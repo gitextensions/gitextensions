@@ -3,260 +3,259 @@ using FluentAssertions;
 using FluentAssertions.Execution;
 using GitCommands;
 using GitExtensions.Extensibility;
+using GitExtensions.UITests;
 using GitUI;
 using GitUI.CommandsDialogs;
-using GitUITests;
 using NSubstitute;
 using static GitUI.CommandsDialogs.FormBrowse;
 
-namespace GitExtensions.UITests.CommandsDialogs
+namespace UITests.CommandsDialogs;
+
+[Apartment(ApartmentState.STA)]
+public class SplitterPersistenceTests
 {
-    [Apartment(ApartmentState.STA)]
-    public class SplitterPersistenceTests
+    private IWindowPositionManager _windowPositionManager;
+    private MemorySettings _settings;
+
+    // Created once for the fixture
+    private ReferenceRepository _referenceRepository;
+
+    // Created once for each test
+    private GitUICommands _commands;
+
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
     {
-        private IWindowPositionManager _windowPositionManager;
-        private MemorySettings _settings;
+        _referenceRepository.Dispose();
+    }
 
-        // Created once for the fixture
-        private ReferenceRepository _referenceRepository;
+    [SetUp]
+    public void SetUp()
+    {
+        _settings = new();
 
-        // Created once for each test
-        private GitUICommands _commands;
+        // Stop loading custom diff tools
+        AppSettings.ShowAvailableDiffTools = false;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
+        // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
+        AppSettings.ShowAuthorAvatarColumn = false;
+
+        _windowPositionManager = Substitute.For<IWindowPositionManager>();
+
+        ReferenceRepository.ResetRepo(ref _referenceRepository);
+
+        _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        // Since we set AppSettings, we need to delete the backing file so that any subsequent tests won't load
+        // outdated settings.
+        File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
+    }
+
+    [Test]
+    public async Task SplitterPositionsShouldBeDefault()
+    {
+        AppSettings.CommitInfoPosition.Should().Be(CommitInfoPosition.BelowList);
+
+        await RunFormTestAsync(
+            async form =>
+            {
+                TestAccessor ta = form.GetTestAccessor();
+
+                await WaitForRevisionsToBeLoadedAsync(ta.RevisionGrid);
+            });
+    }
+
+    [TestCase(CommitInfoPosition.BelowList)]
+    [TestCase(CommitInfoPosition.LeftwardFromList)]
+    [TestCase(CommitInfoPosition.RightwardFromList)]
+    public async Task SplitterPositionsShouldBeSaved(CommitInfoPosition commitInfoPosition)
+    {
+        AppSettings.CommitInfoPosition = commitInfoPosition;
+
+        int leftPanelWidth = 300;
+        int revisionGridHeight = 125;
+        int commitInfoWidth = 124;
+        int fileTreeWidth = 127;
+        int diffListWidth = 126;
+        int expectedCommitInfoWidth;
+
+        switch (commitInfoPosition)
         {
-            _referenceRepository.Dispose();
+            case CommitInfoPosition.BelowList:
+                // Since the Commit Info is on the bottom, the size is largely immaterial
+                // because RevisionsSplitContainer_Panel2Collapsed=true
+                expectedCommitInfoWidth = commitInfoWidth + /* splitter width */6;
+                break;
+
+            case CommitInfoPosition.LeftwardFromList:
+                commitInfoWidth = 300;
+
+                // Since the Commit Info is on the left, the expected width is the same
+                expectedCommitInfoWidth = commitInfoWidth;
+                break;
+
+            case CommitInfoPosition.RightwardFromList:
+                commitInfoWidth = 350;
+
+                // Since the Commit Info is on the right, the expected width is the same
+                expectedCommitInfoWidth = commitInfoWidth - /* some magic number... no idea */38;
+                break;
+
+            default:
+                throw new NotSupportedException();
         }
 
-        [SetUp]
-        public void SetUp()
+        SplitterInfo splitterInfoMainSplitContainer = new(_settings, "MainSplitContainer")
         {
-            _settings = new();
+            Size = 911,
+            Distance = leftPanelWidth
+        };
 
-            // Stop loading custom diff tools
-            AppSettings.ShowAvailableDiffTools = false;
+        SplitterInfo splitterInfoRightSplitContainer = new(_settings, "RightSplitContainer")
+        {
+            Size = 507,
+            Distance = revisionGridHeight
+        };
 
-            // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
-            AppSettings.ShowAuthorAvatarColumn = false;
+        SplitterInfo splitterInfoRevisionsSplitContainer = new(_settings, "RevisionsSplitContainer")
+        {
+            Size = 645,
+            Distance = commitInfoWidth
+        };
 
-            _windowPositionManager = Substitute.For<IWindowPositionManager>();
+        SplitterInfo splitterInfoFileTreeSplitContainer = new(_settings, "FileTreeSplitContainer")
+        {
+            Size = 643,
+            Distance = fileTreeWidth
+        };
 
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
+        SplitterInfo splitterInfoDiffSplitContainer = new(_settings, "DiffSplitContainer")
+        {
+            Size = 643,
+            Distance = diffListWidth
+        };
 
-            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
+        await RunFormTestAsync(
+            async form =>
+            {
+                TestAccessor ta = form.GetTestAccessor();
+
+                await WaitForRevisionsToBeLoadedAsync(ta.RevisionGrid);
+            });
+
+        using (new AssertionScope())
+        {
+            splitterInfoMainSplitContainer.Distance.Should().Be(leftPanelWidth);
+            splitterInfoRightSplitContainer.Distance.Should().Be(revisionGridHeight);
+            splitterInfoRevisionsSplitContainer.Distance.Should().Be(expectedCommitInfoWidth);
+            splitterInfoFileTreeSplitContainer.Distance.Should().Be(fileTreeWidth);
+            splitterInfoDiffSplitContainer.Distance.Should().Be(diffListWidth);
         }
+    }
 
-        [TearDown]
-        public void TearDown()
-        {
-            // Since we set AppSettings, we need to delete the backing file so that any subsequent tests won't load
-            // outdated settings.
-            File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
-        }
+    private async Task RunFormTestAsync(Func<FormBrowse, Task> testDriverAsync)
+    {
+        Dictionary<string, string> splitters = [];
 
-        [Test]
-        public async Task SplitterPositionsShouldBeDefault()
-        {
-            AppSettings.CommitInfoPosition.Should().Be(CommitInfoPosition.BelowList);
-
-            await RunFormTestAsync(
-                async form =>
-                {
-                    TestAccessor ta = form.GetTestAccessor();
-
-                    await WaitForRevisionsToBeLoadedAsync(ta.RevisionGrid);
-                });
-        }
-
-        [TestCase(CommitInfoPosition.BelowList)]
-        [TestCase(CommitInfoPosition.LeftwardFromList)]
-        [TestCase(CommitInfoPosition.RightwardFromList)]
-        public async Task SplitterPositionsShouldBeSaved(CommitInfoPosition commitInfoPosition)
-        {
-            AppSettings.CommitInfoPosition = commitInfoPosition;
-
-            int leftPanelWidth = 300;
-            int revisionGridHeight = 125;
-            int commitInfoWidth = 124;
-            int fileTreeWidth = 127;
-            int diffListWidth = 126;
-            int expectedCommitInfoWidth;
-
-            switch (commitInfoPosition)
+        UITest.RunForm(
+            showForm: () =>
             {
-                case CommitInfoPosition.BelowList:
-                    // Since the Commit Info is on the bottom, the size is largely immaterial
-                    // because RevisionsSplitContainer_Panel2Collapsed=true
-                    expectedCommitInfoWidth = commitInfoWidth + /* splitter width */6;
-                    break;
-
-                case CommitInfoPosition.LeftwardFromList:
-                    commitInfoWidth = 300;
-
-                    // Since the Commit Info is on the left, the expected width is the same
-                    expectedCommitInfoWidth = commitInfoWidth;
-                    break;
-
-                case CommitInfoPosition.RightwardFromList:
-                    commitInfoWidth = 350;
-
-                    // Since the Commit Info is on the right, the expected width is the same
-                    expectedCommitInfoWidth = commitInfoWidth - /* some magic number... no idea */38;
-                    break;
-
-                default:
-                    throw new NotSupportedException();
-            }
-
-            SplitterInfo splitterInfoMainSplitContainer = new(_settings, "MainSplitContainer")
-            {
-                Size = 911,
-                Distance = leftPanelWidth
-            };
-
-            SplitterInfo splitterInfoRightSplitContainer = new(_settings, "RightSplitContainer")
-            {
-                Size = 507,
-                Distance = revisionGridHeight
-            };
-
-            SplitterInfo splitterInfoRevisionsSplitContainer = new(_settings, "RevisionsSplitContainer")
-            {
-                Size = 645,
-                Distance = commitInfoWidth
-            };
-
-            SplitterInfo splitterInfoFileTreeSplitContainer = new(_settings, "FileTreeSplitContainer")
-            {
-                Size = 643,
-                Distance = fileTreeWidth
-            };
-
-            SplitterInfo splitterInfoDiffSplitContainer = new(_settings, "DiffSplitContainer")
-            {
-                Size = 643,
-                Distance = diffListWidth
-            };
-
-            await RunFormTestAsync(
-                async form =>
-                {
-                    TestAccessor ta = form.GetTestAccessor();
-
-                    await WaitForRevisionsToBeLoadedAsync(ta.RevisionGrid);
-                });
-
-            using (new AssertionScope())
-            {
-                splitterInfoMainSplitContainer.Distance.Should().Be(leftPanelWidth);
-                splitterInfoRightSplitContainer.Distance.Should().Be(revisionGridHeight);
-                splitterInfoRevisionsSplitContainer.Distance.Should().Be(expectedCommitInfoWidth);
-                splitterInfoFileTreeSplitContainer.Distance.Should().Be(fileTreeWidth);
-                splitterInfoDiffSplitContainer.Distance.Should().Be(diffListWidth);
-            }
-        }
-
-        private async Task RunFormTestAsync(Func<FormBrowse, Task> testDriverAsync)
-        {
-            Dictionary<string, string> splitters = [];
-
-            UITest.RunForm(
-                showForm: () =>
-                {
 #pragma warning disable CS0618 // Type or member is obsolete
-                    FormBrowse form = new(_commands, new BrowseArguments(), _settings);
+                FormBrowse form = new(_commands, new BrowseArguments(), _settings);
 #pragma warning restore CS0618 // Type or member is obsolete
 
-                    form.Load += (_, _) =>
-                    {
-                        // Collect the persisted splitter settings in a dictionary so that we can perform snapshot validation
-                        // instead of manually validating each individual setting.
-                        foreach (SplitterManager.SplitterData splitterData in form.GetTestAccessor().SplitterManager.GetTestAccessor().Splitters)
-                        {
-                            splitters[splitterData.SizeSettingsKey] = null;
-                            splitters[splitterData.DpiSettingsKey] = null;
-                            splitters[splitterData.DistanceSettingsKey] = null;
-                            splitters[splitterData.FontSizeSettingsKey] = null;
-                            splitters[splitterData.Panel1CollapsedSettingsKey] = null;
-                            splitters[splitterData.Panel2CollapsedSettingsKey] = null;
-                        }
-                    };
-
-                    GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
-                    test.WindowPositionManager = _windowPositionManager;
-
-                    if (Application.MessageLoop)
-                    {
-                        form.Show(owner: null);
-                    }
-                    else
-                    {
-                        Application.Run(form);
-                    }
-                },
-                testDriverAsync);
-
-            // Snapshot validation
-            foreach (string key in splitters.Keys)
-            {
-                if (key.EndsWith("Collapsed"))
+                form.Load += (_, _) =>
                 {
-                    splitters[key] = _settings.GetBool(key).ToString();
+                    // Collect the persisted splitter settings in a dictionary so that we can perform snapshot validation
+                    // instead of manually validating each individual setting.
+                    foreach (SplitterManager.SplitterData splitterData in form.GetTestAccessor().SplitterManager.GetTestAccessor().Splitters)
+                    {
+                        splitters[splitterData.SizeSettingsKey] = null;
+                        splitters[splitterData.DpiSettingsKey] = null;
+                        splitters[splitterData.DistanceSettingsKey] = null;
+                        splitters[splitterData.FontSizeSettingsKey] = null;
+                        splitters[splitterData.Panel1CollapsedSettingsKey] = null;
+                        splitters[splitterData.Panel2CollapsedSettingsKey] = null;
+                    }
+                };
+
+                GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
+                test.WindowPositionManager = _windowPositionManager;
+
+                if (Application.MessageLoop)
+                {
+                    form.Show(owner: null);
                 }
                 else
                 {
-                    splitters[key] = _settings.GetInt(key, -1).ToString();
+                    Application.Run(form);
                 }
-            }
+            },
+            testDriverAsync);
 
-            await Verifier.Verify(splitters);
+        // Snapshot validation
+        foreach (string key in splitters.Keys)
+        {
+            if (key.EndsWith("Collapsed"))
+            {
+                splitters[key] = _settings.GetBool(key).ToString();
+            }
+            else
+            {
+                splitters[key] = _settings.GetInt(key, -1).ToString();
+            }
         }
 
-        private static async Task WaitForRevisionsToBeLoadedAsync(RevisionGridControl revisionGridControl)
+        await Verify(splitters);
+    }
+
+    private static async Task WaitForRevisionsToBeLoadedAsync(RevisionGridControl revisionGridControl)
+    {
+        UITest.ProcessUntil("Loading Revisions", () => revisionGridControl.GetTestAccessor().IsDataLoadComplete);
+        try
         {
-            UITest.ProcessUntil("Loading Revisions", () => revisionGridControl.GetTestAccessor().IsDataLoadComplete);
-            try
-            {
-                await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-            }
-            catch
-            {
-                // ignore the timeout and continue
-            }
+            await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+        }
+        catch
+        {
+            // ignore the timeout and continue
+        }
+    }
+
+    private record SplitterInfo
+    {
+        private readonly MemorySettings _settings;
+        private readonly string _settingName;
+
+        public SplitterInfo(MemorySettings settings, string settingName)
+        {
+            _settings = settings;
+            _settingName = settingName;
         }
 
-        private record SplitterInfo
+        // These are a copy from SplitterManager.SplitterData
+
+        public string SizeSettingsKey => _settingName + "_Size";
+        public string DpiSettingsKey => _settingName + "_Dpi";
+        public string DistanceSettingsKey => _settingName + "_Distance";
+        public string FontSizeSettingsKey => _settingName + "_FontSize";
+        public string Panel1CollapsedSettingsKey => _settingName + "_Panel1Collapsed";
+        public string Panel2CollapsedSettingsKey => _settingName + "_Panel2Collapsed";
+
+        public int Distance
         {
-            private readonly MemorySettings _settings;
-            private readonly string _settingName;
+            get => _settings.GetInt(DistanceSettingsKey) ?? throw new InvalidOperationException();
+            set => _settings.SetInt(DistanceSettingsKey, value);
+        }
 
-            public SplitterInfo(MemorySettings settings, string settingName)
-            {
-                _settings = settings;
-                _settingName = settingName;
-            }
-
-            // These are a copy from SplitterManager.SplitterData
-
-            public string SizeSettingsKey => _settingName + "_Size";
-            public string DpiSettingsKey => _settingName + "_Dpi";
-            public string DistanceSettingsKey => _settingName + "_Distance";
-            public string FontSizeSettingsKey => _settingName + "_FontSize";
-            public string Panel1CollapsedSettingsKey => _settingName + "_Panel1Collapsed";
-            public string Panel2CollapsedSettingsKey => _settingName + "_Panel2Collapsed";
-
-            public int Distance
-            {
-                get => _settings.GetInt(DistanceSettingsKey) ?? throw new InvalidOperationException();
-                set => _settings.SetInt(DistanceSettingsKey, value);
-            }
-
-            public int Size
-            {
-                get => _settings.GetInt(SizeSettingsKey) ?? throw new InvalidOperationException();
-                set => _settings.SetInt(SizeSettingsKey, value);
-            }
+        public int Size
+        {
+            get => _settings.GetInt(SizeSettingsKey) ?? throw new InvalidOperationException();
+            set => _settings.SetInt(SizeSettingsKey, value);
         }
     }
 }
