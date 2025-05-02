@@ -51,6 +51,7 @@
             TextBox.AcceptsTab = true;
             TextBox.BorderStyle = BorderStyle.None;
             TextBox.ContextMenuStrip = SpellCheckContextMenu;
+            TextBox.DetectUrls = false;
             TextBox.Dock = DockStyle.Fill;
             TextBox.Location = new Point(0, 0);
             TextBox.Margin = new Padding(0);
