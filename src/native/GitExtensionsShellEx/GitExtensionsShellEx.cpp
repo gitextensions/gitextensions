@@ -116,7 +116,14 @@ STDMETHODIMP CGitExtensionsShellEx::Initialize(LPCITEMIDLIST pidlFolder, LPDATAO
     DBG_TRACE(L"CGitExtensionsShellEx::Initialize(pidlFolder=%p)", pidlFolder);
     m_szFile[0] = '\0';
     if (pidlFolder)
+    {
         SHGetPathFromIDList(pidlFolder, m_szFile);
+        m_uNumFiles = 1;
+        m_sFilesQuoted = ' ';
+        m_sFilesQuoted += '"';
+        m_sFilesQuoted += m_szFile;
+        m_sFilesQuoted += '"';
+    }
 
     if (!pDataObj)
         return S_OK;
