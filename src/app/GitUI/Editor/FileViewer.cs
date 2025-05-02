@@ -899,18 +899,14 @@ namespace GitUI.Editor
                 () =>
                 {
                     ResetView(viewMode, fileName, item: item, text: text);
-                    internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring, contentIdentification: fileName);
+                    bool positionSet = internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring, contentIdentification: fileName);
                     if (line is not null)
                     {
                         GoToLine(line.Value);
                     }
-                    else if (viewMode == ViewMode.Grep && ShowEntireFile)
+                    else if (!positionSet)
                     {
-                        internalFileViewer.GoToNextChange(NumberOfContextLines);
-                    }
-                    else
-                    {
-                        internalFileViewer.GoToNextChange(NumberOfContextLines, keepFirstVisibleLine: true);
+                        internalFileViewer.GoToFirstChange(NumberOfContextLines);
                     }
 
                     TextLoaded?.Invoke(this, null);
