@@ -135,7 +135,7 @@ namespace GitUI.NBugReports
 
             if (externalOperationException?.InnerException?.Message?.Contains(DubiousOwnershipSecurityConfigString) is true)
             {
-                ReportDubiousOwnership(externalOperationException.InnerException);
+                ReportDubiousOwnership(externalOperationException);
                 return;
             }
 
@@ -270,7 +270,7 @@ namespace GitUI.NBugReports
             }
         }
 
-        private static void ReportDubiousOwnership(Exception exception)
+        private static void ReportDubiousOwnership(ExternalOperationException exception)
         {
             if (_isReportingDubiousOwnershipSecurity)
             {
@@ -288,9 +288,10 @@ namespace GitUI.NBugReports
             }
         }
 
-        private static void ReportDubiousOwnershipImpl(Exception exception)
+        private static void ReportDubiousOwnershipImpl(ExternalOperationException exception)
         {
-            string error = exception.Message;
+            ArgumentNullException.ThrowIfNull(exception.InnerException);
+            string error = exception.InnerException.Message;
             TaskDialogPage pageSecurity = new()
             {
                 Icon = TaskDialogIcon.Error,
@@ -302,13 +303,13 @@ namespace GitUI.NBugReports
             };
             int startIndex = error.IndexOf(DubiousOwnershipSecurityConfigString);
             string gitConfigTrustRepoCommand = ReplaceRepoPathQuotes(error[startIndex..].Trim());
-            string folderPath = error[(startIndex + DubiousOwnershipSecurityConfigString.Length + 1)..];
+            string folderPath = exception.WorkingDirectory ?? error[(startIndex + DubiousOwnershipSecurityConfigString.Length + 1)..];
 
             TaskDialogCommandLinkButton openExplorerButton = new(TranslatedStrings.GitDubiousOwnershipOpenRepositoryFolder, allowCloseDialog: false);
             openExplorerButton.Click += (_, _) => OsShellUtil.OpenWithFileExplorer(PathUtil.ToNativePath(folderPath));
             pageSecurity.Buttons.Add(openExplorerButton);
 
-            AddTrustRepoButton(TranslatedStrings.GitDubiousOwnershipTrustRepository, gitConfigTrustRepoCommand);
+            AddTrustRepoButton(TranslatedStrings.GitDubiousOwnershipTrustRepository, gitConfigTrustRepoCommand, exception.WorkingDirectory ?? ".");
 
             TaskDialogButton helpButton = TaskDialogButton.Help;
             helpButton.Click += (_, _) =>
@@ -335,7 +336,7 @@ namespace GitUI.NBugReports
 
             return;
 
-            void AddTrustRepoButton(string buttonText, string command)
+            void AddTrustRepoButton(string buttonText, string command, string workingDir)
             {
                 TaskDialogCommandLinkButton button = new(buttonText)
                 {
@@ -344,8 +345,8 @@ namespace GitUI.NBugReports
 
                 button.Click += (_, _) =>
                 {
-                    new GitModule(".").GitExecutable.Start(command);
-                    ShowGitRepo(OwnerForm, folderPath);
+                    new GitModule(workingDir).GitExecutable.Start(command).WaitForExit();
+                    ShowGitRepo(OwnerForm, workingDir);
                 };
 
                 pageSecurity.Buttons.Add(button);
