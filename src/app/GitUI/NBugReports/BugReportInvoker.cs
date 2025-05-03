@@ -16,6 +16,8 @@ namespace GitUI.NBugReports
     {
         public const string DubiousOwnershipSecurityConfigString = "config --global --add safe.directory";
 
+        private static bool _isReportingDubiousOwnershipSecurity;
+
         private static Form? OwnerForm
             => Form.ActiveForm ?? (Application.OpenForms.Count > 0 ? Application.OpenForms[0] : null);
 
@@ -269,6 +271,24 @@ namespace GitUI.NBugReports
         }
 
         private static void ReportDubiousOwnership(Exception exception)
+        {
+            if (_isReportingDubiousOwnershipSecurity)
+            {
+                return;
+            }
+
+            try
+            {
+                _isReportingDubiousOwnershipSecurity = true;
+                ReportDubiousOwnershipImpl(exception);
+            }
+            finally
+            {
+                _isReportingDubiousOwnershipSecurity = false;
+            }
+        }
+
+        private static void ReportDubiousOwnershipImpl(Exception exception)
         {
             string error = exception.Message;
             TaskDialogPage pageSecurity = new()
