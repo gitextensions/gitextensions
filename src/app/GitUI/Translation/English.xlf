@@ -2164,18 +2164,6 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="FolderBrowserButton" source-language="en">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Browse...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="buttonBrowse.Text">
-        <source>Browse...</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ForkAndCloneForm" source-language="en">
     <body>
       <trans-unit id="$this.Text">
@@ -4504,10 +4492,6 @@ You can unset the template:
         <source>Create the new worktree</source>
         <target />
       </trans-unit>
-      <trans-unit id="folderBrowserButton1.Text">
-        <source>Browse...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="groupBoxWhatToCheckout.Text">
         <source>What to checkout: </source>
         <target />
@@ -5379,10 +5363,6 @@ packages/</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Create new repository</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Browse.Text">
-        <source>Browse...</source>
         <target />
       </trans-unit>
       <trans-unit id="Central.Text">

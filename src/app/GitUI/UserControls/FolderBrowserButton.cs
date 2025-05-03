@@ -23,8 +23,12 @@ namespace GitUI.UserControls
         /// </summary>
         public override string Text
         {
-            get => buttonBrowse.Text;
-            set => buttonBrowse.Text = value;
+            get => base.Text;
+            set
+            {
+                base.Text = value;
+                _NO_TRANSLATE_buttonBrowse.Text = value;
+            }
         }
 
         /// <summary>
