@@ -1,0 +1,122 @@
+﻿using Git.hub;
+using GitExtensions.Extensibility.Plugins;
+
+namespace GitExtensions.Plugins.GitHub3
+{
+    public class GitHubRepo : IHostedRepository
+    {
+        private Repository _repo;
+
+        public GitHubRepo(Repository repo)
+        {
+            _repo = repo;
+        }
+
+        public string? Owner => _repo.Owner?.Login;
+        public string Name => _repo.Name;
+        public string Description => _repo.Description;
+        public bool IsAFork => _repo.Fork;
+        public bool IsMine => Owner == GitHubLoginInfo.Username;
+        public bool IsPrivate => _repo.Private;
+        public int Forks => _repo.Forks;
+        public string Homepage => _repo.Homepage;
+
+        public string? ParentUrl
+        {
+            get
+            {
+                if (!_repo.Fork)
+                {
+                    return null;
+                }
+
+                if (!_repo.Detailed)
+                {
+                    if (_repo.Organization is not null)
+                    {
+                        return null;
+                    }
+
+                    _repo = GitHub3Plugin.GitHub.getRepository(Owner, Name);
+                }
+
+                return CloneProtocol == GitProtocol.Ssh ? _repo.Parent?.SshUrl : _repo.Parent?.CloneUrl;
+            }
+        }
+
+        public string? ParentOwner
+        {
+            get
+            {
+                if (!_repo.Fork)
+                {
+                    return null;
+                }
+
+                if (!_repo.Detailed)
+                {
+                    if (_repo.Organization is not null)
+                    {
+                        return null;
+                    }
+
+                    _repo = GitHub3Plugin.GitHub.getRepository(Owner, Name);
+                }
+
+                return _repo.Parent?.Owner.Login;
+            }
+        }
+
+        public string CloneUrl => CloneProtocol == GitProtocol.Ssh ? _repo.SshUrl : _repo.CloneUrl;
+
+        public IReadOnlyList<IHostedBranch> GetBranches()
+        {
+            return _repo.GetBranches()
+                .Select(branch => new GitHubBranch(branch))
+                .OrderBy(branch => branch.Name, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        public string GetDefaultBranch()
+        {
+            return _repo.GetDefaultBranch();
+        }
+
+        public IHostedRepository Fork()
+        {
+            return new GitHubRepo(_repo.CreateFork());
+        }
+
+        public IReadOnlyList<IPullRequestInformation> GetPullRequests()
+        {
+            IReadOnlyList<PullRequest> pullRequests = _repo?.GetPullRequests();
+
+            if (pullRequests is not null)
+            {
+                return pullRequests
+                    .Select(pr => new GitHubPullRequest(pr))
+                    .ToList();
+            }
+
+            return Array.Empty<IPullRequestInformation>();
+        }
+
+        public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)
+        {
+            PullRequest pullRequest = _repo.CreatePullRequest(GitHubLoginInfo.Username + ":" + myBranch, remoteBranch, title, body);
+
+            if (pullRequest?.Number is not > 0)
+            {
+                throw new Exception("Failed to create pull request.");
+            }
+
+            return pullRequest.Number;
+        }
+
+        public GitProtocol CloneProtocol { get; set; } = GitProtocol.Ssh;
+
+        public IReadOnlyList<GitProtocol> SupportedCloneProtocols { get; set; } = new[] { GitProtocol.Ssh, GitProtocol.Https };
+
+        public override string ToString() => $"{Owner}/{Name}";
+    }
+}
