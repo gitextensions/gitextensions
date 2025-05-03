@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 command = $"{command[..windowsDriveIndex]}/mnt/{char.ToLower(command[windowsDriveIndex])}{command[(colonIndex + 1)..]}";
             }
 
-            return Regex.Replace(command, @"\$(LOCAL|REMOTE|BASE|MERGED)", @"$(wslpath -aw $&)");
+            return Regex.Replace(command, @"\$(LOCAL|REMOTE|BASE|MERGED)", @"$(wslpath -aw $&)").ToPosixPath();
         }
 
         protected override void Init(ISettingsPageHost pageHost)
@@ -67,7 +67,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             CommonLogic.FillEncodings(Global_FilesEncoding);
 
-            GlobalEditor.Items.AddRange(EditorHelper.GetEditors());
+            GlobalEditor.Items.AddRange([.. EditorHelper.GetEditors().Select(AdaptCommandIfWsl).WhereNotNull()]);
         }
 
         public static SettingsPageReference GetPageReference()
