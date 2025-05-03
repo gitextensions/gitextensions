@@ -5018,7 +5018,7 @@ Do you want Git Extensions to help locate the correct folder?</source>
         <target />
       </trans-unit>
       <trans-unit id="defaultHome.Text">
-        <source>Use default for HOME</source>
+        <source>&amp;Use default for HOME</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBox8.Text">
@@ -5036,15 +5036,15 @@ Change the default behaviour only if you experience problems.</source>
         <target />
       </trans-unit>
       <trans-unit id="otherHome.Text">
-        <source>Other</source>
+        <source>&amp;Other</source>
         <target />
       </trans-unit>
       <trans-unit id="otherHomeBrowse.Text">
-        <source>Browse...</source>
+        <source>&amp;Browse...</source>
         <target />
       </trans-unit>
       <trans-unit id="userprofileHome.Text">
-        <source>Set HOME to USERPROFILE</source>
+        <source>&amp;Set HOME to USERPROFILE</source>
         <target />
       </trans-unit>
     </body>
