@@ -34,18 +34,6 @@ namespace GitUI.CommandsDialogs
             {
                 recoverLostObjectsToolStripMenuItem, // Repository->Git maintenance->Recover lost objects
                 branchSelect, // main toolbar
-
-                // main toolbar and submenu
-                toolStripButtonPull,
-                pullToolStripMenuItem,
-                pullToolStripMenuItem1,
-                mergeToolStripMenuItem,
-                rebaseToolStripMenuItem1,
-                fetchToolStripMenuItem,
-                fetchAllToolStripMenuItem,
-                fetchPruneAllToolStripMenuItem,
-                toolStripButtonPush,
-                pushToolStripMenuItem,
             }.ForEach(ColorHelper.AdaptImageLightness);
 
             pullToolStripMenuItem1.Tag = GitPullAction.None;

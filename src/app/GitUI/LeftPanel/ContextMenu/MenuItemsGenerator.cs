@@ -95,7 +95,7 @@ namespace GitUI.LeftPanel.ContextMenu
             if (Implements<ICanRename>())
             {
                 ToolStripMenuItem item = _menuItemFactory.CreateMenuItem<ToolStripMenuItem, TNode>(
-                    node => ((ICanRename)node).Rename(), Strings.Rename, GetTooltip(MenuItemKey.Rename), Properties.Images.Renamed.AdaptLightness());
+                    node => ((ICanRename)node).Rename(), Strings.Rename, GetTooltip(MenuItemKey.Rename), Properties.Images.Renamed);
                 yield return item.WithKey(MenuItemKey.Rename);
             }
         }
