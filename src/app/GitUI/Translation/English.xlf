@@ -6733,7 +6733,7 @@ Value has been reset to empty value.</source>
         <target />
       </trans-unit>
       <trans-unit id="btnRemoteColor.Text">
-        <source>Set color</source>
+        <source>Set &amp;color</source>
         <target />
       </trans-unit>
       <trans-unit id="btnRemoteColorReset.Text">
@@ -6773,7 +6773,7 @@ Value has been reset to empty value.</source>
         <target />
       </trans-unit>
       <trans-unit id="label4.Text">
-        <source>L&amp;ocal branch name</source>
+        <source>&amp;Local branch name</source>
         <target />
       </trans-unit>
       <trans-unit id="label5.Text">

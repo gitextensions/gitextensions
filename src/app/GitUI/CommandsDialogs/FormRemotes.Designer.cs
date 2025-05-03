@@ -178,7 +178,7 @@ namespace GitUI.CommandsDialogs
             btnRemoteColor.Name = "btnRemoteColor";
             btnRemoteColor.Size = new Size(63, 25);
             btnRemoteColor.TabIndex = 7;
-            btnRemoteColor.Text = "Set color";
+            btnRemoteColor.Text = "Set &color";
             btnRemoteColor.UseVisualStyleBackColor = false;
             btnRemoteColor.Click += btnRemoteColor_Click;
             // 
@@ -675,7 +675,7 @@ namespace GitUI.CommandsDialogs
             label4.Name = "label4";
             label4.Size = new Size(108, 15);
             label4.TabIndex = 0;
-            label4.Text = "L&ocal branch name";
+            label4.Text = "&Local branch name";
             // 
             // label5
             // 
