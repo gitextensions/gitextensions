@@ -1565,6 +1565,10 @@ Git will never check if the file has changed that will improve status check perf
         <source>&lt;multiple&gt;</source>
         <target />
       </trans-unit>
+      <trans-unit id="_newName.Text">
+        <source>New name</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_resetSelectedChangesText.Text">
         <source>Are you sure you want to reset all selected files to {0}?</source>
         <target />
@@ -1776,6 +1780,10 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="tsmiInteractiveAdd.Text">
         <source>Interactive add...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiMove.Text">
+        <source>Rena&amp;me / move</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiOpenFindInCommitFilesGitGrepDialog.Text">
