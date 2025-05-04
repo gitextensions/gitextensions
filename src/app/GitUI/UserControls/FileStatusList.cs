@@ -326,8 +326,7 @@ namespace GitUI
             {
                 Toolbar.Visible = false;
                 lblSplitter.Height = DpiUtil.Scale(1);
-                SetFindInCommitFilesGitGrepVisibilityImpl(visible: false);
-                CanUseFindInCommitFilesGitGrep = false;
+                SetFindInCommitFilesGitGrepVisibilityImpl(AppSettings.ShowFindInCommitFilesGitGrep.Value);
                 _diffCalculator.SetGrep(@"-e ""^""", fileTreeMode: true);
                 GroupByRevision = false;
                 FileStatusListView.ShowRootLines = true;
@@ -431,6 +430,7 @@ namespace GitUI
         public Func<ObjectId?, string>? DescribeRevision { get; set; }
 
         public bool FilterFilesByNameRegexFocused => _NO_TRANSLATE_FilterComboBox.Focused;
+        public bool FindInCommitFilesGitGrepActive => !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
         public bool FindInCommitFilesGitGrepFocused => cboFindInCommitFilesGitGrep.Focused;
         public bool FindInCommitFilesGitGrepVisible => cboFindInCommitFilesGitGrep.Visible;
 
@@ -493,7 +493,7 @@ namespace GitUI
             DeleteFilterButton.Height = _NO_TRANSLATE_FilterComboBox.Height;
 
             // Use variable to prevent bad value retrieved from `Visible` property
-            bool showFilesFilter = !showNoFiles || (cboFindInCommitFilesGitGrep.Visible && cboFindInCommitFilesGitGrep.Text.Length > 0);
+            bool showFilesFilter = !showNoFiles || FindInCommitFilesGitGrepActive;
             _NO_TRANSLATE_FilterComboBox.Visible = showFilesFilter;
 
             NoFiles.Visible = showNoFiles;
@@ -795,7 +795,7 @@ namespace GitUI
                 // Skip collapsed or empty groups
                 if ((_showDiffGroups && !rootNode.IsExpanded)
                     || (rootNode.Nodes.Count == 1 && rootNode.Nodes[0].Tag is FileStatusItem fileStatusItem && fileStatusItem.Item == _noItemStatuses[0])
-                    || (_isFileTreeMode && _filter is null))
+                    || (_isFileTreeMode && _filter is null && !FindInCommitFilesGitGrepActive))
                 {
                     continue;
                 }
@@ -857,7 +857,7 @@ namespace GitUI
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
                 cancellationToken.ThrowIfCancellationRequested();
-                bool withGitGrep = !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
+                bool withGitGrep = FindInCommitFilesGitGrepActive;
                 UpdateFileStatusListView(gitItemStatusesWithDescription, gitGrepState: withGitGrep ? GitGrepState.Preparing : GitGrepState.None, cancellationToken: cancellationToken);
 
                 // git grep, fetched as a separate step
@@ -1098,7 +1098,7 @@ namespace GitUI
 
         private void SetFindInCommitFilesGitGrepWatermarkVisibility()
         {
-            lblFindInCommitFilesGitGrepWatermark.Visible = cboFindInCommitFilesGitGrep.Visible && !cboFindInCommitFilesGitGrep.Focused && string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
+            lblFindInCommitFilesGitGrepWatermark.Visible = cboFindInCommitFilesGitGrep.Visible && !cboFindInCommitFilesGitGrep.Focused && !FindInCommitFilesGitGrepActive;
             if (lblFindInCommitFilesGitGrepWatermark.Visible)
             {
                 lblFindInCommitFilesGitGrepWatermark.BringToFront();
@@ -1107,7 +1107,7 @@ namespace GitUI
 
         private void SetDeleteSearchButtonVisibility()
         {
-            DeleteSearchButton.Visible = cboFindInCommitFilesGitGrep.Visible && !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
+            DeleteSearchButton.Visible = FindInCommitFilesGitGrepActive;
             if (DeleteSearchButton.Visible)
             {
                 DeleteSearchButton.BringToFront();
@@ -1645,7 +1645,7 @@ namespace GitUI
                 Location = new Point(TopLevelControl.Location.X + 90, TopLevelControl.Location.Y + 110)
             };
 
-            _formFindInCommitFilesGitGrep.GitGrepExpressionText = !string.IsNullOrEmpty(text) ? text : (cboFindInCommitFilesGitGrep.Visible && !string.IsNullOrWhiteSpace(cboFindInCommitFilesGitGrep.Text) ? cboFindInCommitFilesGitGrep.Text : null);
+            _formFindInCommitFilesGitGrep.GitGrepExpressionText = !string.IsNullOrEmpty(text) ? text : FindInCommitFilesGitGrepActive ? cboFindInCommitFilesGitGrep.Text : null;
             _formFindInCommitFilesGitGrep.SetSearchItems(cboFindInCommitFilesGitGrep.Items);
             _formFindInCommitFilesGitGrep.SetShowFindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Visible);
             _formFindInCommitFilesGitGrep.Show();
@@ -2030,6 +2030,11 @@ namespace GitUI
                 // delay to handle keypresses
                 await Task.Delay(delay, cancellationToken);
                 string searchArg = search;
+                if (_isFileTreeMode && string.IsNullOrWhiteSpace(searchArg))
+                {
+                    searchArg = "^";
+                }
+
                 if (!string.IsNullOrWhiteSpace(searchArg) && !GrepStringRegex().IsMatch(searchArg))
                 {
                     searchArg = $@"-e ""{searchArg}""";
@@ -2042,6 +2047,11 @@ namespace GitUI
                 cboFindInCommitFilesGitGrep.BackColor = string.IsNullOrEmpty(search) ? SystemColors.Window : _activeInputColor;
                 WorkaroundTooEarlyDrawing();
                 UpdateFileStatusListView(gitItemStatusesWithDescription, cancellationToken: cancellationToken);
+
+                if (FileStatusListView.SelectedNodes.Count == 0 || !FileStatusListView.SelectedNodes.First().IsVisible)
+                {
+                    SelectFirstVisibleItem();
+                }
 
                 if (string.IsNullOrEmpty(search))
                 {

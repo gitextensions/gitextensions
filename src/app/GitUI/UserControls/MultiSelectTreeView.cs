@@ -102,7 +102,7 @@ public class MultiSelectTreeView : NativeTreeView
 
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public HashSet<TreeNode> SelectedNodes => _selectedNodes;
+    public IReadOnlySet<TreeNode> SelectedNodes => _selectedNodes;
 
     public void SetSelectedNodes(HashSet<TreeNode> selectedNodes, TreeNode? focusedNode)
     {

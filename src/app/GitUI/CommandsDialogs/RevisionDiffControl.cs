@@ -456,7 +456,7 @@ namespace GitUI.CommandsDialogs
 
             await DiffText.ViewChangesAsync(DiffFiles.SelectedItem,
                 line: line,
-                forceFileView: IsFileTreeMode,
+                forceFileView: IsFileTreeMode && !DiffFiles.FindInCommitFilesGitGrepActive,
                 openWithDiffTool: IsFileTreeMode ? null : DiffFiles.tsmiDiffFirstToSelected.PerformClick,
                 additionalCommandInfo: (DiffFiles.SelectedItem?.Item?.IsRangeDiff is true) && Module.GitVersion.SupportRangeDiffPath ? _pathFilter() : "",
                 cancellationToken: _viewChangesSequence.Next());
