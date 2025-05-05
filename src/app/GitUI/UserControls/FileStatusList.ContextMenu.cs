@@ -679,6 +679,8 @@ partial class FileStatusList
 
         string? title = tsmiMove.Text.RemoveMnemonicMarker();
         using IUserInputPrompt prompt = UICommands.GetRequiredService<ISimplePromptCreator>().Create(title, label: _newName.Text, defaultValue: oldName);
+
+        // Repeat if name not different or if failed, let the user cancel explicitely
         while (true)
         {
             DialogResult result = prompt.ShowDialog(this);
