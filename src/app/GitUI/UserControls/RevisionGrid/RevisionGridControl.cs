@@ -3154,7 +3154,20 @@ namespace GitUI
             });
 
             using FormProcess formProcess = new(UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
-            formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", string.Format("sed -i -re '0,/pick/s//{0}/'", command));
+
+            const string envVarNameGitSequenceEditor = "GIT_SEQUENCE_EDITOR";
+            formProcess.ProcessEnvVariables.Add(envVarNameGitSequenceEditor, string.Format("sed -i -re '0,/pick/s//{0}/'", command));
+
+            const string envVarNameWslEnvControl = "WSLENV";
+            string wslEnvControlValue = envVarNameGitSequenceEditor;
+            if (Environment.GetEnvironmentVariable(envVarNameWslEnvControl) is string existingWslEnvValue)
+            {
+                wslEnvControlValue = $"{existingWslEnvValue}:{wslEnvControlValue}";
+            }
+
+            formProcess.ProcessEnvVariables.Remove(envVarNameWslEnvControl);
+            formProcess.ProcessEnvVariables.Add(envVarNameWslEnvControl, wslEnvControlValue);
+
             formProcess.ShowDialog(ParentForm);
             PerformRefreshRevisions();
         }
