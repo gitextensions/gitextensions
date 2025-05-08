@@ -420,6 +420,7 @@ partial class FileStatusList
                 break;
             case RevisionDiffControl.Command.OpenInVisualStudio: tsmiOpenInVisualStudio.PerformClick(); break;
             case RevisionDiffControl.Command.AddFileToGitIgnore: return AddFileToGitIgnore();
+            case RevisionDiffControl.Command.RenameMove: tsmiMove.PerformClick(); break;
             default: return base.ExecuteCommand(cmd);
         }
 
@@ -876,6 +877,7 @@ partial class FileStatusList
         tsmiOpenFindInCommitFilesGitGrepDialog.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep);
         tsmiOpenInVisualStudio.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenInVisualStudio);
         tsmiAddFileToGitIgnore.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.AddFileToGitIgnore);
+        tsmiMove.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.RenameMove);
     }
 
     private void RememberFirstRevDiff_Click(object sender, EventArgs e)
