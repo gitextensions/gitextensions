@@ -376,23 +376,23 @@ namespace GitUI.Hotkey
                     Hk(FormStash.Command.PreviousStash, Keys.Control | Keys.P),
                     Hk(FormStash.Command.Refresh, Keys.F5)),
                 new HotkeySettings(
-                    FormSettings.HotkeySettingsName,
-                    LoadScriptHotkeys())
+                    FormSettings.HotkeySettingsName)
+                    ////LoadScriptHotkeys())
             };
 
-            HotkeyCommand[] LoadScriptHotkeys()
-            {
-                /* define unusable int for identifying a shortcut for a custom script is pressed
-                 * all integers above 9000 represent a script hotkey
-                 * these integers are never matched in the 'switch' routine on a form and
-                 * therefore execute the 'default' action
-                 */
-                return _scriptsManager
-                    .GetScripts()
-                    .Where(s => !string.IsNullOrEmpty(s.Name))
-                    .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.GetDisplayName()) { KeyData = Keys.None })
-                    .ToArray();
-            }
+            ////HotkeyCommand[] LoadScriptHotkeys()
+            ////{
+            ////    /* define unusable int for identifying a shortcut for a custom script is pressed
+            ////     * all integers above 9000 represent a script hotkey
+            ////     * these integers are never matched in the 'switch' routine on a form and
+            ////     * therefore execute the 'default' action
+            ////     */
+            ////    return _scriptsManager
+            ////        .GetScripts()
+            ////        .Where(s => !string.IsNullOrEmpty(s.Name))
+            ////        .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.GetDisplayName()) { KeyData = Keys.None })
+            ////        .ToArray();
+            ////}
         }
 
         IReadOnlyList<HotkeyCommand> IHotkeySettingsLoader.LoadHotkeys(string hotkeySettingsName)
