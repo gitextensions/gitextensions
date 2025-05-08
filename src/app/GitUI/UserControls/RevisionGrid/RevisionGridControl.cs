@@ -3158,7 +3158,8 @@ namespace GitUI
             const string envVarNameGitSequenceEditor = "GIT_SEQUENCE_EDITOR";
             formProcess.ProcessEnvVariables.Add(envVarNameGitSequenceEditor, string.Format("sed -i -re '0,/pick/s//{0}/'", command));
 
-            // Tell Windows to forward GIT_SEQUENCE_EDITOR to WSL by means of also setting WSLENV (regardless of whether it is a WSL repo or not)
+            // Tell Windows to forward GIT_SEQUENCE_EDITOR to WSL by means of also setting WSLENV
+            if (PathUtil.IsWslPath(Module.WorkingDir))
             {
                 const string envVarNameWslEnvControl = "WSLENV";
                 string wslEnvControlValue = envVarNameGitSequenceEditor;
