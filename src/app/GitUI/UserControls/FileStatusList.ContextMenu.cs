@@ -3,6 +3,7 @@
 using System.Text;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -689,8 +690,9 @@ partial class FileStatusList
                 return;
             }
 
+            // Git does not support changing only the case of folders in Windows
             string newName = prompt.UserInput;
-            if (oldName == newName || (SelectedFolder is not null && string.Compare(oldName, newName, ignoreCase: true) == 0))
+            if (oldName == newName || (SelectedFolder is not null && string.Compare(oldName, newName, ignoreCase: true) == 0 && IsRunningOnNativeWindows()))
             {
                 continue;
             }
@@ -704,6 +706,10 @@ partial class FileStatusList
 
             MessageBoxes.ShowError(this, executionResult.StandardError, title);
         }
+
+        return;
+
+        bool IsRunningOnNativeWindows() => EnvUtils.RunningOnWindows() && !PathUtil.IsWslPath(Module.WorkingDir);
     }
 
     private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object? sender)
