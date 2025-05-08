@@ -906,7 +906,6 @@ namespace GitUI
             // 
             // tsmiMove
             // 
-            tsmiMove.Image = Properties.Images.Renamed;
             tsmiMove.Name = "tsmiMove";
             tsmiMove.Size = new Size(295, 22);
             tsmiMove.Text = "Rena&me / move";

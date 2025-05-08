@@ -101,6 +101,7 @@ namespace GitUI
                 Name = "sortListByContextMenuItem"
             };
 
+            tsmiMove.Image = Properties.Images.Renamed.AdaptLightness();
             FileStatusListView.BackColor = AppColor.PanelBackground.GetThemeColor();
             InitializeComplete();
 
