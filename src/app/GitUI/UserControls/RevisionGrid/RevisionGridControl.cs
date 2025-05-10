@@ -163,7 +163,6 @@ namespace GitUI
         {
             InitializeComponent();
             openPullRequestPageStripMenuItem.AdaptImageLightness();
-            renameBranchToolStripMenuItem.AdaptImageLightness();
             InitializeComplete();
 
             _loadingControlText = new Label

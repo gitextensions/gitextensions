@@ -47,8 +47,6 @@ namespace GitUI.CommandsDialogs
 
             InitializeComponent();
 
-            btnSwap.AdaptImageLightness();
-
             InitializeComplete();
 
             _toolTipControl.SetToolTip(btnAnotherFirstBranch, _anotherBranchTooltip.Text);

@@ -36,7 +36,7 @@ namespace GitUI.CommandsDialogs
 
             if (!string.IsNullOrEmpty(data.BehindCount))
             {
-                Image = Images.Unstage.AdaptLightness();
+                Image = Images.Unstage;
             }
         }
 
@@ -54,7 +54,7 @@ namespace GitUI.CommandsDialogs
         {
             AutoSize = true;
             DisplayStyle = ToolStripItemDisplayStyle.Image;
-            Image = Images.Push.AdaptLightness();
+            Image = Images.Push;
             ToolTipText = _push.Text;
         }
 
