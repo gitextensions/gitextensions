@@ -54,12 +54,7 @@ namespace GitUI.LeftPanel
             mnubtnCollapse.AdaptImageLightness();
             tsbCollapseAll.AdaptImageLightness();
             mnubtnExpand.AdaptImageLightness();
-            mnubtnFetchAllBranchesFromARemote.AdaptImageLightness();
-            mnuBtnPruneAllBranchesFromARemote.AdaptImageLightness();
-            mnuBtnFetchAllRemotes.AdaptImageLightness();
-            mnuBtnPruneAllRemotes.AdaptImageLightness();
             mnubtnFetchCreateBranch.AdaptImageLightness();
-            mnubtnPullFromRemoteBranch.AdaptImageLightness();
             InitializeComplete();
 
             HotkeysEnabled = true;
