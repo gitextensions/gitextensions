@@ -21,22 +21,20 @@ namespace GitExtUtils.GitUI.Theming
                 return;
             }
 
+            container.DescendantsToFix<ToolStrip>()
+                .ForEach(SetupToolStrip);
+            container.ContextMenusToFix()
+                .ForEach(SetupContextMenu);
             container.DescendantsToFix<DataGridView>()
                 .ForEach(SetupDataGridView);
-            container.DescendantsToFix<TreeView>()
-                .ForEach(SetupTreeView);
             container.DescendantsToFix<TabControl>()
                 .ForEach(SetupTabControl);
             container.DescendantsToFix<TextBoxBase>()
                  .ForEach(SetupTextBoxBase);
             container.DescendantsToFix<LinkLabel>()
                 .ForEach(SetupLinkLabel);
-            container.DescendantsToFix<ToolStrip>()
-                .ForEach(SetupToolStrip);
             container.DescendantsToFix<Button>()
                 .ForEach(SetupButton);
-            container.ContextMenusToFix()
-                .ForEach(SetupContextMenu);
         }
 
         private static IEnumerable<TControl> DescendantsToFix<TControl>(this Control c)
@@ -68,12 +66,12 @@ namespace GitExtUtils.GitUI.Theming
 
         private static void SetupToolStrip(ToolStrip strip)
         {
-            strip.UseExtendedThemeAwareRenderer();
+            strip.RenderMode = ToolStripRenderMode.Professional;
         }
 
         private static void SetupContextMenu(ContextMenuStrip strip)
         {
-            strip.UseExtendedThemeAwareRenderer();
+            strip.RenderMode = ToolStripRenderMode.Professional;
         }
 
         private static void SetupLinkLabel(this LinkLabel label)
@@ -115,18 +113,9 @@ namespace GitExtUtils.GitUI.Theming
             view.ColumnHeadersDefaultCellStyle.BackColor = view.ColumnHeadersDefaultCellStyle.BackColor;
         }
 
-        private static void SetupTreeView(TreeView view)
-        {
-        }
-
         private static void TouchBackColor(this Control c)
         {
             c.BackColor = c.BackColor;
-        }
-
-        private static void TouchForeColor(this Control c)
-        {
-            c.ForeColor = c.ForeColor;
         }
 
         private static bool TryAddToWeakTable(IWin32Window element, ConditionalWeakTable<IWin32Window, IWin32Window> weakTable)
