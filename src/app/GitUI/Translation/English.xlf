@@ -5023,10 +5023,6 @@ Change the default behaviour only if you experience problems.</source>
         <source>&amp;Other</source>
         <target />
       </trans-unit>
-      <trans-unit id="otherHomeBrowse.Text">
-        <source>&amp;Browse...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="userprofileHome.Text">
         <source>&amp;Set HOME to USERPROFILE</source>
         <target />
@@ -5645,10 +5641,6 @@ command "git help shortlog"</source>
       </trans-unit>
       <trans-unit id="_warningOpenFailed.Text">
         <source>The selected directory is not a valid git repository.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="folderBrowserButton.Text">
-        <source>&amp;Browse...</source>
         <target />
       </trans-unit>
       <trans-unit id="folderGoUpButton.toolTip1">
@@ -6730,10 +6722,6 @@ Value has been reset to empty value.</source>
       </trans-unit>
       <trans-unit id="folderBrowserButtonPushUrl.Text">
         <source>Bro&amp;wse...</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="folderBrowserButtonUrl.Text">
-        <source>&amp;Browse...</source>
         <target />
       </trans-unit>
       <trans-unit id="gbMgtPanel.Text">

@@ -291,7 +291,6 @@ namespace GitUI.CommandsDialogs
             folderBrowserButtonUrl.PathShowingControl = Url;
             folderBrowserButtonUrl.Size = new Size(104, 25);
             folderBrowserButtonUrl.TabIndex = 2;
-            folderBrowserButtonUrl.Text = "&Browse...";
             // 
             // label1
             // 

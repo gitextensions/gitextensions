@@ -43,7 +43,7 @@
             _NO_TRANSLATE_buttonBrowse.Name = "_NO_TRANSLATE_buttonBrowse";
             _NO_TRANSLATE_buttonBrowse.Size = new Size(100, 25);
             _NO_TRANSLATE_buttonBrowse.TabIndex = 5;
-            _NO_TRANSLATE_buttonBrowse.Text = "Browse...";
+            _NO_TRANSLATE_buttonBrowse.Text = "&Browse...";
             _NO_TRANSLATE_buttonBrowse.UseVisualStyleBackColor = true;
             _NO_TRANSLATE_buttonBrowse.Click += buttonBrowse_Click;
             // 

@@ -66,7 +66,6 @@
             otherHomeBrowse.PathShowingControl = otherHomeDir;
             otherHomeBrowse.Size = new Size(130, 25);
             otherHomeBrowse.TabIndex = 5;
-            otherHomeBrowse.Text = "&Browse...";
             // 
             // otherHomeDir
             // 
