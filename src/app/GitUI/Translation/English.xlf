@@ -6120,6 +6120,10 @@ Would you like to do it now?</source>
         <source>&amp;Force with lease</source>
         <target />
       </trans-unit>
+      <trans-unit id="folderBrowserButton1.Text">
+        <source>Bro&amp;wse...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="groupBox2.Text">
         <source>Push to</source>
         <target />
@@ -6133,7 +6137,7 @@ Would you like to do it now?</source>
         <target />
       </trans-unit>
       <trans-unit id="labelFrom.Text">
-        <source>Br&amp;anch to push</source>
+        <source>&amp;Branch to push</source>
         <target />
       </trans-unit>
       <trans-unit id="labelTo.Text">

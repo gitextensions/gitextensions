@@ -309,7 +309,7 @@
             labelFrom.Name = "labelFrom";
             labelFrom.Size = new Size(79, 13);
             labelFrom.TabIndex = 0;
-            labelFrom.Text = "Br&anch to push";
+            labelFrom.Text = "&Branch to push";
             // 
             // TagTab
             // 
@@ -511,6 +511,7 @@
             folderBrowserButton1.PathShowingControl = PushDestination;
             folderBrowserButton1.Size = new Size(0, 0);
             folderBrowserButton1.TabIndex = 5;
+            folderBrowserButton1.Text = "Bro&wse...";
             // 
             // Pull
             // 
