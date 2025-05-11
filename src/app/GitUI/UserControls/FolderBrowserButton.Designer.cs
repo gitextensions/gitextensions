@@ -28,29 +28,29 @@
         /// </summary>
         private void InitializeComponent()
         {
-            _NO_TRANSLATE_buttonBrowse = new Button();
+            buttonBrowse = new Button();
             SuspendLayout();
             // 
-            // _NO_TRANSLATE_buttonBrowse
+            // buttonBrowse
             // 
-            _NO_TRANSLATE_buttonBrowse.AutoSize = true;
-            _NO_TRANSLATE_buttonBrowse.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            _NO_TRANSLATE_buttonBrowse.Dock = DockStyle.Fill;
-            _NO_TRANSLATE_buttonBrowse.Image = Properties.Images.BrowseFileExplorer;
-            _NO_TRANSLATE_buttonBrowse.ImageAlign = ContentAlignment.MiddleLeft;
-            _NO_TRANSLATE_buttonBrowse.Location = new Point(0, 0);
-            _NO_TRANSLATE_buttonBrowse.MinimumSize = new Size(100, 25);
-            _NO_TRANSLATE_buttonBrowse.Name = "_NO_TRANSLATE_buttonBrowse";
-            _NO_TRANSLATE_buttonBrowse.Size = new Size(100, 25);
-            _NO_TRANSLATE_buttonBrowse.TabIndex = 5;
-            _NO_TRANSLATE_buttonBrowse.Text = "&Browse...";
-            _NO_TRANSLATE_buttonBrowse.UseVisualStyleBackColor = true;
-            _NO_TRANSLATE_buttonBrowse.Click += buttonBrowse_Click;
+            buttonBrowse.AutoSize = true;
+            buttonBrowse.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            buttonBrowse.Dock = DockStyle.Fill;
+            buttonBrowse.Image = Properties.Images.BrowseFileExplorer;
+            buttonBrowse.ImageAlign = ContentAlignment.MiddleLeft;
+            buttonBrowse.Location = new Point(0, 0);
+            buttonBrowse.MinimumSize = new Size(100, 25);
+            buttonBrowse.Name = "buttonBrowse";
+            buttonBrowse.Size = new Size(100, 25);
+            buttonBrowse.TabIndex = 5;
+            buttonBrowse.Text = "&Browse...";
+            buttonBrowse.UseVisualStyleBackColor = true;
+            buttonBrowse.Click += buttonBrowse_Click;
             // 
             // FolderBrowserButton
             // 
             AutoScaleMode = AutoScaleMode.Inherit;
-            Controls.Add(_NO_TRANSLATE_buttonBrowse);
+            Controls.Add(buttonBrowse);
             Name = "FolderBrowserButton";
             Size = new Size(100, 25);
             ResumeLayout(false);
@@ -60,6 +60,6 @@
 
         #endregion
 
-        private Button _NO_TRANSLATE_buttonBrowse;
+        private Button buttonBrowse;
     }
 }

@@ -27,7 +27,7 @@ namespace GitUI.UserControls
             set
             {
                 base.Text = value;
-                _NO_TRANSLATE_buttonBrowse.Text = value;
+                buttonBrowse.Text = value;
             }
         }
 

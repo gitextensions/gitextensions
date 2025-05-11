@@ -2164,6 +2164,14 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FolderBrowserButton" source-language="en">
+    <body>
+      <trans-unit id="buttonBrowse.Text">
+        <source>&amp;Browse...</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="ForkAndCloneForm" source-language="en">
     <body>
       <trans-unit id="$this.Text">
