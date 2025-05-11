@@ -68,7 +68,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             createDirTB = new TextBox();
             createDirectoryLbl = new Label();
             label1 = new Label();
-            browseForCloneToDirbtn = new Button();
+            browseForCloneToDirbtn = new UserControls.FolderBrowserButton();
             destinationTB = new TextBox();
             depthUpDown = new NumericUpDown();
             flowLayoutPanel1 = new FlowLayoutPanel();
@@ -518,10 +518,9 @@ namespace GitUI.CommandsDialogs.RepoHosting
             // 
             browseForCloneToDirbtn.Location = new Point(310, 32);
             browseForCloneToDirbtn.Name = "browseForCloneToDirbtn";
+            browseForCloneToDirbtn.PathShowingControl = createDirTB;
             browseForCloneToDirbtn.Size = new Size(102, 23);
             browseForCloneToDirbtn.TabIndex = 2;
-            browseForCloneToDirbtn.Text = "Browse...";
-            browseForCloneToDirbtn.UseVisualStyleBackColor = true;
             browseForCloneToDirbtn.Click += _browseForCloneToDirbtn_Click;
             // 
             // destinationTB
@@ -616,7 +615,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private TextBox createDirTB;
         private Label createDirectoryLbl;
         private Label label1;
-        private Button browseForCloneToDirbtn;
+        private UserControls.FolderBrowserButton browseForCloneToDirbtn;
         private TextBox destinationTB;
         private FlowLayoutPanel flowLayoutPanel1;
         private Label cloneInfoText;
