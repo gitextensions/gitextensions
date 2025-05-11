@@ -21,8 +21,9 @@ namespace GitUI.CommandsDialogs
     public sealed partial class FormPull : GitExtensionsDialog
     {
         #region Mnemonics
-        // Available: BIJKQVXYZ
+        // Available: IJKQVXYZ
         // A Fetch all tags
+        // B Browse...
         // C Stash changes
         // D Prune remote branches and tags
         // E Rebase

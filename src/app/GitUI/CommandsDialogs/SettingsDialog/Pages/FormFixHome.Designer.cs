@@ -84,7 +84,7 @@
             otherHome.Size = new Size(53, 17);
             otherHome.TabIndex = 3;
             otherHome.TabStop = true;
-            otherHome.Text = "Other";
+            otherHome.Text = "&Other";
             otherHome.UseVisualStyleBackColor = true;
             // 
             // userprofileHome
@@ -95,7 +95,7 @@
             userprofileHome.Size = new Size(157, 17);
             userprofileHome.TabIndex = 2;
             userprofileHome.TabStop = true;
-            userprofileHome.Text = "Set HOME to USERPROFILE";
+            userprofileHome.Text = "&Set HOME to USERPROFILE";
             userprofileHome.UseVisualStyleBackColor = true;
             // 
             // defaultHome
@@ -106,7 +106,7 @@
             defaultHome.Size = new Size(129, 17);
             defaultHome.TabIndex = 1;
             defaultHome.TabStop = true;
-            defaultHome.Text = "Use default for HOME";
+            defaultHome.Text = "&Use default for HOME";
             defaultHome.UseVisualStyleBackColor = true;
             // 
             // label51

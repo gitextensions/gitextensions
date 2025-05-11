@@ -2167,7 +2167,7 @@ Suitable for some config files modified locally.</source>
   <file datatype="plaintext" original="FolderBrowserButton" source-language="en">
     <body>
       <trans-unit id="buttonBrowse.Text">
-        <source>Browse...</source>
+        <source>&amp;Browse...</source>
         <target />
       </trans-unit>
     </body>
@@ -2238,10 +2238,6 @@ You can not push unless you are a collaborator. {2}</source>
       <trans-unit id="_strWillCloneWithPushAccess.Text">
         <source>Will clone {0} into {1}.
 You will have push access. {2}</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="browseForCloneToDirbtn.Text">
-        <source>Browse...</source>
         <target />
       </trans-unit>
       <trans-unit id="cloneBtn.Text">
@@ -3873,7 +3869,7 @@ Do you want to open the new repository "{0}" now?</source>
         <target />
       </trans-unit>
       <trans-unit id="brachLabel.Text">
-        <source>&amp;Branch:</source>
+        <source>Br&amp;anch:</source>
         <target />
       </trans-unit>
       <trans-unit id="cbDownloadFullHistory.Text">
@@ -5010,7 +5006,7 @@ Do you want Git Extensions to help locate the correct folder?</source>
         <target />
       </trans-unit>
       <trans-unit id="defaultHome.Text">
-        <source>Use default for HOME</source>
+        <source>&amp;Use default for HOME</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBox8.Text">
@@ -5028,11 +5024,11 @@ Change the default behaviour only if you experience problems.</source>
         <target />
       </trans-unit>
       <trans-unit id="otherHome.Text">
-        <source>Other</source>
+        <source>&amp;Other</source>
         <target />
       </trans-unit>
       <trans-unit id="userprofileHome.Text">
-        <source>Set HOME to USERPROFILE</source>
+        <source>&amp;Set HOME to USERPROFILE</source>
         <target />
       </trans-unit>
     </body>
@@ -5651,10 +5647,6 @@ command "git help shortlog"</source>
         <source>The selected directory is not a valid git repository.</source>
         <target />
       </trans-unit>
-      <trans-unit id="folderBrowserButton.Text">
-        <source>&amp;Browse...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="folderGoUpButton.toolTip1">
         <source>Go to parent directory...</source>
         <target />
@@ -5951,7 +5943,7 @@ This will initialize and update all submodules recursive.</source>
         <target />
       </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
-        <source>Load SSH key</source>
+        <source>&amp;Load SSH key</source>
         <target />
       </trans-unit>
       <trans-unit id="LocalColumn.HeaderText">
@@ -6126,6 +6118,10 @@ Would you like to do it now?</source>
       </trans-unit>
       <trans-unit id="ckForceWithLease.Text">
         <source>&amp;Force with lease</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="folderBrowserButton1.Text">
+        <source>Bro&amp;wse...</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBox2.Text">
@@ -6594,7 +6590,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
         <target />
       </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
-        <source>Load SSH key</source>
+        <source>&amp;Load SSH key</source>
         <target />
       </trans-unit>
       <trans-unit id="MergeWith.HeaderText">
@@ -6610,19 +6606,19 @@ Do you want to register the host's fingerprint and restart the process?</source>
         <target />
       </trans-unit>
       <trans-unit id="Save.Text">
-        <source>Save changes</source>
+        <source>&amp;Save changes</source>
         <target />
       </trans-unit>
       <trans-unit id="SaveDefaultPushPull.Text">
-        <source>Save changes</source>
+        <source>&amp;Save changes</source>
         <target />
       </trans-unit>
       <trans-unit id="SshBrowse.Text">
-        <source> Browse...</source>
+        <source>Brows&amp;e...</source>
         <target />
       </trans-unit>
       <trans-unit id="TestConnection.Text">
-        <source>Test connection</source>
+        <source>&amp;Test connection</source>
         <target />
       </trans-unit>
       <trans-unit id="_btnDeleteTooltip.Text">
@@ -6663,11 +6659,11 @@ Inactive remote is completely invisible to git.</source>
         <target />
       </trans-unit>
       <trans-unit id="_labelUrlAsFetch.Text">
-        <source>Fetch Url</source>
+        <source>Fetch &amp;Url</source>
         <target />
       </trans-unit>
       <trans-unit id="_labelUrlAsFetchPush.Text">
-        <source>Url</source>
+        <source>&amp;Url</source>
         <target />
       </trans-unit>
       <trans-unit id="_lvgDisabledHeader.Text">
@@ -6709,7 +6705,7 @@ Value has been reset to empty value.</source>
         <target />
       </trans-unit>
       <trans-unit id="btnRemoteColor.Text">
-        <source>Set color</source>
+        <source>Set &amp;color</source>
         <target />
       </trans-unit>
       <trans-unit id="btnRemoteColorReset.Text">
@@ -6721,7 +6717,11 @@ Value has been reset to empty value.</source>
         <target />
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
-        <source>Separate Push Url</source>
+        <source>Sep&amp;arate Push Url</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="folderBrowserButtonPushUrl.Text">
+        <source>Bro&amp;wse...</source>
         <target />
       </trans-unit>
       <trans-unit id="gbMgtPanel.Text">
@@ -6729,31 +6729,31 @@ Value has been reset to empty value.</source>
         <target />
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Name</source>
+        <source>&amp;Name</source>
         <target />
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Url</source>
+        <source>&amp;Url</source>
         <target />
       </trans-unit>
       <trans-unit id="label3.Text">
-        <source>Private key file</source>
+        <source>Private &amp;key file</source>
         <target />
       </trans-unit>
       <trans-unit id="label4.Text">
-        <source>Local branch name</source>
+        <source>&amp;Local branch name</source>
         <target />
       </trans-unit>
       <trans-unit id="label5.Text">
-        <source>Remote repository</source>
+        <source>&amp;Remote repository</source>
         <target />
       </trans-unit>
       <trans-unit id="label6.Text">
-        <source>Default merge with</source>
+        <source>&amp;Default merge with</source>
         <target />
       </trans-unit>
       <trans-unit id="labelPushUrl.Text">
-        <source>Push Url</source>
+        <source>&amp;Push Url</source>
         <target />
       </trans-unit>
       <trans-unit id="lblMgtPuttyPanelHeader.Text">
@@ -8845,7 +8845,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
-        <source>Fetch and prune</source>
+        <source>Fetch and &amp;prune</source>
         <target />
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllRemotes.Text">

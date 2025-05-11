@@ -43,7 +43,7 @@
             buttonBrowse.Name = "buttonBrowse";
             buttonBrowse.Size = new Size(100, 25);
             buttonBrowse.TabIndex = 5;
-            buttonBrowse.Text = "Browse...";
+            buttonBrowse.Text = "&Browse...";
             buttonBrowse.UseVisualStyleBackColor = true;
             buttonBrowse.Click += buttonBrowse_Click;
             // 
