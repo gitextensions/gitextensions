@@ -365,6 +365,7 @@ namespace GitUI.Hotkey
                     Hk(RevisionDiffControl.Command.OpenWorkingDirectoryFileWith, OpenFileWithHotkey),
                     Hk(RevisionDiffControl.Command.ResetSelectedFiles, Keys.R),
                     Hk(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep, Keys.Control | Keys.Shift | Keys.F),
+                    Hk(RevisionDiffControl.Command.RenameMove, Keys.F2),
                     Hk(RevisionDiffControl.Command.SelectFirstGroupChanges, Keys.Control | Keys.A),
                     Hk(RevisionDiffControl.Command.ShowFileTree, Keys.T),
                     Hk(RevisionDiffControl.Command.ShowHistory, ShowHistoryHotkey),
