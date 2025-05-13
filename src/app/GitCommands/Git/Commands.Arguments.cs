@@ -404,15 +404,6 @@ namespace GitCommands.Git
             };
         }
 
-        public static ArgumentString Move(string oldName, string newName)
-        {
-            return new GitArgumentBuilder("mv")
-            {
-                oldName.Quote(),
-                newName.Quote()
-            };
-        }
-
         /// <summary>
         ///  Creates a <c>git push</c> command using the specified parameters.</summary>
         /// <param name="remote">The remote repository that is the destination of the push operation.</param>

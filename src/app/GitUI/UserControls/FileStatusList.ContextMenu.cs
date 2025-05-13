@@ -3,7 +3,7 @@
 using System.Text;
 using GitCommands;
 using GitCommands.Git;
-using GitCommands.Utils;
+using GitCommands.Git.Extended;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -673,7 +673,9 @@ partial class FileStatusList
 
     private void Move_Click(object sender, EventArgs e)
     {
-        string? oldName = SelectedGitItem?.Name ?? SelectedFolder?.Value;
+        string? oldName = SelectedGitItem?.Name;
+        bool isFolder = oldName is null;
+        oldName ??= SelectedFolder?.Value;
         if (oldName is null)
         {
             return;
@@ -683,34 +685,29 @@ partial class FileStatusList
         using IUserInputPrompt prompt = UICommands.GetRequiredService<ISimplePromptCreator>().Create(title, label: _newName.Text, defaultValue: oldName);
 
         // Repeat if name not different or if failed, let the user cancel explicitely
-        while (true)
+        while (prompt.ShowDialog(this) == DialogResult.OK)
         {
-            DialogResult result = prompt.ShowDialog(this);
-            if (result != DialogResult.OK)
-            {
-                return;
-            }
-
-            // Git does not support changing only the case of folders in Windows
-            string newName = prompt.UserInput;
-            if (oldName == newName || (SelectedFolder is not null && string.Compare(oldName, newName, ignoreCase: true) == 0 && IsRunningOnNativeWindows()))
+            MoveCommand.Arguments arguments = new(isFolder, oldName, NewName: prompt.UserInput);
+            MoveCommand moveCommand = new(Module.GitExecutable);
+            if (!moveCommand.Validate(arguments))
             {
                 continue;
             }
 
-            ExecutionResult executionResult = Module.GitExecutable.Execute(Commands.Move(oldName, newName), throwOnErrorExit: false);
-            RequestRefresh();
-            if (executionResult.ExitedSuccessfully)
+            try
             {
-                break;
+                moveCommand.Execute(arguments);
+                return;
             }
-
-            MessageBoxes.ShowError(this, executionResult.StandardError, title);
+            catch (Exception exception)
+            {
+                MessageBoxes.ShowError(this, exception.Message, title);
+            }
+            finally
+            {
+                RequestRefresh();
+            }
         }
-
-        return;
-
-        bool IsRunningOnNativeWindows() => EnvUtils.RunningOnWindows() && !PathUtil.IsWslPath(Module.WorkingDir);
     }
 
     private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object? sender)
