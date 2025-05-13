@@ -8,7 +8,6 @@ namespace GitUI
         private static readonly ConditionalWeakTable<ToolStrip, IMenuItemBackgroundFilter> MenuItemBackgroundFilters = [];
         private static readonly ConditionalWeakTable<ToolStrip, ToolStripExSystemRenderer> ExtendedSystemRenderers = [];
         private static readonly ConditionalWeakTable<ToolStrip, ToolStripExProfessionalRenderer> ExtendedProfessionalRenderers = [];
-        private static readonly ConditionalWeakTable<ToolStrip, ToolStripExThemeAwareRenderer> ExtendedThemeAwareRenderers = [];
 
         public static void AttachMenuItemBackgroundFilter(this ToolStrip toolStrip, IMenuItemBackgroundFilter? value)
         {
@@ -30,14 +29,6 @@ namespace GitUI
             else if (toolStrip.Renderer is ToolStripProfessionalRenderer and not ToolStripExProfessionalRenderer)
             {
                 toolStrip.Renderer = ExtendedProfessionalRenderers.GetOrCreateValue(toolStrip);
-            }
-        }
-
-        internal static void UseExtendedThemeAwareRenderer(this ToolStrip toolStrip)
-        {
-            if (toolStrip.Renderer is not ToolStripExThemeAwareRenderer)
-            {
-                toolStrip.Renderer = ExtendedThemeAwareRenderers.GetOrCreateValue(toolStrip);
             }
         }
 
