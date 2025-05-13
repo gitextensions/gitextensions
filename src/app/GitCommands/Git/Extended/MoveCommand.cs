@@ -12,59 +12,45 @@ public sealed class MoveCommand(IExecutable _gitExecutable) : IExtendedCommand<M
 {
     public record Arguments(bool IsFolder, string OldName, string NewName);
 
-    private static void CreateDestinationFolders(Arguments arguments, string workingDir)
+    private static void CreateDestinationFolder(Arguments arguments, string workingDir)
     {
-        // single file: "old" -> "new"
-        // folder: "old" -> "new/" renames the folder
-        //         "old" -> "new" results in "new/old"
-        if (!arguments.IsFolder)
+        string? relativePath = Path.GetDirectoryName(arguments.NewName);
+        if (string.IsNullOrWhiteSpace(relativePath))
         {
-            CreateDestinationFolder(Path.GetDirectoryName(arguments.NewName));
-        }
-        else if (arguments.NewName.EndsWith('/'))
-        {
-            CreateDestinationFolder(Path.GetDirectoryName(Path.GetDirectoryName(arguments.NewName)));
-        }
-        else
-        {
-            CreateDestinationFolder(arguments.NewName);
+            return;
         }
 
-        return;
-
-        void CreateDestinationFolder(string? relativePath)
+        string fullPath = Path.Combine(workingDir, relativePath);
+        if (!Directory.Exists(fullPath))
         {
-            if (string.IsNullOrEmpty(relativePath))
-            {
-                return;
-            }
-
-            string fullPath = Path.Combine(workingDir, relativePath);
-            if (!Directory.Exists(fullPath))
-            {
-                Directory.CreateDirectory(fullPath);
-            }
+            Directory.CreateDirectory(fullPath);
         }
     }
 
     public void Execute(Arguments arguments)
     {
-        CreateDestinationFolders(arguments, _gitExecutable.WorkingDir);
+        CreateDestinationFolder(arguments, _gitExecutable.WorkingDir);
         _gitExecutable.Execute(GetArgumentString(arguments));
     }
 
     public static ArgumentString GetArgumentString(Arguments arguments)
     {
+        // single file: "old" -> "new"
+        // folder: "old" -> "new/" renames the folder
+        //         "old" -> "new" results in "new/old" - to be avoided because unexpected
+        string newName = arguments.IsFolder ? arguments.NewName.EnsureTrailingPathSeparator(posix: true) : arguments.NewName;
         return new GitArgumentBuilder("mv")
         {
             arguments.OldName.Quote(),
-            arguments.NewName.Quote()
+            newName.Quote()
         };
     }
 
     public bool Validate(Arguments arguments)
     {
-        if (arguments.OldName == arguments.NewName)
+        if (string.IsNullOrWhiteSpace(arguments.OldName)
+            || string.IsNullOrWhiteSpace(arguments.NewName)
+            || arguments.OldName == arguments.NewName)
         {
             return false;
         }

@@ -97,13 +97,13 @@ namespace GitCommands
         /// This method can be used to add (or keep) a trailing path separator character to a directory path.
         /// </summary>
         [return: NotNullIfNotNull("dirPath")]
-        public static string? EnsureTrailingPathSeparator(this string? dirPath)
+        public static string? EnsureTrailingPathSeparator(this string? dirPath, bool posix = false)
         {
             if (!string.IsNullOrEmpty(dirPath) &&
                 dirPath[^1] != NativeDirectorySeparatorChar &&
                 dirPath[^1] != PosixDirectorySeparatorChar)
             {
-                dirPath += NativeDirectorySeparatorChar;
+                dirPath += posix ? PosixDirectorySeparatorChar : NativeDirectorySeparatorChar;
             }
 
             return dirPath;
