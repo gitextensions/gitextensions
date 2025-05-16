@@ -8,6 +8,7 @@ using System.Runtime.ExceptionServices;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
@@ -3153,7 +3154,11 @@ namespace GitUI
             });
 
             using FormProcess formProcess = new(UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
-            formProcess.ProcessEnvVariables.Add("GIT_SEQUENCE_EDITOR", string.Format("sed -i -re '0,/pick/s//{0}/'", command));
+
+            const string envVarNameGitSequenceEditor = "GIT_SEQUENCE_EDITOR";
+            formProcess.ProcessEnvVariables.Add(envVarNameGitSequenceEditor, string.Format("sed -i -re '0,/pick/s//{0}/'", command));
+            formProcess.ProcessEnvVariables.ForwardEnvironmentVariableToWsl(Module.WorkingDir, envVarNameGitSequenceEditor);
+
             formProcess.ShowDialog(ParentForm);
             PerformRefreshRevisions();
         }
