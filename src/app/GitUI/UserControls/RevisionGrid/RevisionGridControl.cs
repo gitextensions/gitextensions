@@ -8,6 +8,7 @@ using System.Runtime.ExceptionServices;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
@@ -3157,20 +3158,7 @@ namespace GitUI
 
             const string envVarNameGitSequenceEditor = "GIT_SEQUENCE_EDITOR";
             formProcess.ProcessEnvVariables.Add(envVarNameGitSequenceEditor, string.Format("sed -i -re '0,/pick/s//{0}/'", command));
-
-            // Tell Windows to forward GIT_SEQUENCE_EDITOR to WSL by means of also setting WSLENV
-            if (PathUtil.IsWslPath(Module.WorkingDir))
-            {
-                const string envVarNameWslEnvControl = "WSLENV";
-                string wslEnvControlValue = envVarNameGitSequenceEditor;
-                if (Environment.GetEnvironmentVariable(envVarNameWslEnvControl) is string existingWslEnvValue)
-                {
-                    wslEnvControlValue = $"{existingWslEnvValue}:{wslEnvControlValue}";
-                }
-
-                formProcess.ProcessEnvVariables.Remove(envVarNameWslEnvControl);
-                formProcess.ProcessEnvVariables.Add(envVarNameWslEnvControl, wslEnvControlValue);
-            }
+            formProcess.ProcessEnvVariables.ForwardEnvironmentVariableToWsl(Module.WorkingDir, envVarNameGitSequenceEditor);
 
             formProcess.ShowDialog(ParentForm);
             PerformRefreshRevisions();
