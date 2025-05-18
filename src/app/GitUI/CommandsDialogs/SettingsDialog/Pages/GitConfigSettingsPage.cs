@@ -1,11 +1,13 @@
 ﻿#nullable enable
 
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Settings;
+using GitCommands.Utils;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
 using ResourceManager;
@@ -67,7 +69,52 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             CommonLogic.FillEncodings(Global_FilesEncoding);
 
+            const string gitCredentialHelperPrefix = "git-credential-";
+            string[] linuxCredentialHelpers = ["oauth"];
+            if (EnvUtils.RunningOnWindows())
+            {
+                cbxCredentialHelper.Items.AddRange(PathUtil.IsWslPath(Module?.WorkingDir)
+                    ? [.. FindGitCredentialHelpers().Select(path => path.ToWslPath().Replace(" ", @"\ ")), .. linuxCredentialHelpers]
+                    : [.. FindGitCredentialHelpers().Select(GetCredentialHelperName)]);
+            }
+            else
+            {
+                cbxCredentialHelper.Items.AddRange(linuxCredentialHelpers);
+            }
+
+            cbxCredentialHelper.Items.AddRange(["store", "cache"]);
+
             GlobalEditor.Items.AddRange([.. EditorHelper.GetEditors().Select(AdaptCommandIfWsl).WhereNotNull()]);
+
+            return;
+
+            static IEnumerable<string> FindGitCredentialHelpers()
+            {
+                try
+                {
+                    string? gitDir = Path.GetDirectoryName(AppSettings.GitCommand);
+                    if (gitDir?.EndsWith("bin") is true)
+                    {
+                        gitDir = Path.GetDirectoryName(gitDir);
+                    }
+
+                    return !Directory.Exists(gitDir)
+                        ? []
+                        : Directory.GetFiles(gitDir, $"{gitCredentialHelperPrefix}*.exe", SearchOption.AllDirectories)
+                            .Where(path => !path.Contains("git-credential-helper-selector"));
+                }
+                catch (Exception exception)
+                {
+                    Trace.Write(exception);
+                    return [];
+                }
+            }
+
+            static string GetCredentialHelperName(string path)
+            {
+                string name = Path.GetFileNameWithoutExtension(path);
+                return name.StartsWith(gitCredentialHelperPrefix) ? name[gitCredentialHelperPrefix.Length..] : path;
+            }
         }
 
         public static SettingsPageReference GetPageReference()
@@ -81,6 +128,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             GlobalUserName.Enabled = canFindGitCmd;
             GlobalUserEmail.Enabled = canFindGitCmd;
+            cbxCredentialHelper.Enabled = canFindGitCmd;
             GlobalEditor.Enabled = canFindGitCmd;
             txtCommitTemplatePath.Enabled = canFindGitCmd;
             _NO_TRANSLATE_cboMergeTool.Enabled = canFindGitCmd;
@@ -91,7 +139,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             if (ReadOnly)
             {
                 // Unselect has no effect in SettingsToPage because ComboBox asynchronously lives its own life
-                GlobalEditor.Select(start: GlobalEditor.Text.Length, length: 0);
+                ComboBox[] comboBoxes = [cbxCredentialHelper, GlobalEditor];
+                foreach (ComboBox comboBox in comboBoxes)
+                {
+                    comboBox.Select(start: comboBox.Text.Length, length: 0);
+                }
             }
         }
 
@@ -107,6 +159,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             GlobalUserName.Text = CurrentSettings.GetValue(SettingKeyString.UserName);
             GlobalUserEmail.Text = CurrentSettings.GetValue(SettingKeyString.UserEmail);
+            cbxCredentialHelper.Text = CurrentSettings.GetValue("credential.helper");
             GlobalEditor.Text = CurrentSettings.GetValue("core.editor");
             txtCommitTemplatePath.Text = CurrentSettings.GetValue("commit.template");
 
@@ -148,6 +201,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CurrentSettings.SetValue(SettingKeyString.UserName, GlobalUserName.Text);
             CurrentSettings.SetValue(SettingKeyString.UserEmail, GlobalUserEmail.Text);
             CurrentSettings.SetValue("commit.template", txtCommitTemplatePath.Text);
+            CurrentSettings.SetValue("credential.helper", cbxCredentialHelper.Text);
             CurrentSettings.SetValue("core.editor", GlobalEditor.Text.ConvertPathToGitSetting());
 
             Validates.NotNull(_diffMergeToolConfigurationManager);

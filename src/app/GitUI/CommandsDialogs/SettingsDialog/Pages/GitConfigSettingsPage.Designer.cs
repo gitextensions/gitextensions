@@ -66,6 +66,8 @@
             lblMergeToolCommand = new Label();
             lblMergeToolPath = new Label();
             lblMergeTool = new Label();
+            lblCredentialHelper = new Label();
+            cbxCredentialHelper = new ComboBox();
             InvalidGitPathGlobal.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(pictureBox1)).BeginInit();
             groupBoxLineEndings.SuspendLayout();
@@ -426,38 +428,41 @@
             tableLayoutPanelGitConfig.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanelGitConfig.Controls.Add(label3, 0, 0);
             tableLayoutPanelGitConfig.Controls.Add(GlobalUserName, 1, 0);
+            tableLayoutPanelGitConfig.Controls.Add(InvalidGitPathGlobal, 2, 0);
             tableLayoutPanelGitConfig.Controls.Add(label4, 0, 1);
             tableLayoutPanelGitConfig.Controls.Add(GlobalUserEmail, 1, 1);
-            tableLayoutPanelGitConfig.Controls.Add(label6, 0, 2);
-            tableLayoutPanelGitConfig.Controls.Add(GlobalEditor, 1, 2);
-            tableLayoutPanelGitConfig.Controls.Add(lblMergeTool, 0, 3);
-            tableLayoutPanelGitConfig.Controls.Add(_NO_TRANSLATE_cboMergeTool, 1, 3);
-            tableLayoutPanelGitConfig.Controls.Add(lblMergeToolPath, 0, 4);
-            tableLayoutPanelGitConfig.Controls.Add(txtMergeToolPath, 1, 4);
-            tableLayoutPanelGitConfig.Controls.Add(btnMergeToolBrowse, 2, 4);
-            tableLayoutPanelGitConfig.Controls.Add(lblMergeToolCommand, 0, 5);
-            tableLayoutPanelGitConfig.Controls.Add(txtMergeToolCommand, 1, 5);
-            tableLayoutPanelGitConfig.Controls.Add(btnMergeToolCommandSuggest, 2, 5);
-            tableLayoutPanelGitConfig.Controls.Add(lblDiffTool, 0, 6);
-            tableLayoutPanelGitConfig.Controls.Add(_NO_TRANSLATE_cboDiffTool, 1, 6);
-            tableLayoutPanelGitConfig.Controls.Add(lblDiffToolPath, 0, 7);
-            tableLayoutPanelGitConfig.Controls.Add(txtDiffToolPath, 1, 7);
-            tableLayoutPanelGitConfig.Controls.Add(btnDiffToolBrowse, 2, 7);
-            tableLayoutPanelGitConfig.Controls.Add(lblDiffToolCommand, 0, 8);
-            tableLayoutPanelGitConfig.Controls.Add(txtDiffToolCommand, 1, 8);
-            tableLayoutPanelGitConfig.Controls.Add(btnDiffToolCommandSuggest, 2, 8);
-            tableLayoutPanelGitConfig.Controls.Add(lblCommitTemplatePath, 0, 9);
-            tableLayoutPanelGitConfig.Controls.Add(txtCommitTemplatePath, 1, 9);
-            tableLayoutPanelGitConfig.Controls.Add(btnCommitTemplateBrowse, 2, 9);
-            tableLayoutPanelGitConfig.Controls.Add(groupBoxLineEndings, 0, 10);
-            tableLayoutPanelGitConfig.Controls.Add(label60, 0, 11);
-            tableLayoutPanelGitConfig.Controls.Add(InvalidGitPathGlobal, 2, 0);
-            tableLayoutPanelGitConfig.Controls.Add(Global_FilesEncoding, 1, 11);
-            tableLayoutPanelGitConfig.Controls.Add(ConfigureEncoding, 2, 11);
+            tableLayoutPanelGitConfig.Controls.Add(lblCredentialHelper, 0, 2);
+            tableLayoutPanelGitConfig.Controls.Add(cbxCredentialHelper, 1, 2);
+            tableLayoutPanelGitConfig.Controls.Add(label6, 0, 3);
+            tableLayoutPanelGitConfig.Controls.Add(GlobalEditor, 1, 3);
+            tableLayoutPanelGitConfig.Controls.Add(lblMergeTool, 0, 4);
+            tableLayoutPanelGitConfig.Controls.Add(_NO_TRANSLATE_cboMergeTool, 1, 4);
+            tableLayoutPanelGitConfig.Controls.Add(lblMergeToolPath, 0, 5);
+            tableLayoutPanelGitConfig.Controls.Add(txtMergeToolPath, 1, 5);
+            tableLayoutPanelGitConfig.Controls.Add(btnMergeToolBrowse, 2, 5);
+            tableLayoutPanelGitConfig.Controls.Add(lblMergeToolCommand, 0, 6);
+            tableLayoutPanelGitConfig.Controls.Add(txtMergeToolCommand, 1, 6);
+            tableLayoutPanelGitConfig.Controls.Add(btnMergeToolCommandSuggest, 2, 6);
+            tableLayoutPanelGitConfig.Controls.Add(lblDiffTool, 0, 7);
+            tableLayoutPanelGitConfig.Controls.Add(_NO_TRANSLATE_cboDiffTool, 1, 7);
+            tableLayoutPanelGitConfig.Controls.Add(lblDiffToolPath, 0, 8);
+            tableLayoutPanelGitConfig.Controls.Add(txtDiffToolPath, 1, 8);
+            tableLayoutPanelGitConfig.Controls.Add(btnDiffToolBrowse, 2, 8);
+            tableLayoutPanelGitConfig.Controls.Add(lblDiffToolCommand, 0, 9);
+            tableLayoutPanelGitConfig.Controls.Add(txtDiffToolCommand, 1, 9);
+            tableLayoutPanelGitConfig.Controls.Add(btnDiffToolCommandSuggest, 2, 9);
+            tableLayoutPanelGitConfig.Controls.Add(lblCommitTemplatePath, 0, 10);
+            tableLayoutPanelGitConfig.Controls.Add(txtCommitTemplatePath, 1, 10);
+            tableLayoutPanelGitConfig.Controls.Add(btnCommitTemplateBrowse, 2, 10);
+            tableLayoutPanelGitConfig.Controls.Add(groupBoxLineEndings, 0, 11);
+            tableLayoutPanelGitConfig.Controls.Add(label60, 0, 12);
+            tableLayoutPanelGitConfig.Controls.Add(Global_FilesEncoding, 1, 12);
+            tableLayoutPanelGitConfig.Controls.Add(ConfigureEncoding, 2, 12);
             tableLayoutPanelGitConfig.Dock = DockStyle.Top;
             tableLayoutPanelGitConfig.Location = new Point(0, 0);
             tableLayoutPanelGitConfig.Name = "tableLayoutPanelGitConfig";
-            tableLayoutPanelGitConfig.RowCount = 13;
+            tableLayoutPanelGitConfig.RowCount = 14;
+            tableLayoutPanelGitConfig.RowStyles.Add(new RowStyle());
             tableLayoutPanelGitConfig.RowStyles.Add(new RowStyle());
             tableLayoutPanelGitConfig.RowStyles.Add(new RowStyle());
             tableLayoutPanelGitConfig.RowStyles.Add(new RowStyle());
@@ -483,6 +488,22 @@
             ConfigureEncoding.Text = "Configure";
             ConfigureEncoding.UseVisualStyleBackColor = true;
             ConfigureEncoding.Click += ConfigureEncoding_Click;
+            // 
+            // lblCredentialHelper
+            // 
+            lblCredentialHelper.Anchor = AnchorStyles.Left;
+            lblCredentialHelper.AutoSize = true;
+            lblCredentialHelper.Location = new Point(3, 59);
+            lblCredentialHelper.Name = "lblCredentialHelper";
+            lblCredentialHelper.Size = new Size(34, 13);
+            lblCredentialHelper.Text = "Credential helper";
+            // 
+            // cbxCredentialHelper
+            // 
+            cbxCredentialHelper.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            cbxCredentialHelper.Location = new Point(129, 55);
+            cbxCredentialHelper.Name = "cbxCredentialHelper";
+            cbxCredentialHelper.Size = new Size(902, 21);
             // 
             // GitConfigSettingsPage
             // 
@@ -545,5 +566,7 @@
         private Label lblMergeToolCommand;
         private Label lblMergeToolPath;
         private Label lblMergeTool;
+        private Label lblCredentialHelper;
+        private ComboBox cbxCredentialHelper;
     }
 }

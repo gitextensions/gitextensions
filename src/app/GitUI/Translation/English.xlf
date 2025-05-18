@@ -8191,6 +8191,10 @@ global settings.
         <source>Path to commit template</source>
         <target />
       </trans-unit>
+      <trans-unit id="lblCredentialHelper.Text">
+        <source>Credential helper</source>
+        <target />
+      </trans-unit>
       <trans-unit id="lblDiffTool.Text">
         <source>Difftool</source>
         <target />
