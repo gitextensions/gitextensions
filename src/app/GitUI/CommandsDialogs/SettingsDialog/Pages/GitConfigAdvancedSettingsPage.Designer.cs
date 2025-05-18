@@ -34,6 +34,8 @@
             checkBoxRebaseAutosquash = new CheckBox();
             checkBoxUpdateRefs = new CheckBox();
             checkboxMergeAutoStash = new CheckBox();
+            checkBoxReReReEnabled = new CheckBox();
+            checkBoxReReReAutoUpdate = new CheckBox();
             SuspendLayout();
             // 
             // checkBoxRebaseAutostash
@@ -102,10 +104,34 @@
             checkboxMergeAutoStash.ThreeState = true;
             checkboxMergeAutoStash.UseVisualStyleBackColor = true;
             // 
+            // checkBoxReReReEnabled
+            // 
+            checkBoxReReReEnabled.AutoSize = true;
+            checkBoxReReReEnabled.Location = new Point(19, 164);
+            checkBoxReReReEnabled.Name = "checkBoxReReReEnabled";
+            checkBoxReReReEnabled.Size = new Size(275, 19);
+            checkBoxReReReEnabled.TabIndex = 7;
+            checkBoxReReReEnabled.Text = "Reuse recorded resolution of conflicted merges";
+            checkBoxReReReEnabled.ThreeState = true;
+            checkBoxReReReEnabled.UseVisualStyleBackColor = true;
+            // 
+            // checkBoxReReReAutoUpdate
+            // 
+            checkBoxReReReAutoUpdate.AutoSize = true;
+            checkBoxReReReAutoUpdate.Location = new Point(19, 189);
+            checkBoxReReReAutoUpdate.Name = "checkBoxReReReAutoUpdate";
+            checkBoxReReReAutoUpdate.Size = new Size(350, 19);
+            checkBoxReReReAutoUpdate.TabIndex = 8;
+            checkBoxReReReAutoUpdate.Text = "Automatically apply recorded resolution of conflicted merges";
+            checkBoxReReReAutoUpdate.ThreeState = true;
+            checkBoxReReReAutoUpdate.UseVisualStyleBackColor = true;
+            // 
             // GitConfigAdvancedSettingsPage
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
+            Controls.Add(checkBoxReReReAutoUpdate);
+            Controls.Add(checkBoxReReReEnabled);
             Controls.Add(checkboxMergeAutoStash);
             Controls.Add(checkBoxRebaseAutostash);
             Controls.Add(checkBoxFetchPrune);
@@ -127,5 +153,7 @@
         private CheckBox checkBoxRebaseAutosquash;
         private CheckBox checkBoxUpdateRefs;
         private CheckBox checkboxMergeAutoStash;
+        private CheckBox checkBoxReReReEnabled;
+        private CheckBox checkBoxReReReAutoUpdate;
     }
 }
