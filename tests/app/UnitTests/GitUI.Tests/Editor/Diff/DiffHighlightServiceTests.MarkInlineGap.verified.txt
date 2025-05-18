@@ -2,33 +2,33 @@
   {
     Item1: [
       {
-        Offset: 388,
+        Offset: 396,
         Length: 106
       },
       {
-        Offset: 707,
+        Offset: 718,
         Length: 104
       },
       {
-        Offset: 812,
+        Offset: 824,
         Length: 1
       }
     ],
     Item2: [
       {
-        Offset: 967,
+        Offset: 984,
         Length: 106
       },
       {
-        Offset: 1074,
+        Offset: 1092,
         Length: 1
       },
       {
-        Offset: 1147,
+        Offset: 1167,
         Length: 1
       },
       {
-        Offset: 1149,
+        Offset: 1170,
         Length: 104
       }
     ]
@@ -36,13 +36,13 @@
   {
     Item1: [
       {
-        Offset: 1580,
+        Offset: 1609,
         Length: 10
       }
     ],
     Item2: [
       {
-        Offset: 1591,
+        Offset: 1621,
         Length: 1
       }
     ]
@@ -50,13 +50,13 @@
   {
     Item1: [
       {
-        Offset: 1621,
+        Offset: 1653,
         Length: 25
       }
     ],
     Item2: [
       {
-        Offset: 1647,
+        Offset: 1680,
         Length: 1
       }
     ]

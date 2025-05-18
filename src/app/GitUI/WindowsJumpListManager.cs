@@ -107,7 +107,7 @@ namespace GitUI
 
                 // sanitise
                 StringBuilder sb = new(repositoryDescription);
-                sb.Replace(@":\", "_");
+                sb.Replace(@"\\wsl$\", "").Replace(@":\", "_");
                 foreach (char c in Path.GetInvalidFileNameChars())
                 {
                     sb.Replace(c, '_');
