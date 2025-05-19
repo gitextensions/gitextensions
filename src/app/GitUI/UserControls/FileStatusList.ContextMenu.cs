@@ -1158,7 +1158,8 @@ partial class FileStatusList
 
     public void UpdateStatusOfMenuItems()
     {
-        ContextMenuSelectionInfo selectionInfo = GetSelectionInfo([.. SelectedItems], SelectedFolder, isBareRepository: Module.IsBareRepository(), supportLinePatching: _getSupportLinePatching?.Invoke() ?? false, _fullPathResolver);
+        FileStatusItem[] selectedItems = [.. SelectedItems];
+        ContextMenuSelectionInfo selectionInfo = GetSelectionInfo(selectedItems, SelectedFolder, isBareRepository: Module.IsBareRepository(), supportLinePatching: _getSupportLinePatching?.Invoke() ?? false, _fullPathResolver);
 
         // Many options have no meaning for artificial commits or submodules
         // Hide the obviously no action options when single selected, handle them in actions if multi select
@@ -1209,25 +1210,15 @@ partial class FileStatusList
         tsmiDeleteFile.Visible = tsmiDeleteFile.Enabled;
 
         tsmiCopyPaths.Enabled = _revisionDiffController.ShouldShowMenuCopyFileName(selectionInfo);
-        tsmiShowInFolder.Enabled = false;
-
-        foreach (FileStatusItem item in SelectedItems)
-        {
-            string? filePath = _fullPathResolver.Resolve(item.Item.Name);
-            if (filePath is not null && FormBrowseUtil.FileOrParentDirectoryExists(filePath))
-            {
-                tsmiShowInFolder.Enabled = true;
-                break;
-            }
-        }
+        tsmiShowInFolder.Enabled = selectedItems.Any(item => _fullPathResolver.Resolve(item.Item.Name) is string filePath && FormBrowseUtil.FileOrParentDirectoryExists(filePath));
 
         // Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
         tsmiShowInFileTree.Visible = _openInFileTreeTab_AsBlame is not null && _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         tsmiFilterFileInGrid.Enabled = _filterFileInGrid is not null && _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
         tsmiFileHistory.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
         tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame.Value || _blame is null
-                ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
-                : _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
+            ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
+            : _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         if (!tsmiBlame.Enabled)
         {
             tsmiBlame.Checked = false;
@@ -1257,6 +1248,8 @@ partial class FileStatusList
         tsmiAddFileToGitInfoExclude.Visible = canIgnoreFiles;
         tsmiSkipWorktree.Visible = canIgnoreFiles && selectionInfo.IsAnyTracked;
         tsmiAssumeUnchanged.Visible = canIgnoreFiles && selectionInfo.IsAnyTracked;
+        tsmiSkipWorktree.Checked = selectedItems.Any(item => item.Item.IsSkipWorktree);
+        tsmiAssumeUnchanged.Checked = selectedItems.Any(item => item.Item.IsAssumeUnchanged);
 
         tsmiStopTracking.Visible = canStopTracking;
 
