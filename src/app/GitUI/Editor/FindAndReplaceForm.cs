@@ -176,6 +176,11 @@ namespace GitUI
                 else if (isMultiFileSearch)
                 {
                     range = null;
+                    if (!Visible)
+                    {
+                        return range;
+                    }
+
                     if (currentItem is not null && startItem is null)
                     {
                         startItem = currentItem;
