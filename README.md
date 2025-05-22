@@ -15,7 +15,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 
 <a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a>
 
-### Next Version ([build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To%3A-build-instructions))
+### Next Version ([build instructions](https://github.com/gitextensions/gitextensions/wiki/Build-instructions))
 
 <table>
   <tr>
@@ -56,9 +56,9 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
   </tr>
 </table>
 
-### Older versions 
+### Older versions
 
-See [build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To%3A-build-instructions)
+See [build instructions](https://github.com/gitextensions/gitextensions/wiki/Build-instructions)
 
 
 ## Downloads
