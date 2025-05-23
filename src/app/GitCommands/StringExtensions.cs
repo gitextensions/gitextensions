@@ -13,6 +13,13 @@ namespace System
         // NOTE ordinal string comparison is the default as most string comparison in GE is against static ASCII output from git.exe
 
         /// <summary>
+        /// Returns <paramref name="str"/> without the mnemonic marker "&amp;".
+        /// </summary>
+        [Pure]
+        public static string RemoveMnemonicMarker(this string? str)
+            => str?.Replace("&", "");
+
+        /// <summary>
         /// Returns <paramref name="str"/> without <paramref name="prefix"/>.
         /// If <paramref name="prefix"/> is not found, <paramref name="str"/> is returned unchanged.
         /// </summary>
