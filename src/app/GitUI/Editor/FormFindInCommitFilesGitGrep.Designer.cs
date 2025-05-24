@@ -1,5 +1,6 @@
 ﻿
 using ICSharpCode.TextEditor.Actions;
+using GitUI.UserControls;
 
 namespace GitUI;
 
@@ -20,7 +21,7 @@ partial class FormFindInCommitFilesGitGrep
     {
         label1 = new Label();
         lblOptions = new Label();
-        cboFindInCommitFilesGitGrep = new ComboBox();
+        cboFindInCommitFilesGitGrep = new WatermarkComboBox();
         txtOptions = new TextBox();
         chkMatchWholeWord = new CheckBox();
         chkMatchCase = new CheckBox();
@@ -73,6 +74,7 @@ partial class FormFindInCommitFilesGitGrep
         cboFindInCommitFilesGitGrep.Name = "cboFindInCommitFilesGitGrep";
         cboFindInCommitFilesGitGrep.Size = new Size(323, 23);
         cboFindInCommitFilesGitGrep.TabIndex = 1;
+        cboFindInCommitFilesGitGrep.Watermark = "git-grep regular expression...";
         // 
         // txtOptions
         // 
@@ -160,7 +162,7 @@ partial class FormFindInCommitFilesGitGrep
 
     private Label label1;
     private Label lblOptions;
-    private ComboBox cboFindInCommitFilesGitGrep;
+    private WatermarkComboBox cboFindInCommitFilesGitGrep;
     private TextBox txtOptions;
     private CheckBox chkMatchWholeWord;
     private CheckBox chkMatchCase;

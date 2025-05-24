@@ -1511,14 +1511,14 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>No changes</source>
         <target />
       </trans-unit>
+      <trans-unit id="_NO_TRANSLATE_FilterComboBox.Watermark">
+        <source>Filter files using a regular expression...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_assumeUnchangedToolTip.Text">
         <source>Tell git to not check the status of this file for performance benefits.
 Use this feature when a file is big and never change.
 Git will never check if the file has changed that will improve status check performance.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_cboFindInCommitFilesGitGrepWatermarkText.Text">
-        <source>Find in commit files using git-grep regular expression...</source>
         <target />
       </trans-unit>
       <trans-unit id="_collapseAll.Text">
@@ -1543,10 +1543,6 @@ Git will never check if the file has changed that will improve status check perf
       </trans-unit>
       <trans-unit id="_expandAll.Text">
         <source>E&amp;xpand all</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_filterComboBoxWatermarkText.Text">
-        <source>Filter files using a regular expression...</source>
         <target />
       </trans-unit>
       <trans-unit id="_firstRevision.Text">
@@ -1650,7 +1646,7 @@ Suitable for some config files modified locally.</source>
         <source>Show files with different changes</source>
         <target />
       </trans-unit>
-      <trans-unit id="cboFindInCommitFilesGitGrep.Text">
+      <trans-unit id="cboFindInCommitFilesGitGrep.Watermark">
         <source>Find in commit files using git-grep regular expression...</source>
         <target />
       </trans-unit>
@@ -4937,12 +4933,12 @@ If you are not sure just close this window.</source>
         <source>Find in commit files using git-grep</source>
         <target />
       </trans-unit>
-      <trans-unit id="_watermarkText.Text">
-        <source>git-grep regular expression...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="btnSearch.Text">
         <source>&amp;Find</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cboFindInCommitFilesGitGrep.Watermark">
+        <source>git-grep regular expression...</source>
         <target />
       </trans-unit>
       <trans-unit id="chkMatchCase.Text">

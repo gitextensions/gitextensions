@@ -1,15 +1,12 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
-using GitUI.Editor;
-using ResourceManager;
+using GitExtensions.Extensibility.Translations;
+using GitUI.UserControls;
 
 namespace GitUI;
 
 internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
 {
-    private readonly TranslationString _watermarkText = new("git-grep regular expression...");
-    private readonly ComboBoxWatermarkManager _cboFindInCommitFilesGitGrepWatermark;
-
     private bool _hasLoaded = false;
 
     /// <summary>
@@ -28,14 +25,12 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         InitializeComponent();
         InitializeComplete();
 
-        _cboFindInCommitFilesGitGrepWatermark = new ComboBoxWatermarkManager(cboFindInCommitFilesGitGrep, _watermarkText.Text);
-
         ShowInTaskbar = false;
     }
 
     public string? GitGrepExpressionText
     {
-        get => _cboFindInCommitFilesGitGrepWatermark.ComboBoxText;
+        get => cboFindInCommitFilesGitGrep.Text;
         set
         {
             if (value is not null)
@@ -55,7 +50,7 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
     public void SetSearchItems(ComboBox.ObjectCollection items)
     {
         cboFindInCommitFilesGitGrep.BeginUpdate();
-        string search = _cboFindInCommitFilesGitGrepWatermark.ComboBoxText;
+        string search = cboFindInCommitFilesGitGrep.Text;
         int selectionStart = cboFindInCommitFilesGitGrep.SelectionStart;
         int selectionLength = cboFindInCommitFilesGitGrep.SelectionLength;
 
@@ -96,7 +91,6 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         if (disposing)
         {
             components?.Dispose();
-            _cboFindInCommitFilesGitGrepWatermark?.Dispose();
         }
 
         base.Dispose(disposing);
@@ -154,5 +148,17 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
     private void txtOptions_TextChanged(object sender, EventArgs e)
     {
         AppSettings.GitGrepUserArguments.Value = txtOptions.Text;
+    }
+
+    public override void AddTranslationItems(ITranslation translation)
+    {
+        base.AddTranslationItems(translation);
+        translation.AddTranslationItem(Name, cboFindInCommitFilesGitGrep.Name, nameof(WatermarkComboBox.Watermark), cboFindInCommitFilesGitGrep.Watermark);
+    }
+
+    public override void TranslateItems(ITranslation translation)
+    {
+        base.TranslateItems(translation);
+        cboFindInCommitFilesGitGrep.Watermark = translation.TranslateItem(Name, cboFindInCommitFilesGitGrep.Name, nameof(WatermarkComboBox.Watermark), () => cboFindInCommitFilesGitGrep.Watermark) ?? string.Empty;
     }
 }
