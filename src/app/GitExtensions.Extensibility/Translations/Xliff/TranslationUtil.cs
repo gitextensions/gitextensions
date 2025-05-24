@@ -102,7 +102,7 @@ public static class TranslationUtil
         AddTranslationItemsFromList(category, translation, GetObjFields(obj, "$this"));
     }
 
-    private static IEnumerable<PropertyInfo> GetItemPropertiesEnumerator(string name, object item)
+    private static IEnumerable<PropertyInfo> GetItemPropertiesEnumerator(string name, object? item)
     {
         if (item is null)
         {

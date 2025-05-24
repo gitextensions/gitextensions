@@ -37,11 +37,11 @@ partial class FileStatusList
         columnHeader = new ColumnHeader();
         NoFiles = new Label();
         LoadingFiles = new Label();
-        _NO_TRANSLATE_FilterComboBox = new ComboBox();
+        _NO_TRANSLATE_FilterComboBox = new WatermarkComboBox();
         FilterToolTip = new ToolTip(components);
         lblSplitter = new Label();
         DeleteFilterButton = new Label();
-        cboFindInCommitFilesGitGrep = new ComboBox();
+        cboFindInCommitFilesGitGrep = new WatermarkComboBox();
         DeleteSearchButton = new Label();
         Toolbar = new ToolStripEx();
         btnCollapseGroups = new ToolStripButton();
@@ -203,6 +203,7 @@ partial class FileStatusList
         _NO_TRANSLATE_FilterComboBox.Name = "_NO_TRANSLATE_FilterComboBox";
         _NO_TRANSLATE_FilterComboBox.Size = new Size(682, 23);
         _NO_TRANSLATE_FilterComboBox.TabIndex = 5;
+        _NO_TRANSLATE_FilterComboBox.Watermark = "Filter files using a regular expression...";
         _NO_TRANSLATE_FilterComboBox.SelectedIndexChanged += FilterComboBox_SelectedIndexChanged;
         _NO_TRANSLATE_FilterComboBox.TextUpdate += FilterComboBox_TextUpdate;
         _NO_TRANSLATE_FilterComboBox.SizeChanged += FilterComboBox_SizeChanged;
@@ -249,6 +250,7 @@ partial class FileStatusList
         cboFindInCommitFilesGitGrep.Size = new Size(682, 23);
         cboFindInCommitFilesGitGrep.TabIndex = 0;
         cboFindInCommitFilesGitGrep.Tag = "ToolBar_group:Text search";
+        cboFindInCommitFilesGitGrep.Watermark = "Find in commit files using git-grep regular expression...";
         cboFindInCommitFilesGitGrep.SelectedIndexChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
         cboFindInCommitFilesGitGrep.TextUpdate += cboFindInCommitFilesGitGrep_TextUpdate;
         cboFindInCommitFilesGitGrep.SizeChanged += cboFindInCommitFilesGitGrep_SizeChanged;
@@ -1057,11 +1059,11 @@ partial class FileStatusList
     private Label NoFiles;
     private Label LoadingFiles;
     private ColumnHeader columnHeader;
-    private ComboBox _NO_TRANSLATE_FilterComboBox;
+    private WatermarkComboBox _NO_TRANSLATE_FilterComboBox;
     private ToolTip FilterToolTip;
     private Label lblSplitter;
     private Label DeleteFilterButton;
-    private ComboBox cboFindInCommitFilesGitGrep;
+    private WatermarkComboBox cboFindInCommitFilesGitGrep;
     private Label DeleteSearchButton;
     private ToolStripEx Toolbar;
     private ToolStripButton btnCollapseGroups;
