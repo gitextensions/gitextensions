@@ -633,7 +633,15 @@ namespace GitUI.Blame
                 return false;
             }
 
-            blameInfo = (_revisionGridInfo?.GetRevision(blameCommit.ObjectId), blameCommit.FileName);
+            if (_revisionGridInfo == null)
+            {
+                RevisionGridControl rr = new();
+                _revisionGridInfo = rr;
+                rr.UICommandsSource = UICommandsSource;
+                rr.Load();
+            }
+
+            blameInfo = (_revisionGridInfo.GetRevision(blameCommit.ObjectId), blameCommit.FileName);
             return blameInfo.selectedRevision is not null;
         }
 
