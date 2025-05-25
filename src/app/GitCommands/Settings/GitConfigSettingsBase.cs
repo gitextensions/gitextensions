@@ -26,7 +26,11 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
 
     public void Invalidate()
     {
-        Valid = false;
+        lock (_uniqueValueSettings)
+        {
+            Valid = false;
+        }
+
         ThreadHelper.FileAndForget(async () =>
         {
             await Task.Delay(millisecondsDelay: 250);
