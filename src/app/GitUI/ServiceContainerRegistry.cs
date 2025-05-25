@@ -14,7 +14,7 @@ public static class ServiceContainerRegistry
 {
     public static void RegisterServices(ServiceContainer serviceContainer)
     {
-        ScriptsManager scriptsManager = new();
+        DistributedScriptsManager scriptsManager = new(new UserScriptsStorage());
         HotkeySettingsManager hotkeySettingsManager = new(scriptsManager);
 
         OutputHistoryModel outputHistoryModel = new(AppSettings.OutputHistoryDepth.Value);
