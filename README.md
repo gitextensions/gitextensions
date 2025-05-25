@@ -27,7 +27,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Runtime environment
     </td>
     <td>
-      MS Windows 7SP1+ // <a href="https://dotnet.microsoft.com/download/dotnet/8.0" target=_blank>.NET 8.0 SDK</a>
+      MS Windows 7SP1+ // <a href="https://dotnet.microsoft.com/download/dotnet/9.0" target=_blank>.NET 9.0 SDK</a>
     </td>
   </tr>
   <tr>
@@ -35,7 +35,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Development
     </td>
     <td>
-      MS Visual Studio 2022 (v17.8+), C# 12 // VC++ (inc. ATL for x86/x64 for installer)
+      MS Visual Studio 2022 (v17.12+), C# 13 // VC++ (inc. ATL for x86/x64 for installer)
     </td>
   </tr>
   <tr>
@@ -59,7 +59,6 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
 ### Older versions
 
 See [build instructions](https://github.com/gitextensions/gitextensions/wiki/Build-instructions)
-
 
 ## Downloads
 
@@ -179,7 +178,6 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/gitextensions/sponsor/7/website" target="_blank"><img src="https://opencollective.com/gitextensions/sponsor/7/avatar.svg"></a>
 <a href="https://opencollective.com/gitextensions/sponsor/8/website" target="_blank"><img src="https://opencollective.com/gitextensions/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/gitextensions/sponsor/9/website" target="_blank"><img src="https://opencollective.com/gitextensions/sponsor/9/avatar.svg"></a>
-
 
 # Useful Links
 

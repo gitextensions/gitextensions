@@ -4,9 +4,9 @@ Fixes #
 
 ## Proposed changes
 
-- 
-- 
-- 
+-
+-
+-
 
 ## Screenshots <!-- Include variants with higher scaling, e.g. 150% or 200%. Remove this section if PR does not change UI -->
 
@@ -20,9 +20,9 @@ Fixes #
 
 ## Test methodology <!-- How did you ensure quality? -->
 
-- 
-- 
-- 
+-
+-
+-
 
 ## Test environment(s) <!-- Remove any that don't apply -->
 
