@@ -198,6 +198,7 @@ namespace GitUITests.Editor
             }
 
             Arrange(texts[0], searchPhrase, scanRegion: scanRegion, fileLoader: FileLoader);
+            _findAndReplaceForm.Show();
 
             foreach (TextRange expectedRange in expectedRanges)
             {
