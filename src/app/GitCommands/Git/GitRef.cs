@@ -88,18 +88,18 @@ namespace GitCommands
             {
                 if (IsRemote)
                 {
-                    return CompleteName.SubstringAfterLast("remotes/");
+                    return CompleteName.SubstringAfter("remotes/");
                 }
 
                 if (IsTag)
                 {
                     // we need the one containing ^{}, because it contains the reference
-                    return CompleteName.RemoveSuffix(GitRefName.TagDereferenceSuffix).SubstringAfterLast("tags/");
+                    return CompleteName.RemoveSuffix(GitRefName.TagDereferenceSuffix).SubstringAfter("tags/");
                 }
 
                 if (IsHead)
                 {
-                    return CompleteName.SubstringAfterLast("heads/");
+                    return CompleteName.SubstringAfter("heads/");
                 }
 
                 // if we don't know ref type then we don't know if '/' is a valid ref character
