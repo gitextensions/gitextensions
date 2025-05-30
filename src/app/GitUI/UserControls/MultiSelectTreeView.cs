@@ -193,10 +193,27 @@ public class MultiSelectTreeView : NativeTreeView
         if (e.Button != MouseButtons.Left
 
             // or other modifier keys than for selection manipulation
-            || (modifierKeys | Keys.Control | Keys.Shift) != (Keys.Control | Keys.Shift)
+            || (modifierKeys | Keys.Control | Keys.Shift) != (Keys.Control | Keys.Shift))
+        {
+            _mouseClickHandled = false;
+            base.OnMouseDown(e);
+            return;
+        }
 
-            // or no node clicked
-            || HitTest(e.Location).Node is not TreeNode newFocusedNode
+        TreeViewHitTestInfo hitTestInfo = HitTest(e.Location);
+        if (// empty area clicked
+            hitTestInfo.Location == TreeViewHitTestLocations.None
+
+            // and no modifiers active
+            && modifierKeys == Keys.None)
+        {
+            ClearSelection();
+            _mouseClickHandled = true;
+            return;
+        }
+
+        if (// no node clicked
+            hitTestInfo.Node is not TreeNode newFocusedNode
 
             // or starting drag operation
             || (_selectedNodes.Contains(newFocusedNode) && modifierKeys == Keys.None && !ShallHandleRootIconClick(e.X, newFocusedNode, modifierKeys)))
@@ -295,6 +312,13 @@ public class MultiSelectTreeView : NativeTreeView
             {
                 SelectedNodesChanged?.Invoke(this, e);
             }
+        }
+
+        void ClearSelection()
+        {
+            SelectedNode = null;
+            FocusedNode = null;
+            SelectedNodesChanged?.Invoke(this, e);
         }
     }
 
