@@ -20,11 +20,6 @@ namespace GitUI.CommandsDialogs
 
             environmentInfo.SetCopyButtonTooltip(_copyTooltip.Text);
 
-            Color clrLink = SystemColors.Highlight;
-            _NO_TRANSLATE_labelProductName.LinkColor = clrLink;
-            _NO_TRANSLATE_ThanksTo.LinkColor = clrLink;
-            linkLabelIcons.LinkColor = clrLink;
-
             // Click handlers
             _NO_TRANSLATE_labelProductName.LinkClicked += delegate { OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions"); };
             _NO_TRANSLATE_ThanksTo.LinkClicked += delegate { ShowContributorsForm(); };

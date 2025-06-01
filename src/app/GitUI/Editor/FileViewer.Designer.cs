@@ -449,7 +449,6 @@ namespace GitUI.Editor
             // llShowPreview
             //
             _NO_TRANSLATE_lblShowPreview.AutoSize = true;
-            _NO_TRANSLATE_lblShowPreview.BackColor = Color.White;
             _NO_TRANSLATE_lblShowPreview.Location = new Point(43, 23);
             _NO_TRANSLATE_lblShowPreview.Name = "_NO_TRANSLATE_lblShowPreview";
             _NO_TRANSLATE_lblShowPreview.Size = new Size(214, 13);

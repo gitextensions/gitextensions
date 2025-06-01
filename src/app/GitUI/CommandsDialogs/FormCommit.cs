@@ -300,10 +300,6 @@ namespace GitUI.CommandsDialogs
 
             toolStripStatusBranchIcon.AdaptImageLightness();
 
-            // Change the link color
-            commitAuthorStatus.LinkColor = Application.IsDarkModeEnabled ? Color.CornflowerBlue : Color.FromArgb(0, 0, 0xff);
-            remoteNameLabel.LinkColor = Application.IsDarkModeEnabled ? Color.CornflowerBlue : Color.Blue;
-
             splitLeft.Panel1.BackColor = OtherColors.PanelBorderColor;
             splitLeft.Panel2.BackColor = OtherColors.PanelBorderColor;
             splitRight.Panel1.BackColor = OtherColors.PanelBorderColor;
