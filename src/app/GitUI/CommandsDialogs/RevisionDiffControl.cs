@@ -72,7 +72,7 @@ namespace GitUI.CommandsDialogs
                 await SetDiffsAsync(revisions);
                 if (!DiffFiles.SelectedItems.Any())
                 {
-                    DiffFiles.SelectStoredNextItem();
+                    DiffFiles.SelectStoredNextItem(orSelectFirst: true);
                 }
             });
         }
