@@ -1504,14 +1504,20 @@ namespace GitUI.CommandsDialogs
                 if (Unstaged.FocusedItem is null)
                 {
                     Unstaged.SelectFirstVisibleItem();
+                    if (!Unstaged.HasSelection)
+                    {
+                        UnstagedSelectionChanged(Unstaged, EventArgs.Empty);
+                    }
                 }
                 else
                 {
                     Unstaged.SelectedItems = [Unstaged.FocusedItem];
                 }
             }
-
-            UnstagedSelectionChanged(Unstaged, EventArgs.Empty);
+            else
+            {
+                UnstagedSelectionChanged(Unstaged, EventArgs.Empty);
+            }
         }
 
         private void Unstaged_FilterChanged(object sender, EventArgs e)
@@ -1759,6 +1765,11 @@ namespace GitUI.CommandsDialogs
 
         private void Staged_Enter(object sender, EnterEventArgs e)
         {
+            SelectStaged();
+        }
+
+        private void SelectStaged()
+        {
             _currentFilesList = Staged;
             _skipUpdate = false;
             if (!Staged.HasSelection)
@@ -1766,14 +1777,20 @@ namespace GitUI.CommandsDialogs
                 if (Staged.FocusedItem is null)
                 {
                     Staged.SelectFirstVisibleItem();
+                    if (!Staged.HasSelection)
+                    {
+                        StagedSelectionChanged(Staged, EventArgs.Empty);
+                    }
                 }
                 else
                 {
                     Staged.SelectedItems = [Staged.FocusedItem];
                 }
             }
-
-            StagedSelectionChanged(Staged, EventArgs.Empty);
+            else
+            {
+                StagedSelectionChanged(Staged, EventArgs.Empty);
+            }
         }
 
         private void Stage(IReadOnlyList<GitItemStatus> items)
@@ -2703,7 +2720,7 @@ namespace GitUI.CommandsDialogs
 
             UpdateButtonStates();
 
-            ViewFirstStagedFile();
+            SelectStaged();
         }
 
         private void StageInSuperproject_CheckedChanged(object sender, EventArgs e)
@@ -2737,17 +2754,7 @@ namespace GitUI.CommandsDialogs
 
         private void Message_Enter(object sender, EventArgs e)
         {
-            ViewFirstStagedFile();
-        }
-
-        private void ViewFirstStagedFile()
-        {
-            if (Staged.AllItemsCount != 0 && !Staged.SelectedItems.Any())
-            {
-                _currentFilesList = Staged;
-                Staged.SelectFirstVisibleItem();
-                StagedSelectionChanged(this, EventArgs.Empty);
-            }
+            SelectStaged();
         }
 
         private void modifyCommitMessageButton_Click(object sender, EventArgs e)
