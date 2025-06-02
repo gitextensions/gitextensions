@@ -97,7 +97,7 @@ namespace GitCommands
             _wslDistro = AppSettings.WslGitEnabled ? PathUtil.GetWslDistro(WorkingDir) : "";
             if (!string.IsNullOrEmpty(_wslDistro))
             {
-                _gitExecutable = new Executable(() => AppSettings.WslGitCommand, WorkingDir, $"-d {_wslDistro} {AppSettings.WslGitPath} ");
+                _gitExecutable = new Executable(() => AppSettings.WslGitCommand, WorkingDir, $"-d {_wslDistro} --cd {WorkingDir.Quote()} {AppSettings.WslGitPath} ");
                 _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
             }
             else

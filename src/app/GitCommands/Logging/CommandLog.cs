@@ -102,12 +102,21 @@ namespace GitCommands.Logging
 
                 string fileName;
                 string arguments;
-                if (FileName.StartsWith("wsl "))
+                if (FileName.StartsWith("wsl ") && FileName.EndsWith("git"))
                 {
-                    fileName = "wsl";
+                    fileName = "[wsl] git";
                     arguments = GetGitArgumentsWithoutConfiguration(Arguments);
                 }
-                else if (FileName.EndsWith("git.exe"))
+                else if (FileName.Equals("wsl") && Arguments.Contains(" git "))
+                {
+                    // This is a hack for the correct display of the git command when coming from `FormProcess`. `FormProcess` logs
+                    // everything on the command line besides the "wsl" command in `Arguments` while `GitModule` logs the "wsl" command,
+                    // all its arguments with "git " on the end as part of `FileName` and only the git command arguments in `Arguments`.
+                    // When both classes log the same type of information the same way either this if branch or the one above can be removed.
+                    fileName = "[wsl] git";
+                    arguments = GetGitArgumentsWithoutConfiguration(Arguments.Substring(Arguments.IndexOf(" git ") + 5));
+                }
+                else if (FileName.EndsWith("git") || FileName.EndsWith("git.exe"))
                 {
                     fileName = "git";
                     arguments = GetGitArgumentsWithoutConfiguration(Arguments);
