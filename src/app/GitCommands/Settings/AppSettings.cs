@@ -384,15 +384,15 @@ namespace GitCommands
         }
 
         // Currently not configurable in UI (Set manually in settings file)
-        public static string WslGitCommand
+        public static string WslCommand
         {
-            get => GetString("WslGitCommand", "wsl");
+            get => GetString(nameof(WslCommand), "wsl");
         }
 
         // Currently not configurable in UI (Set manually in settings file)
-        public static string WslGitPath
+        public static string WslGitCommand
         {
-            get => GetString("WslGitPath", "git");
+            get => GetString(nameof(WslGitCommand), "git");
         }
 
         public static bool StashKeepIndex

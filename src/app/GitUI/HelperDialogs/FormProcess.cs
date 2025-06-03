@@ -32,8 +32,11 @@ namespace GitUI.HelperDialogs
                 string wslDistro = AppSettings.WslGitEnabled ? PathUtil.GetWslDistro(workingDirectory) : "";
                 if (!string.IsNullOrEmpty(wslDistro))
                 {
-                    process = AppSettings.WslGitCommand;
-                    arguments = $"-d {wslDistro} --cd {WorkingDirectory.Quote()} {AppSettings.WslGitPath} {arguments}";
+                    process = AppSettings.WslCommand;
+
+                    // In some WSL environments the current working directory is not passed along to the git command without using the `--cd` argument. Adding it to
+                    // the command line is required for these environments. For those that do not need it using the argument is just redundant.
+                    arguments = $"-d {wslDistro} --cd {WorkingDirectory.RemoveTrailingPathSeparator().Quote()} {AppSettings.WslGitCommand} {arguments}";
                 }
             }
 
