@@ -224,10 +224,12 @@ public class MultiSelectTreeView : NativeTreeView
             {
                 newFocusedNode.Expand();
             }
+
+            _toBeFocusedNode = newFocusedNode;
+            return;
         }
 
         UpdateSelection(newFocusedNode, replace: !modifierKeys.HasFlag(Keys.Control), addRange: modifierKeys.HasFlag(Keys.Shift));
-        _toBeFocusedNode = newFocusedNode;
     }
 
     protected override void OnMouseUp(MouseEventArgs e)
