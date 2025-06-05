@@ -256,13 +256,18 @@ public class MultiSelectTreeView : NativeTreeView
             }
 
             Keys modifierKeys = ModifierKeys;
-            if (SelectedNodes.Count > 1
-                && e.Button == MouseButtons.Left
+            if (e.Button == MouseButtons.Left
                 && modifierKeys == Keys.None
                 && HitTest(e.Location).Node is TreeNode newFocusedNode
                 && !ShallHandleRootIconClick(e.X, newFocusedNode, modifierKeys))
             {
-                if (FocusedNode != newFocusedNode)
+                // Explicit click on the same single item needs to be notified upstream.
+                // In case of multi-selection, the clicked item becomes the single selection.
+                if (SelectedNodes.Count == 1)
+                {
+                    OnSelectionChanged();
+                }
+                else if (FocusedNode != newFocusedNode)
                 {
                     SelectedNode = newFocusedNode;
                 }
