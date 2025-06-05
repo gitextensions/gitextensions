@@ -163,7 +163,7 @@ namespace GitUI.NBugReports
 
             // Treat all git errors as user issues
             if (string.Equals(AppSettings.GitCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase)
-             || string.Equals(AppSettings.WslGitCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase))
+             || string.Equals(AppSettings.WslCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase))
             {
                 isUserExternalOperation = true;
             }
