@@ -2981,6 +2981,8 @@ namespace GitUI.CommandsDialogs
             public SplitterManager SplitterManager => _form._splitterManager;
             public TabPage TreeTabPage => _form.TreeTabPage;
             public FilterToolBar ToolStripFilters => _form.ToolStripFilters;
+
+            public void RefreshRevisions() => _form.RefreshRevisions();
         }
 
         private void FormBrowse_DragDrop(object sender, DragEventArgs e)

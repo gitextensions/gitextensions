@@ -668,6 +668,8 @@ namespace GitUI.CommandsDialogs
                 _control = control;
             }
 
+            public FileStatusList DiffFiles => _control.DiffFiles;
+            public Editor.FileViewer DiffText => _control.DiffText;
             public SplitContainer DiffSplitContainer => _control.DiffSplitContainer;
         }
     }
