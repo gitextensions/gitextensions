@@ -107,6 +107,7 @@ namespace GitUI.CommandsDialogs
             OpenWorkingDirectoryFile = 20,
             OpenInVisualStudio = 21,
             AddFileToGitIgnore = 22,
+            RenameMove = 23,
         }
 
         public bool ExecuteCommand(Command cmd)
@@ -153,6 +154,7 @@ namespace GitUI.CommandsDialogs
                 case Command.OpenWorkingDirectoryFile:
                 case Command.OpenInVisualStudio:
                 case Command.AddFileToGitIgnore:
+                case Command.RenameMove:
                     return DiffFiles.ExecuteCommand((Command)cmd);
 
                 default: return base.ExecuteCommand(cmd);
