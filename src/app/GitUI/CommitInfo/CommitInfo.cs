@@ -214,6 +214,8 @@ namespace GitUI.CommitInfo
 
         public void SetRevisionWithChildren(GitRevision? revision, IReadOnlyList<ObjectId>? children)
         {
+            CancellationToken cancellationToken = _asyncLoadCancellation.Next();
+
             _revision = revision;
             _children = children;
 
@@ -225,7 +227,7 @@ namespace GitUI.CommitInfo
 
             tableLayout.Visible = true;
             commitInfoHeader.ShowCommitInfo(revision, children);
-            ReloadCommitInfo();
+            ReloadCommitInfo(cancellationToken);
         }
 
         private void ShowAll(string? what)
@@ -299,6 +301,11 @@ namespace GitUI.CommitInfo
 
         private void ReloadCommitInfo()
         {
+            ReloadCommitInfo(_asyncLoadCancellation.Next());
+        }
+
+        private void ReloadCommitInfo(CancellationToken cancellationToken)
+        {
             showContainedInBranchesToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesLocal;
             showContainedInBranchesRemoteToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemote;
             showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
@@ -322,7 +329,7 @@ namespace GitUI.CommitInfo
             {
                 if (Module.GetEffectiveSettings() is DistributedSettings distributedSettings)
                 {
-                    StartAsyncDataLoad(distributedSettings);
+                    StartAsyncDataLoad(distributedSettings, cancellationToken);
                 }
                 else
                 {
@@ -348,9 +355,13 @@ namespace GitUI.CommitInfo
                 return _commitDataBodyRenderer?.Render(data, showRevisionsAsLinks: false) ?? string.Empty;
             }
 
-            async Task UpdateCommitMessageAsync()
+            async Task UpdateCommitMessageAsync(CancellationToken cancellationToken)
             {
+                cancellationToken.ThrowIfCancellationRequested();
+
                 CommitData data = _commitDataManager.CreateFromRevision(_revision, _children);
+
+                cancellationToken.ThrowIfCancellationRequested();
 
                 if (_revision.Body is null || (AppSettings.ShowGitNotes && !_revision.HasNotes))
                 {
@@ -368,19 +379,21 @@ namespace GitUI.CommitInfo
 
                 string commitMessage = commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent is not null);
 
-                await this.SwitchToMainThreadAsync();
+                await this.SwitchToMainThreadAsync(cancellationToken);
+                cancellationToken.ThrowIfCancellationRequested();
                 rtbxCommitMessage.SetXHTMLText(commitMessage);
             }
 
-            void StartAsyncDataLoad(DistributedSettings settings)
+            void StartAsyncDataLoad(DistributedSettings settings, CancellationToken cancellationToken)
             {
-                CancellationToken cancellationToken = _asyncLoadCancellation.Next();
                 GitRevision initialRevision = _revision;
 
                 ThreadHelper.FileAndForget(async () =>
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
+
                     List<Task> tasks = [
-                        UpdateCommitMessageAsync().WithCancellation(cancellationToken),
+                        UpdateCommitMessageAsync(cancellationToken),
                         LoadLinksForRevisionAsync(initialRevision, settings).WithCancellation(cancellationToken)
                     ];
 
