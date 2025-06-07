@@ -14,6 +14,7 @@ namespace GitUI.CommandsDialogs
         bool ShouldShowMenuEditWorkingDirectoryFile(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuOpenRevision(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuDeleteFile(ContextMenuSelectionInfo selectionInfo);
+        bool ShouldShowMenuMove(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowResetFileMenus(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuFileHistory(ContextMenuSelectionInfo selectionInfo);
         bool ShouldShowMenuSaveAs(ContextMenuSelectionInfo selectionInfo);
@@ -159,6 +160,12 @@ namespace GitUI.CommandsDialogs
         public bool ShouldShowMenuDeleteFile(ContextMenuSelectionInfo selectionInfo)
         {
             return selectionInfo.AllFilesOrUntrackedDirectoriesExist && (selectionInfo.SelectedRevision?.IsArtificial ?? false);
+        }
+
+        public bool ShouldShowMenuMove(ContextMenuSelectionInfo selectionInfo)
+        {
+            return (selectionInfo.SelectedGitItemCount == 1 && selectionInfo.IsAnyTracked && !selectionInfo.IsAnySubmodule)
+                || selectionInfo.SelectedFolder is not null;
         }
 
         public bool ShouldShowMenuOpenRevision(ContextMenuSelectionInfo selectionInfo)

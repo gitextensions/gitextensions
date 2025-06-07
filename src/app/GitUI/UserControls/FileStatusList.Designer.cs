@@ -121,6 +121,7 @@ namespace GitUI
             tsmiEditWorkingDirectoryFile = new ToolStripMenuItem();
             tsmiOpenInVisualStudio = new ToolStripMenuItem();
             tsmiSaveAs = new ToolStripMenuItem();
+            tsmiMove = new ToolStripMenuItem();
             tsmiDeleteFile = new ToolStripMenuItem();
             sepFile = new ToolStripSeparator();
             tsmiCopyPaths = new GitUI.CommandsDialogs.Menus.CopyPathsToolStripMenuItem();
@@ -660,9 +661,9 @@ namespace GitUI
             // 
             // ItemContextMenu
             // 
-            ItemContextMenu.Items.AddRange(new ToolStripItem[] { tsmiUpdateSubmodule, tsmiResetSubmoduleChanges, tsmiStashSubmoduleChanges, tsmiCommitSubmoduleChanges, sepSubmodule, tsmiStageFile, tsmiUnstageFile, tsmiResetFileTo, tsmiResetChunkOfFile, tsmiInteractiveAdd, tsmiCherryPickChanges, sepGit, tsmiOpenWithDifftool, tsmiOpenWorkingDirectoryFile, tsmiOpenWorkingDirectoryFileWith, tsmiOpenRevisionFile, tsmiOpenRevisionFileWith, tsmiEditWorkingDirectoryFile, tsmiOpenInVisualStudio, tsmiSaveAs, tsmiDeleteFile, sepFile, tsmiCopyPaths, tsmiShowInFolder, sepBrowse, tsmiShowInFileTree, tsmiFilterFileInGrid, tsmiFileHistory, tsmiBlame, tsmiFindFile, tsmiOpenFindInCommitFilesGitGrepDialog, tsmiShowFindInCommitFilesGitGrep, sepIgnore, tsmiAddFileToGitIgnore, tsmiAddFileToGitInfoExclude, tsmiSkipWorktree, tsmiAssumeUnchanged, tsmiStopTracking, sepScripts, tsmiRunScript });
+            ItemContextMenu.Items.AddRange(new ToolStripItem[] { tsmiUpdateSubmodule, tsmiResetSubmoduleChanges, tsmiStashSubmoduleChanges, tsmiCommitSubmoduleChanges, sepSubmodule, tsmiStageFile, tsmiUnstageFile, tsmiResetFileTo, tsmiResetChunkOfFile, tsmiInteractiveAdd, tsmiCherryPickChanges, sepGit, tsmiOpenWithDifftool, tsmiOpenWorkingDirectoryFile, tsmiOpenWorkingDirectoryFileWith, tsmiOpenRevisionFile, tsmiOpenRevisionFileWith, tsmiEditWorkingDirectoryFile, tsmiOpenInVisualStudio, tsmiSaveAs, tsmiMove, tsmiDeleteFile, sepFile, tsmiCopyPaths, tsmiShowInFolder, sepBrowse, tsmiShowInFileTree, tsmiFilterFileInGrid, tsmiFileHistory, tsmiBlame, tsmiFindFile, tsmiOpenFindInCommitFilesGitGrepDialog, tsmiShowFindInCommitFilesGitGrep, sepIgnore, tsmiAddFileToGitIgnore, tsmiAddFileToGitInfoExclude, tsmiSkipWorktree, tsmiAssumeUnchanged, tsmiStopTracking, sepScripts, tsmiRunScript });
             ItemContextMenu.Name = "DiffContextMenu";
-            ItemContextMenu.Size = new Size(296, 788);
+            ItemContextMenu.Size = new Size(296, 832);
             ItemContextMenu.Opening += ItemContextMenu_Opening;
             // 
             // tsmiUpdateSubmodule
@@ -902,6 +903,13 @@ namespace GitUI
             tsmiSaveAs.Size = new Size(295, 22);
             tsmiSaveAs.Text = "S&ave selected as...";
             tsmiSaveAs.Click += SaveAs_Click;
+            // 
+            // tsmiMove
+            // 
+            tsmiMove.Name = "tsmiMove";
+            tsmiMove.Size = new Size(295, 22);
+            tsmiMove.Text = "Rena&me / move";
+            tsmiMove.Click += Move_Click;
             // 
             // tsmiDeleteFile
             // 
@@ -1165,6 +1173,7 @@ namespace GitUI
         internal ToolStripMenuItem tsmiEditWorkingDirectoryFile;
         private ToolStripMenuItem tsmiOpenInVisualStudio;
         private ToolStripMenuItem tsmiSaveAs;
+        private ToolStripMenuItem tsmiMove;
         private ToolStripMenuItem tsmiDeleteFile;
         private ToolStripSeparator sepFile;
         private CommandsDialogs.Menus.CopyPathsToolStripMenuItem tsmiCopyPaths;
