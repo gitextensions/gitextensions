@@ -194,7 +194,9 @@ namespace GitExtensions.UITests.CommandsDialogs
             const string contentA = nameof(contentA);
             const string contentB = nameof(contentB);
 
-            _referenceRepository.CreateCommit("multiple files",
+            using ReferenceRepository referenceRepository = new();
+            GitUICommands commands = new(GlobalServiceContainer.CreateDefaultMockServiceContainer(), referenceRepository.Module);
+            referenceRepository.CreateCommit("multiple files",
                 $"{contentA}\n{new string('A', 20000)}", fileA,
                 $"{contentB}\n{new string('B', 20000)}", fileB);
 
@@ -237,7 +239,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                                     && tadiff.DiffText.CurrentFileLine == expectedLine,
                             maxMilliseconds);
                     }
-                });
+                },
+                commands);
         }
 
         [Test]
@@ -356,10 +359,10 @@ namespace GitExtensions.UITests.CommandsDialogs
                 });
         }
 
-        private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
+        private void RunFormTest(Func<FormBrowse, Task> testDriverAsync, GitUICommands? commands = null)
         {
             UITest.RunForm(
-                showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
+                showForm: () => (commands ?? _commands).StartBrowseDialog(owner: null).Should().BeTrue(),
                 testDriverAsync);
         }
 
