@@ -8649,7 +8649,7 @@ help</source>
         <target />
       </trans-unit>
       <trans-unit id="_rememberChoice.Text">
-        <source>Remember choice</source>
+        <source>&amp;Remember choice</source>
         <target />
       </trans-unit>
       <trans-unit id="_retry.Text">
