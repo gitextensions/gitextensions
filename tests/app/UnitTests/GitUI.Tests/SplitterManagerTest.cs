@@ -7,7 +7,7 @@ namespace GitUITests;
 [TestFixture]
 public partial class SplitterManagerTest
 {
-    private MemorySettings _settings;
+    private MemorySettings _settings = null!;
     private const int _designTimeSplitterWidth = 100;
     private const int _designTimeSplitterDistance = 40;
 
@@ -202,6 +202,80 @@ public partial class SplitterManagerTest
                 splitter.SplitterDistance.Should().Be(108); // decreased by 10%
             }
         }
+    }
+
+    [Test]
+    public void RestoreSplitters_WhenNoSavedSettings_ShouldUseDefaultDistance()
+    {
+        // arrange
+        const string splitterName = "splitterName";
+        const int defaultDistance = 75;
+        SplitterManager splitManager = new(_settings);
+        SplitContainer splitContainer = CreateVerticalSplitContainer();
+        splitManager.AddSplitter(splitContainer, splitterName, defaultDistance);
+
+        splitContainer.Panel1MinSize = 5;
+        splitContainer.Panel2MinSize = 5;
+
+        // act
+        splitManager.RestoreSplitters();
+
+        // assert
+        splitContainer.SplitterDistance.Should().Be(defaultDistance);
+
+        // Verify that settings were not previously stored
+        SplitterManager.SplitterData splitterData = splitManager.GetTestAccessor().Splitters[0];
+        _settings.GetInt(splitterData.SizeSettingsKey).Should().BeNull();
+        _settings.GetInt(splitterData.DistanceSettingsKey).Should().BeNull();
+    }
+
+    [Test]
+    public void RestoreSplitters_WhenNoSavedSettings_ShouldIgnoreInvalidDefaultDistance()
+    {
+        // arrange
+        const string splitterName = "splitterName";
+        const int defaultDistance = 10;
+        SplitterManager splitManager = new(_settings);
+        SplitContainer splitContainer = CreateVerticalSplitContainer();
+        splitManager.AddSplitter(splitContainer, splitterName, defaultDistance);
+
+        splitContainer.Panel1MinSize = 30;
+        splitContainer.Panel2MinSize = 30;
+
+        // act
+        splitManager.RestoreSplitters();
+
+        // assert
+        splitContainer.SplitterDistance.Should().Be(_designTimeSplitterDistance);
+
+        // Verify that settings were not previously stored
+        SplitterManager.SplitterData splitterData = splitManager.GetTestAccessor().Splitters[0];
+        _settings.GetInt(splitterData.SizeSettingsKey).Should().BeNull();
+        _settings.GetInt(splitterData.DistanceSettingsKey).Should().BeNull();
+    }
+
+    [Test]
+    public void RestoreSplitters_WhenPrevSettingsSizeIsZero_ShouldIgnoreDefaultDistance()
+    {
+        // arrange
+        const string splitterName = "splitterName";
+        const int defaultDistance = 50;
+        SplitterManager splitManager = new(_settings);
+        SplitContainer splitContainer = CreateVerticalSplitContainer();
+        splitManager.AddSplitter(splitContainer, splitterName, defaultDistance);
+
+        splitContainer.Panel1MinSize = 5;
+        splitContainer.Panel2MinSize = 5;
+
+        SplitterManager.SplitterData splitterData = splitManager.GetTestAccessor().Splitters[0];
+        _settings.SetInt(splitterData.SizeSettingsKey, 0);
+        _settings.SetInt(splitterData.DistanceSettingsKey, 0);
+
+        // act
+        splitManager.RestoreSplitters();
+
+        // assert
+        splitContainer.SplitterDistance.Should().Be(_designTimeSplitterDistance);
     }
 
     private static SplitContainer CreateVerticalSplitContainer()
