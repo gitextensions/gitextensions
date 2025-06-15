@@ -134,20 +134,39 @@ namespace GitCommands.Remotes
             ArgumentNullException.ThrowIfNull(remote);
 
             IGitModule module = GetModule();
-            bool IsSettingForBranch(string setting, string branchName)
-            {
-                GitRef head = new(module, null, setting);
-                return head.IsHead && head.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase);
-            }
 
             GitRef remoteHead = remote.Push
                                    .Select(s => s.Split(Delimiters.Colon))
                                    .Where(t => t.Length == 2)
                                    .Where(t => IsSettingForBranch(t[0], branch))
-                                   .Select(t => new GitRef(module, null, t[1]))
+                                   .Select(t => new GitRef(module, objectId: null, t[1]))
                                    .FirstOrDefault(h => h.IsHead);
 
-            return remoteHead?.Name;
+            if (remoteHead is not null)
+            {
+                return remoteHead.Name;
+            }
+
+            GitRef remoteWildcardHead = remote.Push
+                                   .Select(s => s.Split(Delimiters.Colon))
+                                   .Where(t => t.Length == 2)
+                                   .Where(t => IsSettingForWildcardBranch(t[0]))
+                                   .Select(t => new GitRef(module, objectId: null, t[1].Replace("*", branch)))
+                                   .FirstOrDefault(h => h.IsHead);
+
+            return remoteWildcardHead?.Name;
+
+            bool IsSettingForBranch(string setting, string branchName)
+            {
+                GitRef head = new(module, objectId: null, setting);
+                return head.IsHead && head.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase);
+            }
+
+            bool IsSettingForWildcardBranch(string setting)
+            {
+                GitRef head = new(module, objectId: null, setting);
+                return head.IsHead && head.Name == "*";
+            }
         }
 
         /// <summary>

@@ -96,7 +96,16 @@ namespace GitCommands.Git
             foreach (Match match in matches)
             {
                 string branch = match.Groups["branch"].Value;
-                string remoteRef = (match.Groups["remote_p"].Success && !string.IsNullOrEmpty(match.Groups["remote_p"].Value))
+
+                // Use 'remote_p' (the value of '%(push)') if all of the following conditions are met:
+                // 1. The value exists
+                // 2. The value is not empty
+                // 3. The value of '%(push:track,nobracket)' is not 'gone'
+                //
+                // The third condition specifically ensures we do not use the value of '%(push)' in cases where the
+                // value was provided by a push refspec defined for the remote, but the local branch is not already
+                // tracking some remote branch.
+                string remoteRef = (match.Groups["remote_p"].Success && !string.IsNullOrEmpty(match.Groups["remote_p"].Value) && !match.Groups["gone_p"].Success)
                     ? match.Groups["remote_p"].Value
                     : match.Groups["remote_u"].Value;
                 if (string.IsNullOrEmpty(branch) || string.IsNullOrEmpty(remoteRef))

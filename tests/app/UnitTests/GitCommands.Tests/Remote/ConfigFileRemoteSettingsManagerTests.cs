@@ -416,6 +416,29 @@ namespace GitCommandsTests.Remote
             ClassicAssert.IsFalse(_remotesManager.DisabledRemoteExists(enabledRemoteName));
         }
 
+        [Test]
+        public void GetDefaultPushRemote_returns_null_for_no_remote_branch()
+        {
+            ConfigFileRemote remote = new() { Push = [] };
+            ClassicAssert.IsNull(_remotesManager.GetDefaultPushRemote(remote, "BranchName"));
+        }
+
+        [TestCase("BranchName", "BranchName")]
+        [TestCase("BranchName", "dev/me/BranchName")]
+        public void GetDefaultPushRemote_returns_value_for_mapped_remote_branch(string branchName, string pushToBranch)
+        {
+            ConfigFileRemote remote = new() { Push = [$"refs/heads/{branchName}:refs/heads/{pushToBranch}"] };
+            ClassicAssert.AreEqual(pushToBranch, _remotesManager.GetDefaultPushRemote(remote, branchName));
+        }
+
+        [TestCase("BranchName", "*")]
+        [TestCase("BranchName", "dev/me/*")]
+        public void GetDefaultPushRemote_returns_value_for_wildcard_mapped_remote_branch(string branchName, string pushToBranch)
+        {
+            ConfigFileRemote remote = new() { Push = [$"refs/heads/*:refs/heads/{pushToBranch}"] };
+            ClassicAssert.AreEqual(pushToBranch.Replace("*", branchName), _remotesManager.GetDefaultPushRemote(remote, branchName));
+        }
+
         public class IntegrationTests
         {
             [Test]
