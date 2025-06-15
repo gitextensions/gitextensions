@@ -67,7 +67,6 @@ packages/
 GitExtensions.*.sln.VisualState.xml
 GitExtensions.settings.backup
 /Setup/*.zip
-/Setup/installer/Changelog.md
 *.received.*
 Directory.Build.rsp
 GitStatus.txt
