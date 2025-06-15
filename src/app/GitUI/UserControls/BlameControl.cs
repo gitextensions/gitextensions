@@ -86,6 +86,13 @@ namespace GitUI.Blame
             _gitBlameParser = new GitBlameParser(() => UICommands.Module);
         }
 
+        public void InitSplitterManager(NestedSplitterManager splitterManager)
+        {
+            NestedSplitterManager nested = new(splitterManager, Name);
+            nested.AddSplitter(splitContainer1, defaultDistance: splitContainer1.Panel1MinSize + 1);
+            nested.AddSplitter(splitContainer2, defaultDistance: splitContainer2.Panel1MinSize + 1);
+        }
+
         public void ConfigureRepositoryHostPlugin(IRepositoryHostPlugin? gitHoster)
         {
             _gitHoster = gitHoster;
