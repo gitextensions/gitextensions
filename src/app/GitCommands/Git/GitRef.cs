@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using GitExtensions.Extensibility.Git;
-using GitExtensions.Extensibility.Settings;
 
 namespace GitCommands
 {
@@ -89,18 +88,18 @@ namespace GitCommands
             {
                 if (IsRemote)
                 {
-                    return CompleteName.SubstringAfterLast("remotes/");
+                    return CompleteName.SubstringAfter("remotes/");
                 }
 
                 if (IsTag)
                 {
                     // we need the one containing ^{}, because it contains the reference
-                    return CompleteName.RemoveSuffix(GitRefName.TagDereferenceSuffix).SubstringAfterLast("tags/");
+                    return CompleteName.RemoveSuffix(GitRefName.TagDereferenceSuffix).SubstringAfter("tags/");
                 }
 
                 if (IsHead)
                 {
-                    return CompleteName.SubstringAfterLast("heads/");
+                    return CompleteName.SubstringAfter("heads/");
                 }
 
                 // if we don't know ref type then we don't know if '/' is a valid ref character
@@ -131,7 +130,7 @@ namespace GitCommands
         [AllowNull]
         public string TrackingRemote
         {
-            get => GetTrackingRemote(Module.LocalConfigFile);
+            get => Module.GetEffectiveSetting(_remoteSettingName);
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -151,16 +150,10 @@ namespace GitCommands
         }
 
         /// <inheritdoc />
-        public string GetTrackingRemote(ISettingsValueGetter configFile)
-        {
-            return configFile.GetValue(_remoteSettingName);
-        }
-
-        /// <inheritdoc />
         [AllowNull]
         public string MergeWith
         {
-            get => GetMergeWith(Module.LocalConfigFile);
+            get => Module.GetEffectiveSetting(_mergeSettingName).RemovePrefix(GitRefName.RefsHeadsPrefix);
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -172,12 +165,6 @@ namespace GitCommands
                     Module.SetSetting(_mergeSettingName, GitRefName.GetFullBranchName(value));
                 }
             }
-        }
-
-        /// <inheritdoc />
-        public string GetMergeWith(ISettingsValueGetter configFile)
-        {
-            return configFile.GetValue(_mergeSettingName).RemovePrefix(GitRefName.RefsHeadsPrefix);
         }
 
         public static GitRef NoHead(IGitModule module)

@@ -19,14 +19,14 @@ namespace GitCommandsTests_Git
         public void Validate_should_throw_if_tag_name_invalid(string tagName)
         {
             GitCreateTagArgs args = new(tagName, Revision);
-            Assert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
+            ClassicAssert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
         }
 
         [Test]
         public void Validate_should_throw_if_tag_revision_invalid()
         {
             GitCreateTagArgs args = new(TagName, null);
-            Assert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
+            ClassicAssert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
         }
 
         [TestCase(null)]
@@ -35,14 +35,14 @@ namespace GitCommandsTests_Git
         public void Validate_should_throw_for_SignWithSpecificKey_if_tag_keyId_invalid(string signKeyId)
         {
             GitCreateTagArgs args = new(TagName, Revision, TagOperation.SignWithSpecificKey, signKeyId: signKeyId);
-            Assert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
+            ClassicAssert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
         }
 
         [Test]
         public void ToLine_should_throw_if_operation_not_supported()
         {
             GitCreateTagArgs args = new(TagName, Revision, (TagOperation)10);
-            Assert.Throws<NotSupportedException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
+            ClassicAssert.Throws<NotSupportedException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
         }
 
         [TestCase(true, "tag -f -s -F \"c:/.git/TAGMESSAGE\" \"bla\" -- 0123456789012345678901234567890123456789")]
@@ -54,7 +54,7 @@ namespace GitCommandsTests_Git
 
             string cmdLine = cmd.Arguments;
 
-            Assert.AreEqual(expected, cmdLine);
+            ClassicAssert.AreEqual(expected, cmdLine);
         }
 
         [TestCase(TagOperation.Lightweight, "tag -f \"bla\" -- 0123456789012345678901234567890123456789")]
@@ -68,7 +68,7 @@ namespace GitCommandsTests_Git
 
             string actualCmdLine = cmd.Arguments;
 
-            Assert.AreEqual(expected, actualCmdLine);
+            ClassicAssert.AreEqual(expected, actualCmdLine);
         }
     }
 }

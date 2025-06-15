@@ -23,6 +23,8 @@ namespace GitUI.CommandsDialogs
             : base(commands)
         {
             InitializeComponent();
+            Stashed.Bind(() => RefreshAll());
+            Stashed.BindContextMenu(View.CherryPickAllChanges, getSupportLinePatching: () => View.SupportLinePatching);
             View.ExtraDiffArgumentsChanged += delegate { StashedSelectedIndexChanged(this, EventArgs.Empty); };
             View.TopScrollReached += FileViewer_TopScrollReached;
             View.BottomScrollReached += FileViewer_BottomScrollReached;
@@ -171,7 +173,6 @@ namespace GitUI.CommandsDialogs
             Loading.Visible = true;
             Loading.IsAnimating = true;
             Stashes.Enabled = false;
-            refreshToolStripButton.Enabled = false;
             StashMessage.ReadOnly = true;
             if (gitStash == _currentWorkingDirStashItem)
             {
@@ -286,18 +287,18 @@ namespace GitUI.CommandsDialogs
             Loading.Visible = false;
             Loading.IsAnimating = false;
             Stashes.Enabled = true;
-            refreshToolStripButton.Enabled = gitStash == _currentWorkingDirStashItem;
         }
 
         private void ResizeStashesWidth()
         {
-            Stashes.Size = new Size(toolStrip1.Width - 15 - refreshToolStripButton.Width - showToolStripLabel.Width, Stashes.Size.Height);
+            const int spacingBetweenLabelAndComboBox = 5;
+            Stashes.Width = toolStrip1.Width - DpiUtil.Scale(spacingBetweenLabelAndComboBox) - showToolStripLabel.Width;
         }
 
         private void StashedSelectedIndexChanged(object sender, EventArgs e)
         {
-            _ = View.ViewChangesAsync(Stashed.SelectedItem,
-                cancellationToken: _viewChangesSequence.Next());
+            CancellationToken cancellationToken = _viewChangesSequence.Next();
+            this.InvokeAndForget(() => View.ViewChangesAsync(Stashed.SelectedItem, cancellationToken), cancellationToken: cancellationToken);
             EnablePartialStash();
         }
 
@@ -409,11 +410,6 @@ namespace GitUI.CommandsDialogs
                 dpiScaleBounds: false);
         }
 
-        private void RefreshClick(object sender, EventArgs e)
-        {
-            RefreshAll();
-        }
-
         private void RefreshAll(bool force = false)
         {
             if (!force && Stashes.SelectedIndex != 0)
@@ -451,16 +447,6 @@ namespace GitUI.CommandsDialogs
             {
                 Close();
             }
-        }
-
-        private void CherryPickFileChangesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            View.CherryPickAllChanges();
-        }
-
-        private void ContextMenuStripStashedFiles_Opening(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            cherryPickFileChangesToolStripMenuItem.Enabled = Stashed.SelectedItems.Count() == 1 && View.SupportLinePatching;
         }
     }
 }

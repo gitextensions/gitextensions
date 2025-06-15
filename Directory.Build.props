@@ -3,7 +3,8 @@
   <Import Project="eng\Tests.props" />
 
   <PropertyGroup>
-    <LangVersion>12</LangVersion>
+    <!-- Enable C#13 keyword "field" -->
+    <LangVersion>preview</LangVersion>
     <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Nullable>enable</Nullable>

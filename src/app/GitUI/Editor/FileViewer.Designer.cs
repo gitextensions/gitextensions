@@ -218,7 +218,6 @@ namespace GitUI.Editor
             // showSyntaxHighlightingToolStripMenuItem
             // 
             showSyntaxHighlightingToolStripMenuItem.Image = Properties.Resources.SyntaxHighlighting;
-            showSyntaxHighlightingToolStripMenuItem.ImageTransparentColor = Color.Magenta;
             showSyntaxHighlightingToolStripMenuItem.Name = "showSyntaxHighlightingToolStripMenuItem";
             showSyntaxHighlightingToolStripMenuItem.Size = new Size(243, 22);
             showSyntaxHighlightingToolStripMenuItem.Text = "Show synta&x highlighting";
@@ -244,7 +243,7 @@ namespace GitUI.Editor
             showPatchToolStripMenuItem.Name = "showPatchToolStripMenuItem";
             showPatchToolStripMenuItem.Size = new Size(243, 22);
             showPatchToolStripMenuItem.Text = "&Patch";
-            showPatchToolStripMenuItem.Click += ToggleGitWordColoringToolStripMenuItemClick;
+            showPatchToolStripMenuItem.Click += ResetPatchAppearanceToolStripMenuItemClick;
             // 
             // showGitWordColoringToolStripMenuItem
             // 
@@ -331,7 +330,6 @@ namespace GitUI.Editor
             // 
             nextChangeButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
             nextChangeButton.Image = Properties.Images.ArrowDown;
-            nextChangeButton.ImageTransparentColor = Color.Magenta;
             nextChangeButton.Name = "nextChangeButton";
             nextChangeButton.Size = new Size(23, 20);
             nextChangeButton.ToolTipText = "Next change";
@@ -341,7 +339,6 @@ namespace GitUI.Editor
             // 
             previousChangeButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
             previousChangeButton.Image = Properties.Images.ArrowUp;
-            previousChangeButton.ImageTransparentColor = Color.Magenta;
             previousChangeButton.Name = "previousChangeButton";
             previousChangeButton.Size = new Size(23, 20);
             previousChangeButton.ToolTipText = "Previous change";
@@ -356,7 +353,6 @@ namespace GitUI.Editor
             // 
             increaseNumberOfLines.DisplayStyle = ToolStripItemDisplayStyle.Image;
             increaseNumberOfLines.Image = Properties.Images.NumberOfLinesIncrease;
-            increaseNumberOfLines.ImageTransparentColor = Color.Magenta;
             increaseNumberOfLines.Name = "increaseNumberOfLines";
             increaseNumberOfLines.Size = new Size(23, 20);
             increaseNumberOfLines.ToolTipText = "Increase the number of lines of context";
@@ -366,7 +362,6 @@ namespace GitUI.Editor
             // 
             decreaseNumberOfLines.DisplayStyle = ToolStripItemDisplayStyle.Image;
             decreaseNumberOfLines.Image = Properties.Images.NumberOfLinesDecrease;
-            decreaseNumberOfLines.ImageTransparentColor = Color.Magenta;
             decreaseNumberOfLines.Name = "decreaseNumberOfLines";
             decreaseNumberOfLines.Size = new Size(23, 20);
             decreaseNumberOfLines.ToolTipText = "Decrease the number of lines of context";
@@ -381,7 +376,6 @@ namespace GitUI.Editor
             // 
             showEntireFileButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
             showEntireFileButton.Image = Properties.Images.ShowEntireFile;
-            showEntireFileButton.ImageTransparentColor = Color.Magenta;
             showEntireFileButton.Name = "showEntireFileButton";
             showEntireFileButton.Size = new Size(23, 20);
             showEntireFileButton.ToolTipText = "Show entire file";
@@ -391,7 +385,6 @@ namespace GitUI.Editor
             // 
             showNonPrintChars.DisplayStyle = ToolStripItemDisplayStyle.Image;
             showNonPrintChars.Image = Properties.Images.ShowWhitespace;
-            showNonPrintChars.ImageTransparentColor = Color.Magenta;
             showNonPrintChars.Name = "showNonPrintChars";
             showNonPrintChars.Size = new Size(23, 20);
             showNonPrintChars.ToolTipText = "Show nonprinting characters";
@@ -400,7 +393,6 @@ namespace GitUI.Editor
             // ignoreWhitespaceAtEol
             // 
             ignoreWhitespaceAtEol.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            ignoreWhitespaceAtEol.ImageTransparentColor = Color.Magenta;
             ignoreWhitespaceAtEol.Name = "ignoreWhitespaceAtEol";
             ignoreWhitespaceAtEol.Size = new Size(23, 4);
             ignoreWhitespaceAtEol.ToolTipText = "Ignore whitespace changes at end of line";
@@ -409,7 +401,6 @@ namespace GitUI.Editor
             // ignoreWhiteSpaces
             // 
             ignoreWhiteSpaces.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            ignoreWhiteSpaces.ImageTransparentColor = Color.Magenta;
             ignoreWhiteSpaces.Name = "ignoreWhiteSpaces";
             ignoreWhiteSpaces.Size = new Size(23, 4);
             ignoreWhiteSpaces.ToolTipText = "Ignore changes in amount of whitespace";
@@ -428,7 +419,6 @@ namespace GitUI.Editor
             // 
             settingsButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
             settingsButton.Image = Properties.Images.Settings;
-            settingsButton.ImageTransparentColor = Color.Magenta;
             settingsButton.Name = "settingsButton";
             settingsButton.Size = new Size(23, 20);
             settingsButton.ToolTipText = "Settings";
@@ -437,7 +427,6 @@ namespace GitUI.Editor
             // ignoreAllWhitespaces
             // 
             ignoreAllWhitespaces.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            ignoreAllWhitespaces.ImageTransparentColor = Color.Magenta;
             ignoreAllWhitespaces.Name = "ignoreAllWhitespaces";
             ignoreAllWhitespaces.Size = new Size(23, 4);
             ignoreAllWhitespaces.ToolTipText = "Ignore all whitespace changes";
@@ -460,7 +449,6 @@ namespace GitUI.Editor
             // llShowPreview
             //
             _NO_TRANSLATE_lblShowPreview.AutoSize = true;
-            _NO_TRANSLATE_lblShowPreview.BackColor = Color.White;
             _NO_TRANSLATE_lblShowPreview.Location = new Point(43, 23);
             _NO_TRANSLATE_lblShowPreview.Name = "_NO_TRANSLATE_lblShowPreview";
             _NO_TRANSLATE_lblShowPreview.Size = new Size(214, 13);
@@ -488,7 +476,6 @@ namespace GitUI.Editor
             // 
             showSyntaxHighlighting.DisplayStyle = ToolStripItemDisplayStyle.Image;
             showSyntaxHighlighting.Image = Properties.Resources.SyntaxHighlighting;
-            showSyntaxHighlighting.ImageTransparentColor = Color.Magenta;
             showSyntaxHighlighting.Name = "showSyntaxHighlighting";
             showSyntaxHighlighting.Size = new Size(23, 22);
             showSyntaxHighlighting.ToolTipText = "Show syntax highlighting";

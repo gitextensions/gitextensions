@@ -1,3 +1,4 @@
+using System.Collections.Immutable;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Text;
@@ -749,10 +750,21 @@ namespace GitUI
             }
         }
 
-        private bool StartResetChangesDialog(string fileName)
+        /// <summary>
+        ///  Resets changes of passed files or folders (with absolute or relative paths).<br/>
+        ///  If no <paramref name="names"/> are passed all changes are reset.
+        /// </summary>
+        /// <returns><see langword="false"/> if cancelled or if no items match.</returns>
+        private bool StartResetChangesDialog(string[] names)
         {
+            ImmutableHashSet<string> relativeFilePaths = [.. names.Select(fileName => Path.GetRelativePath(Module.WorkingDir, fileName).ToPosixPath())];
+            ImmutableHashSet<string> relativeFolderPaths = [.. relativeFilePaths.Where(name => Directory.Exists(Path.Combine(Module.WorkingDir, name)))];
+            bool allItems = relativeFolderPaths.Contains(".");
+            GitItemStatus[] selectedItems = [.. Module.GetAllChangedFilesWithSubmodulesStatus(cancellationToken: default)
+                .Where(item => allItems || relativeFilePaths.Contains(item.Name) || relativeFolderPaths.Any(folder => item.Path.Value.StartsWith(folder)))];
+
             // Show a form asking the user if they want to reset the changes.
-            FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(null, hasExistingFiles: true, hasNewFiles: false);
+            FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(null, hasExistingFiles: selectedItems.Any(item => item.IsTracked), hasNewFiles: selectedItems.Any(item => item.IsNew));
 
             if (resetType == FormResetChanges.ActionEnum.Cancel)
             {
@@ -762,14 +774,12 @@ namespace GitUI
             using (WaitCursorScope.Enter())
             {
                 // Reset all changes.
-                if (string.IsNullOrWhiteSpace(fileName))
+                if (names.Length == 0)
                 {
                     return Module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete, onlyWorkTree: false);
                 }
 
-                string filePath = Path.GetRelativePath(Module.WorkingDir, fileName).ToPosixPath();
-                List<GitItemStatus> selectedItems = Module.GetAllChangedFilesWithSubmodulesStatus(cancellationToken: default).Where(item => item.Name == filePath).ToList();
-                if (selectedItems.Count < 1)
+                if (selectedItems.Length == 0)
                 {
                     return false;
                 }
@@ -820,10 +830,7 @@ namespace GitUI
 
         public bool StartCherryPickDialog(IWin32Window? owner, IEnumerable<GitRevision> revisions)
         {
-            if (revisions is null)
-            {
-                throw new ArgumentNullException(nameof(revisions));
-            }
+            ArgumentNullException.ThrowIfNull(revisions);
 
             bool Action()
             {
@@ -1496,7 +1503,8 @@ namespace GitUI
                     return StartRemotesDialog(owner: null);
                 case "revert":
                 case "reset":
-                    return StartResetChangesDialog(args.Count == 3 ? args[2] : "");
+                    // If names of files or folders have been specified, pass them
+                    return StartResetChangesDialog(names: [.. args.Skip(2)]);
                 case "searchfile":
                     return RunSearchFileCommand();
                 case "settings":
@@ -1547,16 +1555,14 @@ namespace GitUI
 
         private static bool UninstallEditor()
         {
-            ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(false);
-
-            string coreEditor = configFileGlobalSettings.GetValue("core.editor");
-            string path = AppSettings.GetInstallDir().ToPosixPath();
-            if (path is not null && coreEditor.ToLowerInvariant().Contains(path.ToLowerInvariant()))
+            GitConfigSettings globalSettings = new(new Executable(AppSettings.GitCommand), GitSettingLevel.Global);
+            string? coreEditor = globalSettings.GetValue("core.editor");
+            string? path = AppSettings.GetInstallDir().ToPosixPath();
+            if (path is not null && coreEditor?.Contains(path, StringComparison.InvariantCultureIgnoreCase) is true)
             {
-                configFileGlobalSettings.SetValue("core.editor", "");
+                globalSettings.SetValue("core.editor", value: null);
+                globalSettings.Save();
             }
-
-            configFileGlobalSettings.Save();
 
             return true;
         }

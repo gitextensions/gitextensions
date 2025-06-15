@@ -11,7 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph
             return Math.Abs(seed) % PresetGraphBrushes.Count;
         }
 
-        public static Color NonRelativeColor { get; } = Color.LightGray;
+        public static Color NonRelativeColor { get; } = AppColor.GraphNonRelativeBranch.GetThemeColor();
 
         internal static Brush NonRelativeBrush { get; }
 
@@ -23,12 +23,14 @@ namespace GitUI.UserControls.RevisionGrid.Graph
                 .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1]))
                 .Select(name => ((AppColor)Enum.Parse(typeof(AppColor), name)).GetThemeColor())
                 .Where(color => !color.IsEmpty)
+                .Distinct()
                 .ToArray();
 
-            if (branchColors.Length < 2)
+            const int minBranchColors = 4;
+            if (branchColors.Length < minBranchColors)
             {
-                Trace.WriteLine("At least two graph colors must be configured");
-                branchColors = [Color.Magenta, Color.Cyan];
+                Trace.WriteLine(@"At least {minBranchColors} different graph colors must be configured - using crying fallback");
+                branchColors = [Color.Cyan, Color.Magenta, Color.Yellow, Color.Lime];
             }
 
             foreach (Color color in branchColors)

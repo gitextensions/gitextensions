@@ -57,7 +57,7 @@ namespace GitCommands
             LockedAction(SaveImpl);
         }
 
-        private void Load()
+        public void Load()
         {
             LockedAction(() =>
                 {

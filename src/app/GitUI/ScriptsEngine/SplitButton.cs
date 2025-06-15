@@ -292,20 +292,16 @@ namespace GitUI.ScriptsEngine
 
             Graphics g = pevent.Graphics;
             Rectangle bounds = ClientRectangle;
+            pevent.Graphics.Clear(SystemColors.Window);
 
             // draw the button background as according to the current state.
             if (State != PushButtonState.Pressed && IsDefault && !Application.RenderWithVisualStyles)
             {
                 Rectangle backgroundBounds = bounds;
                 backgroundBounds.Inflate(-1, -1);
-                ButtonRenderer.DrawButton(g, backgroundBounds, State);
 
                 // button renderer doesn't draw the black frame when themes are off
                 g.DrawRectangle(SystemPens.WindowFrame, 0, 0, bounds.Width - 1, bounds.Height - 1);
-            }
-            else
-            {
-                ButtonRenderer.DrawButton(g, bounds, State);
             }
 
             // calculate the current dropdown rectangle.

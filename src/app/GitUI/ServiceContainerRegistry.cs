@@ -21,9 +21,10 @@ public static class ServiceContainerRegistry
         serviceContainer.GetRequiredService<ISubscribableTraceListener>().TraceReceived += (in string message) =>
         {
             // In release builds, all Trace.Write* output is recorded.
-            // In debug builds, forward only exceptions but not all the noisy Debug.Write* output.
+            // In debug builds, forward only exceptions and DebugHelper.Trace messages but not all the noisy Debug.Write* output.
 #if DEBUG
-            if (message.Contains("Exception"))
+            const char noBreakSpace = '\u00a0';
+            if (message.Contains("Exception") || message.Contains($":{noBreakSpace}"))
 #endif
             {
                 outputHistoryModel.RecordHistory(message);

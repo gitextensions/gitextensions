@@ -76,10 +76,7 @@ public partial class GitGpgController : IGitGpgController
     /// <returns>Enum value that indicate the gpg status for current git revision.</returns>
     public async Task<CommitStatus> GetRevisionCommitSignatureStatusAsync(GitRevision revision)
     {
-        if (revision is null)
-        {
-            throw new ArgumentNullException(nameof(revision));
-        }
+        ArgumentNullException.ThrowIfNull(revision);
 
         IGitModule module = GetModule();
 
@@ -127,10 +124,7 @@ public partial class GitGpgController : IGitGpgController
     /// <returns>Enum value that indicate if current git revision has one tag with good signature, one tag with bad signature or more than one tag.</returns>
     public async Task<TagStatus> GetRevisionTagSignatureStatusAsync(GitRevision revision)
     {
-        if (revision is null)
-        {
-            throw new ArgumentNullException(nameof(revision));
-        }
+        ArgumentNullException.ThrowIfNull(revision);
 
         /* No Tag present, exit */
         List<IGitRef> usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
@@ -181,10 +175,7 @@ public partial class GitGpgController : IGitGpgController
     /// <returns>Full string coming from GPG analysis on current revision.</returns>
     public string GetCommitVerificationMessage(GitRevision revision)
     {
-        if (revision is null)
-        {
-            throw new ArgumentNullException(nameof(revision));
-        }
+        ArgumentNullException.ThrowIfNull(revision);
 
         IGitModule module = GetModule();
         GitArgumentBuilder args = new("log")
@@ -202,10 +193,7 @@ public partial class GitGpgController : IGitGpgController
     /// <returns>Full string coming from GPG analysis on current revision.</returns>
     public string? GetTagVerifyMessage(GitRevision revision)
     {
-        if (revision is null)
-        {
-            throw new ArgumentNullException(nameof(revision));
-        }
+        ArgumentNullException.ThrowIfNull(revision);
 
         List<IGitRef> usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
         return EvaluateTagVerifyMessage(usefulTagRefs);

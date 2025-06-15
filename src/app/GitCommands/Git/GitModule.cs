@@ -1,4 +1,5 @@
-using System.ComponentModel;
+using System;
+using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Security;
@@ -8,6 +9,7 @@ using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
 using GitCommands.Patches;
+using GitCommands.Remotes;
 using GitCommands.Settings;
 using GitCommands.Utils;
 using GitExtensions.Extensibility;
@@ -28,6 +30,8 @@ namespace GitCommands
     public sealed partial class GitModule : IGitModule
     {
         private const string GitError = "Git Error";
+
+        private static readonly Encoding _defaultEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
         private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
 
         // the amount of lines we must skip in order to get to an annotated tag's message when doing git cat-file -p <tag_name>
@@ -42,6 +46,7 @@ namespace GitCommands
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
         private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
+        private FrozenDictionary<string, Color>? _remoteColors;
 
         // The executable may use Windows Git (native to the app, always used in special situations) or WSL Git.
         private readonly IGitCommandRunner _gitCommandRunner;
@@ -93,7 +98,9 @@ namespace GitCommands
             _wslDistro = AppSettings.WslGitEnabled ? PathUtil.GetWslDistro(WorkingDir) : "";
             if (!string.IsNullOrEmpty(_wslDistro))
             {
-                _gitExecutable = new Executable(() => AppSettings.WslGitCommand, WorkingDir, $"-d {_wslDistro} {AppSettings.WslGitPath} ");
+                // In some WSL environments the current working directory is not passed along to the git command without using the `--cd` argument. Adding it to
+                // the command line is required for these environments. For those that do not need it using the argument is just redundant.
+                _gitExecutable = new Executable(() => AppSettings.WslCommand, WorkingDir, $"-d {_wslDistro} --cd {WorkingDir.RemoveTrailingPathSeparator().Quote()} {AppSettings.WslGitCommand} ");
                 _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
             }
             else
@@ -191,7 +198,7 @@ namespace GitCommands
         /// <summary>
         /// GitVersion for the default GitExecutable.
         /// </summary>
-        public IGitVersion GitVersion => GitCommands.GitVersion.CurrentVersion(GitExecutable, _wslDistro);
+        public IGitVersion GitVersion => Git.GitVersion.CurrentVersion(GitExecutable);
 
         /// <inherit/>
         public IExecutable GitExecutable => _gitExecutable;
@@ -277,28 +284,25 @@ namespace GitCommands
             }
         }
 
-        private ConfigFileSettings? _effectiveConfigFile;
-
-        public IConfigFileSettings EffectiveConfigFile
+        private GitEncodingSettingsGetter GitEncodingSettingsGetter
         {
             get
             {
-                if (_effectiveConfigFile is null)
+                if (field is null)
                 {
                     lock (_lock)
                     {
-                        _effectiveConfigFile ??= ConfigFileSettings.CreateEffective(module: this);
+                        field ??= new GitEncodingSettingsGetter(new EffectiveGitConfigSettings(GitExecutable));
                     }
                 }
 
-                return _effectiveConfigFile;
+                return field;
             }
         }
 
-        public IConfigFileSettings LocalConfigFile
-            => new ConfigFileSettings(lowerPriority: null, ((ConfigFileSettings)EffectiveConfigFile).SettingsCache, SettingLevel.Local);
+        private ISettingsValueGetter EffectiveGitConfigSettings => GitEncodingSettingsGetter.SettingsValueGetter;
 
-        IConfigFileSettings IGitModule.LocalConfigFile => LocalConfigFile;
+        private IGitConfigSettingsGetter LocalGitConfigSettings => field ??= new GitConfigSettings(GitExecutable, GitSettingLevel.Local);
 
         // encoding for files paths
         private static Encoding? _systemEncoding;
@@ -316,11 +320,19 @@ namespace GitCommands
         // 4) branch, tag name, errors, warnings, hints encoded in system default encoding
         public static readonly Encoding LosslessEncoding = Encoding.GetEncoding("ISO-8859-1"); // is any better?
 
-        public Encoding FilesEncoding => ((ConfigFileSettings)EffectiveConfigFile).FilesEncoding ?? new UTF8Encoding(false);
+        public Encoding FilesEncoding => GitEncodingSettingsGetter.FilesEncoding ?? _defaultEncoding;
 
-        public Encoding CommitEncoding => ((ConfigFileSettings)EffectiveConfigFile).CommitEncoding ?? new UTF8Encoding(false);
+        public Encoding CommitEncoding => GitEncodingSettingsGetter.CommitEncoding ?? _defaultEncoding;
 
-        public Encoding LogOutputEncoding => ((ConfigFileSettings)EffectiveConfigFile).LogOutputEncoding ?? CommitEncoding;
+        public Encoding LogOutputEncoding => GitEncodingSettingsGetter.LogOutputEncoding ?? CommitEncoding;
+
+        public IEnumerable<(string Setting, string Value)> GetAllLocalSettings() => LocalGitConfigSettings.GetAllValues();
+
+        public void InvalidateGitSettings()
+        {
+            EffectiveGitConfigSettings.Invalidate();
+            LocalGitConfigSettings.Invalidate();
+        }
 
         /// <summary>Indicates whether the <see cref="WorkingDir"/> contains a git repository.</summary>
         public bool IsValidGitWorkingDir()
@@ -651,7 +663,7 @@ namespace GitCommands
             }
 
             byte[] blobData = blobStream.ToArray();
-            if (((ConfigFileSettings)EffectiveConfigFile).ByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf") is AutoCRLFType.@true)
+            if (GetEffectiveSetting<AutoCRLFType>("core.autocrlf") is AutoCRLFType.@true)
             {
                 if (!FileHelper.IsBinaryFileName(this, saveAs) && !FileHelper.IsBinaryFileAccordingToContent(blobData))
                 {
@@ -945,7 +957,7 @@ namespace GitCommands
         {
             // Use Windows Git if custom tool is selected as the list is native to the application.
             bool isWindowsGit = !string.IsNullOrWhiteSpace(customTool);
-            string gui = (isWindowsGit ? GitCommands.GitVersion.Current : GitVersion).SupportGuiMergeTool ? "--gui" : string.Empty;
+            string gui = (isWindowsGit ? Git.GitVersion.Current : GitVersion).SupportGuiMergeTool ? "--gui" : string.Empty;
             GitArgumentBuilder args = new("mergetool")
             {
                 { string.IsNullOrWhiteSpace(customTool), gui, $"--tool={customTool}" },
@@ -1369,6 +1381,7 @@ namespace GitCommands
             List<string> filesToCheckout = [];
             List<string> filesToReset = [];
             List<string> filesCannotCheckout = [];
+            HashSet<GitItemStatus> deletedItems = [];
             output = new();
             Lazy<List<GitItemStatus>> postUnstageStatus = new(() => GetAllChangedFilesWithSubmodulesStatus().ToList());
 
@@ -1383,10 +1396,12 @@ namespace GitCommands
                         if (File.Exists(path))
                         {
                             File.Delete(path);
+                            deletedItems.Add(item);
                         }
                         else if (Directory.Exists(path))
                         {
                             Directory.Delete(path, recursive: true);
+                            deletedItems.Add(item);
                         }
                     }
                     catch (IOException)
@@ -1400,7 +1415,7 @@ namespace GitCommands
 
                 if (resetId == ObjectId.IndexId)
                 {
-                    if (!postUnstageStatus.Value.Any(i => i.Name == item.Name))
+                    if (deletedItems.Contains(item) || !postUnstageStatus.Value.Any(i => i.Name == item.Name))
                     {
                         // Already removed (for instance new file)
                         continue;
@@ -1455,7 +1470,7 @@ namespace GitCommands
             // 'git-checkout --' must be used for Index (git-reset will copy HEAD to Index, git-restore from 2.25 could be used).
             // However, Unmerged (Conflict) files cannot be checked out to Index.
             static bool UnmergedIndex(GitItemStatus item, Lazy<List<GitItemStatus>> status)
-                => status.Value.Any(i => (i.IsUnmerged || i.IsNew) && i.Name == item.Name) || !status.Value.Any(i => i.Name == item.Name);
+                => status.Value.Any(i => (i.IsUnmerged || (i.IsNew && i.Staged == item.Staged)) && i.Name == item.Name) || !status.Value.Any(i => i.Name == item.Name);
         }
 
         /// <summary>
@@ -1598,8 +1613,8 @@ namespace GitCommands
         {
             return new ArgumentBuilder
             {
-                { string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("fetch.parallel")), "-c fetch.parallel=0" },
-                { string.IsNullOrWhiteSpace(EffectiveConfigFile.GetValue("submodule.fetchJobs")), "-c submodule.fetchJobs=0" },
+                { string.IsNullOrWhiteSpace(GetEffectiveSetting("fetch.parallel")), "-c fetch.parallel=0" },
+                { string.IsNullOrWhiteSpace(GetEffectiveSetting("submodule.fetchjobs")), "-c submodule.fetchjobs=0" },
             };
         }
 
@@ -1739,7 +1754,7 @@ namespace GitCommands
                     {
                         foreach (GitItemStatus file in nonDeletedFiles)
                         {
-                            UpdateIndex(inputWriter, file.Name);
+                            UpdateIndex(inputWriter, file.Name.TrimEnd('/'));
                         }
                     },
                     SystemEncoding,
@@ -1957,6 +1972,12 @@ namespace GitCommands
             return InTheMiddleOfConflictedMerge() || InTheMiddleOfRebase();
         }
 
+        public void RemoveConfigSection(string section, string? subsection)
+        {
+            GitExecutable.RemoveConfigSection(GitSettingLevel.Local, section, subsection);
+            InvalidateGitSettings();
+        }
+
         public string RemoveRemote(string remoteName)
         {
             GitArgumentBuilder args = new("remote")
@@ -1964,7 +1985,9 @@ namespace GitCommands
                 "rm",
                 remoteName.QuoteNE()
             };
-            return _gitExecutable.GetOutput(args);
+            string output = _gitExecutable.GetOutput(args);
+            InvalidateGitSettings();
+            return output;
         }
 
         public string RenameRemote(string remoteName, string newName)
@@ -1975,7 +1998,9 @@ namespace GitCommands
                 remoteName.QuoteNE(),
                 newName.QuoteNE()
             };
-            return _gitExecutable.GetOutput(args);
+            string output = _gitExecutable.GetOutput(args);
+            InvalidateGitSettings();
+            return output;
         }
 
         public string AddRemote(string? name, string? path)
@@ -1985,13 +2010,15 @@ namespace GitCommands
                 return "Please enter a name.";
             }
 
-            return _gitExecutable.GetOutput(
-                new GitArgumentBuilder("remote")
-                {
-                    "add",
-                    name.Quote(),
-                    GetPathForGitExecution(path).QuoteNE()
-                });
+            GitArgumentBuilder args = new("remote")
+            {
+                "add",
+                name.Quote(),
+                GetPathForGitExecution(path).QuoteNE()
+            };
+            string output = _gitExecutable.GetOutput(args);
+            InvalidateGitSettings();
+            return output;
         }
 
         public IReadOnlyList<string> GetRemoteNames()
@@ -2080,52 +2107,45 @@ namespace GitCommands
             }
         }
 
-        public IEnumerable<string> GetSettings(string setting)
+        public FrozenDictionary<string, Color> GetRemoteColors()
         {
-            return ((ConfigFileSettings)LocalConfigFile).GetValues(setting);
-        }
-
-        public string GetSetting(string setting) => LocalConfigFile.GetValue(setting);
-        public T? GetSetting<T>(string setting) where T : struct => LocalConfigFile.GetValue<T>(setting);
-
-        public string GetEffectiveSetting(string setting) => EffectiveConfigFile.GetValue(setting);
-        public T? GetEffectiveSetting<T>(string setting) where T : struct => EffectiveConfigFile.GetValue<T>(setting);
-
-        public SettingsSource GetEffectiveSettingsByPath(string path)
-        {
-            return ((ConfigFileSettings)EffectiveConfigFile).ByPath(path);
-        }
-
-        public string? GetGitSetting(string setting, string scopeArg, bool cache = false)
-        {
-            GitArgumentBuilder args = new("config") { "--includes", scopeArg, "--get", setting };
-            ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: false);
-
-            // Handle no value set, is error code 1: https://git-scm.com/docs/git-config#_description
-            const int ConfigKeyInvalidOrNotSet = 1;
-            if (result.ExitCode == ConfigKeyInvalidOrNotSet)
+            if (_remoteColors is null)
             {
-                return null;
+                lock (_lock)
+                {
+                    _remoteColors ??= new ConfigFileRemoteSettingsManager(getModule: () => this)
+                                .LoadRemotes(loadDisabled: false)
+                                .Where(r => !string.IsNullOrEmpty(r.Color) && !string.IsNullOrEmpty(r.Name))
+                                .ToFrozenDictionary(r => r.Name, r => ColorTranslator.FromHtml(r.Color), StringComparer.Ordinal);
+                }
             }
 
-            result.ThrowIfErrorExit("Error getting config value");
-
-            return result.StandardOutput.Trim();
+            return _remoteColors;
         }
 
-        public string? GetEffectiveGitSetting(string setting, bool cache = false)
+        public void ResetRemoteColors()
         {
-            return GetGitSetting(setting, scopeArg: "", cache);
+            lock (_lock)
+            {
+                _remoteColors = null;
+            }
         }
+
+        public IEnumerable<string> GetSettings(string setting) => LocalGitConfigSettings.GetValues(setting);
+
+        public string GetSetting(string setting) => GetEffectiveSetting(setting);
+
+        public string GetEffectiveSetting(string setting, string defaultValue = "") => EffectiveGitConfigSettings.GetValue(setting) ?? defaultValue;
+        public T? GetEffectiveSetting<T>(string setting) where T : struct => EffectiveGitConfigSettings.GetValue<T>(setting);
 
         public void UnsetSetting(string setting)
         {
-            SetSetting(setting, null);
+            SetGitSetting(GitSettingLevel.Local, setting, value: null);
         }
 
-        public void SetSetting(string setting, string? value)
+        public void SetSetting(string setting, string value, bool append = false)
         {
-            ((ConfigFileSettings)LocalConfigFile).SetValue(setting, value);
+            SetGitSetting(GitSettingLevel.Local, setting, value, append);
         }
 
         internal GitArgumentBuilder GetStashesCmd(bool noLocks)
@@ -2251,7 +2271,7 @@ namespace GitCommands
                 cancellationToken: cancellationToken);
             if (!result.ExitedSuccessfully)
             {
-                return (Patch: null, ErrorMessage: $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {args}{Environment.NewLine}");
+                return (Patch: null, ErrorMessage: $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCodeDisplay}): {args}{Environment.NewLine}");
             }
 
             string patch = result.StandardOutput;
@@ -2328,7 +2348,7 @@ namespace GitCommands
             });
         }
 
-        private ExecutionResult GetGrepFiles(ObjectId objectId, string grepString, CancellationToken cancellationToken = default)
+        private ExecutionResult GetGrepFiles(ObjectId objectId, string grepString, bool applyAppSettings, CancellationToken cancellationToken = default)
         {
             bool noCache = objectId.IsArtificial;
 
@@ -2337,9 +2357,9 @@ namespace GitCommands
                 {
                     "--files-with-matches",
                     "-z",
-                    AppSettings.GitGrepUserArguments.Value,
-                    { AppSettings.GitGrepIgnoreCase.Value, "--ignore-case" },
-                    { AppSettings.GitGrepMatchWholeWord.Value, "--word-regexp" },
+                    { applyAppSettings, AppSettings.GitGrepUserArguments.Value },
+                    { applyAppSettings && AppSettings.GitGrepIgnoreCase.Value, "--ignore-case" },
+                    { applyAppSettings && AppSettings.GitGrepMatchWholeWord.Value, "--word-regexp" },
                     grepString,
                     !objectId.IsArtificial ? objectId.ToString() : objectId == ObjectId.IndexId ? "--cached" : "",
                     "--"
@@ -2349,10 +2369,10 @@ namespace GitCommands
                 cancellationToken: cancellationToken);
         }
 
-        public IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string grepString, CancellationToken cancellationToken)
+        public IReadOnlyList<GitItemStatus> GetGrepFilesStatus(ObjectId objectId, string grepString, bool applyAppSettings, CancellationToken cancellationToken)
         {
             List<GitItemStatus> result = [];
-            ExecutionResult exec = GetGrepFiles(objectId, grepString, cancellationToken);
+            ExecutionResult exec = GetGrepFiles(objectId, grepString, applyAppSettings, cancellationToken);
             if (!exec.ExitedSuccessfully)
             {
                 // Cannot see difference from error and no matches
@@ -3915,14 +3935,16 @@ namespace GitCommands
         public string? GetLocalTrackingBranchName(string remoteName, string branch)
         {
             string branchName = remoteName.Length > 0 ? branch[(remoteName.Length + 1)..] : branch;
-            foreach (IConfigSection section in LocalConfigFile.GetConfigSections())
+            IGitConfigSettingsGetter localGitConfigSettings = LocalGitConfigSettings;
+            foreach ((string setting, string value) in localGitConfigSettings.GetAllValues())
             {
-                if (section.SectionName == "branch" && section.GetValue("remote") == remoteName)
+                (string section, string? subsection, string name) = IGitConfigSettingsGetter.SplitSetting(setting);
+                if (section == "branch" && name == "remote" && value == remoteName)
                 {
-                    string remoteBranch = section.GetValue("merge").Replace("refs/heads/", string.Empty);
+                    string remoteBranch = localGitConfigSettings.GetValue($"{section}.{subsection}.merge").Replace("refs/heads/", string.Empty);
                     if (remoteBranch == branchName)
                     {
-                        return section.SubSection;
+                        return subsection;
                     }
                 }
             }
@@ -4105,6 +4127,17 @@ namespace GitCommands
             }
         }
 
+        private void SetGitSetting(GitSettingLevel settingLevel, string setting, string? value, bool append = false)
+        {
+            Commands.SetGitSetting(GitExecutable, settingLevel, setting, value, append);
+
+            EffectiveGitConfigSettings.Invalidate();
+            if (settingLevel == GitSettingLevel.Local)
+            {
+                LocalGitConfigSettings.Invalidate();
+            }
+        }
+
         internal TestAccessor GetTestAccessor() => new(this);
 
         internal readonly struct TestAccessor
@@ -4115,6 +4148,10 @@ namespace GitCommands
             {
                 _gitModule = gitModule;
             }
+
+            public DistributedSettings? EffectiveSettings => _gitModule._effectiveSettings;
+
+            public FrozenDictionary<string, Color>? RemoteColors => _gitModule._remoteColors;
 
             public GitArgumentBuilder UpdateIndexCmd(bool showErrorsWhenStagingFiles) => GitModule.UpdateIndexCmd(showErrorsWhenStagingFiles);
 

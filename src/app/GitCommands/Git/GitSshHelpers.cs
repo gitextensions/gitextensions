@@ -6,7 +6,7 @@ namespace GitCommands
         public static void SetGitSshEnvironmentVariable(string path)
         {
             // Git will use the embedded OpenSSH ssh.exe if empty/unset
-            Environment.SetEnvironmentVariable("GIT_SSH", path, EnvironmentVariableTarget.Process);
+            Environment.SetEnvironmentVariable("GIT_SSH", path?.Length is > 0 ? path : null, EnvironmentVariableTarget.Process);
         }
 
         // Note that variants like TortoisePlink.exe are supported too

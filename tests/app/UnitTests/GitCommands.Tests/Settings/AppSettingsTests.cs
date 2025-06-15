@@ -71,7 +71,7 @@ namespace GitCommandsTests.Settings
             });
 
             // Assert
-            Assert.That(storedValue, Is.EqualTo(defaultValue));
+            ClassicAssert.That(storedValue, Is.EqualTo(defaultValue));
         }
 
         [Test]
@@ -112,21 +112,21 @@ namespace GitCommandsTests.Settings
             {
                 if (isISetting)
                 {
-                    Assert.That(storedValue, Is.EqualTo(value ?? string.Empty));
+                    ClassicAssert.That(storedValue, Is.EqualTo(value ?? string.Empty));
                 }
                 else
                 {
-                    Assert.That(storedValue, Is.EqualTo(value ?? defaultValue));
+                    ClassicAssert.That(storedValue, Is.EqualTo(value ?? defaultValue));
                 }
             }
             else if (Type.GetTypeCode(property.PropertyType) == TypeCode.DateTime)
             {
                 // We keep only the date
-                Assert.That(storedValue, Is.EqualTo(((DateTime)value).Date));
+                ClassicAssert.That(storedValue, Is.EqualTo(((DateTime)value).Date));
             }
             else
             {
-                Assert.That(storedValue, Is.EqualTo(value));
+                ClassicAssert.That(storedValue, Is.EqualTo(value));
             }
         }
 
@@ -171,6 +171,9 @@ namespace GitCommandsTests.Settings
 
                 yield return (properties[nameof(AppSettings.TelemetryEnabled)], null, true, false);
                 yield return (properties[nameof(AppSettings.AutoNormaliseBranchName)], true, false, false);
+                yield return (properties[nameof(AppSettings.FileStatusFindInFilesGitGrepTypeIndex)], 1, isNotNullable, isISetting);
+                yield return (properties[nameof(AppSettings.FileStatusMergeSingleItemWithFolder)], false, isNotNullable, isISetting);
+                yield return (properties[nameof(AppSettings.FileStatusShowGroupNodesInFlatList)], false, isNotNullable, isISetting);
                 yield return (properties[nameof(AppSettings.RememberAmendCommitState)], true, false, false);
                 yield return (properties[nameof(AppSettings.StashKeepIndex)], false, false, false);
                 yield return (properties[nameof(AppSettings.DontConfirmStashDrop)], false, false, false);
@@ -198,6 +201,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.UseDiffViewerForBlame)], false, false, true);
                 yield return (properties[nameof(AppSettings.ShowGpgInformation)], true, false, true);
 
+                yield return (properties[nameof(AppSettings.MessageEditorWordWrap)], false, isNotNullable, isISetting);
                 yield return (properties[nameof(AppSettings.ShowSplitViewLayout)], true, false, false);
                 yield return (properties[nameof(AppSettings.ProvideAutocompletion)], true, false, false);
                 yield return (properties[nameof(AppSettings.TruncatePathMethod)], TruncatePathMethod.None, false, false);
@@ -245,6 +249,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.AutoStash)], false, false, false);
                 yield return (properties[nameof(AppSettings.RebaseAutoStash)], false, false, false);
                 yield return (properties[nameof(AppSettings.CheckoutBranchAction)], LocalChangesAction.DontChange, false, false);
+                yield return (properties[nameof(AppSettings.CheckoutOtherBranchAfterReset)], true, isNotNullable, isISetting);
                 yield return (properties[nameof(AppSettings.UseDefaultCheckoutBranchAction)], false, false, false);
                 yield return (properties[nameof(AppSettings.DontShowHelpImages)], false, false, false);
                 yield return (properties[nameof(AppSettings.AlwaysShowAdvOpt)], false, false, false);
@@ -381,6 +386,7 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.AutomaticContinuousScrollDelay)], 600, false, false);
                 yield return (properties[nameof(AppSettings.IsEditorSettingsMigrated)], false, isNotNullable, isISetting);
                 yield return (properties[nameof(AppSettings.ShowProcessDialogPasswordInput)], false, isNotNullable, isISetting);
+                yield return (properties[nameof(AppSettings.UninformativeRepoNameRegex)], "app|(repo(sitory)?)", isNotNullable, isISetting);
             }
 
             static IEnumerable<object> Values()

@@ -629,7 +629,7 @@ namespace GitCommandsTests.Submodules
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
             result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
-            (DateTime.Now - statusStart).TotalSeconds.Should().BeGreaterOrEqualTo(14);
+            (DateTime.Now - statusStart).TotalSeconds.Should().BeGreaterThanOrEqualTo(14);
 
             // Revert the change
             File.Delete(Path.Combine(_repo1Module.WorkingDir, "test.txt"));

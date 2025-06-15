@@ -12,8 +12,8 @@ namespace ResourceManagerTests
         public void ParseInvalidLink(string link)
         {
             LinkFactory linkFactory = new();
-            Assert.False(linkFactory.GetTestAccessor().TryParseLink(link, out Uri? actualUri));
-            Assert.That(actualUri, Is.Null);
+            ClassicAssert.False(linkFactory.GetTestAccessor().TryParseLink(link, out Uri? actualUri));
+            ClassicAssert.That(actualUri, Is.Null);
         }
 
         [Test]
@@ -22,8 +22,8 @@ namespace ResourceManagerTests
             LinkFactory linkFactory = new();
             linkFactory.CreateBranchLink("master");
             string expected = "gitext://gotobranch/master";
-            Assert.True(linkFactory.GetTestAccessor().TryParseLink("master#gitext://gotobranch/master", out Uri? actualUri));
-            Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
+            ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink("master#gitext://gotobranch/master", out Uri? actualUri));
+            ClassicAssert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
         [Test]
@@ -32,8 +32,8 @@ namespace ResourceManagerTests
             LinkFactory linkFactory = new();
             linkFactory.CreateBranchLink("PR#23");
             string expected = "gitext://gotobranch/PR#23";
-            Assert.True(linkFactory.GetTestAccessor().TryParseLink("PR#23#gitext://gotobranch/PR#23", out Uri? actualUri));
-            Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
+            ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink("PR#23#gitext://gotobranch/PR#23", out Uri? actualUri));
+            ClassicAssert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
         public void ParseGoToBranchLinkWithDetachedHead()
@@ -42,8 +42,8 @@ namespace ResourceManagerTests
             LinkFactory linkFactory = new();
             linkFactory.CreateBranchLink(linkCaption);
             string expected = "gitext://gotobranch/HEAD";
-            Assert.True(linkFactory.GetTestAccessor().TryParseLink($"{linkCaption}#{expected}", out Uri? actualUri));
-            Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
+            ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink($"{linkCaption}#{expected}", out Uri? actualUri));
+            ClassicAssert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
         private static void TestCreateLink(string caption, string uri)
@@ -51,8 +51,8 @@ namespace ResourceManagerTests
             LinkFactory linkFactory = new();
             linkFactory.CreateLink(caption, uri);
             string expected = uri;
-            Assert.True(linkFactory.GetTestAccessor().TryParseLink(caption + "#" + uri, out Uri? actualUri));
-            Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
+            ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink(caption + "#" + uri, out Uri? actualUri));
+            ClassicAssert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
         [Test]
@@ -73,8 +73,8 @@ namespace ResourceManagerTests
             LinkFactory linkFactory = new();
 
             string expected = "https://github.com/gitextensions/gitextensions/pull/3471#end";
-            Assert.True(linkFactory.GetTestAccessor().TryParseLink("https://github.com/gitextensions/gitextensions/pull/3471#end", out Uri? actualUri));
-            Assert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
+            ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink("https://github.com/gitextensions/gitextensions/pull/3471#end", out Uri? actualUri));
+            ClassicAssert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
         }
 
         [Test]
@@ -87,8 +87,8 @@ namespace ResourceManagerTests
         public void ParseInternalScheme_Null()
         {
             LinkFactory linkFactory = new();
-            Assert.False(linkFactory.GetTestAccessor().ParseInternalScheme(null, out CommandEventArgs? actualCommandEventArgs));
-            Assert.That(actualCommandEventArgs, Is.Null);
+            ClassicAssert.False(linkFactory.GetTestAccessor().ParseInternalScheme(null, out CommandEventArgs? actualCommandEventArgs));
+            ClassicAssert.That(actualCommandEventArgs, Is.Null);
         }
 
         [TestCase("slkldfjdfkj:fkjsd")]
@@ -99,8 +99,8 @@ namespace ResourceManagerTests
         {
             LinkFactory linkFactory = new();
             Uri uri = new(link);
-            Assert.False(linkFactory.GetTestAccessor().ParseInternalScheme(uri, out CommandEventArgs? actualCommandEventArgs));
-            Assert.That(actualCommandEventArgs, Is.Null);
+            ClassicAssert.False(linkFactory.GetTestAccessor().ParseInternalScheme(uri, out CommandEventArgs? actualCommandEventArgs));
+            ClassicAssert.That(actualCommandEventArgs, Is.Null);
         }
 
         [TestCase("gitext://command/data", "command", "data")]
@@ -115,9 +115,9 @@ namespace ResourceManagerTests
         {
             LinkFactory linkFactory = new();
             Uri uri = new(link);
-            Assert.True(linkFactory.GetTestAccessor().ParseInternalScheme(uri, out CommandEventArgs? actualCommandEventArgs));
-            Assert.That(actualCommandEventArgs.Command, Is.EqualTo(expectedCommand));
-            Assert.That(actualCommandEventArgs.Data, Is.EqualTo(expectedData));
+            ClassicAssert.True(linkFactory.GetTestAccessor().ParseInternalScheme(uri, out CommandEventArgs? actualCommandEventArgs));
+            ClassicAssert.That(actualCommandEventArgs.Command, Is.EqualTo(expectedCommand));
+            ClassicAssert.That(actualCommandEventArgs.Data, Is.EqualTo(expectedData));
         }
 
         [TestCase("gitext://command/data", "command", "data", null, "", false, true)]
@@ -159,10 +159,10 @@ namespace ResourceManagerTests
                 actualException = ex.Message;
             }
 
-            Assert.That(actualCommandEventArgs?.Command, Is.EqualTo(expectedCommand));
-            Assert.That(actualCommandEventArgs?.Data, Is.EqualTo(expectedData));
-            Assert.That(actualShowAll, Is.EqualTo(expectedShowAll));
-            Assert.That(actualException, Is.EqualTo(expectedException));
+            ClassicAssert.That(actualCommandEventArgs?.Command, Is.EqualTo(expectedCommand));
+            ClassicAssert.That(actualCommandEventArgs?.Data, Is.EqualTo(expectedData));
+            ClassicAssert.That(actualShowAll, Is.EqualTo(expectedShowAll));
+            ClassicAssert.That(actualException, Is.EqualTo(expectedException));
         }
     }
 }

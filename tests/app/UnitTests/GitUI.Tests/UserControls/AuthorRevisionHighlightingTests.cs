@@ -4,6 +4,7 @@ using GitCommands.Config;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
+using NSubstitute;
 
 namespace GitUITests.UserControls
 {
@@ -42,10 +43,10 @@ namespace GitUITests.UserControls
         {
             AuthorRevisionHighlighting sut = new();
             GitModule currentModule = NewModule();
-            Assert.True(sut.ProcessRevisionSelectionChange(currentModule,
+            ClassicAssert.True(sut.ProcessRevisionSelectionChange(currentModule,
                                                new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) }));
 
-            Assert.False(sut.ProcessRevisionSelectionChange(currentModule,
+            ClassicAssert.False(sut.ProcessRevisionSelectionChange(currentModule,
                                                new[]
                                                    {
                                                        NewRevisionWithAuthorEmail(ExpectedAuthorEmail2),
@@ -129,8 +130,8 @@ namespace GitUITests.UserControls
         public void Given_previously_selected_revision_When_no_revision_selected_Then_ProcessSelectionChange_should_return_RefreshUserInterface()
         {
             AuthorRevisionHighlighting sut = new();
-            GitModule currentModule = NewModule();
-            currentModule.SetSetting(SettingKeyString.UserEmail, ExpectedAuthorEmail2);
+            IGitModule currentModule = Substitute.For<IGitModule>();
+            currentModule.GetEffectiveSetting(SettingKeyString.UserEmail).Returns(ExpectedAuthorEmail2);
             sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
 
             bool action = sut.ProcessRevisionSelectionChange(currentModule, Array.Empty<GitRevision>());
@@ -142,8 +143,8 @@ namespace GitUITests.UserControls
         public void Given_previously_selected_revision_When_no_revision_selected_Then_AuthorEmailToHighlight_should_be_value_of_current_user_email_setting()
         {
             AuthorRevisionHighlighting sut = new();
-            GitModule currentModule = NewModule();
-            currentModule.SetSetting(SettingKeyString.UserEmail, ExpectedAuthorEmail2);
+            IGitModule currentModule = Substitute.For<IGitModule>();
+            currentModule.GetEffectiveSetting(SettingKeyString.UserEmail).Returns(ExpectedAuthorEmail2);
             sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
 
             sut.ProcessRevisionSelectionChange(currentModule, Array.Empty<GitRevision>());

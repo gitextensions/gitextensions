@@ -45,7 +45,7 @@ namespace GitCommandsTests.Git
         [TestCase("", GitRevision.CombinedDiffGuid)]
         public void RevisionDiffProvider_should_throw_if_any_combined_diff(string firstRevision, string secondRevision)
         {
-            Assert.Throws<ArgumentOutOfRangeException>(() => _revisionDiffProvider.Get(firstRevision, secondRevision));
+            ClassicAssert.Throws<ArgumentOutOfRangeException>(() => _revisionDiffProvider.Get(firstRevision, secondRevision));
         }
 
         [TestCase(GitRevision.IndexGuid, GitRevision.WorkTreeGuid)]

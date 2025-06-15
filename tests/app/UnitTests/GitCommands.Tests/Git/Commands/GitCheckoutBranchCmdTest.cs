@@ -12,7 +12,7 @@ namespace GitCommandsTests.Git_Commands
         {
             IGitCommand cmd = Commands.CheckoutBranch("branchName", remote: true);
 
-            Assert.IsNotNull(cmd);
+            ClassicAssert.IsNotNull(cmd);
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace GitCommandsTests.Git_Commands
         {
             IGitCommand cmd = Commands.CheckoutBranch("branchName", remote: false);
 
-            Assert.IsNotNull(cmd);
+            ClassicAssert.IsNotNull(cmd);
         }
 
         [Test]
@@ -28,7 +28,7 @@ namespace GitCommandsTests.Git_Commands
         {
             IGitCommand cmd = Commands.CheckoutBranch("branchName", remote: true);
 
-            Assert.IsFalse(cmd.AccessesRemote);
+            ClassicAssert.IsFalse(cmd.AccessesRemote);
         }
 
         [Test]
@@ -36,29 +36,29 @@ namespace GitCommandsTests.Git_Commands
         {
             // Merge
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 "checkout --merge \"branchName\"",
                 Commands.CheckoutBranch("branchName", remote: false, LocalChangesAction.Merge).Arguments);
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 "checkout --merge -b \"newBranchName\" \"branchName\"",
                 Commands.CheckoutBranch("branchName", remote: true, LocalChangesAction.Merge, CheckoutNewBranchMode.Create, "newBranchName").Arguments);
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 "checkout --merge -B \"newBranchName\" \"branchName\"",
                 Commands.CheckoutBranch("branchName", remote: true, LocalChangesAction.Merge, CheckoutNewBranchMode.Reset, "newBranchName").Arguments);
 
             // Reset
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 "checkout --force \"branchName\"",
                 Commands.CheckoutBranch("branchName", remote: false, LocalChangesAction.Reset).Arguments);
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 "checkout --force -b \"newBranchName\" \"branchName\"",
                 Commands.CheckoutBranch("branchName", remote: true, LocalChangesAction.Reset, CheckoutNewBranchMode.Create, "newBranchName").Arguments);
 
-            Assert.AreEqual(
+            ClassicAssert.AreEqual(
                 "checkout --force -B \"newBranchName\" \"branchName\"",
                 Commands.CheckoutBranch("branchName", remote: true, LocalChangesAction.Reset, CheckoutNewBranchMode.Reset, "newBranchName").Arguments);
         }

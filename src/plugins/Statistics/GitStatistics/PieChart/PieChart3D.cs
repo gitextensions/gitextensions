@@ -1,4 +1,5 @@
 using GitExtensions.Extensibility;
+using GitExtUtils.GitUI.Theming;
 using Microsoft;
 
 namespace GitExtensions.Plugins.GitStatistics.PieChart
@@ -677,7 +678,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                             X + (largestDisplacementEllipseSize.Width / 2) + xDisplacement,
                             Y + (largestDisplacementEllipseSize.Height / 2) + yDisplacement,
                             topEllipseSize.Width, topEllipseSize.Height, PieHeight, (float)(startAngle % 360),
-                            (float)sweepAngle, SliceColors[colorIndex], ShadowStyle, EdgeColorType,
+                            (float)sweepAngle, SliceColors[colorIndex].AdaptBackColor(), ShadowStyle, EdgeColorType,
                             EdgeLineWidth);
                 }
                 else
@@ -685,7 +686,7 @@ namespace GitExtensions.Plugins.GitStatistics.PieChart
                     slice = CreatePieSlice(X + (largestDisplacementEllipseSize.Width / 2) + xDisplacement,
                                            Y + (largestDisplacementEllipseSize.Height / 2) + yDisplacement,
                                            topEllipseSize.Width, topEllipseSize.Height, PieHeight,
-                                           (float)(startAngle % 360), (float)sweepAngle, SliceColors[colorIndex],
+                                           (float)(startAngle % 360), (float)sweepAngle, SliceColors[colorIndex].AdaptBackColor(),
                                            ShadowStyle, EdgeColorType, EdgeLineWidth);
                 }
 

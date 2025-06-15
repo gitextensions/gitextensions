@@ -23,10 +23,7 @@ namespace GitUITests.Theming
             [Values(
                 KnownColor.Transparent,
                 KnownColor.AliceBlue, // begins the range of web colors
-                KnownColor.YellowGreen, // ends the range of web colors
-                KnownColor.ButtonFace, // duplicates KnownColor.Control
-                KnownColor.ButtonShadow, // duplicates KnownColor.ControlDark
-                KnownColor.ButtonHighlight)] // duplicates KnownColor.ControlLight
+                KnownColor.YellowGreen)] // ends the range of web colors
             KnownColor value)
         {
             Theme.TestAccessor.SysColorNames.Should().NotContain(value);

@@ -32,7 +32,7 @@ namespace GitUITests.UserControls
         {
             (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(Array.Empty<GitItemStatus>());
 
-            Assert.AreEqual(RepoStateVisualiser.Clean, commitIcon);
+            ClassicAssert.AreEqual(RepoStateVisualiser.Clean, commitIcon);
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace GitUITests.UserControls
                 CreateGitItemStatus(isSubmodule: true)
             });
 
-            Assert.AreEqual(RepoStateVisualiser.DirtySubmodules, commitIcon);
+            ClassicAssert.AreEqual(RepoStateVisualiser.DirtySubmodules, commitIcon);
         }
 
         [Test]
@@ -56,7 +56,7 @@ namespace GitUITests.UserControls
                 CreateGitItemStatus()
             });
 
-            Assert.AreEqual(RepoStateVisualiser.Dirty, commitIcon);
+            ClassicAssert.AreEqual(RepoStateVisualiser.Dirty, commitIcon);
         }
 
         [Test]
@@ -68,7 +68,7 @@ namespace GitUITests.UserControls
                 CreateGitItemStatus()
             });
 
-            Assert.AreEqual(RepoStateVisualiser.Mixed, commitIcon);
+            ClassicAssert.AreEqual(RepoStateVisualiser.Mixed, commitIcon);
         }
 
         [Test]
@@ -80,7 +80,7 @@ namespace GitUITests.UserControls
                 CreateGitItemStatus(isStaged: true)
             });
 
-            Assert.AreEqual(RepoStateVisualiser.Staged, commitIcon);
+            ClassicAssert.AreEqual(RepoStateVisualiser.Staged, commitIcon);
         }
 
         [Test]
@@ -92,7 +92,7 @@ namespace GitUITests.UserControls
                 CreateGitItemStatus(isTracked: false)
             });
 
-            Assert.AreEqual(RepoStateVisualiser.UntrackedOnly, commitIcon);
+            ClassicAssert.AreEqual(RepoStateVisualiser.UntrackedOnly, commitIcon);
         }
 
         [Test]
@@ -100,7 +100,7 @@ namespace GitUITests.UserControls
         {
             (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(null);
 
-            Assert.AreEqual(RepoStateVisualiser.Unknown, commitIcon);
+            ClassicAssert.AreEqual(RepoStateVisualiser.Unknown, commitIcon);
         }
     }
 }

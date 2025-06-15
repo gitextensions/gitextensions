@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
+using GitCommands.Settings;
 using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -644,15 +646,17 @@ namespace GitUI.CommandsDialogs
         private bool InitMergetool()
         {
             // All _mergetool related is for native ("Windows")
-            if (GitVersion.Current.SupportGuiMergeTool)
+            Executable nativeGit = new(AppSettings.GitCommand, Module.WorkingDir);
+            EffectiveGitConfigSettings nativeSettings = new(nativeGit);
+            if (GitVersion.CurrentVersion(nativeGit).SupportGuiMergeTool)
             {
-                _mergetool = Module.GetEffectiveSetting(SettingKeyString.MergeToolKey);
+                _mergetool = nativeSettings.GetValue(SettingKeyString.MergeToolKey);
             }
 
             // Fallback and older Git
             if (string.IsNullOrEmpty(_mergetool))
             {
-                _mergetool = Module.GetEffectiveSetting(SettingKeyString.MergeToolNoGuiKey);
+                _mergetool = nativeSettings.GetValue(SettingKeyString.MergeToolNoGuiKey);
             }
 
             if (string.IsNullOrEmpty(_mergetool))
@@ -663,8 +667,8 @@ namespace GitUI.CommandsDialogs
 
             using (WaitCursorScope.Enter())
             {
-                _mergetoolCmd = Module.GetEffectiveSetting($"mergetool.{_mergetool}.cmd");
-                _mergetoolPath = Module.GetEffectiveSetting($"mergetool.{_mergetool}.path");
+                _mergetoolCmd = nativeSettings.GetValue($"mergetool.{_mergetool}.cmd");
+                _mergetoolPath = nativeSettings.GetValue($"mergetool.{_mergetool}.path");
 
                 // Temporary compatibility with GE <3.3
                 if (_mergetool == "kdiff3")
@@ -680,7 +684,7 @@ namespace GitUI.CommandsDialogs
                     }
                 }
 
-                if (EnvUtils.RunningOnWindows())
+                if (EnvUtils.RunningOnWindows() && _mergetoolCmd is not null)
                 {
                     // This only works when on Windows....
                     const string executablePattern = ".exe";

@@ -1,6 +1,7 @@
 using System.ComponentModel.Composition;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
@@ -30,6 +31,7 @@ namespace AzureDevOpsIntegration.Settings
         public SettingsUserControl()
         {
             InitializeComponent();
+            labelRegexError.ForeColor.AdaptTextColor();
             InitializeComplete();
 
             Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;

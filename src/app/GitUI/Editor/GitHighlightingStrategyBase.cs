@@ -5,11 +5,11 @@ namespace GitUI.Editor
 {
     internal abstract class GitHighlightingStrategyBase : IHighlightingStrategy
     {
-        protected static HighlightColor ColorNormal { get; } = new(SystemColors.WindowText, bold: false, italic: false);
+        protected static HighlightColor ColorNormal { get; } = new(nameof(SystemColors.WindowText), bold: false, italic: false);
 
         private static HighlightColor ColorComment { get; } = new(Color.DarkGreen, bold: false, italic: false);
 
-        private readonly DefaultHighlightingStrategy _defaultHighlightingStrategy = new();
+        private readonly DefaultHighlightingStrategy _defaultHighlightingStrategy = HighlightingManager.Manager.DefaultHighlighting;
 
         private readonly char _commentChar;
 
@@ -19,9 +19,9 @@ namespace GitUI.Editor
 
             // By default, comments start with '#'.
             //
-            // This can be overridden via the "core.commentChar" configuration setting.
+            // This can be overridden via the "core.commentchar" configuration setting.
             //
-            // However, if "core.commentChar" is "auto", then git attempts to choose a
+            // However, if "core.commentchar" is "auto", then git attempts to choose a
             // character from "#;@!$%^&|:" which is not present in the message.
             // In such cases it does not appear that the character is provided to the
             // editor. The only way to determine the character is to inspect the message,
@@ -32,9 +32,9 @@ namespace GitUI.Editor
             // characters for each line[0] and take the character with most.
             // That would work well in practice.
 
-            string commentCharSetting = module.EffectiveConfigFile.GetString("core.commentChar", "#");
-
-            _commentChar = commentCharSetting?.Length == 1 ? commentCharSetting[0] : '#';
+            const string defaultValue = "#";
+            string commentCharSetting = module.GetEffectiveSetting("core.commentchar", defaultValue);
+            _commentChar = commentCharSetting.Length == 1 ? commentCharSetting[0] : defaultValue[0];
         }
 
         protected abstract void MarkTokens(IDocument document, IList<LineSegment> lines);

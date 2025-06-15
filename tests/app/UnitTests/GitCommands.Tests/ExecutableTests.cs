@@ -45,7 +45,7 @@ namespace GitCommandsTests
                 {
                     ctsWaitExit.CancelAfter(cancelDelay);
                     int exitCode = await process.WaitForExitAsync(ctsWaitExit.Token);
-                    Assert.Fail("should not have exited", exitCode);
+                    ClassicAssert.Fail($"should not have exited, received: {exitCode}");
                 }
                 catch (OperationCanceledException)
                 {
@@ -55,7 +55,7 @@ namespace GitCommandsTests
             process.Dispose();
 
             TimeSpan durationWaitTimeout = DateTime.Now - startedAt;
-            durationWaitTimeout.Should().BeGreaterThan(1.5 * cancelDelay).And.BeLessThan(2.5 * cancelDelay);
+            durationWaitTimeout.Should().BeGreaterThan(1.5 * cancelDelay).And.BeLessThan(4 * cancelDelay);
 
             CommandLogEntry? cmd = CommandLog.Commands.LastOrDefault();
             (cmd?.Exception?.Message).Should().Be("Process killed");

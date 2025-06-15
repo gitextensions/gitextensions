@@ -97,13 +97,13 @@ namespace GitCommands
         /// This method can be used to add (or keep) a trailing path separator character to a directory path.
         /// </summary>
         [return: NotNullIfNotNull("dirPath")]
-        public static string? EnsureTrailingPathSeparator(this string? dirPath)
+        public static string? EnsureTrailingPathSeparator(this string? dirPath, bool posix = false)
         {
             if (!string.IsNullOrEmpty(dirPath) &&
                 dirPath[^1] != NativeDirectorySeparatorChar &&
                 dirPath[^1] != PosixDirectorySeparatorChar)
             {
-                dirPath += NativeDirectorySeparatorChar;
+                dirPath += posix ? PosixDirectorySeparatorChar : NativeDirectorySeparatorChar;
             }
 
             return dirPath;
@@ -121,14 +121,15 @@ namespace GitCommands
                 return false;
             }
 
-            return Uri.IsWellFormedUriString(url, UriKind.Absolute)
+            return (Uri.IsWellFormedUriString(url, UriKind.Absolute) && url.IndexOfAny(['?', '#']) == -1)
                    || url.EndsWith(".git", StringComparison.CurrentCultureIgnoreCase)
+                   || url.EndsWith(".git/", StringComparison.CurrentCultureIgnoreCase)
                    || GitModule.IsValidGitWorkingDir(url);
         }
 
         public static string GetFileName(string fileName)
         {
-            char[] pathSeparators = new[] { NativeDirectorySeparatorChar, PosixDirectorySeparatorChar };
+            char[] pathSeparators = [NativeDirectorySeparatorChar, PosixDirectorySeparatorChar];
             int pos = fileName.LastIndexOfAny(pathSeparators);
             if (pos != -1)
             {

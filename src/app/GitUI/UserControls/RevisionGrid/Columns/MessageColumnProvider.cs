@@ -83,13 +83,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
             DrawSuperprojectRefs(e, superprojectRefs, style, messageBounds, ref offset);
 
-            if (revision.IsStash)
+            if (revision.IsStash || revision.IsAutostash)
             {
                 RevisionGridRefRenderer.DrawRef(
                     e.State.HasFlag(DataGridViewElementStates.Selected),
                     style.NormalFont,
                     ref offset,
-                    revision.ReflogSelector[5..],
+                    revision.IsAutostash ? revision.Subject : revision.ReflogSelector[5..],
                     AppColor.OtherTag.GetThemeColor(),
                     RefArrowType.None,
                     messageBounds,
@@ -102,7 +102,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
             {
                 DrawArtificialRevision(e, revision, style, messageBounds, ref offset);
             }
-            else
+            else if (!revision.IsAutostash)
             {
                 DrawCommitMessage(e, revision, style, messageBounds, indicator, ref offset);
             }
@@ -329,7 +329,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                     style.NormalFont,
                     ref currentOffset,
                     label,
-                    Color.OrangeRed,
+                    headColor: Color.OrangeRed.AdaptTextColor(),
                     isSelected ? RefArrowType.Filled : RefArrowType.NotFilled,
                     messageBounds,
                     e.Graphics,
@@ -360,7 +360,10 @@ namespace GitUI.UserControls.RevisionGrid.Columns
                 }
             }
 
-            Color headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
+            if (!style.RemoteColors.TryGetValue(gitRef.Remote, out Color headColor))
+            {
+                headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
+            }
 
             RefArrowType arrowType = gitRef.IsSelected
                 ? RefArrowType.Filled

@@ -172,7 +172,7 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private static TreeNode GetRemoteNode(FormBrowse form)
         {
-            Assert.IsFalse(form.MainSplitContainer.Panel1Collapsed);
+            ClassicAssert.IsFalse(form.MainSplitContainer.Panel1Collapsed);
 
             // Await all async operation such as load of branches and remotes in the left panel
             AsyncTestHelper.JoinPendingOperations();

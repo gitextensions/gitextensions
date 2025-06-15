@@ -2,6 +2,7 @@ using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing.Imaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
@@ -16,7 +17,6 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Properties;
-using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using ICSharpCode.TextEditor.Util;
@@ -74,6 +74,7 @@ namespace GitUI.Editor
             ShowEntireFile = false;
             NumberOfContextLines = AppSettings.NumberOfContextLines;
             InitializeComponent();
+
             InitializeComplete();
 
             UICommandsSourceSet += OnUICommandsSourceSet;
@@ -122,10 +123,10 @@ namespace GitUI.Editor
             diffAppearanceToolStripMenuItem.Visible = false;
             SetStateOfContextLinesButtons();
 
-            automaticContinuousScrollToolStripMenuItem.Image = Images.UiScrollBar.AdaptLightness();
+            automaticContinuousScrollToolStripMenuItem.AdaptImageLightness();
             automaticContinuousScrollToolStripMenuItem.Checked = AppSettings.AutomaticContinuousScroll;
 
-            showNonPrintChars.Image = Images.ShowWhitespace.AdaptLightness();
+            showNonPrintChars.AdaptImageLightness();
             showNonprintableCharactersToolStripMenuItem.Image = showNonPrintChars.Image;
             bool showNonPrintingChars = AppSettings.ShowNonPrintingChars.GetValue(reload: !AppSettings.RememberShowNonPrintingCharsPreference);
             showNonPrintChars.Checked = showNonPrintingChars;
@@ -133,11 +134,13 @@ namespace GitUI.Editor
             ToggleNonPrintingChars(showNonPrintingChars);
 
             ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff.GetValue(reload: !AppSettings.RememberShowSyntaxHighlightingInDiff);
-            showSyntaxHighlighting.Image = Resources.SyntaxHighlighting.AdaptLightness();
+            showSyntaxHighlighting.AdaptImageLightness();
             showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
-            showSyntaxHighlightingToolStripMenuItem.Image = Resources.SyntaxHighlighting.AdaptLightness();
+            showSyntaxHighlightingToolStripMenuItem.AdaptImageLightness();
             showSyntaxHighlightingToolStripMenuItem.Checked = ShowSyntaxHighlightingInDiff;
             automaticContinuousScrollToolStripMenuItem.Text = TranslatedStrings.ContScrollToNextFileOnlyWithAlt;
+
+            showGitWordColoringToolStripMenuItem.AdaptImageLightness();
 
             IsReadOnly = true;
 
@@ -300,24 +303,25 @@ namespace GitUI.Editor
             {
                 lock (_difftasticCmdCache)
                 {
+                    // GetEffectiveSettings() checks Windows only, this need to be checked for each instance
                     if (_difftasticCmdCache.TryGetValue(Module.WorkingDir, out Lazy<bool> isEnabled))
                     {
                         return isEnabled;
                     }
 
-                    // GetEffectiveSettings() checks Windows only, this need to be checked for each instance
-                    try
+                    isEnabled = _difftasticCmdCache[Module.WorkingDir] = new Lazy<bool>(() =>
                     {
-                        const string difftasticCmd = "difftool.difftastic.cmd";
-                        isEnabled = _difftasticCmdCache[Module.WorkingDir] = new Lazy<bool>(() =>
-                            !string.IsNullOrEmpty(PathUtil.IsWslPath(Module.WorkingDir)
-                                ? Module.GetEffectiveGitSetting(difftasticCmd)
-                                : Module.GetEffectiveSetting(difftasticCmd)));
-                    }
-                    catch (Exception)
-                    {
-                        isEnabled = new Lazy<bool>(() => false);
-                    }
+                        try
+                        {
+                            const string difftasticCmd = "difftool.difftastic.cmd";
+                            return !string.IsNullOrEmpty(Module.GetEffectiveSetting(difftasticCmd));
+                        }
+                        catch (Exception exception)
+                        {
+                            Trace.WriteLine(exception);
+                            return false;
+                        }
+                    });
 
                     return isEnabled;
                 }
@@ -434,7 +438,9 @@ namespace GitUI.Editor
             // Difftastic coloring is always used (AppSettings.UseGitColoring.Value is not used).
             // Allow user to override with difftool command line options.
             SetEnvironmentVariable("DFT_COLOR", "always");
-            SetEnvironmentVariable("DFT_BACKGROUND", ThemeModule.IsDarkTheme ? "dark" : "light");
+
+            // DFT_BACKGROUND="dark" applies bold-bold colors, "light" corresponds better with Git colors
+            SetEnvironmentVariable("DFT_BACKGROUND", "light");
             SetEnvironmentVariable("DFT_SYNTAX_HIGHLIGHT", ShowSyntaxHighlightingInDiff ? "on" : "off");
             int contextLines = ShowEntireFile ? 9000 : NumberOfContextLines;
             SetEnvironmentVariable("DFT_CONTEXT", contextLines.ToString());
@@ -511,6 +517,11 @@ namespace GitUI.Editor
         public void ClearHighlighting()
         {
             internalFileViewer.ClearHighlighting();
+        }
+
+        internal void DontMarkGutterSelectedLine()
+        {
+            internalFileViewer.DontMarkGutterSelectedLine();
         }
 
         public string GetText() => internalFileViewer.GetText();
@@ -888,14 +899,14 @@ namespace GitUI.Editor
                 () =>
                 {
                     ResetView(viewMode, fileName, item: item, text: text);
-                    internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring, contentIdentification: fileName);
+                    bool positionSet = internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring, contentIdentification: fileName);
                     if (line is not null)
                     {
                         GoToLine(line.Value);
                     }
-                    else if (viewMode == ViewMode.Grep && ShowEntireFile)
+                    else if (!positionSet)
                     {
-                        internalFileViewer.GoToNextChange(NumberOfContextLines);
+                        internalFileViewer.GoToFirstChange(NumberOfContextLines);
                     }
 
                     TextLoaded?.Invoke(this, null);
@@ -1197,6 +1208,18 @@ namespace GitUI.Editor
                                     string text = getFileText();
                                     DisplayAsHexDump(_cannotViewImage.Text, fileName, text, openWithDifftool);
                                     return;
+                                }
+
+                                if (image.FrameDimensionsList.Length > 0)
+                                {
+                                    FrameDimension frameDimension = new(image.FrameDimensionsList[0]);
+                                    if (image.GetFrameCount(frameDimension) > 1)
+                                    {
+                                        image.SelectActiveFrame(frameDimension, 0);
+                                        Bitmap firstFrame = new(image);
+                                        image.Dispose();
+                                        image = firstFrame;
+                                    }
                                 }
 
                                 ResetView(ViewMode.Image, fileName, item);
@@ -1838,7 +1861,7 @@ namespace GitUI.Editor
                 }
             }
 
-            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.GetEffectiveSettingsByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf")));
+            ClipboardUtil.TrySetText(code.AdjustLineEndings(Module.GetEffectiveSetting<AutoCRLFType>("core.autocrlf")));
 
             return;
 

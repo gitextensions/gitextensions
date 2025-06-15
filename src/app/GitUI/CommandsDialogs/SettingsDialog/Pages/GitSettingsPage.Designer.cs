@@ -142,7 +142,7 @@
             label50.Name = "label50";
             label50.Size = new Size(603, 13);
             label50.TabIndex = 0;
-            label50.Text = "Set the correct paths to Git for Windows. (WSL Git will be used for WSL repositories).";
+            label50.Text = "Set the correct paths to Git for Windows. (WSL Git will automatically be used for WSL repositories.)";
             label50.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // downloadGitForWindows
@@ -290,7 +290,6 @@
             gbPaths.ResumeLayout(false);
             gbPaths.PerformLayout();
             ResumeLayout(false);
-
         }
 
         #endregion

@@ -4,7 +4,6 @@ using System.Text;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
-using GitCommands.Settings;
 using NSubstitute;
 
 namespace GitCommandsTests
@@ -164,7 +163,7 @@ namespace GitCommandsTests
             AppSettings.RememberAmendCommitState = true;
             await _manager.SetAmendStateAsync(amendState: true);
 
-            Assert.That(correctlyWritten);
+            ClassicAssert.That(correctlyWritten);
         }
 
         [Test]
@@ -177,7 +176,7 @@ namespace GitCommandsTests
             AppSettings.RememberAmendCommitState = false;
             await _manager.SetAmendStateAsync(amendState: true);
 
-            Assert.That(correctlyDeleted);
+            ClassicAssert.That(correctlyDeleted);
         }
 
         [TestCase(true)]
@@ -191,7 +190,7 @@ namespace GitCommandsTests
             AppSettings.RememberAmendCommitState = rememberAmendCommitState;
             await _manager.SetAmendStateAsync(amendState: false);
 
-            Assert.That(correctlyDeleted);
+            ClassicAssert.That(correctlyDeleted);
         }
 
         [Test]
@@ -229,7 +228,7 @@ namespace GitCommandsTests
         public async Task WriteCommitMessageToFileAsync_no_bom(string encodingName)
         {
             GitModule module = _referenceRepository.Module;
-            ((ConfigFileSettings)module.EffectiveConfigFile).SetString("i18n.commitEncoding", encodingName);
+            module.SetSetting("i18n.commitencoding", encodingName);
             module.CommitEncoding.Preamble.Length.Should().Be(0);
             CommitMessageManager manager = new(_owner, _referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding);
 
@@ -330,7 +329,7 @@ namespace GitCommandsTests
 
             await _manager.SetMergeOrCommitMessageAsync(_newMessage);
 
-            Assert.That(correctlyWritten);
+            ClassicAssert.That(correctlyWritten);
         }
 
         [Test]
@@ -358,7 +357,7 @@ namespace GitCommandsTests
 
             await _manager.SetMergeOrCommitMessageAsync(_newMessage);
 
-            Assert.That(correctlyWritten);
+            ClassicAssert.That(correctlyWritten);
         }
 
         [Test]
@@ -372,7 +371,7 @@ namespace GitCommandsTests
 
             await _manager.SetMergeOrCommitMessageAsync(_newMessage);
 
-            Assert.That(correctlyWritten);
+            ClassicAssert.That(correctlyWritten);
         }
 
         [Test]
@@ -386,7 +385,7 @@ namespace GitCommandsTests
 
             await _manager.SetMergeOrCommitMessageAsync(message: null);
 
-            Assert.That(correctlyWritten);
+            ClassicAssert.That(correctlyWritten);
         }
 
         [Test]
@@ -400,7 +399,7 @@ namespace GitCommandsTests
 
             await _manager.SetMergeOrCommitMessageAsync(message: null);
 
-            Assert.That(!correctlyWritten);
+            ClassicAssert.That(!correctlyWritten);
         }
 
         [Test]
@@ -415,9 +414,9 @@ namespace GitCommandsTests
 
             await _manager.ResetCommitMessageAsync();
 
-            Assert.That(deletedA);
-            Assert.That(deletedC);
-            Assert.That(!deletedM);
+            ClassicAssert.That(deletedA);
+            ClassicAssert.That(deletedC);
+            ClassicAssert.That(!deletedM);
         }
 
         [Test, TestCaseSource(typeof(FormatCommitMessageTestData), nameof(FormatCommitMessageTestData.FormatCommitMessageTestCases))]

@@ -116,7 +116,14 @@ STDMETHODIMP CGitExtensionsShellEx::Initialize(LPCITEMIDLIST pidlFolder, LPDATAO
     DBG_TRACE(L"CGitExtensionsShellEx::Initialize(pidlFolder=%p)", pidlFolder);
     m_szFile[0] = '\0';
     if (pidlFolder)
+    {
         SHGetPathFromIDList(pidlFolder, m_szFile);
+        m_uNumFiles = 1;
+        m_sFilesQuoted = ' ';
+        m_sFilesQuoted += '"';
+        m_sFilesQuoted += m_szFile;
+        m_sFilesQuoted += '"';
+    }
 
     if (!pDataObj)
         return S_OK;
@@ -591,7 +598,7 @@ STDMETHODIMP CGitExtensionsShellEx::QueryContextMenu(
             commandsId[cmdid]=gcFileHistory;
         }
 
-        if (DisplayMenuItem(szCascadeShellMenuItems, gcResetFileChanges) && isSingleFile)
+        if (DisplayMenuItem(szCascadeShellMenuItems, gcResetFileChanges))
         {
             isSubMenu = DisplayInSubmenu(szCascadeShellMenuItems, gcResetFileChanges);
             cmdid=AddMenuItem(!isSubMenu ? hMenu : popupMenu, L"Reset file changes...", IDI_ICONTRESETFILETO, uidFirstCmd, ++id, !isSubMenu ? menuIndex++ : submenuIndex++, isSubMenu);
@@ -730,23 +737,23 @@ STDMETHODIMP CGitExtensionsShellEx::GetCommandString(
 
 void CGitExtensionsShellEx::RunGitEx(const TCHAR* command)
 {
-    CString sFile = m_szFile;
     CString sArgs;
 
-    if (sFile.GetLength() > 1 && sFile[sFile.GetLength() - 1] == '\\')
-    {
-        // Escape the final backslash to avoid escaping the quote.
-        // This is a problem for drive roots on Windows, such as "C:\".
-        sFile += '\\';
-    }
-
     sArgs += command;
-    if (StrCmpW(command, L"addfiles") == 0)
+    if (StrCmpW(command, L"addfiles") == 0 || StrCmpW(command, L"reset") == 0)
     {
         sArgs += m_sFilesQuoted;
     }
     else
     {
+        CString sFile = m_szFile;
+        if (sFile.GetLength() > 1 && sFile[sFile.GetLength() - 1] == '\\')
+        {
+            // Escape the final backslash to avoid escaping the quote.
+            // This is a problem for drive roots on Windows, such as "C:\".
+            sFile += '\\';
+        }
+
         sArgs += " \"";
         sArgs += sFile;
         sArgs += "\"";

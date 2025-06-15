@@ -21,24 +21,20 @@ namespace GitExtUtils.GitUI.Theming
                 return;
             }
 
-            container.DescendantsToFix<GroupBox>()
-                 .ForEach(SetupGroupBox);
-            container.DescendantsToFix<TreeView>()
-                .ForEach(SetupTreeView);
-            container.DescendantsToFix<ListBox>()
-                .ForEach(SetupListBox);
-            container.DescendantsToFix<TabControl>()
-                .ForEach(SetupTabControl);
-            container.DescendantsToFix<TextBoxBase>()
-                 .ForEach(SetupTextBoxBase);
-            container.DescendantsToFix<ComboBox>()
-                 .ForEach(SetupComboBox);
-            container.DescendantsToFix<LinkLabel>()
-                .ForEach(SetupLinkLabel);
             container.DescendantsToFix<ToolStrip>()
                 .ForEach(SetupToolStrip);
             container.ContextMenusToFix()
                 .ForEach(SetupContextMenu);
+            container.DescendantsToFix<DataGridView>()
+                .ForEach(SetupDataGridView);
+            container.DescendantsToFix<TabControl>()
+                .ForEach(SetupTabControl);
+            container.DescendantsToFix<TextBoxBase>()
+                 .ForEach(SetupTextBoxBase);
+            container.DescendantsToFix<LinkLabel>()
+                .ForEach(SetupLinkLabel);
+            container.DescendantsToFix<Button>()
+                .ForEach(SetupButton);
         }
 
         private static IEnumerable<TControl> DescendantsToFix<TControl>(this Control c)
@@ -70,33 +66,41 @@ namespace GitExtUtils.GitUI.Theming
 
         private static void SetupToolStrip(ToolStrip strip)
         {
-            strip.UseExtendedThemeAwareRenderer();
-            strip.Items.OfType<ToolStripLabel>()
-                .ForEach(SetupToolStripLabel);
+            strip.RenderMode = ToolStripRenderMode.Professional;
+            foreach (ToolStripLabel item in strip.Items.OfType<ToolStripLabel>())
+            {
+                SetupToolStripStatusLabel(item);
+            }
         }
 
         private static void SetupContextMenu(ContextMenuStrip strip)
         {
-            strip.UseExtendedThemeAwareRenderer();
-        }
-
-        private static void SetupToolStripLabel(ToolStripLabel label)
-        {
-            label.LinkColor = label.LinkColor.AdaptTextColor();
-            label.VisitedLinkColor = label.VisitedLinkColor.AdaptTextColor();
-            label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
+            strip.RenderMode = ToolStripRenderMode.Professional;
         }
 
         private static void SetupLinkLabel(this LinkLabel label)
         {
-            label.LinkColor = label.LinkColor.AdaptTextColor();
+            label.LinkColor = Application.IsDarkModeEnabled ? Color.CornflowerBlue : label.LinkColor.AdaptTextColor();
             label.VisitedLinkColor = label.VisitedLinkColor.AdaptTextColor();
             label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
         }
 
-        private static void SetupGroupBox(this GroupBox box)
+        private static void SetupToolStripStatusLabel(this ToolStripLabel label)
         {
-            box.TouchForeColor();
+            label.LinkColor = Application.IsDarkModeEnabled ? Color.CornflowerBlue : label.LinkColor.AdaptTextColor();
+            label.VisitedLinkColor = label.VisitedLinkColor.AdaptTextColor();
+            label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
+        }
+
+        private static void SetupButton(this Button button)
+        {
+            // .net9 fix for https://github.com/dotnet/winforms/issues/11949 (only supposed to occur for 100%)
+            if (Application.IsDarkModeEnabled && button.FlatStyle == FlatStyle.Standard)
+            {
+                // In addition to not setting the BackColor (TouchBackColor() will fix),
+                // FlatStyle.Standard buttons look ugly in dark mode
+                button.FlatStyle = FlatStyle.Flat;
+            }
         }
 
         private static void SetupTabControl(TabControl tabControl)
@@ -114,35 +118,15 @@ namespace GitExtUtils.GitUI.Theming
             }
         }
 
-        private static void SetupTreeView(TreeView view)
+        private static void SetupDataGridView(DataGridView view)
         {
-            IntPtr unused = view.Handle; // force handle creation
-            view.TouchBackColor();
-            view.TouchForeColor();
-            view.LineColor = SystemColors.ControlDark;
-        }
-
-        private static void SetupListBox(ListBox view)
-        {
-            if (view.BorderStyle == BorderStyle.Fixed3D)
-            {
-                view.BorderStyle = BorderStyle.FixedSingle;
-            }
-        }
-
-        private static void SetupComboBox(this ComboBox menu)
-        {
-            menu.TouchBackColor();
+            view.EnableHeadersVisualStyles = false;
+            view.ColumnHeadersDefaultCellStyle.BackColor = view.ColumnHeadersDefaultCellStyle.BackColor;
         }
 
         private static void TouchBackColor(this Control c)
         {
             c.BackColor = c.BackColor;
-        }
-
-        private static void TouchForeColor(this Control c)
-        {
-            c.ForeColor = c.ForeColor;
         }
 
         private static bool TryAddToWeakTable(IWin32Window element, ConditionalWeakTable<IWin32Window, IWin32Window> weakTable)

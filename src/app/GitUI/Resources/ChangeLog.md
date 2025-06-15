@@ -1,7 +1,7 @@
 Changelog
 =========
 
-### Version v5.2.1 (no due date)
+### Version v5.2.1 (29 Jan 2025)
 
 #### Changes:
 * [#12171] fix(ShowProcessDialogPasswordInput): Default to false
@@ -16,7 +16,7 @@ Changelog
 [#12143]:https://github.com/gitextensions/gitextensions/pull/12143
 
 
-### Version v5.2 (no due date)
+### Version v5.2 (11 Jan 2025)
 
 #### Changes:
 * [#12130] feat(git-grep): Show function name of matches

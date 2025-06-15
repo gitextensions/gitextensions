@@ -1,7 +1,7 @@
 ﻿using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using GitUI.CommandDialogs;
+using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
 using Microsoft;
 

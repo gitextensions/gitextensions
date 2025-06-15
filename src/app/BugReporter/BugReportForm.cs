@@ -14,6 +14,7 @@ using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using GitExtensions.Extensibility.Translations.Xliff;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI;
 using Microsoft;
 using ResourceManager;
@@ -124,6 +125,12 @@ Send report?");
             _lastReport.GeneralInfo.UserDescription = descriptionTextBox.Text;
 
             return result;
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            this.FixVisualStyle();
         }
 
         protected override void OnShown(EventArgs e)

@@ -116,7 +116,7 @@ namespace GitUITests
         {
             if (DpiUtil.IsNonStandard)
             {
-                Assert.Inconclusive("The test must be run at 96dpi");
+                ClassicAssert.Inconclusive("The test must be run at 96dpi");
             }
 
             using MockForm form = new(true)
@@ -150,7 +150,7 @@ namespace GitUITests
         {
             if (DpiUtil.IsNonStandard)
             {
-                Assert.Inconclusive("The test must be run at 96dpi");
+                ClassicAssert.Inconclusive("The test must be run at 96dpi");
             }
 
             using Form owner = new()

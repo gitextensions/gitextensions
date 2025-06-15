@@ -2,6 +2,7 @@
 using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.SpellChecker
 {
@@ -151,7 +152,7 @@ namespace GitUI.SpellChecker
 
         private void DrawWave(Point start, Point end)
         {
-            using Pen pen = new(Color.Red, DpiUtil.ScaleX);
+            using Pen pen = new(Color.Red.AdaptTextColor(), DpiUtil.ScaleX);
             int waveWidth = DpiUtil.Scale(4);
             int waveHalfWidth = waveWidth >> 1;
             if ((end.X - start.X) > waveWidth)
@@ -174,7 +175,7 @@ namespace GitUI.SpellChecker
 
         private void DrawMark(Point start, Point end)
         {
-            Color col = Color.FromArgb(120, 255, 255, 0);
+            Color col = Color.FromArgb(120, 255, 255, 0).AdaptBackColor();
             int lineHeight = LineHeight();
             using Pen pen = new(col, lineHeight);
             start.Offset(0, -lineHeight / 2);

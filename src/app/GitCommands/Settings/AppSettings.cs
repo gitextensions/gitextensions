@@ -4,8 +4,10 @@ using System.Globalization;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using GitCommands.Git;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
@@ -39,6 +41,7 @@ namespace GitCommands
         private static readonly SettingsPath DetailedSettingsPath = new AppSettingsPath("Detailed");
         private static readonly SettingsPath DialogSettingsPath = new AppSettingsPath("Dialogs");
         private static readonly SettingsPath ExperimentalSettingsPath = new AppSettingsPath(DetailedSettingsPath, "Experimental");
+        private static readonly SettingsPath FileStatusSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "FileStatus");
         private static readonly SettingsPath RevisionGraphSettingsPath = new AppSettingsPath(AppearanceSettingsPath, "RevisionGraph");
         private static readonly SettingsPath RecentRepositories = new AppSettingsPath("RecentRepositories");
         private static readonly SettingsPath RootSettingsPath = new AppSettingsPath(pathName: "");
@@ -184,6 +187,8 @@ namespace GitCommands
             }
         }
 
+        public static string FileEditorCommand => @$"""{AppSettings.GetGitExtensionsFullPath()}"" fileeditor";
+
         public static bool RememberAmendCommitState
         {
             get => GetBool("RememberAmendCommitState", true);
@@ -300,6 +305,12 @@ namespace GitCommands
             set => WriteStringRegValue("CascadeShellMenuItems", value);
         }
 
+        public static ISetting<int> FileStatusFindInFilesGitGrepTypeIndex { get; } = Setting.Create(FileStatusSettingsPath, nameof(FileStatusFindInFilesGitGrepTypeIndex), 1);
+
+        public static ISetting<bool> FileStatusMergeSingleItemWithFolder { get; } = Setting.Create(FileStatusSettingsPath, nameof(FileStatusMergeSingleItemWithFolder), false);
+
+        public static ISetting<bool> FileStatusShowGroupNodesInFlatList { get; } = Setting.Create(FileStatusSettingsPath, nameof(FileStatusShowGroupNodesInFlatList), false);
+
         public static string SshPath
         {
             get => ReadStringRegValue("gitssh", "");
@@ -335,7 +346,11 @@ namespace GitCommands
             }
             set
             {
-                GitVersion.ResetVersion();
+                if (GitCommandValue == value)
+                {
+                    return;
+                }
+
                 if (IsPortable())
                 {
                     SetString("gitcommand", value);
@@ -344,6 +359,8 @@ namespace GitCommands
                 {
                     WriteStringRegValue("gitcommand", value);
                 }
+
+                GitVersion.ResetVersion();
             }
         }
 
@@ -367,15 +384,15 @@ namespace GitCommands
         }
 
         // Currently not configurable in UI (Set manually in settings file)
-        public static string WslGitCommand
+        public static string WslCommand
         {
-            get => GetString("WslGitCommand", "wsl");
+            get => GetString(nameof(WslCommand), "wsl");
         }
 
         // Currently not configurable in UI (Set manually in settings file)
-        public static string WslGitPath
+        public static string WslGitCommand
         {
-            get => GetString("WslGitPath", "git");
+            get => GetString(nameof(WslGitCommand), "git");
         }
 
         public static bool StashKeepIndex
@@ -481,12 +498,14 @@ namespace GitCommands
 
         public static CommitInfoPosition CommitInfoPosition
         {
-            get => DetailedSettingsPath.GetNullableEnum<CommitInfoPosition>("CommitInfoPosition") ?? (
+            get => ((ISettingsValueGetter)DetailedSettingsPath).GetValue<CommitInfoPosition>("CommitInfoPosition") ?? (
                 DetailedSettingsPath.GetBool("ShowRevisionInfoNextToRevisionGrid") == true // legacy setting
                     ? CommitInfoPosition.RightwardFromList
                     : CommitInfoPosition.BelowList);
             set => DetailedSettingsPath.SetEnum("CommitInfoPosition", value);
         }
+
+        public static ISetting<bool> MessageEditorWordWrap => Setting.Create(DetailedSettingsPath, nameof(MessageEditorWordWrap), false);
 
         public static bool ShowSplitViewLayout
         {
@@ -741,23 +760,19 @@ namespace GitCommands
             }
 
             EnvironmentConfiguration.SetEnvironmentVariables();
-            ConfigFileSettings configFileGlobalSettings = ConfigFileSettings.CreateGlobal(useSharedCache: false);
-
-            string path = configFileGlobalSettings.GetValue("core.editor");
-            if (!path.Contains("Program Files (x86)/GitExtensions", StringComparison.CurrentCultureIgnoreCase))
+            IPersistentConfigValueStore globalSettings = new GitConfigSettings(new Executable(AppSettings.GitCommand), GitSettingLevel.Global);
+            string? path = globalSettings.GetValue("core.editor");
+            if (path?.Contains("Program Files (x86)/GitExtensions", StringComparison.CurrentCultureIgnoreCase) is not true)
             {
                 return;
             }
 
 #if DEBUG
             // avoid setting, this may be in the debugger
-            throw new Exception($"Update the core.editor path {path} in {configFileGlobalSettings}");
+            throw new Exception($"Update the core.editor path {path} in global git settings");
 #else
-
-            // Similar in EditorHelper.FileEditorCommand
-            path = $"\"{AppSettings.GetGitExtensionsFullPath().ToPosixPath()}\" fileeditor";
-            configFileGlobalSettings.SetValue("core.editor", path);
-            configFileGlobalSettings.Save();
+            globalSettings.SetValue("core.editor", FileEditorCommand.ConvertPathToGitSetting());
+            globalSettings.Save();
 #endif
         }
 
@@ -1012,6 +1027,8 @@ namespace GitCommands
             get => GetEnum("checkoutbranchaction", LocalChangesAction.DontChange);
             set => SetEnum("checkoutbranchaction", value);
         }
+
+        public static ISetting<bool> CheckoutOtherBranchAfterReset { get; } = Setting.Create(DialogSettingsPath, nameof(CheckoutOtherBranchAfterReset), defaultValue: true);
 
         public static bool UseDefaultCheckoutBranchAction
         {
@@ -2095,6 +2112,8 @@ namespace GitCommands
 
         public static ISetting<bool> IsEditorSettingsMigrated { get; } = Setting.Create(MigrationSettingsPath, nameof(IsEditorSettingsMigrated), false);
 
+        public static ISetting<string> UninformativeRepoNameRegex { get; } = Setting.Create(DetailedSettingsPath, nameof(UninformativeRepoNameRegex), "app|(repo(sitory)?)");
+
         private static IEnumerable<(string name, string value)> GetSettingsFromRegistry()
         {
             RegistryKey oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
@@ -2149,7 +2168,7 @@ namespace GitCommands
         public static Font GetFont(string name, Font defaultValue) => SettingsContainer.GetFont(name, defaultValue);
         public static void SetFont(string name, Font value) => SettingsContainer.SetFont(name, value);
 
-        [Obsolete("AppSettings is no longer responsible for colors, ThemeModule is")]
+        [Obsolete("AppSettings is no longer responsible for colors, ThemeModule is. Only used by ThemeMigration.")]
         public static Color GetColor(AppColor name)
         {
             return SettingsContainer.GetColor(name.ToString().ToLowerInvariant() + "color", AppColorDefaults.GetBy(name));
@@ -2159,8 +2178,8 @@ namespace GitCommands
         public static T GetEnum<T>(string name, T defaultValue) where T : struct, Enum => SettingsContainer.GetEnum(name, defaultValue);
         public static void SetEnum<T>(string name, T value) where T : Enum => SettingsContainer.SetEnum(name, value);
 
-        public static T? GetNullableEnum<T>(string name) where T : struct => SettingsContainer.GetNullableEnum<T>(name);
-        public static void SetNullableEnum<T>(string name, T? value) where T : struct, Enum => SettingsContainer.SetNullableEnum(name, value);
+        public static T? GetNullableEnum<T>(string name) where T : struct, Enum => ((ISettingsValueGetter)SettingsContainer).GetValue<T>(name);
+        public static void SetNullableEnum<T>(string name, T? value) where T : struct, Enum => SettingsContainer.SetValue(name, value?.ToString());
         #endregion
 
         private static void LoadEncodings()

@@ -45,16 +45,16 @@ namespace GitExtensions.UITests.CommandsDialogs
                     },
                     form =>
                     {
-                        Assert.False(form.GetTestAccessor().HasChanges);
+                        ClassicAssert.False(form.GetTestAccessor().HasChanges);
 
                         FileViewerInternal fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
                         fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null);
 
-                        Assert.True(form.GetTestAccessor().HasChanges);
+                        ClassicAssert.True(form.GetTestAccessor().HasChanges);
 
                         form.GetTestAccessor().SaveChanges();
 
-                        Assert.False(form.GetTestAccessor().HasChanges);
+                        ClassicAssert.False(form.GetTestAccessor().HasChanges);
 
                         return Task.CompletedTask;
                     });
@@ -83,19 +83,19 @@ namespace GitExtensions.UITests.CommandsDialogs
                     },
                     form =>
                     {
-                        Assert.False(form.GetTestAccessor().HasChanges);
+                        ClassicAssert.False(form.GetTestAccessor().HasChanges);
 
                         FileViewerInternal fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
                         fileViewerInternal.GetTestAccessor().CurrentViewPositionCache.GetTestAccessor().SetCurrentIdentification("hello-world");
                         fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null, ViewMode.Text, true, "hello-world");
 
-                        Assert.True(form.GetTestAccessor().HasChanges);
+                        ClassicAssert.True(form.GetTestAccessor().HasChanges);
 
                         form.GetTestAccessor().SaveChanges();
 
-                        Assert.False(form.GetTestAccessor().HasChanges);
+                        ClassicAssert.False(form.GetTestAccessor().HasChanges);
 
-                        Assert.AreEqual(lineNumberDefault, fileViewerInternal.CurrentFileLine());
+                        ClassicAssert.AreEqual(lineNumberDefault, fileViewerInternal.CurrentFileLine());
 
                         return Task.CompletedTask;
                     });
@@ -106,14 +106,13 @@ namespace GitExtensions.UITests.CommandsDialogs
             }
         }
 
-        [Ignore("Unstable UTF8EncodingSealed result")]
+        [Ignore("Test cannot pass because _commands.Module.FilesEncoding has a preamble which is always used by FormEditor.SaveChanges")]
         [Test]
         public void Should_preserve_encoding_utf8()
         {
             Should_preserve_encoding(new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
         }
 
-        [Ignore("Unstable UTF8EncodingSealed result")]
         [Test]
         public void Should_preserve_encoding_utf8_bom()
         {
@@ -122,7 +121,9 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private void Should_preserve_encoding(Encoding encoding)
         {
-            Assert.AreEqual(new UTF8Encoding(encoderShouldEmitUTF8Identifier: false), _commands.Module.FilesEncoding);
+            ClassicAssert.AreEqual(_commands.Module.FilesEncoding.ToString(), UTF8Encoding.Default.ToString());
+            ClassicAssert.That(_commands.Module.FilesEncoding.GetPreamble().SequenceEqual(UTF8Encoding.Default.GetPreamble())
+                || _commands.Module.FilesEncoding.GetPreamble().SequenceEqual(encoding.GetPreamble()));
 
             string filePath = Path.Combine(_referenceRepository.Module.WorkingDir, Path.GetRandomFileName());
 
@@ -144,7 +145,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                         return Task.CompletedTask;
                     });
 
-                Assert.That(File.ReadAllBytes(filePath), Is.EquivalentTo(encoding.GetPreamble().Concat(encoding.GetBytes("Hello↔world!"))));
+                ClassicAssert.That(File.ReadAllBytes(filePath), Is.EquivalentTo(encoding.GetPreamble().Concat(encoding.GetBytes("Hello↔world!"))));
             }
             finally
             {

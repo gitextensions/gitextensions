@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using GitExtUtils.GitUI.Theming;
 
 namespace GitUI.Avatars
 {
@@ -59,7 +60,7 @@ namespace GitUI.Avatars
         private static Image GenerateSafetynetFallback()
         {
             Bitmap bmp = new(1, 1);
-            bmp.SetPixel(0, 0, Color.Red);
+            bmp.SetPixel(0, 0, Color.Red.AdaptBackColor());
             return bmp;
         }
     }

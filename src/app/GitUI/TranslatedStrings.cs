@@ -50,7 +50,6 @@ namespace GitUI
         private readonly TranslationString _tag = new("Tag");
         private readonly TranslationString _remote = new("Remote");
         private readonly TranslationString _openWithGitExtensions = new("&Open with Git Extensions");
-        private readonly TranslationString _openInVisualStudio = new("Open in &Visual Studio");
         private readonly TranslationString _contScrollToNextFileOnlyWithAlt = new("Enable automatic continuous scroll (without ALT button)");
         private readonly TranslationString _noRevision = new("No revision");
 
@@ -72,8 +71,9 @@ namespace GitUI
         private readonly TranslationString _open = new("Open");
         private readonly TranslationString _directoryIsNotAValidRepository = new("The selected item is not a valid git repository.");
 
-        private readonly TranslationString _sortBy = new("&Sort by...");
-        private readonly TranslationString _sortOrder = new("&Sort order...");
+        private readonly TranslationString _sortBy = new("&Sort by");
+        private readonly TranslationString _sortGroupBy = new("&Sort and group by");
+        private readonly TranslationString _sortOrder = new("&Sort order");
 
         private readonly TranslationString _diffSelectedWithRememberedFile = new("&Diff with \"{0}\"");
         private readonly TranslationString _diffWithParent = new("Diff with A ");
@@ -240,7 +240,6 @@ Copy error details to clipboard?");
         public static string Remote => _instance.Value._remote.Text;
         public static string OpenWithGitExtensions => _instance.Value._openWithGitExtensions.Text;
         public static string FilterFileInGrid => _instance.Value._filterFileInGrid.Text;
-        public static string OpenInVisualStudio => _instance.Value._openInVisualStudio.Text;
         public static string ContScrollToNextFileOnlyWithAlt => _instance.Value._contScrollToNextFileOnlyWithAlt.Text;
         public static string NoRevision => _instance.Value._noRevision.Text;
 
@@ -272,6 +271,7 @@ Copy error details to clipboard?");
         public static string DirectoryInvalidRepository => _instance.Value._directoryIsNotAValidRepository.Text;
 
         public static string SortBy => _instance.Value._sortBy.Text;
+        public static string SortGroupBy => _instance.Value._sortGroupBy.Text;
         public static string SortOrder => _instance.Value._sortOrder.Text;
 
         public static string DiffSelectedWithRememberedFile => _instance.Value._diffSelectedWithRememberedFile.Text;

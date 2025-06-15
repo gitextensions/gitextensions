@@ -18,7 +18,7 @@ namespace GitUITests.CommandsDialogs.Settings
             externalLinkDefinitions.Should().HaveCount(3);
             foreach (ExternalLinkDefinition externalLinkDefinition in externalLinkDefinitions)
             {
-                externalLinkDefinition.LinkFormats.Should().HaveCountGreaterOrEqualTo(1);
+                externalLinkDefinition.LinkFormats.Should().HaveCountGreaterThanOrEqualTo(1);
                 foreach (ExternalLinkFormat externalLinkFormat in externalLinkDefinition.LinkFormats)
                 {
                     externalLinkFormat.Format.Should().Contain("owner").And.Contain("repo");
@@ -33,7 +33,7 @@ namespace GitUITests.CommandsDialogs.Settings
             externalLinkDefinitions.Should().HaveCount(3);
             foreach (ExternalLinkDefinition externalLinkDefinition in externalLinkDefinitions)
             {
-                externalLinkDefinition.LinkFormats.Should().HaveCountGreaterOrEqualTo(1);
+                externalLinkDefinition.LinkFormats.Should().HaveCountGreaterThanOrEqualTo(1);
                 foreach (ExternalLinkFormat externalLinkFormat in externalLinkDefinition.LinkFormats)
                 {
                     externalLinkFormat.Format.Should().Contain("ORGANIZATION_NAME").And.Contain("REPO_NAME");

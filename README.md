@@ -7,11 +7,15 @@ It also integrates with Windows Explorer and Microsoft Visual Studio (2015/2017/
 
 Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) or send us a tweet [![@git_extensions](https://img.shields.io/badge/twitter-%40git__extensions-blue)](https://twitter.com/git_extensions)
 
+## Online manual
+
+[git-extensions-documentation.readthedocs.org](https://git-extensions-documentation.readthedocs.org/)
+
 ## Current Status
 
 <a href="#backers" alt="sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/backers/badge.svg" /></a> <a href="#sponsors" alt="Sponsors on Open Collective"><img src="https://opencollective.com/gitextensions/sponsors/badge.svg" /></a>
 
-### Next Version ([build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To%3A-build-instructions))
+### Next Version ([build instructions](https://github.com/gitextensions/gitextensions/wiki/Build-instructions))
 
 <table>
   <tr>
@@ -23,7 +27,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Runtime environment
     </td>
     <td>
-      MS Windows 7SP1+ // <a href="https://dotnet.microsoft.com/download/dotnet/8.0" target=_blank>.NET 8.0 SDK</a>
+      MS Windows 7SP1+ // <a href="https://dotnet.microsoft.com/download/dotnet/9.0" target=_blank>.NET 9.0 SDK</a>
     </td>
   </tr>
   <tr>
@@ -31,7 +35,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Development
     </td>
     <td>
-      MS Visual Studio 2022 (v17.8+), C# 12 // VC++ (inc. ATL for x86/x64 for installer)
+      MS Visual Studio 2022 (v17.12+), C# 13 // VC++ (inc. ATL for x86/x64 for installer)
     </td>
   </tr>
   <tr>
@@ -52,14 +56,13 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
   </tr>
 </table>
 
-### Older versions 
+### Older versions
 
-See [build instructions](https://github.com/gitextensions/gitextensions/wiki/How-To%3A-build-instructions)
-
+See [build instructions](https://github.com/gitextensions/gitextensions/wiki/Build-instructions)
 
 ## Downloads
 
-<a href="https://github.com/gitextensions/gitextensions/releases" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?label=GitHub%20downloads%20(total)&cacheSeconds=86400"></a> <a href="https://sourceforge.net/projects/gitextensions/files" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/sourceforge/dt/gitextensions.svg?label=SourceForge%20downloads%20(total)&cacheSeconds=86400"></a> <a href="https://chocolatey.org/packages/gitextensions" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/chocolatey/dt/gitextensions.svg?label=Chocolatey%20downloads%20(total)&cacheSeconds=86400"></a>
+<a href="https://github.com/gitextensions/gitextensions/releases" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?label=GitHub%20downloads%20(total)&cacheSeconds=86400"></a> <a href="https://chocolatey.org/packages/gitextensions" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/chocolatey/dt/gitextensions.svg?label=Chocolatey%20downloads%20(total)&cacheSeconds=86400"></a>
 
 **[Download it now](https://github.com/gitextensions/gitextensions/releases/latest)** or install it with [Chocolatey](https://chocolatey.org/packages/gitextensions) or [Winget](https://winget.run/pkg/GitExtensionsTeam/GitExtensions).
 
@@ -72,7 +75,7 @@ If you want to **update a portable version**, you should delete all the files an
 <table>
   <tr>
     <td>
-      <strong>Latest Release: v5.1.1</strong>
+      <strong>Latest Release: v5.2.1</strong>
     </td>
     <td>
       <a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a><br />
@@ -175,7 +178,6 @@ Support this project by becoming a sponsor. Your logo will show up here with a l
 <a href="https://opencollective.com/gitextensions/sponsor/7/website" target="_blank"><img src="https://opencollective.com/gitextensions/sponsor/7/avatar.svg"></a>
 <a href="https://opencollective.com/gitextensions/sponsor/8/website" target="_blank"><img src="https://opencollective.com/gitextensions/sponsor/8/avatar.svg"></a>
 <a href="https://opencollective.com/gitextensions/sponsor/9/website" target="_blank"><img src="https://opencollective.com/gitextensions/sponsor/9/avatar.svg"></a>
-
 
 # Useful Links
 

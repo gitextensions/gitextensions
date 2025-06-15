@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Frozen;
 using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
@@ -6,7 +7,6 @@ using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI;
-using GitExtUtils.GitUI.Theming;
 using GitUI.ScriptsEngine;
 using Microsoft;
 using ResourceManager;
@@ -131,6 +131,8 @@ Diff selection:
             propertyGrid1.PropertyValueChanged += (_, e) =>
                 UpdateScripts(WatchedProxyPropertiesOnValueChanged, e.ChangedItem?.PropertyDescriptor?.Name ?? "");
 
+            return;
+
             void UpdateScripts(string[] watchedProperties, string changedItem)
             {
                 if (watchedProperties.Contains(changedItem))
@@ -161,23 +163,26 @@ Diff selection:
                 return;
             }
 
-            System.Resources.ResourceManager rm = new("GitUI.Properties.Images", Assembly.GetExecutingAssembly());
-
-            // dummy request; for some strange reason the ResourceSets are not loaded until after the first object request... bug?
-            rm.GetObject("dummy");
-
-            using System.Resources.ResourceSet resourceSet = rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
-            Validates.NotNull(resourceSet);
-            foreach (DictionaryEntry icon in resourceSet.Cast<DictionaryEntry>().OrderBy(icon => icon.Key))
+            if (EmbeddedIcons.Images.Count == 0)
             {
-                if (icon.Value is Bitmap bitmap)
-                {
-                    EmbeddedIcons.Images.Add(icon.Key.ToString()!, bitmap.AdaptLightness());
-                }
-            }
+                System.Resources.ResourceManager rm = new("GitUI.Properties.Images", Assembly.GetExecutingAssembly());
 
-            resourceSet.Close();
-            rm.ReleaseAllResources();
+                // dummy request; for some strange reason the ResourceSets are not loaded until after the first object request... bug?
+                rm.GetObject("dummy");
+
+                using System.Resources.ResourceSet resourceSet = rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
+                Validates.NotNull(resourceSet);
+                foreach (DictionaryEntry icon in resourceSet.Cast<DictionaryEntry>().OrderBy(icon => icon.Key))
+                {
+                    if (icon.Value is Bitmap bitmap)
+                    {
+                        EmbeddedIcons.Images.Add(icon.Key.ToString()!, bitmap);
+                    }
+                }
+
+                resourceSet.Close();
+                rm.ReleaseAllResources();
+            }
 
             lvScripts.LargeImageList = lvScripts.SmallImageList = EmbeddedIcons;
             _imagesLoaded = true;
@@ -236,8 +241,16 @@ Diff selection:
                     return;
                 }
 
+                // script.Icon must match in case because assembly resources are case-sensitive
+                FrozenSet<string> imageKeys = EmbeddedIcons.Images.Keys.Cast<string>().ToFrozenSet();
+
                 foreach (ScriptInfoProxy script in scripts)
                 {
+                    if (script.Icon is not null && !imageKeys.Contains(script.Icon))
+                    {
+                        script.Icon = null;
+                    }
+
                     Color color = !script.Enabled ? SystemColors.GrayText : SystemColors.WindowText;
 
                     ListViewItem lvitem = new(script.Name)

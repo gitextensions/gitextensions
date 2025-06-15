@@ -7,9 +7,9 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
-using GitUI.CommandDialogs;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -48,16 +48,13 @@ namespace GitUI.LeftPanel
             InitImageList();
             _txtBranchCriterion = CreateSearchBox();
             branchSearchPanel.Controls.Add(_txtBranchCriterion, 1, 0);
+            treeMain.BackColor = AppColor.PanelBackground.GetThemeColor();
+            leftPanelToolStrip.BackColor = SystemColors.Control;
 
             mnubtnCollapse.AdaptImageLightness();
             tsbCollapseAll.AdaptImageLightness();
             mnubtnExpand.AdaptImageLightness();
-            mnubtnFetchAllBranchesFromARemote.AdaptImageLightness();
-            mnuBtnPruneAllBranchesFromARemote.AdaptImageLightness();
-            mnuBtnFetchAllRemotes.AdaptImageLightness();
-            mnuBtnPruneAllRemotes.AdaptImageLightness();
             mnubtnFetchCreateBranch.AdaptImageLightness();
-            mnubtnPullFromRemoteBranch.AdaptImageLightness();
             InitializeComplete();
 
             HotkeysEnabled = true;
@@ -112,9 +109,9 @@ namespace GitUI.LeftPanel
                         { nameof(Images.BranchRemoteMerged), Pad(Images.BranchRemoteMerged) },
                         { nameof(Images.BranchFolder), Pad(Images.BranchFolder) },
                         { nameof(Images.TagHorizontal), Pad(Images.TagHorizontal) },
-                        { nameof(Images.EyeOpened), Pad(Images.EyeOpened) },
-                        { nameof(Images.EyeClosed), Pad(Images.EyeClosed) },
-                        { nameof(Images.RemoteEnableAndFetch), Pad(Images.RemoteEnableAndFetch) },
+                        { nameof(Images.EyeOpened), Pad(Images.EyeOpened.AdaptLightness()) },
+                        { nameof(Images.EyeClosed), Pad(Images.EyeClosed.AdaptLightness()) },
+                        { nameof(Images.RemoteEnableAndFetch), Pad(Images.RemoteEnableAndFetch.AdaptLightness()) },
                         { nameof(Images.FileStatusModified), Pad(Images.FileStatusModified) },
                         { nameof(Images.FolderSubmodule), Pad(Images.FolderSubmodule) },
                         { nameof(Images.Stash), Pad(Images.Stash) },
@@ -158,8 +155,8 @@ namespace GitUI.LeftPanel
 
                 search.SearchBoxBorderStyle = BorderStyle.FixedSingle;
                 search.SearchBoxBorderDefaultColor = Color.LightGray.AdaptBackColor();
-                search.SearchBoxBorderHoveredColor = SystemColors.Highlight.AdaptBackColor();
-                search.SearchBoxBorderFocusedColor = SystemColors.HotTrack.AdaptBackColor();
+                search.SearchBoxBorderHoveredColor = SystemColors.Highlight;
+                search.SearchBoxBorderFocusedColor = SystemColors.HotTrack;
 
                 return search;
 
@@ -339,6 +336,20 @@ namespace GitUI.LeftPanel
             }
         }
 
+        public void SelectGitRef(string gitRef)
+        {
+            foreach (TreeNode node in treeMain.Items())
+            {
+                if (node.Tag is BaseRevisionNode revisionNode && revisionNode.FullPath == gitRef)
+                {
+                    SelectNode(revisionNode, multiple: false, includingDescendants: false);
+                    node.EnsureVerticallyVisible();
+                    treeMain.SelectedNode = node;
+                    return;
+                }
+            }
+        }
+
         protected override void OnRuntimeLoad()
         {
             base.OnRuntimeLoad();
@@ -491,7 +502,7 @@ namespace GitUI.LeftPanel
                 return;
             }
 
-            node.EnsureVisible();
+            node.EnsureVerticallyVisible();
             treeMain.SelectedNode = node;
 
             return;

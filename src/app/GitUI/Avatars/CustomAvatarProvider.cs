@@ -53,10 +53,7 @@ namespace GitUI.Avatars
         /// <returns>Returns the <see cref="IAvatarProvider"/> described by the template.</returns>
         public static IAvatarProvider ParseTemplateString(string customProviderTemplates, IAvatarDownloader downloader)
         {
-            if (downloader is null)
-            {
-                throw new ArgumentNullException(nameof(downloader));
-            }
+            ArgumentNullException.ThrowIfNull(downloader);
 
             IAvatarProvider[] providerParts = customProviderTemplates
                 .LazySplit(';')

@@ -5,8 +5,10 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.Infrastructure;
 using GitUI.Properties;
+using GitUI.Theming;
 using GitUI.UserControls;
 using Microsoft;
 using ResourceManager;
@@ -61,10 +63,10 @@ namespace GitUI.CommandsDialogs
             new("Select ssh key file");
 
         private readonly TranslationString _labelUrlAsFetch =
-            new("Fetch Url");
+            new("Fetch &Url");
 
         private readonly TranslationString _labelUrlAsFetchPush =
-            new("Url");
+            new("&Url");
 
         private readonly TranslationString _gbMgtPanelHeaderNew =
             new("Create New Remote");
@@ -104,6 +106,14 @@ Inactive remote is completely invisible to git.");
         {
             InitializeComponent();
             InitializeComplete();
+
+            btnRemoteColor.BackColor = Color.Transparent;
+
+            // Persist the text of the buttons to be able to restore it whenever the color is reset
+            btnRemoteColor.Tag = btnRemoteColor.Text;
+
+            // Set the minimum height of the color button after initialization
+            btnRemoteColor.MinimumSize = new Size(DpiUtil.Scale(60), btnRemoteColor.Height);
 
             // remove text from 'new' and 'delete' buttons because now they are represented by icons
             New.Text = string.Empty;
@@ -195,12 +205,12 @@ Inactive remote is completely invisible to git.");
         {
             if (disabled)
             {
-                btnToggleState.Image = DpiUtil.Scale(Images.EyeOpened);
+                btnToggleState.Image = DpiUtil.Scale(Images.EyeOpened.AdaptLightness());
                 toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Activate.Text ?? "").Trim());
             }
             else
             {
-                btnToggleState.Image = DpiUtil.Scale(Images.EyeClosed);
+                btnToggleState.Image = DpiUtil.Scale(Images.EyeClosed.AdaptLightness());
                 toolTip1.SetToolTip(btnToggleState, (_btnToggleStateTooltip_Deactivate.Text ?? "").Trim());
             }
         }
@@ -309,6 +319,27 @@ Inactive remote is completely invisible to git.");
             }
         }
 
+        private void SetRemoteColor(Color color)
+        {
+            if (color == Color.Transparent)
+            {
+                btnRemoteColor.Text = (string)btnRemoteColor.Tag;
+                btnRemoteColor.BackColor = Color.Transparent;
+
+                btnRemoteColorReset.Visible = false;
+            }
+            else
+            {
+                if (btnRemoteColor.BackColor == Color.Transparent)
+                {
+                    btnRemoteColor.Text = string.Empty;
+                    btnRemoteColorReset.Visible = true;
+                }
+
+                btnRemoteColor.BackColor = color;
+            }
+        }
+
         private void application_Idle(object sender, EventArgs e)
         {
             // we need this event only once, so unwire
@@ -323,8 +354,15 @@ Inactive remote is completely invisible to git.");
 
             pnlMgtPuttySsh.Visible = GitSshHelpers.IsPlink;
 
+            if (!AppSettings.AlwaysShowAdvOpt)
+            {
+                lblRemoteColor.Visible = false;
+                flpnlRemoteColors.Visible = false;
+            }
+
             // if Putty SSH isn't enabled, reduce the minimum height of the form
             MinimumSize = new Size(MinimumSize.Width, pnlMgtPuttySsh.Visible ? MinimumSize.Height : MinimumSize.Height - pnlMgtPuttySsh.Height);
+            Height = MinimumSize.Height + DpiUtil.Scale(36);
 
             // adjust width of the labels if required
             // this may be necessary if the translated labels require more space than English versions
@@ -338,6 +376,23 @@ Inactive remote is completely invisible to git.");
 
             // load the data for the very first time
             Initialize(PreselectRemoteOnLoad, PreselectLocalOnLoad);
+        }
+
+        private void btnRemoteColor_Click(object sender, EventArgs e)
+        {
+            colorDialog.Color = btnRemoteColor.BackColor == Color.Transparent
+                ? AppColor.RemoteBranch.GetThemeColor()
+                : btnRemoteColor.BackColor;
+
+            if (colorDialog.ShowDialog() == DialogResult.OK)
+            {
+                SetRemoteColor(colorDialog.Color);
+            }
+        }
+
+        private void btnRemoteColorReset_Click(object sender, EventArgs e)
+        {
+            SetRemoteColor(Color.Transparent);
         }
 
         private void btnToggleState_Click(object sender, EventArgs e)
@@ -392,6 +447,12 @@ Inactive remote is completely invisible to git.");
             string remotePushUrl = comboBoxPushUrl.Text.Trim();
             bool creatingNew = _selectedRemote is null;
 
+            string? color = null;
+            if (btnRemoteColor.BackColor != Color.Transparent)
+            {
+                color = ColorTranslator.ToHtml(btnRemoteColor.BackColor);
+            }
+
             try
             {
                 // disable the control while saving
@@ -415,7 +476,8 @@ Inactive remote is completely invisible to git.");
                                                        remote,
                                                        remoteUrl,
                                                        checkBoxSepPushUrl.Checked ? remotePushUrl : null,
-                                                       PuttySshKey.Text);
+                                                       PuttySshKey.Text,
+                                                       color);
 
                 if (!string.IsNullOrEmpty(result.UserMessage))
                 {
@@ -424,6 +486,9 @@ Inactive remote is completely invisible to git.");
                 }
                 else
                 {
+                    // This will cause the module's remotes colors to reload
+                    Module.ResetRemoteColors();
+
                     ThreadHelper.JoinableTaskFactory.Run(async () =>
                     {
                         IList<Repository> repositoryHistory = await RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync();
@@ -658,6 +723,15 @@ Inactive remote is completely invisible to git.");
             BindBtnToggleState(_selectedRemote.Disabled);
             btnToggleState.Visible = true;
             flpnlRemoteManagement.Enabled = !_selectedRemote.Disabled;
+
+            if (string.IsNullOrWhiteSpace(_selectedRemote.Color))
+            {
+                SetRemoteColor(Color.Transparent);
+            }
+            else
+            {
+                SetRemoteColor(ColorTranslator.FromHtml(_selectedRemote.Color));
+            }
         }
 
         private void checkBoxSepPushUrl_CheckedChanged(object sender, EventArgs e)

@@ -1,6 +1,4 @@
-﻿using GitExtensions.Extensibility.Settings;
-
-namespace GitExtensions.Extensibility.Git;
+﻿namespace GitExtensions.Extensibility.Git;
 
 public interface IGitRef : INamedGitItem
 {
@@ -42,20 +40,6 @@ public interface IGitRef : INamedGitItem
     string TrackingRemote { get; set; }
     bool IsSelected { get; set; }
     bool IsSelectedHeadMergeSource { get; set; }
-
-    /// <summary>
-    /// This method is a faster than the property above. The property reads the config file
-    /// every time it is accessed. This method accepts a config file what makes it faster when loading
-    /// the revision graph.
-    /// </summary>
-    string GetTrackingRemote(ISettingsValueGetter configFile);
-
-    /// <summary>
-    /// This method is a faster than the property above. The property reads the config file
-    /// every time it is accessed. This method accepts a config file which makes it faster when loading
-    /// the revision graph.
-    /// </summary>
-    string GetMergeWith(ISettingsValueGetter configFile);
 
     /// <summary>
     /// Return if the current `GitRef` is tracking another `GitRef` as a remote.

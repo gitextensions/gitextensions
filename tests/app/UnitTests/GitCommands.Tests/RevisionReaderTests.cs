@@ -1,8 +1,12 @@
-﻿using System.Runtime.CompilerServices;
+﻿using System.Reactive.Linq;
+using System.Reactive.Subjects;
+using System.Runtime.CompilerServices;
 using System.Text;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 using Newtonsoft.Json;
 
@@ -29,6 +33,63 @@ namespace GitCommandsTests
         }
 
         [Test]
+        public void GetLog_shall_add_Autostash()
+        {
+            const string autostashLabel = nameof(autostashLabel);
+            List<GitRevision> allRevisions = [];
+
+            ObjectId autostashId = ObjectId.Random();
+            using ReferenceRepository repo = new(createCommit: true);
+            string commitHash = repo.CommitHash ?? throw new ArgumentNullException(nameof(repo.CommitHash));
+            string rebaseMergeDir = Path.Combine(repo.Module.WorkingDirGitDir, "rebase-merge");
+            string autostashFilename = Path.Combine(rebaseMergeDir, "autostash");
+            Directory.CreateDirectory(rebaseMergeDir);
+            File.WriteAllText(autostashFilename, autostashId.ToString());
+            File.WriteAllText(Path.Combine(rebaseMergeDir, "orig-head"), commitHash);
+            long unixTime = DateTimeUtils.ToUnixTime(File.GetLastWriteTime(autostashFilename));
+
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(repo.Module, _logOutputEncoding, _sixMonths);
+            Subject<IReadOnlyList<GitRevision>> observeRevisions = new();
+            IDisposable revisionSubscription = observeRevisions.Subscribe(OnNextRevisions);
+            reader.GetLog(observeRevisions, revisionFilter: "", pathFilter: "", hasNotes: false, autostashLabel, cancellationToken: default);
+
+            allRevisions.Count.Should().Be(2);
+            GitRevision autostash = allRevisions[0];
+            GitRevision head = allRevisions[1];
+
+            autostash.IsArtificial.Should().BeFalse();
+            autostash.IsAutostash.Should().BeTrue();
+            autostash.IsStash.Should().BeFalse();
+            autostash.ObjectId.Should().Be(autostashId);
+            autostash.ParentIds.Should().BeEquivalentTo([head.ObjectId]);
+            autostash.Subject.Should().Be(autostashLabel);
+            autostash.AuthorUnixTime.Should().Be(unixTime);
+            autostash.CommitUnixTime.Should().Be(unixTime);
+            autostash.Author.Should().BeNull();
+            autostash.AuthorEmail.Should().BeNull();
+            autostash.Committer.Should().BeNull();
+            autostash.CommitterEmail.Should().BeNull();
+
+            head.ObjectId.ToString().Should().Be(commitHash);
+            head.IsArtificial.Should().BeFalse();
+            head.IsAutostash.Should().BeFalse();
+            head.IsStash.Should().BeFalse();
+
+            CommitData commitData = new CommitDataManager(() => repo.Module).CreateFromRevision(autostash, children: [head.ObjectId]);
+            commitData.Author.Should().BeNull();
+            commitData.Committer.Should().BeNull();
+            commitData.ObjectId.Should().Be(autostashId);
+            commitData.Body.Should().Be(autostashLabel);
+
+            return;
+
+            void OnNextRevisions(IReadOnlyList<GitRevision> revisions)
+            {
+                allRevisions.AddRange(revisions);
+            }
+        }
+
+        [Test]
         public void GetRevision_should_return_null_if_revision_does_not_exist()
         {
             RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
@@ -41,7 +102,7 @@ namespace GitCommandsTests
         public void GetRevision_should_throw_if_revision_does_not_exist()
         {
             RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
-            Assert.Throws<ExternalOperationException>(() =>
+            ClassicAssert.Throws<ExternalOperationException>(() =>
                 reader.GetRevision(GitRevision.WorkTreeGuid, hasNotes: false, throwOnError: true, cancellationToken: default));
         }
 

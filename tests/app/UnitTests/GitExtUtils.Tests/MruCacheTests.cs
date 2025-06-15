@@ -14,16 +14,16 @@ namespace GitExtUtilsTests
             cache.Add(2, "two");
             cache.Add(3, "three");
 
-            Assert.True(cache.TryGetValue(1, out _));
-            Assert.True(cache.TryGetValue(2, out _));
-            Assert.True(cache.TryGetValue(3, out _));
+            ClassicAssert.True(cache.TryGetValue(1, out _));
+            ClassicAssert.True(cache.TryGetValue(2, out _));
+            ClassicAssert.True(cache.TryGetValue(3, out _));
 
             cache.Add(4, "four");
 
-            Assert.False(cache.TryGetValue(1, out _));
-            Assert.True(cache.TryGetValue(2, out _));
-            Assert.True(cache.TryGetValue(3, out _));
-            Assert.True(cache.TryGetValue(4, out _));
+            ClassicAssert.False(cache.TryGetValue(1, out _));
+            ClassicAssert.True(cache.TryGetValue(2, out _));
+            ClassicAssert.True(cache.TryGetValue(3, out _));
+            ClassicAssert.True(cache.TryGetValue(4, out _));
         }
 
         [Test]
@@ -35,16 +35,16 @@ namespace GitExtUtilsTests
             cache.Add(2, "two");
             cache.Add(3, "three");
 
-            Assert.True(cache.TryGetValue(3, out _));
-            Assert.True(cache.TryGetValue(2, out _));
-            Assert.True(cache.TryGetValue(1, out _));
+            ClassicAssert.True(cache.TryGetValue(3, out _));
+            ClassicAssert.True(cache.TryGetValue(2, out _));
+            ClassicAssert.True(cache.TryGetValue(1, out _));
 
             cache.Add(4, "four");
 
-            Assert.True(cache.TryGetValue(1, out _));
-            Assert.True(cache.TryGetValue(2, out _));
-            Assert.False(cache.TryGetValue(3, out _));
-            Assert.True(cache.TryGetValue(4, out _));
+            ClassicAssert.True(cache.TryGetValue(1, out _));
+            ClassicAssert.True(cache.TryGetValue(2, out _));
+            ClassicAssert.False(cache.TryGetValue(3, out _));
+            ClassicAssert.True(cache.TryGetValue(4, out _));
         }
 
         [Test]
@@ -58,9 +58,9 @@ namespace GitExtUtilsTests
 
             cache.Clear();
 
-            Assert.False(cache.TryGetValue(1, out _));
-            Assert.False(cache.TryGetValue(2, out _));
-            Assert.False(cache.TryGetValue(3, out _));
+            ClassicAssert.False(cache.TryGetValue(1, out _));
+            ClassicAssert.False(cache.TryGetValue(2, out _));
+            ClassicAssert.False(cache.TryGetValue(3, out _));
         }
 
         [Test]
@@ -72,12 +72,12 @@ namespace GitExtUtilsTests
             cache.Add(2, "two");
             cache.Add(3, "three");
 
-            Assert.True(cache.TryRemove(1, out string? removed));
-            Assert.AreEqual("one", removed);
-            Assert.False(cache.TryGetValue(1, out _));
+            ClassicAssert.True(cache.TryRemove(1, out string? removed));
+            ClassicAssert.AreEqual("one", removed);
+            ClassicAssert.False(cache.TryGetValue(1, out _));
 
-            Assert.True(cache.TryGetValue(2, out _));
-            Assert.True(cache.TryGetValue(3, out _));
+            ClassicAssert.True(cache.TryGetValue(2, out _));
+            ClassicAssert.True(cache.TryGetValue(3, out _));
         }
 
         [Test]
@@ -87,8 +87,8 @@ namespace GitExtUtilsTests
 
             cache.Add(1, "one");
 
-            Assert.False(cache.TryRemove(2, out string? removed));
-            Assert.Null(removed);
+            ClassicAssert.False(cache.TryRemove(2, out string? removed));
+            ClassicAssert.Null(removed);
         }
     }
 }

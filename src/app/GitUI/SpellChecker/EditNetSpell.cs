@@ -68,7 +68,14 @@ namespace GitUI.SpellChecker
 
             _wordAtCursorExtractor = new WordAtCursorExtractor();
 
-            _ = new TextBoxSilencer(TextBox);
+            if (AppSettings.MessageEditorWordWrap.Value)
+            {
+                TextBox.WordWrap = true;
+            }
+            else
+            {
+                _ = new TextBoxSilencer(TextBox);
+            }
         }
 
         public override string Text
@@ -85,9 +92,20 @@ namespace GitUI.SpellChecker
             set
             {
                 HideWatermark();
+                EvaluateForecolor();
                 TextBox.Text = value;
                 ShowWatermark();
                 OnTextAssigned();
+            }
+        }
+
+        public void EvaluateForecolor()
+        {
+            if (Application.IsDarkModeEnabled)
+            {
+                // In dark mode the background color is set to White, but still reported as SystemColors.Window (or adjusted)
+                // The Forecolor must be changed manually
+                TextBox.ForeColor = TextBox.Enabled ? SystemColors.WindowText : SystemColors.HighlightText;
             }
         }
 

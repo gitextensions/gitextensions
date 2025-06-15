@@ -10,6 +10,5 @@
     <RunInBackground>false</RunInBackground>
     <IsPowerShell>false</IsPowerShell>
     <HotkeyCommandIdentifier>0</HotkeyCommandIdentifier>
-    <Icon>bug</Icon>
   </ScriptInfo>
 </ArrayOfScriptInfo>

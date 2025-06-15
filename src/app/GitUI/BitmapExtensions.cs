@@ -6,10 +6,7 @@ namespace GitUI
     {
         public static Icon ToIcon(this Bitmap bitmap)
         {
-            if (bitmap is null)
-            {
-                throw new ArgumentNullException(nameof(bitmap));
-            }
+            ArgumentNullException.ThrowIfNull(bitmap);
 
             IntPtr handle = IntPtr.Zero;
             try

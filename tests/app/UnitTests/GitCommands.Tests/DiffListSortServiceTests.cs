@@ -31,7 +31,7 @@ namespace GitCommandsTests
             AppSettings.DiffListSorting = persistedSetting;
             DiffListSortService service = new();
 
-            Assert.AreEqual(persistedSetting, service.DiffListSorting);
+            ClassicAssert.AreEqual(persistedSetting, service.DiffListSorting);
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace GitCommandsTests
 
             service.DiffListSorting = sortType;
 
-            Assert.AreEqual(sortType, AppSettings.DiffListSorting);
+            ClassicAssert.AreEqual(sortType, AppSettings.DiffListSorting);
         }
 
         [Test]
@@ -57,23 +57,23 @@ namespace GitCommandsTests
             service.DiffListSortingChanged += (s, e) => raisedCount++;
 
             service.DiffListSorting = DiffListSortType.FilePath;
-            Assert.AreEqual(0, raisedCount, "Service sort did not change. It should not have raised a notification.");
+            ClassicAssert.AreEqual(0, raisedCount, "Service sort did not change. It should not have raised a notification.");
 
             service.DiffListSorting = DiffListSortType.FileExtension;
-            Assert.AreEqual(1, raisedCount, "Service sort changed. It should not have raised a single notification.");
+            ClassicAssert.AreEqual(1, raisedCount, "Service sort changed. It should not have raised a single notification.");
 
             service.DiffListSorting = DiffListSortType.FileExtension;
-            Assert.AreEqual(1, raisedCount, "Service sort did not change. It should not have raised another notification.");
+            ClassicAssert.AreEqual(1, raisedCount, "Service sort did not change. It should not have raised another notification.");
 
             service.DiffListSorting = DiffListSortType.FileStatus;
-            Assert.AreEqual(2, raisedCount, "Service sort changed. It should not have raised a second notification.");
+            ClassicAssert.AreEqual(2, raisedCount, "Service sort changed. It should not have raised a second notification.");
         }
 
         [Test]
         public void Can_get_singleton()
         {
-            Assert.IsNotNull(DiffListSortService.Instance);
-            Assert.AreSame(DiffListSortService.Instance, DiffListSortService.Instance);
+            ClassicAssert.IsNotNull(DiffListSortService.Instance);
+            ClassicAssert.AreSame(DiffListSortService.Instance, DiffListSortService.Instance);
         }
     }
 }

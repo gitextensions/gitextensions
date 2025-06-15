@@ -37,6 +37,7 @@ namespace GitUI.UserControls
         public InteractiveGitActionControl()
         {
             InitializeComponent();
+            BackColor.AdaptBackColor();
             InitializeComplete();
         }
 

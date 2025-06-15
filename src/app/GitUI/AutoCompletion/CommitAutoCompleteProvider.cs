@@ -1,4 +1,3 @@
-using System.Reflection;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Git;
@@ -116,23 +115,7 @@ namespace GitUI.AutoCompletion
                 return File.ReadLines(path);
             }
 
-            Assembly entryAssembly = Assembly.GetEntryAssembly();
-
-            if (entryAssembly is null)
-            {
-                // This will be null during integration tests, for example
-                return Enumerable.Empty<string>();
-            }
-
-            Stream? s = entryAssembly.GetManifestResourceStream("GitExtensions.AutoCompleteRegexes.txt");
-
-            if (s is null)
-            {
-                throw new NotImplementedException("Please add AutoCompleteRegexes.txt file into .csproj");
-            }
-
-            using StreamReader sr = new(s);
-            return sr.ReadToEnd().Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
+            return AutoCompleteRegexes.Default.Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
         }
 
         private static Dictionary<string, Regex> ParseRegexes()

@@ -76,12 +76,12 @@ namespace AppVeyorIntegrationTests
             return false;
         }
 
-        public object ReadYaml(IParser parser, Type type)
+        public object ReadYaml(IParser parser, Type type, ObjectDeserializer rootDeserializer)
         {
             throw new NotImplementedException();
         }
 
-        public void WriteYaml(IEmitter emitter, object value, Type type)
+        public void WriteYaml(IEmitter emitter, object value, Type type, ObjectSerializer serializer)
         {
             if (type == typeof(DateTime))
             {

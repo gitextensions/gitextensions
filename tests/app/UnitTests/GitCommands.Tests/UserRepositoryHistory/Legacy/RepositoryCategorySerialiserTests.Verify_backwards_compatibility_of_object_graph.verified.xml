@@ -7,7 +7,7 @@
         <Anchor>None</Anchor>
       </Repository>
       <Repository>
-        <Path></Path>
+        <Path />
         <Anchor>None</Anchor>
       </Repository>
     </Repositories>

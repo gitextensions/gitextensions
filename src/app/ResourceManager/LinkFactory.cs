@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 
@@ -112,12 +112,7 @@ namespace ResourceManager
                 return;
             }
 
-            using Process process = new()
-            {
-                EnableRaisingEvents = false,
-                StartInfo = { FileName = uri.AbsoluteUri, UseShellExecute = true },
-            };
-            process.Start();
+            OsShellUtil.OpenUrlInDefaultBrowser(uri.AbsoluteUri);
         }
 
         private static bool ParseInternalScheme(Uri? uri, [NotNullWhen(returnValue: true)] out CommandEventArgs? commandEventArgs)

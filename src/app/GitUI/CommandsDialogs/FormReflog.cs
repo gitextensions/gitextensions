@@ -5,6 +5,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI;
+using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -39,6 +40,7 @@ namespace GitUI.CommandsDialogs
             : base(uiCommands)
         {
             InitializeComponent();
+            lblDirtyWorkingDirectory.ForeColor.AdaptTextColor();
             InitializeComplete();
 
             gridReflog.RowTemplate.Height = DpiUtil.Scale(24);
@@ -71,9 +73,9 @@ namespace GitUI.CommandsDialogs
 
         private void Branches_SelectedIndexChanged(object sender, EventArgs e)
         {
-            ThreadHelper.JoinableTaskFactory.Run(DisplayRefLog);
+            ThreadHelper.JoinableTaskFactory.Run(DisplayRefLogAsync);
 
-            async Task DisplayRefLog()
+            async Task DisplayRefLogAsync()
             {
                 string item = (string)Branches.SelectedItem;
                 await TaskScheduler.Default;

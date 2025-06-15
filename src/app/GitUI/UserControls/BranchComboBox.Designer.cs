@@ -47,7 +47,7 @@
             // selectMultipleBranchesButton
             // 
             selectMultipleBranchesButton.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Right;
-            selectMultipleBranchesButton.Image = Properties.Images.Select;
+            selectMultipleBranchesButton.Image = Properties.Images.SelectBranch;
             selectMultipleBranchesButton.Location = new Point(308, 1);
             selectMultipleBranchesButton.Margin = new Padding(0);
             selectMultipleBranchesButton.Name = "selectMultipleBranchesButton";

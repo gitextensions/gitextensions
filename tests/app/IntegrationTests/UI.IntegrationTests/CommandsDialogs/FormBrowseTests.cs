@@ -52,9 +52,6 @@ namespace GitExtensions.UITests.CommandsDialogs
             _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
         }
 
-#if !DEBUG
-        [Ignore("This test is unstable in AppVeyor")]
-#endif
         [Test]
         public void Filters_should_behave_as_expected()
         {
@@ -189,6 +186,64 @@ namespace GitExtensions.UITests.CommandsDialogs
         }
 
         [Test]
+        public void FileSelection_should_be_restored_after_refresh()
+        {
+            // create a commit with multiple files changed
+            const string fileA = "fileA.txt";
+            const string fileB = "fileB.txt";
+            const string contentA = nameof(contentA);
+            const string contentB = nameof(contentB);
+
+            using ReferenceRepository referenceRepository = new();
+            GitUICommands commands = new(GlobalServiceContainer.CreateDefaultMockServiceContainer(), referenceRepository.Module);
+            referenceRepository.CreateCommit("multiple files",
+                $"{contentA}\n{new string('A', 20000)}", fileA,
+                $"{contentB}\n{new string('B', 20000)}", fileB);
+
+            const int maxMilliseconds = 1_000;
+            RunFormTest(
+                async form =>
+                {
+                    FormBrowse.TestAccessor ta = form.GetTestAccessor();
+                    ((TabControl)ta.DiffTabPage.Parent).SelectedTab = ta.DiffTabPage;
+
+                    RevisionDiffControl.TestAccessor tadiff = ta.RevisionDiffControl.GetTestAccessor();
+                    FileStatusList fileStatusList = tadiff.DiffFiles;
+
+                    WaitForRevisionsToBeLoaded(form);
+
+                    IReadOnlyList<GitItemStatus> files = [];
+                    UITest.ProcessUntil("waiting for files", () => { return (files = fileStatusList.GitItemStatuses).Count == 2; }, maxMilliseconds);
+                    GitItemStatus fileToSelect = files[1];
+                    fileStatusList.SelectedGitItems = [fileToSelect];
+                    await VerifySelectionAsync();
+                    const int expectedLine = 2;
+                    tadiff.DiffText.GoToLine(expectedLine);
+
+                    // repeat: refresh and check selection
+                    for (int i = 0; i < 15; ++i)
+                    {
+                        ta.RefreshRevisions();
+                        WaitForRevisionsToBeLoaded(form);
+                        await VerifySelectionAsync(expectedLine);
+                    }
+
+                    return;
+
+                    async Task VerifySelectionAsync(int expectedLine = 1)
+                    {
+                        await Task.Delay(FileStatusList.SelectedIndexChangeThrottleDuration);
+                        UITest.ProcessUntil("waiting for selection",
+                            () => fileStatusList.SelectedGitItem?.Name == fileB
+                                    && tadiff.DiffText.GetText().StartsWith(contentB)
+                                    && tadiff.DiffText.CurrentFileLine == expectedLine,
+                            maxMilliseconds);
+                    }
+                },
+                commands);
+        }
+
+        [Test]
         public void ShowStashes_starting_disabled_should_filter_as_expected()
         {
             using ReferenceRepository referenceRepository = new();
@@ -270,11 +325,9 @@ namespace GitExtensions.UITests.CommandsDialogs
                         WaitForRevisionsToBeLoaded(form);
                         // Assert
                         AppSettings.ShowStashes.Should().BeFalse();
-#if DEBUG
                         // https://github.com/gitextensions/gitextensions/issues/10170
                         // This test occasionaly fails with 3 visible revisions
                         form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
-#endif
                     }
                     finally
                     {
@@ -306,10 +359,10 @@ namespace GitExtensions.UITests.CommandsDialogs
                 });
         }
 
-        private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
+        private void RunFormTest(Func<FormBrowse, Task> testDriverAsync, GitUICommands? commands = null)
         {
             UITest.RunForm(
-                showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
+                showForm: () => (commands ?? _commands).StartBrowseDialog(owner: null).Should().BeTrue(),
                 testDriverAsync);
         }
 

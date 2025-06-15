@@ -208,7 +208,7 @@
             brachLabel.Name = "brachLabel";
             brachLabel.Size = new Size(47, 32);
             brachLabel.TabIndex = 8;
-            brachLabel.Text = "&Branch:";
+            brachLabel.Text = "Br&anch:";
             brachLabel.TextAlign = ContentAlignment.MiddleLeft;
             // 
             // _NO_TRANSLATE_Branches

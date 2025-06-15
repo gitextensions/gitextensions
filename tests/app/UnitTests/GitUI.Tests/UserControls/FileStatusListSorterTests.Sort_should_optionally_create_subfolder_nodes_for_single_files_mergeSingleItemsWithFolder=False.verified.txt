@@ -1,0 +1,45 @@
+﻿{
+  "Text": "",
+  "Tag": "RelativePath: ",
+  "Nodes": [
+    {
+      "Text": "1",
+      "Tag": "RelativePath: 1",
+      "Nodes": [
+        {
+          "Text": "2",
+          "Tag": "RelativePath: 1/2",
+          "Nodes": [
+            {
+              "Text": "file12",
+              "Tag": "FileStatusItem: 1/2/file12",
+              "Nodes": []
+            }
+          ]
+        },
+        {
+          "Text": "3",
+          "Tag": "RelativePath: 1/3",
+          "Nodes": [
+            {
+              "Text": "file13",
+              "Tag": "FileStatusItem: 1/3/file13",
+              "Nodes": []
+            }
+          ]
+        },
+        {
+          "Text": "4",
+          "Tag": "RelativePath: 1/4",
+          "Nodes": [
+            {
+              "Text": "file14",
+              "Tag": "FileStatusItem: 1/4/file14",
+              "Nodes": []
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

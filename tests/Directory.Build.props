@@ -12,8 +12,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- CVE-2019-0820, see https://github.com/advisories/GHSA-cmhx-cq75-c4mj -->
-    <PackageReference Include="System.Text.RegularExpressions" />
+    <Using Include="NUnit.Framework.Legacy" />
   </ItemGroup>
-
 </Project>

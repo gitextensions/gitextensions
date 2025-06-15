@@ -55,7 +55,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public void RefreshContent()
         {
-            DashboardTheme selectedTheme = ColorHelper.IsLightTheme() ? DashboardTheme.Light : DashboardTheme.Dark;
+            DashboardTheme selectedTheme = Application.IsDarkModeEnabled ? DashboardTheme.Dark : DashboardTheme.Light;
 
             InitDashboardLayout();
             ApplyTheme();

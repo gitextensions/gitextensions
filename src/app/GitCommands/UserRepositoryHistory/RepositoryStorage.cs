@@ -80,10 +80,7 @@ namespace GitCommands.UserRepositoryHistory
                 throw new ArgumentException(nameof(key));
             }
 
-            if (repositories is null)
-            {
-                throw new ArgumentNullException(nameof(repositories));
-            }
+            ArgumentNullException.ThrowIfNull(repositories);
 
             string xml = _repositorySerialiser.Serialize(repositories);
             if (xml is null)

@@ -67,23 +67,6 @@ namespace GitExtensions
             AppSettings.SetDocumentationBaseUrl(AppSettings.ProductVersion);
 
             ThemeModule.Load();
-#if SUPPORT_THEME_HOOKS
-            Application.ApplicationExit += (s, e) => ThemeModule.Unload();
-
-            SystemEvents.UserPreferenceChanged += (s, e) =>
-            {
-                // Whenever a user changes monitor scaling (e.g. 100%->125%) unload and
-                // reload the theme, and repaint all forms
-                if (e.Category == UserPreferenceCategory.Desktop || e.Category == UserPreferenceCategory.VisualStyle)
-                {
-                    ThemeModule.ReloadWin32ThemeData();
-                    foreach (Form form in Application.OpenForms)
-                    {
-                        form.BeginInvoke((MethodInvoker)(() => form.Invalidate()));
-                    }
-                }
-            };
-#endif
 
             HighDpiMouseCursors.Enable();
 
@@ -256,7 +239,7 @@ namespace GitExtensions
             {
                 // If no working dir is yet found, try to find one relative to the current working directory.
                 // This allows the `fileeditor` command to discover repository configuration which is
-                // required for core.commentChar support.
+                // required for core.commentchar support.
                 workingDir = GitModule.TryFindGitWorkingDir(Environment.CurrentDirectory);
             }
 

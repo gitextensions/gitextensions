@@ -1,15 +1,20 @@
-﻿using System.Text;
+﻿#nullable enable
+
+using System.Diagnostics;
+using System.Text;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Settings;
+using GitCommands.Utils;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class GitConfigSettingsPage : ConfigFileSettingsPage
+    public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
     {
         private readonly TranslationString _selectFile = new("Select file");
         private readonly GitConfigSettingsPageController _controller;
@@ -38,6 +43,24 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             _controller = new GitConfigSettingsPageController();
         }
 
+        private string? AdaptCommandIfWsl(string? command)
+        {
+            if (string.IsNullOrEmpty(command) || !PathUtil.IsWslPath(Module?.WorkingDir))
+            {
+                return command;
+            }
+
+            // Replace "D:" with "/mnt/d"
+            int colonIndex = command.IndexOf(':');
+            if (colonIndex == (command[0] == '"' ? 2 : 1))
+            {
+                int windowsDriveIndex = colonIndex - 1;
+                command = $"{command[..windowsDriveIndex]}/mnt/{char.ToLower(command[windowsDriveIndex])}{command[(colonIndex + 1)..]}";
+            }
+
+            return Regex.Replace(command, @"\$(LOCAL|REMOTE|BASE|MERGED)", @"$(wslpath -aw $&)").ToPosixPath();
+        }
+
         protected override void Init(ISettingsPageHost pageHost)
         {
             base.Init(pageHost);
@@ -46,7 +69,52 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             CommonLogic.FillEncodings(Global_FilesEncoding);
 
-            GlobalEditor.Items.AddRange(EditorHelper.GetEditors());
+            const string gitCredentialHelperPrefix = "git-credential-";
+            string[] linuxCredentialHelpers = ["oauth"];
+            if (EnvUtils.RunningOnWindows())
+            {
+                cbxCredentialHelper.Items.AddRange(PathUtil.IsWslPath(Module?.WorkingDir)
+                    ? [.. FindGitCredentialHelpers().Select(path => path.ToWslPath().Replace(" ", @"\ ")), .. linuxCredentialHelpers]
+                    : [.. FindGitCredentialHelpers().Select(GetCredentialHelperName)]);
+            }
+            else
+            {
+                cbxCredentialHelper.Items.AddRange(linuxCredentialHelpers);
+            }
+
+            cbxCredentialHelper.Items.AddRange(["store", "cache"]);
+
+            GlobalEditor.Items.AddRange([.. EditorHelper.GetEditors().Select(AdaptCommandIfWsl).WhereNotNull()]);
+
+            return;
+
+            static IEnumerable<string> FindGitCredentialHelpers()
+            {
+                try
+                {
+                    string? gitDir = Path.GetDirectoryName(AppSettings.GitCommand);
+                    if (gitDir?.EndsWith("bin") is true)
+                    {
+                        gitDir = Path.GetDirectoryName(gitDir);
+                    }
+
+                    return !Directory.Exists(gitDir)
+                        ? []
+                        : Directory.GetFiles(gitDir, $"{gitCredentialHelperPrefix}*.exe", SearchOption.AllDirectories)
+                            .Where(path => !path.Contains("git-credential-helper-selector"));
+                }
+                catch (Exception exception)
+                {
+                    Trace.Write(exception);
+                    return [];
+                }
+            }
+
+            static string GetCredentialHelperName(string path)
+            {
+                string name = Path.GetFileNameWithoutExtension(path);
+                return name.StartsWith(gitCredentialHelperPrefix) ? name[gitCredentialHelperPrefix.Length..] : path;
+            }
         }
 
         public static SettingsPageReference GetPageReference()
@@ -60,12 +128,23 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             GlobalUserName.Enabled = canFindGitCmd;
             GlobalUserEmail.Enabled = canFindGitCmd;
+            cbxCredentialHelper.Enabled = canFindGitCmd;
             GlobalEditor.Enabled = canFindGitCmd;
             txtCommitTemplatePath.Enabled = canFindGitCmd;
             _NO_TRANSLATE_cboMergeTool.Enabled = canFindGitCmd;
             txtMergeToolPath.Enabled = canFindGitCmd;
             txtMergeToolCommand.Enabled = canFindGitCmd;
             InvalidGitPathGlobal.Visible = !canFindGitCmd;
+
+            if (ReadOnly)
+            {
+                // Unselect has no effect in SettingsToPage because ComboBox asynchronously lives its own life
+                ComboBox[] comboBoxes = [cbxCredentialHelper, GlobalEditor];
+                foreach (ComboBox comboBox in comboBoxes)
+                {
+                    comboBox.Select(start: comboBox.Text.Length, length: 0);
+                }
+            }
         }
 
         protected override void SettingsToPage()
@@ -73,13 +152,14 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Validates.NotNull(_diffMergeToolConfigurationManager);
             Validates.NotNull(CurrentSettings);
 
-            string mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
-            string diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
+            string? mergeTool = _diffMergeToolConfigurationManager.ConfiguredMergeTool;
+            string? diffTool = _diffMergeToolConfigurationManager.ConfiguredDiffTool;
 
-            Global_FilesEncoding.Text = CurrentSettings.FilesEncoding?.EncodingName ?? "";
+            Global_FilesEncoding.SelectedItem = new GitEncodingSettingsGetter(CurrentSettings).FilesEncoding;
 
             GlobalUserName.Text = CurrentSettings.GetValue(SettingKeyString.UserName);
             GlobalUserEmail.Text = CurrentSettings.GetValue(SettingKeyString.UserEmail);
+            cbxCredentialHelper.Text = CurrentSettings.GetValue("credential.helper");
             GlobalEditor.Text = CurrentSettings.GetValue("core.editor");
             txtCommitTemplatePath.Text = CurrentSettings.GetValue("commit.template");
 
@@ -91,8 +171,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             txtDiffToolPath.Text = _diffMergeToolConfigurationManager.GetToolPath(diffTool, DiffMergeToolType.Diff);
             txtDiffToolCommand.Text = _diffMergeToolConfigurationManager.GetToolCommand(diffTool, DiffMergeToolType.Diff);
 
-            AutoCRLFType? autocrlf = CurrentSettings.ByPath("core")
-                .GetNullableEnum<AutoCRLFType>("autocrlf");
+            AutoCRLFType? autocrlf = ((ISettingsValueGetter)CurrentSettings).GetValue<AutoCRLFType>("core.autocrlf");
 
             globalAutoCrlfFalse.Checked = autocrlf is AutoCRLFType.@false;
             globalAutoCrlfInput.Checked = autocrlf is AutoCRLFType.input;
@@ -110,7 +189,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         {
             Validates.NotNull(CurrentSettings);
 
-            CurrentSettings.FilesEncoding = (Encoding)Global_FilesEncoding.SelectedItem;
+            new GitEncodingSettingsSetter(CurrentSettings).FilesEncoding = (Encoding?)Global_FilesEncoding.SelectedItem;
 
             base.PageToSettings();
 
@@ -122,7 +201,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CurrentSettings.SetValue(SettingKeyString.UserName, GlobalUserName.Text);
             CurrentSettings.SetValue(SettingKeyString.UserEmail, GlobalUserEmail.Text);
             CurrentSettings.SetValue("commit.template", txtCommitTemplatePath.Text);
-            CurrentSettings.SetPathValue("core.editor", GlobalEditor.Text);
+            CurrentSettings.SetValue("credential.helper", cbxCredentialHelper.Text);
+            CurrentSettings.SetValue("core.editor", GlobalEditor.Text.ConvertPathToGitSetting());
 
             Validates.NotNull(_diffMergeToolConfigurationManager);
 
@@ -148,27 +228,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 _diffMergeToolConfigurationManager.UnsetCurrentTool(DiffMergeToolType.Merge);
             }
 
-            SettingsSource coreSectionSettingsSource = CurrentSettings.ByPath("core");
-
-            if (globalAutoCrlfFalse.Checked)
-            {
-                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", AutoCRLFType.@false);
-            }
-
-            if (globalAutoCrlfInput.Checked)
-            {
-                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", AutoCRLFType.input);
-            }
-
-            if (globalAutoCrlfTrue.Checked)
-            {
-                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", AutoCRLFType.@true);
-            }
-
-            if (globalAutoCrlfNotSet.Checked)
-            {
-                coreSectionSettingsSource.SetNullableEnum<AutoCRLFType>("autocrlf", null);
-            }
+            AutoCRLFType? autoCRLFType =
+                globalAutoCrlfFalse.Checked ? AutoCRLFType.@false
+                : globalAutoCrlfInput.Checked ? AutoCRLFType.input
+                : globalAutoCrlfTrue.Checked ? AutoCRLFType.@true
+                : null;
+            CurrentSettings.SetValue("core.autocrlf", autoCRLFType?.ToString());
         }
 
         private string BrowseDiffMergeTool(string toolName, string path, DiffMergeToolType toolType)
@@ -208,7 +273,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             Validates.NotNull(_diffMergeToolConfigurationManager);
             DiffMergeToolConfiguration diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtDiffToolPath.Text);
-            txtDiffToolCommand.Text = diffMergeToolConfig.FullDiffCommand;
+            txtDiffToolCommand.Text = AdaptCommandIfWsl(diffMergeToolConfig.FullDiffCommand);
         }
 
         private void SuggestMergeToolCommand()
@@ -222,7 +287,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             Validates.NotNull(_diffMergeToolConfigurationManager);
             DiffMergeToolConfiguration diffMergeToolConfig = _diffMergeToolConfigurationManager.LoadDiffMergeToolConfig(toolName, txtMergeToolPath.Text);
-            txtMergeToolCommand.Text = diffMergeToolConfig.FullMergeCommand;
+            txtMergeToolCommand.Text = AdaptCommandIfWsl(diffMergeToolConfig.FullMergeCommand);
         }
 
         private void btnMergeToolCommandSuggest_Click(object sender, EventArgs e)

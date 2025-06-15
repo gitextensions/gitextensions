@@ -1,6 +1,10 @@
 ﻿{
   "Name": "file2",
   "OldName": "file1",
+  "Path": {
+    "Length": 0,
+    "Value": ""
+  },
   "ErrorMessage": null,
   "TreeGuid": null,
   "RenameCopyPercentage": null,

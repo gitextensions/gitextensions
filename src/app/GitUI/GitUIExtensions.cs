@@ -32,7 +32,8 @@ namespace GitUI
             int? line = null,
             string defaultText = "",
             Action? openWithDiffTool = null,
-            string additionalCommandInfo = null)
+            string additionalCommandInfo = null,
+            bool forceFileView = false)
         {
             if (item?.Item.IsStatusOnly ?? false)
             {
@@ -57,7 +58,7 @@ namespace GitUI
 
             openWithDiffTool ??= OpenWithDiffTool;
 
-            if (item.Item.IsNew || firstId is null || (!item.Item.IsDeleted && FileHelper.IsImage(item.Item.Name)))
+            if (forceFileView || item.Item.IsNew || firstId is null || (!item.Item.IsDeleted && FileHelper.IsImage(item.Item.Name)))
             {
                 // View blob guid from revision, or file for worktree
                 await fileViewer.ViewGitItemAsync(item, line, openWithDiffTool);
@@ -86,7 +87,7 @@ namespace GitUI
 
                 if (!result.ExitedSuccessfully)
                 {
-                    string output = $"{result.StandardError}{Environment.NewLine}Git output (exit code: {result.ExitCode}): {Environment.NewLine}{result.StandardOutput}";
+                    string output = $"{result.StandardError}{Environment.NewLine}Git output (exit code: {result.ExitCodeDisplay}): {Environment.NewLine}{result.StandardOutput}";
                     await fileViewer.ViewTextAsync(item?.Item?.Name, text: output);
                     return;
                 }
@@ -116,7 +117,7 @@ namespace GitUI
 
                 if (!result.ExitedSuccessfully)
                 {
-                    string output = $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCode}): {result}{Environment.NewLine}";
+                    string output = $"{result.StandardError}{Environment.NewLine}Git command (exit code: {result.ExitCodeDisplay}): {result}{Environment.NewLine}";
                     await fileViewer.ViewTextAsync(item?.Item?.Name, text: output);
                     return;
                 }
@@ -172,7 +173,7 @@ namespace GitUI
 
                 if (!result.ExitedSuccessfully)
                 {
-                    string output = $"Git command exit code: {result}{Environment.NewLine}{result.StandardError}";
+                    string output = $"Git command exit code: {result.ExitCodeDisplay}{Environment.NewLine}{result.StandardError}";
                     await fileViewer.ViewTextAsync(item?.Item?.Name, text: output);
                     return;
                 }

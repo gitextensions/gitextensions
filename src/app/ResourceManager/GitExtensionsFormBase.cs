@@ -39,10 +39,6 @@ namespace ResourceManager
 
             ShowInTaskbar = Application.OpenForms.Count <= 0;
             Icon = Resources.GitExtensionsLogoIcon;
-
-#if !SUPPORT_THEME_HOOKS
-            Load += (s, e) => ((Form)s!).FixVisualStyle();
-#endif
         }
 
         /// <summary>
@@ -58,6 +54,12 @@ namespace ResourceManager
 
             HotkeyCommand? hotkey = _hotkeys?.FirstOrDefault(hotkey => hotkey?.KeyData == keyData);
             return hotkey is not null && ExecuteCommand(hotkey.CommandCode);
+        }
+
+        protected override void OnLoad(EventArgs e)
+        {
+            base.OnLoad(e);
+            this.FixVisualStyle();
         }
 
         protected bool IsDesignMode => _initialiser.IsDesignMode;

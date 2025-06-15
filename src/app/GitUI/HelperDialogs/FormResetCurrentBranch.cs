@@ -32,10 +32,10 @@ namespace GitUI.HelperDialogs
 
             InitializeComponent();
             Soft.SetForeColorForBackColor();
-            Hard.SetForeColorForBackColor();
             Mixed.SetForeColorForBackColor();
-            Merge.SetForeColorForBackColor();
-            Keep.SetForeColorForBackColor();
+            Keep.ForeColor = Mixed.ForeColor;
+            Merge.ForeColor = Mixed.ForeColor;
+            Hard.SetForeColorForBackColor();
             InitializeComplete();
 
             switch (resetType)
@@ -68,6 +68,8 @@ namespace GitUI.HelperDialogs
 
         private void Ok_Click(object sender, EventArgs e)
         {
+            bool updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout is true && Module.HasSubmodules() && Revision.ObjectId != Module.GetCurrentCheckout();
+
             if (Soft.Checked)
             {
                 FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Soft, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
@@ -102,6 +104,11 @@ namespace GitUI.HelperDialogs
             else if (Keep.Checked)
             {
                 FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Keep, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
+            }
+
+            if (updateSubmodules)
+            {
+                UICommands.StartUpdateSubmodulesDialog(this);
             }
 
             UICommands.RepoChangedNotifier.Notify();

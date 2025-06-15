@@ -13,7 +13,7 @@ namespace GitUITests
         [TestCase("\" \"", " ")]
         public void AppendQuoted(string expected, string source)
         {
-            Assert.AreEqual(expected, new StringBuilder().AppendQuoted(source).ToString());
+            ClassicAssert.AreEqual(expected, new StringBuilder().AppendQuoted(source).ToString());
         }
     }
 }

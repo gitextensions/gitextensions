@@ -1,9 +1,11 @@
-﻿using GitCommands;
+﻿#nullable enable
+
+using GitCommands.Git;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
-    public partial class GitConfigAdvancedSettingsPage : ConfigFileSettingsPage
+    public partial class GitConfigAdvancedSettingsPage : GitConfigBaseSettingsPage
     {
         private record GitSettingUiMapping(string GitSettingKey, CheckBox MappedCheckbox);
         private readonly List<GitSettingUiMapping> _gitSettings;
@@ -18,9 +20,12 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             [
                 new("pull.rebase", checkBoxPullRebase),
                 new("fetch.prune", checkBoxFetchPrune),
-                new("rebase.autoStash", checkBoxRebaseAutostash),
+                new("merge.autostash", checkboxMergeAutoStash),
+                new("rebase.autostash", checkBoxRebaseAutostash),
                 new("rebase.autosquash", checkBoxRebaseAutosquash),
-                new("rebase.updateRefs", checkBoxUpdateRefs)
+                new("rebase.updaterefs", checkBoxUpdateRefs),
+                new("rerere.enabled", checkBoxReReReEnabled),
+                new("rerere.autoupdate", checkBoxReReReAutoUpdate),
             ];
 
             checkBoxUpdateRefs.Visible = GitVersion.Current.SupportUpdateRefs;
@@ -55,9 +60,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         protected override void PageToSettings()
         {
             Validates.NotNull(CurrentSettings);
-            foreach (GitSettingUiMapping gitSetting in _gitSettings.Where(s => s.MappedCheckbox.CheckState != CheckState.Indeterminate))
+            foreach (GitSettingUiMapping gitSetting in _gitSettings)
             {
-                CurrentSettings.SetValue(gitSetting.GitSettingKey, gitSetting.MappedCheckbox.Checked ? "true" : "false");
+                CurrentSettings.SetValue(gitSetting.GitSettingKey, gitSetting.MappedCheckbox.CheckState switch { CheckState.Checked => "true", CheckState.Unchecked => "false", _ => null });
             }
 
             base.PageToSettings();

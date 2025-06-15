@@ -8,6 +8,7 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
 {
     private readonly SplitContainer _horizontalSplitContainer;
     private readonly OutputHistoryControl _outputHistoryControl;
+    private readonly Action _showVerticalSplitContainer1;
     private readonly SplitContainer _verticalSplitContainer1;
     private readonly SplitContainer _verticalSplitContainer2;
     private readonly Timer _timer = new() { Interval = 25 };
@@ -15,12 +16,14 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
     internal OutputHistoryPanelController(IOutputHistoryProvider outputHistoryProvider,
                                           OutputHistoryControl outputHistoryControl,
                                           Control parent,
+                                          Action showVerticalSplitContainer1,
                                           SplitContainer verticalSplitContainer1,
                                           SplitContainer verticalSplitContainer2,
                                           SplitContainer horizontalSplitContainer)
         : base(outputHistoryProvider, outputHistoryControl)
     {
         _outputHistoryControl = outputHistoryControl;
+        _showVerticalSplitContainer1 = showVerticalSplitContainer1;
         _verticalSplitContainer1 = verticalSplitContainer1;
         _verticalSplitContainer2 = verticalSplitContainer2;
         _horizontalSplitContainer = horizontalSplitContainer;
@@ -36,6 +39,7 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
 
         _timer.Tick += SetSizeByVerticalSplitContainer1;
         _verticalSplitContainer1.Invalidated += SetSizeByVerticalSplitContainer1Deferred;
+        _verticalSplitContainer1.Parent.VisibleChanged += SetSizeByVerticalSplitContainer1Deferred;
         _verticalSplitContainer1.SplitterMoved += SetSizeByVerticalSplitContainer1;
         _verticalSplitContainer2.SplitterMoved += SetSizeByVerticalSplitContainer2;
         horizontalSplitContainer.SplitterMoved += SetSizeByVerticalSplitContainer1;
@@ -48,6 +52,7 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
         {
             _timer.Tick -= SetSizeByVerticalSplitContainer1;
             _verticalSplitContainer1.Invalidated -= SetSizeByVerticalSplitContainer1Deferred;
+            _verticalSplitContainer1.Parent.VisibleChanged -= SetSizeByVerticalSplitContainer1Deferred;
             _verticalSplitContainer1.SplitterMoved -= SetSizeByVerticalSplitContainer1;
             _verticalSplitContainer2.SplitterMoved -= SetSizeByVerticalSplitContainer2;
             horizontalSplitContainer.SplitterMoved -= SetSizeByVerticalSplitContainer1;
@@ -68,7 +73,13 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
         bool show = !AppSettings.OutputHistoryPanelVisible.Value;
         AppSettings.OutputHistoryPanelVisible.Value = show;
         _verticalSplitContainer1.Panel2Collapsed = !show;
+        if (show && !_verticalSplitContainer1.Visible)
+        {
+            _showVerticalSplitContainer1();
+        }
+
         SetSizeByVerticalSplitContainer1(_outputHistoryControl, EventArgs.Empty);
+
         if (show)
         {
             _textBox.FindForm().ActiveControl = _textBox;

@@ -42,19 +42,19 @@ namespace GitCommandsTests
                     },
                     () => completed++);
 
-                Assert.True(await loadSignal.WaitAsync(1000));
+                ClassicAssert.True(await loadSignal.WaitAsync(1000));
 
-                Assert.AreEqual(1, started);
-                Assert.AreEqual(0, completed);
+                ClassicAssert.AreEqual(1, started);
+                ClassicAssert.AreEqual(0, completed);
 
                 completeSignal.Release();
 
                 await task;
 
-                Assert.AreEqual(1, started);
-                Assert.AreEqual(1, completed);
+                ClassicAssert.AreEqual(1, started);
+                ClassicAssert.AreEqual(1, completed);
 
-                Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+                ClassicAssert.AreEqual(TaskStatus.RanToCompletion, task.Status);
             });
         }
 
@@ -67,16 +67,16 @@ namespace GitCommandsTests
                 Thread loadThread = null;
                 Thread continuationThread = null;
 
-                Assert.False(callerThread.IsThreadPoolThread);
+                ClassicAssert.False(callerThread.IsThreadPoolThread);
 
                 using AsyncLoader loader = new();
                 await loader.LoadAsync(
                     () => loadThread = Thread.CurrentThread,
                     () => continuationThread = Thread.CurrentThread);
 
-                Assert.True(loadThread.IsThreadPoolThread);
-                Assert.AreNotSame(loadThread, callerThread);
-                Assert.AreNotSame(loadThread, continuationThread);
+                ClassicAssert.True(loadThread.IsThreadPoolThread);
+                ClassicAssert.AreNotSame(loadThread, callerThread);
+                ClassicAssert.AreNotSame(loadThread, continuationThread);
             });
         }
 
@@ -99,20 +99,20 @@ namespace GitCommandsTests
                     },
                     () => completed++);
 
-                Assert.True(await loadSignal.WaitAsync(1000));
+                ClassicAssert.True(await loadSignal.WaitAsync(1000));
 
-                Assert.AreEqual(1, started);
-                Assert.AreEqual(0, completed);
+                ClassicAssert.AreEqual(1, started);
+                ClassicAssert.AreEqual(0, completed);
 
                 _loader.Cancel();
                 completeSignal.Release();
 
                 await task;
 
-                Assert.AreEqual(1, started);
-                Assert.AreEqual(0, completed, "Should not have called the follow-up action");
+                ClassicAssert.AreEqual(1, started);
+                ClassicAssert.AreEqual(0, completed, "Should not have called the follow-up action");
 
-                Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+                ClassicAssert.AreEqual(TaskStatus.RanToCompletion, task.Status);
             });
         }
 
@@ -132,17 +132,17 @@ namespace GitCommandsTests
 
                 await Task.Delay(50);
 
-                Assert.AreEqual(0, started);
-                Assert.AreEqual(0, completed);
+                ClassicAssert.AreEqual(0, started);
+                ClassicAssert.AreEqual(0, completed);
 
                 _loader.Cancel();
 
                 await task;
 
-                Assert.AreEqual(0, started);
-                Assert.AreEqual(0, completed);
+                ClassicAssert.AreEqual(0, started);
+                ClassicAssert.AreEqual(0, completed);
 
-                Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+                ClassicAssert.AreEqual(TaskStatus.RanToCompletion, task.Status);
             });
         }
 
@@ -165,20 +165,20 @@ namespace GitCommandsTests
                     },
                     () => completed++);
 
-                Assert.True(await loadSignal.WaitAsync(1000));
+                ClassicAssert.True(await loadSignal.WaitAsync(1000));
 
-                Assert.AreEqual(1, started);
-                Assert.AreEqual(0, completed);
+                ClassicAssert.AreEqual(1, started);
+                ClassicAssert.AreEqual(0, completed);
 
                 _loader.Dispose();
                 completeSignal.Release();
 
                 await task;
 
-                Assert.AreEqual(1, started);
-                Assert.AreEqual(0, completed, "Should not have called the follow-up action");
+                ClassicAssert.AreEqual(1, started);
+                ClassicAssert.AreEqual(0, completed, "Should not have called the follow-up action");
 
-                Assert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+                ClassicAssert.AreEqual(TaskStatus.RanToCompletion, task.Status);
             });
         }
 
@@ -195,7 +195,7 @@ namespace GitCommandsTests
                     () => sw.Stop(),
                     () => { });
 
-                Assert.GreaterOrEqual(sw.Elapsed, _loader.Delay - TimeSpan.FromMilliseconds(10));
+                ClassicAssert.GreaterOrEqual(sw.Elapsed, _loader.Delay - TimeSpan.FromMilliseconds(10));
             });
         }
 
@@ -216,10 +216,10 @@ namespace GitCommandsTests
 
                 await _loader.LoadAsync(
                     () => throw ex,
-                    Assert.Fail);
+                    ClassicAssert.Fail);
 
-                Assert.AreEqual(1, observed.Count);
-                Assert.AreSame(ex, observed[0]);
+                ClassicAssert.AreEqual(1, observed.Count);
+                ClassicAssert.AreSame(ex, observed[0]);
             });
         }
 
@@ -231,10 +231,10 @@ namespace GitCommandsTests
             JoinableTask loadTask = ThreadHelper.JoinableTaskFactory.RunAsync(() =>
                 _loader.LoadAsync(
                     loadContent: () => throw ex,
-                    onLoaded: Assert.Fail));
+                    onLoaded: ClassicAssert.Fail));
 
-            Exception oe = Assert.Throws<Exception>(() => loadTask.Join());
-            Assert.AreSame(oe, ex);
+            Exception oe = ClassicAssert.Throws<Exception>(() => loadTask.Join());
+            ClassicAssert.AreSame(oe, ex);
         }
 
         [Test]
@@ -252,13 +252,13 @@ namespace GitCommandsTests
 
             JoinableTask loadTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => _loader.LoadAsync(
                 () => throw ex,
-                Assert.Fail));
+                ClassicAssert.Fail));
 
-            Exception oe = Assert.Throws<Exception>(() => loadTask.Join());
+            Exception oe = ClassicAssert.Throws<Exception>(() => loadTask.Join());
 
-            Assert.AreEqual(1, observed.Count);
-            Assert.AreSame(ex, observed[0]);
-            Assert.AreSame(oe, observed[0]);
+            ClassicAssert.AreEqual(1, observed.Count);
+            ClassicAssert.AreSame(ex, observed[0]);
+            ClassicAssert.AreSame(oe, observed[0]);
         }
 
         [Test]
@@ -276,7 +276,7 @@ namespace GitCommandsTests
             await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(() => 1, i => { }));
             await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(_ => { }, () => { }));
             await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(_ => 1, i => { }));
-            Assert.Throws<ObjectDisposedException>(() => loader.Cancel());
+            ClassicAssert.Throws<ObjectDisposedException>(() => loader.Cancel());
         }
     }
 }

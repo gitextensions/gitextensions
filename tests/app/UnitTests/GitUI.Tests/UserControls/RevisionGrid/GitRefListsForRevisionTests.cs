@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitCommands;
-using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
@@ -19,7 +18,6 @@ namespace GitUITests.UserControls.RevisionGrid
         public void Setup()
         {
             _module = Substitute.For<IGitModule>();
-            _module.LocalConfigFile.Returns(Substitute.For<IConfigFileSettings>());
 
             _refs = new IGitRef[]
             {

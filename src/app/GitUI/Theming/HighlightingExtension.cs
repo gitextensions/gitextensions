@@ -12,7 +12,7 @@ namespace GitUI.Theming
             return new HighlightColor(original, replacement, backReplacement);
 
             Color Adapt(Color c, bool isForeground) =>
-                c.IsSystemColor
+                !original.Adaptable || c.IsSystemColor
                     ? c
                     : ColorHelper.AdaptColor(c, isForeground);
         }

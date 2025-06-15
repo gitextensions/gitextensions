@@ -3,6 +3,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI;
 using GitUI.Properties;
+using GitUI.UserControls;
 
 namespace GitUI.CommandsDialogs.SettingsDialog
 {
@@ -151,7 +152,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
             foreach (TreeNode node in _nodesFoundByTextBox)
             {
                 HighlightNode(node, true);
-                node.EnsureVisible();
+                node.EnsureVerticallyVisible();
             }
 
             if (_nodesFoundByTextBox.Any())
@@ -165,7 +166,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog
         private static void HighlightNode(TreeNode treeNode, bool highlight)
         {
             treeNode.ForeColor = highlight ? SystemColors.HighlightText : SystemColors.ControlText;
-            treeNode.BackColor = highlight ? SystemColors.Highlight : new Color();
+            treeNode.BackColor = highlight ? SystemColors.Highlight : Color.Empty;
         }
 
         private void ResetAllNodeHighlighting()

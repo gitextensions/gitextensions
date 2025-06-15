@@ -30,17 +30,17 @@ namespace GitUITests.Avatars
         [Test]
         public void Construction_with_null_parameters_is_permitted()
         {
-            Assert.Throws<ArgumentNullException>(() =>
+            ClassicAssert.Throws<ArgumentNullException>(() =>
             {
                 new MultiCacheCleaner(null);
             });
 
-            Assert.Throws<ArgumentNullException>(() =>
+            ClassicAssert.Throws<ArgumentNullException>(() =>
             {
                 new MultiCacheCleaner(null);
             });
 
-            Assert.Throws<ArgumentNullException>(() =>
+            ClassicAssert.Throws<ArgumentNullException>(() =>
             {
                 new MultiCacheCleaner(null, null);
             });

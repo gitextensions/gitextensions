@@ -198,6 +198,7 @@ namespace GitUITests.Editor
             }
 
             Arrange(texts[0], searchPhrase, scanRegion: scanRegion, fileLoader: FileLoader);
+            _findAndReplaceForm.Show();
 
             foreach (TextRange expectedRange in expectedRanges)
             {
@@ -212,11 +213,11 @@ namespace GitUITests.Editor
         {
             Arrange("line 1\r\nline 2\r\nline 3", "line", scanRegion: new TextRegion(new TextLocation(0, 1), new TextLocation(0, 2)));
 
-            Assert.IsTrue(_testAccessor.Search.HasScanRegion);
+            ClassicAssert.IsTrue(_testAccessor.Search.HasScanRegion);
 
             _textEditorControl.Text = "new text";
 
-            Assert.IsFalse(_testAccessor.Search.HasScanRegion);
+            ClassicAssert.IsFalse(_testAccessor.Search.HasScanRegion);
         }
 
         private void Arrange(string text,
@@ -245,7 +246,7 @@ namespace GitUITests.Editor
         private void AssertTextRange(TextRange expectedRange, TextRange actualRange)
         {
             // Assert returned value
-            Assert.That(actualRange, Is.EqualTo(expectedRange).Using(new SegmentComparer()));
+            ClassicAssert.That(actualRange, Is.EqualTo(expectedRange).Using(new SegmentComparer()));
 
             if (expectedRange is null)
             {
@@ -254,11 +255,11 @@ namespace GitUITests.Editor
 
             // Assert text selected
             ISelection actualSelection = _textEditorControl.ActiveTextAreaControl.SelectionManager.SelectionCollection.Single();
-            Assert.AreEqual(expectedRange.Offset, actualSelection.Offset);
-            Assert.AreEqual(expectedRange.Length, actualSelection.Length);
+            ClassicAssert.AreEqual(expectedRange.Offset, actualSelection.Offset);
+            ClassicAssert.AreEqual(expectedRange.Length, actualSelection.Length);
 
             // Assert caret is at the end of the found range.
-            Assert.AreEqual(expectedRange.Offset + expectedRange.Length, _textEditorControl.ActiveTextAreaControl.Caret.Offset);
+            ClassicAssert.AreEqual(expectedRange.Offset + expectedRange.Length, _textEditorControl.ActiveTextAreaControl.Caret.Offset);
         }
     }
 }

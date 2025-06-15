@@ -11,7 +11,7 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
-using GitUI.CommandDialogs;
+using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.HelperDialogs;
 using GitUI.UserControls;
@@ -106,7 +106,7 @@ namespace GitUI.BuildServerIntegration
                                                                       .Retry()
                                                                       .Repeat())
                                          .ObserveOn(MainThreadScheduler.Instance)
-                                         .Subscribe(OnBuildInfoUpdate),
+                                         .Subscribe(UpdateAndReportExceptions),
 
                         runningBuildsObservable.Do(buildInfo =>
                                                     {
@@ -118,11 +118,18 @@ namespace GitUI.BuildServerIntegration
                                                .Finally(() => anyRunningBuilds = false)
                                                .Repeat()
                                                .ObserveOn(MainThreadScheduler.Instance)
-                                               .Subscribe(OnBuildInfoUpdate)
+                                               .Subscribe(UpdateAndReportExceptions)
                     };
             }
 
             await _revisionGridView.SwitchToMainThreadAsync(launchToken);
+
+            return;
+
+            void UpdateAndReportExceptions(BuildInfo buildInfo)
+            {
+                TaskManager.HandleExceptions(() => OnBuildInfoUpdate(buildInfo), Application.OnThreadException);
+            }
         }
 
         public void CancelBuildStatusFetchOperation()

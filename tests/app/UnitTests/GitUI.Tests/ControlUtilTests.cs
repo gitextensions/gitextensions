@@ -10,8 +10,8 @@ namespace GitUITests
         {
             Control root = new() { Controls = { new Control(), new Control(), new Control() } };
 
-            Assert.AreEqual(3, root.FindDescendants().Count());
-            Assert.AreEqual(3, root.FindDescendants().Distinct().Count());
+            ClassicAssert.AreEqual(3, root.FindDescendants().Count());
+            ClassicAssert.AreEqual(3, root.FindDescendants().Distinct().Count());
         }
 
         [Test]
@@ -19,8 +19,8 @@ namespace GitUITests
         {
             Control root = new() { Controls = { new Control(), new TextBox(), new Control() } };
 
-            Assert.AreEqual(1, root.FindDescendantsOfType<TextBox>().Count());
-            Assert.AreEqual(1, root.FindDescendantsOfType<TextBox>().Distinct().Count());
+            ClassicAssert.AreEqual(1, root.FindDescendantsOfType<TextBox>().Count());
+            ClassicAssert.AreEqual(1, root.FindDescendantsOfType<TextBox>().Distinct().Count());
         }
 
         [Test]
@@ -28,9 +28,9 @@ namespace GitUITests
         {
             Control root = new() { Controls = { new Control(), new TextBox { Tag = "A" }, new TextBox { Tag = "B" } } };
 
-            Assert.NotNull(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "A"));
-            Assert.NotNull(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "B"));
-            Assert.Null(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "C"));
+            ClassicAssert.NotNull(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "A"));
+            ClassicAssert.NotNull(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "B"));
+            ClassicAssert.Null(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "C"));
         }
     }
 }

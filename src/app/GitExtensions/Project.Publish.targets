@@ -18,21 +18,6 @@
   </Target>
 
   <!--
-
-    Disabled until we find a way to utilise it under .NET
-
-    ============================================================
-                       _PublishExtraDependecies
-
-    Copies additional files (e.g. EasyHook dlls) to the publish directory.
-    ============================================================
-  <Target Name="_PublishExtraDependecies">
-    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x64\EasyHook64.dll" DestinationFolder="$(PublishDir)" />
-    <Copy SourceFiles="$(SolutionDir)\Externals\EasyHook\EasyHookDll\Build\Release\x86\EasyHook32.dll" DestinationFolder="$(PublishDir)" />
-  </Target>
-    -->
-
-  <!--
     ============================================================
                        _RetrieveCurrentBuildVersion
 

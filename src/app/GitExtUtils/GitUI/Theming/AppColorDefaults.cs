@@ -4,14 +4,15 @@
     {
         public static readonly Color FallbackColor = Color.Magenta;
 
-        private static readonly Dictionary<AppColor, Color> Values =
+        private static readonly Dictionary<AppColor, Color> _values =
             new()
             {
-                { AppColor.OtherTag, Color.Gray },
+                { AppColor.PanelBackground, SystemColors.Window },
+                { AppColor.EditorBackground, SystemColors.Window },
+                { AppColor.LineNumberBackground, SystemColors.Window },
                 { AppColor.AuthoredHighlight, Color.FromArgb(0xea, 0xf1, 0xff) },
                 { AppColor.HighlightAllOccurences, Color.FromArgb(0xe8, 0xe8, 0xff) },
-                { AppColor.Tag, Color.DarkBlue },
-                { AppColor.Graph, Color.DarkRed },
+                { AppColor.InactiveSelectionHighlight, Color.FromArgb(0xe6, 0xe6, 0xe6) },
                 { AppColor.GraphBranch1, Color.FromArgb(0xf0, 0x64, 0xa0) },
                 { AppColor.GraphBranch2, Color.FromArgb(0x78, 0xb4, 0xe6) },
                 { AppColor.GraphBranch3, Color.FromArgb(0x24, 0xc2, 0x21) },
@@ -20,8 +21,11 @@
                 { AppColor.GraphBranch6, Color.FromArgb(0x1a, 0xc6, 0xa6) },
                 { AppColor.GraphBranch7, Color.FromArgb(0xe7, 0xb0, 0x0f) },
                 { AppColor.GraphBranch8, Color.Empty },
+                { AppColor.GraphNonRelativeBranch, Color.LightGray },
                 { AppColor.Branch, Color.FromArgb(0x00, 0x80, 0x00) },
                 { AppColor.RemoteBranch, Color.FromArgb(0x8b, 0x00, 0x09) },
+                { AppColor.Tag, Color.DarkBlue },
+                { AppColor.OtherTag, Color.Gray },
                 { AppColor.DiffSection, Color.FromArgb(230, 230, 230) },
                 { AppColor.AnsiTerminalBlackForeNormal, Color.FromArgb(0x00, 0x00, 0x00) },
                 { AppColor.AnsiTerminalBlackBackNormal, Color.FromArgb(0x60, 0x60, 0x60) },
@@ -54,15 +58,14 @@
                 { AppColor.AnsiTerminalWhiteForeNormal, Color.FromArgb(0xbf, 0xbf, 0xbf) },
                 { AppColor.AnsiTerminalWhiteBackNormal, Color.FromArgb(0xe0, 0xe0, 0xe0) },
                 { AppColor.AnsiTerminalWhiteForeBold, Color.FromArgb(0xff, 0xff, 0xff) },
-                { AppColor.AnsiTerminalWhiteBackBold, Color.FromArgb(0xff, 0xff, 0xff) }
+                { AppColor.AnsiTerminalWhiteBackBold, Color.FromArgb(0xff, 0xff, 0xff) },
             };
 
-        private static readonly Dictionary<string, Dictionary<AppColor, Color>> Variations = new()
+        private static readonly Dictionary<string, Dictionary<AppColor, Color>> _variations = new()
         {
             {
                 "colorblind", new()
                 {
-                   { AppColor.Graph, Color.FromArgb(0x06, 0x00, 0xa8) },
                    { AppColor.RemoteBranch, Color.FromArgb(0x06, 0x00, 0xa8) },
                    { AppColor.AnsiTerminalRedBackNormal, Color.FromArgb(0x94, 0xcb, 0xff) },
                    { AppColor.AnsiTerminalRedBackBold, Color.FromArgb(0x4d, 0xa6, 0xff) },
@@ -72,7 +75,7 @@
 
         public static Color GetBy(AppColor name, string[]? variations = null)
         {
-            if (!Values.TryGetValue(name, out Color result))
+            if (!_values.TryGetValue(name, out Color result))
             {
                 result = FallbackColor;
             }
@@ -84,7 +87,7 @@
 
             foreach (string variation in variations)
             {
-                if (!Variations.TryGetValue(variation, out Dictionary<AppColor, Color> colorOverrides))
+                if (!_variations.TryGetValue(variation, out Dictionary<AppColor, Color> colorOverrides))
                 {
                     continue;
                 }

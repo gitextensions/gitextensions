@@ -1,5 +1,4 @@
 ﻿using GitCommands;
-using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
@@ -16,7 +15,7 @@ namespace GitCommandsTests.Git
 
             GitRef remoteBranchRef = SetupRemoteRef(remoteBranchShortName, remoteName);
 
-            Assert.IsTrue(localBranchRef.IsTrackingRemote(remoteBranchRef));
+            ClassicAssert.IsTrue(localBranchRef.IsTrackingRemote(remoteBranchRef));
         }
 
         [Test]
@@ -24,7 +23,7 @@ namespace GitCommandsTests.Git
         {
             GitRef localBranchRef = SetupLocalBranchWithATrackingReference("remote_branch", "origin");
 
-            Assert.IsFalse(localBranchRef.IsTrackingRemote(null));
+            ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(null));
         }
 
         [Test]
@@ -35,7 +34,7 @@ namespace GitCommandsTests.Git
 
             GitRef remoteBranchRef = SetupRemoteRef(remoteBranchShortName, "upstream");
 
-            Assert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+            ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
         }
 
         [Test]
@@ -45,7 +44,7 @@ namespace GitCommandsTests.Git
 
             GitRef remoteBranchRef = SetupRemoteRef("another_remote_branch", "origin");
 
-            Assert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+            ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
         }
 
         [Test]
@@ -55,7 +54,7 @@ namespace GitCommandsTests.Git
 
             GitRef remoteBranchRef = SetupRemoteRef("a_remote_branch", "origin");
 
-            Assert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+            ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
         }
 
         [Test]
@@ -65,22 +64,20 @@ namespace GitCommandsTests.Git
 
             GitRef remoteBranchRef = SetupLocalBranchWithATrackingReference("a_remote_branch", "origin");
 
-            Assert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+            ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
         }
 
         [Test]
         public void IsTrackingRemote_should_return_false_when_local_branch_is_tracking_nothing()
         {
             IGitModule localGitModule = Substitute.For<IGitModule>();
-            IConfigFileSettings localConfigFileSettings = Substitute.For<IConfigFileSettings>();
-            localConfigFileSettings.GetValue($"branch.local_branch.merge").Returns(string.Empty);
-            localConfigFileSettings.GetValue($"branch.local_branch.remote").Returns(string.Empty);
-            localGitModule.LocalConfigFile.Returns(localConfigFileSettings);
+            localGitModule.GetEffectiveSetting($"branch.local_branch.merge").Returns(string.Empty);
+            localGitModule.GetEffectiveSetting($"branch.local_branch.remote").Returns(string.Empty);
             GitRef localBranchRef = new(localGitModule, ObjectId.Random(), "refs/heads/local_branch");
 
             GitRef remoteBranchRef = SetupLocalBranchWithATrackingReference("a_remote_branch", "origin");
 
-            Assert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+            ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
         }
 
         [Test]
@@ -91,7 +88,7 @@ namespace GitCommandsTests.Git
             string completeName = $"refs/remotes/{remoteName}/{name}";
 
             GitRef remoteBranchRef = SetupRawRemoteRef(name, remoteName, completeName);
-            Assert.AreEqual(remoteBranchRef.LocalName, name);
+            ClassicAssert.AreEqual(remoteBranchRef.LocalName, name);
         }
 
         [Test]
@@ -103,16 +100,14 @@ namespace GitCommandsTests.Git
             string completeName = $"refs/remotes/{name}";
 
             GitRef remoteBranchRef = SetupRawRemoteRef(name, remoteName, completeName);
-            Assert.AreEqual(remoteBranchRef.LocalName, name);
+            ClassicAssert.AreEqual(remoteBranchRef.LocalName, name);
         }
 
         private static GitRef SetupRawRemoteRef(string remoteBranchShortName, string remoteName, string completeName)
         {
             IGitModule localGitModule = Substitute.For<IGitModule>();
-            IConfigFileSettings localConfigFileSettings = Substitute.For<IConfigFileSettings>();
-            localConfigFileSettings.GetValue($"branch.local_branch.merge").Returns(completeName);
-            localConfigFileSettings.GetValue($"branch.local_branch.remote").Returns(remoteName);
-            localGitModule.LocalConfigFile.Returns(localConfigFileSettings);
+            localGitModule.GetEffectiveSetting($"branch.local_branch.merge").Returns(completeName);
+            localGitModule.GetEffectiveSetting($"branch.local_branch.remote").Returns(remoteName);
             GitRef remoteBranchRef = new(localGitModule, ObjectId.Random(), completeName, remoteName);
             return remoteBranchRef;
         }
@@ -120,8 +115,6 @@ namespace GitCommandsTests.Git
         private static GitRef SetupRemoteRef(string remoteBranchShortName, string remoteName)
         {
             IGitModule remoteGitModule = Substitute.For<IGitModule>();
-            IConfigFileSettings remoteConfigFileSettings = Substitute.For<IConfigFileSettings>();
-            remoteGitModule.LocalConfigFile.Returns(remoteConfigFileSettings);
             GitRef remoteBranchRef = new(remoteGitModule, ObjectId.Random(), $"refs/remotes/{remoteName}/{remoteBranchShortName}", remoteName);
             return remoteBranchRef;
         }
@@ -129,10 +122,8 @@ namespace GitCommandsTests.Git
         private static GitRef SetupLocalBranchWithATrackingReference(string remoteShortName, string remoteName)
         {
             IGitModule localGitModule = Substitute.For<IGitModule>();
-            IConfigFileSettings localConfigFileSettings = Substitute.For<IConfigFileSettings>();
-            localConfigFileSettings.GetValue($"branch.local_branch.merge").Returns($"refs/heads/{remoteShortName}");
-            localConfigFileSettings.GetValue($"branch.local_branch.remote").Returns(remoteName);
-            localGitModule.LocalConfigFile.Returns(localConfigFileSettings);
+            localGitModule.GetEffectiveSetting($"branch.local_branch.merge").Returns($"refs/heads/{remoteShortName}");
+            localGitModule.GetEffectiveSetting($"branch.local_branch.remote").Returns(remoteName);
             GitRef localBranchRef = new(localGitModule, ObjectId.Random(), "refs/heads/local_branch");
             return localBranchRef;
         }

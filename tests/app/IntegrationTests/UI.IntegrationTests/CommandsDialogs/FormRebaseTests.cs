@@ -18,6 +18,12 @@ namespace GitExtensions.UITests.CommandsDialogs
             _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            _referenceRepository.Dispose();
+        }
+
         [Test]
         public void Interactive_check_enables_autosquash()
         {

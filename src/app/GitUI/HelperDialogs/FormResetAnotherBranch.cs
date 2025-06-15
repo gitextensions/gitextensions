@@ -29,8 +29,9 @@ namespace GitUI.HelperDialogs
             InitializeComponent();
 
             pictureBox1.Image = DpiUtil.Scale(pictureBox1.Image);
-            labelResetBranchWarning.AutoSize = true;
-            labelResetBranchWarning.Dock = DockStyle.Fill;
+            lblResetBranchWarning.AutoSize = true;
+            lblResetBranchWarning.Dock = DockStyle.Fill;
+            lblResetBranchWarning.SetForeColorForBackColor();
 
             Height = tableLayoutPanel1.Height + tableLayoutPanel1.Top;
             tableLayoutPanel1.Dock = DockStyle.Fill;
@@ -39,7 +40,8 @@ namespace GitUI.HelperDialogs
 
             InitializeComplete();
 
-            labelResetBranchWarning.SetForeColorForBackColor();
+            cbxCheckoutBranch.Checked = AppSettings.CheckoutOtherBranchAfterReset.Value;
+            cbxCheckoutBranch.CheckedChanged += (s, e) => AppSettings.CheckoutOtherBranchAfterReset.Value = cbxCheckoutBranch.Checked;
 
             Ok.Enabled = false;
         }
@@ -106,6 +108,11 @@ namespace GitUI.HelperDialogs
             bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (success)
             {
+                if (cbxCheckoutBranch.Checked)
+                {
+                    UICommands.StartCheckoutBranch(this, gitRefToReset.Name);
+                }
+
                 UICommands.RepoChangedNotifier.Notify();
                 Close();
             }
@@ -145,7 +152,7 @@ namespace GitUI.HelperDialogs
             CancellationToken cancellationToken = _cancellationTokenSequence.Next();
 
             IGitRef? gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == branch);
-            Branches.BackColor = gitRefToReset is null && ActiveControl != Branches ? Color.LightCoral : SystemColors.Window;
+            Branches.BackColor = gitRefToReset is null && ActiveControl != Branches ? Color.LightCoral.AdaptBackColor() : SystemColors.Window;
 
             Ok.Enabled = gitRefToReset is not null && ForceReset.Checked;
             Ok.BackColor = SystemColors.ButtonFace;
@@ -171,7 +178,7 @@ namespace GitUI.HelperDialogs
                 Ok.Enabled = executionResult.ExitedSuccessfully;
                 if (!executionResult.ExitedSuccessfully)
                 {
-                    Ok.BackColor = Color.LightCoral;
+                    Ok.BackColor = Color.LightCoral.AdaptBackColor();
                 }
             });
         }

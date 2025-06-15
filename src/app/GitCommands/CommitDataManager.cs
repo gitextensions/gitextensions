@@ -82,10 +82,7 @@ namespace GitCommands
         /// <inheritdoc />
         public CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<ObjectId>? children)
         {
-            if (revision is null)
-            {
-                throw new ArgumentNullException(nameof(revision));
-            }
+            ArgumentNullException.ThrowIfNull(revision);
 
             if (revision.ObjectId is null)
             {
@@ -93,10 +90,12 @@ namespace GitCommands
             }
 
             return new CommitData(revision.ObjectId, revision.ParentIds,
-                string.Format("{0} <{1}>", revision.Author, revision.AuthorEmail), revision.AuthorDate,
-                string.Format("{0} <{1}>", revision.Committer, revision.CommitterEmail), revision.CommitDate,
+                FormatUser(revision.Author, revision.AuthorEmail), revision.AuthorDate,
+                FormatUser(revision.Committer, revision.CommitterEmail), revision.CommitDate,
                 revision.Body ?? revision.Subject)
             { ChildIds = children };
+
+            static string FormatUser(string user, string email) => string.IsNullOrWhiteSpace(email) ? user : $"{user} <{email}>";
         }
 
         private IGitModule GetModule()

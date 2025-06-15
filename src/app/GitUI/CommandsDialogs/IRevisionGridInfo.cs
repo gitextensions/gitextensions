@@ -1,16 +1,17 @@
-﻿using GitExtensions.Extensibility.Git;
+﻿#nullable enable
+
+using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
-namespace GitUI.CommandDialogs
+namespace GitUI.CommandsDialogs;
+
+public interface IRevisionGridInfo
 {
-    public interface IRevisionGridInfo
-    {
-        ObjectId? CurrentCheckout { get; }
-        GitRevision GetRevision(ObjectId objectId);
-        GitRevision? GetActualRevision(ObjectId objectId);
-        GitRevision GetActualRevision(GitRevision revision);
-        IReadOnlyList<GitRevision> GetSelectedRevisions();
-        string DescribeRevision(GitRevision revision, int maxLength = 0);
-        string GetCurrentBranch();
-    }
+    ObjectId? CurrentCheckout { get; }
+    GitRevision GetRevision(ObjectId objectId);
+    GitRevision? GetActualRevision(ObjectId objectId);
+    GitRevision GetActualRevision(GitRevision revision);
+    IReadOnlyList<GitRevision> GetSelectedRevisions();
+    string DescribeRevision(GitRevision revision, int maxLength = 0);
+    string GetCurrentBranch();
 }

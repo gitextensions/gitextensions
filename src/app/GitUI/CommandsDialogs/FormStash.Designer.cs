@@ -36,13 +36,9 @@ namespace GitUI.CommandsDialogs
             panel1 = new Panel();
             Loading = new LoadingControl();
             Stashed = new GitUI.FileStatusList();
-            contextMenuStripStashedFiles = new ContextMenuStrip(components);
-            cherryPickFileChangesToolStripMenuItem = new ToolStripMenuItem();
             toolStrip1 = new GitUI.ToolStripEx();
             showToolStripLabel = new ToolStripLabel();
             Stashes = new ToolStripComboBox();
-            refreshToolStripButton = new ToolStripButton();
-            toolStripSeparator1 = new ToolStripSeparator();
             View = new GitUI.Editor.FileViewer();
             toolTip = new ToolTip(components);
             ((System.ComponentModel.ISupportInitialize)(gitStashBindingSource)).BeginInit();
@@ -54,7 +50,6 @@ namespace GitUI.CommandsDialogs
             tableLayoutPanel1.SuspendLayout();
             panel1.SuspendLayout();
             toolStrip1.SuspendLayout();
-            contextMenuStripStashedFiles.SuspendLayout();
             SuspendLayout();
             // 
             // gitStashBindingSource
@@ -258,7 +253,6 @@ namespace GitUI.CommandsDialogs
             // 
             // Stashed
             // 
-            Stashed.ContextMenuStrip = contextMenuStripStashedFiles;
             Stashed.Dock = DockStyle.Fill;
             Stashed.GroupByRevision = true;
             Stashed.Location = new Point(0, 0);
@@ -267,22 +261,6 @@ namespace GitUI.CommandsDialogs
             Stashed.Size = new Size(280, 553);
             Stashed.TabIndex = 2;
             Stashed.SelectedIndexChanged += StashedSelectedIndexChanged;
-            // 
-            // contextMenuStripStashedFiles
-            // 
-            contextMenuStripStashedFiles.Items.AddRange(new ToolStripItem[] {
-            cherryPickFileChangesToolStripMenuItem});
-            contextMenuStripStashedFiles.Name = "contextMenuStripStashedFiles";
-            contextMenuStripStashedFiles.Size = new Size(209, 76);
-            contextMenuStripStashedFiles.Opening += ContextMenuStripStashedFiles_Opening;
-            // 
-            // cherryPickFileChangesToolStripMenuItem
-            // 
-            cherryPickFileChangesToolStripMenuItem.Image = Properties.Resources.CherryPick;
-            cherryPickFileChangesToolStripMenuItem.Name = "cherryPickFileChangesToolStripMenuItem";
-            cherryPickFileChangesToolStripMenuItem.Size = new Size(208, 22);
-            cherryPickFileChangesToolStripMenuItem.Text = "&Cherry pick file changes";
-            cherryPickFileChangesToolStripMenuItem.Click += CherryPickFileChangesToolStripMenuItem_Click;
             // 
             // toolStrip1
             // 
@@ -293,9 +271,7 @@ namespace GitUI.CommandsDialogs
             toolStrip1.GripStyle = ToolStripGripStyle.Hidden;
             toolStrip1.Items.AddRange(new ToolStripItem[] {
             showToolStripLabel,
-            Stashes,
-            refreshToolStripButton,
-            toolStripSeparator1});
+            Stashes});
             toolStrip1.Location = new Point(0, 0);
             toolStrip1.Name = "toolStrip1";
             toolStrip1.Padding = new Padding(4);
@@ -312,6 +288,7 @@ namespace GitUI.CommandsDialogs
             // 
             // Stashes
             // 
+            Stashes.AutoSize = false;
             Stashes.DropDownStyle = ComboBoxStyle.DropDownList;
             Stashes.DropDownWidth = 200;
             Stashes.MaxDropDownItems = 30;
@@ -321,24 +298,6 @@ namespace GitUI.CommandsDialogs
             Stashes.ToolTipText = "Select a stash";
             Stashes.SelectedIndexChanged += StashesSelectedIndexChanged;
             Stashes.DropDown += Stashes_DropDown;
-            // 
-            // refreshToolStripButton
-            // 
-            refreshToolStripButton.Alignment = ToolStripItemAlignment.Right;
-            refreshToolStripButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
-            refreshToolStripButton.Image = Properties.Images.ReloadRevisions;
-            refreshToolStripButton.ImageTransparentColor = Color.Magenta;
-            refreshToolStripButton.Name = "refreshToolStripButton";
-            refreshToolStripButton.Overflow = ToolStripItemOverflow.Never;
-            refreshToolStripButton.Size = new Size(36, 37);
-            refreshToolStripButton.Text = "Refresh";
-            refreshToolStripButton.Click += RefreshClick;
-            // 
-            // toolStripSeparator1
-            // 
-            toolStripSeparator1.Name = "toolStripSeparator1";
-            toolStripSeparator1.Overflow = ToolStripItemOverflow.Never;
-            toolStripSeparator1.Size = new Size(6, 40);
             // 
             // View
             // 
@@ -376,7 +335,6 @@ namespace GitUI.CommandsDialogs
             tableLayoutPanel1.ResumeLayout(false);
             tableLayoutPanel1.PerformLayout();
             panel1.ResumeLayout(false);
-            contextMenuStripStashedFiles.ResumeLayout(false);
             toolStrip1.ResumeLayout(false);
             toolStrip1.PerformLayout();
             ResumeLayout(false);
@@ -395,19 +353,15 @@ namespace GitUI.CommandsDialogs
         private RichTextBox StashMessage;
         private FileViewer View;
         private ToolStripEx toolStrip1;
-        private ToolStripButton refreshToolStripButton;
         private ToolStripLabel showToolStripLabel;
         private ToolStripComboBox Stashes;
         private GitUI.UserControls.RevisionGrid.LoadingControl Loading;
         private CheckBox StashKeepIndex;
-        private ToolStripSeparator toolStripSeparator1;
         private CheckBox chkIncludeUntrackedFiles;
         private TableLayoutPanel tableLayoutPanel2;
         private TableLayoutPanel tableLayoutPanel1;
         private Panel panel1;
         private ToolTip toolTip;
         private Button StashSelectedFiles;
-        private ContextMenuStrip contextMenuStripStashedFiles;
-        private ToolStripMenuItem cherryPickFileChangesToolStripMenuItem;
     }
 }

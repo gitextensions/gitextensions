@@ -1,4 +1,6 @@
-﻿namespace GitUI.HelperDialogs
+﻿using GitExtUtils.GitUI.Theming;
+
+namespace GitUI.HelperDialogs
 {
     partial class FormResetCurrentBranch
     {
@@ -91,10 +93,9 @@
             // Soft
             // 
             Soft.AutoSize = true;
-            Soft.BackColor = Color.FromArgb(((int)(((byte)(128)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            Soft.BackColor = OtherColors.BrightGreen;
             Soft.Checked = true;
             Soft.Dock = DockStyle.Fill;
-            Soft.ForeColor = Color.Black;
             Soft.Location = new Point(3, 3);
             Soft.Name = "Soft";
             Soft.Padding = new Padding(3);
@@ -106,9 +107,8 @@
             // Mixed
             // 
             Mixed.AutoSize = true;
-            Mixed.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            Mixed.BackColor = OtherColors.BrightYellow;
             Mixed.Dock = DockStyle.Fill;
-            Mixed.ForeColor = Color.Black;
             Mixed.Location = new Point(3, 45);
             Mixed.Name = "Mixed";
             Mixed.Padding = new Padding(3);
@@ -121,9 +121,8 @@
             // Keep
             // 
             Keep.AutoSize = true;
-            Keep.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            Keep.BackColor = OtherColors.BrightYellow;
             Keep.Dock = DockStyle.Fill;
-            Keep.ForeColor = Color.Black;
             Keep.Location = new Point(3, 87);
             Keep.Name = "Keep";
             Keep.Padding = new Padding(3);
@@ -136,9 +135,8 @@
             // Merge
             // 
             Merge.AutoSize = true;
-            Merge.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(255)))), ((int)(((byte)(128)))));
+            Merge.BackColor = OtherColors.BrightYellow;
             Merge.Dock = DockStyle.Fill;
-            Merge.ForeColor = Color.Black;
             Merge.Location = new Point(3, 129);
             Merge.Name = "Merge";
             Merge.Padding = new Padding(3);
@@ -151,9 +149,8 @@
             // Hard
             // 
             Hard.AutoSize = true;
-            Hard.BackColor = Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(128)))), ((int)(((byte)(128)))));
+            Hard.BackColor = OtherColors.BrightRed;
             Hard.Dock = DockStyle.Fill;
-            Hard.ForeColor = Color.Black;
             Hard.Location = new Point(3, 171);
             Hard.Name = "Hard";
             Hard.Padding = new Padding(3);

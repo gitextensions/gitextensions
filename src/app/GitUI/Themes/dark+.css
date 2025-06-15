@@ -1,0 +1,11 @@
+/* See (App install)\Themes\README.md for instructions on how to create or modify a theme */
+
+@import url("dark.css");
+
+/* Application colors */
+.PanelBackground { color: #252526; }
+.EditorBackground { color: #1e1e1e; }
+.LineNumberBackground { color: #303030; }
+.AuthoredHighlight { color: #33331E; }
+
+.Branch { color: #00d76b; }

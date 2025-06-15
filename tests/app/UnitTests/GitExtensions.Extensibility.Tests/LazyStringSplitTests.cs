@@ -81,7 +81,7 @@ namespace GitExtUtilsTests
         [Test]
         public void Constructor_WithNullInput_Throws()
         {
-            Assert.Throws<ArgumentNullException>(() => _ = new LazyStringSplit(null!, ' ', StringSplitOptions.RemoveEmptyEntries));
+            ClassicAssert.Throws<ArgumentNullException>(() => _ = new LazyStringSplit(null!, ' ', StringSplitOptions.RemoveEmptyEntries));
         }
     }
 }

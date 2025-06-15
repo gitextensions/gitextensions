@@ -2,45 +2,44 @@
 
 using GitCommands;
 
-namespace GitUITests
+namespace CommonTestUtils;
+
+public class MemorySettingsCache : SettingsCache
 {
-    public class MemorySettingsCache : SettingsCache
+    private readonly IDictionary<string, string?> _stringSettings = new Dictionary<string, string?>();
+
+    protected override void LoadImpl()
     {
-        private readonly IDictionary<string, string?> _stringSettings = new Dictionary<string, string?>();
+        // cached in memory, do nothing
+    }
 
-        protected override void LoadImpl()
+    protected override bool NeedRefresh()
+    {
+        return false;
+    }
+
+    protected override void SaveImpl()
+    {
+        // cached in memory, do nothing
+    }
+
+    protected override void SetValueImpl(string key, string? value)
+    {
+        _stringSettings[key] = value;
+    }
+
+    protected override string? GetValueImpl(string key)
+    {
+        if (_stringSettings.TryGetValue(key, out string? value))
         {
-            // cached in memory, do nothing
+            return value;
         }
 
-        protected override bool NeedRefresh()
-        {
-            return false;
-        }
+        return null;
+    }
 
-        protected override void SaveImpl()
-        {
-            // cached in memory, do nothing
-        }
-
-        protected override void SetValueImpl(string key, string? value)
-        {
-            _stringSettings[key] = value;
-        }
-
-        protected override string? GetValueImpl(string key)
-        {
-            if (_stringSettings.TryGetValue(key, out string? value))
-            {
-                return value;
-            }
-
-            return null;
-        }
-
-        protected override void ClearImpl()
-        {
-            _stringSettings.Clear();
-        }
+    protected override void ClearImpl()
+    {
+        _stringSettings.Clear();
     }
 }

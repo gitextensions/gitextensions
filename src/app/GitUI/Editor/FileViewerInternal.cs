@@ -78,18 +78,32 @@ namespace GitUI.Editor
             };
             TextEditor.ActiveTextAreaControl.TextArea.MouseWheel += TextArea_MouseWheel;
 
-            HighlightingManager.Manager.DefaultHighlighting.SetColorFor("LineNumbers",
-                new HighlightColor(SystemColors.ControlText, SystemColors.Control, false, false));
             TextEditor.ActiveTextAreaControl.TextEditorProperties.EnableFolding = false;
-
             _lineNumbersControl = new DiffViewerLineNumberControl(TextEditor.ActiveTextAreaControl.TextArea);
-
             VRulerPosition = AppSettings.DiffVerticalRulerPosition;
+            TextEditor.ActiveTextAreaControl.Caret.PositionChanged += GutterSelectedLineChanged;
+        }
+
+        public void DontMarkGutterSelectedLine()
+        {
+            TextEditor.ActiveTextAreaControl.Caret.PositionChanged -= GutterSelectedLineChanged;
+            TextEditor.ActiveTextAreaControl.TextArea.GutterMargin.MarkSelectedLine = false;
         }
 
         public void SetContinuousScrollManager(ContinuousScrollEventManager continuousScrollEventManager)
         {
             _continuousScrollEventManager = continuousScrollEventManager;
+        }
+
+        internal void GutterSelectedLineChanged(object sender, EventArgs e)
+        {
+            GutterSelectedLineChanged(TextEditor.ActiveTextAreaControl.Caret.Line);
+        }
+
+        internal void GutterSelectedLineChanged(int lineNo)
+        {
+            _lineNumbersControl.SelectedLineChanged(lineNo);
+            TextEditor.ActiveTextAreaControl.TextArea.GutterMargin.SelectedLineChanged(lineNo);
         }
 
         private void SelectionManagerSelectionChanged(object sender, EventArgs e)
@@ -240,7 +254,8 @@ namespace GitUI.Editor
         /// <param name="text">The text to set in the editor.</param>
         /// <param name="openWithDifftool">The command to open the difftool.</param>
         /// <param name="viewMode">the view viewMode in the file viewer, the kind of info shown</param>
-        public void SetText(string text, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring, string? contentIdentification)
+        /// <returns><see langword="true"/> if a position was set.</returns>
+        public bool SetText(string text, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring, string? contentIdentification)
         {
             ThreadHelper.ThrowIfNotOnUIThread();
 
@@ -289,6 +304,7 @@ namespace GitUI.Editor
             // important to set after the text was changed
             // otherwise the may be rendering artifacts as noted in #5568
             TextEditor.ShowLineNumbers = ShowLineNumbers ?? !hasLineNumberControl;
+            GutterSelectedLineChanged(-1);
             if (ShowLineNumbers.HasValue && !ShowLineNumbers.Value)
             {
                 Padding = new Padding(DpiUtil.Scale(5), Padding.Top, Padding.Right, Padding.Bottom);
@@ -297,7 +313,7 @@ namespace GitUI.Editor
             TextEditor.Refresh();
 
             // Restore position if contentIdentification matches the capture
-            _currentViewPositionCache.Restore(contentIdentification);
+            bool positionSet = _currentViewPositionCache.Restore(contentIdentification) && LineAtCaret > FirstLineAfterHeader;
 
             if (_shouldScrollToBottom || _shouldScrollToTop)
             {
@@ -305,11 +321,14 @@ namespace GitUI.Editor
                 if (scrollBar.Visible)
                 {
                     scrollBar.Value = _shouldScrollToTop ? 0 : Math.Max(0, scrollBar.Maximum - scrollBar.Height - _bottomBlankHeight);
+                    positionSet = true;
                 }
 
                 _shouldScrollToTop = false;
                 _shouldScrollToBottom = false;
             }
+
+            return positionSet;
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -422,29 +441,60 @@ namespace GitUI.Editor
         private bool IsSearchMatch(int indexInText)
             => _textHighlightService.IsSearchMatch(_lineNumbersControl, indexInText);
 
+        private int FirstLineAfterHeader
+        {
+            get
+            {
+                bool hasDiffHeader = _textHighlightService is (PatchHighlightService or CombinedDiffHighlightService);
+                return hasDiffHeader ? 5 : 0;
+            }
+        }
+
         /// <summary>
-        /// Go to next change
-        /// For normal diffs, this is the next diff
+        /// Go to the first change.
+        /// For normal diffs, this is the first diff.
+        /// For range-diff, it is the first block of commit summary header.
+        /// </summary>
+        public void GoToFirstChange(int contextLines)
+        {
+            GoToNextChange(contextLines, fromTop: true);
+        }
+
+        /// <summary>
+        /// Go to the next change.
+        /// For normal diffs, this is the next diff.
         /// For range-diff, it is the next block of commit summary header.
         /// </summary>
         /// <param name="contextLines">Number of context lines, to include header for new diff.</param>
         public void GoToNextChange(int contextLines)
         {
+            GoToNextChange(contextLines, fromTop: false);
+        }
+
+        private void GoToNextChange(int contextLines, bool fromTop)
+        {
             // Skip the file header
-            bool hasDiffHeader = _textHighlightService is (PatchHighlightService or CombinedDiffHighlightService);
-            int firstValidIndex = hasDiffHeader ? 4 : 0;
-            int startIndex = Math.Max(firstValidIndex, LineAtCaret);
+            int firstValidIndex = FirstLineAfterHeader;
+            int startIndex = fromTop ? firstValidIndex : Math.Max(firstValidIndex, LineAtCaret);
             int totalNumberOfLines = TotalNumberOfLines;
 
-            bool emptyLineCheck = false;
+            bool emptyLineCheck = fromTop;
             for (int line = startIndex; line < totalNumberOfLines; line++)
             {
                 if (IsSearchMatch(line))
                 {
                     if (emptyLineCheck)
                     {
-                        // Include the header with the (possible) function summary line
-                        FirstVisibleLine = Math.Max(line - contextLines - 1, 0);
+                        if (fromTop && IsLineVisible(line))
+                        {
+                            // Keep FirstVisibleLine
+                        }
+                        else
+                        {
+                            // Include the header with the (possible) function summary line
+                            FirstVisibleLine = Math.Max(line - contextLines - 1, 0);
+                        }
+
                         LineAtCaret = line;
                         return;
                     }
@@ -453,6 +503,14 @@ namespace GitUI.Editor
                 {
                     emptyLineCheck = true;
                 }
+            }
+
+            return;
+
+            bool IsLineVisible(int line)
+            {
+                int firstVisibleLine = FirstVisibleLine;
+                return firstVisibleLine <= line && line < firstVisibleLine + TextEditor.ActiveTextAreaControl.TextArea.TextView.VisibleLineCount;
             }
         }
 
@@ -537,7 +595,7 @@ namespace GitUI.Editor
                 text = string.Join("\n", lines);
             }
 
-            ClipboardUtil.TrySetText(text.AdjustLineEndings(Module.GetEffectiveSettingsByPath("core").GetNullableEnum<AutoCRLFType>("autocrlf")));
+            ClipboardUtil.TrySetText(text.AdjustLineEndings(Module.GetEffectiveSetting<AutoCRLFType>("core.autocrlf")));
         }
 
         public int HScrollPosition
@@ -847,18 +905,18 @@ namespace GitUI.Editor
                 }
             }
 
-            public void Restore(string? contentIdentification)
+            public bool Restore(string? contentIdentification)
             {
                 _currentIdentification = contentIdentification;
                 if (_viewer.TotalNumberOfLines <= 1 || string.IsNullOrEmpty(contentIdentification) || string.IsNullOrEmpty(_currentIdentification))
                 {
-                    return;
+                    return false;
                 }
 
                 bool sameIdentification = contentIdentification == _capturedIdentification;
                 if (!sameIdentification)
                 {
-                    return;
+                    return false;
                 }
 
                 ViewPosition viewPosition = _currentViewPosition;
@@ -887,6 +945,8 @@ namespace GitUI.Editor
                         _viewer.FirstVisibleLine = viewPosition.FirstVisibleLine;
                     }
                 }
+
+                return true;
             }
 
             /// <summary>
