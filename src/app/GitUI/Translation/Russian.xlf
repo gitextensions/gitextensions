@@ -4515,6 +4515,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_conventionalCommit.Text">
         <source>Conven&amp;tional Commits</source>
+        <target>Общ&amp;епринятые коммиты</target>
         
       </trans-unit>
       <trans-unit id="_conventionalCommitDocumentation.Text">
@@ -5162,6 +5163,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="labelUseIndent.Text">
         <source>Indent lines after the first line:</source>
+        <target>Отступ строк после первой строки:</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
@@ -8504,6 +8506,7 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_changesLocalMergeTooltip.Text">
         <source>Changes from the current branch</source>
+        <target>Изменения по сравнению с текущей веткой</target>
         
       </trans-unit>
       <trans-unit id="_changesLocalRebaseTooltip.Text">
@@ -9057,6 +9060,7 @@ Do you want to use this custom merge script?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Search files in commit</source>
+        <target>Поиск файлов в коммите</target>
         
       </trans-unit>
       <trans-unit id="btnSearch.Text">
@@ -9076,6 +9080,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="chkShowSearchBox.Text">
         <source>Show search &amp;box</source>
+        <target>Показать поле по&amp;иска</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -11420,10 +11425,12 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
         <source>View &amp;history</source>
+        <target>Показать исто&amp;рию</target>
         
       </trans-unit>
       <trans-unit id="fileTreeArchiveToolStripMenuItem.Text">
         <source>Archi&amp;ve...</source>
+        <target>Арх&amp;ив…</target>
         
       </trans-unit>
       <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
