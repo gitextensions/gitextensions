@@ -33,7 +33,7 @@ namespace GitUITests
             const string caption = "CAPTION";
             Repository repository = new(path);
 
-            _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption);
+            _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption, number: 1);
 
             containerMenu.DropDownItems.Count.Should().Be(1);
         }
@@ -47,10 +47,10 @@ namespace GitUITests
             const string caption = "CAPTION";
             Repository repository = new(path);
 
-            _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption);
+            _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption, number: 1);
 
             ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
-            item.Text.Should().Be(caption);
+            item.Text.Should().Be($"&1: {caption}");
             item.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
             item.ToolTipText.Should().BeEmpty();
         }
@@ -69,7 +69,7 @@ namespace GitUITests
             const string caption = "CAPTION";
             Repository repository = new(path);
 
-            _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption);
+            _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption, number: 1);
 
             // await adding branch name in ShortcutKeyDisplayString, done async
             AsyncTestHelper.JoinPendingOperations();
@@ -87,7 +87,7 @@ namespace GitUITests
             const string caption = "CAPTION";
             Repository repository = new(path);
 
-            _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption);
+            _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption, number: 1);
 
             ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
             item.PerformClick();
