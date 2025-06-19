@@ -3941,7 +3941,7 @@ namespace GitCommands
                 (string section, string? subsection, string name) = IGitConfigSettingsGetter.SplitSetting(setting);
                 if (section == "branch" && name == "remote" && value == remoteName)
                 {
-                    string remoteBranch = localGitConfigSettings.GetValue($"{section}.{subsection}.merge").Replace("refs/heads/", string.Empty);
+                    string? remoteBranch = localGitConfigSettings.GetValue($"{section}.{subsection}.merge")?.Replace("refs/heads/", string.Empty);
                     if (remoteBranch == branchName)
                     {
                         return subsection;
