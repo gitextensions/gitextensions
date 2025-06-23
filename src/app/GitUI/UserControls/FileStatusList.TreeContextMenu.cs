@@ -8,7 +8,7 @@ namespace GitUI;
 partial class FileStatusList
 {
     private ToolStripMenuItem _collapseAll = new("C&ollapse all", Images.CollapseAll);
-    private ToolStripMenuItem _collapseRootFolders = new("Co&llapse root folders", Images.TreeCollapseAll);
+    private ToolStripMenuItem _collapseRootFolders = new("Collap&se root folders", Images.TreeCollapseAll);
     private ToolStripMenuItem _expandAll = new("E&xpand all", Images.ExpandAll);
     private ToolStripMenuItem _selectAll = new("S&elect all", Images.FileTree);
     private ToolStripSeparator _treeContextMenuSeparator = new() { Name = nameof(_treeContextMenuSeparator) };

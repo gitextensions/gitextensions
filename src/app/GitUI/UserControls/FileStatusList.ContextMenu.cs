@@ -39,7 +39,7 @@ partial class FileStatusList
         P Copy paths
         Q
         R Reset files
-        S Stage, Sort and group by
+        S Stage, Sort and group by, Collapse root folders (file tree only)
         T Show in file tree, Stash submodule
         U Unstage, Update submodule
         V Open in VS
