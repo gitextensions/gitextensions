@@ -1538,7 +1538,7 @@ Git will never check if the file has changed that will improve status check perf
         <target />
       </trans-unit>
       <trans-unit id="_collapseRootFolders.Text">
-        <source>Co&amp;llapse root folders</source>
+        <source>Collap&amp;se root folders</source>
         <target />
       </trans-unit>
       <trans-unit id="_deleteFailed.Text">
