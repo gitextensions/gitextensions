@@ -8,6 +8,7 @@ using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Settings;
 using GitCommands.Utils;
+using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
 using ResourceManager;
@@ -159,9 +160,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             GlobalUserName.Text = CurrentSettings.GetValue(SettingKeyString.UserName);
             GlobalUserEmail.Text = CurrentSettings.GetValue(SettingKeyString.UserEmail);
-            cbxCredentialHelper.Text = CurrentSettings.GetValue("credential.helper");
             GlobalEditor.Text = CurrentSettings.GetValue("core.editor");
             txtCommitTemplatePath.Text = CurrentSettings.GetValue("commit.template");
+
+            // Hide credential helper because EffectiveGitConfigSettings can only return the last value
+            GitConfigSettings? gitConfigSettings = TryGetGitConfigSettings(CurrentSettings);
+            bool showCredentialHelper = gitConfigSettings is not null;
+            lblCredentialHelper.Visible = showCredentialHelper;
+            cbxCredentialHelper.Visible = showCredentialHelper;
+            cbxCredentialHelper.Enabled = showCredentialHelper;
+            if (gitConfigSettings is not null)
+            {
+                IReadOnlyList<string> values = gitConfigSettings.GetValues(SettingKeyString.CredentialHelper);
+                cbxCredentialHelper.Enabled = values.Count <= 1;
+                cbxCredentialHelper.Text = string.Join(", ", values);
+            }
 
             _NO_TRANSLATE_cboMergeTool.Text = mergeTool;
             txtMergeToolPath.Text = _diffMergeToolConfigurationManager.GetToolPath(mergeTool, DiffMergeToolType.Merge);
@@ -179,6 +192,17 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             globalAutoCrlfNotSet.Checked = autocrlf is null;
 
             base.SettingsToPage();
+
+            return;
+
+            static GitConfigSettings? TryGetGitConfigSettings(SettingsSource settingsSource)
+            {
+                return settingsSource is SettingsSource<IPersistentConfigValueStore> persistentSettingsSource
+                    ? persistentSettingsSource.ConfigValueStore as GitConfigSettings
+                    : settingsSource is SettingsSource<IConfigValueStore> otherGenericSettingsSource
+                        ? otherGenericSettingsSource.ConfigValueStore as GitConfigSettings
+                        : null;
+            }
         }
 
         /// <summary>
@@ -201,8 +225,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             CurrentSettings.SetValue(SettingKeyString.UserName, GlobalUserName.Text);
             CurrentSettings.SetValue(SettingKeyString.UserEmail, GlobalUserEmail.Text);
             CurrentSettings.SetValue("commit.template", txtCommitTemplatePath.Text);
-            CurrentSettings.SetValue("credential.helper", cbxCredentialHelper.Text);
             CurrentSettings.SetValue("core.editor", GlobalEditor.Text.ConvertPathToGitSetting());
+            if (cbxCredentialHelper.Enabled)
+            {
+                CurrentSettings.SetValue(SettingKeyString.CredentialHelper, cbxCredentialHelper.Text);
+            }
 
             Validates.NotNull(_diffMergeToolConfigurationManager);
 
