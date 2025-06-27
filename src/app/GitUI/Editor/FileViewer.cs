@@ -6,6 +6,7 @@ using System.Drawing.Imaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Patches;
 using GitCommands.Settings;
 using GitCommands.Utils;
@@ -668,44 +669,43 @@ namespace GitUI.Editor
         /// <returns>Task to view the item</returns>
         private Task ViewGitItemAsync(GitItemStatus file, ObjectId? objectId, FileStatusItem? item, int? line, Action? openWithDifftool)
         {
-            if (objectId == ObjectId.WorkTreeId || file.Staged == StagedStatus.WorkTree)
-            {
-                // No blob exists for worktree, present contents from file system
-                return ViewFileAsync(file.Name, file.IsSubmodule, item, line, openWithDifftool);
-            }
-
-            file.TreeGuid ??= Module.GetFileBlobHash(file.Name, objectId);
-
             if (file.TreeGuid is null)
             {
-                return ViewTextAsync(file.Name, $"Cannot get treeId from Git for {file.Name} for commit {objectId}.");
-            }
-
-            string sha = file.TreeGuid.ToString();
-            bool isSubmodule = file.IsSubmodule;
-
-            if (!isSubmodule && file.IsNew && file.Staged == StagedStatus.Index)
-            {
-                // File system access for other than Worktree,
-                // to handle that git-status does not detect details for untracked (git-diff --no-index will not give info)
-                string fullPath = Path.Combine(Module.WorkingDir, file.Name);
-                if (Directory.Exists(fullPath) && GitModule.IsValidGitWorkingDir(fullPath))
+                IObjectGitItem[] items = Module.GetTree(objectId, full: true, file.Name).ToArray();
+                if (items.Count() == 1)
                 {
-                    isSubmodule = true;
+                    // set fields possibly not set from git-diff
+                    // (git-status does not report submodule, assume IsSubmodule is not set if not TreeGuid is)
+                    IObjectGitItem gitObject = items[0];
+                    file.IsSubmodule = gitObject.ObjectType == GitObjectType.Commit;
+                    file.TreeGuid ??= gitObject.ObjectId;
                 }
             }
 
+            if (file.TreeGuid is null)
+            {
+                string? fullPath = _fullPathResolver.Resolve(file.Name);
+                if (string.IsNullOrEmpty(fullPath))
+                {
+                    return ViewTextAsync(file.Name, $"Cannot get treeId from Git or path for {file.Name} for commit {objectId}.");
+                }
+
+                return ViewFileAsync(file.Name, file.IsSubmodule, item, line, openWithDifftool);
+            }
+
+            string sha = file.TreeGuid.ToString();
+
             return ViewItemAsync(
                 file.Name,
-                isSubmodule,
+                file.IsSubmodule,
                 getImage: () => ThreadHelper.JoinableTaskFactory.Run(GetImageAsync),
-                getFileText: GetFileTextIfBlobExists,
-                getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, file.Name.TrimEnd('/'), sha, cache: true),
+                getFileText: GetFileText,
+                getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, file.Name.TrimEnd('/'), sha, cache: objectId?.IsArtificial is false),
                 item: item,
                 line: line,
                 openWithDifftool: openWithDifftool);
 
-            string GetFileTextIfBlobExists()
+            string GetFileText()
             {
                 // If the file blob seem to be a diff file, get also escape sequences, that possibly are stored in the diff
                 // _viewMode is not set yet, similar check there
@@ -713,7 +713,7 @@ namespace GitUI.Editor
                     || (!file.Name.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
                        && !file.Name.EndsWith(".patch", StringComparison.OrdinalIgnoreCase));
                 FilePreamble = [];
-                return file.TreeGuid is not null ? Module.GetFileText(file.TreeGuid, Encoding, stripAnsiEscapeCodes) : string.Empty;
+                return Module.GetFileText(file.TreeGuid, Encoding, stripAnsiEscapeCodes) is string s ? s : "";
             }
 
             async Task<Image?> GetImageAsync()

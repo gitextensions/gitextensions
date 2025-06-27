@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -769,7 +768,7 @@ namespace GitCommands
             {
                 "-z",
                 "--unmerged",
-                { !string.IsNullOrWhiteSpace(filename), "--" },
+                "--",
                 filename.QuoteNE()
             };
 
@@ -837,7 +836,7 @@ namespace GitCommands
             {
                 // optimized codepath, default is "--format={_gitTreeParser.GitTreeFormat}"
                 refName.Quote(),
-                { !string.IsNullOrWhiteSpace(filename), "--" },
+                "--",
                 filename.QuoteNE()
             };
             string output = _gitExecutable.GetOutput(args);
@@ -962,7 +961,7 @@ namespace GitCommands
             GitArgumentBuilder args = new("mergetool")
             {
                 { string.IsNullOrWhiteSpace(customTool), gui, $"--tool={customTool}" },
-                { !string.IsNullOrWhiteSpace(fileName), "--" },
+                "--",
                 fileName.ToPosixPath().QuoteNE()
             };
 
@@ -2562,7 +2561,7 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId commitId, bool full, CancellationToken cancellationToken = default)
         {
-            IEnumerable<GitItem> tree = GetGitItemTree(commitId, full, cancellationToken);
+            IObjectGitItem[] tree = [.. GetTree(commitId, full, cancellationToken: cancellationToken)];
 
             return tree
                 .Select(file => new GitItemStatus(file.Name)
@@ -3184,15 +3183,17 @@ namespace GitCommands
                 .Split(Delimiters.NullAndLineFeed);
         }
 
-        public IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full, CancellationToken cancellationToken = default)
-            => GetGitItemTree(commitId, full, cancellationToken);
-
-        public IEnumerable<GitItem> GetGitItemTree(ObjectId? commitId, bool full, CancellationToken cancellationToken = default)
+        public IEnumerable<IObjectGitItem> GetTree(ObjectId? commitId, bool full, string fileName = "", CancellationToken cancellationToken = default)
         {
             bool isArtificial = commitId?.IsArtificial is true;
             if (isArtificial && !full)
             {
                 throw new ArgumentOutOfRangeException(nameof(full), "Artificial commit requires 'full'.");
+            }
+
+            if (commitId == ObjectId.CombinedDiffId)
+            {
+                throw new ArgumentOutOfRangeException(nameof(commitId), "Cannot use CombinedDiffId.");
             }
 
             GitArgumentBuilder args = isArtificial
@@ -3202,13 +3203,17 @@ namespace GitCommands
                     "-z",
                     { commitId == ObjectId.IndexId, "--cached", "--no-cached" },
                     @$"--format=""{_gitTreeParser.GitTreeFormat}""",
+                    "--",
+                    fileName.QuoteNE()
                 }
                 : new("ls-tree")
                 {
                     // optimized codepath, default is "--format={_gitTreeParser.GitTreeFormat}"
                     "-z",
                     { full, "-r" },
-                    commitId
+                    commitId,
+                    "--",
+                    fileName.QuoteNE()
                 };
 
             ExecutionResult result = _gitExecutable.Execute(args, cache: isArtificial ? null : GitCommandCache, cancellationToken: cancellationToken);
@@ -3479,7 +3484,7 @@ namespace GitCommands
             }
         }
 
-        public string GetFileText(ObjectId id, Encoding encoding, bool stripAnsiEscapeCodes)
+        public string? GetFileText(ObjectId id, Encoding encoding, bool stripAnsiEscapeCodes)
         {
             GitArgumentBuilder args = new("cat-file")
             {
@@ -3487,55 +3492,22 @@ namespace GitCommands
                 id.ToString().QuoteNE()
             };
 
-            return _gitExecutable.GetOutput(
-                args,
-                cache: GitCommandCache,
-                outputEncoding: encoding,
-                stripAnsiEscapeCodes: stripAnsiEscapeCodes);
+            ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false, cache: GitCommandCache);
+            if (!exec.ExitedSuccessfully)
+            {
+                // blob did not exist, this could be a submodule that is removed
+                return null;
+            }
+
+            return exec.StandardOutput;
         }
 
         public ObjectId? GetFileBlobHash(string fileName, ObjectId objectId)
         {
-            if (objectId == ObjectId.WorkTreeId || objectId == ObjectId.CombinedDiffId)
-            {
-                throw new ArgumentException($"Tried to get blob for unsupported revision: {objectId} and file: {fileName}");
-            }
-
-            // TODO use regex for parsing
-            if (objectId == ObjectId.IndexId)
-            {
-                GitArgumentBuilder args = new("ls-files")
-                {
-                    "-s",
-                    { !string.IsNullOrWhiteSpace(fileName), "--" },
-                    fileName.QuoteNE()
-                };
-
-                // index
-                string[] lines = _gitExecutable.GetOutput(args).Split(Delimiters.TabAndSpace);
-
-                if (lines.Length >= 2)
-                {
-                    return ObjectId.Parse(lines[1]);
-                }
-            }
-            else
-            {
-                GitArgumentBuilder args = new("ls-tree")
-                {
-                    "-r",
-                    objectId,
-                    { !string.IsNullOrWhiteSpace(fileName), "--" },
-                    fileName.QuoteNE()
-                };
-                string[] lines = _gitExecutable.GetOutput(args).Split(Delimiters.TabAndSpace);
-                if (lines.Length >= 3)
-                {
-                    return ObjectId.Parse(lines[2]);
-                }
-            }
-
-            return null;
+            IEnumerable<IObjectGitItem> items = GetTree(objectId, full: true, fileName);
+            return items.Count() == 1 && items.First() is IObjectGitItem i && i.ObjectType is GitObjectType.Blob
+                ? i.ObjectId
+                : null;
         }
 
         public Task<MemoryStream?> GetFileStreamAsync(string blob, CancellationToken cancellationToken)
@@ -3666,15 +3638,19 @@ namespace GitCommands
 
         public SubmoduleStatus CheckSubmoduleStatus(ObjectId? commit, ObjectId? oldCommit, CommitData? data, CommitData? oldData, bool loadData)
         {
-            // Submodule directory must exist to run commands, unknown otherwise
-            if (!IsValidGitWorkingDir() || oldCommit is null)
+            // Submodule directory must exist to run commands, just guess
+            if (oldCommit is null)
             {
                 return SubmoduleStatus.NewSubmodule;
             }
 
             if (commit is null)
             {
-                // Actually removed submodule, no special status for this uncommon status
+                return SubmoduleStatus.RemovedSubmodule;
+            }
+
+            if (!IsValidGitWorkingDir())
+            {
                 return SubmoduleStatus.Unknown;
             }
 

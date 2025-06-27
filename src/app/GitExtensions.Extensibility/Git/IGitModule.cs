@@ -21,7 +21,7 @@ public interface IGitModule
 
     IReadOnlyList<IGitRef> GetRefs(RefsFilter getRef);
     IEnumerable<string> GetSettings(string setting);
-    IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full, CancellationToken cancellationToken = default);
+    IEnumerable<IObjectGitItem> GetTree(ObjectId? commitId, bool full, string fileName = "", CancellationToken cancellationToken = default);
 
     /// <summary>
     ///  Loads the user-defined colors for the remote branches specific for the current repository.
@@ -436,7 +436,7 @@ public interface IGitModule
 
     bool ExistsMergeCommit(string? startRev, string? endRev);
 
-    string GetFileText(ObjectId id, Encoding encoding, bool stripAnsiEscapeCodes);
+    string? GetFileText(ObjectId id, Encoding encoding, bool stripAnsiEscapeCodes);
 
     Task<MemoryStream?> GetFileStreamAsync(string blob, CancellationToken cancellationToken);
 

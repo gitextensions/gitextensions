@@ -1437,6 +1437,7 @@ namespace GitUI
                 {
                     if (gitItemStatus.IsSubmodule)
                     {
+                        // Image without evaluating added/removed etc
                         imageKey = GetSubmoduleItemImageKey(gitItemStatus);
                     }
                     else if (Path.GetExtension(gitItemStatus.Name) is string extension && _imageListData.StateImageIndexMap.TryGetValue(extension, out int imageIndex))
@@ -1453,7 +1454,9 @@ namespace GitUI
                 else
                 {
                     imageKey = gitItemStatus.IsStatusOnly || !string.IsNullOrWhiteSpace(gitItemStatus.ErrorMessage)
-                                ? gitItemStatus == noItemStatuses[0] ? nameof(Images.FileStatusCopiedSame) : nameof(Images.FileStatusUnknown)
+                                ? gitItemStatus == noItemStatuses[0]
+                                    ? nameof(Images.FileStatusCopiedSame)
+                                    : nameof(Images.FileStatusUnknown)
                                 : GetItemImageKey(gitItemStatus);
                 }
 

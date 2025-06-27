@@ -206,6 +206,9 @@ namespace ResourceManager
                 case SubmoduleStatus.NewSubmodule:
                     sb.AppendLine("New submodule");
                     break;
+                case SubmoduleStatus.RemovedSubmodule:
+                    sb.AppendLine("Removed submodule");
+                    break;
                 case SubmoduleStatus.FastForward:
                     sb.AppendLine("Fast Forward");
                     break;

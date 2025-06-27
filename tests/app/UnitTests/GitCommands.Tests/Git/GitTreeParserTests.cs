@@ -1,5 +1,6 @@
 using FluentAssertions;
 using GitCommands.Git;
+using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests.Git
 {
