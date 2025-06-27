@@ -9,12 +9,20 @@ namespace GitCommands.Git
         IEnumerable<GitItem> Parse(string? tree);
 
         GitItem? ParseSingle(string? rawItem);
+
+        /// <summary>
+        /// git ls-tree (or ls-files) --format
+        /// -z required too
+        /// </summary>
+        string GitTreeFormat { get; }
     }
 
     public sealed partial class GitTreeParser : IGitTreeParser
     {
         [GeneratedRegex(@"^(?<mode>\d{6}) (?<type>(blob|tree|commit)+) (?<objectid>[0-9a-f]{40})\s+(?<name>.+)$", RegexOptions.ExplicitCapture)]
         private static partial Regex TreeLineRegex();
+
+        public string GitTreeFormat { get; } = "%(objectmode) %(objecttype) %(objectname)%x09%(path)";
 
         public IEnumerable<GitItem> Parse(string? tree)
         {

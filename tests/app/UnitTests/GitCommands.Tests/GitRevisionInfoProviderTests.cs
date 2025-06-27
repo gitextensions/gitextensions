@@ -57,13 +57,13 @@ namespace GitCommandsTests
             item.ObjectId.Returns(objectId);
             item.Guid.Returns(objectId.ToString());
 
-            INamedGitItem[] items = new[] { Substitute.For<INamedGitItem>(), Substitute.For<INamedGitItem>(), Substitute.For<INamedGitItem>() };
+            IObjectGitItem[] items = new[] { Substitute.For<IObjectGitItem>(), Substitute.For<IObjectGitItem>(), Substitute.For<IObjectGitItem>() };
             _module.GetTree(objectId, full: false).Returns(items);
 
             IEnumerable<INamedGitItem> children = _provider.LoadChildren(item);
 
             children.Should().BeEquivalentTo(items);
-            _module.Received(1).GetTree(objectId, false);
+            _module.Received(1).GetTree(objectId, full: false);
         }
 
         [Test]
@@ -72,15 +72,15 @@ namespace GitCommandsTests
             ObjectId commitId = ObjectId.Random();
             GitItem item = new(0, GitObjectType.Tree, commitId, "folder");
 
-            INamedGitItem[] items = new[] { Substitute.For<INamedGitItem>(), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file3") };
-            _module.GetTree(commitId, false).Returns(items);
+            IObjectGitItem[] items = new[] { Substitute.For<IObjectGitItem>(), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file3") };
+            _module.GetTree(commitId, full: false).Returns(items);
 
             IEnumerable<INamedGitItem> children = _provider.LoadChildren(item);
 
             children.Should().BeEquivalentTo(items);
             ((GitItem)items[1]).FileName.Should().Be(Path.Combine(item.FileName, "file2"));
             ((GitItem)items[2]).FileName.Should().Be(Path.Combine(item.FileName, "file3"));
-            _module.Received(1).GetTree(commitId, false);
+            _module.Received(1).GetTree(commitId, full: false);
         }
     }
 }
