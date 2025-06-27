@@ -83,6 +83,7 @@
             folderBrowserButton.Name = "folderBrowserButton";
             folderBrowserButton.Size = new Size(135, 25);
             folderBrowserButton.TabIndex = 4;
+            folderBrowserButton.Text = "&Browse...";
             folderBrowserButton.UseVisualStyleBackColor = true;
             folderBrowserButton.Click += folderBrowserButton_Click;
             // 
