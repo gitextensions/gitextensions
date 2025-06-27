@@ -4,6 +4,7 @@ public enum SubmoduleStatus
 {
     Unknown = 0,
     NewSubmodule,
+    RemovedSubmodule,
     FastForward,
     Rewind,
     NewerTime,
