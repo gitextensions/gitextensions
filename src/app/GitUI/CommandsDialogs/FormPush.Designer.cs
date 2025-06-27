@@ -212,10 +212,10 @@
             // labelTo
             // 
             labelTo.AutoSize = true;
-            labelTo.Location = new Point(200, 0);
+            labelTo.Location = new Point(200, 3);
+            labelTo.Margin = new Padding(4, 3, 2, 0);
             labelTo.Name = "labelTo";
-            labelTo.RightToLeft = RightToLeft.Yes;
-            labelTo.Size = new Size(17, 22);
+            labelTo.Size = new Size(18, 15);
             labelTo.TabIndex = 1;
             labelTo.Text = "&to";
             labelTo.TextAlign = ContentAlignment.MiddleCenter;
@@ -250,10 +250,10 @@
             flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             flowLayoutPanel1.Controls.Add(label2);
             flowLayoutPanel1.Controls.Add(RecursiveSubmodules);
-            flowLayoutPanel1.Location = new Point(319, 2);
+            flowLayoutPanel1.Location = new Point(307, 1);
             flowLayoutPanel1.Margin = new Padding(0);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
-            flowLayoutPanel1.Size = new Size(215, 25);
+            flowLayoutPanel1.Size = new Size(227, 27);
             flowLayoutPanel1.TabIndex = 2;
             flowLayoutPanel1.WrapContents = false;
             // 
