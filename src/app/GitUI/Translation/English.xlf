@@ -5655,6 +5655,10 @@ command "git help shortlog"</source>
         <source>The selected directory is not a valid git repository.</source>
         <target />
       </trans-unit>
+      <trans-unit id="folderBrowserButton.Text">
+        <source>&amp;Browse...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="folderGoUpButton.toolTip1">
         <source>Go to parent directory...</source>
         <target />
