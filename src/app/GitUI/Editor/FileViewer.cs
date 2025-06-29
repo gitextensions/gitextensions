@@ -676,7 +676,7 @@ namespace GitUI.Editor
                 {
                     // set fields possibly not set from git-diff
                     // (git-status does not report submodule, assume IsSubmodule is not set if not TreeGuid is)
-                    IObjectGitItem gitObject = items.First();
+                    IObjectGitItem gitObject = items[0];
                     file.IsSubmodule = gitObject.ObjectType == GitObjectType.Commit;
                     file.TreeGuid ??= gitObject.ObjectId;
                 }
