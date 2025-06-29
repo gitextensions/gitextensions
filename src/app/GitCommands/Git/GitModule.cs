@@ -3185,7 +3185,7 @@ namespace GitCommands
                 .Split(Delimiters.NullAndLineFeed);
         }
 
-        public IEnumerable<IObjectGitItem> GetTree(ObjectId? commitId, bool full, string? fileName = null, CancellationToken cancellationToken = default)
+        public IEnumerable<IObjectGitItem> GetTree(ObjectId? commitId, bool full, string fileName = "", CancellationToken cancellationToken = default)
         {
             bool isArtificial = commitId?.IsArtificial is true;
             if (isArtificial && !full)
