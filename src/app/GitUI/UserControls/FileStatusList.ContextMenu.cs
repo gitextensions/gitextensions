@@ -1257,8 +1257,7 @@ partial class FileStatusList
         tsmiCopyPaths.Enabled = _revisionDiffController.ShouldShowMenuCopyFileName(selectionInfo);
         tsmiShowInFolder.Enabled = selectedItems.Any(item => _fullPathResolver.Resolve(item.Item.Name) is string filePath && FormBrowseUtil.FileOrParentDirectoryExists(filePath));
 
-        // Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
-        tsmiShowInFileTree.Visible = _openInFileTreeTab_AsBlame is not null && _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
+        tsmiShowInFileTree.Visible = !_isFileTreeMode && _openInFileTreeTab_AsBlame is not null && _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         tsmiFilterFileInGrid.Enabled = _filterFileInGrid is not null && _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
         tsmiFileHistory.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
         tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame.Value || _blame is null
