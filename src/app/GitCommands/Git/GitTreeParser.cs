@@ -9,6 +9,12 @@ namespace GitCommands.Git
         IEnumerable<GitItem> Parse(string? tree);
 
         GitItem? ParseSingle(string? rawItem);
+
+        /// <summary>
+        /// git ls-tree (or ls-files) --format
+        /// -z required too
+        /// </summary>
+        string GitTreeFormat { get; }
     }
 
     public sealed partial class GitTreeParser : IGitTreeParser
@@ -16,11 +22,13 @@ namespace GitCommands.Git
         [GeneratedRegex(@"^(?<mode>\d{6}) (?<type>(blob|tree|commit)+) (?<objectid>[0-9a-f]{40})\s+(?<name>.+)$", RegexOptions.ExplicitCapture)]
         private static partial Regex TreeLineRegex();
 
+        public string GitTreeFormat { get; } = "%(objectmode) %(objecttype) %(objectname)%x09%(path)";
+
         public IEnumerable<GitItem> Parse(string? tree)
         {
             if (string.IsNullOrWhiteSpace(tree))
             {
-                return Enumerable.Empty<GitItem>();
+                return [];
             }
 
             // $ git ls-tree HEAD
@@ -33,10 +41,7 @@ namespace GitCommands.Git
             // 100644 blob 7e4eb9dc6a1531a6ee37d8efa6bf570e4bf61146    README.md
             // 100644 blob 5b0965cd097b8c48b66dd456337852640fa429c8    stylecop.json
 
-            // Split on \0 too, as GitModule.GetTree uses `ls-tree -z` which uses null terminators
-            string[] items = tree.Split(Delimiters.NullAndLineFeed);
-
-            return items.Select(ParseSingle).Where(item => item is not null)!;
+            return tree.LazySplit('\0').Select(ParseSingle).WhereNotNull();
         }
 
         public GitItem? ParseSingle(string? rawItem)
