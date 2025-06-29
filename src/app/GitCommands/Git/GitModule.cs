@@ -2502,7 +2502,7 @@ namespace GitCommands
             if (stagedStatus is StagedStatus.WorkTree or StagedStatus.Index)
             {
                 IReadOnlyList<GitItemStatus> status = GetAllChangedFilesWithSubmodulesStatus(cancellationToken: cancellationToken);
-                return status.Where(x => x.Staged == stagedStatus).ToList();
+                return status.Where(x => x.Staged == stagedStatus || x.IsStatusOnly).ToList();
             }
 
             ExecutionResult exec = GetDiffFiles(firstRevision, secondRevision, noCache: noCache, nullSeparated: true, cancellationToken);
