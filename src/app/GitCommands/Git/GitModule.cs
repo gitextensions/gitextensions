@@ -835,6 +835,7 @@ namespace GitCommands
         {
             GitArgumentBuilder args = new("ls-tree")
             {
+                // optimized codepath, default is "--format={_gitTreeParser.GitTreeFormat}"
                 refName.Quote(),
                 { !string.IsNullOrWhiteSpace(filename), "--" },
                 filename.QuoteNE()
@@ -2559,29 +2560,23 @@ namespace GitCommands
             return resultCollection;
         }
 
-        public IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId commitId, bool full)
+        public IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId commitId, bool full, CancellationToken cancellationToken = default)
         {
-            IEnumerable<INamedGitItem> tree = GetTree(commitId, full);
+            IEnumerable<GitItem> tree = GetGitItemTree(commitId, full, cancellationToken);
 
-            List<GitItemStatus> list = tree
-                .Select(file => new GitItemStatus(name: file.Name)
+            List<GitItemStatus> list = new(tree is ICollection<GitItem> collection ? collection.Count : 0);
+            foreach (GitItem file in tree)
+            {
+                list.Add(new GitItemStatus(file.Name)
                 {
                     IsTracked = true,
                     IsNew = true,
                     IsChanged = false,
                     IsDeleted = false,
                     TreeGuid = file.ObjectId,
-                    Staged = StagedStatus.None
-                }).ToList();
-
-            // Doesn't work with removed submodules
-            IReadOnlyList<string> submodulesList = GetSubmodulesLocalPaths();
-            foreach (GitItemStatus item in list)
-            {
-                if (submodulesList.Contains(item.Name))
-                {
-                    item.IsSubmodule = true;
-                }
+                    Staged = StagedStatus.None,
+                    IsSubmodule = file.ObjectType == GitObjectType.Commit
+                });
             }
 
             return list;
@@ -3191,18 +3186,36 @@ namespace GitCommands
                 .Split(Delimiters.NullAndLineFeed);
         }
 
-        public IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full)
+        public IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full, CancellationToken cancellationToken = default)
+            => GetGitItemTree(commitId, full, cancellationToken);
+
+        public IEnumerable<GitItem> GetGitItemTree(ObjectId? commitId, bool full, CancellationToken cancellationToken = default)
         {
-            GitArgumentBuilder args = new("ls-tree")
+            bool isArtificial = commitId?.IsArtificial is true;
+            if (isArtificial && !full)
             {
-                "-z",
-                { full, "-r" },
-                commitId
-            };
+                throw new ArgumentOutOfRangeException(nameof(full), "Artificial commit requires 'full'.");
+            }
 
-            string tree = _gitExecutable.GetOutput(args, cache: GitCommandCache);
+            GitArgumentBuilder args = isArtificial
+                ? new("ls-files")
+                {
+                    // ls-files with same format as ls-tree
+                    "-z",
+                    { commitId == ObjectId.IndexId, "--cached", "--no-cached" },
+                    @$"--format=""{_gitTreeParser.GitTreeFormat}""",
+                }
+                : new("ls-tree")
+                {
+                    // optimized codepath, default is "--format={_gitTreeParser.GitTreeFormat}"
+                    "-z",
+                    { full, "-r" },
+                    commitId
+                };
 
-            return _gitTreeParser.Parse(tree);
+            ExecutionResult result = _gitExecutable.Execute(args, cache: isArtificial ? null : GitCommandCache, cancellationToken: cancellationToken);
+
+            return _gitTreeParser.Parse(result.StandardOutput);
         }
 
         public GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines, CancellationToken cancellationToken)
