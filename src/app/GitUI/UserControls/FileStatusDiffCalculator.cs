@@ -83,21 +83,7 @@ namespace GitUI
                 // If the grid is filtered, parents may be rewritten
                 GitRevision actualRev = GetActualRevisionForRevision(selectedRev);
 
-                if (actualRev.ParentIds is null || actualRev.ParentIds.Count == 0)
-                {
-                    fileStatusDescs.Add(new FileStatusWithDescription(
-                        firstRev: null,
-                        secondRev: selectedRev,
-                        summary: GetDescriptionForRevision(selectedRev.ObjectId),
-                        statuses: selectedRev.TreeGuid is null
-
-                            // likely index commit without HEAD
-                            ? module.GetDiffFilesWithSubmodulesStatus(firstId: null, selectedRev.ObjectId, parentToSecond: null, cancellationToken)
-
-                            // No parent for the initial commit
-                            : module.GetTreeFiles(selectedRev.TreeGuid, full: true)));
-                }
-                else
+                if (actualRev.ParentIds?.Count is > 0)
                 {
                     // Get the parents for the selected revision
                     // Exclude the optional third group with the diff to the orphan commit containing the untracked files of a stash
@@ -112,6 +98,20 @@ namespace GitUI
                                 secondRev: selectedRev,
                                 summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(parentId),
                                 statuses: module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, actualRev.ParentIds[0], cancellationToken))));
+                }
+                else
+                {
+                    fileStatusDescs.Add(new FileStatusWithDescription(
+                        firstRev: null,
+                        secondRev: selectedRev,
+                        summary: GetDescriptionForRevision(selectedRev.ObjectId),
+                        statuses: selectedRev.TreeGuid is null
+
+                            // likely index commit without HEAD
+                            ? module.GetDiffFilesWithSubmodulesStatus(firstId: null, selectedRev.ObjectId, parentToSecond: null, cancellationToken)
+
+                            // No parent for the initial commit, show files
+                            : module.GetTreeFiles(selectedRev.TreeGuid, full: true, cancellationToken)));
                 }
 
                 // Show combined (merge conflicts) when a single merge commit is selected
@@ -309,23 +309,15 @@ namespace GitUI
 
         private FileStatusWithDescription? GetGrepItemStatuses(GitRevision selectedRev, CancellationToken cancellationToken)
         {
-            if (string.IsNullOrEmpty(_fileStatusDiffCalculatorInfo.GrepArguments))
+            if (string.IsNullOrEmpty(_fileStatusDiffCalculatorInfo.GrepArguments) && !_fileStatusDiffCalculatorInfo.FileTreeMode)
             {
                 return null;
             }
 
             IGitModule module = GetModule();
-            IReadOnlyList<GitItemStatus> statuses = module.GetGrepFilesStatus(selectedRev.ObjectId, _fileStatusDiffCalculatorInfo.GrepArguments, applyAppSettings: !_fileStatusDiffCalculatorInfo.FileTreeMode, cancellationToken);
-
-            if (_fileStatusDiffCalculatorInfo.FileTreeMode)
-            {
-                List<GitItemStatus> statusesWithSubmodules = new(statuses);
-                statuses = statusesWithSubmodules;
-                foreach (string submodulePath in module.GetSubmodulesLocalPaths(recursive: false))
-                {
-                    statusesWithSubmodules.Add(new GitItemStatus(submodulePath) { IsSubmodule = true });
-                }
-            }
+            IReadOnlyList<GitItemStatus> statuses = string.IsNullOrEmpty(_fileStatusDiffCalculatorInfo.GrepArguments)
+                ? module.GetTreeFiles(selectedRev.ObjectId, full: true, cancellationToken)
+                : module.GetGrepFilesStatus(selectedRev.ObjectId, _fileStatusDiffCalculatorInfo.GrepArguments, applyAppSettings: true, cancellationToken);
 
             return new FileStatusWithDescription(
                                firstRev: null,

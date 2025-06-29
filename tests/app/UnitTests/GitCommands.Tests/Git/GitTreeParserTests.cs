@@ -25,7 +25,7 @@ namespace GitCommandsTests.Git
         {
             List<GitItem> items = _parser.Parse(GetLsTreeOutput()).ToList();
 
-            items.Should().HaveCount(10);
+            items.Should().HaveCount(11);
 
             items[3].Guid.Should().Be("46cccae116d2e5a1a2f818b0b31adde4ab3800a9");
             items[3].Mode.Should().Be(100644);
@@ -36,6 +36,11 @@ namespace GitCommandsTests.Git
             items[8].Mode.Should().Be(040000);
             items[8].Name.Should().Be("Bin");
             items[8].ObjectType.Should().Be(GitObjectType.Tree);
+
+            items[9].Guid.Should().Be("ec097fc11ec61f502d5fced60e27d54b5fe326c0");
+            items[9].Mode.Should().Be(160000);
+            items[9].Name.Should().Be("subm");
+            items[9].ObjectType.Should().Be(GitObjectType.Commit);
         }
 
         [TestCase(null)]
@@ -67,15 +72,16 @@ namespace GitCommandsTests.Git
         private static string GetLsTreeOutput()
         {
             return string.Concat(
-                "100644 blob 25d7b5d771e84982a3dfd8bd537531d8fb45d491	.editorconfig", "\n",
+                "100644 blob 25d7b5d771e84982a3dfd8bd537531d8fb45d491	.editorconfig", "\0",
                 "100644 blob bf29d31ff93be092ce746849e8db0984d4a83231	.gitattributes", "\0",
-                "040000 tree 93185d6bd18327f5a23bc34e7eb75e66ec0ef2d1	.github", "\n",
+                "040000 tree 93185d6bd18327f5a23bc34e7eb75e66ec0ef2d1	.github", "\0",
                 "100644 blob 46cccae116d2e5a1a2f818b0b31adde4ab3800a9	.gitignore", "\0",
-                "100644 blob e55070b6c781e278bc68fc1b2525f56318d18244	.gitmodules", "\n",
-                "100644 blob 1a569e3aa555e8cdf14dcc29f9bf4edf9aa465eb	.mailmap", "\n",
-                "040000 tree 5c1f6ae123f16e2bee1c5a064cf293c11250d98f	.nuget", "\n",
+                "100644 blob e55070b6c781e278bc68fc1b2525f56318d18244	.gitmodules", "\0",
+                "100644 blob 1a569e3aa555e8cdf14dcc29f9bf4edf9aa465eb	.mailmap", "\0",
+                "040000 tree 5c1f6ae123f16e2bee1c5a064cf293c11250d98f	.nuget", "\0",
                 "100644 blob 1e53ed8f6759a92d4596af6a99ef04f1554bfd57	.travis.yml", "\0",
                 "040000 tree 58d57013ed2ef925fc1b3f6fe72ead258c522e75	Bin", "\0",
+                "160000 commit ec097fc11ec61f502d5fced60e27d54b5fe326c0	subm", "\0",
                 "040000 tree 0c7cce8981b980d03431f65b9b54c680a467fa2e	Build");
         }
     }
