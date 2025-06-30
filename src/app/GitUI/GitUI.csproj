@@ -25,8 +25,8 @@
     <PackageReference Include="AppInsights.WindowsDesktop" />
     <PackageReference Include="EnvDTE" />
     <PackageReference Include="ExCSS" />
-    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" />
-    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Core-6.0" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Shell-6.0" />
     <PackageReference Include="JetBrains.Annotations" />
   </ItemGroup>
 
