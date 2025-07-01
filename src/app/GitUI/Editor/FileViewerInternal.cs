@@ -487,7 +487,8 @@ namespace GitUI.Editor
                     {
                         if (fromTop && IsLineVisible(line))
                         {
-                            // Keep FirstVisibleLine
+                            // Keep FirstVisibleLine, but let it be clamped in order to avoid scrolling the text out of view
+                            FirstVisibleLine = FirstVisibleLine;
                         }
                         else
                         {
