@@ -1506,7 +1506,7 @@ namespace GitUI
 
             if (gitItemStatus.IsSubmodule)
             {
-                GetSubmoduleItemImageKey(gitItemStatus);
+                return GetSubmoduleItemImageKey(gitItemStatus);
             }
 
             if (gitItemStatus.IsChanged || (gitItemStatus.IsRenamed && gitItemStatus.RenameCopyPercentage != "100"))
