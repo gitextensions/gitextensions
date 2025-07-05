@@ -75,7 +75,7 @@ namespace GitCommands
                 // Path APIs don't throw an exception for invalid characters
                 // https://docs.microsoft.com/dotnet/core/compatibility/2.1#path-apis-dont-throw-an-exception-for-invalid-characters
 
-                if (string.IsNullOrEmpty(path) || path.IndexOfAny(Path.GetInvalidPathChars()) >= 0)
+                if (string.IsNullOrEmpty(path) || path.ContainsAny(Path.GetInvalidPathChars()))
                 {
                     return false;
                 }
