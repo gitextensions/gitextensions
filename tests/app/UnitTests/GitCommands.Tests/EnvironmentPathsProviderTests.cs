@@ -49,6 +49,7 @@ namespace GitCommandsTests
         [TestCase("\\\\my-pc\\Work\\GitExtensions\\", true)]
         [TestCase("C:\\Work\\GitExtensions\\", true)]
         [TestCase("C:\\Work\\", true)]
+        [TestCase("C:\\Work|space\\", false, TestName="Invalid char in path")]
         [TestCase("C:\\", true)]
         [TestCase("C:", true)]
         [TestCase("", false)]
