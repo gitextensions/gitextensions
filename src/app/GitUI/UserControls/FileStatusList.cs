@@ -471,7 +471,7 @@ namespace GitUI
             else if (_formFindInCommitFilesGitGrep?.Visible is not true && cboFindInCommitFilesGitGrep.Text.Length > 0)
             {
                 cboFindInCommitFilesGitGrep.Text = "";
-                FindInCommitFilesGitGrep(search: "", delay: 0);
+                FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
             }
 
             SetFileStatusListVisibility(showNoFiles: NoFiles.Visible);
@@ -2088,7 +2088,7 @@ namespace GitUI
         private void DeleteSearchButton_Click(object? sender, EventArgs e)
         {
             cboFindInCommitFilesGitGrep.Text = "";
-            FindInCommitFilesGitGrep(search: "", delay: 0);
+            FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
         }
 
         private void StoreFilter(string value)
