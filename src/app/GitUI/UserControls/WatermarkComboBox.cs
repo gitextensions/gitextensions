@@ -1,3 +1,5 @@
+#nullable enable
+
 using System.ComponentModel;
 
 namespace GitUI.UserControls;
@@ -7,18 +9,18 @@ namespace GitUI.UserControls;
 /// </summary>
 [ToolboxItem(true)]
 [Description("A ComboBox control with built-in watermark text functionality.")]
-public sealed partial class WatermarkComboBox : ComboBox
+public sealed class WatermarkComboBox : ComboBox
 {
     private readonly Color _watermarkColor = SystemColors.GrayText;
     private Font? _watermarkFont;
     private Font? _originalFont;
     private Color _originalForeColor;
-    private string _watermark = string.Empty;
     private bool _isInitialized;
     private bool _suppressTextChangedEvent;
 
     public WatermarkComboBox()
     {
+        Watermark = string.Empty;
         InitializeWatermark();
     }
 
@@ -30,16 +32,16 @@ public sealed partial class WatermarkComboBox : ComboBox
     [DefaultValue("")]
     public string Watermark
     {
-        get => _watermark;
+        get;
         set
         {
             string val = value ?? string.Empty;
-            if (_watermark == val)
+            if (field == val)
             {
                 return;
             }
 
-            _watermark = val;
+            field = val;
 
             if (_isInitialized)
             {
@@ -63,7 +65,7 @@ public sealed partial class WatermarkComboBox : ComboBox
         set
         {
             string val = value ?? string.Empty;
-            if (IsWatermarkVisible && val == _watermark)
+            if (IsWatermarkVisible && val == Watermark)
             {
                 return;
             }
@@ -125,7 +127,7 @@ public sealed partial class WatermarkComboBox : ComboBox
 
         string currentText = base.Text;
 
-        if (IsWatermarkVisible && currentText != _watermark && !string.IsNullOrEmpty(currentText))
+        if (IsWatermarkVisible && currentText != Watermark && !string.IsNullOrEmpty(currentText))
         {
             ActOpaqueToTextChanged(() => HideWatermark(resetText: false));
         }
@@ -198,13 +200,13 @@ public sealed partial class WatermarkComboBox : ComboBox
 
         if (IsWatermarkVisible)
         {
-            ActOpaqueToTextChanged(() => base.Text = _watermark);
+            ActOpaqueToTextChanged(() => base.Text = Watermark);
         }
     }
 
     private void ShowWatermark(bool leaving = false)
     {
-        if (IsWatermarkVisible || !_isInitialized || (!leaving && Focused) || string.IsNullOrEmpty(_watermark))
+        if (IsWatermarkVisible || !_isInitialized || (!leaving && Focused) || string.IsNullOrEmpty(Watermark))
         {
             return;
         }
@@ -217,7 +219,7 @@ public sealed partial class WatermarkComboBox : ComboBox
         }
 
         ForeColor = _watermarkColor;
-        base.Text = _watermark;
+        base.Text = Watermark;
     }
 
     private void HideWatermark(bool resetText)
