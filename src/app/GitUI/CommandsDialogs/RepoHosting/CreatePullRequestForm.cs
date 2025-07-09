@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -61,6 +63,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     _currentBranch = Module.IsValidGitWorkingDir() ? Module.GetSelectedBranch() : "";
                     LoadRemotes(foreignHostedRemotes);
                     LoadMyBranches();
+                    LoadPRTemplate();
                 });
         }
 
@@ -88,6 +91,35 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _ignoreFirstRemoteLoading = false;
 
             _pullReqTargetsCB_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+
+        private void LoadPRTemplate()
+        {
+            string templatePath = Path.Combine(Module.WorkingDir, ".github", "PULL_REQUEST_TEMPLATE.md");
+
+            if (File.Exists(templatePath))
+            {
+                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                {
+                    _bodyTB.Text = await GetTemplateTextAsync(templatePath);
+                });
+            }
+
+            async Task<string> GetTemplateTextAsync(string templatePath)
+            {
+                await TaskScheduler.Default;
+
+                try
+                {
+                    return await File.ReadAllTextAsync(templatePath);
+                }
+                catch (Exception ex)
+                {
+                    Trace.TraceError("Failed to read pull request template: {0}", ex.Message);
+                }
+
+                return string.Empty;
+            }
         }
 
         private void _pullReqTargetsCB_SelectedIndexChanged(object sender, EventArgs e)
