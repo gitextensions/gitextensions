@@ -2,7 +2,6 @@ using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
-using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -99,26 +98,20 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             if (File.Exists(templatePath))
             {
-                ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
+                ThreadHelper.FileAndForget(async () =>
                 {
-                    _bodyTB.Text = await GetTemplateTextAsync(templatePath);
+                    try
+                    {
+                        string template = await File.ReadAllTextAsync(templatePath);
+
+                        await this.SwitchToMainThreadAsync();
+                        _bodyTB.Text = template;
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.TraceError($@"Failed to read pull request template ""{templatePath}"": {ex}");
+                    }
                 });
-            }
-
-            async Task<string> GetTemplateTextAsync(string templatePath)
-            {
-                await TaskScheduler.Default;
-
-                try
-                {
-                    return await File.ReadAllTextAsync(templatePath);
-                }
-                catch (Exception ex)
-                {
-                    Trace.TraceError("Failed to read pull request template: {0}", ex.Message);
-                }
-
-                return string.Empty;
             }
         }
 
