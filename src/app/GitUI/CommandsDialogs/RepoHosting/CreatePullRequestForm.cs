@@ -116,7 +116,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                 catch (Exception ex)
                 {
                     throw new UserExternalOperationException(_strFailedToLoadTemplate.Text,
-                    new ExternalOperationException(arguments: templatePath, workingDirectory: Module.WorkingDir, innerException: ex));
+                        new ExternalOperationException(arguments: templatePath, workingDirectory: Module.WorkingDir, innerException: ex));
                 }
             });
         }
