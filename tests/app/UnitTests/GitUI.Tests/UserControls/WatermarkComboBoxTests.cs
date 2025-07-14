@@ -77,6 +77,59 @@ public class WatermarkComboBoxTests
     }
 
     [Test]
+    public void Focus_and_blur_should_not_produce_events()
+    {
+        AssertWatermarkVisible(_comboBox1, Watermark);
+
+        int eventOccurred = 0;
+        _comboBox1.TextChanged += (sender, e) => eventOccurred++;
+        _comboBox1.FontChanged += (sender, e) => eventOccurred++;
+
+        _comboBox1.Focus();
+        FocusAway();
+        _comboBox1.Focus();
+        FocusAway();
+
+        AssertWatermarkVisible(_comboBox1, Watermark);
+        Assert.That(eventOccurred, Is.Zero, "No events should have been triggered during focus and blur.");
+    }
+
+    [Test]
+    public void Change_of_text_should_produce_text_change_events()
+    {
+        AssertWatermarkVisible(_comboBox1, Watermark);
+
+        int textEventOccurred = 0;
+        int fontEventOccurred = 0;
+        _comboBox1.TextChanged += (sender, e) => textEventOccurred++;
+        _comboBox1.FontChanged += (sender, e) => fontEventOccurred++;
+
+        _comboBox1.Text = "New Text";
+
+        AssertWatermarkHidden(_comboBox1, "New Text");
+        Assert.That(textEventOccurred, Is.EqualTo(1), "Event should have been triggered once.");
+        Assert.That(fontEventOccurred, Is.EqualTo(0), "FontChanged event should not be triggered on text change.");
+    }
+
+    [Test]
+    public void Change_of_text_to_empty_should_produce_text_change_events()
+    {
+        _comboBox1.Text = "User text";
+        AssertWatermarkHidden(_comboBox1, "User text");
+
+        int textEventOccurred = 0;
+        int fontEventOccurred = 0;
+        _comboBox1.TextChanged += (sender, e) => textEventOccurred++;
+        _comboBox1.FontChanged += (sender, e) => fontEventOccurred++;
+
+        _comboBox1.Text = "";
+
+        AssertWatermarkVisible(_comboBox1, Watermark);
+        Assert.That(textEventOccurred, Is.EqualTo(1), "Event should have been triggered once.");
+        Assert.That(fontEventOccurred, Is.EqualTo(0), "FontChanged event should not be triggered on text change.");
+    }
+
+    [Test]
     public void Lost_focus_should_show_watermark_when_text_is_empty()
     {
         _comboBox1.Focus();

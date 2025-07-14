@@ -16,12 +16,11 @@ public sealed class WatermarkComboBox : ComboBox
     private Font? _originalFont;
     private Color _originalForeColor;
     private bool _isInitialized;
-    private bool _suppressTextChangedEvent;
+    private bool _suppressEvents;
 
     public WatermarkComboBox()
     {
         Watermark = string.Empty;
-        InitializeWatermark();
     }
 
     /// <summary>
@@ -70,20 +69,23 @@ public sealed class WatermarkComboBox : ComboBox
                 return;
             }
 
-            ActOpaqueToTextChanged(() =>
+            if (IsWatermarkVisible)
             {
-                if (IsWatermarkVisible)
+                ActWithEventsSuppressed(() =>
                 {
                     HideWatermark(resetText: false);
-                }
+                });
+            }
 
-                base.Text = val;
+            base.Text = val;
 
-                if (_isInitialized && string.IsNullOrEmpty(val) && !Focused)
+            if (_isInitialized && ShouldWatermarkBeVisible(val) && !Focused)
+            {
+                ActWithEventsSuppressed(() =>
                 {
                     ShowWatermark();
-                }
-            });
+                });
+            }
         }
     }
 
@@ -104,50 +106,50 @@ public sealed class WatermarkComboBox : ComboBox
     protected override void OnEnter(EventArgs e)
     {
         base.OnEnter(e);
-        ActOpaqueToTextChanged(() => HideWatermark(resetText: true));
+        ActWithEventsSuppressed(() => HideWatermark(resetText: true));
     }
 
     protected override void OnLeave(EventArgs e)
     {
         base.OnLeave(e);
 
-        if (string.IsNullOrEmpty(base.Text))
+        if (ShouldWatermarkBeVisible(base.Text))
         {
-            ActOpaqueToTextChanged(() => ShowWatermark(leaving: true));
+            ActWithEventsSuppressed(() => ShowWatermark(leaving: true));
         }
     }
 
     protected override void OnTextChanged(EventArgs e)
     {
-        if (_suppressTextChangedEvent)
+        if (_suppressEvents)
         {
-            base.OnTextChanged(e);
             return;
         }
 
-        string currentText = base.Text;
-
-        if (IsWatermarkVisible && currentText != Watermark && !string.IsNullOrEmpty(currentText))
-        {
-            ActOpaqueToTextChanged(() => HideWatermark(resetText: false));
-        }
-        else if (!IsWatermarkVisible && string.IsNullOrEmpty(currentText) && !Focused)
-        {
-            ActOpaqueToTextChanged(() => ShowWatermark());
-        }
-
         base.OnTextChanged(e);
+
+        if (ShouldWatermarkBeVisible(Text))
+        {
+            ActWithEventsSuppressed(() => ShowWatermark());
+        }
+        else
+        {
+            ActWithEventsSuppressed(() => HideWatermark(resetText: false));
+        }
     }
 
     protected override void OnFontChanged(EventArgs e)
     {
-        base.OnFontChanged(e);
-
-        Font currentFont = Font;
-        if (!IsWatermarkVisible && _isInitialized && !currentFont.Equals(_watermarkFont) && !currentFont.Equals(_originalFont))
+        if (_suppressEvents)
         {
-            _originalFont = currentFont;
-            UpdateWatermarkFont();
+            return;
+        }
+
+        _originalFont = Font;
+        UpdateWatermarkFont();
+        if (IsWatermarkVisible)
+        {
+            ActWithEventsSuppressed(() => ShowWatermark());
         }
     }
 
@@ -195,12 +197,12 @@ public sealed class WatermarkComboBox : ComboBox
     {
         if (string.IsNullOrEmpty(base.Text) && !Focused)
         {
-            ShowWatermark();
+            ActWithEventsSuppressed(() => ShowWatermark());
         }
 
         if (IsWatermarkVisible)
         {
-            ActOpaqueToTextChanged(() => base.Text = Watermark);
+            ActWithEventsSuppressed(() => base.Text = Watermark);
         }
     }
 
@@ -244,25 +246,24 @@ public sealed class WatermarkComboBox : ComboBox
         ForeColor = _originalForeColor;
     }
 
-    /// <summary>
-    /// Prevent text change events from causing recursive calls when updating the text.
-    /// </summary>
-    private void ActOpaqueToTextChanged(Action action)
+    private static bool ShouldWatermarkBeVisible(string text)
     {
-        if (_suppressTextChangedEvent)
-        {
-            return;
-        }
+        return string.IsNullOrEmpty(text);
+    }
 
-        _suppressTextChangedEvent = true;
-
+    /// <summary>
+    ///  Prevent text and font change events.
+    /// </summary>
+    private void ActWithEventsSuppressed(Action action)
+    {
         try
         {
+            _suppressEvents = true;
             action();
         }
         finally
         {
-            _suppressTextChangedEvent = false;
+            _suppressEvents = false;
         }
     }
 
