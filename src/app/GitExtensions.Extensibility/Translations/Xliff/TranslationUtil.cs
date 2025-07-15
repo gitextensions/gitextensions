@@ -26,10 +26,12 @@ public static class TranslationUtil
         "Title"
     };
 
-    private static bool IsTranslatableItemInComponent(PropertyInfo property)
+    private static bool IsTranslatableItemInComponent(PropertyInfo property, object item)
     {
-        return property.PropertyType == typeof(string) &&
-               _translatableItemInComponentNames.Contains(property.Name);
+        HashSet<string> localizableItemNames = GetLocalizablePropertiesFromAttribute(item)
+            ?? _translatableItemInComponentNames;
+
+        return property.PropertyType == typeof(string) && localizableItemNames.Contains(property.Name);
     }
 
     private static readonly string[] UnTranslatableDLLs =
@@ -127,7 +129,7 @@ public static class TranslationUtil
         }
         else
         {
-            isTranslatable = IsTranslatableItemInComponent;
+            isTranslatable = property => IsTranslatableItemInComponent(property, item);
         }
 
         foreach (PropertyInfo property in item.GetType().GetProperties(_fieldFlags).Where(isTranslatable))
@@ -328,12 +330,15 @@ public static class TranslationUtil
 
     private static bool IsTranslatableItemInBox(PropertyInfo property, object itemObj)
     {
-        if (IsTranslatableItemInComponent(property))
+        if (IsTranslatableItemInComponent(property, itemObj))
         {
             return true;
         }
 
-        return property.Name.Equals("Items", StringComparison.Ordinal) &&
+        HashSet<string> localizableProperties = GetLocalizablePropertiesFromAttribute(itemObj)
+            ?? new HashSet<string>(["Items"], StringComparer.Ordinal);
+
+        return localizableProperties.Contains(property.Name) &&
                property.GetValue(itemObj, null) is IList items &&
                items.Count != 0;
     }
@@ -430,6 +435,14 @@ public static class TranslationUtil
 
             return e.Types.Where(t => t != null)!;
         }
+    }
+
+    private static HashSet<string>? GetLocalizablePropertiesFromAttribute(object item)
+    {
+        return item.GetType()
+            .GetCustomAttribute<LocalizablePropertiesAttribute>()
+            ?.TranslatableProperties
+            ?.ToHashSet(StringComparer.Ordinal);
     }
 
     private static readonly char PosixDirectorySeparatorChar = '/';
