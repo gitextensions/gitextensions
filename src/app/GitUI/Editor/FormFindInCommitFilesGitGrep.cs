@@ -149,16 +149,4 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
     {
         AppSettings.GitGrepUserArguments.Value = txtOptions.Text;
     }
-
-    public override void AddTranslationItems(ITranslation translation)
-    {
-        base.AddTranslationItems(translation);
-        translation.AddTranslationItem(Name, cboFindInCommitFilesGitGrep.Name, nameof(WatermarkComboBox.Watermark), cboFindInCommitFilesGitGrep.Watermark);
-    }
-
-    public override void TranslateItems(ITranslation translation)
-    {
-        base.TranslateItems(translation);
-        cboFindInCommitFilesGitGrep.Watermark = translation.TranslateItem(Name, cboFindInCommitFilesGitGrep.Name, nameof(WatermarkComboBox.Watermark), () => cboFindInCommitFilesGitGrep.Watermark) ?? string.Empty;
-    }
 }
