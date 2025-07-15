@@ -1,6 +1,7 @@
 #nullable enable
 
 using System.ComponentModel;
+using GitExtensions.Extensibility.Translations.Xliff;
 
 namespace GitUI.UserControls;
 
@@ -9,6 +10,7 @@ namespace GitUI.UserControls;
 /// </summary>
 [ToolboxItem(true)]
 [Description("A ComboBox control with built-in watermark text functionality.")]
+[LocalizableProperties(nameof(Watermark))]
 public sealed class WatermarkComboBox : ComboBox
 {
     private readonly Color _watermarkColor = SystemColors.GrayText;
