@@ -1511,10 +1511,6 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>No changes</source>
         <target />
       </trans-unit>
-      <trans-unit id="_NO_TRANSLATE_FilterComboBox.Watermark">
-        <source>Filter files using a regular expression...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_assumeUnchangedToolTip.Text">
         <source>Tell git to not check the status of this file for performance benefits.
 Use this feature when a file is big and never change.
@@ -1644,6 +1640,10 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="btnUnequalChange.ToolTipText">
         <source>Show files with different changes</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cboFilterComboBox.Watermark">
+        <source>Filter files using a regular expression...</source>
         <target />
       </trans-unit>
       <trans-unit id="cboFindInCommitFilesGitGrep.Watermark">

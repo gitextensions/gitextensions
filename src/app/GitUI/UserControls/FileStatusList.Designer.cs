@@ -37,7 +37,7 @@ partial class FileStatusList
         columnHeader = new ColumnHeader();
         NoFiles = new Label();
         LoadingFiles = new Label();
-        _NO_TRANSLATE_FilterComboBox = new WatermarkComboBox();
+        cboFilterComboBox = new WatermarkComboBox();
         FilterToolTip = new ToolTip(components);
         lblSplitter = new Label();
         DeleteFilterButton = new Label();
@@ -195,19 +195,19 @@ partial class FileStatusList
         // 
         // _NO_TRANSLATE_FilterComboBox
         // 
-        _NO_TRANSLATE_FilterComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        _NO_TRANSLATE_FilterComboBox.FlatStyle = FlatStyle.Flat;
-        _NO_TRANSLATE_FilterComboBox.FormattingEnabled = true;
-        _NO_TRANSLATE_FilterComboBox.Location = new Point(0, 48);
-        _NO_TRANSLATE_FilterComboBox.Margin = new Padding(0);
-        _NO_TRANSLATE_FilterComboBox.Name = "_NO_TRANSLATE_FilterComboBox";
-        _NO_TRANSLATE_FilterComboBox.Size = new Size(682, 23);
-        _NO_TRANSLATE_FilterComboBox.TabIndex = 5;
-        _NO_TRANSLATE_FilterComboBox.Watermark = "Filter files using a regular expression...";
-        _NO_TRANSLATE_FilterComboBox.SelectedIndexChanged += FilterComboBox_SelectedIndexChanged;
-        _NO_TRANSLATE_FilterComboBox.TextUpdate += FilterComboBox_TextUpdate;
-        _NO_TRANSLATE_FilterComboBox.SizeChanged += FilterComboBox_SizeChanged;
-        _NO_TRANSLATE_FilterComboBox.MouseEnter += FilterComboBox_MouseEnter;
+        cboFilterComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        cboFilterComboBox.FlatStyle = FlatStyle.Flat;
+        cboFilterComboBox.FormattingEnabled = true;
+        cboFilterComboBox.Location = new Point(0, 48);
+        cboFilterComboBox.Margin = new Padding(0);
+        cboFilterComboBox.Name = "_NO_TRANSLATE_FilterComboBox";
+        cboFilterComboBox.Size = new Size(682, 23);
+        cboFilterComboBox.TabIndex = 5;
+        cboFilterComboBox.Watermark = "Filter files using a regular expression...";
+        cboFilterComboBox.SelectedIndexChanged += FilterComboBox_SelectedIndexChanged;
+        cboFilterComboBox.TextUpdate += FilterComboBox_TextUpdate;
+        cboFilterComboBox.SizeChanged += FilterComboBox_SizeChanged;
+        cboFilterComboBox.MouseEnter += FilterComboBox_MouseEnter;
         // 
         // FilterToolTip
         // 
@@ -1040,7 +1040,7 @@ partial class FileStatusList
         Controls.Add(DeleteFilterButton);
         Controls.Add(cboFindInCommitFilesGitGrep);
         Controls.Add(FileStatusListView);
-        Controls.Add(_NO_TRANSLATE_FilterComboBox);
+        Controls.Add(cboFilterComboBox);
         Controls.Add(lblSplitter);
         Controls.Add(Toolbar);
         Margin = new Padding(3, 4, 3, 4);
@@ -1059,7 +1059,7 @@ partial class FileStatusList
     private Label NoFiles;
     private Label LoadingFiles;
     private ColumnHeader columnHeader;
-    private WatermarkComboBox _NO_TRANSLATE_FilterComboBox;
+    private WatermarkComboBox cboFilterComboBox;
     private ToolTip FilterToolTip;
     private Label lblSplitter;
     private Label DeleteFilterButton;
