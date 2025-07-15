@@ -1,6 +1,7 @@
 #nullable enable
 
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using GitExtensions.Extensibility.Translations.Xliff;
 
 namespace GitUI.UserControls;
@@ -60,6 +61,7 @@ public sealed class WatermarkComboBox : ComboBox
     /// <summary>
     ///  Gets or sets the text associated with this control, handling watermark display automatically.
     /// </summary>
+    [AllowNull]
     public override string Text
     {
         get => IsWatermarkVisible ? string.Empty : base.Text;
