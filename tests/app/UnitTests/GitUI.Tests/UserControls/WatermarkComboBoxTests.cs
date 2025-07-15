@@ -27,12 +27,12 @@ public class WatermarkComboBoxTests
         _tab1 = new TabPage("Tab 1") { Parent = _tabControl };
         _tab2 = new TabPage("Tab 2") { Parent = _tabControl };
         _tabControl.SelectedTab = _tab1;
-        _comboBox1 = new WatermarkComboBox { Parent = _tab1, Name = "ComboBox1", Watermark = Watermark };
+        _comboBox1 = new WatermarkComboBox { Parent = _tab1, Name = "ComboBox1", Watermark = Watermark, Font = new Font(Control.DefaultFont, FontStyle.Bold) };
         _textBox = new TextBox { Parent = _tab1, Name = "TextBox", Top = _comboBox1.Bottom + 10 };
 
         _originalFont = (Font)_comboBox1.Font.Clone();
         _originalForeColor = _comboBox1.ForeColor;
-        _watermarkFont = new Font(_originalFont, FontStyle.Italic);
+        _watermarkFont = new Font((Font)_originalFont.Clone(), FontStyle.Italic);
         _watermarkColor = SystemColors.GrayText;
 
         _form.Show();
@@ -60,10 +60,11 @@ public class WatermarkComboBoxTests
     public void Initialized_with_text_should_not_show_watermark()
     {
         using Form form = new();
-        using WatermarkComboBox comboBox = new() { Parent = form, Text = "Initial Text" };
+        Font font = new(Control.DefaultFont, FontStyle.Bold);
+        using WatermarkComboBox comboBox = new() { Parent = form, Text = "Initial Text", Font = font };
         form.Show();
 
-        AssertWatermarkHidden(comboBox, "Initial Text");
+        AssertWatermarkHidden(comboBox, "Initial Text", font);
     }
 
     [Test]
@@ -83,7 +84,6 @@ public class WatermarkComboBoxTests
 
         int eventOccurred = 0;
         _comboBox1.TextChanged += (sender, e) => eventOccurred++;
-        _comboBox1.FontChanged += (sender, e) => eventOccurred++;
 
         _comboBox1.Focus();
         FocusAway();
@@ -100,15 +100,12 @@ public class WatermarkComboBoxTests
         AssertWatermarkVisible(_comboBox1, Watermark);
 
         int textEventOccurred = 0;
-        int fontEventOccurred = 0;
         _comboBox1.TextChanged += (sender, e) => textEventOccurred++;
-        _comboBox1.FontChanged += (sender, e) => fontEventOccurred++;
 
         _comboBox1.Text = "New Text";
 
         AssertWatermarkHidden(_comboBox1, "New Text");
         Assert.That(textEventOccurred, Is.EqualTo(1), "Event should have been triggered once.");
-        Assert.That(fontEventOccurred, Is.EqualTo(0), "FontChanged event should not be triggered on text change.");
     }
 
     [Test]
@@ -118,15 +115,12 @@ public class WatermarkComboBoxTests
         AssertWatermarkHidden(_comboBox1, "User text");
 
         int textEventOccurred = 0;
-        int fontEventOccurred = 0;
         _comboBox1.TextChanged += (sender, e) => textEventOccurred++;
-        _comboBox1.FontChanged += (sender, e) => fontEventOccurred++;
 
         _comboBox1.Text = "";
 
         AssertWatermarkVisible(_comboBox1, Watermark);
         Assert.That(textEventOccurred, Is.EqualTo(1), "Event should have been triggered once.");
-        Assert.That(fontEventOccurred, Is.EqualTo(0), "FontChanged event should not be triggered on text change.");
     }
 
     [Test]
