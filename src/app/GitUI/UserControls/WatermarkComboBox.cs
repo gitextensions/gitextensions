@@ -132,16 +132,13 @@ public sealed class WatermarkComboBox : ComboBox
 
     protected override void OnFontChanged(EventArgs e)
     {
-        if (_suppressEvents)
-        {
-            return;
-        }
+        base.OnFontChanged(e);
 
-        _originalFont = Font;
-        UpdateWatermarkFont();
-        if (IsWatermarkVisible)
+        Font currentFont = Font;
+        if (!IsWatermarkVisible && _isInitialized && !currentFont.Equals(_watermarkFont) && !currentFont.Equals(_originalFont))
         {
-            ShowWatermark();
+            _originalFont = currentFont;
+            UpdateWatermarkFont();
         }
     }
 
@@ -178,8 +175,8 @@ public sealed class WatermarkComboBox : ComboBox
     {
         _watermarkFont?.Dispose();
         _watermarkFont = _originalFont is not null
-            ? new Font(_originalFont, FontStyle.Italic)
-            : new Font(Font, FontStyle.Italic);
+            ? new Font((Font)_originalFont.Clone(), FontStyle.Italic)
+            : new Font((Font)Font.Clone(), FontStyle.Italic);
     }
 
     private void ShowWatermark(bool leaving = false)
@@ -234,7 +231,7 @@ public sealed class WatermarkComboBox : ComboBox
     }
 
     /// <summary>
-    ///  Prevent text and font change events.
+    ///  Prevent text change events.
     /// </summary>
     private void ActWithEventsSuppressed(Action action)
     {
