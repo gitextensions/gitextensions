@@ -42,9 +42,9 @@ public sealed class WatermarkComboBox : ComboBox
 
             field = val;
 
-            if (_isInitialized)
+            if (ShouldWatermarkBeVisible(Text))
             {
-                UpdateWatermarkDisplay();
+                ShowWatermark();
             }
         }
     }
@@ -71,20 +71,14 @@ public sealed class WatermarkComboBox : ComboBox
 
             if (IsWatermarkVisible)
             {
-                ActWithEventsSuppressed(() =>
-                {
-                    HideWatermark(resetText: false);
-                });
+                HideWatermark(resetText: false);
             }
 
             base.Text = val;
 
-            if (_isInitialized && ShouldWatermarkBeVisible(val) && !Focused)
+            if (ShouldWatermarkBeVisible(val))
             {
-                ActWithEventsSuppressed(() =>
-                {
-                    ShowWatermark();
-                });
+                ShowWatermark();
             }
         }
     }
@@ -93,20 +87,18 @@ public sealed class WatermarkComboBox : ComboBox
     {
         base.OnHandleCreated(e);
 
-        if (_isInitialized)
-        {
-            return;
-        }
-
-        _isInitialized = true;
         InitializeWatermark();
-        UpdateWatermarkDisplay();
+
+        if (ShouldWatermarkBeVisible(Text))
+        {
+            ShowWatermark();
+        }
     }
 
     protected override void OnEnter(EventArgs e)
     {
         base.OnEnter(e);
-        ActWithEventsSuppressed(() => HideWatermark(resetText: true));
+        HideWatermark(resetText: true);
     }
 
     protected override void OnLeave(EventArgs e)
@@ -115,7 +107,7 @@ public sealed class WatermarkComboBox : ComboBox
 
         if (ShouldWatermarkBeVisible(base.Text))
         {
-            ActWithEventsSuppressed(() => ShowWatermark(leaving: true));
+            ShowWatermark(leaving: true);
         }
     }
 
@@ -130,11 +122,11 @@ public sealed class WatermarkComboBox : ComboBox
 
         if (ShouldWatermarkBeVisible(Text))
         {
-            ActWithEventsSuppressed(() => ShowWatermark());
+            ShowWatermark();
         }
         else
         {
-            ActWithEventsSuppressed(() => HideWatermark(resetText: false));
+            HideWatermark(resetText: false);
         }
     }
 
@@ -149,7 +141,7 @@ public sealed class WatermarkComboBox : ComboBox
         UpdateWatermarkFont();
         if (IsWatermarkVisible)
         {
-            ActWithEventsSuppressed(() => ShowWatermark());
+            ShowWatermark();
         }
     }
 
@@ -175,10 +167,7 @@ public sealed class WatermarkComboBox : ComboBox
 
     private void InitializeWatermark()
     {
-        if (!_isInitialized)
-        {
-            return;
-        }
+        _isInitialized = true;
 
         _originalFont = Font;
         _originalForeColor = ForeColor;
@@ -193,35 +182,25 @@ public sealed class WatermarkComboBox : ComboBox
             : new Font(Font, FontStyle.Italic);
     }
 
-    private void UpdateWatermarkDisplay()
-    {
-        if (string.IsNullOrEmpty(base.Text) && !Focused)
-        {
-            ActWithEventsSuppressed(() => ShowWatermark());
-        }
-
-        if (IsWatermarkVisible)
-        {
-            ActWithEventsSuppressed(() => base.Text = Watermark);
-        }
-    }
-
     private void ShowWatermark(bool leaving = false)
     {
-        if (IsWatermarkVisible || !_isInitialized || (!leaving && Focused) || string.IsNullOrEmpty(Watermark))
+        if ((IsWatermarkVisible && Text == Watermark) || !_isInitialized || (!leaving && Focused) || string.IsNullOrEmpty(Watermark))
         {
             return;
         }
 
         IsWatermarkVisible = true;
 
-        if (_watermarkFont is not null)
+        ActWithEventsSuppressed(() =>
         {
-            Font = _watermarkFont;
-        }
+            if (_watermarkFont is not null)
+            {
+                Font = _watermarkFont;
+            }
 
-        ForeColor = _watermarkColor;
-        base.Text = Watermark;
+            ForeColor = _watermarkColor;
+            base.Text = Watermark;
+        });
     }
 
     private void HideWatermark(bool resetText)
@@ -233,17 +212,20 @@ public sealed class WatermarkComboBox : ComboBox
 
         IsWatermarkVisible = false;
 
-        if (resetText)
+        ActWithEventsSuppressed(() =>
         {
-            base.Text = string.Empty;
-        }
+            if (resetText)
+            {
+                base.Text = string.Empty;
+            }
 
-        if (_originalFont is not null)
-        {
-            Font = _originalFont;
-        }
+            if (_originalFont is not null)
+            {
+                Font = _originalFont;
+            }
 
-        ForeColor = _originalForeColor;
+            ForeColor = _originalForeColor;
+        });
     }
 
     private static bool ShouldWatermarkBeVisible(string text)
