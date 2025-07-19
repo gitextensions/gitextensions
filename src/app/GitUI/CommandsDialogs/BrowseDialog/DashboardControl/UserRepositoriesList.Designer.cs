@@ -35,14 +35,10 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UserRepositoriesList));
-            ListViewGroup lvgPinned = new ListViewGroup("Pinned", HorizontalAlignment.Left);
-            ListViewGroup lvgAllRecent = new ListViewGroup("Recent", HorizontalAlignment.Left);
-            ListViewGroup lvgOther = new ListViewGroup("Other", HorizontalAlignment.Left);
-            ListViewItem listViewItem1 = new ListViewItem(new string[] {
-            "C:\\Users\\russkie\\AppData\\Roaming\\GitExtensions\\GitExtensions",
-            "refs/heads/master",
-            "Favourite"}, 0);
+            ListViewGroup listViewGroup1 = new ListViewGroup("Pinned", HorizontalAlignment.Left);
+            ListViewGroup listViewGroup2 = new ListViewGroup("Recent", HorizontalAlignment.Left);
+            ListViewGroup listViewGroup3 = new ListViewGroup("Other", HorizontalAlignment.Left);
+            ListViewItem listViewItem1 = new ListViewItem(new string[] { "C:\\Users\\russkie\\AppData\\Roaming\\GitExtensions\\GitExtensions", "refs/heads/master", "Favourite" }, "(none)");
             toolStripMenuItem1 = new ToolStripSeparator();
             toolStripMenuItem2 = new ToolStripSeparator();
             pnlHeader = new Panel();
@@ -50,6 +46,10 @@
             lblRecentRepositories = new Label();
             pnlBody = new Panel();
             tableLayoutPanel2 = new TableLayoutPanel();
+            listView1 = new GitUI.UserControls.NativeListView();
+            clmhdrPath = new ColumnHeader();
+            clmhdrBranch = new ColumnHeader();
+            clmhdrCategory = new ColumnHeader();
             contextMenuStripRepository = new ContextMenuStrip(components);
             tsmiOpenFolder = new ToolStripMenuItem();
             tsmiCategories = new ToolStripMenuItem();
@@ -66,10 +66,6 @@
             menuStripRecentMenu = new MenuStrip();
             mnuTop = new ToolStripMenuItem();
             mnuConfigure = new ToolStripMenuItem();
-            listView1 = new GitUI.UserControls.NativeListView();
-            clmhdrPath = ((ColumnHeader)(new ColumnHeader()));
-            clmhdrBranch = ((ColumnHeader)(new ColumnHeader()));
-            clmhdrCategory = ((ColumnHeader)(new ColumnHeader()));
             pnlHeader.SuspendLayout();
             tableLayoutPanel1.SuspendLayout();
             pnlBody.SuspendLayout();
@@ -122,7 +118,7 @@
             // 
             lblRecentRepositories.AutoSize = true;
             lblRecentRepositories.Dock = DockStyle.Fill;
-            lblRecentRepositories.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, ((byte)(204)));
+            lblRecentRepositories.Font = new Font("Segoe UI", 18F, FontStyle.Regular, GraphicsUnit.Point, 204);
             lblRecentRepositories.ForeColor = Color.DimGray;
             lblRecentRepositories.Location = new Point(0, 0);
             lblRecentRepositories.Margin = new Padding(0);
@@ -149,23 +145,66 @@
             tableLayoutPanel2.Controls.Add(listView1, 0, 1);
             tableLayoutPanel2.Controls.Add(textBoxSearch, 0, 0);
             tableLayoutPanel2.Dock = DockStyle.Fill;
-            tableLayoutPanel2.Location = new Point(20, 3);
+            tableLayoutPanel2.Location = new Point(20, 18);
             tableLayoutPanel2.Name = "tableLayoutPanel2";
             tableLayoutPanel2.RowCount = 2;
             tableLayoutPanel2.RowStyles.Add(new RowStyle(SizeType.Absolute, 45F));
             tableLayoutPanel2.RowStyles.Add(new RowStyle());
-            tableLayoutPanel2.Size = new Size(411, 204);
+            tableLayoutPanel2.Size = new Size(411, 189);
             tableLayoutPanel2.TabIndex = 4;
+            // 
+            // listView1
+            // 
+            listView1.Activation = ItemActivation.OneClick;
+            listView1.BorderStyle = BorderStyle.None;
+            listView1.Columns.AddRange(new ColumnHeader[] { clmhdrPath, clmhdrBranch, clmhdrCategory });
+            listView1.ContextMenuStrip = contextMenuStripRepository;
+            listView1.Dock = DockStyle.Fill;
+            listView1.FullRowSelect = true;
+            listViewGroup1.Header = "Pinned";
+            listViewGroup1.Name = "lvgPinned";
+            listViewGroup2.Header = "Recent";
+            listViewGroup2.Name = "lvgAllRecent";
+            listViewGroup3.Header = "Other";
+            listViewGroup3.Name = "lvgOther";
+            listView1.Groups.AddRange(new ListViewGroup[] { listViewGroup1, listViewGroup2, listViewGroup3 });
+            listView1.HeaderStyle = ColumnHeaderStyle.None;
+            listView1.Items.AddRange(new ListViewItem[] { listViewItem1 });
+            listView1.LargeImageList = imageList1;
+            listView1.Location = new Point(0, 48);
+            listView1.Margin = new Padding(0, 3, 0, 3);
+            listView1.MultiSelect = false;
+            listView1.Name = "listView1";
+            listView1.OwnerDraw = true;
+            listView1.ShowItemToolTips = true;
+            listView1.Size = new Size(445, 168);
+            listView1.TabIndex = 1;
+            listView1.TileSize = new Size(350, 50);
+            listView1.UseCompatibleStateImageBehavior = false;
+            listView1.View = View.Tile;
+            listView1.GroupTaskLinkClick += ListView1_GroupTaskLinkClick;
+            listView1.DrawItem += listView1_DrawItem;
+            listView1.GotFocus += listView1_GotFocus;
+            listView1.KeyDown += listView1_KeyDown;
+            listView1.MouseClick += listView1_MouseClick;
+            listView1.MouseLeave += listView1_MouseLeave;
+            listView1.MouseMove += listView1_MouseMove;
+            // 
+            // clmhdrPath
+            // 
+            clmhdrPath.Text = "Path";
+            // 
+            // clmhdrBranch
+            // 
+            clmhdrBranch.Text = "Branch";
+            // 
+            // clmhdrCategory
+            // 
+            clmhdrCategory.Text = "Category";
             // 
             // contextMenuStripRepository
             // 
-            contextMenuStripRepository.Items.AddRange(new ToolStripItem[] {
-            tsmiOpenFolder,
-            toolStripMenuItem1,
-            tsmiCategories,
-            toolStripMenuItem2,
-            tsmiRemoveFromList,
-            tsmiRemoveMissingReposFromList});
+            contextMenuStripRepository.Items.AddRange(new ToolStripItem[] { tsmiOpenFolder, toolStripMenuItem1, tsmiCategories, toolStripMenuItem2, tsmiRemoveFromList, tsmiRemoveMissingReposFromList });
             contextMenuStripRepository.Name = "contextMenuStripRepository";
             contextMenuStripRepository.Size = new Size(274, 104);
             contextMenuStripRepository.Closed += contextMenuStrip_Closed;
@@ -181,9 +220,7 @@
             // 
             // tsmiCategories
             // 
-            tsmiCategories.DropDownItems.AddRange(new ToolStripItem[] {
-            tsmiCategoryNone,
-            tsmiCategoryAdd});
+            tsmiCategories.DropDownItems.AddRange(new ToolStripItem[] { tsmiCategoryNone, tsmiCategoryAdd });
             tsmiCategories.Name = "tsmiCategories";
             tsmiCategories.Size = new Size(273, 22);
             tsmiCategories.Text = "Categories";
@@ -220,25 +257,23 @@
             // 
             // imageList1
             // 
-            imageList1.ImageStream = ((ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            imageList1.Images.SetKeyName(0, "source_code.png");
+            imageList1.ColorDepth = ColorDepth.Depth32Bit;
+            imageList1.ImageSize = new Size(32, 32);
+            imageList1.TransparentColor = Color.Transparent;
             // 
             // textBoxSearch
             // 
             textBoxSearch.Dock = DockStyle.Fill;
             textBoxSearch.Location = new Point(3, 3);
             textBoxSearch.Name = "textBoxSearch";
-            textBoxSearch.Size = new Size(439, 20);
+            textBoxSearch.Size = new Size(439, 23);
             textBoxSearch.TabIndex = 0;
             textBoxSearch.TextChanged += TextBoxSearch_TextChanged;
             textBoxSearch.KeyDown += TextBoxSearch_KeyDown;
             // 
             // contextMenuStripCategory
             // 
-            contextMenuStripCategory.Items.AddRange(new ToolStripItem[] {
-            tsmiCategoryRename,
-            tsmiCategoryDelete,
-            tsmiCategoryClear});
+            contextMenuStripCategory.Items.AddRange(new ToolStripItem[] { tsmiCategoryRename, tsmiCategoryDelete, tsmiCategoryClear });
             contextMenuStripCategory.Name = "contextMenuStripCategory";
             contextMenuStripCategory.Size = new Size(217, 70);
             // 
@@ -268,8 +303,7 @@
             // 
             // menuStripRecentMenu
             // 
-            menuStripRecentMenu.Items.AddRange(new ToolStripItem[] {
-            mnuTop});
+            menuStripRecentMenu.Items.AddRange(new ToolStripItem[] { mnuTop });
             menuStripRecentMenu.Location = new Point(0, 73);
             menuStripRecentMenu.Name = "menuStripRecentMenu";
             menuStripRecentMenu.Size = new Size(451, 24);
@@ -278,8 +312,7 @@
             // 
             // mnuTop
             // 
-            mnuTop.DropDownItems.AddRange(new ToolStripItem[] {
-            mnuConfigure});
+            mnuTop.DropDownItems.AddRange(new ToolStripItem[] { mnuConfigure });
             mnuTop.Name = "mnuTop";
             mnuTop.Size = new Size(12, 20);
             // 
@@ -290,63 +323,6 @@
             mnuConfigure.Size = new Size(218, 22);
             mnuConfigure.Text = "Recent repositories &settings";
             mnuConfigure.Click += mnuConfigure_Click;
-            // 
-            // listView1
-            // 
-            listView1.Activation = ItemActivation.OneClick;
-            listView1.BorderStyle = BorderStyle.None;
-            listView1.Columns.AddRange(new ColumnHeader[] {
-            clmhdrPath,
-            clmhdrBranch,
-            clmhdrCategory});
-            listView1.ContextMenuStrip = contextMenuStripRepository;
-            listView1.Dock = DockStyle.Fill;
-            listView1.FullRowSelect = true;
-            lvgPinned.Header = "Pinned";
-            lvgPinned.Name = "lvgPinned";
-            lvgAllRecent.Header = "Recent";
-            lvgAllRecent.Name = "lvgAllRecent";
-            lvgOther.Header = "Other";
-            lvgOther.Name = "lvgOther";
-            listView1.Groups.AddRange(new ListViewGroup[] {
-            lvgPinned,
-            lvgAllRecent,
-            lvgOther});
-            listView1.HeaderStyle = ColumnHeaderStyle.None;
-            listView1.HideSelection = false;
-            listView1.Items.AddRange(new ListViewItem[] {
-            listViewItem1});
-            listView1.LargeImageList = imageList1;
-            listView1.Location = new Point(0, 33);
-            listView1.Margin = new Padding(0, 3, 0, 3);
-            listView1.MultiSelect = false;
-            listView1.Name = "listView1";
-            listView1.OwnerDraw = true;
-            listView1.ShowItemToolTips = true;
-            listView1.Size = new Size(445, 168);
-            listView1.TabIndex = 1;
-            listView1.TileSize = new Size(350, 50);
-            listView1.UseCompatibleStateImageBehavior = false;
-            listView1.View = View.Tile;
-            listView1.GroupTaskLinkClick += new System.EventHandler<ListViewGroupEventArgs>(ListView1_GroupTaskLinkClick);
-            listView1.DrawItem += listView1_DrawItem;
-            listView1.MouseClick += listView1_MouseClick;
-            listView1.MouseLeave += listView1_MouseLeave;
-            listView1.MouseMove += listView1_MouseMove;
-            listView1.GotFocus += listView1_GotFocus;
-            listView1.KeyDown += listView1_KeyDown;
-            // 
-            // clmhdrPath
-            // 
-            clmhdrPath.Text = "Path";
-            // 
-            // clmhdrBranch
-            // 
-            clmhdrBranch.Text = "Branch";
-            // 
-            // clmhdrCategory
-            // 
-            clmhdrCategory.Text = "Category";
             // 
             // UserRepositoriesList
             // 
