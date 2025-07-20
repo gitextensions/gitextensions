@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitExtensions.Extensibility.Git;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;

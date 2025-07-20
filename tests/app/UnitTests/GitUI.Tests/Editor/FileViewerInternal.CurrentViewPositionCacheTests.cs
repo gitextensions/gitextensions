@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitUI.Editor;
 using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor;

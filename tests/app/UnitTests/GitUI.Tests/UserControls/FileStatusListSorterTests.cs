@@ -1,5 +1,5 @@
 ﻿using System.Text.Json.Nodes;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.UserControls;

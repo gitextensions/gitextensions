@@ -1,5 +1,5 @@
-﻿using CommonTestUtils;
-using FluentAssertions;
+﻿using AwesomeAssertions;
+using CommonTestUtils;
 using GitCommands;
 using GitCommands.Git.Gpg;
 using GitExtensions.Extensibility.Git;

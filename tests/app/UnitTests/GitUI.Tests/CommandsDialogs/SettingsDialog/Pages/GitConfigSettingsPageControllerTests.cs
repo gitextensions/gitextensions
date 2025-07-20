@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 namespace GitUITests.CommandsDialogs.SettingsDialog.Pages

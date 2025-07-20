@@ -1,8 +1,8 @@
 using System.ComponentModel.Design;
 using System.Reflection;
+using AwesomeAssertions;
+using AwesomeAssertions.Specialized;
 using CommonTestUtils;
-using FluentAssertions;
-using FluentAssertions.Specialized;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;

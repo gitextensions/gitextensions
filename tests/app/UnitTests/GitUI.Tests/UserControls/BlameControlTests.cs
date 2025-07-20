@@ -1,7 +1,7 @@
 ﻿using System.Globalization;
 using System.Text;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;

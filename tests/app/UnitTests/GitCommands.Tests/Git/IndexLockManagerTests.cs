@@ -1,6 +1,6 @@
 ﻿using System.IO.Abstractions;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;

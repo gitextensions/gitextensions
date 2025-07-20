@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.Design;
 using System.Reflection;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;

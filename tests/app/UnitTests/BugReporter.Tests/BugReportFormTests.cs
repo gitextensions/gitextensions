@@ -1,5 +1,5 @@
-﻿using BugReporter;
-using FluentAssertions;
+﻿using AwesomeAssertions;
+using BugReporter;
 
 namespace GitUITests
 {

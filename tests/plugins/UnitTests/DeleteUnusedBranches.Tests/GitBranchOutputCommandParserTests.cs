@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitExtensions.Plugins.DeleteUnusedBranches;
 
 namespace DeleteUnusedBranchesTests
