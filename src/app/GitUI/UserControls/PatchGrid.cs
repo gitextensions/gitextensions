@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using GitCommands;
@@ -332,6 +333,8 @@ namespace GitUI
             Validates.NotNull(PatchFiles);
 
             IReadOnlyList<PatchFile> updatedPatches = GetPatches();
+            DebugHelpers.Assert(updatedPatches.Count <= PatchFiles.Count,
+                $"PatchGrid: RefreshGrid: PatchFiles count {PatchFiles.Count} is less than updatedPatches count {updatedPatches.Count}. This should not happen.");
 
             for (int i = 0; i < updatedPatches.Count; i++)
             {
