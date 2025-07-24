@@ -31,7 +31,7 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
             Valid = false;
         }
 
-        ThreadHelper.FileAndForget(async () =>
+        ThreadHelper.FireAndForget(async () =>
         {
             await Task.Delay(millisecondsDelay: 250);
             if (Path.Exists(_gitExecutable.WorkingDir))

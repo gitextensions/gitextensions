@@ -348,7 +348,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                     };
                     listView1.Items.Add(item);
 
-                    ThreadHelper.FileAndForget(async () =>
+                    ThreadHelper.FireAndForget(async () =>
                     {
                         bool isValidGitDir = _controller.IsValidGitWorkingDir(recent.Repo.Path);
                         string branchName = isValidGitDir ? _controller.GetCurrentBranchName(recent.Repo.Path) : "";

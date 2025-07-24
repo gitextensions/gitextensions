@@ -67,7 +67,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             item.ToolTipText = repo.Path;
         }
 
-        ThreadHelper.FileAndForget(async () =>
+        ThreadHelper.FireAndForget(async () =>
         {
             string branchName = _repositoryCurrentBranchNameProvider.GetCurrentBranchName(repo.Path);
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

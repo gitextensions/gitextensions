@@ -177,7 +177,7 @@ namespace GitExtensions.Plugins.DeleteUnusedBranches
             SetWorkingState(isWorking: true);
             lblStatus.Text = _deletingBranches.Text;
 
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
             {
                 try
                 {

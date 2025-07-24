@@ -186,7 +186,7 @@ namespace GitUI.CommandsDialogs
 
             if (favIconUrl is not null)
             {
-                ThreadHelper.FileAndForget(async () =>
+                ThreadHelper.FireAndForget(async () =>
                     {
                         using Stream imageStream = await DownloadRemoteImageFileAsync(favIconUrl);
                         if (imageStream is not null)

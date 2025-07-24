@@ -123,7 +123,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void PopulateBranchesComboAndEnableCreateButton(IHostedRemote remote, ComboBox comboBox)
         {
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
                     {
                         try
                         {

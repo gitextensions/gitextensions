@@ -177,7 +177,7 @@ namespace GitExtensions.Plugins.GitHub3
                 return;
             }
 
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
             {
                 IHostedRemote[] hostedRemotes = GetHostedRemotes().ToArray();
                 if (hostedRemotes.Length == 0)

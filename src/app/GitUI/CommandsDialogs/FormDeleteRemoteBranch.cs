@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
         public FormDeleteRemoteBranch(IGitUICommands commands, string defaultRemoteBranch)
             : base(commands, enablePositionRestore: false)
         {
-            _taskManager.FileAndForget(() => _mergedBranches = Module.GetMergedRemoteBranches().ToHashSet());
+            _taskManager.FireAndForget(() => _mergedBranches = Module.GetMergedRemoteBranches().ToHashSet());
 
             _defaultRemoteBranch = defaultRemoteBranch;
 

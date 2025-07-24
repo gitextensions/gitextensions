@@ -28,7 +28,7 @@ public sealed class AsyncStreamReader : IDisposable
     public AsyncStreamReader(IStreamReader streamReader, Action<string> notify)
     {
         CancellationToken cancellationToken = _cancellationTokenSource.Token;
-        _taskManager.FileAndForget(async () =>
+        _taskManager.FireAndForget(async () =>
         {
             // Read single chars because ReadAsync blocks until a line end is received
             // Wait for start of new output without timeout, but read consecutive chars with timeout in order to display prompts having no line end

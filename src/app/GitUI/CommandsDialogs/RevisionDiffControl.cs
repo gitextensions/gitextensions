@@ -310,7 +310,7 @@ namespace GitUI.CommandsDialogs
             }
             finally
             {
-                ThreadHelper.FileAndForget(async () =>
+                ThreadHelper.FireAndForget(async () =>
                 {
                     // DiffFiles_SelectedIndexChanged is called asynchronously with throttling. _isImplicitListSelection must not be reset before.
                     await Task.Delay(FileStatusList.SelectedIndexChangeThrottleDuration + TimeSpan.FromSeconds(1), cancellationToken);

@@ -380,7 +380,7 @@ namespace GitUI.CommandsDialogs
                         {
                             Validates.NotNull(_submoduleStatusProvider);
 
-                            ThreadHelper.FileAndForget(async () =>
+                            ThreadHelper.FireAndForget(async () =>
                             {
                                 try
                                 {
@@ -1047,7 +1047,7 @@ namespace GitUI.CommandsDialogs
                     if (AppSettings.ShowAheadBehindData)
                     {
                         string currentBranch = RevisionGrid.CurrentBranch.Value;
-                        ThreadHelper.FileAndForget(async () =>
+                        ThreadHelper.FireAndForget(async () =>
                         {
                             // Always query only current branch here
                             // because, due to race condition with left panel async refresh:
@@ -1169,7 +1169,7 @@ namespace GitUI.CommandsDialogs
         {
             if (AppSettings.ShowStashCount && !Module.IsBareRepository())
             {
-                ThreadHelper.FileAndForget(async () =>
+                ThreadHelper.FireAndForget(async () =>
                 {
                     // Add a delay to not interfere with GUI updates when switching repository
                     await Task.Delay(500);
@@ -1464,8 +1464,8 @@ namespace GitUI.CommandsDialogs
             AvatarService.UpdateAvatarInitialFontsSettings();
 
             // Clear the separate caches for diff/merge tools
-            ThreadHelper.FileAndForget(() => new CustomDiffMergeToolProvider().ClearAsync(isDiff: false));
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(() => new CustomDiffMergeToolProvider().ClearAsync(isDiff: false));
+            ThreadHelper.FireAndForget(async () =>
             {
                 revisionDiff.CancelLoadCustomDifftools();
                 RevisionGrid.CancelLoadCustomDifftools();
@@ -2526,7 +2526,7 @@ namespace GitUI.CommandsDialogs
 
             toolStripButtonLevelUp.ToolTipText = "";
 
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
             {
                 try
                 {

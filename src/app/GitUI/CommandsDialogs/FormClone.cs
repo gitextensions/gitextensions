@@ -402,7 +402,7 @@ namespace GitUI.CommandsDialogs
             Cursor = Cursors.AppStarting;
 
             CancellationToken cancellationToken = _branchLoaderSequence.Next();
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
             {
                 RemoteActionResult<IReadOnlyList<IGitRef>> branchList;
 

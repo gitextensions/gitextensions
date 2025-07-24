@@ -77,7 +77,7 @@ namespace GitUI
         /// <summary>
         /// Asynchronously run <paramref name="asyncAction"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
         /// </summary>
-        public void FileAndForget(Func<Task> asyncAction)
+        public void FireAndForget(Func<Task> asyncAction)
         {
             _ = JoinableTaskFactory.RunAsync(async () =>
                 {
@@ -89,18 +89,18 @@ namespace GitUI
         /// <summary>
         /// Asynchronously run <paramref name="action"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
         /// </summary>
-        public void FileAndForget(Action action)
+        public void FireAndForget(Action action)
         {
-            FileAndForget(AsyncAction(action));
+            FireAndForget(AsyncAction(action));
         }
 
         /// <summary>
         /// Asynchronously run <paramref name="task"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
         /// </summary>
-        public void FileAndForget(Task task)
+        public void FireAndForget(Task task)
         {
             TimeSpan infiniteTimeout = new(-TimeSpan.TicksPerMillisecond);
-            FileAndForget(() => task.WaitAsync(infiniteTimeout));
+            FireAndForget(() => task.WaitAsync(infiniteTimeout));
         }
 
         /// <summary>

@@ -441,7 +441,7 @@ namespace GitUI.CommandsDialogs
                     // Run async as we're closing the form
                     string message = Message.Text;
                     bool isAmend = Amend.Checked;
-                    ThreadHelper.FileAndForget(async () =>
+                    ThreadHelper.FireAndForget(async () =>
                     {
                         await _commitMessageManager.SetMergeOrCommitMessageAsync(message);
                         await _commitMessageManager.SetAmendStateAsync(isAmend);
@@ -791,7 +791,7 @@ namespace GitUI.CommandsDialogs
 
             if (doAsync)
             {
-                ThreadHelper.FileAndForget(() => _unstagedLoader.LoadAsync(GetAllChangedFilesWithSubmodulesStatus, onComputed));
+                ThreadHelper.FireAndForget(() => _unstagedLoader.LoadAsync(GetAllChangedFilesWithSubmodulesStatus, onComputed));
             }
             else
             {
@@ -879,7 +879,7 @@ namespace GitUI.CommandsDialogs
         {
             _initialized = true;
 
-            ThreadHelper.FileAndForget(UpdateBranchNameDisplayAsync);
+            ThreadHelper.FireAndForget(UpdateBranchNameDisplayAsync);
 
             using (WaitCursorScope.Enter())
             {
@@ -2195,7 +2195,7 @@ namespace GitUI.CommandsDialogs
 
         private void UpdateAuthorInfo()
         {
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
                 {
                     string committer = $"{_commitCommitterInfo.Text} {GetSetting(SettingKeyString.UserName)} <{GetSetting(SettingKeyString.UserEmail)}>";
 
@@ -2745,7 +2745,7 @@ namespace GitUI.CommandsDialogs
                 return;
             }
 
-            ThreadHelper.FileAndForget(UpdateBranchNameDisplayAsync);
+            ThreadHelper.FireAndForget(UpdateBranchNameDisplayAsync);
         }
 
         private void Message_Enter(object sender, EventArgs e)
@@ -2771,7 +2771,7 @@ namespace GitUI.CommandsDialogs
         {
             if (!_skipUpdate && !_bypassActivatedEventHandler)
             {
-                ThreadHelper.FileAndForget(async () =>
+                ThreadHelper.FireAndForget(async () =>
                     {
                         await this.SwitchToMainThreadAsync();
                         RescanChanges();

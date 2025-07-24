@@ -1329,7 +1329,7 @@ namespace GitUI
             WrapRepoHostingCall(TranslatedStrings.AddUpstreamRemote, gitHoster,
                                 gh =>
                                 {
-                                    ThreadHelper.FileAndForget(async () =>
+                                    ThreadHelper.FireAndForget(async () =>
                                     {
                                         string remoteName = await gh.AddUpstreamRemoteAsync();
                                         if (!string.IsNullOrEmpty(remoteName))

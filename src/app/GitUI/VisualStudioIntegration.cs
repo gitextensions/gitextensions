@@ -15,7 +15,7 @@ namespace GitUI
 
         static VisualStudioIntegration()
         {
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
             {
                 string vswhere = $@"{Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)}\Microsoft Visual Studio\Installer\vswhere.exe";
                 if (!File.Exists(vswhere))
@@ -40,7 +40,7 @@ namespace GitUI
 
         public static void OpenFile(string filePath, int lineNumber = 0)
         {
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
             {
                 while (true)
                 {

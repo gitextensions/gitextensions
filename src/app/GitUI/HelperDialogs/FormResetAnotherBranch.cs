@@ -164,7 +164,7 @@ namespace GitUI.HelperDialogs
 
             _validatedBranch = branch;
 
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
             {
                 ArgumentString command = Commands.PushLocal(gitRefToReset.CompleteName, _revision.ObjectId, Module.WorkingDir, Module.GetPathForGitExecution, ForceReset.Checked, dryRun: true);
                 ExecutionResult executionResult = await Module.GitExecutable.ExecuteAsync(command, throwOnErrorExit: false, cancellationToken: cancellationToken);

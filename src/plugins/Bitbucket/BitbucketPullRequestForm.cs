@@ -67,7 +67,7 @@ namespace GitExtensions.Plugins.Bitbucket
                 return;
             }
 
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
             {
                 List<Repository> repositories = await GetRepositoriesAsync();
 
@@ -103,7 +103,7 @@ namespace GitExtensions.Plugins.Bitbucket
                 return;
             }
 
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
             {
                 List<PullRequest> pullRequests = await GetPullRequestsAsync();
 

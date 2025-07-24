@@ -195,7 +195,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         private void ClearImageCache_Click(object sender, EventArgs e)
         {
-            ThreadHelper.FileAndForget(AvatarService.CacheCleaner.ClearCacheAsync);
+            ThreadHelper.FireAndForget(AvatarService.CacheCleaner.ClearCacheAsync);
         }
 
         private void helpTranslate_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)

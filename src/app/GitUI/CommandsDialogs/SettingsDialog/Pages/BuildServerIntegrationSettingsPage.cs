@@ -56,7 +56,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
         protected override void SettingsToPage()
         {
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
                 {
                     Validates.NotNull(_populateBuildServerTypeTask);
 

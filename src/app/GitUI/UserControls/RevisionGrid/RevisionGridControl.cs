@@ -989,7 +989,7 @@ namespace GitUI
                 bool showStashes = AppSettings.ShowStashes;
 
                 // Evaluate GitRefs and current commit
-                ThreadHelper.FileAndForget(async () =>
+                ThreadHelper.FireAndForget(async () =>
                 {
                     cancellationToken.ThrowIfCancellationRequested();
 
@@ -1042,7 +1042,7 @@ namespace GitUI
                 }
                 else
                 {
-                    ThreadHelper.FileAndForget(() =>
+                    ThreadHelper.FireAndForget(() =>
                     {
                         try
                         {
@@ -1093,7 +1093,7 @@ namespace GitUI
                 }
 
                 // Get info about all Git commits, update the grid
-                ThreadHelper.FileAndForget(() =>
+                ThreadHelper.FireAndForget(() =>
                 {
                     TaskManager.HandleExceptions(() =>
                     {
@@ -1360,14 +1360,14 @@ namespace GitUI
                 _isRefreshingRevisions = false;
 
                 // Rethrow the exception on the UI thread
-                ThreadHelper.FileAndForget(() => ExceptionDispatchInfo.Throw(exception));
+                ThreadHelper.FireAndForget(() => ExceptionDispatchInfo.Throw(exception));
             }
 
             void OnRevisionReadCompleted()
             {
                 if (!firstRevisionReceived && !FilterIsApplied())
                 {
-                    ThreadHelper.FileAndForget(async () =>
+                    ThreadHelper.FireAndForget(async () =>
                     {
                         // No revisions at all received without any filter
                         await semaphoreUpdateGrid.WaitAsync(cancellationToken);
@@ -1392,7 +1392,7 @@ namespace GitUI
                     return;
                 }
 
-                ThreadHelper.FileAndForget(async () =>
+                ThreadHelper.FireAndForget(async () =>
                 {
                     if (!firstRevisionReceived)
                     {

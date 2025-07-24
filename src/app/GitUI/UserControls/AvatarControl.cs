@@ -59,7 +59,7 @@ namespace GitUI
 
         public void ClearCache()
         {
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
                     {
                         AvatarService.UpdateAvatarProvider();
                         await _avatarCacheCleaner.ClearCacheAsync();
@@ -98,7 +98,7 @@ namespace GitUI
 
             Email = email;
             AuthorName = name;
-            ThreadHelper.FileAndForget(UpdateAvatarAsync);
+            ThreadHelper.FireAndForget(UpdateAvatarAsync);
         }
 
         private void RefreshImage(Image? image)

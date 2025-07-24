@@ -11,7 +11,7 @@ partial class FileStatusList
         Dictionary<string, MissingIcon> missingIconsByExtension = FindMissingIcons(nodes);
         if (missingIconsByExtension.Count > 0 && Module?.WorkingDir is string workingDir)
         {
-            ThreadHelper.FileAndForget(() => LoadFileIconsAsync(missingIconsByExtension, fileName => _iconProvider.Get(workingDir, fileName), _imageListData.ImageList.ImageSize, FileStatusListView, cancellationToken));
+            ThreadHelper.FireAndForget(() => LoadFileIconsAsync(missingIconsByExtension, fileName => _iconProvider.Get(workingDir, fileName), _imageListData.ImageList.ImageSize, FileStatusListView, cancellationToken));
         }
 
         return;

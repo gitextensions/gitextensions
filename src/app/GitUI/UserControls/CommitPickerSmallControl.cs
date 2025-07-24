@@ -51,7 +51,7 @@ namespace GitUI.UserControls
             else
             {
                 textBoxCommitHash.Text = SelectedObjectId.ToShortString();
-                ThreadHelper.FileAndForget(async () =>
+                ThreadHelper.FireAndForget(async () =>
                     {
                         ObjectId currentCheckout = Module.GetCurrentCheckout();
 

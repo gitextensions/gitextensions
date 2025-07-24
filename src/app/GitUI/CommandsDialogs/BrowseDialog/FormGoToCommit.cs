@@ -35,8 +35,8 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
         private void FormGoToCommit_Load(object sender, EventArgs e)
         {
-            LoadTagsAsync().FileAndForget();
-            LoadBranchesAsync().FileAndForget();
+            LoadTagsAsync().FireAndForget();
+            LoadBranchesAsync().FireAndForget();
             SetCommitExpressionFromClipboard();
         }
 

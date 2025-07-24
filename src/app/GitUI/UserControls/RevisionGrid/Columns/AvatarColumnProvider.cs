@@ -120,7 +120,7 @@ namespace GitUI.UserControls.RevisionGrid.Columns
 
                         imageTask.Dispose();
                     }, TaskScheduler.Current)
-                    .FileAndForget();
+                    .FireAndForget();
                 return;
             }
 

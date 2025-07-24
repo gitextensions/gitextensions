@@ -91,7 +91,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             myReposLV.Items.Clear();
             myReposLV.Items.Add(new ListViewItem { Text = _strLoading.Text });
 
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
                 {
                     try
                     {
@@ -150,7 +150,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             PrepareSearch(sender, e);
 
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
                 {
                     try
                     {
@@ -180,7 +180,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
             PrepareSearch(sender, e);
 
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
                 {
                     try
                     {

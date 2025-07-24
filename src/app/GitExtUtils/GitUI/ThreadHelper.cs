@@ -69,26 +69,26 @@ namespace GitUI
         /// <summary>
         /// Asynchronously run <paramref name="asyncAction"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
         /// </summary>
-        public static void FileAndForget(Func<Task> asyncAction)
-            => _taskManager.FileAndForget(asyncAction);
+        public static void FireAndForget(Func<Task> asyncAction)
+            => _taskManager.FireAndForget(asyncAction);
 
         /// <summary>
         /// Asynchronously run <paramref name="action"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
         /// </summary>
-        public static void FileAndForget(Action action)
-            => _taskManager.FileAndForget(action);
+        public static void FireAndForget(Action action)
+            => _taskManager.FireAndForget(action);
 
         /// <summary>
         /// Asynchronously run <paramref name="joinableTask"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
         /// </summary>
-        public static void FileAndForget(this JoinableTask joinableTask)
-            => _taskManager.FileAndForget(joinableTask.Task);
+        public static void FireAndForget(this JoinableTask joinableTask)
+            => _taskManager.FireAndForget(joinableTask.Task);
 
         /// <summary>
         /// Asynchronously run <paramref name="task"/> on a background thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.
         /// </summary>
-        public static void FileAndForget(this Task task)
-            => _taskManager.FileAndForget(task);
+        public static void FireAndForget(this Task task)
+            => _taskManager.FireAndForget(task);
 
         /// <summary>
         /// Asynchronously run <paramref name="asyncAction"/> on the UI thread and forward all exceptions to <see cref="Application.OnThreadException"/> except for <see cref="OperationCanceledException"/>, which is ignored.

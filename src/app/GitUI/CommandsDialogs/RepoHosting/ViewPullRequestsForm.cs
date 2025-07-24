@@ -129,7 +129,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _selectHostedRepoCB.Enabled = false;
             ResetAllAndShowLoadingPullRequests();
 
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
                 {
                     try
                     {
@@ -326,7 +326,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
 
         private void LoadDiscussion()
         {
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
                 {
                     try
                     {
@@ -364,7 +364,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private void LoadDiffPatch()
         {
             Validates.NotNull(_currentPullRequestInfo);
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
                 {
                     try
                     {

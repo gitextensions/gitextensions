@@ -194,7 +194,7 @@ partial class FileStatusList
         AppSettings.ShowDiffForAllParents = tsmiShowDiffForAllParents.Checked;
         CancellationToken cancellationToken = _reloadSequence.Next();
         FileStatusListLoading();
-        ThreadHelper.FileAndForget(async () =>
+        ThreadHelper.FireAndForget(async () =>
         {
             IReadOnlyList<FileStatusWithDescription> gitItemStatusesWithDescription = _diffCalculator.Calculate(prevList: GitItemStatusesWithDescription, refreshDiff: true, refreshGrep: false, cancellationToken);
 

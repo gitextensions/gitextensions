@@ -368,7 +368,7 @@ namespace GitUI.CommandsDialogs
         {
             if (ShowOtherObjects.Checked & !_typeDetected)
             {
-                ThreadHelper.FileAndForget(async () =>
+                ThreadHelper.FireAndForget(async () =>
                 {
                     _typeDetected = true;
                     foreach (LostObject item in _lostObjects.Where(o => o.ObjectType == LostObjectType.Blob))

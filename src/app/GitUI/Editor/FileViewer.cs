@@ -999,7 +999,7 @@ namespace GitUI.Editor
                     return;
                 }
 
-                ThreadHelper.FileAndForget(async () =>
+                ThreadHelper.FireAndForget(async () =>
                 {
                     bool enabled = IsDifftasticEnabled.Value;
 

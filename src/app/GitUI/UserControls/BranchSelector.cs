@@ -123,7 +123,7 @@ namespace GitUI.UserControls
                     return;
                 }
 
-                ThreadHelper.FileAndForget(async () =>
+                ThreadHelper.FireAndForget(async () =>
                 {
                     string text = Module.GetCommitCountString(currentCheckout, branchName);
                     await this.SwitchToMainThreadAsync();

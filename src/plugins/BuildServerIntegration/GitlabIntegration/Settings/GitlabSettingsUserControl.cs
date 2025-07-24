@@ -64,7 +64,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings
             {
                 if (host is not null)
                 {
-                    ThreadHelper.FileAndForget(async () =>
+                    ThreadHelper.FireAndForget(async () =>
                     {
                         projectId = await UpdateProjectIdAsync(host, apiToken);
                         if (projectId is > 0)
@@ -124,7 +124,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings
 
             GetProjectIdStatusText.Visible = false;
 
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
             {
                 int? projectId = await UpdateProjectIdAsync(InstanceUrlTextBox.Text, ApiTokenTextBox.Text);
                 if (projectId is > 0)

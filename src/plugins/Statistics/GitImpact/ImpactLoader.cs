@@ -92,7 +92,7 @@ namespace GitExtensions.Plugins.GitImpact
 
             IReadOnlyList<JoinableTask> tasks = GetTasks(token);
 
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
             {
                 try
                 {

@@ -93,7 +93,7 @@ namespace GitExtensions.Plugins.GitStatistics
 
         private void InitializeCommitCount()
         {
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
                 {
                     (int totalCommits, Dictionary<string, int> commitsPerUser) = _module.GetCommitsByContributor();
 

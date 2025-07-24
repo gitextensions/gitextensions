@@ -1398,7 +1398,7 @@ namespace GitUI
                 {
                     GitItemStatus capturedItem = item;
 
-                    ThreadHelper.FileAndForget(async () =>
+                    ThreadHelper.FireAndForget(async () =>
                     {
 #pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
                         await task;
@@ -2026,7 +2026,7 @@ namespace GitUI
             SetDeleteSearchButtonVisibility();
 
             CancellationToken cancellationToken = _reloadSequence.Next();
-            ThreadHelper.FileAndForget(async () =>
+            ThreadHelper.FireAndForget(async () =>
             {
                 // delay to handle keypresses
                 await Task.Delay(delay, cancellationToken);

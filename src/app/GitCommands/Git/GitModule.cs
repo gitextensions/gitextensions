@@ -652,7 +652,7 @@ namespace GitCommands
         }
 
         public void SaveBlobAs(string saveAs, string blob, CancellationToken cancellationToken = default)
-            => ThreadHelper.FileAndForget(() => SaveBlobAsAsync(saveAs, blob, cancellationToken));
+            => ThreadHelper.FireAndForget(() => SaveBlobAsAsync(saveAs, blob, cancellationToken));
 
         public async Task SaveBlobAsAsync(string saveAs, string blob, CancellationToken cancellationToken)
         {

@@ -22,25 +22,25 @@ namespace GitUITests
         }
 
         [Test]
-        public async Task FileAndForgetReportsThreadException()
+        public async Task FireAndForgetReportsThreadException()
         {
             using ThreadExceptionHelper helper = new();
             Exception ex = new();
 
-            ThrowExceptionAsync(ex).FileAndForget();
+            ThrowExceptionAsync(ex).FireAndForget();
 
             await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
             ClassicAssert.AreSame(ex, helper.Exception);
         }
 
         [Test]
-        public async Task FileAndForgetIgnoresCancellationExceptions()
+        public async Task FireAndForgetIgnoresCancellationExceptions()
         {
             using ThreadExceptionHelper helper = new();
             Form form = new();
             form.Dispose();
 
-            YieldOntoControlMainThreadAsync(form).FileAndForget();
+            YieldOntoControlMainThreadAsync(form).FireAndForget();
 
             await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
             ClassicAssert.Null(helper.Exception, helper.Message);
