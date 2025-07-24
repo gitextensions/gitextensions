@@ -333,10 +333,14 @@ namespace GitUI
             Validates.NotNull(PatchFiles);
 
             IReadOnlyList<PatchFile> updatedPatches = GetPatches();
-            DebugHelpers.Assert(updatedPatches.Count <= PatchFiles.Count,
-                $"PatchGrid: RefreshGrid: PatchFiles count {PatchFiles.Count} is less than updatedPatches count {updatedPatches.Count}. This should not happen.");
+            if (updatedPatches.Count > PatchFiles.Count)
+            {
+                string s = $"PatchGrid: RefreshGrid: PatchFiles count {PatchFiles.Count} is less than updatedPatches count {updatedPatches.Count}. This should not happen.";
+                DebugHelpers.Assert(true, s);
+                Trace.Write(s);
+            }
 
-            for (int i = 0; i < updatedPatches.Count; i++)
+            for (int i = 0; i < Math.Min(updatedPatches.Count, PatchFiles.Count); i++)
             {
                 updatedPatches[i].IsSkipped = PatchFiles[i].IsSkipped;
             }
