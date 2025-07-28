@@ -333,9 +333,9 @@ namespace GitUI
             Validates.NotNull(PatchFiles);
 
             IReadOnlyList<PatchFile> updatedPatches = GetPatches();
-            if (updatedPatches.Count > PatchFiles.Count)
+            if (updatedPatches.Count != PatchFiles.Count)
             {
-                string s = $"PatchGrid: RefreshGrid: PatchFiles count {PatchFiles.Count} is less than updatedPatches count {updatedPatches.Count}. This should not happen.";
+                string s = $"PatchGrid: RefreshGrid: PatchFiles count {PatchFiles.Count} is different from updatedPatches count {updatedPatches.Count}. This should not happen.";
                 DebugHelpers.Assert(true, s);
                 Trace.Write(s);
             }
