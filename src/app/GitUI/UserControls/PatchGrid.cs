@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using GitCommands;
@@ -332,8 +333,15 @@ namespace GitUI
             Validates.NotNull(PatchFiles);
 
             IReadOnlyList<PatchFile> updatedPatches = GetPatches();
+            if (updatedPatches.Count != PatchFiles.Count)
+            {
+                // Fail for popup in Debug
+                string s = $"PatchGrid: RefreshGrid: PatchFiles count {PatchFiles.Count} is different from updatedPatches count {updatedPatches.Count}. This should not happen.";
+                Trace.Write(s);
+                DebugHelpers.Fail(s);
+            }
 
-            for (int i = 0; i < updatedPatches.Count; i++)
+            for (int i = 0; i < Math.Min(updatedPatches.Count, PatchFiles.Count); i++)
             {
                 updatedPatches[i].IsSkipped = PatchFiles[i].IsSkipped;
             }
