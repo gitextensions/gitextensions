@@ -335,10 +335,10 @@ namespace GitUI
             IReadOnlyList<PatchFile> updatedPatches = GetPatches();
             if (updatedPatches.Count != PatchFiles.Count)
             {
-                // assert for popup in Debug
+                // Fail for popup in Debug
                 string s = $"PatchGrid: RefreshGrid: PatchFiles count {PatchFiles.Count} is different from updatedPatches count {updatedPatches.Count}. This should not happen.";
-                DebugHelpers.Assert(false, s);
                 Trace.Write(s);
+                DebugHelpers.Fail(s);
             }
 
             for (int i = 0; i < Math.Min(updatedPatches.Count, PatchFiles.Count); i++)
