@@ -1209,6 +1209,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Failed to create pull request.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_strFailedToLoadTemplate.Text">
+        <source>Failed to load PR template from file.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_strLoading.Text">
         <source>Loading...</source>
         <target />
