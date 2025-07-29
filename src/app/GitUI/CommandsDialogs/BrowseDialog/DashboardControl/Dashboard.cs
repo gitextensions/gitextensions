@@ -8,7 +8,6 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
-    [ThemeAware]
     public partial class Dashboard : GitModuleControl
     {
         private readonly TranslationString _cloneFork = new("Clone {0} repository");
