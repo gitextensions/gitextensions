@@ -835,6 +835,7 @@ namespace GitCommands
         {
             GitArgumentBuilder args = new("ls-tree")
             {
+                // optimized codepath, default is "--format={_gitTreeParser.GitTreeFormat}"
                 refName.Quote(),
                 { !string.IsNullOrWhiteSpace(filename), "--" },
                 filename.QuoteNE()
@@ -3202,10 +3203,11 @@ namespace GitCommands
                     // ls-files with same format as ls-tree
                     "-z",
                     { commitId == ObjectId.IndexId, "--cached", "--no-cached" },
-                    @"--format=""%(objectmode) %(objecttype) %(objectname)%x09%(path)""",
+                    @$"--format=""{_gitTreeParser.GitTreeFormat}""",
                 }
                 : new("ls-tree")
                 {
+                    // optimized codepath, default is "--format={_gitTreeParser.GitTreeFormat}"
                     "-z",
                     { full, "-r" },
                     commitId
