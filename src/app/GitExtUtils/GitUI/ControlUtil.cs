@@ -10,18 +10,12 @@ namespace GitUI
         /// <summary>
         /// Enumerates all descendant controls.
         /// </summary>
-        public static IEnumerable<Control> FindDescendants(this Control control,
-            Func<Control, bool>? skip = null)
+        public static IEnumerable<Control> FindDescendants(this Control control)
         {
             Queue<Control> queue = new();
 
             foreach (Control child in control.Controls)
             {
-                if (skip?.Invoke(control) == true)
-                {
-                    continue;
-                }
-
                 queue.Enqueue(child);
             }
 
@@ -33,11 +27,6 @@ namespace GitUI
 
                 foreach (Control child in c.Controls)
                 {
-                    if (skip?.Invoke(child) == true)
-                    {
-                        continue;
-                    }
-
                     queue.Enqueue(child);
                 }
             }
@@ -46,20 +35,18 @@ namespace GitUI
         /// <summary>
         /// Enumerates all descendant controls of type <typeparamref name="T"/> in breadth-first order.
         /// </summary>
-        public static IEnumerable<T> FindDescendantsOfType<T>(this Control control,
-            Func<Control, bool>? skip = null)
+        public static IEnumerable<T> FindDescendantsOfType<T>(this Control control)
         {
-            return FindDescendants(control, skip).OfType<T>();
+            return FindDescendants(control).OfType<T>();
         }
 
         /// <summary>
         /// Finds the first descendent of <paramref name="control"/> that has type
         /// <typeparamref name="T"/> and satisfies <paramref name="predicate"/>.
         /// </summary>
-        public static T? FindDescendantOfType<T>(this Control control, Func<T, bool> predicate,
-            Func<Control, bool>? skip = null)
+        public static T? FindDescendantOfType<T>(this Control control, Func<T, bool> predicate)
         {
-            return FindDescendants(control, skip).OfType<T>().Where(predicate).FirstOrDefault();
+            return FindDescendants(control).OfType<T>().Where(predicate).FirstOrDefault();
         }
 
         /// <summary>
