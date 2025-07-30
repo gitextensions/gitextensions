@@ -2563,17 +2563,19 @@ namespace GitCommands
         {
             IEnumerable<IObjectGitItem> tree = GetTree(commitId, full, cancellationToken: cancellationToken);
 
-            List<GitItemStatus> list = new(tree is ICollection<GitItem> collection ? collection.Count : 0);
+            List<GitItemStatus> list = new(tree.Count());
             foreach (IObjectGitItem file in tree)
             {
                 list.Add(new GitItemStatus(file.Name)
                 {
+                    // IsTracked is always true, only tracked are reported
+                    // New/Changed/Deleted are are just set
                     IsTracked = true,
-                    IsNew = true,
+                    IsNew = false,
                     IsChanged = false,
                     IsDeleted = false,
                     TreeGuid = file.ObjectId,
-                    Staged = StagedStatus.None,
+                    Staged = StagedStatus.Unset,
                     IsSubmodule = file.ObjectType == GitObjectType.Commit
                 });
             }
@@ -3507,8 +3509,8 @@ namespace GitCommands
         public ObjectId? GetFileBlobHash(string fileName, ObjectId objectId)
         {
             IEnumerable<IObjectGitItem> items = GetTree(objectId, full: true, fileName);
-            return items.Count() == 1 && items.First().ObjectType == GitObjectType.Blob
-                ? items.First().ObjectId
+            return items.Count() == 1 && items.First() is IObjectGitItem i && i.ObjectType is GitObjectType.Blob
+                ? i.ObjectId
                 : null;
         }
 
