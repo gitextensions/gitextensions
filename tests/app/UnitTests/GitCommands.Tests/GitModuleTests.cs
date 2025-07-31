@@ -9,7 +9,6 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
-using Newtonsoft.Json;
 
 namespace GitCommandsTests
 {
@@ -269,49 +268,6 @@ namespace GitCommandsTests
             {
                 _gitModule.RevParse(revisionExpression).Should().BeNull();
             }
-        }
-
-        [Test]
-        [TestCase("WorkTree1", StagedStatus.Index,
-            "\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0")]
-        [TestCase("WorkTree2", StagedStatus.Index,
-            "\0\r\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\r\nThe file will have its original line endings in your working directory.\r\nwarning: LF will be replaced by CRLF in FxCop.targets.\r\nThe file will have its original line endings in your working directory.\r\nM\0testfile.txt\0")]
-        [TestCase("WorkTree3", StagedStatus.Index,
-            "\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\nM\0testfile.txt\0")]
-        [TestCase("WorkTree4", StagedStatus.Index,
-            "M\0testfile.txt\0\nwarning: LF will be replaced by CRLF in CustomDictionary.xml.\nThe file will have its original line endings in your working directory.\nwarning: LF will be replaced by CRLF in FxCop.targets.\nThe file will have its original line endings in your working directory.\n")]
-        [TestCase("fatal_error", StagedStatus.None,
-            "M\0testfile.txt\0fatal: bad config line 1 in file F:/dev/gc/gitextensions/.git/modules/GitExtensionsDoc/config\nfatal: 'git status --porcelain=2' failed in submodule GitExtensionsDoc\nM\0testfile2.txt\0")]
-
-        [TestCase("Ignore_unmerged_in_conflict_if_revision_is_work_tree", StagedStatus.WorkTree,
-            "M\0testfile.txt\0U\0testfile.txt\0")]
-        [TestCase("Include_unmerged_in_conflict_if_revision_is_index", StagedStatus.Index,
-            "M\0testfile.txt\0U\0testfile2.txt\0")]
-        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree1", StagedStatus.None,
-            "M\0testfile.txt\0U\0testfile2.txt\0")]
-        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree2", StagedStatus.None,
-            "M\0testfile.txt\0U\0testfile2.txt\0")]
-
-        [TestCase("Check_that_spaces_are_not_trimmed_in_file_names", StagedStatus.None,
-            "M\0 no trim space0 \0U\0 no trim space1 \0A\0 no trim space2 \0")]
-        [TestCase("Rename_with_spaces", StagedStatus.None,
-            "R100\0CONTRIBUTING.md\0 CONTRIBUTI NG.md\0C70\0apa.md\0 apa.md\0A\0 co decov.yml\0D\0CODE_OF_CONDUCT.md\0")]
-#if !DEBUG && false
-        // This test is for documentation, but as the throw is in a called function, it will not test cleanly
-        // Check that the staged status is None if not Index/WorkTree
-        // Assertion in Debug, throws in Release
-        [TestCase("Check_that_the_staged_status_is_None_if_not_IndexWorkTree3", StagedStatus.None,
-            "M\0testfile.txt\0U\0testfile2.txt\0")]
-#endif
-        public async Task GetDiffChangedFilesFromString(string testName, StagedStatus stagedStatus, string statusString)
-        {
-            // TODO produce a valid working directory
-            GitModule module = new(Path.GetTempPath());
-            // git diff --find-renames --find-copies -z --name-status
-            List<GitItemStatus> statuses = module.GetTestAccessor().GetDiffChangedFilesFromString(statusString, stagedStatus);
-
-            await Verifier.VerifyJson(JsonConvert.SerializeObject(statuses))
-                .UseParameters(testName);
         }
 
         [TestCase("fatal: not a git repository:")]

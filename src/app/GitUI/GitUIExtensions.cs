@@ -58,7 +58,7 @@ namespace GitUI
 
             openWithDiffTool ??= OpenWithDiffTool;
 
-            if (forceFileView || item.Item.IsNew || firstId is null || (!item.Item.IsDeleted && FileHelper.IsImage(item.Item.Name)))
+            if (forceFileView || (!item.Item.IsSubmodule && (item.Item.IsNew || firstId is null || (!item.Item.IsDeleted && FileHelper.IsImage(item.Item.Name)))))
             {
                 // View blob guid from revision, or file for worktree
                 await fileViewer.ViewGitItemAsync(item, line, openWithDiffTool);
