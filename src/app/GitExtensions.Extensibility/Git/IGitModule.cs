@@ -299,7 +299,18 @@ public interface IGitModule
     string? GetCurrentSubmoduleLocalPath();
     ISubmodulesConfigFile GetSubmodulesConfigFile();
     string GetStatusText(bool untracked);
-    ExecutionResult GetDiffFiles(string? firstRevision, string? secondRevision, bool noCache, bool nullSeparated, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Retrieves the list of files that differ between two specified revisions.
+    /// </summary>
+    /// <param name="firstRevision">The identifier of the first revision to compare. Can be <see langword="null"/> to indicate the initial state or
+    /// baseline.</param>
+    /// <param name="secondRevision">The identifier of the second revision to compare. Can be <see langword="null"/> to indicate the current state.</param>
+    /// <param name="noCache">Force not cache, never done for artificial commits.</param>
+    /// <param name="rawParsable">A value indicating whether the output should be in a raw, parsable format.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests. The operation will terminate early if the token is canceled.</param>
+    /// <returns>An <see cref="ExecutionResult"/> containing the list of differing files and any associated metadata.</returns>
+    ExecutionResult GetDiffFiles(string? firstRevision, string? secondRevision, bool noCache, bool rawParsable, CancellationToken cancellationToken);
     bool InTheMiddleOfBisect();
     IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision, string? secondRevision, StagedStatus stagedStatus, bool noCache, CancellationToken cancellationToken);
     bool IsDirtyDir();
