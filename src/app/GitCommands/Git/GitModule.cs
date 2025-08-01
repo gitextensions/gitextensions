@@ -2561,9 +2561,9 @@ namespace GitCommands
 
         public IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId commitId, bool full, CancellationToken cancellationToken = default)
         {
-            IEnumerable<IObjectGitItem> tree = GetTree(commitId, full, cancellationToken: cancellationToken);
+            IObjectGitItem[] tree = [.. GetTree(commitId, full, cancellationToken: cancellationToken)];
 
-            List<GitItemStatus> list = new(tree.Count());
+            List<GitItemStatus> list = new(tree.Length);
             foreach (IObjectGitItem file in tree)
             {
                 list.Add(new GitItemStatus(file.Name)
