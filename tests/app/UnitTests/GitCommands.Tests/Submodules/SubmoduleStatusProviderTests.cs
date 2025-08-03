@@ -252,9 +252,9 @@ namespace GitCommandsTests.Submodules
             changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.SameTime);
             result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
+            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.SameTime);
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
             result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
@@ -290,7 +290,7 @@ namespace GitCommandsTests.Submodules
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
             result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
             result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
+            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.SameTime);
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
             result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
@@ -335,7 +335,7 @@ namespace GitCommandsTests.Submodules
             changedFiles.Should().ContainSingle();
             await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
+            result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.SameTime);
             result.AllSubmodules[1].Detailed.IsDirty.Should().BeFalse();
             result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
             result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -467,7 +467,7 @@ namespace GitCommandsTests.Submodules
             result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
             result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
             result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
+            result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.SameTime);
             result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
             result.TopProject.Detailed.IsDirty.Should().BeTrue();
 

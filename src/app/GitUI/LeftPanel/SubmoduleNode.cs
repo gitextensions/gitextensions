@@ -164,7 +164,7 @@ namespace GitUI.LeftPanel
             if (Info.Detailed?.RawStatus is not null)
             {
                 // Prefer submodule status, shows ahead/behind
-                toolTip = LocalizationHelpers.ProcessSubmoduleStatus(
+                toolTip = SubmoduleResources.GetSubmoduleStatusText(
                     new GitModule(Info.Path),
                     Info.Detailed.RawStatus,
                     moduleIsParent: false,
