@@ -1511,9 +1511,10 @@ namespace GitUI
                     SubmoduleStatus.OlderTime => status.IsDirty
                         ? nameof(Images.SubmoduleRevisionSemiDownDirty)
                         : nameof(Images.SubmoduleRevisionSemiDown),
-                    _ => status.IsDirty
+                    SubmoduleStatus.SameTime => status.IsDirty
                         ? nameof(Images.SubmoduleDirty)
-                        : nameof(Images.FolderSubmodule)
+                        : nameof(Images.FolderSubmodule),
+                    _ => nameof(Images.SubmoduleDirty)
                 };
             }
 
