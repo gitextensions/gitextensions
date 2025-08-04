@@ -871,14 +871,21 @@ namespace GitCommands
 
         public (int? First, int? Second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId)
         {
-            if (firstId == secondId)
+            string second = secondId.IsArtificial ? "HEAD" : secondId.ToString();
+            return GetCommitRangeDiffCountInternal(firstId, second);
+        }
+
+        private (int? First, int? Second) GetCommitRangeDiffCountInternal(ObjectId firstId, string secondRef)
+        {
+            string firstRef = firstId.IsArtificial ? "HEAD" : firstId.ToString();
+            if (firstRef == secondRef)
             {
                 return (0, 0);
             }
 
             GitArgumentBuilder args = new("rev-list")
             {
-                $"{firstId}...{secondId}".Quote(),
+                $"{firstRef}...{secondRef}".Quote(),
                 "--count",
                 "--left-right"
             };
@@ -895,9 +902,7 @@ namespace GitCommands
 
         public string GetCommitCountString(ObjectId fromId, string to)
         {
-            string from = fromId.IsArtificial ? "HEAD" : fromId.ToString();
-            int? removed = GetCommitCount(from, to);
-            int? added = GetCommitCount(to, from);
+            (int? added, int? removed) = GetCommitRangeDiffCountInternal(fromId, to);
 
             if (removed is null || added is null)
             {
