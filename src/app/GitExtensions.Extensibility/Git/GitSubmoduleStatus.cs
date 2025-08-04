@@ -61,9 +61,7 @@ public sealed class GitSubmoduleStatus
             return "";
         }
 
-        return " (" +
-            (RemovedCommits == 0 ? "" : "-" + RemovedCommits) +
-            (AddedCommits == 0 ? "" : "+" + AddedCommits) +
-            ")";
+        // similar to GetCommitCountString
+        return $" (+{AddedCommits}-{RemovedCommits})";
     }
 }
