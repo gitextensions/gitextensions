@@ -914,9 +914,8 @@ namespace GitCommands
                 return "=";
             }
 
-            return
-                (removed > 0 ? ("-" + removed) : "") +
-                (added > 0 ? ("+" + added) : "");
+            // similar to AheadBehindData
+            return $"(+{added}-{removed})";
         }
 
         public void RunGitK()
@@ -3662,6 +3661,14 @@ namespace GitCommands
             }
 
             if (commit == oldCommit)
+            {
+                return SubmoduleStatus.SameTime;
+            }
+
+            // From this on, the status is by default Modified
+
+            // Submodule directory must exist to run commands
+            if (!IsValidGitWorkingDir())
             {
                 return SubmoduleStatus.Unknown;
             }
