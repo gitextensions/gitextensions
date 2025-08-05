@@ -700,7 +700,7 @@ namespace GitUI.Editor
                 isSubmodule,
                 getImage: () => ThreadHelper.JoinableTaskFactory.Run(GetImageAsync),
                 getFileText: GetFileTextIfBlobExists,
-                getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, file.Name.TrimEnd('/'), sha, cache: true),
+                getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, file.Name.TrimEnd('/'), sha),
                 item: item,
                 line: line,
                 openWithDifftool: openWithDifftool);
@@ -777,7 +777,7 @@ namespace GitUI.Editor
                     isSubmodule,
                     getImage: GetImage,
                     getFileText: GetFileText,
-                    getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), "", cache: false),
+                    getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""),
                     item: item,
                     line: line,
                     openWithDifftool));
