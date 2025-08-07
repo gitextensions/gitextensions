@@ -225,15 +225,22 @@ namespace GitCommands
                 commandBytes = standardOutputBuffer.SplitLogOutput().SingleOrDefault();
             }
 
-            if (!TryParseRevision(commandBytes, out GitRevision? revision))
+            GitRevision? revision;
+            if (commandBytes.Length == 0)
             {
-                if (throwOnError)
-                {
-                    throw new ExternalOperationException(AppSettings.GitCommand, arguments.ToString(),
-                        innerException: new Exception($"invalid revision{Environment.NewLine}{commandBytes}"));
-                }
+                // Note: allow store in cache also if empty
+                revision = null;
+            }
+            else if (!TryParseRevision(commandBytes, out revision))
+            {
+                doCache = false;
+                revision = null;
+            }
 
-                return null;
+            if (revision == null && throwOnError)
+            {
+                throw new ExternalOperationException(AppSettings.GitCommand, arguments.ToString(),
+                    innerException: new Exception($"invalid revision{Environment.NewLine}{commandBytes}"));
             }
 
             if (doCache)
