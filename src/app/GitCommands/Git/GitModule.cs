@@ -2564,22 +2564,20 @@ namespace GitCommands
         {
             IEnumerable<GitItem> tree = GetGitItemTree(commitId, full, cancellationToken);
 
-            List<GitItemStatus> list = new(tree is ICollection<GitItem> collection ? collection.Count : 0);
-            foreach (GitItem file in tree)
-            {
-                list.Add(new GitItemStatus(file.Name)
+            return tree
+                .Select(file => new GitItemStatus(file.Name)
                 {
+                    // IsTracked is always true, only tracked are reported
+                    // New/Changed/Deleted are are just set
                     IsTracked = true,
-                    IsNew = true,
+                    IsNew = false,
                     IsChanged = false,
                     IsDeleted = false,
                     TreeGuid = file.ObjectId,
-                    Staged = StagedStatus.None,
+                    Staged = StagedStatus.Unset,
                     IsSubmodule = file.ObjectType == GitObjectType.Commit
-                });
-            }
-
-            return list;
+                })
+                .ToList();
         }
 
         public IReadOnlyList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true,
