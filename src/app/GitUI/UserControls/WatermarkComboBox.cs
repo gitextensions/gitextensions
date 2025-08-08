@@ -45,7 +45,7 @@ public sealed class WatermarkComboBox : ComboBox
 
             field = val;
 
-            if (ShouldWatermarkBeVisible(Text))
+            if (IsWatermarkVisible)
             {
                 ShowWatermark();
             }
@@ -87,13 +87,13 @@ public sealed class WatermarkComboBox : ComboBox
         }
     }
 
-    protected override void OnHandleCreated(EventArgs e)
+    protected override void OnCreateControl()
     {
-        base.OnHandleCreated(e);
+        base.OnCreateControl();
 
         InitializeWatermark();
 
-        if (ShouldWatermarkBeVisible(Text))
+        if (ShouldWatermarkBeVisible(base.Text))
         {
             ShowWatermark();
         }
@@ -124,7 +124,7 @@ public sealed class WatermarkComboBox : ComboBox
 
         base.OnTextChanged(e);
 
-        if (ShouldWatermarkBeVisible(Text))
+        if (ShouldWatermarkBeVisible(base.Text))
         {
             ShowWatermark();
         }
@@ -185,7 +185,7 @@ public sealed class WatermarkComboBox : ComboBox
 
     private void ShowWatermark(bool leaving = false)
     {
-        if ((IsWatermarkVisible && Text == Watermark) || !_isInitialized || (!leaving && Focused) || string.IsNullOrEmpty(Watermark))
+        if ((IsWatermarkVisible && base.Text == Watermark) || !_isInitialized || (!leaving && Focused) || string.IsNullOrEmpty(Watermark))
         {
             return;
         }
