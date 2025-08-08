@@ -174,6 +174,22 @@ public class WatermarkComboBoxTests
     }
 
     [Test]
+    public void Typing_into_initially_active_control_with_watermark_should_hide_it()
+    {
+        using Form form = new();
+        WatermarkComboBox comboBox = new() { Parent = form, Name = "ComboBox1", Watermark = Watermark, Font = new Font(Control.DefaultFont, FontStyle.Bold) };
+        form.ActiveControl = comboBox;
+
+        form.Show();
+
+        Application.DoEvents();
+
+        SendKeys.SendWait("A");
+
+        AssertWatermarkHidden(comboBox, "A");
+    }
+
+    [Test]
     public void Watermark_property_should_update_displayed_watermark()
     {
         AssertWatermarkVisible(_comboBox1, Watermark);
