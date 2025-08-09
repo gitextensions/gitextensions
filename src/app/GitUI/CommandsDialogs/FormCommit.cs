@@ -1407,6 +1407,53 @@ namespace GitUI.CommandsDialogs
             }
         }
 
+        /// <summary>
+        /// replace the Message.Text in an undo-able way.
+        /// </summary>
+        /// <param name="message">the new message.</param>
+        /// <param name="regexEnabled">regex replace is enabled</param>
+        private void ReplaceMessage(string? message, bool regexEnabled)
+        {
+            if (regexEnabled)
+            {
+                try
+                {
+                    string regexfinderPattern = @"\[\[(.*?)\]\](?:\((\d+)\))?";
+                    Match regexMatch = Regex.Match(message, regexfinderPattern);
+
+                    if (regexMatch.Success)
+                    {
+                        string pattern = regexMatch.Groups[1].Value;
+                        int groupIndex = 1;
+
+                        if (regexMatch.Groups.Count > 2 && int.TryParse(regexMatch.Groups[2].Value, out int parsedIndex))
+                        {
+                            groupIndex = parsedIndex;
+                        }
+
+                        Regex regex = new(pattern);
+                        string currentBranchName = Module.GetSelectedBranch();
+                        MatchCollection matches = regex.Matches(currentBranchName);
+
+                        if (matches.Count > 0 && matches[0].Groups.Count > groupIndex)
+                        {
+                            string generatedName = matches[0].Groups[groupIndex].Value;
+                            message = message.Replace(regexMatch.Groups[0].Value, generatedName);
+                        }
+                        else
+                        {
+                            message = message.Replace(regexMatch.Groups[0].Value, "");
+                        }
+                    }
+                }
+                catch
+                {
+                }
+            }
+
+            ReplaceMessage(message);
+        }
+
         private void RescanChanges()
         {
             if (_shouldRescanChanges)
@@ -2519,7 +2566,7 @@ namespace GitUI.CommandsDialogs
                     {
                         try
                         {
-                            ReplaceMessage(item.Text);
+                            ReplaceMessage(item.Text, item.Regex);
                             Message.Focus();
                         }
                         catch
