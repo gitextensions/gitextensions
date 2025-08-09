@@ -29,7 +29,7 @@ public interface IGitUICommands : IServiceProvider
     /// </summary>
     ILockableNotifier RepoChangedNotifier { get; }
 
-    void AddCommitTemplate(string key, Func<string> addingText, Image? icon);
+    void AddCommitTemplate(string key, Func<string> addingText, Image? icon, bool regex = false);
     void AddUpstreamRemote(IWin32Window? owner, IRepositoryHostPlugin gitHoster);
     IGitRemoteCommand CreateRemoteCommand();
     bool DoActionOnRepo(Func<bool> action);
