@@ -237,7 +237,7 @@ namespace GitCommands
                 revision = null;
             }
 
-            if (revision == null && throwOnError)
+            if (revision is null && throwOnError)
             {
                 throw new ExternalOperationException(AppSettings.GitCommand, arguments.ToString(),
                     innerException: new Exception($"invalid revision{Environment.NewLine}{commandBytes}"));
