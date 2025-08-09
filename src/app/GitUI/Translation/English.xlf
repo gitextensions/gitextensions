@@ -4324,6 +4324,19 @@ You can unset the template:
         <source>OK</source>
         <target />
       </trans-unit>
+      <trans-unit id="checkBoxRegexEnabled.Text">
+        <source>Regex enable</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="checkBoxRegexEnabled.toolTipRegex">
+        <source>Use [[regex]](regex group number) to extract branch name part
+Group number optional, defaults to 1
+
+Example on branch name: "feature/ABC-4587-commitMessageRegex"
+"Commit from: [[^feature/(.*)$]] branch" -&gt; "Commit from: ABC-4587-commitMessageRegex branch"
+"[[([A-Z]+-\d+)]]: My message is" -&gt; "ABC-4587: My message is "</source>
+        <target />
+      </trans-unit>
       <trans-unit id="labelAutoWrap.Text">
         <source>Auto-wrap commit message (except subject line)</source>
         <target />
