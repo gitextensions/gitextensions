@@ -120,7 +120,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="templateName">The name of the template.</param>
         /// <param name="templateText">The body of the template.</param>
-        public void Register(string templateName, Func<string> templateText, Image? icon, bool regex)
+        public void Register(string templateName, Func<string> templateText, Image? icon, bool regex = false)
         {
             lock (RegisteredTemplatesStorage)
             {
