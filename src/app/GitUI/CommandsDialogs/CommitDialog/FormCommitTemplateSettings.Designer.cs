@@ -221,7 +221,15 @@
             checkBoxRegexEnabled.Size = new Size(96, 19);
             checkBoxRegexEnabled.TabIndex = 8;
             checkBoxRegexEnabled.Text = "Regex enable";
-            toolTipRegex.SetToolTip(checkBoxRegexEnabled, " Use [[regex]](regex group number) to extract branch name part.\r\n Group number optional, defaults to 1.\r\n");
+            toolTipRegex.SetToolTip(checkBoxRegexEnabled,
+                """
+                Use [[regex]](regex group number) to extract branch name part
+                Group number optional, defaults to 1
+
+                Example on branch name: "feature/ABC-4587-commitMessageRegex"
+                "Commit from: [[^feature/(.*)$]] branch" -> "Commit from: ABC-4587-commitMessageRegex branch"
+                "[[([A-Z]+-\d+)]]: My message is" -> "ABC-4587: My message is "
+                """);
             checkBoxRegexEnabled.UseVisualStyleBackColor = true;
             checkBoxRegexEnabled.CheckedChanged += checkBoxRegexEnabled_CheckedChanged;
             // 
