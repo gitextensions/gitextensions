@@ -90,19 +90,28 @@ namespace GitCommandsTests
         }
 
         [Test]
-        public void GetRevision_should_return_null_if_revision_does_not_exist()
+        public void GetRevision_should_return_null_if_objectid_does_not_exist()
         {
             RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
-            GitRevision? revision = reader.GetRevision(GitRevision.WorkTreeGuid, hasNotes: false, throwOnError: false, cancellationToken: default);
+            GitRevision? revision = reader.GetRevision(ObjectId.Random().ToString(), hasNotes: false, throwOnError: false, cancellationToken: default);
 
             revision.Should().BeNull();
         }
 
         [Test]
-        public void GetRevision_should_throw_if_revision_does_not_exist()
+        public void GetRevision_should_return_null_if_revision_does_not_exist()
         {
             RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
-            ClassicAssert.Throws<ExternalOperationException>(() =>
+            GitRevision? revision = reader.GetRevision("non/existing/ref", hasNotes: false, throwOnError: false, cancellationToken: default);
+
+            revision.Should().BeNull();
+        }
+
+        [Test]
+        public void GetRevision_should_throw_if_revision_is_artificial()
+        {
+            RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
+            ClassicAssert.Throws<InvalidOperationException>(() =>
                 reader.GetRevision(GitRevision.WorkTreeGuid, hasNotes: false, throwOnError: true, cancellationToken: default));
         }
 
