@@ -2560,10 +2560,7 @@ namespace GitCommands
         }
 
         public IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId commitId, bool full, CancellationToken cancellationToken = default)
-        {
-            IObjectGitItem[] tree = [.. GetTree(commitId, full, cancellationToken: cancellationToken)];
-
-            return tree
+            => GetTree(commitId, full, cancellationToken: cancellationToken)
                 .Select(file => new GitItemStatus(file.Name)
                 {
                     // IsTracked is always true, only tracked are reported
@@ -2577,7 +2574,6 @@ namespace GitCommands
                     IsSubmodule = file.ObjectType == GitObjectType.Commit
                 })
                 .ToList();
-        }
 
         public IReadOnlyList<GitItemStatus> GetAllChangedFiles(bool excludeIgnoredFiles = true,
             bool excludeAssumeUnchangedFiles = true, bool excludeSkipWorktreeFiles = true,
