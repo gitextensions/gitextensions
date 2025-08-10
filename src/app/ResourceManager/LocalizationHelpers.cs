@@ -133,18 +133,18 @@ namespace ResourceManager
                 sb.AppendLine(status.OldCommit?.ToString() ?? "null");
 
                 // Submodule directory must exist to run commands, unknown otherwise
-                if (gitModule.IsValidGitWorkingDir())
+                if (gitModule.IsValidGitWorkingDir()
+                    && commitDataManager.GetCommitData(status.OldCommit.ToString(), cache: true) is CommitData c)
                 {
                     oldCommitData = commitDataManager.GetCommitData(status.OldCommit.ToString(), cache: true);
-                    if (oldCommitData is not null)
+                    oldCommitData = c;
+
+                    sb.AppendLine("\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" +
+                                  GetFullDateString(oldCommitData.CommitDate) + ")");
+                    string[] lines = oldCommitData.Body.Trim(Delimiters.LineFeedAndCarriageReturn).Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.None);
+                    foreach (string line in lines)
                     {
-                        sb.AppendLine("\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" +
-                                      GetFullDateString(oldCommitData.CommitDate) + ")");
-                        string[] lines = oldCommitData.Body.Trim(Delimiters.LineFeedAndCarriageReturn).Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.None);
-                        foreach (string line in lines)
-                        {
-                            sb.AppendLine("\t\t" + line);
-                        }
+                        sb.AppendLine("\t\t" + line);
                     }
                 }
             }
@@ -160,24 +160,22 @@ namespace ResourceManager
                 sb.AppendLine((status.Commit?.ToString() ?? "null") + dirty);
 
                 // Submodule directory must exist to run commands, unknown otherwise
-                if (gitModule.IsValidGitWorkingDir())
+                if (gitModule.IsValidGitWorkingDir()
+                    && commitDataManager.GetCommitData(status.Commit.ToString(), cache: true) is CommitData c)
                 {
-                    commitData = commitDataManager.GetCommitData(status.Commit.ToString(), cache: true);
-                    if (commitData is not null)
+                    commitData = c;
+                    sb.AppendLine("\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" +
+                                  GetFullDateString(commitData.CommitDate) + ")");
+                    string[] lines = commitData.Body.Trim(Delimiters.LineFeedAndCarriageReturn).Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.None);
+                    foreach (string line in lines)
                     {
-                        sb.AppendLine("\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" +
-                                      GetFullDateString(commitData.CommitDate) + ")");
-                        string[] lines = commitData.Body.Trim(Delimiters.LineFeedAndCarriageReturn).Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.None);
-                        foreach (string line in lines)
-                        {
-                            sb.AppendLine("\t\t" + line);
-                        }
+                        sb.AppendLine("\t\t" + line);
                     }
+                }
 
-                    if (status.OldCommit == status.Commit)
-                    {
-                        oldCommitData = commitData;
-                    }
+                if (status.OldCommit == status.Commit)
+                {
+                    oldCommitData = commitData;
                 }
             }
 
