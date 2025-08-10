@@ -2,8 +2,8 @@
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Text;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
