@@ -3673,7 +3673,7 @@ namespace GitCommands
 
             if (loadData)
             {
-                oldData = _commitDataManager.GetCommitData(oldCommit.ToString(), cache: true);
+                oldData = _commitDataManager.GetCommitData(oldCommit.ToString());
             }
 
             if (oldData is null)
@@ -3683,7 +3683,7 @@ namespace GitCommands
 
             if (loadData)
             {
-                data = _commitDataManager.GetCommitData(commit.ToString(), cache: true);
+                data = _commitDataManager.GetCommitData(commit.ToString());
             }
 
             if (data is null)
