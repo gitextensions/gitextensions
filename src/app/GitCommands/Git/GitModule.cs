@@ -910,7 +910,7 @@ namespace GitCommands
             }
 
             // similar to AheadBehindData
-            return $" (+{added}-{removed})";
+            return $"(+{added}-{removed})";
         }
 
         public void RunGitK()

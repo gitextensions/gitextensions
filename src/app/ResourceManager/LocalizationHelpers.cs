@@ -8,9 +8,11 @@ using ResourceManager.CommitDataRenders;
 
 namespace ResourceManager
 {
-    public static class LocalizationHelpers
+    public static partial class LocalizationHelpers
     {
         private static readonly ICommitDataHeaderRenderer PlainCommitDataHeaderRenderer = new CommitDataHeaderRenderer(new MonospacedHeaderLabelFormatter(), new DateFormatter(), new MonospacedHeaderRenderStyleProvider(), null);
+        [GeneratedRegex(@"^(\s*\S+)\s+", RegexOptions.Multiline)]
+        private static partial Regex ReplaceTrailingSpacesWithTabRegex();
 
         private static DateTime RoundDateTime(DateTime dateTime)
         {
@@ -136,13 +138,11 @@ namespace ResourceManager
                 if (gitModule.IsValidGitWorkingDir()
                     && commitDataManager.GetCommitData(status.OldCommit.ToString(), cache: true) is CommitData c)
                 {
-                    oldCommitData = commitDataManager.GetCommitData(status.OldCommit.ToString(), cache: true);
                     oldCommitData = c;
 
                     sb.AppendLine("\t\t\t" + GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" +
                                   GetFullDateString(oldCommitData.CommitDate) + ")");
-                    string[] lines = oldCommitData.Body.Trim(Delimiters.LineFeedAndCarriageReturn).Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.None);
-                    foreach (string line in lines)
+                    foreach (string line in oldCommitData.Body.Replace("\r\n", "\n").Split(Delimiters.LineFeed, StringSplitOptions.None))
                     {
                         sb.AppendLine("\t\t" + line);
                     }
@@ -166,8 +166,7 @@ namespace ResourceManager
                     commitData = c;
                     sb.AppendLine("\t\t\t" + GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" +
                                   GetFullDateString(commitData.CommitDate) + ")");
-                    string[] lines = commitData.Body.Trim(Delimiters.LineFeedAndCarriageReturn).Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.None);
-                    foreach (string line in lines)
+                    foreach (string line in commitData.Body.Replace("\r\n", "\n").LazySplit(Delimiters.LineFeed))
                     {
                         sb.AppendLine("\t\t" + line);
                     }
@@ -233,7 +232,7 @@ namespace ResourceManager
                         sb.AppendLine("Status:");
                         if (limitOutput)
                         {
-                            string[] txt = statusText.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
+                            string[] txt = statusText.Replace("\r\n", "\n").Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
                             if (txt.Length > maxLimitedLines)
                             {
                                 statusText = new List<string>(txt).Take(maxLimitedLines).Join(Environment.NewLine) +
@@ -242,7 +241,7 @@ namespace ResourceManager
                         }
 
                         // format similar to Differences:
-                        sb.Append(ReplaceSpace(statusText));
+                        sb.Append(ReplaceTrailingSpacesWithTab(statusText));
                     }
                 }
 
@@ -256,7 +255,7 @@ namespace ResourceManager
                         sb.AppendLine("Differences:");
                         if (limitOutput)
                         {
-                            string[] txt = diffs.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
+                            string[] txt = diffs.Replace("\r\n", "\n").Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
                             if (txt.Length > maxLimitedLines)
                             {
                                 diffs = new List<string>(txt).Take(maxLimitedLines).Join(Environment.NewLine) +
@@ -282,8 +281,8 @@ namespace ResourceManager
                 return $"{status.AddedCommits} added, {status.RemovedCommits} removed";
             }
 
-            static string ReplaceSpace(string input)
-                    => Regex.Replace(input, @"^(\s*\S+)\s+", "$1\t", RegexOptions.Multiline);
+            static string ReplaceTrailingSpacesWithTab(string input)
+                => ReplaceTrailingSpacesWithTabRegex().Replace(input, "$1\t");
         }
     }
 }
