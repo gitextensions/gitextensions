@@ -131,9 +131,10 @@ namespace GitCommands.Git
             for (int n = 0; n < files.Length; ++n)
             {
                 ReadOnlySpan<char> line = files[n].AsSpan();
-                if (line.Length <= 2 || line[1] != ' ')
+                if (line.Length <= 2 || line[1] != ' ' || line[0] == '#')
                 {
-                    // Illegal info, like error output
+                    // Illegal info, like error output,
+                    // except '#' that is an ignored header
                     continue;
                 }
 
