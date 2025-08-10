@@ -278,7 +278,7 @@ namespace ResourceManager
 
                 if (gitModule.IsValidGitWorkingDir())
                 {
-                    ExecutionResult exec = gitModule.GetDiffFiles(status.OldCommit.ToString(), status.Commit.ToString(), noCache: false, nullSeparated: false, cancellationToken: default);
+                    ExecutionResult exec = gitModule.GetDiffFiles(status.OldCommit.ToString(), status.Commit.ToString(), noCache: false, rawParsable: false, cancellationToken: default);
                     if (exec.ExitedSuccessfully)
                     {
                         string diffs = exec.StandardOutput;
