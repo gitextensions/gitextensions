@@ -1418,8 +1418,8 @@ namespace GitUI.CommandsDialogs
             {
                 try
                 {
-                    string regexfinderPattern = @"\[\[(.*?)\]\](?:\((\d+)\))?";
-                    Match regexMatch = Regex.Match(message, regexfinderPattern);
+                    string regexFinderPattern = @"\[\[(.*?)\]\](?:\((\d+)\))?";
+                    Match regexMatch = Regex.Match(message, regexFinderPattern);
 
                     if (regexMatch.Success)
                     {
@@ -2566,7 +2566,7 @@ namespace GitUI.CommandsDialogs
                     {
                         try
                         {
-                            ReplaceMessage(item.Text, item.Regex);
+                            ReplaceMessage(item.Text, item.IsRegex);
                             Message.Focus();
                         }
                         catch

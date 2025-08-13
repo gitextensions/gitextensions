@@ -9,14 +9,14 @@ namespace GitCommands
         public string Name { get; set; }
         public string Text { get; set; }
         public Image? Icon { get; set; }
-        public bool Regex { get; set; }
+        public bool IsRegex { get; set; }
 
-        public CommitTemplateItem(string name, string text, Image? icon, bool regex)
+        public CommitTemplateItem(string name, string text, Image? icon, bool isRegex)
         {
             Name = name;
             Text = text;
             Icon = icon;
-            Regex = regex;
+            IsRegex = isRegex;
         }
 
         public CommitTemplateItem()
@@ -24,7 +24,25 @@ namespace GitCommands
             Name = string.Empty;
             Text = string.Empty;
             Icon = null;
-            Regex = false;
+            IsRegex = false;
+        }
+
+        private CommitTemplateItem(SerializationInfo info, StreamingContext context)
+        {
+            Name = (string)info.GetValue("Name", typeof(string));
+            Text = (string)info.GetValue("Text", typeof(string));
+
+            if (HasKey(info, "IsRegex"))
+            {
+                IsRegex = (bool)info.GetValue("IsRegex", typeof(bool));
+            }
+        }
+
+        public void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            info.AddValue("Name", Name);
+            info.AddValue("Text", Text);
+            info.AddValue("IsRegex", IsRegex);
         }
 
         private bool HasKey(SerializationInfo info, string key)
@@ -38,24 +56,6 @@ namespace GitCommands
             }
 
             return false;
-        }
-
-        private CommitTemplateItem(SerializationInfo info, StreamingContext context)
-        {
-            Name = (string)info.GetValue("Name", typeof(string));
-            Text = (string)info.GetValue("Text", typeof(string));
-
-            if (HasKey(info, "Regex"))
-            {
-                Regex = (bool)info.GetValue("Regex", typeof(bool));
-            }
-        }
-
-        public void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            info.AddValue("Name", Name);
-            info.AddValue("Text", Text);
-            info.AddValue("Regex", Regex);
         }
 
         public static void SaveToSettings(CommitTemplateItem[]? items)

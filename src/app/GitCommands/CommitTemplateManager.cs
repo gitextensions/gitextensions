@@ -28,7 +28,7 @@ namespace GitCommands
         /// </summary>
         /// <param name="templateName">The name of the template.</param>
         /// <param name="templateText">The body of the template.</param>
-        void Register(string templateName, Func<string> templateText, Image? icon, bool regex);
+        void Register(string templateName, Func<string> templateText, Image? icon, bool isRegex);
 
         /// <summary>
         /// Allows a plugin to unregister a commit template.
@@ -45,14 +45,14 @@ namespace GitCommands
 
             public readonly Func<string> Text;
             public readonly Image? Icon;
-            public readonly bool Regex;
+            public readonly bool IsRegex;
 
-            public RegisteredCommitTemplateItem(string name, Func<string> text, Image? icon, bool regex)
+            public RegisteredCommitTemplateItem(string name, Func<string> text, Image? icon, bool isRegex)
             {
                 Name = name;
                 Text = text;
                 Icon = icon;
-                Regex = regex;
+                IsRegex = isRegex;
             }
         }
 
@@ -82,7 +82,7 @@ namespace GitCommands
             {
                 lock (RegisteredTemplatesStorage)
                 {
-                    return RegisteredTemplatesStorage.Select(item => new CommitTemplateItem(item.Name, item.Text(), item.Icon, item.Regex)).AsReadOnlyList();
+                    return RegisteredTemplatesStorage.Select(item => new CommitTemplateItem(item.Name, item.Text(), item.Icon, item.IsRegex)).AsReadOnlyList();
                 }
             }
         }
@@ -120,13 +120,13 @@ namespace GitCommands
         /// </summary>
         /// <param name="templateName">The name of the template.</param>
         /// <param name="templateText">The body of the template.</param>
-        public void Register(string templateName, Func<string> templateText, Image? icon, bool regex = false)
+        public void Register(string templateName, Func<string> templateText, Image? icon, bool isRegex = false)
         {
             lock (RegisteredTemplatesStorage)
             {
                 if (RegisteredTemplatesStorage.All(item => item.Name != templateName))
                 {
-                    RegisteredTemplatesStorage.Add(new RegisteredCommitTemplateItem(templateName, templateText, icon, regex));
+                    RegisteredTemplatesStorage.Add(new RegisteredCommitTemplateItem(templateName, templateText, icon, isRegex));
                 }
             }
         }
