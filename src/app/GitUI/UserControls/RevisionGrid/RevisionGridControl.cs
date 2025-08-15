@@ -2997,7 +2997,12 @@ namespace GitUI
             {
                 Validates.NotNull(form.BranchName);
                 ObjectId baseCommit = Module.RevParse(form.BranchName);
-                Validates.NotNull(baseCommit);
+                if (baseCommit is null)
+                {
+                    MessageBox.Show(this, _noRevisionFoundError.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+
                 ShowFormDiff(baseCommit, headCommit.ObjectId, form.BranchName, headCommit.Subject);
             }
         }
