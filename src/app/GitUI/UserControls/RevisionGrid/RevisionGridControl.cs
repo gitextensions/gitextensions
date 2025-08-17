@@ -2996,8 +2996,13 @@ namespace GitUI
             if (form.ShowDialog(ParentForm) == DialogResult.OK)
             {
                 Validates.NotNull(form.BranchName);
-                ObjectId baseCommit = Module.RevParse(form.BranchName);
-                Validates.NotNull(baseCommit);
+                ObjectId? baseCommit = Module.RevParse(form.BranchName);
+                if (baseCommit is null)
+                {
+                    MessageBoxes.ShowError(this, _noRevisionFoundError.Text);
+                    return;
+                }
+
                 ShowFormDiff(baseCommit, headCommit.ObjectId, form.BranchName, headCommit.Subject);
             }
         }
