@@ -88,7 +88,7 @@ namespace ResourceManager
                 // TEMP, will be moved in the follow up refactor
                 ICommitDataManager commitDataManager = new CommitDataManager(() => module);
 
-                // Get body without Notes, to cache the command
+                // Get body without git-notes, to cache the command
                 CommitData? data = commitDataManager.GetCommitData(hash);
                 if (data is null)
                 {
@@ -143,7 +143,7 @@ namespace ResourceManager
                 {
                     if (status.OldCommit is not null)
                     {
-                        // Get body without Notes, to cache the command
+                        // Get body without git-notes, to cache the command
                         oldCommitData = commitDataManager.GetCommitData(status.OldCommit.ToString());
                     }
 

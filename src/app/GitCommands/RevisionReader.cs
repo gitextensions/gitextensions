@@ -177,8 +177,8 @@ namespace GitCommands
         /// <returns>The retrieved git revision or <see langword="null"/> if it does not exist.</returns>
         public async Task<GitRevision?> GetRevisionAsync(string commitHash, bool hasNotes, bool throwOnError, CancellationToken cancellationToken)
         {
-            // output can be cached if Git Notes is not included and hash is a sha.
-            bool doCache = ObjectId.TryParse(commitHash, out ObjectId? objectId) && !hasNotes;
+            // output can be cached if git-notes is not included and hash is a sha.
+            bool doCacheGitOutput = ObjectId.TryParse(commitHash, out ObjectId? objectId) && !hasNotes;
             if (objectId?.IsArtificial is true)
             {
                 throw new InvalidOperationException(nameof(commitHash));
@@ -195,12 +195,12 @@ namespace GitCommands
             };
 
             ReadOnlyMemory<byte> commandBytes;
-            if (doCache && GitModule.GitCommandCache.TryGet(arguments.ToString(), out string? commandOutput, out _) is true)
+            if (doCacheGitOutput && GitModule.GitCommandCache.TryGet(arguments.ToString(), out string? commandOutput, out _) is true)
             {
                 commandBytes = new ReadOnlyMemory<byte>(Convert.FromBase64String(commandOutput));
 
                 // Already cached, reading adds it first to the MRU cache
-                doCache = false;
+                doCacheGitOutput = false;
             }
             else
             {
@@ -233,17 +233,17 @@ namespace GitCommands
             }
             else if (!TryParseRevision(commandBytes, out revision))
             {
-                doCache = false;
+                doCacheGitOutput = false;
                 revision = null;
             }
 
-            if (revision == null && throwOnError)
+            if (revision is null && throwOnError)
             {
                 throw new ExternalOperationException(AppSettings.GitCommand, arguments.ToString(),
                     innerException: new Exception($"invalid revision{Environment.NewLine}{commandBytes}"));
             }
 
-            if (doCache)
+            if (doCacheGitOutput)
             {
                 // store the byte stream as a Base64 string to allow that it can be converted back.
                 commandOutput = Convert.ToBase64String(commandBytes.ToArray());
