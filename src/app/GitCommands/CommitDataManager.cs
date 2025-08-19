@@ -25,8 +25,9 @@ namespace GitCommands
         /// Gets <see cref="CommitData"/> for the specified <paramref name="commitId"/>.
         /// </summary>
         /// <param name="commitId">The sha or Git reference.</param>
-        /// <param name="cache">Allow caching of the Git command, should only be used if commitId is a sha and Notes are not used.</param>
-        CommitData? GetCommitData(string commitId, bool cache = false);
+        /// <param name="includeNotes">Include Notes with the commit info. This also means that the Git command is not cached.
+        /// Note that Notes are only needed if the full Body with Notes is to be used, regardless of Settings.</param>
+        CommitData? GetCommitData(string commitId, bool includeNotes = false);
 
         /// <summary>
         /// Updates the <see cref="CommitData.Body"/> (commit message) property of <paramref name="commitData"/>.
