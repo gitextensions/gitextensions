@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using AppVeyorIntegration;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces.BuildServerIntegration;
