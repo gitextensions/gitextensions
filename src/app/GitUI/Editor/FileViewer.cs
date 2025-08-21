@@ -6,7 +6,6 @@ using System.Drawing.Imaging;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
-using GitCommands.Git;
 using GitCommands.Patches;
 using GitCommands.Settings;
 using GitCommands.Utils;
@@ -534,11 +533,19 @@ namespace GitUI.Editor
         /// <param name="text">The patch text.</param>
         /// <param name="line">The line number to display.</param>
         /// <param name="openWithDifftool">The action to open the difftool.</param>
-        public Task ViewPatchAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool)
-            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.Diff, useGitColoring: PatchUseGitColoring);
+        public Task ViewPatchAsync(FileStatusItem item,
+            string text,
+            int? line,
+            Action? openWithDifftool,
+            CancellationToken cancellationToken = default)
+            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.Diff, useGitColoring: PatchUseGitColoring, cancellationToken);
 
-        public Task ViewCombinedDiffAsync(FileStatusItem item, string text, int? line, Action? openWithDifftool)
-            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.CombinedDiff, useGitColoring: AppSettings.UseGitColoring.Value);
+        public Task ViewCombinedDiffAsync(FileStatusItem item,
+            string text,
+            int? line,
+            Action? openWithDifftool,
+            CancellationToken cancellationToken = default)
+            => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.CombinedDiff, useGitColoring: AppSettings.UseGitColoring.Value, cancellationToken);
 
         /// <summary>
         /// Present the text as a patch in the file viewer.
@@ -546,25 +553,35 @@ namespace GitUI.Editor
         /// <param name="fileName">The fileName to present.</param>
         /// <param name="text">The patch text.</param>
         /// <param name="openWithDifftool">The action to open the difftool.</param>
-        public Task ViewFixedPatchAsync(string fileName, string text, Action? openWithDifftool = null)
-            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool, ViewMode.FixedDiff);
+        public Task ViewFixedPatchAsync(string fileName,
+            string text,
+            Action? openWithDifftool = null,
+            CancellationToken cancellationToken = default)
+            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool, ViewMode.FixedDiff, cancellationToken: cancellationToken);
 
         public void ViewFixedPatch(string? fileName,
             string text,
-            Action? openWithDifftool = null)
+            Action? openWithDifftool = null,
+            CancellationToken cancellationToken = default)
         {
             ThreadHelper.JoinableTaskFactory.Run(
-                () => ViewFixedPatchAsync(fileName, text, openWithDifftool));
+                () => ViewFixedPatchAsync(fileName, text, openWithDifftool, cancellationToken));
         }
 
-        public Task ViewDifftasticAsync(string fileName, string text)
-            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.Difftastic, useGitColoring: true);
+        public Task ViewDifftasticAsync(string fileName,
+            string text,
+            CancellationToken cancellationToken = default)
+            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.Difftastic, useGitColoring: true, cancellationToken);
 
-        public Task ViewRangeDiffAsync(string fileName, string text)
-            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.RangeDiff, useGitColoring: true);
+        public Task ViewRangeDiffAsync(string fileName,
+            string text,
+            CancellationToken cancellationToken = default)
+            => ViewPrivateAsync(item: null, fileName, text, line: null, openWithDifftool: null, ViewMode.RangeDiff, useGitColoring: true, cancellationToken);
 
-        public Task ViewGrepAsync(FileStatusItem item, string text)
-            => ViewPrivateAsync(item, item?.Item?.Name, text, line: null, openWithDifftool: null, ViewMode.Grep, useGitColoring: true);
+        public Task ViewGrepAsync(FileStatusItem item,
+            string text,
+            CancellationToken cancellationToken = default)
+            => ViewPrivateAsync(item, item?.Item?.Name, text, line: null, openWithDifftool: null, ViewMode.Grep, useGitColoring: true, cancellationToken);
 
         public void ViewText(string? fileName,
             string text,
@@ -587,12 +604,15 @@ namespace GitUI.Editor
             FileStatusItem? item = null,
             int? line = null,
             Action? openWithDifftool = null,
-            bool checkGitAttributes = false)
+            bool checkGitAttributes = false,
+            CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return ShowOrDeferAsync(
                 text.Length,
                 () =>
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     ResetView(ViewMode.Text, fileName, item: item);
 
                     // Check for binary file. Using gitattributes could be misleading for a changed file,
@@ -648,14 +668,21 @@ namespace GitUI.Editor
             internalFileViewer.SetText(hexData, openWithDifftool);
         }
 
-        public Task ViewGitItemAsync(FileStatusItem item, int? line, Action? openWithDifftool)
+        public Task ViewGitItemAsync(FileStatusItem item,
+            int? line,
+            Action? openWithDifftool,
+            CancellationToken cancellationToken = default)
         {
-            return ViewGitItemAsync(item.Item, item.SecondRevision.ObjectId, item, line, openWithDifftool);
+            return ViewGitItemAsync(item.Item, item.SecondRevision.ObjectId, item, line, openWithDifftool, cancellationToken);
         }
 
-        public Task ViewGitItemAsync(GitItemStatus file, ObjectId objectId, int? line = null, Action? openWithDifftool = null)
+        public Task ViewGitItemAsync(GitItemStatus file,
+            ObjectId objectId,
+            int? line = null,
+            Action? openWithDifftool = null,
+            CancellationToken cancellationToken = default)
         {
-            return ViewGitItemAsync(file, objectId, item: null, line, openWithDifftool);
+            return ViewGitItemAsync(file, objectId, item: null, line, openWithDifftool, cancellationToken);
         }
 
         /// <summary>
@@ -667,12 +694,18 @@ namespace GitUI.Editor
         /// <param name="line">The line to display.</param>
         /// <param name="openWithDifftool">difftool command</param>
         /// <returns>Task to view the item</returns>
-        private Task ViewGitItemAsync(GitItemStatus file, ObjectId? objectId, FileStatusItem? item, int? line, Action? openWithDifftool)
+        private Task ViewGitItemAsync(GitItemStatus file,
+            ObjectId? objectId,
+            FileStatusItem? item,
+            int? line,
+            Action? openWithDifftool,
+            CancellationToken cancellationToken = default)
         {
             if (file.TreeGuid is null)
             {
-                IObjectGitItem[] items = Module.GetTree(objectId, full: true, file.Name).ToArray();
-                if (items.Count() == 1)
+                cancellationToken.ThrowIfCancellationRequested();
+                IObjectGitItem[] items = Module.GetTree(objectId, full: true, file.Name, cancellationToken).ToArray();
+                if (items.Length == 1)
                 {
                     // set fields possibly not set from git-diff
                     // (git-status does not report submodule, assume IsSubmodule is not set if not TreeGuid is)
@@ -687,10 +720,10 @@ namespace GitUI.Editor
                 string? fullPath = _fullPathResolver.Resolve(file.Name);
                 if (string.IsNullOrEmpty(fullPath))
                 {
-                    return ViewTextAsync(file.Name, $"Cannot get treeId from Git or path for {file.Name} for commit {objectId}.");
+                    return ViewTextAsync(file.Name, $"Cannot get treeId from Git or path for {file.Name} for commit {objectId}.", cancellationToken: cancellationToken);
                 }
 
-                return ViewFileAsync(file.Name, file.IsSubmodule, item, line, openWithDifftool);
+                return ViewFileAsync(file.Name, file.IsSubmodule, item, line, openWithDifftool, cancellationToken);
             }
 
             string sha = file.TreeGuid.ToString();
@@ -703,7 +736,8 @@ namespace GitUI.Editor
                 getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, file.Name.TrimEnd('/'), sha),
                 item: item,
                 line: line,
-                openWithDifftool: openWithDifftool);
+                openWithDifftool: openWithDifftool,
+                cancellationToken: cancellationToken);
 
             string GetFileText()
             {
@@ -743,8 +777,14 @@ namespace GitUI.Editor
         /// <param name="line">The line to display.</param>
         /// <param name="openWithDifftool">Diff action.</param>
         /// <returns>Task.</returns>
-        public Task ViewFileAsync(string fileName, bool isSubmodule = false, FileStatusItem? item = null, int? line = null, Action? openWithDifftool = null)
+        public Task ViewFileAsync(string fileName,
+            bool isSubmodule = false,
+            FileStatusItem? item = null,
+            int? line = null,
+            Action? openWithDifftool = null,
+            CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             string? fullPath = _fullPathResolver.Resolve(fileName);
             Validates.NotNull(fullPath);
             DebugHelpers.Assert(Path.IsPathFullyQualified(fullPath), "Path must be resolved and fully qualified");
@@ -755,19 +795,19 @@ namespace GitUI.Editor
                 {
                     if (!GitModule.IsValidGitWorkingDir(fullPath))
                     {
-                        return ViewTextAsync(fileName, "Directory: " + fileName);
+                        return ViewTextAsync(fileName, "Directory: " + fileName, cancellationToken: cancellationToken);
                     }
 
                     isSubmodule = true;
                 }
                 else if (!File.Exists(fullPath))
                 {
-                    return ViewTextAsync(fileName, $"File {fullPath} does not exist");
+                    return ViewTextAsync(fileName, $"File {fullPath} does not exist", cancellationToken: cancellationToken);
                 }
             }
             else if (!GitModule.IsValidGitWorkingDir(fullPath))
             {
-                return ViewTextAsync(fileName, $"Invalid submodule: {fileName}");
+                return ViewTextAsync(fileName, $"Invalid submodule: {fileName}", cancellationToken: cancellationToken);
             }
 
             return ShowOrDeferAsync(
@@ -780,7 +820,8 @@ namespace GitUI.Editor
                     getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, fileName.TrimEnd('/'), ""),
                     item: item,
                     line: line,
-                    openWithDifftool));
+                    openWithDifftool,
+                    cancellationToken: cancellationToken));
 
             Image? GetImage()
             {
@@ -892,12 +933,21 @@ namespace GitUI.Editor
 
         // Private methods
 
-        private Task ViewPrivateAsync(FileStatusItem? item, string? fileName, string text, int? line, Action? openWithDifftool, ViewMode viewMode, bool useGitColoring = false)
+        private Task ViewPrivateAsync(FileStatusItem? item,
+            string? fileName,
+            string text,
+            int? line,
+            Action? openWithDifftool,
+            ViewMode viewMode,
+            bool useGitColoring = false,
+            CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             return ShowOrDeferAsync(
                 text.Length,
                 () =>
                 {
+                    cancellationToken.ThrowIfCancellationRequested();
                     ResetView(viewMode, fileName, item: item, text: text);
                     bool positionSet = internalFileViewer.SetText(text, openWithDifftool, _viewMode, useGitColoring, contentIdentification: fileName);
                     if (line is not null)
@@ -1149,7 +1199,7 @@ namespace GitUI.Editor
                         && AppSettings.DiffDisplayAppearance.Value != DiffDisplayAppearance.GitWordDiff
                         && File.Exists(_fullPathResolver.Resolve(fileName)))
 
-                // New files, patches only applies for artificial or if the file does not exist
+                    // New files, patches only applies for artificial or if the file does not exist
                     || ((item?.Item.IsNew ?? false)
                         && ((item.Item.Staged is StagedStatus.WorkTree or StagedStatus.Index)
                             || !File.Exists(_fullPathResolver.Resolve(fileName)))))
@@ -1187,15 +1237,24 @@ namespace GitUI.Editor
             }
         }
 
-        private Task ViewItemAsync(string fileName, bool isSubmodule, Func<Image?> getImage, Func<string> getFileText, Func<string> getSubmoduleText, FileStatusItem? item, int? line, Action? openWithDifftool)
+        private Task ViewItemAsync(string fileName,
+            bool isSubmodule,
+            Func<Image?> getImage,
+            Func<string> getFileText,
+            Func<string> getSubmoduleText,
+            FileStatusItem? item,
+            int? line,
+            Action? openWithDifftool,
+            CancellationToken cancellationToken = default)
         {
+            cancellationToken.ThrowIfCancellationRequested();
             FilePreamble = null;
 
             if (isSubmodule)
             {
                 return _async.LoadAsync(
                     getSubmoduleText,
-                    text => ThreadHelper.JoinableTaskFactory.Run(() => ViewTextAsync(fileName, text, item, line: null, openWithDifftool)));
+                    text => ThreadHelper.JoinableTaskFactory.Run(() => ViewTextAsync(fileName, text, item, line: null, openWithDifftool, cancellationToken: cancellationToken)));
             }
             else if (FileHelper.IsImage(fileName))
             {
@@ -1241,7 +1300,7 @@ namespace GitUI.Editor
             {
                 return _async.LoadAsync(
                     getFileText,
-                    text => ThreadHelper.JoinableTaskFactory.Run(() => ViewTextAsync(fileName, text, item, line, openWithDifftool, checkGitAttributes: true)));
+                    text => ThreadHelper.JoinableTaskFactory.Run(() => ViewTextAsync(fileName, text, item, line, openWithDifftool, checkGitAttributes: true, cancellationToken: cancellationToken)));
             }
         }
 
@@ -1928,7 +1987,7 @@ namespace GitUI.Editor
             Focus();
 
             internalFileViewer.GoToPreviousChange(NumberOfContextLines);
-         }
+        }
 
         private void ContinuousScrollToolStripMenuItemClick(object sender, EventArgs e)
         {
