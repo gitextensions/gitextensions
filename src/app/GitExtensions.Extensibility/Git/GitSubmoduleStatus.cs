@@ -33,7 +33,26 @@ public sealed class GitSubmoduleStatus
     public void CheckSubmoduleStatus(IGitModule? submodule)
     {
         // TODO remove from GitExtensions.Extensibility
-        throw new NotImplementedException("CheckSubmoduleStatus is not implemented in GitModule. Use SubmoduleHelper instead.");
+        if (submodule is null)
+        {
+            if (OldCommit is null)
+            {
+                // If there is no old commit, it is a new submodule.
+                Status = SubmoduleStatus.NewSubmodule;
+                return;
+            }
+
+            if (Commit is null)
+            {
+                Status = SubmoduleStatus.RemovedSubmodule;
+                return;
+            }
+
+            Status = SubmoduleStatus.Unknown;
+            return;
+        }
+
+        Status = submodule.CheckSubmoduleStatus(Commit, OldCommit, data: null, oldData: null, loadData: true);
     }
 
     public string AddedAndRemovedString()
