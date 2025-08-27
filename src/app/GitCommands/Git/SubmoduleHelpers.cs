@@ -127,12 +127,9 @@ namespace GitCommands.Git
                     addedCommits = 0;
                     removedCommits = 0;
                 }
-                else if (commitId is not null && oldCommitId is not null)
+                else if (submodule.IsValidGitWorkingDir())
                 {
-                    if (submodule.IsValidGitWorkingDir())
-                    {
-                        (addedCommits, removedCommits) = submodule.GetCommitRangeDiffCount(commitId, oldCommitId);
-                    }
+                    (addedCommits, removedCommits) = submodule.GetCommitRangeDiffCount(commitId, oldCommitId);
                 }
             }
 
