@@ -153,7 +153,7 @@ namespace GitUI.Blame
             catch (ExternalOperationException ex)
             {
                 _blame = null;
-                await BlameFile.ViewTextAsync(fileName, ex.Message);
+                await BlameFile.ViewTextAsync(fileName, ex.Message, cancellationToken: cancellationToken);
             }
 
             _loading = false;
@@ -339,9 +339,8 @@ namespace GitUI.Blame
 
             Validates.NotNull(_fileName);
 
-            BlameAuthor.InvokeAndForget(() => BlameAuthor.ViewTextAsync("committer.txt", gutter));
-            cancellationToken.ThrowIfCancellationRequested();
-            BlameFile.InvokeAndForget(() => BlameFile.ViewTextAsync(_fileName, body));
+            BlameAuthor.InvokeAndForget(() => BlameAuthor.ViewTextAsync("committer.txt", gutter, cancellationToken: cancellationToken));
+            BlameFile.InvokeAndForget(() => BlameFile.ViewTextAsync(_fileName, body, cancellationToken: cancellationToken));
             cancellationToken.ThrowIfCancellationRequested();
 
             BlameFile.GoToLine(Math.Min(lineNumber, _blame.Lines.Count));
