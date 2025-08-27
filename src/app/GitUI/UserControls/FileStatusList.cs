@@ -1573,8 +1573,8 @@ namespace GitUI
                 (SubmoduleStatus.NewerTime, false) => nameof(Images.SubmoduleRevisionSemiUp),
                 (SubmoduleStatus.OlderTime, true) => nameof(Images.SubmoduleRevisionSemiDownDirty),
                 (SubmoduleStatus.OlderTime, false) => nameof(Images.SubmoduleRevisionSemiDown),
-                (_, true) => nameof(Images.SubmoduleDirty),
-                (_, false) => nameof(Images.FolderSubmodule),
+                (SubmoduleStatus.SameTime, false) => nameof(Images.FolderSubmodule),
+                _ => nameof(Images.SubmoduleDirty),
             };
         }
 

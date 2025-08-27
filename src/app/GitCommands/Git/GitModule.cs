@@ -41,7 +41,6 @@ namespace GitCommands
 
         private readonly object _lock = new();
         private readonly IIndexLockManager _indexLockManager;
-        private readonly ICommitDataManager _commitDataManager;
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
         private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
         private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
@@ -89,7 +88,6 @@ namespace GitCommands
             WorkingDir = (workingDir ?? "").NormalizePath().NormalizeWslPath().EnsureTrailingPathSeparator();
             WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
             _indexLockManager = new IndexLockManager(this);
-            _commitDataManager = new CommitDataManager(() => this);
             _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => this);
             _gitWindowsExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
             _gitWindowsCommandRunner = new GitCommandRunner(_gitWindowsExecutable, () => SystemEncoding);
@@ -2464,7 +2462,7 @@ namespace GitCommands
         {
             StagedStatus stagedStatus = GetStagedStatus(firstId, secondId, parentToSecond);
             IReadOnlyList<GitItemStatus> status = GetDiffFilesWithUntracked(firstId?.ToString(), secondId?.ToString(), stagedStatus, cancellationToken: cancellationToken);
-            GetSubmoduleStatus(status, firstId, secondId, cancellationToken);
+            GetSubmoduleDiffStatus(status, firstId, secondId, cancellationToken);
             return status;
         }
 
@@ -2666,11 +2664,11 @@ namespace GitCommands
             UntrackedFilesMode untrackedFiles, CancellationToken cancellationToken)
         {
             IReadOnlyList<GitItemStatus> status = GetAllChangedFiles(excludeIgnoredFiles, excludeAssumeUnchangedFiles, excludeSkipWorktreeFiles, untrackedFiles, cancellationToken);
-            GetCurrentSubmoduleStatus(status);
+            GetSubmoduleCurrentStatus(status);
             return status;
         }
 
-        private void GetCurrentSubmoduleStatus(IReadOnlyList<GitItemStatus> status)
+        private void GetSubmoduleCurrentStatus(IReadOnlyList<GitItemStatus> status)
         {
             foreach (GitItemStatus item in status)
             {
@@ -2679,23 +2677,22 @@ namespace GitCommands
                     GitItemStatus localItem = item;
                     localItem.SetSubmoduleStatus(ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                     {
-                        return await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index)
+                        return await SubmoduleHelpers.GetSubmoduleCurrentChangesAsync(this, localItem.Name, localItem.OldName, localItem.Staged == StagedStatus.Index)
                             .ConfigureAwait(false);
                     }));
                 }
             }
         }
 
-        private void GetSubmoduleStatus(IReadOnlyList<GitItemStatus> status, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
+        private void GetSubmoduleDiffStatus(IReadOnlyList<GitItemStatus> status, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
         {
             foreach (GitItemStatus item in status.Where(i => i.IsSubmodule))
             {
                 item.SetSubmoduleStatus(
-                    ThreadHelper.JoinableTaskFactory.RunAsync(
-                        async () =>
+                    ThreadHelper.JoinableTaskFactory.RunAsync(async () =>
                         {
                             await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-                            return await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(this, item.Name, item.OldName, firstId, secondId, cancellationToken)
+                            return await SubmoduleHelpers.GetSubmoduleDiffChangesAsync(this, item.Name, item.OldName, firstId, secondId, cancellationToken)
                                 .ConfigureAwait(false);
                         }));
             }
@@ -2746,7 +2743,7 @@ namespace GitCommands
         public IReadOnlyList<GitItemStatus> GetIndexFilesWithSubmodulesStatus()
         {
             IReadOnlyList<GitItemStatus> status = GetIndexFiles();
-            GetCurrentSubmoduleStatus(status);
+            GetSubmoduleCurrentStatus(status);
             return status;
         }
 
@@ -3644,85 +3641,8 @@ namespace GitCommands
 
         public SubmoduleStatus CheckSubmoduleStatus(ObjectId? commit, ObjectId? oldCommit, CommitData? data, CommitData? oldData, bool loadData)
         {
-            // Submodule directory must exist to run commands, just guess
-            if (oldCommit is null)
-            {
-                return SubmoduleStatus.NewSubmodule;
-            }
-
-            if (commit is null)
-            {
-                return SubmoduleStatus.RemovedSubmodule;
-            }
-
-            if (!IsValidGitWorkingDir())
-            {
-                return SubmoduleStatus.Unknown;
-            }
-
-            if (commit == oldCommit)
-            {
-                return SubmoduleStatus.SameTime;
-            }
-
-            // From this on, the status is by default Modified
-
-            // Submodule directory must exist to run commands
-            if (!IsValidGitWorkingDir())
-            {
-                return SubmoduleStatus.Unknown;
-            }
-
-            ObjectId? baseOid = GetMergeBase(commit, oldCommit);
-            if (baseOid is null)
-            {
-                return SubmoduleStatus.Unknown;
-            }
-
-            ObjectId baseCommit = baseOid;
-            if (baseCommit == oldCommit)
-            {
-                return SubmoduleStatus.FastForward;
-            }
-            else if (baseCommit == commit)
-            {
-                return SubmoduleStatus.Rewind;
-            }
-
-            if (loadData)
-            {
-                oldData = _commitDataManager.GetCommitData(oldCommit.ToString());
-            }
-
-            if (oldData is null)
-            {
-                return SubmoduleStatus.NewSubmodule;
-            }
-
-            if (loadData)
-            {
-                data = _commitDataManager.GetCommitData(commit.ToString());
-            }
-
-            if (data is null)
-            {
-                return SubmoduleStatus.Unknown;
-            }
-
-            if (data.CommitDate > oldData.CommitDate)
-            {
-                return SubmoduleStatus.NewerTime;
-            }
-            else if (data.CommitDate < oldData.CommitDate)
-            {
-                return SubmoduleStatus.OlderTime;
-            }
-            else if (data.CommitDate == oldData.CommitDate)
-            {
-                return SubmoduleStatus.SameTime;
-            }
-
-            return SubmoduleStatus.Unknown;
+            // TODO remove from IGitModule
+            throw new NotImplementedException("CheckSubmoduleStatus is not implemented in GitModule. Use SubmoduleHelper instead.");
         }
 
         public bool CheckBranchFormat(string branchName)
