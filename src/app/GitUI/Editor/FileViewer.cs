@@ -701,7 +701,11 @@ namespace GitUI.Editor
             Action? openWithDifftool,
             CancellationToken cancellationToken = default)
         {
-            if (file.TreeGuid is null)
+            // for worktree the TreeGuid is only valid if the file is not dirty, always get from file system
+            bool useTreeId = objectId != ObjectId.WorkTreeId;
+
+            // for index the treeid is not immutable and must be evaluated
+            if (useTreeId && (file.TreeGuid is null || objectId == ObjectId.IndexId))
             {
                 cancellationToken.ThrowIfCancellationRequested();
                 IObjectGitItem[] items = Module.GetTree(objectId, full: true, file.Name, cancellationToken).ToArray();
@@ -715,7 +719,7 @@ namespace GitUI.Editor
                 }
             }
 
-            if (file.TreeGuid is null)
+            if (!useTreeId || file.TreeGuid is null)
             {
                 string? fullPath = _fullPathResolver.Resolve(file.Name);
                 if (string.IsNullOrEmpty(fullPath))
