@@ -1,7 +1,7 @@
 using System.Collections;
 using System.IO.Abstractions;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;

@@ -1,5 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.Graph;
