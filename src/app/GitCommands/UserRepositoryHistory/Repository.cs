@@ -38,6 +38,22 @@ namespace GitCommands.UserRepositoryHistory
             set => _path = value;
         }
 
+        public string GetParentPath()
+        {
+            if (Path.StartsWith(@"\\") || !Directory.Exists(Path))
+            {
+                return string.Empty;
+            }
+
+            DirectoryInfo dir = new(Path);
+            if (dir.Parent is null)
+            {
+                return Path;
+            }
+
+            return dir.Parent.FullName;
+        }
+
         public override string ToString()
         {
             return Path + " (" + Anchor + ")";
