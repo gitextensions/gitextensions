@@ -2887,7 +2887,8 @@ namespace GitCommands
 
             const string prefix = "ref: refs/heads/";
 
-            if (!headFileContents.StartsWith(prefix))
+            // the head file contains ".invalid" if the repo uses the reftable backend
+            if (!headFileContents.StartsWith(prefix) || headFileContents.StartsWith($"{prefix}.invalid"))
             {
                 return string.Empty;
             }
@@ -2911,8 +2912,10 @@ namespace GitCommands
             };
             ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
 
+            const string prefix = "refs/heads/";
+
             return result.ExitedSuccessfully
-                ? result.StandardOutput
+                ? result.StandardOutput[prefix.Length..].TrimEnd()
                 : emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
         }
 

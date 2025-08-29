@@ -26,6 +26,12 @@ internal sealed class RepositoryCurrentBranchNameProvider : IRepositoryCurrentBr
         }
 
         string branchName = GitModule.GetSelectedBranchFast(repositoryPath);
+
+        if (string.IsNullOrWhiteSpace(branchName))
+        {
+            branchName = new GitModule(repositoryPath).GetSelectedBranch();
+        }
+
         if (string.IsNullOrWhiteSpace(branchName) || branchName == DetachedHeadParser.DetachedBranch)
         {
             branchName = $"({TranslatedStrings.NoBranch})";

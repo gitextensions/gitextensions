@@ -52,7 +52,14 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
                 return string.Empty;
             }
 
-            return GitModule.GetSelectedBranchFast(path);
+            string branchName = GitModule.GetSelectedBranchFast(path);
+
+            if (string.IsNullOrWhiteSpace(branchName))
+            {
+                branchName = new GitModule(path).GetSelectedBranch();
+            }
+
+            return branchName;
         }
 
         public bool IsValidGitWorkingDir(string path)
