@@ -182,7 +182,7 @@ namespace GitExtensions.Plugins.GitStatistics
                 void LoadLinesOfCodeForModule(IGitModule module)
                 {
                     List<string> filesToCheck = module
-                        .GetTree(module.RevParse("HEAD"), full: true)
+                        .GetTree(commitId: null, full: true)
                         .Select(file => Path.Combine(module.WorkingDir, file.Name))
                         .ToList();
 
