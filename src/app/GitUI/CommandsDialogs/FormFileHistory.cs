@@ -349,9 +349,10 @@ namespace GitUI.CommandsDialogs
                 GitItemStatus file = new(name: fileName)
                 {
                     IsTracked = true,
-                    IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
-                _ = View.ViewGitItemAsync(file, revision.ObjectId);
+                CancellationToken cancellationToken = _viewChangesSequence.Next();
+                View.TryUpdateTreeId(file, revision.ObjectId, cancellationToken);
+                _ = View.ViewGitItemAsync(file, revision.ObjectId, cancellationToken: cancellationToken);
             }
             else if (tabControl1.SelectedTab == DiffTab)
             {
@@ -359,13 +360,13 @@ namespace GitUI.CommandsDialogs
                 GitItemStatus file = new(name: fileName)
                 {
                     IsTracked = true,
-                    IsSubmodule = GitModule.IsValidGitWorkingDir(_fullPathResolver.Resolve(fileName))
                 };
+                CancellationToken cancellationToken = _viewChangesSequence.Next();
+                View.TryUpdateTreeId(file, revision.ObjectId, cancellationToken);
                 FileStatusItem item = new(firstRev: selectedRevisions.Count > 1 ? selectedRevisions[^1] : null,
                     secondRev: selectedRevisions.Count > 0 ? selectedRevisions[0] : null,
                     file);
-                _ = Diff.ViewChangesAsync(item, defaultText: TranslatedStrings.NoChanges,
-                    cancellationToken: _viewChangesSequence.Next());
+                _ = Diff.ViewChangesAsync(item, defaultText: TranslatedStrings.NoChanges, cancellationToken: cancellationToken);
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)
             {
