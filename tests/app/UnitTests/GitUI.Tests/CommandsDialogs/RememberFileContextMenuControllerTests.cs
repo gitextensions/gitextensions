@@ -167,7 +167,7 @@ namespace GitUITests.CommandsDialogs
                 firstRev: rev,
                 secondRev: index,
                 item: new GitItemStatus(name) { TreeGuid = ObjectId.Random() });
-            _rememberFileContextMenuController.GetGitCommit(null, item, true).Should().Be(item.Item.TreeGuid?.ToString());
+            _rememberFileContextMenuController.GetGitCommit(GetFileBlobHash, item, true).Should().Be(ObjectId.IndexId.ToString());
         }
 
         [Test]

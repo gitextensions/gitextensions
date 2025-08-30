@@ -1692,7 +1692,7 @@ namespace GitUI.Editor
             {
                 Validates.NotNull(FilePreamble);
 
-                string? treeGuid = TryUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId)?.ToString();
+                string? itemBlobGuid = TryUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId)?.ToString();
                 patch = PatchManager.GetSelectedLinesAsNewPatch(
                     Module,
                     _viewItem.Item.Name,
@@ -1702,7 +1702,7 @@ namespace GitUI.Editor
                     Encoding,
                     reset: false,
                     FilePreamble,
-                    treeGuid);
+                    itemBlobGuid);
             }
             else
             {
@@ -1755,7 +1755,7 @@ namespace GitUI.Editor
             {
                 Validates.NotNull(FilePreamble);
 
-                string? treeGuid = TryUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId)?.ToString();
+                string? itemBlobGuid = TryUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId)?.ToString();
                 patch = PatchManager.GetSelectedLinesAsNewPatch(
                     Module,
                     _viewItem.Item.Name,
@@ -1765,7 +1765,7 @@ namespace GitUI.Editor
                     Encoding,
                     reset: true,
                     FilePreamble,
-                    treeGuid);
+                    itemBlobGuid);
             }
             else if (currentItemStaged)
             {
@@ -1829,7 +1829,7 @@ namespace GitUI.Editor
             {
                 Validates.NotNull(FilePreamble);
 
-                string? treeGuid = reverse ? TryUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId)?.ToString() : null;
+                string? itemBlobGuid = reverse ? TryUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId)?.ToString() : null;
                 patch = PatchManager.GetSelectedLinesAsNewPatch(
                     Module,
                     _viewItem.Item.Name,
@@ -1839,7 +1839,7 @@ namespace GitUI.Editor
                     Encoding,
                     reset: reverse,
                     FilePreamble,
-                    treeGuid);
+                    itemBlobGuid);
             }
             else if (!reverse)
             {
