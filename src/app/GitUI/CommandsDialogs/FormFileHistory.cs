@@ -340,8 +340,7 @@ namespace GitUI.CommandsDialogs
 
             if (tabControl1.SelectedTab == BlameTab)
             {
-                ThreadHelper.FileAndForget(() => Blame.LoadBlameAsync(
-                    revision, children, fileName, revisionGridInfo: RevisionGrid, revisionGridFileUpdate: this, controlToMask: BlameTab, Diff.Encoding, force: force, cancellationTokenSequence: _viewChangesSequence));
+                _ = Blame.LoadBlameAsync(revision, children, fileName, revisionGridInfo: RevisionGrid, revisionGridFileUpdate: this, controlToMask: BlameTab, Diff.Encoding, force: force, cancellationTokenSequence: _viewChangesSequence);
             }
             else if (tabControl1.SelectedTab == ViewTab)
             {
@@ -353,7 +352,7 @@ namespace GitUI.CommandsDialogs
                 };
                 CancellationToken cancellationToken = _viewChangesSequence.Next();
                 View.TryUpdateTreeId(file, revision.ObjectId, cancellationToken);
-                ThreadHelper.FileAndForget(() => View.ViewGitItemAsync(file, revision.ObjectId, cancellationToken: cancellationToken));
+                _ = View.ViewGitItemAsync(file, revision.ObjectId, cancellationToken: cancellationToken);
             }
             else if (tabControl1.SelectedTab == DiffTab)
             {
@@ -367,7 +366,7 @@ namespace GitUI.CommandsDialogs
                 FileStatusItem item = new(firstRev: selectedRevisions.Count > 1 ? selectedRevisions[^1] : null,
                     secondRev: selectedRevisions.Count > 0 ? selectedRevisions[0] : null,
                     file);
-                ThreadHelper.FileAndForget(() => Diff.ViewChangesAsync(item, defaultText: TranslatedStrings.NoChanges, cancellationToken: cancellationToken));
+                _ = Diff.ViewChangesAsync(item, defaultText: TranslatedStrings.NoChanges, cancellationToken: cancellationToken);
             }
             else if (tabControl1.SelectedTab == CommitInfoTabPage)
             {
