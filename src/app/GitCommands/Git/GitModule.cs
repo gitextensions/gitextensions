@@ -2851,7 +2851,7 @@ namespace GitCommands
         }
 
         /// <summary>Dirty but fast. This sometimes fails.</summary>
-        public static string GetSelectedBranchFast(string? repositoryPath, bool emptyIfDetached = false)
+        internal static string GetSelectedBranchFast(string? repositoryPath, bool emptyIfDetached = false)
         {
             if (string.IsNullOrEmpty(repositoryPath))
             {
