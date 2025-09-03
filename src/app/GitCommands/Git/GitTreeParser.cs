@@ -8,6 +8,14 @@ namespace GitCommands.Git
     {
         IEnumerable<GitItem> Parse(string? tree);
 
+        /// <summary>
+        /// Parse ls-files --stage
+        /// Should only be used with Git lessthan 2.38.0 without --format support
+        /// </summary>
+        /// <param name="tree">String to parse</param>
+        /// <returns>GitItems</returns>
+        IEnumerable<GitItem> ParseLsFiles(string? tree);
+
         GitItem? ParseSingle(string? rawItem);
 
         /// <summary>
@@ -23,6 +31,8 @@ namespace GitCommands.Git
         // Match GitTreeFormat
         [GeneratedRegex(@"^(?<mode>\d{6}) (?<type>(blob|tree|commit)+) (?<objectid>[0-9a-f]{40})\t(?<name>.+)$", RegexOptions.ExplicitCapture)]
         private static partial Regex TreeLineRegex();
+        [GeneratedRegex(@"^(?<mode>\d{6}) (?<objectid>[0-9a-f]{40}) (?<stage>[0-9])\t(?<name>.+)$", RegexOptions.ExplicitCapture)]
+        private static partial Regex LsFilesLineRegex();
 
         public string GitTreeFormat { get; } = "%(objectmode) %(objecttype) %(objectname)%x09%(path)";
 
@@ -66,6 +76,47 @@ namespace GitCommands.Git
             string name = match.Groups["name"].Value;
 
             Enum.TryParse(typeName, ignoreCase: true, out GitObjectType type);
+
+            return new GitItem(mode, type, objectId, name);
+        }
+
+        public IEnumerable<GitItem> ParseLsFiles(string? tree)
+        {
+            if (string.IsNullOrWhiteSpace(tree))
+            {
+                return [];
+            }
+
+            // $ git ls-files --stage | grep exter
+            // 100644 07c4d877fa885b9ef1ea2c343fe237beaf7a087c 0       externals/Directory.Build.props
+            // 100644 532e4f49ecac926e5ff3881ec9cd46a9d48b5ddd 0       externals/Directory.Build.targets
+            // 160000 1b0386aea1acdd2ba258977bd79e40a0a7b95665 0       externals/Git.hub
+            // 160000 be6183dc8f29079ce677b6834c56b05752828f23 0       externals/ICSharpCode.TextEditor
+
+            return tree.LazySplit('\0').Select(ParseSingleLsFiles).WhereNotNull();
+        }
+
+        public GitItem? ParseSingleLsFiles(string? rawItem)
+        {
+            if (rawItem is null)
+            {
+                return null;
+            }
+
+            Match match = LsFilesLineRegex().Match(rawItem);
+
+            if (!match.Success)
+            {
+                return null;
+            }
+
+            // ignore stage
+            int mode = int.Parse(match.Groups["mode"].Value);
+            ObjectId objectId = ObjectId.Parse(rawItem, match.Groups["objectid"]);
+            string name = match.Groups["name"].Value;
+
+            // GitObjectType.Tree is not listed here
+            GitObjectType type = mode == 160000 ? GitObjectType.Commit : GitObjectType.Blob;
 
             return new GitItem(mode, type, objectId, name);
         }
