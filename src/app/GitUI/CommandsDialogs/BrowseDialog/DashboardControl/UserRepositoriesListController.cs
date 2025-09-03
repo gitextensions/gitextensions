@@ -1,6 +1,5 @@
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
-using GitExtensions.Extensibility.Git;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 {
@@ -18,18 +17,16 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
     {
         private readonly ILocalRepositoryManager _localRepositoryManager;
         private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
-        private readonly Func<string, IGitModule> _getModule;
 
         // Holds the raw, unfiltered list of repositories.
         // This is done to allow fast filtering of all known repos.
         private IList<Repository>? _allRecentRepositories;
         private IList<Repository>? _allFavoriteRepositories;
 
-        public UserRepositoriesListController(ILocalRepositoryManager localRepositoryManager, IInvalidRepositoryRemover invalidRepositoryRemover, Func<string, IGitModule> getModule)
+        public UserRepositoriesListController(ILocalRepositoryManager localRepositoryManager, IInvalidRepositoryRemover invalidRepositoryRemover)
         {
             _localRepositoryManager = localRepositoryManager;
             _invalidRepositoryRemover = invalidRepositoryRemover;
-            _getModule = getModule;
         }
 
         public async Task AssignCategoryAsync(Repository repository, string? category)
@@ -50,16 +47,12 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
 
         public string GetCurrentBranchName(string path)
         {
-            IGitModule module = _getModule(path);
-
             if (!AppSettings.ShowRepoCurrentBranch || GitModule.IsBareRepository(path))
             {
                 return string.Empty;
             }
 
-            string branchName = module.GetSelectedBranch();
-
-            return branchName;
+            return GitModule.GetSelectedBranchFast(path);
         }
 
         public bool IsValidGitWorkingDir(string path)
