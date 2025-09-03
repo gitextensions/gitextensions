@@ -2939,12 +2939,16 @@ namespace GitCommands
                     fileStream.Seek(28, SeekOrigin.Current);
                 }
 
-                // Read the branch name's length
                 int suffixLengthAndValueType = ReadVarInt(fileStream);
+
+                // Skip over the suffix and the update_index_delta since they are not relevant for reading the selected branch name
                 int suffixLength = suffixLengthAndValueType >> 3;
-                int valueType = suffixLengthAndValueType & 0x7;
                 fileStream.Seek(suffixLength, SeekOrigin.Current);
                 int updateIndexDelta = ReadVarInt(fileStream);
+
+                // Value type describes the checked out reference/commit
+                // We only care about type 3 (symbolic reference), which indicates a checked out branch
+                int valueType = suffixLengthAndValueType & 0x7;
                 if (valueType == 3)
                 {
                     int branchNameLength = ReadVarInt(fileStream);
@@ -2955,11 +2959,10 @@ namespace GitCommands
 
                     return Encoding.UTF8.GetString(branchNameBuffer.ToArray());
                 }
-                else
-                {
-                    // If value type is not 3 (symbolic reference), we are detached
-                    return string.Empty;
-                }
+
+                // Otherwise, we assume detached state and do not care about the actual value
+                // (For example, the actual value would be the commit id when type is 1)
+                return string.Empty;
             }
             catch
             {
