@@ -872,10 +872,11 @@ namespace GitCommands
         public (int? First, int? Second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId)
         {
             string second = secondId.IsArtificial ? "HEAD" : secondId.ToString();
-            return GetRevListLeftRightCount(firstId, second);
+            bool cache = !firstId.IsArtificial && !secondId.IsArtificial;
+            return GetRevListLeftRightCount(firstId, second, cache, throwOnErrorExit: false);
         }
 
-        private (int? First, int? Second) GetRevListLeftRightCount(ObjectId firstId, string secondRef)
+        private (int? left, int? right) GetRevListLeftRightCount(ObjectId firstId, string secondRef, bool cache, bool throwOnErrorExit = true)
         {
             string firstRef = firstId.IsArtificial ? "HEAD" : firstId.ToString();
             if (firstRef == secondRef)
@@ -889,9 +890,15 @@ namespace GitCommands
                 "--count",
                 "--left-right"
             };
-            string output = _gitExecutable.GetOutput(args, cache: GitCommandCache);
 
-            string[] counts = output.Split(Delimiters.Tab);
+            ExecutionResult result = _gitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: throwOnErrorExit);
+            if (!result.ExitedSuccessfully)
+            {
+                // this is likely one of the commits in a submodule no longer existing
+                return (null, null);
+            }
+
+            string[] counts = result.StandardOutput.Split(Delimiters.Tab);
             if (counts.Length == 2 && int.TryParse(counts[0], out int first) && int.TryParse(counts[1], out int second))
             {
                 return (first, second);
@@ -902,7 +909,8 @@ namespace GitCommands
 
         public string GetCommitCountString(ObjectId fromId, string to)
         {
-            (int? added, int? removed) = GetRevListLeftRightCount(fromId, to);
+            bool cache = !fromId.IsArtificial && ObjectId.TryParse(to, out ObjectId toId) && !toId.IsArtificial;
+            (int? added, int? removed) = GetRevListLeftRightCount(fromId, to, cache);
 
             if (removed is null || added is null)
             {
