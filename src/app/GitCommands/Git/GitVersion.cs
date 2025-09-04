@@ -20,7 +20,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     /// The recommended Git version (normally latest official before a GE release).
     /// This and later versions are green in the settings check.
     /// </summary>
-    public static readonly GitVersion LastRecommendedVersion = new("2.46.0");
+    public static readonly GitVersion LastRecommendedVersion = new("2.51.0");
 
     /// <summary>
     /// The oldest version with reasonable reliable support in GE.
@@ -148,6 +148,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     public bool SupportRebaseMerges => this >= _v2_19_0;
     public bool SupportStashStaged => this >= _v2_35_0;
     public bool SupportUpdateRefs => this >= _v2_38_0;
+    public bool SupportLsFilesFormat => this >= _v2_38_0;
 
     private static int Compare(GitVersion? left, GitVersion? right)
     {
