@@ -2887,132 +2887,19 @@ namespace GitCommands
 
             const string prefix = "ref: refs/heads/";
 
-            if (headFileContents.StartsWith($"{prefix}.invalid"))
-            {
-                // we need to find the git directory in case we are in a worktree
-                string gitDir = GetGitDirectory(repositoryPath);
-
-                string fullRefName = ParseReftableFileForBranchName(gitDir);
-                if (!string.IsNullOrWhiteSpace(fullRefName))
-                {
-                    string simpleBranchName = fullRefName["refs/heads/".Length..].TrimEnd();
-                    return simpleBranchName;
-                }
-
-                return emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
-            }
-
-            if (headFileContents.StartsWith(prefix))
-            {
-                    return headFileContents[prefix.Length..].TrimEnd();
-            }
-
-            return emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
-        }
-
-        /// <summary>
-        /// Parse the git reftable files to find the current branch name.
-        /// </summary>
-        /// <param name="gitDir">The path to the .git directory.</param>
-        /// <remarks>See: https://git-scm.com/docs/reftable#_reftable</remarks>
-        /// <returns>Returns the simple branch name.</returns>
-        private static string ParseReftableFileForBranchName(string gitDir)
-        {
-            try
-            {
-                // Read the tables.list file first to get the first reftable's filename
-                string[] reftableFileNames = File.ReadAllLines(Path.Combine(gitDir, "reftable", "tables.list"));
-                string firstReftableFile = Path.Combine(gitDir, "reftable", reftableFileNames[0]);
-
-                // Read the reftable's header version to know how long the header is
-                using var fileStream = new FileStream(firstReftableFile, FileMode.Open, FileAccess.Read);
-                fileStream.Seek(4, SeekOrigin.Begin);
-                int headerVersion = fileStream.ReadByte();
-
-                // Skip irrelevant header bytes
-                if (headerVersion == 1)
-                {
-                    fileStream.Seek(24, SeekOrigin.Current);
-                }
-                else
-                {
-                    fileStream.Seek(28, SeekOrigin.Current);
-                }
-
-                int suffixLengthAndValueType = ReadVarInt(fileStream);
-
-                // Skip over the suffix and the update_index_delta since they are not relevant for reading the selected branch name
-                int suffixLength = suffixLengthAndValueType >> 3;
-                fileStream.Seek(suffixLength, SeekOrigin.Current);
-                int updateIndexDelta = ReadVarInt(fileStream);
-
-                // Value type describes the checked out reference/commit
-                // We only care about type 3 (symbolic reference), which indicates a checked out branch
-                int valueType = suffixLengthAndValueType & 0x7;
-                if (valueType == 3)
-                {
-                    int branchNameLength = ReadVarInt(fileStream);
-
-                    // Read exactly the amount of characters specified by the previously read branch name length
-                    byte[] branchNameBuffer = new byte[branchNameLength];
-                    fileStream.ReadExactly(branchNameBuffer);
-
-                    return Encoding.UTF8.GetString(branchNameBuffer.ToArray());
-                }
-
-                // Otherwise, we assume detached state and do not care about the actual value
-                // (For example, the actual value would be the commit id when type is 1)
-                return string.Empty;
-            }
-            catch
+            if (!headFileContents.StartsWith(prefix))
             {
                 return string.Empty;
             }
-        }
 
-        /// <summary>
-        /// Reads a varint value from a fileStream as defined in Git's reftable documentation
-        /// </summary>
-        /// <param name="stream">An already opened stream positioned at the desired location to read a varint from.
-        /// The function advances the stream's position by the length of the varint.</param>
-        /// <remarks>See https://git-scm.com/docs/reftable#_reftable</remarks>
-        /// <returns>Returns the varint value at the current </returns>
-        private static int ReadVarInt(Stream stream)
-        {
-            /*
-             Decoder algorithm defined by git's reftable documentation:
-
-             val = buf[ptr] & 0x7f
-             while (buf[ptr] & 0x80) {
-               ptr++
-               val = ((val + 1) << 7) | (buf[ptr] & 0x7f)
-              }
-             */
-
-            int buffer = stream.ReadByte();
-            int varInt = buffer & 0x7f;
-            while ((buffer & 0x80) != 0)
-            {
-                buffer = stream.ReadByte();
-                if (buffer == -1)
-                {
-                    // stop reading when we are at the end of a stream
-                    buffer = 0;
-                }
-                else
-                {
-                    varInt = ((varInt + 1) << 7) | (buffer & 0x7f);
-                }
-            }
-
-            return varInt;
+            return headFileContents[prefix.Length..].TrimEnd();
         }
 
         public string GetSelectedBranch(bool emptyIfDetached = false)
         {
             string head = GetSelectedBranchFast(WorkingDir, emptyIfDetached);
 
-            if (!string.IsNullOrEmpty(head))
+            if (!string.IsNullOrEmpty(head) && !head.Equals(".invalid"))
             {
                 return head;
             }
