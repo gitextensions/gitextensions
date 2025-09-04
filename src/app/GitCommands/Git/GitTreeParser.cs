@@ -28,10 +28,25 @@ namespace GitCommands.Git
 
     public sealed partial class GitTreeParser : IGitTreeParser
     {
-        // Match GitTreeFormat
+        // $ git ls-tree HEAD
+        // 100644 blob ff17eaee6b8952e5736637424bc4348a69c40227    .editorconfig
+        // 100644 blob bf29d31ff93be092ce746849e8db0984d4a83231    .gitattributes
+        // 040000 tree 7469e02057cf5e5eb86f1edc6061d6f816e20ff7    .github
+        // 100644 blob 770e60816f1d6338c15af91e3ce5b7ccd38b0e3f    .gitignore
+        // 040000 tree c8f09c5438fca1477e79814c99ffcec58e06a83c    GitExtensions
+        // 160000 commit 6868f2b4a39fc894c44711c8903407da596acbf5  GitExtensionsDoc
+        // 100644 blob 7e4eb9dc6a1531a6ee37d8efa6bf570e4bf61146    README.md
+        // 100644 blob 5b0965cd097b8c48b66dd456337852640fa429c8    stylecop.json
         [GeneratedRegex(@"^(?<mode>\d{6}) (?<type>(blob|tree|commit)+) (?<objectid>[0-9a-f]{40})\t(?<name>.+)$", RegexOptions.ExplicitCapture)]
         private static partial Regex TreeLineRegex();
-        [GeneratedRegex(@"^(?<mode>\d{6}) (?<objectid>[0-9a-f]{40}) (?<stage>[0-9])\t(?<name>.+)$", RegexOptions.ExplicitCapture)]
+
+        // $ git ls-files --stage
+        // 100644 07c4d877fa885b9ef1ea2c343fe237beaf7a087c 0       externals/Directory.Build.props
+        // 100644 532e4f49ecac926e5ff3881ec9cd46a9d48b5ddd 0       externals/Directory.Build.targets
+        // 160000 1b0386aea1acdd2ba258977bd79e40a0a7b95665 0       externals/Git.hub
+        // 160000 be6183dc8f29079ce677b6834c56b05752828f23 0       externals/ICSharpCode.TextEditor
+        // ignore the stage part
+        [GeneratedRegex(@"^(?<mode>\d{6}) (?<objectid>[0-9a-f]{40}) (?:[0-9])\t(?<name>.+)$", RegexOptions.ExplicitCapture)]
         private static partial Regex LsFilesLineRegex();
 
         public string GitTreeFormat { get; } = "%(objectmode) %(objecttype) %(objectname)%x09%(path)";
@@ -42,16 +57,6 @@ namespace GitCommands.Git
             {
                 return [];
             }
-
-            // $ git ls-tree HEAD
-            // 100644 blob ff17eaee6b8952e5736637424bc4348a69c40227    .editorconfig
-            // 100644 blob bf29d31ff93be092ce746849e8db0984d4a83231    .gitattributes
-            // 040000 tree 7469e02057cf5e5eb86f1edc6061d6f816e20ff7    .github
-            // 100644 blob 770e60816f1d6338c15af91e3ce5b7ccd38b0e3f    .gitignore
-            // 040000 tree c8f09c5438fca1477e79814c99ffcec58e06a83c    GitExtensions
-            // 160000 commit 6868f2b4a39fc894c44711c8903407da596acbf5  GitExtensionsDoc
-            // 100644 blob 7e4eb9dc6a1531a6ee37d8efa6bf570e4bf61146    README.md
-            // 100644 blob 5b0965cd097b8c48b66dd456337852640fa429c8    stylecop.json
 
             return tree.LazySplit('\0').Select(ParseSingle).WhereNotNull();
         }
@@ -87,16 +92,10 @@ namespace GitCommands.Git
                 return [];
             }
 
-            // $ git ls-files --stage | grep exter
-            // 100644 07c4d877fa885b9ef1ea2c343fe237beaf7a087c 0       externals/Directory.Build.props
-            // 100644 532e4f49ecac926e5ff3881ec9cd46a9d48b5ddd 0       externals/Directory.Build.targets
-            // 160000 1b0386aea1acdd2ba258977bd79e40a0a7b95665 0       externals/Git.hub
-            // 160000 be6183dc8f29079ce677b6834c56b05752828f23 0       externals/ICSharpCode.TextEditor
-
             return tree.LazySplit('\0').Select(ParseSingleLsFiles).WhereNotNull();
         }
 
-        public GitItem? ParseSingleLsFiles(string? rawItem)
+        private GitItem? ParseSingleLsFiles(string? rawItem)
         {
             if (rawItem is null)
             {
@@ -110,13 +109,15 @@ namespace GitCommands.Git
                 return null;
             }
 
-            // ignore stage
             int mode = int.Parse(match.Groups["mode"].Value);
             ObjectId objectId = ObjectId.Parse(rawItem, match.Groups["objectid"]);
             string name = match.Groups["name"].Value;
 
-            // GitObjectType.Tree is not listed here
-            GitObjectType type = mode == 160000 ? GitObjectType.Commit : GitObjectType.Blob;
+            GitObjectType type = mode == 160000
+                ? GitObjectType.Commit
+                : mode == 040000
+                    ? GitObjectType.Tree
+                    : GitObjectType.Blob;
 
             return new GitItem(mode, type, objectId, name);
         }

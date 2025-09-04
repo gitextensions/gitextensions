@@ -99,10 +99,10 @@ namespace GitCommandsTests.Git
         {
             List<GitItem> items = _parser.ParseLsFiles(GetLsFilesOutput()).ToList();
 
-            items.Should().HaveCount(5);
+            items.Should().HaveCount(6);
 
             items[1].Guid.Should().Be("532e4f49ecac926e5ff3881ec9cd46a9d48b5ddd");
-            items[1].Mode.Should().Be(100644);
+            items[1].Mode.Should().Be(100755);
             items[1].Name.Should().Be("externals/Directory.Build.targets");
             items[1].ObjectType.Should().Be(GitObjectType.Blob);
 
@@ -110,16 +110,23 @@ namespace GitCommandsTests.Git
             items[2].Mode.Should().Be(160000);
             items[2].Name.Should().Be("externals/Git.hub");
             items[2].ObjectType.Should().Be(GitObjectType.Commit);
+
+            items[5].Guid.Should().Be("0c7cce8981b980d03431f65b9b54c680a467fa2e");
+            items[5].Mode.Should().Be(040000);
+            items[5].Name.Should().Be("externals");
+            items[5].ObjectType.Should().Be(GitObjectType.Tree);
         }
 
         private static string GetLsFilesOutput()
         {
             return string.Concat(
                 "100644 07c4d877fa885b9ef1ea2c343fe237beaf7a087c 0\texternals/Directory.Build.props", "\0",
-                "100644 532e4f49ecac926e5ff3881ec9cd46a9d48b5ddd 0\texternals/Directory.Build.targets", "\0",
+                "100755 532e4f49ecac926e5ff3881ec9cd46a9d48b5ddd 0\texternals/Directory.Build.targets", "\0",
                 "160000 1b0386aea1acdd2ba258977bd79e40a0a7b95665 0\texternals/Git.hub", "\0",
-                "160000 be6183dc8f29079ce677b6834c56b05752828f23 0\texternals/ICSharpCode.TextEditor", "\0",
-                "100644 b5400269ebd000ab4b8f44e4530ec3edfe104f8c 0\texternals/NetSpell.SpellChecker/Dictionary/Affix/AffixEntry.cs");
+                "120000 be6183dc8f29079ce677b6834c56b05752828f23 0\texternals/ICSharpCode.TextEditor", "\0",
+                "100644 b5400269ebd000ab4b8f44e4530ec3edfe104f8c 0\texternals/NetSpell.SpellChecker/Dictionary/Affix/AffixEntry.cs", "\0",
+                "040000 0c7cce8981b980d03431f65b9b54c680a467fa2e 0\texternals", "\0",
+                "040000 illegal-sha 0\texternals");
         }
     }
 }
