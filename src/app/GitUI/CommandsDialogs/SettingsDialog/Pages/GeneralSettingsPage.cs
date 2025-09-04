@@ -30,7 +30,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
-            string[] historicPaths = repositoryHistory.Select(GetParentPath())
+            string[] historicPaths = repositoryHistory.Select(x => x.GetParentPath())
                                                       .Where(x => !string.IsNullOrEmpty(x))
                                                       .Distinct(StringComparer.CurrentCultureIgnoreCase)
                                                       .ToArray();
@@ -127,25 +127,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.TelemetryEnabled = chkTelemetry.Checked;
 
             base.PageToSettings();
-        }
-
-        private static Func<Repository, string> GetParentPath()
-        {
-            return x =>
-            {
-                if (x.Path.StartsWith(@"\\") || !Directory.Exists(x.Path))
-                {
-                    return string.Empty;
-                }
-
-                DirectoryInfo dir = new(x.Path);
-                if (dir.Parent is null)
-                {
-                    return x.Path;
-                }
-
-                return dir.Parent.FullName;
-            };
         }
 
         private static CheckState ToCheckboxState(bool? booleanValue)
