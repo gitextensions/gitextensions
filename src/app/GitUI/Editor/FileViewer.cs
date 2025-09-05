@@ -772,19 +772,14 @@ namespace GitUI.Editor
             Validates.NotNull(fullPath);
             DebugHelpers.Assert(Path.IsPathFullyQualified(fullPath), "Path must be resolved and fully qualified");
 
-            // IsSubmodule may not be set if TreeGuid is not set
-            if (!isSubmodule && item?.Item.TreeGuid is null)
+            // If supplied 'externally' (like form editor) item is null and assume it is a file.
+            // If GE is invoked as git-config core.editor when rebasing,
+            // another Git command must not be called (will fail the rebase).
+            if (item is null)
             {
-                // set fields possibly not set from git-diff (etc); treeGuid and IsSubmodule
-                // (git-status does not report submodule, IsSubmodule is not set if not TreeGuid is)
-                // for Index, the blobId (treeGuid) is  mutable and must be refreshed
-                GitItemStatus gitItem = item?.Item ?? new GitItemStatus(fileName);
-                TryUpdateTreeId(gitItem, ObjectId.WorkTreeId, cancellationToken);
-                isSubmodule = gitItem.IsSubmodule;
-
                 if (!isSubmodule)
                 {
-                    if (fileName.EndsWith("/") || Directory.Exists(fullPath))
+                    if (fileName.EndsWith('/') || Directory.Exists(fullPath))
                     {
                         if (!GitModule.IsValidGitWorkingDir(fullPath))
                         {
@@ -793,11 +788,23 @@ namespace GitUI.Editor
 
                         isSubmodule = true;
                     }
-                    else if (!File.Exists(fullPath))
-                    {
-                        return ViewTextAsync(fileName, $"File {fullPath} does not exist", cancellationToken: cancellationToken);
-                    }
                 }
+            }
+
+            // IsSubmodule may not be set if TreeGuid is not set
+            else if (!isSubmodule && item.Item.TreeGuid is null)
+            {
+                // set fields possibly not set from git-diff (etc); treeGuid and IsSubmodule
+                // (git-status does not report submodule, IsSubmodule is not set if not TreeGuid is)
+                // for Index, the blobId (treeGuid) is  mutable and must be refreshed
+                GitItemStatus gitItem = item?.Item ?? new GitItemStatus(fileName);
+                TryUpdateTreeId(gitItem, ObjectId.WorkTreeId, cancellationToken);
+                isSubmodule = gitItem.IsSubmodule;
+            }
+
+            if (!isSubmodule && !File.Exists(fullPath))
+            {
+                return ViewTextAsync(fileName, $"File {fullPath} does not exist", cancellationToken: cancellationToken);
             }
 
             return ShowOrDeferAsync(
