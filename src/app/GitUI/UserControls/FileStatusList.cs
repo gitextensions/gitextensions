@@ -1995,6 +1995,19 @@ namespace GitUI
 
             string filterText = _NO_TRANSLATE_FilterComboBox.Text;
 
+            if (filterText.Length > Module.WorkingDir.Length)
+            {
+                string posixWorkingDir = PathUtil.ToPosixPath(Module.WorkingDir);
+                string posixFilterText = PathUtil.ToPosixPath(filterText);
+                if (posixFilterText.StartsWith(posixWorkingDir, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    filterText = posixFilterText.SubstringAfter(posixWorkingDir, StringComparison.InvariantCultureIgnoreCase);
+
+                    _NO_TRANSLATE_FilterComboBox.Text = filterText;
+                    _NO_TRANSLATE_FilterComboBox.SelectionStart = filterText.Length;
+                }
+            }
+
             // workaround for text getting selected if it matches the start of the combobox items
             if (_NO_TRANSLATE_FilterComboBox.SelectionLength == filterText.Length && _NO_TRANSLATE_FilterComboBox.SelectionStart == 0)
             {
