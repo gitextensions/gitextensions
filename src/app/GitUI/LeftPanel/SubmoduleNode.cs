@@ -5,6 +5,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
+using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
 namespace GitUI.LeftPanel
@@ -164,6 +165,7 @@ namespace GitUI.LeftPanel
             if (Info.Detailed?.RawStatus is not null)
             {
                 // Prefer submodule status, shows ahead/behind
+                await TaskScheduler.Default;
                 toolTip = LocalizationHelpers.ProcessSubmoduleStatus(
                     new GitModule(Info.Path),
                     Info.Detailed.RawStatus,
@@ -172,6 +174,7 @@ namespace GitUI.LeftPanel
             }
             else if (GitStatus is not null)
             {
+                await TaskScheduler.Default;
                 ArtificialCommitChangeCount changeCount = new();
                 changeCount.Update(GitStatus);
                 toolTip = changeCount.GetSummary();
