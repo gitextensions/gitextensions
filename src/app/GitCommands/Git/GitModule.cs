@@ -3236,7 +3236,7 @@ namespace GitCommands
 
             if (isArtificial && !GitVersion.SupportUpdateRefs)
             {
-                return _gitTreeParser.Parse(result.StandardOutput);
+                return _gitTreeParser.ParseLsFiles(result.StandardOutput);
             }
 
             return _gitTreeParser.Parse(result.StandardOutput);
