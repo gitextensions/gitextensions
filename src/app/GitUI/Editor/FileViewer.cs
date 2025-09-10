@@ -707,7 +707,7 @@ namespace GitUI.Editor
             // for WorkTree, only run the command if IsSubmodule may not be set.
             ObjectId? blobId = objectId == ObjectId.WorkTreeId && (file.IsSubmodule || file.TreeGuid is not null)
                 ? null
-                : TryUpdateTreeId(file, objectId, cancellationToken);
+                : GetUpdateTreeId(file, objectId, cancellationToken);
 
             return blobId is null
                 ? ViewFileAsync(file.Name, file.IsSubmodule, item, line, openWithDifftool, cancellationToken)
@@ -772,7 +772,7 @@ namespace GitUI.Editor
             Validates.NotNull(fullPath);
             DebugHelpers.Assert(Path.IsPathFullyQualified(fullPath), "Path must be resolved and fully qualified");
 
-            // Do not evaluate TryUpdateTreeId() to get isSubmodule if not set.
+            // Do not evaluate GetUpdateTreeId() to get isSubmodule if not set.
             // For ViewGitItemAsync() this is already attempted, for other calls (where item is null)
             // a file should be provided
             // Especially, if GE is invoked as git-config core.editor when rebasing,
@@ -1589,24 +1589,28 @@ namespace GitUI.Editor
         /// TreeId is irrelevant for worktree (if dirty), but this sets IsSubmodule.
         /// TODO: add to GitModule, similar to GetFileBlobHash
         /// </summary>
-        public ObjectId? TryUpdateTreeId(GitItemStatus file,
-            ObjectId? objectId,
+        /// <param fileName="file">The GitStatusItem to update.</param>
+        /// <param fileName="commitId">The commit to use..</param>
+        /// <param fileName="cancellationToken">The cancellation token.</param>
+        /// <returns>the current TreeId (normally blob id, could be commit id) to be used. For worktree null is always returned also if there is a treeid (that really applies to the index)</returns>
+        public ObjectId? GetUpdateTreeId(GitItemStatus file,
+            ObjectId? commitId,
             CancellationToken cancellationToken = default)
         {
-            if (file.TreeGuid is ObjectId treeId && objectId?.IsArtificial is false)
+            if (file.TreeGuid is ObjectId treeId && commitId?.IsArtificial is false)
             {
                 // current value is immutable (and IsSubmodule should have been set)
                 return file.TreeGuid;
             }
 
             cancellationToken.ThrowIfCancellationRequested();
-            IObjectGitItem[] items = Module.GetTree(objectId, full: true, file.Name, cancellationToken).ToArray();
+            IObjectGitItem[] items = Module.GetTree(commitId, full: true, file.Name, cancellationToken).ToArray();
             if (items.Length == 1)
             {
                 IObjectGitItem gitItem = items[0];
                 file.IsSubmodule = gitItem.ObjectType == GitObjectType.Commit;
                 file.TreeGuid = gitItem.ObjectId;
-                return objectId == ObjectId.WorkTreeId ? null : file.TreeGuid;
+                return commitId == ObjectId.WorkTreeId ? null : file.TreeGuid;
             }
 
             return null;
@@ -1680,7 +1684,7 @@ namespace GitUI.Editor
             {
                 Validates.NotNull(FilePreamble);
 
-                ObjectId? itemBlobId = TryUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
+                ObjectId? itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
                 patch = PatchManager.GetSelectedLinesAsNewPatch(
                     Module,
                     _viewItem.Item.Name,
@@ -1743,7 +1747,7 @@ namespace GitUI.Editor
             {
                 Validates.NotNull(FilePreamble);
 
-                ObjectId? itemBlobId = TryUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
+                ObjectId? itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
                 patch = PatchManager.GetSelectedLinesAsNewPatch(
                     Module,
                     _viewItem.Item.Name,
@@ -1817,7 +1821,7 @@ namespace GitUI.Editor
             {
                 Validates.NotNull(FilePreamble);
 
-                ObjectId? itemBlobId = reverse ? TryUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId) : null;
+                ObjectId? itemBlobId = reverse ? GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId) : null;
                 patch = PatchManager.GetSelectedLinesAsNewPatch(
                     Module,
                     _viewItem.Item.Name,

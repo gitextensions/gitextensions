@@ -351,7 +351,7 @@ namespace GitUI.CommandsDialogs
                     IsTracked = true,
                 };
                 CancellationToken cancellationToken = _viewChangesSequence.Next();
-                View.TryUpdateTreeId(file, revision.ObjectId, cancellationToken);
+                View.GetUpdateTreeId(file, revision.ObjectId, cancellationToken);
                 _ = View.ViewGitItemAsync(file, revision.ObjectId, cancellationToken: cancellationToken);
             }
             else if (tabControl1.SelectedTab == DiffTab)
@@ -362,7 +362,7 @@ namespace GitUI.CommandsDialogs
                     IsTracked = true,
                 };
                 CancellationToken cancellationToken = _viewChangesSequence.Next();
-                View.TryUpdateTreeId(file, revision.ObjectId, cancellationToken);
+                View.GetUpdateTreeId(file, revision.ObjectId, cancellationToken);
                 FileStatusItem item = new(firstRev: selectedRevisions.Count > 1 ? selectedRevisions[^1] : null,
                     secondRev: selectedRevisions.Count > 0 ? selectedRevisions[0] : null,
                     file);
