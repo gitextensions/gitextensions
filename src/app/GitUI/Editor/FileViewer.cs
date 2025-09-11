@@ -703,11 +703,8 @@ namespace GitUI.Editor
         {
             // set fields possibly not set from git-diff (etc); treeGuid and IsSubmodule.
             // (git-status does not report submodule, IsSubmodule is not set if not TreeGuid is)
-            // for Index, the blobId (TreeGuid) is mutable and must be refreshed.
-            // for WorkTree, only run the command if IsSubmodule may not be set.
-            ObjectId? blobId = objectId == ObjectId.WorkTreeId && (file.IsSubmodule || file.TreeGuid is not null)
-                ? null
-                : GetUpdateTreeId(file, objectId, cancellationToken);
+            // treeId (blobId) is only recalculated if required.
+            ObjectId? blobId = GetUpdateTreeId(file, objectId, cancellationToken);
 
             return blobId is null
                 ? ViewFileAsync(file.Name, file.IsSubmodule, item, line, openWithDifftool, cancellationToken)
@@ -1586,21 +1583,30 @@ namespace GitUI.Editor
         /// <summary>
         /// Update the current blob id for the GitItemStatus.
         /// TreeId is immutable for normal commits, must always be updated before use for Index.
-        /// TreeId is irrelevant for worktree (if dirty), but this sets IsSubmodule.
+        /// TreeId is irrelevant for worktree (if dirty), but this sets IsSubmodule
+        /// (treeId is not updated if set already).
         /// TODO: add to GitModule, similar to GetFileBlobHash
         /// </summary>
         /// <param fileName="file">The GitStatusItem to update.</param>
         /// <param fileName="commitId">The commit to use..</param>
         /// <param fileName="cancellationToken">The cancellation token.</param>
-        /// <returns>the current TreeId (normally blob id, could be commit id) to be used. For worktree null is always returned also if there is a treeid (that really applies to the index)</returns>
+        /// <returns>the current TreeId (normally blob id, could be commit id) to be used.
+        /// For worktree null is always returned also if there is a treeid (that really applies to the index)</returns>
         public ObjectId? GetUpdateTreeId(GitItemStatus file,
             ObjectId? commitId,
             CancellationToken cancellationToken = default)
         {
-            if (file.TreeGuid is ObjectId treeId && commitId?.IsArtificial is false)
+            if (file.TreeGuid is not null && commitId?.IsArtificial is false)
             {
                 // current value is immutable (and IsSubmodule should have been set)
                 return file.TreeGuid;
+            }
+
+            if (commitId == ObjectId.WorkTreeId && (file.TreeGuid is not null || file.IsSubmodule))
+            {
+                // treeId already calculated, no point in doing it again.
+                // (if treeId is set, it means that IsSubmodule is set).
+                return null;
             }
 
             cancellationToken.ThrowIfCancellationRequested();
