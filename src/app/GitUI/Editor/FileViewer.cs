@@ -701,43 +701,23 @@ namespace GitUI.Editor
             Action? openWithDifftool,
             CancellationToken cancellationToken = default)
         {
-            if (file.TreeGuid is null)
-            {
-                cancellationToken.ThrowIfCancellationRequested();
-                IObjectGitItem[] items = Module.GetTree(objectId, full: true, file.Name, cancellationToken).ToArray();
-                if (items.Length == 1)
-                {
-                    // set fields possibly not set from git-diff
-                    // (git-status does not report submodule, assume IsSubmodule is not set if not TreeGuid is)
-                    IObjectGitItem gitObject = items[0];
-                    file.IsSubmodule = gitObject.ObjectType == GitObjectType.Commit;
-                    file.TreeGuid ??= gitObject.ObjectId;
-                }
-            }
+            // set fields possibly not set from git-diff (etc); treeGuid and IsSubmodule.
+            // (git-status does not report submodule, IsSubmodule is not set if not TreeGuid is)
+            // treeId (blobId) is only recalculated if required.
+            ObjectId? blobId = GetUpdateTreeId(file, objectId, cancellationToken);
 
-            if (file.TreeGuid is null)
-            {
-                string? fullPath = _fullPathResolver.Resolve(file.Name);
-                if (string.IsNullOrEmpty(fullPath))
-                {
-                    return ViewTextAsync(file.Name, $"Cannot get treeId from Git or path for {file.Name} for commit {objectId}.", cancellationToken: cancellationToken);
-                }
-
-                return ViewFileAsync(file.Name, file.IsSubmodule, item, line, openWithDifftool, cancellationToken);
-            }
-
-            string sha = file.TreeGuid.ToString();
-
-            return ViewItemAsync(
-                file.Name,
-                file.IsSubmodule,
-                getImage: () => ThreadHelper.JoinableTaskFactory.Run(GetImageAsync),
-                getFileText: GetFileText,
-                getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, file.Name.TrimEnd('/'), sha),
-                item: item,
-                line: line,
-                openWithDifftool: openWithDifftool,
-                cancellationToken: cancellationToken);
+            return blobId is null
+                ? ViewFileAsync(file.Name, file.IsSubmodule, item, line, openWithDifftool, cancellationToken)
+                : ViewItemAsync(
+                    file.Name,
+                    file.IsSubmodule,
+                    getImage: () => ThreadHelper.JoinableTaskFactory.Run(GetImageAsync),
+                    getFileText: GetFileText,
+                    getSubmoduleText: () => LocalizationHelpers.GetSubmoduleText(Module, file.Name.TrimEnd('/'), blobId.ToString()),
+                    item: item,
+                    line: line,
+                    openWithDifftool: openWithDifftool,
+                    cancellationToken: cancellationToken);
 
             string GetFileText()
             {
@@ -747,14 +727,14 @@ namespace GitUI.Editor
                     || (!file.Name.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
                        && !file.Name.EndsWith(".patch", StringComparison.OrdinalIgnoreCase));
                 FilePreamble = [];
-                return Module.GetFileText(file.TreeGuid, Encoding, stripAnsiEscapeCodes) is string s ? s : "";
+                return Module.GetFileText(blobId, Encoding, stripAnsiEscapeCodes) is string s ? s : "";
             }
 
             async Task<Image?> GetImageAsync()
             {
                 try
                 {
-                    using MemoryStream stream = await Module.GetFileStreamAsync(sha, cancellationToken: default);
+                    using MemoryStream stream = await Module.GetFileStreamAsync(blobId.ToString(), cancellationToken: default);
                     if (stream is not null)
                     {
                         return CreateImage(file.Name, stream);
@@ -789,25 +769,26 @@ namespace GitUI.Editor
             Validates.NotNull(fullPath);
             DebugHelpers.Assert(Path.IsPathFullyQualified(fullPath), "Path must be resolved and fully qualified");
 
-            if (!isSubmodule)
+            // Do not evaluate GetUpdateTreeId() to get isSubmodule if not set.
+            // For ViewGitItemAsync() this is already attempted, for other calls (where item is null)
+            // a file should be provided
+            // Especially, if GE is invoked as git-config core.editor when rebasing,
+            // another Git command must not be called (will fail the rebase).
+            if (!isSubmodule
+                && (item is null || item.Item.TreeGuid is null)
+                && (fileName.EndsWith('/') || Directory.Exists(fullPath)))
             {
-                if (fileName.EndsWith("/") || Directory.Exists(fullPath))
+                if (!GitModule.IsValidGitWorkingDir(fullPath))
                 {
-                    if (!GitModule.IsValidGitWorkingDir(fullPath))
-                    {
-                        return ViewTextAsync(fileName, "Directory: " + fileName, cancellationToken: cancellationToken);
-                    }
+                    return ViewTextAsync(fileName, "Directory: " + fileName, cancellationToken: cancellationToken);
+                }
 
-                    isSubmodule = true;
-                }
-                else if (!File.Exists(fullPath))
-                {
-                    return ViewTextAsync(fileName, $"File {fullPath} does not exist", cancellationToken: cancellationToken);
-                }
+                isSubmodule = true;
             }
-            else if (!GitModule.IsValidGitWorkingDir(fullPath))
+
+            if (!isSubmodule && !File.Exists(fullPath))
             {
-                return ViewTextAsync(fileName, $"Invalid submodule: {fileName}", cancellationToken: cancellationToken);
+                return ViewTextAsync(fileName, $"File {fullPath} does not exist", cancellationToken: cancellationToken);
             }
 
             return ShowOrDeferAsync(
@@ -1600,6 +1581,48 @@ namespace GitUI.Editor
         }
 
         /// <summary>
+        /// Update the current blob id for the GitItemStatus.
+        /// TreeId is immutable for normal commits, must always be updated before use for Index.
+        /// TreeId is irrelevant for worktree (if dirty), but this sets IsSubmodule
+        /// (treeId is not updated if set already).
+        /// TODO: add to GitModule, similar to GetFileBlobHash
+        /// </summary>
+        /// <param fileName="file">The GitStatusItem to update.</param>
+        /// <param fileName="commitId">The commit to use..</param>
+        /// <param fileName="cancellationToken">The cancellation token.</param>
+        /// <returns>the current TreeId (normally blob id, could be commit id) to be used.
+        /// For worktree null is always returned also if there is a treeid (that really applies to the index)</returns>
+        public ObjectId? GetUpdateTreeId(GitItemStatus file,
+            ObjectId? commitId,
+            CancellationToken cancellationToken = default)
+        {
+            if (file.TreeGuid is not null && commitId?.IsArtificial is false)
+            {
+                // current value is immutable (and IsSubmodule should have been set)
+                return file.TreeGuid;
+            }
+
+            if (commitId == ObjectId.WorkTreeId && (file.TreeGuid is not null || file.IsSubmodule))
+            {
+                // treeId already calculated, no point in doing it again.
+                // (if treeId is set, it means that IsSubmodule is set).
+                return null;
+            }
+
+            cancellationToken.ThrowIfCancellationRequested();
+            IObjectGitItem[] items = Module.GetTree(commitId, full: true, file.Name, cancellationToken).ToArray();
+            if (items.Length == 1)
+            {
+                IObjectGitItem gitItem = items[0];
+                file.IsSubmodule = gitItem.ObjectType == GitObjectType.Commit;
+                file.TreeGuid = gitItem.ObjectId;
+                return commitId == ObjectId.WorkTreeId ? null : file.TreeGuid;
+            }
+
+            return null;
+        }
+
+        /// <summary>
         /// Use implementation matching the current viewItem.
         /// </summary>
         private bool StageSelectedLines()
@@ -1653,6 +1676,7 @@ namespace GitUI.Editor
         /// <summary>
         /// Stage lines in WorkTree or Unstage lines in Index.
         /// </summary>
+        /// <param fileName="stage"><see langword="true"/> if current commit is worktree and the lines are to be staged, <see langword="false"/> otherwise.</param>
         public void StageSelectedLines(bool stage)
         {
             if (!AllowLinePatching || _viewItem is null)
@@ -1666,7 +1690,7 @@ namespace GitUI.Editor
             {
                 Validates.NotNull(FilePreamble);
 
-                string treeGuid = !stage ? _viewItem.Item.TreeGuid?.ToString() : null;
+                ObjectId? itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
                 patch = PatchManager.GetSelectedLinesAsNewPatch(
                     Module,
                     _viewItem.Item.Name,
@@ -1676,7 +1700,7 @@ namespace GitUI.Editor
                     Encoding,
                     reset: false,
                     FilePreamble,
-                    treeGuid);
+                    itemBlobId?.ToString());
             }
             else
             {
@@ -1729,7 +1753,7 @@ namespace GitUI.Editor
             {
                 Validates.NotNull(FilePreamble);
 
-                string treeGuid = currentItemStaged ? _viewItem.Item.TreeGuid?.ToString() : null;
+                ObjectId? itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
                 patch = PatchManager.GetSelectedLinesAsNewPatch(
                     Module,
                     _viewItem.Item.Name,
@@ -1739,7 +1763,7 @@ namespace GitUI.Editor
                     Encoding,
                     reset: true,
                     FilePreamble,
-                    treeGuid);
+                    itemBlobId?.ToString());
             }
             else if (currentItemStaged)
             {
@@ -1777,7 +1801,7 @@ namespace GitUI.Editor
         }
 
         /// <summary>
-        /// Cherry-pick/revert patches (not worktree or index).
+        /// Cherry-pick/revert patches (not worktree).
         /// </summary>
         /// <param name="reverse"><see langword="true"/> if patches is to be reversed; otherwise <see langword="false"/>.</param>.
         private void ApplySelectedLines(bool allFile, bool reverse)
@@ -1787,6 +1811,8 @@ namespace GitUI.Editor
                 // reload not completed
                 return;
             }
+
+            DebugHelpers.Assert(_viewItem.SecondRevision.ObjectId != ObjectId.WorkTreeId, "ApplySelectedLines() not supported for worktree");
 
             int selectionStart = allFile ? 0 : GetSelectionPosition();
             int selectionLength = allFile ? GetText().Length : GetSelectionLength();
@@ -1801,7 +1827,7 @@ namespace GitUI.Editor
             {
                 Validates.NotNull(FilePreamble);
 
-                string treeGuid = reverse ? _viewItem.Item.TreeGuid?.ToString() : null;
+                ObjectId? itemBlobId = reverse ? GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId) : null;
                 patch = PatchManager.GetSelectedLinesAsNewPatch(
                     Module,
                     _viewItem.Item.Name,
@@ -1811,7 +1837,7 @@ namespace GitUI.Editor
                     Encoding,
                     reset: reverse,
                     FilePreamble,
-                    treeGuid);
+                    itemBlobId?.ToString());
             }
             else if (!reverse)
             {

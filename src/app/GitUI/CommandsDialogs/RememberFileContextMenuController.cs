@@ -108,10 +108,9 @@ namespace GitUI.CommandsDialogs
 
             if (id == ObjectId.IndexId)
             {
-                // Must be referenced by blob - no commit. File name presented in difftool will be blob or the other file
-                return item.Item.TreeGuid is not null
-                    ? item.Item.TreeGuid.ToString()
-                    : getFileBlobHash?.Invoke(name, id)?.ToString();
+                // Must be referenced by blob - treeid is mutable.
+                // File name presented in difftool will be blob or the other file
+                return getFileBlobHash?.Invoke(name, id)?.ToString();
             }
 
             // commit:path
