@@ -96,9 +96,13 @@ namespace ResourceManager
                 sb.AppendLine();
                 sb.Append(body);
             }
-            else
+            else if (!string.IsNullOrWhiteSpace(hash))
             {
                 sb.AppendLine("Commit hash:\t" + hash);
+            }
+            else
+            {
+                sb.AppendLine("Invalid git directory and commit hash");
             }
 
             return sb.ToString();
