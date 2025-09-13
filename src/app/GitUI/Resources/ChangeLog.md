@@ -1,6 +1,73 @@
 ﻿Changelog
 =========
 
+### Version v6.0.1 (no due date)
+
+#### Changes:
+* [#12505] fix: submodule tooltip on default thread
+* [#12504] feat(filter): format native path to repo relative path
+* [#12501] fix: ls-files for Git <2.38
+* [#12500] fix: no throw for commit count
+* [#12496] fix: read worktree files from the filesystem
+* [#12489] fix: check cancellation before viewing text
+* [#12486] fix: missing .net9 references
+* [#12485] fix: compare branch check revgrid
+* [#12470] fix: GetCommitData is includeNotes, not cache
+* [#12469] fix: format submodule status
+* [#12468] perf: one Git command for added/removed
+* [#12467] fix(diff): present submodules also if no local path
+* [#12463] Fix GitExtensions.sln
+* [#12462] fix: Remove attribute ThemeAware
+* [#12459] fix: assert in patch grid
+* [#12454] Remove `skip` arg from ControlUtil.FindDescendants
+* [#12445] Load PR Template from local file
+* [#12444] fix(TextView): Clamp FirstVisibleLine
+* [#12438] fix(filetree): Hide "Show in File tree"
+* [#12437] fix: present git-status errors
+* [#12436] fix: present removed submodules
+* [#12435] fix(FormOpenDirectory): Restore button label
+* [#12434] fix(FormPush): Align labels with fields
+* [#12426] fix(multi-value git config): "credential.helper"
+* [#12424] fix(file tree context menu): Unique mnemonic for "Collapse root folders"
+* [#12423] fix(AsyncStreamReaderTests): Relax timing
+* [#12421] fix(file tree): ls-tree if no grep
+* [#12418] fix(copy file paths): Reactivate shortcut Ctrl+C
+* [#12414] Consider non-existent config setting for remote branch
+* [#12407] Add numbers and mnemonics in the “Recent repositories” menu
+
+
+[#12505]:https://github.com/gitextensions/gitextensions/pull/12505
+[#12504]:https://github.com/gitextensions/gitextensions/pull/12504
+[#12501]:https://github.com/gitextensions/gitextensions/pull/12501
+[#12500]:https://github.com/gitextensions/gitextensions/pull/12500
+[#12496]:https://github.com/gitextensions/gitextensions/pull/12496
+[#12489]:https://github.com/gitextensions/gitextensions/pull/12489
+[#12486]:https://github.com/gitextensions/gitextensions/pull/12486
+[#12485]:https://github.com/gitextensions/gitextensions/pull/12485
+[#12470]:https://github.com/gitextensions/gitextensions/pull/12470
+[#12469]:https://github.com/gitextensions/gitextensions/pull/12469
+[#12468]:https://github.com/gitextensions/gitextensions/pull/12468
+[#12467]:https://github.com/gitextensions/gitextensions/pull/12467
+[#12463]:https://github.com/gitextensions/gitextensions/pull/12463
+[#12462]:https://github.com/gitextensions/gitextensions/pull/12462
+[#12459]:https://github.com/gitextensions/gitextensions/pull/12459
+[#12454]:https://github.com/gitextensions/gitextensions/pull/12454
+[#12445]:https://github.com/gitextensions/gitextensions/pull/12445
+[#12444]:https://github.com/gitextensions/gitextensions/pull/12444
+[#12438]:https://github.com/gitextensions/gitextensions/pull/12438
+[#12437]:https://github.com/gitextensions/gitextensions/pull/12437
+[#12436]:https://github.com/gitextensions/gitextensions/pull/12436
+[#12435]:https://github.com/gitextensions/gitextensions/pull/12435
+[#12434]:https://github.com/gitextensions/gitextensions/pull/12434
+[#12426]:https://github.com/gitextensions/gitextensions/pull/12426
+[#12424]:https://github.com/gitextensions/gitextensions/pull/12424
+[#12423]:https://github.com/gitextensions/gitextensions/pull/12423
+[#12421]:https://github.com/gitextensions/gitextensions/pull/12421
+[#12418]:https://github.com/gitextensions/gitextensions/pull/12418
+[#12414]:https://github.com/gitextensions/gitextensions/pull/12414
+[#12407]:https://github.com/gitextensions/gitextensions/pull/12407
+
+
 ### Version v6.0 (no due date)
 
 #### Changes:
