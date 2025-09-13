@@ -27,12 +27,12 @@ namespace GitExtUtils.GitUI.Theming
                 .ForEach(SetupContextMenu);
             container.DescendantsToFix<DataGridView>()
                 .ForEach(SetupDataGridView);
+            container.DescendantsToFix<LinkLabel>()
+                .ForEach(SetupLinkLabel);
             container.DescendantsToFix<TabControl>()
                 .ForEach(SetupTabControl);
             container.DescendantsToFix<TextBoxBase>()
                  .ForEach(SetupTextBoxBase);
-            container.DescendantsToFix<LinkLabel>()
-                .ForEach(SetupLinkLabel);
             container.DescendantsToFix<Button>()
                 .ForEach(SetupButton);
         }
@@ -54,15 +54,21 @@ namespace GitExtUtils.GitUI.Theming
 
         private static void SetupTextBoxBase(TextBoxBase textBox)
         {
+#if !NET10_0_OR_GREATER
+            // TODO No longer visual artifacts, but more consistent to force
             textBox.TouchBackColor();
             if (textBox.BorderStyle == BorderStyle.Fixed3D)
             {
                 textBox.BorderStyle = BorderStyle.FixedSingle;
             }
+#endif
         }
 
         private static void SetupToolStrip(ToolStrip strip)
         {
+            // .NET10 Seem to be required for two reasons:
+            // * sidepanel and browse branch icons has "marked" color, not just borders
+            // * LinkColor is always dark blue (and cannot be overridden)
             strip.RenderMode = ToolStripRenderMode.Professional;
             foreach (ToolStripLabel item in strip.Items.OfType<ToolStripLabel>())
             {
@@ -72,14 +78,21 @@ namespace GitExtUtils.GitUI.Theming
 
         private static void SetupContextMenu(ContextMenuStrip strip)
         {
+#if !NET10_0_OR_GREATER
+            // TODO Confirm this is not needed
             strip.RenderMode = ToolStripRenderMode.Professional;
+#endif
         }
 
         private static void SetupLinkLabel(this LinkLabel label)
         {
+#if !NET10_0_OR_GREATER
+            // TODO Confirm this is not needed
+            // See also SetupToolStrip(), has this override an effect in .net10?
             label.LinkColor = Application.IsDarkModeEnabled ? Color.CornflowerBlue : label.LinkColor.AdaptTextColor();
             label.VisitedLinkColor = label.VisitedLinkColor.AdaptTextColor();
             label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
+#endif
         }
 
         private static void SetupToolStripStatusLabel(this ToolStripLabel label)
@@ -91,6 +104,8 @@ namespace GitExtUtils.GitUI.Theming
 
         private static void SetupButton(this Button button)
         {
+#if !NET10_0_OR_GREATER
+            // TODO No longer visual artifacts, but more consistent to force?
             // .net9 fix for https://github.com/dotnet/winforms/issues/11949 (only supposed to occur for 100%)
             if (Application.IsDarkModeEnabled && button.FlatStyle == FlatStyle.Standard)
             {
@@ -98,6 +113,7 @@ namespace GitExtUtils.GitUI.Theming
                 // FlatStyle.Standard buttons look ugly in dark mode
                 button.FlatStyle = FlatStyle.Flat;
             }
+#endif
         }
 
         private static void SetupTabControl(TabControl tabControl)
