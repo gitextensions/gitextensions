@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;

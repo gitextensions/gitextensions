@@ -1,5 +1,5 @@
-﻿using AzureDevOpsIntegration;
-using FluentAssertions;
+﻿using AwesomeAssertions;
+using AzureDevOpsIntegration;
 
 namespace AzureDevOpsIntegrationTests
 {
