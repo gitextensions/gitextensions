@@ -150,6 +150,7 @@ namespace GitUI
             // 
             FileStatusListView.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             FileStatusListView.BorderStyle = BorderStyle.None;
+            FileStatusListView.ContextMenuStrip = ItemContextMenu;
             FileStatusListView.DrawMode = TreeViewDrawMode.OwnerDrawText;
             FileStatusListView.FullRowSelect = true;
             FileStatusListView.HideSelection = false;
@@ -1063,7 +1064,6 @@ namespace GitUI
             // FileStatusList
             // 
             AutoScaleMode = AutoScaleMode.Inherit;
-            ContextMenuStrip = ItemContextMenu;
             Controls.Add(LoadingFiles);
             Controls.Add(NoFiles);
             Controls.Add(lblFindInCommitFilesGitGrepWatermark);

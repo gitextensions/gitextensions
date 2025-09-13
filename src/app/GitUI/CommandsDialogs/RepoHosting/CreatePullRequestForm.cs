@@ -1,6 +1,8 @@
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
+using GitUI.NBugReports;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting
@@ -15,6 +17,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
         private readonly TranslationString _strPleaseCloneGitHubRep = new("Please clone GitHub repository before pull request.");
         private readonly TranslationString _strDone = new("Done");
         private readonly TranslationString _strRemoteFailToLoadBranches = new("Fail to load target branches");
+        private readonly TranslationString _strFailedToLoadTemplate = new("Failed to load PR template from file.");
         #endregion
 
         private readonly IRepositoryHostPlugin _repoHost;
@@ -61,6 +64,7 @@ namespace GitUI.CommandsDialogs.RepoHosting
                     _currentBranch = Module.IsValidGitWorkingDir() ? Module.GetSelectedBranch() : "";
                     LoadRemotes(foreignHostedRemotes);
                     LoadMyBranches();
+                    LoadPRTemplate();
                 });
         }
 
@@ -88,6 +92,32 @@ namespace GitUI.CommandsDialogs.RepoHosting
             _ignoreFirstRemoteLoading = false;
 
             _pullReqTargetsCB_SelectedIndexChanged(this, EventArgs.Empty);
+        }
+
+        private void LoadPRTemplate()
+        {
+            string templatePath = Path.Combine(Module.WorkingDir, ".github", "PULL_REQUEST_TEMPLATE.md");
+
+            if (!File.Exists(templatePath))
+            {
+                return;
+            }
+
+            ThreadHelper.FileAndForget(async () =>
+            {
+                try
+                {
+                    string template = await File.ReadAllTextAsync(templatePath);
+
+                    await this.SwitchToMainThreadAsync();
+                    _bodyTB.Text = template;
+                }
+                catch (Exception ex)
+                {
+                    throw new UserExternalOperationException(_strFailedToLoadTemplate.Text,
+                        new ExternalOperationException(arguments: templatePath, workingDirectory: Module.WorkingDir, innerException: ex));
+                }
+            });
         }
 
         private void _pullReqTargetsCB_SelectedIndexChanged(object sender, EventArgs e)

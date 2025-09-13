@@ -33,7 +33,20 @@ public sealed class GitSubmoduleStatus
     {
         if (submodule is null)
         {
-            Status = SubmoduleStatus.NewSubmodule;
+            if (OldCommit is null)
+            {
+                // If there is no old commit, it is a new submodule.
+                Status = SubmoduleStatus.NewSubmodule;
+                return;
+            }
+
+            if (Commit is null)
+            {
+                Status = SubmoduleStatus.RemovedSubmodule;
+                return;
+            }
+
+            Status = SubmoduleStatus.Unknown;
             return;
         }
 
@@ -48,9 +61,7 @@ public sealed class GitSubmoduleStatus
             return "";
         }
 
-        return " (" +
-            (RemovedCommits == 0 ? "" : "-" + RemovedCommits) +
-            (AddedCommits == 0 ? "" : "+" + AddedCommits) +
-            ")";
+        // similar to GetCommitCountString
+        return $" (+{AddedCommits}-{RemovedCommits})";
     }
 }

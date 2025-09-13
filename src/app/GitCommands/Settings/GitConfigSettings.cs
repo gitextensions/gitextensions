@@ -80,7 +80,11 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
     {
         name = NormalizeSettingName(name);
         Update();
-        return _multiValueSettings.TryGetValue(name, out List<string>? values) ? values : [];
+        return _multiValueSettings.TryGetValue(name, out List<string>? values)
+            ? values
+            : GetValue(name) is string value
+                ? [value]
+                : [];
     }
 
     public void Save()
@@ -106,7 +110,7 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
     {
         if (_multiValueSettings.ContainsKey(name))
         {
-            throw new InvalidOperationException(@"Changing multi-value git settings is not supported. Tried to set ""{name}"" = ""{value}"".");
+            throw new InvalidOperationException(@$"Changing multi-value git settings is not supported. Tried to set ""{name}"" = ""{value}"".");
         }
 
         name = NormalizeSettingName(name);

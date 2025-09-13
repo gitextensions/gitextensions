@@ -40,7 +40,7 @@ namespace GitExtUtils.GitUI.Theming
         private static IEnumerable<TControl> DescendantsToFix<TControl>(this Control c)
             where TControl : Control
         {
-            return c.FindDescendantsOfType<TControl>(SkipThemeAware)
+            return c.FindDescendantsOfType<TControl>()
                 .Where(control => TryAddToWeakTable(control, AlreadyFixedControls));
         }
 
@@ -51,9 +51,6 @@ namespace GitExtUtils.GitUI.Theming
                 .Select(_ => _.ContextMenuStrip)
                 .Where(_ => _ is not null);
         }
-
-        private static bool SkipThemeAware(Control c) =>
-            c.GetType().GetCustomAttribute<ThemeAwareAttribute>() is not null;
 
         private static void SetupTextBoxBase(TextBoxBase textBox)
         {
