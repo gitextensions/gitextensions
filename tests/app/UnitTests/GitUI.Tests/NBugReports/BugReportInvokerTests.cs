@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Text;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitExtensions.Extensibility;
 using GitUI.NBugReports;
 

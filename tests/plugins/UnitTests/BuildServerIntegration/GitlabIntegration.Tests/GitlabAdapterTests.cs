@@ -1,6 +1,6 @@
 ﻿using System.Reactive.Concurrency;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Plugins.GitlabIntegration;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient;

@@ -1,8 +1,8 @@
 using System.Collections;
 using System.IO.Abstractions;
 using System.Text;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using NSubstitute;
 
