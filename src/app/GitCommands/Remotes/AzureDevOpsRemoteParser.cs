@@ -17,7 +17,7 @@ namespace GitCommands.Remotes
         [GeneratedRegex(@"^git@ssh\.dev\.azure\.com:v\d\/(?<owner>[^\/]*)\/(?<project>[^\/]*)\/(?<repo>.*)$")]
         private static partial Regex AzureDevopsSshRemoteRegex();
 
-        private static readonly Regex[] _azureDevopsRegexes = [ AzureDevopsHttpsRemoteRegex(), AzureDevopsSshRemoteRegex(), VstsHttpsRemoteRegex(), VstsSshRemoteRegex()];
+        private static readonly Regex[] _azureDevopsRegexes = [AzureDevopsHttpsRemoteRegex(), AzureDevopsSshRemoteRegex(), VstsHttpsRemoteRegex(), VstsSshRemoteRegex()];
 
         public bool IsValidRemoteUrl(string remoteUrl)
             => TryExtractAzureDevopsDataFromRemoteUrl(remoteUrl, out _, out _, out _);

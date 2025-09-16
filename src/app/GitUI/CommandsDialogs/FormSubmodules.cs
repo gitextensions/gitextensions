@@ -41,10 +41,10 @@ namespace GitUI.CommandsDialogs
             base.OnLoad(e);
         }
 
-        protected override void OnClosing(CancelEventArgs e)
+        protected override void OnFormClosing(FormClosingEventArgs e)
         {
             _splitterManager.SaveSplitters();
-            base.OnClosing(e);
+            base.OnFormClosing(e);
         }
 
         private void AddSubmoduleClick(object sender, EventArgs e)
