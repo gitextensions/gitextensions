@@ -25,6 +25,7 @@
     <PackageReference Include="AppInsights.WindowsDesktop" />
     <PackageReference Include="EnvDTE" />
     <PackageReference Include="ExCSS" />
+    <PackageReference Include="MailKit" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Core" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" />
     <PackageReference Include="JetBrains.Annotations" />

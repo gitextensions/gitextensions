@@ -1,10 +1,13 @@
-﻿using System.Net;
-using System.Net.Mail;
+using System.Net;
 using GitCommands;
 using GitCommands.Config;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.FormatPatchDialog;
 using GitUIPluginInterfaces;
+using MailKit.Net.Smtp;
+using MailKit.Security;
+using MimeKit;
+using MimeKit.Text;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs
@@ -192,6 +195,7 @@ namespace GitUI.CommandsDialogs
 
         private bool SendMail(string dir)
         {
+            List<Stream> attachmentStreams = [];
             try
             {
                 string from = MailFrom.Text;
@@ -203,31 +207,50 @@ namespace GitUI.CommandsDialogs
 
                 string to = MailTo.Text;
 
-                using MailMessage mail = new(from, to, MailSubject.Text, MailBody.Text);
+                MimeMessage mail = new();
+                mail.From.Add(new MailboxAddress(from, from));
+                mail.To.Add(new MailboxAddress(to, to));
+                mail.Subject = MailSubject.Text;
+                TextPart bodyPart = new(TextFormat.Plain)
+                {
+                    Text = MailBody.Text
+                };
+                Multipart body =
+                [
+                    bodyPart
+                ];
+
                 foreach (string file in Directory.GetFiles(dir, "*.patch"))
                 {
-                    Attachment attachment = new(file);
-                    mail.Attachments.Add(attachment);
+                    FileStream stream = File.OpenRead(file);
+                    attachmentStreams.Add(stream);
+                    MimePart attachment = new()
+                    {
+                        Content = new MimeContent(stream),
+                        ContentDisposition = new ContentDisposition(ContentDisposition.Attachment),
+                        ContentTransferEncoding = ContentEncoding.Base64,
+                        FileName = Path.GetFileName(file)
+                    };
+                    body.Add(attachment);
                 }
 
-                SmtpClient smtpClient = new(AppSettings.SmtpServer)
-                {
-                    Port = AppSettings.SmtpPort,
-                    EnableSsl = AppSettings.SmtpUseSsl
-                };
+                mail.Body = body;
+                using SmtpClient smtpClient = new();
+                smtpClient.Connect(AppSettings.SmtpServer, AppSettings.SmtpPort,
+                    AppSettings.SmtpUseSsl ? SecureSocketOptions.Auto : SecureSocketOptions.None);
 
                 using (SmtpCredentials credentials = new())
                 {
                     credentials.login.Text = from;
 
-                    smtpClient.Credentials = credentials.ShowDialog(this) == DialogResult.OK
+                    NetworkCredential cred = credentials.ShowDialog(this) == DialogResult.OK
                         ? new NetworkCredential(credentials.login.Text, credentials.password.Text)
                         : CredentialCache.DefaultNetworkCredentials;
-                }
+                    smtpClient.Authenticate(cred);
 
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
-                ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
+                    smtpClient.CheckCertificateRevocation = false;
+                    smtpClient.ServerCertificateValidationCallback = (sender, certificate, chain, sslPolicyErrors) => true;
+                }
 
                 smtpClient.Send(mail);
             }
@@ -235,6 +258,13 @@ namespace GitUI.CommandsDialogs
             {
                 MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
+            }
+            finally
+            {
+                foreach (Stream x in attachmentStreams)
+                {
+                    x.Dispose();
+                }
             }
 
             return true;

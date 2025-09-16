@@ -91,6 +91,9 @@
       <Component Id="Ben.Demystifier.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Ben.Demystifier.dll" />
       </Component>
+      <Component Id="BouncyCastle.Cryptography.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\BouncyCastle.Cryptography.dll" />
+      </Component>
       <Component Id="BugReporter.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\BugReporter.dll" />
       </Component>
@@ -145,6 +148,9 @@
       <Component Id="ICSharpCode.TextEditor.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\ICSharpCode.TextEditor.dll" />
       </Component>
+      <Component Id="MailKit.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\MailKit.dll" />
+      </Component>
       <Component Id="Microsoft.AI.DependencyCollector.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Microsoft.AI.DependencyCollector.dll" />
       </Component>
@@ -175,6 +181,9 @@
       </Component>
       <Component Id="Microsoft.WindowsAPICodePack.Shell.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Microsoft.WindowsAPICodePack.Shell.dll" />
+      </Component>
+      <Component Id="MimeKit.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\MimeKit.dll" />
       </Component>
       <Component Id="Newtonsoft.Json.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Newtonsoft.Json.dll" />
@@ -647,6 +656,7 @@
       <ComponentRef Id="AppInsights.WindowsDesktop.dll" />
       <ComponentRef Id="Ben.Demystifier.dll" />
       <ComponentRef Id="BugReporter.dll" />
+      <ComponentRef Id="BouncyCastle.Cryptography.dll" />
       <ComponentRef Id="BugReporter.exe" />
       <ComponentRef Id="BugReporter.runtimeconfig.json" />
       <ComponentRef Id="ConEmuWinForms.dll" />
@@ -664,6 +674,7 @@
       <ComponentRef Id="GitUI.dll" />
       <ComponentRef Id="GitUIPluginInterfaces.dll" />
       <ComponentRef Id="ICSharpCode.TextEditor.dll" />
+      <ComponentRef Id="MailKit.dll" />
       <ComponentRef Id="Microsoft.AI.DependencyCollector.dll" />
       <ComponentRef Id="Microsoft.ApplicationInsights.dll" />
       <ComponentRef Id="Microsoft.Toolkit.HighPerformance.dll" />
@@ -674,6 +685,7 @@
       <ComponentRef Id="Microsoft.VisualStudio.Validation.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
+      <ComponentRef Id="MimeKit.dll" />
       <ComponentRef Id="Newtonsoft.Json.dll" />
       <ComponentRef Id="ResourceManager.dll" />
       <ComponentRef Id="RestSharp.dll" />
