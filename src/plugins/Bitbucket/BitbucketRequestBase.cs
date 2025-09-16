@@ -25,13 +25,6 @@ namespace GitExtensions.Plugins.Bitbucket
 
         public async Task<BitbucketResponse<T>> SendAsync()
         {
-            if (Settings.DisableSSL)
-            {
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
-                System.Net.ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-            }
-
             Validates.NotNull(Settings.BitbucketUrl);
             Validates.NotNull(Settings.Username);
             Validates.NotNull(Settings.Password);
@@ -41,6 +34,10 @@ namespace GitExtensions.Plugins.Bitbucket
                 BaseUrl = new Uri(Settings.BitbucketUrl),
                 Authenticator = new HttpBasicAuthenticator(Settings.Username, Settings.Password)
             };
+            if (Settings.DisableSSL)
+            {
+                client.RemoteCertificateValidationCallback = delegate { return true; };
+            }
 
             RestRequest request = new(ApiUrl, RequestMethod);
             if (RequestBody is not null)

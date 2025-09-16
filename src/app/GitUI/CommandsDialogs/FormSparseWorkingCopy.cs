@@ -25,7 +25,7 @@ namespace GitUI.CommandsDialogs
         {
             ArgumentNullException.ThrowIfNull(sparse);
 
-            Closing += (sender, args) =>
+            FormClosing += (sender, args) =>
             {
                 try
                 {

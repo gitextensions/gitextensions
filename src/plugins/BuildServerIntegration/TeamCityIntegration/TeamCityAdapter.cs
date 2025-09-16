@@ -549,7 +549,7 @@ namespace TeamCityIntegration
 
         private Task<XDocument> GetFilteredBuildsXmlResponseAsync(string buildTypeId, CancellationToken cancellationToken, DateTime? sinceDate = null, bool? running = null)
         {
-            List<string> values = [ "branch:(default:any)"];
+            List<string> values = ["branch:(default:any)"];
 
             if (sinceDate.HasValue)
             {

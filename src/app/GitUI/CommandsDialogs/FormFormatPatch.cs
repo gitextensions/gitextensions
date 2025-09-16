@@ -225,10 +225,10 @@ namespace GitUI.CommandsDialogs
                         : CredentialCache.DefaultNetworkCredentials;
                 }
 
-#pragma warning disable SYSLIB0014 // Type or member is obsolete
+#if !NET10_0_OR_GREATER
+                // No longer supported, but SmtpClient is obsolete and have limtations anyway
                 ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
-#pragma warning restore SYSLIB0014 // Type or member is obsolete
-
+#endif
                 smtpClient.Send(mail);
             }
             catch (Exception ex)
