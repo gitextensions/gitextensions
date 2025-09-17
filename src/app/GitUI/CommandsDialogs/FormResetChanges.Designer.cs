@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            label1 = new Label();
+            txtMessage = new TextBox();
             btnReset = new Button();
             btnCancel = new Button();
             cbDeleteNewFilesAndDirectories = new CheckBox();
@@ -37,14 +37,18 @@
             flowLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
-            // label1
+            // txtMessage
             // 
-            label1.AutoSize = true;
-            label1.Location = new Point(9, 9);
-            label1.Name = "label1";
-            label1.Size = new Size(271, 16);
-            label1.TabIndex = 0;
-            label1.Text = "Are you sure you want to reset your changes?";
+            txtMessage.BackColor = SystemColors.Control;
+            txtMessage.BorderStyle = BorderStyle.None;
+            txtMessage.Location = new Point(12, 12);
+            txtMessage.Multiline = true;
+            txtMessage.Name = "txtMessage";
+            txtMessage.ReadOnly = true;
+            txtMessage.ScrollBars = ScrollBars.Vertical;
+            txtMessage.Size = new Size(436, 60);
+            txtMessage.TabIndex = 0;
+            txtMessage.Text = "Are you sure you want to reset your changes?";
             // 
             // btnReset
             // 
@@ -69,24 +73,24 @@
             btnCancel.UseVisualStyleBackColor = true;
             btnCancel.Click += btnCancel_Click;
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(12, 78);
+            label2.Name = "label2";
+            label2.Size = new Size(232, 16);
+            label2.TabIndex = 4;
+            label2.Text = "This will delete any uncommitted work.";
+            // 
             // cbDeleteNewFilesAndDirectories
             // 
             cbDeleteNewFilesAndDirectories.AutoSize = true;
-            cbDeleteNewFilesAndDirectories.Location = new Point(10, 58);
+            cbDeleteNewFilesAndDirectories.Location = new Point(12, 97);
             cbDeleteNewFilesAndDirectories.Name = "cbDeleteNewFilesAndDirectories";
             cbDeleteNewFilesAndDirectories.Size = new Size(251, 20);
             cbDeleteNewFilesAndDirectories.TabIndex = 3;
             cbDeleteNewFilesAndDirectories.Text = "Also delete &new files and/or directories";
             cbDeleteNewFilesAndDirectories.UseVisualStyleBackColor = true;
-            // 
-            // label2
-            // 
-            label2.AutoSize = true;
-            label2.Location = new Point(9, 24);
-            label2.Name = "label2";
-            label2.Size = new Size(232, 16);
-            label2.TabIndex = 4;
-            label2.Text = "This will delete any uncommitted work.";
             // 
             // flowLayoutPanel1
             // 
@@ -95,7 +99,7 @@
             flowLayoutPanel1.Controls.Add(btnReset);
             flowLayoutPanel1.Dock = DockStyle.Bottom;
             flowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
-            flowLayoutPanel1.Location = new Point(0, 84);
+            flowLayoutPanel1.Location = new Point(0, 123);
             flowLayoutPanel1.Margin = new Padding(2, 2, 2, 2);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Size = new Size(460, 31);
@@ -106,16 +110,17 @@
             AcceptButton = btnCancel;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            AutoSize = true;
             CancelButton = btnCancel;
-            ClientSize = new Size(460, 115);
+            ClientSize = new Size(460, 154);
             Controls.Add(flowLayoutPanel1);
-            Controls.Add(label1);
+            Controls.Add(txtMessage);
             Controls.Add(label2);
             Controls.Add(cbDeleteNewFilesAndDirectories);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
+            MaximumSize = new Size(476, 600);
             MinimizeBox = false;
+            MinimumSize = new Size(476, 193);
             Name = "FormResetChanges";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Reset changes";
@@ -127,7 +132,7 @@
 
         #endregion
 
-        private Label label1;
+        private TextBox txtMessage;
         private Button btnReset;
         private Button btnCancel;
         private CheckBox cbDeleteNewFilesAndDirectories;

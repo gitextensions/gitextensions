@@ -23,8 +23,11 @@
 
             if (confirmationMessage is not null)
             {
-                label1.Text = confirmationMessage;
+                txtMessage.Text = confirmationMessage;
             }
+
+            // Adjust form size based on message content
+            AdjustFormSize();
 
             if (!hasExistingFiles)
             {
@@ -68,6 +71,44 @@
         {
             SelectedAction = cbDeleteNewFilesAndDirectories.Checked ? ActionEnum.ResetAndDelete : ActionEnum.Reset;
             Close();
+        }
+
+        private void AdjustFormSize()
+        {
+            // Calculate preferred height for the message text
+            using Graphics g = CreateGraphics();
+            SizeF textSize = g.MeasureString(txtMessage.Text, txtMessage.Font, txtMessage.Width);
+            
+            // Calculate how much height we need for the text
+            int preferredTextHeight = (int)Math.Ceiling(textSize.Height);
+            
+            // Limit the text height to a reasonable maximum (about 60% of screen height)
+            int maxTextHeight = (int)(Screen.FromControl(this).WorkingArea.Height * 0.4);
+            int actualTextHeight = Math.Min(preferredTextHeight, maxTextHeight);
+            
+            // If the content is larger than what fits, show scrollbars
+            if (preferredTextHeight > actualTextHeight)
+            {
+                txtMessage.ScrollBars = ScrollBars.Vertical;
+            }
+            else
+            {
+                txtMessage.ScrollBars = ScrollBars.None;
+            }
+            
+            // Update text box height
+            txtMessage.Height = Math.Max(60, actualTextHeight); // Minimum 60px height
+            
+            // Adjust positions of other controls
+            int yOffset = txtMessage.Bottom + 6;
+            label2.Location = new Point(label2.Location.X, yOffset);
+            
+            yOffset = label2.Bottom + 3;
+            cbDeleteNewFilesAndDirectories.Location = new Point(cbDeleteNewFilesAndDirectories.Location.X, yOffset);
+            
+            // Update form height to fit all content
+            int formHeight = cbDeleteNewFilesAndDirectories.Bottom + flowLayoutPanel1.Height + 45; // 45 for borders and spacing
+            Height = Math.Max(MinimumSize.Height, Math.Min(formHeight, MaximumSize.Height));
         }
     }
 }
