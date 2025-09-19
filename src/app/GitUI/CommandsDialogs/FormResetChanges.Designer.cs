@@ -118,7 +118,6 @@
             Controls.Add(cbDeleteNewFilesAndDirectories);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
-            MaximumSize = new Size(476, 600);
             MinimizeBox = false;
             MinimumSize = new Size(476, 193);
             Name = "FormResetChanges";

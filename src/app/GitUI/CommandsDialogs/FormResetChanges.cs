@@ -86,19 +86,12 @@ namespace GitUI.CommandsDialogs
             // Calculate how much height we need for the text
             int preferredTextHeight = (int)Math.Ceiling(textSize.Height);
             
-            // Limit the text height to a reasonable maximum (about 60% of screen height)
-            int maxTextHeight = (int)(Screen.FromControl(this).WorkingArea.Height * 0.4);
+            // Limit the text height to a reasonable maximum based on screen working area
+            int maxTextHeight = (int)(Screen.FromControl(this).WorkingArea.Height * 0.6);
             int actualTextHeight = Math.Min(preferredTextHeight, maxTextHeight);
             
             // If the content is larger than what fits, show scrollbars
-            if (preferredTextHeight > actualTextHeight)
-            {
-                txtMessage.ScrollBars = ScrollBars.Vertical;
-            }
-            else
-            {
-                txtMessage.ScrollBars = ScrollBars.None;
-            }
+            txtMessage.ScrollBars = preferredTextHeight > actualTextHeight ? ScrollBars.Vertical : ScrollBars.None;
             
             // Update text box height
             txtMessage.Height = Math.Max(60, actualTextHeight); // Minimum 60px height
@@ -110,9 +103,10 @@ namespace GitUI.CommandsDialogs
             yOffset = label2.Bottom + 3;
             cbDeleteNewFilesAndDirectories.Location = new Point(cbDeleteNewFilesAndDirectories.Location.X, yOffset);
             
-            // Update form height to fit all content
+            // Update form height to fit all content, constrained by screen working area
             int formHeight = cbDeleteNewFilesAndDirectories.Bottom + flowLayoutPanel1.Height + 45; // 45 for borders and spacing
-            Height = Math.Max(MinimumSize.Height, Math.Min(formHeight, MaximumSize.Height));
+            int maxFormHeight = Screen.FromControl(this).WorkingArea.Height - 50; // Leave some margin from screen edges
+            Height = Math.Clamp(formHeight, MinimumSize.Height, maxFormHeight);
         }
     }
 }
