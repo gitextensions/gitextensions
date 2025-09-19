@@ -55,6 +55,12 @@ namespace GitUI.CommandsDialogs
             _NO_TRANSLATE_From.DataSource = repositoryHistory;
             _NO_TRANSLATE_From.DisplayMember = nameof(Repository.Path);
 
+            IList<Repository> localsHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
+            string[] historicPaths = localsHistory.Select(x => x.GetParentPath())
+                                                  .Where(x => !string.IsNullOrEmpty(x))
+                                                  .Distinct(StringComparer.CurrentCultureIgnoreCase)
+                                                  .ToArray();
+            _NO_TRANSLATE_To.DataSource = historicPaths;
             _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
             if (PathUtil.CanBeGitURL(_url))
