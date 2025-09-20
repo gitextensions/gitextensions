@@ -37,13 +37,6 @@
             chkMergeGraphLanesHavingCommonParent = new CheckBox();
             chkRenderGraphWithDiagonals = new CheckBox();
             chkStraightenGraphDiagonals = new CheckBox();
-            groupBoxEmailSettings = new GroupBox();
-            tlpnlEmailSettings = new TableLayoutPanel();
-            SmtpServer = new TextBox();
-            lblSmtpServerPort = new Label();
-            chkUseSSL = new CheckBox();
-            SmtpServerPort = new TextBox();
-            lblSmtpServerName = new Label();
             mergeWindowGroup = new GroupBox();
             tableLayoutPanel4 = new TableLayoutPanel();
             flowLayoutPanel1 = new FlowLayoutPanel();
@@ -54,8 +47,6 @@
             tableLayoutPanel2.SuspendLayout();
             gbRevisionGraph.SuspendLayout();
             tlpnlRevisionGraph.SuspendLayout();
-            groupBoxEmailSettings.SuspendLayout();
-            tlpnlEmailSettings.SuspendLayout();
             mergeWindowGroup.SuspendLayout();
             tableLayoutPanel4.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
@@ -113,7 +104,6 @@
             tableLayoutPanel2.ColumnCount = 1;
             tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
             tableLayoutPanel2.Controls.Add(gbRevisionGraph, 0, 0);
-            tableLayoutPanel2.Controls.Add(groupBoxEmailSettings, 0, 3);
             tableLayoutPanel2.Controls.Add(mergeWindowGroup, 0, 2);
             tableLayoutPanel2.Controls.Add(PushWindowGB, 0, 1);
             tableLayoutPanel2.Dock = DockStyle.Fill;
@@ -199,91 +189,6 @@
             chkStraightenGraphDiagonals.Text = "Straighten graph diagonals";
             chkStraightenGraphDiagonals.UseVisualStyleBackColor = true;
             // 
-            // groupBoxEmailSettings
-            // 
-            groupBoxEmailSettings.AutoSize = true;
-            groupBoxEmailSettings.Controls.Add(tlpnlEmailSettings);
-            groupBoxEmailSettings.Dock = DockStyle.Fill;
-            groupBoxEmailSettings.Location = new Point(3, 252);
-            groupBoxEmailSettings.Name = "groupBoxEmailSettings";
-            groupBoxEmailSettings.Padding = new Padding(8);
-            groupBoxEmailSettings.Size = new Size(1049, 115);
-            groupBoxEmailSettings.TabIndex = 3;
-            groupBoxEmailSettings.TabStop = false;
-            groupBoxEmailSettings.Text = "&Email settings for sending patches";
-            // 
-            // tlpnlEmailSettings
-            // 
-            tlpnlEmailSettings.AutoSize = true;
-            tlpnlEmailSettings.ColumnCount = 3;
-            tlpnlEmailSettings.ColumnStyles.Add(new ColumnStyle());
-            tlpnlEmailSettings.ColumnStyles.Add(new ColumnStyle());
-            tlpnlEmailSettings.ColumnStyles.Add(new ColumnStyle());
-            tlpnlEmailSettings.Controls.Add(SmtpServer, 2, 0);
-            tlpnlEmailSettings.Controls.Add(lblSmtpServerPort, 0, 1);
-            tlpnlEmailSettings.Controls.Add(chkUseSSL, 0, 2);
-            tlpnlEmailSettings.Controls.Add(SmtpServerPort, 2, 1);
-            tlpnlEmailSettings.Controls.Add(lblSmtpServerName, 0, 0);
-            tlpnlEmailSettings.Dock = DockStyle.Top;
-            tlpnlEmailSettings.Location = new Point(8, 24);
-            tlpnlEmailSettings.Name = "tlpnlEmailSettings";
-            tlpnlEmailSettings.RowCount = 3;
-            tlpnlEmailSettings.RowStyles.Add(new RowStyle());
-            tlpnlEmailSettings.RowStyles.Add(new RowStyle());
-            tlpnlEmailSettings.RowStyles.Add(new RowStyle());
-            tlpnlEmailSettings.Size = new Size(1033, 83);
-            tlpnlEmailSettings.TabIndex = 0;
-            // 
-            // SmtpServer
-            // 
-            SmtpServer.Location = new Point(123, 3);
-            SmtpServer.Name = "SmtpServer";
-            SmtpServer.Size = new Size(179, 23);
-            SmtpServer.TabIndex = 0;
-            // 
-            // lblSmtpServerPort
-            // 
-            lblSmtpServerPort.AutoSize = true;
-            lblSmtpServerPort.Dock = DockStyle.Fill;
-            lblSmtpServerPort.Location = new Point(3, 29);
-            lblSmtpServerPort.Name = "lblSmtpServerPort";
-            lblSmtpServerPort.Size = new Size(114, 29);
-            lblSmtpServerPort.TabIndex = 1;
-            lblSmtpServerPort.Text = "Port";
-            lblSmtpServerPort.TextAlign = ContentAlignment.MiddleLeft;
-            // 
-            // chkUseSSL
-            // 
-            chkUseSSL.AutoSize = true;
-            chkUseSSL.Dock = DockStyle.Fill;
-            chkUseSSL.Location = new Point(3, 61);
-            chkUseSSL.Name = "chkUseSSL";
-            chkUseSSL.Size = new Size(114, 19);
-            chkUseSSL.TabIndex = 3;
-            chkUseSSL.Text = "Use SSL/TLS";
-            chkUseSSL.UseVisualStyleBackColor = true;
-            chkUseSSL.CheckedChanged += chkUseSSL_CheckedChanged;
-            // 
-            // SmtpServerPort
-            // 
-            SmtpServerPort.Location = new Point(123, 32);
-            SmtpServerPort.Name = "SmtpServerPort";
-            SmtpServerPort.Size = new Size(49, 23);
-            SmtpServerPort.TabIndex = 2;
-            SmtpServerPort.Text = "587";
-            // 
-            // lblSmtpServerName
-            // 
-            lblSmtpServerName.Anchor = AnchorStyles.Left;
-            lblSmtpServerName.AutoSize = true;
-            lblSmtpServerName.Location = new Point(3, 7);
-            lblSmtpServerName.Name = "lblSmtpServerName";
-            lblSmtpServerName.Padding = new Padding(0, 0, 10, 0);
-            lblSmtpServerName.Size = new Size(114, 15);
-            lblSmtpServerName.TabIndex = 0;
-            lblSmtpServerName.Text = "SMTP server name";
-            lblSmtpServerName.TextAlign = ContentAlignment.MiddleLeft;
-            // 
             // mergeWindowGroup
             // 
             mergeWindowGroup.AutoSize = true;
@@ -362,10 +267,6 @@
             gbRevisionGraph.PerformLayout();
             tlpnlRevisionGraph.ResumeLayout(false);
             tlpnlRevisionGraph.PerformLayout();
-            groupBoxEmailSettings.ResumeLayout(false);
-            groupBoxEmailSettings.PerformLayout();
-            tlpnlEmailSettings.ResumeLayout(false);
-            tlpnlEmailSettings.PerformLayout();
             mergeWindowGroup.ResumeLayout(false);
             mergeWindowGroup.PerformLayout();
             tableLayoutPanel4.ResumeLayout(false);
@@ -387,13 +288,6 @@
         private FlowLayoutPanel flowLayoutPanel1;
         private CheckBox addLogMessages;
         private TextBox nbMessages;
-        private GroupBox groupBoxEmailSettings;
-        private TableLayoutPanel tlpnlEmailSettings;
-        private TextBox SmtpServer;
-        private Label lblSmtpServerPort;
-        private CheckBox chkUseSSL;
-        private TextBox SmtpServerPort;
-        private Label lblSmtpServerName;
         private GroupBox gbRevisionGraph;
         private TableLayoutPanel tlpnlRevisionGraph;
         private CheckBox chkMergeGraphLanesHavingCommonParent;
