@@ -110,6 +110,7 @@ namespace GitUI.CommandsDialogs
             // 
             // RevisionGrid
             // 
+            tableLayoutPanelForm.SetColumnSpan(RevisionGrid, 2);
             RevisionGrid.Dock = DockStyle.Fill;
             RevisionGrid.Location = new Point(4, 4);
             RevisionGrid.Margin = new Padding(4, 4, 4, 4);
