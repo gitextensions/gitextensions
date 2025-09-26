@@ -992,24 +992,6 @@ namespace GitCommands
             set => SetEnum("FormPullAction", value);
         }
 
-        public static string SmtpServer
-        {
-            get => SettingsContainer.Detailed().SmtpServer;
-            set => SettingsContainer.Detailed().SmtpServer = value;
-        }
-
-        public static int SmtpPort
-        {
-            get => SettingsContainer.Detailed().SmtpPort;
-            set => SettingsContainer.Detailed().SmtpPort = value;
-        }
-
-        public static bool SmtpUseSsl
-        {
-            get => SettingsContainer.Detailed().SmtpUseSsl;
-            set => SettingsContainer.Detailed().SmtpUseSsl = value;
-        }
-
         public static bool AutoStash
         {
             get => GetBool("autostash", false);

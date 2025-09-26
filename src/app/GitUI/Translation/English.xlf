@@ -1329,24 +1329,8 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Straighten graph diagonals</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkUseSSL.Text">
-        <source>Use SSL/TLS</source>
-        <target />
-      </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>&amp;Revision graph</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="groupBoxEmailSettings.Text">
-        <source>&amp;Email settings for sending patches</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblSmtpServerName.Text">
-        <source>SMTP server name</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblSmtpServerPort.Text">
-        <source>Port</source>
         <target />
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
@@ -5059,10 +5043,6 @@ Change the default behaviour only if you experience problems.</source>
         <source>Create patch(es)</source>
         <target />
       </trans-unit>
-      <trans-unit id="SaveToDir.Text">
-        <source>Save patches in directory</source>
-        <target />
-      </trans-unit>
       <trans-unit id="SelectedBranch.Text">
         <source>Branch</source>
         <target />
@@ -5075,20 +5055,8 @@ Change the default behaviour only if you experience problems.</source>
         <source>Unable to create patch file(s)</source>
         <target />
       </trans-unit>
-      <trans-unit id="_noEmailEnteredText.Text">
-        <source>You need to enter an email address.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_noGitMailConfigured.Text">
-        <source>There is no email address configured in the settings dialog.</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_noOutputPathEnteredText.Text">
         <source>You need to enter an output path.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_noSubjectEnteredText.Text">
-        <source>You need to enter a mail subject.</source>
         <target />
       </trans-unit>
       <trans-unit id="_patchResultCaption.Text">
@@ -5103,32 +5071,8 @@ Change the default behaviour only if you experience problems.</source>
         <source>You need to select at least one revision</source>
         <target />
       </trans-unit>
-      <trans-unit id="_sendMailResult.Text">
-        <source>Send to:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_sendMailResultFailed.Text">
-        <source>Failed to send mail.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_wrongSmtpSettingsText.Text">
-        <source>You need to enter a valid smtp in the settings dialog.</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Subject</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Body</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>To</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="radioButton1.Text">
-        <source>Mail patches from</source>
+      <trans-unit id="lblPatches.Text">
+        <source>Patch:</source>
         <target />
       </trans-unit>
     </body>
