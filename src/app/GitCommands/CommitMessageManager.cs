@@ -197,7 +197,7 @@ namespace GitCommands
 
                 if (usingCommitTemplate && line.StartsWith("# "))
                 {
-                  continue;
+                    continue;
                 }
 
                 if (ensureCommitMessageSecondLineEmpty && lineNumber == 2 && !string.IsNullOrEmpty(line))
