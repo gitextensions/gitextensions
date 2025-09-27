@@ -191,11 +191,13 @@ namespace GitCommands
             int lineNumber = 1;
             foreach (string line in commitMessage.LazySplit('\n'))
             {
-                // When a committemplate is used, skip comments and do not count them as line.
-                // otherwise: "#" is probably not used for comment but for issue number
-                if (usingCommitTemplate && line.StartsWith("#"))
+                // When a commit template is used, skip comments and do not count them as line.
+                // Note: In commit templates, "# " is used for comments and "#123" could be used for the issue number.
+                // Redefining the comment symbol is not supported now
+
+                if (usingCommitTemplate && line.StartsWith("# "))
                 {
-                    continue;
+                  continue;
                 }
 
                 if (ensureCommitMessageSecondLineEmpty && lineNumber == 2 && !string.IsNullOrEmpty(line))
