@@ -1,6 +1,6 @@
-﻿using BugReporter;
+﻿using AwesomeAssertions;
+using BugReporter;
 using BugReporter.Serialization;
-using FluentAssertions;
 
 namespace BugReporterTests
 {

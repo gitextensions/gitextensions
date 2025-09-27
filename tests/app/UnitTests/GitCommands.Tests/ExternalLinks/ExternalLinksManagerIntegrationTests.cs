@@ -1,6 +1,6 @@
 using System.Reflection;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands.ExternalLinks;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
