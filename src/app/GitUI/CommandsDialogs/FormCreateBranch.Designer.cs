@@ -52,7 +52,7 @@
             // MainPanel
             // 
             MainPanel.Controls.Add(tableLayout);
-            MainPanel.Size = new Size(570, 325);
+            MainPanel.Size = new Size(570, 354);
             // 
             // ControlsPanel
             // 
@@ -80,7 +80,7 @@
             commitPicker.Location = new Point(169, 31);
             commitPicker.MinimumSize = new Size(100, 26);
             commitPicker.Name = "commitPicker";
-            commitPicker.Size = new Size(380, 26);
+            commitPicker.Size = new Size(374, 26);
             commitPicker.TabIndex = 3;
             commitPicker.SelectedObjectIdChanged += commitPicker_SelectedObjectIdChanged;
             // 
@@ -92,7 +92,7 @@
             chkCheckoutAfterCreate.Dock = DockStyle.Fill;
             chkCheckoutAfterCreate.Location = new Point(169, 59);
             chkCheckoutAfterCreate.Name = "chkCheckoutAfterCreate";
-            chkCheckoutAfterCreate.Size = new Size(380, 22);
+            chkCheckoutAfterCreate.Size = new Size(374, 22);
             chkCheckoutAfterCreate.TabIndex = 5;
             chkCheckoutAfterCreate.Text = "Checkout &after create";
             chkCheckoutAfterCreate.UseVisualStyleBackColor = true;
@@ -114,7 +114,7 @@
             BranchNameTextBox.Dock = DockStyle.Fill;
             BranchNameTextBox.Location = new Point(169, 3);
             BranchNameTextBox.Name = "BranchNameTextBox";
-            BranchNameTextBox.Size = new Size(380, 23);
+            BranchNameTextBox.Size = new Size(374, 23);
             BranchNameTextBox.TabIndex = 1;
             BranchNameTextBox.Leave += BranchNameTextBox_Leave;
             // 
@@ -187,7 +187,7 @@
             tableLayout.RowStyles.Add(new RowStyle());
             tableLayout.RowStyles.Add(new RowStyle());
             tableLayout.RowStyles.Add(new RowStyle());
-            tableLayout.Size = new Size(552, 301);
+            tableLayout.Size = new Size(546, 330);
             tableLayout.TabIndex = 0;
             // 
             // grpOrphan
@@ -200,7 +200,7 @@
             grpOrphan.Location = new Point(3, 241);
             grpOrphan.Name = "grpOrphan";
             grpOrphan.Padding = new Padding(8);
-            grpOrphan.Size = new Size(546, 57);
+            grpOrphan.Size = new Size(540, 57);
             grpOrphan.TabIndex = 6;
             grpOrphan.TabStop = false;
             grpOrphan.Text = "Orphan";
@@ -215,7 +215,7 @@
             flowLayoutPanel1.Location = new Point(8, 24);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Padding = new Padding(8, 0, 0, 0);
-            flowLayoutPanel1.Size = new Size(530, 25);
+            flowLayoutPanel1.Size = new Size(524, 25);
             flowLayoutPanel1.TabIndex = 1;
             // 
             // commitSummaryUserControl1
@@ -229,7 +229,7 @@
             commitSummaryUserControl1.MinimumSize = new Size(293, 107);
             commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             commitSummaryUserControl1.Revision = null;
-            commitSummaryUserControl1.Size = new Size(548, 150);
+            commitSummaryUserControl1.Size = new Size(542, 150);
             commitSummaryUserControl1.TabIndex = 7;
             // 
             // FormCreateBranch
@@ -237,13 +237,13 @@
             AcceptButton = cmdOk;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(570, 366);
+            ClientSize = new Size(570, 386);
             HelpButton = true;
             ManualSectionAnchorName = "create-branch";
             ManualSectionSubfolder = "branches";
             MaximizeBox = false;
             MinimizeBox = false;
-            MinimumSize = new Size(580, 405);
+            MinimumSize = new Size(580, 425);
             Name = "FormCreateBranch";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Create branch";
