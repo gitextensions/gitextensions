@@ -42,18 +42,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowCommitAndPush = new CheckBox();
             chkShowResetWorkTreeChanges = new CheckBox();
             chkShowResetAllChanges = new CheckBox();
-            tbComment = new TextBox();
             chkEnsureCommitMessageSecondLineEmpty = new CheckBox();
-            grpComment = new GroupBox();
+            tbTemplateComment = new TextBox();
+            grpTemplateComment = new GroupBox();
             tableLayoutPanelComment = new TableLayoutPanel();
-            lblComment = new Label();
+            lblTemplateComment = new Label();
+            chkReadFromGitAfterAppStart = new CheckBox();
             groupBoxBehaviour.SuspendLayout();
             tableLayoutPanelBehaviour.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this
                 ._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages)).BeginInit();
             grpAdditionalButtons.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
-            grpComment.SuspendLayout();
+            grpTemplateComment.SuspendLayout();
             tableLayoutPanelComment.SuspendLayout();
             SuspendLayout();
             // 
@@ -234,13 +235,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowResetAllChanges.Text = "Reset All Changes";
             chkShowResetAllChanges.UseVisualStyleBackColor = true;
             // 
-            // tbComment
-            // 
-            tbComment.Location = new Point(363, 3);
-            tbComment.Name = "tbComment";
-            tbComment.Size = new Size(94, 23);
-            tbComment.TabIndex = 4;
-            // 
             // chkEnsureCommitMessageSecondLineEmpty
             // 
             chkEnsureCommitMessageSecondLineEmpty.AutoSize = true;
@@ -253,49 +247,68 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 "Ensure the second line of commit message is empty";
             chkEnsureCommitMessageSecondLineEmpty.UseVisualStyleBackColor = true;
             // 
-            // grpComment
+            // tbTemplateComment
             // 
-            grpComment.AutoSize = true;
-            grpComment.Controls.Add(tableLayoutPanelComment);
-            grpComment.Dock = DockStyle.Top;
-            grpComment.Location = new Point(0, 294);
-            grpComment.Name = "grpComment";
-            grpComment.Size = new Size(715, 51);
-            grpComment.TabIndex = 57;
-            grpComment.TabStop = false;
-            grpComment.Text = "Comment";
+            tbTemplateComment.Location = new Point(358, 3);
+            tbTemplateComment.Name = "tbTemplateComment";
+            tbTemplateComment.Size = new Size(80, 23);
+            tbTemplateComment.TabIndex = 4;
+            // 
+            // grpTemplateComment
+            // 
+            grpTemplateComment.AutoSize = true;
+            grpTemplateComment.Controls.Add(tableLayoutPanelComment);
+            grpTemplateComment.Dock = DockStyle.Top;
+            grpTemplateComment.Location = new Point(0, 294);
+            grpTemplateComment.Name = "grpTemplateComment";
+            grpTemplateComment.Size = new Size(690, 76);
+            grpTemplateComment.TabIndex = 57;
+            grpTemplateComment.TabStop = false;
+            grpTemplateComment.Text = "Commit Template Comment";
             // 
             // tableLayoutPanelComment
             // 
             tableLayoutPanelComment.ColumnCount = 2;
-            tableLayoutPanelComment.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 360F));
+            tableLayoutPanelComment.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 355F));
             tableLayoutPanelComment.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanelComment.Controls.Add(lblComment, 0, 0);
-            tableLayoutPanelComment.Controls.Add(tbComment, 1, 0);
+            tableLayoutPanelComment.Controls.Add(tbTemplateComment, 1, 0);
+            tableLayoutPanelComment.Controls.Add(lblTemplateComment, 0, 0);
+            tableLayoutPanelComment.Controls.Add(chkReadFromGitAfterAppStart, 0, 1);
             tableLayoutPanelComment.Dock = DockStyle.Top;
             tableLayoutPanelComment.Location = new Point(3, 19);
             tableLayoutPanelComment.Name = "tableLayoutPanelComment";
-            tableLayoutPanelComment.RowCount = 1;
+            tableLayoutPanelComment.RowCount = 2;
             tableLayoutPanelComment.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanelComment.Size = new Size(709, 29);
+            tableLayoutPanelComment.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanelComment.Size = new Size(684, 54);
             tableLayoutPanelComment.TabIndex = 0;
             // 
-            // lblComment
+            // lblTemplateComment
             // 
-            lblComment.Anchor = AnchorStyles.Left;
-            lblComment.AutoSize = true;
-            lblComment.Location = new Point(3, 7);
-            lblComment.Name = "lblComment";
-            lblComment.Size = new Size(106, 15);
-            lblComment.TabIndex = 3;
-            lblComment.Text = "Commit comment";
+            lblTemplateComment.Anchor = AnchorStyles.Left;
+            lblTemplateComment.AutoSize = true;
+            lblTemplateComment.Location = new Point(3, 6);
+            lblTemplateComment.Name = "lblTemplateComment";
+            lblTemplateComment.Size = new Size(199, 15);
+            lblTemplateComment.TabIndex = 3;
+            lblTemplateComment.Text = "Comment/line prefix (char or string)";
+            // 
+            // chkReadFromGitAfterAppStart
+            // 
+            chkReadFromGitAfterAppStart.AutoSize = true;
+            chkReadFromGitAfterAppStart.Location = new Point(3, 30);
+            chkReadFromGitAfterAppStart.Name = "chkReadFromGitAfterAppStart";
+            chkReadFromGitAfterAppStart.Size = new Size(213, 19);
+            chkReadFromGitAfterAppStart.TabIndex = 5;
+            chkReadFromGitAfterAppStart.Text = "Read from git after application start";
+            chkReadFromGitAfterAppStart.UseVisualStyleBackColor = true;
             // 
             // CommitDialogSettingsPage
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoScroll = true;
-            Controls.Add(grpComment);
+            Controls.Add(grpTemplateComment);
             Controls.Add(groupBoxBehaviour);
             Name = "CommitDialogSettingsPage";
             Size = new Size(1014, 950);
@@ -310,7 +323,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             grpAdditionalButtons.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
-            grpComment.ResumeLayout(false);
+            grpTemplateComment.ResumeLayout(false);
             tableLayoutPanelComment.ResumeLayout(false);
             tableLayoutPanelComment.PerformLayout();
             ResumeLayout(false);
@@ -333,9 +346,10 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private CheckBox chkEnsureCommitMessageSecondLineEmpty;
         private CheckBox chkAutocomplete;
         private CheckBox cbRememberAmendCommitState;
-        private GroupBox grpComment;
+        private GroupBox grpTemplateComment;
         private TableLayoutPanel tableLayoutPanelComment;
-        private Label lblComment;
-        private TextBox tbComment;
+        private Label lblTemplateComment;
+        private TextBox tbTemplateComment;
+        private CheckBox chkReadFromGitAfterAppStart;
     }
 }

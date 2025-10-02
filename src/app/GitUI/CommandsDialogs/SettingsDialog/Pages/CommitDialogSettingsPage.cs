@@ -22,7 +22,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowResetAllChanges.Checked = AppSettings.ShowResetAllChanges;
             chkAutocomplete.Checked = AppSettings.ProvideAutocompletion;
             cbRememberAmendCommitState.Checked = AppSettings.RememberAmendCommitState;
-            lblComment.Text = AppSettings.Comment;
+            tbTemplateComment.Text = AppSettings.Comment;
 
             base.SettingsToPage();
         }
@@ -38,7 +38,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowResetAllChanges = chkShowResetAllChanges.Checked;
             AppSettings.ProvideAutocompletion = chkAutocomplete.Checked;
             AppSettings.RememberAmendCommitState = cbRememberAmendCommitState.Checked;
-            AppSettings.Comment = lblComment.Text;
+            AppSettings.Comment = tbTemplateComment.Text;
             base.PageToSettings();
         }
     }
