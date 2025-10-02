@@ -53,11 +53,30 @@ namespace GitUI.CommandsDialogs
                     commitSummaryUserControl1.Revision = revision;
                 }
             }
+            else if (!Module.IsBareRepository())
+            {
+                ConfigureForOrphanBranch();
+            }
 
             if (!string.IsNullOrWhiteSpace(newBranchNamePrefix))
             {
                 BranchNameTextBox.Text = newBranchNamePrefix;
             }
+        }
+
+        private void ConfigureForOrphanBranch()
+        {
+            tableLayout.SetColumnSpan(lblCreateBranch, 2);
+            lblCreateBranch.Text = "Creating orphan branch (repository has no commits)";
+            commitPicker.Visible = false;
+            chkCheckoutAfterCreate.Checked = true;
+            chkCheckoutAfterCreate.Enabled = false;
+            grpOrphan.Enabled = true;
+            chkCreateOrphan.Checked = true;
+            chkCreateOrphan.Enabled = false;
+            chkClearOrphan.Checked = false;
+
+            CouldBeOrphan = true;
         }
 
         private void BranchNameTextBox_Leave(object sender, EventArgs e)
@@ -97,12 +116,17 @@ namespace GitUI.CommandsDialogs
             // if the user hits [Enter] at any point, we need to trigger BranchNameTextBox Leave event
             cmdOk.Focus();
 
-            ObjectId objectId = commitPicker.SelectedObjectId;
-            if (objectId is null)
+            ObjectId objectId = null;
+
+            if (!chkCreateOrphan.Checked)
             {
-                MessageBox.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                DialogResult = DialogResult.None;
-                return;
+                objectId = commitPicker.SelectedObjectId;
+                if (objectId is null)
+                {
+                    MessageBox.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    DialogResult = DialogResult.None;
+                    return;
+                }
             }
 
             string branchName = BranchNameTextBox.Text.Trim();
@@ -158,6 +182,8 @@ namespace GitUI.CommandsDialogs
             {
                 chkCheckoutAfterCreate.Checked = true;
             }
+
+            commitPicker.Enabled = !isOrphan;
         }
 
         private void commitPicker_SelectedObjectIdChanged(object sender, EventArgs e)
