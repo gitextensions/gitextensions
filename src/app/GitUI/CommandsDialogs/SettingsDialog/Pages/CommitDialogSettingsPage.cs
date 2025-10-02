@@ -38,6 +38,21 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowResetAllChanges = chkShowResetAllChanges.Checked;
             AppSettings.ProvideAutocompletion = chkAutocomplete.Checked;
             AppSettings.RememberAmendCommitState = cbRememberAmendCommitState.Checked;
+
+            // Validate template comment is not empty
+            if (string.IsNullOrWhiteSpace(tbTemplateComment.Text))
+            {
+                MessageBox.Show(this,
+                    "Comment/line prefix cannot be empty. Please enter a value.",
+                    "Validation Error",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Warning);
+                // Focus the textbox and select all text for easy editing
+                tbTemplateComment.Focus();
+                tbTemplateComment.SelectAll();
+                return;
+            }
+
             AppSettings.Comment = tbTemplateComment.Text;
             base.PageToSettings();
         }
