@@ -456,6 +456,12 @@ namespace GitCommands
             set => SetString("lastCommitMessage", value);
         }
 
+        public static string Comment
+        {
+            get => GetString("Comment", "#");
+            set => SetString("Comment", value);
+        }
+
         public static int CommitDialogNumberOfPreviousMessages
         {
             get => GetInt("commitDialogNumberOfPreviousMessages", 6);
@@ -2270,6 +2276,7 @@ namespace GitCommands
             }
         }
 
+        
         internal static TestAccessor GetTestAccessor() => new();
 
         internal struct TestAccessor
