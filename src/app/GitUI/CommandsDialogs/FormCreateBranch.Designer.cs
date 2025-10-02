@@ -29,73 +29,73 @@
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            label2 = new Label();
-            commitPickerSmallControl1 = new GitUI.UserControls.CommitPickerSmallControl();
-            chkbxCheckoutAfterCreate = new CheckBox();
+            lblCreateBranch = new Label();
+            commitPicker = new GitUI.UserControls.CommitPickerSmallControl();
+            chkCheckoutAfterCreate = new CheckBox();
             label1 = new Label();
             BranchNameTextBox = new TextBox();
-            Orphan = new CheckBox();
-            ClearOrphan = new CheckBox();
-            Ok = new Button();
+            chkCreateOrphan = new CheckBox();
+            chkClearOrphan = new CheckBox();
+            cmdOk = new Button();
             toolTip = new ToolTip(components);
-            tableLayoutPanel1 = new TableLayoutPanel();
-            groupBox1 = new GroupBox();
+            tableLayout = new TableLayoutPanel();
+            grpOrphan = new GroupBox();
             flowLayoutPanel1 = new FlowLayoutPanel();
             commitSummaryUserControl1 = new GitUI.UserControls.CommitSummaryUserControl();
             MainPanel.SuspendLayout();
             ControlsPanel.SuspendLayout();
-            tableLayoutPanel1.SuspendLayout();
-            groupBox1.SuspendLayout();
+            tableLayout.SuspendLayout();
+            grpOrphan.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
             SuspendLayout();
             // 
             // MainPanel
             // 
-            MainPanel.Controls.Add(tableLayoutPanel1);
-            MainPanel.Size = new Size(570, 325);
+            MainPanel.Controls.Add(tableLayout);
+            MainPanel.Size = new Size(570, 354);
             // 
             // ControlsPanel
             // 
-            ControlsPanel.Controls.Add(Ok);
+            ControlsPanel.Controls.Add(cmdOk);
             ControlsPanel.Location = new Point(0, 325);
             ControlsPanel.Size = new Size(570, 41);
             // 
-            // label2
+            // lblCreateBranch
             // 
-            label2.AutoSize = true;
-            label2.Dock = DockStyle.Fill;
-            label2.Location = new Point(3, 31);
-            label2.Margin = new Padding(3);
-            label2.Name = "label2";
-            label2.Size = new Size(160, 22);
-            label2.TabIndex = 2;
-            label2.Text = "Create b&ranch at this revision";
-            label2.TextAlign = ContentAlignment.MiddleLeft;
+            lblCreateBranch.AutoSize = true;
+            lblCreateBranch.Dock = DockStyle.Fill;
+            lblCreateBranch.Location = new Point(3, 31);
+            lblCreateBranch.Margin = new Padding(3);
+            lblCreateBranch.Name = "lblCreateBranch";
+            lblCreateBranch.Size = new Size(160, 22);
+            lblCreateBranch.TabIndex = 2;
+            lblCreateBranch.Text = "Create b&ranch at this revision";
+            lblCreateBranch.TextAlign = ContentAlignment.MiddleLeft;
             // 
-            // commitPickerSmallControl1
+            // commitPicker
             // 
-            commitPickerSmallControl1.AutoSize = true;
-            commitPickerSmallControl1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            commitPickerSmallControl1.Dock = DockStyle.Fill;
-            commitPickerSmallControl1.Location = new Point(169, 31);
-            commitPickerSmallControl1.MinimumSize = new Size(100, 26);
-            commitPickerSmallControl1.Name = "commitPickerSmallControl1";
-            commitPickerSmallControl1.Size = new Size(380, 26);
-            commitPickerSmallControl1.TabIndex = 3;
-            commitPickerSmallControl1.SelectedObjectIdChanged += commitPickerSmallControl1_SelectedObjectIdChanged;
+            commitPicker.AutoSize = true;
+            commitPicker.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            commitPicker.Dock = DockStyle.Fill;
+            commitPicker.Location = new Point(169, 31);
+            commitPicker.MinimumSize = new Size(100, 26);
+            commitPicker.Name = "commitPicker";
+            commitPicker.Size = new Size(374, 26);
+            commitPicker.TabIndex = 3;
+            commitPicker.SelectedObjectIdChanged += commitPicker_SelectedObjectIdChanged;
             // 
-            // chkbxCheckoutAfterCreate
+            // chkCheckoutAfterCreate
             // 
-            chkbxCheckoutAfterCreate.AutoSize = true;
-            chkbxCheckoutAfterCreate.Checked = true;
-            chkbxCheckoutAfterCreate.CheckState = CheckState.Checked;
-            chkbxCheckoutAfterCreate.Dock = DockStyle.Fill;
-            chkbxCheckoutAfterCreate.Location = new Point(169, 59);
-            chkbxCheckoutAfterCreate.Name = "chkbxCheckoutAfterCreate";
-            chkbxCheckoutAfterCreate.Size = new Size(380, 22);
-            chkbxCheckoutAfterCreate.TabIndex = 5;
-            chkbxCheckoutAfterCreate.Text = "Checkout &after create";
-            chkbxCheckoutAfterCreate.UseVisualStyleBackColor = true;
+            chkCheckoutAfterCreate.AutoSize = true;
+            chkCheckoutAfterCreate.Checked = true;
+            chkCheckoutAfterCreate.CheckState = CheckState.Checked;
+            chkCheckoutAfterCreate.Dock = DockStyle.Fill;
+            chkCheckoutAfterCreate.Location = new Point(169, 59);
+            chkCheckoutAfterCreate.Name = "chkCheckoutAfterCreate";
+            chkCheckoutAfterCreate.Size = new Size(374, 22);
+            chkCheckoutAfterCreate.TabIndex = 5;
+            chkCheckoutAfterCreate.Text = "Checkout &after create";
+            chkCheckoutAfterCreate.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -114,136 +114,136 @@
             BranchNameTextBox.Dock = DockStyle.Fill;
             BranchNameTextBox.Location = new Point(169, 3);
             BranchNameTextBox.Name = "BranchNameTextBox";
-            BranchNameTextBox.Size = new Size(380, 23);
+            BranchNameTextBox.Size = new Size(374, 23);
             BranchNameTextBox.TabIndex = 1;
             BranchNameTextBox.Leave += BranchNameTextBox_Leave;
             // 
-            // Orphan
+            // chkCreateOrphan
             // 
-            Orphan.AutoSize = true;
-            Orphan.Location = new Point(11, 3);
-            Orphan.Name = "Orphan";
-            Orphan.Size = new Size(101, 19);
-            Orphan.TabIndex = 1;
-            Orphan.Text = "Create or&phan";
-            toolTip.SetToolTip(Orphan, "New branch will have NO parents");
-            Orphan.UseVisualStyleBackColor = true;
-            Orphan.CheckedChanged += Orphan_CheckedChanged;
+            chkCreateOrphan.AutoSize = true;
+            chkCreateOrphan.Location = new Point(11, 3);
+            chkCreateOrphan.Name = "chkCreateOrphan";
+            chkCreateOrphan.Size = new Size(101, 19);
+            chkCreateOrphan.TabIndex = 1;
+            chkCreateOrphan.Text = "Create or&phan";
+            toolTip.SetToolTip(chkCreateOrphan, "New branch will have NO parents");
+            chkCreateOrphan.UseVisualStyleBackColor = true;
+            chkCreateOrphan.CheckedChanged += chkCreateOrphan_CheckedChanged;
             // 
-            // ClearOrphan
+            // chkClearOrphan
             // 
-            ClearOrphan.AutoSize = true;
-            ClearOrphan.Checked = true;
-            ClearOrphan.CheckState = CheckState.Checked;
-            ClearOrphan.Enabled = false;
-            ClearOrphan.Location = new Point(118, 3);
-            ClearOrphan.Name = "ClearOrphan";
-            ClearOrphan.Size = new Size(204, 19);
-            ClearOrphan.TabIndex = 3;
-            ClearOrphan.Text = "Clear &working directory and index";
-            toolTip.SetToolTip(ClearOrphan, "Remove files from the working directory and from the index");
-            ClearOrphan.UseVisualStyleBackColor = true;
+            chkClearOrphan.AutoSize = true;
+            chkClearOrphan.Checked = true;
+            chkClearOrphan.CheckState = CheckState.Checked;
+            chkClearOrphan.Enabled = false;
+            chkClearOrphan.Location = new Point(118, 3);
+            chkClearOrphan.Name = "chkClearOrphan";
+            chkClearOrphan.Size = new Size(204, 19);
+            chkClearOrphan.TabIndex = 3;
+            chkClearOrphan.Text = "Clear &working directory and index";
+            toolTip.SetToolTip(chkClearOrphan, "Remove files from the working directory and from the index");
+            chkClearOrphan.UseVisualStyleBackColor = true;
             // 
-            // Ok
+            // cmdOk
             // 
-            Ok.AutoSize = true;
-            Ok.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            Ok.DialogResult = DialogResult.OK;
-            Ok.Image = Properties.Images.BranchCreate;
-            Ok.ImageAlign = ContentAlignment.TopLeft;
-            Ok.Location = new Point(450, 8);
-            Ok.MinimumSize = new Size(75, 23);
-            Ok.Name = "Ok";
-            Ok.Size = new Size(107, 25);
-            Ok.TabIndex = 7;
-            Ok.Text = "&Create branch";
-            Ok.TextAlign = ContentAlignment.MiddleRight;
-            Ok.TextImageRelation = TextImageRelation.ImageBeforeText;
-            Ok.UseVisualStyleBackColor = true;
-            Ok.Click += OkClick;
+            cmdOk.AutoSize = true;
+            cmdOk.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            cmdOk.DialogResult = DialogResult.OK;
+            cmdOk.Image = Properties.Images.BranchCreate;
+            cmdOk.ImageAlign = ContentAlignment.TopLeft;
+            cmdOk.Location = new Point(450, 8);
+            cmdOk.MinimumSize = new Size(75, 23);
+            cmdOk.Name = "cmdOk";
+            cmdOk.Size = new Size(107, 25);
+            cmdOk.TabIndex = 7;
+            cmdOk.Text = "&Create branch";
+            cmdOk.TextAlign = ContentAlignment.MiddleRight;
+            cmdOk.TextImageRelation = TextImageRelation.ImageBeforeText;
+            cmdOk.UseVisualStyleBackColor = true;
+            cmdOk.Click += cmdOk_Click;
             // 
-            // tableLayoutPanel1
+            // tableLayout
             // 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.ColumnCount = 2;
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            tableLayoutPanel1.Controls.Add(groupBox1, 0, 4);
-            tableLayoutPanel1.Controls.Add(commitPickerSmallControl1, 1, 1);
-            tableLayoutPanel1.Controls.Add(BranchNameTextBox, 1, 0);
-            tableLayoutPanel1.Controls.Add(label1, 0, 0);
-            tableLayoutPanel1.Controls.Add(label2, 0, 1);
-            tableLayoutPanel1.Controls.Add(chkbxCheckoutAfterCreate, 1, 2);
-            tableLayoutPanel1.Controls.Add(commitSummaryUserControl1, 0, 3);
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            tableLayoutPanel1.Location = new Point(9, 9);
-            tableLayoutPanel1.Margin = new Padding(0);
-            tableLayoutPanel1.Name = "tableLayoutPanel1";
-            tableLayoutPanel1.RowCount = 6;
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 28F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 28F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle(SizeType.Absolute, 28F));
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.RowStyles.Add(new RowStyle());
-            tableLayoutPanel1.Size = new Size(552, 301);
-            tableLayoutPanel1.TabIndex = 0;
+            tableLayout.AutoSize = true;
+            tableLayout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayout.ColumnCount = 2;
+            tableLayout.ColumnStyles.Add(new ColumnStyle());
+            tableLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            tableLayout.Controls.Add(grpOrphan, 0, 4);
+            tableLayout.Controls.Add(commitPicker, 1, 1);
+            tableLayout.Controls.Add(BranchNameTextBox, 1, 0);
+            tableLayout.Controls.Add(label1, 0, 0);
+            tableLayout.Controls.Add(lblCreateBranch, 0, 1);
+            tableLayout.Controls.Add(chkCheckoutAfterCreate, 1, 2);
+            tableLayout.Controls.Add(commitSummaryUserControl1, 0, 3);
+            tableLayout.Dock = DockStyle.Fill;
+            tableLayout.Location = new Point(12, 12);
+            tableLayout.Margin = new Padding(0);
+            tableLayout.Name = "tableLayout";
+            tableLayout.RowCount = 6;
+            tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 28F));
+            tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 28F));
+            tableLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 28F));
+            tableLayout.RowStyles.Add(new RowStyle());
+            tableLayout.RowStyles.Add(new RowStyle());
+            tableLayout.RowStyles.Add(new RowStyle());
+            tableLayout.Size = new Size(546, 330);
+            tableLayout.TabIndex = 0;
             // 
-            // groupBox1
+            // grpOrphan
             // 
-            groupBox1.AutoSize = true;
-            groupBox1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.SetColumnSpan(groupBox1, 2);
-            groupBox1.Controls.Add(flowLayoutPanel1);
-            groupBox1.Dock = DockStyle.Fill;
-            groupBox1.Location = new Point(3, 241);
-            groupBox1.Name = "groupBox1";
-            groupBox1.Padding = new Padding(8);
-            groupBox1.Size = new Size(546, 57);
-            groupBox1.TabIndex = 6;
-            groupBox1.TabStop = false;
-            groupBox1.Text = "Orphan";
+            grpOrphan.AutoSize = true;
+            grpOrphan.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            tableLayout.SetColumnSpan(grpOrphan, 2);
+            grpOrphan.Controls.Add(flowLayoutPanel1);
+            grpOrphan.Dock = DockStyle.Fill;
+            grpOrphan.Location = new Point(3, 241);
+            grpOrphan.Name = "grpOrphan";
+            grpOrphan.Padding = new Padding(8);
+            grpOrphan.Size = new Size(540, 57);
+            grpOrphan.TabIndex = 6;
+            grpOrphan.TabStop = false;
+            grpOrphan.Text = "Orphan";
             // 
             // flowLayoutPanel1
             // 
             flowLayoutPanel1.AutoSize = true;
             flowLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            flowLayoutPanel1.Controls.Add(Orphan);
-            flowLayoutPanel1.Controls.Add(ClearOrphan);
+            flowLayoutPanel1.Controls.Add(chkCreateOrphan);
+            flowLayoutPanel1.Controls.Add(chkClearOrphan);
             flowLayoutPanel1.Dock = DockStyle.Fill;
             flowLayoutPanel1.Location = new Point(8, 24);
             flowLayoutPanel1.Name = "flowLayoutPanel1";
             flowLayoutPanel1.Padding = new Padding(8, 0, 0, 0);
-            flowLayoutPanel1.Size = new Size(530, 25);
+            flowLayoutPanel1.Size = new Size(524, 25);
             flowLayoutPanel1.TabIndex = 1;
             // 
             // commitSummaryUserControl1
             // 
             commitSummaryUserControl1.AutoSize = true;
             commitSummaryUserControl1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.SetColumnSpan(commitSummaryUserControl1, 2);
+            tableLayout.SetColumnSpan(commitSummaryUserControl1, 2);
             commitSummaryUserControl1.Dock = DockStyle.Fill;
             commitSummaryUserControl1.Location = new Point(2, 86);
             commitSummaryUserControl1.Margin = new Padding(2, 2, 2, 2);
             commitSummaryUserControl1.MinimumSize = new Size(293, 107);
             commitSummaryUserControl1.Name = "commitSummaryUserControl1";
             commitSummaryUserControl1.Revision = null;
-            commitSummaryUserControl1.Size = new Size(548, 150);
+            commitSummaryUserControl1.Size = new Size(542, 150);
             commitSummaryUserControl1.TabIndex = 7;
             // 
             // FormCreateBranch
             // 
-            AcceptButton = Ok;
+            AcceptButton = cmdOk;
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
-            ClientSize = new Size(570, 366);
+            ClientSize = new Size(570, 386);
             HelpButton = true;
             ManualSectionAnchorName = "create-branch";
             ManualSectionSubfolder = "branches";
             MaximizeBox = false;
             MinimizeBox = false;
-            MinimumSize = new Size(580, 405);
+            MinimumSize = new Size(580, 425);
             Name = "FormCreateBranch";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Create branch";
@@ -251,10 +251,10 @@
             MainPanel.PerformLayout();
             ControlsPanel.ResumeLayout(false);
             ControlsPanel.PerformLayout();
-            tableLayoutPanel1.ResumeLayout(false);
-            tableLayoutPanel1.PerformLayout();
-            groupBox1.ResumeLayout(false);
-            groupBox1.PerformLayout();
+            tableLayout.ResumeLayout(false);
+            tableLayout.PerformLayout();
+            grpOrphan.ResumeLayout(false);
+            grpOrphan.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
             ResumeLayout(false);
@@ -263,17 +263,17 @@
 
         #endregion
 
-        private CheckBox Orphan;
+        private CheckBox chkCreateOrphan;
         private ToolTip toolTip;
-        private CheckBox ClearOrphan;
+        private CheckBox chkClearOrphan;
         private TextBox BranchNameTextBox;
         private Label label1;
-        private Label label2;
-        private UserControls.CommitPickerSmallControl commitPickerSmallControl1;
-        private GroupBox groupBox1;
-        private TableLayoutPanel tableLayoutPanel1;
-        private Button Ok;
-        private CheckBox chkbxCheckoutAfterCreate;
+        private Label lblCreateBranch;
+        private UserControls.CommitPickerSmallControl commitPicker;
+        private GroupBox grpOrphan;
+        private TableLayoutPanel tableLayout;
+        private Button cmdOk;
+        private CheckBox chkCheckoutAfterCreate;
         private FlowLayoutPanel flowLayoutPanel1;
         private UserControls.CommitSummaryUserControl commitSummaryUserControl1;
     }

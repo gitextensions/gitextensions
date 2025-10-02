@@ -14,6 +14,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRevisionSelected = new("Select 1 revision to create the branch on.");
         private readonly TranslationString _branchNameIsEmpty = new("Enter branch name.");
         private readonly TranslationString _branchNameIsNotValid = new("“{0}” is not valid branch name.");
+        private readonly TranslationString _creatingOrphanBranch = new("Creating orphan branch (repository has no commits)");
         private readonly IGitBranchNameNormaliser _branchNameNormaliser = new GitBranchNameNormaliser();
         private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
 
@@ -30,7 +31,7 @@ namespace GitUI.CommandsDialogs
 
             InitializeComplete();
 
-            groupBox1.AutoSize = true;
+            grpOrphan.AutoSize = true;
 
             if (objectId?.IsArtificial is true)
             {
@@ -42,7 +43,7 @@ namespace GitUI.CommandsDialogs
             objectId ??= Module.GetCurrentCheckout();
             if (objectId is not null)
             {
-                commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
+                commitPicker.SetSelectedCommitHash(objectId.ToString());
 
                 if (string.IsNullOrWhiteSpace(newBranchNamePrefix))
                 {
@@ -53,11 +54,30 @@ namespace GitUI.CommandsDialogs
                     commitSummaryUserControl1.Revision = revision;
                 }
             }
+            else if (!Module.IsBareRepository())
+            {
+                ConfigureForOrphanBranch();
+            }
 
             if (!string.IsNullOrWhiteSpace(newBranchNamePrefix))
             {
                 BranchNameTextBox.Text = newBranchNamePrefix;
             }
+        }
+
+        private void ConfigureForOrphanBranch()
+        {
+            tableLayout.SetColumnSpan(lblCreateBranch, 2);
+            lblCreateBranch.Text = _creatingOrphanBranch.Text;
+            commitPicker.Visible = false;
+            chkCheckoutAfterCreate.Checked = true;
+            chkCheckoutAfterCreate.Enabled = false;
+            grpOrphan.Enabled = true;
+            chkCreateOrphan.Checked = true;
+            chkCreateOrphan.Enabled = false;
+            chkClearOrphan.Checked = false;
+
+            CouldBeOrphan = true;
         }
 
         private void BranchNameTextBox_Leave(object sender, EventArgs e)
@@ -84,25 +104,30 @@ namespace GitUI.CommandsDialogs
                 label.AutoSize = true;
             }
 
-            chkbxCheckoutAfterCreate.Checked = CheckoutAfterCreation;
-            commitPickerSmallControl1.Enabled = UserAbleToChangeRevision;
-            groupBox1.Enabled = CouldBeOrphan;
+            chkCheckoutAfterCreate.Checked = CheckoutAfterCreation;
+            commitPicker.Enabled = UserAbleToChangeRevision;
+            grpOrphan.Enabled = CouldBeOrphan;
 
             BranchNameTextBox.Focus();
         }
 
-        private void OkClick(object sender, EventArgs e)
+        private void cmdOk_Click(object sender, EventArgs e)
         {
             // Ok button set as the "AcceptButton" for the form
             // if the user hits [Enter] at any point, we need to trigger BranchNameTextBox Leave event
-            Ok.Focus();
+            cmdOk.Focus();
 
-            ObjectId objectId = commitPickerSmallControl1.SelectedObjectId;
-            if (objectId is null)
+            ObjectId objectId = null;
+
+            if (!chkCreateOrphan.Checked)
             {
-                MessageBox.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                DialogResult = DialogResult.None;
-                return;
+                objectId = commitPicker.SelectedObjectId;
+                if (objectId is null)
+                {
+                    MessageBox.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    DialogResult = DialogResult.None;
+                    return;
+                }
             }
 
             string branchName = BranchNameTextBox.Text.Trim();
@@ -124,18 +149,18 @@ namespace GitUI.CommandsDialogs
             {
                 ObjectId originalHash = Module.GetCurrentCheckout();
 
-                ArgumentString command = Orphan.Checked
+                ArgumentString command = chkCreateOrphan.Checked
                     ? Commands.CreateOrphan(branchName, objectId)
-                    : Commands.Branch(branchName, objectId.ToString(), chkbxCheckoutAfterCreate.Checked);
+                    : Commands.Branch(branchName, objectId.ToString(), chkCheckoutAfterCreate.Checked);
 
                 bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
-                if (Orphan.Checked && success && ClearOrphan.Checked)
+                if (chkCreateOrphan.Checked && success && chkClearOrphan.Checked)
                 {
                     // orphan AND orphan creation success AND clear
                     FormProcess.ShowDialog(this, UICommands, arguments: Commands.Remove(), Module.WorkingDir, input: null, useDialogSettings: true);
                 }
 
-                if (success && chkbxCheckoutAfterCreate.Checked && objectId != originalHash)
+                if (success && chkCheckoutAfterCreate.Checked && objectId != originalHash)
                 {
                     UICommands.UpdateSubmodules(this);
                 }
@@ -148,21 +173,23 @@ namespace GitUI.CommandsDialogs
             }
         }
 
-        private void Orphan_CheckedChanged(object sender, EventArgs e)
+        private void chkCreateOrphan_CheckedChanged(object sender, EventArgs e)
         {
-            bool isOrphan = Orphan.Checked;
-            ClearOrphan.Enabled = isOrphan;
+            bool isOrphan = chkCreateOrphan.Checked;
+            chkClearOrphan.Enabled = isOrphan;
 
-            chkbxCheckoutAfterCreate.Enabled = isOrphan == false; // auto-checkout for orphan
+            chkCheckoutAfterCreate.Enabled = isOrphan == false; // auto-checkout for orphan
             if (isOrphan)
             {
-                chkbxCheckoutAfterCreate.Checked = true;
+                chkCheckoutAfterCreate.Checked = true;
             }
+
+            commitPicker.Enabled = !isOrphan;
         }
 
-        private void commitPickerSmallControl1_SelectedObjectIdChanged(object sender, EventArgs e)
+        private void commitPicker_SelectedObjectIdChanged(object sender, EventArgs e)
         {
-            GitRevision revision = Module.GetRevision(commitPickerSmallControl1.SelectedObjectId, shortFormat: true, loadRefs: true);
+            GitRevision revision = Module.GetRevision(commitPicker.SelectedObjectId, shortFormat: true, loadRefs: true);
             commitSummaryUserControl1.Revision = revision;
         }
     }
