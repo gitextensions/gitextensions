@@ -22,6 +22,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowResetAllChanges.Checked = AppSettings.ShowResetAllChanges;
             chkAutocomplete.Checked = AppSettings.ProvideAutocompletion;
             cbRememberAmendCommitState.Checked = AppSettings.RememberAmendCommitState;
+            chkReadFromGitAfterAppStart.Checked = AppSettings.ReadFromGitAfterAppStart;
             tbTemplateComment.Text = AppSettings.Comment;
 
             base.SettingsToPage();
@@ -38,6 +39,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowResetAllChanges = chkShowResetAllChanges.Checked;
             AppSettings.ProvideAutocompletion = chkAutocomplete.Checked;
             AppSettings.RememberAmendCommitState = cbRememberAmendCommitState.Checked;
+            AppSettings.ReadFromGitAfterAppStart = chkReadFromGitAfterAppStart.Checked;
 
             // Validate template comment is not empty
             if (string.IsNullOrWhiteSpace(tbTemplateComment.Text))

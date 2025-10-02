@@ -885,6 +885,12 @@ namespace GitCommands
             set => SetBool("refreshcommitdialogonformfocus", value);
         }
 
+        public static bool ReadFromGitAfterAppStart
+        {
+            get => GetBool("readfromgitafterappstart", false);
+            set => SetBool("readfromgitafterappstart", value);
+        }
+
         public static bool StageInSuperprojectAfterCommit
         {
             get => GetBool("stageinsuperprojectaftercommit", true);
