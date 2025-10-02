@@ -42,13 +42,19 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowCommitAndPush = new CheckBox();
             chkShowResetWorkTreeChanges = new CheckBox();
             chkShowResetAllChanges = new CheckBox();
+            tbComment = new TextBox();
             chkEnsureCommitMessageSecondLineEmpty = new CheckBox();
+            grpComment = new GroupBox();
+            tableLayoutPanelComment = new TableLayoutPanel();
+            lblComment = new Label();
             groupBoxBehaviour.SuspendLayout();
             tableLayoutPanelBehaviour.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this
                 ._NO_TRANSLATE_CommitDialogNumberOfPreviousMessages)).BeginInit();
             grpAdditionalButtons.SuspendLayout();
             flowLayoutPanel1.SuspendLayout();
+            grpComment.SuspendLayout();
+            tableLayoutPanelComment.SuspendLayout();
             SuspendLayout();
             // 
             // groupBoxBehaviour
@@ -228,6 +234,13 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowResetAllChanges.Text = "Reset All Changes";
             chkShowResetAllChanges.UseVisualStyleBackColor = true;
             // 
+            // tbComment
+            // 
+            tbComment.Location = new Point(363, 3);
+            tbComment.Name = "tbComment";
+            tbComment.Size = new Size(94, 23);
+            tbComment.TabIndex = 4;
+            // 
             // chkEnsureCommitMessageSecondLineEmpty
             // 
             chkEnsureCommitMessageSecondLineEmpty.AutoSize = true;
@@ -240,11 +253,49 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 "Ensure the second line of commit message is empty";
             chkEnsureCommitMessageSecondLineEmpty.UseVisualStyleBackColor = true;
             // 
+            // grpComment
+            // 
+            grpComment.AutoSize = true;
+            grpComment.Controls.Add(tableLayoutPanelComment);
+            grpComment.Dock = DockStyle.Top;
+            grpComment.Location = new Point(0, 294);
+            grpComment.Name = "grpComment";
+            grpComment.Size = new Size(715, 51);
+            grpComment.TabIndex = 57;
+            grpComment.TabStop = false;
+            grpComment.Text = "Comment";
+            // 
+            // tableLayoutPanelComment
+            // 
+            tableLayoutPanelComment.ColumnCount = 2;
+            tableLayoutPanelComment.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 360F));
+            tableLayoutPanelComment.ColumnStyles.Add(new ColumnStyle());
+            tableLayoutPanelComment.Controls.Add(lblComment, 0, 0);
+            tableLayoutPanelComment.Controls.Add(tbComment, 1, 0);
+            tableLayoutPanelComment.Dock = DockStyle.Top;
+            tableLayoutPanelComment.Location = new Point(3, 19);
+            tableLayoutPanelComment.Name = "tableLayoutPanelComment";
+            tableLayoutPanelComment.RowCount = 1;
+            tableLayoutPanelComment.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            tableLayoutPanelComment.Size = new Size(709, 29);
+            tableLayoutPanelComment.TabIndex = 0;
+            // 
+            // lblComment
+            // 
+            lblComment.Anchor = AnchorStyles.Left;
+            lblComment.AutoSize = true;
+            lblComment.Location = new Point(3, 7);
+            lblComment.Name = "lblComment";
+            lblComment.Size = new Size(106, 15);
+            lblComment.TabIndex = 3;
+            lblComment.Text = "Commit comment";
+            // 
             // CommitDialogSettingsPage
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             AutoScroll = true;
+            Controls.Add(grpComment);
             Controls.Add(groupBoxBehaviour);
             Name = "CommitDialogSettingsPage";
             Size = new Size(1014, 950);
@@ -259,6 +310,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             grpAdditionalButtons.PerformLayout();
             flowLayoutPanel1.ResumeLayout(false);
             flowLayoutPanel1.PerformLayout();
+            grpComment.ResumeLayout(false);
+            tableLayoutPanelComment.ResumeLayout(false);
+            tableLayoutPanelComment.PerformLayout();
             ResumeLayout(false);
             PerformLayout();
         }
@@ -279,5 +333,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private CheckBox chkEnsureCommitMessageSecondLineEmpty;
         private CheckBox chkAutocomplete;
         private CheckBox cbRememberAmendCommitState;
+        private GroupBox grpComment;
+        private TableLayoutPanel tableLayoutPanelComment;
+        private Label lblComment;
+        private TextBox tbComment;
     }
 }
