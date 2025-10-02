@@ -14,6 +14,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _noRevisionSelected = new("Select 1 revision to create the branch on.");
         private readonly TranslationString _branchNameIsEmpty = new("Enter branch name.");
         private readonly TranslationString _branchNameIsNotValid = new("“{0}” is not valid branch name.");
+        private readonly TranslationString _creatingOrphanBranch = new("Creating orphan branch (repository has no commits)");
         private readonly IGitBranchNameNormaliser _branchNameNormaliser = new GitBranchNameNormaliser();
         private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
 
@@ -67,7 +68,7 @@ namespace GitUI.CommandsDialogs
         private void ConfigureForOrphanBranch()
         {
             tableLayout.SetColumnSpan(lblCreateBranch, 2);
-            lblCreateBranch.Text = "Creating orphan branch (repository has no commits)";
+            lblCreateBranch.Text = _creatingOrphanBranch.Text;
             commitPicker.Visible = false;
             chkCheckoutAfterCreate.Checked = true;
             chkCheckoutAfterCreate.Enabled = false;

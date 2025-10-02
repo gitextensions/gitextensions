@@ -4368,26 +4368,6 @@ You can unset the template:
         <source>Create branch</source>
         <target />
       </trans-unit>
-      <trans-unit id="ClearOrphan.Text">
-        <source>Clear &amp;working directory and index</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="ClearOrphan.toolTip">
-        <source>Remove files from the working directory and from the index</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Ok.Text">
-        <source>&amp;Create branch</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Orphan.Text">
-        <source>Create or&amp;phan</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="Orphan.toolTip">
-        <source>New branch will have NO parents</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
         <source>Enter branch name.</source>
         <target />
@@ -4396,15 +4376,39 @@ You can unset the template:
         <source>“{0}” is not valid branch name.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_creatingOrphanBranch.Text">
+        <source>Creating orphan branch (repository has no commits)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_noRevisionSelected.Text">
         <source>Select 1 revision to create the branch on.</source>
         <target />
       </trans-unit>
-      <trans-unit id="chkbxCheckoutAfterCreate.Text">
+      <trans-unit id="chkCheckoutAfterCreate.Text">
         <source>Checkout &amp;after create</source>
         <target />
       </trans-unit>
-      <trans-unit id="groupBox1.Text">
+      <trans-unit id="chkClearOrphan.Text">
+        <source>Clear &amp;working directory and index</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkClearOrphan.toolTip">
+        <source>Remove files from the working directory and from the index</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkCreateOrphan.Text">
+        <source>Create or&amp;phan</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="chkCreateOrphan.toolTip">
+        <source>New branch will have NO parents</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cmdOk.Text">
+        <source>&amp;Create branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="grpOrphan.Text">
         <source>Orphan</source>
         <target />
       </trans-unit>
@@ -4412,7 +4416,7 @@ You can unset the template:
         <source>&amp;Branch name</source>
         <target />
       </trans-unit>
-      <trans-unit id="label2.Text">
+      <trans-unit id="lblCreateBranch.Text">
         <source>Create b&amp;ranch at this revision</source>
         <target />
       </trans-unit>
