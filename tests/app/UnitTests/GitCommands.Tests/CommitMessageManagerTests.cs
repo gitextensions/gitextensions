@@ -5,6 +5,7 @@ using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using NSubstitute;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace GitCommandsTests
 {
@@ -423,8 +424,10 @@ namespace GitCommandsTests
         public void FormatCommitMessage(
         string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty, string expectedMessage)
         {
-            CommitMessageManager.FormatCommitMessage(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty)
-                .Should().Be(expectedMessage);
+            CommitMessageManager cut = new CommitMessageManager(null, null, null);
+            string commitMessage = cut.FormatCommitMessage(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
+
+            commitMessage.Should().Be(expectedMessage);
         }
 
         public class FormatCommitMessageTestData
