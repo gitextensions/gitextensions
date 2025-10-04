@@ -71,6 +71,12 @@ public interface IGitModule
     Encoding FilesEncoding { get; }
 
     /// <summary>
+    /// Gets the string used by git to prefix comment lines in commit messages and other areas.
+    /// </summary>
+    /// <returns>The comment line prefix string, or <c>null</c> if not defined.</returns>
+    string? GetCommentString();
+
+    /// <summary>
     /// Returns git common directory.
     /// https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-common-dir.
     /// </summary>

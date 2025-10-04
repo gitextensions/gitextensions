@@ -1,5 +1,4 @@
-﻿using GitExtensions.Extensibility.Git;
-using ICSharpCode.TextEditor;
+﻿using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor
@@ -28,8 +27,8 @@ namespace GitUI.Editor
             { 'd', ("drop", new HighlightColor(Application.IsDarkModeEnabled ? Color.IndianRed : Color.Red, bold: true, italic: false, adaptable: false), Array.Empty<string>()) }
         };
 
-        public RebaseTodoHighlightingStrategy(IGitModule module)
-            : base("GitRebaseTodo", module)
+        public RebaseTodoHighlightingStrategy(string? commentString)
+            : base("GitRebaseTodo", commentString)
         {
         }
 

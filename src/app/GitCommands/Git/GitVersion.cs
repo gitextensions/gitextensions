@@ -14,6 +14,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     private static readonly GitVersion _v2_32_0 = new("2.32.0");
     private static readonly GitVersion _v2_35_0 = new("2.35.0");
     private static readonly GitVersion _v2_38_0 = new("2.38.0");
+    private static readonly GitVersion _v2_45_0 = new("2.45.0");
     private static readonly GitVersion _v2_46_0 = new("2.46.0");
 
     /// <summary>
@@ -149,6 +150,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     public bool SupportStashStaged => this >= _v2_35_0;
     public bool SupportUpdateRefs => this >= _v2_38_0;
     public bool SupportLsFilesFormat => this >= _v2_38_0;
+    public bool SupportCommentStringConfig => this >= _v2_45_0;
 
     private static int Compare(GitVersion? left, GitVersion? right)
     {

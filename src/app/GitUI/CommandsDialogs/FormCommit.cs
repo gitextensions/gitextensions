@@ -16,6 +16,7 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.AutoCompletion;
 using GitUI.CommandsDialogs.CommitDialog;
 using GitUI.Editor;
+using GitUI.GitComments;
 using GitUI.HelperDialogs;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
@@ -210,7 +211,10 @@ namespace GitUI.CommandsDialogs
 
             splitRight.Panel2MinSize = DpiUtil.Scale(100);
 
-            _commitMessageManager = new CommitMessageManager(this, Module.WorkingDirGitDir, Module.CommitEncoding, commitMessage);
+            var commentStrategy = CommentStrategyFactory.GetSelected();
+            var commentDefinition = commentStrategy.GetComment(Module);
+
+            _commitMessageManager = new CommitMessageManager(this, Module.WorkingDirGitDir, Module.CommitEncoding, commentString: commentDefinition, overriddenCommitMessage: commitMessage);
 
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;

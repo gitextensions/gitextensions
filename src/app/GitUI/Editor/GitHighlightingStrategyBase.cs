@@ -11,30 +11,17 @@ namespace GitUI.Editor
 
         private readonly DefaultHighlightingStrategy _defaultHighlightingStrategy = HighlightingManager.Manager.DefaultHighlighting;
 
-        private readonly char _commentChar;
+        private readonly string? _commentString;
 
-        protected GitHighlightingStrategyBase(string name, IGitModule module)
+        protected GitHighlightingStrategyBase(
+            string name,
+            string? commentString = null)
         {
             Name = name;
 
-            // By default, comments start with '#'.
-            //
-            // This can be overridden via the "core.commentchar" configuration setting.
-            //
-            // However, if "core.commentchar" is "auto", then git attempts to choose a
-            // character from "#;@!$%^&|:" which is not present in the message.
-            // In such cases it does not appear that the character is provided to the
-            // editor. The only way to determine the character is to inspect the message,
-            // potentially for a regex resembling "with '(.)' will be ignored", though
-            // this likely changes with locale.
-            //
-            // An alternative approach would be to tally counts for the known set of
-            // characters for each line[0] and take the character with most.
-            // That would work well in practice.
-
-            const string defaultValue = "#";
-            string commentCharSetting = module.GetEffectiveSetting("core.commentchar", defaultValue);
-            _commentChar = commentCharSetting.Length == 1 ? commentCharSetting[0] : defaultValue[0];
+            // This class used comments as is, and no decision was made about how to get it.
+            // In addition, the latest version of Git could define a comment string.
+            _commentString = commentString;
         }
 
         protected abstract void MarkTokens(IDocument document, IList<LineSegment> lines);
@@ -78,21 +65,16 @@ namespace GitUI.Editor
 
         #region Line classifiers
 
+        
         protected bool IsComment(IDocument document, LineSegment line)
         {
-            for (int i = 0; i < line.Length; i++)
+            if (string.IsNullOrEmpty(_commentString) || line.Length == 0)
             {
-                char c = document.GetCharAt(line.Offset + i);
-
-                if (char.IsWhiteSpace(c))
-                {
-                    continue;
-                }
-
-                return c == _commentChar;
+                return false;
             }
 
-            return false;
+            string lineText = document.GetText(line.Offset, line.Length).TrimStart();
+            return lineText.StartsWith(_commentString);
         }
 
         protected static bool IsEmptyOrWhiteSpace(IDocument document, LineSegment line)

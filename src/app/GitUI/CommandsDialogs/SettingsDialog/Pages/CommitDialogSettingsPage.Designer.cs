@@ -43,11 +43,11 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowResetWorkTreeChanges = new CheckBox();
             chkShowResetAllChanges = new CheckBox();
             chkEnsureCommitMessageSecondLineEmpty = new CheckBox();
-            tbTemplateComment = new TextBox();
             grpTemplateComment = new GroupBox();
             tableLayoutPanelComment = new TableLayoutPanel();
             lblTemplateComment = new Label();
-            chkReadFromGitAfterAppStart = new CheckBox();
+            cbCommentStrategy = new ComboBox();
+            lblCommentStrategyDescription = new Label();
             groupBoxBehaviour.SuspendLayout();
             tableLayoutPanelBehaviour.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this
@@ -247,13 +247,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
                 "Ensure the second line of commit message is empty";
             chkEnsureCommitMessageSecondLineEmpty.UseVisualStyleBackColor = true;
             // 
-            // tbTemplateComment
-            // 
-            tbTemplateComment.Location = new Point(358, 3);
-            tbTemplateComment.Name = "tbTemplateComment";
-            tbTemplateComment.Size = new Size(80, 23);
-            tbTemplateComment.TabIndex = 4;
-            // 
             // grpTemplateComment
             // 
             grpTemplateComment.AutoSize = true;
@@ -261,47 +254,57 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             grpTemplateComment.Dock = DockStyle.Top;
             grpTemplateComment.Location = new Point(0, 294);
             grpTemplateComment.Name = "grpTemplateComment";
-            grpTemplateComment.Size = new Size(690, 76);
+            grpTemplateComment.Size = new Size(971, 120);
             grpTemplateComment.TabIndex = 57;
             grpTemplateComment.TabStop = false;
-            grpTemplateComment.Text = "Commit Template Comment";
+            grpTemplateComment.Text = "Comment Definition";
             // 
             // tableLayoutPanelComment
             // 
             tableLayoutPanelComment.ColumnCount = 2;
             tableLayoutPanelComment.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 355F));
             tableLayoutPanelComment.ColumnStyles.Add(new ColumnStyle());
-            tableLayoutPanelComment.Controls.Add(tbTemplateComment, 1, 0);
             tableLayoutPanelComment.Controls.Add(lblTemplateComment, 0, 0);
-            tableLayoutPanelComment.Controls.Add(chkReadFromGitAfterAppStart, 0, 1);
+            tableLayoutPanelComment.Controls.Add(cbCommentStrategy, 1, 0);
+            tableLayoutPanelComment.Controls.Add(lblCommentStrategyDescription, 1, 1);
             tableLayoutPanelComment.Dock = DockStyle.Top;
             tableLayoutPanelComment.Location = new Point(3, 19);
             tableLayoutPanelComment.Name = "tableLayoutPanelComment";
             tableLayoutPanelComment.RowCount = 2;
             tableLayoutPanelComment.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanelComment.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            tableLayoutPanelComment.Size = new Size(684, 54);
+            tableLayoutPanelComment.RowStyles.Add(new RowStyle());
+            tableLayoutPanelComment.Size = new Size(965, 98);
             tableLayoutPanelComment.TabIndex = 0;
             // 
             // lblTemplateComment
             // 
             lblTemplateComment.Anchor = AnchorStyles.Left;
             lblTemplateComment.AutoSize = true;
-            lblTemplateComment.Location = new Point(3, 6);
+            lblTemplateComment.Location = new Point(3, 11);
             lblTemplateComment.Name = "lblTemplateComment";
-            lblTemplateComment.Size = new Size(199, 15);
+            lblTemplateComment.Size = new Size(106, 15);
             lblTemplateComment.TabIndex = 3;
-            lblTemplateComment.Text = "Comment/line prefix (char or string)";
+            lblTemplateComment.Text = "Comment strategy";
             // 
-            // chkReadFromGitAfterAppStart
+            // cbCommentStrategy
             // 
-            chkReadFromGitAfterAppStart.AutoSize = true;
-            chkReadFromGitAfterAppStart.Location = new Point(3, 30);
-            chkReadFromGitAfterAppStart.Name = "chkReadFromGitAfterAppStart";
-            chkReadFromGitAfterAppStart.Size = new Size(213, 19);
-            chkReadFromGitAfterAppStart.TabIndex = 5;
-            chkReadFromGitAfterAppStart.Text = "Read from git after application start";
-            chkReadFromGitAfterAppStart.UseVisualStyleBackColor = true;
+            cbCommentStrategy.FormattingEnabled = true;
+            cbCommentStrategy.Location = new Point(358, 3);
+            cbCommentStrategy.Name = "cbCommentStrategy";
+            cbCommentStrategy.Size = new Size(190, 23);
+            cbCommentStrategy.TabIndex = 6;
+            cbCommentStrategy.SelectedIndexChanged += cbCommentStrategy_SelectedIndexChanged;
+            // 
+            // lblCommentStrategyDescription
+            // 
+            lblCommentStrategyDescription.Location = new Point(358, 38);
+            lblCommentStrategyDescription.MaximumSize = new Size(400, 0);
+            lblCommentStrategyDescription.MinimumSize = new Size(0, 60);
+            lblCommentStrategyDescription.Name = "lblCommentStrategyDescription";
+            lblCommentStrategyDescription.Size = new Size(300, 60);
+            lblCommentStrategyDescription.TabIndex = 7;
+            lblCommentStrategyDescription.Text = "[Dynamic load]";
+            lblCommentStrategyDescription.UseMnemonic = false;
             // 
             // CommitDialogSettingsPage
             // 
@@ -313,6 +316,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Name = "CommitDialogSettingsPage";
             Size = new Size(1014, 950);
             Text = "Commit dialog";
+            Load += CommitDialogSettingsPage_Load;
             groupBoxBehaviour.ResumeLayout(false);
             groupBoxBehaviour.PerformLayout();
             tableLayoutPanelBehaviour.ResumeLayout(false);
@@ -349,7 +353,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
         private GroupBox grpTemplateComment;
         private TableLayoutPanel tableLayoutPanelComment;
         private Label lblTemplateComment;
-        private TextBox tbTemplateComment;
-        private CheckBox chkReadFromGitAfterAppStart;
+        private ComboBox cbCommentStrategy;
+        private Label lblCommentStrategyDescription;
     }
 }

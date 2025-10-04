@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitCommands.Config;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
@@ -88,7 +89,7 @@ namespace GitUI
 
             string[] doneCommits = ReadCommitsDataFromRebaseFile(doneFilePath);
             string[] todoCommits = ReadCommitsDataFromRebaseFile(rebaseTodoFilePath);
-            string commentChar = Module.GetEffectiveSetting("core.commentchar", defaultValue: "#");
+            string commentChar = Module.GetEffectiveSetting(SettingKeyString.CommentChar, defaultValue: "#");
 
             // Filter comment lines and keep only lines containing at least 3 columns
             // (action, commit hash and commit subject -- that could contain spaces and be cut in more --)

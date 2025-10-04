@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using System.Text;
+using Accessibility;
 using GitExtensions.Extensibility;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
@@ -83,12 +84,25 @@ namespace GitCommands
 
         private string? _overriddenCommitMessage;
 
-        public CommitMessageManager(Control owner, string workingDirGitDir, Encoding commitEncoding, string? overriddenCommitMessage = null)
-            : this(owner, workingDirGitDir, commitEncoding, new FileSystem(), overriddenCommitMessage)
+        private readonly string? _commentString;
+
+        public CommitMessageManager(
+            Control owner,
+            string workingDirGitDir,
+            Encoding commitEncoding,
+            string? commentString = null,
+            string? overriddenCommitMessage = null)
+            : this(owner, workingDirGitDir, commitEncoding, new FileSystem(), overriddenCommitMessage,commentString)
         {
         }
 
-        internal CommitMessageManager(Control owner, string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string? overriddenCommitMessage = null)
+        internal CommitMessageManager(
+            Control owner,
+            string workingDirGitDir,
+            Encoding commitEncoding,
+            IFileSystem fileSystem,
+            string? overriddenCommitMessage = null,
+            string? commentString = null)
         {
             ArgumentNullException.ThrowIfNull(owner);
 
@@ -99,6 +113,7 @@ namespace GitCommands
             CommitMessagePath = GetFilePath(workingDirGitDir, "COMMITMESSAGE");
             MergeMessagePath = GetFilePath(workingDirGitDir, "MERGE_MSG");
             _overriddenCommitMessage = overriddenCommitMessage;
+            _commentString = commentString;
         }
 
         public async Task<bool> GetAmendStateAsync(CancellationToken cancellationToken = default)
@@ -179,7 +194,7 @@ namespace GitCommands
             await WriteFileAsync(path, CannotSaveCommitMessage, formattedCommitMessage, _commitEncoding, cancellationToken);
         }
 
-        internal static string FormatCommitMessage(string commitMessage, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
+        internal string FormatCommitMessage(string commitMessage, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty)
         {
             if (string.IsNullOrEmpty(commitMessage))
             {
@@ -189,15 +204,21 @@ namespace GitCommands
             StringBuilder formattedCommitMessage = new();
 
             int lineNumber = 1;
+            var isCommentNullOrEmpty = string.IsNullOrEmpty(_commentString);
             foreach (string line in commitMessage.LazySplit('\n'))
             {
-                // When a commit template is used, skip comments and do not count them as line.
-                // Note: In commit templates, "# " is used for comments and "#123" could be used for the issue number.
-                // Redefining the comment symbol is not supported now
-
-                if (usingCommitTemplate && line.StartsWith("# "))
+                // If a commit template is used and the comment string is not null or empty,
+                // skip lines that start with the comment string (e.g., "# ").
+                // This prevents template comments from being included in the commit message.
+                // For example, in commit templates, lines starting with "# " are comments,
+                // but lines like "#123" (issue numbers) are not skipped unless they match the comment string exactly.
+                // Note: This class is intended for use with predefined comment string.
+                if (!isCommentNullOrEmpty)
                 {
-                    continue;
+                    if (usingCommitTemplate && line.StartsWith(_commentString))
+                    {
+                        continue;
+                    }
                 }
 
                 if (ensureCommitMessageSecondLineEmpty && lineNumber == 2 && !string.IsNullOrEmpty(line))

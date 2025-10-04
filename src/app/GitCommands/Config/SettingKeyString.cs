@@ -75,5 +75,25 @@
         /// protocol.file.allow
         /// </summary>
         public static readonly string AllowFileProtocol = "protocol.file.allow";
+
+        /// <summary>
+        /// core.commentchar
+        /// </summary>
+        /// <remarks>
+        /// Default is '#'
+        /// Alias: core.commentstring
+        /// https://git-scm.com/docs/git-config#Documentation/git-config.txt-corecommentchar
+        /// Canonical setting is core.commentstring after git 2.45.0
+        /// </remarks>
+        public static readonly string CommentChar = "core.commentchar";
+
+        /// <summary>
+        /// core.commentstring
+        /// </summary>
+        /// <remarks>
+        /// Alias: core.commentchar
+        /// https://git-scm.com/docs/git-config#Documentation/git-config.txt-corecommentString
+        /// </remarks>
+        public static readonly string CommentString = "core.commentstring";
     }
 }

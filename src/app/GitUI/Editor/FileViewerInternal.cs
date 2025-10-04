@@ -5,6 +5,7 @@ using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
+using GitUI.GitComments;
 using GitUI.Theming;
 using ICSharpCode.TextEditor;
 using ICSharpCode.TextEditor.Document;
@@ -349,13 +350,15 @@ namespace GitUI.Editor
         public void SetHighlightingForFile(string filename)
         {
             IHighlightingStrategy highlightingStrategy;
+            var commentStrategy = CommentStrategyFactory.GetSelected();
+            var comment = commentStrategy.GetComment(Module);
             if (filename.EndsWith("git-rebase-todo"))
             {
-                highlightingStrategy = new RebaseTodoHighlightingStrategy(Module);
+                highlightingStrategy = new RebaseTodoHighlightingStrategy(comment);
             }
             else if (filename.EndsWith("COMMIT_EDITMSG"))
             {
-                highlightingStrategy = new CommitMessageHighlightingStrategy(Module);
+                highlightingStrategy = new CommitMessageHighlightingStrategy(comment);
             }
             else
             {

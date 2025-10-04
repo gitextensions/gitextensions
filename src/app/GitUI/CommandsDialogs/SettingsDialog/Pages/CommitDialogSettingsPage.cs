@@ -1,9 +1,12 @@
 ﻿using GitCommands;
+using GitUI.GitComments;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 {
     public partial class CommitDialogSettingsPage : SettingsPageWithHeader
     {
+        private int _selectedCommentStrategyId;
+
         public CommitDialogSettingsPage(IServiceProvider serviceProvider)
             : base(serviceProvider)
         {
@@ -22,12 +25,16 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             chkShowResetAllChanges.Checked = AppSettings.ShowResetAllChanges;
             chkAutocomplete.Checked = AppSettings.ProvideAutocompletion;
             cbRememberAmendCommitState.Checked = AppSettings.RememberAmendCommitState;
-            chkReadFromGitAfterAppStart.Checked = AppSettings.ReadFromGitAfterAppStart;
-            tbTemplateComment.Text = AppSettings.Comment;
+
+            _selectedCommentStrategyId = AppSettings.CommentStrategyId;
+
+            // Select the item matching _selectedCommentStrategyId
+            SelectStrategyById(_selectedCommentStrategyId);
 
             base.SettingsToPage();
         }
 
+       
         protected override void PageToSettings()
         {
             AppSettings.ShowErrorsWhenStagingFiles = chkShowErrorsWhenStagingFiles.Checked;
@@ -39,24 +46,39 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             AppSettings.ShowResetAllChanges = chkShowResetAllChanges.Checked;
             AppSettings.ProvideAutocompletion = chkAutocomplete.Checked;
             AppSettings.RememberAmendCommitState = cbRememberAmendCommitState.Checked;
-            AppSettings.ReadFromGitAfterAppStart = chkReadFromGitAfterAppStart.Checked;
 
-            // Validate template comment is not empty
-            if (string.IsNullOrWhiteSpace(tbTemplateComment.Text))
-            {
-                MessageBox.Show(this,
-                    "Comment/line prefix cannot be empty. Please enter a value.",
-                    "Validation Error",
-                    MessageBoxButtons.OK,
-                    MessageBoxIcon.Warning);
-                // Focus the textbox and select all text for easy editing
-                tbTemplateComment.Focus();
-                tbTemplateComment.SelectAll();
-                return;
-            }
+            AppSettings.CommentStrategyId = _selectedCommentStrategyId;
 
-            AppSettings.Comment = tbTemplateComment.Text;
             base.PageToSettings();
+        }
+
+        private void SelectStrategyById(int selectedCommentStrategyId)
+        {
+            var strategies = CommentStrategyFactory.GetAll();
+            ICommentStrategy? selectedStrategy = strategies
+                .FirstOrDefault(s => s.Id == selectedCommentStrategyId);
+
+            if (selectedStrategy is not null)
+            {
+                cbCommentStrategy.SelectedItem = selectedStrategy;
+            }
+        }
+
+        private void CommitDialogSettingsPage_Load(object sender, EventArgs e)
+        {
+            var strategies = CommentStrategyFactory.GetAll();
+            cbCommentStrategy.DataSource = strategies;
+            cbCommentStrategy.DisplayMember = nameof(ICommentStrategy.Name);
+        }
+
+        private void cbCommentStrategy_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ICommentStrategy? selectedItem = cbCommentStrategy.SelectedItem as ICommentStrategy;
+            if (selectedItem != null)
+            {
+                _selectedCommentStrategyId = selectedItem.Id;
+                lblCommentStrategyDescription.Text = selectedItem.Description;
+            }
         }
     }
 }

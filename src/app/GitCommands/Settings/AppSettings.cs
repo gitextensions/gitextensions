@@ -50,6 +50,7 @@ namespace GitCommands
 
         private static Mutex _globalMutex;
 
+
         [GeneratedRegex(@"^(?<major>\d+)\.(?<minor>\d+)", RegexOptions.ExplicitCapture)]
         private static partial Regex VersionRegex();
 
@@ -455,13 +456,7 @@ namespace GitCommands
             get => GetString("lastCommitMessage", "");
             set => SetString("lastCommitMessage", value);
         }
-
-        public static string Comment
-        {
-            get => GetString("Comment", "#");
-            set => SetString("Comment", value);
-        }
-
+        
         public static int CommitDialogNumberOfPreviousMessages
         {
             get => GetInt("commitDialogNumberOfPreviousMessages", 6);
@@ -883,12 +878,6 @@ namespace GitCommands
         {
             get => GetBool("refreshcommitdialogonformfocus", false);
             set => SetBool("refreshcommitdialogonformfocus", value);
-        }
-
-        public static bool ReadFromGitAfterAppStart
-        {
-            get => GetBool("readfromgitafterappstart", false);
-            set => SetBool("readfromgitafterappstart", value);
         }
 
         public static bool StageInSuperprojectAfterCommit
@@ -2081,6 +2070,12 @@ namespace GitCommands
         {
             get => GetBool("Log.CaptureCallStacks", false);
             set => SetBool("Log.CaptureCallStacks", value);
+        }
+
+        public static int CommentStrategyId
+        {
+            get => GetInt("CommentStrategyId", 1);
+            set => SetInt("CommentStrategyId", value);
         }
 
         // There is a bug in .NET/.NET Designer that fails to execute Properties.Settings.Default call.

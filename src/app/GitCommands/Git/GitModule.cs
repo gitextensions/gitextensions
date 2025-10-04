@@ -387,6 +387,33 @@ namespace GitCommands
         private string? _gitCommonDirectory;
         private readonly object _gitCommonLock = new();
 
+        /// <inheritdoc/>
+        public string? GetCommentString()
+        {
+            string? commentCharSetting = null;
+            if (GitVersion.SupportCommentStringConfig)
+            {
+                // Git 2.45+ supports core.commentString which can be multiple characters
+                // git automatically handles the commentchar vs commentstring precedence so requesting commentstring is sufficient
+                string configKey = SettingKeyString.CommentString;
+                commentCharSetting = GetEffectiveSetting(configKey, null);
+            }
+            else
+            {
+                // Fallback for older git versions that do not support core.commentString
+                string configKey = SettingKeyString.CommentChar;
+                commentCharSetting = GetEffectiveSetting(configKey, null);
+
+                // core.commentChar is single character only, use it if set and make sure it is a single character
+                if (!string.IsNullOrEmpty(commentCharSetting))
+                {
+                    commentCharSetting = commentCharSetting.Length == 1 ? commentCharSetting : commentCharSetting[..1];
+                }
+            }
+
+            return string.IsNullOrEmpty(commentCharSetting) ? null : commentCharSetting;
+        }
+
         /// <summary>
         /// Returns git common directory.
         /// https://git-scm.com/docs/git-rev-parse#Documentation/git-rev-parse.txt---git-common-dir.
