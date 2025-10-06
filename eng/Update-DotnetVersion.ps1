@@ -17,7 +17,8 @@ $globalJson = Resolve-Path $globalJson
 $json = Get-Content $globalJson | ConvertFrom-Json
 Write-Output "Updating SDK version from $($json.sdk.version) to $($versionResult.'latest-sdk')"
 $json.sdk.version = $versionResult.'latest-sdk'
-$json | ConvertTo-Json  | Out-File -Encoding utf8 $globalJson
+$lfContent = ($json | ConvertTo-Json) -replace "`r`n", "`n"
+Set-Content -Path $globalJson -Value $lfContent -NoNewline -Encoding utf8
 
 # Update RepoLayout.props file
 $propsPath = [System.IO.Path]::Combine($path, "RepoLayout.props")
@@ -28,6 +29,8 @@ $nd.'#text' = $versionResult.'latest-runtime'
 $settings = [System.Xml.XmlWriterSettings]@{
   Encoding = $encoding
   Indent   = $true    
+  NewLineHandling = "Replace"
+  NewLineChars = "`n"
 }
 $writer = [System.Xml.XmlWriter]::Create($propsPath, $settings)
 $nd.OwnerDocument.Save($writer)
