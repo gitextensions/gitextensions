@@ -4,175 +4,174 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.Editor;
 using ResourceManager;
 
-namespace GitUI.CommandsDialogs
+namespace GitUI.CommandsDialogs;
+
+public sealed partial class FormEditor : GitModuleForm
 {
-    public sealed partial class FormEditor : GitModuleForm
+    private readonly TranslationString _saveChanges = new("Do you want to save changes?");
+    private readonly TranslationString _saveChangesCaption = new("Save changes");
+    private readonly TranslationString _cannotOpenFile = new("Cannot open file:");
+    private readonly TranslationString _cannotSaveFile = new("Cannot save file:");
+
+    private readonly string? _fileName;
+
+    private bool _hasChanges;
+
+    public FormEditor(IGitUICommands commands, string? fileName, bool showWarning, bool readOnly = false, int? lineNumber = null)
+        : base(commands)
     {
-        private readonly TranslationString _saveChanges = new("Do you want to save changes?");
-        private readonly TranslationString _saveChangesCaption = new("Save changes");
-        private readonly TranslationString _cannotOpenFile = new("Cannot open file:");
-        private readonly TranslationString _cannotSaveFile = new("Cannot save file:");
+        _fileName = fileName;
+        InitializeComponent();
+        panelMessage.BackColor = OtherColors.PanelMessageWarningColor;
+        panelMessage.SetForeColorForBackColor();
+        InitializeComplete();
 
-        private readonly string? _fileName;
-
-        private bool _hasChanges;
-
-        public FormEditor(IGitUICommands commands, string? fileName, bool showWarning, bool readOnly = false, int? lineNumber = null)
-            : base(commands)
+        // for translation form
+        if (_fileName is not null)
         {
-            _fileName = fileName;
-            InitializeComponent();
-            panelMessage.BackColor = OtherColors.PanelMessageWarningColor;
-            panelMessage.SetForeColorForBackColor();
-            InitializeComplete();
-
-            // for translation form
-            if (_fileName is not null)
-            {
-                OpenFile(_fileName, lineNumber);
-            }
-
-            fileViewer.TextChanged += (s, e) => HasChanges = true;
-            fileViewer.TextLoaded += (s, e) => HasChanges = false;
-            panelMessage.Visible = showWarning;
-
-            fileViewer.IsReadOnly = readOnly;
+            OpenFile(_fileName, lineNumber);
         }
 
-        private bool HasChanges
+        fileViewer.TextChanged += (s, e) => HasChanges = true;
+        fileViewer.TextLoaded += (s, e) => HasChanges = false;
+        panelMessage.Visible = showWarning;
+
+        fileViewer.IsReadOnly = readOnly;
+    }
+
+    private bool HasChanges
+    {
+        get { return _hasChanges; }
+        set
         {
-            get { return _hasChanges; }
-            set
-            {
-                _hasChanges = value;
-                toolStripSaveButton.Enabled = value;
-            }
+            _hasChanges = value;
+            toolStripSaveButton.Enabled = value;
         }
+    }
 
-        private void OpenFile(string fileName, int? line = null)
+    private void OpenFile(string fileName, int? line = null)
+    {
+        try
         {
-            try
-            {
-                fileViewer.ViewFileAsync(fileName, line: line);
-                fileViewer.IsReadOnly = false;
-                Text = fileName;
+            fileViewer.ViewFileAsync(fileName, line: line);
+            fileViewer.IsReadOnly = false;
+            Text = fileName;
 
-                // loading a new file from disk, the text hasn't been changed yet.
-                HasChanges = false;
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, _cannotOpenFile.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                Close();
-            }
+            // loading a new file from disk, the text hasn't been changed yet.
+            HasChanges = false;
         }
-
-        private void FormEditor_FormClosing(object sender, FormClosingEventArgs e)
+        catch (Exception ex)
         {
-            // only offer to save if there's something to save.
-            if (HasChanges)
+            MessageBox.Show(this, _cannotOpenFile.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            Close();
+        }
+    }
+
+    private void FormEditor_FormClosing(object sender, FormClosingEventArgs e)
+    {
+        // only offer to save if there's something to save.
+        if (HasChanges)
+        {
+            DialogResult saveChangesAnswer = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text,
+                                     MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
+            switch (saveChangesAnswer)
             {
-                DialogResult saveChangesAnswer = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text,
-                                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
-                switch (saveChangesAnswer)
-                {
-                    case DialogResult.Yes:
-                        try
+                case DialogResult.Yes:
+                    try
+                    {
+                        SaveChanges();
+                    }
+                    catch (Exception ex)
+                    {
+                        if (MessageBox.Show(this, $"{_cannotSaveFile.Text}{Environment.NewLine}{ex.Message}", TranslatedStrings.Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
                         {
-                            SaveChanges();
+                            e.Cancel = true;
+                            return;
                         }
-                        catch (Exception ex)
-                        {
-                            if (MessageBox.Show(this, $"{_cannotSaveFile.Text}{Environment.NewLine}{ex.Message}", TranslatedStrings.Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
-                            {
-                                e.Cancel = true;
-                                return;
-                            }
-                        }
+                    }
 
-                        DialogResult = DialogResult.OK;
-                        break;
-                    case DialogResult.Cancel:
-                        e.Cancel = true;
-                        return;
-                    default:
-                        DialogResult = DialogResult.Cancel;
-                        break;
-                }
+                    DialogResult = DialogResult.OK;
+                    break;
+                case DialogResult.Cancel:
+                    e.Cancel = true;
+                    return;
+                default:
+                    DialogResult = DialogResult.Cancel;
+                    break;
+            }
+        }
+        else
+        {
+            DialogResult = DialogResult.OK;
+        }
+    }
+
+    private void toolStripSaveButton_Click(object sender, EventArgs e)
+    {
+        SaveChangesShowException();
+    }
+
+    private void SaveChangesShowException()
+    {
+        try
+        {
+            SaveChanges();
+        }
+        catch (Exception ex)
+        {
+            MessageBoxes.ShowError(this, $"{_cannotSaveFile.Text}{Environment.NewLine}{ex.Message}");
+        }
+    }
+
+    private void SaveChanges()
+    {
+        if (!string.IsNullOrEmpty(_fileName))
+        {
+            if (fileViewer.FilePreamble is null || Module.FilesEncoding.GetPreamble().SequenceEqual(fileViewer.FilePreamble))
+            {
+                FileUtility.SafeWriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding, filePreamble: []);
             }
             else
             {
-                DialogResult = DialogResult.OK;
+                FileUtility.SafeWriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding, fileViewer.FilePreamble);
             }
-        }
 
-        private void toolStripSaveButton_Click(object sender, EventArgs e)
+            // we've written the changes out to disk now, nothing to save.
+            HasChanges = false;
+        }
+    }
+
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        switch (keyData)
         {
-            SaveChangesShowException();
+            case Keys.Escape:
+                Close();
+                return true;
+            case Keys.Control | Keys.S:
+                SaveChangesShowException();
+                return true;
+            default:
+                return base.ProcessCmdKey(ref msg, keyData);
         }
+    }
 
-        private void SaveChangesShowException()
+    internal TestAccessor GetTestAccessor()
+        => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly FormEditor _formEditor;
+
+        public TestAccessor(FormEditor formEditor)
         {
-            try
-            {
-                SaveChanges();
-            }
-            catch (Exception ex)
-            {
-                MessageBoxes.ShowError(this, $"{_cannotSaveFile.Text}{Environment.NewLine}{ex.Message}");
-            }
+            _formEditor = formEditor;
         }
 
-        private void SaveChanges()
-        {
-            if (!string.IsNullOrEmpty(_fileName))
-            {
-                if (fileViewer.FilePreamble is null || Module.FilesEncoding.GetPreamble().SequenceEqual(fileViewer.FilePreamble))
-                {
-                    FileUtility.SafeWriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding, filePreamble: []);
-                }
-                else
-                {
-                    FileUtility.SafeWriteAllText(_fileName, fileViewer.GetText(), Module.FilesEncoding, fileViewer.FilePreamble);
-                }
+        public FileViewer FileViewer => _formEditor.fileViewer;
 
-                // we've written the changes out to disk now, nothing to save.
-                HasChanges = false;
-            }
-        }
+        public bool HasChanges => _formEditor.HasChanges;
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            switch (keyData)
-            {
-                case Keys.Escape:
-                    Close();
-                    return true;
-                case Keys.Control | Keys.S:
-                    SaveChangesShowException();
-                    return true;
-                default:
-                    return base.ProcessCmdKey(ref msg, keyData);
-            }
-        }
-
-        internal TestAccessor GetTestAccessor()
-            => new(this);
-
-        internal readonly struct TestAccessor
-        {
-            private readonly FormEditor _formEditor;
-
-            public TestAccessor(FormEditor formEditor)
-            {
-                _formEditor = formEditor;
-            }
-
-            public FileViewer FileViewer => _formEditor.fileViewer;
-
-            public bool HasChanges => _formEditor.HasChanges;
-
-            public void SaveChanges() => _formEditor.SaveChanges();
-        }
+        public void SaveChanges() => _formEditor.SaveChanges();
     }
 }

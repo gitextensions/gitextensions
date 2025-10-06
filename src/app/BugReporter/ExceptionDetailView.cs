@@ -4,20 +4,19 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace BugReporter
-{
-    internal partial class ExceptionDetailView : Form
-    {
-        public ExceptionDetailView()
-        {
-            InitializeComponent();
-        }
+namespace BugReporter;
 
-        internal void ShowDialog(string property, string info)
-        {
-            propertyTextBox.Text = property;
-            propertyInformationTextBox.Text = info;
-            ShowDialog();
-        }
+internal partial class ExceptionDetailView : Form
+{
+    public ExceptionDetailView()
+    {
+        InitializeComponent();
+    }
+
+    internal void ShowDialog(string property, string info)
+    {
+        propertyTextBox.Text = property;
+        propertyInformationTextBox.Text = info;
+        ShowDialog();
     }
 }

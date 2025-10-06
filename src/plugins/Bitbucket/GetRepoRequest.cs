@@ -1,29 +1,28 @@
 ﻿using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace GitExtensions.Plugins.Bitbucket
+namespace GitExtensions.Plugins.Bitbucket;
+
+internal class GetRepoRequest : BitbucketRequestBase<Repository>
 {
-    internal class GetRepoRequest : BitbucketRequestBase<Repository>
+    private readonly string _projectKey;
+    private readonly string _repoName;
+
+    public GetRepoRequest(string projectKey, string repoName, Settings settings) : base(settings)
     {
-        private readonly string _projectKey;
-        private readonly string _repoName;
+        _projectKey = projectKey;
+        _repoName = repoName;
+    }
 
-        public GetRepoRequest(string projectKey, string repoName, Settings settings) : base(settings)
-        {
-            _projectKey = projectKey;
-            _repoName = repoName;
-        }
+    protected override object? RequestBody => null;
 
-        protected override object? RequestBody => null;
+    protected override Method RequestMethod => Method.GET;
 
-        protected override Method RequestMethod => Method.GET;
+    protected override string ApiUrl => string.Format("/rest/api/latest/projects/{0}/repos/{1}",
+        _projectKey, _repoName);
 
-        protected override string ApiUrl => string.Format("/rest/api/latest/projects/{0}/repos/{1}",
-            _projectKey, _repoName);
-
-        protected override Repository ParseResponse(JObject json)
-        {
-            return Repository.Parse(json);
-        }
+    protected override Repository ParseResponse(JObject json)
+    {
+        return Repository.Parse(json);
     }
 }

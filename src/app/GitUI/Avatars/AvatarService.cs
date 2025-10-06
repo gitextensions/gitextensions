@@ -1,131 +1,130 @@
 ﻿using GitCommands;
 using GitUI.Properties;
 
-namespace GitUI.Avatars
+namespace GitUI.Avatars;
+
+public static class AvatarService
 {
-    public static class AvatarService
+    private static readonly InitialsAvatarProvider InitialsAvatarProvider;
+    private static readonly StaticImageAvatarProvider UserImageAvatarProvider;
+
+    private static readonly HotSwapAvatarProvider HotSwapProvider;
+
+    static AvatarService()
     {
-        private static readonly InitialsAvatarProvider InitialsAvatarProvider;
-        private static readonly StaticImageAvatarProvider UserImageAvatarProvider;
+        InitialsAvatarProvider = new();
+        UserImageAvatarProvider = new(Images.User80);
 
-        private static readonly HotSwapAvatarProvider HotSwapProvider;
+        HotSwapProvider = new();
+        (DefaultProvider, CacheCleaner) = SetupCachingAndFallback();
 
-        static AvatarService()
+        UpdateAvatarProvider();
+    }
+
+    public static IAvatarProvider DefaultProvider { get; }
+    public static IAvatarCacheCleaner CacheCleaner { get; }
+
+    /// <summary>
+    /// Updates the internal avatar provider chain to
+    /// reflect the current active (according to <see cref="AppSettings"/> provider.
+    /// </summary>
+    public static void UpdateAvatarProvider()
+    {
+        HotSwapProvider.Provider = CreateAvatarProvider(AppSettings.AvatarProvider, AppSettings.AvatarFallbackType);
+    }
+
+    /// <summary>
+    /// Creates an <see cref="IAvatarProvider"/> based on the given
+    /// <see cref="AvatarProvider"/> and <see cref="AvatarFallbackType"/> enum options.
+    /// </summary>
+    /// <returns>Returns an avatar provider that can be used to resolve user avatars.</returns>
+    public static IAvatarProvider? CreateAvatarProvider(
+        AvatarProvider provider,
+        AvatarFallbackType? fallbackType,
+        IAvatarDownloader? downloader = null)
+    {
+        // initialize download only if needed (some options, like local providers, don't need a downloader)
+        // and use the downloader provided as parameter if possible.
+        Lazy<IAvatarDownloader> lazyDownloader = new(() => downloader ?? new AvatarDownloader());
+
+        // build collection of (non-null) providers
+        IAvatarProvider[] providers = new[]
         {
-            InitialsAvatarProvider = new();
-            UserImageAvatarProvider = new(Images.User80);
-
-            HotSwapProvider = new();
-            (DefaultProvider, CacheCleaner) = SetupCachingAndFallback();
-
-            UpdateAvatarProvider();
+            BuildMainProvider(),
+            BuildFallbackProvider()
         }
+        .WhereNotNull()
+        .ToArray();
 
-        public static IAvatarProvider DefaultProvider { get; }
-        public static IAvatarCacheCleaner CacheCleaner { get; }
-
-        /// <summary>
-        /// Updates the internal avatar provider chain to
-        /// reflect the current active (according to <see cref="AppSettings"/> provider.
-        /// </summary>
-        public static void UpdateAvatarProvider()
+        // only create chained avatar overhead if really needed
+        return providers.Length switch
         {
-            HotSwapProvider.Provider = CreateAvatarProvider(AppSettings.AvatarProvider, AppSettings.AvatarFallbackType);
-        }
+            0 => null,
+            1 => providers[0],
+            _ => new ChainedAvatarProvider(providers),
+        };
 
-        /// <summary>
-        /// Creates an <see cref="IAvatarProvider"/> based on the given
-        /// <see cref="AvatarProvider"/> and <see cref="AvatarFallbackType"/> enum options.
-        /// </summary>
-        /// <returns>Returns an avatar provider that can be used to resolve user avatars.</returns>
-        public static IAvatarProvider? CreateAvatarProvider(
-            AvatarProvider provider,
-            AvatarFallbackType? fallbackType,
-            IAvatarDownloader? downloader = null)
+        // Local methods to build requested main and fallback providers:
+
+        IAvatarProvider? BuildMainProvider()
         {
-            // initialize download only if needed (some options, like local providers, don't need a downloader)
-            // and use the downloader provided as parameter if possible.
-            Lazy<IAvatarDownloader> lazyDownloader = new(() => downloader ?? new AvatarDownloader());
-
-            // build collection of (non-null) providers
-            IAvatarProvider[] providers = new[]
+            return provider switch
             {
-                BuildMainProvider(),
-                BuildFallbackProvider()
-            }
-            .WhereNotNull()
-            .ToArray();
-
-            // only create chained avatar overhead if really needed
-            return providers.Length switch
-            {
-                0 => null,
-                1 => providers[0],
-                _ => new ChainedAvatarProvider(providers),
+                AvatarProvider.Default => BuildDefaultMainProvider(),
+                AvatarProvider.Custom => CustomAvatarProvider.ParseTemplateString(AppSettings.CustomAvatarTemplate, lazyDownloader.Value),
+                _ => null,
             };
-
-            // Local methods to build requested main and fallback providers:
-
-            IAvatarProvider? BuildMainProvider()
-            {
-                return provider switch
-                {
-                    AvatarProvider.Default => BuildDefaultMainProvider(),
-                    AvatarProvider.Custom => CustomAvatarProvider.ParseTemplateString(AppSettings.CustomAvatarTemplate, lazyDownloader.Value),
-                    _ => null,
-                };
-            }
-
-            IAvatarProvider BuildDefaultMainProvider()
-            {
-                // 1. query GitHub (with non-reply and regular email addresses)
-                //    GitHub might internally fall back to Gravatar, so only need a single request in most cases.
-
-                // 2. resolve via Gravatar (for users that don't have a GitHub account)
-                //    this request also directly provides the fallback if it's Gravatar compatible.
-
-                return new ChainedAvatarProvider(
-                    new GithubAvatarProvider(lazyDownloader.Value),
-                    new GravatarProvider(lazyDownloader.Value, fallbackType));
-            }
-
-            IAvatarProvider BuildFallbackProvider()
-            {
-                return fallbackType switch
-                {
-                    // Local fallback provider
-                    AvatarFallbackType.AuthorInitials => InitialsAvatarProvider,
-
-                    null => InitialsAvatarProvider,
-
-                    // Use Gravatar as fallback provider
-                    AvatarFallbackType type when GravatarProvider.IsFallbackSupportedByGravatar(fallbackType.Value) => new GravatarProvider(lazyDownloader.Value, type, true),
-
-                    // Use author initials for unknown types
-                    _ => InitialsAvatarProvider,
-                };
-            }
         }
 
-        private static (IAvatarProvider provider, IAvatarCacheCleaner cacheCleaner) SetupCachingAndFallback()
+        IAvatarProvider BuildDefaultMainProvider()
         {
-            FileSystemAvatarCache persistentCacheProvider = new(HotSwapProvider);
-            AvatarMemoryCache memoryCachedProvider = new(persistentCacheProvider, AppSettings.AvatarCacheSize);
+            // 1. query GitHub (with non-reply and regular email addresses)
+            //    GitHub might internally fall back to Gravatar, so only need a single request in most cases.
 
-            MultiCacheCleaner cacheCleaner = new(memoryCachedProvider, persistentCacheProvider);
+            // 2. resolve via Gravatar (for users that don't have a GitHub account)
+            //    this request also directly provides the fallback if it's Gravatar compatible.
 
-            SafetynetAvatarProvider mainProvider
-                = new(
-                    new ChainedAvatarProvider(
-                        memoryCachedProvider,
-                        UserImageAvatarProvider));
-
-            return (mainProvider, cacheCleaner);
+            return new ChainedAvatarProvider(
+                new GithubAvatarProvider(lazyDownloader.Value),
+                new GravatarProvider(lazyDownloader.Value, fallbackType));
         }
 
-        public static void UpdateAvatarInitialFontsSettings()
+        IAvatarProvider BuildFallbackProvider()
         {
-            InitialsAvatarProvider.UpdateFontsSettings();
+            return fallbackType switch
+            {
+                // Local fallback provider
+                AvatarFallbackType.AuthorInitials => InitialsAvatarProvider,
+
+                null => InitialsAvatarProvider,
+
+                // Use Gravatar as fallback provider
+                AvatarFallbackType type when GravatarProvider.IsFallbackSupportedByGravatar(fallbackType.Value) => new GravatarProvider(lazyDownloader.Value, type, true),
+
+                // Use author initials for unknown types
+                _ => InitialsAvatarProvider,
+            };
         }
+    }
+
+    private static (IAvatarProvider provider, IAvatarCacheCleaner cacheCleaner) SetupCachingAndFallback()
+    {
+        FileSystemAvatarCache persistentCacheProvider = new(HotSwapProvider);
+        AvatarMemoryCache memoryCachedProvider = new(persistentCacheProvider, AppSettings.AvatarCacheSize);
+
+        MultiCacheCleaner cacheCleaner = new(memoryCachedProvider, persistentCacheProvider);
+
+        SafetynetAvatarProvider mainProvider
+            = new(
+                new ChainedAvatarProvider(
+                    memoryCachedProvider,
+                    UserImageAvatarProvider));
+
+        return (mainProvider, cacheCleaner);
+    }
+
+    public static void UpdateAvatarInitialFontsSettings()
+    {
+        InitialsAvatarProvider.UpdateFontsSettings();
     }
 }

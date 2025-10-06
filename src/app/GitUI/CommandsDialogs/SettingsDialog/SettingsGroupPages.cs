@@ -1,44 +1,43 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Settings;
 
-namespace GitUI.CommandsDialogs.SettingsDialog
+namespace GitUI.CommandsDialogs.SettingsDialog;
+
+public class GitSettingsGroup : GroupSettingsPage
 {
-    public class GitSettingsGroup : GroupSettingsPage
+    public GitSettingsGroup()
+        : base("Git")
     {
-        public GitSettingsGroup()
-            : base("Git")
-        {
-        }
-
-        public static SettingsPageReference GetPageReference()
-        {
-            return new SettingsPageReferenceByType(typeof(GitSettingsGroup));
-        }
     }
 
-    public class GitExtensionsSettingsGroup : GroupSettingsPage
+    public static SettingsPageReference GetPageReference()
     {
-        public GitExtensionsSettingsGroup()
-            : base(AppSettings.ApplicationName)
-        {
-        }
+        return new SettingsPageReferenceByType(typeof(GitSettingsGroup));
+    }
+}
 
-        public static SettingsPageReference GetPageReference()
-        {
-            return new SettingsPageReferenceByType(typeof(GitExtensionsSettingsGroup));
-        }
+public class GitExtensionsSettingsGroup : GroupSettingsPage
+{
+    public GitExtensionsSettingsGroup()
+        : base(AppSettings.ApplicationName)
+    {
     }
 
-    public class PluginsSettingsGroup : GroupSettingsPage
+    public static SettingsPageReference GetPageReference()
     {
-        public PluginsSettingsGroup()
-            : base("Plugins")
-        {
-        }
+        return new SettingsPageReferenceByType(typeof(GitExtensionsSettingsGroup));
+    }
+}
 
-        public static SettingsPageReference GetPageReference()
-        {
-            return new SettingsPageReferenceByType(typeof(PluginsSettingsGroup));
-        }
+public class PluginsSettingsGroup : GroupSettingsPage
+{
+    public PluginsSettingsGroup()
+        : base("Plugins")
+    {
+    }
+
+    public static SettingsPageReference GetPageReference()
+    {
+        return new SettingsPageReferenceByType(typeof(PluginsSettingsGroup));
     }
 }

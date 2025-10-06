@@ -1,8 +1,7 @@
-﻿namespace GitUI.SpellChecker
+﻿namespace GitUI.SpellChecker;
+
+internal static class SpellCheckerHelper
 {
-    internal static class SpellCheckerHelper
-    {
-        public static bool IsSeparator(this char c)
-            => !"_+-".Contains(c) && !char.IsLetterOrDigit(c);
-    }
+    public static bool IsSeparator(this char c)
+        => !"_+-".Contains(c) && !char.IsLetterOrDigit(c);
 }

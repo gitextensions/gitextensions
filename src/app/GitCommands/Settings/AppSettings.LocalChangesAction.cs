@@ -1,11 +1,10 @@
-﻿namespace GitCommands
+﻿namespace GitCommands;
+
+public enum LocalChangesAction
 {
-    public enum LocalChangesAction
-    {
-        // DO NOT RENAME THESE -- doing so will break user preferences
-        DontChange,
-        Merge,
-        Reset,
-        Stash
-    }
+    // DO NOT RENAME THESE -- doing so will break user preferences
+    DontChange,
+    Merge,
+    Reset,
+    Stash
 }

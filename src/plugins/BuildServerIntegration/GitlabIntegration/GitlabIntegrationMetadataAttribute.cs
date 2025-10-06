@@ -1,15 +1,14 @@
 ﻿using System.ComponentModel.Composition;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
-namespace GitExtensions.Plugins.GitlabIntegration
+namespace GitExtensions.Plugins.GitlabIntegration;
+
+[MetadataAttribute]
+[AttributeUsage(AttributeTargets.Class)]
+public class GitlabIntegrationMetadataAttribute : BuildServerAdapterMetadataAttribute
 {
-    [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class)]
-    public class GitlabIntegrationMetadataAttribute : BuildServerAdapterMetadataAttribute
+    public GitlabIntegrationMetadataAttribute(string buildServerType)
+        : base(buildServerType)
     {
-        public GitlabIntegrationMetadataAttribute(string buildServerType)
-            : base(buildServerType)
-        {
-        }
     }
 }

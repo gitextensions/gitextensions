@@ -1,8 +1,7 @@
-﻿namespace GitCommands.DiffMergeTools
+﻿namespace GitCommands.DiffMergeTools;
+
+public enum DiffMergeToolType
 {
-    public enum DiffMergeToolType
-    {
-        Diff = 0,
-        Merge
-    }
+    Diff = 0,
+    Merge
 }

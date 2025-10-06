@@ -1,106 +1,105 @@
 ﻿using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
 
-namespace GitUITests.UserControls
+namespace GitUITests.UserControls;
+
+[TestFixture]
+public sealed class RepoStateVisualiserTests
 {
-    [TestFixture]
-    public sealed class RepoStateVisualiserTests
+    [SetUp]
+    public void SetUp()
     {
-        [SetUp]
-        public void SetUp()
+        _repoStateVisualiser = new RepoStateVisualiser();
+    }
+
+    private RepoStateVisualiser _repoStateVisualiser;
+
+    private static GitItemStatus CreateGitItemStatus(
+        bool isStaged = false,
+        bool isTracked = true,
+        bool isSubmodule = false)
+    {
+        return new GitItemStatus("file1")
         {
-            _repoStateVisualiser = new RepoStateVisualiser();
-        }
+            Staged = isStaged ? StagedStatus.Index : StagedStatus.WorkTree,
+            IsTracked = isTracked,
+            IsSubmodule = isSubmodule
+        };
+    }
 
-        private RepoStateVisualiser _repoStateVisualiser;
+    [Test]
+    public void ReturnsIconCleanWhenThereIsNoChangedFiles()
+    {
+        (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(Array.Empty<GitItemStatus>());
 
-        private static GitItemStatus CreateGitItemStatus(
-            bool isStaged = false,
-            bool isTracked = true,
-            bool isSubmodule = false)
+        ClassicAssert.AreEqual(RepoStateVisualiser.Clean, commitIcon);
+    }
+
+    [Test]
+    public void ReturnsIconDirtySubmodulesWhenThereAreOnlyWorkTreeSubmodules()
+    {
+        (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
         {
-            return new GitItemStatus("file1")
-            {
-                Staged = isStaged ? StagedStatus.Index : StagedStatus.WorkTree,
-                IsTracked = isTracked,
-                IsSubmodule = isSubmodule
-            };
-        }
+            CreateGitItemStatus(isSubmodule: true),
+            CreateGitItemStatus(isSubmodule: true)
+        });
 
-        [Test]
-        public void ReturnsIconCleanWhenThereIsNoChangedFiles()
+        ClassicAssert.AreEqual(RepoStateVisualiser.DirtySubmodules, commitIcon);
+    }
+
+    [Test]
+    public void ReturnsIconDirtyWhenThereAreWorkTreeChanges()
+    {
+        (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
         {
-            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(Array.Empty<GitItemStatus>());
+            CreateGitItemStatus(isSubmodule: true),
+            CreateGitItemStatus()
+        });
 
-            ClassicAssert.AreEqual(RepoStateVisualiser.Clean, commitIcon);
-        }
+        ClassicAssert.AreEqual(RepoStateVisualiser.Dirty, commitIcon);
+    }
 
-        [Test]
-        public void ReturnsIconDirtySubmodulesWhenThereAreOnlyWorkTreeSubmodules()
+    [Test]
+    public void ReturnsIconMixedWhenThereAreIndexAndWorkTreeFiles()
+    {
+        (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
         {
-            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
-            {
-                CreateGitItemStatus(isSubmodule: true),
-                CreateGitItemStatus(isSubmodule: true)
-            });
+            CreateGitItemStatus(isStaged: true),
+            CreateGitItemStatus()
+        });
 
-            ClassicAssert.AreEqual(RepoStateVisualiser.DirtySubmodules, commitIcon);
-        }
+        ClassicAssert.AreEqual(RepoStateVisualiser.Mixed, commitIcon);
+    }
 
-        [Test]
-        public void ReturnsIconDirtyWhenThereAreWorkTreeChanges()
+    [Test]
+    public void ReturnsIconStagedWhenThereAreOnlyIndexFiles()
+    {
+        (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
         {
-            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
-            {
-                CreateGitItemStatus(isSubmodule: true),
-                CreateGitItemStatus()
-            });
+            CreateGitItemStatus(isStaged: true),
+            CreateGitItemStatus(isStaged: true)
+        });
 
-            ClassicAssert.AreEqual(RepoStateVisualiser.Dirty, commitIcon);
-        }
+        ClassicAssert.AreEqual(RepoStateVisualiser.Staged, commitIcon);
+    }
 
-        [Test]
-        public void ReturnsIconMixedWhenThereAreIndexAndWorkTreeFiles()
+    [Test]
+    public void ReturnsIconUntrackedOnlyWhenThereAreUntrackedFilesOnly()
+    {
+        (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
         {
-            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
-            {
-                CreateGitItemStatus(isStaged: true),
-                CreateGitItemStatus()
-            });
+            CreateGitItemStatus(isTracked: false),
+            CreateGitItemStatus(isTracked: false)
+        });
 
-            ClassicAssert.AreEqual(RepoStateVisualiser.Mixed, commitIcon);
-        }
+        ClassicAssert.AreEqual(RepoStateVisualiser.UntrackedOnly, commitIcon);
+    }
 
-        [Test]
-        public void ReturnsIconStagedWhenThereAreOnlyIndexFiles()
-        {
-            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
-            {
-                CreateGitItemStatus(isStaged: true),
-                CreateGitItemStatus(isStaged: true)
-            });
+    [Test]
+    public void ReturnsIconUnknownWhenNull()
+    {
+        (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(null);
 
-            ClassicAssert.AreEqual(RepoStateVisualiser.Staged, commitIcon);
-        }
-
-        [Test]
-        public void ReturnsIconUntrackedOnlyWhenThereAreUntrackedFilesOnly()
-        {
-            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(new[]
-            {
-                CreateGitItemStatus(isTracked: false),
-                CreateGitItemStatus(isTracked: false)
-            });
-
-            ClassicAssert.AreEqual(RepoStateVisualiser.UntrackedOnly, commitIcon);
-        }
-
-        [Test]
-        public void ReturnsIconUnknownWhenNull()
-        {
-            (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(null);
-
-            ClassicAssert.AreEqual(RepoStateVisualiser.Unknown, commitIcon);
-        }
+        ClassicAssert.AreEqual(RepoStateVisualiser.Unknown, commitIcon);
     }
 }

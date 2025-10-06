@@ -4,9 +4,8 @@
 // </copyright>
 // --------------------------------------------------------------------------------------------------------------------
 
-namespace BugReporter.Info
+namespace BugReporter.Info;
+
+public class ConfigurationInfo
 {
-    public class ConfigurationInfo
-    {
-    }
 }

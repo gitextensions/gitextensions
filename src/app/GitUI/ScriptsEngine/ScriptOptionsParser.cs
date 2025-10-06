@@ -8,576 +8,575 @@ using GitExtUtils;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
-namespace GitUI.ScriptsEngine
+namespace GitUI.ScriptsEngine;
+
+public sealed partial class ScriptOptionsParser
 {
-    public sealed partial class ScriptOptionsParser
+    /// <summary>
+    /// Name of the option which requires the full commit message.
+    /// </summary>
+    private const string currentMessage = "cMessage";
+
+    private const string head = "HEAD";
+
+    [GeneratedRegex(@"(?<!\\)""")]
+    private static partial Regex QuoteRegex();
+
+    /// <summary>
+    /// Gets the list of available script options.
+    /// </summary>
+    public static readonly IReadOnlyList<string> Options = new[]
     {
-        /// <summary>
-        /// Name of the option which requires the full commit message.
-        /// </summary>
-        private const string currentMessage = "cMessage";
+        "sHashes",
+        "sTag",
+        "sBranch",
+        "sLocalBranch",
+        "sRemoteBranch",
+        "sRemoteBranchName",
+        "sRemote",
+        "sRemoteUrl",
+        "sRemotePathFromUrl",
+        "sHash",
+        "sMessage",
+        "sSubject",
+        "sAuthor",
+        "sCommitter",
+        "sAuthorDate",
+        "sCommitDate",
+        head,
+        "cTag",
+        "cBranch",
+        "cLocalBranch",
+        "cRemoteBranch",
+        "cRemoteBranchName",
+        "cHash",
+        currentMessage,
+        "cSubject",
+        "cAuthor",
+        "cCommitter",
+        "cAuthorDate",
+        "cCommitDate",
+        "cDefaultRemote",
+        "cDefaultRemoteUrl",
+        "cDefaultRemotePathFromUrl",
+        "RepoName",
+        "WorkingDir"
+    };
 
-        private const string head = "HEAD";
+    /// <summary>
+    ///  Checks whether <paramref name="arguments"/> contains the supplied <paramref name="option"/>.
+    /// </summary>
+    /// <param name="arguments">The script argument.</param>
+    /// <param name="option">The option.</param>
+    /// <returns><see langword="true"/> if the argument contains the option; otherwise <see langword="false"/>.</returns>
+    public static bool Contains(string arguments, string option)
+    {
+        arguments = arguments ?? throw new ArgumentNullException(nameof(arguments));
+        option = option ?? throw new ArgumentNullException(nameof(option));
 
-        [GeneratedRegex(@"(?<!\\)""")]
-        private static partial Regex QuoteRegex();
+        return arguments.Contains(CreateOption(option, quoted: false));
+    }
 
-        /// <summary>
-        /// Gets the list of available script options.
-        /// </summary>
-        public static readonly IReadOnlyList<string> Options = new[]
+    /// <summary>
+    ///  Checks whether <paramref name="option"/> starts with "s".
+    /// </summary>
+    /// <param name="option">The option.</param>
+    /// <returns><see langword="true"/> if the options starts with "s"; otherwise <see langword="false"/>.</returns>
+    public static bool DependsOnSelectedRevision(string option)
+    {
+        option = option ?? throw new ArgumentNullException(nameof(option));
+
+        return option.StartsWith("s");
+    }
+
+    public static (string? arguments, bool abort) Parse(string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider = null)
+    {
+        if (string.IsNullOrWhiteSpace(arguments))
         {
-            "sHashes",
-            "sTag",
-            "sBranch",
-            "sLocalBranch",
-            "sRemoteBranch",
-            "sRemoteBranchName",
-            "sRemote",
-            "sRemoteUrl",
-            "sRemotePathFromUrl",
-            "sHash",
-            "sMessage",
-            "sSubject",
-            "sAuthor",
-            "sCommitter",
-            "sAuthorDate",
-            "sCommitDate",
-            head,
-            "cTag",
-            "cBranch",
-            "cLocalBranch",
-            "cRemoteBranch",
-            "cRemoteBranchName",
-            "cHash",
-            currentMessage,
-            "cSubject",
-            "cAuthor",
-            "cCommitter",
-            "cAuthorDate",
-            "cCommitDate",
-            "cDefaultRemote",
-            "cDefaultRemoteUrl",
-            "cDefaultRemotePathFromUrl",
-            "RepoName",
-            "WorkingDir"
-        };
-
-        /// <summary>
-        ///  Checks whether <paramref name="arguments"/> contains the supplied <paramref name="option"/>.
-        /// </summary>
-        /// <param name="arguments">The script argument.</param>
-        /// <param name="option">The option.</param>
-        /// <returns><see langword="true"/> if the argument contains the option; otherwise <see langword="false"/>.</returns>
-        public static bool Contains(string arguments, string option)
-        {
-            arguments = arguments ?? throw new ArgumentNullException(nameof(arguments));
-            option = option ?? throw new ArgumentNullException(nameof(option));
-
-            return arguments.Contains(CreateOption(option, quoted: false));
+            return (arguments, abort: false);
         }
 
-        /// <summary>
-        ///  Checks whether <paramref name="option"/> starts with "s".
-        /// </summary>
-        /// <param name="option">The option.</param>
-        /// <returns><see langword="true"/> if the options starts with "s"; otherwise <see langword="false"/>.</returns>
-        public static bool DependsOnSelectedRevision(string option)
-        {
-            option = option ?? throw new ArgumentNullException(nameof(option));
+        ArgumentNullException.ThrowIfNull(uiCommands);
+        ArgumentNullException.ThrowIfNull(uiCommands.Module);
 
-            return option.StartsWith("s");
-        }
+        GitRevision? selectedRevision = null;
+        GitRevision? currentRevision = null;
 
-        public static (string? arguments, bool abort) Parse(string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider = null)
+        IReadOnlyList<GitRevision> allSelectedRevisions = Array.Empty<GitRevision>();
+        List<IGitRef> selectedLocalBranches = [];
+        List<IGitRef> selectedRemoteBranches = [];
+        List<string> selectedRemotes = [];
+        List<IGitRef> selectedBranches = [];
+        List<IGitRef> selectedTags = [];
+        List<IGitRef> currentLocalBranches = [];
+        List<IGitRef> currentRemoteBranches = [];
+        string currentRemote = "";
+        List<IGitRef> currentBranches = [];
+        List<IGitRef> currentTags = [];
+
+        foreach (string option in GetOptions(Options, scriptOptionsProvider))
         {
-            if (string.IsNullOrWhiteSpace(arguments))
+            if (!Contains(arguments, option))
             {
-                return (arguments, abort: false);
+                continue;
             }
 
-            ArgumentNullException.ThrowIfNull(uiCommands);
-            ArgumentNullException.ThrowIfNull(uiCommands.Module);
-
-            GitRevision? selectedRevision = null;
-            GitRevision? currentRevision = null;
-
-            IReadOnlyList<GitRevision> allSelectedRevisions = Array.Empty<GitRevision>();
-            List<IGitRef> selectedLocalBranches = [];
-            List<IGitRef> selectedRemoteBranches = [];
-            List<string> selectedRemotes = [];
-            List<IGitRef> selectedBranches = [];
-            List<IGitRef> selectedTags = [];
-            List<IGitRef> currentLocalBranches = [];
-            List<IGitRef> currentRemoteBranches = [];
-            string currentRemote = "";
-            List<IGitRef> currentBranches = [];
-            List<IGitRef> currentTags = [];
-
-            foreach (string option in GetOptions(Options, scriptOptionsProvider))
+            if (currentRevision is null && (option.StartsWith("c") || option == head))
             {
-                if (!Contains(arguments, option))
+                currentRevision = GetCurrentRevision(uiCommands.Module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches,
+                    loadBody: Contains(arguments, currentMessage));
+                if (currentRevision is null)
                 {
-                    continue;
+                    return (arguments: null, abort: true);
                 }
 
-                if (currentRevision is null && (option.StartsWith("c") || option == head))
+                if (currentLocalBranches.Count == 1)
                 {
-                    currentRevision = GetCurrentRevision(uiCommands.Module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches,
-                        loadBody: Contains(arguments, currentMessage));
-                    if (currentRevision is null)
+                    currentRemote = uiCommands.Module.GetSetting(string.Format(SettingKeyString.BranchRemote, currentLocalBranches[0].Name));
+                }
+                else
+                {
+                    currentRemote = uiCommands.Module.GetCurrentRemote();
+                    if (string.IsNullOrEmpty(currentRemote))
                     {
-                        return (arguments: null, abort: true);
-                    }
-
-                    if (currentLocalBranches.Count == 1)
-                    {
-                        currentRemote = uiCommands.Module.GetSetting(string.Format(SettingKeyString.BranchRemote, currentLocalBranches[0].Name));
-                    }
-                    else
-                    {
-                        currentRemote = uiCommands.Module.GetCurrentRemote();
-                        if (string.IsNullOrEmpty(currentRemote))
-                        {
-                            currentRemote = uiCommands.Module.GetSetting(string.Format(SettingKeyString.BranchRemote,
-                                AskToSpecify(currentLocalBranches, uiCommands, owner)));
-                        }
+                        currentRemote = uiCommands.Module.GetSetting(string.Format(SettingKeyString.BranchRemote,
+                            AskToSpecify(currentLocalBranches, uiCommands, owner)));
                     }
                 }
-                else if (selectedRevision is null && uiCommands.BrowseRepo is not null && DependsOnSelectedRevision(option))
-                {
-                    allSelectedRevisions = uiCommands.BrowseRepo.GetSelectedRevisions();
-                    selectedRevision = CalculateSelectedRevision(uiCommands, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
-                    if (selectedRevision is null)
-                    {
-                        return (arguments: null, abort: true);
-                    }
-                }
-
-                arguments = ParseScriptArguments(arguments, option, owner, scriptOptionsProvider, uiCommands, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision!, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision!, currentRemote);
-                if (arguments is null)
+            }
+            else if (selectedRevision is null && uiCommands.BrowseRepo is not null && DependsOnSelectedRevision(option))
+            {
+                allSelectedRevisions = uiCommands.BrowseRepo.GetSelectedRevisions();
+                selectedRevision = CalculateSelectedRevision(uiCommands, selectedRemoteBranches, selectedRemotes, selectedLocalBranches, selectedBranches, selectedTags);
+                if (selectedRevision is null)
                 {
                     return (arguments: null, abort: true);
                 }
             }
 
-            return (arguments, abort: false);
-
-            static IEnumerable<string> GetOptions(IReadOnlyList<string> options, IScriptOptionsProvider? scriptOptionsProvider)
-                => scriptOptionsProvider is null ? options : options.Union(scriptOptionsProvider.Options);
-        }
-
-        private static string AskToSpecify(IEnumerable<IGitRef> options, IGitUICommands uiCommands, IWin32Window owner)
-        {
-            List<IGitRef> items = options.ToList();
-            if (items.Count == 0)
+            arguments = ParseScriptArguments(arguments, option, owner, scriptOptionsProvider, uiCommands, allSelectedRevisions, selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision!, currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision!, currentRemote);
+            if (arguments is null)
             {
-                return string.Empty;
+                return (arguments: null, abort: true);
             }
-
-            using FormQuickGitRefSelector f = new();
-            f.Location = uiCommands.BrowseRepo?.GetQuickItemSelectorLocation() ?? new Point();
-            f.Init(FormQuickGitRefSelector.QuickAction.Select, items);
-            f.ShowDialog(owner);
-            return f.SelectedRef?.Name ?? "";
         }
 
-        private static string AskToSpecify(IEnumerable<string> options, IGitUICommands uiCommands, IWin32Window owner)
+        return (arguments, abort: false);
+
+        static IEnumerable<string> GetOptions(IReadOnlyList<string> options, IScriptOptionsProvider? scriptOptionsProvider)
+            => scriptOptionsProvider is null ? options : options.Union(scriptOptionsProvider.Options);
+    }
+
+    private static string AskToSpecify(IEnumerable<IGitRef> options, IGitUICommands uiCommands, IWin32Window owner)
+    {
+        List<IGitRef> items = options.ToList();
+        if (items.Count == 0)
         {
-            using FormQuickStringSelector f = new();
-            f.Location = uiCommands.BrowseRepo?.GetQuickItemSelectorLocation() ?? new Point();
-            f.Init(options.ToList());
-            f.ShowDialog(owner);
-            return f.SelectedString ?? "";
+            return string.Empty;
         }
 
-        private static GitRevision? CalculateSelectedRevision(IGitUICommands uiCommands, List<IGitRef> selectedRemoteBranches,
-            List<string> selectedRemotes, List<IGitRef> selectedLocalBranches,
-            List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
+        using FormQuickGitRefSelector f = new();
+        f.Location = uiCommands.BrowseRepo?.GetQuickItemSelectorLocation() ?? new Point();
+        f.Init(FormQuickGitRefSelector.QuickAction.Select, items);
+        f.ShowDialog(owner);
+        return f.SelectedRef?.Name ?? "";
+    }
+
+    private static string AskToSpecify(IEnumerable<string> options, IGitUICommands uiCommands, IWin32Window owner)
+    {
+        using FormQuickStringSelector f = new();
+        f.Location = uiCommands.BrowseRepo?.GetQuickItemSelectorLocation() ?? new Point();
+        f.Init(options.ToList());
+        f.ShowDialog(owner);
+        return f.SelectedString ?? "";
+    }
+
+    private static GitRevision? CalculateSelectedRevision(IGitUICommands uiCommands, List<IGitRef> selectedRemoteBranches,
+        List<string> selectedRemotes, List<IGitRef> selectedLocalBranches,
+        List<IGitRef> selectedBranches, List<IGitRef> selectedTags)
+    {
+        GitRevision? selectedRevision = uiCommands.BrowseRepo?.GetLatestSelectedRevision();
+        if (selectedRevision is null)
         {
-            GitRevision? selectedRevision = uiCommands.BrowseRepo?.GetLatestSelectedRevision();
-            if (selectedRevision is null)
+            return null;
+        }
+
+        foreach (IGitRef head in selectedRevision.Refs)
+        {
+            if (head.IsTag)
             {
-                return null;
+                selectedTags.Add(head);
             }
-
-            foreach (IGitRef head in selectedRevision.Refs)
+            else if (head.IsHead || head.IsRemote)
             {
-                if (head.IsTag)
+                selectedBranches.Add(head);
+                if (head.IsRemote)
                 {
-                    selectedTags.Add(head);
-                }
-                else if (head.IsHead || head.IsRemote)
-                {
-                    selectedBranches.Add(head);
-                    if (head.IsRemote)
+                    selectedRemoteBranches.Add(head);
+                    if (!selectedRemotes.Contains(head.Remote))
                     {
-                        selectedRemoteBranches.Add(head);
-                        if (!selectedRemotes.Contains(head.Remote))
-                        {
-                            selectedRemotes.Add(head.Remote);
-                        }
-                    }
-                    else
-                    {
-                        selectedLocalBranches.Add(head);
-                    }
-                }
-            }
-
-            return selectedRevision;
-        }
-
-        private static string CreateOption(string option, bool quoted)
-        {
-            if (string.IsNullOrWhiteSpace(option))
-            {
-                return string.Empty;
-            }
-
-            string result = "{" + option.Trim() + "}";
-
-            if (quoted)
-            {
-                result = "{" + result + "}";
-            }
-
-            return result;
-        }
-
-        private static GitRevision? GetCurrentRevision(
-            IGitModule module, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
-            List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, bool loadBody)
-        {
-            GitRevision currentRevision;
-            IEnumerable<IGitRef> refs;
-            currentRevision = module.GetRevision(shortFormat: !loadBody, loadRefs: true);
-            refs = currentRevision?.Refs ?? Array.Empty<IGitRef>();
-
-            foreach (IGitRef gitRef in refs)
-            {
-                if (gitRef.IsTag)
-                {
-                    currentTags.Add(gitRef);
-                }
-                else if (gitRef.IsHead || gitRef.IsRemote)
-                {
-                    currentBranches.Add(gitRef);
-                    if (gitRef.IsRemote)
-                    {
-                        currentRemoteBranches.Add(gitRef);
-                    }
-                    else
-                    {
-                        currentLocalBranches.Add(gitRef);
+                        selectedRemotes.Add(head.Remote);
                     }
                 }
+                else
+                {
+                    selectedLocalBranches.Add(head);
+                }
             }
-
-            return currentRevision;
         }
 
-        private static string GetRemotePath(string url)
-        {
-            if (Uri.TryCreate(url, UriKind.Absolute, out Uri? uri) ||
-                Uri.TryCreate("ssh://" + url.Replace(":", "/"), UriKind.Absolute, out uri))
-            {
-                return uri.LocalPath.SubstringUntilLast('.');
-            }
+        return selectedRevision;
+    }
 
-            return "";
+    private static string CreateOption(string option, bool quoted)
+    {
+        if (string.IsNullOrWhiteSpace(option))
+        {
+            return string.Empty;
         }
 
-        private static string? ParseScriptArguments(string arguments, string option, IWin32Window owner,
-            IScriptOptionsProvider? scriptOptionsProvider, IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions,
-            in IList<IGitRef> selectedTags, in IList<IGitRef> selectedBranches, in IList<IGitRef> selectedLocalBranches,
-            in IList<IGitRef> selectedRemoteBranches, in IList<string> selectedRemotes, GitRevision selectedRevision,
-            in IList<IGitRef> currentTags, in IList<IGitRef> currentBranches, in IList<IGitRef> currentLocalBranches,
-            in IList<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote)
+        string result = "{" + option.Trim() + "}";
+
+        if (quoted)
         {
-            IEnumerable<string>? newStrings = null;
-            string? newString = null;
-            string remote;
-            string url;
-            switch (option)
+            result = "{" + result + "}";
+        }
+
+        return result;
+    }
+
+    private static GitRevision? GetCurrentRevision(
+        IGitModule module, List<IGitRef> currentTags, List<IGitRef> currentLocalBranches,
+        List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, bool loadBody)
+    {
+        GitRevision currentRevision;
+        IEnumerable<IGitRef> refs;
+        currentRevision = module.GetRevision(shortFormat: !loadBody, loadRefs: true);
+        refs = currentRevision?.Refs ?? Array.Empty<IGitRef>();
+
+        foreach (IGitRef gitRef in refs)
+        {
+            if (gitRef.IsTag)
             {
-                case "sHashes":
-                    newString = string.Join(" ", allSelectedRevisions.Select(revision => revision.Guid));
-                    break;
+                currentTags.Add(gitRef);
+            }
+            else if (gitRef.IsHead || gitRef.IsRemote)
+            {
+                currentBranches.Add(gitRef);
+                if (gitRef.IsRemote)
+                {
+                    currentRemoteBranches.Add(gitRef);
+                }
+                else
+                {
+                    currentLocalBranches.Add(gitRef);
+                }
+            }
+        }
 
-                case "sTag":
-                    newString = SelectOneRef(selectedTags);
-                    break;
+        return currentRevision;
+    }
 
-                case "sBranch":
-                    newString = SelectOneRef(selectedBranches);
-                    break;
+    private static string GetRemotePath(string url)
+    {
+        if (Uri.TryCreate(url, UriKind.Absolute, out Uri? uri) ||
+            Uri.TryCreate("ssh://" + url.Replace(":", "/"), UriKind.Absolute, out uri))
+        {
+            return uri.LocalPath.SubstringUntilLast('.');
+        }
 
-                case "sLocalBranch":
-                    newString = SelectOneRef(selectedLocalBranches);
-                    break;
+        return "";
+    }
 
-                case "sRemoteBranch":
-                    newString = SelectOneRef(selectedRemoteBranches);
-                    break;
+    private static string? ParseScriptArguments(string arguments, string option, IWin32Window owner,
+        IScriptOptionsProvider? scriptOptionsProvider, IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions,
+        in IList<IGitRef> selectedTags, in IList<IGitRef> selectedBranches, in IList<IGitRef> selectedLocalBranches,
+        in IList<IGitRef> selectedRemoteBranches, in IList<string> selectedRemotes, GitRevision selectedRevision,
+        in IList<IGitRef> currentTags, in IList<IGitRef> currentBranches, in IList<IGitRef> currentLocalBranches,
+        in IList<IGitRef> currentRemoteBranches, GitRevision currentRevision, string currentRemote)
+    {
+        IEnumerable<string>? newStrings = null;
+        string? newString = null;
+        string remote;
+        string url;
+        switch (option)
+        {
+            case "sHashes":
+                newString = string.Join(" ", allSelectedRevisions.Select(revision => revision.Guid));
+                break;
 
-                case "sRemoteBranchName":
-                    newString = StripRemoteName(SelectOneRef(selectedRemoteBranches));
-                    break;
+            case "sTag":
+                newString = SelectOneRef(selectedTags);
+                break;
 
-                case "sRemote":
-                    newString = SelectOneString(selectedRemotes);
-                    break;
+            case "sBranch":
+                newString = SelectOneRef(selectedBranches);
+                break;
 
-                case "sRemoteUrl":
-                    newString = SelectOneString(selectedRemotes);
-                    if (!string.IsNullOrEmpty(newString))
-                    {
-                        remote = newString;
-                        newString = uiCommands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
-                    }
+            case "sLocalBranch":
+                newString = SelectOneRef(selectedLocalBranches);
+                break;
 
-                    break;
+            case "sRemoteBranch":
+                newString = SelectOneRef(selectedRemoteBranches);
+                break;
 
-                case "sRemotePathFromUrl":
-                    newString = SelectOneString(selectedRemotes);
-                    if (!string.IsNullOrEmpty(newString))
-                    {
-                        remote = newString;
-                        url = uiCommands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
-                        newString = GetRemotePath(url);
-                    }
+            case "sRemoteBranchName":
+                newString = StripRemoteName(SelectOneRef(selectedRemoteBranches));
+                break;
 
-                    break;
+            case "sRemote":
+                newString = SelectOneString(selectedRemotes);
+                break;
 
-                case "sHash":
-                    newString = selectedRevision.Guid;
-                    break;
+            case "sRemoteUrl":
+                newString = SelectOneString(selectedRemotes);
+                if (!string.IsNullOrEmpty(newString))
+                {
+                    remote = newString;
+                    newString = uiCommands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                }
 
-                case "sMessage":
-                    newString = EscapeLinefeeds(selectedRevision.Body) ?? selectedRevision.Subject;
-                    break;
+                break;
 
-                case "sSubject":
-                    newString = selectedRevision.Subject;
-                    break;
+            case "sRemotePathFromUrl":
+                newString = SelectOneString(selectedRemotes);
+                if (!string.IsNullOrEmpty(newString))
+                {
+                    remote = newString;
+                    url = uiCommands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
+                    newString = GetRemotePath(url);
+                }
 
-                case "sAuthor":
-                    newString = selectedRevision.Author;
-                    break;
+                break;
 
-                case "sCommitter":
-                    newString = selectedRevision.Committer;
-                    break;
+            case "sHash":
+                newString = selectedRevision.Guid;
+                break;
 
-                case "sAuthorDate":
-                    newString = selectedRevision.AuthorDate.ToString();
-                    break;
+            case "sMessage":
+                newString = EscapeLinefeeds(selectedRevision.Body) ?? selectedRevision.Subject;
+                break;
 
-                case "sCommitDate":
-                    newString = selectedRevision.CommitDate.ToString();
-                    break;
+            case "sSubject":
+                newString = selectedRevision.Subject;
+                break;
 
-                case "cTag":
-                    newString = SelectOneRef(currentTags);
-                    break;
+            case "sAuthor":
+                newString = selectedRevision.Author;
+                break;
 
-                case head:
-                    newString = uiCommands.Module.GetSelectedBranch(emptyIfDetached: true);
-                    if (string.IsNullOrEmpty(newString))
-                    {
-                        newString = currentRevision.Guid;
-                    }
+            case "sCommitter":
+                newString = selectedRevision.Committer;
+                break;
 
-                    break;
+            case "sAuthorDate":
+                newString = selectedRevision.AuthorDate.ToString();
+                break;
 
-                case "cBranch":
-                    newString = SelectOneRef(currentBranches);
-                    break;
+            case "sCommitDate":
+                newString = selectedRevision.CommitDate.ToString();
+                break;
 
-                case "cLocalBranch":
-                    newString = SelectOneRef(currentLocalBranches);
-                    break;
+            case "cTag":
+                newString = SelectOneRef(currentTags);
+                break;
 
-                case "cRemoteBranch":
-                    newString = SelectOneRef(currentRemoteBranches);
-                    break;
-
-                case "cRemoteBranchName":
-                    newString = StripRemoteName(SelectOneRef(currentRemoteBranches));
-                    break;
-
-                case "cHash":
+            case head:
+                newString = uiCommands.Module.GetSelectedBranch(emptyIfDetached: true);
+                if (string.IsNullOrEmpty(newString))
+                {
                     newString = currentRevision.Guid;
-                    break;
-
-                case "cMessage":
-                    newString = EscapeLinefeeds(currentRevision.Body) ?? currentRevision.Subject;
-                    break;
-
-                case "cSubject":
-                    newString = currentRevision.Subject;
-                    break;
-
-                case "cAuthor":
-                    newString = currentRevision.Author;
-                    break;
-
-                case "cCommitter":
-                    newString = currentRevision.Committer;
-                    break;
-
-                case "cAuthorDate":
-                    newString = currentRevision.AuthorDate.ToString();
-                    break;
-
-                case "cCommitDate":
-                    newString = currentRevision.CommitDate.ToString();
-                    break;
-
-                case "cDefaultRemote":
-                    if (string.IsNullOrEmpty(currentRemote))
-                    {
-                        newString = "";
-                    }
-                    else
-                    {
-                        newString = currentRemote;
-                    }
-
-                    break;
-
-                case "cDefaultRemoteUrl":
-                    if (string.IsNullOrEmpty(currentRemote))
-                    {
-                        newString = "";
-                    }
-                    else
-                    {
-                        newString = uiCommands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
-                    }
-
-                    break;
-
-                case "cDefaultRemotePathFromUrl":
-                    if (string.IsNullOrEmpty(currentRemote))
-                    {
-                        newString = "";
-                    }
-                    else
-                    {
-                        url = uiCommands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
-                        newString = GetRemotePath(url);
-                    }
-
-                    break;
-
-                case "RepoName":
-                    newString = uiCommands.GetRequiredService<IRepositoryDescriptionProvider>().Get(uiCommands.Module.WorkingDir);
-                    break;
-
-                case "WorkingDir":
-                    newString = uiCommands.Module.WorkingDir;
-                    break;
-
-                default:
-                    newStrings = scriptOptionsProvider?.GetValues(option);
-                    break;
-            }
-
-            if (newString is not null)
-            {
-                newStrings = [newString];
-            }
-            else if (newStrings is null)
-            {
-                return arguments;
-            }
-
-            return ReplaceOption(option, arguments, newStrings.ToArray());
-
-            static string? EscapeLinefeeds(string? multiLine) => multiLine?.Replace("\n", "\\n");
-
-            string SelectOneRef(IList<IGitRef> refs) => SelectOne(refs, uiCommands, owner);
-
-            string SelectOneString(IList<string> strings) => SelectOne(strings, uiCommands, owner);
-        }
-
-        internal static string ReplaceOption(string option, string arguments, string[] newStrings)
-        {
-            return arguments
-                .Replace(CreateOption(option, quoted: true), string.Join(' ', newStrings.Select(value => Quote(value))))
-                .Replace(CreateOption(option, quoted: false), string.Join(' ', newStrings));
-
-            static string Quote(string newString)
-            {
-                string newStringQuoted = QuoteRegex().Replace(newString, "\\\"");
-                newStringQuoted = "\"" + newStringQuoted;
-                if (newStringQuoted.EndsWith("\\"))
-                {
-                    newStringQuoted += "\\";
                 }
 
-                newStringQuoted += "\"";
-                return newStringQuoted;
+                break;
+
+            case "cBranch":
+                newString = SelectOneRef(currentBranches);
+                break;
+
+            case "cLocalBranch":
+                newString = SelectOneRef(currentLocalBranches);
+                break;
+
+            case "cRemoteBranch":
+                newString = SelectOneRef(currentRemoteBranches);
+                break;
+
+            case "cRemoteBranchName":
+                newString = StripRemoteName(SelectOneRef(currentRemoteBranches));
+                break;
+
+            case "cHash":
+                newString = currentRevision.Guid;
+                break;
+
+            case "cMessage":
+                newString = EscapeLinefeeds(currentRevision.Body) ?? currentRevision.Subject;
+                break;
+
+            case "cSubject":
+                newString = currentRevision.Subject;
+                break;
+
+            case "cAuthor":
+                newString = currentRevision.Author;
+                break;
+
+            case "cCommitter":
+                newString = currentRevision.Committer;
+                break;
+
+            case "cAuthorDate":
+                newString = currentRevision.AuthorDate.ToString();
+                break;
+
+            case "cCommitDate":
+                newString = currentRevision.CommitDate.ToString();
+                break;
+
+            case "cDefaultRemote":
+                if (string.IsNullOrEmpty(currentRemote))
+                {
+                    newString = "";
+                }
+                else
+                {
+                    newString = currentRemote;
+                }
+
+                break;
+
+            case "cDefaultRemoteUrl":
+                if (string.IsNullOrEmpty(currentRemote))
+                {
+                    newString = "";
+                }
+                else
+                {
+                    newString = uiCommands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
+                }
+
+                break;
+
+            case "cDefaultRemotePathFromUrl":
+                if (string.IsNullOrEmpty(currentRemote))
+                {
+                    newString = "";
+                }
+                else
+                {
+                    url = uiCommands.Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, currentRemote));
+                    newString = GetRemotePath(url);
+                }
+
+                break;
+
+            case "RepoName":
+                newString = uiCommands.GetRequiredService<IRepositoryDescriptionProvider>().Get(uiCommands.Module.WorkingDir);
+                break;
+
+            case "WorkingDir":
+                newString = uiCommands.Module.WorkingDir;
+                break;
+
+            default:
+                newStrings = scriptOptionsProvider?.GetValues(option);
+                break;
+        }
+
+        if (newString is not null)
+        {
+            newStrings = [newString];
+        }
+        else if (newStrings is null)
+        {
+            return arguments;
+        }
+
+        return ReplaceOption(option, arguments, newStrings.ToArray());
+
+        static string? EscapeLinefeeds(string? multiLine) => multiLine?.Replace("\n", "\\n");
+
+        string SelectOneRef(IList<IGitRef> refs) => SelectOne(refs, uiCommands, owner);
+
+        string SelectOneString(IList<string> strings) => SelectOne(strings, uiCommands, owner);
+    }
+
+    internal static string ReplaceOption(string option, string arguments, string[] newStrings)
+    {
+        return arguments
+            .Replace(CreateOption(option, quoted: true), string.Join(' ', newStrings.Select(value => Quote(value))))
+            .Replace(CreateOption(option, quoted: false), string.Join(' ', newStrings));
+
+        static string Quote(string newString)
+        {
+            string newStringQuoted = QuoteRegex().Replace(newString, "\\\"");
+            newStringQuoted = "\"" + newStringQuoted;
+            if (newStringQuoted.EndsWith("\\"))
+            {
+                newStringQuoted += "\\";
             }
-        }
 
-        private static string SelectOne(IList<IGitRef> refs, IGitUICommands uiCommands, IWin32Window owner)
+            newStringQuoted += "\"";
+            return newStringQuoted;
+        }
+    }
+
+    private static string SelectOne(IList<IGitRef> refs, IGitUICommands uiCommands, IWin32Window owner)
+    {
+        return refs.Count switch
         {
-            return refs.Count switch
-            {
-                0 => string.Empty,
-                1 => refs[0].Name,
-                _ => AskToSpecify(refs, uiCommands, owner)
-            };
-        }
+            0 => string.Empty,
+            1 => refs[0].Name,
+            _ => AskToSpecify(refs, uiCommands, owner)
+        };
+    }
 
-        private static string SelectOne(IList<string> strings, IGitUICommands uiCommands, IWin32Window owner)
+    private static string SelectOne(IList<string> strings, IGitUICommands uiCommands, IWin32Window owner)
+    {
+        return strings.Count switch
         {
-            return strings.Count switch
-            {
-                0 => string.Empty,
-                1 => strings[0],
-                _ => AskToSpecify(strings, uiCommands, owner)
-            };
-        }
+            0 => string.Empty,
+            1 => strings[0],
+            _ => AskToSpecify(strings, uiCommands, owner)
+        };
+    }
 
-        private static string StripRemoteName(string remoteBranchName)
+    private static string StripRemoteName(string remoteBranchName)
+    {
+        if (string.IsNullOrEmpty(remoteBranchName))
         {
-            if (string.IsNullOrEmpty(remoteBranchName))
-            {
-                return string.Empty;
-            }
-
-            int firstSlashIndex = remoteBranchName.IndexOf('/');
-            if (firstSlashIndex >= 0)
-            {
-                return remoteBranchName[(firstSlashIndex + 1)..];
-            }
-
-            return remoteBranchName;
+            return string.Empty;
         }
 
-        internal static TestAccessor GetTestAccessor() => new();
-
-        internal readonly struct TestAccessor
+        int firstSlashIndex = remoteBranchName.IndexOf('/');
+        if (firstSlashIndex >= 0)
         {
-            public string CreateOption(string option, bool quoted)
-                => ScriptOptionsParser.CreateOption(option, quoted);
-
-            public GitRevision? GetCurrentRevision(IGitModule module, List<IGitRef> currentTags,
-                List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, bool loadBody)
-                => ScriptOptionsParser.GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, loadBody);
-
-            public string? ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider,
-                IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches,
-                List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision,
-                List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches,
-                GitRevision currentRevision, string currentRemote)
-                => ScriptOptionsParser.ParseScriptArguments(arguments, option, owner, scriptOptionsProvider, uiCommands, allSelectedRevisions,
-                    selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision,
-                    currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
+            return remoteBranchName[(firstSlashIndex + 1)..];
         }
+
+        return remoteBranchName;
+    }
+
+    internal static TestAccessor GetTestAccessor() => new();
+
+    internal readonly struct TestAccessor
+    {
+        public string CreateOption(string option, bool quoted)
+            => ScriptOptionsParser.CreateOption(option, quoted);
+
+        public GitRevision? GetCurrentRevision(IGitModule module, List<IGitRef> currentTags,
+            List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, bool loadBody)
+            => ScriptOptionsParser.GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, loadBody);
+
+        public string? ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider,
+            IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches,
+            List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision,
+            List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches,
+            GitRevision currentRevision, string currentRemote)
+            => ScriptOptionsParser.ParseScriptArguments(arguments, option, owner, scriptOptionsProvider, uiCommands, allSelectedRevisions,
+                selectedTags, selectedBranches, selectedLocalBranches, selectedRemoteBranches, selectedRemotes, selectedRevision,
+                currentTags, currentBranches, currentLocalBranches, currentRemoteBranches, currentRevision, currentRemote);
     }
 }

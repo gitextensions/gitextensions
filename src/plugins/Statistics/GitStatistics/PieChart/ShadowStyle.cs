@@ -1,24 +1,23 @@
-namespace GitExtensions.Plugins.GitStatistics.PieChart
+namespace GitExtensions.Plugins.GitStatistics.PieChart;
+
+/// <summary>
+///   Enumeration for different shadow styles
+/// </summary>
+public enum ShadowStyle
 {
     /// <summary>
-    ///   Enumeration for different shadow styles
+    ///   No shadow. Sides are drawn in the same color as the top od the
+    ///   pie.
     /// </summary>
-    public enum ShadowStyle
-    {
-        /// <summary>
-        ///   No shadow. Sides are drawn in the same color as the top od the
-        ///   pie.
-        /// </summary>
-        NoShadow,
+    NoShadow,
 
-        /// <summary>
-        ///   Uniform shadow. Sides are drawn somewhat darker.
-        /// </summary>
-        UniformShadow,
+    /// <summary>
+    ///   Uniform shadow. Sides are drawn somewhat darker.
+    /// </summary>
+    UniformShadow,
 
-        /// <summary>
-        ///   Gradual shadow is used to fully simulate 3-D shadow.
-        /// </summary>
-        GradualShadow
-    }
+    /// <summary>
+    ///   Gradual shadow is used to fully simulate 3-D shadow.
+    /// </summary>
+    GradualShadow
 }

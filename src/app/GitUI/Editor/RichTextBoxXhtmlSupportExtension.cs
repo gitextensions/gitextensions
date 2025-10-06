@@ -7,1603 +7,1602 @@ using GitExtensions.Extensibility;
 
 #pragma warning disable SA1305 // Field names should not use Hungarian notation
 
-namespace GitUI.Editor.RichTextBoxExtension
+namespace GitUI.Editor.RichTextBoxExtension;
+
+internal static class RichTextBoxXhtmlSupportExtension
 {
-    internal static class RichTextBoxXhtmlSupportExtension
+    private const string LinkSeparator = "|||";
+
+    /// <summary>
+    /// Maintains performance while updating.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// It is recommended to call this method before doing
+    /// any major updates that you do not wish the user to
+    /// see. Remember to call EndUpdate when you are finished
+    /// with the update. Nested calls are supported.
+    /// </para>
+    /// <para>
+    /// Calling this method will prevent redrawing. It will
+    /// also setup the event mask of the underlying richedit
+    /// control so that no events are sent.
+    /// </para>
+    /// </remarks>
+    private static IntPtr BeginUpdate(HandleRef handleRef)
     {
-        private const string LinkSeparator = "|||";
+        // Prevent the control from raising any events.
+        IntPtr oldEventMask = NativeMethods.SendMessage(handleRef,
+            NativeMethods.EM_SETEVENTMASK, IntPtr.Zero, IntPtr.Zero);
 
-        /// <summary>
-        /// Maintains performance while updating.
-        /// </summary>
-        /// <remarks>
-        /// <para>
-        /// It is recommended to call this method before doing
-        /// any major updates that you do not wish the user to
-        /// see. Remember to call EndUpdate when you are finished
-        /// with the update. Nested calls are supported.
-        /// </para>
-        /// <para>
-        /// Calling this method will prevent redrawing. It will
-        /// also setup the event mask of the underlying richedit
-        /// control so that no events are sent.
-        /// </para>
-        /// </remarks>
-        private static IntPtr BeginUpdate(HandleRef handleRef)
-        {
-            // Prevent the control from raising any events.
-            IntPtr oldEventMask = NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETEVENTMASK, IntPtr.Zero, IntPtr.Zero);
+        // Prevent the control from redrawing itself.
+        NativeMethods.SendMessage(handleRef,
+            NativeMethods.WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
 
-            // Prevent the control from redrawing itself.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.WM_SETREDRAW, IntPtr.Zero, IntPtr.Zero);
+        return oldEventMask;
+    }
 
-            return oldEventMask;
-        }
+    public static IntPtr BeginUpdate(this RichTextBox rtb)
+    {
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        return BeginUpdate(handleRef);
+    }
 
-        public static IntPtr BeginUpdate(this RichTextBox rtb)
-        {
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            return BeginUpdate(handleRef);
-        }
+    /// <summary>
+    /// Resumes drawing and event handling.
+    /// </summary>
+    /// <remarks>
+    /// This method should be called every time a call is made
+    /// made to BeginUpdate. It resets the event mask to it's
+    /// original value and enables redrawing of the control.
+    /// </remarks>
+    private static void EndUpdate(HandleRef handleRef, IntPtr oldEventMask)
+    {
+        // Allow the control to redraw itself.
+        NativeMethods.SendMessage(handleRef,
+            NativeMethods.WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
 
-        /// <summary>
-        /// Resumes drawing and event handling.
-        /// </summary>
-        /// <remarks>
-        /// This method should be called every time a call is made
-        /// made to BeginUpdate. It resets the event mask to it's
-        /// original value and enables redrawing of the control.
-        /// </remarks>
-        private static void EndUpdate(HandleRef handleRef, IntPtr oldEventMask)
-        {
-            // Allow the control to redraw itself.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.WM_SETREDRAW, (IntPtr)1, IntPtr.Zero);
+        // Allow the control to raise event messages.
+        NativeMethods.SendMessage(handleRef,
+            NativeMethods.EM_SETEVENTMASK, IntPtr.Zero, oldEventMask);
+    }
 
-            // Allow the control to raise event messages.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETEVENTMASK, IntPtr.Zero, oldEventMask);
-        }
+    public static void EndUpdate(this RichTextBox rtb, IntPtr oldEventMask)
+    {
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        EndUpdate(handleRef, oldEventMask);
+    }
 
-        public static void EndUpdate(this RichTextBox rtb, IntPtr oldEventMask)
-        {
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            EndUpdate(handleRef, oldEventMask);
-        }
+    // Defines for STRUCT_CHARFORMAT member dwMask
+    [Flags]
+    public enum CFM : uint
+    {
+        BOLD = 0x00000001,
+        ITALIC = 0x00000002,
+        UNDERLINE = 0x00000004,
+        STRIKEOUT = 0x00000008,
+        PROTECTED = 0x00000010,
+        LINK = 0x00000020,
+        SIZE = 0x80000000,
+        COLOR = 0x40000000,
+        FACE = 0x20000000,
+        OFFSET = 0x10000000,
+        CHARSET = 0x08000000,
+        SUBSCRIPT = CFE.SUBSCRIPT | CFE.SUPERSCRIPT,
+        SUPERSCRIPT = SUBSCRIPT,
 
-        // Defines for STRUCT_CHARFORMAT member dwMask
-        [Flags]
-        public enum CFM : uint
-        {
-            BOLD = 0x00000001,
-            ITALIC = 0x00000002,
-            UNDERLINE = 0x00000004,
-            STRIKEOUT = 0x00000008,
-            PROTECTED = 0x00000010,
-            LINK = 0x00000020,
-            SIZE = 0x80000000,
-            COLOR = 0x40000000,
-            FACE = 0x20000000,
-            OFFSET = 0x10000000,
-            CHARSET = 0x08000000,
-            SUBSCRIPT = CFE.SUBSCRIPT | CFE.SUPERSCRIPT,
-            SUPERSCRIPT = SUBSCRIPT,
+        SMALLCAPS = 0x0040,         /* (*)  */
+        ALLCAPS = 0x0080,           /* Displayed by 3.0 */
+        HIDDEN = 0x0100,            /* Hidden by 3.0 */
+        OUTLINE = 0x0200,           /* (*)  */
+        SHADOW = 0x0400,            /* (*)  */
+        EMBOSS = 0x0800,            /* (*)  */
+        IMPRINT = 0x1000,           /* (*)  */
+        DISABLED = 0x2000,
+        REVISED = 0x4000,
 
-            SMALLCAPS = 0x0040,         /* (*)  */
-            ALLCAPS = 0x0080,           /* Displayed by 3.0 */
-            HIDDEN = 0x0100,            /* Hidden by 3.0 */
-            OUTLINE = 0x0200,           /* (*)  */
-            SHADOW = 0x0400,            /* (*)  */
-            EMBOSS = 0x0800,            /* (*)  */
-            IMPRINT = 0x1000,           /* (*)  */
-            DISABLED = 0x2000,
-            REVISED = 0x4000,
+        BACKCOLOR = 0x04000000,
+        LCID = 0x02000000,
+        UNDERLINETYPE = 0x00800000,     /* Many displayed by 3.0 */
+        WEIGHT = 0x00400000,
+        SPACING = 0x00200000,       /* Displayed by 3.0 */
+        KERNING = 0x00100000,       /* (*)  */
+        STYLE = 0x00080000,     /* (*)  */
+        ANIMATION = 0x00040000,     /* (*)  */
+        REVAUTHOR = 0x00008000
+    }
 
-            BACKCOLOR = 0x04000000,
-            LCID = 0x02000000,
-            UNDERLINETYPE = 0x00800000,     /* Many displayed by 3.0 */
-            WEIGHT = 0x00400000,
-            SPACING = 0x00200000,       /* Displayed by 3.0 */
-            KERNING = 0x00100000,       /* (*)  */
-            STYLE = 0x00080000,     /* (*)  */
-            ANIMATION = 0x00040000,     /* (*)  */
-            REVAUTHOR = 0x00008000
-        }
+    // Defines for STRUCT_CHARFORMAT member dwEffects
+    [Flags]
+    public enum CFE : uint
+    {
+        BOLD = 0x00000001,
+        ITALIC = 0x00000002,
+        UNDERLINE = 0x00000004,
+        STRIKEOUT = 0x00000008,
+        PROTECTED = 0x00000010,
+        LINK = 0x00000020,
+        AUTOCOLOR = 0x40000000,
+        SUBSCRIPT = 0x00010000,     /* Superscript and subscript are */
+        SUPERSCRIPT = 0x00020000,     /*  mutually exclusive             */
 
-        // Defines for STRUCT_CHARFORMAT member dwEffects
-        [Flags]
-        public enum CFE : uint
-        {
-            BOLD = 0x00000001,
-            ITALIC = 0x00000002,
-            UNDERLINE = 0x00000004,
-            STRIKEOUT = 0x00000008,
-            PROTECTED = 0x00000010,
-            LINK = 0x00000020,
-            AUTOCOLOR = 0x40000000,
-            SUBSCRIPT = 0x00010000,     /* Superscript and subscript are */
-            SUPERSCRIPT = 0x00020000,     /*  mutually exclusive             */
+        SMALLCAPS = 0x0040,         /* (*)  */
+        ALLCAPS = 0x0080,           /* Displayed by 3.0 */
+        HIDDEN = 0x0100,            /* Hidden by 3.0 */
+        OUTLINE = 0x0200,           /* (*)  */
+        SHADOW = 0x0400,            /* (*)  */
+        EMBOSS = 0x0800,            /* (*)  */
+        IMPRINT = 0x1000,           /* (*)  */
+        DISABLED = 0x2000,
+        REVISED = 0x4000,
 
-            SMALLCAPS = 0x0040,         /* (*)  */
-            ALLCAPS = 0x0080,           /* Displayed by 3.0 */
-            HIDDEN = 0x0100,            /* Hidden by 3.0 */
-            OUTLINE = 0x0200,           /* (*)  */
-            SHADOW = 0x0400,            /* (*)  */
-            EMBOSS = 0x0800,            /* (*)  */
-            IMPRINT = 0x1000,           /* (*)  */
-            DISABLED = 0x2000,
-            REVISED = 0x4000,
+        // CFE.AUTOCOLOR and CFE.AUTOBACKCOLOR correspond to CFM.COLOR and
+        // CFM.BACKCOLOR, respectively, which control them
+        AUTOBACKCOLOR = 0x04000000
+    }
 
-            // CFE.AUTOCOLOR and CFE.AUTOBACKCOLOR correspond to CFM.COLOR and
-            // CFM.BACKCOLOR, respectively, which control them
-            AUTOBACKCOLOR = 0x04000000
-        }
+    public enum CFU : byte
+    {
+        UNDERLINENONE = 0x00,
+        UNDERLINE = 0x01,
+        UNDERLINEWORD = 0x02, /* (*) displayed as ordinary underline    */
+        UNDERLINEDOUBLE = 0x03, /* (*) displayed as ordinary underline  */
+        UNDERLINEDOTTED = 0x04,
+        UNDERLINEDASH = 0x05,
+        UNDERLINEDASHDOT = 0x06,
+        UNDERLINEDASHDOTDOT = 0x07,
+        UNDERLINEWAVE = 0x08,
+        UNDERLINETHICK = 0x09,
+        UNDERLINEHAIRLINE = 0x0A /* (*) displayed as ordinary underline */
+    }
 
-        public enum CFU : byte
-        {
-            UNDERLINENONE = 0x00,
-            UNDERLINE = 0x01,
-            UNDERLINEWORD = 0x02, /* (*) displayed as ordinary underline    */
-            UNDERLINEDOUBLE = 0x03, /* (*) displayed as ordinary underline  */
-            UNDERLINEDOTTED = 0x04,
-            UNDERLINEDASH = 0x05,
-            UNDERLINEDASHDOT = 0x06,
-            UNDERLINEDASHDOTDOT = 0x07,
-            UNDERLINEWAVE = 0x08,
-            UNDERLINETHICK = 0x09,
-            UNDERLINEHAIRLINE = 0x0A /* (*) displayed as ordinary underline */
-        }
+    // Font Weights
+    public enum FW : short
+    {
+        DONTCARE = 0,
+        THIN = 100,
+        EXTRALIGHT = 200,
+        LIGHT = 300,
+        NORMAL = 400,
+        MEDIUM = 500,
+        SEMIBOLD = 600,
+        BOLD = 700,
+        EXTRABOLD = 800,
+        HEAVY = 900,
 
-        // Font Weights
-        public enum FW : short
-        {
-            DONTCARE = 0,
-            THIN = 100,
-            EXTRALIGHT = 200,
-            LIGHT = 300,
-            NORMAL = 400,
-            MEDIUM = 500,
-            SEMIBOLD = 600,
-            BOLD = 700,
-            EXTRABOLD = 800,
-            HEAVY = 900,
+        ULTRALIGHT = EXTRALIGHT,
+        REGULAR = NORMAL,
+        DEMIBOLD = SEMIBOLD,
+        ULTRABOLD = EXTRABOLD,
+        BLACK = HEAVY
+    }
 
-            ULTRALIGHT = EXTRALIGHT,
-            REGULAR = NORMAL,
-            DEMIBOLD = SEMIBOLD,
-            ULTRABOLD = EXTRABOLD,
-            BLACK = HEAVY
-        }
-
+    // PARAFORMAT mask values
+    [Flags]
+    public enum PFM : uint
+    {
         // PARAFORMAT mask values
-        [Flags]
-        public enum PFM : uint
+        STARTINDENT = 0x00000001,
+        RIGHTINDENT = 0x00000002,
+        OFFSET = 0x00000004,
+        ALIGNMENT = 0x00000008,
+        TABSTOPS = 0x00000010,
+        NUMBERING = 0x00000020,
+        OFFSETINDENT = 0x80000000,
+
+        // PARAFORMAT 2.0 masks and effects
+        SPACEBEFORE = 0x00000040,
+        SPACEAFTER = 0x00000080,
+        LINESPACING = 0x00000100,
+        STYLE = 0x00000400,
+        BORDER = 0x00000800,    // (*)
+        SHADING = 0x00001000,   // (*)
+        NUMBERINGSTYLE = 0x00002000,    // RE 3.0
+        NUMBERINGTAB = 0x00004000,  // RE 3.0
+        NUMBERINGSTART = 0x00008000,    // RE 3.0
+
+        RTLPARA = 0x00010000,
+        KEEP = 0x00020000,  // (*)
+        KEEPNEXT = 0x00040000,  // (*)
+        PAGEBREAKBEFORE = 0x00080000,   // (*)
+        NOLINENUMBER = 0x00100000,  // (*)
+        NOWIDOWCONTROL = 0x00200000,    // (*)
+        DONOTHYPHEN = 0x00400000,   // (*)
+        SIDEBYSIDE = 0x00800000,    // (*)
+        TABLE = 0x40000000, // RE 3.0
+        TEXTWRAPPINGBREAK = 0x20000000, // RE 3.0
+        TABLEROWDELIMITER = 0x10000000, // RE 4.0
+
+        // The following three properties are read only
+        COLLAPSED = 0x01000000, // RE 3.0
+        OUTLINELEVEL = 0x02000000,  // RE 3.0
+        BOX = 0x04000000,   // RE 3.0
+        RESERVED2 = 0x08000000 // RE 4.0
+    }
+
+    // PARAFORMAT numbering options
+    public enum PFN : ushort
+    {
+        BULLET = 0x0001
+    }
+
+    // PARAFORMAT alignment options
+    public enum PFA : ushort
+    {
+        LEFT = 0x0001,
+        RIGHT = 0x0002,
+        CENTER = 0x0003
+    }
+
+    // It makes no difference if we use PARAFORMAT or
+    // PARAFORMAT2 here, so I have opted for PARAFORMAT2.
+    [StructLayout(LayoutKind.Sequential)]
+    public struct PARAFORMAT
+    {
+        public int cbSize;
+        public PFM dwMask;
+        public PFN wNumbering;
+        public short wReserved;
+        public int dxStartIndent;
+        public int dxRightIndent;
+        public int dxOffset;
+        public PFA wAlignment;
+        public short cTabCount;
+        [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
+        public int[] rgxTabs;
+
+        // PARAFORMAT2 from here onwards.
+        public int dySpaceBefore;
+        public int dySpaceAfter;
+        public int dyLineSpacing;
+        public short sStyle;
+        public byte bLineSpacingRule;
+        public byte bOutlineLevel;
+        public short wShadingWeight;
+        public short wShadingStyle;
+        public short wNumberingStart;
+        public short wNumberingStyle;
+        public short wNumberingTab;
+        public short wBorderSpace;
+        public short wBorderWidth;
+        public short wBorders;
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    public struct CHARFORMAT
+    {
+        public CHARFORMAT(CFM mask, CFE effects)
+            : this()
         {
-            // PARAFORMAT mask values
-            STARTINDENT = 0x00000001,
-            RIGHTINDENT = 0x00000002,
-            OFFSET = 0x00000004,
-            ALIGNMENT = 0x00000008,
-            TABSTOPS = 0x00000010,
-            NUMBERING = 0x00000020,
-            OFFSETINDENT = 0x80000000,
-
-            // PARAFORMAT 2.0 masks and effects
-            SPACEBEFORE = 0x00000040,
-            SPACEAFTER = 0x00000080,
-            LINESPACING = 0x00000100,
-            STYLE = 0x00000400,
-            BORDER = 0x00000800,    // (*)
-            SHADING = 0x00001000,   // (*)
-            NUMBERINGSTYLE = 0x00002000,    // RE 3.0
-            NUMBERINGTAB = 0x00004000,  // RE 3.0
-            NUMBERINGSTART = 0x00008000,    // RE 3.0
-
-            RTLPARA = 0x00010000,
-            KEEP = 0x00020000,  // (*)
-            KEEPNEXT = 0x00040000,  // (*)
-            PAGEBREAKBEFORE = 0x00080000,   // (*)
-            NOLINENUMBER = 0x00100000,  // (*)
-            NOWIDOWCONTROL = 0x00200000,    // (*)
-            DONOTHYPHEN = 0x00400000,   // (*)
-            SIDEBYSIDE = 0x00800000,    // (*)
-            TABLE = 0x40000000, // RE 3.0
-            TEXTWRAPPINGBREAK = 0x20000000, // RE 3.0
-            TABLEROWDELIMITER = 0x10000000, // RE 4.0
-
-            // The following three properties are read only
-            COLLAPSED = 0x01000000, // RE 3.0
-            OUTLINELEVEL = 0x02000000,  // RE 3.0
-            BOX = 0x04000000,   // RE 3.0
-            RESERVED2 = 0x08000000 // RE 4.0
+            cbSize = Marshal.SizeOf(this);
+            dwMask = mask;
+            dwEffects = effects;
+            szFaceName = "";
         }
 
-        // PARAFORMAT numbering options
-        public enum PFN : ushort
+        public int cbSize;
+        public CFM dwMask;
+        public CFE dwEffects;
+        public int yHeight;
+        public int yOffset;
+        public int crTextColor;
+        public byte bCharSet;
+        public byte bPitchAndFamily;
+        [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
+        public string szFaceName;
+
+        // CHARFORMAT2 from here onwards.
+        public FW wWeight;
+        public short sSpacing;
+        public int crBackColor;
+        public uint lcid;
+        public uint dwReserved;
+        public short sStyle;
+        public short wKerning;
+        public CFU bUnderlineType;
+        public byte bAnimation;
+        public byte bRevAuthor;
+        public byte bReserved1;
+    }
+
+    #region Win32 Apis
+    internal static class NativeMethods
+    {
+        // Constants from the Platform SDK.
+        internal const int WM_USER = 0x0400;
+        internal const int EM_GETCHARFORMAT = WM_USER + 58;
+        internal const int EM_SETCHARFORMAT = WM_USER + 68;
+        internal const int EM_HIDESELECTION = WM_USER + 63;
+        internal const int EM_GETSCROLLPOS = WM_USER + 221;
+        internal const int EM_SETSCROLLPOS = WM_USER + 222;
+
+        internal const int EM_SETEVENTMASK = 1073;
+        internal const int EM_GETPARAFORMAT = 1085;
+        internal const int EM_SETPARAFORMAT = 1095;
+        internal const int WM_SETREDRAW = 11;
+
+        // Defines for EM_SETCHARFORMAT/EM_GETCHARFORMAT
+        internal const int SCF_SELECTION = 0x0001;
+        internal const int SCF_WORD = 0x0002;
+        internal const int SCF_ALL = 0x0004;
+
+        internal const int LF_FACESIZE = 32;
+
+        [DllImport("user32", CharSet = CharSet.Auto)]
+        internal static extern IntPtr SendMessage(HandleRef hWnd,
+            int msg,
+            IntPtr wParam,
+            IntPtr lParam);
+
+        [DllImport("user32", CharSet = CharSet.Auto)]
+        internal static extern IntPtr SendMessage(HandleRef hWnd,
+            int msg,
+            IntPtr wParam,
+            ref Point lParam);
+
+        [DllImport("user32", CharSet = CharSet.Auto)]
+        internal static extern IntPtr SendMessage(HandleRef hWnd,
+            int msg,
+            IntPtr wParam,
+            ref PARAFORMAT lp);
+
+        [DllImport("user32", CharSet = CharSet.Auto)]
+        internal static extern IntPtr SendMessage(HandleRef hWnd,
+            int msg,
+            IntPtr wParam,
+            ref CHARFORMAT lp);
+    }
+    #endregion
+
+    public static void SetSuperScript(this RichTextBox rtb, bool bSet)
+    {
+        rtb.SetCharFormat(CFM.SUPERSCRIPT, bSet ? CFE.SUPERSCRIPT : 0);
+    }
+
+    public static void SetSubScript(this RichTextBox rtb, bool bSet)
+    {
+        rtb.SetCharFormat(CFM.SUBSCRIPT, bSet ? CFE.SUBSCRIPT : 0);
+    }
+
+    public static void SetLink(this RichTextBox rtb, bool bSet)
+    {
+        rtb.SetCharFormat(CFM.LINK, bSet ? CFE.LINK : 0);
+    }
+
+    public static bool IsSuperScript(this RichTextBox rtb)
+    {
+        CHARFORMAT cf = rtb.GetCharFormat();
+        return (cf.dwEffects & CFE.SUPERSCRIPT) == CFE.SUPERSCRIPT;
+    }
+
+    public static bool IsSubScript(this RichTextBox rtb)
+    {
+        CHARFORMAT cf = rtb.GetCharFormat();
+        return (cf.dwEffects & CFE.SUBSCRIPT) == CFE.SUBSCRIPT;
+    }
+
+    public static bool IsLink(this RichTextBox rtb)
+    {
+        CHARFORMAT cf = rtb.GetCharFormat();
+        return (cf.dwEffects & CFE.LINK) == CFE.LINK;
+    }
+
+    private static void RtbSetSelectedRtf(RichTextBox rtb, string str)
+    {
+        // Work around bug in DotNet.
+        // Basically it assumes that incoming text is always in the default
+        // encoding so giving it a unicode string throws an exception.
+        // (Bug #5005)
+        try
         {
-            BULLET = 0x0001
+            rtb.SelectedRtf = str;
         }
-
-        // PARAFORMAT alignment options
-        public enum PFA : ushort
+        catch (ArgumentException)
         {
-            LEFT = 0x0001,
-            RIGHT = 0x0002,
-            CENTER = 0x0003
-        }
-
-        // It makes no difference if we use PARAFORMAT or
-        // PARAFORMAT2 here, so I have opted for PARAFORMAT2.
-        [StructLayout(LayoutKind.Sequential)]
-        public struct PARAFORMAT
-        {
-            public int cbSize;
-            public PFM dwMask;
-            public PFN wNumbering;
-            public short wReserved;
-            public int dxStartIndent;
-            public int dxRightIndent;
-            public int dxOffset;
-            public PFA wAlignment;
-            public short cTabCount;
-            [MarshalAs(UnmanagedType.ByValArray, SizeConst = 32)]
-            public int[] rgxTabs;
-
-            // PARAFORMAT2 from here onwards.
-            public int dySpaceBefore;
-            public int dySpaceAfter;
-            public int dyLineSpacing;
-            public short sStyle;
-            public byte bLineSpacingRule;
-            public byte bOutlineLevel;
-            public short wShadingWeight;
-            public short wShadingStyle;
-            public short wNumberingStart;
-            public short wNumberingStyle;
-            public short wNumberingTab;
-            public short wBorderSpace;
-            public short wBorderWidth;
-            public short wBorders;
-        }
-
-        [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
-        public struct CHARFORMAT
-        {
-            public CHARFORMAT(CFM mask, CFE effects)
-                : this()
+            // NOTE: This will break any text which actually contains UTF-8 characters!
+            if (str.StartsWith(@"{\urtf"))
             {
-                cbSize = Marshal.SizeOf(this);
-                dwMask = mask;
-                dwEffects = effects;
-                szFaceName = "";
-            }
+                // Convert "urtf" -> "rtf"
+                str = str.Remove(2, 1);
 
-            public int cbSize;
-            public CFM dwMask;
-            public CFE dwEffects;
-            public int yHeight;
-            public int yOffset;
-            public int crTextColor;
-            public byte bCharSet;
-            public byte bPitchAndFamily;
-            [MarshalAs(UnmanagedType.ByValTStr, SizeConst = 32)]
-            public string szFaceName;
-
-            // CHARFORMAT2 from here onwards.
-            public FW wWeight;
-            public short sSpacing;
-            public int crBackColor;
-            public uint lcid;
-            public uint dwReserved;
-            public short sStyle;
-            public short wKerning;
-            public CFU bUnderlineType;
-            public byte bAnimation;
-            public byte bRevAuthor;
-            public byte bReserved1;
-        }
-
-        #region Win32 Apis
-        internal static class NativeMethods
-        {
-            // Constants from the Platform SDK.
-            internal const int WM_USER = 0x0400;
-            internal const int EM_GETCHARFORMAT = WM_USER + 58;
-            internal const int EM_SETCHARFORMAT = WM_USER + 68;
-            internal const int EM_HIDESELECTION = WM_USER + 63;
-            internal const int EM_GETSCROLLPOS = WM_USER + 221;
-            internal const int EM_SETSCROLLPOS = WM_USER + 222;
-
-            internal const int EM_SETEVENTMASK = 1073;
-            internal const int EM_GETPARAFORMAT = 1085;
-            internal const int EM_SETPARAFORMAT = 1095;
-            internal const int WM_SETREDRAW = 11;
-
-            // Defines for EM_SETCHARFORMAT/EM_GETCHARFORMAT
-            internal const int SCF_SELECTION = 0x0001;
-            internal const int SCF_WORD = 0x0002;
-            internal const int SCF_ALL = 0x0004;
-
-            internal const int LF_FACESIZE = 32;
-
-            [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern IntPtr SendMessage(HandleRef hWnd,
-                int msg,
-                IntPtr wParam,
-                IntPtr lParam);
-
-            [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern IntPtr SendMessage(HandleRef hWnd,
-                int msg,
-                IntPtr wParam,
-                ref Point lParam);
-
-            [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern IntPtr SendMessage(HandleRef hWnd,
-                int msg,
-                IntPtr wParam,
-                ref PARAFORMAT lp);
-
-            [DllImport("user32", CharSet = CharSet.Auto)]
-            internal static extern IntPtr SendMessage(HandleRef hWnd,
-                int msg,
-                IntPtr wParam,
-                ref CHARFORMAT lp);
-        }
-        #endregion
-
-        public static void SetSuperScript(this RichTextBox rtb, bool bSet)
-        {
-            rtb.SetCharFormat(CFM.SUPERSCRIPT, bSet ? CFE.SUPERSCRIPT : 0);
-        }
-
-        public static void SetSubScript(this RichTextBox rtb, bool bSet)
-        {
-            rtb.SetCharFormat(CFM.SUBSCRIPT, bSet ? CFE.SUBSCRIPT : 0);
-        }
-
-        public static void SetLink(this RichTextBox rtb, bool bSet)
-        {
-            rtb.SetCharFormat(CFM.LINK, bSet ? CFE.LINK : 0);
-        }
-
-        public static bool IsSuperScript(this RichTextBox rtb)
-        {
-            CHARFORMAT cf = rtb.GetCharFormat();
-            return (cf.dwEffects & CFE.SUPERSCRIPT) == CFE.SUPERSCRIPT;
-        }
-
-        public static bool IsSubScript(this RichTextBox rtb)
-        {
-            CHARFORMAT cf = rtb.GetCharFormat();
-            return (cf.dwEffects & CFE.SUBSCRIPT) == CFE.SUBSCRIPT;
-        }
-
-        public static bool IsLink(this RichTextBox rtb)
-        {
-            CHARFORMAT cf = rtb.GetCharFormat();
-            return (cf.dwEffects & CFE.LINK) == CFE.LINK;
-        }
-
-        private static void RtbSetSelectedRtf(RichTextBox rtb, string str)
-        {
-            // Work around bug in DotNet.
-            // Basically it assumes that incoming text is always in the default
-            // encoding so giving it a unicode string throws an exception.
-            // (Bug #5005)
-            try
-            {
-                rtb.SelectedRtf = str;
-            }
-            catch (ArgumentException)
-            {
-                // NOTE: This will break any text which actually contains UTF-8 characters!
-                if (str.StartsWith(@"{\urtf"))
+                // Encode unicode characters
+                StringBuilder sb = new();
+                foreach (char c in str)
                 {
-                    // Convert "urtf" -> "rtf"
-                    str = str.Remove(2, 1);
-
-                    // Encode unicode characters
-                    StringBuilder sb = new();
-                    foreach (char c in str)
+                    if (c < 0x7f)
                     {
-                        if (c < 0x7f)
-                        {
-                            sb.Append(c);
-                        }
-                        else
-                        {
-                            sb.Append(@"\u" + Convert.ToUInt32(c) + "?");
-                        }
+                        sb.Append(c);
                     }
-
-                    rtb.SelectedRtf = sb.ToString();
+                    else
+                    {
+                        sb.Append(@"\u" + Convert.ToUInt32(c) + "?");
+                    }
                 }
+
+                rtb.SelectedRtf = sb.ToString();
             }
         }
+    }
 
-        private static PARAFORMAT GetParaFormat(HandleRef handleRef)
-        {
-            PARAFORMAT pf = new();
-            pf.cbSize = Marshal.SizeOf(pf);
+    private static PARAFORMAT GetParaFormat(HandleRef handleRef)
+    {
+        PARAFORMAT pf = new();
+        pf.cbSize = Marshal.SizeOf(pf);
 
-            // Get the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_GETPARAFORMAT,
-                (IntPtr)NativeMethods.SCF_SELECTION, ref pf);
+        // Get the alignment.
+        NativeMethods.SendMessage(handleRef,
+            NativeMethods.EM_GETPARAFORMAT,
+            (IntPtr)NativeMethods.SCF_SELECTION, ref pf);
 
-            return pf;
-        }
+        return pf;
+    }
 
-        public static PARAFORMAT GetParaFormat(this RichTextBox rtb)
-        {
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            return GetParaFormat(handleRef);
-        }
+    public static PARAFORMAT GetParaFormat(this RichTextBox rtb)
+    {
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        return GetParaFormat(handleRef);
+    }
 
-        private static void SetParaFormat(HandleRef handleRef, PARAFORMAT value)
-        {
-            DebugHelpers.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
+    private static void SetParaFormat(HandleRef handleRef, PARAFORMAT value)
+    {
+        DebugHelpers.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
-            // Set the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETPARAFORMAT,
-                (IntPtr)NativeMethods.SCF_SELECTION, ref value);
-        }
+        // Set the alignment.
+        NativeMethods.SendMessage(handleRef,
+            NativeMethods.EM_SETPARAFORMAT,
+            (IntPtr)NativeMethods.SCF_SELECTION, ref value);
+    }
 
-        public static void SetParaFormat(this RichTextBox rtb, PARAFORMAT value)
-        {
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            SetParaFormat(handleRef, value);
-        }
+    public static void SetParaFormat(this RichTextBox rtb, PARAFORMAT value)
+    {
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        SetParaFormat(handleRef, value);
+    }
 
-        private static PARAFORMAT GetDefaultParaFormat(HandleRef handleRef)
-        {
-            PARAFORMAT pf = new();
-            pf.cbSize = Marshal.SizeOf(pf);
+    private static PARAFORMAT GetDefaultParaFormat(HandleRef handleRef)
+    {
+        PARAFORMAT pf = new();
+        pf.cbSize = Marshal.SizeOf(pf);
 
-            // Get the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_GETPARAFORMAT,
-                (IntPtr)NativeMethods.SCF_ALL, ref pf);
+        // Get the alignment.
+        NativeMethods.SendMessage(handleRef,
+            NativeMethods.EM_GETPARAFORMAT,
+            (IntPtr)NativeMethods.SCF_ALL, ref pf);
 
-            return pf;
-        }
+        return pf;
+    }
 
-        public static PARAFORMAT GetDefaultParaFormat(this RichTextBox rtb)
-        {
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            return GetDefaultParaFormat(handleRef);
-        }
+    public static PARAFORMAT GetDefaultParaFormat(this RichTextBox rtb)
+    {
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        return GetDefaultParaFormat(handleRef);
+    }
 
-        private static void SetDefaultParaFormat(HandleRef handleRef, PARAFORMAT value)
-        {
-            DebugHelpers.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
+    private static void SetDefaultParaFormat(HandleRef handleRef, PARAFORMAT value)
+    {
+        DebugHelpers.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
-            // Set the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETPARAFORMAT,
-                (IntPtr)NativeMethods.SCF_ALL, ref value);
-        }
+        // Set the alignment.
+        NativeMethods.SendMessage(handleRef,
+            NativeMethods.EM_SETPARAFORMAT,
+            (IntPtr)NativeMethods.SCF_ALL, ref value);
+    }
 
-        public static void SetDefaultParaFormat(this RichTextBox rtb, PARAFORMAT value)
-        {
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            SetDefaultParaFormat(handleRef, value);
-        }
+    public static void SetDefaultParaFormat(this RichTextBox rtb, PARAFORMAT value)
+    {
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        SetDefaultParaFormat(handleRef, value);
+    }
 
-        private static CHARFORMAT GetCharFormat(HandleRef handleRef)
-        {
-            CHARFORMAT cf = new();
-            cf.cbSize = Marshal.SizeOf(cf);
+    private static CHARFORMAT GetCharFormat(HandleRef handleRef)
+    {
+        CHARFORMAT cf = new();
+        cf.cbSize = Marshal.SizeOf(cf);
 
-            // Get the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_GETCHARFORMAT,
-                (IntPtr)NativeMethods.SCF_SELECTION, ref cf);
+        // Get the alignment.
+        NativeMethods.SendMessage(handleRef,
+            NativeMethods.EM_GETCHARFORMAT,
+            (IntPtr)NativeMethods.SCF_SELECTION, ref cf);
 
-            return cf;
-        }
+        return cf;
+    }
 
-        public static CHARFORMAT GetCharFormat(this RichTextBox rtb)
-        {
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            return GetCharFormat(handleRef);
-        }
+    public static CHARFORMAT GetCharFormat(this RichTextBox rtb)
+    {
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        return GetCharFormat(handleRef);
+    }
 
-        private static void SetCharFormat(HandleRef handleRef, CHARFORMAT value)
-        {
-            DebugHelpers.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
+    private static void SetCharFormat(HandleRef handleRef, CHARFORMAT value)
+    {
+        DebugHelpers.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
-            // Set the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETCHARFORMAT,
-                (IntPtr)NativeMethods.SCF_SELECTION, ref value);
-        }
+        // Set the alignment.
+        NativeMethods.SendMessage(handleRef,
+            NativeMethods.EM_SETCHARFORMAT,
+            (IntPtr)NativeMethods.SCF_SELECTION, ref value);
+    }
 
-        public static void SetCharFormat(this RichTextBox rtb, CHARFORMAT value)
-        {
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            SetCharFormat(handleRef, value);
-        }
+    public static void SetCharFormat(this RichTextBox rtb, CHARFORMAT value)
+    {
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        SetCharFormat(handleRef, value);
+    }
 
-        public static void SetCharFormat(this RichTextBox rtb, CFM mask, CFE effects)
-        {
-            CHARFORMAT cf = new(mask, effects);
-            rtb.SetCharFormat(cf);
-        }
+    public static void SetCharFormat(this RichTextBox rtb, CFM mask, CFE effects)
+    {
+        CHARFORMAT cf = new(mask, effects);
+        rtb.SetCharFormat(cf);
+    }
 
-        private static CHARFORMAT GetDefaultCharFormat(HandleRef handleRef)
-        {
-            CHARFORMAT cf = new();
-            cf.cbSize = Marshal.SizeOf(cf);
+    private static CHARFORMAT GetDefaultCharFormat(HandleRef handleRef)
+    {
+        CHARFORMAT cf = new();
+        cf.cbSize = Marshal.SizeOf(cf);
 
-            // Get the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_GETCHARFORMAT,
-                (IntPtr)NativeMethods.SCF_ALL, ref cf);
+        // Get the alignment.
+        NativeMethods.SendMessage(handleRef,
+            NativeMethods.EM_GETCHARFORMAT,
+            (IntPtr)NativeMethods.SCF_ALL, ref cf);
 
-            return cf;
-        }
+        return cf;
+    }
 
-        public static CHARFORMAT GetDefaultCharFormat(this RichTextBox rtb)
-        {
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            return GetDefaultCharFormat(handleRef);
-        }
+    public static CHARFORMAT GetDefaultCharFormat(this RichTextBox rtb)
+    {
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        return GetDefaultCharFormat(handleRef);
+    }
 
-        private static void SetDefaultCharFormat(HandleRef handleRef, CHARFORMAT value)
-        {
-            DebugHelpers.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
+    private static void SetDefaultCharFormat(HandleRef handleRef, CHARFORMAT value)
+    {
+        DebugHelpers.Assert(value.cbSize == Marshal.SizeOf(value), "value.cbSize == Marshal.SizeOf(value)");
 
-            // Set the alignment.
-            NativeMethods.SendMessage(handleRef,
-                NativeMethods.EM_SETCHARFORMAT,
-                (IntPtr)NativeMethods.SCF_ALL, ref value);
-        }
+        // Set the alignment.
+        NativeMethods.SendMessage(handleRef,
+            NativeMethods.EM_SETCHARFORMAT,
+            (IntPtr)NativeMethods.SCF_ALL, ref value);
+    }
 
-        public static void SetDefaultCharFormat(this RichTextBox rtb, CHARFORMAT value)
-        {
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            SetDefaultCharFormat(handleRef, value);
-        }
+    public static void SetDefaultCharFormat(this RichTextBox rtb, CHARFORMAT value)
+    {
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        SetDefaultCharFormat(handleRef, value);
+    }
 
-        public static void SetDefaultCharFormat(this RichTextBox rtb, CFM mask, CFE effects)
-        {
-            CHARFORMAT cf = new(mask, effects);
-            rtb.SetDefaultCharFormat(cf);
-        }
+    public static void SetDefaultCharFormat(this RichTextBox rtb, CFM mask, CFE effects)
+    {
+        CHARFORMAT cf = new(mask, effects);
+        rtb.SetDefaultCharFormat(cf);
+    }
 
-        private static Point GetScrollPoint(HandleRef handleRef)
-        {
-            Point scrollPoint = new();
-            NativeMethods.SendMessage(handleRef, NativeMethods.EM_GETSCROLLPOS, IntPtr.Zero, ref scrollPoint);
-            return scrollPoint;
-        }
+    private static Point GetScrollPoint(HandleRef handleRef)
+    {
+        Point scrollPoint = new();
+        NativeMethods.SendMessage(handleRef, NativeMethods.EM_GETSCROLLPOS, IntPtr.Zero, ref scrollPoint);
+        return scrollPoint;
+    }
 
-        public static Point GetScrollPoint(this RichTextBox rtb)
-        {
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            return GetScrollPoint(handleRef);
-        }
+    public static Point GetScrollPoint(this RichTextBox rtb)
+    {
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        return GetScrollPoint(handleRef);
+    }
 
-        private static void SetScrollPoint(HandleRef handleRef, Point scrollPoint)
-        {
-            NativeMethods.SendMessage(handleRef, NativeMethods.EM_SETSCROLLPOS, IntPtr.Zero, ref scrollPoint);
-        }
+    private static void SetScrollPoint(HandleRef handleRef, Point scrollPoint)
+    {
+        NativeMethods.SendMessage(handleRef, NativeMethods.EM_SETSCROLLPOS, IntPtr.Zero, ref scrollPoint);
+    }
 
-        public static void SetScrollPoint(this RichTextBox rtb, Point scrollPoint)
-        {
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            SetScrollPoint(handleRef, scrollPoint);
-        }
+    public static void SetScrollPoint(this RichTextBox rtb, Point scrollPoint)
+    {
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        SetScrollPoint(handleRef, scrollPoint);
+    }
 
 #region COLORREF helper functions
 
-        // convert COLORREF to Color
-        private static Color GetColor(int crColor)
-        {
-            byte r = (byte)crColor;
-            byte g = (byte)(crColor >> 8);
-            byte b = (byte)(crColor >> 16);
+    // convert COLORREF to Color
+    private static Color GetColor(int crColor)
+    {
+        byte r = (byte)crColor;
+        byte g = (byte)(crColor >> 8);
+        byte b = (byte)(crColor >> 16);
 
-            return Color.FromArgb(r, g, b);
-        }
+        return Color.FromArgb(r, g, b);
+    }
 
-        // convert COLORREF to Color
-        private static int GetCOLORREF(int r, int g, int b)
-        {
-            int r2 = r;
-            int g2 = g << 8;
-            int b2 = b << 16;
+    // convert COLORREF to Color
+    private static int GetCOLORREF(int r, int g, int b)
+    {
+        int r2 = r;
+        int g2 = g << 8;
+        int b2 = b << 16;
 
-            int result = r2 | g2 | b2;
+        int result = r2 | g2 | b2;
 
-            return result;
-        }
+        return result;
+    }
 
-        private static int GetCOLORREF(Color color)
-        {
-            int r = color.R;
-            int g = color.G;
-            int b = color.B;
+    private static int GetCOLORREF(Color color)
+    {
+        int r = color.R;
+        int g = color.G;
+        int b = color.B;
 
-            return GetCOLORREF(r, g, b);
-        }
+        return GetCOLORREF(r, g, b);
+    }
 #endregion
 
-        public static string GetUrl(this LinkClickedEventArgs e)
+    public static string GetUrl(this LinkClickedEventArgs e)
+    {
+        string[] v = e.LinkText.Split(Delimiters.Hash, 2);
+        return v.Length switch
         {
-            string[] v = e.LinkText.Split(Delimiters.Hash, 2);
-            return v.Length switch
-            {
-                0 => "",
-                1 => v[0],
-                _ => v[1]
-            };
+            0 => "",
+            1 => v[0],
+            _ => v[1]
+        };
+    }
+
+    public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
+    {
+        string[] v = e.LinkText.Split(Delimiters.Hash, 2);
+        if (v.Length == 0)
+        {
+            url = "";
+            text = "";
+            return;
         }
 
-        public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
+        text = v[0];
+
+        url = v.Length == 1 ? v[0] : v[1];
+    }
+
+    // format states
+    private enum ctformatStates
+    {
+        nctNone = 0, // none format applied
+        nctNew = 1, // new format
+        nctContinue = 2, // continue with previous format
+        nctReset = 3 // reset format (close this tag)
+    }
+
+    public static string GetXHTMLText(this RichTextBox rtb, bool bParaFormat)
+    {
+        StringBuilder strHTML = new();
+
+        rtb.HideSelection = true;
+        IntPtr oldMask = rtb.BeginUpdate();
+
+        int nStart = rtb.SelectionStart;
+        int nEnd = rtb.SelectionLength;
+
+        try
         {
-            string[] v = e.LinkText.Split(Delimiters.Hash, 2);
-            if (v.Length == 0)
+            // to store formatting
+            List<KeyValuePair<int, string>> colFormat = [];
+            string strT = ProcessTags(rtb, colFormat, bParaFormat);
+
+            // apply format by replacing and inserting HTML tags
+            // stored in the Format Array
+            int nAcum = 0;
+            for (int i = 0; i < colFormat.Count; i++)
             {
-                url = "";
-                text = "";
-                return;
+                (int pos, string markup) = colFormat[i];
+                strHTML.Append(WebUtility.HtmlEncode(strT[nAcum..pos]) + markup);
+                nAcum = pos;
             }
 
-            text = v[0];
-
-            url = v.Length == 1 ? v[0] : v[1];
-        }
-
-        // format states
-        private enum ctformatStates
-        {
-            nctNone = 0, // none format applied
-            nctNew = 1, // new format
-            nctContinue = 2, // continue with previous format
-            nctReset = 3 // reset format (close this tag)
-        }
-
-        public static string GetXHTMLText(this RichTextBox rtb, bool bParaFormat)
-        {
-            StringBuilder strHTML = new();
-
-            rtb.HideSelection = true;
-            IntPtr oldMask = rtb.BeginUpdate();
-
-            int nStart = rtb.SelectionStart;
-            int nEnd = rtb.SelectionLength;
-
-            try
+            if (nAcum < strT.Length)
             {
-                // to store formatting
-                List<KeyValuePair<int, string>> colFormat = [];
-                string strT = ProcessTags(rtb, colFormat, bParaFormat);
+                strHTML.Append(strT[nAcum..]);
+            }
+        }
+        catch (Exception /*ex*/)
+        {
+        }
+        finally
+        {
+            // finish, restore
+            rtb.SelectionStart = nStart;
+            rtb.SelectionLength = nEnd;
 
-                // apply format by replacing and inserting HTML tags
-                // stored in the Format Array
-                int nAcum = 0;
-                for (int i = 0; i < colFormat.Count; i++)
+            rtb.EndUpdate(oldMask);
+            rtb.HideSelection = false;
+        }
+
+        return strHTML.ToString();
+    }
+
+    private static string ProcessTags(RichTextBox rtb, List<KeyValuePair<int, string>> colFormat, bool bParaFormat)
+    {
+        StringBuilder sbT = new();
+
+        ctformatStates bold = ctformatStates.nctNone;
+        ctformatStates bitalic = ctformatStates.nctNone;
+        ctformatStates bstrikeout = ctformatStates.nctNone;
+        ctformatStates bunderline = ctformatStates.nctNone;
+        ctformatStates super = ctformatStates.nctNone;
+        ctformatStates sub = ctformatStates.nctNone;
+
+        ctformatStates bacenter = ctformatStates.nctNone;
+        ctformatStates baleft = ctformatStates.nctNone;
+        ctformatStates baright = ctformatStates.nctNone;
+        ctformatStates bnumbering = ctformatStates.nctNone;
+        bool fontSet = false;
+        string strFont = "";
+        int crFont = 0;
+        int yHeight = 0;
+
+        int i;
+        int pos = 0;
+        int k = rtb.TextLength;
+        char[] chtrim = { ' ', '\x0000' };
+
+        //--------------------------------
+        // this is an inefficient method to get text format
+        // but RichTextBox doesn't provide another method to
+        // get something like an array of charformat and paraformat
+        //--------------------------------
+        for (i = 0; i < k; i++)
+        {
+            // select one character
+            rtb.Select(i, 1);
+            string strChar = rtb.SelectedText;
+
+            // get format for this character
+            CHARFORMAT cf = rtb.GetCharFormat();
+            PARAFORMAT pf = rtb.GetParaFormat();
+
+            string strfname = cf.szFaceName;
+            strfname = strfname.Trim(chtrim);
+
+            // new font format ?
+            if ((strFont != strfname) || (crFont != cf.crTextColor) || (yHeight != cf.yHeight))
+            {
+                KeyValuePair<int, string> mfr;
+                if (strFont != "")
                 {
-                    (int pos, string markup) = colFormat[i];
-                    strHTML.Append(WebUtility.HtmlEncode(strT[nAcum..pos]) + markup);
-                    nAcum = pos;
+                    // close previous <font> tag
+                    mfr = new KeyValuePair<int, string>(pos, "</font>");
+                    colFormat.Add(mfr);
                 }
 
-                if (nAcum < strT.Length)
+                // save this for cache
+                strFont = strfname;
+                crFont = cf.crTextColor;
+                yHeight = cf.yHeight;
+
+                fontSet = strFont != "";
+
+                // font size should be translate to
+                // html size (Approximately)
+                int fsize = yHeight / (20 * 5);
+
+                // color object from COLORREF
+                Color color = GetColor(crFont);
+
+                // add <font> tag
+                string strcolor = string.Concat("#", (color.ToArgb() & 0x00FFFFFF).ToString("X6"));
+
+                mfr = new KeyValuePair<int, string>(pos, "<font face=\"" + strFont + "\" color=\"" + strcolor + "\" size=\"" + fsize + "\">");
+                colFormat.Add(mfr);
+            }
+
+            // are we in another line ?
+            if ((strChar == "\r") || (strChar == "\n"))
+            {
+                // yes?
+                // then, we need to reset paragraph format
+                // and character format
+                if (bParaFormat)
                 {
-                    strHTML.Append(strT[nAcum..]);
+                    bnumbering = ctformatStates.nctNone;
+                    baleft = ctformatStates.nctNone;
+                    baright = ctformatStates.nctNone;
+                    bacenter = ctformatStates.nctNone;
+                }
+
+                // close previous tags
+
+                // is italic? => close it
+                if (bitalic != ctformatStates.nctNone)
+                {
+                    KeyValuePair<int, string> mfr = new(pos, "</i>");
+                    colFormat.Add(mfr);
+                    bitalic = ctformatStates.nctNone;
+                }
+
+                // is bold? => close it
+                if (bold != ctformatStates.nctNone)
+                {
+                    KeyValuePair<int, string> mfr = new(pos, "</b>");
+                    colFormat.Add(mfr);
+                    bold = ctformatStates.nctNone;
+                }
+
+                // is underline? => close it
+                if (bunderline != ctformatStates.nctNone)
+                {
+                    KeyValuePair<int, string> mfr = new(pos, "</u>");
+                    colFormat.Add(mfr);
+                    bunderline = ctformatStates.nctNone;
+                }
+
+                // is strikeout? => close it
+                if (bstrikeout != ctformatStates.nctNone)
+                {
+                    KeyValuePair<int, string> mfr = new(pos, "</s>");
+                    colFormat.Add(mfr);
+                    bstrikeout = ctformatStates.nctNone;
+                }
+
+                // is super? => close it
+                if (super != ctformatStates.nctNone)
+                {
+                    KeyValuePair<int, string> mfr = new(pos, "</sup>");
+                    colFormat.Add(mfr);
+                    super = ctformatStates.nctNone;
+                }
+
+                // is sub? => close it
+                if (sub != ctformatStates.nctNone)
+                {
+                    KeyValuePair<int, string> mfr = new(pos, "</sub>");
+                    colFormat.Add(mfr);
+                    sub = ctformatStates.nctNone;
                 }
             }
-            catch (Exception /*ex*/)
-            {
-            }
-            finally
-            {
-                // finish, restore
-                rtb.SelectionStart = nStart;
-                rtb.SelectionLength = nEnd;
 
-                rtb.EndUpdate(oldMask);
-                rtb.HideSelection = false;
+            // now, process the paragraph format,
+            // managing states: none, new, continue {with previous}, reset
+            if (bParaFormat)
+            {
+                // align to center?
+                UpdateState(pf.wAlignment == PFA.CENTER, ref bacenter);
+
+                if (bacenter == ctformatStates.nctNew)
+                {
+                    KeyValuePair<int, string> mfr = new(pos, "<p align=\"center\">");
+                    colFormat.Add(mfr);
+                }
+                else if (bacenter == ctformatStates.nctReset)
+                {
+                    bacenter = ctformatStates.nctNone;
+                }
+
+                // align to left
+                UpdateState(pf.wAlignment == PFA.LEFT, ref baleft);
+
+                if (baleft == ctformatStates.nctNew)
+                {
+                    KeyValuePair<int, string> mfr = new(pos, "<p align=\"left\">");
+                    colFormat.Add(mfr);
+                }
+                else if (baleft == ctformatStates.nctReset)
+                {
+                    baleft = ctformatStates.nctNone;
+                }
+
+                // align to right
+                UpdateState(pf.wAlignment == PFA.RIGHT, ref baright);
+
+                if (baright == ctformatStates.nctNew)
+                {
+                    KeyValuePair<int, string> mfr = new(pos, "<p align=\"right\">");
+                    colFormat.Add(mfr);
+                }
+                else if (baright == ctformatStates.nctReset)
+                {
+                    baright = ctformatStates.nctNone;
+                }
+
+                // bullet
+                UpdateState(pf.wNumbering == PFN.BULLET, ref bnumbering);
+
+                if (bnumbering == ctformatStates.nctNew)
+                {
+                    KeyValuePair<int, string> mfr = new(pos, "<li>");
+                    colFormat.Add(mfr);
+                }
+                else if (bnumbering == ctformatStates.nctReset)
+                {
+                    bnumbering = ctformatStates.nctNone;
+                }
             }
 
-            return strHTML.ToString();
+            // bold
+            UpdateState((cf.dwEffects & CFE.BOLD) == CFE.BOLD, ref bold);
+            AddTag(pos, "b", colFormat, ref bold);
+
+            // Italic
+            UpdateState((cf.dwEffects & CFE.ITALIC) == CFE.ITALIC, ref bitalic);
+            AddTag(pos, "i", colFormat, ref bitalic);
+
+            // strikeout
+            UpdateState((cf.dwEffects & CFE.STRIKEOUT) == CFE.STRIKEOUT, ref bstrikeout);
+            AddTag(pos, "s", colFormat, ref bstrikeout);
+
+            // underline
+            UpdateState((cf.dwEffects & CFE.UNDERLINE) == CFE.UNDERLINE, ref bunderline);
+            AddTag(pos, "u", colFormat, ref bunderline);
+
+            // superscript
+            UpdateState((cf.dwEffects & CFE.SUPERSCRIPT) == CFE.SUPERSCRIPT, ref super);
+            AddTag(pos, "sup", colFormat, ref super);
+
+            // subscript
+            UpdateState((cf.dwEffects & CFE.SUBSCRIPT) == CFE.SUBSCRIPT, ref sub);
+            AddTag(pos, "sub", colFormat, ref sub);
+
+            sbT.Append(strChar);
+            pos = sbT.Length;
         }
 
-        private static string ProcessTags(RichTextBox rtb, List<KeyValuePair<int, string>> colFormat, bool bParaFormat)
+        // close pending tags
+        if (bold != ctformatStates.nctNone)
         {
-            StringBuilder sbT = new();
+            KeyValuePair<int, string> mfr = new(pos, "</b>");
+            colFormat.Add(mfr);
+        }
 
-            ctformatStates bold = ctformatStates.nctNone;
-            ctformatStates bitalic = ctformatStates.nctNone;
-            ctformatStates bstrikeout = ctformatStates.nctNone;
-            ctformatStates bunderline = ctformatStates.nctNone;
-            ctformatStates super = ctformatStates.nctNone;
-            ctformatStates sub = ctformatStates.nctNone;
+        if (bitalic != ctformatStates.nctNone)
+        {
+            KeyValuePair<int, string> mfr = new(pos, "</i>");
+            colFormat.Add(mfr);
+        }
 
-            ctformatStates bacenter = ctformatStates.nctNone;
-            ctformatStates baleft = ctformatStates.nctNone;
-            ctformatStates baright = ctformatStates.nctNone;
-            ctformatStates bnumbering = ctformatStates.nctNone;
-            bool fontSet = false;
-            string strFont = "";
-            int crFont = 0;
-            int yHeight = 0;
+        if (bstrikeout != ctformatStates.nctNone)
+        {
+            KeyValuePair<int, string> mfr = new(pos, "</s>");
+            colFormat.Add(mfr);
+        }
 
-            int i;
-            int pos = 0;
-            int k = rtb.TextLength;
-            char[] chtrim = { ' ', '\x0000' };
+        if (bunderline != ctformatStates.nctNone)
+        {
+            KeyValuePair<int, string> mfr = new(pos, "</u>");
+            colFormat.Add(mfr);
+        }
 
+        if (super != ctformatStates.nctNone)
+        {
+            KeyValuePair<int, string> mfr = new(pos, "</sup>");
+            colFormat.Add(mfr);
+        }
+
+        if (sub != ctformatStates.nctNone)
+        {
+            KeyValuePair<int, string> mfr = new(pos, "</sub>");
+            colFormat.Add(mfr);
+        }
+
+        if (fontSet)
+        {
+            // close pending font format
+            KeyValuePair<int, string> mfr = new(pos, "</font>");
+            colFormat.Add(mfr);
+        }
+
+        // now, reorder the formatting array
+        k = colFormat.Count;
+        for (i = 0; i < k - 1; i++)
+        {
+            for (int j = i + 1; j < k; j++)
+            {
+                KeyValuePair<int, string> mfr = colFormat[i];
+                KeyValuePair<int, string> mfr2 = colFormat[j];
+
+                if (mfr2.Key < mfr.Key)
+                {
+                    colFormat.RemoveAt(j);
+                    colFormat.Insert(i, mfr2);
+                    j--;
+                }
+            }
+        }
+
+        return sbT.ToString();
+    }
+
+    private static void UpdateState(bool value, ref ctformatStates state)
+    {
+        if (value)
+        {
+            state = state == ctformatStates.nctNone
+                ? ctformatStates.nctNew
+                : ctformatStates.nctContinue;
+        }
+        else
+        {
+            if (state != ctformatStates.nctNone)
+            {
+                state = ctformatStates.nctReset;
+            }
+        }
+    }
+
+    private static void AddTag(int pos, string tag, List<KeyValuePair<int, string>> colFormat, ref ctformatStates state)
+    {
+        if (state == ctformatStates.nctNew)
+        {
+            KeyValuePair<int, string> mfr = new(pos, "<" + tag + ">");
+            colFormat.Add(mfr);
+        }
+        else if (state == ctformatStates.nctReset)
+        {
+            KeyValuePair<int, string> mfr = new(pos, "</" + tag + ">");
+            colFormat.Add(mfr);
+            state = ctformatStates.nctNone;
+        }
+    }
+
+    public static string GetPlainText(this RichTextBox rtb)
+    {
+        return GetPlainText(rtb, 0, rtb.TextLength);
+    }
+
+    public static string GetSelectionPlainText(this RichTextBox rtb)
+    {
+        return GetPlainText(rtb, rtb.SelectionStart, rtb.SelectionStart + rtb.SelectionLength);
+    }
+
+    public static string GetPlainText(this RichTextBox rtb, int from, int to)
+    {
+        if (to == 0)
+        {
+            return string.Empty;
+        }
+
+        IntPtr oldMask = rtb.BeginUpdate();
+
+        int nStart = rtb.SelectionStart;
+        int nEnd = rtb.SelectionLength;
+        StringBuilder text = new();
+
+        try
+        {
+            //--------------------------------
+            // This is an inefficient method to get text format.
+            // But RichTextBox doesn't provide another method to
+            // get something like an array of charformat and paraformat.
+            //--------------------------------
+            for (int i = from; i < to; i++)
+            {
+                // Try to select one visible character (RichTextBox returns a string, can be empty, may contain more than what is visible)
+                rtb.Select(i, 1);
+                string selectedText = rtb.SelectedText;
+
+                // For every character of a link, the current RichTextBox returns the entire link (but should be the empty string). So, skip the links.
+                if (!selectedText.StartsWith(LinkSeparator))
+                {
+                    text.Append(selectedText);
+                }
+            }
+        }
+        catch (Exception /*ex*/)
+        {
+        }
+        finally
+        {
+            // finish, restore
+            rtb.SelectionStart = nStart;
+            rtb.SelectionLength = nEnd;
+
+            rtb.EndUpdate(oldMask);
+            rtb.Invalidate();
+        }
+
+        return text.ToString();
+    }
+
+    public static string? GetLink(this RichTextBox rtb, int charIndex)
+    {
+        string text = rtb.Text;
+        if (charIndex < 0 || text.Length <= charIndex)
+        {
+            return null;
+        }
+
+        IntPtr oldMask = rtb.BeginUpdate();
+
+        int nStart = rtb.SelectionStart;
+        int nEnd = rtb.SelectionLength;
+
+        try
+        {
             //--------------------------------
             // this is an inefficient method to get text format
             // but RichTextBox doesn't provide another method to
             // get something like an array of charformat and paraformat
             //--------------------------------
-            for (i = 0; i < k; i++)
+            rtb.Select(charIndex, 1);
+            if (!rtb.IsLink())
             {
-                // select one character
-                rtb.Select(i, 1);
-                string strChar = rtb.SelectedText;
+                return null;
+            }
 
-                // get format for this character
-                CHARFORMAT cf = rtb.GetCharFormat();
-                PARAFORMAT pf = rtb.GetParaFormat();
-
-                string strfname = cf.szFaceName;
-                strfname = strfname.Trim(chtrim);
-
-                // new font format ?
-                if ((strFont != strfname) || (crFont != cf.crTextColor) || (yHeight != cf.yHeight))
+            int from = charIndex;
+            while (from > 0)
+            {
+                rtb.Select(from - 1, 1);
+                if (!rtb.IsLink())
                 {
-                    KeyValuePair<int, string> mfr;
-                    if (strFont != "")
-                    {
-                        // close previous <font> tag
-                        mfr = new KeyValuePair<int, string>(pos, "</font>");
-                        colFormat.Add(mfr);
-                    }
-
-                    // save this for cache
-                    strFont = strfname;
-                    crFont = cf.crTextColor;
-                    yHeight = cf.yHeight;
-
-                    fontSet = strFont != "";
-
-                    // font size should be translate to
-                    // html size (Approximately)
-                    int fsize = yHeight / (20 * 5);
-
-                    // color object from COLORREF
-                    Color color = GetColor(crFont);
-
-                    // add <font> tag
-                    string strcolor = string.Concat("#", (color.ToArgb() & 0x00FFFFFF).ToString("X6"));
-
-                    mfr = new KeyValuePair<int, string>(pos, "<font face=\"" + strFont + "\" color=\"" + strcolor + "\" size=\"" + fsize + "\">");
-                    colFormat.Add(mfr);
+                    break;
                 }
 
-                // are we in another line ?
-                if ((strChar == "\r") || (strChar == "\n"))
+                --from;
+            }
+
+            int to = charIndex + 1;
+            while (to < text.Length)
+            {
+                rtb.Select(to, 1);
+                if (!rtb.IsLink())
                 {
-                    // yes?
-                    // then, we need to reset paragraph format
-                    // and character format
-                    if (bParaFormat)
-                    {
-                        bnumbering = ctformatStates.nctNone;
-                        baleft = ctformatStates.nctNone;
-                        baright = ctformatStates.nctNone;
-                        bacenter = ctformatStates.nctNone;
-                    }
-
-                    // close previous tags
-
-                    // is italic? => close it
-                    if (bitalic != ctformatStates.nctNone)
-                    {
-                        KeyValuePair<int, string> mfr = new(pos, "</i>");
-                        colFormat.Add(mfr);
-                        bitalic = ctformatStates.nctNone;
-                    }
-
-                    // is bold? => close it
-                    if (bold != ctformatStates.nctNone)
-                    {
-                        KeyValuePair<int, string> mfr = new(pos, "</b>");
-                        colFormat.Add(mfr);
-                        bold = ctformatStates.nctNone;
-                    }
-
-                    // is underline? => close it
-                    if (bunderline != ctformatStates.nctNone)
-                    {
-                        KeyValuePair<int, string> mfr = new(pos, "</u>");
-                        colFormat.Add(mfr);
-                        bunderline = ctformatStates.nctNone;
-                    }
-
-                    // is strikeout? => close it
-                    if (bstrikeout != ctformatStates.nctNone)
-                    {
-                        KeyValuePair<int, string> mfr = new(pos, "</s>");
-                        colFormat.Add(mfr);
-                        bstrikeout = ctformatStates.nctNone;
-                    }
-
-                    // is super? => close it
-                    if (super != ctformatStates.nctNone)
-                    {
-                        KeyValuePair<int, string> mfr = new(pos, "</sup>");
-                        colFormat.Add(mfr);
-                        super = ctformatStates.nctNone;
-                    }
-
-                    // is sub? => close it
-                    if (sub != ctformatStates.nctNone)
-                    {
-                        KeyValuePair<int, string> mfr = new(pos, "</sub>");
-                        colFormat.Add(mfr);
-                        sub = ctformatStates.nctNone;
-                    }
+                    break;
                 }
 
-                // now, process the paragraph format,
-                // managing states: none, new, continue {with previous}, reset
-                if (bParaFormat)
+                ++to;
+            }
+
+            if (to < text.Length && DoesMatchLinkSeparatorPattern(text, to))
+            {
+                from = to + LinkSeparator.Length;
+                while (to < text.Length && !char.IsWhiteSpace(text[to]) && text[to] != ',')
                 {
-                    // align to center?
-                    UpdateState(pf.wAlignment == PFA.CENTER, ref bacenter);
-
-                    if (bacenter == ctformatStates.nctNew)
-                    {
-                        KeyValuePair<int, string> mfr = new(pos, "<p align=\"center\">");
-                        colFormat.Add(mfr);
-                    }
-                    else if (bacenter == ctformatStates.nctReset)
-                    {
-                        bacenter = ctformatStates.nctNone;
-                    }
-
-                    // align to left
-                    UpdateState(pf.wAlignment == PFA.LEFT, ref baleft);
-
-                    if (baleft == ctformatStates.nctNew)
-                    {
-                        KeyValuePair<int, string> mfr = new(pos, "<p align=\"left\">");
-                        colFormat.Add(mfr);
-                    }
-                    else if (baleft == ctformatStates.nctReset)
-                    {
-                        baleft = ctformatStates.nctNone;
-                    }
-
-                    // align to right
-                    UpdateState(pf.wAlignment == PFA.RIGHT, ref baright);
-
-                    if (baright == ctformatStates.nctNew)
-                    {
-                        KeyValuePair<int, string> mfr = new(pos, "<p align=\"right\">");
-                        colFormat.Add(mfr);
-                    }
-                    else if (baright == ctformatStates.nctReset)
-                    {
-                        baright = ctformatStates.nctNone;
-                    }
-
-                    // bullet
-                    UpdateState(pf.wNumbering == PFN.BULLET, ref bnumbering);
-
-                    if (bnumbering == ctformatStates.nctNew)
-                    {
-                        KeyValuePair<int, string> mfr = new(pos, "<li>");
-                        colFormat.Add(mfr);
-                    }
-                    else if (bnumbering == ctformatStates.nctReset)
-                    {
-                        bnumbering = ctformatStates.nctNone;
-                    }
-                }
-
-                // bold
-                UpdateState((cf.dwEffects & CFE.BOLD) == CFE.BOLD, ref bold);
-                AddTag(pos, "b", colFormat, ref bold);
-
-                // Italic
-                UpdateState((cf.dwEffects & CFE.ITALIC) == CFE.ITALIC, ref bitalic);
-                AddTag(pos, "i", colFormat, ref bitalic);
-
-                // strikeout
-                UpdateState((cf.dwEffects & CFE.STRIKEOUT) == CFE.STRIKEOUT, ref bstrikeout);
-                AddTag(pos, "s", colFormat, ref bstrikeout);
-
-                // underline
-                UpdateState((cf.dwEffects & CFE.UNDERLINE) == CFE.UNDERLINE, ref bunderline);
-                AddTag(pos, "u", colFormat, ref bunderline);
-
-                // superscript
-                UpdateState((cf.dwEffects & CFE.SUPERSCRIPT) == CFE.SUPERSCRIPT, ref super);
-                AddTag(pos, "sup", colFormat, ref super);
-
-                // subscript
-                UpdateState((cf.dwEffects & CFE.SUBSCRIPT) == CFE.SUBSCRIPT, ref sub);
-                AddTag(pos, "sub", colFormat, ref sub);
-
-                sbT.Append(strChar);
-                pos = sbT.Length;
-            }
-
-            // close pending tags
-            if (bold != ctformatStates.nctNone)
-            {
-                KeyValuePair<int, string> mfr = new(pos, "</b>");
-                colFormat.Add(mfr);
-            }
-
-            if (bitalic != ctformatStates.nctNone)
-            {
-                KeyValuePair<int, string> mfr = new(pos, "</i>");
-                colFormat.Add(mfr);
-            }
-
-            if (bstrikeout != ctformatStates.nctNone)
-            {
-                KeyValuePair<int, string> mfr = new(pos, "</s>");
-                colFormat.Add(mfr);
-            }
-
-            if (bunderline != ctformatStates.nctNone)
-            {
-                KeyValuePair<int, string> mfr = new(pos, "</u>");
-                colFormat.Add(mfr);
-            }
-
-            if (super != ctformatStates.nctNone)
-            {
-                KeyValuePair<int, string> mfr = new(pos, "</sup>");
-                colFormat.Add(mfr);
-            }
-
-            if (sub != ctformatStates.nctNone)
-            {
-                KeyValuePair<int, string> mfr = new(pos, "</sub>");
-                colFormat.Add(mfr);
-            }
-
-            if (fontSet)
-            {
-                // close pending font format
-                KeyValuePair<int, string> mfr = new(pos, "</font>");
-                colFormat.Add(mfr);
-            }
-
-            // now, reorder the formatting array
-            k = colFormat.Count;
-            for (i = 0; i < k - 1; i++)
-            {
-                for (int j = i + 1; j < k; j++)
-                {
-                    KeyValuePair<int, string> mfr = colFormat[i];
-                    KeyValuePair<int, string> mfr2 = colFormat[j];
-
-                    if (mfr2.Key < mfr.Key)
-                    {
-                        colFormat.RemoveAt(j);
-                        colFormat.Insert(i, mfr2);
-                        j--;
-                    }
+                    ++to;
                 }
             }
 
-            return sbT.ToString();
+            // prior to net47 links were created via hidden text, and had the following format: "text#link"
+            // extract the link portion only
+            string linkOldFormat = text[from..to];
+            return linkOldFormat[(linkOldFormat.IndexOf(LinkSeparator) + LinkSeparator.Length)..];
+        }
+        catch
+        {
+            return null;
+        }
+        finally
+        {
+            // finish, restore
+            rtb.SelectionStart = nStart;
+            rtb.SelectionLength = nEnd;
+
+            rtb.EndUpdate(oldMask);
+            rtb.Invalidate();
+        }
+    }
+
+    private static bool DoesMatchLinkSeparatorPattern(string text, int index)
+    {
+        for (int ls = 0; ls < LinkSeparator.Length && index < text.Length; ls++, index++)
+        {
+            if (text[index] != LinkSeparator[ls])
+            {
+                return false;
+            }
         }
 
-        private static void UpdateState(bool value, ref ctformatStates state)
+        return true;
+    }
+
+    /// <summary>
+    /// Returns input text with characters disallowed by XML spec (e.g. most control codes in 0x00-0x20 range)
+    /// replaced with equivalent character references or question marks if there is an unrecoverable error.
+    /// Although they are disallowed even when escaped, this step seems necessary to make them acceptable
+    /// by XmlReader with CheckCharacters disabled.
+    /// </summary>
+    private static string EscapeNonXMLChars(string input)
+    {
+        StringBuilder result = new();
+        foreach (char ch in input)
         {
-            if (value)
+            if (XmlConvert.IsXmlChar(ch))
             {
-                state = state == ctformatStates.nctNone
-                    ? ctformatStates.nctNew
-                    : ctformatStates.nctContinue;
+                result.Append(ch);
             }
             else
             {
-                if (state != ctformatStates.nctNone)
+                try
                 {
-                    state = ctformatStates.nctReset;
+                    result.Append("&#" + (int)ch + ';');
+                }
+                catch (ArgumentException)
+                {
+                    result.Append('?');
                 }
             }
         }
 
-        private static void AddTag(int pos, string tag, List<KeyValuePair<int, string>> colFormat, ref ctformatStates state)
+        return result.ToString();
+    }
+
+    private class RTFCurrentState
+    {
+        public RTFCurrentState()
         {
-            if (state == ctformatStates.nctNew)
-            {
-                KeyValuePair<int, string> mfr = new(pos, "<" + tag + ">");
-                colFormat.Add(mfr);
-            }
-            else if (state == ctformatStates.nctReset)
-            {
-                KeyValuePair<int, string> mfr = new(pos, "</" + tag + ">");
-                colFormat.Add(mfr);
-                state = ctformatStates.nctNone;
-            }
+            scf = new Stack<CHARFORMAT>();
+            spf = new Stack<PARAFORMAT>();
+            links = [];
+            hyperlink = null;
+            hyperlinkStart = -1;
+            charFormatChanged = false;
+            paraFormatChanged = false;
         }
 
-        public static string GetPlainText(this RichTextBox rtb)
-        {
-            return GetPlainText(rtb, 0, rtb.TextLength);
-        }
+        public readonly List<KeyValuePair<int, int>> links;
+        public readonly Stack<CHARFORMAT> scf;
+        public readonly Stack<PARAFORMAT> spf;
+        public CHARFORMAT cf;
+        public PARAFORMAT pf;
+        public bool charFormatChanged;
+        public bool paraFormatChanged;
+        public string? hyperlink;
+        public int hyperlinkStart;
+    }
 
-        public static string GetSelectionPlainText(this RichTextBox rtb)
-        {
-            return GetPlainText(rtb, rtb.SelectionStart, rtb.SelectionStart + rtb.SelectionLength);
-        }
+    public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
+    {
+        rtb.DetectUrls = false;
 
-        public static string GetPlainText(this RichTextBox rtb, int from, int to)
+        rtb.Clear();
+        RTFCurrentState cs = new();
+
+        HandleRef handleRef = new(rtb, rtb.Handle);
+        cs.cf = GetDefaultCharFormat(handleRef); // to apply character formatting
+        cs.pf = GetDefaultParaFormat(handleRef); // to apply paragraph formatting
+
+        IntPtr oldMask = BeginUpdate(handleRef);
+
+        XmlReaderSettings settings = new()
         {
-            if (to == 0)
+            ConformanceLevel = ConformanceLevel.Fragment,
+            CheckCharacters = false
+        };
+
+        try
+        {
+            using StringReader stringreader = new(EscapeNonXMLChars(xhtmlText));
+            XmlReader reader = XmlReader.Create(stringreader, settings);
+            while (reader.Read())
             {
-                return string.Empty;
+                ProcessNode(rtb, handleRef, reader, cs);
             }
+        }
+        catch (XmlException ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
 
-            IntPtr oldMask = rtb.BeginUpdate();
+        // apply links style
+        CHARFORMAT ncf = new(CFM.LINK, CFE.LINK);
+        ncf.cbSize = Marshal.SizeOf(ncf);
+        foreach ((int start, int length) in cs.links)
+        {
+            rtb.Select(start, length);
+            SetCharFormat(handleRef, ncf);
+        }
 
-            int nStart = rtb.SelectionStart;
-            int nEnd = rtb.SelectionLength;
-            StringBuilder text = new();
+        // reposition to first
+        rtb.Select(0, 0);
+        EndUpdate(handleRef, oldMask);
+        rtb.Invalidate();
+    }
 
-            try
-            {
-                //--------------------------------
-                // This is an inefficient method to get text format.
-                // But RichTextBox doesn't provide another method to
-                // get something like an array of charformat and paraformat.
-                //--------------------------------
-                for (int i = from; i < to; i++)
+    private static void ProcessNode(RichTextBox rtb, HandleRef handleRef, XmlReader reader, RTFCurrentState cs)
+    {
+        switch (reader.NodeType)
+        {
+            case XmlNodeType.Element:
+                ProcessElement(reader, cs, rtb);
+                break;
+            case XmlNodeType.EndElement:
+                ProcessEndElement(reader, cs, rtb);
+                break;
+            case XmlNodeType.Text:
+                string strData = reader.Value;
+                bool bNewParagraph = (strData.IndexOf("\r\n", 0) >= 0) || (strData.IndexOf("\n", 0) >= 0);
+
+                if (strData.Length > 0)
                 {
-                    // Try to select one visible character (RichTextBox returns a string, can be empty, may contain more than what is visible)
-                    rtb.Select(i, 1);
-                    string selectedText = rtb.SelectedText;
+                    // now, add text to control
+                    int nStartCache = rtb.SelectionStart;
+                    rtb.SelectedText = strData;
+                    rtb.Select(nStartCache, strData.Length);
 
-                    // For every character of a link, the current RichTextBox returns the entire link (but should be the empty string). So, skip the links.
-                    if (!selectedText.StartsWith(LinkSeparator))
+                    // apply format
+                    if (cs.paraFormatChanged)
                     {
-                        text.Append(selectedText);
-                    }
-                }
-            }
-            catch (Exception /*ex*/)
-            {
-            }
-            finally
-            {
-                // finish, restore
-                rtb.SelectionStart = nStart;
-                rtb.SelectionLength = nEnd;
-
-                rtb.EndUpdate(oldMask);
-                rtb.Invalidate();
-            }
-
-            return text.ToString();
-        }
-
-        public static string? GetLink(this RichTextBox rtb, int charIndex)
-        {
-            string text = rtb.Text;
-            if (charIndex < 0 || text.Length <= charIndex)
-            {
-                return null;
-            }
-
-            IntPtr oldMask = rtb.BeginUpdate();
-
-            int nStart = rtb.SelectionStart;
-            int nEnd = rtb.SelectionLength;
-
-            try
-            {
-                //--------------------------------
-                // this is an inefficient method to get text format
-                // but RichTextBox doesn't provide another method to
-                // get something like an array of charformat and paraformat
-                //--------------------------------
-                rtb.Select(charIndex, 1);
-                if (!rtb.IsLink())
-                {
-                    return null;
-                }
-
-                int from = charIndex;
-                while (from > 0)
-                {
-                    rtb.Select(from - 1, 1);
-                    if (!rtb.IsLink())
-                    {
-                        break;
+                        SetParaFormat(handleRef, cs.pf);
                     }
 
-                    --from;
-                }
-
-                int to = charIndex + 1;
-                while (to < text.Length)
-                {
-                    rtb.Select(to, 1);
-                    if (!rtb.IsLink())
+                    if (cs.charFormatChanged)
                     {
-                        break;
+                        SetCharFormat(handleRef, cs.cf);
                     }
 
-                    ++to;
-                }
+                    cs.charFormatChanged = false;
+                    cs.paraFormatChanged = false;
 
-                if (to < text.Length && DoesMatchLinkSeparatorPattern(text, to))
-                {
-                    from = to + LinkSeparator.Length;
-                    while (to < text.Length && !char.IsWhiteSpace(text[to]) && text[to] != ',')
+                    // reposition to final
+                    rtb.Select(rtb.TextLength + 1, 0);
+
+                    // new paragraph requires to reset alignment
+                    if (bNewParagraph)
                     {
-                        ++to;
+                        cs.pf.dwMask = PFM.ALIGNMENT | PFM.NUMBERING;
+                        cs.pf.wAlignment = PFA.LEFT;
+                        cs.pf.wNumbering = 0;
+                        cs.paraFormatChanged = true;
                     }
                 }
 
-                // prior to net47 links were created via hidden text, and had the following format: "text#link"
-                // extract the link portion only
-                string linkOldFormat = text[from..to];
-                return linkOldFormat[(linkOldFormat.IndexOf(LinkSeparator) + LinkSeparator.Length)..];
-            }
-            catch
-            {
-                return null;
-            }
-            finally
-            {
-                // finish, restore
-                rtb.SelectionStart = nStart;
-                rtb.SelectionLength = nEnd;
-
-                rtb.EndUpdate(oldMask);
-                rtb.Invalidate();
-            }
+                break;
+            case XmlNodeType.Whitespace:
+            case XmlNodeType.SignificantWhitespace:
+                rtb.SelectedText = reader.Value;
+                break;
+            case XmlNodeType.XmlDeclaration:
+            case XmlNodeType.ProcessingInstruction:
+                break;
+            case XmlNodeType.Comment:
+                break;
         }
+    }
 
-        private static bool DoesMatchLinkSeparatorPattern(string text, int index)
+    private static void ProcessElement(XmlReader reader, RTFCurrentState cs, RichTextBox rtb)
+    {
+        switch (reader.Name.ToLower())
         {
-            for (int ls = 0; ls < LinkSeparator.Length && index < text.Length; ls++, index++)
-            {
-                if (text[index] != LinkSeparator[ls])
+            case "b":
+                cs.cf.dwMask |= CFM.WEIGHT | CFM.BOLD;
+                cs.cf.dwEffects |= CFE.BOLD;
+                cs.cf.wWeight = FW.BOLD;
+                cs.charFormatChanged = true;
+                break;
+            case "i":
+                cs.cf.dwMask |= CFM.ITALIC;
+                cs.cf.dwEffects |= CFE.ITALIC;
+                cs.charFormatChanged = true;
+                break;
+            case "u":
+                cs.cf.dwMask |= CFM.UNDERLINE | CFM.UNDERLINETYPE;
+                cs.cf.dwEffects |= CFE.UNDERLINE;
+                cs.cf.bUnderlineType = CFU.UNDERLINE;
+                cs.charFormatChanged = true;
+                break;
+            case "s":
+                cs.cf.dwMask |= CFM.STRIKEOUT;
+                cs.cf.dwEffects |= CFE.STRIKEOUT;
+                cs.charFormatChanged = true;
+                break;
+            case "sup":
+                cs.cf.dwMask |= CFM.SUPERSCRIPT;
+                cs.cf.dwEffects |= CFE.SUPERSCRIPT;
+                cs.charFormatChanged = true;
+                break;
+            case "sub":
+                cs.cf.dwMask |= CFM.SUBSCRIPT;
+                cs.cf.dwEffects |= CFE.SUBSCRIPT;
+                cs.charFormatChanged = true;
+                break;
+            case "a":
+                cs.hyperlinkStart = rtb.TextLength;
+                cs.hyperlink = null;
+                while (reader.MoveToNextAttribute())
                 {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        /// <summary>
-        /// Returns input text with characters disallowed by XML spec (e.g. most control codes in 0x00-0x20 range)
-        /// replaced with equivalent character references or question marks if there is an unrecoverable error.
-        /// Although they are disallowed even when escaped, this step seems necessary to make them acceptable
-        /// by XmlReader with CheckCharacters disabled.
-        /// </summary>
-        private static string EscapeNonXMLChars(string input)
-        {
-            StringBuilder result = new();
-            foreach (char ch in input)
-            {
-                if (XmlConvert.IsXmlChar(ch))
-                {
-                    result.Append(ch);
-                }
-                else
-                {
-                    try
+                    if (reader.Name.ToLower() == "href")
                     {
-                        result.Append("&#" + (int)ch + ';');
+                        cs.hyperlink = reader.Value;
                     }
-                    catch (ArgumentException)
-                    {
-                        result.Append('?');
-                    }
                 }
-            }
 
-            return result.ToString();
-        }
-
-        private class RTFCurrentState
-        {
-            public RTFCurrentState()
-            {
-                scf = new Stack<CHARFORMAT>();
-                spf = new Stack<PARAFORMAT>();
-                links = [];
-                hyperlink = null;
-                hyperlinkStart = -1;
-                charFormatChanged = false;
-                paraFormatChanged = false;
-            }
-
-            public readonly List<KeyValuePair<int, int>> links;
-            public readonly Stack<CHARFORMAT> scf;
-            public readonly Stack<PARAFORMAT> spf;
-            public CHARFORMAT cf;
-            public PARAFORMAT pf;
-            public bool charFormatChanged;
-            public bool paraFormatChanged;
-            public string? hyperlink;
-            public int hyperlinkStart;
-        }
-
-        public static void SetXHTMLText(this RichTextBox rtb, string xhtmlText)
-        {
-            rtb.DetectUrls = false;
-
-            rtb.Clear();
-            RTFCurrentState cs = new();
-
-            HandleRef handleRef = new(rtb, rtb.Handle);
-            cs.cf = GetDefaultCharFormat(handleRef); // to apply character formatting
-            cs.pf = GetDefaultParaFormat(handleRef); // to apply paragraph formatting
-
-            IntPtr oldMask = BeginUpdate(handleRef);
-
-            XmlReaderSettings settings = new()
-            {
-                ConformanceLevel = ConformanceLevel.Fragment,
-                CheckCharacters = false
-            };
-
-            try
-            {
-                using StringReader stringreader = new(EscapeNonXMLChars(xhtmlText));
-                XmlReader reader = XmlReader.Create(stringreader, settings);
-                while (reader.Read())
+                reader.MoveToElement();
+                break;
+            case "p":
+                cs.spf.Push(cs.pf);
+                while (reader.MoveToNextAttribute())
                 {
-                    ProcessNode(rtb, handleRef, reader, cs);
-                }
-            }
-            catch (XmlException ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
-
-            // apply links style
-            CHARFORMAT ncf = new(CFM.LINK, CFE.LINK);
-            ncf.cbSize = Marshal.SizeOf(ncf);
-            foreach ((int start, int length) in cs.links)
-            {
-                rtb.Select(start, length);
-                SetCharFormat(handleRef, ncf);
-            }
-
-            // reposition to first
-            rtb.Select(0, 0);
-            EndUpdate(handleRef, oldMask);
-            rtb.Invalidate();
-        }
-
-        private static void ProcessNode(RichTextBox rtb, HandleRef handleRef, XmlReader reader, RTFCurrentState cs)
-        {
-            switch (reader.NodeType)
-            {
-                case XmlNodeType.Element:
-                    ProcessElement(reader, cs, rtb);
-                    break;
-                case XmlNodeType.EndElement:
-                    ProcessEndElement(reader, cs, rtb);
-                    break;
-                case XmlNodeType.Text:
-                    string strData = reader.Value;
-                    bool bNewParagraph = (strData.IndexOf("\r\n", 0) >= 0) || (strData.IndexOf("\n", 0) >= 0);
-
-                    if (strData.Length > 0)
+                    if (reader.Name.ToLower() == "align")
                     {
-                        // now, add text to control
-                        int nStartCache = rtb.SelectionStart;
-                        rtb.SelectedText = strData;
-                        rtb.Select(nStartCache, strData.Length);
-
-                        // apply format
-                        if (cs.paraFormatChanged)
+                        if (reader.Value == "left")
                         {
-                            SetParaFormat(handleRef, cs.pf);
-                        }
-
-                        if (cs.charFormatChanged)
-                        {
-                            SetCharFormat(handleRef, cs.cf);
-                        }
-
-                        cs.charFormatChanged = false;
-                        cs.paraFormatChanged = false;
-
-                        // reposition to final
-                        rtb.Select(rtb.TextLength + 1, 0);
-
-                        // new paragraph requires to reset alignment
-                        if (bNewParagraph)
-                        {
-                            cs.pf.dwMask = PFM.ALIGNMENT | PFM.NUMBERING;
+                            cs.pf.dwMask |= PFM.ALIGNMENT;
                             cs.pf.wAlignment = PFA.LEFT;
-                            cs.pf.wNumbering = 0;
+                            cs.paraFormatChanged = true;
+                        }
+                        else if (reader.Value == "right")
+                        {
+                            cs.pf.dwMask |= PFM.ALIGNMENT;
+                            cs.pf.wAlignment = PFA.RIGHT;
+                            cs.paraFormatChanged = true;
+                        }
+                        else if (reader.Value == "center")
+                        {
+                            cs.pf.dwMask |= PFM.ALIGNMENT;
+                            cs.pf.wAlignment = PFA.CENTER;
                             cs.paraFormatChanged = true;
                         }
                     }
+                }
 
-                    break;
-                case XmlNodeType.Whitespace:
-                case XmlNodeType.SignificantWhitespace:
-                    rtb.SelectedText = reader.Value;
-                    break;
-                case XmlNodeType.XmlDeclaration:
-                case XmlNodeType.ProcessingInstruction:
-                    break;
-                case XmlNodeType.Comment:
-                    break;
-            }
-        }
-
-        private static void ProcessElement(XmlReader reader, RTFCurrentState cs, RichTextBox rtb)
-        {
-            switch (reader.Name.ToLower())
-            {
-                case "b":
-                    cs.cf.dwMask |= CFM.WEIGHT | CFM.BOLD;
-                    cs.cf.dwEffects |= CFE.BOLD;
-                    cs.cf.wWeight = FW.BOLD;
-                    cs.charFormatChanged = true;
-                    break;
-                case "i":
-                    cs.cf.dwMask |= CFM.ITALIC;
-                    cs.cf.dwEffects |= CFE.ITALIC;
-                    cs.charFormatChanged = true;
-                    break;
-                case "u":
-                    cs.cf.dwMask |= CFM.UNDERLINE | CFM.UNDERLINETYPE;
-                    cs.cf.dwEffects |= CFE.UNDERLINE;
-                    cs.cf.bUnderlineType = CFU.UNDERLINE;
-                    cs.charFormatChanged = true;
-                    break;
-                case "s":
-                    cs.cf.dwMask |= CFM.STRIKEOUT;
-                    cs.cf.dwEffects |= CFE.STRIKEOUT;
-                    cs.charFormatChanged = true;
-                    break;
-                case "sup":
-                    cs.cf.dwMask |= CFM.SUPERSCRIPT;
-                    cs.cf.dwEffects |= CFE.SUPERSCRIPT;
-                    cs.charFormatChanged = true;
-                    break;
-                case "sub":
-                    cs.cf.dwMask |= CFM.SUBSCRIPT;
-                    cs.cf.dwEffects |= CFE.SUBSCRIPT;
-                    cs.charFormatChanged = true;
-                    break;
-                case "a":
-                    cs.hyperlinkStart = rtb.TextLength;
-                    cs.hyperlink = null;
-                    while (reader.MoveToNextAttribute())
-                    {
-                        if (reader.Name.ToLower() == "href")
-                        {
-                            cs.hyperlink = reader.Value;
-                        }
-                    }
-
-                    reader.MoveToElement();
-                    break;
-                case "p":
-                    cs.spf.Push(cs.pf);
-                    while (reader.MoveToNextAttribute())
-                    {
-                        if (reader.Name.ToLower() == "align")
-                        {
-                            if (reader.Value == "left")
-                            {
-                                cs.pf.dwMask |= PFM.ALIGNMENT;
-                                cs.pf.wAlignment = PFA.LEFT;
-                                cs.paraFormatChanged = true;
-                            }
-                            else if (reader.Value == "right")
-                            {
-                                cs.pf.dwMask |= PFM.ALIGNMENT;
-                                cs.pf.wAlignment = PFA.RIGHT;
-                                cs.paraFormatChanged = true;
-                            }
-                            else if (reader.Value == "center")
-                            {
-                                cs.pf.dwMask |= PFM.ALIGNMENT;
-                                cs.pf.wAlignment = PFA.CENTER;
-                                cs.paraFormatChanged = true;
-                            }
-                        }
-                    }
-
-                    reader.MoveToElement();
-                    break;
-                case "li":
-                    cs.spf.Push(cs.pf);
-                    if (cs.pf.wNumbering != PFN.BULLET)
-                    {
-                        cs.pf.dwMask |= PFM.NUMBERING;
-                        cs.pf.wNumbering = PFN.BULLET;
-                        cs.paraFormatChanged = true;
-                    }
-
-                    break;
-                case "font":
-                    cs.scf.Push(cs.cf);
-                    string strFont = cs.cf.szFaceName;
-                    int crFont = cs.cf.crTextColor;
-                    int yHeight = cs.cf.yHeight;
-
-                    while (reader.MoveToNextAttribute())
-                    {
-                        switch (reader.Name.ToLower())
-                        {
-                            case "face":
-                                cs.cf.dwMask |= CFM.FACE;
-                                strFont = reader.Value;
-                                break;
-                            case "size":
-                                cs.cf.dwMask |= CFM.SIZE;
-                                yHeight = int.Parse(reader.Value);
-                                yHeight *= 20 * 5;
-                                break;
-                            case "color":
-                                cs.cf.dwMask |= CFM.COLOR;
-                                string text = reader.Value;
-                                if (text.StartsWith("#"))
-                                {
-                                    string strCr = text[1..];
-                                    int nCr = Convert.ToInt32(strCr, 16);
-                                    Color color = Color.FromArgb(nCr);
-                                    crFont = GetCOLORREF(color);
-                                }
-                                else if (!int.TryParse(text, out crFont))
-                                {
-                                    Color color = Color.FromName(text);
-                                    crFont = GetCOLORREF(color);
-                                }
-
-                                break;
-                        }
-                    }
-
-                    reader.MoveToElement();
-
-                    cs.cf.szFaceName = strFont;
-                    cs.cf.crTextColor = crFont;
-                    cs.cf.yHeight = yHeight;
-
-                    cs.cf.dwEffects &= ~CFE.AUTOCOLOR;
-                    cs.charFormatChanged = true;
-                    break;
-            }
-        }
-
-        private static void ProcessEndElement(XmlReader reader, RTFCurrentState cs, RichTextBox rtb)
-        {
-            switch (reader.Name)
-            {
-                case "b":
-                    cs.cf.dwEffects &= ~CFE.BOLD;
-                    cs.cf.wWeight = FW.NORMAL;
-                    cs.charFormatChanged = true;
-                    break;
-                case "i":
-                    cs.cf.dwEffects &= ~CFE.ITALIC;
-                    cs.charFormatChanged = true;
-                    break;
-                case "u":
-                    cs.cf.dwEffects &= ~CFE.UNDERLINE;
-                    cs.charFormatChanged = true;
-                    break;
-                case "s":
-                    cs.cf.dwEffects &= ~CFE.STRIKEOUT;
-                    cs.charFormatChanged = true;
-                    break;
-                case "sup":
-                    cs.cf.dwEffects &= ~CFE.SUPERSCRIPT;
-                    cs.charFormatChanged = true;
-                    break;
-                case "sub":
-                    cs.cf.dwEffects &= ~CFE.SUBSCRIPT;
-                    cs.charFormatChanged = true;
-                    break;
-                case "a":
-                    int length = rtb.TextLength - cs.hyperlinkStart;
-
-                    if (cs.hyperlink is not null)
-                    {
-                        rtb.Select(cs.hyperlinkStart, length);
-                        if (cs.hyperlink != rtb.SelectedText)
-                        {
-                            string rtfText = rtb.SelectedRtf;
-                            int idx = rtfText.LastIndexOf('}');
-                            if (idx != -1)
-                            {
-                                string head = rtfText[..idx];
-                                string tail = rtfText[idx..];
-                                RtbSetSelectedRtf(rtb, $@"{head}\v {LinkSeparator}{cs.hyperlink}\v0{tail}");
-                                length = rtb.TextLength - cs.hyperlinkStart;
-                            }
-                        }
-
-                        // reposition to final
-                        rtb.Select(rtb.TextLength + 1, 0);
-                    }
-
-                    cs.links.Add(new KeyValuePair<int, int>(cs.hyperlinkStart, length));
-
-                    cs.hyperlinkStart = -1;
-                    break;
-                case "p":
-                    cs.pf = cs.spf.Pop();
-                    cs.paraFormatChanged = true;
-                    break;
-                case "li":
-                    cs.pf = cs.spf.Pop();
-                    cs.paraFormatChanged = true;
-                    break;
-                case "font":
-                    cs.cf = cs.scf.Pop();
-                    cs.charFormatChanged = true;
-                    break;
-            }
-        }
-
-        public static void SetXHTMLTextAsPlainText(this RichTextBox rtb, string xhtmlText)
-        {
-            rtb.Clear();
-
-            rtb.HideSelection = true;
-
-            XmlReaderSettings settings = new() { ConformanceLevel = ConformanceLevel.Fragment };
-
-            try
-            {
-                using StringReader strReader = new(xhtmlText);
-                XmlReader reader = XmlReader.Create(strReader, settings);
-                while (reader.Read())
+                reader.MoveToElement();
+                break;
+            case "li":
+                cs.spf.Push(cs.pf);
+                if (cs.pf.wNumbering != PFN.BULLET)
                 {
-                    switch (reader.NodeType)
+                    cs.pf.dwMask |= PFM.NUMBERING;
+                    cs.pf.wNumbering = PFN.BULLET;
+                    cs.paraFormatChanged = true;
+                }
+
+                break;
+            case "font":
+                cs.scf.Push(cs.cf);
+                string strFont = cs.cf.szFaceName;
+                int crFont = cs.cf.crTextColor;
+                int yHeight = cs.cf.yHeight;
+
+                while (reader.MoveToNextAttribute())
+                {
+                    switch (reader.Name.ToLower())
                     {
-                        case XmlNodeType.Text:
-                        case XmlNodeType.Whitespace:
-                        case XmlNodeType.SignificantWhitespace:
-                            rtb.SelectedText = reader.Value;
+                        case "face":
+                            cs.cf.dwMask |= CFM.FACE;
+                            strFont = reader.Value;
                             break;
-                        case XmlNodeType.Element:
-                        case XmlNodeType.EndElement:
+                        case "size":
+                            cs.cf.dwMask |= CFM.SIZE;
+                            yHeight = int.Parse(reader.Value);
+                            yHeight *= 20 * 5;
                             break;
-                        case XmlNodeType.XmlDeclaration:
-                        case XmlNodeType.ProcessingInstruction:
-                            break;
-                        case XmlNodeType.Comment:
+                        case "color":
+                            cs.cf.dwMask |= CFM.COLOR;
+                            string text = reader.Value;
+                            if (text.StartsWith("#"))
+                            {
+                                string strCr = text[1..];
+                                int nCr = Convert.ToInt32(strCr, 16);
+                                Color color = Color.FromArgb(nCr);
+                                crFont = GetCOLORREF(color);
+                            }
+                            else if (!int.TryParse(text, out crFont))
+                            {
+                                Color color = Color.FromName(text);
+                                crFont = GetCOLORREF(color);
+                            }
+
                             break;
                     }
                 }
-            }
-            catch (XmlException ex)
-            {
-                Debug.WriteLine(ex.Message);
-            }
 
-            rtb.HideSelection = false;
+                reader.MoveToElement();
 
-            // reposition to final
-            rtb.Select(rtb.TextLength + 1, 0);
+                cs.cf.szFaceName = strFont;
+                cs.cf.crTextColor = crFont;
+                cs.cf.yHeight = yHeight;
+
+                cs.cf.dwEffects &= ~CFE.AUTOCOLOR;
+                cs.charFormatChanged = true;
+                break;
         }
+    }
+
+    private static void ProcessEndElement(XmlReader reader, RTFCurrentState cs, RichTextBox rtb)
+    {
+        switch (reader.Name)
+        {
+            case "b":
+                cs.cf.dwEffects &= ~CFE.BOLD;
+                cs.cf.wWeight = FW.NORMAL;
+                cs.charFormatChanged = true;
+                break;
+            case "i":
+                cs.cf.dwEffects &= ~CFE.ITALIC;
+                cs.charFormatChanged = true;
+                break;
+            case "u":
+                cs.cf.dwEffects &= ~CFE.UNDERLINE;
+                cs.charFormatChanged = true;
+                break;
+            case "s":
+                cs.cf.dwEffects &= ~CFE.STRIKEOUT;
+                cs.charFormatChanged = true;
+                break;
+            case "sup":
+                cs.cf.dwEffects &= ~CFE.SUPERSCRIPT;
+                cs.charFormatChanged = true;
+                break;
+            case "sub":
+                cs.cf.dwEffects &= ~CFE.SUBSCRIPT;
+                cs.charFormatChanged = true;
+                break;
+            case "a":
+                int length = rtb.TextLength - cs.hyperlinkStart;
+
+                if (cs.hyperlink is not null)
+                {
+                    rtb.Select(cs.hyperlinkStart, length);
+                    if (cs.hyperlink != rtb.SelectedText)
+                    {
+                        string rtfText = rtb.SelectedRtf;
+                        int idx = rtfText.LastIndexOf('}');
+                        if (idx != -1)
+                        {
+                            string head = rtfText[..idx];
+                            string tail = rtfText[idx..];
+                            RtbSetSelectedRtf(rtb, $@"{head}\v {LinkSeparator}{cs.hyperlink}\v0{tail}");
+                            length = rtb.TextLength - cs.hyperlinkStart;
+                        }
+                    }
+
+                    // reposition to final
+                    rtb.Select(rtb.TextLength + 1, 0);
+                }
+
+                cs.links.Add(new KeyValuePair<int, int>(cs.hyperlinkStart, length));
+
+                cs.hyperlinkStart = -1;
+                break;
+            case "p":
+                cs.pf = cs.spf.Pop();
+                cs.paraFormatChanged = true;
+                break;
+            case "li":
+                cs.pf = cs.spf.Pop();
+                cs.paraFormatChanged = true;
+                break;
+            case "font":
+                cs.cf = cs.scf.Pop();
+                cs.charFormatChanged = true;
+                break;
+        }
+    }
+
+    public static void SetXHTMLTextAsPlainText(this RichTextBox rtb, string xhtmlText)
+    {
+        rtb.Clear();
+
+        rtb.HideSelection = true;
+
+        XmlReaderSettings settings = new() { ConformanceLevel = ConformanceLevel.Fragment };
+
+        try
+        {
+            using StringReader strReader = new(xhtmlText);
+            XmlReader reader = XmlReader.Create(strReader, settings);
+            while (reader.Read())
+            {
+                switch (reader.NodeType)
+                {
+                    case XmlNodeType.Text:
+                    case XmlNodeType.Whitespace:
+                    case XmlNodeType.SignificantWhitespace:
+                        rtb.SelectedText = reader.Value;
+                        break;
+                    case XmlNodeType.Element:
+                    case XmlNodeType.EndElement:
+                        break;
+                    case XmlNodeType.XmlDeclaration:
+                    case XmlNodeType.ProcessingInstruction:
+                        break;
+                    case XmlNodeType.Comment:
+                        break;
+                }
+            }
+        }
+        catch (XmlException ex)
+        {
+            Debug.WriteLine(ex.Message);
+        }
+
+        rtb.HideSelection = false;
+
+        // reposition to final
+        rtb.Select(rtb.TextLength + 1, 0);
     }
 }

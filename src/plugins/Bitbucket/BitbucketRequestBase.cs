@@ -5,121 +5,120 @@ using Newtonsoft.Json.Linq;
 using RestSharp;
 using RestSharp.Authenticators;
 
-namespace GitExtensions.Plugins.Bitbucket
+namespace GitExtensions.Plugins.Bitbucket;
+
+internal class BitbucketResponse<T>
 {
-    internal class BitbucketResponse<T>
+    public bool Success { get; set; }
+    public IEnumerable<string>? Messages { get; set; }
+    public T? Result { get; set; }
+}
+
+internal abstract class BitbucketRequestBase<T>
+{
+    protected Settings Settings { get; }
+
+    protected BitbucketRequestBase(Settings settings)
     {
-        public bool Success { get; set; }
-        public IEnumerable<string>? Messages { get; set; }
-        public T? Result { get; set; }
+        Settings = settings;
     }
 
-    internal abstract class BitbucketRequestBase<T>
+    public async Task<BitbucketResponse<T>> SendAsync()
     {
-        protected Settings Settings { get; }
+        Validates.NotNull(Settings.BitbucketUrl);
+        Validates.NotNull(Settings.Username);
+        Validates.NotNull(Settings.Password);
 
-        protected BitbucketRequestBase(Settings settings)
+        RestClient client = new()
         {
-            Settings = settings;
+            BaseUrl = new Uri(Settings.BitbucketUrl),
+            Authenticator = new HttpBasicAuthenticator(Settings.Username, Settings.Password)
+        };
+        if (Settings.DisableSSL)
+        {
+            client.RemoteCertificateValidationCallback = delegate { return true; };
         }
 
-        public async Task<BitbucketResponse<T>> SendAsync()
+        RestRequest request = new(ApiUrl, RequestMethod);
+        if (RequestBody is not null)
         {
-            Validates.NotNull(Settings.BitbucketUrl);
-            Validates.NotNull(Settings.Username);
-            Validates.NotNull(Settings.Password);
+            request.AddJsonBody(RequestBody);
+        }
 
-            RestClient client = new()
-            {
-                BaseUrl = new Uri(Settings.BitbucketUrl),
-                Authenticator = new HttpBasicAuthenticator(Settings.Username, Settings.Password)
-            };
-            if (Settings.DisableSSL)
-            {
-                client.RemoteCertificateValidationCallback = delegate { return true; };
-            }
+        // XSRF check fails when approving/creating
+        request.AddHeader("X-Atlassian-Token", "no-check");
 
-            RestRequest request = new(ApiUrl, RequestMethod);
-            if (RequestBody is not null)
-            {
-                request.AddJsonBody(RequestBody);
-            }
-
-            // XSRF check fails when approving/creating
-            request.AddHeader("X-Atlassian-Token", "no-check");
-
-            IRestResponse response = await client.ExecuteAsync(request).ConfigureAwait(false);
-            if (response.ResponseStatus != ResponseStatus.Completed)
-            {
-                return new BitbucketResponse<T>
-                {
-                    Success = false,
-                    Messages = new[] { response.ErrorMessage }
-                };
-            }
-
-            if ((int)response.StatusCode >= 300)
-            {
-                return ParseErrorResponse(response.Content);
-            }
-
+        IRestResponse response = await client.ExecuteAsync(request).ConfigureAwait(false);
+        if (response.ResponseStatus != ResponseStatus.Completed)
+        {
             return new BitbucketResponse<T>
             {
-                Success = true,
-                Result = ParseResponse(JObject.Parse(response.Content))
+                Success = false,
+                Messages = new[] { response.ErrorMessage }
             };
         }
 
-        protected abstract object? RequestBody { get; }
-        protected abstract Method RequestMethod { get; }
-        protected abstract string ApiUrl { get; }
-        protected abstract T ParseResponse(JObject json);
-
-        private static BitbucketResponse<T> ParseErrorResponse(string jsonString)
+        if ((int)response.StatusCode >= 300)
         {
-            JObject json;
-            try
-            {
-                System.Console.WriteLine(jsonString);
-                json = (JObject)JsonConvert.DeserializeObject(jsonString);
-            }
-            catch (JsonReaderException)
-            {
-                MessageBox.Show(jsonString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                BitbucketResponse<T> errorResponse = new() { Success = false };
-                return errorResponse;
-            }
+            return ParseErrorResponse(response.Content);
+        }
 
-            if (json["errors"] is not null)
+        return new BitbucketResponse<T>
+        {
+            Success = true,
+            Result = ParseResponse(JObject.Parse(response.Content))
+        };
+    }
+
+    protected abstract object? RequestBody { get; }
+    protected abstract Method RequestMethod { get; }
+    protected abstract string ApiUrl { get; }
+    protected abstract T ParseResponse(JObject json);
+
+    private static BitbucketResponse<T> ParseErrorResponse(string jsonString)
+    {
+        JObject json;
+        try
+        {
+            System.Console.WriteLine(jsonString);
+            json = (JObject)JsonConvert.DeserializeObject(jsonString);
+        }
+        catch (JsonReaderException)
+        {
+            MessageBox.Show(jsonString, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            BitbucketResponse<T> errorResponse = new() { Success = false };
+            return errorResponse;
+        }
+
+        if (json["errors"] is not null)
+        {
+            List<string> messages = [];
+            BitbucketResponse<T> errorResponse = new() { Success = false };
+            foreach (JToken error in json["errors"])
             {
-                List<string> messages = [];
-                BitbucketResponse<T> errorResponse = new() { Success = false };
-                foreach (JToken error in json["errors"])
+                StringBuilder sb = new();
+                sb.AppendLine(error["message"].ToString());
+                if (error["reviewerErrors"] is not null)
                 {
-                    StringBuilder sb = new();
-                    sb.AppendLine(error["message"].ToString());
-                    if (error["reviewerErrors"] is not null)
+                    sb.AppendLine();
+                    foreach (JToken reviewerError in error["reviewerErrors"])
                     {
-                        sb.AppendLine();
-                        foreach (JToken reviewerError in error["reviewerErrors"])
-                        {
-                            sb.Append(reviewerError["message"]).AppendLine();
-                        }
+                        sb.Append(reviewerError["message"]).AppendLine();
                     }
-
-                    messages.Add(sb.ToString());
                 }
 
-                errorResponse.Messages = messages;
-                return errorResponse;
+                messages.Add(sb.ToString());
             }
 
-            if (json["message"] is not null)
-            {
-                return new BitbucketResponse<T> { Success = false, Messages = new[] { json["message"].ToString() } };
-            }
-
-            return new BitbucketResponse<T> { Success = false, Messages = new[] { "Unknown error." } };
+            errorResponse.Messages = messages;
+            return errorResponse;
         }
+
+        if (json["message"] is not null)
+        {
+            return new BitbucketResponse<T> { Success = false, Messages = new[] { json["message"].ToString() } };
+        }
+
+        return new BitbucketResponse<T> { Success = false, Messages = new[] { "Unknown error." } };
     }
 }

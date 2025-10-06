@@ -1,62 +1,61 @@
 ﻿using GitExtensions.Extensibility.Settings;
 
-namespace GitCommands.Settings
+namespace GitCommands.Settings;
+
+internal sealed class DetailedSettings : IDetailedSettings
 {
-    internal sealed class DetailedSettings : IDetailedSettings
+    private const string DetailedGroupName = "Detailed";
+
+    private const bool GetRemoteBranchesDirectlyFromRemoteDefault = false;
+    private const bool AddMergeLogMessagesDefault = false;
+    private const int MergeLogMessagesCountDefault = 20;
+
+    private readonly SettingsSource _settingsSource;
+
+    public DetailedSettings(SettingsSource settingsSource)
     {
-        private const string DetailedGroupName = "Detailed";
+        _settingsSource = settingsSource;
+    }
 
-        private const bool GetRemoteBranchesDirectlyFromRemoteDefault = false;
-        private const bool AddMergeLogMessagesDefault = false;
-        private const int MergeLogMessagesCountDefault = 20;
-
-        private readonly SettingsSource _settingsSource;
-
-        public DetailedSettings(SettingsSource settingsSource)
+    public bool GetRemoteBranchesDirectlyFromRemote
+    {
+        get => _settingsSource.GetBool($"{DetailedGroupName}.{nameof(GetRemoteBranchesDirectlyFromRemote)}", GetRemoteBranchesDirectlyFromRemoteDefault);
+        set
         {
-            _settingsSource = settingsSource;
-        }
-
-        public bool GetRemoteBranchesDirectlyFromRemote
-        {
-            get => _settingsSource.GetBool($"{DetailedGroupName}.{nameof(GetRemoteBranchesDirectlyFromRemote)}", GetRemoteBranchesDirectlyFromRemoteDefault);
-            set
+            if (GetRemoteBranchesDirectlyFromRemote == value)
             {
-                if (GetRemoteBranchesDirectlyFromRemote == value)
-                {
-                    return;
-                }
-
-                _settingsSource.SetBool($"{DetailedGroupName}.{nameof(GetRemoteBranchesDirectlyFromRemote)}", value);
+                return;
             }
+
+            _settingsSource.SetBool($"{DetailedGroupName}.{nameof(GetRemoteBranchesDirectlyFromRemote)}", value);
         }
+    }
 
-        public bool AddMergeLogMessages
+    public bool AddMergeLogMessages
+    {
+        get => _settingsSource.GetBool($"{DetailedGroupName}.{nameof(AddMergeLogMessages)}", AddMergeLogMessagesDefault);
+        set
         {
-            get => _settingsSource.GetBool($"{DetailedGroupName}.{nameof(AddMergeLogMessages)}", AddMergeLogMessagesDefault);
-            set
+            if (AddMergeLogMessages == value)
             {
-                if (AddMergeLogMessages == value)
-                {
-                    return;
-                }
-
-                _settingsSource.SetBool($"{DetailedGroupName}.{nameof(AddMergeLogMessages)}", value);
+                return;
             }
+
+            _settingsSource.SetBool($"{DetailedGroupName}.{nameof(AddMergeLogMessages)}", value);
         }
+    }
 
-        public int MergeLogMessagesCount
+    public int MergeLogMessagesCount
+    {
+        get => _settingsSource.GetInt($"{DetailedGroupName}.{nameof(MergeLogMessagesCount)}", MergeLogMessagesCountDefault);
+        set
         {
-            get => _settingsSource.GetInt($"{DetailedGroupName}.{nameof(MergeLogMessagesCount)}", MergeLogMessagesCountDefault);
-            set
+            if (MergeLogMessagesCount == value)
             {
-                if (MergeLogMessagesCount == value)
-                {
-                    return;
-                }
-
-                _settingsSource.SetInt($"{DetailedGroupName}.{nameof(MergeLogMessagesCount)}", value);
+                return;
             }
+
+            _settingsSource.SetInt($"{DetailedGroupName}.{nameof(MergeLogMessagesCount)}", value);
         }
     }
 }

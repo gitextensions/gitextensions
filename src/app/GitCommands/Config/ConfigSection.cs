@@ -1,165 +1,164 @@
 ﻿using GitExtensions.Extensibility.Configurations;
 
-namespace GitCommands.Config
+namespace GitCommands.Config;
+
+/// <summary>
+///   ConfigSection
+///   Sections can be defined as:
+///   [section "subsection"] (subsection is case sensitive)
+///   or
+///   [section.subsection] (subsection is case insensitive)
+///
+///   Case insensitive sections are deprecated. Dot separated subsections are treated
+///   as case insensitive only when loaded from config file. Dot separated subsections
+///   added from code, are treated as case sensitive.
+/// </summary>
+public class ConfigSection : IConfigSection
 {
-    /// <summary>
-    ///   ConfigSection
-    ///   Sections can be defined as:
-    ///   [section "subsection"] (subsection is case sensitive)
-    ///   or
-    ///   [section.subsection] (subsection is case insensitive)
-    ///
-    ///   Case insensitive sections are deprecated. Dot separated subsections are treated
-    ///   as case insensitive only when loaded from config file. Dot separated subsections
-    ///   added from code, are treated as case sensitive.
-    /// </summary>
-    public class ConfigSection : IConfigSection
+    private readonly IDictionary<string, List<string>> _configKeys;
+
+    internal ConfigSection(string name, bool forceCaseSensitive)
     {
-        private readonly IDictionary<string, List<string>> _configKeys;
+        _configKeys = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
 
-        internal ConfigSection(string name, bool forceCaseSensitive)
+        int slashIndex = name.IndexOf('\"');
+
+        if (slashIndex != -1)
         {
-            _configKeys = new Dictionary<string, List<string>>(StringComparer.OrdinalIgnoreCase);
+            // [section "subsection"] case sensitive
+            SectionName = name[..slashIndex].Trim();
+            SubSection = name.Substring(slashIndex + 1, name.LastIndexOf('\"') - slashIndex - 1);
+            SubSectionCaseSensitive = true;
+        }
+        else if (!name.Contains("."))
+        {
+            // [section] case sensitive
+            SectionName = name.Trim();
+            SubSectionCaseSensitive = true;
+        }
+        else
+        {
+            // [section.subsection] case insensitive
+            int subSectionIndex = name.IndexOf('.');
 
-            int slashIndex = name.IndexOf('\"');
-
-            if (slashIndex != -1)
+            if (subSectionIndex < 1)
             {
-                // [section "subsection"] case sensitive
-                SectionName = name[..slashIndex].Trim();
-                SubSection = name.Substring(slashIndex + 1, name.LastIndexOf('\"') - slashIndex - 1);
-                SubSectionCaseSensitive = true;
-            }
-            else if (!name.Contains("."))
-            {
-                // [section] case sensitive
-                SectionName = name.Trim();
-                SubSectionCaseSensitive = true;
-            }
-            else
-            {
-                // [section.subsection] case insensitive
-                int subSectionIndex = name.IndexOf('.');
-
-                if (subSectionIndex < 1)
-                {
-                    throw new Exception("Invalid section name: " + name);
-                }
-
-                SectionName = name[..subSectionIndex].Trim();
-                SubSection = name[(subSectionIndex + 1)..].Trim();
-                SubSectionCaseSensitive = false;
+                throw new Exception("Invalid section name: " + name);
             }
 
-            if (forceCaseSensitive)
-            {
-                SubSectionCaseSensitive = true;
-            }
+            SectionName = name[..subSectionIndex].Trim();
+            SubSection = name[(subSectionIndex + 1)..].Trim();
+            SubSectionCaseSensitive = false;
         }
 
-        public string SectionName { get; set; }
-        public string? SubSection { get; set; }
-        public bool SubSectionCaseSensitive { get; }
-
-        public IDictionary<string, IReadOnlyList<string>> AsDictionary()
+        if (forceCaseSensitive)
         {
-            return _configKeys.ToDictionary(kv => kv.Key, kv => (IReadOnlyList<string>)kv.Value, StringComparer.OrdinalIgnoreCase);
-        }
-
-        public bool HasValue(string key)
-        {
-            return _configKeys.ContainsKey(key);
-        }
-
-        public void SetValue(string key, string? value)
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                _configKeys.Remove(key);
-            }
-            else
-            {
-                _configKeys[key] = [value];
-            }
-        }
-
-        public void AddValue(string key, string value)
-        {
-            if (!_configKeys.ContainsKey(key))
-            {
-                _configKeys[key] = [];
-            }
-
-            _configKeys[key].Add(value);
-        }
-
-        public string GetValue(string key, string defaultValue)
-        {
-            if (_configKeys.TryGetValue(key, out List<string> list))
-            {
-                if (list.Count > 0)
-                {
-                    return list[^1];
-                }
-            }
-
-            return defaultValue;
-        }
-
-        public IReadOnlyList<string> GetValues(string key)
-        {
-            return _configKeys.TryGetValue(key, out List<string>? configKey) ? configKey : Array.Empty<string>();
-        }
-
-        public override string ToString()
-        {
-            string result = "[" + SectionName;
-            if (!string.IsNullOrEmpty(SubSection))
-            {
-                string escSubSection = SubSection.Replace("\"", "\\\"");
-                escSubSection = escSubSection.Replace("\\", "\\\\");
-
-                if (!SubSectionCaseSensitive)
-                {
-                    escSubSection = escSubSection.ToLower();
-                }
-
-                result = result + " \"" + escSubSection + "\"";
-            }
-
-            result = result + "]";
-            return result;
-        }
-
-        public bool Equals(IConfigSection other)
-        {
-            StringComparison sc = SubSectionCaseSensitive
-                ? StringComparison.Ordinal
-                : StringComparison.OrdinalIgnoreCase;
-
-            return string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) &&
-                string.Equals(SubSection, other.SubSection, sc);
+            SubSectionCaseSensitive = true;
         }
     }
 
-    public static class ConfigSectionExt
-    {
-        public static bool GetValueAsBool(this IConfigSection section, string name, bool defaultValue)
-        {
-            bool result = defaultValue;
+    public string SectionName { get; set; }
+    public string? SubSection { get; set; }
+    public bool SubSectionCaseSensitive { get; }
 
-            if (section.HasValue(name))
+    public IDictionary<string, IReadOnlyList<string>> AsDictionary()
+    {
+        return _configKeys.ToDictionary(kv => kv.Key, kv => (IReadOnlyList<string>)kv.Value, StringComparer.OrdinalIgnoreCase);
+    }
+
+    public bool HasValue(string key)
+    {
+        return _configKeys.ContainsKey(key);
+    }
+
+    public void SetValue(string key, string? value)
+    {
+        if (string.IsNullOrEmpty(value))
+        {
+            _configKeys.Remove(key);
+        }
+        else
+        {
+            _configKeys[key] = [value];
+        }
+    }
+
+    public void AddValue(string key, string value)
+    {
+        if (!_configKeys.ContainsKey(key))
+        {
+            _configKeys[key] = [];
+        }
+
+        _configKeys[key].Add(value);
+    }
+
+    public string GetValue(string key, string defaultValue)
+    {
+        if (_configKeys.TryGetValue(key, out List<string> list))
+        {
+            if (list.Count > 0)
             {
-                string value = section.GetValue(name);
-                bool.TryParse(value, out result);
+                return list[^1];
+            }
+        }
+
+        return defaultValue;
+    }
+
+    public IReadOnlyList<string> GetValues(string key)
+    {
+        return _configKeys.TryGetValue(key, out List<string>? configKey) ? configKey : Array.Empty<string>();
+    }
+
+    public override string ToString()
+    {
+        string result = "[" + SectionName;
+        if (!string.IsNullOrEmpty(SubSection))
+        {
+            string escSubSection = SubSection.Replace("\"", "\\\"");
+            escSubSection = escSubSection.Replace("\\", "\\\\");
+
+            if (!SubSectionCaseSensitive)
+            {
+                escSubSection = escSubSection.ToLower();
             }
 
-            return result;
+            result = result + " \"" + escSubSection + "\"";
         }
 
-        public static void SetValueAsBool(this IConfigSection section, string name, bool value)
+        result = result + "]";
+        return result;
+    }
+
+    public bool Equals(IConfigSection other)
+    {
+        StringComparison sc = SubSectionCaseSensitive
+            ? StringComparison.Ordinal
+            : StringComparison.OrdinalIgnoreCase;
+
+        return string.Equals(SectionName, other.SectionName, StringComparison.OrdinalIgnoreCase) &&
+            string.Equals(SubSection, other.SubSection, sc);
+    }
+}
+
+public static class ConfigSectionExt
+{
+    public static bool GetValueAsBool(this IConfigSection section, string name, bool defaultValue)
+    {
+        bool result = defaultValue;
+
+        if (section.HasValue(name))
         {
-            section.SetValue(name, value.ToString());
+            string value = section.GetValue(name);
+            bool.TryParse(value, out result);
         }
+
+        return result;
+    }
+
+    public static void SetValueAsBool(this IConfigSection section, string name, bool value)
+    {
+        section.SetValue(name, value.ToString());
     }
 }

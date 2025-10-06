@@ -11,1161 +11,1160 @@ using NetSpell.SpellChecker;
 using NetSpell.SpellChecker.Dictionary;
 using ResourceManager;
 
-namespace GitUI.SpellChecker
+namespace GitUI.SpellChecker;
+
+[DefaultEvent("TextChanged")]
+public partial class EditNetSpell : GitModuleControl
 {
-    [DefaultEvent("TextChanged")]
-    public partial class EditNetSpell : GitModuleControl
+    public event EventHandler? TextAssigned;
+
+    private readonly TranslationString _cutMenuItemText = new("Cut");
+    private readonly TranslationString _copyMenuItemText = new("Copy");
+    private readonly TranslationString _pasteMenuItemText = new("Paste");
+    private readonly TranslationString _deleteMenuItemText = new("Delete");
+    private readonly TranslationString _selectAllMenuItemText = new("Select all");
+
+    private readonly TranslationString _addToDictionaryText = new("Add to dictionary");
+    private readonly TranslationString _ignoreWordText = new("Ignore word");
+    private readonly TranslationString _removeWordText = new("Remove word");
+    private readonly TranslationString _dictionaryText = new("Dictionary");
+    private readonly TranslationString _markIllFormedLinesText = new("Mark ill formed lines");
+    private readonly TranslationString _autoCompletionText = new("Provide auto completion");
+
+    private SpellCheckEditControl? _customUnderlines;
+    private Spelling? _spelling;
+    private static WordDictionary? _wordDictionary;
+
+    private CancellationTokenSource _autoCompleteCancellationTokenSource = new();
+    private readonly List<IAutoCompleteProvider> _autoCompleteProviders = [];
+    private AsyncLazy<IEnumerable<AutoCompleteWord>?>? _autoCompleteListTask;
+    private bool _autoCompleteWasUserActivated;
+    private bool _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
+    private readonly Dictionary<Keys, string> _keysToSendToAutoComplete = new()
     {
-        public event EventHandler? TextAssigned;
+        { Keys.Down, "{DOWN}" },
+        { Keys.Up, "{UP}" },
+        { Keys.PageUp, "{PGUP}" },
+        { Keys.PageDown, "{PGDN}" },
+        { Keys.End, "{END}" },
+        { Keys.Home, "{HOME}" }
+    };
 
-        private readonly TranslationString _cutMenuItemText = new("Cut");
-        private readonly TranslationString _copyMenuItemText = new("Copy");
-        private readonly TranslationString _pasteMenuItemText = new("Paste");
-        private readonly TranslationString _deleteMenuItemText = new("Delete");
-        private readonly TranslationString _selectAllMenuItemText = new("Select all");
+    private readonly IWordAtCursorExtractor _wordAtCursorExtractor;
 
-        private readonly TranslationString _addToDictionaryText = new("Add to dictionary");
-        private readonly TranslationString _ignoreWordText = new("Ignore word");
-        private readonly TranslationString _removeWordText = new("Remove word");
-        private readonly TranslationString _dictionaryText = new("Dictionary");
-        private readonly TranslationString _markIllFormedLinesText = new("Mark ill formed lines");
-        private readonly TranslationString _autoCompletionText = new("Provide auto completion");
+    public Font TextBoxFont { get; set; }
 
-        private SpellCheckEditControl? _customUnderlines;
-        private Spelling? _spelling;
-        private static WordDictionary? _wordDictionary;
+    public bool IsUndoInProgress;
 
-        private CancellationTokenSource _autoCompleteCancellationTokenSource = new();
-        private readonly List<IAutoCompleteProvider> _autoCompleteProviders = [];
-        private AsyncLazy<IEnumerable<AutoCompleteWord>?>? _autoCompleteListTask;
-        private bool _autoCompleteWasUserActivated;
-        private bool _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
-        private readonly Dictionary<Keys, string> _keysToSendToAutoComplete = new()
+    public EditNetSpell()
+    {
+        InitializeComponent();
+        InitializeComplete();
+
+        MistakeFont = new Font(TextBox.Font, FontStyle.Underline);
+        TextBoxFont = TextBox.Font;
+
+        AutoComplete.DisplayMember = nameof(AutoCompleteWord.Word);
+
+        _wordAtCursorExtractor = new WordAtCursorExtractor();
+
+        if (AppSettings.MessageEditorWordWrap.Value)
         {
-            { Keys.Down, "{DOWN}" },
-            { Keys.Up, "{UP}" },
-            { Keys.PageUp, "{PGUP}" },
-            { Keys.PageDown, "{PGDN}" },
-            { Keys.End, "{END}" },
-            { Keys.Home, "{HOME}" }
-        };
-
-        private readonly IWordAtCursorExtractor _wordAtCursorExtractor;
-
-        public Font TextBoxFont { get; set; }
-
-        public bool IsUndoInProgress;
-
-        public EditNetSpell()
+            TextBox.WordWrap = true;
+        }
+        else
         {
-            InitializeComponent();
-            InitializeComplete();
+            _ = new TextBoxSilencer(TextBox);
+        }
+    }
 
-            MistakeFont = new Font(TextBox.Font, FontStyle.Underline);
-            TextBoxFont = TextBox.Font;
-
-            AutoComplete.DisplayMember = nameof(AutoCompleteWord.Word);
-
-            _wordAtCursorExtractor = new WordAtCursorExtractor();
-
-            if (AppSettings.MessageEditorWordWrap.Value)
+    public override string Text
+    {
+        get
+        {
+            if (TextBox is null)
             {
-                TextBox.WordWrap = true;
-            }
-            else
-            {
-                _ = new TextBoxSilencer(TextBox);
-            }
-        }
-
-        public override string Text
-        {
-            get
-            {
-                if (TextBox is null)
-                {
-                    return string.Empty;
-                }
-
-                return _isWatermarkShowing ? string.Empty : TextBox.Text;
-            }
-            set
-            {
-                HideWatermark();
-                EvaluateForecolor();
-                TextBox.Text = value;
-                ShowWatermark();
-                OnTextAssigned();
-            }
-        }
-
-        public void EvaluateForecolor()
-        {
-            if (Application.IsDarkModeEnabled)
-            {
-                // In dark mode the background color is set to White, but still reported as SystemColors.Window (or adjusted)
-                // The Forecolor must be changed manually
-                TextBox.ForeColor = TextBox.Enabled ? SystemColors.WindowText : SystemColors.HighlightText;
-            }
-        }
-
-        private void OnTextAssigned()
-        {
-            TextAssigned?.Invoke(this, EventArgs.Empty);
-        }
-
-        public string Line(int line)
-        {
-            return TextBox.Lines[line];
-        }
-
-        public void ReplaceLine(int line, string withText)
-        {
-            int oldPos = TextBox.SelectionStart + TextBox.SelectionLength;
-            int startIdx = TextBox.GetFirstCharIndexFromLine(line);
-            TextBox.SelectionLength = 0;
-            TextBox.SelectionStart = startIdx;
-            TextBox.SelectionLength = Line(line).Length;
-            TextBox.SelectedText = withText;
-            TextBox.SelectionLength = 0;
-            TextBox.SelectionStart = oldPos;
-        }
-
-        public int LineLength(int line)
-        {
-            return LineCount() <= line ? 0 : TextBox.Lines[line].Length;
-        }
-
-        public int LineCount()
-        {
-            return TextBox.Lines.Length;
-        }
-
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public Font MistakeFont { get; set; }
-
-        [Browsable(false)]
-        public int CurrentColumn => TextBox.SelectionStart - TextBox.GetFirstCharIndexOfCurrentLine() + 1;
-
-        [Browsable(false)]
-        public int CurrentLine => TextBox.GetLineFromCharIndex(TextBox.SelectionStart) + 1;
-
-        public event EventHandler? SelectionChanged;
-
-        private void EditNetSpellEnabledChanged(object sender, EventArgs e)
-        {
-            if (Enabled)
-            {
-                TextBox.ReadOnly = false;
-                ShowWatermark();
-            }
-            else
-            {
-                TextBox.ReadOnly = true;
-                HideWatermark();
-            }
-        }
-
-        private bool _isWatermarkShowing;
-        private string _watermarkText = "";
-        [Category("Appearance")]
-        [DefaultValue("")]
-        public string WatermarkText
-        {
-            get { return _watermarkText; }
-
-            set
-            {
-                HideWatermark();
-                _watermarkText = value;
-                ShowWatermark();
-            }
-        }
-
-        [Category("Appearance")]
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public int SelectionStart
-        {
-            get => TextBox.SelectionStart;
-            set => TextBox.SelectionStart = value;
-        }
-
-        [Category("Appearance")]
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual int SelectionLength
-        {
-            get => TextBox.SelectionLength;
-
-            set => TextBox.SelectionLength = value;
-        }
-
-        [Category("Appearance")]
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public virtual string? SelectedText
-        {
-            get => TextBox.SelectedText;
-            set
-            {
-                HideWatermark();
-                TextBox.SelectedText = value;
-                ShowWatermark();
-            }
-        }
-
-        protected DistributedSettings Settings => Module.GetEffectiveSettings() as DistributedSettings ?? AppSettings.SettingsContainer;
-
-        public void SelectAll()
-        {
-            TextBox.SelectAll();
-        }
-
-        protected override void OnRuntimeLoad()
-        {
-            base.OnRuntimeLoad();
-
-            _customUnderlines = new SpellCheckEditControl(TextBox);
-            TextBox.SelectionChanged += TextBox_SelectionChanged;
-            TextBox.TextChanged += TextBoxTextChanged;
-            TextBox.DoubleClick += TextBox_DoubleClick;
-
-            EnabledChanged += EditNetSpellEnabledChanged;
-
-            ShowWatermark();
-
-            components = new Container();
-            _spelling = new Spelling(components)
-            {
-                ShowDialog = false,
-                IgnoreAllCapsWords = true,
-                IgnoreWordsWithDigits = true
-            };
-
-            ToggleAutoCompletion();
-
-            //
-            // spelling
-            //
-            _spelling.ReplacedWord += SpellingReplacedWord;
-            _spelling.DeletedWord += SpellingDeletedWord;
-            _spelling.MisspelledWord += SpellingMisspelledWord;
-
-            //
-            // wordDictionary
-            //
-            LoadDictionary();
-
-            SpellCheckTimer.Enabled = true;
-        }
-
-        private ToolStripMenuItem AddContextMenuItem(string text, EventHandler eventHandler)
-        {
-            ToolStripMenuItem menuItem = new(text, null, eventHandler);
-            SpellCheckContextMenu.Items.Add(menuItem);
-            return menuItem;
-        }
-
-        private void AddContextMenuSeparator()
-        {
-            SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
-        }
-
-        private void AddDictionaries()
-        {
-            try
-            {
-                ToolStripMenuItem dictionaryToolStripMenuItem = new(_dictionaryText.Text);
-                SpellCheckContextMenu.Items.Add(dictionaryToolStripMenuItem);
-
-                ContextMenuStrip toolStripDropDown = new();
-
-                ToolStripMenuItem noDicToolStripMenuItem = new("None");
-                noDicToolStripMenuItem.Click += DicToolStripMenuItemClick;
-
-                IDetachedSettings detachedSettings = Settings.Detached();
-
-                if (detachedSettings.Dictionary is "None")
-                {
-                    noDicToolStripMenuItem.Checked = true;
-                }
-
-                toolStripDropDown.Items.Add(noDicToolStripMenuItem);
-
-                foreach (string fileName in Directory.GetFiles(AppSettings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
-                {
-                    FileInfo file = new(fileName);
-
-                    string dic = file.Name.Replace(".dic", "");
-
-                    ToolStripMenuItem dicToolStripMenuItem = new(dic);
-                    dicToolStripMenuItem.Click += DicToolStripMenuItemClick;
-
-                    if (detachedSettings.Dictionary == dic)
-                    {
-                        dicToolStripMenuItem.Checked = true;
-                    }
-
-                    toolStripDropDown.Items.Add(dicToolStripMenuItem);
-                }
-
-                dictionaryToolStripMenuItem.DropDown = toolStripDropDown;
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex);
-            }
-        }
-
-        private void AddWordSuggestions(int pos)
-        {
-            if (!AppSettings.ProvideAutocompletion)
-            {
-                return;
+                return string.Empty;
             }
 
-            try
-            {
-                Validates.NotNull(_spelling);
-
-                _spelling.Text = TextBox.Text;
-                _spelling.WordIndex = _spelling.GetWordIndexFromTextIndex(pos);
-
-                if (_spelling.CurrentWord.Length == 0 || _spelling.TestWord())
-                {
-                    return;
-                }
-
-                _spelling.ShowDialog = false;
-                _spelling.MaxSuggestions = 5;
-
-                // generate suggestions
-                _spelling.Suggest();
-
-                foreach (string suggestion in _spelling.Suggestions)
-                {
-                    ToolStripMenuItem si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick);
-                    si.Font = new Font(si.Font, FontStyle.Bold);
-                }
-
-                AddContextMenuItem(_addToDictionaryText.Text, AddToDictionaryClick);
-                AddContextMenuItem(_ignoreWordText.Text, IgnoreWordClick);
-                AddContextMenuItem(_removeWordText.Text, RemoveWordClick);
-
-                if (_spelling.Suggestions.Count > 0)
-                {
-                    AddContextMenuSeparator();
-                }
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex);
-            }
+            return _isWatermarkShowing ? string.Empty : TextBox.Text;
         }
-
-        private void LoadDictionary()
-        {
-            // Don`t load a dictionary in Design-time
-            if (Site?.DesignMode is true)
-            {
-                return;
-            }
-
-            IDetachedSettings detachedSettings = Settings.Detached();
-            string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), detachedSettings.Dictionary), ".dic");
-
-            if (_wordDictionary is null || _wordDictionary.DictionaryFile != dictionaryFile)
-            {
-                _wordDictionary =
-                    new WordDictionary(components)
-                    {
-                        DictionaryFile = dictionaryFile
-                    };
-            }
-
-            Validates.NotNull(_spelling);
-
-            _spelling.Dictionary = _wordDictionary;
-        }
-
-        private void ToggleAutoCompletion()
-        {
-            if (!AppSettings.ProvideAutocompletion || Site?.DesignMode is true)
-            {
-                CloseAutoComplete();
-                CancelAutoComplete();
-                return;
-            }
-
-            InitializeAutoCompleteWordsTask();
-            CancellationToken cancellationToken = _autoCompleteCancellationTokenSource.Token;
-
-            Validates.NotNull(_autoCompleteListTask);
-            Validates.NotNull(_spelling);
-
-            ThreadHelper.FileAndForget(async () =>
-                {
-                    IEnumerable<AutoCompleteWord> words = await _autoCompleteListTask.GetValueAsync(cancellationToken);
-                    await this.SwitchToMainThreadAsync(cancellationToken);
-
-                    _spelling.AddAutoCompleteWords(words.Select(x => x.Word));
-                });
-        }
-
-        private void SpellingMisspelledWord(object sender, SpellingEventArgs e)
-        {
-            Validates.NotNull(_customUnderlines);
-            _customUnderlines.Lines.Add(new TextPos(e.TextIndex, e.TextIndex + e.Word.Length));
-        }
-
-        public void CheckSpelling()
-        {
-            Validates.NotNull(_customUnderlines);
-
-            _customUnderlines.IllFormedLines.Clear();
-            _customUnderlines.Lines.Clear();
-
-            // Do not check spelling of watermark text
-            if (!_isWatermarkShowing)
-            {
-                try
-                {
-                    if (_spelling is not null && TextBox.Text.Length < 5000)
-                    {
-                        _spelling.Text = TextBox.Text;
-                        _spelling.ShowDialog = false;
-
-                        if (File.Exists(_spelling.Dictionary.DictionaryFile))
-                        {
-                            _spelling.SpellCheck();
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Trace.WriteLine(ex);
-                }
-
-                MarkLines();
-            }
-
-            TextBox.Refresh();
-        }
-
-        private void MarkLines()
-        {
-            if (!AppSettings.MarkIllFormedLinesInCommitMsg)
-            {
-                return;
-            }
-
-            int numLines = TextBox.Lines.Length;
-            int chars = 0;
-            for (int curLine = 0; curLine < numLines; ++curLine)
-            {
-                int curLength = TextBox.Lines[curLine].Length;
-                int curMaxLength = curLine switch
-                {
-                    0 => 50,
-                    1 => 0,
-                    _ => 72
-                };
-
-                if (curLength > curMaxLength)
-                {
-                    Validates.NotNull(_customUnderlines);
-                    _customUnderlines.IllFormedLines.Add(new TextPos(chars + curMaxLength, chars + curLength));
-                }
-
-                chars += curLength + 1;
-            }
-        }
-
-        private void SpellingDeletedWord(object sender, SpellingEventArgs e)
-        {
-            int start = TextBox.SelectionStart;
-            int length = TextBox.SelectionLength;
-
-            TextBox.Select(e.TextIndex, e.Word.Length);
-            TextBox.SelectedText = "";
-
-            if (start > TextBox.Text.Length)
-            {
-                start = TextBox.Text.Length;
-            }
-
-            if ((start + length) > TextBox.Text.Length)
-            {
-                length = 0;
-            }
-
-            TextBox.Select(start, length);
-        }
-
-        private void SpellingReplacedWord(object sender, ReplaceWordEventArgs e)
-        {
-            int start = TextBox.SelectionStart;
-            int length = TextBox.SelectionLength;
-
-            TextBox.Select(e.TextIndex, e.Word.Length);
-            TextBox.SelectedText = e.ReplacementWord;
-
-            if (start > TextBox.Text.Length)
-            {
-                start = TextBox.Text.Length;
-            }
-
-            if ((start + length) > TextBox.Text.Length)
-            {
-                length = 0;
-            }
-
-            TextBox.Select(start, length);
-        }
-
-        private void SpellCheckContextMenuOpening(object sender, CancelEventArgs e)
-        {
-            TextBox.Focus();
-            int pos = TextBox.SelectionStart;
-            if (pos < 0)
-            {
-                e.Cancel = true;
-                return;
-            }
-
-            SpellCheckContextMenu.Items.Clear();
-
-            AddWordSuggestions(pos);
-            AddContextMenuItem(_cutMenuItemText.Text, CutMenuItemClick);
-            AddContextMenuItem(_copyMenuItemText.Text, CopyMenuItemdClick);
-            AddContextMenuItem(_pasteMenuItemText.Text, PasteMenuItemClick);
-            AddContextMenuItem(_deleteMenuItemText.Text, DeleteMenuItemClick);
-            AddContextMenuItem(_selectAllMenuItemText.Text, SelectAllMenuItemClick);
-
-            AddContextMenuSeparator();
-
-            AddDictionaries();
-
-            AddContextMenuSeparator();
-
-            ToolStripMenuItem mi = new(_markIllFormedLinesText.Text)
-            {
-                Checked = AppSettings.MarkIllFormedLinesInCommitMsg
-            };
-            mi.Click += MarkIllFormedLinesInCommitMsgClick;
-            SpellCheckContextMenu.Items.Add(mi);
-
-            mi = new ToolStripMenuItem(_autoCompletionText.Text)
-            {
-                Checked = AppSettings.ProvideAutocompletion
-            };
-            mi.Click += (s, _) =>
-            {
-                AppSettings.ProvideAutocompletion = !AppSettings.ProvideAutocompletion;
-                ToggleAutoCompletion();
-            };
-            SpellCheckContextMenu.Items.Add(mi);
-        }
-
-        private void RemoveWordClick(object sender, EventArgs e)
-        {
-            Validates.NotNull(_spelling);
-            _spelling.DeleteWord();
-            CheckSpelling();
-        }
-
-        private void IgnoreWordClick(object sender, EventArgs e)
-        {
-            Validates.NotNull(_spelling);
-            _spelling.IgnoreWord();
-            CheckSpelling();
-        }
-
-        private void AddToDictionaryClick(object sender, EventArgs e)
-        {
-            Validates.NotNull(_spelling);
-            _spelling.Dictionary.Add(_spelling.CurrentWord);
-            CheckSpelling();
-        }
-
-        private void MarkIllFormedLinesInCommitMsgClick(object sender, EventArgs e)
-        {
-            AppSettings.MarkIllFormedLinesInCommitMsg = !AppSettings.MarkIllFormedLinesInCommitMsg;
-            CheckSpelling();
-        }
-
-        private void SuggestionToolStripItemClick(object sender, EventArgs e)
-        {
-            Validates.NotNull(_spelling);
-            _spelling.ReplaceWord(((ToolStripItem)sender).Text);
-            CheckSpelling();
-        }
-
-        private void DicToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            // if a Module is available, then always change the "repository local" setting
-            // it will set a dictionary only for this Module (repository) locally
-
-            DistributedSettings settings = Module.GetLocalSettings() as DistributedSettings ?? Settings;
-            IDetachedSettings detachedSettings = settings.Detached();
-
-            detachedSettings.Dictionary = ((ToolStripItem)sender).Text;
-
-            LoadDictionary();
-            CheckSpelling();
-        }
-
-        private void SpellCheckTimerTick(object sender, EventArgs e)
-        {
-            Validates.NotNull(_customUnderlines);
-            if (!_customUnderlines.IsImeStartingComposition)
-            {
-                CheckSpelling();
-
-                SpellCheckTimer.Enabled = false;
-                SpellCheckTimer.Interval = 250;
-            }
-        }
-
-        private void TextBoxTextChanged(object sender, EventArgs e)
-        {
-            Validates.NotNull(_customUnderlines);
-            if (_customUnderlines.IsImeStartingComposition)
-            {
-                return;
-            }
-
-            if (!_disableAutoCompleteTriggerOnTextUpdate)
-            {
-                _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
-
-                // Reset when timer is already running
-                if (AutoCompleteTimer.Enabled)
-                {
-                    AutoCompleteTimer.Stop();
-                }
-
-                AutoCompleteTimer.Start();
-            }
-
-            _customUnderlines.Lines.Clear();
-            _customUnderlines.IllFormedLines.Clear();
-
-            if (!_isWatermarkShowing)
-            {
-                OnTextChanged(e);
-
-                IDetachedSettings detachedSettings = Settings.Detached();
-
-                if (detachedSettings.Dictionary is "None" || TextBox.Text.Length < 4)
-                {
-                    return;
-                }
-
-                SpellCheckTimer.Enabled = false;
-                SpellCheckTimer.Interval = 250;
-                SpellCheckTimer.Enabled = true;
-            }
-        }
-
-        private void TextBoxLeave(object sender, EventArgs e)
-        {
-            if (ActiveControl != AutoComplete)
-            {
-                CloseAutoComplete();
-            }
-        }
-
-        private void TextBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            OnKeyUp(e);
-        }
-
-        private bool _skipSelectionUndo;
-
-        private void UndoHighlighting()
-        {
-            if (!_skipSelectionUndo)
-            {
-                return;
-            }
-
-            IsUndoInProgress = true;
-            while (TextBox.UndoActionName == "Unknown")
-            {
-                TextBox.Undo();
-            }
-
-            TextBox.Undo();
-            _skipSelectionUndo = false;
-            IsUndoInProgress = false;
-        }
-
-        private void TextBox_KeyDown(object sender, KeyEventArgs e)
-        {
-            if (!e.Alt && !e.Control && !e.Shift && _keysToSendToAutoComplete.ContainsKey(e.KeyCode) && AutoComplete.Visible)
-            {
-                if (e.KeyCode == Keys.Up && AutoComplete.SelectedIndex == 0)
-                {
-                    AutoComplete.SelectedIndex = AutoComplete.Items.Count - 1;
-                }
-                else if (e.KeyCode == Keys.Down && AutoComplete.SelectedIndex == AutoComplete.Items.Count - 1)
-                {
-                    AutoComplete.SelectedIndex = 0;
-                }
-                else
-                {
-                    AutoComplete.Focus();
-                    SendKeys.SendWait(_keysToSendToAutoComplete[e.KeyCode]);
-                    TextBox.Focus();
-                }
-
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-                return;
-            }
-
-            // handle paste from clipboard (Ctrl+V, Shift+Ins)
-            if ((e.Control && e.KeyCode == Keys.V) || (e.Shift && e.KeyCode == Keys.Insert))
-            {
-                PasteTextFromClipboard();
-                e.Handled = true;
-                return;
-            }
-
-            if (e.Control && !e.Alt && e.KeyCode == Keys.Z)
-            {
-                UndoHighlighting();
-            }
-            else if (e.Control && !e.Alt && e.KeyCode == Keys.Space && AppSettings.ProvideAutocompletion)
-            {
-                UpdateOrShowAutoComplete(true);
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-                return;
-            }
-
-            // handle vertical tab (Shift + Enter)
-            if (e.Shift && e.KeyCode == Keys.Enter)
-            {
-                AddNewLine();
-                e.Handled = true;
-                return;
-            }
-
-            OnKeyDown(e);
-        }
-
-        private void PasteTextFromClipboard()
-        {
-            // insert only text with replace vertical tab to line feed
-            string clipboardText = Clipboard.GetText().Replace('\v', '\n');
-
-            TextBox.SelectedText = clipboardText;
-        }
-
-        private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
-        {
-            bool isSeparator = e.KeyChar.IsSeparator();
-            _disableAutoCompleteTriggerOnTextUpdate = isSeparator;
-
-            if (e.KeyChar == (char)Keys.Back)
-            {
-               // When a character is deleted...
-               if (TextBox.SelectionStart == 0
-                    || TextBox.Text[TextBox.SelectionStart - 1].IsSeparator())
-                {
-                    CloseAutoComplete();
-                }
-            }
-            else if (isSeparator)
-            {
-                CloseAutoComplete();
-            }
-
-            OnKeyPress(e);
-        }
-
-        private void TextBox_SelectionChanged(object sender, EventArgs e)
-        {
-            SelectionChanged?.Invoke(sender, e);
-        }
-
-        private void TextBox_DoubleClick(object sender, EventArgs e)
-        {
-            int charIndexAtMousePosition = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
-            (int start, int length) = _wordAtCursorExtractor.GetWordBounds(TextBox.Text, charIndexAtMousePosition);
-            TextBox.Select(start, length);
-        }
-
-        private void ShowWatermark()
-        {
-            if (!ContainsFocus && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont is not null)
-            {
-                _isWatermarkShowing = true;
-                TextBox.Font = new Font(TextBox.Font, FontStyle.Italic);
-                TextBox.ForeColor = SystemColors.GrayText;
-                TextBox.Text = WatermarkText;
-            }
-        }
-
-        private void HideWatermark()
-        {
-            if (_isWatermarkShowing && TextBoxFont is not null)
-            {
-                TextBox.Font = TextBoxFont;
-                _isWatermarkShowing = false;
-                TextBox.Text = string.Empty;
-                TextBox.ForeColor = SystemColors.WindowText;
-            }
-        }
-
-        private void TextBox_LostFocus(object sender, EventArgs e)
-        {
-            ShowWatermark();
-        }
-
-        private void TextBox_GotFocus(object sender, EventArgs e)
+        set
         {
             HideWatermark();
+            EvaluateForecolor();
+            TextBox.Text = value;
+            ShowWatermark();
+            OnTextAssigned();
+        }
+    }
+
+    public void EvaluateForecolor()
+    {
+        if (Application.IsDarkModeEnabled)
+        {
+            // In dark mode the background color is set to White, but still reported as SystemColors.Window (or adjusted)
+            // The Forecolor must be changed manually
+            TextBox.ForeColor = TextBox.Enabled ? SystemColors.WindowText : SystemColors.HighlightText;
+        }
+    }
+
+    private void OnTextAssigned()
+    {
+        TextAssigned?.Invoke(this, EventArgs.Empty);
+    }
+
+    public string Line(int line)
+    {
+        return TextBox.Lines[line];
+    }
+
+    public void ReplaceLine(int line, string withText)
+    {
+        int oldPos = TextBox.SelectionStart + TextBox.SelectionLength;
+        int startIdx = TextBox.GetFirstCharIndexFromLine(line);
+        TextBox.SelectionLength = 0;
+        TextBox.SelectionStart = startIdx;
+        TextBox.SelectionLength = Line(line).Length;
+        TextBox.SelectedText = withText;
+        TextBox.SelectionLength = 0;
+        TextBox.SelectionStart = oldPos;
+    }
+
+    public int LineLength(int line)
+    {
+        return LineCount() <= line ? 0 : TextBox.Lines[line].Length;
+    }
+
+    public int LineCount()
+    {
+        return TextBox.Lines.Length;
+    }
+
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public Font MistakeFont { get; set; }
+
+    [Browsable(false)]
+    public int CurrentColumn => TextBox.SelectionStart - TextBox.GetFirstCharIndexOfCurrentLine() + 1;
+
+    [Browsable(false)]
+    public int CurrentLine => TextBox.GetLineFromCharIndex(TextBox.SelectionStart) + 1;
+
+    public event EventHandler? SelectionChanged;
+
+    private void EditNetSpellEnabledChanged(object sender, EventArgs e)
+    {
+        if (Enabled)
+        {
+            TextBox.ReadOnly = false;
+            ShowWatermark();
+        }
+        else
+        {
+            TextBox.ReadOnly = true;
+            HideWatermark();
+        }
+    }
+
+    private bool _isWatermarkShowing;
+    private string _watermarkText = "";
+    [Category("Appearance")]
+    [DefaultValue("")]
+    public string WatermarkText
+    {
+        get { return _watermarkText; }
+
+        set
+        {
+            HideWatermark();
+            _watermarkText = value;
+            ShowWatermark();
+        }
+    }
+
+    [Category("Appearance")]
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int SelectionStart
+    {
+        get => TextBox.SelectionStart;
+        set => TextBox.SelectionStart = value;
+    }
+
+    [Category("Appearance")]
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public virtual int SelectionLength
+    {
+        get => TextBox.SelectionLength;
+
+        set => TextBox.SelectionLength = value;
+    }
+
+    [Category("Appearance")]
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public virtual string? SelectedText
+    {
+        get => TextBox.SelectedText;
+        set
+        {
+            HideWatermark();
+            TextBox.SelectedText = value;
+            ShowWatermark();
+        }
+    }
+
+    protected DistributedSettings Settings => Module.GetEffectiveSettings() as DistributedSettings ?? AppSettings.SettingsContainer;
+
+    public void SelectAll()
+    {
+        TextBox.SelectAll();
+    }
+
+    protected override void OnRuntimeLoad()
+    {
+        base.OnRuntimeLoad();
+
+        _customUnderlines = new SpellCheckEditControl(TextBox);
+        TextBox.SelectionChanged += TextBox_SelectionChanged;
+        TextBox.TextChanged += TextBoxTextChanged;
+        TextBox.DoubleClick += TextBox_DoubleClick;
+
+        EnabledChanged += EditNetSpellEnabledChanged;
+
+        ShowWatermark();
+
+        components = new Container();
+        _spelling = new Spelling(components)
+        {
+            ShowDialog = false,
+            IgnoreAllCapsWords = true,
+            IgnoreWordsWithDigits = true
+        };
+
+        ToggleAutoCompletion();
+
+        //
+        // spelling
+        //
+        _spelling.ReplacedWord += SpellingReplacedWord;
+        _spelling.DeletedWord += SpellingDeletedWord;
+        _spelling.MisspelledWord += SpellingMisspelledWord;
+
+        //
+        // wordDictionary
+        //
+        LoadDictionary();
+
+        SpellCheckTimer.Enabled = true;
+    }
+
+    private ToolStripMenuItem AddContextMenuItem(string text, EventHandler eventHandler)
+    {
+        ToolStripMenuItem menuItem = new(text, null, eventHandler);
+        SpellCheckContextMenu.Items.Add(menuItem);
+        return menuItem;
+    }
+
+    private void AddContextMenuSeparator()
+    {
+        SpellCheckContextMenu.Items.Add(new ToolStripSeparator());
+    }
+
+    private void AddDictionaries()
+    {
+        try
+        {
+            ToolStripMenuItem dictionaryToolStripMenuItem = new(_dictionaryText.Text);
+            SpellCheckContextMenu.Items.Add(dictionaryToolStripMenuItem);
+
+            ContextMenuStrip toolStripDropDown = new();
+
+            ToolStripMenuItem noDicToolStripMenuItem = new("None");
+            noDicToolStripMenuItem.Click += DicToolStripMenuItemClick;
+
+            IDetachedSettings detachedSettings = Settings.Detached();
+
+            if (detachedSettings.Dictionary is "None")
+            {
+                noDicToolStripMenuItem.Checked = true;
+            }
+
+            toolStripDropDown.Items.Add(noDicToolStripMenuItem);
+
+            foreach (string fileName in Directory.GetFiles(AppSettings.GetDictionaryDir(), "*.dic", SearchOption.TopDirectoryOnly))
+            {
+                FileInfo file = new(fileName);
+
+                string dic = file.Name.Replace(".dic", "");
+
+                ToolStripMenuItem dicToolStripMenuItem = new(dic);
+                dicToolStripMenuItem.Click += DicToolStripMenuItemClick;
+
+                if (detachedSettings.Dictionary == dic)
+                {
+                    dicToolStripMenuItem.Checked = true;
+                }
+
+                toolStripDropDown.Items.Add(dicToolStripMenuItem);
+            }
+
+            dictionaryToolStripMenuItem.DropDown = toolStripDropDown;
+        }
+        catch (Exception ex)
+        {
+            Trace.WriteLine(ex);
+        }
+    }
+
+    private void AddWordSuggestions(int pos)
+    {
+        if (!AppSettings.ProvideAutocompletion)
+        {
+            return;
         }
 
-        private void CutMenuItemClick(object sender, EventArgs e)
+        try
         {
-            TextBox.Cut();
-            CheckSpelling();
-        }
+            Validates.NotNull(_spelling);
 
-        private void CopyMenuItemdClick(object sender, EventArgs e)
-        {
-            TextBox.Copy();
-        }
+            _spelling.Text = TextBox.Text;
+            _spelling.WordIndex = _spelling.GetWordIndexFromTextIndex(pos);
 
-        private void PasteMenuItemClick(object sender, EventArgs e)
-        {
-            if (!Clipboard.ContainsText())
+            if (_spelling.CurrentWord.Length == 0 || _spelling.TestWord())
             {
                 return;
             }
 
-            PasteTextFromClipboard();
-            CheckSpelling();
-        }
+            _spelling.ShowDialog = false;
+            _spelling.MaxSuggestions = 5;
 
-        private void DeleteMenuItemClick(object sender, EventArgs e)
-        {
-            TextBox.SelectedText = string.Empty;
-            CheckSpelling();
-        }
+            // generate suggestions
+            _spelling.Suggest();
 
-        private void SelectAllMenuItemClick(object sender, EventArgs e)
-        {
-            TextBox.SelectAll();
-        }
-
-        public void ChangeTextColor(int line, int offset, int length, Color color)
-        {
-            int oldPos = TextBox.SelectionStart;
-            Color oldColor = TextBox.SelectionColor;
-            int lineIndex = TextBox.GetFirstCharIndexFromLine(line);
-            TextBox.SelectionStart = Math.Max(lineIndex + offset, 0);
-            TextBox.SelectionLength = length;
-            TextBox.SelectionColor = color;
-            bool restoreColor = oldPos < TextBox.SelectionStart || oldPos > TextBox.SelectionStart + TextBox.SelectionLength;
-
-            TextBox.SelectionLength = 0;
-            TextBox.SelectionStart = oldPos;
-
-            // restore old color only if oldPos doesn't intersects with colored selection
-            if (restoreColor)
+            foreach (string suggestion in _spelling.Suggestions)
             {
-                TextBox.SelectionColor = oldColor;
+                ToolStripMenuItem si = AddContextMenuItem(suggestion, SuggestionToolStripItemClick);
+                si.Font = new Font(si.Font, FontStyle.Bold);
             }
 
-            // undoes all recent selections while ctrl-z pressed
-            _skipSelectionUndo = true;
-        }
+            AddContextMenuItem(_addToDictionaryText.Text, AddToDictionaryClick);
+            AddContextMenuItem(_ignoreWordText.Text, IgnoreWordClick);
+            AddContextMenuItem(_removeWordText.Text, RemoveWordClick);
 
-        /// <summary>
-        /// Make sure this line is empty by inserting a newline at its start.
-        /// </summary>
-        public void EnsureEmptyLine(bool addBullet, int afterLine)
-        {
-            int lineLength = LineLength(afterLine);
-            if (lineLength > 0)
+            if (_spelling.Suggestions.Count > 0)
             {
-                string bullet = addBullet ? " - " : string.Empty;
-                int indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
-                string newLine = Environment.NewLine;
-                int newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;
-                TextBox.SelectionLength = 0;
-                TextBox.SelectionStart = indexOfLine;
-                TextBox.SelectedText = newLine + bullet;
-                TextBox.SelectionLength = 0;
-                TextBox.SelectionStart = newCursorPos;
+                AddContextMenuSeparator();
             }
         }
-
-        public void RefreshAutoCompleteWords()
+        catch (Exception ex)
         {
-            if (AppSettings.ProvideAutocompletion)
-            {
-                InitializeAutoCompleteWordsTask();
-            }
+            Trace.WriteLine(ex);
+        }
+    }
+
+    private void LoadDictionary()
+    {
+        // Don`t load a dictionary in Design-time
+        if (Site?.DesignMode is true)
+        {
+            return;
         }
 
-        private void InitializeAutoCompleteWordsTask()
+        IDetachedSettings detachedSettings = Settings.Detached();
+        string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), detachedSettings.Dictionary), ".dic");
+
+        if (_wordDictionary is null || _wordDictionary.DictionaryFile != dictionaryFile)
         {
+            _wordDictionary =
+                new WordDictionary(components)
+                {
+                    DictionaryFile = dictionaryFile
+                };
+        }
+
+        Validates.NotNull(_spelling);
+
+        _spelling.Dictionary = _wordDictionary;
+    }
+
+    private void ToggleAutoCompletion()
+    {
+        if (!AppSettings.ProvideAutocompletion || Site?.DesignMode is true)
+        {
+            CloseAutoComplete();
             CancelAutoComplete();
-            _autoCompleteCancellationTokenSource = new CancellationTokenSource();
-            CancellationToken cancellationToken = _autoCompleteCancellationTokenSource.Token;
-            _autoCompleteListTask = new AsyncLazy<IEnumerable<AutoCompleteWord>?>(
-                async () =>
-                {
-                    await TaskScheduler.Default.SwitchTo(alwaysYield: true);
-
-                    Task<IEnumerable<AutoCompleteWord>>[] subTasks = _autoCompleteProviders.Select(p => p.GetAutoCompleteWordsAsync(cancellationToken)).ToArray();
-                    try
-                    {
-                        IEnumerable<AutoCompleteWord>[] results = await Task.WhenAll(subTasks);
-                        return results.SelectMany(result => result).Distinct();
-                    }
-                    catch (OperationCanceledException)
-                    {
-                        // WaitAll was cancelled
-                        return null;
-                    }
-                    catch (Exception)
-                    {
-                        if (subTasks.Any(t => t.IsCanceled))
-                        {
-                            // At least one task was cancelled
-                            return null;
-                        }
-
-                        throw;
-                    }
-                },
-                ThreadHelper.JoinableTaskFactory);
+            return;
         }
 
-        public void AddAutoCompleteProvider(IAutoCompleteProvider autoCompleteProvider)
-        {
-            _autoCompleteProviders.Add(autoCompleteProvider);
-        }
+        InitializeAutoCompleteWordsTask();
+        CancellationToken cancellationToken = _autoCompleteCancellationTokenSource.Token;
 
-        protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
-        {
-            if (AutoComplete.Visible)
+        Validates.NotNull(_autoCompleteListTask);
+        Validates.NotNull(_spelling);
+
+        ThreadHelper.FileAndForget(async () =>
             {
-                if (keyData is (Keys.Tab or Keys.Enter))
-                {
-                    AcceptAutoComplete();
-                    return true;
-                }
+                IEnumerable<AutoCompleteWord> words = await _autoCompleteListTask.GetValueAsync(cancellationToken);
+                await this.SwitchToMainThreadAsync(cancellationToken);
 
-                if (keyData == Keys.Escape)
+                _spelling.AddAutoCompleteWords(words.Select(x => x.Word));
+            });
+    }
+
+    private void SpellingMisspelledWord(object sender, SpellingEventArgs e)
+    {
+        Validates.NotNull(_customUnderlines);
+        _customUnderlines.Lines.Add(new TextPos(e.TextIndex, e.TextIndex + e.Word.Length));
+    }
+
+    public void CheckSpelling()
+    {
+        Validates.NotNull(_customUnderlines);
+
+        _customUnderlines.IllFormedLines.Clear();
+        _customUnderlines.Lines.Clear();
+
+        // Do not check spelling of watermark text
+        if (!_isWatermarkShowing)
+        {
+            try
+            {
+                if (_spelling is not null && TextBox.Text.Length < 5000)
                 {
-                    CloseAutoComplete();
-                    return true;
+                    _spelling.Text = TextBox.Text;
+                    _spelling.ShowDialog = false;
+
+                    if (File.Exists(_spelling.Dictionary.DictionaryFile))
+                    {
+                        _spelling.SpellCheck();
+                    }
                 }
             }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex);
+            }
 
-            return base.ProcessCmdKey(ref msg, keyData);
+            MarkLines();
         }
 
-        private string GetWordAtCursor()
+        TextBox.Refresh();
+    }
+
+    private void MarkLines()
+    {
+        if (!AppSettings.MarkIllFormedLinesInCommitMsg)
         {
-            return _wordAtCursorExtractor.Extract(TextBox.Text, TextBox.SelectionStart - 1);
+            return;
         }
 
-        private void CloseAutoComplete()
+        int numLines = TextBox.Lines.Length;
+        int chars = 0;
+        for (int curLine = 0; curLine < numLines; ++curLine)
         {
-            AutoComplete.Hide();
-            _autoCompleteWasUserActivated = false;
+            int curLength = TextBox.Lines[curLine].Length;
+            int curMaxLength = curLine switch
+            {
+                0 => 50,
+                1 => 0,
+                _ => 72
+            };
+
+            if (curLength > curMaxLength)
+            {
+                Validates.NotNull(_customUnderlines);
+                _customUnderlines.IllFormedLines.Add(new TextPos(chars + curMaxLength, chars + curLength));
+            }
+
+            chars += curLength + 1;
+        }
+    }
+
+    private void SpellingDeletedWord(object sender, SpellingEventArgs e)
+    {
+        int start = TextBox.SelectionStart;
+        int length = TextBox.SelectionLength;
+
+        TextBox.Select(e.TextIndex, e.Word.Length);
+        TextBox.SelectedText = "";
+
+        if (start > TextBox.Text.Length)
+        {
+            start = TextBox.Text.Length;
         }
 
-        private void AcceptAutoComplete(AutoCompleteWord? completionWord = null)
+        if ((start + length) > TextBox.Text.Length)
         {
-            completionWord ??= (AutoCompleteWord)AutoComplete.SelectedItem;
-            string word = GetWordAtCursor();
-            TextBox.Select(TextBox.SelectionStart - word.Length, word.Length);
-            TextBox.SelectedText = completionWord.Word;
+            length = 0;
+        }
+
+        TextBox.Select(start, length);
+    }
+
+    private void SpellingReplacedWord(object sender, ReplaceWordEventArgs e)
+    {
+        int start = TextBox.SelectionStart;
+        int length = TextBox.SelectionLength;
+
+        TextBox.Select(e.TextIndex, e.Word.Length);
+        TextBox.SelectedText = e.ReplacementWord;
+
+        if (start > TextBox.Text.Length)
+        {
+            start = TextBox.Text.Length;
+        }
+
+        if ((start + length) > TextBox.Text.Length)
+        {
+            length = 0;
+        }
+
+        TextBox.Select(start, length);
+    }
+
+    private void SpellCheckContextMenuOpening(object sender, CancelEventArgs e)
+    {
+        TextBox.Focus();
+        int pos = TextBox.SelectionStart;
+        if (pos < 0)
+        {
+            e.Cancel = true;
+            return;
+        }
+
+        SpellCheckContextMenu.Items.Clear();
+
+        AddWordSuggestions(pos);
+        AddContextMenuItem(_cutMenuItemText.Text, CutMenuItemClick);
+        AddContextMenuItem(_copyMenuItemText.Text, CopyMenuItemdClick);
+        AddContextMenuItem(_pasteMenuItemText.Text, PasteMenuItemClick);
+        AddContextMenuItem(_deleteMenuItemText.Text, DeleteMenuItemClick);
+        AddContextMenuItem(_selectAllMenuItemText.Text, SelectAllMenuItemClick);
+
+        AddContextMenuSeparator();
+
+        AddDictionaries();
+
+        AddContextMenuSeparator();
+
+        ToolStripMenuItem mi = new(_markIllFormedLinesText.Text)
+        {
+            Checked = AppSettings.MarkIllFormedLinesInCommitMsg
+        };
+        mi.Click += MarkIllFormedLinesInCommitMsgClick;
+        SpellCheckContextMenu.Items.Add(mi);
+
+        mi = new ToolStripMenuItem(_autoCompletionText.Text)
+        {
+            Checked = AppSettings.ProvideAutocompletion
+        };
+        mi.Click += (s, _) =>
+        {
+            AppSettings.ProvideAutocompletion = !AppSettings.ProvideAutocompletion;
+            ToggleAutoCompletion();
+        };
+        SpellCheckContextMenu.Items.Add(mi);
+    }
+
+    private void RemoveWordClick(object sender, EventArgs e)
+    {
+        Validates.NotNull(_spelling);
+        _spelling.DeleteWord();
+        CheckSpelling();
+    }
+
+    private void IgnoreWordClick(object sender, EventArgs e)
+    {
+        Validates.NotNull(_spelling);
+        _spelling.IgnoreWord();
+        CheckSpelling();
+    }
+
+    private void AddToDictionaryClick(object sender, EventArgs e)
+    {
+        Validates.NotNull(_spelling);
+        _spelling.Dictionary.Add(_spelling.CurrentWord);
+        CheckSpelling();
+    }
+
+    private void MarkIllFormedLinesInCommitMsgClick(object sender, EventArgs e)
+    {
+        AppSettings.MarkIllFormedLinesInCommitMsg = !AppSettings.MarkIllFormedLinesInCommitMsg;
+        CheckSpelling();
+    }
+
+    private void SuggestionToolStripItemClick(object sender, EventArgs e)
+    {
+        Validates.NotNull(_spelling);
+        _spelling.ReplaceWord(((ToolStripItem)sender).Text);
+        CheckSpelling();
+    }
+
+    private void DicToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        // if a Module is available, then always change the "repository local" setting
+        // it will set a dictionary only for this Module (repository) locally
+
+        DistributedSettings settings = Module.GetLocalSettings() as DistributedSettings ?? Settings;
+        IDetachedSettings detachedSettings = settings.Detached();
+
+        detachedSettings.Dictionary = ((ToolStripItem)sender).Text;
+
+        LoadDictionary();
+        CheckSpelling();
+    }
+
+    private void SpellCheckTimerTick(object sender, EventArgs e)
+    {
+        Validates.NotNull(_customUnderlines);
+        if (!_customUnderlines.IsImeStartingComposition)
+        {
+            CheckSpelling();
+
+            SpellCheckTimer.Enabled = false;
+            SpellCheckTimer.Interval = 250;
+        }
+    }
+
+    private void TextBoxTextChanged(object sender, EventArgs e)
+    {
+        Validates.NotNull(_customUnderlines);
+        if (_customUnderlines.IsImeStartingComposition)
+        {
+            return;
+        }
+
+        if (!_disableAutoCompleteTriggerOnTextUpdate)
+        {
+            _disableAutoCompleteTriggerOnTextUpdate = true; // only popup on key press
+
+            // Reset when timer is already running
+            if (AutoCompleteTimer.Enabled)
+            {
+                AutoCompleteTimer.Stop();
+            }
+
+            AutoCompleteTimer.Start();
+        }
+
+        _customUnderlines.Lines.Clear();
+        _customUnderlines.IllFormedLines.Clear();
+
+        if (!_isWatermarkShowing)
+        {
+            OnTextChanged(e);
+
+            IDetachedSettings detachedSettings = Settings.Detached();
+
+            if (detachedSettings.Dictionary is "None" || TextBox.Text.Length < 4)
+            {
+                return;
+            }
+
+            SpellCheckTimer.Enabled = false;
+            SpellCheckTimer.Interval = 250;
+            SpellCheckTimer.Enabled = true;
+        }
+    }
+
+    private void TextBoxLeave(object sender, EventArgs e)
+    {
+        if (ActiveControl != AutoComplete)
+        {
+            CloseAutoComplete();
+        }
+    }
+
+    private void TextBox_KeyUp(object sender, KeyEventArgs e)
+    {
+        OnKeyUp(e);
+    }
+
+    private bool _skipSelectionUndo;
+
+    private void UndoHighlighting()
+    {
+        if (!_skipSelectionUndo)
+        {
+            return;
+        }
+
+        IsUndoInProgress = true;
+        while (TextBox.UndoActionName == "Unknown")
+        {
+            TextBox.Undo();
+        }
+
+        TextBox.Undo();
+        _skipSelectionUndo = false;
+        IsUndoInProgress = false;
+    }
+
+    private void TextBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (!e.Alt && !e.Control && !e.Shift && _keysToSendToAutoComplete.ContainsKey(e.KeyCode) && AutoComplete.Visible)
+        {
+            if (e.KeyCode == Keys.Up && AutoComplete.SelectedIndex == 0)
+            {
+                AutoComplete.SelectedIndex = AutoComplete.Items.Count - 1;
+            }
+            else if (e.KeyCode == Keys.Down && AutoComplete.SelectedIndex == AutoComplete.Items.Count - 1)
+            {
+                AutoComplete.SelectedIndex = 0;
+            }
+            else
+            {
+                AutoComplete.Focus();
+                SendKeys.SendWait(_keysToSendToAutoComplete[e.KeyCode]);
+                TextBox.Focus();
+            }
+
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            return;
+        }
+
+        // handle paste from clipboard (Ctrl+V, Shift+Ins)
+        if ((e.Control && e.KeyCode == Keys.V) || (e.Shift && e.KeyCode == Keys.Insert))
+        {
+            PasteTextFromClipboard();
+            e.Handled = true;
+            return;
+        }
+
+        if (e.Control && !e.Alt && e.KeyCode == Keys.Z)
+        {
+            UndoHighlighting();
+        }
+        else if (e.Control && !e.Alt && e.KeyCode == Keys.Space && AppSettings.ProvideAutocompletion)
+        {
+            UpdateOrShowAutoComplete(true);
+            e.Handled = true;
+            e.SuppressKeyPress = true;
+            return;
+        }
+
+        // handle vertical tab (Shift + Enter)
+        if (e.Shift && e.KeyCode == Keys.Enter)
+        {
+            AddNewLine();
+            e.Handled = true;
+            return;
+        }
+
+        OnKeyDown(e);
+    }
+
+    private void PasteTextFromClipboard()
+    {
+        // insert only text with replace vertical tab to line feed
+        string clipboardText = Clipboard.GetText().Replace('\v', '\n');
+
+        TextBox.SelectedText = clipboardText;
+    }
+
+    private void TextBox_KeyPress(object sender, KeyPressEventArgs e)
+    {
+        bool isSeparator = e.KeyChar.IsSeparator();
+        _disableAutoCompleteTriggerOnTextUpdate = isSeparator;
+
+        if (e.KeyChar == (char)Keys.Back)
+        {
+           // When a character is deleted...
+           if (TextBox.SelectionStart == 0
+                || TextBox.Text[TextBox.SelectionStart - 1].IsSeparator())
+            {
+                CloseAutoComplete();
+            }
+        }
+        else if (isSeparator)
+        {
             CloseAutoComplete();
         }
 
-        private void AddNewLine()
+        OnKeyPress(e);
+    }
+
+    private void TextBox_SelectionChanged(object sender, EventArgs e)
+    {
+        SelectionChanged?.Invoke(sender, e);
+    }
+
+    private void TextBox_DoubleClick(object sender, EventArgs e)
+    {
+        int charIndexAtMousePosition = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
+        (int start, int length) = _wordAtCursorExtractor.GetWordBounds(TextBox.Text, charIndexAtMousePosition);
+        TextBox.Select(start, length);
+    }
+
+    private void ShowWatermark()
+    {
+        if (!ContainsFocus && string.IsNullOrEmpty(TextBox.Text) && TextBoxFont is not null)
         {
-            TextBox.SelectedText = "\n";
+            _isWatermarkShowing = true;
+            TextBox.Font = new Font(TextBox.Font, FontStyle.Italic);
+            TextBox.ForeColor = SystemColors.GrayText;
+            TextBox.Text = WatermarkText;
+        }
+    }
+
+    private void HideWatermark()
+    {
+        if (_isWatermarkShowing && TextBoxFont is not null)
+        {
+            TextBox.Font = TextBoxFont;
+            _isWatermarkShowing = false;
+            TextBox.Text = string.Empty;
+            TextBox.ForeColor = SystemColors.WindowText;
+        }
+    }
+
+    private void TextBox_LostFocus(object sender, EventArgs e)
+    {
+        ShowWatermark();
+    }
+
+    private void TextBox_GotFocus(object sender, EventArgs e)
+    {
+        HideWatermark();
+    }
+
+    private void CutMenuItemClick(object sender, EventArgs e)
+    {
+        TextBox.Cut();
+        CheckSpelling();
+    }
+
+    private void CopyMenuItemdClick(object sender, EventArgs e)
+    {
+        TextBox.Copy();
+    }
+
+    private void PasteMenuItemClick(object sender, EventArgs e)
+    {
+        if (!Clipboard.ContainsText())
+        {
+            return;
         }
 
-        private void UpdateOrShowAutoComplete(bool calledByUser)
+        PasteTextFromClipboard();
+        CheckSpelling();
+    }
+
+    private void DeleteMenuItemClick(object sender, EventArgs e)
+    {
+        TextBox.SelectedText = string.Empty;
+        CheckSpelling();
+    }
+
+    private void SelectAllMenuItemClick(object sender, EventArgs e)
+    {
+        TextBox.SelectAll();
+    }
+
+    public void ChangeTextColor(int line, int offset, int length, Color color)
+    {
+        int oldPos = TextBox.SelectionStart;
+        Color oldColor = TextBox.SelectionColor;
+        int lineIndex = TextBox.GetFirstCharIndexFromLine(line);
+        TextBox.SelectionStart = Math.Max(lineIndex + offset, 0);
+        TextBox.SelectionLength = length;
+        TextBox.SelectionColor = color;
+        bool restoreColor = oldPos < TextBox.SelectionStart || oldPos > TextBox.SelectionStart + TextBox.SelectionLength;
+
+        TextBox.SelectionLength = 0;
+        TextBox.SelectionStart = oldPos;
+
+        // restore old color only if oldPos doesn't intersects with colored selection
+        if (restoreColor)
         {
-            if (IsDisposed)
-            {
-                return;
-            }
+            TextBox.SelectionColor = oldColor;
+        }
 
-            Validates.NotNull(_customUnderlines);
-            if (_customUnderlines.IsImeStartingComposition)
-            {
-                return;
-            }
+        // undoes all recent selections while ctrl-z pressed
+        _skipSelectionUndo = true;
+    }
 
-            if (_autoCompleteListTask is null || !AppSettings.ProvideAutocompletion)
-            {
-                return;
-            }
+    /// <summary>
+    /// Make sure this line is empty by inserting a newline at its start.
+    /// </summary>
+    public void EnsureEmptyLine(bool addBullet, int afterLine)
+    {
+        int lineLength = LineLength(afterLine);
+        if (lineLength > 0)
+        {
+            string bullet = addBullet ? " - " : string.Empty;
+            int indexOfLine = TextBox.GetFirstCharIndexFromLine(afterLine);
+            string newLine = Environment.NewLine;
+            int newCursorPos = indexOfLine + newLine.Length + bullet.Length + lineLength - 1;
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = indexOfLine;
+            TextBox.SelectedText = newLine + bullet;
+            TextBox.SelectionLength = 0;
+            TextBox.SelectionStart = newCursorPos;
+        }
+    }
 
-            if (!_autoCompleteListTask.IsValueFactoryCompleted)
-            {
-                _autoCompleteListTask.GetValueAsync().Forget();
+    public void RefreshAutoCompleteWords()
+    {
+        if (AppSettings.ProvideAutocompletion)
+        {
+            InitializeAutoCompleteWordsTask();
+        }
+    }
 
-                if (calledByUser)
+    private void InitializeAutoCompleteWordsTask()
+    {
+        CancelAutoComplete();
+        _autoCompleteCancellationTokenSource = new CancellationTokenSource();
+        CancellationToken cancellationToken = _autoCompleteCancellationTokenSource.Token;
+        _autoCompleteListTask = new AsyncLazy<IEnumerable<AutoCompleteWord>?>(
+            async () =>
+            {
+                await TaskScheduler.Default.SwitchTo(alwaysYield: true);
+
+                Task<IEnumerable<AutoCompleteWord>>[] subTasks = _autoCompleteProviders.Select(p => p.GetAutoCompleteWordsAsync(cancellationToken)).ToArray();
+                try
                 {
-                    AutoCompleteToolTip.Show(
-                            "AutoComplete is not available yet (it is still parsing the changed files).",
-                            TextBox,
-                            GetCursorPosition());
-                    AutoCompleteToolTipTimer.Start();
+                    IEnumerable<AutoCompleteWord>[] results = await Task.WhenAll(subTasks);
+                    return results.SelectMany(result => result).Distinct();
                 }
-
-                return;
-            }
-
-            AutoCompleteToolTipTimer.Stop();
-            AutoCompleteToolTip.Hide(TextBox);
-
-            string word = GetWordAtCursor();
-
-            if (word is null || (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated))
-            {
-                if (AutoComplete.Visible)
+                catch (OperationCanceledException)
                 {
-                    CloseAutoComplete();
+                    // WaitAll was cancelled
+                    return null;
                 }
-
-                return;
-            }
-
-            IEnumerable<AutoCompleteWord> autoCompleteList = ThreadHelper.JoinableTaskFactory.Run(_autoCompleteListTask.GetValueAsync);
-            IReadOnlyList<AutoCompleteWord> list = autoCompleteList.Where(x => x.Matches(word)).ToList();
-
-            if (list.Count == 0)
-            {
-                if (AutoComplete.Visible)
+                catch (Exception)
                 {
-                    CloseAutoComplete();
+                    if (subTasks.Any(t => t.IsCanceled))
+                    {
+                        // At least one task was cancelled
+                        return null;
+                    }
+
+                    throw;
                 }
+            },
+            ThreadHelper.JoinableTaskFactory);
+    }
 
-                return;
-            }
+    public void AddAutoCompleteProvider(IAutoCompleteProvider autoCompleteProvider)
+    {
+        _autoCompleteProviders.Add(autoCompleteProvider);
+    }
 
-            if (list.Count == 1 && calledByUser)
+    protected override bool ProcessCmdKey(ref Message msg, Keys keyData)
+    {
+        if (AutoComplete.Visible)
+        {
+            if (keyData is (Keys.Tab or Keys.Enter))
             {
-                AcceptAutoComplete(list[0]);
-                return;
+                AcceptAutoComplete();
+                return true;
             }
+
+            if (keyData == Keys.Escape)
+            {
+                CloseAutoComplete();
+                return true;
+            }
+        }
+
+        return base.ProcessCmdKey(ref msg, keyData);
+    }
+
+    private string GetWordAtCursor()
+    {
+        return _wordAtCursorExtractor.Extract(TextBox.Text, TextBox.SelectionStart - 1);
+    }
+
+    private void CloseAutoComplete()
+    {
+        AutoComplete.Hide();
+        _autoCompleteWasUserActivated = false;
+    }
+
+    private void AcceptAutoComplete(AutoCompleteWord? completionWord = null)
+    {
+        completionWord ??= (AutoCompleteWord)AutoComplete.SelectedItem;
+        string word = GetWordAtCursor();
+        TextBox.Select(TextBox.SelectionStart - word.Length, word.Length);
+        TextBox.SelectedText = completionWord.Word;
+        CloseAutoComplete();
+    }
+
+    private void AddNewLine()
+    {
+        TextBox.SelectedText = "\n";
+    }
+
+    private void UpdateOrShowAutoComplete(bool calledByUser)
+    {
+        if (IsDisposed)
+        {
+            return;
+        }
+
+        Validates.NotNull(_customUnderlines);
+        if (_customUnderlines.IsImeStartingComposition)
+        {
+            return;
+        }
+
+        if (_autoCompleteListTask is null || !AppSettings.ProvideAutocompletion)
+        {
+            return;
+        }
+
+        if (!_autoCompleteListTask.IsValueFactoryCompleted)
+        {
+            _autoCompleteListTask.GetValueAsync().Forget();
 
             if (calledByUser)
             {
-                _autoCompleteWasUserActivated = true;
+                AutoCompleteToolTip.Show(
+                        "AutoComplete is not available yet (it is still parsing the changed files).",
+                        TextBox,
+                        GetCursorPosition());
+                AutoCompleteToolTipTimer.Start();
             }
 
-            List<Size> sizes = list.Select(x => TextRenderer.MeasureText(x.Word, TextBox.Font)).ToList();
+            return;
+        }
 
-            Point cursorPos = GetCursorPosition();
+        AutoCompleteToolTipTimer.Stop();
+        AutoCompleteToolTip.Hide(TextBox);
 
-            int top = cursorPos.Y;
-            int height = (sizes.Count + 1) * AutoComplete.ItemHeight;
-            int width = sizes.Max(x => x.Width);
-            if (top + height > TextBox.Height)
+        string word = GetWordAtCursor();
+
+        if (word is null || (word.Length <= 1 && !calledByUser && !_autoCompleteWasUserActivated))
+        {
+            if (AutoComplete.Visible)
             {
-                // if reduced height is not too small then shrink only
-                if (TextBox.Height - top > TextBox.Height / 2)
-                {
-                    height = TextBox.Height - top;
-                }
-                else
-                {
-                    // if shrinking wasn't acceptable, move higher
-                    top = Math.Max(0, TextBox.Height - height);
-
-                    // and reduce height if moving up wasn't enough
-                    height = Math.Min(TextBox.Height - top, height);
-                }
-
-                width += SystemInformation.VerticalScrollBarWidth;
+                CloseAutoComplete();
             }
 
-            AutoComplete.SetBounds(cursorPos.X, top, width, height);
-
-            AutoComplete.DataSource = list.ToList();
-            AutoComplete.Show();
-            TextBox.Focus();
+            return;
         }
 
-        private Point GetCursorPosition()
-        {
-            Point cursorPos = TextBox.GetPositionFromCharIndex(TextBox.SelectionStart);
-            cursorPos.Y += (int)Math.Ceiling(TextBox.Font.GetHeight());
-            cursorPos.X += 2;
-            return cursorPos;
-        }
+        IEnumerable<AutoCompleteWord> autoCompleteList = ThreadHelper.JoinableTaskFactory.Run(_autoCompleteListTask.GetValueAsync);
+        IReadOnlyList<AutoCompleteWord> list = autoCompleteList.Where(x => x.Matches(word)).ToList();
 
-        private void AutoComplete_Click(object sender, EventArgs e)
+        if (list.Count == 0)
         {
-            AcceptAutoComplete();
-        }
-
-        private void AutoCompleteTimer_Tick(object sender, EventArgs e)
-        {
-            Validates.NotNull(_customUnderlines);
-            if (!_customUnderlines.IsImeStartingComposition)
+            if (AutoComplete.Visible)
             {
-                UpdateOrShowAutoComplete(false);
-                AutoCompleteTimer.Stop();
+                CloseAutoComplete();
             }
+
+            return;
         }
 
-        public void CancelAutoComplete()
+        if (list.Count == 1 && calledByUser)
         {
-            _autoCompleteCancellationTokenSource.Cancel();
-            AutoCompleteToolTipTimer.Stop();
+            AcceptAutoComplete(list[0]);
+            return;
+        }
+
+        if (calledByUser)
+        {
+            _autoCompleteWasUserActivated = true;
+        }
+
+        List<Size> sizes = list.Select(x => TextRenderer.MeasureText(x.Word, TextBox.Font)).ToList();
+
+        Point cursorPos = GetCursorPosition();
+
+        int top = cursorPos.Y;
+        int height = (sizes.Count + 1) * AutoComplete.ItemHeight;
+        int width = sizes.Max(x => x.Width);
+        if (top + height > TextBox.Height)
+        {
+            // if reduced height is not too small then shrink only
+            if (TextBox.Height - top > TextBox.Height / 2)
+            {
+                height = TextBox.Height - top;
+            }
+            else
+            {
+                // if shrinking wasn't acceptable, move higher
+                top = Math.Max(0, TextBox.Height - height);
+
+                // and reduce height if moving up wasn't enough
+                height = Math.Min(TextBox.Height - top, height);
+            }
+
+            width += SystemInformation.VerticalScrollBarWidth;
+        }
+
+        AutoComplete.SetBounds(cursorPos.X, top, width, height);
+
+        AutoComplete.DataSource = list.ToList();
+        AutoComplete.Show();
+        TextBox.Focus();
+    }
+
+    private Point GetCursorPosition()
+    {
+        Point cursorPos = TextBox.GetPositionFromCharIndex(TextBox.SelectionStart);
+        cursorPos.Y += (int)Math.Ceiling(TextBox.Font.GetHeight());
+        cursorPos.X += 2;
+        return cursorPos;
+    }
+
+    private void AutoComplete_Click(object sender, EventArgs e)
+    {
+        AcceptAutoComplete();
+    }
+
+    private void AutoCompleteTimer_Tick(object sender, EventArgs e)
+    {
+        Validates.NotNull(_customUnderlines);
+        if (!_customUnderlines.IsImeStartingComposition)
+        {
+            UpdateOrShowAutoComplete(false);
             AutoCompleteTimer.Stop();
         }
+    }
 
-        private void AutoCompleteToolTipTimer_Tick(object sender, EventArgs e)
+    public void CancelAutoComplete()
+    {
+        _autoCompleteCancellationTokenSource.Cancel();
+        AutoCompleteToolTipTimer.Stop();
+        AutoCompleteTimer.Stop();
+    }
+
+    private void AutoCompleteToolTipTimer_Tick(object sender, EventArgs e)
+    {
+        AutoCompleteToolTip.Hide(TextBox);
+    }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            AutoCompleteToolTip.Hide(TextBox);
+            CancelAutoComplete();
+            SpellCheckTimer.Stop();
+            _autoCompleteCancellationTokenSource.Dispose();
+            _customUnderlines?.Dispose();
+            components?.Dispose();
         }
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                CancelAutoComplete();
-                SpellCheckTimer.Stop();
-                _autoCompleteCancellationTokenSource.Dispose();
-                _customUnderlines?.Dispose();
-                components?.Dispose();
-            }
+        base.Dispose(disposing);
+    }
 
-            base.Dispose(disposing);
-        }
-
-        private void TextBox_MouseDown(object sender, MouseEventArgs e)
+    private void TextBox_MouseDown(object sender, MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Right)
         {
-            if (e.Button == MouseButtons.Right)
-            {
-                TextBox.SelectionStart = TextBox.GetCharIndexFromPosition(e.Location);
-            }
+            TextBox.SelectionStart = TextBox.GetCharIndexFromPosition(e.Location);
         }
     }
 }

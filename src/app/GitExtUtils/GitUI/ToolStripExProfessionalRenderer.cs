@@ -1,27 +1,26 @@
-﻿namespace GitUI
+﻿namespace GitUI;
+
+internal class ToolStripExProfessionalRenderer : ToolStripProfessionalRenderer
 {
-    internal class ToolStripExProfessionalRenderer : ToolStripProfessionalRenderer
+    public ToolStripExProfessionalRenderer()
     {
-        public ToolStripExProfessionalRenderer()
-        {
-            RoundedEdges = false;
-        }
+        RoundedEdges = false;
+    }
 
-        protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
+    protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
+    {
+        if (e.ToolStrip.GetMenuItemBackgroundFilter()?.ShouldRenderMenuItemBackground(e) != false)
         {
-            if (e.ToolStrip.GetMenuItemBackgroundFilter()?.ShouldRenderMenuItemBackground(e) != false)
-            {
-                base.OnRenderMenuItemBackground(e);
-            }
+            base.OnRenderMenuItemBackground(e);
         }
+    }
 
-        protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
+    protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
+    {
+        if (e.ToolStrip is not IToolStripEx { DrawBorder: false })
         {
-            if (e.ToolStrip is not IToolStripEx { DrawBorder: false })
-            {
-                // render border
-                base.OnRenderToolStripBorder(e);
-            }
+            // render border
+            base.OnRenderToolStripBorder(e);
         }
     }
 }

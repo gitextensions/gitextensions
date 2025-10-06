@@ -1,78 +1,77 @@
 ﻿using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
-namespace GitUI.UserControls.RevisionGrid.Columns
+namespace GitUI.UserControls.RevisionGrid.Columns;
+
+internal readonly struct MultilineIndicator
 {
-    internal readonly struct MultilineIndicator
+    private static readonly Brush _indicatorForeBrush = new SolidBrush(Color.FromArgb(128, SystemColors.WindowText));
+    private static readonly Brush _indicatorBackBrush = new SolidBrush(Color.FromArgb(32, SystemColors.WindowText));
+
+    private const int DotCount = 3;
+
+    private static readonly int paddingX = DpiUtil.Scale(4);
+    private static readonly int paddingTop = DpiUtil.Scale(5);
+    private static readonly int paddingBottom = DpiUtil.Scale(4);
+    private static readonly int marginX = DpiUtil.Scale(4);
+    private static readonly int dotSize = DpiUtil.Scale(2);
+    private static readonly int dotSpacing = DpiUtil.Scale(2);
+
+    private readonly DataGridViewCellPaintingEventArgs _e;
+    private readonly int _indicatorReservedWidth;
+    private readonly int _indicatorRectHeight;
+    private readonly int _indicatorRectWidth;
+    private readonly bool _isMultiline;
+
+    public Rectangle RemainingCellBounds => _isMultiline ? _e.CellBounds.ReduceRight(_indicatorReservedWidth) : _e.CellBounds;
+
+    public MultilineIndicator(DataGridViewCellPaintingEventArgs e, GitRevision revision)
     {
-        private static readonly Brush _indicatorForeBrush = new SolidBrush(Color.FromArgb(128, SystemColors.WindowText));
-        private static readonly Brush _indicatorBackBrush = new SolidBrush(Color.FromArgb(32, SystemColors.WindowText));
+        _e = e;
 
-        private const int DotCount = 3;
+        _isMultiline = revision.HasMultiLineMessage;
 
-        private static readonly int paddingX = DpiUtil.Scale(4);
-        private static readonly int paddingTop = DpiUtil.Scale(5);
-        private static readonly int paddingBottom = DpiUtil.Scale(4);
-        private static readonly int marginX = DpiUtil.Scale(4);
-        private static readonly int dotSize = DpiUtil.Scale(2);
-        private static readonly int dotSpacing = DpiUtil.Scale(2);
-
-        private readonly DataGridViewCellPaintingEventArgs _e;
-        private readonly int _indicatorReservedWidth;
-        private readonly int _indicatorRectHeight;
-        private readonly int _indicatorRectWidth;
-        private readonly bool _isMultiline;
-
-        public Rectangle RemainingCellBounds => _isMultiline ? _e.CellBounds.ReduceRight(_indicatorReservedWidth) : _e.CellBounds;
-
-        public MultilineIndicator(DataGridViewCellPaintingEventArgs e, GitRevision revision)
+        if (_isMultiline)
         {
-            _e = e;
+            _indicatorRectWidth = paddingX + paddingX + (DotCount * (dotSize + dotSpacing)) - dotSpacing;
+            _indicatorReservedWidth = _indicatorRectWidth + marginX + marginX;
+            _indicatorRectHeight = dotSize + paddingTop + paddingBottom;
 
-            _isMultiline = revision.HasMultiLineMessage;
-
-            if (_isMultiline)
+            if (e.CellBounds.Width < 2 * _indicatorReservedWidth)
             {
-                _indicatorRectWidth = paddingX + paddingX + (DotCount * (dotSize + dotSpacing)) - dotSpacing;
-                _indicatorReservedWidth = _indicatorRectWidth + marginX + marginX;
-                _indicatorRectHeight = dotSize + paddingTop + paddingBottom;
-
-                if (e.CellBounds.Width < 2 * _indicatorReservedWidth)
-                {
-                    _isMultiline = false;
-                }
-            }
-            else
-            {
-                _indicatorRectWidth = 0;
-                _indicatorRectHeight = 0;
-                _indicatorReservedWidth = 0;
+                _isMultiline = false;
             }
         }
-
-        public void Render()
+        else
         {
-            if (!_isMultiline)
-            {
-                return;
-            }
+            _indicatorRectWidth = 0;
+            _indicatorRectHeight = 0;
+            _indicatorReservedWidth = 0;
+        }
+    }
 
-            Rectangle indicatorRect = new(
-                _e.CellBounds.Right - marginX - _indicatorRectWidth,
-                _e.CellBounds.Y + ((_e.CellBounds.Height - _indicatorRectHeight) / 2),
-                _indicatorRectWidth,
-                _indicatorRectHeight);
+    public void Render()
+    {
+        if (!_isMultiline)
+        {
+            return;
+        }
 
-            _e.Graphics.FillRectangle(_indicatorBackBrush, indicatorRect);
+        Rectangle indicatorRect = new(
+            _e.CellBounds.Right - marginX - _indicatorRectWidth,
+            _e.CellBounds.Y + ((_e.CellBounds.Height - _indicatorRectHeight) / 2),
+            _indicatorRectWidth,
+            _indicatorRectHeight);
 
-            int x = indicatorRect.X + paddingX;
-            int y = indicatorRect.Y + paddingTop;
+        _e.Graphics.FillRectangle(_indicatorBackBrush, indicatorRect);
 
-            for (int i = 0; i < DotCount; i++)
-            {
-                _e.Graphics.FillRectangle(_indicatorForeBrush, x, y, dotSize, dotSize);
-                x += dotSize + dotSpacing;
-            }
+        int x = indicatorRect.X + paddingX;
+        int y = indicatorRect.Y + paddingTop;
+
+        for (int i = 0; i < DotCount; i++)
+        {
+            _e.Graphics.FillRectangle(_indicatorForeBrush, x, y, dotSize, dotSize);
+            x += dotSize + dotSpacing;
         }
     }
 }

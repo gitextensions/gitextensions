@@ -11,203 +11,202 @@ using System.Text;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
-namespace BugReporter.Serialization
+namespace BugReporter.Serialization;
+
+[Serializable]
+public class SerializableException
 {
-    [Serializable]
-    public class SerializableException
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SerializableException"/> class.
+    /// Default constructor provided for XML serialization and de-serialization.
+    /// </summary>
+    public SerializableException()
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SerializableException"/> class.
-        /// Default constructor provided for XML serialization and de-serialization.
-        /// </summary>
-        public SerializableException()
+    }
+
+    public SerializableException(Exception exception)
+    {
+        OriginalException = exception ?? throw new ArgumentNullException();
+
+        CultureInfo oldCulture = Thread.CurrentThread.CurrentCulture;
+        CultureInfo oldUICulture = Thread.CurrentThread.CurrentUICulture;
+
+        try
         {
-        }
+            // Prefer messages in English, instead of in language of the user.
+            Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
+            Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
-        public SerializableException(Exception exception)
-        {
-            OriginalException = exception ?? throw new ArgumentNullException();
+            Type = exception.GetType().ToString();
 
-            CultureInfo oldCulture = Thread.CurrentThread.CurrentCulture;
-            CultureInfo oldUICulture = Thread.CurrentThread.CurrentUICulture;
-
-            try
+            if (exception.Data.Count != 0)
             {
-                // Prefer messages in English, instead of in language of the user.
-                Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
-                Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-
-                Type = exception.GetType().ToString();
-
-                if (exception.Data.Count != 0)
+                foreach (DictionaryEntry entry in exception.Data)
                 {
-                    foreach (DictionaryEntry entry in exception.Data)
+                    if (entry.Value is not null)
                     {
-                        if (entry.Value is not null)
-                        {
-                            // Assign 'Data' property only if there is at least one entry with non-null value
-                            Data ??= [];
+                        // Assign 'Data' property only if there is at least one entry with non-null value
+                        Data ??= [];
 
-                            Data.Add(entry.Key, entry.Value);
-                        }
+                        Data.Add(entry.Key, entry.Value);
                     }
                 }
-
-                if (exception.HelpLink is not null)
-                {
-                    HelpLink = exception.HelpLink;
-                }
-
-                if (exception.InnerException is not null)
-                {
-                    InnerException = new SerializableException(exception.InnerException);
-                }
-
-                if (exception is AggregateException)
-                {
-                    InnerExceptions = [];
-
-                    foreach (Exception innerException in ((AggregateException)exception).InnerExceptions)
-                    {
-                        InnerExceptions.Add(new SerializableException(innerException));
-                    }
-
-                    InnerExceptions.RemoveAt(0);
-                }
-
-                Message = exception.Message != string.Empty ? exception.Message : string.Empty;
-
-                if (exception.Source is not null)
-                {
-                    Source = exception.Source;
-                }
-
-                if (exception.StackTrace is not null)
-                {
-                    StackTrace = exception.StackTrace;
-                }
-
-                if (exception.TargetSite is not null)
-                {
-                    TargetSite = string.Format("{0} @ {1}", exception.TargetSite, exception.TargetSite.DeclaringType);
-                }
-
-                ExtendedInformation = GetExtendedInformation(exception);
             }
-            finally
+
+            if (exception.HelpLink is not null)
             {
-                Thread.CurrentThread.CurrentCulture = oldCulture;
-                Thread.CurrentThread.CurrentUICulture = oldUICulture;
+                HelpLink = exception.HelpLink;
             }
+
+            if (exception.InnerException is not null)
+            {
+                InnerException = new SerializableException(exception.InnerException);
+            }
+
+            if (exception is AggregateException)
+            {
+                InnerExceptions = [];
+
+                foreach (Exception innerException in ((AggregateException)exception).InnerExceptions)
+                {
+                    InnerExceptions.Add(new SerializableException(innerException));
+                }
+
+                InnerExceptions.RemoveAt(0);
+            }
+
+            Message = exception.Message != string.Empty ? exception.Message : string.Empty;
+
+            if (exception.Source is not null)
+            {
+                Source = exception.Source;
+            }
+
+            if (exception.StackTrace is not null)
+            {
+                StackTrace = exception.StackTrace;
+            }
+
+            if (exception.TargetSite is not null)
+            {
+                TargetSite = string.Format("{0} @ {1}", exception.TargetSite, exception.TargetSite.DeclaringType);
+            }
+
+            ExtendedInformation = GetExtendedInformation(exception);
+        }
+        finally
+        {
+            Thread.CurrentThread.CurrentCulture = oldCulture;
+            Thread.CurrentThread.CurrentUICulture = oldUICulture;
+        }
+    }
+
+    public SerializableDictionary<object, object>? Data { get; set; }
+
+    public SerializableDictionary<string, object>? ExtendedInformation { get; set; }
+
+    public string? HelpLink { get; set; }
+
+    public SerializableException? InnerException { get; set; }
+
+    public List<SerializableException>? InnerExceptions { get; set; }
+
+    public string? Message { get; set; }
+
+    public Exception? OriginalException { get; }
+
+    public string? Source { get; set; }
+
+    public string? StackTrace { get; set; }
+
+    // This will make TargetSite property XML serializable but RuntimeMethodInfo class does not have a parameterless
+    // constructor thus the serializer throws an exception if full info is used
+    public string? TargetSite { get; set; }
+
+    public string? Type { get; set; }
+
+    public override string ToString()
+    {
+        if (OriginalException is not null)
+        {
+            return OriginalException.ToString();
         }
 
-        public SerializableDictionary<object, object>? Data { get; set; }
+        StringBuilder output = new();
+        output.Append($"{Type}: {Message}");
 
-        public SerializableDictionary<string, object>? ExtendedInformation { get; set; }
-
-        public string? HelpLink { get; set; }
-
-        public SerializableException? InnerException { get; set; }
-
-        public List<SerializableException>? InnerExceptions { get; set; }
-
-        public string? Message { get; set; }
-
-        public Exception? OriginalException { get; }
-
-        public string? Source { get; set; }
-
-        public string? StackTrace { get; set; }
-
-        // This will make TargetSite property XML serializable but RuntimeMethodInfo class does not have a parameterless
-        // constructor thus the serializer throws an exception if full info is used
-        public string? TargetSite { get; set; }
-
-        public string? Type { get; set; }
-
-        public override string ToString()
+        Stack<SerializableException> inners = new();
+        SerializableException? inner = InnerException;
+        while (inner is not null)
         {
-            if (OriginalException is not null)
-            {
-                return OriginalException.ToString();
-            }
-
-            StringBuilder output = new();
-            output.Append($"{Type}: {Message}");
-
-            Stack<SerializableException> inners = new();
-            SerializableException? inner = InnerException;
-            while (inner is not null)
-            {
-                output.Append($" ---> {inner.Type}: {inner.Message}");
-                inners.Push(inner);
-                inner = inner.InnerException;
-            }
-
-            output.AppendLine();
-
-            while (inners.Count > 0)
-            {
-                inner = inners.Pop();
-                output.AppendLine(inner.StackTrace);
-                output.AppendLine("   --- End of inner exception stack trace ---");
-            }
-
-            output.AppendLine(StackTrace);
-
-            return output.ToString();
+            output.Append($" ---> {inner.Type}: {inner.Message}");
+            inners.Push(inner);
+            inner = inner.InnerException;
         }
 
-        public string ToXmlString()
+        output.AppendLine();
+
+        while (inners.Count > 0)
         {
-            XmlSerializer serializer = new(typeof(SerializableException));
-            using MemoryStream stream = new();
-            stream.SetLength(0);
-            serializer.Serialize(stream, this);
-            stream.Position = 0;
-            XDocument doc = XDocument.Load(stream);
-            return doc.Root.ToString();
+            inner = inners.Pop();
+            output.AppendLine(inner.StackTrace);
+            output.AppendLine("   --- End of inner exception stack trace ---");
         }
 
-        public static SerializableException FromXmlString(string xml)
+        output.AppendLine(StackTrace);
+
+        return output.ToString();
+    }
+
+    public string ToXmlString()
+    {
+        XmlSerializer serializer = new(typeof(SerializableException));
+        using MemoryStream stream = new();
+        stream.SetLength(0);
+        serializer.Serialize(stream, this);
+        stream.Position = 0;
+        XDocument doc = XDocument.Load(stream);
+        return doc.Root.ToString();
+    }
+
+    public static SerializableException FromXmlString(string xml)
+    {
+        XmlSerializer serializer = new(typeof(SerializableException));
+        using StringReader reader = new(xml);
+        SerializableException exception = (SerializableException)serializer.Deserialize(reader);
+
+        if (exception.StackTrace?.IndexOf(Environment.NewLine) < 0)
         {
-            XmlSerializer serializer = new(typeof(SerializableException));
-            using StringReader reader = new(xml);
-            SerializableException exception = (SerializableException)serializer.Deserialize(reader);
-
-            if (exception.StackTrace?.IndexOf(Environment.NewLine) < 0)
-            {
-                // Presume that the payload was serialized with \n only
-                exception.StackTrace = exception.StackTrace.Replace("\n", Environment.NewLine);
-            }
-
-            return exception;
+            // Presume that the payload was serialized with \n only
+            exception.StackTrace = exception.StackTrace.Replace("\n", Environment.NewLine);
         }
 
-        private SerializableDictionary<string, object>? GetExtendedInformation(Exception exception)
+        return exception;
+    }
+
+    private SerializableDictionary<string, object>? GetExtendedInformation(Exception exception)
+    {
+        PropertyInfo[] extendedProperties = (from property in exception.GetType().GetProperties()
+                                  where
+                                      property.Name != "Data" && property.Name != "InnerExceptions" && property.Name != "InnerException"
+                                      && property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace"
+                                      && property.Name != "TargetSite" && property.Name != "HelpLink" && property.CanRead
+                                  select property).ToArray();
+
+        if (extendedProperties.Any())
         {
-            PropertyInfo[] extendedProperties = (from property in exception.GetType().GetProperties()
-                                      where
-                                          property.Name != "Data" && property.Name != "InnerExceptions" && property.Name != "InnerException"
-                                          && property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace"
-                                          && property.Name != "TargetSite" && property.Name != "HelpLink" && property.CanRead
-                                      select property).ToArray();
+            SerializableDictionary<string, object> extendedInformation = [];
 
-            if (extendedProperties.Any())
+            foreach (PropertyInfo property in extendedProperties.Where(property => property.GetValue(exception, null) is not null))
             {
-                SerializableDictionary<string, object> extendedInformation = [];
-
-                foreach (PropertyInfo property in extendedProperties.Where(property => property.GetValue(exception, null) is not null))
-                {
-                    extendedInformation.Add(property.Name, property.GetValue(exception, null));
-                }
-
-                return extendedInformation;
+                extendedInformation.Add(property.Name, property.GetValue(exception, null));
             }
-            else
-            {
-                return null;
-            }
+
+            return extendedInformation;
+        }
+        else
+        {
+            return null;
         }
     }
 }

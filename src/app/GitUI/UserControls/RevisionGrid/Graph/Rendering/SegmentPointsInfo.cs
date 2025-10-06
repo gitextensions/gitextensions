@@ -1,9 +1,8 @@
-﻿namespace GitUI.UserControls.RevisionGrid.Graph.Rendering
+﻿namespace GitUI.UserControls.RevisionGrid.Graph.Rendering;
+
+internal ref struct SegmentPointsInfo
 {
-    internal ref struct SegmentPointsInfo
-    {
-        public Point Start;
-        public Point Center;
-        public Point End;
-    }
+    public Point Start;
+    public Point Center;
+    public Point End;
 }

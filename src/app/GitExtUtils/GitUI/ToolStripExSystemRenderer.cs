@@ -1,22 +1,21 @@
-﻿namespace GitUI
-{
-    public sealed class ToolStripExSystemRenderer : ToolStripSystemRenderer
-    {
-        protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
-        {
-            if (e.ToolStrip.GetMenuItemBackgroundFilter()?.ShouldRenderMenuItemBackground(e) != false)
-            {
-                base.OnRenderMenuItemBackground(e);
-            }
-        }
+﻿namespace GitUI;
 
-        protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
+public sealed class ToolStripExSystemRenderer : ToolStripSystemRenderer
+{
+    protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
+    {
+        if (e.ToolStrip.GetMenuItemBackgroundFilter()?.ShouldRenderMenuItemBackground(e) != false)
         {
-            if (e.ToolStrip is not IToolStripEx { DrawBorder: false })
-            {
-                // render border
-                base.OnRenderToolStripBorder(e);
-            }
+            base.OnRenderMenuItemBackground(e);
+        }
+    }
+
+    protected override void OnRenderToolStripBorder(ToolStripRenderEventArgs e)
+    {
+        if (e.ToolStrip is not IToolStripEx { DrawBorder: false })
+        {
+            // render border
+            base.OnRenderToolStripBorder(e);
         }
     }
 }

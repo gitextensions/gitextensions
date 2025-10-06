@@ -1,8 +1,7 @@
-﻿namespace GitExtUtils.GitUI.Theming
+﻿namespace GitExtUtils.GitUI.Theming;
+
+public interface IThemeSerializationData
 {
-    public interface IThemeSerializationData
-    {
-        IReadOnlyDictionary<AppColor, Color> AppColorValues { get; }
-        IReadOnlyDictionary<KnownColor, Color> SysColorValues { get; }
-    }
+    IReadOnlyDictionary<AppColor, Color> AppColorValues { get; }
+    IReadOnlyDictionary<KnownColor, Color> SysColorValues { get; }
 }

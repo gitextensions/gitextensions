@@ -1,23 +1,22 @@
 ﻿using GitCommands;
 using GitUI.Properties;
 
-namespace GitUI.Shells
+namespace GitUI.Shells;
+
+public class PwshShell : ShellDescriptor
 {
-    public class PwshShell : ShellDescriptor
+    public PwshShell()
     {
-        public PwshShell()
+        Name = "pwsh";
+        Icon = Images.pwsh;
+
+        ExecutableName = "pwsh.exe";
+        if (PathUtil.TryFindShellPath(ExecutableName, out string? exePath))
         {
-            Name = "pwsh";
-            Icon = Images.pwsh;
-
-            ExecutableName = "pwsh.exe";
-            if (PathUtil.TryFindShellPath(ExecutableName, out string? exePath))
-            {
-                ExecutablePath = exePath;
-                ExecutableCommandLine = exePath.Quote();
-            }
+            ExecutablePath = exePath;
+            ExecutableCommandLine = exePath.Quote();
         }
-
-        public override string GetChangeDirCommand(string path) => $"cd {path.QuoteNE()}";
     }
+
+    public override string GetChangeDirCommand(string path) => $"cd {path.QuoteNE()}";
 }
