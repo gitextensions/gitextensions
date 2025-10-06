@@ -111,7 +111,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void Should_display_branch_and_no_remote_info_in_statusbar()
         {
-            _referenceRepository.CheckoutBranch("master");
+            string defaultBranchName = GitConfigurationHelper.GetSetting("init.defaultbranch", "master");
+
+            _referenceRepository.CheckoutBranch(defaultBranchName);
             RunFormTest(async form =>
             {
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
@@ -119,7 +121,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 ToolStripStatusLabel currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 ToolStripStatusLabel remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
-                ClassicAssert.AreEqual("master →", currentBranchNameLabelStatus.Text);
+                ClassicAssert.AreEqual($"{defaultBranchName} →", currentBranchNameLabelStatus.Text);
                 ClassicAssert.AreEqual("(remote not configured)", remoteNameLabelStatus.Text);
             });
         }
@@ -150,7 +152,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void Should_display_branch_and_remote_info_in_statusbar()
         {
-            _referenceRepository.CreateRemoteForMasterBranch();
+            string defaultBranchName = GitConfigurationHelper.GetSetting("init.defaultbranch", "master");
+
+            _referenceRepository.CreateRemoteForMasterBranch(defaultBranchName);
             RunFormTest(async form =>
             {
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
@@ -158,8 +162,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 ToolStripStatusLabel currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 ToolStripStatusLabel remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
-                ClassicAssert.AreEqual("master →", currentBranchNameLabelStatus.Text);
-                ClassicAssert.AreEqual("origin/master", remoteNameLabelStatus.Text);
+                ClassicAssert.AreEqual($"{defaultBranchName} →", currentBranchNameLabelStatus.Text);
+                ClassicAssert.AreEqual($"origin/{defaultBranchName}", remoteNameLabelStatus.Text);
             });
         }
 

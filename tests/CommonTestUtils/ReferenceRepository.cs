@@ -161,17 +161,17 @@ namespace CommonTestUtils
             Commands.Checkout(repository, branchName, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
         }
 
-        public void CreateRemoteForMasterBranch()
+        public void CreateRemoteForMasterBranch(string defaultBranchName = "master")
         {
             using Repository repository = new(Module.WorkingDir);
             repository.Network.Remotes.Add("origin", "http://useless.url");
             Remote remote = repository.Network.Remotes["origin"];
 
-            Branch masterBranch = repository.Branches["master"];
+            Branch defaultBranch = repository.Branches[defaultBranchName];
 
-            repository.Branches.Update(masterBranch,
+            repository.Branches.Update(defaultBranch,
                 b => b.Remote = remote.Name,
-                b => b.UpstreamBranch = masterBranch.CanonicalName);
+                b => b.UpstreamBranch = defaultBranch.CanonicalName);
 
             Module.InvalidateGitSettings();
             Module.GetEffectiveSetting("reload now");

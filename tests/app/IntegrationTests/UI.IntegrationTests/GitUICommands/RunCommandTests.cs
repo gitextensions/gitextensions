@@ -104,7 +104,9 @@ namespace GitUITests.GitUICommandsTests
         [Test]
         public void RunCommandBasedOnArgument_branch()
         {
-            _referenceRepository.CheckoutBranch("master");
+            string defaultBranchName = GitConfigurationHelper.GetSetting("init.defaultbranch", "master");
+
+            _referenceRepository.CheckoutBranch(defaultBranchName);
             RunCommandBasedOnArgument<FormCreateBranch>(new string[] { "ge.exe", "branch" }, runTest: form =>
             {
                 SetText(form, "BranchNameTextBox", "branchname");
