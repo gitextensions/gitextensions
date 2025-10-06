@@ -2,78 +2,77 @@
 using GitExtensions.Extensibility;
 using Timer = System.Timers.Timer;
 
-namespace GitCommands.Utils
+namespace GitCommands.Utils;
+
+public class WeakRefCache : IDisposable
 {
-    public class WeakRefCache : IDisposable
+    private readonly Lock _weakMapLock = new();
+    private readonly Dictionary<string, WeakReference> _weakMap = [];
+    private readonly Timer _clearTimer = new(60 * 1000);
+
+    public static readonly WeakRefCache Default = new();
+
+    public WeakRefCache()
     {
-        private readonly Lock _weakMapLock = new();
-        private readonly Dictionary<string, WeakReference> _weakMap = [];
-        private readonly Timer _clearTimer = new(60 * 1000);
+        _clearTimer.Elapsed += OnClearTimer;
+        _clearTimer.Start();
+    }
 
-        public static readonly WeakRefCache Default = new();
+    // TODO add expiration time (MemoryCache) after change to .net 4 full profile
 
-        public WeakRefCache()
+    public T Get<T>(string objectUniqueKey, Lazy<T> provideObject)
+    {
+        object? cached = null;
+
+        lock (_weakMapLock)
         {
-            _clearTimer.Elapsed += OnClearTimer;
-            _clearTimer.Start();
-        }
-
-        // TODO add expiration time (MemoryCache) after change to .net 4 full profile
-
-        public T Get<T>(string objectUniqueKey, Lazy<T> provideObject)
-        {
-            object? cached = null;
-
-            lock (_weakMapLock)
+            if (_weakMap.TryGetValue(objectUniqueKey, out WeakReference weakReference))
             {
-                if (_weakMap.TryGetValue(objectUniqueKey, out WeakReference weakReference))
-                {
-                    cached = weakReference.Target;
-                }
-
-                if (cached is null)
-                {
-                    cached = provideObject.Value;
-                    _weakMap[objectUniqueKey] = new WeakReference(cached);
-                }
-                else
-                {
-                    if (cached is not T)
-                    {
-                        throw new InvalidCastException("Incompatible class for object: " + objectUniqueKey + ". Expected: " + typeof(T).FullName + ", found: " + cached.GetType().FullName);
-                    }
-                }
+                cached = weakReference.Target;
             }
 
-            DebugHelpers.Assert(cached is not null, "cached is not null -- if this is violated, the annotations on SettingsContainer<,>.ctor cache are wrong");
-
-            return (T)cached!;
-        }
-
-        private void OnClearTimer(object source, ElapsedEventArgs e)
-        {
-            lock (_weakMapLock)
+            if (cached is null)
             {
-                string[] toRemove = _weakMap.Where(p => !p.Value.IsAlive).Select(p => p.Key).ToArray();
-                foreach (string key in toRemove)
+                cached = provideObject.Value;
+                _weakMap[objectUniqueKey] = new WeakReference(cached);
+            }
+            else
+            {
+                if (cached is not T)
                 {
-                    _weakMap.Remove(key);
+                    throw new InvalidCastException("Incompatible class for object: " + objectUniqueKey + ". Expected: " + typeof(T).FullName + ", found: " + cached.GetType().FullName);
                 }
             }
         }
 
-        public void Dispose()
-        {
-            Dispose(true);
-            GC.SuppressFinalize(this);
-        }
+        DebugHelpers.Assert(cached is not null, "cached is not null -- if this is violated, the annotations on SettingsContainer<,>.ctor cache are wrong");
 
-        protected virtual void Dispose(bool disposing)
+        return (T)cached!;
+    }
+
+    private void OnClearTimer(object source, ElapsedEventArgs e)
+    {
+        lock (_weakMapLock)
         {
-            if (disposing)
+            string[] toRemove = _weakMap.Where(p => !p.Value.IsAlive).Select(p => p.Key).ToArray();
+            foreach (string key in toRemove)
             {
-                _clearTimer.Dispose();
+                _weakMap.Remove(key);
             }
+        }
+    }
+
+    public void Dispose()
+    {
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
+
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _clearTimer.Dispose();
         }
     }
 }

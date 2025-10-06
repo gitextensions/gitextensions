@@ -1,23 +1,22 @@
 ﻿using System.Windows.Forms;
 
-namespace GitUI.CommandsDialogs.SettingsDialog
+namespace GitUI.CommandsDialogs.SettingsDialog;
+
+partial class SettingsPageBase
 {
-    partial class SettingsPageBase
+    private void InitializeComponent()
     {
-        private void InitializeComponent()
-        {
-            components = new System.ComponentModel.Container();
-            toolTip1 = new ToolTip(components);
-            SuspendLayout();
-            // 
-            // SettingsPageBase
-            // 
-            Name = "SettingsPageBase";
-            ResumeLayout(false);
+        components = new System.ComponentModel.Container();
+        toolTip1 = new ToolTip(components);
+        SuspendLayout();
+        // 
+        // SettingsPageBase
+        // 
+        Name = "SettingsPageBase";
+        ResumeLayout(false);
 
-        }
-
-        private ToolTip toolTip1;
-        private System.ComponentModel.IContainer components;
     }
+
+    private ToolTip toolTip1;
+    private System.ComponentModel.IContainer components;
 }

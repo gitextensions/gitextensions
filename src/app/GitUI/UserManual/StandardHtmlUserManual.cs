@@ -1,23 +1,22 @@
 ﻿using GitCommands;
 
-namespace GitUI.UserManual
+namespace GitUI.UserManual;
+
+public class StandardHtmlUserManual : IProvideUserManual
 {
-    public class StandardHtmlUserManual : IProvideUserManual
+    private readonly string _subFolder;
+    private readonly string _anchorName;
+
+    public StandardHtmlUserManual(string subFolder, string anchorName)
     {
-        private readonly string _subFolder;
-        private readonly string _anchorName;
+        _subFolder = subFolder;
+        _anchorName = anchorName;
+    }
 
-        public StandardHtmlUserManual(string subFolder, string anchorName)
-        {
-            _subFolder = subFolder;
-            _anchorName = anchorName;
-        }
+    public string GetUrl()
+    {
+        string subFolder = string.IsNullOrEmpty(_subFolder) ? string.Empty : _subFolder + ".html";
 
-        public string GetUrl()
-        {
-            string subFolder = string.IsNullOrEmpty(_subFolder) ? string.Empty : _subFolder + ".html";
-
-            return (AppSettings.DocumentationBaseUrl + subFolder).Combine("#", _anchorName)!;
-        }
+        return (AppSettings.DocumentationBaseUrl + subFolder).Combine("#", _anchorName)!;
     }
 }

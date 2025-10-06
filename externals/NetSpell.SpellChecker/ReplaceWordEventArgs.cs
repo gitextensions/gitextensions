@@ -1,21 +1,20 @@
-namespace NetSpell.SpellChecker
+namespace NetSpell.SpellChecker;
+
+/// <summary>
+/// Summary description for ReplaceWordEventArgs.
+/// </summary>
+public class ReplaceWordEventArgs : SpellingEventArgs
 {
     /// <summary>
-    /// Summary description for ReplaceWordEventArgs.
+    ///     Class sent to the event handler when the ReplacedWord Event is fired
     /// </summary>
-    public class ReplaceWordEventArgs : SpellingEventArgs
+    public ReplaceWordEventArgs(string replacementWord, string word, int wordIndex, int textIndex) : base(word, wordIndex, textIndex)
     {
-        /// <summary>
-        ///     Class sent to the event handler when the ReplacedWord Event is fired
-        /// </summary>
-        public ReplaceWordEventArgs(string replacementWord, string word, int wordIndex, int textIndex) : base(word, wordIndex, textIndex)
-        {
-            ReplacementWord = replacementWord;
-        }
-
-        /// <summary>
-        ///     The word to use in replacing the misspelled word
-        /// </summary>
-        public string ReplacementWord { get; }
+        ReplacementWord = replacementWord;
     }
+
+    /// <summary>
+    ///     The word to use in replacing the misspelled word
+    /// </summary>
+    public string ReplacementWord { get; }
 }

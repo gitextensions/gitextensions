@@ -1,56 +1,55 @@
 ﻿using System.IO.Abstractions;
 
-namespace GitCommands
+namespace GitCommands;
+
+public interface ISshPathLocator
 {
-    public interface ISshPathLocator
+    public string? GetSshFromGitDir(string gitBinDirectory);
+}
+
+public sealed class SshPathLocator : ISshPathLocator
+{
+    private readonly IFileSystem _fileSystem;
+
+    public SshPathLocator(IFileSystem fileSystem)
     {
-        public string? GetSshFromGitDir(string gitBinDirectory);
+        _fileSystem = fileSystem;
     }
 
-    public sealed class SshPathLocator : ISshPathLocator
+    public SshPathLocator()
+        : this(new FileSystem())
     {
-        private readonly IFileSystem _fileSystem;
+    }
 
-        public SshPathLocator(IFileSystem fileSystem)
+    /// <summary>
+    /// Get ssh path from Git installation.
+    /// (Also used by plugins to get the OpenSSH path).
+    /// </summary>
+    /// <param name="gitBinDirectory">Git installation directory.</param>
+    /// <returns>Path to ssh.exe or null.</returns>
+    public string? GetSshFromGitDir(string gitBinDirectory)
+    {
+        if (string.IsNullOrEmpty(gitBinDirectory))
         {
-            _fileSystem = fileSystem;
+            return null;
         }
 
-        public SshPathLocator()
-            : this(new FileSystem())
+        try
         {
-        }
-
-        /// <summary>
-        /// Get ssh path from Git installation.
-        /// (Also used by plugins to get the OpenSSH path).
-        /// </summary>
-        /// <param name="gitBinDirectory">Git installation directory.</param>
-        /// <returns>Path to ssh.exe or null.</returns>
-        public string? GetSshFromGitDir(string gitBinDirectory)
-        {
-            if (string.IsNullOrEmpty(gitBinDirectory))
+            // gitBinDirectory will normally end with a directory separator
+            // (at least this is what AppSettings.GitBinDir ensures),
+            // but then GetParent() returns the same directory, only without the trailing separator
+            IDirectoryInfo gitDirInfo = _fileSystem.Directory.GetParent(gitBinDirectory.RemoveTrailingPathSeparator());
+            if (gitDirInfo is null)
             {
                 return null;
             }
 
-            try
-            {
-                // gitBinDirectory will normally end with a directory separator
-                // (at least this is what AppSettings.GitBinDir ensures),
-                // but then GetParent() returns the same directory, only without the trailing separator
-                IDirectoryInfo gitDirInfo = _fileSystem.Directory.GetParent(gitBinDirectory.RemoveTrailingPathSeparator());
-                if (gitDirInfo is null)
-                {
-                    return null;
-                }
-
-                return _fileSystem.Directory.EnumerateFiles(gitDirInfo.FullName, "ssh.exe", SearchOption.AllDirectories).FirstOrDefault();
-            }
-            catch
-            {
-                return null;
-            }
+            return _fileSystem.Directory.EnumerateFiles(gitDirInfo.FullName, "ssh.exe", SearchOption.AllDirectories).FirstOrDefault();
+        }
+        catch
+        {
+            return null;
         }
     }
 }

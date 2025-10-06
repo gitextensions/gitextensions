@@ -1,12 +1,11 @@
-﻿namespace GitExtensions.Plugins.DeleteUnusedBranches
-{
-    public class CheckBoxHeaderCellEventArgs : EventArgs
-    {
-        public CheckBoxHeaderCellEventArgs(bool checkedValue)
-        {
-            Checked = checkedValue;
-        }
+﻿namespace GitExtensions.Plugins.DeleteUnusedBranches;
 
-        public bool Checked { get; }
+public class CheckBoxHeaderCellEventArgs : EventArgs
+{
+    public CheckBoxHeaderCellEventArgs(bool checkedValue)
+    {
+        Checked = checkedValue;
     }
+
+    public bool Checked { get; }
 }

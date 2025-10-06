@@ -1,57 +1,56 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-namespace GitExtUtils.GitUI
+namespace GitExtUtils.GitUI;
+
+internal static class HighDpiMouseCursors
 {
-    internal static class HighDpiMouseCursors
+    /// <summary>
+    /// Replaces some .NET Framework 96-dpi .cur file mouse cursors with system cursors.
+    /// </summary>
+    public static void Enable()
     {
-        /// <summary>
-        /// Replaces some .NET Framework 96-dpi .cur file mouse cursors with system cursors.
-        /// </summary>
-        public static void Enable()
+        try
         {
-            try
-            {
-                SetCursor("hand", IDC.HAND);
-                SetCursor("hSplit", IDC.SIZENS);
-                SetCursor("vSplit", IDC.SIZEWE);
-            }
-            catch
-            {
-                // ignore
-            }
-
-            static void SetCursor(string fieldName, IDC idc)
-            {
-                FieldInfo field = typeof(Cursors).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Static);
-                field?.SetValue(null, new Cursor(NativeMethods.LoadCursor(IntPtr.Zero, idc)));
-            }
+            SetCursor("hand", IDC.HAND);
+            SetCursor("hSplit", IDC.SIZENS);
+            SetCursor("vSplit", IDC.SIZEWE);
+        }
+        catch
+        {
+            // ignore
         }
 
-        private static class NativeMethods
+        static void SetCursor(string fieldName, IDC idc)
         {
-            [DllImport("user32.dll")]
-            public static extern IntPtr LoadCursor(IntPtr hInstance, IDC lpCursorName);
+            FieldInfo field = typeof(Cursors).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Static);
+            field?.SetValue(null, new Cursor(NativeMethods.LoadCursor(IntPtr.Zero, idc)));
         }
+    }
 
-        private enum IDC
-        {
-            ARROW = 32512,
-            IBEAM = 32513,
-            WAIT = 32514,
-            CROSS = 32515,
-            UPARROW = 32516,
-            SIZE = 32640,
-            ICON = 32641,
-            SIZENWSE = 32642,
-            SIZENESW = 32643,
-            SIZEWE = 32644,
-            SIZENS = 32645,
-            SIZEALL = 32646,
-            NO = 32648,
-            HAND = 32649,
-            APPSTARTING = 32650,
-            HELP = 32651
-        }
+    private static class NativeMethods
+    {
+        [DllImport("user32.dll")]
+        public static extern IntPtr LoadCursor(IntPtr hInstance, IDC lpCursorName);
+    }
+
+    private enum IDC
+    {
+        ARROW = 32512,
+        IBEAM = 32513,
+        WAIT = 32514,
+        CROSS = 32515,
+        UPARROW = 32516,
+        SIZE = 32640,
+        ICON = 32641,
+        SIZENWSE = 32642,
+        SIZENESW = 32643,
+        SIZEWE = 32644,
+        SIZENS = 32645,
+        SIZEALL = 32646,
+        NO = 32648,
+        HAND = 32649,
+        APPSTARTING = 32650,
+        HELP = 32651
     }
 }

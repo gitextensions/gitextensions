@@ -2,193 +2,192 @@
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 
-namespace GitCommands
+namespace GitCommands;
+
+public static class FileHelper
 {
-    public static class FileHelper
+    private static readonly IEnumerable<string> BinaryExtensions = new[]
     {
-        private static readonly IEnumerable<string> BinaryExtensions = new[]
+        ".avi", // movie
+        ".bmp", // image
+        ".dat", // data file
+        ".bin", // binary file
+        ".dll", // dynamic link library
+        ".doc", // office word
+        ".docx", // office word
+        ".ppt", // office powerpoint
+        ".pps", // office powerpoint
+        ".pptx", // office powerpoint
+        ".ppsx", // office powerpoint
+        ".dwg", // autocad
+        ".exe", // executable
+        ".gif", // image
+        ".ico", // icon
+        ".jpg", // image
+        ".jpeg", // image
+        ".mpg", // movie
+        ".mpeg", // movie
+        ".msi", // installer
+        ".pdf", // pdf document
+        ".png", // image
+        ".pdb", // debug file
+        ".sc1", // screen file
+        ".tif", // image
+        ".tiff", // image
+        ".vsd", // microsoft visio
+        ".vsdx", // microsoft
+        ".xls", // microsoft excel
+        ".xlsx", // microsoft excel
+        ".odt" // Open office
+    };
+
+    private static readonly IEnumerable<string> ImageExtensions = new[]
+    {
+        ".bmp",
+        ".gif",
+        ".ico",
+        ".jpg",
+        ".jpeg",
+        ".png",
+        ".tif",
+        ".tiff",
+    };
+
+    public static bool IsBinaryFileName(IGitModule module, string? fileName)
+    {
+        return !string.IsNullOrWhiteSpace(fileName)
+               && (IsBinaryAccordingToGitAttributes(module, fileName)
+                   ?? HasMatchingExtension(BinaryExtensions, fileName));
+    }
+
+    /// <returns>null if no info in .gitattributes (or ambiguous). True if marked as binary, false if marked as text</returns>
+    private static bool? IsBinaryAccordingToGitAttributes(IGitModule module, string fileName)
+    {
+        string[] diffValues = { "set", "astextplain", "ada", "bibtext", "cpp", "csharp", "css", "dts", "elixir", "fortran", "html", "java", "kotlin", "markdown", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "rust", "scheme", "tex" };
+        GitArgumentBuilder cmd = new("check-attr")
         {
-            ".avi", // movie
-            ".bmp", // image
-            ".dat", // data file
-            ".bin", // binary file
-            ".dll", // dynamic link library
-            ".doc", // office word
-            ".docx", // office word
-            ".ppt", // office powerpoint
-            ".pps", // office powerpoint
-            ".pptx", // office powerpoint
-            ".ppsx", // office powerpoint
-            ".dwg", // autocad
-            ".exe", // executable
-            ".gif", // image
-            ".ico", // icon
-            ".jpg", // image
-            ".jpeg", // image
-            ".mpg", // movie
-            ".mpeg", // movie
-            ".msi", // installer
-            ".pdf", // pdf document
-            ".png", // image
-            ".pdb", // debug file
-            ".sc1", // screen file
-            ".tif", // image
-            ".tiff", // image
-            ".vsd", // microsoft visio
-            ".vsdx", // microsoft
-            ".xls", // microsoft excel
-            ".xlsx", // microsoft excel
-            ".odt" // Open office
+            "-z",
+            "diff",
+            "text",
+            "crlf",
+            "eol",
+            "--",
+            fileName.Quote()
         };
-
-        private static readonly IEnumerable<string> ImageExtensions = new[]
+        ExecutionResult result = module.GitExecutable.Execute(cmd, throwOnErrorExit: false);
+        if (!result.ExitedSuccessfully)
         {
-            ".bmp",
-            ".gif",
-            ".ico",
-            ".jpg",
-            ".jpeg",
-            ".png",
-            ".tif",
-            ".tiff",
-        };
-
-        public static bool IsBinaryFileName(IGitModule module, string? fileName)
-        {
-            return !string.IsNullOrWhiteSpace(fileName)
-                   && (IsBinaryAccordingToGitAttributes(module, fileName)
-                       ?? HasMatchingExtension(BinaryExtensions, fileName));
-        }
-
-        /// <returns>null if no info in .gitattributes (or ambiguous). True if marked as binary, false if marked as text</returns>
-        private static bool? IsBinaryAccordingToGitAttributes(IGitModule module, string fileName)
-        {
-            string[] diffValues = { "set", "astextplain", "ada", "bibtext", "cpp", "csharp", "css", "dts", "elixir", "fortran", "html", "java", "kotlin", "markdown", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "rust", "scheme", "tex" };
-            GitArgumentBuilder cmd = new("check-attr")
-            {
-                "-z",
-                "diff",
-                "text",
-                "crlf",
-                "eol",
-                "--",
-                fileName.Quote()
-            };
-            ExecutionResult result = module.GitExecutable.Execute(cmd, throwOnErrorExit: false);
-            if (!result.ExitedSuccessfully)
-            {
-                return null;
-            }
-
-            string[] lines = result.StandardOutput.Split(Delimiters.NullAndLineFeed);
-            Dictionary<string, string> attributes = [];
-            for (int i = 0; i < lines.Length - 2; i += 3)
-            {
-                attributes[lines[i + 1].Trim()] = lines[i + 2].Trim();
-            }
-
-            if (attributes.TryGetValue("diff", out string diff))
-            {
-                if (diff == "unset")
-                {
-                    return true;
-                }
-
-                if (diffValues.Contains(diff))
-                {
-                    return false;
-                }
-            }
-
-            if (attributes.TryGetValue("text", out string text))
-            {
-                if (text != "unset" && text != "unspecified")
-                {
-                    return false;
-                }
-            }
-
-            if (attributes.TryGetValue("crlf", out string crlf))
-            {
-                if (crlf != "unset" && crlf != "unspecified")
-                {
-                    return false;
-                }
-            }
-
-            if (attributes.TryGetValue("eol", out string eol))
-            {
-                if (eol != "unset" && eol != "unspecified")
-                {
-                    return false;
-                }
-            }
-
             return null;
         }
 
-        public static bool IsImage(string fileName)
+        string[] lines = result.StandardOutput.Split(Delimiters.NullAndLineFeed);
+        Dictionary<string, string> attributes = [];
+        for (int i = 0; i < lines.Length - 2; i += 3)
         {
-            return HasMatchingExtension(ImageExtensions, fileName);
+            attributes[lines[i + 1].Trim()] = lines[i + 2].Trim();
         }
 
-        private static bool HasMatchingExtension(IEnumerable<string> extensions, string fileName)
+        if (attributes.TryGetValue("diff", out string diff))
         {
-            return extensions.Any(extension => fileName.EndsWith(extension, StringComparison.CurrentCultureIgnoreCase));
-        }
-
-        #region binary file check
-
-        public static bool IsBinaryFileAccordingToContent(byte[]? content)
-        {
-            // Check for binary file.
-            if (content?.Length is > 0)
+            if (diff == "unset")
             {
-                int nullCount = 0;
-                foreach (char c in content)
-                {
-                    if (c == '\0')
-                    {
-                        nullCount++;
-                    }
+                return true;
+            }
 
-                    if (nullCount > 5)
-                    {
-                        break;
-                    }
+            if (diffValues.Contains(diff))
+            {
+                return false;
+            }
+        }
+
+        if (attributes.TryGetValue("text", out string text))
+        {
+            if (text != "unset" && text != "unspecified")
+            {
+                return false;
+            }
+        }
+
+        if (attributes.TryGetValue("crlf", out string crlf))
+        {
+            if (crlf != "unset" && crlf != "unspecified")
+            {
+                return false;
+            }
+        }
+
+        if (attributes.TryGetValue("eol", out string eol))
+        {
+            if (eol != "unset" && eol != "unspecified")
+            {
+                return false;
+            }
+        }
+
+        return null;
+    }
+
+    public static bool IsImage(string fileName)
+    {
+        return HasMatchingExtension(ImageExtensions, fileName);
+    }
+
+    private static bool HasMatchingExtension(IEnumerable<string> extensions, string fileName)
+    {
+        return extensions.Any(extension => fileName.EndsWith(extension, StringComparison.CurrentCultureIgnoreCase));
+    }
+
+    #region binary file check
+
+    public static bool IsBinaryFileAccordingToContent(byte[]? content)
+    {
+        // Check for binary file.
+        if (content?.Length is > 0)
+        {
+            int nullCount = 0;
+            foreach (char c in content)
+            {
+                if (c == '\0')
+                {
+                    nullCount++;
                 }
 
                 if (nullCount > 5)
                 {
-                    return true;
+                    break;
                 }
             }
 
-            return false;
+            if (nullCount > 5)
+            {
+                return true;
+            }
         }
 
-        public static bool IsBinaryFileAccordingToContent(string? content)
+        return false;
+    }
+
+    public static bool IsBinaryFileAccordingToContent(string? content)
+    {
+        // Check for binary file.
+        if (!string.IsNullOrEmpty(content))
         {
-            // Check for binary file.
-            if (!string.IsNullOrEmpty(content))
+            int nullCount = 0;
+            foreach (char c in content)
             {
-                int nullCount = 0;
-                foreach (char c in content)
+                if (c == '\0')
                 {
-                    if (c == '\0')
+                    nullCount++;
+                    if (nullCount > 5)
                     {
-                        nullCount++;
-                        if (nullCount > 5)
-                        {
-                            return true;
-                        }
+                        return true;
                     }
                 }
             }
-
-            return false;
         }
 
-        #endregion
+        return false;
     }
+
+    #endregion
 }

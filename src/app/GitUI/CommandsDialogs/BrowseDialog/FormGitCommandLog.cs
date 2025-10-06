@@ -2,233 +2,232 @@
 using GitCommands;
 using GitCommands.Logging;
 
-namespace GitUI.CommandsDialogs.BrowseDialog
+namespace GitUI.CommandsDialogs.BrowseDialog;
+
+public sealed partial class FormGitCommandLog : GitExtensionsForm
 {
-    public sealed partial class FormGitCommandLog : GitExtensionsForm
+    private FormGitCommandLog()
+        : base(enablePositionRestore: true)
     {
-        private FormGitCommandLog()
-            : base(enablePositionRestore: true)
+        ThreadHelper.ThrowIfNotOnUIThread();
+
+        ShowInTaskbar = true;
+        InitializeComponent();
+        InitializeComplete();
+        ActiveControl = LogItems;
+
+        LogItems.DisplayMember = nameof(CommandLogEntry.ColumnLine);
+
+        Font font = new(FontFamily.GenericMonospace, 9);
+        LogItems.Font = font;
+        CommandCacheItems.Font = font;
+        LogOutput.Font = font;
+        commandCacheOutput.Font = font;
+
+        chkCaptureCallStacks.Checked = AppSettings.LogCaptureCallStacks;
+        chkCaptureCallStacks.CheckedChanged += delegate { AppSettings.LogCaptureCallStacks = chkCaptureCallStacks.Checked; };
+
+        chkWordWrap.CheckedChanged += delegate
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            LogOutput.WordWrap = chkWordWrap.Checked;
+            commandCacheOutput.WordWrap = chkWordWrap.Checked;
+        };
 
-            ShowInTaskbar = true;
-            InitializeComponent();
-            InitializeComplete();
-            ActiveControl = LogItems;
-
-            LogItems.DisplayMember = nameof(CommandLogEntry.ColumnLine);
-
-            Font font = new(FontFamily.GenericMonospace, 9);
-            LogItems.Font = font;
-            CommandCacheItems.Font = font;
-            LogOutput.Font = font;
-            commandCacheOutput.Font = font;
-
-            chkCaptureCallStacks.Checked = AppSettings.LogCaptureCallStacks;
-            chkCaptureCallStacks.CheckedChanged += delegate { AppSettings.LogCaptureCallStacks = chkCaptureCallStacks.Checked; };
-
-            chkWordWrap.CheckedChanged += delegate
-            {
-                LogOutput.WordWrap = chkWordWrap.Checked;
-                commandCacheOutput.WordWrap = chkWordWrap.Checked;
-            };
-
-            Load += delegate
-            {
-                CommandLog.CommandsChanged += OnGitCommandLogChanged;
-                GitModule.GitCommandCache.Changed += OnCachedCommandsLogChanged;
-
-                RefreshLogItems();
-                RefreshCommandCacheItems();
-            };
-
-            FormClosed += delegate
-            {
-                CommandLog.CommandsChanged -= OnGitCommandLogChanged;
-                GitModule.GitCommandCache.Changed -= OnCachedCommandsLogChanged;
-                instance = null;
-            };
-
-            void OnGitCommandLogChanged()
-            {
-                this.InvokeAndForget(RefreshLogItems);
-            }
-
-            void OnCachedCommandsLogChanged(object sender, EventArgs e)
-            {
-                this.InvokeAndForget(RefreshCommandCacheItems);
-            }
-        }
-
-        private void RefreshLogItems()
+        Load += delegate
         {
-            if (TabControl.SelectedTab == tabPageCommandLog)
-            {
-                RefreshListBox(LogItems, CommandLog.Commands.ToArray());
-            }
-        }
+            CommandLog.CommandsChanged += OnGitCommandLogChanged;
+            GitModule.GitCommandCache.Changed += OnCachedCommandsLogChanged;
 
-        private void RefreshCommandCacheItems()
-        {
-            if (TabControl.SelectedTab == tabPageCommandCache)
-            {
-                CommandCacheItems.ValueMember = nameof(CacheItem.DisplayString);
-                RefreshListBox(CommandCacheItems, GitModule.GitCommandCache.GetCachedCommands().Select(key => new CacheItem(key)).ToArray());
-            }
-        }
-
-        private static void RefreshListBox(ListBox log, object dataSource)
-        {
-            bool isLastIndexSelected = log.Items.Count == 0 || log.SelectedIndex == log.Items.Count - 1;
-            int lastIndex = -1;
-            if (!isLastIndexSelected)
-            {
-                lastIndex = log.SelectedIndex;
-            }
-
-            try
-            {
-                log.BeginUpdate();
-                log.DataSource = dataSource;
-            }
-            finally
-            {
-                log.EndUpdate();
-            }
-
-            if (log.Items.Count < 1)
-            {
-                return;
-            }
-
-            // select the very last item first, then select the previously selected item, if any
-            log.SelectedIndex = log.Items.Count - 1;
-            if (isLastIndexSelected)
-            {
-                log.SelectedIndex = log.Items.Count - 1;
-            }
-            else if (lastIndex >= 0)
-            {
-                log.SelectedIndex = lastIndex;
-            }
-        }
-
-        private void CommandCacheItems_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            string command = ((CacheItem)CommandCacheItems.SelectedItem).Key;
-
-            if (GitModule.GitCommandCache.TryGet(command, out string? cmdOut, out string? cmdErr))
-            {
-                Encoding encoding = GitModule.SystemEncoding;
-                commandCacheOutput.Text =
-                    command +
-                    "\n-------------------------------------\n\n" +
-                    PrintableChars(cmdOut) +
-                    "\n-------------------------------------\n\n" +
-                    PrintableChars(cmdErr);
-            }
-            else
-            {
-                commandCacheOutput.Text = string.Empty;
-            }
-
-            return;
-
-            static string? PrintableChars(string? str)
-            {
-                if (str is null)
-                {
-                    return str;
-                }
-
-                return str.Replace("\0", @"\0").Replace("\r", @"\r").Replace("\n", "\\n\n").Replace("\t", "\u00bb").Replace(" ", "\u00b7").Replace("\u001b", @"\x1b");
-            }
-        }
-
-        private void LogItems_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            CommandLogEntry entry = (CommandLogEntry)LogItems.SelectedItem;
-
-            LogOutput.Text = entry.Detail;
-        }
-
-        private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
-        {
             RefreshLogItems();
             RefreshCommandCacheItems();
+        };
+
+        FormClosed += delegate
+        {
+            CommandLog.CommandsChanged -= OnGitCommandLogChanged;
+            GitModule.GitCommandCache.Changed -= OnCachedCommandsLogChanged;
+            instance = null;
+        };
+
+        void OnGitCommandLogChanged()
+        {
+            this.InvokeAndForget(RefreshLogItems);
         }
 
-        private void alwaysOnTopCheckBox_CheckedChanged(object sender, EventArgs e)
+        void OnCachedCommandsLogChanged(object sender, EventArgs e)
         {
-            TopMost = !TopMost;
-            chkAlwaysOnTop.Checked = TopMost;
+            this.InvokeAndForget(RefreshCommandCacheItems);
+        }
+    }
+
+    private void RefreshLogItems()
+    {
+        if (TabControl.SelectedTab == tabPageCommandLog)
+        {
+            RefreshListBox(LogItems, CommandLog.Commands.ToArray());
+        }
+    }
+
+    private void RefreshCommandCacheItems()
+    {
+        if (TabControl.SelectedTab == tabPageCommandCache)
+        {
+            CommandCacheItems.ValueMember = nameof(CacheItem.DisplayString);
+            RefreshListBox(CommandCacheItems, GitModule.GitCommandCache.GetCachedCommands().Select(key => new CacheItem(key)).ToArray());
+        }
+    }
+
+    private static void RefreshListBox(ListBox log, object dataSource)
+    {
+        bool isLastIndexSelected = log.Items.Count == 0 || log.SelectedIndex == log.Items.Count - 1;
+        int lastIndex = -1;
+        if (!isLastIndexSelected)
+        {
+            lastIndex = log.SelectedIndex;
         }
 
-        private void mnuSaveToFile_Click(object sender, EventArgs e)
+        try
         {
-            using SaveFileDialog fileDialog = new()
+            log.BeginUpdate();
+            log.DataSource = dataSource;
+        }
+        finally
+        {
+            log.EndUpdate();
+        }
+
+        if (log.Items.Count < 1)
+        {
+            return;
+        }
+
+        // select the very last item first, then select the previously selected item, if any
+        log.SelectedIndex = log.Items.Count - 1;
+        if (isLastIndexSelected)
+        {
+            log.SelectedIndex = log.Items.Count - 1;
+        }
+        else if (lastIndex >= 0)
+        {
+            log.SelectedIndex = lastIndex;
+        }
+    }
+
+    private void CommandCacheItems_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        string command = ((CacheItem)CommandCacheItems.SelectedItem).Key;
+
+        if (GitModule.GitCommandCache.TryGet(command, out string? cmdOut, out string? cmdErr))
+        {
+            Encoding encoding = GitModule.SystemEncoding;
+            commandCacheOutput.Text =
+                command +
+                "\n-------------------------------------\n\n" +
+                PrintableChars(cmdOut) +
+                "\n-------------------------------------\n\n" +
+                PrintableChars(cmdErr);
+        }
+        else
+        {
+            commandCacheOutput.Text = string.Empty;
+        }
+
+        return;
+
+        static string? PrintableChars(string? str)
+        {
+            if (str is null)
             {
-                Title = Name,
-                DefaultExt = ".txt",
-                AddExtension = true,
-                Filter = "Text files (*.txt)|*.txt|CSV files|*.csv|All files *.*|*.*"
-            };
-            if (fileDialog.ShowDialog(this) == DialogResult.OK)
-            {
-                string separator = fileDialog.FileName.EndsWith("csv") ?
-                    System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator :
-                    "\t";
-                File.WriteAllLines(
-                    fileDialog.FileName,
-                    CommandLog.Commands.Select(cle => cle.FullLine(separator)));
+                return str;
             }
-        }
 
-        private void mnuClear_Click(object sender, EventArgs e)
+            return str.Replace("\0", @"\0").Replace("\r", @"\r").Replace("\n", "\\n\n").Replace("\t", "\u00bb").Replace(" ", "\u00b7").Replace("\u001b", @"\x1b");
+        }
+    }
+
+    private void LogItems_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        CommandLogEntry entry = (CommandLogEntry)LogItems.SelectedItem;
+
+        LogOutput.Text = entry.Detail;
+    }
+
+    private void TabControl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        RefreshLogItems();
+        RefreshCommandCacheItems();
+    }
+
+    private void alwaysOnTopCheckBox_CheckedChanged(object sender, EventArgs e)
+    {
+        TopMost = !TopMost;
+        chkAlwaysOnTop.Checked = TopMost;
+    }
+
+    private void mnuSaveToFile_Click(object sender, EventArgs e)
+    {
+        using SaveFileDialog fileDialog = new()
         {
-            CommandLog.Clear();
-        }
-
-        private void mnuCopyCommandLine_Click(object sender, EventArgs e)
+            Title = Name,
+            DefaultExt = ".txt",
+            AddExtension = true,
+            Filter = "Text files (*.txt)|*.txt|CSV files|*.csv|All files *.*|*.*"
+        };
+        if (fileDialog.ShowDialog(this) == DialogResult.OK)
         {
-            if (LogItems.SelectedItem is CommandLogEntry commandLogEntry)
-            {
-                Clipboard.SetText(commandLogEntry.CommandLine);
-            }
+            string separator = fileDialog.FileName.EndsWith("csv") ?
+                System.Globalization.CultureInfo.CurrentCulture.TextInfo.ListSeparator :
+                "\t";
+            File.WriteAllLines(
+                fileDialog.FileName,
+                CommandLog.Commands.Select(cle => cle.FullLine(separator)));
         }
+    }
 
-        private void tsmiClearCache_Click(object sender, EventArgs e)
+    private void mnuClear_Click(object sender, EventArgs e)
+    {
+        CommandLog.Clear();
+    }
+
+    private void mnuCopyCommandLine_Click(object sender, EventArgs e)
+    {
+        if (LogItems.SelectedItem is CommandLogEntry commandLogEntry)
         {
-            GitModule.GitCommandCache.Clear();
-            RefreshCommandCacheItems();
+            Clipboard.SetText(commandLogEntry.CommandLine);
         }
+    }
 
-        #region Single instance static members
+    private void tsmiClearCache_Click(object sender, EventArgs e)
+    {
+        GitModule.GitCommandCache.Clear();
+        RefreshCommandCacheItems();
+    }
 
-        private static FormGitCommandLog? instance;
+    #region Single instance static members
 
-        public static void ShowOrActivate(IWin32Window owner)
+    private static FormGitCommandLog? instance;
+
+    public static void ShowOrActivate(IWin32Window owner)
+    {
+        if (instance is null)
         {
-            if (instance is null)
-            {
-                (instance = new FormGitCommandLog()).Show(owner);
-            }
-            else if (instance.WindowState == FormWindowState.Minimized)
-            {
-                instance.WindowState = FormWindowState.Normal;
-            }
-            else
-            {
-                instance.Activate();
-            }
+            (instance = new FormGitCommandLog()).Show(owner);
         }
-
-        #endregion
-
-        private sealed class CacheItem(string key)
+        else if (instance.WindowState == FormWindowState.Minimized)
         {
-            public string Key { get; } = key;
-            public string DisplayString { get; } = CommandLogEntry.GetGitArgumentsWithoutConfiguration(key);
+            instance.WindowState = FormWindowState.Normal;
         }
+        else
+        {
+            instance.Activate();
+        }
+    }
+
+    #endregion
+
+    private sealed class CacheItem(string key)
+    {
+        public string Key { get; } = key;
+        public string DisplayString { get; } = CommandLogEntry.GetGitArgumentsWithoutConfiguration(key);
     }
 }

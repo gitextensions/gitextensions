@@ -2,181 +2,180 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 
-namespace GitCommands
+namespace GitCommands;
+
+[DebuggerDisplay("{" + nameof(_byNameMap) + ".Count}")]
+public abstract class SettingsCache : IDisposable
 {
-    [DebuggerDisplay("{" + nameof(_byNameMap) + ".Count}")]
-    public abstract class SettingsCache : IDisposable
+    private readonly Lock _byNameMapLock = new();
+    private readonly ConcurrentDictionary<string, string?> _byNameMap = new();
+
+    public void Dispose()
     {
-        private readonly Lock _byNameMapLock = new();
-        private readonly ConcurrentDictionary<string, string?> _byNameMap = new();
+        Dispose(true);
+        GC.SuppressFinalize(this);
+    }
 
-        public void Dispose()
+    protected virtual void Dispose(bool disposing)
+    {
+    }
+
+    public void LockedAction(Action action)
+    {
+        LockedAction<object?>(() =>
         {
-            Dispose(true);
-            GC.SuppressFinalize(this);
+            action();
+            return default;
+        });
+    }
+
+    protected T LockedAction<T>(Func<T> action)
+    {
+        lock (_byNameMapLock)
+        {
+            return action();
         }
+    }
 
-        protected virtual void Dispose(bool disposing)
-        {
-        }
+    protected abstract void SaveImpl();
+    protected abstract void LoadImpl();
+    protected abstract void SetValueImpl(string key, string? value);
+    protected abstract string? GetValueImpl(string key);
+    protected abstract bool NeedRefresh();
+    protected abstract void ClearImpl();
 
-        public void LockedAction(Action action)
+    private void Clear()
+    {
+        LockedAction(() =>
         {
-            LockedAction<object?>(() =>
+            ClearImpl();
+            _byNameMap.Clear();
+        });
+    }
+
+    public void Save()
+    {
+        LockedAction(SaveImpl);
+    }
+
+    public void Load()
+    {
+        LockedAction(() =>
             {
-                action();
-                return default;
+                Clear();
+                LoadImpl();
             });
-        }
+    }
 
-        protected T LockedAction<T>(Func<T> action)
-        {
-            lock (_byNameMapLock)
+    public void Import(IEnumerable<(string name, string value)> keyValuePairs)
+    {
+        LockedAction(() =>
             {
-                return action();
-            }
-        }
-
-        protected abstract void SaveImpl();
-        protected abstract void LoadImpl();
-        protected abstract void SetValueImpl(string key, string? value);
-        protected abstract string? GetValueImpl(string key);
-        protected abstract bool NeedRefresh();
-        protected abstract void ClearImpl();
-
-        private void Clear()
-        {
-            LockedAction(() =>
-            {
-                ClearImpl();
-                _byNameMap.Clear();
-            });
-        }
-
-        public void Save()
-        {
-            LockedAction(SaveImpl);
-        }
-
-        public void Load()
-        {
-            LockedAction(() =>
+                foreach ((string key, string value) in keyValuePairs)
                 {
-                    Clear();
-                    LoadImpl();
-                });
-        }
-
-        public void Import(IEnumerable<(string name, string value)> keyValuePairs)
-        {
-            LockedAction(() =>
-                {
-                    foreach ((string key, string value) in keyValuePairs)
+                    if (value is not null)
                     {
-                        if (value is not null)
-                        {
-                            SetValueImpl(key, value);
-                        }
+                        SetValueImpl(key, value);
                     }
+                }
 
-                    Save();
-                });
-        }
+                Save();
+            });
+    }
 
-        protected void EnsureSettingsAreUpToDate()
+    protected void EnsureSettingsAreUpToDate()
+    {
+        if (NeedRefresh())
         {
-            if (NeedRefresh())
+            LockedAction(Load);
+        }
+    }
+
+    protected virtual void SettingsChanged()
+    {
+    }
+
+    private string? GetValue(string name)
+    {
+        return LockedAction(() =>
+        {
+            EnsureSettingsAreUpToDate();
+            return GetValueImpl(name);
+        });
+    }
+
+    public bool HasValue(string name)
+    {
+        return GetValue(name) is not null;
+    }
+
+    public bool HasADifferentValue(string name, string? value)
+    {
+        return LockedAction(() =>
+        {
+            string? inMemValue = GetValue(name);
+            return inMemValue is not null && !string.Equals(inMemValue, value);
+        });
+    }
+
+    public void SetValue(string name, string? value)
+    {
+        LockedAction(() =>
+        {
+            // will refresh EncodedNameMap if needed
+            string? inMemValue = GetValue(name);
+
+            if (string.Equals(inMemValue, value))
             {
-                LockedAction(Load);
+                return;
+            }
+
+            SetValueImpl(name, value);
+
+            SettingsChanged();
+
+            if (string.IsNullOrEmpty(value))
+            {
+                _byNameMap.TryRemove(name, out _);
+            }
+            else
+            {
+                _byNameMap.AddOrUpdate(name, value, (key, oldValue) => value);
+            }
+        });
+    }
+
+    // This method will attempt to get the value from cache first. If the setting is not cached, it will call GetValue.
+    // GetValue will not look in the cache. This method doesn't require a lock. A lock is only required when GetValue is
+    // called. GetValue will set the lock.
+    public bool TryGetValue(string name, [NotNullWhen(true)] out string? value)
+    {
+        value = default;
+
+        EnsureSettingsAreUpToDate();
+
+        if (_byNameMap.TryGetValue(name, out string? o))
+        {
+            switch (o)
+            {
+                case null:
+                    return false;
+                default:
+                    value = o;
+                    return true;
             }
         }
 
-        protected virtual void SettingsChanged()
-        {
-        }
+        string? s = GetValue(name);
 
-        private string? GetValue(string name)
-        {
-            return LockedAction(() =>
-            {
-                EnsureSettingsAreUpToDate();
-                return GetValueImpl(name);
-            });
-        }
-
-        public bool HasValue(string name)
-        {
-            return GetValue(name) is not null;
-        }
-
-        public bool HasADifferentValue(string name, string? value)
-        {
-            return LockedAction(() =>
-            {
-                string? inMemValue = GetValue(name);
-                return inMemValue is not null && !string.Equals(inMemValue, value);
-            });
-        }
-
-        public void SetValue(string name, string? value)
-        {
-            LockedAction(() =>
-            {
-                // will refresh EncodedNameMap if needed
-                string? inMemValue = GetValue(name);
-
-                if (string.Equals(inMemValue, value))
-                {
-                    return;
-                }
-
-                SetValueImpl(name, value);
-
-                SettingsChanged();
-
-                if (string.IsNullOrEmpty(value))
-                {
-                    _byNameMap.TryRemove(name, out _);
-                }
-                else
-                {
-                    _byNameMap.AddOrUpdate(name, value, (key, oldValue) => value);
-                }
-            });
-        }
-
-        // This method will attempt to get the value from cache first. If the setting is not cached, it will call GetValue.
-        // GetValue will not look in the cache. This method doesn't require a lock. A lock is only required when GetValue is
-        // called. GetValue will set the lock.
-        public bool TryGetValue(string name, [NotNullWhen(true)] out string? value)
+        if (s is null)
         {
             value = default;
-
-            EnsureSettingsAreUpToDate();
-
-            if (_byNameMap.TryGetValue(name, out string? o))
-            {
-                switch (o)
-                {
-                    case null:
-                        return false;
-                    default:
-                        value = o;
-                        return true;
-                }
-            }
-
-            string? s = GetValue(name);
-
-            if (s is null)
-            {
-                value = default;
-                return false;
-            }
-
-            value = s;
-            _byNameMap.AddOrUpdate(name, s, (key, oldValue) => s);
-            return true;
+            return false;
         }
+
+        value = s;
+        _byNameMap.AddOrUpdate(name, s, (key, oldValue) => s);
+        return true;
     }
 }

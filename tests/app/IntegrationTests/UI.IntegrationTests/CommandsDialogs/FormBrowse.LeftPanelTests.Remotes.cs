@@ -5,199 +5,198 @@ using GitCommands.Remotes;
 using GitUI;
 using GitUI.CommandsDialogs;
 
-namespace GitExtensions.UITests.CommandsDialogs
+namespace GitExtensions.UITests.CommandsDialogs;
+
+[Apartment(ApartmentState.STA)]
+[NonParallelizable]
+public class FormBrowse_LeftPanel_RemotesTests
 {
-    [Apartment(ApartmentState.STA)]
-    [NonParallelizable]
-    public class FormBrowse_LeftPanel_RemotesTests
+    // Created once for the fixture
+    private ReferenceRepository _referenceRepository;
+
+    // Track the original setting value
+    private bool _originalShowAuthorAvatarColumn;
+    private bool _showAvailableDiffTools;
+
+    // Created once for each test
+    private GitUICommands _commands;
+    private IConfigFileRemoteSettingsManager _remotesManager;
+    private static readonly string[] RemoteNames = new[] { "remote1", "remote5", "remote3", "remote4", "remote2" };
+
+    [OneTimeSetUp]
+    public void SetUpFixture()
     {
-        // Created once for the fixture
-        private ReferenceRepository _referenceRepository;
+        // Remember the current settings...
+        _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
+        _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools;
 
-        // Track the original setting value
-        private bool _originalShowAuthorAvatarColumn;
-        private bool _showAvailableDiffTools;
+        // Stop loading custom diff tools
+        AppSettings.ShowAvailableDiffTools = false;
 
-        // Created once for each test
-        private GitUICommands _commands;
-        private IConfigFileRemoteSettingsManager _remotesManager;
-        private static readonly string[] RemoteNames = new[] { "remote1", "remote5", "remote3", "remote4", "remote2" };
+        // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
+        AppSettings.ShowAuthorAvatarColumn = false;
+    }
 
-        [OneTimeSetUp]
-        public void SetUpFixture()
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
+        AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
+    }
+
+    [SetUp]
+    public void SetUp()
+    {
+        _referenceRepository = new ReferenceRepository();
+
+        foreach (string name in RemoteNames)
         {
-            // Remember the current settings...
-            _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
-            _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools;
-
-            // Stop loading custom diff tools
-            AppSettings.ShowAvailableDiffTools = false;
-
-            // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
-            AppSettings.ShowAuthorAvatarColumn = false;
+            _referenceRepository.Module.AddRemote(name, $"http://localhost/remotes/{name}.git");
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
-            AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
-        }
+        _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
+        _remotesManager = new ConfigFileRemoteSettingsManager(() => _referenceRepository.Module);
+    }
 
-        [SetUp]
-        public void SetUp()
-        {
-            _referenceRepository = new ReferenceRepository();
+    [TearDown]
+    public void TearDown()
+    {
+        _referenceRepository.Dispose();
+    }
 
-            foreach (string name in RemoteNames)
+    [Test]
+    public void RepoObjectTree_should_load_active_remotes()
+    {
+        RunRepoObjectsTreeTest(
+            remotesNode =>
             {
-                _referenceRepository.Module.AddRemote(name, $"http://localhost/remotes/{name}.git");
-            }
+                // act
+                // no-op: by the virtue of loading the form, the left panel has loaded its content
 
-            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
-            _remotesManager = new ConfigFileRemoteSettingsManager(() => _referenceRepository.Module);
-        }
+                // assert
+                remotesNode.Nodes.Count.Should().Be(RemoteNames.Length);
+            });
+    }
 
-        [TearDown]
-        public void TearDown()
-        {
-            _referenceRepository.Dispose();
-        }
+    [Test]
+    public void RepoObjectTree_should_order_active_remotes_alphabetically()
+    {
+        RunRepoObjectsTreeTest(
+            remotesNode =>
+            {
+                // act
+                // no-op: by the virtue of loading the form, the left panel has loaded its content
 
-        [Test]
-        public void RepoObjectTree_should_load_active_remotes()
-        {
-            RunRepoObjectsTreeTest(
-                remotesNode =>
-                {
-                    // act
-                    // no-op: by the virtue of loading the form, the left panel has loaded its content
+                // assert
+                List<string> names = remotesNode.Nodes.OfType<TreeNode>().Select(x => x.Text).ToList();
+                names.Should().BeEquivalentTo(RemoteNames);
+                names.Should().BeInAscendingOrder();
+            });
+    }
 
-                    // assert
-                    remotesNode.Nodes.Count.Should().Be(RemoteNames.Length);
-                });
-        }
+    [Test]
+    public void RepoObjectTree_should_order_should_not_display_inactive_if_none()
+    {
+        RunRepoObjectsTreeTest(
+            remotesNode =>
+            {
+                // act
+                // no-op: by the virtue of loading the form, the left panel has loaded its content
 
-        [Test]
-        public void RepoObjectTree_should_order_active_remotes_alphabetically()
-        {
-            RunRepoObjectsTreeTest(
-                remotesNode =>
-                {
-                    // act
-                    // no-op: by the virtue of loading the form, the left panel has loaded its content
+                // assert
+                remotesNode.Nodes.OfType<TreeNode>().Any(n => n.Text == TranslatedStrings.Inactive).Should().BeFalse();
+            });
+    }
 
-                    // assert
-                    List<string> names = remotesNode.Nodes.OfType<TreeNode>().Select(x => x.Text).ToList();
-                    names.Should().BeEquivalentTo(RemoteNames);
-                    names.Should().BeInAscendingOrder();
-                });
-        }
+    [Test]
+    public void RepoObjectTree_should_order_should_display_inactive_if_present()
+    {
+        // setup
+        DeactivateTreeNode(RemoteNames[1]);
 
-        [Test]
-        public void RepoObjectTree_should_order_should_not_display_inactive_if_none()
-        {
-            RunRepoObjectsTreeTest(
-                remotesNode =>
-                {
-                    // act
-                    // no-op: by the virtue of loading the form, the left panel has loaded its content
+        RunRepoObjectsTreeTest(
+            remotesNode =>
+            {
+                // act
+                // no-op: by the virtue of loading the form, the left panel has loaded its content
 
-                    // assert
-                    remotesNode.Nodes.OfType<TreeNode>().Any(n => n.Text == TranslatedStrings.Inactive).Should().BeFalse();
-                });
-        }
+                // assert
+                remotesNode.Nodes.OfType<TreeNode>().Count(n => n.Text == TranslatedStrings.Inactive).Should().Be(1);
+            });
+    }
 
-        [Test]
-        public void RepoObjectTree_should_order_should_display_inactive_if_present()
-        {
-            // setup
-            DeactivateTreeNode(RemoteNames[1]);
+    [Test]
+    public void RepoObjectTree_should_order_should_display_inactive_after_active_nodes()
+    {
+        // setup
+        DeactivateTreeNode(RemoteNames[1]);
 
-            RunRepoObjectsTreeTest(
-                remotesNode =>
-                {
-                    // act
-                    // no-op: by the virtue of loading the form, the left panel has loaded its content
+        RunRepoObjectsTreeTest(
+            remotesNode =>
+            {
+                // act
+                // no-op: by the virtue of loading the form, the left panel has loaded its content
 
-                    // assert
-                    remotesNode.Nodes.OfType<TreeNode>().Count(n => n.Text == TranslatedStrings.Inactive).Should().Be(1);
-                });
-        }
+                // assert
+                remotesNode.Nodes.OfType<TreeNode>().Last().Text.Should().Be(TranslatedStrings.Inactive);
+            });
+    }
 
-        [Test]
-        public void RepoObjectTree_should_order_should_display_inactive_after_active_nodes()
-        {
-            // setup
-            DeactivateTreeNode(RemoteNames[1]);
+    [Test]
+    public void RepoObjectTree_should_order_inactive_remotes_alphabetically()
+    {
+        // setup
+        DeactivateTreeNode(RemoteNames[3]);
+        DeactivateTreeNode(RemoteNames[0]);
+        DeactivateTreeNode(RemoteNames[1]);
 
-            RunRepoObjectsTreeTest(
-                remotesNode =>
-                {
-                    // act
-                    // no-op: by the virtue of loading the form, the left panel has loaded its content
+        RunRepoObjectsTreeTest(
+            remotesNode =>
+            {
+                // act
+                // no-op: by the virtue of loading the form, the left panel has loaded its content
 
-                    // assert
-                    remotesNode.Nodes.OfType<TreeNode>().Last().Text.Should().Be(TranslatedStrings.Inactive);
-                });
-        }
+                // assert
+                List<string> inactiveNodes = remotesNode.Nodes.OfType<TreeNode>().Last().Nodes.OfType<TreeNode>().Select(n => n.Text).ToList();
+                inactiveNodes.Should().HaveCount(3);
+                inactiveNodes.Should().BeEquivalentTo(RemoteNames[3], RemoteNames[0], RemoteNames[1]);
+                inactiveNodes.Should().BeInAscendingOrder();
+            });
+    }
 
-        [Test]
-        public void RepoObjectTree_should_order_inactive_remotes_alphabetically()
-        {
-            // setup
-            DeactivateTreeNode(RemoteNames[3]);
-            DeactivateTreeNode(RemoteNames[0]);
-            DeactivateTreeNode(RemoteNames[1]);
+    private void DeactivateTreeNode(string nodeText)
+    {
+        _remotesManager.ToggleRemoteState(nodeText, true);
+    }
 
-            RunRepoObjectsTreeTest(
-                remotesNode =>
-                {
-                    // act
-                    // no-op: by the virtue of loading the form, the left panel has loaded its content
+    private static TreeNode GetRemoteNode(FormBrowse form)
+    {
+        ClassicAssert.IsFalse(form.MainSplitContainer.Panel1Collapsed);
 
-                    // assert
-                    List<string> inactiveNodes = remotesNode.Nodes.OfType<TreeNode>().Last().Nodes.OfType<TreeNode>().Select(n => n.Text).ToList();
-                    inactiveNodes.Should().HaveCount(3);
-                    inactiveNodes.Should().BeEquivalentTo(RemoteNames[3], RemoteNames[0], RemoteNames[1]);
-                    inactiveNodes.Should().BeInAscendingOrder();
-                });
-        }
+        // Await all async operation such as load of branches and remotes in the left panel
+        AsyncTestHelper.JoinPendingOperations();
 
-        private void DeactivateTreeNode(string nodeText)
-        {
-            _remotesManager.ToggleRemoteState(nodeText, true);
-        }
+        GitUI.UserControls.NativeTreeView treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
+        TreeNode remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
+        remotesNode.Should().NotBeNull();
 
-        private static TreeNode GetRemoteNode(FormBrowse form)
-        {
-            ClassicAssert.IsFalse(form.MainSplitContainer.Panel1Collapsed);
+        return remotesNode;
+    }
 
-            // Await all async operation such as load of branches and remotes in the left panel
-            AsyncTestHelper.JoinPendingOperations();
+    private void RunRepoObjectsTreeTest(Action<TreeNode> testDriver)
+    {
+        RunFormTest(
+            form =>
+            {
+                testDriver(GetRemoteNode(form));
+                return Task.CompletedTask;
+            });
+    }
 
-            GitUI.UserControls.NativeTreeView treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
-            TreeNode remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
-            remotesNode.Should().NotBeNull();
-
-            return remotesNode;
-        }
-
-        private void RunRepoObjectsTreeTest(Action<TreeNode> testDriver)
-        {
-            RunFormTest(
-                form =>
-                {
-                    testDriver(GetRemoteNode(form));
-                    return Task.CompletedTask;
-                });
-        }
-
-        private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
-        {
-            UITest.RunForm(
-                showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
-                testDriverAsync);
-        }
+    private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
+    {
+        UITest.RunForm(
+            showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
+            testDriverAsync);
     }
 }

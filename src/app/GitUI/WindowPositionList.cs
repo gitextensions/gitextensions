@@ -3,80 +3,79 @@ using System.Diagnostics;
 using System.Xml.Serialization;
 using GitCommands;
 
-namespace GitUI
+namespace GitUI;
+
+/// <summary>
+///   Stores the state and position of a single window.
+/// </summary>
+[DebuggerDisplay("Name={Name} Rect={Rect} DeviceDpi={DeviceDpi} State={State}")]
+[Serializable]
+public class WindowPosition
 {
-    /// <summary>
-    ///   Stores the state and position of a single window.
-    /// </summary>
-    [DebuggerDisplay("Name={Name} Rect={Rect} DeviceDpi={DeviceDpi} State={State}")]
-    [Serializable]
-    public class WindowPosition
+    protected WindowPosition()
     {
-        protected WindowPosition()
-        {
-            DeviceDpi = 96;
-        }
-
-        public WindowPosition(Rectangle rect, int deviceDpi, FormWindowState state, string name)
-        {
-            Rect = rect;
-            DeviceDpi = deviceDpi;
-            State = state;
-            Name = name;
-        }
-
-        public Rectangle Rect { get; set; }
-        [DefaultValue(96)]
-        public int DeviceDpi { get; set; }
-        public FormWindowState State { get; set; }
-        public string? Name { get; set; }
+        DeviceDpi = 96;
     }
 
-    [Serializable]
-    public class WindowPositionList
+    public WindowPosition(Rectangle rect, int deviceDpi, FormWindowState state, string name)
     {
-        private static readonly string ConfigFilePath = Path.Combine(AppSettings.LocalApplicationDataPath.Value, "WindowPositions.xml");
-        private static readonly XmlSerializer _serializer = new(typeof(WindowPositionList));
+        Rect = rect;
+        DeviceDpi = deviceDpi;
+        State = state;
+        Name = name;
+    }
 
-        public List<WindowPosition> WindowPositions { get; set; } = [];
+    public Rectangle Rect { get; set; }
+    [DefaultValue(96)]
+    public int DeviceDpi { get; set; }
+    public FormWindowState State { get; set; }
+    public string? Name { get; set; }
+}
 
-        protected WindowPositionList()
+[Serializable]
+public class WindowPositionList
+{
+    private static readonly string ConfigFilePath = Path.Combine(AppSettings.LocalApplicationDataPath.Value, "WindowPositions.xml");
+    private static readonly XmlSerializer _serializer = new(typeof(WindowPositionList));
+
+    public List<WindowPosition> WindowPositions { get; set; } = [];
+
+    protected WindowPositionList()
+    {
+    }
+
+    public WindowPosition? Get(string name)
+    {
+        return WindowPositions.FirstOrDefault(r => r.Name == name);
+    }
+
+    public void AddOrUpdate(WindowPosition pos)
+    {
+        WindowPositions.RemoveAll(r => r.Name == pos.Name);
+        WindowPositions.Add(pos);
+    }
+
+    public static WindowPositionList? Load()
+    {
+        if (!File.Exists(ConfigFilePath))
         {
+            return new WindowPositionList();
         }
 
-        public WindowPosition? Get(string name)
+        try
         {
-            return WindowPositions.FirstOrDefault(r => r.Name == name);
+            using FileStream stream = File.Open(ConfigFilePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
+            return (WindowPositionList)_serializer.Deserialize(stream);
         }
-
-        public void AddOrUpdate(WindowPosition pos)
+        catch
         {
-            WindowPositions.RemoveAll(r => r.Name == pos.Name);
-            WindowPositions.Add(pos);
+            return new WindowPositionList();
         }
+    }
 
-        public static WindowPositionList? Load()
-        {
-            if (!File.Exists(ConfigFilePath))
-            {
-                return new WindowPositionList();
-            }
-
-            try
-            {
-                using FileStream stream = File.Open(ConfigFilePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
-                return (WindowPositionList)_serializer.Deserialize(stream);
-            }
-            catch
-            {
-                return new WindowPositionList();
-            }
-        }
-
-        public void Save()
-        {
-            using FileStream stream = File.Open(ConfigFilePath, FileMode.Create, FileAccess.Write);
-            _serializer.Serialize(stream, this);
-        }
+    public void Save()
+    {
+        using FileStream stream = File.Open(ConfigFilePath, FileMode.Create, FileAccess.Write);
+        _serializer.Serialize(stream, this);
     }
 }

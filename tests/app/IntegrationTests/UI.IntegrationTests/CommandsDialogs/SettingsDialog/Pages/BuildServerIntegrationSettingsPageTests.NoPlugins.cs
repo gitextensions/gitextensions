@@ -9,88 +9,87 @@ using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Composition;
 
-namespace UITests.CommandsDialogs.SettingsDialog.Pages
+namespace UITests.CommandsDialogs.SettingsDialog.Pages;
+
+[Apartment(ApartmentState.STA)]
+public class BuildServerIntegrationSettingsPageTests_NoPlugins
 {
-    [Apartment(ApartmentState.STA)]
-    public class BuildServerIntegrationSettingsPageTests_NoPlugins
+    // Created once for the fixture
+    private ReferenceRepository _referenceRepository;
+    private MockHost _form;
+    private BuildServerIntegrationSettingsPage _settingsPage;
+
+    [SetUp]
+    public void SetUp()
     {
-        // Created once for the fixture
-        private ReferenceRepository _referenceRepository;
-        private MockHost _form;
-        private BuildServerIntegrationSettingsPage _settingsPage;
+        _referenceRepository = new ReferenceRepository();
+        ExportProvider mefExportProvider = TestComposition.Empty.ExportProviderFactory.CreateExportProvider();
+        ManagedExtensibility.SetTestExportProvider(mefExportProvider);
+    }
 
-        [SetUp]
-        public void SetUp()
-        {
-            _referenceRepository = new ReferenceRepository();
-            ExportProvider mefExportProvider = TestComposition.Empty.ExportProviderFactory.CreateExportProvider();
-            ManagedExtensibility.SetTestExportProvider(mefExportProvider);
-        }
+    [TearDown]
+    public void TearDown()
+    {
+        _settingsPage.Dispose();
+        _form.Dispose();
+        _referenceRepository.Dispose();
+    }
 
-        [TearDown]
-        public void TearDown()
-        {
-            _settingsPage.Dispose();
-            _form.Dispose();
-            _referenceRepository.Dispose();
-        }
+    [Test]
+    public void BuildServerType_should_contain_only_None_if_not_build_server_plugins_found()
+    {
+        RunFormTest(
+          async form =>
+          {
+              await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-        [Test]
-        public void BuildServerType_should_contain_only_None_if_not_build_server_plugins_found()
-        {
-            RunFormTest(
-              async form =>
-              {
-                  await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
+              ClassicAssert.AreEqual(1, _settingsPage.GetTestAccessor().BuildServerType.Items.Count);
+              ClassicAssert.AreEqual(0, _settingsPage.GetTestAccessor().BuildServerType.SelectedIndex);
+          });
+    }
 
-                  ClassicAssert.AreEqual(1, _settingsPage.GetTestAccessor().BuildServerType.Items.Count);
-                  ClassicAssert.AreEqual(0, _settingsPage.GetTestAccessor().BuildServerType.SelectedIndex);
-              });
-        }
-
-        private void RunFormTest(Func<MockHost, Task> testDriverAsync)
-        {
-            UITest.RunForm(
-                () =>
+    private void RunFormTest(Func<MockHost, Task> testDriverAsync)
+    {
+        UITest.RunForm(
+            () =>
+            {
+                _form = new MockHost(_referenceRepository.Module)
                 {
-                    _form = new MockHost(_referenceRepository.Module)
-                    {
-                        Size = new(800, 400)
-                    };
+                    Size = new(800, 400)
+                };
 
-                    _settingsPage = SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(_form, GitUICommands.EmptyServiceProvider);
-                    _settingsPage.Dock = DockStyle.Fill;
+                _settingsPage = SettingsPageBase.Create<BuildServerIntegrationSettingsPage>(_form, GitUICommands.EmptyServiceProvider);
+                _settingsPage.Dock = DockStyle.Fill;
 
-                    _form.Controls.Add(_settingsPage);
+                _form.Controls.Add(_settingsPage);
 
-                    _form.ShowDialog(owner: null);
-                },
-                testDriverAsync);
+                _form.ShowDialog(owner: null);
+            },
+            testDriverAsync);
+    }
+
+    private class MockHost : Form, ISettingsPageHost
+    {
+        public MockHost(GitModule module)
+        {
+            CheckSettingsLogic = new(new(module));
         }
 
-        private class MockHost : Form, ISettingsPageHost
+        public CheckSettingsLogic CheckSettingsLogic { get; }
+
+        public void GotoPage(SettingsPageReference settingsPageReference)
         {
-            public MockHost(GitModule module)
-            {
-                CheckSettingsLogic = new(new(module));
-            }
+            throw new NotImplementedException();
+        }
 
-            public CheckSettingsLogic CheckSettingsLogic { get; }
+        public void LoadAll()
+        {
+            throw new NotImplementedException();
+        }
 
-            public void GotoPage(SettingsPageReference settingsPageReference)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void LoadAll()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void SaveAll()
-            {
-                throw new NotImplementedException();
-            }
+        public void SaveAll()
+        {
+            throw new NotImplementedException();
         }
     }
 }

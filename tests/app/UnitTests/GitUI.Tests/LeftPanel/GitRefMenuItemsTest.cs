@@ -4,157 +4,156 @@ using GitUI.LeftPanel.Interfaces;
 using NSubstitute;
 using ResourceManager;
 
-namespace GitUITests.LeftPanel
+namespace GitUITests.LeftPanel;
+
+[TestFixture]
+[Apartment(ApartmentState.STA)]
+public class GitRefMenuItemsTest
 {
-    [TestFixture]
-    [Apartment(ApartmentState.STA)]
-    public class GitRefMenuItemsTest
+    private const int expectedMenuItems = 7;
+    private const int expectedTotal = expectedMenuItems + 1; // + end separator
+    private Queue<ToolStripMenuItem> _factoryQueue = new();
+    private IMenuItemFactory _factory = null;
+    private TestBranchNode _testNode = new();
+
+    [SetUp]
+    public void Setup()
     {
-        private const int expectedMenuItems = 7;
-        private const int expectedTotal = expectedMenuItems + 1; // + end separator
-        private Queue<ToolStripMenuItem> _factoryQueue = new();
-        private IMenuItemFactory _factory = null;
-        private TestBranchNode _testNode = new();
+        _factory = Substitute.For<IMenuItemFactory>();
+        _factory.CreateMenuItem<ToolStripMenuItem, TestBranchNode>(
+            Arg.Do<Action<TestBranchNode>>(arg => _factoryQueue.Peek().Click += (sender, e) => arg(_testNode)),
+            Arg.Any<TranslationString>(),
+            Arg.Any<TranslationString>(),
+            Arg.Any<Bitmap>())
+            .Returns(_ => _factoryQueue.Dequeue());
 
-        [SetUp]
-        public void Setup()
+        Enumerable.Range(0, expectedMenuItems).ForEach(_ => _factoryQueue.Enqueue(new ToolStripMenuItem()));
+    }
+
+    [Test]
+    public void WithInactiveLocalBranch_HasAllMenuItems()
+    {
+        // Arrange
+        MenuItemsGenerator<TestBranchNode> group = CreateGenerator(_factory);
+        new LocalBranchMenuItemsStrings().ApplyTo(group.Strings);
+        WithRefMenu_HasAllItems(group);
+    }
+
+    [Test]
+    public void WithRemoteBranch_HasAllMenuItems()
+    {
+        // Arrange
+        MenuItemsGenerator<TestBranchNode> group = CreateGenerator(_factory);
+        new RemoteBranchMenuItemsStrings().ApplyTo(group.Strings);
+        WithRefMenu_HasAllItems(group);
+    }
+
+    [Test]
+    public void WithTagNode_HasAllMenuItems()
+    {
+        // Arrange
+        MenuItemsGenerator<TestBranchNode> group = CreateGenerator(_factory);
+        new TagMenuItemsStrings().ApplyTo(group.Strings);
+
+        // mock rename to keep the test simple
+        group.Strings.Tooltips[MenuItemKey.Rename] = new TranslationString("Rename");
+        WithRefMenu_HasAllItems(group);
+    }
+
+    private void WithRefMenu_HasAllItems(MenuItemsGenerator<TestBranchNode> group)
+    {
+        // Act
+        ToolStripItemWithKey[] menuItems = group.ToArray();
+        ClassicAssert.IsEmpty(_factoryQueue);
+        ClassicAssert.AreEqual(menuItems.Length, expectedTotal);
+        int testIndex = 0;
+        AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Checkout));
+        AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Merge));
+        AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Rebase));
+        AssertItem(menuItems[testIndex++], nameof(TestBranchNode.CreateBranch));
+        AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Reset));
+        ClassicAssert.IsInstanceOf<ToolStripSeparator>(menuItems[testIndex++].Item);
+        AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Rename));
+        AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Delete));
+    }
+
+    [Test]
+    public void WithCurrentLocalBranch_HavingDisabledItems()
+    {
+        // Arrange
+        LocalBranchMenuItems<TestBranchNode> generator = new(_factory);
+
+        // Act
+        const int expectedEnabled = 2; // create branch, rename
+        int expectedDisabled = expectedTotal - expectedEnabled;
+        ToolStripItemWithKey[] disabledItems = generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key)).ToArray();
+        ClassicAssert.AreEqual(disabledItems.Length, expectedDisabled);
+        int testIndex = 0;
+        AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Checkout));
+        AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Merge));
+        AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Rebase));
+        AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Reset));
+        ClassicAssert.IsInstanceOf<ToolStripSeparator>(disabledItems[testIndex++].Item);
+        AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Delete));
+    }
+
+    private void AssertItem(ToolStripItemWithKey menuItem, string caption)
+    {
+        ToolStripMenuItem item = menuItem.Item as ToolStripMenuItem;
+        item.PerformClick();
+        ClassicAssert.AreEqual(caption, _testNode.CallStatck.Pop());
+    }
+
+    private static MenuItemsGenerator<TestBranchNode> CreateGenerator(IMenuItemFactory factory)
+    {
+        return new MenuItemsGenerator<TestBranchNode>(factory);
+    }
+
+    // can't use a substitute here because of class constraint on INode
+    public class TestBranchNode : INode, IGitRefActions, ICanDelete, ICanRename
+    {
+        public Stack<string> CallStatck { get; } = new Stack<string>();
+        public string FullPath => throw new NotImplementedException();
+
+        public bool Checkout()
         {
-            _factory = Substitute.For<IMenuItemFactory>();
-            _factory.CreateMenuItem<ToolStripMenuItem, TestBranchNode>(
-                Arg.Do<Action<TestBranchNode>>(arg => _factoryQueue.Peek().Click += (sender, e) => arg(_testNode)),
-                Arg.Any<TranslationString>(),
-                Arg.Any<TranslationString>(),
-                Arg.Any<Bitmap>())
-                .Returns(_ => _factoryQueue.Dequeue());
-
-            Enumerable.Range(0, expectedMenuItems).ForEach(_ => _factoryQueue.Enqueue(new ToolStripMenuItem()));
+            return Trace();
         }
 
-        [Test]
-        public void WithInactiveLocalBranch_HasAllMenuItems()
+        public bool CreateBranch()
         {
-            // Arrange
-            MenuItemsGenerator<TestBranchNode> group = CreateGenerator(_factory);
-            new LocalBranchMenuItemsStrings().ApplyTo(group.Strings);
-            WithRefMenu_HasAllItems(group);
+            return Trace();
         }
 
-        [Test]
-        public void WithRemoteBranch_HasAllMenuItems()
+        public bool Delete()
         {
-            // Arrange
-            MenuItemsGenerator<TestBranchNode> group = CreateGenerator(_factory);
-            new RemoteBranchMenuItemsStrings().ApplyTo(group.Strings);
-            WithRefMenu_HasAllItems(group);
+            return Trace();
         }
 
-        [Test]
-        public void WithTagNode_HasAllMenuItems()
+        public bool Merge()
         {
-            // Arrange
-            MenuItemsGenerator<TestBranchNode> group = CreateGenerator(_factory);
-            new TagMenuItemsStrings().ApplyTo(group.Strings);
-
-            // mock rename to keep the test simple
-            group.Strings.Tooltips[MenuItemKey.Rename] = new TranslationString("Rename");
-            WithRefMenu_HasAllItems(group);
+            return Trace();
         }
 
-        private void WithRefMenu_HasAllItems(MenuItemsGenerator<TestBranchNode> group)
+        public bool Rebase()
         {
-            // Act
-            ToolStripItemWithKey[] menuItems = group.ToArray();
-            ClassicAssert.IsEmpty(_factoryQueue);
-            ClassicAssert.AreEqual(menuItems.Length, expectedTotal);
-            int testIndex = 0;
-            AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Checkout));
-            AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Merge));
-            AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Rebase));
-            AssertItem(menuItems[testIndex++], nameof(TestBranchNode.CreateBranch));
-            AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Reset));
-            ClassicAssert.IsInstanceOf<ToolStripSeparator>(menuItems[testIndex++].Item);
-            AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Rename));
-            AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Delete));
+            return Trace();
         }
 
-        [Test]
-        public void WithCurrentLocalBranch_HavingDisabledItems()
+        public bool Rename()
         {
-            // Arrange
-            LocalBranchMenuItems<TestBranchNode> generator = new(_factory);
-
-            // Act
-            const int expectedEnabled = 2; // create branch, rename
-            int expectedDisabled = expectedTotal - expectedEnabled;
-            ToolStripItemWithKey[] disabledItems = generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key)).ToArray();
-            ClassicAssert.AreEqual(disabledItems.Length, expectedDisabled);
-            int testIndex = 0;
-            AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Checkout));
-            AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Merge));
-            AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Rebase));
-            AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Reset));
-            ClassicAssert.IsInstanceOf<ToolStripSeparator>(disabledItems[testIndex++].Item);
-            AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Delete));
+            return Trace();
         }
 
-        private void AssertItem(ToolStripItemWithKey menuItem, string caption)
+        public bool Reset()
         {
-            ToolStripMenuItem item = menuItem.Item as ToolStripMenuItem;
-            item.PerformClick();
-            ClassicAssert.AreEqual(caption, _testNode.CallStatck.Pop());
+            return Trace();
         }
 
-        private static MenuItemsGenerator<TestBranchNode> CreateGenerator(IMenuItemFactory factory)
+        private bool Trace([CallerMemberName] string name = "")
         {
-            return new MenuItemsGenerator<TestBranchNode>(factory);
-        }
-
-        // can't use a substitute here because of class constraint on INode
-        public class TestBranchNode : INode, IGitRefActions, ICanDelete, ICanRename
-        {
-            public Stack<string> CallStatck { get; } = new Stack<string>();
-            public string FullPath => throw new NotImplementedException();
-
-            public bool Checkout()
-            {
-                return Trace();
-            }
-
-            public bool CreateBranch()
-            {
-                return Trace();
-            }
-
-            public bool Delete()
-            {
-                return Trace();
-            }
-
-            public bool Merge()
-            {
-                return Trace();
-            }
-
-            public bool Rebase()
-            {
-                return Trace();
-            }
-
-            public bool Rename()
-            {
-                return Trace();
-            }
-
-            public bool Reset()
-            {
-                return Trace();
-            }
-
-            private bool Trace([CallerMemberName] string name = "")
-            {
-                CallStatck.Push(name);
-                return true;
-            }
+            CallStatck.Push(name);
+            return true;
         }
     }
 }

@@ -1,66 +1,65 @@
 using GitCommands.Config;
 using GitExtensions.Extensibility.Git;
 
-namespace GitCommands.Remotes
+namespace GitCommands.Remotes;
+
+public interface IRepoNameExtractor
 {
-    public interface IRepoNameExtractor
+    /// <summary>
+    /// Get a "repo shortname" from the current repo URL
+    /// There is no official Git repo shortname, this is one possible definition:
+    ///  The filename without extension for the remote URL
+    /// This function could have been included in GitModule
+    /// </summary>
+    (string repoProject, string repoName) Get();
+}
+
+public sealed class RepoNameExtractor : IRepoNameExtractor
+{
+    private readonly Func<IGitModule> _getModule;
+
+    public RepoNameExtractor(Func<IGitModule> getModule)
     {
-        /// <summary>
-        /// Get a "repo shortname" from the current repo URL
-        /// There is no official Git repo shortname, this is one possible definition:
-        ///  The filename without extension for the remote URL
-        /// This function could have been included in GitModule
-        /// </summary>
-        (string repoProject, string repoName) Get();
+        _getModule = getModule;
     }
 
-    public sealed class RepoNameExtractor : IRepoNameExtractor
+    /// <summary>
+    /// Get a "repo shortname" from the current repo URL
+    /// There is no official Git repo shortname, this is one possible definition:
+    ///  The filename without extension for the remote URL
+    /// This function could have been included in GitModule
+    /// </summary>
+    public (string repoProject, string repoName) Get()
     {
-        private readonly Func<IGitModule> _getModule;
+        IGitModule module = _getModule();
 
-        public RepoNameExtractor(Func<IGitModule> getModule)
+        // Extract "name of repo" from remote url
+        string remoteName = module.GetCurrentRemote();
+
+        if (string.IsNullOrWhiteSpace(remoteName))
         {
-            _getModule = getModule;
+            // No remote for the branch, for instance a submodule. Use first remote.
+            IReadOnlyList<string> remotes = module.GetRemoteNames();
+            if (remotes.Count > 0)
+            {
+                remoteName = remotes[0];
+            }
         }
 
-        /// <summary>
-        /// Get a "repo shortname" from the current repo URL
-        /// There is no official Git repo shortname, this is one possible definition:
-        ///  The filename without extension for the remote URL
-        /// This function could have been included in GitModule
-        /// </summary>
-        public (string repoProject, string repoName) Get()
+        string remoteUrl = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
+        string repoName = Path.GetFileNameWithoutExtension(remoteUrl);
+
+        return (GetRepoProject(), repoName);
+
+        string GetRepoProject()
         {
-            IGitModule module = _getModule();
-
-            // Extract "name of repo" from remote url
-            string remoteName = module.GetCurrentRemote();
-
-            if (string.IsNullOrWhiteSpace(remoteName))
+            try
             {
-                // No remote for the branch, for instance a submodule. Use first remote.
-                IReadOnlyList<string> remotes = module.GetRemoteNames();
-                if (remotes.Count > 0)
-                {
-                    remoteName = remotes[0];
-                }
+                return Path.GetFileNameWithoutExtension(Path.GetDirectoryName(remoteUrl));
             }
-
-            string remoteUrl = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
-            string repoName = Path.GetFileNameWithoutExtension(remoteUrl);
-
-            return (GetRepoProject(), repoName);
-
-            string GetRepoProject()
+            catch
             {
-                try
-                {
-                    return Path.GetFileNameWithoutExtension(Path.GetDirectoryName(remoteUrl));
-                }
-                catch
-                {
-                    return "";
-                }
+                return "";
             }
         }
     }

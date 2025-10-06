@@ -1,81 +1,80 @@
 ﻿using System.Diagnostics.Contracts;
 using System.Text;
 
-namespace GitCommands
+namespace GitCommands;
+
+/// <summary>
+/// Encoding Helper
+/// </summary>
+public static class EncodingHelper
 {
-    /// <summary>
-    /// Encoding Helper
-    /// </summary>
-    public static class EncodingHelper
+    [Pure]
+    public static string GetString(byte[]? output, byte[]? error, Encoding encoding)
     {
-        [Pure]
-        public static string GetString(byte[]? output, byte[]? error, Encoding encoding)
+        ArgumentNullException.ThrowIfNull(encoding);
+
+        StringBuilder sb = new();
+
+        if (output?.Length is > 0)
         {
-            ArgumentNullException.ThrowIfNull(encoding);
-
-            StringBuilder sb = new();
-
-            if (output?.Length is > 0)
-            {
-                sb.Append(encoding.GetString(output));
-            }
-
-            if (error?.Length is > 0)
-            {
-                if (sb.Length > 0)
-                {
-                    sb.AppendLine();
-                }
-
-                sb.Append(encoding.GetString(error));
-            }
-
-            return sb.ToString();
+            sb.Append(encoding.GetString(output));
         }
 
-        [Pure]
-        public static byte[] ConvertTo(Encoding encoding, string s)
+        if (error?.Length is > 0)
         {
-            byte[] unicodeBytes = Encoding.Unicode.GetBytes(s);
+            if (sb.Length > 0)
+            {
+                sb.AppendLine();
+            }
 
-            return Encoding.Convert(Encoding.Unicode, encoding, unicodeBytes);
+            sb.Append(encoding.GetString(error));
         }
 
-        [Pure]
-        public static string DecodeString(byte[]? output, byte[]? error, ref Encoding encoding)
-        {
-            ArgumentNullException.ThrowIfNull(encoding);
+        return sb.ToString();
+    }
 
-            string outputString = "";
-            if (output?.Length is > 0)
+    [Pure]
+    public static byte[] ConvertTo(Encoding encoding, string s)
+    {
+        byte[] unicodeBytes = Encoding.Unicode.GetBytes(s);
+
+        return Encoding.Convert(Encoding.Unicode, encoding, unicodeBytes);
+    }
+
+    [Pure]
+    public static string DecodeString(byte[]? output, byte[]? error, ref Encoding encoding)
+    {
+        ArgumentNullException.ThrowIfNull(encoding);
+
+        string outputString = "";
+        if (output?.Length is > 0)
+        {
+            using Stream ms = new MemoryStream(output);
+            using StreamReader reader = new(ms, encoding);
+            reader.Peek();
+            encoding = reader.CurrentEncoding;
+            outputString = reader.ReadToEnd();
+        }
+
+        if (error?.Length is > 0)
+        {
+            using Stream ms = new MemoryStream(error);
+            using StreamReader reader = new(ms, encoding);
+            reader.Peek();
+
+            if (outputString.Length > 0)
             {
-                using Stream ms = new MemoryStream(output);
-                using StreamReader reader = new(ms, encoding);
-                reader.Peek();
+                outputString += Environment.NewLine;
+            }
+            else
+            {
+                // .Net automatically detect Unicode encoding in StreamReader
                 encoding = reader.CurrentEncoding;
-                outputString = reader.ReadToEnd();
             }
 
-            if (error?.Length is > 0)
-            {
-                using Stream ms = new MemoryStream(error);
-                using StreamReader reader = new(ms, encoding);
-                reader.Peek();
-
-                if (outputString.Length > 0)
-                {
-                    outputString += Environment.NewLine;
-                }
-                else
-                {
-                    // .Net automatically detect Unicode encoding in StreamReader
-                    encoding = reader.CurrentEncoding;
-                }
-
-                outputString += reader.ReadToEnd();
-            }
-
-            return outputString;
+            outputString += reader.ReadToEnd();
         }
+
+        return outputString;
     }
 }

@@ -2,98 +2,97 @@
 using GitUI.CommitInfo;
 using ResourceManager;
 
-namespace GitUITests.UserControls.CommitInfo
+namespace GitUITests.UserControls.CommitInfo;
+
+public class RefsFormatterTests
 {
-    public class RefsFormatterTests
+    private readonly IReadOnlyList<string> _refs
+        = new List<string> { "r1", null, "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13" };
+
+    // Created once for each test
+    private ILinkFactory _linkFactory;
+    private RefsFormatter _refsFormatter;
+
+    [SetUp]
+    public void SetUp()
     {
-        private readonly IReadOnlyList<string> _refs
-            = new List<string> { "r1", null, "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13" };
+        _linkFactory = new LinkFactory();
+        _refsFormatter = new RefsFormatter(_linkFactory);
+    }
 
-        // Created once for each test
-        private ILinkFactory _linkFactory;
-        private RefsFormatter _refsFormatter;
+    [Test]
+    public void LinkFactoryNull()
+    {
+        ((Action)(() => new RefsFormatter(null))).Should().Throw<ArgumentNullException>();
+    }
 
-        [SetUp]
-        public void SetUp()
-        {
-            _linkFactory = new LinkFactory();
-            _refsFormatter = new RefsFormatter(_linkFactory);
-        }
+    [Test]
+    public void RefsNull()
+    {
+        _refsFormatter.FormatBranches(branches: null, showAsLinks: true, limit: true)
+            .Should().Be(string.Empty);
 
-        [Test]
-        public void LinkFactoryNull()
-        {
-            ((Action)(() => new RefsFormatter(null))).Should().Throw<ArgumentNullException>();
-        }
+        _refsFormatter.FormatTags(tags: null, showAsLinks: true, limit: true)
+            .Should().Be(string.Empty);
+    }
 
-        [Test]
-        public void RefsNull()
-        {
-            _refsFormatter.FormatBranches(branches: null, showAsLinks: true, limit: true)
-                .Should().Be(string.Empty);
+    [Test]
+    public void Empty([Values(true, false)] bool showAsLinks, [Values(true, false)] bool limit)
+    {
+        IReadOnlyList<string> refs = new List<string>();
 
-            _refsFormatter.FormatTags(tags: null, showAsLinks: true, limit: true)
-                .Should().Be(string.Empty);
-        }
+        _refsFormatter.FormatBranches(refs, showAsLinks, limit)
+            .Should().Be(GitUI.TranslatedStrings.ContainedInNoBranch);
 
-        [Test]
-        public void Empty([Values(true, false)] bool showAsLinks, [Values(true, false)] bool limit)
-        {
-            IReadOnlyList<string> refs = new List<string>();
+        _refsFormatter.FormatTags(refs, showAsLinks, limit)
+            .Should().Be(GitUI.TranslatedStrings.ContainedInNoTag);
+    }
 
-            _refsFormatter.FormatBranches(refs, showAsLinks, limit)
-                .Should().Be(GitUI.TranslatedStrings.ContainedInNoBranch);
+    [Test]
+    public void LimitNotExceededOrNotLimited([Values(1, 2, 3, 9, 10, 11, 12, 13)] int count, [Values(true, false)] bool showAsLinks)
+    {
+        bool limit = count <= 12;
+        IReadOnlyList<string> refs = _refs.Take(count).ToList();
+        IEnumerable<string> formattedBranches = refs.Select(r => FormatRef(r, "branch", showAsLinks));
+        IEnumerable<string> formattedTags = refs.Select(r => FormatRef(r, "tag", showAsLinks));
 
-            _refsFormatter.FormatTags(refs, showAsLinks, limit)
-                .Should().Be(GitUI.TranslatedStrings.ContainedInNoTag);
-        }
+        _refsFormatter.FormatBranches(refs, showAsLinks, limit)
+            .Should().Be(GitUI.TranslatedStrings.ContainedInBranches
+                         + Environment.NewLine
+                         + formattedBranches.Join(Environment.NewLine));
 
-        [Test]
-        public void LimitNotExceededOrNotLimited([Values(1, 2, 3, 9, 10, 11, 12, 13)] int count, [Values(true, false)] bool showAsLinks)
-        {
-            bool limit = count <= 12;
-            IReadOnlyList<string> refs = _refs.Take(count).ToList();
-            IEnumerable<string> formattedBranches = refs.Select(r => FormatRef(r, "branch", showAsLinks));
-            IEnumerable<string> formattedTags = refs.Select(r => FormatRef(r, "tag", showAsLinks));
+        _refsFormatter.FormatTags(refs, showAsLinks, limit)
+            .Should().Be(GitUI.TranslatedStrings.ContainedInTags
+                         + Environment.NewLine
+                         + formattedTags.Join(Environment.NewLine));
+    }
 
-            _refsFormatter.FormatBranches(refs, showAsLinks, limit)
-                .Should().Be(GitUI.TranslatedStrings.ContainedInBranches
-                             + Environment.NewLine
-                             + formattedBranches.Join(Environment.NewLine));
+    [Test]
+    public void LimitExceeded([Values(true, false)] bool showAsLinks)
+    {
+        IEnumerable<string> formattedBranches = _refs.Take(10).Select(r => FormatRef(r, "branch", showAsLinks));
+        IEnumerable<string> formattedTags = _refs.Take(10).Select(r => FormatRef(r, "tag", showAsLinks));
 
-            _refsFormatter.FormatTags(refs, showAsLinks, limit)
-                .Should().Be(GitUI.TranslatedStrings.ContainedInTags
-                             + Environment.NewLine
-                             + formattedTags.Join(Environment.NewLine));
-        }
+        _refsFormatter.FormatBranches(_refs, showAsLinks, limit: true)
+            .Should().Be(GitUI.TranslatedStrings.ContainedInBranches
+                         + Environment.NewLine
+                         + formattedBranches.Join(Environment.NewLine)
+                         + GetShowAllLink("branches"));
 
-        [Test]
-        public void LimitExceeded([Values(true, false)] bool showAsLinks)
-        {
-            IEnumerable<string> formattedBranches = _refs.Take(10).Select(r => FormatRef(r, "branch", showAsLinks));
-            IEnumerable<string> formattedTags = _refs.Take(10).Select(r => FormatRef(r, "tag", showAsLinks));
+        _refsFormatter.FormatTags(_refs, showAsLinks, limit: true)
+            .Should().Be(GitUI.TranslatedStrings.ContainedInTags
+                         + Environment.NewLine
+                         + formattedTags.Join(Environment.NewLine)
+                         + GetShowAllLink("tags"));
+    }
 
-            _refsFormatter.FormatBranches(_refs, showAsLinks, limit: true)
-                .Should().Be(GitUI.TranslatedStrings.ContainedInBranches
-                             + Environment.NewLine
-                             + formattedBranches.Join(Environment.NewLine)
-                             + GetShowAllLink("branches"));
+    private static string FormatRef(string r, string type, bool showAsLinks)
+    {
+        return showAsLinks ? $"<a href='gitext://goto{type}/{r}'>{r}</a>" : r;
+    }
 
-            _refsFormatter.FormatTags(_refs, showAsLinks, limit: true)
-                .Should().Be(GitUI.TranslatedStrings.ContainedInTags
-                             + Environment.NewLine
-                             + formattedTags.Join(Environment.NewLine)
-                             + GetShowAllLink("tags"));
-        }
-
-        private static string FormatRef(string r, string type, bool showAsLinks)
-        {
-            return showAsLinks ? $"<a href='gitext://goto{type}/{r}'>{r}</a>" : r;
-        }
-
-        private static string GetShowAllLink(string type)
-        {
-            return $"{Environment.NewLine}<a href='gitext://showall/{type}'>[ {TranslatedStrings.ShowAll} ]</a>";
-        }
+    private static string GetShowAllLink(string type)
+    {
+        return $"{Environment.NewLine}<a href='gitext://showall/{type}'>[ {TranslatedStrings.ShowAll} ]</a>";
     }
 }
