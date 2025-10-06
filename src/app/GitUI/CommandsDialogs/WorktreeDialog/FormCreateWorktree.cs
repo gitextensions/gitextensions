@@ -92,20 +92,45 @@ public sealed partial class FormCreateWorktree : GitModuleForm
 
     private void CreateWorktree()
     {
+        string relativePath = Path.GetRelativePath(Module.WorkingDir, WorktreeDirectory).ToPosixPath().Quote();
+        string newBranchOption =
+            radioButtonCreateNewBranch.Checked
+            ? $"-b {textBoxNewBranchName.Text}"
+            : (comboBoxBranches.SelectedItem as GitRef)?.Name;
+        DialogResult = UICommands.StartGitCommandProcessDialog(this, CreateWorktreeCommand(Module, relativePath, newBranchOption)) ? DialogResult.OK : DialogResult.None;
+    }
+
+    private GitArgumentBuilder CreateWorktreeCommand(IGitModule module, string relativePath, string newBranchOption)
+    {
         // https://git-scm.com/docs/git-worktree
 
-        GitArgumentBuilder args = new("worktree")
+        // Get the default value, set if unset in config.
+        // Similar in DiffHighlightService.
+        const string command = "worktree";
+        GitCommandConfiguration commandConfiguration = new();
+        IReadOnlyList<GitConfigItem> items = GitCommandConfiguration.Default.Get(command);
+        foreach (GitConfigItem cfg in items)
+        {
+            commandConfiguration.Add(cfg, command);
+        }
+
+        SetIfUnsetInGit("worktree.useRelativePaths", "true");
+        GitArgumentBuilder args = new(command, commandConfiguration)
         {
             "add",
-            Path.GetRelativePath(Module.WorkingDir, WorktreeDirectory).ToPosixPath().Quote(),
-            {
-                radioButtonCreateNewBranch.Checked,
-                $"-b {textBoxNewBranchName.Text}",
-                comboBoxBranches.SelectedItem is not null ? ((GitRef)comboBoxBranches.SelectedItem).Name : null
-            }
+            relativePath,
+            newBranchOption,
         };
 
-        DialogResult = UICommands.StartGitCommandProcessDialog(this, args) ? DialogResult.OK : DialogResult.None;
+        return args;
+
+        void SetIfUnsetInGit(string key, string value)
+        {
+            if (string.IsNullOrEmpty(module.GetEffectiveSetting(key)))
+            {
+                commandConfiguration.Add(new GitConfigItem(key, value), command);
+            }
+        }
     }
 
     private void ValidateWorktreeOptions()
