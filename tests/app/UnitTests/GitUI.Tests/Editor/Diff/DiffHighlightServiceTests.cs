@@ -96,6 +96,10 @@ public class DiffHighlightServiceTests
         DiffViewerLineNumberControl diffViewerLineNumber = new(textEditor.ActiveTextAreaControl.TextArea);
         string testDataDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "Editor", "Diff");
         string text = File.ReadAllText(Path.Combine(testDataDir, "gaps.diff"));
+
+        // ensure that the test doesn't fail if the local Git configuration has core.autocrlf enabled
+        text = text.Replace("\r\n", "\n");
+
         _ = new PatchHighlightService(ref text, useGitColoring: true, diffViewerLineNumber);
         DiffLinesInfo result = diffViewerLineNumber.GetTestAccessor().Result;
         DiffLineInfo[] diffLines = [.. result.DiffLines.Values.OrderBy(l => l.LineNumInDiff)];
