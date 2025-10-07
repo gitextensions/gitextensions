@@ -154,7 +154,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             string defaultBranchName = GitConfigurationHelper.GetSetting("init.defaultbranch", "master");
 
-            _referenceRepository.CreateRemoteForMasterBranch(defaultBranchName);
+            _referenceRepository.CreateRemoteForBranch(defaultBranchName);
             RunFormTest(async form =>
             {
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
