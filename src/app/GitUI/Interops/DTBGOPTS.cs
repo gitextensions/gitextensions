@@ -1,15 +1,14 @@
 ﻿using System.Runtime.InteropServices;
 
-namespace System
+namespace System;
+
+internal static partial class NativeMethods
 {
-    internal static partial class NativeMethods
+    [StructLayout(LayoutKind.Sequential)]
+    public struct DTBGOPTS
     {
-        [StructLayout(LayoutKind.Sequential)]
-        public struct DTBGOPTS
-        {
-            public uint dwSize;
-            public uint dwFlags;
-            public RECT rcClip;
-        }
+        public uint dwSize;
+        public uint dwFlags;
+        public RECT rcClip;
     }
 }

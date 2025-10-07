@@ -1,290 +1,289 @@
 using GitExtensions.Extensibility;
 
-namespace GitExtensions.Plugins.GitStatistics
+namespace GitExtensions.Plugins.GitStatistics;
+
+public readonly struct CodeFile
 {
-    public readonly struct CodeFile
+    public int TotalLineCount { get; }
+    public int BlankLineCount { get; }
+    public int DesignerLineCount { get; }
+    public int CommentLineCount { get; }
+    public int CodeLineCount { get; }
+    public bool IsTestFile { get; }
+
+    public static CodeFile Parse(FileInfo file)
     {
-        public int TotalLineCount { get; }
-        public int BlankLineCount { get; }
-        public int DesignerLineCount { get; }
-        public int CommentLineCount { get; }
-        public int CodeLineCount { get; }
-        public bool IsTestFile { get; }
+        int lineCount = 0;
+        int blankLineCount = 0;
+        int designerLineCount = 0;
+        int commentLineCount = 0;
+        bool isTestFile = false;
 
-        public static CodeFile Parse(FileInfo file)
+        string extension = file.Extension;
+        bool inCodeGeneratedRegion = false;
+        bool inCommentBlock = false;
+
+        foreach (string line in ReadLines())
         {
-            int lineCount = 0;
-            int blankLineCount = 0;
-            int designerLineCount = 0;
-            int commentLineCount = 0;
-            bool isTestFile = false;
+            ProcessLine(line);
+        }
 
-            string extension = file.Extension;
-            bool inCodeGeneratedRegion = false;
-            bool inCommentBlock = false;
+        return new CodeFile(lineCount, blankLineCount, designerLineCount, commentLineCount, isTestFile);
 
-            foreach (string line in ReadLines())
+        IEnumerable<string> ReadLines()
+        {
+            // NOTE not using File.ReadLines here as it doesn't appear to detect a BOM
+            using StreamReader reader = new(file.FullName, detectEncodingFromByteOrderMarks: true);
+            while (true)
             {
-                ProcessLine(line);
+                string line = reader.ReadLine();
+
+                if (line is null)
+                {
+                    yield break;
+                }
+
+                yield return line;
+            }
+        }
+
+        void ProcessLine(string line)
+        {
+            line = line.TrimStart();
+
+            bool skipResetFlag;
+
+            SetCodeBlockFlags();
+
+            lineCount++;
+
+            if (inCodeGeneratedRegion || IsDesignerFile())
+            {
+                designerLineCount++;
+            }
+            else if (line.Length == 0)
+            {
+                blankLineCount++;
+            }
+            else if (inCommentBlock || line.StartsWith("'") || line.StartsWith("//"))
+            {
+                commentLineCount++;
+            }
+            else if (extension.Equals(".py", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
+            {
+                commentLineCount++;
+            }
+            else if (extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
+            {
+                commentLineCount++;
+            }
+            else if (extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
+            {
+                commentLineCount++;
+            }
+            else if (extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.StartsWith("--"))
+            {
+                commentLineCount++;
+            }
+            else if (extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) && (line.Contains("@*") && line.Contains("*@")))
+            {
+                commentLineCount++;
+            }
+            else if (extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.StartsWith("%"))
+            {
+                commentLineCount++;
+            }
+            else if ((extension.Equals(".asm", StringComparison.OrdinalIgnoreCase) ||
+                      extension.Equals(".s", StringComparison.OrdinalIgnoreCase) ||
+                      extension.Equals(".inc", StringComparison.OrdinalIgnoreCase)) &&
+                      line.StartsWith(";"))
+            {
+                commentLineCount++;
             }
 
-            return new CodeFile(lineCount, blankLineCount, designerLineCount, commentLineCount, isTestFile);
-
-            IEnumerable<string> ReadLines()
+            if (!skipResetFlag)
             {
-                // NOTE not using File.ReadLines here as it doesn't appear to detect a BOM
-                using StreamReader reader = new(file.FullName, detectEncodingFromByteOrderMarks: true);
-                while (true)
-                {
-                    string line = reader.ReadLine();
+                ResetCodeBlockFlags();
+            }
 
-                    if (line is null)
+            return;
+
+            bool IsDesignerFile()
+            {
+                bool isWebReferenceFile = file.FullName.Contains("Web References") && file.Name == "Reference.cs";
+
+                return isWebReferenceFile || file.Name.Contains(".Designer.", StringComparison.CurrentCultureIgnoreCase);
+            }
+
+            void SetCodeBlockFlags()
+            {
+                skipResetFlag = false;
+
+                // The number of code-generated lines is an approximation at best, particularly
+                // with VS 2003 code.  Change code here if you don't like the way it's working.
+                // if (line.Contains("Designer generated code") // Might be cleaner
+                if (line.StartsWith("#region Windows Form Designer generated code") ||
+                    line.StartsWith("#Region \" Windows Form Designer generated code") ||
+                    line.StartsWith("#region Component Designer generated code") ||
+                    line.StartsWith("#Region \" Component Designer generated code \"") ||
+                    line.StartsWith("#region Web Form Designer generated code") ||
+                    line.StartsWith("#Region \" Web Form Designer Generated Code \""))
+                {
+                    inCodeGeneratedRegion = true;
+                }
+
+                if (line.StartsWith("/*"))
+                {
+                    inCommentBlock = true;
+                }
+
+                if (extension.Equals(".pas", StringComparison.OrdinalIgnoreCase) || extension.Equals(".inc", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (line.StartsWith("(*") && !line.StartsWith("(*$"))
                     {
-                        yield break;
+                        inCommentBlock = true;
                     }
 
-                    yield return line;
+                    if (line.StartsWith("{") && !line.StartsWith("{$"))
+                    {
+                        inCommentBlock = true;
+                    }
+                }
+
+                if (extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.StartsWith("=begin"))
+                {
+                    inCommentBlock = true;
+                }
+                else if (extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.StartsWith("=begin"))
+                {
+                    inCommentBlock = true;
+                }
+                else if (extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.StartsWith("--[["))
+                {
+                    inCommentBlock = true;
+                }
+
+                if (extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.StartsWith("%{"))
+                {
+                    inCommentBlock = true;
+                }
+
+                // If we're not in a code-generated region, we should still check for normal
+                // comments. This should help improve accuracy on resx files
+                if (extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
+                    (extension.Equals(".resx", StringComparison.OrdinalIgnoreCase) && !inCodeGeneratedRegion) ||
+                    extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
+                    extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) ||
+                    extension.Equals(".htm", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (line.Contains("<!--"))
+                    {
+                        inCommentBlock = true;
+                    }
+                }
+
+                if (extension.Equals(".aspx", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (line.Contains("<%--"))
+                    {
+                        inCommentBlock = true;
+                    }
+                }
+
+                if (extension.Equals(".py", StringComparison.OrdinalIgnoreCase) && !inCommentBlock)
+                {
+                    if (line.StartsWith("'''") || line.StartsWith("\"\"\""))
+                    {
+                        inCommentBlock = true;
+                        skipResetFlag = true;
+                    }
+                }
+
+                if (!inCommentBlock && !inCodeGeneratedRegion && line.StartsWith("[Test"))
+                {
+                    isTestFile = true;
                 }
             }
 
-            void ProcessLine(string line)
+            void ResetCodeBlockFlags()
             {
-                line = line.TrimStart();
-
-                bool skipResetFlag;
-
-                SetCodeBlockFlags();
-
-                lineCount++;
-
-                if (inCodeGeneratedRegion || IsDesignerFile())
+                if (inCodeGeneratedRegion && (line.Contains("#endregion") || line.Contains("#End Region")))
                 {
-                    designerLineCount++;
-                }
-                else if (line.Length == 0)
-                {
-                    blankLineCount++;
-                }
-                else if (inCommentBlock || line.StartsWith("'") || line.StartsWith("//"))
-                {
-                    commentLineCount++;
-                }
-                else if (extension.Equals(".py", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
-                {
-                    commentLineCount++;
-                }
-                else if (extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
-                {
-                    commentLineCount++;
-                }
-                else if (extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
-                {
-                    commentLineCount++;
-                }
-                else if (extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.StartsWith("--"))
-                {
-                    commentLineCount++;
-                }
-                else if (extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) && (line.Contains("@*") && line.Contains("*@")))
-                {
-                    commentLineCount++;
-                }
-                else if (extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.StartsWith("%"))
-                {
-                    commentLineCount++;
-                }
-                else if ((extension.Equals(".asm", StringComparison.OrdinalIgnoreCase) ||
-                          extension.Equals(".s", StringComparison.OrdinalIgnoreCase) ||
-                          extension.Equals(".inc", StringComparison.OrdinalIgnoreCase)) &&
-                          line.StartsWith(";"))
-                {
-                    commentLineCount++;
+                    inCodeGeneratedRegion = false;
                 }
 
-                if (!skipResetFlag)
+                if (inCommentBlock && line.Contains("*/"))
                 {
-                    ResetCodeBlockFlags();
+                    inCommentBlock = false;
                 }
 
-                return;
-
-                bool IsDesignerFile()
+                if (extension.ToLower() == ".pas" || extension.ToLower() == ".inc")
                 {
-                    bool isWebReferenceFile = file.FullName.Contains("Web References") && file.Name == "Reference.cs";
-
-                    return isWebReferenceFile || file.Name.Contains(".Designer.", StringComparison.CurrentCultureIgnoreCase);
-                }
-
-                void SetCodeBlockFlags()
-                {
-                    skipResetFlag = false;
-
-                    // The number of code-generated lines is an approximation at best, particularly
-                    // with VS 2003 code.  Change code here if you don't like the way it's working.
-                    // if (line.Contains("Designer generated code") // Might be cleaner
-                    if (line.StartsWith("#region Windows Form Designer generated code") ||
-                        line.StartsWith("#Region \" Windows Form Designer generated code") ||
-                        line.StartsWith("#region Component Designer generated code") ||
-                        line.StartsWith("#Region \" Component Designer generated code \"") ||
-                        line.StartsWith("#region Web Form Designer generated code") ||
-                        line.StartsWith("#Region \" Web Form Designer Generated Code \""))
-                    {
-                        inCodeGeneratedRegion = true;
-                    }
-
-                    if (line.StartsWith("/*"))
-                    {
-                        inCommentBlock = true;
-                    }
-
-                    if (extension.Equals(".pas", StringComparison.OrdinalIgnoreCase) || extension.Equals(".inc", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (line.StartsWith("(*") && !line.StartsWith("(*$"))
-                        {
-                            inCommentBlock = true;
-                        }
-
-                        if (line.StartsWith("{") && !line.StartsWith("{$"))
-                        {
-                            inCommentBlock = true;
-                        }
-                    }
-
-                    if (extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.StartsWith("=begin"))
-                    {
-                        inCommentBlock = true;
-                    }
-                    else if (extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.StartsWith("=begin"))
-                    {
-                        inCommentBlock = true;
-                    }
-                    else if (extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.StartsWith("--[["))
-                    {
-                        inCommentBlock = true;
-                    }
-
-                    if (extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.StartsWith("%{"))
-                    {
-                        inCommentBlock = true;
-                    }
-
-                    // If we're not in a code-generated region, we should still check for normal
-                    // comments. This should help improve accuracy on resx files
-                    if (extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
-                        (extension.Equals(".resx", StringComparison.OrdinalIgnoreCase) && !inCodeGeneratedRegion) ||
-                        extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
-                        extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) ||
-                        extension.Equals(".htm", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (line.Contains("<!--"))
-                        {
-                            inCommentBlock = true;
-                        }
-                    }
-
-                    if (extension.Equals(".aspx", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (line.Contains("<%--"))
-                        {
-                            inCommentBlock = true;
-                        }
-                    }
-
-                    if (extension.Equals(".py", StringComparison.OrdinalIgnoreCase) && !inCommentBlock)
-                    {
-                        if (line.StartsWith("'''") || line.StartsWith("\"\"\""))
-                        {
-                            inCommentBlock = true;
-                            skipResetFlag = true;
-                        }
-                    }
-
-                    if (!inCommentBlock && !inCodeGeneratedRegion && line.StartsWith("[Test"))
-                    {
-                        isTestFile = true;
-                    }
-                }
-
-                void ResetCodeBlockFlags()
-                {
-                    if (inCodeGeneratedRegion && (line.Contains("#endregion") || line.Contains("#End Region")))
-                    {
-                        inCodeGeneratedRegion = false;
-                    }
-
-                    if (inCommentBlock && line.Contains("*/"))
+                    if (line.Contains("*)") || line.Contains("}"))
                     {
                         inCommentBlock = false;
                     }
+                }
 
-                    if (extension.ToLower() == ".pas" || extension.ToLower() == ".inc")
-                    {
-                        if (line.Contains("*)") || line.Contains("}"))
-                        {
-                            inCommentBlock = false;
-                        }
-                    }
+                if (extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.Contains("=end"))
+                {
+                    inCommentBlock = false;
+                }
+                else if (extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.Contains("=end"))
+                {
+                    inCommentBlock = false;
+                }
+                else if (extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.Contains("]]"))
+                {
+                    inCommentBlock = false;
+                }
 
-                    if (extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.Contains("=end"))
+                if (extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.Contains("%}"))
+                {
+                    inCommentBlock = false;
+                }
+
+                if (extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
+                    (extension.Equals(".resx", StringComparison.OrdinalIgnoreCase) && !inCodeGeneratedRegion) ||
+                    extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
+                    extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) ||
+                    extension.Equals(".htm", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (line.Contains("-->"))
                     {
                         inCommentBlock = false;
                     }
-                    else if (extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.Contains("=end"))
+                }
+
+                if (extension.Equals(".aspx", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (line.Contains("--%>"))
                     {
                         inCommentBlock = false;
                     }
-                    else if (extension.Equals(".lua", StringComparison.OrdinalIgnoreCase) && line.Contains("]]"))
+                }
+
+                if (extension.Equals(".py", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (line.Contains("'''") || line.Contains("\"\"\""))
                     {
                         inCommentBlock = false;
-                    }
-
-                    if (extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.Contains("%}"))
-                    {
-                        inCommentBlock = false;
-                    }
-
-                    if (extension.Equals(".xml", StringComparison.OrdinalIgnoreCase) ||
-                        (extension.Equals(".resx", StringComparison.OrdinalIgnoreCase) && !inCodeGeneratedRegion) ||
-                        extension.Equals(".html", StringComparison.OrdinalIgnoreCase) ||
-                        extension.Equals(".cshtml", StringComparison.OrdinalIgnoreCase) ||
-                        extension.Equals(".htm", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (line.Contains("-->"))
-                        {
-                            inCommentBlock = false;
-                        }
-                    }
-
-                    if (extension.Equals(".aspx", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (line.Contains("--%>"))
-                        {
-                            inCommentBlock = false;
-                        }
-                    }
-
-                    if (extension.Equals(".py", StringComparison.OrdinalIgnoreCase))
-                    {
-                        if (line.Contains("'''") || line.Contains("\"\"\""))
-                        {
-                            inCommentBlock = false;
-                        }
                     }
                 }
             }
         }
+    }
 
-        private CodeFile(int totalLineCount, int blankLineCount, int designerLineCount, int commentLineCount, bool isTestFile)
-        {
-            TotalLineCount = totalLineCount;
-            BlankLineCount = blankLineCount;
-            DesignerLineCount = designerLineCount;
-            CommentLineCount = commentLineCount;
-            IsTestFile = isTestFile;
+    private CodeFile(int totalLineCount, int blankLineCount, int designerLineCount, int commentLineCount, bool isTestFile)
+    {
+        TotalLineCount = totalLineCount;
+        BlankLineCount = blankLineCount;
+        DesignerLineCount = designerLineCount;
+        CommentLineCount = commentLineCount;
+        IsTestFile = isTestFile;
 
-            CodeLineCount = totalLineCount - blankLineCount - designerLineCount - commentLineCount;
+        CodeLineCount = totalLineCount - blankLineCount - designerLineCount - commentLineCount;
 
-            DebugHelpers.Assert(CodeLineCount >= 0, "CodeLineCount >= 0");
-        }
+        DebugHelpers.Assert(CodeLineCount >= 0, "CodeLineCount >= 0");
     }
 }

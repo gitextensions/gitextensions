@@ -1,46 +1,45 @@
 ﻿using FluentAssertions;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 
-namespace GitUITests.CommandsDialogs.SettingsDialog.Pages
+namespace GitUITests.CommandsDialogs.SettingsDialog.Pages;
+
+[TestFixture]
+public class GitConfigSettingsPageControllerTests
 {
-    [TestFixture]
-    public class GitConfigSettingsPageControllerTests
+    private GitConfigSettingsPageController _controller;
+
+    [SetUp]
+    public void Setup()
     {
-        private GitConfigSettingsPageController _controller;
+        _controller = new GitConfigSettingsPageController();
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            _controller = new GitConfigSettingsPageController();
-        }
+    [TestCase(null, null)]
+    [TestCase(null, "")]
+    [TestCase("", null)]
+    [TestCase("", "")]
+    public void GetInitialDirectory_CalculateInitialDirectory_should_return_ProgramFiles_if_path_and_toolPreferredPath_unset(string path, string toolPreferredPath)
+    {
+        string expected = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
-        [TestCase(null, null)]
-        [TestCase(null, "")]
-        [TestCase("", null)]
-        [TestCase("", "")]
-        public void GetInitialDirectory_CalculateInitialDirectory_should_return_ProgramFiles_if_path_and_toolPreferredPath_unset(string path, string toolPreferredPath)
-        {
-            string expected = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
+        _controller.GetInitialDirectory(path, toolPreferredPath).Should().Be(expected);
+    }
 
-            _controller.GetInitialDirectory(path, toolPreferredPath).Should().Be(expected);
-        }
+    [Test]
+    public void GetInitialDirectory_CalculateInitialDirectory_should_return_directory_for_supplied_path()
+    {
+        string tempFolder = @"c:\";
+        _controller.GetInitialDirectory(tempFolder, null).Should().Be(@"c:\");
 
-        [Test]
-        public void GetInitialDirectory_CalculateInitialDirectory_should_return_directory_for_supplied_path()
-        {
-            string tempFolder = @"c:\";
-            _controller.GetInitialDirectory(tempFolder, null).Should().Be(@"c:\");
+        tempFolder = @"c:";
+        _controller.GetInitialDirectory(tempFolder, null).Should().Be(@"c:\");
 
-            tempFolder = @"c:";
-            _controller.GetInitialDirectory(tempFolder, null).Should().Be(@"c:\");
+        tempFolder = Path.GetTempPath(); // something like: C:\Users\user\AppData\Local\Temp\
+        _controller.GetInitialDirectory(tempFolder, null).Should().Be(tempFolder);
 
-            tempFolder = Path.GetTempPath(); // something like: C:\Users\user\AppData\Local\Temp\
-            _controller.GetInitialDirectory(tempFolder, null).Should().Be(tempFolder);
+        _controller.GetInitialDirectory(tempFolder.Remove(tempFolder.Length - 1), null).Should().Be(tempFolder);
 
-            _controller.GetInitialDirectory(tempFolder.Remove(tempFolder.Length - 1), null).Should().Be(tempFolder);
-
-            string tempFile = Path.GetTempFileName(); // something like: C:\Users\user\AppData\Local\Temp\tmp97C5.tmp
-            _controller.GetInitialDirectory(tempFile, null).Should().Be(tempFolder);
-        }
+        string tempFile = Path.GetTempFileName(); // something like: C:\Users\user\AppData\Local\Temp\tmp97C5.tmp
+        _controller.GetInitialDirectory(tempFile, null).Should().Be(tempFolder);
     }
 }

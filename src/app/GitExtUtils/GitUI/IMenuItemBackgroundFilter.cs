@@ -1,7 +1,6 @@
-﻿namespace GitExtUtils.GitUI
+﻿namespace GitExtUtils.GitUI;
+
+public interface IMenuItemBackgroundFilter
 {
-    public interface IMenuItemBackgroundFilter
-    {
-        bool ShouldRenderMenuItemBackground(ToolStripItemRenderEventArgs e);
-    }
+    bool ShouldRenderMenuItemBackground(ToolStripItemRenderEventArgs e);
 }

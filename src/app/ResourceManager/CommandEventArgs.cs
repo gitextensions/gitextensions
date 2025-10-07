@@ -1,14 +1,13 @@
-﻿namespace ResourceManager
-{
-    public class CommandEventArgs : EventArgs
-    {
-        public CommandEventArgs(string command, string? data)
-        {
-            Command = command;
-            Data = data;
-        }
+﻿namespace ResourceManager;
 
-        public string Command { get; }
-        public string? Data { get; }
+public class CommandEventArgs : EventArgs
+{
+    public CommandEventArgs(string command, string? data)
+    {
+        Command = command;
+        Data = data;
     }
+
+    public string Command { get; }
+    public string? Data { get; }
 }

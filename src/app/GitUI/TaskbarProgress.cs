@@ -1,41 +1,40 @@
 using GitCommands.Utils;
 using Microsoft.WindowsAPICodePack.Taskbar;
 
-namespace GitUI
+namespace GitUI;
+
+public static class TaskbarProgress
 {
-    public static class TaskbarProgress
+    private static void Try(Action<TaskbarManager> action)
     {
-        private static void Try(Action<TaskbarManager> action)
+        if (EnvUtils.RunningOnWindowsWithMainWindow() && TaskbarManager.IsPlatformSupported)
         {
-            if (EnvUtils.RunningOnWindowsWithMainWindow() && TaskbarManager.IsPlatformSupported)
+            try
             {
-                try
-                {
-                    action(TaskbarManager.Instance);
-                }
-                catch (InvalidOperationException)
-                {
-                }
+                action(TaskbarManager.Instance);
+            }
+            catch (InvalidOperationException)
+            {
             }
         }
+    }
 
-        public static void Clear()
-        {
-            Try(taskbar => taskbar.SetProgressState(TaskbarProgressBarState.NoProgress));
-        }
+    public static void Clear()
+    {
+        Try(taskbar => taskbar.SetProgressState(TaskbarProgressBarState.NoProgress));
+    }
 
-        public static void SetProgress(TaskbarProgressBarState state, int progressValue, int maximumValue)
+    public static void SetProgress(TaskbarProgressBarState state, int progressValue, int maximumValue)
+    {
+        Try(taskbar =>
         {
-            Try(taskbar =>
-            {
-                taskbar.SetProgressState(state);
-                taskbar.SetProgressValue(progressValue, maximumValue);
-            });
-        }
+            taskbar.SetProgressState(state);
+            taskbar.SetProgressValue(progressValue, maximumValue);
+        });
+    }
 
-        public static void SetState(TaskbarProgressBarState state)
-        {
-            Try(taskbar => taskbar.SetProgressState(state));
-        }
+    public static void SetState(TaskbarProgressBarState state)
+    {
+        Try(taskbar => taskbar.SetProgressState(state));
     }
 }

@@ -1,45 +1,44 @@
-﻿namespace GitUI.UserControls.RevisionGrid
+﻿namespace GitUI.UserControls.RevisionGrid;
+
+public sealed class LoadingControl : UserControl
 {
-    public sealed class LoadingControl : UserControl
+    private readonly WaitSpinner _waitSpinner;
+
+    public LoadingControl()
     {
-        private readonly WaitSpinner _waitSpinner;
+        Size size = new(32, 32);
 
-        public LoadingControl()
+        _waitSpinner = new WaitSpinner
         {
-            Size size = new(32, 32);
+            Dock = DockStyle.Fill,
+            Size = size
+        };
 
-            _waitSpinner = new WaitSpinner
-            {
-                Dock = DockStyle.Fill,
-                Size = size
-            };
+        SuspendLayout();
+        Dock = DockStyle.Fill;
+        AutoScaleDimensions = new SizeF(96, 96);
+        AutoScaleMode = AutoScaleMode.Dpi;
+        Controls.Add(_waitSpinner);
+        Name = nameof(LoadingControl);
+        Size = size;
+        ResumeLayout(performLayout: false);
 
-            SuspendLayout();
-            Dock = DockStyle.Fill;
-            AutoScaleDimensions = new SizeF(96, 96);
-            AutoScaleMode = AutoScaleMode.Dpi;
-            Controls.Add(_waitSpinner);
-            Name = nameof(LoadingControl);
-            Size = size;
-            ResumeLayout(performLayout: false);
+        this.AdjustForDpiScaling();
+    }
 
-            this.AdjustForDpiScaling();
+    public bool IsAnimating
+    {
+        get => _waitSpinner.IsAnimating;
+        set => _waitSpinner.IsAnimating = value;
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            _waitSpinner.Dispose();
         }
 
-        public bool IsAnimating
-        {
-            get => _waitSpinner.IsAnimating;
-            set => _waitSpinner.IsAnimating = value;
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _waitSpinner.Dispose();
-            }
-
-            base.Dispose(disposing);
-        }
+        base.Dispose(disposing);
     }
 }

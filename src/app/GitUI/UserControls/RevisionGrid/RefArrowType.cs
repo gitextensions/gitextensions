@@ -1,9 +1,8 @@
-namespace GitUI.UserControls.RevisionGrid
+namespace GitUI.UserControls.RevisionGrid;
+
+internal enum RefArrowType
 {
-    internal enum RefArrowType
-    {
-        None,
-        Filled,
-        NotFilled
-    }
+    None,
+    Filled,
+    NotFilled
 }

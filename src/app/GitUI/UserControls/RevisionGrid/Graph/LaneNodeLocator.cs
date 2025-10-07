@@ -1,57 +1,56 @@
-﻿namespace GitUI.UserControls.RevisionGrid.Graph
+﻿namespace GitUI.UserControls.RevisionGrid.Graph;
+
+internal interface ILaneNodeLocator
 {
-    internal interface ILaneNodeLocator
+    (RevisionGraphRevision? revision, bool isAtNode) FindPrevNode(int rowIndex, int lane);
+}
+
+internal sealed class LaneNodeLocator : ILaneNodeLocator
+{
+    private readonly IRevisionGraphRowProvider _revisionGraphRowProvider;
+
+    public static readonly (RevisionGraphRevision?, bool) NotFoundResult = (null, false);
+
+    public LaneNodeLocator(IRevisionGraphRowProvider revisionGraphRowProvider)
     {
-        (RevisionGraphRevision? revision, bool isAtNode) FindPrevNode(int rowIndex, int lane);
+        _revisionGraphRowProvider = revisionGraphRowProvider;
     }
 
-    internal sealed class LaneNodeLocator : ILaneNodeLocator
+    public (RevisionGraphRevision? revision, bool isAtNode) FindPrevNode(int rowIndex, int lane)
     {
-        private readonly IRevisionGraphRowProvider _revisionGraphRowProvider;
-
-        public static readonly (RevisionGraphRevision?, bool) NotFoundResult = (null, false);
-
-        public LaneNodeLocator(IRevisionGraphRowProvider revisionGraphRowProvider)
+        if (rowIndex < 0 || lane < 0)
         {
-            _revisionGraphRowProvider = revisionGraphRowProvider;
-        }
-
-        public (RevisionGraphRevision? revision, bool isAtNode) FindPrevNode(int rowIndex, int lane)
-        {
-            if (rowIndex < 0 || lane < 0)
-            {
-                // as unlikely as it may be...
-                // don't throw, just pretend we couldn't find it
-                return NotFoundResult;
-            }
-
-            IRevisionGraphRow? row = _revisionGraphRowProvider.GetSegmentsForRow(rowIndex);
-            if (row is null)
-            {
-                return NotFoundResult;
-            }
-
-            if (row.GetCurrentRevisionLane() == lane)
-            {
-                return (row.Revision, isAtNode: true);
-            }
-
-            IEnumerable<RevisionGraphSegment> segmentsForLane = row.GetSegmentsForIndex(lane);
-            if (segmentsForLane.Any())
-            {
-                RevisionGraphRevision firstParent = segmentsForLane.First().Parent;
-#if DEBUG
-                if (segmentsForLane.Any(segment => segment.Parent != firstParent))
-                {
-                    throw new Exception(string.Format("All segments for a lane should have the same parent.\n"
-                                                      + "Not fulfilled for rowIndex {0} lane {1} with {2} segments.",
-                                                      rowIndex, lane, segmentsForLane.Count()));
-                }
-#endif
-                return (firstParent, isAtNode: false);
-            }
-
+            // as unlikely as it may be...
+            // don't throw, just pretend we couldn't find it
             return NotFoundResult;
         }
+
+        IRevisionGraphRow? row = _revisionGraphRowProvider.GetSegmentsForRow(rowIndex);
+        if (row is null)
+        {
+            return NotFoundResult;
+        }
+
+        if (row.GetCurrentRevisionLane() == lane)
+        {
+            return (row.Revision, isAtNode: true);
+        }
+
+        IEnumerable<RevisionGraphSegment> segmentsForLane = row.GetSegmentsForIndex(lane);
+        if (segmentsForLane.Any())
+        {
+            RevisionGraphRevision firstParent = segmentsForLane.First().Parent;
+#if DEBUG
+            if (segmentsForLane.Any(segment => segment.Parent != firstParent))
+            {
+                throw new Exception(string.Format("All segments for a lane should have the same parent.\n"
+                                                  + "Not fulfilled for rowIndex {0} lane {1} with {2} segments.",
+                                                  rowIndex, lane, segmentsForLane.Count()));
+            }
+#endif
+            return (firstParent, isAtNode: false);
+        }
+
+        return NotFoundResult;
     }
 }

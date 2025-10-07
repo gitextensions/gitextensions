@@ -1,10 +1,9 @@
 using System.Runtime.InteropServices;
 
-namespace System
+namespace System;
+
+internal static partial class NativeMethods
 {
-    internal static partial class NativeMethods
-    {
-        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
-        public static extern int CloseThemeData(IntPtr hTheme);
-    }
+    [DllImport(Libraries.UxTheme, ExactSpelling = true)]
+    public static extern int CloseThemeData(IntPtr hTheme);
 }

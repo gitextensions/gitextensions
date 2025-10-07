@@ -3,121 +3,120 @@ using System.Text.RegularExpressions;
 using System.Web;
 using JetBrains.Annotations;
 
-namespace GitUI.Avatars
+namespace GitUI.Avatars;
+
+public sealed partial class GithubAvatarProvider : IAvatarProvider
 {
-    public sealed partial class GithubAvatarProvider : IAvatarProvider
+    /* A brief skim through the Git Extensions repo history shows GitHub emails with the following user names:
+     *
+     * 25421792+mserfli
+     * 33052757+freza-tm
+     * gpongelli
+     * odie2
+     * palver123
+     * RaMMicHaeL
+     * SamuelLongchamps
+     */
+    private readonly IAvatarDownloader _downloader;
+    private readonly bool _onlySupplyNoReply;
+
+    [GeneratedRegex(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
+    private static partial Regex GitHubEmailRegex();
+
+    public GithubAvatarProvider([NotNull] IAvatarDownloader downloader, bool onlySupplyNoReply = false)
     {
-        /* A brief skim through the Git Extensions repo history shows GitHub emails with the following user names:
-         *
-         * 25421792+mserfli
-         * 33052757+freza-tm
-         * gpongelli
-         * odie2
-         * palver123
-         * RaMMicHaeL
-         * SamuelLongchamps
-         */
-        private readonly IAvatarDownloader _downloader;
-        private readonly bool _onlySupplyNoReply;
+        _downloader = downloader ?? throw new ArgumentNullException(nameof(downloader));
+        _onlySupplyNoReply = onlySupplyNoReply;
+    }
 
-        [GeneratedRegex(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
-        private static partial Regex GitHubEmailRegex();
+    public bool PerformsIo => true;
 
-        public GithubAvatarProvider([NotNull] IAvatarDownloader downloader, bool onlySupplyNoReply = false)
+    public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
+    {
+        Uri uri = await BuildAvatarUriAsync(email, imageSize);
+
+        if (uri is null)
         {
-            _downloader = downloader ?? throw new ArgumentNullException(nameof(downloader));
-            _onlySupplyNoReply = onlySupplyNoReply;
+            return null;
         }
 
-        public bool PerformsIo => true;
+        Image image = await _downloader.DownloadImageAsync(uri);
 
-        public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
+        // Sadly GitHub doesn't provide an option to return a 404 error for non-custom avatars
+        // and always provides a fallback image (identicon). Using GitHubs fallback image would
+        // render the user defined fallback useless so we have to filter out the identicons.
+
+        // We do this by checking the size of the returned image, because identicons provided by
+        // GitHub are never scaled and always 420 x 420 - even if a different size was requested.
+
+        // We exploit that fact to filter out identicons.
+        bool isIdenticon = imageSize != 420 && image?.Size.Width is 420;
+
+        if (isIdenticon)
         {
-            Uri uri = await BuildAvatarUriAsync(email, imageSize);
-
-            if (uri is null)
-            {
-                return null;
-            }
-
-            Image image = await _downloader.DownloadImageAsync(uri);
-
-            // Sadly GitHub doesn't provide an option to return a 404 error for non-custom avatars
-            // and always provides a fallback image (identicon). Using GitHubs fallback image would
-            // render the user defined fallback useless so we have to filter out the identicons.
-
-            // We do this by checking the size of the returned image, because identicons provided by
-            // GitHub are never scaled and always 420 x 420 - even if a different size was requested.
-
-            // We exploit that fact to filter out identicons.
-            bool isIdenticon = imageSize != 420 && image?.Size.Width is 420;
-
-            if (isIdenticon)
-            {
-                return null;
-            }
-
-            return image;
+            return null;
         }
 
-        private async Task<Uri?> BuildAvatarUriAsync(string email, int imageSize)
+        return image;
+    }
+
+    private async Task<Uri?> BuildAvatarUriAsync(string email, int imageSize)
+    {
+        Match match = GitHubEmailRegex().Match(email);
+
+        if (match.Success)
         {
-            Match match = GitHubEmailRegex().Match(email);
+            // email is an @users.noreply.github.com address
 
-            if (match.Success)
+            string username = match.Groups["username"].Value;
+
+            // For real users we can directly access the avatar by using
+            // https://avatars.githubusercontent.com/{encodedUsername}?s={imageSize}
+            // But for bots this doesn't work. To get the avatar url we can make use of the
+            // GitHub API to get the profile (which includes the avatar url) but for unauthenticated
+            // requests the rate limits are pretty low (60 requests per hour)
+
+            // To mitigate the issue of possibly hitting the rate limit, we directly load the avatars
+            // for all "normal" users and only users that can't be resolved that way (like bots)
+            // query the GitHub profile first.
+
+            // GitHub user names can't contain square brackets but bots use them.
+            bool isBot = username.IndexOf('[') >= 0;
+
+            if (isBot)
             {
-                // email is an @users.noreply.github.com address
+                Git.hub.Client client = new();
+                Git.hub.User userProfile = await client.GetUserAsync(username);
 
-                string username = match.Groups["username"].Value;
-
-                // For real users we can directly access the avatar by using
-                // https://avatars.githubusercontent.com/{encodedUsername}?s={imageSize}
-                // But for bots this doesn't work. To get the avatar url we can make use of the
-                // GitHub API to get the profile (which includes the avatar url) but for unauthenticated
-                // requests the rate limits are pretty low (60 requests per hour)
-
-                // To mitigate the issue of possibly hitting the rate limit, we directly load the avatars
-                // for all "normal" users and only users that can't be resolved that way (like bots)
-                // query the GitHub profile first.
-
-                // GitHub user names can't contain square brackets but bots use them.
-                bool isBot = username.IndexOf('[') >= 0;
-
-                if (isBot)
-                {
-                    Git.hub.Client client = new();
-                    Git.hub.User userProfile = await client.GetUserAsync(username);
-
-                    if (string.IsNullOrEmpty(userProfile?.AvatarUrl))
-                    {
-                        return null;
-                    }
-
-                    UriBuilder builder = new(userProfile.AvatarUrl);
-                    StringBuilder query = new(builder.Query.TrimStart('?'));
-                    query.Append(query.Length == 0 ? "?" : "&");
-                    query.Append("s=").Append(imageSize);
-                    builder.Query = query.ToString();
-                    return builder.Uri;
-                }
-                else
-                {
-                    string encodedUsername = HttpUtility.UrlEncode(match.Groups["username"].Value);
-                    return new Uri($"https://avatars.githubusercontent.com/{encodedUsername}?s={imageSize}");
-                }
-            }
-            else
-            {
-                // regular email address
-
-                if (_onlySupplyNoReply)
+                if (string.IsNullOrEmpty(userProfile?.AvatarUrl))
                 {
                     return null;
                 }
 
-                string encodedEmail = HttpUtility.UrlEncode(email);
-                return new Uri($"https://avatars.githubusercontent.com/u/e?email={encodedEmail}&s={imageSize}");
+                UriBuilder builder = new(userProfile.AvatarUrl);
+                StringBuilder query = new(builder.Query.TrimStart('?'));
+                query.Append(query.Length == 0 ? "?" : "&");
+                query.Append("s=").Append(imageSize);
+                builder.Query = query.ToString();
+                return builder.Uri;
             }
+            else
+            {
+                string encodedUsername = HttpUtility.UrlEncode(match.Groups["username"].Value);
+                return new Uri($"https://avatars.githubusercontent.com/{encodedUsername}?s={imageSize}");
+            }
+        }
+        else
+        {
+            // regular email address
+
+            if (_onlySupplyNoReply)
+            {
+                return null;
+            }
+
+            string encodedEmail = HttpUtility.UrlEncode(email);
+            return new Uri($"https://avatars.githubusercontent.com/u/e?email={encodedEmail}&s={imageSize}");
         }
     }
 }

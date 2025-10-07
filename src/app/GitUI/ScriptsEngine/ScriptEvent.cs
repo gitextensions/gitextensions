@@ -1,21 +1,20 @@
-﻿namespace GitUI.ScriptsEngine
+﻿namespace GitUI.ScriptsEngine;
+
+public enum ScriptEvent
 {
-    public enum ScriptEvent
-    {
-        None,
-        BeforeCommit,
-        AfterCommit,
-        BeforePull,
-        AfterPull,
-        BeforePush,
-        AfterPush,
-        ShowInUserMenuBar,
-        BeforeCheckout,
-        AfterCheckout,
-        BeforeMerge,
-        AfterMerge,
-        BeforeFetch,
-        AfterFetch,
-        ShowInFileList
-    }
+    None,
+    BeforeCommit,
+    AfterCommit,
+    BeforePull,
+    AfterPull,
+    BeforePush,
+    AfterPush,
+    ShowInUserMenuBar,
+    BeforeCheckout,
+    AfterCheckout,
+    BeforeMerge,
+    AfterMerge,
+    BeforeFetch,
+    AfterFetch,
+    ShowInFileList
 }

@@ -1,14 +1,13 @@
 ﻿using GitUIPluginInterfaces;
 
-namespace GitUI.UserControls.RevisionGrid
-{
-    public sealed class DoubleClickRevisionEventArgs : EventArgs
-    {
-        public DoubleClickRevisionEventArgs(GitRevision? revision)
-        {
-            Revision = revision;
-        }
+namespace GitUI.UserControls.RevisionGrid;
 
-        public GitRevision? Revision { get; }
+public sealed class DoubleClickRevisionEventArgs : EventArgs
+{
+    public DoubleClickRevisionEventArgs(GitRevision? revision)
+    {
+        Revision = revision;
     }
+
+    public GitRevision? Revision { get; }
 }

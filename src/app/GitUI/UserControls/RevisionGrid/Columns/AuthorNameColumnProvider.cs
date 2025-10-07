@@ -3,79 +3,78 @@ using GitCommands;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
-namespace GitUI.UserControls.RevisionGrid.Columns
+namespace GitUI.UserControls.RevisionGrid.Columns;
+
+internal sealed class AuthorNameColumnProvider : ColumnProvider
 {
-    internal sealed class AuthorNameColumnProvider : ColumnProvider
+    private readonly RevisionGridControl _grid;
+    private readonly AuthorRevisionHighlighting _authorHighlighting;
+
+    public AuthorNameColumnProvider(RevisionGridControl grid, AuthorRevisionHighlighting authorHighlighting)
+        : base("Author Name")
     {
-        private readonly RevisionGridControl _grid;
-        private readonly AuthorRevisionHighlighting _authorHighlighting;
+        _grid = grid;
+        _authorHighlighting = authorHighlighting;
 
-        public AuthorNameColumnProvider(RevisionGridControl grid, AuthorRevisionHighlighting authorHighlighting)
-            : base("Author Name")
+        Column = new DataGridViewTextBoxColumn
         {
-            _grid = grid;
-            _authorHighlighting = authorHighlighting;
+            AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+            HeaderText = "Author Name",
+            ReadOnly = true,
+            SortMode = DataGridViewColumnSortMode.NotSortable,
+            Width = DpiUtil.Scale(130),
+            MinimumWidth = DpiUtil.Scale(25)
+        };
+    }
 
-            Column = new DataGridViewTextBoxColumn
-            {
-                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
-                HeaderText = "Author Name",
-                ReadOnly = true,
-                SortMode = DataGridViewColumnSortMode.NotSortable,
-                Width = DpiUtil.Scale(130),
-                MinimumWidth = DpiUtil.Scale(25)
-            };
+    public override void ApplySettings()
+    {
+        Column.Visible = AppSettings.ShowAuthorNameColumn;
+    }
+
+    public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
+    {
+        if (!revision.IsArtificial)
+        {
+            Font font = _authorHighlighting.IsHighlighted(revision) ? style.BoldFont : style.NormalFont;
+
+            _grid.DrawColumnText(e, (string)e.FormattedValue, font, style.ForeColor, e.CellBounds.ReduceLeft(ColumnLeftMargin));
+        }
+    }
+
+    public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
+    {
+        e.Value = revision.Author ?? "";
+        e.FormattingApplied = true;
+    }
+
+    public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
+    {
+        if (revision.ObjectId.IsArtificial)
+        {
+            toolTip = default;
+            return false;
         }
 
-        public override void ApplySettings()
+        toolTip = GetAuthorAndCommiterToolTip(revision);
+
+        return true;
+    }
+
+    public static string GetAuthorAndCommiterToolTip(GitRevision revision)
+    {
+        string toolTip;
+        if (revision.Author == revision.Committer && revision.AuthorEmail == revision.CommitterEmail)
         {
-            Column.Visible = AppSettings.ShowAuthorNameColumn;
+            toolTip = $"{revision.Author} <{revision.AuthorEmail}> {TranslatedStrings.AuthoredAndCommitted}";
+        }
+        else
+        {
+            toolTip =
+                $"{revision.Author} <{revision.AuthorEmail}> {TranslatedStrings.Authored}\n" +
+                $"{revision.Committer} <{revision.CommitterEmail}> {TranslatedStrings.Committed}";
         }
 
-        public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
-        {
-            if (!revision.IsArtificial)
-            {
-                Font font = _authorHighlighting.IsHighlighted(revision) ? style.BoldFont : style.NormalFont;
-
-                _grid.DrawColumnText(e, (string)e.FormattedValue, font, style.ForeColor, e.CellBounds.ReduceLeft(ColumnLeftMargin));
-            }
-        }
-
-        public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
-        {
-            e.Value = revision.Author ?? "";
-            e.FormattingApplied = true;
-        }
-
-        public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
-        {
-            if (revision.ObjectId.IsArtificial)
-            {
-                toolTip = default;
-                return false;
-            }
-
-            toolTip = GetAuthorAndCommiterToolTip(revision);
-
-            return true;
-        }
-
-        public static string GetAuthorAndCommiterToolTip(GitRevision revision)
-        {
-            string toolTip;
-            if (revision.Author == revision.Committer && revision.AuthorEmail == revision.CommitterEmail)
-            {
-                toolTip = $"{revision.Author} <{revision.AuthorEmail}> {TranslatedStrings.AuthoredAndCommitted}";
-            }
-            else
-            {
-                toolTip =
-                    $"{revision.Author} <{revision.AuthorEmail}> {TranslatedStrings.Authored}\n" +
-                    $"{revision.Committer} <{revision.CommitterEmail}> {TranslatedStrings.Committed}";
-            }
-
-            return toolTip;
-        }
+        return toolTip;
     }
 }

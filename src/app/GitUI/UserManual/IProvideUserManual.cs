@@ -1,7 +1,6 @@
-﻿namespace GitUI.UserManual
+﻿namespace GitUI.UserManual;
+
+public interface IProvideUserManual
 {
-    public interface IProvideUserManual
-    {
-        string GetUrl();
-    }
+    string GetUrl();
 }

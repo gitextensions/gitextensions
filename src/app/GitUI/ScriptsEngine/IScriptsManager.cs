@@ -1,13 +1,12 @@
 ﻿using System.ComponentModel;
 
-namespace GitUI.ScriptsEngine
+namespace GitUI.ScriptsEngine;
+
+public interface IScriptsManager
 {
-    public interface IScriptsManager
-    {
-        ScriptInfo? GetScript(int scriptId);
+    ScriptInfo? GetScript(int scriptId);
 
-        BindingList<ScriptInfo> GetScripts();
+    BindingList<ScriptInfo> GetScripts();
 
-        string SerializeIntoXml();
-    }
+    string SerializeIntoXml();
 }

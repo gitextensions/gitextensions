@@ -1,68 +1,67 @@
 ﻿using ResourceManager;
 
-namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
+namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
+
+public partial class FormDashboardCategoryTitle : GitExtensionsForm
 {
-    public partial class FormDashboardCategoryTitle : GitExtensionsForm
+    private readonly TranslationString _categoryNameRequiredText = new("Category name is required");
+    private readonly TranslationString _categoryNameExistsText = new("Category name already exists");
+    private readonly TranslationString _renameCategoryText = new("Rename category");
+    private readonly List<string> _existingCategories = [];
+
+    public FormDashboardCategoryTitle()
     {
-        private readonly TranslationString _categoryNameRequiredText = new("Category name is required");
-        private readonly TranslationString _categoryNameExistsText = new("Category name already exists");
-        private readonly TranslationString _renameCategoryText = new("Rename category");
-        private readonly List<string> _existingCategories = [];
+        InitializeComponent();
+        InitializeComplete();
+    }
 
-        public FormDashboardCategoryTitle()
+    public FormDashboardCategoryTitle(IEnumerable<string> existingCategories, string? originalName = null)
+        : this()
+    {
+        if (existingCategories is not null)
         {
-            InitializeComponent();
-            InitializeComplete();
+            _existingCategories.AddRange(existingCategories);
         }
 
-        public FormDashboardCategoryTitle(IEnumerable<string> existingCategories, string? originalName = null)
-            : this()
+        if (originalName is not null)
         {
-            if (existingCategories is not null)
-            {
-                _existingCategories.AddRange(existingCategories);
-            }
+            Category = originalName;
+            txtCategoryName.Text = originalName;
+            txtCategoryName.SelectAll();
+            Text = _renameCategoryText.Text;
+        }
+    }
 
-            if (originalName is not null)
-            {
-                Category = originalName;
-                txtCategoryName.Text = originalName;
-                txtCategoryName.SelectAll();
-                Text = _renameCategoryText.Text;
-            }
+    /// <summary>
+    /// Gets the new category.
+    /// </summary>
+    public string? Category { get; private set; }
+
+    private void OkButton_Click(object sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(txtCategoryName.Text))
+        {
+            MessageBox.Show(this, _categoryNameRequiredText.Text, lblCategoryName.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
         }
 
-        /// <summary>
-        /// Gets the new category.
-        /// </summary>
-        public string? Category { get; private set; }
-
-        private void OkButton_Click(object sender, EventArgs e)
+        if (_existingCategories.Contains(txtCategoryName.Text, StringComparer.Ordinal))
         {
-            if (string.IsNullOrEmpty(txtCategoryName.Text))
-            {
-                MessageBox.Show(this, _categoryNameRequiredText.Text, lblCategoryName.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            if (_existingCategories.Contains(txtCategoryName.Text, StringComparer.Ordinal))
-            {
-                MessageBox.Show(this, _categoryNameExistsText.Text, lblCategoryName.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            Category = txtCategoryName.Text;
-            Close();
+            MessageBox.Show(this, _categoryNameExistsText.Text, lblCategoryName.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
         }
 
-        private void btnCancel_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
+        Category = txtCategoryName.Text;
+        Close();
+    }
 
-        private void txtCategoryName_TextChanged(object sender, EventArgs e)
-        {
-            btnOk.Enabled = txtCategoryName.Text != Category;
-        }
+    private void btnCancel_Click(object sender, EventArgs e)
+    {
+        Close();
+    }
+
+    private void txtCategoryName_TextChanged(object sender, EventArgs e)
+    {
+        btnOk.Enabled = txtCategoryName.Text != Category;
     }
 }

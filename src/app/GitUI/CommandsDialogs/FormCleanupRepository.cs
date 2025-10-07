@@ -6,219 +6,218 @@ using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
 using ResourceManager;
 
-namespace GitUI.CommandsDialogs
+namespace GitUI.CommandsDialogs;
+
+public partial class FormCleanupRepository : GitModuleForm
 {
-    public partial class FormCleanupRepository : GitModuleForm
+    private readonly TranslationString _reallyCleanupQuestion =
+        new("Are you sure you want to cleanup the repository?");
+    private readonly TranslationString _reallyCleanupQuestionCaption = new("Cleanup");
+
+    public FormCleanupRepository(IGitUICommands commands)
+        : base(commands)
     {
-        private readonly TranslationString _reallyCleanupQuestion =
-            new("Are you sure you want to cleanup the repository?");
-        private readonly TranslationString _reallyCleanupQuestionCaption = new("Cleanup");
+        InitializeComponent();
+        InitializeComplete();
+        PreviewOutput.ReadOnly = true;
 
-        public FormCleanupRepository(IGitUICommands commands)
-            : base(commands)
+        checkBoxPathFilter_CheckedChanged(this, EventArgs.Empty);
+        checkBoxExcludePathFilter_CheckedChanged(this, EventArgs.Empty);
+    }
+
+    public void SetPathArgument(string? path)
+    {
+        if (string.IsNullOrEmpty(path))
         {
-            InitializeComponent();
-            InitializeComplete();
-            PreviewOutput.ReadOnly = true;
+            checkBoxExcludePathFilter.Checked = false;
+            textBoxExcludePaths.Text = "";
 
-            checkBoxPathFilter_CheckedChanged(this, EventArgs.Empty);
-            checkBoxExcludePathFilter_CheckedChanged(this, EventArgs.Empty);
+            checkBoxIncludePathFilter.Checked = false;
+            textBoxIncludePaths.Text = "";
         }
-
-        public void SetPathArgument(string? path)
+        else
         {
-            if (string.IsNullOrEmpty(path))
-            {
-                checkBoxExcludePathFilter.Checked = false;
-                textBoxExcludePaths.Text = "";
-
-                checkBoxIncludePathFilter.Checked = false;
-                textBoxIncludePaths.Text = "";
-            }
-            else
-            {
-                checkBoxExcludePathFilter.Checked = true;
-                textBoxExcludePaths.Text = path;
-
-                checkBoxIncludePathFilter.Checked = true;
-                textBoxIncludePaths.Text = path;
-            }
-        }
-
-        private void CleanUp(bool dryRun)
-        {
-            string includePathArgument = GetInclusivePathArgumentFromGui();
-            string excludePathArguments = GetExclusivePathArgumentFromGui();
-            CleanMode mode = GetCleanMode();
-            ArgumentString cleanUpCmd = Commands.Clean(mode, dryRun, directories: RemoveDirectories.Checked,
-                paths: includePathArgument, excludes: excludePathArguments);
-
-            string cmdOutput = FormProcess.ReadDialog(this, UICommands, arguments: cleanUpCmd, Module.WorkingDir, input: null, useDialogSettings: true);
-            PreviewOutput.Text = EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
-
-            if (CleanSubmodules.Checked)
-            {
-                ArgumentString cleanSubmodulesCmd = Commands.CleanSubmodules(mode, dryRun, directories: RemoveDirectories.Checked, paths: includePathArgument);
-                cmdOutput = FormProcess.ReadDialog(this, UICommands, arguments: cleanSubmodulesCmd, Module.WorkingDir, input: null, useDialogSettings: true);
-                PreviewOutput.Text += EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
-            }
-        }
-
-        private void Preview_Click(object sender, EventArgs e)
-        {
-            CleanUp(dryRun: true);
-        }
-
-        private void Cleanup_Click(object sender, EventArgs e)
-        {
-            if (MessageBox.Show(this, _reallyCleanupQuestion.Text, _reallyCleanupQuestionCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-            {
-                CleanUp(dryRun: false);
-            }
-        }
-
-        private CleanMode GetCleanMode()
-        {
-            if (RemoveAll.Checked)
-            {
-                return CleanMode.All;
-            }
-
-            if (RemoveNonIgnored.Checked)
-            {
-                return CleanMode.OnlyNonIgnored;
-            }
-
-            if (RemoveIgnored.Checked)
-            {
-                return CleanMode.OnlyIgnored;
-            }
-
-            throw new NotSupportedException($"Unknown value for {nameof(CleanMode)}.");
-        }
-
-        private string? GetInclusivePathArgumentFromGui()
-        {
-            if (!checkBoxIncludePathFilter.Checked)
-            {
-                return null;
-            }
-
-            // 1. get all lines from text box which are not empty
-            // 2. wrap lines with ""
-            // 3. join together with space as separator
-            return string.Join(" ", textBoxIncludePaths.Lines.Where(p => !string.IsNullOrEmpty(p)).Select(p => $"\"{p}\""));
-        }
-
-        private string? GetExclusivePathArgumentFromGui()
-        {
-            if (!checkBoxExcludePathFilter.Checked)
-            {
-                return null;
-            }
-
-            // 1. get all lines from text box which are not empty
-            // 2. Prepend lines with '--exclude='
-            // 3. Replace whitespace with '?' and convert to POSIX path
-            // 4. join together with space as separator
-            return string.Join(" ", textBoxExcludePaths.Lines.Where(p => !string.IsNullOrEmpty(p)).Select(p => $"--exclude={p.Replace(" ", "?")}".ToPosixPath()));
-        }
-
-        private void Close_Click(object sender, EventArgs e)
-        {
-            Close();
-        }
-
-        private void checkBoxPathFilter_CheckedChanged(object sender, EventArgs e)
-        {
-            bool filterByPath = checkBoxIncludePathFilter.Checked;
-            textBoxIncludePaths.Enabled = filterByPath;
-            labelPathHintInclude.Visible = filterByPath;
-        }
-
-        private void checkBoxExcludePathFilter_CheckedChanged(object sender, EventArgs e)
-        {
-            bool filterByPath = checkBoxExcludePathFilter.Checked;
-            textBoxExcludePaths.Enabled = filterByPath;
-            labelPathHintExclude.Visible = filterByPath;
-        }
-
-        private void AddIncludePath_Click(object sender, EventArgs e)
-        {
-            string path = RequestUserFolderPath();
-
-            if (path is not null)
-            {
-                textBoxIncludePaths.Text += path;
-            }
-        }
-
-        private void AddExcludePath_Click(object sender, EventArgs e)
-        {
-            string path = RequestUserFilePath();
-
-            if (path is not null)
-            {
-                path = path.Replace(Module.WorkingDir, "");
-                textBoxExcludePaths.Text += path;
-            }
-        }
-
-        private string? RequestUserFolderPath()
-        {
-            using FolderBrowserDialog dialog = new()
-            {
-                SelectedPath = Module.WorkingDir,
-            };
-
-            DialogResult result = dialog.ShowDialog(this);
-
-            string subFoldersToClean;
-            if (result != DialogResult.OK
-                || !(subFoldersToClean = dialog.SelectedPath).StartsWith(Module.WorkingDir)
-                || !Directory.Exists(subFoldersToClean)
-                || subFoldersToClean.Equals(PathUtil.RemoveTrailingPathSeparator(Module.WorkingDirGitDir)))
-            {
-                return null;
-            }
+            checkBoxExcludePathFilter.Checked = true;
+            textBoxExcludePaths.Text = path;
 
             checkBoxIncludePathFilter.Checked = true;
-            textBoxIncludePaths.Enabled = true;
-            if (textBoxIncludePaths.Text.Length != 0)
-            {
-                textBoxIncludePaths.Text += Environment.NewLine;
-            }
-
-            string userPath = string.Join(Environment.NewLine, subFoldersToClean);
-            return userPath;
+            textBoxIncludePaths.Text = path;
         }
+    }
 
-        private string? RequestUserFilePath()
+    private void CleanUp(bool dryRun)
+    {
+        string includePathArgument = GetInclusivePathArgumentFromGui();
+        string excludePathArguments = GetExclusivePathArgumentFromGui();
+        CleanMode mode = GetCleanMode();
+        ArgumentString cleanUpCmd = Commands.Clean(mode, dryRun, directories: RemoveDirectories.Checked,
+            paths: includePathArgument, excludes: excludePathArguments);
+
+        string cmdOutput = FormProcess.ReadDialog(this, UICommands, arguments: cleanUpCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+        PreviewOutput.Text = EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
+
+        if (CleanSubmodules.Checked)
         {
-            using OpenFileDialog openFileDialog = new();
-
-            openFileDialog.InitialDirectory = Module.WorkingDir;
-            openFileDialog.RestoreDirectory = true;
-
-            DialogResult result = openFileDialog.ShowDialog(this);
-
-            string fileToExclude;
-            if (result != DialogResult.OK
-                || !(fileToExclude = openFileDialog.FileName).StartsWith(Module.WorkingDir))
-            {
-                return null;
-            }
-
-            checkBoxExcludePathFilter.Checked = true;
-            textBoxExcludePaths.Enabled = true;
-
-            if (textBoxExcludePaths.Text.Length != 0)
-            {
-                textBoxExcludePaths.Text += Environment.NewLine;
-            }
-
-            string userPath = string.Join(Environment.NewLine, fileToExclude);
-            return userPath;
+            ArgumentString cleanSubmodulesCmd = Commands.CleanSubmodules(mode, dryRun, directories: RemoveDirectories.Checked, paths: includePathArgument);
+            cmdOutput = FormProcess.ReadDialog(this, UICommands, arguments: cleanSubmodulesCmd, Module.WorkingDir, input: null, useDialogSettings: true);
+            PreviewOutput.Text += EnvUtils.ReplaceLinuxNewLinesDependingOnPlatform(cmdOutput);
         }
+    }
+
+    private void Preview_Click(object sender, EventArgs e)
+    {
+        CleanUp(dryRun: true);
+    }
+
+    private void Cleanup_Click(object sender, EventArgs e)
+    {
+        if (MessageBox.Show(this, _reallyCleanupQuestion.Text, _reallyCleanupQuestionCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+        {
+            CleanUp(dryRun: false);
+        }
+    }
+
+    private CleanMode GetCleanMode()
+    {
+        if (RemoveAll.Checked)
+        {
+            return CleanMode.All;
+        }
+
+        if (RemoveNonIgnored.Checked)
+        {
+            return CleanMode.OnlyNonIgnored;
+        }
+
+        if (RemoveIgnored.Checked)
+        {
+            return CleanMode.OnlyIgnored;
+        }
+
+        throw new NotSupportedException($"Unknown value for {nameof(CleanMode)}.");
+    }
+
+    private string? GetInclusivePathArgumentFromGui()
+    {
+        if (!checkBoxIncludePathFilter.Checked)
+        {
+            return null;
+        }
+
+        // 1. get all lines from text box which are not empty
+        // 2. wrap lines with ""
+        // 3. join together with space as separator
+        return string.Join(" ", textBoxIncludePaths.Lines.Where(p => !string.IsNullOrEmpty(p)).Select(p => $"\"{p}\""));
+    }
+
+    private string? GetExclusivePathArgumentFromGui()
+    {
+        if (!checkBoxExcludePathFilter.Checked)
+        {
+            return null;
+        }
+
+        // 1. get all lines from text box which are not empty
+        // 2. Prepend lines with '--exclude='
+        // 3. Replace whitespace with '?' and convert to POSIX path
+        // 4. join together with space as separator
+        return string.Join(" ", textBoxExcludePaths.Lines.Where(p => !string.IsNullOrEmpty(p)).Select(p => $"--exclude={p.Replace(" ", "?")}".ToPosixPath()));
+    }
+
+    private void Close_Click(object sender, EventArgs e)
+    {
+        Close();
+    }
+
+    private void checkBoxPathFilter_CheckedChanged(object sender, EventArgs e)
+    {
+        bool filterByPath = checkBoxIncludePathFilter.Checked;
+        textBoxIncludePaths.Enabled = filterByPath;
+        labelPathHintInclude.Visible = filterByPath;
+    }
+
+    private void checkBoxExcludePathFilter_CheckedChanged(object sender, EventArgs e)
+    {
+        bool filterByPath = checkBoxExcludePathFilter.Checked;
+        textBoxExcludePaths.Enabled = filterByPath;
+        labelPathHintExclude.Visible = filterByPath;
+    }
+
+    private void AddIncludePath_Click(object sender, EventArgs e)
+    {
+        string path = RequestUserFolderPath();
+
+        if (path is not null)
+        {
+            textBoxIncludePaths.Text += path;
+        }
+    }
+
+    private void AddExcludePath_Click(object sender, EventArgs e)
+    {
+        string path = RequestUserFilePath();
+
+        if (path is not null)
+        {
+            path = path.Replace(Module.WorkingDir, "");
+            textBoxExcludePaths.Text += path;
+        }
+    }
+
+    private string? RequestUserFolderPath()
+    {
+        using FolderBrowserDialog dialog = new()
+        {
+            SelectedPath = Module.WorkingDir,
+        };
+
+        DialogResult result = dialog.ShowDialog(this);
+
+        string subFoldersToClean;
+        if (result != DialogResult.OK
+            || !(subFoldersToClean = dialog.SelectedPath).StartsWith(Module.WorkingDir)
+            || !Directory.Exists(subFoldersToClean)
+            || subFoldersToClean.Equals(PathUtil.RemoveTrailingPathSeparator(Module.WorkingDirGitDir)))
+        {
+            return null;
+        }
+
+        checkBoxIncludePathFilter.Checked = true;
+        textBoxIncludePaths.Enabled = true;
+        if (textBoxIncludePaths.Text.Length != 0)
+        {
+            textBoxIncludePaths.Text += Environment.NewLine;
+        }
+
+        string userPath = string.Join(Environment.NewLine, subFoldersToClean);
+        return userPath;
+    }
+
+    private string? RequestUserFilePath()
+    {
+        using OpenFileDialog openFileDialog = new();
+
+        openFileDialog.InitialDirectory = Module.WorkingDir;
+        openFileDialog.RestoreDirectory = true;
+
+        DialogResult result = openFileDialog.ShowDialog(this);
+
+        string fileToExclude;
+        if (result != DialogResult.OK
+            || !(fileToExclude = openFileDialog.FileName).StartsWith(Module.WorkingDir))
+        {
+            return null;
+        }
+
+        checkBoxExcludePathFilter.Checked = true;
+        textBoxExcludePaths.Enabled = true;
+
+        if (textBoxExcludePaths.Text.Length != 0)
+        {
+            textBoxExcludePaths.Text += Environment.NewLine;
+        }
+
+        string userPath = string.Join(Environment.NewLine, fileToExclude);
+        return userPath;
     }
 }

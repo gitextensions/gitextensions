@@ -1,26 +1,25 @@
 ﻿using GitExtensions.Extensibility.Settings;
 
-namespace GitUI.CommandsDialogs.SettingsDialog
+namespace GitUI.CommandsDialogs.SettingsDialog;
+
+public interface ISettingsPage
 {
-    public interface ISettingsPage
-    {
-        string GetTitle();
+    string GetTitle();
 
-        Control? GuiControl { get; }
+    Control? GuiControl { get; }
 
-        void OnPageShown();
+    void OnPageShown();
 
-        void LoadSettings();
+    void LoadSettings();
 
-        void SaveSettings();
+    void SaveSettings();
 
-        /// <summary>
-        /// true if the page cannot properly react to cancel or discard.
-        /// </summary>
-        bool IsInstantSavePage { get; }
+    /// <summary>
+    /// true if the page cannot properly react to cancel or discard.
+    /// </summary>
+    bool IsInstantSavePage { get; }
 
-        IEnumerable<string> GetSearchKeywords();
+    IEnumerable<string> GetSearchKeywords();
 
-        SettingsPageReference PageReference { get; }
-    }
+    SettingsPageReference PageReference { get; }
 }

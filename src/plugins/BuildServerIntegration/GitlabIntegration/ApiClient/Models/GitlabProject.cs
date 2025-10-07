@@ -1,7 +1,6 @@
-﻿namespace GitExtensions.Plugins.GitlabIntegration.ApiClient.Models
+﻿namespace GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
+
+public class GitlabProject
 {
-    public class GitlabProject
-    {
-        public int Id { get; set; }
-    }
+    public int Id { get; set; }
 }

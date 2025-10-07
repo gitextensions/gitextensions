@@ -1,55 +1,54 @@
 ﻿using GitExtensions.Extensibility.Git;
 
-namespace GitExtensions.Extensibility.Plugins
+namespace GitExtensions.Extensibility.Plugins;
+
+public interface IHostedRepository
 {
-    public interface IHostedRepository
-    {
-        string? Owner { get; }
-        string Name { get; }
-        string Description { get; }
-        bool IsAFork { get; }
-        bool IsMine { get; }
-        bool IsPrivate { get; }
-        int Forks { get; }
+    string? Owner { get; }
+    string Name { get; }
+    string Description { get; }
+    bool IsAFork { get; }
+    bool IsMine { get; }
+    bool IsPrivate { get; }
+    int Forks { get; }
 
-        string Homepage { get; }
+    string Homepage { get; }
 
-        string? ParentUrl { get; }
-        string? ParentOwner { get; }
+    string? ParentUrl { get; }
+    string? ParentOwner { get; }
 
-        string CloneUrl { get; }
+    string CloneUrl { get; }
 
-        /// <summary>
-        /// Requests details of branches from the GitHub remote repository.
-        /// </summary>
-        /// <returns>A list of branches, ordered by name.</returns>
-        IReadOnlyList<IHostedBranch> GetBranches();
+    /// <summary>
+    /// Requests details of branches from the GitHub remote repository.
+    /// </summary>
+    /// <returns>A list of branches, ordered by name.</returns>
+    IReadOnlyList<IHostedBranch> GetBranches();
 
-        /// <summary>
-        /// Returns the default branch of the repository.
-        /// </summary>
-        /// <returns>The default branch of the repository.</returns>
-        string GetDefaultBranch();
+    /// <summary>
+    /// Returns the default branch of the repository.
+    /// </summary>
+    /// <returns>The default branch of the repository.</returns>
+    string GetDefaultBranch();
 
-        /// <summary>
-        /// Forks the repo owned by somebody else to "my" repos.
-        /// </summary>
-        /// <returns>The new repo, owned by me.</returns>
-        IHostedRepository Fork();
+    /// <summary>
+    /// Forks the repo owned by somebody else to "my" repos.
+    /// </summary>
+    /// <returns>The new repo, owned by me.</returns>
+    IHostedRepository Fork();
 
-        IReadOnlyList<IPullRequestInformation> GetPullRequests();
+    IReadOnlyList<IPullRequestInformation> GetPullRequests();
 
-        /// <returns>Pull request number</returns>
-        int CreatePullRequest(string myBranch, string remoteBranch, string title, string body);
+    /// <returns>Pull request number</returns>
+    int CreatePullRequest(string myBranch, string remoteBranch, string title, string body);
 
-        GitProtocol CloneProtocol { get; set; }
+    GitProtocol CloneProtocol { get; set; }
 
-        IReadOnlyList<GitProtocol> SupportedCloneProtocols { get; set; }
-    }
+    IReadOnlyList<GitProtocol> SupportedCloneProtocols { get; set; }
+}
 
-    public interface IHostedBranch
-    {
-        string Name { get; }
-        ObjectId Sha { get; }
-    }
+public interface IHostedBranch
+{
+    string Name { get; }
+    ObjectId Sha { get; }
 }

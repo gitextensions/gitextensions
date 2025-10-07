@@ -1,38 +1,37 @@
-﻿namespace GitExtUtils.GitUI.Theming
+﻿namespace GitExtUtils.GitUI.Theming;
+
+public readonly struct ThemeId
 {
-    public readonly struct ThemeId
+    public static ThemeId Default { get; } = new(string.Empty, isBuiltin: true);
+
+    public string Name { get; }
+    public bool IsBuiltin { get; }
+
+    public ThemeId(string name, bool isBuiltin)
     {
-        public static ThemeId Default { get; } = new(string.Empty, isBuiltin: true);
-
-        public string Name { get; }
-        public bool IsBuiltin { get; }
-
-        public ThemeId(string name, bool isBuiltin)
-        {
-            Name = name ?? string.Empty;
-            IsBuiltin = isBuiltin;
-        }
-
-        public override bool Equals(object obj) =>
-            obj is ThemeId other && Equals(other);
-
-        public override int GetHashCode()
-        {
-            // Name can be null because of default struct constructor
-            int nameHashCode = Name is null
-                ? 0
-                : StringComparer.OrdinalIgnoreCase.GetHashCode(Name);
-            return nameHashCode ^ IsBuiltin.GetHashCode();
-        }
-
-        public static bool operator ==(ThemeId left, ThemeId right) =>
-            left.Equals(right);
-
-        public static bool operator !=(ThemeId left, ThemeId right) =>
-            !left.Equals(right);
-
-        private bool Equals(ThemeId other) =>
-            string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase) &&
-            IsBuiltin == other.IsBuiltin;
+        Name = name ?? string.Empty;
+        IsBuiltin = isBuiltin;
     }
+
+    public override bool Equals(object obj) =>
+        obj is ThemeId other && Equals(other);
+
+    public override int GetHashCode()
+    {
+        // Name can be null because of default struct constructor
+        int nameHashCode = Name is null
+            ? 0
+            : StringComparer.OrdinalIgnoreCase.GetHashCode(Name);
+        return nameHashCode ^ IsBuiltin.GetHashCode();
+    }
+
+    public static bool operator ==(ThemeId left, ThemeId right) =>
+        left.Equals(right);
+
+    public static bool operator !=(ThemeId left, ThemeId right) =>
+        !left.Equals(right);
+
+    private bool Equals(ThemeId other) =>
+        string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase) &&
+        IsBuiltin == other.IsBuiltin;
 }

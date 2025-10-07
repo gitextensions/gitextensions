@@ -1,10 +1,9 @@
 using System.Runtime.InteropServices;
 
-namespace System
+namespace System;
+
+internal static partial class NativeMethods
 {
-    internal static partial class NativeMethods
-    {
-        [DllImport(Libraries.WinInet)]
-        public static extern bool InternetGetConnectedState(out int description, int reservedValue);
-    }
+    [DllImport(Libraries.WinInet)]
+    public static extern bool InternetGetConnectedState(out int description, int reservedValue);
 }

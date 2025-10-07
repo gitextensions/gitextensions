@@ -1,7 +1,6 @@
-namespace GitUI.AutoCompletion
+namespace GitUI.AutoCompletion;
+
+public interface IAutoCompleteProvider
 {
-    public interface IAutoCompleteProvider
-    {
-        Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWordsAsync(CancellationToken cancellationToken);
-    }
+    Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWordsAsync(CancellationToken cancellationToken);
 }

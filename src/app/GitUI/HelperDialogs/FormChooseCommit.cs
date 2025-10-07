@@ -2,132 +2,131 @@
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
-namespace GitUI.HelperDialogs
+namespace GitUI.HelperDialogs;
+
+public partial class FormChooseCommit : GitModuleForm
 {
-    public partial class FormChooseCommit : GitModuleForm
+    private FormChooseCommit(IGitUICommands commands)
+        : base(commands)
     {
-        private FormChooseCommit(IGitUICommands commands)
-            : base(commands)
+        InitializeComponent();
+        InitializeComplete();
+    }
+
+    public FormChooseCommit(IGitUICommands commands, string? preselectCommit, bool showArtificial = false, bool showCurrentBranchOnly = false, string? lastRevisionToDisplayHash = null)
+        : this(commands)
+    {
+        revisionGrid.MultiSelect = false;
+        revisionGrid.ShowUncommittedChangesIfPossible = showArtificial;
+        if (lastRevisionToDisplayHash is not null)
         {
-            InitializeComponent();
-            InitializeComplete();
+            revisionGrid.SetLastRevisionToDisplayHash(lastRevisionToDisplayHash);
         }
 
-        public FormChooseCommit(IGitUICommands commands, string? preselectCommit, bool showArtificial = false, bool showCurrentBranchOnly = false, string? lastRevisionToDisplayHash = null)
-            : this(commands)
+        if (showCurrentBranchOnly)
         {
-            revisionGrid.MultiSelect = false;
-            revisionGrid.ShowUncommittedChangesIfPossible = showArtificial;
-            if (lastRevisionToDisplayHash is not null)
-            {
-                revisionGrid.SetLastRevisionToDisplayHash(lastRevisionToDisplayHash);
-            }
-
-            if (showCurrentBranchOnly)
-            {
-                revisionGrid.ShowCurrentBranchOnly();
-            }
-
-            if (!string.IsNullOrEmpty(preselectCommit))
-            {
-                ObjectId objectId = Module.RevParse(preselectCommit);
-                if (objectId is not null)
-                {
-                    revisionGrid.SelectedId = objectId;
-                }
-            }
+            revisionGrid.ShowCurrentBranchOnly();
         }
 
-        public GitRevision? SelectedRevision { get; private set; }
-
-        protected override void OnLoad(EventArgs e)
+        if (!string.IsNullOrEmpty(preselectCommit))
         {
-            revisionGrid.Load();
-            base.OnLoad(e);
-        }
-
-        private void btnOK_Click(object sender, EventArgs e)
-        {
-            IReadOnlyList<GitRevision> revisions = revisionGrid.GetSelectedRevisions();
-
-            if (revisions.Count == 1)
+            ObjectId objectId = Module.RevParse(preselectCommit);
+            if (objectId is not null)
             {
-                SelectedRevision = revisions[0];
-                DialogResult = DialogResult.OK;
-
-                Close();
+                revisionGrid.SelectedId = objectId;
             }
         }
+    }
 
-        private void revisionGrid_DoubleClickRevision(object sender, DoubleClickRevisionEventArgs e)
+    public GitRevision? SelectedRevision { get; private set; }
+
+    protected override void OnLoad(EventArgs e)
+    {
+        revisionGrid.Load();
+        base.OnLoad(e);
+    }
+
+    private void btnOK_Click(object sender, EventArgs e)
+    {
+        IReadOnlyList<GitRevision> revisions = revisionGrid.GetSelectedRevisions();
+
+        if (revisions.Count == 1)
         {
-            if (e.Revision is not null)
-            {
-                SelectedRevision = e.Revision;
-                DialogResult = DialogResult.OK;
-                Close();
-            }
-        }
-
-        private void buttonGotoCommit_Click(object sender, EventArgs e)
-        {
-            revisionGrid.MenuCommands.GotoCommitExecute();
-        }
-
-        private void linkLabelParent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
-        {
-            LinkLabel linkLabel = (LinkLabel)sender;
-            ObjectId parentId = (ObjectId)linkLabel.Tag;
-
-            if (!revisionGrid.SetSelectedRevision(parentId))
-            {
-                MessageBoxes.RevisionFilteredInGrid(this, parentId);
-            }
-        }
-
-        private void revisionGrid_SelectionChanged(object sender, EventArgs e)
-        {
-            IReadOnlyList<GitRevision> revisions = revisionGrid.GetSelectedRevisions();
-
-            bool singleCommitSelected = revisions.Count == 1;
-            labelParents.Visible = singleCommitSelected;
-            linkLabelParent.Visible = singleCommitSelected;
-            linkLabelParent2.Visible = singleCommitSelected;
-
-            if (!singleCommitSelected)
-            {
-                return;
-            }
-
             SelectedRevision = revisions[0];
+            DialogResult = DialogResult.OK;
 
-            flowLayoutPanelParents.Visible = SelectedRevision.HasParent;
+            Close();
+        }
+    }
 
-            if (!flowLayoutPanelParents.Visible)
-            {
-                return;
-            }
+    private void revisionGrid_DoubleClickRevision(object sender, DoubleClickRevisionEventArgs e)
+    {
+        if (e.Revision is not null)
+        {
+            SelectedRevision = e.Revision;
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+    }
 
-            IReadOnlyList<ObjectId> parents = SelectedRevision.ParentIds;
+    private void buttonGotoCommit_Click(object sender, EventArgs e)
+    {
+        revisionGrid.MenuCommands.GotoCommitExecute();
+    }
 
-            if (parents?.Count is not > 0)
-            {
-                return;
-            }
+    private void linkLabelParent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    {
+        LinkLabel linkLabel = (LinkLabel)sender;
+        ObjectId parentId = (ObjectId)linkLabel.Tag;
 
-            linkLabelParent.Tag = parents[0];
-            linkLabelParent.Text = parents[0].ToShortString();
+        if (!revisionGrid.SetSelectedRevision(parentId))
+        {
+            MessageBoxes.RevisionFilteredInGrid(this, parentId);
+        }
+    }
 
-            if (parents.Count > 1)
-            {
-                linkLabelParent2.Visible = true;
-                linkLabelParent2.Tag = parents[1];
-                linkLabelParent2.Text = parents[1].ToShortString();
-            }
-            else
-            {
-                linkLabelParent2.Visible = false;
-            }
+    private void revisionGrid_SelectionChanged(object sender, EventArgs e)
+    {
+        IReadOnlyList<GitRevision> revisions = revisionGrid.GetSelectedRevisions();
+
+        bool singleCommitSelected = revisions.Count == 1;
+        labelParents.Visible = singleCommitSelected;
+        linkLabelParent.Visible = singleCommitSelected;
+        linkLabelParent2.Visible = singleCommitSelected;
+
+        if (!singleCommitSelected)
+        {
+            return;
+        }
+
+        SelectedRevision = revisions[0];
+
+        flowLayoutPanelParents.Visible = SelectedRevision.HasParent;
+
+        if (!flowLayoutPanelParents.Visible)
+        {
+            return;
+        }
+
+        IReadOnlyList<ObjectId> parents = SelectedRevision.ParentIds;
+
+        if (parents?.Count is not > 0)
+        {
+            return;
+        }
+
+        linkLabelParent.Tag = parents[0];
+        linkLabelParent.Text = parents[0].ToShortString();
+
+        if (parents.Count > 1)
+        {
+            linkLabelParent2.Visible = true;
+            linkLabelParent2.Tag = parents[1];
+            linkLabelParent2.Text = parents[1].ToShortString();
+        }
+        else
+        {
+            linkLabelParent2.Visible = false;
         }
     }
 }

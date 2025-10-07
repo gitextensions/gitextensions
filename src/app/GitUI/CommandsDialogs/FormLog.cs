@@ -1,78 +1,77 @@
 ﻿using GitExtensions.Extensibility.Git;
 
-namespace GitUI.CommandsDialogs
+namespace GitUI.CommandsDialogs;
+
+public partial class FormLog : GitModuleForm
 {
-    public partial class FormLog : GitModuleForm
+    private readonly CancellationTokenSequence _viewChangesSequence = new();
+
+    public FormLog(IGitUICommands commands)
+        : base(commands)
     {
-        private readonly CancellationTokenSequence _viewChangesSequence = new();
+        InitializeComponent();
+        diffViewer.ExtraDiffArgumentsChanged += DiffViewerExtraDiffArgumentsChanged;
+        diffViewer.TopScrollReached += FileViewer_TopScrollReached;
+        diffViewer.BottomScrollReached += FileViewer_BottomScrollReached;
+        InitializeComplete();
+    }
 
-        public FormLog(IGitUICommands commands)
-            : base(commands)
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            InitializeComponent();
-            diffViewer.ExtraDiffArgumentsChanged += DiffViewerExtraDiffArgumentsChanged;
-            diffViewer.TopScrollReached += FileViewer_TopScrollReached;
-            diffViewer.BottomScrollReached += FileViewer_BottomScrollReached;
-            InitializeComplete();
+            _viewChangesSequence.Dispose();
+            components?.Dispose();
         }
 
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _viewChangesSequence.Dispose();
-                components?.Dispose();
-            }
+        base.Dispose(disposing);
+    }
 
-            base.Dispose(disposing);
-        }
+    private void FormDiffLoad(object sender, EventArgs e)
+    {
+        RevisionGrid.Load();
+    }
 
-        private void FormDiffLoad(object sender, EventArgs e)
-        {
-            RevisionGrid.Load();
-        }
+    private void DiffFilesSelectedIndexChanged(object sender, EventArgs e)
+    {
+        ViewSelectedFileDiff();
+    }
 
-        private void DiffFilesSelectedIndexChanged(object sender, EventArgs e)
+    private void ViewSelectedFileDiff()
+    {
+        using (WaitCursorScope.Enter())
         {
-            ViewSelectedFileDiff();
+            _ = diffViewer.ViewChangesAsync(DiffFiles.SelectedItem,
+                cancellationToken: _viewChangesSequence.Next());
         }
+    }
 
-        private void ViewSelectedFileDiff()
+    private void RevisionGridSelectionChanged(object sender, EventArgs e)
+    {
+        using (WaitCursorScope.Enter())
         {
-            using (WaitCursorScope.Enter())
-            {
-                _ = diffViewer.ViewChangesAsync(DiffFiles.SelectedItem,
-                    cancellationToken: _viewChangesSequence.Next());
-            }
+            TaskManager.HandleExceptions(() => DiffFiles.SetDiffs(RevisionGrid.GetSelectedRevisions()), Application.OnThreadException);
         }
+    }
 
-        private void RevisionGridSelectionChanged(object sender, EventArgs e)
-        {
-            using (WaitCursorScope.Enter())
-            {
-                TaskManager.HandleExceptions(() => DiffFiles.SetDiffs(RevisionGrid.GetSelectedRevisions()), Application.OnThreadException);
-            }
-        }
+    private void DiffViewerExtraDiffArgumentsChanged(object sender, EventArgs e)
+    {
+        ViewSelectedFileDiff();
+    }
 
-        private void DiffViewerExtraDiffArgumentsChanged(object sender, EventArgs e)
-        {
-            ViewSelectedFileDiff();
-        }
+    private void FileViewer_TopScrollReached(object sender, EventArgs e)
+    {
+        DiffFiles.SelectPreviousVisibleItem();
+        diffViewer.ScrollToBottom();
+    }
 
-        private void FileViewer_TopScrollReached(object sender, EventArgs e)
-        {
-            DiffFiles.SelectPreviousVisibleItem();
-            diffViewer.ScrollToBottom();
-        }
-
-        private void FileViewer_BottomScrollReached(object sender, EventArgs e)
-        {
-            DiffFiles.SelectNextVisibleItem();
-            diffViewer.ScrollToTop();
-        }
+    private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+    {
+        DiffFiles.SelectNextVisibleItem();
+        diffViewer.ScrollToTop();
     }
 }

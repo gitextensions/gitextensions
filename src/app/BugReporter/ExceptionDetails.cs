@@ -6,167 +6,166 @@
 
 using BugReporter.Serialization;
 
-namespace BugReporter
+namespace BugReporter;
+
+internal partial class ExceptionDetails : UserControl
 {
-    internal partial class ExceptionDetails : UserControl
+    private readonly Dictionary<TreeNode, SerializableException> _exceptionDetailsList = [];
+
+    public ExceptionDetails()
     {
-        private readonly Dictionary<TreeNode, SerializableException> _exceptionDetailsList = [];
+        InitializeComponent();
+    }
 
-        public ExceptionDetails()
+    public int InformationColumnWidth
+    {
+        get
         {
-            InitializeComponent();
+            return exceptionDetailsListView.Columns[1].Width;
         }
 
-        public int InformationColumnWidth
+        set
         {
-            get
-            {
-                return exceptionDetailsListView.Columns[1].Width;
-            }
+            exceptionDetailsListView.Columns[1].Width = value;
+        }
+    }
 
-            set
-            {
-                exceptionDetailsListView.Columns[1].Width = value;
-            }
+    public int PropertyColumnWidth
+    {
+        get
+        {
+            return exceptionDetailsListView.Columns[0].Width;
         }
 
-        public int PropertyColumnWidth
+        set
         {
-            get
-            {
-                return exceptionDetailsListView.Columns[0].Width;
-            }
+            exceptionDetailsListView.Columns[0].Width = value;
+        }
+    }
 
-            set
-            {
-                exceptionDetailsListView.Columns[0].Width = value;
-            }
+    internal void Initialize(SerializableException exception)
+    {
+        _exceptionDetailsList.Add(exceptionTreeView.Nodes.Add(exception.Type), exception);
+
+        if (exception.InnerException is not null)
+        {
+            FillInnerExceptionTree(exception.InnerException, exceptionTreeView.Nodes[0]);
         }
 
-        internal void Initialize(SerializableException exception)
+        if (exception.InnerExceptions is not null)
         {
-            _exceptionDetailsList.Add(exceptionTreeView.Nodes.Add(exception.Type), exception);
-
-            if (exception.InnerException is not null)
+            foreach (SerializableException innerException in exception.InnerExceptions)
             {
-                FillInnerExceptionTree(exception.InnerException, exceptionTreeView.Nodes[0]);
-            }
-
-            if (exception.InnerExceptions is not null)
-            {
-                foreach (SerializableException innerException in exception.InnerExceptions)
-                {
-                    FillInnerExceptionTree(innerException, exceptionTreeView.Nodes[0]);
-                }
-            }
-
-            exceptionTreeView.ExpandAll();
-            DisplayExceptionDetails(exceptionTreeView.Nodes[0]);
-        }
-
-        private void DisplayExceptionDetails(TreeNode node)
-        {
-            SerializableException exception = _exceptionDetailsList[node];
-            exceptionDetailsListView.SuspendLayout();
-            exceptionDetailsListView.Items.Clear();
-
-            if (exception.Type is not null)
-            {
-                exceptionDetailsListView.Items.Add("Exception").SubItems.Add(exception.Type);
-            }
-
-            if (exception.Message is not null)
-            {
-                exceptionDetailsListView.Items.Add("Message").SubItems.Add(exception.Message);
-            }
-
-            if (exception.TargetSite is not null)
-            {
-                exceptionDetailsListView.Items.Add("Target Site").SubItems.Add(exception.TargetSite);
-            }
-
-            if (exception.InnerException is not null)
-            {
-                exceptionDetailsListView.Items.Add("Inner Exception").SubItems.Add(exception.InnerException.Type);
-            }
-
-            if (exception.Source is not null)
-            {
-                exceptionDetailsListView.Items.Add("Source").SubItems.Add(exception.Source);
-            }
-
-            if (exception.HelpLink is not null)
-            {
-                exceptionDetailsListView.Items.Add("Help Link").SubItems.Add(exception.HelpLink);
-            }
-
-            if (exception.StackTrace is not null)
-            {
-                exceptionDetailsListView.Items.Add("Stack Trace").SubItems.Add(exception.StackTrace);
-            }
-
-            if (exception.Data is not null)
-            {
-                foreach (KeyValuePair<object, object> pair in exception.Data)
-                {
-                    exceptionDetailsListView.Items.Add(string.Format("Data[\"{0}\"]", pair.Key)).SubItems.Add(pair.Value.ToString());
-                }
-            }
-
-            if (exception.ExtendedInformation is not null)
-            {
-                foreach (KeyValuePair<string, object> info in exception.ExtendedInformation)
-                {
-                    ListViewItem item = exceptionDetailsListView.Items.Add(info.Key);
-                    item.UseItemStyleForSubItems = false;
-                    item.Font = new Font(Font, FontStyle.Bold);
-                    item.SubItems.Add(info.Value.ToString());
-                }
-            }
-
-            exceptionDetailsListView.ResumeLayout();
-        }
-
-        private void ExceptionDetailsListView_DoubleClick(object sender, EventArgs e)
-        {
-            using ExceptionDetailView detailView = new();
-            detailView.ShowDialog(exceptionDetailsListView.SelectedItems[0].Text, exceptionDetailsListView.SelectedItems[0].SubItems[1].Text);
-        }
-
-        private void ExceptionDetailsListView_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
-        {
-            toolTip.RemoveAll();
-            toolTip.Show(e.Item.SubItems[1].Text, exceptionDetailsListView);
-        }
-
-        private void ExceptionTreeView_AfterSelect(object sender, TreeViewEventArgs e)
-        {
-            DisplayExceptionDetails(e.Node);
-        }
-
-        private void FillInnerExceptionTree(SerializableException innerException, TreeNode innerNode)
-        {
-            _exceptionDetailsList.Add(innerNode.Nodes.Add(innerException.Type), innerException);
-
-            if (innerException.InnerException is not null)
-            {
-                FillInnerExceptionTree(innerException.InnerException, innerNode.Nodes[0]);
+                FillInnerExceptionTree(innerException, exceptionTreeView.Nodes[0]);
             }
         }
 
-        internal TestAccessor GetTestAccessor()
-            => new(this);
+        exceptionTreeView.ExpandAll();
+        DisplayExceptionDetails(exceptionTreeView.Nodes[0]);
+    }
 
-        internal readonly struct TestAccessor
+    private void DisplayExceptionDetails(TreeNode node)
+    {
+        SerializableException exception = _exceptionDetailsList[node];
+        exceptionDetailsListView.SuspendLayout();
+        exceptionDetailsListView.Items.Clear();
+
+        if (exception.Type is not null)
         {
-            private readonly ExceptionDetails _form;
-
-            public TestAccessor(ExceptionDetails form)
-            {
-                _form = form;
-            }
-
-            public ListView ExceptionDetailsListView => _form.exceptionDetailsListView;
+            exceptionDetailsListView.Items.Add("Exception").SubItems.Add(exception.Type);
         }
+
+        if (exception.Message is not null)
+        {
+            exceptionDetailsListView.Items.Add("Message").SubItems.Add(exception.Message);
+        }
+
+        if (exception.TargetSite is not null)
+        {
+            exceptionDetailsListView.Items.Add("Target Site").SubItems.Add(exception.TargetSite);
+        }
+
+        if (exception.InnerException is not null)
+        {
+            exceptionDetailsListView.Items.Add("Inner Exception").SubItems.Add(exception.InnerException.Type);
+        }
+
+        if (exception.Source is not null)
+        {
+            exceptionDetailsListView.Items.Add("Source").SubItems.Add(exception.Source);
+        }
+
+        if (exception.HelpLink is not null)
+        {
+            exceptionDetailsListView.Items.Add("Help Link").SubItems.Add(exception.HelpLink);
+        }
+
+        if (exception.StackTrace is not null)
+        {
+            exceptionDetailsListView.Items.Add("Stack Trace").SubItems.Add(exception.StackTrace);
+        }
+
+        if (exception.Data is not null)
+        {
+            foreach (KeyValuePair<object, object> pair in exception.Data)
+            {
+                exceptionDetailsListView.Items.Add(string.Format("Data[\"{0}\"]", pair.Key)).SubItems.Add(pair.Value.ToString());
+            }
+        }
+
+        if (exception.ExtendedInformation is not null)
+        {
+            foreach (KeyValuePair<string, object> info in exception.ExtendedInformation)
+            {
+                ListViewItem item = exceptionDetailsListView.Items.Add(info.Key);
+                item.UseItemStyleForSubItems = false;
+                item.Font = new Font(Font, FontStyle.Bold);
+                item.SubItems.Add(info.Value.ToString());
+            }
+        }
+
+        exceptionDetailsListView.ResumeLayout();
+    }
+
+    private void ExceptionDetailsListView_DoubleClick(object sender, EventArgs e)
+    {
+        using ExceptionDetailView detailView = new();
+        detailView.ShowDialog(exceptionDetailsListView.SelectedItems[0].Text, exceptionDetailsListView.SelectedItems[0].SubItems[1].Text);
+    }
+
+    private void ExceptionDetailsListView_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
+    {
+        toolTip.RemoveAll();
+        toolTip.Show(e.Item.SubItems[1].Text, exceptionDetailsListView);
+    }
+
+    private void ExceptionTreeView_AfterSelect(object sender, TreeViewEventArgs e)
+    {
+        DisplayExceptionDetails(e.Node);
+    }
+
+    private void FillInnerExceptionTree(SerializableException innerException, TreeNode innerNode)
+    {
+        _exceptionDetailsList.Add(innerNode.Nodes.Add(innerException.Type), innerException);
+
+        if (innerException.InnerException is not null)
+        {
+            FillInnerExceptionTree(innerException.InnerException, innerNode.Nodes[0]);
+        }
+    }
+
+    internal TestAccessor GetTestAccessor()
+        => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly ExceptionDetails _form;
+
+        public TestAccessor(ExceptionDetails form)
+        {
+            _form = form;
+        }
+
+        public ListView ExceptionDetailsListView => _form.exceptionDetailsListView;
     }
 }

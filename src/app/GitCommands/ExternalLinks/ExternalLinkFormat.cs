@@ -3,49 +3,48 @@ using System.Xml.Serialization;
 using GitUIPluginInterfaces;
 using Microsoft;
 
-namespace GitCommands.ExternalLinks
+namespace GitCommands.ExternalLinks;
+
+[XmlType("GitExtLinkFormat")]
+public class ExternalLinkFormat
 {
-    [XmlType("GitExtLinkFormat")]
-    public class ExternalLinkFormat
+    public string? Caption { get; set; }
+    public string? Format { get; set; }
+    [XmlIgnore]
+    public bool IsValid { get; private set; }
+
+    public ExternalLink Apply(Match? remoteMatch, Match? revisionMatch, GitRevision revision)
     {
-        public string? Caption { get; set; }
-        public string? Format { get; set; }
-        [XmlIgnore]
-        public bool IsValid { get; private set; }
+        List<string> groups = [];
+        AddGroupsFromMatches(remoteMatch);
+        AddGroupsFromMatches(revisionMatch);
+        object[] groupsArray = groups.ToArray<object>();
 
-        public ExternalLink Apply(Match? remoteMatch, Match? revisionMatch, GitRevision revision)
+        string? caption = null;
+        string? uri;
+        try
         {
-            List<string> groups = [];
-            AddGroupsFromMatches(remoteMatch);
-            AddGroupsFromMatches(revisionMatch);
-            object[] groupsArray = groups.ToArray<object>();
+            caption = string.Format(Caption, groupsArray);
+            Validates.NotNull(Format);
+            uri = Format.Replace("%COMMIT_HASH%", revision.Guid);
+            uri = string.Format(uri, groupsArray);
+            IsValid = true;
+        }
+        catch (Exception e)
+        {
+            uri = e.Message + ": " + Format + " " + groupsArray;
+            IsValid = false;
+        }
 
-            string? caption = null;
-            string? uri;
-            try
-            {
-                caption = string.Format(Caption, groupsArray);
-                Validates.NotNull(Format);
-                uri = Format.Replace("%COMMIT_HASH%", revision.Guid);
-                uri = string.Format(uri, groupsArray);
-                IsValid = true;
-            }
-            catch (Exception e)
-            {
-                uri = e.Message + ": " + Format + " " + groupsArray;
-                IsValid = false;
-            }
+        return new ExternalLink(caption, uri);
 
-            return new ExternalLink(caption, uri);
-
-            void AddGroupsFromMatches(Match? match)
+        void AddGroupsFromMatches(Match? match)
+        {
+            if (match is not null)
             {
-                if (match is not null)
+                for (int i = match.Groups.Count > 1 ? 1 : 0; i < match.Groups.Count; i++)
                 {
-                    for (int i = match.Groups.Count > 1 ? 1 : 0; i < match.Groups.Count; i++)
-                    {
-                        groups.Add(match.Groups[i].Value);
-                    }
+                    groups.Add(match.Groups[i].Value);
                 }
             }
         }

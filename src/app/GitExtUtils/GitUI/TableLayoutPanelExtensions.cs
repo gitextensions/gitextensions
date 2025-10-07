@@ -1,37 +1,36 @@
-﻿namespace GitUI
+﻿namespace GitUI;
+
+public static class TableLayoutPanelExtensions
 {
-    public static class TableLayoutPanelExtensions
+    /// <summary>
+    /// Adjusts the width of the required column to the largest value from the supplied set.
+    /// </summary>
+    /// <param name="table">The table to adjust.</param>
+    /// <param name="columnIndex">The index of the column to resize.</param>
+    /// <param name="controls">A set of controls to choose the widest from.</param>
+    public static void AdjustWidthToSize(this TableLayoutPanel table, int columnIndex, params Control[] controls)
     {
-        /// <summary>
-        /// Adjusts the width of the required column to the largest value from the supplied set.
-        /// </summary>
-        /// <param name="table">The table to adjust.</param>
-        /// <param name="columnIndex">The index of the column to resize.</param>
-        /// <param name="controls">A set of controls to choose the widest from.</param>
-        public static void AdjustWidthToSize(this TableLayoutPanel table, int columnIndex, params Control[] controls)
+        ArgumentNullException.ThrowIfNull(table);
+
+        if (table.ColumnCount < 1)
         {
-            ArgumentNullException.ThrowIfNull(table);
-
-            if (table.ColumnCount < 1)
-            {
-                throw new ArgumentException("The table must have at least one column");
-            }
-
-            if (columnIndex < 0 || columnIndex >= table.ColumnCount)
-            {
-                throw new ArgumentOutOfRangeException(nameof(columnIndex), columnIndex, $"Column index must be within [0, {table.ColumnCount - 1}] range");
-            }
-
-            ArgumentNullException.ThrowIfNull(controls);
-
-            if (controls.Length < 1)
-            {
-                throw new ArgumentException("At least one control is required", nameof(controls));
-            }
-
-            int requiredWidth = controls.Max(c => c.Margin.Left + c.Width + c.Margin.Right);
-            table.ColumnStyles[columnIndex].SizeType = SizeType.Absolute;
-            table.ColumnStyles[columnIndex].Width = requiredWidth;
+            throw new ArgumentException("The table must have at least one column");
         }
+
+        if (columnIndex < 0 || columnIndex >= table.ColumnCount)
+        {
+            throw new ArgumentOutOfRangeException(nameof(columnIndex), columnIndex, $"Column index must be within [0, {table.ColumnCount - 1}] range");
+        }
+
+        ArgumentNullException.ThrowIfNull(controls);
+
+        if (controls.Length < 1)
+        {
+            throw new ArgumentException("At least one control is required", nameof(controls));
+        }
+
+        int requiredWidth = controls.Max(c => c.Margin.Left + c.Width + c.Margin.Right);
+        table.ColumnStyles[columnIndex].SizeType = SizeType.Absolute;
+        table.ColumnStyles[columnIndex].Width = requiredWidth;
     }
 }

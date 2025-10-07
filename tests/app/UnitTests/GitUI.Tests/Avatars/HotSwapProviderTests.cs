@@ -1,42 +1,41 @@
 ﻿using GitUI.Avatars;
 using NSubstitute;
 
-namespace GitUITests.Avatars
+namespace GitUITests.Avatars;
+
+[TestFixture]
+public class HotSwapProviderTests
 {
-    [TestFixture]
-    public class HotSwapProviderTests
+    private const int _size = 16;
+    private const string _email = "a@a.a";
+    private const string _name = "John Lennon";
+
+    private readonly Image _img;
+
+    public HotSwapProviderTests()
     {
-        private const int _size = 16;
-        private const string _email = "a@a.a";
-        private const string _name = "John Lennon";
+        _img = new Bitmap(_size, _size);
+    }
 
-        private readonly Image _img;
+    [Test]
+    public async Task Returns_null_if_no_provider_is_set()
+    {
+        HotSwapAvatarProvider provider = new();
+        Image image = await provider.GetAvatarAsync(_email, _name, 16);
+        ClassicAssert.Null(image);
+    }
 
-        public HotSwapProviderTests()
-        {
-            _img = new Bitmap(_size, _size);
-        }
+    [Test]
+    public async Task Returns_the_same_image_as_the_wrapped_provider()
+    {
+        HotSwapAvatarProvider provider = new();
+        IAvatarProvider inner = Substitute.For<IAvatarProvider>();
+        provider.Provider = inner;
 
-        [Test]
-        public async Task Returns_null_if_no_provider_is_set()
-        {
-            HotSwapAvatarProvider provider = new();
-            Image image = await provider.GetAvatarAsync(_email, _name, 16);
-            ClassicAssert.Null(image);
-        }
+        inner.GetAvatarAsync(_email, _name, _size).Returns(_img);
 
-        [Test]
-        public async Task Returns_the_same_image_as_the_wrapped_provider()
-        {
-            HotSwapAvatarProvider provider = new();
-            IAvatarProvider inner = Substitute.For<IAvatarProvider>();
-            provider.Provider = inner;
+        Image result = await provider.GetAvatarAsync(_email, _name, _size);
 
-            inner.GetAvatarAsync(_email, _name, _size).Returns(_img);
-
-            Image result = await provider.GetAvatarAsync(_email, _name, _size);
-
-            ClassicAssert.AreSame(_img, result);
-        }
+        ClassicAssert.AreSame(_img, result);
     }
 }

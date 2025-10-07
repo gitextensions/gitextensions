@@ -1,56 +1,55 @@
 using System.Diagnostics;
 using System.Xml.Serialization;
 
-namespace ResourceManager
+namespace ResourceManager;
+
+[Serializable]
+[DebuggerDisplay("Hotkey: {CommandCode} {Name}")]
+public class HotkeyCommand
 {
-    [Serializable]
-    [DebuggerDisplay("Hotkey: {CommandCode} {Name}")]
-    public class HotkeyCommand
+    #region Properties
+
+    [XmlAttribute]
+    public int CommandCode { get; set; }
+
+    [XmlAttribute]
+    public string? Name { get; set; }
+
+    [XmlAttribute]
+    public Keys KeyData { get; set; }
+
+    #endregion
+
+    public HotkeyCommand()
     {
-        #region Properties
+    }
 
-        [XmlAttribute]
-        public int CommandCode { get; set; }
+    public HotkeyCommand(int commandCode, string name)
+    {
+        CommandCode = commandCode;
+        Name = name;
+    }
 
-        [XmlAttribute]
-        public string? Name { get; set; }
+    public static HotkeyCommand[] FromEnum(Type enumType)
+    {
+        return Enum.GetValues(enumType).Cast<object>().Select(c => new HotkeyCommand((int)c, c.ToString())).ToArray();
+    }
 
-        [XmlAttribute]
-        public Keys KeyData { get; set; }
+    public override bool Equals(object obj)
+    {
+        return obj is HotkeyCommand other &&
+               GetFieldsToCompare().SequenceEqual(other.GetFieldsToCompare());
+    }
 
-        #endregion
+    private IEnumerable<object?> GetFieldsToCompare()
+    {
+        yield return Name;
+        yield return CommandCode;
+        yield return KeyData;
+    }
 
-        public HotkeyCommand()
-        {
-        }
-
-        public HotkeyCommand(int commandCode, string name)
-        {
-            CommandCode = commandCode;
-            Name = name;
-        }
-
-        public static HotkeyCommand[] FromEnum(Type enumType)
-        {
-            return Enum.GetValues(enumType).Cast<object>().Select(c => new HotkeyCommand((int)c, c.ToString())).ToArray();
-        }
-
-        public override bool Equals(object obj)
-        {
-            return obj is HotkeyCommand other &&
-                   GetFieldsToCompare().SequenceEqual(other.GetFieldsToCompare());
-        }
-
-        private IEnumerable<object?> GetFieldsToCompare()
-        {
-            yield return Name;
-            yield return CommandCode;
-            yield return KeyData;
-        }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
+    public override int GetHashCode()
+    {
+        return base.GetHashCode();
     }
 }

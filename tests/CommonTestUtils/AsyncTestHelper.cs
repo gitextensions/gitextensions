@@ -5,29 +5,28 @@
 using System.Diagnostics;
 using GitUI;
 
-namespace CommonTestUtils
+namespace CommonTestUtils;
+
+public static class AsyncTestHelper
 {
-    public static class AsyncTestHelper
+    public static TimeSpan UnexpectedTimeout
     {
-        public static TimeSpan UnexpectedTimeout
+        get
         {
-            get
-            {
-                return Debugger.IsAttached ? TimeSpan.FromHours(1) : TimeSpan.FromMinutes(1);
-            }
+            return Debugger.IsAttached ? TimeSpan.FromHours(1) : TimeSpan.FromMinutes(1);
         }
+    }
 
-        public static async Task JoinPendingOperationsAsync(TimeSpan timeout)
-        {
-            using CancellationTokenSource cancellationTokenSource = new(timeout);
-            await ThreadHelper.JoinPendingOperationsAsync(cancellationTokenSource.Token);
-        }
+    public static async Task JoinPendingOperationsAsync(TimeSpan timeout)
+    {
+        using CancellationTokenSource cancellationTokenSource = new(timeout);
+        await ThreadHelper.JoinPendingOperationsAsync(cancellationTokenSource.Token);
+    }
 
-        public static void JoinPendingOperations()
-        {
-            // Note that JoinableTaskContext.Factory must be used to bypass the default behavior of JoinableTaskFactory
-            // since the latter adds new tasks to the collection and would therefore never complete.
-            ThreadHelper.JoinableTaskContext.Factory.Run(() => JoinPendingOperationsAsync(UnexpectedTimeout));
-        }
+    public static void JoinPendingOperations()
+    {
+        // Note that JoinableTaskContext.Factory must be used to bypass the default behavior of JoinableTaskFactory
+        // since the latter adds new tasks to the collection and would therefore never complete.
+        ThreadHelper.JoinableTaskContext.Factory.Run(() => JoinPendingOperationsAsync(UnexpectedTimeout));
     }
 }

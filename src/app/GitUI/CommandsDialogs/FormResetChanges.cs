@@ -1,73 +1,72 @@
-﻿namespace GitUI.CommandsDialogs
+﻿namespace GitUI.CommandsDialogs;
+
+/// <summary>
+/// Shows a form asking if the user wants to reset their changes.
+/// </summary>
+public partial class FormResetChanges : GitExtensionsForm
 {
-    /// <summary>
-    /// Shows a form asking if the user wants to reset their changes.
-    /// </summary>
-    public partial class FormResetChanges : GitExtensionsForm
+    // CANCEL must be placed at first position because it is the default value when
+    // closing the dialog via the X button
+    public enum ActionEnum
     {
-        // CANCEL must be placed at first position because it is the default value when
-        // closing the dialog via the X button
-        public enum ActionEnum
+        Cancel,
+        Reset,
+        ResetAndDelete
+    }
+
+    public ActionEnum SelectedAction { get; private set; }
+
+    public FormResetChanges(bool hasExistingFiles, bool hasNewFiles, string? confirmationMessage = null)
+    {
+        InitializeComponent();
+        InitializeComplete();
+
+        if (confirmationMessage is not null)
         {
-            Cancel,
-            Reset,
-            ResetAndDelete
+            label1.Text = confirmationMessage;
         }
 
-        public ActionEnum SelectedAction { get; private set; }
-
-        public FormResetChanges(bool hasExistingFiles, bool hasNewFiles, string? confirmationMessage = null)
+        if (!hasExistingFiles)
         {
-            InitializeComponent();
-            InitializeComplete();
-
-            if (confirmationMessage is not null)
-            {
-                label1.Text = confirmationMessage;
-            }
-
-            if (!hasExistingFiles)
-            {
-                // No existing files => new files only => force the "delete new files" checkbox on.
-                cbDeleteNewFilesAndDirectories.Enabled = false;
-                cbDeleteNewFilesAndDirectories.Checked = true;
-            }
-            else if (!hasNewFiles)
-            {
-                // No new files => force the "delete new files" checkbox off.
-                cbDeleteNewFilesAndDirectories.Enabled = false;
-                cbDeleteNewFilesAndDirectories.Checked = false;
-            }
-            else
-            {
-                cbDeleteNewFilesAndDirectories.Enabled = true; // A mix of types, so enable the checkbox.
-            }
+            // No existing files => new files only => force the "delete new files" checkbox on.
+            cbDeleteNewFilesAndDirectories.Enabled = false;
+            cbDeleteNewFilesAndDirectories.Checked = true;
         }
-
-        /// <summary>
-        /// Shows the dialog modally under the given owner, and returns the user's selection (RESET, RESET_AND_DELETE, or CANCEL).
-        /// </summary>
-        /// <param name="owner">Shows this form as a modal dialog with the specified owner.</param>
-        /// <param name="hasExistingFiles">Where there are existing (modified) files selected.</param>
-        /// <param name="hasNewFiles">Where there are new (untracked) files selected.</param>
-        /// <param name="confirmationMessage">Optional confirmation message replacing the default.</param>
-        public static ActionEnum ShowResetDialog(IWin32Window? owner, bool hasExistingFiles, bool hasNewFiles, string? confirmationMessage = null)
+        else if (!hasNewFiles)
         {
-            using FormResetChanges form = new(hasExistingFiles, hasNewFiles, confirmationMessage);
-            form.ShowDialog(owner);
-            return form.SelectedAction;
+            // No new files => force the "delete new files" checkbox off.
+            cbDeleteNewFilesAndDirectories.Enabled = false;
+            cbDeleteNewFilesAndDirectories.Checked = false;
         }
-
-        private void btnCancel_Click(object sender, EventArgs e)
+        else
         {
-            SelectedAction = ActionEnum.Cancel;
-            Close();
+            cbDeleteNewFilesAndDirectories.Enabled = true; // A mix of types, so enable the checkbox.
         }
+    }
 
-        private void btnReset_Click(object sender, EventArgs e)
-        {
-            SelectedAction = cbDeleteNewFilesAndDirectories.Checked ? ActionEnum.ResetAndDelete : ActionEnum.Reset;
-            Close();
-        }
+    /// <summary>
+    /// Shows the dialog modally under the given owner, and returns the user's selection (RESET, RESET_AND_DELETE, or CANCEL).
+    /// </summary>
+    /// <param name="owner">Shows this form as a modal dialog with the specified owner.</param>
+    /// <param name="hasExistingFiles">Where there are existing (modified) files selected.</param>
+    /// <param name="hasNewFiles">Where there are new (untracked) files selected.</param>
+    /// <param name="confirmationMessage">Optional confirmation message replacing the default.</param>
+    public static ActionEnum ShowResetDialog(IWin32Window? owner, bool hasExistingFiles, bool hasNewFiles, string? confirmationMessage = null)
+    {
+        using FormResetChanges form = new(hasExistingFiles, hasNewFiles, confirmationMessage);
+        form.ShowDialog(owner);
+        return form.SelectedAction;
+    }
+
+    private void btnCancel_Click(object sender, EventArgs e)
+    {
+        SelectedAction = ActionEnum.Cancel;
+        Close();
+    }
+
+    private void btnReset_Click(object sender, EventArgs e)
+    {
+        SelectedAction = cbDeleteNewFilesAndDirectories.Checked ? ActionEnum.ResetAndDelete : ActionEnum.Reset;
+        Close();
     }
 }

@@ -1,13 +1,12 @@
-namespace GitUIPluginInterfaces.BuildServerIntegration
+namespace GitUIPluginInterfaces.BuildServerIntegration;
+
+public interface IBuildServerCredentials
 {
-    public interface IBuildServerCredentials
-    {
-        BuildServerCredentialsType BuildServerCredentialsType { get; set; }
+    BuildServerCredentialsType BuildServerCredentialsType { get; set; }
 
-        string? Username { get; set; }
+    string? Username { get; set; }
 
-        string? Password { get; set; }
+    string? Password { get; set; }
 
-        string? BearerToken { get; set; }
-    }
+    string? BearerToken { get; set; }
 }

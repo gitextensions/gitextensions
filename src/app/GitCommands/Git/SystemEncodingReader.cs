@@ -4,65 +4,64 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 
-namespace GitCommands.Git
+namespace GitCommands.Git;
+
+public interface ISystemEncodingReader
 {
-    public interface ISystemEncodingReader
+    /// <summary>
+    /// Checks whether Git Extensions works with standard msysgit or msysgit-unicode.
+    /// </summary>
+    /// <returns>System encoding.</returns>
+    Encoding Read();
+}
+
+public sealed class SystemEncodingReader : ISystemEncodingReader
+{
+    private readonly IGitModule _module;
+
+    public SystemEncodingReader(IGitModule? module)
     {
-        /// <summary>
-        /// Checks whether Git Extensions works with standard msysgit or msysgit-unicode.
-        /// </summary>
-        /// <returns>System encoding.</returns>
-        Encoding Read();
+        _module = module ?? new GitModule("");
     }
 
-    public sealed class SystemEncodingReader : ISystemEncodingReader
+    public SystemEncodingReader()
+        : this(null)
     {
-        private readonly IGitModule _module;
+    }
 
-        public SystemEncodingReader(IGitModule? module)
+    /// <inheritdoc />
+    public Encoding Read()
+    {
+        try
         {
-            _module = module ?? new GitModule("");
-        }
+            Encoding systemEncoding;
 
-        public SystemEncodingReader()
-            : this(null)
-        {
-        }
+            // invoke a git command that returns an invalid argument in its response, and
+            // check if a unicode-only character is reported back. If so assume msysgit-unicode
 
-        /// <inheritdoc />
-        public Encoding Read()
-        {
-            try
+            // git config --get with a malformed key (no section) returns:
+            // "error: key does not contain a section: <key>"
+            const string controlStr = "ą"; // "a caudata"
+            GitArgumentBuilder arguments = new("config")
             {
-                Encoding systemEncoding;
+                "--get",
+                controlStr
+            };
 
-                // invoke a git command that returns an invalid argument in its response, and
-                // check if a unicode-only character is reported back. If so assume msysgit-unicode
+            ExecutionResult result = _module.GitExecutable.Execute(arguments, outputEncoding: Encoding.UTF8, throwOnErrorExit: false);
+            string? s = result.StandardError;
+            systemEncoding = s?.IndexOf(controlStr) is >= 0
+                ? new UTF8Encoding(false)
+                : Encoding.Default;
 
-                // git config --get with a malformed key (no section) returns:
-                // "error: key does not contain a section: <key>"
-                const string controlStr = "ą"; // "a caudata"
-                GitArgumentBuilder arguments = new("config")
-                {
-                    "--get",
-                    controlStr
-                };
+            Debug.WriteLine("System encoding: " + systemEncoding.EncodingName);
 
-                ExecutionResult result = _module.GitExecutable.Execute(arguments, outputEncoding: Encoding.UTF8, throwOnErrorExit: false);
-                string? s = result.StandardError;
-                systemEncoding = s?.IndexOf(controlStr) is >= 0
-                    ? new UTF8Encoding(false)
-                    : Encoding.Default;
-
-                Debug.WriteLine("System encoding: " + systemEncoding.EncodingName);
-
-                return systemEncoding;
-            }
-            catch (Exception)
-            {
-                // Ignore exception. If the git location itself is not configured correctly yet, we could never execute it.
-                return Encoding.Default;
-            }
+            return systemEncoding;
+        }
+        catch (Exception)
+        {
+            // Ignore exception. If the git location itself is not configured correctly yet, we could never execute it.
+            return Encoding.Default;
         }
     }
 }

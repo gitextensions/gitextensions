@@ -1,11 +1,10 @@
 ﻿using System.Runtime.CompilerServices;
 
-namespace GitCommandsTests.Properties
+namespace GitCommandsTests.Properties;
+
+internal class VerifyModuleInitializer
 {
-    internal class VerifyModuleInitializer
-    {
-        [ModuleInitializer]
-        public static void Init() =>
-            VerifierSettings.UseStrictJson();
-    }
+    [ModuleInitializer]
+    public static void Init() =>
+        VerifierSettings.UseStrictJson();
 }

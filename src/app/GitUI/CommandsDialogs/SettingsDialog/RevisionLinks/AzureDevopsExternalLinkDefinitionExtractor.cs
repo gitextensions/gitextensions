@@ -2,58 +2,57 @@
 using GitCommands.Remotes;
 using GitUI.Properties;
 
-namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
+namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
+
+public sealed class AzureDevopsExternalLinkDefinitionExtractor : ExternalLinkDefinitionExtractor
 {
-    public sealed class AzureDevopsExternalLinkDefinitionExtractor : ExternalLinkDefinitionExtractor
+    public override string ServiceName => "Azure DevOps";
+    public override Image Icon => Images.VisualStudioTeamServices;
+    private readonly AzureDevOpsRemoteParser _azureDevOpsRemoteParser = new();
+
+    public override bool IsValidRemoteUrl(string remoteUrl)
     {
-        public override string ServiceName => "Azure DevOps";
-        public override Image Icon => Images.VisualStudioTeamServices;
-        private readonly AzureDevOpsRemoteParser _azureDevOpsRemoteParser = new();
+        return _azureDevOpsRemoteParser.IsValidRemoteUrl(remoteUrl);
+    }
 
-        public override bool IsValidRemoteUrl(string remoteUrl)
+    public override IList<ExternalLinkDefinition> GetDefinitions(string remoteUrl)
+    {
+        List<ExternalLinkDefinition> externalLinkDefinitions = [];
+        string? accountName = null;
+        string? repoName = null;
+
+        if (!string.IsNullOrWhiteSpace(remoteUrl))
         {
-            return _azureDevOpsRemoteParser.IsValidRemoteUrl(remoteUrl);
+            _azureDevOpsRemoteParser.TryExtractAzureDevopsDataFromRemoteUrl(remoteUrl, out accountName, out _, out repoName);
         }
 
-        public override IList<ExternalLinkDefinition> GetDefinitions(string remoteUrl)
-        {
-            List<ExternalLinkDefinition> externalLinkDefinitions = [];
-            string? accountName = null;
-            string? repoName = null;
+        accountName ??= "ACCOUNT_NAME";
+        repoName ??= "REPO_NAME";
 
-            if (!string.IsNullOrWhiteSpace(remoteUrl))
+        string azureDevopsUrl = $"https://dev.azure.com/{accountName}";
+        ExternalLinkDefinition definition = new()
+        {
+            Name = string.Format(CodeLink.Text, ServiceName),
+            Enabled = true,
+            SearchInParts = { ExternalLinkDefinition.RevisionPart.Message },
+            SearchPattern = @".*",
+            LinkFormats =
             {
-                _azureDevOpsRemoteParser.TryExtractAzureDevopsDataFromRemoteUrl(remoteUrl, out accountName, out _, out repoName);
+                new ExternalLinkFormat { Caption = string.Format(ViewCommitLink.Text, ServiceName), Format = $"{azureDevopsUrl}/_git/{repoName}/commit/%COMMIT_HASH%" },
+                new ExternalLinkFormat { Caption = string.Format(ViewProjectLink.Text, ServiceName), Format = $"{azureDevopsUrl}/{repoName}" }
             }
+        };
+        externalLinkDefinitions.Add(definition);
 
-            accountName ??= "ACCOUNT_NAME";
-            repoName ??= "REPO_NAME";
+        externalLinkDefinitions.Add(new ExternalLinkDefinition
+        {
+            Name = string.Format(IssuesLink.Text, ServiceName),
+            Enabled = true,
+            SearchInParts = { ExternalLinkDefinition.RevisionPart.Message },
+            SearchPattern = @"#(\d+)",
+            LinkFormats = { new ExternalLinkFormat { Caption = "#{0}", Format = $"{azureDevopsUrl}/{repoName}/_workitems/edit/{{0}}" } }
+        });
 
-            string azureDevopsUrl = $"https://dev.azure.com/{accountName}";
-            ExternalLinkDefinition definition = new()
-            {
-                Name = string.Format(CodeLink.Text, ServiceName),
-                Enabled = true,
-                SearchInParts = { ExternalLinkDefinition.RevisionPart.Message },
-                SearchPattern = @".*",
-                LinkFormats =
-                {
-                    new ExternalLinkFormat { Caption = string.Format(ViewCommitLink.Text, ServiceName), Format = $"{azureDevopsUrl}/_git/{repoName}/commit/%COMMIT_HASH%" },
-                    new ExternalLinkFormat { Caption = string.Format(ViewProjectLink.Text, ServiceName), Format = $"{azureDevopsUrl}/{repoName}" }
-                }
-            };
-            externalLinkDefinitions.Add(definition);
-
-            externalLinkDefinitions.Add(new ExternalLinkDefinition
-            {
-                Name = string.Format(IssuesLink.Text, ServiceName),
-                Enabled = true,
-                SearchInParts = { ExternalLinkDefinition.RevisionPart.Message },
-                SearchPattern = @"#(\d+)",
-                LinkFormats = { new ExternalLinkFormat { Caption = "#{0}", Format = $"{azureDevopsUrl}/{repoName}/_workitems/edit/{{0}}" } }
-            });
-
-            return externalLinkDefinitions;
-        }
+        return externalLinkDefinitions;
     }
 }

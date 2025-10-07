@@ -1,10 +1,9 @@
 using System.Runtime.InteropServices;
 
-namespace System
+namespace System;
+
+internal static partial class NativeMethods
 {
-    internal static partial class NativeMethods
-    {
-        [DllImport(Libraries.UxTheme, ExactSpelling = true)]
-        public static extern int GetThemeFont(IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, int iPropId, out LOGFONT pFont);
-    }
+    [DllImport(Libraries.UxTheme, ExactSpelling = true)]
+    public static extern int GetThemeFont(IntPtr hTheme, IntPtr hdc, int iPartId, int iStateId, int iPropId, out LOGFONT pFont);
 }

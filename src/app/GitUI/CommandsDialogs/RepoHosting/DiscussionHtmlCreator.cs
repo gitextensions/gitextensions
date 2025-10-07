@@ -2,97 +2,97 @@ using System.Reflection;
 using System.Text;
 using GitExtensions.Extensibility.Plugins;
 
-namespace GitUI.CommandsDialogs.RepoHosting
+namespace GitUI.CommandsDialogs.RepoHosting;
+
+internal static class DiscussionHtmlCreator
 {
-    internal static class DiscussionHtmlCreator
+    public static string CreateFor(IPullRequestInformation currentPullRequestInfo, List<IDiscussionEntry>? entries = null)
     {
-        public static string CreateFor(IPullRequestInformation currentPullRequestInfo, List<IDiscussionEntry>? entries = null)
-        {
-            StringBuilder html = new();
-            AddLine(html, "<html><body><style type='text/css'>");
-            html.Append(CssData);
-            AddLine(html, "</style>");
+        StringBuilder html = new();
+        AddLine(html, "<html><body><style type='text/css'>");
+        html.Append(CssData);
+        AddLine(html, "</style>");
 
-            if (entries is not null)
+        if (entries is not null)
+        {
+            foreach (IDiscussionEntry entry in entries)
             {
-                foreach (IDiscussionEntry entry in entries)
+                ICommitDiscussionEntry cde = entry as ICommitDiscussionEntry;
+
+                AddLine(html, "<div class='entry {0}'>", cde is null ? "commentEntry" : " commitEntry");
+
+                AddLine(html, "<div class='heading'>");
+                AddLine(html, "<span class='created'>{0}</span>\r\n", entry.Created);
+                AddLine(html, "<span class='author'>{0}</span>\r\n", entry.Author);
+                if (cde is not null)
                 {
-                    ICommitDiscussionEntry cde = entry as ICommitDiscussionEntry;
-
-                    AddLine(html, "<div class='entry {0}'>", cde is null ? "commentEntry" : " commitEntry");
-
-                    AddLine(html, "<div class='heading'>");
-                    AddLine(html, "<span class='created'>{0}</span>\r\n", entry.Created);
-                    AddLine(html, "<span class='author'>{0}</span>\r\n", entry.Author);
-                    if (cde is not null)
-                    {
-                        AddLine(html, "<span class='commit'>Commit:  {0}</span>\r\n", cde.Sha);
-                    }
-
-                    AddLine(html, "</div>");
-                    AddLine(html, "<div class='commentBody'>{0}</div>\r\n", entry.Body);
-
-                    AddLine(html, "</div>");
-                }
-            }
-
-            AddLine(html, "</body></html>");
-
-            return html.ToString();
-        }
-
-        private static void AddLine(StringBuilder html, string input, params object?[] p)
-        {
-            html.AppendFormat(input + "\r\n", (from el in p select (el is null) ? "[UNKNOWN]" : el.ToString().Replace("\r", "").Replace("\n", "<br/>\n").Replace("\"", "&quot;")).ToArray());
-        }
-
-        private static string CssData
-        {
-            get
-            {
-                if (_cssData is null)
-                {
-                    _cssData = _cssDataRaw;
-                    foreach (KeyValuePair<string, string> elem in SystemInfoReplacement)
-                    {
-                        _cssData = _cssData.Replace(elem.Key, elem.Value);
-                    }
+                    AddLine(html, "<span class='commit'>Commit:  {0}</span>\r\n", cde.Sha);
                 }
 
-                return _cssData;
+                AddLine(html, "</div>");
+                AddLine(html, "<div class='commentBody'>{0}</div>\r\n", entry.Body);
+
+                AddLine(html, "</div>");
             }
         }
 
-        private static List<KeyValuePair<string, string>>? _systemInfoReplacement;
+        AddLine(html, "</body></html>");
 
-        private static IEnumerable<KeyValuePair<string, string>> SystemInfoReplacement
+        return html.ToString();
+    }
+
+    private static void AddLine(StringBuilder html, string input, params object?[] p)
+    {
+        html.AppendFormat(input + "\r\n", (from el in p select (el is null) ? "[UNKNOWN]" : el.ToString().Replace("\r", "").Replace("\n", "<br/>\n").Replace("\"", "&quot;")).ToArray());
+    }
+
+    private static string CssData
+    {
+        get
         {
-            get
+            if (_cssData is null)
             {
-                if (_systemInfoReplacement is null)
+                _cssData = _cssDataRaw;
+                foreach (KeyValuePair<string, string> elem in SystemInfoReplacement)
                 {
-                    List<PropertyInfo> props = typeof(SystemColors).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty).ToList();
-
-                    IEnumerable<KeyValuePair<string, string>> kvps = from prop in props
-                               where prop.PropertyType == typeof(Color)
-                               let c = (Color)prop.GetValue(null, null)
-                               select new KeyValuePair<string, string>("SC." + prop.Name, string.Format("#{0:X2}{1:X2}{2:X2}", c.R, c.G, c.B));
-
-                    _systemInfoReplacement = kvps.ToList();
-
-                    // TODO: is it safe to rename the keys ('SF.DialogFont', 'SF.DialogFontSize') to 'SF.MessageBoxFont' or not?
-                    _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFont", SystemFonts.MessageBoxFont.Name));
-                    _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFontSize", string.Format("{0}pt", SystemFonts.MessageBoxFont.SizeInPoints)));
-
-                    _systemInfoReplacement.Sort((p1, p2) => p2.Key.CompareTo(p1.Key)); // Required.
+                    _cssData = _cssData.Replace(elem.Key, elem.Value);
                 }
-
-                return _systemInfoReplacement;
             }
-        }
 
-        private static string? _cssData;
-        private const string _cssDataRaw = @"
+            return _cssData;
+        }
+    }
+
+    private static List<KeyValuePair<string, string>>? _systemInfoReplacement;
+
+    private static IEnumerable<KeyValuePair<string, string>> SystemInfoReplacement
+    {
+        get
+        {
+            if (_systemInfoReplacement is null)
+            {
+                List<PropertyInfo> props = typeof(SystemColors).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty).ToList();
+
+                IEnumerable<KeyValuePair<string, string>> kvps = from prop in props
+                           where prop.PropertyType == typeof(Color)
+                           let c = (Color)prop.GetValue(null, null)
+                           select new KeyValuePair<string, string>("SC." + prop.Name, string.Format("#{0:X2}{1:X2}{2:X2}", c.R, c.G, c.B));
+
+                _systemInfoReplacement = kvps.ToList();
+
+                // TODO: is it safe to rename the keys ('SF.DialogFont', 'SF.DialogFontSize') to 'SF.MessageBoxFont' or not?
+                _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFont", SystemFonts.MessageBoxFont.Name));
+                _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFontSize", string.Format("{0}pt", SystemFonts.MessageBoxFont.SizeInPoints)));
+
+                _systemInfoReplacement.Sort((p1, p2) => p2.Key.CompareTo(p1.Key)); // Required.
+            }
+
+            return _systemInfoReplacement;
+        }
+    }
+
+    private static string? _cssData;
+    private const string _cssDataRaw = @"
 body {
     background: SC.Control;
     color: SC.ControlText;
@@ -147,5 +147,4 @@ div
 {
 }
 ";
-    }
 }

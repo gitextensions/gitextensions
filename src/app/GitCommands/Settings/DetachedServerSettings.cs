@@ -1,45 +1,44 @@
 ﻿using GitExtensions.Extensibility.Settings;
 
-namespace GitCommands.Settings
+namespace GitCommands.Settings;
+
+internal sealed class DetachedSettings : IDetachedSettings
 {
-    internal sealed class DetachedSettings : IDetachedSettings
+    private const string DictionaryDefault = "en-US";
+    private const bool NoFastForwardMergeDefault = false;
+
+    private readonly SettingsSource _settingsSource;
+
+    public DetachedSettings(SettingsSource settingsSource)
     {
-        private const string DictionaryDefault = "en-US";
-        private const bool NoFastForwardMergeDefault = false;
+        _settingsSource = settingsSource;
+    }
 
-        private readonly SettingsSource _settingsSource;
-
-        public DetachedSettings(SettingsSource settingsSource)
+    public string Dictionary
+    {
+        get => _settingsSource.GetString(nameof(Dictionary).ToLower(), DictionaryDefault);
+        set
         {
-            _settingsSource = settingsSource;
-        }
-
-        public string Dictionary
-        {
-            get => _settingsSource.GetString(nameof(Dictionary).ToLower(), DictionaryDefault);
-            set
+            if (Dictionary == value)
             {
-                if (Dictionary == value)
-                {
-                    return;
-                }
-
-                _settingsSource.SetString(nameof(Dictionary).ToLower(), value);
+                return;
             }
+
+            _settingsSource.SetString(nameof(Dictionary).ToLower(), value);
         }
+    }
 
-        public bool NoFastForwardMerge
+    public bool NoFastForwardMerge
+    {
+        get => _settingsSource.GetBool(nameof(NoFastForwardMerge), NoFastForwardMergeDefault);
+        set
         {
-            get => _settingsSource.GetBool(nameof(NoFastForwardMerge), NoFastForwardMergeDefault);
-            set
+            if (NoFastForwardMerge == value)
             {
-                if (NoFastForwardMerge == value)
-                {
-                    return;
-                }
-
-                _settingsSource.SetBool(nameof(NoFastForwardMerge), value);
+                return;
             }
+
+            _settingsSource.SetBool(nameof(NoFastForwardMerge), value);
         }
     }
 }

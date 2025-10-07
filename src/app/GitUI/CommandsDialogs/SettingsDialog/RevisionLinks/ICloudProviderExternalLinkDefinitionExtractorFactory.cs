@@ -1,7 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
+﻿namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
+
+public interface ICloudProviderExternalLinkDefinitionExtractorFactory
 {
-    public interface ICloudProviderExternalLinkDefinitionExtractorFactory
-    {
-        ICloudProviderExternalLinkDefinitionExtractor? Get(CloudProviderKind cloudProviderKind);
-    }
+    ICloudProviderExternalLinkDefinitionExtractor? Get(CloudProviderKind cloudProviderKind);
 }

@@ -1,305 +1,304 @@
-﻿namespace GitExtUtils.GitUI.Theming
+﻿namespace GitExtUtils.GitUI.Theming;
+
+internal class TabControlPaintContext
 {
-    internal class TabControlPaintContext
+    private readonly Point _mouseCursor;
+    private readonly Graphics _graphics;
+    private readonly Rectangle _clipRectangle;
+    private readonly Color _parentBackColor;
+    private readonly int _selectedIndex;
+    private readonly int _tabCount;
+    private readonly Size _imageSize;
+    private readonly Font _font;
+    private readonly bool _enabled;
+    private readonly Image?[] _tabImages;
+    private readonly Rectangle[] _tabRects;
+    private readonly string[] _tabTexts;
+    private readonly Size _size;
+    private readonly bool _failed;
+
+    private static readonly int ImagePadding = DpiUtil.Scale(6);
+
+    // DPI 100% - 175%: 2; DPI 200%: 4
+    // so that when leftmost tab is selected, its border matches the border of tab control
+    private static readonly int SelectedTabPadding = 2 * (int)Math.Floor(DpiUtil.ScaleX);
+    private const int BorderWidth = 1;
+
+    public TabControlPaintContext(TabControl tabs, PaintEventArgs e)
     {
-        private readonly Point _mouseCursor;
-        private readonly Graphics _graphics;
-        private readonly Rectangle _clipRectangle;
-        private readonly Color _parentBackColor;
-        private readonly int _selectedIndex;
-        private readonly int _tabCount;
-        private readonly Size _imageSize;
-        private readonly Font _font;
-        private readonly bool _enabled;
-        private readonly Image?[] _tabImages;
-        private readonly Rectangle[] _tabRects;
-        private readonly string[] _tabTexts;
-        private readonly Size _size;
-        private readonly bool _failed;
+        _mouseCursor = tabs.PointToClient(Cursor.Position);
+        _graphics = e.Graphics;
+        _clipRectangle = e.ClipRectangle;
+        _size = tabs.Size;
+        _parentBackColor = GetParentBackColor(tabs);
+        _selectedIndex = tabs.SelectedIndex;
+        _tabCount = tabs.TabCount;
+        _font = tabs.Font;
+        _imageSize = tabs.ImageList?.ImageSize ?? Size.Empty;
+        _enabled = tabs.Enabled;
 
-        private static readonly int ImagePadding = DpiUtil.Scale(6);
-
-        // DPI 100% - 175%: 2; DPI 200%: 4
-        // so that when leftmost tab is selected, its border matches the border of tab control
-        private static readonly int SelectedTabPadding = 2 * (int)Math.Floor(DpiUtil.ScaleX);
-        private const int BorderWidth = 1;
-
-        public TabControlPaintContext(TabControl tabs, PaintEventArgs e)
+        try
         {
-            _mouseCursor = tabs.PointToClient(Cursor.Position);
-            _graphics = e.Graphics;
-            _clipRectangle = e.ClipRectangle;
-            _size = tabs.Size;
-            _parentBackColor = GetParentBackColor(tabs);
-            _selectedIndex = tabs.SelectedIndex;
-            _tabCount = tabs.TabCount;
-            _font = tabs.Font;
-            _imageSize = tabs.ImageList?.ImageSize ?? Size.Empty;
-            _enabled = tabs.Enabled;
+            _tabTexts = Enumerable.Range(0, _tabCount)
+                .Select(i => tabs.TabPages[i].Text)
+                .ToArray();
+            _tabImages = Enumerable.Range(0, _tabCount)
+                .Select(i => GetTabImage(tabs, i))
+                .ToArray();
+            _tabRects = Enumerable.Range(0, _tabCount)
+                .Select(tabs.GetTabRect)
+                .ToArray();
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            // Workaround probable bug in .NET framework, known example:
+            // tabCtrl.GetTabRect[tabCtrl.SelectedIndex] may throw ArgumentOutOfRangeException
+            // https://github.com/gitextensions/gitextensions/pull/7213#issuecomment-554760531
+            _failed = true;
 
-            try
-            {
-                _tabTexts = Enumerable.Range(0, _tabCount)
-                    .Select(i => tabs.TabPages[i].Text)
-                    .ToArray();
-                _tabImages = Enumerable.Range(0, _tabCount)
-                    .Select(i => GetTabImage(tabs, i))
-                    .ToArray();
-                _tabRects = Enumerable.Range(0, _tabCount)
-                    .Select(tabs.GetTabRect)
-                    .ToArray();
-            }
-            catch (ArgumentOutOfRangeException)
-            {
-                // Workaround probable bug in .NET framework, known example:
-                // tabCtrl.GetTabRect[tabCtrl.SelectedIndex] may throw ArgumentOutOfRangeException
-                // https://github.com/gitextensions/gitextensions/pull/7213#issuecomment-554760531
-                _failed = true;
+            // Set these to null explicitly to satisfy nullability checking. We will always verify
+            // _failed before dereferencing these.
+            _tabTexts = null!;
+            _tabImages = null!;
+            _tabRects = null!;
+        }
+    }
 
-                // Set these to null explicitly to satisfy nullability checking. We will always verify
-                // _failed before dereferencing these.
-                _tabTexts = null!;
-                _tabImages = null!;
-                _tabRects = null!;
-            }
+    public void Paint()
+    {
+        if (_failed)
+        {
+            return;
         }
 
-        public void Paint()
+        using SolidBrush canvasBrush = new(_parentBackColor);
+        _graphics.FillRectangle(canvasBrush, _clipRectangle);
+
+        RenderSelectedPageBackground();
+
+        IEnumerable<int> pageIndices;
+        if (_selectedIndex.IsWithin(0, _tabCount))
         {
-            if (_failed)
-            {
-                return;
-            }
-
-            using SolidBrush canvasBrush = new(_parentBackColor);
-            _graphics.FillRectangle(canvasBrush, _clipRectangle);
-
-            RenderSelectedPageBackground();
-
-            IEnumerable<int> pageIndices;
-            if (_selectedIndex.IsWithin(0, _tabCount))
-            {
-                // render tabs in pyramid order with selected on top
-                pageIndices = Enumerable.Range(0, _selectedIndex)
-                    .Concat(Enumerable.Range(_selectedIndex, _tabCount - _selectedIndex).Reverse());
-            }
-            else
-            {
-                pageIndices = Enumerable.Range(0, _tabCount);
-            }
-
-            foreach (int index in pageIndices)
-            {
-                RenderTabBackground(index);
-                RenderTabImage(index);
-                RenderTabText(index, _tabImages[index] is not null);
-            }
+            // render tabs in pyramid order with selected on top
+            pageIndices = Enumerable.Range(0, _selectedIndex)
+                .Concat(Enumerable.Range(_selectedIndex, _tabCount - _selectedIndex).Reverse());
+        }
+        else
+        {
+            pageIndices = Enumerable.Range(0, _tabCount);
         }
 
-        private void RenderTabBackground(int index)
+        foreach (int index in pageIndices)
         {
-            using Pen borderPen = CreateBorderPen();
-            Rectangle outerRect = GetOuterTabRect(index);
-            using (BrushScope backgroundBrush = CreateBackgroundBrusScope(index))
-            {
-                _graphics.FillRectangle(backgroundBrush.Brush, outerRect);
-            }
+            RenderTabBackground(index);
+            RenderTabImage(index);
+            RenderTabText(index, _tabImages[index] is not null);
+        }
+    }
 
-            List<Point> points = new(4);
-            if (index <= _selectedIndex)
-            {
-                points.Add(new Point(outerRect.Left, outerRect.Bottom - 1));
-            }
-
-            points.Add(new Point(outerRect.Left, outerRect.Top));
-            points.Add(new Point(outerRect.Right - 1, outerRect.Top));
-
-            if (index >= _selectedIndex)
-            {
-                points.Add(new Point(outerRect.Right - 1, outerRect.Bottom - 1));
-            }
-
-            _graphics.DrawLines(borderPen, points.ToArray());
+    private void RenderTabBackground(int index)
+    {
+        using Pen borderPen = CreateBorderPen();
+        Rectangle outerRect = GetOuterTabRect(index);
+        using (BrushScope backgroundBrush = CreateBackgroundBrusScope(index))
+        {
+            _graphics.FillRectangle(backgroundBrush.Brush, outerRect);
         }
 
-        private void RenderTabImage(int index)
+        List<Point> points = new(4);
+        if (index <= _selectedIndex)
         {
-            Image image = _tabImages[index];
-            if (image is null)
-            {
-                return;
-            }
-
-            Rectangle imgRect = GetTabImageRect(index);
-            _graphics.DrawImage(image, imgRect);
+            points.Add(new Point(outerRect.Left, outerRect.Bottom - 1));
         }
 
-        private Rectangle GetTabImageRect(int index)
+        points.Add(new Point(outerRect.Left, outerRect.Top));
+        points.Add(new Point(outerRect.Right - 1, outerRect.Top));
+
+        if (index >= _selectedIndex)
         {
-            Rectangle innerRect = _tabRects[index];
-            int imgHeight = _imageSize.Height;
-            Rectangle imgRect = new(
-                new Point(innerRect.X + ImagePadding,
-                    innerRect.Y + ((innerRect.Height - imgHeight) / 2)),
-                _imageSize);
-
-            if (index == _selectedIndex)
-            {
-                imgRect.Offset(0, -SelectedTabPadding);
-            }
-
-            return imgRect;
+            points.Add(new Point(outerRect.Right - 1, outerRect.Bottom - 1));
         }
 
-        private static Image? GetTabImage(TabControl tabs, int index)
+        _graphics.DrawLines(borderPen, points.ToArray());
+    }
+
+    private void RenderTabImage(int index)
+    {
+        Image image = _tabImages[index];
+        if (image is null)
         {
-            ImageList.ImageCollection images = tabs.ImageList?.Images;
-            if (images is null)
-            {
-                return null;
-            }
+            return;
+        }
 
-            TabPage page = tabs.TabPages[index];
-            if (!string.IsNullOrEmpty(page.ImageKey))
-            {
-                return images[page.ImageKey];
-            }
+        Rectangle imgRect = GetTabImageRect(index);
+        _graphics.DrawImage(image, imgRect);
+    }
 
-            if (page.ImageIndex.IsWithin(0, images.Count))
-            {
-                return images[page.ImageIndex];
-            }
+    private Rectangle GetTabImageRect(int index)
+    {
+        Rectangle innerRect = _tabRects[index];
+        int imgHeight = _imageSize.Height;
+        Rectangle imgRect = new(
+            new Point(innerRect.X + ImagePadding,
+                innerRect.Y + ((innerRect.Height - imgHeight) / 2)),
+            _imageSize);
 
+        if (index == _selectedIndex)
+        {
+            imgRect.Offset(0, -SelectedTabPadding);
+        }
+
+        return imgRect;
+    }
+
+    private static Image? GetTabImage(TabControl tabs, int index)
+    {
+        ImageList.ImageCollection images = tabs.ImageList?.Images;
+        if (images is null)
+        {
             return null;
         }
 
-        private void RenderTabText(int index, bool hasImage)
+        TabPage page = tabs.TabPages[index];
+        if (!string.IsNullOrEmpty(page.ImageKey))
         {
-            if (string.IsNullOrEmpty(_tabTexts[index]))
-            {
-                return;
-            }
-
-            Rectangle textRect = GetTabTextRect(index, hasImage);
-
-            const TextFormatFlags format =
-                TextFormatFlags.NoClipping |
-                TextFormatFlags.NoPrefix |
-                TextFormatFlags.VerticalCenter |
-                TextFormatFlags.HorizontalCenter;
-
-            Color textColor = _enabled
-                ? index == _selectedIndex
-                    ? SystemColors.WindowText
-                    : SystemColors.ControlText
-                : SystemColors.GrayText;
-
-            TextRenderer.DrawText(_graphics, _tabTexts[index], _font, textRect, textColor, format);
+            return images[page.ImageKey];
         }
 
-        private Rectangle GetTabTextRect(int index, bool hasImage)
+        if (page.ImageIndex.IsWithin(0, images.Count))
         {
-            Rectangle innerRect = _tabRects[index];
-            Rectangle textRect;
-            if (hasImage)
-            {
-                int deltaWidth = _imageSize.Width + ImagePadding;
-                textRect = new Rectangle(
-                    innerRect.X + deltaWidth,
-                    innerRect.Y,
-                    innerRect.Width - deltaWidth,
-                    innerRect.Height);
-            }
-            else
-            {
-                textRect = innerRect;
-            }
-
-            if (index == _selectedIndex)
-            {
-                textRect.Offset(0, -SelectedTabPadding);
-            }
-
-            return textRect;
+            return images[page.ImageIndex];
         }
 
-        private Rectangle GetOuterTabRect(int index)
-        {
-            Rectangle innerRect = _tabRects[index];
-
-            if (index == _selectedIndex)
-            {
-                return Rectangle.FromLTRB(
-                    innerRect.Left - SelectedTabPadding,
-                    innerRect.Top - SelectedTabPadding,
-                    innerRect.Right + SelectedTabPadding,
-                    innerRect.Bottom + 1); // +1 to overlap tabs bottom line
-            }
-
-            return Rectangle.FromLTRB(
-                innerRect.Left,
-                innerRect.Top + 1,
-                innerRect.Right,
-                innerRect.Bottom);
-        }
-
-        private void RenderSelectedPageBackground()
-        {
-            if (!_selectedIndex.IsWithin(0, _tabCount))
-            {
-                return;
-            }
-
-            Rectangle tabRect = _tabRects[_selectedIndex];
-            Rectangle pageRect = Rectangle.FromLTRB(0, tabRect.Bottom, _size.Width - 1,
-                _size.Height - 1);
-
-            if (!_clipRectangle.IntersectsWith(pageRect))
-            {
-                return;
-            }
-
-            using (BrushScope backgroundBrush = CreateBackgroundBrusScope(_selectedIndex))
-            {
-                _graphics.FillRectangle(backgroundBrush.Brush, pageRect);
-            }
-
-            using (Pen borderPen = CreateBorderPen())
-            {
-                _graphics.DrawRectangle(borderPen, pageRect);
-            }
-        }
-
-        private static Color GetParentBackColor(TabControl tabs)
-        {
-            Control parent = tabs.Parent;
-            while (parent is not null)
-            {
-                if (parent.BackColor != Color.Transparent)
-                {
-                    return parent.BackColor;
-                }
-
-                parent = parent.Parent;
-            }
-
-            return SystemColors.Window;
-        }
-
-        private BrushScope CreateBackgroundBrusScope(int index)
-        {
-            if (index == _selectedIndex)
-            {
-                return BrushScope.ForSystemBrush(SystemBrushes.Window);
-            }
-
-            bool isHighlighted = _tabRects[index].Contains(_mouseCursor);
-            return isHighlighted
-                ? BrushScope.ForRegularBrush(new SolidBrush(ColorHelper.Lerp(SystemColors.Control, SystemColors.HotTrack, 64f / 255f)))
-                : BrushScope.ForSystemBrush(SystemBrushes.Control);
-        }
-
-        private static Pen CreateBorderPen() =>
-            new(Color.LightGray.AdaptBackColor(), BorderWidth);
+        return null;
     }
+
+    private void RenderTabText(int index, bool hasImage)
+    {
+        if (string.IsNullOrEmpty(_tabTexts[index]))
+        {
+            return;
+        }
+
+        Rectangle textRect = GetTabTextRect(index, hasImage);
+
+        const TextFormatFlags format =
+            TextFormatFlags.NoClipping |
+            TextFormatFlags.NoPrefix |
+            TextFormatFlags.VerticalCenter |
+            TextFormatFlags.HorizontalCenter;
+
+        Color textColor = _enabled
+            ? index == _selectedIndex
+                ? SystemColors.WindowText
+                : SystemColors.ControlText
+            : SystemColors.GrayText;
+
+        TextRenderer.DrawText(_graphics, _tabTexts[index], _font, textRect, textColor, format);
+    }
+
+    private Rectangle GetTabTextRect(int index, bool hasImage)
+    {
+        Rectangle innerRect = _tabRects[index];
+        Rectangle textRect;
+        if (hasImage)
+        {
+            int deltaWidth = _imageSize.Width + ImagePadding;
+            textRect = new Rectangle(
+                innerRect.X + deltaWidth,
+                innerRect.Y,
+                innerRect.Width - deltaWidth,
+                innerRect.Height);
+        }
+        else
+        {
+            textRect = innerRect;
+        }
+
+        if (index == _selectedIndex)
+        {
+            textRect.Offset(0, -SelectedTabPadding);
+        }
+
+        return textRect;
+    }
+
+    private Rectangle GetOuterTabRect(int index)
+    {
+        Rectangle innerRect = _tabRects[index];
+
+        if (index == _selectedIndex)
+        {
+            return Rectangle.FromLTRB(
+                innerRect.Left - SelectedTabPadding,
+                innerRect.Top - SelectedTabPadding,
+                innerRect.Right + SelectedTabPadding,
+                innerRect.Bottom + 1); // +1 to overlap tabs bottom line
+        }
+
+        return Rectangle.FromLTRB(
+            innerRect.Left,
+            innerRect.Top + 1,
+            innerRect.Right,
+            innerRect.Bottom);
+    }
+
+    private void RenderSelectedPageBackground()
+    {
+        if (!_selectedIndex.IsWithin(0, _tabCount))
+        {
+            return;
+        }
+
+        Rectangle tabRect = _tabRects[_selectedIndex];
+        Rectangle pageRect = Rectangle.FromLTRB(0, tabRect.Bottom, _size.Width - 1,
+            _size.Height - 1);
+
+        if (!_clipRectangle.IntersectsWith(pageRect))
+        {
+            return;
+        }
+
+        using (BrushScope backgroundBrush = CreateBackgroundBrusScope(_selectedIndex))
+        {
+            _graphics.FillRectangle(backgroundBrush.Brush, pageRect);
+        }
+
+        using (Pen borderPen = CreateBorderPen())
+        {
+            _graphics.DrawRectangle(borderPen, pageRect);
+        }
+    }
+
+    private static Color GetParentBackColor(TabControl tabs)
+    {
+        Control parent = tabs.Parent;
+        while (parent is not null)
+        {
+            if (parent.BackColor != Color.Transparent)
+            {
+                return parent.BackColor;
+            }
+
+            parent = parent.Parent;
+        }
+
+        return SystemColors.Window;
+    }
+
+    private BrushScope CreateBackgroundBrusScope(int index)
+    {
+        if (index == _selectedIndex)
+        {
+            return BrushScope.ForSystemBrush(SystemBrushes.Window);
+        }
+
+        bool isHighlighted = _tabRects[index].Contains(_mouseCursor);
+        return isHighlighted
+            ? BrushScope.ForRegularBrush(new SolidBrush(ColorHelper.Lerp(SystemColors.Control, SystemColors.HotTrack, 64f / 255f)))
+            : BrushScope.ForSystemBrush(SystemBrushes.Control);
+    }
+
+    private static Pen CreateBorderPen() =>
+        new(Color.LightGray.AdaptBackColor(), BorderWidth);
 }

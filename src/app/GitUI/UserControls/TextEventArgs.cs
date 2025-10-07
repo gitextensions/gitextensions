@@ -1,12 +1,11 @@
-﻿namespace GitUI.UserControls
-{
-    public sealed class TextEventArgs : EventArgs
-    {
-        public TextEventArgs(string text)
-        {
-            Text = text ?? throw new ArgumentNullException(nameof(text));
-        }
+﻿namespace GitUI.UserControls;
 
-        public string Text { get; }
+public sealed class TextEventArgs : EventArgs
+{
+    public TextEventArgs(string text)
+    {
+        Text = text ?? throw new ArgumentNullException(nameof(text));
     }
+
+    public string Text { get; }
 }

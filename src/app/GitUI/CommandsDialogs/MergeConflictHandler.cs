@@ -1,50 +1,49 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 
-namespace GitUI.CommandsDialogs
+namespace GitUI.CommandsDialogs;
+
+public static class MergeConflictHandler
 {
-    public static class MergeConflictHandler
+    public static bool HandleMergeConflicts(IGitUICommands commands, IWin32Window? owner, bool offerCommit = true, bool offerUpdateSubmodules = true)
     {
-        public static bool HandleMergeConflicts(IGitUICommands commands, IWin32Window? owner, bool offerCommit = true, bool offerUpdateSubmodules = true)
+        if (commands.Module.InTheMiddleOfConflictedMerge())
         {
-            if (commands.Module.InTheMiddleOfConflictedMerge())
+            if (AppSettings.DontConfirmResolveConflicts || MessageBoxes.ConfirmResolveMergeConflicts(owner))
             {
-                if (AppSettings.DontConfirmResolveConflicts || MessageBoxes.ConfirmResolveMergeConflicts(owner))
-                {
-                    SolveMergeConflicts(commands, owner, offerCommit);
-                }
-
-                return true;
+                SolveMergeConflicts(commands, owner, offerCommit);
             }
 
-            if (offerUpdateSubmodules)
-            {
-                commands.UpdateSubmodules(owner);
-            }
-
-            return false;
+            return true;
         }
 
-        private static void SolveMergeConflicts(IGitUICommands commands, IWin32Window? owner, bool offerCommit)
+        if (offerUpdateSubmodules)
         {
-            if (commands.Module.InTheMiddleOfConflictedMerge())
-            {
-                commands.StartResolveConflictsDialog(owner, offerCommit);
-            }
+            commands.UpdateSubmodules(owner);
+        }
 
-            if (commands.Module.InTheMiddleOfPatch())
+        return false;
+    }
+
+    private static void SolveMergeConflicts(IGitUICommands commands, IWin32Window? owner, bool offerCommit)
+    {
+        if (commands.Module.InTheMiddleOfConflictedMerge())
+        {
+            commands.StartResolveConflictsDialog(owner, offerCommit);
+        }
+
+        if (commands.Module.InTheMiddleOfPatch())
+        {
+            if (MessageBoxes.MiddleOfPatchApply(owner))
             {
-                if (MessageBoxes.MiddleOfPatchApply(owner))
-                {
-                    commands.StartApplyPatchDialog(owner);
-                }
+                commands.StartApplyPatchDialog(owner);
             }
-            else if (commands.Module.InTheMiddleOfRebase())
+        }
+        else if (commands.Module.InTheMiddleOfRebase())
+        {
+            if (MessageBoxes.MiddleOfRebase(owner))
             {
-                if (MessageBoxes.MiddleOfRebase(owner))
-                {
-                    commands.StartTheContinueRebaseDialog(owner);
-                }
+                commands.StartTheContinueRebaseDialog(owner);
             }
         }
     }

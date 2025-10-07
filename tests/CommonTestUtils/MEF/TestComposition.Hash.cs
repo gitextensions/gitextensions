@@ -5,45 +5,44 @@
 
 using System.Collections.Immutable;
 
-namespace CommonTestUtils.MEF
+namespace CommonTestUtils.MEF;
+
+public sealed partial class TestComposition
 {
-    public sealed partial class TestComposition
+    internal static class Hash
     {
-        internal static class Hash
+        /// <summary>
+        /// This is how VB Anonymous Types combine hash values for fields.
+        /// </summary>
+        internal static int Combine(int newKey, int currentKey)
         {
-            /// <summary>
-            /// This is how VB Anonymous Types combine hash values for fields.
-            /// </summary>
-            internal static int Combine(int newKey, int currentKey)
+            return unchecked((currentKey * (int)0xA5555529) + newKey);
+        }
+
+        internal static int CombineValues<T>(ImmutableArray<T> values, int maxItemsToHash = int.MaxValue)
+        {
+            if (values.IsDefaultOrEmpty)
             {
-                return unchecked((currentKey * (int)0xA5555529) + newKey);
+                return 0;
             }
 
-            internal static int CombineValues<T>(ImmutableArray<T> values, int maxItemsToHash = int.MaxValue)
+            int hashCode = 0;
+            int count = 0;
+            foreach (T value in values)
             {
-                if (values.IsDefaultOrEmpty)
+                if (count++ >= maxItemsToHash)
                 {
-                    return 0;
+                    break;
                 }
 
-                int hashCode = 0;
-                int count = 0;
-                foreach (T value in values)
+                // Should end up with a constrained virtual call to object.GetHashCode (i.e. avoid boxing where possible).
+                if (value != null)
                 {
-                    if (count++ >= maxItemsToHash)
-                    {
-                        break;
-                    }
-
-                    // Should end up with a constrained virtual call to object.GetHashCode (i.e. avoid boxing where possible).
-                    if (value != null)
-                    {
-                        hashCode = Combine(value.GetHashCode(), hashCode);
-                    }
+                    hashCode = Combine(value.GetHashCode(), hashCode);
                 }
-
-                return hashCode;
             }
+
+            return hashCode;
         }
     }
 }
