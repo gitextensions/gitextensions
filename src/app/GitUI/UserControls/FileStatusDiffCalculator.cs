@@ -110,8 +110,13 @@ namespace GitUI
                             // likely index commit without HEAD
                             ? module.GetDiffFilesWithSubmodulesStatus(firstId: null, selectedRev.ObjectId, parentToSecond: null, cancellationToken)
 
-                            // No parent for the initial commit, show files
-                            : module.GetTreeFiles(selectedRev.TreeGuid, full: true, cancellationToken)));
+                            // No parent for the initial commit, show files and explicitly set IsNew
+                            : module.GetTreeFiles(selectedRev.TreeGuid, full: true, cancellationToken)
+                                .Select(i =>
+                                {
+                                    i.IsNew = true;
+                                    return i;
+                                }).ToList()));
                 }
 
                 // Show combined (merge conflicts) when a single merge commit is selected
