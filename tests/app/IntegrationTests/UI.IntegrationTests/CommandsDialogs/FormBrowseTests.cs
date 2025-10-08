@@ -40,8 +40,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
             AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
-
-            _referenceRepository.Dispose();
         }
 
         [SetUp]
@@ -50,6 +48,12 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository = new ReferenceRepository();
 
             _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _referenceRepository.Dispose();
         }
 
         [Test]

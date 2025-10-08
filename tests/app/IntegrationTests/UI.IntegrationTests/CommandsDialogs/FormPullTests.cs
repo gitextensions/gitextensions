@@ -36,11 +36,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.DefaultPullAction = _originalDefaultPullAction;
             AppSettings.FormPullAction = _originalFormPullAction;
             AppSettings.AutoStash = _originalAutoStash;
-        }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
             _referenceRepository.Dispose();
         }
 

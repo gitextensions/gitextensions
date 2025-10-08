@@ -23,8 +23,8 @@ public class FormFileHistoryTests
         AppSettings.UseBrowseForFileHistory.Value = false;
     }
 
-    [OneTimeTearDown]
-    public void OneTimeTearDown()
+    [TearDown]
+    public void TearDown()
     {
         _referenceRepository.Dispose();
     }

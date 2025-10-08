@@ -90,11 +90,6 @@ namespace GitUITests.UserControls
         public void TearDown()
         {
             _blameControl.Dispose();
-        }
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
             _referenceRepository.Dispose();
         }
 

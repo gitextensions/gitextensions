@@ -18,10 +18,15 @@ namespace GitUITests.GitUICommandsTests
         // Created once for each test
         private GitUICommands _commands;
 
+        [OneTimeSetUp]
+        public void OneTimeSetUp()
+        {
+            AppSettings.SetDocumentationBaseUrl("33.33.33");
+        }
+
         [SetUp]
         public void SetUp()
         {
-            bool first = _referenceRepository is null;
             _referenceRepository = new ReferenceRepository();
 
             string cmdPath = (Environment.GetEnvironmentVariable("COMSPEC") ?? "C:/WINDOWS/system32/cmd.exe").ToPosixPath().QuoteNE();
@@ -37,14 +42,8 @@ namespace GitUITests.GitUICommandsTests
             _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
         }
 
-        [OneTimeSetUp]
-        public void OneTimeSetUp()
-        {
-            AppSettings.SetDocumentationBaseUrl("33.33.33");
-        }
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
+        [TearDown]
+        public void TearDown()
         {
             _referenceRepository.Dispose();
         }

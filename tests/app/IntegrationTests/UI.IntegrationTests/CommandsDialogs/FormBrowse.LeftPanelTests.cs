@@ -13,14 +13,12 @@ namespace GitExtensions.UITests.CommandsDialogs
     {
         private const string RemoteName = "remote1";
 
-        // Created once for the fixture
-        private ReferenceRepository _remoteReferenceRepository;
-
         // Track the original setting value
         private bool _originalShowAuthorAvatarColumn;
         private bool _showAvailableDiffTools;
 
         // Created once for each test
+        private ReferenceRepository _remoteReferenceRepository;
         private ReferenceRepository _referenceRepository;
         private GitUICommands _commands;
 
@@ -46,8 +44,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
             AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
-
-            _remoteReferenceRepository.Dispose();
         }
 
         [SetUp]
@@ -55,7 +51,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             _remoteReferenceRepository = new ReferenceRepository();
 
-            // we will be modifying .git/config and need to completely reset each time
             _referenceRepository = new ReferenceRepository();
 
             _referenceRepository.Module.AddRemote(RemoteName, _remoteReferenceRepository.Module.WorkingDir);

@@ -19,8 +19,8 @@ namespace GitCommandsTests
             Console.WriteLine("Repo path: " + _gitModule.WorkingDir);
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
+        [TearDown]
+        public void TearDown()
         {
             _refRepo.Dispose();
         }

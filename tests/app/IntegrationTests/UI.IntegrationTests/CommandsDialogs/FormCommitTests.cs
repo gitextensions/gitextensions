@@ -44,6 +44,12 @@ namespace GitExtensions.UITests.CommandsDialogs
             _commands = new GitUICommands(serviceContainer, _referenceRepository.Module);
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            _referenceRepository.Dispose();
+        }
+
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
@@ -61,7 +67,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             AppSettings.ProvideAutocompletion = _provideAutocompletion;
             AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
-            _referenceRepository.Dispose();
         }
 
         [Test]

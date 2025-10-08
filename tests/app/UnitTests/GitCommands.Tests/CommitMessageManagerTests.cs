@@ -74,11 +74,7 @@ namespace GitCommandsTests
         public void TearDown()
         {
             AppSettings.RememberAmendCommitState = _rememberAmendCommitState;
-        }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
             _referenceRepository.Dispose();
         }
 
