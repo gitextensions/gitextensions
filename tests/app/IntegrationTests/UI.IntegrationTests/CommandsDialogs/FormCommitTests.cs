@@ -111,9 +111,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void Should_display_branch_and_no_remote_info_in_statusbar()
         {
-            string defaultBranchName = GitConfigurationHelper.GetSetting("init.defaultbranch", "master");
+            string branchName = _referenceRepository.Module.GetCurrentBranchName();
 
-            _referenceRepository.CheckoutBranch(defaultBranchName);
+            _referenceRepository.CheckoutBranch(branchName);
             RunFormTest(async form =>
             {
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
@@ -121,7 +121,7 @@ namespace GitExtensions.UITests.CommandsDialogs
                 ToolStripStatusLabel currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 ToolStripStatusLabel remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
-                ClassicAssert.AreEqual($"{defaultBranchName} →", currentBranchNameLabelStatus.Text);
+                ClassicAssert.AreEqual($"{branchName} →", currentBranchNameLabelStatus.Text);
                 ClassicAssert.AreEqual("(remote not configured)", remoteNameLabelStatus.Text);
             });
         }
@@ -152,9 +152,9 @@ namespace GitExtensions.UITests.CommandsDialogs
         [Test]
         public void Should_display_branch_and_remote_info_in_statusbar()
         {
-            string defaultBranchName = GitConfigurationHelper.GetSetting("init.defaultbranch", "master");
+            string branchName = _referenceRepository.Module.GetCurrentBranchName();
 
-            _referenceRepository.CreateRemoteForBranch(defaultBranchName);
+            _referenceRepository.CreateRemoteForBranch(branchName);
             RunFormTest(async form =>
             {
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
@@ -162,8 +162,8 @@ namespace GitExtensions.UITests.CommandsDialogs
                 ToolStripStatusLabel currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
                 ToolStripStatusLabel remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
-                ClassicAssert.AreEqual($"{defaultBranchName} →", currentBranchNameLabelStatus.Text);
-                ClassicAssert.AreEqual($"origin/{defaultBranchName}", remoteNameLabelStatus.Text);
+                ClassicAssert.AreEqual($"{branchName} →", currentBranchNameLabelStatus.Text);
+                ClassicAssert.AreEqual($"origin/{branchName}", remoteNameLabelStatus.Text);
             });
         }
 

@@ -104,12 +104,14 @@ namespace GitUITests.GitUICommandsTests
         [Test]
         public void RunCommandBasedOnArgument_branch()
         {
-            string defaultBranchName = GitConfigurationHelper.GetSetting("init.defaultbranch", "master");
+            string branchName = _referenceRepository.Module.GetCurrentBranchName();
 
-            _referenceRepository.CheckoutBranch(defaultBranchName);
+            string newBranchName = branchName + "-subbranch";
+
+            _referenceRepository.CheckoutBranch(branchName);
             RunCommandBasedOnArgument<FormCreateBranch>(new string[] { "ge.exe", "branch" }, runTest: form =>
             {
-                SetText(form, "BranchNameTextBox", "branchname");
+                SetText(form, "BranchNameTextBox", newBranchName);
                 ClickButton(form, "Ok");
             });
         }
