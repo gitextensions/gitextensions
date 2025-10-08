@@ -17,7 +17,7 @@ public class FormUpdatesTests
     [SetUp]
     public void SetUp()
     {
-        ReferenceRepository.ResetRepo(ref _referenceRepository);
+        _referenceRepository = new ReferenceRepository();
         _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
     }
 

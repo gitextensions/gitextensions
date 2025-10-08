@@ -24,32 +24,6 @@ namespace CommonTestUtils
             }
         }
 
-        /// <summary>
-        /// Reset the repo if possible, if it is null or reset throws create a new.
-        /// </summary>
-        /// <param name="refRepo">The repo to reset, possibly null.</param>
-        public static void ResetRepo([NotNull] ref ReferenceRepository? refRepo)
-        {
-            if (refRepo is null)
-            {
-                refRepo = new ReferenceRepository();
-            }
-            else
-            {
-                try
-                {
-                    refRepo.Reset();
-                }
-                catch (LockedFileException)
-                {
-                    // the index is locked; this might be due to a concurrent or crashed process
-                    refRepo.Dispose();
-                    refRepo = new ReferenceRepository();
-                    Trace.WriteLine("Repo is locked, creating new");
-                }
-            }
-        }
-
         public GitModule Module => _moduleTestHelper.Module;
 
         public string? CommitHash { get; private set; }

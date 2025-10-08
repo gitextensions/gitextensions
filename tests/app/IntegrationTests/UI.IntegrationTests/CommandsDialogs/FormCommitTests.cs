@@ -32,7 +32,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
+            _referenceRepository = new ReferenceRepository();
 
             ServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
             serviceContainer.RemoveService<IScriptsRunner>();

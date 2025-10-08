@@ -53,7 +53,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
-            ReferenceRepository.ResetRepo(ref _remoteReferenceRepository);
+            _remoteReferenceRepository = new ReferenceRepository();
 
             // we will be modifying .git/config and need to completely reset each time
             _referenceRepository = new ReferenceRepository();
@@ -75,6 +75,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [TearDown]
         public void TearDown()
         {
+            _remoteReferenceRepository.Dispose();
             _referenceRepository.Dispose();
         }
 

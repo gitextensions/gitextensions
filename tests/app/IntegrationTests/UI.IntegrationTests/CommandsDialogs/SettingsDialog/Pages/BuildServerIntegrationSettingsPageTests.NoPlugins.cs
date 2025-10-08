@@ -28,7 +28,7 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
         [SetUp]
         public void SetUp()
         {
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
+            _referenceRepository = new ReferenceRepository();
             ExportProvider mefExportProvider = TestComposition.Empty.ExportProviderFactory.CreateExportProvider();
             ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }

@@ -52,7 +52,7 @@ namespace GitCommandsTests
         [SetUp]
         public void Setup()
         {
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
+            _referenceRepository = new ReferenceRepository();
 
             _file = Substitute.For<FileBase>();
             _file.ReadAllTextAsync(_commitMessagePath, _encoding, cancellationToken: default).Returns(_commitMessage);

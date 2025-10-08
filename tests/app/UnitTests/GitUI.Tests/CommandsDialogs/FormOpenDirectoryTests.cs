@@ -17,7 +17,7 @@ namespace GitUITests.CommandsDialogs
         [SetUp]
         public void Setup()
         {
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
+            _referenceRepository = new ReferenceRepository();
             _localRepositoryManager = Substitute.For<ILocalRepositoryManager>();
         }
 
