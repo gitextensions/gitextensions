@@ -1,7 +1,38 @@
 ﻿Changelog
 =========
 
-### Version v6.0.1 (no due date)
+### Version v6.0.2 (10 Oct 2025)
+
+#### Changes:
+* [#12551] Update contributors.txt
+* [#12548] Test robustness: Account for core.autocrlf in DiffHighlightServiceTests.MarkInlineGap
+* [#12544] fix(FileStatusList): set files as new for initial commit
+* [#12543] fix: include rc in .net debug listings
+* [#12542] fix: appveyor warning for lineending
+* [#12541] fix: do not add / to submodule names
+* [#12539] Fix the creation of orphan branches in empty repositories
+* [#12533] fix: create worktrees with relative paths
+* [#12522] fix: remove mail patches
+* [#12519] fix: prepare for .net10
+* [#12499] fix: show recent destination directories on clone
+* [#176] Small grammar change to dialogbox text
+
+
+[#12551]:https://github.com/gitextensions/gitextensions/pull/12551
+[#12548]:https://github.com/gitextensions/gitextensions/pull/12548
+[#12544]:https://github.com/gitextensions/gitextensions/pull/12544
+[#12543]:https://github.com/gitextensions/gitextensions/pull/12543
+[#12542]:https://github.com/gitextensions/gitextensions/pull/12542
+[#12541]:https://github.com/gitextensions/gitextensions/pull/12541
+[#12539]:https://github.com/gitextensions/gitextensions/pull/12539
+[#12533]:https://github.com/gitextensions/gitextensions/pull/12533
+[#12522]:https://github.com/gitextensions/gitextensions/pull/12522
+[#12519]:https://github.com/gitextensions/gitextensions/pull/12519
+[#12499]:https://github.com/gitextensions/gitextensions/pull/12499
+[#176]:https://github.com/gitextensions/gitextensions/pull/176
+
+
+### Version v6.0.1 (14 Sep 2025)
 
 #### Changes:
 * [#12505] fix: submodule tooltip on default thread
@@ -68,7 +99,7 @@
 [#12407]:https://github.com/gitextensions/gitextensions/pull/12407
 
 
-### Version v6.0 (no due date)
+### Version v6.0 (16 Jun 2025)
 
 #### Changes:
 * [#12409] Keyboard mnemonic for “Remember choice”
