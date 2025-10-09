@@ -108,7 +108,7 @@ namespace GitUITests.GitUICommandsTests
             RunCommandBasedOnArgument<FormCreateBranch>(new string[] { "ge.exe", "branch" }, runTest: form =>
             {
                 SetText(form, "BranchNameTextBox", "branchname");
-                ClickButton(form, "Ok");
+                ClickButton(form, "cmdOk");
             });
         }
 
