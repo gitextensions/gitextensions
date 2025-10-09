@@ -54,6 +54,12 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
             _referenceRepository.Dispose();
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            ReferenceRepository.CleanUp();
+        }
+
         [Test]
         public void GetSortedTags_should_throw_on_git_warning()
         {

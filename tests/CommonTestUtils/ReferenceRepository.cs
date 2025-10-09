@@ -8,6 +8,41 @@ namespace CommonTestUtils
 {
     public class ReferenceRepository : IDisposable
     {
+        private static readonly string CleanupLogFileName = Path.GetTempFileName();
+        private static readonly object CleanupSync = new();
+
+        private static void AddPathToCleanupLog(string path)
+        {
+            lock (CleanupSync)
+            {
+                using (StreamWriter writer = new(CleanupLogFileName, append: true))
+                {
+                    writer.WriteLine(path);
+                }
+            }
+        }
+
+        public static void CleanUp()
+        {
+            lock (CleanupSync)
+            {
+                if (!File.Exists(CleanupLogFileName))
+                {
+                    return;
+                }
+
+                using (StreamReader reader = new(CleanupLogFileName))
+                {
+                    while (reader.ReadLine() is string path)
+                    {
+                        GitModuleTestHelper.CleanUp(path);
+                    }
+                }
+
+                File.Delete(CleanupLogFileName);
+            }
+        }
+
         public const string AuthorName = "GitUITests";
         public const string AuthorEmail = "unittests@gitextensions.com";
         public const string AuthorFullIdentity = $"{AuthorName} <{AuthorEmail}>";
@@ -207,7 +242,10 @@ namespace CommonTestUtils
 
         protected virtual void Dispose(bool disposing)
         {
+            _moduleTestHelper.ExplicitCleanUpForTests = true;
             _moduleTestHelper.Dispose();
+
+            AddPathToCleanupLog(_moduleTestHelper.TemporaryPath);
         }
     }
 }

@@ -27,6 +27,12 @@ namespace GitUITests.CommandsDialogs
             _referenceRepository.Dispose();
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            ReferenceRepository.CleanUp();
+        }
+
         [Test]
         public void OpenGitRepository_should_return_null_if_directory_not_exist()
         {

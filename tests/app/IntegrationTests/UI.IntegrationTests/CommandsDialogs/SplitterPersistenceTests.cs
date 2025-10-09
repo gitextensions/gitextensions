@@ -51,6 +51,12 @@ public class SplitterPersistenceTests
         _referenceRepository.Dispose();
     }
 
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        ReferenceRepository.CleanUp();
+    }
+
     [Test]
     public async Task SplitterPositionsShouldBeDefault()
     {

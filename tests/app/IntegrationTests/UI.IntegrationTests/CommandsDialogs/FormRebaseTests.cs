@@ -24,6 +24,12 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.Dispose();
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            ReferenceRepository.CleanUp();
+        }
+
         [Test]
         public void Interactive_check_enables_autosquash()
         {

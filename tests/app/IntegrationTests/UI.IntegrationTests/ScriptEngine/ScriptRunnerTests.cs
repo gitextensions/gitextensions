@@ -79,6 +79,12 @@ namespace GitExtensions.UITests.ScriptEngine
             _referenceRepository.Dispose();
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            ReferenceRepository.CleanUp();
+        }
+
         [Test]
         public void RunScript_without_command_shall_return_false([Values(null, "")] string command)
         {

@@ -33,6 +33,12 @@ namespace UITests.UserControls
             _referenceRepository.Dispose();
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            ReferenceRepository.CleanUp();
+        }
+
         [Test]
         public void RebasePatchesBuiltAccordingToGitRebaseFiles_EnsureRebaseFileFormatWithGit()
         {

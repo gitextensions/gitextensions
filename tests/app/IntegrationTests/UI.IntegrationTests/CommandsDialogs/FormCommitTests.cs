@@ -67,6 +67,8 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             AppSettings.ProvideAutocompletion = _provideAutocompletion;
             AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
+
+            ReferenceRepository.CleanUp();
         }
 
         [Test]

@@ -35,6 +35,12 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
             _referenceRepository.Dispose();
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            ReferenceRepository.CleanUp();
+        }
+
         [Test]
         public void BuildServerType_should_contain_only_None_if_not_build_server_plugins_found()
         {

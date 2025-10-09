@@ -40,6 +40,12 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.Dispose();
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            ReferenceRepository.CleanUp();
+        }
+
         [Test]
         public void Should_correctly_setup_form_title_for_merge_action()
         {

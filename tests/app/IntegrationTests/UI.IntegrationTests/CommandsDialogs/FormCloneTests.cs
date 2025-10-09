@@ -27,6 +27,12 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.Dispose();
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            ReferenceRepository.CleanUp();
+        }
+
         [TestCase(null, false, "")]
         [TestCase("", false, "")]
         [TestCase(" ", false, "")]
