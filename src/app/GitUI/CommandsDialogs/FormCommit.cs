@@ -1808,7 +1808,6 @@ namespace GitUI.CommandsDialogs
                     foreach (GitItemStatus item in items)
                     {
                         toolStripProgressBar1.Value = Math.Min(toolStripProgressBar1.Maximum - 1, toolStripProgressBar1.Value + 1);
-                        item.Name = item.Name.TrimEnd('/');
                         files.Add(item);
                     }
 

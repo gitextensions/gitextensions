@@ -576,6 +576,14 @@ namespace GitUI.CommandsDialogs
 
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            // Restore state at startup if file history mode, ignore the forced setting
+            if (_isFileHistoryMode)
+            {
+                MainSplitContainer.Panel1Collapsed = _fileBlameHistoryLeftPanelStartupState;
+            }
+
+            _splitterManager.SaveSplitters();
+
             SaveApplicationSettings();
 
             foreach (Control control in this.FindDescendants())
@@ -587,23 +595,11 @@ namespace GitUI.CommandsDialogs
             base.OnFormClosing(e);
         }
 
-        protected override void OnClosing(CancelEventArgs e)
-        {
-            // Restore state at startup if file history mode, ignore the forced setting
-            if (_isFileHistoryMode)
-            {
-                MainSplitContainer.Panel1Collapsed = _fileBlameHistoryLeftPanelStartupState;
-            }
-
-            _splitterManager.SaveSplitters();
-            base.OnClosing(e);
-        }
-
-        protected override void OnClosed(EventArgs e)
+        protected override void OnFormClosed(FormClosedEventArgs e)
         {
             PluginRegistry.Unregister(UICommands);
             RevisionGrid.CancelBackgroundTasks();
-            base.OnClosed(e);
+            base.OnFormClosed(e);
         }
 
         protected override void OnUICommandsChanged(GitUICommandsChangedEventArgs e)

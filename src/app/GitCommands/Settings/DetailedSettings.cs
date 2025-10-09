@@ -6,9 +6,6 @@ namespace GitCommands.Settings
     {
         private const string DetailedGroupName = "Detailed";
 
-        private const string SmtpServerDefault = "smtp.gmail.com";
-        private const int SmtpPortDefault = 465;
-        private const bool SmtpUseSslDefault = true;
         private const bool GetRemoteBranchesDirectlyFromRemoteDefault = false;
         private const bool AddMergeLogMessagesDefault = false;
         private const int MergeLogMessagesCountDefault = 20;
@@ -18,48 +15,6 @@ namespace GitCommands.Settings
         public DetailedSettings(SettingsSource settingsSource)
         {
             _settingsSource = settingsSource;
-        }
-
-        public string SmtpServer
-        {
-            get => _settingsSource.GetString(nameof(SmtpServer), SmtpServerDefault);
-            set
-            {
-                if (SmtpServer == value)
-                {
-                    return;
-                }
-
-                _settingsSource.SetString(nameof(SmtpServer), value);
-            }
-        }
-
-        public int SmtpPort
-        {
-            get => _settingsSource.GetInt(nameof(SmtpPort), SmtpPortDefault);
-            set
-            {
-                if (SmtpPort == value)
-                {
-                    return;
-                }
-
-                _settingsSource.SetInt(nameof(SmtpPort), value);
-            }
-        }
-
-        public bool SmtpUseSsl
-        {
-            get => _settingsSource.GetBool(nameof(SmtpUseSsl), SmtpUseSslDefault);
-            set
-            {
-                if (SmtpUseSsl == value)
-                {
-                    return;
-                }
-
-                _settingsSource.SetBool(nameof(SmtpUseSsl), value);
-            }
         }
 
         public bool GetRemoteBranchesDirectlyFromRemote

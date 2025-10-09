@@ -18,14 +18,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             return new SettingsPageReferenceByType(typeof(DetailedSettingsPage));
         }
 
-        protected override void OnRuntimeLoad()
-        {
-            base.OnRuntimeLoad();
-
-            // align 1st columns across all tables
-            tlpnlEmailSettings.AdjustWidthToSize(0, addLogMessages);
-        }
-
         protected override void SettingsToPage()
         {
             chkMergeGraphLanesHavingCommonParent.Checked = AppSettings.MergeGraphLanesHavingCommonParent.Value;
@@ -34,10 +26,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
 
             IDetailedSettings detailedSettings = GetCurrentSettings()
                 .Detailed();
-
-            SmtpServer.Text = detailedSettings.SmtpServer;
-            SmtpServerPort.Text = detailedSettings.SmtpPort.ToString();
-            chkUseSSL.Checked = detailedSettings.SmtpUseSsl;
 
             chkRemotesFromServer.Checked = detailedSettings.GetRemoteBranchesDirectlyFromRemote;
             addLogMessages.Checked = detailedSettings.AddMergeLogMessages;
@@ -55,15 +43,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             IDetailedSettings detailedSettings = GetCurrentSettings()
                 .Detailed();
 
-            detailedSettings.SmtpServer = SmtpServer.Text;
-
-            if (int.TryParse(SmtpServerPort.Text, out int port))
-            {
-                detailedSettings.SmtpPort = port;
-            }
-
-            detailedSettings.SmtpUseSsl = chkUseSSL.Checked;
-
             detailedSettings.GetRemoteBranchesDirectlyFromRemote = chkRemotesFromServer.Checked;
             detailedSettings.AddMergeLogMessages = addLogMessages.Checked;
 
@@ -73,24 +52,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             }
 
             base.PageToSettings();
-        }
-
-        private void chkUseSSL_CheckedChanged(object sender, EventArgs e)
-        {
-            if (!chkUseSSL.Checked)
-            {
-                if (SmtpServerPort.Text == "587")
-                {
-                    SmtpServerPort.Text = "465";
-                }
-            }
-            else
-            {
-                if (SmtpServerPort.Text == "465")
-                {
-                    SmtpServerPort.Text = "587";
-                }
-            }
         }
     }
 }

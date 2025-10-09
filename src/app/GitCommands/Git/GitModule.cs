@@ -2563,7 +2563,12 @@ namespace GitCommands
             ExecutionResult executionResult = _gitExecutable.Execute(args, throwOnErrorExit: false);
             if (executionResult.ExitedSuccessfully && ObjectId.TryParse(executionResult.StandardOutput, out ObjectId? treeId))
             {
-                IReadOnlyList<GitItemStatus> files = GetTreeFiles(treeId, full: true);
+                IEnumerable<GitItemStatus> files = GetTreeFiles(treeId, full: true)
+                    .Select(i =>
+                    {
+                        i.IsNew = true;
+                        return i;
+                    });
 
                 resultCollection.AddRange(files);
             }

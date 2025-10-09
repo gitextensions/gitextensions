@@ -243,9 +243,6 @@ namespace GitCommandsTests.Settings
                 yield return (properties[nameof(AppSettings.RevisionGraphDrawNonRelativesTextGray)], false, false, false);
                 yield return (properties[nameof(AppSettings.DefaultPullAction)], GitPullAction.Merge, false, false);
                 yield return (properties[nameof(AppSettings.FormPullAction)], GitPullAction.Merge, false, false);
-                yield return (properties[nameof(AppSettings.SmtpServer)], "smtp.gmail.com", true, false);
-                yield return (properties[nameof(AppSettings.SmtpPort)], 465, false, false);
-                yield return (properties[nameof(AppSettings.SmtpUseSsl)], true, false, false);
                 yield return (properties[nameof(AppSettings.AutoStash)], false, false, false);
                 yield return (properties[nameof(AppSettings.RebaseAutoStash)], false, false, false);
                 yield return (properties[nameof(AppSettings.CheckoutBranchAction)], LocalChangesAction.DontChange, false, false);

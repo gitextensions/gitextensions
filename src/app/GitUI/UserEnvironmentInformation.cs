@@ -17,7 +17,7 @@ namespace GitUI
         private static bool _dirty;
         private static string? _sha;
 
-        [GeneratedRegex(@"^Microsoft\.WindowsDesktop\.App\s+([0-9.]+)\s+.*$", RegexOptions.Multiline)]
+        [GeneratedRegex(@"^Microsoft\.WindowsDesktop\.App\s+([\w.-]+)\s+.*$", RegexOptions.Multiline)]
         private static partial Regex DesktopAppRegex();
         [GeneratedRegex(@"^", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
         private static partial Regex LineStartRegex();
