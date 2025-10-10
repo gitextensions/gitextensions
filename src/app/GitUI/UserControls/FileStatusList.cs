@@ -1385,11 +1385,6 @@ namespace GitUI
                 string oldName = item.OldName is null ? "" : $" ({item.OldName})";
                 TreeNode listItem = new(text: $"{item.Name}{oldName}");
 
-                if (item.IsSubmodule)
-                {
-                    item.Name = $"{item.Name}/";
-                }
-
                 bool isGitGrep = FileStatusDiffCalculator.IsGrepItemStatuses(fileStatusWithDescription);
                 listItem.ImageIndex = GetItemImageIndex(item, isGitGrep);
                 listItem.SelectedImageIndex = listItem.ImageIndex;
