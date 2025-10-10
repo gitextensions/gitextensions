@@ -42,12 +42,13 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
             AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
+
+            ReferenceRepository.CleanUp();
         }
 
         [SetUp]
         public void SetUp()
         {
-            // we will be modifying .git/config and need to completely reset each time
             _referenceRepository = new ReferenceRepository();
 
             foreach (string name in RemoteNames)

@@ -190,26 +190,36 @@ public class GitModuleTestHelper : IDisposable
 
     public void Dispose()
     {
+        // if settings have been set, the corresponding local config file is in the directory
+        // we want to delete, so we need to make sure the timers that will try to auto-save there
+        // are stopped before actually deleting, else the timers will throw on a background thread.
+        // Note that the intermittent failures mentioned below are likely related too.
+        if (Module.GetTestAccessor().EffectiveSettings is not null)
+        {
+            if (ThreadHelper.JoinableTaskContext is null)
+            {
+                Trace.WriteLine($"{nameof(ThreadHelper)}{nameof(ThreadHelper.JoinableTaskContext)} should not be null if {nameof(Module.EffectiveSettings)} exist! Disposing too late?");
+            }
+            else
+            {
+                Module.EffectiveSettings.SettingsCache.Dispose();
+            }
+        }
+
+        if (!ExplicitCleanUpForTests)
+        {
+            CleanUp(TemporaryPath);
+        }
+    }
+
+    internal bool ExplicitCleanUpForTests = false;
+
+    internal static void CleanUp(string path)
+    {
         try
         {
-            // if settings have been set, the corresponding local config file is in the directory
-            // we want to delete, so we need to make sure the timers that will try to auto-save there
-            // are stopped before actually deleting, else the timers will throw on a background thread.
-            // Note that the intermittent failures mentioned below are likely related too.
-            if (Module.GetTestAccessor().EffectiveSettings is not null)
-            {
-                if (ThreadHelper.JoinableTaskContext is null)
-                {
-                    Trace.WriteLine($"{nameof(ThreadHelper)}{nameof(ThreadHelper.JoinableTaskContext)} should not be null if {nameof(Module.EffectiveSettings)} exist! Disposing too late?");
-                }
-                else
-                {
-                    Module.EffectiveSettings.SettingsCache.Dispose();
-                }
-            }
-
             // Directory.Delete seems to intermittently fail, so delete the files first before deleting folders
-            foreach (string file in Directory.GetFiles(TemporaryPath, "*", SearchOption.AllDirectories))
+            foreach (string file in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
             {
                 if (File.GetAttributes(file).HasFlag(FileAttributes.ReparsePoint))
                 {
@@ -227,7 +237,7 @@ public class GitModuleTestHelper : IDisposable
             {
                 try
                 {
-                    Directory.Delete(TemporaryPath, true);
+                    Directory.Delete(path, true);
                     break;
                 }
                 catch

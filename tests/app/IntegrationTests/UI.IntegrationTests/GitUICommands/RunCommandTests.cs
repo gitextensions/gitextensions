@@ -18,38 +18,40 @@ namespace GitUITests.GitUICommandsTests
         // Created once for each test
         private GitUICommands _commands;
 
-        [SetUp]
-        public void SetUp()
-        {
-            bool first = _referenceRepository is null;
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
-
-            if (first)
-            {
-                string cmdPath = (Environment.GetEnvironmentVariable("COMSPEC") ?? "C:/WINDOWS/system32/cmd.exe").ToPosixPath().QuoteNE();
-                _referenceRepository.Module.GitExecutable.RunCommand($"config --local difftool.cmd.path {cmdPath}").Should().BeTrue();
-                _referenceRepository.Module.GitExecutable.RunCommand($"config --local mergetool.cmd.path {cmdPath}").Should().BeTrue();
-                _referenceRepository.Module.GitExecutable.RunCommand("config --local diff.guitool cmd").Should().BeTrue();
-                _referenceRepository.Module.GitExecutable.RunCommand("config --local merge.guitool cmd").Should().BeTrue();
-
-                AppSettings.UseConsoleEmulatorForCommands = false;
-                AppSettings.CloseProcessDialog = true;
-                AppSettings.UseBrowseForFileHistory.Value = false;
-            }
-
-            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
-        }
-
         [OneTimeSetUp]
         public void OneTimeSetUp()
         {
             AppSettings.SetDocumentationBaseUrl("33.33.33");
         }
 
+        [SetUp]
+        public void SetUp()
+        {
+            _referenceRepository = new ReferenceRepository();
+
+            string cmdPath = (Environment.GetEnvironmentVariable("COMSPEC") ?? "C:/WINDOWS/system32/cmd.exe").ToPosixPath().QuoteNE();
+            _referenceRepository.Module.GitExecutable.RunCommand($"config --local difftool.cmd.path {cmdPath}").Should().BeTrue();
+            _referenceRepository.Module.GitExecutable.RunCommand($"config --local mergetool.cmd.path {cmdPath}").Should().BeTrue();
+            _referenceRepository.Module.GitExecutable.RunCommand("config --local diff.guitool cmd").Should().BeTrue();
+            _referenceRepository.Module.GitExecutable.RunCommand("config --local merge.guitool cmd").Should().BeTrue();
+
+            AppSettings.UseConsoleEmulatorForCommands = false;
+            AppSettings.CloseProcessDialog = true;
+            AppSettings.UseBrowseForFileHistory.Value = false;
+
+            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _referenceRepository.Dispose();
+        }
+
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _referenceRepository.Dispose();
+            ReferenceRepository.CleanUp();
         }
 
         [Test]

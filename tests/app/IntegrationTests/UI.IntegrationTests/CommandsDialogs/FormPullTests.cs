@@ -26,7 +26,7 @@ namespace GitExtensions.UITests.CommandsDialogs
             _originalFormPullAction = AppSettings.FormPullAction;
             _originalAutoStash = AppSettings.AutoStash;
 
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
+            _referenceRepository = new ReferenceRepository();
             _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
         }
 
@@ -36,12 +36,14 @@ namespace GitExtensions.UITests.CommandsDialogs
             AppSettings.DefaultPullAction = _originalDefaultPullAction;
             AppSettings.FormPullAction = _originalFormPullAction;
             AppSettings.AutoStash = _originalAutoStash;
+
+            _referenceRepository.Dispose();
         }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _referenceRepository.Dispose();
+            ReferenceRepository.CleanUp();
         }
 
         [Test]

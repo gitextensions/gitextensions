@@ -28,23 +28,13 @@ namespace GitCommandsTests.Submodules
         private IGitModule _repo3Module;
 
         private ISubmoduleStatusProvider _provider;
-        private bool _isInit = false;
 
-        /// <summary>
-        /// The repo creation should only be done once as it slows tests down considerably
-        /// Each test must therefore revert changes after the test
-        /// OneTimeSetUp cannot be used, as the setup must run after BeforeTest in CommonTestUtils\ConfigureJoinableTaskFactoryAttribute.cs
-        /// OneTimeTearDown can be used though
-        /// </summary>
         [SetUp]
         public void SetUp()
         {
-            if (_isInit)
-            {
-                return;
-            }
+            // NB: A previous iteration of this test fixture did reuse the repositories across all of the tests, initializing them only once.
+            //     This saved about 5 seconds in the overall test run, but it was at the cost of test isolation.
 
-            _isInit = true;
             _repo1 = new GitModuleTestHelper("repo1");
             _repo2 = new GitModuleTestHelper("repo2");
             _repo3 = new GitModuleTestHelper("repo3");
@@ -71,8 +61,8 @@ namespace GitCommandsTests.Submodules
             _provider = new SubmoduleStatusProvider();
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
+        [TearDown]
+        public void TearDown()
         {
             _provider.Dispose();
             _repo1.Dispose();

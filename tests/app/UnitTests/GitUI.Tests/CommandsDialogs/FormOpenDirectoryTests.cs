@@ -17,14 +17,20 @@ namespace GitUITests.CommandsDialogs
         [SetUp]
         public void Setup()
         {
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
+            _referenceRepository = new ReferenceRepository();
             _localRepositoryManager = Substitute.For<ILocalRepositoryManager>();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _referenceRepository.Dispose();
         }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _referenceRepository.Dispose();
+            ReferenceRepository.CleanUp();
         }
 
         [Test]

@@ -67,7 +67,7 @@ namespace GitUITests.UserControls
                 new(blameCommit2, 4, 4, "line4"),
             });
 
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
+            _referenceRepository = new ReferenceRepository();
 
             // Creates/updates a file with name in DefaultRepoFileName
             _referenceRepository.CreateCommit("1",
@@ -90,12 +90,13 @@ namespace GitUITests.UserControls
         public void TearDown()
         {
             _blameControl.Dispose();
+            _referenceRepository.Dispose();
         }
 
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            _referenceRepository.Dispose();
+            ReferenceRepository.CleanUp();
         }
 
         [TestCase(true, true, true, true, "author1 - 3/22/2010 - fileName.txt")]
