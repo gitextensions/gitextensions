@@ -13,7 +13,7 @@ namespace CommonTestUtils
 
         private static bool? _isCIBuild;
 
-        private static bool IsCIBuild => _isCIBuild ??= Environment.GetEnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER") != null;
+        private static bool IsCIBuild => _isCIBuild ??= Environment.GetEnvironmentVariable("CI") == "true";
 
         private static void AddPathToCleanupLog(string path)
         {
