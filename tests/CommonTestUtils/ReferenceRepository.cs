@@ -11,8 +11,18 @@ namespace CommonTestUtils
         private static readonly string CleanupLogFileName = Path.GetTempFileName();
         private static readonly object CleanupSync = new();
 
+        private static bool? _isCIBuild;
+
+        private static bool IsCIBuild => _isCIBuild ??= Environment.GetEnvironmentVariable("APPVEYOR_PULL_REQUEST_NUMBER") != null;
+
         private static void AddPathToCleanupLog(string path)
         {
+            // Do not do explicit cleanup during C.I. builds. The VM instance gets discarded anyway.
+            if (IsCIBuild)
+            {
+                return;
+            }
+
             lock (CleanupSync)
             {
                 using (StreamWriter writer = new(CleanupLogFileName, append: true))
