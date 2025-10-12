@@ -1,5 +1,6 @@
 ﻿using System.IO.Abstractions;
 using System.Text;
+using GitCommands.Services;
 using GitExtensions.Extensibility;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
@@ -29,12 +30,25 @@ namespace GitCommands
 
         private string? _overriddenCommitMessage;
 
-        public CommitMessageManager(IMessageBoxService messageBoxService, string workingDirGitDir, Encoding commitEncoding, string? overriddenCommitMessage = null)
-            : this(messageBoxService, workingDirGitDir, commitEncoding, new FileSystem(), overriddenCommitMessage)
+        private readonly string? _commentString;
+
+        public CommitMessageManager(
+            IMessageBoxService messageBoxService,
+            string workingDirGitDir,
+            Encoding commitEncoding,
+            string? commentString = null,
+            string? overriddenCommitMessage = null)
+            : this(messageBoxService, workingDirGitDir, commitEncoding, new FileSystem(), overriddenCommitMessage,commentString)
         {
         }
 
-        internal CommitMessageManager(IMessageBoxService messageBoxService, string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string? overriddenCommitMessage = null)
+        internal CommitMessageManager(
+            IMessageBoxService messageBoxService,
+            string workingDirGitDir,
+            Encoding commitEncoding,
+            IFileSystem fileSystem,
+            string? overriddenCommitMessage = null,
+            string? commentString = null)
         {
             ArgumentNullException.ThrowIfNull(messageBoxService);
 
