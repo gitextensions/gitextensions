@@ -34,7 +34,6 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             base.SettingsToPage();
         }
 
-       
         protected override void PageToSettings()
         {
             AppSettings.ShowErrorsWhenStagingFiles = chkShowErrorsWhenStagingFiles.Checked;

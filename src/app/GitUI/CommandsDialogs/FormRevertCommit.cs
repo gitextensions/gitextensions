@@ -133,6 +133,7 @@ namespace GitUI.CommandsDialogs
                     parentIndex = lvParentsList.SelectedItems[0].Index + 1;
                 }
             }
+
             IMessageBoxService messageBoxService = new WinFormsMessageBoxService(this);
             var commentStrategy = CommentStrategyFactory.GetSelected();
             var commentDefinition = commentStrategy.GetComment(Module);

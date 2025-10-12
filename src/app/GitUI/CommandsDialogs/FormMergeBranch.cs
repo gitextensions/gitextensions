@@ -6,6 +6,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
+using GitUI.GitComments;
 using GitUI.HelperDialogs;
 using GitUI.ScriptsEngine;
 using ResourceManager;

@@ -62,10 +62,8 @@ namespace GitUI.Editor
         }
 
         #endregion
-
         #region Line classifiers
 
-        
         protected bool IsComment(IDocument document, LineSegment line)
         {
             if (string.IsNullOrEmpty(_commentString) || line.Length == 0)

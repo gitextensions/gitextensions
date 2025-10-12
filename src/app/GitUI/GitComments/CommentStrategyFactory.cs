@@ -12,7 +12,6 @@ namespace GitUI.GitComments
             new GitDefaultCommentStrategy()
         };
 
-
         /// <summary>
         /// Gets the existing or default comment strategy.
         /// </summary>
