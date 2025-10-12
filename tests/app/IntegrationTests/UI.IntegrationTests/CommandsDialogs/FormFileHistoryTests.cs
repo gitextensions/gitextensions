@@ -32,7 +32,7 @@ public class FormFileHistoryTests
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        ReferenceRepository.CleanUp();
+        ReferenceRepository.WaitForCleanUpCompletion();
     }
 
     [TestCase("", "file.txt")]

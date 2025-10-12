@@ -96,7 +96,7 @@ namespace GitUITests.UserControls
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            ReferenceRepository.CleanUp();
+            ReferenceRepository.WaitForCleanUpCompletion();
         }
 
         [TestCase(true, true, true, true, "author1 - 3/22/2010 - fileName.txt")]

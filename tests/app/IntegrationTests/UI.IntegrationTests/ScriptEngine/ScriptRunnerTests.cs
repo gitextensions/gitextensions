@@ -82,7 +82,7 @@ namespace GitExtensions.UITests.ScriptEngine
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            ReferenceRepository.CleanUp();
+            ReferenceRepository.WaitForCleanUpCompletion();
         }
 
         [Test]

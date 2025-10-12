@@ -54,7 +54,7 @@ public class SplitterPersistenceTests
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        ReferenceRepository.CleanUp();
+        ReferenceRepository.WaitForCleanUpCompletion();
     }
 
     [Test]

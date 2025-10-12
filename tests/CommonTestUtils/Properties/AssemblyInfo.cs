@@ -1,4 +1,5 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using CommonTestUtils;
 
 // General Information about an assembly is controlled through the following
@@ -8,3 +9,5 @@ using CommonTestUtils;
 
 [assembly: TestAppSettings]
 [assembly: NUnit.Framework.Category("UnitTests")]
+
+[assembly: InternalsVisibleTo("CommonTestUtils.Tests")]

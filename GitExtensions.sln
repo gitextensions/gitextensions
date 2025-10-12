@@ -250,6 +250,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "UnitTests", "UnitTests", "{
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FindLargeFiles.Tests", "tests\plugins\UnitTests\FindLargeFiles.Tests\FindLargeFiles.Tests.csproj", "{85006436-9332-4ADA-89BF-A9541F90F761}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CommonTestUtils.Tests", "tests\CommonTestUtils.Tests\CommonTestUtils.Tests.csproj", "{827ABAF2-8DE7-4652-A4ED-33B56709C681}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -454,6 +456,10 @@ Global
 		{85006436-9332-4ADA-89BF-A9541F90F761}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{85006436-9332-4ADA-89BF-A9541F90F761}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{85006436-9332-4ADA-89BF-A9541F90F761}.Release|Any CPU.Build.0 = Release|Any CPU
+		{827ABAF2-8DE7-4652-A4ED-33B56709C681}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{827ABAF2-8DE7-4652-A4ED-33B56709C681}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{827ABAF2-8DE7-4652-A4ED-33B56709C681}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{827ABAF2-8DE7-4652-A4ED-33B56709C681}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -524,6 +530,7 @@ Global
 		{1110DC9C-5A1E-43E8-A91C-819B3B5207A1} = {449DD87E-63E9-4C61-B797-A94F8CBE8837}
 		{0C71ED08-A7BC-42CC-B690-81F53C62A731} = {1110DC9C-5A1E-43E8-A91C-819B3B5207A1}
 		{85006436-9332-4ADA-89BF-A9541F90F761} = {0C71ED08-A7BC-42CC-B690-81F53C62A731}
+		{827ABAF2-8DE7-4652-A4ED-33B56709C681} = {449DD87E-63E9-4C61-B797-A94F8CBE8837}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {ECECB7EA-BCCF-44AD-B63E-C2FA45589FB0}

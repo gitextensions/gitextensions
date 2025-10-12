@@ -38,7 +38,7 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            ReferenceRepository.CleanUp();
+            ReferenceRepository.WaitForCleanUpCompletion();
         }
 
         [Test]
