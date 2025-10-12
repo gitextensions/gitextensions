@@ -1,0 +1,145 @@
+name: GitExtensions Build (x64, arm64)
+
+on:
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+  # Manually triggered via the Actions UI, with inputs
+  workflow_dispatch:
+    inputs:
+      ge-release-version:
+        description: "GE release version"
+        required: true
+        type: string
+        default: '33.33.33' # for dev
+      run-x64-tests:
+        description: "Run tests for x64 build"
+        type: boolean
+        default: true
+      run-arm64-tests:
+        description: "Run tests for arm64 build"
+        type: boolean
+        default: false # skip arm64 test by default, as it doesn't complete, resulting in timeout...
+
+env:
+  # version is '33.33.33' for PR/push, or take it from user's input when manually triggered,
+  # then append the current run number
+  ge-version: ${{ github.event_name == 'workflow_dispatch' && inputs.ge-release-version || '33.33.33' }}.${{ github.run_number }}
+
+jobs:
+  build:
+    name: Build and Test (${{ matrix.os }}, .NET ${{ matrix.dotnet-version }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-latest, windows-11-arm ]
+        dotnet-version: [ 9.0.x ]
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 60
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+
+      - name: Use Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Set up .NET ${{ matrix.dotnet-version }}
+        uses: actions/setup-dotnet@v5
+        with:
+          dotnet-version: ${{ matrix.dotnet-version }}
+
+      - name: Install WiX
+        run: dotnet tool install --global wix
+
+      - name: Set up common build arguments
+        run: |
+          $buildArgs = '/p:ContinuousIntegrationBuild=true'
+          echo "buildArgs=$buildArgs" >> $env:GITHUB_ENV
+          $nativeBuildArgs = '/p:VSWherePath="C:\Program Files (x86)\Microsoft Visual Studio\Installer"'
+          echo "nativeBuildArgs=$nativeBuildArgs" >> $env:GITHUB_ENV
+          echo "geVersionText=${{ env.ge-version }}" >> $env:GITHUB_ENV
+
+      - name: Set up extra build arguments for PR
+        if: github.event_name == 'pull_request'
+        run: |
+          $shortSha = $(git rev-parse --short ${{ github.event.pull_request.head.sha }})
+          $buildArgs = $env:buildArgs
+          $buildArgs += " /p:GitCommit=$shortSha /p:GitSha=${{ github.event.pull_request.head.sha }}"
+          echo "buildArgs=$buildArgs" >> $env:GITHUB_ENV
+
+      - name: Set up extra build arguments for Arm64
+        if: runner.arch == 'arm64'
+        run: |
+          $buildArgs = "$env:buildArgs /p:TargetPlatform=arm64"
+          echo "buildArgs=$buildArgs" >> $env:GITHUB_ENV
+          $nativeBuildArgs = "/p:TargetPlatform=arm64 $env:nativeBuildArgs"
+          echo "nativeBuildArgs=$nativeBuildArgs" >> $env:GITHUB_ENV
+          $geVersionText = "${env:geVersionText}-arm64"
+          echo "geVersionText=$geVersionText" >> $env:GITHUB_ENV
+
+      - name: Set up GE version
+        run: |
+          cd eng
+          python set_version_to.py -v ${{ env.ge-version }} -t $env:geVersionText
+          cd ..
+
+      - name: Build GE native components
+        run: |
+          dotnet build .\src\native\build.proj -c Release --verbosity q --nologo $env:nativeBuildArgs
+
+      - name: Build GE app
+        run: |
+          dotnet build -c Release --verbosity q --nologo $env:buildArgs
+          # We are done with the build, reset all pending changes
+          git reset --hard HEAD
+
+      - name: Verify localisation of new strings
+        run: |
+          # Verify that new strings (if any) have been processed and ready for localisation
+          Push-Location .\src\app\GitExtensions
+          dotnet msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m
+          Pop-Location
+
+      - name: Test - for PR/push (but skip arm64 tests by default)
+        id: pr_push_test
+        if: github.event_name != 'workflow_dispatch' && runner.arch != 'arm64'
+        run: dotnet test -c Release --no-restore --no-build --verbosity m --test-adapter-path:. --logger:trx /bl:.\artifacts\log\tests.binlog
+
+      - name: Test - when manually triggered
+        id: dispatched_test
+        if: github.event_name == 'workflow_dispatch' && ((runner.arch == 'arm64' && inputs.run-arm64-tests) || (runner.arch == 'x64' && inputs.run-x64-tests))
+        run: dotnet test -c Release --no-restore --no-build --verbosity m --test-adapter-path:. --logger:trx /bl:.\artifacts\log\tests.binlog
+
+      - name: Upload test logs if test failure
+        if: failure() && (steps.pr_push_test.conclusion == 'failure' || steps.dispatched_test.conclusion == 'failure')
+        uses: actions/upload-artifact@v4
+        with:
+          name: FailedTestLogs-v${{ env.ge-version }}-${{ runner.arch }}
+          path: |
+            artifacts/log/tests.binlog
+            artifacts/Release/TestsResults/*.trx
+          retention-days: 7
+
+      - name: Package GE app for deployment
+        run: |
+          dotnet publish -c Release --no-build $env:buildArgs
+
+      - name: Upload GE distribution files - when manually triggered
+        if: github.event_name == 'workflow_dispatch'
+        uses: actions/upload-artifact@v4
+        with:
+          name: GE-v${{ env.ge-version }}-${{ runner.arch }}-dist
+          path: |
+            artifacts/Release/publish/*.msi
+            artifacts/Release/publish/*.zip
+          retention-days: 7
+
