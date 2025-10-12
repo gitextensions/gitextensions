@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
+using GitCommands.Services;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
@@ -211,10 +212,10 @@ namespace GitUI.CommandsDialogs
 
             splitRight.Panel2MinSize = DpiUtil.Scale(100);
 
+            IMessageBoxService messageBoxService = new WinFormsMessageBoxService(this);
             var commentStrategy = CommentStrategyFactory.GetSelected();
             var commentDefinition = commentStrategy.GetComment(Module);
-
-            _commitMessageManager = new CommitMessageManager(this, Module.WorkingDirGitDir, Module.CommitEncoding, commentString: commentDefinition, overriddenCommitMessage: commitMessage);
+            _commitMessageManager = new CommitMessageManager(messageBoxService, Module.WorkingDirGitDir, Module.CommitEncoding, commentString: commentDefinition, overriddenCommitMessage: commitMessage);
 
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;

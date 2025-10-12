@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitCommands.Git;
+using GitCommands.Services;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
@@ -132,11 +133,11 @@ namespace GitUI.CommandsDialogs
                     parentIndex = lvParentsList.SelectedItems[0].Index + 1;
                 }
             }
-
+            IMessageBoxService messageBoxService = new WinFormsMessageBoxService(this);
             var commentStrategy = CommentStrategyFactory.GetSelected();
             var commentDefinition = commentStrategy.GetComment(Module);
 
-            CommitMessageManager commitMessageManager = new(this, Module.WorkingDirGitDir, Module.CommitEncoding, commentString: commentDefinition);
+            CommitMessageManager commitMessageManager = new(messageBoxService, Module.WorkingDirGitDir, Module.CommitEncoding, commentString: commentDefinition);
 
             string existingCommitMessage = ThreadHelper.JoinableTaskFactory.Run(() => commitMessageManager.GetMergeOrCommitMessageAsync());
 

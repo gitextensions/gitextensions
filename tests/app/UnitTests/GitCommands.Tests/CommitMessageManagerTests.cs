@@ -4,6 +4,7 @@ using System.Text;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
+using GitCommands.Services;
 using NSubstitute;
 using static System.Net.Mime.MediaTypeNames;
 
@@ -34,7 +35,9 @@ namespace GitCommandsTests
         private CommitMessageManager _manager;
 
         // We don't expect any failures so that we won't be switching to the main thread or showing messages
-        private readonly Control _owner = ReferenceRepository.DummyOwner;
+        // private readonly Control _owner = ReferenceRepository.DummyOwner;
+
+        private IMessageBoxService _messageBoxService = new NUnitMessageBoxService();
 
         public CommitMessageManagerTests()
         {
@@ -68,7 +71,7 @@ namespace GitCommandsTests
             _fileSystem.Directory.Returns(_directory);
             _fileSystem.Path.Returns(path);
 
-            _manager = new CommitMessageManager(_owner, _workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage: null);
+            _manager = new CommitMessageManager(_messageBoxService, _workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage: null);
         }
 
         [TearDown]
@@ -85,13 +88,21 @@ namespace GitCommandsTests
 
         public void SetupExtra(string overriddenCommitMessage)
         {
-            _manager = new CommitMessageManager(_owner, _workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage);
+            _manager = new CommitMessageManager(_messageBoxService, _workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage);
         }
 
         [TestCase(null)]
         public void Constructor_should_throw(string workingDirGitDir)
         {
-            ((Action)(() => new CommitMessageManager(_owner, workingDirGitDir, _encoding))).Should().Throw<ArgumentNullException>();
+            // Arrange
+            IMessageBoxService messageBoxService = _messageBoxService;
+            Encoding encoding = _encoding;
+
+            // Act
+            Action act = () => new CommitMessageManager(messageBoxService, workingDirGitDir, encoding);
+
+            // Assert
+            act.Should().Throw<ArgumentNullException>();
         }
 
         [TestCase("")]
@@ -99,7 +110,8 @@ namespace GitCommandsTests
         [TestCase("::")]
         public void Constructor_should_not_throw(string workingDirGitDir)
         {
-            new CommitMessageManager(_owner, workingDirGitDir, _encoding).Should().NotBeNull();
+            var commitMessageManager = new CommitMessageManager(_messageBoxService, workingDirGitDir, _encoding);
+            commitMessageManager.Should().NotBeNull();
         }
 
         [Test]
@@ -212,7 +224,7 @@ namespace GitCommandsTests
         [Test]
         public async Task WriteCommitMessageToFileAsync_should_write_COMMITMESSAGE()
         {
-            CommitMessageManager manager = new(_owner, _referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
+            CommitMessageManager manager = new(_messageBoxService, _referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
 
             File.Exists(manager.CommitMessagePath).Should().BeFalse();
 
@@ -231,7 +243,7 @@ namespace GitCommandsTests
             GitModule module = _referenceRepository.Module;
             module.SetSetting("i18n.commitencoding", encodingName);
             module.CommitEncoding.Preamble.Length.Should().Be(0);
-            CommitMessageManager manager = new(_owner, _referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding);
+            CommitMessageManager manager = new(_messageBoxService, _referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding);
 
             File.Exists(manager.CommitMessagePath).Should().BeFalse();
 
@@ -245,7 +257,7 @@ namespace GitCommandsTests
         [Test]
         public async Task WriteCommitMessageToFileAsync_should_write_MERGE_MSG()
         {
-            CommitMessageManager manager = new(_owner, _referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
+            CommitMessageManager manager = new(_messageBoxService, _referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
 
             File.Exists(manager.MergeMessagePath).Should().BeFalse();
 
