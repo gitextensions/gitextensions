@@ -84,7 +84,7 @@ public class GitModuleTestHelper : IDisposable
     /// Integration build, based on the presence of an environment variable "CI"
     /// which is set by AppVeyor.
     /// </summary>
-    private static bool IsCIBuild => _isCIBuild ??= Environment.GetEnvironmentVariable("CI") == "true";
+    internal static bool IsCIBuild => _isCIBuild ??= Environment.GetEnvironmentVariable("CI") == "true";
 
     /// <summary>
     /// Creates a new file, writes the specified string to the file, and then closes the file.
