@@ -81,10 +81,10 @@ public class GitModuleTestHelper : IDisposable
 
     /// <summary>
     /// Gets a value indicating whether tests are running as part of a Continuous
-    /// Integration build, based on the presence of an environment variable "APPVEYOR"
+    /// Integration build, based on the presence of an environment variable "CI"
     /// which is set by AppVeyor.
     /// </summary>
-    internal static bool IsCIBuild => _isCIBuild ??= Environment.GetEnvironmentVariable("APPVEYOR") == "true";
+    internal static bool IsCIBuild => _isCIBuild ??= Environment.GetEnvironmentVariable("CI") == "True";
 
     /// <summary>
     /// Creates a new file, writes the specified string to the file, and then closes the file.
