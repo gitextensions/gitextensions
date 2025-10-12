@@ -6,6 +6,7 @@ using FluentAssertions;
 using GitCommands;
 using GitCommands.Services;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace GitCommandsTests
@@ -110,7 +111,7 @@ namespace GitCommandsTests
         [TestCase("::")]
         public void Constructor_should_not_throw(string workingDirGitDir)
         {
-            var commitMessageManager = new CommitMessageManager(_messageBoxService, workingDirGitDir, _encoding);
+            CommitMessageManager commitMessageManager = new(_messageBoxService, workingDirGitDir, _encoding);
             commitMessageManager.Should().NotBeNull();
         }
 
@@ -432,7 +433,136 @@ namespace GitCommandsTests
             ClassicAssert.That(!deletedM);
         }
 
-        
+        // Exception / message box tests
+
+        [Test]
+        public async Task GetMergeOrCommitMessageAsync_should_call_messageboxservice_on_exception()
+        {
+            IMessageBoxService messageBoxService = Substitute.For<IMessageBoxService>();
+            messageBoxService.ShowInfoMessageAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.CompletedTask);
+
+            FileBase file = Substitute.For<FileBase>();
+            file.Exists(_commitMessagePath).Returns(true);
+            file.Exists(_mergeMessagePath).Returns(false);
+            file.ReadAllTextAsync(_commitMessagePath, _encoding, cancellationToken: default).Throws(new IOException("read boom"));
+
+            DirectoryBase directory = Substitute.For<DirectoryBase>();
+
+            PathBase path = Substitute.For<PathBase>();
+            path.Combine(Arg.Any<string>(), Arg.Any<string>()).Returns(x => Path.Combine((string)x[0], (string)x[1]));
+
+            IFileSystem fileSystem = Substitute.For<IFileSystem>();
+            fileSystem.File.Returns(file);
+            fileSystem.Directory.Returns(directory);
+            fileSystem.Path.Returns(path);
+
+            CommitMessageManager manager = new(messageBoxService, _workingDirGitDir, _encoding, fileSystem, overriddenCommitMessage: null);
+
+            string result = await manager.GetMergeOrCommitMessageAsync();
+
+            result.Should().BeEmpty();
+            await messageBoxService.Received(1).ShowInfoMessageAsync(
+                Arg.Is<string>(m => m.Contains("read boom") && m.Contains(_commitMessagePath)),
+                "Cannot read commit message");
+        }
+
+        [Test]
+        public async Task WriteCommitMessageToFileAsync_should_call_messageboxservice_on_exception()
+        {
+            IMessageBoxService messageBoxService = Substitute.For<IMessageBoxService>();
+            messageBoxService.ShowInfoMessageAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.CompletedTask);
+
+            FileBase file = Substitute.For<FileBase>();
+            DirectoryBase directory = Substitute.For<DirectoryBase>();
+            directory.Exists(Arg.Any<string>()).Returns(true);
+
+            file.WriteAllTextAsync(_commitMessagePath, Arg.Any<string>(), _encoding, cancellationToken: default)
+                .Throws(new IOException("write boom"));
+
+            PathBase path = Substitute.For<PathBase>();
+            path.Combine(Arg.Any<string>(), Arg.Any<string>())
+                .Returns(x => Path.Combine((string)x[0], (string)x[1]));
+
+            IFileSystem fileSystem = Substitute.For<IFileSystem>();
+            fileSystem.File.Returns(file);
+            fileSystem.Directory.Returns(directory);
+            fileSystem.Path.Returns(path);
+
+            CommitMessageManager manager = new(messageBoxService, _workingDirGitDir, _encoding, fileSystem, overriddenCommitMessage: null);
+
+            await manager.WriteCommitMessageToFileAsync("msg", CommitMessageType.Normal, false, false);
+
+            await messageBoxService.Received(1).ShowInfoMessageAsync(
+                Arg.Is<string>(m => m.Contains("write boom") && m.Contains(_commitMessagePath)),
+                "Cannot save commit message");
+        }
+
+        [Test]
+        public async Task GetAmendStateAsync_should_call_messageboxservice_on_exception()
+        {
+            IMessageBoxService messageBoxService = Substitute.For<IMessageBoxService>();
+            messageBoxService.ShowInfoMessageAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.CompletedTask);
+
+            FileBase file = Substitute.For<FileBase>();
+            file.Exists(_amendSaveStatePath).Returns(true);
+            file.ReadAllTextAsync(_amendSaveStatePath, Encoding.Default, cancellationToken: default)
+                .Throws(new IOException("amend read boom"));
+
+            DirectoryBase directory = Substitute.For<DirectoryBase>();
+
+            PathBase path = Substitute.For<PathBase>();
+            path.Combine(Arg.Any<string>(), Arg.Any<string>())
+                .Returns(x => Path.Combine((string)x[0], (string)x[1]));
+
+            IFileSystem fileSystem = Substitute.For<IFileSystem>();
+            fileSystem.File.Returns(file);
+            fileSystem.Directory.Returns(directory);
+            fileSystem.Path.Returns(path);
+
+            CommitMessageManager manager = new(messageBoxService, _workingDirGitDir, _encoding, fileSystem, overriddenCommitMessage: null);
+
+            AppSettings.RememberAmendCommitState = true;
+
+            bool amend = await manager.GetAmendStateAsync();
+
+            amend.Should().BeFalse();
+            await messageBoxService.Received(1).ShowInfoMessageAsync(
+                Arg.Is<string>(m => m.Contains("amend read boom") && m.Contains(_amendSaveStatePath)),
+                "Cannot read amend state");
+        }
+
+        [Test]
+        public async Task SetAmendStateAsync_should_call_messageboxservice_on_exception_when_writing_true()
+        {
+            IMessageBoxService messageBoxService = Substitute.For<IMessageBoxService>();
+            messageBoxService.ShowInfoMessageAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.CompletedTask);
+
+            FileBase file = Substitute.For<FileBase>();
+            DirectoryBase directory = Substitute.For<DirectoryBase>();
+            directory.Exists(Path.GetDirectoryName(_amendSaveStatePath)).Returns(true);
+
+            file.WriteAllTextAsync(_amendSaveStatePath, true.ToString(), Encoding.Default, cancellationToken: default)
+                .Throws(new IOException("amend write boom"));
+
+            PathBase path = Substitute.For<PathBase>();
+            path.Combine(Arg.Any<string>(), Arg.Any<string>())
+                .Returns(x => Path.Combine((string)x[0], (string)x[1]));
+
+            IFileSystem fileSystem = Substitute.For<IFileSystem>();
+            fileSystem.File.Returns(file);
+            fileSystem.Directory.Returns(directory);
+            fileSystem.Path.Returns(path);
+
+            CommitMessageManager manager = new(messageBoxService, _workingDirGitDir, _encoding, fileSystem, overriddenCommitMessage: null);
+
+            AppSettings.RememberAmendCommitState = true;
+
+            await manager.SetAmendStateAsync(true);
+
+            await messageBoxService.Received(1).ShowInfoMessageAsync(
+                Arg.Is<string>(m => m.Contains("amend write boom") && m.Contains(_amendSaveStatePath)),
+                "Cannot save amend state");
+        }
 
         [Test, TestCaseSource(typeof(FormatCommitMessageTestData), nameof(FormatCommitMessageTestData.FormatCommitMessageTestCases))]
         public void FormatCommitMessage_should_return_expected(
@@ -567,7 +697,5 @@ namespace GitCommandsTests
                 }
             }
         }
-
-
     }
 }
