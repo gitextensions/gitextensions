@@ -7,6 +7,8 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI;
+using Microsoft.VisualStudio.Threading;
+using NUnit.Framework;
 
 namespace CommonTestUtils;
 
@@ -14,11 +16,14 @@ public class GitModuleTestHelper : IDisposable
 {
     private static bool? _isCIBuild;
 
-    private const int MaximumConcurrentCleanUpOperations = 8; // just in case
+    private static TaskManager CleanUpOperations;
 
-    private static SynchronizingCounter PendingCleanUpOperations = new();
+    static GitModuleTestHelper()
+    {
+        ThreadHelper.JoinableTaskContext ??= new JoinableTaskContext();
 
-    private static Semaphore CleanUpOperationLimiter = new(initialCount: MaximumConcurrentCleanUpOperations, maximumCount: MaximumConcurrentCleanUpOperations);
+        CleanUpOperations = ThreadHelper.CreateTaskManager();
+    }
 
     /// <summary>
     /// Creates a throw-away new repository in a temporary location.
@@ -213,7 +218,7 @@ public class GitModuleTestHelper : IDisposable
 
     public static void WaitForCleanUpCompletion()
     {
-        PendingCleanUpOperations.WaitForZero();
+        CleanUpOperations.JoinPendingOperations();
     }
 
     public void Dispose()
@@ -238,10 +243,8 @@ public class GitModuleTestHelper : IDisposable
 
             if (!IsCIBuild)
             {
-                CleanUpOperationLimiter.WaitOne();
-                PendingCleanUpOperations.Increment();
-
-                Task.Run(() => CleanUp(TemporaryPath));
+                CleanUpOperations.FileAndForget(
+                    () => CleanUp(TemporaryPath));
             }
         }
         catch
@@ -284,11 +287,6 @@ public class GitModuleTestHelper : IDisposable
         catch
         {
             // do nothing
-        }
-        finally
-        {
-            PendingCleanUpOperations.Decrement();
-            CleanUpOperationLimiter.Release();
         }
     }
 }
