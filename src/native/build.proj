@@ -15,7 +15,7 @@
   <Target Name="Build">
     <PropertyGroup>
       <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
-      <VSWherePath>$([MSBuild]::NormalizePath('$(Pkgvswhere)', 'tools'))</VSWherePath>
+      <VSWherePath Condition="'$(VSWherePath)' == ''">$([MSBuild]::NormalizePath('$(Pkgvswhere)', 'tools'))</VSWherePath>
     </PropertyGroup>
 
     <!-- Work out VS installation path, so we can find MSBuild.exe -->
