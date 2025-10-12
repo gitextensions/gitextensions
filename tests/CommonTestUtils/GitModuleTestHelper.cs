@@ -14,11 +14,15 @@ namespace CommonTestUtils;
 public class GitModuleTestHelper : IDisposable
 {
 #if CI_BUILD
+    internal const bool IsCIBuild = true;
+
     static GitModuleTestHelper()
     {
         NUnit.Framework.TestContext.WriteLine("Disabling explicit test clean-up for continuous integration test environment.");
     }
 #else
+    internal const bool IsCIBuild = false;
+
     private static TaskManager CleanUpOperations;
 
     static GitModuleTestHelper()
