@@ -81,7 +81,7 @@ namespace GitCommandsTests
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            ReferenceRepository.CleanUp();
+            ReferenceRepository.WaitForCleanUpCompletion();
         }
 
         public void SetupExtra(string overriddenCommitMessage)

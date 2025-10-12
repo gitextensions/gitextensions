@@ -25,6 +25,12 @@ namespace GitCommandsTests
             _refRepo.Dispose();
         }
 
+        [OneTimeTearDown]
+        public void OneTimeTearDown()
+        {
+            ReferenceRepository.WaitForCleanUpCompletion();
+        }
+
         [Test]
         public void GetCommitCount_Should_manage_ambiguous_argument()
         {

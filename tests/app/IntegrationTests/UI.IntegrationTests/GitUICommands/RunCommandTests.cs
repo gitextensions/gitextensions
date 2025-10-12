@@ -51,7 +51,7 @@ namespace GitUITests.GitUICommandsTests
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            ReferenceRepository.CleanUp();
+            ReferenceRepository.WaitForCleanUpCompletion();
         }
 
         [Test]

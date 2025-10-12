@@ -30,7 +30,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            ReferenceRepository.CleanUp();
+            ReferenceRepository.WaitForCleanUpCompletion();
         }
 
         [TestCase(null, false, "")]

@@ -60,7 +60,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            ReferenceRepository.CleanUp();
+            ReferenceRepository.WaitForCleanUpCompletion();
         }
 
         [Test]

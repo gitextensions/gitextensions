@@ -57,7 +57,7 @@ namespace GitExtensions.UITests.UserControls.CommitInfo
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            ReferenceRepository.CleanUp();
+            ReferenceRepository.WaitForCleanUpCompletion();
         }
 
         [Test]

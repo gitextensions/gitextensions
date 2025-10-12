@@ -31,7 +31,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [OneTimeTearDown]
         public void OneTimeTearDown()
         {
-            ReferenceRepository.CleanUp();
+            ReferenceRepository.WaitForCleanUpCompletion();
         }
 
         // Note: the DataBindings between ForcePushTags and ForcePushBranches or ckForceWithLease (depending on Git version) do not function in this test environment

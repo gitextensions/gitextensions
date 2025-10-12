@@ -7,11 +7,24 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI;
+using Microsoft.VisualStudio.Threading;
+using NUnit.Framework;
 
 namespace CommonTestUtils;
 
 public class GitModuleTestHelper : IDisposable
 {
+    private static bool? _isCIBuild;
+
+    private static TaskManager CleanUpOperations;
+
+    static GitModuleTestHelper()
+    {
+        ThreadHelper.JoinableTaskContext ??= new JoinableTaskContext();
+
+        CleanUpOperations = ThreadHelper.CreateTaskManager();
+    }
+
     /// <summary>
     /// Creates a throw-away new repository in a temporary location.
     /// </summary>
@@ -67,6 +80,13 @@ public class GitModuleTestHelper : IDisposable
     public string TemporaryPath { get; }
 
     /// <summary>
+    /// Gets a value indicating whether tests are running as part of a Continuous
+    /// Integration build, based on the presence of an environment variable "CI"
+    /// which is set by AppVeyor.
+    /// </summary>
+    private static bool IsCIBuild => _isCIBuild ??= Environment.GetEnvironmentVariable("CI") == "true";
+
+    /// <summary>
     /// Creates a new file, writes the specified string to the file, and then closes the file.
     /// If the target file already exists, it is overwritten.
     /// </summary>
@@ -102,6 +122,14 @@ public class GitModuleTestHelper : IDisposable
         EnsureCreatedInTempFolder(parentDir);
 
         return CreateFile(parentDir, fileName, fileContent);
+    }
+
+    private void EnsureCreatedInTempFolder(string path)
+    {
+        if (!path.StartsWith(TemporaryPath))
+        {
+            throw new ArgumentException("The given module does not belong to this helper.");
+        }
     }
 
     /// <summary>
@@ -188,38 +216,49 @@ public class GitModuleTestHelper : IDisposable
         });
     }
 
+    public static void WaitForCleanUpCompletion()
+    {
+        CleanUpOperations.JoinPendingOperations();
+    }
+
     public void Dispose()
     {
-        // if settings have been set, the corresponding local config file is in the directory
-        // we want to delete, so we need to make sure the timers that will try to auto-save there
-        // are stopped before actually deleting, else the timers will throw on a background thread.
-        // Note that the intermittent failures mentioned below are likely related too.
-        if (Module.GetTestAccessor().EffectiveSettings is not null)
+        try
         {
-            if (ThreadHelper.JoinableTaskContext is null)
+            // if settings have been set, the corresponding local config file is in the directory
+            // we want to delete, so we need to make sure the timers that will try to auto-save there
+            // are stopped before actually deleting, else the timers will throw on a background thread.
+            // Note that the intermittent failures mentioned below are likely related too.
+            if (Module.GetTestAccessor().EffectiveSettings is not null)
             {
-                Trace.WriteLine($"{nameof(ThreadHelper)}{nameof(ThreadHelper.JoinableTaskContext)} should not be null if {nameof(Module.EffectiveSettings)} exist! Disposing too late?");
+                if (ThreadHelper.JoinableTaskContext is null)
+                {
+                    Trace.WriteLine($"{nameof(ThreadHelper)}{nameof(ThreadHelper.JoinableTaskContext)} should not be null if {nameof(Module.EffectiveSettings)} exist! Disposing too late?");
+                }
+                else
+                {
+                    Module.EffectiveSettings.SettingsCache.Dispose();
+                }
             }
-            else
+
+            if (!IsCIBuild)
             {
-                Module.EffectiveSettings.SettingsCache.Dispose();
+                CleanUpOperations.FileAndForget(
+                    () => CleanUp(TemporaryPath));
             }
         }
-
-        if (!ExplicitCleanUpForTests)
+        catch
         {
-            CleanUp(TemporaryPath);
+            // Do nothing.
         }
     }
 
-    internal bool ExplicitCleanUpForTests = false;
-
-    internal static void CleanUp(string path)
+    private static void CleanUp(string path)
     {
         try
         {
             // Directory.Delete seems to intermittently fail, so delete the files first before deleting folders
-            foreach (string file in Directory.GetFiles(path, "*", SearchOption.AllDirectories))
+            foreach (string file in Directory.EnumerateFiles(path, "*", SearchOption.AllDirectories))
             {
                 if (File.GetAttributes(file).HasFlag(FileAttributes.ReparsePoint))
                 {
@@ -248,14 +287,6 @@ public class GitModuleTestHelper : IDisposable
         catch
         {
             // do nothing
-        }
-    }
-
-    private void EnsureCreatedInTempFolder(string path)
-    {
-        if (!path.StartsWith(TemporaryPath))
-        {
-            throw new ArgumentException("The given module does not belong to this helper.");
         }
     }
 }
