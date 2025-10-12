@@ -433,10 +433,14 @@ namespace GitCommandsTests
         }
 
         [Test, TestCaseSource(typeof(FormatCommitMessageTestData), nameof(FormatCommitMessageTestData.FormatCommitMessageTestCases))]
-        public void FormatCommitMessage(
-        string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty, string expectedMessage)
+        public void FormatCommitMessage_should_return_expected(
+    string commitMessageText,
+    bool usingCommitTemplate,
+    bool ensureCommitMessageSecondLineEmpty,
+    string expectedMessage,
+    string commentString)
         {
-            CommitMessageManager cut = new CommitMessageManager(null, null, null);
+            CommitMessageManager cut = new(_messageBoxService, string.Empty, null, commentString);
             string commitMessage = cut.FormatCommitMessage(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
 
             commitMessage.Should().Be(expectedMessage);
@@ -445,41 +449,46 @@ namespace GitCommandsTests
         public class FormatCommitMessageTestData
         {
             private static readonly string NL = Environment.NewLine;
+            private static readonly string[] CommentStrings = new[] { "#", ";", "//" };
 
             public static IEnumerable FormatCommitMessageTestCases
             {
                 get
                 {
-                    // string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty, string expectedMessage
-                    yield return new TestCaseData(new object[] { null, false, false, "" });
-                    yield return new TestCaseData(new object[] { null, true, false, "" });
-                    yield return new TestCaseData(new object[] { null, false, true, "" });
-                    yield return new TestCaseData(new object[] { null, true, true, "" });
-                    yield return new TestCaseData(new object[] { "", false, false, "" });
-                    yield return new TestCaseData(new object[] { "", true, false, "" });
-                    yield return new TestCaseData(new object[] { "", false, true, "" });
-                    yield return new TestCaseData(new object[] { "", true, true, "" });
-                    yield return new TestCaseData(new object[] { "\n", false, false, NL + NL });
-                    yield return new TestCaseData(new object[] { "\n", true, false, NL + NL });
-                    yield return new TestCaseData(new object[] { "\n", false, true, NL + NL });
-                    yield return new TestCaseData(new object[] { "\n", true, true, NL + NL });
-                    yield return new TestCaseData(new object[] { "1", true, false, "1" + NL });
-                    yield return new TestCaseData(new object[] { "#1", false, false, "#1" + NL });
-                    yield return new TestCaseData(new object[] { "#1", true, false, "" });
-                    yield return new TestCaseData(new object[] { "1\n\n3", false, false, "1" + NL + NL + "3" + NL });
-                    yield return new TestCaseData(new object[] { "1\n\n3", false, true, "1" + NL + NL + "3" + NL });
-                    yield return new TestCaseData(new object[] { "1\n2\n3", false, false, "1" + NL + "2" + NL + "3" + NL });
-                    yield return new TestCaseData(new object[] { "1\n2\n3", false, true, "1" + NL + NL + "2" + NL + "3" + NL });
-                    yield return new TestCaseData(new object[] { "#0\n1\n\n3", true, false, "1" + NL + NL + "3" + NL });
-                    yield return new TestCaseData(new object[] { "#0\n1\n\n3", true, true, "1" + NL + NL + "3" + NL });
-                    yield return new TestCaseData(new object[] { "#0\n1\n2\n3", true, false, "1" + NL + "2" + NL + "3" + NL });
-                    yield return new TestCaseData(new object[] { "#0\n1\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL });
-                    yield return new TestCaseData(new object[] { "#0\n1\n#0\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL });
-                    yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10", true, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL });
-                    yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL });
-                    yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10\n", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL + NL });
+                    foreach (string commentString in CommentStrings)
+                    {
+                        yield return new TestCaseData(new object[] { null, false, false, "", commentString });
+                        yield return new TestCaseData(new object[] { null, true, false, "", commentString });
+                        yield return new TestCaseData(new object[] { null, false, true, "", commentString });
+                        yield return new TestCaseData(new object[] { null, true, true, "", commentString });
+                        yield return new TestCaseData(new object[] { "", false, false, "", commentString });
+                        yield return new TestCaseData(new object[] { "", true, false, "", commentString });
+                        yield return new TestCaseData(new object[] { "", false, true, "", commentString });
+                        yield return new TestCaseData(new object[] { "", true, true, "", commentString });
+                        yield return new TestCaseData(new object[] { "\n", false, false, NL + NL, commentString });
+                        yield return new TestCaseData(new object[] { "\n", true, false, NL + NL, commentString });
+                        yield return new TestCaseData(new object[] { "\n", false, true, NL + NL, commentString });
+                        yield return new TestCaseData(new object[] { "\n", true, true, NL + NL, commentString });
+                        yield return new TestCaseData(new object[] { "1", true, false, "1" + NL, commentString });
+                        yield return new TestCaseData(new object[] { commentString + "1", false, false, commentString + "1" + NL, commentString });
+                        yield return new TestCaseData(new object[] { commentString + "1", true, false, "", commentString });
+                        yield return new TestCaseData(new object[] { "1\n\n3", false, false, "1" + NL + NL + "3" + NL, commentString });
+                        yield return new TestCaseData(new object[] { "1\n\n3", false, true, "1" + NL + NL + "3" + NL, commentString });
+                        yield return new TestCaseData(new object[] { "1\n2\n3", false, false, "1" + NL + "2" + NL + "3" + NL, commentString });
+                        yield return new TestCaseData(new object[] { "1\n2\n3", false, true, "1" + NL + NL + "2" + NL + "3" + NL, commentString });
+                        yield return new TestCaseData(new object[] { commentString + "0\n1\n\n3", true, false, "1" + NL + NL + "3" + NL, commentString });
+                        yield return new TestCaseData(new object[] { commentString + "0\n1\n\n3", true, true, "1" + NL + NL + "3" + NL, commentString });
+                        yield return new TestCaseData(new object[] { commentString + "0\n1\n2\n3", true, false, "1" + NL + "2" + NL + "3" + NL, commentString });
+                        yield return new TestCaseData(new object[] { commentString + "0\n1\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL, commentString });
+                        yield return new TestCaseData(new object[] { commentString + "0\n1\n" + commentString + "0\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL, commentString });
+                        yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10", true, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL, commentString });
+                        yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL, commentString });
+                        yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10\n", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL + NL, commentString });
+                    }
                 }
             }
         }
+
+
     }
 }
