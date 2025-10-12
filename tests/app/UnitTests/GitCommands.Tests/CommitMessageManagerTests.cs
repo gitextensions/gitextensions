@@ -432,13 +432,15 @@ namespace GitCommandsTests
             ClassicAssert.That(!deletedM);
         }
 
+        
+
         [Test, TestCaseSource(typeof(FormatCommitMessageTestData), nameof(FormatCommitMessageTestData.FormatCommitMessageTestCases))]
         public void FormatCommitMessage_should_return_expected(
-    string commitMessageText,
-    bool usingCommitTemplate,
-    bool ensureCommitMessageSecondLineEmpty,
-    string expectedMessage,
-    string commentString)
+            string commitMessageText,
+            bool usingCommitTemplate,
+            bool ensureCommitMessageSecondLineEmpty,
+            string expectedMessage,
+            string commentString)
         {
             CommitMessageManager cut = new(_messageBoxService, string.Empty, null, commentString);
             string commitMessage = cut.FormatCommitMessage(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
@@ -446,6 +448,83 @@ namespace GitCommandsTests
             commitMessage.Should().Be(expectedMessage);
         }
 
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("#")]
+        [TestCase(";")]
+        [TestCase("//")]
+        public void FormatCommitMessage_should_remove_comment_line_when_using_template(string? commentString)
+        {
+            // Arrange
+            CommitMessageManager cut = new(_messageBoxService, string.Empty, Encoding.UTF8, commentString);
+            string input = commentString is not null && commentString.Length > 0
+                ? $"{commentString}comment\nactual message"
+                : "actual message";
+            string expected = "actual message" + Environment.NewLine;
+
+            // Act
+            string result = cut.FormatCommitMessage(input, usingCommitTemplate: true, ensureCommitMessageSecondLineEmpty: false);
+
+            // Assert
+            result.Should().Be(expected);
+        }
+
+        private static string ToUnixStyleLineEnding(string? s)
+        {
+            return s is null ? string.Empty : s.Replace("\r\n", "\n");
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("#")]
+        [TestCase(";")]
+        [TestCase("//")]
+        public void FormatCommitMessage_should_keep_comment_line_when_not_using_template(string? commentString)
+        {
+            CommitMessageManager cut = new(_messageBoxService, string.Empty, Encoding.UTF8, commentString);
+            string input = commentString is not null && commentString.Length > 0
+                ? $"{commentString}comment\nactual message"
+                : "actual message";
+            string expected = input + "\n";
+
+            string result = cut.FormatCommitMessage(input, usingCommitTemplate: false, ensureCommitMessageSecondLineEmpty: false);
+
+            ToUnixStyleLineEnding(result).Should().Be(expected);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("#")]
+        [TestCase(";")]
+        [TestCase("//")]
+        public void FormatCommitMessage_should_return_empty_for_empty_input(string? commentString)
+        {
+            // Arrange
+            CommitMessageManager cut = new(_messageBoxService, string.Empty, Encoding.UTF8, commentString);
+
+            // Act
+            string result = cut.FormatCommitMessage(string.Empty, usingCommitTemplate: true, ensureCommitMessageSecondLineEmpty: false);
+
+            // Assert
+            result.Should().Be(string.Empty);
+        }
+
+        [TestCase(null)]
+        [TestCase("")]
+        [TestCase("#")]
+        [TestCase(";")]
+        [TestCase("//")]
+        public void FormatCommitMessage_should_return_empty_for_null_input(string? commentString)
+        {
+            // Arrange
+            CommitMessageManager cut = new(_messageBoxService, string.Empty, Encoding.UTF8, commentString);
+
+            // Act
+            string result = cut.FormatCommitMessage(null, usingCommitTemplate: true, ensureCommitMessageSecondLineEmpty: false);
+
+            // Assert
+            result.Should().Be(string.Empty);
+        }
         public class FormatCommitMessageTestData
         {
             private static readonly string NL = Environment.NewLine;
