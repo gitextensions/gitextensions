@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
-  <PropertyGroup>   
+  <PropertyGroup>
     <!-- TODO once all project migrated to SDK-style, remove this and move properties to Directory.Build.props -->
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
 
@@ -10,6 +10,10 @@
     <!-- Exclude this project from the list of tests project -->
     <TestProject>false</TestProject>
     <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(ContinuousIntegrationBuild)' == 'true'">
+    <DefineConstants>$(DefineConstants);CI_BUILD</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

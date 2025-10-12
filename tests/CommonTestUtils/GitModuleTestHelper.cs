@@ -8,14 +8,17 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
-using NUnit.Framework;
 
 namespace CommonTestUtils;
 
 public class GitModuleTestHelper : IDisposable
 {
-    private static bool? _isCIBuild;
-
+#if CI_BUILD
+    static GitModuleTestHelper()
+    {
+        NUnit.Framework.TestContext.WriteLine("Disabling explicit test clean-up for continuous integration test environment.");
+    }
+#else
     private static TaskManager CleanUpOperations;
 
     static GitModuleTestHelper()
@@ -24,6 +27,7 @@ public class GitModuleTestHelper : IDisposable
 
         CleanUpOperations = ThreadHelper.CreateTaskManager();
     }
+#endif
 
     /// <summary>
     /// Creates a throw-away new repository in a temporary location.
@@ -78,13 +82,6 @@ public class GitModuleTestHelper : IDisposable
     /// Gets the temporary path where test repositories will be created for integration tests.
     /// </summary>
     public string TemporaryPath { get; }
-
-    /// <summary>
-    /// Gets a value indicating whether tests are running as part of a Continuous
-    /// Integration build, based on the presence of an environment variable "CI"
-    /// which is set by AppVeyor.
-    /// </summary>
-    private static bool IsCIBuild => _isCIBuild ??= Environment.GetEnvironmentVariable("CI") == "true";
 
     /// <summary>
     /// Creates a new file, writes the specified string to the file, and then closes the file.
@@ -218,7 +215,9 @@ public class GitModuleTestHelper : IDisposable
 
     public static void WaitForCleanUpCompletion()
     {
+#if !CI_BUILD
         CleanUpOperations.JoinPendingOperations();
+#endif
     }
 
     public void Dispose()
@@ -241,11 +240,10 @@ public class GitModuleTestHelper : IDisposable
                 }
             }
 
-            if (!IsCIBuild)
-            {
-                CleanUpOperations.FileAndForget(
-                    () => CleanUp(TemporaryPath));
-            }
+#if !CI_BUILD
+            CleanUpOperations.FileAndForget(
+                () => CleanUp(TemporaryPath));
+#endif
         }
         catch
         {
