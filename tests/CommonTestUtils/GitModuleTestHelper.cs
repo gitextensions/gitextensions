@@ -32,6 +32,12 @@ public class GitModuleTestHelper : IDisposable
     /// </summary>
     public GitModuleTestHelper(string repositoryName = "repo1")
     {
+#if CI_BUILD
+        Console.WriteLine("GitModuleTestHelper .ctor: Disabling explicit clean-up for continuous integration test environment");
+#else
+        Console.WriteLine("GitModuleTestHelper .ctor: Will perform clean-up in background tasks");
+#endif
+
         TemporaryPath = GetTemporaryPath();
 
         string path = Path.Combine(TemporaryPath, repositoryName);
