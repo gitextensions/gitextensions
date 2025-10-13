@@ -1,6 +1,5 @@
 ﻿using GitCommands;
 using GitCommands.Git;
-using GitCommands.Services;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -30,10 +29,9 @@ namespace GitUI.CommandsDialogs
             helpImageDisplayUserControl1.Image2 = Properties.Images.HelpCommandMergeFastForward.AdaptLightness();
             InitializeComplete();
 
-            IMessageBoxService messageBoxService = new WinFormsMessageBoxService(this);
             var commentStrategy = CommentStrategyFactory.GetSelected();
             var commentDefinition = commentStrategy.GetComment(Module);
-            _commitMessageManager = new CommitMessageManager(messageBoxService, Module.WorkingDirGitDir, Module.CommitEncoding, commentString: commentDefinition);
+            _commitMessageManager = new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding, commentString: commentDefinition);
 
             currentBranchLabel.Font = new Font(currentBranchLabel.Font, FontStyle.Bold);
             noCommit.Checked = AppSettings.DontCommitMerge;
@@ -101,10 +99,25 @@ namespace GitUI.CommandsDialogs
             {
                 // [!] Do not reset the last commit message stored in AppSettings.LastCommitMessage
 
-                ThreadHelper.JoinableTaskFactory.Run(
-                    () => _commitMessageManager.WriteCommitMessageToFileAsync(mergeMessage.Text, CommitMessageType.Merge,
-                                                                              usingCommitTemplate: false,
-                                                                              ensureCommitMessageSecondLineEmpty: false));
+                ThreadHelper.JoinableTaskFactory.Run(async () =>
+                {
+                    try
+                    {
+                        await _commitMessageManager.WriteCommitMessageToFileAsync(
+                            mergeMessage.Text,
+                            CommitMessageType.Merge,
+                            usingCommitTemplate: false,
+                            ensureCommitMessageSecondLineEmpty: false);
+                    }
+                    catch (Exception ex)
+                    {
+                        // Switch to main thread for UI operations
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        MessageBox.Show($"Error writing commit message: {ex.Message}", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                });
+
                 mergeMessagePath = _commitMessageManager.MergeMessagePath;
             }
 

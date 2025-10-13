@@ -35,4 +35,8 @@
     <ProjectReference Include="..\..\plugins\GitUIPluginInterfaces\GitUIPluginInterfaces.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Services\" />
+  </ItemGroup>
+
 </Project>

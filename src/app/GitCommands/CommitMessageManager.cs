@@ -1,6 +1,5 @@
 ﻿using System.IO.Abstractions;
 using System.Text;
-using GitCommands.Services;
 using GitExtensions.Extensibility;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
@@ -74,7 +73,6 @@ namespace GitCommands
         private readonly string _amendSaveStatePath;
 
         private readonly IFileSystem _fileSystem;
-        private readonly IMessageBoxService _messageBoxService;
 
         // Commit messages are UTF-8 by default unless otherwise in the config file.
         // The git manual states:
@@ -89,26 +87,21 @@ namespace GitCommands
         private readonly string? _commentString;
 
         public CommitMessageManager(
-            IMessageBoxService messageBoxService,
             string workingDirGitDir,
             Encoding commitEncoding,
             string? commentString = null,
             string? overriddenCommitMessage = null)
-            : this(messageBoxService, workingDirGitDir, commitEncoding, new FileSystem(), overriddenCommitMessage,commentString)
+            : this(workingDirGitDir, commitEncoding, new FileSystem(), overriddenCommitMessage: overriddenCommitMessage,commentString: commentString)
         {
         }
 
         internal CommitMessageManager(
-            IMessageBoxService messageBoxService,
             string workingDirGitDir,
             Encoding commitEncoding,
             IFileSystem fileSystem,
             string? overriddenCommitMessage = null,
             string? commentString = null)
         {
-            ArgumentNullException.ThrowIfNull(messageBoxService);
-
-            _messageBoxService = messageBoxService;
             _fileSystem = fileSystem;
             _commitEncoding = commitEncoding;
             _amendSaveStatePath = GetFilePath(workingDirGitDir, "GitExtensions.amend");
@@ -248,15 +241,15 @@ namespace GitCommands
             {
                 if (!_fileSystem.File.Exists(filePath))
                 {
-                    return string.Empty;
+                    throw new CannotAccessFileException(filePath);
                 }
 
                 return await _fileSystem.File.ReadAllTextAsync(filePath, encoding ?? Encoding.Default, cancellationToken);
             }
             catch (Exception ex) when (ex is not (OperationCanceledException or ObjectDisposedException))
             {
-                await _messageBoxService.ShowInfoMessageAsync(string.Format(CannotAccessFile, ex.Message, filePath), errorTitle);
-                return string.Empty;
+                string message = string.Format(CannotAccessFile, ex.Message, filePath);
+                throw new CannotAccessFileException(message, ex);
             }
         }
 
@@ -277,7 +270,8 @@ namespace GitCommands
             catch (Exception ex) when (ex is not (OperationCanceledException or ObjectDisposedException))
             {
                 // No need to cancel the other operations in FormCommit - just let the user know that something went wrong
-                await _messageBoxService.ShowInfoMessageAsync(string.Format(CannotAccessFile, ex.Message, filePath), errorTitle);
+                string message = string.Format(CannotAccessFile, ex.Message, filePath);
+                throw new CannotAccessFileException(message, ex);
             }
         }
     }

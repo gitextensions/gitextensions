@@ -1,6 +1,5 @@
 ﻿using GitCommands;
 using GitCommands.Git;
-using GitCommands.Services;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
@@ -134,13 +133,28 @@ namespace GitUI.CommandsDialogs
                 }
             }
 
-            IMessageBoxService messageBoxService = new WinFormsMessageBoxService(this);
             var commentStrategy = CommentStrategyFactory.GetSelected();
             var commentDefinition = commentStrategy.GetComment(Module);
 
-            CommitMessageManager commitMessageManager = new(messageBoxService, Module.WorkingDirGitDir, Module.CommitEncoding, commentString: commentDefinition);
+            CommitMessageManager commitMessageManager = new(Module.WorkingDirGitDir, Module.CommitEncoding, commentString: commentDefinition);
 
-            string existingCommitMessage = ThreadHelper.JoinableTaskFactory.Run(() => commitMessageManager.GetMergeOrCommitMessageAsync());
+            string existingCommitMessage = ThreadHelper.JoinableTaskFactory.Run(async () =>
+            {
+                try
+                {
+                    return await commitMessageManager.GetMergeOrCommitMessageAsync();
+                }
+                catch (Exception ex)
+                {
+                    // Switch to main thread for UI operations
+                    await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                    MessageBox.Show($"Error retrieving commit message: {ex.Message}", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    // Return default value in case of error
+                    return string.Empty;
+                }
+            });
 
             ArgumentString command = Commands.Revert(Revision.ObjectId, AutoCommit.Checked, parentIndex);
 
@@ -161,8 +175,12 @@ namespace GitUI.CommandsDialogs
                         await commitMessageManager.WriteCommitMessageToFileAsync(newCommitMessageContent, CommitMessageType.Merge,
                                                                                  usingCommitTemplate: false, ensureCommitMessageSecondLineEmpty: false);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
+                        // Switch to main thread for UI operations
+                        await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                        MessageBox.Show($"Error reverting commit message: {ex.Message}", "Error",
+                            MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 });
             }

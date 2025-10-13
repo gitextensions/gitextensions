@@ -7,7 +7,6 @@ using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
-using GitCommands.Services;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
@@ -212,10 +211,9 @@ namespace GitUI.CommandsDialogs
 
             splitRight.Panel2MinSize = DpiUtil.Scale(100);
 
-            IMessageBoxService messageBoxService = new WinFormsMessageBoxService(this);
             var commentStrategy = CommentStrategyFactory.GetSelected();
             var commentDefinition = commentStrategy.GetComment(Module);
-            _commitMessageManager = new CommitMessageManager(messageBoxService, Module.WorkingDirGitDir, Module.CommitEncoding, commentString: commentDefinition, overriddenCommitMessage: commitMessage);
+            _commitMessageManager = new CommitMessageManager(Module.WorkingDirGitDir, Module.CommitEncoding, commentString: commentDefinition, overriddenCommitMessage: commitMessage);
 
             Message.TextChanged += Message_TextChanged;
             Message.TextAssigned += Message_TextAssigned;
@@ -448,8 +446,23 @@ namespace GitUI.CommandsDialogs
                     bool isAmend = Amend.Checked;
                     ThreadHelper.FileAndForget(async () =>
                     {
-                        await _commitMessageManager.SetMergeOrCommitMessageAsync(message);
-                        await _commitMessageManager.SetAmendStateAsync(isAmend);
+                        try
+                        {
+                            await _commitMessageManager.SetMergeOrCommitMessageAsync(message);
+                            await _commitMessageManager.SetAmendStateAsync(isAmend);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Ensure MessageBox is shown on the UI thread
+                            if (InvokeRequired)
+                            {
+                                Invoke(() => MessageBox.Show(this, $"Exception: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error));
+                            }
+                            else
+                            {
+                                MessageBox.Show(this, $"Exception: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        }
                     });
                 }
             }
@@ -500,10 +513,23 @@ namespace GitUI.CommandsDialogs
                 default:
                     (string retrievedMessage, bool retrievedAmendState) = ThreadHelper.JoinableTaskFactory.Run(async () =>
                     {
-                        string m = await _commitMessageManager.GetMergeOrCommitMessageAsync();
-                        bool a = await _commitMessageManager.GetAmendStateAsync();
-                        return (m, a);
-                    });
+                        try
+                        {
+                            string m = await _commitMessageManager.GetMergeOrCommitMessageAsync();
+                            bool a = await _commitMessageManager.GetAmendStateAsync();
+                            return (m, a);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Switch to main thread for UI operations
+                            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                            MessageBox.Show($"Error retrieving commit message and amend state: {ex.Message}", "Error",
+                                MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                            // Return default values in case of error
+                            return (string.Empty, false);
+                        }
+                    }); ;
                     message = retrievedMessage;
                     Amend.Checked = !_commitMessageManager.IsMergeCommit && retrievedAmendState;
                     break;
@@ -1238,10 +1264,24 @@ namespace GitUI.CommandsDialogs
                     {
                         // Save last commit message in settings. This way it can be used in multiple repositories.
                         AppSettings.LastCommitMessage = Message.Text;
-                        ThreadHelper.JoinableTaskFactory.Run(
-                            () => _commitMessageManager.WriteCommitMessageToFileAsync(Message.Text, CommitMessageType.Normal,
-                                                                                      usingCommitTemplate: !string.IsNullOrEmpty(_commitTemplate),
-                                                                                      ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty));
+                        ThreadHelper.JoinableTaskFactory.Run(async () =>
+                        {
+                            try
+                            {
+                                await _commitMessageManager.WriteCommitMessageToFileAsync(
+                                    Message.Text,
+                                    CommitMessageType.Normal,
+                                    usingCommitTemplate: !string.IsNullOrEmpty(_commitTemplate),
+                                    ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty);
+                            }
+                            catch (Exception ex)
+                            {
+                                // Switch to main thread for UI operations
+                                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                                MessageBox.Show($"Error writing commit message: {ex.Message}", "Error",
+                                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            }
+                        });
                     }
 
                     bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCommit, this);
