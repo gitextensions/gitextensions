@@ -78,12 +78,6 @@ namespace GitCommandsTests
             _referenceRepository.Dispose();
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            ReferenceRepository.WaitForCleanUpCompletion();
-        }
-
         public void SetupExtra(string overriddenCommitMessage)
         {
             _manager = new CommitMessageManager(_owner, _workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage);

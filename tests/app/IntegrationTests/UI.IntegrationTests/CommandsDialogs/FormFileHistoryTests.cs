@@ -29,12 +29,6 @@ public class FormFileHistoryTests
         _referenceRepository.Dispose();
     }
 
-    [OneTimeTearDown]
-    public void OneTimeTearDown()
-    {
-        ReferenceRepository.WaitForCleanUpCompletion();
-    }
-
     [TestCase("", "file.txt")]
     [TestCase("", "file with spaces.txt")]
     [TestCase("Dir with spaces", "file.txt")]

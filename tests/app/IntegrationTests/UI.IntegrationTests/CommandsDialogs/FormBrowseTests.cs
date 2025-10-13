@@ -40,8 +40,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
             AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
-
-            ReferenceRepository.WaitForCleanUpCompletion();
         }
 
         [SetUp]

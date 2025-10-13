@@ -57,12 +57,6 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid
             _referenceRepository.Dispose();
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            ReferenceRepository.WaitForCleanUpCompletion();
-        }
-
         [Test]
         public void Assert_default_filter_related_settings()
         {

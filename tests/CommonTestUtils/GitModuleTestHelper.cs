@@ -239,8 +239,12 @@ public class GitModuleTestHelper : IDisposable
             }
 
 #if !CI_BUILD
-            CleanUpOperations.FileAndForget(
-                () => CleanUp(TemporaryPath));
+            TestCleanUp.RegisterCleanUpAction(
+                () =>
+                {
+                    CleanUpOperations.FileAndForget(
+                        () => CleanUp(TemporaryPath));
+                });
 #endif
         }
         catch

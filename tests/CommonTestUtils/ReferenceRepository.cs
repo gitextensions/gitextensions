@@ -180,10 +180,5 @@ namespace CommonTestUtils
         {
             _moduleTestHelper.Dispose();
         }
-
-        public static void WaitForCleanUpCompletion()
-        {
-            GitModuleTestHelper.WaitForCleanUpCompletion();
-        }
     }
 }

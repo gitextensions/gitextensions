@@ -48,12 +48,6 @@ namespace GitUITests.GitUICommandsTests
             _referenceRepository.Dispose();
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            ReferenceRepository.WaitForCleanUpCompletion();
-        }
-
         [Test]
         public void RunCommandBasedOnArgument_should_throw_on_null_args()
         {

@@ -27,12 +27,6 @@ public class FormUpdatesTests
         _referenceRepository.Dispose();
     }
 
-    [OneTimeTearDown]
-    public void OneTimeTearDown()
-    {
-        ReferenceRepository.WaitForCleanUpCompletion();
-    }
-
     [Test]
     public void Should_hide_NET_runtime_link_if_no_required_version()
     {

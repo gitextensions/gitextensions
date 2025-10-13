@@ -28,12 +28,6 @@ namespace GitExtensions.UITests.CommandsDialogs
             _referenceRepository.Dispose();
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            ReferenceRepository.WaitForCleanUpCompletion();
-        }
-
         [Test]
         public void HasChanges_updated_correctly()
         {
