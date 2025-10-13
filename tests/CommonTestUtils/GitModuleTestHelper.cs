@@ -16,9 +16,14 @@ public class GitModuleTestHelper : IDisposable
 #if CI_BUILD
     static GitModuleTestHelper()
     {
-        NUnit.Framework.TestContext.WriteLine("Disabling explicit test clean-up for continuous integration test environment.");
+        Console.WriteLine("GitModuleTestHelper: Disabling explicit clean-up for continuous integration test environment");
     }
 #else
+    static GitModuleTestHelper()
+    {
+        Console.WriteLine("GitModuleTestHelper: Will perform clean-up in background tasks");
+    }
+
     private static TaskManager CleanUpOperations = new(new JoinableTaskContext());
 #endif
 
