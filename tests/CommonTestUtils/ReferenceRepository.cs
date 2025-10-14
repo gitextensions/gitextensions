@@ -2,7 +2,6 @@
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.Config;
-using GitCommands.Services;
 using LibGit2Sharp;
 
 namespace CommonTestUtils
@@ -208,8 +207,7 @@ namespace CommonTestUtils
                 Module.GetSettings("reload local settings, too");
             }
 
-            IMessageBoxService messageBoxService = new NUnitMessageBoxService();
-            CommitMessageManager commitMessageManager = new(messageBoxService, Module.WorkingDirGitDir, Module.CommitEncoding);
+            CommitMessageManager commitMessageManager = new(Module.WorkingDirGitDir, Module.CommitEncoding);
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
             commitMessageManager.ResetCommitMessageAsync().GetAwaiter().GetResult();
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits

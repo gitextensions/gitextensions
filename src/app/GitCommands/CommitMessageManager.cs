@@ -241,7 +241,7 @@ namespace GitCommands
             {
                 if (!_fileSystem.File.Exists(filePath))
                 {
-                    throw new CannotAccessFileException(filePath);
+                    return string.Empty;
                 }
 
                 return await _fileSystem.File.ReadAllTextAsync(filePath, encoding ?? Encoding.Default, cancellationToken);

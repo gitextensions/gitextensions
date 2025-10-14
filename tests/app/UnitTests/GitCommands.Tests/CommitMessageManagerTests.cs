@@ -4,7 +4,6 @@ using System.Text;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
-using GitCommands.Services;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using static System.Net.Mime.MediaTypeNames;
@@ -36,10 +35,7 @@ namespace GitCommandsTests
         private CommitMessageManager _manager;
 
         // We don't expect any failures so that we won't be switching to the main thread or showing messages
-        // private readonly Control _owner = ReferenceRepository.DummyOwner;
-
-        private IMessageBoxService _messageBoxService = new NUnitMessageBoxService();
-
+       
         public CommitMessageManagerTests()
         {
             _amendSaveStatePath = Path.Combine(_workingDirGitDir, "GitExtensions.amend");
@@ -72,7 +68,7 @@ namespace GitCommandsTests
             _fileSystem.Directory.Returns(_directory);
             _fileSystem.Path.Returns(path);
 
-            _manager = new CommitMessageManager(_messageBoxService, _workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage: null);
+            _manager = new CommitMessageManager(_workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage: null);
         }
 
         [TearDown]
@@ -89,18 +85,17 @@ namespace GitCommandsTests
 
         public void SetupExtra(string overriddenCommitMessage)
         {
-            _manager = new CommitMessageManager(_messageBoxService, _workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage);
+            _manager = new CommitMessageManager(_workingDirGitDir, _encoding, _fileSystem, overriddenCommitMessage: overriddenCommitMessage);
         }
 
         [TestCase(null)]
         public void Constructor_should_throw(string workingDirGitDir)
         {
             // Arrange
-            IMessageBoxService messageBoxService = _messageBoxService;
-            Encoding encoding = _encoding;
+           Encoding encoding = _encoding;
 
             // Act
-            Action act = () => new CommitMessageManager(messageBoxService, workingDirGitDir, encoding);
+            Action act = () => new CommitMessageManager(workingDirGitDir, encoding);
 
             // Assert
             act.Should().Throw<ArgumentNullException>();
@@ -111,7 +106,7 @@ namespace GitCommandsTests
         [TestCase("::")]
         public void Constructor_should_not_throw(string workingDirGitDir)
         {
-            CommitMessageManager commitMessageManager = new(_messageBoxService, workingDirGitDir, _encoding);
+            CommitMessageManager commitMessageManager = new(workingDirGitDir, _encoding);
             commitMessageManager.Should().NotBeNull();
         }
 
@@ -225,7 +220,7 @@ namespace GitCommandsTests
         [Test]
         public async Task WriteCommitMessageToFileAsync_should_write_COMMITMESSAGE()
         {
-            CommitMessageManager manager = new(_messageBoxService, _referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
+            CommitMessageManager manager = new(_referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
 
             File.Exists(manager.CommitMessagePath).Should().BeFalse();
 
@@ -244,7 +239,7 @@ namespace GitCommandsTests
             GitModule module = _referenceRepository.Module;
             module.SetSetting("i18n.commitencoding", encodingName);
             module.CommitEncoding.Preamble.Length.Should().Be(0);
-            CommitMessageManager manager = new(_messageBoxService, _referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding);
+            CommitMessageManager manager = new(_referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding);
 
             File.Exists(manager.CommitMessagePath).Should().BeFalse();
 
@@ -258,7 +253,7 @@ namespace GitCommandsTests
         [Test]
         public async Task WriteCommitMessageToFileAsync_should_write_MERGE_MSG()
         {
-            CommitMessageManager manager = new(_messageBoxService, _referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
+            CommitMessageManager manager = new(_referenceRepository.Module.WorkingDir, _referenceRepository.Module.CommitEncoding, overriddenCommitMessage: null);
 
             File.Exists(manager.MergeMessagePath).Should().BeFalse();
 
@@ -315,8 +310,10 @@ namespace GitCommandsTests
             _file.Exists(_commitMessagePath).Returns(false);
             _file.Exists(_mergeMessagePath).Returns(false);
 
-            (await _manager.GetMergeOrCommitMessageAsync()).Should().BeEmpty();
+            var commitMessage = (await _manager.GetMergeOrCommitMessageAsync());
 
+
+            commitMessage.Should().BeEmpty();
             _manager.IsMergeCommit.Should().BeFalse();
         }
 
@@ -436,18 +433,16 @@ namespace GitCommandsTests
         // Exception / message box tests
 
         [Test]
-        public async Task GetMergeOrCommitMessageAsync_should_call_messageboxservice_on_exception()
+        public async Task GetMergeOrCommitMessageAsync_should_throw_CannotAccessFileException_on_io_error()
         {
-            IMessageBoxService messageBoxService = Substitute.For<IMessageBoxService>();
-            messageBoxService.ShowInfoMessageAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.CompletedTask);
-
+            // Arrange
             FileBase file = Substitute.For<FileBase>();
             file.Exists(_commitMessagePath).Returns(true);
             file.Exists(_mergeMessagePath).Returns(false);
-            file.ReadAllTextAsync(_commitMessagePath, _encoding, cancellationToken: default).Throws(new IOException("read boom"));
+            file.ReadAllTextAsync(_commitMessagePath, _encoding, cancellationToken: default)
+                .Throws(new IOException("read boom"));
 
             DirectoryBase directory = Substitute.For<DirectoryBase>();
-
             PathBase path = Substitute.For<PathBase>();
             path.Combine(Arg.Any<string>(), Arg.Any<string>()).Returns(x => Path.Combine((string)x[0], (string)x[1]));
 
@@ -456,22 +451,20 @@ namespace GitCommandsTests
             fileSystem.Directory.Returns(directory);
             fileSystem.Path.Returns(path);
 
-            CommitMessageManager manager = new(messageBoxService, _workingDirGitDir, _encoding, fileSystem, overriddenCommitMessage: null);
+            CommitMessageManager manager = new(_workingDirGitDir, _encoding, fileSystem, overriddenCommitMessage: null);
 
-            string result = await manager.GetMergeOrCommitMessageAsync();
+            // Act
+            Func<Task> act = async () => await manager.GetMergeOrCommitMessageAsync();
 
-            result.Should().BeEmpty();
-            await messageBoxService.Received(1).ShowInfoMessageAsync(
-                Arg.Is<string>(m => m.Contains("read boom") && m.Contains(_commitMessagePath)),
-                "Cannot read commit message");
+            // Assert
+            await act.Should().ThrowAsync<CannotAccessFileException>()
+                .WithMessage($"*read boom*{_commitMessagePath}*");
         }
 
         [Test]
-        public async Task WriteCommitMessageToFileAsync_should_call_messageboxservice_on_exception()
+        public async Task WriteCommitMessageToFileAsync_should_throw_CannotAccessFileException_on_io_error()
         {
-            IMessageBoxService messageBoxService = Substitute.For<IMessageBoxService>();
-            messageBoxService.ShowInfoMessageAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.CompletedTask);
-
+            // Arrange
             FileBase file = Substitute.For<FileBase>();
             DirectoryBase directory = Substitute.For<DirectoryBase>();
             directory.Exists(Arg.Any<string>()).Returns(true);
@@ -488,28 +481,26 @@ namespace GitCommandsTests
             fileSystem.Directory.Returns(directory);
             fileSystem.Path.Returns(path);
 
-            CommitMessageManager manager = new(messageBoxService, _workingDirGitDir, _encoding, fileSystem, overriddenCommitMessage: null);
+            CommitMessageManager manager = new(_workingDirGitDir, _encoding, fileSystem, overriddenCommitMessage: null);
 
-            await manager.WriteCommitMessageToFileAsync("msg", CommitMessageType.Normal, false, false);
+            // Act
+            Func<Task> act = async () => await manager.WriteCommitMessageToFileAsync("msg", CommitMessageType.Normal, false, false);
 
-            await messageBoxService.Received(1).ShowInfoMessageAsync(
-                Arg.Is<string>(m => m.Contains("write boom") && m.Contains(_commitMessagePath)),
-                "Cannot save commit message");
+            // Assert
+            await act.Should().ThrowAsync<CannotAccessFileException>()
+                .WithMessage($"*write boom*{_commitMessagePath}*");
         }
 
         [Test]
-        public async Task GetAmendStateAsync_should_call_messageboxservice_on_exception()
+        public async Task GetAmendStateAsync_should_throw_CannotAccessFileException_on_io_error()
         {
-            IMessageBoxService messageBoxService = Substitute.For<IMessageBoxService>();
-            messageBoxService.ShowInfoMessageAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.CompletedTask);
-
+            // Arrange
             FileBase file = Substitute.For<FileBase>();
             file.Exists(_amendSaveStatePath).Returns(true);
             file.ReadAllTextAsync(_amendSaveStatePath, Encoding.Default, cancellationToken: default)
                 .Throws(new IOException("amend read boom"));
 
             DirectoryBase directory = Substitute.For<DirectoryBase>();
-
             PathBase path = Substitute.For<PathBase>();
             path.Combine(Arg.Any<string>(), Arg.Any<string>())
                 .Returns(x => Path.Combine((string)x[0], (string)x[1]));
@@ -519,24 +510,21 @@ namespace GitCommandsTests
             fileSystem.Directory.Returns(directory);
             fileSystem.Path.Returns(path);
 
-            CommitMessageManager manager = new(messageBoxService, _workingDirGitDir, _encoding, fileSystem, overriddenCommitMessage: null);
-
+            CommitMessageManager manager = new(_workingDirGitDir, _encoding, fileSystem, overriddenCommitMessage: null);
             AppSettings.RememberAmendCommitState = true;
 
-            bool amend = await manager.GetAmendStateAsync();
+            // Act
+            Func<Task> act = async () => await manager.GetAmendStateAsync();
 
-            amend.Should().BeFalse();
-            await messageBoxService.Received(1).ShowInfoMessageAsync(
-                Arg.Is<string>(m => m.Contains("amend read boom") && m.Contains(_amendSaveStatePath)),
-                "Cannot read amend state");
+            // Assert
+            await act.Should().ThrowAsync<CannotAccessFileException>()
+                .WithMessage($"*amend read boom*{_amendSaveStatePath}*");
         }
 
         [Test]
-        public async Task SetAmendStateAsync_should_call_messageboxservice_on_exception_when_writing_true()
+        public async Task SetAmendStateAsync_should_throw_CannotAccessFileException_on_io_error()
         {
-            IMessageBoxService messageBoxService = Substitute.For<IMessageBoxService>();
-            messageBoxService.ShowInfoMessageAsync(Arg.Any<string>(), Arg.Any<string>()).Returns(Task.CompletedTask);
-
+            // Arrange
             FileBase file = Substitute.For<FileBase>();
             DirectoryBase directory = Substitute.For<DirectoryBase>();
             directory.Exists(Path.GetDirectoryName(_amendSaveStatePath)).Returns(true);
@@ -553,15 +541,15 @@ namespace GitCommandsTests
             fileSystem.Directory.Returns(directory);
             fileSystem.Path.Returns(path);
 
-            CommitMessageManager manager = new(messageBoxService, _workingDirGitDir, _encoding, fileSystem, overriddenCommitMessage: null);
-
+            CommitMessageManager manager = new(_workingDirGitDir, _encoding, fileSystem, overriddenCommitMessage: null);
             AppSettings.RememberAmendCommitState = true;
 
-            await manager.SetAmendStateAsync(true);
+            // Act
+            Func<Task> act = async () => await manager.SetAmendStateAsync(true);
 
-            await messageBoxService.Received(1).ShowInfoMessageAsync(
-                Arg.Is<string>(m => m.Contains("amend write boom") && m.Contains(_amendSaveStatePath)),
-                "Cannot save amend state");
+            // Assert
+            await act.Should().ThrowAsync<CannotAccessFileException>()
+                .WithMessage($"*amend write boom*{_amendSaveStatePath}*");
         }
 
         [Test, TestCaseSource(typeof(FormatCommitMessageTestData), nameof(FormatCommitMessageTestData.FormatCommitMessageTestCases))]
@@ -572,7 +560,7 @@ namespace GitCommandsTests
             string expectedMessage,
             string commentString)
         {
-            CommitMessageManager cut = new(_messageBoxService, string.Empty, null, commentString);
+            CommitMessageManager cut = new(string.Empty, null, commentString: commentString);
             string commitMessage = cut.FormatCommitMessage(commitMessageText, usingCommitTemplate, ensureCommitMessageSecondLineEmpty);
 
             commitMessage.Should().Be(expectedMessage);
@@ -586,7 +574,7 @@ namespace GitCommandsTests
         public void FormatCommitMessage_should_remove_comment_line_when_using_template(string? commentString)
         {
             // Arrange
-            CommitMessageManager cut = new(_messageBoxService, string.Empty, Encoding.UTF8, commentString);
+            CommitMessageManager cut = new(string.Empty, Encoding.UTF8, commentString: commentString);
             string input = commentString is not null && commentString.Length > 0
                 ? $"{commentString}comment\nactual message"
                 : "actual message";
@@ -611,7 +599,7 @@ namespace GitCommandsTests
         [TestCase("//")]
         public void FormatCommitMessage_should_keep_comment_line_when_not_using_template(string? commentString)
         {
-            CommitMessageManager cut = new(_messageBoxService, string.Empty, Encoding.UTF8, commentString);
+            CommitMessageManager cut = new(string.Empty, Encoding.UTF8, commentString: commentString);
             string input = commentString is not null && commentString.Length > 0
                 ? $"{commentString}comment\nactual message"
                 : "actual message";
@@ -630,7 +618,7 @@ namespace GitCommandsTests
         public void FormatCommitMessage_should_return_empty_for_empty_input(string? commentString)
         {
             // Arrange
-            CommitMessageManager cut = new(_messageBoxService, string.Empty, Encoding.UTF8, commentString);
+            CommitMessageManager cut = new(string.Empty, Encoding.UTF8, commentString: commentString);
 
             // Act
             string result = cut.FormatCommitMessage(string.Empty, usingCommitTemplate: true, ensureCommitMessageSecondLineEmpty: false);
@@ -647,7 +635,7 @@ namespace GitCommandsTests
         public void FormatCommitMessage_should_return_empty_for_null_input(string? commentString)
         {
             // Arrange
-            CommitMessageManager cut = new(_messageBoxService, string.Empty, Encoding.UTF8, commentString);
+            CommitMessageManager cut = new(string.Empty, Encoding.UTF8, commentString: commentString);
 
             // Act
             string result = cut.FormatCommitMessage(null, usingCommitTemplate: true, ensureCommitMessageSecondLineEmpty: false);
