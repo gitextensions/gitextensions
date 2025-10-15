@@ -13,17 +13,18 @@ namespace CommonTestUtils;
 
 public class GitModuleTestHelper : IDisposable
 {
+    static GitModuleTestHelper()
+    {
 #if CI_BUILD
-    static GitModuleTestHelper()
-    {
         Console.WriteLine("GitModuleTestHelper: Disabling explicit clean-up for continuous integration test environment");
-    }
 #else
-    static GitModuleTestHelper()
-    {
         Console.WriteLine("GitModuleTestHelper: Will perform clean-up in background tasks");
+#endif
+
+        TestCleanUp.RegisterCleanUpWait(2, WaitForCleanUpCompletion);
     }
 
+#if !CI_BUILD
     private static TaskManager CleanUpOperations = new(new JoinableTaskContext());
 #endif
 

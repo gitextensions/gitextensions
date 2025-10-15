@@ -87,11 +87,11 @@ namespace CommonTestUtils
         {
             if (test.IsSuite)
             {
-                GitModuleTestHelper.WaitForCleanUpCompletion();
+                TestCleanUp.WaitForCompletion();
             }
             else
             {
-                TestCleanUp.StartQueuedCleanupActions();
+                TestCleanUp.ExecuteQueuedCleanUpActions();
             }
         }
     }
