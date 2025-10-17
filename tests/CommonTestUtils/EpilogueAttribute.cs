@@ -75,7 +75,7 @@ namespace CommonTestUtils
     //     ConfigureJoinableTestFactory.AfterTest -> wait for detached tasks
     //   ThreadCleanUp.AfterTest -> kick off clean-up tasks
     // ThreadCleanUp.AfterTest (suite) -> wait for clean-up tasks before exit
-    public class TestCleanUpAttribute : Attribute, ITestAction
+    public class EpilogueAttribute : Attribute, ITestAction
     {
         public ActionTargets Targets => ActionTargets.Suite | ActionTargets.Test;
 
@@ -87,11 +87,11 @@ namespace CommonTestUtils
         {
             if (test.IsSuite)
             {
-                TestCleanUp.WaitForCompletion();
+                Epilogue.ExecuteAfterSuiteActions();
             }
             else
             {
-                TestCleanUp.ExecuteQueuedCleanUpActions();
+                Epilogue.ExecuteAfterTestActions();
             }
         }
     }

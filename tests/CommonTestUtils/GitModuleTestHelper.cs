@@ -21,7 +21,7 @@ public class GitModuleTestHelper : IDisposable
         Console.WriteLine("GitModuleTestHelper: Will perform clean-up in background tasks");
 #endif
 
-        TestCleanUp.RegisterCleanUpWait(2, WaitForCleanUpCompletion);
+        Epilogue.RegisterAfterSuiteAction(2, WaitForCleanUpCompletion);
     }
 
 #if !CI_BUILD
@@ -240,7 +240,7 @@ public class GitModuleTestHelper : IDisposable
             }
 
 #if !CI_BUILD
-            TestCleanUp.RegisterCleanUpAction(
+            Epilogue.RegisterAfterTestAction(
                 () =>
                 {
                     CleanUpOperations.FileAndForget(

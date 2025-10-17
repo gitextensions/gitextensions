@@ -1,6 +1,6 @@
 ﻿using CommonTestUtils;
 
-[assembly: TestCleanUp]
+[assembly: Epilogue]
 [assembly: ConfigureJoinableTaskFactory]
 [assembly: TestAppSettings]
 [assembly: Category("UnitTests")]
