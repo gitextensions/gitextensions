@@ -23,7 +23,7 @@ public partial class GitModuleTestHelper : IDisposable
     {
         Console.WriteLine("GitModuleTestHelper: Will perform clean-up in background tasks");
 
-        Epilogue.RegisterAfterSuiteAction(2, WaitForCleanUpCompletion);
+        Epilogue.RegisterAfterSuiteAction(order: 2, WaitForCleanUpCompletion);
     }
 
     private static TaskManager CleanUpOperations = new(new JoinableTaskContext());
