@@ -174,6 +174,8 @@ public partial class GitModuleTestHelper : IDisposable
                     Module.EffectiveSettings.SettingsCache.Dispose();
                 }
             }
+
+            FileAndForgetCleanUp();
         }
         catch
         {
