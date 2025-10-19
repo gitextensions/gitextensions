@@ -69,7 +69,7 @@ namespace GitCommands
             private readonly Process _process;
             private readonly bool _redirectInput;
             private readonly bool _redirectOutput;
-            private readonly object _syncRoot = new();
+            private readonly Lock _syncRoot = new();
             private readonly bool _throwOnErrorExit;
 
             private bool _disposed;

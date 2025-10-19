@@ -9,7 +9,7 @@
         {
             private readonly Func<Task> _operation;
             private readonly int _cooldownMilliseconds;
-            private readonly object _sync = new();
+            private readonly Lock _sync = new();
             private readonly TaskManager _taskManager;
 
             private volatile bool _executing;

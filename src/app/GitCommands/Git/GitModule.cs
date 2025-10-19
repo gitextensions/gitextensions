@@ -39,7 +39,7 @@ namespace GitCommands
         public static readonly string NoNewLineAtTheEnd = "\\ No newline at end of file";
         public static CommandCache GitCommandCache { get; } = new();
 
-        private readonly object _lock = new();
+        private readonly Lock _lock = new();
         private readonly IIndexLockManager _indexLockManager;
         private readonly ICommitDataManager _commitDataManager;
         private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
@@ -385,7 +385,7 @@ namespace GitCommands
         }
 
         private string? _gitCommonDirectory;
-        private readonly object _gitCommonLock = new();
+        private readonly Lock _gitCommonLock = new();
 
         /// <summary>
         /// Returns git common directory.

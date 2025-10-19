@@ -5,6 +5,7 @@ namespace GitUI
 {
     public class FormStatusOutputLog
     {
+        private readonly Lock _outputStringSync = new();
         private readonly StringBuilder _outputString = new();
 
         public void Append(string text)
@@ -12,7 +13,7 @@ namespace GitUI
             ArgumentNullException.ThrowIfNull(text);
 
             text = text.Replace(Delimiters.VerticalFeed, Delimiters.LineFeed).ReplaceLineEndings();
-            lock (_outputString)
+            lock (_outputStringSync)
             {
                 _outputString.Append(text);
             }
@@ -20,7 +21,7 @@ namespace GitUI
 
         public void Clear()
         {
-            lock (_outputString)
+            lock (_outputStringSync)
             {
                 _outputString.Clear();
             }
@@ -28,7 +29,7 @@ namespace GitUI
 
         public string GetString()
         {
-            lock (_outputString)
+            lock (_outputStringSync)
             {
                 return _outputString.ToString();
             }

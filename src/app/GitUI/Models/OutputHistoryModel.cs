@@ -10,7 +10,8 @@ internal sealed class OutputHistoryModel : IOutputHistoryProvider, IOutputHistor
     private const string _endMark = "###";
     private const string _noExecutable = "---";
 
-    private List<StringBuilder> _outputHistory;
+    private readonly Lock _outputHistorySync = new();
+    private readonly List<StringBuilder> _outputHistory;
 
     public event EventHandler HistoryChanged;
 
@@ -26,7 +27,7 @@ internal sealed class OutputHistoryModel : IOutputHistoryProvider, IOutputHistor
         get
         {
             StringBuilder sb = new();
-            lock (_outputHistory)
+            lock (_outputHistorySync)
             {
                 foreach (StringBuilder entry in _outputHistory)
                 {
@@ -42,7 +43,7 @@ internal sealed class OutputHistoryModel : IOutputHistoryProvider, IOutputHistor
 
     public void ClearHistory()
     {
-        lock (_outputHistory)
+        lock (_outputHistorySync)
         {
             _outputHistory.Clear();
         }
@@ -94,7 +95,7 @@ internal sealed class OutputHistoryModel : IOutputHistoryProvider, IOutputHistor
             return;
         }
 
-        lock (_outputHistory)
+        lock (_outputHistorySync)
         {
             if (_outputHistory.Count == _outputHistory.Capacity)
             {

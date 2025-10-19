@@ -3,6 +3,7 @@
     public sealed class StaticImageAvatarProvider : IAvatarProvider
     {
         private readonly Image _image;
+        private readonly Lock _sizeCacheSync = new();
         private readonly Dictionary<int, Image> _sizeCache = [];
 
         public StaticImageAvatarProvider(Image image)
@@ -21,7 +22,7 @@
 
         private Image GetCachedResizedImage(int imageSize)
         {
-            lock (_sizeCache)
+            lock (_sizeCacheSync)
             {
                 if (_sizeCache.TryGetValue(imageSize, out Image image))
                 {

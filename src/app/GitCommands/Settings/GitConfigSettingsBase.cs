@@ -17,18 +17,24 @@ namespace GitCommands.Settings;
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
 public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettingLevel gitSettingLevel) : ISettingsValueGetter
 {
-    protected readonly GitSettingLevel _gitSettingLevel = gitSettingLevel;
-    protected readonly IExecutable _gitExecutable = gitExecutable;
-    protected readonly Dictionary<string, string> _uniqueValueSettings = [];
-    protected bool Valid { get; private set; }
+    private readonly GitSettingLevel _gitSettingLevel = gitSettingLevel;
+    private readonly IExecutable _gitExecutable = gitExecutable;
+    private readonly Lock _isValidSync = new();
+    private bool _isValid;
+    private readonly Dictionary<string, string> _uniqueValueSettings = [];
+
+    protected GitSettingLevel GitSettingLevel => _gitSettingLevel;
+    protected IExecutable GitExecutable => _gitExecutable;
+    protected Dictionary<string, string> UniqueValueSettings => _uniqueValueSettings;
+    protected bool IsValid => _isValid;
 
     public abstract string? GetValue(string name);
 
     public void Invalidate()
     {
-        lock (_uniqueValueSettings)
+        lock (_isValidSync)
         {
-            Valid = false;
+            _isValid = false;
         }
 
         ThreadHelper.FileAndForget(async () =>
@@ -111,14 +117,14 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
     /// <param name="storeSetting">Shall store a parsed git setting.</param>
     protected void Update(Action clear, Action<string, string> storeSetting)
     {
-        if (Valid)
+        if (_isValid)
         {
             return;
         }
 
-        lock (_uniqueValueSettings)
+        lock (_isValidSync)
         {
-            if (Valid)
+            if (_isValid)
             {
                 return;
             }
@@ -128,9 +134,9 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
             clear();
             Parse(settings, storeSetting);
 
-            Valid = true;
+            _isValid = true;
         }
     }
 
-    protected string DebuggerDisplay => $"{{ {_gitSettingLevel}, {(Valid ? "" : "in")}valid, {_uniqueValueSettings.Count} }}";
+    protected string DebuggerDisplay => $"{{ {_gitSettingLevel}, {(_isValid ? "" : "in")}valid, {_uniqueValueSettings.Count} }}";
 }

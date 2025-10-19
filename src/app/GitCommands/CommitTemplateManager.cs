@@ -54,6 +54,7 @@ namespace GitCommands
             }
         }
 
+        private static readonly Lock RegisteredTemplatesStorageSync = new();
         private static readonly List<RegisteredCommitTemplateItem> RegisteredTemplatesStorage = [];
         private readonly IFileSystem _fileSystem;
         private readonly Func<IGitModule> _getModule;
@@ -78,7 +79,7 @@ namespace GitCommands
         {
             get
             {
-                lock (RegisteredTemplatesStorage)
+                lock (RegisteredTemplatesStorageSync)
                 {
                     return RegisteredTemplatesStorage.Select(item => new CommitTemplateItem(item.Name, item.Text(), item.Icon)).AsReadOnlyList();
                 }
@@ -120,7 +121,7 @@ namespace GitCommands
         /// <param name="templateText">The body of the template.</param>
         public void Register(string templateName, Func<string> templateText, Image? icon)
         {
-            lock (RegisteredTemplatesStorage)
+            lock (RegisteredTemplatesStorageSync)
             {
                 if (RegisteredTemplatesStorage.All(item => item.Name != templateName))
                 {
@@ -135,7 +136,7 @@ namespace GitCommands
         /// <param name="templateName">The name of the template.</param>
         public void Unregister(string templateName)
         {
-            lock (RegisteredTemplatesStorage)
+            lock (RegisteredTemplatesStorageSync)
             {
                 RegisteredTemplatesStorage.RemoveAll(item => item.Name == templateName);
             }
