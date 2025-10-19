@@ -74,6 +74,7 @@ namespace CommonTestUtils;
 //     ConfigureJoinableTestFactory.AfterTest -> wait for detached tasks
 //   ThreadCleanUp.AfterTest -> kick off clean-up tasks
 // ThreadCleanUp.AfterTest (suite) -> wait for clean-up tasks before exit
+[AttributeUsage(AttributeTargets.Assembly)]
 public class EpilogueAttribute : Attribute, ITestAction
 {
     public ActionTargets Targets => ActionTargets.Suite | ActionTargets.Test;
