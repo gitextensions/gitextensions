@@ -25,7 +25,7 @@ public static class Epilogue
     /// <param name="action">The action to be called.</param>
     public static void RegisterAfterSuiteAction(int order, Action action)
     {
-        using (_sync.EnterScope())
+        lock (_sync)
         {
             _afterSuiteActions.Add(order, action);
         }
@@ -43,7 +43,7 @@ public static class Epilogue
     /// <param name="action">The clean-up action to run after the current test.</param>
     public static void RegisterAfterTestAction(Action action)
     {
-        using (_sync.EnterScope())
+        lock (_sync)
         {
             _afterTestActions.Add(action);
         }
@@ -58,7 +58,7 @@ public static class Epilogue
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static void ExecuteAfterTestActions()
     {
-        using (_sync.EnterScope())
+        lock (_sync)
         {
             _afterTestActions.ForEach(action => action());
             _afterTestActions.Clear();
@@ -74,7 +74,7 @@ public static class Epilogue
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static void ExecuteAfterSuiteActions()
     {
-        using (_sync.EnterScope())
+        lock (_sync)
         {
             _afterSuiteActions.Values.ForEach(action => action());
         }
