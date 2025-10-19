@@ -22,12 +22,12 @@ public static class Epilogue
     /// the current plan of action.
     /// </summary>
     /// <param name="order">The position in sequence to run this action.</param>
-    /// <param name="wait">The action to be called.</param>
-    public static void RegisterAfterSuiteAction(int order, Action wait)
+    /// <param name="action">The action to be called.</param>
+    public static void RegisterAfterSuiteAction(int order, Action action)
     {
         using (_sync.EnterScope())
         {
-            _afterSuiteActions.Add(order, wait);
+            _afterSuiteActions.Add(order, action);
         }
     }
 
@@ -76,7 +76,7 @@ public static class Epilogue
     {
         using (_sync.EnterScope())
         {
-            _afterSuiteActions.Values.ForEach(wait => wait());
+            _afterSuiteActions.Values.ForEach(action => action());
         }
     }
 }
