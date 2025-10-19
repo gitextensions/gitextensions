@@ -4,6 +4,8 @@ using System.Text;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
+using GitExtUtils.GitUI;
+using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 
 namespace GitCommandsTests
@@ -46,7 +48,10 @@ namespace GitCommandsTests
         [OneTimeSetUp]
         public void Init()
         {
-            AppSettings.LoadSettings();
+            using (new JoinableTaskScope())
+            {
+                AppSettings.LoadSettings();
+            }
         }
 
         [SetUp]

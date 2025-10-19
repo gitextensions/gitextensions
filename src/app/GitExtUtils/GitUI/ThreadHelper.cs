@@ -20,7 +20,47 @@ namespace GitUI
             internal set => _taskManager = value is null ? null : new(value);
         }
 
+        public static bool IsOnMainThread => JoinableTaskContext?.IsOnMainThread ?? false;
+
         public static JoinableTaskFactory JoinableTaskFactory => _taskManager.JoinableTaskFactory;
+
+        public static void RunJoinableTask(Func<Task> asyncMethod)
+        {
+            if (_taskManager?.JoinableTaskFactory is JoinableTaskFactory factory)
+            {
+#pragma warning disable VSTHRD104
+                factory.Run(asyncMethod);
+#pragma warning restore VSTHRD104
+            }
+            else
+            {
+#pragma warning disable VSTHRD002
+                asyncMethod()
+                    .ConfigureAwait(false)
+                    .GetAwaiter()
+                    .GetResult();
+#pragma warning restore VSTHRD002
+            }
+        }
+
+        public static TResult RunJoinableTask<TResult>(Func<Task<TResult>> asyncMethod)
+        {
+            if (_taskManager?.JoinableTaskFactory is JoinableTaskFactory factory)
+            {
+#pragma warning disable VSTHRD104
+                return factory.Run(asyncMethod);
+#pragma warning restore VSTHRD104
+            }
+            else
+            {
+#pragma warning disable VSTHRD002
+                return asyncMethod()
+                    .ConfigureAwait(false)
+                    .GetAwaiter()
+                    .GetResult();
+#pragma warning restore VSTHRD002
+            }
+        }
 
         internal static void CancelSwitchToMainThread()
             => TaskManager.CancelSwitchToMainThread();
@@ -113,7 +153,9 @@ namespace GitUI
             }
 
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+#pragma warning disable VSTHRD104 // Make this method async and add a wrapper that uses JoinableTaskFactory.Run
             return task.Result;
+#pragma warning restore VSTHRD104 // Make this method async and add a wrapper that uses JoinableTaskFactory.Run
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 
@@ -125,7 +167,9 @@ namespace GitUI
             }
 
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
+#pragma warning disable VSTHRD104 // Make this method async and add a wrapper that uses JoinableTaskFactory.Run
             return task.Result;
+#pragma warning restore VSTHRD104 // Make this method async and add a wrapper that uses JoinableTaskFactory.Run
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
     }
