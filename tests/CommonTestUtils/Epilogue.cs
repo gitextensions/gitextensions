@@ -8,9 +8,9 @@ namespace CommonTestUtils
     /// </summary>
     public static class Epilogue
     {
-        private static object Sync = new();
-        private static OrderedDictionary<int, Action> AfterSuiteActions = new();
-        private static List<Action> AfterTestActions = new();
+        private static readonly Lock _sync = new();
+        private static readonly OrderedDictionary<int, Action> _afterSuiteActions = [];
+        private static readonly List<Action> _afterTestActions = [];
 
         /// <summary>
         /// Registers an action to be executed after the completion of
@@ -25,9 +25,9 @@ namespace CommonTestUtils
         /// <param name="wait">The action to be called.</param>
         public static void RegisterAfterSuiteAction(int order, Action wait)
         {
-            lock (Sync)
+            using (_sync.EnterScope())
             {
-                AfterSuiteActions.Add(order, wait);
+                _afterSuiteActions.Add(order, wait);
             }
         }
 
@@ -43,9 +43,9 @@ namespace CommonTestUtils
         /// <param name="action">The clean-up action to run after the current test.</param>
         public static void RegisterAfterTestAction(Action action)
         {
-            lock (Sync)
+            using (_sync.EnterScope())
             {
-                AfterTestActions.Add(action);
+                _afterTestActions.Add(action);
             }
         }
 
@@ -58,10 +58,10 @@ namespace CommonTestUtils
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static void ExecuteAfterTestActions()
         {
-            lock (Sync)
+            using (_sync.EnterScope())
             {
-                AfterTestActions.ForEach(action => action());
-                AfterTestActions.Clear();
+                _afterTestActions.ForEach(action => action());
+                _afterTestActions.Clear();
             }
         }
 
@@ -74,9 +74,9 @@ namespace CommonTestUtils
         [EditorBrowsable(EditorBrowsableState.Never)]
         public static void ExecuteAfterSuiteActions()
         {
-            lock (Sync)
+            using (_sync.EnterScope())
             {
-                AfterSuiteActions.Values.ForEach(wait => wait());
+                _afterSuiteActions.Values.ForEach(wait => wait());
             }
         }
     }

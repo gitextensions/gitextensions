@@ -10,7 +10,7 @@ using GitUI;
 
 namespace CommonTestUtils;
 
-public partial class GitModuleTestHelper : IDisposable
+public sealed partial class GitModuleTestHelper : IDisposable
 {
     /// <summary>
     /// Creates a throw-away new repository in a temporary location.
@@ -42,7 +42,7 @@ public partial class GitModuleTestHelper : IDisposable
 
         return;
 
-        string GetTemporaryPath()
+        static string GetTemporaryPath()
         {
             string tempPath = Path.GetTempPath();
 

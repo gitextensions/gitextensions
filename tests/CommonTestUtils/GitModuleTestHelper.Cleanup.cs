@@ -19,14 +19,14 @@ public partial class GitModuleTestHelper : IDisposable
     {
     }
 #else
+    private static readonly TaskManager _cleanUpOperations = new(new JoinableTaskContext());
+
     static GitModuleTestHelper()
     {
         Console.WriteLine("GitModuleTestHelper: Will perform clean-up in background tasks");
 
         Epilogue.RegisterAfterSuiteAction(order: 2, WaitForCleanUpCompletion);
     }
-
-    private static TaskManager CleanUpOperations = new(new JoinableTaskContext());
 
     private static void CleanUp(string path)
     {
@@ -67,12 +67,12 @@ public partial class GitModuleTestHelper : IDisposable
 
     private void FileAndForgetCleanUp()
     {
-        Epilogue.RegisterAfterTestAction(() => { CleanUpOperations.FileAndForget(() => CleanUp(TemporaryPath)); });
+        Epilogue.RegisterAfterTestAction(() => { _cleanUpOperations.FileAndForget(() => CleanUp(TemporaryPath)); });
     }
 
     public static void WaitForCleanUpCompletion()
     {
-        CleanUpOperations.JoinPendingOperations();
+        _cleanUpOperations.JoinPendingOperations();
     }
 #endif
 }
