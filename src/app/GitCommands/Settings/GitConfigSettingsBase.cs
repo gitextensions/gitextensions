@@ -17,16 +17,13 @@ namespace GitCommands.Settings;
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
 public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettingLevel gitSettingLevel) : ISettingsValueGetter
 {
-    private readonly GitSettingLevel _gitSettingLevel = gitSettingLevel;
-    private readonly IExecutable _gitExecutable = gitExecutable;
-    private readonly Lock _isValidLock = new();
-    private bool _isValid;
-    private readonly Dictionary<string, string> _uniqueValueSettings = [];
+    protected GitSettingLevel GitSettingLevel { get; } = gitSettingLevel;
+    protected IExecutable GitExecutable { get; } = gitExecutable;
+    protected Dictionary<string, string> UniqueValueSettings { get; } = [];
 
-    protected GitSettingLevel GitSettingLevel => _gitSettingLevel;
-    protected IExecutable GitExecutable => _gitExecutable;
-    protected Dictionary<string, string> UniqueValueSettings => _uniqueValueSettings;
-    protected bool IsValid => _isValid;
+    private readonly Lock _isValidLock = new();
+
+    protected bool IsValid { get; private set; }
 
     public abstract string? GetValue(string name);
 
@@ -34,13 +31,13 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
     {
         lock (_isValidLock)
         {
-            _isValid = false;
+            IsValid = false;
         }
 
         ThreadHelper.FileAndForget(async () =>
         {
             await Task.Delay(millisecondsDelay: 250);
-            if (Path.Exists(_gitExecutable.WorkingDir))
+            if (Path.Exists(GitExecutable.WorkingDir))
             {
                 try
                 {
@@ -117,26 +114,26 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
     /// <param name="storeSetting">Shall store a parsed git setting.</param>
     protected void Update(Action clear, Action<string, string> storeSetting)
     {
-        if (_isValid)
+        if (IsValid)
         {
             return;
         }
 
         lock (_isValidLock)
         {
-            if (_isValid)
+            if (IsValid)
             {
                 return;
             }
 
-            string settings = _gitExecutable.GetGitSettings(_gitSettingLevel);
+            string settings = GitExecutable.GetGitSettings(GitSettingLevel);
 
             clear();
             Parse(settings, storeSetting);
 
-            _isValid = true;
+            IsValid = true;
         }
     }
 
-    protected string DebuggerDisplay => $"{{ {_gitSettingLevel}, {(_isValid ? "" : "in")}valid, {_uniqueValueSettings.Count} }}";
+    protected string DebuggerDisplay => $"{{ {GitSettingLevel}, {(IsValid ? "" : "in")}valid, {UniqueValueSettings.Count} }}";
 }
