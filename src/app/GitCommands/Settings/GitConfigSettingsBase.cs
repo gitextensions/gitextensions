@@ -22,8 +22,9 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
     protected Dictionary<string, string> UniqueValueSettings { get; } = [];
 
     private readonly Lock _isValidLock = new();
+    private bool _isValid;
 
-    protected bool IsValid { get; private set; }
+    protected bool IsValid => _isValid;
 
     public abstract string? GetValue(string name);
 
@@ -31,7 +32,7 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
     {
         lock (_isValidLock)
         {
-            IsValid = false;
+            _isValid = false;
         }
 
         ThreadHelper.FileAndForget(async () =>
@@ -114,14 +115,14 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
     /// <param name="storeSetting">Shall store a parsed git setting.</param>
     protected void Update(Action clear, Action<string, string> storeSetting)
     {
-        if (IsValid)
+        if (_isValid)
         {
             return;
         }
 
         lock (_isValidLock)
         {
-            if (IsValid)
+            if (_isValid)
             {
                 return;
             }
@@ -131,9 +132,9 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
             clear();
             Parse(settings, storeSetting);
 
-            IsValid = true;
+            _isValid = true;
         }
     }
 
-    protected string DebuggerDisplay => $"{{ {GitSettingLevel}, {(IsValid ? "" : "in")}valid, {UniqueValueSettings.Count} }}";
+    protected string DebuggerDisplay => $"{{ {GitSettingLevel}, {(_isValid ? "" : "in")}valid, {UniqueValueSettings.Count} }}";
 }
