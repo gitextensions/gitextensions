@@ -23,12 +23,6 @@ public class SplitterPersistenceTests
     // Created once for each test
     private GitUICommands _commands;
 
-    [OneTimeTearDown]
-    public void OneTimeTearDown()
-    {
-        _referenceRepository.Dispose();
-    }
-
     [SetUp]
     public void SetUp()
     {
@@ -42,7 +36,7 @@ public class SplitterPersistenceTests
 
         _windowPositionManager = Substitute.For<IWindowPositionManager>();
 
-        ReferenceRepository.ResetRepo(ref _referenceRepository);
+        _referenceRepository = new ReferenceRepository();
 
         _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
     }
@@ -53,6 +47,8 @@ public class SplitterPersistenceTests
         // Since we set AppSettings, we need to delete the backing file so that any subsequent tests won't load
         // outdated settings.
         File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
+
+        _referenceRepository.Dispose();
     }
 
     [Test]

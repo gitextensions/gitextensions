@@ -24,32 +24,6 @@ namespace CommonTestUtils
             }
         }
 
-        /// <summary>
-        /// Reset the repo if possible, if it is null or reset throws create a new.
-        /// </summary>
-        /// <param name="refRepo">The repo to reset, possibly null.</param>
-        public static void ResetRepo([NotNull] ref ReferenceRepository? refRepo)
-        {
-            if (refRepo is null)
-            {
-                refRepo = new ReferenceRepository();
-            }
-            else
-            {
-                try
-                {
-                    refRepo.Reset();
-                }
-                catch (LockedFileException)
-                {
-                    // the index is locked; this might be due to a concurrent or crashed process
-                    refRepo.Dispose();
-                    refRepo = new ReferenceRepository();
-                    Trace.WriteLine("Repo is locked, creating new");
-                }
-            }
-        }
-
         public GitModule Module => _moduleTestHelper.Module;
 
         public string? CommitHash { get; private set; }
@@ -182,35 +156,6 @@ namespace CommonTestUtils
         {
             using Repository repository = new(Module.WorkingDir);
             Commands.Fetch(repository, remoteName, Array.Empty<string>(), new FetchOptions(), null);
-        }
-
-        private void Reset()
-        {
-            // Undo potential impact from earlier tests
-            using (Repository repository = new(Module.WorkingDir))
-            {
-                CheckoutOptions options = new();
-                repository.Reset(LibGit2Sharp.ResetMode.Hard, (Commit)repository.Lookup(CommitHash, LibGit2Sharp.ObjectType.Commit), options);
-                repository.RemoveUntrackedFiles();
-
-                string[] remoteNames = repository.Network.Remotes.Select(remote => remote.Name).ToArray();
-                foreach (string remoteName in remoteNames)
-                {
-                    repository.Network.Remotes.Remove(remoteName);
-                }
-
-                repository.Config.Set(SettingKeyString.UserName, "author");
-                repository.Config.Set(SettingKeyString.UserEmail, "author@mail.com");
-
-                Module.InvalidateGitSettings();
-                Module.GetEffectiveSetting("reload now");
-                Module.GetSettings("reload local settings, too");
-            }
-
-            CommitMessageManager commitMessageManager = new(DummyOwner, Module.WorkingDirGitDir, Module.CommitEncoding);
-#pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-            commitMessageManager.ResetCommitMessageAsync().GetAwaiter().GetResult();
-#pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 
         public void Stash(string stashMessage, string content = null)

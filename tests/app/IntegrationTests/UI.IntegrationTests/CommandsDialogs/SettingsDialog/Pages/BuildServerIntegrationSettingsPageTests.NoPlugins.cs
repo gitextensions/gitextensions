@@ -19,16 +19,10 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
         private MockHost _form;
         private BuildServerIntegrationSettingsPage _settingsPage;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            _referenceRepository.Dispose();
-        }
-
         [SetUp]
         public void SetUp()
         {
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
+            _referenceRepository = new ReferenceRepository();
             ExportProvider mefExportProvider = TestComposition.Empty.ExportProviderFactory.CreateExportProvider();
             ManagedExtensibility.SetTestExportProvider(mefExportProvider);
         }
@@ -38,6 +32,7 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages
         {
             _settingsPage.Dispose();
             _form.Dispose();
+            _referenceRepository.Dispose();
         }
 
         [Test]

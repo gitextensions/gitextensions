@@ -32,7 +32,7 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
+            _referenceRepository = new ReferenceRepository();
 
             ServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
             serviceContainer.RemoveService<IScriptsRunner>();
@@ -42,6 +42,12 @@ namespace GitExtensions.UITests.CommandsDialogs
             serviceContainer.AddService(scriptsRunner);
 
             _commands = new GitUICommands(serviceContainer, _referenceRepository.Module);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _referenceRepository.Dispose();
         }
 
         [OneTimeSetUp]
@@ -61,7 +67,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         {
             AppSettings.ProvideAutocompletion = _provideAutocompletion;
             AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
-            _referenceRepository.Dispose();
         }
 
         [Test]

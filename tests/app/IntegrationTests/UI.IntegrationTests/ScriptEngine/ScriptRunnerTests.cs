@@ -51,7 +51,7 @@ namespace GitExtensions.UITests.ScriptEngine
             serviceContainer.AddService<IScriptsManager>(scriptsManager);
             serviceContainer.AddService<IScriptsRunner>(scriptsManager);
 
-            ReferenceRepository.ResetRepo(ref _referenceRepository);
+            _referenceRepository = new ReferenceRepository();
             _uiCommands = new GitUICommands(serviceContainer, _referenceRepository.Module);
 
             _module = Substitute.For<IGitModule>();
@@ -73,8 +73,8 @@ namespace GitExtensions.UITests.ScriptEngine
             }
         }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
+        [TearDown]
+        public void TearDown()
         {
             _referenceRepository.Dispose();
         }

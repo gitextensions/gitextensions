@@ -47,7 +47,6 @@ namespace GitExtensions.UITests.CommandsDialogs
         [SetUp]
         public void SetUp()
         {
-            // we will be modifying .git/config and need to completely reset each time
             _referenceRepository = new ReferenceRepository();
 
             foreach (string name in RemoteNames)
