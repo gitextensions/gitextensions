@@ -7,7 +7,7 @@ namespace GitCommands
     [DebuggerDisplay("{" + nameof(_byNameMap) + ".Count}")]
     public abstract class SettingsCache : IDisposable
     {
-        private readonly Lock _byNameMapSync = new();
+        private readonly Lock _byNameMapLock = new();
         private readonly ConcurrentDictionary<string, string?> _byNameMap = new();
 
         public void Dispose()
@@ -31,7 +31,7 @@ namespace GitCommands
 
         protected T LockedAction<T>(Func<T> action)
         {
-            lock (_byNameMapSync)
+            lock (_byNameMapLock)
             {
                 return action();
             }

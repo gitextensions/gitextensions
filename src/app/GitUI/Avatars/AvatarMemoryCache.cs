@@ -11,9 +11,9 @@ namespace GitUI.Avatars
     /// </remarks>
     public sealed class AvatarMemoryCache : IAvatarProvider, IAvatarCacheCleaner
     {
-        private readonly Lock _cacheSync = new();
+        private readonly Lock _cacheLock = new();
         private readonly MruCache<(string email, int imageSize), Image> _cache;
-        private readonly Lock _requestedSync = new();
+        private readonly Lock _requestedLock = new();
         private HashSet<(string email, int imageSize)> _requested = new(6);
         private readonly IAvatarProvider _inner;
 
@@ -32,7 +32,7 @@ namespace GitUI.Avatars
         public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
         {
             (string email, int imageSize) key = (email, imageSize);
-            lock (_cacheSync)
+            lock (_cacheLock)
             {
                 if (_cache.TryGetValue(key, out Image? cachedImage))
                 {
@@ -46,7 +46,7 @@ namespace GitUI.Avatars
             {
                 for (int i = 0; i < 10_000; i++)
                 {
-                    lock (_cacheSync)
+                    lock (_cacheLock)
                     {
                         if (_cache.TryGetValue(key, out Image? cachedImage))
                         {
@@ -67,7 +67,7 @@ namespace GitUI.Avatars
 
             try
             {
-                lock (_requestedSync)
+                lock (_requestedLock)
                 {
                     _requested.Add(key);
                 }
@@ -76,7 +76,7 @@ namespace GitUI.Avatars
 
                 if (image is not null)
                 {
-                    lock (_cacheSync)
+                    lock (_cacheLock)
                     {
                         _cache.Add(key, image);
                     }
@@ -86,7 +86,7 @@ namespace GitUI.Avatars
             }
             finally
             {
-                lock (_requestedSync)
+                lock (_requestedLock)
                 {
                     _requested.Remove(key);
                 }
@@ -94,7 +94,7 @@ namespace GitUI.Avatars
 
             bool IsRequestInProgress((string email, int imageSize) avatarKey)
             {
-                lock (_requestedSync)
+                lock (_requestedLock)
                 {
                     return _requested.Contains(avatarKey);
                 }
@@ -104,7 +104,7 @@ namespace GitUI.Avatars
         /// <inheritdoc />
         public Task ClearCacheAsync()
         {
-            lock (_cacheSync)
+            lock (_cacheLock)
             {
                 foreach ((string email, int imageSize) key in _cache.Keys)
                 {
@@ -117,7 +117,7 @@ namespace GitUI.Avatars
                 _cache.Clear();
             }
 
-            lock (_requestedSync)
+            lock (_requestedLock)
             {
                 _requested.Clear();
             }

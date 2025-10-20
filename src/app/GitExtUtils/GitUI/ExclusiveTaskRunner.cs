@@ -4,7 +4,7 @@ namespace GitUI
 {
     public class ExclusiveTaskRunner : IDisposable
     {
-        private readonly Lock _cancellationTokenSequenceSync = new();
+        private readonly Lock _cancellationTokenSequenceLock = new();
         private readonly CancellationTokenSequence _cancellationTokenSequence = new();
         private JoinableTask? _runningTask;
         private readonly TaskManager _taskManager;
@@ -32,7 +32,7 @@ namespace GitUI
         /// </summary>
         public JoinableTask RunDetached(Func<CancellationToken, Task> asyncAction)
         {
-            lock (_cancellationTokenSequenceSync)
+            lock (_cancellationTokenSequenceLock)
             {
                 CancellationToken cancellationToken = _cancellationTokenSequence.Next();
                 JoinableTask? previousTask = _runningTask;

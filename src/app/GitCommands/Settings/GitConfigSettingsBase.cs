@@ -19,7 +19,7 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
 {
     private readonly GitSettingLevel _gitSettingLevel = gitSettingLevel;
     private readonly IExecutable _gitExecutable = gitExecutable;
-    private readonly Lock _isValidSync = new();
+    private readonly Lock _isValidLock = new();
     private bool _isValid;
     private readonly Dictionary<string, string> _uniqueValueSettings = [];
 
@@ -32,7 +32,7 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
 
     public void Invalidate()
     {
-        lock (_isValidSync)
+        lock (_isValidLock)
         {
             _isValid = false;
         }
@@ -122,7 +122,7 @@ public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettin
             return;
         }
 
-        lock (_isValidSync)
+        lock (_isValidLock)
         {
             if (_isValid)
             {

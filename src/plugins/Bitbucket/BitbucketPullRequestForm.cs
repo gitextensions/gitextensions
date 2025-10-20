@@ -166,11 +166,11 @@ namespace GitExtensions.Plugins.Bitbucket
             }
         }
 
-        private readonly Lock _branchesSync = new();
+        private readonly Lock _branchesLock = new();
         private readonly Dictionary<Repository, IEnumerable<string>> _branches = [];
         private async Task<IEnumerable<string>> GetBitbucketBranchesAsync(Repository selectedRepo)
         {
-            lock (_branchesSync)
+            lock (_branchesLock)
             {
                 if (_branches.TryGetValue(selectedRepo, out IEnumerable<string>? selectedBranches))
                 {
@@ -192,7 +192,7 @@ namespace GitExtensions.Plugins.Bitbucket
                 }
             }
 
-            lock (_branchesSync)
+            lock (_branchesLock)
             {
                 _branches.Add(selectedRepo, list);
             }

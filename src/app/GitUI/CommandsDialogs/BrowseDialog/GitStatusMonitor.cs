@@ -59,7 +59,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private bool _isFirstPostRepoChanged;
         private string? _gitPath;
         private string? _submodulesPath;
-        private readonly Lock _statusSequenceSync = new();
+        private readonly Lock _statusSequenceLock = new();
         private readonly CancellationTokenSequence _statusSequence = new();
         private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
         private readonly Func<bool> _isMinimized;
@@ -257,7 +257,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
                             if (_currentStatus != prevStatus)
                             {
-                                lock (_statusSequenceSync)
+                                lock (_statusSequenceLock)
                                 {
                                     if (_commandIsRunningAndNotCancelled)
                                     {
@@ -376,7 +376,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
 
             void GitUICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
             {
-                lock (_statusSequenceSync)
+                lock (_statusSequenceLock)
                 {
                     // First time after open a repo, trigger an update with locked buffers (to speed up subsequent updates)
                     _isFirstPostRepoChanged = true;
@@ -460,7 +460,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
             CancellationToken cancelToken;
             bool noLocks;
 
-            lock (_statusSequenceSync)
+            lock (_statusSequenceLock)
             {
                 if (_disposed)
                 {
@@ -547,7 +547,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
                         }
                         finally
                         {
-                            lock (_statusSequenceSync)
+                            lock (_statusSequenceLock)
                             {
                                 if (!cancelToken.IsCancellationRequested)
                                 {
@@ -586,7 +586,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         /// <param name="delay">delay in milliseconds.</param>
         private void ScheduleNextUpdateTime(int delay)
         {
-            lock (_statusSequenceSync)
+            lock (_statusSequenceLock)
             {
                 // Enforce a minimal time between updates, to not update too frequently
                 int ticks = Environment.TickCount;
@@ -608,7 +608,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog
         private void ScheduleNextInteractiveTime(int delay = InteractiveUpdateDelay)
         {
             // Start commands, also if running already
-            lock (_statusSequenceSync)
+            lock (_statusSequenceLock)
             {
                 _statusSequence.CancelCurrent();
                 _commandIsRunningAndNotCancelled = false;

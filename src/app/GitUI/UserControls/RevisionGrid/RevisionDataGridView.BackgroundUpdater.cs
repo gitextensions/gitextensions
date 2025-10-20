@@ -9,7 +9,7 @@
         {
             private readonly Func<Task> _operation;
             private readonly int _cooldownMilliseconds;
-            private readonly Lock _sync = new();
+            private readonly Lock _lock = new();
             private readonly TaskManager _taskManager;
 
             private volatile bool _executing;
@@ -24,7 +24,7 @@
 
             public void ScheduleExecution()
             {
-                lock (_sync)
+                lock (_lock)
                 {
                     if (!_executing)
                     {
@@ -50,7 +50,7 @@
                 {
                     await Task.Delay(_cooldownMilliseconds);
 
-                    lock (_sync)
+                    lock (_lock)
                     {
                         if (_rerunRequested)
                         {

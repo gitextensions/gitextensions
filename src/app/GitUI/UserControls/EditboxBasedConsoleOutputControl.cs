@@ -282,7 +282,7 @@ namespace GitUI.UserControls
 
         private sealed class ProcessOutputThrottle : IDisposable
         {
-            private readonly Lock _textToAddSync = new();
+            private readonly Lock _textToAddLock = new();
             private readonly StringBuilder _textToAdd = new();
             private readonly Timer _timer;
             private readonly Action<string> _doOutput;
@@ -310,7 +310,7 @@ namespace GitUI.UserControls
             /// <remarks>Can be called on any thread.</remarks>
             public void Append(string text)
             {
-                lock (_textToAddSync)
+                lock (_textToAddLock)
                 {
                     _textToAdd.Append(text);
                 }
@@ -323,7 +323,7 @@ namespace GitUI.UserControls
                 _timer.Start();
 
                 string textToAdd = "";
-                lock (_textToAddSync)
+                lock (_textToAddLock)
                 {
                     if (_textToAdd.Length > 0)
                     {
@@ -340,7 +340,7 @@ namespace GitUI.UserControls
 
             public void Clear()
             {
-                lock (_textToAddSync)
+                lock (_textToAddLock)
                 {
                     _textToAdd.Clear();
                 }

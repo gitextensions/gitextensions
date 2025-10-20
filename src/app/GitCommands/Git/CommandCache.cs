@@ -32,7 +32,7 @@ namespace GitCommands
         /// </summary>
         public event EventHandler? Changed;
 
-        private readonly Lock _cacheSync = new();
+        private readonly Lock _cacheLock = new();
         private readonly MruCache<string, (string output, string error)> _cache;
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace GitCommands
         /// </summary>
         public IReadOnlyList<string> GetCachedCommands()
         {
-            lock (_cacheSync)
+            lock (_cacheLock)
             {
                 return _cache.Keys;
             }
@@ -67,7 +67,7 @@ namespace GitCommands
             // Never cache empty commands
             if (!string.IsNullOrEmpty(cmd))
             {
-                lock (_cacheSync)
+                lock (_cacheLock)
                 {
                     if (_cache.TryGetValue(cmd, out (string output, string error) item))
                     {
@@ -96,7 +96,7 @@ namespace GitCommands
                 return;
             }
 
-            lock (_cacheSync)
+            lock (_cacheLock)
             {
                 _cache.Add(cmd, (output, error));
             }

@@ -69,7 +69,7 @@ namespace GitCommands
             private readonly Process _process;
             private readonly bool _redirectInput;
             private readonly bool _redirectOutput;
-            private readonly Lock _syncRoot = new();
+            private readonly Lock _lock = new();
             private readonly bool _throwOnErrorExit;
 
             private bool _disposed;
@@ -214,7 +214,7 @@ namespace GitCommands
 
             private void OnProcessExit(object sender, EventArgs eventArgs)
             {
-                lock (_syncRoot)
+                lock (_lock)
                 {
                     // The Exited event can be raised after the process is disposed, however
                     // if the Process is disposed then reading ExitCode will throw.
@@ -280,7 +280,7 @@ namespace GitCommands
 
             public void Dispose()
             {
-                lock (_syncRoot)
+                lock (_lock)
                 {
                     if (_disposed)
                     {

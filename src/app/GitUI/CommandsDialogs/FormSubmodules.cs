@@ -18,7 +18,7 @@ namespace GitUI.CommandsDialogs
         private readonly TranslationString _removeSelectedSubmodule = new("Are you sure you want remove the selected submodule?");
         private readonly TranslationString _removeSelectedSubmoduleCaption = new("Remove");
 
-        private readonly Lock _modulesSync = new();
+        private readonly Lock _modulesLock = new();
         private readonly BindingList<IGitSubmoduleInfo?> _modules = [];
         private GitSubmoduleInfo? _oldSubmoduleInfo;
 
@@ -75,7 +75,7 @@ namespace GitUI.CommandsDialogs
                 _oldSubmoduleInfo = Submodules.SelectedRows[0].DataBoundItem as GitSubmoduleInfo;
             }
 
-            lock (_modulesSync)
+            lock (_modulesLock)
             {
                 _modules.Clear();
             }
@@ -100,7 +100,7 @@ namespace GitUI.CommandsDialogs
             };
             _bw.ProgressChanged += (sender, e) =>
             {
-                lock (_modulesSync)
+                lock (_modulesLock)
                 {
                     _modules.Add(e.UserState as GitSubmoduleInfo);
 

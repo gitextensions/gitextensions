@@ -16,7 +16,7 @@ namespace CommonTestUtils.MEF
     public sealed partial class TestComposition
     {
         public static readonly TestComposition Empty = new(ImmutableHashSet<Assembly>.Empty, ImmutableHashSet<Type>.Empty, ImmutableHashSet<Type>.Empty);
-        private static readonly Lock _factoryCacheSync = new();
+        private static readonly Lock _factoryCacheLock = new();
         private static readonly Dictionary<CacheKey, IExportProviderFactory> _factoryCache = [];
 
         private readonly struct CacheKey : IEquatable<CacheKey>
@@ -86,7 +86,7 @@ namespace CommonTestUtils.MEF
         {
             CacheKey key = new(Assemblies, Parts, ExcludedPartTypes);
 
-            lock (_factoryCacheSync)
+            lock (_factoryCacheLock)
             {
                 if (_factoryCache.TryGetValue(key, out IExportProviderFactory existing))
                 {
@@ -96,7 +96,7 @@ namespace CommonTestUtils.MEF
 
             IExportProviderFactory newFactory = ExportProviderCache.CreateExportProviderFactory(GetCatalog(), isRemoteHostComposition: false);
 
-            lock (_factoryCacheSync)
+            lock (_factoryCacheLock)
             {
                 if (_factoryCache.TryGetValue(key, out IExportProviderFactory existing))
                 {
