@@ -88,6 +88,12 @@ public partial class FormUpdates : GitExtensionsDialog
                 CheckForNewerVersion(releases.Blob.Value.GetContent());
             }
         }
+        catch (Exception ex) when (ex.Message.Contains("rate limit", StringComparison.OrdinalIgnoreCase))
+        {
+            // GitHub API rate limiting - suppress the exception and do not show it to the user.
+            // Nothing we can do here, ignore it.
+            Done();
+        }
         catch (InvalidAsynchronousStateException)
         {
             // InvalidAsynchronousStateException (The destination thread no longer exists) is thrown
@@ -99,12 +105,6 @@ public partial class FormUpdates : GitExtensionsDialog
             // We had a number of NRE reports.
             // Most likely scenario is that GitHub is API rate limiting unauthenticated requests that lead to failures in Git.hub library.
             // Nothing we can do here, ignore it.
-        }
-        catch (Exception ex) when (ex.Message.Contains("rate limit", StringComparison.OrdinalIgnoreCase))
-        {
-            // GitHub API rate limiting - suppress the exception and do not show it to the user.
-            // Nothing we can do here, ignore it.
-            Done();
         }
         catch (Exception ex)
         {
