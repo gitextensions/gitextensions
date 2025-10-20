@@ -100,6 +100,12 @@ public partial class FormUpdates : GitExtensionsDialog
             // Most likely scenario is that GitHub is API rate limiting unauthenticated requests that lead to failures in Git.hub library.
             // Nothing we can do here, ignore it.
         }
+        catch (Exception ex) when (ex.Message.Contains("rate limit", StringComparison.OrdinalIgnoreCase))
+        {
+            // GitHub API rate limiting - suppress the exception and do not show it to the user.
+            // Nothing we can do here, ignore it.
+            Done();
+        }
         catch (Exception ex)
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
