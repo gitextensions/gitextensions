@@ -599,7 +599,7 @@ namespace GitCommandsTests
         [TestCase(true)]
         public void GetSelectedBranch_should_return_requested_result_in_detached_state(bool emptyIfDetached)
         {
-            _executable.StageOutput("symbolic-ref --quiet HEAD", "", 1);
+            _executable.StageOutput("symbolic-ref --quiet HEAD", "", exitCode: 1);
 
             string expectedResult = emptyIfDetached ? "" : DetachedHeadParser.DetachedBranch;
             string result = _gitModule.GetSelectedBranch(emptyIfDetached);
