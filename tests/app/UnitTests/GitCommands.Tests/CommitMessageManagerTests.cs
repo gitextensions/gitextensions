@@ -48,10 +48,9 @@ namespace GitCommandsTests
         [OneTimeSetUp]
         public void Init()
         {
-            using (new JoinableTaskScope())
-            {
-                AppSettings.LoadSettings();
-            }
+            using JoinableTaskScope joinableTaskScope = new();
+
+            AppSettings.LoadSettings();
         }
 
         [SetUp]
