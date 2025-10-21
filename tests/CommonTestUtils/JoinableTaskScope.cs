@@ -1,15 +1,15 @@
 ﻿using GitUI;
 using Microsoft.VisualStudio.Threading;
 
-namespace GitExtUtils.GitUI;
+namespace CommonTestUtils;
 
-public sealed class JoinableTaskScope : IDisposable
+public readonly ref struct JoinableTaskScope : IDisposable
 {
     private readonly bool _localScope;
 
     public JoinableTaskScope()
     {
-        _localScope = ThreadHelper.JoinableTaskContext == null;
+        _localScope = ThreadHelper.JoinableTaskContext is null;
 
         if (_localScope)
         {
