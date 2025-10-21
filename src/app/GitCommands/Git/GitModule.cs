@@ -2913,7 +2913,7 @@ namespace GitCommands
             ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
 
             return result.ExitedSuccessfully
-                ? result.StandardOutput["refs/heads/".Length..].TrimEnd()
+                ? result.StandardOutput[GitRefName.RefsHeadsPrefix.Length..].TrimEnd()
                 : emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
         }
 
