@@ -13,52 +13,7 @@ namespace CommonTestUtils;
 
 public sealed partial class GitModuleTestHelper : IDisposable
 {
-    /// <summary>
-    /// Creates a throw-away new repository in a temporary location.
-    /// </summary>
-    public GitModuleTestHelper(string repositoryName = "repo1")
-    {
-        TemporaryPath = GetTemporaryPath();
-
-        string path = Path.Combine(TemporaryPath, repositoryName);
-        if (Directory.Exists(path))
-        {
-            throw new ArgumentException($"Repository '{path}' already exists", nameof(repositoryName));
-        }
-
-        Directory.CreateDirectory(path);
-
-        GitModule module = new(path);
-        module.Init(bare: false, shared: false);
-        Module = module;
-
-        // Don't assume global user/email
-        SetRepoConfig(module);
-
-        // Stage operations may fail due to different line endings, so want only warning and not a fatal error
-        //
-        //  fatal: LF would be replaced by CRLF in .gitmodules
-        //         Failed to register submodule 'repo2'
-        using (new JoinableTaskScope())
-        {
-            module.SetSetting("core.safecrlf", "false");
-        }
-
-        return;
-
-        static string GetTemporaryPath()
-        {
-            string tempPath = Path.GetTempPath();
-
-            // workaround macOS symlinking its temp folder
-            if (tempPath.StartsWith("/var"))
-            {
-                tempPath = "/private" + tempPath;
-            }
-
-            return Path.Combine(tempPath, Path.GetRandomFileName());
-        }
-    }
+    private readonly string _repositoryName;
 
     /// <summary>
     /// Gets the module.
@@ -69,6 +24,73 @@ public sealed partial class GitModuleTestHelper : IDisposable
     /// Gets the temporary path where test repositories will be created for integration tests.
     /// </summary>
     public string TemporaryPath { get; }
+
+    /// <summary>
+    /// Creates a throw-away new repository in a temporary location.
+    /// </summary>
+    public GitModuleTestHelper(string repositoryName = "repo1")
+        : this(repositoryName, FileSystemUtility.GetTemporaryPath(), useExisting: false)
+    {
+    }
+
+    /// <summary>
+    /// Creates a wrapper for a throw-away repository in a temporary location.
+    /// The caller must supply the path to the directory containing the
+    /// repository in <paramref name="temporaryPath"/> and the name for the
+    /// repository, which will be a subdirectory of <paramref name="temporaryPath"/>,
+    /// in <paramref name="repositoryName"/>. If <paramref name="useExisting"/>
+    /// is false, then the temporary path must not exist, and it will be
+    /// created and the specified repository initialized within it. If
+    /// <paramref name="useExisting"/> is true, then the temporary repository
+    /// must already exist with the specified name in the specified temporary
+    /// path.
+    /// </summary>
+    internal GitModuleTestHelper(string repositoryName, string temporaryPath, bool useExisting)
+    {
+        TemporaryPath = temporaryPath;
+
+        _repositoryName = repositoryName;
+
+        string path = Path.Combine(TemporaryPath, repositoryName);
+
+        GitModule module;
+
+        if (useExisting)
+        {
+            if (!Directory.Exists(path))
+            {
+                throw new ArgumentException($"Repository '{path}' does not exist", nameof(repositoryName));
+            }
+
+            module = new(path);
+        }
+        else
+        {
+            if (Directory.Exists(path))
+            {
+                throw new ArgumentException($"Repository '{path}' already exists", nameof(repositoryName));
+            }
+
+            Directory.CreateDirectory(path);
+
+            module = new(path);
+            module.Init(bare: false, shared: false);
+
+            // Don't assume global user/email
+            SetRepoConfig(module);
+
+            // Stage operations may fail due to different line endings, so want only warning and not a fatal error
+            //
+            //  fatal: LF would be replaced by CRLF in .gitmodules
+            //         Failed to register submodule 'repo2'
+            using (new JoinableTaskScope())
+            {
+                module.SetSetting("core.safecrlf", "false");
+            }
+        }
+
+        Module = module;
+    }
 
     /// <summary>
     /// Adds 'subModuleHelper' as a submodule of the current subModuleHelper.
@@ -91,6 +113,13 @@ public sealed partial class GitModuleTestHelper : IDisposable
         Debug.WriteLine(result.AllOutput);
 
         Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
+    }
+
+    public GitModuleTestSnapshot CaptureSnapshot()
+    {
+        return new GitModuleTestSnapshot(
+            _repositoryName,
+            TemporaryPath);
     }
 
     /// <summary>

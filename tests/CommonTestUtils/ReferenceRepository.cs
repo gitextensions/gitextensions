@@ -14,6 +14,9 @@ public class ReferenceRepository : IDisposable
     }
 
     private static readonly Lock _nextLock = new();
+    private static SnapshotRef _repoSnapshot = new();
+    private static SnapshotRef _repoWithCommitSnapshot = new();
+    private static string? _repoCommitHash = null;
     private static Task<(GitModuleTestHelper Helper, string? CommitHash)> _nextGitModuleTestHelper = null;
     private static Task<(GitModuleTestHelper Helper, string? CommitHash)> _nextGitModuleTestHelperWithCommit = null;
 
@@ -25,26 +28,31 @@ public class ReferenceRepository : IDisposable
     // We don't expect any failures so that we won't be switching to the main thread or showing messages
     public static Control DummyOwner { get; } = new();
 
+    private class SnapshotRef
+    {
+        public GitModuleTestSnapshot? Value;
+    }
+
     public ReferenceRepository(bool createCommit = true)
     {
         lock (_nextLock)
         {
             if (createCommit)
             {
-                _moduleTestHelper = ClaimNextModuleTestHelper(ref _nextGitModuleTestHelperWithCommit, createCommit: true);
+                _moduleTestHelper = ClaimNextModuleTestHelper(ref _nextGitModuleTestHelperWithCommit, _repoWithCommitSnapshot, createCommit: true);
             }
             else
             {
-                _moduleTestHelper = ClaimNextModuleTestHelper(ref _nextGitModuleTestHelper, createCommit: false);
+                _moduleTestHelper = ClaimNextModuleTestHelper(ref _nextGitModuleTestHelper, _repoSnapshot, createCommit: false);
             }
         }
     }
 
-    private GitModuleTestHelper ClaimNextModuleTestHelper(ref Task<(GitModuleTestHelper Helper, string? CommitHash)> initializerRef, bool createCommit)
+    private GitModuleTestHelper ClaimNextModuleTestHelper(ref Task<(GitModuleTestHelper Helper, string? CommitHash)> initializerRef, SnapshotRef snapshotRef, bool createCommit)
     {
         // If ReleaseNextRepositories was called, then the pending instances have
         // been cancelled.
-        initializerRef ??= BeginInitializeGitModuleTestHelper(createCommit);
+        initializerRef ??= BeginInitializeGitModuleTestHelper(snapshotRef, createCommit);
 
         Task<(GitModuleTestHelper Helper, string? CommitHash)> initializer = initializerRef;
 
@@ -62,25 +70,35 @@ public class ReferenceRepository : IDisposable
 #pragma warning restore VSTHRD002
 
         // Start background initialization of the Git module for the next call.
-        initializerRef = BeginInitializeGitModuleTestHelper(createCommit);
+        initializerRef = BeginInitializeGitModuleTestHelper(snapshotRef, createCommit);
 
         return moduleTestHelper;
     }
 
-    private static Task<(GitModuleTestHelper Helper, string? CommitHash)> BeginInitializeGitModuleTestHelper(bool createCommit)
+    private static Task<(GitModuleTestHelper Helper, string? CommitHash)> BeginInitializeGitModuleTestHelper(SnapshotRef snapshotRef, bool createCommit)
     {
         return Task.Run(
             () =>
             {
-                GitModuleTestHelper moduleTestHelper = new();
-                string? commitHash = null;
+                GitModuleTestHelper moduleTestHelper;
 
-                if (createCommit)
+                if (snapshotRef.Value == null)
                 {
-                    commitHash = CreateCommit(moduleTestHelper, "A commit message", "A");
+                    moduleTestHelper = new();
+
+                    if (createCommit)
+                    {
+                        _repoCommitHash = CreateCommit(moduleTestHelper, "A commit message", "A");
+                    }
+
+                    snapshotRef.Value = moduleTestHelper.CaptureSnapshot();
+                }
+                else
+                {
+                    moduleTestHelper = snapshotRef.Value.Clone();
                 }
 
-                return (moduleTestHelper, commitHash);
+                return (moduleTestHelper, _repoCommitHash);
             });
     }
 
