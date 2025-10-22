@@ -6,7 +6,6 @@ using GitCommands.Git;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using GitExtUtils.GitUI;
 using GitUI;
 
 namespace CommonTestUtils;
@@ -83,10 +82,7 @@ public sealed partial class GitModuleTestHelper : IDisposable
             //
             //  fatal: LF would be replaced by CRLF in .gitmodules
             //         Failed to register submodule 'repo2'
-            using (new JoinableTaskScope())
-            {
-                module.SetSetting("core.safecrlf", "false");
-            }
+            module.SetSetting("core.safecrlf", "false");
         }
 
         Module = module;

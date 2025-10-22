@@ -12,7 +12,7 @@ namespace GitCommands
     /// </summary>
     public static partial class ExecutableExtensions
     {
-        private static readonly Lazy<Encoding> _defaultOutputEncoding = new(() => GitModule.SystemEncoding, isThreadSafe: true);
+        private static readonly Lazy<Encoding> _defaultOutputEncoding = new(() => GitModule.SystemEncoding);
 
         [GeneratedRegex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.ExplicitCapture)]
         private static partial Regex AnsiCodeRegex();
@@ -41,7 +41,7 @@ namespace GitCommands
             CommandCache? cache = null,
             bool stripAnsiEscapeCodes = true)
         {
-            return GitUI.ThreadHelper.RunJoinableTask(
+            return GitUI.ThreadHelper.JoinableTaskFactory.Run(
                 () => executable.GetOutputAsync(arguments, input, outputEncoding, cache, stripAnsiEscapeCodes));
         }
 
@@ -262,7 +262,7 @@ namespace GitCommands
             bool throwOnErrorExit = true,
             CancellationToken cancellationToken = default)
         {
-            return GitUI.ThreadHelper.RunJoinableTask(
+            return GitUI.ThreadHelper.JoinableTaskFactory.Run(
                 () => executable.ExecuteAsync(arguments, writeInput, outputEncoding, cache, extraCacheKey: "", stripAnsiEscapeCodes, throwOnErrorExit, cancellationToken));
         }
 

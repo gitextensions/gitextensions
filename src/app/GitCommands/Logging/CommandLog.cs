@@ -222,7 +222,7 @@ namespace GitCommands.Logging
         {
             const int MaxEntryCount = 500;
 
-            CommandLogEntry entry = new(fileName, arguments, workDir, DateTime.Now, ThreadHelper.IsOnMainThread);
+            CommandLogEntry entry = new(fileName, arguments, workDir, DateTime.Now, ThreadHelper.JoinableTaskContext.IsOnMainThread);
 
             if (AppSettings.LogCaptureCallStacks)
             {

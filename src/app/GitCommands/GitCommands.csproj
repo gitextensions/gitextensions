@@ -8,6 +8,10 @@
   <PropertyGroup Condition="'$(Configuration)'=='Debug'">
     <DefineConstants>$(DefineConstants);TRACE_REVISIONREADER</DefineConstants>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\GitExtUtils\Validates.cs" Link="Validates.cs" />
+  </ItemGroup>
   
   <ItemGroup>
 
