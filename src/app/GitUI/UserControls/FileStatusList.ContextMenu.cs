@@ -870,11 +870,18 @@ partial class FileStatusList
         tsmiUnstageFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.UnStageSelectedFile);
         tsmiShowInFileTree.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ShowFileTree);
         tsmiFilterFileInGrid.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FilterFileInGrid);
-        tsmiFindFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindFile);
-        tsmiOpenFindInCommitFilesGitGrepDialog.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep);
+        tsmiFindFile.ShortcutKeyDisplayString = GetFindFileShortcut();
+        tsmiOpenFindInCommitFilesGitGrepDialog.ShortcutKeyDisplayString = _isFileTreeMode ? "" : GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep);
         tsmiOpenInVisualStudio.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenInVisualStudio);
         tsmiAddFileToGitIgnore.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.AddFileToGitIgnore);
         tsmiMove.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.RenameMove);
+
+        string GetFindFileShortcut()
+        {
+            // FindInCommitFilesUsingGitGrep is redirected to FindFile in file tree mode
+            string dedicated = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindFile);
+            return dedicated.Length > 0 || !_isFileTreeMode ? dedicated : GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep);
+        }
     }
 
     private void RememberFirstRevDiff_Click(object sender, EventArgs e)
