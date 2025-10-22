@@ -4,7 +4,6 @@ using System.Text;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
-using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 
 namespace GitCommandsTests

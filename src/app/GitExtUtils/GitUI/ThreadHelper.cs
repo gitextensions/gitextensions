@@ -113,9 +113,7 @@ namespace GitUI
             }
 
 #pragma warning disable VSTHRD002 // Avoid problematic synchronous waits
-#pragma warning disable VSTHRD104 // Make this method async and add a wrapper that uses JoinableTaskFactory.Run
             return task.Result;
-#pragma warning restore VSTHRD104 // Make this method async and add a wrapper that uses JoinableTaskFactory.Run
 #pragma warning restore VSTHRD002 // Avoid problematic synchronous waits
         }
 

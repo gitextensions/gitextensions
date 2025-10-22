@@ -12,7 +12,7 @@ namespace GitCommands
     /// </summary>
     public static partial class ExecutableExtensions
     {
-        private static readonly Lazy<Encoding> _defaultOutputEncoding = new(() => GitModule.SystemEncoding);
+        private static readonly Lazy<Encoding> _defaultOutputEncoding = new(() => GitModule.SystemEncoding, false);
 
         [GeneratedRegex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.ExplicitCapture)]
         private static partial Regex AnsiCodeRegex();
