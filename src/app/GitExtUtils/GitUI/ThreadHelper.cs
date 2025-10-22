@@ -36,7 +36,7 @@ namespace GitUI
             {
 #pragma warning disable VSTHRD002
                 asyncMethod()
-                    .ConfigureAwait(false)
+                    .ConfigureAwait(continueOnCapturedContext: false)
                     .GetAwaiter()
                     .GetResult();
 #pragma warning restore VSTHRD002
@@ -55,7 +55,7 @@ namespace GitUI
             {
 #pragma warning disable VSTHRD002
                 return asyncMethod()
-                    .ConfigureAwait(false)
+                    .ConfigureAwait(continueOnCapturedContext: false)
                     .GetAwaiter()
                     .GetResult();
 #pragma warning restore VSTHRD002
