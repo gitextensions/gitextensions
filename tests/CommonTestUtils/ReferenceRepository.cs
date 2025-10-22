@@ -14,8 +14,8 @@ public class ReferenceRepository : IDisposable
     }
 
     private static readonly Lock _nextLock = new();
-    private static SnapshotRef _repoSnapshot = new();
-    private static SnapshotRef _repoWithCommitSnapshot = new();
+    private static GitModuleTestSnapshot? _repoSnapshot = null;
+    private static GitModuleTestSnapshot? _repoWithCommitSnapshot = null;
     private static string? _repoCommitHash = null;
     private static Task<(GitModuleTestHelper Helper, string? CommitHash)> _nextGitModuleTestHelper = null;
     private static Task<(GitModuleTestHelper Helper, string? CommitHash)> _nextGitModuleTestHelperWithCommit = null;
@@ -28,75 +28,75 @@ public class ReferenceRepository : IDisposable
     // We don't expect any failures so that we won't be switching to the main thread or showing messages
     public static Control DummyOwner { get; } = new();
 
-    private class SnapshotRef
-    {
-        public GitModuleTestSnapshot? Value;
-    }
-
     public ReferenceRepository(bool createCommit = true)
     {
         lock (_nextLock)
         {
             if (createCommit)
             {
-                _moduleTestHelper = ClaimNextModuleTestHelper(ref _nextGitModuleTestHelperWithCommit, _repoWithCommitSnapshot, createCommit: true);
+                _moduleTestHelper = ClaimNextModuleTestHelper(ref _nextGitModuleTestHelperWithCommit, ref _repoWithCommitSnapshot, createCommit: true);
             }
             else
             {
-                _moduleTestHelper = ClaimNextModuleTestHelper(ref _nextGitModuleTestHelper, _repoSnapshot, createCommit: false);
+                _moduleTestHelper = ClaimNextModuleTestHelper(ref _nextGitModuleTestHelper, ref _repoSnapshot, createCommit: false);
             }
         }
     }
 
-    private GitModuleTestHelper ClaimNextModuleTestHelper(ref Task<(GitModuleTestHelper Helper, string? CommitHash)> initializerRef, SnapshotRef snapshotRef, bool createCommit)
+    private GitModuleTestHelper ClaimNextModuleTestHelper(ref Task<(GitModuleTestHelper Helper, string? CommitHash)>? initializer, ref GitModuleTestSnapshot? snapshot, bool createCommit)
     {
-        // If ReleaseNextRepositories was called, then the pending instances have
-        // been cancelled.
-        initializerRef ??= BeginInitializeGitModuleTestHelper(snapshotRef, createCommit);
-
-        Task<(GitModuleTestHelper Helper, string? CommitHash)> initializer = initializerRef;
-
-        // VSTHRD002 warns that naively accessing the result of a task with affinity to the
-        // UI thread when running on the UI thread will result in a deadlock, because it
-        // can't advance the task to get that result without the thread running and the call
-        // is explicitly blocking it. This is not the UI thread, and the await is specifically
-        // configured to not require continuation on captured context. Furthermore, the task
-        // was created earlier on this same thread on which there is no synchronization
-        // context to begin with.
         GitModuleTestHelper moduleTestHelper;
 
+        if (initializer == null)
+        {
+            // Initialize a reference Git repository synchronously. This is considerably
+            // simpler than doing it in a background task, because various parts of the
+            // initialization depend on there being an ambient ThreadHelper.JoinableTaskContext,
+            // and there is one in this context.
+
+            (moduleTestHelper, CommitHash) = InitializeGitModuleTestHelper(createCommit);
+
+            snapshot = moduleTestHelper.CaptureSnapshot();
+        }
+        else
+        {
+            // VSTHRD002 warns that naively accessing the result of a task with affinity to the
+            // UI thread when running on the UI thread will result in a deadlock, because it
+            // can't advance the task to get that result without the thread running and the call
+            // is explicitly blocking it. This is not the UI thread, and the await is specifically
+            // configured to not require continuation on captured context. Furthermore, the task
+            // was created earlier on this same thread on which there is no synchronization
+            // context to begin with.
+
 #pragma warning disable VSTHRD002
-        (moduleTestHelper, CommitHash) = initializer.ConfigureAwait(false).GetAwaiter().GetResult();
+            (moduleTestHelper, CommitHash) = initializer.ConfigureAwait(false).GetAwaiter().GetResult();
 #pragma warning restore VSTHRD002
+        }
 
         // Start background initialization of the Git module for the next call.
-        initializerRef = BeginInitializeGitModuleTestHelper(snapshotRef, createCommit);
+        initializer = BeginFastCloneGitModuleTestHelper(snapshot, createCommit);
 
         return moduleTestHelper;
     }
 
-    private static Task<(GitModuleTestHelper Helper, string? CommitHash)> BeginInitializeGitModuleTestHelper(SnapshotRef snapshotRef, bool createCommit)
+    private static (GitModuleTestHelper Helper, string? CommitHash) InitializeGitModuleTestHelper(bool createCommit)
+    {
+        GitModuleTestHelper moduleTestHelper = new();
+
+        if (createCommit)
+        {
+            _repoCommitHash = CreateCommit(moduleTestHelper, "A commit message", "A");
+        }
+
+        return (moduleTestHelper, _repoCommitHash);
+    }
+
+    private static Task<(GitModuleTestHelper Helper, string? CommitHash)> BeginFastCloneGitModuleTestHelper(GitModuleTestSnapshot snapshot, bool createCommit)
     {
         return Task.Run(
             () =>
             {
-                GitModuleTestHelper moduleTestHelper;
-
-                if (snapshotRef.Value == null)
-                {
-                    moduleTestHelper = new();
-
-                    if (createCommit)
-                    {
-                        _repoCommitHash = CreateCommit(moduleTestHelper, "A commit message", "A");
-                    }
-
-                    snapshotRef.Value = moduleTestHelper.CaptureSnapshot();
-                }
-                else
-                {
-                    moduleTestHelper = snapshotRef.Value.Clone();
-                }
+                GitModuleTestHelper moduleTestHelper = snapshot.Clone();
 
                 return (moduleTestHelper, _repoCommitHash);
             });
