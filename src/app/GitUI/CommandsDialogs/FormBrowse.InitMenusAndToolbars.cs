@@ -292,7 +292,7 @@ namespace GitUI.CommandsDialogs
                     break;
 
                 case GitPullAction.Rebase:
-                    toolStripButtonPull.Image = rebaseToolStripMenuItem.Image;
+                    toolStripButtonPull.Image = rebaseToolStripMenuItem1.Image;
                     toolStripButtonPull.ToolTipText = _pullRebase.Text;
                     break;
 
