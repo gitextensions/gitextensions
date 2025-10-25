@@ -309,7 +309,6 @@ namespace GitExtensions.Plugins.GitImpact
                     foreach ((string author, ImpactLoader.DataPoint data) in from entry in dataByAuthor orderby entry.Value.ChangedLines descending select entry)
                     {
                         // Calculate week-author-rectangle
-                        // Ensure ChangedLines is at least 1 to avoid Math.Log(0) which returns -Infinity
                         int changedLines = Math.Max(1, data.ChangedLines);
                         int height = Math.Max(1, (int)Math.Round(Math.Pow(Math.Log(changedLines), 1.5) * 4));
                         Rectangle rc = new(x, y, BlockWidth, height);
@@ -346,7 +345,6 @@ namespace GitExtensions.Plugins.GitImpact
                 }
 
                 // Pre-calculate height scale factor
-                // Ensure h_max is at least 1 to avoid division by zero
                 double height_factor = h_max > 0 ? 0.9 * Height / h_max : 1.0;
 
                 // Scale week label coordinates
