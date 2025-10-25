@@ -11,8 +11,7 @@ public interface IGitVersion : IComparable<IGitVersion>
     bool SupportRebaseMerges { get; }
     bool SupportStashStaged { get; }
     bool SupportUpdateRefs { get; }
-
-    // TODO bool SupportLsFilesFormat { get; }
+    bool SupportLsFilesFormat { get; }
 
     string ToString();
 
