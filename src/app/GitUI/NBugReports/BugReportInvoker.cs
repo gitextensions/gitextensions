@@ -278,13 +278,9 @@ namespace GitUI.NBugReports
                 Environment.Exit(0);
             }
 
-            /// <summary>
-            /// Determines if the assembly name is a .NET framework assembly.
-            /// .NET framework assemblies are typically affected by Patch Tuesday updates,
-            /// causing transient FileNotFoundException errors that are resolved by restarting the application.
-            /// </summary>
-            /// <param name="assemblyName">The assembly name (without version info).</param>
-            /// <returns>True if the assembly is a .NET framework assembly; otherwise, false.</returns>
+            // Determines if the assembly name is a .NET framework assembly.
+            // .NET framework assemblies are typically affected by Patch Tuesday updates,
+            // causing transient FileNotFoundException errors that are resolved by restarting the application.
             static bool IsDotNetFrameworkAssembly(string assemblyName)
             {
                 if (string.IsNullOrWhiteSpace(assemblyName))
