@@ -3223,9 +3223,7 @@ namespace GitCommands
                     // ls-files with same format as ls-tree
                     "-z",
                     { commitId == ObjectId.IndexId, "--cached", "--no-cached" },
-
-                    // TODO change to GitVersion.SupportLsFilesFormat when Extensibility.Git can be updated
-                    { GitVersion.SupportUpdateRefs, @$"--format=""{_gitTreeParser.GitTreeFormat}""", "--stage" },
+                    { GitVersion.SupportLsFilesFormat, @$"--format=""{_gitTreeParser.GitTreeFormat}""", "--stage" },
                     "--",
                     fileName.QuoteNE()
                 }
@@ -3241,7 +3239,7 @@ namespace GitCommands
 
             ExecutionResult result = _gitExecutable.Execute(args, cache: isArtificial ? null : GitCommandCache, cancellationToken: cancellationToken);
 
-            if (isArtificial && !GitVersion.SupportUpdateRefs)
+            if (isArtificial && !GitVersion.SupportLsFilesFormat)
             {
                 return _gitTreeParser.ParseLsFiles(result.StandardOutput);
             }
