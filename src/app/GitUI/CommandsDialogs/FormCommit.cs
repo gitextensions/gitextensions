@@ -1874,8 +1874,6 @@ namespace GitUI.CommandsDialogs
                             {
                                 continue;
                             }
-
-                            gitSubmoduleStatus.Status = SubmoduleStatus.Unknown;
                         }
 
                         (GitRevision _, GitRevision indexRev, GitRevision workTreeRev) = GetHeadRevisions();
