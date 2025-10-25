@@ -220,6 +220,26 @@ namespace GitUI.NBugReports
             }
         }
 
+        /// <summary>
+        /// Determines if the assembly name is a .NET framework assembly.
+        /// .NET framework assemblies are typically affected by Patch Tuesday updates,
+        /// causing transient FileNotFoundException errors that are resolved by restarting the application.
+        /// </summary>
+        /// <param name="assemblyName">The assembly name (without version info).</param>
+        /// <returns>True if the assembly is a .NET framework assembly; otherwise, false.</returns>
+        private static bool IsDotNetFrameworkAssembly(string assemblyName)
+        {
+            if (string.IsNullOrWhiteSpace(assemblyName))
+            {
+                return false;
+            }
+
+            // .NET framework assemblies typically start with "System." or "Microsoft."
+            // These are the assemblies commonly affected by Patch Tuesday updates
+            return assemblyName.StartsWith("System.", StringComparison.OrdinalIgnoreCase)
+                || assemblyName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase);
+        }
+
         private static void ReportFailedToLoadAnAssembly(FileNotFoundException exception, bool isTerminating)
         {
             string fileName = exception.FileName ?? "";
@@ -228,6 +248,9 @@ namespace GitUI.NBugReports
             {
                 fileName = fileName[..uninterestingIndex];
             }
+
+            // Check if this is a .NET framework assembly (typically affected by Patch Tuesday updates)
+            bool isDotNetFrameworkAssembly = IsDotNetFrameworkAssembly(fileName);
 
             TaskDialogPage page = new()
             {
@@ -243,9 +266,15 @@ namespace GitUI.NBugReports
             restartButton.Click += (_, _) => RestartGE();
             page.Buttons.Add(restartButton);
 
-            TaskDialogCommandLinkButton reportButton = new(text: TranslatedStrings.ReportIssue, descriptionText: TranslatedStrings.ReportReproducedIssueDescription);
-            reportButton.Click += (_, _) => ShowNBug(OwnerForm, exception, isExternalOperation: false, isTerminating);
-            page.Buttons.Add(reportButton);
+            // Only show the report button for non-.NET framework assemblies
+            // .NET framework assembly errors are typically transient (caused by Patch Tuesday updates)
+            // and should not generate NBug reports
+            if (!isDotNetFrameworkAssembly)
+            {
+                TaskDialogCommandLinkButton reportButton = new(text: TranslatedStrings.ReportIssue, descriptionText: TranslatedStrings.ReportReproducedIssueDescription);
+                reportButton.Click += (_, _) => ShowNBug(OwnerForm, exception, isExternalOperation: false, isTerminating);
+                page.Buttons.Add(reportButton);
+            }
 
             page.Expander = new TaskDialogExpander
             {
