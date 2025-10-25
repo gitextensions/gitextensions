@@ -105,6 +105,8 @@ namespace GitExtensions.UITests.CommandsDialogs
 
         private void RunRepoObjectsTreeTest(Action<ContextMenuStrip> testDriver)
         {
+            string branchName = _referenceRepository.Module.GetCurrentBranchName();
+
             RunFormTest(
                 async form =>
                 {
@@ -117,11 +119,11 @@ namespace GitExtensions.UITests.CommandsDialogs
 
                     ContextMenuStrip contextMenu = ta.ContextMenu;
 
-                    ta.SelectNode<LocalBranchNode>(new[] { TranslatedStrings.Branches, "master" });
+                    ta.SelectNode<LocalBranchNode>(new[] { TranslatedStrings.Branches, branchName });
                     ta.OpenContextMenu();
                     testDriver(contextMenu);
 
-                    ta.SelectNode<RemoteBranchNode>(new[] { TranslatedStrings.Remotes, RemoteName, "master" });
+                    ta.SelectNode<RemoteBranchNode>(new[] { TranslatedStrings.Remotes, RemoteName, branchName });
                     ta.OpenContextMenu();
                     testDriver(contextMenu);
 
