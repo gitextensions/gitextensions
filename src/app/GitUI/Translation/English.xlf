@@ -1503,10 +1503,6 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <source>RegEx</source>
         <target />
       </trans-unit>
-      <trans-unit id="FilterWatermarkLabel.Text">
-        <source>Filter files using a regular expression...</source>
-        <target />
-      </trans-unit>
       <trans-unit id="LoadingFiles.Text">
         <source>Loading data...</source>
         <target />
@@ -1646,12 +1642,16 @@ Suitable for some config files modified locally.</source>
         <source>Show files with different changes</source>
         <target />
       </trans-unit>
-      <trans-unit id="columnHeader.Text">
-        <source>Files</source>
+      <trans-unit id="cboFilterComboBox.Watermark">
+        <source>Filter files using a regular expression...</source>
         <target />
       </trans-unit>
-      <trans-unit id="lblFindInCommitFilesGitGrepWatermark.Text">
+      <trans-unit id="cboFindInCommitFilesGitGrep.Watermark">
         <source>Find in commit files using git-grep regular expression...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="columnHeader.Text">
+        <source>Files</source>
         <target />
       </trans-unit>
       <trans-unit id="tmsiEditLocallyIgnoredFiles.Text">
@@ -4937,6 +4937,10 @@ If you are not sure just close this window.</source>
         <source>&amp;Find</source>
         <target />
       </trans-unit>
+      <trans-unit id="cboFindInCommitFilesGitGrep.Watermark">
+        <source>git-grep regular expression...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkMatchCase.Text">
         <source>Match &amp;case</source>
         <target />
@@ -4955,10 +4959,6 @@ If you are not sure just close this window.</source>
       </trans-unit>
       <trans-unit id="lblOptions.Text">
         <source>&amp;Options:</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblSearchCommitGitGrepWatermark.Text">
-        <source>git-grep regular expression...</source>
         <target />
       </trans-unit>
     </body>
