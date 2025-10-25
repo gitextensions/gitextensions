@@ -410,10 +410,18 @@ partial class FileStatusList
             case RevisionDiffControl.Command.FilterFileInGrid: tsmiFilterFileInGrid.PerformClick(); break;
             case RevisionDiffControl.Command.SelectFirstGroupChanges: return SelectFirstGroupChangesIfFocused();
             case RevisionDiffControl.Command.FindFile: tsmiFindFile.PerformClick(); break;
-            case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep:
+            case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_DiffTab:
                 if (_isFileTreeMode)
                 {
-                    return base.ExecuteCommand(cmd);
+                    return false;
+                }
+
+                tsmiOpenFindInCommitFilesGitGrepDialog.PerformClick();
+                break;
+            case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_FileTreeTab:
+                if (!_isFileTreeMode)
+                {
+                    return false;
                 }
 
                 tsmiOpenFindInCommitFilesGitGrepDialog.PerformClick();
@@ -871,7 +879,7 @@ partial class FileStatusList
         tsmiShowInFileTree.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ShowFileTree);
         tsmiFilterFileInGrid.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FilterFileInGrid);
         tsmiFindFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindFile);
-        tsmiOpenFindInCommitFilesGitGrepDialog.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep);
+        tsmiOpenFindInCommitFilesGitGrepDialog.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(_isFileTreeMode ? RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_FileTreeTab : RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_DiffTab);
         tsmiOpenInVisualStudio.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenInVisualStudio);
         tsmiAddFileToGitIgnore.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.AddFileToGitIgnore);
         tsmiMove.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.RenameMove);
