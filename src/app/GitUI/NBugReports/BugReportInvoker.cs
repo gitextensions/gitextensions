@@ -220,26 +220,6 @@ namespace GitUI.NBugReports
             }
         }
 
-        /// <summary>
-        /// Determines if the assembly name is a .NET framework assembly.
-        /// .NET framework assemblies are typically affected by Patch Tuesday updates,
-        /// causing transient FileNotFoundException errors that are resolved by restarting the application.
-        /// </summary>
-        /// <param name="assemblyName">The assembly name (without version info).</param>
-        /// <returns>True if the assembly is a .NET framework assembly; otherwise, false.</returns>
-        private static bool IsDotNetFrameworkAssembly(string assemblyName)
-        {
-            if (string.IsNullOrWhiteSpace(assemblyName))
-            {
-                return false;
-            }
-
-            // .NET framework assemblies typically start with "System." or "Microsoft."
-            // These are the assemblies commonly affected by Patch Tuesday updates
-            return assemblyName.StartsWith("System.", StringComparison.OrdinalIgnoreCase)
-                || assemblyName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase);
-        }
-
         private static void ReportFailedToLoadAnAssembly(FileNotFoundException exception, bool isTerminating)
         {
             string fileName = exception.FileName ?? "";
@@ -296,6 +276,26 @@ namespace GitUI.NBugReports
                 pi.WorkingDirectory = Environment.CurrentDirectory;
                 Process.Start(pi);
                 Environment.Exit(0);
+            }
+
+            /// <summary>
+            /// Determines if the assembly name is a .NET framework assembly.
+            /// .NET framework assemblies are typically affected by Patch Tuesday updates,
+            /// causing transient FileNotFoundException errors that are resolved by restarting the application.
+            /// </summary>
+            /// <param name="assemblyName">The assembly name (without version info).</param>
+            /// <returns>True if the assembly is a .NET framework assembly; otherwise, false.</returns>
+            static bool IsDotNetFrameworkAssembly(string assemblyName)
+            {
+                if (string.IsNullOrWhiteSpace(assemblyName))
+                {
+                    return false;
+                }
+
+                // .NET framework assemblies typically start with "System." or "Microsoft."
+                // These are the assemblies commonly affected by Patch Tuesday updates
+                return assemblyName.StartsWith("System.", StringComparison.OrdinalIgnoreCase)
+                    || assemblyName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase);
             }
         }
 
