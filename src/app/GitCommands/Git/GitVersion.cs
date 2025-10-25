@@ -32,7 +32,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     /// <summary>
     /// The oldest Git version without known incompatibilities.
     /// </summary>
-    public static readonly GitVersion LastVersionWithoutKnownLimitations = new("2.15.2");
+    public static readonly GitVersion LastVersionWithoutKnownLimitations = new("2.42.0");
 
     private static readonly Dictionary<string, GitVersion> _current = [];
 
