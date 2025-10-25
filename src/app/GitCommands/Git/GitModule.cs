@@ -2865,7 +2865,8 @@ namespace GitCommands
             _gitExecutable.RunCommand(args);
         }
 
-        /// <summary>Dirty but fast. This sometimes fails.</summary>
+        /// <summary>Attempt to read the branch name from the HEAD file instead of calling a git command.</summary>
+        /// <remarks>Dirty but fast. This sometimes fails. In reftable repos, it always returns ".invalid".</remarks>
         public static string GetSelectedBranchFast(string? repositoryPath, bool emptyIfDetached = false)
         {
             if (string.IsNullOrEmpty(repositoryPath))
@@ -2914,7 +2915,7 @@ namespace GitCommands
         {
             string head = GetSelectedBranchFast(WorkingDir, emptyIfDetached);
 
-            if (!string.IsNullOrEmpty(head))
+            if (!string.IsNullOrEmpty(head) && !head.Equals(".invalid"))
             {
                 return head;
             }
@@ -2927,7 +2928,7 @@ namespace GitCommands
             ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
 
             return result.ExitedSuccessfully
-                ? result.StandardOutput
+                ? result.StandardOutput[GitRefName.RefsHeadsPrefix.Length..].TrimEnd()
                 : emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
         }
 
