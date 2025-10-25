@@ -117,6 +117,8 @@ namespace GitUI
                 File.WriteAllText(path, workingDir);
                 JumpList.AddToRecent(path);
 
+                UpdateJumpList();
+
                 if (!ToolbarButtonsCreated)
                 {
                     return;
@@ -166,13 +168,10 @@ namespace GitUI
 
             SafeInvoke(() =>
             {
-                // One ApplicationId, so all windows must share the same jumplist
-                JumpList jumpList = JumpList.CreateJumpList();
-                jumpList.ClearAllUserTasks();
-                jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
-                jumpList.Refresh();
-
                 CreateTaskbarButtons(windowHandle, buttons);
+                
+                // Create and populate jump list with recent repositories for Start menu
+                UpdateJumpList();
             }, nameof(CreateJumpList));
 
             if (ToolbarButtonsCreated && _deferredAddToRecent is not null)
@@ -226,6 +225,71 @@ namespace GitUI
                 _pushButton.Enabled = enable;
                 _pullButton.Enabled = enable;
             }, nameof(EnableThumbnailToolbar));
+        }
+
+        /// <summary>
+        /// Updates the jump list with recent repositories from the Recent folder.
+        /// This makes recent repositories appear in the Start menu.
+        /// </summary>
+        private void UpdateJumpList()
+        {
+            if (!IsSupported)
+            {
+                return;
+            }
+
+            SafeInvoke(() =>
+            {
+                string baseFolder = Path.Combine(AppSettings.ApplicationDataPath.Value, "Recent");
+                if (!Directory.Exists(baseFolder))
+                {
+                    return;
+                }
+
+                // Get the recent .gitext files
+                DirectoryInfo dirInfo = new(baseFolder);
+                FileInfo[] recentFiles = dirInfo.GetFiles("*.gitext")
+                                                .OrderByDescending(f => f.LastWriteTime)
+                                                .Take(10) // Limit to 10 most recent
+                                                .ToArray();
+
+                if (recentFiles.Length == 0)
+                {
+                    return;
+                }
+
+                // Get or create the jump list
+                JumpList jumpList = JumpList.CreateJumpList();
+                jumpList.ClearAllUserTasks();
+                
+                // Add recent repositories as a custom category
+                JumpListCustomCategory recentCategory = new("Recent");
+                foreach (FileInfo file in recentFiles)
+                {
+                    try
+                    {
+                        string repositoryName = Path.GetFileNameWithoutExtension(file.Name);
+                        JumpListLink link = new(file.FullName, repositoryName)
+                        {
+                            IconReference = new IconReference(Application.ExecutablePath, 0)
+                        };
+                        recentCategory.AddJumpListItems(link);
+                    }
+                    catch
+                    {
+                        // Ignore errors for individual files
+                    }
+                }
+
+                if (recentCategory.JumpListItems.Count > 0)
+                {
+                    jumpList.AddCustomCategories(recentCategory);
+                }
+
+                // Also show the built-in Recent category for taskbar
+                jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
+                jumpList.Refresh();
+            }, nameof(UpdateJumpList));
         }
 
         /// <summary>
