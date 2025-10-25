@@ -185,7 +185,7 @@ namespace GitExtensions.Plugins.GitHub3
                     return;
                 }
 
-                IReadOnlyList<Issue> issues = _gitHub.GetAssignedIssues();
+                IReadOnlyList<Issue> issues = GitHub.GetAssignedIssues();
 
                 if (issues?.All(i => i.Number == 0) ?? true)
                 {
