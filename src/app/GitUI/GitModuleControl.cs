@@ -12,7 +12,7 @@ namespace GitUI
     /// </summary>
     public class GitModuleControl : GitExtensionsControl, IGitModuleControl
     {
-        private readonly object _lock = new();
+        private readonly Lock _lock = new();
         private int _isDisposed;
         private IGitUICommandsSource? _uiCommandsSource;
 

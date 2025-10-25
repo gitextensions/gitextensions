@@ -21,7 +21,7 @@ namespace System
         // are rerouting correctly if multiple threads are creating/disposing this class concurrently.
 
 #pragma warning disable SA1308 // Variable names should not be prefixed
-        private static readonly object s_lock = new();
+        private static readonly Lock s_lock = new();
         private static bool s_hooked;
 
         private static readonly ConcurrentDictionary<int, int> s_suppressedThreads = new();

@@ -28,7 +28,7 @@ namespace GitUI.BuildServerIntegration
         private static readonly TimeSpan ShortPollInterval = TimeSpan.FromSeconds(10);
         private static readonly TimeSpan LongPollInterval = TimeSpan.FromSeconds(120);
         private readonly CancellationTokenSequence _launchCancellation = new();
-        private readonly object _buildServerCredentialsLock = new();
+        private readonly Lock _buildServerCredentialsLock = new();
         private readonly RevisionGridControl _revisionGrid;
         private readonly RevisionDataGridView _revisionGridView;
         private readonly IRevisionGridInfo _revisionGridInfo;
@@ -36,7 +36,7 @@ namespace GitUI.BuildServerIntegration
         private readonly IRepoNameExtractor _repoNameExtractor;
         private IDisposable? _buildStatusCancellationToken;
         private IBuildServerAdapter? _buildServerAdapter;
-        private readonly object _observerLock = new();
+        private readonly Lock _observerLock = new();
 
         internal BuildStatusColumnProvider ColumnProvider { get; }
 

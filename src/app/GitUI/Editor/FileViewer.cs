@@ -58,6 +58,7 @@ namespace GitUI.Editor
         private readonly ContinuousScrollEventManager _continuousScrollEventManager;
 
         // Cache for the configuration of a difftastic difftool
+        private readonly Lock _difftasticCmdCacheLock = new();
         private readonly ConcurrentDictionary<string, Lazy<bool>> _difftasticCmdCache = [];
 
         private ViewMode _viewMode;
@@ -301,7 +302,7 @@ namespace GitUI.Editor
         {
             get
             {
-                lock (_difftasticCmdCache)
+                lock (_difftasticCmdCacheLock)
                 {
                     // GetEffectiveSettings() checks Windows only, this need to be checked for each instance
                     if (_difftasticCmdCache.TryGetValue(Module.WorkingDir, out Lazy<bool> isEnabled))

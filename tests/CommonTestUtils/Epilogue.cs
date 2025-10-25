@@ -8,7 +8,7 @@ namespace CommonTestUtils;
 /// </summary>
 public static class Epilogue
 {
-    private static readonly Lock _sync = new();
+    private static readonly Lock _lock = new();
     private static readonly OrderedDictionary<int, Action> _afterSuiteActions = [];
     private static readonly List<Action> _afterTestActions = [];
 
@@ -25,7 +25,7 @@ public static class Epilogue
     /// <param name="action">The action to be called.</param>
     public static void RegisterAfterSuiteAction(int order, Action action)
     {
-        lock (_sync)
+        lock (_lock)
         {
             _afterSuiteActions.Add(order, action);
         }
@@ -43,7 +43,7 @@ public static class Epilogue
     /// <param name="action">The clean-up action to run after the current test.</param>
     public static void RegisterAfterTestAction(Action action)
     {
-        lock (_sync)
+        lock (_lock)
         {
             _afterTestActions.Add(action);
         }
@@ -58,7 +58,7 @@ public static class Epilogue
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static void ExecuteAfterTestActions()
     {
-        lock (_sync)
+        lock (_lock)
         {
             _afterTestActions.ForEach(action => action());
             _afterTestActions.Clear();
@@ -74,7 +74,7 @@ public static class Epilogue
     [EditorBrowsable(EditorBrowsableState.Never)]
     public static void ExecuteAfterSuiteActions()
     {
-        lock (_sync)
+        lock (_lock)
         {
             _afterSuiteActions.Values.ForEach(action => action());
         }

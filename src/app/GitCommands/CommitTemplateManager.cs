@@ -54,7 +54,8 @@ namespace GitCommands
             }
         }
 
-        private static readonly List<RegisteredCommitTemplateItem> RegisteredTemplatesStorage = [];
+        private static readonly Lock _registeredTemplatesStorageSync = new();
+        private static readonly List<RegisteredCommitTemplateItem> _registeredTemplatesStorage = [];
         private readonly IFileSystem _fileSystem;
         private readonly Func<IGitModule> _getModule;
         private readonly IFullPathResolver _fullPathResolver;
@@ -78,9 +79,9 @@ namespace GitCommands
         {
             get
             {
-                lock (RegisteredTemplatesStorage)
+                lock (_registeredTemplatesStorageSync)
                 {
-                    return RegisteredTemplatesStorage.Select(item => new CommitTemplateItem(item.Name, item.Text(), item.Icon)).AsReadOnlyList();
+                    return _registeredTemplatesStorage.Select(item => new CommitTemplateItem(item.Name, item.Text(), item.Icon)).AsReadOnlyList();
                 }
             }
         }
@@ -120,11 +121,11 @@ namespace GitCommands
         /// <param name="templateText">The body of the template.</param>
         public void Register(string templateName, Func<string> templateText, Image? icon)
         {
-            lock (RegisteredTemplatesStorage)
+            lock (_registeredTemplatesStorageSync)
             {
-                if (RegisteredTemplatesStorage.All(item => item.Name != templateName))
+                if (_registeredTemplatesStorage.All(item => item.Name != templateName))
                 {
-                    RegisteredTemplatesStorage.Add(new RegisteredCommitTemplateItem(templateName, templateText, icon));
+                    _registeredTemplatesStorage.Add(new RegisteredCommitTemplateItem(templateName, templateText, icon));
                 }
             }
         }
@@ -135,9 +136,9 @@ namespace GitCommands
         /// <param name="templateName">The name of the template.</param>
         public void Unregister(string templateName)
         {
-            lock (RegisteredTemplatesStorage)
+            lock (_registeredTemplatesStorageSync)
             {
-                RegisteredTemplatesStorage.RemoveAll(item => item.Name == templateName);
+                _registeredTemplatesStorage.RemoveAll(item => item.Name == templateName);
             }
         }
 

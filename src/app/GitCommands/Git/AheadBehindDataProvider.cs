@@ -26,7 +26,7 @@ namespace GitCommands.Git
         private readonly string _refFormat = @"%(push:track,nobracket)::%(upstream:track,nobracket)::%(push)::%(upstream)::%(refname:short)";
         private Lazy<IDictionary<string, AheadBehindData>?> _lazyData;
         private string _branchName;
-        private object _lock = new();
+        private readonly Lock _lock = new();
 
         public AheadBehindDataProvider(Func<IExecutable> getGitExecutable)
         {
