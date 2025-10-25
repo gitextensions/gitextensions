@@ -275,9 +275,10 @@ namespace GitUI
                         };
                         recentCategory.AddJumpListItems(link);
                     }
-                    catch
+                    catch (Exception ex)
                     {
-                        // Ignore errors for individual files
+                        // Ignore errors for individual files but log for diagnostic purposes
+                        Trace.WriteLine($"Failed to add jump list item for {file.Name}: {ex.Message}", nameof(UpdateJumpList));
                     }
                 }
 
