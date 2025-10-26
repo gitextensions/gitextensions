@@ -3262,6 +3262,7 @@ namespace GitCommands
 
             ExecutionResult result = _gitExecutable.Execute(args, cache: isArtificial ? null : GitCommandCache, cancellationToken: cancellationToken);
 
+            // TODO change to GitVersion.SupportLsFilesFormat when Extensibility.Git can be updated
             if (isArtificial && !GitVersion.SupportNewGitConfigSyntax)
             {
                 return _gitTreeParser.ParseLsFiles(result.StandardOutput);
