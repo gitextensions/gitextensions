@@ -7,6 +7,12 @@
 * Make only high confidence suggestions when reviewing code changes.
 * Always use the latest version C#, currently C# 13 features.
 * Files must have CRLF line endings.
+* Lines must not have trailing whitespace.
+
+## Comments
+
+* Add const with speaking name instead of using magic numbers. Avoid hard-to-maintain comments which contain the magic number again.
+* Omit comments which just describe _what_ is done.
 
 ## Formatting
 
