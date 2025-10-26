@@ -107,13 +107,14 @@ namespace GitUI.CommandsDialogs
             SelectFirstGroupChanges = 14,
             FindFile = 15,
             OpenWorkingDirectoryFileWith = 16,
-            FindInCommitFilesUsingGitGrep = 17,
+            FindInCommitFilesUsingGitGrep_DiffTab = 17,
             GoToFirstParent = 18,
             GoToLastParent = 19,
             OpenWorkingDirectoryFile = 20,
             OpenInVisualStudio = 21,
             AddFileToGitIgnore = 22,
             RenameMove = 23,
+            FindInCommitFilesUsingGitGrep_FileTreeTab = 24,
         }
 
         public bool ExecuteCommand(Command cmd)
@@ -156,7 +157,8 @@ namespace GitUI.CommandsDialogs
                 case Command.SelectFirstGroupChanges:
                 case Command.FindFile:
                 case Command.OpenWorkingDirectoryFileWith:
-                case Command.FindInCommitFilesUsingGitGrep:
+                case Command.FindInCommitFilesUsingGitGrep_DiffTab:
+                case Command.FindInCommitFilesUsingGitGrep_FileTreeTab:
                 case Command.OpenWorkingDirectoryFile:
                 case Command.OpenInVisualStudio:
                 case Command.AddFileToGitIgnore:
