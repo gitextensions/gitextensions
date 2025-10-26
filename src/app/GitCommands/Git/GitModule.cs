@@ -3262,12 +3262,10 @@ namespace GitCommands
 
             ExecutionResult result = _gitExecutable.Execute(args, cache: isArtificial ? null : GitCommandCache, cancellationToken: cancellationToken);
 
-            if (isArtificial && !GitVersion.SupportUpdateRefs)
-            {
-                return _gitTreeParser.ParseLsFiles(result.StandardOutput);
-            }
-
-            return _gitTreeParser.Parse(result.StandardOutput);
+            IEnumerable<IObjectGitItem> tree = isArtificial && !GitVersion.SupportUpdateRefs
+                ? _gitTreeParser.ParseLsFiles(result.StandardOutput)
+                : _gitTreeParser.Parse(result.StandardOutput);
+            return tree.OrderBy(item => item.Name);
         }
 
         public GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines, CancellationToken cancellationToken)
