@@ -12,7 +12,7 @@
 ## Comments
 
 * Add const with speaking name instead of using magic numbers. Avoid hard-to-maintain comments which contain the magic number again.
-* Omit comments which just describe _what_ is done.
+* Omit comments which just describe _what_ is done. In situations where a comment may be necessary describe _why_ an implementation was chosen.
 
 ## Formatting
 
