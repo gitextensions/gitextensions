@@ -1060,9 +1060,15 @@ namespace GitCommands
         }
 
         /// <summary>
+        /// <para>
         /// Gets the current branch name. This is the branch whose ref will be updated to the next commit. When the repository is
         /// newly-initialized, this is a nonexistent ref whose name is set to the effective value of init.defaultbranch at the time
         /// of init (unless overridden with --initial-branch).
+        /// </para>
+        /// <para>
+        /// If there is no current branch name (e.g. detached HEAD), this method returns an empty
+        /// <see cref="string"/>.
+        /// </para>
         /// </summary>
         public string GetCurrentBranchName()
         {
