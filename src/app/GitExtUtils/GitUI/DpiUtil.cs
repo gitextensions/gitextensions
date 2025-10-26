@@ -83,19 +83,9 @@ namespace GitExtUtils.GitUI
         /// equivalent length on screen at the current DPI at the original would
         /// at 96 DPI.
         /// </summary>
-        public static int Scale(int i)
-        {
-            return (int)Math.Round(i * ScaleX);
-        }
-
-        /// <summary>
-        /// Returns a scaled copy of measurement <paramref name="i"/> which has
-        /// equivalent length on screen at the current DPI as the original would
-        /// at 96 DPI.
-        /// </summary>
         /// <param name="i">The value to scale.</param>
         /// <param name="ceiling">If true, uses ceiling rounding to ensure the result is never smaller than the scaled value.</param>
-        public static int Scale(int i, bool ceiling)
+        public static int Scale(int i, bool ceiling = false)
         {
             return ceiling ? (int)Math.Ceiling(i * ScaleX) : (int)Math.Round(i * ScaleX);
         }
