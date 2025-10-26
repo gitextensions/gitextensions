@@ -233,53 +233,50 @@ namespace GitUI
         /// </summary>
         private void UpdateJumpList()
         {
-            SafeInvoke(() =>
+            string baseFolder = Path.Combine(AppSettings.ApplicationDataPath.Value, "Recent");
+            if (!Directory.Exists(baseFolder))
             {
-                string baseFolder = Path.Combine(AppSettings.ApplicationDataPath.Value, "Recent");
-                if (!Directory.Exists(baseFolder))
+                return;
+            }
+
+            // Get the recent .gitext files
+            DirectoryInfo dirInfo = new(baseFolder);
+            FileInfo[] recentFiles = dirInfo.GetFiles("*.gitext")
+                                            .OrderByDescending(f => f.LastWriteTime)
+                                            .Take(AppSettings.RecentRepositoriesHistorySize)
+                                            .ToArray();
+
+            if (recentFiles.Length == 0)
+            {
+                return;
+            }
+
+            // Get or create the jump list
+            JumpList jumpList = JumpList.CreateJumpList();
+            jumpList.ClearAllUserTasks();
+
+            // Add recent repositories as a custom category
+            JumpListCustomCategory recentCategory = new(nameof(JumpListKnownCategoryType.Recent));
+            foreach (FileInfo file in recentFiles)
+            {
+                try
                 {
-                    return;
+                    string repositoryName = Path.GetFileNameWithoutExtension(file.Name);
+                    JumpListLink link = new(file.FullName, repositoryName);
+                    recentCategory.AddJumpListItems(link);
                 }
-
-                // Get the recent .gitext files
-                DirectoryInfo dirInfo = new(baseFolder);
-                FileInfo[] recentFiles = dirInfo.GetFiles("*.gitext")
-                                                .OrderByDescending(f => f.LastWriteTime)
-                                                .Take(AppSettings.RecentRepositoriesHistorySize)
-                                                .ToArray();
-
-                if (recentFiles.Length == 0)
+                catch (Exception ex)
                 {
-                    return;
+                    // Ignore errors for individual files but log for diagnostic purposes
+                    Trace.WriteLine($"Failed to add jump list item for {file.Name}: {ex.Message}", nameof(UpdateJumpList));
                 }
+            }
 
-                // Get or create the jump list
-                JumpList jumpList = JumpList.CreateJumpList();
-                jumpList.ClearAllUserTasks();
+            jumpList.AddCustomCategories(recentCategory);
 
-                // Add recent repositories as a custom category
-                JumpListCustomCategory recentCategory = new(nameof(JumpListKnownCategoryType.Recent));
-                foreach (FileInfo file in recentFiles)
-                {
-                    try
-                    {
-                        string repositoryName = Path.GetFileNameWithoutExtension(file.Name);
-                        JumpListLink link = new(file.FullName, repositoryName);
-                        recentCategory.AddJumpListItems(link);
-                    }
-                    catch (Exception ex)
-                    {
-                        // Ignore errors for individual files but log for diagnostic purposes
-                        Trace.WriteLine($"Failed to add jump list item for {file.Name}: {ex.Message}", nameof(UpdateJumpList));
-                    }
-                }
-
-                jumpList.AddCustomCategories(recentCategory);
-
-                // Also show the built-in Recent category for taskbar
-                jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
-                jumpList.Refresh();
-            }, nameof(UpdateJumpList));
+            // Also show the built-in Recent category for taskbar
+            jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
+            jumpList.Refresh();
         }
 
         /// <summary>
