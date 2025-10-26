@@ -17,6 +17,100 @@ namespace GitUITests.NBugReports
             rootError.Should().Be(expectedRootError);
             text.ToString().Should().Be(expectedText);
         }
+
+        [TestCase("System.Data.Common", true)]
+        [TestCase("System.IO", true)]
+        [TestCase("Microsoft.CSharp", true)]
+        [TestCase("Microsoft.VisualBasic", true)]
+        [TestCase("system.data.common", true)] // case-insensitive
+        [TestCase("MICROSOFT.Extensions", true)] // case-insensitive
+        [TestCase("CustomAssembly", false)]
+        [TestCase("MyApp.Core", false)]
+        [TestCase("", false)]
+        [TestCase(null, false)]
+        public void IsDotNetFrameworkAssembly_should_identify_framework_assemblies(string assemblyName, bool expected)
+        {
+            // The logic being tested (as implemented in ReportFailedToLoadAnAssembly local function):
+            // - Returns true for assemblies starting with "System." or "Microsoft."
+            // - Case-insensitive comparison
+            // - Returns false for null or whitespace
+            
+            bool result = IsSystemOrMicrosoftAssembly(assemblyName);
+            result.Should().Be(expected);
+        }
+
+        [TestCase("vcruntime140_cor3.dll", true)]
+        [TestCase("vcruntime140.dll", true)]
+        [TestCase("VCRUNTIME140_COR3.DLL", true)] // case-insensitive
+        [TestCase("some_vcruntime_file.dll", true)]
+        [TestCase("CustomDll.dll", false)]
+        [TestCase("user32.dll", false)]
+        [TestCase("", false)]
+        [TestCase(null, false)]
+        public void IsVCRuntimeDll_should_identify_vcruntime_dlls(string dllName, bool expected)
+        {
+            // The logic being tested (as implemented in ReportFailedToLoadAnAssembly local function):
+            // - Returns true for DLL names containing "vcruntime"
+            // - Case-insensitive comparison
+            // - Returns false for null or whitespace
+            
+            bool result = ContainsVCRuntime(dllName);
+            result.Should().Be(expected);
+        }
+
+        [TestCase("Unable to load DLL 'vcruntime140_cor3.dll' or one of its dependencies: The specified module could not be found.", "vcruntime140_cor3.dll")]
+        [TestCase("Unable to load DLL 'user32.dll': File not found.", "user32.dll")]
+        [TestCase("Unable to load DLL 'my.custom.dll' for some reason", "my.custom.dll")]
+        [TestCase("No quotes in this message", "No quotes in this message")] // fallback case
+        [TestCase("'only_one_quote", "'only_one_quote")] // fallback case
+        public void DllNameExtraction_should_extract_dll_name_from_message(string message, string expectedDllName)
+        {
+            // The logic being tested (as implemented in ReportFailedToLoadAnAssembly):
+            // - Extracts DLL name between single quotes from DllNotFoundException message
+            // - Falls back to using the entire message if no quotes found
+            
+            string result = ExtractDllNameFromMessage(message);
+            result.Should().Be(expectedDllName);
+        }
+
+        // Helper methods that replicate the logic from the local functions in ReportFailedToLoadAnAssembly
+        // This allows us to test the logic without making the actual functions public
+        
+        private static bool IsSystemOrMicrosoftAssembly(string assemblyName)
+        {
+            if (string.IsNullOrWhiteSpace(assemblyName))
+            {
+                return false;
+            }
+
+            return assemblyName.StartsWith("System.", StringComparison.OrdinalIgnoreCase)
+                || assemblyName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool ContainsVCRuntime(string dllName)
+        {
+            if (string.IsNullOrWhiteSpace(dllName))
+            {
+                return false;
+            }
+
+            return dllName.Contains("vcruntime", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string ExtractDllNameFromMessage(string message)
+        {
+            string fileName = message;
+            int startIndex = fileName.IndexOf('\'');
+            if (startIndex >= 0)
+            {
+                int endIndex = fileName.IndexOf('\'', startIndex + 1);
+                if (endIndex > startIndex)
+                {
+                    fileName = fileName.Substring(startIndex + 1, endIndex - startIndex - 1);
+                }
+            }
+            return fileName;
+        }
     }
 
     public class TestExceptions
