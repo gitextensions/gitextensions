@@ -10,15 +10,17 @@ public class GitModuleTestSnapshot
     {
         _repositoryName = repositoryName;
 
-        Populate(new(path), "");
+        DirectoryInfo sourcePath = new(path);
+
+        PopulateFrom(sourcePath, relativePath: "");
     }
 
     public GitModuleTestHelper Clone()
     {
-        return Clone(FileSystemUtility.GetTemporaryPath());
+        return CloneTo(FileSystemUtility.GetTemporaryPath());
     }
 
-    public GitModuleTestHelper Clone(string path)
+    public GitModuleTestHelper CloneTo(string path)
     {
         foreach (string folderPath in _folders)
         {
@@ -27,15 +29,13 @@ public class GitModuleTestSnapshot
 
         foreach ((string filePath, byte[] content) in _files)
         {
-            File.WriteAllBytes(
-                Path.Combine(path, filePath),
-                content);
+            File.WriteAllBytes(Path.Combine(path, filePath), content);
         }
 
         return new GitModuleTestHelper(_repositoryName, path, useExisting: true);
     }
 
-    private void Populate(DirectoryInfo sourcePath, string relativePath)
+    private void PopulateFrom(DirectoryInfo sourcePath, string relativePath)
     {
         foreach (FileSystemInfo entry in sourcePath.EnumerateFileSystemInfos())
         {
@@ -45,7 +45,7 @@ public class GitModuleTestSnapshot
             {
                 _folders.Add(entryPath);
 
-                Populate(subPath, entryPath);
+                PopulateFrom(subPath, entryPath);
             }
             else
             {

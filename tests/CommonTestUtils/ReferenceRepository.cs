@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using GitCommands;
+﻿using GitCommands;
 using GitUI;
 using LibGit2Sharp;
 using Microsoft.VisualStudio.Threading;
@@ -47,7 +46,7 @@ public class ReferenceRepository : IDisposable
     {
         GitModuleTestHelper moduleTestHelper;
 
-        if (initializer == null)
+        if (initializer is null)
         {
             // Initialize a reference Git repository synchronously. This is considerably
             // simpler than doing it in a background task, because various parts of the
@@ -93,13 +92,7 @@ public class ReferenceRepository : IDisposable
 
     private static Task<(GitModuleTestHelper Helper, string? CommitHash)> BeginFastCloneGitModuleTestHelper(GitModuleTestSnapshot snapshot, bool createCommit)
     {
-        return Task.Run(
-            () =>
-            {
-                GitModuleTestHelper moduleTestHelper = snapshot.Clone();
-
-                return (moduleTestHelper, _repoCommitHash);
-            });
+        return Task.Run(() => (snapshot.Clone(), _repoCommitHash));
     }
 
     public GitModule Module => _moduleTestHelper.Module;
@@ -268,55 +261,28 @@ public class ReferenceRepository : IDisposable
 
     public static void ReleaseNextRepositories()
     {
-        Task<(GitModuleTestHelper Helper, string? CommitHash)> next = null;
-        Task<(GitModuleTestHelper Helper, string? CommitHash)> nextWithCommit = null;
+        Task<(GitModuleTestHelper Helper, string? CommitHash)> next;
+        Task<(GitModuleTestHelper Helper, string? CommitHash)> nextWithCommit;
 
         lock (_nextLock)
         {
-            if (_nextGitModuleTestHelper != null)
-            {
-                next = _nextGitModuleTestHelper;
-                _nextGitModuleTestHelper = null;
-            }
+            next = _nextGitModuleTestHelper;
+            _nextGitModuleTestHelper = null;
 
-            if (_nextGitModuleTestHelperWithCommit != null)
-            {
-                nextWithCommit = _nextGitModuleTestHelperWithCommit;
-                _nextGitModuleTestHelperWithCommit = null;
-            }
+            nextWithCommit = _nextGitModuleTestHelperWithCommit;
+            _nextGitModuleTestHelperWithCommit = null;
         }
 
-        TaskManager mgr = new(new JoinableTaskContext());
-
-        // VSTHRD003 says we shouldn't await tasks that came from other
-        // places because we don't know anything about them and it might
-        // cause deadlocks. These tasks didn't come from other places,
-        // though.
-        //
-        // VSTHRD104 says we should rewrite ReleaseNextRepositories as an
-        // async method and then expose a synchronous version that just
-        // calls JoinableTaskFactory.Run(ReleaseNextRepositoriesAsync).
-        // I tried that, and it just moves VSTHRD104 into the new sync
-        // wrapper.
-#pragma warning disable VSTHRD003, VSTHRD104
-        mgr.JoinableTaskFactory.Run(
-            async () =>
-            {
-                if (next != null)
-                {
-                    (await next.ConfigureAwait(false)).Helper.Dispose();
-                }
-
-                if (nextWithCommit != null)
-                {
-                    (await nextWithCommit.ConfigureAwait(false)).Helper.Dispose();
-                }
-            });
-#pragma warning restore VSTHRD003, VSTHRD104
-    }
-
-    public static void WaitForCleanUpCompletion()
-    {
-        GitModuleTestHelper.WaitForCleanUpCompletion();
+        // VSTHRD002 says we should avoid calling `GetResult` directly
+        // on tasks, because if they're associated with a synchronization
+        // context and this call is in that same context, then the context's
+        // message pump is, by definition, not running and calls to dispatch
+        // task execution can't be processed, resulting in a deadlock. This
+        // mainly applies to UI threads, and ReleaseNextRepositories isn't
+        // going to be called from UI threads, I think.
+#pragma warning disable VSTHRD002
+        next?.ConfigureAwait(false).GetAwaiter().GetResult().Helper.Dispose();
+        nextWithCommit?.ConfigureAwait(false).GetAwaiter().GetResult().Helper.Dispose();
+#pragma warning restore VSTHRD002
     }
 }

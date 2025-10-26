@@ -112,11 +112,7 @@ public sealed partial class GitModuleTestHelper : IDisposable
     }
 
     public GitModuleTestSnapshot CaptureSnapshot()
-    {
-        return new GitModuleTestSnapshot(
-            _repositoryName,
-            TemporaryPath);
-    }
+        => new(_repositoryName, TemporaryPath);
 
     /// <summary>
     /// Creates a new file, writes the specified string to the file, and then closes the file.
