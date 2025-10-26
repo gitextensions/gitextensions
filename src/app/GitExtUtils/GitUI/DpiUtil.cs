@@ -90,7 +90,7 @@ namespace GitExtUtils.GitUI
 
         /// <summary>
         /// Returns a scaled copy of measurement <paramref name="i"/> which has
-        /// equivalent length on screen at the current DPI at the original would
+        /// equivalent length on screen at the current DPI as the original would
         /// at 96 DPI.
         /// </summary>
         /// <param name="i">The value to scale.</param>
