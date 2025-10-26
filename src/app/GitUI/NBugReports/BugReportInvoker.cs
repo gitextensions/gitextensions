@@ -117,6 +117,15 @@ namespace GitUI.NBugReports
                 return;
             }
 
+            // Ignore VC Runtime DLL loading errors (refer to https://github.com/gitextensions/gitextensions/issues/12511)
+            // These are transient errors typically caused by Windows updates, similar to .NET assembly loading errors
+            if (exception is DllNotFoundException dllNotFoundException
+                && dllNotFoundException.Message.Contains("vcruntime140"))
+            {
+                Trace.WriteLine(dllNotFoundException);
+                return;
+            }
+
             // Ignore accessibility-specific exception (refer to https://github.com/gitextensions/gitextensions/issues/11385)
             if (exception is InvalidOperationException && exception.StackTrace?.Contains("ListViewGroup.get_AccessibilityObject") is true)
             {
