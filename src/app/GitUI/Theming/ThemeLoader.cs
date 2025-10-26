@@ -106,6 +106,12 @@ namespace GitUI.Theming
                 return;
             }
 
+            // Migration, ignore color removed in 5.2.1 -> 6.0
+            if (colorName == "Graph")
+            {
+                return;
+            }
+
             throw new ThemeException($"Unknown color name \"{colorName}\"", themeFileName);
         }
 

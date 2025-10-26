@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtUtils.GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 
@@ -54,7 +56,8 @@ namespace GitUI.Theming
             catch (ThemeException ex)
             {
                 // Not good, ColorHelper needs actual InvariantTheme to correctly transform colors.
-                MessageBoxes.ShowError(null, $"Failed to load invariant theme: {ex}");
+                string firstLine = ex.ToString().Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries)[0];
+                MessageBoxes.ShowError(null, $"Failed to load invariant theme: {firstLine}");
                 return ThemeSettings.Default;
             }
 
@@ -85,7 +88,10 @@ namespace GitUI.Theming
             }
             catch (ThemeException ex)
             {
-                MessageBoxes.ShowError(null, $"Failed to load {(themeId.IsBuiltin ? "preinstalled" : "user-defined")} theme {themeId.Name}: {ex}");
+                Trace.WriteLine($"Failed to load {(themeId.IsBuiltin ? "preinstalled" : "user-defined")} theme {themeId.Name}: {ex}");
+                string firstLine = ex.ToString().Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)[0];
+                MessageBoxes.ShowError(null, $"Failed to load {(themeId.IsBuiltin ? "preinstalled" : "user-defined")} theme {themeId.Name}: {firstLine}");
+                AppSettings.ThemeId = ThemeId.Default;
                 return CreateFallbackSettings(invariantTheme, variations);
             }
 
