@@ -23,6 +23,23 @@
 * Ensure that the final return statement of a method is on its own line.
 * Use pattern matching and switch expressions wherever possible.
 * Use `nameof` instead of string literals when referring to member names.
+* Local methods must be 
+    - placed at the end of the parent method,
+    - sorted in alphabetical order,
+    - preceded with a `return` statement.
+  For example:
+  ```cs
+  private void MyMethod()
+  {
+      // implementation
+
+      return;
+
+      static void FirstLocalMethod1() { ... }
+
+      static int SecondLocalMethod1() { ... }
+  }
+  ```
 
 ### Variable Declarations
 
