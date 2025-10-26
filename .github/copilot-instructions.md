@@ -41,19 +41,19 @@
   }
   ```
 
-### Variable Declarations
+## Variable Declarations
 
 * Never use `var` for primitive types. Use `var` only when the type is obvious from context. When in doubt, opt for an explicit type declaration.
 * Prefer simplified "new()" construct over to "new MyType()" where the type is already declared.
   For example: "MyType t = new()" instead of "var t = new MyType()" or "MyType t = new MyType()".
 
-### Nullable Reference Types
+## Nullable Reference Types
 
 * Declare variables non-nullable, and check for `null` at entry points.
 * Always use `is null` or `is not null` instead of `== null` or `!= null`.
 * Trust the C# null annotations and don't add null checks when the type system says a value cannot be null.
 
-### Testing
+## Testing
 
 * We use NUnit SDK
 * Do not emit "Act", "Arrange" or "Assert" comments.
@@ -61,3 +61,8 @@
   For example, a test for a method "MyMethod" should be named as "MyMethod_should_return_expected".
 * Use NSubstitute for mocking.
 * Use FluentAssertions for assertions.
+
+## Commit Messages
+
+* Use https://www.conventionalcommits.org/en/v1.0.0/ for commit messages.
+* Note especially that changes in directory src/app/GitExtensions.Extensibility affects the version for the plugin interface. This must be annotated in the commit message.
