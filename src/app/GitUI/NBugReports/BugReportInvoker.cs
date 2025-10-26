@@ -229,9 +229,6 @@ namespace GitUI.NBugReports
                 fileName = fileName[..uninterestingIndex];
             }
 
-            // Check if this is a .NET framework assembly (typically affected by Patch Tuesday updates)
-            bool isDotNetFrameworkAssembly = IsDotNetFrameworkAssembly(fileName);
-
             TaskDialogPage page = new()
             {
                 Icon = TaskDialogIcon.Warning,
@@ -249,7 +246,7 @@ namespace GitUI.NBugReports
             // Only show the report button for non-.NET framework assemblies
             // .NET framework assembly errors are typically transient (caused by Patch Tuesday updates)
             // and should not generate NBug reports
-            if (!isDotNetFrameworkAssembly)
+            if (!IsDotNetFrameworkAssembly(fileName))
             {
                 TaskDialogCommandLinkButton reportButton = new(text: TranslatedStrings.ReportIssue, descriptionText: TranslatedStrings.ReportReproducedIssueDescription);
                 reportButton.Click += (_, _) => ShowNBug(OwnerForm, exception, isExternalOperation: false, isTerminating);
