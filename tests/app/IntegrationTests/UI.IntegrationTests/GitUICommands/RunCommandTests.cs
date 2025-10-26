@@ -106,7 +106,7 @@ namespace GitUITests.GitUICommandsTests
         {
             string branchName = _referenceRepository.Module.GetCurrentBranchName();
 
-            string newBranchName = branchName + "-subbranch";
+            string newBranchName = $"{branchName}-subbranch";
 
             _referenceRepository.CheckoutBranch(branchName);
             RunCommandBasedOnArgument<FormCreateBranch>(new string[] { "ge.exe", "branch" }, runTest: form =>
