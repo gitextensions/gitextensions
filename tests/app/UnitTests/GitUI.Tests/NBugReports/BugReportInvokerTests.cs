@@ -37,6 +37,17 @@ namespace GitUITests.NBugReports
             
             bool result = IsSystemOrMicrosoftAssembly(assemblyName);
             result.Should().Be(expected);
+
+            static bool IsSystemOrMicrosoftAssembly(string assemblyName)
+            {
+                if (string.IsNullOrWhiteSpace(assemblyName))
+                {
+                    return false;
+                }
+
+                return assemblyName.StartsWith("System.", StringComparison.OrdinalIgnoreCase)
+                    || assemblyName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase);
+            }
         }
 
         [TestCase("vcruntime140_cor3.dll", true)]
@@ -56,6 +67,16 @@ namespace GitUITests.NBugReports
             
             bool result = ContainsVCRuntime(dllName);
             result.Should().Be(expected);
+
+            static bool ContainsVCRuntime(string dllName)
+            {
+                if (string.IsNullOrWhiteSpace(dllName))
+                {
+                    return false;
+                }
+
+                return dllName.Contains("vcruntime", StringComparison.OrdinalIgnoreCase);
+            }
         }
 
         [TestCase("Unable to load DLL 'vcruntime140_cor3.dll' or one of its dependencies: The specified module could not be found.", "vcruntime140_cor3.dll")]
@@ -71,45 +92,21 @@ namespace GitUITests.NBugReports
             
             string result = ExtractDllNameFromMessage(message);
             result.Should().Be(expectedDllName);
-        }
 
-        // Helper methods that replicate the logic from the local functions in ReportFailedToLoadAnAssembly
-        // This allows us to test the logic without making the actual functions public
-        
-        private static bool IsSystemOrMicrosoftAssembly(string assemblyName)
-        {
-            if (string.IsNullOrWhiteSpace(assemblyName))
+            static string ExtractDllNameFromMessage(string message)
             {
-                return false;
-            }
-
-            return assemblyName.StartsWith("System.", StringComparison.OrdinalIgnoreCase)
-                || assemblyName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static bool ContainsVCRuntime(string dllName)
-        {
-            if (string.IsNullOrWhiteSpace(dllName))
-            {
-                return false;
-            }
-
-            return dllName.Contains("vcruntime", StringComparison.OrdinalIgnoreCase);
-        }
-
-        private static string ExtractDllNameFromMessage(string message)
-        {
-            string fileName = message;
-            int startIndex = fileName.IndexOf('\'');
-            if (startIndex >= 0)
-            {
-                int endIndex = fileName.IndexOf('\'', startIndex + 1);
-                if (endIndex > startIndex)
+                string fileName = message;
+                int startIndex = fileName.IndexOf('\'');
+                if (startIndex >= 0)
                 {
-                    fileName = fileName.Substring(startIndex + 1, endIndex - startIndex - 1);
+                    int endIndex = fileName.IndexOf('\'', startIndex + 1);
+                    if (endIndex > startIndex)
+                    {
+                        fileName = fileName.Substring(startIndex + 1, endIndex - startIndex - 1);
+                    }
                 }
+                return fileName;
             }
-            return fileName;
         }
     }
 
