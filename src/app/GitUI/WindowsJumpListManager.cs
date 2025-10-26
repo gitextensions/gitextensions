@@ -169,7 +169,7 @@ namespace GitUI
             SafeInvoke(() =>
             {
                 CreateTaskbarButtons(windowHandle, buttons);
-                
+
                 // Create and populate jump list with recent repositories for Start menu
                 UpdateJumpList();
             }, nameof(CreateJumpList));
@@ -233,11 +233,6 @@ namespace GitUI
         /// </summary>
         private void UpdateJumpList()
         {
-            if (!IsSupported)
-            {
-                return;
-            }
-
             SafeInvoke(() =>
             {
                 string baseFolder = Path.Combine(AppSettings.ApplicationDataPath.Value, "Recent");
@@ -250,7 +245,7 @@ namespace GitUI
                 DirectoryInfo dirInfo = new(baseFolder);
                 FileInfo[] recentFiles = dirInfo.GetFiles("*.gitext")
                                                 .OrderByDescending(f => f.LastWriteTime)
-                                                .Take(10) // Limit to 10 most recent
+                                                .Take(AppSettings.RecentRepositoriesHistorySize)
                                                 .ToArray();
 
                 if (recentFiles.Length == 0)
@@ -261,18 +256,15 @@ namespace GitUI
                 // Get or create the jump list
                 JumpList jumpList = JumpList.CreateJumpList();
                 jumpList.ClearAllUserTasks();
-                
+
                 // Add recent repositories as a custom category
-                JumpListCustomCategory recentCategory = new("Recent");
+                JumpListCustomCategory recentCategory = new(nameof(JumpListKnownCategoryType.Recent));
                 foreach (FileInfo file in recentFiles)
                 {
                     try
                     {
                         string repositoryName = Path.GetFileNameWithoutExtension(file.Name);
-                        JumpListLink link = new(file.FullName, repositoryName)
-                        {
-                            IconReference = new IconReference(Application.ExecutablePath, 0)
-                        };
+                        JumpListLink link = new(file.FullName, repositoryName);
                         recentCategory.AddJumpListItems(link);
                     }
                     catch (Exception ex)
@@ -282,10 +274,7 @@ namespace GitUI
                     }
                 }
 
-                if (recentCategory.JumpListItems.Count > 0)
-                {
-                    jumpList.AddCustomCategories(recentCategory);
-                }
+                jumpList.AddCustomCategories(recentCategory);
 
                 // Also show the built-in Recent category for taskbar
                 jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
