@@ -120,7 +120,7 @@ namespace GitUI.NBugReports
             // Handle VC Runtime DLL loading errors (refer to https://github.com/gitextensions/gitextensions/issues/12511)
             // These are transient errors typically caused by Windows updates, similar to .NET assembly loading errors
             if (exception is DllNotFoundException dllNotFoundException
-                && dllNotFoundException.Message.Contains("vcruntime140"))
+                && dllNotFoundException.Message.Contains("vcruntime", StringComparison.OrdinalIgnoreCase))
             {
                 ReportFailedToLoadAnAssembly(dllNotFoundException, isTerminating);
                 return;
