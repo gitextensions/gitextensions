@@ -84,7 +84,7 @@ namespace GitExtUtils.GitUI
         /// at 96 DPI.
         /// </summary>
         /// <param name="i">The value to scale.</param>
-        /// <param name="ceiling">If true, uses ceiling rounding to ensure the result is never smaller than the scaled value.</param>
+        /// <param name="ceiling">If <see langword="true" />, uses ceiling rounding to ensure the result is never smaller than the scaled value.</param>
         public static int Scale(int i, bool ceiling = false)
         {
             return ceiling ? (int)Math.Ceiling(i * ScaleX) : (int)Math.Round(i * ScaleX);
