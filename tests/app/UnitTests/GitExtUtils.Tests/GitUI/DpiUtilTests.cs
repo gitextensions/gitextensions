@@ -41,25 +41,23 @@ public sealed class DpiUtilTests
         ClassicAssert.AreEqual(resultExplicit, resultDefault);
     }
 
-    [Test]
-    public void Scale_with_zero_should_return_zero()
+    [TestCase(0, false, 0)]
+    [TestCase(0, true, 0)]
+    public void Scale_with_zero_should_return_zero(int input, bool ceiling, int expected)
     {
-        int resultRound = DpiUtil.Scale(0, ceiling: false);
-        int resultCeiling = DpiUtil.Scale(0, ceiling: true);
+        int result = DpiUtil.Scale(input, ceiling: ceiling);
         
-        ClassicAssert.AreEqual(0, resultRound);
-        ClassicAssert.AreEqual(0, resultCeiling);
+        ClassicAssert.AreEqual(expected, result);
     }
 
-    [Test]
-    public void Scale_with_negative_value_should_work()
+    [TestCase(-5, false)]
+    [TestCase(-5, true)]
+    public void Scale_with_negative_value_should_work(int input, bool ceiling)
     {
         // Negative values should be scaled correctly
-        int resultRound = DpiUtil.Scale(-5, ceiling: false);
-        int resultCeiling = DpiUtil.Scale(-5, ceiling: true);
+        int result = DpiUtil.Scale(input, ceiling: ceiling);
         
-        // Results should be valid integers
-        ClassicAssert.LessOrEqual(resultRound, 0);
-        ClassicAssert.LessOrEqual(resultCeiling, 0);
+        // Results should be valid integers (less than or equal to 0)
+        ClassicAssert.LessOrEqual(result, 0);
     }
 }
