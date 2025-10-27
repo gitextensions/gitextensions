@@ -34,7 +34,7 @@ namespace GitUITests.NBugReports
             // - Returns true for assemblies starting with "System." or "Microsoft."
             // - Case-insensitive comparison
             // - Returns false for null or whitespace
-            
+
             bool result = IsSystemOrMicrosoftAssembly(assemblyName);
             result.Should().Be(expected);
 
@@ -64,7 +64,7 @@ namespace GitUITests.NBugReports
             // - Returns true for DLL names containing "vcruntime"
             // - Case-insensitive comparison
             // - Returns false for null or whitespace
-            
+
             bool result = ContainsVCRuntime(dllName);
             result.Should().Be(expected);
 
@@ -89,7 +89,7 @@ namespace GitUITests.NBugReports
             // The logic being tested (as implemented in ReportFailedToLoadAnAssembly):
             // - Extracts DLL name between single quotes from DllNotFoundException message
             // - Falls back to using the entire message if no quotes found
-            
+
             string result = ExtractDllNameFromMessage(message);
             result.Should().Be(expectedDllName);
 
@@ -105,6 +105,7 @@ namespace GitUITests.NBugReports
                         fileName = fileName.Substring(startIndex + 1, endIndex - startIndex - 1);
                     }
                 }
+
                 return fileName;
             }
         }
