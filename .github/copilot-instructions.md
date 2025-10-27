@@ -7,13 +7,14 @@
 * Make only high confidence suggestions when reviewing code changes.
 * Always use the latest version C#, currently C# 13 features.
 * Files must have CRLF line endings.
-* Lines must not have trailing whitespace.
+* When creating or modifying code, follow all StyleCop analyzer rules.
+* Test changes locally or verify StyleCop compliance before committing when possible.
 
 ## Comments
 
 * Add const with speaking name instead of using magic numbers. Avoid hard-to-maintain comments which contain the magic number again.
 * Omit comments which just describe _what_ is done. In situations where a comment may be necessary describe _why_ an implementation was chosen.
-* In XML docs, use keywords correctly, e.g. "<see langword="true" />".
+* In XML documentation, use proper XML keywords like "<see langword="true" />".
 
 ## Formatting
 
@@ -40,6 +41,8 @@
       static int SecondLocalMethod1() { ... }
   }
   ```
+* Do not add trailing whitespace to any lines (StyleCop SA1028).
+* Add blank lines after closing braces when required (StyleCop SA1513).
 
 ## Variable Declarations
 
@@ -55,12 +58,13 @@
 
 ## Testing
 
-* We use NUnit SDK
+* We use NUnit SDK.
 * Do not emit "Act", "Arrange" or "Assert" comments.
 * The test names must follow snake-casing in the suffix BUT keeping the methods under test intact.
   For example, a test for a method "MyMethod" should be named as "MyMethod_should_return_expected".
-* Use NSubstitute for mocking.
-* Use FluentAssertions for assertions.
+* Do not repeat in a comment what the test name already expresses.
+* Use `NSubstitute` for mocking.
+* Use `FluentAssertions` for assertions, i.e. do not use `ClassicAssert`.
 
 ## Commit Messages
 
