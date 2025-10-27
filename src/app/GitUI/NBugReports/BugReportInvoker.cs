@@ -120,7 +120,7 @@ namespace GitUI.NBugReports
             // Handle VC Runtime DLL loading errors (refer to https://github.com/gitextensions/gitextensions/issues/12511)
             // These are transient errors typically caused by Windows updates, similar to .NET assembly loading errors
             if (exception is DllNotFoundException dllNotFoundException
-                && dllNotFoundException.Message.Contains("vcruntime", StringComparison.OrdinalIgnoreCase))
+                && IsVCRuntimeDll(dllNotFoundException.Message))
             {
                 ReportFailedToLoadAnAssembly(dllNotFoundException, isTerminating);
                 return;
@@ -322,19 +322,19 @@ namespace GitUI.NBugReports
                 return assemblyName.StartsWith("System.", StringComparison.OrdinalIgnoreCase)
                     || assemblyName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase);
             }
+        }
 
-            // Determines if the DLL name is a VC Runtime DLL.
-            // VC Runtime DLL loading errors are typically caused by Windows updates.
-            static bool IsVCRuntimeDll(string dllName)
+        // Determines if the DLL name is a VC Runtime DLL.
+        // VC Runtime DLL loading errors are typically caused by Windows updates.
+        private static bool IsVCRuntimeDll(string dllName)
+        {
+            if (string.IsNullOrWhiteSpace(dllName))
             {
-                if (string.IsNullOrWhiteSpace(dllName))
-                {
-                    return false;
-                }
-
-                // VC Runtime DLLs typically contain "vcruntime"
-                return dllName.Contains("vcruntime", StringComparison.OrdinalIgnoreCase);
+                return false;
             }
+
+            // VC Runtime DLLs typically contain "vcruntime"
+            return dllName.Contains("vcruntime", StringComparison.OrdinalIgnoreCase);
         }
 
         private static void ReportDubiousOwnership(ExternalOperationException exception)
