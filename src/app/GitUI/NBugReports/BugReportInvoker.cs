@@ -232,7 +232,7 @@ namespace GitUI.NBugReports
         private static void ReportFailedToLoadAnAssembly(Exception exception, bool isTerminating)
         {
             string fileName;
-            
+
             if (exception is FileNotFoundException fileNotFoundException)
             {
                 fileName = fileNotFoundException.FileName ?? "";
