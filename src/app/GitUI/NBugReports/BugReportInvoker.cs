@@ -117,6 +117,15 @@ namespace GitUI.NBugReports
                 return;
             }
 
+            // Handle VC Runtime DLL loading errors (refer to https://github.com/gitextensions/gitextensions/issues/12511)
+            // These are transient errors typically caused by Windows updates, similar to .NET assembly loading errors
+            if (exception is DllNotFoundException dllNotFoundException
+                && IsVCRuntimeDll(dllNotFoundException.Message))
+            {
+                ReportFailedToLoadAnAssembly(dllNotFoundException, isTerminating);
+                return;
+            }
+
             // Ignore accessibility-specific exception (refer to https://github.com/gitextensions/gitextensions/issues/11385)
             if (exception is InvalidOperationException && exception.StackTrace?.Contains("ListViewGroup.get_AccessibilityObject") is true)
             {
@@ -220,13 +229,36 @@ namespace GitUI.NBugReports
             }
         }
 
-        private static void ReportFailedToLoadAnAssembly(FileNotFoundException exception, bool isTerminating)
+        private static void ReportFailedToLoadAnAssembly(Exception exception, bool isTerminating)
         {
-            string fileName = exception.FileName ?? "";
-            int uninterestingIndex = fileName.IndexOf(", version=", StringComparison.InvariantCultureIgnoreCase);
-            if (uninterestingIndex > 0)
+            string fileName;
+
+            if (exception is FileNotFoundException fileNotFoundException)
             {
-                fileName = fileName[..uninterestingIndex];
+                fileName = fileNotFoundException.FileName ?? "";
+                int uninterestingIndex = fileName.IndexOf(", version=", StringComparison.InvariantCultureIgnoreCase);
+                if (uninterestingIndex > 0)
+                {
+                    fileName = fileName[..uninterestingIndex];
+                }
+            }
+            else if (exception is DllNotFoundException dllNotFoundException)
+            {
+                // Extract DLL name from message like "Unable to load DLL 'vcruntime140_cor3.dll'"
+                fileName = dllNotFoundException.Message;
+                int startIndex = fileName.IndexOf('\'');
+                if (startIndex >= 0)
+                {
+                    int endIndex = fileName.IndexOf('\'', startIndex + 1);
+                    if (endIndex > startIndex)
+                    {
+                        fileName = fileName.Substring(startIndex + 1, endIndex - startIndex - 1);
+                    }
+                }
+            }
+            else
+            {
+                fileName = "unknown";
             }
 
             TaskDialogPage page = new()
@@ -243,9 +275,15 @@ namespace GitUI.NBugReports
             restartButton.Click += (_, _) => RestartGE();
             page.Buttons.Add(restartButton);
 
-            TaskDialogCommandLinkButton reportButton = new(text: TranslatedStrings.ReportIssue, descriptionText: TranslatedStrings.ReportReproducedIssueDescription);
-            reportButton.Click += (_, _) => ShowNBug(OwnerForm, exception, isExternalOperation: false, isTerminating);
-            page.Buttons.Add(reportButton);
+            // Only show the report button for non-.NET framework assemblies and non-VC Runtime DLLs
+            // .NET framework assembly errors and VC Runtime DLL errors are typically transient (caused by Windows updates)
+            // and should not generate NBug reports
+            if (!IsDotNetFrameworkAssembly(fileName) && !IsVCRuntimeDll(fileName))
+            {
+                TaskDialogCommandLinkButton reportButton = new(text: TranslatedStrings.ReportIssue, descriptionText: TranslatedStrings.ReportReproducedIssueDescription);
+                reportButton.Click += (_, _) => ShowNBug(OwnerForm, exception, isExternalOperation: false, isTerminating);
+                page.Buttons.Add(reportButton);
+            }
 
             page.Expander = new TaskDialogExpander
             {
@@ -268,6 +306,35 @@ namespace GitUI.NBugReports
                 Process.Start(pi);
                 Environment.Exit(0);
             }
+
+            // Determines if the assembly name is a .NET framework assembly.
+            // .NET framework assemblies are typically affected by Patch Tuesday updates,
+            // causing transient FileNotFoundException errors that are resolved by restarting the application.
+            static bool IsDotNetFrameworkAssembly(string assemblyName)
+            {
+                if (string.IsNullOrWhiteSpace(assemblyName))
+                {
+                    return false;
+                }
+
+                // .NET framework assemblies typically start with "System." or "Microsoft."
+                // These are the assemblies commonly affected by Patch Tuesday updates
+                return assemblyName.StartsWith("System.", StringComparison.OrdinalIgnoreCase)
+                    || assemblyName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase);
+            }
+        }
+
+        // Determines if the DLL name is a VC Runtime DLL.
+        // VC Runtime DLL loading errors are typically caused by Windows updates.
+        private static bool IsVCRuntimeDll(string dllName)
+        {
+            if (string.IsNullOrWhiteSpace(dllName))
+            {
+                return false;
+            }
+
+            // VC Runtime DLLs typically contain "vcruntime"
+            return dllName.Contains("vcruntime", StringComparison.OrdinalIgnoreCase);
         }
 
         private static void ReportDubiousOwnership(ExternalOperationException exception)
