@@ -11,12 +11,12 @@ public sealed class DpiUtilTests
     {
         // The actual DPI values are system-dependent, so we test the rounding behavior
         // by verifying that the method respects the ceiling parameter
-        
+
         // When ceiling is false (default), Math.Round should be used
         // We can't test exact values without mocking static properties,
         // but we can verify the method signature works correctly
         int result = DpiUtil.Scale(5, ceiling: false);
-        
+
         // Result should be a valid integer (basic sanity check)
         result.Should().BeGreaterOrEqual(0);
     }
@@ -25,7 +25,7 @@ public sealed class DpiUtilTests
     public void Scale_with_ceiling_true_should_use_ceiling()
     {
         int result = DpiUtil.Scale(1, ceiling: true);
-        
+
         result.Should().BeGreaterThan(0);
     }
 
@@ -34,7 +34,7 @@ public sealed class DpiUtilTests
     {
         int resultDefault = DpiUtil.Scale(value);
         int resultExplicit = DpiUtil.Scale(value, ceiling: false);
-        
+
         resultExplicit.Should().Be(resultDefault);
     }
 
@@ -43,7 +43,7 @@ public sealed class DpiUtilTests
     public void Scale_with_zero_should_return_zero(int input, bool ceiling, int expected)
     {
         int result = DpiUtil.Scale(input, ceiling: ceiling);
-        
+
         result.Should().Be(expected);
     }
 
@@ -53,7 +53,7 @@ public sealed class DpiUtilTests
     {
         // Negative values should be scaled correctly
         int result = DpiUtil.Scale(input, ceiling: ceiling);
-        
+
         result.Should().BeLessOrEqualTo(0);
     }
 }
