@@ -18,7 +18,7 @@ public sealed class DpiUtilTests
         int result = DpiUtil.Scale(5, ceiling: false);
 
         // Result should be a valid integer (basic sanity check)
-        result.Should().BeGreaterOrEqual(0);
+        result.Should().BeGreaterThanOrEqualTo(0);
     }
 
     [Test]
@@ -54,6 +54,6 @@ public sealed class DpiUtilTests
         // Negative values should be scaled correctly
         int result = DpiUtil.Scale(input, ceiling: ceiling);
 
-        result.Should().BeLessOrEqualTo(0);
+        result.Should().BeLessThanOrEqualTo(0);
     }
 }
