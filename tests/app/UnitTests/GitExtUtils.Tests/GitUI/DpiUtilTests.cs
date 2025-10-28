@@ -1,3 +1,4 @@
+using FluentAssertions;
 using GitExtUtils.GitUI;
 
 namespace GitExtUtilsTests.GitUI;
@@ -17,28 +18,40 @@ public sealed class DpiUtilTests
         int result = DpiUtil.Scale(5, ceiling: false);
         
         // Result should be a valid integer (basic sanity check)
-        ClassicAssert.GreaterOrEqual(result, 0);
+        result.Should().BeGreaterOrEqual(0);
     }
 
     [Test]
     public void Scale_with_ceiling_true_should_use_ceiling()
     {
-        // When ceiling is true, Math.Ceiling should be used
-        int result = DpiUtil.Scale(5, ceiling: true);
+        int result = DpiUtil.Scale(1, ceiling: true);
         
-        // Result should be a valid integer (basic sanity check)
-        ClassicAssert.GreaterOrEqual(result, 0);
+        result.Should().BeGreaterThan(0);
     }
 
-    [Test]
-    public void Scale_default_parameter_should_use_round()
+    [TestCase(0)]
+    [TestCase(1)]
+    [TestCase(2)]
+    [TestCase(3)]
+    [TestCase(4)]
+    [TestCase(5)]
+    [TestCase(6)]
+    [TestCase(7)]
+    [TestCase(8)]
+    [TestCase(9)]
+    [TestCase(10)]
+    [TestCase(11)]
+    [TestCase(12)]
+    [TestCase(13)]
+    [TestCase(14)]
+    [TestCase(15)]
+    [TestCase(16)]
+    public void Scale_default_parameter_should_use_round(int value)
     {
-        // When ceiling parameter is omitted, it defaults to false (Math.Round)
-        int resultDefault = DpiUtil.Scale(5);
-        int resultExplicit = DpiUtil.Scale(5, ceiling: false);
+        int resultDefault = DpiUtil.Scale(value);
+        int resultExplicit = DpiUtil.Scale(value, ceiling: false);
         
-        // Both should produce the same result
-        ClassicAssert.AreEqual(resultExplicit, resultDefault);
+        resultExplicit.Should().Be(resultDefault);
     }
 
     [TestCase(0, false, 0)]
@@ -47,7 +60,7 @@ public sealed class DpiUtilTests
     {
         int result = DpiUtil.Scale(input, ceiling: ceiling);
         
-        ClassicAssert.AreEqual(expected, result);
+        result.Should().Be(expected);
     }
 
     [TestCase(-5, false)]
@@ -57,7 +70,6 @@ public sealed class DpiUtilTests
         // Negative values should be scaled correctly
         int result = DpiUtil.Scale(input, ceiling: ceiling);
         
-        // Results should be valid integers (less than or equal to 0)
-        ClassicAssert.LessOrEqual(result, 0);
+        result.Should().BeLessOrEqualTo(0);
     }
 }
