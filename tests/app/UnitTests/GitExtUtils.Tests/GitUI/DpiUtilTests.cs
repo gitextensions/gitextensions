@@ -29,24 +29,8 @@ public sealed class DpiUtilTests
         result.Should().BeGreaterThan(0);
     }
 
-    [TestCase(0)]
-    [TestCase(1)]
-    [TestCase(2)]
-    [TestCase(3)]
-    [TestCase(4)]
-    [TestCase(5)]
-    [TestCase(6)]
-    [TestCase(7)]
-    [TestCase(8)]
-    [TestCase(9)]
-    [TestCase(10)]
-    [TestCase(11)]
-    [TestCase(12)]
-    [TestCase(13)]
-    [TestCase(14)]
-    [TestCase(15)]
-    [TestCase(16)]
-    public void Scale_default_parameter_should_use_round(int value)
+    [Test]
+    public void Scale_default_parameter_should_use_round([Range(0, 16)] int value)
     {
         int resultDefault = DpiUtil.Scale(value);
         int resultExplicit = DpiUtil.Scale(value, ceiling: false);
