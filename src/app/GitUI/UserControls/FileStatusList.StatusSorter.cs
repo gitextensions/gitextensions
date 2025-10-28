@@ -147,10 +147,16 @@ partial class FileStatusList
 
                 return pathComparison switch
                 {
-                    -1 => r.Path.Value.StartsWith(l.Path.Value, StringComparison.InvariantCultureIgnoreCase) ? 1 : -1,
-                    1 => l.Path.Value.StartsWith(r.Path.Value, StringComparison.InvariantCultureIgnoreCase) ? -1 : 1,
+                    -1 => StartsWith(r.Path, l.Path) ? 1 : -1,
+                    1 => StartsWith(l.Path, r.Path) ? -1 : 1,
                     _ => StringComparer.InvariantCultureIgnoreCase.Compare(l.Name, r.Name)
                 };
+
+                static bool StartsWith(RelativePath longPath, RelativePath shortPath)
+                {
+                    return longPath.Value.StartsWith(shortPath.Value, StringComparison.InvariantCultureIgnoreCase)
+                        && longPath.Value[shortPath.Length] == '/';
+                }
             }
         }
 
