@@ -95,9 +95,9 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages
             Trace.WriteLine($"Failed to load theme {themeId.Name}: {ex}");
             string variationsStr = string.Concat(variations.Select(_ => "." + _));
             string identifier = new FormattedThemeId(themeId).ToString();
-            string firstLine = ex.ToString().Split(['\r', '\n'], StringSplitOptions.RemoveEmptyEntries)[0];
             AppSettings.ThemeId = ThemeId.Default;
-            MessageBoxes.ShowError(this, $"Failed to load theme {identifier}{variationsStr}: {firstLine}");
+            MessageBoxes.ShowError(this, $"Failed to load theme {identifier}{variationsStr}: {ex.Message}"
+                + $"{Environment.NewLine}{Environment.NewLine}See also https://github.com/gitextensions/gitextensions/wiki/Dark-Mode");
         }
 
         protected override void OnRuntimeLoad()
