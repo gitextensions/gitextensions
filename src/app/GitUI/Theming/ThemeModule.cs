@@ -1,4 +1,6 @@
+using System.Diagnostics;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtUtils.GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 
@@ -54,7 +56,8 @@ namespace GitUI.Theming
             catch (ThemeException ex)
             {
                 // Not good, ColorHelper needs actual InvariantTheme to correctly transform colors.
-                MessageBoxes.ShowError(null, $"Failed to load invariant theme: {ex}");
+                MessageBoxes.ShowError(null, $"Failed to load invariant theme: {ex.Message}"
+                        + $"{Environment.NewLine}{Environment.NewLine}See also https://github.com/gitextensions/gitextensions/wiki/Dark-Mode");
                 return ThemeSettings.Default;
             }
 
@@ -85,7 +88,10 @@ namespace GitUI.Theming
             }
             catch (ThemeException ex)
             {
-                MessageBoxes.ShowError(null, $"Failed to load {(themeId.IsBuiltin ? "preinstalled" : "user-defined")} theme {themeId.Name}: {ex}");
+                Trace.WriteLine($"Failed to load {(themeId.IsBuiltin ? "preinstalled" : "user-defined")} theme {themeId.Name}: {ex}");
+                MessageBoxes.ShowError(null, $"Failed to load {(themeId.IsBuiltin ? "preinstalled" : "user-defined")} theme {themeId.Name}: {ex.Message}"
+                        + $"{Environment.NewLine}{Environment.NewLine}See also https://github.com/gitextensions/gitextensions/wiki/Dark-Mode");
+                AppSettings.ThemeId = ThemeId.Default;
                 return CreateFallbackSettings(invariantTheme, variations);
             }
 
