@@ -142,14 +142,14 @@ partial class FileStatusList
                     ("", "") => 0,
                     (_, "") => -1,
                     ("", _) => 1,
-                    _ => StringComparer.InvariantCultureIgnoreCase.Compare(l.Path.Value, r.Path.Value)
+                    _ => StringComparer.InvariantCulture.Compare(l.Path.Value, r.Path.Value)
                 };
 
                 return pathComparison switch
                 {
                     -1 => StartsWith(r.Path, l.Path) ? 1 : -1,
                     1 => StartsWith(l.Path, r.Path) ? -1 : 1,
-                    _ => StringComparer.InvariantCultureIgnoreCase.Compare(l.Name, r.Name)
+                    _ => StringComparer.InvariantCulture.Compare(l.Name, r.Name)
                 };
 
                 static bool StartsWith(RelativePath longPath, RelativePath shortPath)
