@@ -3668,12 +3668,6 @@ public sealed partial class GitModule : IGitModule
             : null;
     }
 
-    public SubmoduleStatus CheckSubmoduleStatus(ObjectId? commit, ObjectId? oldCommit, CommitData? data, CommitData? oldData, bool loadData)
-    {
-        // TODO remove from IGitModule
-        throw new NotImplementedException("CheckSubmoduleStatus is not implemented in GitModule. Use SubmoduleHelper instead.");
-    }
-
     public bool CheckBranchFormat(string branchName)
     {
         ArgumentNullException.ThrowIfNull(branchName);
