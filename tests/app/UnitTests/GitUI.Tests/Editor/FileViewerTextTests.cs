@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.Design;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitExtUtils;
 using GitUI;
 using GitUI.Editor;
