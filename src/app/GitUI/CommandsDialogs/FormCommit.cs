@@ -1414,44 +1414,50 @@ public sealed partial class FormCommit : GitModuleForm
     /// <param name="regexEnabled">regex replace is enabled</param>
     private void ReplaceMessage(string? message, bool regexEnabled)
     {
-        if (regexEnabled)
+        try
         {
-            try
+            if (!regexEnabled)
             {
-                string regexFinderPattern = @"\[\[(.*?)\]\](?:\((\d+)\))?";
-                Match regexMatch = Regex.Match(message, regexFinderPattern);
-
-                if (regexMatch.Success)
-                {
-                    string pattern = regexMatch.Groups[1].Value;
-                    int groupIndex = 1;
-
-                    if (regexMatch.Groups.Count > 2 && int.TryParse(regexMatch.Groups[2].Value, out int parsedIndex))
-                    {
-                        groupIndex = parsedIndex;
-                    }
-
-                    Regex regex = new(pattern);
-                    string currentBranchName = Module.GetSelectedBranch();
-                    MatchCollection matches = regex.Matches(currentBranchName);
-
-                    if (matches.Count > 0 && matches[0].Groups.Count > groupIndex)
-                    {
-                        string generatedName = matches[0].Groups[groupIndex].Value;
-                        message = message.Replace(regexMatch.Groups[0].Value, generatedName);
-                    }
-                    else
-                    {
-                        message = message.Replace(regexMatch.Groups[0].Value, "");
-                    }
-                }
+                return;
             }
-            catch
+
+            string regexFinderPattern = @"\[\[(.*?)\]\](?:\((\d+)\))?";
+            Match regexMatch = Regex.Match(message, regexFinderPattern);
+
+            if (!regexMatch.Success)
             {
+                return;
+            }
+
+            string pattern = regexMatch.Groups[1].Value;
+            int groupIndex = 1;
+
+            if (regexMatch.Groups.Count > 2 && int.TryParse(regexMatch.Groups[2].Value, out int parsedIndex))
+            {
+                groupIndex = parsedIndex;
+            }
+
+            Regex regex = new(pattern);
+            string currentBranchName = Module.GetSelectedBranch();
+            MatchCollection matches = regex.Matches(currentBranchName);
+
+            if (matches.Count > 0 && matches[0].Groups.Count > groupIndex)
+            {
+                string generatedName = matches[0].Groups[groupIndex].Value;
+                message = message.Replace(regexMatch.Groups[0].Value, generatedName);
+            }
+            else
+            {
+                message = message.Replace(regexMatch.Groups[0].Value, "");
             }
         }
-
-        ReplaceMessage(message);
+        catch
+        {
+        }
+        finally
+        {
+            ReplaceMessage(message);
+        }
     }
 
     private void RescanChanges()
