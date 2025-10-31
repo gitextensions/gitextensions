@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.Editor;
@@ -151,7 +152,26 @@ public static partial class GitUIExtensions
             return;
         }
 
-        if (!item.Item.IsSubmodule && AppSettings.DiffDisplayAppearance.Value == GitCommands.Settings.DiffDisplayAppearance.Difftastic && fileViewer.IsDifftasticEnabled.Value)
+        if (item.Item.IsSubmodule)
+        {
+            GitSubmoduleStatus? status = item.Item.GetSubmoduleStatusAsync() is Task<GitSubmoduleStatus?> statusTask
+
+                // Patch already evaluated, normal case for e.g. FileStatusList
+                ? await statusTask
+                : await SubmoduleHelpers.GetSubmoduleDiffChangesAsync(fileViewer.Module, item.Item.Name, item.Item.OldName, firstId, item.SecondRevision.ObjectId, cancellationToken);
+
+            cancellationToken.ThrowIfCancellationRequested();
+            string subText = status is null
+                ? $"Failed to get status for submodule \"{item.Item.Name}\""
+                : await Task.Run(() => SubmoduleResources.GetSubmoduleStatusText(fileViewer.Module, status))
+                    .ConfigureAwait(false);
+
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await fileViewer.ViewPatchAsync(item, text: subText, line: line, openWithDifftool: openWithDiffTool, cancellationToken: cancellationToken);
+            return;
+        }
+
+        if (AppSettings.DiffDisplayAppearance.Value == GitCommands.Settings.DiffDisplayAppearance.Difftastic && fileViewer.IsDifftasticEnabled.Value)
         {
             bool isTracked = item.Item.IsTracked || (item.Item.TreeGuid is not null && item.SecondRevision.ObjectId is not null);
             (ArgumentString diffArgs, string extraCacheKey) = fileViewer.GetDifftasticArguments();
@@ -178,18 +198,11 @@ public static partial class GitUIExtensions
             return;
         }
 
+        // diff of text file
         string selectedPatch = (await GetSelectedPatchAsync(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item, cancellationToken))
             ?? defaultText;
 
-        if (item.Item.IsSubmodule)
-        {
-            await fileViewer.ViewTextAsync(item.Item.Name, text: selectedPatch, openWithDifftool: openWithDiffTool, cancellationToken: cancellationToken);
-        }
-        else
-        {
-            await fileViewer.ViewPatchAsync(item, text: selectedPatch, line: line, openWithDifftool: openWithDiffTool, cancellationToken: cancellationToken);
-        }
-
+        await fileViewer.ViewPatchAsync(item, text: selectedPatch, line: line, openWithDifftool: openWithDiffTool, cancellationToken: cancellationToken);
         return;
 
         void OpenWithDiffTool()
@@ -209,26 +222,12 @@ public static partial class GitUIExtensions
             GitItemStatus file,
             CancellationToken cancellationToken)
         {
-            Task<GitSubmoduleStatus?> task = file.GetSubmoduleStatusAsync();
-
-            if (file.IsSubmodule && task is not null)
-            {
-                // Patch already evaluated
-                GitSubmoduleStatus? status = await task;
-
-                cancellationToken.ThrowIfCancellationRequested();
-                return status is not null
-                    ? LocalizationHelpers.ProcessSubmoduleStatus(fileViewer.Module, status)
-                    : $"Failed to get status for submodule \"{file.Name}\"";
-            }
-
             (Patch? patch, string? errorMessage) = await GetItemPatchAsync(fileViewer.Module, file, firstId, selectedId,
                 fileViewer.GetExtraDiffArguments(), fileViewer.PatchUseGitColoring, fileViewer.Encoding, cancellationToken);
 
             cancellationToken.ThrowIfCancellationRequested();
-            return file.IsSubmodule
-                ? LocalizationHelpers.ProcessSubmodulePatch(fileViewer.Module, file.Name, patch)
-                : patch?.Text ?? errorMessage;
+
+            return patch?.Text ?? errorMessage;
 
             static async Task<(Patch? patch, string? errorMessage)> GetItemPatchAsync(
                 IGitModule module,

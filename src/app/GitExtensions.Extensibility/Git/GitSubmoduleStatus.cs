@@ -26,11 +26,13 @@ public sealed class GitSubmoduleStatus
 
     public IGitModule GetSubmodule(IGitModule module)
     {
+        // TODO remove from GitExtensions.Extensibility
         return module.GetSubmodule(Name);
     }
 
     public void CheckSubmoduleStatus(IGitModule? submodule)
     {
+        // TODO remove from GitExtensions.Extensibility
         if (submodule is null)
         {
             if (OldCommit is null)
