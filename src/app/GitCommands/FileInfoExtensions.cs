@@ -1,30 +1,29 @@
-﻿namespace GitCommands
+﻿namespace GitCommands;
+
+public static class FileInfoExtensions
 {
-    public static class FileInfoExtensions
+    /// <summary>
+    ///   Remove all attributes that could cause the file to be read-only
+    ///   and restores them later
+    /// </summary>
+    public static void MakeFileTemporaryWritable(string fileName, Action<string> writableAction)
     {
-        /// <summary>
-        ///   Remove all attributes that could cause the file to be read-only
-        ///   and restores them later
-        /// </summary>
-        public static void MakeFileTemporaryWritable(string fileName, Action<string> writableAction)
+        if (!File.Exists(fileName))
         {
-            if (!File.Exists(fileName))
-            {
-                // The file doesn't exist yet, no need to make it writable
-                writableAction(fileName);
-                return;
-            }
-
-            FileInfo fileInfo = new(fileName);
-            FileAttributes oldAttributes = fileInfo.Attributes;
-            fileInfo.Attributes = FileAttributes.Normal;
+            // The file doesn't exist yet, no need to make it writable
             writableAction(fileName);
+            return;
+        }
 
-            fileInfo.Refresh();
-            if (fileInfo.Exists)
-            {
-                fileInfo.Attributes = oldAttributes;
-            }
+        FileInfo fileInfo = new(fileName);
+        FileAttributes oldAttributes = fileInfo.Attributes;
+        fileInfo.Attributes = FileAttributes.Normal;
+        writableAction(fileName);
+
+        fileInfo.Refresh();
+        if (fileInfo.Exists)
+        {
+            fileInfo.Attributes = oldAttributes;
         }
     }
 }

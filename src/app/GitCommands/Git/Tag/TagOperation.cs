@@ -1,10 +1,9 @@
-namespace GitCommands.Git.Tag
+namespace GitCommands.Git.Tag;
+
+public enum TagOperation
 {
-    public enum TagOperation
-    {
-        Lightweight = 0,
-        Annotate,
-        SignWithDefaultKey,
-        SignWithSpecificKey
-    }
+    Lightweight = 0,
+    Annotate,
+    SignWithDefaultKey,
+    SignWithSpecificKey
 }

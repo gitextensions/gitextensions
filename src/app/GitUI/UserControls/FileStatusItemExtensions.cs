@@ -1,39 +1,38 @@
 ﻿using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
-namespace GitUI.UserControls
+namespace GitUI.UserControls;
+
+public static class FileStatusItemExtensions
 {
-    public static class FileStatusItemExtensions
+    public static IEnumerable<GitRevision> FirstRevs(this IEnumerable<FileStatusItem> l)
     {
-        public static IEnumerable<GitRevision> FirstRevs(this IEnumerable<FileStatusItem> l)
-        {
-            return l.Where(i => i.FirstRevision is not null)
-                .Select(i => i.FirstRevision!)
-                .Distinct();
-        }
+        return l.Where(i => i.FirstRevision is not null)
+            .Select(i => i.FirstRevision!)
+            .Distinct();
+    }
 
-        public static IEnumerable<ObjectId> FirstIds(this IEnumerable<FileStatusItem> l)
-        {
-            return l.Where(i => i.FirstRevision is not null)
-                .Select(i => i.FirstRevision!.ObjectId)
-                .Distinct();
-        }
+    public static IEnumerable<ObjectId> FirstIds(this IEnumerable<FileStatusItem> l)
+    {
+        return l.Where(i => i.FirstRevision is not null)
+            .Select(i => i.FirstRevision!.ObjectId)
+            .Distinct();
+    }
 
-        public static IEnumerable<GitRevision> SecondRevs(this IEnumerable<FileStatusItem> l)
-        {
-            return l.Select(i => i.SecondRevision)
-                .Distinct();
-        }
+    public static IEnumerable<GitRevision> SecondRevs(this IEnumerable<FileStatusItem> l)
+    {
+        return l.Select(i => i.SecondRevision)
+            .Distinct();
+    }
 
-        public static IEnumerable<ObjectId> SecondIds(this IEnumerable<FileStatusItem> l)
-        {
-            return l.Select(i => i.SecondRevision.ObjectId)
-                .Distinct();
-        }
+    public static IEnumerable<ObjectId> SecondIds(this IEnumerable<FileStatusItem> l)
+    {
+        return l.Select(i => i.SecondRevision.ObjectId)
+            .Distinct();
+    }
 
-        public static IEnumerable<GitItemStatus> Items(this IEnumerable<FileStatusItem> l)
-        {
-            return l.Select(i => i.Item);
-        }
+    public static IEnumerable<GitItemStatus> Items(this IEnumerable<FileStatusItem> l)
+    {
+        return l.Select(i => i.Item);
     }
 }

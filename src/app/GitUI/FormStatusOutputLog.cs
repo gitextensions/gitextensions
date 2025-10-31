@@ -1,37 +1,37 @@
 using System.Text;
 using GitExtensions.Extensibility;
 
-namespace GitUI
+namespace GitUI;
+
+public class FormStatusOutputLog
 {
-    public class FormStatusOutputLog
+    private readonly Lock _outputStringLock = new();
+    private readonly StringBuilder _outputString = new();
+
+    public void Append(string text)
     {
-        private readonly StringBuilder _outputString = new();
+        ArgumentNullException.ThrowIfNull(text);
 
-        public void Append(string text)
+        text = text.Replace(Delimiters.VerticalFeed, Delimiters.LineFeed).ReplaceLineEndings();
+        lock (_outputStringLock)
         {
-            ArgumentNullException.ThrowIfNull(text);
-
-            text = text.Replace(Delimiters.VerticalFeed, Delimiters.LineFeed).ReplaceLineEndings();
-            lock (_outputString)
-            {
-                _outputString.Append(text);
-            }
+            _outputString.Append(text);
         }
+    }
 
-        public void Clear()
+    public void Clear()
+    {
+        lock (_outputStringLock)
         {
-            lock (_outputString)
-            {
-                _outputString.Clear();
-            }
+            _outputString.Clear();
         }
+    }
 
-        public string GetString()
+    public string GetString()
+    {
+        lock (_outputStringLock)
         {
-            lock (_outputString)
-            {
-                return _outputString.ToString();
-            }
+            return _outputString.ToString();
         }
     }
 }

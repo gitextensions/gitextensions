@@ -6,236 +6,235 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
 using ResourceManager;
 
-namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl
+namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
+
+public partial class Dashboard : GitModuleControl
 {
-    public partial class Dashboard : GitModuleControl
+    private readonly TranslationString _cloneFork = new("Clone {0} repository");
+    private readonly TranslationString _cloneRepository = new("Clone repository");
+    private readonly TranslationString _createRepository = new("Create new repository");
+    private readonly TranslationString _develop = new("Develop");
+    private readonly TranslationString _donate = new("Donate");
+    private readonly TranslationString _issues = new("Issues");
+    private readonly TranslationString _openRepository = new("Open repository");
+    private readonly TranslationString _translate = new("Translate");
+
+    public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
+
+    public Dashboard()
     {
-        private readonly TranslationString _cloneFork = new("Clone {0} repository");
-        private readonly TranslationString _cloneRepository = new("Clone repository");
-        private readonly TranslationString _createRepository = new("Create new repository");
-        private readonly TranslationString _develop = new("Develop");
-        private readonly TranslationString _donate = new("Donate");
-        private readonly TranslationString _issues = new("Issues");
-        private readonly TranslationString _openRepository = new("Open repository");
-        private readonly TranslationString _translate = new("Translate");
+        InitializeComponent();
+        InitializeComplete();
 
-        public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
+        SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+        Visible = false;
 
-        public Dashboard()
+        tableLayoutPanel1.AutoSize = true;
+        tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        tableLayoutPanel1.Dock = DockStyle.Fill;
+        pnlLeft.Dock = DockStyle.Fill;
+        flpnlStart.Dock = DockStyle.Fill;
+        flpnlContribute.Dock = DockStyle.Bottom;
+        flpnlContribute.SendToBack();
+
+        userRepositoriesList.GitModuleChanged += OnModuleChanged;
+
+        // apply scaling
+        pnlLogo.Padding = DpiUtil.Scale(pnlLogo.Padding);
+        userRepositoriesList.HeaderHeight = pnlLogo.Height;
+    }
+
+    protected override void OnVisibleChanged(EventArgs e)
+    {
+        base.OnVisibleChanged(e);
+
+        // Focus the control in order for the search bar to have focus once the dashboard is shown
+        userRepositoriesList.Focus();
+    }
+
+    public void RefreshContent()
+    {
+        DashboardTheme selectedTheme = Application.IsDarkModeEnabled ? DashboardTheme.Dark : DashboardTheme.Light;
+
+        InitDashboardLayout();
+        ApplyTheme();
+        userRepositoriesList.ShowRecentRepositories();
+
+        void ApplyTheme()
         {
-            InitializeComponent();
-            InitializeComplete();
+            BackgroundImage = selectedTheme.BackgroundImage;
 
-            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
-            Visible = false;
+            BackColor = SystemColors.Window;
+            pnlLogo.BackColor = selectedTheme.LogoBackColor;
+            flpnlStart.BackColor = selectedTheme.StartBackColor;
+            flpnlContribute.BackColor = selectedTheme.ContributeBackColor;
+            lblContribute.ForeColor = selectedTheme.SecondaryHeadingText;
+            userRepositoriesList.MainBackColor = SystemColors.Window;
+            userRepositoriesList.BranchNameColor = selectedTheme.SecondaryText;
+            userRepositoriesList.FavouriteColor = selectedTheme.AccentedText;
+            userRepositoriesList.ForeColor = selectedTheme.PrimaryText;
+            userRepositoriesList.HeaderColor = selectedTheme.SecondaryHeadingText;
+            userRepositoriesList.HeaderBackColor = selectedTheme.HeaderBackColor;
+            userRepositoriesList.HoverColor = selectedTheme.StartBackColor;
+            userRepositoriesList.SearchBackColor = selectedTheme.SearchBackColor;
 
-            tableLayoutPanel1.AutoSize = true;
-            tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            tableLayoutPanel1.Dock = DockStyle.Fill;
-            pnlLeft.Dock = DockStyle.Fill;
-            flpnlStart.Dock = DockStyle.Fill;
-            flpnlContribute.Dock = DockStyle.Bottom;
-            flpnlContribute.SendToBack();
-
-            userRepositoriesList.GitModuleChanged += OnModuleChanged;
-
-            // apply scaling
-            pnlLogo.Padding = DpiUtil.Scale(pnlLogo.Padding);
-            userRepositoriesList.HeaderHeight = pnlLogo.Height;
-        }
-
-        protected override void OnVisibleChanged(EventArgs e)
-        {
-            base.OnVisibleChanged(e);
-
-            // Focus the control in order for the search bar to have focus once the dashboard is shown
-            userRepositoriesList.Focus();
-        }
-
-        public void RefreshContent()
-        {
-            DashboardTheme selectedTheme = Application.IsDarkModeEnabled ? DashboardTheme.Dark : DashboardTheme.Light;
-
-            InitDashboardLayout();
-            ApplyTheme();
-            userRepositoriesList.ShowRecentRepositories();
-
-            void ApplyTheme()
+            foreach (LinkLabel item in flpnlContribute.Controls.OfType<LinkLabel>().Union(flpnlStart.Controls.OfType<LinkLabel>()))
             {
-                BackgroundImage = selectedTheme.BackgroundImage;
-
-                BackColor = SystemColors.Window;
-                pnlLogo.BackColor = selectedTheme.LogoBackColor;
-                flpnlStart.BackColor = selectedTheme.StartBackColor;
-                flpnlContribute.BackColor = selectedTheme.ContributeBackColor;
-                lblContribute.ForeColor = selectedTheme.SecondaryHeadingText;
-                userRepositoriesList.MainBackColor = SystemColors.Window;
-                userRepositoriesList.BranchNameColor = selectedTheme.SecondaryText;
-                userRepositoriesList.FavouriteColor = selectedTheme.AccentedText;
-                userRepositoriesList.ForeColor = selectedTheme.PrimaryText;
-                userRepositoriesList.HeaderColor = selectedTheme.SecondaryHeadingText;
-                userRepositoriesList.HeaderBackColor = selectedTheme.HeaderBackColor;
-                userRepositoriesList.HoverColor = selectedTheme.StartBackColor;
-                userRepositoriesList.SearchBackColor = selectedTheme.SearchBackColor;
-
-                foreach (LinkLabel item in flpnlContribute.Controls.OfType<LinkLabel>().Union(flpnlStart.Controls.OfType<LinkLabel>()))
-                {
-                    item.LinkColor = selectedTheme.PrimaryText;
-                }
-
-                Invalidate(true);
+                item.LinkColor = selectedTheme.PrimaryText;
             }
 
-            void InitDashboardLayout()
+            Invalidate(true);
+        }
+
+        void InitDashboardLayout()
+        {
+            try
             {
-                try
-                {
-                    pnlLeft.SuspendLayout();
+                pnlLeft.SuspendLayout();
 
-                    AddLinks(flpnlContribute,
-                        panel =>
-                        {
-                            panel.Controls.Add(lblContribute);
-                            lblContribute.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
-
-                            CreateLink(panel, _develop.Text, Images.Develop.AdaptLightness(), GitHubItem_Click);
-                            CreateLink(panel, _donate.Text, Images.DollarSign, DonateItem_Click);
-                            CreateLink(panel, _translate.Text, Images.Translate.AdaptLightness(), TranslateItem_Click);
-                            Control lastControl = CreateLink(panel, _issues.Text, Images.Bug, IssuesItem_Click);
-                            return lastControl;
-                        },
-                        (panel, lastControl) =>
-                        {
-                            int height = lastControl.Location.Y + lastControl.Size.Height + panel.Padding.Bottom;
-                            panel.Height = height;
-                            panel.MinimumSize = new Size(0, height);
-                        });
-
-                    AddLinks(flpnlStart,
-                        panel =>
-                        {
-                            CreateLink(panel, _createRepository.Text, Images.RepoCreate, createItem_Click);
-                            CreateLink(panel, _openRepository.Text, Images.RepoOpen, openItem_Click);
-                            Control lastControl = CreateLink(panel, _cloneRepository.Text, Images.CloneRepoGit, cloneItem_Click);
-
-                            foreach (IRepositoryHostPlugin gitHoster in PluginRegistry.GitHosters)
-                            {
-                                lastControl = CreateLink(panel, string.Format(_cloneFork.Text, gitHoster.Name), Images.CloneRepoGitHub,
-                                    (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged));
-                            }
-
-                            return lastControl;
-                        },
-                        (panel, lastControl) =>
-                        {
-                            int height = lastControl.Location.Y + lastControl.Size.Height + panel.Padding.Bottom;
-                            panel.MinimumSize = new Size(0, height);
-                        });
-                }
-                finally
-                {
-                    pnlLeft.ResumeLayout(false);
-                    pnlLeft.PerformLayout();
-                    AutoScrollMinSize = new Size(0, pnlLogo.Height + flpnlStart.MinimumSize.Height + flpnlContribute.MinimumSize.Height);
-                }
-
-                static void AddLinks(Panel panel, Func<Panel, Control> addLinks, Action<Panel, Control> onLayout)
-                {
-                    panel.SuspendLayout();
-                    panel.Controls.Clear();
-
-                    Control lastControl = addLinks(panel);
-
-                    panel.ResumeLayout(false);
-                    panel.PerformLayout();
-
-                    onLayout(panel, lastControl);
-                }
-
-                Control CreateLink(Control container, string text, Image icon, EventHandler handler)
-                {
-                    int padding24 = DpiUtil.Scale(24);
-                    int padding3 = DpiUtil.Scale(3);
-                    LinkLabel linkLabel = new()
+                AddLinks(flpnlContribute,
+                    panel =>
                     {
-                        AutoSize = true,
-                        AutoEllipsis = true,
-                        Font = AppSettings.Font,
-                        Image = DpiUtil.Scale(icon),
-                        ImageAlign = ContentAlignment.MiddleLeft,
-                        LinkBehavior = LinkBehavior.NeverUnderline,
-                        Margin = new Padding(padding3, 0, padding3, DpiUtil.Scale(8)),
-                        Padding = new Padding(padding24, padding3, padding3, padding3),
-                        TabStop = true,
-                        Text = text,
-                        TextAlign = ContentAlignment.MiddleLeft
-                    };
-                    linkLabel.MouseHover += (s, e) => linkLabel.LinkColor = selectedTheme.AccentedText;
-                    linkLabel.MouseLeave += (s, e) => linkLabel.LinkColor = selectedTheme.PrimaryText;
-                    linkLabel.Click += handler;
+                        panel.Controls.Add(lblContribute);
+                        lblContribute.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
 
-                    container.Controls.Add(linkLabel);
+                        CreateLink(panel, _develop.Text, Images.Develop.AdaptLightness(), GitHubItem_Click);
+                        CreateLink(panel, _donate.Text, Images.DollarSign, DonateItem_Click);
+                        CreateLink(panel, _translate.Text, Images.Translate.AdaptLightness(), TranslateItem_Click);
+                        Control lastControl = CreateLink(panel, _issues.Text, Images.Bug, IssuesItem_Click);
+                        return lastControl;
+                    },
+                    (panel, lastControl) =>
+                    {
+                        int height = lastControl.Location.Y + lastControl.Size.Height + panel.Padding.Bottom;
+                        panel.Height = height;
+                        panel.MinimumSize = new Size(0, height);
+                    });
 
-                    return linkLabel;
-                }
+                AddLinks(flpnlStart,
+                    panel =>
+                    {
+                        CreateLink(panel, _createRepository.Text, Images.RepoCreate, createItem_Click);
+                        CreateLink(panel, _openRepository.Text, Images.RepoOpen, openItem_Click);
+                        Control lastControl = CreateLink(panel, _cloneRepository.Text, Images.CloneRepoGit, cloneItem_Click);
+
+                        foreach (IRepositoryHostPlugin gitHoster in PluginRegistry.GitHosters)
+                        {
+                            lastControl = CreateLink(panel, string.Format(_cloneFork.Text, gitHoster.Name), Images.CloneRepoGitHub,
+                                (repoSender, eventArgs) => UICommands.StartCloneForkFromHoster(this, gitHoster, GitModuleChanged));
+                        }
+
+                        return lastControl;
+                    },
+                    (panel, lastControl) =>
+                    {
+                        int height = lastControl.Location.Y + lastControl.Size.Height + panel.Padding.Bottom;
+                        panel.MinimumSize = new Size(0, height);
+                    });
             }
-        }
-
-        protected virtual void OnModuleChanged(object sender, GitModuleEventArgs e)
-        {
-            EventHandler<GitModuleEventArgs> handler = GitModuleChanged;
-            handler?.Invoke(this, e);
-        }
-
-        private void dashboard_ParentChanged(object sender, EventArgs e)
-        {
-            if (Parent is null)
+            finally
             {
-                Visible = false;
-                return;
+                pnlLeft.ResumeLayout(false);
+                pnlLeft.PerformLayout();
+                AutoScrollMinSize = new Size(0, pnlLogo.Height + flpnlStart.MinimumSize.Height + flpnlContribute.MinimumSize.Height);
             }
 
-            Visible = true;
-        }
-
-        private static void TranslateItem_Click(object sender, EventArgs e)
-        {
-            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Translations");
-        }
-
-        private static void GitHubItem_Click(object sender, EventArgs e)
-        {
-            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions");
-        }
-
-        private static void IssuesItem_Click(object sender, EventArgs e)
-        {
-            UserEnvironmentInformation.CopyInformation();
-            OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/issues");
-        }
-
-        private void openItem_Click(object sender, EventArgs e)
-        {
-            IGitModule? module = FormOpenDirectory.OpenModule(this, currentModule: null);
-            if (module is not null)
+            static void AddLinks(Panel panel, Func<Panel, Control> addLinks, Action<Panel, Control> onLayout)
             {
-                OnModuleChanged(this, new GitModuleEventArgs(module));
+                panel.SuspendLayout();
+                panel.Controls.Clear();
+
+                Control lastControl = addLinks(panel);
+
+                panel.ResumeLayout(false);
+                panel.PerformLayout();
+
+                onLayout(panel, lastControl);
+            }
+
+            Control CreateLink(Control container, string text, Image icon, EventHandler handler)
+            {
+                int padding24 = DpiUtil.Scale(24);
+                int padding3 = DpiUtil.Scale(3);
+                LinkLabel linkLabel = new()
+                {
+                    AutoSize = true,
+                    AutoEllipsis = true,
+                    Font = AppSettings.Font,
+                    Image = DpiUtil.Scale(icon),
+                    ImageAlign = ContentAlignment.MiddleLeft,
+                    LinkBehavior = LinkBehavior.NeverUnderline,
+                    Margin = new Padding(padding3, 0, padding3, DpiUtil.Scale(8)),
+                    Padding = new Padding(padding24, padding3, padding3, padding3),
+                    TabStop = true,
+                    Text = text,
+                    TextAlign = ContentAlignment.MiddleLeft
+                };
+                linkLabel.MouseHover += (s, e) => linkLabel.LinkColor = selectedTheme.AccentedText;
+                linkLabel.MouseLeave += (s, e) => linkLabel.LinkColor = selectedTheme.PrimaryText;
+                linkLabel.Click += handler;
+
+                container.Controls.Add(linkLabel);
+
+                return linkLabel;
             }
         }
+    }
 
-        private void cloneItem_Click(object sender, EventArgs e)
+    protected virtual void OnModuleChanged(object sender, GitModuleEventArgs e)
+    {
+        EventHandler<GitModuleEventArgs> handler = GitModuleChanged;
+        handler?.Invoke(this, e);
+    }
+
+    private void dashboard_ParentChanged(object sender, EventArgs e)
+    {
+        if (Parent is null)
         {
-            UICommands.StartCloneDialog(this, null, false, OnModuleChanged);
+            Visible = false;
+            return;
         }
 
-        private void createItem_Click(object sender, EventArgs e)
-        {
-            UICommands.StartInitializeDialog(this, Module.WorkingDir, OnModuleChanged);
-        }
+        Visible = true;
+    }
 
-        private static void DonateItem_Click(object sender, EventArgs e)
+    private static void TranslateItem_Click(object sender, EventArgs e)
+    {
+        OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/wiki/Translations");
+    }
+
+    private static void GitHubItem_Click(object sender, EventArgs e)
+    {
+        OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions");
+    }
+
+    private static void IssuesItem_Click(object sender, EventArgs e)
+    {
+        UserEnvironmentInformation.CopyInformation();
+        OsShellUtil.OpenUrlInDefaultBrowser(@"https://github.com/gitextensions/gitextensions/issues");
+    }
+
+    private void openItem_Click(object sender, EventArgs e)
+    {
+        IGitModule? module = FormOpenDirectory.OpenModule(this, currentModule: null);
+        if (module is not null)
         {
-            OsShellUtil.OpenUrlInDefaultBrowser(FormDonate.DonationUrl);
+            OnModuleChanged(this, new GitModuleEventArgs(module));
         }
+    }
+
+    private void cloneItem_Click(object sender, EventArgs e)
+    {
+        UICommands.StartCloneDialog(this, null, false, OnModuleChanged);
+    }
+
+    private void createItem_Click(object sender, EventArgs e)
+    {
+        UICommands.StartInitializeDialog(this, Module.WorkingDir, OnModuleChanged);
+    }
+
+    private static void DonateItem_Click(object sender, EventArgs e)
+    {
+        OsShellUtil.OpenUrlInDefaultBrowser(FormDonate.DonationUrl);
     }
 }

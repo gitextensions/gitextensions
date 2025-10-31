@@ -1,14 +1,13 @@
-namespace GitUI.LeftPanel
+namespace GitUI.LeftPanel;
+
+public partial class RepoObjectsTree
 {
-    public partial class RepoObjectsTree
+    public enum Command
     {
-        public enum Command
-        {
-            Delete = 0,
-            Rename = 1,
-            Search = 2,
-            MultiSelect = 3,
-            MultiSelectWithChildren = 4,
-        }
+        Delete = 0,
+        Rename = 1,
+        Search = 2,
+        MultiSelect = 3,
+        MultiSelectWithChildren = 4,
     }
 }

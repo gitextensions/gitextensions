@@ -6,212 +6,211 @@ using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.LeftPanel;
 
-namespace GitExtensions.UITests.CommandsDialogs
+namespace GitExtensions.UITests.CommandsDialogs;
+
+[Apartment(ApartmentState.STA)]
+[NonParallelizable]
+public class FormBrowse_LeftPanel_ReorderNodesTest
 {
-    [Apartment(ApartmentState.STA)]
-    [NonParallelizable]
-    public class FormBrowse_LeftPanel_ReorderNodesTest
+    // Created once for each test
+    private GitUICommands _commands;
+
+    // Track the original setting value
+    private bool _originalShowAuthorAvatarColumn;
+    private bool _showAvailableDiffTools;
+
+    private List<bool> _originalRepoObjectsTreeShow = [];
+
+    private GitModuleTestHelper _repo1;
+
+    [OneTimeSetUp]
+    public void SetUpFixture()
     {
-        // Created once for each test
-        private GitUICommands _commands;
+        // Remember the current settings...
+        _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
+        _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools;
 
-        // Track the original setting value
-        private bool _originalShowAuthorAvatarColumn;
-        private bool _showAvailableDiffTools;
+        // Stop loading custom diff tools
+        AppSettings.ShowAvailableDiffTools = false;
 
-        private List<bool> _originalRepoObjectsTreeShow = [];
+        // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
+        AppSettings.ShowAuthorAvatarColumn = false;
 
-        private GitModuleTestHelper _repo1;
+        // Show all root nodes for test, restore when done
+        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowBranches);
+        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowRemotes);
+        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowTags);
+        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowStashes);
+        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowSubmodules);
+        AppSettings.RepoObjectsTreeShowBranches = true;
+        AppSettings.RepoObjectsTreeShowRemotes = true;
+        AppSettings.RepoObjectsTreeShowTags = true;
+        AppSettings.RepoObjectsTreeShowStashes = true;
+        AppSettings.RepoObjectsTreeShowSubmodules = true;
+    }
 
-        [OneTimeSetUp]
-        public void SetUpFixture()
-        {
-            // Remember the current settings...
-            _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
-            _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools;
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
+        AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
 
-            // Stop loading custom diff tools
-            AppSettings.ShowAvailableDiffTools = false;
+        AppSettings.RepoObjectsTreeShowBranches = _originalRepoObjectsTreeShow[0];
+        AppSettings.RepoObjectsTreeShowRemotes = _originalRepoObjectsTreeShow[1];
+        AppSettings.RepoObjectsTreeShowTags = _originalRepoObjectsTreeShow[2];
+        AppSettings.RepoObjectsTreeShowSubmodules = _originalRepoObjectsTreeShow[3];
+        AppSettings.RepoObjectsTreeShowStashes = _originalRepoObjectsTreeShow[4];
+    }
 
-            // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
-            AppSettings.ShowAuthorAvatarColumn = false;
+    [SetUp]
+    public void SetUp()
+    {
+        _repo1 = new GitModuleTestHelper("repo1");
 
-            // Show all root nodes for test, restore when done
-            _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowBranches);
-            _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowRemotes);
-            _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowTags);
-            _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowStashes);
-            _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowSubmodules);
-            AppSettings.RepoObjectsTreeShowBranches = true;
-            AppSettings.RepoObjectsTreeShowRemotes = true;
-            AppSettings.RepoObjectsTreeShowTags = true;
-            AppSettings.RepoObjectsTreeShowStashes = true;
-            AppSettings.RepoObjectsTreeShowSubmodules = true;
-        }
+        _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _repo1.Module);
+    }
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
-            AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
+    [TearDown]
+    public void TearDown()
+    {
+        _repo1.Dispose();
+    }
 
-            AppSettings.RepoObjectsTreeShowBranches = _originalRepoObjectsTreeShow[0];
-            AppSettings.RepoObjectsTreeShowRemotes = _originalRepoObjectsTreeShow[1];
-            AppSettings.RepoObjectsTreeShowTags = _originalRepoObjectsTreeShow[2];
-            AppSettings.RepoObjectsTreeShowSubmodules = _originalRepoObjectsTreeShow[3];
-            AppSettings.RepoObjectsTreeShowStashes = _originalRepoObjectsTreeShow[4];
-        }
-
-        [SetUp]
-        public void SetUp()
-        {
-            _repo1 = new GitModuleTestHelper("repo1");
-
-            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _repo1.Module);
-        }
-
-        [TearDown]
-        public void TearDown()
-        {
-            _repo1.Dispose();
-        }
-
-        [Test]
-        public void RepoObjectTree_moving_first_up_and_last_down_does_nothing()
-        {
-            RunRepoObjectsTreeTest(
-                repoObjectTree =>
-                {
-                    RepoObjectsTree.TestAccessor testAccessor = repoObjectTree.GetTestAccessor();
-
-                    // act
-                    TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
-                    List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
-
-                    // assert
-                    AssertListCount(currNodes, 5);
-                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
-
-                    int first = 0;
-                    int last = currNodes.Count - 1;
-
-                    // Trying to move first node up should do nothing
-                    testAccessor.ReorderTreeNode(currNodes[first], up: true);
-                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
-
-                    // Similarly, moving last node down should do nothing
-                    testAccessor.ReorderTreeNode(currNodes[last], up: false);
-                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
-                });
-        }
-
-        [Test]
-        public void RepoObjectTree_moving_node_legally_moves_it()
-        {
-            RunRepoObjectsTreeTest(
-                repoObjectTree =>
-                {
-                    RepoObjectsTree.TestAccessor testAccessor = repoObjectTree.GetTestAccessor();
-
-                    // act
-                    TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
-                    List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
-
-                    // assert
-                    AssertListCount(currNodes, 5);
-                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
-
-                    // Move first down
-                    testAccessor.ReorderTreeNode(currNodes[0], up: false);
-                    ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3, 4);
-                    testAccessor.ReorderTreeNode(currNodes[1], up: false);
-                    ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3, 4);
-                    testAccessor.ReorderTreeNode(currNodes[2], up: false);
-                    ValidateOrder(initialNodes, currNodes, 1, 2, 3, 0, 4);
-
-                    // Then back up
-                    testAccessor.ReorderTreeNode(currNodes[3], up: true);
-                    ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3, 4);
-                    testAccessor.ReorderTreeNode(currNodes[2], up: true);
-                    ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3, 4);
-                    testAccessor.ReorderTreeNode(currNodes[1], up: true);
-                    ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
-                });
-        }
-
-        [Test]
-        public void RepoObjectTree_moving_node_across_hidden_trees_skips_them()
-        {
-            RunRepoObjectsTreeTest(
-                repoObjectTree =>
-                {
-                    RepoObjectsTree.TestAccessor testAccessor = repoObjectTree.GetTestAccessor();
-
-                    // act
-                    TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
-                    List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
-                    AssertListCount(initialNodes, 5);
-
-                    // Hide nodes between first and last
-                    testAccessor.SetTreeVisibleByIndex(1, false);
-                    testAccessor.SetTreeVisibleByIndex(2, false);
-
-                    // assert
-                    AssertListCount(currNodes, 3);
-
-                    // Move node 0 down, which should move it to index 3
-                    testAccessor.ReorderTreeNode(currNodes[0], up: false);
-
-                    // Unhide nodes between first and last
-                    testAccessor.SetTreeVisibleByIndex(1, true);
-                    testAccessor.SetTreeVisibleByIndex(2, true);
-
-                    // Reset currNodes, should be back
-                    AssertListCount(currNodes, 5);
-
-                    // Only first and last nodes should have swapped
-                    ValidateOrder(initialNodes, currNodes, 3, 1, 2, 0, 4);
-                });
-        }
-
-        private static void AssertListCount(ICollection collection, int expectedCount)
-        {
-            int actualCount = collection.Count;
-            if (actualCount == expectedCount)
+    [Test]
+    public void RepoObjectTree_moving_first_up_and_last_down_does_nothing()
+    {
+        RunRepoObjectsTreeTest(
+            repoObjectTree =>
             {
-                return;
-            }
+                RepoObjectsTree.TestAccessor testAccessor = repoObjectTree.GetTestAccessor();
 
-            string items = collection.OfType<object>().Select(n => n.ToString()).Join(", ");
-            ClassicAssert.Fail($"Actual count {actualCount} differs from expected {expectedCount}.{Environment.NewLine}Actual items: {items}");
-        }
+                // act
+                TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
+                List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
 
-        private static void ValidateOrder(List<TreeNode> initialNodes, TreeNodeCollection currNodes, params int[] expectedOrder)
-        {
-            AssertListCount(currNodes, expectedOrder.Length);
-            AssertListCount(initialNodes, expectedOrder.Length);
+                // assert
+                AssertListCount(currNodes, 5);
+                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
 
-            for (int i = 0; i < initialNodes.Count; ++i)
+                int first = 0;
+                int last = currNodes.Count - 1;
+
+                // Trying to move first node up should do nothing
+                testAccessor.ReorderTreeNode(currNodes[first], up: true);
+                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+
+                // Similarly, moving last node down should do nothing
+                testAccessor.ReorderTreeNode(currNodes[last], up: false);
+                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+            });
+    }
+
+    [Test]
+    public void RepoObjectTree_moving_node_legally_moves_it()
+    {
+        RunRepoObjectsTreeTest(
+            repoObjectTree =>
             {
-                currNodes[i].Should().Be(initialNodes[expectedOrder[i]]);
-            }
+                RepoObjectsTree.TestAccessor testAccessor = repoObjectTree.GetTestAccessor();
+
+                // act
+                TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
+                List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
+
+                // assert
+                AssertListCount(currNodes, 5);
+                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+
+                // Move first down
+                testAccessor.ReorderTreeNode(currNodes[0], up: false);
+                ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3, 4);
+                testAccessor.ReorderTreeNode(currNodes[1], up: false);
+                ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3, 4);
+                testAccessor.ReorderTreeNode(currNodes[2], up: false);
+                ValidateOrder(initialNodes, currNodes, 1, 2, 3, 0, 4);
+
+                // Then back up
+                testAccessor.ReorderTreeNode(currNodes[3], up: true);
+                ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3, 4);
+                testAccessor.ReorderTreeNode(currNodes[2], up: true);
+                ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3, 4);
+                testAccessor.ReorderTreeNode(currNodes[1], up: true);
+                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+            });
+    }
+
+    [Test]
+    public void RepoObjectTree_moving_node_across_hidden_trees_skips_them()
+    {
+        RunRepoObjectsTreeTest(
+            repoObjectTree =>
+            {
+                RepoObjectsTree.TestAccessor testAccessor = repoObjectTree.GetTestAccessor();
+
+                // act
+                TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
+                List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
+                AssertListCount(initialNodes, 5);
+
+                // Hide nodes between first and last
+                testAccessor.SetTreeVisibleByIndex(1, false);
+                testAccessor.SetTreeVisibleByIndex(2, false);
+
+                // assert
+                AssertListCount(currNodes, 3);
+
+                // Move node 0 down, which should move it to index 3
+                testAccessor.ReorderTreeNode(currNodes[0], up: false);
+
+                // Unhide nodes between first and last
+                testAccessor.SetTreeVisibleByIndex(1, true);
+                testAccessor.SetTreeVisibleByIndex(2, true);
+
+                // Reset currNodes, should be back
+                AssertListCount(currNodes, 5);
+
+                // Only first and last nodes should have swapped
+                ValidateOrder(initialNodes, currNodes, 3, 1, 2, 0, 4);
+            });
+    }
+
+    private static void AssertListCount(ICollection collection, int expectedCount)
+    {
+        int actualCount = collection.Count;
+        if (actualCount == expectedCount)
+        {
+            return;
         }
 
-        private void RunRepoObjectsTreeTest(Action<RepoObjectsTree> testDriver)
-        {
-            RunFormTest(
-                form =>
-                {
-                    testDriver(form.GetTestAccessor().RepoObjectsTree);
-                    return Task.CompletedTask;
-                });
-        }
+        string items = collection.OfType<object>().Select(n => n.ToString()).Join(", ");
+        ClassicAssert.Fail($"Actual count {actualCount} differs from expected {expectedCount}.{Environment.NewLine}Actual items: {items}");
+    }
 
-        private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
+    private static void ValidateOrder(List<TreeNode> initialNodes, TreeNodeCollection currNodes, params int[] expectedOrder)
+    {
+        AssertListCount(currNodes, expectedOrder.Length);
+        AssertListCount(initialNodes, expectedOrder.Length);
+
+        for (int i = 0; i < initialNodes.Count; ++i)
         {
-            UITest.RunForm(
-                showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
-                testDriverAsync);
+            currNodes[i].Should().Be(initialNodes[expectedOrder[i]]);
         }
+    }
+
+    private void RunRepoObjectsTreeTest(Action<RepoObjectsTree> testDriver)
+    {
+        RunFormTest(
+            form =>
+            {
+                testDriver(form.GetTestAccessor().RepoObjectsTree);
+                return Task.CompletedTask;
+            });
+    }
+
+    private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)
+    {
+        UITest.RunForm(
+            showForm: () => _commands.StartBrowseDialog(owner: null).Should().BeTrue(),
+            testDriverAsync);
     }
 }

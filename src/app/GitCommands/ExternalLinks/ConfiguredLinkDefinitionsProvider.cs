@@ -2,50 +2,49 @@
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
 
-namespace GitCommands.ExternalLinks
+namespace GitCommands.ExternalLinks;
+
+/// <summary>
+/// Provides the ability to retrieves available persisted external link definitions.
+/// </summary>
+public interface IConfiguredLinkDefinitionsProvider
 {
     /// <summary>
-    /// Provides the ability to retrieves available persisted external link definitions.
+    /// Loads all persisted external link definitions across all setting layers.
     /// </summary>
-    public interface IConfiguredLinkDefinitionsProvider
+    IReadOnlyList<ExternalLinkDefinition> Get(DistributedSettings settings);
+}
+
+/// <summary>
+/// Retrieves available persisted external link definitions.
+/// </summary>
+public sealed class ConfiguredLinkDefinitionsProvider : IConfiguredLinkDefinitionsProvider
+{
+    private readonly IExternalLinksStorage _externalLinksStorage;
+
+    public ConfiguredLinkDefinitionsProvider(IExternalLinksStorage externalLinksStorage)
     {
-        /// <summary>
-        /// Loads all persisted external link definitions across all setting layers.
-        /// </summary>
-        IReadOnlyList<ExternalLinkDefinition> Get(DistributedSettings settings);
+        _externalLinksStorage = externalLinksStorage;
     }
 
     /// <summary>
-    /// Retrieves available persisted external link definitions.
+    /// Loads all persisted external link definitions across all setting layers.
     /// </summary>
-    public sealed class ConfiguredLinkDefinitionsProvider : IConfiguredLinkDefinitionsProvider
+    public IReadOnlyList<ExternalLinkDefinition> Get(DistributedSettings settings)
     {
-        private readonly IExternalLinksStorage _externalLinksStorage;
+        ArgumentNullException.ThrowIfNull(settings);
 
-        public ConfiguredLinkDefinitionsProvider(IExternalLinksStorage externalLinksStorage)
+        DistributedSettings cachedSettings = new(null, settings.SettingsCache, SettingLevel.Unknown);
+        IEnumerable<ExternalLinkDefinition>? effective = _externalLinksStorage.Load(cachedSettings);
+
+        Validates.NotNull(effective);
+
+        if (settings.LowerPriority is not null)
         {
-            _externalLinksStorage = externalLinksStorage;
+            ConfiguredLinkDefinitionsProvider lowerPriorityLoader = new(_externalLinksStorage);
+            effective = effective.Union(lowerPriorityLoader.Get(settings.LowerPriority));
         }
 
-        /// <summary>
-        /// Loads all persisted external link definitions across all setting layers.
-        /// </summary>
-        public IReadOnlyList<ExternalLinkDefinition> Get(DistributedSettings settings)
-        {
-            ArgumentNullException.ThrowIfNull(settings);
-
-            DistributedSettings cachedSettings = new(null, settings.SettingsCache, SettingLevel.Unknown);
-            IEnumerable<ExternalLinkDefinition>? effective = _externalLinksStorage.Load(cachedSettings);
-
-            Validates.NotNull(effective);
-
-            if (settings.LowerPriority is not null)
-            {
-                ConfiguredLinkDefinitionsProvider lowerPriorityLoader = new(_externalLinksStorage);
-                effective = effective.Union(lowerPriorityLoader.Get(settings.LowerPriority));
-            }
-
-            return effective.ToList();
-        }
+        return effective.ToList();
     }
 }

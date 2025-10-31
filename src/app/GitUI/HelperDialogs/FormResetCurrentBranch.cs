@@ -5,148 +5,147 @@ using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
-namespace GitUI.HelperDialogs
+namespace GitUI.HelperDialogs;
+
+public partial class FormResetCurrentBranch : GitModuleForm
 {
-    public partial class FormResetCurrentBranch : GitModuleForm
+    private readonly TranslationString _branchInfo = new("Reset branch '{0}' to revision:");
+    private readonly TranslationString _resetHardWarning = new("You are about to discard ALL local changes, are you sure?");
+    private readonly TranslationString _resetCaption = new("Reset branch");
+
+    public enum ResetType
     {
-        private readonly TranslationString _branchInfo = new("Reset branch '{0}' to revision:");
-        private readonly TranslationString _resetHardWarning = new("You are about to discard ALL local changes, are you sure?");
-        private readonly TranslationString _resetCaption = new("Reset branch");
+        Soft,
+        Mixed,
+        Keep,
+        Merge,
+        Hard
+    }
 
-        public enum ResetType
+    public static FormResetCurrentBranch Create(IGitUICommands commands, GitRevision revision, ResetType resetType = ResetType.Soft)
+        => new(commands, revision ?? throw new NotSupportedException(TranslatedStrings.NoRevision), resetType);
+
+    private FormResetCurrentBranch(IGitUICommands commands, GitRevision revision, ResetType resetType)
+        : base(commands)
+    {
+        Revision = revision;
+
+        InitializeComponent();
+        Soft.SetForeColorForBackColor();
+        Mixed.SetForeColorForBackColor();
+        Keep.ForeColor = Mixed.ForeColor;
+        Merge.ForeColor = Mixed.ForeColor;
+        Hard.SetForeColorForBackColor();
+        InitializeComplete();
+
+        switch (resetType)
         {
-            Soft,
-            Mixed,
-            Keep,
-            Merge,
-            Hard
+            case ResetType.Soft:
+                Soft.Checked = true;
+                break;
+            case ResetType.Mixed:
+                Mixed.Checked = true;
+                break;
+            case ResetType.Keep:
+                Keep.Checked = true;
+                break;
+            case ResetType.Merge:
+                Merge.Checked = true;
+                break;
+            case ResetType.Hard:
+                Hard.Checked = true;
+                break;
         }
+    }
 
-        public static FormResetCurrentBranch Create(IGitUICommands commands, GitRevision revision, ResetType resetType = ResetType.Soft)
-            => new(commands, revision ?? throw new NotSupportedException(TranslatedStrings.NoRevision), resetType);
+    public GitRevision Revision { get; }
 
-        private FormResetCurrentBranch(IGitUICommands commands, GitRevision revision, ResetType resetType)
-            : base(commands)
+    private void FormResetCurrentBranch_Load(object sender, EventArgs e)
+    {
+        _NO_TRANSLATE_BranchInfo.Text = string.Format(_branchInfo.Text, Module.GetSelectedBranch());
+        commitSummaryUserControl1.Revision = Revision;
+    }
+
+    private void Ok_Click(object sender, EventArgs e)
+    {
+        bool updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout is true && Module.HasSubmodules() && Revision.ObjectId != Module.GetCurrentCheckout();
+
+        if (Soft.Checked)
         {
-            Revision = revision;
-
-            InitializeComponent();
-            Soft.SetForeColorForBackColor();
-            Mixed.SetForeColorForBackColor();
-            Keep.ForeColor = Mixed.ForeColor;
-            Merge.ForeColor = Mixed.ForeColor;
-            Hard.SetForeColorForBackColor();
-            InitializeComplete();
-
-            switch (resetType)
-            {
-                case ResetType.Soft:
-                    Soft.Checked = true;
-                    break;
-                case ResetType.Mixed:
-                    Mixed.Checked = true;
-                    break;
-                case ResetType.Keep:
-                    Keep.Checked = true;
-                    break;
-                case ResetType.Merge:
-                    Merge.Checked = true;
-                    break;
-                case ResetType.Hard:
-                    Hard.Checked = true;
-                    break;
-            }
+            FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Soft, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
         }
-
-        public GitRevision Revision { get; }
-
-        private void FormResetCurrentBranch_Load(object sender, EventArgs e)
+        else if (Mixed.Checked)
         {
-            _NO_TRANSLATE_BranchInfo.Text = string.Format(_branchInfo.Text, Module.GetSelectedBranch());
-            commitSummaryUserControl1.Revision = Revision;
+            FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Mixed, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
         }
-
-        private void Ok_Click(object sender, EventArgs e)
+        else if (Hard.Checked)
         {
-            bool updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout is true && Module.HasSubmodules() && Revision.ObjectId != Module.GetCurrentCheckout();
-
-            if (Soft.Checked)
+            if (MessageBox.Show(this, _resetHardWarning.Text, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
-                FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Soft, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
-            }
-            else if (Mixed.Checked)
-            {
-                FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Mixed, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
-            }
-            else if (Hard.Checked)
-            {
-                if (MessageBox.Show(this, _resetHardWarning.Text, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+                ObjectId currentCheckout = Module.GetCurrentCheckout();
+                bool success = FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Hard, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
+                if (success)
                 {
-                    ObjectId currentCheckout = Module.GetCurrentCheckout();
-                    bool success = FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Hard, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
-                    if (success)
+                    if (currentCheckout != Revision.ObjectId)
                     {
-                        if (currentCheckout != Revision.ObjectId)
-                        {
-                            UICommands.UpdateSubmodules(this);
-                        }
+                        UICommands.UpdateSubmodules(this);
                     }
                 }
-                else
-                {
-                    return;
-                }
             }
-            else if (Merge.Checked)
+            else
             {
-                FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Merge, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
+                return;
             }
-            else if (Keep.Checked)
-            {
-                FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Keep, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
-            }
-
-            if (updateSubmodules)
-            {
-                UICommands.StartUpdateSubmodulesDialog(this);
-            }
-
-            UICommands.RepoChangedNotifier.Notify();
-            DialogResult = DialogResult.OK;
-            Close();
         }
-
-        private void Cancel_Click(object sender, EventArgs e)
+        else if (Merge.Checked)
         {
-            DialogResult = DialogResult.Cancel;
-            Close();
+            FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Merge, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
         }
-
-        private void FormResetCurrentBranch_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+        else if (Keep.Checked)
         {
-            string? helpSection = default;
-            if (Soft.Checked)
-            {
-                helpSection = "--soft";
-            }
-            else if (Mixed.Checked)
-            {
-                helpSection = "--mixed";
-            }
-            else if (Keep.Checked)
-            {
-                helpSection = "--keep";
-            }
-            else if (Merge.Checked)
-            {
-                helpSection = "--merge";
-            }
-            else if (Hard.Checked)
-            {
-                helpSection = "--hard";
-            }
-
-            OsShellUtil.OpenUrlInDefaultBrowser(@$"https://git-scm.com/docs/git-reset#Documentation/git-reset.txt-{helpSection}");
+            FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Keep, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
         }
+
+        if (updateSubmodules)
+        {
+            UICommands.StartUpdateSubmodulesDialog(this);
+        }
+
+        UICommands.RepoChangedNotifier.Notify();
+        DialogResult = DialogResult.OK;
+        Close();
+    }
+
+    private void Cancel_Click(object sender, EventArgs e)
+    {
+        DialogResult = DialogResult.Cancel;
+        Close();
+    }
+
+    private void FormResetCurrentBranch_HelpButtonClicked(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+        string? helpSection = default;
+        if (Soft.Checked)
+        {
+            helpSection = "--soft";
+        }
+        else if (Mixed.Checked)
+        {
+            helpSection = "--mixed";
+        }
+        else if (Keep.Checked)
+        {
+            helpSection = "--keep";
+        }
+        else if (Merge.Checked)
+        {
+            helpSection = "--merge";
+        }
+        else if (Hard.Checked)
+        {
+            helpSection = "--hard";
+        }
+
+        OsShellUtil.OpenUrlInDefaultBrowser(@$"https://git-scm.com/docs/git-reset#Documentation/git-reset.txt-{helpSection}");
     }
 }

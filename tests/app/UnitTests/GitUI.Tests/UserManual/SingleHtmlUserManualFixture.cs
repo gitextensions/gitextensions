@@ -1,20 +1,19 @@
 ﻿using FluentAssertions;
 using GitUI.UserManual;
 
-namespace GitUITests.UserManual
+namespace GitUITests.UserManual;
+
+[TestFixture]
+public class SingleHtmlUserManualFixture
 {
-    [TestFixture]
-    public class SingleHtmlUserManualFixture
+    [TestCase((string)null)]
+    [TestCase("merge-conflicts")]
+    public void GetUrl(string anchor)
     {
-        [TestCase((string)null)]
-        [TestCase("merge-conflicts")]
-        public void GetUrl(string anchor)
-        {
-            SingleHtmlUserManual sut = new(anchor);
+        SingleHtmlUserManual sut = new(anchor);
 
-            string expected = SingleHtmlUserManual.Location + "/index.html".Combine("#", anchor);
+        string expected = SingleHtmlUserManual.Location + "/index.html".Combine("#", anchor);
 
-            sut.GetUrl().Should().Be(expected);
-        }
+        sut.GetUrl().Should().Be(expected);
     }
 }

@@ -2,112 +2,111 @@
 using GitCommands.Settings;
 using GitUI.Editor;
 
-namespace GitUITests.Editor
+namespace GitUITests.Editor;
+
+[Apartment(ApartmentState.STA)]
+public class FileViewerTests
 {
-    [Apartment(ApartmentState.STA)]
-    public class FileViewerTests
+    private FileViewer _fileViewer;
+
+    [SetUp]
+    public void SetUp()
     {
-        private FileViewer _fileViewer;
+        _fileViewer = new FileViewer();
+    }
 
-        [SetUp]
-        public void SetUp()
+    [TearDown]
+    public void TearDown()
+    {
+        _fileViewer.Dispose();
+    }
+
+    [Test]
+    [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.Eol, true, false, false)]
+    [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.Change, true, true, false)]
+    [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.AllSpace, true, true, true)]
+    [TestCase(IgnoreWhitespaceKind.Eol, IgnoreWhitespaceKind.Change, true, true, false)]
+    [TestCase(IgnoreWhitespaceKind.Eol, IgnoreWhitespaceKind.AllSpace, true, true, true)]
+    [TestCase(IgnoreWhitespaceKind.Change, IgnoreWhitespaceKind.Eol, true, false, false)]
+    [TestCase(IgnoreWhitespaceKind.Change, IgnoreWhitespaceKind.AllSpace, true, true, true)]
+    [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Eol, true, false, false)]
+    [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Change, true, true, false)]
+    public void Should_correctly_setup_IgnoreWhitespaceMethod_with_one_click(IgnoreWhitespaceKind oldIgnoreWhitespace, IgnoreWhitespaceKind newIgnoreWhitespace, bool ignoreEol, bool ignoreChange, bool ignoreAllSpace)
+    {
+        ClassicAssert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
+
+        FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
+
+        accessor.IgnoreWhitespace = oldIgnoreWhitespace;
+
+        switch (newIgnoreWhitespace)
         {
-            _fileViewer = new FileViewer();
+            case IgnoreWhitespaceKind.Eol:
+                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null, null);
+                break;
+            case IgnoreWhitespaceKind.Change:
+                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
+                break;
+            case IgnoreWhitespaceKind.AllSpace:
+                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null, null);
+                break;
         }
 
-        [TearDown]
-        public void TearDown()
+        accessor.IgnoreWhitespace.Should().Be(newIgnoreWhitespace);
+
+        accessor.IgnoreWhitespaceAtEolButton.Checked.Should().Be(ignoreEol);
+        accessor.IgnoreWhitespaceAtEolMenuItem.Checked.Should().Be(ignoreEol);
+
+        accessor.IgnoreWhiteSpacesButton.Checked.Should().Be(ignoreChange);
+        accessor.IgnoreWhiteSpacesMenuItem.Checked.Should().Be(ignoreChange);
+
+        accessor.IgnoreAllWhitespacesButton.Checked.Should().Be(ignoreAllSpace);
+        accessor.IgnoreAllWhitespacesMenuItem.Checked.Should().Be(ignoreAllSpace);
+    }
+
+    [Test]
+    [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.Eol)]
+    [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.Change)]
+    [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.AllSpace)]
+    [TestCase(IgnoreWhitespaceKind.Eol, IgnoreWhitespaceKind.Change)]
+    [TestCase(IgnoreWhitespaceKind.Eol, IgnoreWhitespaceKind.AllSpace)]
+    [TestCase(IgnoreWhitespaceKind.Change, IgnoreWhitespaceKind.Eol)]
+    [TestCase(IgnoreWhitespaceKind.Change, IgnoreWhitespaceKind.AllSpace)]
+    [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Eol)]
+    [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Change)]
+    public void Should_correctly_reset_IgnoreWhitespaceMethod_to_None_with_two_clicks(IgnoreWhitespaceKind oldIgnoreWhitespace, IgnoreWhitespaceKind newIgnoreWhitespace)
+    {
+        ClassicAssert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
+
+        FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
+
+        accessor.IgnoreWhitespace = oldIgnoreWhitespace;
+
+        switch (newIgnoreWhitespace)
         {
-            _fileViewer.Dispose();
+            case IgnoreWhitespaceKind.Eol:
+                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null, null);
+                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null, null);
+                break;
+            case IgnoreWhitespaceKind.Change:
+                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
+                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
+                break;
+            case IgnoreWhitespaceKind.AllSpace:
+                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null, null);
+                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null, null);
+                break;
         }
 
-        [Test]
-        [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.Eol, true, false, false)]
-        [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.Change, true, true, false)]
-        [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.AllSpace, true, true, true)]
-        [TestCase(IgnoreWhitespaceKind.Eol, IgnoreWhitespaceKind.Change, true, true, false)]
-        [TestCase(IgnoreWhitespaceKind.Eol, IgnoreWhitespaceKind.AllSpace, true, true, true)]
-        [TestCase(IgnoreWhitespaceKind.Change, IgnoreWhitespaceKind.Eol, true, false, false)]
-        [TestCase(IgnoreWhitespaceKind.Change, IgnoreWhitespaceKind.AllSpace, true, true, true)]
-        [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Eol, true, false, false)]
-        [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Change, true, true, false)]
-        public void Should_correctly_setup_IgnoreWhitespaceMethod_with_one_click(IgnoreWhitespaceKind oldIgnoreWhitespace, IgnoreWhitespaceKind newIgnoreWhitespace, bool ignoreEol, bool ignoreChange, bool ignoreAllSpace)
-        {
-            ClassicAssert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
+        accessor.IgnoreWhitespace.Should().Be(IgnoreWhitespaceKind.None);
 
-            FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
+        accessor.IgnoreWhitespaceAtEolButton.Checked.Should().Be(false);
+        accessor.IgnoreWhitespaceAtEolMenuItem.Checked.Should().Be(false);
 
-            accessor.IgnoreWhitespace = oldIgnoreWhitespace;
+        accessor.IgnoreWhiteSpacesButton.Checked.Should().Be(false);
+        accessor.IgnoreWhiteSpacesMenuItem.Checked.Should().Be(false);
 
-            switch (newIgnoreWhitespace)
-            {
-                case IgnoreWhitespaceKind.Eol:
-                    accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null, null);
-                    break;
-                case IgnoreWhitespaceKind.Change:
-                    accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
-                    break;
-                case IgnoreWhitespaceKind.AllSpace:
-                    accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null, null);
-                    break;
-            }
-
-            accessor.IgnoreWhitespace.Should().Be(newIgnoreWhitespace);
-
-            accessor.IgnoreWhitespaceAtEolButton.Checked.Should().Be(ignoreEol);
-            accessor.IgnoreWhitespaceAtEolMenuItem.Checked.Should().Be(ignoreEol);
-
-            accessor.IgnoreWhiteSpacesButton.Checked.Should().Be(ignoreChange);
-            accessor.IgnoreWhiteSpacesMenuItem.Checked.Should().Be(ignoreChange);
-
-            accessor.IgnoreAllWhitespacesButton.Checked.Should().Be(ignoreAllSpace);
-            accessor.IgnoreAllWhitespacesMenuItem.Checked.Should().Be(ignoreAllSpace);
-        }
-
-        [Test]
-        [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.Eol)]
-        [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.Change)]
-        [TestCase(IgnoreWhitespaceKind.None, IgnoreWhitespaceKind.AllSpace)]
-        [TestCase(IgnoreWhitespaceKind.Eol, IgnoreWhitespaceKind.Change)]
-        [TestCase(IgnoreWhitespaceKind.Eol, IgnoreWhitespaceKind.AllSpace)]
-        [TestCase(IgnoreWhitespaceKind.Change, IgnoreWhitespaceKind.Eol)]
-        [TestCase(IgnoreWhitespaceKind.Change, IgnoreWhitespaceKind.AllSpace)]
-        [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Eol)]
-        [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Change)]
-        public void Should_correctly_reset_IgnoreWhitespaceMethod_to_None_with_two_clicks(IgnoreWhitespaceKind oldIgnoreWhitespace, IgnoreWhitespaceKind newIgnoreWhitespace)
-        {
-            ClassicAssert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
-
-            FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
-
-            accessor.IgnoreWhitespace = oldIgnoreWhitespace;
-
-            switch (newIgnoreWhitespace)
-            {
-                case IgnoreWhitespaceKind.Eol:
-                    accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null, null);
-                    accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null, null);
-                    break;
-                case IgnoreWhitespaceKind.Change:
-                    accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
-                    accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
-                    break;
-                case IgnoreWhitespaceKind.AllSpace:
-                    accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null, null);
-                    accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null, null);
-                    break;
-            }
-
-            accessor.IgnoreWhitespace.Should().Be(IgnoreWhitespaceKind.None);
-
-            accessor.IgnoreWhitespaceAtEolButton.Checked.Should().Be(false);
-            accessor.IgnoreWhitespaceAtEolMenuItem.Checked.Should().Be(false);
-
-            accessor.IgnoreWhiteSpacesButton.Checked.Should().Be(false);
-            accessor.IgnoreWhiteSpacesMenuItem.Checked.Should().Be(false);
-
-            accessor.IgnoreAllWhitespacesButton.Checked.Should().Be(false);
-            accessor.IgnoreAllWhitespacesMenuItem.Checked.Should().Be(false);
-        }
+        accessor.IgnoreAllWhitespacesButton.Checked.Should().Be(false);
+        accessor.IgnoreAllWhitespacesMenuItem.Checked.Should().Be(false);
     }
 }

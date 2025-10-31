@@ -1,219 +1,218 @@
 ﻿using GitCommands;
 
-namespace GitUI.CommandsDialogs
+namespace GitUI.CommandsDialogs;
+
+public partial class SearchControl<T> : UserControl, IDisposable where T : class
 {
-    public partial class SearchControl<T> : UserControl, IDisposable where T : class
+    private readonly Func<string, IEnumerable<T>> _getCandidates;
+    private readonly Action<Size> _onSizeChanged;
+    private readonly AsyncLoader _backgroundLoader = new();
+    private bool _isUpdatingTextFromCode;
+    public event Action? OnTextEntered;
+    public event Action? OnCancelled;
+
+    public override string Text
     {
-        private readonly Func<string, IEnumerable<T>> _getCandidates;
-        private readonly Action<Size> _onSizeChanged;
-        private readonly AsyncLoader _backgroundLoader = new();
-        private bool _isUpdatingTextFromCode;
-        public event Action? OnTextEntered;
-        public event Action? OnCancelled;
+        get => txtSearchBox.Text;
+        set => txtSearchBox.Text = value;
+    }
 
-        public override string Text
+    public SearchControl(Func<string, IEnumerable<T>> getCandidates, Action<Size> onSizeChanged)
+    {
+        InitializeComponent();
+
+        txtSearchBox.LostFocus += delegate { CloseDropDownWhenLostFocus(); };
+        listBoxSearchResult.LostFocus += delegate { CloseDropDownWhenLostFocus(); };
+        listBoxSearchResult.Left = Left;
+        txtSearchBox.Select();
+
+        _getCandidates = getCandidates;
+        _onSizeChanged = onSizeChanged;
+        AutoFit();
+
+        void CloseDropDownWhenLostFocus()
         {
-            get => txtSearchBox.Text;
-            set => txtSearchBox.Text = value;
-        }
-
-        public SearchControl(Func<string, IEnumerable<T>> getCandidates, Action<Size> onSizeChanged)
-        {
-            InitializeComponent();
-
-            txtSearchBox.LostFocus += delegate { CloseDropDownWhenLostFocus(); };
-            listBoxSearchResult.LostFocus += delegate { CloseDropDownWhenLostFocus(); };
-            listBoxSearchResult.Left = Left;
-            txtSearchBox.Select();
-
-            _getCandidates = getCandidates;
-            _onSizeChanged = onSizeChanged;
-            AutoFit();
-
-            void CloseDropDownWhenLostFocus()
+            if (!txtSearchBox.Focused && !listBoxSearchResult.Focused)
             {
-                if (!txtSearchBox.Focused && !listBoxSearchResult.Focused)
-                {
-                    CloseDropdown();
-                }
+                CloseDropdown();
             }
         }
+    }
 
-        public void CloseDropdown()
+    public void CloseDropdown()
+    {
+        listBoxSearchResult.Visible = false;
+    }
+
+    public BorderStyle SearchBoxBorderStyle
+    {
+        get => txtSearchBox.BorderStyle;
+        set => txtSearchBox.BorderStyle = value;
+    }
+
+    public Color SearchBoxBorderDefaultColor
+    {
+        get => txtSearchBox.BorderDefaultColor;
+        set => txtSearchBox.BorderDefaultColor = value;
+    }
+
+    public Color SearchBoxBorderHoveredColor
+    {
+        get => txtSearchBox.BorderHoveredColor;
+        set => txtSearchBox.BorderHoveredColor = value;
+    }
+
+    public Color SearchBoxBorderFocusedColor
+    {
+        get => txtSearchBox.BorderFocusedColor;
+        set => txtSearchBox.BorderFocusedColor = value;
+    }
+
+    private void SearchForCandidates(IEnumerable<T> candidates)
+    {
+        int selectionStart = txtSearchBox.SelectionStart;
+        int selectionLength = txtSearchBox.SelectionLength;
+        listBoxSearchResult.BeginUpdate();
+        listBoxSearchResult.Items.Clear();
+
+        foreach (T candidate in candidates.Take(20))
+        {
+            listBoxSearchResult.Items.Add(candidate);
+        }
+
+        listBoxSearchResult.EndUpdate();
+        if (listBoxSearchResult.Items.Count > 0)
+        {
+            listBoxSearchResult.SelectedIndex = 0;
+        }
+
+        txtSearchBox.SelectionStart = selectionStart;
+        txtSearchBox.SelectionLength = selectionLength;
+        AutoFit();
+    }
+
+    private void AutoFit()
+    {
+        if (listBoxSearchResult.Items.Count == 0)
         {
             listBoxSearchResult.Visible = false;
+            return;
         }
 
-        public BorderStyle SearchBoxBorderStyle
+        listBoxSearchResult.Visible = true;
+
+        Point txtBoxOnScreen = PointToScreen(txtSearchBox.Location + new Size(0, txtSearchBox.Height));
+        if (ParentForm is not null && !ParentForm.Controls.Contains(listBoxSearchResult))
         {
-            get => txtSearchBox.BorderStyle;
-            set => txtSearchBox.BorderStyle = value;
+            ParentForm.Controls.Add(listBoxSearchResult);
+            Point listBoxLocationOnScreen = txtBoxOnScreen;
+            listBoxSearchResult.Location = ParentForm.PointToClient(listBoxLocationOnScreen);
         }
 
-        public Color SearchBoxBorderDefaultColor
-        {
-            get => txtSearchBox.BorderDefaultColor;
-            set => txtSearchBox.BorderDefaultColor = value;
-        }
+        int width = 300;
 
-        public Color SearchBoxBorderHoveredColor
+        using (Graphics g = listBoxSearchResult.CreateGraphics())
         {
-            get => txtSearchBox.BorderHoveredColor;
-            set => txtSearchBox.BorderHoveredColor = value;
-        }
-
-        public Color SearchBoxBorderFocusedColor
-        {
-            get => txtSearchBox.BorderFocusedColor;
-            set => txtSearchBox.BorderFocusedColor = value;
-        }
-
-        private void SearchForCandidates(IEnumerable<T> candidates)
-        {
-            int selectionStart = txtSearchBox.SelectionStart;
-            int selectionLength = txtSearchBox.SelectionLength;
-            listBoxSearchResult.BeginUpdate();
-            listBoxSearchResult.Items.Clear();
-
-            foreach (T candidate in candidates.Take(20))
+            for (int i1 = 0; i1 < listBoxSearchResult.Items.Count; i1++)
             {
-                listBoxSearchResult.Items.Add(candidate);
-            }
-
-            listBoxSearchResult.EndUpdate();
-            if (listBoxSearchResult.Items.Count > 0)
-            {
-                listBoxSearchResult.SelectedIndex = 0;
-            }
-
-            txtSearchBox.SelectionStart = selectionStart;
-            txtSearchBox.SelectionLength = selectionLength;
-            AutoFit();
-        }
-
-        private void AutoFit()
-        {
-            if (listBoxSearchResult.Items.Count == 0)
-            {
-                listBoxSearchResult.Visible = false;
-                return;
-            }
-
-            listBoxSearchResult.Visible = true;
-
-            Point txtBoxOnScreen = PointToScreen(txtSearchBox.Location + new Size(0, txtSearchBox.Height));
-            if (ParentForm is not null && !ParentForm.Controls.Contains(listBoxSearchResult))
-            {
-                ParentForm.Controls.Add(listBoxSearchResult);
-                Point listBoxLocationOnScreen = txtBoxOnScreen;
-                listBoxSearchResult.Location = ParentForm.PointToClient(listBoxLocationOnScreen);
-            }
-
-            int width = 300;
-
-            using (Graphics g = listBoxSearchResult.CreateGraphics())
-            {
-                for (int i1 = 0; i1 < listBoxSearchResult.Items.Count; i1++)
-                {
-                    int itemWidth = Convert.ToInt32(g.MeasureString(Convert.ToString(listBoxSearchResult.Items[i1]), listBoxSearchResult.Font).Width);
-                    width = Math.Max(width, itemWidth);
-                }
-            }
-
-            listBoxSearchResult.Width = width;
-            listBoxSearchResult.Height = Math.Min(800, listBoxSearchResult.Font.Height * (listBoxSearchResult.Items.Count + 1));
-
-            _onSizeChanged(new Size(width + Margin.Right + Margin.Left,
-                listBoxSearchResult.Height + txtSearchBox.Height));
-
-            listBoxSearchResult.BringToFront();
-        }
-
-        public T? SelectedItem => (T?)listBoxSearchResult.SelectedItem;
-
-        void IDisposable.Dispose()
-        {
-            _backgroundLoader?.Dispose();
-        }
-
-        private void txtSearchBox_TextChange(object sender, EventArgs e)
-        {
-            OnTextChanged(e);
-            if (_isUpdatingTextFromCode)
-            {
-                _isUpdatingTextFromCode = false;
-                return;
-            }
-
-            string selectedText = txtSearchBox.Text;
-
-            _backgroundLoader.LoadAsync(() => _getCandidates(selectedText), SearchForCandidates);
-        }
-
-        private void txtSearchBox_KeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.KeyCode == Keys.Enter)
-            {
-                e.Handled = true;
-                e.SuppressKeyPress = true;
-                ItemSelectedFromList();
-            }
-            else if (e.KeyCode == Keys.Escape)
-            {
-                listBoxSearchResult.SelectedItem = null;
-                listBoxSearchResult.Visible = false;
-                e.SuppressKeyPress = true;
-                OnCancelled?.Invoke();
+                int itemWidth = Convert.ToInt32(g.MeasureString(Convert.ToString(listBoxSearchResult.Items[i1]), listBoxSearchResult.Font).Width);
+                width = Math.Max(width, itemWidth);
             }
         }
 
-        private void ItemSelectedFromList()
-        {
-            _isUpdatingTextFromCode = true;
-            if (listBoxSearchResult.SelectedItem is not null)
-            {
-                txtSearchBox.Text = listBoxSearchResult.SelectedItem.ToString();
-            }
+        listBoxSearchResult.Width = width;
+        listBoxSearchResult.Height = Math.Min(800, listBoxSearchResult.Font.Height * (listBoxSearchResult.Items.Count + 1));
 
-            listBoxSearchResult.Visible = false;
-            OnTextEntered?.Invoke();
+        _onSizeChanged(new Size(width + Margin.Right + Margin.Left,
+            listBoxSearchResult.Height + txtSearchBox.Height));
+
+        listBoxSearchResult.BringToFront();
+    }
+
+    public T? SelectedItem => (T?)listBoxSearchResult.SelectedItem;
+
+    void IDisposable.Dispose()
+    {
+        _backgroundLoader?.Dispose();
+    }
+
+    private void txtSearchBox_TextChange(object sender, EventArgs e)
+    {
+        OnTextChanged(e);
+        if (_isUpdatingTextFromCode)
+        {
+            _isUpdatingTextFromCode = false;
+            return;
         }
 
-        private void txtSearchBox_KeyDown(object sender, KeyEventArgs e)
+        string selectedText = txtSearchBox.Text;
+
+        _backgroundLoader.LoadAsync(() => _getCandidates(selectedText), SearchForCandidates);
+    }
+
+    private void txtSearchBox_KeyUp(object sender, KeyEventArgs e)
+    {
+        if (e.KeyCode == Keys.Enter)
         {
-            if (e.KeyCode == Keys.Down)
-            {
-                if (listBoxSearchResult.Items.Count > 1)
-                {
-                    listBoxSearchResult.SelectedIndex = (listBoxSearchResult.SelectedIndex + 1) % listBoxSearchResult.Items.Count;
-                    e.SuppressKeyPress = true;
-                }
-            }
-
-            if (e.KeyCode == Keys.Up)
-            {
-                if (listBoxSearchResult.Items.Count > 1)
-                {
-                    int newSelectedIndex = listBoxSearchResult.SelectedIndex - 1;
-                    if (newSelectedIndex < 0)
-                    {
-                        newSelectedIndex = listBoxSearchResult.Items.Count - 1;
-                    }
-
-                    listBoxSearchResult.SelectedIndex = newSelectedIndex;
-                    e.SuppressKeyPress = true;
-                }
-            }
-
-            if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Escape)
-            {
-                e.SuppressKeyPress = true;
-            }
-        }
-
-        private void listBoxSearchResult_DoubleClick(object sender, EventArgs e)
-        {
+            e.Handled = true;
+            e.SuppressKeyPress = true;
             ItemSelectedFromList();
         }
+        else if (e.KeyCode == Keys.Escape)
+        {
+            listBoxSearchResult.SelectedItem = null;
+            listBoxSearchResult.Visible = false;
+            e.SuppressKeyPress = true;
+            OnCancelled?.Invoke();
+        }
+    }
+
+    private void ItemSelectedFromList()
+    {
+        _isUpdatingTextFromCode = true;
+        if (listBoxSearchResult.SelectedItem is not null)
+        {
+            txtSearchBox.Text = listBoxSearchResult.SelectedItem.ToString();
+        }
+
+        listBoxSearchResult.Visible = false;
+        OnTextEntered?.Invoke();
+    }
+
+    private void txtSearchBox_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.KeyCode == Keys.Down)
+        {
+            if (listBoxSearchResult.Items.Count > 1)
+            {
+                listBoxSearchResult.SelectedIndex = (listBoxSearchResult.SelectedIndex + 1) % listBoxSearchResult.Items.Count;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        if (e.KeyCode == Keys.Up)
+        {
+            if (listBoxSearchResult.Items.Count > 1)
+            {
+                int newSelectedIndex = listBoxSearchResult.SelectedIndex - 1;
+                if (newSelectedIndex < 0)
+                {
+                    newSelectedIndex = listBoxSearchResult.Items.Count - 1;
+                }
+
+                listBoxSearchResult.SelectedIndex = newSelectedIndex;
+                e.SuppressKeyPress = true;
+            }
+        }
+
+        if (e.KeyCode == Keys.Enter || e.KeyCode == Keys.Escape)
+        {
+            e.SuppressKeyPress = true;
+        }
+    }
+
+    private void listBoxSearchResult_DoubleClick(object sender, EventArgs e)
+    {
+        ItemSelectedFromList();
     }
 }

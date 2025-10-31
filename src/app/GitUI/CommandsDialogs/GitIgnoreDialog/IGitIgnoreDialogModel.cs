@@ -1,12 +1,11 @@
-﻿namespace GitUI.CommandsDialogs.GitIgnoreDialog
+﻿namespace GitUI.CommandsDialogs.GitIgnoreDialog;
+
+public interface IGitIgnoreDialogModel
 {
-    public interface IGitIgnoreDialogModel
-    {
-        string FormCaption { get; }
-        string? ExcludeFile { get; }
-        string FileOnlyInWorkingDirSupported { get; }
-        string CannotAccessFile { get; }
-        string CannotAccessFileCaption { get; }
-        string SaveFileQuestion { get; }
-    }
+    string FormCaption { get; }
+    string? ExcludeFile { get; }
+    string FileOnlyInWorkingDirSupported { get; }
+    string CannotAccessFile { get; }
+    string CannotAccessFileCaption { get; }
+    string SaveFileQuestion { get; }
 }

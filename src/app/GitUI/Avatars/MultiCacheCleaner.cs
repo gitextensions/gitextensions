@@ -1,34 +1,33 @@
-﻿namespace GitUI.Avatars
+﻿namespace GitUI.Avatars;
+
+/// <summary>
+/// Wraps multiple caches and clears all of them with a single call.
+/// </summary>
+public sealed class MultiCacheCleaner : IAvatarCacheCleaner
 {
-    /// <summary>
-    /// Wraps multiple caches and clears all of them with a single call.
-    /// </summary>
-    public sealed class MultiCacheCleaner : IAvatarCacheCleaner
+    private readonly IAvatarCacheCleaner[] _inner;
+
+    public MultiCacheCleaner(params IAvatarCacheCleaner[] inner)
     {
-        private readonly IAvatarCacheCleaner[] _inner;
+        _inner = inner ?? throw new ArgumentNullException(nameof(inner));
 
-        public MultiCacheCleaner(params IAvatarCacheCleaner[] inner)
+        if (_inner.Any(p => p == null))
         {
-            _inner = inner ?? throw new ArgumentNullException(nameof(inner));
+            throw new ArgumentNullException();
+        }
+    }
 
-            if (_inner.Any(p => p == null))
-            {
-                throw new ArgumentNullException();
-            }
+    /// <inheritdoc/>
+    public event EventHandler? CacheCleared;
+
+    /// <inheritdoc/>
+    public async Task ClearCacheAsync()
+    {
+        foreach (IAvatarCacheCleaner cacheCleaner in _inner)
+        {
+            await cacheCleaner.ClearCacheAsync();
         }
 
-        /// <inheritdoc/>
-        public event EventHandler? CacheCleared;
-
-        /// <inheritdoc/>
-        public async Task ClearCacheAsync()
-        {
-            foreach (IAvatarCacheCleaner cacheCleaner in _inner)
-            {
-                await cacheCleaner.ClearCacheAsync();
-            }
-
-            CacheCleared?.Invoke(this, EventArgs.Empty);
-        }
+        CacheCleared?.Invoke(this, EventArgs.Empty);
     }
 }
