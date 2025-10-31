@@ -18,8 +18,18 @@
       "Nodes": []
     },
     {
+      "Text": "1/subfolder/file1s",
+      "Tag": "FileStatusItem: 1/subfolder/file1s",
+      "Nodes": []
+    },
+    {
       "Text": "1/file1",
       "Tag": "FileStatusItem: 1/file1",
+      "Nodes": []
+    },
+    {
+      "Text": "1/submodule_sorted_as_file/",
+      "Tag": "FileStatusItem: 1/submodule_sorted_as_file/",
       "Nodes": []
     },
     {
@@ -53,6 +63,16 @@
       "Nodes": []
     },
     {
+      "Text": "ext/subfolder/filees",
+      "Tag": "FileStatusItem: ext/subfolder/filees",
+      "Nodes": []
+    },
+    {
+      "Text": "ext/file",
+      "Tag": "FileStatusItem: ext/file",
+      "Nodes": []
+    },
+    {
       "Text": "ext/s/",
       "Tag": "FileStatusItem: ext/s/",
       "Nodes": []
@@ -60,6 +80,11 @@
     {
       "Text": "ext/submodule/",
       "Tag": "FileStatusItem: ext/submodule/",
+      "Nodes": []
+    },
+    {
+      "Text": "ext2/file",
+      "Tag": "FileStatusItem: ext2/file",
       "Nodes": []
     },
     {

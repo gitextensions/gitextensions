@@ -40,8 +40,24 @@
           ]
         },
         {
+          "Text": "subfolder",
+          "Tag": "RelativePath: 1/subfolder",
+          "Nodes": [
+            {
+              "Text": "file1s",
+              "Tag": "FileStatusItem: 1/subfolder/file1s",
+              "Nodes": []
+            }
+          ]
+        },
+        {
           "Text": "file1",
           "Tag": "FileStatusItem: 1/file1",
+          "Nodes": []
+        },
+        {
+          "Text": "submodule_sorted_as_file/",
+          "Tag": "FileStatusItem: 1/submodule_sorted_as_file/",
           "Nodes": []
         }
       ]
@@ -105,6 +121,22 @@
       "Tag": "RelativePath: ext",
       "Nodes": [
         {
+          "Text": "subfolder",
+          "Tag": "RelativePath: ext/subfolder",
+          "Nodes": [
+            {
+              "Text": "filees",
+              "Tag": "FileStatusItem: ext/subfolder/filees",
+              "Nodes": []
+            }
+          ]
+        },
+        {
+          "Text": "file",
+          "Tag": "FileStatusItem: ext/file",
+          "Nodes": []
+        },
+        {
           "Text": "s/",
           "Tag": "FileStatusItem: ext/s/",
           "Nodes": []
@@ -112,6 +144,17 @@
         {
           "Text": "submodule/",
           "Tag": "FileStatusItem: ext/submodule/",
+          "Nodes": []
+        }
+      ]
+    },
+    {
+      "Text": "ext2",
+      "Tag": "RelativePath: ext2",
+      "Nodes": [
+        {
+          "Text": "file",
+          "Tag": "FileStatusItem: ext2/file",
           "Nodes": []
         }
       ]
