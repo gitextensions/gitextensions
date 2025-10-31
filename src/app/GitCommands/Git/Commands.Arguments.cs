@@ -604,6 +604,7 @@ public static partial class Commands
         return new GitArgumentBuilder("reset")
         {
             mode,
+            "--quiet",
             commit.QuoteNE(),
             "--",
             file?.ToPosixPath().QuoteNE()

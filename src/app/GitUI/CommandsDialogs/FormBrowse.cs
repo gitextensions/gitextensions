@@ -3025,7 +3025,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         if (AppSettings.DontConfirmUndoLastCommit || MessageBoxes.Show(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
         {
             ArgumentString args = Commands.Reset(ResetMode.Soft, "HEAD~1");
-            Module.GitExecutable.GetOutput(args);
+            Module.GitExecutable.RunCommand(args);
             refreshToolStripMenuItem.PerformClick();
             RefreshGitStatusMonitor();
         }
