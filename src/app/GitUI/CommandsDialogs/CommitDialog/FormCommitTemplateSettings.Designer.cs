@@ -28,6 +28,7 @@ partial class FormCommitTemplateSettings
     /// </summary>
     private void InitializeComponent()
     {
+        components = new System.ComponentModel.Container();
         buttonOk = new Button();
         buttonCancel = new Button();
         tabControl1 = new TabControl();

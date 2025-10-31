@@ -24,6 +24,7 @@ public sealed class CommitTemplateItem : ISerializable
         Name = string.Empty;
         Text = string.Empty;
         Icon = null;
+        IsRegex = false;
     }
 
     private CommitTemplateItem(SerializationInfo info, StreamingContext context)

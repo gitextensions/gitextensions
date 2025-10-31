@@ -2560,21 +2560,21 @@ public sealed partial class FormCommit : GitModuleForm
                     return false;
                 }
 
-                    ToolStripMenuItem toolStripItem = new(item.Name, item.Icon);
-                    toolStripItem.Click += delegate
+                ToolStripMenuItem toolStripItem = new(item.Name, item.Icon);
+                toolStripItem.Click += delegate
+                {
+                    try
                     {
-                        try
-                        {
-                            ReplaceMessage(item.Text);
-                            Message.Focus();
-                        }
-                        catch
-                        {
-                        }
-                    };
-                    commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
-                    return true;
-                }
+                        ReplaceMessage(item.Text, item.IsRegex);
+                        Message.Focus();
+                    }
+                    catch
+                    {
+                    }
+                };
+                commitTemplatesToolStripMenuItem.DropDownItems.Add(toolStripItem);
+                return true;
+            }
 
             void AddSeparator()
             {

@@ -690,7 +690,7 @@ public sealed class GitUICommands : IGitUICommands
 
         return DoActionOnRepo(owner, Action, changesRepo: false);
     }
-    
+
     public void AddCommitTemplate(string key, Func<string> addingText, Image? icon, bool isRegex)
     {
         _commitTemplateManager.Register(key, addingText, icon, isRegex);
