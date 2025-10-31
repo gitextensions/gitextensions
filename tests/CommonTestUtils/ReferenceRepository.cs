@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitExtUtils.Tasks;
 using GitUI;
 using LibGit2Sharp;
 using Microsoft.VisualStudio.Threading;
@@ -67,9 +68,7 @@ public class ReferenceRepository : IDisposable
             // was created earlier on this same thread on which there is no synchronization
             // context to begin with.
 
-#pragma warning disable VSTHRD002
-            (moduleTestHelper, CommitHash) = initializer.ConfigureAwait(false).GetAwaiter().GetResult();
-#pragma warning restore VSTHRD002
+            (moduleTestHelper, CommitHash) = initializer.DetachFromSynchronizationContext().GetResultDirect();
         }
 
         // Start background initialization of the Git module for the next call.
@@ -273,16 +272,7 @@ public class ReferenceRepository : IDisposable
             _nextGitModuleTestHelperWithCommit = null;
         }
 
-        // VSTHRD002 says we should avoid calling `GetResult` directly
-        // on tasks, because if they're associated with a synchronization
-        // context and this call is in that same context, then the context's
-        // message pump is, by definition, not running and calls to dispatch
-        // task execution can't be processed, resulting in a deadlock. This
-        // mainly applies to UI threads, and ReleaseNextRepositories isn't
-        // going to be called from UI threads, I think.
-#pragma warning disable VSTHRD002
-        next?.ConfigureAwait(false).GetAwaiter().GetResult().Helper.Dispose();
-        nextWithCommit?.ConfigureAwait(false).GetAwaiter().GetResult().Helper.Dispose();
-#pragma warning restore VSTHRD002
+        next?.DetachFromSynchronizationContext().GetResultDirect().Helper.Dispose();
+        nextWithCommit?.DetachFromSynchronizationContext().GetResultDirect().Helper.Dispose();
     }
 }
