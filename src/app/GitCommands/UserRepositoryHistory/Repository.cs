@@ -1,62 +1,61 @@
 ﻿using System.Xml.Serialization;
 
-namespace GitCommands.UserRepositoryHistory
+namespace GitCommands.UserRepositoryHistory;
+
+[Serializable]
+public class Repository
 {
-    [Serializable]
-    public class Repository
+    private string? _path;
+
+    public enum RepositoryAnchor
     {
-        private string? _path;
+        [XmlEnum(Name = "Pinned")]
+        AnchoredInTop,
+        [XmlEnum(Name = "AllRecent")]
+        AnchoredInRecent,
+        None
+    }
 
-        public enum RepositoryAnchor
+    // required by XmlSerializer
+    private Repository()
+    {
+        Anchor = RepositoryAnchor.None;
+    }
+
+    public Repository(string path)
+        : this()
+    {
+        Path = path;
+    }
+
+    public RepositoryAnchor Anchor { get; set; }
+
+    public string? Category { get; set; }
+
+    public string Path
+    {
+        get => _path ?? string.Empty;
+        set => _path = value;
+    }
+
+    public string GetParentPath()
+    {
+        if (Path.StartsWith(@"\\") || !Directory.Exists(Path))
         {
-            [XmlEnum(Name = "Pinned")]
-            AnchoredInTop,
-            [XmlEnum(Name = "AllRecent")]
-            AnchoredInRecent,
-            None
+            return string.Empty;
         }
 
-        // required by XmlSerializer
-        private Repository()
+        DirectoryInfo dir = new(Path);
+        if (dir.Parent is null)
         {
-            Anchor = RepositoryAnchor.None;
+            return Path;
         }
 
-        public Repository(string path)
-            : this()
-        {
-            Path = path;
-        }
+        return dir.Parent.FullName;
+    }
 
-        public RepositoryAnchor Anchor { get; set; }
-
-        public string? Category { get; set; }
-
-        public string Path
-        {
-            get => _path ?? string.Empty;
-            set => _path = value;
-        }
-
-        public string GetParentPath()
-        {
-            if (Path.StartsWith(@"\\") || !Directory.Exists(Path))
-            {
-                return string.Empty;
-            }
-
-            DirectoryInfo dir = new(Path);
-            if (dir.Parent is null)
-            {
-                return Path;
-            }
-
-            return dir.Parent.FullName;
-        }
-
-        public override string ToString()
-        {
-            return Path + " (" + Anchor + ")";
-        }
+    public override string ToString()
+    {
+        return Path + " (" + Anchor + ")";
     }
 }

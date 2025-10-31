@@ -1,40 +1,39 @@
 ﻿using GitCommands.UserRepositoryHistory;
 
-namespace GitUI.CommandsDialogs
-{
-    internal class FormRemotesController
-    {
-        public void RemoteDelete(IList<Repository> remotes, string? oldRemoteUrl)
-        {
-            if (string.IsNullOrWhiteSpace(oldRemoteUrl))
-            {
-                return;
-            }
+namespace GitUI.CommandsDialogs;
 
-            Repository oldRemote = remotes.FirstOrDefault(r => r.Path == oldRemoteUrl);
-            if (oldRemote is not null)
-            {
-                remotes.Remove(oldRemote);
-            }
+internal class FormRemotesController
+{
+    public void RemoteDelete(IList<Repository> remotes, string? oldRemoteUrl)
+    {
+        if (string.IsNullOrWhiteSpace(oldRemoteUrl))
+        {
+            return;
         }
 
-        public void RemoteUpdate(IList<Repository> remotes, string? oldRemoteUrl, string? newRemoteUrl)
+        Repository oldRemote = remotes.FirstOrDefault(r => r.Path == oldRemoteUrl);
+        if (oldRemote is not null)
         {
-            if (string.IsNullOrWhiteSpace(newRemoteUrl))
-            {
-                return;
-            }
+            remotes.Remove(oldRemote);
+        }
+    }
 
-            // if remote url was renamed - delete the old value
-            if (!string.Equals(oldRemoteUrl, newRemoteUrl, StringComparison.OrdinalIgnoreCase))
-            {
-                RemoteDelete(remotes, oldRemoteUrl);
-            }
+    public void RemoteUpdate(IList<Repository> remotes, string? oldRemoteUrl, string? newRemoteUrl)
+    {
+        if (string.IsNullOrWhiteSpace(newRemoteUrl))
+        {
+            return;
+        }
 
-            if (remotes.All(r => r.Path != newRemoteUrl))
-            {
-                remotes.Insert(0, new Repository(newRemoteUrl));
-            }
+        // if remote url was renamed - delete the old value
+        if (!string.Equals(oldRemoteUrl, newRemoteUrl, StringComparison.OrdinalIgnoreCase))
+        {
+            RemoteDelete(remotes, oldRemoteUrl);
+        }
+
+        if (remotes.All(r => r.Path != newRemoteUrl))
+        {
+            remotes.Insert(0, new Repository(newRemoteUrl));
         }
     }
 }

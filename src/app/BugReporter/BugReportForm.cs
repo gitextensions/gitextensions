@@ -20,237 +20,236 @@ using Microsoft;
 using ResourceManager;
 using Report = BugReporter.Info.Report;
 
-namespace BugReporter
+namespace BugReporter;
+
+public partial class BugReportForm : Form, ITranslate
 {
-    public partial class BugReportForm : Form, ITranslate
-    {
-        private readonly TranslationString _title = new("Error Report");
-        private readonly TranslationString _submitGitHubMessage = new(@"Give as much as information as possible please to help the developers solve this issue. Otherwise, your issue ticket may be closed without any follow-up from the developers.
+    private readonly TranslationString _title = new("Error Report");
+    private readonly TranslationString _submitGitHubMessage = new(@"Give as much as information as possible please to help the developers solve this issue. Otherwise, your issue ticket may be closed without any follow-up from the developers.
 
 Because of this, make sure to fill in all the fields in the report template please.
 
 Send report?");
-        private readonly TranslationString _toolTipCopy = new("Copy the issue details into clipboard");
-        private readonly TranslationString _toolTipSendQuit = new("Report the issue to GitHub and quit application.\r\nA valid GitHub account is required");
-        private readonly TranslationString _toolTipQuit = new("Quit application without reporting the issue");
-        private readonly TranslationString _noReproStepsSuppliedErrorMessage = new("Please provide as much as information as possible to help the developers solve this issue.");
+    private readonly TranslationString _toolTipCopy = new("Copy the issue details into clipboard");
+    private readonly TranslationString _toolTipSendQuit = new("Report the issue to GitHub and quit application.\r\nA valid GitHub account is required");
+    private readonly TranslationString _toolTipQuit = new("Quit application without reporting the issue");
+    private readonly TranslationString _noReproStepsSuppliedErrorMessage = new("Please provide as much as information as possible to help the developers solve this issue.");
 
-        private static readonly IErrorReportUrlBuilder ErrorReportBodyBuilder;
-        private static readonly GitHubUrlBuilder UrlBuilder;
-        private SerializableException? _lastException;
-        private Report? _lastReport;
-        private string _exceptionInfo;
-        private string? _environmentInfo;
+    private static readonly IErrorReportUrlBuilder ErrorReportBodyBuilder;
+    private static readonly GitHubUrlBuilder UrlBuilder;
+    private SerializableException? _lastException;
+    private Report? _lastReport;
+    private string _exceptionInfo;
+    private string? _environmentInfo;
 
-        [GeneratedRegex(@"\s|\r|\n", RegexOptions.ExplicitCapture)]
-        private static partial Regex WhitespaceRegex();
+    [GeneratedRegex(@"\s|\r|\n", RegexOptions.ExplicitCapture)]
+    private static partial Regex WhitespaceRegex();
 
-        static BugReportForm()
+    static BugReportForm()
+    {
+        ErrorReportBodyBuilder = new ErrorReportUrlBuilder();
+        UrlBuilder = new GitHubUrlBuilder(ErrorReportBodyBuilder);
+    }
+
+    public BugReportForm()
+    {
+        InitializeComponent();
+
+        Icon = Resources.GitExtensionsLogoIcon;
+
+        // Scaling
+        exceptionTypeLabel.Image = DpiUtil.Scale(exceptionTypeLabel.Image);
+        exceptionDetails.PropertyColumnWidth = DpiUtil.Scale(101);
+        exceptionDetails.InformationColumnWidth = DpiUtil.Scale(350);
+
+        warningLabel.MaximumSize = new Size(warningLabel.Width, 0);
+        warningLabel.AutoSize = true;
+
+        AutoScaleMode = AppSettings.EnableAutoScale
+            ? AutoScaleMode.Dpi
+            : AutoScaleMode.None;
+
+        this.AdjustForDpiScaling();
+        this.EnableRemoveWordHotkey();
+
+        toolTip.SetToolTip(btnCopy, _toolTipCopy.Text);
+        toolTip.SetToolTip(sendAndQuitButton, _toolTipSendQuit.Text);
+        toolTip.SetToolTip(quitButton, _toolTipQuit.Text);
+
+        // ToDo: Displaying report contents properly requires some more work.
+        mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]);
+    }
+
+    public DialogResult ShowDialog(IWin32Window? owner, SerializableException exception, string exceptionInfo, string environmentInfo, bool canIgnore, bool showIgnore, bool focusDetails)
+    {
+        _lastException = exception;
+        _lastReport = new Report(_lastException);
+        _exceptionInfo = exceptionInfo;
+        _environmentInfo = environmentInfo;
+
+        Validates.NotNull(_lastReport.GeneralInfo);
+
+        Text = $@"{_lastReport.GeneralInfo.HostApplication} {_title.Text}";
+
+        // Fill in the 'General' tab
+        warningPictureBox.Image = SystemIcons.Warning.ToBitmap();
+        exceptionTextBox.Text = _lastException.Type;
+        exceptionMessageTextBox.Text = _lastException.Message;
+        targetSiteTextBox.Text = _lastException.TargetSite;
+        applicationTextBox.Text = $@"{_lastReport.GeneralInfo.HostApplication} [{_lastReport.GeneralInfo.HostApplicationVersion}]";
+        gitTextBox.Text = _lastReport.GeneralInfo.GitVersion;
+        dateTimeTextBox.Text = _lastReport.GeneralInfo.DateTime;
+        clrTextBox.Text = _lastReport.GeneralInfo.ClrVersion;
+
+        // Fill in the 'Exception' tab
+        exceptionDetails.Initialize(_lastException);
+
+        if (focusDetails)
         {
-            ErrorReportBodyBuilder = new ErrorReportUrlBuilder();
-            UrlBuilder = new GitHubUrlBuilder(ErrorReportBodyBuilder);
+            mainTabs.SelectedTab = exceptionTabPage;
+
+            // Hold back users from reporting UserExternalOperationExceptions directly
+            sendAndQuitButton.Enabled = false;
         }
 
-        public BugReportForm()
+        ControlBox = canIgnore;
+        IgnoreButton.Enabled = showIgnore && canIgnore;
+        IgnoreButton.Visible = showIgnore;
+
+        DialogResult = DialogResult.None;
+
+        // ToDo: Fill in the 'Report Contents' tab);
+        DialogResult result = ShowDialog(owner);
+
+        // Write back the user description (as we passed 'report' as a reference since it is a reference object anyway)
+        _lastReport.GeneralInfo.UserDescription = descriptionTextBox.Text;
+
+        return result;
+    }
+
+    protected override void OnLoad(EventArgs e)
+    {
+        base.OnLoad(e);
+        this.FixVisualStyle();
+    }
+
+    protected override void OnShown(EventArgs e)
+    {
+        base.OnShown(e);
+        descriptionTextBox.Focus();
+    }
+
+    private static bool CheckContainsInfo(string input)
+    {
+        string text = WhitespaceRegex().Replace(input, string.Empty);
+        return !string.IsNullOrWhiteSpace(text);
+    }
+
+    private void QuitButton_Click(object sender, EventArgs e)
+    {
+        DialogResult = DialogResult.Abort;
+        Close();
+    }
+
+    private void SendAndQuitButton_Click(object sender, EventArgs e)
+    {
+        bool hasUserText = CheckContainsInfo(descriptionTextBox.Text);
+        if (!hasUserText)
         {
-            InitializeComponent();
-
-            Icon = Resources.GitExtensionsLogoIcon;
-
-            // Scaling
-            exceptionTypeLabel.Image = DpiUtil.Scale(exceptionTypeLabel.Image);
-            exceptionDetails.PropertyColumnWidth = DpiUtil.Scale(101);
-            exceptionDetails.InformationColumnWidth = DpiUtil.Scale(350);
-
-            warningLabel.MaximumSize = new Size(warningLabel.Width, 0);
-            warningLabel.AutoSize = true;
-
-            AutoScaleMode = AppSettings.EnableAutoScale
-                ? AutoScaleMode.Dpi
-                : AutoScaleMode.None;
-
-            this.AdjustForDpiScaling();
-            this.EnableRemoveWordHotkey();
-
-            toolTip.SetToolTip(btnCopy, _toolTipCopy.Text);
-            toolTip.SetToolTip(sendAndQuitButton, _toolTipSendQuit.Text);
-            toolTip.SetToolTip(quitButton, _toolTipQuit.Text);
-
-            // ToDo: Displaying report contents properly requires some more work.
-            mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]);
-        }
-
-        public DialogResult ShowDialog(IWin32Window? owner, SerializableException exception, string exceptionInfo, string environmentInfo, bool canIgnore, bool showIgnore, bool focusDetails)
-        {
-            _lastException = exception;
-            _lastReport = new Report(_lastException);
-            _exceptionInfo = exceptionInfo;
-            _environmentInfo = environmentInfo;
-
-            Validates.NotNull(_lastReport.GeneralInfo);
-
-            Text = $@"{_lastReport.GeneralInfo.HostApplication} {_title.Text}";
-
-            // Fill in the 'General' tab
-            warningPictureBox.Image = SystemIcons.Warning.ToBitmap();
-            exceptionTextBox.Text = _lastException.Type;
-            exceptionMessageTextBox.Text = _lastException.Message;
-            targetSiteTextBox.Text = _lastException.TargetSite;
-            applicationTextBox.Text = $@"{_lastReport.GeneralInfo.HostApplication} [{_lastReport.GeneralInfo.HostApplicationVersion}]";
-            gitTextBox.Text = _lastReport.GeneralInfo.GitVersion;
-            dateTimeTextBox.Text = _lastReport.GeneralInfo.DateTime;
-            clrTextBox.Text = _lastReport.GeneralInfo.ClrVersion;
-
-            // Fill in the 'Exception' tab
-            exceptionDetails.Initialize(_lastException);
-
-            if (focusDetails)
-            {
-                mainTabs.SelectedTab = exceptionTabPage;
-
-                // Hold back users from reporting UserExternalOperationExceptions directly
-                sendAndQuitButton.Enabled = false;
-            }
-
-            ControlBox = canIgnore;
-            IgnoreButton.Enabled = showIgnore && canIgnore;
-            IgnoreButton.Visible = showIgnore;
-
-            DialogResult = DialogResult.None;
-
-            // ToDo: Fill in the 'Report Contents' tab);
-            DialogResult result = ShowDialog(owner);
-
-            // Write back the user description (as we passed 'report' as a reference since it is a reference object anyway)
-            _lastReport.GeneralInfo.UserDescription = descriptionTextBox.Text;
-
-            return result;
-        }
-
-        protected override void OnLoad(EventArgs e)
-        {
-            base.OnLoad(e);
-            this.FixVisualStyle();
-        }
-
-        protected override void OnShown(EventArgs e)
-        {
-            base.OnShown(e);
+            MessageBox.Show(this, _noReproStepsSuppliedErrorMessage.Text, _title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             descriptionTextBox.Focus();
+            return;
         }
 
-        private static bool CheckContainsInfo(string input)
+        if (MessageBox.Show(this, _submitGitHubMessage.Text, _title.Text,
+                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
         {
-            string text = WhitespaceRegex().Replace(input, string.Empty);
-            return !string.IsNullOrWhiteSpace(text);
+            return;
         }
 
-        private void QuitButton_Click(object sender, EventArgs e)
+        Validates.NotNull(_lastException);
+
+        string? url = UrlBuilder.Build("https://github.com/gitextensions/gitextensions/issues/new", _lastException, _exceptionInfo, _environmentInfo, descriptionTextBox.Text);
+        new Executable(url!).Start(useShellExecute: true, throwOnErrorExit: false);
+
+        DialogResult = DialogResult.Abort;
+        Close();
+    }
+
+    private void btnCopy_Click(object sender, EventArgs e)
+    {
+        Validates.NotNull(_lastException);
+
+        string report = ErrorReportBodyBuilder.CopyText(_lastException, _exceptionInfo, _environmentInfo, descriptionTextBox.Text);
+        if (string.IsNullOrWhiteSpace(report))
         {
-            DialogResult = DialogResult.Abort;
-            Close();
+            return;
         }
 
-        private void SendAndQuitButton_Click(object sender, EventArgs e)
+        Clipboard.SetDataObject(report, true, 5, 100);
+
+        DialogResult = DialogResult.None;
+    }
+
+    private void IgnoreButton_Click(object sender, EventArgs e)
+    {
+        DialogResult = DialogResult.Ignore;
+        Close();
+    }
+
+    #region Translation
+
+    public virtual void AddTranslationItems(ITranslation translation)
+    {
+        TranslationUtils.AddTranslationItemsFromFields(Name, this, translation);
+    }
+
+    public virtual void TranslateItems(ITranslation translation)
+    {
+        TranslationUtils.TranslateItemsFromFields(Name, this, translation);
+    }
+
+    protected void TranslateItem(string itemName, object item)
+    {
+        IDictionary<string, TranslationFile> translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
+
+        if (translation.Count == 0)
         {
-            bool hasUserText = CheckContainsInfo(descriptionTextBox.Text);
-            if (!hasUserText)
-            {
-                MessageBox.Show(this, _noReproStepsSuppliedErrorMessage.Text, _title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                descriptionTextBox.Focus();
-                return;
-            }
-
-            if (MessageBox.Show(this, _submitGitHubMessage.Text, _title.Text,
-                    MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
-            {
-                return;
-            }
-
-            Validates.NotNull(_lastException);
-
-            string? url = UrlBuilder.Build("https://github.com/gitextensions/gitextensions/issues/new", _lastException, _exceptionInfo, _environmentInfo, descriptionTextBox.Text);
-            new Executable(url!).Start(useShellExecute: true, throwOnErrorExit: false);
-
-            DialogResult = DialogResult.Abort;
-            Close();
+            return;
         }
 
-        private void btnCopy_Click(object sender, EventArgs e)
+        (string itemName, object item)[] itemsToTranslate = new[] { (itemName, item) };
+
+        foreach (KeyValuePair<string, TranslationFile> pair in translation)
         {
-            Validates.NotNull(_lastException);
-
-            string report = ErrorReportBodyBuilder.CopyText(_lastException, _exceptionInfo, _environmentInfo, descriptionTextBox.Text);
-            if (string.IsNullOrWhiteSpace(report))
-            {
-                return;
-            }
-
-            Clipboard.SetDataObject(report, true, 5, 100);
-
-            DialogResult = DialogResult.None;
+            TranslationUtils.TranslateItemsFromList(Name, pair.Value, itemsToTranslate);
         }
+    }
 
-        private void IgnoreButton_Click(object sender, EventArgs e)
+    #endregion
+
+    internal TestAccessor GetTestAccessor()
+        => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly BugReportForm _form;
+
+        public TestAccessor(BugReportForm form)
         {
-            DialogResult = DialogResult.Ignore;
-            Close();
+            _form = form;
         }
 
-        #region Translation
+        public TextBox ExceptionTextBox => _form.exceptionTextBox;
+        public TextBox ExceptionMessageTextBox => _form.exceptionMessageTextBox;
+        public TextBox TargetSiteTextBox => _form.targetSiteTextBox;
+        public ExceptionDetails ExceptionDetails => _form.exceptionDetails;
 
-        public virtual void AddTranslationItems(ITranslation translation)
-        {
-            TranslationUtils.AddTranslationItemsFromFields(Name, this, translation);
-        }
+        public TextBox ApplicationTextBox => _form.applicationTextBox;
+        public TextBox GitTextBox => _form.gitTextBox;
+        public TextBox DateTimeTextBox => _form.dateTimeTextBox;
+        public TextBox ClrTextBox => _form.clrTextBox;
 
-        public virtual void TranslateItems(ITranslation translation)
-        {
-            TranslationUtils.TranslateItemsFromFields(Name, this, translation);
-        }
-
-        protected void TranslateItem(string itemName, object item)
-        {
-            IDictionary<string, TranslationFile> translation = Translator.GetTranslation(AppSettings.CurrentTranslation);
-
-            if (translation.Count == 0)
-            {
-                return;
-            }
-
-            (string itemName, object item)[] itemsToTranslate = new[] { (itemName, item) };
-
-            foreach (KeyValuePair<string, TranslationFile> pair in translation)
-            {
-                TranslationUtils.TranslateItemsFromList(Name, pair.Value, itemsToTranslate);
-            }
-        }
-
-        #endregion
-
-        internal TestAccessor GetTestAccessor()
-            => new(this);
-
-        internal readonly struct TestAccessor
-        {
-            private readonly BugReportForm _form;
-
-            public TestAccessor(BugReportForm form)
-            {
-                _form = form;
-            }
-
-            public TextBox ExceptionTextBox => _form.exceptionTextBox;
-            public TextBox ExceptionMessageTextBox => _form.exceptionMessageTextBox;
-            public TextBox TargetSiteTextBox => _form.targetSiteTextBox;
-            public ExceptionDetails ExceptionDetails => _form.exceptionDetails;
-
-            public TextBox ApplicationTextBox => _form.applicationTextBox;
-            public TextBox GitTextBox => _form.gitTextBox;
-            public TextBox DateTimeTextBox => _form.dateTimeTextBox;
-            public TextBox ClrTextBox => _form.clrTextBox;
-
-            public static bool CheckContainsInfo(string input) => BugReportForm.CheckContainsInfo(input);
-        }
+        public static bool CheckContainsInfo(string input) => BugReportForm.CheckContainsInfo(input);
     }
 }
