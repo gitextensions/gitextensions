@@ -1550,7 +1550,7 @@ public sealed partial class FileStatusList : GitModuleControl
             (SubmoduleStatus.NewerTime, false) => nameof(Images.SubmoduleRevisionSemiUp),
             (SubmoduleStatus.OlderTime, true) => nameof(Images.SubmoduleRevisionSemiDownDirty),
             (SubmoduleStatus.OlderTime, false) => nameof(Images.SubmoduleRevisionSemiDown),
-            (SubmoduleStatus.SameTime, false) => nameof(Images.FolderSubmodule),
+            (SubmoduleStatus.SameCommit, false) => nameof(Images.FolderSubmodule),
             _ => nameof(Images.SubmoduleDirty),
         };
     }
