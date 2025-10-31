@@ -1,112 +1,111 @@
 ﻿using FluentAssertions;
 using GitCommands.Settings;
 
-namespace GitCommandsTests.Settings
+namespace GitCommandsTests.Settings;
+
+[TestFixture]
+public class FileSettingsCacheTests
 {
-    [TestFixture]
-    public class FileSettingsCacheTests
+    [SetUp]
+    public void Setup()
     {
-        [SetUp]
-        public void Setup()
-        {
-        }
+    }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("boo")]
-        public void ctor_FileWatcher_Path_should_not_set_if_invalid_dir(string settingsFilePath)
-        {
-            new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().FileSystemWatcher.Path.Should().BeNullOrEmpty();
-        }
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("boo")]
+    public void ctor_FileWatcher_Path_should_not_set_if_invalid_dir(string settingsFilePath)
+    {
+        new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().FileSystemWatcher.Path.Should().BeNullOrEmpty();
+    }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("boo")]
-        public void ctor_FileWatcher_Filter_should_be_default_if_invalid_dir(string settingsFilePath)
-        {
-            new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().FileSystemWatcher.Filter.Should().Be("*");
-        }
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("boo")]
+    public void ctor_FileWatcher_Filter_should_be_default_if_invalid_dir(string settingsFilePath)
+    {
+        new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().FileSystemWatcher.Filter.Should().Be("*");
+    }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("boo")]
-        public void ctor_FileWatcher_EnableRaisingEvents_should_be_false_if_invalid_dir(string settingsFilePath)
-        {
-            new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().FileSystemWatcher.EnableRaisingEvents.Should().BeFalse();
-        }
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("boo")]
+    public void ctor_FileWatcher_EnableRaisingEvents_should_be_false_if_invalid_dir(string settingsFilePath)
+    {
+        new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().FileSystemWatcher.EnableRaisingEvents.Should().BeFalse();
+    }
 
-        [TestCase(null)]
-        [TestCase("")]
-        public void SaveImpl_should_throw_if_invalid_path(string settingsFilePath)
+    [TestCase(null)]
+    [TestCase("")]
+    public void SaveImpl_should_throw_if_invalid_path(string settingsFilePath)
+    {
+        FileSettingsCache.TestAccessor cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();
+        cache.SetLastModificationDate(DateTime.Now);
+        ((Action)(() => cache.SaveImpl())).Should().Throw<SaveSettingsException>();
+    }
+
+    [Test]
+    public void SaveImpl_should_create_folder_if_absent()
+    {
+        string tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
+        string settingsFilePath = Path.Combine(tempPath, "GitExtensions.settings");
+
+        try
         {
             FileSettingsCache.TestAccessor cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();
             cache.SetLastModificationDate(DateTime.Now);
-            ((Action)(() => cache.SaveImpl())).Should().Throw<SaveSettingsException>();
+
+            Directory.Exists(tempPath).Should().BeFalse();
+            File.Exists(settingsFilePath).Should().BeFalse();
+
+            cache.SaveImpl();
+
+            Directory.Exists(tempPath).Should().BeTrue();
+            File.Exists(settingsFilePath).Should().BeTrue();
         }
-
-        [Test]
-        public void SaveImpl_should_create_folder_if_absent()
+        finally
         {
-            string tempPath = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
-            string settingsFilePath = Path.Combine(tempPath, "GitExtensions.settings");
-
+            // clean up
             try
             {
-                FileSettingsCache.TestAccessor cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();
-                cache.SetLastModificationDate(DateTime.Now);
-
-                Directory.Exists(tempPath).Should().BeFalse();
-                File.Exists(settingsFilePath).Should().BeFalse();
-
-                cache.SaveImpl();
-
-                Directory.Exists(tempPath).Should().BeTrue();
-                File.Exists(settingsFilePath).Should().BeTrue();
+                Directory.Delete(tempPath, true);
             }
-            finally
+            catch
             {
-                // clean up
-                try
-                {
-                    Directory.Delete(tempPath, true);
-                }
-                catch
-                {
-                    // no-op
-                }
+                // no-op
             }
         }
+    }
 
-        private class MockFileSettingsCache : FileSettingsCache
+    private class MockFileSettingsCache : FileSettingsCache
+    {
+        public MockFileSettingsCache(string settingsFilePath, bool autoSave = true)
+            : base(settingsFilePath, autoSave)
         {
-            public MockFileSettingsCache(string settingsFilePath, bool autoSave = true)
-                : base(settingsFilePath, autoSave)
-            {
-            }
+        }
 
-            protected override void ClearImpl()
-            {
-                throw new NotImplementedException();
-            }
+        protected override void ClearImpl()
+        {
+            throw new NotImplementedException();
+        }
 
-            protected override string GetValueImpl(string key)
-            {
-                throw new NotImplementedException();
-            }
+        protected override string GetValueImpl(string key)
+        {
+            throw new NotImplementedException();
+        }
 
-            protected override void ReadSettings(string fileName)
-            {
-                throw new NotImplementedException();
-            }
+        protected override void ReadSettings(string fileName)
+        {
+            throw new NotImplementedException();
+        }
 
-            protected override void SetValueImpl(string key, string value)
-            {
-                throw new NotImplementedException();
-            }
+        protected override void SetValueImpl(string key, string value)
+        {
+            throw new NotImplementedException();
+        }
 
-            protected override void WriteSettings(string fileName)
-            {
-            }
+        protected override void WriteSettings(string fileName)
+        {
         }
     }
 }

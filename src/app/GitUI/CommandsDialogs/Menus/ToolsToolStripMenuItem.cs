@@ -7,95 +7,94 @@ using Microsoft;
 using ResourceManager;
 using ResourceManager.Hotkey;
 
-namespace GitUI.CommandsDialogs.Menus
+namespace GitUI.CommandsDialogs.Menus;
+
+internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
 {
-    internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
+    public event EventHandler<SettingsChangedEventArgs> SettingsChanged;
+
+    public ToolsToolStripMenuItem()
     {
-        public event EventHandler<SettingsChangedEventArgs> SettingsChanged;
+        InitializeComponent();
 
-        public ToolsToolStripMenuItem()
+        gitBashToolStripMenuItem.Tag = new ShellProvider().GetShell(BashShell.ShellName);
+
+        if (!EnvUtils.RunningOnWindows())
         {
-            InitializeComponent();
+            toolStripSeparator6.Visible = false;
+            PuTTYToolStripMenuItem.Visible = false;
+        }
+    }
 
-            gitBashToolStripMenuItem.Tag = new ShellProvider().GetShell(BashShell.ShellName);
+    public override void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
+    {
+        gitBashToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.GitBash);
+        gitGUIToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.GitGui);
+        kGitToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.GitGitK);
+        settingsToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenSettings);
 
-            if (!EnvUtils.RunningOnWindows())
-            {
-                toolStripSeparator6.Visible = false;
-                PuTTYToolStripMenuItem.Visible = false;
-            }
+        base.RefreshShortcutKeys(hotkeys);
+    }
+
+    public override void RefreshState(bool bareRepository)
+    {
+        gitGUIToolStripMenuItem.Enabled = !bareRepository;
+
+        base.RefreshState(bareRepository);
+    }
+
+    private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        FormGitCommandLog.ShowOrActivate(OwnerForm);
+    }
+
+    private void GitGuiToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        UICommands.Module.RunGui();
+    }
+
+    private void KGitToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        UICommands.Module.RunGitK();
+    }
+
+    private void StartAuthenticationAgentToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        PuttyHelpers.StartPageant(UICommands.Module.WorkingDir);
+    }
+
+    private void GenerateOrImportKeyToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        PuttyHelpers.StartPuttygen(UICommands.Module.WorkingDir);
+    }
+
+    private void OnShowSettingsClick(object sender, EventArgs e)
+    {
+        string translation = AppSettings.Translation;
+        CommitInfoPosition commitInfoPosition = AppSettings.CommitInfoPosition;
+
+        UICommands.StartSettingsDialog(OwnerForm);
+
+        SettingsChanged?.Invoke(sender, new(translation, commitInfoPosition));
+    }
+
+    private void gitBashToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        if (gitBashToolStripMenuItem.Tag is not IShellDescriptor shell)
+        {
+            return;
         }
 
-        public override void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
+        try
         {
-            gitBashToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.GitBash);
-            gitGUIToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.GitGui);
-            kGitToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.GitGitK);
-            settingsToolStripMenuItem.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenSettings);
+            Validates.NotNull(shell.ExecutablePath);
 
-            base.RefreshShortcutKeys(hotkeys);
+            Executable executable = new(shell.ExecutablePath, UICommands.Module.WorkingDir);
+            executable.Start(createWindow: true, throwOnErrorExit: false); // throwOnErrorExit would redirect the output
         }
-
-        public override void RefreshState(bool bareRepository)
+        catch (Exception exception)
         {
-            gitGUIToolStripMenuItem.Enabled = !bareRepository;
-
-            base.RefreshState(bareRepository);
-        }
-
-        private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            FormGitCommandLog.ShowOrActivate(OwnerForm);
-        }
-
-        private void GitGuiToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            UICommands.Module.RunGui();
-        }
-
-        private void KGitToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            UICommands.Module.RunGitK();
-        }
-
-        private void StartAuthenticationAgentToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            PuttyHelpers.StartPageant(UICommands.Module.WorkingDir);
-        }
-
-        private void GenerateOrImportKeyToolStripMenuItemClick(object sender, EventArgs e)
-        {
-            PuttyHelpers.StartPuttygen(UICommands.Module.WorkingDir);
-        }
-
-        private void OnShowSettingsClick(object sender, EventArgs e)
-        {
-            string translation = AppSettings.Translation;
-            CommitInfoPosition commitInfoPosition = AppSettings.CommitInfoPosition;
-
-            UICommands.StartSettingsDialog(OwnerForm);
-
-            SettingsChanged?.Invoke(sender, new(translation, commitInfoPosition));
-        }
-
-        private void gitBashToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            if (gitBashToolStripMenuItem.Tag is not IShellDescriptor shell)
-            {
-                return;
-            }
-
-            try
-            {
-                Validates.NotNull(shell.ExecutablePath);
-
-                Executable executable = new(shell.ExecutablePath, UICommands.Module.WorkingDir);
-                executable.Start(createWindow: true, throwOnErrorExit: false); // throwOnErrorExit would redirect the output
-            }
-            catch (Exception exception)
-            {
-                MessageBoxes.FailedToRunShell(OwnerForm, shell.Name, exception);
-            }
+            MessageBoxes.FailedToRunShell(OwnerForm, shell.Name, exception);
         }
     }
 }

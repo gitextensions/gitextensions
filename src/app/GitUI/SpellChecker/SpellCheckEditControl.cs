@@ -4,216 +4,215 @@ using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 
-namespace GitUI.SpellChecker
+namespace GitUI.SpellChecker;
+
+public sealed class SpellCheckEditControl : NativeWindow, IDisposable
 {
-    public sealed class SpellCheckEditControl : NativeWindow, IDisposable
+    public bool IsImeStartingComposition { get; private set; }
+
+    private readonly RichTextBox _richTextBox;
+    public List<TextPos> IllFormedLines { get; } = [];
+    public List<TextPos> Lines { get; } = [];
+    private Bitmap? _bitmap;
+    private Graphics? _bufferGraphics;
+    private int _lineHeight;
+    private Graphics? _textBoxGraphics;
+
+    public SpellCheckEditControl(RichTextBox richTextBox)
     {
-        public bool IsImeStartingComposition { get; private set; }
+        _richTextBox = richTextBox;
 
-        private readonly RichTextBox _richTextBox;
-        public List<TextPos> IllFormedLines { get; } = [];
-        public List<TextPos> Lines { get; } = [];
-        private Bitmap? _bitmap;
-        private Graphics? _bufferGraphics;
-        private int _lineHeight;
-        private Graphics? _textBoxGraphics;
+        // Start receiving messages
+        AssignHandle(richTextBox.Handle);
+    }
 
-        public SpellCheckEditControl(RichTextBox richTextBox)
+    protected override void WndProc(ref Message m)
+    {
+        const int WM_IME_STARTCOMPOSITION = 0x010D;
+        const int WM_IME_ENDCOMPOSITION = 0x010E;
+
+        switch (m.Msg)
         {
-            _richTextBox = richTextBox;
+            case 15: // this is the WM_PAINT message
+                // invalidate the TextBox so that it gets refreshed properly
+                _richTextBox.Invalidate();
 
-            // Start receiving messages
-            AssignHandle(richTextBox.Handle);
+                // call the default win32 Paint method for the TextBox first
+                base.WndProc(ref m);
+
+                // now use our code to draw extra stuff over the TextBox
+                CustomPaint();
+
+                break;
+            case WM_IME_STARTCOMPOSITION:
+                IsImeStartingComposition = true;
+                base.WndProc(ref m);
+                break;
+            case WM_IME_ENDCOMPOSITION:
+                base.WndProc(ref m);
+                IsImeStartingComposition = false;
+                break;
+            default:
+                base.WndProc(ref m);
+                break;
+        }
+    }
+
+    private void CustomPaint()
+    {
+        if (IsImeStartingComposition)
+        {
+            return;
         }
 
-        protected override void WndProc(ref Message m)
+        if (_bitmap is null || (_bitmap.Width != _richTextBox.Width || _bitmap.Height != _richTextBox.Height))
         {
-            const int WM_IME_STARTCOMPOSITION = 0x010D;
-            const int WM_IME_ENDCOMPOSITION = 0x010E;
-
-            switch (m.Msg)
-            {
-                case 15: // this is the WM_PAINT message
-                    // invalidate the TextBox so that it gets refreshed properly
-                    _richTextBox.Invalidate();
-
-                    // call the default win32 Paint method for the TextBox first
-                    base.WndProc(ref m);
-
-                    // now use our code to draw extra stuff over the TextBox
-                    CustomPaint();
-
-                    break;
-                case WM_IME_STARTCOMPOSITION:
-                    IsImeStartingComposition = true;
-                    base.WndProc(ref m);
-                    break;
-                case WM_IME_ENDCOMPOSITION:
-                    base.WndProc(ref m);
-                    IsImeStartingComposition = false;
-                    break;
-                default:
-                    base.WndProc(ref m);
-                    break;
-            }
+            _bitmap = new Bitmap(_richTextBox.Width, _richTextBox.Height, PixelFormat.Format32bppPArgb);
+            _bufferGraphics = Graphics.FromImage(_bitmap);
+            _bufferGraphics.Clip = new Region(_richTextBox.ClientRectangle);
+            _textBoxGraphics = Graphics.FromHwnd(_richTextBox.Handle);
         }
 
-        private void CustomPaint()
+        // clear the graphics buffer
+        _bufferGraphics!.Clear(Color.Transparent);
+
+        // * Here’s where the magic happens
+
+        // Mark ill formed parts of commit message
+        DrawLines(IllFormedLines, DrawType.Mark);
+
+        // Mark first line if it is blank
+        int lh = LineHeight();
+        int ypos = _richTextBox.GetPositionFromCharIndex(0).Y;
+        if (_richTextBox.Text.Length > 1 &&
+
+            // check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
+            _richTextBox.Lines.Length > 0 && _richTextBox.Lines[0].Length == 0
+            && ypos >= -lh && AppSettings.MarkIllFormedLinesInCommitMsg)
         {
-            if (IsImeStartingComposition)
-            {
-                return;
-            }
-
-            if (_bitmap is null || (_bitmap.Width != _richTextBox.Width || _bitmap.Height != _richTextBox.Height))
-            {
-                _bitmap = new Bitmap(_richTextBox.Width, _richTextBox.Height, PixelFormat.Format32bppPArgb);
-                _bufferGraphics = Graphics.FromImage(_bitmap);
-                _bufferGraphics.Clip = new Region(_richTextBox.ClientRectangle);
-                _textBoxGraphics = Graphics.FromHwnd(_richTextBox.Handle);
-            }
-
-            // clear the graphics buffer
-            _bufferGraphics!.Clear(Color.Transparent);
-
-            // * Here’s where the magic happens
-
-            // Mark ill formed parts of commit message
-            DrawLines(IllFormedLines, DrawType.Mark);
-
-            // Mark first line if it is blank
-            int lh = LineHeight();
-            int ypos = _richTextBox.GetPositionFromCharIndex(0).Y;
-            if (_richTextBox.Text.Length > 1 &&
-
-                // check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
-                _richTextBox.Lines.Length > 0 && _richTextBox.Lines[0].Length == 0
-                && ypos >= -lh && AppSettings.MarkIllFormedLinesInCommitMsg)
-            {
-                DrawMark(new Point(0, lh + ypos), new Point(_richTextBox.Width - 3, lh + ypos));
-            }
-
-            // Mark misspelled words
-            DrawLines(Lines, DrawType.Wave);
-
-            // Now we just draw our internal buffer on top of the TextBox.
-            // Everything should be at the right place.
-            _textBoxGraphics!.DrawImageUnscaled(_bitmap, 0, 0);
+            DrawMark(new Point(0, lh + ypos), new Point(_richTextBox.Width - 3, lh + ypos));
         }
 
-        private void DrawLines(IEnumerable<TextPos> list, DrawType type)
+        // Mark misspelled words
+        DrawLines(Lines, DrawType.Wave);
+
+        // Now we just draw our internal buffer on top of the TextBox.
+        // Everything should be at the right place.
+        _textBoxGraphics!.DrawImageUnscaled(_bitmap, 0, 0);
+    }
+
+    private void DrawLines(IEnumerable<TextPos> list, DrawType type)
+    {
+        foreach (TextPos textPos in list)
         {
-            foreach (TextPos textPos in list)
+            Point start = _richTextBox.GetPositionFromCharIndex(textPos.Start);
+            Point end = _richTextBox.GetPositionFromCharIndex(textPos.End);
+
+            // The position above now points to the top left corner of the character.
+            // We need to account for the character height so the underlines go
+            // to the right place.
+            end.X += 1;
+            start.Y += TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, textPos.Start);
+            end.Y += TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, textPos.End);
+
+            if (start.X == -1 || end.X == -1)
             {
-                Point start = _richTextBox.GetPositionFromCharIndex(textPos.Start);
-                Point end = _richTextBox.GetPositionFromCharIndex(textPos.End);
-
-                // The position above now points to the top left corner of the character.
-                // We need to account for the character height so the underlines go
-                // to the right place.
-                end.X += 1;
-                start.Y += TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, textPos.Start);
-                end.Y += TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, textPos.End);
-
-                if (start.X == -1 || end.X == -1)
-                {
-                    continue;
-                }
-
-                // Draw the wavy underline/mark
-                if (start.Y < end.Y)
-                {
-                    switch (type)
-                    {
-                        case DrawType.Wave:
-                            DrawWave(start, new Point(_richTextBox.Width - 3, start.Y));
-                            DrawWave(new Point(3, end.Y), end);
-                            break;
-                        case DrawType.Mark:
-                            DrawMark(start, new Point(_richTextBox.Width - 3, start.Y));
-                            DrawMark(new Point(0, end.Y), end);
-                            break;
-                    }
-                }
-                else
-                {
-                    switch (type)
-                    {
-                        case DrawType.Wave:
-                            DrawWave(start, end);
-                            break;
-                        case DrawType.Mark:
-                            DrawMark(start, end);
-                            break;
-                    }
-                }
+                continue;
             }
-        }
 
-        private void DrawWave(Point start, Point end)
-        {
-            using Pen pen = new(Color.Red.AdaptTextColor(), DpiUtil.ScaleX);
-            int waveWidth = DpiUtil.Scale(4);
-            int waveHalfWidth = waveWidth >> 1;
-            if ((end.X - start.X) > waveWidth)
+            // Draw the wavy underline/mark
+            if (start.Y < end.Y)
             {
-                List<Point> pl = [];
-                for (int i = start.X; i <= (end.X - waveHalfWidth); i += waveWidth)
+                switch (type)
                 {
-                    pl.Add(new Point(i, start.Y));
-                    pl.Add(new Point(i + waveHalfWidth, start.Y + waveHalfWidth));
+                    case DrawType.Wave:
+                        DrawWave(start, new Point(_richTextBox.Width - 3, start.Y));
+                        DrawWave(new Point(3, end.Y), end);
+                        break;
+                    case DrawType.Mark:
+                        DrawMark(start, new Point(_richTextBox.Width - 3, start.Y));
+                        DrawMark(new Point(0, end.Y), end);
+                        break;
                 }
-
-                Point[] p = pl.ToArray();
-                _bufferGraphics!.DrawLines(pen, p);
             }
             else
             {
-                _bufferGraphics!.DrawLine(pen, start, end);
-            }
-        }
-
-        private void DrawMark(Point start, Point end)
-        {
-            Color col = Color.FromArgb(120, 255, 255, 0).AdaptBackColor();
-            int lineHeight = LineHeight();
-            using Pen pen = new(col, lineHeight);
-            start.Offset(0, -lineHeight / 2);
-            end.Offset(0, -lineHeight / 2);
-            _bufferGraphics!.DrawLine(pen, start, end);
-        }
-
-        private int LineHeight()
-        {
-            if (!EnvUtils.RunningOnWindows())
-            {
-                return 12;
-            }
-
-            if (_lineHeight == 0)
-            {
-                if (_richTextBox.Lines.Any(line => line.Length != 0))
+                switch (type)
                 {
-                    _lineHeight = TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, 0);
+                    case DrawType.Wave:
+                        DrawWave(start, end);
+                        break;
+                    case DrawType.Mark:
+                        DrawMark(start, end);
+                        break;
                 }
             }
-
-            return _lineHeight == 0 ? 12 : _lineHeight;
         }
+    }
 
-        public void Dispose()
+    private void DrawWave(Point start, Point end)
+    {
+        using Pen pen = new(Color.Red.AdaptTextColor(), DpiUtil.ScaleX);
+        int waveWidth = DpiUtil.Scale(4);
+        int waveHalfWidth = waveWidth >> 1;
+        if ((end.X - start.X) > waveWidth)
         {
-            ReleaseHandle();
+            List<Point> pl = [];
+            for (int i = start.X; i <= (end.X - waveHalfWidth); i += waveWidth)
+            {
+                pl.Add(new Point(i, start.Y));
+                pl.Add(new Point(i + waveHalfWidth, start.Y + waveHalfWidth));
+            }
 
-            _bitmap?.Dispose();
-            _bufferGraphics?.Dispose();
-            _textBoxGraphics?.Dispose();
+            Point[] p = pl.ToArray();
+            _bufferGraphics!.DrawLines(pen, p);
         }
-
-        private enum DrawType
+        else
         {
-            Wave,
-            Mark
+            _bufferGraphics!.DrawLine(pen, start, end);
         }
+    }
+
+    private void DrawMark(Point start, Point end)
+    {
+        Color col = Color.FromArgb(120, 255, 255, 0).AdaptBackColor();
+        int lineHeight = LineHeight();
+        using Pen pen = new(col, lineHeight);
+        start.Offset(0, -lineHeight / 2);
+        end.Offset(0, -lineHeight / 2);
+        _bufferGraphics!.DrawLine(pen, start, end);
+    }
+
+    private int LineHeight()
+    {
+        if (!EnvUtils.RunningOnWindows())
+        {
+            return 12;
+        }
+
+        if (_lineHeight == 0)
+        {
+            if (_richTextBox.Lines.Any(line => line.Length != 0))
+            {
+                _lineHeight = TextBoxHelper.GetBaselineOffsetAtCharIndex(_richTextBox, 0);
+            }
+        }
+
+        return _lineHeight == 0 ? 12 : _lineHeight;
+    }
+
+    public void Dispose()
+    {
+        ReleaseHandle();
+
+        _bitmap?.Dispose();
+        _bufferGraphics?.Dispose();
+        _textBoxGraphics?.Dispose();
+    }
+
+    private enum DrawType
+    {
+        Wave,
+        Mark
     }
 }

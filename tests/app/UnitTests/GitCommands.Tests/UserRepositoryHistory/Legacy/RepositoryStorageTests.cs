@@ -4,77 +4,76 @@ using GitCommands.UserRepositoryHistory.Legacy;
 using NSubstitute;
 using Current = GitCommands.UserRepositoryHistory;
 
-namespace GitCommandsTests.UserRepositoryHistory.Legacy
+namespace GitCommandsTests.UserRepositoryHistory.Legacy;
+
+[TestFixture]
+public class RepositoryStorageTests
 {
-    [TestFixture]
-    public class RepositoryStorageTests
+    private Current.IRepositorySerialiser<RepositoryCategory> _repositoryCategorySerialiser;
+    private RepositoryStorage _repositoryStorage;
+
+    [SetUp]
+    public void Setup()
     {
-        private Current.IRepositorySerialiser<RepositoryCategory> _repositoryCategorySerialiser;
-        private RepositoryStorage _repositoryStorage;
+        _repositoryCategorySerialiser = Substitute.For<Current.IRepositorySerialiser<RepositoryCategory>>();
+        _repositoryStorage = new RepositoryStorage(_repositoryCategorySerialiser);
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            _repositoryCategorySerialiser = Substitute.For<Current.IRepositorySerialiser<RepositoryCategory>>();
-            _repositoryStorage = new RepositoryStorage(_repositoryCategorySerialiser);
-        }
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("   ")]
+    public void LoadLegacy_should_return_empty_collection_if_settings_empty(string setting)
+    {
+        AppSettings.SetString("repositories", setting);
+        RepositoryStorage repositoryStorage = new();
+        var repositories = repositoryStorage.Load();
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("   ")]
-        public void LoadLegacy_should_return_empty_collection_if_settings_empty(string setting)
-        {
-            AppSettings.SetString("repositories", setting);
-            RepositoryStorage repositoryStorage = new();
-            var repositories = repositoryStorage.Load();
+        repositories.Should().BeEmpty();
+    }
 
-            repositories.Should().BeEmpty();
-        }
+    [Test]
+    public void LoadLegacy_should_return_empty_collection_if_failed_to_deserialise()
+    {
+        AppSettings.SetString("repositories", "repo");
+        _repositoryCategorySerialiser.Deserialize(Arg.Any<string>()).Returns(x => null);
 
-        [Test]
-        public void LoadLegacy_should_return_empty_collection_if_failed_to_deserialise()
-        {
-            AppSettings.SetString("repositories", "repo");
-            _repositoryCategorySerialiser.Deserialize(Arg.Any<string>()).Returns(x => null);
+        IReadOnlyList<RepositoryCategory> repositories = _repositoryStorage.Load();
 
-            IReadOnlyList<RepositoryCategory> repositories = _repositoryStorage.Load();
+        repositories.Should().BeEmpty();
+    }
 
-            repositories.Should().BeEmpty();
-        }
+    [Test]
+    public void LoadLegacy_should_return_collection()
+    {
+        AppSettings.SetString("repositories", "repos");
+        List<RepositoryCategory> history =
+        [
+            new RepositoryCategory
+            {
+                Repositories = new List<Repository>(
+                    new[]
+                    {
+                        new Repository { Path = "C:\\Development\\RibbonWinForms\\", Description = "Check it out!", Anchor = "None" },
+                        new Repository { Path = "", Anchor = "None" },
+                    }),
+                CategoryType = "Repositories",
+                Description = "3rd Party"
+            },
+            new RepositoryCategory
+            {
+                Repositories = new List<Repository>(
+                    new[]
+                    {
+                        new Repository { Title = "Git Extensions", Path = "C:\\Development\\gitextensions\\", Description = "Mega project!", Anchor = "Pinned" }
+                    }),
+                CategoryType = "Repositories",
+                Description = "Test"
+            },
+        ];
+        _repositoryCategorySerialiser.Deserialize(Arg.Any<string>()).Returns(x => history);
 
-        [Test]
-        public void LoadLegacy_should_return_collection()
-        {
-            AppSettings.SetString("repositories", "repos");
-            List<RepositoryCategory> history =
-            [
-                new RepositoryCategory
-                {
-                    Repositories = new List<Repository>(
-                        new[]
-                        {
-                            new Repository { Path = "C:\\Development\\RibbonWinForms\\", Description = "Check it out!", Anchor = "None" },
-                            new Repository { Path = "", Anchor = "None" },
-                        }),
-                    CategoryType = "Repositories",
-                    Description = "3rd Party"
-                },
-                new RepositoryCategory
-                {
-                    Repositories = new List<Repository>(
-                        new[]
-                        {
-                            new Repository { Title = "Git Extensions", Path = "C:\\Development\\gitextensions\\", Description = "Mega project!", Anchor = "Pinned" }
-                        }),
-                    CategoryType = "Repositories",
-                    Description = "Test"
-                },
-            ];
-            _repositoryCategorySerialiser.Deserialize(Arg.Any<string>()).Returns(x => history);
+        IReadOnlyList<RepositoryCategory> repositories = _repositoryStorage.Load();
 
-            IReadOnlyList<RepositoryCategory> repositories = _repositoryStorage.Load();
-
-            repositories.Should().BeSameAs(history);
-        }
+        repositories.Should().BeSameAs(history);
     }
 }

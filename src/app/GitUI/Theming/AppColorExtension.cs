@@ -1,10 +1,15 @@
 ﻿using GitExtUtils.GitUI.Theming;
 
-namespace GitUI.Theming
+namespace GitUI.Theming;
+
+public static class AppColorExtension
 {
-    public static class AppColorExtension
+    public static Color GetThemeColor(this AppColor name)
     {
-        public static Color GetThemeColor(this AppColor name) =>
-            ThemeModule.Settings.Theme.GetColor(name);
+        Color themeColor = ThemeModule.Settings.Theme.GetColor(name);
+
+        return themeColor is { IsEmpty: false }
+            ? themeColor
+            : ThemeModule.Settings.InvariantTheme.GetColor(name);
     }
 }

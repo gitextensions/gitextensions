@@ -1,87 +1,86 @@
 ﻿using CommonTestUtils;
 using GitExtensions.Extensibility;
 
-namespace GitExtUtilsTests
+namespace GitExtUtilsTests;
+
+[TestFixture]
+public sealed class LazyStringSplitTests
 {
-    [TestFixture]
-    public sealed class LazyStringSplitTests
+    [TestCase("a;b;c", ';', new[] { "a", "b", "c" })]
+    [TestCase("a_b_c", '_', new[] { "a", "b", "c" })]
+    [TestCase("aa;bb;cc", ';', new[] { "aa", "bb", "cc" })]
+    [TestCase("aaa;bbb;ccc", ';', new[] { "aaa", "bbb", "ccc" })]
+    [TestCase(";a", ';', new[] { "", "a" })]
+    [TestCase("a;", ';', new[] { "a", "" })]
+    [TestCase(";a;b;c", ';', new[] { "", "a", "b", "c" })]
+    [TestCase("a;b;c;", ';', new[] { "a", "b", "c", "" })]
+    [TestCase(";a;b;c;", ';', new[] { "", "a", "b", "c", "" })]
+    [TestCase(";;a;;b;;c;;", ';', new[] { "", "", "a", "", "b", "", "c", "", "" })]
+    [TestCase("", ';', new[] { "" })]
+    [TestCase(";", ';', new[] { "", "" })]
+    [TestCase(";;", ';', new[] { "", "", "" })]
+    [TestCase(";;;", ';', new[] { "", "", "", "" })]
+    [TestCase(";;;a", ';', new[] { "", "", "", "a" })]
+    [TestCase("a;;;", ';', new[] { "a", "", "", "" })]
+    [TestCase(";a;;", ';', new[] { "", "a", "", "" })]
+    [TestCase(";;a;", ';', new[] { "", "", "a", "" })]
+    [TestCase("a", ';', new[] { "a" })]
+    [TestCase("aa", ';', new[] { "aa" })]
+    public void None(string input, char delimiter, string[] expected)
     {
-        [TestCase("a;b;c", ';', new[] { "a", "b", "c" })]
-        [TestCase("a_b_c", '_', new[] { "a", "b", "c" })]
-        [TestCase("aa;bb;cc", ';', new[] { "aa", "bb", "cc" })]
-        [TestCase("aaa;bbb;ccc", ';', new[] { "aaa", "bbb", "ccc" })]
-        [TestCase(";a", ';', new[] { "", "a" })]
-        [TestCase("a;", ';', new[] { "a", "" })]
-        [TestCase(";a;b;c", ';', new[] { "", "a", "b", "c" })]
-        [TestCase("a;b;c;", ';', new[] { "a", "b", "c", "" })]
-        [TestCase(";a;b;c;", ';', new[] { "", "a", "b", "c", "" })]
-        [TestCase(";;a;;b;;c;;", ';', new[] { "", "", "a", "", "b", "", "c", "", "" })]
-        [TestCase("", ';', new[] { "" })]
-        [TestCase(";", ';', new[] { "", "" })]
-        [TestCase(";;", ';', new[] { "", "", "" })]
-        [TestCase(";;;", ';', new[] { "", "", "", "" })]
-        [TestCase(";;;a", ';', new[] { "", "", "", "a" })]
-        [TestCase("a;;;", ';', new[] { "a", "", "", "" })]
-        [TestCase(";a;;", ';', new[] { "", "a", "", "" })]
-        [TestCase(";;a;", ';', new[] { "", "", "a", "" })]
-        [TestCase("a", ';', new[] { "a" })]
-        [TestCase("aa", ';', new[] { "aa" })]
-        public void None(string input, char delimiter, string[] expected)
-        {
-            // This boxes
-            IEnumerable<string> actual = new LazyStringSplit(input, delimiter, StringSplitOptions.None);
+        // This boxes
+        IEnumerable<string> actual = new LazyStringSplit(input, delimiter, StringSplitOptions.None);
 
-            AssertEx.SequenceEqual(expected, actual);
+        AssertEx.SequenceEqual(expected, actual);
 
-            // Non boxing foreach
-            List<string> list = [.. new LazyStringSplit(input, delimiter, StringSplitOptions.None)];
+        // Non boxing foreach
+        List<string> list = [.. new LazyStringSplit(input, delimiter, StringSplitOptions.None)];
 
-            AssertEx.SequenceEqual(expected, list);
+        AssertEx.SequenceEqual(expected, list);
 
-            // Equivalence with string.Split
-            AssertEx.SequenceEqual(expected, input.Split(new[] { delimiter }, StringSplitOptions.None));
-        }
+        // Equivalence with string.Split
+        AssertEx.SequenceEqual(expected, input.Split(new[] { delimiter }, StringSplitOptions.None));
+    }
 
-        [TestCase("a;b;c", ';', new[] { "a", "b", "c" })]
-        [TestCase("a_b_c", '_', new[] { "a", "b", "c" })]
-        [TestCase("aa;bb;cc", ';', new[] { "aa", "bb", "cc" })]
-        [TestCase("aaa;bbb;ccc", ';', new[] { "aaa", "bbb", "ccc" })]
-        [TestCase(";a", ';', new[] { "a" })]
-        [TestCase("a;", ';', new[] { "a" })]
-        [TestCase(";a;b;c", ';', new[] { "a", "b", "c" })]
-        [TestCase("a;b;c;", ';', new[] { "a", "b", "c" })]
-        [TestCase(";a;b;c;", ';', new[] { "a", "b", "c" })]
-        [TestCase(";;a;;b;;c;;", ';', new[] { "a", "b", "c" })]
-        [TestCase("", ';', new string[0])]
-        [TestCase(";", ';', new string[0])]
-        [TestCase(";;", ';', new string[0])]
-        [TestCase(";;;", ';', new string[0])]
-        [TestCase(";;;a", ';', new[] { "a" })]
-        [TestCase("a;;;", ';', new[] { "a" })]
-        [TestCase(";a;;", ';', new[] { "a" })]
-        [TestCase(";;a;", ';', new[] { "a" })]
-        [TestCase("a", ';', new[] { "a" })]
-        [TestCase("aa", ';', new[] { "aa" })]
-        public void RemoveEmptyEntries(string input, char delimiter, string[] expected)
-        {
-            // This boxes
-            IEnumerable<string> actual = new LazyStringSplit(input, delimiter, StringSplitOptions.RemoveEmptyEntries);
+    [TestCase("a;b;c", ';', new[] { "a", "b", "c" })]
+    [TestCase("a_b_c", '_', new[] { "a", "b", "c" })]
+    [TestCase("aa;bb;cc", ';', new[] { "aa", "bb", "cc" })]
+    [TestCase("aaa;bbb;ccc", ';', new[] { "aaa", "bbb", "ccc" })]
+    [TestCase(";a", ';', new[] { "a" })]
+    [TestCase("a;", ';', new[] { "a" })]
+    [TestCase(";a;b;c", ';', new[] { "a", "b", "c" })]
+    [TestCase("a;b;c;", ';', new[] { "a", "b", "c" })]
+    [TestCase(";a;b;c;", ';', new[] { "a", "b", "c" })]
+    [TestCase(";;a;;b;;c;;", ';', new[] { "a", "b", "c" })]
+    [TestCase("", ';', new string[0])]
+    [TestCase(";", ';', new string[0])]
+    [TestCase(";;", ';', new string[0])]
+    [TestCase(";;;", ';', new string[0])]
+    [TestCase(";;;a", ';', new[] { "a" })]
+    [TestCase("a;;;", ';', new[] { "a" })]
+    [TestCase(";a;;", ';', new[] { "a" })]
+    [TestCase(";;a;", ';', new[] { "a" })]
+    [TestCase("a", ';', new[] { "a" })]
+    [TestCase("aa", ';', new[] { "aa" })]
+    public void RemoveEmptyEntries(string input, char delimiter, string[] expected)
+    {
+        // This boxes
+        IEnumerable<string> actual = new LazyStringSplit(input, delimiter, StringSplitOptions.RemoveEmptyEntries);
 
-            AssertEx.SequenceEqual(expected, actual);
+        AssertEx.SequenceEqual(expected, actual);
 
-            // Non boxing foreach
-            List<string> list = [.. new LazyStringSplit(input, delimiter, StringSplitOptions.RemoveEmptyEntries)];
+        // Non boxing foreach
+        List<string> list = [.. new LazyStringSplit(input, delimiter, StringSplitOptions.RemoveEmptyEntries)];
 
-            AssertEx.SequenceEqual(expected, list);
+        AssertEx.SequenceEqual(expected, list);
 
-            // Equivalence with string.Split
-            AssertEx.SequenceEqual(expected, input.Split(new[] { delimiter }, StringSplitOptions.RemoveEmptyEntries));
-        }
+        // Equivalence with string.Split
+        AssertEx.SequenceEqual(expected, input.Split(new[] { delimiter }, StringSplitOptions.RemoveEmptyEntries));
+    }
 
-        [Test]
-        public void Constructor_WithNullInput_Throws()
-        {
-            ClassicAssert.Throws<ArgumentNullException>(() => _ = new LazyStringSplit(null!, ' ', StringSplitOptions.RemoveEmptyEntries));
-        }
+    [Test]
+    public void Constructor_WithNullInput_Throws()
+    {
+        ClassicAssert.Throws<ArgumentNullException>(() => _ = new LazyStringSplit(null!, ' ', StringSplitOptions.RemoveEmptyEntries));
     }
 }

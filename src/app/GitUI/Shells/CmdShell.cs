@@ -1,23 +1,22 @@
 ﻿using GitCommands;
 using GitUI.Properties;
 
-namespace GitUI.Shells
+namespace GitUI.Shells;
+
+public class CmdShell : ShellDescriptor
 {
-    public class CmdShell : ShellDescriptor
+    public CmdShell()
     {
-        public CmdShell()
+        Name = "cmd";
+        Icon = Images.cmd;
+
+        ExecutableName = "cmd.exe";
+        if (PathUtil.TryFindShellPath(ExecutableName, out string? exePath))
         {
-            Name = "cmd";
-            Icon = Images.cmd;
-
-            ExecutableName = "cmd.exe";
-            if (PathUtil.TryFindShellPath(ExecutableName, out string? exePath))
-            {
-                ExecutablePath = exePath;
-                ExecutableCommandLine = exePath.Quote();
-            }
+            ExecutablePath = exePath;
+            ExecutableCommandLine = exePath.Quote();
         }
-
-        public override string GetChangeDirCommand(string path) => $"cd /D {path.QuoteNE()}";
     }
+
+    public override string GetChangeDirCommand(string path) => $"cd /D {path.QuoteNE()}";
 }

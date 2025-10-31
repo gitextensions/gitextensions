@@ -21,7 +21,7 @@ public interface IGitModule
 
     IReadOnlyList<IGitRef> GetRefs(RefsFilter getRef);
     IEnumerable<string> GetSettings(string setting);
-    IEnumerable<INamedGitItem> GetTree(ObjectId? commitId, bool full);
+    IEnumerable<IObjectGitItem> GetTree(ObjectId? commitId, bool full, string fileName = "", CancellationToken cancellationToken = default);
 
     /// <summary>
     ///  Loads the user-defined colors for the remote branches specific for the current repository.
@@ -299,7 +299,18 @@ public interface IGitModule
     string? GetCurrentSubmoduleLocalPath();
     ISubmodulesConfigFile GetSubmodulesConfigFile();
     string GetStatusText(bool untracked);
-    ExecutionResult GetDiffFiles(string? firstRevision, string? secondRevision, bool noCache, bool nullSeparated, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Retrieves the list of files that differ between two specified revisions.
+    /// </summary>
+    /// <param name="firstRevision">The identifier of the first revision to compare. Can be <see langword="null"/> to indicate the initial state or
+    /// baseline.</param>
+    /// <param name="secondRevision">The identifier of the second revision to compare. Can be <see langword="null"/> to indicate the current state.</param>
+    /// <param name="noCache">Force not cache, never done for artificial commits.</param>
+    /// <param name="rawParsable">A value indicating whether the output should be in a raw, parsable format.</param>
+    /// <param name="cancellationToken">A token to monitor for cancellation requests. The operation will terminate early if the token is canceled.</param>
+    /// <returns>An <see cref="ExecutionResult"/> containing the list of differing files and any associated metadata.</returns>
+    ExecutionResult GetDiffFiles(string? firstRevision, string? secondRevision, bool noCache, bool rawParsable, CancellationToken cancellationToken);
     bool InTheMiddleOfBisect();
     IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision, string? secondRevision, StagedStatus stagedStatus, bool noCache, CancellationToken cancellationToken);
     bool IsDirtyDir();
@@ -332,7 +343,7 @@ public interface IGitModule
     ObjectId? GetMergeBase(ObjectId a, ObjectId b);
     (int? First, int? Second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId);
     IReadOnlyList<GitItemStatus> GetCombinedDiffFileList(ObjectId mergeCommitObjectId);
-    IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId treeGuid, bool full);
+    IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId treeGuid, bool full, CancellationToken cancellationToken = default);
     IReadOnlyList<string> GetFullTree(string id);
 
     /// <summary>
@@ -436,7 +447,7 @@ public interface IGitModule
 
     bool ExistsMergeCommit(string? startRev, string? endRev);
 
-    string GetFileText(ObjectId id, Encoding encoding, bool stripAnsiEscapeCodes);
+    string? GetFileText(ObjectId id, Encoding encoding, bool stripAnsiEscapeCodes);
 
     Task<MemoryStream?> GetFileStreamAsync(string blob, CancellationToken cancellationToken);
 

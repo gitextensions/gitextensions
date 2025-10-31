@@ -3,71 +3,70 @@ using System.Text;
 using Git.hub;
 using GitExtensions.Extensibility.Plugins;
 
-namespace GitExtensions.Plugins.GitHub3
+namespace GitExtensions.Plugins.GitHub3;
+
+internal class GitHubPullRequest : IPullRequestInformation
 {
-    internal class GitHubPullRequest : IPullRequestInformation
+    private readonly PullRequest _pullRequest;
+
+    public GitHubPullRequest(PullRequest pullRequest)
     {
-        private readonly PullRequest _pullRequest;
+        _pullRequest = pullRequest;
+    }
 
-        public GitHubPullRequest(PullRequest pullRequest)
+    public string Title => _pullRequest.Title;
+
+    public string Body => _pullRequest.Body;
+
+    public string Owner => _pullRequest.User.Login;
+
+    public DateTime Created => _pullRequest.CreatedAt;
+
+    private string? _diffData;
+
+    public async Task<string> GetDiffDataAsync()
+    {
+        if (_diffData is null)
         {
-            _pullRequest = pullRequest;
-        }
-
-        public string Title => _pullRequest.Title;
-
-        public string Body => _pullRequest.Body;
-
-        public string Owner => _pullRequest.User.Login;
-
-        public DateTime Created => _pullRequest.CreatedAt;
-
-        private string? _diffData;
-
-        public async Task<string> GetDiffDataAsync()
-        {
-            if (_diffData is null)
-            {
 #pragma warning disable SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
-                HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_pullRequest.DiffUrl);
+            HttpWebRequest request = (HttpWebRequest)WebRequest.Create(_pullRequest.DiffUrl);
 #pragma warning restore SYSLIB0014 // 'WebRequest.Create(string)' is obsolete
-                using WebResponse response = await request.GetResponseAsync();
-                using StreamReader reader = new(response.GetResponseStream(), Encoding.UTF8);
-                _diffData = await reader.ReadToEndAsync();
-            }
-
-            return _diffData;
+            using WebResponse response = await request.GetResponseAsync();
+            using StreamReader reader = new(response.GetResponseStream(), Encoding.UTF8);
+            _diffData = await reader.ReadToEndAsync();
         }
 
-        private IHostedRepository? _baseRepo;
-        public IHostedRepository BaseRepo => _baseRepo ??= new GitHubRepo(_pullRequest.Base.Repo);
+        return _diffData;
+    }
 
-        private IHostedRepository? _headRepo;
-        public IHostedRepository HeadRepo => _headRepo ??= new GitHubRepo(_pullRequest.Head.Repo);
+    private IHostedRepository? _baseRepo;
+    public IHostedRepository BaseRepo => _baseRepo ??= new GitHubRepo(_pullRequest.Base.Repo);
 
-        public string BaseSha => _pullRequest.Base.Sha;
+    private IHostedRepository? _headRepo;
+    public IHostedRepository HeadRepo => _headRepo ??= new GitHubRepo(_pullRequest.Head.Repo);
 
-        public string HeadSha => _pullRequest.Head.Sha;
+    public string BaseSha => _pullRequest.Base.Sha;
 
-        public string BaseRef => _pullRequest.Base.Ref;
+    public string HeadSha => _pullRequest.Head.Sha;
 
-        public string HeadRef => _pullRequest.Head.Ref;
+    public string BaseRef => _pullRequest.Base.Ref;
 
-        public string Id => _pullRequest.Number.ToString();
+    public string HeadRef => _pullRequest.Head.Ref;
 
-        public string DetailedInfo => string.Format("Base repo owner: {0}\nHead repo owner: {1}", BaseRepo.Owner, HeadRepo.Owner);
-        public string FetchBranch => string.Format("pr/n{0}_{1}", Id, HeadRef);
+    public string Id => _pullRequest.Number.ToString();
 
-        public void Close()
-        {
-            _pullRequest.Close();
-        }
+    public string DetailedInfo => string.Format("Base repo owner: {0}\nHead repo owner: {1}", BaseRepo.Owner, HeadRepo.Owner);
+    public string FetchBranch => string.Format("pr/n{0}_{1}", Id, HeadRef);
 
-        private IPullRequestDiscussion? _discussion;
+    public void Close()
+    {
+        _pullRequest.Close();
+    }
 
-        public IPullRequestDiscussion GetDiscussion()
-        {
-            return _discussion ??= new GitHubPullRequestDiscussion(_pullRequest);
-        }
+    private IPullRequestDiscussion? _discussion;
+
+    public IPullRequestDiscussion GetDiscussion()
+    {
+        return _discussion ??= new GitHubPullRequestDiscussion(_pullRequest);
     }
 }

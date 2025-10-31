@@ -1,46 +1,45 @@
 ﻿using System.Security.Cryptography;
 using System.Text;
 
-namespace GitUI.Avatars
+namespace GitUI.Avatars;
+
+public sealed partial class CustomAvatarProvider
 {
-    public sealed partial class CustomAvatarProvider
+    /// <summary>
+    /// A type that holds and prepares for variables in custom avatar templates.
+    /// It's processed by an <see cref="UriTemplateResolver"/>.
+    /// </summary>
+    private class UriTemplateData
     {
-        /// <summary>
-        /// A type that holds and prepares for variables in custom avatar templates.
-        /// It's processed by an <see cref="UriTemplateResolver"/>.
-        /// </summary>
-        private class UriTemplateData
+        public UriTemplateData(string email, string? name, int imageSize)
         {
-            public UriTemplateData(string email, string? name, int imageSize)
+            Email = email ?? throw new ArgumentNullException(nameof(email));
+            Name = name;
+            ImageSize = imageSize;
+
+            NormalizedEmail = Email.Trim().ToLowerInvariant();
+
+            EmailMd5 = new Lazy<string>(() => ComputeHash(MD5.Create(), NormalizedEmail));
+            EmailSha1 = new Lazy<string>(() => ComputeHash(SHA1.Create(), NormalizedEmail));
+            EmailSha256 = new Lazy<string>(() => ComputeHash(SHA256.Create(), NormalizedEmail));
+        }
+
+        public string Email { get; }
+        public string? Name { get; }
+        public int ImageSize { get; }
+        public string NormalizedEmail { get; }
+
+        public Lazy<string> EmailMd5 { get; }
+        public Lazy<string> EmailSha1 { get; }
+        public Lazy<string> EmailSha256 { get; }
+
+        private static string ComputeHash(HashAlgorithm hashAlgorithm, string input)
+        {
+            using (hashAlgorithm)
             {
-                Email = email ?? throw new ArgumentNullException(nameof(email));
-                Name = name;
-                ImageSize = imageSize;
-
-                NormalizedEmail = Email.Trim().ToLowerInvariant();
-
-                EmailMd5 = new Lazy<string>(() => ComputeHash(MD5.Create(), NormalizedEmail));
-                EmailSha1 = new Lazy<string>(() => ComputeHash(SHA1.Create(), NormalizedEmail));
-                EmailSha256 = new Lazy<string>(() => ComputeHash(SHA256.Create(), NormalizedEmail));
-            }
-
-            public string Email { get; }
-            public string? Name { get; }
-            public int ImageSize { get; }
-            public string NormalizedEmail { get; }
-
-            public Lazy<string> EmailMd5 { get; }
-            public Lazy<string> EmailSha1 { get; }
-            public Lazy<string> EmailSha256 { get; }
-
-            private static string ComputeHash(HashAlgorithm hashAlgorithm, string input)
-            {
-                using (hashAlgorithm)
-                {
-                    byte[] inputBytes = Encoding.UTF8.GetBytes(input);
-                    byte[] hashBytes = hashAlgorithm.ComputeHash(inputBytes);
-                    return HexString.FromByteArray(hashBytes);
-                }
+                byte[] inputBytes = Encoding.UTF8.GetBytes(input);
+                byte[] hashBytes = hashAlgorithm.ComputeHash(inputBytes);
+                return HexString.FromByteArray(hashBytes);
             }
         }
     }

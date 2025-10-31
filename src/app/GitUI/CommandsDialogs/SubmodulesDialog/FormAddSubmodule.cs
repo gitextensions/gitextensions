@@ -8,104 +8,103 @@ using GitExtUtils;
 using GitUI.HelperDialogs;
 using ResourceManager;
 
-namespace GitUI.CommandsDialogs.SubmodulesDialog
+namespace GitUI.CommandsDialogs.SubmodulesDialog;
+
+public partial class FormAddSubmodule : GitModuleForm
 {
-    public partial class FormAddSubmodule : GitModuleForm
+    private readonly TranslationString _remoteAndLocalPathRequired
+        = new("A remote path and local path are required");
+
+    public FormAddSubmodule(IGitUICommands commands)
+        : base(commands)
     {
-        private readonly TranslationString _remoteAndLocalPathRequired
-            = new("A remote path and local path are required");
+        ThreadHelper.ThrowIfNotOnUIThread();
 
-        public FormAddSubmodule(IGitUICommands commands)
-            : base(commands)
+        InitializeComponent();
+        InitializeComplete();
+
+        IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync);
+        Directory.DataSource = repositoryHistory;
+        Directory.DisplayMember = nameof(Repository.Path);
+        Directory.Text = "";
+        LocalPath.Text = "";
+    }
+
+    private void BrowseClick(object sender, EventArgs e)
+    {
+        string userSelectedPath = OsShellUtil.PickFolder(this, Directory.Text);
+
+        if (userSelectedPath is not null)
         {
-            ThreadHelper.ThrowIfNotOnUIThread();
+            Directory.Text = userSelectedPath;
+        }
+    }
 
-            InitializeComponent();
-            InitializeComplete();
-
-            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Remotes.LoadRecentHistoryAsync);
-            Directory.DataSource = repositoryHistory;
-            Directory.DisplayMember = nameof(Repository.Path);
-            Directory.Text = "";
-            LocalPath.Text = "";
+    private void AddClick(object sender, EventArgs e)
+    {
+        if (string.IsNullOrEmpty(Directory.Text) || string.IsNullOrEmpty(LocalPath.Text))
+        {
+            MessageBox.Show(this, _remoteAndLocalPathRequired.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
         }
 
-        private void BrowseClick(object sender, EventArgs e)
+        using (WaitCursorScope.Enter())
         {
-            string userSelectedPath = OsShellUtil.PickFolder(this, Directory.Text);
+            ArgumentString command = Commands.AddSubmodule(Directory.Text, LocalPath.Text, Branch.Text, chkForce.Checked);
+            FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
+            Close();
+        }
+    }
 
-            if (userSelectedPath is not null)
-            {
-                Directory.Text = userSelectedPath;
-            }
+    private void DirectorySelectedIndexChanged(object sender, EventArgs e)
+    {
+        DirectoryTextUpdate(this, EventArgs.Empty);
+    }
+
+    private void BranchDropDown(object sender, EventArgs e)
+    {
+        Branch.DataSource = LoadRemoteRepoBranches(Module.GitExecutable, url: Directory.Text);
+    }
+
+    private void DirectoryTextUpdate(object sender, EventArgs e)
+    {
+        string path = PathUtil.GetRepositoryName(Directory.Text);
+
+        if (path != "")
+        {
+            LocalPath.Text = path;
+        }
+    }
+
+    /// <summary>
+    /// Returns the branches of a remote repository as strings; ignores git errors and warnings.
+    /// </summary>
+    /// 'git ls-remotes --heads "URL"' is completely independent from a local repo clone.
+    /// Hence there is no need for a GitModule.
+    /// <param name="gitExecutable">the git executable.</param>
+    /// <param name="url">the repo URL; can also be a local path.</param>
+    private static IEnumerable<string> LoadRemoteRepoBranches(IExecutable gitExecutable, string url)
+    {
+        if (string.IsNullOrWhiteSpace(url))
+        {
+            return Array.Empty<string>();
         }
 
-        private void AddClick(object sender, EventArgs e)
-        {
-            if (string.IsNullOrEmpty(Directory.Text) || string.IsNullOrEmpty(LocalPath.Text))
-            {
-                MessageBox.Show(this, _remoteAndLocalPathRequired.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
+        GitArgumentBuilder gitArguments = new("ls-remote") { "--heads", url.ToPosixPath().Quote() };
+        string heads = gitExecutable.GetOutput(gitArguments);
+        return heads.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
+                    .Select(head =>
+                    {
+                        int branchIndex = head.IndexOf(GitRefName.RefsHeadsPrefix);
+                        return branchIndex == -1 ? null : head[(branchIndex + GitRefName.RefsHeadsPrefix.Length)..];
+                    })
+                    .WhereNotNull()
+                    .ToImmutableList();
+    }
 
-            using (WaitCursorScope.Enter())
-            {
-                ArgumentString command = Commands.AddSubmodule(Directory.Text, LocalPath.Text, Branch.Text, chkForce.Checked);
-                FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
-                Close();
-            }
-        }
-
-        private void DirectorySelectedIndexChanged(object sender, EventArgs e)
-        {
-            DirectoryTextUpdate(this, EventArgs.Empty);
-        }
-
-        private void BranchDropDown(object sender, EventArgs e)
-        {
-            Branch.DataSource = LoadRemoteRepoBranches(Module.GitExecutable, url: Directory.Text);
-        }
-
-        private void DirectoryTextUpdate(object sender, EventArgs e)
-        {
-            string path = PathUtil.GetRepositoryName(Directory.Text);
-
-            if (path != "")
-            {
-                LocalPath.Text = path;
-            }
-        }
-
-        /// <summary>
-        /// Returns the branches of a remote repository as strings; ignores git errors and warnings.
-        /// </summary>
-        /// 'git ls-remotes --heads "URL"' is completely independent from a local repo clone.
-        /// Hence there is no need for a GitModule.
-        /// <param name="gitExecutable">the git executable.</param>
-        /// <param name="url">the repo URL; can also be a local path.</param>
-        private static IEnumerable<string> LoadRemoteRepoBranches(IExecutable gitExecutable, string url)
-        {
-            if (string.IsNullOrWhiteSpace(url))
-            {
-                return Array.Empty<string>();
-            }
-
-            GitArgumentBuilder gitArguments = new("ls-remote") { "--heads", url.ToPosixPath().Quote() };
-            string heads = gitExecutable.GetOutput(gitArguments);
-            return heads.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
-                        .Select(head =>
-                        {
-                            int branchIndex = head.IndexOf(GitRefName.RefsHeadsPrefix);
-                            return branchIndex == -1 ? null : head[(branchIndex + GitRefName.RefsHeadsPrefix.Length)..];
-                        })
-                        .WhereNotNull()
-                        .ToImmutableList();
-        }
-
-        internal readonly struct TestAccessor
-        {
-            public static IEnumerable<string> LoadRemoteRepoBranches(IExecutable gitExecutable, string url)
-                => FormAddSubmodule.LoadRemoteRepoBranches(gitExecutable, url);
-        }
+    internal readonly struct TestAccessor
+    {
+        public static IEnumerable<string> LoadRemoteRepoBranches(IExecutable gitExecutable, string url)
+            => FormAddSubmodule.LoadRemoteRepoBranches(gitExecutable, url);
     }
 }

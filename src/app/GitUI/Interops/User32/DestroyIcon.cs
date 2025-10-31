@@ -1,11 +1,10 @@
 using System.Runtime.InteropServices;
 using static System.Interop;
 
-namespace System
+namespace System;
+
+internal static partial class NativeMethods
 {
-    internal static partial class NativeMethods
-    {
-        [DllImport(Libraries.User32, ExactSpelling = true, SetLastError = true)]
-        public static extern BOOL DestroyIcon(IntPtr handle);
-    }
+    [DllImport(Libraries.User32, ExactSpelling = true, SetLastError = true)]
+    public static extern BOOL DestroyIcon(IntPtr handle);
 }

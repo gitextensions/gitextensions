@@ -10,539 +10,538 @@ using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
 
-namespace GitUI.CommandsDialogs.RepoHosting
+namespace GitUI.CommandsDialogs.RepoHosting;
+
+public partial class ForkAndCloneForm : GitExtensionsForm
 {
-    public partial class ForkAndCloneForm : GitExtensionsForm
+    #region Translation
+
+    private readonly TranslationString _strLoading = new(" : LOADING : ");
+    private readonly TranslationString _strFailedToGetRepos = new("Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu \"Plugins/{0}\".");
+    private readonly TranslationString _strWillCloneWithPushAccess = new("Will clone {0} into {1}.\r\nYou will have push access. {2}");
+    private readonly TranslationString _strWillCloneInfo = new("Will clone {0} into {1}.\r\nYou can not push unless you are a collaborator. {2}");
+    private readonly TranslationString _strWillBeAddedAsARemote = new("\"{0}\" will be added as a remote.");
+    private readonly TranslationString _strCouldNotAddRemote = new("Could not add remote");
+    private readonly TranslationString _strNoHomepageDefined = new("No homepage defined");
+    private readonly TranslationString _strFailedToFork = new("Failed to fork:");
+    private readonly TranslationString _strSearchFailed = new("Search failed!");
+    private readonly TranslationString _strUserNotFound = new("User not found!");
+    private readonly TranslationString _strCouldNotFetchReposOfUser = new("Could not fetch repositories of user!");
+    private readonly TranslationString _strSearching = new(" : SEARCHING : ");
+    private readonly TranslationString _strSelectOneItem = new("You must select exactly one item");
+    private readonly TranslationString _strCloneFolderCanNotBeEmpty = new("Clone folder can not be empty");
+
+    #endregion
+
+    private const string UpstreamRemoteName = "upstream";
+    private readonly IGitUICommands _commands;
+    private readonly IRepositoryHostPlugin _gitHoster;
+    private readonly EventHandler<GitModuleEventArgs>? _gitModuleChanged;
+
+    public ForkAndCloneForm(IGitUICommands commands, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs>? gitModuleChanged)
     {
-        #region Translation
+        _gitModuleChanged = gitModuleChanged;
+        _commands = commands;
+        _gitHoster = gitHoster;
+        InitializeComponent();
+        InitializeComplete();
 
-        private readonly TranslationString _strLoading = new(" : LOADING : ");
-        private readonly TranslationString _strFailedToGetRepos = new("Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu \"Plugins/{0}\".");
-        private readonly TranslationString _strWillCloneWithPushAccess = new("Will clone {0} into {1}.\r\nYou will have push access. {2}");
-        private readonly TranslationString _strWillCloneInfo = new("Will clone {0} into {1}.\r\nYou can not push unless you are a collaborator. {2}");
-        private readonly TranslationString _strWillBeAddedAsARemote = new("\"{0}\" will be added as a remote.");
-        private readonly TranslationString _strCouldNotAddRemote = new("Could not add remote");
-        private readonly TranslationString _strNoHomepageDefined = new("No homepage defined");
-        private readonly TranslationString _strFailedToFork = new("Failed to fork:");
-        private readonly TranslationString _strSearchFailed = new("Search failed!");
-        private readonly TranslationString _strUserNotFound = new("User not found!");
-        private readonly TranslationString _strCouldNotFetchReposOfUser = new("Could not fetch repositories of user!");
-        private readonly TranslationString _strSearching = new(" : SEARCHING : ");
-        private readonly TranslationString _strSelectOneItem = new("You must select exactly one item");
-        private readonly TranslationString _strCloneFolderCanNotBeEmpty = new("Clone folder can not be empty");
-
-        #endregion
-
-        private const string UpstreamRemoteName = "upstream";
-        private readonly IGitUICommands _commands;
-        private readonly IRepositoryHostPlugin _gitHoster;
-        private readonly EventHandler<GitModuleEventArgs>? _gitModuleChanged;
-
-        public ForkAndCloneForm(IGitUICommands commands, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs>? gitModuleChanged)
+        foreach (ColumnHeader column in myReposLV.Columns)
         {
-            _gitModuleChanged = gitModuleChanged;
-            _commands = commands;
-            _gitHoster = gitHoster;
-            InitializeComponent();
-            InitializeComplete();
+            column.Width = DpiUtil.Scale(column.Width);
+        }
 
-            foreach (ColumnHeader column in myReposLV.Columns)
-            {
-                column.Width = DpiUtil.Scale(column.Width);
-            }
+        foreach (ColumnHeader column in searchResultsLV.Columns)
+        {
+            column.Width = DpiUtil.Scale(column.Width);
+        }
+    }
 
-            foreach (ColumnHeader column in searchResultsLV.Columns)
+    private void ForkAndCloneForm_Load(object sender, EventArgs e)
+    {
+        Init();
+    }
+
+    private void Init()
+    {
+        ThreadHelper.ThrowIfNotOnUIThread();
+        if (!string.IsNullOrEmpty(AppSettings.DefaultCloneDestinationPath))
+        {
+            destinationTB.Text = AppSettings.DefaultCloneDestinationPath;
+        }
+        else
+        {
+            IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
+            Repository? lastRepo = repositoryHistory.Count > 0 ? repositoryHistory[0] : null;
+            if (!string.IsNullOrEmpty(lastRepo?.Path))
             {
-                column.Width = DpiUtil.Scale(column.Width);
+                string p = lastRepo.Path.Trim('/', '\\');
+                destinationTB.Text = Path.GetDirectoryName(p);
             }
         }
 
-        private void ForkAndCloneForm_Load(object sender, EventArgs e)
-        {
-            Init();
-        }
+        Text = $"{_gitHoster.Name}: {Text}";
 
-        private void Init()
-        {
-            ThreadHelper.ThrowIfNotOnUIThread();
-            if (!string.IsNullOrEmpty(AppSettings.DefaultCloneDestinationPath))
+        UpdateCloneInfo();
+        UpdateMyRepos();
+    }
+
+    private void UpdateMyRepos()
+    {
+        myReposLV.Items.Clear();
+        myReposLV.Items.Add(new ListViewItem { Text = _strLoading.Text });
+
+        ThreadHelper.FileAndForget(async () =>
             {
-                destinationTB.Text = AppSettings.DefaultCloneDestinationPath;
-            }
-            else
-            {
-                IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
-                Repository? lastRepo = repositoryHistory.Count > 0 ? repositoryHistory[0] : null;
-                if (!string.IsNullOrEmpty(lastRepo?.Path))
+                try
                 {
-                    string p = lastRepo.Path.Trim('/', '\\');
-                    destinationTB.Text = Path.GetDirectoryName(p);
-                }
-            }
+                    IReadOnlyList<IHostedRepository> repos = _gitHoster.GetMyRepos();
 
-            Text = $"{_gitHoster.Name}: {Text}";
+                    await this.SwitchToMainThreadAsync();
 
-            UpdateCloneInfo();
-            UpdateMyRepos();
-        }
+                    myReposLV.Items.Clear();
 
-        private void UpdateMyRepos()
-        {
-            myReposLV.Items.Clear();
-            myReposLV.Items.Add(new ListViewItem { Text = _strLoading.Text });
-
-            ThreadHelper.FileAndForget(async () =>
-                {
-                    try
+                    foreach (IHostedRepository repo in repos.OrderBy(r => r.Name))
                     {
-                        IReadOnlyList<IHostedRepository> repos = _gitHoster.GetMyRepos();
-
-                        await this.SwitchToMainThreadAsync();
-
-                        myReposLV.Items.Clear();
-
-                        foreach (IHostedRepository repo in repos.OrderBy(r => r.Name))
+                        myReposLV.Items.Add(new ListViewItem
                         {
-                            myReposLV.Items.Add(new ListViewItem
+                            Tag = repo,
+                            Text = repo.Name,
+                            SubItems =
                             {
-                                Tag = repo,
-                                Text = repo.Name,
-                                SubItems =
-                                {
-                                    repo.IsAFork ? TranslatedStrings.Yes : TranslatedStrings.No,
-                                    repo.Forks.ToString(),
-                                    repo.IsPrivate ? TranslatedStrings.Yes : TranslatedStrings.No
-                                }
-                            });
-                        }
-
-                        ResizeColumnToFitContent(myReposLV.Columns[0]);
+                                repo.IsAFork ? TranslatedStrings.Yes : TranslatedStrings.No,
+                                repo.Forks.ToString(),
+                                repo.IsPrivate ? TranslatedStrings.Yes : TranslatedStrings.No
+                            }
+                        });
                     }
-                    catch (Exception ex) when (ex is not OperationCanceledException)
-                    {
-                        await this.SwitchToMainThreadAsync();
 
-                        myReposLV.Items.Clear();
-                        helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Name) +
-                                            "\r\n\r\nException: " + ex.Message + "\r\n\r\n" + helpTextLbl.Text;
-                    }
-                });
-        }
-
-        private const int ResizeOnContent = -1;
-        private const int ResizeOnHeader = -2;
-
-        private static void ResizeColumnToFitContent(ColumnHeader column)
-        {
-            int resizeStrategy = column.ListView.Items.Count == 0 ? ResizeOnHeader : ResizeOnContent;
-            column.Width = resizeStrategy;
-        }
-
-        #region GUI Handlers
-
-        private void _searchBtn_Click(object sender, EventArgs e)
-        {
-            string search = searchTB.Text;
-            if (search?.Trim().Length is not > 0)
-            {
-                return;
-            }
-
-            PrepareSearch(sender, e);
-
-            ThreadHelper.FileAndForget(async () =>
+                    ResizeColumnToFitContent(myReposLV.Columns[0]);
+                }
+                catch (Exception ex) when (ex is not OperationCanceledException)
                 {
-                    try
-                    {
-                        IReadOnlyList<IHostedRepository> repositories = _gitHoster.SearchForRepository(search);
+                    await this.SwitchToMainThreadAsync();
 
-                        await this.SwitchToMainThreadAsync();
+                    myReposLV.Items.Clear();
+                    helpTextLbl.Text = string.Format(_strFailedToGetRepos.Text, _gitHoster.Name) +
+                                        "\r\n\r\nException: " + ex.Message + "\r\n\r\n" + helpTextLbl.Text;
+                }
+            });
+    }
 
-                        HandleSearchResult(repositories);
-                    }
-                    catch (Exception ex) when (ex is not OperationCanceledException)
-                    {
-                        await this.SwitchToMainThreadAsync();
+    private const int ResizeOnContent = -1;
+    private const int ResizeOnHeader = -2;
 
-                        MessageBox.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        searchBtn.Enabled = true;
-                    }
-                });
+    private static void ResizeColumnToFitContent(ColumnHeader column)
+    {
+        int resizeStrategy = column.ListView.Items.Count == 0 ? ResizeOnHeader : ResizeOnContent;
+        column.Width = resizeStrategy;
+    }
+
+    #region GUI Handlers
+
+    private void _searchBtn_Click(object sender, EventArgs e)
+    {
+        string search = searchTB.Text;
+        if (search?.Trim().Length is not > 0)
+        {
+            return;
         }
 
-        private void _getFromUserBtn_Click(object sender, EventArgs e)
-        {
-            string search = searchTB.Text;
-            if (search?.Trim().Length is not > 0)
+        PrepareSearch(sender, e);
+
+        ThreadHelper.FileAndForget(async () =>
             {
-                return;
-            }
-
-            PrepareSearch(sender, e);
-
-            ThreadHelper.FileAndForget(async () =>
+                try
                 {
-                    try
-                    {
-                        IReadOnlyList<IHostedRepository> repositories = _gitHoster.GetRepositoriesOfUser(search.Trim());
+                    IReadOnlyList<IHostedRepository> repositories = _gitHoster.SearchForRepository(search);
 
-                        await this.SwitchToMainThreadAsync();
+                    await this.SwitchToMainThreadAsync();
 
-                        HandleSearchResult(repositories);
-                    }
-                    catch (Exception ex) when (ex is not OperationCanceledException)
-                    {
-                        await this.SwitchToMainThreadAsync();
-
-                        if (ex.Message.Contains("404"))
-                        {
-                            MessageBox.Show(this, _strUserNotFound.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-                        else
-                        {
-                            MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine +
-                                                  ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                        }
-
-                        searchBtn.Enabled = true;
-                    }
-                });
-        }
-
-        private void PrepareSearch(object sender, EventArgs e)
-        {
-            searchResultsLV.Items.Clear();
-            _searchResultsLV_SelectedIndexChanged(sender, e);
-            searchBtn.Enabled = false;
-            searchResultsLV.Items.Add(new ListViewItem { Text = _strSearching.Text });
-        }
-
-        private void HandleSearchResult(IReadOnlyList<IHostedRepository> repos)
-        {
-            searchResultsLV.Items.Clear();
-
-            foreach (IHostedRepository repo in repos.OrderBy(r => r.Name))
-            {
-                searchResultsLV.Items.Add(new ListViewItem
+                    HandleSearchResult(repositories);
+                }
+                catch (Exception ex) when (ex is not OperationCanceledException)
                 {
-                    Tag = repo,
-                    Text = repo.Name,
-                    SubItems =
+                    await this.SwitchToMainThreadAsync();
+
+                    MessageBox.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    searchBtn.Enabled = true;
+                }
+            });
+    }
+
+    private void _getFromUserBtn_Click(object sender, EventArgs e)
+    {
+        string search = searchTB.Text;
+        if (search?.Trim().Length is not > 0)
+        {
+            return;
+        }
+
+        PrepareSearch(sender, e);
+
+        ThreadHelper.FileAndForget(async () =>
+            {
+                try
+                {
+                    IReadOnlyList<IHostedRepository> repositories = _gitHoster.GetRepositoriesOfUser(search.Trim());
+
+                    await this.SwitchToMainThreadAsync();
+
+                    HandleSearchResult(repositories);
+                }
+                catch (Exception ex) when (ex is not OperationCanceledException)
+                {
+                    await this.SwitchToMainThreadAsync();
+
+                    if (ex.Message.Contains("404"))
                     {
-                        repo.Owner,
-                        repo.IsAFork ? TranslatedStrings.Yes : TranslatedStrings.No,
-                        repo.Forks.ToString()
+                        MessageBox.Show(this, _strUserNotFound.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
-                });
-            }
+                    else
+                    {
+                        MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine +
+                                              ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
 
-            ResizeColumnToFitContent(searchResultsLV.Columns[0]);
-            ResizeColumnToFitContent(searchResultsLV.Columns[1]);
+                    searchBtn.Enabled = true;
+                }
+            });
+    }
 
-            searchBtn.Enabled = true;
+    private void PrepareSearch(object sender, EventArgs e)
+    {
+        searchResultsLV.Items.Clear();
+        _searchResultsLV_SelectedIndexChanged(sender, e);
+        searchBtn.Enabled = false;
+        searchResultsLV.Items.Add(new ListViewItem { Text = _strSearching.Text });
+    }
+
+    private void HandleSearchResult(IReadOnlyList<IHostedRepository> repos)
+    {
+        searchResultsLV.Items.Clear();
+
+        foreach (IHostedRepository repo in repos.OrderBy(r => r.Name))
+        {
+            searchResultsLV.Items.Add(new ListViewItem
+            {
+                Tag = repo,
+                Text = repo.Name,
+                SubItems =
+                {
+                    repo.Owner,
+                    repo.IsAFork ? TranslatedStrings.Yes : TranslatedStrings.No,
+                    repo.Forks.ToString()
+                }
+            });
         }
 
-        private void _forkBtn_Click(object sender, EventArgs e)
+        ResizeColumnToFitContent(searchResultsLV.Columns[0]);
+        ResizeColumnToFitContent(searchResultsLV.Columns[1]);
+
+        searchBtn.Enabled = true;
+    }
+
+    private void _forkBtn_Click(object sender, EventArgs e)
+    {
+        if (searchResultsLV.SelectedItems.Count != 1)
         {
-            if (searchResultsLV.SelectedItems.Count != 1)
-            {
-                MessageBox.Show(this, _strSelectOneItem.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            IHostedRepository hostedRepo = searchResultsLV.SelectedItems[0].Tag as IHostedRepository;
-            try
-            {
-                hostedRepo?.Fork();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(this, _strFailedToFork.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
-            tabControl.SelectedTab = myReposPage;
-            UpdateMyRepos();
+            MessageBox.Show(this, _strSelectOneItem.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
         }
 
-        private void _searchTB_Enter(object sender, EventArgs e)
+        IHostedRepository hostedRepo = searchResultsLV.SelectedItems[0].Tag as IHostedRepository;
+        try
         {
-            AcceptButton = searchBtn;
+            hostedRepo?.Fork();
+        }
+        catch (Exception ex)
+        {
+            MessageBox.Show(this, _strFailedToFork.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
-        private void _searchTB_Leave(object sender, EventArgs e)
+        tabControl.SelectedTab = myReposPage;
+        UpdateMyRepos();
+    }
+
+    private void _searchTB_Enter(object sender, EventArgs e)
+    {
+        AcceptButton = searchBtn;
+    }
+
+    private void _searchTB_Leave(object sender, EventArgs e)
+    {
+        AcceptButton = null;
+    }
+
+    private void _searchResultsLV_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        UpdateCloneInfo();
+        if (searchResultsLV.SelectedItems.Count != 1)
         {
-            AcceptButton = null;
+            forkBtn.Enabled = false;
+            return;
         }
 
-        private void _searchResultsLV_SelectedIndexChanged(object sender, EventArgs e)
+        forkBtn.Enabled = true;
+        IHostedRepository hostedRepo = (IHostedRepository)searchResultsLV.SelectedItems[0].Tag;
+        searchResultItemDescription.Text = hostedRepo.Description;
+    }
+
+    private void _browseForCloneToDirbtn_Click(object sender, EventArgs e)
+    {
+        string initialDir = destinationTB.Text.Length > 0 ? destinationTB.Text : "C:\\";
+
+        string userSelectedPath = OsShellUtil.PickFolder(this, initialDir);
+
+        if (userSelectedPath is not null)
         {
-            UpdateCloneInfo();
-            if (searchResultsLV.SelectedItems.Count != 1)
+            destinationTB.Text = userSelectedPath;
+            _destinationTB_TextChanged(sender, e);
+        }
+    }
+
+    private void _cloneBtn_Click(object sender, EventArgs e)
+    {
+        IHostedRepository repo = CurrentySelectedGitRepo;
+
+        if (repo is not null)
+        {
+            Clone(repo);
+        }
+    }
+
+    private void _openGitupPageBtn_Click(object sender, EventArgs e)
+    {
+        if (CurrentySelectedGitRepo is null)
+        {
+            return;
+        }
+
+        string hp = CurrentySelectedGitRepo.Homepage;
+        if (string.IsNullOrEmpty(hp) || (!hp.StartsWith("http://") && !hp.StartsWith("https://")))
+        {
+            MessageBox.Show(this, _strNoHomepageDefined.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+        else
+        {
+            OsShellUtil.OpenUrlInDefaultBrowser(CurrentySelectedGitRepo.Homepage);
+        }
+    }
+
+    private void _closeBtn_Click(object sender, EventArgs e)
+    {
+        DialogResult = DialogResult.OK;
+    }
+
+    private void _tabControl_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        UpdateCloneInfo();
+        if (tabControl.SelectedTab == searchReposPage)
+        {
+            searchTB.Focus();
+        }
+    }
+
+    private void _myReposLV_SelectedIndexChanged(object sender, EventArgs e)
+    {
+        UpdateCloneInfo();
+    }
+
+    private void _createDirTB_TextChanged(object sender, EventArgs e)
+    {
+        UpdateCloneInfo(false, false);
+    }
+
+    private void _destinationTB_TextChanged(object sender, EventArgs e)
+    {
+        UpdateCloneInfo(false, false);
+    }
+
+    private void _addRemoteAsTB_TextChanged(object sender, EventArgs e)
+    {
+        UpdateCloneInfo(false, false);
+    }
+    #endregion
+
+    private void Clone(IHostedRepository repo)
+    {
+        string? targetDir = GetTargetDir();
+        if (targetDir is null)
+        {
+            return;
+        }
+
+        ArgumentString cmd = Commands.Clone(repo.CloneUrl, targetDir, _commands.Module.GetPathForGitExecution, depth: GetDepth());
+
+        FormRemoteProcess formRemoteProcess = new(_commands, cmd)
+        {
+            Remote = repo.CloneUrl
+        };
+
+        formRemoteProcess.ShowDialog();
+
+        if (formRemoteProcess.ErrorOccurred())
+        {
+            return;
+        }
+
+        GitModule module = new(targetDir);
+
+        if (addUpstreamRemoteAsCB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentUrl))
+        {
+            string error = module.AddRemote(addUpstreamRemoteAsCB.Text.Trim(), repo.ParentUrl);
+            if (!string.IsNullOrEmpty(error))
             {
-                forkBtn.Enabled = false;
-                return;
-            }
-
-            forkBtn.Enabled = true;
-            IHostedRepository hostedRepo = (IHostedRepository)searchResultsLV.SelectedItems[0].Tag;
-            searchResultItemDescription.Text = hostedRepo.Description;
-        }
-
-        private void _browseForCloneToDirbtn_Click(object sender, EventArgs e)
-        {
-            string initialDir = destinationTB.Text.Length > 0 ? destinationTB.Text : "C:\\";
-
-            string userSelectedPath = OsShellUtil.PickFolder(this, initialDir);
-
-            if (userSelectedPath is not null)
-            {
-                destinationTB.Text = userSelectedPath;
-                _destinationTB_TextChanged(sender, e);
+                MessageBox.Show(this, error, _strCouldNotAddRemote.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
-        private void _cloneBtn_Click(object sender, EventArgs e)
+        _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
+
+        Close();
+    }
+
+    private IHostedRepository? CurrentySelectedGitRepo
+    {
+        get
         {
-            IHostedRepository repo = CurrentySelectedGitRepo;
-
-            if (repo is not null)
-            {
-                Clone(repo);
-            }
-        }
-
-        private void _openGitupPageBtn_Click(object sender, EventArgs e)
-        {
-            if (CurrentySelectedGitRepo is null)
-            {
-                return;
-            }
-
-            string hp = CurrentySelectedGitRepo.Homepage;
-            if (string.IsNullOrEmpty(hp) || (!hp.StartsWith("http://") && !hp.StartsWith("https://")))
-            {
-                MessageBox.Show(this, _strNoHomepageDefined.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-            else
-            {
-                OsShellUtil.OpenUrlInDefaultBrowser(CurrentySelectedGitRepo.Homepage);
-            }
-        }
-
-        private void _closeBtn_Click(object sender, EventArgs e)
-        {
-            DialogResult = DialogResult.OK;
-        }
-
-        private void _tabControl_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateCloneInfo();
             if (tabControl.SelectedTab == searchReposPage)
             {
-                searchTB.Focus();
-            }
-        }
-
-        private void _myReposLV_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            UpdateCloneInfo();
-        }
-
-        private void _createDirTB_TextChanged(object sender, EventArgs e)
-        {
-            UpdateCloneInfo(false, false);
-        }
-
-        private void _destinationTB_TextChanged(object sender, EventArgs e)
-        {
-            UpdateCloneInfo(false, false);
-        }
-
-        private void _addRemoteAsTB_TextChanged(object sender, EventArgs e)
-        {
-            UpdateCloneInfo(false, false);
-        }
-        #endregion
-
-        private void Clone(IHostedRepository repo)
-        {
-            string? targetDir = GetTargetDir();
-            if (targetDir is null)
-            {
-                return;
-            }
-
-            ArgumentString cmd = Commands.Clone(repo.CloneUrl, targetDir, _commands.Module.GetPathForGitExecution, depth: GetDepth());
-
-            FormRemoteProcess formRemoteProcess = new(_commands, cmd)
-            {
-                Remote = repo.CloneUrl
-            };
-
-            formRemoteProcess.ShowDialog();
-
-            if (formRemoteProcess.ErrorOccurred())
-            {
-                return;
-            }
-
-            GitModule module = new(targetDir);
-
-            if (addUpstreamRemoteAsCB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentUrl))
-            {
-                string error = module.AddRemote(addUpstreamRemoteAsCB.Text.Trim(), repo.ParentUrl);
-                if (!string.IsNullOrEmpty(error))
-                {
-                    MessageBox.Show(this, error, _strCouldNotAddRemote.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            }
-
-            _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
-
-            Close();
-        }
-
-        private IHostedRepository? CurrentySelectedGitRepo
-        {
-            get
-            {
-                if (tabControl.SelectedTab == searchReposPage)
-                {
-                    if (searchResultsLV.SelectedItems.Count != 1)
-                    {
-                        return null;
-                    }
-
-                    return (IHostedRepository)searchResultsLV.SelectedItems[0].Tag;
-                }
-
-                if (myReposLV.SelectedItems.Count != 1)
+                if (searchResultsLV.SelectedItems.Count != 1)
                 {
                     return null;
                 }
 
-                return (IHostedRepository)myReposLV.SelectedItems[0].Tag;
+                return (IHostedRepository)searchResultsLV.SelectedItems[0].Tag;
             }
-        }
 
-        private void UpdateCloneInfo(bool updateCreateDirTB = true, bool updateProtocols = true)
-        {
-            IHostedRepository repo = CurrentySelectedGitRepo;
-
-            if (repo is not null)
+            if (myReposLV.SelectedItems.Count != 1)
             {
-                bool multipleProtocols = repo.SupportedCloneProtocols.Any();
-
-                if (multipleProtocols && updateProtocols)
-                {
-                    GitProtocol currentSelection = (GitProtocol)(ProtocolDropdownList.SelectedItem ?? repo.SupportedCloneProtocols[0]);
-                    ProtocolDropdownList.DataSource = repo.SupportedCloneProtocols;
-                    if (repo.SupportedCloneProtocols.Contains(currentSelection))
-                    {
-                        repo.CloneProtocol = currentSelection;
-                    }
-
-                    ProtocolDropdownList.SelectedItem = repo.CloneProtocol;
-                }
-
-                SetProtocolSelectionVisibility(multipleProtocols);
-
-                if (updateCreateDirTB)
-                {
-                    createDirTB.Text = repo.Name;
-                    addUpstreamRemoteAsCB.Text = "";
-                    addUpstreamRemoteAsCB.Items.Clear();
-                    if (repo.ParentOwner is not null)
-                    {
-                        string upstreamRemoteName = repo.ParentOwner ?? "";
-                        addUpstreamRemoteAsCB.Items.Add(upstreamRemoteName);
-                        addUpstreamRemoteAsCB.Items.Add(UpstreamRemoteName);
-                        if (addUpstreamRemoteAsCB.Text != UpstreamRemoteName)
-                        {
-                            addUpstreamRemoteAsCB.Text = upstreamRemoteName;
-                        }
-                    }
-
-                    addUpstreamRemoteAsCB.Enabled = repo.ParentOwner is not null;
-                }
-
-                cloneBtn.Enabled = true;
-                SetCloneInfoText(repo);
-            }
-            else
-            {
-                SetProtocolSelectionVisibility(false);
-                cloneBtn.Enabled = false;
-                cloneInfoText.Text = "";
-                createDirTB.Text = "";
-            }
-        }
-
-        private void SetCloneInfoText(IHostedRepository repo)
-        {
-            string moreInfo = !string.IsNullOrEmpty(addUpstreamRemoteAsCB.Text) ? string.Format(_strWillBeAddedAsARemote.Text, addUpstreamRemoteAsCB.Text.Trim()) : "";
-
-            if (tabControl.SelectedTab == searchReposPage)
-            {
-                cloneInfoText.Text = string.Format(_strWillCloneInfo.Text, repo.CloneUrl, GetTargetDir(), moreInfo);
-            }
-            else if (tabControl.SelectedTab == myReposPage)
-            {
-                cloneInfoText.Text = string.Format(_strWillCloneWithPushAccess.Text, repo.CloneUrl, GetTargetDir(), moreInfo);
-            }
-        }
-
-        private void SetProtocolSelectionVisibility(bool multipleProtocols)
-        {
-            ProtocolLabel.Visible = multipleProtocols;
-            ProtocolDropdownList.Visible = multipleProtocols;
-        }
-
-        private string? GetTargetDir()
-        {
-            string targetDir = destinationTB.Text.Trim();
-            if (targetDir.Length == 0)
-            {
-                MessageBox.Show(this, _strCloneFolderCanNotBeEmpty.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return null;
             }
 
-            targetDir = Path.Combine(targetDir, createDirTB.Text);
-            return targetDir;
+            return (IHostedRepository)myReposLV.SelectedItems[0].Tag;
         }
+    }
 
-        private int? GetDepth()
+    private void UpdateCloneInfo(bool updateCreateDirTB = true, bool updateProtocols = true)
+    {
+        IHostedRepository repo = CurrentySelectedGitRepo;
+
+        if (repo is not null)
         {
-            if (depthUpDown.Value != 0)
+            bool multipleProtocols = repo.SupportedCloneProtocols.Any();
+
+            if (multipleProtocols && updateProtocols)
             {
-                return (int)depthUpDown.Value;
+                GitProtocol currentSelection = (GitProtocol)(ProtocolDropdownList.SelectedItem ?? repo.SupportedCloneProtocols[0]);
+                ProtocolDropdownList.DataSource = repo.SupportedCloneProtocols;
+                if (repo.SupportedCloneProtocols.Contains(currentSelection))
+                {
+                    repo.CloneProtocol = currentSelection;
+                }
+
+                ProtocolDropdownList.SelectedItem = repo.CloneProtocol;
             }
 
+            SetProtocolSelectionVisibility(multipleProtocols);
+
+            if (updateCreateDirTB)
+            {
+                createDirTB.Text = repo.Name;
+                addUpstreamRemoteAsCB.Text = "";
+                addUpstreamRemoteAsCB.Items.Clear();
+                if (repo.ParentOwner is not null)
+                {
+                    string upstreamRemoteName = repo.ParentOwner ?? "";
+                    addUpstreamRemoteAsCB.Items.Add(upstreamRemoteName);
+                    addUpstreamRemoteAsCB.Items.Add(UpstreamRemoteName);
+                    if (addUpstreamRemoteAsCB.Text != UpstreamRemoteName)
+                    {
+                        addUpstreamRemoteAsCB.Text = upstreamRemoteName;
+                    }
+                }
+
+                addUpstreamRemoteAsCB.Enabled = repo.ParentOwner is not null;
+            }
+
+            cloneBtn.Enabled = true;
+            SetCloneInfoText(repo);
+        }
+        else
+        {
+            SetProtocolSelectionVisibility(false);
+            cloneBtn.Enabled = false;
+            cloneInfoText.Text = "";
+            createDirTB.Text = "";
+        }
+    }
+
+    private void SetCloneInfoText(IHostedRepository repo)
+    {
+        string moreInfo = !string.IsNullOrEmpty(addUpstreamRemoteAsCB.Text) ? string.Format(_strWillBeAddedAsARemote.Text, addUpstreamRemoteAsCB.Text.Trim()) : "";
+
+        if (tabControl.SelectedTab == searchReposPage)
+        {
+            cloneInfoText.Text = string.Format(_strWillCloneInfo.Text, repo.CloneUrl, GetTargetDir(), moreInfo);
+        }
+        else if (tabControl.SelectedTab == myReposPage)
+        {
+            cloneInfoText.Text = string.Format(_strWillCloneWithPushAccess.Text, repo.CloneUrl, GetTargetDir(), moreInfo);
+        }
+    }
+
+    private void SetProtocolSelectionVisibility(bool multipleProtocols)
+    {
+        ProtocolLabel.Visible = multipleProtocols;
+        ProtocolDropdownList.Visible = multipleProtocols;
+    }
+
+    private string? GetTargetDir()
+    {
+        string targetDir = destinationTB.Text.Trim();
+        if (targetDir.Length == 0)
+        {
+            MessageBox.Show(this, _strCloneFolderCanNotBeEmpty.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return null;
         }
 
-        private void _destinationTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+        targetDir = Path.Combine(targetDir, createDirTB.Text);
+        return targetDir;
+    }
+
+    private int? GetDepth()
+    {
+        if (depthUpDown.Value != 0)
         {
-            if (destinationTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
-            {
-                e.Cancel = true;
-            }
+            return (int)depthUpDown.Value;
         }
 
-        private void _createDirTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            if (createDirTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
-            {
-                e.Cancel = true;
-            }
-        }
+        return null;
+    }
 
-        private void ProtocolSelectionChanged(object sender, EventArgs e)
+    private void _destinationTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+        if (destinationTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
         {
-            Validates.NotNull(CurrentySelectedGitRepo);
-
-            CurrentySelectedGitRepo.CloneProtocol = (GitProtocol)ProtocolDropdownList.SelectedItem;
-            SetCloneInfoText(CurrentySelectedGitRepo);
+            e.Cancel = true;
         }
+    }
+
+    private void _createDirTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
+    {
+        if (createDirTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+        {
+            e.Cancel = true;
+        }
+    }
+
+    private void ProtocolSelectionChanged(object sender, EventArgs e)
+    {
+        Validates.NotNull(CurrentySelectedGitRepo);
+
+        CurrentySelectedGitRepo.CloneProtocol = (GitProtocol)ProtocolDropdownList.SelectedItem;
+        SetCloneInfoText(CurrentySelectedGitRepo);
     }
 }

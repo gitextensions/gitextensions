@@ -1,80 +1,79 @@
 ﻿using FluentAssertions;
 using GitUI;
 
-namespace GitExtUtilsTests
+namespace GitExtUtilsTests;
+
+[SetCulture("en-US")]
+[SetUICulture("en-US")]
+[TestFixture]
+public class TableLayoutPanelExtensionsTests
 {
-    [SetCulture("en-US")]
-    [SetUICulture("en-US")]
-    [TestFixture]
-    public class TableLayoutPanelExtensionsTests
+    [Test]
+    public void AdjustWidthToSize_should_throw_if_table_null()
     {
-        [Test]
-        public void AdjustWidthToSize_should_throw_if_table_null()
+        ((Action)(() => ((TableLayoutPanel)null).AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentNullException>();
+    }
+
+    [Test]
+    public void AdjustWidthToSize_should_throw_if_table_has_no_columns()
+    {
+        ((Action)(() => new TableLayoutPanel().AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentException>()
+            .WithMessage("The table must have at least one column");
+    }
+
+    [Test]
+    public void AdjustWidthToSize_should_throw_if_index_outside_table_columns_count()
+    {
+        TableLayoutPanel table = new()
         {
-            ((Action)(() => ((TableLayoutPanel)null).AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentNullException>();
-        }
+            ColumnCount = 3
+        };
+        ((Action)(() => table.AdjustWidthToSize(-1, Array.Empty<Control>()))).Should().Throw<ArgumentOutOfRangeException>()
+            .WithMessage("Column index must be within [0, 2] range (Parameter 'columnIndex')\nActual value was -1.");
+        ((Action)(() => table.AdjustWidthToSize(3, Array.Empty<Control>()))).Should().Throw<ArgumentOutOfRangeException>()
+            .WithMessage("Column index must be within [0, 2] range (Parameter 'columnIndex')\nActual value was 3.");
+    }
 
-        [Test]
-        public void AdjustWidthToSize_should_throw_if_table_has_no_columns()
+    [Test]
+    public void AdjustWidthToSize_should_throw_if_no_widths_given()
+    {
+        TableLayoutPanel table = new()
         {
-            ((Action)(() => new TableLayoutPanel().AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentException>()
-                .WithMessage("The table must have at least one column");
-        }
+            ColumnCount = 3
+        };
+        ((Action)(() => table.AdjustWidthToSize(0, null))).Should().Throw<ArgumentNullException>();
+    }
 
-        [Test]
-        public void AdjustWidthToSize_should_throw_if_index_outside_table_columns_count()
+    [Test]
+    public void AdjustWidthToSize_should_throw_if_no_widths_given1()
+    {
+        TableLayoutPanel table = new()
         {
-            TableLayoutPanel table = new()
-            {
-                ColumnCount = 3
-            };
-            ((Action)(() => table.AdjustWidthToSize(-1, Array.Empty<Control>()))).Should().Throw<ArgumentOutOfRangeException>()
-                .WithMessage("Column index must be within [0, 2] range (Parameter 'columnIndex')\nActual value was -1.");
-            ((Action)(() => table.AdjustWidthToSize(3, Array.Empty<Control>()))).Should().Throw<ArgumentOutOfRangeException>()
-                .WithMessage("Column index must be within [0, 2] range (Parameter 'columnIndex')\nActual value was 3.");
-        }
+            ColumnCount = 3
+        };
+        ((Action)(() => table.AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentException>()
+            .WithMessage("At least one control is required (Parameter 'controls')");
+    }
 
-        [Test]
-        public void AdjustWidthToSize_should_throw_if_no_widths_given()
+    [Test]
+    public void AdjustWidthToSize_should_set_width_to_largest_value()
+    {
+        TableLayoutPanel table = new()
         {
-            TableLayoutPanel table = new()
-            {
-                ColumnCount = 3
-            };
-            ((Action)(() => table.AdjustWidthToSize(0, null))).Should().Throw<ArgumentNullException>();
-        }
+            ColumnCount = 3
+        };
+        table.ColumnStyles.Add(new ColumnStyle());
+        table.ColumnStyles.Add(new ColumnStyle());
+        table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        table.ColumnStyles[0].SizeType = SizeType.AutoSize;
 
-        [Test]
-        public void AdjustWidthToSize_should_throw_if_no_widths_given1()
-        {
-            TableLayoutPanel table = new()
-            {
-                ColumnCount = 3
-            };
-            ((Action)(() => table.AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentException>()
-                .WithMessage("At least one control is required (Parameter 'controls')");
-        }
+        table.AdjustWidthToSize(0, new Label { Width = 3, Margin = new Padding(3) },
+            new TextBox { Width = 6, Margin = new Padding(3) },
+            new Label { Width = 9, Margin = new Padding(3) },
+            new TextBox { Width = 10, Margin = new Padding(3) },
+            new CheckBox { Width = 3, Margin = new Padding(3) });
 
-        [Test]
-        public void AdjustWidthToSize_should_set_width_to_largest_value()
-        {
-            TableLayoutPanel table = new()
-            {
-                ColumnCount = 3
-            };
-            table.ColumnStyles.Add(new ColumnStyle());
-            table.ColumnStyles.Add(new ColumnStyle());
-            table.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            table.ColumnStyles[0].SizeType = SizeType.AutoSize;
-
-            table.AdjustWidthToSize(0, new Label { Width = 3, Margin = new Padding(3) },
-                new TextBox { Width = 6, Margin = new Padding(3) },
-                new Label { Width = 9, Margin = new Padding(3) },
-                new TextBox { Width = 10, Margin = new Padding(3) },
-                new CheckBox { Width = 3, Margin = new Padding(3) });
-
-            table.ColumnStyles[0].SizeType.Should().Be(SizeType.Absolute);
-            table.ColumnStyles[0].Width.Should().Be(16f);
-        }
+        table.ColumnStyles[0].SizeType.Should().Be(SizeType.Absolute);
+        table.ColumnStyles[0].Width.Should().Be(16f);
     }
 }

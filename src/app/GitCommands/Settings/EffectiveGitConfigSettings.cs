@@ -18,14 +18,14 @@ public sealed class EffectiveGitConfigSettings(IExecutable gitExecutable) : GitC
 {
     private void Clear()
     {
-        _uniqueValueSettings.Clear();
+        UniqueValueSettings.Clear();
     }
 
     public override string? GetValue(string name)
     {
         name = NormalizeSettingName(name);
         Update();
-        return _uniqueValueSettings.TryGetValue(name, out string? value) ? value : null;
+        return UniqueValueSettings.TryGetValue(name, out string? value) ? value : null;
     }
 
     public void SetValue(string setting, string? value)
@@ -38,6 +38,6 @@ public sealed class EffectiveGitConfigSettings(IExecutable gitExecutable) : GitC
     private void StoreSetting(string name, string value)
     {
         // "git config list" yields entries from all scopes starting with the most generic scope, use the last one, i.e. the most specific
-        _uniqueValueSettings[name] = value;
+        UniqueValueSettings[name] = value;
     }
 }

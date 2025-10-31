@@ -188,9 +188,6 @@
       <Component Id="SmartFormat.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\SmartFormat.dll" />
       </Component>
-      <Component Id="SmartFormat.ZString.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\SmartFormat.ZString.dll" />
-      </Component>
       <Component Id="SpellChecker.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\SpellChecker.dll" />
       </Component>
@@ -235,6 +232,9 @@
       </Component>
       <Component Id="System.Reactive.Linq.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\System.Reactive.Linq.dll" />
+      </Component>
+      <Component Id="ZString.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\ZString.dll" />
       </Component>
       <!-- Shell extensions -->
       <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
@@ -678,7 +678,6 @@
       <ComponentRef Id="ResourceManager.dll" />
       <ComponentRef Id="RestSharp.dll" />
       <ComponentRef Id="SmartFormat.dll" />
-      <ComponentRef Id="SmartFormat.ZString.dll" />
       <ComponentRef Id="SpellChecker.dll" />
       <ComponentRef Id="StrongOf.dll" />
       <ComponentRef Id="System.ComponentModel.Composition.dll" />
@@ -694,6 +693,7 @@
       <ComponentRef Id="System.Reactive.dll" />
       <ComponentRef Id="System.Reactive.Interfaces.dll" />
       <ComponentRef Id="System.Reactive.Linq.dll" />
+      <ComponentRef Id="ZString.dll" />
       <!-- end application build artifacts -->
       <ComponentRef Id="gitextensions.ico" />
       <ComponentRef Id="gitex.cmd" />
