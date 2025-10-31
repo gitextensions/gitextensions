@@ -5,7 +5,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Microsoft-WindowsAPICodePack-Core" />
+    <PackageReference Include="Microsoft-WindowsAPICodePack-Core-6.0" />
   </ItemGroup>
 
   <ItemGroup>
