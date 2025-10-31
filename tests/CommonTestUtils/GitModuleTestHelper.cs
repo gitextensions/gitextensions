@@ -67,7 +67,7 @@ public sealed partial class GitModuleTestHelper : IDisposable
         {
             if (Directory.Exists(path))
             {
-                throw new ArgumentException($"Repository '{path}' already exists", nameof(repositoryName));
+                throw new InvalidOperationException($"A repository already exists at path: '{path}'");
             }
 
             Directory.CreateDirectory(path);

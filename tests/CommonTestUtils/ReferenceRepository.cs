@@ -16,8 +16,8 @@ public class ReferenceRepository : IDisposable
     private static GitModuleTestSnapshot? _repoSnapshot = null;
     private static GitModuleTestSnapshot? _repoWithCommitSnapshot = null;
     private static string? _repoCommitHash = null;
-    private static Task<(GitModuleTestHelper Helper, string? CommitHash)> _nextGitModuleTestHelper = null;
-    private static Task<(GitModuleTestHelper Helper, string? CommitHash)> _nextGitModuleTestHelperWithCommit = null;
+    private static Task<(GitModuleTestHelper Helper, string? CommitHash)>? _nextGitModuleTestHelper = null;
+    private static Task<(GitModuleTestHelper Helper, string? CommitHash)>? _nextGitModuleTestHelperWithCommit = null;
 
     public const string AuthorName = "GitUITests";
     public const string AuthorEmail = "unittests@gitextensions.com";
