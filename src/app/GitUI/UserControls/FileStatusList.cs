@@ -1706,7 +1706,8 @@ public sealed partial class FileStatusList : GitModuleControl
 
         PathFormatter formatter = new(e.Graphics, FileStatusListView.Font);
 
-        (string? prefix, string text, string? suffix) = FormatListViewItem(item, formatter, item.Bounds.Width);
+        int maxWidth = FileStatusListView.ClientSize.Width - item.Bounds.X + 1;
+        (string? prefix, string text, string? suffix) = FormatListViewItem(item, formatter, maxWidth);
 
         Brush backgroundBrush = selected
             ? Focused
