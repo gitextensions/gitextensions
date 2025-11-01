@@ -1,8 +1,6 @@
 ﻿using GitCommands;
 using GitExtUtils.Tasks;
-using GitUI;
 using LibGit2Sharp;
-using Microsoft.VisualStudio.Threading;
 
 namespace CommonTestUtils;
 
@@ -83,14 +81,6 @@ public class ReferenceRepository : IDisposable
         }
         else
         {
-            // VSTHRD002 warns that naively accessing the result of a task with affinity to the
-            // UI thread when running on the UI thread will result in a deadlock, because it
-            // can't advance the task to get that result without the thread running and the call
-            // is explicitly blocking it. This is not the UI thread, and the await is specifically
-            // configured to not require continuation on captured context. Furthermore, the task
-            // was created earlier on this same thread on which there is no synchronization
-            // context to begin with.
-
             (moduleTestHelper, CommitHash) = initializer.DetachFromSynchronizationContext().GetResultDirect();
         }
 
@@ -248,6 +238,13 @@ public class ReferenceRepository : IDisposable
 
         next?.DetachFromSynchronizationContext().GetResultDirect().Helper.Dispose();
         nextWithCommit?.DetachFromSynchronizationContext().GetResultDirect().Helper.Dispose();
+
+        // The disposal of GitModuleTestHelper instances registers after-test actions. But
+        // we're already after all of the tests; there won't be any further after-test
+        // actions. We need to execute them ourselves. Note that the after-test actions
+        // don't synchronously perform the clean-up, they just file and forget the clean-up
+        // with the clean-up TaskManager.
+        Epilogue.ExecuteAfterTestActions();
     }
 
     public string RenameRepoFile(string fileRelativePath, string oldFileName, string newFileName, string? newContent = null, string? commitMessage = null)
