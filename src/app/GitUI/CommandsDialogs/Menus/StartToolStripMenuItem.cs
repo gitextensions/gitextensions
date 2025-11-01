@@ -28,9 +28,9 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
     /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
     protected override void Dispose(bool disposing)
     {
-        if (disposing && (components != null))
+        if (disposing)
         {
-            components.Dispose();
+            components?.Dispose();
 
             if (_repositoryHistoryUIService is not null)
             {
