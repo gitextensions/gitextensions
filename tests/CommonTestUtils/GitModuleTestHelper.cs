@@ -200,7 +200,7 @@ public sealed partial class GitModuleTestHelper : IDisposable
                 }
             }
 
-            FileAndForgetCleanUp();
+            RegisterAfterTestCleanUp();
         }
         catch
         {

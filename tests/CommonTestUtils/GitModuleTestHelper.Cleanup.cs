@@ -11,7 +11,7 @@ public partial class GitModuleTestHelper : IDisposable
         Console.WriteLine("GitModuleTestHelper: Disabling explicit clean-up for continuous integration test environment");
     }
 
-    private void FileAndForgetCleanUp()
+    private void RegisterAfterTestCleanUp()
     {
     }
 
@@ -65,7 +65,7 @@ public partial class GitModuleTestHelper : IDisposable
         }
     }
 
-    private void FileAndForgetCleanUp()
+    private void RegisterAfterTestCleanUp()
     {
         Epilogue.RegisterAfterTestAction(() => { _cleanUpOperations.FileAndForget(() => CleanUp(TemporaryPath)); });
     }
