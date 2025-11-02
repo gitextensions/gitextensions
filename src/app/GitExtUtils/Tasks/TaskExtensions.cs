@@ -4,17 +4,14 @@ namespace GitExtUtils.Tasks;
 
 internal static class TaskExtensions
 {
-#pragma warning disable VSTHRD002, VSTHRD003, VSTHRD200
+    // VSTHRD003: Avoid awaiting foreign Tasks. But, this extension method isn't
+    // really its own independent context, so these Tasks aren't foreign. This is
+    // just a tool for the callers to use to show intent.
+#pragma warning disable VSTHRD003
     public static ConfiguredTaskAwaitable DetachFromSynchronizationContext(this Task task)
         => task.ConfigureAwait(continueOnCapturedContext: false);
 
     public static ConfiguredTaskAwaitable<TResult> DetachFromSynchronizationContext<TResult>(this Task<TResult> task)
         => task.ConfigureAwait(continueOnCapturedContext: false);
-
-    public static void WaitDirect(this ConfiguredTaskAwaitable task)
-        => task.GetAwaiter().GetResult();
-
-    public static TResult GetResultDirect<TResult>(this ConfiguredTaskAwaitable<TResult> task)
-        => task.GetAwaiter().GetResult();
-#pragma warning restore VSTHRD002, VSTHRD003, VSTHRD200
+#pragma warning restore VSTHRD003
 }
