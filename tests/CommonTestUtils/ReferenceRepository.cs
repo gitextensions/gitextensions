@@ -8,7 +8,7 @@ public class ReferenceRepository : IDisposable
 {
     static ReferenceRepository()
     {
-        Epilogue.RegisterAfterSuiteAction(1, ReleaseNextRepositories);
+        Epilogue.RegisterAfterSuiteAction(order: 1, ReleaseNextRepositories);
     }
 
     private static readonly Lock _nextLock = new();
