@@ -129,7 +129,6 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
 
         GlobalUserName.Enabled = canFindGitCmd;
         GlobalUserEmail.Enabled = canFindGitCmd;
-        cbxCredentialHelper.Enabled = canFindGitCmd;
         GlobalEditor.Enabled = canFindGitCmd;
         txtCommitTemplatePath.Enabled = canFindGitCmd;
         _NO_TRANSLATE_cboMergeTool.Enabled = canFindGitCmd;
