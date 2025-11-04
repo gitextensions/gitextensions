@@ -160,7 +160,7 @@ public sealed class MockExecutable : IExecutable
 
         public Task<int> WaitForExitAsync(CancellationToken token)
         {
-            return Task.FromResult(0);
+            return Task.FromResult(_exitCode ?? 0);
         }
 
         public void WaitForInputIdle()

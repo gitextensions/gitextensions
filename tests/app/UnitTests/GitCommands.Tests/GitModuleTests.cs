@@ -585,6 +585,28 @@ public sealed partial class GitModuleTests
         ClassicAssert.AreEqual(expectedResult, result);
     }
 
+    [TestCase("refs/heads/feature/my-test-branch", "feature/my-test-branch")]
+    public void GetSelectedBranch_should_return_simple_branch_name(string gitCommandResult, string expectedResult)
+    {
+        _executable.StageOutput("symbolic-ref --quiet HEAD", gitCommandResult);
+
+        string result = _gitModule.GetSelectedBranch();
+
+        ClassicAssert.AreEqual(expectedResult, result);
+    }
+
+    [TestCase(false)]
+    [TestCase(true)]
+    public void GetSelectedBranch_should_return_requested_result_in_detached_state(bool emptyIfDetached)
+    {
+        _executable.StageOutput("symbolic-ref --quiet HEAD", "", exitCode: 1);
+
+        string expectedResult = emptyIfDetached ? "" : DetachedHeadParser.DetachedBranch;
+        string result = _gitModule.GetSelectedBranch(emptyIfDetached);
+
+        ClassicAssert.AreEqual(expectedResult, result);
+    }
+
     private static IEnumerable<TestCaseData> BatchUnstageFilesTestCases
     {
         get
