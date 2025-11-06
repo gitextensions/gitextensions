@@ -1150,6 +1150,7 @@ public partial class FileViewer : GitModuleControl
         }
 
         AppSettings.IgnoreWhitespaceKind.Value = IgnoreWhitespace;
+        AppSettings.IgnoreWhitespaceKind.Save();
     }
 
     /// <summary>
@@ -1473,6 +1474,7 @@ public partial class FileViewer : GitModuleControl
         showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
         showSyntaxHighlightingToolStripMenuItem.Checked = ShowSyntaxHighlightingInDiff;
         AppSettings.ShowSyntaxHighlightingInDiff.Value = ShowSyntaxHighlightingInDiff;
+        AppSettings.ShowSyntaxHighlightingInDiff.Save();
         OnExtraDiffArgumentsChanged();
     }
 
@@ -1483,6 +1485,7 @@ public partial class FileViewer : GitModuleControl
         showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
         SetStateOfContextLinesButtons();
         AppSettings.ShowEntireFile.Value = ShowEntireFile;
+        AppSettings.ShowEntireFile.Save();
         OnExtraDiffArgumentsChanged();
     }
 
@@ -2029,6 +2032,7 @@ public partial class FileViewer : GitModuleControl
 
         ToggleNonPrintingChars(show: showNonprintableCharactersToolStripMenuItem.Checked);
         AppSettings.ShowNonPrintingChars.Value = showNonPrintChars.Checked;
+        AppSettings.ShowNonPrintingChars.Save();
     }
 
     private void FindToolStripMenuItemClick(object sender, EventArgs e)
