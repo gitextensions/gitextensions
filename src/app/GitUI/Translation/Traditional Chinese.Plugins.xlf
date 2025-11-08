@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>在每个构建结果的构建状态摘要中显示测试结果（会大量使用网络！）</target>
+        <target>在每個建置結果的建置狀態摘要中顯示測試結果 (需使用大量網路資源！)</target>
         
       </trans-unit>
     </body>

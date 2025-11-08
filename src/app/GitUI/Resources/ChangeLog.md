@@ -1,6 +1,61 @@
 ﻿Changelog
 =========
 
+### Version v6.0.3 (no due date)
+
+#### Changes:
+* [#12643] User theme folder path and creation
+* [#12624] fix(Settings): Do not re-enable CredentialHelper edit if multi-value
+* [#12621] fix(DpiUtil): Avoid breaking plugin compatibility
+* [#12620] fix: ignore long filepath filters when listing revisions
+* [#12619] Trivial: Switch to the null-conditional operator in a couple of places
+* [#12615] fix(FileStatusList): Calculate available width for truncating filenames
+* [#12601] fix: Theme loading error suppressions
+* [#12599] fix: ls-files %objecttype Git version check
+* [#12598] fix(File tree): Avoid split folders
+* [#12597] Teach Copilot a few obvious things
+* [#12594] Fix stash picker hidden at high DPI scaling
+* [#12593] Fix NullReferenceException in GitHub3Plugin on first commit window open
+* [#12592] Suppress NBug reports for transient Windows update errors (Patch Tuesday)
+* [#12581] fix: icon for default PulMerge button
+* [#12580] Fix overflow error in GitImpact graph rendering when displaying zero-change weeks
+* [#12579] fix(FileStatusList.ContextMenu): Clarify Find file hotkey
+* [#12570] Test performance: Initialization of reference repositories
+* [#12565] Fix: Suppress "Rate limit exceeded" error when checking for updates
+* [#12563] System.Threading.Lock
+* [#12553] Test robustness: Isolation
+* [#12550] chore: file scoped namespace
+* [#12549] Test robustness: Account for system changes in init.defaultbranch
+* [#12498] Feature/branch name in reftable repos
+* [#12494] fix: simplify submodule helpers
+
+
+[#12643]:https://github.com/gitextensions/gitextensions/pull/12643
+[#12624]:https://github.com/gitextensions/gitextensions/pull/12624
+[#12621]:https://github.com/gitextensions/gitextensions/pull/12621
+[#12620]:https://github.com/gitextensions/gitextensions/pull/12620
+[#12619]:https://github.com/gitextensions/gitextensions/pull/12619
+[#12615]:https://github.com/gitextensions/gitextensions/pull/12615
+[#12601]:https://github.com/gitextensions/gitextensions/pull/12601
+[#12599]:https://github.com/gitextensions/gitextensions/pull/12599
+[#12598]:https://github.com/gitextensions/gitextensions/pull/12598
+[#12597]:https://github.com/gitextensions/gitextensions/pull/12597
+[#12594]:https://github.com/gitextensions/gitextensions/pull/12594
+[#12593]:https://github.com/gitextensions/gitextensions/pull/12593
+[#12592]:https://github.com/gitextensions/gitextensions/pull/12592
+[#12581]:https://github.com/gitextensions/gitextensions/pull/12581
+[#12580]:https://github.com/gitextensions/gitextensions/pull/12580
+[#12579]:https://github.com/gitextensions/gitextensions/pull/12579
+[#12570]:https://github.com/gitextensions/gitextensions/pull/12570
+[#12565]:https://github.com/gitextensions/gitextensions/pull/12565
+[#12563]:https://github.com/gitextensions/gitextensions/pull/12563
+[#12553]:https://github.com/gitextensions/gitextensions/pull/12553
+[#12550]:https://github.com/gitextensions/gitextensions/pull/12550
+[#12549]:https://github.com/gitextensions/gitextensions/pull/12549
+[#12498]:https://github.com/gitextensions/gitextensions/pull/12498
+[#12494]:https://github.com/gitextensions/gitextensions/pull/12494
+
+
 ### Version v6.0.2 (10 Oct 2025)
 
 #### Changes:
