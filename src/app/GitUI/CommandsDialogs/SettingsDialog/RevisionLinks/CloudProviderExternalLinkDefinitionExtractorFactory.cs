@@ -1,23 +1,22 @@
-﻿namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks
-{
-    public sealed class CloudProviderExternalLinkDefinitionExtractorFactory : ICloudProviderExternalLinkDefinitionExtractorFactory
-    {
-        public ICloudProviderExternalLinkDefinitionExtractor? Get(CloudProviderKind cloudProviderKind)
-        {
-            return cloudProviderKind switch
-            {
-                CloudProviderKind.GitHub => new GitHubExternalLinkDefinitionExtractor(),
-                CloudProviderKind.AzureDevOps => new AzureDevopsExternalLinkDefinitionExtractor(),
-                _ => null
-            };
-        }
+﻿namespace GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
 
-        public IEnumerable<ICloudProviderExternalLinkDefinitionExtractor> GetAllExtractor()
+public sealed class CloudProviderExternalLinkDefinitionExtractorFactory : ICloudProviderExternalLinkDefinitionExtractorFactory
+{
+    public ICloudProviderExternalLinkDefinitionExtractor? Get(CloudProviderKind cloudProviderKind)
+    {
+        return cloudProviderKind switch
         {
-            IEnumerable<CloudProviderKind> cloudProviderKinds = Enum.GetValues(typeof(CloudProviderKind)).OfType<CloudProviderKind>();
-            CloudProviderExternalLinkDefinitionExtractorFactory cloudProviderExternalLinkDefinitionExtractorFactory = new();
-            return cloudProviderKinds.Select(c => cloudProviderExternalLinkDefinitionExtractorFactory.Get(c))
-                .WhereNotNull();
-        }
+            CloudProviderKind.GitHub => new GitHubExternalLinkDefinitionExtractor(),
+            CloudProviderKind.AzureDevOps => new AzureDevopsExternalLinkDefinitionExtractor(),
+            _ => null
+        };
+    }
+
+    public IEnumerable<ICloudProviderExternalLinkDefinitionExtractor> GetAllExtractor()
+    {
+        IEnumerable<CloudProviderKind> cloudProviderKinds = Enum.GetValues(typeof(CloudProviderKind)).OfType<CloudProviderKind>();
+        CloudProviderExternalLinkDefinitionExtractorFactory cloudProviderExternalLinkDefinitionExtractorFactory = new();
+        return cloudProviderKinds.Select(c => cloudProviderExternalLinkDefinitionExtractorFactory.Get(c))
+            .WhereNotNull();
     }
 }

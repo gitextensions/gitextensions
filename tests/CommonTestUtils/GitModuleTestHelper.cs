@@ -10,51 +10,9 @@ using GitUI;
 
 namespace CommonTestUtils;
 
-public class GitModuleTestHelper : IDisposable
+public sealed partial class GitModuleTestHelper : IDisposable
 {
-    /// <summary>
-    /// Creates a throw-away new repository in a temporary location.
-    /// </summary>
-    public GitModuleTestHelper(string repositoryName = "repo1")
-    {
-        TemporaryPath = GetTemporaryPath();
-
-        string path = Path.Combine(TemporaryPath, repositoryName);
-        if (Directory.Exists(path))
-        {
-            throw new ArgumentException($"Repository '{path}' already exists", nameof(repositoryName));
-        }
-
-        Directory.CreateDirectory(path);
-
-        GitModule module = new(path);
-        module.Init(bare: false, shared: false);
-        Module = module;
-
-        // Don't assume global user/email
-        SetRepoConfig(module);
-
-        // Stage operations may fail due to different line endings, so want only warning and not a fatal error
-        //
-        //  fatal: LF would be replaced by CRLF in .gitmodules
-        //         Failed to register submodule 'repo2'
-        module.SetSetting("core.safecrlf", "false");
-
-        return;
-
-        string GetTemporaryPath()
-        {
-            string tempPath = Path.GetTempPath();
-
-            // workaround macOS symlinking its temp folder
-            if (tempPath.StartsWith("/var"))
-            {
-                tempPath = "/private" + tempPath;
-            }
-
-            return Path.Combine(tempPath, Path.GetRandomFileName());
-        }
-    }
+    private readonly string _repositoryName;
 
     /// <summary>
     /// Gets the module.
@@ -65,6 +23,96 @@ public class GitModuleTestHelper : IDisposable
     /// Gets the temporary path where test repositories will be created for integration tests.
     /// </summary>
     public string TemporaryPath { get; }
+
+    /// <summary>
+    /// Creates a throw-away new repository in a temporary location.
+    /// </summary>
+    public GitModuleTestHelper(string repositoryName = "repo1")
+        : this(repositoryName, FileSystemUtility.GetTemporaryPath(), useExisting: false)
+    {
+    }
+
+    /// <summary>
+    /// Creates a wrapper for a throw-away repository in a temporary location.
+    /// The caller must supply the path to the directory containing the
+    /// repository in <paramref name="temporaryPath"/> and the name for the
+    /// repository, which will be a subdirectory of <paramref name="temporaryPath"/>,
+    /// in <paramref name="repositoryName"/>. If <paramref name="useExisting"/>
+    /// is false, then the temporary path must not exist, and it will be
+    /// created and the specified repository initialized within it. If
+    /// <paramref name="useExisting"/> is true, then the temporary repository
+    /// must already exist with the specified name in the specified temporary
+    /// path.
+    /// </summary>
+    internal GitModuleTestHelper(string repositoryName, string temporaryPath, bool useExisting)
+    {
+        TemporaryPath = temporaryPath;
+
+        _repositoryName = repositoryName;
+
+        string path = Path.Combine(TemporaryPath, repositoryName);
+
+        GitModule module;
+
+        if (useExisting)
+        {
+            if (!Directory.Exists(path))
+            {
+                throw new ArgumentException($"Repository '{path}' does not exist", nameof(repositoryName));
+            }
+
+            module = new(path);
+        }
+        else
+        {
+            if (Directory.Exists(path))
+            {
+                throw new InvalidOperationException($"A repository already exists at path: '{path}'");
+            }
+
+            Directory.CreateDirectory(path);
+
+            module = new(path);
+            module.Init(bare: false, shared: false);
+
+            // Don't assume global user/email
+            SetRepoConfig(module);
+
+            // Stage operations may fail due to different line endings, so want only warning and not a fatal error
+            //
+            //  fatal: LF would be replaced by CRLF in .gitmodules
+            //         Failed to register submodule 'repo2'
+            module.SetSetting("core.safecrlf", "false");
+        }
+
+        Module = module;
+    }
+
+    /// <summary>
+    /// Adds 'subModuleHelper' as a submodule of the current subModuleHelper.
+    /// </summary>
+    /// <param name="subModuleHelper">GitModuleTestHelper to add as a submodule of this.</param>
+    /// <param name="path">Relative submodule path.</param>
+    public void AddSubmodule(GitModuleTestHelper subModuleHelper, string path)
+    {
+        // Submodules require at least one commit
+        subModuleHelper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Initial empty commit""");
+
+        // Ensure config is set to allow file submodules
+        string fileEnabled = Module.GetEffectiveSetting(SettingKeyString.AllowFileProtocol);
+        ClassicAssert.That(fileEnabled == "always");
+
+        // Even though above is set, adding a file protocol submodule fails unless -c... is used for protocol.file.allow config.
+        IEnumerable<GitConfigItem> cfgs = Commands.GetAllowFileConfig();
+
+        ExecutionResult result = Module.GitExecutable.Execute(Commands.AddSubmodule(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null, true, cfgs));
+        Debug.WriteLine(result.AllOutput);
+
+        Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
+    }
+
+    public GitModuleTestSnapshot CaptureSnapshot()
+        => new(_repositoryName, TemporaryPath);
 
     /// <summary>
     /// Creates a new file, writes the specified string to the file, and then closes the file.
@@ -132,41 +180,40 @@ public class GitModuleTestHelper : IDisposable
         return filePath;
     }
 
-    /// <summary>
-    /// Set dummy user and email locally for the module along with specific tests configs, no global setting in AppVeyor
-    /// Must also be set on the submodule, local settings are not included when adding it
-    /// </summary>
-    private static void SetRepoConfig(GitModule module)
+    public void Dispose()
     {
-        GitConfigSettings localSettings = new(module.GitExecutable, GitSettingLevel.Local);
-        localSettings.SetValue(SettingKeyString.UserName, "author");
-        localSettings.SetValue(SettingKeyString.UserEmail, "author@mail.com");
-        new GitEncodingSettingsSetter(localSettings).FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-        localSettings.SetValue(SettingKeyString.AllowFileProtocol, "always"); // git version 2.38.1 and later disabled file protocol by default
-        localSettings.Save();
+        try
+        {
+            // if settings have been set, the corresponding local config file is in the directory
+            // we want to delete, so we need to make sure the timers that will try to auto-save there
+            // are stopped before actually deleting, else the timers will throw on a background thread.
+            // Note that the intermittent failures mentioned below are likely related too.
+            if (Module.GetTestAccessor().EffectiveSettings is not null)
+            {
+                if (ThreadHelper.JoinableTaskContext is null)
+                {
+                    Trace.WriteLine($"{nameof(ThreadHelper)}{nameof(ThreadHelper.JoinableTaskContext)} should not be null if {nameof(Module.EffectiveSettings)} exist! Disposing too late?");
+                }
+                else
+                {
+                    Module.EffectiveSettings.SettingsCache.Dispose();
+                }
+            }
+
+            RegisterAfterTestCleanUp();
+        }
+        catch
+        {
+            // Do nothing.
+        }
     }
 
-    /// <summary>
-    /// Adds 'subModuleHelper' as a submodule of the current subModuleHelper.
-    /// </summary>
-    /// <param name="subModuleHelper">GitModuleTestHelper to add as a submodule of this.</param>
-    /// <param name="path">Relative submodule path.</param>
-    public void AddSubmodule(GitModuleTestHelper subModuleHelper, string path)
+    private void EnsureCreatedInTempFolder(string path)
     {
-        // Submodules require at least one commit
-        subModuleHelper.Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Initial empty commit""");
-
-        // Ensure config is set to allow file submodules
-        string fileEnabled = Module.GetEffectiveSetting(SettingKeyString.AllowFileProtocol);
-        ClassicAssert.That(fileEnabled == "always");
-
-        // Even though above is set, adding a file protocol submodule fails unless -c... is used for protocol.file.allow config.
-        IEnumerable<GitConfigItem> cfgs = Commands.GetAllowFileConfig();
-
-        ExecutionResult result = Module.GitExecutable.Execute(Commands.AddSubmodule(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null, true, cfgs));
-        Debug.WriteLine(result.AllOutput);
-
-        Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
+        if (!path.StartsWith(TemporaryPath))
+        {
+            throw new ArgumentException("The given module does not belong to this helper.");
+        }
     }
 
     /// <summary>
@@ -188,64 +235,17 @@ public class GitModuleTestHelper : IDisposable
         });
     }
 
-    public void Dispose()
+    /// <summary>
+    /// Set dummy user and email locally for the module along with specific tests configs, no global setting in AppVeyor
+    /// Must also be set on the submodule, local settings are not included when adding it
+    /// </summary>
+    private static void SetRepoConfig(GitModule module)
     {
-        try
-        {
-            // if settings have been set, the corresponding local config file is in the directory
-            // we want to delete, so we need to make sure the timers that will try to auto-save there
-            // are stopped before actually deleting, else the timers will throw on a background thread.
-            // Note that the intermittent failures mentioned below are likely related too.
-            if (Module.GetTestAccessor().EffectiveSettings is not null)
-            {
-                if (ThreadHelper.JoinableTaskContext is null)
-                {
-                    Trace.WriteLine($"{nameof(ThreadHelper)}{nameof(ThreadHelper.JoinableTaskContext)} should not be null if {nameof(Module.EffectiveSettings)} exist! Disposing too late?");
-                }
-                else
-                {
-                    Module.EffectiveSettings.SettingsCache.Dispose();
-                }
-            }
-
-            // Directory.Delete seems to intermittently fail, so delete the files first before deleting folders
-            foreach (string file in Directory.GetFiles(TemporaryPath, "*", SearchOption.AllDirectories))
-            {
-                if (File.GetAttributes(file).HasFlag(FileAttributes.ReparsePoint))
-                {
-                    continue;
-                }
-
-                File.SetAttributes(file, FileAttributes.Normal);
-                File.Delete(file);
-            }
-
-            // Delete tends to fail on the first try, so give it a few tries as a best effort.
-            // By this point, all files have been deleted anyway, so this is mainly about removing
-            // empty directories.
-            for (int tries = 0; tries < 10; ++tries)
-            {
-                try
-                {
-                    Directory.Delete(TemporaryPath, true);
-                    break;
-                }
-                catch
-                {
-                }
-            }
-        }
-        catch
-        {
-            // do nothing
-        }
-    }
-
-    private void EnsureCreatedInTempFolder(string path)
-    {
-        if (!path.StartsWith(TemporaryPath))
-        {
-            throw new ArgumentException("The given module does not belong to this helper.");
-        }
+        GitConfigSettings localSettings = new(module.GitExecutable, GitSettingLevel.Local);
+        localSettings.SetValue(SettingKeyString.UserName, "author");
+        localSettings.SetValue(SettingKeyString.UserEmail, "author@mail.com");
+        new GitEncodingSettingsSetter(localSettings).FilesEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+        localSettings.SetValue(SettingKeyString.AllowFileProtocol, "always"); // git version 2.38.1 and later disabled file protocol by default
+        localSettings.Save();
     }
 }

@@ -64,6 +64,7 @@ UpgradeLog*.htm*
 
 #nuget
 packages/
+.nuget/
 GitExtensions.*.sln.VisualState.xml
 GitExtensions.settings.backup
 /Setup/*.zip

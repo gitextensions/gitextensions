@@ -1,50 +1,49 @@
-﻿namespace GitUIPluginInterfaces
+﻿namespace GitUIPluginInterfaces;
+
+/// <summary>
+/// A helper class for scanning for plugin files.
+/// </summary>
+public static class PluginsPathScanner
 {
     /// <summary>
-    /// A helper class for scanning for plugin files.
+    /// Searches for plugin files in the <paramref name="pluginsPaths"/>.
+    /// Returns dll files
+    /// - located in the folder for backward compatibility,
+    /// - located in the first level of sub directories for the new plugin structure.
     /// </summary>
-    public static class PluginsPathScanner
+    /// <example>
+    /// Plugins
+    ///     \OldPlugin1.dll
+    ///     \OldPlugin2.dll
+    ///     \OldPlugin2.config
+    ///     \NewPlugin1
+    ///         \Plugin1.dll
+    ///         \Plugin1.config
+    ///     \NewPlugin2
+    ///         \Plugin2.dll
+    ///         \Plugin2.config
+    /// </example>
+    /// <param name="pluginsPaths">An array of filesystem paths to search for plugins in.</param>
+    /// <returns>An enumeration of found dll files.</returns>
+    public static IEnumerable<FileInfo> GetFiles(params string?[] pluginsPaths)
     {
-        /// <summary>
-        /// Searches for plugin files in the <paramref name="pluginsPaths"/>.
-        /// Returns dll files
-        /// - located in the folder for backward compatibility,
-        /// - located in the first level of sub directories for the new plugin structure.
-        /// </summary>
-        /// <example>
-        /// Plugins
-        ///     \OldPlugin1.dll
-        ///     \OldPlugin2.dll
-        ///     \OldPlugin2.config
-        ///     \NewPlugin1
-        ///         \Plugin1.dll
-        ///         \Plugin1.config
-        ///     \NewPlugin2
-        ///         \Plugin2.dll
-        ///         \Plugin2.config
-        /// </example>
-        /// <param name="pluginsPaths">An array of filesystem paths to search for plugins in.</param>
-        /// <returns>An enumeration of found dll files.</returns>
-        public static IEnumerable<FileInfo> GetFiles(params string?[] pluginsPaths)
+        IEnumerable<FileInfo> result = Enumerable.Empty<FileInfo>();
+
+        foreach (string? pluginsPath in pluginsPaths)
         {
-            IEnumerable<FileInfo> result = Enumerable.Empty<FileInfo>();
-
-            foreach (string? pluginsPath in pluginsPaths)
+            if (!string.IsNullOrEmpty(pluginsPath) && Directory.Exists(pluginsPath))
             {
-                if (!string.IsNullOrEmpty(pluginsPath) && Directory.Exists(pluginsPath))
+                DirectoryInfo directory = new(pluginsPath);
+
+                result = Enumerable.Concat(result, directory.GetFiles("*.dll"));
+
+                foreach (DirectoryInfo childDirectory in directory.GetDirectories())
                 {
-                    DirectoryInfo directory = new(pluginsPath);
-
-                    result = Enumerable.Concat(result, directory.GetFiles("*.dll"));
-
-                    foreach (DirectoryInfo childDirectory in directory.GetDirectories())
-                    {
-                        result = Enumerable.Concat(result, childDirectory.GetFiles("*.dll"));
-                    }
+                    result = Enumerable.Concat(result, childDirectory.GetFiles("*.dll"));
                 }
             }
-
-            return result;
         }
+
+        return result;
     }
 }

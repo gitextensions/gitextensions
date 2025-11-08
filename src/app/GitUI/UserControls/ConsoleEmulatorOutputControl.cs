@@ -7,226 +7,225 @@ using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using Microsoft;
 
-namespace GitUI.UserControls
+namespace GitUI.UserControls;
+
+/// <summary>
+/// An output control which inserts a fully-functional console emulator window.
+/// </summary>
+public class ConsoleEmulatorOutputControl : ConsoleOutputControl
 {
-    /// <summary>
-    /// An output control which inserts a fully-functional console emulator window.
-    /// </summary>
-    public class ConsoleEmulatorOutputControl : ConsoleOutputControl
+    private int _nLastExitCode;
+
+    private Panel _panel;
+    private ConEmuControl? _terminal;
+
+    public ConsoleEmulatorOutputControl()
     {
-        private int _nLastExitCode;
+        InitializeComponent();
 
-        private Panel _panel;
-        private ConEmuControl? _terminal;
+        Validates.NotNull(_panel);
+    }
 
-        public ConsoleEmulatorOutputControl()
+    private void InitializeComponent()
+    {
+        Controls.Add(_panel = new Panel { Dock = DockStyle.Fill, BorderStyle = BorderStyle.None });
+    }
+
+    public override int ExitCode => _nLastExitCode;
+
+    public override bool IsDisplayingFullProcessOutput => true;
+
+    public static bool IsSupportedInThisEnvironment => EnvUtils.RunningOnWindows();
+
+    public override void AppendMessageFreeThreaded(string text)
+    {
+        Validates.NotNull(_terminal);
+        _terminal.RunningSession?.WriteOutputTextAsync(text);
+    }
+
+    public override void AppendInput(string text)
+    {
+        Validates.NotNull(_terminal);
+        this.InvokeAndForget(() => _terminal.RunningSession?.WriteInputTextAsync(text));
+    }
+
+    public override void KillProcess()
+    {
+        Validates.NotNull(_terminal);
+        KillProcess(_terminal);
+    }
+
+    private static void KillProcess(ConEmuControl terminal)
+    {
+        terminal.RunningSession?.SendControlCAsync();
+    }
+
+    public override void Reset()
+    {
+        ConEmuControl? oldTerminal = _terminal;
+
+        _terminal = new ConEmuControl
         {
-            InitializeComponent();
+            Dock = DockStyle.Fill,
+            IsStatusbarVisible = false
+        };
 
-            Validates.NotNull(_panel);
+        if (oldTerminal is not null)
+        {
+            KillProcess(oldTerminal);
+            _panel.Controls.Remove(oldTerminal);
+            oldTerminal.Dispose();
         }
 
-        private void InitializeComponent()
+        _panel.Controls.Add(_terminal);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            Controls.Add(_panel = new Panel { Dock = DockStyle.Fill, BorderStyle = BorderStyle.None });
+            _terminal?.Dispose();
         }
 
-        public override int ExitCode => _nLastExitCode;
+        base.Dispose(disposing);
+    }
 
-        public override bool IsDisplayingFullProcessOutput => true;
+    public override void StartProcess(string command, string arguments, string workDir, Dictionary<string, string> envVariables)
+    {
+        ProcessOperation operation = CommandLog.LogProcessStart(command, arguments, workDir);
 
-        public static bool IsSupportedInThisEnvironment => EnvUtils.RunningOnWindows();
-
-        public override void AppendMessageFreeThreaded(string text)
+        try
         {
-            Validates.NotNull(_terminal);
-            _terminal.RunningSession?.WriteOutputTextAsync(text);
-        }
+            string commandLine = new ArgumentBuilder { command.Quote(), arguments }.ToString();
+            ConsoleCommandLineOutputProcessor outputProcessor = new(commandLine.Length, FireDataReceived);
 
-        public override void AppendInput(string text)
-        {
-            Validates.NotNull(_terminal);
-            this.InvokeAndForget(() => _terminal.RunningSession?.WriteInputTextAsync(text));
-        }
-
-        public override void KillProcess()
-        {
-            Validates.NotNull(_terminal);
-            KillProcess(_terminal);
-        }
-
-        private static void KillProcess(ConEmuControl terminal)
-        {
-            terminal.RunningSession?.SendControlCAsync();
-        }
-
-        public override void Reset()
-        {
-            ConEmuControl? oldTerminal = _terminal;
-
-            _terminal = new ConEmuControl
+            ConEmuStartInfo startInfo = new()
             {
-                Dock = DockStyle.Fill,
-                IsStatusbarVisible = false
+                ConsoleProcessCommandLine = commandLine,
+                IsEchoingConsoleCommandLine = true,
+                WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage,
+                AnsiStreamChunkReceivedEventSink = outputProcessor.AnsiStreamChunkReceived,
+                StartupDirectory = workDir
             };
 
-            if (oldTerminal is not null)
+            foreach ((string name, string value) in envVariables)
             {
-                KillProcess(oldTerminal);
-                _panel.Controls.Remove(oldTerminal);
-                oldTerminal.Dispose();
+                startInfo.SetEnv(name, value);
             }
 
-            _panel.Controls.Add(_terminal);
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            startInfo.ConsoleProcessExitedEventSink = (_, args) =>
             {
-                _terminal?.Dispose();
-            }
+                _nLastExitCode = args.ExitCode;
+                operation.LogProcessEnd(_nLastExitCode);
+                outputProcessor.Flush();
+                FireProcessExited();
+            };
 
-            base.Dispose(disposing);
-        }
-
-        public override void StartProcess(string command, string arguments, string workDir, Dictionary<string, string> envVariables)
-        {
-            ProcessOperation operation = CommandLog.LogProcessStart(command, arguments, workDir);
-
-            try
+            startInfo.ConsoleEmulatorClosedEventSink = (sender, _) =>
             {
-                string commandLine = new ArgumentBuilder { command.Quote(), arguments }.ToString();
-                ConsoleCommandLineOutputProcessor outputProcessor = new(commandLine.Length, FireDataReceived);
-
-                ConEmuStartInfo startInfo = new()
-                {
-                    ConsoleProcessCommandLine = commandLine,
-                    IsEchoingConsoleCommandLine = true,
-                    WhenConsoleProcessExits = WhenConsoleProcessExits.KeepConsoleEmulatorAndShowMessage,
-                    AnsiStreamChunkReceivedEventSink = outputProcessor.AnsiStreamChunkReceived,
-                    StartupDirectory = workDir
-                };
-
-                foreach ((string name, string value) in envVariables)
-                {
-                    startInfo.SetEnv(name, value);
-                }
-
-                startInfo.ConsoleProcessExitedEventSink = (_, args) =>
-                {
-                    _nLastExitCode = args.ExitCode;
-                    operation.LogProcessEnd(_nLastExitCode);
-                    outputProcessor.Flush();
-                    FireProcessExited();
-                };
-
-                startInfo.ConsoleEmulatorClosedEventSink = (sender, _) =>
-                {
-                    Validates.NotNull(_terminal);
-                    if (sender == _terminal.RunningSession)
-                    {
-                        FireTerminated();
-                    }
-                };
-
                 Validates.NotNull(_terminal);
-                _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.Value, AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString("F0", CultureInfo.InvariantCulture));
-            }
-            catch (Exception ex)
+                if (sender == _terminal.RunningSession)
+                {
+                    FireTerminated();
+                }
+            };
+
+            Validates.NotNull(_terminal);
+            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.Value, AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString("F0", CultureInfo.InvariantCulture));
+        }
+        catch (Exception ex)
+        {
+            operation.LogProcessEnd(ex);
+            throw;
+        }
+    }
+}
+
+public partial class ConsoleCommandLineOutputProcessor
+{
+    private readonly Action<TextEventArgs> _fireDataReceived;
+    private int _commandLineCharsInOutput;
+    private string? _lineChunk;
+
+    [GeneratedRegex(@"(?<=[\n\r])", RegexOptions.ExplicitCapture)]
+    private static partial Regex NewLineRegex();
+
+    public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> fireDataReceived)
+    {
+        _fireDataReceived = fireDataReceived;
+        _commandLineCharsInOutput = commandLineCharsInOutput;
+        _commandLineCharsInOutput += Environment.NewLine.Length; // for \n after the command line
+    }
+
+    private string? FilterOutConsoleCommandLine(string outputChunk)
+    {
+        if (_commandLineCharsInOutput > 0)
+        {
+            if (_commandLineCharsInOutput >= outputChunk.Length)
             {
-                operation.LogProcessEnd(ex);
-                throw;
+                _commandLineCharsInOutput -= outputChunk.Length;
+                return null;
             }
+
+            string rest = outputChunk[_commandLineCharsInOutput..];
+            _commandLineCharsInOutput = 0;
+            return rest;
+        }
+
+        return outputChunk;
+    }
+
+    public void AnsiStreamChunkReceived(object sender, AnsiStreamChunkEventArgs args)
+    {
+        string text = args.GetText(GitModule.SystemEncoding);
+        string? filtered = FilterOutConsoleCommandLine(text);
+        if (filtered is not null)
+        {
+            SendAsLines(filtered);
         }
     }
 
-    public partial class ConsoleCommandLineOutputProcessor
+    private void SendAsLines(string output)
     {
-        private readonly Action<TextEventArgs> _fireDataReceived;
-        private int _commandLineCharsInOutput;
-        private string? _lineChunk;
-
-        [GeneratedRegex(@"(?<=[\n\r])", RegexOptions.ExplicitCapture)]
-        private static partial Regex NewLineRegex();
-
-        public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> fireDataReceived)
+        if (_lineChunk is not null)
         {
-            _fireDataReceived = fireDataReceived;
-            _commandLineCharsInOutput = commandLineCharsInOutput;
-            _commandLineCharsInOutput += Environment.NewLine.Length; // for \n after the command line
+            output = _lineChunk + output;
+            _lineChunk = null;
         }
 
-        private string? FilterOutConsoleCommandLine(string outputChunk)
+        string[] outputLines = NewLineRegex().Split(output);
+        int lineCount = outputLines.Length;
+        if (string.IsNullOrEmpty(outputLines[^1]))
         {
-            if (_commandLineCharsInOutput > 0)
+            lineCount--;
+        }
+
+        for (int i = 0; i < lineCount; i++)
+        {
+            string outputLine = outputLines[i];
+            bool isTheLastLine = i == lineCount - 1;
+            if (isTheLastLine)
             {
-                if (_commandLineCharsInOutput >= outputChunk.Length)
+                bool isLineCompleted = outputLine.Length > 0 &&
+                    ((outputLine[^1] == '\n') ||
+                    outputLine[^1] == '\r');
+                if (!isLineCompleted)
                 {
-                    _commandLineCharsInOutput -= outputChunk.Length;
-                    return null;
+                    _lineChunk = outputLine;
+                    break;
                 }
-
-                string rest = outputChunk[_commandLineCharsInOutput..];
-                _commandLineCharsInOutput = 0;
-                return rest;
             }
 
-            return outputChunk;
+            _fireDataReceived(new TextEventArgs(outputLine));
         }
+    }
 
-        public void AnsiStreamChunkReceived(object sender, AnsiStreamChunkEventArgs args)
+    public void Flush()
+    {
+        if (_lineChunk is not null)
         {
-            string text = args.GetText(GitModule.SystemEncoding);
-            string? filtered = FilterOutConsoleCommandLine(text);
-            if (filtered is not null)
-            {
-                SendAsLines(filtered);
-            }
-        }
-
-        private void SendAsLines(string output)
-        {
-            if (_lineChunk is not null)
-            {
-                output = _lineChunk + output;
-                _lineChunk = null;
-            }
-
-            string[] outputLines = NewLineRegex().Split(output);
-            int lineCount = outputLines.Length;
-            if (string.IsNullOrEmpty(outputLines[^1]))
-            {
-                lineCount--;
-            }
-
-            for (int i = 0; i < lineCount; i++)
-            {
-                string outputLine = outputLines[i];
-                bool isTheLastLine = i == lineCount - 1;
-                if (isTheLastLine)
-                {
-                    bool isLineCompleted = outputLine.Length > 0 &&
-                        ((outputLine[^1] == '\n') ||
-                        outputLine[^1] == '\r');
-                    if (!isLineCompleted)
-                    {
-                        _lineChunk = outputLine;
-                        break;
-                    }
-                }
-
-                _fireDataReceived(new TextEventArgs(outputLine));
-            }
-        }
-
-        public void Flush()
-        {
-            if (_lineChunk is not null)
-            {
-                _fireDataReceived(new TextEventArgs(_lineChunk));
-                _lineChunk = null;
-            }
+            _fireDataReceived(new TextEventArgs(_lineChunk));
+            _lineChunk = null;
         }
     }
 }

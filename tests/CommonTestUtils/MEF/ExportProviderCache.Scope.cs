@@ -5,28 +5,27 @@
 
 using Microsoft.VisualStudio.Composition;
 
-namespace CommonTestUtils.MEF
+namespace CommonTestUtils.MEF;
+
+public static partial class ExportProviderCache
 {
-    public static partial class ExportProviderCache
+    private sealed class Scope
     {
-        private sealed class Scope
+        public readonly string Name;
+        public ExportProvider? CurrentExportProvider;
+        public ComposableCatalog? ExpectedCatalog;
+        public ExportProvider? ExpectedProviderForCatalog;
+
+        public Scope(string name)
         {
-            public readonly string Name;
-            public ExportProvider? CurrentExportProvider;
-            public ComposableCatalog? ExpectedCatalog;
-            public ExportProvider? ExpectedProviderForCatalog;
+            Name = name;
+        }
 
-            public Scope(string name)
-            {
-                Name = name;
-            }
-
-            public void Clear()
-            {
-                CurrentExportProvider = null;
-                ExpectedCatalog = null;
-                ExpectedProviderForCatalog = null;
-            }
+        public void Clear()
+        {
+            CurrentExportProvider = null;
+            ExpectedCatalog = null;
+            ExpectedProviderForCatalog = null;
         }
     }
 }

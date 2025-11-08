@@ -2,56 +2,55 @@ using System.Diagnostics.CodeAnalysis;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
-namespace GitUI.UserControls.RevisionGrid.Columns
+namespace GitUI.UserControls.RevisionGrid.Columns;
+
+/// <summary>
+/// Base class for columns shown in the revisions grid control.
+/// </summary>
+internal abstract class ColumnProvider
 {
-    /// <summary>
-    /// Base class for columns shown in the revisions grid control.
-    /// </summary>
-    internal abstract class ColumnProvider
+    public int ColumnLeftMargin { get; } = DpiUtil.Scale(6);
+
+    /// <summary>The DataGrid column object that models this column.</summary>
+    public DataGridViewColumn Column { get; init; }
+
+    /// <summary>The display friendly name of this column.</summary>
+    public string Name { get; }
+
+    public int Index => Column.Index;
+
+    protected ColumnProvider(string name)
     {
-        public int ColumnLeftMargin { get; } = DpiUtil.Scale(6);
+        Name = name;
+    }
 
-        /// <summary>The DataGrid column object that models this column.</summary>
-        public DataGridViewColumn Column { get; init; }
+    public virtual void ApplySettings()
+    {
+        Column.Visible = true;
+    }
 
-        /// <summary>The display friendly name of this column.</summary>
-        public string Name { get; }
+    public virtual void Clear()
+    {
+    }
 
-        public int Index => Column.Index;
+    /// <summary>Renders the content of a cell in this column.</summary>
+    public abstract void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style);
 
-        protected ColumnProvider(string name)
-        {
-            Name = name;
-        }
+    /// <summary>Formats the textual representation of a cell in this column.</summary>
+    /// <remarks>Implementations may set <c>e.Value</c> to the required string, and then set <c>e.FormattingApplied</c> to <c>true</c>.</remarks>
+    public virtual void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
+    {
+    }
 
-        public virtual void ApplySettings()
-        {
-            Column.Visible = true;
-        }
+    public virtual void OnColumnWidthChanged(DataGridViewColumnEventArgs e)
+    {
+    }
 
-        public virtual void Clear()
-        {
-        }
-
-        /// <summary>Renders the content of a cell in this column.</summary>
-        public abstract void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style);
-
-        /// <summary>Formats the textual representation of a cell in this column.</summary>
-        /// <remarks>Implementations may set <c>e.Value</c> to the required string, and then set <c>e.FormattingApplied</c> to <c>true</c>.</remarks>
-        public virtual void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
-        {
-        }
-
-        public virtual void OnColumnWidthChanged(DataGridViewColumnEventArgs e)
-        {
-        }
-
-        /// <summary>Attempts to get custom tool tip text for a cell in this column.</summary>
-        /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
-        public virtual bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
-        {
-            toolTip = null;
-            return false;
-        }
+    /// <summary>Attempts to get custom tool tip text for a cell in this column.</summary>
+    /// <remarks>Returning <c>false</c> here will not stop a tool tip being automatically displayed for truncated text.</remarks>
+    public virtual bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
+    {
+        toolTip = null;
+        return false;
     }
 }

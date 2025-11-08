@@ -1,7 +1,6 @@
-﻿namespace GitUI.LeftPanel.Interfaces
+﻿namespace GitUI.LeftPanel.Interfaces;
+
+public interface ICanDelete
 {
-    public interface ICanDelete
-    {
-        bool Delete();
-    }
+    bool Delete();
 }
