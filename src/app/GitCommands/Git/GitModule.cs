@@ -3229,9 +3229,7 @@ public sealed partial class GitModule : IGitModule
                 // ls-files with same format as ls-tree
                 "-z",
                 { commitId == ObjectId.IndexId, "--cached", "--no-cached" },
-
-                // TODO change to GitVersion.SupportLsFilesFormat when Extensibility.Git can be updated
-                { GitVersion.SupportNewGitConfigSyntax, @$"--format=""{_gitTreeParser.GitTreeFormat}""", "--stage" },
+                { GitVersion.SupportLsFilesFormat, @$"--format=""{_gitTreeParser.GitTreeFormat}""", "--stage" },
                 "--",
                 fileName.QuoteNE()
             }
@@ -3247,8 +3245,7 @@ public sealed partial class GitModule : IGitModule
 
         ExecutionResult result = _gitExecutable.Execute(args, cache: isArtificial ? null : GitCommandCache, cancellationToken: cancellationToken);
 
-        // TODO change to GitVersion.SupportLsFilesFormat when Extensibility.Git can be updated
-        if (isArtificial && !GitVersion.SupportNewGitConfigSyntax)
+        if (isArtificial && !GitVersion.SupportLsFilesFormat)
         {
             return _gitTreeParser.ParseLsFiles(result.StandardOutput);
         }
