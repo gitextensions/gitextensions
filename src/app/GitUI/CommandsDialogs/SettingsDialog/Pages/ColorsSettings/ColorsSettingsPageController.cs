@@ -112,6 +112,9 @@ internal class ColorsSettingsPageController
     {
         if (_themePathProvider.UserThemesDirectory is not null)
         {
+            // Make sure the directory exists before we try to open it
+            Directory.CreateDirectory(_themePathProvider.UserThemesDirectory);
+
             OsShellUtil.SelectPathInFileExplorer(_themePathProvider.UserThemesDirectory);
         }
     }
