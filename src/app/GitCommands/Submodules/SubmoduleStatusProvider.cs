@@ -422,7 +422,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         SubmoduleInfo info = _submoduleInfos[path];
         cancelToken.ThrowIfCancellationRequested();
 
-        GitSubmoduleStatus submoduleStatus = await SubmoduleHelpers.GetCurrentSubmoduleChangesAsync(superModule, submoduleName, noLocks: true)
+        GitSubmoduleStatus submoduleStatus = await SubmoduleHelpers.GetSubmoduleCurrentChangesAsync(superModule, fileName: submoduleName, oldFileName: submoduleName, staged: false, noLocks: true)
             .ConfigureAwait(false);
 
         // If no changes, set info.Detailed to null

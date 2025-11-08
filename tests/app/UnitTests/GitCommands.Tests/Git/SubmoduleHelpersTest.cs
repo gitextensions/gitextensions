@@ -25,8 +25,10 @@ public class SubmoduleHelpersTest
 
         string text = "diff --git a/Externals/conemu-inside b/Externals/conemu-inside\nindex a17ea0c..b5a3d51 160000\n--- a/Externals/conemu-inside\n+++ b/Externals/conemu-inside\n@@ -1 +1 @@\n-Subproject commit a17ea0c8ebe9d8cd7e634ba44559adffe633c11d\n+Subproject commit b5a3d51777c85a9aeee534c382b5ccbb86b485d3\n";
         string fileName = "Externals/conemu-inside";
+        IGitModule submodule = testModule.GetSubmodule(fileName);
+        CommitDataManager commitDataManager = new(() => submodule);
 
-        GitSubmoduleStatus status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
+        GitSubmoduleStatus status = SubmoduleHelpers.TestAccessor.ParseSubmoduleStatus(text, submodule, commitId => commitDataManager.GetCommitData(commitId));
 
         ClassicAssert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
         ClassicAssert.AreEqual(fileName, status.Name);
@@ -37,8 +39,10 @@ public class SubmoduleHelpersTest
 
         text = "diff --git a/Main Assets/Core/Vehicle Physics core assets b/Main Assets/Core/Vehicle Physics core assets\nindex 2fb8851..0cc457d 160000\n--- a/Main Assets/Core/Vehicle Physics core assets\t\n+++ b/Main Assets/Core/Vehicle Physics core assets\t\n@@ -1 +1 @@\n-Subproject commit 2fb88514cfdc37a2708c24f71eca71c424b8d402\n+Subproject commit 0cc457d030e92f804569407c7cd39893320f9740\n";
         fileName = "Main Assets/Core/Vehicle Physics core assets";
+        submodule = testModule.GetSubmodule(fileName);
+        commitDataManager = new(() => submodule);
 
-        status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
+        status = SubmoduleHelpers.TestAccessor.ParseSubmoduleStatus(text, submodule, commitId => commitDataManager.GetCommitData(commitId));
 
         ClassicAssert.AreEqual(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"), status.Commit);
         ClassicAssert.AreEqual(fileName, status.Name);
@@ -49,8 +53,10 @@ public class SubmoduleHelpersTest
 
         text = "diff --git b/Externals/conemu-inside-b a/Externals/conemu-inside-a\nindex a17ea0c..b5a3d51 160000\n--- b/Externals/conemu-inside-b\n+++ a/Externals/conemu-inside-a\n@@ -1 +1 @@\n-Subproject commit a17ea0c8ebe9d8cd7e634ba44559adffe633c11d\n+Subproject commit b5a3d51777c85a9aeee534c382b5ccbb86b485d3\n";
         fileName = "Externals/conemu-inside-b";
+        submodule = testModule.GetSubmodule(fileName);
+        commitDataManager = new(() => submodule);
 
-        status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
+        status = SubmoduleHelpers.TestAccessor.ParseSubmoduleStatus(text, submodule, commitId => commitDataManager.GetCommitData(commitId));
 
         ClassicAssert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
         ClassicAssert.AreEqual(fileName, status.Name);
@@ -59,8 +65,10 @@ public class SubmoduleHelpersTest
 
         text = "diff --git a/Externals/ICSharpCode.TextEditor b/Externals/ICSharpCode.TextEditor\r\nnew file mode 160000\r\nindex 000000000..05321769f\r\n--- /dev/null\r\n+++ b/Externals/ICSharpCode.TextEditor\r\n@@ -0,0 +1 @@\r\n+Subproject commit 05321769f039f39fa7f6748e8f30d5c8f157c7dc\r\n";
         fileName = "Externals/ICSharpCode.TextEditor";
+        submodule = testModule.GetSubmodule(fileName);
+        commitDataManager = new(() => submodule);
 
-        status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
+        status = SubmoduleHelpers.TestAccessor.ParseSubmoduleStatus(text, submodule, commitId => commitDataManager.GetCommitData(commitId));
 
         ClassicAssert.AreEqual(ObjectId.Parse("05321769f039f39fa7f6748e8f30d5c8f157c7dc"), status.Commit);
         ClassicAssert.AreEqual(fileName, status.Name);
@@ -71,8 +79,10 @@ public class SubmoduleHelpersTest
 
         text = "diff --git b/Assets/Core/Vehicle Physics core assets a/Assets/Core/Vehicle Physics core assets\nindex 2fb8851..0cc457d 160000\n--- b/Assets/Core/Vehicle Physics core assets\t\n+++ a/Assets/Core/Vehicle Physics core assets\t\n@@ -1 +1 @@\n-Subproject commit 2fb88514cfdc37a2708c24f71eca71c424b8d402\n+Subproject commit 0cc457d030e92f804569407c7cd39893320f9740\n";
         fileName = "Assets/Core/Vehicle Physics core assets";
+        submodule = testModule.GetSubmodule(fileName);
+        commitDataManager = new(() => submodule);
 
-        status = SubmoduleHelpers.ParseSubmoduleStatus(text, testModule, fileName);
+        status = SubmoduleHelpers.TestAccessor.ParseSubmoduleStatus(text, submodule, commitId => commitDataManager.GetCommitData(commitId));
 
         ClassicAssert.AreEqual(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"), status.Commit);
         ClassicAssert.AreEqual(fileName, status.Name);

@@ -1,5 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using GitExtensions.Extensibility.Git;
 using Microsoft;
 
@@ -12,45 +11,39 @@ public static partial class SubmoduleHelpers
     [GeneratedRegex(@"diff --cc (?<filenamea>.+)", RegexOptions.ExplicitCapture)]
     private static partial Regex CombinedDiffCommandRegex();
 
-    public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
+    public static async Task<GitSubmoduleStatus?> GetSubmoduleDiffChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
     {
         (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true, isTracked: true, useGitColoring: false, commandConfiguration: null, cancellationToken: cancellationToken).ConfigureAwait(false);
-        return patch is null
-            ? new GitSubmoduleStatus(errorMessage ?? "", null, false, null, null, null, null)
-            : ParseSubmodulePatchStatus(patch, module, fileName);
+        return GetSubmoduleChanges(patch, errorMessage, module, fileName);
     }
 
-    public static async Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(IGitModule module, string? fileName, string? oldFileName, bool staged, bool noLocks = false)
+    public static async Task<GitSubmoduleStatus?> GetSubmoduleCurrentChangesAsync(IGitModule module, string? fileName, string? oldFileName, bool staged, bool noLocks = false)
     {
-        Patch? patch = await module.GetCurrentChangesAsync(fileName, oldFileName, staged, "", noLocks: noLocks).ConfigureAwait(false);
-        return ParseSubmodulePatchStatus(patch, module, fileName);
+        Patch? patch = await module.GetCurrentChangesAsync(fileName, oldFileName, staged, extraDiffArguments: "", noLocks: noLocks).ConfigureAwait(false);
+        return GetSubmoduleChanges(patch, "", module, fileName);
     }
 
-    public static Task<GitSubmoduleStatus?> GetCurrentSubmoduleChangesAsync(IGitModule module, string submodule, bool noLocks = false)
+    private static GitSubmoduleStatus GetSubmoduleChanges(Patch? patch, string? errorMessage, IGitModule module, string? fileName)
     {
-        return GetCurrentSubmoduleChangesAsync(module, submodule, submodule, false, noLocks: noLocks);
-    }
-
-    private static GitSubmoduleStatus? ParseSubmodulePatchStatus(Patch? patch, IGitModule module, string? fileName)
-    {
-        GitSubmoduleStatus? submoduleStatus = ParseSubmoduleStatus(patch?.Text, module, fileName);
-        if (submoduleStatus is not null && submoduleStatus.Commit != submoduleStatus.OldCommit)
+        if (!string.IsNullOrEmpty(errorMessage))
         {
-            IGitModule submodule = submoduleStatus.GetSubmodule(module);
-            submoduleStatus.CheckSubmoduleStatus(submodule);
+            // (some) Git errors, propagate
+            return new GitSubmoduleStatus(errorMessage, null, false, null, null, null, null);
         }
 
-        return submoduleStatus;
-    }
-
-    [return: NotNullIfNotNull("text")]
-    public static GitSubmoduleStatus? ParseSubmoduleStatus(string? text, IGitModule module, string? fileName)
-    {
-        if (string.IsNullOrEmpty(text))
+        if (string.IsNullOrEmpty(patch?.Text))
         {
+            // Note that empty diff will give null Patch too, not necessarily an error
             return null;
         }
 
+        IGitModule submodule = module.GetSubmodule(fileName);
+        CommitDataManager commitDataManager = new(() => submodule);
+        return ParseSubmoduleStatus(patch.Text, submodule, commitId => commitDataManager.GetCommitData(commitId));
+    }
+
+    private static GitSubmoduleStatus ParseSubmoduleStatus(string text, IGitModule submodule, Func<string, CommitData?> getCommitData)
+    {
         string? name = null;
         string? oldName = null;
         bool isDirty = false;
@@ -119,6 +112,15 @@ public static partial class SubmoduleHelpers
             }
         }
 
+        Validates.NotNull(name);
+
+        if (!submodule.IsValidGitWorkingDir())
+        {
+            // cannot calculate the data
+            getCommitData = null;
+        }
+
+        // Force calculation of caches, could be separate
         if (oldCommitId is not null && commitId is not null)
         {
             if (oldCommitId == commitId)
@@ -126,18 +128,77 @@ public static partial class SubmoduleHelpers
                 addedCommits = 0;
                 removedCommits = 0;
             }
-            else
+            else if (submodule.IsValidGitWorkingDir())
             {
-                IGitModule submodule = module.GetSubmodule(fileName);
-                if (submodule.IsValidGitWorkingDir())
-                {
-                    (addedCommits, removedCommits) = submodule.GetCommitRangeDiffCount(commitId, oldCommitId);
-                }
+                (addedCommits, removedCommits) = submodule.GetCommitRangeDiffCount(commitId, oldCommitId);
             }
         }
 
-        Validates.NotNull(name);
+        GitSubmoduleStatus status = new(name, oldName, isDirty, commitId, oldCommitId, addedCommits, removedCommits);
 
-        return new GitSubmoduleStatus(name, oldName, isDirty, commitId, oldCommitId, addedCommits, removedCommits);
+        // Force calculation of caches, could be separate
+        status.Status = status.GetSubmoduleStatus(getCommitData);
+
+        return status;
+    }
+
+    private static SubmoduleStatus GetSubmoduleStatus(this GitSubmoduleStatus submoduleStatus, Func<string, CommitData?> getCommitData)
+    {
+        if (submoduleStatus.OldCommit is null)
+        {
+            return SubmoduleStatus.NewSubmodule;
+        }
+
+        if (submoduleStatus.Commit is null)
+        {
+            return SubmoduleStatus.RemovedSubmodule;
+        }
+
+        if (submoduleStatus.Commit == submoduleStatus.OldCommit)
+        {
+            return SubmoduleStatus.SameTime;
+        }
+
+        // From this on, the status is by default Modified
+
+        if (submoduleStatus.AddedCommits is null || submoduleStatus.RemovedCommits is null)
+        {
+            return SubmoduleStatus.Unknown;
+        }
+
+        if (submoduleStatus.AddedCommits > 0 && submoduleStatus.RemovedCommits == 0)
+        {
+            return SubmoduleStatus.FastForward;
+        }
+
+        if (submoduleStatus.AddedCommits == 0 && submoduleStatus.RemovedCommits > 0)
+        {
+            return SubmoduleStatus.Rewind;
+        }
+
+        if (getCommitData is null
+            || getCommitData(submoduleStatus.Commit.ToString()) is not CommitData commitData
+            || getCommitData(submoduleStatus.OldCommit.ToString()) is not CommitData oldCommitData)
+        {
+            return SubmoduleStatus.Unknown;
+        }
+
+        if (commitData.CommitDate > oldCommitData.CommitDate)
+        {
+            return SubmoduleStatus.NewerTime;
+        }
+
+        if (commitData.CommitDate < oldCommitData.CommitDate)
+        {
+            return SubmoduleStatus.OlderTime;
+        }
+
+        return SubmoduleStatus.Unknown;
+    }
+
+    internal readonly struct TestAccessor
+    {
+        internal static GitSubmoduleStatus ParseSubmoduleStatus(string text, IGitModule submodule, Func<string, CommitData?> getCommitData)
+            => SubmoduleHelpers.ParseSubmoduleStatus(text, submodule, getCommitData);
     }
 }
