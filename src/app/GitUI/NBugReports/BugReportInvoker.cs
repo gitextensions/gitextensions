@@ -169,10 +169,13 @@ public static class BugReportInvoker
                                              or DirectoryNotFoundException
                                              or PathTooLongException
                                              or Win32Exception;
+        bool isMsysGitIssue = externalOperationException is null &&
+                              exception.Message.Contains("mingw64/libexec", StringComparison.InvariantCultureIgnoreCase);
 
         // Treat all git errors as user issues
         if (string.Equals(AppSettings.GitCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase)
-         || string.Equals(AppSettings.WslCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase))
+         || string.Equals(AppSettings.WslCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase)
+         || isMsysGitIssue)
         {
             isUserExternalOperation = true;
         }
