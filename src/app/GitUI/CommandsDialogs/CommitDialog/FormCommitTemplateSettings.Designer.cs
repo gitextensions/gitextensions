@@ -220,7 +220,7 @@ partial class FormCommitTemplateSettings
         checkBoxRegexEnabled.RightToLeft = RightToLeft.Yes;
         checkBoxRegexEnabled.Size = new Size(96, 19);
         checkBoxRegexEnabled.TabIndex = 8;
-        checkBoxRegexEnabled.Text = "Regex enable";
+        checkBoxRegexEnabled.Text = "Enable regex";
         toolTipRegex.SetToolTip(checkBoxRegexEnabled,
             """
                 Use [[regex]](regex group number) to extract branch name part

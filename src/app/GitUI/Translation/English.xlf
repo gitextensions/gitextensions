@@ -4309,7 +4309,7 @@ You can unset the template:
         <target />
       </trans-unit>
       <trans-unit id="checkBoxRegexEnabled.Text">
-        <source>Regex enable</source>
+        <source>Enable regex</source>
         <target />
       </trans-unit>
       <trans-unit id="checkBoxRegexEnabled.toolTipRegex">
