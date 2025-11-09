@@ -223,12 +223,13 @@ partial class FormCommitTemplateSettings
         checkBoxRegexEnabled.Text = "Enable regex";
         toolTipRegex.SetToolTip(checkBoxRegexEnabled,
             """
-                Use [[regex]](regex group number) to extract branch name part
-                Group number optional, defaults to 1
+                Use {{regex}}[regex group number] to extract branch name part
+                Group number is optional, default is 1
 
-                Example on branch name: "feature/ABC-4587-commitMessageRegex"
-                "Commit from: [[^feature/(.*)$]] branch" -> "Commit from: ABC-4587-commitMessageRegex branch"
-                "[[([A-Z]+-\d+)]]: My message is" -> "ABC-4587: My message is "
+                Examples on branch name: "feature/ABC-4587-commitMessageRegex"
+                "Commit from: {{^feature/(.*)$}} branch" -> "Commit from: ABC-4587-commitMessageRegex branch"
+                "{{([A-Z]+-\d+)}}: My message is" -> "ABC-4587: My message is "
+                "Name: {{([A-Z]+-\d+)-(.*)}}[2], issue: {{([A-Z]+-\d+)-(.*)}}[1]" -> "Name: commitMessageRegex, issue: ABC-4587"
                 """);
         checkBoxRegexEnabled.UseVisualStyleBackColor = true;
         checkBoxRegexEnabled.CheckedChanged += checkBoxRegexEnabled_CheckedChanged;
