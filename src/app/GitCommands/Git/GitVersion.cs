@@ -35,6 +35,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     public static readonly GitVersion LastVersionWithoutKnownLimitations = new("2.15.2");
 
     private static readonly Dictionary<string, GitVersion> _current = [];
+    private static readonly Lock _currentLock = new();
 
     /// <summary>
     /// GitVersion for the native ("Windows") Git
@@ -52,36 +53,45 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
             : string.IsNullOrWhiteSpace(gitExecutable.PrefixArguments)
                 ? gitExecutable.Command
                 : $"{gitExecutable.Command} {gitExecutable.PrefixArguments}";
-        if (_current.TryGetValue(gitIdentifiable, out GitVersion? gitVersion) && !gitVersion.IsUnknown)
+
+        // Lock version also over the git-version call; only one gitIdentifiable at a time.
+        lock (_currentLock)
         {
+            if (_current.TryGetValue(gitIdentifiable, out GitVersion? gitVersion) && !gitVersion.IsUnknown)
+            {
+                return gitVersion;
+            }
+
+            try
+            {
+                gitExecutable ??= new Executable(gitIdentifiable);
+                string output = gitExecutable.GetOutput("--version");
+                gitVersion = new GitVersion(output);
+                _current[gitIdentifiable] = gitVersion;
+
+                if (gitVersion < LastVersionWithoutKnownLimitations)
+                {
+                    // Report the last supported version rather than the last version without known issues
+                    MessageBox.Show(null, $"{gitVersion} is lower than {LastSupportedVersion}. Some commands can fail.", "Unsupported Git version", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+            catch (Exception exception)
+            {
+                Trace.WriteLine(exception);
+                gitVersion = _unknown;
+            }
+
             return gitVersion;
         }
-
-        try
-        {
-            gitExecutable ??= new Executable(gitIdentifiable);
-            string output = gitExecutable.GetOutput("--version");
-            gitVersion = new GitVersion(output);
-            _current[gitIdentifiable] = gitVersion;
-            if (gitVersion < LastVersionWithoutKnownLimitations)
-            {
-                // Report the last supported version rather than the last version without known issues
-                MessageBox.Show(null, $"{gitVersion} is lower than {LastSupportedVersion}. Some commands can fail.", "Unsupported Git version", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-        catch (Exception exception)
-        {
-            Trace.WriteLine(exception);
-            gitVersion = _unknown;
-        }
-
-        return gitVersion;
-    }
+     }
 
     public static void ResetVersion()
     {
-        _current.Clear();
-        Current = CurrentVersion();
+        lock (_currentLock)
+        {
+            _current.Clear();
+            Current = CurrentVersion();
+        }
     }
 
     private readonly string _fullVersionMoniker;
