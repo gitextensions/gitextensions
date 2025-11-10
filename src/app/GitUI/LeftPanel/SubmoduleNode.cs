@@ -166,7 +166,7 @@ internal sealed class SubmoduleNode : Node
         {
             // Prefer submodule status, shows ahead/behind
             await TaskScheduler.Default;
-            toolTip = LocalizationHelpers.ProcessSubmoduleStatus(
+            toolTip = SubmoduleResources.GetSubmoduleStatusText(
                 new GitModule(Info.Path),
                 Info.Detailed.RawStatus,
                 moduleIsParent: false,

@@ -221,4 +221,5 @@ YYYY/MM/DD, github id, Full name, email
 2025/07/30, M-L-Ml, Mihas Malinouski, m.l.malinouski+gitextensions(at)gmail.comgmail.com
 2025/08/22, nikolaosginos, Nikolaos Ginos, nikolaos.gkinos(at)googlemail.com
 2025/10/06, logiclrd, Jonathan Gilbert, logic(at)deltaq.org
-2025/10/30, mdani9506, Daniel Marosi, madani.9506+gitextensions(at)gmail.com
+2025/11/08, hultqvist, Peter Hultqvist, hultqvist@silentorbit.com
+2025/11/10, mdani9506, Daniel Marosi, madani.9506+gitextensions(at)gmail.com

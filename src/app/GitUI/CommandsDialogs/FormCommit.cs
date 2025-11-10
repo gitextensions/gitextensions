@@ -1929,8 +1929,6 @@ public sealed partial class FormCommit : GitModuleForm
                         {
                             continue;
                         }
-
-                        gitSubmoduleStatus.Status = SubmoduleStatus.Unknown;
                     }
 
                     (GitRevision _, GitRevision indexRev, GitRevision workTreeRev) = GetHeadRevisions();

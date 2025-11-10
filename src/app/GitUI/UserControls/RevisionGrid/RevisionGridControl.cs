@@ -379,21 +379,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    // returns " --find-renames=..." according to app settings
-    private static ArgumentString FindRenamesOpt()
-    {
-        return AppSettings.FollowRenamesInFileHistoryExactOnly
-            ? " --find-renames=\"100%\""
-            : " --find-renames";
-    }
-
     // returns " --find-renames=... --find-copies=..." according to app settings
     private static ArgumentString FindRenamesAndCopiesOpts()
     {
-        string findCopies = AppSettings.FollowRenamesInFileHistoryExactOnly
-            ? " --find-copies=\"100%\""
-            : " --find-copies";
-        return FindRenamesOpt() + findCopies;
+        return AppSettings.FollowRenamesInFileHistoryExactOnly
+            ? " --find-renames=\"100%\" --find-copies=\"100%\""
+            : " --find-renames --find-copies";
     }
 
     public void ResetAllFilters()
@@ -1216,9 +1207,23 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
             // Add path in case of no matches so result is never empty
             // This also occurs if Git detects more than one path argument
-            return setOfFileNames.Count == 0
+            string pathFilter = setOfFileNames.Count == 0
                 ? path
                 : string.Join("", setOfFileNames.Select(s => @$" ""{s}"""));
+
+            // Windows commands have a max length of 32267 characters,
+            // git-log command is normally around 200 characters.
+            if (pathFilter.Length > 31000)
+            {
+                this.InvokeAndForget(()
+                    => MessageBoxes.ShowError(
+                        this,
+                        $"Ignoring too long pathfilter ({pathFilter.Length}). (Are you trying to filter a folder?)",
+                        "Cannot follow file renames"));
+                return path;
+            }
+
+            return pathFilter;
         }
 
         void OnRevisionRead(IReadOnlyList<GitRevision> revisions)

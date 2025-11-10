@@ -17,7 +17,7 @@ is an 'Installed' or a 'Portable' version. Both come with a predefined set of th
 `{App install}\Themes` directory.
 
 In addition the Installed version looks for user-defined themes in
-`%AppData%\Roaming\GitExtensions\GitExtensions\Themes` directory.
+`%AppData%\GitExtensions\GitExtensions\Themes` directory.
 
 For each found theme file `ColorSettings` page will show an entry in the Theme dropdown list.
 
@@ -31,7 +31,7 @@ The default theme is in `Themes\invariant.css`.
 #### Custom themes
 
 Any modifications for personal use should be saved to
-`%AppData%\Roaming\GitExtensions\GitExtensions\Themes` directory, because any changes to
+`%AppData%\GitExtensions\GitExtensions\Themes` directory, because any changes to
 `{App install}\Themes` directory will be lost as soon as user updates or re-installs the app.
 
 ### Portable application
