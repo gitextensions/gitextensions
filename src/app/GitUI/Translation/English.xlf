@@ -4314,7 +4314,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="checkBoxRegexEnabled.toolTipRegex">
         <source>Use {{regex}}[regex group number] to extract branch name part
-Group number optional, default is 1
+Group number is optional, default is 1
 
 Examples on branch name: "feature/ABC-4587-commitMessageRegex"
 "Commit from: {{^feature/(.*)$}} branch" -&gt; "Commit from: ABC-4587-commitMessageRegex branch"
