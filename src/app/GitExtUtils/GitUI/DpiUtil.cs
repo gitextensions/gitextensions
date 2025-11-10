@@ -41,6 +41,11 @@ public static class DpiUtil
     }
 
     /// <summary>
+    /// Gets whether the current scaling factor is not integer.
+    /// </summary>
+    public static bool IsFractional => Math.Floor(ScaleX) != ScaleX || Math.Floor(ScaleY) != ScaleY;
+
+    /// <summary>
     /// Gets whether the current pixel density is not 96 DPI.
     /// </summary>
     public static bool IsNonStandard => DpiX != 96 || DpiY != 96;
