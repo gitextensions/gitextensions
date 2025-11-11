@@ -54,9 +54,7 @@ internal sealed class RevisionDiffController(Func<IGitModule> getModule, IFullPa
 
         void SaveMultipleFiles(List<FileStatusItem> selectedFiles)
         {
-            // Derive the folder from the first selected file.
-            string firstItemFullName = _fullPathResolver.Resolve(selectedFiles[0].Item.Name);
-            string baseSourceDirectory = Path.GetDirectoryName(firstItemFullName).EnsureTrailingPathSeparator();
+            string baseSourceDirectory = _fullPathResolver.Resolve(GetLongestCommonPath(selectedFiles)).EnsureTrailingPathSeparator();
 
             string selectedPath = userSelection(baseSourceDirectory);
             if (selectedPath is null)
@@ -86,10 +84,28 @@ internal sealed class RevisionDiffController(Func<IGitModule> getModule, IFullPa
                 // TODO: check target file exists.
                 // TODO: allow cancel the whole sequence
 
+                Directory.CreateDirectory(targetDirectory);
                 string targetFileName = Path.Combine(targetDirectory, Path.GetFileName(selectedItemFullName)).ToNativePath();
                 Debug.WriteLine($"Saving {selectedItemFullName} --> {targetFileName}");
 
                 GetModule().SaveBlobAs(targetFileName, $"{item.SecondRevision.Guid}:\"{item.Item.Name}\"");
+            }
+
+            return;
+
+            static string GetLongestCommonPath(List<FileStatusItem> files)
+            {
+                string firstFile = files[0].Item.Name;
+                for (int length = files.Min(f => f.Item.Path.Length) + 1; length > 0; --length)
+                {
+                    string possibleMatch = firstFile[..length];
+                    if (files.All(f => f.Item.Name.StartsWith(possibleMatch)))
+                    {
+                        return Path.GetDirectoryName(possibleMatch);
+                    }
+                }
+
+                return string.Empty;
             }
         }
 
