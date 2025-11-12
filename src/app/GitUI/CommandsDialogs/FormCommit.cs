@@ -168,6 +168,12 @@ public sealed partial class FormCommit : GitModuleForm
     private EventHandler? _branchNameLabelOnClick;
     private ToolStripMenuItem _conventionalCommitItem;
 
+    /// <summary>
+    /// Regex to find message replace pattern: {{ group1 }}[ group2 ]
+    /// </summary>
+    [GeneratedRegex(@"\{\{(.*?)\}\}(?:\[(\d+)\])?")]
+    private static partial Regex ReplaceMessageRegex();
+
     private CommitKind CommitKind
     {
         get => _commitKind;
@@ -1408,12 +1414,6 @@ public sealed partial class FormCommit : GitModuleForm
     }
 
     /// <summary>
-    /// Regex to find message replace pattern: {{ group1 }}[ group2 ]
-    /// </summary>
-    [GeneratedRegex(@"\{\{(.*?)\}\}(?:\[(\d+)\])?")]
-    private static partial Regex ReplaceMessageRegexFinder();
-
-    /// <summary>
     /// replace the Message.Text in an undo-able way.
     /// </summary>
     /// <param name="message">the new message.</param>
@@ -1427,9 +1427,7 @@ public sealed partial class FormCommit : GitModuleForm
                 return;
             }
 
-            MatchCollection regexMatches = ReplaceMessageRegexFinder().Matches(message);
-
-            foreach (Match regexMatch in regexMatches)
+            foreach (Match regexMatch in ReplaceMessageRegex().Matches(message))
             {
                 string pattern = regexMatch.Groups[1].Value;
                 int groupIndex = 1;
