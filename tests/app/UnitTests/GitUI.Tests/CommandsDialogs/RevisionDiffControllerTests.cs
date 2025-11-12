@@ -120,9 +120,9 @@ public class RevisionDiffControllerTests
         FileStatusItem item3 = new(default, new(ObjectId.Random()), new("item3"));
         List<FileStatusItem> files =
         [
+            item3,
             item1,
             item2,
-            item3,
         ];
 
         _fullPathResolver.Resolve("").Returns(x => "c:\\temp\\");
