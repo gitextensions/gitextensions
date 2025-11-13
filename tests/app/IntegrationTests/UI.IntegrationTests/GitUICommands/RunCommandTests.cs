@@ -213,14 +213,6 @@ public sealed class RunCommandTests
     }
 
     [Test]
-    public void RunCommandBasedOnArgument_history_with_empty_path_returns_false(
-        [Values("blamehistory", "filehistory")] string command,
-        [Values("", " ", "  ")] string emptyPath)
-    {
-        _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", command, emptyPath }).Should().BeFalse();
-    }
-
-    [Test]
     public void RunCommandBasedOnArgument_fileeditor_throws()
     {
         ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", "fileeditor" })))

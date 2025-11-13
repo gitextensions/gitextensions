@@ -1472,9 +1472,7 @@ public sealed class GitUICommands : IGitUICommands
             case BlameHistoryCommand:
             case FileHistoryCommand:
                 // filename [revision [--filter-by-revision]]
-                if (!string.IsNullOrWhiteSpace(args[2])
-                    && Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2])
-                    && Module.SuperprojectModule is not null)
+                if (Module.WorkingDir.TrimEnd('\\') == Path.GetFullPath(args[2]) && Module.SuperprojectModule is not null)
                 {
                     Module = Module.SuperprojectModule;
                 }
