@@ -273,7 +273,7 @@ public static class BugReportInvoker
         };
 
         TaskDialogCommandLinkButton restartButton = new(text: TranslatedStrings.RestartApplication, descriptionText: TranslatedStrings.RestartApplicationDescription);
-        restartButton.Click += (_, _) => RestartGE();
+        restartButton.Click += (_, _) => RestartGEAsync();
         page.Buttons.Add(restartButton);
 
         // Only show the report button for non-.NET framework assemblies and non-VC Runtime DLLs
@@ -297,6 +297,21 @@ public static class BugReportInvoker
         TaskDialog.ShowDialog(OwnerFormHandle, page);
 
         return;
+
+        static async void RestartGEAsync()
+        {
+            // Use InvokeAsync to queue the restart on the message loop to avoid deadlocks
+            // when the new process calls Application.SetColorMode() which broadcasts system events
+            Control? control = OwnerForm;
+            if (control is not null)
+            {
+                await control.InvokeAsync(RestartGE);
+            }
+            else
+            {
+                RestartGE();
+            }
+        }
 
         static void RestartGE()
         {
