@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Diagnostics;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtensions.Extensibility;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
@@ -196,7 +197,10 @@ internal static class Program
             }
             catch (Exception ex)
             {
-                BugReportInvoker.Report(new UserExternalOperationException(ex), isTerminating: false);
+                BugReportInvoker.Report(new UserExternalOperationException(
+                        context: "Invalid Git Extensions command line",
+                        new ExternalOperationException(command: args.Join(" ").Quote(), innerException: ex)),
+                    isTerminating: false);
             }
         }
 
