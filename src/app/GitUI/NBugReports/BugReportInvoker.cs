@@ -273,7 +273,7 @@ public static class BugReportInvoker
         };
 
         TaskDialogCommandLinkButton restartButton = new(text: TranslatedStrings.RestartApplication, descriptionText: TranslatedStrings.RestartApplicationDescription);
-        restartButton.Click += (_, _) => RestartGEAsync();
+        restartButton.Click += (_, _) => ThreadHelper.FileAndForget(RestartGEAsync);
         page.Buttons.Add(restartButton);
 
         // Only show the report button for non-.NET framework assemblies and non-VC Runtime DLLs
@@ -298,7 +298,7 @@ public static class BugReportInvoker
 
         return;
 
-        static async void RestartGEAsync()
+        static async Task RestartGEAsync()
         {
             // Use InvokeAsync to queue the restart on the message loop to avoid deadlocks
             // when the new process calls Application.SetColorMode() which broadcasts system events
@@ -311,16 +311,16 @@ public static class BugReportInvoker
             {
                 RestartGE();
             }
-        }
 
-        static void RestartGE()
-        {
-            // Skipping the 1st parameter that, starting from .net core, contains the path to application dll (instead of exe)
-            string arguments = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
-            ProcessStartInfo pi = new(Environment.ProcessPath!, arguments);
-            pi.WorkingDirectory = Environment.CurrentDirectory;
-            Process.Start(pi);
-            Environment.Exit(0);
+            static void RestartGE()
+            {
+                // Skipping the 1st parameter that, starting from .NET, contains the path to application dll (instead of exe)
+                string arguments = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
+                ProcessStartInfo pi = new(Environment.ProcessPath!, arguments);
+                pi.WorkingDirectory = Environment.CurrentDirectory;
+                Process.Start(pi);
+                Environment.Exit(0);
+            }
         }
 
         // Determines if the assembly name is a .NET framework assembly.
