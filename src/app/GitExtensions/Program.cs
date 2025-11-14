@@ -196,7 +196,7 @@ internal static class Program
             }
             catch (Exception ex)
             {
-                throw new UserExternalOperationException(ex);
+                BugReportInvoker.Report(new UserExternalOperationException(ex), isTerminating: false);
             }
         }
 
