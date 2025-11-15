@@ -273,7 +273,7 @@ public static class BugReportInvoker
         };
 
         TaskDialogCommandLinkButton restartButton = new(text: TranslatedStrings.RestartApplication, descriptionText: TranslatedStrings.RestartApplicationDescription);
-        restartButton.Click += (_, _) => ThreadHelper.FileAndForget(RestartGEAsync);
+        restartButton.Click += (_, _) => InvokeRestartGE();
         page.Buttons.Add(restartButton);
 
         // Only show the report button for non-.NET framework assemblies and non-VC Runtime DLLs
@@ -298,31 +298,6 @@ public static class BugReportInvoker
 
         return;
 
-        static async Task RestartGEAsync()
-        {
-            // Use InvokeAsync to queue the restart on the message loop to avoid deadlocks
-            // when the new process calls Application.SetColorMode() which broadcasts system events
-            Control? control = OwnerForm;
-            if (control is not null)
-            {
-                await control.InvokeAsync(RestartGE);
-            }
-            else
-            {
-                RestartGE();
-            }
-
-            static void RestartGE()
-            {
-                // Skipping the 1st parameter that, starting from .NET, contains the path to application dll (instead of exe)
-                string arguments = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
-                ProcessStartInfo pi = new(Environment.ProcessPath!, arguments);
-                pi.WorkingDirectory = Environment.CurrentDirectory;
-                Process.Start(pi);
-                Environment.Exit(0);
-            }
-        }
-
         // Determines if the assembly name is a .NET framework assembly.
         // .NET framework assemblies are typically affected by Patch Tuesday updates,
         // causing transient FileNotFoundException errors that are resolved by restarting the application.
@@ -337,6 +312,30 @@ public static class BugReportInvoker
             // These are the assemblies commonly affected by Patch Tuesday updates
             return assemblyName.StartsWith("System.", StringComparison.OrdinalIgnoreCase)
                 || assemblyName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase);
+        }
+
+        static void InvokeRestartGE()
+        {
+            // Use Invoke to queue the restart on the message loop to avoid deadlocks
+            // when the new process calls Application.SetColorMode() which broadcasts system events
+            if (OwnerForm is Control control)
+            {
+                control.InvokeAndForget(RestartGE);
+            }
+            else
+            {
+                ThreadHelper.FileAndForget(RestartGE);
+            }
+
+            static void RestartGE()
+            {
+                // Skipping the 1st parameter that, starting from .NET, contains the path to application dll (instead of exe)
+                string arguments = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
+                ProcessStartInfo pi = new(Environment.ProcessPath!, arguments);
+                pi.WorkingDirectory = Environment.CurrentDirectory;
+                Process.Start(pi);
+                Environment.Exit(0);
+            }
         }
     }
 
