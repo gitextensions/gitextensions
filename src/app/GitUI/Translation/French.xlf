@@ -780,7 +780,7 @@ Un compte GitHub valide est nécessaire.</target>
       </trans-unit>
       <trans-unit id="_adviceDiffToolConfiguration.Text">
         <source>You should configure a diff tool to show file diff in external program.</source>
-        <target>Vous devez configurer un outil de différentiation pour afficher les différences de fichiers dans un programme externe</target>
+        <target>Vous devez configurer un outil de différenciation pour afficher les différences de fichiers dans un programme externe</target>
         
       </trans-unit>
       <trans-unit id="_configureMergeTool.Text">
@@ -795,7 +795,7 @@ Un compte GitHub valide est nécessaire.</target>
       </trans-unit>
       <trans-unit id="_diffToolXConfigured.Text">
         <source>There is a difftool configured: {0}</source>
-        <target>Un outil de différentiation a été configuré : {0}</target>
+        <target>Un outil de différenciation a été configuré : {0}</target>
         
       </trans-unit>
       <trans-unit id="_emailSet.Text">
@@ -867,7 +867,7 @@ Veuillez vérifier que des outils linux sont installés (par Git fo Windows ou c
       </trans-unit>
       <trans-unit id="_noDiffToolConfiguredCaption.Text">
         <source>Difftool</source>
-        <target>Outil de différentiation</target>
+        <target>Outil de différenciation</target>
         
       </trans-unit>
       <trans-unit id="_noEmailSet.Text">
@@ -1684,12 +1684,12 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
       </trans-unit>
       <trans-unit id="chkOmitUninterestingDiff.Text">
         <source>Omit uninteresting changes from combined diff</source>
-        <target>Omettre les modifications inintéressantes de la différentiation combinée </target>
+        <target>Omettre les modifications inintéressantes de la différenciation combinée </target>
         
       </trans-unit>
       <trans-unit id="chkOpenSubmoduleDiffInSeparateWindow.Text">
         <source>Open Submodule Diff in separate window</source>
-        <target>Ouvrir la différentiation des sous-modules dans une fenêtre séparée</target>
+        <target>Ouvrir la différenciation des sous-modules dans une fenêtre séparée</target>
         
       </trans-unit>
       <trans-unit id="chkRememberDiffAppearancePreference.Text">
@@ -1729,14 +1729,14 @@ Veuillez vous assurez que git (Git for Windows ou cygwin) est installé ou rense
       </trans-unit>
       <trans-unit id="chkShowAllCustomDiffTools.Text">
         <source>Show all available difftools</source>
-        <target>Montrer tous les outils de différentiation disponibles</target>
+        <target>Montrer tous les outils de différenciation disponibles</target>
         
       </trans-unit>
       <trans-unit id="chkShowAllCustomDiffTools.ToolTipText">
         <source>Show all configured difftools in a dropdown.
 The primary difftool can still be selected by clicking the main menu entry.</source>
-        <target>Afficher tous les outils de différentiation configurés dans un menu déroulant.
-L'outil de différentiation par défaut peut être choisi via le menu principal.</target>
+        <target>Afficher tous les outils de différenciation configurés dans un menu déroulant.
+L'outil de différenciation par défaut peut être choisi via le menu principal.</target>
         
       </trans-unit>
       <trans-unit id="chkShowDiffForAllParents.Text">
@@ -2850,7 +2850,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="DiffTabPage.Text">
         <source>Diff</source>
-        <target>Différentiation</target>
+        <target>Différenciation</target>
         
       </trans-unit>
       <trans-unit id="EditSettings.ToolTipText">
@@ -3646,7 +3646,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="tsmiDiffContainsFilter.Text">
         <source>&amp;Diff contains (SLOW)</source>
-        <target>Contenu des &amp;différentiations (LENT)</target>
+        <target>Contenu des &amp;différenciations (LENT)</target>
         
       </trans-unit>
       <trans-unit id="tsmiFavouriteRepositories.Text">
@@ -4901,7 +4901,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with difftool</source>
-        <target>Ouvrir avec l'outil de différentiation</target>
+        <target>Ouvrir avec l'outil de différenciation</target>
         
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
@@ -4986,7 +4986,7 @@ $ git config --unset commit.template</target>
       </trans-unit>
       <trans-unit id="stagedOpenDifftoolToolStripMenuItem9.Text">
         <source>Open with difftool</source>
-        <target>Ouvrir avec l'outil de différentiation</target>
+        <target>Ouvrir avec l'outil de différenciation</target>
         
       </trans-unit>
       <trans-unit id="stagedOpenFolderToolStripMenuItem10.Text">
@@ -5085,7 +5085,7 @@ $ git config --unset commit.template</target>
     <body>
       <trans-unit id="$this.Text">
         <source>Diff</source>
-        <target>Différentiation</target>
+        <target>Différenciation</target>
         
       </trans-unit>
     </body>
@@ -5536,7 +5536,7 @@ Deleting a branch can cause commits to be deleted too!</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Diff</source>
-        <target>Différentiation</target>
+        <target>Différenciation</target>
         
       </trans-unit>
       <trans-unit id="_anotherBranchTooltip.Text">
@@ -5611,7 +5611,7 @@ Deleting a branch can cause commits to be deleted too!</source>
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with &amp;difftool</source>
-        <target>Ouvrir avec l'outil de &amp;différentiation</target>
+        <target>Ouvrir avec l'outil de &amp;différenciation</target>
         
       </trans-unit>
       <trans-unit id="secondCommitGroup.Text">
@@ -5724,7 +5724,7 @@ Si vous n'êtes pas sûr, fermez seulement la fenêtre.</target>
       </trans-unit>
       <trans-unit id="DiffTab.Text">
         <source>Diff</source>
-        <target>Différentiation</target>
+        <target>Différenciation</target>
         
       </trans-unit>
       <trans-unit id="ShowFullHistory.ToolTipText">
@@ -5769,7 +5769,7 @@ Si vous n'êtes pas sûr, fermez seulement la fenêtre.</target>
       </trans-unit>
       <trans-unit id="diffToolRemoteLocalStripMenuItem.Text">
         <source>Difftool selected &lt; - &gt; local</source>
-        <target>Outil de différentiation : Selectionné &lt; - &gt; local</target>
+        <target>Outil de différenciation : Sélectionné &lt; - &gt; local</target>
         
       </trans-unit>
       <trans-unit id="displayAuthorFirstToolStripMenuItem.Text">
@@ -5819,7 +5819,7 @@ Si vous n'êtes pas sûr, fermez seulement la fenêtre.</target>
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with difftool</source>
-        <target>Ouvrir avec l'outil de différentiation</target>
+        <target>Ouvrir avec l'outil de différenciation</target>
         
       </trans-unit>
       <trans-unit id="revertCommitToolStripMenuItem.Text">
@@ -9845,7 +9845,7 @@ du menu contextuel pour des opérations supplémentaires</target>
       </trans-unit>
       <trans-unit id="btnDiffToolBrowse.AccessibleName">
         <source>Browse Difftool command</source>
-        <target>Parcourir jusqu'à l'outil de différentiation</target>
+        <target>Parcourir jusqu'à l'outil de différenciation</target>
         
       </trans-unit>
       <trans-unit id="btnDiffToolBrowse.Text">
@@ -9855,7 +9855,7 @@ du menu contextuel pour des opérations supplémentaires</target>
       </trans-unit>
       <trans-unit id="btnDiffToolCommandSuggest.AccessibleName">
         <source>Suggest Difftool command</source>
-        <target>Suggérer la commande de l'outil de différentiation</target>
+        <target>Suggérer la commande de l'outil de différenciation</target>
         
       </trans-unit>
       <trans-unit id="btnDiffToolCommandSuggest.Text">
@@ -9945,17 +9945,17 @@ global settings.
       </trans-unit>
       <trans-unit id="lblDiffTool.Text">
         <source>Difftool</source>
-        <target>Outil de différentiation</target>
+        <target>Outil de différenciation</target>
         
       </trans-unit>
       <trans-unit id="lblDiffToolCommand.Text">
         <source>Difftool command</source>
-        <target>Commande de l'outil de différentiation</target>
+        <target>Commande de l'outil de différenciation</target>
         
       </trans-unit>
       <trans-unit id="lblDiffToolPath.Text">
         <source>Path to difftool</source>
-        <target>Chemin de l'outil de différentiation</target>
+        <target>Chemin de l'outil de différenciation</target>
         
       </trans-unit>
       <trans-unit id="lblMergeTool.Text">
@@ -11213,7 +11213,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with &amp;difftool</source>
-        <target>Ouvrir avec l'outil de &amp;différentiation</target>
+        <target>Ouvrir avec l'outil de &amp;différenciation</target>
         
       </trans-unit>
       <trans-unit id="rememberFirstRevDiffToolStripMenuItem.Text">
@@ -11432,7 +11432,7 @@ Vous pouvez voir les changements dans le formulaire de commit.</target>
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with &amp;difftool</source>
-        <target>Ouvrir avec l'outil de &amp;différentiation</target>
+        <target>Ouvrir avec l'outil de &amp;différenciation</target>
         
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
@@ -11442,7 +11442,7 @@ Vous pouvez voir les changements dans le formulaire de commit.</target>
       </trans-unit>
       <trans-unit id="rememberFileStripMenuItem.Text">
         <source>Re&amp;member file for diff</source>
-        <target>Se souvenir du fichier pour la différentiation</target>
+        <target>Se souvenir du fichier pour la différenciation</target>
         
       </trans-unit>
       <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
@@ -11755,7 +11755,7 @@ Vous pouvez voir les changements dans le formulaire de commit.</target>
       </trans-unit>
       <trans-unit id="_invalidDiffContainsFilter.Text">
         <source>Filter text '{0}' not valid for &quot;Diff contains&quot; filter.</source>
-        <target>Le filtre de texte '{0}' est invalide pour &quot;Contenu de la différentiation&quot;.</target>
+        <target>Le filtre de texte '{0}' est invalide pour &quot;Contenu de la différenciation&quot;.</target>
         
       </trans-unit>
       <trans-unit id="_loadingControlText.Text">
@@ -11939,7 +11939,7 @@ Vous pouvez voir les changements dans le formulaire de commit.</target>
       </trans-unit>
       <trans-unit id="openCommitsWithDiffToolMenuItem.Text">
         <source>Open selected commits with &amp;difftool</source>
-        <target>Ouvrir les commits sélectionnés avec l'outil de &amp;différentiation</target>
+        <target>Ouvrir les commits sélectionnés avec l'outil de &amp;différenciation</target>
         
       </trans-unit>
       <trans-unit id="openPullRequestPageStripMenuItem.Text">
@@ -12640,7 +12640,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_combinedDiff.Text">
         <source>Combined diff</source>
-        <target>Différentiation combinée</target>
+        <target>Différenciation combinée</target>
         
       </trans-unit>
       <trans-unit id="_commandText.Text">
@@ -12724,27 +12724,27 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_diffBaseWith.Text">
         <source>Diff BASE with</source>
-        <target>Différentiation de BASE avec</target>
+        <target>Différenciation de BASE avec</target>
         
       </trans-unit>
       <trans-unit id="_diffContent.Text">
         <source>Diff contains</source>
-        <target>Contenu de la différentiation</target>
+        <target>Contenu de la différenciation</target>
         
       </trans-unit>
       <trans-unit id="_diffRange.Text">
         <source>Range diff</source>
-        <target>Plage de différentiation</target>
+        <target>Plage de différenciation</target>
         
       </trans-unit>
       <trans-unit id="_diffSelectedWithRememberedFile.Text">
         <source>&amp;Diff with &quot;{0}&quot;</source>
-        <target>&amp;Différentiation avec &quot;{0}&quot;</target>
+        <target>&amp;Différenciation avec &quot;{0}&quot;</target>
         
       </trans-unit>
       <trans-unit id="_diffWithParent.Text">
         <source>Diff with A </source>
-        <target>Différentiation avec A</target>
+        <target>Différenciation avec A</target>
         
       </trans-unit>
       <trans-unit id="_directoryIsNotAValidRepository.Text">
@@ -13321,7 +13321,7 @@ the last selected commit.</source>
       </trans-unit>
       <trans-unit id="_tagsText.Text">
         <source>Tags</source>
-        <target>Etiquettes</target>
+        <target>Étiquettes</target>
         
       </trans-unit>
       <trans-unit id="_telemetryPermissionCaption.Text">
@@ -13419,7 +13419,7 @@ Cette action ne peut être annulée.</target>
       </trans-unit>
       <trans-unit id="_deleteCategoryCaption.Text">
         <source>Delete Category</source>
-        <target>Supprimer la catégory</target>
+        <target>Supprimer la catégorie</target>
         
       </trans-unit>
       <trans-unit id="_deleteCategoryQuestion.Text">
@@ -13542,7 +13542,7 @@ Cette action ne peut être annulée.</target>
       </trans-unit>
       <trans-unit id="_fetchBtn.Text">
         <source>Fetch to pr/ branch</source>
-        <target>Récuperer depuis demande de pull/branche</target>
+        <target>Récupérer depuis demande de pull/branche</target>
         
       </trans-unit>
       <trans-unit id="_postComment.Text">
@@ -13562,12 +13562,12 @@ Cette action ne peut être annulée.</target>
       </trans-unit>
       <trans-unit id="_strCouldNotLoadDiscussion.Text">
         <source>Could not load discussion!</source>
-        <target>Impossible de charger la discussion!</target>
+        <target>Impossible de charger la discussion !</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToClosePullRequest.Text">
         <source>Failed to close pull request!</source>
-        <target>Echec de cloture de la demande de pull!</target>
+        <target>Échec de clôture de la demande de pull !</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToFetchPullData.Text">
@@ -13577,12 +13577,12 @@ Cette action ne peut être annulée.</target>
       </trans-unit>
       <trans-unit id="_strFailedToLoadDiffData.Text">
         <source>Failed to load diff data!</source>
-        <target>Échec de chargement des données de différentiation !</target>
+        <target>Échec de chargement des données de différenciation !</target>
         
       </trans-unit>
       <trans-unit id="_strFailedToLoadDiscussionItem.Text">
         <source>Failed to post discussion item!</source>
-        <target>Echec de post de l'item de discussion!</target>
+        <target>Échec de publication de l'item de discussion !</target>
         
       </trans-unit>
       <trans-unit id="_strLoading.Text">

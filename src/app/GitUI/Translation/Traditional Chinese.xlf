@@ -49,12 +49,12 @@ If enabled, any illegal symbols will be replaced with the replacement symbol of 
       </trans-unit>
       <trans-unit id="chkCommitAndPushForcedWhenAmend.Text">
         <source>Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked</source>
-        <target>若选中修补 Amend 选项，在执行提交并推送操作时，使用 force with lease 强制推送</target>
+        <target>當已勾選修訂選項時，提交和推送操作會強制使用租約推送</target>
         
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
-        <target>在命令对话框使用控制台模拟器显示控制台输出</target>
+        <target>在命令對話方塊中使用控制台模擬器輸出</target>
         
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.ToolTipText">
@@ -64,12 +64,11 @@ If yes, embeds the fully functional console emulator. This is experimental and m
 If no, redirects select strings from stdout/stderr into an edit box. This is the classic mode.
 
 Turn off if you experience problems with the console emulator.</source>
-        <target>设置命令行程序，例如克隆和拉取，在命令进度对话框中的显示样式。
+        <target>控制命令進度對話框中的控制台程式輸出顯示方式，例如 Clone 或 Pull。
 
-如果选“是”，则嵌入全功能的命令行模拟器。这是实验性的，可能具有副作用。
-如果选“否”，则将 stdout / stderr 的输出字符串重定向到编辑框中。这是经典模式。
+若選擇是，將嵌入完整功能的控制台模擬器。這是實驗性功能，可能會有副作用。 若選擇否，將部分字串從 stdout/stderr 重定向至編輯框。這是經典模式。
 
-如果您在使用命令行模拟器时遇到问题，请选“否”。</target>
+若您在使用控制台模擬器時遇到問題，請關閉此選項。</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -2882,7 +2881,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="ToolStripFilters.Text">
         <source>Filters</source>
-        <target>过滤器</target>
+        <target>篩選</target>
         
       </trans-unit>
       <trans-unit id="ToolStripMain.Text">
