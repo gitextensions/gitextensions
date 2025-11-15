@@ -10032,10 +10032,6 @@ Select this commit to populate the full message.</source>
         <source>Checkout branch</source>
         <target />
       </trans-unit>
-      <trans-unit id="_buttonCloseApp.Text">
-        <source>Close application</source>
-        <target />
-      </trans-unit>
       <trans-unit id="_buttonContinue.Text">
         <source>Continue</source>
         <target />
