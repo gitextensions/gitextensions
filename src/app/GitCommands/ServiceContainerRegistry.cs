@@ -8,6 +8,6 @@ public static class ServiceContainerRegistry
 {
     public static void RegisterServices(ServiceContainer serviceContainer)
     {
-        serviceContainer.AddService<ISubmoduleStatusProvider>(new SubmoduleStatusProvider());
+        serviceContainer.AddService<ISubmoduleStatusProvider>(new SubmoduleStatusProvider((path) => new GitModule(path)));
     }
 }

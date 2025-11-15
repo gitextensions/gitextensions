@@ -70,7 +70,7 @@ public class FormBrowse_LeftPanel_SubmodulesTests
         _repo2Module = submodules.ElementAt(0);
         _repo3Module = submodules.ElementAt(1);
 
-        _provider = new SubmoduleStatusProvider();
+        _provider = new SubmoduleStatusProvider((path) => new GitModule(path));
 
         IServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
         serviceContainer.RemoveService<ISubmoduleStatusProvider>();

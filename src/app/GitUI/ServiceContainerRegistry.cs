@@ -41,7 +41,7 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IOutputHistoryProvider>(outputHistoryModel);
         serviceContainer.AddService<IOutputHistoryRecorder>(outputHistoryModel);
 
-        RepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider = new();
+        RepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider = new((path) => new GitModule(path));
         InvalidRepositoryRemover invalidRepositoryRemover = new();
         serviceContainer.AddService<IRepositoryCurrentBranchNameProvider>(repositoryCurrentBranchNameProvider);
         serviceContainer.AddService<IInvalidRepositoryRemover>(invalidRepositoryRemover);

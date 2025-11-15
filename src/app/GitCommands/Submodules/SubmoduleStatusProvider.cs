@@ -40,8 +40,14 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     private readonly CancellationTokenSequence _submodulesStructureSequence = new();
     private readonly CancellationTokenSequence _submodulesStatusSequence = new();
     private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = [];
+    private readonly Func<string, IGitModule> _getModule;
     private DateTime _previousSubmoduleUpdateTime;
     private SubmoduleInfoResult? _submoduleInfoResult;
+
+    public SubmoduleStatusProvider(Func<string, IGitModule> getModule)
+    {
+        _getModule = getModule;
+    }
 
     // Invoked when status update is requested (use to clear/lock UI)
     public event EventHandler? StatusUpdating;
@@ -160,6 +166,17 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         OnStatusUpdated(_submoduleInfoResult, structureUpdated: false, cancelToken);
     }
 
+    private IGitModule GetModule(string path)
+    {
+        IGitModule module = _getModule(path);
+        if (module is null)
+        {
+            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
+        }
+
+        return module;
+    }
+
     private void OnStatusUpdating()
     {
         StatusUpdating?.Invoke(this, EventArgs.Empty);
@@ -176,7 +193,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     /// </summary>
     /// <param name="currentModule">The current module.</param>
     /// <param name="noBranchText">text with no branches.</param>
-    private static SubmoduleInfoResult GetSuperProjectRepositorySubmodulesStructure(IGitModule currentModule, string noBranchText)
+    private SubmoduleInfoResult GetSuperProjectRepositorySubmodulesStructure(IGitModule currentModule, string noBranchText)
     {
         SubmoduleInfoResult result = new() { Module = currentModule, CurrentSubmoduleStatus = null };
 
@@ -195,7 +212,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         return result;
     }
 
-    private static void SetTopProjectSubmoduleInfo(SubmoduleInfoResult result,
+    private void SetTopProjectSubmoduleInfo(SubmoduleInfoResult result,
         string noBranchText,
         IGitModule topProject,
         bool isCurrentTopProject)
@@ -210,7 +227,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         result.TopProject = new SubmoduleInfo(text: name, path, bold: isCurrentTopProject);
     }
 
-    private static void SetSubmoduleData(IGitModule currentModule, SubmoduleInfoResult result, string noBranchText, IGitModule topProject)
+    private void SetSubmoduleData(IGitModule currentModule, SubmoduleInfoResult result, string noBranchText, IGitModule topProject)
     {
         string[] submodules = topProject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName).ToArray();
         if (!submodules.Any())
@@ -262,7 +279,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         }
     }
 
-    private static string GetBranchNameSuffix(string repositoryPath, string noBranchText)
+    private string GetBranchNameSuffix(string repositoryPath, string noBranchText)
     {
         if (AppSettings.ShowRepoCurrentBranch && !GitModule.IsBareRepository(repositoryPath))
         {
@@ -272,10 +289,10 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         return string.Empty;
     }
 
-    private static string GetModuleBranch(string path, string noBranchText)
+    private string GetModuleBranch(string path, string noBranchText)
     {
         // Note: This will fail for WSL symbolic links to .git directories
-        string branch = GitModule.GetSelectedBranchFast(path);
+        string branch = GetModule(path).GetSelectedBranch();
         string text = DetachedHeadParser.IsDetachedHead(branch) ? noBranchText : branch;
         return $"({text})";
     }

@@ -58,7 +58,7 @@ internal class SubmoduleStatusProviderTests
             Debug.WriteLine($"Repo[{i + 1}]:{actualModules[i].WorkingDir}");
         }
 
-        _provider = new SubmoduleStatusProvider();
+        _provider = new SubmoduleStatusProvider((path) => new GitModule(path));
     }
 
     [TearDown]
