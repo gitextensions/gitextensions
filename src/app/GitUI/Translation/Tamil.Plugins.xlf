@@ -946,26 +946,32 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="GetProjectIdLink.Text">
         <source>Get Project ID from server</source>
+        <target>சேவையகத்திலிருந்து திட்ட அடையாளத்தைப் பெறு</target>
         
       </trans-unit>
       <trans-unit id="GetProjectIdStatusText.Text">
         <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        <target>சேவையகத்திலிருந்து திட்டத்தைப் பெற முடியவில்லை. செல்லுபடியாகும் பநிஇ கிள்ளாக்கைக் குறிப்பிட முயற்சிக்கவும் அல்லது நிகழ்வு முகவரியைச் சரிபார்</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
+        <target>கிள்ளாகு மேலாண்மை பக்கத்திற்குச் செல்</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Instance URL</source>
+        <target>நிகழ்வு முகவரி</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Api Token</source>
+        <target>பநிஇ கிள்ளாகு</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
+        <target>திட்ட அடையாளம்</target>
         
       </trans-unit>
     </body>
@@ -1176,6 +1182,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="JiraPluginConfigurationErrorText.Text">
         <source>Jira plugin configuration incomplete!</source>
+        <target>சீரா செருகுநிரல் உள்ளமைவு முழுமையடையவில்லை!</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
@@ -1195,6 +1202,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_authTypeSettings.Caption">
         <source>Auth type</source>
+        <target>ஒப்புதல் வகை</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">

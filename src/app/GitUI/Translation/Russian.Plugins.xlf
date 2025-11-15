@@ -1182,6 +1182,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="JiraPluginConfigurationErrorText.Text">
         <source>Jira plugin configuration incomplete!</source>
+        <target>Настройка плагина Jira не завершена!</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">

@@ -416,7 +416,7 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="cbShowAuthor.Text">
         <source>Show author</source>
-        <target>显示作者</target>
+        <target>显示作者时间</target>
         
       </trans-unit>
       <trans-unit id="cbShowAuthorAvatar.Text">
@@ -2085,7 +2085,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
       </trans-unit>
       <trans-unit id="treatAllFilesAsTextToolStripMenuItem.Text">
         <source>&amp;Treat all files as text</source>
-        <target>將所有檔案視為文字檔(&amp;T)</target>
+        <target>将所有文件视为文本(&amp;T)</target>
         
       </trans-unit>
       <trans-unit id="unstageSelectedLinesToolStripMenuItem.Text">
@@ -3378,7 +3378,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="openToolStripMenuItem.Text">
         <source>&amp;Open...</source>
-        <target>打开...(&amp;O)</target>
+        <target>打开(&amp;O)...</target>
         
       </trans-unit>
       <trans-unit id="patchToolStripMenuItem.Text">
@@ -3418,7 +3418,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem.Text">
         <source>R&amp;ebase...</source>
-        <target>重设基准&amp;e...</target>
+        <target>重设基准(&amp;E)...</target>
         
       </trans-unit>
       <trans-unit id="rebaseToolStripMenuItem1.Text">
@@ -3428,7 +3428,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="recoverLostObjectsToolStripMenuItem.Text">
         <source>&amp;Recover lost objects...</source>
-        <target>恢复丢失的记录&amp;R...</target>
+        <target>恢复丢失的记录(&amp;R)...</target>
         
       </trans-unit>
       <trans-unit id="refreshDashboardToolStripMenuItem.Text">
@@ -3448,7 +3448,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="reportAnIssueToolStripMenuItem.Text">
         <source>&amp;Report an issue</source>
-        <target>报告问题&amp;R</target>
+        <target>报告问题(&amp;R)</target>
         
       </trans-unit>
       <trans-unit id="repositoryToolStripMenuItem.Text">
@@ -3458,17 +3458,17 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="resetToolStripMenuItem.Text">
         <source>&amp;Reset changes...</source>
-        <target>重置更改&amp;R...</target>
+        <target>重置更改(&amp;R)...</target>
         
       </trans-unit>
       <trans-unit id="runMergetoolToolStripMenuItem.Text">
         <source>&amp;Solve merge conflicts...</source>
-        <target>解决合并冲突&amp;S...</target>
+        <target>解决合并冲突(&amp;S)...</target>
         
       </trans-unit>
       <trans-unit id="setDefaultPullButtonActionToolStripMenuItem.Text">
         <source>Set &amp;default Pull button action</source>
-        <target>设置拉取按钮的默认操作&amp;d</target>
+        <target>设置拉取按钮的默认操作(&amp;d)...</target>
         
       </trans-unit>
       <trans-unit id="settingsToolStripMenuItem.Text">
@@ -3493,7 +3493,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="stashPopToolStripMenuItem.Text">
         <source>Stash &amp;pop</source>
-        <target>删除暂存&amp;p</target>
+        <target>删除暂存(&amp;P)</target>
         
       </trans-unit>
       <trans-unit id="stashPopToolStripMenuItem.ToolTipText">
@@ -3845,7 +3845,7 @@ Do you want to continue?</source>
       </trans-unit>
       <trans-unit id="_createBranch.Text">
         <source>Cr&amp;eate local branch with same name:</source>
-        <target>建立相同名稱的本地分支(&amp;e)：</target>
+        <target>创建相同名称的本地分支(&amp;E)：</target>
         
       </trans-unit>
       <trans-unit id="_customBranchNameIsEmpty.Text">
@@ -3908,7 +3908,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="rbDontCreate.Text">
         <source>Ch&amp;eckout the commit (in detached head)</source>
-        <target>檢出此提交（在分離的 HEAD 中）(&amp;e)</target>
+        <target>检出此提交(在分离的 HEAD 中)(&amp;E)</target>
         
       </trans-unit>
       <trans-unit id="rbMerge.Text">
@@ -3986,7 +3986,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="btnPick.Text">
         <source>&amp;Cherry pick</source>
-        <target>選取此提交(&amp;C)</target>
+        <target>选取此提交(&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="cbxAddReference.Text">
@@ -3996,7 +3996,7 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="cbxAutoCommit.Text">
         <source>&amp;Automatically create a commit</source>
-        <target>自動建立一個提交(&amp;A)</target>
+        <target>自动创建一个提交(&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="columnHeader1.Text">
@@ -4021,12 +4021,12 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="lblBranchInfo.Text">
         <source>Cherry pick this commit:</source>
-        <target>選取此提交：</target>
+        <target>选取此提交：</target>
         
       </trans-unit>
       <trans-unit id="lblParents.Text">
         <source>This commit is a merge, select &amp;parent:</source>
-        <target>此提交是合併的，請選擇父項目(&amp;p)：</target>
+        <target>此提交是一个合并，选择父项目(&amp;P)：</target>
         
       </trans-unit>
     </body>
@@ -4173,12 +4173,12 @@ Are you sure?</source>
       </trans-unit>
       <trans-unit id="labelPathHintExclude.Text">
         <source>(one path per line)</source>
-        <target>（每行一個路徑）</target>
+        <target>(每行一个路径)</target>
         
       </trans-unit>
       <trans-unit id="labelPathHintInclude.Text">
         <source>(one path per line)</source>
-        <target>（每行一個路徑）</target>
+        <target>(每行一个路径)</target>
         
       </trans-unit>
     </body>
@@ -4371,7 +4371,7 @@ gitex.cmd / gitex (located in the same folder as GitExtensions.exe):</source>
       </trans-unit>
       <trans-unit id="ResetSoft.Text">
         <source>Reset so&amp;ft</source>
-        <target>软重置 &amp;f</target>
+        <target>软重置(&amp;f)</target>
         
       </trans-unit>
       <trans-unit id="ResetSoft.fileTooltip">
@@ -8547,17 +8547,17 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_changesTakeOnlyLocalRebaseTooltip.Text">
         <source>Take only the changes from the branch you are rebasing onto</source>
-        <target>僅接受您正在 rebase 的分支的變更</target>
+        <target>仅从要变基的分支中获取更改</target>
         
       </trans-unit>
       <trans-unit id="_changesTakeOnlyRemoteMergeTooltip.Text">
         <source>Take only the changes from the branch you are merging</source>
-        <target>僅接受您正在合併的分支的變更</target>
+        <target>仅从要合并的分支中获取更改</target>
         
       </trans-unit>
       <trans-unit id="_changesTakeOnlyRemoteRebaseTooltip.Text">
         <source>Take only the changes from the branch you are rebasing</source>
-        <target>僅接受您正在 rebase 的分支的變更</target>
+        <target>仅从要变基的分支中获取更改</target>
         
       </trans-unit>
       <trans-unit id="_chooseBaseFileFailedText.Text">
@@ -8592,27 +8592,27 @@ Is the merge conflict solved?</source>
       </trans-unit>
       <trans-unit id="_contextChooseBaseTooltip.Text">
         <source>Take no changes and revert to base content!</source>
-        <target>不接受任何變更，還原至基礎內容！</target>
+        <target>不进行任何更改并恢复到基本内容！</target>
         
       </trans-unit>
       <trans-unit id="_contextChooseLocalMergeText.Text">
         <source>Choose local/current (ours)</source>
-        <target>選擇本地/當前（我們的）</target>
+        <target>选择本地文件 (ours)</target>
         
       </trans-unit>
       <trans-unit id="_contextChooseLocalRebaseText.Text">
         <source>Choose local/current (theirs)</source>
-        <target>選擇本地/當前（他們的）</target>
+        <target>选择本地/当前（他们的）</target>
         
       </trans-unit>
       <trans-unit id="_contextChooseRemoteMergeText.Text">
         <source>Choose remote/incoming (theirs)</source>
-        <target>選擇遠端/傳入（他們的）</target>
+        <target>选择远端/传入（他们的）</target>
         
       </trans-unit>
       <trans-unit id="_contextChooseRemoteRebaseText.Text">
         <source>Choose remote/incoming (ours)</source>
-        <target>選擇遠端/傳入（我們的）</target>
+        <target>选择远端/传入（我们的）</target>
         
       </trans-unit>
       <trans-unit id="_currentFormatFilter.Text">
@@ -8886,7 +8886,7 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="labelRemoteIncoming.Text">
         <source>Remote/incoming</source>
-        <target>遠端/傳入</target>
+        <target>远端/传入</target>
         
       </trans-unit>
       <trans-unit id="merge.Text">
@@ -9093,27 +9093,27 @@ Do you want to use this custom merge script?</source>
       </trans-unit>
       <trans-unit id="chkMatchCase.Text">
         <source>Match &amp;case</source>
-        <target>區分大小寫(&amp;c)</target>
+        <target>匹配大小写(&amp;C)</target>
         
       </trans-unit>
       <trans-unit id="chkMatchWholeWord.Text">
         <source>Match &amp;whole word</source>
-        <target>匹配整個單詞(&amp;w)</target>
+        <target>全字匹配(&amp;w)</target>
         
       </trans-unit>
       <trans-unit id="chkShowSearchBox.Text">
         <source>Show search &amp;box</source>
-        <target>顯示搜尋框(&amp;b)</target>
+        <target>显示搜索框(&amp;b)</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>&amp;Search:</source>
-        <target>搜尋(&amp;S)：</target>
+        <target>搜索(&amp;S)：</target>
         
       </trans-unit>
       <trans-unit id="lblOptions.Text">
         <source>&amp;Options:</source>
-        <target>選項(&amp;O)：</target>
+        <target>选项 (&amp;O)</target>
         
       </trans-unit>
     </body>
@@ -9210,7 +9210,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="Clear.toolTip">
         <source>Remove the selected stash from the list</source>
-        <target>移除列表中選取的暫存區</target>
+        <target>从列表中移除选取的暂存</target>
         
       </trans-unit>
       <trans-unit id="Stash.Text">
@@ -9220,7 +9220,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="Stash.toolTip">
         <source>Save local changes to a new stash, then revert local changes</source>
-        <target>儲存本地變更到新的隱藏區（stash），然後還原本地變更。</target>
+        <target>将本地更改保存到新存储中，然后恢复本地更改</target>
         
       </trans-unit>
       <trans-unit id="StashKeepIndex.Text">
@@ -9230,7 +9230,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="StashKeepIndex.toolTip">
         <source>All changes already added to the index are left intact</source>
-        <target>所有已經添加到索引的更改將保持不變</target>
+        <target>已添加到索引中的所有更改都保持不变</target>
         
       </trans-unit>
       <trans-unit id="StashSelectedFiles.Text">
@@ -9240,7 +9240,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="StashSelectedFiles.toolTip">
         <source>Stash changes for the selected files, then revert them to the original state</source>
-        <target>將選取的檔案儲存並隱藏更改，然後將它們還原至原始狀態</target>
+        <target>暂存所选文件的更改，然后将它们恢复为原始状态</target>
         
       </trans-unit>
       <trans-unit id="Stashes.ToolTipText">
@@ -9270,7 +9270,7 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       </trans-unit>
       <trans-unit id="chkIncludeUntrackedFiles.toolTip">
         <source>All untracked files are also stashed and then cleaned</source>
-        <target>所有未追蹤的檔案也會被儲藏並進行清理</target>
+        <target>所有未跟踪的文件也会被隐藏，然后被清理</target>
         
       </trans-unit>
       <trans-unit id="messageLabel.Text">
@@ -9844,7 +9844,7 @@ Context menu for additional operations</source>
       </trans-unit>
       <trans-unit id="checkBoxRebaseAutosquash.Text">
         <source>Automatically squash commits when doing an interactive rebase</source>
-        <target>在進行互動式變基時自動合併提交</target>
+        <target>在执行交互式变基时自动压缩提交</target>
         
       </trans-unit>
       <trans-unit id="checkBoxRebaseAutostash.Text">
@@ -10125,7 +10125,7 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="BrowseLinuxToolsDir.Text">
         <source>Browse</source>
-        <target>瀏覽功能</target>
+        <target>浏览</target>
         
       </trans-unit>
       <trans-unit id="ChangeHomeButton.Text">
@@ -10160,7 +10160,7 @@ Check if file is accessible.</source>
       </trans-unit>
       <trans-unit id="label50.Text">
         <source>Set the correct paths to Git for Windows. (WSL Git will be used for WSL repositories).</source>
-        <target>設定正確的 Git for Windows 路徑。（WSL 儲存庫將使用 WSL Git）。</target>
+        <target>设定正确的 Git for Windows 路径。（WSL Git将用于WSL存储库）。</target>
         
       </trans-unit>
       <trans-unit id="lblGitCommand.Text">
@@ -10438,7 +10438,7 @@ help</source>
       </trans-unit>
       <trans-unit id="Merge.Text">
         <source>&amp;Merge into current branch...</source>
-        <target>將變更合併至目前分支...(&amp;M)</target>
+        <target>合并到当前分支(&amp;M)… </target>
         
       </trans-unit>
       <trans-unit id="Rename.Text">
@@ -10482,12 +10482,12 @@ help</source>
       </trans-unit>
       <trans-unit id="_confirmBranchCheckout.Text">
         <source>Are you sure you want to check out branch &quot;{0}&quot;?</source>
-        <target>您確定要切換到分支&quot;{0}&quot;嗎？</target>
+        <target>您确定要切换到分支&quot;{0}&quot;吗？</target>
         
       </trans-unit>
       <trans-unit id="_confirmBranchCheckoutCaption.Text">
         <source>Confirm checkout</source>
-        <target>確認切換</target>
+        <target>确认检出</target>
         
       </trans-unit>
       <trans-unit id="_directoryDoesNotExist.Text">
@@ -10609,7 +10609,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="CommitHash.HeaderText">
         <source>Commit hash</source>
-        <target>提交哈希碼</target>
+        <target>提交哈希值</target>
         
       </trans-unit>
       <trans-unit id="FileName.HeaderText">
@@ -10680,12 +10680,12 @@ This will just checkout on the submodule the commit determined by the superproje
     <body>
       <trans-unit id="Checkout.Text">
         <source>Chec&amp;kout remote branch...</source>
-        <target>切換至遠端分支...(&amp;k)</target>
+        <target>切换至远端分支…(&amp;K)</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>&amp;Delete remote branch...</source>
-        <target>刪除遠端分支...(&amp;D)</target>
+        <target>删除远端分支...(&amp;D)</target>
         
       </trans-unit>
       <trans-unit id="DeleteTooltip.Text">
@@ -10695,7 +10695,7 @@ This will just checkout on the submodule the commit determined by the superproje
       </trans-unit>
       <trans-unit id="Rebase.Text">
         <source>&amp;Rebase current branch on this remote branch...</source>
-        <target>重新基於遠端分支將當前分支進行變基(&amp;R)...</target>
+        <target>重新基于远端分支将当前分支进行变基(&amp;R)...</target>
         
       </trans-unit>
     </body>
@@ -10736,9 +10736,9 @@ This will just checkout on the submodule the commit determined by the superproje
         <source>Filter the revision grid to show selected (underlined) refs (branches and tags) only.
 Hold CTRL while clicking to de/select multiple and include descendant tree nodes by additionally holding SHIFT.
 Reset the filter via View &gt; Show all branches.</source>
-        <target>篩選版本網格以僅顯示所選（加底線）參考（分支和標籤）。 
-按住CTRL鍵單擊以選擇/取消選擇多個項目，並通過同時按住SHIFT鍵包括後代樹節點。 
-透過檢視 &gt; 顯示所有分支 重設篩選器。</target>
+        <target>过滤版本网格以显示所选（带下划线的）参考（仅分支和标签）。 
+按住CTRL键的同时单击，可以取消/选择多个节点，并通过同时按住SHIFT键来包含后代树节点。 
+通过 “查看” &gt; “显示所有分支” 重置过滤器。。</target>
         
       </trans-unit>
       <trans-unit id="mnuBtnFetchAllRemotes.Text">
@@ -10778,12 +10778,12 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnApplyStash.Text">
         <source>&amp;Apply stash</source>
-        <target>应用贮藏(&amp;A)</target>
+        <target>应用暂存(&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnApplyStash.ToolTipText">
         <source>Apply this stash</source>
-        <target>应用这个贮藏</target>
+        <target>应用暂存(&amp;A)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnCollapse.Text">
@@ -10833,12 +10833,12 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnDropStash.Text">
         <source>&amp;Drop stash...</source>
-        <target>删除贮藏(&amp;D)...</target>
+        <target>删除暂存...(&amp;D)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnDropStash.ToolTipText">
         <source>Drop this stash</source>
-        <target>删除这个贮藏</target>
+        <target>删除这个暂存</target>
         
       </trans-unit>
       <trans-unit id="mnubtnEnableRemote.Text">
@@ -10883,7 +10883,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnFetchOneBranch.ToolTipText">
         <source>Fetch this remote branch</source>
-        <target>下載此遠端分支</target>
+        <target>下載此远端分支</target>
         
       </trans-unit>
       <trans-unit id="mnubtnFetchRebase.Text">
@@ -10893,7 +10893,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnFetchRebase.ToolTipText">
         <source>Fetch then rebase current branch on this remote branch</source>
-        <target>從遠端分支取回並在目前分支上進行變基（rebase）</target>
+        <target>从远端分支取回并在目前分支上进行变基（rebase）</target>
         
       </trans-unit>
       <trans-unit id="mnubtnManageRemotes.Text">
@@ -10908,7 +10908,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnManageStashFromRootNode.Text">
         <source>&amp;Manage stashes...</source>
-        <target>管理贮藏(&amp;M)...</target>
+        <target>管理暂存...(&amp;M)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnManageSubmodules.Text">
@@ -10953,12 +10953,12 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnOpenStash.Text">
         <source>&amp;Open stash</source>
-        <target>打开贮藏区(&amp;O)</target>
+        <target>打开暂存区(&amp;O)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnOpenStash.ToolTipText">
         <source>Open this stash</source>
-        <target>打开这个贮藏</target>
+        <target>打开这个暂存</target>
         
       </trans-unit>
       <trans-unit id="mnubtnOpenSubmodule.Text">
@@ -10973,7 +10973,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnPopStash.Text">
         <source>&amp;Pop stash</source>
-        <target>弹出贮藏(&amp;P)</target>
+        <target>弹出暂存(&amp;P)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnPopStash.ToolTipText">
@@ -10988,7 +10988,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnPullFromRemoteBranch.ToolTipText">
         <source>Fetch then merge this remote branch into current branch</source>
-        <target>從遠端分支拉取後合併到目前分支</target>
+        <target>从远端分支拉取后合并到当前分支</target>
         
       </trans-unit>
       <trans-unit id="mnubtnRemoteBranchFetchAndCheckout.Text">
@@ -11013,7 +11013,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnStashAllFromRootNode.Text">
         <source>&amp;Stash</source>
-        <target>贮藏(&amp;S)</target>
+        <target>暂存(&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnStashStagedFromRootNode.Text">
@@ -11023,7 +11023,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnStashSubmodule.Text">
         <source>&amp;Stash</source>
-        <target>储藏(&amp;S)</target>
+        <target>暂存(&amp;S)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnStashSubmodule.ToolTipText">
@@ -11043,7 +11043,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnUpdateSubmodule.Text">
         <source>&amp;Update</source>
-        <target>(&amp;U)更新</target>
+        <target>更新(&amp;U)</target>
         
       </trans-unit>
       <trans-unit id="mnubtnUpdateSubmodule.ToolTipText">
@@ -11302,7 +11302,7 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="showSearchCommitToolStripMenuItem.Text">
         <source>Sear&amp;ch files in commit...</source>
-        <target>搜尋提交中的檔案(&amp;c)...</target>
+        <target>搜索提交中的文件(&amp;c)...</target>
         
       </trans-unit>
       <trans-unit id="stageFileToolStripMenuItem.Text">
@@ -11408,7 +11408,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="assumeUnchangedTheFileToolStripMenuItem.Text">
         <source>Assume &amp;unchanged this file</source>
-        <target>假設此檔案未變更(&amp;u)</target>
+        <target>假设此文件未改变(&amp;U)</target>
         
       </trans-unit>
       <trans-unit id="blameToolStripMenuItem1.Text">
@@ -11418,7 +11418,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="collapseAllToolStripMenuItem.Text">
         <source>Co&amp;llapse all</source>
-        <target>全部摺疊(&amp;l)</target>
+        <target>全部折叠(&amp;l)</target>
         
       </trans-unit>
       <trans-unit id="copyPathsToolStripMenuItem.Text">
@@ -11428,7 +11428,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
         <source>&amp;Edit working directory file</source>
-        <target>編輯工作目錄檔案(&amp;E)
+        <target>编辑工作目录文件(&amp;E)
 </target>
         
       </trans-unit>
@@ -11439,7 +11439,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="fileHistoryToolStripMenuItem.Text">
         <source>View &amp;history</source>
-        <target>查看歷史紀錄(&amp;h)</target>
+        <target>查看文件历史(&amp;H)</target>
         
       </trans-unit>
       <trans-unit id="fileTreeArchiveToolStripMenuItem.Text">
@@ -11449,12 +11449,12 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
         <source>&amp;Clean this folder in the working directory...</source>
-        <target>清理工作目錄中的此資料夾(&amp;C)...</target>
+        <target>清理工作目录中的此文件夹(&amp;C)...</target>
         
       </trans-unit>
       <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
         <source>Show &amp;in folder</source>
-        <target>在資料夾中顯示(&amp;i)</target>
+        <target>在文件夹中显示(&amp;I)</target>
         
       </trans-unit>
       <trans-unit id="filterFileInGridToolStripMenuItem.Text">
@@ -11469,12 +11469,12 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="openFileToolStripMenuItem.Text">
         <source>Ope&amp;n this revision (temp file)</source>
-        <target>開啟此版本（臨時檔案）(&amp;n)</target>
+        <target>打开此版本（临时文件）(&amp;n)</target>
         
       </trans-unit>
       <trans-unit id="openFileWithToolStripMenuItem.Text">
         <source>Open this revision &amp;with... (temp file)</source>
-        <target>使用... 開啟此版本（臨時檔案）(&amp;w)</target>
+        <target>使用...打开此版本（临时文件）(&amp;w)</target>
         
       </trans-unit>
       <trans-unit id="openSubmoduleMenuItem.Text">
@@ -11484,22 +11484,22 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
         <source>Open with &amp;difftool</source>
-        <target>使用差異工具開啟(&amp;d)</target>
+        <target>使用差异工具打开(&amp;D)</target>
         
       </trans-unit>
       <trans-unit id="openWithToolStripMenuItem.Text">
         <source>&amp;Open working directory file with...</source>
-        <target>使用... 開啟工作目錄檔案(&amp;O)</target>
+        <target>使用...打开工作目录文件(&amp;O)</target>
         
       </trans-unit>
       <trans-unit id="rememberFileStripMenuItem.Text">
         <source>Re&amp;member file for diff</source>
-        <target>記住檔案以進行差異比較(&amp;m)</target>
+        <target>记住档案以进行差异比较(&amp;m)</target>
         
       </trans-unit>
       <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
         <source>&amp;Reset to selected revision</source>
-        <target>重置至選定的版本(&amp;R)</target>
+        <target>复位到选中的版本(&amp;R)</target>
         
       </trans-unit>
       <trans-unit id="runScriptToolStripMenuItem.Text">
@@ -11514,7 +11514,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
         <source>Stop &amp;tracking this file</source>
-        <target>停止追蹤此檔案(&amp;t)</target>
+        <target>停止跟踪这个文件(&amp;t)</target>
         
       </trans-unit>
     </body>
@@ -11582,7 +11582,7 @@ See the changes in the commit form.</source>
       </trans-unit>
       <trans-unit id="GotoMergeBaseCommit.ToolTipText">
         <source>Selects the common ancestor commit (merge base), which is the most recent shared ancestor of the selected commits (or if only one commit is selected, between it and the checked out commit (HEAD))</source>
-        <target>選擇共同祖先提交（合併基礎），它是所選提交的最近共享祖先（或如果僅選擇一個提交，則在其和檢出的提交（HEAD）之間）</target>
+        <target>选择共同祖先提交（合并基础），这是所选提交的最新共享祖先（或者如果只选择了一个提交，则在它和签出的提交（HEAD）之间）選</target>
         
       </trans-unit>
       <trans-unit id="GotoParentCommit.Text">
@@ -12275,31 +12275,28 @@ Currently checked out revision:
 File(s):
 {SelectedFiles}
 {LineNumber}</source>
-        <target>使用 {option} 進行正常替換。
-使用 {{option}} 進行引用替換。
+        <target>使用 {option} 表示普通模板替换。
+使用{{option}} 表示带引号&amp;转义的模板替换。
 
-使用者輸入：
+用户输入：
 {UserInput}
-{UserInput:彈出式標籤}
-{UserInput:彈出式標籤=預設值}
-{UserInput:彈出式標籤=使用 {sLocalBranch} 的預設值}
 {UserFiles}
 
-工作目錄：
+工作目录：
 {WorkingDir}
 
-儲存庫：
+存储库：
 {RepoName}
 
-選擇的提交：
+选中的提交：
 {sHashes}
 
-選擇的修訂版本：
+选中的修订：
 {sTag}
 {sBranch}
 {sLocalBranch}
 {sRemoteBranch}
-{sRemoteBranchName} （不包括遠端的名稱）
+{sRemoteBranchName}   (不含远程的名称)
 {sRemote}
 {sRemoteUrl}
 {sRemotePathFromUrl}
@@ -12311,13 +12308,13 @@ File(s):
 {sAuthorDate}
 {sCommitDate}
 
-當前檢出的修訂版本：
-{HEAD} （檢出的分支名稱或檢出的提交哈希）
+当前签出的修订：
+{HEAD}   (签出的分支名称或签出的提交哈希)
 {cTag}
 {cBranch}
 {cLocalBranch}
 {cRemoteBranch}
-{cRemoteBranchName} （不包括遠端的名稱）
+{cRemoteBranchName}   (不含远程的名称)
 {cHash}
 {cMessage}
 {cSubject}
@@ -12329,7 +12326,7 @@ File(s):
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}
 
-檔案：
+文件:
 {SelectedFiles}
 {LineNumber}</target>
         
@@ -12401,14 +12398,14 @@ File(s):
         <source>* Checked: at top level for direct access
 * Intermediate: in a cascaded context menu
 * Unchecked: not added to the menu</source>
-        <target>* 已選取：在頂層進行直接存取
-* 中介：以串聯的內容選單方式呈現
-* 未選取：不加入選單</target>
+        <target>* 已选取：在顶层直接访问
+* 中间：在级联的上下文菜单中
+* 未选中：不添加到菜单</target>
         
       </trans-unit>
       <trans-unit id="_noItems.Text">
         <source>no items</source>
-        <target>無可顯示項目</target>
+        <target>无可显示项目</target>
         
       </trans-unit>
       <trans-unit id="cbAlwaysShowAllCommands.Text">
@@ -12418,7 +12415,7 @@ File(s):
       </trans-unit>
       <trans-unit id="gbCascadingMenu.Text">
         <source>Cascaded context menu</source>
-        <target>階層式快捷選單</target>
+        <target>层叠右键菜单</target>
         
       </trans-unit>
       <trans-unit id="gbExplorerIntegration.Text">
@@ -12449,23 +12446,23 @@ File(s):
         <source>Regex to prioritize branch names in the left panel and commit info.
 The branches matching the pattern will be shown before the others.
 Separate the priorities with ';'.</source>
-        <target>使用正則表達式來優先顯示左側面板和提交資訊中的分支名稱。
- 符合模式的分支將在其他分支之前顯示。
- 使用 ';' 來分隔優先級。</target>
+        <target>使用正则表达式来优先显示左侧面板和提交资讯中的分支名称。
+ 符合模式的分支将在其他分支之前显示。
+ 使用 ';' 來分隔优先级。</target>
         
       </trans-unit>
       <trans-unit id="_prioRemoteNamesTooltip.Text">
         <source>Regex to prioritize remote names in the left panel and commit info.
 The remotes matching the pattern will be shown before the others.
 Separate the priorities with ';'.</source>
-        <target>使用正則表達式來優先顯示左側面板和提交資訊中的遠端名稱。 
-與模式匹配的遠端將優先顯示於其他遠端之前。
-使用 ';' 分隔優先順序。</target>
+        <target>使用正则表达式来优先显示左侧面板和提交资讯中的分支名称。 
+与远端匹配的模式将在其他分支之前显示。
+使用“；”分隔优先级。</target>
         
       </trans-unit>
       <trans-unit id="_revisionSortWarningTooltip.Text">
         <source>Sorting revisions may delay rendering of the revision graph.</source>
-        <target>排序修訂可能會延遲修訂圖的呈現。</target>
+        <target>对修订进行排序可能会延迟修订图的呈现。</target>
         
       </trans-unit>
       <trans-unit id="gbGeneral.Text">
@@ -12475,27 +12472,27 @@ Separate the priorities with ';'.</source>
       </trans-unit>
       <trans-unit id="lblBranchesOrder.Text">
         <source>Order branches</source>
-        <target>分支排序選項</target>
+        <target>分支排序</target>
         
       </trans-unit>
       <trans-unit id="lblBranchesSortBy.Text">
         <source>Sort branches by</source>
-        <target>依據...排序分支</target>
+        <target>依据...排序分支</target>
         
       </trans-unit>
       <trans-unit id="lblPrioBranchNames.Text">
         <source>Prioritized branches</source>
-        <target>優先處理的分支</target>
+        <target>优先处理的分支</target>
         
       </trans-unit>
       <trans-unit id="lblPrioRemoteNames.Text">
         <source>Prioritized remotes</source>
-        <target>優先處理的遠端倉庫</target>
+        <target>优先处理的远端仓库</target>
         
       </trans-unit>
       <trans-unit id="lblRevisionsSortBy.Text">
         <source>Sort revisions by</source>
-        <target>依照...排序修訂版本</target>
+        <target>依照...排序修订版本</target>
         
       </trans-unit>
     </body>
@@ -12588,12 +12585,12 @@ When OpenSSH is used, command line dialogs are shown!
     <body>
       <trans-unit id="Checkout.Text">
         <source>Chec&amp;kout tag revision...</source>
-        <target>切換至此標籤修訂版本...(&amp;k)</target>
+        <target>切換至此标签修订版本...(&amp;k)</target>
         
       </trans-unit>
       <trans-unit id="CheckoutTooltip.Text">
         <source>Checkout this tag revision</source>
-        <target>查看此標籤修訂版本</target>
+        <target>查看此标签修订版本</target>
         
       </trans-unit>
       <trans-unit id="CreateTooltip.Text">
@@ -12618,12 +12615,12 @@ When OpenSSH is used, command line dialogs are shown!
       </trans-unit>
       <trans-unit id="Rebase.Text">
         <source>&amp;Rebase current branch on this tag revision...</source>
-        <target>在此標籤修訂上重新變基目前分支...(&amp;R)</target>
+        <target>在此标签修订上重新变基目前分支...(&amp;R)</target>
         
       </trans-unit>
       <trans-unit id="RebaseTooltip.Text">
         <source>Rebase current branch on this tag</source>
-        <target>在此標籤上重新變基目前分支</target>
+        <target>在此标签上重新变基目前分支</target>
         
       </trans-unit>
       <trans-unit id="ResetTooltip.Text">
@@ -12933,22 +12930,22 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_externalErrorDescription.Text">
         <source>error from git or from other external application</source>
-        <target>來自 git 或其他外部應用程式的錯誤</target>
+        <target>来自 git 或其他外部应用程序的错误</target>
         
       </trans-unit>
       <trans-unit id="_failedToLoadAnAssembly.Text">
         <source>Failed to load an assembly</source>
-        <target>無法載入組件</target>
+        <target>无法载入组件</target>
         
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyFormat.Text">
         <source>Could not load file or assembly '{0}'.</source>
-        <target>無法載入文件或組件 '{0}'。</target>
+        <target>无法载入文件或组件 '{0}'。</target>
         
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyText.Text">
         <source>Most of the times the error is temporary, likely caused by Windows Update.</source>
-        <target>這種錯誤多數是暫時的，很可能是因為 Windows 更新造成的。</target>
+        <target>这种错误多数是暂时的，很可能是因为 Windows 更新造成的。</target>
         
       </trans-unit>
       <trans-unit id="_failedToLoadPlugin.Text">
@@ -13021,12 +13018,12 @@ Git-tracked directories are considered unsafe if they are owned by someone other
 To be able to open this repository, you need to either:
 - add a security exception for the repository to make git trust it, or
 - correct the ownership of the repository.</source>
-        <target>Git 偵測到一個安全問題，無法開啟此儲存庫。 若 Git 追蹤的目錄不是當前使用者所擁有，則被視為不安全。
+        <target>Git检测到一个阻止打开存储库的安全问题。
+如果Git跟踪的目录由当前用户以外的其他人所有，则被认为是不安全的。
 
-為了能夠開啟此儲存庫，你需要執行以下其中一項動作：
-
-- 給儲存庫新增安全例外，讓 Git 可以信任它。
-- 更正儲存庫的擁有權。</target>
+为了能够打开此存储库，您需要执行以下其中一项：
+-为存储库添加一个安全异常以使git信任它，或者
+-更正存储库的所有权。</target>
         
       </trans-unit>
       <trans-unit id="_gitDubiousOwnershipTrustAllInstruction.Text">
@@ -13039,11 +13036,12 @@ If you wish to trust all git repositories on your system even if they are owned 
 following command.
 
 !!! THIS CAN BE DANGEROUS !!!</source>
-        <target>如果 Git 追踪的目錄不是當前使用者擁有，就被視為不安全。 預設情況下，Git 甚至會拒絕解析屬於其他使用者擁有的存儲庫的 Git 設置，更不要說運行其 hook 了。 此設置允許使用者指定例外情況，例如用於故意共享的存儲庫。
+        <target>如果 Git 跟踪的目录由当前用户以外的人拥有，则它们被认为是不安全的。
+默认情况下，Git 甚至会拒绝解析其他人拥有的存储库的 Git 配置，更不用说了运行其 hook 了。 此配置设置允许用户指定例外情况，例如有意共享的版本库。
 
-如果您希望信任系統上的所有 Git 存儲庫，即使它們由其他使用者擁有，請執行以下命令。
+如果您希望信任系统上的所有 Git 存储库，即使它们归其他人所有，请执行以下命令。
 
-!!! 這可能很危險 !!!</target>
+!!! 这可能很危险 !!!</target>
         
       </trans-unit>
       <trans-unit id="_gitDubiousOwnershipTrustAllRepositories.Text">
@@ -13078,7 +13076,7 @@ following command.
       </trans-unit>
       <trans-unit id="_ignoringReference.Text">
         <source>&quot;{0}&quot; is not a Git revision and will be ignored.</source>
-        <target>&quot;{0}&quot; 不是一個有效的 Git 修訂版本，將不予考慮。</target>
+        <target>&quot;{0}&quot; 不是一个有效的 Git 修订版本，将不予考虑。</target>
         
       </trans-unit>
       <trans-unit id="_indexText.Text">
@@ -13252,7 +13250,7 @@ Remote: {1}</source>
       </trans-unit>
       <trans-unit id="_reportIssueDescription.Text">
         <source>for the team to investigate - if you think this was caused by Git Extensions</source>
-        <target>讓團隊進行調查 - 如果您認為這是由 Git Extensions 引起的</target>
+        <target>供团队调查 - 如果您认为这是由 Git Extensions 引起的</target>
         
       </trans-unit>
       <trans-unit id="_reportReproducedIssueDescription.Text">
