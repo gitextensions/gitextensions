@@ -22,16 +22,12 @@ public static class ThemeFix
 
         container.DescendantsToFix<ToolStrip>()
             .ForEach(SetupToolStrip);
-        container.ContextMenusToFix()
-            .ForEach(SetupContextMenu);
         container.DescendantsToFix<DataGridView>()
             .ForEach(SetupDataGridView);
         container.DescendantsToFix<LinkLabel>()
             .ForEach(SetupLinkLabel);
         container.DescendantsToFix<TabControl>()
             .ForEach(SetupTabControl);
-        container.DescendantsToFix<TextBoxBase>()
-             .ForEach(SetupTextBoxBase);
         container.DescendantsToFix<Button>()
             .ForEach(SetupButton);
     }
@@ -43,41 +39,20 @@ public static class ThemeFix
             .Where(control => TryAddToWeakTable(control, AlreadyFixedControls));
     }
 
-    private static IEnumerable<ContextMenuStrip> ContextMenusToFix(this Control c)
-    {
-        return c.FindDescendantsOfType<Control>()
-            .Where(control => TryAddToWeakTable(control, AlreadyFixedContextMenuOwners))
-            .Select(_ => _.ContextMenuStrip)
-            .Where(_ => _ is not null);
-    }
-
-    private static void SetupTextBoxBase(TextBoxBase textBox)
-    {
-        // TODO use custom Paint?
-        // Fixed3D is default, has thicker border than comboboxes and blue underline when input
-        // FixedSingle has thinner border than Comboboxes but is slightly more the same
-        ////if (textBox.BorderStyle == BorderStyle.Fixed3D)
-        ////{
-        ////    textBox.BorderStyle = BorderStyle.FixedSingle;
-        ////}
-    }
+    // Note: TextBoxBase is not overridden, it looks a little of (requires custom paint).
+    // Fixed3D is default, has thicker border than comboboxes and blue underline when input.
+    // FixedSingle has thinner border than Comboboxes but is slightly more the same.
 
     private static void SetupToolStrip(ToolStrip strip)
     {
-        // TOODO .NET10 Seem to be required for two reasons:
-        // * sidepanel and browse branch icons has "marked" color, not just borders
-        // * LinkColor is always dark blue (and cannot be overridden with other RenderMode)
+        // RenderMode seem to be required for two reasons:
+        // * FormBrowse menubar background is not overridden.
+        // * LinkColor override (in SetupToolStripStatusLabel()).
         strip.RenderMode = ToolStripRenderMode.Professional;
         foreach (ToolStripLabel item in strip.Items.OfType<ToolStripLabel>())
         {
             SetupToolStripStatusLabel(item);
         }
-    }
-
-    private static void SetupContextMenu(ContextMenuStrip strip)
-    {
-        // TODO No changes detected by this override in e.g. FormGitCommandLog
-        // strip.RenderMode = ToolStripRenderMode.Professional;
     }
 
     private static void SetupLinkLabel(this LinkLabel label)
@@ -98,6 +73,7 @@ public static class ThemeFix
 
     private static void SetupButton(this Button button)
     {
+        // e.g. reset another branch where force is required
         // FlatStyle.Standard cannot set button color.
         if (Application.IsDarkModeEnabled && button.FlatStyle == FlatStyle.Standard)
         {
@@ -107,7 +83,8 @@ public static class ThemeFix
 
     private static void SetupTabControl(TabControl tabControl)
     {
-        // TODO The tabs have mostly the same color, hard to see the active tab otherwise
+        // e.g. FormBrowse tabs
+        // The tabs have mostly the same color, hard to see the active tab otherwise
         new TabControlRenderer(tabControl).Setup();
 
         tabControl.TabPages.OfType<TabPage>()
@@ -116,7 +93,8 @@ public static class ThemeFix
 
     private static void SetupTabPage(TabPage page)
     {
-        // FormPush upper part is not painted correctly
+        // e.g. FormPush
+        // upper part is not painted correctly
         if (page.BackColor.IsKnownColor)
         {
             page.TouchBackColor();
@@ -125,7 +103,8 @@ public static class ThemeFix
 
     private static void SetupDataGridView(DataGridView view)
     {
-        // NET10 still light color header (but this workaround is not perfect)
+        // e.g. Settings - RevisionLinks
+        // still light color header (but this workaround is not perfect)
         view.EnableHeadersVisualStyles = false;
     }
 
