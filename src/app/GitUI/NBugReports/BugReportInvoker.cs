@@ -1,4 +1,6 @@
-﻿using System.ComponentModel;
+﻿#nullable enable
+
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Security;
 using System.Text;
@@ -32,7 +34,7 @@ public static class BugReportInvoker
     internal static string GetRootError(Exception exception)
     {
         string rootError = exception.Message;
-        for (Exception innerException = exception.InnerException; innerException is not null; innerException = innerException.InnerException)
+        for (Exception? innerException = exception.InnerException; innerException is not null; innerException = innerException.InnerException)
         {
             if (!string.IsNullOrEmpty(innerException.Message))
             {
@@ -140,7 +142,7 @@ public static class BugReportInvoker
             return;
         }
 
-        ExternalOperationException externalOperationException = exception as ExternalOperationException;
+        ExternalOperationException? externalOperationException = exception as ExternalOperationException;
 
         if (externalOperationException?.InnerException?.Message?.Contains(DubiousOwnershipSecurityConfigString) is true)
         {
@@ -160,22 +162,21 @@ public static class BugReportInvoker
             return;
         }
 
-        bool isUserExternalOperation = exception is UserExternalOperationException
-                                                 or GitConfigFormatException;
-        bool isExternalOperation = exception is ExternalOperationException
-                                             or IOException
-                                             or SecurityException
-                                             or FileNotFoundException
-                                             or DirectoryNotFoundException
-                                             or PathTooLongException
-                                             or Win32Exception;
+        bool isUserExternalOperation
+            = exception is UserExternalOperationException
+                        or GitConfigFormatException
 
-        // Treat all git errors as user issues
-        if (string.Equals(AppSettings.GitCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase)
-         || string.Equals(AppSettings.WslCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase))
-        {
-            isUserExternalOperation = true;
-        }
+            // Treat all git errors as user issues
+            || string.Equals(AppSettings.GitCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase)
+            || string.Equals(AppSettings.WslCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase);
+        bool isExternalOperation = isUserExternalOperation
+            || exception is ExternalOperationException
+                         or IOException
+                         or SecurityException
+                         or FileNotFoundException
+                         or DirectoryNotFoundException
+                         or PathTooLongException
+                         or Win32Exception;
 
         StringBuilder text = GetExceptionInfo(exception);
         string rootError = GetRootError(exception);
@@ -192,7 +193,7 @@ public static class BugReportInvoker
         // prefer to ignore failed external operations
         if (isExternalOperation)
         {
-            AddIgnoreOrCloseButton(TranslatedStrings.ExternalErrorDescription);
+            AddIgnoreButton(TranslatedStrings.ExternalErrorDescription);
         }
         else
         {
@@ -207,23 +208,23 @@ public static class BugReportInvoker
                 : new(TranslatedStrings.ButtonReportBug);
         taskDialogCommandLink.Click += (s, e) =>
         {
-            ShowNBug(OwnerForm, exception, isExternalOperation, isTerminating);
+            ShowNBug(OwnerForm, exception, isExternalOperation, isUserExternalOperation, isTerminating: false);
         };
         page.Buttons.Add(taskDialogCommandLink);
 
         // let the user decide whether to report the bug
         if (!isExternalOperation)
         {
-            AddIgnoreOrCloseButton();
+            AddIgnoreButton();
         }
 
         page.Text = text.ToString().Trim();
         TaskDialog.ShowDialog(OwnerFormHandle, page);
         return;
 
-        void AddIgnoreOrCloseButton(string descriptionText = null)
+        void AddIgnoreButton(string? descriptionText = null)
         {
-            string buttonText = isTerminating ? TranslatedStrings.ButtonCloseApp : TranslatedStrings.ButtonIgnore;
+            string buttonText = TranslatedStrings.ButtonIgnore;
             TaskDialogCommandLinkButton taskDialogCommandLink = new(buttonText, descriptionText);
             page.Buttons.Add(taskDialogCommandLink);
         }
@@ -281,7 +282,7 @@ public static class BugReportInvoker
         if (!IsDotNetFrameworkAssembly(fileName) && !IsVCRuntimeDll(fileName))
         {
             TaskDialogCommandLinkButton reportButton = new(text: TranslatedStrings.ReportIssue, descriptionText: TranslatedStrings.ReportReproducedIssueDescription);
-            reportButton.Click += (_, _) => ShowNBug(OwnerForm, exception, isExternalOperation: false, isTerminating);
+            reportButton.Click += (_, _) => ShowNBug(OwnerForm, exception, isExternalOperation: false, isUserExternalOperation: false, isTerminating);
             page.Buttons.Add(reportButton);
         }
 
@@ -301,7 +302,7 @@ public static class BugReportInvoker
         {
             // Skipping the 1st parameter that, starting from .net core, contains the path to application dll (instead of exe)
             string arguments = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
-            ProcessStartInfo pi = new(Environment.ProcessPath, arguments);
+            ProcessStartInfo pi = new(Environment.ProcessPath!, arguments);
             pi.WorkingDirectory = Environment.CurrentDirectory;
             Process.Start(pi);
             Environment.Exit(0);
@@ -449,7 +450,7 @@ public static class BugReportInvoker
         }
     }
 
-    private static void ShowNBug(IWin32Window? owner, Exception exception, bool isExternalOperation, bool isTerminating)
+    private static void ShowNBug(IWin32Window? owner, Exception exception, bool isExternalOperation, bool isUserExternalOperation, bool isTerminating)
     {
         using BugReportForm form = new();
         DialogResult result = form.ShowDialog(owner,
@@ -458,7 +459,7 @@ public static class BugReportInvoker
             UserEnvironmentInformation.GetInformation(),
             canIgnore: !isTerminating,
             showIgnore: isExternalOperation,
-            focusDetails: exception is UserExternalOperationException);
+            focusDetails: isUserExternalOperation);
         if (isTerminating || result == DialogResult.Abort)
         {
             Environment.Exit(-1);
