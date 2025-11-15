@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.Design;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.UserRepositoryHistory;

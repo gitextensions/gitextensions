@@ -1,6 +1,6 @@
 ﻿using System.CodeDom.Compiler;
 using System.Reflection;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
