@@ -63,6 +63,11 @@
         <target>Tüm alt modülleri getir</target>
         
       </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
+        <target>Depo açıldığında hemen getir</target>
+        
+      </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
         <target>Her şeyi getir (saniye) - devre dışı bırakmak için 0 yap</target>
@@ -270,7 +275,7 @@
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>Çekme İsteklerini Görüntüleme</target>
+        <target>Çekme İsteklerini Görüntüle</target>
         
       </trans-unit>
     </body>
@@ -901,14 +906,39 @@ Devam etmek istediğine emin misin?</target>
         <target>Kişisel Erişim Jetonu (Personal Access Token)</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Hata</target>
+        
+      </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
         <target>GitHub kişisel erişim jetonunu (GitHub personal access token) oluştur</target>
         
       </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
+        <source>Enable commit message issue helper</source>
+        <target>Teslim mesajı sorun yardımcısını etkinleştir</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
+        <target>Alınan maksimum sorun sayısı</target>
+        
+      </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
         <target>GitHub kişisel erişim jetonunu (GitHub personal access token) yönet</target>
+        
+      </trans-unit>
+      <trans-unit id="_noAssignedIssues.Text">
+        <source>No assigned GitHub issues found</source>
+        <target>Atanmış GitHub sorunları bulunamadı</target>
+        
+      </trans-unit>
+      <trans-unit id="_noTokenError.Text">
+        <source>No GitHub personal access token (PAT) defined</source>
+        <target>GitHub kişisel erişim jetonu (PAT) tanımlanmadı</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
@@ -1490,9 +1520,9 @@ Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bi
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
         <target>Örnekler:
- - https://dev.azure.com/seninnorganizasyonun/projeadi/
- - https://seninsunucun:8080/tfs/koleksiyonadi/projeadi/
- - https://seninorganizasyonun.visualstudio.com/projeadi/</target>
+- https://dev.azure.com/seninnorganizasyonun/projeadi/
+- https://seninsunucun:8080/tfs/koleksiyonadi/projeadi/
+- https://seninorganizasyonun.visualstudio.com/projeadi/</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
@@ -1548,7 +1578,7 @@ Lütfen, sunucu URL'sini doğrulayın.</target>
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>&quot;Derleme Kimliği Filtresi (Build Id Filter)&quot; normal ifadesi geçerli değil ve kaydedilmeyecek!</target>
+        <target>&quot;Derleme Kimliği Filtresi (Build Id Filter)&quot; düzenli(kurallı) ifadesi geçerli değil ve kaydedilmeyecek!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">

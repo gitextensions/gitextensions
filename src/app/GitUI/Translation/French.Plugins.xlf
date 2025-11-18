@@ -63,6 +63,10 @@
         <target>Effectuer une récupération de tous les sous-modules</target>
         
       </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
+        
+      </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
         <target>Effectuer une récupération toutes les (secondes) - mettre à 0 pour désactiver</target>
@@ -265,7 +269,8 @@
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>Créer une demande de pull</target>
+        <target>Créer une demande de tirage
+</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
@@ -396,7 +401,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
         <source>Search branches</source>
-        <target>Rechercher des branches</target>
+        <target>Rechercher les branches</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
@@ -795,7 +800,7 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
       </trans-unit>
       <trans-unit id="btnPull.Text">
         <source>Pull</source>
-        <target>Récupérer</target>
+        <target>Récupérer (pull)</target>
         
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
@@ -901,14 +906,34 @@ Les branches distantes seront supprimées '{0}'. On ne peut pas annuler.
         <target>Token d'accès personnel</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        
+      </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
         <target>Générer un jeton d'accès personnel GitHub</target>
         
       </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
+        <source>Enable commit message issue helper</source>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
+        
+      </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
         <target>Gérer les jetons d'accès personnel GitHub</target>
+        
+      </trans-unit>
+      <trans-unit id="_noAssignedIssues.Text">
+        <source>No assigned GitHub issues found</source>
+        
+      </trans-unit>
+      <trans-unit id="_noTokenError.Text">
+        <source>No GitHub personal access token (PAT) defined</source>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">

@@ -63,6 +63,10 @@
         <target>Cargar todos los submódulos</target>
         
       </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
+        
+      </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
         <target>Hacer fetch cada (segundos) - dejar valor en 0 para desactivar</target>
@@ -135,7 +139,7 @@
       </trans-unit>
       <trans-unit id="_success.Text">
         <source>Success</source>
-        <target>Todo bien</target>
+        <target>Exito</target>
         
       </trans-unit>
       <trans-unit id="btnApprove.Text">
@@ -150,7 +154,7 @@
       </trans-unit>
       <trans-unit id="btnMerge.Text">
         <source>Merge</source>
-        <target>Merge</target>
+        <target>Fusionar</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCreatePullRequest.Text">
@@ -195,7 +199,7 @@
       </trans-unit>
       <trans-unit id="lblBranchView.Text">
         <source>Branch</source>
-        <target>Branch</target>
+        <target>Rama</target>
         
       </trans-unit>
       <trans-unit id="lblDescription.Text">
@@ -220,7 +224,7 @@
       </trans-unit>
       <trans-unit id="lblSourceBranch.Text">
         <source>Branch</source>
-        <target>Branch</target>
+        <target>Rama</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepoView.Text">
@@ -240,12 +244,12 @@
       </trans-unit>
       <trans-unit id="lblTargetBranch.Text">
         <source>Branch</source>
-        <target>Branch</target>
+        <target>Rama</target>
         
       </trans-unit>
       <trans-unit id="lblTargetRepoView.Text">
         <source>Branch</source>
-        <target>Branch</target>
+        <target>Rama</target>
         
       </trans-unit>
       <trans-unit id="lblTargetRepository.Text">
@@ -265,7 +269,7 @@
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>Crear un pull request</target>
+        <target>Crear pedido de Pull</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
@@ -901,14 +905,39 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
         <target>Token de acceso personal</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Error</target>
+        
+      </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
         <target>Generar un token de acceso personal a GitHub</target>
         
       </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
+        <source>Enable commit message issue helper</source>
+        <target>Habilitar el asistente de problemas de mensajes de commit</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
+        <target>Número máximo de problemas recuperados</target>
+        
+      </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
         <target>Gestionar el token de acceso personal a GitHub</target>
+        
+      </trans-unit>
+      <trans-unit id="_noAssignedIssues.Text">
+        <source>No assigned GitHub issues found</source>
+        <target>No se encontraron problemas asignados en GitHub</target>
+        
+      </trans-unit>
+      <trans-unit id="_noTokenError.Text">
+        <source>No GitHub personal access token (PAT) defined</source>
+        <target>No se ha definido un token de acceso personal (PAT) de GitHub</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
@@ -1426,7 +1455,7 @@ nombres de ramas, ó nombres de tags)</target>
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
         <source>n/a</source>
-        <target>n/a</target>
+        <target>n/d</target>
         
       </trans-unit>
     </body>

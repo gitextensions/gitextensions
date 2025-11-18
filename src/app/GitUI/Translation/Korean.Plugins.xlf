@@ -31,7 +31,7 @@
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>msbuild.exe 인수</target>
+        <target>msbuild.exe 매개변수</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
@@ -61,6 +61,10 @@
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
         <target>모든 서브모듈 fetch</target>
+        
+      </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
@@ -322,7 +326,7 @@
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
@@ -371,7 +375,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
@@ -426,7 +430,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>브랜치에 결합된 브랜치들을 삭제합니다</target>
+        <target>브랜치에 완전히 병합된 브랜치들을 삭제합니다</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -451,7 +455,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>정규식을 사용하여 브랜치 필터링</target>
+        <target>regex를 사용하여 브랜치 필터링</target>
         
       </trans-unit>
     </body>
@@ -529,7 +533,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -539,7 +543,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
@@ -549,7 +553,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -900,14 +904,34 @@ Are you sure you want to continue?</source>
         <target>개인 액세스 토큰</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        
+      </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
         <target>Github 개인 액세스 토큰 만들기</target>
         
       </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
+        <source>Enable commit message issue helper</source>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
+        
+      </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
         <target>Github 개인 액세스 토큰 관리하기</target>
+        
+      </trans-unit>
+      <trans-unit id="_noAssignedIssues.Text">
+        <source>No assigned GitHub issues found</source>
+        
+      </trans-unit>
+      <trans-unit id="_noTokenError.Text">
+        <source>No GitHub personal access token (PAT) defined</source>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
