@@ -22,6 +22,7 @@ public class FileStatusListSorterTests
     [Test]
     public async Task Sort_should_first_add_folders_then_files([Values(false, true)] bool flat, [Values(false, true)] bool mergeSingleItemsWithFolder)
     {
+        const string oldFolder = "oldfolder/of/renamed/file/";
         GitItemStatus[] statuses =
         [
             new("root_file"),
@@ -42,8 +43,11 @@ public class FileStatusListSorterTests
             new("5/6/file56a"),
             new("5/7/file57b"),
             new("5/7/file57a"),
-            new("5/7/8/file578"),
+            new($"{oldFolder}5/7/8/file578"),
         ];
+        GitItemStatus renamedFile = statuses[^1];
+        renamedFile.OldName = renamedFile.Name;
+        renamedFile.Name = renamedFile.Name[oldFolder.Length..];
 
         FileStatusList.StatusSorter statusSorter = new();
         TreeNode rootNode = statusSorter.CreateTreeSortedByPath(statuses, flat, mergeSingleItemsWithFolder, createNode: status => new TreeNode(status.ToString()) { Tag = new FileStatusItem(firstRev: null, secondRev: new GitRevision(ObjectId.WorkTreeId), status) });

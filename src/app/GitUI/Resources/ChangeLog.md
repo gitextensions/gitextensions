@@ -1,7 +1,30 @@
 ﻿Changelog
 =========
 
-### Version v6.0.3 (no due date)
+### Version v6.0.4 (18 Nov 2025)
+
+#### Changes:
+* [#12691] fix(GitModuleForm): Avoid InvalidOperationException
+* [#12687] fix(renamed/copied file): Correctly display in tree
+* [#12681] fix(git error): Actually treat as user external operation
+* [#12675] Fix deadlock in ThemeModule.Load during app restart
+* [#12671] Fix NBug crash reports for invalid command-line arguments
+* [#12658] fix(save folder as): Get longest common path
+* [#12655] fix: concurrent access GitVersion
+* [#12651] fix(stash picker): Add 1px offset if high DPI scaling factor is fractional
+
+
+[#12691]:https://github.com/gitextensions/gitextensions/pull/12691
+[#12687]:https://github.com/gitextensions/gitextensions/pull/12687
+[#12681]:https://github.com/gitextensions/gitextensions/pull/12681
+[#12675]:https://github.com/gitextensions/gitextensions/pull/12675
+[#12671]:https://github.com/gitextensions/gitextensions/pull/12671
+[#12658]:https://github.com/gitextensions/gitextensions/pull/12658
+[#12655]:https://github.com/gitextensions/gitextensions/pull/12655
+[#12651]:https://github.com/gitextensions/gitextensions/pull/12651
+
+
+### Version v6.0.3 (9 Nov 2025)
 
 #### Changes:
 * [#12643] User theme folder path and creation
@@ -506,7 +529,7 @@
 * [#12007] fix(git diff): Suppress `diff.external`
 * [#12004] fix(FileStatusList): Set `Text` for accessibility
 * [#11999] fix(Push): fix false positive detection of "detached head" state
-* [#11995] Singed for contributing 
+* [#11995] Singed for contributing
 * [#11994] fix(in-line diff): Support non-reversed git coloring
 * [#11993] Improve unit tests code
 * [#11992] fix: Handle dubious repo ownership, too, if detected by GitStatusMonitor
@@ -1858,7 +1881,7 @@
 * [9622] Pull dialog: add mnemonics, fix tab order
 * [9621] Rebase & Apply Patch: add mnemonics, fix tab order, add a shortcut
 * [9620] Fix #8211: Incorrect EOL in diff
-* [9619] Remove "process: null" for FormProcess 
+* [9619] Remove "process: null" for FormProcess
 * [9616] Fix #6276: "Show messages of annotated tags" truncates to ten lines without notice
 * [9611] Ensure all grid views can be sorted
 * [9608] Fix branch copy and Open with difftool menu switching back to System style
@@ -2724,7 +2747,7 @@
 ### Version 3.5 (25 April 2021)
 
 #### Changes:
-* [9103] GitHub token: Add a link to let the user generate its Personal Access Token 
+* [9103] GitHub token: Add a link to let the user generate its Personal Access Token
 * [9102] Restore splitter persistence
 * [9094] Handle more exceptions as failed external operation
 * [9083] Report bugs in a separate process
@@ -2798,7 +2821,7 @@
 * [8697] Handle multi-part names for author initials
 * [8690] FormResolveConflict: Allow open without cmd/path
 * [8687] GitStatusMonitor: Display when inactive
-* [8682] A variety of accessibility-related fixes for the contents of the main pane on the Config page 
+* [8682] A variety of accessibility-related fixes for the contents of the main pane on the Config page
 * [8679] Don't persist or restore the state of the main menu
 * [8678] Improve handling of Drag and drop
 * [8667] Left panel enhancement
@@ -2940,7 +2963,7 @@
 * [8078] Improve tooltip for diff selection
 * [8076] Run FormFileHistory in a separate GE instance
 * [8075] Catch all types of exception thrown by ReadAllText
-* [8067] Fix 8055 add sign-off to FormApplyPatch 
+* [8067] Fix 8055 add sign-off to FormApplyPatch
 * [8065] Align folder/copy for submodule
 * [8049] Fix 7097 crash invalid escape character in .gitmodule
 * [8038] Fix for #8030 URL in "Edit Remote Details"is case insensitive
@@ -3301,7 +3324,7 @@
 * [7850] Fix slow plugins loading
 * [7842] Plugins are extremely slow to load
 * [7832] Files starting with space incorrectly handled
-* [7831] Show new files as file, not diff 
+* [7831] Show new files as file, not diff
 * [7824] revdiff: Show new file in worktree as file, not diff
 * [7820] Surround access to plugin collection with a `lock()`
 * [7800] Stash: Form fail to load
@@ -3363,7 +3386,7 @@
 * [7489] Install with AppGet (https://appget.net/)
 * [7485] BuildServerIntegration: Fix freeze due to polling interval adjustment
 * [7482] ResetCurrentBranch: Correct tab order
-* [7477] Azure devops ci: reduce calls to api when revision grid is refreshed 
+* [7477] Azure devops ci: reduce calls to api when revision grid is refreshed
 * [7457] Add warning header
 * [7452] BuildServerIntegration: Adjust polling interval for running builds
 * [7445] Remove background thread from RevisionDataGridView

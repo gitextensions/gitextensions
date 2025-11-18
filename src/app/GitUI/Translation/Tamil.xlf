@@ -18,7 +18,7 @@
       </trans-unit>
       <trans-unit id="chkAlwaysShowAdvOpt.Text">
         <source>Always show advanced options</source>
-        <target>எப்பொழுதும்  மேம்பட்ட அமைப்புகளைக் காட்டு</target>
+        <target>எப்பொழுதும் மேம்பட்ட அமைப்புகளைக் காட்டு</target>
         
       </trans-unit>
       <trans-unit id="chkAlwaysShowCheckoutDlg.Text">
@@ -35,27 +35,27 @@
         <source>Controls whether branch name should be automatically normalised as per git branch naming rules.
 If enabled, any illegal symbols will be replaced with the replacement symbol of your choice.</source>
         <target>அறிவிலி கிளை பெயரிடும் விதிகளின்படி கிளையின் பெயர் தானாகவே இயல்பாக்கப்பட வேண்டுமா என்பதைக் கட்டுப்படுத்துகிறது.
-இயக்கப்பட்டால், ஏதேனும் சட்டவிரோதச் சின்னங்கள் நீங்கள் விரும்பும் மாற்றுச் சின்னத்துடன் மாற்றப்படும்.</target>
+இயக்கப்பட்டால், ஏதேனும் ஒவ்வாதச் சின்னங்கள் நீங்கள் விரும்பும் மாற்றுச் சின்னத்துடன் மாற்றப்படும்.</target>
         
       </trans-unit>
       <trans-unit id="chkCheckForRCVersions.Text">
         <source>Check for release candidate versions</source>
-        <target>வெளியீட்டு வேட்பாளர் பதிப்புகளைச் சரிபார்க்கவும்</target>
+        <target>வெளியீட்டு வேட்பாளர் பதிப்புகளைச் சரிபார்</target>
         
       </trans-unit>
       <trans-unit id="chkCheckForUpdates.Text">
         <source>Check for updates weekly</source>
-        <target>வாரந்தோறும் புதுப்பிப்புகளைச் சரிபார்க்கவும்</target>
+        <target>வாரந்தோறும் புதுப்பிப்புகளைச் சரிபார்</target>
         
       </trans-unit>
       <trans-unit id="chkCommitAndPushForcedWhenAmend.Text">
         <source>Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked</source>
-        <target>உறுதிமொழி &amp;&amp; தள்ளு செயல்படும்போது  திருத்த விருப்பம் இயக்கப்பட்டால் குத்தகைக்கு கட்டாயம் தள்ளு பயன்படுத்தபடும்</target>
+        <target>உறுதிமொழி &amp;&amp; தள்ளு செயல்படும்போது திருத்த விருப்பம் இயக்கப்பட்டால் குத்தகைக்கு கட்டாயம் தள்ளு பயன்படுத்தபடும்</target>
         
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
-        <target>கட்டளை உரையாடல்களில் பணியக வெளியீட்டிற்கு பணியக முன்மாதிரியைப் பயன்படுத்தவும்</target>
+        <target>கட்டளை உரையாடல்களில் பணியக வெளியீட்டிற்கு பணியக முன்மாதிரியைப் பயன்படுத்து</target>
         
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.ToolTipText">
@@ -70,7 +70,7 @@ Turn off if you experience problems with the console emulator.</source>
 ஆம் எனில், முழு செயல்பாட்டு பணியக முன்மாதிரியை உட்பொதிக்கும். இது பரிசோதனை மற்றும் பக்க விளைவுகளை ஏற்படுத்தலாம்.
 இல்லை எனில், நிலையானவெளியீடு/நிலையானபிழை இலிருந்து தேர்ந்தெடுக்கப்பட்ட சரங்களை திருத்திப் பெட்டியில் திருப்பிவிடும். இது உன்னதமான முறை.
 
-பணியக முன்மாதிரியில் சிக்கல் ஏற்பட்டால் அணைக்கவும்.</target>
+பணியக முன்மாதிரியில் சிக்கல் ஏற்பட்டால் அணை.</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -345,8 +345,18 @@ Click this info icon for more details.</source>
   </file>
   <file datatype="plaintext" original="BlameControl" source-language="en" target-language="ta">
     <body>
+      <trans-unit id="_blameActualPreviousRevision.Text">
+        <source>&amp;Blame previous revision</source>
+        <target>முந்தைய திருத்தத்தைக் பழி கூறு</target>
+        
+      </trans-unit>
+      <trans-unit id="_blameVisiblePreviousRevision.Text">
+        <source>&amp;Blame previous visible revision</source>
+        <target>முந்தைய தெரியும் திருத்தத்தைக் பழி கூறு</target>
+        
+      </trans-unit>
       <trans-unit id="allCommitInfoToolStripMenuItem.Text">
-        <source>All commit info</source>
+        <source>&amp;All commit info</source>
         <target>அனைத்து உறுதிமொழி தகவல்</target>
         
       </trans-unit>
@@ -356,28 +366,25 @@ Click this info icon for more details.</source>
         
       </trans-unit>
       <trans-unit id="blameRevisionToolStripMenuItem.Text">
-        <source>Blame this revision</source>
-        <target>இந்தத் திருத்தத்தைக் பழி கூறுங்கள்</target>
+        <source>Blame &amp;this revision</source>
+        <target>இந்தத் திருத்தத்தைக் பழி கூறு</target>
         
       </trans-unit>
       <trans-unit id="commitHashToolStripMenuItem.Text">
-        <source>Commit hash</source>
+        <source>Commit &amp;hash</source>
         <target>உறுதிமொழி கொத்து</target>
         
       </trans-unit>
       <trans-unit id="commitMessageToolStripMenuItem.Text">
-        <source>Commit message</source>
-        <target>உறுதிமொழி செய்தி</target>
+        <source>Commit &amp;message</source>
         
       </trans-unit>
       <trans-unit id="copyToClipboardToolStripMenuItem.Text">
-        <source>Copy to clipboard</source>
-        <target>இடைநிலைப் பலகைக்கு நகலெடு</target>
+        <source>&amp;Copy to clipboard</source>
         
       </trans-unit>
       <trans-unit id="showChangesToolStripMenuItem.Text">
-        <source>Show changes</source>
-        <target>மாற்றங்களைக் காட்டு</target>
+        <source>&amp;Show changes</source>
         
       </trans-unit>
     </body>
@@ -1493,6 +1500,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <target>இழுக்கும் கோரிக்கையை உருவாக்குவதில் தோல்வி.</target>
         
       </trans-unit>
+      <trans-unit id="_strFailedToLoadTemplate.Text">
+        <source>Failed to load PR template from file.</source>
+        
+      </trans-unit>
       <trans-unit id="_strLoading.Text">
         <source>Loading...</source>
         <target>ஏற்றப்படுகிறது...</target>
@@ -1636,29 +1647,9 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <target>வரைபட மூலைவிட்டங்களை நேராக்குங்கள்</target>
         
       </trans-unit>
-      <trans-unit id="chkUseSSL.Text">
-        <source>Use SSL/TLS</source>
-        <target>பாதுகாக்குகுழிஅடுக்கு/போக்குவரத்துஅடுக்குபாதுகாப்பைப் பயன்படுத்து</target>
-        
-      </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>&amp;Revision graph</source>
         <target>&amp;திருத்த வரைபடம்</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxEmailSettings.Text">
-        <source>&amp;Email settings for sending patches</source>
-        <target>&amp;ஒட்டுகளை அனுப்புவதற்கான மின்னஞ்சல் அமைப்புகள்</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSmtpServerName.Text">
-        <source>SMTP server name</source>
-        <target>எளியஞ்சல்மாற்றுநெறிமுறை சேவையக பெயர்</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSmtpServerPort.Text">
-        <source>Port</source>
-        <target>துறைமுகம்</target>
         
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
@@ -1743,13 +1734,11 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         
       </trans-unit>
       <trans-unit id="chkUseGEThemeGitColoring.Text">
-        <source>Use theme coloring</source>
-        <target>கருப்பொருள் வண்ணமயமாக்கலைப் பயன்படுத்து</target>
+        <source>Reverse background color</source>
         
       </trans-unit>
       <trans-unit id="chkUseGEThemeGitColoring.ToolTipText">
-        <source>Apply Git theme colors (with inverse backround) instead of Git default colors.</source>
-        <target>அறிவிலி இயல்புநிலை வண்ணங்களுக்குப் பதிலாக அறிவிலி கருப்பொருள் வண்ணங்களைப் பயன்படுத்தவும் (தலைகீழ் பின்னோற்றத்துடன்).</target>
+        <source>Color the background at changes (invert colors).</source>
         
       </trans-unit>
       <trans-unit id="chkUseGitColoring.Text">
@@ -1886,14 +1875,135 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target>மாற்றங்கள் ஏதுமில்லை</target>
         
       </trans-unit>
-      <trans-unit id="SearchWatermarkLabel.Text">
-        <source>Search files in commit using a regular expression...</source>
-        <target>வழக்கமான வெளிப்பாட்டைப் பயன்படுத்தி உறுதிமொழியில் உள்ள கோப்புகளைத் தேடுங்கள்...</target>
+      <trans-unit id="_assumeUnchangedToolTip.Text">
+        <source>Tell git to not check the status of this file for performance benefits.
+Use this feature when a file is big and never change.
+Git will never check if the file has changed that will improve status check performance.</source>
+        
+      </trans-unit>
+      <trans-unit id="_collapseAll.Text">
+        <source>C&amp;ollapse all</source>
+        
+      </trans-unit>
+      <trans-unit id="_collapseRootFolders.Text">
+        <source>Collap&amp;se root folders</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteFailed.Text">
+        <source>Delete file failed</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteSelectedFiles.Text">
+        <source>Are you sure you want to delete the selected file(s)?</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteSelectedFilesCaption.Text">
+        <source>Delete</source>
+        
+      </trans-unit>
+      <trans-unit id="_expandAll.Text">
+        <source>E&amp;xpand all</source>
+        
+      </trans-unit>
+      <trans-unit id="_firstRevision.Text">
+        <source>First: A </source>
+        
+      </trans-unit>
+      <trans-unit id="_multipleDescription.Text">
+        <source>&lt;multiple&gt;</source>
+        
+      </trans-unit>
+      <trans-unit id="_newName.Text">
+        <source>New name</source>
+        
+      </trans-unit>
+      <trans-unit id="_resetSelectedChangesText.Text">
+        <source>Are you sure you want to reset all selected files to {0}?</source>
+        
+      </trans-unit>
+      <trans-unit id="_saveFileFilterAllFiles.Text">
+        <source>All files</source>
+        
+      </trans-unit>
+      <trans-unit id="_saveFileFilterCurrentFormat.Text">
+        <source>Current format</source>
+        
+      </trans-unit>
+      <trans-unit id="_selectAll.Text">
+        <source>S&amp;elect all</source>
+        
+      </trans-unit>
+      <trans-unit id="_selectedRevision.Text">
+        <source>Second: B </source>
+        
+      </trans-unit>
+      <trans-unit id="_skipWorktreeToolTip.Text">
+        <source>Hide already tracked files that will change but that you don't want to commit.
+Suitable for some config files modified locally.</source>
         
       </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
-        <source>&amp;Sort by...</source>
-        <target>&amp;மூலம் வரிசைப்படுத்து...</target>
+        <source>&amp;Sort and group by</source>
+        
+      </trans-unit>
+      <trans-unit id="_stopTrackingFail.Text">
+        <source>Fail to stop tracking the file '{0}'.</source>
+        
+      </trans-unit>
+      <trans-unit id="btnAsTree.ToolTipText">
+        <source>Toggle flat list / tree</source>
+        
+      </trans-unit>
+      <trans-unit id="btnByExtension.ToolTipText">
+        <source>Group by file type (extension)</source>
+        
+      </trans-unit>
+      <trans-unit id="btnByPath.ToolTipText">
+        <source>Group by file path</source>
+        
+      </trans-unit>
+      <trans-unit id="btnByStatus.ToolTipText">
+        <source>Group by diff status</source>
+        
+      </trans-unit>
+      <trans-unit id="btnCollapseGroups.ToolTipText">
+        <source>Collapse all groups, otherwise expand the selected group</source>
+        
+      </trans-unit>
+      <trans-unit id="btnFindInFilesGitGrep.ToolTipText">
+        <source>Toggle 'Find in commit files using git-grep'</source>
+        
+      </trans-unit>
+      <trans-unit id="btnOnlyA.Text">
+        <source>A</source>
+        
+      </trans-unit>
+      <trans-unit id="btnOnlyA.ToolTipText">
+        <source>Show files changed in A only</source>
+        
+      </trans-unit>
+      <trans-unit id="btnOnlyB.Text">
+        <source>B</source>
+        
+      </trans-unit>
+      <trans-unit id="btnOnlyB.ToolTipText">
+        <source>Show files changed in B only</source>
+        
+      </trans-unit>
+      <trans-unit id="btnRefresh.ToolTipText">
+        <source>Refresh artificial commit</source>
+        
+      </trans-unit>
+      <trans-unit id="btnSameChange.ToolTipText">
+        <source>Show files changed equally</source>
+        
+      </trans-unit>
+      <trans-unit id="btnSettings.Text">
+        <source>Settings</source>
+        
+      </trans-unit>
+      <trans-unit id="btnUnequalChange.ToolTipText">
+        <source>Show files with different changes</source>
         
       </trans-unit>
       <trans-unit id="columnHeader.Text">
@@ -1901,13 +2011,277 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target>கோப்புகள்</target>
         
       </trans-unit>
+      <trans-unit id="lblFindInCommitFilesGitGrepWatermark.Text">
+        <source>Find in commit files using git-grep regular expression...</source>
+        
+      </trans-unit>
+      <trans-unit id="tmsiEditLocallyIgnoredFiles.Text">
+        <source>Edit &amp;locally ignored files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiAddFileToGitIgnore.Text">
+        <source>Add file to &amp;.gitignore</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiAddFileToGitInfoExclude.Text">
+        <source>Add file to .git/info/exclude</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiAssumeUnchanged.Text">
+        <source>Assu&amp;me unchanged</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiBlame.Text">
+        <source>&amp;Blame</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCherryPickChanges.Text">
+        <source>Cherr&amp;y pick changes</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCommitSubmoduleChanges.Text">
+        <source>&amp;Commit submodule changes</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCopyPaths.Text">
+        <source>Copy &amp;path(s)</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDeleteFile.Text">
+        <source>De&amp;lete file</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDenseTree.Text">
+        <source>&amp;Dense tree (merge single item with its folder node)</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDiffFirstToLocal.Text">
+        <source>First -&gt; &amp;Working directory</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDiffFirstToSelected.Text">
+        <source>&amp;First -&gt; Second</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDiffSelectedToLocal.Text">
+        <source>&amp;Second -&gt; Working directory</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDiffTwoSelected.Text">
+        <source>&amp;Diff the selected files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiEditGitIgnore.Text">
+        <source>&amp;Edit ignored files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiEditWorkingDirectoryFile.Text">
+        <source>&amp;Edit working directory file</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFileHistory.Text">
+        <source>File &amp;history</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFilterFileInGrid.Text">
+        <source>Filter file in &amp;grid</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFindFile.Text">
+        <source>&amp;Find file...</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFindUsingBoth.Text">
+        <source>Using &amp;both</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFindUsingDialog.Text">
+        <source>Using &amp;dialog</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFindUsingInputBox.Text">
+        <source>Using &amp;input box</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFileExtensionFlat.Text">
+        <source>Group by file e&amp;xtension - flat</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFileExtensionTree.Text">
+        <source>Group by file &amp;extension - tree</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFilePathFlat.Text">
+        <source>Group by &amp;file path - flat</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFilePathTree.Text">
+        <source>Group by file &amp;path - tree</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFileStatusFlat.Text">
+        <source>Group by file s&amp;tatus - flat</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFileStatusTree.Text">
+        <source>Group by file &amp;status - tree</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiInteractiveAdd.Text">
+        <source>Interactive add...</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiMove.Text">
+        <source>Rena&amp;me / move</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenFindInCommitFilesGitGrepDialog.Text">
+        <source>Find in &amp;commit files using git-grep...</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenInVisualStudio.Text">
+        <source>Open in &amp;Visual Studio</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenRevisionFile.Text">
+        <source>Ope&amp;n this revision (temp file)</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenRevisionFileWith.Text">
+        <source>Open this revision &amp;with... (temp file)</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenWithDifftool.Text">
+        <source>Open with &amp;difftool</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenWorkingDirectoryFile.Text">
+        <source>&amp;Open working directory file</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenWorkingDirectoryFileWith.Text">
+        <source>Open working directory file with...</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiRefreshOnFormFocus.Text">
+        <source>&amp;Refresh artificial commits on form focus</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiRememberFirstRevDiff.Text">
+        <source>R&amp;emember First for diff</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiRememberSecondRevDiff.Text">
+        <source>&amp;Remember Second for diff</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetChunkOfFile.Text">
+        <source>Reset chunk of file...</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetFileTo.Text">
+        <source>&amp;Reset file(s) to</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetSubmoduleChanges.Text">
+        <source>R&amp;eset submodule changes</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiRunScript.Text">
+        <source>Run script</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiSaveAs.Text">
+        <source>S&amp;ave selected as...</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowAssumeUnchangedFiles.Text">
+        <source>Show &amp;assumed-unchanged files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowDiffForAllParents.Text">
+        <source>&amp;Show file differences for all parents</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowFindInCommitFilesGitGrep.Text">
+        <source>Show 'Find in commit fi&amp;les using git-grep'</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowGroupNodesInFlatList.Text">
+        <source>Show &amp;group nodes in flat list (if multiple)</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowIgnoredFiles.Text">
+        <source>Show &amp;ignored files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowInFileTree.Text">
+        <source>Show in File &amp;tree</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowInFolder.Text">
+        <source>Show &amp;in folder</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowSkipWorktreeFiles.Text">
+        <source>Show &amp;skip-worktree files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowUntrackedFiles.Text">
+        <source>Show &amp;untracked files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiSkipWorktree.Text">
+        <source>S&amp;kip worktree</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiStageFile.Text">
+        <source>&amp;Stage selected</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiStashSubmoduleChanges.Text">
+        <source>S&amp;tash submodule changes</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiStopTracking.Text">
+        <source>Stop tracking this file</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiToolbar.Text">
+        <source>&amp;Toolbar</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiUnstageFile.Text">
+        <source>&amp;Unstage selected</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiUpdateSubmodule.Text">
+        <source>&amp;Update submodule</source>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en" target-language="ta">
     <body>
+      <trans-unit id="_binaryFile.Text">
+        <source>Binary file: {0}</source>
+        
+      </trans-unit>
+      <trans-unit id="_binaryFileDetected.Text">
+        <source>Binary file: {0} (Detected)</source>
+        
+      </trans-unit>
+      <trans-unit id="_bytes.Text">
+        <source>bytes</source>
+        
+      </trans-unit>
       <trans-unit id="_cannotViewImage.Text">
         <source>Cannot view image {0}</source>
         <target>படத்தைப் பார்க்க முடியாது {0}</target>
+        
+      </trans-unit>
+      <trans-unit id="_fileSizeInMb.Text">
+        <source>MB</source>
         
       </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
@@ -2208,8 +2582,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
   <file datatype="plaintext" original="FolderBrowserButton" source-language="en" target-language="ta">
     <body>
       <trans-unit id="buttonBrowse.Text">
-        <source>Browse...</source>
-        <target>உலாவு...</target>
+        <source>&amp;Browse...</source>
         
       </trans-unit>
     </body>
@@ -2298,11 +2671,6 @@ You can not push unless you are a collaborator. {2}</source>
 You will have push access. {2}</source>
         <target> {0} ஐ {1} இல் நகலி செய்யும்.
 நீங்கள் தள்ளு அணுகலைப் பெறுவீர்கள். {2}</target>
-        
-      </trans-unit>
-      <trans-unit id="browseForCloneToDirbtn.Text">
-        <source>Browse...</source>
-        <target>உலாவு...</target>
         
       </trans-unit>
       <trans-unit id="cloneBtn.Text">
@@ -2925,8 +3293,7 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
-        <source>&amp;Configure this menu...</source>
-        <target>இந்தப் பட்டியலை உள்ளமை</target>
+        <source>Co&amp;nfigure this menu...</source>
         
       </trans-unit>
       <trans-unit id="_consoleTabCaption.Text">
@@ -2977,6 +3344,10 @@ compare with first:</source>
       <trans-unit id="_noWorkingFolderText.Text">
         <source>No working directory</source>
         <target>செயல்படும் அடைவு இல்லை</target>
+        
+      </trans-unit>
+      <trans-unit id="_outputHistoryTabCaption.Text">
+        <source>Output</source>
         
       </trans-unit>
       <trans-unit id="_pullFetch.Text">
@@ -3254,8 +3625,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="fetchPruneAllToolStripMenuItem.ToolTipText">
-        <source>Fetch branches and tags from all remote repositories also prune deleted refs</source>
-        <target>அனைத்து தொலை களஞ்சியங்களிலிருந்தும் கிளைகள் மற்றும் குறிச்சொற்களைப் எடுக்கவும், நீக்கப்பட்ட குறிப்புகளைக் கத்தரிக்கவும் </target>
+        <source>Fetch branches and tags from all remote repositories also prune deleted branches</source>
         
       </trans-unit>
       <trans-unit id="fetchToolStripMenuItem.Text">
@@ -3762,9 +4132,25 @@ Do you want to continue?</source>
         <target>களஞ்சிய சாளரத்தை உலாவுக</target>
         
       </trans-unit>
-      <trans-unit id="chkChowConsoleTab.Text">
+      <trans-unit id="_outputHistoryTooltip.Text">
+        <source>The output displayed in the process dialog and some trace output is retained and shown in the output history.
+
+- With this set, the output history is displayed in a tab in the lower pane of the Browse Repository window.
+- With this unset, the output history is displayed in a panel docked to the lower left corner of the Browse Repository window.
+
+Focus the output history and (when displayed as panel) toggle its visibility using the hotkey {0}.</source>
+        
+      </trans-unit>
+      <trans-unit id="chkShowConsoleTab.Text">
         <source>Show the Console tab</source>
-        <target>பணியக தாவலைக் காட்டு</target>
+        
+      </trans-unit>
+      <trans-unit id="chkShowConsoleTab.ToolTipText">
+        <source>View help</source>
+        
+      </trans-unit>
+      <trans-unit id="chkShowFindInCommitFilesGitGrep.Text">
+        <source>Show 'Find in commit files using git-grep'</source>
         
       </trans-unit>
       <trans-unit id="chkShowGpgInformation.Text">
@@ -3772,9 +4158,21 @@ Do you want to continue?</source>
         <target>சிபிசி தகவலைக் காட்டு</target>
         
       </trans-unit>
+      <trans-unit id="chkShowGpgInformation.ToolTipText">
+        <source>View help</source>
+        
+      </trans-unit>
+      <trans-unit id="chkShowOutputHistoryAsTab.Text">
+        <source>Show output history as tab (otherwise as panel)</source>
+        
+      </trans-unit>
       <trans-unit id="chkUseBrowseForFileHistory.Text">
         <source>Show file history in the main window</source>
         <target>பிரதான சாளரத்தில் கோப்பு வரலாற்றைக் காட்டு</target>
+        
+      </trans-unit>
+      <trans-unit id="chkUseBrowseForFileHistory.ToolTipText">
+        <source>View help</source>
         
       </trans-unit>
       <trans-unit id="chkUseDiffViewerForBlame.Text">
@@ -3782,9 +4180,8 @@ Do you want to continue?</source>
         <target>வேறுபாடு காட்டியில் பழியைக் காட்டு</target>
         
       </trans-unit>
-      <trans-unit id="gbGeneral.Text">
-        <source>General</source>
-        <target>பொது</target>
+      <trans-unit id="chkUseDiffViewerForBlame.ToolTipText">
+        <source>View help</source>
         
       </trans-unit>
       <trans-unit id="gbTabs.Text">
@@ -3792,9 +4189,16 @@ Do you want to continue?</source>
         <target>தாவல்கள் (மறுதொடக்கம் தேவை)</target>
         
       </trans-unit>
-      <trans-unit id="label2.Text">
+      <trans-unit id="groupBox1.Text">
+        <source>General</source>
+        
+      </trans-unit>
+      <trans-unit id="lblDefaultShell.Text">
         <source>Default shell</source>
-        <target>இயல்புநிலை ஓடு</target>
+        
+      </trans-unit>
+      <trans-unit id="lblOutputHistoryDepth.Text">
+        <source>Output history depth (0 to disable):</source>
         
       </trans-unit>
     </body>
@@ -4014,6 +4418,10 @@ Are you sure?</source>
       <trans-unit id="columnHeader4.Text">
         <source>Date</source>
         <target>தேதி</target>
+        
+      </trans-unit>
+      <trans-unit id="lblAnotherRev.Text">
+        <source>C&amp;hoose another revision:</source>
         
       </trans-unit>
       <trans-unit id="lblBranchInfo.Text">
@@ -4272,8 +4680,7 @@ Do you want to open the new repository &quot;{0}&quot; now?</source>
         
       </trans-unit>
       <trans-unit id="brachLabel.Text">
-        <source>&amp;Branch:</source>
-        <target>&amp;கிளை:</target>
+        <source>Br&amp;anch:</source>
         
       </trans-unit>
       <trans-unit id="cbDownloadFullHistory.Text">
@@ -4436,15 +4843,6 @@ Do you want to continue?</source>
 தொடர வேண்டுமா?</target>
         
       </trans-unit>
-      <trans-unit id="_assumeUnchangedToolTip.Text">
-        <source>Tell git to not check the status of this file for performance benefits.
-Use this feature when a file is big and never change.
-Git will never check if the file has changed that will improve status check performance.</source>
-        <target>செயல்திறன் பலன்களுக்காக இந்தக் கோப்பின் நிலையைச் சரிபார்க்க வேண்டாம் என்று அறிவிலியிடம் சொல்லுங்கள்.
-கோப்பு பெரியதாக இருக்கும்போது இந்த அம்சத்தைப் பயன்படுத்தவும்.
-நிலை சரிபார்ப்பு செயல்திறனை மேம்படுத்தும் கோப்பு மாறியிருந்தால் அறிவிலி ஒருபோதும் சரிபார்க்காது.</target>
-        
-      </trans-unit>
       <trans-unit id="_commitAndForcePush.Text">
         <source>Commit &amp;&amp; force &amp;push</source>
         <target>உறுதிமொழி &amp;&amp; கட்டாய &amp;தள்ளு</target>
@@ -4527,31 +4925,6 @@ Do you want to continue?</source>
       <trans-unit id="_conventionalCommitDocumentation.Text">
         <source>Documentation...</source>
         <target>ஆவணமாக்கம்...</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteFailed.Text">
-        <source>Delete file failed</source>
-        <target>கோப்பை நீக்க முடியவில்லை</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteSelectedFiles.Text">
-        <source>Are you sure you want to delete the selected file(s)?</source>
-        <target>தேர்ந்தெடுத்த கோப்பை(களை) நிச்சயமாக நீக்க விரும்புகிறீர்களா?</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteSelectedFilesCaption.Text">
-        <source>Delete</source>
-        <target>நீக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteUntrackedFiles.Text">
-        <source>Are you sure you want to delete all untracked files?</source>
-        <target>கண்காணிக்கப்படாத எல்லா கோப்புகளையும் நிச்சயமாக நீக்க விரும்புகிறீர்களா?</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteUntrackedFilesCaption.Text">
-        <source>Delete untracked files.</source>
-        <target>கண்காணிக்கப்படாத கோப்புகளை நீக்கு.</target>
         
       </trans-unit>
       <trans-unit id="_enterCommitMessage.Text">
@@ -4644,26 +5017,6 @@ Do you want to continue?</source>
 தொடர விரும்புகிறீர்களா?</target>
         
       </trans-unit>
-      <trans-unit id="_onlyStageChunkOfSingleFileError.Text">
-        <source>You can only use this option when selecting a single file</source>
-        <target>ஒரு கோப்பைத் தேர்ந்தெடுக்கும்போது மட்டுமே இந்த விருப்பத்தைப் பயன்படுத்த முடியும்</target>
-        
-      </trans-unit>
-      <trans-unit id="_resetSelectedChangesText.Text">
-        <source>Are you sure you want to reset all selected files?</source>
-        <target>தேர்ந்தெடுத்த எல்லா கோப்புகளையும் மீட்டமைக்க விரும்புகிறீர்களா?</target>
-        
-      </trans-unit>
-      <trans-unit id="_resetStageChunkOfFileCaption.Text">
-        <source>Unstage chunk of file</source>
-        <target>கோப்பின் பகுதி மேடையற்றதாக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectOnlyOneFile.Text">
-        <source>You must have only one file selected.</source>
-        <target>நீங்கள் ஒரு கோப்பை மட்டுமே தேர்ந்தெடுத்திருக்க வேண்டும்</target>
-        
-      </trans-unit>
       <trans-unit id="_selectionFilterErrorToolTip.Text">
         <source>Error {0}</source>
         <target>பிழை  {0}</target>
@@ -4672,13 +5025,6 @@ Do you want to continue?</source>
       <trans-unit id="_selectionFilterToolTip.Text">
         <source>Enter a regular expression to select unstaged files.</source>
         <target>மேடையற்ற கோப்புகளைத் தேர்ந்தெடுக்க வழக்கமான வெளிப்பாட்டை உள்ளிடவும்.</target>
-        
-      </trans-unit>
-      <trans-unit id="_skipWorktreeToolTip.Text">
-        <source>Hide already tracked files that will change but that you don't want to commit.
-Suitable for some config files modified locally.</source>
-        <target>ஏற்கனவே கண்காணித்த கோப்புகளை மறைக்கவும், அவை மாறும் ஆனால் நீங்கள் செய்ய விரும்பாதவை.
-உள்நாட்டில் மாற்றியமைக்கப்பட்ட சில கட்டமைப்பு கோப்புகளுக்கு ஏற்றது.</target>
         
       </trans-unit>
       <trans-unit id="_stageAll.Text">
@@ -4704,11 +5050,6 @@ Suitable for some config files modified locally.</source>
       <trans-unit id="_statusBarBranchWithoutRemote.Text">
         <source>(remote not configured)</source>
         <target>(தொலை உள்ளமைக்கப்படவில்லை)</target>
-        
-      </trans-unit>
-      <trans-unit id="_stopTrackingFail.Text">
-        <source>Fail to stop tracking the file '{0}'.</source>
-        <target>'{0}' கோப்பை கண்காணிப்பதை நிறுத்த முடியவில்லை.</target>
         
       </trans-unit>
       <trans-unit id="_templateLoadErrorCaption.Text">
@@ -4749,21 +5090,6 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
       <trans-unit id="_untrackedRemote.Text">
         <source>(untracked)</source>
         <target>(கண்காணிக்கப்படாதது)</target>
-        
-      </trans-unit>
-      <trans-unit id="addFileToGitIgnoreToolStripMenuItem.Text">
-        <source>Add file to .gitignore</source>
-        <target>கோப்பை .அறிவிலிபுறக்கணி இல் சேர்</target>
-        
-      </trans-unit>
-      <trans-unit id="addFileToGitInfoExcludeLocallyToolStripMenuItem.Text">
-        <source>Add file to .git/info/exclude</source>
-        <target>கோப்பை .அறிவிலி/தகவல்/விடுவி இல் சேர்</target>
-        
-      </trans-unit>
-      <trans-unit id="assumeUnchangedToolStripMenuItem.Text">
-        <source>Assume unchanged</source>
-        <target>மாறாமல் இருப்பதாகக் கருதுங்கள்</target>
         
       </trans-unit>
       <trans-unit id="branchNameLabel.Text">
@@ -4816,11 +5142,6 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
         <target>மேடை</target>
         
       </trans-unit>
-      <trans-unit id="commitSubmoduleChanges.Text">
-        <source>Commit submodule changes</source>
-        <target>துணை தொகுதி மாற்றங்களைச் உறுதிமொழியுங்கள்</target>
-        
-      </trans-unit>
       <trans-unit id="commitTemplatesToolStripMenuItem.Text">
         <source>Commit &amp;templates</source>
         <target>உறுதிமொழி &amp;வார்ப்புருகள்</target>
@@ -4829,11 +5150,6 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
       <trans-unit id="commitTemplatesToolStripMenuItem.ToolTipText">
         <source>Commit templates</source>
         <target>உறுதிமொழி வார்ப்புருகள்</target>
-        
-      </trans-unit>
-      <trans-unit id="copyFolderNameMenuItem.Text">
-        <source>Copy folder name</source>
-        <target>கோப்புறை பெயரை நகலெடு</target>
         
       </trans-unit>
       <trans-unit id="createBranchToolStripButton.Text">
@@ -4846,54 +5162,9 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
         <target>கிளையை உருவாக்கு</target>
         
       </trans-unit>
-      <trans-unit id="deleteAllUntrackedFilesToolStripMenuItem.Text">
-        <source>Delete all untracked files</source>
-        <target>கண்காணிக்கப்படாத அனைத்து கோப்புகளையும் நீக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="deleteFileToolStripMenuItem.Text">
-        <source>Delete file</source>
-        <target>கோப்பை நீக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="doNotAssumeUnchangedToolStripMenuItem.Text">
-        <source>Do not assume unchanged</source>
-        <target>மாறாதது என்று எண்ண வேண்டாம்</target>
-        
-      </trans-unit>
-      <trans-unit id="doNotSkipWorktreeToolStripMenuItem.Text">
-        <source>Do not skip worktree</source>
-        <target>பணிமரத்தை தவிர்க்க வேண்டாம்</target>
-        
-      </trans-unit>
-      <trans-unit id="editFileToolStripMenuItem.Text">
-        <source>Edit file</source>
-        <target>கோப்பைத் திருத்து</target>
-        
-      </trans-unit>
-      <trans-unit id="editGitIgnoreToolStripMenuItem.Text">
-        <source>Edit ignored files</source>
-        <target>புறக்கணிக்கப்பட்ட கோப்புகளைத் திருத்து</target>
-        
-      </trans-unit>
-      <trans-unit id="editLocallyIgnoredFilesToolStripMenuItem.Text">
-        <source>Edit locally ignored files</source>
-        <target>உள்ளூரில் புறக்கணிக்கப்பட்ட கோப்புகளைத் திருத்து</target>
-        
-      </trans-unit>
-      <trans-unit id="filenameToClipboardToolStripMenuItem.Text">
-        <source>Copy full path</source>
-        <target>முழு பாதையை நகலெடு</target>
-        
-      </trans-unit>
       <trans-unit id="generateListOfChangesInSubmodulesChangesToolStripMenuItem.Text">
         <source>Generate a list of changes in submodules</source>
         <target>துணை தொகுதிகளில் மாற்றங்களின் பட்டியலை உருவாக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="interactiveAddToolStripMenuItem.Text">
-        <source>Interactive Add</source>
-        <target>ஊடாடுகையில் சேர்</target>
         
       </trans-unit>
       <trans-unit id="modifyCommitMessageButton.Text">
@@ -4906,31 +5177,6 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
         <target>சரிபார்ப்பு இல்லை</target>
         
       </trans-unit>
-      <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Show in folder</source>
-        <target>கோப்புறையில் காட்டு</target>
-        
-      </trans-unit>
-      <trans-unit id="openFolderMenuItem.Text">
-        <source>Show in folder</source>
-        <target>கோப்புறையில் காட்டு</target>
-        
-      </trans-unit>
-      <trans-unit id="openToolStripMenuItem.Text">
-        <source>Open</source>
-        <target>திற</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with difftool</source>
-        <target>வேறுபாடுகருவி மூலம் திற</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithToolStripMenuItem.Text">
-        <source>Open with...</source>
-        <target>இதனுடன் திற...</target>
-        
-      </trans-unit>
       <trans-unit id="refreshDialogOnFormFocusToolStripMenuItem.Text">
         <source>Refresh dialog on form focus</source>
         <target>படிவகவனத்தில் உரையாடலைப் புதுப்பி</target>
@@ -4941,119 +5187,14 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
         <target>(தொலை பெயர்)</target>
         
       </trans-unit>
-      <trans-unit id="resetPartOfFileToolStripMenuItem.Text">
-        <source>Reset chunk of file</source>
-        <target>கோப்பின் பகுதியை மீட்டமைக்கவும்</target>
-        
-      </trans-unit>
-      <trans-unit id="resetSubmoduleChanges.Text">
-        <source>Reset submodule changes</source>
-        <target>துணை தொகுதி மாற்றங்களை மீட்டமை</target>
-        
-      </trans-unit>
-      <trans-unit id="runScriptToolStripMenuItem.Text">
-        <source>Run script</source>
-        <target>கைஉரை இயக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="selectionFilterToolStripMenuItem.Text">
-        <source>Selection filter</source>
-        <target>தேர்வு வடிகட்டி</target>
-        
-      </trans-unit>
-      <trans-unit id="showAssumeUnchangedFilesToolStripMenuItem.Text">
-        <source>Show assumed-unchanged files</source>
-        <target>ஊகிக்கப்பட்ட-மாற்றப்படாத கோப்புகளைக் காண்பி</target>
-        
-      </trans-unit>
-      <trans-unit id="showIgnoredFilesToolStripMenuItem.Text">
-        <source>Show ignored files</source>
-        <target>புறக்கணிக்கப்பட்ட கோப்புகளைக் காண்பி</target>
-        
-      </trans-unit>
-      <trans-unit id="showSkipWorktreeFilesToolStripMenuItem.Text">
-        <source>Show skip-worktree files</source>
-        <target>தவிர்-பணிமரம் கோப்புகளைக் காண்பி</target>
-        
-      </trans-unit>
-      <trans-unit id="showUntrackedFilesToolStripMenuItem.Text">
-        <source>Show untracked files</source>
-        <target>கண்காணிக்கப்படாத கோப்புகளைக் காண்பி</target>
-        
-      </trans-unit>
       <trans-unit id="signOffToolStripMenuItem.Text">
         <source>Sign-off commit</source>
         <target>உறுதிமொழி கையொப்பமிடுதல்</target>
         
       </trans-unit>
-      <trans-unit id="skipWorktreeToolStripMenuItem.Text">
-        <source>Skip worktree</source>
-        <target>பணிமரத்தை தவிர்</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedCopyPathToolStripMenuItem14.Text">
-        <source>Copy full path</source>
-        <target>முழு பாதையை நகலெடுக்கவும்</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedEditFileToolStripMenuItem11.Text">
-        <source>Edit file</source>
-        <target>கோப்பைத் திருத்து</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedFileHistoryToolStripMenuItem6.Text">
-        <source>View file history</source>
-        <target>கோப்பு வரலாற்றைக் காண்க</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedOpenDifftoolToolStripMenuItem9.Text">
-        <source>Open with difftool</source>
-        <target>வேறுபாடுகருவி மூலம் திற</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedOpenFolderToolStripMenuItem10.Text">
-        <source>Show in folder</source>
-        <target>கோப்புறையில் காட்டு</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedOpenToolStripMenuItem7.Text">
-        <source>Open</source>
-        <target>திற</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedOpenWithToolStripMenuItem8.Text">
-        <source>Open with...</source>
-        <target>இதனுடன் திற...</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedResetChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target>கோப்பு அல்லது அடைவு மாற்றங்களை மீட்டமை</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedRunScriptToolStripMenuItem.Text">
-        <source>Run script</source>
-        <target>கைஉரை இயக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
-        <source>Stash submodule changes</source>
-        <target>பதுக்கிவை துணை தொகுதி மாற்றங்கள்</target>
-        
-      </trans-unit>
-      <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
-        <source>Stop tracking this file</source>
-        <target>இந்தக் கோப்பை கண்காணிப்பதை நிறுத்து</target>
-        
-      </trans-unit>
       <trans-unit id="toolAuthorLabelItem.Text">
         <source>Author: (Format: &quot;name &lt;mail&gt;&quot;)</source>
         <target>ஆசிரியர்: (வடிவம்: &quot;பெயர் &lt;அஞ்சல்&gt;&quot;)</target>
-        
-      </trans-unit>
-      <trans-unit id="toolRefreshItem.Text">
-        <source>Refresh</source>
-        <target>புதுப்பி</target>
         
       </trans-unit>
       <trans-unit id="toolStageItem.Text">
@@ -5066,39 +5207,13 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
         <target>தேர்வு வடிகட்டி</target>
         
       </trans-unit>
-      <trans-unit id="toolStripMenuItem3.Text">
-        <source>&amp;Options</source>
-        <target>&amp;விருப்பங்கள்</target>
-        
-      </trans-unit>
       <trans-unit id="toolUnstageItem.Text">
         <source>&amp;Unstage</source>
         <target>&amp;மேடையற்றதாக்கு</target>
         
       </trans-unit>
-      <trans-unit id="tsmiResetUnstagedChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target>கோப்பு அல்லது அடைவு மாற்றங்களை மீட்டமை</target>
-        
-      </trans-unit>
-      <trans-unit id="updateSubmoduleMenuItem.Text">
-        <source>Update submodule</source>
-        <target>துணைத்தொகுப்பைப் புதுப்பிக்கவும்</target>
-        
-      </trans-unit>
-      <trans-unit id="viewFileHistoryToolStripItem.Text">
-        <source>View file history</source>
-        <target>கோப்பு வரலாற்றைக் காண்க</target>
-        
-      </trans-unit>
-      <trans-unit id="viewHistoryMenuItem.Text">
-        <source>View history</source>
-        <target>வரலாற்றைக் காண்க</target>
-        
-      </trans-unit>
-      <trans-unit id="workingToolStripMenuItem.Text">
-        <source>&amp;Working directory changes</source>
-        <target>&amp;வேலைசெய்யும் அடைவு மாற்றங்கள்</target>
+      <trans-unit id="tsmiOptions.Text">
+        <source>&amp;Options</source>
         
       </trans-unit>
     </body>
@@ -5207,31 +5322,6 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
         <target>கிளையை உருவாக்கு</target>
         
       </trans-unit>
-      <trans-unit id="ClearOrphan.Text">
-        <source>Clear &amp;working directory and index</source>
-        <target>&amp;வேலை செய்யும் அடைவு மற்றும் குறியீடு அழிக்கவும்</target>
-        
-      </trans-unit>
-      <trans-unit id="ClearOrphan.toolTip">
-        <source>Remove files from the working directory and from the index</source>
-        <target>வேலை செய்யும் கோப்பகத்திலிருந்து மற்றும் குறியீட்டிலிருந்து கோப்புகளை அகற்றவும்</target>
-        
-      </trans-unit>
-      <trans-unit id="Ok.Text">
-        <source>&amp;Create branch</source>
-        <target>&amp;கிளையை உருவாக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="Orphan.Text">
-        <source>Create or&amp;phan</source>
-        <target>அனாதை உருவாக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="Orphan.toolTip">
-        <source>New branch will have NO parents</source>
-        <target>புதிய கிளையில் பெற்றோர்கள் இல்லை</target>
-        
-      </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
         <source>Enter branch name.</source>
         <target>கிளை பெயரை உள்ளிடவும்.</target>
@@ -5242,19 +5332,41 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
         <target>“{0}” என்பது செல்லுபடியாகாத கிளை பெயர்.</target>
         
       </trans-unit>
+      <trans-unit id="_creatingOrphanBranch.Text">
+        <source>Creating orphan branch (repository has no commits)</source>
+        
+      </trans-unit>
       <trans-unit id="_noRevisionSelected.Text">
         <source>Select 1 revision to create the branch on.</source>
         <target>கிளையை உருவாக்க 1 மீள்திருத்தத்தைத் தேர்ந்தெடுக்கவும்.</target>
         
       </trans-unit>
-      <trans-unit id="chkbxCheckoutAfterCreate.Text">
+      <trans-unit id="chkCheckoutAfterCreate.Text">
         <source>Checkout &amp;after create</source>
-        <target>&amp;உருவாக்கிய பிறகு மாறு</target>
         
       </trans-unit>
-      <trans-unit id="groupBox1.Text">
+      <trans-unit id="chkClearOrphan.Text">
+        <source>Clear &amp;working directory and index</source>
+        
+      </trans-unit>
+      <trans-unit id="chkClearOrphan.toolTip">
+        <source>Remove files from the working directory and from the index</source>
+        
+      </trans-unit>
+      <trans-unit id="chkCreateOrphan.Text">
+        <source>Create or&amp;phan</source>
+        
+      </trans-unit>
+      <trans-unit id="chkCreateOrphan.toolTip">
+        <source>New branch will have NO parents</source>
+        
+      </trans-unit>
+      <trans-unit id="cmdOk.Text">
+        <source>&amp;Create branch</source>
+        
+      </trans-unit>
+      <trans-unit id="grpOrphan.Text">
         <source>Orphan</source>
-        <target>அனாதை</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -5262,9 +5374,8 @@ $ அறிவிலி கட்டமைப்பு --நிலைதிர�
         <target>&amp;கிளை பெயர்</target>
         
       </trans-unit>
-      <trans-unit id="label2.Text">
+      <trans-unit id="lblCreateBranch.Text">
         <source>Create b&amp;ranch at this revision</source>
-        <target>இந்தத் திருத்தத்தில் &amp;கிளையை உருவாக்கவும்</target>
         
       </trans-unit>
     </body>
@@ -5586,19 +5697,9 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target>ஒன்றிணை &amp;அடிதளத்துடன் ஒப்பிடு</target>
         
       </trans-unit>
-      <trans-unit id="blameToolStripMenuItem.Text">
-        <source>&amp;Blame</source>
-        <target>பழி</target>
-        
-      </trans-unit>
       <trans-unit id="btnCompareDirectoriesWithDiffTool.Text">
         <source>Open diff using &amp;directory diff tool</source>
         <target>அடைவு வேறுபாடுகருவியைப் பயன்படுத்தி வேறுபாட்டைத் திறக்கவும்</target>
-        
-      </trans-unit>
-      <trans-unit id="copyPathsToolStripMenuItem.Text">
-        <source>Copy &amp;path(s)</source>
-        <target>பாதை(கள்) &amp;நகல்</target>
         
       </trans-unit>
       <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
@@ -5606,49 +5707,14 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target>கோப்பு மரத்தில் காட்டு</target>
         
       </trans-unit>
-      <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
-        <source>File &amp;history</source>
-        <target>கோப்பு வரலாறு</target>
-        
-      </trans-unit>
-      <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>&amp;Find file...</source>
-        <target>கோப்பு கண்டுபிடி...</target>
-        
-      </trans-unit>
       <trans-unit id="firstCommitGroup.Text">
         <source>BASE</source>
         <target>அடிதளம்</target>
         
       </trans-unit>
-      <trans-unit id="firstToLocalToolStripMenuItem.Text">
-        <source>First -&gt; Working directory</source>
-        <target>முதல் -&gt; வேலை செய்யும் அடைவு</target>
-        
-      </trans-unit>
-      <trans-unit id="firstToSelectedToolStripMenuItem.Text">
-        <source>First -&gt; Compare</source>
-        <target>முதல் -&gt; ஒப்பிடு</target>
-        
-      </trans-unit>
-      <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Show &amp;in folder</source>
-        <target>கோப்புறையில் காண்பி</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with &amp;difftool</source>
-        <target>வேறுபாடுகருவி மூலம் திற</target>
-        
-      </trans-unit>
       <trans-unit id="secondCommitGroup.Text">
         <source>Compare</source>
         <target>ஒப்பிடு</target>
-        
-      </trans-unit>
-      <trans-unit id="selectedToLocalToolStripMenuItem.Text">
-        <source>Compare -&gt; Working directory</source>
-        <target>ஒப்பிடு -&gt; வேலை செய்யும் அடைவு</target>
         
       </trans-unit>
     </body>
@@ -5767,6 +5833,10 @@ If you are not sure just close this window.</source>
       <trans-unit id="_buildReportTabCaption.Text">
         <source>Build Report</source>
         <target>அறிக்கையை உருவாக்கு</target>
+        
+      </trans-unit>
+      <trans-unit id="_fileNotFound.Text">
+        <source> - Git could not identify the file {0}</source>
         
       </trans-unit>
       <trans-unit id="blameSettingsToolStripMenuItem.Text">
@@ -5935,6 +6005,42 @@ If you are not sure just close this window.</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormFindInCommitFilesGitGrep" source-language="en" target-language="ta">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Find in commit files using git-grep</source>
+        
+      </trans-unit>
+      <trans-unit id="btnSearch.Text">
+        <source>&amp;Find</source>
+        
+      </trans-unit>
+      <trans-unit id="chkMatchCase.Text">
+        <source>Match &amp;case</source>
+        
+      </trans-unit>
+      <trans-unit id="chkMatchWholeWord.Text">
+        <source>Match &amp;whole word</source>
+        
+      </trans-unit>
+      <trans-unit id="chkShowSearchBox.Text">
+        <source>&amp;Show 'Find in commit files using git-grep'</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Fi&amp;nd what:</source>
+        
+      </trans-unit>
+      <trans-unit id="lblOptions.Text">
+        <source>&amp;Options:</source>
+        
+      </trans-unit>
+      <trans-unit id="lblSearchCommitGitGrepWatermark.Text">
+        <source>git-grep regular expression...</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="FormFixHome" source-language="en" target-language="ta">
     <body>
       <trans-unit id="$this.Text">
@@ -5991,8 +6097,7 @@ Do you want Git Extensions to help locate the correct folder?</source>
         
       </trans-unit>
       <trans-unit id="defaultHome.Text">
-        <source>Use default for HOME</source>
-        <target>வீட்டிற்கான இயல்புநிலையைப் பயன்படுத்தவும்</target>
+        <source>&amp;Use default for HOME</source>
         
       </trans-unit>
       <trans-unit id="groupBox8.Text">
@@ -6015,13 +6120,11 @@ Change the default behaviour only if you experience problems.</source>
         
       </trans-unit>
       <trans-unit id="otherHome.Text">
-        <source>Other</source>
-        <target>மற்ற</target>
+        <source>&amp;Other</source>
         
       </trans-unit>
       <trans-unit id="userprofileHome.Text">
-        <source>Set HOME to USERPROFILE</source>
-        <target>வீட்டை பயனர்சுயவிவரத்தில் அமைக்கவும்</target>
+        <source>&amp;Set HOME to USERPROFILE</source>
         
       </trans-unit>
     </body>
@@ -6043,11 +6146,6 @@ Change the default behaviour only if you experience problems.</source>
         <target>ஒட்டு(களை) உருவாக்கு</target>
         
       </trans-unit>
-      <trans-unit id="SaveToDir.Text">
-        <source>Save patches in directory</source>
-        <target>கோப்பகத்தில் ஒட்டுகளைச் சேமி</target>
-        
-      </trans-unit>
       <trans-unit id="SelectedBranch.Text">
         <source>Branch</source>
         <target>கிளை</target>
@@ -6063,24 +6161,9 @@ Change the default behaviour only if you experience problems.</source>
         <target>ஒட்டு கோப்பை(களை) உருவாக்க முடியவில்லை</target>
         
       </trans-unit>
-      <trans-unit id="_noEmailEnteredText.Text">
-        <source>You need to enter an email address.</source>
-        <target>நீங்கள் மின்னஞ்சல் முகவரியை உள்ளிட வேண்டும்.</target>
-        
-      </trans-unit>
-      <trans-unit id="_noGitMailConfigured.Text">
-        <source>There is no email address configured in the settings dialog.</source>
-        <target>அமைப்புகள் உரையாடலில் எந்த மின்னஞ்சல் முகவரியும் உள்ளமைக்கப்படவில்லை.</target>
-        
-      </trans-unit>
       <trans-unit id="_noOutputPathEnteredText.Text">
         <source>You need to enter an output path.</source>
         <target>நீங்கள் ஒரு வெளியீட்டு பாதையை உள்ளிட வேண்டும்.</target>
-        
-      </trans-unit>
-      <trans-unit id="_noSubjectEnteredText.Text">
-        <source>You need to enter a mail subject.</source>
-        <target>நீங்கள் ஒரு அஞ்சல் பொருளை உள்ளிட வேண்டும்.</target>
         
       </trans-unit>
       <trans-unit id="_patchResultCaption.Text">
@@ -6098,39 +6181,8 @@ Change the default behaviour only if you experience problems.</source>
         <target>குறைந்தது ஒரு திருத்தத்தையாவது தேர்ந்தெடுக்க வேண்டும்</target>
         
       </trans-unit>
-      <trans-unit id="_sendMailResult.Text">
-        <source>Send to:</source>
-        <target>இதற்கு அனுப்பு:</target>
-        
-      </trans-unit>
-      <trans-unit id="_sendMailResultFailed.Text">
-        <source>Failed to send mail.</source>
-        <target>அஞ்சல் அனுப்புவதில் தோல்வி.</target>
-        
-      </trans-unit>
-      <trans-unit id="_wrongSmtpSettingsText.Text">
-        <source>You need to enter a valid smtp in the settings dialog.</source>
-        <target>நீங்கள் சரியான smtp ஐ அமைப்புகள் உரையாடலில் உள்ளிட வேண்டும்.</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Subject</source>
-        <target>பொருள்</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Body</source>
-        <target>உடல்</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>To</source>
-        <target>பெறுநர்</target>
-        
-      </trans-unit>
-      <trans-unit id="radioButton1.Text">
-        <source>Mail patches from</source>
-        <target>இலிருந்து அஞ்சல் ஒட்டுகள்</target>
+      <trans-unit id="lblPatches.Text">
+        <source>Patch:</source>
         
       </trans-unit>
     </body>
@@ -6261,6 +6313,10 @@ sln கோப்புகளை இருமம்யாகக் குறி�
       <trans-unit id="tabPageCommandLog.Text">
         <source>Command log</source>
         <target>கட்டளை பதிவு</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiClearCache.Text">
+        <source>C&amp;lear</source>
         
       </trans-unit>
     </body>
@@ -7209,8 +7265,7 @@ This will initialize and update all submodules recursive.</source>
         
       </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
-        <source>Load SSH key</source>
-        <target>பாதுகாப்பானஓடு விசையை ஏற்று</target>
+        <source>&amp;Load SSH key</source>
         
       </trans-unit>
       <trans-unit id="LocalColumn.HeaderText">
@@ -7432,6 +7487,10 @@ Would you like to do it now?</source>
         <target>&amp;குத்தகையுடன் கட்டாயப்படுத்து</target>
         
       </trans-unit>
+      <trans-unit id="folderBrowserButton1.Text">
+        <source>Bro&amp;wse...</source>
+        
+      </trans-unit>
       <trans-unit id="groupBox2.Text">
         <source>Push to</source>
         <target>இதற்குத் தள்ளு</target>
@@ -7523,6 +7582,14 @@ Would you like to do it now?</source>
       <trans-unit id="_actionSelect.Text">
         <source>Select</source>
         <target>தேர்வுசெய்</target>
+        
+      </trans-unit>
+      <trans-unit id="_local.Text">
+        <source>local</source>
+        
+      </trans-unit>
+      <trans-unit id="_remote.Text">
+        <source>remote</source>
         
       </trans-unit>
       <trans-unit id="_tag.Text">
@@ -7761,19 +7828,16 @@ commit date), ignoring the original author date.</source>
         <target>சரி</target>
         
       </trans-unit>
-      <trans-unit id="PinnedLabel.Text">
-        <source>Pinned repositories</source>
-        <target>பின் செய்யப்பட்ட களஞ்சியங்கள்</target>
+      <trans-unit id="TopLabel.Text">
+        <source>Top repositories</source>
         
       </trans-unit>
-      <trans-unit id="anchorToAllRecentReposToolStripMenuItem.Text">
+      <trans-unit id="anchorToRecentReposToolStripMenuItem.Text">
         <source>Anchor to recent repositories</source>
-        <target>சமீபத்திய களஞ்சியங்களுக்கு நங்கூரம்</target>
         
       </trans-unit>
-      <trans-unit id="anchorToPinnedReposToolStripMenuItem.Text">
-        <source>Anchor to pinned repositories</source>
-        <target>பின் செய்யப்பட்ட களஞ்சியங்களுக்கு நங்கூரம்</target>
+      <trans-unit id="anchorToTopReposToolStripMenuItem.Text">
+        <source>Anchor to top repositories</source>
         
       </trans-unit>
       <trans-unit id="chdrRepository.Text">
@@ -7801,19 +7865,21 @@ commit date), ignoring the original author date.</source>
         <target>சுருக்க வேண்டாம்  </target>
         
       </trans-unit>
+      <trans-unit id="hideTopRepositoriesFromRecentList.Text">
+        <source>Hide top repositories from recent repositories list</source>
+        
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>Recent repositories</source>
         <target>சமீபத்திய களஞ்சியங்கள்</target>
         
       </trans-unit>
       <trans-unit id="lblRecentRepositoriesHistorySize.Text">
-        <source>Recent repositories history size</source>
-        <target>சமீபத்திய களஞ்சியங்களின் வரலாறு அளவு</target>
+        <source>Maximum number of recent repositories</source>
         
       </trans-unit>
       <trans-unit id="maxRecentRepositories.Text">
-        <source>Maximum number of pinned recent repositories</source>
-        <target>பின் செய்யப்பட்ட சமீபத்திய களஞ்சியங்களின் அதிகபட்ச எண்ணிக்கை</target>
+        <source>Maximum number of top repositories</source>
         
       </trans-unit>
       <trans-unit id="middleDotRB.Text">
@@ -7841,14 +7907,12 @@ commit date), ignoring the original author date.</source>
         <target>சுருக்க உத்தி</target>
         
       </trans-unit>
-      <trans-unit id="sortAllRecentRepos.Text">
+      <trans-unit id="sortRecentRepos.Text">
         <source>Sort recent repositories alphabetically</source>
-        <target>சமீபத்திய களஞ்சியங்களை அகரவரிசைப்படி வரிசைப்படுத்து</target>
         
       </trans-unit>
-      <trans-unit id="sortPinnedRepos.Text">
-        <source>Sort pinned repositories alphabetically</source>
-        <target>பின் செய்யப்பட்ட களஞ்சியங்களை அகரவரிசைப்படி வரிசைப்படுத்து</target>
+      <trans-unit id="sortTopRepos.Text">
+        <source>Sort top repositories alphabetically</source>
         
       </trans-unit>
     </body>
@@ -7941,18 +8005,20 @@ Stash them before if you don't want to lose them.</source>
         
       </trans-unit>
       <trans-unit id="Abort.Text">
-        <source>Abort</source>
-        <target>ரத்துசெய்</target>
+        <source>&amp;Abort</source>
         
       </trans-unit>
       <trans-unit id="KeepDialogOpen.Text">
-        <source>Keep dialog open</source>
-        <target>உரையாடலைத் திறந்து வையுங்கள்</target>
+        <source>&amp;Keep dialog open</source>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>OK</source>
         <target>சரி</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowPassword.Text">
+        <source>Show &amp;password input</source>
         
       </trans-unit>
       <trans-unit id="_fingerprintNotRegistredText.Text">
@@ -7997,8 +8063,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
         
       </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
-        <source>Load SSH key</source>
-        <target>பாதுகாப்பானஓடு விசையை ஏற்று</target>
+        <source>&amp;Load SSH key</source>
         
       </trans-unit>
       <trans-unit id="MergeWith.HeaderText">
@@ -8017,23 +8082,19 @@ Do you want to register the host's fingerprint and restart the process?</source>
         
       </trans-unit>
       <trans-unit id="Save.Text">
-        <source>Save changes</source>
-        <target>மாற்றங்களைச் சேமி</target>
+        <source>&amp;Save changes</source>
         
       </trans-unit>
       <trans-unit id="SaveDefaultPushPull.Text">
-        <source>Save changes</source>
-        <target>மாற்றங்களைச் சேமி</target>
+        <source>&amp;Save changes</source>
         
       </trans-unit>
       <trans-unit id="SshBrowse.Text">
-        <source> Browse...</source>
-        <target>உலாவு...</target>
+        <source>Brows&amp;e...</source>
         
       </trans-unit>
       <trans-unit id="TestConnection.Text">
-        <source>Test connection</source>
-        <target>இணைப்புச் சோதனை</target>
+        <source>&amp;Test connection</source>
         
       </trans-unit>
       <trans-unit id="_btnDeleteTooltip.Text">
@@ -8084,13 +8145,11 @@ Inactive remote is completely invisible to git.</source>
         
       </trans-unit>
       <trans-unit id="_labelUrlAsFetch.Text">
-        <source>Fetch Url</source>
-        <target>முகவரி எடு</target>
+        <source>Fetch &amp;Url</source>
         
       </trans-unit>
       <trans-unit id="_labelUrlAsFetchPush.Text">
-        <source>Url</source>
-        <target>முகவரி</target>
+        <source>&amp;Url</source>
         
       </trans-unit>
       <trans-unit id="_lvgDisabledHeader.Text">
@@ -8142,14 +8201,25 @@ Value has been reset to empty value.</source>
         <target>தனிப்பட்ட திறவுகோல் (*.ppk)</target>
         
       </trans-unit>
+      <trans-unit id="btnRemoteColor.Text">
+        <source>Set &amp;color</source>
+        
+      </trans-unit>
+      <trans-unit id="btnRemoteColorReset.Text">
+        <source>Default color</source>
+        
+      </trans-unit>
       <trans-unit id="btnToggleState.toolTip1">
         <source>Enable or disable the selected remote</source>
         <target>தேர்ந்தெடுத்த தொலையை இயக்கவும் அல்லது முடக்கவும்</target>
         
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
-        <source>Separate Push Url</source>
-        <target>தனி தள்ளு முகவரி</target>
+        <source>Sep&amp;arate Push Url</source>
+        
+      </trans-unit>
+      <trans-unit id="folderBrowserButtonPushUrl.Text">
+        <source>Bro&amp;wse...</source>
         
       </trans-unit>
       <trans-unit id="gbMgtPanel.Text">
@@ -8158,43 +8228,40 @@ Value has been reset to empty value.</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Name</source>
-        <target>பெயர்</target>
+        <source>&amp;Name</source>
         
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Url</source>
-        <target>முகவரி</target>
+        <source>&amp;Url</source>
         
       </trans-unit>
       <trans-unit id="label3.Text">
-        <source>Private key file</source>
-        <target>தனிப்பட்ட முக்கிய கோப்பு</target>
+        <source>Private &amp;key file</source>
         
       </trans-unit>
       <trans-unit id="label4.Text">
-        <source>Local branch name</source>
-        <target>உள்ளக கிளை பெயர்</target>
+        <source>&amp;Local branch name</source>
         
       </trans-unit>
       <trans-unit id="label5.Text">
-        <source>Remote repository</source>
-        <target>தொலை களஞ்சியம்</target>
+        <source>&amp;Remote repository</source>
         
       </trans-unit>
       <trans-unit id="label6.Text">
-        <source>Default merge with</source>
-        <target>இயல்புநிலை இணைத்தல் இலக்கு</target>
+        <source>&amp;Default merge with</source>
         
       </trans-unit>
       <trans-unit id="labelPushUrl.Text">
-        <source>Push Url</source>
-        <target>முகவரி தள்ளு</target>
+        <source>&amp;Push Url</source>
         
       </trans-unit>
       <trans-unit id="lblMgtPuttyPanelHeader.Text">
         <source>PuTTY SSH</source>
         <target>புட்டி பாதுகாப்பானஓடு</target>
+        
+      </trans-unit>
+      <trans-unit id="lblRemoteColor.Text">
+        <source>Color</source>
         
       </trans-unit>
       <trans-unit id="pnlMgtDetails.Text">
@@ -8229,11 +8296,6 @@ Value has been reset to empty value.</source>
       <trans-unit id="Ok.Text">
         <source>Rename</source>
         <target>மறுபெயர்</target>
-        
-      </trans-unit>
-      <trans-unit id="_branchRenameFailed.Text">
-        <source>Rename failed.</source>
-        <target>மறுபெயரிட முடியவில்லை.</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -8275,11 +8337,13 @@ Value has been reset to empty value.</source>
         <target>உள்ளீடு செய்யப்பட்ட மதிப்பு '{0}' என்பது ஏற்கனவே உள்ள உள்ளக கிளையின் பெயர் அல்ல.</target>
         
       </trans-unit>
-      <trans-unit id="labelResetBranchWarning.Text">
+      <trans-unit id="cbxCheckoutBranch.Text">
+        <source>Chec&amp;kout branch after reset</source>
+        
+      </trans-unit>
+      <trans-unit id="lblResetBranchWarning.Text">
         <source>You can only reset a branch safely if there is a direct path from it to selected revision.
 Forcing a branch to reset if it has not been merged might leave some commits unreachable.</source>
-        <target>தேர்ந்தெடுக்கப்பட்ட மறுதளம்க்கு நேரடியாக ஒரு கிளை இருந்தால் மட்டுமே நீங்கள் அதைப் பாதுகாப்பாக மீட்டமைக்க முடியும்.
-ஒரு கிளை இணைக்கப்படாவிட்டால், அதை மீட்டமைக்க கட்டாயப்படுத்துவது சில உறுதிமொழிகளை அணுக முடியாமல் போகலாம்.</target>
         
       </trans-unit>
     </body>
@@ -8960,6 +9024,10 @@ Do you want to use this custom merge script?</source>
         <target>பெற்றோர் யாரும் தேர்ந்தெடுக்கப்படவில்லை!</target>
         
       </trans-unit>
+      <trans-unit id="btnAbort.Text">
+        <source>A&amp;bort</source>
+        
+      </trans-unit>
       <trans-unit id="columnHeader1.Text">
         <source>No.</source>
         <target>எண்.</target>
@@ -9082,45 +9150,6 @@ Do you want to use this custom merge script?</source>
       <trans-unit id="_until.Text">
         <source>&amp;Until</source>
         <target>&amp;வரை</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormSearchCommit" source-language="en" target-language="ta">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Search files in commit</source>
-        <target>உறுதிமொழியில் உள்ள கோப்புகளைத் தேடு</target>
-        
-      </trans-unit>
-      <trans-unit id="btnSearch.Text">
-        <source>Search</source>
-        <target>தேடு</target>
-        
-      </trans-unit>
-      <trans-unit id="chkMatchCase.Text">
-        <source>Match &amp;case</source>
-        <target>வழக்கு பொருத்தம் </target>
-        
-      </trans-unit>
-      <trans-unit id="chkMatchWholeWord.Text">
-        <source>Match &amp;whole word</source>
-        <target>முழு சொல்லைப் பொருத்து</target>
-        
-      </trans-unit>
-      <trans-unit id="chkShowSearchBox.Text">
-        <source>Show search &amp;box</source>
-        <target>தேடல் பெட்டியைக் காட்டு</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>&amp;Search:</source>
-        <target>தேடு:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblOptions.Text">
-        <source>&amp;Options:</source>
-        <target>விருப்பங்கள்:</target>
         
       </trans-unit>
     </body>
@@ -9268,11 +9297,6 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <target>பதுக்கல் எதுவும் இல்லை.</target>
         
       </trans-unit>
-      <trans-unit id="cherryPickFileChangesToolStripMenuItem.Text">
-        <source>&amp;Cherry pick file changes</source>
-        <target>&amp;கோப்புகள் மாற்றங்களைச் சிவந்தகனி எடு</target>
-        
-      </trans-unit>
       <trans-unit id="chkIncludeUntrackedFiles.Text">
         <source>&amp;Include untracked files</source>
         <target>&amp;கண்காணிக்கப்படாத கோப்புகளைச் சேர்க்கவும்</target>
@@ -9286,11 +9310,6 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       <trans-unit id="messageLabel.Text">
         <source>&amp;Message:</source>
         <target>&amp;செய்தி:</target>
-        
-      </trans-unit>
-      <trans-unit id="refreshToolStripButton.Text">
-        <source>Refresh</source>
-        <target>புதுப்பி</target>
         
       </trans-unit>
       <trans-unit id="showToolStripLabel.Text">
@@ -9308,18 +9327,20 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="Abort.Text">
-        <source>Abort</source>
-        <target>ரத்துசெய்</target>
+        <source>&amp;Abort</source>
         
       </trans-unit>
       <trans-unit id="KeepDialogOpen.Text">
-        <source>Keep dialog open</source>
-        <target>உரையாடலைத் திறந்து வையுங்கள்</target>
+        <source>&amp;Keep dialog open</source>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>OK</source>
         <target>சரி</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowPassword.Text">
+        <source>Show &amp;password input</source>
         
       </trans-unit>
     </body>
@@ -9451,13 +9472,20 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="linkChangeLog.Text">
-        <source>Show Change&amp;Log</source>
-        <target>மாற்ற&amp;பதிவைக் காட்டு</target>
+        <source>Show release notes and change &amp;log</source>
         
       </trans-unit>
       <trans-unit id="linkDirectDownload.Text">
         <source>&amp;Direct Download</source>
         <target>&amp;நேரடி பதிவிறக்கம்</target>
+        
+      </trans-unit>
+      <trans-unit id="linkRequiredDotNetRuntime.Text">
+        <source>Required: .NET {0} Desktop Runtime {1} or later {2}.x</source>
+        
+      </trans-unit>
+      <trans-unit id="linkRequiredDotNetRuntime.ToolTipText">
+        <source>Download latest .NET Desktop Runtime. See docs on how to install .NET runtime without administrative privileges.</source>
         
       </trans-unit>
     </body>
@@ -9500,13 +9528,19 @@ reflog to be reachable.</source>
         
       </trans-unit>
       <trans-unit id="ShowCommitsAndTags.Text">
-        <source>Show commits and tags</source>
-        <target>உறுதிமொழிகள் மற்றும் குறிச்சொற்களைக் காட்டு</target>
+        <source>Show commits and annotated tags</source>
+        
+      </trans-unit>
+      <trans-unit id="ShowCommitsAndTags.toolTip">
+        <source>To recover unreachable commits or annotated tags</source>
         
       </trans-unit>
       <trans-unit id="ShowOtherObjects.Text">
-        <source>Show other objects</source>
-        <target>மற்ற பொருட்களைக் காட்டு</target>
+        <source>Show blobs and trees</source>
+        
+      </trans-unit>
+      <trans-unit id="ShowOtherObjects.toolTip">
+        <source>To recover contents of files once staged but mistakenly deleted</source>
         
       </trans-unit>
       <trans-unit id="Unreachable.Text">
@@ -9525,6 +9559,10 @@ nodes.
       <trans-unit id="_removeDanglingObjectsQuestion.Text">
         <source>Are you sure you want to delete all dangling objects?</source>
         <target>அனைத்து தொங்கும் பொருட்களையும் நிச்சயமாக நீக்க விரும்புகிறீர்களா?</target>
+        
+      </trans-unit>
+      <trans-unit id="_seemingly.Text">
+        <source>seemingly</source>
         
       </trans-unit>
       <trans-unit id="_selectLostObjectsToRestoreCaption.Text">
@@ -9857,6 +9895,14 @@ Context menu for additional operations</source>
         <target>இழுக்கும்போது உள்ளக கிளையை மறுதளம் செய்யுங்கள் (ஒன்றிணைவதற்குப் பதிலாக)</target>
         
       </trans-unit>
+      <trans-unit id="checkBoxReReReAutoUpdate.Text">
+        <source>Automatically apply recorded resolution of conflicted merges</source>
+        
+      </trans-unit>
+      <trans-unit id="checkBoxReReReEnabled.Text">
+        <source>Reuse recorded resolution of conflicted merges</source>
+        
+      </trans-unit>
       <trans-unit id="checkBoxRebaseAutosquash.Text">
         <source>Automatically squash commits when doing an interactive rebase</source>
         <target>ஊடாடும் மறுதளம் செய்யும்போது தானாக உறுதிமொழிகளை நசுக்குகிறது</target>
@@ -9870,6 +9916,10 @@ Context menu for additional operations</source>
       <trans-unit id="checkBoxUpdateRefs.Text">
         <source>Rebase also dependent branches</source>
         <target>சார்ந்த கிளைகளையும் மறுதளம்</target>
+        
+      </trans-unit>
+      <trans-unit id="checkboxMergeAutoStash.Text">
+        <source>Automatically stash before doing a merge</source>
         
       </trans-unit>
     </body>
@@ -9999,6 +10049,10 @@ global settings.
       <trans-unit id="lblCommitTemplatePath.Text">
         <source>Path to commit template</source>
         <target>உறுதிமொழி வார்ப்புருவுக்கான பாதை</target>
+        
+      </trans-unit>
+      <trans-unit id="lblCredentialHelper.Text">
+        <source>Credential helper</source>
         
       </trans-unit>
       <trans-unit id="lblDiffTool.Text">
@@ -10175,8 +10229,7 @@ Check if file is accessible.</source>
         
       </trans-unit>
       <trans-unit id="label50.Text">
-        <source>Set the correct paths to Git for Windows. (WSL Git will be used for WSL repositories).</source>
-        <target>சாளரங்களுக்கான அறிவிலிக்கு சரியான பாதைகளை  அமைக்கவும். (டபலயுஎச்எல் அறிவிலி டபலயுஎச்எல் களஞ்சியங்களுக்குப் பயன்படுத்தப்படும்).</target>
+        <source>Set the correct paths to Git for Windows. (WSL Git will automatically be used for WSL repositories.)</source>
         
       </trans-unit>
       <trans-unit id="lblGitCommand.Text">
@@ -10553,8 +10606,17 @@ help</source>
         
       </trans-unit>
       <trans-unit id="_rememberChoice.Text">
-        <source>Remember choice</source>
-        <target>தேர்வை நினைவில் கொள்</target>
+        <source>&amp;Remember choice</source>
+        
+      </trans-unit>
+      <trans-unit id="_retry.Text">
+        <source>Retry</source>
+        
+      </trans-unit>
+      <trans-unit id="_retryOpenVisualStudio.Text">
+        <source>Visual Studio failed to open the file.
+This can be caused by an opened dialog window or other pending operations.
+Try again?</source>
         
       </trans-unit>
       <trans-unit id="_selectOnlyOneOrTwoRevisions.Text">
@@ -10613,6 +10675,26 @@ This will just checkout on the submodule the commit determined by the superproje
         <target>இந்தக் களஞ்சியத்தில் துணைத்தொகுதிகள் இருப்பதால், ஒவ்வொரு மாறுதலிலும் அவற்றைப் புதுப்பிக்க வேண்டியது அவசியம்.
 
 இது அருமை திட்டம்மூலம் நிர்ணயிக்கப்பட்ட உறுதிமொழியைத் துணைத் தொகுதியில் மாறும்.</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="OutputHistoryControl" source-language="en" target-language="ta">
+    <body>
+      <trans-unit id="tsmiClear.Text">
+        <source>C&amp;lear</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCopy.Text">
+        <source>&amp;Copy</source>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="PasswordInput" source-language="en" target-language="ta">
+    <body>
+      <trans-unit id="SendInput.Text">
+        <source>Send input</source>
         
       </trans-unit>
     </body>
@@ -10725,13 +10807,11 @@ This will just checkout on the submodule the commit determined by the superproje
         
       </trans-unit>
       <trans-unit id="_sortByContextMenuItem.Text">
-        <source>&amp;Sort by...</source>
-        <target>&amp;இதால் வரிசைப்படுத்து...</target>
+        <source>&amp;Sort by</source>
         
       </trans-unit>
       <trans-unit id="_sortOrderContextMenuItem.Text">
-        <source>&amp;Sort order...</source>
-        <target>&amp;வரிசைப்படுத்து முறை...</target>
+        <source>&amp;Sort order</source>
         
       </trans-unit>
       <trans-unit id="btnSearch.toolTip">
@@ -10784,8 +10864,7 @@ Reset the filter via View &gt; Show all branches.</source>
         
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
-        <source>Fetch and prune</source>
-        <target>எடுத்துக் கத்தரிக்கவும்</target>
+        <source>Fetch and &amp;prune</source>
         
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllRemotes.Text">
@@ -11130,411 +11209,6 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionDiffControl" source-language="en" target-language="ta">
-    <body>
-      <trans-unit id="_deleteFailed.Text">
-        <source>Delete file failed</source>
-        <target>கோப்பை நீக்க முடியவில்லை</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteSelectedFiles.Text">
-        <source>Are you sure you want to delete the selected file(s)?</source>
-        <target>தேர்ந்தெடுத்த கோப்பை(களை) நிச்சயமாக நீக்க விரும்புகிறீர்களா?</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteSelectedFilesCaption.Text">
-        <source>Delete</source>
-        <target>நீக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="_firstRevision.Text">
-        <source>First: A </source>
-        <target>முதல்: அ</target>
-        
-      </trans-unit>
-      <trans-unit id="_multipleDescription.Text">
-        <source>&lt;multiple&gt;</source>
-        <target>&lt;பல&gt;</target>
-        
-      </trans-unit>
-      <trans-unit id="_resetSelectedChangesText.Text">
-        <source>Are you sure you want to reset all selected files to {0}?</source>
-        <target>தேர்ந்தெடுத்த எல்லா கோப்புகளையும் {0} க்கு மீட்டமைக்க விரும்புகிறீர்களா?</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileFilterAllFiles.Text">
-        <source>All files</source>
-        <target>எல்லா கோப்புகளும்</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileFilterCurrentFormat.Text">
-        <source>Current format</source>
-        <target>தற்போதைய வடிவம்</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectedRevision.Text">
-        <source>Second: B </source>
-        <target>இரண்டாவது: ஆ </target>
-        
-      </trans-unit>
-      <trans-unit id="blameToolStripMenuItem.Text">
-        <source>&amp;Blame</source>
-        <target>பழி</target>
-        
-      </trans-unit>
-      <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
-        <source>Cherr&amp;y pick changes</source>
-        <target>மாற்றங்களைச் சிவந்தகனி எடு</target>
-        
-      </trans-unit>
-      <trans-unit id="copyPathsToolStripMenuItem.Text">
-        <source>Copy &amp;path(s)</source>
-        <target>பாதை(கள்) &amp;நகல்</target>
-        
-      </trans-unit>
-      <trans-unit id="diffCommitSubmoduleChanges.Text">
-        <source>&amp;Commit submodule changes</source>
-        <target>துணைதொகுதி மாற்றங்களை உறுதிமொழி</target>
-        
-      </trans-unit>
-      <trans-unit id="diffDeleteFileToolStripMenuItem.Text">
-        <source>De&amp;lete file</source>
-        <target>கோப்பு நீக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="diffEditWorkingDirectoryFileToolStripMenuItem.Text">
-        <source>&amp;Edit working directory file</source>
-        <target>செயல்படும் கோப்பகக் கோப்பைத் திருத்து</target>
-        
-      </trans-unit>
-      <trans-unit id="diffFilterFileInGridToolStripMenuItem.Text">
-        <source>Filter file in &amp;grid</source>
-        <target>&amp;கட்டத்தில் கோப்பு வடிகட்டவும்</target>
-        
-      </trans-unit>
-      <trans-unit id="diffOpenRevisionFileToolStripMenuItem.Text">
-        <source>Ope&amp;n this revision (temp file)</source>
-        <target>இந்த மீள்திருத்தத்தை திற(தற்காலிக கோப்பு)</target>
-        
-      </trans-unit>
-      <trans-unit id="diffOpenRevisionFileWithToolStripMenuItem.Text">
-        <source>Open this revision &amp;with... (temp file)</source>
-        <target>இந்த மீள்திருத்தத்தை இதன்முலம் திறக்கவும்... (தற்காலிக கோப்பு)</target>
-        
-      </trans-unit>
-      <trans-unit id="diffOpenWorkingDirectoryFileWithToolStripMenuItem.Text">
-        <source>&amp;Open working directory file with...</source>
-        <target>&amp;இதனுடன் செயல்படும் அடைவுக் கோப்பைத் திற...</target>
-        
-      </trans-unit>
-      <trans-unit id="diffResetSubmoduleChanges.Text">
-        <source>R&amp;eset submodule changes</source>
-        <target>துணைதொகுதி மாற்றங்களை மீட்டமை</target>
-        
-      </trans-unit>
-      <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
-        <source>Show in File &amp;tree</source>
-        <target>மரக்கோப்பில் காட்டு </target>
-        
-      </trans-unit>
-      <trans-unit id="diffStashSubmoduleChangesToolStripMenuItem.Text">
-        <source>S&amp;tash submodule changes</source>
-        <target>துணைதொகுதி மாற்றங்கள் பதுக்கிவை</target>
-        
-      </trans-unit>
-      <trans-unit id="diffTwoSelectedDifftoolToolStripMenuItem.Text">
-        <source>&amp;Diff the selected files</source>
-        <target>&amp;தேர்ந்தெடுக்கப்பட்ட கோப்புகளை வேறுபடுத்தவும்</target>
-        
-      </trans-unit>
-      <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
-        <source>&amp;Update submodule</source>
-        <target>துணைதொகுதி மேம்படுத்து</target>
-        
-      </trans-unit>
-      <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
-        <source>File &amp;history</source>
-        <target>கோப்பு வரலாறு</target>
-        
-      </trans-unit>
-      <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>&amp;Find file...</source>
-        <target>கோப்பு கண்டுபிடி...</target>
-        
-      </trans-unit>
-      <trans-unit id="firstToLocalToolStripMenuItem.Text">
-        <source>First -&gt; &amp;Working directory</source>
-        <target>முதல் -&gt; &amp;வேலை செய்யும் அடைவு</target>
-        
-      </trans-unit>
-      <trans-unit id="firstToSelectedToolStripMenuItem.Text">
-        <source>&amp;First -&gt; Second</source>
-        <target>&amp;முதல் -&gt; இரண்டாவது</target>
-        
-      </trans-unit>
-      <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Show &amp;in folder</source>
-        <target>&amp;கோப்புறையில் காண்பி</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with &amp;difftool</source>
-        <target>&amp;வேறுபாடுகருவி மூலம் திறக்கவும்</target>
-        
-      </trans-unit>
-      <trans-unit id="rememberFirstRevDiffToolStripMenuItem.Text">
-        <source>R&amp;emember First for diff</source>
-        <target>வேறுபாட்டிற்கு முதலாவதை நினைவில் கொள்</target>
-        
-      </trans-unit>
-      <trans-unit id="rememberSecondRevDiffToolStripMenuItem.Text">
-        <source>&amp;Remember Second for diff</source>
-        <target>வேறுபாட்டிற்கு இரண்டாவதை நினைவில் கொள்</target>
-        
-      </trans-unit>
-      <trans-unit id="resetFileToToolStripMenuItem.Text">
-        <source>&amp;Reset file(s) to</source>
-        <target>கோப்பை(களை) இதற்க்கு மீட்டமை</target>
-        
-      </trans-unit>
-      <trans-unit id="runScriptToolStripMenuItem.Text">
-        <source>Run script</source>
-        <target>கைஉரை இயக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="saveAsToolStripMenuItem1.Text">
-        <source>S&amp;ave selected as...</source>
-        <target>தேர்ந்தெடுக்கப்பட்டது இவ்வாறு சேமி...</target>
-        
-      </trans-unit>
-      <trans-unit id="saveToolStripMenuItem.Text">
-        <source>Save</source>
-        <target>சேமி</target>
-        
-      </trans-unit>
-      <trans-unit id="selectedToLocalToolStripMenuItem.Text">
-        <source>&amp;Second -&gt; Working directory</source>
-        <target>&amp;இரண்டாவது -&gt; வேலை செய்யும் அடைவு</target>
-        
-      </trans-unit>
-      <trans-unit id="showSearchCommitToolStripMenuItem.Text">
-        <source>Sear&amp;ch files in commit...</source>
-        <target>உறுதிமொழியில் உள்ள கோப்புகளைத் தேடு</target>
-        
-      </trans-unit>
-      <trans-unit id="stageFileToolStripMenuItem.Text">
-        <source>&amp;Stage file(s)</source>
-        <target>&amp;மேடை கோப்பு(கள்)</target>
-        
-      </trans-unit>
-      <trans-unit id="unstageFileToolStripMenuItem.Text">
-        <source>&amp;Unstage file(s)</source>
-        <target>கோப்பு(கள்) மேடையற்றதாக்கு</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="RevisionFileTreeControl" source-language="en" target-language="ta">
-    <body>
-      <trans-unit id="_assumeUnchangedCaption.Text">
-        <source>Assume this file won't change</source>
-        <target>இந்தக் கோப்பு மாறாது என்று வைத்துக்கொள்வோம்</target>
-        
-      </trans-unit>
-      <trans-unit id="_assumeUnchangedFail.Text">
-        <source>Fail to assume unchanged the file '{0}'.</source>
-        <target>'{0}' கோப்பை மாற்றவில்லையெனக் கருத முடியவில்லை.</target>
-        
-      </trans-unit>
-      <trans-unit id="_assumeUnchangedMessage.Text">
-        <source>This feature should be used for performance purpose when it is costly for git to check the state of a big file.
-
-
-Are you sure to assume this file won't change ?</source>
-        <target>பெரிய கோப்பின் நிலையைச் சரிபார்ப்பதற்கு அறிவிலி செலவாகும்போது இந்த அம்சம் செயல்திறன் நோக்கத்திற்காகப் பயன்படுத்தப்பட வேண்டும்.
-
-
-இந்தக் கோப்பு மாறாது என்று உறுதியாகக் கருதுகிறீர்களா ?</target>
-        
-      </trans-unit>
-      <trans-unit id="_assumeUnchangedSuccess.Text">
-        <source>File successfully assumed unchanged.</source>
-        <target>கோப்பு மாறவில்லையென வெற்றிகரமாகக் கருதப்படுகிறது.</target>
-        
-      </trans-unit>
-      <trans-unit id="_nodeNotFoundNextAvailableParentSelected.Text">
-        <source>Node not found. The next available parent node will be selected.</source>
-        <target>முனை கிடைக்கவில்லை. அடுத்து கிடைக்கும் பெற்றோர் முனை தேர்ந்தெடுக்கப்படும்.</target>
-        
-      </trans-unit>
-      <trans-unit id="_nodeNotFoundSelectionNotChanged.Text">
-        <source>Node not found. File tree selection was not changed.</source>
-        <target>முனை கிடைக்கவில்லை. கோப்பு மரம் தேர்வு மாற்றப்படவில்லை.</target>
-        
-      </trans-unit>
-      <trans-unit id="_resetFileCaption.Text">
-        <source>Reset</source>
-        <target>மீட்டமை</target>
-        
-      </trans-unit>
-      <trans-unit id="_resetFileText.Text">
-        <source>Are you sure you want to reset this file or directory?</source>
-        <target>இந்தக் கோப்பை அல்லது கோப்பகத்தை மீட்டமைக்க விரும்புகிறீர்களா?</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileFilterAllFiles.Text">
-        <source>All files</source>
-        <target>எல்லா கோப்புகளும்</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileFilterCurrentFormat.Text">
-        <source>Current format</source>
-        <target>தற்போதைய வடிவம்</target>
-        
-      </trans-unit>
-      <trans-unit id="_stopTrackingCaption.Text">
-        <source>Stop tracking the file</source>
-        <target>கோப்பை கண்காணிப்பதை நிறுத்து</target>
-        
-      </trans-unit>
-      <trans-unit id="_stopTrackingFail.Text">
-        <source>Fail to stop tracking the file '{0}'.</source>
-        <target>'{0}' கோப்பை கண்காணிப்பதை நிறுத்த முடியவில்லை.</target>
-        
-      </trans-unit>
-      <trans-unit id="_stopTrackingMessage.Text">
-        <source>Are you sure you want to stop tracking the file
-'{0}'?</source>
-        <target>கோப்பைக் கண்காணிப்பதை நிச்சயமாக நிறுத்த விரும்புகிறீர்களா
-'{0}'?</target>
-        
-      </trans-unit>
-      <trans-unit id="_stopTrackingSuccess.Text">
-        <source>File successfully untracked. Removal has been added to the staging area.
-
-See the changes in the commit form.</source>
-        <target>கோப்பு வெற்றிகரமாகக் கண்காணிக்கப்பட்டது. மேடை பகுதியில் அகற்றுதல் சேர்க்கப்பட்டது.
-
-உறுதிப் படிவத்தில் உள்ள மாற்றங்களைப் பார்க்கவும்.</target>
-        
-      </trans-unit>
-      <trans-unit id="_success.Text">
-        <source>Success</source>
-        <target>வெற்றி</target>
-        
-      </trans-unit>
-      <trans-unit id="assumeUnchangedTheFileToolStripMenuItem.Text">
-        <source>Assume &amp;unchanged this file</source>
-        <target>இந்தக் கோப்பை மாற்றவில்லையெனக் கருதுங்கள்</target>
-        
-      </trans-unit>
-      <trans-unit id="blameToolStripMenuItem1.Text">
-        <source>&amp;Blame</source>
-        <target>பழி</target>
-        
-      </trans-unit>
-      <trans-unit id="collapseAllToolStripMenuItem.Text">
-        <source>Co&amp;llapse all</source>
-        <target>அனைத்தையும் சுருக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="copyPathsToolStripMenuItem.Text">
-        <source>Copy &amp;path(s)</source>
-        <target>பாதை(கள்) &amp;நகல்</target>
-        
-      </trans-unit>
-      <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
-        <source>&amp;Edit working directory file</source>
-        <target>செயல்படும் கோப்பகக் கோப்பைத் திருத்து</target>
-        
-      </trans-unit>
-      <trans-unit id="expandToolStripMenuItem.Text">
-        <source>&amp;Expand</source>
-        <target>விரிவாக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="fileHistoryToolStripMenuItem.Text">
-        <source>View &amp;history</source>
-        <target>வரலாற்றைக் காண்க</target>
-        
-      </trans-unit>
-      <trans-unit id="fileTreeArchiveToolStripMenuItem.Text">
-        <source>Archi&amp;ve...</source>
-        <target>காப்பகப்படுத்து...</target>
-        
-      </trans-unit>
-      <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
-        <source>&amp;Clean this folder in the working directory...</source>
-        <target>செயல்படும் கோப்பகத்தில் இந்தக் கோப்புறையை சுத்தம் செய்யவும்...</target>
-        
-      </trans-unit>
-      <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
-        <source>Show &amp;in folder</source>
-        <target>கோப்புறையில் காண்பி</target>
-        
-      </trans-unit>
-      <trans-unit id="filterFileInGridToolStripMenuItem.Text">
-        <source>Filter file in &amp;grid</source>
-        <target> &amp;கட்டத்தில் கோப்பை வடிகட்டவும்</target>
-        
-      </trans-unit>
-      <trans-unit id="findToolStripMenuItem.Text">
-        <source>&amp;Find file...</source>
-        <target>கோப்பு கண்டுபிடி...</target>
-        
-      </trans-unit>
-      <trans-unit id="openFileToolStripMenuItem.Text">
-        <source>Ope&amp;n this revision (temp file)</source>
-        <target>இந்த மீள்திருத்தத்தை திற(தற்காலிக கோப்பு)</target>
-        
-      </trans-unit>
-      <trans-unit id="openFileWithToolStripMenuItem.Text">
-        <source>Open this revision &amp;with... (temp file)</source>
-        <target>இந்த மீள்திருத்தத்தை இதன்முலம் திற... (தற்காலிக கோப்பு)</target>
-        
-      </trans-unit>
-      <trans-unit id="openSubmoduleMenuItem.Text">
-        <source>&amp;Open with Git Extensions</source>
-        <target>&amp;அறிவிலி நீட்டிப்புகளுடன் திற</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with &amp;difftool</source>
-        <target>வேறுபாடுகருவி மூலம் திற</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithToolStripMenuItem.Text">
-        <source>&amp;Open working directory file with...</source>
-        <target>இதனுடன் செயல்படும் அடைவுக் கோப்பைத் திற...</target>
-        
-      </trans-unit>
-      <trans-unit id="rememberFileStripMenuItem.Text">
-        <source>Re&amp;member file for diff</source>
-        <target>வேறுபாடுகளுக்குக் கோப்பை நினைவில் கொள்</target>
-        
-      </trans-unit>
-      <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
-        <source>&amp;Reset to selected revision</source>
-        <target>தேர்ந்தெடுத்த திருத்தத்திற்கு மீட்டமை</target>
-        
-      </trans-unit>
-      <trans-unit id="runScriptToolStripMenuItem.Text">
-        <source>Run script</source>
-        <target>கைஉரை இயக்கு</target>
-        
-      </trans-unit>
-      <trans-unit id="saveAsToolStripMenuItem.Text">
-        <source>S&amp;ave as...</source>
-        <target>இவ்வாறு சேமி...</target>
-        
-      </trans-unit>
-      <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
-        <source>Stop &amp;tracking this file</source>
-        <target>இந்தக் கோப்பை கண்காணிப்பதை நிறுத்து</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en" target-language="ta">
     <body>
       <trans-unit id="_commitNotSigned.Text">
@@ -11589,6 +11263,14 @@ See the changes in the commit form.</source>
       <trans-unit id="GotoCurrentRevision.Text">
         <source>Go to c&amp;urrent revision</source>
         <target>தற்போதைய திருத்ததிற்குச் செல்</target>
+        
+      </trans-unit>
+      <trans-unit id="GotoFirstParentCommit.Text">
+        <source>Go to f&amp;irst parent commit</source>
+        
+      </trans-unit>
+      <trans-unit id="GotoLastParentCommit.Text">
+        <source>Go to &amp;last parent commit</source>
         
       </trans-unit>
       <trans-unit id="GotoMergeBaseCommit.Text">
@@ -11956,8 +11638,7 @@ See the changes in the commit form.</source>
         
       </trans-unit>
       <trans-unit id="deleteTagToolStripMenuItem.Text">
-        <source>De&amp;lete tag...</source>
-        <target>குறிச்சொல் நீக்கு...</target>
+        <source>&amp;Delete tag...</source>
         
       </trans-unit>
       <trans-unit id="dropStashToolStripMenuItem.Text">
@@ -12088,6 +11769,10 @@ See the changes in the commit form.</source>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
         <source>Stop bisect</source>
         <target>இருபிரிவு நிறுத்து</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiSelectInLeftPanel.Text">
+        <source>Se&amp;lect in left panel</source>
         
       </trans-unit>
       <trans-unit id="viewToolStripMenuItem.Text">
@@ -12288,66 +11973,9 @@ Currently checked out revision:
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}
 
-File(s):
-{SelectedFiles}
+Diff selection:
+{SelectedRelativePaths}   (relative paths as they were in the selected commit)
 {LineNumber}</source>
-        <target>சாதாரண மாற்றத்திற்கு {option} ஐப் பயன்படுத்தவும்.
-மேற்கோள் மாற்றத்திற்கு {{option}} ஐப் பயன்படுத்தவும்.
-
-பயனர் உள்ளீடு:
-{UserInput}
-{UserInput:a popup label}
-{UserInput:a popup label=a default value}
-{UserInput:a popup label=a default value using {sLocalBranch}}
-{UserFiles}
-
-பணிபுரியும் கோப்புறை:
-{WorkingDir}
-
-களஞ்சியம்:
-{RepoName}
-
-தேர்ந்தெடுக்கப்பட்ட உறுதிமொழிகள்:
-{sHashes}
-
-தேர்ந்தெடுக்கப்பட்ட பதிப்புகள்:
-{sTag}
-{sBranch}
-{sLocalBranch}
-{sRemoteBranch}
-{sRemoteBranchName}   (without the remote's name)
-{sRemote}
-{sRemoteUrl}
-{sRemotePathFromUrl}
-{sHash}
-{sMessage}
-{sSubject}
-{sAuthor}
-{sCommitter}
-{sAuthorDate}
-{sCommitDate}
-
-தற்போதைய சரிபார்த்த பதிப்பு:
-{HEAD}   (சரிபார் கிளை பெயர் அல்லது சரிபார் உறுதிமொழி கொத்து)
-{cTag}
-{cBranch}
-{cLocalBranch}
-{cRemoteBranch}
-{cRemoteBranchName}   (without the remote's name)
-{cHash}
-{cMessage}
-{cSubject}
-{cAuthor}
-{cCommitter}
-{cAuthorDate}
-{cCommitDate}
-{cDefaultRemote}
-{cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}
-
-கோப்பு(கள்):
-{SelectedFiles}
-{LineNumber}</target>
         
       </trans-unit>
       <trans-unit id="chdrCommand.Text">
@@ -12387,6 +12015,10 @@ File(s):
       <trans-unit id="LocalRB.Text">
         <source>Local for current repository</source>
         <target>தற்போதைய களஞ்சியத்திற்கான உள்ளகம்</target>
+        
+      </trans-unit>
+      <trans-unit id="SystemRB.Text">
+        <source>System</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -12692,6 +12324,10 @@ When OpenSSH is used, command line dialogs are shown!
         <target>எழுத்தப்பட்டது மற்றும் உறுதிமொழியளித்தது</target>
         
       </trans-unit>
+      <trans-unit id="_autostash.Text">
+        <source>Autostash</source>
+        
+      </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">
         <source>
 
@@ -12716,11 +12352,6 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_buttonCheckoutBranch.Text">
         <source>Checkout branch</source>
         <target>கிளைக்கு மாறு </target>
-        
-      </trans-unit>
-      <trans-unit id="_buttonCloseApp.Text">
-        <source>Close application</source>
-        <target>பயன்பாட்டை மூடு</target>
         
       </trans-unit>
       <trans-unit id="_buttonContinue.Text">
@@ -13046,29 +12677,6 @@ To be able to open this repository, you need to either:
 - களஞ்சியத்தின் உரிமையைச் சரி செய்யவும்.</target>
         
       </trans-unit>
-      <trans-unit id="_gitDubiousOwnershipTrustAllInstruction.Text">
-        <source>Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
-By default, Git will refuse to even parse a Git config of a repository owned by someone else, let alone
-run its hooks, and this config setting allows users to specify exceptions, e.g. for intentionally shared
-repositories.
-
-If you wish to trust all git repositories on your system even if they are owned by someone else, run the
-following command.
-
-!!! THIS CAN BE DANGEROUS !!!</source>
-        <target>அறிவிலி கண்காணிக்கப்பட்ட கோப்பகங்கள் தற்போதைய பயனரைத் தவிர வேறு ஒருவருக்குச் சொந்தமானதாக இருந்தால் அவை பாதுகாப்பற்றதாகக் கருதப்படும்.
-இயல்பாக, வேறொருவருக்குச் சொந்தமான களஞ்சியத்தின் அறிவிலி கட்டமைப்பை அலசவும் அறிவிலி மறுக்கும், அதன் கொக்கிகளை இயக்குவது ஒருபுறம் இருக்கட்டும், மேலும் இந்தக் கட்டமைப்பு அமைப்பு விதிவிலக்குகளைக் குறிப்பிட பயனர்களை அனுமதிக்கிறது, எ.கா. வேண்டுமென்றே பகிரப்பட்ட களஞ்சியங்களுக்கு.
-
-உங்கள் கணினியில் உள்ள அனைத்து அறிவிலி களஞ்சியங்களையும் நீங்கள் நம்ப விரும்பினால், அவை வேறொருவருக்கு சொந்தமானதாக இருந்தாலும், பின்வரும் கட்டளையை இயக்கவும்.
-
-!!! இது ஆபத்தானது !!!</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitDubiousOwnershipTrustAllRepositories.Text">
-        <source>Trust all repositories</source>
-        <target>எல்லா களஞ்சியங்களையும் நம்புங்கள்</target>
-        
-      </trans-unit>
       <trans-unit id="_gitDubiousOwnershipTrustRepository.Text">
         <source>Trust this repository</source>
         <target>இந்தக் களஞ்சியத்தை நம்புங்கள்</target>
@@ -13202,11 +12810,6 @@ following command.
       <trans-unit id="_open.Text">
         <source>Open</source>
         <target>திற</target>
-        
-      </trans-unit>
-      <trans-unit id="_openInVisualStudio.Text">
-        <source>Open in &amp;Visual Studio</source>
-        <target>&amp;காட்சிஓவியஅறையில் திற</target>
         
       </trans-unit>
       <trans-unit id="_openReport.Text">
@@ -13434,13 +13037,15 @@ the last selected commit.</source>
         
       </trans-unit>
       <trans-unit id="_sortBy.Text">
-        <source>&amp;Sort by...</source>
-        <target>&amp;இதன் முலம் வரிசைப்படுத்து...</target>
+        <source>&amp;Sort by</source>
+        
+      </trans-unit>
+      <trans-unit id="_sortGroupBy.Text">
+        <source>&amp;Sort and group by</source>
         
       </trans-unit>
       <trans-unit id="_sortOrder.Text">
-        <source>&amp;Sort order...</source>
-        <target>&amp;வரிசைப்படுத்தும் முறை...</target>
+        <source>&amp;Sort order</source>
         
       </trans-unit>
       <trans-unit id="_stageSelectedLines.Text">

@@ -17,7 +17,6 @@ internal sealed class TranslatedStrings : Translate
 
     private readonly TranslationString _buttonCheckoutBranch = new("Checkout branch");
     private readonly TranslationString _buttonContinue = new("Continue");
-    private readonly TranslationString _buttonCloseApp = new("Close application");
     private readonly TranslationString _buttonCreateBranch = new("Create branch");
     private readonly TranslationString _buttonIgnore = new("Ignore");
     private readonly TranslationString _buttonPush = new("&Push");
@@ -203,7 +202,6 @@ Copy error details to clipboard?");
 
     public static string ButtonContinue => _instance.Value._buttonContinue.Text;
     public static string ButtonCheckoutBranch => _instance.Value._buttonCheckoutBranch.Text;
-    public static string ButtonCloseApp => _instance.Value._buttonCloseApp.Text;
     public static string ButtonCreateBranch => _instance.Value._buttonCreateBranch.Text;
     public static string ButtonIgnore => _instance.Value._buttonIgnore.Text;
     public static string ButtonPush => _instance.Value._buttonPush.Text;

@@ -3,6 +3,7 @@ using System.Configuration;
 using System.Diagnostics;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtensions.Extensibility;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
@@ -187,9 +188,19 @@ internal static class Program
             // Avoid replacing the ExitCode eventually set while parsing arguments,
             // i.e. assume -1 and afterwards, only set it to 0 if no error is indicated.
             Environment.ExitCode = -1;
-            if (commands.RunCommand(args))
+            try
             {
-                Environment.ExitCode = 0;
+                if (commands.RunCommand(args))
+                {
+                    Environment.ExitCode = 0;
+                }
+            }
+            catch (Exception ex)
+            {
+                BugReportInvoker.Report(new UserExternalOperationException(
+                        context: "Invalid Git Extensions command line",
+                        new ExternalOperationException(command: args.Join(" ").Quote(), innerException: ex)),
+                    isTerminating: false);
             }
         }
 

@@ -45,9 +45,11 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModule
     {
         get
         {
-            // If this exception is seen, it's because the parameterless constructor was called.
+            // If this exception is seen, it might be because the parameterless constructor was called.
             // That constructor is only for use by the VS designer, and translation unit tests.
             // Using it at run time is an error.
+            // If no IGitUICommands instance has been passed to the protected ctor on purpose,
+            // the properties UICommands and Module must not be accessed.
             return _uiCommands
                    ?? throw new InvalidOperationException(
                        $"{nameof(UICommands)} is null. {GetType().FullName} was constructed incorrectly.");
@@ -131,9 +133,9 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModule
     {
         base.OnApplicationActivated();
 
-        if (_isReactivation)
+        if (_isReactivation && _uiCommands is IGitUICommands uiCommands)
         {
-            Module.InvalidateGitSettings();
+            uiCommands.Module.InvalidateGitSettings();
         }
         else
         {

@@ -292,7 +292,8 @@ public sealed partial class FormStash : GitModuleForm
     private void ResizeStashesWidth()
     {
         const int spacingBetweenLabelAndComboBox = 5;
-        Stashes.Width = toolStrip1.Width - DpiUtil.Scale(spacingBetweenLabelAndComboBox, ceiling: true) - showToolStripLabel.Width;
+        int compensationForOddToolbarScaling = DpiUtil.IsFractional ? 1 : 0;
+        Stashes.Width = toolStrip1.Width - DpiUtil.Scale(spacingBetweenLabelAndComboBox, ceiling: true) - compensationForOddToolbarScaling - showToolStripLabel.Width;
     }
 
     private void StashedSelectedIndexChanged(object sender, EventArgs e)
