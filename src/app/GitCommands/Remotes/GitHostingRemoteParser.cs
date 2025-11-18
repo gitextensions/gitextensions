@@ -18,7 +18,7 @@ public partial class GitHostingRemoteParser : RemoteParser
     /// </summary>
     /// <param name="remoteUrl">the url of a git repository.</param>
     /// <returns>
-    /// true, if the url has been succefully parsed.
+    /// true, if the url has been successfully parsed.
     /// false otherwise.
     /// </returns>
     public bool IsValidRemoteUrl(string remoteUrl)
