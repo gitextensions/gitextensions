@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitCommands.ExternalLinks;
 using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
 

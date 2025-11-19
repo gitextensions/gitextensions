@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitUI.UserManual;
 
 namespace GitUITests.UserManual;

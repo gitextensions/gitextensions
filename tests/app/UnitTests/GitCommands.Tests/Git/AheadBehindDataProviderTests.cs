@@ -1,5 +1,5 @@
 ﻿using System.Text;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using NSubstitute;

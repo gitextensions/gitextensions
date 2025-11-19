@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands.UserRepositoryHistory.Legacy;
 using Current = GitCommands.UserRepositoryHistory;
 
