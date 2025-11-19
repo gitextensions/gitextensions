@@ -166,17 +166,6 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         OnStatusUpdated(_submoduleInfoResult, structureUpdated: false, cancelToken);
     }
 
-    private IGitModule GetModule(string path)
-    {
-        IGitModule module = _getModule(path);
-        if (module is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-        }
-
-        return module;
-    }
-
     private void OnStatusUpdating()
     {
         StatusUpdating?.Invoke(this, EventArgs.Empty);
@@ -292,7 +281,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     private string GetModuleBranch(string path, string noBranchText)
     {
         // Note: This will fail for WSL symbolic links to .git directories
-        string branch = GetModule(path).GetSelectedBranch();
+        string branch = _getModule(path).GetSelectedBranch();
         string text = DetachedHeadParser.IsDetachedHead(branch) ? noBranchText : branch;
         return $"({text})";
     }

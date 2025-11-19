@@ -55,7 +55,7 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
             return string.Empty;
         }
 
-        return GetModule(path).GetSelectedBranch();
+        return _getModule(path).GetSelectedBranch();
     }
 
     public bool IsValidGitWorkingDir(string path)
@@ -96,17 +96,6 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
 
     public bool RemoveInvalidRepository(string path)
        => _invalidRepositoryRemover.ShowDeleteInvalidRepositoryDialog(path);
-
-    private IGitModule GetModule(string path)
-    {
-        IGitModule module = _getModule(path);
-        if (module is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-        }
-
-        return module;
-    }
 
     private static IList<Repository> Filter(IList<Repository> repositories, string pattern)
     {
