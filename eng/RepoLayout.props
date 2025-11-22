@@ -8,7 +8,7 @@
     <!-- Set version for runtimeconfig.json, used by DotnetRuntimeBootstrapper for minimal version to support
          To be kept in sync with the .NET SDK version in global.json
     -->
-    <RuntimeFrameworkVersion>10.0.0-rc.2.25502.107</RuntimeFrameworkVersion>
+    <RuntimeFrameworkVersion>10.0.0</RuntimeFrameworkVersion>
     <SolutionTargetFramework>net10.0-windows</SolutionTargetFramework>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
     <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
