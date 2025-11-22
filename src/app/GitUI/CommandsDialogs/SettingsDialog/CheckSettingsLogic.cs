@@ -1,4 +1,6 @@
-﻿using GitCommands;
+﻿#nullable enable
+
+using GitCommands;
 using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtensions.Extensibility.Git;
@@ -101,7 +103,7 @@ public class CheckSettingsLogic
 
     private static IEnumerable<string> GetGitLocations()
     {
-        string envVariable = Environment.GetEnvironmentVariable("GITEXT_GIT");
+        string? envVariable = Environment.GetEnvironmentVariable("GITEXT_GIT");
         if (!string.IsNullOrEmpty(envVariable))
         {
             yield return envVariable;
@@ -110,7 +112,7 @@ public class CheckSettingsLogic
         yield return
             CommonLogic.GetRegistryValue(Registry.LocalMachine,
                              "SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Git_is1", "InstallLocation");
-        string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
+        string? programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
         string? programFilesX86 = null;
         if (IntPtr.Size == 8
             || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
@@ -118,18 +120,26 @@ public class CheckSettingsLogic
             programFilesX86 = Environment.GetEnvironmentVariable("ProgramFiles(x86)");
         }
 
+        if (programFiles is not null)
+        {
+            yield return programFiles + @"\Git\";
+        }
+
         if (programFilesX86 is not null)
         {
             yield return programFilesX86 + @"\Git\";
         }
 
-        yield return programFiles + @"\Git\";
+        if (programFiles is not null)
+        {
+            yield return programFiles + @"\msysgit\";
+        }
+
         if (programFilesX86 is not null)
         {
             yield return programFilesX86 + @"\msysgit\";
         }
 
-        yield return programFiles + @"\msysgit\";
         yield return @"C:\msysgit\";
 
         // cygwin has old git version on windows and bash has a lot of bugs
@@ -138,7 +148,7 @@ public class CheckSettingsLogic
             "Programs", "Git\\");
     }
 
-    public bool SolveGitExtensionsDir()
+    public static bool SolveGitExtensionsDir()
     {
         string? fileName = AppSettings.GetGitExtensionsDirectory();
 
