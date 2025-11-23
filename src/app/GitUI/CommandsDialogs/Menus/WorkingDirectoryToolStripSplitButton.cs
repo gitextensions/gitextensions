@@ -31,7 +31,7 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
         /// <summary>
         ///  Gets the active or the first open form.
         /// </summary>
-        private Form? ActiveOrOpenForm
+        private static Form? ActiveOrOpenForm
             => Form.ActiveForm ?? (Application.OpenForms.Count > 0 ? Application.OpenForms[0] : null);
 
         /// <summary>
@@ -61,8 +61,7 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
             Func<IGitUICommands> getUICommands,
             IRepositoryHistoryUIService repositoryHistoryUIService,
             StartToolStripMenuItem startToolStripMenuItem,
-            ToolStripMenuItem closeToolStripMenuItem,
-            Action refreshContent)
+            ToolStripMenuItem closeToolStripMenuItem)
         {
             button.ButtonClick += (s, e) => button.ShowDropDown();
             button.DropDownOpening += (s, e) => FillDropDown(button);
@@ -135,13 +134,14 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
 
             _tsmiOpenLocalRepository = new(_startToolStripMenuItem.OpenRepositoryMenuItem.Text, _startToolStripMenuItem.OpenRepositoryMenuItem.Image)
             {
-                ShortcutKeys = _startToolStripMenuItem.OpenRepositoryMenuItem.ShortcutKeys,
+                ShortcutKeyDisplayString = _startToolStripMenuItem.OpenRepositoryMenuItem.ShortcutKeyDisplayString,
                 Tag = _excludeFromFilterMarker
             };
             _tsmiOpenLocalRepository.Click += (s, e) => _startToolStripMenuItem.OpenRepositoryMenuItem.PerformClick();
 
             _tsmiCloseRepo = new(_closeToolStripMenuItem.Text, _closeToolStripMenuItem.Image)
             {
+                ShortcutKeyDisplayString = _closeToolStripMenuItem.ShortcutKeyDisplayString,
                 Tag = _excludeFromFilterMarker
             };
             _tsmiCloseRepo.Click += (hs, he) => _closeToolStripMenuItem.PerformClick();
@@ -157,7 +157,7 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
                     frm.ShowDialog(ActiveOrOpenForm);
                 }
 
-                refreshContent();
+                RefreshContent(button);
             };
         }
 
@@ -203,8 +203,7 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
 
         internal void RefreshContent(ToolStripSplitButton button)
         {
-            Form? graphicsForm = ActiveOrOpenForm;
-            if (graphicsForm is null)
+            if (ActiveOrOpenForm is not Form graphicsForm)
             {
                 // The component is unparented, no point doing anything.
                 return;
@@ -252,13 +251,12 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
 
     private Implementation? _implementation;
 
-    internal WorkingDirectoryToolStripSplitButton()
+    public WorkingDirectoryToolStripSplitButton()
     {
         Name = nameof(WorkingDirectoryToolStripSplitButton);
 
         Image = Properties.Resources.RepoOpen;
         ImageAlign = ContentAlignment.MiddleLeft;
-        ImageTransparentColor = Color.Magenta;
         TextAlign = ContentAlignment.MiddleLeft;
     }
 
@@ -266,24 +264,19 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
     ///  Initializes the menu item.
     /// </summary>
     /// <param name="getUICommands">The method that returns the current instance of UI commands.</param>
-    internal void Initialize(Func<IGitUICommands> getUICommands, IRepositoryHistoryUIService repositoryHistoryUIService,
+    public void Initialize(Func<IGitUICommands> getUICommands, IRepositoryHistoryUIService repositoryHistoryUIService,
                            StartToolStripMenuItem startToolStripMenuItem, ToolStripMenuItem closeToolStripMenuItem)
     {
         Translator.Translate(this, AppSettings.CurrentTranslation);
 
-        _implementation = new Implementation(this, getUICommands, repositoryHistoryUIService, startToolStripMenuItem, closeToolStripMenuItem, RefreshContent);
+        _implementation = new Implementation(this, getUICommands, repositoryHistoryUIService, startToolStripMenuItem, closeToolStripMenuItem);
     }
 
     /// <summary>Updates the text shown on the combo button itself.</summary>
-    internal void RefreshContent()
+    public void RefreshContent()
     {
-        if (_implementation is null)
-        {
-            // The component is not initialized, no point doing anything.
-            return;
-        }
-
-        _implementation.RefreshContent(this);
+        // If the component is not initialized, no point doing anything.
+        _implementation?.RefreshContent(this);
     }
 
     void ITranslate.AddTranslationItems(ITranslation translation)
