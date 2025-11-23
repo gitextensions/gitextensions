@@ -93,7 +93,7 @@ public class LaneInfoProviderTests
     [SetUp]
     public void Setup()
     {
-        _artificialCommitNode = new RevisionGraphRevision(ObjectId.WorkTreeId, 0)
+        _artificialCommitNode = new RevisionGraphRevision(ObjectId.WorkTreeId, guessScore: 0)
         {
             GitRevision = new GitRevision(ObjectId.WorkTreeId)
             {
@@ -104,7 +104,7 @@ public class LaneInfoProviderTests
             }
         };
         ObjectId realCommitObjectId = ObjectId.Parse("a48da1aba59a65b2a7f0df7e3512817caf16819f");
-        _realCommitNode = new RevisionGraphRevision(realCommitObjectId, 0)
+        _realCommitNode = new RevisionGraphRevision(realCommitObjectId, guessScore: 1)
         {
             GitRevision = new GitRevision(realCommitObjectId)
             {
@@ -116,7 +116,7 @@ public class LaneInfoProviderTests
             }
         };
         ObjectId mergeCommitObjectId = ObjectId.Parse("b48da1aba59a65b2a7f0df7e3512817caf16819f");
-        _mergeCommitNode = new RevisionGraphRevision(mergeCommitObjectId, 0)
+        _mergeCommitNode = new RevisionGraphRevision(mergeCommitObjectId, guessScore: 0)
         {
             GitRevision = new GitRevision(mergeCommitObjectId)
             {
@@ -129,7 +129,7 @@ public class LaneInfoProviderTests
             }
         };
         ObjectId undetectedMergeCommitObjectId = ObjectId.Parse("c48da1aba59a65b2a7f0df7e3512817caf16819f");
-        _undetectedMergeCommitNode = new RevisionGraphRevision(undetectedMergeCommitObjectId, 0)
+        _undetectedMergeCommitNode = new RevisionGraphRevision(undetectedMergeCommitObjectId, guessScore: 0)
         {
             GitRevision = new GitRevision(undetectedMergeCommitObjectId)
             {
@@ -142,7 +142,7 @@ public class LaneInfoProviderTests
             }
         };
         ObjectId innerCommitObjectId = ObjectId.Parse("d48da1aba59a65b2a7f0df7e3512817caf16819f");
-        _innerCommitNode = new RevisionGraphRevision(innerCommitObjectId, 0)
+        _innerCommitNode = new RevisionGraphRevision(innerCommitObjectId, guessScore: 0)
         {
             GitRevision = new GitRevision(innerCommitObjectId)
             {
