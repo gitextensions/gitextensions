@@ -318,7 +318,7 @@ public class LaneInfoProviderTests
         // real
         _mergeCommitNode.GetTestAccessor().AddParent(_innerCommitNode);
         _innerCommitNode.GetTestAccessor().AddParent(_realCommitNode);
-        _realCommitNode.GitRevision.Refs = new GitRef[] { new(null, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored") };
+        _realCommitNode.GitRevision.Refs = [new GitRef(null, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored")];
         _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, null));
 
         Check(new GitRef(null, null, GitRefName.RefsHeadsPrefix + "local_branch"));
@@ -329,7 +329,7 @@ public class LaneInfoProviderTests
 
         void Check(GitRef gitRef)
         {
-            _innerCommitNode.GitRevision.Refs = new GitRef[] { gitRef };
+            _innerCommitNode.GitRevision.Refs = [gitRef];
 
             GetLaneInfo_should_display(_realCommitNode, gitRef.Name);
         }
@@ -374,7 +374,7 @@ public class LaneInfoProviderTests
         _mergeCommitNode.GitRevision.Subject = subject;
 
         GitRef gitRef = new(null, null, GitRefName.RefsHeadsPrefix + "local_branch");
-        _mergeCommitNode.GitRevision.Refs = new GitRef[] { gitRef };
+        _mergeCommitNode.GitRevision.Refs = [gitRef];
 
         GetLaneInfo_should_display(_realCommitNode, into);
     }
@@ -456,7 +456,7 @@ public class LaneInfoProviderTests
         // |
         // real (parent)
         _innerCommitNode.AddParent(_realCommitNode);
-        _realCommitNode.GitRevision.Refs = new GitRef[] { new GitRef(null, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored") };
+        _realCommitNode.GitRevision.Refs = [new GitRef(null, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored")];
         _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, _innerCommitNode));
 
         Check(new GitRef(null, null, GitRefName.RefsHeadsPrefix + "local_branch"));
@@ -467,7 +467,7 @@ public class LaneInfoProviderTests
 
         void Check(GitRef gitRef)
         {
-            _innerCommitNode.GitRevision.Refs = new GitRef[] { gitRef };
+            _innerCommitNode.GitRevision.Refs = [gitRef];
 
             GetLaneInfo_should_display(_realCommitNode, gitRef.Name, child: _innerCommitNode);
         }
