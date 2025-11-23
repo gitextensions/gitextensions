@@ -16,22 +16,22 @@ public static class TranslationUtil
 
     private static readonly HashSet<string> _processedAssemblies = [];
 
-    private static readonly HashSet<string> _translatableItemInComponentNames = new(StringComparer.Ordinal)
-    {
+    private static readonly string[] _translatableItemInComponentNames =
+    [
         "AccessibleDescription",
         "AccessibleName",
         "Caption",
         "Text",
         "ToolTipText",
         "Title"
-    };
+    ];
 
     private static bool IsTranslatableItemInComponent(PropertyInfo property, object item)
     {
-        HashSet<string> localizableItemNames = GetLocalizablePropertiesFromAttribute(item)
+        string[] localizableItemNames = GetLocalizablePropertiesFromAttribute(item)
             ?? _translatableItemInComponentNames;
 
-        return property.PropertyType == typeof(string) && localizableItemNames.Contains(property.Name);
+        return property.PropertyType == typeof(string) && localizableItemNames.Contains(property.Name, StringComparer.Ordinal);
     }
 
     private static readonly string[] UnTranslatableDLLs =
@@ -335,10 +335,9 @@ public static class TranslationUtil
             return true;
         }
 
-        HashSet<string> localizableProperties = GetLocalizablePropertiesFromAttribute(itemObj)
-            ?? new HashSet<string>(["Items"], StringComparer.Ordinal);
+        string[] localizableProperties = GetLocalizablePropertiesFromAttribute(itemObj) ?? ["Items"];
 
-        return localizableProperties.Contains(property.Name) &&
+        return localizableProperties.Contains(property.Name, StringComparer.Ordinal) &&
                property.GetValue(itemObj, null) is IList items &&
                items.Count != 0;
     }
@@ -437,12 +436,11 @@ public static class TranslationUtil
         }
     }
 
-    private static HashSet<string>? GetLocalizablePropertiesFromAttribute(object item)
+    private static string[]? GetLocalizablePropertiesFromAttribute(object item)
     {
         return item.GetType()
             .GetCustomAttribute<LocalizablePropertiesAttribute>()
-            ?.TranslatableProperties
-            ?.ToHashSet(StringComparer.Ordinal);
+            ?.TranslatableProperties;
     }
 
     private static readonly char PosixDirectorySeparatorChar = '/';
