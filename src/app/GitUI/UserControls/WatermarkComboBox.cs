@@ -178,9 +178,7 @@ public sealed class WatermarkComboBox : ComboBox
     private void UpdateWatermarkFont()
     {
         _watermarkFont?.Dispose();
-        _watermarkFont = _originalFont is not null
-            ? new Font((Font)_originalFont.Clone(), FontStyle.Italic)
-            : new Font((Font)Font.Clone(), FontStyle.Italic);
+        _watermarkFont = new Font((Font)(_originalFont ?? Font).Clone(), FontStyle.Italic);
     }
 
     private void ShowWatermark(bool leaving = false)

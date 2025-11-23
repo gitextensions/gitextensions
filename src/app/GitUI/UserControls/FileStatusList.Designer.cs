@@ -193,14 +193,14 @@ partial class FileStatusList
         LoadingFiles.Size = new Size(4, 19);
         LoadingFiles.TabIndex = 2;
         // 
-        // _NO_TRANSLATE_FilterComboBox
+        // cboFilterComboBox
         // 
         cboFilterComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         cboFilterComboBox.FlatStyle = FlatStyle.Flat;
         cboFilterComboBox.FormattingEnabled = true;
         cboFilterComboBox.Location = new Point(0, 48);
         cboFilterComboBox.Margin = new Padding(0);
-        cboFilterComboBox.Name = "_NO_TRANSLATE_FilterComboBox";
+        cboFilterComboBox.Name = "cboFilterComboBox";
         cboFilterComboBox.Size = new Size(682, 23);
         cboFilterComboBox.TabIndex = 5;
         cboFilterComboBox.Watermark = "Filter files using a regular expression...";
