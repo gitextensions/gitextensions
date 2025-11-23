@@ -14,7 +14,6 @@ public static class ThemeModule
 
     public static void Load()
     {
-        new ThemeMigration(Repository).Migrate();
         Settings = LoadThemeSettings(Repository);
         bool isDarkMode = IsDarkColor(Settings.Theme.GetColor(AppColor.PanelBackground));
         SystemColorMode mode = isDarkMode ? SystemColorMode.Dark : SystemColorMode.Classic;
@@ -59,19 +58,6 @@ public static class ThemeModule
             MessageBoxes.ShowError(null, $"Failed to load invariant theme: {ex.Message}"
                     + $"{Environment.NewLine}{Environment.NewLine}See also https://github.com/gitextensions/gitextensions/wiki/Dark-Mode");
             return ThemeSettings.Default;
-        }
-
-        string oldThemeName = AppSettings.ThemeIdName_v1;
-        if (oldThemeName is not null)
-        {
-            // Migrate to default v4 theme for v3
-            AppSettings.ThemeIdName_v1 = null;
-            AppSettings.ThemeId = ThemeId.Default;
-            if (oldThemeName != ThemeId.Default.Name)
-            {
-                MessageBox.Show($"The theme ({oldThemeName}) is reset to default as the theme support is limited in this Git Extensions version.",
-                    TranslatedStrings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
         }
 
         ThemeId themeId = AppSettings.ThemeId;
