@@ -145,7 +145,7 @@ public class LaneNodeLocatorTests
 
 #if !DEBUG
         // innermost "return" in RELEASE build
-        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((parentNode, false, null));
+        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((parentNode, false, segment.Child));
 #else
         try
         {
