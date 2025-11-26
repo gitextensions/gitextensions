@@ -1,4 +1,3 @@
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
@@ -205,6 +204,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     #endregion
 
     private readonly uint _closeAllMessage = NativeMethods.RegisterWindowMessageW("Global.GitExtensions.CloseAllInstances");
+    private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
     private readonly SplitterManager _splitterManager;
     private readonly GitStatusMonitor _gitStatusMonitor;
     private readonly FormBrowseMenus _formBrowseMenus;
@@ -448,6 +448,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         if (disposing)
         {
+            _loadOperations.JoinPendingOperations();
             _formBrowseMenus?.Dispose();
             components?.Dispose();
             _gitStatusMonitor?.Dispose();
@@ -489,7 +490,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         // All app init is done, make all repo related similar to switching repos
         SetGitModule(this, new GitModuleEventArgs(new GitModule(Module.WorkingDir)));
         bool isDashboard = _dashboard?.Visible ?? false;
-        this.InvokeAndForget(async () =>
+        _loadOperations.InvokeAndForget(this, async () =>
         {
             _outputHistoryController = AppSettings.ShowOutputHistoryAsTab.Value
                 ? new OutputHistoryTabController(UICommands.GetRequiredService<IOutputHistoryProvider>(), new OutputHistoryControl(), parent: CommitInfoTabControl,
@@ -1429,6 +1430,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         string translation = AppSettings.Translation;
         CommitInfoPosition commitInfoPosition = AppSettings.CommitInfoPosition;
+
+        // Await plugin registration
+        _loadOperations.JoinPendingOperations();
 
         UICommands.StartSettingsDialog(this);
 
