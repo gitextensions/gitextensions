@@ -1,4 +1,4 @@
-version: 7.0.0.{build}
+version: 6.0.5.{build}
 
 branches:
   except:
