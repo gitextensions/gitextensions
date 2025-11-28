@@ -377,14 +377,17 @@ Click this info icon for more details.</source>
       </trans-unit>
       <trans-unit id="commitMessageToolStripMenuItem.Text">
         <source>Commit &amp;message</source>
+        <target>உறுதிமொழி செய்தி</target>
         
       </trans-unit>
       <trans-unit id="copyToClipboardToolStripMenuItem.Text">
         <source>&amp;Copy to clipboard</source>
+        <target>இடைநிலைப் பலகைக்கு நகலெடு</target>
         
       </trans-unit>
       <trans-unit id="showChangesToolStripMenuItem.Text">
         <source>&amp;Show changes</source>
+        <target>மாற்றங்களைக் காட்டு</target>
         
       </trans-unit>
     </body>
@@ -1907,39 +1910,49 @@ Git will never check if the file has changed that will improve status check perf
       </trans-unit>
       <trans-unit id="_firstRevision.Text">
         <source>First: A </source>
+        <target>முதல்: அ</target>
         
       </trans-unit>
       <trans-unit id="_multipleDescription.Text">
         <source>&lt;multiple&gt;</source>
+        <target>&lt;multiple&gt;</target>
         
       </trans-unit>
       <trans-unit id="_newName.Text">
         <source>New name</source>
+        <target>புதிய பெயர்</target>
         
       </trans-unit>
       <trans-unit id="_resetSelectedChangesText.Text">
         <source>Are you sure you want to reset all selected files to {0}?</source>
+        <target>தேர்ந்தெடுத்த எல்லா கோப்புகளையும் {0} க்கு மீட்டமைக்க விரும்புகிறீர்களா?</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
         <source>All files</source>
+        <target>எல்லா கோப்புகளும்</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterCurrentFormat.Text">
         <source>Current format</source>
+        <target>தற்போதைய வடிவம்</target>
         
       </trans-unit>
       <trans-unit id="_selectAll.Text">
         <source>S&amp;elect all</source>
+        <target>அனைத்தையும் தேர்ந்தெடு</target>
         
       </trans-unit>
       <trans-unit id="_selectedRevision.Text">
         <source>Second: B </source>
+        <target>இரண்டாவது: ஆ </target>
         
       </trans-unit>
       <trans-unit id="_skipWorktreeToolTip.Text">
         <source>Hide already tracked files that will change but that you don't want to commit.
 Suitable for some config files modified locally.</source>
+        <target>ஏற்கனவே கண்காணித்த கோப்புகளை மறைக்கவும், அவை மாறும் ஆனால் நீங்கள் உறுதிமொழி செய்ய விரும்பாதவை.
+உள்ளகத்தில் மாற்றியமைக்கப்பட்ட சில கட்டமைப்புக் கோப்புகளுக்கு ஏற்றது.</target>
         
       </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
@@ -1948,6 +1961,7 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="_stopTrackingFail.Text">
         <source>Fail to stop tracking the file '{0}'.</source>
+        <target>'{0}' கோப்பை கண்காணிப்பதை நிறுத்த முடியவில்லை.</target>
         
       </trans-unit>
       <trans-unit id="btnAsTree.ToolTipText">

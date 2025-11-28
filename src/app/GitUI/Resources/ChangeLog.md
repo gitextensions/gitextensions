@@ -1,6 +1,17 @@
 ﻿Changelog
 =========
 
+### Version v6.0.5 (28 Nov 2025)
+
+#### Changes:
+* [#12707] fix(plugin loading): Await registration before use
+* [#12704] fix(CheckSettingsLogic): Prefer native executables
+
+
+[#12707]:https://github.com/gitextensions/gitextensions/pull/12707
+[#12704]:https://github.com/gitextensions/gitextensions/pull/12704
+
+
 ### Version v6.0.4 (18 Nov 2025)
 
 #### Changes:
