@@ -2003,7 +2003,7 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="btnCollapseGroups.ToolTipText">
         <source>Collapse all groups, otherwise expand the selected group</source>
-        <target>すべてのグループをたたみます。(既にたたまれている場合は展開します。)</target>
+        <target>グループをすべてたたむ (既にたたまれている場合は展開)</target>
         
       </trans-unit>
       <trans-unit id="btnFindInFilesGitGrep.ToolTipText">

@@ -1888,6 +1888,7 @@ Git will never check if the file has changed that will improve status check perf
       </trans-unit>
       <trans-unit id="_deleteSelectedFilesCaption.Text">
         <source>Delete</source>
+        <target>Sil</target>
         
       </trans-unit>
       <trans-unit id="_expandAll.Text">
@@ -1904,6 +1905,7 @@ Git will never check if the file has changed that will improve status check perf
       </trans-unit>
       <trans-unit id="_newName.Text">
         <source>New name</source>
+        <target>Yeni ad</target>
         
       </trans-unit>
       <trans-unit id="_resetSelectedChangesText.Text">
@@ -1912,6 +1914,7 @@ Git will never check if the file has changed that will improve status check perf
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
         <source>All files</source>
+        <target>Tüm dosyalar</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterCurrentFormat.Text">
@@ -1989,6 +1992,7 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="btnSettings.Text">
         <source>Settings</source>
+        <target>Ayarlar</target>
         
       </trans-unit>
       <trans-unit id="btnUnequalChange.ToolTipText">
@@ -2570,6 +2574,7 @@ Suitable for some config files modified locally.</source>
     <body>
       <trans-unit id="buttonBrowse.Text">
         <source>&amp;Browse...</source>
+        <target>&amp;Gözat...</target>
         
       </trans-unit>
     </body>
@@ -4180,6 +4185,7 @@ Focus the output history and (when displayed as panel) toggle its visibility usi
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>General</source>
+        <target>Genel</target>
         
       </trans-unit>
       <trans-unit id="lblDefaultShell.Text">
@@ -5343,6 +5349,7 @@ You can unset the template:
       </trans-unit>
       <trans-unit id="grpOrphan.Text">
         <source>Orphan</source>
+        <target>Yetim</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -8184,6 +8191,7 @@ Değer, boş değere sıfırlandı.</target>
       </trans-unit>
       <trans-unit id="lblRemoteColor.Text">
         <source>Color</source>
+        <target>Renk</target>
         
       </trans-unit>
       <trans-unit id="pnlMgtDetails.Text">
@@ -10591,10 +10599,12 @@ Bu, yalnızca alt modül içerisinde bulunan ve süper proje tarafından belirle
     <body>
       <trans-unit id="tsmiClear.Text">
         <source>C&amp;lear</source>
+        <target>&amp;Temizle</target>
         
       </trans-unit>
       <trans-unit id="tsmiCopy.Text">
         <source>&amp;Copy</source>
+        <target>&amp;Kopyala</target>
         
       </trans-unit>
     </body>
