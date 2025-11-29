@@ -28,6 +28,14 @@ public class Theme : IThemeSerializationData
     public ThemeId Id { get; }
 
     /// <summary>
+    /// Get the Windows SystemColorMode for this theme, based on the background color.
+    /// </summary>
+    public SystemColorMode SystemColorMode
+        => new HslColor(GetColor(AppColor.PanelBackground)).L < 0.5
+            ? SystemColorMode.Dark
+            : SystemColorMode.Classic;
+
+    /// <summary>
     /// Get GitExtensions app-specific color value as defined by this instance. If not defined,
     /// returns <see cref="Color.Empty"/>.
     /// </summary>
@@ -89,7 +97,7 @@ public class Theme : IThemeSerializationData
     {
         Dictionary<AppColor, Color> appColors = AppColorNames.ToDictionary(name => name, name => AppColorDefaults.GetBy(name, variations));
         Dictionary<KnownColor, Color> sysColors = SysColorNames.ToDictionary(name => name, GetFixedColor);
-        return new Theme(appColors, sysColors, ThemeId.Default);
+        return new Theme(appColors, sysColors, ThemeId.DefaultLight);
     }
 
     /// <summary>

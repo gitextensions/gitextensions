@@ -4,8 +4,6 @@ namespace GitUI.Theming;
 
 public interface IThemeRepository
 {
-    string InvariantThemeName { get; }
-
     Theme GetTheme(ThemeId themeId, IReadOnlyList<string> variations);
 
     void Save(Theme theme);
@@ -33,8 +31,6 @@ public class ThemeRepository : IThemeRepository
     {
     }
 
-    public string InvariantThemeName { get; } = "invariant";
-
     public Theme GetTheme(ThemeId themeId, IReadOnlyList<string> variations)
     {
         string themePath = _themePathProvider.GetThemePath(themeId);
@@ -48,7 +44,7 @@ public class ThemeRepository : IThemeRepository
     }
 
     public Theme GetInvariantTheme() =>
-        GetTheme(new ThemeId(InvariantThemeName, isBuiltin: true), variations: []);
+        GetTheme(ThemeId.DefaultLight, variations: []);
 
     public IEnumerable<ThemeId> GetThemeIds() =>
         GetBuiltinThemeIds().Concat(GetUserCustomizedThemeIds());
@@ -68,22 +64,21 @@ public class ThemeRepository : IThemeRepository
         new DirectoryInfo(_themePathProvider.AppThemesDirectory)
             .EnumerateFiles("*" + _themePathProvider.ThemeExtension, SearchOption.TopDirectoryOnly)
             .Select(fileInfo => Path.GetFileNameWithoutExtension(fileInfo.Name))
-            .Where(fileName => !fileName.Equals(InvariantThemeName, StringComparison.OrdinalIgnoreCase))
-            .Select(fileName => new ThemeId(fileName, true));
+            .Select(fileName => new ThemeId(fileName, isBuiltin: true))
+            .OrderBy(id => id.Name);
 
     private IEnumerable<ThemeId> GetUserCustomizedThemeIds()
     {
-        if (_themePathProvider.UserThemesDirectory is null)
+        if (_themePathProvider.UserThemesDirectory is null
+            || (new DirectoryInfo(_themePathProvider.UserThemesDirectory) is not DirectoryInfo directory)
+            || !directory.Exists)
         {
             return [];
         }
 
-        DirectoryInfo directory = new(_themePathProvider.UserThemesDirectory);
-        return directory.Exists
-            ? directory
-                .EnumerateFiles("*" + _themePathProvider.ThemeExtension, SearchOption.TopDirectoryOnly)
-                .Select(fileInfo => Path.GetFileNameWithoutExtension(fileInfo.Name))
-                .Select(fileName => new ThemeId(fileName, false))
-            : [];
+        return directory
+            .EnumerateFiles("*" + _themePathProvider.ThemeExtension, SearchOption.TopDirectoryOnly)
+            .Select(fileInfo => Path.GetFileNameWithoutExtension(fileInfo.Name))
+            .Select(fileName => new ThemeId(fileName));
     }
 }
