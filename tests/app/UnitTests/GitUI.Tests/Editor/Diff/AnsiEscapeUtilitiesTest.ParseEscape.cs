@@ -23,7 +23,7 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
     {
         _themeId = AppSettings.ThemeId;
         _themeVariations = AppSettings.ThemeVariations;
-        AppSettings.ThemeId = ThemeId.Default;
+        AppSettings.ThemeId = ThemeId.DefaultLight;
         AppSettings.ThemeVariations = ThemeVariations.None;
         ThemeModule.Load();
     }
