@@ -104,7 +104,7 @@ partial class FileStatusList
 
     private void Filter_ButtonClick(object sender, EventArgs e)
     {
-        FilterFiles(_NO_TRANSLATE_FilterComboBox.Text);
+        FilterFiles(cboFilterComboBox.Text);
     }
 
     private void FindInFilesGitGrep_ButtonClick(object sender, EventArgs e)

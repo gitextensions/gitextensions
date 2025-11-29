@@ -16,20 +16,22 @@ public static class TranslationUtil
 
     private static readonly HashSet<string> _processedAssemblies = [];
 
-    private static readonly HashSet<string> _translatableItemInComponentNames = new(StringComparer.Ordinal)
-    {
+    private static readonly string[] _translatableItemInComponentNames =
+    [
         "AccessibleDescription",
         "AccessibleName",
         "Caption",
         "Text",
         "ToolTipText",
         "Title"
-    };
+    ];
 
-    private static bool IsTranslatableItemInComponent(PropertyInfo property)
+    private static bool IsTranslatableItemInComponent(PropertyInfo property, object item)
     {
-        return property.PropertyType == typeof(string) &&
-               _translatableItemInComponentNames.Contains(property.Name);
+        string[] localizableItemNames = GetLocalizablePropertiesFromAttribute(item)
+            ?? _translatableItemInComponentNames;
+
+        return property.PropertyType == typeof(string) && localizableItemNames.Contains(property.Name, StringComparer.Ordinal);
     }
 
     private static readonly string[] UnTranslatableDLLs =
@@ -102,7 +104,7 @@ public static class TranslationUtil
         AddTranslationItemsFromList(category, translation, GetObjFields(obj, "$this"));
     }
 
-    private static IEnumerable<PropertyInfo> GetItemPropertiesEnumerator(string name, object item)
+    private static IEnumerable<PropertyInfo> GetItemPropertiesEnumerator(string name, object? item)
     {
         if (item is null)
         {
@@ -127,7 +129,7 @@ public static class TranslationUtil
         }
         else
         {
-            isTranslatable = IsTranslatableItemInComponent;
+            isTranslatable = property => IsTranslatableItemInComponent(property, item);
         }
 
         foreach (PropertyInfo property in item.GetType().GetProperties(_fieldFlags).Where(isTranslatable))
@@ -328,12 +330,14 @@ public static class TranslationUtil
 
     private static bool IsTranslatableItemInBox(PropertyInfo property, object itemObj)
     {
-        if (IsTranslatableItemInComponent(property))
+        if (IsTranslatableItemInComponent(property, itemObj))
         {
             return true;
         }
 
-        return property.Name.Equals("Items", StringComparison.Ordinal) &&
+        string[] localizableProperties = GetLocalizablePropertiesFromAttribute(itemObj) ?? ["Items"];
+
+        return localizableProperties.Contains(property.Name, StringComparer.Ordinal) &&
                property.GetValue(itemObj, null) is IList items &&
                items.Count != 0;
     }
@@ -430,6 +434,13 @@ public static class TranslationUtil
 
             return e.Types.Where(t => t != null)!;
         }
+    }
+
+    private static string[]? GetLocalizablePropertiesFromAttribute(object item)
+    {
+        return item.GetType()
+            .GetCustomAttribute<LocalizablePropertiesAttribute>()
+            ?.TranslatableProperties;
     }
 
     private static readonly char PosixDirectorySeparatorChar = '/';
