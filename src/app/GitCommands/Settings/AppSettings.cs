@@ -1470,8 +1470,8 @@ public static partial class AppSettings
         get
         {
             return new ThemeId(
-                GetString("uitheme_v2", ThemeId.Default.Name),
-                GetBool("uithemeisbuiltin_v2", ThemeId.Default.IsBuiltin));
+                GetString("uitheme_v2", ThemeId.DefaultLight.Name),
+                GetBool("uithemeisbuiltin_v2", ThemeId.DefaultLight.IsBuiltin));
         }
         set
         {

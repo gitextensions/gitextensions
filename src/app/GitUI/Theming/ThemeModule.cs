@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using GitCommands;
-using GitExtensions.Extensibility;
 using GitExtUtils.GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 
@@ -15,14 +14,10 @@ public static class ThemeModule
     public static void Load()
     {
         Settings = LoadThemeSettings(Repository);
-        bool isDarkMode = IsDarkColor(Settings.Theme.GetColor(AppColor.PanelBackground));
-        SystemColorMode mode = isDarkMode ? SystemColorMode.Dark : SystemColorMode.Classic;
-        Application.SetColorMode(mode);
+        Application.SetColorMode(Settings.Theme.SystemColorMode);
         UpdateEditorSettings();
         ColorHelper.ThemeSettings = Settings;
         ThemeFix.ThemeSettings = Settings;
-
-        static bool IsDarkColor(Color color) => new HslColor(color).L < 0.5;
     }
 
     private static void UpdateEditorSettings()
@@ -61,27 +56,44 @@ public static class ThemeModule
         }
 
         ThemeId themeId = AppSettings.ThemeId;
-        string[] variations = AppSettings.ThemeVariations;
         if (string.IsNullOrEmpty(themeId.Name))
         {
+            // Migrate from default invariant/light to Windows default color mode
+            themeId = ThemeId.WindowsAppColorModeId;
+            AppSettings.ThemeId = themeId;
+        }
+
+        bool systemVisualStyle = AppSettings.UseSystemVisualStyle;
+        if (themeId == ThemeId.WindowsAppColorModeId)
+        {
+            // fix systemVisualStyle for WindowsAppColorModeId mode (always for DefaultLight)
+            // This is also how it is presented in Settings
+            themeId = ThemeId.ColorModeThemeId;
+            systemVisualStyle = themeId == ThemeId.DefaultLight;
+        }
+
+        string[] variations = AppSettings.ThemeVariations;
+        if (themeId == ThemeId.DefaultLight)
+        {
+            // default/invariant/light theme
             return CreateFallbackSettings(invariantTheme, variations);
         }
 
         Theme theme;
         try
         {
-            theme = repository.GetTheme(themeId, AppSettings.ThemeVariations);
+            theme = repository.GetTheme(themeId, variations);
         }
         catch (ThemeException ex)
         {
             Trace.WriteLine($"Failed to load {(themeId.IsBuiltin ? "preinstalled" : "user-defined")} theme {themeId.Name}: {ex}");
             MessageBoxes.ShowError(null, $"Failed to load {(themeId.IsBuiltin ? "preinstalled" : "user-defined")} theme {themeId.Name}: {ex.Message}"
                     + $"{Environment.NewLine}{Environment.NewLine}See also https://github.com/gitextensions/gitextensions/wiki/Dark-Mode");
-            AppSettings.ThemeId = ThemeId.Default;
+            AppSettings.ThemeId = ThemeId.DefaultLight;
             return CreateFallbackSettings(invariantTheme, variations);
         }
 
-        return new ThemeSettings(theme, invariantTheme, AppSettings.ThemeVariations, AppSettings.UseSystemVisualStyle);
+        return new ThemeSettings(theme, invariantTheme, variations, systemVisualStyle);
     }
 
     private static ThemeSettings CreateFallbackSettings(Theme invariantTheme, string[] variations) =>

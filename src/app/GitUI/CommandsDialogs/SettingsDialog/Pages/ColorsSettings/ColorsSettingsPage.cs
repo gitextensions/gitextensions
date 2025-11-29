@@ -16,9 +16,6 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
     private static readonly TranslationString FormatUserDefinedThemeName =
         new("{0}, user-defined");
 
-    private static readonly TranslationString DefaultThemeName =
-        new("default");
-
     public ColorsSettingsPage(IServiceProvider serviceProvider)
         : base(serviceProvider)
     {
@@ -95,7 +92,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
         Trace.WriteLine($"Failed to load theme {themeId.Name}: {ex}");
         string variationsStr = string.Concat(variations.Select(_ => "." + _));
         string identifier = new FormattedThemeId(themeId).ToString();
-        AppSettings.ThemeId = ThemeId.Default;
+        AppSettings.ThemeId = ThemeId.DefaultLight;
         MessageBoxes.ShowError(this, $"Failed to load theme {identifier}{variationsStr}: {ex.Message}"
             + $"{Environment.NewLine}{Environment.NewLine}See also https://github.com/gitextensions/gitextensions/wiki/Dark-Mode");
     }
@@ -183,11 +180,6 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
 
         public override readonly string ToString()
         {
-            if (ThemeId == ThemeId.Default)
-            {
-                return DefaultThemeName.Text;
-            }
-
             if (ThemeId.IsBuiltin)
             {
                 return string.Format(FormatBuiltinThemeName.Text, ThemeId.Name);
