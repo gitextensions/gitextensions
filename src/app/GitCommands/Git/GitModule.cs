@@ -108,15 +108,15 @@ public sealed partial class GitModule : IGitModule
 
         // If this is a submodule, populate relevant properties.
         // If this is not a submodule, these will all be null.
-        (SuperprojectModule, SubmodulePath, SubmoduleName) = InitialiseSubmoduleProperties();
+        (SuperprojectModule, SubmodulePath) = InitialiseSubmoduleProperties();
 
         return;
 
-        (GitModule? superprojectModule, string? submodulePath, string? submoduleName) InitialiseSubmoduleProperties()
+        (GitModule? superprojectModule, string? submodulePath) InitialiseSubmoduleProperties()
         {
             if (!IsValidGitWorkingDir())
             {
-                return (null, null, null);
+                return (null, null);
             }
 
             string currentPath = WorkingDir.RemoveTrailingPathSeparator();
@@ -139,7 +139,7 @@ public sealed partial class GitModule : IGitModule
                     // If we cannot read the .git file, assume it's not a submodule
                     // See also special handling of WSL .git symbolic links in PathUtil.IsWslLink()
                     // Symbolic links to submodule .git is not expected and not supported.
-                    return (null, null, null);
+                    return (null, null);
                 }
 
                 foreach (string line in lines)
@@ -163,26 +163,25 @@ public sealed partial class GitModule : IGitModule
                 }
             }
 
-            if (!string.IsNullOrEmpty(superprojectPath) && currentPath.ToPosixPath().StartsWith(superprojectPath.ToPosixPath()))
+            if (string.IsNullOrEmpty(superprojectPath) || !currentPath.ToPosixPath().StartsWith(superprojectPath.ToPosixPath()))
             {
-                string submodulePath = currentPath[superprojectPath.Length..].ToPosixPath();
-                ConfigFile configFile = new(Path.Combine(superprojectPath, ".gitmodules"));
-
-                foreach (IConfigSection configSection in configFile.ConfigSections)
-                {
-                    if (configSection.GetValue("path") == submodulePath.ToPosixPath())
-                    {
-                        string submoduleName = configSection.SubSection;
-                        GitModule superprojectModule = new(superprojectPath);
-
-                        return (superprojectModule, submodulePath, submoduleName);
-                    }
-                }
-
-                return (null, submodulePath, null);
+                return (null, null);
             }
 
-            return (null, null, null);
+            string submodulePath = currentPath[superprojectPath.Length..].ToPosixPath();
+            ConfigFile configFile = new(Path.Combine(superprojectPath, ".gitmodules"));
+
+            foreach (IConfigSection configSection in configFile.ConfigSections)
+            {
+                if (configSection.GetValue("path") == submodulePath.ToPosixPath())
+                {
+                    GitModule superprojectModule = new(superprojectPath);
+
+                    return (superprojectModule, submodulePath);
+                }
+            }
+
+            return (null, submodulePath);
 
             static bool HasGitModulesFile(string path)
                 => File.Exists(Path.Combine(path, ".gitmodules")) && IsValidGitWorkingDir(path);
@@ -213,12 +212,6 @@ public sealed partial class GitModule : IGitModule
 
     /// <inherit/>
     public string GetWindowsPath(string path) => PathUtil.GetWindowsPath(path, _wslDistro);
-
-    /// <summary>
-    /// If this module is a submodule, returns its name, otherwise <c>null</c>.
-    /// </summary>
-    // TODO: remove?
-    private string? SubmoduleName { get; }
 
     public string? SubmodulePath { get; }
 
@@ -3242,9 +3235,7 @@ public sealed partial class GitModule : IGitModule
                 // ls-files with same format as ls-tree
                 "-z",
                 { commitId == ObjectId.IndexId, "--cached", "--no-cached" },
-
-                // TODO change to GitVersion.SupportLsFilesFormat when Extensibility.Git can be updated
-                { GitVersion.SupportNewGitConfigSyntax, @$"--format=""{_gitTreeParser.GitTreeFormat}""", "--stage" },
+                { GitVersion.SupportLsFilesFormat, @$"--format=""{_gitTreeParser.GitTreeFormat}""", "--stage" },
                 "--",
                 fileName.QuoteNE()
             }
@@ -3260,8 +3251,7 @@ public sealed partial class GitModule : IGitModule
 
         ExecutionResult result = _gitExecutable.Execute(args, cache: isArtificial ? null : GitCommandCache, cancellationToken: cancellationToken);
 
-        // TODO change to GitVersion.SupportLsFilesFormat when Extensibility.Git can be updated
-        if (isArtificial && !GitVersion.SupportNewGitConfigSyntax)
+        if (isArtificial && !GitVersion.SupportLsFilesFormat)
         {
             return _gitTreeParser.ParseLsFiles(result.StandardOutput);
         }
@@ -3682,12 +3672,6 @@ public sealed partial class GitModule : IGitModule
         return ObjectId.TryParse(output, offset: 0, out ObjectId? objectId)
             ? objectId
             : null;
-    }
-
-    public SubmoduleStatus CheckSubmoduleStatus(ObjectId? commit, ObjectId? oldCommit, CommitData? data, CommitData? oldData, bool loadData)
-    {
-        // TODO remove from IGitModule
-        throw new NotImplementedException("CheckSubmoduleStatus is not implemented in GitModule. Use SubmoduleHelper instead.");
     }
 
     public bool CheckBranchFormat(string branchName)
