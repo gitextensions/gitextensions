@@ -1742,6 +1742,14 @@ Suitable for some config files modified locally.</source>
         <source>Using &amp;input box</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiFindUsingMatchCase.Text">
+        <source>Match &amp;case</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiFindUsingWholeWord.Text">
+        <source>Match &amp;whole word</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiGroupByFileExtensionFlat.Text">
         <source>Group by file e&amp;xtension - flat</source>
         <target />

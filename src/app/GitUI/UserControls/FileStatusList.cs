@@ -471,7 +471,7 @@ public sealed partial class FileStatusList : GitModuleControl
         else if (_formFindInCommitFilesGitGrep?.Visible is not true && cboFindInCommitFilesGitGrep.Text.Length > 0)
         {
             cboFindInCommitFilesGitGrep.Text = "";
-            FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
+            FindInCommitFilesGitGrep();
         }
 
         SetFileStatusListVisibility(showNoFiles: NoFiles.Visible);
@@ -1624,9 +1624,9 @@ public sealed partial class FileStatusList : GitModuleControl
         Validates.NotNull(TopLevelControl);
         _formFindInCommitFilesGitGrep ??= new FormFindInCommitFilesGitGrep(UICommands)
         {
-            FilesGitGrepLocator = (text, delay) =>
+            FilesGitGrepLocator = (text) =>
             {
-                FindInCommitFilesGitGrep(text, delay);
+                FindInCommitFilesGitGrep(text);
                 cboFindInCommitFilesGitGrep.Text = text;
             },
 
@@ -2007,11 +2007,14 @@ public sealed partial class FileStatusList : GitModuleControl
     }
 
     private void cboFindInCommitFilesGitGrep_TextUpdate(object? sender, EventArgs e)
+        => FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 200);
+
+    private void FindInCommitFilesGitGrep()
     {
         FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text);
     }
 
-    private void FindInCommitFilesGitGrep(string search, int delay = 200)
+    private void FindInCommitFilesGitGrep(string search, int delay = 0)
     {
         SetDeleteSearchButtonVisibility();
 
@@ -2102,7 +2105,7 @@ public sealed partial class FileStatusList : GitModuleControl
 
     private void cboFindInCommitFilesGitGrep_SelectedIndexChanged(object? sender, EventArgs e)
     {
-        FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
+        FindInCommitFilesGitGrep();
     }
 
     private void cboFindInCommitFilesGitGrep_SizeChanged(object? sender, EventArgs e)
@@ -2113,7 +2116,7 @@ public sealed partial class FileStatusList : GitModuleControl
     private void DeleteSearchButton_Click(object? sender, EventArgs e)
     {
         cboFindInCommitFilesGitGrep.Text = "";
-        FindInCommitFilesGitGrep(cboFindInCommitFilesGitGrep.Text, delay: 0);
+        FindInCommitFilesGitGrep();
     }
 
     private void StoreFilter(string value)
