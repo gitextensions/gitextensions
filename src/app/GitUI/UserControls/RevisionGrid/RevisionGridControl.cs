@@ -1073,14 +1073,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                             // Remove parents not included ("index" and empty "untracked" commits).
                             foreach (GitRevision stash in getStashRevs.Value)
                             {
-                                if (!untrackedByStashId.ContainsKey(stash.ObjectId))
-                                {
-                                    stash.ParentIds = [stash.FirstParentId];
-                                }
-                                else
-                                {
-                                    stash.ParentIds = [stash.FirstParentId, stash.ParentIds[2]];
-                                }
+                                stash.ParentIds = untrackedByStashId.ContainsKey(stash.ObjectId)
+                                    ? [stash.FirstParentId, stash.ParentIds[2]]
+                                    : [stash.FirstParentId];
                             }
                         }
                         catch
