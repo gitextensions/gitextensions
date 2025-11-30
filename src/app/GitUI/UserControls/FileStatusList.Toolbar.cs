@@ -145,6 +145,16 @@ partial class FileStatusList
         FindInFilesGitGrep_ButtonClick(sender, e);
     }
 
+    private void FindUsingMatchCase_Click(object sender, EventArgs e)
+    {
+        AppSettings.GitGrepIgnoreCase.Value = !tsmiFindUsingMatchCase.Checked;
+    }
+
+    private void FindUsingWholeWord_Click(object sender, EventArgs e)
+    {
+        AppSettings.GitGrepMatchWholeWord.Value = tsmiFindUsingWholeWord.Checked;
+    }
+
     private void GroupBy_Click(object sender, EventArgs e)
     {
         btnByPath.Checked = sender == btnByPath;
@@ -182,6 +192,12 @@ partial class FileStatusList
         tsmiShowDiffForAllParents.Visible = _enableDisablingShowDiffForAllParents;
         tsmiShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
         tsmiShowDiffForAllParents.ToolTipText = TranslatedStrings.ShowDiffForAllParentsTooltip;
+    }
+
+    private void FindInFilesGitGrep_DropDownOpening(object sender, EventArgs e)
+    {
+        tsmiFindUsingMatchCase.Checked = !AppSettings.GitGrepIgnoreCase.Value;
+        tsmiFindUsingWholeWord.Checked = AppSettings.GitGrepMatchWholeWord.Value;
     }
 
     private void ShowAssumeUnchangedFiles_Click(object sender, EventArgs e)
@@ -259,7 +275,9 @@ partial class FileStatusList
         bool findInFilesGitGrepVisible = CanUseFindInCommitFilesGitGrep;
         btnFindInFilesGitGrep.Visible = findInFilesGitGrepVisible;
         sepOptions.Visible = findInFilesGitGrepVisible;
-        for (int itemIndex = 0; itemIndex < btnFindInFilesGitGrep.DropDown.Items.Count; ++itemIndex)
+
+        // Init the first three items, before the separator
+        for (int itemIndex = 0; itemIndex < btnFindInFilesGitGrep.DropDown.Items.Count && btnFindInFilesGitGrep.DropDown.Items[itemIndex] is ToolStripMenuItem; ++itemIndex)
         {
             ((ToolStripMenuItem)btnFindInFilesGitGrep.DropDown.Items[itemIndex]).Checked = AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value == itemIndex;
         }
