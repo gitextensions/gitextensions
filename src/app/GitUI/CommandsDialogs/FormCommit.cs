@@ -1612,6 +1612,10 @@ public sealed partial class FormCommit : GitModuleForm
                         unstagedFiles[index].IsDeleted = item.IsDeleted;
                         unstagedFiles[index].IsTracked = item.IsTracked;
                         unstagedFiles[index].IsChanged = item.IsChanged;
+
+                        // if this is a submodule, update the status, may be dirty
+                        Module.GetSubmoduleCurrentStatus([unstagedFiles[index]]);
+
                         continue;
                     }
 
@@ -1843,39 +1847,18 @@ public sealed partial class FormCommit : GitModuleForm
                         }
                     }
 
-                    unstagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
-
+                    // Dirty submodules need to be kept in unstaged, update the status
                     unstagedFiles.RemoveAll(
                         item =>
                         {
-                            if (!item.IsSubmodule
-                                || item.GetSubmoduleStatusAsync() is not Task<GitSubmoduleStatus> statusTask
-                                || statusTask is null
-                                || !statusTask.IsCompleted)
+                            if ((!item.IsSubmodule || !item.IsDirty) && unstagedItems.Contains(item))
                             {
-                                return false;
+                                return true;
                             }
 
-                            GitSubmoduleStatus? status = statusTask.CompletedResult();
-                            return status is null || (!status.IsDirty && unstagedItems.Contains(item));
+                            Module.GetSubmoduleCurrentStatus([item]);
+                            return false;
                         });
-
-                    foreach (GitItemStatus item in unstagedItems)
-                    {
-                        if (!item.IsSubmodule)
-                        {
-                            continue;
-                        }
-
-                        GitSubmoduleStatus? gitSubmoduleStatus = ThreadHelper.JoinableTaskFactory.Run(() =>
-                            item.GetSubmoduleStatusAsync() ?? Task.FromResult<GitSubmoduleStatus?>(null));
-
-                        if (gitSubmoduleStatus is null || !gitSubmoduleStatus.IsDirty)
-                        {
-                            continue;
-                        }
-                    }
-
                     (GitRevision _, GitRevision indexRev, GitRevision workTreeRev) = GetHeadRevisions();
                     Unstaged.SetDiffs(indexRev, workTreeRev, unstagedFiles);
                     Unstaged.ClearSelected();
