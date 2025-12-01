@@ -1,14 +1,13 @@
 using System.ComponentModel.Composition;
 
-namespace GitUIPluginInterfaces.BuildServerIntegration
+namespace GitUIPluginInterfaces.BuildServerIntegration;
+
+[MetadataAttribute]
+[AttributeUsage(AttributeTargets.Class)]
+public class BuildServerSettingsUserControlMetadata : BuildServerAdapterMetadataAttribute
 {
-    [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class)]
-    public class BuildServerSettingsUserControlMetadata : BuildServerAdapterMetadataAttribute
+    public BuildServerSettingsUserControlMetadata(string buildServerType)
+        : base(buildServerType)
     {
-        public BuildServerSettingsUserControlMetadata(string buildServerType)
-            : base(buildServerType)
-        {
-        }
     }
 }

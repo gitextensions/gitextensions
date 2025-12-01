@@ -26,7 +26,7 @@ public sealed class AsyncStreamReaderTests
     public async Task AsyncStreamReader()
     {
         const int millisecondsDelayForAsyncNotification = 50;
-        const int millisecondsDelayForPartialLine = 300;
+        const int millisecondsDelayForPartialLine = 500;
 
         const string line1 = "line with LF\n";
         const string line2 = "line with CRLF\r\n";

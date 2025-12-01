@@ -1,36 +1,57 @@
 ﻿using GitUI;
 
-namespace GitUITests
+namespace GitUITests;
+
+[TestFixture]
+public sealed class ControlUtilTests
 {
-    [TestFixture]
-    public sealed class ControlUtilTests
+    private static Control CreateTestHierarchy()
     {
-        [Test]
-        public void FindDescendants()
+        Button grandchild1 = new() { Text = "Click me" };
+        Control grandchild2 = new();
+
+        Control child1 = new();
+        TextBox child2 = new() { Controls = { grandchild1, grandchild2 } };
+        Control child3 = new();
+
+        Control root = new()
         {
-            Control root = new() { Controls = { new Control(), new Control(), new Control() } };
+            Controls = { child1, child2, child3 }
+        };
 
-            ClassicAssert.AreEqual(3, root.FindDescendants().Count());
-            ClassicAssert.AreEqual(3, root.FindDescendants().Distinct().Count());
-        }
+        return root;
+    }
 
-        [Test]
-        public void FindDescendantsOfType()
-        {
-            Control root = new() { Controls = { new Control(), new TextBox(), new Control() } };
+    [Test]
+    public void FindDescendants()
+    {
+        Control root = CreateTestHierarchy();
 
-            ClassicAssert.AreEqual(1, root.FindDescendantsOfType<TextBox>().Count());
-            ClassicAssert.AreEqual(1, root.FindDescendantsOfType<TextBox>().Distinct().Count());
-        }
+        // child1, child2, child3, grandchild1, grandchild2
+        ClassicAssert.AreEqual(5, root.FindDescendants().Count());
+        ClassicAssert.AreEqual(5, root.FindDescendants().Distinct().Count());
+    }
 
-        [Test]
-        public void FindDescendantsOfTypeWithPredicate()
-        {
-            Control root = new() { Controls = { new Control(), new TextBox { Tag = "A" }, new TextBox { Tag = "B" } } };
+    [Test]
+    public void FindDescendantsOfType()
+    {
+        Control root = CreateTestHierarchy();
 
-            ClassicAssert.NotNull(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "A"));
-            ClassicAssert.NotNull(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "B"));
-            ClassicAssert.Null(root.FindDescendantOfType<TextBox>(t => t.Tag as string == "C"));
-        }
+        ClassicAssert.AreEqual(1, root.FindDescendantsOfType<TextBox>().Count());
+        ClassicAssert.AreEqual(1, root.FindDescendantsOfType<Button>().Count());
+        ClassicAssert.AreEqual(0, root.FindDescendantsOfType<Label>().Count());
+    }
+
+    [Test]
+    public void FindDescendantsOfTypeWithPredicate()
+    {
+        Control root = CreateTestHierarchy();
+
+        Button? foundButton = root.FindDescendantOfType<Button>(t => t.Text == "Click me");
+        ClassicAssert.NotNull(foundButton);
+        ClassicAssert.AreEqual("Click me", foundButton.Text);
+
+        Button? notFoundButton = root.FindDescendantOfType<Button>(t => t.Text == "Non-existent");
+        ClassicAssert.Null(notFoundButton);
     }
 }

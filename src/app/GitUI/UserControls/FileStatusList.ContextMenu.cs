@@ -3,8 +3,10 @@
 using System.Text;
 using GitCommands;
 using GitCommands.Git;
+using GitCommands.Git.Extended;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.HelperDialogs;
@@ -31,13 +33,13 @@ partial class FileStatusList
         J
         K Skip worktree
         L Delete, Show "Find in commit files"
-        M Assume unchanged
+        M Move, Assume unchanged
         N Open temp
         O Open (on file), Open (submodule), Collapse all (folder)
         P Copy paths
         Q
         R Reset files
-        S Stage, Sort and group by
+        S Stage, Sort and group by, Collapse root folders (file tree only)
         T Show in file tree, Stash submodule
         U Unstage, Update submodule
         V Open in VS
@@ -80,6 +82,7 @@ partial class FileStatusList
     private readonly TranslationString _deleteFailed = new("Delete file failed");
     private readonly TranslationString _firstRevision = new("First: A ");
     private readonly TranslationString _multipleDescription = new("<multiple>");
+    private readonly TranslationString _newName = new("New name");
     private readonly TranslationString _resetSelectedChangesText = new("Are you sure you want to reset all selected files to {0}?");
     private readonly TranslationString _saveFileFilterAllFiles = new("All files");
     private readonly TranslationString _saveFileFilterCurrentFormat = new("Current format");
@@ -407,16 +410,25 @@ partial class FileStatusList
             case RevisionDiffControl.Command.FilterFileInGrid: tsmiFilterFileInGrid.PerformClick(); break;
             case RevisionDiffControl.Command.SelectFirstGroupChanges: return SelectFirstGroupChangesIfFocused();
             case RevisionDiffControl.Command.FindFile: tsmiFindFile.PerformClick(); break;
-            case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep:
+            case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_DiffTab:
                 if (_isFileTreeMode)
                 {
-                    return base.ExecuteCommand(cmd);
+                    return false;
+                }
+
+                tsmiOpenFindInCommitFilesGitGrepDialog.PerformClick();
+                break;
+            case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_FileTreeTab:
+                if (!_isFileTreeMode)
+                {
+                    return false;
                 }
 
                 tsmiOpenFindInCommitFilesGitGrepDialog.PerformClick();
                 break;
             case RevisionDiffControl.Command.OpenInVisualStudio: tsmiOpenInVisualStudio.PerformClick(); break;
             case RevisionDiffControl.Command.AddFileToGitIgnore: return AddFileToGitIgnore();
+            case RevisionDiffControl.Command.RenameMove: tsmiMove.PerformClick(); break;
             default: return base.ExecuteCommand(cmd);
         }
 
@@ -667,6 +679,45 @@ partial class FileStatusList
         new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true, cancellationToken: _customDiffToolsSequence.Next());
     }
 
+    private void Move_Click(object sender, EventArgs e)
+    {
+        string? oldName = SelectedGitItem?.Name;
+        bool isFolder = oldName is null;
+        oldName ??= SelectedFolder?.Value;
+        if (oldName is null)
+        {
+            return;
+        }
+
+        string? title = tsmiMove.Text.RemoveMnemonicMarker();
+        using IUserInputPrompt prompt = UICommands.GetRequiredService<ISimplePromptCreator>().Create(title, label: _newName.Text, defaultValue: oldName);
+
+        // Repeat if name not different or if failed, let the user cancel explicitly
+        while (prompt.ShowDialog(this) == DialogResult.OK)
+        {
+            MoveCommand.Arguments arguments = new(isFolder, oldName, NewName: prompt.UserInput);
+            MoveCommand moveCommand = new(Module.GitExecutable);
+            if (!moveCommand.Validate(arguments))
+            {
+                continue;
+            }
+
+            try
+            {
+                moveCommand.Execute(arguments);
+                return;
+            }
+            catch (Exception exception)
+            {
+                MessageBoxes.ShowError(this, exception.Message, title);
+            }
+            finally
+            {
+                RequestRefresh();
+            }
+        }
+    }
+
     private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object? sender)
     {
         ToolStripMenuItem? item = sender as ToolStripMenuItem;
@@ -828,9 +879,10 @@ partial class FileStatusList
         tsmiShowInFileTree.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ShowFileTree);
         tsmiFilterFileInGrid.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FilterFileInGrid);
         tsmiFindFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindFile);
-        tsmiOpenFindInCommitFilesGitGrepDialog.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep);
+        tsmiOpenFindInCommitFilesGitGrepDialog.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(_isFileTreeMode ? RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_FileTreeTab : RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_DiffTab);
         tsmiOpenInVisualStudio.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenInVisualStudio);
         tsmiAddFileToGitIgnore.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.AddFileToGitIgnore);
+        tsmiMove.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.RenameMove);
     }
 
     private void RememberFirstRevDiff_Click(object sender, EventArgs e)
@@ -1205,6 +1257,7 @@ partial class FileStatusList
         tsmiShowInFolder.Visible = _revisionDiffController.ShouldShowMenuShowInFolder(selectionInfo);
         tsmiEditWorkingDirectoryFile.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
         tsmiOpenInVisualStudio.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo) && VisualStudioIntegration.IsVisualStudioInstalled;
+        tsmiMove.Visible = _revisionDiffController.ShouldShowMenuMove(selectionInfo);
         tsmiDeleteFile.Text = ResourceManager.TranslatedStrings.GetDeleteFile(selectionInfo.SelectedGitItemCount);
         tsmiDeleteFile.Enabled = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo);
         tsmiDeleteFile.Visible = tsmiDeleteFile.Enabled;
@@ -1212,8 +1265,7 @@ partial class FileStatusList
         tsmiCopyPaths.Enabled = _revisionDiffController.ShouldShowMenuCopyFileName(selectionInfo);
         tsmiShowInFolder.Enabled = selectedItems.Any(item => _fullPathResolver.Resolve(item.Item.Name) is string filePath && FormBrowseUtil.FileOrParentDirectoryExists(filePath));
 
-        // Visibility of FileTree is not known, assume (CommitInfoTabControl.Contains(TreeTabPage);)
-        tsmiShowInFileTree.Visible = _openInFileTreeTab_AsBlame is not null && _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
+        tsmiShowInFileTree.Visible = !_isFileTreeMode && _openInFileTreeTab_AsBlame is not null && _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         tsmiFilterFileInGrid.Enabled = _filterFileInGrid is not null && _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
         tsmiFileHistory.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
         tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame.Value || _blame is null

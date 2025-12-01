@@ -1,53 +1,52 @@
-﻿namespace GitExtUtils.GitUI
+﻿namespace GitExtUtils.GitUI;
+
+public static class ControlTagExtensions
 {
-    public static class ControlTagExtensions
+    public static bool HasTag<TValue>(this Control control) =>
+        control.HasTag<TValue>(typeof(TValue).FullName);
+
+    public static bool HasTag<TValue>(this Control control, string key)
     {
-        public static bool HasTag<TValue>(this Control control) =>
-            control.HasTag<TValue>(typeof(TValue).FullName);
-
-        public static bool HasTag<TValue>(this Control control, string key)
+        if (control.Tag is null)
         {
-            if (control.Tag is null)
-            {
-                return false;
-            }
-
-            return control.Tag is Dictionary<string, object> dict &&
-                dict.TryGetValue(key, out object value) &&
-                value is TValue;
+            return false;
         }
 
-        public static TValue? GetTag<TValue>(this Control control) =>
-            GetTag<TValue>(control, typeof(TValue).FullName);
+        return control.Tag is Dictionary<string, object> dict &&
+            dict.TryGetValue(key, out object value) &&
+            value is TValue;
+    }
 
-        public static TValue? GetTag<TValue>(this Control control, string key)
+    public static TValue? GetTag<TValue>(this Control control) =>
+        GetTag<TValue>(control, typeof(TValue).FullName);
+
+    public static TValue? GetTag<TValue>(this Control control, string key)
+    {
+        if (control.Tag is null ||
+            !(control.Tag is Dictionary<string, object?> dict) ||
+            !dict.TryGetValue(key, out object? result))
         {
-            if (control.Tag is null ||
-                !(control.Tag is Dictionary<string, object?> dict) ||
-                !dict.TryGetValue(key, out object? result))
-            {
-                return default;
-            }
-
-            return result is TValue typed
-                ? typed
-                : default;
+            return default;
         }
 
-        public static void SetTag<TValue>(this Control control, TValue value) =>
-            control.SetTag(typeof(TValue).FullName, value);
+        return result is TValue typed
+            ? typed
+            : default;
+    }
 
-        public static void SetTag<TValue>(this Control control, string key, TValue value)
+    public static void SetTag<TValue>(this Control control, TValue value) =>
+        control.SetTag(typeof(TValue).FullName, value);
+
+    public static void SetTag<TValue>(this Control control, string key, TValue value)
+    {
+        switch (control.Tag)
         {
-            switch (control.Tag)
-            {
-                case Dictionary<string, object?> dict:
-                    dict[key] = value;
-                    break;
-                default:
-                    control.Tag = new Dictionary<string, object?> { { key, value } };
-                    break;
-            }
+            case Dictionary<string, object?> dict:
+                dict[key] = value;
+                break;
+            default:
+                control.Tag = new Dictionary<string, object?> { { key, value } };
+                break;
         }
     }
 }

@@ -21,7 +21,7 @@
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="NString" Version="2.1.1" />
     <PackageVersion Include="RestSharp" Version="106.12.0" />
-    <PackageVersion Include="SmartFormat" Version="3.0.0" />
+    <PackageVersion Include="SmartFormat" Version="3.6.0" />
     <PackageVersion Include="StrongOf" Version="1.2.4" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="6.0.0" />    <!-- Required by GitExtensions.PluginManager -->

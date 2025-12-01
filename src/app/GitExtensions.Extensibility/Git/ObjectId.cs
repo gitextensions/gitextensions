@@ -313,11 +313,7 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
         // Operate on the smaller buffer possible
         Span<byte> bufferSlice = buffer.Slice(0, neededBytesCount);
 
-#if NET9_0_OR_GREATER
         return Convert.ToHexStringLower(bufferSlice).Substring(0, length);
-#else
-        return Convert.ToHexString(bufferSlice).Substring(0, length).ToLowerInvariant();
-#endif
     }
 
     #region Equality and hashing

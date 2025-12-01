@@ -216,3 +216,9 @@ YYYY/MM/DD, github id, Full name, email
 2024/11/05, anhtrvn, Anh Tran, anhtran18202(at)gmail.com
 2025/04/19, borzag, Boris Zagar, boris.zagar(at)gmail.com
 2025/05/03, hnalpha323, Muhammad Hamza Noor, hnalpha323(at)gmail.com
+2025/06/03, margaretselzer, Marcell Egyed, spam.myself@yahoo.com
+2025/07/09, KianFitz, Kian Fitzpatrick, kian.fitzpatrick2000(at)gmail.com
+2025/07/30, M-L-Ml, Mihas Malinouski, m.l.malinouski+gitextensions(at)gmail.comgmail.com
+2025/08/22, nikolaosginos, Nikolaos Ginos, nikolaos.gkinos(at)googlemail.com
+2025/10/06, logiclrd, Jonathan Gilbert, logic(at)deltaq.org
+2025/11/08, hultqvist, Peter Hultqvist, hultqvist@silentorbit.com

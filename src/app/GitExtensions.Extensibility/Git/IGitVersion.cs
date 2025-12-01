@@ -12,6 +12,8 @@ public interface IGitVersion : IComparable<IGitVersion>
     bool SupportStashStaged { get; }
     bool SupportUpdateRefs { get; }
 
+    // TODO bool SupportLsFilesFormat { get; }
+
     string ToString();
 
     public static bool operator >(IGitVersion left, IGitVersion? right) => left.CompareTo(right) > 0;

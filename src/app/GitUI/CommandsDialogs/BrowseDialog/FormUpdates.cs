@@ -88,6 +88,12 @@ public partial class FormUpdates : GitExtensionsDialog
                 CheckForNewerVersion(releases.Blob.Value.GetContent());
             }
         }
+        catch (Exception ex) when (ex.Message.Contains("rate limit", StringComparison.OrdinalIgnoreCase))
+        {
+            // GitHub API rate limiting - suppress the exception and do not show it to the user.
+            // Nothing we can do here, ignore it.
+            Done();
+        }
         catch (InvalidAsynchronousStateException)
         {
             // InvalidAsynchronousStateException (The destination thread no longer exists) is thrown

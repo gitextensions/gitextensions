@@ -32,7 +32,7 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
     private void Clear()
     {
         _multiValueSettings.Clear();
-        _uniqueValueSettings.Clear();
+        UniqueValueSettings.Clear();
     }
 
     public IEnumerable<(string Setting, string Value)> GetAllValues()
@@ -47,7 +47,7 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
             }
         }
 
-        foreach (KeyValuePair<string, string> unique in _uniqueValueSettings)
+        foreach (KeyValuePair<string, string> unique in UniqueValueSettings)
         {
             if (!_modifiedSettings.ContainsKey(unique.Key))
             {
@@ -73,29 +73,33 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
         }
 
         Update();
-        return _uniqueValueSettings.TryGetValue(name, out value) ? value : null;
+        return UniqueValueSettings.TryGetValue(name, out value) ? value : null;
     }
 
     public IReadOnlyList<string> GetValues(string name)
     {
         name = NormalizeSettingName(name);
         Update();
-        return _multiValueSettings.TryGetValue(name, out List<string>? values) ? values : [];
+        return _multiValueSettings.TryGetValue(name, out List<string>? values)
+            ? values
+            : GetValue(name) is string value
+                ? [value]
+                : [];
     }
 
     public void Save()
     {
         foreach ((string name, string? value) in _modifiedSettings)
         {
-            _gitExecutable.SetGitSetting(_gitSettingLevel, name, value, append: false);
+            GitExecutable.SetGitSetting(GitSettingLevel, name, value, append: false);
 
             if (value is null)
             {
-                _uniqueValueSettings.Remove(name);
+                UniqueValueSettings.Remove(name);
             }
             else
             {
-                _uniqueValueSettings[name] = value;
+                UniqueValueSettings[name] = value;
             }
         }
 
@@ -106,7 +110,7 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
     {
         if (_multiValueSettings.ContainsKey(name))
         {
-            throw new InvalidOperationException(@"Changing multi-value git settings is not supported. Tried to set ""{name}"" = ""{value}"".");
+            throw new InvalidOperationException(@$"Changing multi-value git settings is not supported. Tried to set ""{name}"" = ""{value}"".");
         }
 
         name = NormalizeSettingName(name);
@@ -121,7 +125,7 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
             return;
         }
 
-        if (_uniqueValueSettings.TryGetValue(name, out string? storedValue) && value == storedValue)
+        if (UniqueValueSettings.TryGetValue(name, out string? storedValue) && value == storedValue)
         {
             _modifiedSettings.Remove(name);
         }
@@ -139,14 +143,14 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
             return;
         }
 
-        if (!_uniqueValueSettings.TryAdd(name, value))
+        if (!UniqueValueSettings.TryAdd(name, value))
         {
-            _uniqueValueSettings.Remove(name, out string? firstValue);
+            UniqueValueSettings.Remove(name, out string? firstValue);
             _multiValueSettings.Add(name, [firstValue!, value]);
         }
     }
 
     protected override void Update() => Update(Clear, StoreSetting);
 
-    private new string DebuggerDisplay => $"{{ {_gitSettingLevel}, {(Valid ? "" : "in")}valid, {_uniqueValueSettings.Count} + {_modifiedSettings.Count}! + {_multiValueSettings.Count}* }}";
+    private new string DebuggerDisplay => $"{{ {GitSettingLevel}, {(IsValid ? "" : "in")}valid, {UniqueValueSettings.Count} + {_modifiedSettings.Count}! + {_multiValueSettings.Count}* }}";
 }

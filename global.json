@@ -1,4 +1,4 @@
-﻿{
+{
     "sdk": {
         "version": "9.0",
         "rollForward": "feature"

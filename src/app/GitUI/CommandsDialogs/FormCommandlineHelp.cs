@@ -1,11 +1,10 @@
-﻿namespace GitUI.CommandsDialogs
+﻿namespace GitUI.CommandsDialogs;
+
+public partial class FormCommandlineHelp : GitExtensionsForm
 {
-    public partial class FormCommandlineHelp : GitExtensionsForm
+    public FormCommandlineHelp()
     {
-        public FormCommandlineHelp()
-        {
-            InitializeComponent();
-            InitializeComplete();
-        }
+        InitializeComponent();
+        InitializeComplete();
     }
 }

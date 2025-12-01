@@ -1,27 +1,26 @@
 ﻿#nullable enable
 
-namespace GitUI
+namespace GitUI;
+
+public static class BitmapExtensions
 {
-    public static class BitmapExtensions
+    public static Icon ToIcon(this Bitmap bitmap)
     {
-        public static Icon ToIcon(this Bitmap bitmap)
+        ArgumentNullException.ThrowIfNull(bitmap);
+
+        IntPtr handle = IntPtr.Zero;
+        try
         {
-            ArgumentNullException.ThrowIfNull(bitmap);
+            handle = bitmap.GetHicon();
+            Icon icon = Icon.FromHandle(handle);
 
-            IntPtr handle = IntPtr.Zero;
-            try
+            return (Icon)icon.Clone();
+        }
+        finally
+        {
+            if (handle != IntPtr.Zero)
             {
-                handle = bitmap.GetHicon();
-                Icon icon = Icon.FromHandle(handle);
-
-                return (Icon)icon.Clone();
-            }
-            finally
-            {
-                if (handle != IntPtr.Zero)
-                {
-                    NativeMethods.DestroyIcon(handle);
-                }
+                NativeMethods.DestroyIcon(handle);
             }
         }
     }

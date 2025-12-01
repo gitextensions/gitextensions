@@ -50,7 +50,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
-        <target>周期性后台拉取</target>
+        <target>周期性背景提取</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
@@ -61,6 +61,11 @@
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
         <target>拉取所有子模块</target>
+        
+      </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
+        <target>打开存储库时立即获取</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
@@ -210,7 +215,7 @@
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
         <source>Repository</source>
-        <target>档案库</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="lblReviewerView.Text">
@@ -225,12 +230,12 @@
       </trans-unit>
       <trans-unit id="lblSourceRepoView.Text">
         <source>Repository</source>
-        <target>档案库</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepository.Text">
         <source>Repository</source>
-        <target>档案库</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="lblState.Text">
@@ -265,7 +270,7 @@
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>创建推送请求</target>
+        <target>创建拉取请求</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
@@ -750,7 +755,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
-        <target>Git工作流</target>
+        <target>GitFlow</target>
         
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
@@ -865,7 +870,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="lnkGitFlow.ttGitFlow">
         <source>A good branch model for your project with Git...</source>
-        <target>用Git为您的项目搭建好分支模型...</target>
+        <target>在使用 Git 管理儲存庫時，一個良好的分支模型對於你的專案至關重要...</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
@@ -901,9 +906,24 @@ Are you sure you want to continue?</source>
         <target>个人访问令牌</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>错误</target>
+        
+      </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
         <target>生成GitHub个人访问令牌</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
+        <source>Enable commit message issue helper</source>
+        <target>启用提交信息问题助手</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
+        <target>检索到的最大问题数量</target>
         
       </trans-unit>
       <trans-unit id="_manageToken.Text">
@@ -911,9 +931,19 @@ Are you sure you want to continue?</source>
         <target>管理GitHub个人访问令牌</target>
         
       </trans-unit>
+      <trans-unit id="_noAssignedIssues.Text">
+        <source>No assigned GitHub issues found</source>
+        <target>未找到分配的 GitHub 问题</target>
+        
+      </trans-unit>
+      <trans-unit id="_noTokenError.Text">
+        <source>No GitHub personal access token (PAT) defined</source>
+        <target>未定义GitHub个人访问令牌（PAT）</target>
+        
+      </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
-        <target>注：需要重新启动 Git Extensions 以使令牌生效。</target>
+        <target>註：需要重新啟動 Git Extensions 以使令牌生效。</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
@@ -937,7 +967,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
-        <target>影响图</target>
+        <target>影响图形</target>
         
       </trans-unit>
     </body>
@@ -1114,7 +1144,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Repository</source>
-        <target>档案库</target>
+        <target>版本库</target>
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
@@ -1152,7 +1182,7 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Jira Commit Hint</source>
-        <target>Jira 提交提示</target>
+        <target>Jira Commit 提示</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultCaption.Text">
@@ -1202,7 +1232,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_authTypeSettings.Caption">
         <source>Auth type</source>
-        <target>认证类型</target>
+        <target>認證類型</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
@@ -1437,7 +1467,7 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
-        <target>发布说明生成器</target>
+        <target>发行注记</target>
         
       </trans-unit>
     </body>

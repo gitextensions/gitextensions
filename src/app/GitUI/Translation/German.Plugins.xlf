@@ -63,6 +63,10 @@
         <target>Alle Untermodule holen</target>
         
       </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
+        
+      </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
         <target>Fetch alle x (Sekunden) ausführen - 0 zum abschalten</target>
@@ -265,12 +269,12 @@
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>Pull Request erzeugen</target>
+        <target>Pull-Request erzeugen</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>Pull Requests anzeigen</target>
+        <target>Pull-Requests anzeigen</target>
         
       </trans-unit>
     </body>
@@ -534,7 +538,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
-        <target>Sind Sie sich sicher, dass Sie die ausgewählte(n) Datei(en) löschen wollen?</target>
+        <target>Sind Sie sicher, dass die ausgewählten Dateien gelöscht werden sollen?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -544,7 +548,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
         <source>Commit count</source>
-        <target>Commit Anzahl</target>
+        <target>Anzahl Commits</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
@@ -554,7 +558,7 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>Lokale Änderungen zurücksetzen bevor Dateien gelöscht werden. Wählen Sie die Daten zum Löschen aus. Force Push um die Daten auf dem Remote Repository zu ersetzen.</target>
+        <target>Setzen Sie lokale Änderungen vor dem Löschen von Dateien zurück. Wählen Sie Dateien zum Löschen. Erzwingen Sie den Push, um Daten im Remote zu ersetzen.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
@@ -901,14 +905,34 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
         <target>Persönlicher Zugriffstoken</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        
+      </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
-        <target>Erzeuge einen persönlichen GitHub Zugriffstoken</target>
+        <target>Erzeuge einen persönlichen GitHub-Zugriffstoken</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
+        <source>Enable commit message issue helper</source>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
         
       </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
         <target>Verwalte persönlichen GitHub-Zugriffstoken</target>
+        
+      </trans-unit>
+      <trans-unit id="_noAssignedIssues.Text">
+        <source>No assigned GitHub issues found</source>
+        
+      </trans-unit>
+      <trans-unit id="_noTokenError.Text">
+        <source>No GitHub personal access token (PAT) defined</source>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">

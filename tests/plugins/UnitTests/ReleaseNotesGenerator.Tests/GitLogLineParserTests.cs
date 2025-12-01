@@ -1,57 +1,57 @@
 ﻿using FluentAssertions;
 using GitExtensions.Plugins.ReleaseNotesGenerator;
 
-namespace ReleaseNotesGeneratorTests
+namespace ReleaseNotesGeneratorTests;
+
+[TestFixture]
+public class GitLogLineParserTests
 {
-    [TestFixture]
-    public class GitLogLineParserTests
+    private IGitLogLineParser _parser;
+
+    [SetUp]
+    public void Setup()
     {
-        private IGitLogLineParser _parser;
+        _parser = new GitLogLineParser();
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            _parser = new GitLogLineParser();
-        }
+    [TestCase(null)]
+    [TestCase("")]
+    [TestCase("    ")]
+    public void Parse_line_should_return_null(string line)
+    {
+        _parser.Parse(line).Should().BeNull();
+    }
 
-        [TestCase(null)]
-        [TestCase("")]
-        [TestCase("    ")]
-        public void Parse_line_should_return_null(string line)
-        {
-            _parser.Parse(line).Should().BeNull();
-        }
+    [Test]
+    public void Parse_line_should_return_null_non_matching_line()
+    {
+        string line = "234_42sfsd@asfkmsa askflsak ";
+        _parser.Parse(line).Should().BeNull();
+    }
 
-        [Test]
-        public void Parse_line_should_return_null_non_matching_line()
-        {
-            string line = "234_42sfsd@asfkmsa askflsak ";
-            _parser.Parse(line).Should().BeNull();
-        }
+    [TestCase("0824@RevisionDiffProvider Release tests", "0824", "RevisionDiffProvider Release tests")]
+    [TestCase("0824e058c@RevisionDiffProvider Release tests", "0824e058c", "RevisionDiffProvider Release tests")]
+    [TestCase("0824e058c0123@RevisionDiffProvider Release tests", "0824e058c0123", "RevisionDiffProvider Release tests")]
+    [TestCase("0824e058c@RevisionDiffProvider@ Release tests", "0824e058c", "RevisionDiffProvider@ Release tests")]
+    public void Parse_line_should_parse_correctly(string line, string expectedHash, string expectedMessage)
+    {
+        LogLine logLine = _parser.Parse(line);
 
-        [TestCase("0824@RevisionDiffProvider Release tests", "0824", "RevisionDiffProvider Release tests")]
-        [TestCase("0824e058c@RevisionDiffProvider Release tests", "0824e058c", "RevisionDiffProvider Release tests")]
-        [TestCase("0824e058c0123@RevisionDiffProvider Release tests", "0824e058c0123", "RevisionDiffProvider Release tests")]
-        [TestCase("0824e058c@RevisionDiffProvider@ Release tests", "0824e058c", "RevisionDiffProvider@ Release tests")]
-        public void Parse_line_should_parse_correctly(string line, string expectedHash, string expectedMessage)
-        {
-            LogLine logLine = _parser.Parse(line);
+        logLine.Should().NotBeNull();
+        logLine.Commit.Should().Be(expectedHash);
+        logLine.MessageLines[0].Should().Be(expectedMessage);
+    }
 
-            logLine.Should().NotBeNull();
-            logLine.Commit.Should().Be(expectedHash);
-            logLine.MessageLines[0].Should().Be(expectedMessage);
-        }
+    [Test]
+    public void Parse_lines_should_return_empty_list_if_null()
+    {
+        _parser.Parse((string[])null).Should().BeEmpty();
+    }
 
-        [Test]
-        public void Parse_lines_should_return_empty_list_if_null()
-        {
-            _parser.Parse((string[])null).Should().BeEmpty();
-        }
-
-        [Test]
-        public void Parse_lines_should_parse_correctly()
-        {
-            string log = @"7895ec59f@Merge remote-tracking branch 'gitextensions/master' into feature-4157/n4031-compare-arificial-commits
+    [Test]
+    public void Parse_lines_should_parse_correctly()
+    {
+        string log = @"7895ec59f@Merge remote-tracking branch 'gitextensions/master' into feature-4157/n4031-compare-arificial-commits
 77fc3cb50@Reset to artificial commits require special handling (#4175)* #4031 Reset to artificial commits require special handling
 
 Reset to Unstaged commits does not make sense at all and should be hidden in the GUI
@@ -91,25 +91,24 @@ The irrelevant commands are disabled
 There are some existing checks for bareRepositories in InternalInitialize() (where some init code is running...) that al
 so could be removed after this (some were missing from that menu). checkoutBranchToolStripMenuItem is a little special t";
 
-            List<LogLine> logLines = _parser.Parse(log.Replace("\r\n", "\n").Split('\n')).ToList();
+        List<LogLine> logLines = _parser.Parse(log.Replace("\r\n", "\n").Split('\n')).ToList();
 
-            logLines.Should().HaveCount(18);
+        logLines.Should().HaveCount(18);
 
-            LogLine line = logLines.SingleOrDefault(l => l.Commit == "77fc3cb50");
-            line.Should().NotBeNull();
-            line.MessageLines.Should().HaveCount(10);
+        LogLine line = logLines.SingleOrDefault(l => l.Commit == "77fc3cb50");
+        line.Should().NotBeNull();
+        line.MessageLines.Should().HaveCount(10);
 
-            line = logLines.SingleOrDefault(l => l.Commit == "57ab3ff2d6546");
-            line.Should().NotBeNull();
-            line.MessageLines.Should().ContainSingle();
+        line = logLines.SingleOrDefault(l => l.Commit == "57ab3ff2d6546");
+        line.Should().NotBeNull();
+        line.MessageLines.Should().ContainSingle();
 
-            line = logLines.SingleOrDefault(l => l.Commit == "ef98f");
-            line.Should().NotBeNull();
-            line.MessageLines.Should().ContainSingle();
+        line = logLines.SingleOrDefault(l => l.Commit == "ef98f");
+        line.Should().NotBeNull();
+        line.MessageLines.Should().ContainSingle();
 
-            line = logLines.SingleOrDefault(l => l.Commit == "eb945eff4");
-            line.Should().NotBeNull();
-            line.MessageLines.Should().HaveCount(3);
-        }
+        line = logLines.SingleOrDefault(l => l.Commit == "eb945eff4");
+        line.Should().NotBeNull();
+        line.MessageLines.Should().HaveCount(3);
     }
 }

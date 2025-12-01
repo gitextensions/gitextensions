@@ -1,119 +1,118 @@
 ﻿using Newtonsoft.Json.Linq;
 using RestSharp;
 
-namespace GitExtensions.Plugins.Bitbucket
+namespace GitExtensions.Plugins.Bitbucket;
+
+internal sealed class PullRequest
 {
-    internal sealed class PullRequest
+    public static PullRequest Parse(JObject json)
     {
-        public static PullRequest Parse(JObject json)
+        PullRequest request = new()
         {
-            PullRequest request = new()
-            {
-                Id = json["id"].ToString(),
-                Version = json["version"].ToString(),
-                State = json["state"].ToString(),
-                Title = json["title"].ToString(),
-                Description = json["description"]?.ToString() ?? "",
-                Author = json["author"]["user"]["displayName"].ToString(),
-                SrcProjectName = json["fromRef"]["repository"]["project"]["name"].ToString(),
-                SrcRepo = json["fromRef"]["repository"]["name"].ToString(),
-                SrcBranch = json["fromRef"]["displayId"].ToString(),
-                DestProjectName = json["toRef"]["repository"]["project"]["name"].ToString(),
-                DestProjectKey = json["toRef"]["repository"]["project"]["key"].ToString(),
-                DestRepo = json["toRef"]["repository"]["name"].ToString(),
-                DestBranch = json["toRef"]["displayId"].ToString(),
-                CreatedDate = Convert.ToDouble(json["createdDate"].ToString()[..10])
-            };
-            JToken reviewers = json["reviewers"];
-            JToken participants = json["participants"];
+            Id = json["id"].ToString(),
+            Version = json["version"].ToString(),
+            State = json["state"].ToString(),
+            Title = json["title"].ToString(),
+            Description = json["description"]?.ToString() ?? "",
+            Author = json["author"]["user"]["displayName"].ToString(),
+            SrcProjectName = json["fromRef"]["repository"]["project"]["name"].ToString(),
+            SrcRepo = json["fromRef"]["repository"]["name"].ToString(),
+            SrcBranch = json["fromRef"]["displayId"].ToString(),
+            DestProjectName = json["toRef"]["repository"]["project"]["name"].ToString(),
+            DestProjectKey = json["toRef"]["repository"]["project"]["key"].ToString(),
+            DestRepo = json["toRef"]["repository"]["name"].ToString(),
+            DestBranch = json["toRef"]["displayId"].ToString(),
+            CreatedDate = Convert.ToDouble(json["createdDate"].ToString()[..10])
+        };
+        JToken reviewers = json["reviewers"];
+        JToken participants = json["participants"];
 
-            if (!reviewers.HasValues)
+        if (!reviewers.HasValues)
+        {
+            request.Reviewers = "None";
+        }
+        else
+        {
+            request.Reviewers = "";
+
+            foreach (JToken reviewer in reviewers)
             {
-                request.Reviewers = "None";
+                request.Reviewers += reviewer["user"]["displayName"] + " (" + reviewer["approved"] + ")" + Environment.NewLine;
             }
-            else
-            {
-                request.Reviewers = "";
-
-                foreach (JToken reviewer in reviewers)
-                {
-                    request.Reviewers += reviewer["user"]["displayName"] + " (" + reviewer["approved"] + ")" + Environment.NewLine;
-                }
-            }
-
-            if (!participants.HasValues)
-            {
-                request.Participants = "None";
-            }
-            else
-            {
-                request.Participants = "";
-
-                foreach (JToken participant in participants)
-                {
-                    request.Participants += participant["user"]["displayName"] + " (" + participant["approved"] + ")" + Environment.NewLine;
-                }
-            }
-
-            return request;
         }
 
-        public string? Id { get; set; }
-        public string? Version { get; set; }
-        public string? DestProjectKey { get; set; }
-        public string? State { get; set; }
-        public string? SrcProjectName { get; set; }
-        public string? DestProjectName { get; set; }
-        public string? Title { get; set; }
-        public string? Description { get; set; }
-        public string? Reviewers { get; set; }
-        public string? Participants { get; set; }
-        public string? Author { get; set; }
-        public string? SrcRepo { get; set; }
-        public string? SrcBranch { get; set; }
-        public string? DestRepo { get; set; }
-        public string? DestBranch { get; set; }
-        public double CreatedDate { get; set; }
-
-        public string SrcDisplayName => $"{SrcProjectName}/{SrcRepo}";
-        public string DestDisplayName => $"{DestProjectName}/{DestRepo}";
-        public string DisplayName => $"#{Id}: {Title}, {ConvertFromUnixTimestamp(CreatedDate):yyyy-MM-dd}";
-
-        private static readonly DateTime _epoch = new(1970, 1, 1, 0, 0, 0, 0);
-
-        public static DateTime ConvertFromUnixTimestamp(double timestamp)
+        if (!participants.HasValues)
         {
-            return _epoch.AddSeconds(timestamp);
+            request.Participants = "None";
         }
+        else
+        {
+            request.Participants = "";
+
+            foreach (JToken participant in participants)
+            {
+                request.Participants += participant["user"]["displayName"] + " (" + participant["approved"] + ")" + Environment.NewLine;
+            }
+        }
+
+        return request;
     }
 
-    internal class GetPullRequest : BitbucketRequestBase<List<PullRequest>>
+    public string? Id { get; set; }
+    public string? Version { get; set; }
+    public string? DestProjectKey { get; set; }
+    public string? State { get; set; }
+    public string? SrcProjectName { get; set; }
+    public string? DestProjectName { get; set; }
+    public string? Title { get; set; }
+    public string? Description { get; set; }
+    public string? Reviewers { get; set; }
+    public string? Participants { get; set; }
+    public string? Author { get; set; }
+    public string? SrcRepo { get; set; }
+    public string? SrcBranch { get; set; }
+    public string? DestRepo { get; set; }
+    public string? DestBranch { get; set; }
+    public double CreatedDate { get; set; }
+
+    public string SrcDisplayName => $"{SrcProjectName}/{SrcRepo}";
+    public string DestDisplayName => $"{DestProjectName}/{DestRepo}";
+    public string DisplayName => $"#{Id}: {Title}, {ConvertFromUnixTimestamp(CreatedDate):yyyy-MM-dd}";
+
+    private static readonly DateTime _epoch = new(1970, 1, 1, 0, 0, 0, 0);
+
+    public static DateTime ConvertFromUnixTimestamp(double timestamp)
     {
-        private readonly string _projectKey;
-        private readonly string _repoName;
-        public GetPullRequest(string projectKey, string repoName, Settings settings)
-            : base(settings)
+        return _epoch.AddSeconds(timestamp);
+    }
+}
+
+internal class GetPullRequest : BitbucketRequestBase<List<PullRequest>>
+{
+    private readonly string _projectKey;
+    private readonly string _repoName;
+    public GetPullRequest(string projectKey, string repoName, Settings settings)
+        : base(settings)
+    {
+        _projectKey = projectKey;
+        _repoName = repoName;
+    }
+
+    protected override object? RequestBody => null;
+
+    protected override Method RequestMethod => Method.GET;
+
+    protected override string ApiUrl => string.Format("/rest/api/latest/projects/{0}/repos/{1}/pull-requests?directions=incoming",
+        _projectKey, _repoName);
+
+    protected override List<PullRequest> ParseResponse(JObject json)
+    {
+        List<PullRequest> result = [];
+        foreach (JObject val in json["values"])
         {
-            _projectKey = projectKey;
-            _repoName = repoName;
+            result.Add(PullRequest.Parse(val));
         }
 
-        protected override object? RequestBody => null;
-
-        protected override Method RequestMethod => Method.GET;
-
-        protected override string ApiUrl => string.Format("/rest/api/latest/projects/{0}/repos/{1}/pull-requests?directions=incoming",
-            _projectKey, _repoName);
-
-        protected override List<PullRequest> ParseResponse(JObject json)
-        {
-            List<PullRequest> result = [];
-            foreach (JObject val in json["values"])
-            {
-                result.Add(PullRequest.Parse(val));
-            }
-
-            return result;
-        }
+        return result;
     }
 }

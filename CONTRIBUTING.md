@@ -20,10 +20,10 @@ existing or closely related issue before creating a new one. Be sure to include 
 in your search.
 
 If an open issue already exists, read through the discussion. If you can add something helpful, do so.
-Add a 👍 if you'd like to see it prioritised. Subscribe to the issue for updates.
+Add a 👍 if you'd like to see it prioritized. Subscribe to the issue for updates.
 
 If a closed issue already exists and the issue was addressed, you may like to try one of the
-[CI builds](https://github.com/gitextensions/gitextensions/wiki/CI-Builds).
+[CI builds](https://github.com/gitextensions/gitextensions/wiki/Canary-Builds).
 
 If no issue exists, create one. Complete the template, and add any further information that
 could be relevant such as steps to reproduce, stack traces, screenshots, git/OS version, etc.
@@ -54,6 +54,7 @@ Specifically:
 - Include a clear description of the changes and why they should be made
 - Be accompanied by unit tests
 - Be consistent with the current code style
+  Most style guides etc are referred to in [Copilot instructions](https://github.com/gitextensions/gitextensions/blob/master/.github/copilot-instructions.md).
 
 When filing a pull request, you should be prepared to answer questions about your changes
 and to perform additional work on the changes in response to review feedback.
@@ -63,4 +64,3 @@ and to perform additional work on the changes in response to review feedback.
 ## Conduct
 
 Please review our [code of conduct](CODE_OF_CONDUCT.md).
-

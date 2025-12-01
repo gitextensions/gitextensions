@@ -9,254 +9,253 @@ using Microsoft.VisualStudio.Threading;
 using NUnit.Framework;
 using NUnit.Framework.Interfaces;
 
-namespace CommonTestUtils
+namespace CommonTestUtils;
+
+[AttributeUsage(AttributeTargets.Assembly)]
+public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestAction
 {
-    [AttributeUsage(AttributeTargets.Assembly)]
-    public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestAction
+    private DenyExecutionSynchronizationContext _denyExecutionSynchronizationContext;
+    private HangReporter _hangReporter;
+    private ExceptionDispatchInfo _threadException;
+
+    public ActionTargets Targets => ActionTargets.Test;
+
+    public ConfigureJoinableTaskFactoryAttribute()
     {
-        private DenyExecutionSynchronizationContext _denyExecutionSynchronizationContext;
-        private HangReporter _hangReporter;
-        private ExceptionDispatchInfo _threadException;
+        Application.ThreadException += HandleApplicationThreadException;
+    }
 
-        public ActionTargets Targets => ActionTargets.Test;
+    public void BeforeTest(ITest test)
+    {
+        ClassicAssert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
 
-        public ConfigureJoinableTaskFactoryAttribute()
+        IList apartmentState = null;
+        for (ITest scope = test; scope is not null; scope = scope.Parent)
         {
-            Application.ThreadException += HandleApplicationThreadException;
-        }
-
-        public void BeforeTest(ITest test)
-        {
-            ClassicAssert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
-
-            IList apartmentState = null;
-            for (ITest scope = test; scope is not null; scope = scope.Parent)
+            apartmentState = scope.Properties[nameof(ApartmentState)];
+            if (apartmentState.Count > 0)
             {
-                apartmentState = scope.Properties[nameof(ApartmentState)];
-                if (apartmentState.Count > 0)
-                {
-                    break;
-                }
-            }
-
-            if (!apartmentState.Contains(ApartmentState.STA))
-            {
-                _denyExecutionSynchronizationContext = new DenyExecutionSynchronizationContext(SynchronizationContext.Current);
-                ThreadHelper.JoinableTaskContext = new JoinableTaskContext(_denyExecutionSynchronizationContext.MainThread, _denyExecutionSynchronizationContext);
-                return;
-            }
-
-            ClassicAssert.AreEqual(ApartmentState.STA, Thread.CurrentThread.GetApartmentState());
-
-            // This form is created to obtain a UI synchronization context only.
-            using (new Form())
-            {
-                // Store the shared JoinableTaskContext
-                ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
-                _hangReporter = new HangReporter(ThreadHelper.JoinableTaskContext);
+                break;
             }
         }
 
-        public void AfterTest(ITest test)
+        if (!apartmentState.Contains(ApartmentState.STA))
+        {
+            _denyExecutionSynchronizationContext = new DenyExecutionSynchronizationContext(SynchronizationContext.Current);
+            ThreadHelper.JoinableTaskContext = new JoinableTaskContext(_denyExecutionSynchronizationContext.MainThread, _denyExecutionSynchronizationContext);
+            return;
+        }
+
+        ClassicAssert.AreEqual(ApartmentState.STA, Thread.CurrentThread.GetApartmentState());
+
+        // This form is created to obtain a UI synchronization context only.
+        using (new Form())
+        {
+            // Store the shared JoinableTaskContext
+            ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
+            _hangReporter = new HangReporter(ThreadHelper.JoinableTaskContext);
+        }
+    }
+
+    public void AfterTest(ITest test)
+    {
+        try
         {
             try
             {
+                // Wait for eventual pending operations triggered by the test.
+                using CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout);
                 try
                 {
-                    // Wait for eventual pending operations triggered by the test.
-                    using CancellationTokenSource cts = new(AsyncTestHelper.UnexpectedTimeout);
-                    try
-                    {
-                        ThreadHelper.CancelSwitchToMainThread();
+                    ThreadHelper.CancelSwitchToMainThread();
 
-                        // Note that ThreadHelper.JoinableTaskContext.Factory must be used to bypass the default behavior of
-                        // ThreadHelper.JoinableTaskFactory since the latter adds new tasks to the collection and would therefore
-                        // never complete.
-                        ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
-                    }
-                    catch (OperationCanceledException) when (cts.IsCancellationRequested)
-                    {
-                        if (int.TryParse(Environment.GetEnvironmentVariable("GE_TEST_SLEEP_SECONDS_ON_HANG"), out int sleepSeconds) && sleepSeconds > 0)
-                        {
-                            Thread.Sleep(TimeSpan.FromSeconds(sleepSeconds));
-                        }
-
-                        throw;
-                    }
+                    // Note that ThreadHelper.JoinableTaskContext.Factory must be used to bypass the default behavior of
+                    // ThreadHelper.JoinableTaskFactory since the latter adds new tasks to the collection and would therefore
+                    // never complete.
+                    ThreadHelper.JoinableTaskContext.Factory.Run(() => ThreadHelper.JoinPendingOperationsAsync(cts.Token));
                 }
-                finally
+                catch (OperationCanceledException) when (cts.IsCancellationRequested)
                 {
-                    ThreadHelper.JoinableTaskContext = null;
-                    if (_denyExecutionSynchronizationContext is not null)
+                    if (int.TryParse(Environment.GetEnvironmentVariable("GE_TEST_SLEEP_SECONDS_ON_HANG"), out int sleepSeconds) && sleepSeconds > 0)
                     {
-                        SynchronizationContext.SetSynchronizationContext(_denyExecutionSynchronizationContext.UnderlyingContext);
+                        Thread.Sleep(TimeSpan.FromSeconds(sleepSeconds));
                     }
-                }
 
-                _denyExecutionSynchronizationContext?.ThrowIfSwitchOccurred();
-            }
-            catch (Exception ex) when (_threadException is not null)
-            {
-                StoreThreadException(ex);
+                    throw;
+                }
             }
             finally
             {
-                // Reset _threadException to null, and throw if it was set during the current test.
-                Interlocked.Exchange(ref _threadException, null)?.Throw();
+                ThreadHelper.JoinableTaskContext = null;
+                if (_denyExecutionSynchronizationContext is not null)
+                {
+                    SynchronizationContext.SetSynchronizationContext(_denyExecutionSynchronizationContext.UnderlyingContext);
+                }
             }
+
+            _denyExecutionSynchronizationContext?.ThrowIfSwitchOccurred();
+        }
+        catch (Exception ex) when (_threadException is not null)
+        {
+            StoreThreadException(ex);
+        }
+        finally
+        {
+            // Reset _threadException to null, and throw if it was set during the current test.
+            Interlocked.Exchange(ref _threadException, null)?.Throw();
+        }
+    }
+
+    private void HandleApplicationThreadException(object sender, ThreadExceptionEventArgs e)
+        => StoreThreadException(e.Exception);
+
+    private void StoreThreadException(Exception ex)
+    {
+        if (_threadException is not null)
+        {
+            ex = new AggregateException(new Exception[] { _threadException.SourceException, ex });
         }
 
-        private void HandleApplicationThreadException(object sender, ThreadExceptionEventArgs e)
-            => StoreThreadException(e.Exception);
+        _threadException = ExceptionDispatchInfo.Capture(ex);
+    }
 
-        private void StoreThreadException(Exception ex)
+    private class DenyExecutionSynchronizationContext : SynchronizationContext
+    {
+        private readonly SynchronizationContext _underlyingContext;
+        private readonly Thread _mainThread;
+        private readonly StrongBox<ExceptionDispatchInfo> _failedTransfer;
+
+        public DenyExecutionSynchronizationContext(SynchronizationContext underlyingContext)
+            : this(underlyingContext, mainThread: null, failedTransfer: null)
         {
-            if (_threadException is not null)
-            {
-                ex = new AggregateException(new Exception[] { _threadException.SourceException, ex });
-            }
-
-            _threadException = ExceptionDispatchInfo.Capture(ex);
         }
 
-        private class DenyExecutionSynchronizationContext : SynchronizationContext
+        private DenyExecutionSynchronizationContext(SynchronizationContext underlyingContext, Thread mainThread, StrongBox<ExceptionDispatchInfo> failedTransfer)
         {
-            private readonly SynchronizationContext _underlyingContext;
-            private readonly Thread _mainThread;
-            private readonly StrongBox<ExceptionDispatchInfo> _failedTransfer;
+            _underlyingContext = underlyingContext;
+            _mainThread = mainThread ?? new Thread(MainThreadStart);
+            _failedTransfer = failedTransfer ?? new StrongBox<ExceptionDispatchInfo>();
+        }
 
-            public DenyExecutionSynchronizationContext(SynchronizationContext underlyingContext)
-                : this(underlyingContext, mainThread: null, failedTransfer: null)
+        internal SynchronizationContext UnderlyingContext => _underlyingContext;
+
+        internal Thread MainThread => _mainThread;
+
+        private static void MainThreadStart() => throw new InvalidOperationException("This thread should never be started.");
+
+        internal void ThrowIfSwitchOccurred()
+        {
+            _failedTransfer.Value?.Throw();
+        }
+
+        public override void Post(SendOrPostCallback d, object state)
+        {
+            try
             {
+                if (_failedTransfer.Value is null)
+                {
+                    ThrowFailedTransferExceptionForCapture();
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                _failedTransfer.Value = ExceptionDispatchInfo.Capture(e);
             }
 
-            private DenyExecutionSynchronizationContext(SynchronizationContext underlyingContext, Thread mainThread, StrongBox<ExceptionDispatchInfo> failedTransfer)
+#pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
+            (_underlyingContext ?? new SynchronizationContext()).Post(d, state);
+#pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
+        }
+
+        public override void Send(SendOrPostCallback d, object state)
+        {
+            try
             {
-                _underlyingContext = underlyingContext;
-                _mainThread = mainThread ?? new Thread(MainThreadStart);
-                _failedTransfer = failedTransfer ?? new StrongBox<ExceptionDispatchInfo>();
+                if (_failedTransfer.Value is null)
+                {
+                    ThrowFailedTransferExceptionForCapture();
+                }
+            }
+            catch (InvalidOperationException e)
+            {
+                _failedTransfer.Value = ExceptionDispatchInfo.Capture(e);
             }
 
-            internal SynchronizationContext UnderlyingContext => _underlyingContext;
+#pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
+            (_underlyingContext ?? new SynchronizationContext()).Send(d, state);
+#pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
+        }
 
-            internal Thread MainThread => _mainThread;
+        public override SynchronizationContext CreateCopy()
+        {
+            return new DenyExecutionSynchronizationContext(_underlyingContext.CreateCopy(), _mainThread, _failedTransfer);
+        }
 
-            private static void MainThreadStart() => throw new InvalidOperationException("This thread should never be started.");
+        private static void ThrowFailedTransferExceptionForCapture()
+        {
+            throw new InvalidOperationException("Tests cannot use SwitchToMainThreadAsync unless they are marked with ApartmentState.STA.");
+        }
+    }
 
-            internal void ThrowIfSwitchOccurred()
+    private sealed class HangReporter : JoinableTaskContextNode
+    {
+        public HangReporter(JoinableTaskContext context)
+            : base(context)
+        {
+            RegisterOnHangDetected();
+        }
+
+        protected override void OnHangDetected(TimeSpan hangDuration, int notificationCount, Guid hangId)
+        {
+            if (notificationCount > 1)
             {
-                _failedTransfer.Value?.Throw();
+                return;
             }
 
-            public override void Post(SendOrPostCallback d, object state)
+            StringBuilder output = new();
+            output.AppendLine();
+            output.AppendLine($"HANG DETECTED: guid {hangId}");
+
+            HangReportContribution report = ((IHangReportContributor)Context).GetHangReport();
+            if (report.ContentName.EndsWith("dgml", StringComparison.InvariantCultureIgnoreCase))
             {
                 try
                 {
-                    if (_failedTransfer.Value is null)
-                    {
-                        ThrowFailedTransferExceptionForCapture();
-                    }
+                    string assemblyLocation = Assembly.GetExecutingAssembly().Location;
+                    string reportLocation = Path.GetDirectoryName(assemblyLocation);
+                    string reportFileName = Path.Combine(reportLocation, $"{hangId}.dgml");
+
+                    File.WriteAllText(reportFileName, report.Content);
+                    output.AppendLine($"HANG report: {reportFileName}");
                 }
-                catch (InvalidOperationException e)
+                catch
                 {
-                    _failedTransfer.Value = ExceptionDispatchInfo.Capture(e);
+                    /* no-op */
                 }
-
-#pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
-                (_underlyingContext ?? new SynchronizationContext()).Post(d, state);
-#pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
             }
-
-            public override void Send(SendOrPostCallback d, object state)
+            else
             {
-                try
-                {
-                    if (_failedTransfer.Value is null)
-                    {
-                        ThrowFailedTransferExceptionForCapture();
-                    }
-                }
-                catch (InvalidOperationException e)
-                {
-                    _failedTransfer.Value = ExceptionDispatchInfo.Capture(e);
-                }
-
-#pragma warning disable VSTHRD001 // Avoid legacy thread switching APIs
-                (_underlyingContext ?? new SynchronizationContext()).Send(d, state);
-#pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
+                output.AppendLine(report.ContentName);
+                output.AppendLine(report.ContentType);
+                output.AppendLine(report.Content);
             }
 
-            public override SynchronizationContext CreateCopy()
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(output.ToString());
+            Console.ResetColor();
+
+            // Allow seeing the output in Release builds
+            Trace.WriteLine(output.ToString());
+
+            if (Environment.GetEnvironmentVariable("GE_TEST_LAUNCH_DEBUGGER_ON_HANG") != "1")
             {
-                return new DenyExecutionSynchronizationContext(_underlyingContext.CreateCopy(), _mainThread, _failedTransfer);
+                return;
             }
 
-            private static void ThrowFailedTransferExceptionForCapture()
-            {
-                throw new InvalidOperationException("Tests cannot use SwitchToMainThreadAsync unless they are marked with ApartmentState.STA.");
-            }
-        }
+            Console.WriteLine("launching debugger...");
 
-        private sealed class HangReporter : JoinableTaskContextNode
-        {
-            public HangReporter(JoinableTaskContext context)
-                : base(context)
-            {
-                RegisterOnHangDetected();
-            }
-
-            protected override void OnHangDetected(TimeSpan hangDuration, int notificationCount, Guid hangId)
-            {
-                if (notificationCount > 1)
-                {
-                    return;
-                }
-
-                StringBuilder output = new();
-                output.AppendLine();
-                output.AppendLine($"HANG DETECTED: guid {hangId}");
-
-                HangReportContribution report = ((IHangReportContributor)Context).GetHangReport();
-                if (report.ContentName.EndsWith("dgml", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    try
-                    {
-                        string assemblyLocation = Assembly.GetExecutingAssembly().Location;
-                        string reportLocation = Path.GetDirectoryName(assemblyLocation);
-                        string reportFileName = Path.Combine(reportLocation, $"{hangId}.dgml");
-
-                        File.WriteAllText(reportFileName, report.Content);
-                        output.AppendLine($"HANG report: {reportFileName}");
-                    }
-                    catch
-                    {
-                        /* no-op */
-                    }
-                }
-                else
-                {
-                    output.AppendLine(report.ContentName);
-                    output.AppendLine(report.ContentType);
-                    output.AppendLine(report.Content);
-                }
-
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(output.ToString());
-                Console.ResetColor();
-
-                // Allow seeing the output in Release builds
-                Trace.WriteLine(output.ToString());
-
-                if (Environment.GetEnvironmentVariable("GE_TEST_LAUNCH_DEBUGGER_ON_HANG") != "1")
-                {
-                    return;
-                }
-
-                Console.WriteLine("launching debugger...");
-
-                Debugger.Launch();
-                Debugger.Break();
-            }
+            Debugger.Launch();
+            Debugger.Break();
         }
     }
 }

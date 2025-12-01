@@ -1,9 +1,8 @@
-﻿namespace GitExtensions.Plugins.Bitbucket
-{
-    public class BitbucketUser
-    {
-        public string? Slug { get; set; }
-    }
+﻿namespace GitExtensions.Plugins.Bitbucket;
 
-    // TODO implement GetUserRequest (partial implementation in previous version)
+public class BitbucketUser
+{
+    public string? Slug { get; set; }
 }
+
+// TODO implement GetUserRequest (partial implementation in previous version)

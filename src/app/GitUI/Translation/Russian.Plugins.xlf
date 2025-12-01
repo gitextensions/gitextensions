@@ -63,9 +63,13 @@
         <target>Забрать все субмодули</target>
         
       </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
+        
+      </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>Забирать каждые N (секунд) - установите в 0 чтобы отключить</target>
+        <target>Забирать каждые N (секунд) — установите в 0, чтобы отключить</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
@@ -391,7 +395,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press '{0}' to search for branches to delete.</source>
-        <target>Нажмите '{0}' чтобы найти ветки для удаления.</target>
+        <target>Нажмите '{0}', чтобы найти ветки для удаления.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -416,7 +420,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>Включить не слитые ветки</target>
+        <target>Включить неслитые ветки</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -544,7 +548,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
         <source>Commit count</source>
-        <target>Количество коммитов</target>
+        <target>Кол-во комитов</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
@@ -805,12 +809,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
         <source>Push after finish</source>
-        <target>Отправить после окончания</target>
+        <target>Отправить после завершения</target>
         
       </trans-unit>
       <trans-unit id="cbSquash.Text">
         <source>Squash</source>
-        <target>Объединить</target>
+        <target>Squash</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
@@ -820,7 +824,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
-        <target>Начальная ветка:</target>
+        <target>Начать ветку:</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -870,7 +874,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
-        <target>Результат запуска команды git flow</target>
+        <target>Результат выполнения команды git flow</target>
         
       </trans-unit>
     </body>
@@ -901,14 +905,37 @@ Are you sure you want to continue?</source>
         <target>Персональный токен доступа</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Ошибка</target>
+        
+      </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
         <target>Создание личного токена доступа GitHub</target>
         
       </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
+        <source>Enable commit message issue helper</source>
+        <target>Включить помощник по проблемам с сообщениями коммитов</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
+        
+      </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
         <target>Управление личным токеном доступа GitHub</target>
+        
+      </trans-unit>
+      <trans-unit id="_noAssignedIssues.Text">
+        <source>No assigned GitHub issues found</source>
+        
+      </trans-unit>
+      <trans-unit id="_noTokenError.Text">
+        <source>No GitHub personal access token (PAT) defined</source>
+        <target>Не определён личный токен доступа GitHub (PAT)</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
@@ -1015,8 +1042,8 @@ Are you sure you want to continue?</source>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>Не удаётся найти Gource.
-Пожалуйста, загрузите Gource и установите путь в окне настроек плагинов.</target>
+        <target>Не могу найти Gource.
+Пожалуйста загрузите Gource и установите путь в окне настроек плагинов.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1046,7 +1073,7 @@ Do you want to automatically download Gource?</source>
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>Скачивание не удалось.
-Пожалуйста, скачайте Gource и установите путь в окне настроек плагинов.</target>
+Пожалуйста скачайте Gource и установите путь в окне настроек плагинов.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1119,7 +1146,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
-        <target>Gource проект</target>
+        <target>Проект Gource</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
@@ -1182,6 +1209,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="JiraPluginConfigurationErrorText.Text">
         <source>Jira plugin configuration incomplete!</source>
+        <target>Настройка плагина Jira не завершена!</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
@@ -1527,10 +1555,10 @@ l.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>Буфер обмена не содержит допустимого адреса сборки.
+        <target>Буфер не содержит валидного адреса сборки.
 
-Пожалуйста, скопируйте адрес сборки перед очередной попыткой.
-(Как минимум должен содержаться параметр &quot;buildTypeId&quot;)</target>
+Пожалуйста скопируйте адрес сборки перед очередной попыткой.
+(Должен содержать &quot;buildTypeId&quot; параметр)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
@@ -1542,7 +1570,7 @@ Please copy in the clipboard the url of the build before retrying.
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
         <target>Неудачная загрузка проектов и списка сборки.
-Пожалуйста, проверьте адрес сервера.</target>
+Пожалуйста проверьте url сервера.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">

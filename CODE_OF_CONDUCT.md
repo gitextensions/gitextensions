@@ -58,7 +58,7 @@ further defined and clarified by project maintainers.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported by contacting the project team at gitextensions@outlook.com.
+reported by contacting the project team at <gitextensions@outlook.com>.
 Alternatively you may reach out to individual maintainers via their profile email,
 Twitter handle or LinkedIn messaging, as available and convenient. All
 complaints will be reviewed and investigated and will result in a response that
@@ -73,9 +73,9 @@ members of the project's leadership.
 ## Attribution
 
 This Code of Conduct is adapted from the [Contributor Covenant][homepage], version 1.4,
-available at https://www.contributor-covenant.org/version/1/4/code-of-conduct.html
+available at <https://www.contributor-covenant.org/version/1/4/code-of-conduct.html>
 
 [homepage]: https://www.contributor-covenant.org
 
 For answers to common questions about this code of conduct, see
-https://www.contributor-covenant.org/faq
+<https://www.contributor-covenant.org/faq>
