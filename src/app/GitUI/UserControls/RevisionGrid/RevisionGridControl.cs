@@ -1055,25 +1055,33 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                         stashesByParentId = getStashRevs.Value.ToLookup(r => r.FirstParentId);
 
                         // "untracked" commits to insert (parent to "stash" commits)
-                        Dictionary<ObjectId, ObjectId> untrackedChildIds = getStashRevs.Value.Where(stash => stash.ParentIds.Count >= 3)
+                        Dictionary<ObjectId, ObjectId> untrackedIdByStashId = getStashRevs.Value
+                            .Where(stash => stash.ParentIds.Count >= 3)
                             .Take(AppSettings.MaxStashesWithUntrackedFiles)
-                            .ToDictionary(stash => stash.ParentIds[2], stash => stash.ObjectId);
-                        IReadOnlyCollection<GitRevision> untrackedRevs = new RevisionReader(capturedModule)
-                            .GetRevisionsFromList(untrackedChildIds.Keys.ToList(), cancellationToken);
-                        untrackedByStashId = untrackedRevs.ToDictionary(r => untrackedChildIds[r.ObjectId]);
+                            .ToDictionary(stash => stash.ObjectId, stash => stash.ParentIds[2]);
+                        List<ObjectId> untrackedIds = [.. untrackedIdByStashId.Values.Distinct()];
+                        Dictionary<ObjectId, GitRevision> untrackedRevs = new RevisionReader(capturedModule)
+                            .GetRevisionsFromList(untrackedIds, cancellationToken)
+                            .ToDictionary(r => r.ObjectId);
+                        untrackedByStashId = untrackedIdByStashId
+                            .Select(e => (e.Key, untrackedRevs.TryGetValue(e.Value, out GitRevision rev) ? rev : null))
+                            .Where(e => e.Item2 is not null)
+                            .ToDictionary();
 
                         // Remove parents not included ("index" and empty "untracked" commits).
                         foreach (GitRevision stash in getStashRevs.Value)
                         {
-                            if (!untrackedByStashId.ContainsKey(stash.ObjectId))
-                            {
-                                stash.ParentIds = [stash.FirstParentId];
-                            }
-                            else
-                            {
-                                stash.ParentIds = [stash.FirstParentId, stash.ParentIds[2]];
-                            }
+                            stash.ParentIds = untrackedByStashId.ContainsKey(stash.ObjectId)
+                                ? [stash.FirstParentId, stash.ParentIds[2]]
+                                : [stash.FirstParentId];
                         }
+                    }
+                    catch
+                    {
+                        stashesById = null;
+                        stashesByParentId = null;
+                        untrackedByStashId = null;
+                        throw;
                     }
                     finally
                     {
