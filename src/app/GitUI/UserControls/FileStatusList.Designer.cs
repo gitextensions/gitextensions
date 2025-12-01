@@ -37,13 +37,11 @@ partial class FileStatusList
         columnHeader = new ColumnHeader();
         NoFiles = new Label();
         LoadingFiles = new Label();
-        _NO_TRANSLATE_FilterComboBox = new ComboBox();
-        FilterWatermarkLabel = new Label();
+        cboFilterComboBox = new WatermarkComboBox();
         FilterToolTip = new ToolTip(components);
         lblSplitter = new Label();
         DeleteFilterButton = new Label();
-        cboFindInCommitFilesGitGrep = new ComboBox();
-        lblFindInCommitFilesGitGrepWatermark = new Label();
+        cboFindInCommitFilesGitGrep = new WatermarkComboBox();
         DeleteSearchButton = new Label();
         Toolbar = new ToolStripEx();
         btnCollapseGroups = new ToolStripButton();
@@ -195,35 +193,21 @@ partial class FileStatusList
         LoadingFiles.Size = new Size(4, 19);
         LoadingFiles.TabIndex = 2;
         // 
-        // _NO_TRANSLATE_FilterComboBox
+        // cboFilterComboBox
         // 
-        _NO_TRANSLATE_FilterComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        _NO_TRANSLATE_FilterComboBox.FlatStyle = FlatStyle.Flat;
-        _NO_TRANSLATE_FilterComboBox.FormattingEnabled = true;
-        _NO_TRANSLATE_FilterComboBox.Location = new Point(0, 48);
-        _NO_TRANSLATE_FilterComboBox.Margin = new Padding(0);
-        _NO_TRANSLATE_FilterComboBox.Name = "_NO_TRANSLATE_FilterComboBox";
-        _NO_TRANSLATE_FilterComboBox.Size = new Size(682, 23);
-        _NO_TRANSLATE_FilterComboBox.TabIndex = 5;
-        _NO_TRANSLATE_FilterComboBox.SelectedIndexChanged += FilterComboBox_SelectedIndexChanged;
-        _NO_TRANSLATE_FilterComboBox.TextUpdate += FilterComboBox_TextUpdate;
-        _NO_TRANSLATE_FilterComboBox.SizeChanged += FilterComboBox_SizeChanged;
-        _NO_TRANSLATE_FilterComboBox.GotFocus += FilterComboBox_GotFocus;
-        _NO_TRANSLATE_FilterComboBox.LostFocus += FilterComboBox_LostFocus;
-        _NO_TRANSLATE_FilterComboBox.MouseEnter += FilterComboBox_MouseEnter;
-        // 
-        // FilterWatermarkLabel
-        // 
-        FilterWatermarkLabel.AutoSize = true;
-        FilterWatermarkLabel.BackColor = SystemColors.Window;
-        FilterWatermarkLabel.ForeColor = SystemColors.GrayText;
-        FilterWatermarkLabel.Location = new Point(0, 48);
-        FilterWatermarkLabel.Name = "FilterWatermarkLabel";
-        FilterWatermarkLabel.Padding = new Padding(2, 3, 2, 0);
-        FilterWatermarkLabel.Size = new Size(210, 18);
-        FilterWatermarkLabel.TabIndex = 6;
-        FilterWatermarkLabel.Text = "Filter files using a regular expression...";
-        FilterWatermarkLabel.Click += FilterWatermarkLabel_Click;
+        cboFilterComboBox.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        cboFilterComboBox.FlatStyle = FlatStyle.Flat;
+        cboFilterComboBox.FormattingEnabled = true;
+        cboFilterComboBox.Location = new Point(0, 48);
+        cboFilterComboBox.Margin = new Padding(0);
+        cboFilterComboBox.Name = "cboFilterComboBox";
+        cboFilterComboBox.Size = new Size(682, 23);
+        cboFilterComboBox.TabIndex = 5;
+        cboFilterComboBox.Watermark = "Filter files using a regular expression...";
+        cboFilterComboBox.SelectedIndexChanged += FilterComboBox_SelectedIndexChanged;
+        cboFilterComboBox.TextUpdate += FilterComboBox_TextUpdate;
+        cboFilterComboBox.SizeChanged += FilterComboBox_SizeChanged;
+        cboFilterComboBox.MouseEnter += FilterComboBox_MouseEnter;
         // 
         // FilterToolTip
         // 
@@ -266,24 +250,10 @@ partial class FileStatusList
         cboFindInCommitFilesGitGrep.Size = new Size(682, 23);
         cboFindInCommitFilesGitGrep.TabIndex = 0;
         cboFindInCommitFilesGitGrep.Tag = "ToolBar_group:Text search";
+        cboFindInCommitFilesGitGrep.Watermark = "Find in commit files using git-grep regular expression...";
         cboFindInCommitFilesGitGrep.SelectedIndexChanged += cboFindInCommitFilesGitGrep_SelectedIndexChanged;
         cboFindInCommitFilesGitGrep.TextUpdate += cboFindInCommitFilesGitGrep_TextUpdate;
         cboFindInCommitFilesGitGrep.SizeChanged += cboFindInCommitFilesGitGrep_SizeChanged;
-        cboFindInCommitFilesGitGrep.GotFocus += cboFindInCommitFilesGitGrep_GotFocus;
-        cboFindInCommitFilesGitGrep.LostFocus += cboFindInCommitFilesGitGrep_LostFocus;
-        // 
-        // lblFindInCommitFilesGitGrepWatermark
-        // 
-        lblFindInCommitFilesGitGrepWatermark.AutoSize = true;
-        lblFindInCommitFilesGitGrepWatermark.BackColor = SystemColors.Window;
-        lblFindInCommitFilesGitGrepWatermark.ForeColor = SystemColors.GrayText;
-        lblFindInCommitFilesGitGrepWatermark.Location = new Point(0, 25);
-        lblFindInCommitFilesGitGrepWatermark.Name = "lblFindInCommitFilesGitGrepWatermark";
-        lblFindInCommitFilesGitGrepWatermark.Padding = new Padding(2, 3, 2, 2);
-        lblFindInCommitFilesGitGrepWatermark.Size = new Size(302, 20);
-        lblFindInCommitFilesGitGrepWatermark.TabIndex = 3;
-        lblFindInCommitFilesGitGrepWatermark.Text = "Find in commit files using git-grep regular expression...";
-        lblFindInCommitFilesGitGrepWatermark.Click += lblFindInCommitFilesGitGrepWatermark_Click;
         // 
         // DeleteSearchButton
         // 
@@ -1066,13 +1036,11 @@ partial class FileStatusList
         AutoScaleMode = AutoScaleMode.Inherit;
         Controls.Add(LoadingFiles);
         Controls.Add(NoFiles);
-        Controls.Add(lblFindInCommitFilesGitGrepWatermark);
         Controls.Add(DeleteSearchButton);
-        Controls.Add(FilterWatermarkLabel);
         Controls.Add(DeleteFilterButton);
         Controls.Add(cboFindInCommitFilesGitGrep);
         Controls.Add(FileStatusListView);
-        Controls.Add(_NO_TRANSLATE_FilterComboBox);
+        Controls.Add(cboFilterComboBox);
         Controls.Add(lblSplitter);
         Controls.Add(Toolbar);
         Margin = new Padding(3, 4, 3, 4);
@@ -1091,13 +1059,11 @@ partial class FileStatusList
     private Label NoFiles;
     private Label LoadingFiles;
     private ColumnHeader columnHeader;
-    private ComboBox _NO_TRANSLATE_FilterComboBox;
-    private Label FilterWatermarkLabel;
+    private WatermarkComboBox cboFilterComboBox;
     private ToolTip FilterToolTip;
     private Label lblSplitter;
     private Label DeleteFilterButton;
-    private ComboBox cboFindInCommitFilesGitGrep;
-    private Label lblFindInCommitFilesGitGrepWatermark;
+    private WatermarkComboBox cboFindInCommitFilesGitGrep;
     private Label DeleteSearchButton;
     private ToolStripEx Toolbar;
     private ToolStripButton btnCollapseGroups;
