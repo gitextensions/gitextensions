@@ -2,6 +2,10 @@
 
 public sealed class GitSubmoduleStatus
 {
+    private Func<string, CommitData?> GetCommitData { get; }
+    private Func<GitSubmoduleStatus, SubmoduleStatus> GetSubmoduleStatus { get; }
+    private SubmoduleStatus? _cachedStatus = null;
+
     public string Name { get; }
     public string? OldName { get; }
     public bool IsDirty { get; }
@@ -10,9 +14,29 @@ public sealed class GitSubmoduleStatus
     public int? AddedCommits { get; }
     public int? RemovedCommits { get; }
 
-    public SubmoduleStatus Status { get; set; } = SubmoduleStatus.Unknown;
+    public SubmoduleStatus Status
+    {
+        get
+        {
+            if (_cachedStatus is not null)
+            {
+                return _cachedStatus.Value;
+            }
 
-    public GitSubmoduleStatus(string name, string? oldName, bool isDirty, ObjectId? commit, ObjectId? oldCommit, int? addedCommits, int? removedCommits)
+            _cachedStatus = GetSubmoduleStatus is null ? SubmoduleStatus.Unknown : GetSubmoduleStatus(this);
+            return _cachedStatus.Value;
+        }
+    }
+
+    public void ResetSubmoduleStatus() => _cachedStatus = null;
+
+    // Get CommitData without Notes (will cache contents)
+    public CommitData? CommitData
+        => GetCommitData is not null && Commit is not null ? GetCommitData(Commit.ToString()) : null;
+    public CommitData? OldCommitData
+        => GetCommitData is not null && OldCommit is not null ? GetCommitData(OldCommit.ToString()) : null;
+
+    public GitSubmoduleStatus(string name, string? oldName, bool isDirty, ObjectId? commit, ObjectId? oldCommit, int? addedCommits, int? removedCommits, Func<string, CommitData?> getCommitData, Func<GitSubmoduleStatus, SubmoduleStatus> getSubmoduleStatus)
     {
         ArgumentNullException.ThrowIfNull(name);
         Name = name;
@@ -22,37 +46,8 @@ public sealed class GitSubmoduleStatus
         OldCommit = oldCommit;
         AddedCommits = addedCommits;
         RemovedCommits = removedCommits;
-    }
-
-    public IGitModule GetSubmodule(IGitModule module)
-    {
-        // TODO remove from GitExtensions.Extensibility
-        return module.GetSubmodule(Name);
-    }
-
-    public void CheckSubmoduleStatus(IGitModule? submodule)
-    {
-        // TODO remove from GitExtensions.Extensibility
-        if (submodule is null)
-        {
-            if (OldCommit is null)
-            {
-                // If there is no old commit, it is a new submodule.
-                Status = SubmoduleStatus.NewSubmodule;
-                return;
-            }
-
-            if (Commit is null)
-            {
-                Status = SubmoduleStatus.RemovedSubmodule;
-                return;
-            }
-
-            Status = SubmoduleStatus.Unknown;
-            return;
-        }
-
-        Status = submodule.CheckSubmoduleStatus(Commit, OldCommit, data: null, oldData: null, loadData: true);
+        GetCommitData = getCommitData;
+        GetSubmoduleStatus = getSubmoduleStatus;
     }
 
     public string AddedAndRemovedString()

@@ -237,7 +237,6 @@ public interface IGitModule
     Task<string?> GetFileContentsAsync(GitItemStatus file);
     IReadOnlyList<GitStash> GetStashes(bool noLocks);
     IReadOnlyList<GitItemStatus> GetWorkTreeFiles();
-    SubmoduleStatus CheckSubmoduleStatus(ObjectId? commit, ObjectId? oldCommit, CommitData? data, CommitData? oldData, bool loadData);
     bool ResetAllChanges(bool clean, bool onlyWorkTree = false);
 
     /// <summary>
