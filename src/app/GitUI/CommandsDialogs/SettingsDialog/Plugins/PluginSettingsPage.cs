@@ -72,7 +72,7 @@ public partial class PluginSettingsPage : AutoLayoutSettingsPage
             throw new ApplicationException();
         }
 
-        return _gitPlugin.HasSettings ? _gitPlugin.GetSettings() : Array.Empty<ISetting>();
+        return _gitPlugin.HasSettings ? _gitPlugin.GetSettings() ?? Array.Empty<ISetting>() : Array.Empty<ISetting>();
     }
 
     public override SettingsPageReference PageReference
