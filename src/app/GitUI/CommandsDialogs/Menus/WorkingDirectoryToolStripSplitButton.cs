@@ -4,6 +4,7 @@ using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager;
 
@@ -72,11 +73,6 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
             _startToolStripMenuItem = startToolStripMenuItem;
             _closeToolStripMenuItem = closeToolStripMenuItem;
 
-            // Even 20 char filter is excessive, but we'll set it at this.
-            // Show a compelling use case to increase.
-            _txtFilter.MaxLength = 20;
-
-            _txtFilter.Size = new Size(250, 23);
             _txtFilter.Tag = _excludeFromFilterMarker;
 
             TextBox filterTextbox = _txtFilter.TextBox;
@@ -125,7 +121,7 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
                 }
             };
 
-            // Initilize toolstip menu items
+            // Initialize toolstip menu items
             // ----------------------------------------
             _tsmiCategorisedRepos = new(_startToolStripMenuItem.FavouriteRepositoriesMenuItem.Text, _startToolStripMenuItem.FavouriteRepositoriesMenuItem.Image)
             {
@@ -190,6 +186,10 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
             finally
             {
                 button.DropDown.ResumeLayout();
+
+                int maxWidth = button.DropDownItems.Cast<ToolStripItem>().Max(item => item == _txtFilter ? 0 : item.Width);
+                const int paddingToAvoidGrowth = 60;
+                _txtFilter.Size = new Size(maxWidth - DpiUtil.Scale(paddingToAvoidGrowth), _txtFilter.Height);
             }
         }
 
