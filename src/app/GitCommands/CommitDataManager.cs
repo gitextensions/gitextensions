@@ -47,7 +47,7 @@ public sealed class CommitDataManager : ICommitDataManager
     /// <inheritdoc />
     public void UpdateBody(CommitData commitData, bool appendNotesOnly, out string? error)
     {
-        const string BodyAndNotesFormat = "%B%nNotes:%n%-N";
+        const string BodyAndNotesFormat = $"%B%n{RevisionReader.NotesPrefix}%n%-N";
         const string NotesFormat = "%-N";
 
         if (!TryGetCommitLog(commitData.ObjectId.ToString(), appendNotesOnly ? NotesFormat : BodyAndNotesFormat, out error, out string? data, cache: false))
@@ -59,15 +59,12 @@ public sealed class CommitDataManager : ICommitDataManager
         {
             if (!string.IsNullOrWhiteSpace(data))
             {
-                commitData.Body += $"\nNotes:\n    {GetModule().ReEncodeCommitMessage(data.Replace('\v', '\n'))}";
+                commitData.Notes = GetModule().ReEncodeCommitMessage(data.Replace('\v', '\n'));
             }
         }
         else
         {
-            string[] lines = data.Split(Delimiters.LineAndVerticalFeed);
-
-            // Commit message is not re-encoded by Git when format is given
-            commitData.Body = GetModule().ReEncodeCommitMessage(ProcessDiffNotes(startIndex: 0, lines));
+            (commitData.Body, commitData.Notes) = ProcessDiffNotes(data.Split(Delimiters.LineAndVerticalFeed), GetModule().ReEncodeCommitMessage);
         }
     }
 
@@ -94,7 +91,7 @@ public sealed class CommitDataManager : ICommitDataManager
             FormatUser(revision.Author, revision.AuthorEmail), revision.AuthorDate,
             FormatUser(revision.Committer, revision.CommitterEmail), revision.CommitDate,
             revision.Body ?? revision.Subject)
-        { ChildIds = children };
+        { ChildIds = children, Notes = revision.Notes };
 
         static string FormatUser(string user, string email) => string.IsNullOrWhiteSpace(email) ? user : $"{user} <{email}>";
     }
@@ -146,35 +143,24 @@ public sealed class CommitDataManager : ICommitDataManager
         return true;
     }
 
-    private static string ProcessDiffNotes(int startIndex, string[] lines)
+    private static (string rawBody, string? rawNotes) ProcessDiffNotes(string[] lines, Func<string, string> encode)
     {
-        int endIndex = lines.Length - 1;
-        if (lines[endIndex] == "Notes:")
-        {
-            // No Notes, ignore
-            endIndex--;
-        }
-
         StringBuilder message = new();
-        bool notesStart = false;
+        StringBuilder? notes = null;
 
-        for (int i = startIndex; i <= endIndex; i++)
+        foreach (string line in lines)
         {
-            string line = lines[i];
-
-            if (notesStart)
+            if (string.Equals(line, RevisionReader.NotesPrefix, StringComparison.Ordinal))
             {
-                message.Append("    ");
+                notes ??= new();
             }
-
-            message.AppendLine(line);
-
-            if (line == "Notes:")
+            else
             {
-                notesStart = true;
+                (notes ?? message).AppendLine(line);
             }
         }
 
-        return message.ToString();
+        // Commit message is not re-encoded by Git when format is given
+        return (encode(message.ToString()), notes is null ? "" : encode(notes.ToString()));
     }
 }
