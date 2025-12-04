@@ -21,7 +21,8 @@ internal class ColorsSettingsPageController
     }
 
     public bool SettingsAreModified =>
-        _page.SelectedThemeId != ThemeModule.Settings.Theme.Id
+        !(_page.SelectedThemeId == ThemeModule.Settings.Theme.Id
+            || (_page.SelectedThemeId == ThemeId.WindowsAppColorModeId && ThemeModule.Settings.Theme.Id == ThemeId.ColorModeThemeId))
         || _page.UseSystemVisualStyle != ThemeModule.Settings.UseSystemVisualStyle
         || !_page.SelectedThemeVariations.SequenceEqual(AppSettings.ThemeVariations);
 
