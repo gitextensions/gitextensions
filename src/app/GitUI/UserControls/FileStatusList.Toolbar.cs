@@ -132,6 +132,16 @@ partial class FileStatusList
         }
     }
 
+    private void FindUsingMatchCase_Click(object sender, EventArgs e)
+    {
+        AppSettings.GitGrepIgnoreCase.Value = !tsmiFindUsingMatchCase.Checked;
+    }
+
+    private void FindUsingWholeWord_Click(object sender, EventArgs e)
+    {
+        AppSettings.GitGrepMatchWholeWord.Value = tsmiFindUsingWholeWord.Checked;
+    }
+
     private void FindUsing_Click(object sender, EventArgs e)
     {
         if (sender is ToolStripMenuItem item)
@@ -143,16 +153,6 @@ partial class FileStatusList
         tsmiFindUsingInputBox.Checked = sender == tsmiFindUsingInputBox;
         tsmiFindUsingBoth.Checked = sender == tsmiFindUsingBoth;
         FindInFilesGitGrep_ButtonClick(sender, e);
-    }
-
-    private void FindUsingMatchCase_Click(object sender, EventArgs e)
-    {
-        AppSettings.GitGrepIgnoreCase.Value = !tsmiFindUsingMatchCase.Checked;
-    }
-
-    private void FindUsingWholeWord_Click(object sender, EventArgs e)
-    {
-        AppSettings.GitGrepMatchWholeWord.Value = tsmiFindUsingWholeWord.Checked;
     }
 
     private void GroupBy_Click(object sender, EventArgs e)

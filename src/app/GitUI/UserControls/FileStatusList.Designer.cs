@@ -69,12 +69,12 @@ partial class FileStatusList
         btnSameChange = new ToolStripButton();
         sepOptions = new ToolStripSeparator();
         btnFindInFilesGitGrep = new ToolStripSplitButton();
+        tsmiFindUsingMatchCase = new ToolStripMenuItem();
+        tsmiFindUsingWholeWord = new ToolStripMenuItem();
+        sepFindUsingSettings = new ToolStripSeparator();
         tsmiFindUsingDialog = new ToolStripMenuItem();
         tsmiFindUsingInputBox = new ToolStripMenuItem();
         tsmiFindUsingBoth = new ToolStripMenuItem();
-        sepFindUsingSettings = new ToolStripSeparator();
-        tsmiFindUsingMatchCase = new ToolStripMenuItem();
-        tsmiFindUsingWholeWord = new ToolStripMenuItem();
         sepSettings = new ToolStripSeparator();
         btnSettings = new ToolStripDropDownButton();
         tsmiShowIgnoredFiles = new ToolStripMenuItem();
@@ -494,13 +494,34 @@ partial class FileStatusList
         // btnFindInFilesGitGrep
         // 
         btnFindInFilesGitGrep.DisplayStyle = ToolStripItemDisplayStyle.Image;
-        btnFindInFilesGitGrep.DropDownItems.AddRange(new ToolStripItem[] { tsmiFindUsingDialog, tsmiFindUsingInputBox, tsmiFindUsingBoth, sepFindUsingSettings, tsmiFindUsingMatchCase, tsmiFindUsingWholeWord });
+        btnFindInFilesGitGrep.DropDownItems.AddRange(new ToolStripItem[] { tsmiFindUsingMatchCase, tsmiFindUsingWholeWord, sepFindUsingSettings, tsmiFindUsingDialog, tsmiFindUsingInputBox, tsmiFindUsingBoth });
         btnFindInFilesGitGrep.Image = Properties.Images.ViewFile;
         btnFindInFilesGitGrep.Name = "btnFindInFilesGitGrep";
         btnFindInFilesGitGrep.Size = new Size(32, 22);
         btnFindInFilesGitGrep.ToolTipText = "Toggle 'Find in commit files using git-grep'";
         btnFindInFilesGitGrep.ButtonClick += FindInFilesGitGrep_ButtonClick;
         btnFindInFilesGitGrep.DropDownOpening += FindInFilesGitGrep_DropDownOpening;
+        // 
+        // tsmiFindUsingMatchCase
+        // 
+        tsmiFindUsingMatchCase.CheckOnClick = true;
+        tsmiFindUsingMatchCase.Name = "tsmiFindUsingMatchCase";
+        tsmiFindUsingMatchCase.Size = new Size(158, 22);
+        tsmiFindUsingMatchCase.Text = "Match &case";
+        tsmiFindUsingMatchCase.Click += FindUsingMatchCase_Click;
+        // 
+        // tsmiFindUsingWholeWord
+        // 
+        tsmiFindUsingWholeWord.CheckOnClick = true;
+        tsmiFindUsingWholeWord.Name = "tsmiFindUsingWholeWord";
+        tsmiFindUsingWholeWord.Size = new Size(158, 22);
+        tsmiFindUsingWholeWord.Text = "Match &whole word";
+        tsmiFindUsingWholeWord.Click += FindUsingWholeWord_Click;
+        // 
+        // sepFindUsingSettings
+        // 
+        sepFindUsingSettings.Name = "sepFindUsingSettings";
+        sepFindUsingSettings.Size = new Size(6, 25);
         // 
         // tsmiFindUsingDialog
         // 
@@ -524,27 +545,6 @@ partial class FileStatusList
         tsmiFindUsingBoth.Size = new Size(158, 22);
         tsmiFindUsingBoth.Text = "Using &both";
         tsmiFindUsingBoth.Click += FindUsing_Click;
-        // 
-        // sepFindUsingSettings
-        // 
-        sepFindUsingSettings.Name = "sepFindUsingSettings";
-        sepFindUsingSettings.Size = new Size(6, 25);
-        // 
-        // tsmiFindUsingMatchCase
-        // 
-        tsmiFindUsingMatchCase.CheckOnClick = true;
-        tsmiFindUsingMatchCase.Name = "tsmiFindUsingMatchCase";
-        tsmiFindUsingMatchCase.Size = new Size(158, 22);
-        tsmiFindUsingMatchCase.Text = "Match &case";
-        tsmiFindUsingMatchCase.Click += FindUsingMatchCase_Click;
-        // 
-        // tsmiFindUsingWholeWord
-        // 
-        tsmiFindUsingWholeWord.CheckOnClick = true;
-        tsmiFindUsingWholeWord.Name = "tsmiFindUsingWholeWord";
-        tsmiFindUsingWholeWord.Size = new Size(158, 22);
-        tsmiFindUsingWholeWord.Text = "Match &whole word";
-        tsmiFindUsingWholeWord.Click += FindUsingWholeWord_Click;
         // 
         // sepSettings
         // 
@@ -1110,12 +1110,12 @@ partial class FileStatusList
     private ToolStripButton btnSameChange;
     private ToolStripSeparator sepOptions;
     private ToolStripSplitButton btnFindInFilesGitGrep;
+    private ToolStripMenuItem tsmiFindUsingMatchCase;
+    private ToolStripMenuItem tsmiFindUsingWholeWord;
+    private ToolStripSeparator sepFindUsingSettings;
     private ToolStripMenuItem tsmiFindUsingDialog;
     private ToolStripMenuItem tsmiFindUsingInputBox;
     private ToolStripMenuItem tsmiFindUsingBoth;
-    private ToolStripSeparator sepFindUsingSettings;
-    private ToolStripMenuItem tsmiFindUsingMatchCase;
-    private ToolStripMenuItem tsmiFindUsingWholeWord;
     private ToolStripSeparator sepSettings;
     private ToolStripDropDownButton btnSettings;
     internal ToolStripMenuItem tsmiShowIgnoredFiles;
