@@ -12,6 +12,10 @@ partial class FileStatusList
 {
     private readonly Image _treeImage = Images.FileTree;
     private readonly Image _flatListImage = Images.DocumentTree.AdaptLightness();
+    private ToolStripMenuItem[]? _findUsings;
+
+    // order in AppSettings.FileStatusFindInFilesGitGrepTypeIndex
+    private ToolStripMenuItem[] FindUsingsArray => _findUsings ??= [tsmiFindUsingDialog, tsmiFindUsingInputBox, tsmiFindUsingBoth];
 
     private void ApplyGroupBy()
     {
@@ -146,12 +150,14 @@ partial class FileStatusList
     {
         if (sender is ToolStripMenuItem item)
         {
-            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value = btnFindInFilesGitGrep.DropDown.Items.IndexOf(item);
+            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value = Array.IndexOf(FindUsingsArray, item);
         }
 
-        tsmiFindUsingDialog.Checked = sender == tsmiFindUsingDialog;
-        tsmiFindUsingInputBox.Checked = sender == tsmiFindUsingInputBox;
-        tsmiFindUsingBoth.Checked = sender == tsmiFindUsingBoth;
+        for (int itemIndex = 0; itemIndex < FindUsingsArray.Length; ++itemIndex)
+        {
+            FindUsingsArray[itemIndex].Checked = sender == FindUsingsArray[itemIndex];
+        }
+
         FindInFilesGitGrep_ButtonClick(sender, e);
     }
 
@@ -276,10 +282,9 @@ partial class FileStatusList
         btnFindInFilesGitGrep.Visible = findInFilesGitGrepVisible;
         sepOptions.Visible = findInFilesGitGrepVisible;
 
-        // Init the first three items, before the separator
-        for (int itemIndex = 0; itemIndex < btnFindInFilesGitGrep.DropDown.Items.Count && btnFindInFilesGitGrep.DropDown.Items[itemIndex] is ToolStripMenuItem; ++itemIndex)
+        for (int itemIndex = 0; itemIndex < FindUsingsArray.Length; ++itemIndex)
         {
-            ((ToolStripMenuItem)btnFindInFilesGitGrep.DropDown.Items[itemIndex]).Checked = AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value == itemIndex;
+            FindUsingsArray[itemIndex].Checked = AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value == itemIndex;
         }
 
         if (tsmiToolbar.DropDown.Items.Count == 0)
