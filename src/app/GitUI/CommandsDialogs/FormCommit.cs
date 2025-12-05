@@ -2894,6 +2894,9 @@ public sealed partial class FormCommit : GitModuleForm
             => _formCommit.PrefixOrReplaceKeyword(keyword);
 
         internal bool IncludeFeatureParentheses { set => _formCommit._insertScopeParentheses = value; }
+
+        internal void ReplaceMessage(string message, bool regexEnabled) => _formCommit.ReplaceMessage(message, regexEnabled);
+
         internal void SetMessageState(string text, int position)
         {
             _formCommit.Message.Text = text;
