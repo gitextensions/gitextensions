@@ -32,7 +32,7 @@ public class FormCommitTests
     [TestCase("Name: {{([A-Z]+-\\d+)-(.*)}}[2]")]
     public void RegexReplaceDisabledTest(string msgToReplace)
     {
-        _formCommit.GetTestAccessor().ReplaceMessage(msgToReplace, false);
+        _formCommit.GetTestAccessor().ReplaceMessage(msgToReplace, regexEnabled: false);
         _formCommit.GetTestAccessor().Message.Text.Should().Be(msgToReplace);
     }
 
@@ -45,7 +45,7 @@ public class FormCommitTests
     [TestCase("{ } end")]
     public void RegexReplaceEnabledShouldNotChange(string msgToReplace)
     {
-        _formCommit.GetTestAccessor().ReplaceMessage(msgToReplace, true);
+        _formCommit.GetTestAccessor().ReplaceMessage(msgToReplace, regexEnabled: true);
         _formCommit.GetTestAccessor().Message.Text.Should().Be(msgToReplace);
     }
 
@@ -55,7 +55,7 @@ public class FormCommitTests
     [TestCase("Commit message {{.*}}", "Commit message ")]
     public void RegexReplaceEnabledShouldChangeEmptyBranchName(string msgToReplace, string expectedValue)
     {
-        _formCommit.GetTestAccessor().ReplaceMessage(msgToReplace, true);
+        _formCommit.GetTestAccessor().ReplaceMessage(msgToReplace, regexEnabled: true);
         _formCommit.GetTestAccessor().Message.Text.Should().Be(expectedValue);
     }
 
@@ -70,7 +70,7 @@ public class FormCommitTests
     public void RegexReplaceEnabledShouldChangeBasedOnBranchName(string branch, string msgToReplace, string expectedValue)
     {
         _gitModule.GetSelectedBranch().Returns(branch);
-        _formCommit.GetTestAccessor().ReplaceMessage(msgToReplace, true);
+        _formCommit.GetTestAccessor().ReplaceMessage(msgToReplace, regexEnabled: true);
         _formCommit.GetTestAccessor().Message.Text.Should().Be(expectedValue);
     }
 }
