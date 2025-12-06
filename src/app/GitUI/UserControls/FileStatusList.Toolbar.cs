@@ -12,10 +12,9 @@ partial class FileStatusList
 {
     private readonly Image _treeImage = Images.FileTree;
     private readonly Image _flatListImage = Images.DocumentTree.AdaptLightness();
-    private ToolStripMenuItem[]? _findUsings;
 
     // order in AppSettings.FileStatusFindInFilesGitGrepTypeIndex
-    private ToolStripMenuItem[] FindUsingsArray => _findUsings ??= [tsmiFindUsingDialog, tsmiFindUsingInputBox, tsmiFindUsingBoth];
+    private ToolStripMenuItem[] FindUsingsArray => field ??= [tsmiFindUsingDialog, tsmiFindUsingInputBox, tsmiFindUsingBoth];
 
     private void ApplyGroupBy()
     {
@@ -153,9 +152,9 @@ partial class FileStatusList
             AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value = Array.IndexOf(FindUsingsArray, item);
         }
 
-        for (int itemIndex = 0; itemIndex < FindUsingsArray.Length; ++itemIndex)
+        foreach (ToolStripMenuItem menuItem in FindUsingMenuItems)
         {
-            FindUsingsArray[itemIndex].Checked = sender == FindUsingsArray[itemIndex];
+            menuItem.Checked = sender == menuItem;
         }
 
         FindInFilesGitGrep_ButtonClick(sender, e);
