@@ -28,6 +28,7 @@ partial class FormCommitTemplateSettings
     /// </summary>
     private void InitializeComponent()
     {
+        components = new System.ComponentModel.Container();
         buttonOk = new Button();
         buttonCancel = new Button();
         tabControl1 = new TabControl();
@@ -38,6 +39,7 @@ partial class FormCommitTemplateSettings
         labelCommitTemplateName = new Label();
         _NO_TRANSLATE_textCommitTemplateText = new TextBox();
         _NO_TRANSLATE_textBoxCommitTemplateName = new TextBox();
+        checkBoxRegexEnabled = new CheckBox();
         tabPage2 = new TabPage();
         tableLayoutPanel3 = new TableLayoutPanel();
         labelMaxFirstLineLength = new Label();
@@ -52,6 +54,7 @@ partial class FormCommitTemplateSettings
         checkBoxUseIndent = new CheckBox();
         labelSecondLineEmpty = new Label();
         checkBoxSecondLineEmpty = new CheckBox();
+        toolTipRegex = new ToolTip(components);
         MainPanel.SuspendLayout();
         ControlsPanel.SuspendLayout();
         tabControl1.SuspendLayout();
@@ -142,10 +145,12 @@ partial class FormCommitTemplateSettings
         tableLayoutPanel5.Controls.Add(labelCommitTemplateName, 0, 1);
         tableLayoutPanel5.Controls.Add(_NO_TRANSLATE_textCommitTemplateText, 1, 2);
         tableLayoutPanel5.Controls.Add(_NO_TRANSLATE_textBoxCommitTemplateName, 1, 1);
+        tableLayoutPanel5.Controls.Add(checkBoxRegexEnabled, 0, 3);
         tableLayoutPanel5.Dock = DockStyle.Fill;
         tableLayoutPanel5.Location = new Point(3, 3);
         tableLayoutPanel5.Name = "tableLayoutPanel5";
-        tableLayoutPanel5.RowCount = 3;
+        tableLayoutPanel5.RowCount = 4;
+        tableLayoutPanel5.RowStyles.Add(new RowStyle());
         tableLayoutPanel5.RowStyles.Add(new RowStyle());
         tableLayoutPanel5.RowStyles.Add(new RowStyle());
         tableLayoutPanel5.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
@@ -190,6 +195,7 @@ partial class FormCommitTemplateSettings
         _NO_TRANSLATE_textCommitTemplateText.Location = new Point(113, 61);
         _NO_TRANSLATE_textCommitTemplateText.Multiline = true;
         _NO_TRANSLATE_textCommitTemplateText.Name = "_NO_TRANSLATE_textCommitTemplateText";
+        tableLayoutPanel5.SetRowSpan(_NO_TRANSLATE_textCommitTemplateText, 2);
         _NO_TRANSLATE_textCommitTemplateText.ScrollBars = ScrollBars.Vertical;
         _NO_TRANSLATE_textCommitTemplateText.Size = new Size(550, 204);
         _NO_TRANSLATE_textCommitTemplateText.TabIndex = 2;
@@ -203,6 +209,30 @@ partial class FormCommitTemplateSettings
         _NO_TRANSLATE_textBoxCommitTemplateName.Size = new Size(550, 23);
         _NO_TRANSLATE_textBoxCommitTemplateName.TabIndex = 1;
         _NO_TRANSLATE_textBoxCommitTemplateName.TextChanged += textBoxCommitTemplateName_TextChanged;
+        // 
+        // checkBoxRegexEnabled
+        // 
+        checkBoxRegexEnabled.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+        checkBoxRegexEnabled.AutoSize = true;
+        checkBoxRegexEnabled.Location = new Point(3, 258);
+        checkBoxRegexEnabled.Margin = new Padding(3, 6, 3, 0);
+        checkBoxRegexEnabled.Name = "checkBoxRegexEnabled";
+        checkBoxRegexEnabled.RightToLeft = RightToLeft.Yes;
+        checkBoxRegexEnabled.Size = new Size(96, 19);
+        checkBoxRegexEnabled.TabIndex = 8;
+        checkBoxRegexEnabled.Text = "Enable regex";
+        toolTipRegex.SetToolTip(checkBoxRegexEnabled,
+            """
+                Use {{regex}}[regex group number] to extract branch name part
+                Group number is optional, default is 1
+
+                Examples on branch name: "feature/ABC-4587-commitMessageRegex"
+                "Commit from: {{^feature/(.*)$}} branch" -> "Commit from: ABC-4587-commitMessageRegex branch"
+                "{{([A-Z]+-\d+)}}: My message is" -> "ABC-4587: My message is "
+                "Name: {{([A-Z]+-\d+)-(.*)}}[2], issue: {{([A-Z]+-\d+)-(.*)}}[1]" -> "Name: commitMessageRegex, issue: ABC-4587"
+                """);
+        checkBoxRegexEnabled.UseVisualStyleBackColor = true;
+        checkBoxRegexEnabled.CheckedChanged += checkBoxRegexEnabled_CheckedChanged;
         // 
         // tabPage2
         // 
@@ -369,6 +399,12 @@ partial class FormCommitTemplateSettings
         checkBoxSecondLineEmpty.TabIndex = 18;
         checkBoxSecondLineEmpty.UseVisualStyleBackColor = true;
         // 
+        // toolTipRegex
+        // 
+        toolTipRegex.AutoPopDelay = 20000;
+        toolTipRegex.InitialDelay = 500;
+        toolTipRegex.ReshowDelay = 100;
+        // 
         // FormCommitTemplateSettings
         // 
         AcceptButton = buttonOk;
@@ -425,4 +461,6 @@ partial class FormCommitTemplateSettings
     private TabControl tabControl1;
     private TabPage tabPage1;
     private TabPage tabPage2;
+    private CheckBox checkBoxRegexEnabled;
+    private ToolTip toolTipRegex;
 }
