@@ -19,7 +19,8 @@ public class MainFixture
         DataObject dataObject = HtmlFragment.CreateHtmlFormatClipboardDataObject("<p>Hallo</p>");
         dataObject.GetFormats().Length.Should().Be(2);
         dataObject.GetText().Should().Be("<p>Hallo</p>");
-        ((string)dataObject.GetData("HTML Format")).Should().Be(
+        dataObject.TryGetData("HTML Format", out string s);
+        s.Should().Be(
             "Version:0.9\r\n" +
             "StartHTML:00000097\r\n" +
             "EndHTML:00000177\r\n" +

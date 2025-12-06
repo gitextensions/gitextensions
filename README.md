@@ -27,7 +27,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Runtime environment
     </td>
     <td>
-      MS Windows 7SP1+ // <a href="https://dotnet.microsoft.com/download/dotnet/9.0" target=_blank>.NET 9.0 SDK</a>
+      MS Windows 7SP1+ // <a href="https://dotnet.microsoft.com/download/dotnet/9.0" target=_blank>.NET Desktop 10.0 SDK</a>
     </td>
   </tr>
   <tr>
@@ -35,7 +35,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Development
     </td>
     <td>
-      MS Visual Studio 2022 (v17.12+), C# 13 // VC++ (inc. ATL for x86/x64 for installer)
+      MS Visual Studio 2026, C# 14 // VC++ (inc. ATL for x86/x64 for installer)
     </td>
   </tr>
   <tr>
