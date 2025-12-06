@@ -178,7 +178,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
                 range = null;
                 if (!Visible)
                 {
-                    return range;
+                    break;
                 }
 
                 if (currentItem is not null && startItem is null)
