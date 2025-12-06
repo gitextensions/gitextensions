@@ -198,6 +198,14 @@ public partial class FileViewer : GitModuleControl
             DefaultButton = TaskDialogButton.Yes,
             SizeToContent = true,
         };
+
+        PictureBox.PaintFailed += (_, ex) => this.InvokeAndForget(() =>
+        {
+            // No further service for users who handle invalid image files. We have no info other than the bad Image in OnPaint.
+            internalFileViewer.SetText($"{string.Format(_cannotViewImage.Text, "")}\n{ex.GetType().Name}: {ex.Message}", openWithDifftool: null);
+            internalFileViewer.Visible = true;
+            PictureBox.Visible = false;
+        });
     }
 
     // Public properties

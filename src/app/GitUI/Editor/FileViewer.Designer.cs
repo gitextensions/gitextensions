@@ -1,4 +1,5 @@
 ﻿using System.Windows.Forms;
+using GitUI.UserControls;
 
 namespace GitUI.Editor;
 
@@ -59,7 +60,7 @@ partial class FileViewer
         settingsButton = new ToolStripButton();
         encodingToolStripComboBox = new ToolStripComboBox();
         ignoreAllWhitespaces = new ToolStripButton();
-        PictureBox = new PictureBox();
+        PictureBox = new PictureBoxEx();
         _NO_TRANSLATE_lblShowPreview = new LinkLabel();
         internalFileViewer = new GitUI.Editor.FileViewerInternal();
         showSyntaxHighlighting = new ToolStripButton();
@@ -536,7 +537,7 @@ partial class FileViewer
     private ToolStripButton ignoreWhitespaceAtEol;
     private ToolStripButton ignoreWhiteSpaces;
     private ToolStripButton settingsButton;
-    private PictureBox PictureBox;
+    private PictureBoxEx PictureBox;
     private ToolStripComboBox encodingToolStripComboBox;
     private ToolStripMenuItem goToLineToolStripMenuItem;
     private ToolStripMenuItem copyNewVersionToolStripMenuItem;
