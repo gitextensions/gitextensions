@@ -9729,7 +9729,9 @@ Currently checked out revision:
 
 Diff selection:
 {SelectedRelativePaths}   (relative paths as they were in the selected commit)
-{LineNumber}</source>
+{LineNumber}   (deprecated, renamed to {FileLine})
+{FileLine}
+{FileColumn}</source>
         <target />
       </trans-unit>
       <trans-unit id="chdrCommand.Text">

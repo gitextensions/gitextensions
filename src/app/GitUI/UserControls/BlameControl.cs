@@ -104,6 +104,7 @@ public sealed partial class BlameControl : GitModuleControl
         BlameAuthor.ShowLineNumbers = AppSettings.BlameShowLineNumbers;
     }
 
+    public int CurrentFileColumn => BlameFile.CurrentFileColumn;
     public int CurrentFileLine => BlameFile.CurrentFileLine;
 
     public void HideCommitInfo()

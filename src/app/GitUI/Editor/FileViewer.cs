@@ -516,6 +516,7 @@ public partial class FileViewer : GitModuleControl
         return internalFileViewer.GetLineFromVisualPosY(visualPosY);
     }
 
+    public int CurrentFileColumn => internalFileViewer.CurrentFileColumn;
     public int CurrentFileLine => internalFileViewer.CurrentFileLine();
 
     public void HighlightLines(int startLine, int endLine, Color color)

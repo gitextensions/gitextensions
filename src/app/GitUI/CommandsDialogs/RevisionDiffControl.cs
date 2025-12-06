@@ -186,7 +186,9 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
 
     protected override IScriptOptionsProvider? GetScriptOptionsProvider()
     {
-        return new ScriptOptionsProvider(DiffFiles, () => BlameControl.Visible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine);
+        return new ScriptOptionsProvider(DiffFiles,
+            () => BlameControl.Visible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine,
+            () => BlameControl.Visible ? BlameControl.CurrentFileColumn : DiffText.CurrentFileColumn);
     }
 
     public void ReloadHotkeys()
