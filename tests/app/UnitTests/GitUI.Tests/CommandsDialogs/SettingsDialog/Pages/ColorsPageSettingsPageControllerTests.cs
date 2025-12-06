@@ -29,7 +29,7 @@ public class ColorsPageSettingsPageControllerTests
     [Test]
     public void When_current_theme_is_default_choosing_visual_style_should_be_disabled()
     {
-        AppSettings.ThemeId = ThemeId.Default;
+        AppSettings.ThemeId = ThemeId.DefaultLight;
         ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
 
         _context.Controller.ShowThemeSettings();
@@ -55,7 +55,7 @@ public class ColorsPageSettingsPageControllerTests
         _context.Controller.ShowThemeSettings();
         _context.Page.UseSystemVisualStyle.Should().BeFalse();
 
-        _context.Page.SelectedThemeId = ThemeId.Default;
+        _context.Page.SelectedThemeId = ThemeId.DefaultLight;
         _context.Controller.HandleSelectedThemeChanged();
         _context.Page.UseSystemVisualStyle.Should().BeTrue();
     }
@@ -63,7 +63,7 @@ public class ColorsPageSettingsPageControllerTests
     [Test]
     public void When_user_switches_to_non_default_theme_UseSystemVisualStyle_should_be_unchecked()
     {
-        AppSettings.ThemeId = ThemeId.Default;
+        AppSettings.ThemeId = ThemeId.DefaultLight;
         AppSettings.UseSystemVisualStyle = true;
         ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
         _context.Controller.ShowThemeSettings();
@@ -83,7 +83,7 @@ public class ColorsPageSettingsPageControllerTests
         _context.Controller.ShowThemeSettings();
         _context.Page.SelectedThemeVariations.Should().BeEquivalentTo(ThemeVariations.Colorblind);
 
-        _context.Page.SelectedThemeId = ThemeId.Default;
+        _context.Page.SelectedThemeId = ThemeId.DefaultLight;
         _context.Controller.HandleSelectedThemeChanged();
         _context.Page.SelectedThemeVariations.Should().BeEmpty();
     }
@@ -136,11 +136,28 @@ public class ColorsPageSettingsPageControllerTests
         _context.Controller.SettingsAreModified.Should().BeTrue();
     }
 
+    [Test]
+    public void Theme_WindowsAppColorModeId_should_set_SystemColorMode()
+    {
+        AppSettings.ThemeId = ThemeId.WindowsAppColorModeId;
+        AppSettings.UseSystemVisualStyle = true;
+        ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
+
+        _context.Controller.ShowThemeSettings();
+        _context.Page.SelectedThemeId.Should().Be(ThemeId.WindowsAppColorModeId);
+
+        // The ThemeId is set from current Windows settings
+        ThemeId id = Application.SystemColorMode == SystemColorMode.Dark
+            ? ThemeId.DefaultDark
+            : ThemeId.DefaultLight;
+        ThemeModule.Settings.Theme.Id.Should().Be(id);
+    }
+
     private static IEnumerable<object[]> CasesThemeSettings()
     {
         yield return new object[]
         {
-            ThemeId.Default,
+            ThemeId.DefaultLight,
             ThemeVariations.None,
             true // useSystemVisualStyle
         };

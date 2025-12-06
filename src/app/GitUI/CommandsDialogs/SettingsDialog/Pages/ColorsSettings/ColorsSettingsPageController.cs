@@ -21,14 +21,15 @@ internal class ColorsSettingsPageController
     }
 
     public bool SettingsAreModified =>
-        _page.SelectedThemeId != ThemeModule.Settings.Theme.Id
+        !(_page.SelectedThemeId == ThemeModule.Settings.Theme.Id
+            || (_page.SelectedThemeId == ThemeId.WindowsAppColorModeId && ThemeModule.Settings.Theme.Id == ThemeId.ColorModeThemeId))
         || _page.UseSystemVisualStyle != ThemeModule.Settings.UseSystemVisualStyle
         || !_page.SelectedThemeVariations.SequenceEqual(AppSettings.ThemeVariations);
 
     public void ShowThemeSettings()
     {
         BeginUpdateThemeSettings();
-        _page.PopulateThemeMenu(Enumerable.Repeat(ThemeId.Default, 1).Concat(_themeRepository.GetThemeIds()));
+        _page.PopulateThemeMenu(Enumerable.Repeat(ThemeId.WindowsAppColorModeId, 1).Concat(_themeRepository.GetThemeIds()));
         _page.SelectedThemeId = AppSettings.ThemeId;
         _page.SelectedThemeVariations = AppSettings.ThemeVariations;
         _page.UseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
@@ -50,8 +51,8 @@ internal class ColorsSettingsPageController
         }
 
         BeginUpdateThemeSettings();
-        _page.UseSystemVisualStyle = _page.SelectedThemeId == ThemeId.Default;
-        if (_page.SelectedThemeId == ThemeId.Default)
+        _page.UseSystemVisualStyle = _page.SelectedThemeId == ThemeId.DefaultLight;
+        if (_page.SelectedThemeId == ThemeId.DefaultLight)
         {
             _page.SelectedThemeVariations = ThemeVariations.None;
         }
@@ -85,23 +86,31 @@ internal class ColorsSettingsPageController
             throw new InvalidOperationException($"{nameof(EndUpdateThemeSettings)} must be called after {nameof(BeginUpdateThemeSettings)}");
         }
 
+        ThemeId themeId = _page.SelectedThemeId;
+        if (themeId == ThemeId.WindowsAppColorModeId)
+        {
+            themeId = ThemeId.ColorModeThemeId;
+        }
+
         if (counter == 0)
         {
             _page.LabelRestartIsNeededVisible = SettingsAreModified;
-            _page.IsChoosingVisualStyleEnabled =
-                _page.SelectedThemeId != ThemeId.Default;
+            _page.IsChoosingVisualStyleEnabled = themeId != ThemeId.DefaultLight;
         }
 
-        if (_page.SelectedThemeId != ThemeId.Default)
+        if (themeId == ThemeId.DefaultLight)
         {
-            try
-            {
-                Theme unused = _themeRepository.GetTheme(_page.SelectedThemeId, _page.SelectedThemeVariations);
-            }
-            catch (Exception ex)
-            {
-                _page.ShowThemeLoadingErrorMessage(_page.SelectedThemeId, _page.SelectedThemeVariations, ex);
-            }
+            // invariant, already loaded
+            return;
+        }
+
+        try
+        {
+            _ = _themeRepository.GetTheme(themeId, _page.SelectedThemeVariations);
+        }
+        catch (Exception ex)
+        {
+            _page.ShowThemeLoadingErrorMessage(themeId, _page.SelectedThemeVariations, ex);
         }
     }
 

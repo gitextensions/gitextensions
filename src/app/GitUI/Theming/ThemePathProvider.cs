@@ -50,7 +50,8 @@ public class ThemePathProvider : IThemePathProvider
         string path;
         if (id.IsBuiltin)
         {
-            path = Path.Combine(AppThemesDirectory, id.Name + ThemeExtension);
+            string name = id == ThemeId.DefaultLight ? ThemeId.InvariantThemeFileName : id.Name;
+            path = Path.Combine(AppThemesDirectory, name + ThemeExtension);
         }
         else
         {
