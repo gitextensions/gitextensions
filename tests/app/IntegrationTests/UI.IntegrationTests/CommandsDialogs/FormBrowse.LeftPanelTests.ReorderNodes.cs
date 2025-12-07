@@ -1,6 +1,6 @@
 ﻿using System.Collections;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;

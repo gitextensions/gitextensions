@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitCommands;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;

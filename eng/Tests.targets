@@ -18,7 +18,7 @@
 
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
 
-    <PackageReference Include="FluentAssertions" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="AwesomeAssertions" PrivateAssets="all" Publish="true" />
     <PackageReference Include="NSubstitute" PrivateAssets="all" Publish="true" />
     <PackageReference Include="NUnit" PrivateAssets="all" Publish="true" />
     <PackageReference Include="NUnit3TestAdapter" PrivateAssets="all" Publish="true" />

@@ -1,5 +1,5 @@
 ﻿using System.Collections.Immutable;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
 using GitUI.Theming;
