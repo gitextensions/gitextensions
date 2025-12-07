@@ -72,9 +72,8 @@ Currently checked out revision:
 
 Diff selection:
 {SelectedRelativePaths}   (relative paths as they were in the selected commit)
-{LineNumber}   (deprecated, renamed to {FileLine})
-{FileLine}
-{FileColumn}");
+{LineNumber}
+{ColumnNumber}");
 
     private static readonly string[] WatchedProxyPropertiesOnFocusChanged =
     [

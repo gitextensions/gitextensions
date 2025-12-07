@@ -7,18 +7,17 @@ internal class ScriptOptionsProvider : IScriptOptionsProvider
 {
     private const string _selectedRelativePaths = "SelectedRelativePaths";
     internal const string _lineNumber = "LineNumber";
-    private const string _fileLine = "FileLine";
-    private const string _fileColumn = "FileColumn";
+    private const string _columnNumber = "ColumnNumber";
 
     private Func<IEnumerable<string>> _getSelectedRelativePaths;
     private Func<int?> _getCurrentLineNumber;
-    private Func<int?> _getCurrentColumn;
+    private Func<int?> _getCurrentColumnNumber;
 
-    public ScriptOptionsProvider(Func<IEnumerable<string>> getSelectedRelativePaths, Func<int?> getCurrentLineNumber, Func<int?> getCurrentColumn)
+    public ScriptOptionsProvider(Func<IEnumerable<string>> getSelectedRelativePaths, Func<int?> getCurrentLineNumber, Func<int?> getCurrentColumnNumber)
     {
         _getSelectedRelativePaths = getSelectedRelativePaths;
         _getCurrentLineNumber = getCurrentLineNumber;
-        _getCurrentColumn = getCurrentColumn;
+        _getCurrentColumnNumber = getCurrentColumnNumber;
     }
 
     public ScriptOptionsProvider(FileStatusList fileStatusList, Func<int?> getCurrentLineNumber, Func<int?> getCurrentColumn)
@@ -26,7 +25,7 @@ internal class ScriptOptionsProvider : IScriptOptionsProvider
     {
     }
 
-    IReadOnlyList<string> IScriptOptionsProvider.Options { get; } = new[] { _selectedRelativePaths, _lineNumber, _fileLine, _fileColumn };
+    IReadOnlyList<string> IScriptOptionsProvider.Options { get; } = new[] { _selectedRelativePaths, _lineNumber, _columnNumber };
 
     IEnumerable<string> IScriptOptionsProvider.GetValues(string option)
     {
@@ -35,10 +34,9 @@ internal class ScriptOptionsProvider : IScriptOptionsProvider
             case _selectedRelativePaths:
                 return _getSelectedRelativePaths().Select(item => item.EscapeForCommandLine());
             case _lineNumber:
-            case _fileLine:
                 return _getCurrentLineNumber() is int lineNumber ? [lineNumber.ToString()] : [];
-            case _fileColumn:
-                return _getCurrentColumn() is int column ? [column.ToString()] : [];
+            case _columnNumber:
+                return _getCurrentColumnNumber() is int columnNumber ? [columnNumber.ToString()] : [];
             default:
                 throw new NotImplementedException(option);
         }
