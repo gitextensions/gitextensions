@@ -462,6 +462,8 @@ public static partial class AppSettings
         set => SetInt("commitDialogNumberOfPreviousMessages", value);
     }
 
+    public static ISetting<bool> CommitDialogSelectStagedOnEnterMessage { get; } = Setting.Create(DialogSettingsPath, nameof(CommitDialogSelectStagedOnEnterMessage), true);
+
     public static bool CommitDialogShowOnlyMyMessages
     {
         get => GetBool("commitDialogShowOnlyMyMessages", false);
