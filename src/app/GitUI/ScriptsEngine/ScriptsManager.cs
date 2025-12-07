@@ -52,11 +52,11 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
     }
 
     public bool RunEventScripts<THostForm>(ScriptEvent scriptEvent, THostForm form)
-        where THostForm : IGitModuleForm, IWin32Window
+        where THostForm : IGitModuleForm, IScriptOptionsForm, IWin32Window
     {
         foreach (ScriptInfo script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
         {
-            bool executed = ScriptRunner.RunScript(script, owner: form, form.UICommands);
+            bool executed = ScriptRunner.RunScript(script, owner: form, form.UICommands, form.GetScriptOptionsProvider());
             if (!executed)
             {
                 return false;
@@ -66,7 +66,7 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
         return true;
     }
 
-    public bool RunScript(ScriptInfo scriptInfo, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider? scriptOptionsProvider = null)
+    public bool RunScript(ScriptInfo scriptInfo, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider scriptOptionsProvider)
     {
         return ScriptRunner.RunScript(scriptInfo, owner, commands, scriptOptionsProvider);
     }

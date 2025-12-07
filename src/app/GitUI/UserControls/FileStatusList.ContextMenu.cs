@@ -551,9 +551,7 @@ partial class FileStatusList
     private int GetLineNumber()
         => _getLineNumber is not null
             ? _getLineNumber()
-            : FindScriptOptionsProvider() is IScriptOptionsProvider scriptOptionsProvider
-                ? int.Parse(scriptOptionsProvider.GetValues(ScriptOptionsProvider._lineNumber).FirstOrDefault("0"))
-                : 0;
+            : int.Parse(FindScriptOptionsProvider().GetValues(ScriptOptionsProvider._lineNumber).FirstOrDefault("0"));
 
     private static ContextMenuSelectionInfo GetSelectionInfo(FileStatusItem[] selectedItems, RelativePath? selectedFolder, bool isBareRepository, bool supportLinePatching, IFullPathResolver fullPathResolver)
     {
