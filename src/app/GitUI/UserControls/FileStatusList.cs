@@ -2057,6 +2057,7 @@ public sealed partial class FileStatusList : GitModuleControl
             string searchArg = search;
             if (!string.IsNullOrWhiteSpace(searchArg) && !GrepStringRegex().IsMatch(searchArg))
             {
+                searchArg = searchArg.Replace(@"\\", @"\\\\");
                 searchArg = $@"-e ""{searchArg}""";
             }
 
