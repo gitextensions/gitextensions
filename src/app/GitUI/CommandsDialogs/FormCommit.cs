@@ -1766,6 +1766,11 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void SelectStaged()
     {
+        if (Staged.AllItemsCount == 0)
+        {
+            return;
+        }
+
         _currentFilesList = Staged;
         _skipUpdate = false;
         if (!Staged.HasSelection)
