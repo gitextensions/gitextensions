@@ -10,6 +10,8 @@ partial class FormBrowse
 
     private void InitRevisionGrid(ObjectId? selectedId, ObjectId? firstId, bool isFileHistoryMode)
     {
+        RevisionGrid.ArtificialChanged += (_, _) => RefreshGitStatusMonitor();
+
         RevisionGrid.IndexWatcher.Changed += (_, args) =>
         {
             bool indexChanged = args.IsIndexChanged;
