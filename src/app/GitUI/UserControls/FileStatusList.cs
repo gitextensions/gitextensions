@@ -5,6 +5,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 using System.Windows.Automation;
 using GitCommands;
@@ -25,6 +26,13 @@ namespace GitUI;
 
 public sealed partial class FileStatusList : GitModuleControl
 {
+    private enum DrawFailureState
+    {
+        None,
+        IgnoringFollowUp,
+        ReportRepeated
+    }
+
     public static readonly TimeSpan SelectedIndexChangeThrottleDuration = TimeSpan.FromMilliseconds(50);
 
     private readonly FileStatusDiffCalculator _diffCalculator;
@@ -50,6 +58,7 @@ public sealed partial class FileStatusList : GitModuleControl
     private Rectangle _dragBoxFromMouseDown;
     private IDisposable? _selectedIndexChangeSubscription;
     private IDisposable? _diffListSortSubscription;
+    private DrawFailureState _drawFailureState = DrawFailureState.None;
     private FormFindInCommitFilesGitGrep? _formFindInCommitFilesGitGrep;
     private bool _showDiffGroups = false;
 
@@ -1678,11 +1687,36 @@ public sealed partial class FileStatusList : GitModuleControl
             return;
         }
 
+        try
+        {
+            FileStatusListView_DrawNodeImpl(item, treeView, e);
+            _drawFailureState = DrawFailureState.None;
+        }
+        catch (ExternalException ex) when (_drawFailureState == DrawFailureState.None)
+        {
+            // Trigger a complete redraw, but only once
+            _drawFailureState = DrawFailureState.IgnoringFollowUp;
+            Trace.WriteLine($"{nameof(FileStatusListView_DrawNode)} encountered {ex}");
+            ThreadHelper.FileAndForget(async () =>
+            {
+                await Task.Delay(millisecondsDelay: 5000);
+                await treeView.SwitchToMainThreadAsync();
+                _drawFailureState = DrawFailureState.ReportRepeated;
+                treeView.Invalidate();
+            });
+        }
+        catch (ExternalException) when (_drawFailureState == DrawFailureState.IgnoringFollowUp)
+        {
+        }
+    }
+
+    private void FileStatusListView_DrawNodeImpl(TreeNode item, MultiSelectTreeView treeView, DrawTreeNodeEventArgs e)
+    {
         bool selected = treeView.SelectedNodes.Contains(item);
 
-        PathFormatter formatter = new(e.Graphics, FileStatusListView.Font);
+        PathFormatter formatter = new(e.Graphics, treeView.Font);
 
-        int maxWidth = FileStatusListView.ClientSize.Width - item.Bounds.X + 1;
+        int maxWidth = treeView.ClientSize.Width - item.Bounds.X + 1;
         (string? prefix, string text, string? suffix) = FormatListViewItem(item, formatter, maxWidth);
 
         Brush backgroundBrush = selected
