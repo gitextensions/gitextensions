@@ -2478,10 +2478,15 @@ public sealed partial class GitModule : IGitModule
             cancellationToken: cancellationToken);
     }
 
-    public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId? firstId, ObjectId? secondId, ObjectId? parentToSecond, CancellationToken cancellationToken)
+    public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId? firstId,
+        ObjectId? secondId,
+        ObjectId? parentToSecond,
+        bool excludeSkipWorktreeFiles,
+        UntrackedFilesMode untrackedFilesMode,
+        CancellationToken cancellationToken)
     {
         StagedStatus stagedStatus = GetStagedStatus(firstId, secondId, parentToSecond);
-        IReadOnlyList<GitItemStatus> status = GetDiffFilesWithUntracked(firstId?.ToString(), secondId?.ToString(), stagedStatus, cancellationToken: cancellationToken);
+        IReadOnlyList<GitItemStatus> status = GetDiffFilesWithUntracked(firstId?.ToString(), secondId?.ToString(), stagedStatus, excludeSkipWorktreeFiles, untrackedFilesMode, cancellationToken: cancellationToken);
         GetSubmoduleDiffStatus(status, firstId, secondId, cancellationToken);
         return status;
     }
@@ -2518,12 +2523,17 @@ public sealed partial class GitModule : IGitModule
         return staged;
     }
 
-    public IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision, string? secondRevision, StagedStatus stagedStatus, bool noCache = false,
+    public IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision,
+        string? secondRevision,
+        StagedStatus stagedStatus,
+        bool excludeSkipWorktreeFiles = true,
+        UntrackedFilesMode untrackedFilesMode = UntrackedFilesMode.Default,
+        bool noCache = false,
         CancellationToken cancellationToken = default)
     {
         if (stagedStatus is StagedStatus.WorkTree or StagedStatus.Index)
         {
-            IReadOnlyList<GitItemStatus> status = GetAllChangedFilesWithSubmodulesStatus(cancellationToken: cancellationToken);
+            IReadOnlyList<GitItemStatus> status = GetAllChangedFilesWithSubmodulesStatus(excludeIgnoredFiles: true, excludeAssumeUnchangedFiles: true, excludeSkipWorktreeFiles, untrackedFilesMode, cancellationToken);
             return status.Where(x => x.Staged == stagedStatus || x.IsStatusOnly).ToList();
         }
 
@@ -2561,7 +2571,7 @@ public sealed partial class GitModule : IGitModule
 
     public IReadOnlyList<GitItemStatus> GetStashDiffFiles(string stashName)
     {
-        List<GitItemStatus> resultCollection = [.. GetDiffFilesWithUntracked(stashName + "^", stashName, StagedStatus.None, true)];
+        List<GitItemStatus> resultCollection = [.. GetDiffFilesWithUntracked(stashName + "^", stashName, StagedStatus.None, noCache: true)];
 
         // add - optionally stashed - untracked files
         GitArgumentBuilder args = new("log")

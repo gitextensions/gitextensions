@@ -349,6 +349,11 @@ partial class FileStatusList
 
     private void UpdateToolbar(IReadOnlyList<GitRevision> revisions)
     {
-        btnRefresh.Enabled = revisions.Any(revision => revision.IsArtificial);
+        bool withArtificial = revisions.Any(revision => revision.IsArtificial);
+        btnRefresh.Enabled = withArtificial;
+
+        bool isWorktree = withArtificial && revisions.Any(revision => revision.ObjectId == ObjectId.WorkTreeId);
+        tsmiShowSkipWorktreeFiles.Enabled = isWorktree;
+        tsmiShowUntrackedFiles.Enabled = isWorktree;
     }
 }
