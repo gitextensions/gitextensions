@@ -551,7 +551,7 @@ partial class FileStatusList
         tsmiShowSkipWorktreeFiles.Name = "tsmiShowSkipWorktreeFiles";
         tsmiShowSkipWorktreeFiles.Size = new Size(286, 22);
         tsmiShowSkipWorktreeFiles.Text = "Show &skip-worktree files";
-        tsmiShowSkipWorktreeFiles.Visible = false;
+        tsmiShowSkipWorktreeFiles.Visible = true;
         tsmiShowSkipWorktreeFiles.Click += ShowSkipWorktreeFiles_Click;
         // 
         // tsmiShowAssumeUnchangedFiles
@@ -571,14 +571,14 @@ partial class FileStatusList
         tsmiShowUntrackedFiles.Name = "tsmiShowUntrackedFiles";
         tsmiShowUntrackedFiles.Size = new Size(286, 22);
         tsmiShowUntrackedFiles.Text = "Show &untracked files";
-        tsmiShowUntrackedFiles.Visible = false;
+        tsmiShowUntrackedFiles.Visible = true;
         tsmiShowUntrackedFiles.Click += ShowUntrackedFiles_Click;
         // 
         // sepShow
         // 
         sepShow.Name = "sepShow";
         sepShow.Size = new Size(283, 6);
-        sepShow.Visible = false;
+        sepShow.Visible = true;
         // 
         // tsmiEditGitIgnore
         // 

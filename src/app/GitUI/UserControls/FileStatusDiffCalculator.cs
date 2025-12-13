@@ -31,11 +31,15 @@ public sealed partial class FileStatusDiffCalculator
     public void SetDiff(
         IReadOnlyList<GitRevision> revisions,
         ObjectId? headId,
-        bool allowMultiDiff)
+        bool allowMultiDiff,
+        bool showSkipWorktreeFiles = false,
+        bool showUntrackedFiles = true)
     {
         _fileStatusDiffCalculatorInfo.Revisions = revisions;
         _fileStatusDiffCalculatorInfo.HeadId = headId;
         _fileStatusDiffCalculatorInfo.AllowMultiDiff = allowMultiDiff;
+        _fileStatusDiffCalculatorInfo.ShowSkipWorktreeFiles = showSkipWorktreeFiles;
+        _fileStatusDiffCalculatorInfo.UntrackedFilesMode = showUntrackedFiles ? UntrackedFilesMode.Default : UntrackedFilesMode.No;
     }
 
     public void SetGrep(string grepArguments, bool fileTreeMode)
@@ -53,8 +57,13 @@ public sealed partial class FileStatusDiffCalculator
         }
 
         List<FileStatusWithDescription> fileStatusDescs = refreshDiff
-            ? CalculateDiffs(_fileStatusDiffCalculatorInfo.Revisions, selectedRev,
-                _fileStatusDiffCalculatorInfo.HeadId, _fileStatusDiffCalculatorInfo.AllowMultiDiff, cancellationToken)
+            ? CalculateDiffs(_fileStatusDiffCalculatorInfo.Revisions,
+                selectedRev,
+                _fileStatusDiffCalculatorInfo.HeadId,
+                _fileStatusDiffCalculatorInfo.AllowMultiDiff,
+                _fileStatusDiffCalculatorInfo.ShowSkipWorktreeFiles,
+                _fileStatusDiffCalculatorInfo.UntrackedFilesMode,
+                cancellationToken)
             : prevList.Where(p => !IsGrepItemStatuses(p)).ToList();
 
         FileStatusWithDescription? grepItemStatuses = refreshGrep
@@ -74,6 +83,8 @@ public sealed partial class FileStatusDiffCalculator
         GitRevision selectedRev,
         ObjectId? headId,
         bool allowMultiDiff,
+        bool showSkipWorktreeFiles,
+        UntrackedFilesMode untrackedFilesMode,
         CancellationToken cancellationToken)
     {
         IGitModule module = GetModule();
@@ -87,7 +98,7 @@ public sealed partial class FileStatusDiffCalculator
             {
                 // Get the parents for the selected revision
                 // Exclude the optional third group with the diff to the orphan commit containing the untracked files of a stash
-                int multipleParents = actualRev.ParentIds is null ? 0 : AppSettings.ShowDiffForAllParents ? actualRev.ParentIds.Count : 1;
+                int multipleParents = AppSettings.ShowDiffForAllParents ? actualRev.ParentIds.Count : 1;
                 fileStatusDescs.AddRange(actualRev
                     .ParentIds
                     .Take(multipleParents)
@@ -97,7 +108,11 @@ public sealed partial class FileStatusDiffCalculator
                             firstRev: new GitRevision(parentId),
                             secondRev: selectedRev,
                             summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(parentId),
-                            statuses: module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, actualRev.ParentIds[0], cancellationToken))));
+                            statuses: (showSkipWorktreeFiles || untrackedFilesMode == UntrackedFilesMode.No) && actualRev.ObjectId == ObjectId.WorkTreeId && parentId == ObjectId.IndexId
+                                ? module.GetAllChangedFilesWithSubmodulesStatus(excludeIgnoredFiles: true, excludeAssumeUnchangedFiles: true, !showSkipWorktreeFiles, untrackedFilesMode, cancellationToken)
+                                    .Where(item => item.Staged == StagedStatus.WorkTree)
+                                    .ToList()
+                                : module.GetDiffFilesWithSubmodulesStatus(parentId, selectedRev.ObjectId, actualRev.ParentIds[0], cancellationToken))));
             }
             else
             {
