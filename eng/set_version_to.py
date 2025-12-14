@@ -20,7 +20,7 @@ if __name__ == '__main__':
         parser.print_help()
         exit(1)
 
-    m = re.match("(\d+\.\d+)", args.version)
+    m = re.match(r'(\d+\.\d+)', args.version)
     if m:
         short_version = m.group(1)
     else:
@@ -35,8 +35,8 @@ if __name__ == '__main__':
     if not args.text:
       args.text = args.version
     
-    submodules = glob.glob("..\externals\**\AssemblyInfo.cs", recursive=True)
-    filenames = [ "..\CommonAssemblyInfo.cs", "..\CommonAssemblyInfoExternals.cs" ]
+    submodules = glob.glob('../externals/**/AssemblyInfo.cs', recursive=True)
+    filenames = [ "../CommonAssemblyInfo.cs", "../CommonAssemblyInfoExternals.cs" ]
     combined = filenames + submodules
     for filename in combined:
         print (filename)
