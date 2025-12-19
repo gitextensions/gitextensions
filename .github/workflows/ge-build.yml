@@ -160,7 +160,6 @@ jobs:
           retention-days: 7
 
       - name: Submit signing request to SignPath
-        if: false # TODO: turn on when SignPath has adapted the GE GH URL
         uses: SignPath/github-action-submit-signing-request@v1
         with:
           connector-url: https://githubactions.connectors.signpath.io
