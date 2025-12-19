@@ -10,7 +10,7 @@ env:
   # GE release version
   ge-release-version: '6.0.5'
   # Run tests for x64 build
-  run-x64-tests: false # TODO: turn on again when signing works - and when TC GetOriginalLineInPreviousCommit passes stably
+  run-x64-tests: true # TODO: turn on again when signing works - and when TC GetOriginalLineInPreviousCommit passes stably
   # Run tests for arm64 build
   run-arm64-tests: false # skip arm64 test by default, as ThemeModule relies on GetGitExtensionsFullPath (TODO: 'C:\Program Files\dotnet\Themes'), and as test doesn't complete, resulting in timeout...
   # Disable the .NET logo in the console output.
