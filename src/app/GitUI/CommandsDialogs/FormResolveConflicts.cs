@@ -36,23 +36,23 @@ public partial class FormResolveConflicts : GitModuleForm
     private readonly TranslationString _noMergeTool = new("There is no mergetool configured." + Environment.NewLine + "Please go to settings and set a mergetool!");
     private readonly TranslationString _noMergeToolConfigured = new("The mergetool is not correctly configured." + Environment.NewLine + "Please go to settings and configure the mergetool!");
     private readonly TranslationString _errorStartingMergetool = new("Error starting mergetool: {0}");
-    private readonly TranslationString _stageFilename = new("Stage {0}");
+    private readonly TranslationString _stageFilename = new("Stage '{0}'");
 
-    private readonly TranslationString _noBaseRevision = new("There is no base revision for {0}." + Environment.NewLine + "Fall back to 2-way merge?");
+    private readonly TranslationString _noBaseRevision = new("There is no base revision for '{0}'." + Environment.NewLine + "Fall back to 2-way merge?");
     private readonly TranslationString _ours = new("ours");
     private readonly TranslationString _theirs = new("theirs");
-    private readonly TranslationString _fileBinaryChooseLocalBaseRemote = new("File ({0}) appears to be a binary file." + Environment.NewLine + "Choose to keep the local ({1}), remote ({2}) or base file.");
+    private readonly TranslationString _fileBinaryChooseLocalBaseRemote = new("File '{0}' appears to be binary." + Environment.NewLine + "Choose to keep the local '{1}', remote '{2}' or base file.");
     private readonly TranslationString _fileChangeLocallyAndRemotely = new("The file has been changed both locally ({0}) and remotely ({1}). Merge the changes.");
     private readonly TranslationString _fileCreatedLocallyAndRemotely = new("A file with the same name has been created locally ({0}) and remotely ({1}). Choose the file you want to keep or merge the files.");
-    private readonly TranslationString _fileCreatedLocallyAndRemotelyLong = new("File {0} does not have a base revision." + Environment.NewLine + "A file with the same name has been created locally ({1}) and remotely ({2}) causing this conflict." + Environment.NewLine + Environment.NewLine + "Choose the file you want to keep, merge the files or delete the file?");
+    private readonly TranslationString _fileCreatedLocallyAndRemotelyLong = new("File '{0}' does not have a base revision." + Environment.NewLine + "A file with the same name has been created locally ({1}) and remotely ({2}) causing this conflict." + Environment.NewLine + Environment.NewLine + "Choose the file you want to keep, merge the files or delete the file?");
     private readonly TranslationString _fileDeletedLocallyAndModifiedRemotely = new("The file has been deleted locally ({0}) and modified remotely ({1}). Choose to delete the file or keep the modified version.");
-    private readonly TranslationString _fileDeletedLocallyAndModifiedRemotelyLong = new("File {0} does not have a local revision." + Environment.NewLine + "The file has been deleted locally ({1}) but modified remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
-    private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLong = new("{0} and {1} other out of {2} selected files do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
-    private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLongNoOtherFilesSelected = new("{0} and {1} other selected file(s) do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
+    private readonly TranslationString _fileDeletedLocallyAndModifiedRemotelyLong = new("File '{0}' does not have a local revision." + Environment.NewLine + "The file has been deleted locally ({1}) but modified remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
+    private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLong = new("'{0}' and {1} other out of {2} selected files do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
+    private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLongNoOtherFilesSelected = new("'{0}' and {1} other selected file(s) do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
     private readonly TranslationString _fileModifiedLocallyAndDeletedRemotely = new("The file has been modified locally ({0}) and deleted remotely ({1}). Choose to delete the file or keep the modified version.");
-    private readonly TranslationString _fileModifiedLocallyAndDeletedRemotelyLong = new("File {0} does not have a remote revision." + Environment.NewLine + "The file has been modified locally ({1}) but deleted remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
-    private readonly TranslationString _filesModifiedLocallyAndDeletedRemotelyLong = new("{0} and {1} other out of {2} selected files do not have a remote revision." + Environment.NewLine + "The files have been modified locally, but deleted remotely." + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
-    private readonly TranslationString _filesModifiedLocallyAndDeletedRemotelyLongNoOtherFilesSelected = new("{0} and {1} other selected file(s) do not have a remote revision." + Environment.NewLine + "The files have been modified locally, but deleted remotely." + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
+    private readonly TranslationString _fileModifiedLocallyAndDeletedRemotelyLong = new("File '{0}' does not have a remote revision." + Environment.NewLine + "The file has been modified locally ({1}) but deleted remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
+    private readonly TranslationString _filesModifiedLocallyAndDeletedRemotelyLong = new("'{0}' and {1} other out of {2} selected files do not have a remote revision." + Environment.NewLine + "The files have been modified locally, but deleted remotely." + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
+    private readonly TranslationString _filesModifiedLocallyAndDeletedRemotelyLongNoOtherFilesSelected = new("'{0}' and {1} other selected file(s) do not have a remote revision." + Environment.NewLine + "The files have been modified locally, but deleted remotely." + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
     private readonly TranslationString _noBase = new("no base");
     private readonly TranslationString _deleted = new("deleted");
     private readonly TranslationString _chooseLocalButtonText = new("Choose local");
@@ -61,7 +61,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private readonly TranslationString _keepModifiedButtonText = new("Keep modified");
     private readonly TranslationString _keepBaseButtonText = new("Keep base file");
 
-    private readonly TranslationString _solveMergeConflictApplyToAllCheckBoxText = new("Apply to {0} and {1} other file(s)");
+    private readonly TranslationString _solveMergeConflictApplyToAllCheckBoxText = new("Apply to '{0}' and {1} other file(s)");
     private readonly TranslationString _solveMergeConflictDialogCaption = new("Solve merge conflict");
 
     private readonly TranslationString _conflictedFilesContextMenuText = new("Solve");
@@ -312,12 +312,47 @@ public partial class FormResolveConflicts : GitModuleForm
         return (ConflictData)ConflictedFiles.SelectedRows[0].DataBoundItem;
     }
 
-    private IReadOnlyList<ConflictData> GetConflicts()
+    private (IReadOnlyList<ConflictData> conflicts,
+        IReadOnlyList<ConflictData> filesDeletedLocallyAndModifiedRemotely,
+        IReadOnlyList<ConflictData> filesModifiedLocallyAndDeletedRemotely,
+        IReadOnlyList<ConflictData> filesRemaining) GetConflicts()
     {
-        return ConflictedFiles.SelectedRows
+        IReadOnlyList<ConflictData> conflicts = ConflictedFiles.SelectedRows
             .Cast<DataGridViewRow>()
             .Select(selectedRow => (ConflictData)selectedRow.DataBoundItem)
             .ToArray();
+
+        _conflictItemsCount = conflicts.Count;
+        StartProgressBarWithMaxValue(_conflictItemsCount);
+
+        List<ConflictData> filesDeletedLocallyAndModifiedRemotely = [];
+        List<ConflictData> filesModifiedLocallyAndDeletedRemotely = [];
+        List<ConflictData> filesRemaining = [];
+
+        // Insert(0, conflictData) is needed the task dialog shows the same order of files as selected in the grid
+        foreach (ConflictData conflictData in conflicts)
+        {
+            if (string.IsNullOrEmpty(conflictData.Local.Filename) && !string.IsNullOrEmpty(conflictData.Remote.Filename))
+            {
+                filesDeletedLocallyAndModifiedRemotely.Insert(0, conflictData);
+            }
+            else if (!string.IsNullOrEmpty(conflictData.Local.Filename) && string.IsNullOrEmpty(conflictData.Remote.Filename))
+            {
+                filesModifiedLocallyAndDeletedRemotely.Insert(0, conflictData);
+            }
+            else
+            {
+                filesRemaining.Insert(0, conflictData);
+            }
+        }
+
+        _filesDeletedLocallyAndModifiedRemotelyCount = filesDeletedLocallyAndModifiedRemotely.Count;
+        _filesModifiedLocallyAndDeletedRemotelyCount = filesModifiedLocallyAndDeletedRemotely.Count;
+        _filesRemainedCount = filesRemaining.Count;
+        _filesDeletedLocallyAndModifiedRemotelySolved = _filesDeletedLocallyAndModifiedRemotelyCount;
+        _filesModifiedLocallyAndDeletedRemotelySolved = _filesModifiedLocallyAndDeletedRemotelyCount;
+
+        return (conflicts, filesDeletedLocallyAndModifiedRemotely, filesModifiedLocallyAndDeletedRemotely, filesRemaining);
     }
 
     private string GetFileName()
@@ -836,10 +871,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
-            IReadOnlyList<ConflictData> conflictItems = GetConflicts();
-
-            StartProgressBarWithMaxValue(conflictItems.Count);
-            foreach (ConflictData conflictItem in conflictItems)
+            foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForBaseRevision(conflictItem))
                 {
@@ -866,9 +898,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
-            IReadOnlyList<ConflictData> conflictItems = GetConflicts();
-            StartProgressBarWithMaxValue(conflictItems.Count);
-            foreach (ConflictData conflictItem in conflictItems)
+            foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForLocalRevision(conflictItem))
                 {
@@ -895,9 +925,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
-            IReadOnlyList<ConflictData> conflictItems = GetConflicts();
-            StartProgressBarWithMaxValue(conflictItems.Count);
-            foreach (ConflictData conflictItem in conflictItems)
+            foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForRemoteRevision(conflictItem))
                 {
@@ -1204,37 +1232,11 @@ public partial class FormResolveConflicts : GitModuleForm
         {
             try
             {
-                IReadOnlyList<ConflictData> items = GetConflicts();
-                _conflictItemsCount = items.Count;
-
-                List<ConflictData> filesDeletedLocallyAndModifiedRemotely = [];
-                List<ConflictData> filesModifiedLocallyAndDeletedRemotely = [];
-                List<ConflictData> filesRemaining = [];
-
-                // Insert(0, conflictData) is needed the task dialog shows the same order of files as selected in the grid
-                foreach (ConflictData conflictData in items)
-                {
-                    if (string.IsNullOrEmpty(conflictData.Local.Filename) && !string.IsNullOrEmpty(conflictData.Remote.Filename))
-                    {
-                        filesDeletedLocallyAndModifiedRemotely.Insert(0, conflictData);
-                    }
-                    else if (!string.IsNullOrEmpty(conflictData.Local.Filename) && string.IsNullOrEmpty(conflictData.Remote.Filename))
-                    {
-                        filesModifiedLocallyAndDeletedRemotely.Insert(0, conflictData);
-                    }
-                    else
-                    {
-                        filesRemaining.Insert(0, conflictData);
-                    }
-                }
-
-                _filesDeletedLocallyAndModifiedRemotelyCount = filesDeletedLocallyAndModifiedRemotely.Count;
-                _filesModifiedLocallyAndDeletedRemotelyCount = filesModifiedLocallyAndDeletedRemotely.Count;
-                _filesRemainedCount = filesRemaining.Count;
-                _filesDeletedLocallyAndModifiedRemotelySolved = _filesDeletedLocallyAndModifiedRemotelyCount;
-                _filesModifiedLocallyAndDeletedRemotelySolved = _filesModifiedLocallyAndDeletedRemotelyCount;
-
-                StartProgressBarWithMaxValue(_conflictItemsCount);
+                (IReadOnlyList<ConflictData> conflictItems,
+                    IReadOnlyList<ConflictData> filesDeletedLocallyAndModifiedRemotely,
+                    IReadOnlyList<ConflictData> filesModifiedLocallyAndDeletedRemotely,
+                    IReadOnlyList<ConflictData> filesRemaining)
+                    = GetConflicts();
 
                 _solveMergeConflictApplyToAll = false;
                 foreach (ConflictData conflictData in filesDeletedLocallyAndModifiedRemotely)
@@ -1286,7 +1288,7 @@ public partial class FormResolveConflicts : GitModuleForm
         {
             string customTool = item?.Tag as string;
 
-            foreach (ConflictData conflict in GetConflicts())
+            foreach (ConflictData conflict in GetConflicts().conflicts)
             {
                 Directory.SetCurrentDirectory(Module.WorkingDir);
                 Module.RunMergeTool(fileName: conflict.Filename, customTool: customTool);
@@ -1397,7 +1399,11 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
-            StageFile(GetFileName());
+            foreach (ConflictData conflict in GetConflicts().conflicts)
+            {
+                StageFile(conflict.Filename);
+            }
+
             Initialize();
         }
     }
