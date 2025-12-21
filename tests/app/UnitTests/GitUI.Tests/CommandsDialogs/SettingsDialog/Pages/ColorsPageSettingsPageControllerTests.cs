@@ -90,11 +90,11 @@ public class ColorsPageSettingsPageControllerTests
 
     [TestCaseSource(nameof(CasesThemeSettings))]
     public void SettingsAreModified_should_reflect_ThemeId_change(
-        ThemeId themeId, string[] themeVariations, bool useSystemVisualStyle)
+        ThemeId themeId, string[] themeVariations, bool? useSystemVisualStyle)
     {
         AppSettings.ThemeId = themeId;
         AppSettings.ThemeVariations = themeVariations;
-        AppSettings.UseSystemVisualStyle = useSystemVisualStyle;
+        AppSettings.UseSystemVisualStyle = useSystemVisualStyle is true;
         ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
         _context.Controller.ShowThemeSettings();
 
@@ -104,27 +104,34 @@ public class ColorsPageSettingsPageControllerTests
 
     [TestCaseSource(nameof(CasesThemeSettings))]
     public void SettingsAreModified_should_reflect_UseSystemVisualStyle_change(
-        ThemeId themeId, string[] themeVariations, bool useSystemVisualStyle)
+        ThemeId themeId, string[] themeVariations, bool? useSystemVisualStyle)
     {
         AppSettings.ThemeId = themeId;
         AppSettings.ThemeVariations = themeVariations;
-        AppSettings.UseSystemVisualStyle = useSystemVisualStyle;
+        AppSettings.UseSystemVisualStyle = useSystemVisualStyle is true;
         ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
 
         _context.Controller.ShowThemeSettings();
         _context.Controller.SettingsAreModified.Should().BeFalse();
 
         _context.Page.UseSystemVisualStyle = !_context.Page.UseSystemVisualStyle;
-        _context.Controller.SettingsAreModified.Should().BeTrue();
+        if (themeId == ThemeId.WindowsAppColorModeId || themeId == ThemeId.DefaultLight)
+        {
+            _context.Controller.SettingsAreModified.Should().BeFalse();
+        }
+        else if (useSystemVisualStyle is not null)
+        {
+            _context.Controller.SettingsAreModified.Should().BeTrue();
+        }
     }
 
     [TestCaseSource(nameof(CasesThemeSettings))]
     public void SettingsAreModified_should_reflect_ThemeVariations_change(
-        ThemeId themeId, string[] themeVariations, bool useSystemVisualStyle)
+        ThemeId themeId, string[] themeVariations, bool? useSystemVisualStyle)
     {
         AppSettings.ThemeId = themeId;
         AppSettings.ThemeVariations = themeVariations;
-        AppSettings.UseSystemVisualStyle = useSystemVisualStyle;
+        AppSettings.UseSystemVisualStyle = useSystemVisualStyle is true;
         ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
 
         _context.Controller.ShowThemeSettings();
@@ -134,6 +141,22 @@ public class ColorsPageSettingsPageControllerTests
             ? new[] { ThemeVariations.Colorblind }
             : ThemeVariations.None;
         _context.Controller.SettingsAreModified.Should().BeTrue();
+    }
+
+    [TestCaseSource(nameof(CasesThemeSettings))]
+    public void Theme_UseSystemVisualStyle_defaults_from_theme(
+        ThemeId themeId, string[] themeVariations, bool? useSystemVisualStyle)
+    {
+        _context.Page.SelectedThemeId = themeId;
+        _context.Controller.HandleSelectedThemeChanged();
+        if (themeId == ThemeId.WindowsAppColorModeId)
+        {
+            _context.Page.UseSystemVisualStyle.Should().Be(Application.SystemColorMode == SystemColorMode.Classic);
+        }
+        else if (useSystemVisualStyle is not null)
+        {
+            _context.Page.UseSystemVisualStyle.Should().Be(useSystemVisualStyle.Value);
+        }
     }
 
     [Test]
@@ -164,9 +187,23 @@ public class ColorsPageSettingsPageControllerTests
 
         yield return new object[]
         {
-            new ThemeId("non_default", isBuiltin: true),
+            ThemeId.DefaultDark,
             new[] { ThemeVariations.Colorblind },
             false // useSystemVisualStyle
+        };
+
+        yield return new object[]
+        {
+            ThemeId.WindowsAppColorModeId,
+            new[] { ThemeVariations.Colorblind },
+            null // useSystemVisualStyle, depends on Application.SystemColorMode
+        };
+
+        yield return new object[]
+        {
+            new ThemeId("non_default", isBuiltin: true),
+            new[] { ThemeVariations.Colorblind },
+            null // useSystemVisualStyle, unknown
         };
     }
 

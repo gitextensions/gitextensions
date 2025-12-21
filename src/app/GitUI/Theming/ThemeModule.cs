@@ -58,14 +58,18 @@ public static class ThemeModule
         ThemeId themeId = AppSettings.ThemeId;
         if (string.IsNullOrEmpty(themeId.Name))
         {
-            // Migrate from default invariant/light to Windows default
+            // Migrate from default invariant/light to Windows default color mode
             themeId = ThemeId.WindowsAppColorModeId;
             AppSettings.ThemeId = themeId;
         }
 
+        bool systemVisualStyle = AppSettings.UseSystemVisualStyle;
         if (themeId == ThemeId.WindowsAppColorModeId)
         {
+            // fix systemVisualStyle for WindowsAppColorModeId mode (always for DefaultLight)
+            // This is also how it is presented in Settings
             themeId = ThemeId.ColorModeThemeId;
+            systemVisualStyle = themeId == ThemeId.DefaultLight;
         }
 
         string[] variations = AppSettings.ThemeVariations;
@@ -78,7 +82,7 @@ public static class ThemeModule
         Theme theme;
         try
         {
-            theme = repository.GetTheme(themeId, AppSettings.ThemeVariations);
+            theme = repository.GetTheme(themeId, variations);
         }
         catch (ThemeException ex)
         {
@@ -89,7 +93,7 @@ public static class ThemeModule
             return CreateFallbackSettings(invariantTheme, variations);
         }
 
-        return new ThemeSettings(theme, invariantTheme, AppSettings.ThemeVariations, AppSettings.UseSystemVisualStyle);
+        return new ThemeSettings(theme, invariantTheme, variations, systemVisualStyle);
     }
 
     private static ThemeSettings CreateFallbackSettings(Theme invariantTheme, string[] variations) =>
