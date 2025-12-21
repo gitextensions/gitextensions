@@ -73,6 +73,8 @@ trim_trailing_whitespace = false
 # C# files
 [*.cs]
 
+charset = utf-8-bom
+
 #### Core EditorConfig Options ####
 
 # New line preferences
