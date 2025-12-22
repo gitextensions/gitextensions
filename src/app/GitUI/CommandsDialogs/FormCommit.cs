@@ -2713,7 +2713,10 @@ public sealed partial class FormCommit : GitModuleForm
 
         UpdateButtonStates();
 
-        SelectStaged();
+        if (AppSettings.CommitDialogSelectStagedOnEnterMessage.Value)
+        {
+            SelectStaged();
+        }
     }
 
     private void StageInSuperproject_CheckedChanged(object sender, EventArgs e)
@@ -2747,7 +2750,10 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void Message_Enter(object sender, EventArgs e)
     {
-        SelectStaged();
+        if (AppSettings.CommitDialogSelectStagedOnEnterMessage.Value)
+        {
+            SelectStaged();
+        }
     }
 
     private void modifyCommitMessageButton_Click(object sender, EventArgs e)
@@ -2782,6 +2788,12 @@ public sealed partial class FormCommit : GitModuleForm
     private void Options_DropDownOpening(object sender, EventArgs e)
     {
         refreshDialogOnFormFocusToolStripMenuItem.Checked = AppSettings.RefreshArtificialCommitOnApplicationActivated;
+        tsmiSelectStagedOnEnterMessage.Checked = AppSettings.CommitDialogSelectStagedOnEnterMessage.Value;
+    }
+
+    private void tsmiSelectStagedOnEnterMessage_Click(object sender, EventArgs e)
+    {
+        AppSettings.CommitDialogSelectStagedOnEnterMessage.Value = !AppSettings.CommitDialogSelectStagedOnEnterMessage.Value;
     }
 
     internal readonly struct TestAccessor

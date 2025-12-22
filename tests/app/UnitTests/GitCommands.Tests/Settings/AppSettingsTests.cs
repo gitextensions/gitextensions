@@ -186,6 +186,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.EnsureCommitMessageSecondLineEmpty)], true, false, false);
             yield return (properties[nameof(AppSettings.LastCommitMessage)], string.Empty, true, false);
             yield return (properties[nameof(AppSettings.CommitDialogNumberOfPreviousMessages)], 6, false, false);
+            yield return (properties[nameof(AppSettings.CommitDialogSelectStagedOnEnterMessage)], true, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.CommitDialogShowOnlyMyMessages)], false, false, false);
             yield return (properties[nameof(AppSettings.ShowCommitAndPush)], true, false, false);
             yield return (properties[nameof(AppSettings.ShowResetWorkTreeChanges)], true, false, false);
