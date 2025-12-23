@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using GitCommands.Git.Extensions;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -47,7 +46,7 @@ public sealed class CommitDataManager : ICommitDataManager
     /// <inheritdoc />
     public void UpdateBody(CommitData commitData, bool appendNotesOnly, out string? error)
     {
-        const string BodyAndNotesFormat = "%B%nNotes:%n%-N";
+        const string BodyAndNotesFormat = $"%B%n{RevisionReader.NotesPrefix}%n%-N";
         const string NotesFormat = "%-N";
 
         if (!TryGetCommitLog(commitData.ObjectId.ToString(), appendNotesOnly ? NotesFormat : BodyAndNotesFormat, out error, out string? data, cache: false))
@@ -55,20 +54,18 @@ public sealed class CommitDataManager : ICommitDataManager
             return;
         }
 
+        // Commit message is not re-encoded by Git when format is given
+        data = GetModule().ReEncodeCommitMessage(data.Replace('\v', '\n'));
+
         if (appendNotesOnly)
         {
-            if (!string.IsNullOrWhiteSpace(data))
-            {
-                commitData.Body += $"\nNotes:\n    {GetModule().ReEncodeCommitMessage(data.Replace('\v', '\n'))}";
-            }
+            commitData.Notes = data;
+            return;
         }
-        else
-        {
-            string[] lines = data.Split(Delimiters.LineAndVerticalFeed);
 
-            // Commit message is not re-encoded by Git when format is given
-            commitData.Body = GetModule().ReEncodeCommitMessage(ProcessDiffNotes(startIndex: 0, lines));
-        }
+        int splitPos = data.IndexOf($"\n{RevisionReader.NotesPrefix}");
+        commitData.Body = data[0..splitPos].TrimEnd();
+        commitData.Notes = data[(splitPos + RevisionReader.NotesPrefix.Length + 1)..];
     }
 
     /// <inheritdoc />
@@ -94,7 +91,7 @@ public sealed class CommitDataManager : ICommitDataManager
             FormatUser(revision.Author, revision.AuthorEmail), revision.AuthorDate,
             FormatUser(revision.Committer, revision.CommitterEmail), revision.CommitDate,
             revision.Body ?? revision.Subject)
-        { ChildIds = children };
+        { ChildIds = children, Notes = revision.Notes };
 
         static string FormatUser(string user, string email) => string.IsNullOrWhiteSpace(email) ? user : $"{user} <{email}>";
     }
@@ -144,37 +141,5 @@ public sealed class CommitDataManager : ICommitDataManager
         data = exec.StandardOutput;
         error = null;
         return true;
-    }
-
-    private static string ProcessDiffNotes(int startIndex, string[] lines)
-    {
-        int endIndex = lines.Length - 1;
-        if (lines[endIndex] == "Notes:")
-        {
-            // No Notes, ignore
-            endIndex--;
-        }
-
-        StringBuilder message = new();
-        bool notesStart = false;
-
-        for (int i = startIndex; i <= endIndex; i++)
-        {
-            string line = lines[i];
-
-            if (notesStart)
-            {
-                message.Append("    ");
-            }
-
-            message.AppendLine(line);
-
-            if (line == "Notes:")
-            {
-                notesStart = true;
-            }
-        }
-
-        return message.ToString();
     }
 }

@@ -1,5 +1,6 @@
 using System.Net;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
 
 namespace ResourceManager.CommitDataRenders;
@@ -36,7 +37,7 @@ public sealed class CommitDataBodyRenderer : ICommitDataBodyRenderer
     {
         ArgumentNullException.ThrowIfNull(commitData);
 
-        string body = WebUtility.HtmlEncode((commitData.Body ?? "").Trim());
+        string body = WebUtility.HtmlEncode((UIExtensions.FormatBodyAndNotes(commitData.Body, commitData.Notes) ?? "").Trim());
 
         if (showRevisionsAsLinks)
         {
