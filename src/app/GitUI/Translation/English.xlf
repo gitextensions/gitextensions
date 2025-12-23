@@ -800,10 +800,6 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Colors</source>
         <target />
       </trans-unit>
-      <trans-unit id="DefaultThemeName.Text">
-        <source>default</source>
-        <target />
-      </trans-unit>
       <trans-unit id="DrawNonRelativesGray.Text">
         <source>Draw non relatives graph gray</source>
         <target />

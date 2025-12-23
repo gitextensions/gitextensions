@@ -31,7 +31,7 @@ public class AnsiEscapeUtilitiesTest_TryGetColors
         _redAnsiTheme[13] = _redAnsiTheme[7];
         _themeId = AppSettings.ThemeId;
         _themeVariations = AppSettings.ThemeVariations;
-        AppSettings.ThemeId = ThemeId.Default;
+        AppSettings.ThemeId = ThemeId.DefaultLight;
         AppSettings.ThemeVariations = ThemeVariations.None;
         ThemeModule.Load();
     }

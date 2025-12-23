@@ -2,14 +2,36 @@
 
 public readonly struct ThemeId
 {
-    public static ThemeId Default { get; } = new(string.Empty, isBuiltin: true);
+    private static readonly string DefaultDarkThemeName = new("dark");
+    private static readonly string DefaultLightThemeName = new("light");
+    private static readonly string WindowsAppColorModeName = new("Windows app color mode");
+
+    /// <summary>
+    /// The filename for the default invariant theme, identifying as "light".
+    /// </summary>
+    public static string InvariantThemeFileName { get; } = "invariant";
+
+    // DefaultLight is the default invariant theme
+    public static ThemeId DefaultDark { get; } = new(DefaultDarkThemeName, isBuiltin: true);
+    public static ThemeId DefaultLight { get; } = new(DefaultLightThemeName, isBuiltin: true);
+    public static ThemeId WindowsAppColorModeId { get; } = new(WindowsAppColorModeName, isBuiltin: true);
 
     public string Name { get; }
     public bool IsBuiltin { get; }
 
-    public ThemeId(string name, bool isBuiltin)
+    /// <summary>
+    /// Get the default ThemeId for the current Windows SystemColorMode
+    /// </summary>
+    public static ThemeId ColorModeThemeId
+        => Application.SystemColorMode == SystemColorMode.Dark
+            ? ThemeId.DefaultDark
+            : ThemeId.DefaultLight;
+
+    public ThemeId(string name, bool isBuiltin = false)
     {
-        Name = name ?? string.Empty;
+        Name = string.IsNullOrWhiteSpace(name) || (isBuiltin && name.Equals(InvariantThemeFileName, StringComparison.OrdinalIgnoreCase))
+            ? DefaultLightThemeName
+            : name;
         IsBuiltin = isBuiltin;
     }
 
@@ -34,4 +56,6 @@ public readonly struct ThemeId
     private bool Equals(ThemeId other) =>
         string.Equals(Name, other.Name, StringComparison.OrdinalIgnoreCase) &&
         IsBuiltin == other.IsBuiltin;
+
+    public override string ToString() => Name;
 }
