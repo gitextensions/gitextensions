@@ -131,12 +131,9 @@ partial class FileStatusList
         tsmiRefreshOnFormFocus.Visible = canAutoRefresh;
         sepToolbar.Visible = canAutoRefresh;
 
-        sepShow.Visible = canAutoRefresh;
         tsmiShowIgnoredFiles.Visible = canAutoRefresh;
-        tsmiShowSkipWorktreeFiles.Visible = canAutoRefresh;
         tsmiShowAssumeUnchangedFiles.Visible = canAutoRefresh;
-        tsmiShowUntrackedFiles.Visible = canAutoRefresh;
-        tsmiShowUntrackedFiles.Checked = canAutoRefresh && Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
+        tsmiShowUntrackedFiles.Checked = Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
 
         tsmiStageFile.Font = new Font(tsmiStageFile.Font, FontStyle.Bold);
         tsmiUnstageFile.Font = new Font(tsmiUnstageFile.Font, FontStyle.Bold);
