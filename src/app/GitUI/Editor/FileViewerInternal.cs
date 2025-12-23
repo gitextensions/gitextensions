@@ -718,6 +718,8 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
     public int MaxLineNumber => TextEditor.ShowLineNumbers ? TotalNumberOfLines : _lineNumbersControl.MaxLineNumber;
 
+    public int CurrentFileColumn => TextEditor.ActiveTextAreaControl.Caret.Position.Column;
+
     public int CurrentFileLine()
     {
         bool isPartial = _textHighlightService is (DiffHighlightService or GrepHighlightService or DifftasticHighlightService);
