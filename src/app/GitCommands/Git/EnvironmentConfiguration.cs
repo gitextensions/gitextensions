@@ -13,6 +13,8 @@ public static class EnvironmentConfiguration
         = Env.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)
        ?? Env.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.Machine);
 
+    public static string? GetEnvironmentVariable(string name) => Env.GetEnvironmentVariable(name);
+
     /// <summary>
     /// Sets <c>PATH</c>, <c>HOME</c>, <c>TERM</c> and <c>SSH_ASKPASS</c> environment variables
     /// for the current process.
