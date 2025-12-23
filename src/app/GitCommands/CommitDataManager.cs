@@ -1,5 +1,4 @@
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using GitCommands.Git.Extensions;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -55,17 +54,18 @@ public sealed class CommitDataManager : ICommitDataManager
             return;
         }
 
+        // Commit message is not re-encoded by Git when format is given
+        data = GetModule().ReEncodeCommitMessage(data.Replace('\v', '\n'));
+
         if (appendNotesOnly)
         {
-            if (!string.IsNullOrWhiteSpace(data))
-            {
-                commitData.Notes = GetModule().ReEncodeCommitMessage(data.Replace('\v', '\n'));
-            }
+            commitData.Notes = data;
+            return;
         }
-        else
-        {
-            (commitData.Body, commitData.Notes) = ProcessDiffNotes(data.Split(Delimiters.LineAndVerticalFeed), GetModule().ReEncodeCommitMessage);
-        }
+
+        int splitPos = data.IndexOf($"\n{RevisionReader.NotesPrefix}");
+        commitData.Body = data[0..splitPos].TrimEnd();
+        commitData.Notes = data[(splitPos + RevisionReader.NotesPrefix.Length + 1)..];
     }
 
     /// <inheritdoc />
@@ -132,26 +132,5 @@ public sealed class CommitDataManager : ICommitDataManager
         data = exec.StandardOutput;
         error = null;
         return true;
-    }
-
-    private static (string rawBody, string? rawNotes) ProcessDiffNotes(string[] lines, Func<string, string> encode)
-    {
-        StringBuilder message = new();
-        StringBuilder? notes = null;
-
-        foreach (string line in lines)
-        {
-            if (string.Equals(line, RevisionReader.NotesPrefix, StringComparison.Ordinal))
-            {
-                notes ??= new();
-            }
-            else
-            {
-                (notes ?? message).AppendLine(line);
-            }
-        }
-
-        // Commit message is not re-encoded by Git when format is given
-        return (encode(message.ToString()), notes is null ? "" : encode(notes.ToString()));
     }
 }
