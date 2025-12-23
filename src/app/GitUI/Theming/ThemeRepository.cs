@@ -61,7 +61,7 @@ public class ThemeRepository : IThemeRepository
     }
 
     private IEnumerable<ThemeId> GetBuiltinThemeIds() =>
-    new DirectoryInfo(_themePathProvider.AppThemesDirectory)
+        new DirectoryInfo(_themePathProvider.AppThemesDirectory)
             .EnumerateFiles("*" + _themePathProvider.ThemeExtension, SearchOption.TopDirectoryOnly)
             .Select(fileInfo => Path.GetFileNameWithoutExtension(fileInfo.Name))
             .Select(fileName => new ThemeId(fileName, isBuiltin: true))
