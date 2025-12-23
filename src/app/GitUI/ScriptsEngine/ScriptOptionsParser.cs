@@ -89,7 +89,7 @@ public sealed partial class ScriptOptionsParser
         return option.StartsWith("s");
     }
 
-    public static (string? arguments, bool abort) Parse(string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider = null)
+    public static (string? arguments, bool abort) Parse(string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptOptionsProvider scriptOptionsProvider)
     {
         if (string.IsNullOrWhiteSpace(arguments))
         {
@@ -163,8 +163,8 @@ public sealed partial class ScriptOptionsParser
 
         return (arguments, abort: false);
 
-        static IEnumerable<string> GetOptions(IReadOnlyList<string> options, IScriptOptionsProvider? scriptOptionsProvider)
-            => scriptOptionsProvider is null ? options : options.Union(scriptOptionsProvider.Options);
+        static IEnumerable<string> GetOptions(IReadOnlyList<string> options, IScriptOptionsProvider scriptOptionsProvider)
+            => options.Union(scriptOptionsProvider.Options);
     }
 
     private static string AskToSpecify(IEnumerable<IGitRef> options, IGitUICommands uiCommands, IWin32Window owner)
@@ -289,7 +289,7 @@ public sealed partial class ScriptOptionsParser
     }
 
     private static string? ParseScriptArguments(string arguments, string option, IWin32Window owner,
-        IScriptOptionsProvider? scriptOptionsProvider, IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions,
+        IScriptOptionsProvider scriptOptionsProvider, IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions,
         in IList<IGitRef> selectedTags, in IList<IGitRef> selectedBranches, in IList<IGitRef> selectedLocalBranches,
         in IList<IGitRef> selectedRemoteBranches, in IList<string> selectedRemotes, GitRevision selectedRevision,
         in IList<IGitRef> currentTags, in IList<IGitRef> currentBranches, in IList<IGitRef> currentLocalBranches,
@@ -481,7 +481,7 @@ public sealed partial class ScriptOptionsParser
                 break;
 
             default:
-                newStrings = scriptOptionsProvider?.GetValues(option);
+                newStrings = scriptOptionsProvider.GetValues(option);
                 break;
         }
 
@@ -570,7 +570,7 @@ public sealed partial class ScriptOptionsParser
             List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches, List<IGitRef> currentBranches, bool loadBody)
             => ScriptOptionsParser.GetCurrentRevision(module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches, loadBody);
 
-        public string? ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider,
+        public string? ParseScriptArguments(string arguments, string option, IWin32Window owner, IScriptOptionsProvider scriptOptionsProvider,
             IGitUICommands uiCommands, IReadOnlyList<GitRevision> allSelectedRevisions, List<IGitRef> selectedTags, List<IGitRef> selectedBranches,
             List<IGitRef> selectedLocalBranches, List<IGitRef> selectedRemoteBranches, List<string> selectedRemotes, GitRevision selectedRevision,
             List<IGitRef> currentTags, List<IGitRef> currentBranches, List<IGitRef> currentLocalBranches, List<IGitRef> currentRemoteBranches,

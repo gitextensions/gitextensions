@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Reflection;
 using CommonTestUtils;
 using FluentAssertions;
@@ -84,7 +84,7 @@ public class ScriptRunnerTests
     {
         _exampleScript.Command = command;
 
-        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands);
+        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands, ScriptOptionsProviderBase.Default);
 
         result.Should().BeFalse();
     }
@@ -95,7 +95,7 @@ public class ScriptRunnerTests
         _exampleScript.Command = "{git}";
         _exampleScript.Arguments = "";
 
-        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands);
+        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands, ScriptOptionsProviderBase.Default);
 
         result.Should().BeTrue();
     }
@@ -106,7 +106,7 @@ public class ScriptRunnerTests
         _exampleScript.Command = "{git}";
         _exampleScript.Arguments = "--version";
 
-        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands);
+        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands, ScriptOptionsProviderBase.Default);
 
         result.Should().BeTrue();
     }
@@ -120,7 +120,7 @@ public class ScriptRunnerTests
         GitRevision revision = new(ObjectId.IndexId);
         _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
 
-        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands);
+        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands, ScriptOptionsProviderBase.Default);
 
         result.Should().BeTrue();
     }
@@ -133,7 +133,7 @@ public class ScriptRunnerTests
 
         _module.GetCurrentCheckout().Returns((ObjectId)null);
 
-        ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _commands))).Should()
+        ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _commands, ScriptOptionsProviderBase.Default))).Should()
             .Throw<UserExternalOperationException>();
         ex.And.Context.Should().Be($"Script: '{_exampleScript.GetDisplayName()}'\r\nA valid revision is required to substitute the argument options");
         ex.And.Command.Should().Be(_exampleScript.Command);
@@ -149,7 +149,7 @@ public class ScriptRunnerTests
 
         _mockForm.UICommands.BrowseRepo = null;
 
-        ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands))).Should()
+        ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands, ScriptOptionsProviderBase.Default))).Should()
             .Throw<UserExternalOperationException>();
         ex.And.Context.Should().Be($"Script: '{_exampleScript.GetDisplayName()}'\r\n'sHash' option is only supported when invoked from the revision grid");
         ex.And.Command.Should().Be(_exampleScript.Command);
@@ -173,7 +173,7 @@ public class ScriptRunnerTests
             ClassicAssert.AreEqual(0, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
             formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull();
 
-            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands))).Should()
+            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, ScriptOptionsProviderBase.Default))).Should()
                     .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Script: '{_exampleScript.GetDisplayName()}'\r\nA valid revision is required to substitute the argument options");
             ex.And.Command.Should().Be(_exampleScript.Command);
@@ -197,14 +197,14 @@ public class ScriptRunnerTests
             ClassicAssert.AreEqual(1, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
 
             string errorMessage = null;
-            bool result = ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands);
+            bool result = ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, ScriptOptionsProviderBase.Default);
 
             errorMessage.Should().BeNull();
             result.Should().BeTrue();
         });
     }
 
-    private static bool ExecuteRunScript(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptOptionsProvider? scriptOptionsProvider = null)
+    private static bool ExecuteRunScript(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptOptionsProvider scriptOptionsProvider)
     {
         try
         {
