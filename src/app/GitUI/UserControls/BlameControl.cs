@@ -640,8 +640,30 @@ public sealed partial class BlameControl : GitModuleControl
             return false;
         }
 
-        blameInfo = (_revisionGridInfo?.GetRevision(blameCommit.ObjectId), blameCommit.FileName);
-        return blameInfo.selectedRevision is not null;
+        int trials = 1;
+        if (_revisionGridInfo is null)
+        {
+            RevisionGridControl revisionGridControl = new() { UICommandsSource = UICommandsSource };
+            revisionGridControl.PerformRefreshRevisions();
+            trials = 10;
+            _revisionGridInfo = revisionGridControl;
+        }
+
+        while (true)
+        {
+            blameInfo = (_revisionGridInfo.GetRevision(blameCommit.ObjectId), blameCommit.FileName);
+            if (blameInfo.selectedRevision is not null)
+            {
+                return true;
+            }
+
+            if (--trials == 0)
+            {
+                return false;
+            }
+
+            Thread.Sleep(250);
+        }
     }
 
     private void blameRevisionToolStripMenuItem_Click(object sender, EventArgs e)
