@@ -123,7 +123,7 @@ Inactive remote is completely invisible to git.");
 
         _lvgEnabled = new ListViewGroup(_lvgEnabledHeader.Text, HorizontalAlignment.Left);
         _lvgDisabled = new ListViewGroup(_lvgDisabledHeader.Text, HorizontalAlignment.Left);
-        Remotes.Groups.AddRange(new[] { _lvgEnabled, _lvgDisabled });
+        Remotes.Groups.AddRange([_lvgEnabled, _lvgDisabled]);
 
         Application.Idle += application_Idle;
 

@@ -151,7 +151,7 @@ public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
             return default;
         }
 
-        string[] remoteNames = new[] { "upstream", "fork", "origin" };
+        string[] remoteNames = ["upstream", "fork", "origin"];
         foreach (string remoteName in remoteNames)
         {
             Remote remoteFound = remotes.FirstOrDefault(r => r.Name == remoteName);

@@ -42,7 +42,7 @@ public interface IHotkeySettingsManager : IHotkeySettingsLoader
 
 internal class HotkeySettingsManager : IHotkeySettingsManager
 {
-    private static readonly XmlSerializer? _serializer = new(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
+    private static readonly XmlSerializer? _serializer = new(typeof(HotkeySettings[]), [typeof(HotkeyCommand)]);
     private readonly HashSet<Keys> _usedKeys = [];
     private readonly IScriptsManager _scriptsManager;
 

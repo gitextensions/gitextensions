@@ -422,7 +422,7 @@ public sealed partial class GitModuleTests
     url = https://github.com/gitextensions/NBug.git
 [submodule ""Externals/Git.hub""]
     url = https://github.com/gitextensions/Git.hub.gitk");
-        helper.Module.GetSubmodulesLocalPaths().Should().Equal(new string[] { "Externals/NBug" });
+        helper.Module.GetSubmodulesLocalPaths().Should().Equal(["Externals/NBug"]);
     }
 
     [Test]
@@ -492,9 +492,9 @@ public sealed partial class GitModuleTests
         ClassicAssert.AreEqual(expected, actual);
     }
 
-    [TestCase(new object[] { "123", "567", "output.file", null })]
-    [TestCase(new object[] { "123", "567", "output.file", 1 })]
-    [TestCase(new object[] { "123", "567", "output.file", 2 })]
+    [TestCase(["123", "567", "output.file", null])]
+    [TestCase(["123", "567", "output.file", 1])]
+    [TestCase(["123", "567", "output.file", 2])]
     public void Test_FormatPatch(string from, string to, string outputFile, int? start)
     {
         StringBuilder arguments = new();
@@ -512,9 +512,9 @@ public sealed partial class GitModuleTests
         _gitModule.FormatPatch(from, to, outputFile, start).Should().Be(dummyCommandOutput);
     }
 
-    [TestCase(new object[] { "", "567", "output.file", null })]
-    [TestCase(new object[] { "", "567", "output.file", 1 })]
-    [TestCase(new object[] { null, "567", "output.file", 2 })]
+    [TestCase(["", "567", "output.file", null])]
+    [TestCase(["", "567", "output.file", 1])]
+    [TestCase([null, "567", "output.file", 2])]
     public void Test_FormatPatchInRoot(string from, string to, string outputFile, int? start)
     {
         StringBuilder arguments = new();

@@ -65,7 +65,7 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
 
         if (EnvUtils.RunningOnWindows())
         {
-            result = string.Join(Environment.NewLine, result.Split(new[] { Environment.NewLine }, StringSplitOptions.None).SelectMany(l => l.Split('\n')));
+            result = string.Join(Environment.NewLine, result.Split([Environment.NewLine], StringSplitOptions.None).SelectMany(l => l.Split('\n')));
         }
 
         textBoxResult.Text = result;

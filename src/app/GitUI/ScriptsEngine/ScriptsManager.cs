@@ -184,9 +184,9 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
 
             if (inputString.Contains(paramSeparator) || inputString.Contains(scriptSeparator))
             {
-                foreach (string script in inputString.Split(new[] { scriptSeparator }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string script in inputString.Split([scriptSeparator], StringSplitOptions.RemoveEmptyEntries))
                 {
-                    string[] parameters = script.Split(new[] { paramSeparator }, StringSplitOptions.None);
+                    string[] parameters = script.Split([paramSeparator], StringSplitOptions.None);
 
                     scripts.Add(new ScriptInfo
                     {

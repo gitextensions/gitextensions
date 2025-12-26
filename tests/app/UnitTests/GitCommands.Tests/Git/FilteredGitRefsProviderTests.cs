@@ -36,12 +36,12 @@ public sealed class FilteredGitRefsProviderTests
     [Test]
     public void FilteredGitRefsProviderTest()
     {
-        IGitRef[] refs = new[]
-        {
+        IGitRef[] refs =
+        [
             CreateSubstituteRef("f6323b8e80f96dff017dd14bdb28a576556adab4", "refs/heads/develop", ""),
             CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", "refs/remotes/origin/develop", "origin"),
             CreateSubstituteRef("f6323b8e80f96dff017dd14bdb28a576556adab5", "refs/heads/local", ""),
-        };
+        ];
 
         _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 

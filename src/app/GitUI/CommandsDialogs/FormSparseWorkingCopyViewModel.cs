@@ -100,7 +100,7 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
         }
     }
 
-    private static readonly string[] first = new[] { "/*" };
+    private static readonly string[] first = ["/*"];
 
     public void FirePropertyChanged()
     {

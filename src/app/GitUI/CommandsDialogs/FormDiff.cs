@@ -136,12 +136,12 @@ public partial class FormDiff : GitModuleForm
         if (ckCompareToMergeBase.Checked)
         {
             Validates.NotNull(_mergeBase);
-            revisions = new[] { _secondRevision, _mergeBase };
+            revisions = [_secondRevision, _mergeBase];
         }
         else
         {
             Validates.NotNull(_firstRevision);
-            revisions = new[] { _secondRevision, _firstRevision };
+            revisions = [_secondRevision, _firstRevision];
         }
 
         DiffFiles.InvokeAndForget(() => DiffFiles.SetDiffsAsync(revisions, _currentHead.Value, _populateDiffFilesSequence.Next()));

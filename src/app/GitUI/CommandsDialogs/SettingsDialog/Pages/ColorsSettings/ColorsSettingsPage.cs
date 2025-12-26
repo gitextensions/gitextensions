@@ -66,7 +66,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
     public string[] SelectedThemeVariations
     {
         get => chkColorblind.Checked
-            ? new[] { ThemeVariations.Colorblind }
+            ? [ThemeVariations.Colorblind]
             : ThemeVariations.None;
 
         set => chkColorblind.Checked = value.Contains(ThemeVariations.Colorblind);

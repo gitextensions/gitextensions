@@ -81,7 +81,7 @@ internal class AppVeyorAdapter : IBuildServerAdapter
         // if AppVeyorAccountName is set, projectNamesSetting may exclude the accountName part
         string projectNamesSetting = config.GetString("AppVeyorProjectName", "");
         List<string> projectNames = [.. _buildServerWatcher.ReplaceVariables(projectNamesSetting)
-            .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
+            .Split(['|'], StringSplitOptions.RemoveEmptyEntries)
             .Where(p => p.Contains('/') || !string.IsNullOrEmpty(accountName))
             .Select(p => p.Contains('/') ? p : accountName.Combine("/", p)!)];
 

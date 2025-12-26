@@ -52,7 +52,7 @@ public class CopyContextMenuItemTests
     [TestCaseSource(nameof(GetArtificialCommits))]
     public void Should_should_show_minimum_info_for_artificial_commits(ObjectId objectId)
     {
-        GitRevision[] revisions = new[] { new GitRevision(objectId) };
+        GitRevision[] revisions = [new GitRevision(objectId)];
         _copyContextMenuItem.SetRevisionFunc(() => revisions);
 
         _copyContextMenuItem.ShowDropDown();
@@ -75,7 +75,7 @@ public class CopyContextMenuItemTests
             new GitRef(null, revision.ObjectId, "refs/heads/branch2")
         ];
         revision.Refs = refs;
-        GitRevision[] revisions = new[] { revision };
+        GitRevision[] revisions = [revision];
         _copyContextMenuItem.SetRevisionFunc(() => revisions);
 
         _copyContextMenuItem.ShowDropDown();
@@ -101,7 +101,7 @@ public class CopyContextMenuItemTests
             new GitRef(null, revision.ObjectId, "refs/tags/tag2")
         ];
         revision.Refs = refs;
-        GitRevision[] revisions = new[] { revision };
+        GitRevision[] revisions = [revision];
         _copyContextMenuItem.SetRevisionFunc(() => revisions);
 
         _copyContextMenuItem.ShowDropDown();
@@ -129,7 +129,7 @@ public class CopyContextMenuItemTests
             new GitRef(null, revision.ObjectId, "refs/heads/branch2"),
         ];
         revision.Refs = refs;
-        GitRevision[] revisions = new[] { revision };
+        GitRevision[] revisions = [revision];
         _copyContextMenuItem.SetRevisionFunc(() => revisions);
 
         _copyContextMenuItem.ShowDropDown();
@@ -171,7 +171,7 @@ public class CopyContextMenuItemTests
             Author = "Author3",
             AuthorEmail = "author3@foo.bla",
         };
-        GitRevision[] revisions = new[] { rev1, rev2, rev3 };
+        GitRevision[] revisions = [rev1, rev2, rev3];
         _copyContextMenuItem.SetRevisionFunc(() => revisions);
 
         _copyContextMenuItem.ShowDropDown();

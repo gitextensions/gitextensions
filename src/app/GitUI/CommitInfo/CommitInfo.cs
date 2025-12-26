@@ -785,11 +785,11 @@ public partial class CommitInfo : GitModuleControl
         tableLayout.SuspendLayout();
 
         int[] heights =
-        {
+        [
             commitInfoHeader.Height + commitInfoHeader.Margin.Vertical,
             _commitMessageHeight + rtbxCommitMessage.Margin.Vertical + pnlCommitMessage.Margin.Vertical,
             _revisionInfoHeight + RevisionInfo.Margin.Vertical
-        };
+        ];
 
         // leave 1st row SizeType = AutoWidth to let CommitInfoHeader.AutoSize be correctly applied
         for (int i = 1; i < tableLayout.RowStyles.Count; i++)

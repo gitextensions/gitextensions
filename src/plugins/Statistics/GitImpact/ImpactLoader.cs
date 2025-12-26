@@ -197,7 +197,7 @@ public sealed class ImpactLoader : IDisposable
             line = line[4..];
 
             // Split date and author
-            string[] header = line.Split(new[] { " --- " }, 2, StringSplitOptions.RemoveEmptyEntries);
+            string[] header = line.Split([" --- "], 2, StringSplitOptions.RemoveEmptyEntries);
 
             if (header.Length != 2)
             {

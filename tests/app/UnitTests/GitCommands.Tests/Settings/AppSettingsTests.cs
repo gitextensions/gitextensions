@@ -440,8 +440,8 @@ internal sealed class AppSettingsTests
             yield return DateTime.MaxValue;
             yield return DateTime.Today;
 
-            Type[] enumTypes = new Type[]
-            {
+            Type[] enumTypes =
+            [
                 typeof(TruncatePathMethod),
                 typeof(AvatarProvider),
                 typeof(GitPullAction),
@@ -452,7 +452,7 @@ internal sealed class AppSettingsTests
                 typeof(GitRefsSortOrder),
                 typeof(DiffListSortType),
                 typeof(RevisionSortOrder),
-            };
+            ];
 
             foreach (Type enumType in enumTypes)
             {

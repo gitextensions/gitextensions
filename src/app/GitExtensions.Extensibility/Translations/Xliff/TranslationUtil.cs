@@ -35,7 +35,7 @@ public static class TranslationUtil
     }
 
     private static readonly string[] UnTranslatableDLLs =
-    {
+    [
         "mscorlib",
         "Microsoft",
         "Presentation",
@@ -52,7 +52,7 @@ public static class TranslationUtil
         "ConEmuWinForms",
         "TranslationApp",
         "netstandard",
-    };
+    ];
 
     private static bool AllowTranslateProperty([NotNullWhen(returnValue: true)] string? text)
     {

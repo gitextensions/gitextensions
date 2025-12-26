@@ -21,7 +21,7 @@ public class FormBrowse_LeftPanel_RemotesTests
     // Created once for each test
     private GitUICommands _commands;
     private IConfigFileRemoteSettingsManager _remotesManager;
-    private static readonly string[] RemoteNames = new[] { "remote1", "remote5", "remote3", "remote4", "remote2" };
+    private static readonly string[] RemoteNames = ["remote1", "remote5", "remote3", "remote4", "remote2"];
 
     [OneTimeSetUp]
     public void SetUpFixture()

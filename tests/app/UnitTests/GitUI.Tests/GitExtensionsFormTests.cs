@@ -89,12 +89,12 @@ public class GitExtensionsFormTests
             Size = new Size(300, 300),
             FormBorderStyle = borderStyle
         };
-        Rectangle[] screens = new[]
-        {
+        Rectangle[] screens =
+        [
             new Rectangle(-1920, 0, 1920, 1080),
             new Rectangle(1920, 0, 1920, 1080),
             new Rectangle(0, 0, 1920, 1080)
-        };
+        ];
 
         GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
         test.GetScreensWorkingArea = () => screens;
@@ -124,12 +124,12 @@ public class GitExtensionsFormTests
             Location = new Point(-100, -100),
             Size = new Size(300, 300),
         };
-        Rectangle[] screens = new[]
-        {
+        Rectangle[] screens =
+        [
             new Rectangle(-1920, 0, 1920, 1080),
             new Rectangle(1920, 0, 1920, 1080),
             new Rectangle(0, 0, 1920, 1080)
-        };
+        ];
 
         GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
         test.GetScreensWorkingArea = () => screens;
@@ -163,13 +163,13 @@ public class GitExtensionsFormTests
             Owner = owner,
             StartPosition = FormStartPosition.CenterParent
         };
-        Rectangle[] screens = new[]
-        {
+        Rectangle[] screens =
+        [
             new Rectangle(0, 0, 0, 0),
             new Rectangle(-1920, 0, 1920, 1080),
             new Rectangle(1920, 0, 1920, 1080),
             new Rectangle(0, 0, 1920, 1080)
-        };
+        ];
 
         GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
         test.GetScreensWorkingArea = () => screens;

@@ -28,7 +28,7 @@ public class ThemeLoader : IThemeLoader
     public Theme LoadTheme(string themeFileName, ThemeId themeId, in IReadOnlyList<string> allowedClasses)
     {
         ThemeColors themeColors = new();
-        LoadThemeColors(themeFileName, cssImportChain: new[] { themeFileName }, allowedClasses, themeColors);
+        LoadThemeColors(themeFileName, cssImportChain: [themeFileName], allowedClasses, themeColors);
         return new Theme(themeColors.AppColors, themeColors.SysColors, themeId);
     }
 
@@ -123,7 +123,7 @@ public class ThemeLoader : IThemeLoader
             throw StyleRuleThemeException(rule, themeFileName);
         }
 
-        return selectorText[ClassSelector.Length..].Split(new[] { ClassSelector }, StringSplitOptions.RemoveEmptyEntries);
+        return selectorText[ClassSelector.Length..].Split([ClassSelector], StringSplitOptions.RemoveEmptyEntries);
     }
 
     private static Color GetColor(string themeFileName, StyleRule rule)

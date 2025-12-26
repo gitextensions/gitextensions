@@ -58,10 +58,10 @@ public sealed class RunCommandTests
     [Test]
     public void RunCommandBasedOnArgument_should_throw_on_empty_args()
     {
-        ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { })))
+        ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument([])))
             .Should().Throw<ArgumentOutOfRangeException>();
 
-        ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe" })))
+        ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe"])))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
@@ -69,33 +69,33 @@ public sealed class RunCommandTests
     public void RunCommandBasedOnArgument_about()
     {
         UserEnvironmentInformation.Initialise("1234567", isDirty: true);
-        RunCommandBasedOnArgument<FormAbout>(new string[] { "ge.exe", "about" });
+        RunCommandBasedOnArgument<FormAbout>(["ge.exe", "about"]);
     }
 
     [TestCase("add")]
     [TestCase("addfiles")]
     public void RunCommandBasedOnArgument_add(string command)
-        => RunCommandBasedOnArgument<FormAddFiles>(new string[] { "ge.exe", command });
+        => RunCommandBasedOnArgument<FormAddFiles>(["ge.exe", command]);
 
     [TestCase("apply")]
     [TestCase("applypatch")]
     public void RunCommandBasedOnArgument_apply(string command)
-        => RunCommandBasedOnArgument<FormApplyPatch>(new string[] { "ge.exe", command });
+        => RunCommandBasedOnArgument<FormApplyPatch>(["ge.exe", command]);
 
     [Test]
     public void RunCommandBasedOnArgument_blame_throws()
     {
-        ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", "blame" })))
+        ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", "blame"])))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Test]
     public void RunCommandBasedOnArgument_blame()
-        => RunCommandBasedOnArgument<FormBlame>(new string[] { "ge.exe", "blame", "filename" });
+        => RunCommandBasedOnArgument<FormBlame>(["ge.exe", "blame", "filename"]);
 
     [Test]
     public void RunCommandBasedOnArgument_blame_line()
-        => RunCommandBasedOnArgument<FormBlame>(new string[] { "ge.exe", "blame", "filename", "42" });
+        => RunCommandBasedOnArgument<FormBlame>(["ge.exe", "blame", "filename", "42"]);
 
     [Test]
     public void RunCommandBasedOnArgument_branch()
@@ -105,7 +105,7 @@ public sealed class RunCommandTests
         string newBranchName = $"{branchName}-subbranch";
 
         _referenceRepository.CheckoutBranch(branchName);
-        RunCommandBasedOnArgument<FormCreateBranch>(new string[] { "ge.exe", "branch" }, runTest: form =>
+        RunCommandBasedOnArgument<FormCreateBranch>(["ge.exe", "branch"], runTest: form =>
         {
             SetText(form, "BranchNameTextBox", newBranchName);
             ClickButton(form, "cmdOk");
@@ -118,50 +118,50 @@ public sealed class RunCommandTests
         ObjectId selected = ObjectId.Random();
         ObjectId first = ObjectId.Random();
         ObjectId otherIgnored = ObjectId.Random();
-        RunCommandBasedOnArgument<FormBrowse>(new string[] { "ge.exe", "browse", $"-commit={selected},{first},,{otherIgnored}" });
+        RunCommandBasedOnArgument<FormBrowse>(["ge.exe", "browse", $"-commit={selected},{first},,{otherIgnored}"]);
     }
 
     [TestCase("checkout")]
     [TestCase("checkoutbranch")]
     public void RunCommandBasedOnArgument_checkout(string command)
-        => RunCommandBasedOnArgument<FormCheckoutBranch>(new string[] { "ge.exe", command }, expectedResult: false);
+        => RunCommandBasedOnArgument<FormCheckoutBranch>(["ge.exe", command], expectedResult: false);
 
     [Test]
     public void RunCommandBasedOnArgument_checkoutrevision()
-        => RunCommandBasedOnArgument<FormCheckoutRevision>(new string[] { "ge.exe", "checkoutrevision" }, expectedResult: false);
+        => RunCommandBasedOnArgument<FormCheckoutRevision>(["ge.exe", "checkoutrevision"], expectedResult: false);
 
     [Test]
     public void RunCommandBasedOnArgument_cherry()
-        => RunCommandBasedOnArgument<FormCherryPick>(new string[] { "ge.exe", "cherry" }, expectedResult: false);
+        => RunCommandBasedOnArgument<FormCherryPick>(["ge.exe", "cherry"], expectedResult: false);
 
     [Test]
     public void RunCommandBasedOnArgument_cleanup()
-        => RunCommandBasedOnArgument<FormCleanupRepository>(new string[] { "ge.exe", "cleanup" });
+        => RunCommandBasedOnArgument<FormCleanupRepository>(["ge.exe", "cleanup"]);
 
     [Test]
     public void RunCommandBasedOnArgument_clone()
-        => RunCommandBasedOnArgument<FormClone>(new string[] { "ge.exe", "clone" });
+        => RunCommandBasedOnArgument<FormClone>(["ge.exe", "clone"]);
 
     [Test]
     public void RunCommandBasedOnArgument_commit()
-        => RunCommandBasedOnArgument<FormCommit>(new string[] { "ge.exe", "commit" });
+        => RunCommandBasedOnArgument<FormCommit>(["ge.exe", "commit"]);
 
     [Test]
     public void RunCommandBasedOnArgument_difftool_returns_false_on_missing_argument()
     {
-        _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", "difftool" })
+        _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", "difftool"])
             .Should().BeFalse();
     }
 
     [Test]
     public void RunCommandBasedOnArgument_difftool()
-        => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", "difftool", "filename" }).Should().BeTrue();
+        => _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", "difftool", "filename"]).Should().BeTrue();
 
     [Test]
     public void RunCommandBasedOnArgument_history_throws(
         [Values("blamehistory", "filehistory")] string command)
     {
-        ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", command })))
+        ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", command])))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
@@ -194,12 +194,12 @@ public sealed class RunCommandTests
     {
         const bool ignored = false;
         (bool commitValid, bool filter, bool filterValid)[] invalidVariants =
-        {
+        [
             (false, false, ignored),
             (false, true, false),
             (false, true, true),
             (true, true, false)
-        };
+        ];
         (bool commitValid, bool filter, bool filterValid) = invalidVariants[invalidVariant];
 
         List<string> args = new() { "ge.exe", command, "filename" };
@@ -215,71 +215,71 @@ public sealed class RunCommandTests
     [Test]
     public void RunCommandBasedOnArgument_fileeditor_throws()
     {
-        ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(new string[] { "ge.exe", "fileeditor" })))
+        ((Action)(() => _commands.GetTestAccessor().RunCommandBasedOnArgument(["ge.exe", "fileeditor"])))
             .Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Test]
     public void RunCommandBasedOnArgument_fileeditor()
-        => RunCommandBasedOnArgument<FormEditor>(new string[] { "ge.exe", "fileeditor", "filename" });
+        => RunCommandBasedOnArgument<FormEditor>(["ge.exe", "fileeditor", "filename"]);
 
     [Test]
     public void RunCommandBasedOnArgument_formatpatch()
-        => RunCommandBasedOnArgument<FormFormatPatch>(new string[] { "ge.exe", "formatpatch" });
+        => RunCommandBasedOnArgument<FormFormatPatch>(["ge.exe", "formatpatch"]);
 
     [Test]
     public void RunCommandBasedOnArgument_gitignore()
-        => RunCommandBasedOnArgument<FormGitIgnore>(new string[] { "ge.exe", "gitignore" });
+        => RunCommandBasedOnArgument<FormGitIgnore>(["ge.exe", "gitignore"]);
 
     [Test]
     public void RunCommandBasedOnArgument_init()
-        => RunCommandBasedOnArgument<FormInit>(new string[] { "ge.exe", "init" });
+        => RunCommandBasedOnArgument<FormInit>(["ge.exe", "init"]);
 
     [Test]
     public void RunCommandBasedOnArgument_merge()
-        => RunCommandBasedOnArgument<FormMergeBranch>(new string[] { "ge.exe", "merge" });
+        => RunCommandBasedOnArgument<FormMergeBranch>(["ge.exe", "merge"]);
 
     [TestCase("mergeconflicts")]
     [TestCase("mergetool")]
     public void RunCommandBasedOnArgument_mergeconflicts(string command)
-        => RunCommandBasedOnArgument<FormResolveConflicts>(new string[] { "ge.exe", command });
+        => RunCommandBasedOnArgument<FormResolveConflicts>(["ge.exe", command]);
 
     [Test]
     public void RunCommandBasedOnArgument_openrepo()
-      => RunCommandBasedOnArgument<FormBrowse>(new string[] { "ge.exe", "openrepo" });
+      => RunCommandBasedOnArgument<FormBrowse>(["ge.exe", "openrepo"]);
 
     [Test]
     public void RunCommandBasedOnArgument_pull()
-        => RunCommandBasedOnArgument<FormPull>(new string[] { "ge.exe", "pull" }, expectedResult: false);
+        => RunCommandBasedOnArgument<FormPull>(["ge.exe", "pull"], expectedResult: false);
 
     [Test]
     public void RunCommandBasedOnArgument_push()
-        => RunCommandBasedOnArgument<FormPush>(new string[] { "ge.exe", "push" }, expectedResult: false);
+        => RunCommandBasedOnArgument<FormPush>(["ge.exe", "push"], expectedResult: false);
 
     [Test]
     public void RunCommandBasedOnArgument_rebase()
-        => RunCommandBasedOnArgument<FormRebase>(new string[] { "ge.exe", "rebase" });
+        => RunCommandBasedOnArgument<FormRebase>(["ge.exe", "rebase"]);
 
     [Test]
     public void RunCommandBasedOnArgument_remotes()
-        => RunCommandBasedOnArgument<FormRemotes>(new string[] { "ge.exe", "remotes" });
+        => RunCommandBasedOnArgument<FormRemotes>(["ge.exe", "remotes"]);
 
     [TestCase("revert")]
     [TestCase("reset")]
     public void RunCommandBasedOnArgument_reset(string command)
-        => RunCommandBasedOnArgument<FormResetChanges>(new string[] { "ge.exe", command }, expectedResult: false);
+        => RunCommandBasedOnArgument<FormResetChanges>(["ge.exe", command], expectedResult: false);
 
     [Test]
     public void RunCommandBasedOnArgument_searchfile()
-        => RunCommandBasedOnArgument<SearchWindow<string>>(new string[] { "ge.exe", "searchfile" }, expectedResult: false);
+        => RunCommandBasedOnArgument<SearchWindow<string>>(["ge.exe", "searchfile"], expectedResult: false);
 
     [Test]
     public void RunCommandBasedOnArgument_settings()
-        => RunCommandBasedOnArgument<FormSettings>(new string[] { "ge.exe", "settings" }, expectedResult: false /* because dialog is not closed using OK button */);
+        => RunCommandBasedOnArgument<FormSettings>(["ge.exe", "settings"], expectedResult: false /* because dialog is not closed using OK button */);
 
     [Test]
     public void RunCommandBasedOnArgument_stash()
-        => RunCommandBasedOnArgument<FormStash>(new string[] { "ge.exe", "stash" });
+        => RunCommandBasedOnArgument<FormStash>(["ge.exe", "stash"]);
 
     [Test]
     public void RunCommandBasedOnArgument_synchronize()
@@ -311,16 +311,16 @@ public sealed class RunCommandTests
             }
         });
 
-        RunCommandBasedOnArgument<FormCommit>(new string[] { "ge.exe", "synchronize" }, expectedResult: false);
+        RunCommandBasedOnArgument<FormCommit>(["ge.exe", "synchronize"], expectedResult: false);
     }
 
     [Test]
     public void RunCommandBasedOnArgument_tag()
-        => RunCommandBasedOnArgument<FormCreateTag>(new string[] { "ge.exe", "tag" }, expectedResult: false);
+        => RunCommandBasedOnArgument<FormCreateTag>(["ge.exe", "tag"], expectedResult: false);
 
     [Test]
     public void RunCommandBasedOnArgument_viewdiff()
-        => RunCommandBasedOnArgument<FormLog>(new string[] { "ge.exe", "viewdiff" }, expectedResult: false);
+        => RunCommandBasedOnArgument<FormLog>(["ge.exe", "viewdiff"], expectedResult: false);
 
     [TestCase("git://")]
     [TestCase("http://")]
@@ -328,14 +328,14 @@ public sealed class RunCommandTests
     [TestCase("github-windows://openRepo/")]
     [TestCase("github-mac://openRepo/")]
     public void RunCommandBasedOnArgument_Url(string url)
-        => RunCommandBasedOnArgument<FormClone>(new string[] { "ge.exe", url });
+        => RunCommandBasedOnArgument<FormClone>(["ge.exe", url]);
 
     [TestCase("")]
     [TestCase(" ")]
     [TestCase("help")]
     [TestCase("nonsense")]
     public void RunCommandBasedOnArgument_unsupported(string command)
-        => RunCommandBasedOnArgument<FormCommandlineHelp>(new string[] { "ge.exe", command });
+        => RunCommandBasedOnArgument<FormCommandlineHelp>(["ge.exe", command]);
 
     private void RunCommandBasedOnArgument<TForm>(string[] args, bool expectedResult = true, Action<TForm> runTest = null) where TForm : Form
     {

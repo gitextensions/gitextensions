@@ -208,11 +208,10 @@ public sealed class ArgumentBuilderExtensionsTests
         {
             System.Reflection.MethodInfo method = typeof(ArgumentBuilderExtensions).GetMethod(
                 nameof(ArgumentBuilderExtensions.Add),
-                new[]
-                {
+                [
                     typeof(ArgumentBuilder),
                     typeof(T)
-                });
+                ]);
 
             ClassicAssert.NotNull(method);
 
@@ -220,7 +219,7 @@ public sealed class ArgumentBuilderExtensionsTests
             {
                 ArgumentBuilder args = [];
 
-                ClassicAssert.DoesNotThrow(() => method.Invoke(null, new object[] { args, member }));
+                ClassicAssert.DoesNotThrow(() => method.Invoke(null, [args, member]));
             }
         }
     }

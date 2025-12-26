@@ -32,7 +32,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
     private LineCounter? _lineCounter;
 
     protected Color[] DecentColors { get; } =
-            {
+            [
                 Color.Red,
                 Color.Yellow,
                 Color.DodgerBlue,
@@ -46,7 +46,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
                 Color.Pink,
                 Color.DarkBlue,
                 Color.Purple
-            };
+            ];
 
     public string DirectoriesToIgnore { get; set; } = "";
 
@@ -222,20 +222,19 @@ public partial class FormGitStatistics : GitExtensionsFormBase
     {
         TotalLinesOfTestCode.Text = string.Format(_linesOfTestCode.Text, lineCounter.TestCodeLineCount);
 
-        TestCodePie.SetValues(new decimal[]
-            {
+        TestCodePie.SetValues(
+            [
                 lineCounter.TestCodeLineCount,
                 lineCounter.CodeLineCount - lineCounter.TestCodeLineCount
-            });
+            ]);
 
         double percentTest = (double)lineCounter.TestCodeLineCount / lineCounter.CodeLineCount;
         double percentProd = (double)(lineCounter.CodeLineCount - lineCounter.TestCodeLineCount) / lineCounter.CodeLineCount;
         TestCodePie.ToolTips =
-            new[]
-                {
+            [
                     string.Format(_linesOfTestCodeP.Text, lineCounter.TestCodeLineCount, percentTest),
                     string.Format(_linesOfProductionCodeP.Text, lineCounter.CodeLineCount - lineCounter.TestCodeLineCount, percentProd)
-                };
+                ];
 
         TestCodeText.Text = string.Format(_linesOfTestCodeP.Text, lineCounter.TestCodeLineCount, percentTest) + Environment.NewLine +
             string.Format(_linesOfProductionCodeP.Text, lineCounter.CodeLineCount - lineCounter.TestCodeLineCount, percentProd);
@@ -244,22 +243,21 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         double percentComments = (double)lineCounter.CommentLineCount / lineCounter.TotalLineCount;
         double percentCode = (double)lineCounter.CodeLineCount / lineCounter.TotalLineCount;
         double percentDesigner = (double)lineCounter.DesignerLineCount / lineCounter.TotalLineCount;
-        LinesOfCodePie.SetValues(new decimal[]
-            {
+        LinesOfCodePie.SetValues(
+            [
                 lineCounter.BlankLineCount,
                 lineCounter.CommentLineCount,
                 lineCounter.CodeLineCount,
                 lineCounter.DesignerLineCount
-            });
+            ]);
 
         LinesOfCodePie.ToolTips =
-            new[]
-                {
+            [
                     string.Format(_blankLinesP.Text, lineCounter.BlankLineCount, percentBlank),
                     string.Format(_commentLinesP.Text, lineCounter.CommentLineCount, percentComments),
                     string.Format(_linesOfCodeP.Text, lineCounter.CodeLineCount, percentCode),
                     string.Format(_linesOfDesignerFilesP.Text, lineCounter.DesignerLineCount, percentDesigner)
-                };
+                ];
 
         LinesOfCodePerTypeText.Text = string.Join(Environment.NewLine, LinesOfCodePie.ToolTips);
 

@@ -47,12 +47,12 @@ internal class SubmoduleStatusProviderTests
         _repo2Module = submodules.ElementAt(0);
         _repo3Module = submodules.ElementAt(1);
 
-        IGitModule[] actualModules = new[]
-        {
+        IGitModule[] actualModules =
+        [
             _repo1Module,
             _repo2Module,
             _repo3Module
-        };
+        ];
         for (int i = 0; i < actualModules.Length; i++)
         {
             Debug.WriteLine($"Repo[{i + 1}]:{actualModules[i].WorkingDir}");

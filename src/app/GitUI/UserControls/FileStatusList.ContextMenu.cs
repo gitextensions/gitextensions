@@ -746,7 +746,7 @@ partial class FileStatusList
                 }
 
                 // If item.FirstRevision is null, compare to root commit
-                GitRevision?[] revs = { item.SecondRevision, item.FirstRevision };
+                GitRevision?[] revs = [item.SecondRevision, item.FirstRevision];
                 UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, diffKind, item.Item.IsTracked, customTool: toolName);
             }
         }

@@ -7,7 +7,7 @@ public static partial class DetachedHeadParser
 {
     public static readonly string DetachedBranch = "(no branch)";
 
-    private static readonly string[] DetachedPrefixes = { "(no branch", "(detached from ", "(HEAD detached at " };
+    private static readonly string[] DetachedPrefixes = ["(no branch", "(detached from ", "(HEAD detached at "];
 
     [GeneratedRegex(@"^\(.* (?<sha1>.*)\)$", RegexOptions.ExplicitCapture)]
     private static partial Regex ShaRegex();

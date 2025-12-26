@@ -59,7 +59,7 @@ public static class ListViewExtensions
     /// on item from a collapsed <see cref="ListViewGroup"/>.
     /// </summary>
     public static Rectangle BoundsOrEmpty(this ListViewItem item) =>
-        (Rectangle)_getItemRectOrEmptyMethod.Value.Invoke(item.ListView, new object[] { item.Index });
+        (Rectangle)_getItemRectOrEmptyMethod.Value.Invoke(item.ListView, [item.Index]);
 
     private static readonly Lazy<MethodInfo> _getItemRectOrEmptyMethod =
         new(() => typeof(ListView).GetMethod(

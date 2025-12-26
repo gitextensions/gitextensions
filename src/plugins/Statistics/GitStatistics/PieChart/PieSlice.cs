@@ -428,7 +428,7 @@ public class PieSlice : IDisposable
         PieSlice pieSlice2 = (PieSlice)MemberwiseClone();
         pieSlice2.SweepAngle = (transformedSplitAngle - StartAngle + 360) % 360;
         pieSlice2.InitializeSides();
-        return new[] { pieSlice1, pieSlice2 };
+        return [pieSlice1, pieSlice2];
     }
 
     /// <summary>
@@ -798,8 +798,8 @@ public class PieSlice : IDisposable
                 InterpolationColors =
                     new ColorBlend
                     {
-                        Colors = new[] { color1, color, color2 },
-                        Positions = new[] { 0F, 0.1F, 1.0F }
+                        Colors = [color1, color, color2],
+                        Positions = [0F, 0.1F, 1.0F]
                     }
             };
     }
@@ -1083,13 +1083,12 @@ public class PieSlice : IDisposable
             return Quadrilateral
                 .Contains(
                     point,
-                    new[]
-                    {
+                    [
                         point1,
                         new PointF(point1.X, point1.Y + SliceHeight),
                         new PointF(point2.X, point2.Y + SliceHeight),
                         point2
-                    });
+                    ]);
         }
 
         return false;

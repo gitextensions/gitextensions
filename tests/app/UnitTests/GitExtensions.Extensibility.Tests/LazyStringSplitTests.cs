@@ -39,7 +39,7 @@ public sealed class LazyStringSplitTests
         AssertEx.SequenceEqual(expected, list);
 
         // Equivalence with string.Split
-        AssertEx.SequenceEqual(expected, input.Split(new[] { delimiter }, StringSplitOptions.None));
+        AssertEx.SequenceEqual(expected, input.Split([delimiter], StringSplitOptions.None));
     }
 
     [TestCase("a;b;c", ';', new[] { "a", "b", "c" })]
@@ -75,7 +75,7 @@ public sealed class LazyStringSplitTests
         AssertEx.SequenceEqual(expected, list);
 
         // Equivalence with string.Split
-        AssertEx.SequenceEqual(expected, input.Split(new[] { delimiter }, StringSplitOptions.RemoveEmptyEntries));
+        AssertEx.SequenceEqual(expected, input.Split([delimiter], StringSplitOptions.RemoveEmptyEntries));
     }
 
     [Test]

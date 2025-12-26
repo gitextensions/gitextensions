@@ -22,7 +22,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
     private static readonly string DefaultIgnorePatternsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
 
     private static readonly string[] DefaultIgnorePatterns =
-    {
+    [
         "#Ignore thumbnails created by Windows",
         "Thumbs.db",
         "#Ignore files built by Visual Studio",
@@ -55,7 +55,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
         ".idea/",
         "#Nuget packages folder",
         "packages/"
-    };
+    ];
 
     #endregion
 
@@ -196,7 +196,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
         string[] defaultIgnorePatterns = File.Exists(DefaultIgnorePatternsFile) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
 
         string currentFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
-        string[] patternsToAdd = [.. defaultIgnorePatterns.Except(currentFileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))];
+        string[] patternsToAdd = [.. defaultIgnorePatterns.Except(currentFileContent.Split([Environment.NewLine], StringSplitOptions.RemoveEmptyEntries))];
         if (patternsToAdd.Length == 0)
         {
             return;

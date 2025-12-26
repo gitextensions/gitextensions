@@ -747,7 +747,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
             return;
         }
 
-        ToolStripItem[] menus = new ToolStripItem[] { mnuConfigure };
+        ToolStripItem[] menus = [mnuConfigure];
         MenuStrip menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "mainMenuStrip");
         Validates.NotNull(menuStrip);
         ToolStripMenuItem dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");

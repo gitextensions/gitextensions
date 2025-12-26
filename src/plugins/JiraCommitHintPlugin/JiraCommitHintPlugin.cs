@@ -342,7 +342,7 @@ public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForCommit
         }
         catch (Exception ex)
         {
-            return new[] { new JiraTaskDTO($"{Name} error", ex.ToString()) };
+            return [new JiraTaskDTO($"{Name} error", ex.ToString())];
         }
     }
 

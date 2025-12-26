@@ -1212,7 +1212,7 @@ public sealed partial class FormCommit : GitModuleForm
 
                 if (result == btnCheckout)
                 {
-                    ObjectId[] revisions = _editedCommit is not null ? new[] { _editedCommit.ObjectId } : null;
+                    ObjectId[] revisions = _editedCommit is not null ? [_editedCommit.ObjectId] : null;
                     if (!UICommands.StartCheckoutBranch(this, revisions))
                     {
                         return;
@@ -1981,12 +1981,12 @@ public sealed partial class FormCommit : GitModuleForm
             AddCommitMessageToMenu(prevMsg);
         }
 
-        commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
-        {
+        commitMessageToolStripMenuItem.DropDownItems.AddRange(
+        [
             toolStripMenuItem1,
             generateListOfChangesInSubmodulesChangesToolStripMenuItem,
             ShowOnlyMyMessagesToolStripMenuItem
-        });
+        ]);
         commitMessageToolStripMenuItem.DropDown.ResumeLayout();
 
         void AddCommitMessageToMenu(string commitMessage)
@@ -2131,7 +2131,7 @@ public sealed partial class FormCommit : GitModuleForm
     {
         foreach (FileStatusItem item in items)
         {
-            GitRevision?[] revs = { item.SecondRevision, item.FirstRevision };
+            GitRevision?[] revs = [item.SecondRevision, item.FirstRevision];
             UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, RevisionDiffKind.DiffAB, item.Item.IsTracked, customTool: toolName);
         }
     }

@@ -218,7 +218,7 @@ Send report?");
             return;
         }
 
-        (string itemName, object item)[] itemsToTranslate = new[] { (itemName, item) };
+        (string itemName, object item)[] itemsToTranslate = [(itemName, item)];
 
         foreach (KeyValuePair<string, TranslationFile> pair in translation)
         {

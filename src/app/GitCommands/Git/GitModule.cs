@@ -778,10 +778,10 @@ public sealed partial class GitModule : IGitModule
 
         foreach (string line in unmerged)
         {
-            int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
+            int findSecondWhitespace = line.IndexOfAny([' ', '\t']);
             string fileStage = findSecondWhitespace >= 0 ? line[findSecondWhitespace..].Trim() : "";
 
-            findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+            findSecondWhitespace = fileStage.IndexOfAny([' ', '\t']);
 
             string hash = findSecondWhitespace >= 0 ? fileStage[..findSecondWhitespace].Trim() : "";
             fileStage = findSecondWhitespace >= 0 ? fileStage[findSecondWhitespace..].Trim() : "";

@@ -739,7 +739,7 @@ internal static class RichTextBoxXhtmlSupportExtension
         int i;
         int pos = 0;
         int k = rtb.TextLength;
-        char[] chtrim = { ' ', '\x0000' };
+        char[] chtrim = [' ', '\x0000'];
 
         //--------------------------------
         // this is an inefficient method to get text format

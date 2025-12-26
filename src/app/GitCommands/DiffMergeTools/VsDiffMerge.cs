@@ -31,7 +31,7 @@ internal class VsDiffMerge : DiffMergeTool
 
         // For 2017 (15.0) and later, VsDiffMerge is not installed by default but often included
         // C:\Program Files (x86)\Microsoft Visual Studio\2019\Community\Common7\IDE\CommonExtensions\Microsoft\TeamFoundation\Team Explorer
-        string[] vsVersions = new[] { "14.0", "12.0", "11.0" };
+        string[] vsVersions = ["14.0", "12.0", "11.0"];
 
         foreach (string version in vsVersions)
         {

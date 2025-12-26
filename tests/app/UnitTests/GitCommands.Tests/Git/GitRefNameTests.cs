@@ -24,7 +24,7 @@ public sealed class GitRefNameTests
         ClassicAssert.AreEqual("foo", GitRefName.GetRemoteName("refs/remotes/foo/master"));
         ClassicAssert.AreEqual("", GitRefName.GetRemoteName("refs/tags/1.0.0"));
 
-        string[] remotes = new[] { "foo", "bar" };
+        string[] remotes = ["foo", "bar"];
 
         ClassicAssert.AreEqual("foo", GitRefName.GetRemoteName("foo/master", remotes));
         ClassicAssert.AreEqual("", GitRefName.GetRemoteName("food/master", remotes));

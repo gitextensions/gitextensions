@@ -29,7 +29,7 @@ public class PieChart3D : IDisposable
     ///   Array of colors used for rendering.
     /// </summary>
     protected Color[] SliceColors =
-        {
+        [
                 Color.Red,
                 Color.Green,
                 Color.Blue,
@@ -42,12 +42,12 @@ public class PieChart3D : IDisposable
                 Color.Maroon,
                 Color.Teal,
                 Color.Fuchsia
-        };
+        ];
 
     /// <summary>
     ///   Array of relative displacements from the common center.
     /// </summary>
-    protected float[] SliceRelativeDisplacements = { 0F };
+    protected float[] SliceRelativeDisplacements = [0F];
 
     /// <summary>
     ///   Slice relative height.
@@ -57,7 +57,7 @@ public class PieChart3D : IDisposable
     /// <summary>
     ///   Array of values to be presented by the chart.
     /// </summary>
-    protected decimal[] Values = { };
+    protected decimal[] Values = [];
 
     /// <summary>
     ///   Initializes an empty instance of <c>PieChart3D</c>.
@@ -379,7 +379,7 @@ public class PieChart3D : IDisposable
     public void SetSliceRelativeDisplacement(float value)
     {
         DebugHelpers.Assert(IsDisplacementValid(value), "IsDisplacementValid(value)");
-        SliceRelativeDisplacements = new[] { value };
+        SliceRelativeDisplacements = [value];
     }
 
     /// <summary>

@@ -112,7 +112,7 @@ internal class TeamCityAdapter : IBuildServerAdapter
         _buildServerWatcher = buildServerWatcher;
 
         ProjectNames = buildServerWatcher.ReplaceVariables(config.GetString("ProjectName", ""))
-            .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+            .Split(['|'], StringSplitOptions.RemoveEmptyEntries);
 
         string buildIdFilerSetting = config.GetString("BuildIdFilter", "");
         if (!BuildServerSettingsHelper.IsRegexValid(buildIdFilerSetting))

@@ -282,7 +282,7 @@ public static partial class PathUtil
                 return -1;
             }
 
-            return path.IndexOfAny(new[] { '\\', '/' }, WslPrefix.Length) - WslPrefix.Length;
+            return path.IndexOfAny(['\\', '/'], WslPrefix.Length) - WslPrefix.Length;
         }
     }
 
@@ -371,7 +371,7 @@ public static partial class PathUtil
 
             if (path.Contains('\\') || path.Contains('/'))
             {
-                name = path[(path.LastIndexOfAny(new[] { '\\', '/' }) + 1)..];
+                name = path[(path.LastIndexOfAny(['\\', '/']) + 1)..];
             }
         }
 

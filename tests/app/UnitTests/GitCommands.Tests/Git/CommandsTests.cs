@@ -565,7 +565,7 @@ public partial class CommandsTests
             Commands.Remove(isRecursive: false).Arguments);
         ClassicAssert.AreEqual(
             "rm --force -r a b c",
-            Commands.Remove(files: new[] { "a", "b", "c" }).Arguments);
+            Commands.Remove(files: ["a", "b", "c"]).Arguments);
     }
 
     [Test]

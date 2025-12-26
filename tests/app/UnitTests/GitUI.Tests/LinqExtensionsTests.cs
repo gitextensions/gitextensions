@@ -42,7 +42,7 @@ public sealed class LinqExtensionsTests
     [Test]
     public void IndexOf()
     {
-        int[] ints = new[] { 0, 1, 2, 3 };
+        int[] ints = [0, 1, 2, 3];
 
         ClassicAssert.AreEqual(0, ints.IndexOf(i => i == 0));
         ClassicAssert.AreEqual(1, ints.IndexOf(i => i == 1));

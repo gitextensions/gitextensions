@@ -155,13 +155,13 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
     private void ApplyLayout()
     {
-        Control[] controls1 = new Control[]
-        {
+        Control[] controls1 =
+        [
             tlpnlBranches,
             horLine,
             tlpnlRemoteOptions,
             localChangesGB
-        };
+        ];
 
         localChangesGB.AutoSize = true;
         localChangesGB.Dock = DockStyle.Fill;

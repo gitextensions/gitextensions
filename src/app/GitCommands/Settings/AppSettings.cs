@@ -839,7 +839,7 @@ public static partial class AppSettings
             }
             catch (CultureNotFoundException)
             {
-                Debug.WriteLine("Culture {0} not found", new object[] { CurrentLanguageCode });
+                Debug.WriteLine("Culture {0} not found", [CurrentLanguageCode]);
                 return CultureInfo.GetCultureInfo("en");
             }
         }

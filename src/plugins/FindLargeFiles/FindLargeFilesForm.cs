@@ -124,7 +124,7 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
                     });
                     foreach (string gitObject in objects.Where(x => x.Contains(" blob ")))
                     {
-                        string[] dataFields = gitObject.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                        string[] dataFields = gitObject.Split([' '], StringSplitOptions.RemoveEmptyEntries);
                         if (_list.TryGetValue(dataFields[0], out GitObject curGitObject))
                         {
                             if (int.TryParse(dataFields[3], out int compressedSize))
@@ -185,7 +185,7 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
                 "-zrl",
                 rev.Quote()
             };
-            string[] objects = _gitModule.GitExecutable.GetOutput(args).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] objects = _gitModule.GitExecutable.GetOutput(args).Split(['\0'], StringSplitOptions.RemoveEmptyEntries);
             foreach (string objData in objects)
             {
                 // "100644 blob b17a497cdc6140aa3b9a681344522f44768165ac 2120195\tBin/Dictionaries/de-DE.dic"
