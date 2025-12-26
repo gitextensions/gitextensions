@@ -556,7 +556,7 @@ public partial class Spelling : Component
                 dist++;
             }
 
-            if (char.ToLowerInvariant(source[source.Length - 1]) != char.ToLowerInvariant(target[target.Length - 1]))
+            if (char.ToLowerInvariant(source[^1]) != char.ToLowerInvariant(target[^1]))
             {
                 dist++;
             }
