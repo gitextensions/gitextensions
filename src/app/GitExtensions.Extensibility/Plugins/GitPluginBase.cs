@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 
@@ -30,6 +30,7 @@ public abstract class GitPluginBase : IGitPlugin, ITranslate
 
     void IDisposable.Dispose()
     {
+        GC.SuppressFinalize(this);
     }
 
     public bool HasSettings { get; }

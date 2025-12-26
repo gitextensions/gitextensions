@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using Microsoft;
 
 namespace GitExtensions.Plugins.GitStatistics.PieChart;
@@ -363,6 +363,7 @@ public class PieSlice : IDisposable
         }
 
         DisposeBrushes();
+        GC.SuppressFinalize(this);
     }
 
     #endregion

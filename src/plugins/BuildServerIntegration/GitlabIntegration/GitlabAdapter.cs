@@ -143,5 +143,6 @@ public class GitlabAdapter : IBuildServerAdapter
     public void Dispose()
     {
         _apiClient?.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

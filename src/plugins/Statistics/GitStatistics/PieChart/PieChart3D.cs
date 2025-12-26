@@ -338,6 +338,8 @@ public class PieChart3D : IDisposable
         {
             slice.Dispose();
         }
+
+        GC.SuppressFinalize(this);
     }
 
     #endregion
