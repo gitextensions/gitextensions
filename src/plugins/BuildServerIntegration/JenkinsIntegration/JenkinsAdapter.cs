@@ -230,7 +230,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
             // Similar, the build results could be cached so they are available when switching repos
             foreach (JoinableTask<ResponseInfo> info in latestBuildInfos.Where(info => !info.Task.IsFaulted))
             {
-                ResponseInfo responseInfo = info.Join();
+                ResponseInfo responseInfo = info.Join(cancellationToken);
 
                 Validates.NotNull(responseInfo.Url);
 
@@ -500,7 +500,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
                 }
                 else
                 {
-                    return await httpContent.ReadAsStreamAsync();
+                    return await httpContent.ReadAsStreamAsync(cancellationToken);
                 }
             }
             else if (resp.StatusCode == HttpStatusCode.NotFound)
@@ -553,7 +553,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
     {
         using Stream responseStream = await GetStreamAsync(relativePath, cancellationToken).ConfigureAwait(false);
         using StreamReader reader = new(responseStream);
-        return await reader.ReadToEndAsync();
+        return await reader.ReadToEndAsync(cancellationToken);
     }
 
     private static string FormatToGetJson(string restServicePath, bool buildsInfo = false)

@@ -340,8 +340,8 @@ public sealed partial class BlameControl : GitModuleControl
 
         Validates.NotNull(_fileName);
 
-        BlameAuthor.InvokeAndForget(() => BlameAuthor.ViewTextAsync("committer.txt", gutter, cancellationToken: cancellationToken));
-        BlameFile.InvokeAndForget(() => BlameFile.ViewTextAsync(_fileName, body, cancellationToken: cancellationToken));
+        BlameAuthor.InvokeAndForget(() => BlameAuthor.ViewTextAsync("committer.txt", gutter, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+        BlameFile.InvokeAndForget(() => BlameFile.ViewTextAsync(_fileName, body, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
 
         BlameFile.GoToLine(Math.Min(lineNumber, _blame.Lines.Count));

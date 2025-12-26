@@ -669,7 +669,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         using FileStream stream = File.Create(saveAs);
-        await stream.WriteAsync(blobData.AsMemory(0, blobData.Length));
+        await stream.WriteAsync(blobData.AsMemory(0, blobData.Length), cancellationToken);
     }
 
     private static string GetSide(string side)
@@ -4029,7 +4029,7 @@ public sealed partial class GitModule : IGitModule
             commitId
         };
 
-        ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
+        ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false, cancellationToken: cancellationToken);
         return exec.ExitedSuccessfully
             ? exec.StandardOutput.TrimEnd()
             : null;

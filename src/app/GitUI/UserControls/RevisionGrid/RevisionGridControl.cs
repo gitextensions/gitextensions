@@ -1603,7 +1603,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private IEnumerable<string> ParseFileNames(GitArgumentBuilder args, CancellationToken cancellationToken)
     {
-        ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false);
+        ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false, cancellationToken: cancellationToken);
 
         if (!result.ExitedSuccessfully)
         {

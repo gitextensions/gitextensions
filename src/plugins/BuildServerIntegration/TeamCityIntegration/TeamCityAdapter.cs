@@ -1,4 +1,4 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Globalization;
 using System.Net;
 using System.Net.Http.Headers;
@@ -398,7 +398,7 @@ internal class TeamCityAdapter : IBuildServerAdapter
                 }
                 else
                 {
-                    return httpContent.ReadAsStreamAsync();
+                    return httpContent.ReadAsStreamAsync(cancellationToken);
                 }
             }
         }

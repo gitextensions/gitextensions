@@ -1,4 +1,4 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -454,7 +454,7 @@ internal class AppVeyorAdapter : IBuildServerAdapter
 
         if (task.Status == TaskStatus.RanToCompletion && task.CompletedResult().IsSuccessStatusCode)
         {
-            return task.CompletedResult().Content.ReadAsStreamAsync();
+            return task.CompletedResult().Content.ReadAsStreamAsync(cancellationToken);
         }
 
         return Task.FromResult<Stream?>(null);
