@@ -220,9 +220,11 @@ public class BuildReportTabPageExtension
     private static string? DetermineFavIconUrl(HtmlDocument htmlDocument)
     {
         HtmlElementCollection links = htmlDocument.GetElementsByTagName("link");
+#pragma warning disable CA1862 // Use the 'StringComparison' method overloads to perform case-insensitive string comparisons
         HtmlElement favIconLink =
             links.Cast<HtmlElement>()
                  .SingleOrDefault(x => x.GetAttribute("rel").ToLowerInvariant() == "shortcut icon");
+#pragma warning restore CA1862 // Use the 'StringComparison' method overloads to perform case-insensitive string comparisons
 
         if (favIconLink is null || htmlDocument.Url is null)
         {
