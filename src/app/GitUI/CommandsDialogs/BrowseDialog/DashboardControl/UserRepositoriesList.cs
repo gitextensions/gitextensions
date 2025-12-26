@@ -666,10 +666,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
         else if (e.Button == MouseButtons.Right)
         {
             _rightClickedItem = listView1.GetItemAt(e.X, e.Y);
-            if (_rightClickedItem is not null)
-            {
-                _rightClickedItem.Selected = true;
-            }
+            _rightClickedItem?.Selected = true;
         }
     }
 

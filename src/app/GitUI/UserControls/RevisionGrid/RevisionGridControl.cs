@@ -521,11 +521,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return;
         }
 
-        if (_lastVisibleResizableColumn is not null)
-        {
-            // restore its resizable state
-            _lastVisibleResizableColumn.Resizable = DataGridViewTriState.True;
-        }
+        // restore its resizable state
+        _lastVisibleResizableColumn?.Resizable = DataGridViewTriState.True;
 
         _gridView.ApplySettings(); // columns could change their Resizable state, e.g. the BuildStatusColumnProvider
 
@@ -538,10 +535,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         //// _lastVisibleResizableColumn = _gridView.Columns.GetLastColumn(DataGridViewElementStates.Visible | DataGridViewElementStates.Resizable, DataGridViewElementStates.None);
         _lastVisibleResizableColumn = _gridView.Columns.Cast<DataGridViewColumn>()
             .OrderBy(column => column.Index).Last(column => column.Visible && column.Resizable == DataGridViewTriState.True);
-        if (_lastVisibleResizableColumn is not null)
-        {
-            _lastVisibleResizableColumn.Resizable = DataGridViewTriState.False;
-        }
+        _lastVisibleResizableColumn?.Resizable = DataGridViewTriState.False;
     }
 
     protected override void OnCreateControl()
@@ -1140,10 +1134,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                      && selectedRemote == gitRef.Remote
                      && selectedMerge == gitRef.LocalName);
 
-            if (selectedHeadMergeSource is not null)
-            {
-                selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
-            }
+            selectedHeadMergeSource?.IsSelectedHeadMergeSource = true;
         }
 
         string BuildPathFilter(string? path)

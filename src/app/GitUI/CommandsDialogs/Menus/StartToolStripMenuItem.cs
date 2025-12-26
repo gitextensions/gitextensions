@@ -32,10 +32,7 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
         {
             components?.Dispose();
 
-            if (_repositoryHistoryUIService is not null)
-            {
-                _repositoryHistoryUIService.GitModuleChanged -= repositoryHistoryUIService_GitModuleChanged;
-            }
+            _repositoryHistoryUIService?.GitModuleChanged -= repositoryHistoryUIService_GitModuleChanged;
         }
 
         base.Dispose(disposing);

@@ -264,12 +264,8 @@ public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForCommit
 
         _btnPreview.Click -= btnPreviewClick;
         _btnPreview = null;
-
-        if (_authTypeSettings.CustomControl is not null)
-        {
-            _authTypeSettings.CustomControl.SelectedIndexChanged -= authTypeSetting_SelectedIndexChanged;
-            _authTypeSettings.CustomControl = null;
-        }
+        _authTypeSettings.CustomControl?.SelectedIndexChanged -= authTypeSetting_SelectedIndexChanged;
+        _authTypeSettings.CustomControl = null;
     }
 
     private void gitUiCommands_PostSettings(object sender, GitUIPostActionEventArgs e)

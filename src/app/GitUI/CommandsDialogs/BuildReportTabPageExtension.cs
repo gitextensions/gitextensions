@@ -136,17 +136,11 @@ public class BuildReportTabPageExtension
 
     private void SetSelectedRevision(GitRevision? revision)
     {
-        if (_selectedGitRevision is not null)
-        {
-            _selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
-        }
+        _selectedGitRevision?.PropertyChanged -= RevisionPropertyChanged;
 
         _selectedGitRevision = revision;
 
-        if (_selectedGitRevision is not null)
-        {
-            _selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
-        }
+        _selectedGitRevision?.PropertyChanged += RevisionPropertyChanged;
     }
 
     private void RevisionPropertyChanged(object sender, PropertyChangedEventArgs e)

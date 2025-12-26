@@ -628,10 +628,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             // This request is directed to the main form also if a modal form like FormCommit is on top.
             // So forward the request and try to close the modal form.
             Form? modalForm = Application.OpenForms.Cast<Form>().FirstOrDefault(form => form.Modal);
-            if (modalForm is not null)
-            {
-                modalForm.Close();
-            }
+            modalForm?.Close();
 
             Close();
         }

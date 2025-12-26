@@ -356,11 +356,8 @@ public class PieSlice : IDisposable
     /// </summary>
     public virtual void Dispose()
     {
-        if (Pen is not null)
-        {
-            Pen.Dispose();
-            Pen = null;
-        }
+        Pen?.Dispose();
+        Pen = null;
 
         DisposeBrushes();
         GC.SuppressFinalize(this);
@@ -720,29 +717,14 @@ public class PieSlice : IDisposable
     /// </summary>
     protected void DisposeBrushes()
     {
-        if (BrushSurface is not null)
-        {
-            BrushSurface.Dispose();
-            BrushSurface = null;
-        }
-
-        if (BrushStartSide is not null)
-        {
-            BrushStartSide.Dispose();
-            BrushStartSide = null;
-        }
-
-        if (BrushEndSide is not null)
-        {
-            BrushEndSide.Dispose();
-            BrushEndSide = null;
-        }
-
-        if (BrushPeripherySurface is not null)
-        {
-            BrushPeripherySurface.Dispose();
-            BrushPeripherySurface = null;
-        }
+        BrushSurface?.Dispose();
+        BrushSurface = null;
+        BrushStartSide?.Dispose();
+        BrushStartSide = null;
+        BrushEndSide?.Dispose();
+        BrushEndSide = null;
+        BrushPeripherySurface?.Dispose();
+        BrushPeripherySurface = null;
     }
 
     /// <summary>

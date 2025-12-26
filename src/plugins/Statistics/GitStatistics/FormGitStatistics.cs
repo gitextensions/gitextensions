@@ -287,9 +287,6 @@ public partial class FormGitStatistics : GitExtensionsFormBase
 
     private void FormGitStatistics_FormClosing(object sender, FormClosingEventArgs e)
     {
-        if (_lineCounter is not null)
-        {
-            _lineCounter.Updated -= OnLineCounterUpdated;
-        }
+        _lineCounter?.Updated -= OnLineCounterUpdated;
     }
 }

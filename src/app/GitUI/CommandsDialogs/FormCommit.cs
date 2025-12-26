@@ -568,10 +568,7 @@ public sealed partial class FormCommit : GitModuleForm
     {
         IGitUICommands oldCommands = e.OldCommands;
 
-        if (oldCommands is not null)
-        {
-            oldCommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
-        }
+        oldCommands?.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
 
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
 
