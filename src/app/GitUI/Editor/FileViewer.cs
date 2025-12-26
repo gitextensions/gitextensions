@@ -831,9 +831,7 @@ public partial class FileViewer : GitModuleControl
         {
             using FileStream stream = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using StreamReader reader = FileReader.OpenStream(stream, GitModule.LosslessEncoding);
-#pragma warning disable VSTHRD103 // Call async methods when in an async method
             string content = reader.ReadToEnd();
-#pragma warning restore VSTHRD103 // Call async methods when in an async method
             FilePreamble = reader.CurrentEncoding.GetPreamble();
             return content;
         }

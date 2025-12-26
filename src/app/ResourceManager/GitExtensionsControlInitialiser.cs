@@ -1,6 +1,4 @@
-#pragma warning disable VSTHRD108 // Assert thread affinity unconditionally
-
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
@@ -82,5 +80,3 @@ internal sealed class GitExtensionsControlInitialiser
         }
     }
 }
-
-#pragma warning restore VSTHRD108 // Assert thread affinity unconditionally
