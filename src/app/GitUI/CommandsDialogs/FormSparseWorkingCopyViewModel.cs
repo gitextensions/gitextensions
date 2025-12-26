@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -99,6 +99,8 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
             FirePropertyChanged();
         }
     }
+
+    private static readonly string[] first = new[] { "/*" };
 
     public void FirePropertyChanged()
     {
@@ -229,7 +231,7 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
 
         // Adjust the rules
         // Comment out all existing nonempty lines, add the single "/*" line to make a total pass filter
-        RulesText = new[] { "/*" }.Concat(RulesText.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).Select(l => (string.IsNullOrWhiteSpace(l) || (l[0] == '#')) ? l : "#" + l)).Join(Environment.NewLine);
+        RulesText = first.Concat(RulesText.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).Select(l => (string.IsNullOrWhiteSpace(l) || (l[0] == '#')) ? l : "#" + l)).Join(Environment.NewLine);
     }
 
     /// <summary>

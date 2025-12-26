@@ -55,6 +55,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
     // last known build per project
     private readonly Dictionary<string, long> _lastProjectBuildTime = [];
     private Regex? _ignoreBuilds;
+    private static readonly char[] separator = ['|'];
 
     public void Initialize(IBuildServerWatcher buildServerWatcher, SettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
     {
@@ -85,7 +86,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
             UpdateHttpClientOptions(buildServerCredentials);
 
             string[] projectUrls = _buildServerWatcher.ReplaceVariables(projectName)
-                .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                .Split(separator, StringSplitOptions.RemoveEmptyEntries);
             foreach (string projectUrl in projectUrls.Select(s => baseAddress + "job/" + s.Trim() + "/"))
             {
                 _lastProjectBuildTime[projectUrl] = -1;
