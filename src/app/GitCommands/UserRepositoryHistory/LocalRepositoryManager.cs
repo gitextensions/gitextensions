@@ -183,7 +183,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
             _repositoryStorage.Save(KeyFavouriteHistory, migrated);
         }
 
-        return migrated ?? new List<Repository>();
+        return migrated ?? [];
     }
 
     /// <summary>

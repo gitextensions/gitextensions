@@ -111,8 +111,8 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
             return DeserializeFromOldFormat(xml);
         }
 
-        BindingList<ScriptInfo> GetDefaultScripts() => new()
-        {
+        BindingList<ScriptInfo> GetDefaultScripts() =>
+        [
             new ScriptInfo
             {
                 HotkeyCommandIdentifier = 9000,
@@ -173,7 +173,7 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
                 AddToRevisionGridContextMenu = true,
                 Enabled = false
             }
-        };
+        ];
 
         BindingList<ScriptInfo> DeserializeFromOldFormat(string inputString)
         {

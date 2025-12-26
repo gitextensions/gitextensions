@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 using GitExtUtils.GitUI.Theming;
 using Microsoft;
 
@@ -461,7 +461,7 @@ public class PieChart3D : IDisposable
         }
 
         // split the backmost (at 270 degrees) pie slice
-        List<PieSlice> pieSlices = new(PieSlices);
+        List<PieSlice> pieSlices = [.. PieSlices];
         PieSlice[] splitSlices = PieSlices[0].Split(270F);
         pieSlices[0] = splitSlices[0];
         if (splitSlices[1].SweepAngle > 0F)
@@ -872,7 +872,7 @@ public class PieChart3D : IDisposable
     /// </param>
     protected void DrawSliceSides(Graphics graphics)
     {
-        List<PieSlice> pieSlices = new(PieSlices);
+        List<PieSlice> pieSlices = [.. PieSlices];
 
         // if the first slice spreads across 180 and 360 degrees boundaries it
         // will appear on both left and right edge so its periphery has to be

@@ -603,7 +603,7 @@ internal class TeamCityAdapter : IBuildServerAdapter
             Id = (string)e.Attribute("id"),
             Name = (string)e.Attribute("name"),
             ParentProject = (string)e.Attribute("parentProjectId"),
-            SubProjects = new List<Project>()
+            SubProjects = []
         })];
 
         Dictionary<string, Project> projectDictionary = projects.ToDictionary(p => p.Id, p => p);

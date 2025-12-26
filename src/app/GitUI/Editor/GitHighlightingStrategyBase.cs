@@ -43,8 +43,7 @@ internal abstract class GitHighlightingStrategyBase : IHighlightingStrategy
     {
         if (IsComment(document, line))
         {
-            line.Words = new List<TextWord>(capacity: 1)
-                { new(document, line, 0, line.Length, ColorComment, hasDefaultColor: false) };
+            line.Words = [new(document, line, 0, line.Length, ColorComment, hasDefaultColor: false)];
             return true;
         }
 

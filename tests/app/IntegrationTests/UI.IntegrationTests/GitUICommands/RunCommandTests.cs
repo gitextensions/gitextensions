@@ -202,8 +202,7 @@ public sealed class RunCommandTests
         ];
         (bool commitValid, bool filter, bool filterValid) = invalidVariants[invalidVariant];
 
-        List<string> args = new() { "ge.exe", command, "filename" };
-        args.Add(commitValid ? _referenceRepository.CommitHash : "no-commit");
+        List<string> args = ["ge.exe", command, "filename", commitValid ? _referenceRepository.CommitHash : "no-commit"];
         if (filter)
         {
             args.Add(filterValid ? "--filter-by-revision" : "invalid");

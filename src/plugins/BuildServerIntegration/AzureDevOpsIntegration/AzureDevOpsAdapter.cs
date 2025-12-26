@@ -279,7 +279,7 @@ Detail of the error:");
         }
 
         IEnumerable<IGrouping<string, Build>> byCommitBuilds = runningBuilds.GroupBy(b => b.SourceVersion);
-        runningBuilds = new List<Build>();
+        runningBuilds = [];
 
         // Filter running builds to display the best build as we can only display one build for a commit
         // by selecting the first started or if none, one that is waiting to start

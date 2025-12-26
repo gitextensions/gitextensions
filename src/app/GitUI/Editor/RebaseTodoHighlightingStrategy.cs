@@ -40,8 +40,7 @@ internal sealed class RebaseTodoHighlightingStrategy : GitHighlightingStrategyBa
             if (!TryHighlightComment(document, line) &&
                 !TryHighlightInteractiveRebaseCommand(document, line))
             {
-                line.Words = new List<TextWord>(capacity: 1)
-                    { new(document, line, 0, line.Length, ColorNormal, hasDefaultColor: true) };
+                line.Words = [new(document, line, 0, line.Length, ColorNormal, hasDefaultColor: true)];
             }
 
             document.RequestUpdate(
@@ -140,12 +139,12 @@ internal sealed class RebaseTodoHighlightingStrategy : GitHighlightingStrategyBa
                             return false;
                         }
 
-                        line.Words = new List<TextWord>(capacity: 3)
-                        {
+                        line.Words =
+                        [
                             new(document, line, 0, idStartIndex, cmd.color, hasDefaultColor: false),
                             new(document, line, idStartIndex, idLength, cmd.color, hasDefaultColor: false),
                             new(document, line, index, line.Length - index, ColorNormal, hasDefaultColor: true)
-                        };
+                        ];
 
                         return true;
                     }

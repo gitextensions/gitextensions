@@ -19,7 +19,7 @@ public class AzureDevOpsAdapterTests
     public void Should_not_filter_running_builds_When_only_one_returned()
     {
         Build myBuild = new() { SourceVersion = "ACommitHash" };
-        IList<Build> runningBuilds = new List<Build> { myBuild };
+        IList<Build> runningBuilds = [myBuild];
 
         IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 
@@ -31,7 +31,7 @@ public class AzureDevOpsAdapterTests
     {
         Build buildOnOneCommit = new() { SourceVersion = "a_commit_Hash" };
         Build buildOnAnotherCommit = new() { SourceVersion = "another_commit_Hash" };
-        IList<Build> runningBuilds = new List<Build> { buildOnOneCommit, buildOnAnotherCommit };
+        IList<Build> runningBuilds = [buildOnOneCommit, buildOnAnotherCommit];
 
         IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 
@@ -44,7 +44,7 @@ public class AzureDevOpsAdapterTests
         Build firstBuildStartedOnACommit = new() { SourceVersion = "a_commit_Hash", StartTime = new DateTime(2010, 1, 1) };
         Build buildAlsoStartedOnSameCommitButAfter = new() { SourceVersion = "a_commit_Hash", StartTime = new DateTime(2010, 1, 2) };
         Build buildAlsoStartedOnSameCommitButAfterAlso = new() { SourceVersion = "a_commit_Hash", StartTime = new DateTime(2010, 1, 3) };
-        IList<Build> runningBuilds = new List<Build> { firstBuildStartedOnACommit, buildAlsoStartedOnSameCommitButAfter, buildAlsoStartedOnSameCommitButAfterAlso };
+        IList<Build> runningBuilds = [firstBuildStartedOnACommit, buildAlsoStartedOnSameCommitButAfter, buildAlsoStartedOnSameCommitButAfterAlso];
 
         IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 
@@ -57,7 +57,7 @@ public class AzureDevOpsAdapterTests
         Build firstBuildStartedOnACommit = new() { SourceVersion = "a_commit_Hash" };
         Build buildAlsoStartedOnSameCommitButAfter = new() { SourceVersion = "a_commit_Hash" };
         Build buildAlsoStartedOnSameCommitButAfterAlso = new() { SourceVersion = "a_commit_Hash" };
-        IList<Build> runningBuilds = new List<Build> { firstBuildStartedOnACommit, buildAlsoStartedOnSameCommitButAfter, buildAlsoStartedOnSameCommitButAfterAlso };
+        IList<Build> runningBuilds = [firstBuildStartedOnACommit, buildAlsoStartedOnSameCommitButAfter, buildAlsoStartedOnSameCommitButAfterAlso];
 
         IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 
@@ -70,7 +70,7 @@ public class AzureDevOpsAdapterTests
         Build notStartedBuildOnACommit = new() { SourceVersion = "a_commit_Hash" };
         Build startedBuild = new() { SourceVersion = "a_commit_Hash", StartTime = new DateTime(2010, 1, 2) };
         Build anotherNotStartedBuildOnACommit = new() { SourceVersion = "a_commit_Hash" };
-        IList<Build> runningBuilds = new List<Build> { notStartedBuildOnACommit, startedBuild, anotherNotStartedBuildOnACommit };
+        IList<Build> runningBuilds = [notStartedBuildOnACommit, startedBuild, anotherNotStartedBuildOnACommit];
 
         IEnumerable<Build> filteredRunningBuilds = _sut.FilterRunningBuilds(runningBuilds);
 

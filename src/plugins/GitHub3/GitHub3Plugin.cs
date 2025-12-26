@@ -98,7 +98,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
 
     private IGitUICommands? _currentGitUiCommands;
     private IReadOnlyList<IHostedRemote>? _hostedRemotesForModule;
-    private List<string> _currentMessages = new();
+    private List<string> _currentMessages = [];
 
     public GitHub3Plugin() : base(true)
     {

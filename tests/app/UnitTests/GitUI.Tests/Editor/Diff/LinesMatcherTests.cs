@@ -70,7 +70,7 @@ public class LinesMatcherTests
         const int maxCombinations = 100 * 100;
         LineSegment[] removedLines = CreateLines(removedCount);
         LineSegment[] addedLines = CreateLines((maxCombinations / removedCount) + 1);
-        Dictionary<ISegment, string> lineTexts = new();
+        Dictionary<ISegment, string> lineTexts = [];
         for (int index = 0; index < removedCount; ++index)
         {
             string lineText = $"line{index}";

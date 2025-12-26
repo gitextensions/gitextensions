@@ -146,7 +146,7 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
         IList<Repository> recentRepositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
             () => RepositoryHistoryManager.Locals.AddAsMostRecentAsync(path));
 
-        List<RecentRepoInfo> topRepos = new();
+        List<RecentRepoInfo> topRepos = [];
         RecentRepoSplitter splitter = new()
         {
             MeasureFont = Font,

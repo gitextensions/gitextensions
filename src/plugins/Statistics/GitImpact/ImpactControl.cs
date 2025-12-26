@@ -316,7 +316,7 @@ public partial class ImpactControl : UserControl
                     // Add rectangle to temporary list
                     if (!author_points_dict.TryGetValue(author, out List<(Rectangle, int changeCount)>? rect))
                     {
-                        rect = new List<(Rectangle, int)>();
+                        rect = [];
                         author_points_dict.Add(author, rect);
                     }
 
@@ -383,7 +383,7 @@ public partial class ImpactControl : UserControl
                     // Add lines-changed-labels
                     if (!_lineLabels.TryGetValue(author, out List<(PointF point, string changeCount)> authorLineLabels))
                     {
-                        _lineLabels.Add(author, authorLineLabels = new List<(PointF, string)>());
+                        _lineLabels.Add(author, authorLineLabels = []);
                     }
 
                     if (rect.Height > LinesFontSize * 1.5)

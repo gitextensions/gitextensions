@@ -23,7 +23,7 @@ public class LaneNodeLocatorTests
         RevisionGraphRevision node = new(ObjectId.WorkTreeId, 0);
         IRevisionGraphRow revisionGraphRow = Substitute.For<IRevisionGraphRow>();
 
-        List<RevisionGraphSegment> segments = new();
+        List<RevisionGraphSegment> segments = [];
         if (firstSegment is not null)
         {
             segments.Add(firstSegment);

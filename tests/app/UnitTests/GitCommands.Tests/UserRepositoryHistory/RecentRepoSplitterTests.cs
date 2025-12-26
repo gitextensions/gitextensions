@@ -25,8 +25,8 @@ public class RecentRepoSplitterTests
         RecentRepoSplitter sut = new();
 
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MostSignDir;
-        List<RecentRepoInfo> topRepoList = new();
-        List<RecentRepoInfo> recentRepoList = new();
+        List<RecentRepoInfo> topRepoList = [];
+        List<RecentRepoInfo> recentRepoList = [];
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
@@ -46,8 +46,8 @@ public class RecentRepoSplitterTests
         RecentRepoSplitter sut = new();
 
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.None;
-        List<RecentRepoInfo> topRepoList = new();
-        List<RecentRepoInfo> recentRepoList = new();
+        List<RecentRepoInfo> topRepoList = [];
+        List<RecentRepoInfo> recentRepoList = [];
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
@@ -67,8 +67,8 @@ public class RecentRepoSplitterTests
         RecentRepoSplitter sut = new();
 
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.None;
-        List<RecentRepoInfo> topRepoList = new();
-        List<RecentRepoInfo> recentRepoList = new();
+        List<RecentRepoInfo> topRepoList = [];
+        List<RecentRepoInfo> recentRepoList = [];
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
@@ -91,8 +91,8 @@ public class RecentRepoSplitterTests
         RecentRepoSplitter sut = new();
 
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MiddleDots;
-        List<RecentRepoInfo> topRepoList = new();
-        List<RecentRepoInfo> recentRepoList = new();
+        List<RecentRepoInfo> topRepoList = [];
+        List<RecentRepoInfo> recentRepoList = [];
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
@@ -119,8 +119,8 @@ public class RecentRepoSplitterTests
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MostSignDir;
         sut.SortTopRepos = false;
         sut.SortRecentRepos = false;
-        List<RecentRepoInfo> topRepoList = new();
-        List<RecentRepoInfo> recentRepoList = new();
+        List<RecentRepoInfo> topRepoList = [];
+        List<RecentRepoInfo> recentRepoList = [];
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
@@ -151,8 +151,8 @@ public class RecentRepoSplitterTests
         sut.ShorteningStrategy = GitCommands.ShorteningRecentRepoPathStrategy.MostSignDir;
         sut.SortTopRepos = true;
         sut.SortRecentRepos = true;
-        List<RecentRepoInfo> topRepoList = new();
-        List<RecentRepoInfo> recentRepoList = new();
+        List<RecentRepoInfo> topRepoList = [];
+        List<RecentRepoInfo> recentRepoList = [];
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 
@@ -184,8 +184,8 @@ public class RecentRepoSplitterTests
         sut.SortTopRepos = true;
         sut.SortRecentRepos = true;
         sut.HideTopRepositoriesFromRecentList = true;
-        List<RecentRepoInfo> topRepoList = new();
-        List<RecentRepoInfo> recentRepoList = new();
+        List<RecentRepoInfo> topRepoList = [];
+        List<RecentRepoInfo> recentRepoList = [];
 
         sut.SplitRecentRepos(history, topRepoList, recentRepoList);
 

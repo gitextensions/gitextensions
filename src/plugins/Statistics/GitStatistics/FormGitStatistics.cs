@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Plugins.GitStatistics.PieChart;
@@ -198,7 +198,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         decimal[] extensionValues = new decimal[_lineCounter.LinesOfCodePerExtension.Count];
         string[] extensionLabels = new string[_lineCounter.LinesOfCodePerExtension.Count];
 
-        List<KeyValuePair<string, int>> linesOfCodePerExtension = new(_lineCounter.LinesOfCodePerExtension);
+        List<KeyValuePair<string, int>> linesOfCodePerExtension = [.. _lineCounter.LinesOfCodePerExtension];
         linesOfCodePerExtension.Sort((first, next) => -first.Value.CompareTo(next.Value));
 
         int n = 0;

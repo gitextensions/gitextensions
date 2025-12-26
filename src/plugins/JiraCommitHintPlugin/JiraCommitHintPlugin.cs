@@ -42,7 +42,7 @@ public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForCommit
     private string _stringTemplate = DefaultFormat;
     private readonly BoolSetting _enabledSettings = new("Jira hint plugin enabled", false);
     private readonly StringSetting _urlSettings = new("Jira URL", @"https://jira.atlassian.com");
-    private readonly ChoiceSetting _authTypeSettings = new("Auth type", new List<string> { AuthTypeUsernamePassword, AuthTypePersonalAccessToken });
+    private readonly ChoiceSetting _authTypeSettings = new("Auth type", [AuthTypeUsernamePassword, AuthTypePersonalAccessToken]);
     private readonly CredentialsSetting _credentialsSettings;
 
     // For compatibility reason, the setting key is kept to "JDL Query" even if the label is, rightly, "JQL Query" (for "Jira Query Language")

@@ -111,27 +111,24 @@ public sealed class ArgumentBuilderExtensionsTests
     {
         Test(
             "foo a b c",
-            new ArgumentBuilder
-            {
+            [
                 "foo",
                 new[] { "a", "b", "c" }
-            });
+            ]);
 
         Test(
             "foo",
-            new ArgumentBuilder
-            {
+            [
                 "foo",
                 Enumerable.Empty<string>()
-            });
+            ]);
 
         Test(
             "foo",
-            new ArgumentBuilder
-            {
+            [
                 "foo",
                 (IEnumerable<string>)null
-            });
+            ]);
 
         static void Test(string expected, ArgumentBuilder command)
         {

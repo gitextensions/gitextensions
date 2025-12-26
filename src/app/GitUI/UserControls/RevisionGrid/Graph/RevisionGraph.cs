@@ -458,7 +458,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
             if (nextIndex == 0)
             {
                 // This is the first row. Start with only the startsegments of this row
-                segments = new List<RevisionGraphSegment>(revisionStartSegments);
+                segments = [.. revisionStartSegments];
 
                 RevisionGraphSegment? prevSegment = null;
                 int revisionSegmentsCount = revisionStartSegments.Length;

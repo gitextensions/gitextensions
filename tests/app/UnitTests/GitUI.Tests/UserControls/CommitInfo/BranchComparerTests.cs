@@ -74,7 +74,7 @@ public class BranchComparerTests
             expectedBranches.RemoveAt(0);
         }
 
-        List<string> branches = new(expectedBranches);
+        List<string> branches = [.. expectedBranches];
 
         SortAndCheckListsForEquality();
 
