@@ -311,7 +311,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         _currentPullRequestInfo.HeadRepo.CloneProtocol = _cloneGitProtocol;
 
-        _discussionWB.DocumentText = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo);
+        _discussionWB.DocumentText = DiscussionHtmlCreator.CreateFor();
         _diffViewer.Clear();
         _fileStatusList.ClearDiffs();
 
@@ -349,7 +349,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private void LoadDiscussion(IPullRequestDiscussion? discussion)
     {
         Validates.NotNull(_currentPullRequestInfo);
-        string t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion?.Entries);
+        string t = DiscussionHtmlCreator.CreateFor(discussion?.Entries);
         _discussionWB.DocumentText = t;
     }
 

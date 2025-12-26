@@ -59,15 +59,15 @@ public class GitlabAdapter : IBuildServerAdapter
 
     public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
     {
-        return GetBuilds(scheduler, sinceDate, false);
+        return GetBuilds(sinceDate, false);
     }
 
     public IObservable<BuildInfo> GetRunningBuilds(IScheduler scheduler)
     {
-        return GetBuilds(scheduler, null, true);
+        return GetBuilds(null, true);
     }
 
-    private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool running = false)
+    private IObservable<BuildInfo> GetBuilds(DateTime? sinceDate = null, bool running = false)
     {
         return Observable.Create<BuildInfo>((observer, cancellationToken) => ObserveBuildsAsync(sinceDate, running, observer, cancellationToken));
     }

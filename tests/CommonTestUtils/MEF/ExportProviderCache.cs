@@ -18,7 +18,7 @@ public static partial class ExportProviderCache
     /// </summary>
     public static IExportProviderFactory GetOrCreateExportProviderFactory(IEnumerable<Assembly> assemblies)
     {
-        return CreateExportProviderFactory(CreateAssemblyCatalog(assemblies), isRemoteHostComposition: false);
+        return CreateExportProviderFactory(CreateAssemblyCatalog(assemblies));
     }
 
     public static ComposableCatalog CreateAssemblyCatalog(IEnumerable<Assembly> assemblies, Resolver? resolver = null)
@@ -74,7 +74,7 @@ public static partial class ExportProviderCache
         }
     }
 
-    public static IExportProviderFactory CreateExportProviderFactory(ComposableCatalog catalog, bool isRemoteHostComposition)
+    public static IExportProviderFactory CreateExportProviderFactory(ComposableCatalog catalog)
     {
         Scope scope = new("local");
         CompositionConfiguration configuration = CompositionConfiguration.Create(catalog.WithCompositionService());

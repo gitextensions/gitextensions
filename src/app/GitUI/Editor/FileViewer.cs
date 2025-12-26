@@ -439,7 +439,7 @@ public partial class FileViewer : GitModuleControl
         };
     }
 
-    public (ArgumentString Args, string ExtraCacheKey) GetDifftasticArguments(bool isRangeDiff = false)
+    public (ArgumentString Args, string ExtraCacheKey) GetDifftasticArguments()
     {
         EnvironmentAbstraction env = new();
         StringBuilder extraCacheKey = new();

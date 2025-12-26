@@ -360,12 +360,12 @@ internal sealed class SubmoduleTree : Tree
         UICommands.StartUpdateSubmoduleDialog(owner, node.LocalPath, node.SuperPath);
     }
 
-    public void OpenSubmodule(IWin32Window owner, SubmoduleNode node)
+    public void OpenSubmodule(SubmoduleNode node)
     {
         node.Open();
     }
 
-    public void OpenSubmoduleInGitExtensions(IWin32Window owner, SubmoduleNode node)
+    public void OpenSubmoduleInGitExtensions(SubmoduleNode node)
     {
         node.LaunchGitExtensions();
     }

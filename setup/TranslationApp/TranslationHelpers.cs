@@ -159,7 +159,7 @@ internal static class TranslationHelpers
 
         foreach ((string key, List<TranslationItemWithCategory> translateItems) in items)
         {
-            TranslationFile foreignTranslation = new(GitCommands.AppSettings.ProductVersion, "en", targetLanguageCode);
+            TranslationFile foreignTranslation = new("en", targetLanguageCode);
             foreach (TranslationItemWithCategory translateItem in translateItems)
             {
                 TranslationItem item = translateItem.GetTranslationItem();

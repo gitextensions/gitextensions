@@ -47,8 +47,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
     /// Requests (from FormBrowse) to refresh the data tree and to apply filtering, if necessary.
     /// </summary>
     /// <param name="getRefs">Function to get refs.</param>
-    /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
-    internal void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, bool forceRefresh)
+    internal void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
         if (!IsAttached)
         {
@@ -57,13 +56,13 @@ internal abstract class BaseRefTree : BaseRevisionTree
 
         // Since the commits of some branches or tags could have been filtered or not been loaded,
         // we need to iterate over the list and rebind the tree.
-        Refresh(getRefs);
+        RefreshInternal(getRefs);
     }
 
     /// <summary>
     /// Requests to refresh the data tree and to apply filtering, if necessary.
     /// </summary>
-    protected internal void Refresh(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+    protected internal void RefreshInternal(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
         // Break the local cache to ensure the data is requeried to reflect the required sort order.
         _loadedRefs = null;

@@ -1141,7 +1141,7 @@ public sealed partial class FileStatusList : GitModuleControl
         }
 
         bool expandIfFewFiles = !_isFileTreeMode || _filter is not null || !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
-        (List<TreeNodeInfo> nodes, _showDiffGroups, bool filesPresent) = GetNodes(items, previouslySelectedItems, GroupByRevision, IsFilterMatch, _groupBy, _flatList, expandIfFewFiles, gitGrepState, _noItemStatuses, cancellationToken);
+        (List<TreeNodeInfo> nodes, _showDiffGroups, bool filesPresent) = GetNodes(items, GroupByRevision, IsFilterMatch, _groupBy, _flatList, expandIfFewFiles, gitGrepState, _noItemStatuses, cancellationToken);
 
         GitItemStatusesWithDescription = items;
         if (nodes.Count > 0)
@@ -1232,7 +1232,6 @@ public sealed partial class FileStatusList : GitModuleControl
 
     private static (List<TreeNodeInfo> Nodes, bool ShowDiffGroups, bool FilesPresent) GetNodes(
         IReadOnlyList<FileStatusWithDescription> items,
-        HashSet<GitItemStatus>? previouslySelectedItems,
         bool groupByRevision,
         Func<GitItemStatus, bool> isFilterMatch,
         GroupBy? groupBy,

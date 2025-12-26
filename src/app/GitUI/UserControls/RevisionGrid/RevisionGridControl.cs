@@ -2533,7 +2533,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         SelectInLeftPanel(gitRef);
     }
 
-    internal void ToggleShowRelativeDate(EventArgs e)
+    internal void ToggleShowRelativeDate()
     {
         AppSettings.RelativeDate = !AppSettings.RelativeDate;
         MenuCommands.TriggerMenuChanged();
@@ -3236,7 +3236,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             case Command.ResetRevisionFilter: ResetAllFiltersAndRefresh(); break;
             case Command.ResetRevisionPathFilter: SetAndApplyPathFilter(""); break;
             case Command.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
-            case Command.ToggleShowRelativeDate: ToggleShowRelativeDate(EventArgs.Empty); break;
+            case Command.ToggleShowRelativeDate: ToggleShowRelativeDate(); break;
             case Command.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
             case Command.ToggleShowGitNotes: ToggleShowGitNotes(); break;
             case Command.ToggleHideMergeCommits: ToggleHideMergeCommits(); break;

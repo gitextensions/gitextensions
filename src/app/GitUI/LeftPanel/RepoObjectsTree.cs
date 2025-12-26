@@ -239,9 +239,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
     public void RefreshRevisionsLoading(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh)
     {
-        _branchesTree.Refresh(getRefs, forceRefresh);
-        _remotesTree.Refresh(getRefs, forceRefresh);
-        _tagTree.Refresh(getRefs, forceRefresh);
+        _branchesTree.Refresh(getRefs);
+        _remotesTree.Refresh(getRefs);
+        _tagTree.Refresh(getRefs);
         _stashTree.Refresh(getStashRevs);
     }
 
@@ -264,9 +264,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     /// <param name="getRefs">Git references</param>
     public void ResortRefs(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
-        _branchesTree.Refresh(getRefs);
-        _remotesTree.Refresh(getRefs);
-        _tagTree.Refresh(getRefs);
+        _branchesTree.RefreshInternal(getRefs);
+        _remotesTree.RefreshInternal(getRefs);
+        _tagTree.RefreshInternal(getRefs);
 
         _branchesTree.UpdateVisibility();
         _remotesTree.UpdateVisibility();

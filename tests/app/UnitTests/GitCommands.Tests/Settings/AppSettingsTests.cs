@@ -41,7 +41,9 @@ internal sealed class AppSettingsTests
 
     [Test]
     [TestCaseSource(nameof(TestCases))]
+#pragma warning disable IDE0060 // Remove unused parameter
     public void Should_return_default_value(PropertyInfo property, object value, object defaultValue, bool isISetting)
+#pragma warning restore IDE0060 // Remove unused parameter
     {
         // Arrange
         object root = null;

@@ -120,21 +120,21 @@ Detail of the error:");
             return Observable.Empty<BuildInfo>();
         }
 
-        return GetBuilds(scheduler, sinceDate, false);
+        return GetBuilds(sinceDate, false);
     }
 
     public IObservable<BuildInfo> GetRunningBuilds(IScheduler scheduler)
-        => GetBuilds(scheduler, null, true);
+        => GetBuilds(null, true);
 
     public void OnRepositoryChanged()
     {
         _buildsCache = null;
     }
 
-    private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool running = false)
-        => Observable.Create<BuildInfo>((observer, cancellationToken) => ObserveBuildsAsync(sinceDate, running, observer, cancellationToken));
+    private IObservable<BuildInfo> GetBuilds(DateTime? sinceDate = null, bool running = false)
+        => Observable.Create<BuildInfo>((observer, cancellationToken) => ObserveBuildsAsync(sinceDate, running, observer));
 
-    private async Task ObserveBuildsAsync(DateTime? sinceDate, bool running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
+    private async Task ObserveBuildsAsync(DateTime? sinceDate, bool running, IObserver<BuildInfo> observer)
     {
         if (_apiClient is null)
         {

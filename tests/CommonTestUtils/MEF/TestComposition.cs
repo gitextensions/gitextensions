@@ -94,7 +94,7 @@ public sealed partial class TestComposition
             }
         }
 
-        IExportProviderFactory newFactory = ExportProviderCache.CreateExportProviderFactory(GetCatalog(), isRemoteHostComposition: false);
+        IExportProviderFactory newFactory = ExportProviderCache.CreateExportProviderFactory(GetCatalog());
 
         lock (_factoryCacheLock)
         {

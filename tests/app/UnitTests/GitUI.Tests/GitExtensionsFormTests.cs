@@ -112,7 +112,9 @@ public class GitExtensionsFormTests
     [TestCase(120, 400, 400)]
     [TestCase(144, 333, 333)]
     [TestCase(192, 250, 250)]
+#pragma warning disable IDE0060 // Remove unused parameter
     public void RestorePosition_should_scale_sizable_window_if_different_dpi(int savedDpi, int expectedWidthAt96dpi, int expectedHeightAt96dpi)
+#pragma warning restore IDE0060 // Remove unused parameter
     {
         if (DpiUtil.IsNonStandard)
         {
