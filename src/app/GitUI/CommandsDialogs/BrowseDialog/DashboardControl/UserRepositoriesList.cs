@@ -739,7 +739,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private void RecentRepositoriesList_Load(object sender, EventArgs e)
     {
-        if (!(Parent.FindForm() is FormBrowse form))
+        if (Parent.FindForm() is not FormBrowse form)
         {
             return;
         }

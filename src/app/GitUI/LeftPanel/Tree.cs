@@ -174,7 +174,7 @@ internal abstract class Tree : NodeBase, IDisposable
 
             if (node is not null)
             {
-                TreeViewNode.TreeView.SelectedNode = !(node.Tag is BaseRevisionNode branchNode) || branchNode.Visible
+                TreeViewNode.TreeView.SelectedNode = node.Tag is not BaseRevisionNode branchNode || branchNode.Visible
                     ? node
                     : null;
             }

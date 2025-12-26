@@ -1,4 +1,4 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using Atlassian.Jira;
 using Atlassian.Jira.Remote;
 using GitCommands;
@@ -187,8 +187,7 @@ public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForCommit
 
     private void authTypeSetting_SelectedIndexChanged(object sender, EventArgs e)
     {
-        ComboBox comboBox = sender as ComboBox;
-        if (comboBox is null || _credentialsSettings.CustomControl is null)
+        if (sender is not ComboBox comboBox || _credentialsSettings.CustomControl is null)
         {
             return;
         }

@@ -100,7 +100,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
 
     private void cboTerminal_SelectionChangeCommitted(object sender, EventArgs e)
     {
-        if (!(cboTerminal.SelectedItem is IShellDescriptor shell))
+        if (cboTerminal.SelectedItem is not IShellDescriptor shell)
         {
             return;
         }

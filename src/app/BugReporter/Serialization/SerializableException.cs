@@ -63,11 +63,11 @@ public class SerializableException
                 InnerException = new SerializableException(exception.InnerException);
             }
 
-            if (exception is AggregateException)
+            if (exception is AggregateException aggregateException)
             {
                 InnerExceptions = [];
 
-                foreach (Exception innerException in ((AggregateException)exception).InnerExceptions)
+                foreach (Exception innerException in aggregateException.InnerExceptions)
                 {
                     InnerExceptions.Add(new SerializableException(innerException));
                 }

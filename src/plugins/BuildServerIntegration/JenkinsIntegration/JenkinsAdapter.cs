@@ -329,7 +329,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
         catch (Exception ex)
         {
             // Cancelling a sub-task is similar to cancelling this task
-            if (!(ex.InnerException is OperationCanceledException))
+            if (ex.InnerException is not OperationCanceledException)
             {
                 observer.OnError(ex);
             }

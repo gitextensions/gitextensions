@@ -827,7 +827,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 continue;
             }
 
-            item.Enabled = !(item.Tag is IGitPluginForRepository) || validWorkingDir;
+            item.Enabled = item.Tag is not IGitPluginForRepository || validWorkingDir;
         }
     }
 

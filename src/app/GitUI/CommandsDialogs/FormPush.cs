@@ -1266,8 +1266,7 @@ public partial class FormPush : GitModuleForm
 
         foreach (DataGridViewRow row in BranchGrid.Rows)
         {
-            DataGridViewCheckBoxCell pushCheckBox = row.Cells[PushColumn.Name] as DataGridViewCheckBoxCell;
-            if (pushCheckBox is null || !pushCheckBox.Visible)
+            if (row.Cells[PushColumn.Name] is not DataGridViewCheckBoxCell pushCheckBox || !pushCheckBox.Visible)
             {
                 continue;
             }
