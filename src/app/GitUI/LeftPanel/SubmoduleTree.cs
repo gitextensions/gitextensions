@@ -95,7 +95,7 @@ internal sealed class SubmoduleTree : Tree
             if (_currentNodes is null)
             {
                 // Module.GetRefs() is not used for submodules
-                JoinableTask joinableTask = ReloadNodesDetached((token, _) =>
+                JoinableTask joinableTask = ReloadNodesDetached((_, token) =>
                     {
                         cts = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
                         loadNodesTask = LoadNodesAsync(e.Info, cts.Token);

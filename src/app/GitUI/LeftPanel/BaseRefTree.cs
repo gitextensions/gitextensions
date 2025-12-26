@@ -27,7 +27,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
         base.OnAttached();
     }
 
-    private async Task<Nodes> LoadNodesAsync(CancellationToken token, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+    private async Task<Nodes> LoadNodesAsync(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, CancellationToken token)
     {
         await TaskScheduler.Default;
         token.ThrowIfCancellationRequested();
