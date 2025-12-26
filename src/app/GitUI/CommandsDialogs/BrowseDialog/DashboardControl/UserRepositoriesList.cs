@@ -632,7 +632,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
             }
         }
 
-        RectangleF DrawText(Graphics g, string text, Font font, Brush brush, int maxTextWidth, PointF location, float spacing)
+        static RectangleF DrawText(Graphics g, string text, Font font, Brush brush, int maxTextWidth, PointF location, float spacing)
         {
             Size textBounds = TextRenderer.MeasureText(text, font);
             float minWidth = Math.Min(textBounds.Width + spacing, maxTextWidth);

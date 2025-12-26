@@ -529,7 +529,7 @@ public static partial class PathUtil
 
         return string.Empty;
 
-        string? FindFileInEnvVarFolder(string environmentVariable, string location, string fileName1)
+        static string? FindFileInEnvVarFolder(string environmentVariable, string location, string fileName1)
         {
             string envVarFolder = Environment.GetEnvironmentVariable(environmentVariable);
             if (string.IsNullOrEmpty(envVarFolder))

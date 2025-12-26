@@ -161,7 +161,7 @@ public partial class PatchGrid : GitModuleControl
 
         return patchFiles;
 
-        string[] ReadCommitsDataFromRebaseFile(string filePath) =>
+        static string[] ReadCommitsDataFromRebaseFile(string filePath) =>
             File.Exists(filePath)
             ? File.ReadAllText(filePath).Trim().Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
             : Array.Empty<string>();

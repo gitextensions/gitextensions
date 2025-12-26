@@ -96,7 +96,7 @@ public sealed class RepositoryHistoryMigrator : IRepositoryHistoryMigrator
 
         return changed;
 
-        Current.Repository.RepositoryAnchor GetAnchor(string anchor)
+        static Current.Repository.RepositoryAnchor GetAnchor(string anchor)
         {
             if (!Enum.TryParse(anchor, out Current.Repository.RepositoryAnchor repositoryAnchor))
             {

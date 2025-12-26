@@ -25,7 +25,7 @@ public sealed class PatchProcessorTest
         _colorBinDiff = LoadPatch("color-binary.diff");
         _colorPrefixDiff = LoadPatch("color-prefix.diff");
 
-        string LoadPatch(string fileName)
+        static string LoadPatch(string fileName)
         {
             string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Patches/testdata", fileName);
             byte[] bytes = File.ReadAllBytes(path);

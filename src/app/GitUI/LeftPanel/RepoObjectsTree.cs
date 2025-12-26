@@ -211,7 +211,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         return;
 
-        bool IsOverride(MethodInfo? m)
+        static bool IsOverride(MethodInfo? m)
         {
             return m is not null && m.GetBaseDefinition().DeclaringType != m.DeclaringType;
         }

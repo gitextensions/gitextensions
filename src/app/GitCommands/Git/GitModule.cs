@@ -4085,7 +4085,7 @@ public sealed partial class GitModule : IGitModule
 
         return (totalCommits, countByName);
 
-        string GetDateParameter(string param, DateTime? date)
+        static string GetDateParameter(string param, DateTime? date)
         {
             return date is not null
                 ? $"{param}=\"{date:yyyy-MM-dd hh:mm:ss}\""

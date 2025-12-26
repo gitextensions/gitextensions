@@ -177,7 +177,7 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
         treeView1.EndUpdate();
         return;
 
-        void ResetHighlighting(TreeNodeCollection nodes)
+        static void ResetHighlighting(TreeNodeCollection nodes)
         {
             foreach (TreeNode node in nodes.Cast<TreeNode>())
             {

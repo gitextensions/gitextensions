@@ -209,7 +209,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
                 e.GitUICommands.AddCommitTemplate(key, () => GetIssueDescription(issue), Icon);
             }
 
-            string GetIssueDescription(Issue issue)
+            static string GetIssueDescription(Issue issue)
                 => $"""
 
                     Fixes #{issue.Number} : {issue.Title}

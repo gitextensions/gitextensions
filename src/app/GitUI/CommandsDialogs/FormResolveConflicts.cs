@@ -634,7 +634,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
         return;
 
-        void DeleteTemporaryFile(string? path)
+        static void DeleteTemporaryFile(string? path)
         {
             if (path is not null && File.Exists(path))
             {

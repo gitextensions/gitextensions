@@ -43,7 +43,7 @@ public sealed class ArgumentBuilderExtensionsTests
                 { true, (string)null }
             });
 
-        void Test(string expected, ArgumentBuilder command)
+        static void Test(string expected, ArgumentBuilder command)
         {
             ClassicAssert.AreEqual(expected, command.ToString());
         }
@@ -100,7 +100,7 @@ public sealed class ArgumentBuilderExtensionsTests
                 { false, null, null }
             });
 
-        void Test(string expected, ArgumentBuilder command)
+        static void Test(string expected, ArgumentBuilder command)
         {
             ClassicAssert.AreEqual(expected, command.ToString());
         }
@@ -133,7 +133,7 @@ public sealed class ArgumentBuilderExtensionsTests
                 (IEnumerable<string>)null
             });
 
-        void Test(string expected, ArgumentBuilder command)
+        static void Test(string expected, ArgumentBuilder command)
         {
             ClassicAssert.AreEqual(expected, command.ToString());
         }
@@ -190,7 +190,7 @@ public sealed class ArgumentBuilderExtensionsTests
                 { false, (IEnumerable<string>)null }
             });
 
-        void Test(string expected, ArgumentBuilder command)
+        static void Test(string expected, ArgumentBuilder command)
         {
             ClassicAssert.AreEqual(expected, command.ToString());
         }

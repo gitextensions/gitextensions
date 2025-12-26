@@ -151,7 +151,7 @@ public class InitialsAvatarProvider : IAvatarProvider
 
         return (new SolidBrush(backgroundColor.GetContrastColor(AppSettings.AvatarAuthorInitialsLuminanceThreshold)), backgroundColor);
 
-        Color ConvertToColor(string colorCode)
+        static Color ConvertToColor(string colorCode)
         {
             try
             {

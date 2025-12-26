@@ -2152,7 +2152,7 @@ public partial class FileViewer : GitModuleControl
 
         return true;
 
-        bool PerformClickIfAvailable(ToolStripItem item)
+        static bool PerformClickIfAvailable(ToolStripItem item)
         {
             if (item.Enabled && item.Available)
             {

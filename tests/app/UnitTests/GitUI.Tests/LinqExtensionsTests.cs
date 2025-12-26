@@ -26,7 +26,7 @@ public sealed class LinqExtensionsTests
         Test(new List<int>());
         Test(new List<int> { 1, 2, 3 });
 
-        void Test(IEnumerable<int> e)
+        static void Test(IEnumerable<int> e)
         {
             if (e is IReadOnlyList<int>)
             {
