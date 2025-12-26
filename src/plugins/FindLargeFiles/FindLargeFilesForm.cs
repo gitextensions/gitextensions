@@ -120,7 +120,7 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
                     ThreadHelper.JoinableTaskFactory.Run(async () =>
                     {
                         await pbRevisions.SwitchToMainThreadAsync();
-                        pbRevisions.Value = pbRevisions.Value + (int)((_revList.Length * 0.1f) / packFiles.Length);
+                        pbRevisions.Value += (int)((_revList.Length * 0.1f) / packFiles.Length);
                     });
                     foreach (string gitObject in objects.Where(x => x.Contains(" blob ")))
                     {

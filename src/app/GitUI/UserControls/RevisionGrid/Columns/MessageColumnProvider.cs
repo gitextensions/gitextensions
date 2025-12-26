@@ -381,7 +381,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             gitRef.IsDereference && // see note on using IsDereference in CommitInfo class
             AppSettings.ShowAnnotatedTagsMessages)
         {
-            name = name + " [...]";
+            name += " [...]";
         }
 
         RevisionGridRefRenderer.DrawRef(

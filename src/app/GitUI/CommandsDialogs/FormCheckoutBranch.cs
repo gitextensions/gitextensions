@@ -183,7 +183,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
         }
 
         tlpnlMain.RowStyles[2].Height = Remotebranch.Checked ? _controls[tlpnlRemoteOptions] : 0;
-        tlpnlMain.Height = tlpnlMain.Height - _controls[tlpnlRemoteOptions];
+        tlpnlMain.Height -= _controls[tlpnlRemoteOptions];
     }
 
     private void PopulateBranches()

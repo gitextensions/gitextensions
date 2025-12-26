@@ -129,7 +129,7 @@ public class ConfigSection : IConfigSection
             result = result + " \"" + escSubSection + "\"";
         }
 
-        result = result + "]";
+        result += "]";
         return result;
     }
 

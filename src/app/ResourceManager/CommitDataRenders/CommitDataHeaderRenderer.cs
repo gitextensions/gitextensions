@@ -125,7 +125,7 @@ public sealed partial class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
         }
 
         // remove the trailing newline character
-        header.Length = header.Length - Environment.NewLine.Length;
+        header.Length -= Environment.NewLine.Length;
 
         return header.ToString();
     }

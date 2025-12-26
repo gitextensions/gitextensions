@@ -373,11 +373,11 @@ public class SplitButton : Button
         // If we don't use mnemonic, set formatFlag to NoPrefix as this will show ampersand.
         if (!UseMnemonic)
         {
-            _textFormatFlags = _textFormatFlags | TextFormatFlags.NoPrefix;
+            _textFormatFlags |= TextFormatFlags.NoPrefix;
         }
         else if (!ShowKeyboardCues)
         {
-            _textFormatFlags = _textFormatFlags | TextFormatFlags.HidePrefix;
+            _textFormatFlags |= TextFormatFlags.HidePrefix;
         }
 
         // draw the text
