@@ -154,16 +154,7 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
     }
 
     private IExecutable GetGitExecutable()
-    {
-        IExecutable executable = _getGitExecutable();
-
-        if (executable is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IExecutable)}");
-        }
-
-        return executable;
-    }
+        => _getGitExecutable() ?? throw new ArgumentException($"Require a valid instance of {nameof(IExecutable)}");
 
     internal TestAccessor GetTestAccessor()
         => new(this);

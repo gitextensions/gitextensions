@@ -86,16 +86,7 @@ public class CommitAutoCompleteProvider : IAutoCompleteProvider
     }
 
     private IGitModule GetModule()
-    {
-        IGitModule module = _getModule();
-
-        if (module is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-        }
-
-        return module;
-    }
+        => _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
 
     private static Regex? GetRegexForExtension(string extension)
     {

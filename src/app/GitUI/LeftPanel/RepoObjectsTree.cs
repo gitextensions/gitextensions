@@ -715,15 +715,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
             foreach (string text in nodeTexts)
             {
-                node = nodes.SingleOrDefault(n => n.Text == text);
-
-                if (node is null)
-                {
-                    throw new ArgumentException(
+                node = nodes.SingleOrDefault(n => n.Text == text) ?? throw new ArgumentException(
                         $"Node '{text}' not found. Available nodes on this level: " + nodes.Select(n => n.Text).Join(", "),
                         nameof(nodeTexts));
-                }
-
                 nodes = node.Nodes.Cast<TreeNode>();
             }
 

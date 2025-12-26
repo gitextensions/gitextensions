@@ -159,13 +159,7 @@ internal partial class FilterToolBar : ToolStripEx
             throw new InvalidOperationException($"{nameof(Bind)} is not called.");
         }
 
-        IGitModule module = _getModule();
-        if (module is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-        }
-
-        return module;
+        return _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
     }
 
     private void InitBranchSelectionFilter(FilterChangedEventArgs e)

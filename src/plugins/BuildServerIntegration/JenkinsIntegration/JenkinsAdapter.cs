@@ -520,13 +520,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
             Validates.NotNull(_buildServerWatcher);
 
-            IBuildServerCredentials buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, false);
-
-            if (buildServerCredentials is null)
-            {
-                throw new OperationCanceledException(resp.ReasonPhrase);
-            }
-
+            IBuildServerCredentials buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, false) ?? throw new OperationCanceledException(resp.ReasonPhrase);
             UpdateHttpClientOptions(buildServerCredentials);
 
             return await GetStreamAsync(restServicePath, cancellationToken);
