@@ -137,7 +137,11 @@ public partial class PatchGrid : GitModuleControl
             }
             else
             {
-                ObjectId.TryParse(parts[1], out objectId);
+                if (!ObjectId.TryParse(parts[1], out objectId))
+                {
+                    Trace.Write($"PatchGrid: GetInteractiveRebasePatchFiles: Unable to parse commit hash '{parts[1]}' from '{todoCommits}'. Skipping this entry.");
+                    continue;
+                }
             }
 
             patchFiles.Add(new PatchFile
@@ -199,7 +203,11 @@ public partial class PatchGrid : GitModuleControl
 
         string nextFile = GetNextRebasePatch();
 
-        int.TryParse(nextFile, out int next);
+        if (!int.TryParse(nextFile, out int next))
+        {
+            Trace.Write($"PatchGrid: GetRebasePatchFiles: Unable to parse rebase next patch file name '{nextFile}'. Skipping this file.");
+            next = 0;
+        }
 
         string rebaseDir = Module.GetRebaseDir();
 

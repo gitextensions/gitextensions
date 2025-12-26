@@ -857,9 +857,9 @@ public partial class Spelling : Component
             {
                 if (!TestWord())
                 {
-                    if (ReplaceList.ContainsKey(currentWord))
+                    if (ReplaceList.TryGetValue(currentWord, out string word))
                     {
-                        ReplacementWord = ReplaceList[currentWord];
+                        ReplacementWord = word;
                         ReplaceWord();
                     }
                     else if (!IgnoreList.Contains(currentWord))

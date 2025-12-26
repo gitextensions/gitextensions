@@ -314,12 +314,13 @@ public partial class ImpactControl : UserControl
                     Rectangle rc = new(x, y, BlockWidth, height);
 
                     // Add rectangle to temporary list
-                    if (!author_points_dict.ContainsKey(author))
+                    if (!author_points_dict.TryGetValue(author, out List<(Rectangle, int changeCount)>? rect))
                     {
-                        author_points_dict.Add(author, new List<(Rectangle, int)>());
+                        rect = new List<(Rectangle, int)>();
+                        author_points_dict.Add(author, rect);
                     }
 
-                    author_points_dict[author].Add((rc, data.ChangedLines));
+                    rect.Add((rc, data.ChangedLines));
 
                     // Create a new random brush for the author if none exists yet
                     if (!_brushes.ContainsKey(author))

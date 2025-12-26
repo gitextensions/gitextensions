@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using System.Diagnostics;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -106,7 +107,12 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
             };
 
             string[] commitLog = context.Commands.GitExecutable.GetOutput(args).Split('\n');
-            DateTime.TryParse(commitLog[0], out DateTime commitDate);
+            if (!DateTime.TryParse(commitLog[0], out DateTime commitDate))
+            {
+                Trace.WriteLine($"Failed to parse commit date from git log output: '{commitLog[0]}' from {commitLog}");
+                commitDate = DateTime.MinValue;
+            }
+
             string authorName = commitLog.Length > 1 ? commitLog[1] : string.Empty;
             string message = commitLog.Length > 2 ? commitLog[2] : string.Empty;
 

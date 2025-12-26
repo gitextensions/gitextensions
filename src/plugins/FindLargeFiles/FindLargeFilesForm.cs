@@ -59,8 +59,7 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
             foreach (GitObject d in data)
             {
                 string commit = d.Commit.First();
-                DateTime date;
-                if (!revData.ContainsKey(commit))
+                if (!revData.TryGetValue(commit, out DateTime date))
                 {
                     GitArgumentBuilder args = new("show")
                     {
@@ -71,10 +70,6 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
                     string revDate = _gitModule.GitExecutable.GetOutput(args);
                     DateTime.TryParse(revDate, out date);
                     revData.Add(commit, date);
-                }
-                else
-                {
-                    date = revData[commit];
                 }
 
                 if (!_list.TryGetValue(d.SHA, out GitObject curGitObject))

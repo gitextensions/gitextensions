@@ -69,9 +69,9 @@ internal sealed class SubmoduleTree : Tree
 
                 foreach (SubmoduleNode node in nodes)
                 {
-                    if (infos.ContainsKey(node.Info.Path))
+                    if (infos.TryGetValue(node.Info.Path, out SubmoduleInfo? info))
                     {
-                        node.Info = infos[node.Info.Path];
+                        node.Info = info;
                         infos.Remove(node.Info.Path);
                     }
                     else

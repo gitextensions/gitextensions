@@ -85,12 +85,13 @@ public class ConfigSection : IConfigSection
 
     public void AddValue(string key, string value)
     {
-        if (!_configKeys.ContainsKey(key))
+        if (!_configKeys.TryGetValue(key, out List<string>? list))
         {
-            _configKeys[key] = [];
+            list = [];
+            _configKeys[key] = list;
         }
 
-        _configKeys[key].Add(value);
+        list.Add(value);
     }
 
     public string GetValue(string key, string defaultValue)

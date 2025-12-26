@@ -341,12 +341,10 @@ internal class JenkinsAdapter : IBuildServerAdapter
         static bool StatusIsBetter(BuildStatus newStatus, ObjectId commit, Dictionary<ObjectId, BuildStatus> builds)
         {
             // No existing status
-            if (!builds.ContainsKey(commit))
+            if (!builds.TryGetValue(commit, out BuildStatus existingStatus))
             {
                 return true;
             }
-
-            BuildStatus existingStatus = builds[commit];
 
             // Completed status is never replaced
             if (IsBuildCompleted(existingStatus))
