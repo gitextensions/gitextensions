@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -68,7 +69,12 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
                         "--format=\"%ci\""
                     };
                     string revDate = _gitModule.GitExecutable.GetOutput(args);
-                    DateTime.TryParse(revDate, out date);
+                    if (!DateTime.TryParse(revDate, out date))
+                    {
+                        Trace.WriteLine($"Could not parse date '{revDate}' for commit '{commit}'");
+                        date = DateTime.MinValue;
+                    }
+
                     revData.Add(commit, date);
                 }
 
@@ -184,14 +190,10 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
             {
                 // "100644 blob b17a497cdc6140aa3b9a681344522f44768165ac 2120195\tBin/Dictionaries/de-DE.dic"
                 string[] dataPack = objData.Split('\t');
-                string[] data = dataPack[0].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (data[1] == "blob")
+                string[] data = dataPack[0].Split([' '], count: 4, StringSplitOptions.RemoveEmptyEntries);
+                if (data[1] == "blob" && int.TryParse(data[3], out int size) && size >= thresholdSize)
                 {
-                    int.TryParse(data[3], out int size);
-                    if (size >= thresholdSize)
-                    {
-                        yield return new GitObject(data[2], dataPack[1], size, rev);
-                    }
+                    yield return new GitObject(data[2], dataPack[1], size, rev);
                 }
             }
         }

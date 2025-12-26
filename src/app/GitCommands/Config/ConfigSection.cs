@@ -1,4 +1,5 @@
-﻿using GitExtensions.Extensibility.Configurations;
+﻿using System.Diagnostics;
+using GitExtensions.Extensibility.Configurations;
 
 namespace GitCommands.Config;
 
@@ -152,7 +153,11 @@ public static class ConfigSectionExt
         if (section.HasValue(name))
         {
             string value = section.GetValue(name);
-            bool.TryParse(value, out result);
+            if (!bool.TryParse(value, out result))
+            {
+                Trace.WriteLine($"Warning: Could not parse boolean value '{value}' for '{section.SectionName}.{name}'. Using default '{defaultValue}'.");
+                result = false;
+            }
         }
 
         return result;
