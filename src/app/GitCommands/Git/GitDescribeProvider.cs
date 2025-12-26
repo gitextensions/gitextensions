@@ -46,7 +46,7 @@ public sealed class GitDescribeProvider : IGitDescribeProvider
         }
 
         description = description[..commitHashPos];
-        int commitCountPos = description.LastIndexOf("-", StringComparison.Ordinal);
+        int commitCountPos = description.LastIndexOf('-');
         if (commitCountPos == -1)
         {
             return (description, string.Empty);

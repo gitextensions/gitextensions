@@ -166,14 +166,14 @@ public sealed partial class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
             return "";
         }
 
-        int ind = author.IndexOf("<", StringComparison.Ordinal);
+        int ind = author.IndexOf('<');
         if (ind == -1)
         {
             return "";
         }
 
         ++ind;
-        return author[ind..author.LastIndexOf(">", StringComparison.Ordinal)];
+        return author[ind..author.LastIndexOf('>')];
     }
 
     private string RenderObjectIds(IEnumerable<ObjectId> objectIds, bool showRevisionsAsLinks)
