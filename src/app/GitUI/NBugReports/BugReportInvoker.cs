@@ -91,7 +91,7 @@ public static class BugReportInvoker
     public static void LogError(Exception exception, bool isTerminating = false)
     {
         string tempFolder = Path.GetTempPath();
-        string tempFileName = $"{AppSettings.ApplicationId}.{AppSettings.AppVersion}.{DateTime.Now.ToString("yyyyMMdd.HHmmssfff")}.log";
+        string tempFileName = $"{AppSettings.ApplicationId}.{AppSettings.AppVersion}.{DateTime.Now:yyyyMMdd.HHmmssfff}.log";
         string tempFile = Path.Combine(tempFolder, tempFileName);
 
         try
