@@ -384,10 +384,7 @@ public partial class Spelling : Component
         {
             StringBuilder tempWord = new(CurrentWord);
 
-            char swap = tempWord[i];
-            tempWord[i] = tempWord[i + 1];
-            tempWord[i + 1] = swap;
-
+            (tempWord[i + 1], tempWord[i]) = (tempWord[i], tempWord[i + 1]);
             string word = tempWord.ToString();
             if (FindWord(ref word))
             {

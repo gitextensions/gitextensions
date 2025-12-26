@@ -155,13 +155,8 @@ public partial class FormDiff : GitModuleForm
 
     private void btnSwap_Click(object sender, EventArgs e)
     {
-        GitRevision orgFirstRev = _firstRevision;
-        _firstRevision = _secondRevision;
-        _secondRevision = orgFirstRev;
-
-        string orgFirstStr = _firstCommitDisplayStr;
-        _firstCommitDisplayStr = _secondCommitDisplayStr;
-        _secondCommitDisplayStr = orgFirstStr;
+        (_secondRevision, _firstRevision) = (_firstRevision, _secondRevision);
+        (_secondCommitDisplayStr, _firstCommitDisplayStr) = (_firstCommitDisplayStr, _secondCommitDisplayStr);
         PopulateDiffFiles();
     }
 

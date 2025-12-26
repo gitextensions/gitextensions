@@ -898,9 +898,7 @@ partial class FileStatusList
             item: SelectedItem.Item);
         if (!string.IsNullOrWhiteSpace(SelectedItem.Item.OldName))
         {
-            string name = SelectedItem.Item.OldName;
-            SelectedItem.Item.OldName = SelectedItem.Item.Name;
-            SelectedItem.Item.Name = name;
+            (SelectedItem.Item.Name, SelectedItem.Item.OldName) = (SelectedItem.Item.OldName, SelectedItem.Item.Name);
         }
 
         _rememberFileContextMenuController.RememberedDiffFileItem = item;
