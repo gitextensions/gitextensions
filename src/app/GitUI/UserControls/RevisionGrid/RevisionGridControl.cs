@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Concurrency;
@@ -2821,7 +2821,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         GitRevision r = LatestSelectedRevision;
         if (r?.HasParent is true)
         {
-            _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.ParentIds.Last());
+            _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.ParentIds[^1]);
         }
     }
 
