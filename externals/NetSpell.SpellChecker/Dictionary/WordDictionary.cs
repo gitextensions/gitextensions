@@ -162,7 +162,7 @@ public partial class WordDictionary : Component
     {
         // make sure base word has this affix key
         Word baseWord = BaseWords[word];
-        return baseWord.AffixKeys.IndexOf(affixKey) != -1;
+        return baseWord.AffixKeys.Contains(affixKey);
     }
 
     /// <summary>

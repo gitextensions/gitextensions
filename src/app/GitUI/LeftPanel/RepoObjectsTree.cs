@@ -163,7 +163,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             IEnumerable<string> SearchForBranch(string arg)
             {
                 return CollectFilterCandidates()
-                    .Where(r => r.IndexOf(arg, StringComparison.OrdinalIgnoreCase) != -1);
+                    .Where(r => r.Contains(arg, StringComparison.OrdinalIgnoreCase));
             }
 
             IEnumerable<string> CollectFilterCandidates()
@@ -530,14 +530,14 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
                 if (n.Tag is BaseRevisionNode branch)
                 {
-                    if (branch.FullPath.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                    if (branch.FullPath.Contains(text, StringComparison.InvariantCultureIgnoreCase))
                     {
                         AddTreeNodeToSearchResult(ret, n);
                     }
                 }
                 else
                 {
-                    if (n.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                    if (n.Text.Contains(text, StringComparison.InvariantCultureIgnoreCase))
                     {
                         AddTreeNodeToSearchResult(ret, n);
                     }

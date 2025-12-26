@@ -327,7 +327,7 @@ internal partial class FilterToolBar : ToolStripEx
             }
 
             string filter = tscboBranchFilter.Items.Count > 0 ? tscboBranchFilter.Text : string.Empty;
-            string[] matches = branches.Where(branch => branch.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToArray();
+            string[] matches = branches.Where(branch => branch.Contains(filter, StringComparison.InvariantCultureIgnoreCase)).ToArray();
 
             if (matches.Length == 0)
             {

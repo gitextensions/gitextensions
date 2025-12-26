@@ -368,7 +368,7 @@ public static class TranslationUtil
                 continue;
             }
 
-            bool isPlugin = assembly.Location.ToPosixPath().IndexOf("/Plugins/", StringComparison.OrdinalIgnoreCase) != -1;
+            bool isPlugin = assembly.Location.ToPosixPath().Contains("/Plugins/", StringComparison.OrdinalIgnoreCase);
             string key = isPlugin ? ".Plugins" : "";
 
             if (!dictionary.TryGetValue(key, out List<Type>? list))

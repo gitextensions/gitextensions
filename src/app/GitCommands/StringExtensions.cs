@@ -317,7 +317,7 @@ public static class StringExtensions
     /// </returns>
     public static bool Contains(this string str, string other, StringComparison stringComparison)
     {
-        return str.IndexOf(other, stringComparison) != -1;
+        return str.Contains(other, stringComparison);
     }
 
     /// <summary>

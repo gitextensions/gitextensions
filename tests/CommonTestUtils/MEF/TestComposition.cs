@@ -178,7 +178,7 @@ public sealed partial class TestComposition
             return
                 name.EndsWith(".Tests", StringComparison.OrdinalIgnoreCase) ||
                 name.EndsWith(".UnitTests", StringComparison.OrdinalIgnoreCase) ||
-                name.IndexOf("Test.Utilities", StringComparison.OrdinalIgnoreCase) >= 0;
+                name.Contains("Test.Utilities", StringComparison.OrdinalIgnoreCase);
         }
     }
 
