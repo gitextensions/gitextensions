@@ -38,5 +38,5 @@ public sealed class MonospacedHeaderRenderStyleProvider : IHeaderRenderStyleProv
 
     public int GetMaxWidth() => _maxLength;
 
-    public IEnumerable<int> GetTabStops() => Enumerable.Empty<int>();
+    public IEnumerable<int> GetTabStops() => [];
 }

@@ -436,7 +436,7 @@ internal class FormBrowseMenus : ITranslate, IDisposable
     {
         if (_navigateMenuCommands is null && _viewMenuCommands is null)
         {
-            return Enumerable.Empty<MenuCommand>();
+            return [];
         }
         else if (_navigateMenuCommands is not null && _viewMenuCommands is not null)
         {

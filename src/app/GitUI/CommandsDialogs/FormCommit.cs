@@ -2484,7 +2484,7 @@ public sealed partial class FormCommit : GitModuleForm
             }
 
             // Add templates from settings
-            foreach (CommitTemplateItem item in CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>())
+            foreach (CommitTemplateItem item in CommitTemplateItem.LoadFromSettings() ?? [])
             {
                 isItemAdded |= CreateToolStripItem(item);
             }

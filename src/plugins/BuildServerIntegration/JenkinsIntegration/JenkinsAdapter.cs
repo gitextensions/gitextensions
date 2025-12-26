@@ -120,7 +120,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
     {
         string? t;
         long timestamp = 0;
-        IEnumerable<JToken> s = Enumerable.Empty<JToken>();
+        IEnumerable<JToken> s = [];
 
         try
         {

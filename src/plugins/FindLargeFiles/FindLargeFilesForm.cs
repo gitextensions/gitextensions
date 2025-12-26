@@ -17,7 +17,7 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
     private readonly float _threshold;
     private readonly IGitUICommands _commands;
     private readonly IGitModule _gitModule;
-    private string[] _revList = Array.Empty<string>();
+    private string[] _revList = [];
     private readonly Dictionary<string, GitObject> _list = [];
     private readonly SortableObjectsList _gitObjects = [];
 

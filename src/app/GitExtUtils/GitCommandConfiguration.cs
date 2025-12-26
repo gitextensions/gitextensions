@@ -45,6 +45,6 @@ public sealed class GitCommandConfiguration : IGitCommandConfiguration
     {
         return _configByCommand.TryGetValue(command, out GitConfigItem[] items)
             ? items
-            : Array.Empty<GitConfigItem>();
+            : [];
     }
 }

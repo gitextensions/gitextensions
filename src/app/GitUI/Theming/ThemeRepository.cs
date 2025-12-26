@@ -75,7 +75,7 @@ public class ThemeRepository : IThemeRepository
     {
         if (_themePathProvider.UserThemesDirectory is null)
         {
-            return Enumerable.Empty<ThemeId>();
+            return [];
         }
 
         DirectoryInfo directory = new(_themePathProvider.UserThemesDirectory);
@@ -84,6 +84,6 @@ public class ThemeRepository : IThemeRepository
                 .EnumerateFiles("*" + _themePathProvider.ThemeExtension, SearchOption.TopDirectoryOnly)
                 .Select(fileInfo => Path.GetFileNameWithoutExtension(fileInfo.Name))
                 .Select(fileName => new ThemeId(fileName, false))
-            : Enumerable.Empty<ThemeId>();
+            : [];
     }
 }

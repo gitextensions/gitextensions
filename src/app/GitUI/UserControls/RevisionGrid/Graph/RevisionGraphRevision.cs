@@ -16,7 +16,7 @@ public sealed class RevisionGraphRevision
 {
     // Enough as initial the majority of times because commits nearly never have more than 2 parents.
     private const int _initialParentStackCapacity = 2;
-    private ImmutableStack<RevisionGraphRevision> _children = ImmutableStack<RevisionGraphRevision>.Empty;
+    private ImmutableStack<RevisionGraphRevision> _children = [];
     private readonly ConcurrentQueue<RevisionGraphSegment> _startSegments = new();
 
     public RevisionGraphRevision(ObjectId objectId, int guessScore)

@@ -1326,7 +1326,7 @@ public static partial class AppSettings
     public static string[] RevisionFilterDropdowns
     {
         get => GetString("RevisionFilterDropdowns", string.Empty).Split('\n', StringSplitOptions.RemoveEmptyEntries);
-        set => SetString("RevisionFilterDropdowns", string.Join("\n", value ?? Array.Empty<string>()));
+        set => SetString("RevisionFilterDropdowns", string.Join("\n", value ?? []));
     }
 
     public static bool CommitDialogSelectionFilter
@@ -1502,7 +1502,7 @@ public static partial class AppSettings
         }
         set
         {
-            SetString("uithemevariations", string.Join(",", value ?? Array.Empty<string>()));
+            SetString("uithemevariations", string.Join(",", value ?? []));
         }
     }
 

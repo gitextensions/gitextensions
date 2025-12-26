@@ -479,7 +479,7 @@ public sealed class RevisionReader
         if (noParents <= 0)
         {
             offset++;
-            parentIds = Array.Empty<ObjectId>();
+            parentIds = [];
         }
         else
         {

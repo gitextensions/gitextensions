@@ -15,7 +15,7 @@ namespace CommonTestUtils.MEF;
 /// </summary>
 public sealed partial class TestComposition
 {
-    public static readonly TestComposition Empty = new(ImmutableHashSet<Assembly>.Empty, ImmutableHashSet<Type>.Empty, ImmutableHashSet<Type>.Empty);
+    public static readonly TestComposition Empty = new([], [], []);
     private static readonly Lock _factoryCacheLock = new();
     private static readonly Dictionary<CacheKey, IExportProviderFactory> _factoryCache = [];
 

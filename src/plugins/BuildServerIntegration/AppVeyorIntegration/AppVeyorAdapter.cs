@@ -163,7 +163,7 @@ internal class AppVeyorAdapter : IBuildServerAdapter
         }
         catch
         {
-            return Enumerable.Empty<AppVeyorBuildInfo>();
+            return [];
         }
     }
 
@@ -171,7 +171,7 @@ internal class AppVeyorAdapter : IBuildServerAdapter
     {
         if (string.IsNullOrWhiteSpace(result))
         {
-            return Enumerable.Empty<AppVeyorBuildInfo>();
+            return [];
         }
 
         Validates.NotNull(_isCommitInRevisionGrid);

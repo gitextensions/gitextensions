@@ -165,7 +165,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
         string remoteBranchPrefix = remoteName + "/";
         IEnumerable<Branch> remoteBranchesSource = IncludeRemoteBranches.Checked
             ? selectedBranches.Where(branch => branch.Name.StartsWith(remoteBranchPrefix))
-            : Enumerable.Empty<Branch>();
+            : [];
         List<Branch> remoteBranches = [.. remoteBranchesSource];
 
         if (remoteBranches.Count > 0)

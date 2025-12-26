@@ -49,7 +49,7 @@ public abstract class GitPluginBase : IGitPlugin, ITranslate
 
     public virtual IEnumerable<ISetting> GetSettings()
     {
-        return Enumerable.Empty<ISetting>();
+        return [];
     }
 
     public virtual void Register(IGitUICommands gitUiCommands)

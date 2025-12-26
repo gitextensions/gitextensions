@@ -199,7 +199,7 @@ public static class ControlHotkeyExtensions
             BindingFlags.Instance | BindingFlags.NonPublic,
             binder: null,
             types: Type.EmptyTypes,
-            modifiers: Array.Empty<ParameterModifier>());
+            modifiers: []);
 
     private static readonly MethodInfo _setSelectedTextInternalMethod =
         typeof(TextBoxBase).GetMethod("SetSelectedTextInternal",

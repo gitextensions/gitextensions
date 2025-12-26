@@ -1541,7 +1541,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return currentlySelectedObjectIds?.Count is > 0
                 ? currentlySelectedObjectIds
                 : currentCheckout is null
-                    ? Array.Empty<ObjectId>()
+                    ? []
                     : new ObjectId[] { currentCheckout };
         }
 

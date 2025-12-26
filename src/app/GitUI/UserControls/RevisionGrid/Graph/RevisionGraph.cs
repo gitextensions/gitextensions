@@ -57,7 +57,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
     /// and the first page is to be displayed, very quick.
     /// The second time is when all revisions are loaded, that may require hundred ms to build.
     /// </remarks>
-    private ImmutableArray<RevisionGraphRevision> _orderedNodesCache = ImmutableArray<RevisionGraphRevision>.Empty;
+    private ImmutableArray<RevisionGraphRevision> _orderedNodesCache = [];
 
     /// <summary>
     /// Mark the <see cref="_orderedNodesCache"/> as dirty. This will trigger a rebuild of the cache.
@@ -90,7 +90,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
         _revisionByObjectId.Clear();
         Count = 0;
         _incompleteRevisionByObjectId.Clear();
-        _orderedNodesCache = ImmutableArray<RevisionGraphRevision>.Empty;
+        _orderedNodesCache = [];
         _orderedNodesCacheInvalid = true;
         _orderedRowCache.Clear();
         _orderedRowCacheInvalidFromScore = int.MaxValue;

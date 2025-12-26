@@ -52,7 +52,7 @@ public static class Translator
             string translationDir = GetTranslationDir();
             if (!Directory.Exists(translationDir))
             {
-                return Array.Empty<string>();
+                return [];
             }
 
             foreach (string fileName in Directory.GetFiles(translationDir, "*.xlf"))

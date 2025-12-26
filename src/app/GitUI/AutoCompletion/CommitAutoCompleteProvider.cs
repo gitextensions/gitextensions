@@ -38,7 +38,7 @@ public class CommitAutoCompleteProvider : IAutoCompleteProvider
         if (!result.ExitedSuccessfully)
         {
             // Failed after retry, do not bother
-            return Enumerable.Empty<AutoCompleteWord>();
+            return [];
         }
 
         string output = result.StandardOutput;

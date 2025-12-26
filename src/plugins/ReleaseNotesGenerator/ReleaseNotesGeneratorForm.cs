@@ -20,7 +20,7 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
 
     private const string MostRecentHint = "most recent changes are listed on top";
     private readonly GitUIEventArgs _gitUiCommands;
-    private IEnumerable<LogLine> _lastGeneratedLogLines = Enumerable.Empty<LogLine>();
+    private IEnumerable<LogLine> _lastGeneratedLogLines = [];
     private readonly IGitLogLineParser _gitLogLineParser;
 
     public ReleaseNotesGeneratorForm(GitUIEventArgs gitUiCommands)

@@ -18,7 +18,7 @@ public class PieChart3D : IDisposable
     ///   Array of ordered pie slices constituting the chart, starting from
     ///   270 degrees axis.
     /// </summary>
-    protected PieSlice[] PieSlices = Array.Empty<PieSlice>();
+    protected PieSlice[] PieSlices = [];
 
     /// <summary>
     ///   Collection of reordered pie slices mapped to original order.

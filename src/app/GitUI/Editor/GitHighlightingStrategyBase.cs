@@ -55,7 +55,7 @@ internal abstract class GitHighlightingStrategyBase : IHighlightingStrategy
 
     public string Name { get; }
 
-    public string[] Extensions => Array.Empty<string>();
+    public string[] Extensions => [];
 
     public Dictionary<string, string> Properties { get; } = [];
 

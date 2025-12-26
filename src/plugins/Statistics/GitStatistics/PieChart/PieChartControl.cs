@@ -25,7 +25,7 @@ public class PieChartControl : Panel
     private float _sliceRelativeHeight;
     private object[]? _tags;
     private float _topMargin;
-    private decimal[] _values = Array.Empty<decimal>();
+    private decimal[] _values = [];
 
     /// <summary>
     ///   Initializes the <c>PieChartControl</c>.
