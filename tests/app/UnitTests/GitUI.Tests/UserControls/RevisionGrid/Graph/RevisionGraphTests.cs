@@ -131,8 +131,10 @@ public class RevisionGraphTests
         ClassicAssert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
         // Add a new head
-        GitRevision newHead = new(ObjectId.Random());
-        newHead.ParentIds = new ObjectId[] { _revisionGraph.GetNodeForRow(0).Objectid };
+        GitRevision newHead = new(ObjectId.Random())
+        {
+            ParentIds = new ObjectId[] { _revisionGraph.GetNodeForRow(0).Objectid }
+        };
         _revisionGraph.Add(newHead); // Add commit that has the current top node as parent.
 
         _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count); // Call to cache fix the order
@@ -467,8 +469,10 @@ public class RevisionGraphTests
             string[] parts = spec.Split(':');
             string id = parts[0];
 
-            GitRevision commit = new(ObjectId.Random());
-            commit.Subject = id;
+            GitRevision commit = new(ObjectId.Random())
+            {
+                Subject = id
+            };
             commits.Add(commit);
             commitsById.Add(id, commit);
 

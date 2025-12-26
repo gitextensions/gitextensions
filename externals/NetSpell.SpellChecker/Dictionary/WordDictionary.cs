@@ -434,10 +434,11 @@ public partial class WordDictionary : Component
                             // if 3 parts, then new rule
                             if (partMatches.Count == 3)
                             {
-                                currentRule = new AffixRule();
-
-                                // part 1 = affix key
-                                currentRule.Name = partMatches[0].Value;
+                                currentRule = new AffixRule
+                                {
+                                    // part 1 = affix key
+                                    Name = partMatches[0].Value
+                                };
 
                                 // part 2 = combine flag
                                 if (partMatches[1].Value == "Y")
@@ -498,10 +499,11 @@ public partial class WordDictionary : Component
                         case "[Words]": // dictionary word list
                             // splits word into its parts
                             string[] parts = tempLine.Split('/');
-                            Word tempWord = new();
-
-                            // part 1 = base word
-                            tempWord.Text = parts[0];
+                            Word tempWord = new()
+                            {
+                                // part 1 = base word
+                                Text = parts[0]
+                            };
 
                             // part 2 = affix keys
                             if (parts.Length >= 2)

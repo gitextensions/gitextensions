@@ -356,8 +356,10 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
             return;
         }
 
-        ToolStripMenuItem toolStripMenuItem = new(string.Format(_viewInWebSite.Text, Name), Icon);
-        toolStripMenuItem.Tag = HostedRemoteMenuItem;
+        ToolStripMenuItem toolStripMenuItem = new(string.Format(_viewInWebSite.Text, Name), Icon)
+        {
+            Tag = HostedRemoteMenuItem
+        };
         contextMenu.Items.Add(toolStripMenuItem);
 
         foreach (IHostedRemote hostedRemote in _hostedRemotesForModule.OrderBy(r => r.Data))

@@ -29,8 +29,10 @@ public class CopyContextMenuItemTests
     [SetUp]
     public void Setup()
     {
-        _copyContextMenuItem = new CopyContextMenuItem();
-        _copyContextMenuItem.Owner = new ToolStrip();
+        _copyContextMenuItem = new CopyContextMenuItem
+        {
+            Owner = new ToolStrip()
+        };
     }
 
     [TearDown]

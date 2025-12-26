@@ -275,9 +275,11 @@ public partial class Spelling : Component
 
     private void SuggestWord(string word, List<Word> tempSuggestion)
     {
-        Word ws = new();
-        ws.Text = word;
-        ws.EditDistance = EditDistance(CurrentWord, word);
+        Word ws = new()
+        {
+            Text = word,
+            EditDistance = EditDistance(CurrentWord, word)
+        };
         tempSuggestion.Add(ws);
     }
 

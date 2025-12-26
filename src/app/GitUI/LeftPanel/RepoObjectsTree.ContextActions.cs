@@ -286,10 +286,12 @@ partial class RepoObjectsTree : IMenuItemFactory
         where TMenuItem : ToolStripItem, new()
         where TNode : class, INode
     {
-        TMenuItem result = new();
-        result.Image = icon;
-        result.Text = text.Text;
-        result.ToolTipText = toolTip.Text;
+        TMenuItem result = new()
+        {
+            Image = icon,
+            Text = text.Text,
+            ToolTipText = toolTip.Text
+        };
         RegisterClick(result, onClick);
         return result;
     }

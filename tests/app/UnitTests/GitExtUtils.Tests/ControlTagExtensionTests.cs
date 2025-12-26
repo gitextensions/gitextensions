@@ -22,8 +22,10 @@ public class ControlTagExtensionTests
     [Test]
     public void When_tag_field_is_occupied_GetTag_returns_default()
     {
-        Control control = new();
-        control.Tag = new object();
+        Control control = new()
+        {
+            Tag = new object()
+        };
 
         ClassicAssert.That(control.HasTag<int>(), Is.False);
         ClassicAssert.That(control.GetTag<int>(), Is.EqualTo(default(int)));
@@ -32,8 +34,10 @@ public class ControlTagExtensionTests
     [Test]
     public void When_tag_field_is_occupied_SetTag_replaces_existing_tag()
     {
-        Control control = new();
-        control.Tag = new object();
+        Control control = new()
+        {
+            Tag = new object()
+        };
 
         control.SetTag(1);
 

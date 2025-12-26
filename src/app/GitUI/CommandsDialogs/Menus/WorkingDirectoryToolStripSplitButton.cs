@@ -97,8 +97,10 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
         mnuOpenLocalRepository.Click += (s, e) => _startToolStripMenuItem.OpenRepositoryMenuItem.PerformClick();
         DropDownItems.Add(mnuOpenLocalRepository);
 
-        ToolStripMenuItem mnuCloseRepo = new(_closeToolStripMenuItem.Text);
-        mnuCloseRepo.ShortcutKeyDisplayString = _closeToolStripMenuItem.ShortcutKeyDisplayString;
+        ToolStripMenuItem mnuCloseRepo = new(_closeToolStripMenuItem.Text)
+        {
+            ShortcutKeyDisplayString = _closeToolStripMenuItem.ShortcutKeyDisplayString
+        };
         mnuCloseRepo.Click += (hs, he) => _closeToolStripMenuItem.PerformClick();
         DropDownItems.Add(mnuCloseRepo);
 

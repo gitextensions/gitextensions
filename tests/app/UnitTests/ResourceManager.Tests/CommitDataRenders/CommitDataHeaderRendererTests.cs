@@ -172,8 +172,10 @@ public class CommitDataHeaderRendererTests
             ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
             [],
             author, authorDate,
-            committer, commitDate, "");
-        data.ChildIds = _childrenHashes;
+            committer, commitDate, "")
+        {
+            ChildIds = _childrenHashes
+        };
 
         _linkFactory.CreateLink(author, Arg.Any<string>()).Returns(x => author);
         _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");
