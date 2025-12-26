@@ -239,10 +239,7 @@ public partial class Spelling : Component
 
     private void Initialize()
     {
-        if (_dictionary is null)
-        {
-            _dictionary = new WordDictionary();
-        }
+        _dictionary ??= new WordDictionary();
 
         if (!_dictionary.Initialized)
         {

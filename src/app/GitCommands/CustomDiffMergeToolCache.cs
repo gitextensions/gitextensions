@@ -74,11 +74,8 @@ public class CustomDiffMergeToolCache
         }
         finally
         {
-            if (_tools is null)
-            {
-                // Parsing has failed, just provide an empty list, no user notification
-                _tools = [];
-            }
+            // Parsing has failed, just provide an empty list, no user notification
+            _tools ??= [];
 
             _mutex.Release();
         }
