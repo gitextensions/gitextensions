@@ -308,7 +308,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             cancellationToken.ThrowIfCancellationRequested();
             HashSet<string> mergedBranches = selectedGuid is null
                 ? []
-                : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid, cancellationToken)).ToHashSet();
+                : [.. await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid, cancellationToken)];
 
             selectedRevision?.Refs.ForEach(gitRef => mergedBranches.Remove(gitRef.CompleteName));
 
@@ -447,11 +447,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         // Add Tree's node in position index order. Because TreeNodeCollections cannot be sorted,
         // we create a list from it, sort it, then clear and re-add the nodes back to the collection.
         treeMain.BeginUpdate();
-        List<TreeNode> nodeList = treeMain.Nodes.OfType<TreeNode>().ToList();
+        List<TreeNode> nodeList = [.. treeMain.Nodes.OfType<TreeNode>()];
         nodeList.Add(tree.TreeViewNode);
         treeMain.Nodes.Clear();
         Dictionary<Tree, int> treeToPositionIndex = GetTreeToPositionIndex();
-        treeMain.Nodes.AddRange(nodeList.OrderBy(treeNode => treeToPositionIndex[(Tree)treeNode.Tag]).ToArray());
+        treeMain.Nodes.AddRange([.. nodeList.OrderBy(treeNode => treeToPositionIndex[(Tree)treeNode.Tag])]);
         treeMain.EndUpdate();
 
         treeMain.Font = AppSettings.Font;

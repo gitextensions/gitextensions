@@ -22,11 +22,10 @@ public partial class Settings
             DisableSSL = plugin.BitbucketDisableSsl.ValueOrDefault(settings)
         };
 
-        string[] remotes = module.GetRemoteNames()
+        string[] remotes = [.. module.GetRemoteNames()
             .Where(s => !string.IsNullOrWhiteSpace(s))
             .Distinct()
-            .Select(r => module.GetSetting(string.Format(SettingKeyString.RemoteUrl, r)))
-            .ToArray();
+            .Select(r => module.GetSetting(string.Format(SettingKeyString.RemoteUrl, r)))];
 
         foreach (string url in remotes)
         {

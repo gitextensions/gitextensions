@@ -1343,7 +1343,7 @@ public sealed class GitUICommands : IGitUICommands
     public void StartCreatePullRequest(IWin32Window? owner)
     {
         List<IRepositoryHostPlugin> relevantHosts =
-            PluginRegistry.GitHosters.Where(gh => gh.GitModuleIsRelevantToMe()).ToList();
+            [.. PluginRegistry.GitHosters.Where(gh => gh.GitModuleIsRelevantToMe())];
 
         if (relevantHosts.Count == 0)
         {

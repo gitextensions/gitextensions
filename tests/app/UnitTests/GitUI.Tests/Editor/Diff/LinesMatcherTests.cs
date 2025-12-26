@@ -39,7 +39,7 @@ public class LinesMatcherTests
     [TestCase("---abc---123---def_7---", new string[] { "abc", "123", "def_7" }, new int[] { 3, 9, 15 })]
     public void GetWords(string text, string[] words, int[] offsets)
     {
-        (string Word, int Offset)[] result = LinesMatcher.GetWords(text, TextUtilities.IsLetterDigitOrUnderscore).ToArray();
+        (string Word, int Offset)[] result = [.. LinesMatcher.GetWords(text, TextUtilities.IsLetterDigitOrUnderscore)];
         result.Select(LinesMatcher.SelectWord).Should().BeEquivalentTo(words);
         result.Select(LinesMatcher.SelectStartIndex).Should().BeEquivalentTo(offsets);
     }
@@ -58,7 +58,7 @@ public class LinesMatcherTests
     [TestCase("    sum += x;", new string[] { "sum", "x" }, new int[] { 4, 11 })]
     public void GetSubwords(string text, string[] words, int[] offsets)
     {
-        (string Word, int Offset)[] result = LinesMatcher.GetSubwords(text).ToArray();
+        (string Word, int Offset)[] result = [.. LinesMatcher.GetSubwords(text)];
         result.Select(LinesMatcher.SelectWord).Should().BeEquivalentTo(words);
         result.Select(LinesMatcher.SelectStartIndex).Should().BeEquivalentTo(offsets);
     }

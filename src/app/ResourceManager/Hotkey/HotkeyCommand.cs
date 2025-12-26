@@ -32,7 +32,7 @@ public class HotkeyCommand
 
     public static HotkeyCommand[] FromEnum(Type enumType)
     {
-        return Enum.GetValues(enumType).Cast<object>().Select(c => new HotkeyCommand((int)c, c.ToString())).ToArray();
+        return [.. Enum.GetValues(enumType).Cast<object>().Select(c => new HotkeyCommand((int)c, c.ToString()))];
     }
 
     public override bool Equals(object obj)

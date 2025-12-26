@@ -335,8 +335,8 @@ public sealed class ArgumentBuilderExtensionsTests
         List<BatchArgumentItem> batch = new GitArgumentBuilder(command)
             .BuildBatchArguments(arguments, baseLength, maxLength);
 
-        string[] args = batch.Select(item => item.Argument.ToString()).ToArray();
-        int[] counts = batch.Select(item => item.BatchItemsCount).ToArray();
+        string[] args = [.. batch.Select(item => item.Argument.ToString())];
+        int[] counts = [.. batch.Select(item => item.BatchItemsCount)];
 
         ClassicAssert.AreEqual(expected, args);
         ClassicAssert.AreEqual(expectedCounts, counts);

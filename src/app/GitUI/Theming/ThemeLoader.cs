@@ -150,15 +150,14 @@ public class ThemeLoader : IThemeLoader
         // Prefer the latter option - less magic.
 
         // cssColorValue is something like 'rgb(180, 180, 180)'
-        int[] rgbValues = cssColorValue.Split('(', ')', ',')
+        int[] rgbValues = [.. cssColorValue.Split('(', ')', ',')
             .Select(sa => new
             {
                 Success = int.TryParse(sa, out int value),
                 Value = value
             })
             .Where(v => v.Success)
-            .Select(v => v.Value)
-            .ToArray();
+            .Select(v => v.Value)];
 
         if (rgbValues.Length != 3)
         {

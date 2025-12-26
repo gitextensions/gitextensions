@@ -398,7 +398,7 @@ internal class FormBrowseMenus : ITranslate, IDisposable
             }
         }
 
-        toolStripMenuItemTarget.DropDownItems.AddRange(toolStripItems.ToArray());
+        toolStripMenuItemTarget.DropDownItems.AddRange([.. toolStripItems]);
     }
 
     // clear is important to avoid mem leaks of event handlers

@@ -27,9 +27,9 @@ public sealed partial class TestComposition
 
         public CacheKey(ImmutableHashSet<Assembly> assemblies, ImmutableHashSet<Type> parts, ImmutableHashSet<Type> excludedPartTypes)
         {
-            _assemblies = assemblies.OrderBy(a => a.FullName).ToImmutableArray();
-            _parts = parts.OrderBy(a => a.FullName).ToImmutableArray();
-            _excludedPartTypes = excludedPartTypes.OrderBy(a => a.FullName).ToImmutableArray();
+            _assemblies = [.. assemblies.OrderBy(a => a.FullName)];
+            _parts = [.. parts.OrderBy(a => a.FullName)];
+            _excludedPartTypes = [.. excludedPartTypes.OrderBy(a => a.FullName)];
         }
 
         public override bool Equals(object? obj)

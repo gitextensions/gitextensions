@@ -1017,8 +1017,8 @@ public sealed partial class FormCommit : GitModuleForm
 
         Validates.NotNull(lastSelection);
         IReadOnlyList<GitItemStatus> newItems = _currentFilesList == Staged ? stagedFiles : unstagedFiles;
-        HashSet<string> names = lastSelection.Select(x => x.Name).ToHashSet();
-        List<GitItemStatus> newSelection = newItems.Where(x => names.Contains(x.Name)).ToList();
+        HashSet<string> names = [.. lastSelection.Select(x => x.Name)];
+        List<GitItemStatus> newSelection = [.. newItems.Where(x => names.Contains(x.Name))];
 
         if (newSelection.Count != 0)
         {
@@ -1552,7 +1552,7 @@ public sealed partial class FormCommit : GitModuleForm
         }
 
         // Staged.SelectedItems.Items() is needed only once, so we can safely convert to list here
-        List<GitItemStatus> allFiles = Staged.SelectedItems.Items().ToList();
+        List<GitItemStatus> allFiles = [.. Staged.SelectedItems.Items()];
         if (allFiles.Count == 0)
         {
             return;
@@ -1593,8 +1593,8 @@ public sealed partial class FormCommit : GitModuleForm
 
                 _skipUpdate = true;
                 InitializedStaged();
-                List<GitItemStatus> stagedFiles = Staged.GitItemStatuses.ToList();
-                List<GitItemStatus> unstagedFiles = Unstaged.GitItemStatuses.ToList();
+                List<GitItemStatus> stagedFiles = [.. Staged.GitItemStatuses];
+                List<GitItemStatus> unstagedFiles = [.. Unstaged.GitItemStatuses];
                 foreach (GitItemStatus item in allFiles)
                 {
                     GitItemStatus item1 = item;
@@ -1824,7 +1824,7 @@ public sealed partial class FormCommit : GitModuleForm
                 else
                 {
                     InitializedStaged();
-                    List<GitItemStatus> unstagedFiles = Unstaged.GitItemStatuses.ToList();
+                    List<GitItemStatus> unstagedFiles = [.. Unstaged.GitItemStatuses];
                     _skipUpdate = true;
                     HashSet<string?> names = [];
                     foreach (GitItemStatus item in files)
@@ -1955,11 +1955,10 @@ public sealed partial class FormCommit : GitModuleForm
             authorPattern = $"^{Regex.Escape(userName)} <{Regex.Escape(userEmail)}>$";
         }
 
-        List<string> prevMessages = Module.GetPreviousCommitMessages(maxCount, "HEAD", authorPattern)
+        List<string> prevMessages = [.. Module.GetPreviousCommitMessages(maxCount, "HEAD", authorPattern)
             .WhereNotNull()
             .Select(message => message.TrimEnd('\n'))
-            .Where(message => !string.IsNullOrWhiteSpace(message))
-            .ToList();
+            .Where(message => !string.IsNullOrWhiteSpace(message))];
 
         if (!string.IsNullOrWhiteSpace(msg) && !prevMessages.Contains(msg))
         {

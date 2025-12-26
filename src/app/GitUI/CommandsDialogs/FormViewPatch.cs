@@ -86,7 +86,7 @@ public partial class FormViewPatch : GitModuleForm
         try
         {
             string text = System.IO.File.ReadAllText(PatchFileNameEdit.Text, GitModule.LosslessEncoding);
-            List<Patch> patches = PatchProcessor.CreatePatchesFromString(text, new Lazy<Encoding>(() => Module.FilesEncoding)).ToList();
+            List<Patch> patches = [.. PatchProcessor.CreatePatchesFromString(text, new Lazy<Encoding>(() => Module.FilesEncoding))];
             SortablePatchesList patchesList = new();
             patchesList.AddRange(patches);
             GridChangedFiles.DataSource = patchesList;

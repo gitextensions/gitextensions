@@ -84,7 +84,7 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
             return null;
         }
 
-        return gitRevisions.Select(extractRevisionText).Distinct().ToArray();
+        return [.. gitRevisions.Select(extractRevisionText).Distinct()];
     }
 
     private void OnDropDownOpening(object sender, EventArgs e)

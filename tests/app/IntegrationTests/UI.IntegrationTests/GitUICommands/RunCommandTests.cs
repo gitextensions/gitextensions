@@ -183,7 +183,7 @@ public sealed class RunCommandTests
             }
         }
 
-        RunCommandBasedOnArgument<FormFileHistory>(args.ToArray(),
+        RunCommandBasedOnArgument<FormFileHistory>([.. args],
             runTest: form => form.FindDescendantOfType<FullBleedTabControl>(_ => true).SelectedTab.Text.Should().Be(expectedTab));
     }
 
@@ -209,7 +209,7 @@ public sealed class RunCommandTests
             args.Add(filterValid ? "--filter-by-revision" : "invalid");
         }
 
-        _commands.GetTestAccessor().RunCommandBasedOnArgument(args.ToArray()).Should().BeFalse();
+        _commands.GetTestAccessor().RunCommandBasedOnArgument([.. args]).Should().BeFalse();
     }
 
     [Test]

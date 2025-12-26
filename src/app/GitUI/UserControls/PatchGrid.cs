@@ -93,10 +93,9 @@ public partial class PatchGrid : GitModuleControl
         // Filter comment lines and keep only lines containing at least 3 columns
         // (action, commit hash and commit subject -- that could contain spaces and be cut in more --)
         // ex: pick e0d861716540aa1ac83eaa2790ba5e79988b9489 this is the commit subject
-        string[][] commitsInfos = doneCommits.Concat(todoCommits).Where(l => !l.StartsWith(commentChar))
+        string[][] commitsInfos = [.. doneCommits.Concat(todoCommits).Where(l => !l.StartsWith(commentChar))
             .Select(l => l.Split(Delimiters.Space))
-            .Where(p => p.Length >= 3)
-            .ToArray();
+            .Where(p => p.Length >= 3)];
 
         List<PatchFile> patchFiles = [];
         if (commitsInfos.Length == 0)

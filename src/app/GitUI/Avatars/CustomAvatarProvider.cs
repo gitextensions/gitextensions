@@ -55,12 +55,11 @@ public sealed partial class CustomAvatarProvider : IAvatarProvider
     {
         ArgumentNullException.ThrowIfNull(downloader);
 
-        IAvatarProvider[] providerParts = customProviderTemplates
+        IAvatarProvider[] providerParts = [.. customProviderTemplates
             .LazySplit(';')
             .Select(p => p.Trim())
             .Select(p => FromTemplateSegment(downloader, p))
-            .WhereNotNull()
-            .ToArray();
+            .WhereNotNull()];
 
         // We can't use the chain provider here, because some returned providers (namely UriTemplateResolvers)
         // don't actually fulfill the interface contract of IAvatarProvider. UriTemplateResolver is a special

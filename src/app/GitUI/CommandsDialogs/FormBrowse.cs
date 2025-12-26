@@ -1073,9 +1073,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         void LoadUserMenu()
         {
-            List<ScriptInfo> scripts = _scriptsManager.GetScripts()
-                .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)
-                .ToList();
+            List<ScriptInfo> scripts = [.. _scriptsManager.GetScripts().Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)];
 
             for (int i = ToolStripScripts.Items.Count - 1; i >= 0; i--)
             {
@@ -2570,9 +2568,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         toolStripButtonLevelUp.DropDown.SuspendLayout();
         RemoveSubmoduleButtons();
 
-        List<ToolStripItem> newItems = result.OurSubmodules
-            .Select(submodule => CreateSubmoduleMenuItem(submodule))
-            .ToList();
+        List<ToolStripItem> newItems = [.. result.OurSubmodules.Select(submodule => CreateSubmoduleMenuItem(submodule))];
 
         if (result.OurSubmodules.Count == 0)
         {
@@ -2614,7 +2610,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         // Using AddRange is critical: if you used Add to add menu items one at a
         // time, performance would be extremely slow with many submodules (> 100).
-        toolStripButtonLevelUp.DropDownItems.AddRange(newItems.ToArray());
+        toolStripButtonLevelUp.DropDownItems.AddRange([.. newItems]);
         toolStripButtonLevelUp.DropDown.ResumeLayout();
 
         return newItems;

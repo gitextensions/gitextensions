@@ -186,12 +186,12 @@ public class SerializableException
 
     private SerializableDictionary<string, object>? GetExtendedInformation(Exception exception)
     {
-        PropertyInfo[] extendedProperties = (from property in exception.GetType().GetProperties()
+        PropertyInfo[] extendedProperties = [.. from property in exception.GetType().GetProperties()
                                   where
                                       property.Name != "Data" && property.Name != "InnerExceptions" && property.Name != "InnerException"
                                       && property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace"
                                       && property.Name != "TargetSite" && property.Name != "HelpLink" && property.CanRead
-                                  select property).ToArray();
+                                  select property];
 
         if (extendedProperties.Length != 0)
         {

@@ -487,9 +487,7 @@ public sealed partial class GitModule : IGitModule
 
         void DoGetSubmodulesLocalPaths(IGitModule module, string parentPath, List<string> paths, bool recurse)
         {
-            List<string> submodulePaths = GetSubmodulePaths(module)
-                .Select(p => Path.Combine(parentPath, p).ToPosixPath())
-                .ToList();
+            List<string> submodulePaths = [.. GetSubmodulePaths(module).Select(p => Path.Combine(parentPath, p).ToPosixPath())];
 
             paths.AddRange(submodulePaths);
 
@@ -1391,7 +1389,7 @@ public sealed partial class GitModule : IGitModule
         // unstage first (to reset conflicts)
         if (resetId != ObjectId.IndexId)
         {
-            Lazy<List<GitItemStatus>> initialStatus = new(() => GetAllChangedFilesWithSubmodulesStatus().ToList());
+            Lazy<List<GitItemStatus>> initialStatus = new(() => [.. GetAllChangedFilesWithSubmodulesStatus()]);
             List<GitItemStatus> filesToUnstage = [];
             foreach (GitItemStatus item in selectedItems)
             {
@@ -1414,7 +1412,7 @@ public sealed partial class GitModule : IGitModule
         List<string> filesCannotCheckout = [];
         HashSet<GitItemStatus> deletedItems = [];
         output = new();
-        Lazy<List<GitItemStatus>> postUnstageStatus = new(() => GetAllChangedFilesWithSubmodulesStatus().ToList());
+        Lazy<List<GitItemStatus>> postUnstageStatus = new(() => [.. GetAllChangedFilesWithSubmodulesStatus()]);
 
         foreach (GitItemStatus item in selectedItems)
         {
@@ -1774,8 +1772,8 @@ public sealed partial class GitModule : IGitModule
         }
 
         StringBuilder output = new();
-        List<GitItemStatus> nonDeletedFiles = files.Where(file => !file.IsDeleted).ToList();
-        List<GitItemStatus> deletedFiles = files.Where(file => file.IsDeleted).ToList();
+        List<GitItemStatus> nonDeletedFiles = [.. files.Where(file => !file.IsDeleted)];
+        List<GitItemStatus> deletedFiles = [.. files.Where(file => file.IsDeleted)];
 
         if (nonDeletedFiles.Count != 0)
         {
@@ -1848,8 +1846,8 @@ public sealed partial class GitModule : IGitModule
         }
 
         StringBuilder output = new();
-        List<GitItemStatus> nonNewFiles = files.Where(file => !file.IsDeleted).ToList();
-        List<GitItemStatus> newFiles = files.Where(file => file.IsDeleted).ToList();
+        List<GitItemStatus> nonNewFiles = [.. files.Where(file => !file.IsDeleted)];
+        List<GitItemStatus> newFiles = [.. files.Where(file => file.IsDeleted)];
 
         if (nonNewFiles.Count != 0)
         {
@@ -2547,8 +2545,8 @@ public sealed partial class GitModule : IGitModule
         {
             // For worktree the untracked must be added too
             // Note that this may add a second GitError, this is a separate Git command
-            GitItemStatus[] files = GetAllChangedFilesWithSubmodulesStatus(cancellationToken: cancellationToken).Where(x =>
-                ((x.Staged == StagedStatus.WorkTree && x.IsNew) || x.IsStatusOnly)).ToArray();
+            GitItemStatus[] files = [.. GetAllChangedFilesWithSubmodulesStatus(cancellationToken: cancellationToken).Where(x =>
+                ((x.Staged == StagedStatus.WorkTree && x.IsNew) || x.IsStatusOnly))];
             if (firstRevision == GitRevision.WorkTreeGuid)
             {
                 // The file is seen as "deleted" in 'to' revision
@@ -2570,7 +2568,7 @@ public sealed partial class GitModule : IGitModule
 
     public IReadOnlyList<GitItemStatus> GetStashDiffFiles(string stashName)
     {
-        List<GitItemStatus> resultCollection = GetDiffFilesWithUntracked(stashName + "^", stashName, StagedStatus.None, true).ToList();
+        List<GitItemStatus> resultCollection = [.. GetDiffFilesWithUntracked(stashName + "^", stashName, StagedStatus.None, true)];
 
         // add - optionally stashed - untracked files
         GitArgumentBuilder args = new("log")
@@ -2618,7 +2616,7 @@ public sealed partial class GitModule : IGitModule
         UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default, CancellationToken cancellationToken = default)
     {
         ExecutionResult exec = _gitExecutable.Execute(Commands.GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles), throwOnErrorExit: false, cancellationToken: cancellationToken);
-        List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
+        List<GitItemStatus> result = [.. _getAllChangedFilesOutputParser.Parse(exec.StandardOutput)];
         if (!exec.ExitedSuccessfully)
         {
             // No simple way to pass the error message, create fake file
@@ -2754,9 +2752,7 @@ public sealed partial class GitModule : IGitModule
         // This command is a little more expensive because it will return both staged and unstaged files
         ArgumentString command = Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.No);
         exec = _gitExecutable.Execute(command, throwOnErrorExit: false);
-        List<GitItemStatus> res = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput)
-                                        .Where(item => (item.Staged == StagedStatus.Index || item.IsStatusOnly))
-                                        .ToList();
+        List<GitItemStatus> res = [.. _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).Where(item => (item.Staged == StagedStatus.Index || item.IsStatusOnly))];
         if (!exec.ExitedSuccessfully)
         {
             // No simple way to pass the error message, create fake file
@@ -2792,7 +2788,7 @@ public sealed partial class GitModule : IGitModule
     {
         ArgumentString args = Commands.GetAllChangedFiles(true, untrackedFilesMode, ignoreSubmodulesMode);
         ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
-        List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
+        List<GitItemStatus> result = [.. _getAllChangedFilesOutputParser.Parse(exec.StandardOutput)];
         if (!exec.ExitedSuccessfully)
         {
             // No simple way to pass the error message, create fake file
@@ -3191,9 +3187,7 @@ public sealed partial class GitModule : IGitModule
     /// <param name="ignorePatterns">Patterns to ignore (.gitignore syntax).</param>
     public IReadOnlyList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
     {
-        List<string> notEmptyPatterns = ignorePatterns
-            .Where(pattern => !string.IsNullOrWhiteSpace(pattern))
-            .ToList();
+        List<string> notEmptyPatterns = [.. ignorePatterns.Where(pattern => !string.IsNullOrWhiteSpace(pattern))];
 
         if (notEmptyPatterns.Count != 0)
         {
@@ -3552,7 +3546,7 @@ public sealed partial class GitModule : IGitModule
 
     public ObjectId? GetFileBlobHash(string fileName, ObjectId objectId)
     {
-        IObjectGitItem[] items = GetTree(objectId, full: true, fileName).ToArray();
+        IObjectGitItem[] items = [.. GetTree(objectId, full: true, fileName)];
         return items.Length == 1 && items[0].ObjectType is GitObjectType.Blob
             ? items[0].ObjectId
             : null;
@@ -3788,10 +3782,9 @@ public sealed partial class GitModule : IGitModule
                 try
                 {
                     return SystemEncoding.GetString(
-                        match.Groups["octal"]
+                        [.. match.Groups["octal"]
                             .Captures.Cast<Capture>()
-                            .Select(c => Convert.ToByte(c.Value, 8))
-                            .ToArray());
+                            .Select(c => Convert.ToByte(c.Value, 8))]);
                 }
                 catch (OverflowException)
                 {
@@ -3991,7 +3984,7 @@ public sealed partial class GitModule : IGitModule
             return true;
         }
 
-        List<Patch> patches = PatchProcessor.CreatePatchesFromString(result.StandardOutput, new Lazy<Encoding>(() => encoding)).ToList();
+        List<Patch> patches = [.. PatchProcessor.CreatePatchesFromString(result.StandardOutput, new Lazy<Encoding>(() => encoding))];
 
         Patch? patch = GetPatch(patches, filePath, filePath);
         if (patch is null)

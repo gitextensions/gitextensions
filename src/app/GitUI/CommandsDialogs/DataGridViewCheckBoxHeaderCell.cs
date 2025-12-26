@@ -60,11 +60,10 @@ public sealed class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCel
 
     private void UpdateCheckedState()
     {
-        List<bool?> cellValues = Cells
+        List<bool?> cellValues = [.. Cells
             .Select(cell => cell.Value)
             .Cast<bool?>()
-            .Distinct()
-            .ToList();
+            .Distinct()];
         CheckedState = cellValues.Count == 1
             ? cellValues.Single() == true ? CheckState.Checked : CheckState.Unchecked
             : CheckState.Indeterminate;

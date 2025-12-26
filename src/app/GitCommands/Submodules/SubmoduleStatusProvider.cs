@@ -212,7 +212,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
 
     private static void SetSubmoduleData(IGitModule currentModule, SubmoduleInfoResult result, string noBranchText, IGitModule topProject)
     {
-        string[] submodules = topProject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName).ToArray();
+        string[] submodules = [.. topProject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName)];
         if (submodules.Length == 0)
         {
             return;

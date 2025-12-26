@@ -728,7 +728,7 @@ public class PieChart3D : IDisposable
             }
         }
 
-        PieSlices = listPieSlices.ToArray();
+        PieSlices = [.. listPieSlices];
     }
 
     /// <summary>

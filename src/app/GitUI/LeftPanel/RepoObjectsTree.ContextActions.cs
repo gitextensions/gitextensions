@@ -50,7 +50,7 @@ partial class RepoObjectsTree : IMenuItemFactory
      * depending on whether node is expanded or collapsed and has child nodes at all */
     private void EnableExpandCollapseContextMenu(NodeBase[] selectedNodes)
     {
-        NodeBase[] multiSelectedParents = selectedNodes.HavingChildren().ToArray();
+        NodeBase[] multiSelectedParents = [.. selectedNodes.HavingChildren()];
         mnubtnExpand.Visible = mnubtnCollapse.Visible = multiSelectedParents.Length > 0;
         mnubtnExpand.Enabled = multiSelectedParents.Expandable().Any();
         mnubtnCollapse.Enabled = multiSelectedParents.Collapsible().Any();
@@ -213,7 +213,7 @@ partial class RepoObjectsTree : IMenuItemFactory
             return;
         }
 
-        NodeBase[] selectedNodes = GetSelectedNodes().ToArray();
+        NodeBase[] selectedNodes = [.. GetSelectedNodes()];
         bool hasSingleSelection = selectedNodes.Length == 1;
         NodeBase? selectedNode = treeMain.SelectedNode?.Tag as NodeBase;
 

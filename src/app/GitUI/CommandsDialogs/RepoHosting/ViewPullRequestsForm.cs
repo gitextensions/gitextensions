@@ -68,7 +68,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _loader.LoadAsync(
             () =>
             {
-                IHostedRemote[] hostedRemotes = _gitHoster.GetHostedRemotesForModule().ToArray();
+                IHostedRemote[] hostedRemotes = [.. _gitHoster.GetHostedRemotesForModule()];
 
                 // load all hosted repositories.
                 foreach (IHostedRemote hostedRemote in hostedRemotes)
@@ -385,7 +385,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     {
         _diffCache = [];
 
-        List<string> fileParts = DiffCommandRegex().Split(diffData).Where(el => el?.Trim().Length is > 10).ToList();
+        List<string> fileParts = [.. DiffCommandRegex().Split(diffData).Where(el => el?.Trim().Length is > 10)];
         List<GitItemStatus> giss = [];
 
         // baseSha is the sha of the merge to ("master") sha, the commit to be firstId

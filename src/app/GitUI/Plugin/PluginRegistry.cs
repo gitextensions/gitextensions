@@ -52,7 +52,7 @@ public static class PluginRegistry
     {
         try
         {
-            IGitPlugin[] plugins = ManagedExtensibility.GetExports<T>()
+            IGitPlugin[] plugins = [.. ManagedExtensibility.GetExports<T>()
                 .Select(lazy =>
                     {
                         try
@@ -65,7 +65,7 @@ public static class PluginRegistry
                             DebugHelpers.Fail($"{wrapper.Name}. Error: {ex.Demystify()}");
                             return wrapper;
                         }
-                    }).ToArray();
+                    })];
 
             lock (Plugins)
             {

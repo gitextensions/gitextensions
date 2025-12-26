@@ -917,7 +917,7 @@ public partial class FileViewer : GitModuleControl
 
         Font = AppSettings.FixedWidthFont;
 
-        string[] encodings = AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName).ToArray();
+        string[] encodings = [.. AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName)];
         encodingToolStripComboBox.Items.AddRange(encodings);
         encodingToolStripComboBox.ResizeDropDownWidth(minWidth: 50, maxWidth: 250);
     }
@@ -1620,7 +1620,7 @@ public partial class FileViewer : GitModuleControl
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        IObjectGitItem[] items = Module.GetTree(commitId, full: true, file.Name, cancellationToken).ToArray();
+        IObjectGitItem[] items = [.. Module.GetTree(commitId, full: true, file.Name, cancellationToken)];
         if (items.Length == 1)
         {
             IObjectGitItem gitItem = items[0];

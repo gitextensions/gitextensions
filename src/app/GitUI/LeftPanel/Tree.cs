@@ -122,7 +122,7 @@ internal abstract class Tree : NodeBase, IDisposable
                 }
 
                 // remember multi-selected nodes
-                HashSet<int> multiSelected = GetSelectedNodes().Select(node => node.GetHashCode()).ToHashSet();
+                HashSet<int> multiSelected = [.. GetSelectedNodes().Select(node => node.GetHashCode())];
 
                 Nodes.Clear();
                 Nodes.AddNodes(newNodes);

@@ -504,7 +504,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
 
     private Task ShowSelectedFolderAsync(RelativePath relativePath)
     {
-        (string path, string description) = GetDescription(relativePath, DiffFiles.SelectedItems.ToArray());
+        (string path, string description) = GetDescription(relativePath, [.. DiffFiles.SelectedItems]);
         BlameControl.Visible = false;
         DiffText.Visible = true;
         return DiffText.ViewTextAsync(fileName: path, text: description);

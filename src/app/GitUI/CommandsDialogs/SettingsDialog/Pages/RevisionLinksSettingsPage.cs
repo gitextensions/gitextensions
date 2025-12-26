@@ -170,7 +170,7 @@ public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
         Validates.NotNull(_externalLinksManager);
 
         IReadOnlyList<Remote> remotes = ThreadHelper.JoinableTaskFactory.Run(Module.GetRemotesAsync).ToList();
-        Remote selectedRemote = FindRemoteByPreference(remotes.Where(r => externalLinkDefinitionExtractor.IsValidRemoteUrl(r.FetchUrl)).ToList());
+        Remote selectedRemote = FindRemoteByPreference([.. remotes.Where(r => externalLinkDefinitionExtractor.IsValidRemoteUrl(r.FetchUrl))]);
 
         IList<ExternalLinkDefinition> externalLinkDefinitions = externalLinkDefinitionExtractor.GetDefinitions(selectedRemote.FetchUrl);
         _externalLinksManager.AddRange(externalLinkDefinitions);

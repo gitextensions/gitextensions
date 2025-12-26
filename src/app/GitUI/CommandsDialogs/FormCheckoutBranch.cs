@@ -203,7 +203,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
             branchNames = GetContainsRevisionBranches();
         }
 
-        Branches.Items.AddRange(branchNames.Where(name => !string.IsNullOrWhiteSpace(name)).ToArray<object>());
+        Branches.Items.AddRange([.. branchNames.Where(name => !string.IsNullOrWhiteSpace(name))]);
 
         if (_containRevisions is not null && Branches.Items.Count == 1)
         {

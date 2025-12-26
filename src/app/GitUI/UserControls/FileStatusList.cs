@@ -1137,9 +1137,7 @@ public sealed partial class FileStatusList : GitModuleControl
         HashSet<GitItemStatus>? previouslySelectedItems = null;
         if (updateCausedByFilter)
         {
-            previouslySelectedItems = FileStatusListView.SelectedItemTags<FileStatusItem>()
-                .Select(i => i.Item)
-                .ToHashSet();
+            previouslySelectedItems = [.. FileStatusListView.SelectedItemTags<FileStatusItem>().Select(i => i.Item)];
         }
 
         bool expandIfFewFiles = !_isFileTreeMode || _filter is not null || !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
@@ -1338,7 +1336,7 @@ public sealed partial class FileStatusList : GitModuleControl
                     }
                     else
                     {
-                        diffGroup.Nodes.AddRange(groupNode.Nodes.Cast<TreeNode>().ToArray());
+                        diffGroup.Nodes.AddRange([.. groupNode.Nodes.Cast<TreeNode>()]);
                     }
                 }
 

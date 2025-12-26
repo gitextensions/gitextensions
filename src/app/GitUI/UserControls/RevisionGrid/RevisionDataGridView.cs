@@ -852,7 +852,7 @@ public sealed partial class RevisionDataGridView : DataGridView
         // With lock, loading the commit info slows down terribly.
         if (_revisionGraph.TryGetNode(objectId, out RevisionGraphRevision? node))
         {
-            List<ObjectId> children = node.Children.Select(d => d.GitRevision!.ObjectId).ToList();
+            List<ObjectId> children = [.. node.Children.Select(d => d.GitRevision!.ObjectId)];
             children.Reverse();
             return children;
         }

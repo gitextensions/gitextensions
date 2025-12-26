@@ -119,7 +119,7 @@ public sealed partial class FormStash : GitModuleForm
 
     private void Initialize()
     {
-        List<GitStash> stashedItems = Module.GetStashes(noLocks: false).ToList();
+        List<GitStash> stashedItems = [.. Module.GetStashes(noLocks: false)];
 
         _currentWorkingDirStashItem = new GitStash(-1, _currentWorkingDirChanges.Text);
 
@@ -263,8 +263,8 @@ public sealed partial class FormStash : GitModuleForm
                 {
                     ParentIds = new[] { headId }
                 };
-                List<GitItemStatus> indexItems = gitItemStatuses.Where(item => item.Staged == StagedStatus.Index).ToList();
-                List<GitItemStatus> workTreeItems = gitItemStatuses.Where(item => item.Staged != StagedStatus.Index).ToList();
+                List<GitItemStatus> indexItems = [.. gitItemStatuses.Where(item => item.Staged == StagedStatus.Index)];
+                List<GitItemStatus> workTreeItems = [.. gitItemStatuses.Where(item => item.Staged != StagedStatus.Index)];
                 Stashed.SetStashDiffs(headRev, indexRev, ResourceManager.TranslatedStrings.Index, indexItems, workTreeRev, ResourceManager.TranslatedStrings.Workspace, workTreeItems);
             }
         }

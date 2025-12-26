@@ -23,7 +23,7 @@ public sealed class ChainedAvatarProvider : IAvatarProvider
     {
         ArgumentNullException.ThrowIfNull(avatarProviders);
 
-        _avatarProviders = avatarProviders.ToArray();
+        _avatarProviders = [.. avatarProviders];
     }
 
     /// <summary>

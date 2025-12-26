@@ -18,7 +18,7 @@ public partial class FormAvailableEncodings : GitExtensionsForm
         ListIncludedEncodings.BeginUpdate();
         try
         {
-            ListIncludedEncodings.Items.AddRange(includedEncoding.Values.ToArray<object>());
+            ListIncludedEncodings.Items.AddRange([.. includedEncoding.Values]);
             ListIncludedEncodings.DisplayMember = nameof(Encoding.EncodingName);
         }
         finally
@@ -26,7 +26,7 @@ public partial class FormAvailableEncodings : GitExtensionsForm
             ListIncludedEncodings.EndUpdate();
         }
 
-        object[] selectableEncodings = Encoding.GetEncodings()
+        object[] selectableEncodings = [.. Encoding.GetEncodings()
             .Select(ei => ei.GetEncoding())
             .Select(e => e.GetType() == typeof(UTF8Encoding) ? new UTF8Encoding(encoderShouldEmitUTF8Identifier: false) : e) // If exists utf-8, then replace to utf-8 without BOM
 #pragma warning disable SYSLIB0001 // Type or member is obsolete
@@ -34,8 +34,7 @@ public partial class FormAvailableEncodings : GitExtensionsForm
 #pragma warning restore SYSLIB0001 // Type or member is obsolete
             .Where(e => !includedEncoding.ContainsKey(e.WebName))
             .GroupBy(e => e.WebName)
-            .Select(group => group.First()) // ignore encodings which cannot be distinguished, keep first only
-            .ToArray<object>();
+            .Select(group => group.First())];
 
         ListAvailableEncodings.BeginUpdate();
         try

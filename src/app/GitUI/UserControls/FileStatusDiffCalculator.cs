@@ -55,7 +55,7 @@ public sealed partial class FileStatusDiffCalculator
         List<FileStatusWithDescription> fileStatusDescs = refreshDiff
             ? CalculateDiffs(_fileStatusDiffCalculatorInfo.Revisions, selectedRev,
                 _fileStatusDiffCalculatorInfo.HeadId, _fileStatusDiffCalculatorInfo.AllowMultiDiff, cancellationToken)
-            : prevList.Where(p => !IsGrepItemStatuses(p)).ToList();
+            : [.. prevList.Where(p => !IsGrepItemStatuses(p))];
 
         FileStatusWithDescription? grepItemStatuses = refreshGrep
             ? GetGrepItemStatuses(selectedRev, cancellationToken)

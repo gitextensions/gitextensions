@@ -318,7 +318,7 @@ public sealed partial class FormPull : GitExtensionsDialog
             {
                 if (PullFromUrl.Checked)
                 {
-                    _heads = Module.GetRefs(RefsFilter.Heads).ToList();
+                    _heads = [.. Module.GetRefs(RefsFilter.Heads)];
                 }
                 else
                 {

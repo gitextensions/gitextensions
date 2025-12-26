@@ -40,7 +40,7 @@ public partial class DiffLineNumAnalyzer
             }
 
             Lazy<List<TextMarker>> textMarkers = new(()
-                => allTextMarkers.Where(m => (m.Offset < textOffset + lineLength && m.EndOffset >= textOffset)).ToList());
+                => [.. allTextMarkers.Where(m => (m.Offset < textOffset + lineLength && m.EndOffset >= textOffset))]);
 
             lineNumInDiff++;
             if (line.StartsWith("@@"))

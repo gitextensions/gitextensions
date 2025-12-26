@@ -72,7 +72,7 @@ public static class GitConvert
             }
         }
 
-        return bytes.ToArray();
+        return [.. bytes];
 
         bool IsBinary()
         {

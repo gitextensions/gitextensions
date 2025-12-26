@@ -204,7 +204,7 @@ public partial class FormDiff : GitModuleForm
 
     private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
     {
-        List<ObjectId> parentIds = DiffFiles.SelectedItems.FirstIds().ToList();
+        List<ObjectId> parentIds = [.. DiffFiles.SelectedItems.FirstIds()];
         bool firstIsParent = _revisionTester.AllFirstAreParentsToSelected(parentIds, _secondRevision);
         bool localExists = _revisionTester.AnyLocalFileExists(DiffFiles.SelectedItems.Select(i => i.Item));
 

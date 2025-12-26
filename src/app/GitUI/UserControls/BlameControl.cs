@@ -486,7 +486,7 @@ public sealed partial class BlameControl : GitModuleControl
     private static IList<Color> GetAgeBucketGradientColors()
     {
         // Color chosen from: https://colorbrewer2.org/#type=sequential&scheme=Greens&n=7
-        return new[]
+        return [.. new[]
         {
             Color.FromArgb(247, 252, 245),
             Color.FromArgb(199, 233, 192),
@@ -495,7 +495,7 @@ public sealed partial class BlameControl : GitModuleControl
             Color.FromArgb(65, 171, 93),
             Color.FromArgb(35, 139, 69),
             Color.FromArgb(0, 68, 27),
-        }.Select(ColorHelper.AdaptBackColor).ToList();
+        }.Select(ColorHelper.AdaptBackColor)];
     }
 
     public DateTime ArtificialOldBoundary => DateTime.Now.AddYears(-3);

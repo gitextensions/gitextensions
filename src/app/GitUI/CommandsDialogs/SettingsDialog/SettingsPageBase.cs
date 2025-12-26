@@ -199,7 +199,7 @@ public abstract partial class SettingsPageBase : TranslatedControl, ISettingsPag
 public class StringComboBoxAdapter : ChoiceSetting
 {
     public StringComboBoxAdapter(ISetting<string> setting, ComboBox comboBox)
-        : base(setting.FullPath, comboBox.Items.Cast<string>().ToList(), setting.Default)
+        : base(setting.FullPath, [.. comboBox.Items.Cast<string>()], setting.Default)
     {
         CustomControl = comboBox;
     }

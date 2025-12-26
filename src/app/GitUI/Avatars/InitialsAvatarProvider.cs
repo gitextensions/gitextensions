@@ -129,7 +129,7 @@ public class InitialsAvatarProvider : IAvatarProvider
                 return GetInitialsFromNames(splitNames);
             }
 
-            char[] upperChars = name.Where(char.IsUpper).ToArray();
+            char[] upperChars = [.. name.Where(char.IsUpper)];
             if (upperChars.Length > 1)
             {
                 return $"{upperChars[0]}{upperChars[^1]}";
@@ -143,7 +143,7 @@ public class InitialsAvatarProvider : IAvatarProvider
         return $"{name[0]}{names[^1][0]}".ToUpper();
     }
 
-    private readonly (Brush foregroundBrush, Color backgroundColor)[] _avatarColors = AppSettings.AvatarAuthorInitialsPalette.Split(',').Select(GetAvatarDrawingMaterial).ToArray();
+    private readonly (Brush foregroundBrush, Color backgroundColor)[] _avatarColors = [.. AppSettings.AvatarAuthorInitialsPalette.Split(',').Select(GetAvatarDrawingMaterial)];
 
     private static (Brush foregroundBrush, Color backgroundColor) GetAvatarDrawingMaterial(string colorCode)
     {

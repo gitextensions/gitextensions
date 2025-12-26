@@ -169,7 +169,7 @@ public sealed partial class ScriptOptionsParser
 
     private static string AskToSpecify(IEnumerable<IGitRef> options, IGitUICommands uiCommands, IWin32Window owner)
     {
-        List<IGitRef> items = options.ToList();
+        List<IGitRef> items = [.. options];
         if (items.Count == 0)
         {
             return string.Empty;
@@ -494,7 +494,7 @@ public sealed partial class ScriptOptionsParser
             return arguments;
         }
 
-        return ReplaceOption(option, arguments, newStrings.ToArray());
+        return ReplaceOption(option, arguments, [.. newStrings]);
 
         static string? EscapeLinefeeds(string? multiLine) => multiLine?.Replace("\n", "\\n");
 

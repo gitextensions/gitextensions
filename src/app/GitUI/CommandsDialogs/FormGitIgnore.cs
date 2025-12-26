@@ -196,9 +196,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
         string[] defaultIgnorePatterns = File.Exists(DefaultIgnorePatternsFile) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
 
         string currentFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
-        string[] patternsToAdd = defaultIgnorePatterns
-            .Except(currentFileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-            .ToArray();
+        string[] patternsToAdd = [.. defaultIgnorePatterns.Except(currentFileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))];
         if (patternsToAdd.Length == 0)
         {
             return;

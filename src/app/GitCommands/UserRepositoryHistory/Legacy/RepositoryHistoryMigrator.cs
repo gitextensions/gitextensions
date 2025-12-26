@@ -52,7 +52,7 @@ public sealed class RepositoryHistoryMigrator : IRepositoryHistoryMigrator
     {
         ArgumentNullException.ThrowIfNull(currentHistory);
 
-        List<Current.Repository> history = currentHistory.ToList();
+        List<Current.Repository> history = [.. currentHistory];
 
         await TaskScheduler.Default;
         IReadOnlyList<RepositoryCategory> categorised = _repositoryStorage.Load();

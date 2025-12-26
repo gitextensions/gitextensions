@@ -75,7 +75,7 @@ public static class Translator
         {
         }
 
-        return translations.ToArray();
+        return [.. translations];
     }
 
     public static void Translate(ITranslate obj, string translationName)

@@ -478,7 +478,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
     private static IReadOnlyList<IGitRef> SortRefs(IEnumerable<IGitRef> refs)
     {
-        List<IGitRef> sortedRefs = refs.ToList();
+        List<IGitRef> sortedRefs = [.. refs];
         sortedRefs.Sort(CompareRefs);
         return sortedRefs;
 

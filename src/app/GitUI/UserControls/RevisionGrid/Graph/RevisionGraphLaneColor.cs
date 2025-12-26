@@ -19,12 +19,11 @@ public static class RevisionGraphLaneColor
 
     static RevisionGraphLaneColor()
     {
-        Color[] branchColors = Enum.GetNames<AppColor>()
+        Color[] branchColors = [.. Enum.GetNames<AppColor>()
             .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1]))
             .Select(name => Enum.Parse<AppColor>(name).GetThemeColor())
             .Where(color => !color.IsEmpty)
-            .Distinct()
-            .ToArray();
+            .Distinct()];
 
         const int minBranchColors = 4;
         if (branchColors.Length < minBranchColors)

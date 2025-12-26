@@ -139,10 +139,9 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
     public void PopulateThemeMenu(IEnumerable<ThemeId> themeIds)
     {
         _NO_TRANSLATE_cbSelectTheme.Items.Clear();
-        object[] formattedThemeIds = themeIds
+        object[] formattedThemeIds = [.. themeIds
             .Select(id => new FormattedThemeId(id))
-            .Cast<object>()
-            .ToArray();
+            .Cast<object>()];
         _NO_TRANSLATE_cbSelectTheme.Items.AddRange(formattedThemeIds);
     }
 

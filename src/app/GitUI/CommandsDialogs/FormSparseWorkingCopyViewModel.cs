@@ -215,7 +215,7 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
         }
 
         // Now check the rules, the well-known recommendation is to have the single "/*" rule active
-        List<string> rulelines = RulesText.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).Where(l => (!string.IsNullOrEmpty(l)) && (l[0] != '#')).ToList(); // All nonempty and non-comment lines
+        List<string> rulelines = [.. RulesText.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).Where(l => (!string.IsNullOrEmpty(l)) && (l[0] != '#'))]; // All nonempty and non-comment lines
         if (rulelines.All(l => l == "/*"))
         {
             return; // Rules OK for turning off

@@ -113,7 +113,7 @@ public sealed class RepositoryHistoryUIServiceTests
         _service.GetTestAccessor().PopulateFavouriteRepositoriesMenu(tsmiFavouriteRepositories, repositoryHistory);
 
         // assert
-        List<string> categories = tsmiFavouriteRepositories.DropDownItems.Cast<ToolStripMenuItem>().Select(x => x.Text).ToList();
+        List<string> categories = [.. tsmiFavouriteRepositories.DropDownItems.Cast<ToolStripMenuItem>().Select(x => x.Text)];
         categories.Should().BeInAscendingOrder();
     }
 }

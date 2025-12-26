@@ -102,9 +102,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
     private static IEnumerable<T> OrderByPriority<T>(IReadOnlyList<T> references, Func<T, string> keySelector, string setting)
     {
         // Sort prio branches first (if set) with the compile cache (no need to instantiate)
-        string[] regexes = setting.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Select(regex => $"^({regex})$")
-            .ToArray();
+        string[] regexes = [.. setting.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(regex => $"^({regex})$")];
 
         if (regexes.Length == 0)
         {

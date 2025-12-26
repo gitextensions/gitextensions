@@ -149,7 +149,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
 
     private void Delete_Click(object sender, EventArgs e)
     {
-        List<Branch> selectedBranches = _branches.Where(branch => branch.Delete).ToList();
+        List<Branch> selectedBranches = [.. _branches.Where(branch => branch.Delete)];
         if (selectedBranches.Count == 0)
         {
             MessageBox.Show(string.Format(_selectBranchesToDelete.Text, _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText), _deleteCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -166,7 +166,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
         IEnumerable<Branch> remoteBranchesSource = IncludeRemoteBranches.Checked
             ? selectedBranches.Where(branch => branch.Name.StartsWith(remoteBranchPrefix))
             : Enumerable.Empty<Branch>();
-        List<Branch> remoteBranches = remoteBranchesSource.ToList();
+        List<Branch> remoteBranches = [.. remoteBranchesSource];
 
         if (remoteBranches.Count > 0)
         {
@@ -179,7 +179,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
 
         HasDeletedBranch = true;
 
-        List<Branch> localBranches = selectedBranches.Except(remoteBranches).ToList();
+        List<Branch> localBranches = [.. selectedBranches.Except(remoteBranches)];
         SetWorkingState(isWorking: true);
         lblStatus.Text = _deletingBranches.Text;
 

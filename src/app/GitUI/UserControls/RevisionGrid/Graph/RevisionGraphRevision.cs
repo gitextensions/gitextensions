@@ -131,7 +131,7 @@ public sealed class RevisionGraphRevision
     public int ParentCount { get; private set; }
     public IEnumerable<RevisionGraphRevision> Parents => _startSegments.Select(segment => segment.Parent);
     public ImmutableStack<RevisionGraphRevision> Children => _children;
-    public RevisionGraphSegment[] GetStartSegments() => _startSegments.ToArray();
+    public RevisionGraphSegment[] GetStartSegments() => [.. _startSegments];
 
     /// <summary>
     /// Mark this commit, and all its parents, as relative. Used for branch highlighting.

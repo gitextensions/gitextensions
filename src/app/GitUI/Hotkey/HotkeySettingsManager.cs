@@ -389,11 +389,10 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
              * these integers are never matched in the 'switch' routine on a form and
              * therefore execute the 'default' action
              */
-            return _scriptsManager
+            return [.. _scriptsManager
                 .GetScripts()
                 .Where(s => !string.IsNullOrEmpty(s.Name))
-                .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.GetDisplayName()) { KeyData = Keys.None })
-                .ToArray();
+                .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.GetDisplayName()) { KeyData = Keys.None })];
         }
     }
 

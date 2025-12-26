@@ -65,7 +65,7 @@ internal sealed class SubmoduleTree : Tree
                 Dictionary<string, SubmoduleInfo> infos = e.Info.AllSubmodules.ToDictionary(info => info.Path, info => info);
                 Validates.NotNull(e.Info.TopProject);
                 infos[e.Info.TopProject.Path] = e.Info.TopProject;
-                List<SubmoduleNode> nodes = _currentNodes.DepthEnumerator<SubmoduleNode>().ToList();
+                List<SubmoduleNode> nodes = [.. _currentNodes.DepthEnumerator<SubmoduleNode>()];
 
                 foreach (SubmoduleNode node in nodes)
                 {
@@ -210,7 +210,7 @@ internal sealed class SubmoduleTree : Tree
     {
         // result.OurSubmodules/AllSubmodules contain a recursive list of submodules, but don't provide info about the super
         // project path. So we deduce these by substring matching paths against an ordered list of all paths.
-        List<string> modulePaths = result.AllSubmodules.Select(info => info.Path).ToList();
+        List<string> modulePaths = [.. result.AllSubmodules.Select(info => info.Path)];
 
         // Add current and parent module paths
         IGitModule parentModule = threadModule;
@@ -222,7 +222,7 @@ internal sealed class SubmoduleTree : Tree
         }
 
         // Sort descending so we find the nearest outer folder first
-        modulePaths = modulePaths.OrderByDescending(path => path).ToList();
+        modulePaths = [.. modulePaths.OrderByDescending(path => path)];
 
         foreach (SubmoduleInfo submoduleInfo in result.AllSubmodules)
         {

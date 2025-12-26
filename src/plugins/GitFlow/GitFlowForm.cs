@@ -40,7 +40,7 @@ public partial class GitFlowForm : GitExtensionsFormBase
 
     private static List<string> BranchTypes
     {
-        get { return Enum.GetValues<Branch>().Select(e => e.ToString()).ToList(); }
+        get { return [.. Enum.GetValues<Branch>().Select(e => e.ToString())]; }
     }
 
     private bool IsGitFlowInitialised
@@ -202,11 +202,10 @@ public partial class GitFlowForm : GitExtensionsFormBase
         List<string> GetLocalBranches()
         {
             GitArgumentBuilder args = new("branch");
-            return _gitUiCommands.GitModule
+            return [.. _gitUiCommands.GitModule
                 .GitExecutable.GetOutput(args)
                 .Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                .Select(e => e.Trim(Delimiters.GitOutput))
-                .ToList();
+                .Select(e => e.Trim(Delimiters.GitOutput))];
         }
     }
 

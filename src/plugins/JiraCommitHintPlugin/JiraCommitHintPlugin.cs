@@ -338,9 +338,7 @@ public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForCommit
         try
         {
             IPagedQueryResult<Issue> results = await jira.Issues.GetIssuesFromJqlAsync(query);
-            return results
-                .Select(issue => new JiraTaskDTO(issue.Key + ": " + issue.Summary, StringTemplate.Format(stringTemplate, issue)))
-                .ToArray();
+            return [.. results.Select(issue => new JiraTaskDTO(issue.Key + ": " + issue.Summary, StringTemplate.Format(stringTemplate, issue)))];
         }
         catch (Exception ex)
         {

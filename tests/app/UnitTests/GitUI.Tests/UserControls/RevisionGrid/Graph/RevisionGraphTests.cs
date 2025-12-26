@@ -515,7 +515,7 @@ public class RevisionGraphTests
             // Create a line for commit
 
             IRevisionGraphRow row = revisionGraph.GetSegmentsForRow(rowIndex);
-            char[] line = Enumerable.Repeat(' ', (row.GetLaneCount() * 2) + 1).ToArray();
+            char[] line = [.. Enumerable.Repeat(' ', (row.GetLaneCount() * 2) + 1)];
 
             // Show '|' in lanes passing through
             foreach (RevisionGraphSegment segment in row.Segments)
@@ -537,7 +537,7 @@ public class RevisionGraphTests
 
             // Create a line between commits
 
-            line = Enumerable.Repeat(' ', (Math.Max(row.GetLaneCount(), nextRow.GetLaneCount()) * 2) + 1).ToArray();
+            line = [.. Enumerable.Repeat(' ', (Math.Max(row.GetLaneCount(), nextRow.GetLaneCount()) * 2) + 1)];
 
             // These drawing actions are done last, to appear on top
             List<Action> actions = [];

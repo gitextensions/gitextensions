@@ -80,11 +80,10 @@ internal class AppVeyorAdapter : IBuildServerAdapter
         // accountName may be any accessible project (for instance upstream)
         // if AppVeyorAccountName is set, projectNamesSetting may exclude the accountName part
         string projectNamesSetting = config.GetString("AppVeyorProjectName", "");
-        List<string> projectNames = _buildServerWatcher.ReplaceVariables(projectNamesSetting)
+        List<string> projectNames = [.. _buildServerWatcher.ReplaceVariables(projectNamesSetting)
             .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
             .Where(p => p.Contains('/') || !string.IsNullOrEmpty(accountName))
-            .Select(p => p.Contains('/') ? p : accountName.Combine("/", p)!)
-            .ToList();
+            .Select(p => p.Contains('/') ? p : accountName.Combine("/", p)!)];
 
         if (projectNames.Count == 0)
         {
@@ -310,7 +309,7 @@ internal class AppVeyorAdapter : IBuildServerAdapter
             }
 
             // Manage in progress builds...
-            List<AppVeyorBuildInfo> inProgressBuilds = _allBuilds.Where(b => b.Status == BuildStatus.InProgress).ToList();
+            List<AppVeyorBuildInfo> inProgressBuilds = [.. _allBuilds.Where(b => b.Status == BuildStatus.InProgress)];
 
             // Reset current build list - refresh required to see new builds
             _allBuilds = null;
@@ -324,7 +323,7 @@ internal class AppVeyorAdapter : IBuildServerAdapter
                     UpdateDisplay(observer, build);
                 }
 
-                inProgressBuilds = inProgressBuilds.Where(b => b.Status == BuildStatus.InProgress).ToList();
+                inProgressBuilds = [.. inProgressBuilds.Where(b => b.Status == BuildStatus.InProgress)];
             }
 
             observer.OnCompleted();

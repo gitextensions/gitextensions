@@ -119,10 +119,9 @@ public sealed class CancellationTokenSequenceTests
         CancellationToken completionToken = completionTokenSource.Token;
         int[] winnerByIndex = new int[threadCount];
 
-        List<Task> tasks = Enumerable
+        List<Task> tasks = [.. Enumerable
             .Range(0, threadCount)
-            .Select(i => Task.Run(() => ThreadMethodAsync(i)))
-            .ToList();
+            .Select(i => Task.Run(() => ThreadMethodAsync(i)))];
 
         ClassicAssert.True(
             countdown.Wait(TimeSpan.FromSeconds(10)),

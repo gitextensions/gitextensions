@@ -67,7 +67,7 @@ public class GitRevisionTester : IGitRevisionTester
             return false;
         }
 
-        List<GitItemStatus> items = selectedItemsWithParent as List<GitItemStatus> ?? selectedItemsWithParent.ToList();
+        List<GitItemStatus> items = selectedItemsWithParent as List<GitItemStatus> ?? [.. selectedItemsWithParent];
         bool localExists = items.Any(item => !item.IsTracked);
         if (localExists)
         {

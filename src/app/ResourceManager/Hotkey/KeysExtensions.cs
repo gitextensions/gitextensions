@@ -38,7 +38,7 @@ public static class KeysExtensions
         AddIfContains(Keys.Shift);
         AddIfContains(Keys.Alt);
 
-        return modifierList.ToArray();
+        return [.. modifierList];
     }
 
     public static string ToText(this Keys key)

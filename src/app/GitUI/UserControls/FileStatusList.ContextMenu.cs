@@ -326,7 +326,7 @@ partial class FileStatusList
         }
 
         string? toolName = item?.Tag as string;
-        List<FileStatusItem> diffFiles = SelectedItems.ToList();
+        List<FileStatusItem> diffFiles = [.. SelectedItems];
         if (diffFiles.Count != 2)
         {
             return;
@@ -529,10 +529,10 @@ partial class FileStatusList
     private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
     {
         // Some items are not supported if more than one revision is selected
-        List<GitRevision> revisions = SelectedItems.SecondRevs().ToList();
+        List<GitRevision> revisions = [.. SelectedItems.SecondRevs()];
         GitRevision? selectedRev = revisions.Count == 1 ? revisions[0] : null;
 
-        List<ObjectId> parentIds = SelectedItems.FirstIds().ToList();
+        List<ObjectId> parentIds = [.. SelectedItems.FirstIds()];
         bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(parentIds, selectedRev);
         bool localExists = _gitRevisionTester.AnyLocalFileExists(SelectedItems.Select(i => i.Item));
 
@@ -558,11 +558,11 @@ partial class FileStatusList
     private static ContextMenuSelectionInfo GetSelectionInfo(FileStatusItem[] selectedItems, RelativePath? selectedFolder, bool isBareRepository, bool supportLinePatching, IFullPathResolver fullPathResolver)
     {
         // Some items are not supported if more than one revision is selected
-        List<GitRevision> revisions = selectedItems.SecondRevs().ToList();
+        List<GitRevision> revisions = [.. selectedItems.SecondRevs()];
         GitRevision? selectedRev = revisions.Count == 1 ? revisions[0] : null;
 
         // First (A) is parent if one revision selected or if parent, then selected
-        List<ObjectId> parentIds = selectedItems.FirstIds().ToList();
+        List<ObjectId> parentIds = [.. selectedItems.FirstIds()];
 
         // Combined diff, range diff etc are for display only, no manipulations
         bool isStatusOnly = selectedItems.Any(item => item.Item.IsRangeDiff || item.Item.IsStatusOnly);
@@ -778,7 +778,7 @@ partial class FileStatusList
     private void OpenWithDifftool_DropDownOpening(object sender, EventArgs e)
     {
         ContextMenuDiffToolInfo selectionInfo = GetContextMenuDiffToolInfo();
-        List<GitRevision> revisions = SelectedItems.SecondRevs().ToList();
+        List<GitRevision> revisions = [.. SelectedItems.SecondRevs()];
 
         if (revisions.Count != 0)
         {
@@ -786,7 +786,7 @@ partial class FileStatusList
             tsmiSecondDiffCaption.Visible = true;
             MenuUtil.SetAsCaptionMenuItem(tsmiSecondDiffCaption, ItemContextMenu);
 
-            tsmiFirstDiffCaption.Text = _firstRevision + (DescribeRevisions(SelectedItems.FirstRevs().ToList()) ?? string.Empty);
+            tsmiFirstDiffCaption.Text = _firstRevision + (DescribeRevisions([.. SelectedItems.FirstRevs()]) ?? string.Empty);
             tsmiFirstDiffCaption.Visible = true;
             MenuUtil.SetAsCaptionMenuItem(tsmiFirstDiffCaption, ItemContextMenu);
         }
@@ -803,7 +803,7 @@ partial class FileStatusList
             = tsmiDiffSelectedToLocal.Visible
             = !_itemContextMenuController.ShouldHideToLocal(selectionInfo);
 
-        List<FileStatusItem> diffFiles = SelectedItems.ToList();
+        List<FileStatusItem> diffFiles = [.. SelectedItems];
         sepDifftoolRemember.Visible = diffFiles.Count == 1 || diffFiles.Count == 2;
 
         // The order is always the order in the list, not clicked order, but the (last) selected is known
@@ -963,8 +963,8 @@ partial class FileStatusList
         bool hasExistingFiles = items.Any(item => !(item.Item.IsUncommittedAdded || IsRenamedIndexItem(item)));
 
         string revDescription = resetToParent
-            ? $"{_firstRevision}{DescribeRevisions(items.FirstRevs().ToList())}"
-            : $"{_selectedRevision}{DescribeRevisions(items.SecondRevs().ToList())}";
+            ? $"{_firstRevision}{DescribeRevisions([.. items.FirstRevs()])}"
+            : $"{_selectedRevision}{DescribeRevisions([.. items.SecondRevs()])}";
         string confirmationMessage = string.Format(_resetSelectedChangesText.Text, revDescription);
 
         FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(ParentForm, hasExistingFiles, hasNewFiles, confirmationMessage);
@@ -1039,7 +1039,7 @@ partial class FileStatusList
 
     private void SaveAs_Click(object sender, EventArgs e)
     {
-        List<FileStatusItem> files = SelectedItems.ToList();
+        List<FileStatusItem> files = [.. SelectedItems];
 
         Func<string, string?>? userSelection = null;
         if (files.Count == 1)

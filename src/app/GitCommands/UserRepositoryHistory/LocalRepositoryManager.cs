@@ -202,7 +202,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
             return Array.Empty<Repository>();
         }
 
-        return AdjustHistorySize(history, size).ToList();
+        return [.. AdjustHistorySize(history, size)];
     }
 
     /// <summary>
@@ -307,9 +307,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
 
         IList<Repository> recentRepositoryHistory = await LoadRecentHistoryAsync();
         int existingRecentCount = recentRepositoryHistory.Count;
-        List<Repository> invalidRecentRepositories = recentRepositoryHistory
-                                        .Where(repo => !predicate(repo.Path))
-                                        .ToList();
+        List<Repository> invalidRecentRepositories = [.. recentRepositoryHistory.Where(repo => !predicate(repo.Path))];
 
         foreach (Repository repo in invalidRecentRepositories)
         {
@@ -323,9 +321,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
 
         IList<Repository> favouriteRepositoryHistory = await LoadFavouriteHistoryAsync();
         int existingFavouriteCount = favouriteRepositoryHistory.Count;
-        List<Repository> invalidFavouriteRepositories = favouriteRepositoryHistory
-                                            .Where(repo => !predicate(repo.Path))
-                                            .ToList();
+        List<Repository> invalidFavouriteRepositories = [.. favouriteRepositoryHistory.Where(repo => !predicate(repo.Path))];
 
         foreach (Repository repo in invalidFavouriteRepositories)
         {

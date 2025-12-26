@@ -179,7 +179,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
 
         ThreadHelper.FileAndForget(async () =>
         {
-            IHostedRemote[] hostedRemotes = GetHostedRemotes().ToArray();
+            IHostedRemote[] hostedRemotes = [.. GetHostedRemotes()];
             if (hostedRemotes.Length == 0)
             {
                 return;
@@ -194,10 +194,9 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
                 return;
             }
 
-            Issue[] recentUserIssues = issues.Where(i => i.Number != 0 && hostedRemotes.Any(r => r.Owner == i.Repository.Owner.Login && r.RemoteRepositoryName == i.Repository.Name))
+            Issue[] recentUserIssues = [.. issues.Where(i => i.Number != 0 && hostedRemotes.Any(r => r.Owner == i.Repository.Owner.Login && r.RemoteRepositoryName == i.Repository.Name))
                                                         .OrderByDescending(i => i.UpdatedAt)
-                                                        .Take(_issueCommitMessageHelperMaxCount.ValueOrDefault(Settings))
-                                                        .ToArray();
+                                                        .Take(_issueCommitMessageHelperMaxCount.ValueOrDefault(Settings))];
 
             bool multipleRemotes = hostedRemotes.Length > 1;
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

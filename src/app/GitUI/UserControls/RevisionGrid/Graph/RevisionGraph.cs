@@ -596,7 +596,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 return int.MaxValue;
             }
 
-            return segments.OrderBy(s => s, (a, b) =>
+            return [.. segments.OrderBy(s => s, (a, b) =>
                 {
                     int rowA = GetRowIndex(a.Parent);
                     int rowB = GetRowIndex(b.Parent);
@@ -642,8 +642,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
 
                         return false;
                     }
-                })
-                .ToArray();
+                })];
         }
 
         static void StraightenLanes(int startIndex, int lastStraightenIndex, int lastLookAheadIndex, IReadOnlyList<RevisionGraphRow> localOrderedRowCache, int straightenGraphSegmentsLimit)
@@ -994,7 +993,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 _orderedNodesCacheInvalid = false;
                 _orderedNodesCache = [];
 
-                _orderedNodesCache = _revisionByObjectId.Values.OrderBy(n => n.Score).ToImmutableArray();
+                _orderedNodesCache = [.. _revisionByObjectId.Values.OrderBy(n => n.Score)];
 
                 return _orderedNodesCache;
             }
