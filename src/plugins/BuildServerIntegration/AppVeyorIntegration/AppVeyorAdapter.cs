@@ -314,7 +314,7 @@ internal class AppVeyorAdapter : IBuildServerAdapter
 
             // Reset current build list - refresh required to see new builds
             _allBuilds = null;
-            while (inProgressBuilds.Any() && !cancellationToken.IsCancellationRequested)
+            while (inProgressBuilds.Count != 0 && !cancellationToken.IsCancellationRequested)
             {
                 const int inProgressRefresh = 10000;
                 Thread.Sleep(inProgressRefresh);

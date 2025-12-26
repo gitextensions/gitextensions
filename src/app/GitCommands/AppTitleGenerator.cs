@@ -69,7 +69,7 @@ public sealed class AppTitleGenerator : IAppTitleGenerator
             if (string.IsNullOrWhiteSpace(filePart))
             {
                 // No file, just quote the pathFilter
-                filePart = path.StartsWith(@"""") && path.EndsWith(@"""")
+                filePart = path.StartsWith('"') && path.EndsWith('"')
                     ? path
                     : $"{path.Quote()}";
             }

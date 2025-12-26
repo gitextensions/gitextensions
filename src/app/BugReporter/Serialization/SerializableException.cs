@@ -193,7 +193,7 @@ public class SerializableException
                                       && property.Name != "TargetSite" && property.Name != "HelpLink" && property.CanRead
                                   select property).ToArray();
 
-        if (extendedProperties.Any())
+        if (extendedProperties.Length != 0)
         {
             SerializableDictionary<string, object> extendedInformation = [];
 

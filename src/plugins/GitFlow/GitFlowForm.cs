@@ -146,7 +146,7 @@ public partial class GitFlowForm : GitExtensionsFormBase
             DisplayBranchData();
         }
 
-        btnFinish.Enabled = Branches.Any();
+        btnFinish.Enabled = Branches.Count != 0;
     }
 
     private IReadOnlyList<string> GetBranches(string typeBranch)

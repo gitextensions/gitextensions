@@ -64,7 +64,7 @@ public partial class CommitSummaryUserControl : GitExtensionsControl
                 labelMessage.Text = Revision.Subject;
 
                 List<IGitRef> tagList = Revision.Refs.Where(r => r.IsTag).ToList();
-                if (tagList.Any())
+                if (tagList.Count != 0)
                 {
                     labelTags.BackColor = _tagsBackColor;
                     labelTags.SetForeColorForBackColor();
@@ -78,7 +78,7 @@ public partial class CommitSummaryUserControl : GitExtensionsControl
                 }
 
                 List<IGitRef> branchesList = Revision.Refs.Where(r => r.IsHead).ToList();
-                if (branchesList.Any())
+                if (branchesList.Count != 0)
                 {
                     labelBranches.BackColor = _branchesBackColor;
                     labelBranches.SetForeColorForBackColor();

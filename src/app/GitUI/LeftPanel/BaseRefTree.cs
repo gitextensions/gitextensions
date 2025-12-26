@@ -106,7 +106,7 @@ internal abstract class BaseRefTree : BaseRevisionTree
             .Select(regex => $"^({regex})$")
             .ToArray();
 
-        if (!regexes.Any())
+        if (regexes.Length == 0)
         {
             return references;
         }

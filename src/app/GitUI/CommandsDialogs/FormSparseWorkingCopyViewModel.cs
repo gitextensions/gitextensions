@@ -222,7 +222,7 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
         }
 
         // Confirm
-        ComfirmAdjustingRulesOnDeactEventArgs args = new(!rulelines.Any());
+        ComfirmAdjustingRulesOnDeactEventArgs args = new(rulelines.Count == 0);
         ComfirmAdjustingRulesOnDeactRequested(this, args);
         if (args.Cancel)
         {

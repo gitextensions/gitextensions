@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
@@ -1020,7 +1020,7 @@ public sealed partial class FormCommit : GitModuleForm
         HashSet<string> names = lastSelection.Select(x => x.Name).ToHashSet();
         List<GitItemStatus> newSelection = newItems.Where(x => names.Contains(x.Name)).ToList();
 
-        if (newSelection.Any())
+        if (newSelection.Count != 0)
         {
             _currentFilesList.SelectedGitItems = newSelection;
         }

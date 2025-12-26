@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing.Imaging;
 using System.Reflection;
 using GitCommands;
@@ -471,7 +471,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     {
         _txtBranchCriterion.CloseDropdown();
 
-        if (_searchCriteriaChanged && _searchResult?.Any() is true)
+        if (_searchCriteriaChanged && _searchResult?.Count is > 0)
         {
             _searchCriteriaChanged = false;
             foreach (TreeNode coloredNode in _searchResult)
@@ -487,7 +487,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             }
         }
 
-        if (_searchResult is null || !_searchResult.Any())
+        if (_searchResult is null || _searchResult.Count == 0)
         {
             if (!string.IsNullOrWhiteSpace(_txtBranchCriterion.Text))
             {

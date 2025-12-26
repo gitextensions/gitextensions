@@ -111,7 +111,7 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
         _itemNumber = 0;
 
         // Add items for branches
-        if (branchNames.Any())
+        if (branchNames.Count != 0)
         {
             ToolStripMenuItem caption = new() { Text = TranslatedStrings.Branches };
             MenuUtil.SetAsCaptionMenuItem(caption, Owner);
@@ -126,7 +126,7 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
         }
 
         // Add items for tags
-        if (tagNames.Any())
+        if (tagNames.Count != 0)
         {
             ToolStripMenuItem caption = new() { Text = TranslatedStrings.Tags };
             MenuUtil.SetAsCaptionMenuItem(caption, Owner);

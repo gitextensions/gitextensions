@@ -1596,7 +1596,7 @@ public sealed partial class FileStatusList : GitModuleControl
         // The actual implementation of the default handling with doubleclick is in each form,
         // separate from this menu item
 
-        if (!cm.Items.Find(_NO_TRANSLATE_openSubmoduleMenuItem.Name!, true).Any())
+        if (cm.Items.Find(_NO_TRANSLATE_openSubmoduleMenuItem.Name!, true).Length == 0)
         {
             cm.Items.Insert(0, _NO_TRANSLATE_openSubmoduleMenuItem);
         }
@@ -1611,7 +1611,7 @@ public sealed partial class FileStatusList : GitModuleControl
                 : new Font(_NO_TRANSLATE_openSubmoduleMenuItem.Font, FontStyle.Regular);
         }
 
-        if (!_isFileTreeMode && !cm.Items.Find(_sortByContextMenu.Name!, true).Any())
+        if (!_isFileTreeMode && cm.Items.Find(_sortByContextMenu.Name!, true).Length == 0)
         {
             cm.Items.Add(_sortBySeparator);
             cm.Items.Add(_sortByContextMenu);

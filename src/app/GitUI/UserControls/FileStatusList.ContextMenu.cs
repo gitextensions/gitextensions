@@ -780,7 +780,7 @@ partial class FileStatusList
         ContextMenuDiffToolInfo selectionInfo = GetContextMenuDiffToolInfo();
         List<GitRevision> revisions = SelectedItems.SecondRevs().ToList();
 
-        if (revisions.Any())
+        if (revisions.Count != 0)
         {
             tsmiSecondDiffCaption.Text = _selectedRevision + (DescribeRevisions(revisions) ?? string.Empty);
             tsmiSecondDiffCaption.Visible = true;

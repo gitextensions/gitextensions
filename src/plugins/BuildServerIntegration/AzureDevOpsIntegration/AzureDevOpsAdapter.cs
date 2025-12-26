@@ -161,7 +161,7 @@ Detail of the error:");
             else
             {
                 // Display cached builds results
-                if (!sinceDate.HasValue && _buildsCache.FinishedBuilds.Any())
+                if (!sinceDate.HasValue && _buildsCache.FinishedBuilds.Count != 0)
                 {
                     foreach (BuildInfo buildInfo in _buildsCache.FinishedBuilds)
                     {

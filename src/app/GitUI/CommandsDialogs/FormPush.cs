@@ -220,7 +220,7 @@ public partial class FormPush : GitModuleForm
         {
             _NO_TRANSLATE_Remotes.SelectedItem = _currentBranchRemote;
         }
-        else if (UserGitRemotes.Any())
+        else if (UserGitRemotes.Count != 0)
         {
             ConfigFileRemote defaultRemote = UserGitRemotes.FirstOrDefault(x => StringComparer.OrdinalIgnoreCase.Equals(x.Name, "origin"));
 

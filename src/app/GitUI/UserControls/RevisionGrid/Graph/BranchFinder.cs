@@ -12,7 +12,7 @@ internal partial class BranchFinder
     internal BranchFinder(RevisionGraphRevision node)
     {
         RevisionGraphRevision? parent = null;
-        while (!CheckForMerge(node, parent) && !FindBranch(node) && node.Children.Any())
+        while (!CheckForMerge(node, parent) && !FindBranch(node) && !node.Children.IsEmpty)
         {
             // try the first child and its children
             parent = node;

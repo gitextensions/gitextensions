@@ -57,7 +57,7 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
     private void CheckDeleteTrackingAllowed()
     {
         string[] localTracking = GetTrackingReferenceOfRemoteRefs(GetSelectedRemotRefs());
-        bool localTrackingBranchesExists = localTracking.Any();
+        bool localTrackingBranchesExists = localTracking.Length != 0;
         const int maxDisplayed = 8;
 
         if (!localTrackingBranchesExists)

@@ -173,7 +173,7 @@ Inactive remote is completely invisible to git.");
         Remotes.SelectedIndexChanged += Remotes_SelectedIndexChanged;
 
         Remotes.SelectedIndices.Clear();
-        if (UserGitRemotes.Any())
+        if (UserGitRemotes.Count != 0)
         {
             if (!string.IsNullOrEmpty(preselectRemote))
             {
