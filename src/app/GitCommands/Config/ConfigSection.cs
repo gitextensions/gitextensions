@@ -30,7 +30,7 @@ public class ConfigSection : IConfigSection
             SubSection = name.Substring(slashIndex + 1, name.LastIndexOf('\"') - slashIndex - 1);
             SubSectionCaseSensitive = true;
         }
-        else if (!name.Contains("."))
+        else if (!name.Contains('.'))
         {
             // [section] case sensitive
             SectionName = name.Trim();

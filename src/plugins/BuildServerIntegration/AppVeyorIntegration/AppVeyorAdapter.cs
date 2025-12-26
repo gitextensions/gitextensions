@@ -82,8 +82,8 @@ internal class AppVeyorAdapter : IBuildServerAdapter
         string projectNamesSetting = config.GetString("AppVeyorProjectName", "");
         List<string> projectNames = _buildServerWatcher.ReplaceVariables(projectNamesSetting)
             .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries)
-            .Where(p => p.Contains("/") || !string.IsNullOrEmpty(accountName))
-            .Select(p => p.Contains("/") ? p : accountName.Combine("/", p)!)
+            .Where(p => p.Contains('/') || !string.IsNullOrEmpty(accountName))
+            .Select(p => p.Contains('/') ? p : accountName.Combine("/", p)!)
             .ToList();
 
         if (projectNames.Count == 0)

@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 
 namespace GitExtensions.Plugins.GitStatistics;
 
@@ -219,7 +219,7 @@ public readonly struct CodeFile
 
                 if (extension.ToLower() == ".pas" || extension.ToLower() == ".inc")
                 {
-                    if (line.Contains("*)") || line.Contains("}"))
+                    if (line.Contains("*)") || line.Contains('}'))
                     {
                         inCommentBlock = false;
                     }
