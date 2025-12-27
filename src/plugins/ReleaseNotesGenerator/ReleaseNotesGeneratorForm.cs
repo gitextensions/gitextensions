@@ -125,7 +125,7 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
         {
             string message = string.Join(Environment.NewLine + colSeparatorRestLines,
                 logLine.MessageLines.Where(
-                a => suppressEmptyLines ? !string.IsNullOrWhiteSpace(a) : true));
+                a => !suppressEmptyLines || !string.IsNullOrWhiteSpace(a)));
             stringBuilder.AppendFormat("{0}{1}{2}{3}", logLine.Commit, colSeparatorFirstLine, message, Environment.NewLine);
         }
 

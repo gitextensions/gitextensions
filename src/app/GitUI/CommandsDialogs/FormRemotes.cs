@@ -308,7 +308,7 @@ Inactive remote is completely invisible to git.");
         RemoteBranches.ClearSelection();
         RemoteBranches.SelectionChanged += RemoteBranchesSelectionChanged;
         DataGridViewRow preselectLocalRow = RemoteBranches.Rows.Cast<DataGridViewRow>().
-            FirstOrDefault(r => r.DataBoundItem is IGitRef gitRef ? gitRef.LocalName == preselectLocal : false);
+            FirstOrDefault(r => r.DataBoundItem is IGitRef gitRef && gitRef.LocalName == preselectLocal);
         if (preselectLocalRow is not null)
         {
             preselectLocalRow.Selected = true;

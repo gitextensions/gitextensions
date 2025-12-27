@@ -301,9 +301,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
     }
 
     public bool GitModuleIsRelevantToMe()
-        => _currentGitUiCommands?.Module is null
-            ? false
-            : GetHostedRemotes().Any();
+        => _currentGitUiCommands?.Module is not null && GetHostedRemotes().Any();
 
     /// <summary>
     /// Returns all relevant github-remotes for the current working directory

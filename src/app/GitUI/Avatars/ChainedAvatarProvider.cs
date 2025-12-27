@@ -7,7 +7,7 @@ public sealed class ChainedAvatarProvider : IAvatarProvider
 {
     private readonly IAvatarProvider[] _avatarProviders;
 
-    public bool PerformsIo => _avatarProviders.Length == 0 ? false : _avatarProviders.Any(p => p.PerformsIo);
+    public bool PerformsIo => _avatarProviders.Length != 0 && _avatarProviders.Any(p => p.PerformsIo);
 
     public ChainedAvatarProvider(params IAvatarProvider[] avatarProviders)
     {

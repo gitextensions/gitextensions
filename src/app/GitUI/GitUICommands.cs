@@ -1,4 +1,4 @@
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Text;
@@ -1713,7 +1713,7 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartFileEditorDialog(string? filename, bool showWarning = false, int? lineNumber = null)
     {
         using FormEditor formEditor = new(this, filename, showWarning, lineNumber: lineNumber);
-        return formEditor.IsDisposed ? false : formEditor.ShowDialog() != DialogResult.Cancel;
+        return !formEditor.IsDisposed && formEditor.ShowDialog() != DialogResult.Cancel;
     }
 
     /// <summary>
