@@ -1614,7 +1614,7 @@ public sealed partial class GitModule : IGitModule
         {
             if (remoteBranch.StartsWith('+'))
             {
-                remoteBranch = remoteBranch.Remove(0, 1);
+                remoteBranch = remoteBranch[1..];
             }
 
             branchArguments = "+" + FormatBranchName(remoteBranch);

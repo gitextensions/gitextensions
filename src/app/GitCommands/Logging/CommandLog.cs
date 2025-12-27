@@ -133,7 +133,7 @@ public sealed partial class CommandLogEntry
                 // in `fileName` and `arguments` this if branch and the one above can be merged.
                 fileName = WslGitLogName;
                 const int numSpaces = 2;
-                arguments = GetGitArgumentsWithoutConfiguration(Arguments.Substring(gitIndex + wslGitCmd.Length + numSpaces));
+                arguments = GetGitArgumentsWithoutConfiguration(Arguments[(gitIndex + wslGitCmd.Length + numSpaces)..]);
             }
             else if (FileName.EndsWith(gitCmd))
             {

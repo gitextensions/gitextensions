@@ -73,7 +73,7 @@ partial class ScriptsManager
                     }
 
                     arguments = ScriptOptionsParser.ReplaceOption($"UserInput:{label}", arguments, [prompt.UserInput]);
-                    arguments = ScriptOptionsParser.ReplaceOption(match.Value.Substring(1, match.Value.Length - 2), arguments, [prompt.UserInput]);
+                    arguments = ScriptOptionsParser.ReplaceOption(match.Value[1..^1], arguments, [prompt.UserInput]);
                 }
             }
 

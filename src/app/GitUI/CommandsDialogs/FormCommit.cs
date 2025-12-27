@@ -2661,7 +2661,7 @@ public sealed partial class FormCommit : GitModuleForm
             {
                 if (nextChar == ':' || nextChar == '!')
                 {
-                    return ($"{keyword}(){currentTitle.Substring(key.Length)}", scopePosition);
+                    return ($"{keyword}(){currentTitle[key.Length..]}", scopePosition);
                 }
 
                 if (nextChar == '(')
@@ -2672,7 +2672,7 @@ public sealed partial class FormCommit : GitModuleForm
 
             (string message, int selectionStart) ReplaceKeyword(Func<string, int> maxPosition)
             {
-                string newTitle = $"{keyword}{currentTitle.Substring(key.Length)}";
+                string newTitle = $"{keyword}{currentTitle[key.Length..]}";
                 int newMessageLength = Message.Text.Length + newTitle.Length - currentTitle.Length;
                 return (newTitle, Math.Min(newMessageLength, Math.Max(maxPosition(newTitle), currentPosition + keyword.Length - key.Length)));
             }
