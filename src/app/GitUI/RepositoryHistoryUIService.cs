@@ -168,7 +168,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
 
-        var number = 0;
+        int number = 0;
         foreach (RecentRepoInfo repo in pinnedRepos)
         {
             AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored);

@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitCommands.UserRepositoryHistory.Legacy;
 using NSubstitute;
@@ -26,7 +26,7 @@ public class RepositoryStorageTests
     {
         AppSettings.SetString("repositories", setting);
         RepositoryStorage repositoryStorage = new();
-        var repositories = repositoryStorage.Load();
+        IReadOnlyList<RepositoryCategory> repositories = repositoryStorage.Load();
 
         repositories.Should().BeEmpty();
     }
