@@ -51,7 +51,7 @@ internal sealed class AppSettingsTests
             root = property.GetValue(null);
 
             property = property.PropertyType
-                .GetProperty(nameof(ISetting<string>.Value));
+                .GetProperty(nameof(ISetting<>.Value));
         }
 
         using TempFileCollection tempFiles = new();
@@ -86,7 +86,7 @@ internal sealed class AppSettingsTests
             root = property.GetValue(null);
 
             property = property.PropertyType
-                .GetProperty(nameof(ISetting<string>.Value));
+                .GetProperty(nameof(ISetting<>.Value));
         }
 
         using TempFileCollection tempFiles = new();
@@ -144,7 +144,7 @@ internal sealed class AppSettingsTests
             Type? propertyType = property.PropertyType;
             if (isISetting)
             {
-                propertyType = propertyType.GetProperty(nameof(ISetting<string>.Value))?.PropertyType;
+                propertyType = propertyType.GetProperty(nameof(ISetting<>.Value))?.PropertyType;
             }
 
             propertyType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
