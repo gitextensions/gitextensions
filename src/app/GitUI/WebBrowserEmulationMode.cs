@@ -20,7 +20,7 @@ public static class WebBrowserEmulationMode
         }
 
         // FeatureControl settings are per-process
-        string appName = System.IO.Path.GetFileName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+        string appName = System.IO.Path.GetFileName(Environment.ProcessPath);
 
         const string featureControlRegKey = @"HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\";
 
