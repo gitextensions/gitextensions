@@ -16,7 +16,7 @@ internal class GitRefListsForRevision
 
         if (revision.Refs is null)
         {
-            throw new ArgumentNullException(nameof(revision.Refs));
+            throw new ArgumentNullException(nameof(revision));
         }
 
         _allBranches = revision.Refs.Where(h => !h.IsTag && (h.IsHead || h.IsRemote)).ToArray();

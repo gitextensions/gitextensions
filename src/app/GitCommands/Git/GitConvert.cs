@@ -7,7 +7,7 @@ public static class GitConvert
     private const byte lf = 0x0A;
     private const byte cr = 0x0D;
 
-    [return: NotNullIfNotNull("buf")]
+    [return: NotNullIfNotNull(nameof(buf))]
     public static byte[]? ConvertCrLfToWorktree(byte[]? buf)
     {
         if (buf is null)

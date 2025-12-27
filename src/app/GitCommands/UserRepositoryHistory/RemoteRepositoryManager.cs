@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.Threading;
+﻿using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.UserRepositoryHistory;
 
@@ -31,7 +31,7 @@ public sealed class RemoteRepositoryManager : IRepositoryManager
     {
         if (string.IsNullOrWhiteSpace(repositoryPathUrl))
         {
-            throw new ArgumentException(nameof(repositoryPathUrl));
+            throw new ArgumentException("AddAsMostRecentAsync: no uri.", nameof(repositoryPathUrl));
         }
 
         return await AddAsMostRecentRepositoryAsync(repositoryPathUrl);
@@ -86,7 +86,7 @@ public sealed class RemoteRepositoryManager : IRepositoryManager
     {
         if (string.IsNullOrWhiteSpace(repositoryPath))
         {
-            throw new ArgumentException(nameof(repositoryPath));
+            throw new ArgumentException("RemoveRecentAsync: no path.", nameof(repositoryPath));
         }
 
         await TaskScheduler.Default;

@@ -1,4 +1,4 @@
-using GitCommands.UserRepositoryHistory.Legacy;
+﻿using GitCommands.UserRepositoryHistory.Legacy;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.UserRepositoryHistory;
@@ -78,7 +78,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
     {
         if (string.IsNullOrWhiteSpace(repositoryPath))
         {
-            throw new ArgumentException(nameof(repositoryPath));
+            throw new ArgumentException("AddAsMostRecentAsync: no path.", nameof(repositoryPath));
         }
 
         if (Uri.IsWellFormedUriString(repositoryPath, UriKind.Absolute))
@@ -215,7 +215,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
     {
         if (string.IsNullOrWhiteSpace(repositoryPath))
         {
-            throw new ArgumentException(nameof(repositoryPath));
+            throw new ArgumentException("RemoveFavouriteAsync: no path.", nameof(repositoryPath));
         }
 
         await TaskScheduler.Default;
@@ -245,7 +245,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
     {
         if (string.IsNullOrWhiteSpace(repositoryPath))
         {
-            throw new ArgumentException(nameof(repositoryPath));
+            throw new ArgumentException("RemoveRecentAsync: no path.", nameof(repositoryPath));
         }
 
         await TaskScheduler.Default;

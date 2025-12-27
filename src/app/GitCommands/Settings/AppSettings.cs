@@ -280,7 +280,7 @@ public static partial class AppSettings
         VersionIndependentRegKey.SetValue(key, value ? "true" : "false");
     }
 
-    [return: NotNullIfNotNull("defaultValue")]
+    [return: NotNullIfNotNull(nameof(defaultValue))]
     private static string? ReadStringRegValue(string key, string? defaultValue)
     {
         return (string?)VersionIndependentRegKey.GetValue(key, defaultValue);
@@ -2126,7 +2126,7 @@ public static partial class AppSettings
     #region Save in settings file
 
     // String
-    [return: NotNullIfNotNull("defaultValue")]
+    [return: NotNullIfNotNull(nameof(defaultValue))]
     public static string? GetString(string name, string? defaultValue) => SettingsContainer.GetString(name, defaultValue);
     public static void SetString(string name, string value) => SettingsContainer.SetString(name, value);
 

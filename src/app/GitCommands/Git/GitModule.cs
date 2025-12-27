@@ -3773,7 +3773,7 @@ public sealed partial class GitModule : IGitModule
     /// </example>
     /// <param name="s">The string to unescape.</param>
     /// <returns>The unescaped string, or <paramref name="s"/> if no escaped values were present, or <c>""</c> if <paramref name="s"/> is <c>null</c>.</returns>
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public static string? UnescapeOctalCodePoints(string? s)
     {
         if (s is null)
@@ -3802,14 +3802,14 @@ public sealed partial class GitModule : IGitModule
             });
     }
 
-    [return: NotNullIfNotNull("fileName")]
+    [return: NotNullIfNotNull(nameof(fileName))]
     public static string? ReEncodeFileNameFromLossless(string? fileName)
     {
         fileName = ReEncodeStringFromLossless(fileName, SystemEncoding);
         return UnescapeOctalCodePoints(fileName);
     }
 
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public static string? ReEncodeString(string? s, Encoding fromEncoding, Encoding toEncoding)
     {
         if (s is null || fromEncoding.WebName == toEncoding.WebName)
@@ -3824,7 +3824,7 @@ public sealed partial class GitModule : IGitModule
     /// <summary>
     /// Re-encodes string from Commands.LosslessEncoding to toEncoding.
     /// </summary>
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public static string? ReEncodeStringFromLossless(string? s, Encoding? toEncoding)
     {
         if (toEncoding is null)
@@ -3835,7 +3835,7 @@ public sealed partial class GitModule : IGitModule
         return ReEncodeString(s, LosslessEncoding, toEncoding);
     }
 
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public string? ReEncodeStringFromLossless(string? s)
     {
         return ReEncodeStringFromLossless(s, LogOutputEncoding);
@@ -3851,7 +3851,7 @@ public sealed partial class GitModule : IGitModule
     /// diff part is raw data in file's original encoding.
     /// s should be encoded in LosslessEncoding.
     /// </summary>
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public string? ReEncodeShowString(string? s)
     {
         if (string.IsNullOrEmpty(s))

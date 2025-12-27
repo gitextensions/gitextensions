@@ -15,7 +15,7 @@ public sealed class ChainedAvatarProvider : IAvatarProvider
 
         if (_avatarProviders.Any(p => p is null))
         {
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(avatarProviders));
         }
     }
 

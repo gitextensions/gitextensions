@@ -26,7 +26,7 @@ public class SerializableException
 
     public SerializableException(Exception exception)
     {
-        OriginalException = exception ?? throw new ArgumentNullException();
+        OriginalException = exception ?? throw new ArgumentNullException(nameof(exception));
 
         CultureInfo oldCulture = Thread.CurrentThread.CurrentCulture;
         CultureInfo oldUICulture = Thread.CurrentThread.CurrentUICulture;

@@ -71,7 +71,7 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
     {
         if (branchName is null)
         {
-            throw new ArgumentException(nameof(branchName));
+            throw new ArgumentException("AheadBehindData: GetData: no branchname.", nameof(branchName));
         }
 
         if (branchName == DetachedHeadParser.DetachedBranch)

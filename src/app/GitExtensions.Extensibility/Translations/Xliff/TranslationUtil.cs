@@ -449,7 +449,7 @@ public static class TranslationUtil
     /// <summary>
     ///  Replaces native path separator with POSIX path separator (/).
     /// </summary>
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     private static string? ToPosixPath(this string? path)
     {
         return path?.Replace(NativeDirectorySeparatorChar, PosixDirectorySeparatorChar);

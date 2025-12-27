@@ -95,7 +95,7 @@ public static partial class GitRefName
     }
 
     [Pure]
-    [return: NotNullIfNotNull("branch")]
+    [return: NotNullIfNotNull(nameof(branch))]
     public static string? GetFullBranchName(string? branch)
     {
         if (branch is null)

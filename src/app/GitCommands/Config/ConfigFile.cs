@@ -144,7 +144,7 @@ public class ConfigFile : IConfigFile
     {
         if (string.IsNullOrEmpty(setting))
         {
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(setting));
         }
 
         int keyIndex = FindAndCheckKeyIndex(setting);
