@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -241,7 +241,7 @@ public partial class FormStatus : GitExtensionsDialog
         await this.SwitchToMainThreadAsync();
 
         int index = text.LastIndexOf('%');
-        if (index > 4 && int.TryParse(text.Substring(index - 3, 3), out int progressValue) && progressValue >= 0)
+        if (index > 4 && int.TryParse(text.AsSpan(index - 3, 3), out int progressValue) && progressValue >= 0)
         {
             ProgressBar.Style = ProgressBarStyle.Blocks;
             ProgressBar.Value = Math.Min(100, progressValue);
