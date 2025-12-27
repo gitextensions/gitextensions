@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -404,7 +404,6 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
 
     private bool GetNextPatchFile(bool searchBackward, bool loop, out FileStatusItem? selectedItem, out Task loadFileContent)
     {
-        selectedItem = null;
         loadFileContent = Task.CompletedTask;
 
         FileStatusItem prevItem = DiffFiles.SelectedItem;

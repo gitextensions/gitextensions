@@ -227,11 +227,6 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         return ColumnLeftMargin + Math.Max(lanesWidth, Column.MinimumWidth);
     }
 
-    public bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision)
-    {
-        return TryGetToolTip(e, revision, out string? toolTip);
-    }
-
     public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
         if (e.X >= ColumnLeftMargin && GraphRenderer.LaneWidth >= 0 && e.RowIndex >= 0)
