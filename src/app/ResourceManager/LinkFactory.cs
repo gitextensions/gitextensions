@@ -157,7 +157,7 @@ public sealed class LinkFactory : ILinkFactory
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal struct TestAccessor
+    internal readonly struct TestAccessor
     {
         private readonly LinkFactory _linkFactory;
 

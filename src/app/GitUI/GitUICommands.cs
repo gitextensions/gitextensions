@@ -1997,7 +1997,7 @@ public sealed class GitUICommands : IGitUICommands
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal struct TestAccessor
+    internal readonly struct TestAccessor
     {
         private readonly GitUICommands _commands;
 

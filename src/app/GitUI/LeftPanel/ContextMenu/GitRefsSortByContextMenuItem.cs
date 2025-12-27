@@ -55,7 +55,7 @@ internal class GitRefsSortByContextMenuItem : ToolStripMenuItem
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal struct TestAccessor
+    internal readonly struct TestAccessor
     {
         private readonly GitRefsSortByContextMenuItem _contextMenuItem;
 

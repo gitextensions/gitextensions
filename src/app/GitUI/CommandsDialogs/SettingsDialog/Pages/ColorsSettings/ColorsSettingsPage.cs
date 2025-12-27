@@ -160,7 +160,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
     private void tsmiUserFolder_Click(object sender, EventArgs e) =>
         _controller.ShowUserThemesDirectory();
 
-    private struct FormattedThemeId
+    private readonly struct FormattedThemeId
     {
         public FormattedThemeId(ThemeId themeId)
         {
