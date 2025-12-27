@@ -229,8 +229,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
     public bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision)
     {
-        string? toolTip;
-        return TryGetToolTip(e, revision, out toolTip);
+        return TryGetToolTip(e, revision, out string? toolTip);
     }
 
     public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
