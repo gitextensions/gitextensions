@@ -145,7 +145,7 @@ public static class FileHelper
         if (content?.Length is > 0)
         {
             int nullCount = 0;
-            foreach (char c in content)
+            foreach (char c in content.Select(v => (char)v))
             {
                 if (c == '\0')
                 {

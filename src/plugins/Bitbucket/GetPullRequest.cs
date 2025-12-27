@@ -108,7 +108,7 @@ internal class GetPullRequest : BitbucketRequestBase<List<PullRequest>>
     protected override List<PullRequest> ParseResponse(JObject json)
     {
         List<PullRequest> result = [];
-        foreach (JObject val in json["values"])
+        foreach (JObject val in json["values"].Cast<JObject>())
         {
             result.Add(PullRequest.Parse(val));
         }

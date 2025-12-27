@@ -44,7 +44,7 @@ public class ThemeLoader : IThemeLoader
             ImportTheme(themeFileName, importDirective, allowedClasses, cssImportChain, themeColors);
         }
 
-        foreach (StyleRule rule in stylesheet.StyleRules)
+        foreach (StyleRule rule in stylesheet.StyleRules.Cast<StyleRule>())
         {
             ParseRule(themeFileName, rule, allowedClasses, themeColors);
         }
