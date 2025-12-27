@@ -11,9 +11,6 @@
 using System.Diagnostics.CodeAnalysis;
 
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1824:MarkAssembliesWithNeutralResourcesLanguage")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Westhuis", Scope = "member", Target = "GitUI.AboutBox.#InitializeComponent()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "Henk", Scope = "member", Target = "GitUI.AboutBox.#InitializeComponent()")]
-[assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "henkwesthuis", Scope = "member", Target = "GitUI.AboutBox.#InitializeComponent()")]
 [assembly: System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA2204:Literals should be spelled correctly", MessageId = "ppk", Scope = "member", Target = "~M:GitUI.BrowseForPrivateKey.Browse(System.Windows.Forms.IWin32Window)~System.String")]
 [assembly: SuppressMessage("Usage", "VSTHRD103:Call async methods when in an async method", Justification = "<Pending>", Scope = "member", Target = "~M:GitUI.BuildServerIntegration.BuildServerWatcher.ShowBuildServerCredentialsFormAsync(System.String,GitUIPluginInterfaces.BuildServerIntegration.IBuildServerCredentials)~System.Threading.Tasks.Task{GitUIPluginInterfaces.BuildServerIntegration.IBuildServerCredentials}")]
 [assembly: SuppressMessage("Usage", "VSTHRD103:Call async methods when in an async method", Justification = "<Pending>", Scope = "member", Target = "~M:GitUI.CommandsDialogs.BrowseDialog.FormUpdates.Done")]
