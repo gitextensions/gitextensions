@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
@@ -172,7 +172,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
         public override bool Equals(object obj) =>
             obj is FormattedThemeId other && Equals(other);
 
-        public override int GetHashCode() =>
+        public override readonly int GetHashCode() =>
             ThemeId.GetHashCode();
 
         public static bool operator ==(FormattedThemeId left, FormattedThemeId right) =>
@@ -181,7 +181,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
         public static bool operator !=(FormattedThemeId left, FormattedThemeId right) =>
             !left.Equals(right);
 
-        public override string ToString()
+        public override readonly string ToString()
         {
             if (ThemeId == ThemeId.Default)
             {
@@ -196,7 +196,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
             return string.Format(FormatUserDefinedThemeName.Text, ThemeId.Name);
         }
 
-        private bool Equals(FormattedThemeId other) =>
+        private readonly bool Equals(FormattedThemeId other) =>
             ThemeId.Equals(other.ThemeId);
     }
 }

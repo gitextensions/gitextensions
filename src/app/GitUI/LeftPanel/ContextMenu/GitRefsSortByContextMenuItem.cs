@@ -64,6 +64,6 @@ internal class GitRefsSortByContextMenuItem : ToolStripMenuItem
             _contextMenuItem = menuitem;
         }
 
-        public void RaiseDropDownOpening() => _contextMenuItem.RequerySortingMethod();
+        public readonly void RaiseDropDownOpening() => _contextMenuItem.RequerySortingMethod();
     }
 }

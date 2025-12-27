@@ -2276,19 +2276,19 @@ public static partial class AppSettings
 
     internal struct TestAccessor
     {
-        public string ApplicationExecutablePath
+        public readonly string ApplicationExecutablePath
         {
             get => _applicationExecutablePath;
             set => _applicationExecutablePath = value;
         }
 
-        public Lazy<string?> ApplicationDataPath
+        public readonly Lazy<string?> ApplicationDataPath
         {
             get => AppSettings.ApplicationDataPath;
             set => AppSettings.ApplicationDataPath = value;
         }
 
-        public void ResetDocumentationBaseUrl() => AppSettings._documentationBaseUrl = null;
+        public readonly void ResetDocumentationBaseUrl() => AppSettings._documentationBaseUrl = null;
     }
 }
 

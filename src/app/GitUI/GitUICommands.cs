@@ -2006,11 +2006,11 @@ public sealed class GitUICommands : IGitUICommands
             _commands = commands;
         }
 
-        internal string NormalizeFileName(string fileName) => _commands.NormalizeFileName(fileName);
+        internal readonly string NormalizeFileName(string fileName) => _commands.NormalizeFileName(fileName);
 
-        internal bool RunCommandBasedOnArgument(string[] args) => _commands.RunCommandBasedOnArgument(args, InitializeArguments(args));
+        internal readonly bool RunCommandBasedOnArgument(string[] args) => _commands.RunCommandBasedOnArgument(args, InitializeArguments(args));
 
-        internal void ShowFileHistoryDialog(string fileName)
+        internal readonly void ShowFileHistoryDialog(string fileName)
             => _commands.RunFileHistoryCommand(args: new string[] { "", "", fileName }, showBlame: false);
     }
 }
