@@ -65,7 +65,8 @@ public sealed class CommitDataManager : ICommitDataManager
 
         int splitPos = data.IndexOf($"\n{RevisionReader.NotesPrefix}");
         commitData.Body = data[0..splitPos].TrimEnd();
-        commitData.Notes = data[(splitPos + RevisionReader.NotesPrefix.Length + 1)..];
+        splitPos += 1 + RevisionReader.NotesPrefix.Length + 1;
+        commitData.Notes = splitPos > data.Length ? "" : data[splitPos..];
     }
 
     /// <inheritdoc />

@@ -38,7 +38,7 @@ public sealed class RevisionReader
         /* Notes placeholder */ "{1}";
 
     private const string _reflogSelectorFormat = "%gD%n";
-    internal const string NotesPrefix = "\u0578\u043et\u0435\u0282:"; // Unicode l00k-alikes, ոоtеʂ:
+    internal const string NotesPrefix = "\u039d\u043et\u0435\u0282:"; // Unicode l00k-alikes, Νоtеʂ:
     private const string _notesMarker = $"\n{NotesPrefix}";
     private const string _notesFormat = $"%n{NotesPrefix}%n%N";
 
@@ -613,7 +613,7 @@ public sealed class RevisionReader
                 if (!decoded.EndsWith(_notesMarker) && ((ReadOnlySpan<char>)decoded).LastIndexOf(_notesMarker, StringComparison.Ordinal) is int notesStartIndex and >= 0)
                 {
                     revision.Body = decoded[..notesStartIndex].TrimEnd().ToString();
-                    revision.Notes = decoded.Slice(notesStartIndex + _notesMarker.Length + 1).ToString();
+                    revision.Notes = decoded.Slice(1 + notesStartIndex + _notesMarker.Length + 1).ToString();
                 }
                 else
                 {

@@ -9309,7 +9309,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="showGitNotesColumnToolStripMenuItem.Text">
-        <source>Show git &amp;notes column</source>
+        <source>Show Git &amp;notes column</source>
         <target />
       </trans-unit>
       <trans-unit id="showGitNotesToolStripMenuItem.Text">

@@ -64,6 +64,7 @@ public static class UIExtensions
         // trying to avoid buffer re-allocation during Append()
         StringBuilder? sb = new StringBuilder((bodyOrSubject?.Length ?? 0) + 2 + notesPrefix.Length + 2 + indent.Length + notes.Length + 1)
             .AppendLine(bodyOrSubject)
+            .AppendLine()
             .AppendLine(notesPrefix);
 
         foreach (string line in notes.Split('\n'))
