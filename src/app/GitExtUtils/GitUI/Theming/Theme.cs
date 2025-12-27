@@ -48,16 +48,13 @@ public class Theme : IThemeSerializationData
     /// GitExtension app-specific color identifiers.
     /// </summary>
     public static IReadOnlyCollection<AppColor> AppColorNames { get; } =
-        new HashSet<AppColor>(Enum.GetValues(typeof(AppColor)).Cast<AppColor>());
+        Enum.GetValues<AppColor>();
 
     /// <summary>
     /// .Net system color identifiers.
     /// </summary>
     private static IReadOnlyCollection<KnownColor> SysColorNames { get; } =
-        new HashSet<KnownColor>(
-            Enum.GetValues<KnownColor>()
-                .Cast<KnownColor>()
-                .Where(c => IsSystemColor(c)));
+        [.. Enum.GetValues<KnownColor>().Where(c => IsSystemColor(c))];
 
     /// <summary>
     /// Get .Net system color value as defined by this instance. If not defined, returns

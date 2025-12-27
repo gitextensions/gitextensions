@@ -19,9 +19,9 @@ public static class RevisionGraphLaneColor
 
     static RevisionGraphLaneColor()
     {
-        Color[] branchColors = Enum.GetNames(typeof(AppColor))
+        Color[] branchColors = Enum.GetNames<AppColor>()
             .Where(name => name.StartsWith(nameof(AppColor.GraphBranch1)[..^1]))
-            .Select(name => ((AppColor)Enum.Parse(typeof(AppColor), name)).GetThemeColor())
+            .Select(name => Enum.Parse<AppColor>(name).GetThemeColor())
             .Where(color => !color.IsEmpty)
             .Distinct()
             .ToArray();

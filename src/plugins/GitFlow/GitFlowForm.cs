@@ -40,7 +40,7 @@ public partial class GitFlowForm : GitExtensionsFormBase
 
     private static List<string> BranchTypes
     {
-        get { return Enum.GetValues(typeof(Branch)).Cast<object>().Select(e => e.ToString()).ToList(); }
+        get { return Enum.GetValues<Branch>().Select(e => e.ToString()).ToList(); }
     }
 
     private bool IsGitFlowInitialised
@@ -110,7 +110,7 @@ public partial class GitFlowForm : GitExtensionsFormBase
 
     private static bool TryExtractBranchFromHead(string currentRef, [NotNullWhen(returnValue: true)] out string? branchType, [NotNullWhen(returnValue: true)] out string? branchName)
     {
-        foreach (Branch branch in Enum.GetValues(typeof(Branch)))
+        foreach (Branch branch in Enum.GetValues<Branch>())
         {
             string startRef = branch + "/";
             if (currentRef.StartsWith(startRef))

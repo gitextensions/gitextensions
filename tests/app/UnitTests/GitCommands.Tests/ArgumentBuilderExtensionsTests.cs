@@ -255,7 +255,7 @@ public sealed class ArgumentBuilderExtensionsTests
     [Test]
     public void Add_ForcePushOptions_ensure_all_switches_are_handled()
     {
-        foreach (int mode in Enum.GetValues(typeof(ForcePushOptions)))
+        foreach (int mode in Enum.GetValues<ForcePushOptions>())
         {
             // unimplemented switches will result in InvalidEnumArgumentException
             ArgumentBuilder args =
@@ -268,7 +268,7 @@ public sealed class ArgumentBuilderExtensionsTests
     [Test]
     public void Add_GitBisectOption_ensure_all_switches_are_handled()
     {
-        foreach (int mode in Enum.GetValues(typeof(GitBisectOption)))
+        foreach (int mode in Enum.GetValues<GitBisectOption>())
         {
             // unimplemented switches will result in InvalidEnumArgumentException
             ArgumentBuilder args =
@@ -281,7 +281,7 @@ public sealed class ArgumentBuilderExtensionsTests
     [Test]
     public void Add_IgnoreSubmodulesMode_ensure_all_switches_are_handled()
     {
-        foreach (int mode in Enum.GetValues(typeof(IgnoreSubmodulesMode)))
+        foreach (int mode in Enum.GetValues<IgnoreSubmodulesMode>())
         {
             // unimplemented switches will result in InvalidEnumArgumentException
             ArgumentBuilder args =
@@ -294,7 +294,7 @@ public sealed class ArgumentBuilderExtensionsTests
     [Test]
     public void Add_CleanMode_ensure_all_switches_are_handled()
     {
-        foreach (int mode in Enum.GetValues(typeof(CleanMode)))
+        foreach (int mode in Enum.GetValues<CleanMode>())
         {
             // unimplemented switches will result in InvalidEnumArgumentException
             ArgumentBuilder args =
@@ -307,7 +307,7 @@ public sealed class ArgumentBuilderExtensionsTests
     [Test]
     public void Add_ResetMode_ensure_all_switches_are_handled()
     {
-        foreach (int mode in Enum.GetValues(typeof(ResetMode)))
+        foreach (int mode in Enum.GetValues<ResetMode>())
         {
             // unimplemented switches will result in InvalidEnumArgumentException
             ArgumentBuilder args =
@@ -359,6 +359,6 @@ public sealed class ArgumentBuilderExtensionsTests
     public void BuildBatchArguments_builder_throw_invalid_argument_exception(string command, string[] arguments, int maxLength,
         int baseLength = 0)
     {
-        ClassicAssert.Throws(typeof(ArgumentException), () => new GitArgumentBuilder(command).BuildBatchArguments(arguments, baseLength, maxLength));
+        ClassicAssert.Throws<ArgumentException>(() => new GitArgumentBuilder(command).BuildBatchArguments(arguments, baseLength, maxLength));
     }
 }

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -2829,7 +2829,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             SetCommitInfoPosition((CommitInfoPosition)(
                 ((int)AppSettings.CommitInfoPosition + 1) %
-                Enum.GetValues(typeof(CommitInfoPosition)).Length));
+                Enum.GetValues<CommitInfoPosition>().Length));
         }
     }
 
