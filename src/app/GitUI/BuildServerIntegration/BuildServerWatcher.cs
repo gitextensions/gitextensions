@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO.IsolatedStorage;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
@@ -273,7 +273,8 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         using FormBuildServerCredentials form = new(buildServerUniqueKey);
         form.BuildServerCredentials = buildServerCredentials;
 
-        if (form.ShowDialog(_revisionGrid) == DialogResult.OK)
+        DialogResult result = await form.ShowDialogAsync(_revisionGrid);
+        if (result == DialogResult.OK)
         {
             return buildServerCredentials;
         }

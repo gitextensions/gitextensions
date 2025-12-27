@@ -173,7 +173,7 @@ public partial class FormUpdates : GitExtensionsDialog
 
                 if (!Visible)
                 {
-                    ShowDialog(_ownerWindow);
+                    await ShowDialogAsync(_ownerWindow);
                 }
             }
             else

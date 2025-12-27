@@ -165,7 +165,6 @@ public class ControlThreadingExtensionsTests
     }
 
     [Test]
-    [Ignore("Hangs")]
     public async Task ControlDisposedAfterSwitchOnBackgroundThread()
     {
         Form form = new();
@@ -173,9 +172,7 @@ public class ControlThreadingExtensionsTests
         await TaskScheduler.Default;
 
         ControlThreadingExtensions.ControlMainThreadAwaitable awaitable = form.SwitchToMainThreadAsync();
-#pragma warning disable VSTHRD103 // Call async methods when in an async method
-        ThreadHelper.JoinableTaskFactory.Run(
-#pragma warning restore VSTHRD103 // Call async methods when in an async method
+        await ThreadHelper.JoinableTaskFactory.RunAsync(
             async () =>
             {
                 await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();

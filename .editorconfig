@@ -309,3 +309,6 @@ dotnet_diagnostic.WFO5001.severity = silent
 
 # IDE0290: Use primary constructor
 dotnet_diagnostic.IDE0290.severity = none
+
+# Remove in .NET10
+dotnet_diagnostic.WFO5002.severity = none
