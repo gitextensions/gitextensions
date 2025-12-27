@@ -127,7 +127,7 @@ public class AutoCompileSubModulesPlugin : GitPluginBase, IGitPluginForRepositor
         {
             FileInfo solutionFile = solutionFiles[n];
             solutionString.Append(solutionFile.Name);
-            solutionString.Append("\n");
+            solutionString.Append('\n');
         }
 
         return solutionString.ToString();

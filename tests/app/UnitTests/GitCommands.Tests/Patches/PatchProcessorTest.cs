@@ -231,16 +231,16 @@ index cdf8bebba,55ff37bb9..000000000
 
         void AppendHeaderLine(string line)
         {
-            patchText.Append(line).Append("\n");
+            patchText.Append(line).Append('\n');
             patchOutput.Append(GitModule.ReEncodeString(line, GitModule.SystemEncoding, GitModule.LosslessEncoding));
-            patchOutput.Append("\n");
+            patchOutput.Append('\n');
         }
 
         void AppendDiffLine(string line)
         {
-            patchText.Append(line).Append("\n");
+            patchText.Append(line).Append('\n');
             patchOutput.Append(GitModule.ReEncodeString(line, Encoding.UTF8, GitModule.LosslessEncoding));
-            patchOutput.Append("\n");
+            patchOutput.Append('\n');
         }
     }
 

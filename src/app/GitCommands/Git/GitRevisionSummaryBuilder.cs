@@ -71,7 +71,7 @@ public class GitRevisionSummaryBuilder : IGitRevisionSummaryBuilder
                     s.Append(" [...]");
                 }
 
-                s.Append("\n");
+                s.Append('\n');
             }
         }
 
