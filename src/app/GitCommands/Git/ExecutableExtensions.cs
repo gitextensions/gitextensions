@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -113,7 +113,7 @@ public static partial class ExecutableExtensions
 #if DEBUG
             System.Diagnostics.Debug.WriteLine($"git {arguments} {Encoding.UTF8.GetString(input)}");
 #endif
-            await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
+            await process.StandardInput.BaseStream.WriteAsync(input.AsMemory(0, input.Length));
             process.StandardInput.Close();
         }
 #if DEBUG
@@ -228,7 +228,7 @@ public static partial class ExecutableExtensions
         if (input is not null)
         {
             // Note that output is not redirected, any output is written to the console
-            await process.StandardInput.BaseStream.WriteAsync(input, 0, input.Length);
+            await process.StandardInput.BaseStream.WriteAsync(input.AsMemory(0, input.Length));
             process.StandardInput.Close();
         }
 

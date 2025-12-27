@@ -1,4 +1,4 @@
-using System.Collections.Frozen;
+﻿using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Security;
@@ -669,7 +669,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         using FileStream stream = File.Create(saveAs);
-        await stream.WriteAsync(blobData, 0, blobData.Length);
+        await stream.WriteAsync(blobData.AsMemory(0, blobData.Length));
     }
 
     private static string GetSide(string side)
