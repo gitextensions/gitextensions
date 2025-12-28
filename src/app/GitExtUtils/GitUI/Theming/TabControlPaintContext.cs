@@ -258,10 +258,8 @@ internal class TabControlPaintContext
             _graphics.FillRectangle(backgroundBrush.Brush, pageRect);
         }
 
-        using (Pen borderPen = CreateBorderPen())
-        {
-            _graphics.DrawRectangle(borderPen, pageRect);
-        }
+        using Pen borderPen = CreateBorderPen();
+        _graphics.DrawRectangle(borderPen, pageRect);
     }
 
     private static Color GetParentBackColor(TabControl tabs)
