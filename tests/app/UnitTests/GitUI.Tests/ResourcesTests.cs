@@ -57,7 +57,7 @@ public class ResourcesTests
         // Read more info on format here: https://en.wikipedia.org/wiki/Portable_Network_Graphics#File_format
 
         // Verify header
-        ReadOnlySpan<byte> header = stackalloc byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+        ReadOnlySpan<byte> header = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
         if (!header.SequenceEqual(cursor[0..header.Length]))
         {
             throw new ArgumentException("PNG does not contain a valid header");
