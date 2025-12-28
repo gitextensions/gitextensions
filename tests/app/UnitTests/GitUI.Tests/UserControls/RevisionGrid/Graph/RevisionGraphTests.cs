@@ -444,7 +444,7 @@ public class RevisionGraphTests
                 prevCommit = currCommit;
             }
 
-            prevCommit.ParentIds = new ObjectId[] { };
+            prevCommit.ParentIds = [];
             yield return prevCommit;
         }
     }
