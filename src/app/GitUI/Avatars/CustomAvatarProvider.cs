@@ -76,7 +76,7 @@ public sealed partial class CustomAvatarProvider : IAvatarProvider
     {
         // if the segment is a tag like "<Demo>", we extract the name
         // and try to parse it as an AvatarProvider enum.
-        if (providerTemplate.StartsWith("<") && providerTemplate.EndsWith(">"))
+        if (providerTemplate.StartsWith('<') && providerTemplate.EndsWith('>'))
         {
             string providerName = providerTemplate[1..^1];
 

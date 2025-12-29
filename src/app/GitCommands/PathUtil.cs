@@ -369,7 +369,7 @@ public static partial class PathUtil
                 path = path[..^standardRepositorySuffix.Length];
             }
 
-            if (path.Contains("\\") || path.Contains("/"))
+            if (path.Contains('\\') || path.Contains('/'))
             {
                 name = path[(path.LastIndexOfAny(new[] { '\\', '/' }) + 1)..];
             }
@@ -455,7 +455,7 @@ public static partial class PathUtil
         if (IsInUserProfile(path))
         {
             int length = path.Length - UserProfilePath.Length;
-            if (path.EndsWith("/") || path.EndsWith("\\"))
+            if (path.EndsWith('/') || path.EndsWith('\\'))
             {
                 length--;
             }

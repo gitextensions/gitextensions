@@ -1180,7 +1180,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             if (!AppSettings.FollowRenamesInFileHistory
 
                 // The command line can be very long for folders, just ignore.
-                || path.EndsWith("/")
+                || path.EndsWith('/')
                 || path.EndsWith("/\"")
 
                 // --follow only accepts exactly one argument, error for all other

@@ -144,9 +144,9 @@ public partial class SshSettingsPage : SettingsPageWithHeader
 
     private bool AutoFindPuttyPathsInDir(string installdir)
     {
-        if (!installdir.EndsWith("\\"))
+        if (!installdir.EndsWith('\\'))
         {
-            installdir += "\\";
+            installdir += '\\';
         }
 
         if (!File.Exists(PlinkPath.Text))

@@ -86,7 +86,7 @@ public sealed partial class ScriptOptionsParser
     {
         option = option ?? throw new ArgumentNullException(nameof(option));
 
-        return option.StartsWith("s");
+        return option.StartsWith('s');
     }
 
     public static (string? arguments, bool abort) Parse(string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider = null)
@@ -121,7 +121,7 @@ public sealed partial class ScriptOptionsParser
                 continue;
             }
 
-            if (currentRevision is null && (option.StartsWith("c") || option == head))
+            if (currentRevision is null && (option.StartsWith('c') || option == head))
             {
                 currentRevision = GetCurrentRevision(uiCommands.Module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches,
                     loadBody: Contains(arguments, currentMessage));
@@ -512,13 +512,13 @@ public sealed partial class ScriptOptionsParser
         static string Quote(string newString)
         {
             string newStringQuoted = QuoteRegex().Replace(newString, "\\\"");
-            newStringQuoted = "\"" + newStringQuoted;
-            if (newStringQuoted.EndsWith("\\"))
+            newStringQuoted = '"' + newStringQuoted;
+            if (newStringQuoted.EndsWith('\\'))
             {
-                newStringQuoted += "\\";
+                newStringQuoted += '\\';
             }
 
-            newStringQuoted += "\"";
+            newStringQuoted += '"';
             return newStringQuoted;
         }
     }

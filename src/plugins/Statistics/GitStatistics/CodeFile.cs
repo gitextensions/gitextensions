@@ -65,19 +65,19 @@ public readonly struct CodeFile
             {
                 blankLineCount++;
             }
-            else if (inCommentBlock || line.StartsWith("'") || line.StartsWith("//"))
+            else if (inCommentBlock || line.StartsWith('\'') || line.StartsWith("//"))
             {
                 commentLineCount++;
             }
-            else if (extension.Equals(".py", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
+            else if (extension.Equals(".py", StringComparison.OrdinalIgnoreCase) && line.StartsWith('#'))
             {
                 commentLineCount++;
             }
-            else if (extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
+            else if (extension.Equals(".rb", StringComparison.OrdinalIgnoreCase) && line.StartsWith('#'))
             {
                 commentLineCount++;
             }
-            else if (extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.StartsWith("#"))
+            else if (extension.Equals(".pl", StringComparison.OrdinalIgnoreCase) && line.StartsWith('#'))
             {
                 commentLineCount++;
             }
@@ -89,14 +89,14 @@ public readonly struct CodeFile
             {
                 commentLineCount++;
             }
-            else if (extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.StartsWith("%"))
+            else if (extension.Equals(".m", StringComparison.OrdinalIgnoreCase) && line.StartsWith('%'))
             {
                 commentLineCount++;
             }
             else if ((extension.Equals(".asm", StringComparison.OrdinalIgnoreCase) ||
                       extension.Equals(".s", StringComparison.OrdinalIgnoreCase) ||
                       extension.Equals(".inc", StringComparison.OrdinalIgnoreCase)) &&
-                      line.StartsWith(";"))
+                      line.StartsWith(';'))
             {
                 commentLineCount++;
             }
@@ -144,7 +144,7 @@ public readonly struct CodeFile
                         inCommentBlock = true;
                     }
 
-                    if (line.StartsWith("{") && !line.StartsWith("{$"))
+                    if (line.StartsWith('{') && !line.StartsWith("{$"))
                     {
                         inCommentBlock = true;
                     }

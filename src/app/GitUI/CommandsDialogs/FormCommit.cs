@@ -2670,7 +2670,7 @@ public sealed partial class FormCommit : GitModuleForm
 
                 if (nextChar == '(')
                 {
-                    return ReplaceKeyword(newTitle => 2 + Math.Max(newTitle.IndexOf(":"), newTitle.IndexOf("(")));
+                    return ReplaceKeyword(newTitle => 2 + Math.Max(newTitle.IndexOf(':'), newTitle.IndexOf('(')));
                 }
             }
 

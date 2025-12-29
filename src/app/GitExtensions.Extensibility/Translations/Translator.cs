@@ -58,7 +58,7 @@ public static class Translator
             foreach (string fileName in Directory.GetFiles(translationDir, "*.xlf"))
             {
                 string name = Path.GetFileNameWithoutExtension(fileName);
-                if (name.IndexOf(".") > 0)
+                if (name.IndexOf('.') > 0)
                 {
                     continue;
                 }

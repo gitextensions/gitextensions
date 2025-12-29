@@ -193,7 +193,7 @@ public sealed class CommitMessageManager : ICommitMessageManager
         {
             // When a committemplate is used, skip comments and do not count them as line.
             // otherwise: "#" is probably not used for comment but for issue number
-            if (usingCommitTemplate && line.StartsWith("#"))
+            if (usingCommitTemplate && line.StartsWith('#'))
             {
                 continue;
             }

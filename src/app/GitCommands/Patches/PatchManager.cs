@@ -612,16 +612,16 @@ internal sealed partial class Chunk
                     patchLine.Selected = true;
                 }
 
-                if (line.StartsWith(" "))
+                if (line.StartsWith(' '))
                 {
                     result.AddContextLine(patchLine, inPreContext);
                 }
-                else if (line.StartsWith("-"))
+                else if (line.StartsWith('-'))
                 {
                     inPreContext = false;
                     result.AddDiffLine(patchLine, true);
                 }
-                else if (line.StartsWith("+"))
+                else if (line.StartsWith('+'))
                 {
                     inPreContext = false;
                     result.AddDiffLine(patchLine, false);

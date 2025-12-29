@@ -263,7 +263,7 @@ public class ConfigFile : IConfigFile
                 parseFunc = parseFunc(_fileContent[_pos]);
             }
 
-            if (_fileContent.Length > 0 && !_fileContent.EndsWith("\n"))
+            if (_fileContent.Length > 0 && !_fileContent.EndsWith('\n'))
             {
                 parseFunc('\n');
             }

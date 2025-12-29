@@ -76,7 +76,7 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
     private string BuildHttpProxy()
     {
         StringBuilder sb = new();
-        sb.Append("\"");
+        sb.Append('"');
         string username = _plugin.Username.ValueOrDefault(_settings);
         if (!string.IsNullOrEmpty(username))
         {
@@ -84,22 +84,22 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
             sb.Append(username);
             if (!string.IsNullOrEmpty(password))
             {
-                sb.Append(":");
+                sb.Append(':');
                 sb.Append(password);
             }
 
-            sb.Append("@");
+            sb.Append('@');
         }
 
         sb.Append(_plugin.HttpProxy.ValueOrDefault(_settings));
         string port = _plugin.HttpProxyPort.ValueOrDefault(_settings);
         if (!string.IsNullOrEmpty(port))
         {
-            sb.Append(":");
+            sb.Append(':');
             sb.Append(port);
         }
 
-        sb.Append("\"");
+        sb.Append('"');
         return sb.ToString();
     }
 

@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
@@ -405,7 +405,7 @@ public partial class WordDictionary : Component
                     }
 
                     // check for section flag
-                    if (tempLine.StartsWith("[") && tempLine.EndsWith("]"))
+                    if (tempLine.StartsWith('[') && tempLine.EndsWith(']'))
                     {
                         // set current section that is being parsed
                         currentSection = tempLine;

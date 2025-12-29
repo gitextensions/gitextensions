@@ -564,7 +564,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
         if (postIndex >= 0)
         {
             int endLen = restServicePath.Length - postIndex;
-            if (restServicePath.EndsWith("/"))
+            if (restServicePath.EndsWith('/'))
             {
                 endLen--;
             }
@@ -599,7 +599,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
             }
         }
 
-        if (!restServicePath.EndsWith("/"))
+        if (!restServicePath.EndsWith('/'))
         {
             restServicePath += "/";
         }

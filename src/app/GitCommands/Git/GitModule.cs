@@ -1614,7 +1614,7 @@ public sealed partial class GitModule : IGitModule
 
         if (!string.IsNullOrEmpty(remoteBranch))
         {
-            if (remoteBranch.StartsWith("+"))
+            if (remoteBranch.StartsWith('+'))
             {
                 remoteBranch = remoteBranch.Remove(0, 1);
             }
@@ -3400,7 +3400,7 @@ public sealed partial class GitModule : IGitModule
                 finalLineNumber = int.Parse(match.Groups["finallinenum"].Value);
                 originLineNumber = int.Parse(match.Groups["origlinenum"].Value);
             }
-            else if (line.StartsWith("\t"))
+            else if (line.StartsWith('\t'))
             {
                 // The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
                 string text = ReEncodeStringFromLossless(line[1..], encoding);
