@@ -178,7 +178,7 @@ public class ConfigFile : IConfigFile
 
         if (configSection is null)
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         return configSection.GetValues(keyName);

@@ -45,7 +45,7 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
     public string Guid => ObjectId.ToString();
 
     // TODO this should probably be null when not yet populated, similar to how ParentIds works
-    public IReadOnlyList<IGitRef> Refs { get; set; } = Array.Empty<IGitRef>();
+    public IReadOnlyList<IGitRef> Refs { get; set; } = [];
 
     /// <summary>
     /// Gets the revision's parent IDs.

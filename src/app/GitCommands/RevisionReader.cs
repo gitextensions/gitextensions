@@ -113,7 +113,7 @@ public sealed class RevisionReader
     {
         if (untracked.Count == 0)
         {
-            return Array.Empty<GitRevision>();
+            return [];
         }
 
         GitArgumentBuilder arguments = new("log")
@@ -139,7 +139,7 @@ public sealed class RevisionReader
     {
         if (string.IsNullOrWhiteSpace(olderCommitHash) || string.IsNullOrWhiteSpace(newerCommitHash))
         {
-            return Array.Empty<GitRevision>();
+            return [];
         }
 
         GitArgumentBuilder arguments = new("log")

@@ -122,16 +122,16 @@ public sealed partial class TestComposition
         => AddAssemblies((IEnumerable<Assembly>?)assemblies);
 
     public TestComposition AddAssemblies(IEnumerable<Assembly>? assemblies)
-        => WithAssemblies(Assemblies.Union(assemblies ?? Array.Empty<Assembly>()));
+        => WithAssemblies(Assemblies.Union(assemblies ?? []));
 
     public TestComposition AddParts(IEnumerable<Type>? types)
-        => WithParts(Parts.Union(types ?? Array.Empty<Type>()));
+        => WithParts(Parts.Union(types ?? []));
 
     public TestComposition AddParts(params Type[]? types)
         => AddParts((IEnumerable<Type>?)types);
 
     public TestComposition AddExcludedPartTypes(IEnumerable<Type>? types)
-        => WithExcludedPartTypes(ExcludedPartTypes.Union(types ?? Array.Empty<Type>()));
+        => WithExcludedPartTypes(ExcludedPartTypes.Union(types ?? []));
 
     public TestComposition AddExcludedPartTypes(params Type[]? types)
         => AddExcludedPartTypes((IEnumerable<Type>?)types);
@@ -143,16 +143,16 @@ public sealed partial class TestComposition
         => RemoveAssemblies((IEnumerable<Assembly>?)assemblies);
 
     public TestComposition RemoveAssemblies(IEnumerable<Assembly>? assemblies)
-        => WithAssemblies(Assemblies.Except(assemblies ?? Array.Empty<Assembly>()));
+        => WithAssemblies(Assemblies.Except(assemblies ?? []));
 
     public TestComposition RemoveParts(IEnumerable<Type>? types)
-        => WithParts(Parts.Except(types ?? Array.Empty<Type>()));
+        => WithParts(Parts.Except(types ?? []));
 
     public TestComposition RemoveParts(params Type[]? types)
         => RemoveParts((IEnumerable<Type>?)types);
 
     public TestComposition RemoveExcludedPartTypes(IEnumerable<Type>? types)
-        => WithExcludedPartTypes(ExcludedPartTypes.Except(types ?? Array.Empty<Type>()));
+        => WithExcludedPartTypes(ExcludedPartTypes.Except(types ?? []));
 
     public TestComposition RemoveExcludedPartTypes(params Type[]? types)
         => RemoveExcludedPartTypes((IEnumerable<Type>?)types);

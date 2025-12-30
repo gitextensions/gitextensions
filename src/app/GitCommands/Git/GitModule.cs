@@ -2065,7 +2065,7 @@ public sealed partial class GitModule : IGitModule
         ////TODO: Handle non-empty result.StandardError if not result.ExitedSuccessfully
         return result.ExitedSuccessfully
             ? ParseRemotes(result)
-            : Array.Empty<Remote>();
+            : [];
 
         IReadOnlyList<Remote> ParseRemotes(ExecutionResult result)
         {
@@ -2998,7 +2998,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         errorOutput = output;
-        return Array.Empty<IGitRef>();
+        return [];
     }
 
     /// <summary>
@@ -3019,7 +3019,7 @@ public sealed partial class GitModule : IGitModule
         ExecutionResult result = _gitExecutable.Execute(cmd, throwOnErrorExit: false);
         return result.ExitedSuccessfully
             ? ParseRefs(result.StandardOutput)
-            : Array.Empty<IGitRef>();
+            : [];
     }
 
     public async Task<string[]> GetMergedBranchesAsync(bool includeRemote, bool fullRefname, string? commit, CancellationToken cancellationToken)
@@ -3098,7 +3098,7 @@ public sealed partial class GitModule : IGitModule
     {
         if (!getLocal && !getRemote)
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         GitArgumentBuilder args = new("branch")
@@ -3112,7 +3112,7 @@ public sealed partial class GitModule : IGitModule
         if (!exec.ExitedSuccessfully)
         {
             // Error occurred, no matches (no error presented to the user)
-            return Array.Empty<string>();
+            return [];
         }
 
         string[] result = exec.StandardOutput.Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
@@ -3149,7 +3149,7 @@ public sealed partial class GitModule : IGitModule
         if (!exec.ExitedSuccessfully)
         {
             // Error occurred, no matches (no error presented to the user)
-            return Array.Empty<string>();
+            return [];
         }
 
         return exec.StandardOutput.Split(Delimiters.GitOutput, StringSplitOptions.RemoveEmptyEntries);
@@ -3205,7 +3205,7 @@ public sealed partial class GitModule : IGitModule
         }
         else
         {
-            return Array.Empty<string>();
+            return [];
         }
     }
 
@@ -3296,7 +3296,7 @@ public sealed partial class GitModule : IGitModule
             // We should never get here...
             Debug.WriteLine("Error parsing output from command: {0}\n\nPlease report a bug!", args);
 
-            return new GitBlame(Array.Empty<GitBlameLine>());
+            return new GitBlame([]);
         }
     }
 
@@ -3926,7 +3926,7 @@ public sealed partial class GitModule : IGitModule
 
         if (string.IsNullOrWhiteSpace(fileList))
         {
-            return Array.Empty<GitItemStatus>();
+            return [];
         }
 
         LazyStringSplit files = fileList.LazySplit('\0', StringSplitOptions.RemoveEmptyEntries);

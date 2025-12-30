@@ -110,7 +110,7 @@ public class ConfigSection : IConfigSection
 
     public IReadOnlyList<string> GetValues(string key)
     {
-        return _configKeys.TryGetValue(key, out List<string>? configKey) ? configKey : Array.Empty<string>();
+        return _configKeys.TryGetValue(key, out List<string>? configKey) ? configKey : [];
     }
 
     public override string ToString()

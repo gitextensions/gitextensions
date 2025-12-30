@@ -174,7 +174,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
     {
         await TaskScheduler.Default;
 
-        IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyFavouriteHistory) ?? Array.Empty<Repository>();
+        IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyFavouriteHistory) ?? [];
 
         // backwards compatibility - port the existing user's categorised repositories
         (IList<Repository> migrated, bool changed) = await _repositoryHistoryMigrator.MigrateAsync(history);
@@ -199,7 +199,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
         IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyRecentHistory);
         if (history is null)
         {
-            return Array.Empty<Repository>();
+            return [];
         }
 
         return [.. AdjustHistorySize(history, size)];

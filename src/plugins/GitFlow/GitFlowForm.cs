@@ -156,7 +156,7 @@ public partial class GitFlowForm : GitExtensionsFormBase
 
         if (!result.ExitedSuccessfully || result.StandardOutput is null)
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         return result.StandardOutput

@@ -199,7 +199,7 @@ public class ReferenceRepository : IDisposable
     public void Fetch(string remoteName)
     {
         using Repository repository = new(Module.WorkingDir);
-        Commands.Fetch(repository, remoteName, Array.Empty<string>(), new FetchOptions(), null);
+        Commands.Fetch(repository, remoteName, [], new FetchOptions(), null);
     }
 
     private static Signature GetAuthorSignature() => new(AuthorName, AuthorEmail, DateTimeOffset.Now);

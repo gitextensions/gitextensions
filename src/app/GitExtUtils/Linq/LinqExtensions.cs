@@ -103,7 +103,7 @@ public static class LinqExtensions
             {
                 if (collection.Count == 0)
                 {
-                    return Array.Empty<T>();
+                    return [];
                 }
 
                 T[] items = new T[collection.Count];
@@ -115,7 +115,7 @@ public static class LinqExtensions
         using IEnumerator<T> e = source.GetEnumerator();
         if (!e.MoveNext())
         {
-            return Array.Empty<T>();
+            return [];
         }
 
         List<T> list = [];

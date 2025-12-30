@@ -98,7 +98,7 @@ public class GitHubRepo : IHostedRepository
                 .ToList();
         }
 
-        return Array.Empty<IPullRequestInformation>();
+        return [];
     }
 
     public int CreatePullRequest(string myBranch, string remoteBranch, string title, string body)

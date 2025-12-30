@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -535,11 +535,11 @@ public sealed partial class FileStatusList : GitModuleControl
         get
         {
             return GitItemStatusesWithDescription?.SelectMany(tuple => tuple.Statuses).AsReadOnlyList()
-                   ?? Array.Empty<GitItemStatus>();
+                   ?? [];
         }
     }
 
-    private IReadOnlyList<FileStatusWithDescription> GitItemStatusesWithDescription { get; set; } = Array.Empty<FileStatusWithDescription>();
+    private IReadOnlyList<FileStatusWithDescription> GitItemStatusesWithDescription { get; set; } = [];
 
     public bool GroupByRevision { get; set; } = false;
 

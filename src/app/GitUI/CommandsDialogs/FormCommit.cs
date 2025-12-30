@@ -928,7 +928,7 @@ public sealed partial class FormCommit : GitModuleForm
     /// </summary>
     private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus> allChangedFiles)
     {
-        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? [];
 
         List<GitItemStatus> unstagedFiles = [];
         List<GitItemStatus> stagedFiles = [];
@@ -1444,7 +1444,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void UnstageAllFiles()
     {
-        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? [];
 
         OnStageAreaLoaded += StageAreaLoaded;
 
@@ -1649,7 +1649,7 @@ public sealed partial class FormCommit : GitModuleForm
 
                 if (Staged.IsEmpty)
                 {
-                    IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+                    IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? [];
 
                     _currentFilesList = Unstaged;
                     RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
@@ -1796,7 +1796,7 @@ public sealed partial class FormCommit : GitModuleForm
             EnableStageButtons(false);
             try
             {
-                IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+                IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? [];
 
                 Unstaged.StoreNextItemToSelect();
                 toolStripProgressBar1.Visible = true;

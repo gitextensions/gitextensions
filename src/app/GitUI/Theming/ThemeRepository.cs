@@ -48,7 +48,7 @@ public class ThemeRepository : IThemeRepository
     }
 
     public Theme GetInvariantTheme() =>
-        GetTheme(new ThemeId(InvariantThemeName, isBuiltin: true), variations: Array.Empty<string>());
+        GetTheme(new ThemeId(InvariantThemeName, isBuiltin: true), variations: []);
 
     public IEnumerable<ThemeId> GetThemeIds() =>
         GetBuiltinThemeIds().Concat(GetUserCustomizedThemeIds());

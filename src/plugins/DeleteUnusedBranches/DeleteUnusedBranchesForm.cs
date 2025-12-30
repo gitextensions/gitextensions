@@ -137,7 +137,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
         if (!result.ExitedSuccessfully)
         {
             MessageBox.Show(this, result.AllOutput, $"git {args}", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            return Array.Empty<string>();
+            return [];
         }
 
         bool withoutRegexFilter = string.IsNullOrEmpty(context.RegexFilter);

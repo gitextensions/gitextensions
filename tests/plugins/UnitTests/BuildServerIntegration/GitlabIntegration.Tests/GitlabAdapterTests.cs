@@ -50,7 +50,7 @@ internal class GitlabAdapterTests
             PageSize = 1,
             PageNumber = 1,
             Total = 0,
-            Items = Array.Empty<GitlabPipeline>()
+            Items = []
         };
 
         List<BuildInfo> expected = [];

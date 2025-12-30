@@ -55,7 +55,7 @@ internal partial class FailedPluginWrapper : IGitPlugin
         return false;
     }
 
-    public IEnumerable<ISetting> GetSettings() => Array.Empty<ISetting>();
+    public IEnumerable<ISetting> GetSettings() => [];
 
     public void Register(IGitUICommands gitUiCommands)
     {

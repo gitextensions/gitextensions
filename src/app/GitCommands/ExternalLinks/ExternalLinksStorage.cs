@@ -78,7 +78,7 @@ public sealed class ExternalLinksStorage : IExternalLinksStorage
     {
         if (string.IsNullOrWhiteSpace(xmlString))
         {
-            return Array.Empty<ExternalLinkDefinition>();
+            return [];
         }
 
         try
@@ -93,6 +93,6 @@ public sealed class ExternalLinksStorage : IExternalLinksStorage
             Debug.WriteLine(ex.Message);
         }
 
-        return Array.Empty<ExternalLinkDefinition>();
+        return [];
     }
 }

@@ -54,13 +54,13 @@ public sealed class RepositoryStorage : IRepositoryStorage
         string? setting = AppSettings.GetString(key, null);
         if (setting is null)
         {
-            return Array.Empty<Repository>();
+            return [];
         }
 
         IReadOnlyList<Repository> history = _repositorySerialiser.Deserialize(setting);
         if (history is null)
         {
-            return Array.Empty<Repository>();
+            return [];
         }
 
         return history;

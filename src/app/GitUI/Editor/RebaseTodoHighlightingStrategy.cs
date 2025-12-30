@@ -19,13 +19,13 @@ internal sealed class RebaseTodoHighlightingStrategy : GitHighlightingStrategyBa
 
     private readonly Dictionary<char, (string longForm, HighlightColor color, string[] options)> _commandByFirstChar = new()
     {
-        { 'p', ("pick", new HighlightColor(nameof(SystemColors.InfoText), bold: true, italic: false), Array.Empty<string>()) },
-        { 'r', ("reword", new HighlightColor(Application.IsDarkModeEnabled ? Color.MediumPurple : Color.Purple, bold: true, italic: false, adaptable: false), Array.Empty<string>()) },
-        { 'e', ("edit", new HighlightColor(Application.IsDarkModeEnabled ? Color.LightGray : Color.DarkGray, bold: true, italic: false, adaptable: false), Array.Empty<string>()) },
-        { 's', ("squash", new HighlightColor(Application.IsDarkModeEnabled ? Color.CornflowerBlue : Color.DarkBlue, bold: true, italic: false, adaptable: false), Array.Empty<string>()) },
+        { 'p', ("pick", new HighlightColor(nameof(SystemColors.InfoText), bold: true, italic: false), []) },
+        { 'r', ("reword", new HighlightColor(Application.IsDarkModeEnabled ? Color.MediumPurple : Color.Purple, bold: true, italic: false, adaptable: false), []) },
+        { 'e', ("edit", new HighlightColor(Application.IsDarkModeEnabled ? Color.LightGray : Color.DarkGray, bold: true, italic: false, adaptable: false), []) },
+        { 's', ("squash", new HighlightColor(Application.IsDarkModeEnabled ? Color.CornflowerBlue : Color.DarkBlue, bold: true, italic: false, adaptable: false), []) },
         { 'f', ("fixup", new HighlightColor(Application.IsDarkModeEnabled ? Color.Coral : Color.LightCoral, bold: true, italic: false, adaptable: false), new[] { "-C", "-c" }) },
-        { 'x', ("exec", new HighlightColor(nameof(SystemColors.GrayText), bold: true, italic: false), Array.Empty<string>()) },
-        { 'd', ("drop", new HighlightColor(Application.IsDarkModeEnabled ? Color.IndianRed : Color.Red, bold: true, italic: false, adaptable: false), Array.Empty<string>()) }
+        { 'x', ("exec", new HighlightColor(nameof(SystemColors.GrayText), bold: true, italic: false), []) },
+        { 'd', ("drop", new HighlightColor(Application.IsDarkModeEnabled ? Color.IndianRed : Color.Red, bold: true, italic: false, adaptable: false), []) }
     };
 
     public RebaseTodoHighlightingStrategy(IGitModule module)

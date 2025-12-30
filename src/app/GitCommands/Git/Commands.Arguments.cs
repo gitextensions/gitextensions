@@ -1,4 +1,4 @@
-using GitCommands.Config;
+﻿using GitCommands.Config;
 using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -651,7 +651,7 @@ public static partial class Commands
 
     public static ArgumentString StashSave(bool untracked, bool keepIndex, string message, IReadOnlyList<string>? selectedFiles)
     {
-        selectedFiles ??= Array.Empty<string>();
+        selectedFiles ??= [];
 
         bool isPartialStash = selectedFiles.Any();
 

@@ -102,7 +102,7 @@ public sealed partial class ScriptOptionsParser
         GitRevision? selectedRevision = null;
         GitRevision? currentRevision = null;
 
-        IReadOnlyList<GitRevision> allSelectedRevisions = Array.Empty<GitRevision>();
+        IReadOnlyList<GitRevision> allSelectedRevisions = [];
         List<IGitRef> selectedLocalBranches = [];
         List<IGitRef> selectedRemoteBranches = [];
         List<string> selectedRemotes = [];
@@ -252,7 +252,7 @@ public sealed partial class ScriptOptionsParser
         GitRevision currentRevision;
         IEnumerable<IGitRef> refs;
         currentRevision = module.GetRevision(shortFormat: !loadBody, loadRefs: true);
-        refs = currentRevision?.Refs ?? Array.Empty<IGitRef>();
+        refs = currentRevision?.Refs ?? [];
 
         foreach (IGitRef gitRef in refs)
         {

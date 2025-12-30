@@ -73,7 +73,7 @@ public sealed class RemoteRepositoryManager : IRepositoryManager
         await TaskScheduler.Default;
 
         IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyRemoteHistory);
-        return history is null ? Array.Empty<Repository>() : AdjustHistorySize(history, AppSettings.RemotesCacheLength).ToList();
+        return history is null ? [] : AdjustHistorySize(history, AppSettings.RemotesCacheLength).ToList();
     }
 
     /// <summary>

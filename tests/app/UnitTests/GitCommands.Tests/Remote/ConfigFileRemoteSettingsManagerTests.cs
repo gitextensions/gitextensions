@@ -35,7 +35,7 @@ internal class ConfigFileRemoteSettingsManagerTests
     [Test]
     public void LoadRemotes_should_not_populate_remotes_if_none()
     {
-        _module.GetRemoteNames().Returns(x => Array.Empty<string>());
+        _module.GetRemoteNames().Returns(x => []);
 
         IEnumerable<ConfigFileRemote> remotes = _remotesManager.LoadRemotes(true);
 

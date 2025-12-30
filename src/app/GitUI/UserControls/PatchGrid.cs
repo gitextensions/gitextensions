@@ -17,7 +17,7 @@ public partial class PatchGrid : GitModuleControl
 {
     private readonly TranslationString _unableToShowPatchDetails = new("Unable to show details of patch file.");
     private readonly ICommitDataManager _commitDataManager;
-    private IList<PatchFile> _skipped = Array.Empty<PatchFile>();
+    private IList<PatchFile> _skipped = [];
     private bool _isManagingRebase;
 
     [GeneratedRegex(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.ExplicitCapture)]

@@ -49,7 +49,7 @@ public sealed partial class FileStatusDiffCalculator
         if (_fileStatusDiffCalculatorInfo.Revisions?.Count is not > 0
             || _fileStatusDiffCalculatorInfo.Revisions[0] is not GitRevision selectedRev)
         {
-            return Array.Empty<FileStatusWithDescription>();
+            return [];
         }
 
         List<FileStatusWithDescription> fileStatusDescs = refreshDiff

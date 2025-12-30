@@ -21,7 +21,7 @@ public sealed class LinqExtensionsTests
     [Test]
     public void AsReadOnlyList_returns_object_unchanged_when_has_required_interface()
     {
-        Test(Array.Empty<int>());
+        Test([]);
         Test(new int[1]);
         Test(new List<int>());
         Test(new List<int> { 1, 2, 3 });

@@ -1729,7 +1729,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 revisionDiff.RepositoryChanged();
             }
 
-            RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
+            RevisionInfo.SetRevisionWithChildren(revision: null, children: []);
             RevisionGrid.ResumeRefreshRevisions();
 
             RefreshRevisions();
@@ -2811,7 +2811,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             // Get the "main" stash commit, including the reflog selector
             Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
                 !AppSettings.ShowStashes
-                ? Array.Empty<GitRevision>()
+                ? []
                 : new RevisionReader(new GitModule(UICommands.Module.WorkingDir)).GetStashes(CancellationToken.None));
 
             RefreshLeftPanel(new FilteredGitRefsProvider(UICommands.Module).GetRefs, getStashRevs, forceRefresh: true);
