@@ -145,22 +145,12 @@ public static class FileHelper
         if (content?.Length is > 0)
         {
             int nullCount = 0;
-            foreach (char c in content.Select(v => (char)v))
+            foreach (byte b in content)
             {
-                if (c == '\0')
+                if (b == 0 && ++nullCount > 5)
                 {
-                    nullCount++;
+                    return true;
                 }
-
-                if (nullCount > 5)
-                {
-                    break;
-                }
-            }
-
-            if (nullCount > 5)
-            {
-                return true;
             }
         }
 
