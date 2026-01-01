@@ -75,7 +75,7 @@ If you want to **update a portable version**, you should delete all the files an
 <table>
   <tr>
     <td>
-      <strong>Latest Release: v6.0.2</strong>
+      <strong>Latest Release: v6.0.5</strong>
     </td>
     <td>
       <a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a><br />
@@ -94,7 +94,7 @@ If you want to **update a portable version**, you should delete all the files an
   </tr>
   <tr>
     <td>
-      <strong>Visual Studio VSIX (2022)</strong>
+      <strong>Visual Studio VSIX (2022 and later)</strong>
     </td>
     <td>
       <a href="https://marketplace.visualstudio.com/items?itemName=GitExtensionsApp.VS2022">[ Download ]</a> or install from Visual Studio via Extensions
