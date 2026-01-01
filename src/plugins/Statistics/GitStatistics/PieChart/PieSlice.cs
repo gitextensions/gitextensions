@@ -1,4 +1,4 @@
-using System.Drawing.Drawing2D;
+﻿using System.Drawing.Drawing2D;
 using Microsoft;
 
 namespace GitExtensions.Plugins.GitStatistics.PieChart;
@@ -356,13 +356,11 @@ public class PieSlice : IDisposable
     /// </summary>
     public virtual void Dispose()
     {
-        if (Pen is not null)
-        {
-            Pen.Dispose();
-            Pen = null;
-        }
+        Pen?.Dispose();
+        Pen = null;
 
         DisposeBrushes();
+        GC.SuppressFinalize(this);
     }
 
     #endregion
@@ -427,7 +425,7 @@ public class PieSlice : IDisposable
         PieSlice pieSlice2 = (PieSlice)MemberwiseClone();
         pieSlice2.SweepAngle = (transformedSplitAngle - StartAngle + 360) % 360;
         pieSlice2.InitializeSides();
-        return new[] { pieSlice1, pieSlice2 };
+        return [pieSlice1, pieSlice2];
     }
 
     /// <summary>
@@ -719,29 +717,14 @@ public class PieSlice : IDisposable
     /// </summary>
     protected void DisposeBrushes()
     {
-        if (BrushSurface is not null)
-        {
-            BrushSurface.Dispose();
-            BrushSurface = null;
-        }
-
-        if (BrushStartSide is not null)
-        {
-            BrushStartSide.Dispose();
-            BrushStartSide = null;
-        }
-
-        if (BrushEndSide is not null)
-        {
-            BrushEndSide.Dispose();
-            BrushEndSide = null;
-        }
-
-        if (BrushPeripherySurface is not null)
-        {
-            BrushPeripherySurface.Dispose();
-            BrushPeripherySurface = null;
-        }
+        BrushSurface?.Dispose();
+        BrushSurface = null;
+        BrushStartSide?.Dispose();
+        BrushStartSide = null;
+        BrushEndSide?.Dispose();
+        BrushEndSide = null;
+        BrushPeripherySurface?.Dispose();
+        BrushPeripherySurface = null;
     }
 
     /// <summary>
@@ -797,8 +780,8 @@ public class PieSlice : IDisposable
                 InterpolationColors =
                     new ColorBlend
                     {
-                        Colors = new[] { color1, color, color2 },
-                        Positions = new[] { 0F, 0.1F, 1.0F }
+                        Colors = [color1, color, color2],
+                        Positions = [0F, 0.1F, 1.0F]
                     }
             };
     }
@@ -1082,13 +1065,12 @@ public class PieSlice : IDisposable
             return Quadrilateral
                 .Contains(
                     point,
-                    new[]
-                    {
+                    [
                         point1,
                         new PointF(point1.X, point1.Y + SliceHeight),
                         new PointF(point2.X, point2.Y + SliceHeight),
                         point2
-                    });
+                    ]);
         }
 
         return false;

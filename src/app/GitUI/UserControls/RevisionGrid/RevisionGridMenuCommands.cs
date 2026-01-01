@@ -408,7 +408,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
             {
                 Name = "showRelativeDateToolStripMenuItem",
                 Text = "Show relati&ve date",
-                ExecuteAction = () => _revisionGrid.ToggleShowRelativeDate(EventArgs.Empty),
+                ExecuteAction = () => _revisionGrid.ToggleShowRelativeDate(),
                 IsCheckedFunc = () => AppSettings.RelativeDate
             },
 

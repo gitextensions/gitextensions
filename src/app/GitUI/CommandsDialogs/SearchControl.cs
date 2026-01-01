@@ -134,6 +134,7 @@ public partial class SearchControl<T> : UserControl, IDisposable where T : class
     void IDisposable.Dispose()
     {
         _backgroundLoader?.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     private void txtSearchBox_TextChange(object sender, EventArgs e)

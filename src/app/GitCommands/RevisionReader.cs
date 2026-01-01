@@ -113,7 +113,7 @@ public sealed class RevisionReader
     {
         if (untracked.Count == 0)
         {
-            return Array.Empty<GitRevision>();
+            return [];
         }
 
         GitArgumentBuilder arguments = new("log")
@@ -139,7 +139,7 @@ public sealed class RevisionReader
     {
         if (string.IsNullOrWhiteSpace(olderCommitHash) || string.IsNullOrWhiteSpace(newerCommitHash))
         {
-            return Array.Empty<GitRevision>();
+            return [];
         }
 
         GitArgumentBuilder arguments = new("log")
@@ -479,7 +479,7 @@ public sealed class RevisionReader
         if (noParents <= 0)
         {
             offset++;
-            parentIds = Array.Empty<ObjectId>();
+            parentIds = [];
         }
         else
         {
@@ -511,7 +511,7 @@ public sealed class RevisionReader
         // Decimal ASCII seconds since the unix epoch
         if (!Utf8Parser.TryParse(bufferSpan.Slice(offset), out long authorUnixTime, out int bytesConsumed))
         {
-            ParseAssert($"Log parse error, not enough data for authortime: {buffer.Length} {offset} {buffer.Slice(offset).ToString()}");
+            ParseAssert($"Log parse error, not enough data for authortime: {buffer.Length} {offset} {buffer.Slice(offset)}");
             revision = default;
             return false;
         }
@@ -519,7 +519,7 @@ public sealed class RevisionReader
         offset += bytesConsumed + 1;
         if (!Utf8Parser.TryParse(bufferSpan.Slice(offset), out long commitUnixTime, out bytesConsumed))
         {
-            ParseAssert($"Log parse error, not enough data for committime: {buffer.Length} {offset} {buffer.Slice(offset).ToString()}");
+            ParseAssert($"Log parse error, not enough data for committime: {buffer.Length} {offset} {buffer.Slice(offset)}");
             revision = default;
             return false;
         }

@@ -46,7 +46,7 @@ public class SubmoduleTestHelpers
 
         return;
 
-        void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
+        static void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
         {
         }
     }

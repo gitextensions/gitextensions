@@ -123,7 +123,7 @@ Inactive remote is completely invisible to git.");
 
         _lvgEnabled = new ListViewGroup(_lvgEnabledHeader.Text, HorizontalAlignment.Left);
         _lvgDisabled = new ListViewGroup(_lvgDisabledHeader.Text, HorizontalAlignment.Left);
-        Remotes.Groups.AddRange(new[] { _lvgEnabled, _lvgDisabled });
+        Remotes.Groups.AddRange([_lvgEnabled, _lvgDisabled]);
 
         Application.Idle += application_Idle;
 
@@ -164,16 +164,16 @@ Inactive remote is completely invisible to git.");
         // we need to unwire and rewire the events to avoid excessive flickering
         Remotes.SelectedIndexChanged -= Remotes_SelectedIndexChanged;
         Remotes.Items.Clear();
-        Remotes.Items.AddRange(UserGitRemotes.Select(remote =>
+        Remotes.Items.AddRange([.. UserGitRemotes.Select(remote =>
         {
             ListViewGroup group = remote.Disabled ? _lvgDisabled : _lvgEnabled;
             Color color = remote.Disabled ? SystemColors.GrayText : SystemColors.WindowText;
             return new ListViewItem(group) { Text = remote.Name, Tag = remote, ForeColor = color };
-        }).ToArray());
+        })]);
         Remotes.SelectedIndexChanged += Remotes_SelectedIndexChanged;
 
         Remotes.SelectedIndices.Clear();
-        if (UserGitRemotes.Any())
+        if (UserGitRemotes.Count != 0)
         {
             if (!string.IsNullOrEmpty(preselectRemote))
             {
@@ -231,7 +231,7 @@ Inactive remote is completely invisible to git.");
         Validates.NotNull(_remotesManager);
 
         // refresh registered git remotes
-        UserGitRemotes = _remotesManager.LoadRemotes(true).ToList();
+        UserGitRemotes = [.. _remotesManager.LoadRemotes(true)];
 
         InitialiseTabRemotes(preselectRemote);
 
@@ -293,7 +293,7 @@ Inactive remote is completely invisible to git.");
 
     private void InitialiseTabDefaultPullBehaviors(string? preselectLocal = null)
     {
-        List<IGitRef> heads = Module.GetRefs(RefsFilter.Heads).OrderBy(r => r.LocalName).ToList();
+        List<IGitRef> heads = [.. Module.GetRefs(RefsFilter.Heads).OrderBy(r => r.LocalName)];
         SortableGitRefList headsList = new();
         headsList.AddRange(heads);
 
@@ -308,7 +308,7 @@ Inactive remote is completely invisible to git.");
         RemoteBranches.ClearSelection();
         RemoteBranches.SelectionChanged += RemoteBranchesSelectionChanged;
         DataGridViewRow preselectLocalRow = RemoteBranches.Rows.Cast<DataGridViewRow>().
-            FirstOrDefault(r => r.DataBoundItem is IGitRef gitRef ? gitRef.LocalName == preselectLocal : false);
+            FirstOrDefault(r => r.DataBoundItem is IGitRef gitRef && gitRef.LocalName == preselectLocal);
         if (preselectLocalRow is not null)
         {
             preselectLocalRow.Selected = true;
@@ -797,7 +797,7 @@ Inactive remote is completely invisible to git.");
             if (candidates.Count > 0)
             {
                 string previousValues = combobox.Text;
-                IList<Repository> proposedRepositories = _repositoryHistory.ToList();
+                IList<Repository> proposedRepositories = [.. _repositoryHistory];
                 bool added = false;
                 foreach (string url in candidates)
                 {

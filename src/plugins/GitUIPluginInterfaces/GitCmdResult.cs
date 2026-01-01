@@ -8,9 +8,9 @@ public struct CmdResult
     public string? StdError;
     public int ExitCode;
 
-    public bool ExitedSuccessfully => ExitCode == 0;
+    public readonly bool ExitedSuccessfully => ExitCode == 0;
 
-    public string GetString()
+    public readonly string GetString()
     {
         StringBuilder sb = new();
 

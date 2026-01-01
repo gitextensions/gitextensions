@@ -237,12 +237,11 @@ public partial class FindAndReplaceForm : GitExtensionsForm
     {
         Validates.NotNull(_editor);
 
-        if (!_highlightGroups.ContainsKey(_editor))
+        if (!_highlightGroups.TryGetValue(_editor, out HighlightGroup? group))
         {
-            _highlightGroups[_editor] = new HighlightGroup(_editor);
+            group = new HighlightGroup(_editor);
+            _highlightGroups[_editor] = group;
         }
-
-        HighlightGroup group = _highlightGroups[_editor];
 
         if (string.IsNullOrEmpty(LookFor))
         {

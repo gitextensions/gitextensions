@@ -27,7 +27,7 @@ internal partial class FailedPluginWrapper : IGitPlugin
             if (match.Success)
             {
                 _pluginName = match.Value;
-                Name = $"{TranslatedStrings.FailedToLoadPlugin}: {_pluginName.Substring(0, Math.Min(50, match.Value.Length))}";
+                Name = $"{TranslatedStrings.FailedToLoadPlugin}: {_pluginName[..Math.Min(50, match.Value.Length)]}";
             }
         }
         catch (Exception)
@@ -55,7 +55,7 @@ internal partial class FailedPluginWrapper : IGitPlugin
         return false;
     }
 
-    public IEnumerable<ISetting> GetSettings() => Array.Empty<ISetting>();
+    public IEnumerable<ISetting> GetSettings() => [];
 
     public void Register(IGitUICommands gitUiCommands)
     {

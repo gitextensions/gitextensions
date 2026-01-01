@@ -37,7 +37,7 @@ public class GitConfigSettingsPageControllerTests
         tempFolder = Path.GetTempPath(); // something like: C:\Users\user\AppData\Local\Temp\
         _controller.GetInitialDirectory(tempFolder, null).Should().Be(tempFolder);
 
-        _controller.GetInitialDirectory(tempFolder.Remove(tempFolder.Length - 1), null).Should().Be(tempFolder);
+        _controller.GetInitialDirectory(tempFolder[..^1], null).Should().Be(tempFolder);
 
         string tempFile = Path.GetTempFileName(); // something like: C:\Users\user\AppData\Local\Temp\tmp97C5.tmp
         _controller.GetInitialDirectory(tempFile, null).Should().Be(tempFolder);

@@ -86,7 +86,7 @@ public sealed partial class ScriptOptionsParser
     {
         option = option ?? throw new ArgumentNullException(nameof(option));
 
-        return option.StartsWith("s");
+        return option.StartsWith('s');
     }
 
     public static (string? arguments, bool abort) Parse(string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider = null)
@@ -102,7 +102,7 @@ public sealed partial class ScriptOptionsParser
         GitRevision? selectedRevision = null;
         GitRevision? currentRevision = null;
 
-        IReadOnlyList<GitRevision> allSelectedRevisions = Array.Empty<GitRevision>();
+        IReadOnlyList<GitRevision> allSelectedRevisions = [];
         List<IGitRef> selectedLocalBranches = [];
         List<IGitRef> selectedRemoteBranches = [];
         List<string> selectedRemotes = [];
@@ -121,7 +121,7 @@ public sealed partial class ScriptOptionsParser
                 continue;
             }
 
-            if (currentRevision is null && (option.StartsWith("c") || option == head))
+            if (currentRevision is null && (option.StartsWith('c') || option == head))
             {
                 currentRevision = GetCurrentRevision(uiCommands.Module, currentTags, currentLocalBranches, currentRemoteBranches, currentBranches,
                     loadBody: Contains(arguments, currentMessage));
@@ -169,7 +169,7 @@ public sealed partial class ScriptOptionsParser
 
     private static string AskToSpecify(IEnumerable<IGitRef> options, IGitUICommands uiCommands, IWin32Window owner)
     {
-        List<IGitRef> items = options.ToList();
+        List<IGitRef> items = [.. options];
         if (items.Count == 0)
         {
             return string.Empty;
@@ -252,7 +252,7 @@ public sealed partial class ScriptOptionsParser
         GitRevision currentRevision;
         IEnumerable<IGitRef> refs;
         currentRevision = module.GetRevision(shortFormat: !loadBody, loadRefs: true);
-        refs = currentRevision?.Refs ?? Array.Empty<IGitRef>();
+        refs = currentRevision?.Refs ?? [];
 
         foreach (IGitRef gitRef in refs)
         {
@@ -494,7 +494,7 @@ public sealed partial class ScriptOptionsParser
             return arguments;
         }
 
-        return ReplaceOption(option, arguments, newStrings.ToArray());
+        return ReplaceOption(option, arguments, [.. newStrings]);
 
         static string? EscapeLinefeeds(string? multiLine) => multiLine?.Replace("\n", "\\n");
 
@@ -512,13 +512,13 @@ public sealed partial class ScriptOptionsParser
         static string Quote(string newString)
         {
             string newStringQuoted = QuoteRegex().Replace(newString, "\\\"");
-            newStringQuoted = "\"" + newStringQuoted;
-            if (newStringQuoted.EndsWith("\\"))
+            newStringQuoted = '"' + newStringQuoted;
+            if (newStringQuoted.EndsWith('\\'))
             {
-                newStringQuoted += "\\";
+                newStringQuoted += '\\';
             }
 
-            newStringQuoted += "\"";
+            newStringQuoted += '"';
             return newStringQuoted;
         }
     }

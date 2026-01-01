@@ -100,7 +100,7 @@ public class SortDiffListContextMenuItem : ToolStripMenuItem
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal struct TestAccessor
+    internal readonly struct TestAccessor
     {
         private readonly SortDiffListContextMenuItem _contextMenuItem;
 
@@ -109,6 +109,6 @@ public class SortDiffListContextMenuItem : ToolStripMenuItem
             _contextMenuItem = menuitem;
         }
 
-        public void RaiseDropDownOpening() => _contextMenuItem.RequerySortingMethod();
+        public readonly void RaiseDropDownOpening() => _contextMenuItem.RequerySortingMethod();
     }
 }

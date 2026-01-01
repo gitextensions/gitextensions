@@ -68,7 +68,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _loader.LoadAsync(
             () =>
             {
-                IHostedRemote[] hostedRemotes = _gitHoster.GetHostedRemotesForModule().ToArray();
+                IHostedRemote[] hostedRemotes = [.. _gitHoster.GetHostedRemotesForModule()];
 
                 // load all hosted repositories.
                 foreach (IHostedRemote hostedRemote in hostedRemotes)
@@ -311,7 +311,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         _currentPullRequestInfo.HeadRepo.CloneProtocol = _cloneGitProtocol;
 
-        _discussionWB.DocumentText = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo);
+        _discussionWB.DocumentText = DiscussionHtmlCreator.CreateFor();
         _diffViewer.Clear();
         _fileStatusList.ClearDiffs();
 
@@ -349,7 +349,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private void LoadDiscussion(IPullRequestDiscussion? discussion)
     {
         Validates.NotNull(_currentPullRequestInfo);
-        string t = DiscussionHtmlCreator.CreateFor(_currentPullRequestInfo, discussion?.Entries);
+        string t = DiscussionHtmlCreator.CreateFor(discussion?.Entries);
         _discussionWB.DocumentText = t;
     }
 
@@ -385,7 +385,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     {
         _diffCache = [];
 
-        List<string> fileParts = DiffCommandRegex().Split(diffData).Where(el => el?.Trim().Length is > 10).ToList();
+        List<string> fileParts = [.. DiffCommandRegex().Split(diffData).Where(el => el?.Trim().Length is > 10)];
         List<GitItemStatus> giss = [];
 
         // baseSha is the sha of the merge to ("master") sha, the commit to be firstId

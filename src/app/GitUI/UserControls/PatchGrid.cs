@@ -17,7 +17,7 @@ public partial class PatchGrid : GitModuleControl
 {
     private readonly TranslationString _unableToShowPatchDetails = new("Unable to show details of patch file.");
     private readonly ICommitDataManager _commitDataManager;
-    private IList<PatchFile> _skipped = Array.Empty<PatchFile>();
+    private IList<PatchFile> _skipped = [];
     private bool _isManagingRebase;
 
     [GeneratedRegex(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.ExplicitCapture)]
@@ -93,10 +93,9 @@ public partial class PatchGrid : GitModuleControl
         // Filter comment lines and keep only lines containing at least 3 columns
         // (action, commit hash and commit subject -- that could contain spaces and be cut in more --)
         // ex: pick e0d861716540aa1ac83eaa2790ba5e79988b9489 this is the commit subject
-        string[][] commitsInfos = doneCommits.Concat(todoCommits).Where(l => !l.StartsWith(commentChar))
+        string[][] commitsInfos = [.. doneCommits.Concat(todoCommits).Where(l => !l.StartsWith(commentChar))
             .Select(l => l.Split(Delimiters.Space))
-            .Where(p => p.Length >= 3)
-            .ToArray();
+            .Where(p => p.Length >= 3)];
 
         List<PatchFile> patchFiles = [];
         if (commitsInfos.Length == 0)
@@ -137,7 +136,11 @@ public partial class PatchGrid : GitModuleControl
             }
             else
             {
-                ObjectId.TryParse(parts[1], out objectId);
+                if (!ObjectId.TryParse(parts[1], out objectId))
+                {
+                    Trace.Write($"PatchGrid: GetInteractiveRebasePatchFiles: Unable to parse commit hash '{parts[1]}' from '{todoCommits}'. Skipping this entry.");
+                    continue;
+                }
             }
 
             patchFiles.Add(new PatchFile
@@ -157,10 +160,10 @@ public partial class PatchGrid : GitModuleControl
 
         return patchFiles;
 
-        string[] ReadCommitsDataFromRebaseFile(string filePath) =>
+        static string[] ReadCommitsDataFromRebaseFile(string filePath) =>
             File.Exists(filePath)
             ? File.ReadAllText(filePath).Trim().Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
-            : Array.Empty<string>();
+            : [];
     }
 
     private IReadOnlyList<PatchFile> GetPatches()
@@ -199,13 +202,17 @@ public partial class PatchGrid : GitModuleControl
 
         string nextFile = GetNextRebasePatch();
 
-        int.TryParse(nextFile, out int next);
+        if (!int.TryParse(nextFile, out int next))
+        {
+            Trace.Write($"PatchGrid: GetRebasePatchFiles: Unable to parse rebase next patch file name '{nextFile}'. Skipping this file.");
+            next = 0;
+        }
 
         string rebaseDir = Module.GetRebaseDir();
 
         string[] files = Directory.Exists(rebaseDir)
             ? Directory.GetFiles(rebaseDir)
-            : Array.Empty<string>();
+            : [];
 
         foreach (string fullFileName in files)
         {

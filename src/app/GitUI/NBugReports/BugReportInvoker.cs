@@ -91,7 +91,7 @@ public static class BugReportInvoker
     public static void LogError(Exception exception, bool isTerminating = false)
     {
         string tempFolder = Path.GetTempPath();
-        string tempFileName = $"{AppSettings.ApplicationId}.{AppSettings.AppVersion}.{DateTime.Now.ToString("yyyyMMdd.HHmmssfff")}.log";
+        string tempFileName = $"{AppSettings.ApplicationId}.{AppSettings.AppVersion}.{DateTime.Now:yyyyMMdd.HHmmssfff}.log";
         string tempFile = Path.Combine(tempFolder, tempFileName);
 
         try
@@ -331,8 +331,10 @@ public static class BugReportInvoker
             {
                 // Skipping the 1st parameter that, starting from .NET, contains the path to application dll (instead of exe)
                 string arguments = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
-                ProcessStartInfo pi = new(Environment.ProcessPath!, arguments);
-                pi.WorkingDirectory = Environment.CurrentDirectory;
+                ProcessStartInfo pi = new(Environment.ProcessPath!, arguments)
+                {
+                    WorkingDirectory = Environment.CurrentDirectory
+                };
                 Process.Start(pi);
                 Environment.Exit(0);
             }

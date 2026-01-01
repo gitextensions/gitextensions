@@ -5,7 +5,7 @@ public class LogLine
     public LogLine(string hash, string message)
     {
         Commit = hash;
-        MessageLines = new List<string> { message };
+        MessageLines = [message];
     }
 
     public string Commit { get; }

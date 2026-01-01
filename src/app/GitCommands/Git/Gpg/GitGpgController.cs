@@ -127,7 +127,7 @@ public partial class GitGpgController : IGitGpgController
         ArgumentNullException.ThrowIfNull(revision);
 
         /* No Tag present, exit */
-        List<IGitRef> usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
+        List<IGitRef> usefulTagRefs = [.. revision.Refs.Where(x => x.IsTag && x.IsDereference)];
 
         if (usefulTagRefs.Count == 0)
         {
@@ -195,7 +195,7 @@ public partial class GitGpgController : IGitGpgController
     {
         ArgumentNullException.ThrowIfNull(revision);
 
-        List<IGitRef> usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
+        List<IGitRef> usefulTagRefs = [.. revision.Refs.Where(x => x.IsTag && x.IsDereference)];
         return EvaluateTagVerifyMessage(usefulTagRefs);
     }
 
@@ -243,13 +243,5 @@ public partial class GitGpgController : IGitGpgController
     }
 
     private IGitModule GetModule()
-    {
-        IGitModule module = _getModule();
-        if (module is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-        }
-
-        return module;
-    }
+        => _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
 }

@@ -3,13 +3,13 @@
 public static class ColorHelper
 {
     private static readonly (KnownColor back, KnownColor fore)[] BackForeExamples =
-    {
+    [
         (KnownColor.Window, KnownColor.WindowText),
         (KnownColor.Control, KnownColor.ControlText),
         (KnownColor.Info, KnownColor.InfoText),
         (KnownColor.Highlight, KnownColor.HighlightText),
         (KnownColor.MenuHighlight, KnownColor.HighlightText),
-    };
+    ];
 
     public static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 

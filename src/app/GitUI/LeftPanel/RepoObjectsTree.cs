@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing.Imaging;
 using System.Reflection;
 using GitCommands;
@@ -163,7 +163,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             IEnumerable<string> SearchForBranch(string arg)
             {
                 return CollectFilterCandidates()
-                    .Where(r => r.IndexOf(arg, StringComparison.OrdinalIgnoreCase) != -1);
+                    .Where(r => r.Contains(arg, StringComparison.OrdinalIgnoreCase));
             }
 
             IEnumerable<string> CollectFilterCandidates()
@@ -211,7 +211,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         return;
 
-        bool IsOverride(MethodInfo? m)
+        static bool IsOverride(MethodInfo? m)
         {
             return m is not null && m.GetBaseDefinition().DeclaringType != m.DeclaringType;
         }
@@ -239,9 +239,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
     public void RefreshRevisionsLoading(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh)
     {
-        _branchesTree.Refresh(getRefs, forceRefresh);
-        _remotesTree.Refresh(getRefs, forceRefresh);
-        _tagTree.Refresh(getRefs, forceRefresh);
+        _branchesTree.Refresh(getRefs);
+        _remotesTree.Refresh(getRefs);
+        _tagTree.Refresh(getRefs);
         _stashTree.Refresh(getStashRevs);
     }
 
@@ -264,9 +264,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     /// <param name="getRefs">Git references</param>
     public void ResortRefs(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
-        _branchesTree.Refresh(getRefs);
-        _remotesTree.Refresh(getRefs);
-        _tagTree.Refresh(getRefs);
+        _branchesTree.RefreshInternal(getRefs);
+        _remotesTree.RefreshInternal(getRefs);
+        _tagTree.RefreshInternal(getRefs);
 
         _branchesTree.UpdateVisibility();
         _remotesTree.UpdateVisibility();
@@ -308,7 +308,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             cancellationToken.ThrowIfCancellationRequested();
             HashSet<string> mergedBranches = selectedGuid is null
                 ? []
-                : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid, cancellationToken)).ToHashSet();
+                : [.. await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid, cancellationToken)];
 
             selectedRevision?.Refs.ForEach(gitRef => mergedBranches.Remove(gitRef.CompleteName));
 
@@ -447,11 +447,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         // Add Tree's node in position index order. Because TreeNodeCollections cannot be sorted,
         // we create a list from it, sort it, then clear and re-add the nodes back to the collection.
         treeMain.BeginUpdate();
-        List<TreeNode> nodeList = treeMain.Nodes.OfType<TreeNode>().ToList();
+        List<TreeNode> nodeList = [.. treeMain.Nodes.OfType<TreeNode>()];
         nodeList.Add(tree.TreeViewNode);
         treeMain.Nodes.Clear();
         Dictionary<Tree, int> treeToPositionIndex = GetTreeToPositionIndex();
-        treeMain.Nodes.AddRange(nodeList.OrderBy(treeNode => treeToPositionIndex[(Tree)treeNode.Tag]).ToArray());
+        treeMain.Nodes.AddRange([.. nodeList.OrderBy(treeNode => treeToPositionIndex[(Tree)treeNode.Tag])]);
         treeMain.EndUpdate();
 
         treeMain.Font = AppSettings.Font;
@@ -471,7 +471,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     {
         _txtBranchCriterion.CloseDropdown();
 
-        if (_searchCriteriaChanged && _searchResult?.Any() is true)
+        if (_searchCriteriaChanged && _searchResult?.Count is > 0)
         {
             _searchCriteriaChanged = false;
             foreach (TreeNode coloredNode in _searchResult)
@@ -487,7 +487,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             }
         }
 
-        if (_searchResult is null || !_searchResult.Any())
+        if (_searchResult is null || _searchResult.Count == 0)
         {
             if (!string.IsNullOrWhiteSpace(_txtBranchCriterion.Text))
             {
@@ -530,14 +530,14 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
                 if (n.Tag is BaseRevisionNode branch)
                 {
-                    if (branch.FullPath.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                    if (branch.FullPath.Contains(text, StringComparison.InvariantCultureIgnoreCase))
                     {
                         AddTreeNodeToSearchResult(ret, n);
                     }
                 }
                 else
                 {
-                    if (n.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                    if (n.Text.Contains(text, StringComparison.InvariantCultureIgnoreCase))
                     {
                         AddTreeNodeToSearchResult(ret, n);
                     }
@@ -715,15 +715,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
             foreach (string text in nodeTexts)
             {
-                node = nodes.SingleOrDefault(n => n.Text == text);
-
-                if (node is null)
-                {
-                    throw new ArgumentException(
+                node = nodes.SingleOrDefault(n => n.Text == text) ?? throw new ArgumentException(
                         $"Node '{text}' not found. Available nodes on this level: " + nodes.Select(n => n.Text).Join(", "),
                         nameof(nodeTexts));
-                }
-
                 nodes = node.Nodes.Cast<TreeNode>();
             }
 

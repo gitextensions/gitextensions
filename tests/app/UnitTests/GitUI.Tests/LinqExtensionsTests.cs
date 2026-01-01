@@ -21,12 +21,12 @@ public sealed class LinqExtensionsTests
     [Test]
     public void AsReadOnlyList_returns_object_unchanged_when_has_required_interface()
     {
-        Test(Array.Empty<int>());
+        Test([]);
         Test(new int[1]);
         Test(new List<int>());
         Test(new List<int> { 1, 2, 3 });
 
-        void Test(IEnumerable<int> e)
+        static void Test(IEnumerable<int> e)
         {
             if (e is IReadOnlyList<int>)
             {
@@ -42,7 +42,7 @@ public sealed class LinqExtensionsTests
     [Test]
     public void IndexOf()
     {
-        int[] ints = new[] { 0, 1, 2, 3 };
+        int[] ints = [0, 1, 2, 3];
 
         ClassicAssert.AreEqual(0, ints.IndexOf(i => i == 0));
         ClassicAssert.AreEqual(1, ints.IndexOf(i => i == 1));

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics;
 using GitExtensions.Extensibility;
 using Microsoft.Win32;
 
@@ -19,7 +20,7 @@ public static class WebBrowserEmulationMode
         }
 
         // FeatureControl settings are per-process
-        string appName = System.IO.Path.GetFileName(System.Diagnostics.Process.GetCurrentProcess().MainModule.FileName);
+        string appName = System.IO.Path.GetFileName(Environment.ProcessPath);
 
         const string featureControlRegKey = @"HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\";
 
@@ -59,7 +60,11 @@ public static class WebBrowserEmulationMode
                     }
                 }
 
-                int.TryParse(version.ToString().LazySplit('.').First(), out browserVersion);
+                if (!int.TryParse(version.ToString().LazySplit('.').First(), out browserVersion))
+                {
+                    Trace.WriteLine($"Could not parse browser version: {version}");
+                    return false;
+                }
             }
 
             emulationMode = browserVersion switch

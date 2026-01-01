@@ -60,7 +60,7 @@ public partial class TeamCityBuildChooser : Form
             Tag = project,
         };
 
-        projectNode.Nodes.AddRange(project.SubProjects.Select(ConvertProjectInTreeNode).OrderBy(p => p.Name).ToArray());
+        projectNode.Nodes.AddRange([.. project.SubProjects.Select(ConvertProjectInTreeNode).OrderBy(p => p.Name)]);
         if (projectNode.Nodes.Count == 0)
         {
             projectNode.Nodes.Add(new TreeNode("Loading..."));
@@ -94,12 +94,12 @@ public partial class TeamCityBuildChooser : Form
                 treeNode.Nodes.RemoveAt(0);
             }
 
-            TreeNode[] buildNodes = project.Builds.Select(b => new TreeNode(b.DisplayName)
+            TreeNode[] buildNodes = [.. project.Builds.Select(b => new TreeNode(b.DisplayName)
             {
                 Name = b.Id,
                 ForeColor = SystemColors.Highlight,
                 Tag = b
-            }).OrderBy(b => b.Name).ToArray();
+            }).OrderBy(b => b.Name)];
             treeNode.Nodes.AddRange(buildNodes);
         }
     }

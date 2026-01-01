@@ -41,7 +41,9 @@ internal sealed class AppSettingsTests
 
     [Test]
     [TestCaseSource(nameof(TestCases))]
+#pragma warning disable IDE0060 // Remove unused parameter
     public void Should_return_default_value(PropertyInfo property, object value, object defaultValue, bool isISetting)
+#pragma warning restore IDE0060 // Remove unused parameter
     {
         // Arrange
         object root = null;
@@ -51,7 +53,7 @@ internal sealed class AppSettingsTests
             root = property.GetValue(null);
 
             property = property.PropertyType
-                .GetProperty(nameof(ISetting<string>.Value));
+                .GetProperty(nameof(ISetting<>.Value));
         }
 
         using TempFileCollection tempFiles = new();
@@ -86,7 +88,7 @@ internal sealed class AppSettingsTests
             root = property.GetValue(null);
 
             property = property.PropertyType
-                .GetProperty(nameof(ISetting<string>.Value));
+                .GetProperty(nameof(ISetting<>.Value));
         }
 
         using TempFileCollection tempFiles = new();
@@ -144,7 +146,7 @@ internal sealed class AppSettingsTests
             Type? propertyType = property.PropertyType;
             if (isISetting)
             {
-                propertyType = propertyType.GetProperty(nameof(ISetting<string>.Value))?.PropertyType;
+                propertyType = propertyType.GetProperty(nameof(ISetting<>.Value))?.PropertyType;
             }
 
             propertyType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
@@ -440,8 +442,8 @@ internal sealed class AppSettingsTests
             yield return DateTime.MaxValue;
             yield return DateTime.Today;
 
-            Type[] enumTypes = new Type[]
-            {
+            Type[] enumTypes =
+            [
                 typeof(TruncatePathMethod),
                 typeof(AvatarProvider),
                 typeof(GitPullAction),
@@ -452,7 +454,7 @@ internal sealed class AppSettingsTests
                 typeof(GitRefsSortOrder),
                 typeof(DiffListSortType),
                 typeof(RevisionSortOrder),
-            };
+            ];
 
             foreach (Type enumType in enumTypes)
             {

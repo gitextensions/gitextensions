@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -381,7 +381,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             gitRef.IsDereference && // see note on using IsDereference in CommitInfo class
             AppSettings.ShowAnnotatedTagsMessages)
         {
-            name = name + " [...]";
+            name += " [...]";
         }
 
         RevisionGridRefRenderer.DrawRef(
@@ -478,11 +478,11 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
     private static IReadOnlyList<IGitRef> SortRefs(IEnumerable<IGitRef> refs)
     {
-        List<IGitRef> sortedRefs = refs.ToList();
+        List<IGitRef> sortedRefs = [.. refs];
         sortedRefs.Sort(CompareRefs);
         return sortedRefs;
 
-        int CompareRefs(IGitRef left, IGitRef right)
+        static int CompareRefs(IGitRef left, IGitRef right)
         {
             int leftTypeRank = RefTypeRank(left);
             int rightTypeRank = RefTypeRank(right);
@@ -493,7 +493,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 ? string.Compare(left.Name, right.Name, StringComparison.Ordinal)
                 : c;
 
-            int RefTypeRank(IGitRef gitRef)
+            static int RefTypeRank(IGitRef gitRef)
             {
                 if (gitRef.IsBisect)
                 {

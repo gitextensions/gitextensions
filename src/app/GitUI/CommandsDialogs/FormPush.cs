@@ -119,7 +119,7 @@ public partial class FormPush : GitModuleForm
             _currentBranchName = Module.GetSelectedBranch();
 
             // refresh registered git remotes
-            UserGitRemotes = _remotesManager.LoadRemotes(false).ToList();
+            UserGitRemotes = [.. _remotesManager.LoadRemotes(false)];
 
             _NO_TRANSLATE_Branch.Text = DetachedHeadParser.IsDetachedHead(_currentBranchName) ? HeadText : _currentBranchName;
 
@@ -189,7 +189,7 @@ public partial class FormPush : GitModuleForm
             return;
         }
 
-        UserGitRemotes = _remotesManager.LoadRemotes(false).ToList();
+        UserGitRemotes = [.. _remotesManager.LoadRemotes(false)];
         BindRemotesDropDown(selectedRemoteName);
     }
 
@@ -220,7 +220,7 @@ public partial class FormPush : GitModuleForm
         {
             _NO_TRANSLATE_Remotes.SelectedItem = _currentBranchRemote;
         }
-        else if (UserGitRemotes.Any())
+        else if (UserGitRemotes.Count != 0)
         {
             ConfigFileRemote defaultRemote = UserGitRemotes.FirstOrDefault(x => StringComparer.OrdinalIgnoreCase.Equals(x.Name, "origin"));
 
@@ -920,9 +920,7 @@ public partial class FormPush : GitModuleForm
     private void FillTagDropDown()
     {
         // var tags = Module.GetTagHeads(Module.GetTagHeadsOption.OrderByCommitDateDescending); // comment out to sort by commit date
-        List<string> tags = Module.GetRefs(RefsFilter.Tags)
-                                  .Select(tag => tag.Name)
-                                  .ToList();
+        List<string> tags = [.. Module.GetRefs(RefsFilter.Tags).Select(tag => tag.Name)];
         tags.Insert(0, AllRefs);
         TagComboBox.DataSource = tags;
 
@@ -1030,7 +1028,7 @@ public partial class FormPush : GitModuleForm
 
         void ProcessHeads(IReadOnlyList<IGitRef> remoteHeads)
         {
-            List<IGitRef> localHeads = GetLocalBranches().ToList();
+            List<IGitRef> localHeads = [.. GetLocalBranches()];
             Dictionary<string, IGitRef> remoteBranches = remoteHeads.ToDictionary(h => h.LocalName, h => h);
 
             Validates.NotNull(_branchTable);
@@ -1268,8 +1266,7 @@ public partial class FormPush : GitModuleForm
 
         foreach (DataGridViewRow row in BranchGrid.Rows)
         {
-            DataGridViewCheckBoxCell pushCheckBox = row.Cells[PushColumn.Name] as DataGridViewCheckBoxCell;
-            if (pushCheckBox is null || !pushCheckBox.Visible)
+            if (row.Cells[PushColumn.Name] is not DataGridViewCheckBoxCell pushCheckBox || !pushCheckBox.Visible)
             {
                 continue;
             }

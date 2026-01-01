@@ -78,7 +78,7 @@ public class ColorsPageSettingsPageControllerTests
     public void When_user_switches_to_default_theme_UseColorblindVariation_should_be_unchecked()
     {
         AppSettings.ThemeId = new ThemeId("non_default", isBuiltin: true);
-        AppSettings.ThemeVariations = new[] { ThemeVariations.Colorblind };
+        AppSettings.ThemeVariations = [ThemeVariations.Colorblind];
         ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
         _context.Controller.ShowThemeSettings();
         _context.Page.SelectedThemeVariations.Should().BeEquivalentTo(ThemeVariations.Colorblind);
@@ -131,7 +131,7 @@ public class ColorsPageSettingsPageControllerTests
         _context.Controller.SettingsAreModified.Should().BeFalse();
 
         _context.Page.SelectedThemeVariations = themeVariations.SequenceEqual(ThemeVariations.None)
-            ? new[] { ThemeVariations.Colorblind }
+            ? [ThemeVariations.Colorblind]
             : ThemeVariations.None;
         _context.Controller.SettingsAreModified.Should().BeTrue();
     }

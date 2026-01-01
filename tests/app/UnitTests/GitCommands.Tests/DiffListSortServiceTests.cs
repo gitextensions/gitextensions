@@ -40,9 +40,10 @@ public class DiffListSortServiceTests
     [TestCase(DiffListSortType.FileStatus)]
     public void Changing_the_sort_modifies_persistence(DiffListSortType sortType)
     {
-        DiffListSortService service = new();
-
-        service.DiffListSorting = sortType;
+        DiffListSortService service = new()
+        {
+            DiffListSorting = sortType
+        };
 
         ClassicAssert.AreEqual(sortType, AppSettings.DiffListSorting);
     }
@@ -50,8 +51,10 @@ public class DiffListSortServiceTests
     [Test]
     public void Change_notifications_occur_when_sort_is_changed()
     {
-        DiffListSortService service = new();
-        service.DiffListSorting = DiffListSortType.FilePath;
+        DiffListSortService service = new()
+        {
+            DiffListSorting = DiffListSortType.FilePath
+        };
 
         int raisedCount = 0;
         service.DiffListSortingChanged += (s, e) => raisedCount++;

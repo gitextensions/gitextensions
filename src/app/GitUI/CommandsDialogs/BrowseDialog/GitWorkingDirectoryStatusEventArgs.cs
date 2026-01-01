@@ -4,7 +4,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog;
 
 public class GitWorkingDirectoryStatusEventArgs : EventArgs
 {
-    private readonly IReadOnlyList<GitItemStatus> _itemStatuses = Array.Empty<GitItemStatus>();
+    private readonly IReadOnlyList<GitItemStatus> _itemStatuses = [];
 
     public GitWorkingDirectoryStatusEventArgs(IReadOnlyList<GitItemStatus> itemStatuses)
     {
@@ -18,5 +18,5 @@ public class GitWorkingDirectoryStatusEventArgs : EventArgs
     /// <summary>
     /// the status of all modified files/submodules or null if the previous information is invalidated.
     /// </summary>
-    public IReadOnlyList<GitItemStatus>? ItemStatuses => _itemStatuses ?? Array.Empty<GitItemStatus>();
+    public IReadOnlyList<GitItemStatus>? ItemStatuses => _itemStatuses ?? [];
 }

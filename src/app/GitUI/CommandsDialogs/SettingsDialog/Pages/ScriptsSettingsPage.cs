@@ -393,7 +393,7 @@ Diff selection:
 
     private void lvScripts_SelectedIndexChanged(object sender, EventArgs e)
     {
-        if (lvScripts.SelectedItems.Count < 1 || !(lvScripts.SelectedItems[0].Tag is ScriptInfoProxy script))
+        if (lvScripts.SelectedItems.Count < 1 || lvScripts.SelectedItems[0].Tag is not ScriptInfoProxy script)
         {
             propertyGrid1.SelectedObject = null;
             return;

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using GitCommands;
@@ -88,7 +88,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
 
         if (string.IsNullOrWhiteSpace(workingDir))
         {
-            throw new ArgumentException(nameof(workingDir));
+            throw new ArgumentException("AddToRecent: No workingdir.", nameof(workingDir));
         }
 
         SafeInvoke(() =>

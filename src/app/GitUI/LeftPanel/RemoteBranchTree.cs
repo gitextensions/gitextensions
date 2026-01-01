@@ -108,11 +108,9 @@ internal sealed class RemoteBranchTree : BaseRefTree
 
         IReadOnlyList<string> GetEnabledRemoteNamesWithoutBranches(IReadOnlyList<IGitRef> branches, Dictionary<string, Remote> remoteByName)
         {
-            HashSet<string> remotesWithBranches = branches
-                .Select(branch => branch.Name.SubstringUntil('/'))
-                .ToHashSet();
+            HashSet<string> remotesWithBranches = [.. branches.Select(branch => branch.Name.SubstringUntil('/'))];
 
-            HashSet<string> allRemotes = remoteByName.Select(kv => kv.Value.Name).ToHashSet();
+            HashSet<string> allRemotes = [.. remoteByName.Select(kv => kv.Value.Name)];
 
             return allRemotes.Except(remotesWithBranches).ToList();
         }

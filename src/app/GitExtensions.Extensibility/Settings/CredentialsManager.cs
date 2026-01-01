@@ -26,7 +26,7 @@ internal class CredentialsManager : ICredentialsManager
 
     public void Save()
     {
-        List<KeyValuePair<string, NetworkCredential?>> credentials = Credentials.ToList();
+        List<KeyValuePair<string, NetworkCredential?>> credentials = [.. Credentials];
         if (credentials.Count < 1)
         {
             return;

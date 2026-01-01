@@ -212,7 +212,7 @@ public partial class BitbucketPullRequestForm : GitExtensionsFormBase
 
     private async Task RefreshDDLBranchAsync(ComboBox branchComboBox, object selectedValue)
     {
-        List<string> branchNames = (await GetBitbucketBranchesAsync((Repository)selectedValue)).ToList();
+        List<string> branchNames = [.. await GetBitbucketBranchesAsync((Repository)selectedValue)];
         branchNames.Sort();
         branchNames.Insert(0, "");
         await this.SwitchToMainThreadAsync();

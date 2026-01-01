@@ -6,7 +6,7 @@ namespace GitUI.CommandsDialogs.RepoHosting;
 
 internal static class DiscussionHtmlCreator
 {
-    public static string CreateFor(IPullRequestInformation currentPullRequestInfo, List<IDiscussionEntry>? entries = null)
+    public static string CreateFor(List<IDiscussionEntry>? entries = null)
     {
         StringBuilder html = new();
         AddLine(html, "<html><body><style type='text/css'>");
@@ -71,14 +71,14 @@ internal static class DiscussionHtmlCreator
         {
             if (_systemInfoReplacement is null)
             {
-                List<PropertyInfo> props = typeof(SystemColors).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty).ToList();
+                List<PropertyInfo> props = [.. typeof(SystemColors).GetProperties(BindingFlags.Static | BindingFlags.Public | BindingFlags.GetProperty)];
 
                 IEnumerable<KeyValuePair<string, string>> kvps = from prop in props
                            where prop.PropertyType == typeof(Color)
                            let c = (Color)prop.GetValue(null, null)
                            select new KeyValuePair<string, string>("SC." + prop.Name, string.Format("#{0:X2}{1:X2}{2:X2}", c.R, c.G, c.B));
 
-                _systemInfoReplacement = kvps.ToList();
+                _systemInfoReplacement = [.. kvps];
 
                 // TODO: is it safe to rename the keys ('SF.DialogFont', 'SF.DialogFontSize') to 'SF.MessageBoxFont' or not?
                 _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFont", SystemFonts.MessageBoxFont.Name));

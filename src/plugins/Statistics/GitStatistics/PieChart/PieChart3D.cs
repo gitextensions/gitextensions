@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 using GitExtUtils.GitUI.Theming;
 using Microsoft;
 
@@ -18,7 +18,7 @@ public class PieChart3D : IDisposable
     ///   Array of ordered pie slices constituting the chart, starting from
     ///   270 degrees axis.
     /// </summary>
-    protected PieSlice[] PieSlices = Array.Empty<PieSlice>();
+    protected PieSlice[] PieSlices = [];
 
     /// <summary>
     ///   Collection of reordered pie slices mapped to original order.
@@ -29,7 +29,7 @@ public class PieChart3D : IDisposable
     ///   Array of colors used for rendering.
     /// </summary>
     protected Color[] SliceColors =
-        {
+        [
                 Color.Red,
                 Color.Green,
                 Color.Blue,
@@ -42,12 +42,12 @@ public class PieChart3D : IDisposable
                 Color.Maroon,
                 Color.Teal,
                 Color.Fuchsia
-        };
+        ];
 
     /// <summary>
     ///   Array of relative displacements from the common center.
     /// </summary>
-    protected float[] SliceRelativeDisplacements = { 0F };
+    protected float[] SliceRelativeDisplacements = [0F];
 
     /// <summary>
     ///   Slice relative height.
@@ -57,7 +57,7 @@ public class PieChart3D : IDisposable
     /// <summary>
     ///   Array of values to be presented by the chart.
     /// </summary>
-    protected decimal[] Values = { };
+    protected decimal[] Values = [];
 
     /// <summary>
     ///   Initializes an empty instance of <c>PieChart3D</c>.
@@ -338,6 +338,8 @@ public class PieChart3D : IDisposable
         {
             slice.Dispose();
         }
+
+        GC.SuppressFinalize(this);
     }
 
     #endregion
@@ -377,7 +379,7 @@ public class PieChart3D : IDisposable
     public void SetSliceRelativeDisplacement(float value)
     {
         DebugHelpers.Assert(IsDisplacementValid(value), "IsDisplacementValid(value)");
-        SliceRelativeDisplacements = new[] { value };
+        SliceRelativeDisplacements = [value];
     }
 
     /// <summary>
@@ -459,7 +461,7 @@ public class PieChart3D : IDisposable
         }
 
         // split the backmost (at 270 degrees) pie slice
-        List<PieSlice> pieSlices = new(PieSlices);
+        List<PieSlice> pieSlices = [.. PieSlices];
         PieSlice[] splitSlices = PieSlices[0].Split(270F);
         pieSlices[0] = splitSlices[0];
         if (splitSlices[1].SweepAngle > 0F)
@@ -726,7 +728,7 @@ public class PieChart3D : IDisposable
             }
         }
 
-        PieSlices = listPieSlices.ToArray();
+        PieSlices = [.. listPieSlices];
     }
 
     /// <summary>
@@ -870,7 +872,7 @@ public class PieChart3D : IDisposable
     /// </param>
     protected void DrawSliceSides(Graphics graphics)
     {
-        List<PieSlice> pieSlices = new(PieSlices);
+        List<PieSlice> pieSlices = [.. PieSlices];
 
         // if the first slice spreads across 180 and 360 degrees boundaries it
         // will appear on both left and right edge so its periphery has to be

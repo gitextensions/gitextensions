@@ -28,8 +28,8 @@ internal static class LinesMatcher
             yield break;
         }
 
-        LineData[] removed = removedLines.Select(line => new LineData(line, getText(line))).ToArray();
-        LineData[] added = addedLines.Select(line => new LineData(line, getText(line))).ToArray();
+        LineData[] removed = [.. removedLines.Select(line => new LineData(line, getText(line)))];
+        LineData[] added = [.. addedLines.Select(line => new LineData(line, getText(line)))];
 
         foreach ((ISegment, ISegment) linePair in FindLinePairs(removed, added))
         {
@@ -109,8 +109,8 @@ internal static class LinesMatcher
     internal static (string? CommonWord, int StartIndexRemoved, int StartIndexAdded) FindBestMatch(string textRemoved, string textAdded)
     {
         (string Word, int StartIndex) notFound = ("", -1);
-        (string Word, int StartIndex)[] wordsRemoved = GetWords(textRemoved).ToArray();
-        (string Word, int StartIndex)[] wordsAdded = GetWords(textAdded).ToArray();
+        (string Word, int StartIndex)[] wordsRemoved = [.. GetWords(textRemoved)];
+        (string Word, int StartIndex)[] wordsAdded = [.. GetWords(textAdded)];
         (string? commonWord, int startIndexOfCommonWordAdded) = wordsAdded
             .IntersectBy(wordsRemoved.Select(SelectWord), SelectWord)
             .Union([notFound])
@@ -120,7 +120,7 @@ internal static class LinesMatcher
             return (commonWord, wordsRemoved.First(pair => pair.Word == commonWord).StartIndex, startIndexOfCommonWordAdded);
         }
 
-        (string Word, int StartIndex)[] subwordsRemoved = GetSubwords(wordsRemoved).ToArray();
+        (string Word, int StartIndex)[] subwordsRemoved = [.. GetSubwords(wordsRemoved)];
         (commonWord, startIndexOfCommonWordAdded) = GetSubwords(wordsAdded)
             .IntersectBy(subwordsRemoved.Select(SelectWord), SelectWord)
             .Union([notFound])

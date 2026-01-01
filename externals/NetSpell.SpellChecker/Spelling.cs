@@ -239,10 +239,7 @@ public partial class Spelling : Component
 
     private void Initialize()
     {
-        if (_dictionary is null)
-        {
-            _dictionary = new WordDictionary();
-        }
+        _dictionary ??= new WordDictionary();
 
         if (!_dictionary.Initialized)
         {
@@ -275,9 +272,11 @@ public partial class Spelling : Component
 
     private void SuggestWord(string word, List<Word> tempSuggestion)
     {
-        Word ws = new();
-        ws.Text = word;
-        ws.EditDistance = EditDistance(CurrentWord, word);
+        Word ws = new()
+        {
+            Text = word,
+            EditDistance = EditDistance(CurrentWord, word)
+        };
         tempSuggestion.Add(ws);
     }
 
@@ -385,10 +384,7 @@ public partial class Spelling : Component
         {
             StringBuilder tempWord = new(CurrentWord);
 
-            char swap = tempWord[i];
-            tempWord[i] = tempWord[i + 1];
-            tempWord[i + 1] = swap;
-
+            (tempWord[i + 1], tempWord[i]) = (tempWord[i], tempWord[i + 1]);
             string word = tempWord.ToString();
             if (FindWord(ref word))
             {
@@ -554,7 +550,7 @@ public partial class Spelling : Component
                 dist++;
             }
 
-            if (char.ToLowerInvariant(source[source.Length - 1]) != char.ToLowerInvariant(target[target.Length - 1]))
+            if (char.ToLowerInvariant(source[^1]) != char.ToLowerInvariant(target[^1]))
             {
                 dist++;
             }
@@ -857,9 +853,9 @@ public partial class Spelling : Component
             {
                 if (!TestWord())
                 {
-                    if (ReplaceList.ContainsKey(currentWord))
+                    if (ReplaceList.TryGetValue(currentWord, out string word))
                     {
-                        ReplacementWord = ReplaceList[currentWord];
+                        ReplacementWord = word;
                         ReplaceWord();
                     }
                     else if (!IgnoreList.Contains(currentWord))

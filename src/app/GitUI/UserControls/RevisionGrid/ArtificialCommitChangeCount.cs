@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using GitExtensions.Extensibility.Git;
 
 namespace GitUI;
@@ -13,29 +13,29 @@ public sealed class ArtificialCommitChangeCount
     /// <summary>
     /// Number of changed files.
     /// </summary>
-    public IReadOnlyList<GitItemStatus> Changed { get; private set; } = Array.Empty<GitItemStatus>();
+    public IReadOnlyList<GitItemStatus> Changed { get; private set; } = [];
 
     /// <summary>
     /// Number of new files.
     /// </summary>
-    public IReadOnlyList<GitItemStatus> New { get; private set; } = Array.Empty<GitItemStatus>();
+    public IReadOnlyList<GitItemStatus> New { get; private set; } = [];
 
     /// <summary>
     /// Number of deleted files.
     /// </summary>
-    public IReadOnlyList<GitItemStatus> Deleted { get; private set; } = Array.Empty<GitItemStatus>();
+    public IReadOnlyList<GitItemStatus> Deleted { get; private set; } = [];
 
     /// <summary>
     /// Number of submodules where the commit has changed
     /// (regardless if they are dirty or not).
     /// </summary>
-    public IReadOnlyList<GitItemStatus> SubmodulesChanged { get; private set; } = Array.Empty<GitItemStatus>();
+    public IReadOnlyList<GitItemStatus> SubmodulesChanged { get; private set; } = [];
 
     /// <summary>
     /// Number of dirty submodules (with changes that are not committed)
     /// (regardless if the commit is changed or not).
     /// </summary>
-    public IReadOnlyList<GitItemStatus> SubmodulesDirty { get; private set; } = Array.Empty<GitItemStatus>();
+    public IReadOnlyList<GitItemStatus> SubmodulesDirty { get; private set; } = [];
 
     /// <summary>
     /// Any valid change in any category.

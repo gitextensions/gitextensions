@@ -33,7 +33,7 @@ public sealed class ArgumentBuilderTests
             "",
             [null]);
 
-        void Test(string expected, ArgumentBuilder command)
+        static void Test(string expected, ArgumentBuilder command)
         {
             ClassicAssert.AreEqual(expected, command.ToString());
         }

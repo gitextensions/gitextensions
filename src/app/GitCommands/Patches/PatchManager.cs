@@ -224,7 +224,7 @@ public static class PatchManager
         header = text[..patchPos];
         string diff = text[(patchPos - 1)..];
 
-        string[] chunks = diff.Split(new[] { "\n@@" }, StringSplitOptions.RemoveEmptyEntries);
+        string[] chunks = diff.Split(["\n@@"], StringSplitOptions.RemoveEmptyEntries);
         List<Chunk> selectedChunks = [];
         int i = 0;
         int currentPos = patchPos - 1;
@@ -612,16 +612,16 @@ internal sealed partial class Chunk
                     patchLine.Selected = true;
                 }
 
-                if (line.StartsWith(" "))
+                if (line.StartsWith(' '))
                 {
                     result.AddContextLine(patchLine, inPreContext);
                 }
-                else if (line.StartsWith("-"))
+                else if (line.StartsWith('-'))
                 {
                     inPreContext = false;
                     result.AddDiffLine(patchLine, true);
                 }
-                else if (line.StartsWith("+"))
+                else if (line.StartsWith('+'))
                 {
                     inPreContext = false;
                     result.AddDiffLine(patchLine, false);
@@ -665,7 +665,7 @@ internal sealed partial class Chunk
 
         int eolLength = eol.Length;
 
-        string[] lines = fileText.Split(new[] { eol }, StringSplitOptions.None);
+        string[] lines = fileText.Split([eol], StringSplitOptions.None);
         int i = 0;
 
         while (i < lines.Length)

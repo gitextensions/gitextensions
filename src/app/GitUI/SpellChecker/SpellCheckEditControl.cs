@@ -164,7 +164,7 @@ public sealed class SpellCheckEditControl : NativeWindow, IDisposable
                 pl.Add(new Point(i + waveHalfWidth, start.Y + waveHalfWidth));
             }
 
-            Point[] p = pl.ToArray();
+            Point[] p = [.. pl];
             _bufferGraphics!.DrawLines(pen, p);
         }
         else

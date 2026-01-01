@@ -48,18 +48,16 @@ public static class OsShellUtil
     /// <returns>The path selected by the user, or null if the user cancels the dialog.</returns>
     public static string? PickFolder(IWin32Window ownerWindow, string? selectedPath = null)
     {
-        using (FolderBrowserDialog dialog = new())
+        using FolderBrowserDialog dialog = new();
+        if (selectedPath is not null)
         {
-            if (selectedPath is not null)
-            {
-                dialog.SelectedPath = selectedPath;
-            }
+            dialog.SelectedPath = selectedPath;
+        }
 
-            DialogResult result = dialog.ShowDialog(ownerWindow);
-            if (result == DialogResult.OK)
-            {
-                return dialog.SelectedPath;
-            }
+        DialogResult result = dialog.ShowDialog(ownerWindow);
+        if (result == DialogResult.OK)
+        {
+            return dialog.SelectedPath;
         }
 
         // return null if the user cancelled

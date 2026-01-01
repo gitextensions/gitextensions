@@ -27,6 +27,6 @@ internal class PropertySorter : ExpandableObjectConverter
             }
         }
 
-        return pdc.Sort(orderedProperties.OrderBy(p => p.order).Select(p => p.name).ToArray());
+        return pdc.Sort([.. orderedProperties.OrderBy(p => p.order).Select(p => p.name)]);
     }
 }

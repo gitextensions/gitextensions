@@ -81,7 +81,7 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
             // query the GitHub profile first.
 
             // GitHub user names can't contain square brackets but bots use them.
-            bool isBot = username.IndexOf('[') >= 0;
+            bool isBot = username.Contains('[');
 
             if (isBot)
             {

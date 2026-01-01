@@ -7,7 +7,7 @@ namespace GitCommands.Config;
 public class ConfigFile : IConfigFile
 {
     private static Encoding GetEncoding() => GitModule.SystemEncoding;
-    public static readonly char[] CommentChars = { ';', '#' };
+    public static readonly char[] CommentChars = [';', '#'];
 
     private readonly List<IConfigSection> _configSections = [];
 
@@ -144,7 +144,7 @@ public class ConfigFile : IConfigFile
     {
         if (string.IsNullOrEmpty(setting))
         {
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(setting));
         }
 
         int keyIndex = FindAndCheckKeyIndex(setting);
@@ -178,7 +178,7 @@ public class ConfigFile : IConfigFile
 
         if (configSection is null)
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         return configSection.GetValues(keyName);
@@ -263,7 +263,7 @@ public class ConfigFile : IConfigFile
                 parseFunc = parseFunc(_fileContent[_pos]);
             }
 
-            if (_fileContent.Length > 0 && !_fileContent.EndsWith("\n"))
+            if (_fileContent.Length > 0 && !_fileContent.EndsWith('\n'))
             {
                 parseFunc('\n');
             }

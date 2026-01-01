@@ -11,10 +11,10 @@ public class SubmoduleInfoResult
     public IGitModule? Module { get; internal set; }
 
     // List of SubmoduleInfo for all submodules (recursively) under current module.
-    public IList<SubmoduleInfo> OurSubmodules { get; } = new List<SubmoduleInfo>();
+    public IList<SubmoduleInfo> OurSubmodules { get; } = [];
 
     // List of SubmoduleInfo for all submodules under TopProject.
-    public IList<SubmoduleInfo> AllSubmodules { get; } = new List<SubmoduleInfo>();
+    public IList<SubmoduleInfo> AllSubmodules { get; } = [];
 
     // Always set to the top-most module.
     public SubmoduleInfo? TopProject { get; internal set; }

@@ -57,8 +57,8 @@ public class ConsoleEmulatorOutputControlFixture
     {
         string cmd = "\"C:\\Program Files\\Git\\bin\\git.exe\" rebase  -i --autosquash --autostash \"branch_foo\"";
 
-        string[] outputData = new[]
-        {
+        string[] outputData =
+        [
             cmd,
             Environment.NewLine,
             "Receiving: 10%\r",
@@ -66,7 +66,7 @@ public class ConsoleEmulatorOutputControlFixture
             "Receiving: 30%\rR",
             "eceiving: 40%\r",
             "Receiving: 100%\nReceived data\n"
-        };
+        ];
 
         List<string> received = [];
 
@@ -84,15 +84,15 @@ public class ConsoleEmulatorOutputControlFixture
 
         filter.Flush();
 
-        string[] expectedData = new[]
-        {
+        string[] expectedData =
+        [
             "Receiving: 10%\r",
             "Receiving: 20%\r",
             "Receiving: 30%\r",
             "Receiving: 40%\r",
             "Receiving: 100%\n",
             "Received data\n"
-        };
+        ];
 
         CollectionAssert.AreEqual(expectedData, received);
     }
@@ -102,8 +102,8 @@ public class ConsoleEmulatorOutputControlFixture
     {
         string cmd = "\"C:\\Program Files\\Git\\bin\\git.exe\" rebase  -i --autosquash --autostash \"branch_foo\"";
 
-        string[] outputData = new[]
-        {
+        string[] outputData =
+        [
             cmd,
             Environment.NewLine,
             "Receiving: 10%\r",
@@ -111,7 +111,7 @@ public class ConsoleEmulatorOutputControlFixture
             "Receiving: 30%\rR",
             "eceiving: 40%\r",
             "Receiving: 100%\nReceived\r\ndata\n"
-        };
+        ];
 
         List<string> received = [];
 
@@ -129,8 +129,8 @@ public class ConsoleEmulatorOutputControlFixture
 
         filter.Flush();
 
-        string[] expectedData = new[]
-        {
+        string[] expectedData =
+        [
             "Receiving: 10%\r",
             "Receiving: 20%\r",
             "Receiving: 30%\r",
@@ -139,7 +139,7 @@ public class ConsoleEmulatorOutputControlFixture
             "Received\r",
             "\n",
             "data\n"
-        };
+        ];
 
         CollectionAssert.AreEqual(expectedData, received);
     }

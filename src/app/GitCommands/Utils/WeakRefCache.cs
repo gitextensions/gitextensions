@@ -54,7 +54,7 @@ public class WeakRefCache : IDisposable
     {
         lock (_weakMapLock)
         {
-            string[] toRemove = _weakMap.Where(p => !p.Value.IsAlive).Select(p => p.Key).ToArray();
+            string[] toRemove = [.. _weakMap.Where(p => !p.Value.IsAlive).Select(p => p.Key)];
             foreach (string key in toRemove)
             {
                 _weakMap.Remove(key);

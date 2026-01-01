@@ -86,7 +86,7 @@ public static class RFC2047Decoder
         }
 
         // Get the name of the encoding but skip the leading =?
-        string encodingName = input[2..input.IndexOf("?", 2, StringComparison.Ordinal)];
+        string encodingName = input[2..input.IndexOf('?', 2)];
         Encoding enc = Encoding.ASCII;
         if (!string.IsNullOrEmpty(encodingName))
         {

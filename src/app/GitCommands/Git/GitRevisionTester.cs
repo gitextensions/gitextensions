@@ -67,7 +67,7 @@ public class GitRevisionTester : IGitRevisionTester
             return false;
         }
 
-        List<GitItemStatus> items = selectedItemsWithParent as List<GitItemStatus> ?? selectedItemsWithParent.ToList();
+        List<GitItemStatus> items = selectedItemsWithParent as List<GitItemStatus> ?? [.. selectedItemsWithParent];
         bool localExists = items.Any(item => !item.IsTracked);
         if (localExists)
         {
@@ -96,7 +96,7 @@ public class GitRevisionTester : IGitRevisionTester
         }
 
         if (revision.Refs.Where(gitHead => !string.IsNullOrWhiteSpace(gitHead.Name))
-                         .Any(gitHead => gitHead.Name.IndexOf(criteria, StringComparison.OrdinalIgnoreCase) >= 0))
+                         .Any(gitHead => gitHead.Name.Contains(criteria, StringComparison.OrdinalIgnoreCase)))
         {
             return true;
         }

@@ -126,7 +126,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     {
         if (string.IsNullOrWhiteSpace(word))
         {
-            return Array.Empty<TextMarker>();
+            return [];
         }
 
         List<TextMarker> selectionMarkers = [];

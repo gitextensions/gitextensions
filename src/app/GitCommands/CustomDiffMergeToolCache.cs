@@ -74,11 +74,8 @@ public class CustomDiffMergeToolCache
         }
         finally
         {
-            if (_tools is null)
-            {
-                // Parsing has failed, just provide an empty list, no user notification
-                _tools = Array.Empty<string>();
-            }
+            // Parsing has failed, just provide an empty list, no user notification
+            _tools ??= [];
 
             _mutex.Release();
         }
@@ -116,7 +113,7 @@ public class CustomDiffMergeToolCache
 
             // two tabs, then tool name, cmd (if split in 3) in second
             // cmd is unreliable for diff and not needed but could be used for mergetool special handling
-            string[] delimit = { " ", ".cmd" };
+            string[] delimit = [" ", ".cmd"];
             string[] tool = l[2..].Split(delimit, 2, StringSplitOptions.None);
             if (tool.Length == 0)
             {
@@ -124,7 +121,7 @@ public class CustomDiffMergeToolCache
             }
 
             // Ignore (known) tools that must run in a terminal
-            string[] ignoredTools = { "vimdiff", "vimdiff1", "vimdiff2", "vimdiff3" };
+            string[] ignoredTools = ["vimdiff", "vimdiff1", "vimdiff2", "vimdiff3"];
             string toolName = tool[0];
             if (!string.IsNullOrWhiteSpace(toolName) && !tools.Contains(toolName) && !ignoredTools.Contains(toolName))
             {

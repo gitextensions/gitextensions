@@ -167,7 +167,7 @@ public sealed class ImpactLoader : IDisposable
         string authorName = RespectMailmap ? "%aN" : "%an";
         string command = $"log --pretty=tformat:\"--- %ad --- {authorName}\" --numstat --date=short --find-copies --all --no-merges";
         ExecutionResult result = module.GitExecutable.Execute(command, cancellationToken: token);
-        List<string> lines = result.StandardOutput.Split('\n', StringSplitOptions.RemoveEmptyEntries).ToList();
+        List<string> lines = [.. result.StandardOutput.Split('\n', StringSplitOptions.RemoveEmptyEntries)];
 
         const int linePerCommitEstimationInGitLogOutput = 6; // chosen by fair dice roll, guaranted to be random ;) ( https://xkcd.com/221/ )
         int estimatedCommitCount = lines.Count / linePerCommitEstimationInGitLogOutput;
@@ -197,7 +197,7 @@ public sealed class ImpactLoader : IDisposable
             line = line[4..];
 
             // Split date and author
-            string[] header = line.Split(new[] { " --- " }, 2, StringSplitOptions.RemoveEmptyEntries);
+            string[] header = line.Split([" --- "], 2, StringSplitOptions.RemoveEmptyEntries);
 
             if (header.Length != 2)
             {

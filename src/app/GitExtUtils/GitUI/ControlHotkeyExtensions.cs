@@ -161,7 +161,7 @@ public static class ControlHotkeyExtensions
                 {
                     case TextBoxBase t:
                         _setSelectedTextInternalMethod.Invoke(t,
-                            new object[] { string.Empty, /* clear undo */ false });
+                            [string.Empty, /* clear undo */ false]);
                         return;
                     case ComboBox cb:
                         cb.SelectedText = string.Empty;
@@ -199,7 +199,7 @@ public static class ControlHotkeyExtensions
             BindingFlags.Instance | BindingFlags.NonPublic,
             binder: null,
             types: Type.EmptyTypes,
-            modifiers: Array.Empty<ParameterModifier>());
+            modifiers: []);
 
     private static readonly MethodInfo _setSelectedTextInternalMethod =
         typeof(TextBoxBase).GetMethod("SetSelectedTextInternal",

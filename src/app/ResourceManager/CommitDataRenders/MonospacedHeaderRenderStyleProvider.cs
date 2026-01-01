@@ -12,8 +12,8 @@ public sealed class MonospacedHeaderRenderStyleProvider : IHeaderRenderStyleProv
 
     public MonospacedHeaderRenderStyleProvider()
     {
-        string[] strings = new[]
-        {
+        string[] strings =
+        [
             TranslatedStrings.Author,
             TranslatedStrings.AuthorDate,
             TranslatedStrings.Committer,
@@ -21,7 +21,7 @@ public sealed class MonospacedHeaderRenderStyleProvider : IHeaderRenderStyleProv
             TranslatedStrings.CommitHash,
             TranslatedStrings.GetChildren(10), // assume text for plural case is longer
             TranslatedStrings.GetParents(10)
-        };
+        ];
 
         _maxLength = strings.Select(s => s.Length).Max() + 2;
     }
@@ -38,5 +38,5 @@ public sealed class MonospacedHeaderRenderStyleProvider : IHeaderRenderStyleProv
 
     public int GetMaxWidth() => _maxLength;
 
-    public IEnumerable<int> GetTabStops() => Enumerable.Empty<int>();
+    public IEnumerable<int> GetTabStops() => [];
 }

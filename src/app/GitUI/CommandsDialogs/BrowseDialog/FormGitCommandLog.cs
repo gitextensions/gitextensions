@@ -119,7 +119,6 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
 
         if (GitModule.GitCommandCache.TryGet(command, out string? cmdOut, out string? cmdErr))
         {
-            Encoding encoding = GitModule.SystemEncoding;
             commandCacheOutput.Text =
                 command +
                 "\n-------------------------------------\n\n" +

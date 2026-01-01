@@ -27,9 +27,11 @@ public abstract class FileSettingsCache : SettingsCache
         SettingsFilePath = settingsFilePath;
         _autoSave = autoSave;
 
-        _saveTimer = new Timer(SaveTime);
-        _saveTimer.Enabled = false;
-        _saveTimer.AutoReset = false;
+        _saveTimer = new Timer(SaveTime)
+        {
+            Enabled = false,
+            AutoReset = false
+        };
         _saveTimer.Elapsed += OnSaveTimer;
 
         _fileWatcher.IncludeSubdirectories = false;

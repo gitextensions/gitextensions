@@ -67,8 +67,8 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
 
     private void Delete_Click(object sender, EventArgs e)
     {
-        IGitRef[] selectedBranches = Branches.GetSelectedBranches().ToArray();
-        if (!selectedBranches.Any())
+        IGitRef[] selectedBranches = [.. Branches.GetSelectedBranches()];
+        if (selectedBranches.Length == 0)
         {
             return;
         }

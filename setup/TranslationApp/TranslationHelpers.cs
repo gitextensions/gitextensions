@@ -63,7 +63,7 @@ internal static class TranslationHelpers
             IEnumerable<TranslationItemWithCategory> list = from item in file.TranslationCategories
                        from translationItem in item.Body.TranslationItems
                        select new TranslationItemWithCategory(item.Name, translationItem);
-            items.Add(key, list.ToList());
+            items.Add(key, [.. list]);
         }
 
         return items;
@@ -159,7 +159,7 @@ internal static class TranslationHelpers
 
         foreach ((string key, List<TranslationItemWithCategory> translateItems) in items)
         {
-            TranslationFile foreignTranslation = new(GitCommands.AppSettings.ProductVersion, "en", targetLanguageCode);
+            TranslationFile foreignTranslation = new("en", targetLanguageCode);
             foreach (TranslationItemWithCategory translateItem in translateItems)
             {
                 TranslationItem item = translateItem.GetTranslationItem();

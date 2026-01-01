@@ -155,13 +155,13 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
     private void ApplyLayout()
     {
-        Control[] controls1 = new Control[]
-        {
+        Control[] controls1 =
+        [
             tlpnlBranches,
             horLine,
             tlpnlRemoteOptions,
             localChangesGB
-        };
+        ];
 
         localChangesGB.AutoSize = true;
         localChangesGB.Dock = DockStyle.Fill;
@@ -183,7 +183,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
         }
 
         tlpnlMain.RowStyles[2].Height = Remotebranch.Checked ? _controls[tlpnlRemoteOptions] : 0;
-        tlpnlMain.Height = tlpnlMain.Height - _controls[tlpnlRemoteOptions];
+        tlpnlMain.Height -= _controls[tlpnlRemoteOptions];
     }
 
     private void PopulateBranches()
@@ -203,7 +203,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
             branchNames = GetContainsRevisionBranches();
         }
 
-        Branches.Items.AddRange(branchNames.Where(name => !string.IsNullOrWhiteSpace(name)).ToArray<object>());
+        Branches.Items.AddRange([.. branchNames.Where(name => !string.IsNullOrWhiteSpace(name))]);
 
         if (_containRevisions is not null && Branches.Items.Count == 1)
         {

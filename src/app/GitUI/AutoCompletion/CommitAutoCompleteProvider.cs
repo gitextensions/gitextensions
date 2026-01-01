@@ -38,7 +38,7 @@ public class CommitAutoCompleteProvider : IAutoCompleteProvider
         if (!result.ExitedSuccessfully)
         {
             // Failed after retry, do not bother
-            return Enumerable.Empty<AutoCompleteWord>();
+            return [];
         }
 
         string output = result.StandardOutput;
@@ -86,16 +86,7 @@ public class CommitAutoCompleteProvider : IAutoCompleteProvider
     }
 
     private IGitModule GetModule()
-    {
-        IGitModule module = _getModule();
-
-        if (module is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-        }
-
-        return module;
-    }
+        => _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
 
     private static Regex? GetRegexForExtension(string extension)
     {

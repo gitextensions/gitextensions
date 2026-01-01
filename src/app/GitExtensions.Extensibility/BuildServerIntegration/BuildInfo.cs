@@ -9,7 +9,7 @@ public class BuildInfo
     public long? Duration { get; set; }
     public BuildStatus Status { get; set; }
     public string? Description { get; set; }
-    public IReadOnlyList<ObjectId> CommitHashList { get; set; } = Array.Empty<ObjectId>();
+    public IReadOnlyList<ObjectId> CommitHashList { get; set; } = [];
     public string? Url { get; set; }
     public bool ShowInBuildReportTab { get; set; } = true;
     public string? Tooltip { get; set; }

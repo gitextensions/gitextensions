@@ -35,11 +35,11 @@ public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPag
                 await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
                 IEnumerable<Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>> exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
-                string[] buildServerTypes = exports.Select(export =>
+                string[] buildServerTypes = [.. exports.Select(export =>
                     {
                         string canBeLoaded = export.Metadata.CanBeLoaded;
                         return export.Metadata.BuildServerType.Combine(" - ", canBeLoaded);
-                    }).ToArray();
+                    })];
 
                 await this.SwitchToMainThreadAsync();
 

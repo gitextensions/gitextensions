@@ -41,17 +41,10 @@ internal sealed class GraphCache
             return;
         }
 
-        if (GraphBitmap is not null)
-        {
-            GraphBitmap.Dispose();
-            GraphBitmap = null;
-        }
-
-        if (GraphBitmapGraphics is not null)
-        {
-            GraphBitmapGraphics.Dispose();
-            GraphBitmapGraphics = null;
-        }
+        GraphBitmap?.Dispose();
+        GraphBitmap = null;
+        GraphBitmapGraphics?.Dispose();
+        GraphBitmapGraphics = null;
 
         GraphBitmap = new Bitmap(width, height, PixelFormat.Format32bppPArgb);
         GraphBitmapGraphics = Graphics.FromImage(GraphBitmap);

@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using GitCommands;
 using GitCommands.Git;
@@ -157,7 +157,7 @@ public sealed class LinkFactory : ILinkFactory
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal struct TestAccessor
+    internal readonly struct TestAccessor
     {
         private readonly LinkFactory _linkFactory;
 
@@ -166,10 +166,10 @@ public sealed class LinkFactory : ILinkFactory
             _linkFactory = linkFactory;
         }
 
-        public bool ParseInternalScheme(Uri uri, [NotNullWhen(returnValue: true)] out CommandEventArgs? commandEventArgs)
+        public readonly bool ParseInternalScheme(Uri uri, [NotNullWhen(returnValue: true)] out CommandEventArgs? commandEventArgs)
             => LinkFactory.ParseInternalScheme(uri, out commandEventArgs);
 
-        public bool TryParseLink(string? linkUri, [NotNullWhen(returnValue: true)] out Uri? uri)
+        public readonly bool TryParseLink(string? linkUri, [NotNullWhen(returnValue: true)] out Uri? uri)
             => LinkFactory.TryParseLink(linkUri, out uri);
     }
 }

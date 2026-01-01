@@ -111,7 +111,7 @@ internal partial class ControlHotkeys : GitExtensionsControl
                 if (cmd is not null)
                 {
                     listMappings.Items.Add(
-                        new ListViewItem(new[] { cmd.Name, cmd.KeyData.ToText() })
+                        new ListViewItem([cmd.Name, cmd.KeyData.ToText()])
                         {
                             Tag = cmd
                         });

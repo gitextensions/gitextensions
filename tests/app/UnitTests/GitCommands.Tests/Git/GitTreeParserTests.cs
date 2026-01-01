@@ -24,7 +24,7 @@ public class GitTreeParserTests
     [Test]
     public void Parse_should_return_the_list()
     {
-        List<GitItem> items = _parser.Parse(GetLsTreeOutput()).ToList();
+        List<GitItem> items = [.. _parser.Parse(GetLsTreeOutput())];
 
         items.Should().HaveCount(13);
 
@@ -97,7 +97,7 @@ public class GitTreeParserTests
     [Test]
     public void ParseLsFiles_should_return_the_list()
     {
-        List<GitItem> items = _parser.ParseLsFiles(GetLsFilesOutput()).ToList();
+        List<GitItem> items = [.. _parser.ParseLsFiles(GetLsFilesOutput())];
 
         items.Should().HaveCount(6);
 

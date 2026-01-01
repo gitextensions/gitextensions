@@ -15,8 +15,7 @@ public static class FontUtil
 
             MainInstructionFont = Font.FromLogFont(pFont);
 
-            NativeMethods.COLORREF pColor;
-            NativeMethods.GetThemeColor(hTheme, NativeMethods.TEXT_MAININSTRUCTION, 0, NativeMethods.TMT_TEXTCOLOR, out pColor);
+            NativeMethods.GetThemeColor(hTheme, NativeMethods.TEXT_MAININSTRUCTION, 0, NativeMethods.TMT_TEXTCOLOR, out NativeMethods.COLORREF pColor);
 
             MainInstructionColor = Color.FromArgb(pColor.R, pColor.G, pColor.B);
 

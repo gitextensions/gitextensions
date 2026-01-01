@@ -87,7 +87,7 @@ public sealed class GitRefTests
         string name = "local_branch";
         string completeName = $"refs/remotes/{remoteName}/{name}";
 
-        GitRef remoteBranchRef = SetupRawRemoteRef(name, remoteName, completeName);
+        GitRef remoteBranchRef = SetupRawRemoteRef(remoteName, completeName);
         ClassicAssert.AreEqual(remoteBranchRef.LocalName, name);
     }
 
@@ -99,11 +99,11 @@ public sealed class GitRefTests
         string name = "a_short_name";
         string completeName = $"refs/remotes/{name}";
 
-        GitRef remoteBranchRef = SetupRawRemoteRef(name, remoteName, completeName);
+        GitRef remoteBranchRef = SetupRawRemoteRef(remoteName, completeName);
         ClassicAssert.AreEqual(remoteBranchRef.LocalName, name);
     }
 
-    private static GitRef SetupRawRemoteRef(string remoteBranchShortName, string remoteName, string completeName)
+    private static GitRef SetupRawRemoteRef(string remoteName, string completeName)
     {
         IGitModule localGitModule = Substitute.For<IGitModule>();
         localGitModule.GetEffectiveSetting($"branch.local_branch.merge").Returns(completeName);

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
@@ -568,10 +568,7 @@ public sealed partial class FormCommit : GitModuleForm
     {
         IGitUICommands oldCommands = e.OldCommands;
 
-        if (oldCommands is not null)
-        {
-            oldCommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
-        }
+        oldCommands?.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
 
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
 
@@ -928,7 +925,7 @@ public sealed partial class FormCommit : GitModuleForm
     /// </summary>
     private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus> allChangedFiles)
     {
-        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? [];
 
         List<GitItemStatus> unstagedFiles = [];
         List<GitItemStatus> stagedFiles = [];
@@ -1017,10 +1014,10 @@ public sealed partial class FormCommit : GitModuleForm
 
         Validates.NotNull(lastSelection);
         IReadOnlyList<GitItemStatus> newItems = _currentFilesList == Staged ? stagedFiles : unstagedFiles;
-        HashSet<string> names = lastSelection.Select(x => x.Name).ToHashSet();
-        List<GitItemStatus> newSelection = newItems.Where(x => names.Contains(x.Name)).ToList();
+        HashSet<string> names = [.. lastSelection.Select(x => x.Name)];
+        List<GitItemStatus> newSelection = [.. newItems.Where(x => names.Contains(x.Name))];
 
-        if (newSelection.Any())
+        if (newSelection.Count != 0)
         {
             _currentFilesList.SelectedGitItems = newSelection;
         }
@@ -1212,7 +1209,7 @@ public sealed partial class FormCommit : GitModuleForm
 
                 if (result == btnCheckout)
                 {
-                    ObjectId[] revisions = _editedCommit is not null ? new[] { _editedCommit.ObjectId } : null;
+                    ObjectId[] revisions = _editedCommit is not null ? [_editedCommit.ObjectId] : null;
                     if (!UICommands.StartCheckoutBranch(this, revisions))
                     {
                         return;
@@ -1444,7 +1441,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void UnstageAllFiles()
     {
-        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? [];
 
         OnStageAreaLoaded += StageAreaLoaded;
 
@@ -1552,7 +1549,7 @@ public sealed partial class FormCommit : GitModuleForm
         }
 
         // Staged.SelectedItems.Items() is needed only once, so we can safely convert to list here
-        List<GitItemStatus> allFiles = Staged.SelectedItems.Items().ToList();
+        List<GitItemStatus> allFiles = [.. Staged.SelectedItems.Items()];
         if (allFiles.Count == 0)
         {
             return;
@@ -1593,8 +1590,8 @@ public sealed partial class FormCommit : GitModuleForm
 
                 _skipUpdate = true;
                 InitializedStaged();
-                List<GitItemStatus> stagedFiles = Staged.GitItemStatuses.ToList();
-                List<GitItemStatus> unstagedFiles = Unstaged.GitItemStatuses.ToList();
+                List<GitItemStatus> stagedFiles = [.. Staged.GitItemStatuses];
+                List<GitItemStatus> unstagedFiles = [.. Unstaged.GitItemStatuses];
                 foreach (GitItemStatus item in allFiles)
                 {
                     GitItemStatus item1 = item;
@@ -1649,7 +1646,7 @@ public sealed partial class FormCommit : GitModuleForm
 
                 if (Staged.IsEmpty)
                 {
-                    IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+                    IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? [];
 
                     _currentFilesList = Unstaged;
                     RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
@@ -1796,7 +1793,7 @@ public sealed partial class FormCommit : GitModuleForm
             EnableStageButtons(false);
             try
             {
-                IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+                IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? [];
 
                 Unstaged.StoreNextItemToSelect();
                 toolStripProgressBar1.Visible = true;
@@ -1824,7 +1821,7 @@ public sealed partial class FormCommit : GitModuleForm
                 else
                 {
                     InitializedStaged();
-                    List<GitItemStatus> unstagedFiles = Unstaged.GitItemStatuses.ToList();
+                    List<GitItemStatus> unstagedFiles = [.. Unstaged.GitItemStatuses];
                     _skipUpdate = true;
                     HashSet<string?> names = [];
                     foreach (GitItemStatus item in files)
@@ -1955,11 +1952,10 @@ public sealed partial class FormCommit : GitModuleForm
             authorPattern = $"^{Regex.Escape(userName)} <{Regex.Escape(userEmail)}>$";
         }
 
-        List<string> prevMessages = Module.GetPreviousCommitMessages(maxCount, "HEAD", authorPattern)
+        List<string> prevMessages = [.. Module.GetPreviousCommitMessages(maxCount, "HEAD", authorPattern)
             .WhereNotNull()
             .Select(message => message.TrimEnd('\n'))
-            .Where(message => !string.IsNullOrWhiteSpace(message))
-            .ToList();
+            .Where(message => !string.IsNullOrWhiteSpace(message))];
 
         if (!string.IsNullOrWhiteSpace(msg) && !prevMessages.Contains(msg))
         {
@@ -1982,12 +1978,12 @@ public sealed partial class FormCommit : GitModuleForm
             AddCommitMessageToMenu(prevMsg);
         }
 
-        commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
-        {
+        commitMessageToolStripMenuItem.DropDownItems.AddRange(
+        [
             toolStripMenuItem1,
             generateListOfChangesInSubmodulesChangesToolStripMenuItem,
             ShowOnlyMyMessagesToolStripMenuItem
-        });
+        ]);
         commitMessageToolStripMenuItem.DropDown.ResumeLayout();
 
         void AddCommitMessageToMenu(string commitMessage)
@@ -2132,7 +2128,7 @@ public sealed partial class FormCommit : GitModuleForm
     {
         foreach (FileStatusItem item in items)
         {
-            GitRevision?[] revs = { item.SecondRevision, item.FirstRevision };
+            GitRevision?[] revs = [item.SecondRevision, item.FirstRevision];
             UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, RevisionDiffKind.DiffAB, item.Item.IsTracked, customTool: toolName);
         }
     }
@@ -2485,7 +2481,7 @@ public sealed partial class FormCommit : GitModuleForm
             }
 
             // Add templates from settings
-            foreach (CommitTemplateItem item in CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>())
+            foreach (CommitTemplateItem item in CommitTemplateItem.LoadFromSettings() ?? [])
             {
                 isItemAdded |= CreateToolStripItem(item);
             }
@@ -2665,18 +2661,18 @@ public sealed partial class FormCommit : GitModuleForm
             {
                 if (nextChar == ':' || nextChar == '!')
                 {
-                    return ($"{keyword}(){currentTitle.Substring(key.Length)}", scopePosition);
+                    return ($"{keyword}(){currentTitle[key.Length..]}", scopePosition);
                 }
 
                 if (nextChar == '(')
                 {
-                    return ReplaceKeyword(newTitle => 2 + Math.Max(newTitle.IndexOf(":"), newTitle.IndexOf("(")));
+                    return ReplaceKeyword(newTitle => 2 + Math.Max(newTitle.IndexOf(':'), newTitle.IndexOf('(')));
                 }
             }
 
             (string message, int selectionStart) ReplaceKeyword(Func<string, int> maxPosition)
             {
-                string newTitle = $"{keyword}{currentTitle.Substring(key.Length)}";
+                string newTitle = $"{keyword}{currentTitle[key.Length..]}";
                 int newMessageLength = Message.Text.Length + newTitle.Length - currentTitle.Length;
                 return (newTitle, Math.Min(newMessageLength, Math.Max(maxPosition(newTitle), currentPosition + keyword.Length - key.Length)));
             }

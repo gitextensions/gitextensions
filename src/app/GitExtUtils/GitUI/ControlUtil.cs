@@ -70,5 +70,5 @@ public static class ControlUtil
     /// Calls protected method <see cref="Control.SetStyle"/>.
     /// </summary>
     public static void SetStyle(this Control control, ControlStyles styles, bool value) =>
-        SetStyleMethod.Invoke(control, new object[] { styles, value });
+        SetStyleMethod.Invoke(control, [styles, value]);
 }

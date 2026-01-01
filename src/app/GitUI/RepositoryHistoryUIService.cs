@@ -123,7 +123,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         foreach (IGrouping<string, RecentRepoInfo> repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
         {
-            AddFavouriteRepositories(repo.Key, repo.ToList());
+            AddFavouriteRepositories(repo.Key, [.. repo]);
         }
 
         void AddFavouriteRepositories(string? category, IList<RecentRepoInfo> repos)
@@ -168,7 +168,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
 
-        var number = 0;
+        int number = 0;
         foreach (RecentRepoInfo repo in pinnedRepos)
         {
             AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored);

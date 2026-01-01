@@ -13,7 +13,7 @@ internal class ThemeMigration
     public ThemeMigration(ThemeRepository repository)
     {
         _repository = repository ?? throw new ArgumentNullException(nameof(repository));
-        _themeIds = _repository.GetThemeIds().ToArray();
+        _themeIds = [.. _repository.GetThemeIds()];
     }
 
     public void Migrate()

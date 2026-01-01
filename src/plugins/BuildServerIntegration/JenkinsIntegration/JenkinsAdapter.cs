@@ -55,6 +55,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
     // last known build per project
     private readonly Dictionary<string, long> _lastProjectBuildTime = [];
     private Regex? _ignoreBuilds;
+    private static readonly char[] separator = ['|'];
 
     public void Initialize(IBuildServerWatcher buildServerWatcher, SettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
     {
@@ -85,7 +86,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
             UpdateHttpClientOptions(buildServerCredentials);
 
             string[] projectUrls = _buildServerWatcher.ReplaceVariables(projectName)
-                .Split(new[] { '|' }, StringSplitOptions.RemoveEmptyEntries);
+                .Split(separator, StringSplitOptions.RemoveEmptyEntries);
             foreach (string projectUrl in projectUrls.Select(s => baseAddress + "job/" + s.Trim() + "/"))
             {
                 _lastProjectBuildTime[projectUrl] = -1;
@@ -119,7 +120,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
     {
         string? t;
         long timestamp = 0;
-        IEnumerable<JToken> s = Enumerable.Empty<JToken>();
+        IEnumerable<JToken> s = [];
 
         try
         {
@@ -229,7 +230,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
             // Similar, the build results could be cached so they are available when switching repos
             foreach (JoinableTask<ResponseInfo> info in latestBuildInfos.Where(info => !info.Task.IsFaulted))
             {
-                ResponseInfo responseInfo = info.Join();
+                ResponseInfo responseInfo = info.Join(cancellationToken);
 
                 Validates.NotNull(responseInfo.Url);
 
@@ -328,7 +329,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
         catch (Exception ex)
         {
             // Cancelling a sub-task is similar to cancelling this task
-            if (!(ex.InnerException is OperationCanceledException))
+            if (ex.InnerException is not OperationCanceledException)
             {
                 observer.OnError(ex);
             }
@@ -340,12 +341,10 @@ internal class JenkinsAdapter : IBuildServerAdapter
         static bool StatusIsBetter(BuildStatus newStatus, ObjectId commit, Dictionary<ObjectId, BuildStatus> builds)
         {
             // No existing status
-            if (!builds.ContainsKey(commit))
+            if (!builds.TryGetValue(commit, out BuildStatus existingStatus))
             {
                 return true;
             }
-
-            BuildStatus existingStatus = builds[commit];
 
             // Completed status is never replaced
             if (IsBuildCompleted(existingStatus))
@@ -501,7 +500,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
                 }
                 else
                 {
-                    return await httpContent.ReadAsStreamAsync();
+                    return await httpContent.ReadAsStreamAsync(cancellationToken);
                 }
             }
             else if (resp.StatusCode == HttpStatusCode.NotFound)
@@ -521,13 +520,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
             Validates.NotNull(_buildServerWatcher);
 
-            IBuildServerCredentials buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, false);
-
-            if (buildServerCredentials is null)
-            {
-                throw new OperationCanceledException(resp.ReasonPhrase);
-            }
-
+            IBuildServerCredentials buildServerCredentials = _buildServerWatcher.GetBuildServerCredentials(this, false) ?? throw new OperationCanceledException(resp.ReasonPhrase);
             UpdateHttpClientOptions(buildServerCredentials);
 
             return await GetStreamAsync(restServicePath, cancellationToken);
@@ -554,7 +547,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
     {
         using Stream responseStream = await GetStreamAsync(relativePath, cancellationToken).ConfigureAwait(false);
         using StreamReader reader = new(responseStream);
-        return await reader.ReadToEndAsync();
+        return await reader.ReadToEndAsync(cancellationToken);
     }
 
     private static string FormatToGetJson(string restServicePath, bool buildsInfo = false)
@@ -565,7 +558,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
         if (postIndex >= 0)
         {
             int endLen = restServicePath.Length - postIndex;
-            if (restServicePath.EndsWith("/"))
+            if (restServicePath.EndsWith('/'))
             {
                 endLen--;
             }
@@ -600,7 +593,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
             }
         }
 
-        if (!restServicePath.EndsWith("/"))
+        if (!restServicePath.EndsWith('/'))
         {
             restServicePath += "/";
         }

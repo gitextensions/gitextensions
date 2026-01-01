@@ -55,12 +55,12 @@ public partial class FormFixHome : GitExtensionsForm
             }
 
             string[] candidates =
-            {
+            [
                         Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User),
                         Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH"),
                         Environment.GetEnvironmentVariable("USERPROFILE"),
                         Environment.GetFolderPath(Environment.SpecialFolder.Personal)
-            };
+            ];
 
             foreach (string candidate in candidates)
             {

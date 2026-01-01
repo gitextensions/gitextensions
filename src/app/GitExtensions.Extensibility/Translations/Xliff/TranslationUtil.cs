@@ -35,7 +35,7 @@ public static class TranslationUtil
     }
 
     private static readonly string[] UnTranslatableDLLs =
-    {
+    [
         "mscorlib",
         "Microsoft",
         "Presentation",
@@ -52,7 +52,7 @@ public static class TranslationUtil
         "ConEmuWinForms",
         "TranslationApp",
         "netstandard",
-    };
+    ];
 
     private static bool AllowTranslateProperty([NotNullWhen(returnValue: true)] string? text)
     {
@@ -310,7 +310,7 @@ public static class TranslationUtil
             property.SetValue(obj, value, null);
         }
 
-        string ProvideDefaultValue() => "";
+        static string ProvideDefaultValue() => "";
     }
 
     public static void TranslateItemsFromFields(string category, object obj, ITranslation translation)
@@ -368,7 +368,7 @@ public static class TranslationUtil
                 continue;
             }
 
-            bool isPlugin = assembly.Location.ToPosixPath().IndexOf("/Plugins/", StringComparison.OrdinalIgnoreCase) != -1;
+            bool isPlugin = assembly.Location.ToPosixPath().Contains("/Plugins/", StringComparison.OrdinalIgnoreCase);
             string key = isPlugin ? ".Plugins" : "";
 
             if (!dictionary.TryGetValue(key, out List<Type>? list))
@@ -449,7 +449,7 @@ public static class TranslationUtil
     /// <summary>
     ///  Replaces native path separator with POSIX path separator (/).
     /// </summary>
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     private static string? ToPosixPath(this string? path)
     {
         return path?.Replace(NativeDirectorySeparatorChar, PosixDirectorySeparatorChar);

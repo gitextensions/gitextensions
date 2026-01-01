@@ -634,7 +634,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
         return;
 
-        void DeleteTemporaryFile(string? path)
+        static void DeleteTemporaryFile(string? path)
         {
             if (path is not null && File.Exists(path))
             {
@@ -826,9 +826,9 @@ public partial class FormResolveConflicts : GitModuleForm
         ItemType itemType = GetItemType(item.Filename);
         if (itemType == ItemType.Submodule)
         {
-            baseFileName.Text = baseFileName.Text + GetShortHash(item.Base);
-            localFileName.Text = localFileName.Text + GetShortHash(item.Local);
-            remoteFileName.Text = remoteFileName.Text + GetShortHash(item.Remote);
+            baseFileName.Text += GetShortHash(item.Base);
+            localFileName.Text += GetShortHash(item.Local);
+            remoteFileName.Text += GetShortHash(item.Remote);
         }
     }
 

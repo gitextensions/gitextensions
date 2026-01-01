@@ -28,7 +28,7 @@ public sealed partial class FormCreateTag : GitModuleForm
         InitializeComponent();
         InitializeComplete();
 
-        annotate.Items.AddRange(new object[] { _trsLightweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text });
+        annotate.Items.AddRange([_trsLightweight.Text, _trsAnnotated.Text, _trsSignDefault.Text, _trsSignSpecificKey.Text]);
         annotate.SelectedIndex = 0;
 
         tagMessage.MistakeFont = new Font(tagMessage.MistakeFont, FontStyle.Underline);

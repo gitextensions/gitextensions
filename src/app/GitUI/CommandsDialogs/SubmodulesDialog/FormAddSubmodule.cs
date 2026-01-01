@@ -87,7 +87,7 @@ public partial class FormAddSubmodule : GitModuleForm
     {
         if (string.IsNullOrWhiteSpace(url))
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         GitArgumentBuilder gitArguments = new("ls-remote") { "--heads", url.ToPosixPath().Quote() };

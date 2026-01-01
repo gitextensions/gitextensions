@@ -30,7 +30,7 @@ public sealed class RepoStateVisualiserTests
     [Test]
     public void ReturnsIconCleanWhenThereIsNoChangedFiles()
     {
-        (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke(Array.Empty<GitItemStatus>());
+        (Image image, Brush brush) commitIcon = _repoStateVisualiser.Invoke([]);
 
         ClassicAssert.AreEqual(RepoStateVisualiser.Clean, commitIcon);
     }

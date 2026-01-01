@@ -22,7 +22,7 @@ public class FindAndReplaceFormTests
             End = end;
         }
 
-        public override string ToString()
+        public override readonly string ToString()
             => $"[[Line = {Start.X}, Column = {Start.Y}], [Line = {End.X}, Column = {End.Y}]]";
     }
 

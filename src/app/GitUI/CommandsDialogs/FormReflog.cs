@@ -85,7 +85,7 @@ public partial class FormReflog : GitModuleForm
                 item
             };
             string output = UICommands.Module.GitExecutable.GetOutput(arguments);
-            List<RefLine> refLines = ConvertReflogOutput().ToList();
+            List<RefLine> refLines = [.. ConvertReflogOutput()];
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             _lastHitRowIndex = 0;
             SortableRefLineList refLinesList = new();

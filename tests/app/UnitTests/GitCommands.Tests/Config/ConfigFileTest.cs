@@ -211,8 +211,10 @@ public class ConfigFileTest
             File.WriteAllText(GetConfigFileName(), GetDefaultConfigFileContent(), GitModule.SystemEncoding);
 
             // Make sure it is hidden
-            FileInfo configFile = new(GetConfigFileName());
-            configFile.Attributes = FileAttributes.Hidden;
+            FileInfo configFile = new(GetConfigFileName())
+            {
+                Attributes = FileAttributes.Hidden
+            };
         }
 
         // PERFORM TEST
@@ -631,8 +633,10 @@ public class ConfigFileTest
         if (File.Exists(GetConfigFileName()))
         {
             // Make sure it is hidden
-            FileInfo configFile = new(GetConfigFileName());
-            configFile.Attributes = FileAttributes.Normal;
+            FileInfo configFile = new(GetConfigFileName())
+            {
+                Attributes = FileAttributes.Normal
+            };
 
             File.Delete(GetConfigFileName());
         }

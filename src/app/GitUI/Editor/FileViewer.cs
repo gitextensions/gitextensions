@@ -439,7 +439,7 @@ public partial class FileViewer : GitModuleControl
         };
     }
 
-    public (ArgumentString Args, string ExtraCacheKey) GetDifftasticArguments(bool isRangeDiff = false)
+    public (ArgumentString Args, string ExtraCacheKey) GetDifftasticArguments()
     {
         EnvironmentAbstraction env = new();
         StringBuilder extraCacheKey = new();
@@ -831,9 +831,7 @@ public partial class FileViewer : GitModuleControl
         {
             using FileStream stream = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using StreamReader reader = FileReader.OpenStream(stream, GitModule.LosslessEncoding);
-#pragma warning disable VSTHRD103 // Call async methods when in an async method
             string content = reader.ReadToEnd();
-#pragma warning restore VSTHRD103 // Call async methods when in an async method
             FilePreamble = reader.CurrentEncoding.GetPreamble();
             return content;
         }
@@ -917,7 +915,7 @@ public partial class FileViewer : GitModuleControl
 
         Font = AppSettings.FixedWidthFont;
 
-        string[] encodings = AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName).ToArray();
+        string[] encodings = [.. AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName)];
         encodingToolStripComboBox.Items.AddRange(encodings);
         encodingToolStripComboBox.ResizeDropDownWidth(minWidth: 50, maxWidth: 250);
     }
@@ -1620,7 +1618,7 @@ public partial class FileViewer : GitModuleControl
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        IObjectGitItem[] items = Module.GetTree(commitId, full: true, file.Name, cancellationToken).ToArray();
+        IObjectGitItem[] items = [.. Module.GetTree(commitId, full: true, file.Name, cancellationToken)];
         if (items.Length == 1)
         {
             IObjectGitItem gitItem = items[0];
@@ -2152,7 +2150,7 @@ public partial class FileViewer : GitModuleControl
 
         return true;
 
-        bool PerformClickIfAvailable(ToolStripItem item)
+        static bool PerformClickIfAvailable(ToolStripItem item)
         {
             if (item.Enabled && item.Available)
             {

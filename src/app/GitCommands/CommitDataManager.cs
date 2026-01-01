@@ -100,16 +100,7 @@ public sealed class CommitDataManager : ICommitDataManager
     }
 
     private IGitModule GetModule()
-    {
-        IGitModule module = _getModule();
-
-        if (module is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-        }
-
-        return module;
-    }
+        => _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
 
     private bool TryGetCommitLog(string commitId, string format, [NotNullWhen(returnValue: false)] out string? error, [NotNullWhen(returnValue: true)] out string? data, bool cache)
     {

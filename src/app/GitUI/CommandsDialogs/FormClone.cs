@@ -56,10 +56,9 @@ public partial class FormClone : GitExtensionsDialog
         _NO_TRANSLATE_From.DisplayMember = nameof(Repository.Path);
 
         IList<Repository> localsHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
-        string[] historicPaths = localsHistory.Select(x => x.GetParentPath())
+        string[] historicPaths = [.. localsHistory.Select(x => x.GetParentPath())
                                               .Where(x => !string.IsNullOrEmpty(x))
-                                              .Distinct(StringComparer.CurrentCultureIgnoreCase)
-                                              .ToArray();
+                                              .Distinct(StringComparer.CurrentCultureIgnoreCase)];
         _NO_TRANSLATE_To.DataSource = historicPaths;
         _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
@@ -393,7 +392,7 @@ public partial class FormClone : GitExtensionsDialog
         else
         {
             string text = _NO_TRANSLATE_Branches.Text;
-            List<string> names = _defaultBranchItems.Concat(branchList.Result.Select(o => o.LocalName)).ToList();
+            List<string> names = [.. _defaultBranchItems, .. branchList.Result.Select(o => o.LocalName)];
             _NO_TRANSLATE_Branches.DataSource = names;
             if (names.Any(a => a == text))
             {

@@ -37,7 +37,7 @@ internal class GitHubPullRequestDiscussion : IPullRequestDiscussion
             Entries.Add(new GitHubDiscussionComment { Author = comment.User.Login, Created = comment.CreatedAt, Body = comment.Body });
         }
 
-        Entries = Entries.OrderBy(entry => entry.Created).ToList();
+        Entries = [.. Entries.OrderBy(entry => entry.Created)];
     }
 }
 

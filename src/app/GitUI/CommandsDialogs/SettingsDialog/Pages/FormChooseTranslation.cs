@@ -19,7 +19,7 @@ public partial class FormChooseTranslation : GitExtensionsForm
     {
         base.OnLoad(e);
 
-        List<string> translations = new(Translator.GetAllTranslations());
+        List<string> translations = [.. Translator.GetAllTranslations()];
         translations.Sort();
         translations.Insert(0, "English");
 

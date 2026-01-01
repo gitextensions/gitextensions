@@ -18,7 +18,7 @@ public class GitCommandCacheTest
     {
         string output = "Git result";
         string error = "No Git error!";
-        string[] expectedCachedCommand = { "git command" };
+        string[] expectedCachedCommand = ["git command"];
 
         _cache.Add("git command", output, error);
 

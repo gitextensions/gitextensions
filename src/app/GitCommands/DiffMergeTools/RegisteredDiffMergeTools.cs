@@ -18,7 +18,7 @@ public static class RegisteredDiffMergeTools
                                                    }
                                                    catch (Exception)
                                                    {
-                                                       return Array.Empty<Type>();
+                                                       return [];
                                                    }
                                                })
                                                .Where(t => t.IsSubclassOf(typeof(DiffMergeTool)))

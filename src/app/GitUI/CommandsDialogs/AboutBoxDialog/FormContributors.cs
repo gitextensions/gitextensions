@@ -28,7 +28,7 @@ public sealed partial class FormContributors : GitExtensionsForm
 
             TabControl tabControl = GetNewTabControl();
 
-            string[] tabCaptions = new[] { _developers.Text, _translators.Text, _designers.Text };
+            string[] tabCaptions = [_developers.Text, _translators.Text, _designers.Text];
             TextBox[] textBoxes = new TextBox[tabCaptions.Length];
             TabPage[] tabPages = new TabPage[tabCaptions.Length];
             for (int i = 0; i < tabCaptions.Length; i++)
