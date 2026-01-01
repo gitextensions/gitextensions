@@ -109,6 +109,7 @@ public sealed partial class FormCommitTemplateSettings : GitExtensionsDialog
         Validates.NotNull(_commitTemplates);
         _NO_TRANSLATE_textCommitTemplateText.Text = _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].Text;
         _NO_TRANSLATE_textBoxCommitTemplateName.Text = _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].Name;
+        checkBoxRegexEnabled.Checked = _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].IsRegex;
     }
 
     private void RefreshLineInListBox(int line)
@@ -127,5 +128,10 @@ public sealed partial class FormCommitTemplateSettings : GitExtensionsDialog
         }
 
         _NO_TRANSLATE_comboBoxCommitTemplates.Items[line] = $"{line + 1} : {comboBoxText}";
+    }
+
+    private void checkBoxRegexEnabled_CheckedChanged(object sender, EventArgs e)
+    {
+        _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].IsRegex = checkBoxRegexEnabled.Checked;
     }
 }
