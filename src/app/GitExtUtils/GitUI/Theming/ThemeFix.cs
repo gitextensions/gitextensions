@@ -1,5 +1,4 @@
-﻿using System.Reflection;
-using System.Runtime.CompilerServices;
+﻿using System.Runtime.CompilerServices;
 using GitUI;
 
 namespace GitExtUtils.GitUI.Theming;
@@ -23,16 +22,12 @@ public static class ThemeFix
 
         container.DescendantsToFix<ToolStrip>()
             .ForEach(SetupToolStrip);
-        container.ContextMenusToFix()
-            .ForEach(SetupContextMenu);
         container.DescendantsToFix<DataGridView>()
             .ForEach(SetupDataGridView);
-        container.DescendantsToFix<TabControl>()
-            .ForEach(SetupTabControl);
-        container.DescendantsToFix<TextBoxBase>()
-             .ForEach(SetupTextBoxBase);
         container.DescendantsToFix<LinkLabel>()
             .ForEach(SetupLinkLabel);
+        container.DescendantsToFix<TabControl>()
+            .ForEach(SetupTabControl);
         container.DescendantsToFix<Button>()
             .ForEach(SetupButton);
     }
@@ -44,25 +39,15 @@ public static class ThemeFix
             .Where(control => TryAddToWeakTable(control, AlreadyFixedControls));
     }
 
-    private static IEnumerable<ContextMenuStrip> ContextMenusToFix(this Control c)
-    {
-        return c.FindDescendantsOfType<Control>()
-            .Where(control => TryAddToWeakTable(control, AlreadyFixedContextMenuOwners))
-            .Select(_ => _.ContextMenuStrip)
-            .Where(_ => _ is not null);
-    }
-
-    private static void SetupTextBoxBase(TextBoxBase textBox)
-    {
-        textBox.TouchBackColor();
-        if (textBox.BorderStyle == BorderStyle.Fixed3D)
-        {
-            textBox.BorderStyle = BorderStyle.FixedSingle;
-        }
-    }
+    // Note: TextBoxBase is not overridden, it looks a little of (requires custom paint).
+    // Fixed3D is default, has thicker border than comboboxes and blue underline when input.
+    // FixedSingle has thinner border than Comboboxes but is slightly more the same.
 
     private static void SetupToolStrip(ToolStrip strip)
     {
+        // RenderMode seem to be required for two reasons:
+        // * FormBrowse menubar background is not overridden.
+        // * LinkColor override (in SetupToolStripStatusLabel()).
         strip.RenderMode = ToolStripRenderMode.Professional;
         foreach (ToolStripLabel item in strip.Items.OfType<ToolStripLabel>())
         {
@@ -70,13 +55,9 @@ public static class ThemeFix
         }
     }
 
-    private static void SetupContextMenu(ContextMenuStrip strip)
-    {
-        strip.RenderMode = ToolStripRenderMode.Professional;
-    }
-
     private static void SetupLinkLabel(this LinkLabel label)
     {
+        // e.g. FormAbout
         label.LinkColor = Application.IsDarkModeEnabled ? Color.CornflowerBlue : label.LinkColor.AdaptTextColor();
         label.VisitedLinkColor = label.VisitedLinkColor.AdaptTextColor();
         label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
@@ -84,6 +65,7 @@ public static class ThemeFix
 
     private static void SetupToolStripStatusLabel(this ToolStripLabel label)
     {
+        // e.g. FormCommit
         label.LinkColor = Application.IsDarkModeEnabled ? Color.CornflowerBlue : label.LinkColor.AdaptTextColor();
         label.VisitedLinkColor = label.VisitedLinkColor.AdaptTextColor();
         label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
@@ -91,24 +73,28 @@ public static class ThemeFix
 
     private static void SetupButton(this Button button)
     {
-        // .net9 fix for https://github.com/dotnet/winforms/issues/11949 (only supposed to occur for 100%)
+        // e.g. reset another branch where force is required
+        // FlatStyle.Standard cannot set button color.
         if (Application.IsDarkModeEnabled && button.FlatStyle == FlatStyle.Standard)
         {
-            // In addition to not setting the BackColor (TouchBackColor() will fix),
-            // FlatStyle.Standard buttons look ugly in dark mode
             button.FlatStyle = FlatStyle.Flat;
         }
     }
 
     private static void SetupTabControl(TabControl tabControl)
     {
+        // e.g. FormBrowse tabs
+        // The tabs have mostly the same color, hard to see the active tab otherwise
         new TabControlRenderer(tabControl).Setup();
+
         tabControl.TabPages.OfType<TabPage>()
             .ForEach(SetupTabPage);
     }
 
     private static void SetupTabPage(TabPage page)
     {
+        // e.g. FormPush
+        // upper part is not painted correctly
         if (page.BackColor.IsKnownColor)
         {
             page.TouchBackColor();
@@ -117,8 +103,9 @@ public static class ThemeFix
 
     private static void SetupDataGridView(DataGridView view)
     {
+        // e.g. Settings - RevisionLinks
+        // still light color header (but this workaround is not perfect)
         view.EnableHeadersVisualStyles = false;
-        view.ColumnHeadersDefaultCellStyle.BackColor = view.ColumnHeadersDefaultCellStyle.BackColor;
     }
 
     private static void TouchBackColor(this Control c)
