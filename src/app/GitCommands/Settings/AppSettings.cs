@@ -51,7 +51,7 @@ public static partial class AppSettings
     private static Mutex _globalMutex;
 
     [GeneratedRegex(@"^(?<major>\d+)\.(?<minor>\d+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex VersionRegex();
+    private static partial Regex VersionRegex { get; }
 
     public static event Action? Saved;
 
@@ -146,7 +146,7 @@ public static partial class AppSettings
         if (!string.IsNullOrWhiteSpace(version) && !version.StartsWith(defaultDevelopmentVersion))
         {
             // We expect version to be something starting with "X.Y" (ignore patch versions)
-            Match match = VersionRegex().Match(version);
+            Match match = VersionRegex.Match(version);
             if (match.Success)
             {
                 docVersion = $"en/release-{match.Groups["major"]}.{match.Groups["minor"]}/";

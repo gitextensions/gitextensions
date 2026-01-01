@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -11,7 +11,7 @@ public static partial class SubmoduleResources
 {
     private static readonly ICommitDataHeaderRenderer PlainCommitDataHeaderRenderer = new CommitDataHeaderRenderer(new MonospacedHeaderLabelFormatter(), new DateFormatter(), new MonospacedHeaderRenderStyleProvider(), null);
     [GeneratedRegex(@"^(\s*\S+)\s+", RegexOptions.Multiline)]
-    private static partial Regex ReplaceTrailingSpacesWithTabRegex();
+    private static partial Regex ReplaceTrailingSpacesWithTabRegex { get; }
 
     public static string GetSubmoduleText(IGitModule superproject, string name, string hash)
     {
@@ -198,6 +198,6 @@ public static partial class SubmoduleResources
         }
 
         static string ReplaceTrailingSpacesWithTab(string input)
-            => ReplaceTrailingSpacesWithTabRegex().Replace(input, "$1\t");
+            => ReplaceTrailingSpacesWithTabRegex.Replace(input, "$1\t");
     }
 }

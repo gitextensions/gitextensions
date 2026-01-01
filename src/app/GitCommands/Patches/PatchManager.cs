@@ -517,7 +517,7 @@ internal sealed partial class Chunk
     private SubChunk? _currentSubChunk;
 
     [GeneratedRegex(@".*-(?<startline>\d+),", RegexOptions.ExplicitCapture)]
-    private static partial Regex HeaderRegex();
+    private static partial Regex HeaderRegex { get; }
 
     private SubChunk CurrentSubChunk
     {
@@ -575,7 +575,7 @@ internal sealed partial class Chunk
     /// </remarks>
     private void ParseHeader(string header)
     {
-        Match match = HeaderRegex().Match(header);
+        Match match = HeaderRegex.Match(header);
 
         if (match.Success)
         {

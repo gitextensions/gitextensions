@@ -21,9 +21,9 @@ public partial class PatchGrid : GitModuleControl
     private bool _isManagingRebase;
 
     [GeneratedRegex(@"^(?<header_key>[-A-Za-z0-9]+)(?::[ \t]*)(?<header_value>.*)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex HeadersRegex();
+    private static partial Regex HeadersRegex { get; }
     [GeneratedRegex(@"=\?(?<qr1>[\w-]+)\?q\?(<qr2>.*)\?=$", RegexOptions.ExplicitCapture)]
-    private static partial Regex QuotedRegex();
+    private static partial Regex QuotedRegex { get; }
 
     public PatchGrid()
     {
@@ -237,7 +237,7 @@ public partial class PatchGrid : GitModuleControl
                 string value = "";
                 foreach (string line in File.ReadLines(rebaseDir + file))
                 {
-                    Match m = HeadersRegex().Match(line);
+                    Match m = HeadersRegex.Match(line);
                     if (key is null)
                     {
                         if (!string.IsNullOrWhiteSpace(line) && !m.Success)
@@ -307,8 +307,8 @@ public partial class PatchGrid : GitModuleControl
 
         static string AppendQuotedString(string str1, string str2)
         {
-            Match m1 = QuotedRegex().Match(str1);
-            Match m2 = QuotedRegex().Match(str2);
+            Match m1 = QuotedRegex.Match(str1);
+            Match m2 = QuotedRegex.Match(str2);
             if (!m1.Success || !m2.Success)
             {
                 return str1 + str2;

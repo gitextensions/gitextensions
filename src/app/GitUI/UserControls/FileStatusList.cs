@@ -66,7 +66,7 @@ public sealed partial class FileStatusList : GitModuleControl
     private bool _enableDisablingShowDiffForAllParents = false;
 
     [GeneratedRegex(@"(^|\s)-e(\s|\s+['""])", RegexOptions.ExplicitCapture)]
-    private static partial Regex GrepStringRegex();
+    private static partial Regex GrepStringRegex { get; }
 
     public delegate void EnterEventHandler(object? sender, EnterEventArgs e);
 
@@ -2055,7 +2055,7 @@ public sealed partial class FileStatusList : GitModuleControl
             // delay to handle keypresses
             await Task.Delay(delay, cancellationToken);
             string searchArg = search;
-            if (!string.IsNullOrWhiteSpace(searchArg) && !GrepStringRegex().IsMatch(searchArg))
+            if (!string.IsNullOrWhiteSpace(searchArg) && !GrepStringRegex.IsMatch(searchArg))
             {
                 searchArg = $@"-e ""{searchArg}""";
             }

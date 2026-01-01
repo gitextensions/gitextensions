@@ -9,54 +9,54 @@ namespace AzureDevOpsIntegration.Settings;
 public partial class ProjectUrlHelper
 {
     [GeneratedRegex(@"^(?<prot>(?:http|https))://(?<user>[^.@]+)(?:@[^.]*)?\.visualstudio\.com(?<port>:\d*)?(?:/DefaultCollection)?(?<project>(/[^/]+)?/[^/]+)/_(git|ssh)/(.+)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex VsTeamHttpsRegex();
+    private static partial Regex VsTeamHttpsRegex { get; }
     [GeneratedRegex(@"^(?<user>[^.@]+)@vs-ssh\.visualstudio.com:v3(?:/[^/]*)?(?<project>/[^/]+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex VsTeamSshRegex();
+    private static partial Regex VsTeamSshRegex { get; }
 
     [GeneratedRegex(@"^(?<prot>(?:http|https))://(?:[^.@]+@)?dev\.azure\.com(?<port>:\d*)?(?<project>(?:/[^/]+)?/[^/]+)/_(?:git|ssh)/(?:.+)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex AzureDevopsHttpsRegex();
+    private static partial Regex AzureDevopsHttpsRegex { get; }
     [GeneratedRegex(@"^[^.@]+@ssh\.dev\.azure\.com:v3(?<project>(?:/[^/]+)?/[^/]+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex AzureDevopsSshRegex();
+    private static partial Regex AzureDevopsSshRegex { get; }
 
     [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+/DefaultCollection)(?<project>/[^/]+)/_(?:git|ssh)", RegexOptions.ExplicitCapture)]
-    private static partial Regex TfsSecondaryRegex();
+    private static partial Regex TfsSecondaryRegex { get; }
     [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+/DefaultCollection)/_(?:git|ssh)(?<project>/[^/]+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex TfsMainRegex();
+    private static partial Regex TfsMainRegex { get; }
 
     [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://[^.@]+(?:@[^.]*)?\.visualstudio\.com(?::\d*)?)", RegexOptions.ExplicitCapture)]
-    private static partial Regex VsTeamTokenRegex();
+    private static partial Regex VsTeamTokenRegex { get; }
     [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://dev\.azure\.com(?::\d*)?/[^/]+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex AzureDevopsTokenRegex();
+    private static partial Regex AzureDevopsTokenRegex { get; }
     [GeneratedRegex(@"^(?<instanceurl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+)/[^/]+", RegexOptions.ExplicitCapture)]
-    private static partial Regex TfsTokenRegex();
+    private static partial Regex TfsTokenRegex { get; }
 
     [GeneratedRegex(@"^(?<projecturl>(?:http|https)://[^/]+(?::\d*)?(?:/[^/]+)+)/_build.*(?:&|\?)buildId=(?<buildid>\d+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex BuildUrlInfoRegex();
+    private static partial Regex BuildUrlInfoRegex { get; }
 
     private static readonly Dictionary<Regex, Func<Match, string>> RemoteToProjectUrlLookup = new()
     {
         { // VS Team Services via HTTPS
-            VsTeamHttpsRegex(),
+            VsTeamHttpsRegex,
             (match) => $"{match.Groups["prot"].Value}://{match.Groups["user"].Value}.visualstudio.com{match.Groups["port"].Value}{match.Groups["project"].Value}"
         },
         { // VS Team Services via SSH
-            VsTeamSshRegex(),
+            VsTeamSshRegex,
             (match) => $"https://{match.Groups["user"].Value}.visualstudio.com{match.Groups["project"].Value}"
         },
         { // Azure DevOps via HTTPS
-            AzureDevopsHttpsRegex(),
+            AzureDevopsHttpsRegex,
             (match) => $"{match.Groups["prot"].Value}://dev.azure.com{match.Groups["port"].Value}{match.Groups["project"].Value}"
         },
         { // Azure DevOps via SSH
-            AzureDevopsSshRegex(),
+            AzureDevopsSshRegex,
             (match) => $"https://dev.azure.com{match.Groups["project"].Value}"
         },
         { // Secondary Project-Repo in TFS on premise with DefaultCollection (need at least something to detect)
-            TfsSecondaryRegex(),
+            TfsSecondaryRegex,
             (match) => $"{match.Groups["instanceurl"].Value}{match.Groups["project"].Value}"
         },
         { // Main Project-Repo in TFS on premise with DefaultCollection (need at least something to detect)
-            TfsMainRegex(),
+            TfsMainRegex,
             (match) => $"{match.Groups["instanceurl"].Value}{match.Groups["project"].Value}"
         },
     };
@@ -64,15 +64,15 @@ public partial class ProjectUrlHelper
     private static readonly Dictionary<Regex, Func<Match, string>> ProjectToTokenManagementUrlLookup = new()
     {
         { // VS Team Services
-            VsTeamTokenRegex(),
+            VsTeamTokenRegex,
             (match) => $"{match.Groups["instanceurl"].Value}/_details/security/tokens"
         },
         { // Azure DevOps
-            AzureDevopsTokenRegex(),
+            AzureDevopsTokenRegex,
             (match) => $"{match.Groups["instanceurl"].Value}/_details/security/tokens"
         },
         { // Generic TFS on premise instance
-            TfsTokenRegex(),
+            TfsTokenRegex,
             (match) => $"{match.Groups["instanceurl"].Value}/_details/security/tokens"
         },
     };
@@ -185,7 +185,7 @@ public partial class ProjectUrlHelper
             return (false, null, -1);
         }
 
-        Match match = BuildUrlInfoRegex().Match(buildUrl);
+        Match match = BuildUrlInfoRegex.Match(buildUrl);
         if (match.Success)
         {
             string projectUrl = match.Groups["projecturl"].Value;

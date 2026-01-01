@@ -20,7 +20,7 @@ public sealed partial class ScriptOptionsParser
     private const string head = "HEAD";
 
     [GeneratedRegex(@"(?<!\\)""")]
-    private static partial Regex QuoteRegex();
+    private static partial Regex QuoteRegex { get; }
 
     /// <summary>
     /// Gets the list of available script options.
@@ -511,7 +511,7 @@ public sealed partial class ScriptOptionsParser
 
         static string Quote(string newString)
         {
-            string newStringQuoted = QuoteRegex().Replace(newString, "\\\"");
+            string newStringQuoted = QuoteRegex.Replace(newString, "\\\"");
             newStringQuoted = '"' + newStringQuoted;
             if (newStringQuoted.EndsWith('\\'))
             {

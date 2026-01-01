@@ -69,7 +69,7 @@ public sealed class ProcessOperation
 public sealed partial class CommandLogEntry
 {
     [GeneratedRegex(@"((-c +[^ ""]+(""[^""]*"")?)|(--no-optional-locks)) *", RegexOptions.ExplicitCapture)]
-    private static partial Regex GitArgumentsWithoutConfigurationRegex();
+    private static partial Regex GitArgumentsWithoutConfigurationRegex { get; }
 
     public string FileName { get; }
     public string Arguments { get; }
@@ -207,7 +207,7 @@ public sealed partial class CommandLogEntry
     }
 
     public static string GetGitArgumentsWithoutConfiguration(string arguments)
-        => GitArgumentsWithoutConfigurationRegex().Replace(arguments, "").TrimEnd();
+        => GitArgumentsWithoutConfigurationRegex.Replace(arguments, "").TrimEnd();
 }
 
 public static class CommandLog

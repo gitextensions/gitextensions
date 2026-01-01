@@ -10,7 +10,7 @@ namespace GitUI.Editor.Diff;
 public partial class DiffLineNumAnalyzer
 {
     [GeneratedRegex(@"\-(?<leftStart>\d{1,})\,{0,}(?<leftCount>\d{0,})\s\+(?<rightStart>\d{1,})\,{0,}(?<rightCount>\d{0,})", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
-    private static partial Regex DiffRegex();
+    private static partial Regex DiffRegex { get; }
 
     public static DiffLinesInfo Analyze(string text, IReadOnlyList<TextMarker> allTextMarkers, bool isCombinedDiff, bool isGitWordDiff = false)
     {
@@ -53,7 +53,7 @@ public partial class DiffLineNumAnalyzer
                     LineType = DiffLineType.Header
                 };
 
-                Match lineNumbers = DiffRegex().Match(line);
+                Match lineNumbers = DiffRegex.Match(line);
                 leftLineNum = int.Parse(lineNumbers.Groups["leftStart"].Value);
                 rightLineNum = int.Parse(lineNumbers.Groups["rightStart"].Value);
 

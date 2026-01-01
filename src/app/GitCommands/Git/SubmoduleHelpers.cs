@@ -7,9 +7,9 @@ namespace GitCommands.Git;
 public static partial class SubmoduleHelpers
 {
     [GeneratedRegex(@"diff --git\s+[ab]/(?<filenamea>.+)\s+[ba]/(?<filenameb>.+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex DiffCommandRegex();
+    private static partial Regex DiffCommandRegex { get; }
     [GeneratedRegex(@"diff --cc (?<filenamea>.+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex CombinedDiffCommandRegex();
+    private static partial Regex CombinedDiffCommandRegex { get; }
 
     public static async Task<GitSubmoduleStatus?> GetSubmoduleDiffChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
     {
@@ -58,7 +58,7 @@ public static partial class SubmoduleHelpers
 
             if (line is not null)
             {
-                Match match = DiffCommandRegex().Match(line);
+                Match match = DiffCommandRegex.Match(line);
                 if (match.Groups.Count > 1)
                 {
                     name = match.Groups["filenamea"].Value;
@@ -66,7 +66,7 @@ public static partial class SubmoduleHelpers
                 }
                 else
                 {
-                    match = CombinedDiffCommandRegex().Match(line);
+                    match = CombinedDiffCommandRegex.Match(line);
                     if (match.Groups.Count > 1)
                     {
                         name = match.Groups["filenamea"].Value;

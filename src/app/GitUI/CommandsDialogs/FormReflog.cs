@@ -29,7 +29,7 @@ public partial class FormReflog : GitModuleForm
     private readonly TranslationString _continueResetCurrentBranchCaptionText = new("Changes not committed...");
 
     [GeneratedRegex(@"^(?<sha>[^ ]+) (?<ref>[^:]+): (?<action>.+)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex ReflogRegex();
+    private static partial Regex ReflogRegex { get; }
 
     private string? _currentBranch;
     private bool _isBranchCheckedOut;
@@ -95,7 +95,7 @@ public partial class FormReflog : GitModuleForm
             IEnumerable<RefLine> ConvertReflogOutput()
                 => from line in output.LazySplit('\n')
                     where line.Length != 0
-                    select ReflogRegex().Match(line)
+                    select ReflogRegex.Match(line)
                     into match
                     where match.Success
                     select new RefLine(ObjectId.Parse(match.Groups["sha"].Value), match.Groups["ref"].Value, match.Groups["action"].Value);

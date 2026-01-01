@@ -60,22 +60,22 @@ public sealed partial class GitModule : IGitModule
     //
     // Lines may also use \t as a column delimiter, such as output of "ls-remote --heads origin".
     [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
-    private static partial Regex RefRegex();
+    private static partial Regex RefRegex { get; }
 
     [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex HeaderRegex();
+    private static partial Regex HeaderRegex { get; }
 
     [GeneratedRegex(@"^(?<name>[^\t]+)\t(?<url>.+?) \((?<direction>fetch|push)\)(?:(?# ignore trailing options)\s*\[[^\]]*])?$", RegexOptions.ExplicitCapture)]
-    private static partial Regex RemoteVerboseLineRegex();
+    private static partial Regex RemoteVerboseLineRegex { get; }
 
     [GeneratedRegex(@"(\\(?<octal>[0-7]{3}))+", RegexOptions.ExplicitCapture)]
-    private static partial Regex EscapedOctalCodePointRegex();
+    private static partial Regex EscapedOctalCodePointRegex { get; }
 
     [GeneratedRegex(@"^(?<code>[\-+U ])(?<sha>[0-9a-f]{40}) (?<path>.+) \((?<branch>.+)\)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex ShaRegex();
+    private static partial Regex ShaRegex { get; }
 
     [GeneratedRegex(@"^\s*(?<count>\d+)\s+(?<name>.*)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex ShortlogRegex();
+    private static partial Regex ShortlogRegex { get; }
 
     /// <summary>
     /// Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
@@ -1259,7 +1259,7 @@ public sealed partial class GitModule : IGitModule
             // - the submodule path
             // - the output of git describe for the SHA-1
 
-            Match match = ShaRegex().Match(s);
+            Match match = ShaRegex.Match(s);
 
             if (!match.Success)
             {
@@ -2071,7 +2071,7 @@ public sealed partial class GitModule : IGitModule
             while (enumerator.MoveNext())
             {
                 string remoteLine = enumerator.Current;
-                Match remoteMatch = RemoteVerboseLineRegex().Match(remoteLine);
+                Match remoteMatch = RemoteVerboseLineRegex.Match(remoteLine);
                 if (!remoteMatch.Success
                     || (remoteMatch.Groups["direction"].Value != "fetch"
                        && remoteMatch.Groups["direction"].Value != "push"))
@@ -2104,7 +2104,7 @@ public sealed partial class GitModule : IGitModule
                 }
 
                 string pushLine = enumerator.Current;
-                Match pushMatch = RemoteVerboseLineRegex().Match(pushLine);
+                Match pushMatch = RemoteVerboseLineRegex.Match(pushLine);
                 if (!pushMatch.Success || pushMatch.Groups["direction"].Value != "push")
                 {
                     throw new Exception("Unable to parse git remote push URL line: " + pushLine);
@@ -3050,7 +3050,7 @@ public sealed partial class GitModule : IGitModule
 
     public IReadOnlyList<IGitRef> ParseRefs(string refList)
     {
-        MatchCollection matches = RefRegex().Matches(refList);
+        MatchCollection matches = RefRegex.Matches(refList);
 
         List<IGitRef> gitRefs = [];
         Dictionary<string, GitRef> headByRemote = [];
@@ -3376,7 +3376,7 @@ public sealed partial class GitModule : IGitModule
 
         foreach (string line in output.LazySplit('\n').Select(l => l.TrimEnd('\r')))
         {
-            Match match = HeaderRegex().Match(line);
+            Match match = HeaderRegex.Match(line);
 
             if (match.Success)
             {
@@ -3759,7 +3759,7 @@ public sealed partial class GitModule : IGitModule
             return null;
         }
 
-        return EscapedOctalCodePointRegex().Replace(
+        return EscapedOctalCodePointRegex.Replace(
             s,
             match =>
             {
@@ -4037,7 +4037,7 @@ public sealed partial class GitModule : IGitModule
 
         foreach (string line in lines)
         {
-            Match match = ShortlogRegex().Match(line);
+            Match match = ShortlogRegex.Match(line);
 
             if (!match.Success)
             {

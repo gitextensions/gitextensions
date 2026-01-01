@@ -7,12 +7,12 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings;
 public partial class GitlabRemoteParser : RemoteParser
 {
     [GeneratedRegex(@"git(?:@|://)(?<host>[^/]+)[:/](?<owner>[^/]+)/(?<repo>[\w_\.\-]+)\.git")]
-    private static partial Regex GitlabSshUrlRegex();
+    private static partial Regex GitlabSshUrlRegex { get; }
 
     [GeneratedRegex(@"https?://(?<host>[^/@]+)/(?<owner>.+)/(?<repo>[\w_\.\-]+)(?:.git)?")]
-    private static partial Regex GitlabHttpsUrlRegex();
+    private static partial Regex GitlabHttpsUrlRegex { get; }
 
-    private static readonly Regex[] _gitLabRegexes = [GitlabHttpsUrlRegex(), GitlabSshUrlRegex()];
+    private static readonly Regex[] _gitLabRegexes = [GitlabHttpsUrlRegex, GitlabSshUrlRegex];
 
     public bool IsValidRemoteUrl(string remoteUrl)
         => TryExtractGitlabDataFromRemoteUrl(remoteUrl, out _, out _, out _);

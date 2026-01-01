@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
@@ -36,9 +36,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
     private readonly AsyncLoader _loader = new();
 
     [GeneratedRegex(@"(?:\n|^)diff --git ", RegexOptions.ExplicitCapture)]
-    private static partial Regex DiffCommandRegex();
+    private static partial Regex DiffCommandRegex { get; }
     [GeneratedRegex(@"^a/([^\n]+) b/(?<name>[^\n]+)\s*(?<value>.*)$", RegexOptions.Singleline | RegexOptions.ExplicitCapture)]
-    private static partial Regex FilePartRegex();
+    private static partial Regex FilePartRegex { get; }
 
     public ViewPullRequestsForm(IGitUICommands commands, IRepositoryHostPlugin gitHoster)
         : base(commands)
@@ -385,7 +385,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
     {
         _diffCache = [];
 
-        List<string> fileParts = [.. DiffCommandRegex().Split(diffData).Where(el => el?.Trim().Length is > 10)];
+        List<string> fileParts = [.. DiffCommandRegex.Split(diffData).Where(el => el?.Trim().Length is > 10)];
         List<GitItemStatus> giss = [];
 
         // baseSha is the sha of the merge to ("master") sha, the commit to be firstId
@@ -399,7 +399,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
         foreach (string part in fileParts)
         {
-            Match match = FilePartRegex().Match(part);
+            Match match = FilePartRegex.Match(part);
             if (!match.Success)
             {
                 MessageBox.Show(this, _strUnableUnderstandPatch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);

@@ -7,7 +7,7 @@ namespace GitUI.UserControls.RevisionGrid.Graph;
 internal partial class BranchFinder
 {
     [GeneratedRegex(@"^merged? (pull request (?<pr>.*) from )?(.*branch |tag )?'?(?<with>[^ ']*[^ '.])'?( of [^ ]*[^ .])?( into (?<into>.*[^.]))?\.?$", RegexOptions.IgnoreCase | RegexOptions.CultureInvariant | RegexOptions.ExplicitCapture)]
-    private static partial Regex MergeRegex();
+    private static partial Regex MergeRegex { get; }
 
     internal BranchFinder(RevisionGraphRevision node)
     {
@@ -75,7 +75,7 @@ internal partial class BranchFinder
     {
         string? into = null;
         string? with = null;
-        Match match = MergeRegex().Match(commitSubject);
+        Match match = MergeRegex.Match(commitSubject);
         if (match.Success)
         {
             Group matchPullRequest = match.Groups["pr"];

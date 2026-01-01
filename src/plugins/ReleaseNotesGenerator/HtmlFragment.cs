@@ -14,7 +14,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator;
 internal partial class HtmlFragment
 {
     [GeneratedRegex(@"(?<key>[a-zA-Z]+):(?<val>.+?)[\r\n]", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
-    private static partial Regex HtmlRegex();
+    private static partial Regex HtmlRegex { get; }
 
     #region Read and decode from clipboard
 
@@ -52,7 +52,7 @@ internal partial class HtmlFragment
         int startHtml = 0;
         int startFragment = 0;
 
-        for (Match m = HtmlRegex().Match(rawClipboardText); m.Success; m = m.NextMatch())
+        for (Match m = HtmlRegex.Match(rawClipboardText); m.Success; m = m.NextMatch())
         {
             string key = m.Groups["key"].Value.ToLower();
             string val = m.Groups["val"].Value;

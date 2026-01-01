@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -67,7 +67,7 @@ public partial class FileViewer : GitModuleControl
     private FileStatusItem? _viewItem;
 
     [GeneratedRegex(@"warning: .*has type .* expected .*", RegexOptions.ExplicitCapture)]
-    private static partial Regex FileModeWarningRegex();
+    private static partial Regex FileModeWarningRegex { get; }
 
     public FileViewer()
     {
@@ -1891,7 +1891,7 @@ public partial class FileViewer : GitModuleControl
         if (EnvUtils.RunningOnWindows())
         {
             // remove file mode warnings
-            output = output.RemoveLines(FileModeWarningRegex().IsMatch);
+            output = output.RemoveLines(FileModeWarningRegex.IsMatch);
         }
 
         if (!result.ExitedSuccessfully && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false)))
