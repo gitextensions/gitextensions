@@ -367,6 +367,14 @@ public interface IGitModule
     string GetCommitCountString(ObjectId fromId, string to);
     IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(CancellationToken cancellationToken);
     IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles, bool excludeAssumeUnchangedFiles, bool excludeSkipWorktreeFiles, UntrackedFilesMode untrackedFiles, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Initiate the submodule status async task, to calculate the statuses for the submodules in the list.
+    /// The task replaces the current task if it exists.
+    /// </summary>
+    /// <param name="status">List with GitItemStatus</param>
+    public void GetSubmoduleCurrentStatus(IReadOnlyList<GitItemStatus> status);
+
     bool ResetChanges(ObjectId? resetId, IReadOnlyList<GitItemStatus> selectedItems, bool resetAndDelete, IFullPathResolver fullPathResolver, out StringBuilder output, Action<BatchProgressEventArgs>? progressAction);
     bool HasSubmodules();
     void OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null);

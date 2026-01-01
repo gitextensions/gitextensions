@@ -2702,7 +2702,7 @@ public sealed partial class GitModule : IGitModule
         return status;
     }
 
-    private void GetSubmoduleCurrentStatus(IReadOnlyList<GitItemStatus> status)
+    public void GetSubmoduleCurrentStatus(IReadOnlyList<GitItemStatus> status)
     {
         foreach (GitItemStatus item in status)
         {
