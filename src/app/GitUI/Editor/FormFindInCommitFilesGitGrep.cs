@@ -10,7 +10,7 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
     /// <summary>
     ///  Action to search for files in the commit using git grep.
     /// </summary>
-    public Action<string, int> FilesGitGrepLocator;
+    public Action<string> FilesGitGrepLocator;
 
     /// <summary>
     /// Action to toggle the visibility of the "find in commit files" filter control.
@@ -99,7 +99,7 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         // Close the search if search is not visible (or user has cleared input)
         if (string.IsNullOrEmpty(GitGrepExpressionText) || !chkShowSearchBox.Checked)
         {
-            FilesGitGrepLocator?.Invoke("", 0);
+            FilesGitGrepLocator?.Invoke("");
         }
     }
 
@@ -115,7 +115,7 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
     }
 
     private void Search()
-        => FilesGitGrepLocator?.Invoke(GitGrepExpressionText, 0);
+        => FilesGitGrepLocator?.Invoke(GitGrepExpressionText);
 
     private void btnSearch_Click(object sender, EventArgs e)
     {
