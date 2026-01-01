@@ -70,7 +70,7 @@ partial class FormBrowse
         notificationBarGitActionInProgress = new GitUI.UserControls.InteractiveGitActionControl();
         CommitInfoTabControl = new GitUI.CommandsDialogs.FullBleedTabControl();
         CommitInfoTabPage = new TabPage();
-        RevisionInfo = new GitUI.CommitInfo.CommitInfo();
+        RevisionInfo = new GitUI.CommitInfo.CommitInfo(_commitDataManager);
         TreeTabPage = new TabPage();
         fileTree = new GitUI.CommandsDialogs.RevisionDiffControl();
         DiffTabPage = new TabPage();
