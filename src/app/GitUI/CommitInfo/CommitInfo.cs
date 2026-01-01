@@ -88,11 +88,16 @@ public partial class CommitInfo : GitModuleControl
     public bool ShowBranchesAsLinks { get; set; }
 
     public CommitInfo()
+        : this(commitDataManager: null)
+    {
+    }
+
+    public CommitInfo(ICommitDataManager? commitDataManager)
     {
         InitializeComponent();
         InitializeComplete();
 
-        _commitDataManager = new CommitDataManager(() => Module);
+        _commitDataManager = commitDataManager ?? new CommitDataManager(() => Module);
 
         _externalLinksStorage = new ExternalLinksStorage();
         _effectiveLinkDefinitionsProvider = new ConfiguredLinkDefinitionsProvider(_externalLinksStorage);
