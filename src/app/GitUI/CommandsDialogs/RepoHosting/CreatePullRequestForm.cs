@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
@@ -185,7 +185,7 @@ public partial class CreatePullRequestForm : GitModuleForm
                     }
                     catch (Exception ex)
                     {
-                        TaskDialog.ShowDialog(new TaskDialogPage
+                        await TaskDialog.ShowDialogAsync(new TaskDialogPage
                             {
                                 Icon = TaskDialogIcon.Error,
                                 Caption = _strRemoteFailToLoadBranches.Text,

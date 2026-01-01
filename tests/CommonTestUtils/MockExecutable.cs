@@ -151,9 +151,7 @@ public sealed class MockExecutable : IExecutable
             {
                 CancellationTokenSource cts = new();
                 CancellationToken ct = cts.Token;
-#pragma warning disable VSTHRD103 // Cancel synchronously blocks. Await CancelAsync instead.
-                cts.Cancel();
-#pragma warning restore VSTHRD103
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => cts.CancelAsync());
                 return Task.FromCanceled<int>(ct);
             }
         }

@@ -1,4 +1,4 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Globalization;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -240,7 +240,7 @@ Detail of the error:");
                     Buttons = { btnOpenSettings, btnIgnore }
                 };
 
-                TaskDialogButton result = TaskDialog.ShowDialog(page);
+                TaskDialogButton result = await TaskDialog.ShowDialogAsync(page);
                 if (result == btnOpenSettings)
                 {
                     _projectOnErrorKey = null;
