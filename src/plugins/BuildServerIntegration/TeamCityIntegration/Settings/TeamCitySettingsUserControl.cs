@@ -1,4 +1,4 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
@@ -22,7 +22,7 @@ public partial class TeamCitySettingsUserControl : GitExtensionsControl, IBuildS
     private readonly TranslationString _failToExtractDataFromClipboardCaption = new("Build url not valid");
 
     [GeneratedRegex(@"(\?|\&)(?<buildtypeid>[^=]+)\=(?<buildtype>[^&]+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex TeamcityBuildUrl();
+    private static partial Regex TeamcityBuildUrl { get; }
 
     public TeamCitySettingsUserControl()
     {
@@ -119,7 +119,7 @@ public partial class TeamCitySettingsUserControl : GitExtensionsControl, IBuildS
             TeamCityServerUrl.Text = teamCityServerUrl;
             _teamCityAdapter.InitializeHttpClient(teamCityServerUrl);
 
-            MatchCollection paramResults = TeamcityBuildUrl().Matches(buildUri.Query);
+            MatchCollection paramResults = TeamcityBuildUrl.Matches(buildUri.Query);
             foreach (Match paramResult in paramResults)
             {
                 if (paramResult.Success)

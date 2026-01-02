@@ -10,7 +10,7 @@ namespace BugReporterTests;
 public sealed partial class SerializableExceptionTests
 {
     [GeneratedRegex(@"^(?<keep>.*)(?<codeLocationToBeRemoved>\sin\s.*)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex PathRegex();
+    private static partial Regex PathRegex { get; }
 
     [Test, TestCaseSource(nameof(TestCases))]
     public async Task ToString(string testName, Action action)
@@ -63,7 +63,7 @@ public sealed partial class SerializableExceptionTests
         StringBuilder m = new();
         foreach (string line in exceptionMessage.Split(['\n', '\r'], StringSplitOptions.RemoveEmptyEntries))
         {
-            m.AppendLine(PathRegex().Replace(line, "${keep}"));
+            m.AppendLine(PathRegex.Replace(line, "${keep}"));
         }
 
         return m.ToString();

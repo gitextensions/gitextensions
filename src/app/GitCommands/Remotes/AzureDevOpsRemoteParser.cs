@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace GitCommands.Remotes;
@@ -6,18 +6,18 @@ namespace GitCommands.Remotes;
 public sealed partial class AzureDevOpsRemoteParser : RemoteParser
 {
     [GeneratedRegex(@"^https:\/\/(?<owner>[^.]*)\.visualstudio\.com\/(?<project>[^\/]*)\/_git\/(?<repo>.*)$")]
-    private static partial Regex VstsHttpsRemoteRegex();
+    private static partial Regex VstsHttpsRemoteRegex { get; }
 
     [GeneratedRegex(@"^[^@]*@vs-ssh\.visualstudio\.com:v\d\/(?<owner>[^\/]*)\/(?<project>[^\/]*)\/(?<repo>.*)$")]
-    private static partial Regex VstsSshRemoteRegex();
+    private static partial Regex VstsSshRemoteRegex { get; }
 
     [GeneratedRegex(@"^https:\/\/[^@]*@dev\.azure\.com\/(?<owner>[^\/]*)\/(?<project>[^\/]*)\/_git\/(?<repo>.*)$")]
-    private static partial Regex AzureDevopsHttpsRemoteRegex();
+    private static partial Regex AzureDevopsHttpsRemoteRegex { get; }
 
     [GeneratedRegex(@"^git@ssh\.dev\.azure\.com:v\d\/(?<owner>[^\/]*)\/(?<project>[^\/]*)\/(?<repo>.*)$")]
-    private static partial Regex AzureDevopsSshRemoteRegex();
+    private static partial Regex AzureDevopsSshRemoteRegex { get; }
 
-    private static readonly Regex[] _azureDevopsRegexes = [AzureDevopsHttpsRemoteRegex(), AzureDevopsSshRemoteRegex(), VstsHttpsRemoteRegex(), VstsSshRemoteRegex()];
+    private static readonly Regex[] _azureDevopsRegexes = [AzureDevopsHttpsRemoteRegex, AzureDevopsSshRemoteRegex, VstsHttpsRemoteRegex, VstsSshRemoteRegex];
 
     public bool IsValidRemoteUrl(string remoteUrl)
         => TryExtractAzureDevopsDataFromRemoteUrl(remoteUrl, out _, out _, out _);

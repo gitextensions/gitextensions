@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility.Git;
@@ -42,9 +42,9 @@ public sealed partial class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
     private readonly ILinkFactory? _linkFactory;
 
     [GeneratedRegex(@"[ \t]+", RegexOptions.ExplicitCapture)]
-    private static partial Regex SpacesRegex();
+    private static partial Regex SpacesRegex { get; }
     [GeneratedRegex(@"(?<reltime>\n[^:]+: ).* ago \((?<unit>[^)]+)\)", RegexOptions.ExplicitCapture)]
-    private static partial Regex RemoveAgoRegex();
+    private static partial Regex RemoveAgoRegex { get; }
 
     public CommitDataHeaderRenderer(IHeaderLabelFormatter labelFormatter, IDateFormatter dateFormatter, IHeaderRenderStyleProvider headerRendererStyleProvider, ILinkFactory? linkFactory)
     {
@@ -58,8 +58,8 @@ public sealed partial class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
     {
         string children = $"({TranslatedStrings.GetChildren(1)})|({TranslatedStrings.GetChildren(2)})|({TranslatedStrings.GetChildren(10)})";
         string parents = $"({TranslatedStrings.GetParents(1)})|({TranslatedStrings.GetParents(2)})|({TranslatedStrings.GetParents(10)})";
-        header = SpacesRegex().Replace(header, " ");
-        header = RemoveAgoRegex().Replace(header, "$1$2");
+        header = SpacesRegex.Replace(header, " ");
+        header = RemoveAgoRegex.Replace(header, "$1$2");
         header = Regex.Replace(header, @$"\n({children}|{parents})[^\n]*", "");
         return header;
     }

@@ -22,7 +22,7 @@ public static partial class PathUtil
     private static StringComparison _pathComparison = EnvUtils.RunningOnWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
     [GeneratedRegex(@"^(\w+):\/\/([\S]+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex DriveLetterRegex();
+    private static partial Regex DriveLetterRegex { get; }
 
     /// <summary>Replaces native path separator with posix path separator (/).</summary>
     [return: NotNullIfNotNull(nameof(path))]
@@ -111,7 +111,7 @@ public static partial class PathUtil
 
     public static bool IsLocalFile(string fileName)
     {
-        return !DriveLetterRegex().IsMatch(fileName);
+        return !DriveLetterRegex.IsMatch(fileName);
     }
 
     public static bool CanBeGitURL(string? url)

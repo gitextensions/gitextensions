@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
@@ -40,7 +40,7 @@ public sealed class CommitDataBodyRenderer : ICommitDataBodyRenderer
 
         if (showRevisionsAsLinks)
         {
-            body = GitRevision.Sha1HashShortRegex().Replace(body, match => ProcessHashCandidate(match.Value));
+            body = GitRevision.Sha1HashShortRegex.Replace(body, match => ProcessHashCandidate(match.Value));
         }
 
         return body;

@@ -148,7 +148,7 @@ public partial class ConsoleCommandLineOutputProcessor
     private string? _lineChunk;
 
     [GeneratedRegex(@"(?<=[\n\r])", RegexOptions.ExplicitCapture)]
-    private static partial Regex NewLineRegex();
+    private static partial Regex NewLineRegex { get; }
 
     public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<TextEventArgs> fireDataReceived)
     {
@@ -193,7 +193,7 @@ public partial class ConsoleCommandLineOutputProcessor
             _lineChunk = null;
         }
 
-        string[] outputLines = NewLineRegex().Split(output);
+        string[] outputLines = NewLineRegex.Split(output);
         int lineCount = outputLines.Length;
         if (string.IsNullOrEmpty(outputLines[^1]))
         {

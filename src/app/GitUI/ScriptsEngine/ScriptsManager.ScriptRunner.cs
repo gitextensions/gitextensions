@@ -23,9 +23,9 @@ partial class ScriptsManager
 
         // Regex that ensure that in the default value, there is the same number of '{' than '}' to find the right end of the default value expression.
         [GeneratedRegex(@"\{UserInput:(?<label>[^}=]+)(=(?<defaultValue>[^{}]*(({[^{}]+})+[^{}]*)*))?\}", RegexOptions.ExplicitCapture)]
-        private static partial Regex UserInputRegex();
+        private static partial Regex UserInputRegex { get; }
         [GeneratedRegex(@"\{plugin.(?<name>.+)\}", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
-        private static partial Regex PluginRegex();
+        private static partial Regex PluginRegex { get; }
 
         public static bool RunScript(ScriptInfo script, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider? scriptOptionsProvider = null)
         {
@@ -50,7 +50,7 @@ partial class ScriptsManager
 
             // Specific handling of "UserInput" because the value entered should replace only "UserInput" with same label
             Match match;
-            while ((match = UserInputRegex().Match(arguments)).Success)
+            while ((match = UserInputRegex.Match(arguments)).Success)
             {
                 Group defaultValueMatch = match.Groups["defaultValue"];
                 (string? arguments, bool abort) defaultValue = defaultValueMatch is null
@@ -262,7 +262,7 @@ partial class ScriptsManager
             }
 
             // Prefix should be {plugin:pluginname},{plugin=pluginname}
-            Match match = PluginRegex().Match(originalCommand);
+            Match match = PluginRegex.Match(originalCommand);
             if (match.Success && match.Groups.Count > 1)
             {
                 originalCommand = $"{PluginPrefix}{match.Groups["name"].Value.ToLower()}";

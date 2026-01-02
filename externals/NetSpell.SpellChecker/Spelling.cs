@@ -21,15 +21,15 @@ public partial class Spelling : Component
 {
     #region Global Regex
     [GeneratedRegex(@"^\d")]
-    private static partial Regex DigitRegex();
+    private static partial Regex DigitRegex { get; }
     [GeneratedRegex(@"</[c-g\d]+>|</[i-o\d]+>|</[a\d]+>|</[q-z\d]+>|<[cg]+[^>]*>|<[i-o]+[^>]*>|<[q-z]+[^>]*>|<[a]+[^>]*>|<(\[^\]*\|'[^']*'|[^'\>])*>", RegexOptions.IgnoreCase)]
-    private static partial Regex HtmlRegex();
+    private static partial Regex HtmlRegex { get; }
     [GeneratedRegex(@"\D")]
-    private static partial Regex LetterRegex();
+    private static partial Regex LetterRegex { get; }
     [GeneratedRegex(@"[^\p{Lu}]")]
-    private static partial Regex UpperRegex(); // @"[^A-Z]
+    private static partial Regex UpperRegex { get; } // @"[^A-Z]
     [GeneratedRegex(@"\b[\w']+\b")]
-    private static partial Regex WordRegex(); // @"\b[A-Za-z0-9_'À-ÿ]+\b"
+    private static partial Regex WordRegex { get; } // @"\b[A-Za-z0-9_'À-ÿ]+\b"
 
     private MatchCollection _htmlTags;
     private MatchCollection _words;
@@ -177,7 +177,7 @@ public partial class Spelling : Component
     private void CalculateWords()
     {
         // splits the text into words
-        _words = WordRegex().Matches(_text.ToString());
+        _words = WordRegex.Matches(_text.ToString());
 
         // remark html
         MarkHtml();
@@ -201,17 +201,17 @@ public partial class Spelling : Component
             return false;
         }
 
-        if (IgnoreAllCapsWords && !UpperRegex().IsMatch(characters))
+        if (IgnoreAllCapsWords && !UpperRegex.IsMatch(characters))
         {
             return false;
         }
 
-        if (IgnoreWordsWithDigits && DigitRegex().IsMatch(characters))
+        if (IgnoreWordsWithDigits && DigitRegex.IsMatch(characters))
         {
             return false;
         }
 
-        if (!LetterRegex().IsMatch(characters))
+        if (!LetterRegex.IsMatch(characters))
         {
             return false;
         }
@@ -253,7 +253,7 @@ public partial class Spelling : Component
     private void MarkHtml()
     {
         // splits the text into words
-        _htmlTags = HtmlRegex().Matches(_text.ToString());
+        _htmlTags = HtmlRegex.Matches(_text.ToString());
     }
 
     /// <summary>

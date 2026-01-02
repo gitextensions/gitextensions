@@ -38,7 +38,7 @@ public partial class GourcePlugin : GitPluginBase, IGitPluginForRepository
     // find http://gource.googlecode.com/files/gource-0.26b.win32.zip
     // find http://gource.googlecode.com/files/gource-0.34-rc2.win32.zip
     [GeneratedRegex(@"(?:<a .*href="")(?<path>.*gource-.{3,15}win32\.zip)""", RegexOptions.ExplicitCapture)]
-    private static partial Regex GourceRegex();
+    private static partial Regex GourceRegex { get; }
 
     public GourcePlugin() : base(true)
     {
@@ -251,7 +251,7 @@ public partial class GourcePlugin : GitPluginBase, IGitPluginForRepository
 
             string response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/latest");
 
-            MatchCollection matches = GourceRegex().Matches(response);
+            MatchCollection matches = GourceRegex.Matches(response);
 
             foreach (Match match in matches)
             {
@@ -260,7 +260,7 @@ public partial class GourcePlugin : GitPluginBase, IGitPluginForRepository
 
             response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/tag/gource-0.42");
 
-            matches = GourceRegex().Matches(response);
+            matches = GourceRegex.Matches(response);
 
             foreach (Match match in matches)
             {

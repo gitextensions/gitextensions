@@ -125,7 +125,7 @@ public sealed partial class FormPull : GitExtensionsDialog
     private bool _bInternalUpdate;
 
     [GeneratedRegex(@"Your configuration specifies to .* the ref '.*'[\r]?\nfrom the remote, but no such ref was fetched.", RegexOptions.ExplicitCapture)]
-    private static partial Regex IsRefRemoved();
+    private static partial Regex IsRefRemoved { get; }
 
     public bool ErrorOccurred { get; private set; }
 
@@ -701,7 +701,7 @@ public sealed partial class FormPull : GitExtensionsDialog
             }
 
             // auto pull only if current branch was rejected
-            if (IsRefRemoved().IsMatch(form.GetOutputString()))
+            if (IsRefRemoved.IsMatch(form.GetOutputString()))
             {
                 TaskDialogPage page = new()
                 {

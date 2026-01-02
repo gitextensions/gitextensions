@@ -68,21 +68,21 @@ public interface IGitBranchNameNormaliser
 public sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
 {
     [GeneratedRegex(@"^(\.)*", RegexOptions.ExplicitCapture)]
-    private static partial Regex PeriodRegex();
+    private static partial Regex PeriodRegex { get; }
     [GeneratedRegex(@"(\.lock)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex LockRegex();
+    private static partial Regex LockRegex { get; }
     [GeneratedRegex(@"\.{2,}", RegexOptions.ExplicitCapture)]
-    private static partial Regex Rule03Regex();
+    private static partial Regex Rule03Regex { get; }
     [GeneratedRegex(@"(\?|\*|\[)", RegexOptions.ExplicitCapture)]
-    private static partial Regex Rule05Regex();
+    private static partial Regex Rule05Regex { get; }
     [GeneratedRegex(@"(\/{2,})", RegexOptions.ExplicitCapture)]
-    private static partial Regex Rule06Regex();
+    private static partial Regex Rule06Regex { get; }
     [GeneratedRegex(@"(\.{1,})$", RegexOptions.ExplicitCapture)]
-    private static partial Regex Rule07Regex();
+    private static partial Regex Rule07Regex { get; }
     [GeneratedRegex(@"(@\{)", RegexOptions.ExplicitCapture)]
-    private static partial Regex Rule08Regex();
+    private static partial Regex Rule08Regex { get; }
     [GeneratedRegex(@"(\\{1,})", RegexOptions.ExplicitCapture)]
-    private static partial Regex Rule10Regex();
+    private static partial Regex Rule10Regex { get; }
 
     /// <summary>
     /// Ensures that the branch name meets the GIT branch naming conventions.
@@ -138,12 +138,12 @@ public sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
         {
             if (tokens[i].StartsWith('.'))
             {
-                tokens[i] = PeriodRegex().Replace(tokens[i], options.ReplacementToken);
+                tokens[i] = PeriodRegex.Replace(tokens[i], options.ReplacementToken);
             }
 
             if (tokens[i].EndsWith(".lock", StringComparison.OrdinalIgnoreCase))
             {
-                tokens[i] = LockRegex().Replace(tokens[i], options.ReplacementToken + "lock");
+                tokens[i] = LockRegex.Replace(tokens[i], options.ReplacementToken + "lock");
             }
         }
 
@@ -158,7 +158,7 @@ public sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
     /// <returns>Normalised branch name.</returns>
     internal string Rule03(string branchName, GitBranchNameOptions options)
     {
-        return Rule03Regex().Replace(branchName, options.ReplacementToken);
+        return Rule03Regex.Replace(branchName, options.ReplacementToken);
     }
 
     /// <summary>
@@ -195,7 +195,7 @@ public sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
     /// <returns>Normalised branch name.</returns>
     internal string Rule05(string branchName, GitBranchNameOptions options)
     {
-        return Rule05Regex().Replace(branchName, options.ReplacementToken);
+        return Rule05Regex.Replace(branchName, options.ReplacementToken);
     }
 
     /// <summary>
@@ -205,7 +205,7 @@ public sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
     /// <returns>Normalised branch name.</returns>
     internal string Rule06(string branchName)
     {
-        branchName = Rule06Regex().Replace(branchName, "/");
+        branchName = Rule06Regex.Replace(branchName, "/");
         if (branchName.StartsWith('/'))
         {
             branchName = branchName[1..];
@@ -227,7 +227,7 @@ public sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
     /// <returns>Normalised branch name.</returns>
     internal string Rule07(string branchName, GitBranchNameOptions options)
     {
-        return Rule07Regex().Replace(branchName, options.ReplacementToken);
+        return Rule07Regex.Replace(branchName, options.ReplacementToken);
     }
 
     /// <summary>
@@ -238,7 +238,7 @@ public sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
     /// <returns>Normalised branch name.</returns>
     internal string Rule08(string branchName, GitBranchNameOptions options)
     {
-        return Rule08Regex().Replace(branchName, options.ReplacementToken);
+        return Rule08Regex.Replace(branchName, options.ReplacementToken);
     }
 
     /// <summary>
@@ -260,6 +260,6 @@ public sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
     /// <returns>Normalised branch name.</returns>
     internal string Rule10(string branchName, GitBranchNameOptions options)
     {
-        return Rule10Regex().Replace(branchName, options.ReplacementToken);
+        return Rule10Regex.Replace(branchName, options.ReplacementToken);
     }
 }

@@ -6,5 +6,5 @@
    at BugReporterTests.SerializableExceptionTests.Code.DoubleNestedException()
    --- End of inner exception stack trace ---
    at BugReporterTests.SerializableExceptionTests.Code.DoubleNestedException()
-   at BugReporterTests.SerializableExceptionTests.<>c.<get_TestCases>b__4_1()
+   at BugReporterTests.SerializableExceptionTests.<>c.<get_TestCases>b__5_1()
    at BugReporterTests.SerializableExceptionTests.ToString_should_be_same_from_round_trip(String testName, Action action)

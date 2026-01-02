@@ -18,9 +18,9 @@ public static partial class UserEnvironmentInformation
     private static string? _sha;
 
     [GeneratedRegex(@"^Microsoft\.WindowsDesktop\.App\s+([\w.-]+)\s+.*$", RegexOptions.Multiline)]
-    private static partial Regex DesktopAppRegex();
+    private static partial Regex DesktopAppRegex { get; }
     [GeneratedRegex(@"^", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
-    private static partial Regex LineStartRegex();
+    private static partial Regex LineStartRegex { get; }
 
     public static void CopyInformation() => ClipboardUtil.TrySetText(GetInformation() + GetDotnetVersionInfo());
 
@@ -87,7 +87,7 @@ public static partial class UserEnvironmentInformation
         };
 
         string output = dotnet.GetOutput(args);
-        return DesktopAppRegex().Matches(output).Cast<Match>();
+        return DesktopAppRegex.Matches(output).Cast<Match>();
     }
 
     public static IEnumerable<Version> GetDotnetDesktopRuntimeVersions()
@@ -113,12 +113,12 @@ public static partial class UserEnvironmentInformation
         {
             IEnumerable<Match> desktopAppMatches = GetDotnetDesktopRuntimeEntries();
             string desktopAppLines = string.Join(Environment.NewLine, desktopAppMatches);
-            desktopAppLines = LineStartRegex().Replace(desktopAppLines, "    ");
+            desktopAppLines = LineStartRegex.Replace(desktopAppLines, "    ");
             sb.AppendLine($"{desktopAppLines}");
         }
         catch (Exception ex)
         {
-            sb.AppendLine(LineStartRegex().Replace(ex.Message, "    "));
+            sb.AppendLine(LineStartRegex.Replace(ex.Message, "    "));
         }
         finally
         {

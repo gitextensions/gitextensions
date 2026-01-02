@@ -10,7 +10,7 @@ namespace GitUI;
 internal partial class FailedPluginWrapper : IGitPlugin
 {
     [GeneratedRegex(@"""GitExtensions.([^""]+)""", RegexOptions.ExplicitCapture)]
-    private static partial Regex PluginNameRegex();
+    private static partial Regex PluginNameRegex { get; }
 
     private readonly string _exception;
     private string _pluginName;
@@ -23,7 +23,7 @@ internal partial class FailedPluginWrapper : IGitPlugin
         try
         {
             // Try to extract plugin name from exception
-            Match match = PluginNameRegex().Match(_exception);
+            Match match = PluginNameRegex.Match(_exception);
             if (match.Success)
             {
                 _pluginName = match.Value;

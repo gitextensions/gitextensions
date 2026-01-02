@@ -15,7 +15,7 @@ public static partial class ExecutableExtensions
     private static readonly Lazy<Encoding> _defaultOutputEncoding = new(() => GitModule.SystemEncoding, false);
 
     [GeneratedRegex(@"\u001B[\u0040-\u005F].*?[\u0040-\u007E]", RegexOptions.ExplicitCapture)]
-    private static partial Regex AnsiCodeRegex();
+    private static partial Regex AnsiCodeRegex { get; }
 
     /// <summary>
     /// Launches a process for the executable and returns its output.
@@ -353,7 +353,7 @@ public static partial class ExecutableExtensions
     {
         // NOTE Regex returns the original string if no ANSI codes are found (no allocation)
         return stripAnsiEscapeCodes
-            ? AnsiCodeRegex().Replace(s, "")
+            ? AnsiCodeRegex.Replace(s, "")
             : s;
     }
 }

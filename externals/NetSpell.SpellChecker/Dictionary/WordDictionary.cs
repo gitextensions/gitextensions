@@ -27,7 +27,7 @@ public partial class WordDictionary : Component
     private Container _components;
 
     [GeneratedRegex(@"[^\s]+")]
-    private static partial Regex SpaceRegex();
+    private static partial Regex SpaceRegex { get; }
 
     /// <summary>
     ///     Initializes a new instance of the class
@@ -373,9 +373,6 @@ public partial class WordDictionary : Component
         PhoneticRules.Clear();
         TryCharacters = "";
 
-        // the following is used to split a line by white space
-        Regex spaceRegex = SpaceRegex();
-
         string currentSection = "";
         AffixRule currentRule = null;
         string dictionaryPath = Path.Combine(DictionaryFolder, _dictionaryFile);
@@ -424,7 +421,7 @@ public partial class WordDictionary : Component
                     case "[Suffix]": // MySpell suffix rules
 
                         // split line by white space
-                        partMatches = spaceRegex.Matches(tempLine);
+                        partMatches = SpaceRegex.Matches(tempLine);
 
                         // if 3 parts, then new rule
                         if (partMatches.Count == 3)
@@ -481,7 +478,7 @@ public partial class WordDictionary : Component
                         break;
                     case "[Phonetic]": // ASpell phonetic rules
                                        // split line by white space
-                        partMatches = spaceRegex.Matches(tempLine);
+                        partMatches = SpaceRegex.Matches(tempLine);
                         if (partMatches.Count >= 2)
                         {
                             PhoneticRule rule = new();

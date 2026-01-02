@@ -19,9 +19,9 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
     public const string CombinedDiffGuid = "3333333333333333333333333333333333333333";
 
     [GeneratedRegex(@"^[a-f\d]{40}$", RegexOptions.ExplicitCapture)]
-    public static partial Regex Sha1HashRegex();
+    public static partial Regex Sha1HashRegex { get; }
     [GeneratedRegex(@"\b[a-f\d]{7,40}\b(?![^@\s]*@)", RegexOptions.ExplicitCapture)]
-    public static partial Regex Sha1HashShortRegex();
+    public static partial Regex Sha1HashShortRegex { get; }
 
     private BuildInfo? _buildStatus;
     private string? _body;
@@ -147,6 +147,6 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
     /// <returns><c>true</c> if <paramref name="id"/> is a valid SHA-1 hash, otherwise <c>false</c>.</returns>
     public static bool IsFullSha1Hash(string id)
     {
-        return Sha1HashRegex().IsMatch(id);
+        return Sha1HashRegex.IsMatch(id);
     }
 }

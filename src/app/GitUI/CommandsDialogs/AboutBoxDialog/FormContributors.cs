@@ -14,7 +14,7 @@ public sealed partial class FormContributors : GitExtensionsForm
     private readonly TranslationString _caption = new("The application would not be possible without...");
 
     [GeneratedRegex(@"\r\n?|\n", RegexOptions.ExplicitCapture)]
-    private static partial Regex NewlineRegex();
+    private static partial Regex NewlineRegex { get; }
 
     public FormContributors()
     {
@@ -38,10 +38,10 @@ public sealed partial class FormContributors : GitExtensionsForm
             }
 
             textBoxes[0].Text = string.Format("{0}:\r\n{1}\r\n\r\n{2}:\r\n{3}",
-                _team.Text, NewlineRegex().Replace(Resources.Team, " "),
-                _contributors.Text, NewlineRegex().Replace(Resources.Coders, " "));
-            textBoxes[1].Text = NewlineRegex().Replace(Resources.Translators, " ");
-            textBoxes[2].Text = NewlineRegex().Replace(Resources.Designers, " ");
+                _team.Text, NewlineRegex.Replace(Resources.Team, " "),
+                _contributors.Text, NewlineRegex.Replace(Resources.Coders, " "));
+            textBoxes[1].Text = NewlineRegex.Replace(Resources.Translators, " ");
+            textBoxes[2].Text = NewlineRegex.Replace(Resources.Designers, " ");
 
             Controls.Add(tabControl);
 

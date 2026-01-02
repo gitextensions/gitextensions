@@ -21,7 +21,7 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
     #endregion
 
     [GeneratedRegex(@":(.*)@", RegexOptions.ExplicitCapture)]
-    private static partial Regex PasswordRegex();
+    private static partial Regex PasswordRegex { get; }
 
     /// <summary>
     /// Default constructor added to register all strings to be translated
@@ -70,7 +70,7 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
 
     private static string HidePassword(string httpProxy)
     {
-        return PasswordRegex().Replace(httpProxy, ":****@");
+        return PasswordRegex.Replace(httpProxy, ":****@");
     }
 
     private string BuildHttpProxy()

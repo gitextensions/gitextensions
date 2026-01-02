@@ -20,7 +20,7 @@ public partial class GrepHighlightService : TextHighlightService
     private DiffLinesInfo _diffLinesInfo = new();
 
     [GeneratedRegex(@"^(?<line>\d+)(?<kind>:|.)(?<text>.*)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex GrepLineRegex();
+    private static partial Regex GrepLineRegex { get; }
 
     public GrepHighlightService(ref string text, DiffViewerLineNumberControl lineNumbersControl)
     {
@@ -107,7 +107,7 @@ public partial class GrepHighlightService : TextHighlightService
             }
 
             // Parse line no and if match (must not have colors)
-            Match match = GrepLineRegex().Match(line);
+            Match match = GrepLineRegex.Match(line);
             if (!match.Success || !int.TryParse(match.Groups["line"].ValueSpan, out int lineNo))
             {
                 if (line.Length > 0)
