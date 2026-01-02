@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using GitCommands.Git.Extensions;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -29,9 +30,9 @@ public interface ICommitDataManager
     CommitData? GetCommitData(string commitId, bool includeNotes = false);
 
     /// <summary>
-    /// Updates the <see cref="CommitData.Body"/> (commit message) property of <paramref name="commitData"/>.
+    /// Updates the <see cref="GitRevision.Body"/> (commit message) and <see cref="GitRevision.Notes"/> properties of <paramref name="revision"/>.
     /// </summary>
-    void UpdateBody(CommitData commitData, bool appendNotesOnly, out string? error);
+    void UpdateBodyAndNotes(GitRevision revision);
 }
 
 public sealed class CommitDataManager : ICommitDataManager
@@ -44,13 +45,15 @@ public sealed class CommitDataManager : ICommitDataManager
     }
 
     /// <inheritdoc />
-    public void UpdateBody(CommitData commitData, bool appendNotesOnly, out string? error)
+    public void UpdateBodyAndNotes(GitRevision revision)
     {
+        bool appendNotesOnly = revision.Body is not null;
         const string BodyAndNotesFormat = $"%B{RevisionReader.NotesFormat}";
         const string NotesFormat = "%N";
 
-        if (!TryGetCommitLog(commitData.ObjectId.ToString(), appendNotesOnly ? NotesFormat : BodyAndNotesFormat, out error, out string? data, cache: false))
+        if (!TryGetCommitLog(revision.ObjectId.ToString(), appendNotesOnly ? NotesFormat : BodyAndNotesFormat, out string? error, out string? data, cache: false))
         {
+            Trace.WriteLine($"Exception in {nameof(UpdateBodyAndNotes)}: {error}", category: "git");
             return;
         }
 
@@ -59,14 +62,14 @@ public sealed class CommitDataManager : ICommitDataManager
 
         if (appendNotesOnly)
         {
-            commitData.Notes = data;
+            revision.Notes = data;
             return;
         }
 
         int splitPos = data.LastIndexOf(RevisionReader.NotesMarkerWithoutTrailingLF);
-        commitData.Body = data[0..splitPos].TrimEnd();
+        revision.Body = data[0..splitPos].TrimEnd();
         splitPos += RevisionReader.NotesMarkerWithoutTrailingLF.Length + /*LF*/ 1;
-        commitData.Notes = splitPos >= data.Length ? "" : data[splitPos..];
+        revision.Notes = splitPos >= data.Length ? "" : data[splitPos..];
     }
 
     /// <inheritdoc />
