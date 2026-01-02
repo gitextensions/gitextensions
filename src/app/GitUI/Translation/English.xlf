@@ -1742,6 +1742,10 @@ Suitable for some config files modified locally.</source>
         <source>Match &amp;case</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiFindUsingOptions.Text">
+        <source>&amp;Options</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiFindUsingWholeWord.Text">
         <source>Match &amp;whole word</source>
         <target />
