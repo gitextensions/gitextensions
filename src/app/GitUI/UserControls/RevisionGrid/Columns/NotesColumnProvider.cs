@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
@@ -37,8 +37,10 @@ internal sealed class NotesColumnProvider : ColumnProvider
             _grid.DrawColumnText(e, firstLine, style.NormalFont, style.ForeColor, e.CellBounds);
         }
 
+        return;
+
         static string? FirstLine(string? text)
-            => text?.IndexOf('\n') is int eolIndex and > 0
+            => text?.IndexOf('\n') is int eolIndex and >= 0
                 ? text[..eolIndex]
                 : text;
     }
