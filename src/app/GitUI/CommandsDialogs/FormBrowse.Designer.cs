@@ -65,7 +65,7 @@ partial class FormBrowse
         RightSplitContainer = new SplitContainer();
         RevisionsSplitContainer = new SplitContainer();
         RevisionGridContainer = new Panel();
-        RevisionGrid = new GitUI.RevisionGridControl();
+        RevisionGrid = new GitUI.RevisionGridControl(_commitDataManager);
         notificationBarBisectInProgress = new GitUI.UserControls.InteractiveGitActionControl();
         notificationBarGitActionInProgress = new GitUI.UserControls.InteractiveGitActionControl();
         CommitInfoTabControl = new GitUI.CommandsDialogs.FullBleedTabControl();

@@ -23,6 +23,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         bool NotesInSeparateColumn,
         bool ShowAnnotatedTagsMessages,
         bool ShowCommitBodyInRevisionGrid,
+        bool ShowGitNotes,
         bool ShowGitStatusForArtificialCommits,
         bool ShowRemoteBranches,
         bool ShowTags);
@@ -35,14 +36,16 @@ internal sealed class MessageColumnProvider : ColumnProvider
     private readonly Image _bisectBadImage = DpiUtil.Scale(Images.BisectBad);
     private readonly Image _fixupAndSquashImage = DpiUtil.Scale(Images.FixupAndSquashMessageMarker);
 
+    private readonly ICommitDataManager? _commitDataManager;
     private readonly RevisionGridControl _grid;
     private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
 
     private Settings _settings;
 
-    public MessageColumnProvider(RevisionGridControl grid, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
+    public MessageColumnProvider(RevisionGridControl grid, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder, ICommitDataManager? commitDataManager)
         : base("Message")
     {
+        _commitDataManager = commitDataManager;
         _grid = grid;
         _gitRevisionSummaryBuilder = gitRevisionSummaryBuilder;
 
@@ -64,6 +67,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             NotesInSeparateColumn: AppSettings.ShowGitNotesColumn.Value,
             ShowAnnotatedTagsMessages: AppSettings.ShowAnnotatedTagsMessages,
             ShowCommitBodyInRevisionGrid: AppSettings.ShowCommitBodyInRevisionGrid,
+            ShowGitNotes: AppSettings.ShowGitNotes,
             ShowGitStatusForArtificialCommits: AppSettings.ShowGitStatusForArtificialCommits,
             ShowRemoteBranches: AppSettings.ShowRemoteBranches,
             ShowTags: AppSettings.ShowTags);
@@ -554,7 +558,19 @@ internal sealed class MessageColumnProvider : ColumnProvider
         => GetBody(revision)?.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries) ?? [revision.Subject];
 
     private string? GetBody(GitRevision revision)
-        => _settings.NotesInSeparateColumn || /*Body & Notes not loaded yet*/ revision.Body is null
+    {
+        if (revision.Body is null)
+        {
+            if (_commitDataManager is not null && (_settings.ShowCommitBodyInRevisionGrid || _settings.ShowGitNotes || _settings.NotesInSeparateColumn))
+            {
+                _commitDataManager.RequestDetails(revision);
+            }
+
+            return null;
+        }
+
+        return _settings.NotesInSeparateColumn
             ? revision.Body
             : UIExtensions.FormatBodyAndNotes(revision.Body, revision.Notes);
+    }
 }

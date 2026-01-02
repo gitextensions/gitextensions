@@ -7,10 +7,13 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class NotesColumnProvider : ColumnProvider
 {
+    private readonly ICommitDataManager? _commitDataManager;
     private readonly RevisionGridControl _grid;
 
-    public NotesColumnProvider(RevisionGridControl grid) : base("Notes")
+    public NotesColumnProvider(RevisionGridControl grid, ICommitDataManager? commitDataManager)
+        : base("Notes")
     {
+        _commitDataManager = commitDataManager;
         _grid = grid;
 
         DataGridViewTextBoxColumn? column = new()
@@ -35,6 +38,10 @@ internal sealed class NotesColumnProvider : ColumnProvider
         if (FirstLine(revision.Notes) is string firstLine)
         {
             _grid.DrawColumnText(e, firstLine, style.NormalFont, style.ForeColor, e.CellBounds);
+        }
+        else
+        {
+            _commitDataManager?.RequestDetails(revision);
         }
 
         return;
