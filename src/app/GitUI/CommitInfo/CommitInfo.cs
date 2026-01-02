@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using System.ComponentModel;
 using System.Net;
@@ -359,16 +359,14 @@ public partial class CommitInfo : GitModuleControl
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            if (_revision.Body is null || (_revision.Notes is null && (AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes)))
+            {
+                _commitDataManager.UpdateBodyAndNotes(_revision);
+            }
+
             CommitData data = _commitDataManager.CreateFromRevision(_revision, _children);
 
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (_revision.Body is null || ((AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes) && _revision.Notes is null))
-            {
-                _commitDataManager.UpdateBody(data, appendNotesOnly: _revision.Body is not null, out _);
-                _revision.Body = data.Body;
-                _revision.Notes = data.Notes ?? "";
-            }
 
             ICommitDataBodyRenderer? commitDataBodyRenderer = _commitDataBodyRenderer;
             if (commitDataBodyRenderer is null)
