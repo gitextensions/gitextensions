@@ -1,4 +1,6 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿#nullable enable
+
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -10,12 +12,23 @@ using GitUI.CommandsDialogs;
 using GitUI.Properties;
 using GitUI.Theming;
 using GitUIPluginInterfaces;
+using Microsoft;
 
 namespace GitUI.UserControls.RevisionGrid.Columns;
 
 internal sealed class MessageColumnProvider : ColumnProvider
 {
+    private record struct Settings
+        (bool FillRefLabels,
+        bool NotesInSeparateColumn,
+        bool ShowAnnotatedTagsMessages,
+        bool ShowCommitBodyInRevisionGrid,
+        bool ShowGitStatusForArtificialCommits,
+        bool ShowRemoteBranches,
+        bool ShowTags);
+
     public const int MaxSuperprojectRefs = 4;
+
     private readonly StringBuilder _toolTipBuilder = new(200);
 
     private readonly Image _bisectGoodImage = DpiUtil.Scale(Images.BisectGood);
@@ -24,7 +37,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
     private readonly RevisionGridControl _grid;
     private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
-    private bool _notesInSeparateColumn;
+
+    private Settings _settings;
 
     public MessageColumnProvider(RevisionGridControl grid, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
         : base("Message")
@@ -45,11 +59,20 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
     public override void ApplySettings()
     {
-        _notesInSeparateColumn = AppSettings.ShowGitNotesColumn.Value;
+        _settings = new Settings(
+            FillRefLabels: AppSettings.FillRefLabels,
+            NotesInSeparateColumn: AppSettings.ShowGitNotesColumn.Value,
+            ShowAnnotatedTagsMessages: AppSettings.ShowAnnotatedTagsMessages,
+            ShowCommitBodyInRevisionGrid: AppSettings.ShowCommitBodyInRevisionGrid,
+            ShowGitStatusForArtificialCommits: AppSettings.ShowGitStatusForArtificialCommits,
+            ShowRemoteBranches: AppSettings.ShowRemoteBranches,
+            ShowTags: AppSettings.ShowTags);
     }
 
     public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
     {
+        Validates.NotNull(e.Graphics);
+
         MultilineIndicator indicator = new(e, revision);
         Rectangle messageBounds = indicator.RemainingCellBounds;
         List<IGitRef> superprojectRefs = [];
@@ -61,7 +84,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             DrawSuperprojectInfo(e, spi, revision, style, messageBounds, ref offset);
 
             if (spi.Refs is not null && revision.ObjectId is not null &&
-                spi.Refs.TryGetValue(revision.ObjectId, out IReadOnlyList<IGitRef> refs))
+                spi.Refs.TryGetValue(revision.ObjectId, out IReadOnlyList<IGitRef>? refs))
             {
                 superprojectRefs.AddRange(refs);
             }
@@ -78,7 +101,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                     break;
                 }
 
-                IGitRef superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
+                IGitRef? superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
                 if (superprojectRef is not null)
                 {
                     superprojectRefs.Remove(superprojectRef);
@@ -96,13 +119,13 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 e.State.HasFlag(DataGridViewElementStates.Selected),
                 style.NormalFont,
                 ref offset,
-                revision.IsAutostash ? revision.Subject : revision.ReflogSelector[5..],
+                revision.IsAutostash ? revision.Subject : (revision.ReflogSelector ?? throw new InvalidOperationException($"{nameof(revision.ReflogSelector)} must not be null"))[5..],
                 AppColor.OtherTag.GetThemeColor(),
                 RefArrowType.None,
                 messageBounds,
                 e.Graphics,
                 dashedLine: false,
-                fill: AppSettings.FillRefLabels);
+                fill: _settings.FillRefLabels);
         }
 
         if (revision.IsArtificial)
@@ -164,8 +187,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             return true;
         }
 
-        ArtificialCommitChangeCount changeCount = _grid.GetChangeCount(revision.ObjectId);
-        if (changeCount is not null && AppSettings.ShowGitStatusForArtificialCommits)
+        if (_settings.ShowGitStatusForArtificialCommits && _grid.GetChangeCount(revision.ObjectId) is ArtificialCommitChangeCount changeCount)
         {
             toolTip = _toolTipBuilder.Append(changeCount.GetSummary()).ToString();
             return true;
@@ -181,6 +203,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         Rectangle messageBounds,
         ref int offset)
     {
+        Graphics graphics = e.Graphics!; // validated by caller
         int baseOffset = offset;
 
         // Add fake "refs" for artificial commits
@@ -192,9 +215,9 @@ internal sealed class MessageColumnProvider : ColumnProvider
             AppColor.OtherTag.GetThemeColor(),
             RefArrowType.None,
             messageBounds,
-            e.Graphics,
+            graphics,
             dashedLine: false,
-            fill: AppSettings.FillRefLabels);
+            fill: _settings.FillRefLabels);
 
         int max = Math.Max(
             TextRenderer.MeasureText(ResourceManager.TranslatedStrings.Workspace, style.NormalFont).Width,
@@ -203,8 +226,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         offset = baseOffset + max + DpiUtil.Scale(6);
 
         // Summary of changes
-        ArtificialCommitChangeCount changeCount = _grid.GetChangeCount(revision.ObjectId);
-        if (changeCount is null || !AppSettings.ShowGitStatusForArtificialCommits)
+        if (!_settings.ShowGitStatusForArtificialCommits || _grid.GetChangeCount(revision.ObjectId) is not ArtificialCommitChangeCount changeCount)
         {
             return;
         }
@@ -213,31 +235,27 @@ internal sealed class MessageColumnProvider : ColumnProvider
         {
             if (changeCount.HasChanges)
             {
-                DrawArtificialCount(_grid, e, changeCount.Changed, Images.FileStatusModified, style, messageBounds, ref offset);
-                DrawArtificialCount(_grid, e, changeCount.New, Images.FileStatusAdded, style, messageBounds, ref offset);
-                DrawArtificialCount(_grid, e, changeCount.Deleted, Images.FileStatusRemoved, style, messageBounds, ref offset);
-                DrawArtificialCount(_grid, e, changeCount.SubmodulesChanged, Images.SubmoduleRevisionDown, style, messageBounds, ref offset);
-                DrawArtificialCount(_grid, e, changeCount.SubmodulesDirty, Images.SubmoduleDirty, style, messageBounds, ref offset);
+                DrawArtificialCount(changeCount.Changed, Images.FileStatusModified, ref offset);
+                DrawArtificialCount(changeCount.New, Images.FileStatusAdded, ref offset);
+                DrawArtificialCount(changeCount.Deleted, Images.FileStatusRemoved, ref offset);
+                DrawArtificialCount(changeCount.SubmodulesChanged, Images.SubmoduleRevisionDown, ref offset);
+                DrawArtificialCount(changeCount.SubmodulesDirty, Images.SubmoduleDirty, ref offset);
             }
             else
             {
-                DrawArtificialCount(_grid, e, items: null, Images.RepoStateClean, style, messageBounds, ref offset);
+                DrawArtificialCount(items: null, Images.RepoStateClean, ref offset);
             }
         }
         else
         {
-            DrawArtificialCount(_grid, e, items: null, Images.RepoStateUnknown, style, messageBounds, ref offset);
+            DrawArtificialCount(items: null, Images.RepoStateUnknown, ref offset);
         }
 
         return;
 
-        static void DrawArtificialCount(
-            RevisionGridControl grid,
-            DataGridViewCellPaintingEventArgs e,
+        void DrawArtificialCount(
             IReadOnlyList<GitItemStatus>? items,
             Image icon,
-            in CellStyle style,
-            Rectangle messageBounds,
             ref int offset)
         {
             if (items?.Count is 0)
@@ -254,15 +272,15 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 imageSize,
                 imageSize);
 
-            System.Drawing.Drawing2D.GraphicsContainer container = e.Graphics.BeginContainer();
-            e.Graphics.DrawImage(icon, imageRect);
-            e.Graphics.EndContainer(container);
+            System.Drawing.Drawing2D.GraphicsContainer container = graphics.BeginContainer();
+            graphics.DrawImage(icon, imageRect);
+            graphics.EndContainer(container);
             offset += imageSize + textHorizontalPadding;
 
             string text = items?.Count.ToString() ?? "";
             Rectangle bounds = messageBounds.ReduceLeft(offset);
             int textWidth = Math.Max(
-                grid.DrawColumnText(e, text, style.NormalFont, style.ForeColor, bounds),
+                _grid.DrawColumnText(e, text, style.NormalFont, style.ForeColor, bounds),
                 TextRenderer.MeasureText("88", style.NormalFont).Width);
             offset += textWidth + textHorizontalPadding;
         }
@@ -296,7 +314,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 headColor,
                 arrowType,
                 messageBounds,
-                e.Graphics,
+                e.Graphics!,
                 dashedLine: true);
         }
     }
@@ -339,7 +357,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 headColor: Color.OrangeRed.AdaptTextColor(),
                 isSelected ? RefArrowType.Filled : RefArrowType.NotFilled,
                 messageBounds,
-                e.Graphics,
+                e.Graphics!,
                 dashedLine: true);
         }
     }
@@ -386,7 +404,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         if (gitRef.IsTag &&
             gitRef.IsDereference && // see note on using IsDereference in CommitInfo class
-            AppSettings.ShowAnnotatedTagsMessages)
+            _settings.ShowAnnotatedTagsMessages)
         {
             name += " [...]";
         }
@@ -399,9 +417,9 @@ internal sealed class MessageColumnProvider : ColumnProvider
             headColor,
             arrowType,
             messageBounds,
-            e.Graphics,
+            e.Graphics!,
             dashedLine: superprojectRef is not null,
-            fill: AppSettings.FillRefLabels);
+            fill: _settings.FillRefLabels);
     }
 
     private static void DrawImage(
@@ -414,7 +432,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         if (x + image.Width < messageBounds.Right)
         {
             int y = e.CellBounds.Y + ((e.CellBounds.Height - image.Height) / 2);
-            e.Graphics.DrawImage(image, x, y);
+            e.Graphics!.DrawImage(image, x, y);
             offset += image.Width + DpiUtil.Scale(4);
         }
     }
@@ -456,7 +474,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             return;
         }
 
-        if (lines.Length > 1 && AppSettings.ShowCommitBodyInRevisionGrid)
+        if (lines.Length > 1 && _settings.ShowCommitBodyInRevisionGrid)
         {
             string commitBody = string.Concat(lines.Skip(1).Select(_ => " " + _));
             Rectangle bodyBounds = messageBounds.ReduceLeft(offset);
@@ -468,16 +486,16 @@ internal sealed class MessageColumnProvider : ColumnProvider
         indicator.Render();
     }
 
-    private static bool FilterRef(IGitRef gitRef)
+    private bool FilterRef(IGitRef gitRef)
     {
         if (gitRef.IsTag)
         {
-            return AppSettings.ShowTags;
+            return _settings.ShowTags;
         }
 
         if (gitRef.IsRemote)
         {
-            return AppSettings.ShowRemoteBranches;
+            return _settings.ShowRemoteBranches;
         }
 
         return true;
@@ -536,7 +554,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         => GetBody(revision)?.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries) ?? [revision.Subject];
 
     private string? GetBody(GitRevision revision)
-        => _notesInSeparateColumn || /*Body & Notes not loaded yet*/ revision.Body is null
+        => _settings.NotesInSeparateColumn || /*Body & Notes not loaded yet*/ revision.Body is null
             ? revision.Body
             : UIExtensions.FormatBodyAndNotes(revision.Body, revision.Notes);
 }
