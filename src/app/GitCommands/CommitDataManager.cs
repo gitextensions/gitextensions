@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using GitCommands.Git.Extensions;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -46,8 +46,8 @@ public sealed class CommitDataManager : ICommitDataManager
     /// <inheritdoc />
     public void UpdateBody(CommitData commitData, bool appendNotesOnly, out string? error)
     {
-        const string BodyAndNotesFormat = $"%B%n{RevisionReader.NotesPrefix}%n%-N";
-        const string NotesFormat = "%-N";
+        const string BodyAndNotesFormat = $"%B{RevisionReader.NotesFormat}";
+        const string NotesFormat = "%N";
 
         if (!TryGetCommitLog(commitData.ObjectId.ToString(), appendNotesOnly ? NotesFormat : BodyAndNotesFormat, out error, out string? data, cache: false))
         {
@@ -63,10 +63,10 @@ public sealed class CommitDataManager : ICommitDataManager
             return;
         }
 
-        int splitPos = data.IndexOf($"\n{RevisionReader.NotesPrefix}");
+        int splitPos = data.LastIndexOf(RevisionReader.NotesMarkerWithoutTrailingLF);
         commitData.Body = data[0..splitPos].TrimEnd();
-        splitPos += 1 + RevisionReader.NotesPrefix.Length + 1;
-        commitData.Notes = splitPos > data.Length ? "" : data[splitPos..];
+        splitPos += RevisionReader.NotesMarkerWithoutTrailingLF.Length + /*LF*/ 1;
+        commitData.Notes = splitPos >= data.Length ? "" : data[splitPos..];
     }
 
     /// <inheritdoc />

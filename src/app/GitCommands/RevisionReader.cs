@@ -38,9 +38,9 @@ public sealed class RevisionReader
         /* Notes placeholder */ "{1}";
 
     private const string _reflogSelectorFormat = "%gD%n";
-    internal const string NotesPrefix = "\u039d\u043et\u0435\u0282:"; // Unicode l00k-alikes, Νоtеʂ:
-    private const string _notesMarker = $"\n{NotesPrefix}";
-    private const string _notesFormat = $"%n{NotesPrefix}%n%N";
+    private const string _notesPrefix = "\u039d\u043et\u0435\u0282:"; // Unicode l00k-alikes, Νоtеʂ:
+    internal const string NotesMarkerWithoutTrailingLF = $"\n{_notesPrefix}";
+    internal const string NotesFormat = $"%n{_notesPrefix}%n%N";
 
     // Trace info for parse errors
     private int _noOfParseError = 0;
@@ -80,7 +80,7 @@ public sealed class RevisionReader
         _hasReflogSelector = hasReflogSelector;
         _hasNotes = hasNotes;
 
-        return string.Format(_fullFormat, hasReflogSelector ? _reflogSelectorFormat : "", hasNotes ? _notesFormat : "");
+        return string.Format(_fullFormat, hasReflogSelector ? _reflogSelectorFormat : "", hasNotes ? NotesFormat : "");
     }
 
     private static long GetUnixTimeForOffset(int days)
@@ -588,7 +588,7 @@ public sealed class RevisionReader
         // this uses the alternative definition of first line in body.
         int lengthSubject = decoded.IndexOfAny(Delimiters.LineAndVerticalFeed);
         revision.HasMultiLineMessage = _hasNotes
-            ? decoded.Length != lengthSubject + _notesMarker.Length + 1 // Notes must always include the notes marker
+            ? decoded.Length != lengthSubject + NotesMarkerWithoutTrailingLF.Length + /*LF*/ 1 // Notes must always include the notes marker
             : lengthSubject >= 0;
 
         revision.Subject = (lengthSubject >= 0
@@ -608,17 +608,11 @@ public sealed class RevisionReader
                 currentOffset++;
             }
 
-            if (_hasNotes)
+            if (_hasNotes && decoded.LastIndexOf(NotesMarkerWithoutTrailingLF, StringComparison.Ordinal) is int splitPos and >= 0)
             {
-                if (!decoded.EndsWith(_notesMarker) && ((ReadOnlySpan<char>)decoded).LastIndexOf(_notesMarker, StringComparison.Ordinal) is int notesStartIndex and >= 0)
-                {
-                    revision.Body = decoded[..notesStartIndex].TrimEnd().ToString();
-                    revision.Notes = decoded.Slice(1 + notesStartIndex + _notesMarker.Length + 1).ToString();
-                }
-                else
-                {
-                    revision.Body = decoded[..^_notesMarker.Length].TrimEnd().ToString();
-                }
+                revision.Body = decoded[..splitPos].TrimEnd().ToString();
+                splitPos += NotesMarkerWithoutTrailingLF.Length + /*LF*/ 1;
+                revision.Notes = splitPos >= decoded.Length ? "" : decoded.Slice(splitPos).ToString();
             }
             else
             {

@@ -29,7 +29,7 @@
   "Subject": "Notes subject1",
   "Body": "Notes subject1\n\nline",
   "HasMultiLineMessage": true,
-  "Notes": "line",
+  "Notes": "Notes",
   "IsArtificial": false,
   "IsAutostash": false,
   "IsStash": false,
