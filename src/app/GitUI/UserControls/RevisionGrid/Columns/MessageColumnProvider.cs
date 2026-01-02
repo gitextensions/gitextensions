@@ -127,7 +127,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
         {
             // The body is not stored for older commits (to save memory)
-            string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(GetText(revision))
+            string bodySummary = _gitRevisionSummaryBuilder.BuildSummary(GetBody(revision))
                 ?? revision.Subject + (revision.HasMultiLineMessage ? TranslatedStrings.BodyNotLoaded : "");
             int initialLength = bodySummary.Length + 10;
             _toolTipBuilder.EnsureCapacity(initialLength);
@@ -531,10 +531,11 @@ internal sealed class MessageColumnProvider : ColumnProvider
         }
     }
 
-    private string[] GetCommitMessageLines(GitRevision revision) => GetText(revision).Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries);
+    private string[] GetCommitMessageLines(GitRevision revision)
+        => GetBody(revision)?.Split(Delimiters.LineFeed, StringSplitOptions.RemoveEmptyEntries) ?? [revision.Subject];
 
-    private string GetText(GitRevision revision)
-        => _notesInSeparateColumn
-            ? revision.Body ?? revision.Subject
-            : UIExtensions.FormatBodyAndNotes(revision.Body ?? revision.Subject, revision.Notes);
+    private string? GetBody(GitRevision revision)
+        => _notesInSeparateColumn || /*Body & Notes not loaded yet*/ revision.Body is null
+            ? revision.Body
+            : UIExtensions.FormatBodyAndNotes(revision.Body, revision.Notes);
 }
