@@ -6,7 +6,8 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 public partial class GitSettingsPage : SettingsPageWithHeader
 {
-    private readonly TranslationString _homeIsSetToString = new("HOME is set to:");
+    private readonly TranslationString _envIsSetToString = new("{0} is set to: {1}");
+    private readonly TranslationString _envIsNotSetString = new("{0} is not set.");
 
     public GitSettingsPage(IServiceProvider serviceProvider)
         : base(serviceProvider)
@@ -29,7 +30,17 @@ public partial class GitSettingsPage : SettingsPageWithHeader
     protected override void SettingsToPage()
     {
         EnvironmentConfiguration.SetEnvironmentVariables();
-        homeIsSetToLabel.Text = string.Concat(_homeIsSetToString.Text, " ", EnvironmentConfiguration.GetHomeDir());
+        string envName = "GIT_CONFIG_GLOBAL";
+        string? envValue = EnvironmentConfiguration.GetEnvironmentVariable(envName);
+        string additionalText = "";
+        if (envValue is null)
+        {
+            additionalText = $"    ({string.Format(_envIsNotSetString.Text, $"%{envName}%")})";
+            envValue = EnvironmentConfiguration.GetHomeDir();
+            envName = "HOME";
+        }
+
+        homeIsSetToLabel.Text = string.Format(_envIsSetToString.Text, $"%{envName}%", envValue) + additionalText;
 
         GitPath.Text = AppSettings.GitCommandValue;
         LinuxToolsDir.Text = AppSettings.LinuxToolsDir;
