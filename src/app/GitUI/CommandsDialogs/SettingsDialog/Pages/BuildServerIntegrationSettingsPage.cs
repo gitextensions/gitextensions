@@ -1,7 +1,7 @@
-using GitCommands.Remotes;
+﻿using GitCommands.Remotes;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
-using GitExtUtils.GitUI;
+using GitExtensions.Extensibility.Extensions;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;

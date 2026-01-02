@@ -1,4 +1,4 @@
-﻿using GitExtUtils.GitUI;
+﻿using GitExtensions.Extensibility.Extensions;
 
 namespace GitExtensions.Extensibility.Settings;
 

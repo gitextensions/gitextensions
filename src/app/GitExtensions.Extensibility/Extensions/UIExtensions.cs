@@ -1,6 +1,8 @@
-﻿using System.Text;
+﻿#nullable enable
 
-namespace GitExtUtils.GitUI;
+using System.Text;
+
+namespace GitExtensions.Extensibility.Extensions;
 
 public static class UIExtensions
 {
@@ -53,7 +55,7 @@ public static class UIExtensions
     /// </summary>
     public static string FormatBodyAndNotes(string bodyOrSubject, string? notes)
     {
-        if (string.IsNullOrWhiteSpace(notes))
+        if (string.IsNullOrEmpty(notes))
         {
             return bodyOrSubject;
         }
@@ -62,9 +64,13 @@ public static class UIExtensions
         const string indent = "    ";
 
         // trying to avoid buffer re-allocation during Append()
-        StringBuilder? sb = new StringBuilder((bodyOrSubject?.Length ?? 0) + 2 + notesPrefix.Length + 2 + indent.Length + notes.Length + 1)
-            .AppendLine(bodyOrSubject)
-            .AppendLine(notesPrefix);
+        StringBuilder? sb = new(bodyOrSubject.Length + 4 + notesPrefix.Length + 2 + indent.Length + notes.Length + 1);
+        if (!string.IsNullOrEmpty(bodyOrSubject))
+        {
+            sb.AppendLine(bodyOrSubject);
+        }
+
+        sb.AppendLine().AppendLine(notesPrefix);
 
         foreach (string line in notes.Split('\n'))
         {
