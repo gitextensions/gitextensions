@@ -1,4 +1,6 @@
-﻿namespace GitExtensions.Extensibility.Git;
+﻿using GitUIPluginInterfaces;
+
+namespace GitExtensions.Extensibility.Git;
 
 public sealed class GitSubmoduleStatus
 {

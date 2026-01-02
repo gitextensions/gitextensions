@@ -250,6 +250,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         _revisionGraphColumnProvider = new RevisionGraphColumnProvider(_gridView._revisionGraph, gitRevisionSummaryBuilder);
         _gridView.AddColumn(_revisionGraphColumnProvider);
         _gridView.AddColumn(new MessageColumnProvider(this, gitRevisionSummaryBuilder));
+        _gridView.AddColumn(new NotesColumnProvider(this));
         _gridView.AddColumn(new AvatarColumnProvider(_gridView, AvatarService.DefaultProvider, AvatarService.CacheCleaner));
         _gridView.AddColumn(new AuthorNameColumnProvider(this, _authorHighlighting));
         _gridView.AddColumn(new DateColumnProvider(this));
@@ -1100,7 +1101,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                         observeRevisions,
                         _filterInfo.GetRevisionFilter(currentCheckout),
                         pathFilter,
-                        AppSettings.ShowGitNotes,
+                        AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes,
                         ResourceManager.TranslatedStrings.Autostash,
                         cancellationToken);
                 },
@@ -1326,7 +1327,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 CommitterEmail = userEmail,
                 Subject = ResourceManager.TranslatedStrings.Workspace,
                 ParentIds = new[] { ObjectId.IndexId },
-                HasNotes = true
+                Notes = ""
             };
             GitRevision indexRev = new(ObjectId.IndexId)
             {
@@ -1338,7 +1339,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 CommitterEmail = userEmail,
                 Subject = ResourceManager.TranslatedStrings.Index,
                 ParentIds = CurrentCheckout is null ? null : new[] { CurrentCheckout },
-                HasNotes = true
+                Notes = ""
             };
 
             if (headParents is null)
@@ -2629,6 +2630,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         PerformRefreshRevisions();
     }
 
+    internal void ToggleShowGitNotesColumn()
+    {
+        AppSettings.ShowGitNotesColumn.Value = !AppSettings.ShowGitNotesColumn.Value;
+        PerformRefreshRevisions();
+    }
+
     internal void ToggleHideMergeCommits()
     {
         AppSettings.HideMergeCommits = !AppSettings.HideMergeCommits;
@@ -3239,6 +3246,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             case Command.ToggleShowRelativeDate: ToggleShowRelativeDate(); break;
             case Command.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
             case Command.ToggleShowGitNotes: ToggleShowGitNotes(); break;
+            case Command.ToggleShowGitNotesColumn: ToggleShowGitNotesColumn(); break;
             case Command.ToggleHideMergeCommits: ToggleHideMergeCommits(); break;
             case Command.ToggleShowTags: ToggleShowTags(); break;
             case Command.ShowAllBranches: ShowAllBranches(); break;
