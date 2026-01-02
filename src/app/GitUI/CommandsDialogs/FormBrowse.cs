@@ -251,6 +251,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         : base(commands)
     {
         _commitDataManager = new CommitDataManager(() => Module);
+        _commitDataManager.RevisionDetailsLoaded += (_, _) => RevisionGrid.Invalidate(invalidateChildren: true);
+
         _splitterManager = new(settingsSource);
 
         SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
