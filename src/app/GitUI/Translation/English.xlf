@@ -7098,8 +7098,8 @@ Is the merge conflict solved?</source>
         <target />
       </trans-unit>
       <trans-unit id="_fileBinaryChooseLocalBaseRemote.Text">
-        <source>File ({0}) appears to be a binary file.
-Choose to keep the local ({1}), remote ({2}) or base file.</source>
+        <source>File '{0}' appears to be binary.
+Choose to keep the local '{1}', remote '{2}' or base file.</source>
         <target />
       </trans-unit>
       <trans-unit id="_fileChangeLocallyAndRemotely.Text">
@@ -7111,7 +7111,7 @@ Choose to keep the local ({1}), remote ({2}) or base file.</source>
         <target />
       </trans-unit>
       <trans-unit id="_fileCreatedLocallyAndRemotelyLong.Text">
-        <source>File {0} does not have a base revision.
+        <source>File '{0}' does not have a base revision.
 A file with the same name has been created locally ({1}) and remotely ({2}) causing this conflict.
 
 Choose the file you want to keep, merge the files or delete the file?</source>
@@ -7122,7 +7122,7 @@ Choose the file you want to keep, merge the files or delete the file?</source>
         <target />
       </trans-unit>
       <trans-unit id="_fileDeletedLocallyAndModifiedRemotelyLong.Text">
-        <source>File {0} does not have a local revision.
+        <source>File '{0}' does not have a local revision.
 The file has been deleted locally ({1}) but modified remotely ({2}).
 
 Choose to delete the file or keep the modified version.</source>
@@ -7138,7 +7138,7 @@ Are you sure you want to open this file in {0}?</source>
         <target />
       </trans-unit>
       <trans-unit id="_fileModifiedLocallyAndDeletedRemotelyLong.Text">
-        <source>File {0} does not have a remote revision.
+        <source>File '{0}' does not have a remote revision.
 The file has been modified locally ({1}) but deleted remotely ({2}).
 
 Choose to delete the file or keep the modified version.</source>
@@ -7151,28 +7151,28 @@ The merge conflict will not be marked as solved. Please try again.</source>
         <target />
       </trans-unit>
       <trans-unit id="_filesDeletedLocallyAndModifiedRemotelyLong.Text">
-        <source>{0} and {1} other out of {2} selected files do not have a local revision.
+        <source>'{0}' and {1} other out of {2} selected files do not have a local revision.
 The files have been deleted locally, but modified remotely
 
 Choose to delete the files or keep the modified versions.</source>
         <target />
       </trans-unit>
       <trans-unit id="_filesDeletedLocallyAndModifiedRemotelyLongNoOtherFilesSelected.Text">
-        <source>{0} and {1} other selected file(s) do not have a local revision.
+        <source>'{0}' and {1} other selected file(s) do not have a local revision.
 The files have been deleted locally, but modified remotely
 
 Choose to delete the files or keep the modified versions.</source>
         <target />
       </trans-unit>
       <trans-unit id="_filesModifiedLocallyAndDeletedRemotelyLong.Text">
-        <source>{0} and {1} other out of {2} selected files do not have a remote revision.
+        <source>'{0}' and {1} other out of {2} selected files do not have a remote revision.
 The files have been modified locally, but deleted remotely.
 
 Choose to delete the files or keep the modified versions.</source>
         <target />
       </trans-unit>
       <trans-unit id="_filesModifiedLocallyAndDeletedRemotelyLongNoOtherFilesSelected.Text">
-        <source>{0} and {1} other selected file(s) do not have a remote revision.
+        <source>'{0}' and {1} other selected file(s) do not have a remote revision.
 The files have been modified locally, but deleted remotely.
 
 Choose to delete the files or keep the modified versions.</source>
@@ -7195,7 +7195,7 @@ Choose to delete the files or keep the modified versions.</source>
         <target />
       </trans-unit>
       <trans-unit id="_noBaseRevision.Text">
-        <source>There is no base revision for {0}.
+        <source>There is no base revision for '{0}'.
 Fall back to 2-way merge?</source>
         <target />
       </trans-unit>
@@ -7222,7 +7222,7 @@ Please go to settings and configure the mergetool!</source>
         <target />
       </trans-unit>
       <trans-unit id="_solveMergeConflictApplyToAllCheckBoxText.Text">
-        <source>Apply to {0} and {1} other file(s)</source>
+        <source>Apply to '{0}' and {1} other file(s)</source>
         <target />
       </trans-unit>
       <trans-unit id="_solveMergeConflictDialogCaption.Text">
@@ -7230,7 +7230,7 @@ Please go to settings and configure the mergetool!</source>
         <target />
       </trans-unit>
       <trans-unit id="_stageFilename.Text">
-        <source>Stage {0}</source>
+        <source>Stage '{0}'</source>
         <target />
       </trans-unit>
       <trans-unit id="_theirs.Text">
