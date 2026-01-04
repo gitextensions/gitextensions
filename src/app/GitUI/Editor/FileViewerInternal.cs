@@ -660,7 +660,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     private int FirstVisibleLine
     {
         get => TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine;
-        set => TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = value;
+        set => TextEditor.ActiveTextAreaControl.TextArea.TextView.SetFirstVisibleLine(value, TextEditor.ActiveTextAreaControl.HScrollBar.Visible ? 0 : SystemInformation.HorizontalScrollBarHeight);
     }
 
     public int GetLineFromVisualPosY(int visualPosY)
