@@ -304,6 +304,7 @@ partial class FileViewer
         fileviewerToolbar.ClickThrough = true;
         fileviewerToolbar.Dock = DockStyle.None;
         fileviewerToolbar.DrawBorder = false;
+        fileviewerToolbar.GripStyle = ToolStripGripStyle.Hidden;
         fileviewerToolbar.Items.AddRange(new ToolStripItem[] {
         nextChangeButton,
         previousChangeButton,
