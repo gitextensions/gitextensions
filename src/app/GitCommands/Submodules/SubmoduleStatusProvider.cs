@@ -37,10 +37,10 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     // Throttle updates triggered from status updates
     private const int MinRefreshInterval = 15;
 
+    private readonly Func<string, IGitModule> _getModule;
     private readonly CancellationTokenSequence _submodulesStructureSequence = new();
     private readonly CancellationTokenSequence _submodulesStatusSequence = new();
     private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = [];
-    private readonly Func<string, IGitModule> _getModule;
     private DateTime _previousSubmoduleUpdateTime;
     private SubmoduleInfoResult? _submoduleInfoResult;
 

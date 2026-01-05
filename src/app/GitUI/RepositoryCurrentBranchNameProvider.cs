@@ -17,14 +17,9 @@ public interface IRepositoryCurrentBranchNameProvider
     string GetCurrentBranchName(string repositoryPath);
 }
 
-internal sealed class RepositoryCurrentBranchNameProvider : IRepositoryCurrentBranchNameProvider
+internal sealed class RepositoryCurrentBranchNameProvider(Func<string, IGitModule> getModule) : IRepositoryCurrentBranchNameProvider
 {
-    private readonly Func<string, IGitModule> _getModule;
-
-    public RepositoryCurrentBranchNameProvider(Func<string, IGitModule> getModule)
-    {
-        _getModule = getModule;
-    }
+    private readonly Func<string, IGitModule> _getModule = getModule;
 
     public string GetCurrentBranchName(string repositoryPath)
     {

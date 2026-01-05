@@ -2941,7 +2941,7 @@ public sealed partial class GitModule : IGitModule
             {
                 _isReftableRepo = true;
             }
-            else if (!string.IsNullOrEmpty(head))
+            else if (head.Length > 0)
             {
                 return head;
             }
