@@ -830,7 +830,7 @@ public partial class FileViewer : GitModuleControl
         string GetFileText()
         {
             using FileStream stream = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using StreamReader reader = FileReader.OpenStream(stream, GitModule.LosslessEncoding);
+            using StreamReader reader = FileReader.OpenStream(stream, Encoding);
             string content = reader.ReadToEnd();
             FilePreamble = reader.CurrentEncoding.GetPreamble();
             return content;
