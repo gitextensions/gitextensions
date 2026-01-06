@@ -737,7 +737,7 @@ public partial class FileViewer : GitModuleControl
                 || (!file.Name.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
                    && !file.Name.EndsWith(".patch", StringComparison.OrdinalIgnoreCase));
             FilePreamble = [];
-            return Module.GetFileText(blobId, Encoding, stripAnsiEscapeCodes) is string s ? s : "";
+            return Module.GetFileText(blobId, Encoding, stripAnsiEscapeCodes) ?? "";
         }
 
         async Task<Image?> GetImageAsync()

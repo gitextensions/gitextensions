@@ -290,7 +290,7 @@ public static partial class ExecutableExtensions
     {
         outputEncoding ??= _defaultOutputEncoding.Value;
 
-        string cacheKey = $"{arguments} #{executable.GetWorkingDirectory()}::{stripAnsiEscapeCodes}::{extraCacheKey}";
+        string cacheKey = $"{arguments} #{executable.GetWorkingDirectory()}::{(stripAnsiEscapeCodes ? "stripped" : "plain")}::{outputEncoding.WebName}::{extraCacheKey}";
         if (cache?.TryGet(cacheKey, out string? cachedOutput, out string? cachedError) is true)
         {
             return new ExecutionResult(
