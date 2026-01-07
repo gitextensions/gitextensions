@@ -60,6 +60,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
     public event EventHandler<FilterChangedEventArgs>? FilterChanged;
     public event EventHandler? SelectionChanged;
+    public event EventHandler? ArtificialChanged;
 
     /// <summary>
     ///  Occurs whenever the revision graph has started loading the data.
@@ -3170,6 +3171,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         formProcess.ShowDialog(ParentForm);
         PerformRefreshRevisions();
+        ArtificialChanged?.Invoke(this, EventArgs.Empty);
     }
 
     #region Drag/drop patch files on revision grid
