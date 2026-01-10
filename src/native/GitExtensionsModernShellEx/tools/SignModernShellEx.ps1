@@ -1,3 +1,37 @@
+<#
+================================================================================
+WARNING: INTENTIONALLY INSECURE – DEVELOPMENT / TESTING ONLY
+================================================================================
+
+This script is deliberately designed to be INSECURE and is intended ONLY for
+local development, testing, or CI scenarios where production security is NOT
+required.
+
+SECURITY WARNINGS:
+- Uses a SELF-SIGNED code-signing certificate
+- Stores and uses a HARD-CODED, WEAK PASSWORD for the certificate PFX
+- Automatically creates and exports an EXPORTABLE private key
+- Does NOT enforce certificate trust, revocation, or chain validation
+- Should NEVER be used for production, release, or distributed binaries
+
+DO NOT:
+- Use this script in production environments
+- Use this script to sign publicly distributed artifacts
+- Reuse the certificate or password outside of local testing
+- Assume any security guarantees from signatures produced by this script
+
+This script exists solely to enable local signing so that Windows, Explorer,
+or development tooling can load and test unsigned binaries.
+
+If you need real security, use:
+- A trusted CA-issued code-signing certificate
+- Secure password handling
+- Proper key storage (HSM / Key Vault)
+- A hardened signing pipeline
+
+================================================================================
+#>
+
 [CmdletBinding()]
 param(
     [Parameter(Mandatory = $true)][string]$PackagePath,
