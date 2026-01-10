@@ -74,58 +74,58 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\BranchCheckout.ico">
+    <Image Include="Resources\BranchCheckout.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\BranchCreate.ico">
+    <Image Include="Resources\BranchCreate.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\checkout.ico">
+    <Image Include="Resources\checkout.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\CloneRepoGit.ico">
+    <Image Include="Resources\CloneRepoGit.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\Diff.ico">
+    <Image Include="Resources\Diff.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\FileHistory.ico">
+    <Image Include="Resources\FileHistory.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\FileStatusAdded.ico">
+    <Image Include="Resources\FileStatusAdded.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\git-extensions-logo.ico">
+    <Image Include="Resources\git-extensions-logo.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\information.ico">
+    <Image Include="Resources\information.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\PatchApply.ico">
+    <Image Include="Resources\PatchApply.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\Pull.ico">
+    <Image Include="Resources\Pull.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\Push.ico">
+    <Image Include="Resources\Push.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\RepoCreate.ico">
+    <Image Include="Resources\RepoCreate.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\RepoStateClean.ico">
+    <Image Include="Resources\RepoStateClean.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\ResetWorkingDirChanges.ico">
+    <Image Include="Resources\ResetWorkingDirChanges.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\Settings.ico">
+    <Image Include="Resources\Settings.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\ShellExtensions.ico">
+    <Image Include="Resources\ShellExtensions.ico">
       <Filter>Resources</Filter>
     </Image>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\stash.ico">
+    <Image Include="Resources\stash.ico">
       <Filter>Resources</Filter>
     </Image>
   </ItemGroup>

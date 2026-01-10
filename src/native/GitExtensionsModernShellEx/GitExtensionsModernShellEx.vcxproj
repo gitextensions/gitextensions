@@ -147,24 +147,24 @@
     <ResourceCompile Include="GitExtensionsModernShellEx.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\BranchCheckout.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\BranchCreate.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\checkout.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\CloneRepoGit.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\Diff.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\FileHistory.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\FileStatusAdded.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\git-extensions-logo.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\information.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\PatchApply.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\Pull.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\Push.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\RepoCreate.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\RepoStateClean.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\ResetWorkingDirChanges.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\Settings.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\ShellExtensions.ico" />
-    <Image Include="F:\gitextensions\src\native\GitExtensionsModernShellEx\Resources\stash.ico" />
+    <Image Include="Resources\BranchCheckout.ico" />
+    <Image Include="Resources\BranchCreate.ico" />
+    <Image Include="Resources\checkout.ico" />
+    <Image Include="Resources\CloneRepoGit.ico" />
+    <Image Include="Resources\Diff.ico" />
+    <Image Include="Resources\FileHistory.ico" />
+    <Image Include="Resources\FileStatusAdded.ico" />
+    <Image Include="Resources\git-extensions-logo.ico" />
+    <Image Include="Resources\information.ico" />
+    <Image Include="Resources\PatchApply.ico" />
+    <Image Include="Resources\Pull.ico" />
+    <Image Include="Resources\Push.ico" />
+    <Image Include="Resources\RepoCreate.ico" />
+    <Image Include="Resources\RepoStateClean.ico" />
+    <Image Include="Resources\ResetWorkingDirChanges.ico" />
+    <Image Include="Resources\Settings.ico" />
+    <Image Include="Resources\ShellExtensions.ico" />
+    <Image Include="Resources\stash.ico" />
   </ItemGroup>
   <PropertyGroup>
     <SdkVersionTrimmed>$([MSBuild]::EnsureTrailingSlash($(WindowsSDKVersion)))</SdkVersionTrimmed>
