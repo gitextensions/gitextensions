@@ -16,7 +16,12 @@ Notes:
 - `-DllPath` can override the default DLL path (which is the MSIX directory).
 
 ## Registering the sparse package
-If a self-signed certificate was used to sign the files, the same certificate must manually be trusted. For that, right-click the certificate and choose *Install PFX*. If you didn't provide your own certificate and the script generated it, the password will be "gitextensions". Install the certificate into the *System \ Trusted People* store or the installation might fail.
+If a self-signed certificate was used to sign the files, the same certificate must manually be trusted. For that, right-click the certificate and choose *Install PFX*. If you didn't provide your own certificate and the script generated it, the password will be "gitextensions". Install the certificate into the "Trusted People" store for the local computer. Installing it only into the current user store is often not sufficient and can cause installation or registration to fail.
+
+**Troubleshooting certificate / registration issues**
+- If `RegisterModernShellEx.ps1` (or `Add-AppxPackage`) fails with certificate or signing errors, verify that the signing certificate is present in the *Local Machine \ Trusted People* store.
+- On systems where Windows Developer Mode is disabled, unsigned or untrusted MSIX packages typically cannot be installed. Ensure the MSIX is signed and that the signing certificate is trusted as described above.
+- If you previously installed the certificate only in the current user store, move or re-import it into the *Local Machine \ Trusted People* store and retry the registration.
 
 Use `tools/RegisterModernShellEx.ps1` to register or unregister the sparse MSIX. The script uses its own location as the default external content root.
 
