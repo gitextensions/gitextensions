@@ -251,6 +251,11 @@
         <?include RegisterShellExtension.wxi?>
         <?endforeach ?>
       </Component>
+      <Component Id="GitExtensionsModernShellEx" Guid="*" Win64="yes">
+        <Condition>VersionNT64</Condition>
+        <File Name="GitExtensionsModernShellEx.dll" Source="$(var.ArtifactsPublishPath)\GitExtensionsModernShellEx.dll" KeyPath="yes" />
+        <File Name="GitExtensionsModernShellEx.msix" Source="$(var.ArtifactsPublishPath)\GitExtensionsModernShellEx.msix" />
+      </Component>
       <!-- End shell extensions -->
       <Component Id="GitExtSshAskPass.exe" Guid="*">
         <File Source="$(var.ArtifactsBinPath)\GitExtSshAskPass\GitExtSshAskPass.exe" />
@@ -881,6 +886,7 @@
       <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
         <ComponentRef Id="GitExtensionsShellEx32.dll" />
         <ComponentRef Id="GitExtensionsShellEx64.dll" />
+        <ComponentRef Id="GitExtensionsModernShellEx" />
       </Feature>
       <Feature Id="AddToPath" Title="Add installation directory to PATH" Level="1">
         <ComponentRef Id="Path" />
@@ -894,9 +900,31 @@
       </Feature>
     </Feature>
     <CustomAction Id="LaunchFile" FileKey="GitExtensions.exe" ExeCommand="" Return="asyncNoWait" />
+    <CustomAction Id="SetRegisterModernShellEx"
+                  Property="RegisterModernShellEx"
+                  Value="&quot;[SystemFolder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -ExecutionPolicy Bypass -Command &quot;Add-AppxPackage -Path '[INSTALLDIR]GitExtensionsModernShellEx.msix' -ExternalLocation '[INSTALLDIR]' -ForceApplicationShutdown -ForceUpdateFromAnyVersion&quot;" />
+    <CustomAction Id="RegisterModernShellEx"
+                  BinaryKey="WixCA"
+                  DllEntry="WixQuietExec"
+                  Execute="deferred"
+                  Impersonate="yes"
+                  Return="check" />
+    <CustomAction Id="SetUnregisterModernShellEx"
+                  Property="UnregisterModernShellEx"
+                  Value="&quot;[SystemFolder]WindowsPowerShell\v1.0\powershell.exe&quot; -NoLogo -NoProfile -ExecutionPolicy Bypass -Command &quot;$package = Get-AppxPackage -Name 'GitExtensions.ModernShellEx'; if ($package) { Remove-AppxPackage -Package $package.PackageFullName }&quot;" />
+    <CustomAction Id="UnregisterModernShellEx"
+                  BinaryKey="WixCA"
+                  DllEntry="WixQuietExec"
+                  Execute="deferred"
+                  Impersonate="yes"
+                  Return="check" />
     <UI />
     <InstallExecuteSequence>
       <Custom Action="LaunchFile" After="InstallFinalize">( NOT Installed ) AND ( LAUNCH = "1" )</Custom>
+      <Custom Action="SetRegisterModernShellEx" Before="RegisterModernShellEx">VersionNT64 AND (WindowsBuild >= 22000) AND (&amp;GitExtensionsModernShellEx=3)</Custom>
+      <Custom Action="RegisterModernShellEx" After="InstallFiles">VersionNT64 AND (WindowsBuild >= 22000) AND (&amp;GitExtensionsModernShellEx=3)</Custom>
+      <Custom Action="SetUnregisterModernShellEx" Before="UnregisterModernShellEx">VersionNT64 AND (WindowsBuild >= 22000) AND (&amp;GitExtensionsModernShellEx=2)</Custom>
+      <Custom Action="UnregisterModernShellEx" Before="RemoveFiles">VersionNT64 AND (WindowsBuild >= 22000) AND (&amp;GitExtensionsModernShellEx=2)</Custom>
     </InstallExecuteSequence>
   </Product>
 </Wix>
