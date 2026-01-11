@@ -71,6 +71,11 @@ partial class FileStatusList
         btnFindInFilesGitGrep = new ToolStripSplitButton();
         tsmiFindUsingMatchCase = new ToolStripMenuItem();
         tsmiFindUsingWholeWord = new ToolStripMenuItem();
+        tsmiFindUsingOptions = new ToolStripMenuItem();
+        _NO_TRANSLATE_tsmiFindUsingBasic = new ToolStripMenuItem();
+        _NO_TRANSLATE_tsmiFindUsingExtended = new ToolStripMenuItem();
+        _NO_TRANSLATE_tsmiFindUsingFixed = new ToolStripMenuItem();
+        _NO_TRANSLATE_tsmiFindUsingPerl = new ToolStripMenuItem();
         sepFindUsingSettings = new ToolStripSeparator();
         tsmiFindUsingDialog = new ToolStripMenuItem();
         tsmiFindUsingInputBox = new ToolStripMenuItem();
@@ -494,7 +499,7 @@ partial class FileStatusList
         // btnFindInFilesGitGrep
         // 
         btnFindInFilesGitGrep.DisplayStyle = ToolStripItemDisplayStyle.Image;
-        btnFindInFilesGitGrep.DropDownItems.AddRange(new ToolStripItem[] { tsmiFindUsingMatchCase, tsmiFindUsingWholeWord, sepFindUsingSettings, tsmiFindUsingDialog, tsmiFindUsingInputBox, tsmiFindUsingBoth });
+        btnFindInFilesGitGrep.DropDownItems.AddRange(new ToolStripItem[] { tsmiFindUsingMatchCase, tsmiFindUsingWholeWord, tsmiFindUsingOptions, sepFindUsingSettings, tsmiFindUsingDialog, tsmiFindUsingInputBox, tsmiFindUsingBoth });
         btnFindInFilesGitGrep.Image = Properties.Images.ViewFile;
         btnFindInFilesGitGrep.Name = "btnFindInFilesGitGrep";
         btnFindInFilesGitGrep.Size = new Size(32, 22);
@@ -517,6 +522,41 @@ partial class FileStatusList
         tsmiFindUsingWholeWord.Size = new Size(158, 22);
         tsmiFindUsingWholeWord.Text = "Match &whole word";
         tsmiFindUsingWholeWord.Click += FindUsingWholeWord_Click;
+        // 
+        // tsmiFindUsingOptions
+        // 
+        tsmiFindUsingOptions.DropDownItems.AddRange(new ToolStripItem[] { _NO_TRANSLATE_tsmiFindUsingBasic, _NO_TRANSLATE_tsmiFindUsingExtended, _NO_TRANSLATE_tsmiFindUsingFixed, _NO_TRANSLATE_tsmiFindUsingPerl });
+        tsmiFindUsingOptions.Name = "tsmiFindUsingOptions";
+        tsmiFindUsingOptions.Size = new Size(180, 22);
+        tsmiFindUsingOptions.Text = "&Options";
+        // 
+        // tsmiFindUsingBasic
+        // 
+        _NO_TRANSLATE_tsmiFindUsingBasic.Name = "_NO_TRANSLATE_tsmiFindUsingBasic";
+        _NO_TRANSLATE_tsmiFindUsingBasic.Size = new Size(180, 22);
+        _NO_TRANSLATE_tsmiFindUsingBasic.Text = "--basic-regexp";
+        _NO_TRANSLATE_tsmiFindUsingBasic.Click += FindUsingOption_Click;
+        // 
+        // tsmiFindUsingExtended
+        // 
+        _NO_TRANSLATE_tsmiFindUsingExtended.Name = "_NO_TRANSLATE_tsmiFindUsingExtended";
+        _NO_TRANSLATE_tsmiFindUsingExtended.Size = new Size(180, 22);
+        _NO_TRANSLATE_tsmiFindUsingExtended.Text = "--extended-regexp";
+        _NO_TRANSLATE_tsmiFindUsingExtended.Click += FindUsingOption_Click;
+        // 
+        // tsmiFindUsingFixed
+        // 
+        _NO_TRANSLATE_tsmiFindUsingFixed.Name = "_NO_TRANSLATE_tsmiFindUsingFixed";
+        _NO_TRANSLATE_tsmiFindUsingFixed.Size = new Size(180, 22);
+        _NO_TRANSLATE_tsmiFindUsingFixed.Text = "--fixed-strings";
+        _NO_TRANSLATE_tsmiFindUsingFixed.Click += FindUsingOption_Click;
+        // 
+        // tsmiFindUsingPerl
+        // 
+        _NO_TRANSLATE_tsmiFindUsingPerl.Name = "_NO_TRANSLATE_tsmiFindUsingPerl";
+        _NO_TRANSLATE_tsmiFindUsingPerl.Size = new Size(180, 22);
+        _NO_TRANSLATE_tsmiFindUsingPerl.Text = "--perl-regexp";
+        _NO_TRANSLATE_tsmiFindUsingPerl.Click += FindUsingOption_Click;
         // 
         // sepFindUsingSettings
         // 
@@ -1112,6 +1152,11 @@ partial class FileStatusList
     private ToolStripSplitButton btnFindInFilesGitGrep;
     private ToolStripMenuItem tsmiFindUsingMatchCase;
     private ToolStripMenuItem tsmiFindUsingWholeWord;
+    private ToolStripMenuItem tsmiFindUsingOptions;
+    private ToolStripMenuItem _NO_TRANSLATE_tsmiFindUsingBasic;
+    private ToolStripMenuItem _NO_TRANSLATE_tsmiFindUsingExtended;
+    private ToolStripMenuItem _NO_TRANSLATE_tsmiFindUsingFixed;
+    private ToolStripMenuItem _NO_TRANSLATE_tsmiFindUsingPerl;
     private ToolStripSeparator sepFindUsingSettings;
     private ToolStripMenuItem tsmiFindUsingDialog;
     private ToolStripMenuItem tsmiFindUsingInputBox;
