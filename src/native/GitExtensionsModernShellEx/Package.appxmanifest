@@ -13,12 +13,12 @@
 
   <Identity
     Name="GitExtensions.ModernShellEx"
-    Publisher="CN=GitExtensions"
+    Publisher="CN=SignPath Foundation, O=SignPath Foundation, L=Lewes, S=Delaware, C=US"
     Version="1.0.0.0"
     ProcessorArchitecture="x64" />
 
   <Properties>
-    <DisplayName>Git Extensions (Modern Shell)</DisplayName>
+    <DisplayName>Git Extensions Shell Extension</DisplayName>
     <PublisherDisplayName>Git Extensions</PublisherDisplayName>
     <Logo>Images\Square44x44Logo.png</Logo>
     <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
