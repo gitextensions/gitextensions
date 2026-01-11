@@ -20,13 +20,12 @@ env:
 
 jobs:
   build:
-    name: Build and Test (${{ matrix.os }}, .NET ${{ matrix.dotnet-version }})
+    name: Build and Test (${{ matrix.os }})
 
     strategy:
       fail-fast: false
       matrix:
         os: [ windows-latest, windows-11-arm ]
-        dotnet-version: [ 9.0.x ]
 
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
@@ -46,10 +45,10 @@ jobs:
         with:
           python-version: '3.13'
 
-      - name: Set up .NET ${{ matrix.dotnet-version }}
+      - name: Set up .NET
         uses: actions/setup-dotnet@v5
         with:
-          dotnet-version: ${{ matrix.dotnet-version }}
+          global-json-file: global.json
 
       - name: Install WiX
         run: dotnet tool install --global wix
