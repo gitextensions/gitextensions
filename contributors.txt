@@ -223,3 +223,4 @@ YYYY/MM/DD, github id, Full name, email
 2025/10/06, logiclrd, Jonathan Gilbert, logic(at)deltaq.org
 2025/11/08, hultqvist, Peter Hultqvist, hultqvist@silentorbit.com
 2026/01/07, xan2622, Xan Seiehun, xan2622(at)online(dot).fr
+2026/01/09, jmg2k, Jonas Guss, 44924601+jmg2k@users.noreply.github.com
