@@ -3,3 +3,7 @@ LIBRARY
 EXPORTS
     DllCanUnloadNow     PRIVATE
     DllGetClassObject   PRIVATE
+    IsExtensionRegistered
+    RegisterExtension
+    UnregisterExtension
+    GetLastRegistrationError

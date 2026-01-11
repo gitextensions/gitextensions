@@ -132,6 +132,7 @@
     <ClCompile Include="CommandRunner.cpp" />
     <ClCompile Include="ExplorerCommand.cpp" />
     <ClCompile Include="ModernShellEx.cpp" />
+    <ClCompile Include="RegistrationUtils.cpp" />
     <ClCompile Include="SelectionContext.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
