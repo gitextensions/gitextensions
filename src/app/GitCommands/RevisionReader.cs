@@ -38,9 +38,9 @@ public sealed class RevisionReader
         /* Notes placeholder */ "{1}";
 
     private const string _reflogSelectorFormat = "%gD%n";
-    private const string _notesPrefix = "Notes:";
-    private const string _notesMarker = $"\n{_notesPrefix}";
-    private const string _notesFormat = $"%n{_notesPrefix}%n%N";
+    private const string _notesPrefix = "\u039d\u043et\u0435\u0282:"; // Unicode l00k-alikes, Νоtеʂ:
+    internal const string NotesMarkerWithoutTrailingLF = $"\n{_notesPrefix}";
+    internal const string NotesFormat = $"%n{_notesPrefix}%n%N";
 
     // Trace info for parse errors
     private int _noOfParseError = 0;
@@ -80,7 +80,7 @@ public sealed class RevisionReader
         _hasReflogSelector = hasReflogSelector;
         _hasNotes = hasNotes;
 
-        return string.Format(_fullFormat, hasReflogSelector ? _reflogSelectorFormat : "", hasNotes ? _notesFormat : "");
+        return string.Format(_fullFormat, hasReflogSelector ? _reflogSelectorFormat : "", hasNotes ? NotesFormat : "");
     }
 
     private static long GetUnixTimeForOffset(int days)
@@ -588,7 +588,7 @@ public sealed class RevisionReader
         // this uses the alternative definition of first line in body.
         int lengthSubject = decoded.IndexOfAny(Delimiters.LineAndVerticalFeed);
         revision.HasMultiLineMessage = _hasNotes
-            ? decoded.Length != lengthSubject + _notesMarker.Length + 1 // Notes must always include the notes marker
+            ? decoded.Length != lengthSubject + NotesMarkerWithoutTrailingLF.Length + /*LF*/ 1 // Notes must always include the notes marker
             : lengthSubject >= 0;
 
         revision.Subject = (lengthSubject >= 0
@@ -608,45 +608,11 @@ public sealed class RevisionReader
                 currentOffset++;
             }
 
-            // Removes empty Notes markers (this is the most common case)
-            bool hasNonEmptyNotes = _hasNotes;
-            if (hasNonEmptyNotes)
+            if (_hasNotes && decoded.LastIndexOf(NotesMarkerWithoutTrailingLF, StringComparison.Ordinal) is int splitPos and >= 0)
             {
-                if (decoded.EndsWith(_notesMarker))
-                {
-                    // Remove the empty marker
-                    decoded = decoded[..^_notesMarker.Length].TrimEnd();
-                    hasNonEmptyNotes = false;
-                }
-            }
-
-            if (hasNonEmptyNotes)
-            {
-                // Format Notes, add indentation
-                int notesStartIndex = ((ReadOnlySpan<char>)decoded).IndexOf(_notesMarker, StringComparison.Ordinal);
-
-                StringBuilder message = new();
-                currentOffset = notesStartIndex + _notesMarker.Length + 1;
-                message.Append(decoded.Slice(0, currentOffset));
-                while (currentOffset < decoded.Length)
-                {
-                    message.Append("    ");
-                    int lineLength = decoded.Slice(currentOffset).IndexOf('\n');
-                    if (lineLength == -1)
-                    {
-                        message.Append(decoded.Slice(currentOffset));
-                        break;
-                    }
-                    else
-                    {
-                        message.Append(decoded.Slice(currentOffset, lineLength))
-                            .Append('\n');
-                    }
-
-                    currentOffset += lineLength + 1;
-                }
-
-                revision.Body = message.ToString();
+                revision.Body = decoded[..splitPos].TrimEnd().ToString();
+                splitPos += NotesMarkerWithoutTrailingLF.Length + /*LF*/ 1;
+                revision.Notes = splitPos >= decoded.Length ? "" : decoded.Slice(splitPos).ToString();
             }
             else
             {
@@ -656,7 +622,7 @@ public sealed class RevisionReader
 
         if (_hasNotes)
         {
-            revision.HasNotes = true;
+            revision.Notes ??= "";
         }
 #if DEBUG
         if (revision.Author is null || revision.AuthorEmail is null || revision.Committer is null || revision.CommitterEmail is null || revision.Subject is null || (keepBody && revision.HasMultiLineMessage && revision.Body is null))

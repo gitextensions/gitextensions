@@ -29,7 +29,7 @@
   "Subject": "",
   "Body": "",
   "HasMultiLineMessage": false,
-  "HasNotes": false,
+  "Notes": null,
   "IsArtificial": false,
   "IsAutostash": false,
   "IsStash": false,
