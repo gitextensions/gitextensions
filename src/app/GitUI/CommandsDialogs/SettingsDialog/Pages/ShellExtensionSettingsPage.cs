@@ -119,20 +119,34 @@ public partial class ShellExtensionSettingsPage : SettingsPageWithHeader
 
     private void RegisterButton_Click(object sender, EventArgs e)
     {
-        ShellExtensionManager.Register();
+        // Try registering the modern shell extension as it shows up in both context menus
+        // and fall back to the classic one if that fails
+
+        ModernShellExtensionManager.Register();
+        if (!ModernShellExtensionManager.IsRegistered())
+        {
+            ShellExtensionManager.Register();
+        }
+
         UpdateRegistrationStatus();
     }
 
     private void UnregisterButton_Click(object sender, EventArgs e)
     {
         ShellExtensionManager.Unregister();
+        ModernShellExtensionManager.Unregister();
         UpdateRegistrationStatus();
     }
 
     private void UpdateRegistrationStatus()
     {
-        gbExplorerIntegration.Enabled = ShellExtensionManager.FilesExist();
-        RegisterButton.Enabled = !ShellExtensionManager.IsRegistered();
+        bool legacyFilesExist = ShellExtensionManager.FilesExist();
+        bool modernFilesExist = ModernShellExtensionManager.FilesExist();
+        gbExplorerIntegration.Enabled = legacyFilesExist || modernFilesExist;
+
+        bool legacyRegistered = ShellExtensionManager.IsRegistered();
+        bool modernRegistered = ModernShellExtensionManager.IsRegistered();
+        RegisterButton.Enabled = !(legacyRegistered || modernRegistered);
     }
 
     private void chlMenuEntries_ItemCheck(object sender, ItemCheckEventArgs e)
