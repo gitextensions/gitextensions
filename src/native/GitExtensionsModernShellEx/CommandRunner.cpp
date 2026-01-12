@@ -37,20 +37,43 @@ namespace
 
     std::wstring GetModuleDirectory()
     {
-        wchar_t modulePath[MAX_PATH] = {};
         HMODULE module = nullptr;
         if (!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
-            GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT, reinterpret_cast<LPCWSTR>(
-                &GetExternalPackageRoot), &module)) return {};
+            GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
+            reinterpret_cast<LPCWSTR>(&GetExternalPackageRoot),
+            &module)) return {};
 
-        const DWORD length = GetModuleFileNameW(module, modulePath, _countof(modulePath));
-        if (length == 0 || length >= _countof(modulePath)) return {};
+        std::wstring path;
+        // Typical start size; will grow as needed.
+        DWORD bufferSize = 512;
 
-        wchar_t* lastSlash = wcsrchr(modulePath, L'\\');
-        if (!lastSlash) return {};
+        for (;;)
+        {
+            path.resize(bufferSize);
 
-        *lastSlash = L'\0';
-        return { modulePath };
+            const auto length = GetModuleFileNameW(module, path.data(), bufferSize);
+
+            if (length == 0) return {};
+
+            if (length < bufferSize - 1)
+            {
+                path.resize(length);
+                break;
+            }
+
+            // Ambiguous case: could be exactly cap-1 chars, or truncated.
+            // If truncated, grow and retry.
+            const auto error = GetLastError();
+            if (error != ERROR_INSUFFICIENT_BUFFER && bufferSize >= 32768) return {};
+
+            bufferSize *= 2;
+            bufferSize = std::min<DWORD>(bufferSize, 32768);
+        }
+
+        const auto pos = path.find_last_of(L'\\');
+        if (pos == std::wstring::npos) return {};
+
+        return path.substr(0, pos);
     }
 }
 
