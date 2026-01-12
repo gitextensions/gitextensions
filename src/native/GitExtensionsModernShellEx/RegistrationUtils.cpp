@@ -38,11 +38,10 @@ namespace
         {
             init_apartment(apartment_type::multi_threaded);
         }
-        catch (hresult_error const& e)
+        catch (winrt::hresult_error const& e)
         {
-            // RPC_E_CHANGED_MODE = 0x80010106
-            if (e.code() != HRESULT_FROM_WIN32(RPC_E_CHANGED_MODE) &&
-                e.code() != 0x80010106) throw;
+            if (e.code() != RPC_E_CHANGED_MODE)
+                throw;
 
             // Already initialized as STA on this thread; proceed or fallback.
         }
