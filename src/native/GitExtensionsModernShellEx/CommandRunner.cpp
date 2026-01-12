@@ -5,6 +5,32 @@
 
 namespace
 {
+    // Quotes a path for use as a Windows command-line argument.
+    // A trailing backslash must be escaped inside quotes to avoid escaping the closing quote.
+    std::wstring QuotePath(
+        const std::wstring& path)
+    {
+        if (path.empty()) return {};
+
+        std::wstring normalized = path;
+        if (normalized.size() > 1 && normalized.back() == L'\\')
+            normalized.push_back(L'\\');
+
+        return L" \"" + normalized + L"\"";
+    }
+
+    std::wstring QuoteAllPaths(
+        const std::vector<std::wstring>& paths)
+    {
+        std::wstring aggregated;
+        for (const auto& entry : paths)
+        {
+            aggregated.append(QuotePath(entry));
+        }
+
+        return aggregated;
+    }
+
     std::wstring GetExternalPackageRoot()
     {
         // ReSharper disable once CppInconsistentNaming
