@@ -3238,7 +3238,7 @@ public sealed partial class GitModule : IGitModule
                 // optimized codepath, default is "--format={_gitTreeParser.GitTreeFormat}"
                 "-z",
                 { full, "-r" },
-                { commitId is null, "HEAD", commitId?.ToString() },
+                { commitId?.ToString() ?? "HEAD" },
                 "--",
                 fileName.QuoteNE()
             };
