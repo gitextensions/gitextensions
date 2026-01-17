@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitCommands.Utils;
 using GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
 using ResourceManager;
 
@@ -117,11 +118,27 @@ public partial class ShellExtensionSettingsPage : SettingsPageWithHeader
         }
     }
 
+    /// <summary>
+    /// Handles the Click event of the RegisterButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    /// <remarks>
+    /// This method attempts a tiered registration approach:
+    /// <list type="number">
+    /// <item>
+    /// It first attempts to register the <see cref="ModernShellExtensionManager"/>,
+    /// which supports the Windows 11 sparse package context menu.
+    /// </item>
+    /// <item>
+    /// If modern registration fails or is not supported, it falls back to the
+    /// <see cref="ShellExtensionManager"/> for the classic COM-based context menu.
+    /// </item>
+    /// </list>
+    /// Finally, it calls <see cref="UpdateRegistrationStatus"/> to refresh the UI state.
+    /// </remarks>
     private void RegisterButton_Click(object sender, EventArgs e)
     {
-        // Try registering the modern shell extension as it shows up in both context menus
-        // and fall back to the classic one if that fails
-
         ModernShellExtensionManager.Register();
         if (!ModernShellExtensionManager.IsRegistered())
         {
@@ -131,13 +148,61 @@ public partial class ShellExtensionSettingsPage : SettingsPageWithHeader
         UpdateRegistrationStatus();
     }
 
+    /// <summary>
+    /// Handles the Click event of the UnregisterButton control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    /// <remarks>
+    /// This method performs a full cleanup of shell extensions by:
+    /// <list type="bullet">
+    /// <item>
+    /// Removing the classic COM-based shell extension via <see cref="ShellExtensionManager"/>.
+    /// </item>
+    /// <item>
+    /// Removing the modern sparse package registration via <see cref="ModernShellExtensionManager"/>.
+    /// </item>
+    /// </list>
+    /// After attempting unregistration for both types, <see cref="UpdateRegistrationStatus"/>
+    /// is called to ensure the UI reflects the current system state.
+    /// </remarks>
     private void UnregisterButton_Click(object sender, EventArgs e)
     {
-        ShellExtensionManager.Unregister();
-        ModernShellExtensionManager.Unregister();
+        if (ShellExtensionManager.IsRegistered())
+        {
+            ShellExtensionManager.Unregister();
+        }
+
+        if (ModernShellExtensionManager.IsRegistered())
+        {
+            ModernShellExtensionManager.Unregister();
+        }
+
         UpdateRegistrationStatus();
     }
 
+    /// <summary>
+    /// Updates the UI state of registration-related controls based on the current system
+    /// configuration and OS version.
+    /// </summary>
+    /// <remarks>
+    /// This method evaluates the availability of shell extension files and their current
+    /// registration status to toggle UI elements:
+    /// <list type="bullet">
+    /// <item>
+    /// <description>
+    /// <see cref="gbExplorerIntegration"/>: Enabled only if legacy files exist and
+    /// the OS is older than Windows 11.
+    /// </description>
+    /// </item>
+    /// <item>
+    /// <description>
+    /// <see cref="RegisterButton"/>: Disabled if either the classic (<see cref="ShellExtensionManager"/>)
+    /// or modern (<see cref="ModernShellExtensionManager"/>) extension is already registered.
+    /// </description>
+    /// </item>
+    /// </list>
+    /// </remarks>
     private void UpdateRegistrationStatus()
     {
         bool legacyFilesExist = ShellExtensionManager.FilesExist();

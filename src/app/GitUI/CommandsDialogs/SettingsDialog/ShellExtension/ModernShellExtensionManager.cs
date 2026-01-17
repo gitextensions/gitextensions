@@ -1,27 +1,37 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 using GitCommands;
+using GitCommands.Utils;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
 
 public static class ModernShellExtensionManager
 {
-    // The Package Family Name (PFN) is derived from the AppX package manifest
-    // and is unique to the package publisher and name.
-    // Should the subject in the signing certificate ever change, this must also be adjusted!
-    // To find out the publisher id, sign the AppX package and try opening it,
-    // once Windows prompts you to install it, continue with that.
-    // It will error out due to the ExternalLocation parameter missing,
-    // but in the error message the full PFN can be found that needs to be set here.
-
+    /// <summary>
+    /// The Package Family Name (PFN) derived from the AppX package manifest.
+    /// This is unique to the package publisher and name.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Should the subject in the signing certificate ever change, this must also be adjusted!
+    /// </para>
+    /// <para>
+    /// To find out the publisher ID:
+    /// <list type="number">
+    /// <item>Sign the AppX package and try opening it.</item>
+    /// <item>Once Windows prompts you to install it, continue.</item>
+    /// <item>It will error out due to the <c>ExternalLocation</c> parameter missing,
+    /// but the error message will contain the full PFN that needs to be set here.</item>
+    /// </list>
+    /// </para>
+    /// </remarks>
     internal const string PackageFamilyName = "GitExtensions.ModernShellEx_wbnnev551gwxy";
 
     internal const string GitExtensionsShellExDllName = "GitExtensionsModernShellEx.dll";
     internal const string GitExtensionsShellExPackageName = "GitExtensionsModernShellEx.msix";
 
-    private static bool IsSupported =>
-        RuntimeInformation.IsOSPlatform(OSPlatform.Windows) &&
-        RuntimeInformation.OSArchitecture == Architecture.X64;
+    public static bool IsSupported =>
+        EnvUtils.IsWindows11OrGreater() && Environment.Is64BitOperatingSystem;
 
     public static bool FilesExist()
     {
@@ -32,7 +42,7 @@ public static class ModernShellExtensionManager
 
     public static bool IsRegistered()
     {
-        if (!IsSupported)
+        if (!IsSupported || !FilesExist())
         {
             return false;
         }
@@ -68,7 +78,7 @@ public static class ModernShellExtensionManager
 
     public static void Unregister()
     {
-        if (!IsSupported)
+        if (!IsSupported || !FilesExist())
         {
             return;
         }
