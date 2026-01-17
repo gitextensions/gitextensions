@@ -60,8 +60,6 @@ jobs:
         run: |
           $buildArgs = '/p:ContinuousIntegrationBuild=true'
           echo "buildArgs=$buildArgs" >> $env:GITHUB_ENV
-          $nativeBuildArgs = '/p:VSWherePath="C:\Program Files (x86)\Microsoft Visual Studio\Installer"'
-          echo "nativeBuildArgs=$nativeBuildArgs" >> $env:GITHUB_ENV
           echo "geVersionText=$env:ge_version" >> $env:GITHUB_ENV
 
       - name: Set up extra build arguments for PR
@@ -74,12 +72,9 @@ jobs:
       - name: Set up extra build arguments for arm64
         if: runner.arch == 'arm64'
         run: |
-          $buildArgs = "/p:TargetPlatform=arm64 $env:buildArgs"
-          echo "buildArgs=$buildArgs" >> $env:GITHUB_ENV
-          $nativeBuildArgs = "/p:TargetPlatform=arm64 $env:nativeBuildArgs" # TargetPlatform must be specified first here because native build fails otherwise
-          echo "nativeBuildArgs=$nativeBuildArgs" >> $env:GITHUB_ENV
           $geVersionText = "${env:geVersionText}-arm64"
           echo "geVersionText=$geVersionText" >> $env:GITHUB_ENV
+          echo "TargetPlatform=arm64" >> $env:GITHUB_ENV
 
       - name: Set up GE version
         run: |
@@ -89,7 +84,7 @@ jobs:
 
       - name: Build GE native components
         run: |
-          dotnet build .\src\native\build.proj -c Release --verbosity q $env:nativeBuildArgs
+          dotnet build .\src\native\build.proj -c Release --verbosity q
 
       - name: Build GE app
         run: |
@@ -121,8 +116,7 @@ jobs:
 
       - name: Package GE app for deployment
         run: |
-          $platformArg = '/p:TargetPlatform=${{ runner.arch }}'.ToLower()
-          dotnet publish -c Release --no-build $platformArg
+          dotnet publish -c Release --no-build $env:buildArgs
 
       - name: Display artifacts
         run: ls -R artifacts/Release/publish/
