@@ -117,8 +117,7 @@ jobs:
 
       - name: Package GE app for deployment
         run: |
-          echo $env:buildArgs
-          dotnet publish -c Release --no-build $env:buildArgs
+          dotnet publish -c Release $env:buildArgs
 
       - name: Display artifacts
         run: ls -R artifacts/Release/publish/
