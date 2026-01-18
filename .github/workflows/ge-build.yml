@@ -62,14 +62,6 @@ jobs:
           echo "buildArgs=$buildArgs" >> $env:GITHUB_ENV
           echo "geVersionText=$env:ge_version" >> $env:GITHUB_ENV
 
-      - name: Avoid using SHA of temporary merge commits for PR
-        if: github.event_name == 'pull_request'
-        run: |
-          $sha = "${{ github.event.after }}"
-          $shortSha = $(git rev-parse --short $sha)
-          $buildArgs = "$env:buildArgs /p:GitCommit=$shortSha /p:GitSha=$sha"
-          echo "buildArgs=$buildArgs" >> $env:GITHUB_ENV
-
       - name: Set up extra build arguments for arm64
         if: runner.arch == 'arm64'
         run: |
@@ -117,7 +109,7 @@ jobs:
 
       - name: Package GE app for deployment
         run: |
-          dotnet publish -c Release $env:buildArgs
+          dotnet publish -c Release --no-build $env:buildArgs
 
       - name: Display artifacts
         run: ls -R artifacts/Release/publish/
