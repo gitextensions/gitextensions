@@ -65,8 +65,9 @@ jobs:
       - name: Set up extra build arguments for PR
         if: github.event_name == 'pull_request'
         run: |
-          $shortSha = $(git rev-parse --short ${{ github.event.pull_request.head.sha }})
-          $buildArgs = "$env:buildArgs /p:GitCommit=$shortSha /p:GitSha=${{ github.event.pull_request.head.sha }}"
+          $sha = ${{ github.event.after }}
+          $shortSha = $(git rev-parse --short $sha)
+          $buildArgs = "$env:buildArgs /p:GitCommit=$shortSha /p:GitSha=$sha"
           echo "buildArgs=$buildArgs" >> $env:GITHUB_ENV
 
       - name: Set up extra build arguments for arm64
