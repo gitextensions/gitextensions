@@ -67,8 +67,8 @@ jobs:
         run: |
           $sha = "${{ github.event.after }}"
           $shortSha = $(git rev-parse --short $sha)
-          echo "GitCommit=$shortSha" >> $env:GITHUB_ENV
-          echo "GitSha=$sha" >> $env:GITHUB_ENV
+          $buildArgs = "$env:buildArgs /p:GitCommit=$shortSha /p:GitSha=$sha"
+          echo "buildArgs=$buildArgs" >> $env:GITHUB_ENV
 
       - name: Set up extra build arguments for arm64
         if: runner.arch == 'arm64'
@@ -117,6 +117,7 @@ jobs:
 
       - name: Package GE app for deployment
         run: |
+          echo $env:buildArgs
           dotnet publish -c Release --no-build $env:buildArgs
 
       - name: Display artifacts
