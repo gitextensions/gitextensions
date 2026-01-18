@@ -62,13 +62,13 @@ jobs:
           echo "buildArgs=$buildArgs" >> $env:GITHUB_ENV
           echo "geVersionText=$env:ge_version" >> $env:GITHUB_ENV
 
-      - name: Set up extra build arguments for PR
+      - name: Avoid using SHA of temporary merge commits for PR
         if: github.event_name == 'pull_request'
         run: |
           $sha = "${{ github.event.after }}"
           $shortSha = $(git rev-parse --short $sha)
-          $buildArgs = "$env:buildArgs /p:GitCommit=$shortSha /p:GitSha=$sha"
-          echo "buildArgs=$buildArgs" >> $env:GITHUB_ENV
+          echo "GitCommit=$shortSha" >> $env:GITHUB_ENV
+          echo "GitSha=$sha" >> $env:GITHUB_ENV
 
       - name: Set up extra build arguments for arm64
         if: runner.arch == 'arm64'
