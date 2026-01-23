@@ -112,19 +112,9 @@ public static class BugReportInvoker
             LogError(exception, isTerminating);
         }
 
-        if (exception is FileNotFoundException fileNotFoundException
-            && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
+        if (HasFailedToLoadAnAssembly(exception))
         {
-            ReportFailedToLoadAnAssembly(fileNotFoundException, isTerminating);
-            return;
-        }
-
-        // Handle VC Runtime DLL loading errors (refer to https://github.com/gitextensions/gitextensions/issues/12511)
-        // These are transient errors typically caused by Windows updates, similar to .NET assembly loading errors
-        if (exception is DllNotFoundException dllNotFoundException
-            && IsVCRuntimeDll(dllNotFoundException.Message))
-        {
-            ReportFailedToLoadAnAssembly(dllNotFoundException, isTerminating);
+            ReportFailedToLoadAnAssembly(exception, isTerminating);
             return;
         }
 
@@ -228,8 +218,17 @@ public static class BugReportInvoker
             TaskDialogCommandLinkButton taskDialogCommandLink = new(buttonText, descriptionText);
             page.Buttons.Add(taskDialogCommandLink);
         }
+
+        static bool HasFailedToLoadAnAssembly(Exception exception)
+            => (exception is FileNotFoundException fileNotFoundException && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
+            || (exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message))
+            || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException));
     }
 
+    /// <summary>
+    /// Handles errors loading .NET assemblies or VC Runtime DLL (refer to https://github.com/gitextensions/gitextensions/issues/12511).
+    /// These are transient errors typically caused by Windows updates.
+    /// </summary>
     private static void ReportFailedToLoadAnAssembly(Exception exception, bool isTerminating)
     {
         string fileName;
