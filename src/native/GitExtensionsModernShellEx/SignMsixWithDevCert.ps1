@@ -30,7 +30,7 @@ if (-not (Test-Path $dir)) {
 }
 
 $cerPath = [IO.Path]::ChangeExtension($PfxPath, ".cer")
-$pwd = Get-DevPassword
+$password = Get-DevPassword
 
 # --- 1. Get Publisher from Manifest ---
 [xml]$m = Get-Content -Raw $ManifestPath
@@ -52,19 +52,19 @@ if (-not (Test-Path $PfxPath)) {
         -NotAfter (Get-Date).AddYears(10) `
         -TextExtension @('2.5.29.37={text}1.3.6.1.5.5.7.3.3') # EKU: Code Signing
 
-    Export-PfxCertificate -Cert $cert -FilePath $PfxPath -Password $pwd | Out-Null
+    Export-PfxCertificate -Cert $cert -FilePath $PfxPath -Password $password | Out-Null
     Export-Certificate   -Cert $cert -FilePath $cerPath | Out-Null
 }
 else {
     if (-not (Test-Path $cerPath)) {
-        $pfxData = Get-PfxData -FilePath $PfxPath -Password $pwd
+        $pfxData = Get-PfxData -FilePath $PfxPath -Password $password
         $end = $pfxData.EndEntityCertificates[0]
         Export-Certificate -Cert $end -FilePath $cerPath | Out-Null
     }
 }
 
 # --- 3. Ensure Trust in LocalMachine (UAC Prompt if needed) ---
-$pfxData2 = Get-PfxData -FilePath $PfxPath -Password $pwd
+$pfxData2 = Get-PfxData -FilePath $PfxPath -Password $password
 $thumb = $pfxData2.EndEntityCertificates[0].Thumbprint
 $lmStore = 'Cert:\LocalMachine\TrustedPeople'
 
@@ -91,7 +91,7 @@ if (-not $alreadyTrusted) {
 
 # --- 4. Sign the MSIX ---
 # SignTool requires a string, not a SecureString
-$ptr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($pwd)
+$ptr = [System.Runtime.InteropServices.Marshal]::SecureStringToBSTR($password)
 try {
     $plainPwd = [System.Runtime.InteropServices.Marshal]::PtrToStringAuto($ptr)
 } finally {
