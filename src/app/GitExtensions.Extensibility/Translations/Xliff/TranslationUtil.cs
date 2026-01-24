@@ -16,24 +16,26 @@ public static class TranslationUtil
 
     private static readonly HashSet<string> _processedAssemblies = [];
 
-    private static readonly HashSet<string> _translatableItemInComponentNames = new(StringComparer.Ordinal)
-    {
+    private static readonly string[] _translatableItemInComponentNames =
+    [
         "AccessibleDescription",
         "AccessibleName",
         "Caption",
         "Text",
         "ToolTipText",
         "Title"
-    };
+    ];
 
-    private static bool IsTranslatableItemInComponent(PropertyInfo property)
+    private static bool IsTranslatableItemInComponent(PropertyInfo property, object item)
     {
-        return property.PropertyType == typeof(string) &&
-               _translatableItemInComponentNames.Contains(property.Name);
+        string[] localizableItemNames = GetLocalizablePropertiesFromAttribute(item)
+            ?? _translatableItemInComponentNames;
+
+        return property.PropertyType == typeof(string) && localizableItemNames.Contains(property.Name, StringComparer.Ordinal);
     }
 
     private static readonly string[] UnTranslatableDLLs =
-    {
+    [
         "mscorlib",
         "Microsoft",
         "Presentation",
@@ -50,7 +52,7 @@ public static class TranslationUtil
         "ConEmuWinForms",
         "TranslationApp",
         "netstandard",
-    };
+    ];
 
     private static bool AllowTranslateProperty([NotNullWhen(returnValue: true)] string? text)
     {
@@ -102,7 +104,7 @@ public static class TranslationUtil
         AddTranslationItemsFromList(category, translation, GetObjFields(obj, "$this"));
     }
 
-    private static IEnumerable<PropertyInfo> GetItemPropertiesEnumerator(string name, object item)
+    private static IEnumerable<PropertyInfo> GetItemPropertiesEnumerator(string name, object? item)
     {
         if (item is null)
         {
@@ -127,7 +129,7 @@ public static class TranslationUtil
         }
         else
         {
-            isTranslatable = IsTranslatableItemInComponent;
+            isTranslatable = property => IsTranslatableItemInComponent(property, item);
         }
 
         foreach (PropertyInfo property in item.GetType().GetProperties(_fieldFlags).Where(isTranslatable))
@@ -308,7 +310,7 @@ public static class TranslationUtil
             property.SetValue(obj, value, null);
         }
 
-        string ProvideDefaultValue() => "";
+        static string ProvideDefaultValue() => "";
     }
 
     public static void TranslateItemsFromFields(string category, object obj, ITranslation translation)
@@ -328,12 +330,14 @@ public static class TranslationUtil
 
     private static bool IsTranslatableItemInBox(PropertyInfo property, object itemObj)
     {
-        if (IsTranslatableItemInComponent(property))
+        if (IsTranslatableItemInComponent(property, itemObj))
         {
             return true;
         }
 
-        return property.Name.Equals("Items", StringComparison.Ordinal) &&
+        string[] localizableProperties = GetLocalizablePropertiesFromAttribute(itemObj) ?? ["Items"];
+
+        return localizableProperties.Contains(property.Name, StringComparer.Ordinal) &&
                property.GetValue(itemObj, null) is IList items &&
                items.Count != 0;
     }
@@ -364,7 +368,7 @@ public static class TranslationUtil
                 continue;
             }
 
-            bool isPlugin = assembly.Location.ToPosixPath().IndexOf("/Plugins/", StringComparison.OrdinalIgnoreCase) != -1;
+            bool isPlugin = assembly.Location.ToPosixPath().Contains("/Plugins/", StringComparison.OrdinalIgnoreCase);
             string key = isPlugin ? ".Plugins" : "";
 
             if (!dictionary.TryGetValue(key, out List<Type>? list))
@@ -432,13 +436,20 @@ public static class TranslationUtil
         }
     }
 
+    private static string[]? GetLocalizablePropertiesFromAttribute(object item)
+    {
+        return item.GetType()
+            .GetCustomAttribute<LocalizablePropertiesAttribute>()
+            ?.TranslatableProperties;
+    }
+
     private static readonly char PosixDirectorySeparatorChar = '/';
     private static readonly char NativeDirectorySeparatorChar = Path.DirectorySeparatorChar;
 
     /// <summary>
     ///  Replaces native path separator with POSIX path separator (/).
     /// </summary>
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     private static string? ToPosixPath(this string? path)
     {
         return path?.Replace(NativeDirectorySeparatorChar, PosixDirectorySeparatorChar);

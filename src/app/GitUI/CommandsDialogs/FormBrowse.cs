@@ -1,5 +1,4 @@
-using System.ComponentModel;
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -205,6 +204,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     #endregion
 
     private readonly uint _closeAllMessage = NativeMethods.RegisterWindowMessageW("Global.GitExtensions.CloseAllInstances");
+    private readonly TaskManager _loadOperations = ThreadHelper.CreateTaskManager();
     private readonly SplitterManager _splitterManager;
     private readonly GitStatusMonitor _gitStatusMonitor;
     private readonly FormBrowseMenus _formBrowseMenus;
@@ -448,6 +448,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         if (disposing)
         {
+            _loadOperations.JoinPendingOperations();
             _formBrowseMenus?.Dispose();
             components?.Dispose();
             _gitStatusMonitor?.Dispose();
@@ -489,7 +490,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         // All app init is done, make all repo related similar to switching repos
         SetGitModule(this, new GitModuleEventArgs(new GitModule(Module.WorkingDir)));
         bool isDashboard = _dashboard?.Visible ?? false;
-        this.InvokeAndForget(async () =>
+        _loadOperations.InvokeAndForget(this, async () =>
         {
             _outputHistoryController = AppSettings.ShowOutputHistoryAsTab.Value
                 ? new OutputHistoryTabController(UICommands.GetRequiredService<IOutputHistoryProvider>(), new OutputHistoryControl(), parent: CommitInfoTabControl,
@@ -627,10 +628,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             // This request is directed to the main form also if a modal form like FormCommit is on top.
             // So forward the request and try to close the modal form.
             Form? modalForm = Application.OpenForms.Cast<Form>().FirstOrDefault(form => form.Modal);
-            if (modalForm is not null)
-            {
-                modalForm.Close();
-            }
+            modalForm?.Close();
 
             Close();
         }
@@ -829,7 +827,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 continue;
             }
 
-            item.Enabled = !(item.Tag is IGitPluginForRepository) || validWorkingDir;
+            item.Enabled = item.Tag is not IGitPluginForRepository || validWorkingDir;
         }
     }
 
@@ -1072,9 +1070,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         void LoadUserMenu()
         {
-            List<ScriptInfo> scripts = _scriptsManager.GetScripts()
-                .Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)
-                .ToList();
+            List<ScriptInfo> scripts = [.. _scriptsManager.GetScripts().Where(script => script.Enabled && script.OnEvent == ScriptEvent.ShowInUserMenuBar)];
 
             for (int i = ToolStripScripts.Items.Count - 1; i >= 0; i--)
             {
@@ -1430,6 +1426,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         string translation = AppSettings.Translation;
         CommitInfoPosition commitInfoPosition = AppSettings.CommitInfoPosition;
 
+        // Await plugin registration
+        _loadOperations.JoinPendingOperations();
+
         UICommands.StartSettingsDialog(this);
 
         HandleSettingsChanged(translation, commitInfoPosition);
@@ -1727,7 +1726,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 revisionDiff.RepositoryChanged();
             }
 
-            RevisionInfo.SetRevisionWithChildren(revision: null, children: Array.Empty<ObjectId>());
+            RevisionInfo.SetRevisionWithChildren(revision: null, children: []);
             RevisionGrid.ResumeRefreshRevisions();
 
             RefreshRevisions();
@@ -2566,9 +2565,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         toolStripButtonLevelUp.DropDown.SuspendLayout();
         RemoveSubmoduleButtons();
 
-        List<ToolStripItem> newItems = result.OurSubmodules
-            .Select(submodule => CreateSubmoduleMenuItem(submodule))
-            .ToList();
+        List<ToolStripItem> newItems = [.. result.OurSubmodules.Select(submodule => CreateSubmoduleMenuItem(submodule))];
 
         if (result.OurSubmodules.Count == 0)
         {
@@ -2610,7 +2607,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         // Using AddRange is critical: if you used Add to add menu items one at a
         // time, performance would be extremely slow with many submodules (> 100).
-        toolStripButtonLevelUp.DropDownItems.AddRange(newItems.ToArray());
+        toolStripButtonLevelUp.DropDownItems.AddRange([.. newItems]);
         toolStripButtonLevelUp.DropDown.ResumeLayout();
 
         return newItems;
@@ -2811,7 +2808,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             // Get the "main" stash commit, including the reflog selector
             Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
                 !AppSettings.ShowStashes
-                ? Array.Empty<GitRevision>()
+                ? []
                 : new RevisionReader(new GitModule(UICommands.Module.WorkingDir)).GetStashes(CancellationToken.None));
 
             RefreshLeftPanel(new FilteredGitRefsProvider(UICommands.Module).GetRefs, getStashRevs, forceRefresh: true);
@@ -2825,7 +2822,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             SetCommitInfoPosition((CommitInfoPosition)(
                 ((int)AppSettings.CommitInfoPosition + 1) %
-                Enum.GetValues(typeof(CommitInfoPosition)).Length));
+                Enum.GetValues<CommitInfoPosition>().Length));
         }
     }
 

@@ -32,10 +32,7 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
         {
             components?.Dispose();
 
-            if (_repositoryHistoryUIService is not null)
-            {
-                _repositoryHistoryUIService.GitModuleChanged -= repositoryHistoryUIService_GitModuleChanged;
-            }
+            _repositoryHistoryUIService?.GitModuleChanged -= repositoryHistoryUIService_GitModuleChanged;
         }
 
         base.Dispose(disposing);
@@ -112,7 +109,7 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
     private void tsmiRecentRepositoriesClear_Click(object sender, EventArgs e)
     {
         ThreadHelper.ThrowIfNotOnUIThread();
-        ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(Array.Empty<Repository>()));
+        ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.SaveRecentHistoryAsync([]));
         RecentRepositoriesCleared?.Invoke(sender, e);
     }
 }

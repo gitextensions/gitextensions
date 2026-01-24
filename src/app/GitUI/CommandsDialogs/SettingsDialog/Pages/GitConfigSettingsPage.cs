@@ -21,6 +21,9 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
     private readonly GitConfigSettingsPageController _controller;
     private DiffMergeToolConfigurationManager? _diffMergeToolConfigurationManager;
 
+    [GeneratedRegex(@"\$(LOCAL|REMOTE|BASE|MERGED)")]
+    private static partial Regex WslRebaseRegex { get; }
+
     public GitConfigSettingsPage(IServiceProvider serviceProvider)
        : base(serviceProvider)
     {
@@ -59,7 +62,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
             command = $"{command[..windowsDriveIndex]}/mnt/{char.ToLower(command[windowsDriveIndex])}{command[(colonIndex + 1)..]}";
         }
 
-        return Regex.Replace(command, @"\$(LOCAL|REMOTE|BASE|MERGED)", @"$(wslpath -aw $&)").ToPosixPath();
+        return WslRebaseRegex.Replace(command, @"$(wslpath -aw $&)").ToPosixPath();
     }
 
     protected override void Init(ISettingsPageHost pageHost)

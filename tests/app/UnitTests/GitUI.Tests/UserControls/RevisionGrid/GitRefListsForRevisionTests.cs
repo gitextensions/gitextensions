@@ -19,12 +19,12 @@ public class GitRefListsForRevisionTests
     {
         _module = Substitute.For<IGitModule>();
 
-        _refs = new IGitRef[]
-        {
+        _refs =
+        [
             new GitRef(_module, ObjectId.Random(), $"{GitRefName.RefsTagsPrefix}tag1"),
             new GitRef(_module, ObjectId.Random(), $"{GitRefName.RefsHeadsPrefix}branch1"),
             new GitRef(_module, ObjectId.Random(), $"{GitRefName.RefsRemotesPrefix}branch1"),
-        };
+        ];
         _revision = new GitRevision(ObjectId.Random())
         {
             Refs = _refs

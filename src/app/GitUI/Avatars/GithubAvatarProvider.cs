@@ -21,7 +21,7 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
     private readonly bool _onlySupplyNoReply;
 
     [GeneratedRegex(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
-    private static partial Regex GitHubEmailRegex();
+    private static partial Regex GitHubEmailRegex { get; }
 
     public GithubAvatarProvider([NotNull] IAvatarDownloader downloader, bool onlySupplyNoReply = false)
     {
@@ -62,7 +62,7 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
 
     private async Task<Uri?> BuildAvatarUriAsync(string email, int imageSize)
     {
-        Match match = GitHubEmailRegex().Match(email);
+        Match match = GitHubEmailRegex.Match(email);
 
         if (match.Success)
         {
@@ -81,7 +81,7 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
             // query the GitHub profile first.
 
             // GitHub user names can't contain square brackets but bots use them.
-            bool isBot = username.IndexOf('[') >= 0;
+            bool isBot = username.Contains('[');
 
             if (isBot)
             {

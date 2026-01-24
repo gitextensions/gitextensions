@@ -13,7 +13,7 @@ internal class FormQuickStringSelector : FormQuickItemSelector
 
     public void Init(IReadOnlyList<string> strings)
     {
-        List<ItemData> items = strings.OrderBy(s => s).Select(s => new ItemData(s, s)).ToList();
+        List<ItemData> items = [.. strings.OrderBy(s => s).Select(s => new ItemData(s, s))];
 
         Init(items, _actionSelect.Text);
     }

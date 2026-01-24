@@ -22,7 +22,7 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
                    ((?<gone_u>gone)|((ahead\s(?<ahead_u>\d+))?(,\s)?(behind\s(?<behind_u>\d+))?)|(?<unk_u>.*?))::
                    (?<remote_p>.*?)::(?<remote_u>.*?)::(?<branch>.*)$",
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture)]
-    private static partial Regex AheadBehindRegex();
+    private static partial Regex AheadBehindRegex { get; }
     private readonly string _refFormat = @"%(push:track,nobracket)::%(upstream:track,nobracket)::%(push)::%(upstream)::%(refname:short)";
     private Lazy<IDictionary<string, AheadBehindData>?> _lazyData;
     private string _branchName;
@@ -71,7 +71,7 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
     {
         if (branchName is null)
         {
-            throw new ArgumentException(nameof(branchName));
+            throw new ArgumentException("AheadBehindData: GetData: no branchname.", nameof(branchName));
         }
 
         if (branchName == DetachedHeadParser.DetachedBranch)
@@ -91,7 +91,7 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
             return null;
         }
 
-        MatchCollection matches = AheadBehindRegex().Matches(result.StandardOutput);
+        MatchCollection matches = AheadBehindRegex.Matches(result.StandardOutput);
         Dictionary<string, AheadBehindData> aheadBehindForBranchesData = [];
         foreach (Match match in matches)
         {
@@ -154,16 +154,7 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
     }
 
     private IExecutable GetGitExecutable()
-    {
-        IExecutable executable = _getGitExecutable();
-
-        if (executable is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IExecutable)}");
-        }
-
-        return executable;
-    }
+        => _getGitExecutable() ?? throw new ArgumentException($"Require a valid instance of {nameof(IExecutable)}");
 
     internal TestAccessor GetTestAccessor()
         => new(this);

@@ -1,4 +1,4 @@
-using GitCommands.Git;
+﻿using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 
 namespace GitCommands;
@@ -33,16 +33,10 @@ public sealed class GitRevisionInfoProvider : IGitRevisionInfoProvider
 
         if (item.ObjectId is null)
         {
-            throw new ArgumentException("Item must have a valid identifier", nameof(item.Guid));
+            throw new ArgumentException("Item must have a valid identifier", nameof(item));
         }
 
-        IGitModule module = _getModule();
-
-        if (module is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-        }
-
+        IGitModule module = _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
         return YieldSubItems();
 
         IEnumerable<INamedGitItem> YieldSubItems()

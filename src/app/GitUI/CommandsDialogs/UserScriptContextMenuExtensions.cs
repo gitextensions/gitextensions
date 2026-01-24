@@ -89,9 +89,7 @@ public static class UserScriptContextMenuExtensions
         hostMenuItem.DropDown.Items.Clear();
         hostMenuItem.Enable(false);
 
-        List<ToolStripItem> list = contextMenu.Items.Cast<ToolStripItem>()
-            .Where(x => x.Name.EndsWith(ScriptNameSuffix))
-            .ToList();
+        List<ToolStripItem> list = [.. contextMenu.Items.Cast<ToolStripItem>().Where(x => x.Name.EndsWith(ScriptNameSuffix))];
 
         foreach (ToolStripItem item in list)
         {

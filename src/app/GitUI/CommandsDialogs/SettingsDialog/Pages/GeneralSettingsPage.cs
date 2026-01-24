@@ -30,10 +30,9 @@ public partial class GeneralSettingsPage : SettingsPageWithHeader
         }
 
         IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
-        string[] historicPaths = repositoryHistory.Select(x => x.GetParentPath())
+        string[] historicPaths = [.. repositoryHistory.Select(x => x.GetParentPath())
                                                   .Where(x => !string.IsNullOrEmpty(x))
-                                                  .Distinct(StringComparer.CurrentCultureIgnoreCase)
-                                                  .ToArray();
+                                                  .Distinct(StringComparer.CurrentCultureIgnoreCase)];
         cbDefaultCloneDestination.Items.AddRange(historicPaths);
 
         var pullActions = new[]

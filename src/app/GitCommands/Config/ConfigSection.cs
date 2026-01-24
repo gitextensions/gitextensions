@@ -1,4 +1,5 @@
-﻿using GitExtensions.Extensibility.Configurations;
+﻿using System.Diagnostics;
+using GitExtensions.Extensibility.Configurations;
 
 namespace GitCommands.Config;
 
@@ -30,7 +31,7 @@ public class ConfigSection : IConfigSection
             SubSection = name.Substring(slashIndex + 1, name.LastIndexOf('\"') - slashIndex - 1);
             SubSectionCaseSensitive = true;
         }
-        else if (!name.Contains("."))
+        else if (!name.Contains('.'))
         {
             // [section] case sensitive
             SectionName = name.Trim();
@@ -85,12 +86,13 @@ public class ConfigSection : IConfigSection
 
     public void AddValue(string key, string value)
     {
-        if (!_configKeys.ContainsKey(key))
+        if (!_configKeys.TryGetValue(key, out List<string>? list))
         {
-            _configKeys[key] = [];
+            list = [];
+            _configKeys[key] = list;
         }
 
-        _configKeys[key].Add(value);
+        list.Add(value);
     }
 
     public string GetValue(string key, string defaultValue)
@@ -108,7 +110,7 @@ public class ConfigSection : IConfigSection
 
     public IReadOnlyList<string> GetValues(string key)
     {
-        return _configKeys.TryGetValue(key, out List<string>? configKey) ? configKey : Array.Empty<string>();
+        return _configKeys.TryGetValue(key, out List<string>? configKey) ? configKey : [];
     }
 
     public override string ToString()
@@ -127,7 +129,7 @@ public class ConfigSection : IConfigSection
             result = result + " \"" + escSubSection + "\"";
         }
 
-        result = result + "]";
+        result += "]";
         return result;
     }
 
@@ -151,7 +153,11 @@ public static class ConfigSectionExt
         if (section.HasValue(name))
         {
             string value = section.GetValue(name);
-            bool.TryParse(value, out result);
+            if (!bool.TryParse(value, out result))
+            {
+                Trace.WriteLine($"Warning: Could not parse boolean value '{value}' for '{section.SectionName}.{name}'. Using default '{defaultValue}'.");
+                result = false;
+            }
         }
 
         return result;

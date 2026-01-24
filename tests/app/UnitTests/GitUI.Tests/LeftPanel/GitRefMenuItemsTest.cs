@@ -63,7 +63,7 @@ public class GitRefMenuItemsTest
     private void WithRefMenu_HasAllItems(MenuItemsGenerator<TestBranchNode> group)
     {
         // Act
-        ToolStripItemWithKey[] menuItems = group.ToArray();
+        ToolStripItemWithKey[] menuItems = [.. group];
         ClassicAssert.IsEmpty(_factoryQueue);
         ClassicAssert.AreEqual(menuItems.Length, expectedTotal);
         int testIndex = 0;
@@ -86,7 +86,7 @@ public class GitRefMenuItemsTest
         // Act
         const int expectedEnabled = 2; // create branch, rename
         int expectedDisabled = expectedTotal - expectedEnabled;
-        ToolStripItemWithKey[] disabledItems = generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key)).ToArray();
+        ToolStripItemWithKey[] disabledItems = [.. generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key))];
         ClassicAssert.AreEqual(disabledItems.Length, expectedDisabled);
         int testIndex = 0;
         AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Checkout));

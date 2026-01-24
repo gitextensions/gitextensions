@@ -73,6 +73,8 @@ trim_trailing_whitespace = false
 # C# files
 [*.cs]
 
+charset = utf-8-bom
+
 #### Core EditorConfig Options ####
 
 # New line preferences
@@ -302,5 +304,5 @@ csharp_prefer_system_threading_lock = true:suggestion
 # Silent for now, see https://github.com/dotnet/winforms/issues/12476
 dotnet_diagnostic.WFO1000.severity = silent
 
-# WFO5001: Type is for evaluation purposes only and is subject to change or removal in future updates. Suppress this diagnostic to proceed.
-dotnet_diagnostic.WFO5001.severity = silent
+# IDE0290: Use primary constructor
+dotnet_diagnostic.IDE0290.severity = none

@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -269,9 +269,8 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         string fileName = GetFileNameForRevision(revision) ?? FileName;
         bool isFolder = fileName.EndsWith('/');
         bool fileAvailable
-            = isFolder ? false
-            : revision.IsArtificial ? File.Exists(fileName)
-            : Module.GetFileBlobHash(fileName, revision.ObjectId) is not null;
+            = !isFolder && (revision.IsArtificial ? File.Exists(fileName)
+            : Module.GetFileBlobHash(fileName, revision.ObjectId) is not null);
 
         SetTitle(alternativeFileName: fileName);
 

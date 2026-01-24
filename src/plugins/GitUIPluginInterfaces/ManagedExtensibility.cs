@@ -64,10 +64,9 @@ public static class ManagedExtensibility
         }
         else
         {
-            Assembly[] assemblies = pluginFiles.Union(userPluginFiles)
+            Assembly[] assemblies = [.. pluginFiles.Union(userPluginFiles)
                                                .Select(assemblyFile => TryLoadAssembly(assemblyFile))
-                                               .WhereNotNull()
-                                               .ToArray();
+                                               .WhereNotNull()];
 
             PartDiscovery? discovery = PartDiscovery.Combine(
                 new AttributedPartDiscoveryV1(Resolver.DefaultInstance),

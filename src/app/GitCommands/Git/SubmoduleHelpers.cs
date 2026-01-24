@@ -7,9 +7,9 @@ namespace GitCommands.Git;
 public static partial class SubmoduleHelpers
 {
     [GeneratedRegex(@"diff --git\s+[ab]/(?<filenamea>.+)\s+[ba]/(?<filenameb>.+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex DiffCommandRegex();
+    private static partial Regex DiffCommandRegex { get; }
     [GeneratedRegex(@"diff --cc (?<filenamea>.+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex CombinedDiffCommandRegex();
+    private static partial Regex CombinedDiffCommandRegex { get; }
 
     public static async Task<GitSubmoduleStatus?> GetSubmoduleDiffChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
     {
@@ -28,7 +28,7 @@ public static partial class SubmoduleHelpers
         if (!string.IsNullOrEmpty(errorMessage))
         {
             // (some) Git errors, propagate
-            return new GitSubmoduleStatus(errorMessage, null, false, null, null, null, null);
+            return new GitSubmoduleStatus(errorMessage, null, false, null, null, null, null, null, GetSubmoduleStatus);
         }
 
         if (string.IsNullOrEmpty(patch?.Text))
@@ -58,7 +58,7 @@ public static partial class SubmoduleHelpers
 
             if (line is not null)
             {
-                Match match = DiffCommandRegex().Match(line);
+                Match match = DiffCommandRegex.Match(line);
                 if (match.Groups.Count > 1)
                 {
                     name = match.Groups["filenamea"].Value;
@@ -66,7 +66,7 @@ public static partial class SubmoduleHelpers
                 }
                 else
                 {
-                    match = CombinedDiffCommandRegex().Match(line);
+                    match = CombinedDiffCommandRegex.Match(line);
                     if (match.Groups.Count > 1)
                     {
                         name = match.Groups["filenamea"].Value;
@@ -134,15 +134,17 @@ public static partial class SubmoduleHelpers
             }
         }
 
-        GitSubmoduleStatus status = new(name, oldName, isDirty, commitId, oldCommitId, addedCommits, removedCommits);
+        GitSubmoduleStatus status = new(name, oldName, isDirty, commitId, oldCommitId, addedCommits, removedCommits, getCommitData, GetSubmoduleStatus);
 
         // Force calculation of caches, could be separate
-        status.Status = status.GetSubmoduleStatus(getCommitData);
+        _ = status.Status;
+        _ = status.CommitData;
+        _ = status.OldCommitData;
 
         return status;
     }
 
-    private static SubmoduleStatus GetSubmoduleStatus(this GitSubmoduleStatus submoduleStatus, Func<string, CommitData?> getCommitData)
+    private static SubmoduleStatus GetSubmoduleStatus(GitSubmoduleStatus submoduleStatus)
     {
         if (submoduleStatus.OldCommit is null)
         {
@@ -156,14 +158,14 @@ public static partial class SubmoduleHelpers
 
         if (submoduleStatus.Commit == submoduleStatus.OldCommit)
         {
-            return SubmoduleStatus.SameTime;
+            return SubmoduleStatus.SameCommit;
         }
 
         // From this on, the status is by default Modified
 
         if (submoduleStatus.AddedCommits is null || submoduleStatus.RemovedCommits is null)
         {
-            return SubmoduleStatus.Unknown;
+            return SubmoduleStatus.Modified;
         }
 
         if (submoduleStatus.AddedCommits > 0 && submoduleStatus.RemovedCommits == 0)
@@ -176,24 +178,22 @@ public static partial class SubmoduleHelpers
             return SubmoduleStatus.Rewind;
         }
 
-        if (getCommitData is null
-            || getCommitData(submoduleStatus.Commit.ToString()) is not CommitData commitData
-            || getCommitData(submoduleStatus.OldCommit.ToString()) is not CommitData oldCommitData)
+        if (submoduleStatus.CommitData is null || submoduleStatus.OldCommitData is null)
         {
-            return SubmoduleStatus.Unknown;
+            return SubmoduleStatus.Modified;
         }
 
-        if (commitData.CommitDate > oldCommitData.CommitDate)
+        if (submoduleStatus.CommitData.CommitDate > submoduleStatus.OldCommitData.CommitDate)
         {
             return SubmoduleStatus.NewerTime;
         }
 
-        if (commitData.CommitDate < oldCommitData.CommitDate)
+        if (submoduleStatus.CommitData.CommitDate < submoduleStatus.OldCommitData.CommitDate)
         {
             return SubmoduleStatus.OlderTime;
         }
 
-        return SubmoduleStatus.Unknown;
+        return SubmoduleStatus.Modified;
     }
 
     internal readonly struct TestAccessor

@@ -10,7 +10,7 @@ namespace BugReporterTests;
 public sealed partial class SerializableExceptionTests
 {
     [GeneratedRegex(@"^(?<keep>.*)(?<codeLocationToBeRemoved>\sin\s.*)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex PathRegex();
+    private static partial Regex PathRegex { get; }
 
     [Test, TestCaseSource(nameof(TestCases))]
     public async Task ToString(string testName, Action action)
@@ -61,9 +61,9 @@ public sealed partial class SerializableExceptionTests
     {
         // message contains physical file paths, which are machine specific
         StringBuilder m = new();
-        foreach (string line in exceptionMessage.Split(new[] { '\n', '\r' }, StringSplitOptions.RemoveEmptyEntries))
+        foreach (string line in exceptionMessage.Split(['\n', '\r'], StringSplitOptions.RemoveEmptyEntries))
         {
-            m.AppendLine(PathRegex().Replace(line, "${keep}"));
+            m.AppendLine(PathRegex.Replace(line, "${keep}"));
         }
 
         return m.ToString();

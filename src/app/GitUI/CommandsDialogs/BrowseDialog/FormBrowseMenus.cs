@@ -196,7 +196,7 @@ internal class FormBrowseMenus : ITranslate, IDisposable
 
         return;
 
-        bool IsVisibleByDefault(string buttonKey) => !buttonKey.Contains(FormBrowse.FetchPullToolbarShortcutsPrefix);
+        static bool IsVisibleByDefault(string buttonKey) => !buttonKey.Contains(FormBrowse.FetchPullToolbarShortcutsPrefix);
         static void SaveVisibilitySetting(string key, bool visible, bool defaultValue = true)
             => AppSettings.SetBool(toolbarSettingsPrefix + key, visible == defaultValue ? null : visible);
         static bool LoadVisibilitySetting(string key, bool defaultValue = true)
@@ -398,7 +398,7 @@ internal class FormBrowseMenus : ITranslate, IDisposable
             }
         }
 
-        toolStripMenuItemTarget.DropDownItems.AddRange(toolStripItems.ToArray());
+        toolStripMenuItemTarget.DropDownItems.AddRange([.. toolStripItems]);
     }
 
     // clear is important to avoid mem leaks of event handlers
@@ -436,7 +436,7 @@ internal class FormBrowseMenus : ITranslate, IDisposable
     {
         if (_navigateMenuCommands is null && _viewMenuCommands is null)
         {
-            return Enumerable.Empty<MenuCommand>();
+            return [];
         }
         else if (_navigateMenuCommands is not null && _viewMenuCommands is not null)
         {

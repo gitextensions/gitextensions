@@ -22,10 +22,10 @@ internal class SemanticMerge : DiffMergeTool
     private static string[] GetFolders()
     {
         string folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        return new[]
-        {
+        return
+        [
             Path.Combine(folder, @"semanticmerge"),
             Path.Combine(folder, @"PlasticSCM4\semanticmerge")
-        };
+        ];
     }
 }

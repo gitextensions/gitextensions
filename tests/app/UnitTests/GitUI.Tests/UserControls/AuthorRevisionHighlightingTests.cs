@@ -134,7 +134,7 @@ internal class AuthorRevisionHighlightingTests
         currentModule.GetEffectiveSetting(SettingKeyString.UserEmail).Returns(ExpectedAuthorEmail2);
         sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
 
-        bool action = sut.ProcessRevisionSelectionChange(currentModule, Array.Empty<GitRevision>());
+        bool action = sut.ProcessRevisionSelectionChange(currentModule, []);
 
         action.Should().Be(true);
     }
@@ -147,7 +147,7 @@ internal class AuthorRevisionHighlightingTests
         currentModule.GetEffectiveSetting(SettingKeyString.UserEmail).Returns(ExpectedAuthorEmail2);
         sut.ProcessRevisionSelectionChange(currentModule, new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) });
 
-        sut.ProcessRevisionSelectionChange(currentModule, Array.Empty<GitRevision>());
+        sut.ProcessRevisionSelectionChange(currentModule, []);
 
         sut.AuthorEmailToHighlight.Should().Be(ExpectedAuthorEmail2);
     }

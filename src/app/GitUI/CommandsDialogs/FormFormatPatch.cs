@@ -63,8 +63,8 @@ public partial class FormFormatPatch : GitModuleForm
             return;
         }
 
-        string rev1 = "";
-        string rev2 = "";
+        string rev1;
+        string rev2;
         string result = "";
 
         IReadOnlyList<GitRevision> revisions = RevisionGrid.GetSelectedRevisions(SortDirection.Descending);

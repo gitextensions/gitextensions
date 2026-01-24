@@ -63,6 +63,11 @@
         <target>サブモジュールをすべて取得</target>
         
       </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
+        <target>リポジトリを開いた際に即時フェッチ</target>
+        
+      </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
         <target>設定された秒ごとにフェッチ (0 で無効)</target>
@@ -363,9 +368,9 @@
         <source>DANGEROUS ACTION!
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>危険な操作です！
+        <target>危険な操作です!
 リモート「{0}」のブランチを削除しようとしています。
-これは取り消せませんが、本当に続行しますか?</target>
+これはやり直せませんが、本当に続行しますか?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -900,14 +905,39 @@ Are you sure you want to continue?</source>
         <target>個人アクセストークン</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>エラー</target>
+        
+      </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
         <target>GitHub個人アクセストークンを生成</target>
         
       </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
+        <source>Enable commit message issue helper</source>
+        <target>コミット メッセージ課題ヘルパーを有効にする</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
+        <target>取得する課題の最大数</target>
+        
+      </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
         <target>GitHub個人アクセストークンを管理</target>
+        
+      </trans-unit>
+      <trans-unit id="_noAssignedIssues.Text">
+        <source>No assigned GitHub issues found</source>
+        <target>未割当ての GitHub 課題はありません</target>
+        
+      </trans-unit>
+      <trans-unit id="_noTokenError.Text">
+        <source>No GitHub personal access token (PAT) defined</source>
+        <target>GitHub 個人アクセス トークン (PAT) が未定義です</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">

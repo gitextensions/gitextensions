@@ -1,4 +1,4 @@
-using System.Collections.Immutable;
+﻿using System.Collections.Immutable;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Text;
@@ -1343,7 +1343,7 @@ public sealed class GitUICommands : IGitUICommands
     public void StartCreatePullRequest(IWin32Window? owner)
     {
         List<IRepositoryHostPlugin> relevantHosts =
-            PluginRegistry.GitHosters.Where(gh => gh.GitModuleIsRelevantToMe()).ToList();
+            [.. PluginRegistry.GitHosters.Where(gh => gh.GitModuleIsRelevantToMe())];
 
         if (relevantHosts.Count == 0)
         {
@@ -1713,7 +1713,7 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartFileEditorDialog(string? filename, bool showWarning = false, int? lineNumber = null)
     {
         using FormEditor formEditor = new(this, filename, showWarning, lineNumber: lineNumber);
-        return formEditor.IsDisposed ? false : formEditor.ShowDialog() != DialogResult.Cancel;
+        return !formEditor.IsDisposed && formEditor.ShowDialog() != DialogResult.Cancel;
     }
 
     /// <summary>
@@ -1997,7 +1997,7 @@ public sealed class GitUICommands : IGitUICommands
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal struct TestAccessor
+    internal readonly struct TestAccessor
     {
         private readonly GitUICommands _commands;
 
@@ -2006,11 +2006,11 @@ public sealed class GitUICommands : IGitUICommands
             _commands = commands;
         }
 
-        internal string NormalizeFileName(string fileName) => _commands.NormalizeFileName(fileName);
+        internal readonly string NormalizeFileName(string fileName) => _commands.NormalizeFileName(fileName);
 
-        internal bool RunCommandBasedOnArgument(string[] args) => _commands.RunCommandBasedOnArgument(args, InitializeArguments(args));
+        internal readonly bool RunCommandBasedOnArgument(string[] args) => _commands.RunCommandBasedOnArgument(args, InitializeArguments(args));
 
-        internal void ShowFileHistoryDialog(string fileName)
+        internal readonly void ShowFileHistoryDialog(string fileName)
             => _commands.RunFileHistoryCommand(args: new string[] { "", "", fileName }, showBlame: false);
     }
 }

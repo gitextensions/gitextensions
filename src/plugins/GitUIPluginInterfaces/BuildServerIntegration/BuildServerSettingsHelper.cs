@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace GitUIPluginInterfaces.BuildServerIntegration;
@@ -9,7 +9,7 @@ public static class BuildServerSettingsHelper
     {
         try
         {
-            new Regex(regexText);
+            _ = new Regex(regexText);
             return true;
         }
         catch

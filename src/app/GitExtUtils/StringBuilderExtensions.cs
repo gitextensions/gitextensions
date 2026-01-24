@@ -4,7 +4,7 @@ namespace GitExtUtils;
 
 public static class StringBuilderExtensions
 {
-    private static readonly char[] _whiteSpaceChars = { ' ', '\r', '\n', '\t' };
+    private static readonly char[] _whiteSpaceChars = [' ', '\r', '\n', '\t'];
 
     public static StringBuilder AppendQuoted(this StringBuilder builder, string s)
     {

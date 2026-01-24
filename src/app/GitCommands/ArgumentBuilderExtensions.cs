@@ -294,7 +294,7 @@ public static class ArgumentBuilderExtensions
         string baseArgument = builder.ToString();
         if (baseLength + baseArgument.Length >= maxLength)
         {
-            throw new ArgumentException($"Git base command \"{baseArgument}\" always reached max length of {maxLength} characters.", nameof(baseArgument));
+            throw new ArgumentException($"Git base command \"{baseArgument}\" always reached max length of {maxLength} characters.", nameof(baseLength));
         }
 
         // Clone command as argument builder

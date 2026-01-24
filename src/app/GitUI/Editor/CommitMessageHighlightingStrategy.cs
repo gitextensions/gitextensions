@@ -74,8 +74,7 @@ internal sealed class CommitMessageHighlightingStrategy : GitHighlightingStrateg
             {
                 HighlightColor color = lineNumber == summaryLineNumber ? ColorSummary : ColorNormal;
 
-                line.Words = new List<TextWord>(capacity: 1)
-                    { new(document, line, 0, line.Length, color, hasDefaultColor: false) };
+                line.Words = [new(document, line, 0, line.Length, color, hasDefaultColor: false)];
 
                 if (lineNumber == summaryLineNumber)
                 {

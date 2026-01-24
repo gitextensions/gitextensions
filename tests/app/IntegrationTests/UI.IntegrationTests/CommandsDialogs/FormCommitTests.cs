@@ -358,8 +358,12 @@ public class FormCommitTests
         string message,
         int selectionStart,
         int selectionLength,
+#pragma warning disable IDE0060 // Remove unused parameter
         string expectedMessage,
+#pragma warning restore IDE0060 // Remove unused parameter
+#pragma warning disable IDE0060 // Remove unused parameter
         int expectedSelectionStart)
+#pragma warning restore IDE0060 // Remove unused parameter
     {
         TestAddSelectionToCommitMessage(focusSelectedDiff: false, CommitMessageTestData.SelectedText,
             message, selectionStart, selectionLength,
@@ -371,8 +375,12 @@ public class FormCommitTests
         string message,
         int selectionStart,
         int selectionLength,
+#pragma warning disable IDE0060 // Remove unused parameter
         string expectedMessage,
+#pragma warning restore IDE0060 // Remove unused parameter
+#pragma warning disable IDE0060 // Remove unused parameter
         int expectedSelectionStart)
+#pragma warning restore IDE0060 // Remove unused parameter
     {
         TestAddSelectionToCommitMessage(focusSelectedDiff: true, selectedText: "",
             message, selectionStart, selectionLength,

@@ -21,7 +21,7 @@ public class FormBrowse_LeftPanel_RemotesTests
     // Created once for each test
     private GitUICommands _commands;
     private IConfigFileRemoteSettingsManager _remotesManager;
-    private static readonly string[] RemoteNames = new[] { "remote1", "remote5", "remote3", "remote4", "remote2" };
+    private static readonly string[] RemoteNames = ["remote1", "remote5", "remote3", "remote4", "remote2"];
 
     [OneTimeSetUp]
     public void SetUpFixture()
@@ -88,7 +88,7 @@ public class FormBrowse_LeftPanel_RemotesTests
                 // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                 // assert
-                List<string> names = remotesNode.Nodes.OfType<TreeNode>().Select(x => x.Text).ToList();
+                List<string> names = [.. remotesNode.Nodes.OfType<TreeNode>().Select(x => x.Text)];
                 names.Should().BeEquivalentTo(RemoteNames);
                 names.Should().BeInAscendingOrder();
             });
@@ -157,7 +157,7 @@ public class FormBrowse_LeftPanel_RemotesTests
                 // no-op: by the virtue of loading the form, the left panel has loaded its content
 
                 // assert
-                List<string> inactiveNodes = remotesNode.Nodes.OfType<TreeNode>().Last().Nodes.OfType<TreeNode>().Select(n => n.Text).ToList();
+                List<string> inactiveNodes = [.. remotesNode.Nodes.OfType<TreeNode>().Last().Nodes.OfType<TreeNode>().Select(n => n.Text)];
                 inactiveNodes.Should().HaveCount(3);
                 inactiveNodes.Should().BeEquivalentTo(RemoteNames[3], RemoteNames[0], RemoteNames[1]);
                 inactiveNodes.Should().BeInAscendingOrder();

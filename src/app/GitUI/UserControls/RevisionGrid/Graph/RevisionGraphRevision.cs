@@ -16,7 +16,7 @@ public sealed class RevisionGraphRevision
 {
     // Enough as initial the majority of times because commits nearly never have more than 2 parents.
     private const int _initialParentStackCapacity = 2;
-    private ImmutableStack<RevisionGraphRevision> _children = ImmutableStack<RevisionGraphRevision>.Empty;
+    private ImmutableStack<RevisionGraphRevision> _children = [];
     private readonly ConcurrentQueue<RevisionGraphSegment> _startSegments = new();
 
     public RevisionGraphRevision(ObjectId objectId, int guessScore)
@@ -131,7 +131,7 @@ public sealed class RevisionGraphRevision
     public int ParentCount { get; private set; }
     public IEnumerable<RevisionGraphRevision> Parents => _startSegments.Select(segment => segment.Parent);
     public ImmutableStack<RevisionGraphRevision> Children => _children;
-    public RevisionGraphSegment[] GetStartSegments() => _startSegments.ToArray();
+    public RevisionGraphSegment[] GetStartSegments() => [.. _startSegments];
 
     /// <summary>
     /// Mark this commit, and all its parents, as relative. Used for branch highlighting.

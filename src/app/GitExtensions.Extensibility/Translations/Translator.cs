@@ -52,13 +52,13 @@ public static class Translator
             string translationDir = GetTranslationDir();
             if (!Directory.Exists(translationDir))
             {
-                return Array.Empty<string>();
+                return [];
             }
 
             foreach (string fileName in Directory.GetFiles(translationDir, "*.xlf"))
             {
                 string name = Path.GetFileNameWithoutExtension(fileName);
-                if (name.IndexOf(".") > 0)
+                if (name.IndexOf('.') > 0)
                 {
                     continue;
                 }
@@ -75,7 +75,7 @@ public static class Translator
         {
         }
 
-        return translations.ToArray();
+        return [.. translations];
     }
 
     public static void Translate(ITranslate obj, string translationName)

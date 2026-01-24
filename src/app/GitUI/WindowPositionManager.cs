@@ -66,7 +66,7 @@ internal sealed class WindowPositionManager : IWindowPositionManager
             bool leftTop = screen.Contains(p);
             if (leftTop)
             {
-                Debug.WriteLine($"{screen.ToString()} contains {p} (L, T)");
+                Debug.WriteLine($"{screen} contains {p} (L, T)");
                 return true;
             }
         }
@@ -77,7 +77,7 @@ internal sealed class WindowPositionManager : IWindowPositionManager
             bool middleTop = screen.Contains(p);
             if (middleTop)
             {
-                Debug.WriteLine($"{screen.ToString()} contains {p} (W/2-, T)");
+                Debug.WriteLine($"{screen} contains {p} (W/2-, T)");
                 return true;
             }
 
@@ -85,7 +85,7 @@ internal sealed class WindowPositionManager : IWindowPositionManager
             middleTop = screen.Contains(p);
             if (middleTop)
             {
-                Debug.WriteLine($"{screen.ToString()} contains {p} (W/2+, T)");
+                Debug.WriteLine($"{screen} contains {p} (W/2+, T)");
                 return true;
             }
         }
@@ -96,7 +96,7 @@ internal sealed class WindowPositionManager : IWindowPositionManager
             bool middleTop = screen.Contains(p);
             if (middleTop)
             {
-                Debug.WriteLine($"{screen.ToString()} contains {p} (L, H/2-)");
+                Debug.WriteLine($"{screen} contains {p} (L, H/2-)");
                 return true;
             }
 
@@ -104,7 +104,7 @@ internal sealed class WindowPositionManager : IWindowPositionManager
             middleTop = screen.Contains(p);
             if (middleTop)
             {
-                Debug.WriteLine($"{screen.ToString()} contains {p} (L, H/2+)");
+                Debug.WriteLine($"{screen} contains {p} (L, H/2+)");
                 return true;
             }
         }
@@ -115,7 +115,7 @@ internal sealed class WindowPositionManager : IWindowPositionManager
             bool rightTop = screen.Contains(p);
             if (rightTop)
             {
-                Debug.WriteLine($"{screen.ToString()} contains {p} (R, T)");
+                Debug.WriteLine($"{screen} contains {p} (R, T)");
                 return true;
             }
         }

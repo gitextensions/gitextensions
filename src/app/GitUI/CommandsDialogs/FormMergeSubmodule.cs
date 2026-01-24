@@ -70,7 +70,7 @@ public sealed partial class FormMergeSubmodule : GitModuleForm
 
     private void btCheckoutBranch_Click(object sender, EventArgs e)
     {
-        ObjectId[] ids = new[] { ObjectId.Parse(tbLocal.Text), ObjectId.Parse(tbRemote.Text) };
+        ObjectId[] ids = [ObjectId.Parse(tbLocal.Text), ObjectId.Parse(tbRemote.Text)];
         IGitUICommands submoduleCommands = UICommands.WithWorkingDirectory(Module.GetSubmoduleFullPath(_filename));
         if (!submoduleCommands.StartCheckoutBranch(this, ids))
         {

@@ -65,13 +65,13 @@ public class GitRevisionSummaryBuilder : IGitRevisionSummaryBuilder
 
             void AppendLine(int length, bool withEllipsis = false)
             {
-                s.Append(body.Substring(lineStartPos, length));
+                s.Append(body.AsSpan(lineStartPos, length));
                 if (withEllipsis)
                 {
                     s.Append(" [...]");
                 }
 
-                s.Append("\n");
+                s.Append('\n');
             }
         }
 

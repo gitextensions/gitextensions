@@ -38,7 +38,7 @@ public abstract class GroupSettingsPage : Translate, ISettingsPage
 
     public IEnumerable<string> GetSearchKeywords()
     {
-        return Array.Empty<string>();
+        return [];
     }
 
     public bool IsInstantSavePage => false;

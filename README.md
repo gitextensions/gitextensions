@@ -27,7 +27,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Runtime environment
     </td>
     <td>
-      MS Windows 7SP1+ // <a href="https://dotnet.microsoft.com/download/dotnet/9.0" target=_blank>.NET 9.0 SDK</a>
+      MS Windows 7SP1+ // <a href="https://dotnet.microsoft.com/download/dotnet/9.0" target=_blank>.NET Desktop 10.0 SDK</a>
     </td>
   </tr>
   <tr>
@@ -35,7 +35,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Development
     </td>
     <td>
-      MS Visual Studio 2022 (v17.12+), C# 13 // VC++ (inc. ATL for x86/x64 for installer)
+      MS Visual Studio 2026, C# 14 // VC++ (inc. ATL for x86/x64 for installer)
     </td>
   </tr>
   <tr>
@@ -75,7 +75,7 @@ If you want to **update a portable version**, you should delete all the files an
 <table>
   <tr>
     <td>
-      <strong>Latest Release: v6.0.2</strong>
+      <strong>Latest Release: v6.0.5</strong>
     </td>
     <td>
       <a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a><br />
@@ -94,7 +94,7 @@ If you want to **update a portable version**, you should delete all the files an
   </tr>
   <tr>
     <td>
-      <strong>Visual Studio VSIX (2022)</strong>
+      <strong>Visual Studio VSIX (2022 and later)</strong>
     </td>
     <td>
       <a href="https://marketplace.visualstudio.com/items?itemName=GitExtensionsApp.VS2022">[ Download ]</a> or install from Visual Studio via Extensions

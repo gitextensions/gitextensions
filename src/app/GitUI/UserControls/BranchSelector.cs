@@ -62,12 +62,12 @@ public partial class BranchSelector : GitModuleControl
 
         string[] GetLocalBranches()
         {
-            return _localBranches ??= Module.GetRefs(RefsFilter.Heads).Select(b => b.Name).ToArray();
+            return _localBranches ??= [.. Module.GetRefs(RefsFilter.Heads).Select(b => b.Name)];
         }
 
         string[] GetRemoteBranches()
         {
-            return _remoteBranches ??= Module.GetRefs(RefsFilter.Remotes).Select(b => b.Name).ToArray();
+            return _remoteBranches ??= [.. Module.GetRefs(RefsFilter.Remotes).Select(b => b.Name)];
         }
 
         string[] GetContainsRevisionBranches()
@@ -99,7 +99,7 @@ public partial class BranchSelector : GitModuleControl
                 result.IntersectWith(branches);
             }
 
-            return result.ToArray();
+            return [.. result];
         }
     }
 

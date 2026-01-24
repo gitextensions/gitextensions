@@ -38,7 +38,7 @@ public class GitRevisionTesterTests
     [Test]
     public void AllFirstAreParentsToSelected_should_return_false_if_no_parents_contains_any_of_selected_items()
     {
-        ObjectId[] firstSelected = new[] { ObjectId.IndexId, ObjectId.Random() };
+        ObjectId[] firstSelected = [ObjectId.IndexId, ObjectId.Random()];
 
         GitRevision selectedRevision = new(ObjectId.WorkTreeId)
         {
@@ -54,11 +54,11 @@ public class GitRevisionTesterTests
         ObjectId parent1 = ObjectId.Random();
         ObjectId parent2 = ObjectId.Random();
 
-        ObjectId[] firstSelected2 = new[]
-        {
+        ObjectId[] firstSelected2 =
+        [
             parent1,
             parent2
-        };
+        ];
 
         GitRevision selectedRevision2 = new(ObjectId.Random())
         {

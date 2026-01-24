@@ -13,7 +13,7 @@ public sealed class MultiCacheCleaner : IAvatarCacheCleaner
 
         if (_inner.Any(p => p == null))
         {
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(inner));
         }
     }
 

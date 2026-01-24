@@ -79,14 +79,14 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
         _allRecentRepositories ??= ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
         IList<Repository> repositories = Filter(_allRecentRepositories, pattern);
         splitter.SplitRecentRepos(repositories, topRepos, recentRepos);
-        List<RecentRepoInfo> recentRepositories = topRepos.Union(recentRepos).ToList();
+        List<RecentRepoInfo> recentRepositories = [.. topRepos.Union(recentRepos)];
 
         _allFavoriteRepositories ??= ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
         repositories = Filter(_allFavoriteRepositories, pattern);
         topRepos.Clear();
         recentRepos.Clear();
         splitter.SplitRecentRepos(repositories, topRepos, recentRepos);
-        List<RecentRepoInfo> favouriteRepositories = topRepos.Union(recentRepos).ToList();
+        List<RecentRepoInfo> favouriteRepositories = [.. topRepos.Union(recentRepos)];
 
         return (recentRepositories, favouriteRepositories);
     }
@@ -101,8 +101,6 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
             return repositories;
         }
 
-        return repositories
-            .Where(r => r.Path.Contains(pattern, StringComparison.CurrentCultureIgnoreCase))
-            .ToList();
+        return [.. repositories.Where(r => r.Path.Contains(pattern, StringComparison.CurrentCultureIgnoreCase))];
     }
 }

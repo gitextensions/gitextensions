@@ -7,7 +7,7 @@ public sealed class ChainedAvatarProvider : IAvatarProvider
 {
     private readonly IAvatarProvider[] _avatarProviders;
 
-    public bool PerformsIo => _avatarProviders.Length == 0 ? false : _avatarProviders.Any(p => p.PerformsIo);
+    public bool PerformsIo => _avatarProviders.Length != 0 && _avatarProviders.Any(p => p.PerformsIo);
 
     public ChainedAvatarProvider(params IAvatarProvider[] avatarProviders)
     {
@@ -15,7 +15,7 @@ public sealed class ChainedAvatarProvider : IAvatarProvider
 
         if (_avatarProviders.Any(p => p is null))
         {
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(avatarProviders));
         }
     }
 
@@ -23,7 +23,7 @@ public sealed class ChainedAvatarProvider : IAvatarProvider
     {
         ArgumentNullException.ThrowIfNull(avatarProviders);
 
-        _avatarProviders = avatarProviders.ToArray();
+        _avatarProviders = [.. avatarProviders];
     }
 
     /// <summary>

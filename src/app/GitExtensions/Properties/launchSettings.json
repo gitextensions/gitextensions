@@ -26,6 +26,10 @@
     "Commit dialog": {
       "commandName": "Project",
       "commandLineArgs": "commit ."
+    },
+    "Init / Create": {
+      "commandName": "Project",
+      "commandLineArgs": "init"
     }
   }
 }

@@ -109,7 +109,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
             {
                 string path = topModule.GetSubmoduleFullPath(name);
 
-                if (_submoduleInfos.ContainsKey(path) && _submoduleInfos[path].Detailed is not null)
+                if (_submoduleInfos.TryGetValue(path, out SubmoduleInfo? info) && info.Detailed is not null)
                 {
                     SetModuleAsDirtyUpwards(topModule);
                     break;
@@ -212,8 +212,8 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
 
     private static void SetSubmoduleData(IGitModule currentModule, SubmoduleInfoResult result, string noBranchText, IGitModule topProject)
     {
-        string[] submodules = topProject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName).ToArray();
-        if (!submodules.Any())
+        string[] submodules = [.. topProject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName)];
+        if (submodules.Length == 0)
         {
             return;
         }
@@ -293,7 +293,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         await TaskScheduler.Default;
         cancelToken.ThrowIfCancellationRequested();
 
-        if (!_submoduleInfos.ContainsKey(module.WorkingDir) || _submoduleInfos[module.WorkingDir] is null)
+        if (!_submoduleInfos.TryGetValue(module.WorkingDir, out SubmoduleInfo? info) || info is null)
         {
             return;
         }
@@ -345,14 +345,14 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     private void SetModuleAsDirty(IGitModule module)
     {
         string path = module.WorkingDir;
-        if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] is null)
+        if (!_submoduleInfos.TryGetValue(path, out SubmoduleInfo? info) || info is null)
         {
             return;
         }
 
-        if (_submoduleInfos[path].Detailed is null)
+        if (info.Detailed is null)
         {
-            _submoduleInfos[path].Detailed = new DetailedSubmoduleInfo
+            info.Detailed = new DetailedSubmoduleInfo
             {
                 IsDirty = true,
                 RawStatus = null
@@ -360,7 +360,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         }
         else
         {
-            _submoduleInfos[path].Detailed!.IsDirty = true;
+            info.Detailed!.IsDirty = true;
         }
     }
 
@@ -386,7 +386,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     /// <returns>The task.</returns>
     private async Task GetSubmoduleDetailedStatusAsync(IGitModule module, CancellationToken cancelToken)
     {
-        if (!_submoduleInfos.ContainsKey(module.WorkingDir) || _submoduleInfos[module.WorkingDir] is null)
+        if (!_submoduleInfos.TryGetValue(module.WorkingDir, out SubmoduleInfo? info) || info is null)
         {
             return;
         }
@@ -414,12 +414,11 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         }
 
         string path = superModule.GetSubmoduleFullPath(submoduleName);
-        if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] is null)
+        if (!_submoduleInfos.TryGetValue(path, out SubmoduleInfo? info) || info is null)
         {
             return;
         }
 
-        SubmoduleInfo info = _submoduleInfos[path];
         cancelToken.ThrowIfCancellationRequested();
 
         GitSubmoduleStatus submoduleStatus = await SubmoduleHelpers.GetSubmoduleCurrentChangesAsync(superModule, fileName: submoduleName, oldFileName: submoduleName, staged: false, noLocks: true)
@@ -462,18 +461,18 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         }
 
         string path = superModule.GetSubmoduleFullPath(submoduleName);
-        if (!_submoduleInfos.ContainsKey(path) || _submoduleInfos[path] is null)
+        if (!_submoduleInfos.TryGetValue(path, out SubmoduleInfo? info) || info is null)
         {
             return;
         }
 
-        if (_submoduleInfos[path].Detailed is null)
+        if (info.Detailed is null)
         {
             // If no info, submodules are already the default
             return;
         }
 
-        _submoduleInfos[path].Detailed = null;
+        info.Detailed = null;
         GitModule module = new(path);
         foreach (string name in module.GetSubmodulesLocalPaths(false))
         {

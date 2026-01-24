@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
@@ -123,7 +123,7 @@ Inactive remote is completely invisible to git.");
 
         _lvgEnabled = new ListViewGroup(_lvgEnabledHeader.Text, HorizontalAlignment.Left);
         _lvgDisabled = new ListViewGroup(_lvgDisabledHeader.Text, HorizontalAlignment.Left);
-        Remotes.Groups.AddRange(new[] { _lvgEnabled, _lvgDisabled });
+        Remotes.Groups.AddRange([_lvgEnabled, _lvgDisabled]);
 
         Application.Idle += application_Idle;
 
@@ -131,7 +131,41 @@ Inactive remote is completely invisible to git.");
         RemoteCombo.DataPropertyName = nameof(IGitRef.TrackingRemote);
         MergeWith.DataPropertyName = nameof(IGitRef.MergeWith);
 
-        Remotes.Columns[0].Width = DpiUtil.Scale(120);
+        // Debounce resize events to avoid excessive column recalculations during continuous resize operations
+        const int resizeDebounceIntervalMs = 150;
+        System.Windows.Forms.Timer resizeDebounceTimer = new() { Interval = resizeDebounceIntervalMs };
+        resizeDebounceTimer.Tick += (sender, _) =>
+        {
+            if (sender is System.Windows.Forms.Timer timer)
+            {
+                timer.Stop();
+                AutoResizeRemotesColumn();
+            }
+        };
+        Remotes.Resize += (_, _) =>
+        {
+            resizeDebounceTimer.Stop();
+            resizeDebounceTimer.Start();
+        };
+    }
+
+    private void AutoResizeRemotesColumn()
+    {
+        if (Remotes.Items.Count == 0)
+        {
+            return;
+        }
+
+        // First, auto-size the column to fit its content
+        Remotes.Columns[0].AutoResize(ColumnHeaderAutoResizeStyle.ColumnContent);
+
+        // If the content is narrower than the visible area, expand the column to fill the available space.
+        // If the content is wider, the column keeps its larger width, allowing a horizontal scrollbar to appear.
+        int availableWidth = Remotes.ClientSize.Width;
+        if (Remotes.Columns[0].Width < availableWidth)
+        {
+            Remotes.Columns[0].Width = availableWidth;
+        }
     }
 
     /// <summary>
@@ -164,16 +198,16 @@ Inactive remote is completely invisible to git.");
         // we need to unwire and rewire the events to avoid excessive flickering
         Remotes.SelectedIndexChanged -= Remotes_SelectedIndexChanged;
         Remotes.Items.Clear();
-        Remotes.Items.AddRange(UserGitRemotes.Select(remote =>
+        Remotes.Items.AddRange([.. UserGitRemotes.Select(remote =>
         {
             ListViewGroup group = remote.Disabled ? _lvgDisabled : _lvgEnabled;
             Color color = remote.Disabled ? SystemColors.GrayText : SystemColors.WindowText;
             return new ListViewItem(group) { Text = remote.Name, Tag = remote, ForeColor = color };
-        }).ToArray());
+        })]);
         Remotes.SelectedIndexChanged += Remotes_SelectedIndexChanged;
 
         Remotes.SelectedIndices.Clear();
-        if (UserGitRemotes.Any())
+        if (UserGitRemotes.Count != 0)
         {
             if (!string.IsNullOrEmpty(preselectRemote))
             {
@@ -194,9 +228,12 @@ Inactive remote is completely invisible to git.");
 
             Remotes.FocusedItem = Remotes.SelectedItems[0];
             Remotes.Select();
+            AutoResizeRemotesColumn();
         }
         else
         {
+            Delete.Enabled = false;
+            btnToggleState.Enabled = false;
             RemoteName.Focus();
         }
     }
@@ -231,7 +268,7 @@ Inactive remote is completely invisible to git.");
         Validates.NotNull(_remotesManager);
 
         // refresh registered git remotes
-        UserGitRemotes = _remotesManager.LoadRemotes(true).ToList();
+        UserGitRemotes = [.. _remotesManager.LoadRemotes(true)];
 
         InitialiseTabRemotes(preselectRemote);
 
@@ -293,7 +330,7 @@ Inactive remote is completely invisible to git.");
 
     private void InitialiseTabDefaultPullBehaviors(string? preselectLocal = null)
     {
-        List<IGitRef> heads = Module.GetRefs(RefsFilter.Heads).OrderBy(r => r.LocalName).ToList();
+        List<IGitRef> heads = [.. Module.GetRefs(RefsFilter.Heads).OrderBy(r => r.LocalName)];
         SortableGitRefList headsList = new();
         headsList.AddRange(heads);
 
@@ -308,7 +345,7 @@ Inactive remote is completely invisible to git.");
         RemoteBranches.ClearSelection();
         RemoteBranches.SelectionChanged += RemoteBranchesSelectionChanged;
         DataGridViewRow preselectLocalRow = RemoteBranches.Rows.Cast<DataGridViewRow>().
-            FirstOrDefault(r => r.DataBoundItem is IGitRef gitRef ? gitRef.LocalName == preselectLocal : false);
+            FirstOrDefault(r => r.DataBoundItem is IGitRef gitRef && gitRef.LocalName == preselectLocal);
         if (preselectLocalRow is not null)
         {
             preselectLocalRow.Selected = true;
@@ -689,7 +726,7 @@ Inactive remote is completely invisible to git.");
             return;
         }
 
-        New.Enabled = Delete.Enabled = btnToggleState.Enabled = false;
+        Delete.Enabled = btnToggleState.Enabled = false;
         RemoteName.Text = string.Empty;
         Url.Text = string.Empty;
         comboBoxPushUrl.Text = string.Empty;
@@ -699,8 +736,6 @@ Inactive remote is completely invisible to git.");
 
         if (Remotes.SelectedIndices.Count < 1)
         {
-            // we are here because we're adding a new remote - so no remotes selected
-            // we just need to enable the panel so the user can enter the information
             _selectedRemote = null;
             flpnlRemoteManagement.Enabled = true;
             return;
@@ -713,7 +748,7 @@ Inactive remote is completely invisible to git.");
             return;
         }
 
-        New.Enabled = Delete.Enabled = btnToggleState.Enabled = true;
+        Delete.Enabled = btnToggleState.Enabled = true;
         RemoteName.Text = _selectedRemote.Name;
         Url.Text = _selectedRemote.Url;
         comboBoxPushUrl.Text = _selectedRemote.PushUrl;
@@ -797,7 +832,7 @@ Inactive remote is completely invisible to git.");
             if (candidates.Count > 0)
             {
                 string previousValues = combobox.Text;
-                IList<Repository> proposedRepositories = _repositoryHistory.ToList();
+                IList<Repository> proposedRepositories = [.. _repositoryHistory];
                 bool added = false;
                 foreach (string url in candidates)
                 {

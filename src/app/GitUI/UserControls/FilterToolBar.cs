@@ -159,13 +159,7 @@ internal partial class FilterToolBar : ToolStripEx
             throw new InvalidOperationException($"{nameof(Bind)} is not called.");
         }
 
-        IGitModule module = _getModule();
-        if (module is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-        }
-
-        return module;
+        return _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
     }
 
     private void InitBranchSelectionFilter(FilterChangedEventArgs e)
@@ -299,7 +293,7 @@ internal partial class FilterToolBar : ToolStripEx
 
             RefsFilter branchesFilter = BranchesFilter();
             IReadOnlyList<IGitRef> refs = _getRefs(branchesFilter);
-            string[] branches = refs.Select(branch => branch.Name).ToArray();
+            string[] branches = [.. refs.Select(branch => branch.Name)];
 
             await this.SwitchToMainThreadAsync();
             BindBranches(branches);
@@ -327,7 +321,7 @@ internal partial class FilterToolBar : ToolStripEx
             }
 
             string filter = tscboBranchFilter.Items.Count > 0 ? tscboBranchFilter.Text : string.Empty;
-            string[] matches = branches.Where(branch => branch.IndexOf(filter, StringComparison.InvariantCultureIgnoreCase) >= 0).ToArray();
+            string[] matches = [.. branches.Where(branch => branch.Contains(filter, StringComparison.InvariantCultureIgnoreCase))];
 
             if (matches.Length == 0)
             {
@@ -400,8 +394,8 @@ internal partial class FilterToolBar : ToolStripEx
             tstxtRevisionFilter.Items.Insert(0, filter);
             tstxtRevisionFilter.Text = filter;
             const int maxFilterItems = 30;
-            AppSettings.RevisionFilterDropdowns = tstxtRevisionFilter.Items.Cast<object>()
-                .Select(item => item.ToString()).Take(maxFilterItems).ToArray();
+            AppSettings.RevisionFilterDropdowns = [.. tstxtRevisionFilter.Items.Cast<object>()
+                .Select(item => item.ToString()).Take(maxFilterItems)];
         }
 
         tsbtnAdvancedFilter.ToolTipText = e.FilterSummary;

@@ -49,13 +49,13 @@ public sealed partial class FileStatusDiffCalculator
         if (_fileStatusDiffCalculatorInfo.Revisions?.Count is not > 0
             || _fileStatusDiffCalculatorInfo.Revisions[0] is not GitRevision selectedRev)
         {
-            return Array.Empty<FileStatusWithDescription>();
+            return [];
         }
 
         List<FileStatusWithDescription> fileStatusDescs = refreshDiff
             ? CalculateDiffs(_fileStatusDiffCalculatorInfo.Revisions, selectedRev,
                 _fileStatusDiffCalculatorInfo.HeadId, _fileStatusDiffCalculatorInfo.AllowMultiDiff, cancellationToken)
-            : prevList.Where(p => !IsGrepItemStatuses(p)).ToList();
+            : [.. prevList.Where(p => !IsGrepItemStatuses(p))];
 
         FileStatusWithDescription? grepItemStatuses = refreshGrep
             ? GetGrepItemStatuses(selectedRev, cancellationToken)

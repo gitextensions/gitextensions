@@ -533,7 +533,7 @@ public partial class CommitInfo : GitModuleControl
             {
                 await TaskScheduler.Default;
 
-                List<string> tags = Module.GetAllTagsWhichContainGivenCommit(objectId, cancellationToken).ToList();
+                List<string> tags = [.. Module.GetAllTagsWhichContainGivenCommit(objectId, cancellationToken)];
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
                 _tags = tags;
@@ -550,7 +550,7 @@ public partial class CommitInfo : GitModuleControl
                 // Include remote branches if requested
                 bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                                  AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-                List<string> branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote, cancellationToken).ToList();
+                List<string> branches = [.. Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote, cancellationToken)];
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
                 _branches = branches;
@@ -618,11 +618,10 @@ public partial class CommitInfo : GitModuleControl
                 // having both lightweight & annotated tags in thisRevisionTagNames,
                 // but GetAnnotatedTagsInfo will process annotated only:
                 List<string> thisRevisionTagNames =
-                    Revision
+                    [.. Revision
                     .Refs
                     .Where(r => r.IsTag)
-                    .Select(r => r.LocalName)
-                    .ToList();
+                    .Select(r => r.LocalName)];
 
                 thisRevisionTagNames.Sort(new TagsComparer(_tagsOrderDict));
                 _annotatedTagsInfo = GetAnnotatedTagsInfo(thisRevisionTagNames, _annotatedTagsMessages);
@@ -648,7 +647,7 @@ public partial class CommitInfo : GitModuleControl
         RevisionInfo.SetXHTMLText(body);
         return;
 
-        string GetAnnotatedTagsInfo(
+        static string GetAnnotatedTagsInfo(
             IEnumerable<string> tagNames,
             IDictionary<string, string> annotatedTagsMessages)
         {
@@ -786,11 +785,11 @@ public partial class CommitInfo : GitModuleControl
         tableLayout.SuspendLayout();
 
         int[] heights =
-        {
+        [
             commitInfoHeader.Height + commitInfoHeader.Margin.Vertical,
             _commitMessageHeight + rtbxCommitMessage.Margin.Vertical + pnlCommitMessage.Margin.Vertical,
             _revisionInfoHeight + RevisionInfo.Margin.Vertical
-        };
+        ];
 
         // leave 1st row SizeType = AutoWidth to let CommitInfoHeader.AutoSize be correctly applied
         for (int i = 1; i < tableLayout.RowStyles.Count; i++)
@@ -860,10 +859,9 @@ public partial class CommitInfo : GitModuleControl
             _currentBranch = currentBranch;
             _isDetachedHead = DetachedHeadParser.IsDetachedHead(currentBranch);
             string[] branchRegexes = AppSettings.PrioritizedBranchNames.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            string[] localBranchRegexes = branchRegexes.Select(regex => $"^({regex})$").ToArray();
-            string[] remoteBranchRegexes = branchRegexes.Select(regex => $"^{_remoteBranchPrefix}[^/]+/({regex})$").ToArray();
-            string[] remoteRegexes = AppSettings.PrioritizedRemoteNames.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Select(regex => $"^{_remoteBranchPrefix}({regex})/").ToArray();
+            string[] localBranchRegexes = [.. branchRegexes.Select(regex => $"^({regex})$")];
+            string[] remoteBranchRegexes = [.. branchRegexes.Select(regex => $"^{_remoteBranchPrefix}[^/]+/({regex})$")];
+            string[] remoteRegexes = [.. AppSettings.PrioritizedRemoteNames.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(regex => $"^{_remoteBranchPrefix}({regex})/")];
 
             foreach (string branch in branches)
             {

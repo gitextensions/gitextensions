@@ -8,9 +8,9 @@ namespace GitExtensions.Plugins.Bitbucket;
 public partial class Settings
 {
     [GeneratedRegex(@"https?:\/\/([\w\.\:]+\@)?(?<url>([a-zA-Z0-9\.\-\/]+?)):?(\d+)?\/scm\/(?<project>~?([^\/]+?))\/(?<repo>(.*?)).git", RegexOptions.ExplicitCapture)]
-    private static partial Regex BitbucketHttpRegex();
+    private static partial Regex BitbucketHttpRegex { get; }
     [GeneratedRegex(@"ssh:\/\/([\w\.]+\@)(?<url>([a-zA-Z0-9\.\-]+)):?(\d+)?\/(?<project>~?([^\/]+))\/(?<repo>(.*?)).git", RegexOptions.ExplicitCapture)]
-    private static partial Regex BitbucketSshRegex();
+    private static partial Regex BitbucketSshRegex { get; }
 
     public static Settings? Parse(IGitModule module, SettingsSource settings, BitbucketPlugin plugin)
     {
@@ -22,15 +22,14 @@ public partial class Settings
             DisableSSL = plugin.BitbucketDisableSsl.ValueOrDefault(settings)
         };
 
-        string[] remotes = module.GetRemoteNames()
+        string[] remotes = [.. module.GetRemoteNames()
             .Where(s => !string.IsNullOrWhiteSpace(s))
             .Distinct()
-            .Select(r => module.GetSetting(string.Format(SettingKeyString.RemoteUrl, r)))
-            .ToArray();
+            .Select(r => module.GetSetting(string.Format(SettingKeyString.RemoteUrl, r)))];
 
         foreach (string url in remotes)
         {
-            Regex pattern = url.Contains("http") ? BitbucketHttpRegex() : BitbucketSshRegex();
+            Regex pattern = url.Contains("http") ? BitbucketHttpRegex : BitbucketSshRegex;
             Match match = pattern.Match(url);
             if (match.Success && result.BitbucketUrl.Contains(match.Groups["url"].Value))
             {

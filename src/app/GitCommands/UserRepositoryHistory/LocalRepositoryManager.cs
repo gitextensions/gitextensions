@@ -1,4 +1,4 @@
-using GitCommands.UserRepositoryHistory.Legacy;
+﻿using GitCommands.UserRepositoryHistory.Legacy;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.UserRepositoryHistory;
@@ -78,7 +78,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
     {
         if (string.IsNullOrWhiteSpace(repositoryPath))
         {
-            throw new ArgumentException(nameof(repositoryPath));
+            throw new ArgumentException("AddAsMostRecentAsync: no path.", nameof(repositoryPath));
         }
 
         if (Uri.IsWellFormedUriString(repositoryPath, UriKind.Absolute))
@@ -174,7 +174,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
     {
         await TaskScheduler.Default;
 
-        IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyFavouriteHistory) ?? Array.Empty<Repository>();
+        IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyFavouriteHistory) ?? [];
 
         // backwards compatibility - port the existing user's categorised repositories
         (IList<Repository> migrated, bool changed) = await _repositoryHistoryMigrator.MigrateAsync(history);
@@ -183,7 +183,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
             _repositoryStorage.Save(KeyFavouriteHistory, migrated);
         }
 
-        return migrated ?? new List<Repository>();
+        return migrated ?? [];
     }
 
     /// <summary>
@@ -199,10 +199,10 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
         IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyRecentHistory);
         if (history is null)
         {
-            return Array.Empty<Repository>();
+            return [];
         }
 
-        return AdjustHistorySize(history, size).ToList();
+        return [.. AdjustHistorySize(history, size)];
     }
 
     /// <summary>
@@ -215,7 +215,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
     {
         if (string.IsNullOrWhiteSpace(repositoryPath))
         {
-            throw new ArgumentException(nameof(repositoryPath));
+            throw new ArgumentException("RemoveFavouriteAsync: no path.", nameof(repositoryPath));
         }
 
         await TaskScheduler.Default;
@@ -245,7 +245,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
     {
         if (string.IsNullOrWhiteSpace(repositoryPath))
         {
-            throw new ArgumentException(nameof(repositoryPath));
+            throw new ArgumentException("RemoveRecentAsync: no path.", nameof(repositoryPath));
         }
 
         await TaskScheduler.Default;
@@ -307,9 +307,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
 
         IList<Repository> recentRepositoryHistory = await LoadRecentHistoryAsync();
         int existingRecentCount = recentRepositoryHistory.Count;
-        List<Repository> invalidRecentRepositories = recentRepositoryHistory
-                                        .Where(repo => !predicate(repo.Path))
-                                        .ToList();
+        List<Repository> invalidRecentRepositories = [.. recentRepositoryHistory.Where(repo => !predicate(repo.Path))];
 
         foreach (Repository repo in invalidRecentRepositories)
         {
@@ -323,9 +321,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
 
         IList<Repository> favouriteRepositoryHistory = await LoadFavouriteHistoryAsync();
         int existingFavouriteCount = favouriteRepositoryHistory.Count;
-        List<Repository> invalidFavouriteRepositories = favouriteRepositoryHistory
-                                            .Where(repo => !predicate(repo.Path))
-                                            .ToList();
+        List<Repository> invalidFavouriteRepositories = [.. favouriteRepositoryHistory.Where(repo => !predicate(repo.Path))];
 
         foreach (Repository repo in invalidFavouriteRepositories)
         {

@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 using GitCommands.Utils;
 
@@ -22,7 +22,7 @@ public static partial class PathUtil
     private static StringComparison _pathComparison = EnvUtils.RunningOnWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
     [GeneratedRegex(@"^(\w+):\/\/([\S]+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex DriveLetterRegex();
+    private static partial Regex DriveLetterRegex { get; }
 
     /// <summary>Replaces native path separator with posix path separator (/).</summary>
     [return: NotNullIfNotNull(nameof(path))]
@@ -32,28 +32,28 @@ public static partial class PathUtil
     }
 
     /// <summary>Replaces '/' with native path separator.</summary>
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     public static string? ToNativePath(this string? path)
     {
         return path?.Replace(PosixDirectorySeparatorChar, NativeDirectorySeparatorChar);
     }
 
     /// <summary>Replaces native path separator with posix path separator (/) and drive letter X: with /mnt/x for use in WSL.</summary>
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     public static string? ToWslPath(this string? path)
     {
         return path?.ToMountPath("/mnt/");
     }
 
     /// <summary>Replaces native path separator with posix path separator (/) and drive letter X: with /cygdrive/x.</summary>
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     public static string? ToCygwinPath(this string? path)
     {
         return path?.ToMountPath("/cygdrive/");
     }
 
     /// <summary>Replaces native path separator with posix path separator (/) and drive letter X: with /prefix/x.</summary>
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     public static string? ToMountPath(this string? path, string prefix)
     {
         if (path is null)
@@ -77,7 +77,7 @@ public static partial class PathUtil
     /// <summary>
     /// Removes any trailing path separator character from the end of <paramref name="dirPath"/>.
     /// </summary>
-    [return: NotNullIfNotNull("dirPath")]
+    [return: NotNullIfNotNull(nameof(dirPath))]
     public static string? RemoveTrailingPathSeparator(this string? dirPath)
     {
         if (dirPath?.Length > 0 &&
@@ -96,7 +96,7 @@ public static partial class PathUtil
     ///
     /// This method can be used to add (or keep) a trailing path separator character to a directory path.
     /// </summary>
-    [return: NotNullIfNotNull("dirPath")]
+    [return: NotNullIfNotNull(nameof(dirPath))]
     public static string? EnsureTrailingPathSeparator(this string? dirPath, bool posix = false)
     {
         if (!string.IsNullOrEmpty(dirPath) &&
@@ -111,7 +111,7 @@ public static partial class PathUtil
 
     public static bool IsLocalFile(string fileName)
     {
-        return !DriveLetterRegex().IsMatch(fileName);
+        return !DriveLetterRegex.IsMatch(fileName);
     }
 
     public static bool CanBeGitURL(string? url)
@@ -196,7 +196,7 @@ public static partial class PathUtil
     {
         if (string.IsNullOrWhiteSpace(path))
         {
-            throw new ArgumentException(nameof(path));
+            throw new ArgumentException("Resolve: no path.", nameof(path));
         }
 
         return IsWslPrefixPath(path) ? ResolveWsl(path, relativePath) : ResolveRelativePath(path, relativePath);
@@ -209,7 +209,7 @@ public static partial class PathUtil
     {
         if (string.IsNullOrWhiteSpace(path) || !IsWslPrefixPath(path))
         {
-            throw new ArgumentException(nameof(path));
+            throw new ArgumentException("ResolveWsl: no path.", nameof(path));
         }
 
         // Temporarily replace machine name with a valid name (remove $ sign from \\wsl$\)
@@ -225,7 +225,7 @@ public static partial class PathUtil
     {
         if (string.IsNullOrWhiteSpace(path))
         {
-            throw new ArgumentException(nameof(path));
+            throw new ArgumentException("ResolveRelativePath: no path.", nameof(path));
         }
 
         Uri tempPath = new(path);
@@ -282,7 +282,7 @@ public static partial class PathUtil
                 return -1;
             }
 
-            return path.IndexOfAny(new[] { '\\', '/' }, WslPrefix.Length) - WslPrefix.Length;
+            return path.IndexOfAny(['\\', '/'], WslPrefix.Length) - WslPrefix.Length;
         }
     }
 
@@ -369,9 +369,9 @@ public static partial class PathUtil
                 path = path[..^standardRepositorySuffix.Length];
             }
 
-            if (path.Contains("\\") || path.Contains("/"))
+            if (path.Contains('\\') || path.Contains('/'))
             {
-                name = path[(path.LastIndexOfAny(new[] { '\\', '/' }) + 1)..];
+                name = path[(path.LastIndexOfAny(['\\', '/']) + 1)..];
             }
         }
 
@@ -455,7 +455,7 @@ public static partial class PathUtil
         if (IsInUserProfile(path))
         {
             int length = path.Length - UserProfilePath.Length;
-            if (path.EndsWith("/") || path.EndsWith("\\"))
+            if (path.EndsWith('/') || path.EndsWith('\\'))
             {
                 length--;
             }
@@ -529,7 +529,7 @@ public static partial class PathUtil
 
         return string.Empty;
 
-        string? FindFileInEnvVarFolder(string environmentVariable, string location, string fileName1)
+        static string? FindFileInEnvVarFolder(string environmentVariable, string location, string fileName1)
         {
             string envVarFolder = Environment.GetEnvironmentVariable(environmentVariable);
             if (string.IsNullOrEmpty(envVarFolder))

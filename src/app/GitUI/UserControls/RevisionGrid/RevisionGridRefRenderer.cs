@@ -10,7 +10,7 @@ namespace GitUI;
 
 internal static class RevisionGridRefRenderer
 {
-    private static readonly float[] _dashPattern = { 4, 4 };
+    private static readonly float[] _dashPattern = [4, 4];
     private static readonly PointF[] _arrowPoints = new PointF[4];
 
     public static void DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false)

@@ -28,6 +28,14 @@ public class Theme : IThemeSerializationData
     public ThemeId Id { get; }
 
     /// <summary>
+    /// Get the Windows SystemColorMode for this theme, based on the background color.
+    /// </summary>
+    public SystemColorMode SystemColorMode
+        => new HslColor(GetColor(AppColor.PanelBackground)).L < 0.5
+            ? SystemColorMode.Dark
+            : SystemColorMode.Classic;
+
+    /// <summary>
     /// Get GitExtensions app-specific color value as defined by this instance. If not defined,
     /// returns <see cref="Color.Empty"/>.
     /// </summary>
@@ -48,16 +56,13 @@ public class Theme : IThemeSerializationData
     /// GitExtension app-specific color identifiers.
     /// </summary>
     public static IReadOnlyCollection<AppColor> AppColorNames { get; } =
-        new HashSet<AppColor>(Enum.GetValues(typeof(AppColor)).Cast<AppColor>());
+        Enum.GetValues<AppColor>();
 
     /// <summary>
     /// .Net system color identifiers.
     /// </summary>
     private static IReadOnlyCollection<KnownColor> SysColorNames { get; } =
-        new HashSet<KnownColor>(
-            Enum.GetValues<KnownColor>()
-                .Cast<KnownColor>()
-                .Where(c => IsSystemColor(c)));
+        [.. Enum.GetValues<KnownColor>().Where(c => IsSystemColor(c))];
 
     /// <summary>
     /// Get .Net system color value as defined by this instance. If not defined, returns
@@ -92,7 +97,7 @@ public class Theme : IThemeSerializationData
     {
         Dictionary<AppColor, Color> appColors = AppColorNames.ToDictionary(name => name, name => AppColorDefaults.GetBy(name, variations));
         Dictionary<KnownColor, Color> sysColors = SysColorNames.ToDictionary(name => name, GetFixedColor);
-        return new Theme(appColors, sysColors, ThemeId.Default);
+        return new Theme(appColors, sysColors, ThemeId.DefaultLight);
     }
 
     /// <summary>

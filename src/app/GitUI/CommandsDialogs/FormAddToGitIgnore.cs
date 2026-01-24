@@ -55,7 +55,7 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
 
     private void AddToIgnoreClick(object sender, EventArgs e)
     {
-        string[] patterns = GetCurrentPatterns().ToArray();
+        string[] patterns = [.. GetCurrentPatterns()];
         if (patterns.Length == 0)
         {
             Close();

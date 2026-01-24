@@ -29,7 +29,7 @@ public class AppColorDefaultsTests
     [Test]
     public void Default_values_are_defined_in_AppColorDefaults()
     {
-        foreach (AppColor name in Enum.GetValues(typeof(AppColor)))
+        foreach (AppColor name in Enum.GetValues<AppColor>())
         {
             Color value = AppColorDefaults.GetBy(name);
             value.Should().NotBe(AppColorDefaults.FallbackColor);

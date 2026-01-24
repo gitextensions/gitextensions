@@ -113,7 +113,7 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
     {
         if (_threadException is not null)
         {
-            ex = new AggregateException(new Exception[] { _threadException.SourceException, ex });
+            ex = new AggregateException([_threadException.SourceException, ex]);
         }
 
         _threadException = ExceptionDispatchInfo.Capture(ex);

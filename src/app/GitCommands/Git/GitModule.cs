@@ -1,4 +1,4 @@
-using System.Collections.Frozen;
+﻿using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Security;
@@ -60,22 +60,22 @@ public sealed partial class GitModule : IGitModule
     //
     // Lines may also use \t as a column delimiter, such as output of "ls-remote --heads origin".
     [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
-    private static partial Regex RefRegex();
+    private static partial Regex RefRegex { get; }
 
     [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex HeaderRegex();
+    private static partial Regex HeaderRegex { get; }
 
     [GeneratedRegex(@"^(?<name>[^\t]+)\t(?<url>.+?) \((?<direction>fetch|push)\)(?:(?# ignore trailing options)\s*\[[^\]]*])?$", RegexOptions.ExplicitCapture)]
-    private static partial Regex RemoteVerboseLineRegex();
+    private static partial Regex RemoteVerboseLineRegex { get; }
 
     [GeneratedRegex(@"(\\(?<octal>[0-7]{3}))+", RegexOptions.ExplicitCapture)]
-    private static partial Regex EscapedOctalCodePointRegex();
+    private static partial Regex EscapedOctalCodePointRegex { get; }
 
     [GeneratedRegex(@"^(?<code>[\-+U ])(?<sha>[0-9a-f]{40}) (?<path>.+) \((?<branch>.+)\)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex ShaRegex();
+    private static partial Regex ShaRegex { get; }
 
     [GeneratedRegex(@"^\s*(?<count>\d+)\s+(?<name>.*)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex ShortlogRegex();
+    private static partial Regex ShortlogRegex { get; }
 
     /// <summary>
     /// Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
@@ -108,15 +108,15 @@ public sealed partial class GitModule : IGitModule
 
         // If this is a submodule, populate relevant properties.
         // If this is not a submodule, these will all be null.
-        (SuperprojectModule, SubmodulePath, SubmoduleName) = InitialiseSubmoduleProperties();
+        (SuperprojectModule, SubmodulePath) = InitialiseSubmoduleProperties();
 
         return;
 
-        (GitModule? superprojectModule, string? submodulePath, string? submoduleName) InitialiseSubmoduleProperties()
+        (GitModule? superprojectModule, string? submodulePath) InitialiseSubmoduleProperties()
         {
             if (!IsValidGitWorkingDir())
             {
-                return (null, null, null);
+                return (null, null);
             }
 
             string currentPath = WorkingDir.RemoveTrailingPathSeparator();
@@ -139,7 +139,7 @@ public sealed partial class GitModule : IGitModule
                     // If we cannot read the .git file, assume it's not a submodule
                     // See also special handling of WSL .git symbolic links in PathUtil.IsWslLink()
                     // Symbolic links to submodule .git is not expected and not supported.
-                    return (null, null, null);
+                    return (null, null);
                 }
 
                 foreach (string line in lines)
@@ -163,26 +163,25 @@ public sealed partial class GitModule : IGitModule
                 }
             }
 
-            if (!string.IsNullOrEmpty(superprojectPath) && currentPath.ToPosixPath().StartsWith(superprojectPath.ToPosixPath()))
+            if (string.IsNullOrEmpty(superprojectPath) || !currentPath.ToPosixPath().StartsWith(superprojectPath.ToPosixPath()))
             {
-                string submodulePath = currentPath[superprojectPath.Length..].ToPosixPath();
-                ConfigFile configFile = new(Path.Combine(superprojectPath, ".gitmodules"));
-
-                foreach (IConfigSection configSection in configFile.ConfigSections)
-                {
-                    if (configSection.GetValue("path") == submodulePath.ToPosixPath())
-                    {
-                        string submoduleName = configSection.SubSection;
-                        GitModule superprojectModule = new(superprojectPath);
-
-                        return (superprojectModule, submodulePath, submoduleName);
-                    }
-                }
-
-                return (null, submodulePath, null);
+                return (null, null);
             }
 
-            return (null, null, null);
+            string submodulePath = currentPath[superprojectPath.Length..].ToPosixPath();
+            ConfigFile configFile = new(Path.Combine(superprojectPath, ".gitmodules"));
+
+            foreach (IConfigSection configSection in configFile.ConfigSections)
+            {
+                if (configSection.GetValue("path") == submodulePath.ToPosixPath())
+                {
+                    GitModule superprojectModule = new(superprojectPath);
+
+                    return (superprojectModule, submodulePath);
+                }
+            }
+
+            return (null, submodulePath);
 
             static bool HasGitModulesFile(string path)
                 => File.Exists(Path.Combine(path, ".gitmodules")) && IsValidGitWorkingDir(path);
@@ -213,12 +212,6 @@ public sealed partial class GitModule : IGitModule
 
     /// <inherit/>
     public string GetWindowsPath(string path) => PathUtil.GetWindowsPath(path, _wslDistro);
-
-    /// <summary>
-    /// If this module is a submodule, returns its name, otherwise <c>null</c>.
-    /// </summary>
-    // TODO: remove?
-    private string? SubmoduleName { get; }
 
     public string? SubmodulePath { get; }
 
@@ -487,9 +480,7 @@ public sealed partial class GitModule : IGitModule
 
         void DoGetSubmodulesLocalPaths(IGitModule module, string parentPath, List<string> paths, bool recurse)
         {
-            List<string> submodulePaths = GetSubmodulePaths(module)
-                .Select(p => Path.Combine(parentPath, p).ToPosixPath())
-                .ToList();
+            List<string> submodulePaths = [.. GetSubmodulePaths(module).Select(p => Path.Combine(parentPath, p).ToPosixPath())];
 
             paths.AddRange(submodulePaths);
 
@@ -669,7 +660,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         using FileStream stream = File.Create(saveAs);
-        await stream.WriteAsync(blobData, 0, blobData.Length);
+        await stream.WriteAsync(blobData.AsMemory(0, blobData.Length), cancellationToken);
     }
 
     private static string GetSide(string side)
@@ -780,10 +771,10 @@ public sealed partial class GitModule : IGitModule
 
         foreach (string line in unmerged)
         {
-            int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
+            int findSecondWhitespace = line.IndexOfAny([' ', '\t']);
             string fileStage = findSecondWhitespace >= 0 ? line[findSecondWhitespace..].Trim() : "";
 
-            findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+            findSecondWhitespace = fileStage.IndexOfAny([' ', '\t']);
 
             string hash = findSecondWhitespace >= 0 ? fileStage[..findSecondWhitespace].Trim() : "";
             fileStage = findSecondWhitespace >= 0 ? fileStage[findSecondWhitespace..].Trim() : "";
@@ -1268,7 +1259,7 @@ public sealed partial class GitModule : IGitModule
             // - the submodule path
             // - the output of git describe for the SHA-1
 
-            Match match = ShaRegex().Match(s);
+            Match match = ShaRegex.Match(s);
 
             if (!match.Success)
             {
@@ -1391,7 +1382,7 @@ public sealed partial class GitModule : IGitModule
         // unstage first (to reset conflicts)
         if (resetId != ObjectId.IndexId)
         {
-            Lazy<List<GitItemStatus>> initialStatus = new(() => GetAllChangedFilesWithSubmodulesStatus().ToList());
+            Lazy<List<GitItemStatus>> initialStatus = new(() => [.. GetAllChangedFilesWithSubmodulesStatus()]);
             List<GitItemStatus> filesToUnstage = [];
             foreach (GitItemStatus item in selectedItems)
             {
@@ -1414,7 +1405,7 @@ public sealed partial class GitModule : IGitModule
         List<string> filesCannotCheckout = [];
         HashSet<GitItemStatus> deletedItems = [];
         output = new();
-        Lazy<List<GitItemStatus>> postUnstageStatus = new(() => GetAllChangedFilesWithSubmodulesStatus().ToList());
+        Lazy<List<GitItemStatus>> postUnstageStatus = new(() => [.. GetAllChangedFilesWithSubmodulesStatus()]);
 
         foreach (GitItemStatus item in selectedItems)
         {
@@ -1614,9 +1605,9 @@ public sealed partial class GitModule : IGitModule
 
         if (!string.IsNullOrEmpty(remoteBranch))
         {
-            if (remoteBranch.StartsWith("+"))
+            if (remoteBranch.StartsWith('+'))
             {
-                remoteBranch = remoteBranch.Remove(0, 1);
+                remoteBranch = remoteBranch[1..];
             }
 
             branchArguments = "+" + FormatBranchName(remoteBranch);
@@ -1774,8 +1765,8 @@ public sealed partial class GitModule : IGitModule
         }
 
         StringBuilder output = new();
-        List<GitItemStatus> nonDeletedFiles = files.Where(file => !file.IsDeleted).ToList();
-        List<GitItemStatus> deletedFiles = files.Where(file => file.IsDeleted).ToList();
+        List<GitItemStatus> nonDeletedFiles = [.. files.Where(file => !file.IsDeleted)];
+        List<GitItemStatus> deletedFiles = [.. files.Where(file => file.IsDeleted)];
 
         if (nonDeletedFiles.Count != 0)
         {
@@ -1848,8 +1839,8 @@ public sealed partial class GitModule : IGitModule
         }
 
         StringBuilder output = new();
-        List<GitItemStatus> nonNewFiles = files.Where(file => !file.IsDeleted).ToList();
-        List<GitItemStatus> newFiles = files.Where(file => file.IsDeleted).ToList();
+        List<GitItemStatus> nonNewFiles = [.. files.Where(file => !file.IsDeleted)];
+        List<GitItemStatus> newFiles = [.. files.Where(file => file.IsDeleted)];
 
         if (nonNewFiles.Count != 0)
         {
@@ -2067,7 +2058,7 @@ public sealed partial class GitModule : IGitModule
         ////TODO: Handle non-empty result.StandardError if not result.ExitedSuccessfully
         return result.ExitedSuccessfully
             ? ParseRemotes(result)
-            : Array.Empty<Remote>();
+            : [];
 
         IReadOnlyList<Remote> ParseRemotes(ExecutionResult result)
         {
@@ -2080,7 +2071,7 @@ public sealed partial class GitModule : IGitModule
             while (enumerator.MoveNext())
             {
                 string remoteLine = enumerator.Current;
-                Match remoteMatch = RemoteVerboseLineRegex().Match(remoteLine);
+                Match remoteMatch = RemoteVerboseLineRegex.Match(remoteLine);
                 if (!remoteMatch.Success
                     || (remoteMatch.Groups["direction"].Value != "fetch"
                        && remoteMatch.Groups["direction"].Value != "push"))
@@ -2113,7 +2104,7 @@ public sealed partial class GitModule : IGitModule
                 }
 
                 string pushLine = enumerator.Current;
-                Match pushMatch = RemoteVerboseLineRegex().Match(pushLine);
+                Match pushMatch = RemoteVerboseLineRegex.Match(pushLine);
                 if (!pushMatch.Success || pushMatch.Groups["direction"].Value != "push")
                 {
                     throw new Exception("Unable to parse git remote push URL line: " + pushLine);
@@ -2547,8 +2538,8 @@ public sealed partial class GitModule : IGitModule
         {
             // For worktree the untracked must be added too
             // Note that this may add a second GitError, this is a separate Git command
-            GitItemStatus[] files = GetAllChangedFilesWithSubmodulesStatus(cancellationToken: cancellationToken).Where(x =>
-                ((x.Staged == StagedStatus.WorkTree && x.IsNew) || x.IsStatusOnly)).ToArray();
+            GitItemStatus[] files = [.. GetAllChangedFilesWithSubmodulesStatus(cancellationToken: cancellationToken).Where(x =>
+                ((x.Staged == StagedStatus.WorkTree && x.IsNew) || x.IsStatusOnly))];
             if (firstRevision == GitRevision.WorkTreeGuid)
             {
                 // The file is seen as "deleted" in 'to' revision
@@ -2570,7 +2561,7 @@ public sealed partial class GitModule : IGitModule
 
     public IReadOnlyList<GitItemStatus> GetStashDiffFiles(string stashName)
     {
-        List<GitItemStatus> resultCollection = GetDiffFilesWithUntracked(stashName + "^", stashName, StagedStatus.None, true).ToList();
+        List<GitItemStatus> resultCollection = [.. GetDiffFilesWithUntracked(stashName + "^", stashName, StagedStatus.None, true)];
 
         // add - optionally stashed - untracked files
         GitArgumentBuilder args = new("log")
@@ -2618,7 +2609,7 @@ public sealed partial class GitModule : IGitModule
         UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default, CancellationToken cancellationToken = default)
     {
         ExecutionResult exec = _gitExecutable.Execute(Commands.GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles), throwOnErrorExit: false, cancellationToken: cancellationToken);
-        List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
+        List<GitItemStatus> result = [.. _getAllChangedFilesOutputParser.Parse(exec.StandardOutput)];
         if (!exec.ExitedSuccessfully)
         {
             // No simple way to pass the error message, create fake file
@@ -2704,7 +2695,7 @@ public sealed partial class GitModule : IGitModule
         return status;
     }
 
-    private void GetSubmoduleCurrentStatus(IReadOnlyList<GitItemStatus> status)
+    public void GetSubmoduleCurrentStatus(IReadOnlyList<GitItemStatus> status)
     {
         foreach (GitItemStatus item in status)
         {
@@ -2754,9 +2745,7 @@ public sealed partial class GitModule : IGitModule
         // This command is a little more expensive because it will return both staged and unstaged files
         ArgumentString command = Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.No);
         exec = _gitExecutable.Execute(command, throwOnErrorExit: false);
-        List<GitItemStatus> res = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput)
-                                        .Where(item => (item.Staged == StagedStatus.Index || item.IsStatusOnly))
-                                        .ToList();
+        List<GitItemStatus> res = [.. _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).Where(item => (item.Staged == StagedStatus.Index || item.IsStatusOnly))];
         if (!exec.ExitedSuccessfully)
         {
             // No simple way to pass the error message, create fake file
@@ -2792,7 +2781,7 @@ public sealed partial class GitModule : IGitModule
     {
         ArgumentString args = Commands.GetAllChangedFiles(true, untrackedFilesMode, ignoreSubmodulesMode);
         ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
-        List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
+        List<GitItemStatus> result = [.. _getAllChangedFilesOutputParser.Parse(exec.StandardOutput)];
         if (!exec.ExitedSuccessfully)
         {
             // No simple way to pass the error message, create fake file
@@ -3002,7 +2991,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         errorOutput = output;
-        return Array.Empty<IGitRef>();
+        return [];
     }
 
     /// <summary>
@@ -3023,7 +3012,7 @@ public sealed partial class GitModule : IGitModule
         ExecutionResult result = _gitExecutable.Execute(cmd, throwOnErrorExit: false);
         return result.ExitedSuccessfully
             ? ParseRefs(result.StandardOutput)
-            : Array.Empty<IGitRef>();
+            : [];
     }
 
     public async Task<string[]> GetMergedBranchesAsync(bool includeRemote, bool fullRefname, string? commit, CancellationToken cancellationToken)
@@ -3061,7 +3050,7 @@ public sealed partial class GitModule : IGitModule
 
     public IReadOnlyList<IGitRef> ParseRefs(string refList)
     {
-        MatchCollection matches = RefRegex().Matches(refList);
+        MatchCollection matches = RefRegex.Matches(refList);
 
         List<IGitRef> gitRefs = [];
         Dictionary<string, GitRef> headByRemote = [];
@@ -3102,7 +3091,7 @@ public sealed partial class GitModule : IGitModule
     {
         if (!getLocal && !getRemote)
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         GitArgumentBuilder args = new("branch")
@@ -3116,7 +3105,7 @@ public sealed partial class GitModule : IGitModule
         if (!exec.ExitedSuccessfully)
         {
             // Error occurred, no matches (no error presented to the user)
-            return Array.Empty<string>();
+            return [];
         }
 
         string[] result = exec.StandardOutput.Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
@@ -3153,7 +3142,7 @@ public sealed partial class GitModule : IGitModule
         if (!exec.ExitedSuccessfully)
         {
             // Error occurred, no matches (no error presented to the user)
-            return Array.Empty<string>();
+            return [];
         }
 
         return exec.StandardOutput.Split(Delimiters.GitOutput, StringSplitOptions.RemoveEmptyEntries);
@@ -3191,9 +3180,7 @@ public sealed partial class GitModule : IGitModule
     /// <param name="ignorePatterns">Patterns to ignore (.gitignore syntax).</param>
     public IReadOnlyList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
     {
-        List<string> notEmptyPatterns = ignorePatterns
-            .Where(pattern => !string.IsNullOrWhiteSpace(pattern))
-            .ToList();
+        List<string> notEmptyPatterns = [.. ignorePatterns.Where(pattern => !string.IsNullOrWhiteSpace(pattern))];
 
         if (notEmptyPatterns.Count != 0)
         {
@@ -3211,7 +3198,7 @@ public sealed partial class GitModule : IGitModule
         }
         else
         {
-            return Array.Empty<string>();
+            return [];
         }
     }
 
@@ -3242,9 +3229,7 @@ public sealed partial class GitModule : IGitModule
                 // ls-files with same format as ls-tree
                 "-z",
                 { commitId == ObjectId.IndexId, "--cached", "--no-cached" },
-
-                // TODO change to GitVersion.SupportLsFilesFormat when Extensibility.Git can be updated
-                { GitVersion.SupportNewGitConfigSyntax, @$"--format=""{_gitTreeParser.GitTreeFormat}""", "--stage" },
+                { GitVersion.SupportLsFilesFormat, @$"--format=""{_gitTreeParser.GitTreeFormat}""", "--stage" },
                 "--",
                 fileName.QuoteNE()
             }
@@ -3260,8 +3245,7 @@ public sealed partial class GitModule : IGitModule
 
         ExecutionResult result = _gitExecutable.Execute(args, cache: isArtificial ? null : GitCommandCache, cancellationToken: cancellationToken);
 
-        // TODO change to GitVersion.SupportLsFilesFormat when Extensibility.Git can be updated
-        if (isArtificial && !GitVersion.SupportNewGitConfigSyntax)
+        if (isArtificial && !GitVersion.SupportLsFilesFormat)
         {
             return _gitTreeParser.ParseLsFiles(result.StandardOutput);
         }
@@ -3302,7 +3286,7 @@ public sealed partial class GitModule : IGitModule
             // We should never get here...
             Debug.WriteLine("Error parsing output from command: {0}\n\nPlease report a bug!", args);
 
-            return new GitBlame(Array.Empty<GitBlameLine>());
+            return new GitBlame([]);
         }
     }
 
@@ -3392,7 +3376,7 @@ public sealed partial class GitModule : IGitModule
 
         foreach (string line in output.LazySplit('\n').Select(l => l.TrimEnd('\r')))
         {
-            Match match = HeaderRegex().Match(line);
+            Match match = HeaderRegex.Match(line);
 
             if (match.Success)
             {
@@ -3400,7 +3384,7 @@ public sealed partial class GitModule : IGitModule
                 finalLineNumber = int.Parse(match.Groups["finallinenum"].Value);
                 originLineNumber = int.Parse(match.Groups["origlinenum"].Value);
             }
-            else if (line.StartsWith("\t"))
+            else if (line.StartsWith('\t'))
             {
                 // The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
                 string text = ReEncodeStringFromLossless(line[1..], encoding);
@@ -3552,7 +3536,7 @@ public sealed partial class GitModule : IGitModule
 
     public ObjectId? GetFileBlobHash(string fileName, ObjectId objectId)
     {
-        IObjectGitItem[] items = GetTree(objectId, full: true, fileName).ToArray();
+        IObjectGitItem[] items = [.. GetTree(objectId, full: true, fileName)];
         return items.Length == 1 && items[0].ObjectType is GitObjectType.Blob
             ? items[0].ObjectId
             : null;
@@ -3684,12 +3668,6 @@ public sealed partial class GitModule : IGitModule
             : null;
     }
 
-    public SubmoduleStatus CheckSubmoduleStatus(ObjectId? commit, ObjectId? oldCommit, CommitData? data, CommitData? oldData, bool loadData)
-    {
-        // TODO remove from IGitModule
-        throw new NotImplementedException("CheckSubmoduleStatus is not implemented in GitModule. Use SubmoduleHelper instead.");
-    }
-
     public bool CheckBranchFormat(string branchName)
     {
         ArgumentNullException.ThrowIfNull(branchName);
@@ -3773,7 +3751,7 @@ public sealed partial class GitModule : IGitModule
     /// </example>
     /// <param name="s">The string to unescape.</param>
     /// <returns>The unescaped string, or <paramref name="s"/> if no escaped values were present, or <c>""</c> if <paramref name="s"/> is <c>null</c>.</returns>
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public static string? UnescapeOctalCodePoints(string? s)
     {
         if (s is null)
@@ -3781,17 +3759,16 @@ public sealed partial class GitModule : IGitModule
             return null;
         }
 
-        return EscapedOctalCodePointRegex().Replace(
+        return EscapedOctalCodePointRegex.Replace(
             s,
             match =>
             {
                 try
                 {
                     return SystemEncoding.GetString(
-                        match.Groups["octal"]
+                        [.. match.Groups["octal"]
                             .Captures.Cast<Capture>()
-                            .Select(c => Convert.ToByte(c.Value, 8))
-                            .ToArray());
+                            .Select(c => Convert.ToByte(c.Value, 8))]);
                 }
                 catch (OverflowException)
                 {
@@ -3802,14 +3779,14 @@ public sealed partial class GitModule : IGitModule
             });
     }
 
-    [return: NotNullIfNotNull("fileName")]
+    [return: NotNullIfNotNull(nameof(fileName))]
     public static string? ReEncodeFileNameFromLossless(string? fileName)
     {
         fileName = ReEncodeStringFromLossless(fileName, SystemEncoding);
         return UnescapeOctalCodePoints(fileName);
     }
 
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public static string? ReEncodeString(string? s, Encoding fromEncoding, Encoding toEncoding)
     {
         if (s is null || fromEncoding.WebName == toEncoding.WebName)
@@ -3824,7 +3801,7 @@ public sealed partial class GitModule : IGitModule
     /// <summary>
     /// Re-encodes string from Commands.LosslessEncoding to toEncoding.
     /// </summary>
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public static string? ReEncodeStringFromLossless(string? s, Encoding? toEncoding)
     {
         if (toEncoding is null)
@@ -3835,7 +3812,7 @@ public sealed partial class GitModule : IGitModule
         return ReEncodeString(s, LosslessEncoding, toEncoding);
     }
 
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public string? ReEncodeStringFromLossless(string? s)
     {
         return ReEncodeStringFromLossless(s, LogOutputEncoding);
@@ -3851,7 +3828,7 @@ public sealed partial class GitModule : IGitModule
     /// diff part is raw data in file's original encoding.
     /// s should be encoded in LosslessEncoding.
     /// </summary>
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public string? ReEncodeShowString(string? s)
     {
         if (string.IsNullOrEmpty(s))
@@ -3933,7 +3910,7 @@ public sealed partial class GitModule : IGitModule
 
         if (string.IsNullOrWhiteSpace(fileList))
         {
-            return Array.Empty<GitItemStatus>();
+            return [];
         }
 
         LazyStringSplit files = fileList.LazySplit('\0', StringSplitOptions.RemoveEmptyEntries);
@@ -3991,7 +3968,7 @@ public sealed partial class GitModule : IGitModule
             return true;
         }
 
-        List<Patch> patches = PatchProcessor.CreatePatchesFromString(result.StandardOutput, new Lazy<Encoding>(() => encoding)).ToList();
+        List<Patch> patches = [.. PatchProcessor.CreatePatchesFromString(result.StandardOutput, new Lazy<Encoding>(() => encoding))];
 
         Patch? patch = GetPatch(patches, filePath, filePath);
         if (patch is null)
@@ -4029,7 +4006,7 @@ public sealed partial class GitModule : IGitModule
             commitId
         };
 
-        ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
+        ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false, cancellationToken: cancellationToken);
         return exec.ExitedSuccessfully
             ? exec.StandardOutput.TrimEnd()
             : null;
@@ -4060,7 +4037,7 @@ public sealed partial class GitModule : IGitModule
 
         foreach (string line in lines)
         {
-            Match match = ShortlogRegex().Match(line);
+            Match match = ShortlogRegex.Match(line);
 
             if (!match.Success)
             {
@@ -4085,7 +4062,7 @@ public sealed partial class GitModule : IGitModule
 
         return (totalCommits, countByName);
 
-        string GetDateParameter(string param, DateTime? date)
+        static string GetDateParameter(string param, DateTime? date)
         {
             return date is not null
                 ? $"{param}=\"{date:yyyy-MM-dd hh:mm:ss}\""

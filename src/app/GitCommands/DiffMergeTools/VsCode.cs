@@ -22,10 +22,10 @@ internal class VsCode : DiffMergeTool
     private static string[] GetFolders()
     {
         string folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-        return new[]
-        {
+        return
+        [
             Path.Combine(folder, @"Programs\Microsoft VS Code"),
             @"Microsoft VS Code\",
-        };
+        ];
     }
 }

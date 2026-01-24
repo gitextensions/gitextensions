@@ -104,7 +104,7 @@ public partial class FormProcess : FormStatus
     {
         BeforeProcessStart();
         string quotedProcessString = ProcessString;
-        if (quotedProcessString.IndexOf(' ') != -1)
+        if (quotedProcessString.Contains(' '))
         {
             quotedProcessString = quotedProcessString.Quote();
         }

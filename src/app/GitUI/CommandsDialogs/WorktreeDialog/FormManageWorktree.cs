@@ -95,7 +95,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
                         currentWorktree.Type = HeadType.Branch;
                         currentWorktree.Branch = CleanBranchName(strings[1]);
 
-                        string? CleanBranchName(string? branch)
+                        static string? CleanBranchName(string? branch)
                             => branch != null && branch.StartsWith(GitRefName.RefsHeadsPrefix) ? branch[GitRefName.RefsHeadsPrefix.Length..] : branch;
 
                         break;

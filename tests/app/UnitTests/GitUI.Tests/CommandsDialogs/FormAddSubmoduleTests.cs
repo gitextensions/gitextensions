@@ -18,7 +18,7 @@ public class FormAddSubmoduleTests
                                + "456\t/refs/heads/b456\n"
                                + "789  /refs/heads/b789";
 
-    private readonly string[] _branches = { "master", "branch", "", "b123", "b456", "b789" };
+    private readonly string[] _branches = ["master", "branch", "", "b123", "b456", "b789"];
 
     // Created once for each test
     private MockExecutable _gitExecutable;

@@ -87,7 +87,7 @@ public partial class BranchComboBox : GitExtensionsControl
 
         formSelectMultipleBranches.ShowDialog(this);
         string branchesText = string.Empty;
-        foreach (GitRef branch in formSelectMultipleBranches.GetSelectedBranches())
+        foreach (GitRef branch in formSelectMultipleBranches.GetSelectedBranches().Cast<GitRef>())
         {
             if (!string.IsNullOrEmpty(branchesText))
             {

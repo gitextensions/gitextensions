@@ -108,7 +108,7 @@ public partial class FormRebase : GitExtensionsDialog
         // Offer rebase on refs also for tags (but not stash, notes etc)
         List<GitRef> refs = _startRebaseImmediately
             ? []
-            : Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.Tags).OfType<GitRef>().ToList();
+            : [.. Module.GetRefs(RefsFilter.Heads | RefsFilter.Remotes | RefsFilter.Tags).OfType<GitRef>()];
         cboBranches.DataSource = refs;
         cboBranches.DisplayMember = nameof(GitRef.Name);
 
@@ -119,7 +119,7 @@ public partial class FormRebase : GitExtensionsDialog
 
         cboBranches.Select();
 
-        refs = refs.Where(h => h.IsHead).ToList();
+        refs = [.. refs.Where(h => h.IsHead)];
         cboTo.DataSource = refs;
         cboTo.DisplayMember = nameof(GitRef.Name);
 

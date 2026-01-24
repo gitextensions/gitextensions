@@ -50,7 +50,7 @@ partial class RepoObjectsTree : IMenuItemFactory
      * depending on whether node is expanded or collapsed and has child nodes at all */
     private void EnableExpandCollapseContextMenu(NodeBase[] selectedNodes)
     {
-        NodeBase[] multiSelectedParents = selectedNodes.HavingChildren().ToArray();
+        NodeBase[] multiSelectedParents = [.. selectedNodes.HavingChildren()];
         mnubtnExpand.Visible = mnubtnCollapse.Visible = multiSelectedParents.Length > 0;
         mnubtnExpand.Enabled = multiSelectedParents.Expandable().Any();
         mnubtnCollapse.Enabled = multiSelectedParents.Collapsible().Any();
@@ -163,8 +163,8 @@ partial class RepoObjectsTree : IMenuItemFactory
         RegisterClick<RemoteRepoNode>(mnubtnDisableRemote, remote => remote.Disable());
 
         // SubmoduleNode
-        RegisterClick<SubmoduleNode>(mnubtnOpenSubmodule, node => _submoduleTree.OpenSubmodule(this, node));
-        RegisterClick<SubmoduleNode>(mnubtnOpenGESubmodule, node => _submoduleTree.OpenSubmoduleInGitExtensions(this, node));
+        RegisterClick<SubmoduleNode>(mnubtnOpenSubmodule, node => _submoduleTree.OpenSubmodule(node));
+        RegisterClick<SubmoduleNode>(mnubtnOpenGESubmodule, node => _submoduleTree.OpenSubmoduleInGitExtensions(node));
         RegisterClick<SubmoduleNode>(mnubtnManageSubmodules, _ => _submoduleTree.ManageSubmodules(this));
         RegisterClick<SubmoduleNode>(mnubtnSynchronizeSubmodules, _ => _submoduleTree.SynchronizeSubmodules(this));
         RegisterClick<SubmoduleNode>(mnubtnUpdateSubmodule, node => _submoduleTree.UpdateSubmodule(this, node));
@@ -213,7 +213,7 @@ partial class RepoObjectsTree : IMenuItemFactory
             return;
         }
 
-        NodeBase[] selectedNodes = GetSelectedNodes().ToArray();
+        NodeBase[] selectedNodes = [.. GetSelectedNodes()];
         bool hasSingleSelection = selectedNodes.Length == 1;
         NodeBase? selectedNode = treeMain.SelectedNode?.Tag as NodeBase;
 
@@ -286,10 +286,12 @@ partial class RepoObjectsTree : IMenuItemFactory
         where TMenuItem : ToolStripItem, new()
         where TNode : class, INode
     {
-        TMenuItem result = new();
-        result.Image = icon;
-        result.Text = text.Text;
-        result.ToolTipText = toolTip.Text;
+        TMenuItem result = new()
+        {
+            Image = icon,
+            Text = text.Text,
+            ToolTipText = toolTip.Text
+        };
         RegisterClick(result, onClick);
         return result;
     }

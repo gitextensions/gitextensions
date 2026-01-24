@@ -1,5 +1,5 @@
 ﻿# Example:
-#    .\Prepare-Release.ps1 -oldVersion 2.51.01 -newVersion 2.51.02 -milestones 36,37
+#    .\Prepare-Release.ps1 -milestones 36,37
 #
 
 [CmdletBinding()]
@@ -19,7 +19,7 @@ function Generate-Changelog {
 
     $baseUri = "https://api.github.com/repos/gitextensions/gitextensions"
 
-    $changelogFile = "Changelog.md";
+    $changelogFile = "$repoRoot/src/app/GitUI/Resources/ChangeLog.md";
     $totalIssues = @();
 
     $milestones | ForEach-Object {
@@ -56,7 +56,10 @@ function Generate-Changelog {
         $issueLinks += "[#$($issue.number)]:$($issue.html_url)"
     }
 
-    "### Version $milestoneTitle ($milestoneDue)" | Out-File $changelogFile -Encoding utf8
+    $oldChangelog = Get-Content -Encoding utf8 $changelogFile
+    $oldChangelog | Select-Object -First 3 | Out-File $changelogFile -Encoding utf8
+
+    "### Version $milestoneTitle ($milestoneDue)" | Out-File $changelogFile -Append -Encoding utf8
     "`r`n#### Changes:" | Out-File $changelogFile -Append -Encoding utf8
     $issues | ForEach-Object {
         $issue = $_;
@@ -64,6 +67,9 @@ function Generate-Changelog {
     }
     "`r`n" | Out-File $changelogFile -Append -Encoding utf8
     $issueLinks | Out-File $changelogFile -Append -Encoding utf8
+    "`r`n" | Out-File $changelogFile -Append -Encoding utf8
+
+    $oldChangelog | Select-Object -Skip 3 | Out-File $changelogFile -Append -Encoding utf8
 }
 
 function Update-Contributors {

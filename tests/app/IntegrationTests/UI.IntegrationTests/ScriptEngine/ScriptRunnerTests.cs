@@ -209,13 +209,12 @@ public class ScriptRunnerTests
         try
         {
             bool result = (bool)_miRunScript.Invoke(null,
-                new object[]
-                {
+                [
                     script,
                     owner,
                     uiCommands,
                     scriptOptionsProvider
-                });
+                ]);
             return result;
         }
         catch (TargetInvocationException ex)

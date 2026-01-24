@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Concurrency;
@@ -521,11 +521,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return;
         }
 
-        if (_lastVisibleResizableColumn is not null)
-        {
-            // restore its resizable state
-            _lastVisibleResizableColumn.Resizable = DataGridViewTriState.True;
-        }
+        // restore its resizable state
+        _lastVisibleResizableColumn?.Resizable = DataGridViewTriState.True;
 
         _gridView.ApplySettings(); // columns could change their Resizable state, e.g. the BuildStatusColumnProvider
 
@@ -538,10 +535,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         //// _lastVisibleResizableColumn = _gridView.Columns.GetLastColumn(DataGridViewElementStates.Visible | DataGridViewElementStates.Resizable, DataGridViewElementStates.None);
         _lastVisibleResizableColumn = _gridView.Columns.Cast<DataGridViewColumn>()
             .OrderBy(column => column.Index).Last(column => column.Visible && column.Resizable == DataGridViewTriState.True);
-        if (_lastVisibleResizableColumn is not null)
-        {
-            _lastVisibleResizableColumn.Resizable = DataGridViewTriState.False;
-        }
+        _lastVisibleResizableColumn?.Resizable = DataGridViewTriState.False;
     }
 
     protected override void OnCreateControl()
@@ -920,7 +914,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         // Get the "main" stash commit, including the reflog selector
         Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
             !AppSettings.ShowStashes || Module.IsBareRepository()
-            ? Array.Empty<GitRevision>()
+            ? []
             : new RevisionReader(capturedModule).GetStashes(cancellationToken));
 
         try
@@ -1055,25 +1049,33 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                         stashesByParentId = getStashRevs.Value.ToLookup(r => r.FirstParentId);
 
                         // "untracked" commits to insert (parent to "stash" commits)
-                        Dictionary<ObjectId, ObjectId> untrackedChildIds = getStashRevs.Value.Where(stash => stash.ParentIds.Count >= 3)
+                        Dictionary<ObjectId, ObjectId> untrackedIdByStashId = getStashRevs.Value
+                            .Where(stash => stash.ParentIds.Count >= 3)
                             .Take(AppSettings.MaxStashesWithUntrackedFiles)
-                            .ToDictionary(stash => stash.ParentIds[2], stash => stash.ObjectId);
-                        IReadOnlyCollection<GitRevision> untrackedRevs = new RevisionReader(capturedModule)
-                            .GetRevisionsFromList(untrackedChildIds.Keys.ToList(), cancellationToken);
-                        untrackedByStashId = untrackedRevs.ToDictionary(r => untrackedChildIds[r.ObjectId]);
+                            .ToDictionary(stash => stash.ObjectId, stash => stash.ParentIds[2]);
+                        List<ObjectId> untrackedIds = [.. untrackedIdByStashId.Values.Distinct()];
+                        Dictionary<ObjectId, GitRevision> untrackedRevs = new RevisionReader(capturedModule)
+                            .GetRevisionsFromList(untrackedIds, cancellationToken)
+                            .ToDictionary(r => r.ObjectId);
+                        untrackedByStashId = untrackedIdByStashId
+                            .Select(e => (e.Key, untrackedRevs.TryGetValue(e.Value, out GitRevision rev) ? rev : null))
+                            .Where(e => e.Item2 is not null)
+                            .ToDictionary();
 
                         // Remove parents not included ("index" and empty "untracked" commits).
                         foreach (GitRevision stash in getStashRevs.Value)
                         {
-                            if (!untrackedByStashId.ContainsKey(stash.ObjectId))
-                            {
-                                stash.ParentIds = [stash.FirstParentId];
-                            }
-                            else
-                            {
-                                stash.ParentIds = [stash.FirstParentId, stash.ParentIds[2]];
-                            }
+                            stash.ParentIds = untrackedByStashId.ContainsKey(stash.ObjectId)
+                                ? [stash.FirstParentId, stash.ParentIds[2]]
+                                : [stash.FirstParentId];
                         }
+                    }
+                    catch
+                    {
+                        stashesById = null;
+                        stashesByParentId = null;
+                        untrackedByStashId = null;
+                        throw;
                     }
                     finally
                     {
@@ -1132,10 +1134,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                      && selectedRemote == gitRef.Remote
                      && selectedMerge == gitRef.LocalName);
 
-            if (selectedHeadMergeSource is not null)
-            {
-                selectedHeadMergeSource.IsSelectedHeadMergeSource = true;
-            }
+            selectedHeadMergeSource?.IsSelectedHeadMergeSource = true;
         }
 
         string BuildPathFilter(string? path)
@@ -1172,7 +1171,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             if (!AppSettings.FollowRenamesInFileHistory
 
                 // The command line can be very long for folders, just ignore.
-                || path.EndsWith("/")
+                || path.EndsWith('/')
                 || path.EndsWith("/\"")
 
                 // --follow only accepts exactly one argument, error for all other
@@ -1533,7 +1532,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return currentlySelectedObjectIds?.Count is > 0
                 ? currentlySelectedObjectIds
                 : currentCheckout is null
-                    ? Array.Empty<ObjectId>()
+                    ? []
                     : new ObjectId[] { currentCheckout };
         }
 
@@ -1595,7 +1594,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private IEnumerable<string> ParseFileNames(GitArgumentBuilder args, CancellationToken cancellationToken)
     {
-        ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false);
+        ExecutionResult result = Module.GitExecutable.Execute(args, outputEncoding: GitModule.LosslessEncoding, throwOnErrorExit: false, cancellationToken: cancellationToken);
 
         if (!result.ExitedSuccessfully)
         {
@@ -2534,7 +2533,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         SelectInLeftPanel(gitRef);
     }
 
-    internal void ToggleShowRelativeDate(EventArgs e)
+    internal void ToggleShowRelativeDate()
     {
         AppSettings.RelativeDate = !AppSettings.RelativeDate;
         MenuCommands.TriggerMenuChanged();
@@ -2813,7 +2812,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         GitRevision r = LatestSelectedRevision;
         if (r?.HasParent is true)
         {
-            _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.ParentIds.Last());
+            _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.ParentIds[^1]);
         }
     }
 
@@ -2871,7 +2870,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         // Artificial commits are replaced with HEAD
         // If only one revision is selected, compare to HEAD
         // => Fill with HEAD to if less than two normal revisions (it is OK to compare HEAD HEAD)
-        List<ObjectId> revisions = GetSelectedRevisions().Select(i => i.ObjectId).Where(i => !i.IsArtificial).ToList();
+        List<ObjectId> revisions = [.. GetSelectedRevisions().Select(i => i.ObjectId).Where(i => !i.IsArtificial)];
         bool hasArtificial = GetSelectedRevisions().Any(i => i.IsArtificial);
         ObjectId? headId = Module.RevParse("HEAD");
         if (headId is null || (revisions.Count == 0 && !hasArtificial))
@@ -3237,7 +3236,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             case Command.ResetRevisionFilter: ResetAllFiltersAndRefresh(); break;
             case Command.ResetRevisionPathFilter: SetAndApplyPathFilter(""); break;
             case Command.ToggleAuthorDateCommitDate: ToggleShowAuthorDate(); break;
-            case Command.ToggleShowRelativeDate: ToggleShowRelativeDate(EventArgs.Empty); break;
+            case Command.ToggleShowRelativeDate: ToggleShowRelativeDate(); break;
             case Command.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
             case Command.ToggleShowGitNotes: ToggleShowGitNotes(); break;
             case Command.ToggleHideMergeCommits: ToggleHideMergeCommits(); break;

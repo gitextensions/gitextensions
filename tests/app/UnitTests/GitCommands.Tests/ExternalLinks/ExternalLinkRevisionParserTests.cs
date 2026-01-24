@@ -36,10 +36,10 @@ public class ExternalLinkRevisionParserTests
     public void ParseGitHubIssueForUpstreamLink()
     {
         _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-        ExternalLink[] expectedLinks = new[]
-        {
+        ExternalLink[] expectedLinks =
+        [
             new ExternalLink("Issue 3657", "https://github.com/gitextensions/gitextensions/issues/3657")
-        };
+        ];
 
         IEnumerable<ExternalLink> actualLinks = _parser.Parse(_revision, _linkDef);
         actualLinks.Should().Equal(expectedLinks);
@@ -50,10 +50,10 @@ public class ExternalLinkRevisionParserTests
     {
         _linkDef.UseRemotesPattern = "origin|upstream";
         _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-        ExternalLink[] expectedLinks = new[]
-        {
+        ExternalLink[] expectedLinks =
+        [
             new ExternalLink("Issue 3657", "https://github.com/jbialobr/gitextensions/issues/3657")
-        };
+        ];
 
         IEnumerable<ExternalLink> actualLinks = _parser.Parse(_revision, _linkDef);
         actualLinks.Should().Equal(expectedLinks);
@@ -64,11 +64,11 @@ public class ExternalLinkRevisionParserTests
     {
         _linkDef.UseOnlyFirstRemote = false;
         _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-        ExternalLink[] expectedLinks = new[]
-        {
+        ExternalLink[] expectedLinks =
+        [
             new ExternalLink("Issue 3657", "https://github.com/gitextensions/gitextensions/issues/3657"),
             new ExternalLink("Issue 3657", "https://github.com/jbialobr/gitextensions/issues/3657")
-        };
+        ];
 
         IEnumerable<ExternalLink> actualLinks = _parser.Parse(_revision, _linkDef);
         actualLinks.Should().Equal(expectedLinks);
@@ -80,12 +80,12 @@ public class ExternalLinkRevisionParserTests
         _linkDef.UseRemotesPattern = string.Empty;
         _linkDef.UseOnlyFirstRemote = false;
         _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-        ExternalLink[] expectedLinks = new[]
-        {
+        ExternalLink[] expectedLinks =
+        [
             new ExternalLink("Issue 3657", "https://github.com/jbialobr/gitextensions/issues/3657"),
             new ExternalLink("Issue 3657", "https://github.com/gitextensions/gitextensions/issues/3657"),
             new ExternalLink("Issue 3657", "https://github.com/russkie/gitextensions/issues/3657")
-        };
+        ];
 
         IEnumerable<ExternalLink> actualLinks = _parser.Parse(_revision, _linkDef);
         actualLinks.Should().Equal(expectedLinks);
@@ -96,10 +96,10 @@ public class ExternalLinkRevisionParserTests
     {
         _linkDef = Parse(GetEmptyRemotePartXmlDef())[0];
         _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-        ExternalLink[] expectedLinks = new[]
-        {
+        ExternalLink[] expectedLinks =
+        [
             new ExternalLink("Issue 3657", "https://github.com/gitextensions/gitextensions/issues/3657")
-        };
+        ];
 
         IEnumerable<ExternalLink> actualLinks = _parser.Parse(_revision, _linkDef);
         actualLinks.Should().Equal(expectedLinks);

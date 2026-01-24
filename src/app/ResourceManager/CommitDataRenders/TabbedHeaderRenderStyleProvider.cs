@@ -8,8 +8,8 @@ public sealed class TabbedHeaderRenderStyleProvider : IHeaderRenderStyleProvider
 
     public TabbedHeaderRenderStyleProvider()
     {
-        string[] strings = new[]
-        {
+        string[] strings =
+        [
             TranslatedStrings.Author,
             TranslatedStrings.AuthorDate,
             TranslatedStrings.Committer,
@@ -17,7 +17,7 @@ public sealed class TabbedHeaderRenderStyleProvider : IHeaderRenderStyleProvider
             TranslatedStrings.CommitHash,
             TranslatedStrings.GetChildren(10), // assume text for plural case is longer
             TranslatedStrings.GetParents(10)
-        };
+        ];
 
         int tabStop = strings
             .Select(s => TextRenderer.MeasureText(s + "  ", AppSettings.Font).Width)

@@ -36,7 +36,7 @@ public sealed class GitCommandConfiguration : IGitCommandConfiguration
         {
             _configByCommand.AddOrUpdate(
                 command,
-                addValueFactory: _ => new[] { configItem },
+                addValueFactory: _ => [configItem],
                 updateValueFactory: (_, items) => items.AppendTo(configItem));
         }
     }
@@ -45,6 +45,6 @@ public sealed class GitCommandConfiguration : IGitCommandConfiguration
     {
         return _configByCommand.TryGetValue(command, out GitConfigItem[] items)
             ? items
-            : Array.Empty<GitConfigItem>();
+            : [];
     }
 }

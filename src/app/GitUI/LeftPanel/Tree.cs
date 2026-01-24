@@ -93,7 +93,7 @@ internal abstract class Tree : NodeBase, IDisposable
     // Invoke from child class to reload nodes for the current Tree. Clears Nodes, invokes
     // input async function that should populate Nodes, then fills the tree view with its contents,
     // making sure to disable/enable the control.
-    protected JoinableTask ReloadNodesDetached(Func<CancellationToken, Func<RefsFilter, IReadOnlyList<IGitRef>>, Task<Nodes>> loadNodesTask, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
+    protected JoinableTask ReloadNodesDetached(Func<Func<RefsFilter, IReadOnlyList<IGitRef>>, CancellationToken, Task<Nodes>> loadNodesTask, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
         TreeView treeView = TreeViewNode.TreeView;
 
@@ -109,7 +109,7 @@ internal abstract class Tree : NodeBase, IDisposable
                 LoadingCompleted = new();
 
                 // Module is invalid in Dashboard
-                Nodes newNodes = Module.IsValidGitWorkingDir() ? await loadNodesTask(cancellationToken, getRefs) : new(tree: null);
+                Nodes newNodes = Module.IsValidGitWorkingDir() ? await loadNodesTask(getRefs, cancellationToken) : new(tree: null);
 
                 await treeView.SwitchToMainThreadAsync(cancellationToken);
 
@@ -122,7 +122,7 @@ internal abstract class Tree : NodeBase, IDisposable
                 }
 
                 // remember multi-selected nodes
-                HashSet<int> multiSelected = GetSelectedNodes().Select(node => node.GetHashCode()).ToHashSet();
+                HashSet<int> multiSelected = [.. GetSelectedNodes().Select(node => node.GetHashCode())];
 
                 Nodes.Clear();
                 Nodes.AddNodes(newNodes);
@@ -174,7 +174,7 @@ internal abstract class Tree : NodeBase, IDisposable
 
             if (node is not null)
             {
-                TreeViewNode.TreeView.SelectedNode = !(node.Tag is BaseRevisionNode branchNode) || branchNode.Visible
+                TreeViewNode.TreeView.SelectedNode = node.Tag is not BaseRevisionNode branchNode || branchNode.Visible
                     ? node
                     : null;
             }

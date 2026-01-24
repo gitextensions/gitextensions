@@ -57,7 +57,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
     /// and the first page is to be displayed, very quick.
     /// The second time is when all revisions are loaded, that may require hundred ms to build.
     /// </remarks>
-    private ImmutableArray<RevisionGraphRevision> _orderedNodesCache = ImmutableArray<RevisionGraphRevision>.Empty;
+    private ImmutableArray<RevisionGraphRevision> _orderedNodesCache = [];
 
     /// <summary>
     /// Mark the <see cref="_orderedNodesCache"/> as dirty. This will trigger a rebuild of the cache.
@@ -90,7 +90,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
         _revisionByObjectId.Clear();
         Count = 0;
         _incompleteRevisionByObjectId.Clear();
-        _orderedNodesCache = ImmutableArray<RevisionGraphRevision>.Empty;
+        _orderedNodesCache = [];
         _orderedNodesCacheInvalid = true;
         _orderedRowCache.Clear();
         _orderedRowCacheInvalidFromScore = int.MaxValue;
@@ -458,7 +458,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
             if (nextIndex == 0)
             {
                 // This is the first row. Start with only the startsegments of this row
-                segments = new List<RevisionGraphSegment>(revisionStartSegments);
+                segments = [.. revisionStartSegments];
 
                 RevisionGraphSegment? prevSegment = null;
                 int revisionSegmentsCount = revisionStartSegments.Length;
@@ -596,7 +596,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 return int.MaxValue;
             }
 
-            return segments.OrderBy(s => s, (a, b) =>
+            return [.. segments.OrderBy(s => s, (a, b) =>
                 {
                     int rowA = GetRowIndex(a.Parent);
                     int rowB = GetRowIndex(b.Parent);
@@ -642,8 +642,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
 
                         return false;
                     }
-                })
-                .ToArray();
+                })];
         }
 
         static void StraightenLanes(int startIndex, int lastStraightenIndex, int lastLookAheadIndex, IReadOnlyList<RevisionGraphRow> localOrderedRowCache, int straightenGraphSegmentsLimit)
@@ -994,7 +993,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
                 _orderedNodesCacheInvalid = false;
                 _orderedNodesCache = [];
 
-                _orderedNodesCache = _revisionByObjectId.Values.OrderBy(n => n.Score).ToImmutableArray();
+                _orderedNodesCache = [.. _revisionByObjectId.Values.OrderBy(n => n.Score)];
 
                 return _orderedNodesCache;
             }

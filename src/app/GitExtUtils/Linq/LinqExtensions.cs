@@ -84,9 +84,7 @@ public static class LinqExtensions
 
     public static void Swap<T>(this IList<T> list, int index1, int index2)
     {
-        T temp = list[index1];
-        list[index1] = list[index2];
-        list[index2] = temp;
+        (list[index2], list[index1]) = (list[index1], list[index2]);
     }
 
     [Pure]
@@ -103,7 +101,7 @@ public static class LinqExtensions
             {
                 if (collection.Count == 0)
                 {
-                    return Array.Empty<T>();
+                    return [];
                 }
 
                 T[] items = new T[collection.Count];
@@ -115,7 +113,7 @@ public static class LinqExtensions
         using IEnumerator<T> e = source.GetEnumerator();
         if (!e.MoveNext())
         {
-            return Array.Empty<T>();
+            return [];
         }
 
         List<T> list = [];

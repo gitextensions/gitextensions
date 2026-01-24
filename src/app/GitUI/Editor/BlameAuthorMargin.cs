@@ -27,8 +27,8 @@ public class BlameAuthorMargin : AbstractMargin
 
     public void Initialize(IEnumerable<GitBlameEntry> blameLines)
     {
-        _blameLines = blameLines.ToList();
-        _avatars = _blameLines.Select(a => a.Avatar).ToList();
+        _blameLines = [.. blameLines];
+        _avatars = [.. _blameLines.Select(a => a.Avatar)];
 
         // Update the resolution otherwise the image is not drawn at the good size :(
         foreach (Image avatar in _avatars)

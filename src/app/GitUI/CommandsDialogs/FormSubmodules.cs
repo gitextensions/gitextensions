@@ -110,10 +110,7 @@ public partial class FormSubmodules : GitModuleForm
                         .Cast<DataGridViewRow>()
                         .FirstOrDefault(r => r.DataBoundItem as GitSubmoduleInfo == _oldSubmoduleInfo);
 
-                    if (row is not null)
-                    {
-                        row.Selected = true;
-                    }
+                    row?.Selected = true;
                 }
             }
         };

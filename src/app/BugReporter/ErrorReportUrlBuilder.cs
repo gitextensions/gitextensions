@@ -31,7 +31,7 @@ public sealed class ErrorReportUrlBuilder : IErrorReportUrlBuilder
 
         StringBuilder sb = new();
         sb.Append(environmentInfo);
-        sb.Append(GetExceptionDetails(exception, exceptionInfo, additionalInfo).ToString());
+        sb.Append(GetExceptionDetails(exception, exceptionInfo, additionalInfo));
 
         return sb.ToString();
     }

@@ -25,7 +25,7 @@ public static class ComparableExtensions
 
     public static double Modulo(this double v, int d)
     {
-        v = v % d;
+        v %= d;
         if (v < 0)
         {
             v += d;

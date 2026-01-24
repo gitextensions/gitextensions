@@ -119,15 +119,15 @@ public class FormBrowse_LeftPanelTests
 
                 ContextMenuStrip contextMenu = ta.ContextMenu;
 
-                ta.SelectNode<LocalBranchNode>(new[] { TranslatedStrings.Branches, branchName });
+                ta.SelectNode<LocalBranchNode>([TranslatedStrings.Branches, branchName]);
                 ta.OpenContextMenu();
                 testDriver(contextMenu);
 
-                ta.SelectNode<RemoteBranchNode>(new[] { TranslatedStrings.Remotes, RemoteName, branchName });
+                ta.SelectNode<RemoteBranchNode>([TranslatedStrings.Remotes, RemoteName, branchName]);
                 ta.OpenContextMenu();
                 testDriver(contextMenu);
 
-                ta.SelectNode<TagNode>(new[] { TranslatedStrings.Tags, "Branch1" });
+                ta.SelectNode<TagNode>([TranslatedStrings.Tags, "Branch1"]);
                 ta.OpenContextMenu();
                 testDriver(contextMenu);
             });

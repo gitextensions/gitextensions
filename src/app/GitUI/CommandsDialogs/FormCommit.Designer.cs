@@ -72,6 +72,7 @@ partial class FormCommit
         closeDialogAfterEachCommitToolStripMenuItem = new ToolStripMenuItem();
         closeDialogAfterAllFilesCommittedToolStripMenuItem = new ToolStripMenuItem();
         refreshDialogOnFormFocusToolStripMenuItem = new ToolStripMenuItem();
+        tsmiSelectStagedOnEnterMessage = new ToolStripMenuItem();
         toolStripSeparator2 = new ToolStripSeparator();
         signOffToolStripMenuItem = new ToolStripMenuItem();
         toolAuthorLabelItem = new ToolStripMenuItem();
@@ -680,6 +681,7 @@ partial class FormCommit
         closeDialogAfterEachCommitToolStripMenuItem,
         closeDialogAfterAllFilesCommittedToolStripMenuItem,
         refreshDialogOnFormFocusToolStripMenuItem,
+        tsmiSelectStagedOnEnterMessage,
         toolStripSeparator2,
         signOffToolStripMenuItem,
         toolAuthorLabelItem,
@@ -714,6 +716,13 @@ partial class FormCommit
         refreshDialogOnFormFocusToolStripMenuItem.Size = new Size(314, 22);
         refreshDialogOnFormFocusToolStripMenuItem.Text = "Refresh dialog on form focus";
         refreshDialogOnFormFocusToolStripMenuItem.Click += refreshDialogOnFormFocusToolStripMenuItem_Click;
+        // 
+        // tsmiSelectStagedOnEnterMessage
+        // 
+        tsmiSelectStagedOnEnterMessage.Name = "tsmiSelectStagedOnEnterMessage";
+        tsmiSelectStagedOnEnterMessage.Size = new Size(314, 22);
+        tsmiSelectStagedOnEnterMessage.Text = "Select staged on entering message editor";
+        tsmiSelectStagedOnEnterMessage.Click += tsmiSelectStagedOnEnterMessage_Click;
         // 
         // toolStripSeparator2
         // 
@@ -976,6 +985,7 @@ partial class FormCommit
     private ToolStripMenuItem closeDialogAfterEachCommitToolStripMenuItem;
     private ToolStripMenuItem closeDialogAfterAllFilesCommittedToolStripMenuItem;
     private ToolStripMenuItem refreshDialogOnFormFocusToolStripMenuItem;
+    private ToolStripMenuItem tsmiSelectStagedOnEnterMessage;
     private GitUI.UserControls.RevisionGrid.LoadingControl Loading;
     private FileStatusList Unstaged;
     private ToolStripProgressBar toolStripProgressBar1;

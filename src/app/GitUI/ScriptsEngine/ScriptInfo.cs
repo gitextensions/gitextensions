@@ -8,7 +8,7 @@ public partial class ScriptInfo
 {
     // Match a single '&' (lookahead to not be followed by a second '&')
     [GeneratedRegex("&(?!&)")]
-    private static partial Regex MnemonicAmpersandRegex();
+    private static partial Regex MnemonicAmpersandRegex { get; }
 
     private Bitmap? _icon;
 
@@ -61,7 +61,7 @@ public partial class ScriptInfo
     /// <summary>
     ///  Returns the name with mnemonic ampersands removed.
     /// </summary>
-    public string GetDisplayName() => MnemonicAmpersandRegex().Replace(Name, "");
+    public string GetDisplayName() => MnemonicAmpersandRegex.Replace(Name, "");
 
     /// <summary>
     /// Gets the associated bitmap.

@@ -61,21 +61,19 @@ public partial class FormResetAnotherBranch : GitModuleForm
         string currentBranch = Module.GetSelectedBranch();
         bool isDetachedHead = currentBranch == DetachedHeadParser.DetachedBranch;
 
-        List<IGitRef> selectedRevisionRemotes = _revision.Refs.Where(r => r.IsRemote).ToList();
+        List<IGitRef> selectedRevisionRemotes = [.. _revision.Refs.Where(r => r.IsRemote)];
 
-        _localGitRefs = Module.GetRefs(RefsFilter.Heads)
+        _localGitRefs = [.. Module.GetRefs(RefsFilter.Heads)
             .Where(r => r.IsHead)
             .Where(r => isDetachedHead || r.LocalName != currentBranch)
             .Where(r => _revision.ObjectId != r.ObjectId) // Don't display local branches already at this revision
             .OrderByDescending(r => selectedRevisionRemotes.Any(r.IsTrackingRemote)) // Put local branches that track these remotes first
-            .ThenByDescending(r => selectedRevisionRemotes.Any(r2 => r2.LocalName == r.LocalName)) // Put local branches with same name as remotes first
-            .ToArray();
+            .ThenByDescending(r => selectedRevisionRemotes.Any(r2 => r2.LocalName == r.LocalName))];
 
         if (selectedRevisionRemotes.Count == 1)
         {
             IGitRef availableRemote = selectedRevisionRemotes[0];
-            IGitRef[] defaultCandidateRefs = _localGitRefs
-                .Where(r => r.IsTrackingRemote(availableRemote) || r.LocalName == availableRemote.LocalName).ToArray();
+            IGitRef[] defaultCandidateRefs = [.. _localGitRefs.Where(r => r.IsTrackingRemote(availableRemote) || r.LocalName == availableRemote.LocalName)];
             if (defaultCandidateRefs.Length == 1)
             {
                 Branches.Text = defaultCandidateRefs[0].Name;

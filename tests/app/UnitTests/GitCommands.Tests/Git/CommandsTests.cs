@@ -565,7 +565,7 @@ public partial class CommandsTests
             Commands.Remove(isRecursive: false).Arguments);
         ClassicAssert.AreEqual(
             "rm --force -r a b c",
-            Commands.Remove(files: new[] { "a", "b", "c" }).Arguments);
+            Commands.Remove(files: ["a", "b", "c"]).Arguments);
     }
 
     [Test]
@@ -642,7 +642,7 @@ public partial class CommandsTests
 
         ClassicAssert.AreEqual(
             "stash save",
-            Commands.StashSave(untracked: false, keepIndex: false, null, Array.Empty<string>()).Arguments);
+            Commands.StashSave(untracked: false, keepIndex: false, null, []).Arguments);
 
         ClassicAssert.AreEqual(
             "stash save",
@@ -704,7 +704,7 @@ public partial class CommandsTests
     {
         ClassicAssert.AreEqual(
            "stash save",
-           Commands.StashSave(untracked: false, keepIndex: false, theMessage, Array.Empty<string>()).Arguments);
+           Commands.StashSave(untracked: false, keepIndex: false, theMessage, []).Arguments);
     }
 
     [Test]
@@ -712,7 +712,7 @@ public partial class CommandsTests
     {
         ClassicAssert.AreEqual(
            "stash save \"test message\"",
-           Commands.StashSave(untracked: false, keepIndex: false, "test message", Array.Empty<string>()).Arguments);
+           Commands.StashSave(untracked: false, keepIndex: false, "test message", []).Arguments);
     }
 
     [Test]

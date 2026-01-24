@@ -309,18 +309,20 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
             _hasInvalidRepos = false;
 
-            ListViewGroup[] groups = new[] { _lvgRecentRepositories }
-                .Concat(recentRepositories.Concat(favouriteRepositories)
-                    .Select(repo => repo.Repo.Category)
-                    .Where(c => !string.IsNullOrWhiteSpace(c))
-                    .Distinct(GroupHeaderComparer)
-                    .OrderBy(c => c)
-                    .Select(c => new ListViewGroup(c, c)
-                    {
-                        CollapsedState = ListViewGroupCollapsedState.Expanded,
-                        TaskLink = _groupActions.Text
-                    }))
-                .ToArray();
+            ListViewGroup[] groups =
+            [
+                _lvgRecentRepositories,
+                .. recentRepositories.Concat(favouriteRepositories)
+                        .Select(repo => repo.Repo.Category)
+                        .Where(c => !string.IsNullOrWhiteSpace(c))
+                        .Distinct(GroupHeaderComparer)
+                        .OrderBy(c => c)
+                        .Select(c => new ListViewGroup(c, c)
+                        {
+                            CollapsedState = ListViewGroupCollapsedState.Expanded,
+                            TaskLink = _groupActions.Text
+                        }),
+            ];
 
             listView1.Groups.AddRange(groups);
             BindRepositories(recentRepositories, isFavourite: false);
@@ -398,12 +400,11 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private List<string> GetCategories()
     {
-        return GetRepositories()
+        return [.. GetRepositories()
             .Select(repository => repository.Category)
             .WhereNotNullOrWhiteSpace()
             .OrderBy(x => x)
-            .Distinct()
-            .ToList();
+            .Distinct()];
     }
 
     private IEnumerable<Repository> GetRepositories()
@@ -632,7 +633,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
             }
         }
 
-        RectangleF DrawText(Graphics g, string text, Font font, Brush brush, int maxTextWidth, PointF location, float spacing)
+        static RectangleF DrawText(Graphics g, string text, Font font, Brush brush, int maxTextWidth, PointF location, float spacing)
         {
             Size textBounds = TextRenderer.MeasureText(text, font);
             float minWidth = Math.Min(textBounds.Width + spacing, maxTextWidth);
@@ -665,10 +666,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
         else if (e.Button == MouseButtons.Right)
         {
             _rightClickedItem = listView1.GetItemAt(e.X, e.Y);
-            if (_rightClickedItem is not null)
-            {
-                _rightClickedItem.Selected = true;
-            }
+            _rightClickedItem?.Selected = true;
         }
     }
 
@@ -741,12 +739,12 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private void RecentRepositoriesList_Load(object sender, EventArgs e)
     {
-        if (!(Parent.FindForm() is FormBrowse form))
+        if (Parent.FindForm() is not FormBrowse form)
         {
             return;
         }
 
-        ToolStripItem[] menus = new ToolStripItem[] { mnuConfigure };
+        ToolStripItem[] menus = [mnuConfigure];
         MenuStrip menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "mainMenuStrip");
         Validates.NotNull(menuStrip);
         ToolStripMenuItem dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
@@ -767,12 +765,12 @@ public partial class UserRepositoriesList : GitExtensionsControl
         if (categories.Count > 0)
         {
             tsmiCategories.DropDownItems.Add(tsmiCategoryNone);
-            tsmiCategories.DropDownItems.AddRange(categories.Select(category =>
+            tsmiCategories.DropDownItems.AddRange([.. categories.Select(category =>
             {
                 ToolStripMenuItem item = new(category) { Tag = category };
                 item.Click += tsmiCategory_Click;
                 return item;
-            }).ToArray<ToolStripItem>());
+            })]);
             tsmiCategories.DropDownItems.Add(new ToolStripSeparator());
         }
 
@@ -874,7 +872,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private void tsmiCategoryClear_Click(object sender, EventArgs e)
     {
-        List<Repository> repositories = GetRepositories().ToList();
+        List<Repository> repositories = [.. GetRepositories()];
         string question = string.Format(_clearRecentCategoryQuestion.Text, repositories.Count);
         if (!PromptUserConfirm(question, _clearRecentCategoryCaption.Text))
         {

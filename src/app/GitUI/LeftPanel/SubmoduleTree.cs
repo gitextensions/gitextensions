@@ -65,13 +65,13 @@ internal sealed class SubmoduleTree : Tree
                 Dictionary<string, SubmoduleInfo> infos = e.Info.AllSubmodules.ToDictionary(info => info.Path, info => info);
                 Validates.NotNull(e.Info.TopProject);
                 infos[e.Info.TopProject.Path] = e.Info.TopProject;
-                List<SubmoduleNode> nodes = _currentNodes.DepthEnumerator<SubmoduleNode>().ToList();
+                List<SubmoduleNode> nodes = [.. _currentNodes.DepthEnumerator<SubmoduleNode>()];
 
                 foreach (SubmoduleNode node in nodes)
                 {
-                    if (infos.ContainsKey(node.Info.Path))
+                    if (infos.TryGetValue(node.Info.Path, out SubmoduleInfo? info))
                     {
-                        node.Info = infos[node.Info.Path];
+                        node.Info = info;
                         infos.Remove(node.Info.Path);
                     }
                     else
@@ -95,7 +95,7 @@ internal sealed class SubmoduleTree : Tree
             if (_currentNodes is null)
             {
                 // Module.GetRefs() is not used for submodules
-                JoinableTask joinableTask = ReloadNodesDetached((token, _) =>
+                JoinableTask joinableTask = ReloadNodesDetached((_, token) =>
                     {
                         cts = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
                         loadNodesTask = LoadNodesAsync(e.Info, cts.Token);
@@ -210,7 +210,7 @@ internal sealed class SubmoduleTree : Tree
     {
         // result.OurSubmodules/AllSubmodules contain a recursive list of submodules, but don't provide info about the super
         // project path. So we deduce these by substring matching paths against an ordered list of all paths.
-        List<string> modulePaths = result.AllSubmodules.Select(info => info.Path).ToList();
+        List<string> modulePaths = [.. result.AllSubmodules.Select(info => info.Path)];
 
         // Add current and parent module paths
         IGitModule parentModule = threadModule;
@@ -222,7 +222,7 @@ internal sealed class SubmoduleTree : Tree
         }
 
         // Sort descending so we find the nearest outer folder first
-        modulePaths = modulePaths.OrderByDescending(path => path).ToList();
+        modulePaths = [.. modulePaths.OrderByDescending(path => path)];
 
         foreach (SubmoduleInfo submoduleInfo in result.AllSubmodules)
         {
@@ -360,12 +360,12 @@ internal sealed class SubmoduleTree : Tree
         UICommands.StartUpdateSubmoduleDialog(owner, node.LocalPath, node.SuperPath);
     }
 
-    public void OpenSubmodule(IWin32Window owner, SubmoduleNode node)
+    public void OpenSubmodule(SubmoduleNode node)
     {
         node.Open();
     }
 
-    public void OpenSubmoduleInGitExtensions(IWin32Window owner, SubmoduleNode node)
+    public void OpenSubmoduleInGitExtensions(SubmoduleNode node)
     {
         node.LaunchGitExtensions();
     }

@@ -6,15 +6,15 @@ public static class EditorHelper
 {
     public static string[] GetEditors()
     {
-        return new[]
-        {
+        return
+        [
             AppSettings.FileEditorCommand,
             "vi",
             "notepad",
             GetNotepadPlusPlus(),
             GetSublimeText(),
             GetVsCode(),
-        };
+        ];
     }
 
     private static string GetNotepadPlusPlus()

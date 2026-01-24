@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -67,7 +67,7 @@ public partial class FileViewer : GitModuleControl
     private FileStatusItem? _viewItem;
 
     [GeneratedRegex(@"warning: .*has type .* expected .*", RegexOptions.ExplicitCapture)]
-    private static partial Regex FileModeWarningRegex();
+    private static partial Regex FileModeWarningRegex { get; }
 
     public FileViewer()
     {
@@ -198,6 +198,14 @@ public partial class FileViewer : GitModuleControl
             DefaultButton = TaskDialogButton.Yes,
             SizeToContent = true,
         };
+
+        PictureBox.PaintFailed += (_, ex) => this.InvokeAndForget(() =>
+        {
+            // No further service for users who handle invalid image files. We have no info other than the bad Image in OnPaint.
+            internalFileViewer.SetText($"{string.Format(_cannotViewImage.Text, "")}\n{ex.GetType().Name}: {ex.Message}", openWithDifftool: null);
+            internalFileViewer.Visible = true;
+            PictureBox.Visible = false;
+        });
     }
 
     // Public properties
@@ -431,7 +439,7 @@ public partial class FileViewer : GitModuleControl
         };
     }
 
-    public (ArgumentString Args, string ExtraCacheKey) GetDifftasticArguments(bool isRangeDiff = false)
+    public (ArgumentString Args, string ExtraCacheKey) GetDifftasticArguments()
     {
         EnvironmentAbstraction env = new();
         StringBuilder extraCacheKey = new();
@@ -508,6 +516,7 @@ public partial class FileViewer : GitModuleControl
         return internalFileViewer.GetLineFromVisualPosY(visualPosY);
     }
 
+    public int CurrentFileColumn => internalFileViewer.CurrentFileColumn;
     public int CurrentFileLine => internalFileViewer.CurrentFileLine();
 
     public void HighlightLines(int startLine, int endLine, Color color)
@@ -822,9 +831,7 @@ public partial class FileViewer : GitModuleControl
         {
             using FileStream stream = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
             using StreamReader reader = FileReader.OpenStream(stream, GitModule.LosslessEncoding);
-#pragma warning disable VSTHRD103 // Call async methods when in an async method
             string content = reader.ReadToEnd();
-#pragma warning restore VSTHRD103 // Call async methods when in an async method
             FilePreamble = reader.CurrentEncoding.GetPreamble();
             return content;
         }
@@ -908,7 +915,7 @@ public partial class FileViewer : GitModuleControl
 
         Font = AppSettings.FixedWidthFont;
 
-        string[] encodings = AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName).ToArray();
+        string[] encodings = [.. AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName)];
         encodingToolStripComboBox.Items.AddRange(encodings);
         encodingToolStripComboBox.ResizeDropDownWidth(minWidth: 50, maxWidth: 250);
     }
@@ -1611,7 +1618,7 @@ public partial class FileViewer : GitModuleControl
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        IObjectGitItem[] items = Module.GetTree(commitId, full: true, file.Name, cancellationToken).ToArray();
+        IObjectGitItem[] items = [.. Module.GetTree(commitId, full: true, file.Name, cancellationToken)];
         if (items.Length == 1)
         {
             IObjectGitItem gitItem = items[0];
@@ -1884,7 +1891,7 @@ public partial class FileViewer : GitModuleControl
         if (EnvUtils.RunningOnWindows())
         {
             // remove file mode warnings
-            output = output.RemoveLines(FileModeWarningRegex().IsMatch);
+            output = output.RemoveLines(FileModeWarningRegex.IsMatch);
         }
 
         if (!result.ExitedSuccessfully && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false)))
@@ -2143,7 +2150,7 @@ public partial class FileViewer : GitModuleControl
 
         return true;
 
-        bool PerformClickIfAvailable(ToolStripItem item)
+        static bool PerformClickIfAvailable(ToolStripItem item)
         {
             if (item.Enabled && item.Available)
             {
