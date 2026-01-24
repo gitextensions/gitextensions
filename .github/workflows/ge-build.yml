@@ -1,0 +1,156 @@
+name: GitExtensions Build (x64, arm64)
+
+on:
+  pull_request:
+    branches: [ master, release/* ]
+  push:
+    branches: [ master, release/* ]
+
+env:
+  # GE release version
+  ge-release-version: '6.0.5'
+  # Run tests for x64 build
+  run-x64-tests: false # TODO: turn on again when TC GetOriginalLineInPreviousCommit passes stably
+  # Run tests for arm64 build
+  run-arm64-tests: false # skip arm64 test by default, as ThemeModule relies on GetGitExtensionsFullPath (TODO: 'C:\Program Files\dotnet\Themes'), and as test doesn't complete, resulting in timeout...
+  # Disable the .NET logo in the console output.
+  DOTNET_NOLOGO: true
+  # Disable the .NET first time experience to skip caching NuGet packages and speed up the build.
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+jobs:
+  build:
+    name: Build and Test (${{ matrix.os }})
+
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ windows-latest, windows-11-arm ]
+
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+
+    steps:
+      - name: Append the current run number
+        run: echo "ge_version=${{ env.ge-release-version }}.${{ github.run_number }}" >> $env:GITHUB_ENV
+
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Checkout submodules
+        run: git submodule update --init --recursive
+
+      - name: Use Python 3.13
+        uses: actions/setup-python@v6
+        with:
+          python-version: '3.13'
+
+      - name: Set up .NET
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      - name: Install WiX
+        run: dotnet tool install --global wix
+
+      - name: Mark the repo as clean
+        run: .\eng\Mark-RepoClean.ps1      
+
+      - name: Set up common build arguments
+        run: |
+          echo "ContinuousIntegrationBuild=true" >> $env:GITHUB_ENV
+          echo "geVersionText=$env:ge_version" >> $env:GITHUB_ENV
+
+      - name: Set up extra build arguments for arm64
+        if: runner.arch == 'arm64'
+        run: |
+          $geVersionText = "${env:geVersionText}-arm64"
+          echo "geVersionText=$geVersionText" >> $env:GITHUB_ENV
+          echo "TargetPlatform=arm64" >> $env:GITHUB_ENV
+
+      - name: Set up GE version
+        run: |
+          cd eng
+          python set_version_to.py -v $env:ge_version -t $env:geVersionText
+          cd ..
+
+      - name: Build GE native components
+        run: |
+          dotnet build .\src\native\build.proj -c Release --verbosity q
+
+      - name: Build GE app
+        run: |
+          dotnet build -c Release --verbosity q
+          # We are done with the build, reset all pending changes
+          git reset --hard HEAD
+
+      - name: Verify localisation of new strings
+        run: |
+          # Verify that new strings (if any) have been processed and ready for localisation
+          Push-Location .\src\app\GitExtensions
+          dotnet msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /v:m
+          Pop-Location
+
+      - name: Test
+        id:   test
+        if: (runner.arch == 'arm64' && env.run-arm64-tests == 'true') || (runner.arch == 'x64' && env.run-x64-tests == 'true')
+        run: dotnet test -c Release --no-restore --no-build --verbosity m --test-adapter-path:. --logger:trx /bl:.\artifacts\log\tests.binlog
+
+      - name: Upload test logs if test failure
+        if: failure() && steps.test.conclusion == 'failure'
+        uses: actions/upload-artifact@v6
+        with:
+          name: FailedTestLogs-v${{ env.ge_version }}-${{ runner.arch }}
+          path: |
+            artifacts/log/tests.binlog
+            artifacts/Release/TestsResults/*.trx
+          retention-days: 31
+
+      - name: Package GE app for deployment
+        run: |
+          dotnet publish -c Release --no-build
+
+      - name: Display artifacts
+        run: ls -R artifacts/Release/publish/
+
+      - name: Upload GE distribution files
+        uses: actions/upload-artifact@v6
+        with:
+          name: GE-v${{ env.ge_version }}-${{ runner.arch }}-dist
+          path: |
+            artifacts/Release/publish/*.msi
+            artifacts/Release/publish/*.zip
+
+  trigger-signing:
+    name: Upload dist files to SignPath
+    runs-on: ubuntu-latest
+    needs: build
+    if: ${{ success() && vars.ARTIFACT_SIGNING_ENABLED == 'true' }}
+    steps:
+      - name: Download build artifacts
+        uses: actions/download-artifact@v7
+        with:
+          path: ./artifacts
+          merge-multiple: true
+
+      - name: Display artifacts
+        run: ls -R ./artifacts
+
+      - name: Upload unsigned artifacts
+        id:   upload-unsigned-artifacts
+        uses: actions/upload-artifact@v6
+        with:
+          name: GE-v${{ env.ge-release-version }}.${{ github.run_number }}-unsigned
+          path: ./artifacts/*
+          retention-days: 7
+
+      - name: Submit signing request to SignPath
+        uses: SignPath/github-action-submit-signing-request@v1
+        with:
+          connector-url: https://githubactions.connectors.signpath.io
+          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
+          organization-id: "7c19b2cf-90f7-4d15-9b12-1b615f7c18c4"
+          project-slug: "GitExtensions_combined"
+          signing-policy-slug: "release-2020"
+          github-artifact-id: ${{ steps.upload-unsigned-artifacts.outputs.artifact-id }}
+          wait-for-completion: false
