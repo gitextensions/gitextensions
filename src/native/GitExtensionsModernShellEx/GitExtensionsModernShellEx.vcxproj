@@ -36,39 +36,13 @@
     <UseOfMfc>false</UseOfMfc>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)'=='Debug'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
-    <ConfigurationType>DynamicLibrary</ConfigurationType>
-    <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
-    <CharacterSet>Unicode</CharacterSet>
-    <WholeProgramOptimization>true</WholeProgramOptimization>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="Configuration">
+  <PropertyGroup Condition="'$(Configuration)'=='Release'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
     <PlatformToolset>$(DefaultPlatformToolset)</PlatformToolset>
@@ -77,22 +51,7 @@
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings" />
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|ARM64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
-    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
-  </ImportGroup>
-  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|ARM64'" Label="PropertySheets">
+  <ImportGroup Label="PropertySheets">
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
@@ -110,18 +69,15 @@
       <PreprocessorDefinitions>_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions>/permissive- %(AdditionalOptions)</AdditionalOptions>
-      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MultiThreadedDebug</RuntimeLibrary>
-      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">MultiThreadedDebug</RuntimeLibrary>
-      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">MultiThreaded</RuntimeLibrary>
-      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebug</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)'=='Release'">MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <AdditionalDependencies>shlwapi.lib;runtimeobject.lib;ole32.lib;advapi32.lib;uuid.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ModuleDefinitionFile>GitExtensionsModernShellEx.def</ModuleDefinitionFile>
-      <LinkTimeCodeGeneration Condition="'$(Configuration)|$(Platform)'=='Release|x64'">UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
-      <LinkTimeCodeGeneration Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
+      <LinkTimeCodeGeneration Condition="'$(Configuration)'=='Release'">UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -143,10 +99,11 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Package.appxmanifest" />
+    <None Include="SignMsixWithDevCert.ps1" />
+    <None Include="Package.appxmanifest">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="GitExtensionsModernShellEx.def" />
-    <None Include="tools\RegisterModernShellEx.ps1" />
-    <None Include="tools\SignModernShellEx.ps1" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="GitExtensionsModernShellEx.rc" />
@@ -171,22 +128,23 @@
     <Image Include="Resources\ShellExtensions.ico" />
     <Image Include="Resources\stash.ico" />
   </ItemGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <LinkIncremental>
+    </LinkIncremental>
+  </PropertyGroup>
   <PropertyGroup>
-    <SdkVersionTrimmed>$([MSBuild]::EnsureTrailingSlash($(WindowsSDKVersion)))</SdkVersionTrimmed>
-    <MakeAppxExe Condition="'$(MakeAppxExe)'==''">$(WindowsSdkDir)bin\$(SdkVersionTrimmed)x64\makeappx.exe</MakeAppxExe>
-    <MakeAppxExe Condition="!Exists('$(MakeAppxExe)')">makeappx.exe</MakeAppxExe>
+    <SdkToolsPath>$(WindowsSdkDir)bin\$(TargetPlatformVersion)\$(Platform)</SdkToolsPath>
+    <MakeAppxExe Condition="'$(MakeAppxExe)'==''">$(SdkToolsPath)\makeappx.exe</MakeAppxExe>
+    <SignToolExe Condition="'$(SignToolExe)'==''">$(SdkToolsPath)\signtool.exe</SignToolExe>
+    <MsixDevSigningScript>$(MSBuildThisFileDirectory)\SignMsixWithDevCert.ps1</MsixDevSigningScript>
+    <DevPfxPath>$([MSBuild]::NormalizePath('$(APPDATA)','GitExtensions','GitExtensions','dev.pfx'))</DevPfxPath>
     <PublishRoot>$([MSBuild]::EnsureTrailingSlash($([MSBuild]::NormalizePath('$(SolutionDir)','..','..','..','artifacts','$(Configuration)','publish','GitExtensions'))))</PublishRoot>
     <ModernPackagePath>$(PublishRoot)GitExtensionsModernShellEx.msix</ModernPackagePath>
-    <ModernCertificatePath>$(PublishRoot)GitExtensionsModernShellEx_TemporaryKey.pfx</ModernCertificatePath>
     <ModernLayoutDir>$([MSBuild]::NormalizePath('$(IntDir)', 'MsixLayout'))</ModernLayoutDir>
     <Logo44Base64>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=</Logo44Base64>
     <Logo150Base64>iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR4nGNgYAAAAAMAASsJTYQAAAAASUVORK5CYII=</Logo150Base64>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <LinkIncremental>
-    </LinkIncremental>
-  </PropertyGroup>
-  <Target Name="CreateMsixPackage" AfterTargets="Build" Condition="'$(Platform)'=='x64'">
+  <Target Name="CreateMsixPackage" AfterTargets="Build">
     <MakeDir Directories="$(PublishRoot)" />
     <Copy SourceFiles="$(OutDir)GitExtensionsModernShellEx.dll" DestinationFolder="$(PublishRoot)" SkipUnchangedFiles="true" />
     <MakeDir Directories="$(ModernLayoutDir)" />
@@ -196,6 +154,10 @@
     <Exec Command="powershell -NoLogo -NoProfile -Command &quot;[IO.File]::WriteAllBytes('$(ModernLayoutDir)\\Images\\Square150x150Logo.png',[Convert]::FromBase64String('$(Logo150Base64)'))&quot;" />
     <Message Text="Packing MSIX to $(ModernPackagePath)" Importance="High" />
     <Exec Command="&quot;$(MakeAppxExe)&quot; pack /d &quot;$(ModernLayoutDir)&quot; /p &quot;$(ModernPackagePath)&quot; /nv /v /o" />
+  </Target>
+  <Target Name="SignMsixWithDevCert" AfterTargets="CreateMsixPackage" Condition="'$(ContinuousIntegrationBuild)'!='true'">
+    <Message Text="Dev-signing MSIX (no CI build detected)" Importance="High" />
+    <Exec Command="powershell -NoLogo -NoProfile -ExecutionPolicy Bypass -File &quot;$(MsixDevSigningScript)&quot; -MsixPath &quot;$(ModernPackagePath)&quot; -ManifestPath &quot;$(ModernLayoutDir)\AppxManifest.xml&quot; -PfxPath &quot;$(DevPfxPath)&quot; -SignToolPath &quot;$(SignToolExe)&quot;" />
   </Target>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

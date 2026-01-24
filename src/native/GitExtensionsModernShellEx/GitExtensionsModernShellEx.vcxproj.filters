@@ -64,10 +64,7 @@
     <None Include="GitExtensionsModernShellEx.def">
       <Filter>Resources</Filter>
     </None>
-    <None Include="tools\RegisterModernShellEx.ps1">
-      <Filter>Scripts</Filter>
-    </None>
-    <None Include="tools\SignModernShellEx.ps1">
+    <None Include="SignMsixWithDevCert.ps1">
       <Filter>Scripts</Filter>
     </None>
   </ItemGroup>

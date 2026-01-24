@@ -15,7 +15,7 @@
     Name="GitExtensions.ModernShellEx"
     Publisher="CN=SignPath Foundation, O=SignPath Foundation, L=Lewes, S=Delaware, C=US"
     Version="1.0.0.0"
-    ProcessorArchitecture="x64" />
+    ProcessorArchitecture="neutral" />
 
   <Properties>
     <DisplayName>Git Extensions Shell Extension</DisplayName>
