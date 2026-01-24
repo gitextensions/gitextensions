@@ -59,6 +59,7 @@ jobs:
       - name: Set up common build arguments
         run: |
           $buildArgs = '/p:ContinuousIntegrationBuild=true'
+          echo "ContinuousIntegrationBuild=true" >> $env:GITHUB_ENV
           echo "buildArgs=$buildArgs" >> $env:GITHUB_ENV
           echo "geVersionText=$env:ge_version" >> $env:GITHUB_ENV
 
