@@ -40,7 +40,7 @@ internal class GetRelatedRepoRequest : BitbucketRequestBase<List<Repository>>
     protected override List<Repository> ParseResponse(JObject json)
     {
         List<Repository> result = [];
-        foreach (JObject val in json["values"])
+        foreach (JObject val in json["values"].Cast<JObject>())
         {
             result.Add(Repository.Parse(val));
         }

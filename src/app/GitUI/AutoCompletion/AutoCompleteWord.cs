@@ -1,4 +1,4 @@
-namespace GitUI.AutoCompletion;
+﻿namespace GitUI.AutoCompletion;
 
 public class AutoCompleteWord : IEquatable<AutoCompleteWord?>
 {
@@ -18,7 +18,7 @@ public class AutoCompleteWord : IEquatable<AutoCompleteWord?>
 
     public bool Equals(AutoCompleteWord? other)
     {
-        if (ReferenceEquals(null, other))
+        if (other is null)
         {
             return false;
         }
@@ -33,7 +33,7 @@ public class AutoCompleteWord : IEquatable<AutoCompleteWord?>
 
     public override bool Equals(object obj)
     {
-        if (ReferenceEquals(null, obj))
+        if (obj is null)
         {
             return false;
         }

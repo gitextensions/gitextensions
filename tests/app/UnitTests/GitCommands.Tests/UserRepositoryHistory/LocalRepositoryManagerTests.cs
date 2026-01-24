@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitCommands.UserRepositoryHistory.Legacy;
@@ -383,7 +383,7 @@ public class LocalRepositoryManagerTests
 
         _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 
-        await _manager.RemoveInvalidRepositoriesAsync(repoPath => repoPath.StartsWith("p"));
+        await _manager.RemoveInvalidRepositoriesAsync(repoPath => repoPath.StartsWith('p'));
 
         _repositoryStorage.Received(1).Load(KeyRecentHistory);
         _repositoryStorage.Received(1).Save(KeyRecentHistory, Arg.Is<IEnumerable<Repository>>(h => h.Count() == 2));
@@ -405,7 +405,7 @@ public class LocalRepositoryManagerTests
         _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => history);
         _repositoryHistoryMigrator.MigrateAsync(Arg.Any<List<Repository>>()).Returns(x => (history, false));
 
-        await _manager.RemoveInvalidRepositoriesAsync(repoPath => repoPath.StartsWith("p"));
+        await _manager.RemoveInvalidRepositoriesAsync(repoPath => repoPath.StartsWith('p'));
 
         _repositoryStorage.Received(1).Load(KeyFavouriteHistory);
         _repositoryStorage.Received(1).Save(KeyFavouriteHistory, Arg.Is<IEnumerable<Repository>>(h => h.All(r => r.Path != repoToDelete)));

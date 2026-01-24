@@ -1,0 +1,72 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:uap10="http://schemas.microsoft.com/appx/manifest/uap/windows10/10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  xmlns:desktop="http://schemas.microsoft.com/appx/manifest/desktop/windows10"
+  xmlns:desktop3="http://schemas.microsoft.com/appx/manifest/desktop/windows10/3"
+  xmlns:desktop4="http://schemas.microsoft.com/appx/manifest/desktop/windows10/4"
+  xmlns:desktop5="http://schemas.microsoft.com/appx/manifest/desktop/windows10/5"
+  xmlns:com="http://schemas.microsoft.com/appx/manifest/com/windows10"
+  IgnorableNamespaces="uap uap10 rescap desktop desktop3 desktop4 desktop5 com">
+
+  <Identity
+    Name="GitExtensions.ModernShellEx"
+    Publisher="CN=SignPath Foundation, O=SignPath Foundation, L=Lewes, S=Delaware, C=US"
+    Version="1.0.0.0"
+    ProcessorArchitecture="neutral" />
+
+  <Properties>
+    <DisplayName>Git Extensions Shell Extension</DisplayName>
+    <PublisherDisplayName>Git Extensions</PublisherDisplayName>
+    <Logo>Images\Square44x44Logo.png</Logo>
+    <uap10:AllowExternalContent>true</uap10:AllowExternalContent>
+  </Properties>
+
+  <Resources>
+    <Resource Language="en-us" />
+  </Resources>
+
+  <Dependencies>
+    <TargetDeviceFamily Name="Windows.Desktop" MinVersion="10.0.19041.0" MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Capabilities>
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+
+  <Applications>
+    <Application Id="GitExtensions" Executable="GitExtensions.exe" EntryPoint="Windows.FullTrustApplication">
+      <uap:VisualElements DisplayName="Git Extensions" Description="Git Extensions" BackgroundColor="transparent" Square150x150Logo="Images\Square150x150Logo.png" Square44x44Logo="Images\Square44x44Logo.png" />
+      <Extensions>
+        <desktop4:Extension Category="windows.fileExplorerContextMenus">
+          <desktop4:FileExplorerContextMenus>
+            <desktop5:ItemType Type="*">
+              <desktop5:Verb Id="GitExtensionsModernContextMenu"
+                             Clsid="5D6339FB-0BB5-4EA5-AC5F-56C20C18D6B1" />
+            </desktop5:ItemType>
+            <desktop5:ItemType Type="Directory">
+              <desktop5:Verb Id="GitExtensionsModernContextMenu"
+                             Clsid="5D6339FB-0BB5-4EA5-AC5F-56C20C18D6B1" />
+            </desktop5:ItemType>
+            <desktop5:ItemType Type="Directory\Background">
+              <desktop5:Verb Id="GitExtensionsModernContextMenu"
+                             Clsid="5D6339FB-0BB5-4EA5-AC5F-56C20C18D6B1" />
+            </desktop5:ItemType>
+          </desktop4:FileExplorerContextMenus>
+        </desktop4:Extension>
+        <com:Extension Category="windows.comServer">
+    <com:ComServer>
+      <com:SurrogateServer AppId="5D6339FB-0BB5-4EA5-AC5F-56C20C18D6B1"
+                           DisplayName="Git Extensions Modern Shell Extension">
+        <com:Class Id="5D6339FB-0BB5-4EA5-AC5F-56C20C18D6B1"
+                   Path="GitExtensionsModernShellEx.dll"
+                   ThreadingModel="Both" />
+      </com:SurrogateServer>
+    </com:ComServer>
+  </com:Extension>
+      </Extensions>
+    </Application>
+  </Applications>
+</Package>

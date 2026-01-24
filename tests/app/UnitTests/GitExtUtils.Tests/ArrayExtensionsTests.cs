@@ -8,7 +8,7 @@ public sealed class ArrayExtensionsTests
     [Test]
     public void Subsequence()
     {
-        int[] nums = Enumerable.Range(0, 10).ToArray();
+        int[] nums = [.. Enumerable.Range(0, 10)];
 
         ClassicAssert.AreEqual(
             new[] { 0, 1, 2, 3 },

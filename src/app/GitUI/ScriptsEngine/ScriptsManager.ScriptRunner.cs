@@ -23,9 +23,9 @@ partial class ScriptsManager
 
         // Regex that ensure that in the default value, there is the same number of '{' than '}' to find the right end of the default value expression.
         [GeneratedRegex(@"\{UserInput:(?<label>[^}=]+)(=(?<defaultValue>[^{}]*(({[^{}]+})+[^{}]*)*))?\}", RegexOptions.ExplicitCapture)]
-        private static partial Regex UserInputRegex();
+        private static partial Regex UserInputRegex { get; }
         [GeneratedRegex(@"\{plugin.(?<name>.+)\}", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
-        private static partial Regex PluginRegex();
+        private static partial Regex PluginRegex { get; }
 
         public static bool RunScript(ScriptInfo script, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider? scriptOptionsProvider = null)
         {
@@ -50,7 +50,7 @@ partial class ScriptsManager
 
             // Specific handling of "UserInput" because the value entered should replace only "UserInput" with same label
             Match match;
-            while ((match = UserInputRegex().Match(arguments)).Success)
+            while ((match = UserInputRegex.Match(arguments)).Success)
             {
                 Group defaultValueMatch = match.Groups["defaultValue"];
                 (string? arguments, bool abort) defaultValue = defaultValueMatch is null
@@ -64,45 +64,39 @@ partial class ScriptsManager
 
                 string label = match.Groups["label"].Value;
 
-                using (IUserInputPrompt prompt = uiCommands.GetRequiredService<ISimplePromptCreator>().Create(userInputCaption, label, defaultValue.arguments))
+                using IUserInputPrompt prompt = uiCommands.GetRequiredService<ISimplePromptCreator>().Create(userInputCaption, label, defaultValue.arguments);
+                DialogResult result = prompt.ShowDialog(owner);
+                if (result != DialogResult.OK)
                 {
-                    DialogResult result = prompt.ShowDialog(owner);
-                    if (result != DialogResult.OK)
-                    {
-                        return (arguments: null, abort: false, cancel: true);
-                    }
-
-                    arguments = ScriptOptionsParser.ReplaceOption($"UserInput:{label}", arguments, [prompt.UserInput]);
-                    arguments = ScriptOptionsParser.ReplaceOption(match.Value.Substring(1, match.Value.Length - 2), arguments, [prompt.UserInput]);
+                    return (arguments: null, abort: false, cancel: true);
                 }
+
+                arguments = ScriptOptionsParser.ReplaceOption($"UserInput:{label}", arguments, [prompt.UserInput]);
+                arguments = ScriptOptionsParser.ReplaceOption(match.Value[1..^1], arguments, [prompt.UserInput]);
             }
 
             if (ScriptOptionsParser.Contains(arguments, userInput))
             {
                 userInputCaption = string.Format(TranslatedStrings.ScriptUserInputCaption, scriptName);
-                using (IUserInputPrompt prompt = uiCommands.GetRequiredService<ISimplePromptCreator>().Create(userInputCaption, label: null, defaultValue: string.Empty))
+                using IUserInputPrompt prompt = uiCommands.GetRequiredService<ISimplePromptCreator>().Create(userInputCaption, label: null, defaultValue: string.Empty);
+                DialogResult result = prompt.ShowDialog(owner);
+                if (result == DialogResult.Cancel)
                 {
-                    DialogResult result = prompt.ShowDialog(owner);
-                    if (result == DialogResult.Cancel)
-                    {
-                        return (arguments: null, abort: false, cancel: true);
-                    }
-
-                    arguments = ScriptOptionsParser.ReplaceOption(userInput, arguments, [prompt.UserInput]);
+                    return (arguments: null, abort: false, cancel: true);
                 }
+
+                arguments = ScriptOptionsParser.ReplaceOption(userInput, arguments, [prompt.UserInput]);
             }
 
             if (ScriptOptionsParser.Contains(arguments, userFiles))
             {
-                using (IUserInputPrompt prompt = uiCommands.GetRequiredService<IFilePromptCreator>().Create())
+                using IUserInputPrompt prompt = uiCommands.GetRequiredService<IFilePromptCreator>().Create();
+                if (prompt.ShowDialog(owner) != DialogResult.OK)
                 {
-                    if (prompt.ShowDialog(owner) != DialogResult.OK)
-                    {
-                        return (arguments: null, abort: false, cancel: true);
-                    }
-
-                    arguments = ScriptOptionsParser.ReplaceOption(userFiles, arguments, [prompt.UserInput]);
+                    return (arguments: null, abort: false, cancel: true);
                 }
+
+                arguments = ScriptOptionsParser.ReplaceOption(userFiles, arguments, [prompt.UserInput]);
             }
 
             return (arguments, abort: false, cancel: false);
@@ -268,7 +262,7 @@ partial class ScriptsManager
             }
 
             // Prefix should be {plugin:pluginname},{plugin=pluginname}
-            Match match = PluginRegex().Match(originalCommand);
+            Match match = PluginRegex.Match(originalCommand);
             if (match.Success && match.Groups.Count > 1)
             {
                 originalCommand = $"{PluginPrefix}{match.Groups["name"].Value.ToLower()}";

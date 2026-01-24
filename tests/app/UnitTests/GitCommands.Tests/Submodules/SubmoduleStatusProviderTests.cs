@@ -47,12 +47,12 @@ internal class SubmoduleStatusProviderTests
         _repo2Module = submodules.ElementAt(0);
         _repo3Module = submodules.ElementAt(1);
 
-        IGitModule[] actualModules = new[]
-        {
+        IGitModule[] actualModules =
+        [
             _repo1Module,
             _repo2Module,
             _repo3Module
-        };
+        ];
         for (int i = 0; i < actualModules.Length; i++)
         {
             Debug.WriteLine($"Repo[{i + 1}]:{actualModules[i].WorkingDir}");
@@ -242,9 +242,9 @@ internal class SubmoduleStatusProviderTests
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.SameTime);
+        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.SameCommit);
         result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.SameTime);
+        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.SameCommit);
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
         result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
@@ -280,7 +280,7 @@ internal class SubmoduleStatusProviderTests
         result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
         result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
         result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.SameTime);
+        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.SameCommit);
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
         result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
@@ -325,7 +325,7 @@ internal class SubmoduleStatusProviderTests
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.SameTime);
+        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.SameCommit);
         result.AllSubmodules[1].Detailed.IsDirty.Should().BeFalse();
         result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
@@ -457,7 +457,7 @@ internal class SubmoduleStatusProviderTests
         result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
         result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
         result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.SameTime);
+        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.SameCommit);
         result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
 

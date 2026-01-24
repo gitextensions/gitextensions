@@ -13,7 +13,7 @@ public sealed class ExternalLinksManager
     public ExternalLinksManager(DistributedSettings settings)
     {
         _cachedSettings = new DistributedSettings(null, settings.SettingsCache, settings.SettingLevel);
-        _definitions = _externalLinksStorage.Load(_cachedSettings).ToList();
+        _definitions = [.. _externalLinksStorage.Load(_cachedSettings)];
 
         if (settings.LowerPriority is not null)
         {

@@ -21,7 +21,7 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
     #endregion
 
     [GeneratedRegex(@":(.*)@", RegexOptions.ExplicitCapture)]
-    private static partial Regex PasswordRegex();
+    private static partial Regex PasswordRegex { get; }
 
     /// <summary>
     /// Default constructor added to register all strings to be translated
@@ -70,13 +70,13 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
 
     private static string HidePassword(string httpProxy)
     {
-        return PasswordRegex().Replace(httpProxy, ":****@");
+        return PasswordRegex.Replace(httpProxy, ":****@");
     }
 
     private string BuildHttpProxy()
     {
         StringBuilder sb = new();
-        sb.Append("\"");
+        sb.Append('"');
         string username = _plugin.Username.ValueOrDefault(_settings);
         if (!string.IsNullOrEmpty(username))
         {
@@ -84,22 +84,22 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
             sb.Append(username);
             if (!string.IsNullOrEmpty(password))
             {
-                sb.Append(":");
+                sb.Append(':');
                 sb.Append(password);
             }
 
-            sb.Append("@");
+            sb.Append('@');
         }
 
         sb.Append(_plugin.HttpProxy.ValueOrDefault(_settings));
         string port = _plugin.HttpProxyPort.ValueOrDefault(_settings);
         if (!string.IsNullOrEmpty(port))
         {
-            sb.Append(":");
+            sb.Append(':');
             sb.Append(port);
         }
 
-        sb.Append("\"");
+        sb.Append('"');
         return sb.ToString();
     }
 

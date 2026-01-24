@@ -197,7 +197,7 @@ partial class FormBrowse
                 return tsi;
             });
 
-        setDefaultPullActionDropDown.Items.AddRange(setDefaultPullActionDropDownItems.ToArray());
+        setDefaultPullActionDropDown.Items.AddRange([.. setDefaultPullActionDropDownItems]);
 
         void SetDefaultPullActionMenuItemClick(object sender, EventArgs eventArgs)
         {

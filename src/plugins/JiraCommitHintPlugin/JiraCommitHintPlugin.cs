@@ -1,4 +1,4 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using Atlassian.Jira;
 using Atlassian.Jira.Remote;
 using GitCommands;
@@ -42,7 +42,7 @@ public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForCommit
     private string _stringTemplate = DefaultFormat;
     private readonly BoolSetting _enabledSettings = new("Jira hint plugin enabled", false);
     private readonly StringSetting _urlSettings = new("Jira URL", @"https://jira.atlassian.com");
-    private readonly ChoiceSetting _authTypeSettings = new("Auth type", new List<string> { AuthTypeUsernamePassword, AuthTypePersonalAccessToken });
+    private readonly ChoiceSetting _authTypeSettings = new("Auth type", [AuthTypeUsernamePassword, AuthTypePersonalAccessToken]);
     private readonly CredentialsSetting _credentialsSettings;
 
     // For compatibility reason, the setting key is kept to "JDL Query" even if the label is, rightly, "JQL Query" (for "Jira Query Language")
@@ -187,8 +187,7 @@ public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForCommit
 
     private void authTypeSetting_SelectedIndexChanged(object sender, EventArgs e)
     {
-        ComboBox comboBox = sender as ComboBox;
-        if (comboBox is null || _credentialsSettings.CustomControl is null)
+        if (sender is not ComboBox comboBox || _credentialsSettings.CustomControl is null)
         {
             return;
         }
@@ -264,12 +263,8 @@ public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForCommit
 
         _btnPreview.Click -= btnPreviewClick;
         _btnPreview = null;
-
-        if (_authTypeSettings.CustomControl is not null)
-        {
-            _authTypeSettings.CustomControl.SelectedIndexChanged -= authTypeSetting_SelectedIndexChanged;
-            _authTypeSettings.CustomControl = null;
-        }
+        _authTypeSettings.CustomControl?.SelectedIndexChanged -= authTypeSetting_SelectedIndexChanged;
+        _authTypeSettings.CustomControl = null;
     }
 
     private void gitUiCommands_PostSettings(object sender, GitUIPostActionEventArgs e)
@@ -338,13 +333,11 @@ public class JiraCommitHintPlugin : GitPluginBase, IGitPluginForCommit
         try
         {
             IPagedQueryResult<Issue> results = await jira.Issues.GetIssuesFromJqlAsync(query);
-            return results
-                .Select(issue => new JiraTaskDTO(issue.Key + ": " + issue.Summary, StringTemplate.Format(stringTemplate, issue)))
-                .ToArray();
+            return [.. results.Select(issue => new JiraTaskDTO(issue.Key + ": " + issue.Summary, StringTemplate.Format(stringTemplate, issue)))];
         }
         catch (Exception ex)
         {
-            return new[] { new JiraTaskDTO($"{Name} error", ex.ToString()) };
+            return [new JiraTaskDTO($"{Name} error", ex.ToString())];
         }
     }
 

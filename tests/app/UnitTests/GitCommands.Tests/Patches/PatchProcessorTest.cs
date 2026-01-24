@@ -25,7 +25,7 @@ public sealed class PatchProcessorTest
         _colorBinDiff = LoadPatch("color-binary.diff");
         _colorPrefixDiff = LoadPatch("color-prefix.diff");
 
-        string LoadPatch(string fileName)
+        static string LoadPatch(string fileName)
         {
             string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "Patches/testdata", fileName);
             byte[] bytes = File.ReadAllBytes(path);
@@ -76,7 +76,7 @@ public sealed class PatchProcessorTest
     [Test]
     public void TestCorrectlyLoadsTheRightFileNamesInAPatchFile()
     {
-        List<Patch> patches = PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
+        List<Patch> patches = [.. PatchProcessor.CreatePatchesFromString(_bigPatch, new Lazy<Encoding>(() => Encoding.UTF8))];
 
         ClassicAssert.AreEqual(17, patches.Select(p => p.FileNameA).Distinct().Count());
         ClassicAssert.AreEqual(17, patches.Select(p => p.FileNameB).Distinct().Count());
@@ -119,7 +119,7 @@ public sealed class PatchProcessorTest
     [Test]
     public void TestCorrectlyLoadsRebaseDiff()
     {
-        List<Patch> patches = PatchProcessor.CreatePatchesFromString(_rebaseDiff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
+        List<Patch> patches = [.. PatchProcessor.CreatePatchesFromString(_rebaseDiff, new Lazy<Encoding>(() => Encoding.UTF8))];
 
         ClassicAssert.AreEqual(13, patches.Count);
     }
@@ -137,7 +137,7 @@ index cdf8bebba,55ff37bb9..000000000
 +++ b/UnitTests/GitCommandsTests/Patches/PatchProcessorTest.cs
 ";
 
-        List<Patch> patches = PatchProcessor.CreatePatchesFromString(diff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
+        List<Patch> patches = [.. PatchProcessor.CreatePatchesFromString(diff, new Lazy<Encoding>(() => Encoding.UTF8))];
 
         ClassicAssert.AreEqual(2, patches.Count);
     }
@@ -145,7 +145,7 @@ index cdf8bebba,55ff37bb9..000000000
     [Test]
     public void ColorDiff()
     {
-        List<Patch> patches = PatchProcessor.CreatePatchesFromString(_colorDiff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
+        List<Patch> patches = [.. PatchProcessor.CreatePatchesFromString(_colorDiff, new Lazy<Encoding>(() => Encoding.UTF8))];
 
         ClassicAssert.AreEqual(1, patches.Count);
         Patch createdPatch = patches.First();
@@ -165,7 +165,7 @@ index cdf8bebba,55ff37bb9..000000000
     public void ColorPrefixDiff(string prefixSrc, string prefixDst)
     {
         string diffWithCutomPrefixes = _colorPrefixDiff.Replace("[PLACEHOLDER_PREFIX_SRC]", prefixSrc).Replace("[PLACEHOLDER_PREFIX_DST]", prefixDst);
-        List<Patch> patches = PatchProcessor.CreatePatchesFromString(diffWithCutomPrefixes, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
+        List<Patch> patches = [.. PatchProcessor.CreatePatchesFromString(diffWithCutomPrefixes, new Lazy<Encoding>(() => Encoding.UTF8))];
 
         ClassicAssert.AreEqual(1, patches.Count);
         Patch createdPatch = patches.First();
@@ -181,7 +181,7 @@ index cdf8bebba,55ff37bb9..000000000
     [Test]
     public void ColorBinDiff()
     {
-        List<Patch> patches = PatchProcessor.CreatePatchesFromString(_colorBinDiff, new Lazy<Encoding>(() => Encoding.UTF8)).ToList();
+        List<Patch> patches = [.. PatchProcessor.CreatePatchesFromString(_colorBinDiff, new Lazy<Encoding>(() => Encoding.UTF8))];
 
         ClassicAssert.AreEqual(1, patches.Count);
         Patch createdPatch = patches.First();
@@ -231,16 +231,16 @@ index cdf8bebba,55ff37bb9..000000000
 
         void AppendHeaderLine(string line)
         {
-            patchText.Append(line).Append("\n");
+            patchText.Append(line).Append('\n');
             patchOutput.Append(GitModule.ReEncodeString(line, GitModule.SystemEncoding, GitModule.LosslessEncoding));
-            patchOutput.Append("\n");
+            patchOutput.Append('\n');
         }
 
         void AppendDiffLine(string line)
         {
-            patchText.Append(line).Append("\n");
+            patchText.Append(line).Append('\n');
             patchOutput.Append(GitModule.ReEncodeString(line, Encoding.UTF8, GitModule.LosslessEncoding));
-            patchOutput.Append("\n");
+            patchOutput.Append('\n');
         }
     }
 

@@ -53,13 +53,13 @@ public partial class GitGpgController : IGitGpgController
     private const string NoSignatureFound = "error: no signature found";
 
     [GeneratedRegex(ValidTagSign, RegexOptions.ExplicitCapture)]
-    private static partial Regex ValidSignatureTagRegex();
+    private static partial Regex ValidSignatureTagRegex { get; }
     [GeneratedRegex(GoodSignature, RegexOptions.ExplicitCapture)]
-    private static partial Regex GoodSignatureTagRegex();
+    private static partial Regex GoodSignatureTagRegex { get; }
     [GeneratedRegex(NoTagPubKey, RegexOptions.ExplicitCapture)]
-    private static partial Regex NoPubKeyTagRegex();
+    private static partial Regex NoPubKeyTagRegex { get; }
     [GeneratedRegex(NoSignatureFound, RegexOptions.ExplicitCapture)]
-    private static partial Regex NoSignatureFoundTagRegex();
+    private static partial Regex NoSignatureFoundTagRegex { get; }
 
     /// <summary>
     /// Obtain the tag verification message for all the tag in current git revision
@@ -127,7 +127,7 @@ public partial class GitGpgController : IGitGpgController
         ArgumentNullException.ThrowIfNull(revision);
 
         /* No Tag present, exit */
-        List<IGitRef> usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
+        List<IGitRef> usefulTagRefs = [.. revision.Refs.Where(x => x.IsTag && x.IsDereference)];
 
         if (usefulTagRefs.Count == 0)
         {
@@ -146,19 +146,19 @@ public partial class GitGpgController : IGitGpgController
             string? rawGpgMessage = GetTagVerificationMessage(usefulTagRefs[0], true);
 
             /* Look for icon to be shown */
-            if (GoodSignatureTagRegex().IsMatch(rawGpgMessage) && ValidSignatureTagRegex().IsMatch(rawGpgMessage))
+            if (GoodSignatureTagRegex.IsMatch(rawGpgMessage) && ValidSignatureTagRegex.IsMatch(rawGpgMessage))
             {
                 /* It's only one good tag */
                 return TagStatus.OneGood;
             }
 
-            if (NoSignatureFoundTagRegex().IsMatch(rawGpgMessage))
+            if (NoSignatureFoundTagRegex.IsMatch(rawGpgMessage))
             {
                 /* One tag, but not signed */
                 return TagStatus.TagNotSigned;
             }
 
-            if (NoPubKeyTagRegex().IsMatch(rawGpgMessage))
+            if (NoPubKeyTagRegex.IsMatch(rawGpgMessage))
             {
                 /* One tag, signed, but user has not the public key */
                 return TagStatus.NoPubKey;
@@ -195,7 +195,7 @@ public partial class GitGpgController : IGitGpgController
     {
         ArgumentNullException.ThrowIfNull(revision);
 
-        List<IGitRef> usefulTagRefs = revision.Refs.Where(x => x.IsTag && x.IsDereference).ToList();
+        List<IGitRef> usefulTagRefs = [.. revision.Refs.Where(x => x.IsTag && x.IsDereference)];
         return EvaluateTagVerifyMessage(usefulTagRefs);
     }
 
@@ -243,13 +243,5 @@ public partial class GitGpgController : IGitGpgController
     }
 
     private IGitModule GetModule()
-    {
-        IGitModule module = _getModule();
-        if (module is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-        }
-
-        return module;
-    }
+        => _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
 }

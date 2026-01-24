@@ -53,7 +53,7 @@ internal static class ContextMenuExtensions
     internal static void ToggleSeparators(this ContextMenuStrip contextMenu)
     {
         contextMenu.SuspendLayout();
-        ToolStripItem[] items = contextMenu.Items.Cast<ToolStripItem>().ToArray();
+        ToolStripItem[] items = [.. contextMenu.Items.Cast<ToolStripItem>()];
 
         // toggle all separators (but the last) looking behind for visible items other than separators
         ToolStripItem lastPrecedingVisibleItem = null;

@@ -3,13 +3,13 @@
 public static class ColorHelper
 {
     private static readonly (KnownColor back, KnownColor fore)[] BackForeExamples =
-    {
+    [
         (KnownColor.Window, KnownColor.WindowText),
         (KnownColor.Control, KnownColor.ControlText),
         (KnownColor.Info, KnownColor.InfoText),
         (KnownColor.Highlight, KnownColor.HighlightText),
         (KnownColor.MenuHighlight, KnownColor.HighlightText),
-    };
+    ];
 
     public static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
@@ -328,10 +328,10 @@ public static class ColorHelper
 
     /// <summary>
     /// Find if the theme is the default.
-    /// Note that the theme is parsed, so ThemeSettings.Default is another instance.
+    /// Note that the theme is parsed, so ThemeSettings.DefaultLight is another instance.
     /// </summary>
     /// <returns><see langword="true"/> if the theme is default; otherwise <see langword="false"/>.</returns>
-    private static bool IsDefaultTheme => string.IsNullOrWhiteSpace(ThemeSettings.Theme.Id.Name);
+    private static bool IsDefaultTheme => ThemeSettings.Theme.Id == ThemeId.DefaultLight;
 
     public static Color Lerp(Color colour, Color to, float amount)
     {

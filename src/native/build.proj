@@ -36,6 +36,7 @@
 
       <_GitExtSshAskPassPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', 'GitExtSshAskPass', 'GitExtSshAskPass.sln'))</_GitExtSshAskPassPath>
       <_GitExtensionsShellExPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', 'GitExtensionsShellEx', 'GitExtensionsShellEx.sln'))</_GitExtensionsShellExPath>
+      <_GitExtensionsModernShellExPath>$([MSBuild]::NormalizePath('$(MSBuildProjectDirectory)', 'GitExtensionsModernShellEx', 'GitExtensionsModernShellEx.sln'))</_GitExtensionsModernShellExPath>
 
       <_ProjectArgs32> /p:Configuration=$(Configuration) /p:Platform=Win32</_ProjectArgs32>
       <_ProjectArgs64> /p:Configuration=$(Configuration) /p:Platform=x64</_ProjectArgs64>
@@ -82,6 +83,24 @@
     <Exec
         Condition="'$(TargetPlatform)' == 'arm64'"
         Command="msbuild.exe $(_GitExtensionsShellExPath) $(_ProjectArgsARM64) /p:OutDir=$(_OutputPath)GitExtensionsShellEx\ /bl:$(_ArtifactsLogDir)\GitExtensionsShellEx64.binlog"
+        WorkingDirectory="$(_MSBuildCurrentPath)"
+        EchoOff="true"
+        ConsoleToMsBuild="true"
+        StandardOutputImportance="High">
+    </Exec>
+    <!-- Build GitExtensionsModernShellEx project, x64 -->
+    <Exec
+        Condition="'$(TargetPlatform)' != 'arm64'"
+        Command="msbuild.exe $(_GitExtensionsModernShellExPath) $(_ProjectArgs64) /p:OutDir=$(_OutputPath)GitExtensionsModernShellEx\ /bl:$(_ArtifactsLogDir)\GitExtensionsModernShellEx64.binlog"
+        WorkingDirectory="$(_MSBuildCurrentPath)"
+        EchoOff="true"
+        ConsoleToMsBuild="true"
+        StandardOutputImportance="High">
+    </Exec>
+    <!-- Build GitExtensionsModernShellEx project, ARM64 -->
+    <Exec
+        Condition="'$(TargetPlatform)' == 'arm64'"
+        Command="msbuild.exe $(_GitExtensionsModernShellExPath) $(_ProjectArgsARM64) /p:OutDir=$(_OutputPath)GitExtensionsModernShellEx\ /bl:$(_ArtifactsLogDir)\GitExtensionsModernShellExARM64.binlog"
         WorkingDirectory="$(_MSBuildCurrentPath)"
         EchoOff="true"
         ConsoleToMsBuild="true"

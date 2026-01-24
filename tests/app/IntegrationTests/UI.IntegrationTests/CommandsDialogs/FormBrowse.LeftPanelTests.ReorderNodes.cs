@@ -86,7 +86,7 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
 
                 // act
                 TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
-                List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
+                List<TreeNode> initialNodes = [.. currNodes.OfType<TreeNode>()];
 
                 // assert
                 AssertListCount(currNodes, 5);
@@ -115,7 +115,7 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
 
                 // act
                 TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
-                List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
+                List<TreeNode> initialNodes = [.. currNodes.OfType<TreeNode>()];
 
                 // assert
                 AssertListCount(currNodes, 5);
@@ -149,7 +149,7 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
 
                 // act
                 TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
-                List<TreeNode> initialNodes = currNodes.OfType<TreeNode>().ToList();
+                List<TreeNode> initialNodes = [.. currNodes.OfType<TreeNode>()];
                 AssertListCount(initialNodes, 5);
 
                 // Hide nodes between first and last

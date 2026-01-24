@@ -20,7 +20,7 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
 
     private const string MostRecentHint = "most recent changes are listed on top";
     private readonly GitUIEventArgs _gitUiCommands;
-    private IEnumerable<LogLine> _lastGeneratedLogLines = Enumerable.Empty<LogLine>();
+    private IEnumerable<LogLine> _lastGeneratedLogLines = [];
     private readonly IGitLogLineParser _gitLogLineParser;
 
     public ReleaseNotesGeneratorForm(GitUIEventArgs gitUiCommands)
@@ -65,7 +65,7 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
 
         if (EnvUtils.RunningOnWindows())
         {
-            result = string.Join(Environment.NewLine, result.Split(new[] { Environment.NewLine }, StringSplitOptions.None).SelectMany(l => l.Split('\n')));
+            result = string.Join(Environment.NewLine, result.Split([Environment.NewLine], StringSplitOptions.None).SelectMany(l => l.Split('\n')));
         }
 
         textBoxResult.Text = result;
@@ -125,7 +125,7 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
         {
             string message = string.Join(Environment.NewLine + colSeparatorRestLines,
                 logLine.MessageLines.Where(
-                a => suppressEmptyLines ? !string.IsNullOrWhiteSpace(a) : true));
+                a => !suppressEmptyLines || !string.IsNullOrWhiteSpace(a)));
             stringBuilder.AppendFormat("{0}{1}{2}{3}", logLine.Commit, colSeparatorFirstLine, message, Environment.NewLine);
         }
 

@@ -96,8 +96,10 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ComboBox comboBox = new();
-        comboBox.DisplayMember = "Value";
+        ComboBox comboBox = new()
+        {
+            DisplayMember = "Value"
+        };
         comboBox.Items.Add(new ComboBoxItem(Value: veryLongString, ToStringValue: ""));
 
         // Act
@@ -113,8 +115,10 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ComboBox comboBox = new();
-        comboBox.DisplayMember = "Value";
+        ComboBox comboBox = new()
+        {
+            DisplayMember = "Value"
+        };
         comboBox.Items.Add(new ComboBoxItem(Value: null, ToStringValue: veryLongString));
 
         // Act
@@ -146,8 +150,10 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ComboBox comboBox = new();
-        comboBox.DisplayMember = "NonExistentMemberName";
+        ComboBox comboBox = new()
+        {
+            DisplayMember = "NonExistentMemberName"
+        };
         comboBox.Items.Add(new ComboBoxItem(Value: "", ToStringValue: veryLongString));
 
         // Act

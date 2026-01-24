@@ -27,7 +27,7 @@ public partial class GitFlowForm : GitExtensionsFormBase
     private string? CurrentBranch { get; set; }
 
     [GeneratedRegex(@"\r\n?|\n", RegexOptions.ExplicitCapture)]
-    private static partial Regex LineEndRegex();
+    private static partial Regex LineEndRegex { get; }
 
     private enum Branch
     {
@@ -40,7 +40,7 @@ public partial class GitFlowForm : GitExtensionsFormBase
 
     private static List<string> BranchTypes
     {
-        get { return Enum.GetValues(typeof(Branch)).Cast<object>().Select(e => e.ToString()).ToList(); }
+        get { return [.. Enum.GetValues<Branch>().Select(e => e.ToString())]; }
     }
 
     private bool IsGitFlowInitialised
@@ -110,7 +110,7 @@ public partial class GitFlowForm : GitExtensionsFormBase
 
     private static bool TryExtractBranchFromHead(string currentRef, [NotNullWhen(returnValue: true)] out string? branchType, [NotNullWhen(returnValue: true)] out string? branchName)
     {
-        foreach (Branch branch in Enum.GetValues(typeof(Branch)))
+        foreach (Branch branch in Enum.GetValues<Branch>())
         {
             string startRef = branch + "/";
             if (currentRef.StartsWith(startRef))
@@ -146,7 +146,7 @@ public partial class GitFlowForm : GitExtensionsFormBase
             DisplayBranchData();
         }
 
-        btnFinish.Enabled = Branches.Any();
+        btnFinish.Enabled = Branches.Count != 0;
     }
 
     private IReadOnlyList<string> GetBranches(string typeBranch)
@@ -156,7 +156,7 @@ public partial class GitFlowForm : GitExtensionsFormBase
 
         if (!result.ExitedSuccessfully || result.StandardOutput is null)
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         return result.StandardOutput
@@ -202,11 +202,10 @@ public partial class GitFlowForm : GitExtensionsFormBase
         List<string> GetLocalBranches()
         {
             GitArgumentBuilder args = new("branch");
-            return _gitUiCommands.GitModule
+            return [.. _gitUiCommands.GitModule
                 .GitExecutable.GetOutput(args)
                 .Split('\n', StringSplitOptions.RemoveEmptyEntries)
-                .Select(e => e.Trim(Delimiters.GitOutput))
-                .ToList();
+                .Select(e => e.Trim(Delimiters.GitOutput))];
         }
     }
 
@@ -326,7 +325,7 @@ public partial class GitFlowForm : GitExtensionsFormBase
         ttDebug.SetToolTip(lblDebug, "cmd: git " + commandText + "\n" + "exit code:" + result.ExitCode);
 
         // TODO Can AllOutput be replaced with StandardOutput?
-        string resultText = LineEndRegex().Replace(result.AllOutput, Environment.NewLine);
+        string resultText = LineEndRegex.Replace(result.AllOutput, Environment.NewLine);
 
         if (result.ExitedSuccessfully)
         {

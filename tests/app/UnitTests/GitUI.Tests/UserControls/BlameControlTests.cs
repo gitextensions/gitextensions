@@ -142,7 +142,7 @@ public class BlameControlTests
             (string gutter, string content, List<GitUI.Editor.GitBlameEntry> _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
 
             content.Should().Be($"line1{Environment.NewLine}line2{Environment.NewLine}line3{Environment.NewLine}line4{Environment.NewLine}");
-            string[] gutterLines = gutter.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            string[] gutterLines = gutter.Split([Environment.NewLine], StringSplitOptions.RemoveEmptyEntries);
             gutterLines[0].TrimEnd().Should().Be("3/22/2010 12:01 PM - author1");
             gutterLines[1].Should().NotBeNullOrEmpty().And.BeNullOrWhiteSpace();
             gutterLines[2].TrimEnd().Should().Be("3/22/2011 12:01 PM - author2");
@@ -172,7 +172,7 @@ public class BlameControlTests
 
             // Then
             content.Should().Be($"line1{Environment.NewLine}line2{Environment.NewLine}line3{Environment.NewLine}line4{Environment.NewLine}");
-            string[] gutterLines = gutter.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            string[] gutterLines = gutter.Split([Environment.NewLine], StringSplitOptions.RemoveEmptyEntries);
             gutterLines[0].TrimEnd().Should().Be($"3/22/2010 - author1");
             gutterLines[1].Should().NotBeNullOrEmpty().And.BeNullOrWhiteSpace();
             gutterLines[2].TrimEnd().Should().Be($"3/22/2011 - author2");

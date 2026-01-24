@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace GitCommands.Git;
@@ -7,10 +7,10 @@ public static partial class DetachedHeadParser
 {
     public static readonly string DetachedBranch = "(no branch)";
 
-    private static readonly string[] DetachedPrefixes = { "(no branch", "(detached from ", "(HEAD detached at " };
+    private static readonly string[] DetachedPrefixes = ["(no branch", "(detached from ", "(HEAD detached at "];
 
     [GeneratedRegex(@"^\(.* (?<sha1>.*)\)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex ShaRegex();
+    private static partial Regex ShaRegex { get; }
 
     public static bool IsDetachedHead(string branch)
     {
@@ -25,7 +25,7 @@ public static partial class DetachedHeadParser
             return false;
         }
 
-        Match sha1Match = ShaRegex().Match(text);
+        Match sha1Match = ShaRegex.Match(text);
         if (!sha1Match.Success)
         {
             return false;

@@ -90,7 +90,7 @@ public class FormRemotesControllerTests
         _controller.RemoteUpdate(remotes, "a", "a1");
 
         remotes.Should().HaveCount(2);
-        remotes.Select(r => r.Path).Should().BeEquivalentTo(new[] { "a1", "b" });
+        remotes.Select(r => r.Path).Should().BeEquivalentTo(["a1", "b"]);
     }
 
     [Test]

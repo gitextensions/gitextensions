@@ -44,12 +44,13 @@ public class NumberSetting<T> : ISetting
 
         public override NumericUpDown CreateControl()
         {
-            NumericUpDown numericUpDown = new();
-
-            // TODO: if we need negative values, int.MinValue should be the Minimum.
-            //       Or, we can attempt to introduce a NumberSetting<int> constructor that accepts a min and max value parameter.
-            numericUpDown.Minimum = 0;
-            numericUpDown.Maximum = int.MaxValue;
+            NumericUpDown numericUpDown = new()
+            {
+                // TODO: if we need negative values, int.MinValue should be the Minimum.
+                //       Or, we can attempt to introduce a NumberSetting<int> constructor that accepts a min and max value parameter.
+                Minimum = 0,
+                Maximum = int.MaxValue
+            };
 
             Setting.CustomControl = numericUpDown;
             return (NumericUpDown)Setting.CustomControl;

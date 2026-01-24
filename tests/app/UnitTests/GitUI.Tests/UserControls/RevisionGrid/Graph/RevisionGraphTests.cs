@@ -131,8 +131,10 @@ public class RevisionGraphTests
         ClassicAssert.IsTrue(_revisionGraph.GetTestAccessor().ValidateTopoOrder());
 
         // Add a new head
-        GitRevision newHead = new(ObjectId.Random());
-        newHead.ParentIds = new ObjectId[] { _revisionGraph.GetNodeForRow(0).Objectid };
+        GitRevision newHead = new(ObjectId.Random())
+        {
+            ParentIds = new ObjectId[] { _revisionGraph.GetNodeForRow(0).Objectid }
+        };
         _revisionGraph.Add(newHead); // Add commit that has the current top node as parent.
 
         _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count); // Call to cache fix the order
@@ -444,7 +446,7 @@ public class RevisionGraphTests
                 prevCommit = currCommit;
             }
 
-            prevCommit.ParentIds = new ObjectId[] { };
+            prevCommit.ParentIds = [];
             yield return prevCommit;
         }
     }
@@ -467,8 +469,10 @@ public class RevisionGraphTests
             string[] parts = spec.Split(':');
             string id = parts[0];
 
-            GitRevision commit = new(ObjectId.Random());
-            commit.Subject = id;
+            GitRevision commit = new(ObjectId.Random())
+            {
+                Subject = id
+            };
             commits.Add(commit);
             commitsById.Add(id, commit);
 
@@ -515,7 +519,7 @@ public class RevisionGraphTests
             // Create a line for commit
 
             IRevisionGraphRow row = revisionGraph.GetSegmentsForRow(rowIndex);
-            char[] line = Enumerable.Repeat(' ', (row.GetLaneCount() * 2) + 1).ToArray();
+            char[] line = [.. Enumerable.Repeat(' ', (row.GetLaneCount() * 2) + 1)];
 
             // Show '|' in lanes passing through
             foreach (RevisionGraphSegment segment in row.Segments)
@@ -537,7 +541,7 @@ public class RevisionGraphTests
 
             // Create a line between commits
 
-            line = Enumerable.Repeat(' ', (Math.Max(row.GetLaneCount(), nextRow.GetLaneCount()) * 2) + 1).ToArray();
+            line = [.. Enumerable.Repeat(' ', (Math.Max(row.GetLaneCount(), nextRow.GetLaneCount()) * 2) + 1)];
 
             // These drawing actions are done last, to appear on top
             List<Action> actions = [];

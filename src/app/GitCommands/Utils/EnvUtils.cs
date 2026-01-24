@@ -59,6 +59,24 @@ public static class EnvUtils
                && Environment.OSVersion.Version.CompareTo(new Version(6, 3)) >= 0;
     }
 
+    /// <summary>
+    /// Determines whether the current operating system is Windows 11 or a later version.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if the OS is Windows 11 (Build 22000) or higher;
+    /// otherwise, <see langword="false"/>.
+    /// </returns>
+    /// <remarks>
+    /// Windows 11 shares the same Major/Minor version (10.0) as Windows 10.
+    /// Differentiation is based on the build number, where 22000 is the first stable build of Windows 11.
+    /// </remarks>
+    public static bool IsWindows11OrGreater()
+    {
+        Version version = Environment.OSVersion.Version;
+        return Environment.OSVersion.Platform == PlatformID.Win32NT
+               && (version.Major > 10 || (version.Major == 10 && version.Build >= 22000));
+    }
+
     public static bool RunningOnUnix()
     {
         return Environment.OSVersion.Platform == PlatformID.Unix;

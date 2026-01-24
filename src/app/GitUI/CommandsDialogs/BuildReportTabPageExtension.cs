@@ -136,17 +136,11 @@ public class BuildReportTabPageExtension
 
     private void SetSelectedRevision(GitRevision? revision)
     {
-        if (_selectedGitRevision is not null)
-        {
-            _selectedGitRevision.PropertyChanged -= RevisionPropertyChanged;
-        }
+        _selectedGitRevision?.PropertyChanged -= RevisionPropertyChanged;
 
         _selectedGitRevision = revision;
 
-        if (_selectedGitRevision is not null)
-        {
-            _selectedGitRevision.PropertyChanged += RevisionPropertyChanged;
-        }
+        _selectedGitRevision?.PropertyChanged += RevisionPropertyChanged;
     }
 
     private void RevisionPropertyChanged(object sender, PropertyChangedEventArgs e)
@@ -221,23 +215,16 @@ public class BuildReportTabPageExtension
     }
 
     private IGitModule GetModule()
-    {
-        IGitModule module = _getModule();
-
-        if (module is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-        }
-
-        return module;
-    }
+        => _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
 
     private static string? DetermineFavIconUrl(HtmlDocument htmlDocument)
     {
         HtmlElementCollection links = htmlDocument.GetElementsByTagName("link");
+#pragma warning disable CA1862 // Use the 'StringComparison' method overloads to perform case-insensitive string comparisons
         HtmlElement favIconLink =
             links.Cast<HtmlElement>()
                  .SingleOrDefault(x => x.GetAttribute("rel").ToLowerInvariant() == "shortcut icon");
+#pragma warning restore CA1862 // Use the 'StringComparison' method overloads to perform case-insensitive string comparisons
 
         if (favIconLink is null || htmlDocument.Url is null)
         {

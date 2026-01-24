@@ -91,7 +91,7 @@ The irrelevant commands are disabled
 There are some existing checks for bareRepositories in InternalInitialize() (where some init code is running...) that al
 so could be removed after this (some were missing from that menu). checkoutBranchToolStripMenuItem is a little special t";
 
-        List<LogLine> logLines = _parser.Parse(log.Replace("\r\n", "\n").Split('\n')).ToList();
+        List<LogLine> logLines = [.. _parser.Parse(log.Replace("\r\n", "\n").Split('\n'))];
 
         logLines.Should().HaveCount(18);
 

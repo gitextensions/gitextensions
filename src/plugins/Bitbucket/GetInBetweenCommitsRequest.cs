@@ -32,7 +32,7 @@ internal class GetInBetweenCommitsRequest : BitbucketRequestBase<List<Commit>>
     protected override List<Commit> ParseResponse(JObject json)
     {
         List<Commit> result = [];
-        foreach (JObject commit in json["values"])
+        foreach (JObject commit in json["values"].Cast<JObject>())
         {
             result.Add(Commit.Parse(commit));
         }

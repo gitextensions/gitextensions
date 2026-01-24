@@ -12,11 +12,11 @@ namespace GitCommandsTests.Git;
 public sealed partial class ObjectIdTests
 {
     [GeneratedRegex(@"[a-f0-9]{40}", RegexOptions.ExplicitCapture)]
-    private static partial Regex Sha40Regex();
+    private static partial Regex Sha40Regex { get; }
     [GeneratedRegex(@"[a-f0-9]{39}", RegexOptions.ExplicitCapture)]
-    private static partial Regex Sha39Regex();
+    private static partial Regex Sha39Regex { get; }
     [GeneratedRegex(@"[XYZa-f0-9]{39}", RegexOptions.ExplicitCapture)]
-    private static partial Regex ShaXYZRegex();
+    private static partial Regex ShaXYZRegex { get; }
 
     [TestCase("0000000000000000000000000000000000000000")]
     [TestCase("0102030405060708091011121314151617181920")]
@@ -111,9 +111,9 @@ public sealed partial class ObjectIdTests
         ObjectId objectId = ObjectId.Random();
         string str = "XYZ" + objectId + "XYZ";
 
-        ClassicAssert.AreEqual(objectId, ObjectId.Parse(str, Sha40Regex().Match(str)));
-        ClassicAssert.Throws<FormatException>(() => ObjectId.Parse(str, Sha39Regex().Match(str)));
-        ClassicAssert.Throws<FormatException>(() => ObjectId.Parse(str, ShaXYZRegex().Match(str)));
+        ClassicAssert.AreEqual(objectId, ObjectId.Parse(str, Sha40Regex.Match(str)));
+        ClassicAssert.Throws<FormatException>(() => ObjectId.Parse(str, Sha39Regex.Match(str)));
+        ClassicAssert.Throws<FormatException>(() => ObjectId.Parse(str, ShaXYZRegex.Match(str)));
     }
 
     [Test]

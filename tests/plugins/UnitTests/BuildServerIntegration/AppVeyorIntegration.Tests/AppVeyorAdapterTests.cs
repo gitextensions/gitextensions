@@ -48,7 +48,7 @@ public class AppVeyorAdapterTests
         appVeyorAdapter.Initialize(Substitute.For<IBuildServerWatcher>(), Substitute.For<SettingsSource>(), () => { },
             id => true);
 
-        List<AppVeyorBuildInfo> buildInfo = appVeyorAdapter.ExtractBuildInfo(_projectId, resultString).ToList();
+        List<AppVeyorBuildInfo> buildInfo = [.. appVeyorAdapter.ExtractBuildInfo(_projectId, resultString)];
         return YamlSerialize(buildInfo);
     }
 

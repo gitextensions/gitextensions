@@ -1,4 +1,4 @@
-namespace GitCommands.UserRepositoryHistory;
+﻿namespace GitCommands.UserRepositoryHistory;
 
 /// <summary>
 /// Provides the ability to persist and retrieve collections of user's git repositories.
@@ -48,19 +48,19 @@ public sealed class RepositoryStorage : IRepositoryStorage
     {
         if (string.IsNullOrWhiteSpace(key))
         {
-            throw new ArgumentException(nameof(key));
+            throw new ArgumentException("RepositoryStorage: Load no path.", nameof(key));
         }
 
         string? setting = AppSettings.GetString(key, null);
         if (setting is null)
         {
-            return Array.Empty<Repository>();
+            return [];
         }
 
         IReadOnlyList<Repository> history = _repositorySerialiser.Deserialize(setting);
         if (history is null)
         {
-            return Array.Empty<Repository>();
+            return [];
         }
 
         return history;
@@ -77,7 +77,7 @@ public sealed class RepositoryStorage : IRepositoryStorage
     {
         if (string.IsNullOrWhiteSpace(key))
         {
-            throw new ArgumentException(nameof(key));
+            throw new ArgumentException("RepositoryStorage: Save no path.", nameof(key));
         }
 
         ArgumentNullException.ThrowIfNull(repositories);

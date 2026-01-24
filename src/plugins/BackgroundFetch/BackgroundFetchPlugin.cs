@@ -182,22 +182,15 @@ public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
 
     private void CancelBackgroundOperation()
     {
-        if (_cancellationToken is not null)
-        {
-            _cancellationToken.Dispose();
-            _cancellationToken = null;
-        }
+        _cancellationToken?.Dispose();
+        _cancellationToken = null;
     }
 
     public override void Unregister(IGitUICommands gitUiCommands)
     {
         CancelBackgroundOperation();
-
-        if (_currentGitUiCommands is not null)
-        {
-            _currentGitUiCommands.PostSettings -= OnPostSettings;
-            _currentGitUiCommands = null;
-        }
+        _currentGitUiCommands?.PostSettings -= OnPostSettings;
+        _currentGitUiCommands = null;
 
         base.Unregister(gitUiCommands);
     }

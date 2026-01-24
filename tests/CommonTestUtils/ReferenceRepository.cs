@@ -47,7 +47,7 @@ public class ReferenceRepository : IDisposable
         }
     }
 
-    private static Task<(GitModuleTestHelper Helper, string? CommitHash)> BeginFastCloneGitModuleTestHelper(GitModuleTestSnapshot snapshot, bool createCommit)
+    private static Task<(GitModuleTestHelper Helper, string? CommitHash)> BeginFastCloneGitModuleTestHelper(GitModuleTestSnapshot snapshot)
     {
         return Task.Run(() => (snapshot.Clone(), _repoCommitHash));
     }
@@ -85,7 +85,7 @@ public class ReferenceRepository : IDisposable
         }
 
         // Start background initialization of the Git module for the next call.
-        initializer = BeginFastCloneGitModuleTestHelper(snapshot, createCommit);
+        initializer = BeginFastCloneGitModuleTestHelper(snapshot);
 
         return moduleTestHelper;
     }
@@ -199,7 +199,7 @@ public class ReferenceRepository : IDisposable
     public void Fetch(string remoteName)
     {
         using Repository repository = new(Module.WorkingDir);
-        Commands.Fetch(repository, remoteName, Array.Empty<string>(), new FetchOptions(), null);
+        Commands.Fetch(repository, remoteName, [], new FetchOptions(), null);
     }
 
     private static Signature GetAuthorSignature() => new(AuthorName, AuthorEmail, DateTimeOffset.Now);

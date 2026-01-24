@@ -926,7 +926,7 @@ public partial class EditNetSpell : GitModuleControl
             {
                 await TaskScheduler.Default.SwitchTo(alwaysYield: true);
 
-                Task<IEnumerable<AutoCompleteWord>>[] subTasks = _autoCompleteProviders.Select(p => p.GetAutoCompleteWordsAsync(cancellationToken)).ToArray();
+                Task<IEnumerable<AutoCompleteWord>>[] subTasks = [.. _autoCompleteProviders.Select(p => p.GetAutoCompleteWordsAsync(cancellationToken))];
                 try
                 {
                     IEnumerable<AutoCompleteWord>[] results = await Task.WhenAll(subTasks);
@@ -1074,7 +1074,7 @@ public partial class EditNetSpell : GitModuleControl
             _autoCompleteWasUserActivated = true;
         }
 
-        List<Size> sizes = list.Select(x => TextRenderer.MeasureText(x.Word, TextBox.Font)).ToList();
+        List<Size> sizes = [.. list.Select(x => TextRenderer.MeasureText(x.Word, TextBox.Font))];
 
         Point cursorPos = GetCursorPosition();
 

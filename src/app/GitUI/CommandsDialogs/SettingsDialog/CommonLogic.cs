@@ -121,7 +121,7 @@ public sealed class CommonLogic : Translate
 
     public static void FillEncodings(ComboBox combo)
     {
-        combo.Items.AddRange(AppSettings.AvailableEncodings.Values.ToArray<object>());
+        combo.Items.AddRange([.. AppSettings.AvailableEncodings.Values]);
         combo.DisplayMember = nameof(Encoding.EncodingName);
     }
 }

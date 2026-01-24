@@ -92,5 +92,6 @@ public class GitlabApiClientBase : IDisposable
     public void Dispose()
     {
         _httpClient.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

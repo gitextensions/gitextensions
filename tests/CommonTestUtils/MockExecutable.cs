@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Text;
 using GitExtensions.Extensibility;
 using GitUI;
@@ -83,7 +83,7 @@ public sealed class MockExecutable : IExecutable
         if (_outputStackByArguments.TryRemove(arguments, out ConcurrentStack<(string output, int? exitCode, string? error)> queue) &&
             queue.TryPop(out (string output, int? exitCode, string? error) item))
         {
-            if (queue.Count == 0)
+            if (queue.IsEmpty)
             {
                 _outputStackByArguments.TryRemove(arguments, out _);
             }
@@ -151,9 +151,7 @@ public sealed class MockExecutable : IExecutable
             {
                 CancellationTokenSource cts = new();
                 CancellationToken ct = cts.Token;
-#pragma warning disable VSTHRD103 // Cancel synchronously blocks. Await CancelAsync instead.
-                cts.Cancel();
-#pragma warning restore VSTHRD103
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => cts.CancelAsync());
                 return Task.FromCanceled<int>(ct);
             }
         }

@@ -85,7 +85,7 @@ internal sealed class SubmoduleNode : Node
         if (IsCurrent)
         {
             // Get the current (most likely) selections from the grid
-            IReadOnlyList<GitRevision> revs = UICommands.BrowseRepo?.GetSelectedRevisions() ?? Array.Empty<GitRevision>();
+            IReadOnlyList<GitRevision> revs = UICommands.BrowseRepo?.GetSelectedRevisions() ?? [];
             selected = revs.Count > 0 ? revs[0].ObjectId : null;
             first = revs.Count > 1 ? revs[^1].ObjectId : null;
         }

@@ -104,6 +104,7 @@ public sealed partial class BlameControl : GitModuleControl
         BlameAuthor.ShowLineNumbers = AppSettings.BlameShowLineNumbers;
     }
 
+    public int CurrentFileColumn => BlameFile.CurrentFileColumn;
     public int CurrentFileLine => BlameFile.CurrentFileLine;
 
     public void HideCommitInfo()
@@ -339,8 +340,8 @@ public sealed partial class BlameControl : GitModuleControl
 
         Validates.NotNull(_fileName);
 
-        BlameAuthor.InvokeAndForget(() => BlameAuthor.ViewTextAsync("committer.txt", gutter, cancellationToken: cancellationToken));
-        BlameFile.InvokeAndForget(() => BlameFile.ViewTextAsync(_fileName, body, cancellationToken: cancellationToken));
+        BlameAuthor.InvokeAndForget(() => BlameAuthor.ViewTextAsync("committer.txt", gutter, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
+        BlameFile.InvokeAndForget(() => BlameFile.ViewTextAsync(_fileName, body, cancellationToken: cancellationToken), cancellationToken: cancellationToken);
         cancellationToken.ThrowIfCancellationRequested();
 
         BlameFile.GoToLine(Math.Min(lineNumber, _blame.Lines.Count));
@@ -369,7 +370,7 @@ public sealed partial class BlameControl : GitModuleControl
         GitBlameCommit? lastCommit = null;
 
         bool showAuthorAvatar = AppSettings.BlameShowAuthorAvatar;
-        List<GitBlameEntry> gitBlameDisplays = showAuthorAvatar ? CalculateBlameGutterData(_blame.Lines) : new List<GitBlameEntry>(0);
+        List<GitBlameEntry> gitBlameDisplays = showAuthorAvatar ? CalculateBlameGutterData(_blame.Lines) : [];
 
         string dateTimeFormat = AppSettings.BlameShowAuthorTime
             ? CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " +
@@ -485,7 +486,7 @@ public sealed partial class BlameControl : GitModuleControl
     private static IList<Color> GetAgeBucketGradientColors()
     {
         // Color chosen from: https://colorbrewer2.org/#type=sequential&scheme=Greens&n=7
-        return new[]
+        return [.. new[]
         {
             Color.FromArgb(247, 252, 245),
             Color.FromArgb(199, 233, 192),
@@ -494,7 +495,7 @@ public sealed partial class BlameControl : GitModuleControl
             Color.FromArgb(65, 171, 93),
             Color.FromArgb(35, 139, 69),
             Color.FromArgb(0, 68, 27),
-        }.Select(ColorHelper.AdaptBackColor).ToList();
+        }.Select(ColorHelper.AdaptBackColor)];
     }
 
     public DateTime ArtificialOldBoundary => DateTime.Now.AddYears(-3);

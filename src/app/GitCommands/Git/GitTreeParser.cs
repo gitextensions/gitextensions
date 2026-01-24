@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 
@@ -38,7 +38,7 @@ public sealed partial class GitTreeParser : IGitTreeParser
     // 100644 blob 7e4eb9dc6a1531a6ee37d8efa6bf570e4bf61146    README.md
     // 100644 blob 5b0965cd097b8c48b66dd456337852640fa429c8    stylecop.json
     [GeneratedRegex(@"^(?<mode>\d{6}) (?<type>(blob|tree|commit)+) (?<objectid>[0-9a-f]{40})\t(?<name>.+)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex TreeLineRegex();
+    private static partial Regex TreeLineRegex { get; }
 
     // $ git ls-files --stage
     // 100644 07c4d877fa885b9ef1ea2c343fe237beaf7a087c 0       externals/Directory.Build.props
@@ -47,7 +47,7 @@ public sealed partial class GitTreeParser : IGitTreeParser
     // 160000 be6183dc8f29079ce677b6834c56b05752828f23 0       externals/ICSharpCode.TextEditor
     // ignore the stage part
     [GeneratedRegex(@"^(?<mode>\d{6}) (?<objectid>[0-9a-f]{40}) (?:[0-9])\t(?<name>.+)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex LsFilesLineRegex();
+    private static partial Regex LsFilesLineRegex { get; }
 
     public string GitTreeFormat { get; } = "%(objectmode) %(objecttype) %(objectname)%x09%(path)";
 
@@ -68,7 +68,7 @@ public sealed partial class GitTreeParser : IGitTreeParser
             return null;
         }
 
-        Match match = TreeLineRegex().Match(rawItem);
+        Match match = TreeLineRegex.Match(rawItem);
 
         if (!match.Success)
         {
@@ -102,7 +102,7 @@ public sealed partial class GitTreeParser : IGitTreeParser
             return null;
         }
 
-        Match match = LsFilesLineRegex().Match(rawItem);
+        Match match = LsFilesLineRegex.Match(rawItem);
 
         if (!match.Success)
         {

@@ -43,7 +43,7 @@ Send report?");
     private string? _environmentInfo;
 
     [GeneratedRegex(@"\s|\r|\n", RegexOptions.ExplicitCapture)]
-    private static partial Regex WhitespaceRegex();
+    private static partial Regex WhitespaceRegex { get; }
 
     static BugReportForm()
     {
@@ -141,7 +141,7 @@ Send report?");
 
     private static bool CheckContainsInfo(string input)
     {
-        string text = WhitespaceRegex().Replace(input, string.Empty);
+        string text = WhitespaceRegex.Replace(input, string.Empty);
         return !string.IsNullOrWhiteSpace(text);
     }
 
@@ -218,7 +218,7 @@ Send report?");
             return;
         }
 
-        (string itemName, object item)[] itemsToTranslate = new[] { (itemName, item) };
+        (string itemName, object item)[] itemsToTranslate = [(itemName, item)];
 
         foreach (KeyValuePair<string, TranslationFile> pair in translation)
         {

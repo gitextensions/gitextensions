@@ -164,7 +164,7 @@ public class ExternalLinkDefinition
 
     public void RemoveEmptyFormats()
     {
-        ExternalLinkFormat[] toRemove = LinkFormats.Where(f => string.IsNullOrWhiteSpace(f.Caption) && string.IsNullOrWhiteSpace(f.Format)).ToArray();
+        ExternalLinkFormat[] toRemove = [.. LinkFormats.Where(f => string.IsNullOrWhiteSpace(f.Caption) && string.IsNullOrWhiteSpace(f.Format))];
 
         foreach (ExternalLinkFormat format in toRemove)
         {

@@ -39,7 +39,7 @@ public partial class FormOpenDirectory : GitExtensionsForm
 
     private static IReadOnlyList<string> GetDirectories(IGitModule? currentModule, IEnumerable<Repository> repositoryHistory)
     {
-        List<string> directories = new();
+        List<string> directories = [];
 
         if (!string.IsNullOrWhiteSpace(AppSettings.DefaultCloneDestinationPath))
         {

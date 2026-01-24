@@ -63,7 +63,7 @@ public static class FileHelper
     /// <returns>null if no info in .gitattributes (or ambiguous). True if marked as binary, false if marked as text</returns>
     private static bool? IsBinaryAccordingToGitAttributes(IGitModule module, string fileName)
     {
-        string[] diffValues = { "set", "astextplain", "ada", "bibtext", "cpp", "csharp", "css", "dts", "elixir", "fortran", "html", "java", "kotlin", "markdown", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "rust", "scheme", "tex" };
+        string[] diffValues = ["set", "astextplain", "ada", "bibtext", "cpp", "csharp", "css", "dts", "elixir", "fortran", "html", "java", "kotlin", "markdown", "matlab", "objc", "pascal", "perl", "php", "python", "ruby", "rust", "scheme", "tex"];
         GitArgumentBuilder cmd = new("check-attr")
         {
             "-z",
@@ -145,22 +145,12 @@ public static class FileHelper
         if (content?.Length is > 0)
         {
             int nullCount = 0;
-            foreach (char c in content)
+            foreach (byte b in content)
             {
-                if (c == '\0')
+                if (b == 0 && ++nullCount > 5)
                 {
-                    nullCount++;
+                    return true;
                 }
-
-                if (nullCount > 5)
-                {
-                    break;
-                }
-            }
-
-            if (nullCount > 5)
-            {
-                return true;
             }
         }
 

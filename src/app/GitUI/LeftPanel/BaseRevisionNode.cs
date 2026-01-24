@@ -28,8 +28,8 @@ internal abstract class BaseRevisionNode : Node
         }
         else
         {
-            Name = fullPath.Substring(nameIndex + 1);
-            ParentPath = fullPath.Substring(0, nameIndex);
+            Name = fullPath[(nameIndex + 1)..];
+            ParentPath = fullPath[..nameIndex];
         }
 
         Visible = visible;

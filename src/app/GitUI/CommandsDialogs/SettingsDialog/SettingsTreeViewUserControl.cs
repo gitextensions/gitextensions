@@ -155,7 +155,7 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
             node.EnsureVerticallyVisible();
         }
 
-        if (_nodesFoundByTextBox.Any())
+        if (_nodesFoundByTextBox.Count != 0)
         {
             // if visible: when searching, if the selected node is valid, it will still have grey background
             treeView1.HideSelection = true;
@@ -177,7 +177,7 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
         treeView1.EndUpdate();
         return;
 
-        void ResetHighlighting(TreeNodeCollection nodes)
+        static void ResetHighlighting(TreeNodeCollection nodes)
         {
             foreach (TreeNode node in nodes.Cast<TreeNode>())
             {

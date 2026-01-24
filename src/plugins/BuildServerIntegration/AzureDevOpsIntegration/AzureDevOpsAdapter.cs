@@ -1,4 +1,4 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Globalization;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -120,21 +120,21 @@ Detail of the error:");
             return Observable.Empty<BuildInfo>();
         }
 
-        return GetBuilds(scheduler, sinceDate, false);
+        return GetBuilds(sinceDate, false);
     }
 
     public IObservable<BuildInfo> GetRunningBuilds(IScheduler scheduler)
-        => GetBuilds(scheduler, null, true);
+        => GetBuilds(null, true);
 
     public void OnRepositoryChanged()
     {
         _buildsCache = null;
     }
 
-    private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate = null, bool running = false)
-        => Observable.Create<BuildInfo>((observer, cancellationToken) => ObserveBuildsAsync(sinceDate, running, observer, cancellationToken));
+    private IObservable<BuildInfo> GetBuilds(DateTime? sinceDate = null, bool running = false)
+        => Observable.Create<BuildInfo>((observer, cancellationToken) => ObserveBuildsAsync(sinceDate, running, observer));
 
-    private async Task ObserveBuildsAsync(DateTime? sinceDate, bool running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
+    private async Task ObserveBuildsAsync(DateTime? sinceDate, bool running, IObserver<BuildInfo> observer)
     {
         if (_apiClient is null)
         {
@@ -161,7 +161,7 @@ Detail of the error:");
             else
             {
                 // Display cached builds results
-                if (!sinceDate.HasValue && _buildsCache.FinishedBuilds.Any())
+                if (!sinceDate.HasValue && _buildsCache.FinishedBuilds.Count != 0)
                 {
                     foreach (BuildInfo buildInfo in _buildsCache.FinishedBuilds)
                     {
@@ -240,7 +240,7 @@ Detail of the error:");
                     Buttons = { btnOpenSettings, btnIgnore }
                 };
 
-                TaskDialogButton result = TaskDialog.ShowDialog(page);
+                TaskDialogButton result = await TaskDialog.ShowDialogAsync(page);
                 if (result == btnOpenSettings)
                 {
                     _projectOnErrorKey = null;
@@ -279,7 +279,7 @@ Detail of the error:");
         }
 
         IEnumerable<IGrouping<string, Build>> byCommitBuilds = runningBuilds.GroupBy(b => b.SourceVersion);
-        runningBuilds = new List<Build>();
+        runningBuilds = [];
 
         // Filter running builds to display the best build as we can only display one build for a commit
         // by selecting the first started or if none, one that is waiting to start

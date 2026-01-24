@@ -28,7 +28,7 @@ public static class UIExtensions
 
     public static bool IsFixedWidth(this Font ft, Graphics g)
     {
-        char[] charSizes = { 'i', 'a', 'Z', '%', '#', 'a', 'B', 'l', 'm', ',', '.' };
+        char[] charSizes = ['i', 'a', 'Z', '%', '#', 'a', 'B', 'l', 'm', ',', '.'];
         float charWidth = g.MeasureString("I", ft).Width;
 
         bool fixedWidth = true;

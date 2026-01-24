@@ -15,7 +15,7 @@ namespace GitUI;
 public static partial class GitUIExtensions
 {
     [GeneratedRegex(@"\n\s*(@@|##)\s+(?<file>[^#:\n]+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex FileNameRegex();
+    private static partial Regex FileNameRegex { get; }
 
     /// <summary>
     /// View the changes between the revisions, if possible as a diff.
@@ -94,7 +94,7 @@ public static partial class GitUIExtensions
             }
 
             // Try set highlighting from first found filename
-            Match match = FileNameRegex().Match(result.StandardOutput);
+            Match match = FileNameRegex.Match(result.StandardOutput);
             string filename = match.Groups["file"].Success ? match.Groups["file"].Value : item.Item.Name;
 
             await fileViewer.ViewRangeDiffAsync(filename, result.StandardOutput, cancellationToken: cancellationToken);

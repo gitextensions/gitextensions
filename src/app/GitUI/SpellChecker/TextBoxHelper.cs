@@ -13,7 +13,7 @@ internal static class TextBoxHelper
 
     internal static int GetBaselineOffsetAtCharIndex(TextBoxBase tb, int index)
     {
-        if (!(tb is RichTextBox rtb) || !EnvUtils.RunningOnWindows())
+        if (tb is not RichTextBox rtb || !EnvUtils.RunningOnWindows())
         {
             return tb.Font.Height;
         }

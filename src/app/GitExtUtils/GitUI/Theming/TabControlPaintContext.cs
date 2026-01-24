@@ -39,15 +39,9 @@ internal class TabControlPaintContext
 
         try
         {
-            _tabTexts = Enumerable.Range(0, _tabCount)
-                .Select(i => tabs.TabPages[i].Text)
-                .ToArray();
-            _tabImages = Enumerable.Range(0, _tabCount)
-                .Select(i => GetTabImage(tabs, i))
-                .ToArray();
-            _tabRects = Enumerable.Range(0, _tabCount)
-                .Select(tabs.GetTabRect)
-                .ToArray();
+            _tabTexts = [.. Enumerable.Range(0, _tabCount).Select(i => tabs.TabPages[i].Text)];
+            _tabImages = [.. Enumerable.Range(0, _tabCount).Select(i => GetTabImage(tabs, i))];
+            _tabRects = [.. Enumerable.Range(0, _tabCount).Select(tabs.GetTabRect)];
         }
         catch (ArgumentOutOfRangeException)
         {
@@ -264,10 +258,8 @@ internal class TabControlPaintContext
             _graphics.FillRectangle(backgroundBrush.Brush, pageRect);
         }
 
-        using (Pen borderPen = CreateBorderPen())
-        {
-            _graphics.DrawRectangle(borderPen, pageRect);
-        }
+        using Pen borderPen = CreateBorderPen();
+        _graphics.DrawRectangle(borderPen, pageRect);
     }
 
     private static Color GetParentBackColor(TabControl tabs)

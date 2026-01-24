@@ -202,7 +202,7 @@ public sealed partial class RevisionDataGridView : DataGridView
 
     // Contains the object Id's that will be selected as soon as all of them have been loaded.
     // The object Id's are in the order in which they were originally selected.
-    public IReadOnlyList<ObjectId> ToBeSelectedObjectIds { get; set; } = Array.Empty<ObjectId>();
+    public IReadOnlyList<ObjectId> ToBeSelectedObjectIds { get; set; } = [];
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [Browsable(false)]
     public IReadOnlyList<ObjectId>? SelectedObjectIds
@@ -380,7 +380,7 @@ public sealed partial class RevisionDataGridView : DataGridView
             && SelectedRows?.Count is > 0)
         {
             // (GraphIndex) selection in grid was 'premature'
-            ToBeSelectedObjectIds = SelectedObjectIds ?? Array.Empty<ObjectId>();
+            ToBeSelectedObjectIds = SelectedObjectIds ?? [];
             _loadedToBeSelectedRevisionsCount = ToBeSelectedObjectIds.Count;
             ResetGraphIndices();
         }
@@ -444,7 +444,7 @@ public sealed partial class RevisionDataGridView : DataGridView
     public void ClearToBeSelected()
     {
         _loadedToBeSelectedRevisionsCount = 0;
-        ToBeSelectedObjectIds = Array.Empty<ObjectId>();
+        ToBeSelectedObjectIds = [];
         ResetGraphIndices();
     }
 
@@ -852,12 +852,12 @@ public sealed partial class RevisionDataGridView : DataGridView
         // With lock, loading the commit info slows down terribly.
         if (_revisionGraph.TryGetNode(objectId, out RevisionGraphRevision? node))
         {
-            List<ObjectId> children = node.Children.Select(d => d.GitRevision!.ObjectId).ToList();
+            List<ObjectId> children = [.. node.Children.Select(d => d.GitRevision!.ObjectId)];
             children.Reverse();
             return children;
         }
 
-        return Array.Empty<ObjectId>();
+        return [];
     }
 
     protected override void OnKeyDown(KeyEventArgs e)

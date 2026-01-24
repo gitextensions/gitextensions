@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitCommands.UserRepositoryHistory.Legacy;
 using NSubstitute;
@@ -26,7 +26,7 @@ public class RepositoryStorageTests
     {
         AppSettings.SetString("repositories", setting);
         RepositoryStorage repositoryStorage = new();
-        var repositories = repositoryStorage.Load();
+        IReadOnlyList<RepositoryCategory> repositories = repositoryStorage.Load();
 
         repositories.Should().BeEmpty();
     }
@@ -50,22 +50,17 @@ public class RepositoryStorageTests
         [
             new RepositoryCategory
             {
-                Repositories = new List<Repository>(
-                    new[]
-                    {
-                        new Repository { Path = "C:\\Development\\RibbonWinForms\\", Description = "Check it out!", Anchor = "None" },
-                        new Repository { Path = "", Anchor = "None" },
-                    }),
+                Repositories =
+                [
+                    new Repository { Path = "C:\\Development\\RibbonWinForms\\", Description = "Check it out!", Anchor = "None" },
+                    new Repository { Path = "", Anchor = "None" },
+                ],
                 CategoryType = "Repositories",
                 Description = "3rd Party"
             },
             new RepositoryCategory
             {
-                Repositories = new List<Repository>(
-                    new[]
-                    {
-                        new Repository { Title = "Git Extensions", Path = "C:\\Development\\gitextensions\\", Description = "Mega project!", Anchor = "Pinned" }
-                    }),
+                Repositories = [new Repository { Title = "Git Extensions", Path = "C:\\Development\\gitextensions\\", Description = "Mega project!", Anchor = "Pinned" }],
                 CategoryType = "Repositories",
                 Description = "Test"
             },

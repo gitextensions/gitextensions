@@ -35,7 +35,7 @@ internal class ConfigFileRemoteSettingsManagerTests
     [Test]
     public void LoadRemotes_should_not_populate_remotes_if_none()
     {
-        _module.GetRemoteNames().Returns(x => Array.Empty<string>());
+        _module.GetRemoteNames().Returns(x => []);
 
         IEnumerable<ConfigFileRemote> remotes = _remotesManager.LoadRemotes(true);
 
@@ -253,10 +253,10 @@ internal class ConfigFileRemoteSettingsManagerTests
     [Test]
     public void ConfigureRemotes_Should_not_update_localHead_if_remoteHead_is_local()
     {
-        IGitRef[] refs = new[]
-        {
+        IGitRef[] refs =
+        [
             CreateSubstituteRef("f6323b8e80f96dff017dd14bdb28a576556adab4", "refs/heads/local", ""),
-        };
+        ];
 
         _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 
@@ -270,10 +270,10 @@ internal class ConfigFileRemoteSettingsManagerTests
     [Test]
     public void ConfigureRemotes_Should_not_update_localHead_if_localHead_is_remote()
     {
-        IGitRef[] refs = new[]
-        {
+        IGitRef[] refs =
+        [
             CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", "refs/remotes/origin/develop", "origin"),
-        };
+        ];
         _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 
         _remotesManager.ConfigureRemotes("origin");
@@ -286,11 +286,11 @@ internal class ConfigFileRemoteSettingsManagerTests
     [Test]
     public void ConfigureRemotes_Should_not_update_localHead_if_remoteHead_is_not_the_remote_origin_of_the_localHead()
     {
-        IGitRef[] refs = new[]
-        {
+        IGitRef[] refs =
+        [
             CreateSubstituteRef("f6323b8e80f96dff017dd14bdb28a576556adab4", "refs/heads/develop", ""),
             CreateSubstituteRef("ddca5a9cdc3ab10e042ae6cf5f8da2dd25c4b75f", "refs/remotes/origin/master", "origin"),
-        };
+        ];
         _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 
         _remotesManager.ConfigureRemotes("origin");
@@ -304,10 +304,10 @@ internal class ConfigFileRemoteSettingsManagerTests
     [Test]
     public void ConfigureRemotes_Should_not_update_localHead_if_remoteHead_is_Tag()
     {
-        IGitRef[] refs = new[]
-        {
+        IGitRef[] refs =
+        [
             CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", "refs/tags/local-tag", ""),
-        };
+        ];
         _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 
         _remotesManager.ConfigureRemotes("origin");
@@ -321,11 +321,11 @@ internal class ConfigFileRemoteSettingsManagerTests
     [Test]
     public void ConfigureRemotes_Should_update_localHead_if_remoteHead_is_the_remote_origin_of_the_localHead()
     {
-        IGitRef[] refs = new[]
-        {
+        IGitRef[] refs =
+        [
             CreateSubstituteRef("f6323b8e80f96dff017dd14bdb28a576556adab4", "refs/heads/develop", ""),
             CreateSubstituteRef("02e10a13e06e7562f7c3c516abb2a0e1a0c0dd90", "refs/remotes/origin/develop", "origin"),
-        };
+        ];
         _module.GetRefs(RefsFilter.NoFilter).ReturnsForAnyArgs(refs);
 
         _remotesManager.ConfigureRemotes("origin");

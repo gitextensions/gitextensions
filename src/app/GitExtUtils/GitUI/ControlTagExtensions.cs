@@ -23,7 +23,7 @@ public static class ControlTagExtensions
     public static TValue? GetTag<TValue>(this Control control, string key)
     {
         if (control.Tag is null ||
-            !(control.Tag is Dictionary<string, object?> dict) ||
+            control.Tag is not Dictionary<string, object?> dict ||
             !dict.TryGetValue(key, out object? result))
         {
             return default;

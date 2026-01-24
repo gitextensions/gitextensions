@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
@@ -16,7 +16,7 @@ partial class CommandsTests
     [Test]
     public void ctor_should_throw_if_branches_is_empty()
     {
-        ClassicAssert.Throws<ArgumentException>(() => Commands.DeleteBranch(Array.Empty<IGitRef>(), force: false));
+        ClassicAssert.Throws<ArgumentException>(() => Commands.DeleteBranch([], force: false));
     }
 
     [Test]

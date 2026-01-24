@@ -126,7 +126,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     {
         if (string.IsNullOrWhiteSpace(word))
         {
-            return Array.Empty<TextMarker>();
+            return [];
         }
 
         List<TextMarker> selectionMarkers = [];
@@ -717,6 +717,8 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     }
 
     public int MaxLineNumber => TextEditor.ShowLineNumbers ? TotalNumberOfLines : _lineNumbersControl.MaxLineNumber;
+
+    public int CurrentFileColumn => TextEditor.ActiveTextAreaControl.Caret.Position.Column;
 
     public int CurrentFileLine()
     {

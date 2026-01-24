@@ -30,8 +30,8 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
 
     private static void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : Enum
     {
-        comboBox.DisplayMember = nameof(ComboBoxItem<T>.Text);
-        comboBox.ValueMember = nameof(ComboBoxItem<T>.Value);
+        comboBox.DisplayMember = nameof(ComboBoxItem<>.Text);
+        comboBox.ValueMember = nameof(ComboBoxItem<>.Value);
         comboBox.DataSource = EnumHelper.GetValues<T>()
             .Select(e => new ComboBoxItem<T>(e.GetDescription(), e))
             .ToArray();
