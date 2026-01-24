@@ -107,14 +107,24 @@ STDAPI RegisterExtension(
 
         const Uri packageUri(packagePath);
         const auto op = pm.AddPackageByUriAsync(packageUri, options);
-        (void)op.get();
+        const auto deploymentResult = op.get();
 
-        // Some WinRT async failures surface via exception; this checks status too.
-        if (op.Status() == AsyncStatus::Error)
+        if (op.Status() == AsyncStatus::Error || !deploymentResult.IsRegistered())
         {
-            // AsyncStatus::Error often pairs with op.ErrorCode()
             const auto hr = op.ErrorCode();
-            SetLastErrorMessage(L"RegisterExtension failed (AsyncStatus::Error).");
+
+            // Extract the "PowerShell-style" detailed error text
+            const winrt::hstring detailedError = deploymentResult.ErrorText();
+
+            if (!detailedError.empty())
+            {
+                SetLastErrorMessage(detailedError.c_str());
+            }
+            else
+            {
+                SetLastErrorMessage(L"RegisterExtension failed with no additional error text.");
+            }
+
             return hr;
         }
 
