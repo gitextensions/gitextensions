@@ -77,7 +77,7 @@ jobs:
 
       - name: Build GE native components
         run: |
-          dotnet build .\src\native\build.proj -c Release --verbosity q
+          dotnet build .\src\native\build.proj -c Release --verbosity q $env:buildArgs
 
       - name: Build GE app
         run: |
