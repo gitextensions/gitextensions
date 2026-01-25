@@ -94,6 +94,7 @@ public partial class GrepHighlightService : TextHighlightService
         StringBuilder sb = new(text.Length);
         bool skipNextSeparator = false;
         bool pendingSeparator = false;
+        bool firstError = true;
         foreach (string line in text.LazySplit('\n'))
         {
             if (line == _grepResultKind_Separator)
@@ -112,8 +113,11 @@ public partial class GrepHighlightService : TextHighlightService
             {
                 if (line.Length > 0)
                 {
-                    Trace.WriteLine($"Cannot parse lineNo for grep {line} ({sb.Length})");
-                    DebugHelpers.Fail($"Cannot parse lineNo for grep {line} ({sb.Length})");
+                    if (firstError)
+                    {
+                        firstError = false;
+                        Trace.WriteLine($"Cannot parse lineNo for grep {line.ShortenTo(80)} ({sb.Length})");
+                    }
                 }
 
                 // git-grep emits an empty line last, should not be displayed.

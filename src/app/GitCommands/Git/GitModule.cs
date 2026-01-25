@@ -2424,6 +2424,7 @@ public sealed partial class GitModule : IGitModule
         bool useGitColoring,
         bool showFunctionName,
         IGitCommandConfiguration commandConfiguration,
+        Encoding encoding,
         CancellationToken cancellationToken)
     {
         bool noCache = objectId.IsArtificial;
@@ -2446,6 +2447,7 @@ public sealed partial class GitModule : IGitModule
 
         return await _gitExecutable.ExecuteAsync(
             args,
+            outputEncoding: encoding,
             cache: noCache ? null : GitCommandCache,
             throwOnErrorExit: false,
             stripAnsiEscapeCodes: !useGitColoring,

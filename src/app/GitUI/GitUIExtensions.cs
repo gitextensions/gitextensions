@@ -112,6 +112,7 @@ public static partial class GitUIExtensions
                     useGitColoring: true,
                     showFunctionName: true,
                     commandConfiguration: commandConfiguration,
+                    fileViewer.Encoding,
                     cancellationToken);
 
             if (!result.ExitedSuccessfully)
