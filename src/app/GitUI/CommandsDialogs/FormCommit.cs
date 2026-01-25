@@ -168,6 +168,12 @@ public sealed partial class FormCommit : GitModuleForm
     private EventHandler? _branchNameLabelOnClick;
     private ToolStripMenuItem _conventionalCommitItem;
 
+    /// <summary>
+    /// Regex to find message replace pattern: {{ group1 }}[ group2 ]
+    /// </summary>
+    [GeneratedRegex(@"\{\{(.*?)\}\}(?:\[(\d+)\])?")]
+    private static partial Regex ReplaceMessageRegex();
+
     private CommitKind CommitKind
     {
         get => _commitKind;
@@ -1395,12 +1401,59 @@ public sealed partial class FormCommit : GitModuleForm
     /// replace the Message.Text in an undo-able way.
     /// </summary>
     /// <param name="message">the new message.</param>
-    private void ReplaceMessage(string? message)
+    private void ReplaceMessage(string message)
     {
         if (Message.Text != message)
         {
             Message.SelectAll();
             Message.SelectedText = message;
+        }
+    }
+
+    /// <summary>
+    /// replace the Message.Text in an undo-able way.
+    /// </summary>
+    /// <param name="message">the new message.</param>
+    /// <param name="regexEnabled">regex replace is enabled</param>
+    private void ReplaceMessage(string message, bool regexEnabled)
+    {
+        try
+        {
+            if (!regexEnabled)
+            {
+                return;
+            }
+
+            foreach (Match regexMatch in ReplaceMessageRegex().Matches(message))
+            {
+                string pattern = regexMatch.Groups[1].Value;
+                int groupIndex = 1;
+
+                if (regexMatch.Groups.Count > 2 && int.TryParse(regexMatch.Groups[2].Value, out int parsedIndex))
+                {
+                    groupIndex = parsedIndex;
+                }
+
+                Regex regex = new(pattern);
+                string currentBranchName = Module.GetSelectedBranch();
+                MatchCollection matches = regex.Matches(currentBranchName);
+                string replaceText = "";
+
+                if (matches.Count > 0 && matches[0].Groups.Count > groupIndex)
+                {
+                    replaceText = matches[0].Groups[groupIndex].Value;
+                }
+
+                message = message.Replace(regexMatch.Groups[0].Value, replaceText);
+            }
+        }
+        catch (Exception ex)
+        {
+            Trace.WriteLine($"ReplaceMessage with regex replace exception: {ex}");
+        }
+        finally
+        {
+            ReplaceMessage(message);
         }
     }
 
@@ -2495,7 +2548,7 @@ public sealed partial class FormCommit : GitModuleForm
                 {
                     try
                     {
-                        ReplaceMessage(item.Text);
+                        ReplaceMessage(item.Text, item.IsRegex);
                         Message.Focus();
                     }
                     catch
@@ -2832,6 +2885,9 @@ public sealed partial class FormCommit : GitModuleForm
             => _formCommit.PrefixOrReplaceKeyword(keyword);
 
         internal bool IncludeFeatureParentheses { set => _formCommit._insertScopeParentheses = value; }
+
+        internal void ReplaceMessage(string message, bool regexEnabled) => _formCommit.ReplaceMessage(message, regexEnabled);
+
         internal void SetMessageState(string text, int position)
         {
             _formCommit.Message.Text = text;

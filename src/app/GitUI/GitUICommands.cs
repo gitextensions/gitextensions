@@ -691,9 +691,9 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action, changesRepo: false);
     }
 
-    public void AddCommitTemplate(string key, Func<string> addingText, Image? icon)
+    public void AddCommitTemplate(string key, Func<string> addingText, Image? icon, bool isRegex)
     {
-        _commitTemplateManager.Register(key, addingText, icon);
+        _commitTemplateManager.Register(key, addingText, icon, isRegex);
     }
 
     public void RemoveCommitTemplate(string key)
