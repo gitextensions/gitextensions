@@ -262,7 +262,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         fileToolStripMenuItem.Initialize(() => UICommands);
         helpToolStripMenuItem.Initialize(() => UICommands);
         toolsToolStripMenuItem.Initialize(() => UICommands);
-        _NO_TRANSLATE_WorkingDir.Initialize(() => UICommands, _repositoryHistoryUIService, fileToolStripMenuItem, closeToolStripMenuItem);
 
         BackColor = OtherColors.BackgroundColor;
 
@@ -295,6 +294,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         LeftSplitContainer.Invalidated += FixupSplitterColor;
 
         InitializeComplete();
+
+        // The toolstrip and menu items must be initialised after InitializeComplete
+        // which invokes the translation logic and applies the current language to the components.
+        _NO_TRANSLATE_WorkingDir.Initialize(() => UICommands, _repositoryHistoryUIService, fileToolStripMenuItem, closeToolStripMenuItem);
 
         HotkeysEnabled = true;
         LoadHotkeys(HotkeySettingsName);
