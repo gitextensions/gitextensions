@@ -8303,8 +8303,12 @@ Check if file is accessible.</source>
         <source>Change HOME</source>
         <target />
       </trans-unit>
-      <trans-unit id="_homeIsSetToString.Text">
-        <source>HOME is set to:</source>
+      <trans-unit id="_envIsNotSetString.Text">
+        <source>{0} is not set.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_envIsSetToString.Text">
+        <source>{0} is set to: {1}</source>
         <target />
       </trans-unit>
       <trans-unit id="downloadGitForWindows.Text">
@@ -8332,8 +8336,10 @@ Check if file is accessible.</source>
         <target />
       </trans-unit>
       <trans-unit id="lblGlobalConfigPath.Text">
-        <source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</source>
+        <source>By default, the global config file is located in the location stored in the environment variable %HOME%.
+(This can be overridden by setting %GIT_CONFIG_GLOBAL%.)
+If empty, %HOME% will be set to %HOMEDRIVE%%HOMEPATH% by default.
+Change the default behaviour only if you experience problems.</source>
         <target />
       </trans-unit>
       <trans-unit id="lblShPath.Text">
