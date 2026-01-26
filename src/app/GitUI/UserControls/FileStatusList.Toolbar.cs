@@ -13,6 +13,8 @@ partial class FileStatusList
     private readonly Image _treeImage = Images.FileTree;
     private readonly Image _flatListImage = Images.DocumentTree.AdaptLightness();
 
+    private string? _findUsingOptionsPrefix;
+
     // order in AppSettings.FileStatusFindInFilesGitGrepTypeIndex
     private ToolStripMenuItem[] FindUsingMenuItems => field ??= [tsmiFindUsingDialog, tsmiFindUsingInputBox, tsmiFindUsingBoth];
 
@@ -147,6 +149,12 @@ partial class FileStatusList
         FindInCommitFilesGitGrep();
     }
 
+    private void FindUsingOption_Click(object sender, EventArgs e)
+    {
+        AppSettings.GitGrepUserArguments.Value = ((ToolStripMenuItem)sender).Text;
+        FindInCommitFilesGitGrep();
+    }
+
     private void FindUsing_Click(object sender, EventArgs e)
     {
         if (sender is ToolStripMenuItem item)
@@ -205,6 +213,8 @@ partial class FileStatusList
     {
         tsmiFindUsingMatchCase.Checked = !AppSettings.GitGrepIgnoreCase.Value;
         tsmiFindUsingWholeWord.Checked = AppSettings.GitGrepMatchWholeWord.Value;
+        _findUsingOptionsPrefix ??= tsmiFindUsingOptions.Text + ": ";
+        tsmiFindUsingOptions.Text = _findUsingOptionsPrefix + AppSettings.GitGrepUserArguments.Value;
     }
 
     private void ShowAssumeUnchangedFiles_Click(object sender, EventArgs e)
