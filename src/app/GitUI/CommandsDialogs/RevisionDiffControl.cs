@@ -475,7 +475,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
             DiffText.Focus();
         }
 
-        FileStatusItem? item = DiffFiles.SelectedItem;
+        FileStatusItem? item = DiffFiles.SelectedItems.Contains(DiffFiles.FocusedItem) ? DiffFiles.FocusedItem : DiffFiles.SelectedItems.FirstOrDefault();
         await DiffText.ViewChangesAsync(item,
             line: line,
             forceFileView: IsFileTreeMode && !DiffFiles.FindInCommitFilesGitGrepActive,
