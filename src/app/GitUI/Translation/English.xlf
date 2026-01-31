@@ -1871,7 +1871,7 @@ Suitable for some config files modified locally.</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowSkipWorktreeFiles.Text">
-        <source>Show &amp;skip-worktree files</source>
+        <source>Show s&amp;kip-worktree files</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiShowUntrackedFiles.Text">
