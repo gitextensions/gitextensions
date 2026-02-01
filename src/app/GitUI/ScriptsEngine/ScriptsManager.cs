@@ -190,6 +190,30 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
                 OnEvent = 0,
                 AddToRevisionGridContextMenu = true,
                 Enabled = false
+            },
+            new ScriptInfo
+            {
+                HotkeyCommandIdentifier = 9006,
+                Name = "Convert workspace file to LF",
+                Command = "bash.exe",
+                Arguments = @"-c ""perl -pi -e 's%\r\n%\n%;' {SelectedRelativePaths}""",
+                RunInBackground = true,
+                AskConfirmation = false,
+                OnEvent = 0,
+                AddToRevisionGridContextMenu = false,
+                Enabled = false
+            },
+            new ScriptInfo
+            {
+                HotkeyCommandIdentifier = 9007,
+                Name = "Convert workspace file to CRLF",
+                Command = "bash.exe",
+                Arguments = @"-c ""perl -pi -e 's%\n%\r\n%;' {SelectedRelativePaths}""",
+                RunInBackground = true,
+                AskConfirmation = false,
+                OnEvent = 0,
+                AddToRevisionGridContextMenu = false,
+                Enabled = false
             }
         ];
 
