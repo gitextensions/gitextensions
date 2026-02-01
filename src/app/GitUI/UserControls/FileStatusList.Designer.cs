@@ -615,7 +615,7 @@ partial class FileStatusList
         tsmiShowSkipWorktreeFiles.CheckOnClick = true;
         tsmiShowSkipWorktreeFiles.Name = "tsmiShowSkipWorktreeFiles";
         tsmiShowSkipWorktreeFiles.Size = new Size(286, 22);
-        tsmiShowSkipWorktreeFiles.Text = "Show &skip-worktree files";
+        tsmiShowSkipWorktreeFiles.Text = "Show s&kip-worktree files";
         tsmiShowSkipWorktreeFiles.Visible = true;
         tsmiShowSkipWorktreeFiles.Click += ShowSkipWorktreeFiles_Click;
         // 
