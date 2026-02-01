@@ -23,7 +23,20 @@ public partial class FormResetChanges : GitExtensionsForm
 
         if (confirmationMessage is not null)
         {
-            label1.Text = confirmationMessage;
+            txtMessage.AutoSize = false;
+            txtMessage.ScrollBars = ScrollBars.None;
+            txtMessage.WordWrap = false;
+
+            confirmationMessage = confirmationMessage.ReplaceLineEndings(Environment.NewLine);
+            txtMessage.Text = confirmationMessage;
+
+            Size formSize = Size;
+            Size preferredSize = formSize + txtMessage.PreferredSize - txtMessage.Size;
+            formSize.Height = Math.Clamp(preferredSize.Height, formSize.Height, Screen.GetWorkingArea(this).Height * 3 / 4);
+            formSize.Width = Math.Clamp(preferredSize.Width + SystemInformation.VerticalScrollBarWidth, formSize.Width, Screen.GetWorkingArea(this).Width * 3 / 4);
+            Size = formSize;
+            txtMessage.ScrollBars = confirmationMessage.Contains(Environment.NewLine) ? ScrollBars.Both : ScrollBars.None;
+            txtMessage.WordWrap = true;
         }
 
         if (!hasExistingFiles)
