@@ -147,7 +147,7 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl
         }
     }
 
-    internal IScriptOptionsProvider? FindScriptOptionsProvider()
+    internal IScriptOptionsProvider FindScriptOptionsProvider()
     {
         for (Control control = this; control != null; control = control.Parent)
         {
@@ -162,7 +162,7 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl
             }
         }
 
-        return null;
+        return ScriptOptionsProviderBase.Default;
     }
 
     protected virtual IScriptOptionsProvider? GetScriptOptionsProvider()
