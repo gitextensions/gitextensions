@@ -6847,12 +6847,12 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <source>Also delete &amp;new files and/or directories</source>
         <target />
       </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Are you sure you want to reset your changes?</source>
+      <trans-unit id="lblDeleteHint.Text">
+        <source>This will delete any uncommitted work.</source>
         <target />
       </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>This will delete any uncommitted work.</source>
+      <trans-unit id="txtMessage.Text">
+        <source>Are you sure you want to reset your changes?</source>
         <target />
       </trans-unit>
     </body>
