@@ -46,5 +46,8 @@ internal sealed class NotesColumnProvider : ColumnProvider
     }
 
     public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
-        => !string.IsNullOrWhiteSpace(toolTip = revision.Notes);
+    {
+        toolTip = revision.Notes;
+        return toolTip is not null;
+    }
 }
