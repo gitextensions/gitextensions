@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitUIPluginInterfaces;
 using ResourceManager.CommitDataRenders;
 
 namespace ResourceManager;

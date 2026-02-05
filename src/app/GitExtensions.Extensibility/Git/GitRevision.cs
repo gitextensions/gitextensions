@@ -89,6 +89,9 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
 
     public string Subject { get; set; } = "";
 
+    /// <summary>
+    /// Full commit message (all lines), but without <see cref="Notes"/>.
+    /// </summary>
     public string? Body
     {
         // Body is not stored by default for older commits to reduce memory usage
@@ -98,7 +101,14 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
     }
 
     public bool HasMultiLineMessage { get; set; }
-    public bool HasNotes { get; set; }
+
+    /// <summary>
+    /// Git <see href="https://git-scm.com/docs/git-notes">Notes</see>
+    /// </summary>
+    /// <remarks>
+    /// <see langword="null"/> means "not loaded yet", <see cref="string.Empty"/> means "empty".
+    /// </remarks>
+    public string? Notes { get; set; }
 
     public override string ToString() => $"{ObjectId.ToShortString()}:{Subject}";
 
