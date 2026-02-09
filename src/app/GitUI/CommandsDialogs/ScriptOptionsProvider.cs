@@ -3,7 +3,7 @@ using GitUI.ScriptsEngine;
 
 namespace GitUI.CommandsDialogs;
 
-internal class ScriptOptionsProvider : IScriptOptionsProvider
+internal sealed class ScriptOptionsProvider : ScriptOptionsProviderBase
 {
     private const string _selectedRelativePaths = "SelectedRelativePaths";
     internal const string _lineNumber = "LineNumber";
@@ -25,9 +25,9 @@ internal class ScriptOptionsProvider : IScriptOptionsProvider
     {
     }
 
-    IReadOnlyList<string> IScriptOptionsProvider.Options { get; } = new[] { _selectedRelativePaths, _lineNumber, _columnNumber };
+    private static string[] ImplementedOptions => [_selectedRelativePaths, _lineNumber, _columnNumber];
 
-    IEnumerable<string> IScriptOptionsProvider.GetValues(string option)
+    public override IEnumerable<string> GetValues(string option)
     {
         switch (option)
         {
@@ -38,7 +38,7 @@ internal class ScriptOptionsProvider : IScriptOptionsProvider
             case _columnNumber:
                 return _getCurrentColumnNumber() is int columnNumber ? [columnNumber.ToString()] : [];
             default:
-                throw new NotImplementedException(option);
+                return base.GetValues(option);
         }
     }
 }
