@@ -90,11 +90,23 @@ public static partial class UserEnvironmentInformation
         return DesktopAppRegex.Matches(output).Cast<Match>();
     }
 
-    public static Version[] GetDotnetDesktopRuntimeVersions()
+    public static IEnumerable<Version> GetDotnetDesktopRuntimeVersions()
     {
         try
         {
-            return [.. GetDotnetDesktopRuntimeEntries().Select(match => new Version(match.Groups[1].Value))];
+            return GetDotnetDesktopRuntimeEntries()
+                .Select(match =>
+                {
+                    try
+                    {
+                        return new Version(match.Groups[1].Value);
+                    }
+                    catch (Exception ex)
+                    {
+                        Trace.WriteLine(ex);
+                        return new Version();
+                    }
+                });
         }
         catch (Exception ex)
         {
