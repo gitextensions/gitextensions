@@ -204,7 +204,8 @@ public partial class FormStatus : GitExtensionsDialog
             Bitmap image = isSuccess ? Images.StatusBadgeSuccess : Images.StatusBadgeError;
             SetIcon(image);
 
-            if (isSuccess && (_useDialogSettings && AppSettings.CloseProcessDialog))
+            if ((isSuccess || (Module.InTheMiddleOfRebase() && !Module.InTheMiddleOfConflictedMerge() && GetOutputString().Contains("using previous resolution")))
+                 && (_useDialogSettings && AppSettings.CloseProcessDialog))
             {
                 Close();
             }
