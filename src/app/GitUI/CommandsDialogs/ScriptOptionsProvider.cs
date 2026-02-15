@@ -1,4 +1,5 @@
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.ScriptsEngine;
 
 namespace GitUI.CommandsDialogs;
@@ -21,7 +22,10 @@ internal class ScriptOptionsProvider : IScriptOptionsProvider
     }
 
     public ScriptOptionsProvider(FileStatusList fileStatusList, Func<int?> getCurrentLineNumber, Func<int?> getCurrentColumn)
-        : this(() => fileStatusList.SelectedItems.Select(item => item.Item.Name), getCurrentLineNumber, getCurrentColumn)
+        : this(getSelectedRelativePaths: () => fileStatusList.SelectedFolder is RelativePath folder
+                ? [folder.Value]
+                : fileStatusList.SelectedItems.Select(item => item.Item.Name),
+            getCurrentLineNumber, getCurrentColumn)
     {
     }
 
