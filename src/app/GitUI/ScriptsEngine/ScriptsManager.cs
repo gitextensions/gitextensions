@@ -139,8 +139,20 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
             },
             new ScriptInfo
             {
+                HotkeyCommandIdentifier = 9005,
+                Name = "&Edit",
+                Command = "cmd",
+                Arguments = @"/c if ""{SelectedRelativePaths}"" == """" ( code . ) else ( code . --goto {{SelectedRelativePaths}}:{LineNumber}:{ColumnNumber} )",
+                RunInBackground = true,
+                AskConfirmation = false,
+                OnEvent = ScriptEvent.ShowInUserMenuBar,
+                AddToRevisionGridContextMenu = false,
+                Enabled = false
+            },
+            new ScriptInfo
+            {
                 HotkeyCommandIdentifier = 9002,
-                Name = "&Example",
+                Name = "E&xample",
                 Command = @"c:\windows\system32\calc.exe",
                 Arguments = "",
                 RunInBackground = false,
