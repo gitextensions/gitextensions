@@ -139,6 +139,24 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
             },
             new ScriptInfo
             {
+                HotkeyCommandIdentifier = 9005,
+                Icon = "EditFile",
+                Name = "&Open in VS Code",
+                Command = "bash",
+                Arguments = "-c '"
+                    + @"if [ -z ""{SelectedRelativePaths}"" ]; then code .; "
+                    + @"elif [ -d ""{SelectedRelativePaths}"" ]; then code {{SelectedRelativePaths}}; "
+                    + @"elif [ ! -f ""{SelectedRelativePaths}"" ]; then code . --goto {{SelectedRelativePaths}}; "
+                    + @"else code . --goto {{SelectedRelativePaths}}:{LineNumber}:{ColumnNumber}; "
+                    + @"fi'",
+                RunInBackground = true,
+                AskConfirmation = false,
+                OnEvent = ScriptEvent.ShowInUserMenuBar,
+                AddToRevisionGridContextMenu = false,
+                Enabled = false
+            },
+            new ScriptInfo
+            {
                 HotkeyCommandIdentifier = 9002,
                 Name = "&Example",
                 Command = @"c:\windows\system32\calc.exe",
