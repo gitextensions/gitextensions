@@ -410,22 +410,34 @@ public static partial class PathUtil
     {
         try
         {
-            shellPath = Path.Combine(EnvironmentAbstraction.GetEnvironmentVariable("ProgramW6432"), "Git", shell);
-            if (File.Exists(shellPath))
+            string? programW6432 = EnvironmentAbstraction.GetEnvironmentVariable("ProgramW6432");
+            if (!string.IsNullOrEmpty(programW6432))
             {
-                return true;
+                shellPath = Path.Combine(programW6432, "Git", shell);
+                if (File.Exists(shellPath))
+                {
+                    return true;
+                }
             }
 
-            shellPath = Path.Combine(EnvironmentAbstraction.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Git", shell);
-            if (File.Exists(shellPath))
+            string programFilesX86 = EnvironmentAbstraction.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+            if (!string.IsNullOrEmpty(programFilesX86))
             {
-                return true;
+                shellPath = Path.Combine(programFilesX86, "Git", shell);
+                if (File.Exists(shellPath))
+                {
+                    return true;
+                }
             }
 
-            shellPath = Path.Combine(AppSettings.LinuxToolsDir, shell);
-            if (File.Exists(shellPath))
+            string linuxToolsDir = AppSettings.LinuxToolsDir;
+            if (!string.IsNullOrEmpty(linuxToolsDir))
             {
-                return true;
+                shellPath = Path.Combine(linuxToolsDir, shell);
+                if (File.Exists(shellPath))
+                {
+                    return true;
+                }
             }
 
             if (TryFindFullPath(shell, out shellPath))

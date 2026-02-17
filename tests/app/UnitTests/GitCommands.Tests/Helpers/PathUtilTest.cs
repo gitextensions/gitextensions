@@ -417,6 +417,35 @@ public class PathUtilTest
         Directory.Exists(tempPath).Should().BeFalse();
     }
 
+    [Test]
+    public void TryFindShellPath_should_not_throw_for_nonexistent_shell()
+    {
+        // This exercises the null-safety guards in TryFindShellPath:
+        // - GetEnvironmentVariable("ProgramW6432") may return null
+        // - AppSettings.LinuxToolsDir may return ""
+        // The method should handle all these gracefully without throwing.
+        bool result = PathUtil.TryFindShellPath("nonexistent_shell_1234567890.exe", out string? shellPath);
+        result.Should().BeFalse();
+        shellPath.Should().BeNull();
+    }
+
+    [TestCase(@"C:\Users\Acker Liu\Git\bash.exe", @"""C:\Users\Acker Liu\Git\bash.exe""")]
+    [TestCase(@"C:\Program Files\Git\bash.exe", @"""C:\Program Files\Git\bash.exe""")]
+    [TestCase(@"C:\NoSpaces\bash.exe", @"""C:\NoSpaces\bash.exe""")]
+    [TestCase(null, "")]
+    public void Quote_should_handle_paths_with_spaces(string? path, string expected)
+    {
+        path.Quote().Should().Be(expected);
+    }
+
+    [TestCase(@"C:\Users\Acker Liu\Git\bash.exe", @"""C:\Users\Acker Liu\Git\bash.exe""")]
+    [TestCase(null, null)]
+    [TestCase("", "")]
+    public void QuoteNE_should_handle_paths_with_spaces(string? path, string? expected)
+    {
+        path.QuoteNE().Should().Be(expected);
+    }
+
     [TestCase(null, false)]
     [TestCase("", false)]
     [TestCase(" ", false)]
