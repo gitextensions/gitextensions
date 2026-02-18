@@ -115,6 +115,7 @@ public static class BugReportInvoker
         // Ignore VC Runtime DLL exceptions during termination - the app is closing anyway
         if (isTerminating && IsVCRuntimeDllException(exception))
         {
+            Trace.WriteLine(exception);
             return;
         }
 
