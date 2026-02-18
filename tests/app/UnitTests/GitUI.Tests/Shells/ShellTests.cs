@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 
 namespace GitUITests.Shells;
