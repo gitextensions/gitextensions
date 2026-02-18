@@ -112,6 +112,12 @@ public static class BugReportInvoker
             LogError(exception, isTerminating);
         }
 
+        // Ignore VC Runtime DLL exceptions during termination - the app is closing anyway
+        if (isTerminating && IsVCRuntimeDllException(exception))
+        {
+            return;
+        }
+
         if (HasFailedToLoadAnAssembly(exception))
         {
             ReportFailedToLoadAnAssembly(exception, isTerminating);
@@ -351,6 +357,17 @@ public static class BugReportInvoker
 
         // VC Runtime DLLs typically contain "vcruntime"
         return dllName.Contains("vcruntime", StringComparison.OrdinalIgnoreCase);
+    }
+
+    // Checks if the exception or any of its inner exceptions is a DllNotFoundException for a VC Runtime DLL
+    private static bool IsVCRuntimeDllException(Exception exception)
+    {
+        if (exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message))
+        {
+            return true;
+        }
+
+        return exception.InnerException is not null && IsVCRuntimeDllException(exception.InnerException);
     }
 
     private static void ReportDubiousOwnership(ExternalOperationException exception)
