@@ -212,7 +212,7 @@ public static partial class GitUIExtensions
                 item.Item.Name,
                 item.Item.OldName,
                 firstId?.ToString(),
-                item.SecondRevision.ToString(),
+                item.SecondRevision.ObjectId.ToString(),
                 isTracked: item.Item.IsTracked);
         }
 
