@@ -37,16 +37,16 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     // Throttle updates triggered from status updates
     private const int MinRefreshInterval = 15;
 
-    private readonly Func<string, IGitModule> _getModule;
+    private readonly Func<string, IGitExecutor> _getExecutor;
     private readonly CancellationTokenSequence _submodulesStructureSequence = new();
     private readonly CancellationTokenSequence _submodulesStatusSequence = new();
     private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = [];
     private DateTime _previousSubmoduleUpdateTime;
     private SubmoduleInfoResult? _submoduleInfoResult;
 
-    public SubmoduleStatusProvider(Func<string, IGitModule> getModule)
+    public SubmoduleStatusProvider(Func<string, IGitExecutor> getExecutor)
     {
-        _getModule = getModule;
+        _getExecutor = getExecutor;
     }
 
     // Invoked when status update is requested (use to clear/lock UI)
@@ -281,7 +281,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     private string GetModuleBranch(string path, string noBranchText)
     {
         // Note: This will fail for WSL symbolic links to .git directories
-        string branch = _getModule(path).GetSelectedBranch();
+        string branch = _getExecutor(path).GetSelectedBranch();
         string text = DetachedHeadParser.IsDetachedHead(branch) ? noBranchText : branch;
         return $"({text})";
     }

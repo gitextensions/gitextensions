@@ -18,18 +18,18 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
 {
     private readonly ILocalRepositoryManager _localRepositoryManager;
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
-    private readonly Func<string, IGitModule> _getModule;
+    private readonly Func<string, IGitExecutor> _getExecutor;
 
     // Holds the raw, unfiltered list of repositories.
     // This is done to allow fast filtering of all known repos.
     private IList<Repository>? _allRecentRepositories;
     private IList<Repository>? _allFavoriteRepositories;
 
-    public UserRepositoriesListController(ILocalRepositoryManager localRepositoryManager, IInvalidRepositoryRemover invalidRepositoryRemover, Func<string, IGitModule> getModule)
+    public UserRepositoriesListController(ILocalRepositoryManager localRepositoryManager, IInvalidRepositoryRemover invalidRepositoryRemover, Func<string, IGitExecutor> getExecutor)
     {
         _localRepositoryManager = localRepositoryManager;
         _invalidRepositoryRemover = invalidRepositoryRemover;
-        _getModule = getModule;
+        _getExecutor = getExecutor;
     }
 
     public async Task AssignCategoryAsync(Repository repository, string? category)
@@ -55,7 +55,7 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
             return string.Empty;
         }
 
-        return _getModule(path).GetSelectedBranch();
+        return _getExecutor(path).GetSelectedBranch();
     }
 
     public bool IsValidGitWorkingDir(string path)
