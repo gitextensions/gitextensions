@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Design;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.Hotkey;
@@ -41,7 +42,7 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IOutputHistoryProvider>(outputHistoryModel);
         serviceContainer.AddService<IOutputHistoryRecorder>(outputHistoryModel);
 
-        RepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider = new(path => new GitExecutor(path));
+        RepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider = new(serviceContainer.GetRequiredService<IGitExecutorProvider>());
         InvalidRepositoryRemover invalidRepositoryRemover = new();
         serviceContainer.AddService<IRepositoryCurrentBranchNameProvider>(repositoryCurrentBranchNameProvider);
         serviceContainer.AddService<IInvalidRepositoryRemover>(invalidRepositoryRemover);
