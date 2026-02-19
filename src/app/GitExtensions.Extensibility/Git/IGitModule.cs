@@ -10,7 +10,7 @@ namespace GitExtensions.Extensibility.Git;
 /// <summary>
 ///  Provides the ability to manipulate the git module.
 /// </summary>
-public interface IGitModule
+public interface IGitModule : IGitExecutor
 {
     string AddRemote(string remoteName, string? path);
 
@@ -77,18 +77,6 @@ public interface IGitModule
     string GitCommonDirectory { get; }
 
     /// <summary>
-    /// Gets the default Git executable associated with this module.
-    /// This executable can be non-native (i.e. WSL).
-    /// </summary>
-    IExecutable GitExecutable { get; }
-
-    /// <summary>
-    /// Gets the access to the current git executable associated with this module.
-    /// This command runner can be non-native (i.e. WSL).
-    /// </summary>
-    IGitCommandRunner GitCommandRunner { get; }
-
-    /// <summary>
     /// Encoding for commit header (message, notes, author, committer, emails).
     /// </summary>
     Encoding LogOutputEncoding { get; }
@@ -105,11 +93,6 @@ public interface IGitModule
     ///  If this module is a submodule, returns its super-project <see cref="IGitModule"/>, otherwise <c>null</c>.
     /// </value>
     public IGitModule? SuperprojectModule { get; }
-
-    /// <summary>
-    /// Gets the directory which contains the git repository.
-    /// </summary>
-    string WorkingDir { get; }
 
     /// <summary>
     /// Gets the location of .git directory for the current working folder.
@@ -204,15 +187,6 @@ public interface IGitModule
     ///  The value of the git setting <paramref name="setting" /> cannot be converted in the specified type <typeparamref name="T" />.
     /// </exception>
     T? GetEffectiveSetting<T>(string setting) where T : struct;
-
-    /// <summary>
-    /// Gets the name of the currently checked out branch.
-    /// </summary>
-    /// <param name="emptyIfDetached">Defines the value returned if HEAD is detached. <see langword="true"/> to return <see cref="string.Empty"/>; <see langword="false"/> to return "(no branch)".</param>
-    /// <returns>
-    /// The name of the branch (for example: "main"); the value requested by <paramref name="emptyIfDetached"/>, if HEAD is detached.
-    /// </returns>
-    string GetSelectedBranch(bool emptyIfDetached = false);
 
     /// <summary>true if ".git" directory does NOT exist.</summary>
     bool IsBareRepository();

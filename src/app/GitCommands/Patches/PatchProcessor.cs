@@ -48,7 +48,7 @@ public static partial class PatchProcessor
     /// <remarks>
     /// The diff part of a patch is printed verbatim.
     /// <para />
-    /// Everything else (header, warnings, ...) is printed in git encoding (<see cref="GitModule.SystemEncoding"/>).
+    /// Everything else (header, warnings, ...) is printed in git encoding (<see cref="GitExecutor.SystemEncoding"/>).
     /// <para />
     /// Since a patch may contain the diff of more than one file, it would be nice to obtain the encoding for each file
     /// from <c>.gitattributes</c>. For now, one encoding is used for every file in the repo (<see cref="GitEncodingSettingsGetter.FilesEncoding"/>).
