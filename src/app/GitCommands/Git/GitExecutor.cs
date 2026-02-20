@@ -1,4 +1,4 @@
-using System.Security;
+﻿using System.Security;
 using System.Text;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -80,9 +80,12 @@ public class GitExecutor : IGitExecutor
         };
         ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
 
-        return result.ExitedSuccessfully
-            ? result.StandardOutput[GitRefName.RefsHeadsPrefix.Length..].TrimEnd()
-            : emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
+        if (result.ExitedSuccessfully)
+        {
+            return result.StandardOutput[GitRefName.RefsHeadsPrefix.Length..].TrimEnd();
+        }
+
+        return emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
     }
 
     /// <summary>Attempt to read the branch name from the HEAD file instead of calling a git command.</summary>
