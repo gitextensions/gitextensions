@@ -23,6 +23,13 @@
     <Property Id="LAUNCH" Value="0" />
     <Property Id="TELEMETRY_ENABLED" Value="1" Secure="yes" />
     <Property Id="MSIRESTARTMANAGERCONTROL" Value="Disable" />
+    <Property Id="WINDOWS_BUILD_VERSION">
+      <RegistrySearch Id="CheckWindowsBuildVersion"
+                      Root="HKLM"
+                      Key="SOFTWARE\Microsoft\Windows NT\CurrentVersion"
+                      Name="CurrentBuild"
+                      Type="raw" />
+    </Property>
     <WixVariable Id="WixUIDialogBmp" Value="dialog.bmp" />
     <WixVariable Id="WixUIBannerBmp" Value="banner.bmp" />
     <WixVariable Id="WixUISupportPerUser" Value="1" Overridable="yes" />
@@ -239,17 +246,23 @@
       <!-- Shell extensions -->
       <?define ShellExCLSID = "{3C16B20A-BA16-4156-916F-0A375ECFFE24}"?>
       <Component Id="GitExtensionsShellEx32.dll" Guid="*">
+        <Condition><![CDATA[WINDOWS_BUILD_VERSION < 22000]]></Condition>
         <File Name="GitExtensionsShellEx32.dll" Source="$(var.ArtifactsPublishPath)\GitExtensionsShellEx32.dll" KeyPath="yes" />
         <?foreach ShellExFileName in GitExtensionsShellEx32.dll?>
         <?include RegisterShellExtension.wxi?>
         <?endforeach ?>
       </Component>
       <Component Id="GitExtensionsShellEx64.dll" Guid="*" Win64="yes">
-        <Condition>VersionNT64</Condition>
+        <Condition><![CDATA[VersionNT64 AND (WINDOWS_BUILD_VERSION < 22000)]]></Condition>
         <File Name="GitExtensionsShellEx64.dll" Source="$(var.ArtifactsPublishPath)\GitExtensionsShellEx64.dll" KeyPath="yes" />
         <?foreach ShellExFileName in GitExtensionsShellEx64.dll?>
         <?include RegisterShellExtension.wxi?>
         <?endforeach ?>
+      </Component>
+      <Component Id="GitExtensionsModernShellEx" Guid="*" Win64="yes">
+        <Condition><![CDATA[VersionNT64 AND (WINDOWS_BUILD_VERSION >= 22000)]]></Condition>
+        <File Name="GitExtensionsModernShellEx.dll" Source="$(var.ArtifactsPublishPath)\GitExtensionsModernShellEx.dll" KeyPath="yes" />
+        <File Name="GitExtensionsModernShellEx.msix" Source="$(var.ArtifactsPublishPath)\GitExtensionsModernShellEx.msix" />
       </Component>
       <!-- End shell extensions -->
       <Component Id="GitExtSshAskPass.exe" Guid="*">
@@ -881,6 +894,7 @@
       <Feature Id="ShellExtension" Title="Windows Explorer integration" Level="1">
         <ComponentRef Id="GitExtensionsShellEx32.dll" />
         <ComponentRef Id="GitExtensionsShellEx64.dll" />
+        <ComponentRef Id="GitExtensionsModernShellEx" />
       </Feature>
       <Feature Id="AddToPath" Title="Add installation directory to PATH" Level="1">
         <ComponentRef Id="Path" />
