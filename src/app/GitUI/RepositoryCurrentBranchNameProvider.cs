@@ -1,5 +1,5 @@
 ﻿using GitCommands;
-using GitCommands.Git;
+using GitExtensions.Extensibility.Git;
 
 namespace GitUI;
 
@@ -16,8 +16,10 @@ public interface IRepositoryCurrentBranchNameProvider
     string GetCurrentBranchName(string repositoryPath);
 }
 
-internal sealed class RepositoryCurrentBranchNameProvider : IRepositoryCurrentBranchNameProvider
+internal sealed class RepositoryCurrentBranchNameProvider(IGitExecutorProvider executorProvider) : IRepositoryCurrentBranchNameProvider
 {
+    private readonly IGitExecutorProvider _executorProvider = executorProvider;
+
     public string GetCurrentBranchName(string repositoryPath)
     {
         if (!AppSettings.ShowRepoCurrentBranch)
@@ -25,12 +27,6 @@ internal sealed class RepositoryCurrentBranchNameProvider : IRepositoryCurrentBr
             return string.Empty;
         }
 
-        string branchName = GitModule.GetSelectedBranchFast(repositoryPath);
-        if (string.IsNullOrWhiteSpace(branchName) || branchName == DetachedHeadParser.DetachedBranch)
-        {
-            branchName = $"({TranslatedStrings.NoBranch})";
-        }
-
-        return branchName;
+        return _executorProvider.GetExecutor(repositoryPath).GetSelectedBranch();
     }
 }
