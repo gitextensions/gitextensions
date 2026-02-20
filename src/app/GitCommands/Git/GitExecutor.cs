@@ -17,6 +17,7 @@ public class GitExecutor : IGitExecutor
 
     protected readonly IGitCommandRunner _gitCommandRunner;
     protected readonly IExecutable _gitExecutable;
+    protected readonly IExecutable _gitWindowsExecutable;
 
     protected bool _isReftableRepo;
 
@@ -26,7 +27,7 @@ public class GitExecutor : IGitExecutor
     /// </summary>
     protected readonly string WslDistro;
 
-    protected IExecutable GitWindowsExecutable { get; }
+    protected IExecutable GitWindowsExecutable => _gitWindowsExecutable;
     protected IGitCommandRunner GitWindowsCommandRunner { get; }
 
     public static Encoding SystemEncoding => _systemEncoding ??= new SystemEncodingReader().Read();
@@ -38,7 +39,7 @@ public class GitExecutor : IGitExecutor
     public GitExecutor(string? workingDir)
     {
         WorkingDir = (workingDir ?? "").NormalizePath().NormalizeWslPath().EnsureTrailingPathSeparator();
-        GitWindowsExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
+        _gitWindowsExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
         GitWindowsCommandRunner = new GitCommandRunner(GitWindowsExecutable, () => SystemEncoding);
 
         WslDistro = AppSettings.WslGitEnabled ? PathUtil.GetWslDistro(WorkingDir) : "";
