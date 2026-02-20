@@ -112,15 +112,15 @@ public static class BugReportInvoker
             LogError(exception, isTerminating);
         }
 
-        // Ignore VC Runtime DLL exceptions during termination - the app is closing anyway
-        if (isTerminating && IsVCRuntimeDllException(exception))
-        {
-            Trace.WriteLine(exception);
-            return;
-        }
-
         if (HasFailedToLoadAnAssembly(exception))
         {
+            // Suppress VC Runtime DLL exceptions during termination - the app is closing anyway
+            if (isTerminating && HasFailedToLoadAnAssembly(exception, vcruntimeOnly: true))
+            {
+                Trace.WriteLine(exception);
+                return;
+            }
+
             ReportFailedToLoadAnAssembly(exception, isTerminating);
             return;
         }
@@ -226,10 +226,24 @@ public static class BugReportInvoker
             page.Buttons.Add(taskDialogCommandLink);
         }
 
-        static bool HasFailedToLoadAnAssembly(Exception exception)
-            => (exception is FileNotFoundException fileNotFoundException && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
-            || (exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message))
-            || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException));
+        /// <summary>
+        /// Checks if the exception or any of its inner exceptions is a failed assembly/DLL loading exception.
+        /// </summary>
+        /// <param name="exception">The exception to check.</param>
+        /// <param name="vcruntimeOnly">If true, only checks for VC Runtime DLL exceptions; if false, checks for all assembly/DLL loading failures.</param>
+        /// <returns>True if the exception represents a failed assembly/DLL loading; otherwise false.</returns>
+        static bool HasFailedToLoadAnAssembly(Exception exception, bool vcruntimeOnly = false)
+        {
+            bool isVCRuntimeDll = exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message);
+            if (vcruntimeOnly)
+            {
+                return isVCRuntimeDll || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException, vcruntimeOnly: true));
+            }
+
+            return (exception is FileNotFoundException fileNotFoundException && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
+                || isVCRuntimeDll
+                || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException));
+        }
     }
 
     /// <summary>
@@ -358,17 +372,6 @@ public static class BugReportInvoker
 
         // VC Runtime DLLs typically contain "vcruntime"
         return dllName.Contains("vcruntime", StringComparison.OrdinalIgnoreCase);
-    }
-
-    // Checks if the exception or any of its inner exceptions is a DllNotFoundException for a VC Runtime DLL
-    private static bool IsVCRuntimeDllException(Exception exception)
-    {
-        if (exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message))
-        {
-            return true;
-        }
-
-        return exception.InnerException is not null && IsVCRuntimeDllException(exception.InnerException);
     }
 
     private static void ReportDubiousOwnership(ExternalOperationException exception)

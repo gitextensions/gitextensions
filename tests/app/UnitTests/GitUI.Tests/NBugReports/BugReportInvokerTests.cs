@@ -109,50 +109,6 @@ public sealed class BugReportInvokerTests
             return fileName;
         }
     }
-
-    [Test]
-    public void IsVCRuntimeDllException_should_identify_vcruntime_dll_exceptions()
-    {
-        // Test direct DllNotFoundException with vcruntime DLL
-        DllNotFoundException vcruntimeException = new("Unable to load DLL 'vcruntime140_cor3.dll' or one of its dependencies: The specified module could not be found.");
-        bool result = IsVCRuntimeDllExceptionTest(vcruntimeException);
-        result.Should().BeTrue("direct vcruntime DllNotFoundException should be identified");
-
-        // Test nested DllNotFoundException with vcruntime DLL
-        Exception nestedVcruntimeException = new("Outer exception", new DllNotFoundException("Unable to load DLL 'vcruntime140.dll'"));
-        result = IsVCRuntimeDllExceptionTest(nestedVcruntimeException);
-        result.Should().BeTrue("nested vcruntime DllNotFoundException should be identified");
-
-        // Test non-vcruntime DLL
-        DllNotFoundException otherDllException = new("Unable to load DLL 'user32.dll'");
-        result = IsVCRuntimeDllExceptionTest(otherDllException);
-        result.Should().BeFalse("non-vcruntime DLL should not be identified");
-
-        // Test other exception types
-        Exception regularException = new("Regular exception");
-        result = IsVCRuntimeDllExceptionTest(regularException);
-        result.Should().BeFalse("non-DllNotFoundException should not be identified");
-
-        static bool IsVCRuntimeDllExceptionTest(Exception exception)
-        {
-            if (exception is DllNotFoundException dllNotFoundException && ContainsVCRuntime(dllNotFoundException.Message))
-            {
-                return true;
-            }
-
-            return exception.InnerException is not null && IsVCRuntimeDllExceptionTest(exception.InnerException);
-
-            static bool ContainsVCRuntime(string dllName)
-            {
-                if (string.IsNullOrWhiteSpace(dllName))
-                {
-                    return false;
-                }
-
-                return dllName.Contains("vcruntime", StringComparison.OrdinalIgnoreCase);
-            }
-        }
-    }
 }
 
 public class TestExceptions
