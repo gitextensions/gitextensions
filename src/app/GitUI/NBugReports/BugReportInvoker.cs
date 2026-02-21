@@ -226,12 +226,10 @@ public static class BugReportInvoker
             page.Buttons.Add(taskDialogCommandLink);
         }
 
-        /// <summary>
-        /// Checks if the exception or any of its inner exceptions is a failed assembly/DLL loading exception.
-        /// </summary>
-        /// <param name="exception">The exception to check.</param>
-        /// <param name="vcruntimeOnly">If true, only checks for VC Runtime DLL exceptions; if false, checks for all assembly/DLL loading failures.</param>
-        /// <returns>True if the exception represents a failed assembly/DLL loading; otherwise false.</returns>
+        // Checks if the exception or any of its inner exceptions is a failed assembly/DLL loading exception.
+        // - exception: The exception to check.
+        // - vcruntimeOnly: If true, only checks for VC Runtime DLL exceptions; if false, checks for all assembly/DLL loading failures.
+        // Returns true if the exception represents a failed assembly/DLL loading; otherwise false.
         static bool HasFailedToLoadAnAssembly(Exception exception, bool vcruntimeOnly = false)
         {
             bool isVCRuntimeDll = exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message);
