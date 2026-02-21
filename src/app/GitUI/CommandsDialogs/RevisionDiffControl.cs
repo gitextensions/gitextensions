@@ -182,9 +182,9 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         }
     }
 
-    internal IScriptOptionsProvider? ScriptOptionsProvider => GetScriptOptionsProvider();
+    internal IScriptOptionsProvider ScriptOptionsProvider => GetScriptOptionsProvider();
 
-    protected override IScriptOptionsProvider? GetScriptOptionsProvider()
+    protected override IScriptOptionsProvider GetScriptOptionsProvider()
     {
         return new ScriptOptionsProvider(DiffFiles,
             () => BlameControl.Visible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine,

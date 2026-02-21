@@ -1182,7 +1182,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
     }
 
-    public override IScriptOptionsProvider? GetScriptOptionsProvider()
+    public override IScriptOptionsProvider GetScriptOptionsProvider()
     {
         if (fileTree.Visible)
         {

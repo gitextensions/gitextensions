@@ -27,7 +27,7 @@ partial class ScriptsManager
         [GeneratedRegex(@"\{plugin.(?<name>.+)\}", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
         private static partial Regex PluginRegex { get; }
 
-        public static bool RunScript(ScriptInfo script, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider? scriptOptionsProvider = null)
+        public static bool RunScript(ScriptInfo script, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider scriptOptionsProvider)
         {
             try
             {
@@ -39,7 +39,7 @@ partial class ScriptsManager
             }
         }
 
-        internal static (string? arguments, bool abort, bool cancel) ParseUserInputs(string scriptName, string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptOptionsProvider? scriptOptionsProvider = null)
+        internal static (string? arguments, bool abort, bool cancel) ParseUserInputs(string scriptName, string? arguments, IGitUICommands uiCommands, IWin32Window owner, IScriptOptionsProvider scriptOptionsProvider)
         {
             if (arguments is null)
             {
@@ -102,7 +102,7 @@ partial class ScriptsManager
             return (arguments, abort: false, cancel: false);
         }
 
-        private static bool RunScriptInternal(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptOptionsProvider? scriptOptionsProvider)
+        private static bool RunScriptInternal(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptOptionsProvider scriptOptionsProvider)
         {
             if (string.IsNullOrEmpty(script.Command))
             {
