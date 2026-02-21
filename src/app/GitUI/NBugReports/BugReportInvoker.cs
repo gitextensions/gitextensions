@@ -114,6 +114,13 @@ public static class BugReportInvoker
 
         if (HasFailedToLoadAnAssembly(exception))
         {
+            // Suppress VC Runtime DLL exceptions during termination - the app is closing anyway
+            if (isTerminating && HasFailedToLoadAnAssembly(exception, vcruntimeOnly: true))
+            {
+                Trace.WriteLine(exception);
+                return;
+            }
+
             ReportFailedToLoadAnAssembly(exception, isTerminating);
             return;
         }
@@ -219,10 +226,22 @@ public static class BugReportInvoker
             page.Buttons.Add(taskDialogCommandLink);
         }
 
-        static bool HasFailedToLoadAnAssembly(Exception exception)
-            => (exception is FileNotFoundException fileNotFoundException && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
-            || (exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message))
-            || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException));
+        // Checks if the exception or any of its inner exceptions is a failed assembly/DLL loading exception.
+        // - exception: The exception to check.
+        // - vcruntimeOnly: If true, only checks for VC Runtime DLL exceptions; if false, checks for all assembly/DLL loading failures.
+        // Returns true if the exception represents a failed assembly/DLL loading; otherwise false.
+        static bool HasFailedToLoadAnAssembly(Exception exception, bool vcruntimeOnly = false)
+        {
+            bool isVCRuntimeDll = exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message);
+            if (vcruntimeOnly)
+            {
+                return isVCRuntimeDll || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException, vcruntimeOnly: true));
+            }
+
+            return (exception is FileNotFoundException fileNotFoundException && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
+                || isVCRuntimeDll
+                || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException));
+        }
     }
 
     /// <summary>
