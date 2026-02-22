@@ -20,6 +20,12 @@ public static class BugReportInvoker
 
     private static bool _isReportingDubiousOwnershipSecurity;
 
+    /// <summary>
+    /// Set to <see langword ="true"/> on application exit
+    /// in order to suppress the popup to restart the app on missing runtime assembly.
+    /// </summary>
+    public static bool IgnoreFailedToLoadAnAssembly { get; set; } = false;
+
     private static Form? OwnerForm
         => Form.ActiveForm ?? (Application.OpenForms.Count > 0 ? Application.OpenForms[0] : null);
 
@@ -114,7 +120,12 @@ public static class BugReportInvoker
 
         if (HasFailedToLoadAnAssembly(exception))
         {
-            ReportFailedToLoadAnAssembly(exception, isTerminating);
+            if (!IgnoreFailedToLoadAnAssembly)
+            {
+                IgnoreFailedToLoadAnAssembly = true;
+                ReportFailedToLoadAnAssembly(exception, isTerminating);
+            }
+
             return;
         }
 
