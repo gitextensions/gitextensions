@@ -222,6 +222,8 @@ partial class RepoObjectsTree : IMenuItemFactory
 
         LocalBranchNode selectedLocalBranch = selectedNode as LocalBranchNode;
 
+        bool isProtected = selectedLocalBranch?.IsDeleteProtected == true;
+
         foreach (ToolStripItemWithKey item in _localBranchMenuItems)
         {
             bool visible = hasSingleSelection && selectedLocalBranch != null;
@@ -234,6 +236,29 @@ partial class RepoObjectsTree : IMenuItemFactory
 
                 // enable all items for non-current branches or only those applying to the current branch
                 && (selectedLocalBranch?.IsCurrent == false || LocalBranchMenuItems<LocalBranchNode>.CurrentBranchItemKeys.Contains(item.Key));
+        }
+
+        // Show only the relevant protection toggle item: hide "Prevent" when already protected, hide "Remove" when not protected.
+        // NOTE: Do not read ToolStripItem.Visible here — it always returns false while the ContextMenuStrip parent is not yet visible.
+        // Use local variables instead, same pattern as the foreach loop above.
+        bool localBranchVisible = hasSingleSelection && selectedLocalBranch != null;
+
+        if (_localBranchMenuItems.TryGetMenuItem(MenuItemKey.PreventDeletion, out ToolStripItem? preventItem))
+        {
+            preventItem.Visible = localBranchVisible && !isProtected;
+            preventItem.Enabled = localBranchVisible && !isProtected;
+        }
+
+        if (_localBranchMenuItems.TryGetMenuItem(MenuItemKey.RemoveDeletionPrevention, out ToolStripItem? removePreventItem))
+        {
+            removePreventItem.Visible = localBranchVisible && isProtected;
+            removePreventItem.Enabled = localBranchVisible && isProtected;
+        }
+
+        // Grey out "Delete branch..." for protected branches: user must unprotect first.
+        if (_localBranchMenuItems.TryGetMenuItem(MenuItemKey.Delete, out ToolStripItem? deleteItem))
+        {
+            deleteItem.Enabled = deleteItem.Enabled && !isProtected;
         }
 
         EnableRemoteBranchContextMenu(hasSingleSelection, selectedNode);

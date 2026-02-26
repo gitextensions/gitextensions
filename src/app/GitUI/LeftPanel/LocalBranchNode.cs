@@ -6,8 +6,10 @@ using GitUI.Properties;
 namespace GitUI.LeftPanel;
 
 [DebuggerDisplay("(Local) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
-internal class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
+internal class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete, ICanToggleDeletionProtection
 {
+    private const string LockSymbol = " 🔒";
+
     public LocalBranchNode(Tree tree, in ObjectId? objectId, string fullPath, bool isCurrent, bool visible)
         : base(tree, objectId, fullPath, visible, nameof(Images.BranchLocal), nameof(Images.BranchLocalMerged))
     {
@@ -19,6 +21,15 @@ internal class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename,
 
     protected override FontStyle GetFontStyle()
         => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
+
+    public bool IsDeleteProtected
+        => ProtectedBranchStore.IsProtected(UICommands.Module.WorkingDirGitDir, FullPath);
+
+    protected override string DisplayText()
+    {
+        string text = base.DisplayText();
+        return IsDeleteProtected ? text + LockSymbol : text;
+    }
 
     public override bool Equals(object obj)
         => base.Equals(obj) && obj is LocalBranchNode;
@@ -69,11 +80,26 @@ internal class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename,
 
     public bool Delete()
     {
+        // FormDeleteBranch handles the protected-branch case with a proper translated message.
         return UICommands.StartDeleteBranchDialog(ParentWindow(), branch: FullPath);
     }
 
     public bool Rename()
     {
         return UICommands.StartRenameDialog(ParentWindow(), branch: FullPath);
+    }
+
+    public bool ProtectFromDeletion()
+    {
+        ProtectedBranchStore.Protect(UICommands.Module.WorkingDirGitDir, FullPath);
+        ApplyText();
+        return true;
+    }
+
+    public bool UnprotectFromDeletion()
+    {
+        ProtectedBranchStore.Unprotect(UICommands.Module.WorkingDirGitDir, FullPath);
+        ApplyText();
+        return true;
     }
 }

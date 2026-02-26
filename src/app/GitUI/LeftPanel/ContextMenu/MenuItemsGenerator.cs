@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using GitExtUtils.GitUI.Theming;
 using GitUI.LeftPanel.Interfaces;
+using GitUI.Properties;
 using ResourceManager;
 
 namespace GitUI.LeftPanel.ContextMenu;
@@ -41,6 +42,8 @@ internal class MenuItemsGenerator<TNode> : IMenuItemsGenerator<TNode>
         items.AddRange(CreateGitRefItems());
         items.AddRange(CreateRename());
         items.AddRange(CreateDelete());
+        items.AddRange(CreatePreventDeletion());
+        items.AddRange(CreateRemoveDeletionPrevention());
     }
 
     #region IEnumerable
@@ -105,8 +108,32 @@ internal class MenuItemsGenerator<TNode> : IMenuItemsGenerator<TNode>
         if (Implements<ICanDelete>())
         {
             ToolStripMenuItem item = _menuItemFactory.CreateMenuItem<ToolStripMenuItem, TNode>(
-                node => ((ICanDelete)node).Delete(), Strings.Delete, GetTooltip(MenuItemKey.Delete), Properties.Images.BranchDelete);
+                node => ((ICanDelete)node).Delete(), Strings.Delete, GetTooltip(MenuItemKey.Delete), Images.BranchDelete);
             yield return item.WithKey(MenuItemKey.Delete);
+        }
+    }
+
+    private IEnumerable<ToolStripItemWithKey> CreatePreventDeletion()
+    {
+        if (Implements<ICanToggleDeletionProtection>())
+        {
+            ToolStripMenuItem item = _menuItemFactory.CreateMenuItem<ToolStripMenuItem, TNode>(
+                node => ((ICanToggleDeletionProtection)node).ProtectFromDeletion(),
+                Strings.PreventDeletion, GetTooltip(MenuItemKey.PreventDeletion),
+                Images.Lock);
+            yield return item.WithKey(MenuItemKey.PreventDeletion);
+        }
+    }
+
+    private IEnumerable<ToolStripItemWithKey> CreateRemoveDeletionPrevention()
+    {
+        if (Implements<ICanToggleDeletionProtection>())
+        {
+            ToolStripMenuItem item = _menuItemFactory.CreateMenuItem<ToolStripMenuItem, TNode>(
+                node => ((ICanToggleDeletionProtection)node).UnprotectFromDeletion(),
+                Strings.RemoveDeletionPrevention, GetTooltip(MenuItemKey.RemoveDeletionPrevention),
+                Images.Lock);
+            yield return item.WithKey(MenuItemKey.RemoveDeletionPrevention);
         }
     }
 

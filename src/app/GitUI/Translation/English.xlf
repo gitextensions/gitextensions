@@ -4599,6 +4599,13 @@ Examples on branch name: "feature/ABC-4587-commitMessageRegex"
         <source>Cannot delete the branch “{0}” which you are currently on.</source>
         <target />
       </trans-unit>
+      <trans-unit id="_cannotDeleteProtectedBranchMessage.Text">
+        <source>The following branches are protected from accidental deletion:
+{0}
+
+Right-click the branch in the branch list and select 'Remove branch deletion prevention' to unlock it first.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_deleteBranchCaption.Text">
         <source>Delete Branches</source>
         <target />
@@ -8556,6 +8563,14 @@ help</source>
         <source>Delete the branch, which must be fully merged in its upstream branch or in HEAD</source>
         <target />
       </trans-unit>
+      <trans-unit id="PreventDeletionTooltip.Text">
+        <source>Protect this branch from accidental deletion</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="RemoveDeletionPreventionTooltip.Text">
+        <source>Remove the deletion protection from this branch</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="MenuItemsStrings" source-language="en">
@@ -8566,6 +8581,14 @@ help</source>
       </trans-unit>
       <trans-unit id="Merge.Text">
         <source>&amp;Merge into current branch...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="PreventDeletion.Text">
+        <source>Prevent branch &amp;deletion</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="RemoveDeletionPrevention.Text">
+        <source>Remove branch deletion pre&amp;vention</source>
         <target />
       </trans-unit>
       <trans-unit id="Rename.Text">

@@ -10,7 +10,7 @@ internal class LocalBranchMenuItems<TNode> : MenuItemsGenerator<TNode>
 {
     /// <summary>Keys of local branch menu items applying to the currently checked out branch.
     /// See <see cref="LocalBranchNode.IsCurrent"/> and <see cref="MenuItemsGenerator{TNode}"/>.</summary>
-    internal static MenuItemKey[] CurrentBranchItemKeys = [MenuItemKey.GitRefCreateBranch, MenuItemKey.Rename];
+    internal static MenuItemKey[] CurrentBranchItemKeys = [MenuItemKey.GitRefCreateBranch, MenuItemKey.Rename, MenuItemKey.PreventDeletion, MenuItemKey.RemoveDeletionPrevention];
 
     public LocalBranchMenuItems(IMenuItemFactory menuItemFactory) : base(menuItemFactory)
     {
@@ -21,6 +21,8 @@ internal class LocalBranchMenuItems<TNode> : MenuItemsGenerator<TNode>
 public class LocalBranchMenuItemsStrings : Translate
 {
     internal readonly TranslationString DeleteTooltip = new("Delete the branch, which must be fully merged in its upstream branch or in HEAD");
+    internal readonly TranslationString PreventDeletionTooltip = new("Protect this branch from accidental deletion");
+    internal readonly TranslationString RemoveDeletionPreventionTooltip = new("Remove the deletion protection from this branch");
 
     public LocalBranchMenuItemsStrings()
     {
@@ -31,5 +33,7 @@ public class LocalBranchMenuItemsStrings : Translate
     {
         new BranchMenuItemsStrings().ApplyTo(strings);
         strings.Tooltips[MenuItemKey.Delete] = DeleteTooltip;
+        strings.Tooltips[MenuItemKey.PreventDeletion] = PreventDeletionTooltip;
+        strings.Tooltips[MenuItemKey.RemoveDeletionPrevention] = RemoveDeletionPreventionTooltip;
     }
 }

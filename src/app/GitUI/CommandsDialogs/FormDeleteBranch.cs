@@ -1,7 +1,8 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitUI.LeftPanel;
 using Microsoft;
 using ResourceManager;
 
@@ -10,7 +11,8 @@ namespace GitUI.CommandsDialogs;
 public sealed partial class FormDeleteBranch : GitExtensionsDialog
 {
     private readonly TranslationString _deleteBranchCaption = new("Delete Branches");
-    private readonly TranslationString _cannotDeleteCurrentBranchMessage = new("Cannot delete the branch “{0}” which you are currently on.");
+    private readonly TranslationString _cannotDeleteCurrentBranchMessage = new("Cannot delete the branch \u201c{0}\u201d which you are currently on.");
+    private readonly TranslationString _cannotDeleteProtectedBranchMessage = new("The following branches are protected from accidental deletion:\n{0}\n\nRight-click the branch in the branch list and select 'Remove branch deletion prevention' to unlock it first.");
     private readonly TranslationString _deleteBranchConfirmTitle = new("Delete Confirmation");
     private readonly TranslationString _deleteBranchQuestion = new("The selected branch(es) have not been merged into HEAD.\r\nProceed?");
     private readonly TranslationString _useReflogHint = new("Did you know you can use reflog to restore deleted branches?");
@@ -76,6 +78,14 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
         if (_currentBranch is not null && selectedBranches.Any(branch => branch.Name == _currentBranch))
         {
             MessageBox.Show(this, string.Format(_cannotDeleteCurrentBranchMessage.Text, _currentBranch), _deleteBranchCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return;
+        }
+
+        IGitRef[] protectedBranches = [.. selectedBranches.Where(branch => ProtectedBranchStore.IsProtected(Module.WorkingDirGitDir, branch.Name))];
+        if (protectedBranches.Length > 0)
+        {
+            string names = string.Join("\n", protectedBranches.Select(b => $"  \u2022 {b.Name}"));
+            MessageBox.Show(this, string.Format(_cannotDeleteProtectedBranchMessage.Text, names), _deleteBranchCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return;
         }
 

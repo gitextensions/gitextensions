@@ -15,5 +15,9 @@ public enum MenuItemKey
 
     // Common Actions
     Rename,
-    Delete
+    Delete,
+
+    // Deletion protection (local branches only)
+    PreventDeletion,
+    RemoveDeletionPrevention
 }

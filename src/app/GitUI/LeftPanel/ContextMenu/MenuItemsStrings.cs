@@ -22,6 +22,10 @@ public class MenuItemsStrings : Translate
     /// <see cref="ICanDelete"/>
     internal TranslationString Delete;
 
+    /// <see cref="ICanToggleDeletionProtection"/>
+    internal readonly TranslationString PreventDeletion = new("Prevent branch &deletion");
+    internal readonly TranslationString RemoveDeletionPrevention = new("Remove branch deletion pre&vention");
+
     internal Dictionary<MenuItemKey, TranslationString> Tooltips { get; } = [];
 
     public MenuItemsStrings()
