@@ -1,4 +1,4 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Configuration;
 using System.Diagnostics;
 using GitCommands;
@@ -34,6 +34,7 @@ internal static class Program
         {
             AppDomain.CurrentDomain.UnhandledException += (s, e) => BugReportInvoker.Report((Exception)e.ExceptionObject, e.IsTerminating);
             Application.ThreadException += (s, e) => BugReportInvoker.Report(e.Exception, isTerminating: false);
+            Application.ApplicationExit += (s, e) => BugReportInvoker.IgnoreFailedToLoadAnAssembly = true;
         }
 
         if (Environment.OSVersion.Version.Major >= 6)
