@@ -773,7 +773,7 @@ public sealed partial class FormCommit : GitModuleForm
         }
     }
 
-    public override IScriptOptionsProvider? GetScriptOptionsProvider()
+    public override IScriptOptionsProvider GetScriptOptionsProvider()
     {
         return new ScriptOptionsProvider(_currentFilesList, () => SelectedDiff.CurrentFileLine, () => SelectedDiff.CurrentFileColumn);
     }
