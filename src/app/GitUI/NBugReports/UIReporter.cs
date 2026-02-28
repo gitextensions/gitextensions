@@ -9,18 +9,48 @@ using GitUI.CommandsDialogs;
 
 namespace GitUI.NBugReports;
 
+/// <summary>
+///  Provides methods for reporting various types of errors to the user.
+/// </summary>
 internal interface IBugReporter
 {
+    /// <summary>
+    ///  Reports a dubious ownership security error detected by git.
+    /// </summary>
+    /// <param name="exception">The external operation exception containing the dubious ownership error.</param>
     void ReportDubiousOwnership(ExternalOperationException exception);
+
+    /// <summary>
+    ///  Reports an error to the user via a task dialog.
+    /// </summary>
+    /// <param name="exception">The exception to report.</param>
+    /// <param name="rootError">The inner-most exception message.</param>
+    /// <param name="text">Additional exception information text.</param>
+    /// <param name="operationInfo">Metadata about the operation that caused the exception.</param>
     void ReportError(Exception exception, string rootError, StringBuilder text, OperationInfo operationInfo);
+
+    /// <summary>
+    ///  Reports a failed assembly or DLL load error, typically caused by Windows updates.
+    /// </summary>
+    /// <param name="exception">The exception to evaluate and potentially report.</param>
+    /// <param name="isTerminating">Indicates whether the exception is terminating the application.</param>
+    /// <returns><see langword="true" /> if the exception was handled; otherwise, <see langword="false" />.</returns>
+    /// <remarks>
+    ///  Handles errors loading .NET assemblies or VC Runtime DLL (refer to https://github.com/gitextensions/gitextensions/issues/12511).
+    ///  These are transient errors typically caused by Windows updates.
+    /// </remarks>
     bool ReportFailedToLoadAnAssembly(Exception exception, bool isTerminating);
 }
 
+/// <summary>
+///  Implements <see cref="IBugReporter" /> by displaying task dialogs
+///  and optionally launching the NBug report form.
+/// </summary>
 internal class UIReporter : IBugReporter
 {
     /// <summary>
-    /// Set to <see langword ="true"/> on application exit
-    /// in order to suppress the popup to restart the app on missing runtime assembly.
+    ///  Set to <see langword="true" /> on application exit
+    ///  in order to suppress the popup to restart the app on missing runtime assembly.
     /// </summary>
     public static bool IgnoreFailedToLoadAnAssembly { get; set; } = false;
 
@@ -284,6 +314,7 @@ internal class UIReporter : IBugReporter
         return dllName.Contains("vcruntime", StringComparison.OrdinalIgnoreCase);
     }
 
+    /// <inheritdoc />
     public void ReportDubiousOwnership(ExternalOperationException exception)
     {
         ArgumentNullException.ThrowIfNull(exception.InnerException);
@@ -293,19 +324,15 @@ internal class UIReporter : IBugReporter
         {
             ShowGitRepo(OwnerForm, workingDir: null);
         }
-
-        return;
     }
 
+    /// <inheritdoc />
     public void ReportError(Exception exception, string rootError, StringBuilder text, OperationInfo operationInfo)
     {
         TaskDialog.ShowDialog(OwnerFormHandle, CreateErrorReport(exception, rootError, text, operationInfo));
     }
 
-    /// <summary>
-    /// Handles errors loading .NET assemblies or VC Runtime DLL (refer to https://github.com/gitextensions/gitextensions/issues/12511).
-    /// These are transient errors typically caused by Windows updates.
-    /// </summary>
+    /// <inheritdoc />
     public bool ReportFailedToLoadAnAssembly(Exception exception, bool isTerminating)
     {
         if (IgnoreFailedToLoadAnAssembly || !HasFailedToLoadAnAssembly(exception))

@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Security;
 using System.Text;
-using BugReporter;
 using BugReporter.Serialization;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -12,16 +11,23 @@ using GitExtensions.Extensibility.Settings;
 
 namespace GitUI.NBugReports;
 
+/// <summary>
+///  Provides methods for reporting unhandled exceptions to the user
+///  via UI dialogs or by launching the external bug reporter process.
+/// </summary>
 public static class BugReportInvoker
 {
+    /// <summary>
+    ///  The git config command fragment used to detect dubious ownership security errors.
+    /// </summary>
     public const string DubiousOwnershipSecurityConfigString = "config --global --add safe.directory";
 
-    private static IBugReporter _bugReporter = new UIReporter();
+    private static readonly IBugReporter _bugReporter = new UIReporter();
     private static bool _isReportingDubiousOwnershipSecurity;
 
     /// <summary>
-    /// Set to <see langword ="true"/> on application exit
-    /// in order to suppress the popup to restart the app on missing runtime assembly.
+    ///  Set to <see langword="true" /> on application exit
+    ///  in order to suppress the popup to restart the app on missing runtime assembly.
     /// </summary>
     public static bool IgnoreFailedToLoadAnAssembly
     {
@@ -29,14 +35,8 @@ public static class BugReportInvoker
         set => UIReporter.IgnoreFailedToLoadAnAssembly = value;
     }
 
-    private static Form? OwnerForm
-        => Form.ActiveForm ?? (Application.OpenForms.Count > 0 ? Application.OpenForms[0] : null);
-
-    private static IntPtr OwnerFormHandle
-        => OwnerForm?.Handle ?? IntPtr.Zero;
-
     /// <summary>
-    /// Gets the root error.
+    ///  Gets the root error.
     /// </summary>
     /// <param name="exception">An Exception to describe.</param>
     /// <returns>The inner-most exception message.</returns>
@@ -54,6 +54,11 @@ public static class BugReportInvoker
         return rootError;
     }
 
+    /// <summary>
+    ///  Logs the exception details to a temporary file.
+    /// </summary>
+    /// <param name="exception">The exception to log.</param>
+    /// <param name="isTerminating">Indicates whether the exception is terminating the application.</param>
     public static void LogError(Exception exception, bool isTerminating = false)
     {
         string tempFolder = Path.GetTempPath();
@@ -71,6 +76,11 @@ public static class BugReportInvoker
         }
     }
 
+    /// <summary>
+    ///  Reports the specified exception to the user via the appropriate UI dialog.
+    /// </summary>
+    /// <param name="exception">The exception to report.</param>
+    /// <param name="isTerminating">Indicates whether the exception is terminating the application.</param>
     public static void Report(Exception exception, bool isTerminating)
     {
         if (AppSettings.WriteErrorLog)
