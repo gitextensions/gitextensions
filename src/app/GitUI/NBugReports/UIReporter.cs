@@ -129,7 +129,7 @@ internal class UIReporter : IBugReporter
         if (!IsDotNetFrameworkAssembly(fileName) && !IsVCRuntimeDll(fileName))
         {
             TaskDialogCommandLinkButton reportButton = new(text: TranslatedStrings.ReportIssue, descriptionText: TranslatedStrings.ReportReproducedIssueDescription);
-            reportButton.Click += (_, _) => { /* ShowNBug(OwnerForm, exception, isExternalOperation: false, isUserExternalOperation: false, isTerminating); */ };
+            reportButton.Click += (_, _) => ShowNBug(OwnerForm, exception, isExternalOperation: false, isUserExternalOperation: false, isTerminating);
             page.Buttons.Add(reportButton);
         }
 
@@ -275,7 +275,7 @@ internal class UIReporter : IBugReporter
                 : new(TranslatedStrings.ButtonReportBug);
         taskDialogCommandLink.Click += (s, e) =>
         {
-            ////ShowNBug(OwnerForm, exception, operationInfo.IsExternalOperation, operationInfo.IsUserExternalOperation, isTerminating: false);
+            ShowNBug(OwnerForm, exception, operationInfo.IsExternalOperation, operationInfo.IsUserExternalOperation, isTerminating: false);
         };
         page.Buttons.Add(taskDialogCommandLink);
 
@@ -333,6 +333,22 @@ internal class UIReporter : IBugReporter
                 await formBrowse.SwitchToMainThreadAsync();
                 formBrowse.SetWorkingDir(workingDir);
             });
+        }
+    }
+
+    private static void ShowNBug(IWin32Window? owner, Exception exception, bool isExternalOperation, bool isUserExternalOperation, bool isTerminating)
+    {
+        using BugReportForm form = new();
+        DialogResult result = form.ShowDialog(owner,
+                                              new SerializableException(exception),
+                                              exception.GetExceptionInfo().ToString(),
+                                              UserEnvironmentInformation.GetInformation(),
+                                              canIgnore: !isTerminating,
+                                              showIgnore: isExternalOperation,
+                                              focusDetails: isUserExternalOperation);
+        if (isTerminating || result == DialogResult.Abort)
+        {
+            Environment.Exit(-1);
         }
     }
 

@@ -167,22 +167,6 @@ public static class BugReportInvoker
         }
     }
 
-    private static void ShowNBug(IWin32Window? owner, Exception exception, bool isExternalOperation, bool isUserExternalOperation, bool isTerminating)
-    {
-        using BugReportForm form = new();
-        DialogResult result = form.ShowDialog(owner,
-            new SerializableException(exception),
-            exception.GetExceptionInfo().ToString(),
-            UserEnvironmentInformation.GetInformation(),
-            canIgnore: !isTerminating,
-            showIgnore: isExternalOperation,
-            focusDetails: isUserExternalOperation);
-        if (isTerminating || result == DialogResult.Abort)
-        {
-            Environment.Exit(-1);
-        }
-    }
-
     private static string Base64Encode(string plainText)
     {
         byte[] plainTextBytes = Encoding.UTF8.GetBytes(plainText);
