@@ -46,6 +46,7 @@ partial class FormBrowseRepoSettingsPage
         chkShowOutputHistoryAsTab = new SettingsCheckBox();
         lblOutputHistoryDepth = new Label();
         _NO_TRANSLATE_OutputHistoryDepth = new NumericUpDown();
+        chkShowRevisionGridTooltip = new SettingsCheckBox();
         tlpnlMain.SuspendLayout();
         groupBox1.SuspendLayout();
         tlpnlGeneral.SuspendLayout();
@@ -155,6 +156,22 @@ partial class FormBrowseRepoSettingsPage
         chkShowFindInCommitFilesGitGrep.ToolTipIcon = UserControls.Settings.ToolTipIcon.Information;
         chkShowFindInCommitFilesGitGrep.ToolTipText = null;
         // 
+        // chkShowRevisionGridTooltip
+        // 
+        chkShowRevisionGridTooltip.AutoSize = true;
+        chkShowRevisionGridTooltip.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        chkShowRevisionGridTooltip.Checked = false;
+        chkShowRevisionGridTooltip.Dock = DockStyle.Fill;
+        chkShowRevisionGridTooltip.Location = new Point(4, 105);
+        chkShowRevisionGridTooltip.ManualSectionAnchorName = "";
+        chkShowRevisionGridTooltip.Margin = new Padding(4, 3, 4, 3);
+        chkShowRevisionGridTooltip.Name = "chkShowRevisionGridTooltip";
+        chkShowRevisionGridTooltip.Size = new Size(249, 19);
+        chkShowRevisionGridTooltip.TabIndex = 5;
+        chkShowRevisionGridTooltip.Text = "Show revision tooltips";
+        chkShowRevisionGridTooltip.ToolTipIcon = UserControls.Settings.ToolTipIcon.Information;
+        chkShowRevisionGridTooltip.ToolTipText = "";
+        // 
         // tlpnlMain
         // 
         tlpnlMain.ColumnCount = 1;
@@ -170,7 +187,7 @@ partial class FormBrowseRepoSettingsPage
         tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
         tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlMain.Size = new Size(1585, 642);
+        tlpnlMain.Size = new Size(722, 422);
         tlpnlMain.TabIndex = 0;
         // 
         // groupBox1
@@ -182,7 +199,7 @@ partial class FormBrowseRepoSettingsPage
         groupBox1.Location = new Point(3, 3);
         groupBox1.Name = "groupBox1";
         groupBox1.Padding = new Padding(8);
-        groupBox1.Size = new Size(1579, 134);
+        groupBox1.Size = new Size(716, 159);
         groupBox1.TabIndex = 0;
         groupBox1.TabStop = false;
         groupBox1.Text = "General";
@@ -199,23 +216,18 @@ partial class FormBrowseRepoSettingsPage
         tlpnlGeneral.Controls.Add(chkUseBrowseForFileHistory, 0, 1);
         tlpnlGeneral.Controls.Add(chkUseDiffViewerForBlame, 0, 2);
         tlpnlGeneral.Controls.Add(chkShowFindInCommitFilesGitGrep, 0, 3);
+        tlpnlGeneral.Controls.Add(chkShowRevisionGridTooltip, 0, 4);
         tlpnlGeneral.Dock = DockStyle.Fill;
         tlpnlGeneral.Location = new Point(8, 24);
         tlpnlGeneral.Name = "tlpnlGeneral";
-        tlpnlGeneral.RowCount = 4;
+        tlpnlGeneral.RowCount = 5;
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
+        tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.Size = new Size(1563, 102);
+        tlpnlGeneral.Size = new Size(700, 127);
         tlpnlGeneral.TabIndex = 0;
         // 
         // gbTabs
@@ -224,10 +236,10 @@ partial class FormBrowseRepoSettingsPage
         gbTabs.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         gbTabs.Controls.Add(tlpnlTabs);
         gbTabs.Dock = DockStyle.Fill;
-        gbTabs.Location = new Point(3, 143);
+        gbTabs.Location = new Point(3, 168);
         gbTabs.Name = "gbTabs";
         gbTabs.Padding = new Padding(8);
-        gbTabs.Size = new Size(1579, 136);
+        gbTabs.Size = new Size(716, 136);
         gbTabs.TabIndex = 1;
         gbTabs.TabStop = false;
         gbTabs.Text = "Tabs (restart required)";
@@ -253,7 +265,7 @@ partial class FormBrowseRepoSettingsPage
         tlpnlTabs.RowStyles.Add(new RowStyle());
         tlpnlTabs.RowStyles.Add(new RowStyle());
         tlpnlTabs.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlTabs.Size = new Size(1563, 104);
+        tlpnlTabs.Size = new Size(700, 104);
         tlpnlTabs.TabIndex = 0;
         // 
         // chkShowOutputHistoryAsTab
@@ -299,7 +311,7 @@ partial class FormBrowseRepoSettingsPage
         Name = "FormBrowseRepoSettingsPage";
         Padding = new Padding(8);
         Text = "Browse repository window";
-        Size = new Size(1601, 658);
+        Size = new Size(738, 438);
         tlpnlMain.ResumeLayout(false);
         tlpnlMain.PerformLayout();
         groupBox1.ResumeLayout(false);
@@ -331,4 +343,5 @@ partial class FormBrowseRepoSettingsPage
     private SettingsCheckBox chkShowOutputHistoryAsTab;
     private Label lblOutputHistoryDepth;
     private NumericUpDown _NO_TRANSLATE_OutputHistoryDepth;
+    private SettingsCheckBox chkShowRevisionGridTooltip;
 }

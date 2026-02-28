@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using GitCommands;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 
@@ -31,6 +32,11 @@ internal sealed class RevisionGridToolTipProvider
 
     public void OnCellMouseMove(DataGridViewCellMouseEventArgs e)
     {
+        if (!AppSettings.ShowRevisionGridTooltips.Value)
+        {
+            return;
+        }
+
         GitUIPluginInterfaces.GitRevision revision = _gridView.GetRevision(e.RowIndex);
 
         if (revision is null)
