@@ -105,6 +105,57 @@ internal class UIReporter : IBugReporter
         }
     }
 
+    private static TaskDialogPage CreateErrorReport(Exception exception, string rootError, StringBuilder text, OperationInfo operationInfo)
+    {
+        TaskDialogPage page = new()
+        {
+            Icon = operationInfo.Icon,
+            Caption = TranslatedStrings.Error,
+            Heading = rootError,
+            AllowCancel = true,
+            SizeToContent = true
+        };
+
+        // prefer to ignore failed external operations
+        if (operationInfo.IsExternalOperation)
+        {
+            AddIgnoreButton(TranslatedStrings.ExternalErrorDescription);
+        }
+        else
+        {
+            // directions and button to raise a bug
+            text.AppendLine().AppendLine(TranslatedStrings.ReportBug);
+        }
+
+        // no bug reports for user configured operations
+        TaskDialogCommandLinkButton taskDialogCommandLink
+            = operationInfo.IsUserExternalOperation ? new(TranslatedStrings.ButtonViewDetails)
+                : operationInfo.IsExternalOperation ? new(TranslatedStrings.ReportIssue, TranslatedStrings.ReportIssueDescription)
+                : new(TranslatedStrings.ButtonReportBug);
+        taskDialogCommandLink.Click += (s, e) =>
+        {
+            ShowNBug(OwnerForm, exception, operationInfo.IsExternalOperation, operationInfo.IsUserExternalOperation, isTerminating: false);
+        };
+        page.Buttons.Add(taskDialogCommandLink);
+
+        // let the user decide whether to report the bug
+        if (!operationInfo.IsExternalOperation)
+        {
+            AddIgnoreButton();
+        }
+
+        page.Text = text.ToString().Trim();
+
+        return page;
+
+        void AddIgnoreButton(string? descriptionText = null)
+        {
+            string buttonText = TranslatedStrings.ButtonIgnore;
+            TaskDialogCommandLinkButton taskDialogCommandLink = new(buttonText, descriptionText);
+            page.Buttons.Add(taskDialogCommandLink);
+        }
+    }
+
     private static TaskDialogPage CreateFailedToLoadAnAssemblyReport(Exception exception, bool isTerminating)
     {
         string fileName = GetFileName(exception);
@@ -248,58 +299,7 @@ internal class UIReporter : IBugReporter
 
     public void ReportError(Exception exception, string rootError, StringBuilder text, OperationInfo operationInfo)
     {
-        TaskDialogPage page = new()
-        {
-            Icon = operationInfo.Icon,
-            Caption = TranslatedStrings.Error,
-            Heading = rootError,
-            AllowCancel = true,
-            SizeToContent = true
-        };
-
-        // prefer to ignore failed external operations
-        if (operationInfo.IsExternalOperation)
-        {
-            AddIgnoreButton(TranslatedStrings.ExternalErrorDescription);
-        }
-        else
-        {
-            // directions and button to raise a bug
-            text.AppendLine().AppendLine(TranslatedStrings.ReportBug);
-        }
-
-        // no bug reports for user configured operations
-        TaskDialogCommandLinkButton taskDialogCommandLink
-            = operationInfo.IsUserExternalOperation ? new(TranslatedStrings.ButtonViewDetails)
-                : operationInfo.IsExternalOperation ? new(TranslatedStrings.ReportIssue, TranslatedStrings.ReportIssueDescription)
-                : new(TranslatedStrings.ButtonReportBug);
-        taskDialogCommandLink.Click += (s, e) =>
-        {
-            ShowNBug(OwnerForm, exception, operationInfo.IsExternalOperation, operationInfo.IsUserExternalOperation, isTerminating: false);
-        };
-        page.Buttons.Add(taskDialogCommandLink);
-
-        // let the user decide whether to report the bug
-        if (!operationInfo.IsExternalOperation)
-        {
-            AddIgnoreButton();
-        }
-
-        page.Text = text.ToString().Trim();
-        TaskDialog.ShowDialog(OwnerFormHandle, page);
-        return;
-
-        void AddIgnoreButton(string? descriptionText = null)
-        {
-            string buttonText = TranslatedStrings.ButtonIgnore;
-            TaskDialogCommandLinkButton taskDialogCommandLink = new(buttonText, descriptionText);
-            page.Buttons.Add(taskDialogCommandLink);
-        }
-
-        static bool HasFailedToLoadAnAssembly(Exception exception)
-            => (exception is FileNotFoundException fileNotFoundException && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
-            || (exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message))
-            || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException));
+        TaskDialog.ShowDialog(OwnerFormHandle, CreateErrorReport(exception, rootError, text, operationInfo));
     }
 
     /// <summary>
@@ -355,6 +355,7 @@ internal class UIReporter : IBugReporter
     internal readonly struct TestAccessor
     {
         internal static TaskDialogPage CreateDubiousOwnershipReport(ExternalOperationException exception) => UIReporter.CreateDubiousOwnershipReport(exception);
+        internal static TaskDialogPage CreateErrorReport(Exception exception, string rootError, StringBuilder text, OperationInfo operationInfo) => UIReporter.CreateErrorReport(exception, rootError, text, operationInfo);
         internal static TaskDialogPage CreateFailedToLoadAnAssemblyReport(Exception exception, bool isTerminating) => UIReporter.CreateFailedToLoadAnAssemblyReport(exception, isTerminating);
         internal static string GetFileName(Exception exception) => UIReporter.GetFileName(exception);
         internal static bool IsDotNetFrameworkAssembly(string assemblyName) => UIReporter.IsDotNetFrameworkAssembly(assemblyName);

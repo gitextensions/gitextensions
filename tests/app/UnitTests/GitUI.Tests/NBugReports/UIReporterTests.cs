@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using System.Text;
+using FluentAssertions;
 using GitExtensions.Extensibility;
 using GitUI.NBugReports;
 
@@ -178,5 +179,98 @@ public sealed class UIReporterTests
         page.Buttons.Should().HaveCount(4);
         page.Expander.Should().NotBeNull();
         page.Expander!.Text.Should().Be(errorMessage);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        UIReporter.IgnoreFailedToLoadAnAssembly = false;
+    }
+
+    [Test]
+    public void CreateErrorReport_should_show_report_bug_and_ignore_buttons_for_internal_operation()
+    {
+        Exception exception = new("something broke");
+        StringBuilder text = new("error details");
+        OperationInfo operationInfo = new() { IsExternalOperation = false, IsUserExternalOperation = false };
+
+        TaskDialogPage page = UIReporter.TestAccessor.CreateErrorReport(exception, "root error", text, operationInfo);
+
+        page.Icon.Should().Be(TaskDialogIcon.Error);
+        page.Heading.Should().Be("root error");
+        page.AllowCancel.Should().BeTrue();
+        page.Buttons.Should().HaveCount(2);
+    }
+
+    [Test]
+    public void CreateErrorReport_should_show_report_issue_and_ignore_buttons_for_external_operation()
+    {
+        Exception exception = new("git failed");
+        StringBuilder text = new("error details");
+        OperationInfo operationInfo = new() { IsExternalOperation = true, IsUserExternalOperation = false };
+
+        TaskDialogPage page = UIReporter.TestAccessor.CreateErrorReport(exception, "root error", text, operationInfo);
+
+        page.Icon.Should().Be(TaskDialogIcon.Warning);
+        page.Buttons.Should().HaveCount(2);
+    }
+
+    [Test]
+    public void CreateErrorReport_should_show_view_details_and_ignore_buttons_for_user_external_operation()
+    {
+        Exception exception = new("user script failed");
+        StringBuilder text = new("error details");
+        OperationInfo operationInfo = new() { IsExternalOperation = true, IsUserExternalOperation = true };
+
+        TaskDialogPage page = UIReporter.TestAccessor.CreateErrorReport(exception, "root error", text, operationInfo);
+
+        page.Icon.Should().Be(TaskDialogIcon.Warning);
+        page.Buttons.Should().HaveCount(2);
+    }
+
+    [Test]
+    public void CreateFailedToLoadAnAssemblyReport_should_show_expander_with_exception_message()
+    {
+        DllNotFoundException exception = new("Unable to load DLL 'vcruntime140_cor3.dll'");
+
+        TaskDialogPage page = UIReporter.TestAccessor.CreateFailedToLoadAnAssemblyReport(exception, isTerminating: false);
+
+        page.Expander.Should().NotBeNull();
+        page.Expander!.Text.Should().Be(exception.Message);
+    }
+
+    [Test]
+    public void ReportFailedToLoadAnAssembly_should_return_false_when_IgnoreFailedToLoadAnAssembly_is_set()
+    {
+        UIReporter.IgnoreFailedToLoadAnAssembly = true;
+        UIReporter reporter = new();
+
+        bool result = reporter.ReportFailedToLoadAnAssembly(
+            new FileNotFoundException("Could not load file or assembly CustomLib", "CustomLib"),
+            isTerminating: false);
+
+        result.Should().BeFalse();
+    }
+
+    [Test, TestCaseSource(nameof(NonAssemblyLoadExceptionTestCases))]
+    public void ReportFailedToLoadAnAssembly_should_return_false_for_non_matching_exception(Exception exception)
+    {
+        UIReporter reporter = new();
+
+        bool result = reporter.ReportFailedToLoadAnAssembly(exception, isTerminating: false);
+
+        result.Should().BeFalse();
+    }
+
+    private static IEnumerable<TestCaseData> NonAssemblyLoadExceptionTestCases
+    {
+        get
+        {
+            yield return new TestCaseData(new Exception("some error"));
+            yield return new TestCaseData(new InvalidOperationException("something went wrong"));
+            yield return new TestCaseData(new FileNotFoundException("File not found"));
+            yield return new TestCaseData(new DllNotFoundException("Unable to load DLL 'user32.dll'"));
+            yield return new TestCaseData(new Exception("outer", new Exception("inner")));
+        }
     }
 }
