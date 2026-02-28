@@ -42,8 +42,8 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
     protected override void OnRuntimeLoad()
     {
         // align 1st columns across all tables
-        tlpnlGeneral.AdjustWidthToSize(0, lblDefaultShell, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowConsoleTab, chkShowGpgInformation);
-        tlpnlTabs.AdjustWidthToSize(0, lblDefaultShell, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowConsoleTab, chkShowGpgInformation);
+        tlpnlGeneral.AdjustWidthToSize(0, lblDefaultShell, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowRevisionGridTooltip, chkShowConsoleTab, chkShowGpgInformation);
+        tlpnlTabs.AdjustWidthToSize(0, lblDefaultShell, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowRevisionGridTooltip, chkShowConsoleTab, chkShowGpgInformation);
 
         base.OnRuntimeLoad();
     }
@@ -55,6 +55,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
         AppSettings.UseDiffViewerForBlame.Value = chkUseDiffViewerForBlame.Checked;
         AppSettings.ShowGpgInformation.Value = chkShowGpgInformation.Checked;
         AppSettings.ShowFindInCommitFilesGitGrep.Value = chkShowFindInCommitFilesGitGrep.Checked;
+        AppSettings.ShowRevisionGridTooltips.Value = chkShowRevisionGridTooltip.Checked;
 
         int outputHistoryDepth = (int)_NO_TRANSLATE_OutputHistoryDepth.Value;
         bool changed = AppSettings.ShowOutputHistoryAsTab.Value != chkShowOutputHistoryAsTab.Checked || AppSettings.OutputHistoryDepth.Value != outputHistoryDepth;
@@ -77,6 +78,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
         chkUseDiffViewerForBlame.Checked = AppSettings.UseDiffViewerForBlame.Value;
         chkShowGpgInformation.Checked = AppSettings.ShowGpgInformation.Value;
         chkShowFindInCommitFilesGitGrep.Checked = AppSettings.ShowFindInCommitFilesGitGrep.Value;
+        chkShowRevisionGridTooltip.Checked = AppSettings.ShowRevisionGridTooltips.Value;
         chkShowOutputHistoryAsTab.Checked = AppSettings.ShowOutputHistoryAsTab.Value;
         _NO_TRANSLATE_OutputHistoryDepth.Value = Math.Clamp(AppSettings.OutputHistoryDepth.Value, _NO_TRANSLATE_OutputHistoryDepth.Minimum, _NO_TRANSLATE_OutputHistoryDepth.Maximum);
 

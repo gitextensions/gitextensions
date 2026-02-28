@@ -1688,7 +1688,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         HideVariableMainMenuItems();
         PluginRegistry.Unregister(UICommands);
-        RevisionGrid.OnRepositoryChanged();
         _gitStatusMonitor.InvalidateGitWorkingDirectoryStatus();
         _submoduleStatusProvider.Init();
 
@@ -1698,6 +1697,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         e.GitModule.ResetRemoteColors();
 
         UICommands = UICommands.WithGitModule(e.GitModule);
+        RevisionGrid.OnRepositoryChanged();
         if (Module.IsValidGitWorkingDir())
         {
             RevisionGrid.SuspendRefreshRevisions();
