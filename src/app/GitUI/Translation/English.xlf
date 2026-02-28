@@ -3458,6 +3458,10 @@ Focus the output history and (when displayed as panel) toggle its visibility usi
         <source>Show output history as tab (otherwise as panel)</source>
         <target />
       </trans-unit>
+      <trans-unit id="chkShowRevisionGridTooltip.Text">
+        <source>Show revision tooltips</source>
+        <target />
+      </trans-unit>
       <trans-unit id="chkUseBrowseForFileHistory.Text">
         <source>Show file history in the main window</source>
         <target />
