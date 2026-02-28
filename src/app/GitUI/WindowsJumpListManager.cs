@@ -228,7 +228,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
 
     /// <summary>
     /// Updates the jump list to show recent repositories in the Start menu.
-    /// Uses the built-in Windows localized "Recent" category.
+    /// Uses the built-in Windows localized “Recent” category.
     /// </summary>
     private static void UpdateJumpList()
     {
