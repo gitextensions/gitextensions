@@ -85,7 +85,9 @@ internal class UIReporter : IBugReporter
         TaskDialogButton helpButton = TaskDialogButton.Help;
         helpButton.Click += (_, _) =>
         {
+#pragma warning disable S1075 // Stable documentation URL
             OsShellUtil.OpenUrlInDefaultBrowser("https://git-scm.com/docs/git-config/#Documentation/git-config.txt-safedirectory");
+#pragma warning restore S1075
         };
 
         pageSecurity.Buttons.Add(helpButton);
@@ -158,10 +160,12 @@ internal class UIReporter : IBugReporter
         }
 
         // no bug reports for user configured operations
-        TaskDialogCommandLinkButton taskDialogCommandLink
-            = operationInfo.IsUserExternalOperation ? new(TranslatedStrings.ButtonViewDetails)
-                : operationInfo.IsExternalOperation ? new(TranslatedStrings.ReportIssue, TranslatedStrings.ReportIssueDescription)
-                : new(TranslatedStrings.ButtonReportBug);
+        TaskDialogCommandLinkButton taskDialogCommandLink = operationInfo switch
+        {
+            { IsUserExternalOperation: true } => new(TranslatedStrings.ButtonViewDetails),
+            { IsExternalOperation: true } => new(TranslatedStrings.ReportIssue, TranslatedStrings.ReportIssueDescription),
+            _ => new(TranslatedStrings.ButtonReportBug),
+        };
         taskDialogCommandLink.Click += (s, e) =>
         {
             ShowNBug(OwnerForm, exception, operationInfo.IsExternalOperation, operationInfo.IsUserExternalOperation, isTerminating: false);

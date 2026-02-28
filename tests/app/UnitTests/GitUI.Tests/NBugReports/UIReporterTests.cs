@@ -8,6 +8,8 @@ namespace GitUITests.NBugReports;
 [TestFixture]
 public sealed class UIReporterTests
 {
+    private const string RootError = "root error";
+
     [Test, TestCaseSource(typeof(UIReporterTests), nameof(GetFileNameTestCases))]
     public void GetFileName_should_extract_file_name_from_exception(Exception exception, string expectedDllName)
     {
@@ -194,10 +196,10 @@ public sealed class UIReporterTests
         StringBuilder text = new("error details");
         OperationInfo operationInfo = new() { IsExternalOperation = false, IsUserExternalOperation = false };
 
-        TaskDialogPage page = UIReporter.TestAccessor.CreateErrorReport(exception, "root error", text, operationInfo);
+        TaskDialogPage page = UIReporter.TestAccessor.CreateErrorReport(exception, RootError, text, operationInfo);
 
         page.Icon.Should().Be(TaskDialogIcon.Error);
-        page.Heading.Should().Be("root error");
+        page.Heading.Should().Be(RootError);
         page.AllowCancel.Should().BeTrue();
         page.Buttons.Should().HaveCount(2);
     }
@@ -209,7 +211,7 @@ public sealed class UIReporterTests
         StringBuilder text = new("error details");
         OperationInfo operationInfo = new() { IsExternalOperation = true, IsUserExternalOperation = false };
 
-        TaskDialogPage page = UIReporter.TestAccessor.CreateErrorReport(exception, "root error", text, operationInfo);
+        TaskDialogPage page = UIReporter.TestAccessor.CreateErrorReport(exception, RootError, text, operationInfo);
 
         page.Icon.Should().Be(TaskDialogIcon.Warning);
         page.Buttons.Should().HaveCount(2);
@@ -222,7 +224,7 @@ public sealed class UIReporterTests
         StringBuilder text = new("error details");
         OperationInfo operationInfo = new() { IsExternalOperation = true, IsUserExternalOperation = true };
 
-        TaskDialogPage page = UIReporter.TestAccessor.CreateErrorReport(exception, "root error", text, operationInfo);
+        TaskDialogPage page = UIReporter.TestAccessor.CreateErrorReport(exception, RootError, text, operationInfo);
 
         page.Icon.Should().Be(TaskDialogIcon.Warning);
         page.Buttons.Should().HaveCount(2);
