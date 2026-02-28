@@ -12,7 +12,7 @@ public sealed class BugReportInvokerTests
     [Test, TestCaseSource(typeof(TestExceptions), "TestCases")]
     public void Append(Exception exception, string expectedRootError, string expectedText)
     {
-        StringBuilder text = BugReportInvoker.GetExceptionInfo(exception);
+        StringBuilder text = exception.GetExceptionInfo();
         string rootError = BugReportInvoker.GetRootError(exception);
         rootError.Should().Be(expectedRootError);
         text.ToString().Should().Be(expectedText);
