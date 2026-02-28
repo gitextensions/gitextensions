@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using GitCommands;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 
@@ -18,6 +17,8 @@ internal sealed class RevisionGridToolTipProvider
         _gridView = gridView;
     }
 
+    public bool ShowRevisionGridTooltips { get; set; }
+
     /// <summary>
     /// Hides the tooltip.
     /// </summary>
@@ -32,7 +33,7 @@ internal sealed class RevisionGridToolTipProvider
 
     public void OnCellMouseMove(DataGridViewCellMouseEventArgs e)
     {
-        if (!AppSettings.ShowRevisionGridTooltips.Value)
+        if (!ShowRevisionGridTooltips)
         {
             return;
         }

@@ -168,7 +168,7 @@ partial class FormBrowseRepoSettingsPage
         chkShowRevisionGridTooltip.Name = "chkShowRevisionGridTooltip";
         chkShowRevisionGridTooltip.Size = new Size(249, 19);
         chkShowRevisionGridTooltip.TabIndex = 5;
-        chkShowRevisionGridTooltip.Text = "Show revision tooltips";
+        chkShowRevisionGridTooltip.Text = "Show revision tooltips (restart required)";
         chkShowRevisionGridTooltip.ToolTipIcon = UserControls.Settings.ToolTipIcon.Information;
         chkShowRevisionGridTooltip.ToolTipText = "";
         // 
