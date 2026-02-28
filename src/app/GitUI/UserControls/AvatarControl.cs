@@ -6,163 +6,162 @@ using GitUI.Avatars;
 using GitUI.Properties;
 using ResourceManager;
 
-namespace GitUI
+namespace GitUI;
+
+public sealed partial class AvatarControl : GitExtensionsControl
 {
-    public sealed partial class AvatarControl : GitExtensionsControl
+    private readonly CancellationTokenSequence _cancellationTokenSequence = new();
+    private IAvatarProvider _avatarProvider = AvatarService.DefaultProvider;
+    private IAvatarCacheCleaner _avatarCacheCleaner = AvatarService.CacheCleaner;
+
+    public AvatarControl()
     {
-        private readonly CancellationTokenSequence _cancellationTokenSequence = new();
-        private IAvatarProvider _avatarProvider = AvatarService.DefaultProvider;
-        private IAvatarCacheCleaner _avatarCacheCleaner = AvatarService.CacheCleaner;
+        InitializeComponent();
+        InitializeComplete();
 
-        public AvatarControl()
+        foreach (AvatarProvider avatarProvider in EnumHelper.GetValues<AvatarProvider>())
         {
-            InitializeComponent();
-            InitializeComplete();
-
-            foreach (AvatarProvider avatarProvider in EnumHelper.GetValues<AvatarProvider>())
+            ToolStripMenuItem item = new()
             {
-                ToolStripMenuItem item = new()
-                {
-                    CheckOnClick = true,
-                    Tag = avatarProvider,
-                    Checked = avatarProvider == AppSettings.AvatarProvider,
-                    Text = avatarProvider.GetDescription(),
-                };
+                CheckOnClick = true,
+                Tag = avatarProvider,
+                Checked = avatarProvider == AppSettings.AvatarProvider,
+                Text = avatarProvider.GetDescription(),
+            };
 
-                item.Click += delegate
-                {
-                    AppSettings.AvatarProvider = avatarProvider;
-                    ClearCache();
-                };
-
-                avatarProviderToolStripMenuItem.DropDownItems.Add(item);
-            }
-
-            foreach (AvatarFallbackType defaultImageType in EnumHelper.GetValues<AvatarFallbackType>())
+            item.Click += delegate
             {
-                ToolStripMenuItem item = new()
-                {
-                    CheckOnClick = true,
-                    Tag = defaultImageType,
-                    Text = defaultImageType.GetDescription(),
-                };
+                AppSettings.AvatarProvider = avatarProvider;
+                ClearCache();
+            };
 
-                item.Click += delegate
-                {
-                    AppSettings.AvatarFallbackType = defaultImageType;
-                    ClearCache();
-                };
-
-                fallbackAvatarStyleToolStripMenuItem.DropDownItems.Add(item);
-            }
+            avatarProviderToolStripMenuItem.DropDownItems.Add(item);
         }
 
-        public void ClearCache()
+        foreach (AvatarFallbackType defaultImageType in EnumHelper.GetValues<AvatarFallbackType>())
         {
-            ThreadHelper.FileAndForget(async () =>
-                    {
-                        AvatarService.UpdateAvatarProvider();
-                        await _avatarCacheCleaner.ClearCacheAsync();
-                        await UpdateAvatarAsync();
-                    });
-        }
-
-        /// <summary>
-        /// Clean up any resources being used.
-        /// </summary>
-        /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
+            ToolStripMenuItem item = new()
             {
-                _cancellationTokenSequence.Dispose();
-                components?.Dispose();
-            }
+                CheckOnClick = true,
+                Tag = defaultImageType,
+                Text = defaultImageType.GetDescription(),
+            };
 
-            base.Dispose(disposing);
-        }
-
-        [Browsable(false)]
-        public string? Email { get; private set; }
-
-        [Browsable(false)]
-        public string? AuthorName { get; private set; }
-
-        public void LoadImage(string? email, string? name)
-        {
-            if (string.IsNullOrEmpty(email))
+            item.Click += delegate
             {
-                RefreshImage(Images.User80);
-                return;
-            }
+                AppSettings.AvatarFallbackType = defaultImageType;
+                ClearCache();
+            };
 
-            Email = email;
-            AuthorName = name;
-            ThreadHelper.FileAndForget(UpdateAvatarAsync);
+            fallbackAvatarStyleToolStripMenuItem.DropDownItems.Add(item);
         }
+    }
 
-        private void RefreshImage(Image? image)
+    public void ClearCache()
+    {
+        ThreadHelper.FileAndForget(async () =>
+                {
+                    AvatarService.UpdateAvatarProvider();
+                    await _avatarCacheCleaner.ClearCacheAsync();
+                    await UpdateAvatarAsync();
+                });
+    }
+
+    /// <summary>
+    /// Clean up any resources being used.
+    /// </summary>
+    /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            _avatarImage.Image = image ?? Images.User80;
-            _avatarImage.Refresh();
+            _cancellationTokenSequence.Dispose();
+            components?.Dispose();
         }
 
-        private async Task UpdateAvatarAsync()
+        base.Dispose(disposing);
+    }
+
+    [Browsable(false)]
+    public string? Email { get; private set; }
+
+    [Browsable(false)]
+    public string? AuthorName { get; private set; }
+
+    public void LoadImage(string? email, string? name)
+    {
+        if (string.IsNullOrEmpty(email))
+        {
+            RefreshImage(Images.User80);
+            return;
+        }
+
+        Email = email;
+        AuthorName = name;
+        ThreadHelper.FileAndForget(UpdateAvatarAsync);
+    }
+
+    private void RefreshImage(Image? image)
+    {
+        _avatarImage.Image = image ?? Images.User80;
+        _avatarImage.Refresh();
+    }
+
+    private async Task UpdateAvatarAsync()
+    {
+        await this.SwitchToMainThreadAsync();
+
+        // resize our control (I'm not using AutoSize for a reason)
+        Size size = new(AppSettings.AuthorImageSizeInCommitInfo, AppSettings.AuthorImageSizeInCommitInfo);
+
+        DpiUtil.Scale(ref size);
+
+        Size = _avatarImage.Size = size;
+
+        string email = Email;
+
+        if (!AppSettings.ShowAuthorAvatarInCommitInfo || string.IsNullOrWhiteSpace(email))
+        {
+            RefreshImage(Images.User80);
+            return;
+        }
+
+        CancellationToken token = _cancellationTokenSequence.Next();
+        Image image = await _avatarProvider.GetAvatarAsync(email, AuthorName, Math.Max(size.Width, size.Height));
+
+        if (!token.IsCancellationRequested)
         {
             await this.SwitchToMainThreadAsync();
 
-            // resize our control (I'm not using AutoSize for a reason)
-            Size size = new(AppSettings.AuthorImageSizeInCommitInfo, AppSettings.AuthorImageSizeInCommitInfo);
-
-            DpiUtil.Scale(ref size);
-
-            Size = _avatarImage.Size = size;
-
-            string email = Email;
-
-            if (!AppSettings.ShowAuthorAvatarInCommitInfo || string.IsNullOrWhiteSpace(email))
-            {
-                RefreshImage(Images.User80);
-                return;
-            }
-
-            CancellationToken token = _cancellationTokenSequence.Next();
-            Image image = await _avatarProvider.GetAvatarAsync(email, AuthorName, Math.Max(size.Width, size.Height));
-
-            if (!token.IsCancellationRequested)
-            {
-                await this.SwitchToMainThreadAsync();
-
-                RefreshImage(image);
-            }
+            RefreshImage(image);
         }
+    }
 
-        private void OnClearCacheClick(object sender, EventArgs e)
-        {
-            ClearCache();
-        }
+    private void OnClearCacheClick(object sender, EventArgs e)
+    {
+        ClearCache();
+    }
 
-        private void OnRegisterGravatarClick(object sender, EventArgs e)
-        {
-            OsShellUtil.OpenUrlInDefaultBrowser(@"https://www.gravatar.com");
-        }
+    private void OnRegisterGravatarClick(object sender, EventArgs e)
+    {
+        OsShellUtil.OpenUrlInDefaultBrowser(@"https://www.gravatar.com");
+    }
 
-        private void OnDefaultImageDropDownOpening(object sender, EventArgs e)
-        {
-            UpdateMenuItemSelection(fallbackAvatarStyleToolStripMenuItem.DropDownItems, AppSettings.AvatarFallbackType);
-        }
+    private void OnDefaultImageDropDownOpening(object sender, EventArgs e)
+    {
+        UpdateMenuItemSelection(fallbackAvatarStyleToolStripMenuItem.DropDownItems, AppSettings.AvatarFallbackType);
+    }
 
-        private void avatarProviderToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
-        {
-            UpdateMenuItemSelection(avatarProviderToolStripMenuItem.DropDownItems, AppSettings.AvatarProvider);
-        }
+    private void avatarProviderToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+    {
+        UpdateMenuItemSelection(avatarProviderToolStripMenuItem.DropDownItems, AppSettings.AvatarProvider);
+    }
 
-        private static void UpdateMenuItemSelection<T>(ToolStripItemCollection toolStripItems, T currentValue)
+    private static void UpdateMenuItemSelection<T>(ToolStripItemCollection toolStripItems, T currentValue)
+    {
+        foreach (ToolStripMenuItem item in toolStripItems)
         {
-            foreach (ToolStripMenuItem item in toolStripItems)
-            {
-                item.Checked = Equals((T)item.Tag, currentValue);
-            }
+            item.Checked = Equals((T)item.Tag, currentValue);
         }
     }
 }

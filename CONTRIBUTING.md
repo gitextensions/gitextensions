@@ -54,6 +54,7 @@ Specifically:
 - Include a clear description of the changes and why they should be made
 - Be accompanied by unit tests
 - Be consistent with the current code style
+  Most style guides etc are referred to in [Copilot instructions](https://github.com/gitextensions/gitextensions/blob/master/.github/copilot-instructions.md).
 
 When filing a pull request, you should be prepared to answer questions about your changes
 and to perform additional work on the changes in response to review feedback.

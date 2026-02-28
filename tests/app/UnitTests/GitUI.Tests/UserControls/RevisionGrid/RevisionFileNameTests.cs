@@ -37,7 +37,7 @@ public class RevisionFileNameTests
         uiCommandsSource.UICommands.Returns(_ => uiCommands);
 
         _revisionGridControl.UICommandsSource = uiCommandsSource;
-        _revisionGridControl.FilePathByObjectId = new();
+        _revisionGridControl.FilePathByObjectId = [];
     }
 
     [TestCase("17b2a8777e43dff588284c9661206c97ccb6cf8e", "a.txt")]

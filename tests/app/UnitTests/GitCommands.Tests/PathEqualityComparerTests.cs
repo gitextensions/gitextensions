@@ -1,23 +1,22 @@
 ﻿using GitCommands;
 
-namespace GitCommandsTests
+namespace GitCommandsTests;
+
+[TestFixture]
+public class PathEqualityComparerTests
 {
-    [TestFixture]
-    public class PathEqualityComparerTests
+    private PathEqualityComparer _comparer;
+
+    [SetUp]
+    public void Setup()
     {
-        private PathEqualityComparer _comparer;
+        _comparer = new PathEqualityComparer();
+    }
 
-        [SetUp]
-        public void Setup()
-        {
-            _comparer = new PathEqualityComparer();
-        }
-
-        [TestCase("C:\\WORK\\GitExtensions\\", "C:/Work/GitExtensions/")]
-        [TestCase("\\\\my-pc\\Work\\GitExtensions\\", "//my-pc/WORK/GitExtensions/")]
-        public void Equals(string input, string expected)
-        {
-            ClassicAssert.AreEqual(_comparer.Equals(input, expected), true);
-        }
+    [TestCase("C:\\WORK\\GitExtensions\\", "C:/Work/GitExtensions/")]
+    [TestCase("\\\\my-pc\\Work\\GitExtensions\\", "//my-pc/WORK/GitExtensions/")]
+    public void Equals(string input, string expected)
+    {
+        ClassicAssert.AreEqual(_comparer.Equals(input, expected), true);
     }
 }

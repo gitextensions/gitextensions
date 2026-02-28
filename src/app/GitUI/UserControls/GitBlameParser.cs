@@ -17,7 +17,7 @@ internal partial class GitBlameParser : IGitBlameParser
     private readonly Func<IGitModule> _getModule;
 
     [GeneratedRegex(@"\@\@ -(?<PreviousLineNumber>\d+)(,(?<LineRemovedCount>\d+))? \+(?<CurrentLineNumber>\d+)(,(?<LineAddedCount>\d+))? \@\@", RegexOptions.ExplicitCapture)]
-    private static partial Regex ChunkHeaderRegex();
+    private static partial Regex ChunkHeaderRegex { get; }
 
     public GitBlameParser(Func<IGitModule> getModule)
     {
@@ -57,7 +57,7 @@ internal partial class GitBlameParser : IGitBlameParser
             // Find the good chunk of code with current line number (starting from the end), skipping header
             foreach (string chunk in diffOutput.Split("\n@@").Skip(1).Reverse())
             {
-                Match match = ChunkHeaderRegex().Match($"@@{chunk}");
+                Match match = ChunkHeaderRegex.Match($"@@{chunk}");
                 if (!match.Success)
                 {
                     Trace.WriteLine($"Blame previous commit: chunk/regex not matching\n@@{chunk}");

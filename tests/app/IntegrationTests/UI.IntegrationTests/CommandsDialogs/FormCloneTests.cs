@@ -3,73 +3,72 @@ using FluentAssertions;
 using GitUI;
 using GitUI.CommandsDialogs;
 
-namespace GitExtensions.UITests.CommandsDialogs
+namespace GitExtensions.UITests.CommandsDialogs;
+
+[Apartment(ApartmentState.STA)]
+public class FormCloneTests
 {
-    [Apartment(ApartmentState.STA)]
-    public class FormCloneTests
+    // Created once for the fixture
+    private ReferenceRepository _referenceRepository;
+
+    // Created once for each test
+    private GitUICommands _commands;
+
+    [SetUp]
+    public void SetUp()
     {
-        // Created once for the fixture
-        private ReferenceRepository _referenceRepository;
+        _referenceRepository = new ReferenceRepository();
+        _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
+    }
 
-        // Created once for each test
-        private GitUICommands _commands;
+    [TearDown]
+    public void TearDown()
+    {
+        _referenceRepository.Dispose();
+    }
 
-        [SetUp]
-        public void SetUp()
-        {
-            _referenceRepository = new ReferenceRepository();
-            _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
-        }
+    [TestCase(null, false, "")]
+    [TestCase("", false, "")]
+    [TestCase(" ", false, "")]
+    [TestCase("blah", false, "")]
+    [TestCase("git clone https://github.com/gitextensions/gitextensions && cd gitextensions", true, "https://github.com/gitextensions/gitextensions")]
+    [TestCase("git clone ssh://username@gerrit-server:/PROJECT", true, "ssh://username@gerrit-server:/PROJECT")]
+    [TestCase("git clone https://github.com/gitextensions/gitextensions && git clone https://github.com/gitextensions/git.hub", true, "https://github.com/gitextensions/gitextensions")]
+    public void Test_Url_extract_from_string(
+        string text, bool expected, string expectedUrl)
+    {
+        RunFormTest(
+            form =>
+            {
+                FormClone.TestAccessor accessor = form.GetTestAccessor();
 
-        [TearDown]
-        public void TearDown()
-        {
-            _referenceRepository.Dispose();
-        }
+                accessor.TryExtractUrl(text, out string url).Should().Be(expected);
 
-        [TestCase(null, false, "")]
-        [TestCase("", false, "")]
-        [TestCase(" ", false, "")]
-        [TestCase("blah", false, "")]
-        [TestCase("git clone https://github.com/gitextensions/gitextensions && cd gitextensions", true, "https://github.com/gitextensions/gitextensions")]
-        [TestCase("git clone ssh://username@gerrit-server:/PROJECT", true, "ssh://username@gerrit-server:/PROJECT")]
-        [TestCase("git clone https://github.com/gitextensions/gitextensions && git clone https://github.com/gitextensions/git.hub", true, "https://github.com/gitextensions/gitextensions")]
-        public void Test_Url_extract_from_string(
-            string text, bool expected, string expectedUrl)
-        {
-            RunFormTest(
-                form =>
+                // No need to compare URL if the result was expected to be false
+                if (expected)
                 {
-                    FormClone.TestAccessor accessor = form.GetTestAccessor();
+                    url.Should().Be(expectedUrl);
+                }
+            });
+    }
 
-                    accessor.TryExtractUrl(text, out string url).Should().Be(expected);
+    private void RunFormTest(Action<FormClone> testDriver)
+    {
+        RunFormTest(
+            form =>
+            {
+                testDriver(form);
+                return Task.CompletedTask;
+            });
+    }
 
-                    // No need to compare URL if the result was expected to be false
-                    if (expected)
-                    {
-                        url.Should().Be(expectedUrl);
-                    }
-                });
-        }
-
-        private void RunFormTest(Action<FormClone> testDriver)
-        {
-            RunFormTest(
-                form =>
-                {
-                    testDriver(form);
-                    return Task.CompletedTask;
-                });
-        }
-
-        private void RunFormTest(Func<FormClone, Task> testDriverAsync)
-        {
-            UITest.RunForm(
-                () =>
-                {
-                    _commands.StartCloneDialog(owner: null, url: null);
-                },
-                testDriverAsync);
-        }
+    private void RunFormTest(Func<FormClone, Task> testDriverAsync)
+    {
+        UITest.RunForm(
+            () =>
+            {
+                _commands.StartCloneDialog(owner: null, url: null);
+            },
+            testDriverAsync);
     }
 }

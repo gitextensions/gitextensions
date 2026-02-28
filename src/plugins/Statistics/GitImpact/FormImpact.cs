@@ -2,71 +2,70 @@
 using GitUI;
 using ResourceManager;
 
-namespace GitExtensions.Plugins.GitImpact
+namespace GitExtensions.Plugins.GitImpact;
+
+public sealed partial class FormImpact : GitExtensionsFormBase
 {
-    public sealed partial class FormImpact : GitExtensionsFormBase
+    private readonly TranslationString _authorCommits = new("{0} ({1} Commits, {2} Changed Lines)");
+
+    public FormImpact(IGitModule module)
     {
-        private readonly TranslationString _authorCommits = new("{0} ({1} Commits, {2} Changed Lines)");
-
-        public FormImpact(IGitModule module)
+        InitializeComponent();
+        InitializeComplete();
+        UpdateAuthorInfo("");
+        if (module is not null)
         {
-            InitializeComponent();
-            InitializeComplete();
-            UpdateAuthorInfo("");
-            if (module is not null)
+            Impact.Init(module);
+            Impact.UpdateData();
+            Impact.Invalidated += Impact_Invalidated;
+        }
+    }
+
+    protected override void OnFormClosed(FormClosedEventArgs e)
+    {
+        Impact.Stop();
+
+        base.OnFormClosed(e);
+
+        Impact.Dispose();
+    }
+
+    private void Impact_Invalidated(object sender, InvalidateEventArgs e)
+    {
+        ThreadHelper.JoinableTaskFactory.Run(
+            async () =>
             {
-                Impact.Init(module);
-                Impact.UpdateData();
-                Impact.Invalidated += Impact_Invalidated;
-            }
-        }
+                await this.SwitchToMainThreadAsync();
+                UpdateAuthorInfo(Impact.SelectedAuthor);
+            });
+    }
 
-        protected override void OnFormClosed(FormClosedEventArgs e)
+    private void UpdateAuthorInfo(string author)
+    {
+        lblAuthor.Visible = pnlAuthorColor.Visible = !string.IsNullOrEmpty(author);
+
+        if (lblAuthor.Visible)
         {
-            Impact.Stop();
+            ImpactLoader.DataPoint data = Impact.GetAuthorInfo(author);
+            lblAuthor.Text = string.Format(_authorCommits.Text, author, data.Commits, data.ChangedLines);
+            pnlAuthorColor.BackColor = Impact.GetAuthorColor(author);
 
-            base.OnFormClosed(e);
-
-            Impact.Dispose();
+            lblAuthor.Refresh();
+            pnlAuthorColor.Refresh();
         }
+    }
 
-        private void Impact_Invalidated(object sender, InvalidateEventArgs e)
+    private void Impact_MouseMove(object sender, MouseEventArgs e)
+    {
+        if (Impact.TrySetAuthorByScreenPosition(e.X, e.Y))
         {
-            ThreadHelper.JoinableTaskFactory.Run(
-                async () =>
-                {
-                    await this.SwitchToMainThreadAsync();
-                    UpdateAuthorInfo(Impact.SelectedAuthor);
-                });
+            Impact.Invalidate();
         }
+    }
 
-        private void UpdateAuthorInfo(string author)
-        {
-            lblAuthor.Visible = pnlAuthorColor.Visible = !string.IsNullOrEmpty(author);
-
-            if (lblAuthor.Visible)
-            {
-                ImpactLoader.DataPoint data = Impact.GetAuthorInfo(author);
-                lblAuthor.Text = string.Format(_authorCommits.Text, author, data.Commits, data.ChangedLines);
-                pnlAuthorColor.BackColor = Impact.GetAuthorColor(author);
-
-                lblAuthor.Refresh();
-                pnlAuthorColor.Refresh();
-            }
-        }
-
-        private void Impact_MouseMove(object sender, MouseEventArgs e)
-        {
-            if (Impact.TrySetAuthorByScreenPosition(e.X, e.Y))
-            {
-                Impact.Invalidate();
-            }
-        }
-
-        private void cbShowSubmodules_CheckedChanged(object sender, EventArgs e)
-        {
-            UpdateAuthorInfo("");
-            Impact.ShowSubmodules = cbIncludingSubmodules.Checked;
-        }
+    private void cbShowSubmodules_CheckedChanged(object sender, EventArgs e)
+    {
+        UpdateAuthorInfo("");
+        Impact.ShowSubmodules = cbIncludingSubmodules.Checked;
     }
 }

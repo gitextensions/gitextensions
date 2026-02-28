@@ -1,10 +1,9 @@
-﻿namespace GitUI
+﻿namespace GitUI;
+
+public interface IToolStripEx
 {
-    public interface IToolStripEx
-    {
-        /// <summary>
-        /// Gets or sets whether the toolstrip control has a border drawn around it.
-        /// </summary>
-        bool DrawBorder { get; set; }
-    }
+    /// <summary>
+    /// Gets or sets whether the toolstrip control has a border drawn around it.
+    /// </summary>
+    bool DrawBorder { get; set; }
 }

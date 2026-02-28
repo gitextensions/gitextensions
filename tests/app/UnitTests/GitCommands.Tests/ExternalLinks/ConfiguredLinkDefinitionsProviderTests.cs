@@ -6,118 +6,117 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
 using NSubstitute;
 
-namespace GitCommandsTests.ExternalLinks
+namespace GitCommandsTests.ExternalLinks;
+
+[TestFixture]
+public class ConfiguredLinkDefinitionsProviderTests
 {
-    [TestFixture]
-    public class ConfiguredLinkDefinitionsProviderTests
+    private GitModuleTestHelper _testHelper;
+    private string _repoLocalConfigFilePath;
+    private string _repoDistributedConfigFilePath;
+    private string _userRoamingConfigFilePath;
+    private DistributedSettings _userRoaming;
+    private DistributedSettings _repoDistributed;
+    private DistributedSettings _repoLocal;
+    private IExternalLinksStorage _externalLinksStorage;
+    private ConfiguredLinkDefinitionsProvider _provider;
+
+    [SetUp]
+    public void Setup()
     {
-        private GitModuleTestHelper _testHelper;
-        private string _repoLocalConfigFilePath;
-        private string _repoDistributedConfigFilePath;
-        private string _userRoamingConfigFilePath;
-        private DistributedSettings _userRoaming;
-        private DistributedSettings _repoDistributed;
-        private DistributedSettings _repoLocal;
-        private IExternalLinksStorage _externalLinksStorage;
-        private ConfiguredLinkDefinitionsProvider _provider;
+        _testHelper = new GitModuleTestHelper();
 
-        [SetUp]
-        public void Setup()
+        string content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level1_repogit_GitExtensions.settings.xml");
+        _repoLocalConfigFilePath = _testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
+        content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level2_repodist_GitExtensions.settings.xml");
+        _repoDistributedConfigFilePath = _testHelper.CreateFile(_testHelper.TemporaryPath + "/RoamingProfile", "GitExtensions.settings", content);
+        content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level3_roaming_GitExtensions.settings.xml");
+        _userRoamingConfigFilePath = _testHelper.CreateRepoFile("GitExtensions.settings", content);
+
+        _userRoaming = new DistributedSettings(lowerPriority: null, new GitExtSettingsCache(_userRoamingConfigFilePath), SettingLevel.Global);
+        _repoDistributed = new DistributedSettings(lowerPriority: _userRoaming, new GitExtSettingsCache(_repoDistributedConfigFilePath), SettingLevel.Distributed);
+        _repoLocal = new DistributedSettings(lowerPriority: _repoDistributed, new GitExtSettingsCache(_repoLocalConfigFilePath), SettingLevel.Local);
+
+        _externalLinksStorage = Substitute.For<IExternalLinksStorage>();
+
+        _provider = new ConfiguredLinkDefinitionsProvider(_externalLinksStorage);
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _userRoaming.SettingsCache.Dispose();
+        _repoDistributed.SettingsCache.Dispose();
+        _repoLocal.SettingsCache.Dispose();
+
+        _testHelper.Dispose();
+    }
+
+    [Test]
+    public void Get_should_throw_if_data_null()
+    {
+        ((Action)(() => _provider.Get(null))).Should().Throw<ArgumentNullException>();
+    }
+
+    [Test]
+    public void Can_load_1_layers_of_settings()
+    {
+        _externalLinksStorage.Load(Arg.Any<DistributedSettings>()).Returns(new List<ExternalLinkDefinition>
         {
-            _testHelper = new GitModuleTestHelper();
+            new() { Name = "user definition 1" },
+        });
 
-            string content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level1_repogit_GitExtensions.settings.xml");
-            _repoLocalConfigFilePath = _testHelper.CreateRepoFile(".git", "GitExtensions.settings", content);
-            content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level2_repodist_GitExtensions.settings.xml");
-            _repoDistributedConfigFilePath = _testHelper.CreateFile(_testHelper.TemporaryPath + "/RoamingProfile", "GitExtensions.settings", content);
-            content = EmbeddedResourceLoader.Load(Assembly.GetExecutingAssembly(), $"{GetType().Namespace}.MockData.level3_roaming_GitExtensions.settings.xml");
-            _userRoamingConfigFilePath = _testHelper.CreateRepoFile("GitExtensions.settings", content);
+        IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_userRoaming);
 
-            _userRoaming = new DistributedSettings(lowerPriority: null, new GitExtSettingsCache(_userRoamingConfigFilePath), SettingLevel.Global);
-            _repoDistributed = new DistributedSettings(lowerPriority: _userRoaming, new GitExtSettingsCache(_repoDistributedConfigFilePath), SettingLevel.Distributed);
-            _repoLocal = new DistributedSettings(lowerPriority: _repoDistributed, new GitExtSettingsCache(_repoLocalConfigFilePath), SettingLevel.Local);
+        effectiveSettings.Should().ContainSingle();
+    }
 
-            _externalLinksStorage = Substitute.For<IExternalLinksStorage>();
+    [Test]
+    public void Can_load_2_layers_of_settings()
+    {
+        _externalLinksStorage.Load(Arg.Any<DistributedSettings>()).Returns(
+            new List<ExternalLinkDefinition>
+            {
+                new() { Name = "local definition 1" },
+            },
+            new List<ExternalLinkDefinition>
+            {
+                new() { Name = "distributed definition 1" },
+                new() { Name = "distributed definition 2" },
+                new() { Name = "distributed definition 3" },
+            });
 
-            _provider = new ConfiguredLinkDefinitionsProvider(_externalLinksStorage);
-        }
+        IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_repoDistributed);
 
-        [TearDown]
-        public void TearDown()
-        {
-            _userRoaming.SettingsCache.Dispose();
-            _repoDistributed.SettingsCache.Dispose();
-            _repoLocal.SettingsCache.Dispose();
+        // 1 comes from the user roaming settings
+        // 3 come from the distributed
+        effectiveSettings.Should().HaveCount(4);
+    }
 
-            _testHelper.Dispose();
-        }
-
-        [Test]
-        public void Get_should_throw_if_data_null()
-        {
-            ((Action)(() => _provider.Get(null))).Should().Throw<ArgumentNullException>();
-        }
-
-        [Test]
-        public void Can_load_1_layers_of_settings()
-        {
-            _externalLinksStorage.Load(Arg.Any<DistributedSettings>()).Returns(new List<ExternalLinkDefinition>
+    [Test]
+    public void Can_load_3_layers_of_settings()
+    {
+        _externalLinksStorage.Load(Arg.Any<DistributedSettings>()).Returns(
+            new List<ExternalLinkDefinition>
+            {
+                new() { Name = "local definition 1" },
+            },
+            new List<ExternalLinkDefinition>
+            {
+                new() { Name = "distributed definition 1" },
+                new() { Name = "distributed definition 2" },
+                new() { Name = "distributed definition 3" },
+            },
+            new List<ExternalLinkDefinition>
             {
                 new() { Name = "user definition 1" },
             });
 
-            IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_userRoaming);
+        IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_repoLocal);
 
-            effectiveSettings.Should().ContainSingle();
-        }
-
-        [Test]
-        public void Can_load_2_layers_of_settings()
-        {
-            _externalLinksStorage.Load(Arg.Any<DistributedSettings>()).Returns(
-                new List<ExternalLinkDefinition>
-                {
-                    new() { Name = "local definition 1" },
-                },
-                new List<ExternalLinkDefinition>
-                {
-                    new() { Name = "distributed definition 1" },
-                    new() { Name = "distributed definition 2" },
-                    new() { Name = "distributed definition 3" },
-                });
-
-            IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_repoDistributed);
-
-            // 1 comes from the user roaming settings
-            // 3 come from the distributed
-            effectiveSettings.Should().HaveCount(4);
-        }
-
-        [Test]
-        public void Can_load_3_layers_of_settings()
-        {
-            _externalLinksStorage.Load(Arg.Any<DistributedSettings>()).Returns(
-                new List<ExternalLinkDefinition>
-                {
-                    new() { Name = "local definition 1" },
-                },
-                new List<ExternalLinkDefinition>
-                {
-                    new() { Name = "distributed definition 1" },
-                    new() { Name = "distributed definition 2" },
-                    new() { Name = "distributed definition 3" },
-                },
-                new List<ExternalLinkDefinition>
-                {
-                    new() { Name = "user definition 1" },
-                });
-
-            IReadOnlyList<ExternalLinkDefinition> effectiveSettings = _provider.Get(_repoLocal);
-
-            // 1 comes from the user roaming settings
-            // 3 come from the distributed
-            // 1 comes from the local
-            effectiveSettings.Should().HaveCount(5);
-        }
+        // 1 comes from the user roaming settings
+        // 3 come from the distributed
+        // 1 comes from the local
+        effectiveSettings.Should().HaveCount(5);
     }
 }

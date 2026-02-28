@@ -49,12 +49,12 @@ If enabled, any illegal symbols will be replaced with the replacement symbol of 
       </trans-unit>
       <trans-unit id="chkCommitAndPushForcedWhenAmend.Text">
         <source>Push forced with lease when Commit &amp;&amp; Push action is performed with Amend option checked</source>
-        <target>若选中修补 Amend 选项，在执行提交并推送操作时，使用 force with lease 强制推送</target>
+        <target>當已勾選修訂選項時，提交和推送操作會強制使用租約推送</target>
         
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.Text">
         <source>Use Console Emulator for console output in command dialogs</source>
-        <target>在命令对话框使用控制台模拟器显示控制台输出</target>
+        <target>在命令對話方塊中使用控制台模擬器輸出</target>
         
       </trans-unit>
       <trans-unit id="chkConsoleEmulator.ToolTipText">
@@ -64,12 +64,11 @@ If yes, embeds the fully functional console emulator. This is experimental and m
 If no, redirects select strings from stdout/stderr into an edit box. This is the classic mode.
 
 Turn off if you experience problems with the console emulator.</source>
-        <target>设置命令行程序，例如克隆和拉取，在命令进度对话框中的显示样式。
+        <target>控制命令進度對話框中的控制台程式輸出顯示方式，例如 Clone 或 Pull。
 
-如果选“是”，则嵌入全功能的命令行模拟器。这是实验性的，可能具有副作用。
-如果选“否”，则将 stdout / stderr 的输出字符串重定向到编辑框中。这是经典模式。
+若選擇是，將嵌入完整功能的控制台模擬器。這是實驗性功能，可能會有副作用。 若選擇否，將部分字串從 stdout/stderr 重定向至編輯框。這是經典模式。
 
-如果您在使用命令行模拟器时遇到问题，请选“否”。</target>
+若您在使用控制台模擬器時遇到問題，請關閉此選項。</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
@@ -343,9 +342,16 @@ Click this info icon for more details.</source>
   </file>
   <file datatype="plaintext" original="BlameControl" source-language="en" target-language="zh-Hant">
     <body>
+      <trans-unit id="_blameActualPreviousRevision.Text">
+        <source>&amp;Blame previous revision</source>
+        
+      </trans-unit>
+      <trans-unit id="_blameVisiblePreviousRevision.Text">
+        <source>&amp;Blame previous visible revision</source>
+        
+      </trans-unit>
       <trans-unit id="allCommitInfoToolStripMenuItem.Text">
-        <source>All commit info</source>
-        <target>所有提交信息</target>
+        <source>&amp;All commit info</source>
         
       </trans-unit>
       <trans-unit id="blamePreviousRevisionToolStripMenuItem.Text">
@@ -354,28 +360,23 @@ Click this info icon for more details.</source>
         
       </trans-unit>
       <trans-unit id="blameRevisionToolStripMenuItem.Text">
-        <source>Blame this revision</source>
-        <target>追溯当前版本</target>
+        <source>Blame &amp;this revision</source>
         
       </trans-unit>
       <trans-unit id="commitHashToolStripMenuItem.Text">
-        <source>Commit hash</source>
-        <target>提交雜湊值</target>
+        <source>Commit &amp;hash</source>
         
       </trans-unit>
       <trans-unit id="commitMessageToolStripMenuItem.Text">
-        <source>Commit message</source>
-        <target>提交訊息</target>
+        <source>Commit &amp;message</source>
         
       </trans-unit>
       <trans-unit id="copyToClipboardToolStripMenuItem.Text">
-        <source>Copy to clipboard</source>
-        <target>複製到剪貼簿</target>
+        <source>&amp;Copy to clipboard</source>
         
       </trans-unit>
       <trans-unit id="showChangesToolStripMenuItem.Text">
-        <source>Show changes</source>
-        <target>顯示變更</target>
+        <source>&amp;Show changes</source>
         
       </trans-unit>
     </body>
@@ -1492,6 +1493,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <target>無法建立拉取請求</target>
         
       </trans-unit>
+      <trans-unit id="_strFailedToLoadTemplate.Text">
+        <source>Failed to load PR template from file.</source>
+        
+      </trans-unit>
       <trans-unit id="_strLoading.Text">
         <source>Loading...</source>
         <target>正在載入...</target>
@@ -1635,29 +1640,9 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <target>拉直图形对角线</target>
         
       </trans-unit>
-      <trans-unit id="chkUseSSL.Text">
-        <source>Use SSL/TLS</source>
-        <target>使用SSL/TLS</target>
-        
-      </trans-unit>
       <trans-unit id="gbRevisionGraph.Text">
         <source>&amp;Revision graph</source>
         <target>版本图像</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxEmailSettings.Text">
-        <source>&amp;Email settings for sending patches</source>
-        <target>为发送补丁设置电子邮件地址</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSmtpServerName.Text">
-        <source>SMTP server name</source>
-        <target>外寄郵件SMTP伺服器</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSmtpServerPort.Text">
-        <source>Port</source>
-        <target>埠</target>
         
       </trans-unit>
       <trans-unit id="mergeWindowGroup.Text">
@@ -1742,13 +1727,11 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         
       </trans-unit>
       <trans-unit id="chkUseGEThemeGitColoring.Text">
-        <source>Use theme coloring</source>
-        <target>使用主题色</target>
+        <source>Reverse background color</source>
         
       </trans-unit>
       <trans-unit id="chkUseGEThemeGitColoring.ToolTipText">
-        <source>Apply Git theme colors (with inverse backround) instead of Git default colors.</source>
-        <target>应用Git主题颜色(带有反向背景)代替Git默认颜色。</target>
+        <source>Color the background at changes (invert colors).</source>
         
       </trans-unit>
       <trans-unit id="chkUseGitColoring.Text">
@@ -1884,14 +1867,135 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target>沒有改變</target>
         
       </trans-unit>
-      <trans-unit id="SearchWatermarkLabel.Text">
-        <source>Search files in commit using a regular expression...</source>
-        <target>使用正则表达式搜索提交中的文件…</target>
+      <trans-unit id="_assumeUnchangedToolTip.Text">
+        <source>Tell git to not check the status of this file for performance benefits.
+Use this feature when a file is big and never change.
+Git will never check if the file has changed that will improve status check performance.</source>
+        
+      </trans-unit>
+      <trans-unit id="_collapseAll.Text">
+        <source>C&amp;ollapse all</source>
+        
+      </trans-unit>
+      <trans-unit id="_collapseRootFolders.Text">
+        <source>Collap&amp;se root folders</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteFailed.Text">
+        <source>Delete file failed</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteSelectedFiles.Text">
+        <source>Are you sure you want to delete the selected file(s)?</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteSelectedFilesCaption.Text">
+        <source>Delete</source>
+        
+      </trans-unit>
+      <trans-unit id="_expandAll.Text">
+        <source>E&amp;xpand all</source>
+        
+      </trans-unit>
+      <trans-unit id="_firstRevision.Text">
+        <source>First: A </source>
+        
+      </trans-unit>
+      <trans-unit id="_multipleDescription.Text">
+        <source>&lt;multiple&gt;</source>
+        
+      </trans-unit>
+      <trans-unit id="_newName.Text">
+        <source>New name</source>
+        
+      </trans-unit>
+      <trans-unit id="_resetSelectedChangesText.Text">
+        <source>Are you sure you want to reset all selected files to {0}?</source>
+        
+      </trans-unit>
+      <trans-unit id="_saveFileFilterAllFiles.Text">
+        <source>All files</source>
+        
+      </trans-unit>
+      <trans-unit id="_saveFileFilterCurrentFormat.Text">
+        <source>Current format</source>
+        
+      </trans-unit>
+      <trans-unit id="_selectAll.Text">
+        <source>S&amp;elect all</source>
+        
+      </trans-unit>
+      <trans-unit id="_selectedRevision.Text">
+        <source>Second: B </source>
+        
+      </trans-unit>
+      <trans-unit id="_skipWorktreeToolTip.Text">
+        <source>Hide already tracked files that will change but that you don't want to commit.
+Suitable for some config files modified locally.</source>
         
       </trans-unit>
       <trans-unit id="_sortByContextMenu.Text">
-        <source>&amp;Sort by...</source>
-        <target>排序方式...</target>
+        <source>&amp;Sort and group by</source>
+        
+      </trans-unit>
+      <trans-unit id="_stopTrackingFail.Text">
+        <source>Fail to stop tracking the file '{0}'.</source>
+        
+      </trans-unit>
+      <trans-unit id="btnAsTree.ToolTipText">
+        <source>Toggle flat list / tree</source>
+        
+      </trans-unit>
+      <trans-unit id="btnByExtension.ToolTipText">
+        <source>Group by file type (extension)</source>
+        
+      </trans-unit>
+      <trans-unit id="btnByPath.ToolTipText">
+        <source>Group by file path</source>
+        
+      </trans-unit>
+      <trans-unit id="btnByStatus.ToolTipText">
+        <source>Group by diff status</source>
+        
+      </trans-unit>
+      <trans-unit id="btnCollapseGroups.ToolTipText">
+        <source>Collapse all groups, otherwise expand the selected group</source>
+        
+      </trans-unit>
+      <trans-unit id="btnFindInFilesGitGrep.ToolTipText">
+        <source>Toggle 'Find in commit files using git-grep'</source>
+        
+      </trans-unit>
+      <trans-unit id="btnOnlyA.Text">
+        <source>A</source>
+        
+      </trans-unit>
+      <trans-unit id="btnOnlyA.ToolTipText">
+        <source>Show files changed in A only</source>
+        
+      </trans-unit>
+      <trans-unit id="btnOnlyB.Text">
+        <source>B</source>
+        
+      </trans-unit>
+      <trans-unit id="btnOnlyB.ToolTipText">
+        <source>Show files changed in B only</source>
+        
+      </trans-unit>
+      <trans-unit id="btnRefresh.ToolTipText">
+        <source>Refresh artificial commit</source>
+        
+      </trans-unit>
+      <trans-unit id="btnSameChange.ToolTipText">
+        <source>Show files changed equally</source>
+        
+      </trans-unit>
+      <trans-unit id="btnSettings.Text">
+        <source>Settings</source>
+        
+      </trans-unit>
+      <trans-unit id="btnUnequalChange.ToolTipText">
+        <source>Show files with different changes</source>
         
       </trans-unit>
       <trans-unit id="columnHeader.Text">
@@ -1899,13 +2003,277 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
         <target>檔案</target>
         
       </trans-unit>
+      <trans-unit id="lblFindInCommitFilesGitGrepWatermark.Text">
+        <source>Find in commit files using git-grep regular expression...</source>
+        
+      </trans-unit>
+      <trans-unit id="tmsiEditLocallyIgnoredFiles.Text">
+        <source>Edit &amp;locally ignored files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiAddFileToGitIgnore.Text">
+        <source>Add file to &amp;.gitignore</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiAddFileToGitInfoExclude.Text">
+        <source>Add file to .git/info/exclude</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiAssumeUnchanged.Text">
+        <source>Assu&amp;me unchanged</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiBlame.Text">
+        <source>&amp;Blame</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCherryPickChanges.Text">
+        <source>Cherr&amp;y pick changes</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCommitSubmoduleChanges.Text">
+        <source>&amp;Commit submodule changes</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCopyPaths.Text">
+        <source>Copy &amp;path(s)</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDeleteFile.Text">
+        <source>De&amp;lete file</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDenseTree.Text">
+        <source>&amp;Dense tree (merge single item with its folder node)</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDiffFirstToLocal.Text">
+        <source>First -&gt; &amp;Working directory</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDiffFirstToSelected.Text">
+        <source>&amp;First -&gt; Second</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDiffSelectedToLocal.Text">
+        <source>&amp;Second -&gt; Working directory</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiDiffTwoSelected.Text">
+        <source>&amp;Diff the selected files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiEditGitIgnore.Text">
+        <source>&amp;Edit ignored files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiEditWorkingDirectoryFile.Text">
+        <source>&amp;Edit working directory file</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFileHistory.Text">
+        <source>File &amp;history</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFilterFileInGrid.Text">
+        <source>Filter file in &amp;grid</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFindFile.Text">
+        <source>&amp;Find file...</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFindUsingBoth.Text">
+        <source>Using &amp;both</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFindUsingDialog.Text">
+        <source>Using &amp;dialog</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFindUsingInputBox.Text">
+        <source>Using &amp;input box</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFileExtensionFlat.Text">
+        <source>Group by file e&amp;xtension - flat</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFileExtensionTree.Text">
+        <source>Group by file &amp;extension - tree</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFilePathFlat.Text">
+        <source>Group by &amp;file path - flat</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFilePathTree.Text">
+        <source>Group by file &amp;path - tree</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFileStatusFlat.Text">
+        <source>Group by file s&amp;tatus - flat</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiGroupByFileStatusTree.Text">
+        <source>Group by file &amp;status - tree</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiInteractiveAdd.Text">
+        <source>Interactive add...</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiMove.Text">
+        <source>Rena&amp;me / move</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenFindInCommitFilesGitGrepDialog.Text">
+        <source>Find in &amp;commit files using git-grep...</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenInVisualStudio.Text">
+        <source>Open in &amp;Visual Studio</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenRevisionFile.Text">
+        <source>Ope&amp;n this revision (temp file)</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenRevisionFileWith.Text">
+        <source>Open this revision &amp;with... (temp file)</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenWithDifftool.Text">
+        <source>Open with &amp;difftool</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenWorkingDirectoryFile.Text">
+        <source>&amp;Open working directory file</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOpenWorkingDirectoryFileWith.Text">
+        <source>Open working directory file with...</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiRefreshOnFormFocus.Text">
+        <source>&amp;Refresh artificial commits on form focus</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiRememberFirstRevDiff.Text">
+        <source>R&amp;emember First for diff</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiRememberSecondRevDiff.Text">
+        <source>&amp;Remember Second for diff</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetChunkOfFile.Text">
+        <source>Reset chunk of file...</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetFileTo.Text">
+        <source>&amp;Reset file(s) to</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiResetSubmoduleChanges.Text">
+        <source>R&amp;eset submodule changes</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiRunScript.Text">
+        <source>Run script</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiSaveAs.Text">
+        <source>S&amp;ave selected as...</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowAssumeUnchangedFiles.Text">
+        <source>Show &amp;assumed-unchanged files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowDiffForAllParents.Text">
+        <source>&amp;Show file differences for all parents</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowFindInCommitFilesGitGrep.Text">
+        <source>Show 'Find in commit fi&amp;les using git-grep'</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowGroupNodesInFlatList.Text">
+        <source>Show &amp;group nodes in flat list (if multiple)</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowIgnoredFiles.Text">
+        <source>Show &amp;ignored files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowInFileTree.Text">
+        <source>Show in File &amp;tree</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowInFolder.Text">
+        <source>Show &amp;in folder</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowSkipWorktreeFiles.Text">
+        <source>Show &amp;skip-worktree files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiShowUntrackedFiles.Text">
+        <source>Show &amp;untracked files</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiSkipWorktree.Text">
+        <source>S&amp;kip worktree</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiStageFile.Text">
+        <source>&amp;Stage selected</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiStashSubmoduleChanges.Text">
+        <source>S&amp;tash submodule changes</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiStopTracking.Text">
+        <source>Stop tracking this file</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiToolbar.Text">
+        <source>&amp;Toolbar</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiUnstageFile.Text">
+        <source>&amp;Unstage selected</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiUpdateSubmodule.Text">
+        <source>&amp;Update submodule</source>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FileViewer" source-language="en" target-language="zh-Hant">
     <body>
+      <trans-unit id="_binaryFile.Text">
+        <source>Binary file: {0}</source>
+        
+      </trans-unit>
+      <trans-unit id="_binaryFileDetected.Text">
+        <source>Binary file: {0} (Detected)</source>
+        
+      </trans-unit>
+      <trans-unit id="_bytes.Text">
+        <source>bytes</source>
+        
+      </trans-unit>
       <trans-unit id="_cannotViewImage.Text">
         <source>Cannot view image {0}</source>
         <target>无法查看图像 {0}</target>
+        
+      </trans-unit>
+      <trans-unit id="_fileSizeInMb.Text">
+        <source>MB</source>
         
       </trans-unit>
       <trans-unit id="_largeFileSizeWarning.Text">
@@ -2206,8 +2574,7 @@ The primary difftool can still be selected by clicking the main menu entry.</sou
   <file datatype="plaintext" original="FolderBrowserButton" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="buttonBrowse.Text">
-        <source>Browse...</source>
-        <target>瀏覽...</target>
+        <source>&amp;Browse...</source>
         
       </trans-unit>
     </body>
@@ -2294,11 +2661,6 @@ You can not push unless you are a collaborator. {2}</source>
         <source>Will clone {0} into {1}.
 You will have push access. {2}</source>
         <target>將複製{0}到{1}，你必須推送才能存取{2}</target>
-        
-      </trans-unit>
-      <trans-unit id="browseForCloneToDirbtn.Text">
-        <source>Browse...</source>
-        <target>瀏覽...</target>
         
       </trans-unit>
       <trans-unit id="cloneBtn.Text">
@@ -2882,7 +3244,7 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="ToolStripFilters.Text">
         <source>Filters</source>
-        <target>过滤器</target>
+        <target>篩選</target>
         
       </trans-unit>
       <trans-unit id="ToolStripMain.Text">
@@ -2921,8 +3283,7 @@ compare with first:</source>
         
       </trans-unit>
       <trans-unit id="_configureWorkingDirMenu.Text">
-        <source>&amp;Configure this menu...</source>
-        <target>設定此選單(&amp;C)...</target>
+        <source>Co&amp;nfigure this menu...</source>
         
       </trans-unit>
       <trans-unit id="_consoleTabCaption.Text">
@@ -2973,6 +3334,10 @@ compare with first:</source>
       <trans-unit id="_noWorkingFolderText.Text">
         <source>No working directory</source>
         <target>無工作目錄</target>
+        
+      </trans-unit>
+      <trans-unit id="_outputHistoryTabCaption.Text">
+        <source>Output</source>
         
       </trans-unit>
       <trans-unit id="_pullFetch.Text">
@@ -3250,8 +3615,7 @@ Do you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="fetchPruneAllToolStripMenuItem.ToolTipText">
-        <source>Fetch branches and tags from all remote repositories also prune deleted refs</source>
-        <target>从所有的远程版本库获取分支和标签并剪除已被删除的引用</target>
+        <source>Fetch branches and tags from all remote repositories also prune deleted branches</source>
         
       </trans-unit>
       <trans-unit id="fetchToolStripMenuItem.Text">
@@ -3758,9 +4122,25 @@ Do you want to continue?</source>
         <target>浏览仓库窗口</target>
         
       </trans-unit>
-      <trans-unit id="chkChowConsoleTab.Text">
+      <trans-unit id="_outputHistoryTooltip.Text">
+        <source>The output displayed in the process dialog and some trace output is retained and shown in the output history.
+
+- With this set, the output history is displayed in a tab in the lower pane of the Browse Repository window.
+- With this unset, the output history is displayed in a panel docked to the lower left corner of the Browse Repository window.
+
+Focus the output history and (when displayed as panel) toggle its visibility using the hotkey {0}.</source>
+        
+      </trans-unit>
+      <trans-unit id="chkShowConsoleTab.Text">
         <source>Show the Console tab</source>
-        <target>显示控制台页</target>
+        
+      </trans-unit>
+      <trans-unit id="chkShowConsoleTab.ToolTipText">
+        <source>View help</source>
+        
+      </trans-unit>
+      <trans-unit id="chkShowFindInCommitFilesGitGrep.Text">
+        <source>Show 'Find in commit files using git-grep'</source>
         
       </trans-unit>
       <trans-unit id="chkShowGpgInformation.Text">
@@ -3768,9 +4148,21 @@ Do you want to continue?</source>
         <target>显示 GPG 密钥信息</target>
         
       </trans-unit>
+      <trans-unit id="chkShowGpgInformation.ToolTipText">
+        <source>View help</source>
+        
+      </trans-unit>
+      <trans-unit id="chkShowOutputHistoryAsTab.Text">
+        <source>Show output history as tab (otherwise as panel)</source>
+        
+      </trans-unit>
       <trans-unit id="chkUseBrowseForFileHistory.Text">
         <source>Show file history in the main window</source>
         <target>在主窗口中显示文件历史</target>
+        
+      </trans-unit>
+      <trans-unit id="chkUseBrowseForFileHistory.ToolTipText">
+        <source>View help</source>
         
       </trans-unit>
       <trans-unit id="chkUseDiffViewerForBlame.Text">
@@ -3778,9 +4170,8 @@ Do you want to continue?</source>
         <target>在差异视图中显示 blame</target>
         
       </trans-unit>
-      <trans-unit id="gbGeneral.Text">
-        <source>General</source>
-        <target>一般</target>
+      <trans-unit id="chkUseDiffViewerForBlame.ToolTipText">
+        <source>View help</source>
         
       </trans-unit>
       <trans-unit id="gbTabs.Text">
@@ -3788,9 +4179,16 @@ Do you want to continue?</source>
         <target>标签（需要重启）</target>
         
       </trans-unit>
-      <trans-unit id="label2.Text">
+      <trans-unit id="groupBox1.Text">
+        <source>General</source>
+        
+      </trans-unit>
+      <trans-unit id="lblDefaultShell.Text">
         <source>Default shell</source>
-        <target>默认命令行工具</target>
+        
+      </trans-unit>
+      <trans-unit id="lblOutputHistoryDepth.Text">
+        <source>Output history depth (0 to disable):</source>
         
       </trans-unit>
     </body>
@@ -4010,6 +4408,10 @@ Are you sure?</source>
       <trans-unit id="columnHeader4.Text">
         <source>Date</source>
         <target>日期</target>
+        
+      </trans-unit>
+      <trans-unit id="lblAnotherRev.Text">
+        <source>C&amp;hoose another revision:</source>
         
       </trans-unit>
       <trans-unit id="lblBranchInfo.Text">
@@ -4268,8 +4670,7 @@ Do you want to open the new repository &quot;{0}&quot; now?</source>
         
       </trans-unit>
       <trans-unit id="brachLabel.Text">
-        <source>&amp;Branch:</source>
-        <target>分支</target>
+        <source>Br&amp;anch:</source>
         
       </trans-unit>
       <trans-unit id="cbDownloadFullHistory.Text">
@@ -4431,15 +4832,6 @@ Do you want to continue?</source>
 你是否要繼續進行？</target>
         
       </trans-unit>
-      <trans-unit id="_assumeUnchangedToolTip.Text">
-        <source>Tell git to not check the status of this file for performance benefits.
-Use this feature when a file is big and never change.
-Git will never check if the file has changed that will improve status check performance.</source>
-        <target>为提升性能，让 Git 不检查此文件的状态。
-可对不会修改的大文件使用此功能。
-Git 将不会检查此文件是否被修改，借此改善文件状态检查功能的性能。</target>
-        
-      </trans-unit>
       <trans-unit id="_commitAndForcePush.Text">
         <source>Commit &amp;&amp; force &amp;push</source>
         <target>強制推送並提交(&amp;p)</target>
@@ -4521,31 +4913,6 @@ Do you want to continue?</source>
       <trans-unit id="_conventionalCommitDocumentation.Text">
         <source>Documentation...</source>
         <target>文件...</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteFailed.Text">
-        <source>Delete file failed</source>
-        <target>刪除檔案失敗</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteSelectedFiles.Text">
-        <source>Are you sure you want to delete the selected file(s)?</source>
-        <target>确实要删除所选文件吗？</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteSelectedFilesCaption.Text">
-        <source>Delete</source>
-        <target>刪除</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteUntrackedFiles.Text">
-        <source>Are you sure you want to delete all untracked files?</source>
-        <target>你確定要刪除所有未追踪的檔案嗎？ </target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteUntrackedFilesCaption.Text">
-        <source>Delete untracked files.</source>
-        <target>刪除未追踪檔案。 </target>
         
       </trans-unit>
       <trans-unit id="_enterCommitMessage.Text">
@@ -4639,26 +5006,6 @@ Do you want to continue?</source>
 您想繼續嗎？ </target>
         
       </trans-unit>
-      <trans-unit id="_onlyStageChunkOfSingleFileError.Text">
-        <source>You can only use this option when selecting a single file</source>
-        <target>只有在選擇單一檔案的時候，您才能使用此選項。 </target>
-        
-      </trans-unit>
-      <trans-unit id="_resetSelectedChangesText.Text">
-        <source>Are you sure you want to reset all selected files?</source>
-        <target>你確定要回復所有選定的檔案？ </target>
-        
-      </trans-unit>
-      <trans-unit id="_resetStageChunkOfFileCaption.Text">
-        <source>Unstage chunk of file</source>
-        <target>不提交大量檔案</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectOnlyOneFile.Text">
-        <source>You must have only one file selected.</source>
-        <target>你只能選一個檔案</target>
-        
-      </trans-unit>
       <trans-unit id="_selectionFilterErrorToolTip.Text">
         <source>Error {0}</source>
         <target>錯誤 {0}</target>
@@ -4667,13 +5014,6 @@ Do you want to continue?</source>
       <trans-unit id="_selectionFilterToolTip.Text">
         <source>Enter a regular expression to select unstaged files.</source>
         <target>輸入正規表達式來選擇未加入的(unstaged)檔案</target>
-        
-      </trans-unit>
-      <trans-unit id="_skipWorktreeToolTip.Text">
-        <source>Hide already tracked files that will change but that you don't want to commit.
-Suitable for some config files modified locally.</source>
-        <target>隐藏那些不想提交且会被修改的已跟踪文件。
-适合一些本地修改的配置文件。</target>
         
       </trans-unit>
       <trans-unit id="_stageAll.Text">
@@ -4699,11 +5039,6 @@ Suitable for some config files modified locally.</source>
       <trans-unit id="_statusBarBranchWithoutRemote.Text">
         <source>(remote not configured)</source>
         <target>（未配置远程版本库）</target>
-        
-      </trans-unit>
-      <trans-unit id="_stopTrackingFail.Text">
-        <source>Fail to stop tracking the file '{0}'.</source>
-        <target>取消跟踪文件失败：“{0}”。</target>
         
       </trans-unit>
       <trans-unit id="_templateLoadErrorCaption.Text">
@@ -4744,21 +5079,6 @@ You can unset the template:
       <trans-unit id="_untrackedRemote.Text">
         <source>(untracked)</source>
         <target>(未跟踪的)</target>
-        
-      </trans-unit>
-      <trans-unit id="addFileToGitIgnoreToolStripMenuItem.Text">
-        <source>Add file to .gitignore</source>
-        <target>添加檔案到.gitignore</target>
-        
-      </trans-unit>
-      <trans-unit id="addFileToGitInfoExcludeLocallyToolStripMenuItem.Text">
-        <source>Add file to .git/info/exclude</source>
-        <target>添加文件到 .git/info/exclude</target>
-        
-      </trans-unit>
-      <trans-unit id="assumeUnchangedToolStripMenuItem.Text">
-        <source>Assume unchanged</source>
-        <target>假定未更改</target>
         
       </trans-unit>
       <trans-unit id="branchNameLabel.Text">
@@ -4811,11 +5131,6 @@ You can unset the template:
         <target>已暂存</target>
         
       </trans-unit>
-      <trans-unit id="commitSubmoduleChanges.Text">
-        <source>Commit submodule changes</source>
-        <target>Commit 子模組變更</target>
-        
-      </trans-unit>
       <trans-unit id="commitTemplatesToolStripMenuItem.Text">
         <source>Commit &amp;templates</source>
         <target>Commit 樣板(&amp;T)</target>
@@ -4824,11 +5139,6 @@ You can unset the template:
       <trans-unit id="commitTemplatesToolStripMenuItem.ToolTipText">
         <source>Commit templates</source>
         <target>Commit樣板</target>
-        
-      </trans-unit>
-      <trans-unit id="copyFolderNameMenuItem.Text">
-        <source>Copy folder name</source>
-        <target>複製資料夾名稱</target>
         
       </trans-unit>
       <trans-unit id="createBranchToolStripButton.Text">
@@ -4841,54 +5151,9 @@ You can unset the template:
         <target>建立分支</target>
         
       </trans-unit>
-      <trans-unit id="deleteAllUntrackedFilesToolStripMenuItem.Text">
-        <source>Delete all untracked files</source>
-        <target>刪除所有未追蹤檔案</target>
-        
-      </trans-unit>
-      <trans-unit id="deleteFileToolStripMenuItem.Text">
-        <source>Delete file</source>
-        <target>移除檔案</target>
-        
-      </trans-unit>
-      <trans-unit id="doNotAssumeUnchangedToolStripMenuItem.Text">
-        <source>Do not assume unchanged</source>
-        <target>不要假定未更改</target>
-        
-      </trans-unit>
-      <trans-unit id="doNotSkipWorktreeToolStripMenuItem.Text">
-        <source>Do not skip worktree</source>
-        <target>不要跳过工作树</target>
-        
-      </trans-unit>
-      <trans-unit id="editFileToolStripMenuItem.Text">
-        <source>Edit file</source>
-        <target>編輯檔案</target>
-        
-      </trans-unit>
-      <trans-unit id="editGitIgnoreToolStripMenuItem.Text">
-        <source>Edit ignored files</source>
-        <target>編輯忽略的檔案</target>
-        
-      </trans-unit>
-      <trans-unit id="editLocallyIgnoredFilesToolStripMenuItem.Text">
-        <source>Edit locally ignored files</source>
-        <target>编辑本地忽略文件</target>
-        
-      </trans-unit>
-      <trans-unit id="filenameToClipboardToolStripMenuItem.Text">
-        <source>Copy full path</source>
-        <target>檔案名複製到剪貼簿</target>
-        
-      </trans-unit>
       <trans-unit id="generateListOfChangesInSubmodulesChangesToolStripMenuItem.Text">
         <source>Generate a list of changes in submodules</source>
         <target>建立子模組的變更列表</target>
-        
-      </trans-unit>
-      <trans-unit id="interactiveAddToolStripMenuItem.Text">
-        <source>Interactive Add</source>
-        <target>互動式Add</target>
         
       </trans-unit>
       <trans-unit id="modifyCommitMessageButton.Text">
@@ -4901,31 +5166,6 @@ You can unset the template:
         <target>没有验证</target>
         
       </trans-unit>
-      <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Show in folder</source>
-        <target>在文件夹显示</target>
-        
-      </trans-unit>
-      <trans-unit id="openFolderMenuItem.Text">
-        <source>Show in folder</source>
-        <target>在文件夹显示</target>
-        
-      </trans-unit>
-      <trans-unit id="openToolStripMenuItem.Text">
-        <source>Open</source>
-        <target>開啟</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with difftool</source>
-        <target>用Difftool開啟</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithToolStripMenuItem.Text">
-        <source>Open with...</source>
-        <target>打开方式</target>
-        
-      </trans-unit>
       <trans-unit id="refreshDialogOnFormFocusToolStripMenuItem.Text">
         <source>Refresh dialog on form focus</source>
         <target>表單前置時重新整理</target>
@@ -4936,119 +5176,14 @@ You can unset the template:
         <target>(远程版本库名称)</target>
         
       </trans-unit>
-      <trans-unit id="resetPartOfFileToolStripMenuItem.Text">
-        <source>Reset chunk of file</source>
-        <target>重設多個檔案</target>
-        
-      </trans-unit>
-      <trans-unit id="resetSubmoduleChanges.Text">
-        <source>Reset submodule changes</source>
-        <target>Reset子模組變更</target>
-        
-      </trans-unit>
-      <trans-unit id="runScriptToolStripMenuItem.Text">
-        <source>Run script</source>
-        <target>运行脚本</target>
-        
-      </trans-unit>
-      <trans-unit id="selectionFilterToolStripMenuItem.Text">
-        <source>Selection filter</source>
-        <target>顯示選取過濾器</target>
-        
-      </trans-unit>
-      <trans-unit id="showAssumeUnchangedFilesToolStripMenuItem.Text">
-        <source>Show assumed-unchanged files</source>
-        <target>显示假定未更改的文件</target>
-        
-      </trans-unit>
-      <trans-unit id="showIgnoredFilesToolStripMenuItem.Text">
-        <source>Show ignored files</source>
-        <target>顯示被忽略的檔案</target>
-        
-      </trans-unit>
-      <trans-unit id="showSkipWorktreeFilesToolStripMenuItem.Text">
-        <source>Show skip-worktree files</source>
-        <target>显示跳过工作文件</target>
-        
-      </trans-unit>
-      <trans-unit id="showUntrackedFilesToolStripMenuItem.Text">
-        <source>Show untracked files</source>
-        <target>顯示未追踪檔案</target>
-        
-      </trans-unit>
       <trans-unit id="signOffToolStripMenuItem.Text">
         <source>Sign-off commit</source>
         <target>註銷(sign-off)commit</target>
         
       </trans-unit>
-      <trans-unit id="skipWorktreeToolStripMenuItem.Text">
-        <source>Skip worktree</source>
-        <target>跳过工作树</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedCopyPathToolStripMenuItem14.Text">
-        <source>Copy full path</source>
-        <target>把檔案名複製到剪貼簿</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedEditFileToolStripMenuItem11.Text">
-        <source>Edit file</source>
-        <target>編輯檔案</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedFileHistoryToolStripMenuItem6.Text">
-        <source>View file history</source>
-        <target>檢視檔案歷史</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedOpenDifftoolToolStripMenuItem9.Text">
-        <source>Open with difftool</source>
-        <target>用difftool開啟</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedOpenFolderToolStripMenuItem10.Text">
-        <source>Show in folder</source>
-        <target>在文件夹显示</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedOpenToolStripMenuItem7.Text">
-        <source>Open</source>
-        <target>開啟</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedOpenWithToolStripMenuItem8.Text">
-        <source>Open with...</source>
-        <target>打开方式</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedResetChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target>Reset檔案/資料夾變更</target>
-        
-      </trans-unit>
-      <trans-unit id="stagedRunScriptToolStripMenuItem.Text">
-        <source>Run script</source>
-        <target>运行脚本</target>
-        
-      </trans-unit>
-      <trans-unit id="stashSubmoduleChangesToolStripMenuItem.Text">
-        <source>Stash submodule changes</source>
-        <target>儲藏(stash)子模組的變更</target>
-        
-      </trans-unit>
-      <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
-        <source>Stop tracking this file</source>
-        <target>停止跟踪这个文件</target>
-        
-      </trans-unit>
       <trans-unit id="toolAuthorLabelItem.Text">
         <source>Author: (Format: &quot;name &lt;mail&gt;&quot;)</source>
         <target>作者:(格式:&quot;name &lt;mail&gt;&quot;)</target>
-        
-      </trans-unit>
-      <trans-unit id="toolRefreshItem.Text">
-        <source>Refresh</source>
-        <target>重新整理</target>
         
       </trans-unit>
       <trans-unit id="toolStageItem.Text">
@@ -5061,39 +5196,13 @@ You can unset the template:
         <target>過濾條件:</target>
         
       </trans-unit>
-      <trans-unit id="toolStripMenuItem3.Text">
-        <source>&amp;Options</source>
-        <target>选项 &amp;O</target>
-        
-      </trans-unit>
       <trans-unit id="toolUnstageItem.Text">
         <source>&amp;Unstage</source>
         <target>不要提交(&amp;U)</target>
         
       </trans-unit>
-      <trans-unit id="tsmiResetUnstagedChanges.Text">
-        <source>Reset file or directory changes</source>
-        <target>重置文件或目录更改</target>
-        
-      </trans-unit>
-      <trans-unit id="updateSubmoduleMenuItem.Text">
-        <source>Update submodule</source>
-        <target>更新子模組</target>
-        
-      </trans-unit>
-      <trans-unit id="viewFileHistoryToolStripItem.Text">
-        <source>View file history</source>
-        <target>檢視檔案歷史</target>
-        
-      </trans-unit>
-      <trans-unit id="viewHistoryMenuItem.Text">
-        <source>View history</source>
-        <target>檢視歷史</target>
-        
-      </trans-unit>
-      <trans-unit id="workingToolStripMenuItem.Text">
-        <source>&amp;Working directory changes</source>
-        <target>工作目录的修改(&amp;W)</target>
+      <trans-unit id="tsmiOptions.Text">
+        <source>&amp;Options</source>
         
       </trans-unit>
     </body>
@@ -5202,31 +5311,6 @@ You can unset the template:
         <target>建立branch</target>
         
       </trans-unit>
-      <trans-unit id="ClearOrphan.Text">
-        <source>Clear &amp;working directory and index</source>
-        <target>清空工作目录及其索引 &amp;W</target>
-        
-      </trans-unit>
-      <trans-unit id="ClearOrphan.toolTip">
-        <source>Remove files from the working directory and from the index</source>
-        <target>刪除工作目錄和索引中的檔案</target>
-        
-      </trans-unit>
-      <trans-unit id="Ok.Text">
-        <source>&amp;Create branch</source>
-        <target>创建分支 &amp;C</target>
-        
-      </trans-unit>
-      <trans-unit id="Orphan.Text">
-        <source>Create or&amp;phan</source>
-        <target>创建空分支 &amp;P</target>
-        
-      </trans-unit>
-      <trans-unit id="Orphan.toolTip">
-        <source>New branch will have NO parents</source>
-        <target>新的分支將沒有父節點</target>
-        
-      </trans-unit>
       <trans-unit id="_branchNameIsEmpty.Text">
         <source>Enter branch name.</source>
         <target>輸入branch名稱</target>
@@ -5237,19 +5321,41 @@ You can unset the template:
         <target>“{0}”並非正確的branch名稱</target>
         
       </trans-unit>
+      <trans-unit id="_creatingOrphanBranch.Text">
+        <source>Creating orphan branch (repository has no commits)</source>
+        
+      </trans-unit>
       <trans-unit id="_noRevisionSelected.Text">
         <source>Select 1 revision to create the branch on.</source>
         <target>選擇建立branch的版本</target>
         
       </trans-unit>
-      <trans-unit id="chkbxCheckoutAfterCreate.Text">
+      <trans-unit id="chkCheckoutAfterCreate.Text">
         <source>Checkout &amp;after create</source>
-        <target>创建后检出 &amp;A</target>
         
       </trans-unit>
-      <trans-unit id="groupBox1.Text">
+      <trans-unit id="chkClearOrphan.Text">
+        <source>Clear &amp;working directory and index</source>
+        
+      </trans-unit>
+      <trans-unit id="chkClearOrphan.toolTip">
+        <source>Remove files from the working directory and from the index</source>
+        
+      </trans-unit>
+      <trans-unit id="chkCreateOrphan.Text">
+        <source>Create or&amp;phan</source>
+        
+      </trans-unit>
+      <trans-unit id="chkCreateOrphan.toolTip">
+        <source>New branch will have NO parents</source>
+        
+      </trans-unit>
+      <trans-unit id="cmdOk.Text">
+        <source>&amp;Create branch</source>
+        
+      </trans-unit>
+      <trans-unit id="grpOrphan.Text">
         <source>Orphan</source>
-        <target>孤兒(沒有parent的Branch)</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -5257,9 +5363,8 @@ You can unset the template:
         <target>分支名称 &amp;B</target>
         
       </trans-unit>
-      <trans-unit id="label2.Text">
+      <trans-unit id="lblCreateBranch.Text">
         <source>Create b&amp;ranch at this revision</source>
-        <target>从这个修订创建分支(&amp;r)</target>
         
       </trans-unit>
     </body>
@@ -5580,19 +5685,9 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target>比较并与基合并 (&amp;b)</target>
         
       </trans-unit>
-      <trans-unit id="blameToolStripMenuItem.Text">
-        <source>&amp;Blame</source>
-        <target>追溯(&amp;B)</target>
-        
-      </trans-unit>
       <trans-unit id="btnCompareDirectoriesWithDiffTool.Text">
         <source>Open diff using &amp;directory diff tool</source>
         <target>使用比较工具比较文件夹(&amp;d)</target>
-        
-      </trans-unit>
-      <trans-unit id="copyPathsToolStripMenuItem.Text">
-        <source>Copy &amp;path(s)</source>
-        <target>複製檔案路徑(&amp;p)</target>
         
       </trans-unit>
       <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
@@ -5600,49 +5695,14 @@ Deleting a branch can cause commits to be deleted too!</source>
         <target>在檔案樹顯示</target>
         
       </trans-unit>
-      <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
-        <source>File &amp;history</source>
-        <target>檔案歷程記錄</target>
-        
-      </trans-unit>
-      <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>&amp;Find file...</source>
-        <target>尋找檔案(&amp;F)...</target>
-        
-      </trans-unit>
       <trans-unit id="firstCommitGroup.Text">
         <source>BASE</source>
         <target>BASE</target>
         
       </trans-unit>
-      <trans-unit id="firstToLocalToolStripMenuItem.Text">
-        <source>First -&gt; Working directory</source>
-        <target>第一个 -&gt; 工作目录</target>
-        
-      </trans-unit>
-      <trans-unit id="firstToSelectedToolStripMenuItem.Text">
-        <source>First -&gt; Compare</source>
-        <target>Firt -&gt; 比较</target>
-        
-      </trans-unit>
-      <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Show &amp;in folder</source>
-        <target>在資料夾中顯示(&amp;i)</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with &amp;difftool</source>
-        <target>使用差異比對工具開啟(&amp;D)</target>
-        
-      </trans-unit>
       <trans-unit id="secondCommitGroup.Text">
         <source>Compare</source>
         <target>比較</target>
-        
-      </trans-unit>
-      <trans-unit id="selectedToLocalToolStripMenuItem.Text">
-        <source>Compare -&gt; Working directory</source>
-        <target>比较-&gt;工作目录</target>
         
       </trans-unit>
     </body>
@@ -5761,6 +5821,10 @@ If you are not sure just close this window.</source>
       <trans-unit id="_buildReportTabCaption.Text">
         <source>Build Report</source>
         <target>构建报告</target>
+        
+      </trans-unit>
+      <trans-unit id="_fileNotFound.Text">
+        <source> - Git could not identify the file {0}</source>
         
       </trans-unit>
       <trans-unit id="blameSettingsToolStripMenuItem.Text">
@@ -5929,6 +5993,42 @@ If you are not sure just close this window.</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="FormFindInCommitFilesGitGrep" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Find in commit files using git-grep</source>
+        
+      </trans-unit>
+      <trans-unit id="btnSearch.Text">
+        <source>&amp;Find</source>
+        
+      </trans-unit>
+      <trans-unit id="chkMatchCase.Text">
+        <source>Match &amp;case</source>
+        
+      </trans-unit>
+      <trans-unit id="chkMatchWholeWord.Text">
+        <source>Match &amp;whole word</source>
+        
+      </trans-unit>
+      <trans-unit id="chkShowSearchBox.Text">
+        <source>&amp;Show 'Find in commit files using git-grep'</source>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Fi&amp;nd what:</source>
+        
+      </trans-unit>
+      <trans-unit id="lblOptions.Text">
+        <source>&amp;Options:</source>
+        
+      </trans-unit>
+      <trans-unit id="lblSearchCommitGitGrepWatermark.Text">
+        <source>git-grep regular expression...</source>
+        
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="FormFixHome" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="$this.Text">
@@ -5985,8 +6085,7 @@ Do you want Git Extensions to help locate the correct folder?</source>
         
       </trans-unit>
       <trans-unit id="defaultHome.Text">
-        <source>Use default for HOME</source>
-        <target>使用預設HOME</target>
+        <source>&amp;Use default for HOME</source>
         
       </trans-unit>
       <trans-unit id="groupBox8.Text">
@@ -6008,13 +6107,11 @@ Change the default behaviour only if you experience problems.</source>
         
       </trans-unit>
       <trans-unit id="otherHome.Text">
-        <source>Other</source>
-        <target>其他</target>
+        <source>&amp;Other</source>
         
       </trans-unit>
       <trans-unit id="userprofileHome.Text">
-        <source>Set HOME to USERPROFILE</source>
-        <target>把USERPROFILE設為HOME</target>
+        <source>&amp;Set HOME to USERPROFILE</source>
         
       </trans-unit>
     </body>
@@ -6036,11 +6133,6 @@ Change the default behaviour only if you experience problems.</source>
         <target>建立補丁</target>
         
       </trans-unit>
-      <trans-unit id="SaveToDir.Text">
-        <source>Save patches in directory</source>
-        <target>儲存補丁到目錄</target>
-        
-      </trans-unit>
       <trans-unit id="SelectedBranch.Text">
         <source>Branch</source>
         <target>分支</target>
@@ -6056,24 +6148,9 @@ Change the default behaviour only if you experience problems.</source>
         <target>无法创建修补程序文件</target>
         
       </trans-unit>
-      <trans-unit id="_noEmailEnteredText.Text">
-        <source>You need to enter an email address.</source>
-        <target>需要您輸入電子郵件</target>
-        
-      </trans-unit>
-      <trans-unit id="_noGitMailConfigured.Text">
-        <source>There is no email address configured in the settings dialog.</source>
-        <target>尚未設定電子郵件地址</target>
-        
-      </trans-unit>
       <trans-unit id="_noOutputPathEnteredText.Text">
         <source>You need to enter an output path.</source>
         <target>需要您決定輸出路徑</target>
-        
-      </trans-unit>
-      <trans-unit id="_noSubjectEnteredText.Text">
-        <source>You need to enter a mail subject.</source>
-        <target>需要您輸入郵件主旨</target>
         
       </trans-unit>
       <trans-unit id="_patchResultCaption.Text">
@@ -6091,39 +6168,8 @@ Change the default behaviour only if you experience problems.</source>
         <target>您至少需要选择一个版本</target>
         
       </trans-unit>
-      <trans-unit id="_sendMailResult.Text">
-        <source>Send to:</source>
-        <target>送給:</target>
-        
-      </trans-unit>
-      <trans-unit id="_sendMailResultFailed.Text">
-        <source>Failed to send mail.</source>
-        <target>電子郵件寄送失敗。</target>
-        
-      </trans-unit>
-      <trans-unit id="_wrongSmtpSettingsText.Text">
-        <source>You need to enter a valid smtp in the settings dialog.</source>
-        <target>需要您設定正確的SMTP伺服器</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Subject</source>
-        <target>主旨</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>Body</source>
-        <target>本文</target>
-        
-      </trans-unit>
-      <trans-unit id="label3.Text">
-        <source>To</source>
-        <target>寄給</target>
-        
-      </trans-unit>
-      <trans-unit id="radioButton1.Text">
-        <source>Mail patches from</source>
-        <target>從...寄送patches</target>
+      <trans-unit id="lblPatches.Text">
+        <source>Patch:</source>
         
       </trans-unit>
     </body>
@@ -6252,6 +6298,10 @@ weirdchars.txt text
       <trans-unit id="tabPageCommandLog.Text">
         <source>Command log</source>
         <target>指令記錄檔</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiClearCache.Text">
+        <source>C&amp;lear</source>
         
       </trans-unit>
     </body>
@@ -7189,8 +7239,7 @@ This will initialize and update all submodules recursive.</source>
         
       </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
-        <source>Load SSH key</source>
-        <target>載入SSH密鑰</target>
+        <source>&amp;Load SSH key</source>
         
       </trans-unit>
       <trans-unit id="LocalColumn.HeaderText">
@@ -7412,6 +7461,10 @@ Would you like to do it now?</source>
         <target>强制租赁&amp;F</target>
         
       </trans-unit>
+      <trans-unit id="folderBrowserButton1.Text">
+        <source>Bro&amp;wse...</source>
+        
+      </trans-unit>
       <trans-unit id="groupBox2.Text">
         <source>Push to</source>
         <target>推送到</target>
@@ -7503,6 +7556,14 @@ Would you like to do it now?</source>
       <trans-unit id="_actionSelect.Text">
         <source>Select</source>
         <target>选择</target>
+        
+      </trans-unit>
+      <trans-unit id="_local.Text">
+        <source>local</source>
+        
+      </trans-unit>
+      <trans-unit id="_remote.Text">
+        <source>remote</source>
         
       </trans-unit>
       <trans-unit id="_tag.Text">
@@ -7740,19 +7801,16 @@ commit date), ignoring the original author date.</source>
         <target>確定</target>
         
       </trans-unit>
-      <trans-unit id="PinnedLabel.Text">
-        <source>Pinned repositories</source>
-        <target>固定的存储库</target>
+      <trans-unit id="TopLabel.Text">
+        <source>Top repositories</source>
         
       </trans-unit>
-      <trans-unit id="anchorToAllRecentReposToolStripMenuItem.Text">
+      <trans-unit id="anchorToRecentReposToolStripMenuItem.Text">
         <source>Anchor to recent repositories</source>
-        <target>锚定到近期使用的仓库</target>
         
       </trans-unit>
-      <trans-unit id="anchorToPinnedReposToolStripMenuItem.Text">
-        <source>Anchor to pinned repositories</source>
-        <target>锚定到固定标记的仓库</target>
+      <trans-unit id="anchorToTopReposToolStripMenuItem.Text">
+        <source>Anchor to top repositories</source>
         
       </trans-unit>
       <trans-unit id="chdrRepository.Text">
@@ -7780,19 +7838,21 @@ commit date), ignoring the original author date.</source>
         <target>不要縮短</target>
         
       </trans-unit>
+      <trans-unit id="hideTopRepositoriesFromRecentList.Text">
+        <source>Hide top repositories from recent repositories list</source>
+        
+      </trans-unit>
       <trans-unit id="label1.Text">
         <source>Recent repositories</source>
         <target>最近使用的版本库</target>
         
       </trans-unit>
       <trans-unit id="lblRecentRepositoriesHistorySize.Text">
-        <source>Recent repositories history size</source>
-        <target>最近版本库历史大小</target>
+        <source>Maximum number of recent repositories</source>
         
       </trans-unit>
       <trans-unit id="maxRecentRepositories.Text">
-        <source>Maximum number of pinned recent repositories</source>
-        <target>标记为固定的版本库的最大数量</target>
+        <source>Maximum number of top repositories</source>
         
       </trans-unit>
       <trans-unit id="middleDotRB.Text">
@@ -7820,14 +7880,12 @@ commit date), ignoring the original author date.</source>
         <target>縮短策略</target>
         
       </trans-unit>
-      <trans-unit id="sortAllRecentRepos.Text">
+      <trans-unit id="sortRecentRepos.Text">
         <source>Sort recent repositories alphabetically</source>
-        <target>按字母顺序排列近期使用的版本库</target>
         
       </trans-unit>
-      <trans-unit id="sortPinnedRepos.Text">
-        <source>Sort pinned repositories alphabetically</source>
-        <target>按字母顺序排列标记为固定的版本库</target>
+      <trans-unit id="sortTopRepos.Text">
+        <source>Sort top repositories alphabetically</source>
         
       </trans-unit>
     </body>
@@ -7919,18 +7977,20 @@ Stash them before if you don't want to lose them.</source>
         
       </trans-unit>
       <trans-unit id="Abort.Text">
-        <source>Abort</source>
-        <target>終止</target>
+        <source>&amp;Abort</source>
         
       </trans-unit>
       <trans-unit id="KeepDialogOpen.Text">
-        <source>Keep dialog open</source>
-        <target>保持對話方塊開啟</target>
+        <source>&amp;Keep dialog open</source>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>OK</source>
         <target>確定</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowPassword.Text">
+        <source>Show &amp;password input</source>
         
       </trans-unit>
       <trans-unit id="_fingerprintNotRegistredText.Text">
@@ -7975,8 +8035,7 @@ Do you want to register the host's fingerprint and restart the process?</source>
         
       </trans-unit>
       <trans-unit id="LoadSSHKey.Text">
-        <source>Load SSH key</source>
-        <target>載入SSH鑰匙</target>
+        <source>&amp;Load SSH key</source>
         
       </trans-unit>
       <trans-unit id="MergeWith.HeaderText">
@@ -7995,23 +8054,19 @@ Do you want to register the host's fingerprint and restart the process?</source>
         
       </trans-unit>
       <trans-unit id="Save.Text">
-        <source>Save changes</source>
-        <target>儲存</target>
+        <source>&amp;Save changes</source>
         
       </trans-unit>
       <trans-unit id="SaveDefaultPushPull.Text">
-        <source>Save changes</source>
-        <target>儲存修改</target>
+        <source>&amp;Save changes</source>
         
       </trans-unit>
       <trans-unit id="SshBrowse.Text">
-        <source> Browse...</source>
-        <target>浏览...</target>
+        <source>Brows&amp;e...</source>
         
       </trans-unit>
       <trans-unit id="TestConnection.Text">
-        <source>Test connection</source>
-        <target>連接測試</target>
+        <source>&amp;Test connection</source>
         
       </trans-unit>
       <trans-unit id="_btnDeleteTooltip.Text">
@@ -8062,13 +8117,11 @@ Inactive remote is completely invisible to git.</source>
         
       </trans-unit>
       <trans-unit id="_labelUrlAsFetch.Text">
-        <source>Fetch Url</source>
-        <target>Fetch位址</target>
+        <source>Fetch &amp;Url</source>
         
       </trans-unit>
       <trans-unit id="_labelUrlAsFetchPush.Text">
-        <source>Url</source>
-        <target>網址</target>
+        <source>&amp;Url</source>
         
       </trans-unit>
       <trans-unit id="_lvgDisabledHeader.Text">
@@ -8119,14 +8172,25 @@ Value has been reset to empty value.</source>
         <target>私鑰 (*.ppk)</target>
         
       </trans-unit>
+      <trans-unit id="btnRemoteColor.Text">
+        <source>Set &amp;color</source>
+        
+      </trans-unit>
+      <trans-unit id="btnRemoteColorReset.Text">
+        <source>Default color</source>
+        
+      </trans-unit>
       <trans-unit id="btnToggleState.toolTip1">
         <source>Enable or disable the selected remote</source>
         <target>啟用或停用所選的遠端。</target>
         
       </trans-unit>
       <trans-unit id="checkBoxSepPushUrl.Text">
-        <source>Separate Push Url</source>
-        <target>分開Push與Fetch位址</target>
+        <source>Sep&amp;arate Push Url</source>
+        
+      </trans-unit>
+      <trans-unit id="folderBrowserButtonPushUrl.Text">
+        <source>Bro&amp;wse...</source>
         
       </trans-unit>
       <trans-unit id="gbMgtPanel.Text">
@@ -8135,43 +8199,40 @@ Value has been reset to empty value.</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
-        <source>Name</source>
-        <target>名稱</target>
+        <source>&amp;Name</source>
         
       </trans-unit>
       <trans-unit id="label2.Text">
-        <source>Url</source>
-        <target>網址</target>
+        <source>&amp;Url</source>
         
       </trans-unit>
       <trans-unit id="label3.Text">
-        <source>Private key file</source>
-        <target>私鑰檔案</target>
+        <source>Private &amp;key file</source>
         
       </trans-unit>
       <trans-unit id="label4.Text">
-        <source>Local branch name</source>
-        <target>本機分支名稱</target>
+        <source>&amp;Local branch name</source>
         
       </trans-unit>
       <trans-unit id="label5.Text">
-        <source>Remote repository</source>
-        <target>遠端版本庫</target>
+        <source>&amp;Remote repository</source>
         
       </trans-unit>
       <trans-unit id="label6.Text">
-        <source>Default merge with</source>
-        <target>預設合併</target>
+        <source>&amp;Default merge with</source>
         
       </trans-unit>
       <trans-unit id="labelPushUrl.Text">
-        <source>Push Url</source>
-        <target>Push位址</target>
+        <source>&amp;Push Url</source>
         
       </trans-unit>
       <trans-unit id="lblMgtPuttyPanelHeader.Text">
         <source>PuTTY SSH</source>
         <target>PuTTY SSH</target>
+        
+      </trans-unit>
+      <trans-unit id="lblRemoteColor.Text">
+        <source>Color</source>
         
       </trans-unit>
       <trans-unit id="pnlMgtDetails.Text">
@@ -8206,11 +8267,6 @@ Value has been reset to empty value.</source>
       <trans-unit id="Ok.Text">
         <source>Rename</source>
         <target>執行</target>
-        
-      </trans-unit>
-      <trans-unit id="_branchRenameFailed.Text">
-        <source>Rename failed.</source>
-        <target>重新命名失敗</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -8252,11 +8308,13 @@ Value has been reset to empty value.</source>
         <target>输入的值“{0}”不是任何一个现有的本地分支的名称。</target>
         
       </trans-unit>
-      <trans-unit id="labelResetBranchWarning.Text">
+      <trans-unit id="cbxCheckoutBranch.Text">
+        <source>Chec&amp;kout branch after reset</source>
+        
+      </trans-unit>
+      <trans-unit id="lblResetBranchWarning.Text">
         <source>You can only reset a branch safely if there is a direct path from it to selected revision.
 Forcing a branch to reset if it has not been merged might leave some commits unreachable.</source>
-        <target>仅当分支到所选修订版有直接路径时，才可以安全地重置分支。
-如果尚未合并分支，则强制重置该分支可能会导致某些提交无法访问。</target>
         
       </trans-unit>
     </body>
@@ -8937,6 +8995,10 @@ Do you want to use this custom merge script?</source>
         <target>尚未選擇父節點!</target>
         
       </trans-unit>
+      <trans-unit id="btnAbort.Text">
+        <source>A&amp;bort</source>
+        
+      </trans-unit>
       <trans-unit id="columnHeader1.Text">
         <source>No.</source>
         <target>序號</target>
@@ -9059,45 +9121,6 @@ Do you want to use this custom merge script?</source>
       <trans-unit id="_until.Text">
         <source>&amp;Until</source>
         <target>到(&amp;U)</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="FormSearchCommit" source-language="en" target-language="zh-Hant">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Search files in commit</source>
-        <target>在提交中搜索文件</target>
-        
-      </trans-unit>
-      <trans-unit id="btnSearch.Text">
-        <source>Search</source>
-        <target>搜索</target>
-        
-      </trans-unit>
-      <trans-unit id="chkMatchCase.Text">
-        <source>Match &amp;case</source>
-        <target>區分大小寫(&amp;c)</target>
-        
-      </trans-unit>
-      <trans-unit id="chkMatchWholeWord.Text">
-        <source>Match &amp;whole word</source>
-        <target>匹配整個單詞(&amp;w)</target>
-        
-      </trans-unit>
-      <trans-unit id="chkShowSearchBox.Text">
-        <source>Show search &amp;box</source>
-        <target>顯示搜尋框(&amp;b)</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>&amp;Search:</source>
-        <target>搜尋(&amp;S)：</target>
-        
-      </trans-unit>
-      <trans-unit id="lblOptions.Text">
-        <source>&amp;Options:</source>
-        <target>選項(&amp;O)：</target>
         
       </trans-unit>
     </body>
@@ -9242,11 +9265,6 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         <target>沒有隱藏的</target>
         
       </trans-unit>
-      <trans-unit id="cherryPickFileChangesToolStripMenuItem.Text">
-        <source>&amp;Cherry pick file changes</source>
-        <target>优选文件变更</target>
-        
-      </trans-unit>
       <trans-unit id="chkIncludeUntrackedFiles.Text">
         <source>&amp;Include untracked files</source>
         <target>包括未跟踪的文件</target>
@@ -9260,11 +9278,6 @@ Therefore the Cancel button does NOT revert any changes made.</source>
       <trans-unit id="messageLabel.Text">
         <source>&amp;Message:</source>
         <target>消息(&amp;M):</target>
-        
-      </trans-unit>
-      <trans-unit id="refreshToolStripButton.Text">
-        <source>Refresh</source>
-        <target>重新整理</target>
         
       </trans-unit>
       <trans-unit id="showToolStripLabel.Text">
@@ -9282,18 +9295,20 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="Abort.Text">
-        <source>Abort</source>
-        <target>終止</target>
+        <source>&amp;Abort</source>
         
       </trans-unit>
       <trans-unit id="KeepDialogOpen.Text">
-        <source>Keep dialog open</source>
-        <target>保持對話方塊開啟</target>
+        <source>&amp;Keep dialog open</source>
         
       </trans-unit>
       <trans-unit id="Ok.Text">
         <source>OK</source>
         <target>確定</target>
+        
+      </trans-unit>
+      <trans-unit id="ShowPassword.Text">
+        <source>Show &amp;password input</source>
         
       </trans-unit>
     </body>
@@ -9425,13 +9440,20 @@ Therefore the Cancel button does NOT revert any changes made.</source>
         
       </trans-unit>
       <trans-unit id="linkChangeLog.Text">
-        <source>Show Change&amp;Log</source>
-        <target>显示更改日志</target>
+        <source>Show release notes and change &amp;log</source>
         
       </trans-unit>
       <trans-unit id="linkDirectDownload.Text">
         <source>&amp;Direct Download</source>
         <target>直接下载</target>
+        
+      </trans-unit>
+      <trans-unit id="linkRequiredDotNetRuntime.Text">
+        <source>Required: .NET {0} Desktop Runtime {1} or later {2}.x</source>
+        
+      </trans-unit>
+      <trans-unit id="linkRequiredDotNetRuntime.ToolTipText">
+        <source>Download latest .NET Desktop Runtime. See docs on how to install .NET runtime without administrative privileges.</source>
         
       </trans-unit>
     </body>
@@ -9473,13 +9495,19 @@ reflog to be reachable.</source>
         
       </trans-unit>
       <trans-unit id="ShowCommitsAndTags.Text">
-        <source>Show commits and tags</source>
-        <target>显示提交和标记</target>
+        <source>Show commits and annotated tags</source>
+        
+      </trans-unit>
+      <trans-unit id="ShowCommitsAndTags.toolTip">
+        <source>To recover unreachable commits or annotated tags</source>
         
       </trans-unit>
       <trans-unit id="ShowOtherObjects.Text">
-        <source>Show other objects</source>
-        <target>显示其他对象</target>
+        <source>Show blobs and trees</source>
+        
+      </trans-unit>
+      <trans-unit id="ShowOtherObjects.toolTip">
+        <source>To recover contents of files once staged but mistakenly deleted</source>
         
       </trans-unit>
       <trans-unit id="Unreachable.Text">
@@ -9497,6 +9525,10 @@ nodes.
       <trans-unit id="_removeDanglingObjectsQuestion.Text">
         <source>Are you sure you want to delete all dangling objects?</source>
         <target>你確定要刪除所有不可讀目標？ </target>
+        
+      </trans-unit>
+      <trans-unit id="_seemingly.Text">
+        <source>seemingly</source>
         
       </trans-unit>
       <trans-unit id="_selectLostObjectsToRestoreCaption.Text">
@@ -9826,6 +9858,14 @@ Context menu for additional operations</source>
         <target>在拉取 pull 时变基 rebase 本地分支（而不是合并 merge）</target>
         
       </trans-unit>
+      <trans-unit id="checkBoxReReReAutoUpdate.Text">
+        <source>Automatically apply recorded resolution of conflicted merges</source>
+        
+      </trans-unit>
+      <trans-unit id="checkBoxReReReEnabled.Text">
+        <source>Reuse recorded resolution of conflicted merges</source>
+        
+      </trans-unit>
       <trans-unit id="checkBoxRebaseAutosquash.Text">
         <source>Automatically squash commits when doing an interactive rebase</source>
         <target>在進行互動式變基時自動合併提交</target>
@@ -9839,6 +9879,10 @@ Context menu for additional operations</source>
       <trans-unit id="checkBoxUpdateRefs.Text">
         <source>Rebase also dependent branches</source>
         <target>重新设置从属分支</target>
+        
+      </trans-unit>
+      <trans-unit id="checkboxMergeAutoStash.Text">
+        <source>Automatically stash before doing a merge</source>
         
       </trans-unit>
     </body>
@@ -9966,6 +10010,10 @@ global settings.
       <trans-unit id="lblCommitTemplatePath.Text">
         <source>Path to commit template</source>
         <target>commit樣板路徑</target>
+        
+      </trans-unit>
+      <trans-unit id="lblCredentialHelper.Text">
+        <source>Credential helper</source>
         
       </trans-unit>
       <trans-unit id="lblDiffTool.Text">
@@ -10141,8 +10189,7 @@ Check if file is accessible.</source>
         
       </trans-unit>
       <trans-unit id="label50.Text">
-        <source>Set the correct paths to Git for Windows. (WSL Git will be used for WSL repositories).</source>
-        <target>設定正確的 Git for Windows 路徑。（WSL 儲存庫將使用 WSL Git）。</target>
+        <source>Set the correct paths to Git for Windows. (WSL Git will automatically be used for WSL repositories.)</source>
         
       </trans-unit>
       <trans-unit id="lblGitCommand.Text">
@@ -10518,8 +10565,17 @@ help</source>
         
       </trans-unit>
       <trans-unit id="_rememberChoice.Text">
-        <source>Remember choice</source>
-        <target>記住我的選擇</target>
+        <source>&amp;Remember choice</source>
+        
+      </trans-unit>
+      <trans-unit id="_retry.Text">
+        <source>Retry</source>
+        
+      </trans-unit>
+      <trans-unit id="_retryOpenVisualStudio.Text">
+        <source>Visual Studio failed to open the file.
+This can be caused by an opened dialog window or other pending operations.
+Try again?</source>
         
       </trans-unit>
       <trans-unit id="_selectOnlyOneOrTwoRevisions.Text">
@@ -10578,6 +10634,26 @@ This will just checkout on the submodule the commit determined by the superproje
         <target>此仓库含有子模块，每次检出时必须更新这些子模块。
 
 这只会在子模块上检出由父工程决定的提交。</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="OutputHistoryControl" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="tsmiClear.Text">
+        <source>C&amp;lear</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiCopy.Text">
+        <source>&amp;Copy</source>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="PasswordInput" source-language="en" target-language="zh-Hant">
+    <body>
+      <trans-unit id="SendInput.Text">
+        <source>Send input</source>
         
       </trans-unit>
     </body>
@@ -10690,13 +10766,11 @@ This will just checkout on the submodule the commit determined by the superproje
         
       </trans-unit>
       <trans-unit id="_sortByContextMenuItem.Text">
-        <source>&amp;Sort by...</source>
-        <target>排序方式...</target>
+        <source>&amp;Sort by</source>
         
       </trans-unit>
       <trans-unit id="_sortOrderContextMenuItem.Text">
-        <source>&amp;Sort order...</source>
-        <target>排序(&amp;S)...</target>
+        <source>&amp;Sort order</source>
         
       </trans-unit>
       <trans-unit id="btnSearch.toolTip">
@@ -10749,8 +10823,7 @@ Reset the filter via View &gt; Show all branches.</source>
         
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllBranchesFromARemote.Text">
-        <source>Fetch and prune</source>
-        <target>提取并修剪</target>
+        <source>Fetch and &amp;prune</source>
         
       </trans-unit>
       <trans-unit id="mnuBtnPruneAllRemotes.Text">
@@ -11095,411 +11168,6 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="RevisionDiffControl" source-language="en" target-language="zh-Hant">
-    <body>
-      <trans-unit id="_deleteFailed.Text">
-        <source>Delete file failed</source>
-        <target>刪除檔案失敗</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteSelectedFiles.Text">
-        <source>Are you sure you want to delete the selected file(s)?</source>
-        <target>确实要删除所选文件吗？</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteSelectedFilesCaption.Text">
-        <source>Delete</source>
-        <target>刪除</target>
-        
-      </trans-unit>
-      <trans-unit id="_firstRevision.Text">
-        <source>First: A </source>
-        <target>第一个： A</target>
-        
-      </trans-unit>
-      <trans-unit id="_multipleDescription.Text">
-        <source>&lt;multiple&gt;</source>
-        <target>&lt;multiple&gt;</target>
-        
-      </trans-unit>
-      <trans-unit id="_resetSelectedChangesText.Text">
-        <source>Are you sure you want to reset all selected files to {0}?</source>
-        <target>确定要将所有选中的文件重置至 {0} 吗？</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileFilterAllFiles.Text">
-        <source>All files</source>
-        <target>全部檔案</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileFilterCurrentFormat.Text">
-        <source>Current format</source>
-        <target>目前格式</target>
-        
-      </trans-unit>
-      <trans-unit id="_selectedRevision.Text">
-        <source>Second: B </source>
-        <target>第二个：B</target>
-        
-      </trans-unit>
-      <trans-unit id="blameToolStripMenuItem.Text">
-        <source>&amp;Blame</source>
-        <target>Blame(&amp;B)</target>
-        
-      </trans-unit>
-      <trans-unit id="cherryPickSelectedDiffFileToolStripMenuItem.Text">
-        <source>Cherr&amp;y pick changes</source>
-        <target>优选变更</target>
-        
-      </trans-unit>
-      <trans-unit id="copyPathsToolStripMenuItem.Text">
-        <source>Copy &amp;path(s)</source>
-        <target>複製路徑(&amp;p)</target>
-        
-      </trans-unit>
-      <trans-unit id="diffCommitSubmoduleChanges.Text">
-        <source>&amp;Commit submodule changes</source>
-        <target>提交子模块的更改</target>
-        
-      </trans-unit>
-      <trans-unit id="diffDeleteFileToolStripMenuItem.Text">
-        <source>De&amp;lete file</source>
-        <target>删除文件(&amp;L)</target>
-        
-      </trans-unit>
-      <trans-unit id="diffEditWorkingDirectoryFileToolStripMenuItem.Text">
-        <source>&amp;Edit working directory file</source>
-        <target>编辑工作目录的文件</target>
-        
-      </trans-unit>
-      <trans-unit id="diffFilterFileInGridToolStripMenuItem.Text">
-        <source>Filter file in &amp;grid</source>
-        <target>过滤网格中的文件</target>
-        
-      </trans-unit>
-      <trans-unit id="diffOpenRevisionFileToolStripMenuItem.Text">
-        <source>Ope&amp;n this revision (temp file)</source>
-        <target>打开此修订版（临时文件）</target>
-        
-      </trans-unit>
-      <trans-unit id="diffOpenRevisionFileWithToolStripMenuItem.Text">
-        <source>Open this revision &amp;with... (temp file)</source>
-        <target>用工具打开这个版本（临时文件）</target>
-        
-      </trans-unit>
-      <trans-unit id="diffOpenWorkingDirectoryFileWithToolStripMenuItem.Text">
-        <source>&amp;Open working directory file with...</source>
-        <target>使用...打开工作目录文件</target>
-        
-      </trans-unit>
-      <trans-unit id="diffResetSubmoduleChanges.Text">
-        <source>R&amp;eset submodule changes</source>
-        <target>重置子模块的更改</target>
-        
-      </trans-unit>
-      <trans-unit id="diffShowInFileTreeToolStripMenuItem.Text">
-        <source>Show in File &amp;tree</source>
-        <target>显示在文件树</target>
-        
-      </trans-unit>
-      <trans-unit id="diffStashSubmoduleChangesToolStripMenuItem.Text">
-        <source>S&amp;tash submodule changes</source>
-        <target>暂存子模块的更改</target>
-        
-      </trans-unit>
-      <trans-unit id="diffTwoSelectedDifftoolToolStripMenuItem.Text">
-        <source>&amp;Diff the selected files</source>
-        <target>比较选中的文件</target>
-        
-      </trans-unit>
-      <trans-unit id="diffUpdateSubmoduleMenuItem.Text">
-        <source>&amp;Update submodule</source>
-        <target>更新子模块(&amp;U)</target>
-        
-      </trans-unit>
-      <trans-unit id="fileHistoryDiffToolstripMenuItem.Text">
-        <source>File &amp;history</source>
-        <target>文件历史(&amp;H)</target>
-        
-      </trans-unit>
-      <trans-unit id="findInDiffToolStripMenuItem.Text">
-        <source>&amp;Find file...</source>
-        <target>尋找檔案(&amp;F)...</target>
-        
-      </trans-unit>
-      <trans-unit id="firstToLocalToolStripMenuItem.Text">
-        <source>First -&gt; &amp;Working directory</source>
-        <target>第一个 -&gt; 工作目录(&amp;W)</target>
-        
-      </trans-unit>
-      <trans-unit id="firstToSelectedToolStripMenuItem.Text">
-        <source>&amp;First -&gt; Second</source>
-        <target>第一个 -&gt; 第二个(&amp;F)</target>
-        
-      </trans-unit>
-      <trans-unit id="openContainingFolderToolStripMenuItem.Text">
-        <source>Show &amp;in folder</source>
-        <target>在文件夹显示(&amp;I)</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with &amp;difftool</source>
-        <target>使用对比工具打开(&amp;D)</target>
-        
-      </trans-unit>
-      <trans-unit id="rememberFirstRevDiffToolStripMenuItem.Text">
-        <source>R&amp;emember First for diff</source>
-        <target>记住第一个差异</target>
-        
-      </trans-unit>
-      <trans-unit id="rememberSecondRevDiffToolStripMenuItem.Text">
-        <source>&amp;Remember Second for diff</source>
-        <target>记住第二个差异</target>
-        
-      </trans-unit>
-      <trans-unit id="resetFileToToolStripMenuItem.Text">
-        <source>&amp;Reset file(s) to</source>
-        <target>重置文件到(&amp;R)</target>
-        
-      </trans-unit>
-      <trans-unit id="runScriptToolStripMenuItem.Text">
-        <source>Run script</source>
-        <target>运行脚本</target>
-        
-      </trans-unit>
-      <trans-unit id="saveAsToolStripMenuItem1.Text">
-        <source>S&amp;ave selected as...</source>
-        <target>选择另存为(&amp;A)</target>
-        
-      </trans-unit>
-      <trans-unit id="saveToolStripMenuItem.Text">
-        <source>Save</source>
-        <target>儲存</target>
-        
-      </trans-unit>
-      <trans-unit id="selectedToLocalToolStripMenuItem.Text">
-        <source>&amp;Second -&gt; Working directory</source>
-        <target>第二个 -&gt; 工作目录(&amp;S)</target>
-        
-      </trans-unit>
-      <trans-unit id="showSearchCommitToolStripMenuItem.Text">
-        <source>Sear&amp;ch files in commit...</source>
-        <target>搜尋提交中的檔案(&amp;c)...</target>
-        
-      </trans-unit>
-      <trans-unit id="stageFileToolStripMenuItem.Text">
-        <source>&amp;Stage file(s)</source>
-        <target>暂存文件 (&amp;S)</target>
-        
-      </trans-unit>
-      <trans-unit id="unstageFileToolStripMenuItem.Text">
-        <source>&amp;Unstage file(s)</source>
-        <target>取消暂存文件(&amp;U)</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="RevisionFileTreeControl" source-language="en" target-language="zh-Hant">
-    <body>
-      <trans-unit id="_assumeUnchangedCaption.Text">
-        <source>Assume this file won't change</source>
-        <target>假定此文件不变</target>
-        
-      </trans-unit>
-      <trans-unit id="_assumeUnchangedFail.Text">
-        <source>Fail to assume unchanged the file '{0}'.</source>
-        <target>对文件假定不变失败：'{0}'.</target>
-        
-      </trans-unit>
-      <trans-unit id="_assumeUnchangedMessage.Text">
-        <source>This feature should be used for performance purpose when it is costly for git to check the state of a big file.
-
-
-Are you sure to assume this file won't change ?</source>
-        <target>当git检查一个大文件的状态时，这个特性应该用于性能目的。
-
-
-你确定假定这个文件不会改变吗？</target>
-        
-      </trans-unit>
-      <trans-unit id="_assumeUnchangedSuccess.Text">
-        <source>File successfully assumed unchanged.</source>
-        <target>成功假定此文件不变。</target>
-        
-      </trans-unit>
-      <trans-unit id="_nodeNotFoundNextAvailableParentSelected.Text">
-        <source>Node not found. The next available parent node will be selected.</source>
-        <target>找不到節點，將會選擇下一個可用的父節點。</target>
-        
-      </trans-unit>
-      <trans-unit id="_nodeNotFoundSelectionNotChanged.Text">
-        <source>Node not found. File tree selection was not changed.</source>
-        <target>找不到節點. 檔案樹選擇未改變.</target>
-        
-      </trans-unit>
-      <trans-unit id="_resetFileCaption.Text">
-        <source>Reset</source>
-        <target>重置</target>
-        
-      </trans-unit>
-      <trans-unit id="_resetFileText.Text">
-        <source>Are you sure you want to reset this file or directory?</source>
-        <target>确定要复位这个文件或文件夹吗？</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileFilterAllFiles.Text">
-        <source>All files</source>
-        <target>全部檔案</target>
-        
-      </trans-unit>
-      <trans-unit id="_saveFileFilterCurrentFormat.Text">
-        <source>Current format</source>
-        <target>目前格式</target>
-        
-      </trans-unit>
-      <trans-unit id="_stopTrackingCaption.Text">
-        <source>Stop tracking the file</source>
-        <target>停止跟踪此文件</target>
-        
-      </trans-unit>
-      <trans-unit id="_stopTrackingFail.Text">
-        <source>Fail to stop tracking the file '{0}'.</source>
-        <target>取消跟踪文件失败：“{0}”。</target>
-        
-      </trans-unit>
-      <trans-unit id="_stopTrackingMessage.Text">
-        <source>Are you sure you want to stop tracking the file
-'{0}'?</source>
-        <target>你确定要停止跟踪此文件
-'{0}'?</target>
-        
-      </trans-unit>
-      <trans-unit id="_stopTrackingSuccess.Text">
-        <source>File successfully untracked. Removal has been added to the staging area.
-
-See the changes in the commit form.</source>
-        <target>已成功取消对此文件的跟踪，并将其从暂存区移除。
-
-请注意提交对话框中的改变。</target>
-        
-      </trans-unit>
-      <trans-unit id="_success.Text">
-        <source>Success</source>
-        <target>成功</target>
-        
-      </trans-unit>
-      <trans-unit id="assumeUnchangedTheFileToolStripMenuItem.Text">
-        <source>Assume &amp;unchanged this file</source>
-        <target>假設此檔案未變更(&amp;u)</target>
-        
-      </trans-unit>
-      <trans-unit id="blameToolStripMenuItem1.Text">
-        <source>&amp;Blame</source>
-        <target>追溯(&amp;B)</target>
-        
-      </trans-unit>
-      <trans-unit id="collapseAllToolStripMenuItem.Text">
-        <source>Co&amp;llapse all</source>
-        <target>全部摺疊(&amp;l)</target>
-        
-      </trans-unit>
-      <trans-unit id="copyPathsToolStripMenuItem.Text">
-        <source>Copy &amp;path(s)</source>
-        <target>Copy &amp;path(s)</target>
-        
-      </trans-unit>
-      <trans-unit id="editCheckedOutFileToolStripMenuItem.Text">
-        <source>&amp;Edit working directory file</source>
-        <target>編輯工作目錄檔案(&amp;E)</target>
-        
-      </trans-unit>
-      <trans-unit id="expandToolStripMenuItem.Text">
-        <source>&amp;Expand</source>
-        <target>展開(&amp;E)</target>
-        
-      </trans-unit>
-      <trans-unit id="fileHistoryToolStripMenuItem.Text">
-        <source>View &amp;history</source>
-        <target>查看歷史紀錄(&amp;h)</target>
-        
-      </trans-unit>
-      <trans-unit id="fileTreeArchiveToolStripMenuItem.Text">
-        <source>Archi&amp;ve...</source>
-        <target>封存(&amp;v)...</target>
-        
-      </trans-unit>
-      <trans-unit id="fileTreeCleanWorkingTreeToolStripMenuItem.Text">
-        <source>&amp;Clean this folder in the working directory...</source>
-        <target>清理工作目錄中的此資料夾(&amp;C)...</target>
-        
-      </trans-unit>
-      <trans-unit id="fileTreeOpenContainingFolderToolStripMenuItem.Text">
-        <source>Show &amp;in folder</source>
-        <target>在資料夾中顯示(&amp;i)</target>
-        
-      </trans-unit>
-      <trans-unit id="filterFileInGridToolStripMenuItem.Text">
-        <source>Filter file in &amp;grid</source>
-        <target>通过 grid 过滤文件(&amp;G)</target>
-        
-      </trans-unit>
-      <trans-unit id="findToolStripMenuItem.Text">
-        <source>&amp;Find file...</source>
-        <target>尋找檔案(&amp;F)...</target>
-        
-      </trans-unit>
-      <trans-unit id="openFileToolStripMenuItem.Text">
-        <source>Ope&amp;n this revision (temp file)</source>
-        <target>開啟此版本（臨時檔案）(&amp;n)</target>
-        
-      </trans-unit>
-      <trans-unit id="openFileWithToolStripMenuItem.Text">
-        <source>Open this revision &amp;with... (temp file)</source>
-        <target>使用... 開啟此版本（臨時檔案）(&amp;w)</target>
-        
-      </trans-unit>
-      <trans-unit id="openSubmoduleMenuItem.Text">
-        <source>&amp;Open with Git Extensions</source>
-        <target>使用 Git Extensions 打开(&amp;O)</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithDifftoolToolStripMenuItem.Text">
-        <source>Open with &amp;difftool</source>
-        <target>使用差異工具開啟(&amp;d)</target>
-        
-      </trans-unit>
-      <trans-unit id="openWithToolStripMenuItem.Text">
-        <source>&amp;Open working directory file with...</source>
-        <target>使用... 開啟工作目錄檔案(&amp;O)</target>
-        
-      </trans-unit>
-      <trans-unit id="rememberFileStripMenuItem.Text">
-        <source>Re&amp;member file for diff</source>
-        <target>記住檔案以進行差異比較(&amp;m)</target>
-        
-      </trans-unit>
-      <trans-unit id="resetToThisRevisionToolStripMenuItem.Text">
-        <source>&amp;Reset to selected revision</source>
-        <target>重置至選定的版本(&amp;R)</target>
-        
-      </trans-unit>
-      <trans-unit id="runScriptToolStripMenuItem.Text">
-        <source>Run script</source>
-        <target>运行脚本</target>
-        
-      </trans-unit>
-      <trans-unit id="saveAsToolStripMenuItem.Text">
-        <source>S&amp;ave as...</source>
-        <target>另存為(&amp;a)...</target>
-        
-      </trans-unit>
-      <trans-unit id="stopTrackingThisFileToolStripMenuItem.Text">
-        <source>Stop &amp;tracking this file</source>
-        <target>停止追蹤此檔案(&amp;t)</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="RevisionGpgInfoControl" source-language="en" target-language="zh-Hant">
     <body>
       <trans-unit id="_commitNotSigned.Text">
@@ -11554,6 +11222,14 @@ See the changes in the commit form.</source>
       <trans-unit id="GotoCurrentRevision.Text">
         <source>Go to c&amp;urrent revision</source>
         <target>到当前修订</target>
+        
+      </trans-unit>
+      <trans-unit id="GotoFirstParentCommit.Text">
+        <source>Go to f&amp;irst parent commit</source>
+        
+      </trans-unit>
+      <trans-unit id="GotoLastParentCommit.Text">
+        <source>Go to &amp;last parent commit</source>
         
       </trans-unit>
       <trans-unit id="GotoMergeBaseCommit.Text">
@@ -11921,8 +11597,7 @@ See the changes in the commit form.</source>
         
       </trans-unit>
       <trans-unit id="deleteTagToolStripMenuItem.Text">
-        <source>De&amp;lete tag...</source>
-        <target>删除标签(L)...</target>
+        <source>&amp;Delete tag...</source>
         
       </trans-unit>
       <trans-unit id="dropStashToolStripMenuItem.Text">
@@ -12053,6 +11728,10 @@ See the changes in the commit form.</source>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
         <source>Stop bisect</source>
         <target>停止二分</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiSelectInLeftPanel.Text">
+        <source>Se&amp;lect in left panel</source>
         
       </trans-unit>
       <trans-unit id="viewToolStripMenuItem.Text">
@@ -12253,66 +11932,9 @@ Currently checked out revision:
 {cDefaultRemoteUrl}
 {cDefaultRemotePathFromUrl}
 
-File(s):
-{SelectedFiles}
+Diff selection:
+{SelectedRelativePaths}   (relative paths as they were in the selected commit)
 {LineNumber}</source>
-        <target>使用 {option} 進行正常替換。
-使用 {{option}} 進行引用替換。
-
-使用者輸入：
-{UserInput}
-{UserInput:彈出式標籤}
-{UserInput:彈出式標籤=預設值}
-{UserInput:彈出式標籤=使用 {sLocalBranch} 的預設值}
-{UserFiles}
-
-工作目錄：
-{WorkingDir}
-
-儲存庫：
-{RepoName}
-
-選擇的提交：
-{sHashes}
-
-選擇的修訂版本：
-{sTag}
-{sBranch}
-{sLocalBranch}
-{sRemoteBranch}
-{sRemoteBranchName} （不包括遠端的名稱）
-{sRemote}
-{sRemoteUrl}
-{sRemotePathFromUrl}
-{sHash}
-{sMessage}
-{sSubject}
-{sAuthor}
-{sCommitter}
-{sAuthorDate}
-{sCommitDate}
-
-當前檢出的修訂版本：
-{HEAD} （檢出的分支名稱或檢出的提交哈希）
-{cTag}
-{cBranch}
-{cLocalBranch}
-{cRemoteBranch}
-{cRemoteBranchName} （不包括遠端的名稱）
-{cHash}
-{cMessage}
-{cSubject}
-{cAuthor}
-{cCommitter}
-{cAuthorDate}
-{cCommitDate}
-{cDefaultRemote}
-{cDefaultRemoteUrl}
-{cDefaultRemotePathFromUrl}
-
-檔案：
-{SelectedFiles}
-{LineNumber}</target>
         
       </trans-unit>
       <trans-unit id="chdrCommand.Text">
@@ -12352,6 +11974,10 @@ File(s):
       <trans-unit id="LocalRB.Text">
         <source>Local for current repository</source>
         <target>目前repositories的本地設定</target>
+        
+      </trans-unit>
+      <trans-unit id="SystemRB.Text">
+        <source>System</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -12657,6 +12283,10 @@ When OpenSSH is used, command line dialogs are shown!
         <target>撰写并提交</target>
         
       </trans-unit>
+      <trans-unit id="_autostash.Text">
+        <source>Autostash</source>
+        
+      </trans-unit>
       <trans-unit id="_bodyNotLoaded.Text">
         <source>
 
@@ -12681,11 +12311,6 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_buttonCheckoutBranch.Text">
         <source>Checkout branch</source>
         <target>簽出分支</target>
-        
-      </trans-unit>
-      <trans-unit id="_buttonCloseApp.Text">
-        <source>Close application</source>
-        <target>关闭应用程序</target>
         
       </trans-unit>
       <trans-unit id="_buttonContinue.Text">
@@ -13011,28 +12636,6 @@ To be able to open this repository, you need to either:
 - 更正儲存庫的擁有權。</target>
         
       </trans-unit>
-      <trans-unit id="_gitDubiousOwnershipTrustAllInstruction.Text">
-        <source>Git-tracked directories are considered unsafe if they are owned by someone other than the current user.
-By default, Git will refuse to even parse a Git config of a repository owned by someone else, let alone
-run its hooks, and this config setting allows users to specify exceptions, e.g. for intentionally shared
-repositories.
-
-If you wish to trust all git repositories on your system even if they are owned by someone else, run the
-following command.
-
-!!! THIS CAN BE DANGEROUS !!!</source>
-        <target>如果 Git 追踪的目錄不是當前使用者擁有，就被視為不安全。 預設情況下，Git 甚至會拒絕解析屬於其他使用者擁有的存儲庫的 Git 設置，更不要說運行其 hook 了。 此設置允許使用者指定例外情況，例如用於故意共享的存儲庫。
-
-如果您希望信任系統上的所有 Git 存儲庫，即使它們由其他使用者擁有，請執行以下命令。
-
-!!! 這可能很危險 !!!</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitDubiousOwnershipTrustAllRepositories.Text">
-        <source>Trust all repositories</source>
-        <target>信任所有仓库</target>
-        
-      </trans-unit>
       <trans-unit id="_gitDubiousOwnershipTrustRepository.Text">
         <source>Trust this repository</source>
         <target>信任此仓库</target>
@@ -13166,11 +12769,6 @@ following command.
       <trans-unit id="_open.Text">
         <source>Open</source>
         <target>開啟</target>
-        
-      </trans-unit>
-      <trans-unit id="_openInVisualStudio.Text">
-        <source>Open in &amp;Visual Studio</source>
-        <target>在 Visual Studio 中開啟(&amp;V)</target>
         
       </trans-unit>
       <trans-unit id="_openReport.Text">
@@ -13397,13 +12995,15 @@ the last selected commit.</source>
         
       </trans-unit>
       <trans-unit id="_sortBy.Text">
-        <source>&amp;Sort by...</source>
-        <target>排序方式...</target>
+        <source>&amp;Sort by</source>
+        
+      </trans-unit>
+      <trans-unit id="_sortGroupBy.Text">
+        <source>&amp;Sort and group by</source>
         
       </trans-unit>
       <trans-unit id="_sortOrder.Text">
-        <source>&amp;Sort order...</source>
-        <target>排序(&amp;S)</target>
+        <source>&amp;Sort order</source>
         
       </trans-unit>
       <trans-unit id="_stageSelectedLines.Text">

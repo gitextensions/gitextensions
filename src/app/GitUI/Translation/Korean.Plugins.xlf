@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>빌드 상태 요약에 각 빌드 결과에 대해 테스트 결과를 표시한다. (네트워크 집약적!)</target>
+        <target>빌드 상태 요약에 각 빌드 결과에 대해 테스트 결과를 표시. (네트워크 많이 사용!)</target>
         
       </trans-unit>
     </body>
@@ -26,12 +26,12 @@
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>플러그인 설정 대화상자에 올바른  MSBUILD 경로를 입력하고 다시 시도하세요</target>
+        <target>플러그인 설정 대화상자에 올바른 MSBUILD 경로를 입력하고 다시 시도하세요.</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>msbuild.exe 인수</target>
+        <target>msbuild.exe 매개변수</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
@@ -63,9 +63,14 @@
         <target>모든 서브모듈 fetch</target>
         
       </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
+        <target>리포지토리 열때 즉시 fetch</target>
+        
+      </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>매 몇 (초)마다 fetch - 비활성화하려면 0으로 설정 </target>
+        <target>매 몇 (초)마다 fetch - 비활성화하려면 0으로 설정</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
@@ -104,7 +109,7 @@
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>당신의 저장소는 BitBucket 서버에서 호스트되지 않습니다.</target>
+        <target>당신의 리포지토리는 BitBucket 서버에서 호스트되지 않습니다.</target>
         
       </trans-unit>
     </body>
@@ -125,7 +130,7 @@
       </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
-        <target>에러</target>
+        <target>오류</target>
         
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
@@ -150,12 +155,12 @@
       </trans-unit>
       <trans-unit id="btnMerge.Text">
         <source>Merge</source>
-        <target>머지(Merge)</target>
+        <target>머지</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCreatePullRequest.Text">
         <source>Pull Request Info</source>
-        <target>Pull 요청 정보</target>
+        <target>Pull Request 정보</target>
         
       </trans-unit>
       <trans-unit id="groupBoxInformation.Text">
@@ -165,7 +170,7 @@
       </trans-unit>
       <trans-unit id="groupBoxPullRequestInfo.Text">
         <source>Pull Request Info</source>
-        <target>Pull 요청 정보</target>
+        <target>Pull Request 정보</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSource.Text">
@@ -200,17 +205,17 @@
       </trans-unit>
       <trans-unit id="lblDescription.Text">
         <source>Description</source>
-        <target>내용</target>
+        <target>설명</target>
         
       </trans-unit>
       <trans-unit id="lblDescriptionView.Text">
         <source>Description</source>
-        <target>내용</target>
+        <target>설명</target>
         
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
         <source>Repository</source>
-        <target>저장소</target>
+        <target>리포지토리</target>
         
       </trans-unit>
       <trans-unit id="lblReviewerView.Text">
@@ -225,12 +230,12 @@
       </trans-unit>
       <trans-unit id="lblSourceRepoView.Text">
         <source>Repository</source>
-        <target>저장소</target>
+        <target>리포지토리</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepository.Text">
         <source>Repository</source>
-        <target>저장소</target>
+        <target>리포지토리</target>
         
       </trans-unit>
       <trans-unit id="lblState.Text">
@@ -250,7 +255,7 @@
       </trans-unit>
       <trans-unit id="lblTargetRepository.Text">
         <source>Repository</source>
-        <target>저장소</target>
+        <target>리포지토리</target>
         
       </trans-unit>
       <trans-unit id="lblTitle.Text">
@@ -265,12 +270,12 @@
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>Pull 요청 생성</target>
+        <target>Pull Request 생성</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>Pull 요청사항 보기</target>
+        <target>Pull Request 보기</target>
         
       </trans-unit>
     </body>
@@ -322,7 +327,7 @@
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
@@ -347,7 +352,7 @@
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
         <source>{0}/{1} branches selected.</source>
-        <target>{0}/{1} 브랜치들이 선택됨</target>
+        <target>{0}/{1} 브랜치 선택됨.</target>
         
       </trans-unit>
       <trans-unit id="_cancel.Text">
@@ -357,7 +362,7 @@
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>제거할 브랜치를 선택하십시오. '{0}'에 완전히 병합된 브랜치만 제거됩니다.</target>
+        <target>제거할 브랜치를 선택하십시오. '{0}'에 완전히 머지된 브랜치만 제거됩니다.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
@@ -371,17 +376,17 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
         <source>Deleting branches...</source>
-        <target>브랜치 삭제 중</target>
+        <target>브랜치 삭제 중...</target>
         
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>병합되지 않은 브랜치들을 삭제하면 잃어버린 커밋을 발생시킵니다. 주의해서 사용하세요!</target>
+        <target>머지되지 않은 브랜치들을 삭제하면 잃어버린 커밋을 발생시킵니다. 주의해서 사용하세요!</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -391,7 +396,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press '{0}' to search for branches to delete.</source>
-        <target>삭제할 브랜치를 찾으려면 '{0}' 누름</target>
+        <target>삭제할 브랜치를 찾으려면 '{0}' 누름.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -416,17 +421,17 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>병합되지 않은 브랜치 포함</target>
+        <target>머지되지 않은 브랜치 포함</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
-        <target>x 일 이상지난 브랜치 삭제</target>
+        <target>x 일 이상 지난 브랜치 삭제</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>브랜치에 결합된 브랜치들을 삭제합니다</target>
+        <target>브랜치에 완전히 머지된 브랜치들을 삭제합니다</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -475,17 +480,17 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
-        <target>병합되지 않은 브랜치 삭제</target>
+        <target>머지되지 않은 브랜치 삭제</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
-        <target>모든 브랜치를 병합해야 하는 브랜치</target>
+        <target>모든 브랜치를 머지해야 하는 브랜치</target>
         
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
-        <target>정규식 필터는 대소문자를 구분하지 않습니까?</target>
+        <target>정규식 필터는 대소문자를 구분하지 않나요?</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
@@ -500,12 +505,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
-        <target>원격 이름 사용되지 않는 브랜치는 다음에서 삭제되어야 합니다. </target>
+        <target>원격 이름 사용되지 않는 브랜치는 다음에서 삭제되어야 합니다</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
-        <target>정규식을 사용하여 삭제할 브랜치들 필터링</target>
+        <target>정규식을 사용하여 삭제할 브랜치 필터링</target>
         
       </trans-unit>
     </body>
@@ -529,7 +534,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -539,7 +544,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
@@ -549,12 +554,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>제거</target>
+        <target>삭제</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>파일을 삭제하기전에 현재 변경을 리셋하시오. 삭제할 파일을 선택하기 바랍니다. 원격 저장소의 데이터를 변경하려면 강제 push 해야함. </target>
+        <target>파일을 삭제하기전에 현재 변경을 리셋하세오. 삭제할 파일을 선택합니다. 원격 리포지토리의 데이터를 변경하려면 force push 해야함.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
@@ -750,12 +755,12 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>GitFlow</source>
-        <target>깃 플로우</target>
+        <target>GitFlow</target>
         
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
         <source>A good branch model for your project with Git...</source>
-        <target>Git과의 프로젝트를 위한 좋은 브랜치 모델...</target>
+        <target>Git 프로젝트를 위한 좋은 브랜치 모델...</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -790,7 +795,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="btnPublish.Text">
         <source>Publish</source>
-        <target>게시</target>
+        <target>발행</target>
         
       </trans-unit>
       <trans-unit id="btnPull.Text">
@@ -805,12 +810,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
         <source>Push after finish</source>
-        <target>push 하고 종료</target>
+        <target>finish 한후 push</target>
         
       </trans-unit>
       <trans-unit id="cbSquash.Text">
         <source>Squash</source>
-        <target>스쿼시</target>
+        <target>Squash</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
@@ -825,7 +830,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>branch:</source>
-        <target>브랜치: </target>
+        <target>브랜치:</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -840,12 +845,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>Remote to pull from :</source>
-        <target>원격에서 꺼내기:</target>
+        <target>pull을 할 원격 :</target>
         
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
         <source>HEAD:</source>
-        <target>헤드:</target>
+        <target>HEAD:</target>
         
       </trans-unit>
       <trans-unit id="lblHead.Text">
@@ -865,6 +870,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="lnkGitFlow.ttGitFlow">
         <source>A good branch model for your project with Git...</source>
+        <target>Git 프로젝트를 위한 좋은 브랜치 모델...</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
@@ -878,7 +884,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>GitFlow</source>
-        <target>깃 플로우</target>
+        <target>GitFlow</target>
         
       </trans-unit>
     </body>
@@ -900,9 +906,24 @@ Are you sure you want to continue?</source>
         <target>개인 액세스 토큰</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>오류</target>
+        
+      </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
         <target>Github 개인 액세스 토큰 만들기</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
+        <source>Enable commit message issue helper</source>
+        <target>커밋 메시지 이슈 도우미 활성화</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
+        <target>가져올 이슈의 최대 개수</target>
         
       </trans-unit>
       <trans-unit id="_manageToken.Text">
@@ -910,18 +931,29 @@ Are you sure you want to continue?</source>
         <target>Github 개인 액세스 토큰 관리하기</target>
         
       </trans-unit>
+      <trans-unit id="_noAssignedIssues.Text">
+        <source>No assigned GitHub issues found</source>
+        <target>나에게 할당된 Github 이슈를 찾을 수 없음</target>
+        
+      </trans-unit>
+      <trans-unit id="_noTokenError.Text">
+        <source>No GitHub personal access token (PAT) defined</source>
+        <target>Github 개인 억세스 토큰 (PAT)가 정의되지 않음</target>
+        
+      </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        <target>주의: Git Extensions을 다시 시작해야만 해당 토큰이 계정에 적용됩니다.</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
         <source>Fail to open the link. Reason: </source>
-        <target>링크를 열 수 없습니다. 이유:</target>
+        <target>링크를 열 수 없습니다. 이유: </target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
-        <target>이미 개인 액세스 토큰이 있습니다. 새로 만들려면, Plugins &gt; Plugin Settings에서 기존의 것을 삭제하세요. </target>
+        <target>이미 개인 액세스 토큰이 있습니다. 새로 만들려면, &quot;플러그인 &gt; 플러그인 설정&quot;에서 이전 것을 삭제하세요.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
@@ -944,10 +976,12 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="GetProjectIdLink.Text">
         <source>Get Project ID from server</source>
+        <target>서버로부터 프로젝트 ID를 가져오기</target>
         
       </trans-unit>
       <trans-unit id="GetProjectIdStatusText.Text">
         <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        <target>서버에서 프로젝트를 가져오지 못했습니다. 유효한 API 토큰을 지정하거나 인스턴스 URL을 확인해 보세요</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
@@ -957,6 +991,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Instance URL</source>
+        <target>인스턴스 URL</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -990,7 +1025,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
         <source>Ignore submodules</source>
-        <target>하위 모듈 무시</target>
+        <target>서브모듈 무시</target>
         
       </trans-unit>
     </body>
@@ -1004,7 +1039,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
-        <target>{0}바이트가 다운로드되었습니다.</target>
+        <target>{0}바이트가 다운로드됨.</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindGource.Text">
@@ -1018,9 +1053,9 @@ Gource를 다운로드하고 플러그인 설정 대화 상자에서 경로를 �
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
-        <target>현재 디렉토리는 유효한 git 저장소가 아닙니다.
+        <target>현재 디렉토리는 유효한 git 리포지토리가 아닙니다.
 
-Gource는 유효한 git  저장소에서 시작해야 합니다. </target>
+Gource는 유효한 git 리포지토리에서 시작해야 합니다.</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
@@ -1040,7 +1075,8 @@ Gource를 자동으로 다운로드하시겠습니까?</target>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>다운로드에 실패했습니다. Gource를 다운로드하고 플러그인 설정 대화 상자에서 경로를 설정하십시오.</target>
+        <target>다운로드에 실패했습니다.
+Gource를 다운로드하고 플러그인 설정 대화 상자에서 경로를 설정하십시오.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1050,7 +1086,7 @@ Please download Gource and set the path in the plugins settings dialog.</source>
       </trans-unit>
       <trans-unit id="_gourceArguments.Caption">
         <source>Arguments</source>
-        <target>인자값</target>
+        <target>매개변수</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
@@ -1060,7 +1096,7 @@ Please download Gource and set the path in the plugins settings dialog.</source>
       </trans-unit>
       <trans-unit id="_gourcePath.Caption">
         <source>Path to Gource</source>
-        <target>Gource로 가는 경로</target>
+        <target>Gource 경로</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
@@ -1083,17 +1119,17 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
-        <target>인자값</target>
+        <target>매개변수</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
         <source>Browse</source>
-        <target>찾기</target>
+        <target>탐색</target>
         
       </trans-unit>
       <trans-unit id="WorkingDirBrowse.Text">
         <source>Browse</source>
-        <target>찾기</target>
+        <target>탐색</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
@@ -1108,7 +1144,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Repository</source>
-        <target>저장소</target>
+        <target>리포지토리</target>
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
@@ -1166,7 +1202,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="InvalidUrlMessage.Text">
         <source>A valid url is required to launch the Jira query helper</source>
-        <target>Jira 쿼리 도우미를 시작하려면 올바른 URL이 필요합니다.</target>
+        <target>Jira 쿼리 도우미를 시작하려면 올바른 URL이 필요합니다</target>
         
       </trans-unit>
       <trans-unit id="JiraFieldsLabel.Text">
@@ -1191,7 +1227,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
-        <target>Jira 쿼리 도우미를 열 수 없습니다.</target>
+        <target>Jira 쿼리 도우미를 열 수 없습니다</target>
         
       </trans-unit>
       <trans-unit id="_authTypeSettings.Caption">
@@ -1235,7 +1271,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
-        <target>전체적으로 적용</target>
+        <target>전역 적용</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
@@ -1294,7 +1330,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="Username.Caption">
         <source>Username</source>
-        <target>사용자 이름</target>
+        <target>사용자명</target>
         
       </trans-unit>
     </body>
@@ -1313,17 +1349,17 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>'{0}'에서 '{1}'({2})로 로그 커밋:</target>
+        <target>'{0}'에서 '{1}' ({2})로 로그 커밋:</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
         <source>'From' commit must be specified</source>
-        <target>'보내는' 커밋을 지정해야 합니다.</target>
+        <target>'From' 커밋을 지정해야 합니다</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
         <source>'To' commit must be specified</source>
-        <target>'받는' 커밋을 지정해야 합니다.</target>
+        <target>'To' 커밋을 지정해야 합니다</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1333,12 +1369,12 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
-        <target>텍스트 테이블로 (spaces 키)</target>
+        <target>텍스트 테이블로 (space)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
-        <target>텍스트 테이블로 (tabs 키)</target>
+        <target>텍스트 테이블로 (tab)</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
@@ -1348,7 +1384,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
         <source>Generate</source>
-        <target>일반설정</target>
+        <target>생성</target>
         
       </trans-unit>
       <trans-unit id="groupBox1.Text">
@@ -1363,7 +1399,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>커밋 표현식 &quot;To&quot;(포함):</target>
+        <target>커밋 표현식 &quot;To&quot; (포함):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -1380,17 +1416,17 @@ MS Word 또는 LibreOffice Writer와 같은 프로그램에 붙여넣을 수 있
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>커밋 표현식 &quot;From&quot;(제외):</target>
+        <target>커밋 표현식 &quot;From&quot; (제외):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
-        <target>git 로그 인수:</target>
+        <target>git 로그 매개변수:</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
-        <target>{0} = 시작; {1} = ~까지</target>
+        <target>{0} = from; {1} = to</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
@@ -1400,7 +1436,7 @@ MS Word 또는 LibreOffice Writer와 같은 프로그램에 붙여넣을 수 있
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
-        <target>수정 횟수 =</target>
+        <target>수정 횟수 = </target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
@@ -1411,12 +1447,12 @@ branch names, tag names)</source>
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
-        <target>있는 그대로</target>
+        <target>그대로</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
-        <target>tabs 키로 열 분리</target>
+        <target>tab으로 열 구분</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
@@ -1467,7 +1503,7 @@ Please copy the url of the build into the clipboard before retrying.
         <source>Error while trying to retrieve build definition information from url.
 
 Please ensure that the url is valid and that the API token has access to build and project information.</source>
-        <target>url에서 빌드 정의 정보를 검색하는 동안 오류가 발생했습니다.
+        <target>URL에서 빌드 정의 정보를 검색하는 동안 오류가 발생했습니다.
 
 URL이 유효하고 API 토큰이 빌드 및 프로젝트 정보에 액세스할 수 있는지 확인하십시오.</target>
         
@@ -1499,7 +1535,7 @@ URL이 유효하고 API 토큰이 빌드 및 프로젝트 정보에 액세스할
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>정규 표현식 '빌드 정의 이름'이 유효하지 않아 저장되지 않았습니다.</target>
+        <target>정규 표현식 'Build definition name'이 유효하지 않아 저장되지 않았습니다!</target>
         
       </trans-unit>
     </body>
@@ -1508,12 +1544,12 @@ URL이 유효하고 API 토큰이 빌드 및 프로젝트 정보에 액세스할
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
-        <target>빌드 보고서를 표시하려면 게스트로 로그인하세요.</target>
+        <target>빌드 보고서를 표시하려면 게스트로 로그인하세요</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
-        <target>빌드 url이 올바르지 않습니다</target>
+        <target>빌드 url이 유효하지 않음</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1529,13 +1565,13 @@ Please copy in the clipboard the url of the build before retrying.
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
-        <target>프로젝트와 빌드목록 읽기 실패</target>
+        <target>프로젝트와 빌드목록 읽기 오류</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
-        <target>프로젝트와 빌드목록을 읽는데 실패했습니다. 서버 url을 확인해주세요</target>
+        <target>프로젝트와 빌드목록을 읽는데 실패했습니다. 서버 url을 확인해주세요.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">

@@ -86,10 +86,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(workingDir))
-        {
-            throw new ArgumentException("AddToRecent: No workingdir.", nameof(workingDir));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(workingDir, nameof(workingDir));
 
         SafeInvoke(() =>
         {

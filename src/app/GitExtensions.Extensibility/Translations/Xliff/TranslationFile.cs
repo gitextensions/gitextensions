@@ -12,7 +12,7 @@ public class TranslationFile : ITranslation
         TranslationCategories = [];
     }
 
-    public TranslationFile(string gitExVersion, string sourceLanguage, string targetLanguage)
+    public TranslationFile(string sourceLanguage, string targetLanguage)
         : this()
     {
         GitExVersion = "";

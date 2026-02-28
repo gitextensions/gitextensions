@@ -13,6 +13,11 @@ partial class FileStatusList
     private readonly Image _treeImage = Images.FileTree;
     private readonly Image _flatListImage = Images.DocumentTree.AdaptLightness();
 
+    private string? _findUsingOptionsPrefix;
+
+    // order in AppSettings.FileStatusFindInFilesGitGrepTypeIndex
+    private ToolStripMenuItem[] FindUsingMenuItems => field ??= [tsmiFindUsingDialog, tsmiFindUsingInputBox, tsmiFindUsingBoth];
+
     private void ApplyGroupBy()
     {
         bool flatList = btnAsTree.Image == _flatListImage;
@@ -104,7 +109,7 @@ partial class FileStatusList
 
     private void Filter_ButtonClick(object sender, EventArgs e)
     {
-        FilterFiles(_NO_TRANSLATE_FilterComboBox.Text);
+        FilterFiles(cboFilterComboBox.Text);
     }
 
     private void FindInFilesGitGrep_ButtonClick(object sender, EventArgs e)
@@ -112,7 +117,7 @@ partial class FileStatusList
         bool usingInputBox = !tsmiFindUsingDialog.Checked;
         bool usingDialog = !tsmiFindUsingInputBox.Checked;
         bool isVisible = (!usingInputBox || cboFindInCommitFilesGitGrep.Visible) && (!usingDialog || _formFindInCommitFilesGitGrep?.Visible is true);
-        bool setVisible = sender == btnFindInFilesGitGrep ? !isVisible : true;
+        bool setVisible = sender != btnFindInFilesGitGrep || !isVisible;
 
         bool inputBoxVisible = setVisible && usingInputBox;
         AppSettings.ShowFindInCommitFilesGitGrep.Value = inputBoxVisible;
@@ -132,16 +137,36 @@ partial class FileStatusList
         }
     }
 
+    private void FindUsingMatchCase_Click(object sender, EventArgs e)
+    {
+        AppSettings.GitGrepIgnoreCase.Value = !tsmiFindUsingMatchCase.Checked;
+        FindInCommitFilesGitGrep();
+    }
+
+    private void FindUsingWholeWord_Click(object sender, EventArgs e)
+    {
+        AppSettings.GitGrepMatchWholeWord.Value = tsmiFindUsingWholeWord.Checked;
+        FindInCommitFilesGitGrep();
+    }
+
+    private void FindUsingOption_Click(object sender, EventArgs e)
+    {
+        AppSettings.GitGrepUserArguments.Value = ((ToolStripMenuItem)sender).Text;
+        FindInCommitFilesGitGrep();
+    }
+
     private void FindUsing_Click(object sender, EventArgs e)
     {
         if (sender is ToolStripMenuItem item)
         {
-            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value = btnFindInFilesGitGrep.DropDown.Items.IndexOf(item);
+            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value = Array.IndexOf(FindUsingMenuItems, item);
         }
 
-        tsmiFindUsingDialog.Checked = sender == tsmiFindUsingDialog;
-        tsmiFindUsingInputBox.Checked = sender == tsmiFindUsingInputBox;
-        tsmiFindUsingBoth.Checked = sender == tsmiFindUsingBoth;
+        foreach (ToolStripMenuItem menuItem in FindUsingMenuItems)
+        {
+            menuItem.Checked = sender == menuItem;
+        }
+
         FindInFilesGitGrep_ButtonClick(sender, e);
     }
 
@@ -182,6 +207,14 @@ partial class FileStatusList
         tsmiShowDiffForAllParents.Visible = _enableDisablingShowDiffForAllParents;
         tsmiShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
         tsmiShowDiffForAllParents.ToolTipText = TranslatedStrings.ShowDiffForAllParentsTooltip;
+    }
+
+    private void FindInFilesGitGrep_DropDownOpening(object sender, EventArgs e)
+    {
+        tsmiFindUsingMatchCase.Checked = !AppSettings.GitGrepIgnoreCase.Value;
+        tsmiFindUsingWholeWord.Checked = AppSettings.GitGrepMatchWholeWord.Value;
+        _findUsingOptionsPrefix ??= tsmiFindUsingOptions.Text + ": ";
+        tsmiFindUsingOptions.Text = _findUsingOptionsPrefix + AppSettings.GitGrepUserArguments.Value;
     }
 
     private void ShowAssumeUnchangedFiles_Click(object sender, EventArgs e)
@@ -259,9 +292,10 @@ partial class FileStatusList
         bool findInFilesGitGrepVisible = CanUseFindInCommitFilesGitGrep;
         btnFindInFilesGitGrep.Visible = findInFilesGitGrepVisible;
         sepOptions.Visible = findInFilesGitGrepVisible;
-        for (int itemIndex = 0; itemIndex < btnFindInFilesGitGrep.DropDown.Items.Count; ++itemIndex)
+
+        for (int itemIndex = 0; itemIndex < FindUsingMenuItems.Length; ++itemIndex)
         {
-            ((ToolStripMenuItem)btnFindInFilesGitGrep.DropDown.Items[itemIndex]).Checked = AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value == itemIndex;
+            FindUsingMenuItems[itemIndex].Checked = AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value == itemIndex;
         }
 
         if (tsmiToolbar.DropDown.Items.Count == 0)
@@ -315,6 +349,11 @@ partial class FileStatusList
 
     private void UpdateToolbar(IReadOnlyList<GitRevision> revisions)
     {
-        btnRefresh.Enabled = revisions.Any(revision => revision.IsArtificial);
+        bool withArtificial = revisions.Any(revision => revision.IsArtificial);
+        btnRefresh.Enabled = withArtificial;
+
+        bool isWorktree = withArtificial && revisions.Any(revision => revision.ObjectId == ObjectId.WorkTreeId);
+        tsmiShowSkipWorktreeFiles.Enabled = isWorktree;
+        tsmiShowUntrackedFiles.Enabled = isWorktree;
     }
 }

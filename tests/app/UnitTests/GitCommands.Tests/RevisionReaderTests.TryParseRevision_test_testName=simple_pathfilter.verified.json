@@ -23,7 +23,7 @@
   "Subject": "wip tests",
   "Body": "wip tests",
   "HasMultiLineMessage": false,
-  "HasNotes": false,
+  "Notes": null,
   "IsArtificial": false,
   "IsAutostash": false,
   "IsStash": false,

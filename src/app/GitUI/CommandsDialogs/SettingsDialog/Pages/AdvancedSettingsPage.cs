@@ -1,69 +1,68 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Settings;
 
-namespace GitUI.CommandsDialogs.SettingsDialog.Pages
+namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
+
+public partial class AdvancedSettingsPage : SettingsPageWithHeader
 {
-    public partial class AdvancedSettingsPage : SettingsPageWithHeader
+    public AdvancedSettingsPage(IServiceProvider serviceProvider)
+        : base(serviceProvider)
     {
-        public AdvancedSettingsPage(IServiceProvider serviceProvider)
-            : base(serviceProvider)
+        InitializeComponent();
+        InitializeComplete();
+
+        var autoNormaliseSymbols = new[]
         {
-            InitializeComponent();
-            InitializeComplete();
+            new { Key = "_", Value = "_" },
+            new { Key = "-", Value = "-" },
+            new { Key = "(none)", Value = "" },
+        };
+        cboAutoNormaliseSymbol.DisplayMember = "Key";
+        cboAutoNormaliseSymbol.ValueMember = "Value";
+        cboAutoNormaliseSymbol.DataSource = autoNormaliseSymbols;
+        cboAutoNormaliseSymbol.SelectedIndex = 0;
+    }
 
-            var autoNormaliseSymbols = new[]
-            {
-                new { Key = "_", Value = "_" },
-                new { Key = "-", Value = "-" },
-                new { Key = "(none)", Value = "" },
-            };
-            cboAutoNormaliseSymbol.DisplayMember = "Key";
-            cboAutoNormaliseSymbol.ValueMember = "Value";
-            cboAutoNormaliseSymbol.DataSource = autoNormaliseSymbols;
-            cboAutoNormaliseSymbol.SelectedIndex = 0;
-        }
+    protected override void SettingsToPage()
+    {
+        chkAlwaysShowCheckoutDlg.Checked = AppSettings.AlwaysShowCheckoutBranchDlg;
+        chkUseLocalChangesAction.Checked = AppSettings.UseDefaultCheckoutBranchAction;
+        chkDontSHowHelpImages.Checked = AppSettings.DontShowHelpImages;
+        chkAlwaysShowAdvOpt.Checked = AppSettings.AlwaysShowAdvOpt;
+        chkCheckForUpdates.Checked = AppSettings.CheckForUpdates;
+        chkCheckForRCVersions.Checked = AppSettings.CheckForReleaseCandidates;
+        chkConsoleEmulator.Checked = AppSettings.UseConsoleEmulatorForCommands;
+        chkAutoNormaliseBranchName.Checked = AppSettings.AutoNormaliseBranchName;
+        cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
+        cboAutoNormaliseSymbol.SelectedValue = AppSettings.AutoNormaliseSymbol;
+        chkCommitAndPushForcedWhenAmend.Checked = AppSettings.CommitAndPushForcedWhenAmend;
 
-        protected override void SettingsToPage()
-        {
-            chkAlwaysShowCheckoutDlg.Checked = AppSettings.AlwaysShowCheckoutBranchDlg;
-            chkUseLocalChangesAction.Checked = AppSettings.UseDefaultCheckoutBranchAction;
-            chkDontSHowHelpImages.Checked = AppSettings.DontShowHelpImages;
-            chkAlwaysShowAdvOpt.Checked = AppSettings.AlwaysShowAdvOpt;
-            chkCheckForUpdates.Checked = AppSettings.CheckForUpdates;
-            chkCheckForRCVersions.Checked = AppSettings.CheckForReleaseCandidates;
-            chkConsoleEmulator.Checked = AppSettings.UseConsoleEmulatorForCommands;
-            chkAutoNormaliseBranchName.Checked = AppSettings.AutoNormaliseBranchName;
-            cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
-            cboAutoNormaliseSymbol.SelectedValue = AppSettings.AutoNormaliseSymbol;
-            chkCommitAndPushForcedWhenAmend.Checked = AppSettings.CommitAndPushForcedWhenAmend;
+        base.SettingsToPage();
+    }
 
-            base.SettingsToPage();
-        }
+    protected override void PageToSettings()
+    {
+        AppSettings.AlwaysShowCheckoutBranchDlg = chkAlwaysShowCheckoutDlg.Checked;
+        AppSettings.UseDefaultCheckoutBranchAction = chkUseLocalChangesAction.Checked;
+        AppSettings.DontShowHelpImages = chkDontSHowHelpImages.Checked;
+        AppSettings.AlwaysShowAdvOpt = chkAlwaysShowAdvOpt.Checked;
+        AppSettings.CheckForUpdates = chkCheckForUpdates.Checked;
+        AppSettings.CheckForReleaseCandidates = chkCheckForRCVersions.Checked;
+        AppSettings.UseConsoleEmulatorForCommands = chkConsoleEmulator.Checked;
+        AppSettings.AutoNormaliseBranchName = chkAutoNormaliseBranchName.Checked;
+        AppSettings.AutoNormaliseSymbol = (string)cboAutoNormaliseSymbol.SelectedValue;
+        AppSettings.CommitAndPushForcedWhenAmend = chkCommitAndPushForcedWhenAmend.Checked;
 
-        protected override void PageToSettings()
-        {
-            AppSettings.AlwaysShowCheckoutBranchDlg = chkAlwaysShowCheckoutDlg.Checked;
-            AppSettings.UseDefaultCheckoutBranchAction = chkUseLocalChangesAction.Checked;
-            AppSettings.DontShowHelpImages = chkDontSHowHelpImages.Checked;
-            AppSettings.AlwaysShowAdvOpt = chkAlwaysShowAdvOpt.Checked;
-            AppSettings.CheckForUpdates = chkCheckForUpdates.Checked;
-            AppSettings.CheckForReleaseCandidates = chkCheckForRCVersions.Checked;
-            AppSettings.UseConsoleEmulatorForCommands = chkConsoleEmulator.Checked;
-            AppSettings.AutoNormaliseBranchName = chkAutoNormaliseBranchName.Checked;
-            AppSettings.AutoNormaliseSymbol = (string)cboAutoNormaliseSymbol.SelectedValue;
-            AppSettings.CommitAndPushForcedWhenAmend = chkCommitAndPushForcedWhenAmend.Checked;
+        base.PageToSettings();
+    }
 
-            base.PageToSettings();
-        }
+    public static SettingsPageReference GetPageReference()
+    {
+        return new SettingsPageReferenceByType(typeof(AdvancedSettingsPage));
+    }
 
-        public static SettingsPageReference GetPageReference()
-        {
-            return new SettingsPageReferenceByType(typeof(AdvancedSettingsPage));
-        }
-
-        private void chkAutoNormaliseBranchName_CheckedChanged(object sender, EventArgs e)
-        {
-            cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
-        }
+    private void chkAutoNormaliseBranchName_CheckedChanged(object sender, EventArgs e)
+    {
+        cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
     }
 }

@@ -131,12 +131,9 @@ partial class FileStatusList
         tsmiRefreshOnFormFocus.Visible = canAutoRefresh;
         sepToolbar.Visible = canAutoRefresh;
 
-        sepShow.Visible = canAutoRefresh;
         tsmiShowIgnoredFiles.Visible = canAutoRefresh;
-        tsmiShowSkipWorktreeFiles.Visible = canAutoRefresh;
         tsmiShowAssumeUnchangedFiles.Visible = canAutoRefresh;
-        tsmiShowUntrackedFiles.Visible = canAutoRefresh;
-        tsmiShowUntrackedFiles.Checked = canAutoRefresh && Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
+        tsmiShowUntrackedFiles.Checked = Module.GetEffectiveSetting("status.showuntrackedfiles") != "no";
 
         tsmiStageFile.Font = new Font(tsmiStageFile.Font, FontStyle.Bold);
         tsmiUnstageFile.Font = new Font(tsmiUnstageFile.Font, FontStyle.Bold);
@@ -326,7 +323,7 @@ partial class FileStatusList
         }
 
         string? toolName = item?.Tag as string;
-        List<FileStatusItem> diffFiles = SelectedItems.ToList();
+        List<FileStatusItem> diffFiles = [.. SelectedItems];
         if (diffFiles.Count != 2)
         {
             return;
@@ -410,10 +407,18 @@ partial class FileStatusList
             case RevisionDiffControl.Command.FilterFileInGrid: tsmiFilterFileInGrid.PerformClick(); break;
             case RevisionDiffControl.Command.SelectFirstGroupChanges: return SelectFirstGroupChangesIfFocused();
             case RevisionDiffControl.Command.FindFile: tsmiFindFile.PerformClick(); break;
-            case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep:
+            case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_DiffTab:
                 if (_isFileTreeMode)
                 {
-                    return base.ExecuteCommand(cmd);
+                    return false;
+                }
+
+                tsmiOpenFindInCommitFilesGitGrepDialog.PerformClick();
+                break;
+            case RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_FileTreeTab:
+                if (!_isFileTreeMode)
+                {
+                    return false;
                 }
 
                 tsmiOpenFindInCommitFilesGitGrepDialog.PerformClick();
@@ -521,10 +526,10 @@ partial class FileStatusList
     private ContextMenuDiffToolInfo GetContextMenuDiffToolInfo()
     {
         // Some items are not supported if more than one revision is selected
-        List<GitRevision> revisions = SelectedItems.SecondRevs().ToList();
+        List<GitRevision> revisions = [.. SelectedItems.SecondRevs()];
         GitRevision? selectedRev = revisions.Count == 1 ? revisions[0] : null;
 
-        List<ObjectId> parentIds = SelectedItems.FirstIds().ToList();
+        List<ObjectId> parentIds = [.. SelectedItems.FirstIds()];
         bool firstIsParent = _gitRevisionTester.AllFirstAreParentsToSelected(parentIds, selectedRev);
         bool localExists = _gitRevisionTester.AnyLocalFileExists(SelectedItems.Select(i => i.Item));
 
@@ -543,18 +548,16 @@ partial class FileStatusList
     private int GetLineNumber()
         => _getLineNumber is not null
             ? _getLineNumber()
-            : FindScriptOptionsProvider() is IScriptOptionsProvider scriptOptionsProvider
-                ? int.Parse(scriptOptionsProvider.GetValues(ScriptOptionsProvider._lineNumber).FirstOrDefault("0"))
-                : 0;
+            : int.Parse(FindScriptOptionsProvider().GetValues(ScriptOptionsProvider._lineNumber).FirstOrDefault("0"));
 
     private static ContextMenuSelectionInfo GetSelectionInfo(FileStatusItem[] selectedItems, RelativePath? selectedFolder, bool isBareRepository, bool supportLinePatching, IFullPathResolver fullPathResolver)
     {
         // Some items are not supported if more than one revision is selected
-        List<GitRevision> revisions = selectedItems.SecondRevs().ToList();
+        List<GitRevision> revisions = [.. selectedItems.SecondRevs()];
         GitRevision? selectedRev = revisions.Count == 1 ? revisions[0] : null;
 
         // First (A) is parent if one revision selected or if parent, then selected
-        List<ObjectId> parentIds = selectedItems.FirstIds().ToList();
+        List<ObjectId> parentIds = [.. selectedItems.FirstIds()];
 
         // Combined diff, range diff etc are for display only, no manipulations
         bool isStatusOnly = selectedItems.Any(item => item.Item.IsRangeDiff || item.Item.IsStatusOnly);
@@ -738,7 +741,7 @@ partial class FileStatusList
                 }
 
                 // If item.FirstRevision is null, compare to root commit
-                GitRevision?[] revs = { item.SecondRevision, item.FirstRevision };
+                GitRevision?[] revs = [item.SecondRevision, item.FirstRevision];
                 UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, diffKind, item.Item.IsTracked, customTool: toolName);
             }
         }
@@ -770,15 +773,15 @@ partial class FileStatusList
     private void OpenWithDifftool_DropDownOpening(object sender, EventArgs e)
     {
         ContextMenuDiffToolInfo selectionInfo = GetContextMenuDiffToolInfo();
-        List<GitRevision> revisions = SelectedItems.SecondRevs().ToList();
+        List<GitRevision> revisions = [.. SelectedItems.SecondRevs()];
 
-        if (revisions.Any())
+        if (revisions.Count != 0)
         {
             tsmiSecondDiffCaption.Text = _selectedRevision + (DescribeRevisions(revisions) ?? string.Empty);
             tsmiSecondDiffCaption.Visible = true;
             MenuUtil.SetAsCaptionMenuItem(tsmiSecondDiffCaption, ItemContextMenu);
 
-            tsmiFirstDiffCaption.Text = _firstRevision + (DescribeRevisions(SelectedItems.FirstRevs().ToList()) ?? string.Empty);
+            tsmiFirstDiffCaption.Text = _firstRevision + (DescribeRevisions([.. SelectedItems.FirstRevs()]) ?? string.Empty);
             tsmiFirstDiffCaption.Visible = true;
             MenuUtil.SetAsCaptionMenuItem(tsmiFirstDiffCaption, ItemContextMenu);
         }
@@ -795,7 +798,7 @@ partial class FileStatusList
             = tsmiDiffSelectedToLocal.Visible
             = !_itemContextMenuController.ShouldHideToLocal(selectionInfo);
 
-        List<FileStatusItem> diffFiles = SelectedItems.ToList();
+        List<FileStatusItem> diffFiles = [.. SelectedItems];
         sepDifftoolRemember.Visible = diffFiles.Count == 1 || diffFiles.Count == 2;
 
         // The order is always the order in the list, not clicked order, but the (last) selected is known
@@ -871,7 +874,7 @@ partial class FileStatusList
         tsmiShowInFileTree.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.ShowFileTree);
         tsmiFilterFileInGrid.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FilterFileInGrid);
         tsmiFindFile.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindFile);
-        tsmiOpenFindInCommitFilesGitGrepDialog.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep);
+        tsmiOpenFindInCommitFilesGitGrepDialog.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(_isFileTreeMode ? RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_FileTreeTab : RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_DiffTab);
         tsmiOpenInVisualStudio.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.OpenInVisualStudio);
         tsmiAddFileToGitIgnore.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.AddFileToGitIgnore);
         tsmiMove.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(RevisionDiffControl.Command.RenameMove);
@@ -890,9 +893,7 @@ partial class FileStatusList
             item: SelectedItem.Item);
         if (!string.IsNullOrWhiteSpace(SelectedItem.Item.OldName))
         {
-            string name = SelectedItem.Item.OldName;
-            SelectedItem.Item.OldName = SelectedItem.Item.Name;
-            SelectedItem.Item.Name = name;
+            (SelectedItem.Item.Name, SelectedItem.Item.OldName) = (SelectedItem.Item.OldName, SelectedItem.Item.Name);
         }
 
         _rememberFileContextMenuController.RememberedDiffFileItem = item;
@@ -955,8 +956,8 @@ partial class FileStatusList
         bool hasExistingFiles = items.Any(item => !(item.Item.IsUncommittedAdded || IsRenamedIndexItem(item)));
 
         string revDescription = resetToParent
-            ? $"{_firstRevision}{DescribeRevisions(items.FirstRevs().ToList())}"
-            : $"{_selectedRevision}{DescribeRevisions(items.SecondRevs().ToList())}";
+            ? $"{_firstRevision}{DescribeRevisions([.. items.FirstRevs()])}"
+            : $"{_selectedRevision}{DescribeRevisions([.. items.SecondRevs()])}";
         string confirmationMessage = string.Format(_resetSelectedChangesText.Text, revDescription);
 
         FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(ParentForm, hasExistingFiles, hasNewFiles, confirmationMessage);
@@ -1031,7 +1032,7 @@ partial class FileStatusList
 
     private void SaveAs_Click(object sender, EventArgs e)
     {
-        List<FileStatusItem> files = SelectedItems.ToList();
+        List<FileStatusItem> files = [.. SelectedItems];
 
         Func<string, string?>? userSelection = null;
         if (files.Count == 1)

@@ -20,7 +20,7 @@ public partial class GrepHighlightService : TextHighlightService
     private DiffLinesInfo _diffLinesInfo = new();
 
     [GeneratedRegex(@"^(?<line>\d+)(?<kind>:|.)(?<text>.*)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex GrepLineRegex();
+    private static partial Regex GrepLineRegex { get; }
 
     public GrepHighlightService(ref string text, DiffViewerLineNumberControl lineNumbersControl)
     {
@@ -94,6 +94,7 @@ public partial class GrepHighlightService : TextHighlightService
         StringBuilder sb = new(text.Length);
         bool skipNextSeparator = false;
         bool pendingSeparator = false;
+        bool firstError = true;
         foreach (string line in text.LazySplit('\n'))
         {
             if (line == _grepResultKind_Separator)
@@ -107,13 +108,16 @@ public partial class GrepHighlightService : TextHighlightService
             }
 
             // Parse line no and if match (must not have colors)
-            Match match = GrepLineRegex().Match(line);
+            Match match = GrepLineRegex.Match(line);
             if (!match.Success || !int.TryParse(match.Groups["line"].ValueSpan, out int lineNo))
             {
                 if (line.Length > 0)
                 {
-                    Trace.WriteLine($"Cannot parse lineNo for grep {line} ({sb.Length})");
-                    DebugHelpers.Fail($"Cannot parse lineNo for grep {line} ({sb.Length})");
+                    if (firstError)
+                    {
+                        firstError = false;
+                        Trace.WriteLine($"Cannot parse lineNo for grep {line.ShortenTo(80)} ({sb.Length})");
+                    }
                 }
 
                 // git-grep emits an empty line last, should not be displayed.

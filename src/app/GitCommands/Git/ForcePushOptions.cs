@@ -1,9 +1,8 @@
-namespace GitCommands.Git
+namespace GitCommands.Git;
+
+public enum ForcePushOptions
 {
-    public enum ForcePushOptions
-    {
-        DoNotForce = 0,
-        Force,
-        ForceWithLease,
-    }
+    DoNotForce = 0,
+    Force,
+    ForceWithLease,
 }

@@ -100,7 +100,7 @@ public static class TreeViewExtensions
 
         return result;
 
-        string GetNameOrText(TreeNode n)
+        static string GetNameOrText(TreeNode n)
         {
             return n.Name.Length > 0 ? n.Name : n.Text;
         }

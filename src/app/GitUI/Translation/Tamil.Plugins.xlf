@@ -63,9 +63,14 @@
         <target>அனைத்து துணை தொகுதிகளையும் எடுக்கவும்</target>
         
       </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
+        <target>களஞ்சியத்தைத் திறந்தவுடன் உடனடியாகப் பெறு</target>
+        
+      </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>ஒவ்வொரு அ(வினாடிகளிலும்) எடுக்கவும் - முடக்க 0 என அமைக்கவும்</target>
+        <target>ஒவ்வொரு (நொடிகளிலும்) எடுக்கவும் - முடக்க 0 என அமை</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
@@ -79,7 +84,7 @@
     <body>
       <trans-unit id="BitbucketBaseUrl.Caption">
         <source>Specify the base URL to Bitbucket</source>
-        <target>இருமவாளிக்கு அடிப்படை முகவரியைக் குறிப்பிடவும்</target>
+        <target>இருமவாளிக்கு அடிப்படை முகவரியைக் குறிப்பிடு</target>
         
       </trans-unit>
       <trans-unit id="BitbucketDisableSsl.Caption">
@@ -130,7 +135,7 @@
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
         <source>Right-click to copy link</source>
-        <target>இணைப்பை நகலெடுக்க வலது சொடுக்கவும்</target>
+        <target>இணைப்பை நகலெடுக்க வலது சொடுக்கு</target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
@@ -140,7 +145,7 @@
       </trans-unit>
       <trans-unit id="btnApprove.Text">
         <source>Approve</source>
-        <target>அனுமதி</target>
+        <target>இசைவு</target>
         
       </trans-unit>
       <trans-unit id="btnCreate.Text">
@@ -150,7 +155,7 @@
       </trans-unit>
       <trans-unit id="btnMerge.Text">
         <source>Merge</source>
-        <target>இணை</target>
+        <target>ஒன்றிணை</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCreatePullRequest.Text">
@@ -270,7 +275,7 @@
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>இழு கோரிக்கைகளைப் பார்க்கவும்</target>
+        <target>இழு கோரிக்கைகளைப் பார்</target>
         
       </trans-unit>
     </body>
@@ -279,12 +284,12 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Create local tracking branches</source>
-        <target>உள்ளக கண்காணிப்பு கிளைகளை உருவாக்கவும்</target>
+        <target>உள்ளக கண்காணிப்பு கிளைகளை உருவாக்கு</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
         <source>Create local tracking branches</source>
-        <target>உள்ளக கண்காணிப்பு கிளைகளை உருவாக்கவும்</target>
+        <target>உள்ளக கண்காணிப்பு கிளைகளை உருவாக்கு</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -327,7 +332,7 @@
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
-        <target>இதிலிருந்து தொலை கிளைகளை நீக்கவும்</target>
+        <target>இதிலிருந்து தொலை கிளைகளை நீக்கு</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
@@ -352,12 +357,12 @@
       </trans-unit>
       <trans-unit id="_cancel.Text">
         <source>Cancel</source>
-        <target>ரத்து</target>
+        <target>நீக்கறல்</target>
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>நீக்கக் கிளைகளைத் தேர்ந்தெடுக்கவும். '{0}' இல் முழுமையாக இணைக்கப்பட்ட கிளைகள் மட்டுமே நீக்கப்படும். </target>
+        <target>நீக்கக் கிளைகளைத் தேர்ந்தெடு. '{0}' இல் முழுமையாக இணைக்கப்பட்ட கிளைகள் மட்டுமே நீக்கப்படும்.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
@@ -401,7 +406,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>'{0}' நெடுவரிசையில் உள்ள தேர்வுப்பெட்டிகளைப் பயன்படுத்தி நீக்கக் கிளைகளைத் தேர்ந்தெடுக்கவும்.</target>
+        <target>'{0}' நெடுவரிசையில் உள்ள தேர்வுப்பெட்டிகளைப் பயன்படுத்தி நீக்கக் கிளைகளைத் தேர்ந்தெடு.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -416,17 +421,17 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>இணைக்கப்படாத கிளைகளைச் சேர்க்கவும்</target>
+        <target>இணைக்கப்படாத கிளைகளைச் சேர்</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
-        <target>அ நாட்களைவிட பழைய கிளைகளை நீக்கவும்</target>
+        <target>அ நாட்களைவிட பழைய கிளைகளை நீக்கு</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>கிளையில் முழுமையாக இணைக்கப்பட்ட கிளைகளை நீக்கவும்</target>
+        <target>கிளையில் முழுமையாக இணைக்கப்பட்ட கிளைகளை நீக்கு</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
@@ -441,7 +446,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="regexFilter.Text">
         <source>/(feature|develop)/</source>
-        <target>/(அம்சம்|மேம்படுத்து)/</target>
+        <target>/(நற்பொருத்தம்|மேம்படுத்து)/</target>
         
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
@@ -451,7 +456,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>கிளைகளை வடிகட்ட வழக்கவெளிபாட்டைப் பயன்படுத்தவும்</target>
+        <target>கிளைகளை வடிகட்ட வழக்கவெளிபாட்டைப் பயன்படுத்து</target>
         
       </trans-unit>
     </body>
@@ -465,12 +470,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_daysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
-        <target>(நாட்கள்) விடப் பழைய கிளைகளை அகற்றவும்</target>
+        <target>(நாட்கள்) விடப் பழைய கிளைகளை அகற்று</target>
         
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
-        <target>தொலைநிலையிலிருந்து வழக்கற்றுப் போன கிளைகளை நீக்கவும்</target>
+        <target>தொலைநிலையிலிருந்து வழக்கற்றுப் போன கிளைகளை நீக்கு</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
@@ -505,7 +510,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
-        <target>நீக்குவதற்கு கிளைகளை வடிகட்ட வழக்கவெளிப்பாட்டைப் பயன்படுத்தவும்</target>
+        <target>நீக்குவதற்கு கிளைகளை வடிகட்ட வழக்கவெளிப்பாட்டைப் பயன்படுத்து</target>
         
       </trans-unit>
     </body>
@@ -662,7 +667,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
-        <target>{0:N0} {1}  மூலம் உறுதிமொழியப்பட்டது</target>
+        <target>{0:N0} {1} மூலம் உறுதிமொழியப்பட்டது</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
@@ -780,12 +785,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="btnFinish.Text">
         <source>Finish</source>
-        <target>முடிக்கவும்</target>
+        <target>முடி</target>
         
       </trans-unit>
       <trans-unit id="btnInit.Text">
         <source>Init GitFlow</source>
-        <target>அறிவிலிஓட்டத்தை துவக்கவும்</target>
+        <target>அறிவிலிஓட்டத்தை துவக்கு</target>
         
       </trans-unit>
       <trans-unit id="btnPublish.Text">
@@ -815,7 +820,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
-        <target>தற்போதுள்ள கிளைகளை நிர்வகிக்கவும்:</target>
+        <target>தற்போதுள்ள கிளைகளை நிர்வகி:</target>
         
       </trans-unit>
       <trans-unit id="gbStart.Text">
@@ -893,7 +898,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
-        <target>அறிவிலிமையம் (நிறுவன) புரவலன் பெயர்</target>
+        <target>அறிவிலிமையம் (நிறுவன) புரவலன்பெயர்</target>
         
       </trans-unit>
       <trans-unit id="PersonalAccessToken.Caption">
@@ -901,14 +906,39 @@ Are you sure you want to continue?</source>
         <target>தனிப்பட்ட அணுகல் அடையாளம்</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>பிழை</target>
+        
+      </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
-        <target>அறிவிலிமையம் தனிப்பட்ட அணுகல் அடையாளத்தை உருவாக்கவும்</target>
+        <target>அறிவிலிமையம் தனிப்பட்ட அணுகல் அடையாளத்தை உருவாக்கு</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
+        <source>Enable commit message issue helper</source>
+        <target>உறுதிமொழி செய்தி சிக்கல் உதவியாளரை இயக்கு.</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
+        <target>மீகையளவு பெறப்பட்ட சிக்கல்கள்</target>
         
       </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
-        <target>அறிவிலிமையம் தனிப்பட்ட அணுகல் அடையாளத்தை நிர்வகிக்கவும்</target>
+        <target>அறிவிலிமையம் தனிப்பட்ட அணுகல் அடையாளத்தை நிர்வகி</target>
+        
+      </trans-unit>
+      <trans-unit id="_noAssignedIssues.Text">
+        <source>No assigned GitHub issues found</source>
+        <target>ஒதுக்கப்பட்ட அறிவிலிமைய சிக்கல்கள் எதுவும் காணப்படவில்லை.</target>
+        
+      </trans-unit>
+      <trans-unit id="_noTokenError.Text">
+        <source>No GitHub personal access token (PAT) defined</source>
+        <target>அறிவிலிமைய தனிப்பட்ட இசைவு கிள்ளாக்கு (தஇகி) எதுவும் வரையறுக்கப்படவில்லை.</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
@@ -923,7 +953,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
-        <target>உங்களிடம் ஏற்கனவே தனிப்பட்ட அணுகல் அடையாளம் உள்ளது. புதிய ஒன்றைப் பெற, உங்கள் பழையதை முதலில் நீக்கவும் செருகுநிரல்கள்&gt;  செருகுநிரல் அமைப்புகள்.</target>
+        <target>உங்களிடம் ஏற்கனவே தனிப்பட்ட அணுகல் அடையாளம் உள்ளது. புதிய ஒன்றைப் பெற, உங்கள் பழையதை முதலில் நீக்கு செருகுநிரல்கள்&gt;  செருகுநிரல் அமைப்புகள்.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
@@ -946,26 +976,32 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="GetProjectIdLink.Text">
         <source>Get Project ID from server</source>
+        <target>சேவையகத்திலிருந்து திட்ட அடையாளத்தைப் பெறு</target>
         
       </trans-unit>
       <trans-unit id="GetProjectIdStatusText.Text">
         <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        <target>சேவையகத்திலிருந்து திட்டத்தைப் பெற முடியவில்லை. செல்லுபடியாகும் பநிஇ கிள்ளாக்கைக் குறிப்பிட முயற்சிக்கவும் அல்லது நிகழ்வு முகவரியைச் சரிபார்</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
+        <target>கிள்ளாக்கு மேலாண்மை பக்கத்திற்குச் செல்</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Instance URL</source>
+        <target>நிகழ்வு முகவரி</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Api Token</source>
+        <target>பநிஇ கிள்ளாக்கு</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
+        <target>திட்ட அடையாளம்</target>
         
       </trans-unit>
     </body>
@@ -989,7 +1025,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
         <source>Ignore submodules</source>
-        <target>துணை தொகுதிகளைப் புறக்கணிக்கவும்</target>
+        <target>துணை தொகுதிகளைப் புறக்கணி</target>
         
       </trans-unit>
     </body>
@@ -1010,7 +1046,7 @@ Are you sure you want to continue?</source>
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>கௌர்சைக் கண்டுபிடிக்க முடியவில்லை.
-கௌர்சைகப் பதிவிறக்கி, செருகுநிரல் அமைப்புகள் உரையாடலில் பாதையை அமைக்கவும்.</target>
+கௌர்சைகப் பதிவிறக்கி, செருகுநிரல் அமைப்புகள் உரையாடலில் பாதையை அமை.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1040,7 +1076,7 @@ Do you want to automatically download Gource?</source>
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>பதிவிறக்க முடியவில்லை.
-கௌர்சைப் பதிவிறக்கி, செருகுநிரல் அமைப்புகள் உரையாடலில் பாதையை அமைக்கவும்.</target>
+கௌர்சைப் பதிவிறக்கி, செருகுநிரல் அமைப்புகள் உரையாடலில் பாதையை அமை</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1127,7 +1163,7 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
-        <target>கிளைக்கான உருவாக்கத்தை புறக்கணிக்கவும்</target>
+        <target>கிளைக்கான உருவாக்கத்தை புறக்கணி</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
@@ -1176,6 +1212,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="JiraPluginConfigurationErrorText.Text">
         <source>Jira plugin configuration incomplete!</source>
+        <target>சீரா செருகுநிரல் உள்ளமைவு முழுமையடையவில்லை!</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
@@ -1195,6 +1232,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_authTypeSettings.Caption">
         <source>Auth type</source>
+        <target>ஒப்புதல் வகை</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
@@ -1233,7 +1271,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
-        <target>உலகளவில் அமைக்கவும்</target>
+        <target>உலகளவில் அமை</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
@@ -1258,7 +1296,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target> எந்தப் பதிலாளையும் உள்ளமைக்கப்படவில்லை. பதிலாள் விருந்தளிப்போன் செருகுநிரல் அமைப்புகளில் அமைக்கவும்.</target>
+        <target>எந்தப் பதிலாளையும் உள்ளமைக்கப்படவில்லை. பதிலாள் விருந்தளிப்போன் செருகுநிரல் அமைப்புகளில் அமை.</target>
         
       </trans-unit>
       <trans-unit id="_pluginDescription.Text">
@@ -1301,7 +1339,7 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
-        <target>வெளியீட்டு குறிப்புகள் உருவாக்க</target>
+        <target>வெளியீட்டு குறிப்புகள் உருவாக்கி</target>
         
       </trans-unit>
       <trans-unit id="_caption.Text">
@@ -1356,7 +1394,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
         <source>Copy to clipboard</source>
-        <target>இடைநிலைப் பலகையில் நகலெடுக்கவும்</target>
+        <target>இடைநிலைப் பலகையில் நகலெடு</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1393,7 +1431,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>வரிசைப்படுத்துதல்: மிகச் சமீபத்திய திருத்தங்கள் மேலே பட்டியலிடப்பட்டுள்ளன.</target>
+        <target>வரிசைப்படுத்துதல்: மிகச் அண்மைகால திருத்தங்கள் மேலே பட்டியலிடப்பட்டுள்ளன.</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
@@ -1438,7 +1476,7 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="ExtractLink.Text">
         <source>Extract data from a build result url copied in the clipboard</source>
-        <target>இடைநிலைப் பலகையில் நகலெடுக்கப்பட்ட உருவாக்க முடிவு முகவரியிலிருந்து தரவைப் பிரித்தெடுக்கவும்</target>
+        <target>இடைநிலைப் பலகையில் நகலெடுக்கப்பட்ட உருவாக்க முடிவு முகவரியிலிருந்து தரவைப் பிரித்தெடு</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
@@ -1458,7 +1496,7 @@ Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
         <target>இடைநிலைப் பலகையில் சரியான கட்டுமான முகவரி இல்லை.
 
-மீண்டும் முயற்சிக்கும் முன், கட்டமைப்பின் முகவரியை இடைநிலைப் பலகையில் நகலெடுக்கவும்.
+மீண்டும் முயற்சிக்கும் முன், கட்டமைப்பின் முகவரியை இடைநிலைப் பலகையில் நகலெடு.
 (குறைந்தது கட்டுமானஅடையாளம் அளவுருவைக் கொண்டிருக்க வேண்டும்)</target>
         
       </trans-unit>
@@ -1466,9 +1504,9 @@ Please copy the url of the build into the clipboard before retrying.
         <source>Error while trying to retrieve build definition information from url.
 
 Please ensure that the url is valid and that the API token has access to build and project information.</source>
-        <target>முகவரியிலிருந்து உருவாக்க வரையறை தகவலை மீட்டெடுக்க முயற்சிக்கும் போது பிழை.
+        <target>முகவரியிலிருந்து உருவாக்க வரையறை தகவலை மீட்டெடுக்க முயற்சிக்கும்போது பிழை.
 
-முகவரி செல்லுபடியாகும் என்பதையும், எபிஐ குறிஅடையாளத்துக்கு தகவலை உருவாக்க மற்றும் திட்டமிடுவதற்கான அணுகல் இருப்பதையும் உறுதிப்படுத்தவும்.</target>
+முகவரி செல்லுபடியாகும் என்பதையும், எபிஐ குறிஅடையாளத்துக்கு தகவலை உருவாக்க மற்றும் திட்டமிடுவதற்கான அணுகல் இருப்பதையும் உறுதிப்படுத்து.</target>
         
       </trans-unit>
       <trans-unit id="_infoNoApiTokenMessage.Text">
@@ -1481,9 +1519,9 @@ Please ensure that the url is valid and that the API token has access to build a
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
-        <target>உதாரணங்கள்:
+        <target>எடுத்துக்காட்டுகள்:
  - https://dev.azure.com/உங்கள்நிறுவனம்/திட்டபெயர்/
- - https://உங்கள்புரவலன்:8080/tfs/சேகரிப்புபெயர்/திட்டபெயர்/
+ - https://உங்கள்புரவலன்:8080/டிஎப்எச்/சேகரிப்புபெயர்/திட்டபெயர்/
  - https://உங்கள்நிறுவனம்.visualstudio.com/திட்டபெயர்/</target>
         
       </trans-unit>
@@ -1492,8 +1530,8 @@ Please ensure that the url is valid and that the API token has access to build a
  - 'Build (read)'
  - 'Project and team (read)'</source>
         <target>நீங்கள் பின்வரும் நோக்கங்களுடன் ஒரு அடையாளகுறியை உருவாக்க வேண்டும்:
-  - 'கட்ட (படிக்க)'
-  - 'திட்டம் மற்றும் குழு (படிக்க)'</target>
+ - 'கட்ட (படிக்க)'
+ - 'திட்டம் மற்றும் குழு (படிக்க)'</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
@@ -1512,7 +1550,7 @@ Please ensure that the url is valid and that the API token has access to build a
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
-        <target>தவறான உருவாக்க முகவரி</target>
+        <target>தவறான கட்டுமான முகவரி</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
@@ -1520,9 +1558,9 @@ Please ensure that the url is valid and that the API token has access to build a
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>இடைநிலைப் பலகையில் சரியான கட்டுமான சேவையக முகவரி இல்லை.
+        <target>இடைநிலைப் பலகையில் சரியான கட்டுமான முகவரி இல்லை.
 
-மீண்டும் முயற்சிக்கும் முன், கட்டமைப்பின் சேவையக முகவரியை இடைநிலைப் பலகையில் நகலெடுக்கவும்.
+மீண்டும் முயற்சிக்கும் முன், கட்டமைப்பின் முகவரியை இடைநிலைப் பலகையில் நகலெடு.
 (குறைந்தது 'கட்டுமானவகைஅடையாளம்' அளவுருவையாவது கொண்டிருக்க வேண்டும்)</target>
         
       </trans-unit>
@@ -1535,7 +1573,7 @@ Please copy in the clipboard the url of the build before retrying.
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
         <target>திட்டங்களை ஏற்றவும், பட்டியலை உருவாக்கவும் முடியவில்லை.
-சேவையக முகவரியைச் சரிபார்க்கவும்.</target>
+சேவையக முகவரியைச் சரிபார்.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
@@ -1545,7 +1583,7 @@ Please verify the server url.</source>
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
-        <target>இடைநிலைப் பலகையில் நகலெடுக்கப்பட்ட உருவாக்க முகவரியிலிருந்து தரவைப் பிரித்தெடுக்கவும்</target>
+        <target>இடைநிலைப் பலகையில் நகலெடுக்கப்பட்ட கட்டுமான முகவரியிலிருந்து தரவைப் பிரித்தெடு</target>
         
       </trans-unit>
     </body>

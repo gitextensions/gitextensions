@@ -44,12 +44,7 @@ public static class ServiceProviderExtensions
     {
         ArgumentNullException.ThrowIfNull(provider);
 
-        object? service = provider.GetService(typeof(T));
-        if (service is null)
-        {
-            throw new InvalidOperationException($"No service for type '{typeof(T)}' has been registered.");
-        }
-
+        object? service = provider.GetService(typeof(T)) ?? throw new InvalidOperationException($"No service for type '{typeof(T)}' has been registered.");
         return (T)service;
     }
 

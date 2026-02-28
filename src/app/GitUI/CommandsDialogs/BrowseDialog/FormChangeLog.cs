@@ -1,16 +1,15 @@
 ﻿using GitUI.Properties;
 
-namespace GitUI.CommandsDialogs.BrowseDialog
-{
-    public partial class FormChangeLog : GitExtensionsForm
-    {
-        public FormChangeLog()
-            : base(enablePositionRestore: true)
-        {
-            InitializeComponent();
-            InitializeComplete();
+namespace GitUI.CommandsDialogs.BrowseDialog;
 
-            Load += (s, e) => ChangeLog.Text = Resources.ChangeLog;
-        }
+public partial class FormChangeLog : GitExtensionsForm
+{
+    public FormChangeLog()
+        : base(enablePositionRestore: true)
+    {
+        InitializeComponent();
+        InitializeComplete();
+
+        Load += (s, e) => ChangeLog.Text = Resources.ChangeLog;
     }
 }

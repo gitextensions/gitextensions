@@ -1,24 +1,20 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 
-namespace GitUIPluginInterfaces.BuildServerIntegration
+namespace GitUIPluginInterfaces.BuildServerIntegration;
+
+[MetadataAttribute]
+[AttributeUsage(AttributeTargets.Class)]
+public class BuildServerAdapterMetadataAttribute : ExportAttribute
 {
-    [MetadataAttribute]
-    [AttributeUsage(AttributeTargets.Class)]
-    public class BuildServerAdapterMetadataAttribute : ExportAttribute
+    public BuildServerAdapterMetadataAttribute(string buildServerType)
+        : base(typeof(IBuildServerTypeMetadata))
     {
-        public BuildServerAdapterMetadataAttribute(string buildServerType)
-            : base(typeof(IBuildServerTypeMetadata))
-        {
-            if (string.IsNullOrEmpty(buildServerType))
-            {
-                throw new ArgumentException();
-            }
+        ArgumentException.ThrowIfNullOrEmpty(buildServerType);
 
-            BuildServerType = buildServerType;
-        }
-
-        public string BuildServerType { get; }
-
-        public virtual string? CanBeLoaded => null;
+        BuildServerType = buildServerType;
     }
+
+    public string BuildServerType { get; }
+
+    public virtual string? CanBeLoaded => null;
 }

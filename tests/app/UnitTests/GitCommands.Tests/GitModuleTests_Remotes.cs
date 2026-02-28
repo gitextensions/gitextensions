@@ -161,7 +161,7 @@ partial class GitModuleTests
     [Test]
     public void GetRemoteNames()
     {
-        string[] lines = new[] { "RussKie", "origin", "upstream", "asymmetrical", "with-space" };
+        string[] lines = ["RussKie", "origin", "upstream", "asymmetrical", "with-space"];
 
         using (_executable.StageOutput("remote", string.Join("\n", lines)))
         {

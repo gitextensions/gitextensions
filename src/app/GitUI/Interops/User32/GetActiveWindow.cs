@@ -1,10 +1,9 @@
 using System.Runtime.InteropServices;
 
-namespace System
+namespace System;
+
+internal static partial class NativeMethods
 {
-    internal static partial class NativeMethods
-    {
-        [DllImport(Libraries.User32, ExactSpelling = true)]
-        public static extern IntPtr GetActiveWindow();
-    }
+    [DllImport(Libraries.User32, ExactSpelling = true)]
+    public static extern IntPtr GetActiveWindow();
 }

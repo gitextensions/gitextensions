@@ -3,44 +3,43 @@ using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using NSubstitute;
 
-namespace GitUITests.Theming
+namespace GitUITests.Theming;
+
+[TestFixture]
+public class CssUrlResolverTests
 {
-    [TestFixture]
-    public class CssUrlResolverTests
+    private const string PreinstalledThemesMockPath = "pre-installed\\themes";
+    private const string UserDefinedThemesMockPath = "app-data\\themes";
+
+    [Test]
+    public void Should_resolve_to_preinstalled_themes_directory_by_default()
     {
-        private const string PreinstalledThemesMockPath = "pre-installed\\themes";
-        private const string UserDefinedThemesMockPath = "app-data\\themes";
+        ThemeCssUrlResolver resolver = new(CreateMockThemePathProvider());
+        string resolvedPath = resolver.ResolveCssUrl("bright.css");
+        resolvedPath.Should().Be(Path.Combine(PreinstalledThemesMockPath, "bright.css"));
+    }
 
-        [Test]
-        public void Should_resolve_to_preinstalled_themes_directory_by_default()
-        {
-            ThemeCssUrlResolver resolver = new(CreateMockThemePathProvider());
-            string resolvedPath = resolver.ResolveCssUrl("bright.css");
-            resolvedPath.Should().Be(Path.Combine(PreinstalledThemesMockPath, "bright.css"));
-        }
+    [Test]
+    public void Should_resolve_to_user_defined_themes_directory_When_url_starts_with_macro()
+    {
+        ThemeCssUrlResolver resolver = new(CreateMockThemePathProvider());
+        string resolvedPath = resolver.ResolveCssUrl("{UserAppData}/bright_custom.css");
+        resolvedPath.Should().Be(Path.Combine(UserDefinedThemesMockPath, "bright_custom.css"));
+    }
 
-        [Test]
-        public void Should_resolve_to_user_defined_themes_directory_When_url_starts_with_macro()
-        {
-            ThemeCssUrlResolver resolver = new(CreateMockThemePathProvider());
-            string resolvedPath = resolver.ResolveCssUrl("{UserAppData}/bright_custom.css");
-            resolvedPath.Should().Be(Path.Combine(UserDefinedThemesMockPath, "bright_custom.css"));
-        }
+    private static IThemePathProvider CreateMockThemePathProvider()
+    {
+        IThemePathProvider pathProvider = Substitute.For<IThemePathProvider>();
 
-        private static IThemePathProvider CreateMockThemePathProvider()
-        {
-            IThemePathProvider pathProvider = Substitute.For<IThemePathProvider>();
+        pathProvider.ThemeExtension.Returns(".css");
 
-            pathProvider.ThemeExtension.Returns(".css");
+        pathProvider.GetThemePath(Arg.Any<ThemeId>()).Returns(callInfo =>
+            Path.Combine(
+                callInfo.Arg<ThemeId>().IsBuiltin
+                    ? PreinstalledThemesMockPath
+                    : UserDefinedThemesMockPath,
+                callInfo.Arg<ThemeId>().Name + ".css"));
 
-            pathProvider.GetThemePath(Arg.Any<ThemeId>()).Returns(callInfo =>
-                Path.Combine(
-                    callInfo.Arg<ThemeId>().IsBuiltin
-                        ? PreinstalledThemesMockPath
-                        : UserDefinedThemesMockPath,
-                    callInfo.Arg<ThemeId>().Name + ".css"));
-
-            return pathProvider;
-        }
+        return pathProvider;
     }
 }

@@ -6,29 +6,28 @@
 using System.Reflection;
 using Microsoft.VisualStudio.Composition;
 
-namespace CommonTestUtils.MEF
+namespace CommonTestUtils.MEF;
+
+public static partial class ExportProviderCache
 {
-    public static partial class ExportProviderCache
+    private sealed class SimpleAssemblyLoader : IAssemblyLoader
     {
-        private sealed class SimpleAssemblyLoader : IAssemblyLoader
+        public static readonly IAssemblyLoader Instance = new SimpleAssemblyLoader();
+
+        public Assembly LoadAssembly(AssemblyName assemblyName)
+            => Assembly.Load(assemblyName);
+
+        public Assembly LoadAssembly(string assemblyFullName, string codeBasePath)
         {
-            public static readonly IAssemblyLoader Instance = new SimpleAssemblyLoader();
-
-            public Assembly LoadAssembly(AssemblyName assemblyName)
-                => Assembly.Load(assemblyName);
-
-            public Assembly LoadAssembly(string assemblyFullName, string codeBasePath)
+            AssemblyName assemblyName = new(assemblyFullName);
+            if (!string.IsNullOrEmpty(codeBasePath))
             {
-                AssemblyName assemblyName = new(assemblyFullName);
-                if (!string.IsNullOrEmpty(codeBasePath))
-                {
 #pragma warning disable SYSLIB0044 // 'AssemblyName.CodeBase' is obsolete: 'AssemblyName.CodeBase and AssemblyName.EscapedCodeBase are obsolete. Using them for loading an assembly is not supported.'
-                    assemblyName.CodeBase = codeBasePath;
+                assemblyName.CodeBase = codeBasePath;
 #pragma warning restore SYSLIB0044
-                }
-
-                return LoadAssembly(assemblyName);
             }
+
+            return LoadAssembly(assemblyName);
         }
     }
 }

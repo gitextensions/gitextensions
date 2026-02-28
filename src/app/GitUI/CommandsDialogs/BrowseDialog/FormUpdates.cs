@@ -44,7 +44,7 @@ public partial class FormUpdates : GitExtensionsDialog
     public void SearchForUpdatesAndShow(IWin32Window ownerWindow, bool alwaysShow)
     {
         _ownerWindow = ownerWindow;
-        new Thread(SearchForUpdates).Start();
+        ThreadHelper.FileAndForget(SearchForUpdates);
         if (alwaysShow)
         {
             ShowDialog(ownerWindow);
@@ -100,12 +100,6 @@ public partial class FormUpdates : GitExtensionsDialog
             // if a UI component gets disposed or the UI thread EXITs while a 'check for updates' thread
             // is in the middle of its run... Ignore it, likely the user has closed the app
         }
-        catch (NullReferenceException)
-        {
-            // We had a number of NRE reports.
-            // Most likely scenario is that GitHub is API rate limiting unauthenticated requests that lead to failures in Git.hub library.
-            // Nothing we can do here, ignore it.
-        }
         catch (Exception ex)
         {
             ThreadHelper.JoinableTaskFactory.Run(async () =>
@@ -129,7 +123,7 @@ public partial class FormUpdates : GitExtensionsDialog
         if (update is not null)
         {
             _updateFound = true;
-            _updateUrl = update.DownloadPage;
+            _updateUrl = AdaptFromX64ToCurrentProcessArchitecture(update.DownloadPage);
             _requiredNetRuntimeVersion = update.RequiredNetRuntimeVersion;
             _newVersion = update.ApplicationVersion.ToString();
             Done();
@@ -140,6 +134,13 @@ public partial class FormUpdates : GitExtensionsDialog
         _requiredNetRuntimeVersion = null;
         _updateFound = false;
         Done();
+
+        return;
+
+        string AdaptFromX64ToCurrentProcessArchitecture(string link)
+            => RuntimeInformation.OSArchitecture == Architecture.X64
+                ? link
+                : link.Replace("-x64-", $"-{RuntimeInformation.OSArchitecture.ToString().ToLowerInvariant()}-");
     }
 
     private void Done()
@@ -173,7 +174,7 @@ public partial class FormUpdates : GitExtensionsDialog
 
                 if (!Visible)
                 {
-                    ShowDialog(_ownerWindow);
+                    await ShowDialogAsync(_ownerWindow);
                 }
             }
             else
@@ -290,8 +291,13 @@ public partial class FormUpdates : GitExtensionsDialog
         });
     }
 
-    private static bool UpdateRequired(Version required, IEnumerable<Version> installed)
+    private static bool UpdateRequired(Version? required, IEnumerable<Version> installed)
     {
+        if (required is null)
+        {
+            return false;
+        }
+
         IEnumerable<Version> matchingMajor = installed.Where(version => version.Major == required.Major);
         return !matchingMajor.Any(version => version >= required);
     }

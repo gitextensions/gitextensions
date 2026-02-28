@@ -121,8 +121,10 @@
     <value>False</value>
   </metadata>
   <data name="lblGlobalConfigPath.Text" xml:space="preserve">
-    <value>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</value>
+    <value>By default, the global config file is located in the location stored in the environment variable %HOME%.
+(This can be overridden by setting %GIT_CONFIG_GLOBAL%.)
+If empty, %HOME% will be set to %HOMEDRIVE%%HOMEPATH% by default.
+Change the default behaviour only if you experience problems.</value>
   </data>
   <metadata name="tlpnlGitPaths.GenerateMember" type="System.Boolean, mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089">
     <value>False</value>

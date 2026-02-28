@@ -63,6 +63,10 @@
         <target>Cargar todos los submódulos</target>
         
       </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
+        
+      </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
         <target>Hacer fetch cada (segundos) - dejar valor en 0 para desactivar</target>
@@ -322,7 +326,7 @@
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
@@ -365,12 +369,13 @@
 Branches will be deleted on the remote '{0}'. This can not be undone.
 Are you sure you want to continue?</source>
         <target>¡ACCIÓN PELIGROSA!
-Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. ¿Está seguro de que desea continuar?</target>
+Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. 
+¿Está seguro de que desea continuar?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
@@ -528,7 +533,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
@@ -538,7 +543,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
@@ -548,7 +553,7 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
         <source>Delete</source>
-        <target>Eliminar</target>
+        <target>Borrar</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -900,14 +905,39 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
         <target>Token de acceso personal</target>
         
       </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Error</target>
+        
+      </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
         <target>Generar un token de acceso personal a GitHub</target>
         
       </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
+        <source>Enable commit message issue helper</source>
+        <target>Habilitar el asistente de problemas de mensajes de commit</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
+        <target>Número máximo de problemas recuperados</target>
+        
+      </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
         <target>Gestionar el token de acceso personal a GitHub</target>
+        
+      </trans-unit>
+      <trans-unit id="_noAssignedIssues.Text">
+        <source>No assigned GitHub issues found</source>
+        <target>No se encontraron problemas asignados en GitHub</target>
+        
+      </trans-unit>
+      <trans-unit id="_noTokenError.Text">
+        <source>No GitHub personal access token (PAT) defined</source>
+        <target>No se ha definido un token de acceso personal (PAT) de GitHub</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
@@ -1317,7 +1347,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
         <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>Log de commit desde '{0}' a '{1}' ({2}):</target>
+        <target>Log de commit desde '{0}' hasta '{1}' ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
@@ -1545,7 +1575,7 @@ Por favor, verifique la url del servidor.</target>
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>¡La expresión regular &quot;Build Id Filter no es valido y no será guardada!</target>
+        <target>¡La expresión regular &quot;Build Id Filter&quot; no es válida y no será guardada!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">

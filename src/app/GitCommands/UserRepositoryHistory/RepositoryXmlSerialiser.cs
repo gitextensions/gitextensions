@@ -1,69 +1,65 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Xml.Serialization;
 using GitCommands.UserRepositoryHistory.Legacy;
 
-namespace GitCommands.UserRepositoryHistory
+namespace GitCommands.UserRepositoryHistory;
+
+/// <summary>
+/// Serialises or deserialises user's git repositories into XML.
+/// </summary>
+public sealed class RepositoryXmlSerialiser : IRepositorySerialiser<Repository>
 {
     /// <summary>
-    /// Serialises or deserialises user's git repositories into XML.
+    /// Restores a list of user's git repositories from the supplied string.
     /// </summary>
-    public sealed class RepositoryXmlSerialiser : IRepositorySerialiser<Repository>
+    /// <param name="serialised">A serialised list of user's git repositories.</param>
+    /// <returns>A list of user's git repositories, if successfully deserialised; otherwise <see langword="null"/>.</returns>
+    /// <exception cref="ArgumentException"><paramref name="serialised"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
+    public IReadOnlyList<Repository>? Deserialize(string serialised)
     {
-        /// <summary>
-        /// Restores a list of user's git repositories from the supplied string.
-        /// </summary>
-        /// <param name="serialised">A serialised list of user's git repositories.</param>
-        /// <returns>A list of user's git repositories, if successfully deserialised; otherwise <see langword="null"/>.</returns>
-        /// <exception cref="ArgumentException"><paramref name="serialised"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
-        public IReadOnlyList<Repository>? Deserialize(string serialised)
+        ArgumentException.ThrowIfNullOrEmpty(serialised);
+
+        try
         {
-            if (string.IsNullOrEmpty(serialised))
+            XmlSerializer serializer = new(typeof(RepositoryHistorySurrogate));
+            using TextReader reader = new StringReader(serialised);
+            if (serializer.Deserialize(reader) is RepositoryHistorySurrogate obj)
             {
-                throw new ArgumentException(nameof(serialised));
+                return obj.Repositories;
             }
-
-            try
-            {
-                XmlSerializer serializer = new(typeof(RepositoryHistorySurrogate));
-                using TextReader reader = new StringReader(serialised);
-                if (serializer.Deserialize(reader) is RepositoryHistorySurrogate obj)
-                {
-                    return obj.Repositories;
-                }
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.Message);
-            }
-
-            return null;
+        }
+        catch (Exception ex)
+        {
+            Trace.WriteLine(ex.Message);
         }
 
-        /// <summary>
-        /// Serialises the given list of user's git repositories.
-        /// </summary>
-        /// <param name="repositories">A list of user's git repositories.</param>
-        /// <returns>A serialised list of user's git repositories, if successful; otherwise <see langword="null"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="repositories"/> is <see langword="null"/>.</exception>
-        public string? Serialize(IEnumerable<Repository> repositories)
-        {
-            ArgumentNullException.ThrowIfNull(repositories);
+        return null;
+    }
 
-            try
-            {
-                RepositoryHistorySurrogate surrogate = new(repositories);
-                using StringWriter sw = new();
-                XmlSerializer serializer = new(typeof(RepositoryHistorySurrogate));
-                XmlSerializerNamespaces ns = new();
-                ns.Add(string.Empty, string.Empty);
-                serializer.Serialize(sw, surrogate, ns);
-                return sw.ToString();
-            }
-            catch (Exception ex)
-            {
-                Trace.WriteLine(ex.Message);
-                return null;
-            }
+    /// <summary>
+    /// Serialises the given list of user's git repositories.
+    /// </summary>
+    /// <param name="repositories">A list of user's git repositories.</param>
+    /// <returns>A serialised list of user's git repositories, if successful; otherwise <see langword="null"/>.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="repositories"/> is <see langword="null"/>.</exception>
+    public string? Serialize(IEnumerable<Repository> repositories)
+    {
+        ArgumentNullException.ThrowIfNull(repositories);
+
+        try
+        {
+            RepositoryHistorySurrogate surrogate = new(repositories);
+            using StringWriter sw = new();
+            XmlSerializer serializer = new(typeof(RepositoryHistorySurrogate));
+            XmlSerializerNamespaces ns = new();
+            ns.Add(string.Empty, string.Empty);
+            serializer.Serialize(sw, surrogate, ns);
+            return sw.ToString();
+        }
+        catch (Exception ex)
+        {
+            Trace.WriteLine(ex.Message);
+            return null;
         }
     }
 }

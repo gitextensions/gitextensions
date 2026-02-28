@@ -237,7 +237,6 @@ public interface IGitModule
     Task<string?> GetFileContentsAsync(GitItemStatus file);
     IReadOnlyList<GitStash> GetStashes(bool noLocks);
     IReadOnlyList<GitItemStatus> GetWorkTreeFiles();
-    SubmoduleStatus CheckSubmoduleStatus(ObjectId? commit, ObjectId? oldCommit, CommitData? data, CommitData? oldData, bool loadData);
     bool ResetAllChanges(bool clean, bool onlyWorkTree = false);
 
     /// <summary>
@@ -312,7 +311,13 @@ public interface IGitModule
     /// <returns>An <see cref="ExecutionResult"/> containing the list of differing files and any associated metadata.</returns>
     ExecutionResult GetDiffFiles(string? firstRevision, string? secondRevision, bool noCache, bool rawParsable, CancellationToken cancellationToken);
     bool InTheMiddleOfBisect();
-    IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision, string? secondRevision, StagedStatus stagedStatus, bool noCache, CancellationToken cancellationToken);
+    IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision,
+        string? secondRevision,
+        StagedStatus stagedStatus,
+        bool excludeSkipWorktreeFiles = true, // applies to StagedStatus.WorkTree or StagedStatus.Index only
+        UntrackedFilesMode untrackedFilesMode = UntrackedFilesMode.Default, // ditto
+        bool noCache = false,
+        CancellationToken cancellationToken = default);
     bool IsDirtyDir();
     Task<ExecutionResult> GetRangeDiffAsync(
         ObjectId firstId,
@@ -330,7 +335,12 @@ public interface IGitModule
     string ApplyPatch(string dirText, ArgumentString arguments);
     bool InTheMiddleOfRebase();
     bool InTheMiddleOfMerge();
-    IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId? firstId, ObjectId? secondId, ObjectId? parentToSecond, CancellationToken cancellationToken);
+    IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId? firstId,
+        ObjectId? secondId,
+        ObjectId? parentToSecond,
+        bool excludeSkipWorktreeFiles = true, // applies to StagedStatus.WorkTree or StagedStatus.Index only
+        UntrackedFilesMode untrackedFilesMode = UntrackedFilesMode.Default, // ditto
+        CancellationToken cancellationToken = default);
     IReadOnlyList<GitItemStatus> GetIndexFilesWithSubmodulesStatus();
     ObjectId? GetFileBlobHash(string fileName, ObjectId objectId);
     void OpenFilesWithDifftool(string? firstGitCommit, string? secondGitCommit, string? customTool);
@@ -367,6 +377,14 @@ public interface IGitModule
     string GetCommitCountString(ObjectId fromId, string to);
     IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(CancellationToken cancellationToken);
     IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles, bool excludeAssumeUnchangedFiles, bool excludeSkipWorktreeFiles, UntrackedFilesMode untrackedFiles, CancellationToken cancellationToken);
+
+    /// <summary>
+    /// Initiate the submodule status async task, to calculate the statuses for the submodules in the list.
+    /// The task replaces the current task if it exists.
+    /// </summary>
+    /// <param name="status">List with GitItemStatus</param>
+    public void GetSubmoduleCurrentStatus(IReadOnlyList<GitItemStatus> status);
+
     bool ResetChanges(ObjectId? resetId, IReadOnlyList<GitItemStatus> selectedItems, bool resetAndDelete, IFullPathResolver fullPathResolver, out StringBuilder output, Action<BatchProgressEventArgs>? progressAction);
     bool HasSubmodules();
     void OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null);
@@ -523,6 +541,7 @@ public interface IGitModule
         bool useGitColoring,
         bool showFunctionName,
         IGitCommandConfiguration commandConfiguration,
+        Encoding encoding,
         CancellationToken cancellationToken);
 
     GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines, CancellationToken cancellationToken);
