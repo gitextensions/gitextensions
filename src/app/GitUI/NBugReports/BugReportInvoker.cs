@@ -23,7 +23,11 @@ public static class BugReportInvoker
     /// Set to <see langword ="true"/> on application exit
     /// in order to suppress the popup to restart the app on missing runtime assembly.
     /// </summary>
-    public static bool IgnoreFailedToLoadAnAssembly { get; set; } = false;
+    public static bool IgnoreFailedToLoadAnAssembly
+    {
+        get => UIReporter.IgnoreFailedToLoadAnAssembly;
+        set => UIReporter.IgnoreFailedToLoadAnAssembly = value;
+    }
 
     private static Form? OwnerForm
         => Form.ActiveForm ?? (Application.OpenForms.Count > 0 ? Application.OpenForms[0] : null);
@@ -74,14 +78,8 @@ public static class BugReportInvoker
             LogError(exception, isTerminating);
         }
 
-        if (HasFailedToLoadAnAssembly(exception))
+        if (_bugReporter.ReportFailedToLoadAnAssembly(exception, isTerminating))
         {
-            if (!IgnoreFailedToLoadAnAssembly)
-            {
-                IgnoreFailedToLoadAnAssembly = true;
-                _bugReporter.ReportFailedToLoadAnAssembly(exception, isTerminating, isRuntimeAssembly: false);
-            }
-
             return;
         }
 
@@ -138,71 +136,17 @@ public static class BugReportInvoker
         StringBuilder text = exception.GetExceptionInfo();
         string rootError = GetRootError(exception);
 
-        TaskDialogPage page = new()
-        {
-            Icon = isExternalOperation || isUserExternalOperation ? TaskDialogIcon.Warning : TaskDialogIcon.Error,
-            Caption = TranslatedStrings.Error,
-            Heading = rootError,
-            AllowCancel = true,
-            SizeToContent = true
-        };
+        _bugReporter.ReportError(
+            exception,
+            rootError,
+            text,
+            new()
+            {
+                IsExternalOperation = isExternalOperation,
+                IsUserExternalOperation = isUserExternalOperation,
+            });
 
-        // prefer to ignore failed external operations
-        if (isExternalOperation)
-        {
-            AddIgnoreButton(TranslatedStrings.ExternalErrorDescription);
-        }
-        else
-        {
-            // directions and button to raise a bug
-            text.AppendLine().AppendLine(TranslatedStrings.ReportBug);
-        }
-
-        // no bug reports for user configured operations
-        TaskDialogCommandLinkButton taskDialogCommandLink
-            = isUserExternalOperation ? new(TranslatedStrings.ButtonViewDetails)
-                : isExternalOperation ? new(TranslatedStrings.ReportIssue, TranslatedStrings.ReportIssueDescription)
-                : new(TranslatedStrings.ButtonReportBug);
-        taskDialogCommandLink.Click += (s, e) =>
-        {
-            ShowNBug(OwnerForm, exception, isExternalOperation, isUserExternalOperation, isTerminating: false);
-        };
-        page.Buttons.Add(taskDialogCommandLink);
-
-        // let the user decide whether to report the bug
-        if (!isExternalOperation)
-        {
-            AddIgnoreButton();
-        }
-
-        page.Text = text.ToString().Trim();
-        TaskDialog.ShowDialog(OwnerFormHandle, page);
         return;
-
-        void AddIgnoreButton(string? descriptionText = null)
-        {
-            string buttonText = TranslatedStrings.ButtonIgnore;
-            TaskDialogCommandLinkButton taskDialogCommandLink = new(buttonText, descriptionText);
-            page.Buttons.Add(taskDialogCommandLink);
-        }
-
-        static bool HasFailedToLoadAnAssembly(Exception exception)
-            => (exception is FileNotFoundException fileNotFoundException && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
-            || (exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message))
-            || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException));
-    }
-
-    // Determines if the DLL name is a VC Runtime DLL.
-    // VC Runtime DLL loading errors are typically caused by Windows updates.
-    private static bool IsVCRuntimeDll(string dllName)
-    {
-        if (string.IsNullOrWhiteSpace(dllName))
-        {
-            return false;
-        }
-
-        // VC Runtime DLLs typically contain "vcruntime"
-        return dllName.Contains("vcruntime", StringComparison.OrdinalIgnoreCase);
     }
 
     private static void ReportDubiousOwnership(ExternalOperationException exception)
