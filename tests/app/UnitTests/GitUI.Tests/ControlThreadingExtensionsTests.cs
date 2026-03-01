@@ -22,7 +22,7 @@ public class ControlThreadingExtensionsTests
             ClassicAssert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
         });
 
-        CancellationTokenSource cancellationTokenSource = new();
+        using CancellationTokenSource cancellationTokenSource = new();
         ThreadHelper.JoinableTaskFactory.Run(async () =>
         {
             ClassicAssert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
@@ -44,7 +44,7 @@ public class ControlThreadingExtensionsTests
 
         ClassicAssert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
 
-        CancellationTokenSource cancellationTokenSource = new();
+        using CancellationTokenSource cancellationTokenSource = new();
         awaiter = form.SwitchToMainThreadAsync(cancellationTokenSource.Token).GetAwaiter();
         ClassicAssert.True(awaiter.IsCompleted);
         awaiter.GetResult();
@@ -65,7 +65,7 @@ public class ControlThreadingExtensionsTests
             ClassicAssert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
         });
 
-        CancellationTokenSource cancellationTokenSource = new();
+        using CancellationTokenSource cancellationTokenSource = new();
         ThreadHelper.JoinableTaskFactory.Run(async () =>
         {
             await TaskScheduler.Default;
@@ -89,7 +89,7 @@ public class ControlThreadingExtensionsTests
     public async Task TokenCancelledBeforeSwitchOnMainThread()
     {
         Form form = new();
-        CancellationTokenSource cancellationTokenSource = new();
+        using CancellationTokenSource cancellationTokenSource = new();
         await cancellationTokenSource.CancelAsync();
 
         ClassicAssert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
@@ -101,7 +101,7 @@ public class ControlThreadingExtensionsTests
     {
         Form form = new();
         form.Dispose();
-        CancellationTokenSource cancellationTokenSource = new();
+        using CancellationTokenSource cancellationTokenSource = new();
         await cancellationTokenSource.CancelAsync();
 
         ClassicAssert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
@@ -128,7 +128,7 @@ public class ControlThreadingExtensionsTests
     public async Task TokenCancelledAfterSwitchOnMainThread()
     {
         Form form = new();
-        CancellationTokenSource cancellationTokenSource = new();
+        using CancellationTokenSource cancellationTokenSource = new();
 
         ControlThreadingExtensions.ControlMainThreadAwaitable awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
 
@@ -157,7 +157,7 @@ public class ControlThreadingExtensionsTests
 
         await TaskScheduler.Default;
 
-        CancellationTokenSource cancellationTokenSource = new();
+        using CancellationTokenSource cancellationTokenSource = new();
         await cancellationTokenSource.CancelAsync();
 
         ClassicAssert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
@@ -190,7 +190,7 @@ public class ControlThreadingExtensionsTests
 
         await TaskScheduler.Default;
 
-        CancellationTokenSource cancellationTokenSource = new();
+        using CancellationTokenSource cancellationTokenSource = new();
 
         ControlThreadingExtensions.ControlMainThreadAwaitable awaitable = form.SwitchToMainThreadAsync(cancellationTokenSource.Token);
 
