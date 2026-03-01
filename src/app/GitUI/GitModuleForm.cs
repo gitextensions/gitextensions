@@ -147,4 +147,10 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModule
     {
         UICommandsChanged?.Invoke(this, e);
     }
+
+    public override bool TryGetUICommands([NotNullWhen(returnValue: true)] out IGitUICommands? commands)
+    {
+        commands = UICommands;
+        return commands is not null;
+    }
 }
