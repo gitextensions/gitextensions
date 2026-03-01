@@ -12,7 +12,7 @@ public interface IFullPathResolver
     /// </summary>
     /// <param name="path">Folder or file path to resolve.</param>
     /// <returns>
-    /// <paramref name="path"/> if <paramref name="path"/> is rooted; otherwise resolved path from <see cref="IGitModule.WorkingDir"/>.
+    /// <paramref name="path"/> if <paramref name="path"/> is rooted; otherwise resolved path from <see cref="IGitExecutor.WorkingDir"/>.
     /// </returns>
     string? Resolve(string? path);
 }

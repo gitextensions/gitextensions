@@ -1,5 +1,6 @@
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility.Git;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 
@@ -17,16 +18,18 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
 {
     private readonly ILocalRepositoryManager _localRepositoryManager;
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
+    private readonly IGitExecutorProvider _executorProvider;
 
     // Holds the raw, unfiltered list of repositories.
     // This is done to allow fast filtering of all known repos.
     private IList<Repository>? _allRecentRepositories;
     private IList<Repository>? _allFavoriteRepositories;
 
-    public UserRepositoriesListController(ILocalRepositoryManager localRepositoryManager, IInvalidRepositoryRemover invalidRepositoryRemover)
+    public UserRepositoriesListController(ILocalRepositoryManager localRepositoryManager, IInvalidRepositoryRemover invalidRepositoryRemover, IGitExecutorProvider executorProvider)
     {
         _localRepositoryManager = localRepositoryManager;
         _invalidRepositoryRemover = invalidRepositoryRemover;
+        _executorProvider = executorProvider;
     }
 
     public async Task AssignCategoryAsync(Repository repository, string? category)
@@ -52,7 +55,7 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
             return string.Empty;
         }
 
-        return GitModule.GetSelectedBranchFast(path);
+        return _executorProvider.GetExecutor(path).GetSelectedBranch();
     }
 
     public bool IsValidGitWorkingDir(string path)

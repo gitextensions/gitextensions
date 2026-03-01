@@ -26,12 +26,11 @@ namespace GitCommands;
 /// <summary>Provides manipulation with git module.
 /// <remarks>Several instances may be created for submodules.</remarks></summary>
 [DebuggerDisplay("GitModule ( {" + nameof(WorkingDir) + "} )")]
-public sealed partial class GitModule : IGitModule
+public sealed partial class GitModule : GitExecutor, IGitModule
 {
     private const string GitError = "Git Error";
 
     private static readonly Encoding _defaultEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-    private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
 
     // the amount of lines we must skip in order to get to an annotated tag's message when doing git cat-file -p <tag_name>
     private static readonly int StandardCatFileTagHeaderLength = 5;
@@ -45,12 +44,6 @@ public sealed partial class GitModule : IGitModule
     private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
     private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
     private FrozenDictionary<string, Color>? _remoteColors;
-
-    // The executable may use Windows Git (native to the app, always used in special situations) or WSL Git.
-    private readonly IGitCommandRunner _gitCommandRunner;
-    private readonly IGitCommandRunner _gitWindowsCommandRunner;
-    private readonly IExecutable _gitExecutable;
-    private readonly IExecutable _gitWindowsExecutable;
 
     // Parse lines of format:
     //
@@ -81,30 +74,11 @@ public sealed partial class GitModule : IGitModule
     /// Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
     /// This can be seen as the Git "instance" identifier.
     /// </summary>
-    private readonly string _wslDistro;
-
-    public GitModule(string? workingDir)
+    public GitModule(string? workingDir) : base(workingDir)
     {
-        WorkingDir = (workingDir ?? "").NormalizePath().NormalizeWslPath().EnsureTrailingPathSeparator();
-        WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
+        WorkingDirGitDir = GetGitDirectory(WorkingDir);
         _indexLockManager = new IndexLockManager(this);
         _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => this);
-        _gitWindowsExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
-        _gitWindowsCommandRunner = new GitCommandRunner(_gitWindowsExecutable, () => SystemEncoding);
-
-        _wslDistro = AppSettings.WslGitEnabled ? PathUtil.GetWslDistro(WorkingDir) : "";
-        if (!string.IsNullOrEmpty(_wslDistro))
-        {
-            // In some WSL environments the current working directory is not passed along to the git command without using the `--cd` argument. Adding it to
-            // the command line is required for these environments. For those that do not need it using the argument is just redundant.
-            _gitExecutable = new Executable(() => AppSettings.WslCommand, WorkingDir, $"-d {_wslDistro} --cd {WorkingDir.RemoveTrailingPathSeparator().Quote()} {AppSettings.WslGitCommand} ");
-            _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
-        }
-        else
-        {
-            _gitExecutable = _gitWindowsExecutable;
-            _gitCommandRunner = _gitWindowsCommandRunner;
-        }
 
         // If this is a submodule, populate relevant properties.
         // If this is not a submodule, these will all be null.
@@ -188,19 +162,10 @@ public sealed partial class GitModule : IGitModule
         }
     }
 
-    /// <inherit/>
-    public string WorkingDir { get; init; }
-
     /// <summary>
     /// GitVersion for the default GitExecutable.
     /// </summary>
     public IGitVersion GitVersion => Git.GitVersion.CurrentVersion(GitExecutable);
-
-    /// <inherit/>
-    public IExecutable GitExecutable => _gitExecutable;
-
-    /// <inherit/>
-    public IGitCommandRunner GitCommandRunner => _gitCommandRunner;
 
     /// <summary>
     /// Gets the location of .git directory for the current working folder.
@@ -208,10 +173,10 @@ public sealed partial class GitModule : IGitModule
     public string WorkingDirGitDir { get; private set; }
 
     /// <inherit/>
-    public string GetPathForGitExecution(string? path) => PathUtil.GetPathForGitExecution(path, _wslDistro);
+    public string GetPathForGitExecution(string? path) => PathUtil.GetPathForGitExecution(path, WslDistro);
 
     /// <inherit/>
-    public string GetWindowsPath(string path) => PathUtil.GetWindowsPath(path, _wslDistro);
+    public string GetWindowsPath(string path) => PathUtil.GetWindowsPath(path, WslDistro);
 
     public string? SubmodulePath { get; }
 
@@ -294,11 +259,6 @@ public sealed partial class GitModule : IGitModule
 
     private IGitConfigSettingsGetter LocalGitConfigSettings => field ??= new GitConfigSettings(GitExecutable, GitSettingLevel.Local);
 
-    // encoding for files paths
-    private static Encoding? _systemEncoding;
-
-    public static Encoding SystemEncoding => _systemEncoding ??= new SystemEncodingReader().Read();
-
     // Encoding that let us read all bytes without replacing any char
     // It is using to read output of commands, which may consist of:
     // 1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of
@@ -324,7 +284,7 @@ public sealed partial class GitModule : IGitModule
         LocalGitConfigSettings.Invalidate();
     }
 
-    /// <summary>Indicates whether the <see cref="WorkingDir"/> contains a git repository.</summary>
+    /// <summary>Indicates whether the <see cref="IGitExecutor.WorkingDir"/> contains a git repository.</summary>
     public bool IsValidGitWorkingDir()
     {
         return IsValidGitWorkingDir(WorkingDir);
@@ -420,17 +380,6 @@ public sealed partial class GitModule : IGitModule
 
             return _gitCommonDirectory;
         }
-    }
-
-    /// <summary>Gets the ".git" directory path.</summary>
-    private string GetGitDirectory()
-    {
-        return GetGitDirectory(WorkingDir);
-    }
-
-    public static string GetGitDirectory(string repositoryPath)
-    {
-        return GitDirectoryResolverInstance.Resolve(repositoryPath);
     }
 
     public bool IsBareRepository()
@@ -966,7 +915,7 @@ public sealed partial class GitModule : IGitModule
             fileName.ToPosixPath().QuoteNE()
         };
 
-        using IProcess process = (isWindowsGit ? _gitWindowsExecutable : _gitExecutable).Start(args, createWindow: true, throwOnErrorExit: false);
+        using IProcess process = (isWindowsGit ? GitWindowsExecutable : _gitExecutable).Start(args, createWindow: true, throwOnErrorExit: false);
         process.WaitForExit();
     }
 
@@ -982,7 +931,7 @@ public sealed partial class GitModule : IGitModule
         // This means that the WSL path is presented in WSL repos, not the Windows path (native to the app).
         string output = _gitExecutable.GetOutput(args);
 
-        WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
+        WorkingDirGitDir = GetGitDirectory(WorkingDir);
         return output;
     }
 
@@ -2884,73 +2833,6 @@ public sealed partial class GitModule : IGitModule
         _gitExecutable.RunCommand(args);
     }
 
-    /// <summary>Attempt to read the branch name from the HEAD file instead of calling a git command.</summary>
-    /// <remarks>Dirty but fast. This sometimes fails. In reftable repos, it always returns ".invalid".</remarks>
-    public static string GetSelectedBranchFast(string? repositoryPath, bool emptyIfDetached = false)
-    {
-        if (string.IsNullOrEmpty(repositoryPath))
-        {
-            return string.Empty;
-        }
-
-        string headFileContents;
-        try
-        {
-            // eg. "/path/to/repo/.git/HEAD"
-            string headFileName = Path.Combine(GetGitDirectory(repositoryPath), "HEAD");
-
-            if (!File.Exists(headFileName))
-            {
-                return string.Empty;
-            }
-
-            headFileContents = File.ReadAllText(headFileName, SystemEncoding);
-        }
-        catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is SecurityException)
-        {
-            // ignore inaccessible file
-            return string.Empty;
-        }
-
-        // eg. "ref: refs/heads/master"
-        //     "9601551c564b48208bccd50b705264e9bd68140d"
-
-        if (!headFileContents.StartsWith("ref: "))
-        {
-            return emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
-        }
-
-        const string prefix = "ref: refs/heads/";
-
-        if (!headFileContents.StartsWith(prefix))
-        {
-            return string.Empty;
-        }
-
-        return headFileContents[prefix.Length..].TrimEnd();
-    }
-
-    public string GetSelectedBranch(bool emptyIfDetached = false)
-    {
-        string head = GetSelectedBranchFast(WorkingDir, emptyIfDetached);
-
-        if (!string.IsNullOrEmpty(head) && head != ".invalid")
-        {
-            return head;
-        }
-
-        GitArgumentBuilder args = new("symbolic-ref")
-        {
-            "--quiet",
-            "HEAD"
-        };
-        ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
-
-        return result.ExitedSuccessfully
-            ? result.StandardOutput[GitRefName.RefsHeadsPrefix.Length..].TrimEnd()
-            : emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
-    }
-
     public bool IsDetachedHead()
     {
         return DetachedHeadParser.IsDetachedHead(GetSelectedBranch());
@@ -3585,7 +3467,7 @@ public sealed partial class GitModule : IGitModule
         // Use a global list of custom tools, always use Windows tools (native paths for the app).
         // Note that --gui has no effect here
         GitArgumentBuilder args = new(isDiff ? "difftool" : "mergetool") { "--tool-help" };
-        ExecutionResult result = _gitWindowsExecutable.Execute(args, cancellationToken: cancellationToken);
+        ExecutionResult result = GitWindowsExecutable.Execute(args, cancellationToken: cancellationToken);
         return result.StandardOutput;
     }
 
@@ -3597,7 +3479,7 @@ public sealed partial class GitModule : IGitModule
     public void OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
     {
         // Use Windows Git if custom tool is selected as the list is native to the application.
-        (string.IsNullOrWhiteSpace(customTool) ? _gitCommandRunner : _gitWindowsCommandRunner)
+        (string.IsNullOrWhiteSpace(customTool) ? _gitCommandRunner : GitWindowsCommandRunner)
             .RunDetached(new GitArgumentBuilder("difftool")
         {
             { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
@@ -3623,7 +3505,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         // Use Windows Git if custom tool is selected as the list is native to the application.
-        (string.IsNullOrWhiteSpace(customTool) ? _gitCommandRunner : _gitWindowsCommandRunner)
+        (string.IsNullOrWhiteSpace(customTool) ? _gitCommandRunner : GitWindowsCommandRunner)
             .RunDetached(new GitArgumentBuilder("difftool")
         {
             { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
