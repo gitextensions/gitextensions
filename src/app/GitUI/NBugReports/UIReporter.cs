@@ -343,11 +343,11 @@ internal class UIReporter : IBugReporter
         {
             return false;
         }
-        
+
         if (IgnoreFailedToLoadAnAssembly)
         {
             return true;
-        } 
+        }
 
         IgnoreFailedToLoadAnAssembly = true;
         TaskDialog.ShowDialog(OwnerFormHandle, CreateFailedToLoadAnAssemblyReport(exception, isTerminating));
