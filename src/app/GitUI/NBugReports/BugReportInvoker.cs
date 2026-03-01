@@ -150,7 +150,7 @@ public static class BugReportInvoker
             exception,
             rootError,
             text,
-            new()
+            new OperationInfo()
             {
                 IsExternalOperation = isExternalOperation,
                 IsUserExternalOperation = isUserExternalOperation,
