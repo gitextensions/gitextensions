@@ -33,9 +33,11 @@ public interface ICommitDataManager
     CommitData? GetCommitData(string commitId, bool includeNotes = false);
 
     /// <summary>
-    /// Requests background loading of <see cref="GitRevision.Body"/> (commit message) and <see cref="GitRevision.Notes"/> properties of <paramref name="revision"/>.
+    ///  Requests background loading of <see cref="GitRevision.Body"/> (commit message) and <see cref="GitRevision.Notes"/> properties of <paramref name="revision"/>.
+    ///  <br/>The last request wins. The execution is delayed in order to avoid loading data for a revision which has been scrolled out of view.
+    ///  <br/>Emits <see cref="RevisionDetailsLoaded"/> when finished.
     /// </summary>
-    void RequestDetails(GitRevision revision);
+    void InitiateDelayedLoadingOfDetails(GitRevision revision);
 
     /// <summary>
     /// Updates the <see cref="GitRevision.Body"/> (commit message) and <see cref="GitRevision.Notes"/> properties of <paramref name="revision"/>.
@@ -55,12 +57,13 @@ public sealed class CommitDataManager : ICommitDataManager
 
     public event EventHandler<GitRevision>? RevisionDetailsLoaded;
 
-    public void RequestDetails(GitRevision revision)
+    public void InitiateDelayedLoadingOfDetails(GitRevision revision)
     {
         CancellationToken cancellationToken = _cancellationTokenSequence.Next();
         ThreadHelper.FileAndForget(async () =>
         {
-            await Task.Delay(millisecondsDelay: 100, cancellationToken);
+            const int millisecondsDelayBetweenSubsequentDetailLoading = 100;
+            await Task.Delay(millisecondsDelayBetweenSubsequentDetailLoading, cancellationToken);
             if (revision.Notes is null || revision.Body is null)
             {
                 UpdateBodyAndNotes(revision);

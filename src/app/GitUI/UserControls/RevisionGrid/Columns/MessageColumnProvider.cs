@@ -563,7 +563,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         {
             if (_commitDataManager is not null && (_settings.ShowCommitBodyInRevisionGrid || _settings.ShowGitNotes || _settings.NotesInSeparateColumn))
             {
-                _commitDataManager.RequestDetails(revision);
+                _commitDataManager.InitiateDelayedLoadingOfDetails(revision);
             }
 
             return null;
