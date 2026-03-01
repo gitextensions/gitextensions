@@ -749,6 +749,8 @@ public partial class UserRepositoriesList : GitExtensionsControl
         Validates.NotNull(menuStrip);
         ToolStripMenuItem dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
         dashboardMenu?.DropDownItems.AddRange(menus);
+
+        BeginInvoke(textBoxSearch.Focus);
     }
 
     private void tsmiCategories_DropDownOpening(object sender, EventArgs e)
