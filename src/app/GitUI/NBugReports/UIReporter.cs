@@ -339,9 +339,15 @@ internal class UIReporter : IBugReporter
     /// <inheritdoc />
     public bool ReportFailedToLoadAnAssembly(Exception exception, bool isTerminating)
     {
-        if (IgnoreFailedToLoadAnAssembly || !HasFailedToLoadAnAssembly(exception))
+        if (!HasFailedToLoadAnAssembly(exception))
         {
             return false;
+        }
+        
+        if (IgnoreFailedToLoadAnAssembly)
+        {
+            return true;
+        } 
         }
 
         IgnoreFailedToLoadAnAssembly = true;
