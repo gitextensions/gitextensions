@@ -250,6 +250,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     internal FormBrowse(IGitUICommands commands, BrowseArguments args, SettingsSource settingsSource)
         : base(commands)
     {
+        _commitDataManager = new CommitDataManager(() => Module);
+        _commitDataManager.RevisionDetailsLoaded += (_, _) => RevisionGrid.Invalidate(invalidateChildren: true);
+
         _splitterManager = new(settingsSource);
 
         SystemEvents.SessionEnding += (sender, args) => SaveApplicationSettings();
@@ -308,7 +311,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UICommands.BrowseRepo = this;
 
         _controller = new GpgInfoProvider(new GitGpgController(() => Module));
-        _commitDataManager = new CommitDataManager(() => Module);
 
         _submoduleStatusProvider = commands.GetRequiredService<ISubmoduleStatusProvider>();
         _submoduleStatusProvider.StatusUpdating += SubmoduleStatusProvider_StatusUpdating;
