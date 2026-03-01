@@ -23,6 +23,8 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl
     [Browsable(false)]
     public event EventHandler<GitUICommandsSourceEventArgs>? UICommandsSourceSet;
 
+    protected override IServiceProvider ServiceProvider => UICommands;
+
     /// <summary>
     /// Gets a <see cref="IGitUICommandsSource"/> for this control.
     /// </summary>
