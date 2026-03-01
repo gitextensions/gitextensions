@@ -12,9 +12,24 @@
 
 ## Comments
 
-* Add const with speaking name instead of using magic numbers. Avoid hard-to-maintain comments which contain the magic number again.
+* Add const with speaking name instead of using magic numbers or repeated string literals. Avoid hard-to-maintain comments which contain the magic number again.
+* When a string literal is used more than once in a class, extract it into a `const` field with a descriptive name.
 * Omit comments which just describe _what_ is done. In situations where a comment may be necessary describe _why_ an implementation was chosen.
 * In XML documentation, use proper XML keywords like "<see langword="true" />".
+
+# Xml doc comments
+
+* Use XML documentation comments for public APIs, including properties, methods, and classes.
+* Use correct xmldoc tags, as well as "see", "langword", and "paramref" tags where appropriate.
+* Use single-line tags for simple XML comments, such as for the `<returns>` tag.
+* When adding multi-line XML documentation comments, add an extra space after the `///` *within* the tags to ensure proper formatting and readability. However, do not add a space after the opening `///` tag in the single-line comments.
+For example:
+```csharp
+/// <summary>
+///  This is a summary of the method.
+/// </summary>
+/// <param name="parameterName">This is a description of the parameter.</param>
+```
 
 ## Formatting
 

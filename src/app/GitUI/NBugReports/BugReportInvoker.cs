@@ -4,36 +4,39 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Security;
 using System.Text;
-using BugReporter;
 using BugReporter.Serialization;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
-using GitUI.CommandsDialogs;
 
 namespace GitUI.NBugReports;
 
+/// <summary>
+///  Provides methods for reporting unhandled exceptions to the user
+///  via UI dialogs or by launching the external bug reporter process.
+/// </summary>
 public static class BugReportInvoker
 {
+    /// <summary>
+    ///  The git config command fragment used to detect dubious ownership security errors.
+    /// </summary>
     public const string DubiousOwnershipSecurityConfigString = "config --global --add safe.directory";
 
+    private static readonly IBugReporter _bugReporter = new UIReporter();
     private static bool _isReportingDubiousOwnershipSecurity;
 
     /// <summary>
-    /// Set to <see langword ="true"/> on application exit
-    /// in order to suppress the popup to restart the app on missing runtime assembly.
+    ///  Set to <see langword="true" /> on application exit
+    ///  in order to suppress the popup to restart the app on missing runtime assembly.
     /// </summary>
-    public static bool IgnoreFailedToLoadAnAssembly { get; set; } = false;
-
-    private static Form? OwnerForm
-        => Form.ActiveForm ?? (Application.OpenForms.Count > 0 ? Application.OpenForms[0] : null);
-
-    private static IntPtr OwnerFormHandle
-        => OwnerForm?.Handle ?? IntPtr.Zero;
+    public static bool IgnoreFailedToLoadAnAssembly
+    {
+        get => UIReporter.IgnoreFailedToLoadAnAssembly;
+        set => UIReporter.IgnoreFailedToLoadAnAssembly = value;
+    }
 
     /// <summary>
-    /// Gets the root error.
+    ///  Gets the root error.
     /// </summary>
     /// <param name="exception">An Exception to describe.</param>
     /// <returns>The inner-most exception message.</returns>
@@ -52,48 +55,10 @@ public static class BugReportInvoker
     }
 
     /// <summary>
-    /// Get the exception data.
+    ///  Logs the exception details to a temporary file.
     /// </summary>
-    /// <param name="exception">An Exception to describe.</param>
-    internal static StringBuilder GetExceptionInfo(Exception exception)
-    {
-        StringBuilder text = new();
-
-        if (exception is UserExternalOperationException userExternalOperationException && !string.IsNullOrWhiteSpace(userExternalOperationException.Context))
-        {
-            // Context contains an error message as UserExternalOperationException is currently used. So append just "<context>"
-            text.AppendLine(userExternalOperationException.Context);
-        }
-
-        if (exception is ExternalOperationException externalOperationException)
-        {
-            // Exit code: <n>
-            if (externalOperationException.ExitCode is int exitCode)
-            {
-                AppendIfNotEmpty(ExecutionResult.FormatExitCode(exitCode), TranslatedStrings.ExitCode);
-            }
-
-            // Command: <command>
-            AppendIfNotEmpty(externalOperationException.Command, TranslatedStrings.Command);
-
-            // Arguments: <args>
-            AppendIfNotEmpty(externalOperationException.Arguments, TranslatedStrings.Arguments);
-
-            // Directory: <dir>
-            AppendIfNotEmpty(externalOperationException.WorkingDirectory, TranslatedStrings.WorkingDirectory);
-        }
-
-        return text;
-
-        void AppendIfNotEmpty(string? value, string designation)
-        {
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                text.Append(designation).Append(": ").AppendLine(value);
-            }
-        }
-    }
-
+    /// <param name="exception">The exception to log.</param>
+    /// <param name="isTerminating">Indicates whether the exception is terminating the application.</param>
     public static void LogError(Exception exception, bool isTerminating = false)
     {
         string tempFolder = Path.GetTempPath();
@@ -111,6 +76,11 @@ public static class BugReportInvoker
         }
     }
 
+    /// <summary>
+    ///  Reports the specified exception to the user via the appropriate UI dialog.
+    /// </summary>
+    /// <param name="exception">The exception to report.</param>
+    /// <param name="isTerminating">Indicates whether the exception is terminating the application.</param>
     public static void Report(Exception exception, bool isTerminating)
     {
         if (AppSettings.WriteErrorLog)
@@ -118,14 +88,8 @@ public static class BugReportInvoker
             LogError(exception, isTerminating);
         }
 
-        if (HasFailedToLoadAnAssembly(exception))
+        if (_bugReporter.ReportFailedToLoadAnAssembly(exception, isTerminating))
         {
-            if (!IgnoreFailedToLoadAnAssembly)
-            {
-                IgnoreFailedToLoadAnAssembly = true;
-                ReportFailedToLoadAnAssembly(exception, isTerminating);
-            }
-
             return;
         }
 
@@ -179,189 +143,20 @@ public static class BugReportInvoker
                          or PathTooLongException
                          or Win32Exception;
 
-        StringBuilder text = GetExceptionInfo(exception);
+        StringBuilder text = exception.GetExceptionInfo();
         string rootError = GetRootError(exception);
 
-        TaskDialogPage page = new()
-        {
-            Icon = isExternalOperation || isUserExternalOperation ? TaskDialogIcon.Warning : TaskDialogIcon.Error,
-            Caption = TranslatedStrings.Error,
-            Heading = rootError,
-            AllowCancel = true,
-            SizeToContent = true
-        };
-
-        // prefer to ignore failed external operations
-        if (isExternalOperation)
-        {
-            AddIgnoreButton(TranslatedStrings.ExternalErrorDescription);
-        }
-        else
-        {
-            // directions and button to raise a bug
-            text.AppendLine().AppendLine(TranslatedStrings.ReportBug);
-        }
-
-        // no bug reports for user configured operations
-        TaskDialogCommandLinkButton taskDialogCommandLink
-            = isUserExternalOperation ? new(TranslatedStrings.ButtonViewDetails)
-                : isExternalOperation ? new(TranslatedStrings.ReportIssue, TranslatedStrings.ReportIssueDescription)
-                : new(TranslatedStrings.ButtonReportBug);
-        taskDialogCommandLink.Click += (s, e) =>
-        {
-            ShowNBug(OwnerForm, exception, isExternalOperation, isUserExternalOperation, isTerminating: false);
-        };
-        page.Buttons.Add(taskDialogCommandLink);
-
-        // let the user decide whether to report the bug
-        if (!isExternalOperation)
-        {
-            AddIgnoreButton();
-        }
-
-        page.Text = text.ToString().Trim();
-        TaskDialog.ShowDialog(OwnerFormHandle, page);
-        return;
-
-        void AddIgnoreButton(string? descriptionText = null)
-        {
-            string buttonText = TranslatedStrings.ButtonIgnore;
-            TaskDialogCommandLinkButton taskDialogCommandLink = new(buttonText, descriptionText);
-            page.Buttons.Add(taskDialogCommandLink);
-        }
-
-        static bool HasFailedToLoadAnAssembly(Exception exception)
-            => (exception is FileNotFoundException fileNotFoundException && fileNotFoundException.Message.StartsWith("Could not load file or assembly"))
-            || (exception is DllNotFoundException dllNotFoundException && IsVCRuntimeDll(dllNotFoundException.Message))
-            || (exception.InnerException is not null && HasFailedToLoadAnAssembly(exception.InnerException));
-    }
-
-    /// <summary>
-    /// Handles errors loading .NET assemblies or VC Runtime DLL (refer to https://github.com/gitextensions/gitextensions/issues/12511).
-    /// These are transient errors typically caused by Windows updates.
-    /// </summary>
-    private static void ReportFailedToLoadAnAssembly(Exception exception, bool isTerminating)
-    {
-        string fileName;
-
-        if (exception is FileNotFoundException fileNotFoundException)
-        {
-            fileName = fileNotFoundException.FileName ?? "";
-            int uninterestingIndex = fileName.IndexOf(", version=", StringComparison.InvariantCultureIgnoreCase);
-            if (uninterestingIndex > 0)
+        _bugReporter.ReportError(
+            exception,
+            rootError,
+            text,
+            new OperationInfo()
             {
-                fileName = fileName[..uninterestingIndex];
-            }
-        }
-        else if (exception is DllNotFoundException dllNotFoundException)
-        {
-            // Extract DLL name from message like "Unable to load DLL 'vcruntime140_cor3.dll'"
-            fileName = dllNotFoundException.Message;
-            int startIndex = fileName.IndexOf('\'');
-            if (startIndex >= 0)
-            {
-                int endIndex = fileName.IndexOf('\'', startIndex + 1);
-                if (endIndex > startIndex)
-                {
-                    fileName = fileName.Substring(startIndex + 1, endIndex - startIndex - 1);
-                }
-            }
-        }
-        else
-        {
-            fileName = "unknown";
-        }
-
-        TaskDialogPage page = new()
-        {
-            Icon = TaskDialogIcon.Warning,
-            Caption = TranslatedStrings.FailedToLoadAnAssembly,
-            Heading = string.Format(TranslatedStrings.FailedToLoadFileOrAssemblyFormat, fileName),
-            Text = TranslatedStrings.FailedToLoadFileOrAssemblyText,
-            AllowCancel = false,
-            SizeToContent = true,
-        };
-
-        TaskDialogCommandLinkButton restartButton = new(text: TranslatedStrings.RestartApplication, descriptionText: TranslatedStrings.RestartApplicationDescription);
-        restartButton.Click += (_, _) => InvokeRestartGE();
-        page.Buttons.Add(restartButton);
-
-        // Only show the report button for non-.NET framework assemblies and non-VC Runtime DLLs
-        // .NET framework assembly errors and VC Runtime DLL errors are typically transient (caused by Windows updates)
-        // and should not generate NBug reports
-        if (!IsDotNetFrameworkAssembly(fileName) && !IsVCRuntimeDll(fileName))
-        {
-            TaskDialogCommandLinkButton reportButton = new(text: TranslatedStrings.ReportIssue, descriptionText: TranslatedStrings.ReportReproducedIssueDescription);
-            reportButton.Click += (_, _) => ShowNBug(OwnerForm, exception, isExternalOperation: false, isUserExternalOperation: false, isTerminating);
-            page.Buttons.Add(reportButton);
-        }
-
-        page.Expander = new TaskDialogExpander
-        {
-            CollapsedButtonText = TranslatedStrings.SeeErrorMessage,
-            ExpandedButtonText = TranslatedStrings.HideErrorMessage,
-            Position = TaskDialogExpanderPosition.AfterFootnote,
-            Text = exception.Message
-        };
-
-        TaskDialog.ShowDialog(OwnerFormHandle, page);
+                IsExternalOperation = isExternalOperation,
+                IsUserExternalOperation = isUserExternalOperation,
+            });
 
         return;
-
-        // Determines if the assembly name is a .NET framework assembly.
-        // .NET framework assemblies are typically affected by Patch Tuesday updates,
-        // causing transient FileNotFoundException errors that are resolved by restarting the application.
-        static bool IsDotNetFrameworkAssembly(string assemblyName)
-        {
-            if (string.IsNullOrWhiteSpace(assemblyName))
-            {
-                return false;
-            }
-
-            // .NET framework assemblies typically start with "System." or "Microsoft."
-            // These are the assemblies commonly affected by Patch Tuesday updates
-            return assemblyName.StartsWith("System.", StringComparison.OrdinalIgnoreCase)
-                || assemblyName.StartsWith("Microsoft.", StringComparison.OrdinalIgnoreCase);
-        }
-
-        static void InvokeRestartGE()
-        {
-            // Use Invoke to queue the restart on the message loop to avoid deadlocks
-            // when the new process calls Application.SetColorMode() which broadcasts system events
-            if (OwnerForm is Control control)
-            {
-                control.InvokeAndForget(RestartGE);
-            }
-            else
-            {
-                ThreadHelper.FileAndForget(RestartGE);
-            }
-
-            static void RestartGE()
-            {
-                // Skipping the 1st parameter that, starting from .NET, contains the path to application dll (instead of exe)
-                string arguments = string.Join(" ", Environment.GetCommandLineArgs().Skip(1));
-                ProcessStartInfo pi = new(Environment.ProcessPath!, arguments)
-                {
-                    WorkingDirectory = Environment.CurrentDirectory
-                };
-                Process.Start(pi);
-                Environment.Exit(0);
-            }
-        }
-    }
-
-    // Determines if the DLL name is a VC Runtime DLL.
-    // VC Runtime DLL loading errors are typically caused by Windows updates.
-    private static bool IsVCRuntimeDll(string dllName)
-    {
-        if (string.IsNullOrWhiteSpace(dllName))
-        {
-            return false;
-        }
-
-        // VC Runtime DLLs typically contain "vcruntime"
-        return dllName.Contains("vcruntime", StringComparison.OrdinalIgnoreCase);
     }
 
     private static void ReportDubiousOwnership(ExternalOperationException exception)
@@ -374,121 +169,11 @@ public static class BugReportInvoker
         try
         {
             _isReportingDubiousOwnershipSecurity = true;
-            ReportDubiousOwnershipImpl(exception);
+            _bugReporter.ReportDubiousOwnership(exception);
         }
         finally
         {
             _isReportingDubiousOwnershipSecurity = false;
-        }
-    }
-
-    private static void ReportDubiousOwnershipImpl(ExternalOperationException exception)
-    {
-        ArgumentNullException.ThrowIfNull(exception.InnerException);
-        string error = exception.InnerException.Message;
-        TaskDialogPage pageSecurity = new()
-        {
-            Icon = TaskDialogIcon.Error,
-            Caption = TranslatedStrings.GitSecurityError,
-            Heading = TranslatedStrings.GitDubiousOwnershipHeader,
-            Text = TranslatedStrings.GitDubiousOwnershipText,
-            AllowCancel = true,
-            SizeToContent = true,
-        };
-        int startIndex = error.IndexOf(DubiousOwnershipSecurityConfigString);
-        string gitConfigTrustRepoCommand = ReplaceRepoPathQuotes(error[startIndex..].Trim());
-        string folderPath = exception.WorkingDirectory ?? error[(startIndex + DubiousOwnershipSecurityConfigString.Length + 1)..];
-
-        TaskDialogCommandLinkButton openExplorerButton = new(TranslatedStrings.GitDubiousOwnershipOpenRepositoryFolder, allowCloseDialog: false);
-        openExplorerButton.Click += (_, _) => OsShellUtil.OpenWithFileExplorer(PathUtil.ToNativePath(folderPath));
-        pageSecurity.Buttons.Add(openExplorerButton);
-
-        AddTrustRepoButton(TranslatedStrings.GitDubiousOwnershipTrustRepository, gitConfigTrustRepoCommand, exception.WorkingDirectory ?? ".");
-
-        TaskDialogButton helpButton = TaskDialogButton.Help;
-        helpButton.Click += (_, _) =>
-        {
-            OsShellUtil.OpenUrlInDefaultBrowser("https://git-scm.com/docs/git-config/#Documentation/git-config.txt-safedirectory");
-        };
-
-        pageSecurity.Buttons.Add(helpButton);
-        pageSecurity.Buttons.Add(TaskDialogButton.Close);
-
-        pageSecurity.Expander = new TaskDialogExpander
-        {
-            CollapsedButtonText = TranslatedStrings.GitDubiousOwnershipSeeGitCommandOutput,
-            ExpandedButtonText = TranslatedStrings.GitDubiousOwnershipHideGitCommandOutput,
-            Position = TaskDialogExpanderPosition.AfterFootnote,
-            Text = error,
-        };
-
-        TaskDialogButton button = TaskDialog.ShowDialog(OwnerFormHandle, pageSecurity);
-        if (button == TaskDialogButton.Cancel || button == TaskDialogButton.Close)
-        {
-            ShowGitRepo(OwnerForm, workingDir: null);
-        }
-
-        return;
-
-        void AddTrustRepoButton(string buttonText, string command, string workingDir)
-        {
-            TaskDialogCommandLinkButton button = new(buttonText)
-            {
-                DescriptionText = $"git {command}"
-            };
-
-            button.Click += (_, _) =>
-            {
-                new GitModule(workingDir).GitExecutable.Start(command).WaitForExit();
-                ShowGitRepo(OwnerForm, workingDir);
-            };
-
-            pageSecurity.Buttons.Add(button);
-        }
-
-        static void ShowGitRepo(Form? ownerForm, string? workingDir)
-        {
-            if (ownerForm is FormBrowse formBrowse)
-            {
-                ThreadHelper.JoinableTaskFactory.Run(async () =>
-                    {
-                        await formBrowse.SwitchToMainThreadAsync();
-                        formBrowse.SetWorkingDir(workingDir);
-                    });
-            }
-        }
-
-        // Turns single quotes to double quotes on Windows if there are any at all around the repo path.
-        // in : git config --global -add safe.directory '%(prefix)///unc_machine/folder/to/repo'
-        // out: git config --global -add safe.directory "%(prefix)///unc_machine/folder/to/repo"
-        // as well as:
-        // in : git config --global -add safe.directory 'd:/folder/to/repo with space in name'
-        // out: git config --global -add safe.directory "d:/folder/to/repo with space in name"
-        static string ReplaceRepoPathQuotes(string command)
-        {
-            if (!EnvUtils.RunningOnWindows() || !command.EndsWith('\''))
-            {
-                return command;
-            }
-
-            int quoteIndex = command.IndexOf('\'');
-            return quoteIndex < 0 ? command : @$"{command[..quoteIndex]}""{command[(quoteIndex + 1)..^1]}""";
-        }
-    }
-
-    private static void ShowNBug(IWin32Window? owner, Exception exception, bool isExternalOperation, bool isUserExternalOperation, bool isTerminating)
-    {
-        using BugReportForm form = new();
-        DialogResult result = form.ShowDialog(owner,
-            new SerializableException(exception),
-            GetExceptionInfo(exception).ToString(),
-            UserEnvironmentInformation.GetInformation(),
-            canIgnore: !isTerminating,
-            showIgnore: isExternalOperation,
-            focusDetails: isUserExternalOperation);
-        if (isTerminating || result == DialogResult.Abort)
-        {
-            Environment.Exit(-1);
         }
     }
 
