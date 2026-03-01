@@ -86,10 +86,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(workingDir))
-        {
-            throw new ArgumentException("AddToRecent: No workingdir.", nameof(workingDir));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(workingDir, nameof(workingDir));
 
         SafeInvoke(() =>
         {
@@ -116,6 +113,8 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
             string path = Path.Combine(baseFolder, $"{sb}.gitext");
             File.WriteAllText(path, workingDir);
             JumpList.AddToRecent(path);
+
+            UpdateJumpList();
 
             if (!ToolbarButtonsCreated)
             {
@@ -166,11 +165,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
 
         SafeInvoke(() =>
         {
-            // One ApplicationId, so all windows must share the same jumplist
-            JumpList jumpList = JumpList.CreateJumpList();
-            jumpList.ClearAllUserTasks();
-            jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
-            jumpList.Refresh();
+            UpdateJumpList();
 
             CreateTaskbarButtons(windowHandle, buttons);
         }, nameof(CreateJumpList));
@@ -226,6 +221,18 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
             _pushButton.Enabled = enable;
             _pullButton.Enabled = enable;
         }, nameof(EnableThumbnailToolbar));
+    }
+
+    /// <summary>
+    /// Updates the jump list to show recent repositories in the Start menu.
+    /// Uses the built-in Windows localized “Recent” category.
+    /// </summary>
+    private static void UpdateJumpList()
+    {
+        JumpList jumpList = JumpList.CreateJumpList();
+        jumpList.ClearAllUserTasks();
+        jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
+        jumpList.Refresh();
     }
 
     /// <summary>
