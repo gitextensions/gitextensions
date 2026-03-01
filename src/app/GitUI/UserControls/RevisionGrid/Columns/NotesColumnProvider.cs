@@ -41,7 +41,7 @@ internal sealed class NotesColumnProvider : ColumnProvider
         }
         else
         {
-            _commitDataManager?.RequestDetails(revision);
+            _commitDataManager?.InitiateDelayedLoadingOfDetails(revision);
         }
 
         return;
