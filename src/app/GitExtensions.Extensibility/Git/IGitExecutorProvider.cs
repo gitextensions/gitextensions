@@ -1,4 +1,4 @@
-namespace GitExtensions.Extensibility.Git;
+﻿namespace GitExtensions.Extensibility.Git;
 
 /// <summary>
 /// Provides cached <see cref="IGitExecutor"/> instances for repository paths.
@@ -10,4 +10,10 @@ public interface IGitExecutorProvider
     /// </summary>
     /// <param name="repositoryPath">The path to the repository.</param>
     IGitExecutor GetExecutor(string repositoryPath);
+
+    /// <summary>
+    /// Gets a new <see cref="IGitExecutor"/> for the specified repository path, replacing any cached instance.
+    /// </summary>
+    /// <param name="repositoryPath">The path to the repository.</param>
+    IGitExecutor GetNewExecutor(string repositoryPath);
 }

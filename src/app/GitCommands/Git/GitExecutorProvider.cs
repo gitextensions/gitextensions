@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using GitExtensions.Extensibility.Git;
 
 namespace GitCommands;
@@ -12,4 +12,10 @@ public sealed class GitExecutorProvider : IGitExecutorProvider
 
     public IGitExecutor GetExecutor(string repositoryPath)
         => _cache.GetOrAdd(repositoryPath, static path => new GitExecutor(path));
+
+    public IGitExecutor GetNewExecutor(string repositoryPath)
+    {
+        _cache.TryRemove(repositoryPath, out _);
+        return _cache.GetOrAdd(repositoryPath, static path => new GitExecutor(path));
+    }
 }
