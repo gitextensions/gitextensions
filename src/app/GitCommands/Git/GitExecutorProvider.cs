@@ -8,7 +8,7 @@ namespace GitCommands;
 /// </summary>
 public sealed class GitExecutorProvider : IGitExecutorProvider
 {
-    private readonly ConcurrentDictionary<string, IGitExecutor> _cache = new(StringComparer.OrdinalIgnoreCase);
+    private readonly ConcurrentDictionary<string, IGitExecutor> _cache = new(StringComparer.Ordinal);
 
     public IGitExecutor GetExecutor(string repositoryPath)
         => _cache.GetOrAdd(repositoryPath, static path => new GitExecutor(path));
