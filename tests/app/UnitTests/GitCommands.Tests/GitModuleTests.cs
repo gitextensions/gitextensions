@@ -651,13 +651,15 @@ public sealed partial class GitModuleTests
     {
         module ??= new GitModule(path);
 
+        object executor = typeof(GitModule).GetField("_executor", BindingFlags.Instance | BindingFlags.NonPublic)
+            .GetValue(module);
         typeof(GitExecutor).GetProperty("GitExecutable", BindingFlags.Instance | BindingFlags.Public)
-            .SetValue(module, executable);
-        typeof(GitExecutor).GetProperty("GitWindowsExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
-            .SetValue(module, executable);
+            .SetValue(executor, executable);
+        typeof(GitExecutor).GetProperty("GitWindowsExecutable", BindingFlags.Instance | BindingFlags.Public)
+            .SetValue(executor, executable);
         GitCommandRunner cmdRunner = new(executable, () => GitModule.SystemEncoding);
         typeof(GitExecutor).GetProperty("GitCommandRunner", BindingFlags.Instance | BindingFlags.Public)
-            .SetValue(module, cmdRunner);
+            .SetValue(executor, cmdRunner);
 
         return module;
     }

@@ -26,7 +26,7 @@ namespace GitCommands;
 /// <summary>Provides manipulation with git module.
 /// <remarks>Several instances may be created for submodules.</remarks></summary>
 [DebuggerDisplay("GitModule ( {" + nameof(WorkingDir) + "} )")]
-public sealed partial class GitModule : GitExecutor, IGitModule
+public sealed partial class GitModule : IGitModule
 {
     private const string GitError = "Git Error";
 
@@ -38,6 +38,7 @@ public sealed partial class GitModule : GitExecutor, IGitModule
     public static readonly string NoNewLineAtTheEnd = "\\ No newline at end of file";
     public static CommandCache GitCommandCache { get; } = new();
 
+    private readonly GitExecutor _executor;
     private readonly Lock _lock = new();
     private readonly IIndexLockManager _indexLockManager;
     private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
@@ -74,9 +75,10 @@ public sealed partial class GitModule : GitExecutor, IGitModule
     /// Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
     /// This can be seen as the Git "instance" identifier.
     /// </summary>
-    public GitModule(string? workingDir) : base(workingDir)
+    public GitModule(string? workingDir)
     {
-        WorkingDirGitDir = GetGitDirectory(WorkingDir);
+        _executor = new GitExecutor(workingDir);
+        WorkingDirGitDir = GitExecutor.GetGitDirectory(WorkingDir);
         _indexLockManager = new IndexLockManager(this);
         _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => this);
 
@@ -167,16 +169,33 @@ public sealed partial class GitModule : GitExecutor, IGitModule
     /// </summary>
     public IGitVersion GitVersion => Git.GitVersion.CurrentVersion(GitExecutable);
 
+    /// <inheritdoc/>
+    public string WorkingDir => _executor.WorkingDir;
+
+    /// <inheritdoc/>
+    public IExecutable GitExecutable => _executor.GitExecutable;
+
+    /// <inheritdoc/>
+    public IGitCommandRunner GitCommandRunner => _executor.GitCommandRunner;
+
+    /// <inheritdoc/>
+    public string GetSelectedBranch(bool emptyIfDetached = false) => _executor.GetSelectedBranch(emptyIfDetached);
+
+    /// <summary>
+    /// Gets the system encoding.
+    /// </summary>
+    public static Encoding SystemEncoding => GitExecutor.SystemEncoding;
+
     /// <summary>
     /// Gets the location of .git directory for the current working folder.
     /// </summary>
     public string WorkingDirGitDir { get; private set; }
 
     /// <inherit/>
-    public string GetPathForGitExecution(string? path) => PathUtil.GetPathForGitExecution(path, WslDistro);
+    public string GetPathForGitExecution(string? path) => PathUtil.GetPathForGitExecution(path, _executor.WslDistro);
 
     /// <inherit/>
-    public string GetWindowsPath(string path) => PathUtil.GetWindowsPath(path, WslDistro);
+    public string GetWindowsPath(string path) => PathUtil.GetWindowsPath(path, _executor.WslDistro);
 
     public string? SubmodulePath { get; }
 
@@ -329,7 +348,7 @@ public sealed partial class GitModule : GitExecutor, IGitModule
 
         if (gitPath.StartsWith(".git/"))
         {
-            gitPath = Path.Combine(GetGitDirectory(), gitPath[".git/".Length..]);
+            gitPath = Path.Combine(_executor.GetGitDirectory(), gitPath[".git/".Length..]);
         }
 
         return GetWindowsPath(gitPath);
@@ -371,7 +390,7 @@ public sealed partial class GitModule : GitExecutor, IGitModule
 
                     if (!result.ExitedSuccessfully || dir == ".git" || dir == "." || !Directory.Exists(dir))
                     {
-                        dir = GetGitDirectory();
+                        dir = _executor.GetGitDirectory();
                     }
 
                     _gitCommonDirectory = dir;
@@ -384,12 +403,12 @@ public sealed partial class GitModule : GitExecutor, IGitModule
 
     public bool IsBareRepository()
     {
-        return WorkingDir == GetGitDirectory();
+        return WorkingDir == _executor.GetGitDirectory();
     }
 
     public static bool IsBareRepository(string repositoryPath)
     {
-        return repositoryPath == GetGitDirectory(repositoryPath);
+        return repositoryPath == GitExecutor.GetGitDirectory(repositoryPath);
     }
 
     public bool IsSubmodule(string submodulePath)
@@ -915,7 +934,7 @@ public sealed partial class GitModule : GitExecutor, IGitModule
             fileName.ToPosixPath().QuoteNE()
         };
 
-        using IProcess process = (isWindowsGit ? GitWindowsExecutable : GitExecutable).Start(args, createWindow: true, throwOnErrorExit: false);
+        using IProcess process = (isWindowsGit ? _executor.GitWindowsExecutable : GitExecutable).Start(args, createWindow: true, throwOnErrorExit: false);
         process.WaitForExit();
     }
 
@@ -931,7 +950,7 @@ public sealed partial class GitModule : GitExecutor, IGitModule
         // This means that the WSL path is presented in WSL repos, not the Windows path (native to the app).
         string output = GitExecutable.GetOutput(args);
 
-        WorkingDirGitDir = GetGitDirectory(WorkingDir);
+        WorkingDirGitDir = GitExecutor.GetGitDirectory(WorkingDir);
         return output;
     }
 
@@ -1591,7 +1610,7 @@ public sealed partial class GitModule : GitExecutor, IGitModule
 
     public string GetRebaseDir()
     {
-        string gitDirectory = GetGitDirectory();
+        string gitDirectory = _executor.GetGitDirectory();
 
         string rebaseMergeDir = gitDirectory + "rebase-merge" + Path.DirectorySeparatorChar;
         if (Directory.Exists(rebaseMergeDir))
@@ -1920,7 +1939,7 @@ public sealed partial class GitModule : GitExecutor, IGitModule
 
     public bool InTheMiddleOfBisect()
     {
-        return File.Exists(Path.Combine(GetGitDirectory(), "BISECT_START"));
+        return File.Exists(Path.Combine(_executor.GetGitDirectory(), "BISECT_START"));
     }
 
     public bool InTheMiddleOfRebase() => InTheMiddleOfGitOperation("applying");
@@ -1935,7 +1954,7 @@ public sealed partial class GitModule : GitExecutor, IGitModule
 
     public bool InTheMiddleOfMerge()
     {
-        return File.Exists(Path.Combine(GetGitDirectory(), "MERGE_HEAD"));
+        return File.Exists(Path.Combine(_executor.GetGitDirectory(), "MERGE_HEAD"));
     }
 
     public bool InTheMiddleOfAction()
@@ -3467,7 +3486,7 @@ public sealed partial class GitModule : GitExecutor, IGitModule
         // Use a global list of custom tools, always use Windows tools (native paths for the app).
         // Note that --gui has no effect here
         GitArgumentBuilder args = new(isDiff ? "difftool" : "mergetool") { "--tool-help" };
-        ExecutionResult result = GitWindowsExecutable.Execute(args, cancellationToken: cancellationToken);
+        ExecutionResult result = _executor.GitWindowsExecutable.Execute(args, cancellationToken: cancellationToken);
         return result.StandardOutput;
     }
 
@@ -3479,7 +3498,7 @@ public sealed partial class GitModule : GitExecutor, IGitModule
     public void OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
     {
         // Use Windows Git if custom tool is selected as the list is native to the application.
-        (string.IsNullOrWhiteSpace(customTool) ? GitCommandRunner : GitWindowsCommandRunner)
+        (string.IsNullOrWhiteSpace(customTool) ? GitCommandRunner : _executor.GitWindowsCommandRunner)
             .RunDetached(new GitArgumentBuilder("difftool")
         {
             { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
@@ -3505,7 +3524,7 @@ public sealed partial class GitModule : GitExecutor, IGitModule
         }
 
         // Use Windows Git if custom tool is selected as the list is native to the application.
-        (string.IsNullOrWhiteSpace(customTool) ? GitCommandRunner : GitWindowsCommandRunner)
+        (string.IsNullOrWhiteSpace(customTool) ? GitCommandRunner : _executor.GitWindowsCommandRunner)
             .RunDetached(new GitArgumentBuilder("difftool")
         {
             { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },

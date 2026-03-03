@@ -10,7 +10,7 @@ namespace GitCommands;
 /// <summary>
 /// Provides a minimal git execution context for lightweight repository operations such as reading the current branch.
 /// </summary>
-public class GitExecutor : IGitExecutor
+internal sealed class GitExecutor : IGitExecutor
 {
     private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
     private static Encoding? _systemEncoding;
@@ -58,19 +58,20 @@ public class GitExecutor : IGitExecutor
     /// <summary>
     /// Gets the access to the Windows git executable associated with this executor.
     /// </summary>
-    protected IGitCommandRunner GitWindowsCommandRunner { get; }
+    internal IGitCommandRunner GitWindowsCommandRunner { get; }
 
     /// <summary>
     /// Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
     /// This can be seen as the Git "instance" identifier.
     /// </summary>
-    protected string WslDistro { get; }
+    internal string WslDistro { get; }
 
     /// <summary>
     /// Gets a value indicating whether this repository is using the reftable format.
     /// </summary>
-    protected bool IsReftableRepo { get; private set; }
+    internal bool IsReftableRepo { get; set; }
 
+    /// <inheritdoc/>
     public string GetSelectedBranch(bool emptyIfDetached = false)
     {
         if (!IsReftableRepo)
@@ -150,11 +151,17 @@ public class GitExecutor : IGitExecutor
     }
 
     /// <summary>Gets the ".git" directory path.</summary>
-    protected string GetGitDirectory()
+    internal string GetGitDirectory()
     {
         return GetGitDirectory(WorkingDir);
     }
 
+    /// <summary>
+    /// Gets the path to the Git directory associated with the specified repository path.
+    /// </summary>
+    /// <param name="repositoryPath">The file system path to the root of the repository. This path must refer to an existing Git repository.</param>
+    /// <returns>The path to the Git directory for the specified repository, or null if the path does not correspond to a
+    /// valid Git repository.</returns>
     public static string GetGitDirectory(string repositoryPath)
     {
         return GitDirectoryResolverInstance.Resolve(repositoryPath);
