@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -40,7 +41,10 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
     {
         if (TaskbarManager.IsPlatformSupported)
         {
-            TaskbarManager.Instance.ApplicationId = AppSettings.ApplicationId;
+            string id = AppSettings.ApplicationId;
+            TaskbarManager.Instance.ApplicationId = AppSettings.IsPortable()
+                ? $"{id}.{Convert.ToBase64String(SHA1.HashData(Encoding.UTF8.GetBytes(Application.ExecutablePath)))}"
+                : id;
         }
     }
 
