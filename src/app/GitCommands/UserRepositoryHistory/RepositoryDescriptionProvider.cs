@@ -1,4 +1,4 @@
-#nullable enable
+ï»¿#nullable enable
 
 using System.Text.RegularExpressions;
 using GitCommands.Git;
@@ -29,7 +29,7 @@ public interface IRepositoryDescriptionProvider
 /// </summary>
 /// <remarks>
 ///  https://git-scm.com/book/en/v2/Git-Internals-Plumbing-and-Porcelain:
-///  ...The description file is used only by the GitWeb program, so don’t worry about it...
+///  ...The description file is used only by the GitWeb program, so don't worry about it...
 /// </remarks>
 public sealed class RepositoryDescriptionProvider : IRepositoryDescriptionProvider
 {
@@ -109,7 +109,7 @@ public sealed class RepositoryDescriptionProvider : IRepositoryDescriptionProvid
         ReadOnlySpan<char> shortName = descriptive.AsSpan(0, descriptiveEnd).Trim();
 
         string unique = repositoryDir.TrimEnd(Path.DirectorySeparatorChar);
-        return shortName.Length == 0 ? unique : $"{shortName} ({unique})";
+        return shortName.Length == 0 ? unique : $"{shortName}    [{unique}]";
     }
 
     /// <summary>
