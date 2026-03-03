@@ -651,12 +651,12 @@ public sealed partial class GitModuleTests
     {
         module ??= new GitModule(path);
 
-        typeof(GitModule).GetField("_gitExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
+        typeof(GitExecutor).GetProperty("GitExecutable", BindingFlags.Instance | BindingFlags.Public)
             .SetValue(module, executable);
-        typeof(GitModule).GetField("_gitWindowsExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
+        typeof(GitExecutor).GetProperty("GitWindowsExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
             .SetValue(module, executable);
         GitCommandRunner cmdRunner = new(executable, () => GitModule.SystemEncoding);
-        typeof(GitModule).GetField("_gitCommandRunner", BindingFlags.Instance | BindingFlags.NonPublic)
+        typeof(GitExecutor).GetProperty("GitCommandRunner", BindingFlags.Instance | BindingFlags.Public)
             .SetValue(module, cmdRunner);
 
         return module;

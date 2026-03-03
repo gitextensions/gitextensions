@@ -15,31 +15,10 @@ public class GitExecutor : IGitExecutor
     private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
     private static Encoding? _systemEncoding;
 
-    protected readonly IGitCommandRunner _gitCommandRunner;
-    protected readonly IExecutable _gitExecutable;
-    protected readonly IExecutable _gitWindowsExecutable;
-
-    protected bool _isReftableRepo;
-
-    /// <summary>
-    /// Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
-    /// This can be seen as the Git "instance" identifier.
-    /// </summary>
-    protected readonly string WslDistro;
-
-    protected IExecutable GitWindowsExecutable => _gitWindowsExecutable;
-    protected IGitCommandRunner GitWindowsCommandRunner { get; }
-
-    public static Encoding SystemEncoding => _systemEncoding ??= new SystemEncodingReader().Read();
-
-    public string WorkingDir { get; init; }
-    public IExecutable GitExecutable => _gitExecutable;
-    public IGitCommandRunner GitCommandRunner => _gitCommandRunner;
-
     public GitExecutor(string? workingDir)
     {
         WorkingDir = (workingDir ?? "").NormalizePath().NormalizeWslPath().EnsureTrailingPathSeparator();
-        _gitWindowsExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
+        GitWindowsExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
         GitWindowsCommandRunner = new GitCommandRunner(GitWindowsExecutable, () => SystemEncoding);
 
         WslDistro = AppSettings.WslGitEnabled ? PathUtil.GetWslDistro(WorkingDir) : "";
@@ -47,28 +26,64 @@ public class GitExecutor : IGitExecutor
         {
             // In some WSL environments the current working directory is not passed along to the git command without using the `--cd` argument. Adding it to
             // the command line is required for these environments. For those that do not need it using the argument is just redundant.
-            _gitExecutable = new Executable(() => AppSettings.WslCommand, WorkingDir, $"-d {WslDistro} --cd {WorkingDir.RemoveTrailingPathSeparator().Quote()} {AppSettings.WslGitCommand} ");
-            _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
+            GitExecutable = new Executable(() => AppSettings.WslCommand, WorkingDir, $"-d {WslDistro} --cd {WorkingDir.RemoveTrailingPathSeparator().Quote()} {AppSettings.WslGitCommand} ");
+            GitCommandRunner = new GitCommandRunner(GitExecutable, () => SystemEncoding);
         }
         else
         {
-            _gitExecutable = GitWindowsExecutable;
-            _gitCommandRunner = GitWindowsCommandRunner;
+            GitExecutable = GitWindowsExecutable;
+            GitCommandRunner = GitWindowsCommandRunner;
         }
     }
 
+    /// <inheritdoc/>
+    public IGitCommandRunner GitCommandRunner { get; }
+
+    /// <inheritdoc/>
+    public IExecutable GitExecutable { get; }
+
+    /// <summary>
+    /// Gets the system encoding.
+    /// </summary>
+    public static Encoding SystemEncoding => _systemEncoding ??= new SystemEncodingReader().Read();
+
+    /// <inheritdoc/>
+    public string WorkingDir { get; init; }
+
+    /// <summary>
+    /// Gets the  Windows Git executable associated with this executor.
+    /// </summary>
+    public IExecutable GitWindowsExecutable { get; }
+
+    /// <summary>
+    /// Gets the access to the Windows git executable associated with this executor.
+    /// </summary>
+    protected IGitCommandRunner GitWindowsCommandRunner { get; }
+
+    /// <summary>
+    /// Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
+    /// This can be seen as the Git "instance" identifier.
+    /// </summary>
+    protected string WslDistro { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether this repository is using the reftable format.
+    /// </summary>
+    protected bool IsReftableRepo { get; private set; }
+
     public string GetSelectedBranch(bool emptyIfDetached = false)
     {
-        if (!_isReftableRepo)
+        if (!IsReftableRepo)
         {
             string head = GetSelectedBranchFast(WorkingDir, emptyIfDetached);
 
             if (head == ".invalid")
             {
-                _isReftableRepo = true;
+                IsReftableRepo = true;
             }
             else if (head.Length > 0)
             {
+                IsReftableRepo = false;
                 return head;
             }
         }
@@ -78,7 +93,7 @@ public class GitExecutor : IGitExecutor
             "--quiet",
             "HEAD"
         };
-        ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
+        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
 
         if (result.ExitedSuccessfully)
         {
