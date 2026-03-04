@@ -621,7 +621,9 @@
     <ComponentGroup Id="Component.PluginResources" />
     <DirectoryRef Id="ProgramMenuFolder">
       <Component Id="GitExtensions.newstartmenu" Guid="*">
-        <Shortcut Id="GitExtensions.newstartmenu" Name="$(var.ProductName)" Description="$(var.ProductName)" Icon="gitextensions.ico" Target="[INSTALLDIR]GitExtensions.exe" WorkingDirectory="INSTALLDIR" />
+        <Shortcut Id="GitExtensions.newstartmenu" Name="$(var.ProductName)" Description="$(var.ProductName)" Icon="gitextensions.ico" Target="[INSTALLDIR]GitExtensions.exe" WorkingDirectory="INSTALLDIR">
+          <ShortcutProperty Key="System.AppUserModel.ID" Value="$(var.InstallName)" />
+        </Shortcut>
         <RegistryValue Root="HKCU" Key="$(var.InstalledRegKey)" Name="GitExtensions.newstartmenu" Value="" Type="string" KeyPath="yes" />
       </Component>
     </DirectoryRef>

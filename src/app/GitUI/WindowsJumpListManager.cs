@@ -86,7 +86,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
             return;
         }
 
-        ArgumentException.ThrowIfNullOrWhiteSpace(workingDir, nameof(workingDir));
+        ArgumentException.ThrowIfNullOrWhiteSpace(workingDir);
 
         SafeInvoke(() =>
         {
