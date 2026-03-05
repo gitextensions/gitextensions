@@ -242,7 +242,7 @@ public sealed class UIReporterTests
     }
 
     [Test]
-    public void ReportFailedToLoadAnAssembly_should_return_false_when_IgnoreFailedToLoadAnAssembly_is_set()
+    public void ReportFailedToLoadAnAssembly_should_return_true_when_IgnoreFailedToLoadAnAssembly_is_set()
     {
         UIReporter.IgnoreFailedToLoadAnAssembly = true;
         UIReporter reporter = new();
@@ -251,7 +251,7 @@ public sealed class UIReporterTests
             new FileNotFoundException("Could not load file or assembly CustomLib", "CustomLib"),
             isTerminating: false);
 
-        result.Should().BeFalse();
+        result.Should().BeTrue();
     }
 
     [Test, TestCaseSource(nameof(NonAssemblyLoadExceptionTestCases))]

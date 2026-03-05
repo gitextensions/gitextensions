@@ -15,7 +15,6 @@
 * Add const with speaking name instead of using magic numbers or repeated string literals. Avoid hard-to-maintain comments which contain the magic number again.
 * When a string literal is used more than once in a class, extract it into a `const` field with a descriptive name.
 * Omit comments which just describe _what_ is done. In situations where a comment may be necessary describe _why_ an implementation was chosen.
-* In XML documentation, use proper XML keywords like "<see langword="true" />".
 
 # Xml doc comments
 
