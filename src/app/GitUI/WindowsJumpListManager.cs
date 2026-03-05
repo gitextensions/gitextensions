@@ -113,8 +113,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
             string path = Path.Combine(baseFolder, $"{sb}.gitext");
             File.WriteAllText(path, workingDir);
             JumpList.AddToRecent(path);
-
-            UpdateJumpList();
+            UpdateJumpList(); // in order to refresh at once
 
             if (!ToolbarButtonsCreated)
             {
@@ -224,8 +223,8 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
     }
 
     /// <summary>
-    /// Updates the jump list to show recent repositories in the Start menu.
-    /// Uses the built-in Windows localized “Recent” category.
+    ///  Updates the jump list to show recent repositories in the Start menu and at the taskbar icon.
+    ///  Uses the built-in Windows localized "Recent" category.
     /// </summary>
     private static void UpdateJumpList()
     {
