@@ -186,6 +186,8 @@ public class WatermarkComboBoxTests
 
         SendKeys.SendWait("A");
 
+        Application.DoEvents();
+
         AssertWatermarkHidden(comboBox, "A");
     }
 
