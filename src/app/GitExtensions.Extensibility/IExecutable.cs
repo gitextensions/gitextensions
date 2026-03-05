@@ -9,7 +9,7 @@ namespace GitExtensions.Extensibility;
 public interface IExecutable
 {
     public string WorkingDir { get; }
-    public string Command { get; }
+    public string Command { get; set; }
     public string PrefixArguments { get; }
 
     /// <summary>

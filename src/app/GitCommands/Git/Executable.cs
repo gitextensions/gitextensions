@@ -25,8 +25,13 @@ public sealed class Executable : IExecutable
         PrefixArguments = prefixArguments;
     }
 
+    public string Command
+    {
+        get => _fileNameProvider();
+        set => throw new NotSupportedException();
+    }
+
     public string WorkingDir => _workingDir;
-    public string Command => _fileNameProvider();
     public string PrefixArguments { get; }
 
     public IProcess Start(ArgumentString arguments = default,

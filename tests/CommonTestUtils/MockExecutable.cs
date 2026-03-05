@@ -13,7 +13,7 @@ public sealed class MockExecutable : IExecutable
     private readonly List<MockProcess> _processes = [];
     private int _nextCommandId;
 
-    public string Command => "mock-git.exe";
+    public string Command { get; set; } = "mock-git.exe";
     public string WorkingDir => ".";
     public string PrefixArguments => "";
 

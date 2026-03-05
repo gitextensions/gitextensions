@@ -1,7 +1,22 @@
-﻿namespace GitCommands;
+﻿using GitExtensions.Extensibility;
+
+namespace GitCommands;
 
 public static class OsShellUtil
 {
+    private static IExecutable? _mockExecutable;
+
+    private static IExecutable CreateExecutable(string command)
+    {
+        if (_mockExecutable is not null)
+        {
+            _mockExecutable.Command = command;
+            return _mockExecutable;
+        }
+
+        return new Executable(command);
+    }
+
     /// <summary>
     /// Open a file with its associated default application.
     /// </summary>
@@ -10,7 +25,7 @@ public static class OsShellUtil
     {
         try
         {
-            new Executable(filePath).Start(useShellExecute: true, throwOnErrorExit: false);
+            CreateExecutable(filePath).Start(useShellExecute: true, throwOnErrorExit: false);
         }
         catch (Exception)
         {
@@ -25,18 +40,18 @@ public static class OsShellUtil
     public static void OpenAs(string filePath)
     {
         // filePath must not be quoted
-        new Executable("rundll32.exe").Start("shell32.dll,OpenAs_RunDLL " + filePath, redirectOutput: true, outputEncoding: System.Text.Encoding.UTF8);
+        CreateExecutable("rundll32.exe").Start("shell32.dll,OpenAs_RunDLL " + filePath, redirectOutput: true, outputEncoding: System.Text.Encoding.UTF8);
     }
 
     public static void SelectPathInFileExplorer(string filePath) => OpenWithFileExplorer($"/select, {filePath.Quote()}", quote: false);
 
-    public static void OpenWithFileExplorer(string arguments, bool quote = true) => new Executable("explorer.exe").Start(quote ? arguments.Quote() : arguments);
+    public static void OpenWithFileExplorer(string arguments, bool quote = true) => CreateExecutable("explorer.exe").Start(quote ? arguments.Quote() : arguments);
 
     public static void OpenUrlInDefaultBrowser(string? url)
     {
         if (!string.IsNullOrWhiteSpace(url))
         {
-            new Executable(url).Start(useShellExecute: true, throwOnErrorExit: false);
+            CreateExecutable(url).Start(useShellExecute: true, throwOnErrorExit: false);
         }
     }
 
@@ -62,5 +77,16 @@ public static class OsShellUtil
 
         // return null if the user cancelled
         return null;
+    }
+
+    internal static TestAccessor GetTestAccessor() => new();
+
+    internal struct TestAccessor
+    {
+        public readonly IExecutable? MockExecutable
+        {
+            get => _mockExecutable;
+            set => _mockExecutable = value;
+        }
     }
 }
