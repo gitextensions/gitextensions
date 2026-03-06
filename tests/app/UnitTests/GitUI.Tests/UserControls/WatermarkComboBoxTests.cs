@@ -186,7 +186,15 @@ public class WatermarkComboBoxTests
 
         SendKeys.SendWait("A");
 
-        Application.DoEvents();
+        // SendKeys.SendWait delivers the keystroke but follow-up events (e.g. TextChanged) may be queued.
+        // Poll until the watermark is hidden, similar to UITest.ProcessUntil in integration tests.
+        const int maxIterations = 60;
+        const int delayMilliseconds = 25;
+        for (int iteration = 0; iteration < maxIterations && comboBox.IsWatermarkVisible; iteration++)
+        {
+            Application.DoEvents();
+            Thread.Sleep(delayMilliseconds);
+        }
 
         AssertWatermarkHidden(comboBox, "A");
     }
