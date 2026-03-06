@@ -109,7 +109,7 @@ public sealed class RepositoryDescriptionProvider : IRepositoryDescriptionProvid
         ReadOnlySpan<char> shortName = descriptive.AsSpan(0, descriptiveEnd).Trim();
 
         string unique = repositoryDir.TrimEnd(Path.DirectorySeparatorChar);
-        return shortName.Length == 0 ? unique : $"{shortName}    [{unique}]";
+        return shortName.Length == 0 ? unique : $"{shortName}  [{unique}]";
     }
 
     /// <summary>
