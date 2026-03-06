@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace CommonTestUtils;
 
@@ -8,7 +8,7 @@ namespace CommonTestUtils;
 public static class WinFormsTestHelper
 {
     // Same delay as RevisionDataGridView.BackgroundThreadUpdatePeriod
-    private const int ProcessDelayMilliseconds = 25;
+    private const int _processDelayMilliseconds = 25;
 
     /// <summary>
     ///  Pumps WinForms events in a loop until <paramref name="condition"/> returns <see langword="true"/>,
@@ -19,7 +19,7 @@ public static class WinFormsTestHelper
     /// <param name="maxMilliseconds">Maximum time to wait in milliseconds.</param>
     public static void ProcessUntil(string processName, Func<bool> condition, int maxMilliseconds = 1500)
     {
-        int maxIterations = (maxMilliseconds + ProcessDelayMilliseconds - 1) / ProcessDelayMilliseconds;
+        int maxIterations = (maxMilliseconds + _processDelayMilliseconds - 1) / _processDelayMilliseconds;
         for (int iteration = 0; iteration < maxIterations; ++iteration)
         {
             if (condition())
@@ -29,7 +29,7 @@ public static class WinFormsTestHelper
             }
 
             Application.DoEvents();
-            Thread.Sleep(ProcessDelayMilliseconds);
+            Thread.Sleep(_processDelayMilliseconds);
         }
 
         ClassicAssert.Fail($"'{processName}' didn't finish in {maxIterations} iterations");
@@ -41,11 +41,11 @@ public static class WinFormsTestHelper
     /// <param name="milliseconds">The minimum duration to process events.</param>
     public static void ProcessEventsFor(int milliseconds)
     {
-        int maxIterations = (milliseconds + ProcessDelayMilliseconds - 1) / ProcessDelayMilliseconds;
+        int maxIterations = (milliseconds + _processDelayMilliseconds - 1) / _processDelayMilliseconds;
         for (int iteration = 0; iteration < maxIterations; ++iteration)
         {
             Application.DoEvents();
-            Thread.Sleep(ProcessDelayMilliseconds);
+            Thread.Sleep(_processDelayMilliseconds);
         }
     }
 }
