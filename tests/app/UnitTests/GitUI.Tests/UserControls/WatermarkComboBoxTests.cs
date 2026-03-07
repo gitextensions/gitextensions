@@ -1,4 +1,4 @@
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using FluentAssertions;
 using GitUI.UserControls;
 
@@ -175,12 +175,22 @@ public class WatermarkComboBoxTests
     }
 
     [Test]
-    public void Typing_into_initially_active_control_with_watermark_should_hide_it()
+    public void Typing_into_initially_active_control_with_watermark_should_hide_it([Values] bool focusBeforeShow)
     {
         using Form form = new();
         WatermarkComboBox comboBox = new() { Parent = form, Name = "ComboBox1", Watermark = Watermark, Font = new Font(Control.DefaultFont, FontStyle.Bold) };
+
+        if (focusBeforeShow)
+        {
+            form.ActiveControl = comboBox;
+        }
+
         form.Show();
-        form.ActiveControl = comboBox;
+
+        if (!focusBeforeShow)
+        {
+            form.ActiveControl = comboBox;
+        }
 
         WinFormsTestHelper.ProcessUntil("gain focus", () => form.ActiveControl == comboBox && comboBox.Focused);
 
