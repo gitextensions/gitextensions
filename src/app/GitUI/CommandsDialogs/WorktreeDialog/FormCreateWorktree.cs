@@ -5,7 +5,7 @@ using GitExtUtils;
 
 namespace GitUI.CommandsDialogs.WorktreeDialog;
 
-public sealed partial class FormCreateWorktree : GitModuleForm
+public sealed partial class FormCreateWorktree : GitExtensionsDialog
 {
     private readonly AsyncLoader _branchesLoader = new();
     private readonly char[] _invalidCharsInPath = Path.GetInvalidFileNameChars();
@@ -18,9 +18,15 @@ public sealed partial class FormCreateWorktree : GitModuleForm
     public IReadOnlyList<IGitRef>? ExistingBranches { get; set; }
 
     public FormCreateWorktree(IGitUICommands commands, string? path)
-        : base(commands)
+        : base(commands, enablePositionRestore: false)
     {
         InitializeComponent();
+
+        tableLayoutPanel1.AdjustWidthToSize(0, radioButtonCheckoutExistingBranch, radioButtonCreateNewBranch, lblNewWorktreeFolder);
+        tableLayoutPanel2.AdjustWidthToSize(0, radioButtonCheckoutExistingBranch, radioButtonCreateNewBranch, lblNewWorktreeFolder);
+
+        MinimumSize = new Size(Width, PreferredMinimumHeight);
+
         InitializeComplete();
         _initialDirectoryPath = path;
     }
