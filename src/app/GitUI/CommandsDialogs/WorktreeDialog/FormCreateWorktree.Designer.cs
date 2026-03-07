@@ -15,112 +15,112 @@ partial class FormCreateWorktree
     /// </summary>
     private void InitializeComponent()
     {
-        createWorktreeButton = new Button();
-        textBoxNewBranchName = new TextBox();
-        radioButtonCreateNewBranch = new RadioButton();
-        radioButtonCheckoutExistingBranch = new RadioButton();
-        openWorktreeCheckBox = new CheckBox();
-        newWorktreeDirectory = new TextBox();
+        btnCreateWorktree = new Button();
+        txtNewBranchName = new TextBox();
+        rbCreateNewBranch = new RadioButton();
+        rbCheckoutExistingBranch = new RadioButton();
+        chkOpenWorktree = new CheckBox();
+        txtWorktreeDirectory = new TextBox();
         lblNewWorktreeFolder = new Label();
-        comboBoxBranches = new ComboBox();
-        folderBrowserButton1 = new GitUI.UserControls.FolderBrowserButton();
-        groupBoxWhatToCheckout = new GroupBox();
-        tableLayoutPanel2 = new TableLayoutPanel();
-        tableLayoutPanel1 = new TableLayoutPanel();
+        cbxBranches = new ComboBox();
+        btnBrowseWorktreeDir = new GitUI.UserControls.FolderBrowserButton();
+        gbxWhatToCheckout = new GroupBox();
+        tpnlCheckout = new TableLayoutPanel();
+        tpnlMain = new TableLayoutPanel();
         MainPanel.SuspendLayout();
         ControlsPanel.SuspendLayout();
-        groupBoxWhatToCheckout.SuspendLayout();
-        tableLayoutPanel2.SuspendLayout();
-        tableLayoutPanel1.SuspendLayout();
+        gbxWhatToCheckout.SuspendLayout();
+        tpnlCheckout.SuspendLayout();
+        tpnlMain.SuspendLayout();
         SuspendLayout();
         //
         // MainPanel
         //
         MainPanel.AutoSize = true;
         MainPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        MainPanel.Controls.Add(tableLayoutPanel1);
+        MainPanel.Controls.Add(tpnlMain);
         MainPanel.Size = new Size(608, 167);
         //
         // ControlsPanel
         //
-        ControlsPanel.Controls.Add(createWorktreeButton);
+        ControlsPanel.Controls.Add(btnCreateWorktree);
         ControlsPanel.Location = new Point(0, 167);
         ControlsPanel.Size = new Size(608, 41);
         //
-        // createWorktreeButton
+        // btnCreateWorktree
         //
-        createWorktreeButton.AutoSize = true;
-        createWorktreeButton.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        createWorktreeButton.DialogResult = DialogResult.OK;
-        createWorktreeButton.Location = new Point(470, 8);
-        createWorktreeButton.MinimumSize = new Size(75, 23);
-        createWorktreeButton.Name = "createWorktreeButton";
-        createWorktreeButton.Size = new Size(125, 25);
-        createWorktreeButton.TabIndex = 0;
-        createWorktreeButton.Text = "&Create the new worktree";
-        createWorktreeButton.UseVisualStyleBackColor = true;
-        createWorktreeButton.Click += createWorktreeButton_Click;
+        btnCreateWorktree.AutoSize = true;
+        btnCreateWorktree.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        btnCreateWorktree.DialogResult = DialogResult.OK;
+        btnCreateWorktree.Location = new Point(470, 8);
+        btnCreateWorktree.MinimumSize = new Size(75, 23);
+        btnCreateWorktree.Name = "btnCreateWorktree";
+        btnCreateWorktree.Size = new Size(125, 25);
+        btnCreateWorktree.TabIndex = 0;
+        btnCreateWorktree.Text = "&Create the new worktree";
+        btnCreateWorktree.UseVisualStyleBackColor = true;
+        btnCreateWorktree.Click += btnCreateWorktree_Click;
         //
-        // textBoxNewBranchName
+        // txtNewBranchName
         //
-        textBoxNewBranchName.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-        textBoxNewBranchName.Location = new Point(174, 34);
-        textBoxNewBranchName.Name = "textBoxNewBranchName";
-        textBoxNewBranchName.Size = new Size(419, 21);
-        textBoxNewBranchName.TabIndex = 3;
-        textBoxNewBranchName.TextChanged += UpdateWorktreePathAndValidateWorktreeOptions;
+        txtNewBranchName.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+        txtNewBranchName.Location = new Point(174, 34);
+        txtNewBranchName.Name = "txtNewBranchName";
+        txtNewBranchName.Size = new Size(419, 21);
+        txtNewBranchName.TabIndex = 3;
+        txtNewBranchName.TextChanged += UpdateWorktreePathAndValidateWorktreeOptions;
         //
-        // radioButtonCreateNewBranch
+        // rbCreateNewBranch
         //
-        radioButtonCreateNewBranch.AutoSize = true;
-        radioButtonCreateNewBranch.Location = new Point(3, 30);
-        radioButtonCreateNewBranch.Dock = DockStyle.Fill;
-        radioButtonCreateNewBranch.Name = "radioButtonCreateNewBranch";
-        radioButtonCreateNewBranch.Size = new Size(135, 30);
-        radioButtonCreateNewBranch.TabIndex = 2;
-        radioButtonCreateNewBranch.TabStop = true;
-        radioButtonCreateNewBranch.Text = "Create a &new branch:\r\n(from current commit)";
-        radioButtonCreateNewBranch.UseVisualStyleBackColor = true;
-        radioButtonCreateNewBranch.Click += UpdateWorktreePathAndValidateWorktreeOptions;
+        rbCreateNewBranch.AutoSize = true;
+        rbCreateNewBranch.Location = new Point(3, 30);
+        rbCreateNewBranch.Dock = DockStyle.Fill;
+        rbCreateNewBranch.Name = "rbCreateNewBranch";
+        rbCreateNewBranch.Size = new Size(135, 30);
+        rbCreateNewBranch.TabIndex = 2;
+        rbCreateNewBranch.TabStop = true;
+        rbCreateNewBranch.Text = "Create a &new branch:\r\n(from current commit)";
+        rbCreateNewBranch.UseVisualStyleBackColor = true;
+        rbCreateNewBranch.Click += UpdateWorktreePathAndValidateWorktreeOptions;
         //
-        // radioButtonCheckoutExistingBranch
+        // rbCheckoutExistingBranch
         //
-        radioButtonCheckoutExistingBranch.AutoSize = true;
-        radioButtonCheckoutExistingBranch.Checked = true;
-        radioButtonCheckoutExistingBranch.Dock = DockStyle.Fill;
-        radioButtonCheckoutExistingBranch.Location = new Point(3, 3);
-        radioButtonCheckoutExistingBranch.Name = "radioButtonCheckoutExistingBranch";
-        radioButtonCheckoutExistingBranch.Size = new Size(165, 17);
-        radioButtonCheckoutExistingBranch.TabIndex = 0;
-        radioButtonCheckoutExistingBranch.TabStop = true;
-        radioButtonCheckoutExistingBranch.Text = "Checkout an &existing branch:";
-        radioButtonCheckoutExistingBranch.UseVisualStyleBackColor = true;
-        radioButtonCheckoutExistingBranch.Click += UpdateWorktreePathAndValidateWorktreeOptions;
+        rbCheckoutExistingBranch.AutoSize = true;
+        rbCheckoutExistingBranch.Checked = true;
+        rbCheckoutExistingBranch.Dock = DockStyle.Fill;
+        rbCheckoutExistingBranch.Location = new Point(3, 3);
+        rbCheckoutExistingBranch.Name = "rbCheckoutExistingBranch";
+        rbCheckoutExistingBranch.Size = new Size(165, 17);
+        rbCheckoutExistingBranch.TabIndex = 0;
+        rbCheckoutExistingBranch.TabStop = true;
+        rbCheckoutExistingBranch.Text = "Checkout an &existing branch:";
+        rbCheckoutExistingBranch.UseVisualStyleBackColor = true;
+        rbCheckoutExistingBranch.Click += UpdateWorktreePathAndValidateWorktreeOptions;
         //
-        // openWorktreeCheckBox
+        // chkOpenWorktree
         //
-        openWorktreeCheckBox.AutoSize = true;
-        openWorktreeCheckBox.Checked = true;
-        openWorktreeCheckBox.CheckState = CheckState.Checked;
-        tableLayoutPanel1.SetColumnSpan(openWorktreeCheckBox, 3);
-        openWorktreeCheckBox.Location = new Point(3, 123);
-        openWorktreeCheckBox.Name = "openWorktreeCheckBox";
-        openWorktreeCheckBox.Size = new Size(228, 17);
-        openWorktreeCheckBox.TabIndex = 4;
-        openWorktreeCheckBox.Text = "&Open the new worktree after the creation";
-        openWorktreeCheckBox.UseVisualStyleBackColor = true;
+        chkOpenWorktree.AutoSize = true;
+        chkOpenWorktree.Checked = true;
+        chkOpenWorktree.CheckState = CheckState.Checked;
+        tpnlMain.SetColumnSpan(chkOpenWorktree, 3);
+        chkOpenWorktree.Location = new Point(3, 123);
+        chkOpenWorktree.Name = "chkOpenWorktree";
+        chkOpenWorktree.Size = new Size(228, 17);
+        chkOpenWorktree.TabIndex = 4;
+        chkOpenWorktree.Text = "&Open the new worktree after the creation";
+        chkOpenWorktree.UseVisualStyleBackColor = true;
         //
-        // newWorktreeDirectory
+        // txtWorktreeDirectory
         //
-        newWorktreeDirectory.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-        newWorktreeDirectory.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-        newWorktreeDirectory.AutoCompleteSource = AutoCompleteSource.FileSystemDirectories;
-        newWorktreeDirectory.Location = new Point(133, 94);
-        newWorktreeDirectory.Margin = new Padding(8, 3, 3, 3);
-        newWorktreeDirectory.Name = "newWorktreeDirectory";
-        newWorktreeDirectory.Size = new Size(356, 21);
-        newWorktreeDirectory.TabIndex = 2;
-        newWorktreeDirectory.TextChanged += ValidateWorktreeOptions;
+        txtWorktreeDirectory.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+        txtWorktreeDirectory.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+        txtWorktreeDirectory.AutoCompleteSource = AutoCompleteSource.FileSystemDirectories;
+        txtWorktreeDirectory.Location = new Point(133, 94);
+        txtWorktreeDirectory.Margin = new Padding(8, 3, 3, 3);
+        txtWorktreeDirectory.Name = "txtWorktreeDirectory";
+        txtWorktreeDirectory.Size = new Size(356, 21);
+        txtWorktreeDirectory.TabIndex = 2;
+        txtWorktreeDirectory.TextChanged += txtWorktreeDirectory_TextChanged;
         //
         // 
         // lblNewWorktreeFolder
@@ -134,91 +134,91 @@ partial class FormCreateWorktree
         lblNewWorktreeFolder.Text = "New worktree &directory:";
         lblNewWorktreeFolder.TextAlign = ContentAlignment.MiddleLeft;
         //
-        // comboBoxBranches
+        // cbxBranches
         //
-        comboBoxBranches.Anchor = AnchorStyles.Left | AnchorStyles.Right;
-        comboBoxBranches.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
-        comboBoxBranches.AutoCompleteSource = AutoCompleteSource.ListItems;
-        comboBoxBranches.DropDownStyle = ComboBoxStyle.DropDownList;
-        comboBoxBranches.FormattingEnabled = true;
-        comboBoxBranches.Location = new Point(174, 3);
-        comboBoxBranches.Name = "comboBoxBranches";
-        comboBoxBranches.Size = new Size(419, 21);
-        comboBoxBranches.TabIndex = 1;
-        comboBoxBranches.SelectedIndexChanged += UpdateWorktreePathAndValidateWorktreeOptions;
-        comboBoxBranches.KeyUp += comboBoxBranches_KeyUp;
+        cbxBranches.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+        cbxBranches.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
+        cbxBranches.AutoCompleteSource = AutoCompleteSource.ListItems;
+        cbxBranches.DropDownStyle = ComboBoxStyle.DropDownList;
+        cbxBranches.FormattingEnabled = true;
+        cbxBranches.Location = new Point(174, 3);
+        cbxBranches.Name = "cbxBranches";
+        cbxBranches.Size = new Size(419, 21);
+        cbxBranches.TabIndex = 1;
+        cbxBranches.SelectedIndexChanged += UpdateWorktreePathAndValidateWorktreeOptions;
+        cbxBranches.KeyUp += cbxBranches_KeyUp;
         //
-        // folderBrowserButton1
+        // btnBrowseWorktreeDir
         //
-        folderBrowserButton1.Anchor = AnchorStyles.Right;
-        folderBrowserButton1.Location = new Point(495, 92);
-        folderBrowserButton1.Name = "folderBrowserButton1";
-        folderBrowserButton1.PathShowingControl = newWorktreeDirectory;
-        folderBrowserButton1.Size = new Size(110, 25);
-        folderBrowserButton1.TabIndex = 3;
+        btnBrowseWorktreeDir.Anchor = AnchorStyles.Right;
+        btnBrowseWorktreeDir.Location = new Point(495, 92);
+        btnBrowseWorktreeDir.Name = "btnBrowseWorktreeDir";
+        btnBrowseWorktreeDir.PathShowingControl = txtWorktreeDirectory;
+        btnBrowseWorktreeDir.Size = new Size(110, 25);
+        btnBrowseWorktreeDir.TabIndex = 3;
         // 
-        // groupBoxWhatToCheckout
+        // gbxWhatToCheckout
         //
-        groupBoxWhatToCheckout.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
-        groupBoxWhatToCheckout.AutoSize = true;
-        groupBoxWhatToCheckout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        tableLayoutPanel1.SetColumnSpan(groupBoxWhatToCheckout, 3);
-        groupBoxWhatToCheckout.Controls.Add(tableLayoutPanel2);
-        groupBoxWhatToCheckout.Location = new Point(3, 3);
-        groupBoxWhatToCheckout.Name = "groupBoxWhatToCheckout";
-        groupBoxWhatToCheckout.Size = new Size(602, 83);
-        groupBoxWhatToCheckout.TabIndex = 0;
-        groupBoxWhatToCheckout.TabStop = false;
-        groupBoxWhatToCheckout.Text = "What to checkout:";
+        gbxWhatToCheckout.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
+        gbxWhatToCheckout.AutoSize = true;
+        gbxWhatToCheckout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        tpnlMain.SetColumnSpan(gbxWhatToCheckout, 3);
+        gbxWhatToCheckout.Controls.Add(tpnlCheckout);
+        gbxWhatToCheckout.Location = new Point(3, 3);
+        gbxWhatToCheckout.Name = "gbxWhatToCheckout";
+        gbxWhatToCheckout.Size = new Size(602, 83);
+        gbxWhatToCheckout.TabIndex = 0;
+        gbxWhatToCheckout.TabStop = false;
+        gbxWhatToCheckout.Text = "What to checkout:";
         //
-        // tableLayoutPanel2
+        // tpnlCheckout
         //
-        tableLayoutPanel2.AutoSize = true;
-        tableLayoutPanel2.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        tableLayoutPanel2.ColumnCount = 2;
-        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle());
-        tableLayoutPanel2.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-        tableLayoutPanel2.Controls.Add(textBoxNewBranchName, 1, 1);
-        tableLayoutPanel2.Controls.Add(radioButtonCheckoutExistingBranch, 0, 0);
-        tableLayoutPanel2.Controls.Add(radioButtonCreateNewBranch, 0, 1);
-        tableLayoutPanel2.Controls.Add(comboBoxBranches, 1, 0);
-        tableLayoutPanel2.Dock = DockStyle.Fill;
-        tableLayoutPanel2.Location = new Point(3, 17);
-        tableLayoutPanel2.Margin = new Padding(0);
-        tableLayoutPanel2.Name = "tableLayoutPanel2";
-        tableLayoutPanel2.RowCount = 2;
-        tableLayoutPanel2.RowStyles.Add(new RowStyle());
-        tableLayoutPanel2.RowStyles.Add(new RowStyle());
-        tableLayoutPanel2.Size = new Size(596, 63);
-        tableLayoutPanel2.TabIndex = 0;
+        tpnlCheckout.AutoSize = true;
+        tpnlCheckout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        tpnlCheckout.ColumnCount = 2;
+        tpnlCheckout.ColumnStyles.Add(new ColumnStyle());
+        tpnlCheckout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        tpnlCheckout.Controls.Add(txtNewBranchName, 1, 1);
+        tpnlCheckout.Controls.Add(rbCheckoutExistingBranch, 0, 0);
+        tpnlCheckout.Controls.Add(rbCreateNewBranch, 0, 1);
+        tpnlCheckout.Controls.Add(cbxBranches, 1, 0);
+        tpnlCheckout.Dock = DockStyle.Fill;
+        tpnlCheckout.Location = new Point(3, 17);
+        tpnlCheckout.Margin = new Padding(0);
+        tpnlCheckout.Name = "tpnlCheckout";
+        tpnlCheckout.RowCount = 2;
+        tpnlCheckout.RowStyles.Add(new RowStyle());
+        tpnlCheckout.RowStyles.Add(new RowStyle());
+        tpnlCheckout.Size = new Size(596, 63);
+        tpnlCheckout.TabIndex = 0;
         // 
-        // tableLayoutPanel1
+        // tpnlMain
         //
-        tableLayoutPanel1.AutoSize = true;
-        tableLayoutPanel1.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        tableLayoutPanel1.ColumnCount = 3;
-        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-        tableLayoutPanel1.ColumnStyles.Add(new ColumnStyle());
-        tableLayoutPanel1.Controls.Add(groupBoxWhatToCheckout, 0, 0);
-        tableLayoutPanel1.Controls.Add(lblNewWorktreeFolder, 0, 1);
-        tableLayoutPanel1.Controls.Add(newWorktreeDirectory, 1, 1);
-        tableLayoutPanel1.Controls.Add(folderBrowserButton1, 2, 1);
-        tableLayoutPanel1.Controls.Add(openWorktreeCheckBox, 0, 2);
-        tableLayoutPanel1.Dock = DockStyle.Fill;
-        tableLayoutPanel1.Location = new Point(12, 12);
-        tableLayoutPanel1.Margin = new Padding(0);
-        tableLayoutPanel1.Name = "tableLayoutPanel1";
-        tableLayoutPanel1.RowCount = 3;
-        tableLayoutPanel1.RowStyles.Add(new RowStyle());
-        tableLayoutPanel1.RowStyles.Add(new RowStyle());
-        tableLayoutPanel1.RowStyles.Add(new RowStyle());
-        tableLayoutPanel1.Size = new Size(584, 143);
-        tableLayoutPanel1.TabIndex = 0;
+        tpnlMain.AutoSize = true;
+        tpnlMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        tpnlMain.ColumnCount = 3;
+        tpnlMain.ColumnStyles.Add(new ColumnStyle());
+        tpnlMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        tpnlMain.ColumnStyles.Add(new ColumnStyle());
+        tpnlMain.Controls.Add(gbxWhatToCheckout, 0, 0);
+        tpnlMain.Controls.Add(lblNewWorktreeFolder, 0, 1);
+        tpnlMain.Controls.Add(txtWorktreeDirectory, 1, 1);
+        tpnlMain.Controls.Add(btnBrowseWorktreeDir, 2, 1);
+        tpnlMain.Controls.Add(chkOpenWorktree, 0, 2);
+        tpnlMain.Dock = DockStyle.Fill;
+        tpnlMain.Location = new Point(12, 12);
+        tpnlMain.Margin = new Padding(0);
+        tpnlMain.Name = "tpnlMain";
+        tpnlMain.RowCount = 3;
+        tpnlMain.RowStyles.Add(new RowStyle());
+        tpnlMain.RowStyles.Add(new RowStyle());
+        tpnlMain.RowStyles.Add(new RowStyle());
+        tpnlMain.Size = new Size(584, 143);
+        tpnlMain.TabIndex = 0;
         //
         // FormCreateWorktree
         //
-        AcceptButton = createWorktreeButton;
+        AcceptButton = btnCreateWorktree;
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         ClientSize = new Size(608, 208);
@@ -232,12 +232,12 @@ partial class FormCreateWorktree
         MainPanel.PerformLayout();
         ControlsPanel.ResumeLayout(false);
         ControlsPanel.PerformLayout();
-        groupBoxWhatToCheckout.ResumeLayout(false);
-        groupBoxWhatToCheckout.PerformLayout();
-        tableLayoutPanel2.ResumeLayout(false);
-        tableLayoutPanel2.PerformLayout();
-        tableLayoutPanel1.ResumeLayout(false);
-        tableLayoutPanel1.PerformLayout();
+        gbxWhatToCheckout.ResumeLayout(false);
+        gbxWhatToCheckout.PerformLayout();
+        tpnlCheckout.ResumeLayout(false);
+        tpnlCheckout.PerformLayout();
+        tpnlMain.ResumeLayout(false);
+        tpnlMain.PerformLayout();
         ResumeLayout(false);
         PerformLayout();
 
@@ -245,16 +245,16 @@ partial class FormCreateWorktree
 
     #endregion
 
-    private Button createWorktreeButton;
-    private ComboBox comboBoxBranches;
-    private UserControls.FolderBrowserButton folderBrowserButton1;
-    private TextBox newWorktreeDirectory;
+    private Button btnCreateWorktree;
+    private ComboBox cbxBranches;
+    private UserControls.FolderBrowserButton btnBrowseWorktreeDir;
+    private TextBox txtWorktreeDirectory;
     private Label lblNewWorktreeFolder;
-    private CheckBox openWorktreeCheckBox;
-    private RadioButton radioButtonCheckoutExistingBranch;
-    private RadioButton radioButtonCreateNewBranch;
-    private TextBox textBoxNewBranchName;
-    private GroupBox groupBoxWhatToCheckout;
-    private TableLayoutPanel tableLayoutPanel2;
-    private TableLayoutPanel tableLayoutPanel1;
+    private CheckBox chkOpenWorktree;
+    private RadioButton rbCheckoutExistingBranch;
+    private RadioButton rbCreateNewBranch;
+    private TextBox txtNewBranchName;
+    private GroupBox gbxWhatToCheckout;
+    private TableLayoutPanel tpnlCheckout;
+    private TableLayoutPanel tpnlMain;
 }

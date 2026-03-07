@@ -117,14 +117,18 @@ ManualSectionSubfolder = "..."
 
 ## Naming conventions
 
-| Element | Convention | Example |
-|---|---|---|
-| Main layout panel | `tpnlMain` or `tableLayout` | `tpnlMain` |
-| Sub-layout panel | `tlpnlBranches`, `tableLayoutPanel1` | descriptive or numbered |
-| GroupBox | `GroupPullFrom`, `groupBox1`, `localChangesGB` | descriptive |
-| FlowLayoutPanel | `flpnlLocalOptions`, `flowLayoutPanel1` | descriptive or numbered |
-| Primary action button | `Ok`, `Init`, `cmdOk`, `Pull` | matches the action |
-| Non-translated controls | `_NO_TRANSLATE_` prefix | `_NO_TRANSLATE_Remotes` |
+| Element | Prefix | Convention | Example |
+|---|---|---|---|
+| Label | `lbl` | `lbl` + descriptive name | `lblMainText` |
+| Button | `btn` | `btn` + action name | `btnAccept` |
+| TextBox | `txt` | `txt` + descriptive name | `txtBranchName` |
+| ComboBox | `cbx` | `cbx` + descriptive name | `cbxOrders` |
+| CheckBox | `chk` | `chk` + descriptive name | `chkOpenWorktree` |
+| RadioButton | `rb` | `rb` + descriptive name | `rbCheckoutExisting` |
+| GroupBox | `gbx` | `gbx` + descriptive name | `gbxOrderDetails` |
+| TableLayoutPanel | `tpnl` | `tpnl` + descriptive name | `tpnlMain` |
+| FlowLayoutPanel | `flpnl` | `flpnl` + descriptive name | `flpnlLocalOptions` |
+| Non-translated controls | `_NO_TRANSLATE_` | `_NO_TRANSLATE_` + name | `_NO_TRANSLATE_Remotes` |
 
 ## Checklist for updating a dialog
 
