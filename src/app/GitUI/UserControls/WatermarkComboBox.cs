@@ -93,6 +93,12 @@ public sealed class WatermarkComboBox : ComboBox
 
         InitializeWatermark();
 
+        if (Focused)
+        {
+            HideWatermark(resetText: true);
+            return;
+        }
+
         if (ShouldWatermarkBeVisible(base.Text))
         {
             ShowWatermark();

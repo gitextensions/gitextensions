@@ -179,11 +179,10 @@ public class WatermarkComboBoxTests
     {
         using Form form = new();
         WatermarkComboBox comboBox = new() { Parent = form, Name = "ComboBox1", Watermark = Watermark, Font = new Font(Control.DefaultFont, FontStyle.Bold) };
+        form.Show();
         form.ActiveControl = comboBox;
 
-        form.Show();
-
-        Application.DoEvents();
+        WinFormsTestHelper.ProcessUntil("gain focus", () => form.ActiveControl == comboBox && comboBox.Focused);
 
         SendKeys.SendWait("A");
 
