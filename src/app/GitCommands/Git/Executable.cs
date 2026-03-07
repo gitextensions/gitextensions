@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
@@ -13,11 +13,22 @@ public sealed class Executable : IExecutable
     private readonly string _workingDir;
     private readonly Func<string> _fileNameProvider;
 
+    /// <summary>
+    ///  Initializes a new instance of the <see cref="Executable"/> class with a fixed file name.
+    /// </summary>
+    /// <param name="fileName">The path to the executable file.</param>
+    /// <param name="workingDir">The working directory in which the process will be started.</param>
     public Executable(string fileName, string workingDir = "")
         : this(() => fileName, workingDir)
     {
     }
 
+    /// <summary>
+    ///  Initializes a new instance of the <see cref="Executable"/> class with a deferred file name resolution.
+    /// </summary>
+    /// <param name="fileNameProvider">A delegate that returns the path to the executable file.</param>
+    /// <param name="workingDir">The working directory in which the process will be started.</param>
+    /// <param name="prefixArguments">Arguments that are prepended to every invocation.</param>
     public Executable(Func<string> fileNameProvider, string workingDir = "", string prefixArguments = "")
     {
         _workingDir = workingDir;
@@ -25,15 +36,16 @@ public sealed class Executable : IExecutable
         PrefixArguments = prefixArguments;
     }
 
-    public string Command
-    {
-        get => _fileNameProvider();
-        set => throw new NotSupportedException();
-    }
-
+    /// <inheritdoc />
     public string WorkingDir => _workingDir;
+
+    /// <inheritdoc />
+    public string Command => _fileNameProvider();
+
+    /// <inheritdoc />
     public string PrefixArguments { get; }
 
+    /// <inheritdoc />
     public IProcess Start(ArgumentString arguments = default,
                           bool createWindow = false,
                           bool redirectInput = false,
@@ -53,6 +65,7 @@ public sealed class Executable : IExecutable
         return new ProcessWrapper(fileName, PrefixArguments, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit, cancellationToken);
     }
 
+    /// <inheritdoc />
     public string GetWorkingDirectory() => _workingDir;
 
     #region ProcessWrapper
@@ -232,6 +245,7 @@ public sealed class Executable : IExecutable
             }
         }
 
+        /// <inheritdoc />
         public StreamWriter StandardInput
         {
             get
@@ -245,6 +259,7 @@ public sealed class Executable : IExecutable
             }
         }
 
+        /// <inheritdoc />
         public StreamReader StandardOutput
         {
             get
@@ -258,6 +273,7 @@ public sealed class Executable : IExecutable
             }
         }
 
+        /// <inheritdoc />
         public string StandardError
         {
             get
@@ -271,18 +287,24 @@ public sealed class Executable : IExecutable
             }
         }
 
+        /// <inheritdoc />
         public void Kill(bool entireProcessTree) => _process.Kill(entireProcessTree);
 
+        /// <inheritdoc />
         public void WaitForInputIdle() => _process.WaitForInputIdle();
 
 #pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
+        /// <inheritdoc />
         public Task<int> WaitForExitAsync() => _exitTaskCompletionSource.Task;
 #pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
 
+        /// <inheritdoc />
         public Task<int> WaitForExitAsync(CancellationToken token) => WaitForExitAsync().WithCancellation(token);
 
+        /// <inheritdoc />
         public int WaitForExit() => ThreadHelper.JoinableTaskFactory.Run(WaitForExitAsync);
 
+        /// <inheritdoc />
         public void Dispose()
         {
             lock (_lock)

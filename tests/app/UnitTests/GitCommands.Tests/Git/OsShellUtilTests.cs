@@ -1,23 +1,24 @@
-using System.Text;
+﻿using System.Text;
 using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 
 namespace GitCommandsTests.Git;
 
 [TestFixture]
-public sealed class OsShellUtilTests
+public class OsShellUtilTests
 {
-    private IExecutable _mockExecutable;
-    private IProcess _mockProcess;
+    private IExecutable _executable;
+    private IProcess _process;
 
     [SetUp]
     public void SetUp()
     {
-        _mockExecutable = Substitute.For<IExecutable>();
-        _mockProcess = Substitute.For<IProcess>();
-        _mockExecutable.Start(
+        _process = Substitute.For<IProcess>();
+        _executable = Substitute.For<IExecutable>();
+        _executable.Start(
             Arg.Any<ArgumentString>(),
             Arg.Any<bool>(),
             Arg.Any<bool>(),
@@ -26,27 +27,24 @@ public sealed class OsShellUtilTests
             Arg.Any<bool>(),
             Arg.Any<bool>(),
             Arg.Any<CancellationToken>())
-            .Returns(_mockProcess);
+            .Returns(_process);
 
-        OsShellUtil.GetTestAccessor().MockExecutable = _mockExecutable;
+        OsShellUtil.TestAccessor.MockExecutable = _executable;
     }
 
     [TearDown]
     public void TearDown()
     {
-        OsShellUtil.GetTestAccessor().MockExecutable = null;
+        OsShellUtil.TestAccessor.MockExecutable = null;
     }
 
     [Test]
-    public void Open_should_start_executable_with_shell_execute()
+    public void Open_should_start_with_shell_execute()
     {
-        const string filePath = @"C:\temp\file.txt";
+        OsShellUtil.Open("test.txt");
 
-        OsShellUtil.Open(filePath);
-
-        _mockExecutable.Command = filePath;
-        _mockExecutable.Received(1).Start(
-            Arg.Is<ArgumentString>(a => a.Arguments == null || a.Arguments == ""),
+        _executable.Received(1).Start(
+            Arg.Is<ArgumentString>(a => a.Length == 0),
             createWindow: false,
             redirectInput: false,
             redirectOutput: false,
@@ -59,10 +57,8 @@ public sealed class OsShellUtilTests
     [Test]
     public void Open_should_fall_back_to_OpenAs_when_Start_throws()
     {
-        const string filePath = @"C:\temp\file.txt";
-
-        bool firstCall = true;
-        _mockExecutable.Start(
+        int callCount = 0;
+        _executable.Start(
             Arg.Any<ArgumentString>(),
             Arg.Any<bool>(),
             Arg.Any<bool>(),
@@ -73,18 +69,18 @@ public sealed class OsShellUtilTests
             Arg.Any<CancellationToken>())
             .Returns(callInfo =>
             {
-                if (firstCall)
+                callCount++;
+                if (callCount == 1)
                 {
-                    firstCall = false;
-                    throw new InvalidOperationException("cannot open");
+                    throw new InvalidOperationException("test");
                 }
 
-                return _mockProcess;
+                return _process;
             });
 
-        OsShellUtil.Open(filePath);
+        OsShellUtil.Open("test.txt");
 
-        _mockExecutable.Received(2).Start(
+        _executable.Received(2).Start(
             Arg.Any<ArgumentString>(),
             Arg.Any<bool>(),
             Arg.Any<bool>(),
@@ -93,38 +89,31 @@ public sealed class OsShellUtilTests
             Arg.Any<bool>(),
             Arg.Any<bool>(),
             Arg.Any<CancellationToken>());
-        _mockExecutable.Command = "rundll32.exe";
     }
 
     [Test]
-    public void OpenAs_should_start_rundll32_with_shell32_open_as()
+    public void OpenAs_should_start_rundll32_with_correct_arguments()
     {
-        const string filePath = @"C:\temp\file.txt";
+        OsShellUtil.OpenAs("test.txt");
 
-        OsShellUtil.OpenAs(filePath);
-
-        _mockExecutable.Command = "rundll32.exe";
-        _mockExecutable.Received(1).Start(
-            Arg.Is<ArgumentString>(a => a.Arguments != null && a.Arguments.Contains("shell32.dll,OpenAs_RunDLL") && a.Arguments.Contains(filePath)),
+        _executable.Received(1).Start(
+            Arg.Is<ArgumentString>(a => ((string)a) == "shell32.dll,OpenAs_RunDLL test.txt"),
             createWindow: false,
             redirectInput: false,
             redirectOutput: true,
-            outputEncoding: Encoding.UTF8,
+            Arg.Is<Encoding>(e => e == Encoding.UTF8),
             useShellExecute: false,
             throwOnErrorExit: true,
             Arg.Any<CancellationToken>());
     }
 
     [Test]
-    public void OpenWithFileExplorer_should_start_explorer_with_quoted_arguments_by_default()
+    public void SelectPathInFileExplorer_should_pass_quoted_path_with_select()
     {
-        const string arguments = @"C:\temp";
+        OsShellUtil.SelectPathInFileExplorer(@"C:\some\file.txt");
 
-        OsShellUtil.OpenWithFileExplorer(arguments);
-
-        _mockExecutable.Command = "explorer.exe";
-        _mockExecutable.Received(1).Start(
-            Arg.Any<ArgumentString>(),
+        _executable.Received(1).Start(
+            Arg.Is<ArgumentString>(a => ((string)a) == @"/select, ""C:\some\file.txt"""),
             Arg.Any<bool>(),
             Arg.Any<bool>(),
             Arg.Any<bool>(),
@@ -135,15 +124,12 @@ public sealed class OsShellUtilTests
     }
 
     [Test]
-    public void OpenWithFileExplorer_should_start_explorer_without_quoting_when_specified()
+    public void OpenWithFileExplorer_should_quote_arguments_by_default()
     {
-        const string arguments = @"/select, ""C:\temp\file.txt""";
+        OsShellUtil.OpenWithFileExplorer(@"C:\some\folder");
 
-        OsShellUtil.OpenWithFileExplorer(arguments, quote: false);
-
-        _mockExecutable.Command = "explorer.exe";
-        _mockExecutable.Received(1).Start(
-            Arg.Is<ArgumentString>(a => a.Arguments != null && a.Arguments == arguments),
+        _executable.Received(1).Start(
+            Arg.Is<ArgumentString>(a => ((string)a) == @"""C:\some\folder"""),
             Arg.Any<bool>(),
             Arg.Any<bool>(),
             Arg.Any<bool>(),
@@ -154,15 +140,12 @@ public sealed class OsShellUtilTests
     }
 
     [Test]
-    public void SelectPathInFileExplorer_should_start_explorer_with_select_argument()
+    public void OpenWithFileExplorer_should_not_quote_when_quote_is_false()
     {
-        const string filePath = @"C:\temp\file.txt";
+        OsShellUtil.OpenWithFileExplorer(@"/select, ""C:\some\file.txt""", quote: false);
 
-        OsShellUtil.SelectPathInFileExplorer(filePath);
-
-        _mockExecutable.Command = "explorer.exe";
-        _mockExecutable.Received(1).Start(
-            Arg.Is<ArgumentString>(a => a.Arguments != null && a.Arguments.Contains("/select,") && a.Arguments.Contains(filePath)),
+        _executable.Received(1).Start(
+            Arg.Is<ArgumentString>(a => ((string)a) == @"/select, ""C:\some\file.txt"""),
             Arg.Any<bool>(),
             Arg.Any<bool>(),
             Arg.Any<bool>(),
@@ -173,15 +156,12 @@ public sealed class OsShellUtilTests
     }
 
     [Test]
-    public void OpenUrlInDefaultBrowser_should_start_executable_with_url()
+    public void OpenUrlInDefaultBrowser_should_start_with_shell_execute()
     {
-        const string url = "https://github.com/gitextensions/gitextensions";
+        OsShellUtil.OpenUrlInDefaultBrowser("https://example.com");
 
-        OsShellUtil.OpenUrlInDefaultBrowser(url);
-
-        _mockExecutable.Command = url;
-        _mockExecutable.Received(1).Start(
-            Arg.Is<ArgumentString>(a => a.Arguments == null || a.Arguments == ""),
+        _executable.Received(1).Start(
+            Arg.Is<ArgumentString>(a => a.Length == 0),
             createWindow: false,
             redirectInput: false,
             redirectOutput: false,
@@ -194,11 +174,11 @@ public sealed class OsShellUtilTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("   ")]
-    public void OpenUrlInDefaultBrowser_should_not_start_for_null_or_whitespace_url(string? url)
+    public void OpenUrlInDefaultBrowser_should_not_start_when_url_is_null_or_whitespace(string? url)
     {
         OsShellUtil.OpenUrlInDefaultBrowser(url);
 
-        _mockExecutable.DidNotReceive().Start(
+        _executable.DidNotReceive().Start(
             Arg.Any<ArgumentString>(),
             Arg.Any<bool>(),
             Arg.Any<bool>(),
