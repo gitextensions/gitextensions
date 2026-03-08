@@ -25,20 +25,20 @@ partial class FormCreateWorktree
         cbxBranches = new ComboBox();
         btnBrowseWorktreeDir = new GitUI.UserControls.FolderBrowserButton();
         gbxWhatToCheckout = new GroupBox();
-        tpnlCheckout = new TableLayoutPanel();
-        tpnlMain = new TableLayoutPanel();
+        tlpnlCheckout = new TableLayoutPanel();
+        tlpnlMain = new TableLayoutPanel();
         MainPanel.SuspendLayout();
         ControlsPanel.SuspendLayout();
         gbxWhatToCheckout.SuspendLayout();
-        tpnlCheckout.SuspendLayout();
-        tpnlMain.SuspendLayout();
+        tlpnlCheckout.SuspendLayout();
+        tlpnlMain.SuspendLayout();
         SuspendLayout();
         //
         // MainPanel
         //
         MainPanel.AutoSize = true;
         MainPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        MainPanel.Controls.Add(tpnlMain);
+        MainPanel.Controls.Add(tlpnlMain);
         MainPanel.Size = new Size(608, 167);
         //
         // ControlsPanel
@@ -102,7 +102,7 @@ partial class FormCreateWorktree
         chkOpenWorktree.AutoSize = true;
         chkOpenWorktree.Checked = true;
         chkOpenWorktree.CheckState = CheckState.Checked;
-        tpnlMain.SetColumnSpan(chkOpenWorktree, 3);
+        tlpnlMain.SetColumnSpan(chkOpenWorktree, 3);
         chkOpenWorktree.Location = new Point(3, 123);
         chkOpenWorktree.Name = "chkOpenWorktree";
         chkOpenWorktree.Size = new Size(228, 17);
@@ -162,8 +162,8 @@ partial class FormCreateWorktree
         gbxWhatToCheckout.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         gbxWhatToCheckout.AutoSize = true;
         gbxWhatToCheckout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        tpnlMain.SetColumnSpan(gbxWhatToCheckout, 3);
-        gbxWhatToCheckout.Controls.Add(tpnlCheckout);
+        tlpnlMain.SetColumnSpan(gbxWhatToCheckout, 3);
+        gbxWhatToCheckout.Controls.Add(tlpnlCheckout);
         gbxWhatToCheckout.Location = new Point(3, 3);
         gbxWhatToCheckout.Name = "gbxWhatToCheckout";
         gbxWhatToCheckout.Size = new Size(602, 83);
@@ -171,50 +171,50 @@ partial class FormCreateWorktree
         gbxWhatToCheckout.TabStop = false;
         gbxWhatToCheckout.Text = "What to checkout:";
         //
-        // tpnlCheckout
+        // tlpnlCheckout
         //
-        tpnlCheckout.AutoSize = true;
-        tpnlCheckout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        tpnlCheckout.ColumnCount = 2;
-        tpnlCheckout.ColumnStyles.Add(new ColumnStyle());
-        tpnlCheckout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-        tpnlCheckout.Controls.Add(txtNewBranchName, 1, 1);
-        tpnlCheckout.Controls.Add(rbCheckoutExistingBranch, 0, 0);
-        tpnlCheckout.Controls.Add(rbCreateNewBranch, 0, 1);
-        tpnlCheckout.Controls.Add(cbxBranches, 1, 0);
-        tpnlCheckout.Dock = DockStyle.Fill;
-        tpnlCheckout.Location = new Point(3, 17);
-        tpnlCheckout.Margin = new Padding(0);
-        tpnlCheckout.Name = "tpnlCheckout";
-        tpnlCheckout.RowCount = 2;
-        tpnlCheckout.RowStyles.Add(new RowStyle());
-        tpnlCheckout.RowStyles.Add(new RowStyle());
-        tpnlCheckout.Size = new Size(596, 63);
-        tpnlCheckout.TabIndex = 0;
+        tlpnlCheckout.AutoSize = true;
+        tlpnlCheckout.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        tlpnlCheckout.ColumnCount = 2;
+        tlpnlCheckout.ColumnStyles.Add(new ColumnStyle());
+        tlpnlCheckout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        tlpnlCheckout.Controls.Add(txtNewBranchName, 1, 1);
+        tlpnlCheckout.Controls.Add(rbCheckoutExistingBranch, 0, 0);
+        tlpnlCheckout.Controls.Add(rbCreateNewBranch, 0, 1);
+        tlpnlCheckout.Controls.Add(cbxBranches, 1, 0);
+        tlpnlCheckout.Dock = DockStyle.Fill;
+        tlpnlCheckout.Location = new Point(3, 17);
+        tlpnlCheckout.Margin = new Padding(0);
+        tlpnlCheckout.Name = "tlpnlCheckout";
+        tlpnlCheckout.RowCount = 2;
+        tlpnlCheckout.RowStyles.Add(new RowStyle());
+        tlpnlCheckout.RowStyles.Add(new RowStyle());
+        tlpnlCheckout.Size = new Size(596, 63);
+        tlpnlCheckout.TabIndex = 0;
         // 
-        // tpnlMain
+        // tlpnlMain
         //
-        tpnlMain.AutoSize = true;
-        tpnlMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        tpnlMain.ColumnCount = 3;
-        tpnlMain.ColumnStyles.Add(new ColumnStyle());
-        tpnlMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-        tpnlMain.ColumnStyles.Add(new ColumnStyle());
-        tpnlMain.Controls.Add(gbxWhatToCheckout, 0, 0);
-        tpnlMain.Controls.Add(lblNewWorktreeFolder, 0, 1);
-        tpnlMain.Controls.Add(txtWorktreeDirectory, 1, 1);
-        tpnlMain.Controls.Add(btnBrowseWorktreeDir, 2, 1);
-        tpnlMain.Controls.Add(chkOpenWorktree, 0, 2);
-        tpnlMain.Dock = DockStyle.Fill;
-        tpnlMain.Location = new Point(12, 12);
-        tpnlMain.Margin = new Padding(0);
-        tpnlMain.Name = "tpnlMain";
-        tpnlMain.RowCount = 3;
-        tpnlMain.RowStyles.Add(new RowStyle());
-        tpnlMain.RowStyles.Add(new RowStyle());
-        tpnlMain.RowStyles.Add(new RowStyle());
-        tpnlMain.Size = new Size(584, 143);
-        tpnlMain.TabIndex = 0;
+        tlpnlMain.AutoSize = true;
+        tlpnlMain.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+        tlpnlMain.ColumnCount = 3;
+        tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+        tlpnlMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        tlpnlMain.ColumnStyles.Add(new ColumnStyle());
+        tlpnlMain.Controls.Add(gbxWhatToCheckout, 0, 0);
+        tlpnlMain.Controls.Add(lblNewWorktreeFolder, 0, 1);
+        tlpnlMain.Controls.Add(txtWorktreeDirectory, 1, 1);
+        tlpnlMain.Controls.Add(btnBrowseWorktreeDir, 2, 1);
+        tlpnlMain.Controls.Add(chkOpenWorktree, 0, 2);
+        tlpnlMain.Dock = DockStyle.Fill;
+        tlpnlMain.Location = new Point(12, 12);
+        tlpnlMain.Margin = new Padding(0);
+        tlpnlMain.Name = "tlpnlMain";
+        tlpnlMain.RowCount = 3;
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.Size = new Size(584, 143);
+        tlpnlMain.TabIndex = 0;
         //
         // FormCreateWorktree
         //
@@ -234,10 +234,10 @@ partial class FormCreateWorktree
         ControlsPanel.PerformLayout();
         gbxWhatToCheckout.ResumeLayout(false);
         gbxWhatToCheckout.PerformLayout();
-        tpnlCheckout.ResumeLayout(false);
-        tpnlCheckout.PerformLayout();
-        tpnlMain.ResumeLayout(false);
-        tpnlMain.PerformLayout();
+        tlpnlCheckout.ResumeLayout(false);
+        tlpnlCheckout.PerformLayout();
+        tlpnlMain.ResumeLayout(false);
+        tlpnlMain.PerformLayout();
         ResumeLayout(false);
         PerformLayout();
 
@@ -255,6 +255,6 @@ partial class FormCreateWorktree
     private RadioButton rbCreateNewBranch;
     private TextBox txtNewBranchName;
     private GroupBox gbxWhatToCheckout;
-    private TableLayoutPanel tpnlCheckout;
-    private TableLayoutPanel tpnlMain;
+    private TableLayoutPanel tlpnlCheckout;
+    private TableLayoutPanel tlpnlMain;
 }

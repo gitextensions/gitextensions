@@ -22,8 +22,8 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
     {
         InitializeComponent();
 
-        tpnlMain.AdjustWidthToSize(0, rbCheckoutExistingBranch, rbCreateNewBranch, lblNewWorktreeFolder);
-        tpnlCheckout.AdjustWidthToSize(0, rbCheckoutExistingBranch, rbCreateNewBranch, lblNewWorktreeFolder);
+        tlpnlMain.AdjustWidthToSize(0, rbCheckoutExistingBranch, rbCreateNewBranch, lblNewWorktreeFolder);
+        tlpnlCheckout.AdjustWidthToSize(0, rbCheckoutExistingBranch, rbCreateNewBranch, lblNewWorktreeFolder);
 
         MinimumSize = new Size(Width, PreferredMinimumHeight);
 
