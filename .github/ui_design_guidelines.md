@@ -16,7 +16,7 @@ A thin separator line is drawn automatically at the top of `ControlsPanel`.
 
 ## Overall layout
 
-1. Place a single root `TableLayoutPanel` (conventionally named `tpnlMain` or `tableLayout`) inside `MainPanel`.
+1. Place a single root `TableLayoutPanel` (conventionally named `tlpnlMain`) inside `MainPanel`.
 2. The root `TableLayoutPanel` should be:
    - `Dock = DockStyle.Fill`
    - `Margin = new Padding(0)` (the outer padding comes from `MainPanel`)
@@ -64,8 +64,7 @@ When there is no browse button, use a **two-column** layout:
   - `MinimumSize = new Size(75, 23)` (ensures a reasonable minimum width)
 - When a button includes an icon, set `ImageAlign = ContentAlignment.MiddleLeft` (or `TopLeft`) and `TextImageRelation = ImageBeforeText`.
 - Secondary buttons (e.g. "Stash", "Mergetool", "Load SSH Key") also go in `ControlsPanel` and flow to the left of the primary button.
-- Use the ampersand (`&`) prefix for keyboard accelerators in button text (e.g. `"&Clone"`, `"&Create branch"`). The accelerators MUST be unique within the context of the same Form or UserControl, BUT should be aligned with the same text in other forms but, if reasonable.
-E.g., this is incorrect if both controls are on the same control: `"&Clone"`, `"&Create branch"`.
+- Use the ampersand (`&`) prefix for keyboard accelerators in button text (e.g. `"&Clone"`, `"&Pull"`, `"&Browse"`). Accelerators **must** be unique within the same Form or UserControl — for example, having both `"&Clone"` and `"&Create branch"` on the same form is incorrect because both use `C` as the accelerator. When the same action appears across multiple forms, use the same accelerator character for consistency, where reasonable.
 
 ## Browse buttons
 
