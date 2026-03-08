@@ -1,9 +1,7 @@
 ﻿using System.Text;
-using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using NSubstitute;
-using NSubstitute.ExceptionExtensions;
 
 namespace GitCommandsTests.Git;
 

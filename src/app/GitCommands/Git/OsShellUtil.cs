@@ -2,12 +2,13 @@
 
 namespace GitCommands;
 
+/// <summary>
+///  Provides helper methods for interacting with the OS shell (opening files, URLs, and File Explorer).
+/// </summary>
 public static class OsShellUtil
 {
-    private static IExecutable? _mockExecutable;
-
     private static IExecutable CreateExecutable(string command)
-        => _mockExecutable ?? new Executable(command);
+        => TestAccessor.MockExecutable ?? new Executable(command);
 
     /// <summary>
     ///  Open a file with its associated default application.
@@ -69,7 +70,7 @@ public static class OsShellUtil
     /// </summary>
     /// <param name="ownerWindow">The owner window.</param>
     /// <param name="selectedPath">The initially selected path.</param>
-    /// <returns>The path selected by the user, or null if the user cancels the dialog.</returns>
+    /// <returns>The path selected by the user, or <see langword="null"/> if the user cancels the dialog.</returns>
     public static string? PickFolder(IWin32Window ownerWindow, string? selectedPath = null)
     {
         using FolderBrowserDialog dialog = new();
@@ -90,10 +91,6 @@ public static class OsShellUtil
 
     internal struct TestAccessor
     {
-        public static IExecutable? MockExecutable
-        {
-            get => _mockExecutable;
-            set => _mockExecutable = value;
-        }
+        public static IExecutable? MockExecutable { get; set; }
     }
 }

@@ -7,7 +7,9 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands;
 
-/// <inheritdoc />
+/// <summary>
+///  Wraps an executable file and provides process creation with logging and environment setup.
+/// </summary>
 public sealed class Executable : IExecutable
 {
     private readonly string _workingDir;
@@ -36,16 +38,12 @@ public sealed class Executable : IExecutable
         PrefixArguments = prefixArguments;
     }
 
-    /// <inheritdoc />
     public string WorkingDir => _workingDir;
 
-    /// <inheritdoc />
     public string Command => _fileNameProvider();
 
-    /// <inheritdoc />
     public string PrefixArguments { get; }
 
-    /// <inheritdoc />
     public IProcess Start(ArgumentString arguments = default,
                           bool createWindow = false,
                           bool redirectInput = false,
@@ -65,7 +63,6 @@ public sealed class Executable : IExecutable
         return new ProcessWrapper(fileName, PrefixArguments, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit, cancellationToken);
     }
 
-    /// <inheritdoc />
     public string GetWorkingDirectory() => _workingDir;
 
     #region ProcessWrapper
@@ -245,7 +242,6 @@ public sealed class Executable : IExecutable
             }
         }
 
-        /// <inheritdoc />
         public StreamWriter StandardInput
         {
             get
@@ -259,7 +255,6 @@ public sealed class Executable : IExecutable
             }
         }
 
-        /// <inheritdoc />
         public StreamReader StandardOutput
         {
             get
@@ -273,7 +268,6 @@ public sealed class Executable : IExecutable
             }
         }
 
-        /// <inheritdoc />
         public string StandardError
         {
             get
@@ -287,24 +281,18 @@ public sealed class Executable : IExecutable
             }
         }
 
-        /// <inheritdoc />
         public void Kill(bool entireProcessTree) => _process.Kill(entireProcessTree);
 
-        /// <inheritdoc />
         public void WaitForInputIdle() => _process.WaitForInputIdle();
 
 #pragma warning disable VSTHRD003 // Avoid awaiting foreign Tasks
-        /// <inheritdoc />
         public Task<int> WaitForExitAsync() => _exitTaskCompletionSource.Task;
 #pragma warning restore VSTHRD003 // Avoid awaiting foreign Tasks
 
-        /// <inheritdoc />
         public Task<int> WaitForExitAsync(CancellationToken token) => WaitForExitAsync().WithCancellation(token);
 
-        /// <inheritdoc />
         public int WaitForExit() => ThreadHelper.JoinableTaskFactory.Run(WaitForExitAsync);
 
-        /// <inheritdoc />
         public void Dispose()
         {
             lock (_lock)
