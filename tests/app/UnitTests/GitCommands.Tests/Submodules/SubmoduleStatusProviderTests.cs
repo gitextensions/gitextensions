@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -58,7 +58,8 @@ internal class SubmoduleStatusProviderTests
             Debug.WriteLine($"Repo[{i + 1}]:{actualModules[i].WorkingDir}");
         }
 
-        _provider = new SubmoduleStatusProvider(new GitExecutorProvider());
+        GitDirectoryResolver gitDirectoryResolver = new();
+        _provider = new SubmoduleStatusProvider(new GitExecutorProvider(gitDirectoryResolver), gitDirectoryResolver);
     }
 
     [TearDown]

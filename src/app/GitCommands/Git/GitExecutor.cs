@@ -12,11 +12,13 @@ namespace GitCommands;
 /// </summary>
 internal sealed class GitExecutor : IGitExecutor
 {
-    private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
+    private readonly IGitDirectoryResolver _gitDirectoryResolverInstance;
     private static Encoding? _systemEncoding;
 
-    public GitExecutor(string? workingDir)
+    public GitExecutor(IGitDirectoryResolver gitDirectoryResolver, string? workingDir)
     {
+        _gitDirectoryResolverInstance = gitDirectoryResolver;
+
         WorkingDir = (workingDir ?? "").NormalizePath().NormalizeWslPath().EnsureTrailingPathSeparator();
         GitWindowsExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
         GitWindowsCommandRunner = new GitCommandRunner(GitWindowsExecutable, () => SystemEncoding);
@@ -34,6 +36,11 @@ internal sealed class GitExecutor : IGitExecutor
             GitExecutable = GitWindowsExecutable;
             GitCommandRunner = GitWindowsCommandRunner;
         }
+    }
+
+    public GitExecutor(string? workingDir)
+        : this(new GitDirectoryResolver(), workingDir)
+    {
     }
 
     /// <inheritdoc/>
@@ -106,7 +113,7 @@ internal sealed class GitExecutor : IGitExecutor
 
     /// <summary>Attempt to read the branch name from the HEAD file instead of calling a git command.</summary>
     /// <remarks>Dirty but fast. This sometimes fails. In reftable repos, it always returns ".invalid".</remarks>
-    private static string GetSelectedBranchFast(string? repositoryPath, bool emptyIfDetached = false)
+    private string GetSelectedBranchFast(string? repositoryPath, bool emptyIfDetached = false)
     {
         if (string.IsNullOrEmpty(repositoryPath))
         {
@@ -162,8 +169,8 @@ internal sealed class GitExecutor : IGitExecutor
     /// <param name="repositoryPath">The file system path to the root of the repository. This path must refer to an existing Git repository.</param>
     /// <returns>The path to the Git directory for the specified repository, or null if the path does not correspond to a
     /// valid Git repository.</returns>
-    public static string GetGitDirectory(string repositoryPath)
+    internal string GetGitDirectory(string repositoryPath)
     {
-        return GitDirectoryResolverInstance.Resolve(repositoryPath);
+        return _gitDirectoryResolverInstance.Resolve(repositoryPath);
     }
 }

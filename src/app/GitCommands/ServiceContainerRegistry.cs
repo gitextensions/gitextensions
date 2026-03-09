@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.Design;
+using GitCommands.Git;
 using GitCommands.Submodules;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -9,8 +10,9 @@ public static class ServiceContainerRegistry
 {
     public static void RegisterServices(ServiceContainer serviceContainer)
     {
-        GitExecutorProvider executorProvider = new();
+        IGitDirectoryResolver gitDirectoryResolver = serviceContainer.GetRequiredService<IGitDirectoryResolver>();
+        GitExecutorProvider executorProvider = new(gitDirectoryResolver);
         serviceContainer.AddService<IGitExecutorProvider>(executorProvider);
-        serviceContainer.AddService<ISubmoduleStatusProvider>(new SubmoduleStatusProvider(executorProvider));
+        serviceContainer.AddService<ISubmoduleStatusProvider>(new SubmoduleStatusProvider(executorProvider, gitDirectoryResolver));
     }
 }

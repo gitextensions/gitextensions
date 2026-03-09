@@ -38,15 +38,17 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     private const int MinRefreshInterval = 15;
 
     private readonly IGitExecutorProvider _executorProvider;
+    private readonly IGitDirectoryResolver _gitDirectoryResolver;
     private readonly CancellationTokenSequence _submodulesStructureSequence = new();
     private readonly CancellationTokenSequence _submodulesStatusSequence = new();
     private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = [];
     private DateTime _previousSubmoduleUpdateTime;
     private SubmoduleInfoResult? _submoduleInfoResult;
 
-    public SubmoduleStatusProvider(IGitExecutorProvider executorProvider)
+    public SubmoduleStatusProvider(IGitExecutorProvider executorProvider, IGitDirectoryResolver gitDirectoryResolver)
     {
         _executorProvider = executorProvider;
+        _gitDirectoryResolver = gitDirectoryResolver;
     }
 
     // Invoked when status update is requested (use to clear/lock UI)

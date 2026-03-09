@@ -78,7 +78,7 @@ public sealed partial class GitModule : IGitModule
     public GitModule(string? workingDir)
     {
         _executor = new GitExecutor(workingDir);
-        WorkingDirGitDir = GitExecutor.GetGitDirectory(WorkingDir);
+        WorkingDirGitDir = _executor.GetGitDirectory();
         _indexLockManager = new IndexLockManager(this);
         _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => this);
 
@@ -408,7 +408,7 @@ public sealed partial class GitModule : IGitModule
 
     public static bool IsBareRepository(string repositoryPath)
     {
-        return repositoryPath == GitExecutor.GetGitDirectory(repositoryPath);
+        return repositoryPath == new GitDirectoryResolver().Resolve(repositoryPath);
     }
 
     public bool IsSubmodule(string submodulePath)
@@ -950,7 +950,7 @@ public sealed partial class GitModule : IGitModule
         // This means that the WSL path is presented in WSL repos, not the Windows path (native to the app).
         string output = GitExecutable.GetOutput(args);
 
-        WorkingDirGitDir = GitExecutor.GetGitDirectory(WorkingDir);
+        WorkingDirGitDir = _executor.GetGitDirectory();
         return output;
     }
 
