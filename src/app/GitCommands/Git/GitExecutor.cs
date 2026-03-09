@@ -101,14 +101,22 @@ internal sealed class GitExecutor : IGitExecutor
             "--quiet",
             "HEAD"
         };
-        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
 
-        if (result.ExitedSuccessfully)
+        try
         {
-            return result.StandardOutput[GitRefName.RefsHeadsPrefix.Length..].TrimEnd();
-        }
+            ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
 
-        return emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
+            if (result.ExitedSuccessfully)
+            {
+                return result.StandardOutput[GitRefName.RefsHeadsPrefix.Length..].TrimEnd();
+            }
+
+            return emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
+        }
+        catch (Exception)
+        {
+            return string.Empty;
+        }
     }
 
     /// <summary>Attempt to read the branch name from the HEAD file instead of calling a git command.</summary>
