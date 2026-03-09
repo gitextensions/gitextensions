@@ -221,9 +221,37 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
         SaveAndRescan_Click(this, EventArgs.Empty);
     }
 
+    /// <summary>
+    /// Handles the Click event of the ShellExtensionsRegistered control.
+    /// </summary>
+    /// <param name="sender">The source of the event.</param>
+    /// <param name="e">The <see cref="EventArgs"/> instance containing the event data.</param>
+    /// <remarks>
+    /// This method attempts a tiered registration approach:
+    /// <list type="number">
+    /// <item>
+    /// It first attempts to register the <see cref="ModernShellExtensionManager"/>,
+    /// which supports the Windows 11 sparse package context menu.
+    /// </item>
+    /// <item>
+    /// If modern registration fails or is not supported, it falls back to the
+    /// <see cref="ShellExtensionManager"/> for the classic COM-based context menu.
+    /// </item>
+    /// </list>
+    /// Finally, it calls <see cref="CheckSettings"/> to refresh the UI state.
+    /// </remarks>
     private void ShellExtensionsRegistered_Click(object sender, EventArgs e)
     {
-        ShellExtensionManager.Register();
+        if (ModernShellExtensionManager.IsRegistered())
+        {
+            return;
+        }
+
+        ModernShellExtensionManager.Register();
+        if (!ModernShellExtensionManager.IsRegistered())
+        {
+            ShellExtensionManager.Register();
+        }
 
         CheckSettings();
     }
@@ -506,6 +534,29 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
         return !string.IsNullOrEmpty(editor);
     }
 
+    /// <summary>
+    /// Validates the registration status of the shell extensions and updates the UI accordingly.
+    /// </summary>
+    /// <returns>
+    /// <see langword="true"/> if the settings are valid or the system is non-Windows;
+    /// otherwise, <see langword="false"/> if registration is required but missing.
+    /// </returns>
+    /// <remarks>
+    /// This method implements a tiered validation strategy:
+    /// <list type="number">
+    /// <item>
+    /// <description>Detects the appropriate manager based on <see cref="ModernShellExtensionManager.IsSupported"/>.</description>
+    /// </item>
+    /// <item>
+    /// <description>Checks if the extension is already registered in the system.</description>
+    /// </item>
+    /// <item>
+    /// <description>If unregistered, verifies if the physical DLL/MSIX files exist before prompting for a fix.</description>
+    /// </item>
+    /// </list>
+    /// If files are missing entirely, the method returns <see langword="true"/> to avoid
+    /// prompting for a registration fix that cannot be completed.
+    /// </remarks>
     private bool CheckGitExtensionRegistrySettings()
     {
         if (!EnvUtils.RunningOnWindows())
@@ -515,20 +566,36 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
 
         ShellExtensionsRegistered.Visible = true;
 
-        if (!ShellExtensionManager.IsRegistered())
+        bool isModern = ModernShellExtensionManager.IsSupported;
+
+        bool isRegistered = isModern
+            ? ModernShellExtensionManager.IsRegistered()
+            : ShellExtensionManager.IsRegistered();
+
+        bool filesExist = isModern
+            ? ModernShellExtensionManager.FilesExist()
+            : ShellExtensionManager.FilesExist();
+
+        string extensionName = isModern
+            ? ModernShellExtensionManager.GitExtensionsShellExDllName
+            : ShellExtensionManager.GitExtensionsShellEx32Name;
+
+        if (!isRegistered)
         {
-            // Check if shell extensions are installed
-            if (!ShellExtensionManager.FilesExist())
+            if (!filesExist)
             {
-                RenderSettingSet(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix, _shellExtNoInstalled.Text);
+                RenderSettingSet(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix,
+                    _shellExtNoInstalled.Text);
                 return true;
             }
 
-            RenderSettingUnset(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix, string.Format(_shellExtNeedsToBeRegistered.Text, ShellExtensionManager.GitExtensionsShellEx32Name));
+            RenderSettingUnset(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix,
+                string.Format(_shellExtNeedsToBeRegistered.Text, extensionName));
             return false;
         }
 
-        RenderSettingSet(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix, _shellExtRegistered.Text);
+        RenderSettingSet(ShellExtensionsRegistered, ShellExtensionsRegistered_Fix,
+            _shellExtRegistered.Text);
         return true;
     }
 
