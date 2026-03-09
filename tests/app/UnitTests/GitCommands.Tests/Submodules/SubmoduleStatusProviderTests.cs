@@ -59,7 +59,7 @@ internal class SubmoduleStatusProviderTests
         }
 
         GitDirectoryResolver gitDirectoryResolver = new();
-        _provider = new SubmoduleStatusProvider(new GitExecutorProvider(gitDirectoryResolver), gitDirectoryResolver);
+        _provider = new SubmoduleStatusProvider(new GitExecutorProvider(gitDirectoryResolver));
     }
 
     [TearDown]

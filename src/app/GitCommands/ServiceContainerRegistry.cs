@@ -13,6 +13,6 @@ public static class ServiceContainerRegistry
         IGitDirectoryResolver gitDirectoryResolver = serviceContainer.GetRequiredService<IGitDirectoryResolver>();
         GitExecutorProvider executorProvider = new(gitDirectoryResolver);
         serviceContainer.AddService<IGitExecutorProvider>(executorProvider);
-        serviceContainer.AddService<ISubmoduleStatusProvider>(new SubmoduleStatusProvider(executorProvider, gitDirectoryResolver));
+        serviceContainer.AddService<ISubmoduleStatusProvider>(new SubmoduleStatusProvider(executorProvider));
     }
 }

@@ -908,7 +908,7 @@ public sealed partial class GitModule : IGitModule
         if (EnvUtils.RunningOnUnix())
         {
             args = new GitArgumentBuilder("gui");
-            GitExecutable.Start(args, createWindow: true);
+            _ = GitExecutable.Start(args, createWindow: true);
         }
         else
         {
