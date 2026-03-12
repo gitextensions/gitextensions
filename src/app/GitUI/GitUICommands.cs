@@ -1189,13 +1189,13 @@ public sealed class GitUICommands : IGitUICommands
         }
     }
 
-    public bool StartPushDialog(IWin32Window? owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted)
+    public bool StartPushDialog(IWin32Window? owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted, string? branchName = null)
     {
         bool pushed = false;
 
         bool Action()
         {
-            using FormPush form = new(this);
+            using FormPush form = new(this, branchName);
             if (forceWithLease)
             {
                 form.CheckForceWithLease();
@@ -1222,7 +1222,7 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool StartPushDialog(IWin32Window? owner, bool pushOnShow)
     {
-        return StartPushDialog(owner, pushOnShow, forceWithLease: false, out _);
+        return StartPushDialog(owner, pushOnShow, forceWithLease: false, out _, branchName: null);
     }
 
     public bool StartApplyPatchDialog(IWin32Window? owner, string? patchFile = null)

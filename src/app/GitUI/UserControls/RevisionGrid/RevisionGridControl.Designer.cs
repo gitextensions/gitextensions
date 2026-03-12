@@ -1,4 +1,4 @@
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using GitUI.Hotkey;
 using GitUI.UserControls.RevisionGrid;
 
@@ -42,6 +42,7 @@ partial class RevisionGridControl
         toolStripSeparator3 = new ToolStripSeparator();
         createNewBranchToolStripMenuItem = new ToolStripMenuItem();
         deleteBranchToolStripMenuItem = new ToolStripMenuItem();
+        tsmiPushBranch = new ToolStripMenuItem();
         renameBranchToolStripMenuItem = new ToolStripMenuItem();
         toolStripSeparator4 = new ToolStripSeparator();
         openCommitsWithDiffToolMenuItem = new ToolStripMenuItem();
@@ -139,6 +140,7 @@ partial class RevisionGridControl
         createNewBranchToolStripMenuItem,
         renameBranchToolStripMenuItem,
         deleteBranchToolStripMenuItem,
+        tsmiPushBranch,
         resetAnotherBranchToHereToolStripMenuItem,
         toolStripSeparator4,
         createTagToolStripMenuItem,
@@ -308,6 +310,14 @@ partial class RevisionGridControl
         deleteBranchToolStripMenuItem.Size = new Size(264, 24);
         deleteBranchToolStripMenuItem.Text = "&Delete branch...";
         deleteBranchToolStripMenuItem.Click += deleteBranchTagToolStripMenuItem_Click;
+        // 
+        // tsmiPushBranch
+        // 
+        tsmiPushBranch.Image = Properties.Images.Push;
+        tsmiPushBranch.Name = "tsmiPushBranch";
+        tsmiPushBranch.Size = new Size(264, 24);
+        tsmiPushBranch.Text = "Push branch (&x)...";
+        tsmiPushBranch.Click += deleteBranchTagToolStripMenuItem_Click;
         // 
         // toolStripSeparator4
         // 
@@ -602,6 +612,7 @@ partial class RevisionGridControl
     private ToolStripMenuItem revertCommitToolStripMenuItem;
     private ToolStripMenuItem deleteTagToolStripMenuItem;
     private ToolStripMenuItem deleteBranchToolStripMenuItem;
+    private ToolStripMenuItem tsmiPushBranch;
     private ToolStripMenuItem checkoutRevisionToolStripMenuItem;
     private ToolStripMenuItem archiveRevisionToolStripMenuItem;
     private ToolStripMenuItem applyStashToolStripMenuItem;

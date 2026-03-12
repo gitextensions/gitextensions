@@ -9596,6 +9596,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Stop bisect</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiPushBranch.Text">
+        <source>Push branch (&amp;x)...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiSelectInLeftPanel.Text">
         <source>Se&amp;lect in left panel</source>
         <target />

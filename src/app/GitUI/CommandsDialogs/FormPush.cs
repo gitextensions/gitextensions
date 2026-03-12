@@ -88,7 +88,7 @@ public partial class FormPush : GitModuleForm
 
     #endregion
 
-    public FormPush(IGitUICommands commands)
+    public FormPush(IGitUICommands commands, string? branchName = null)
         : base(commands)
     {
         InitializeComponent();
@@ -117,11 +117,12 @@ public partial class FormPush : GitModuleForm
             RecursiveSubmodules.SelectedIndex = AppSettings.RecursiveSubmodules;
 
             _currentBranchName = Module.GetSelectedBranch();
+            branchName ??= _currentBranchName;
 
             // refresh registered git remotes
             UserGitRemotes = [.. _remotesManager.LoadRemotes(false)];
 
-            _NO_TRANSLATE_Branch.Text = DetachedHeadParser.IsDetachedHead(_currentBranchName) ? HeadText : _currentBranchName;
+            _NO_TRANSLATE_Branch.Text = DetachedHeadParser.IsDetachedHead(branchName) ? HeadText : branchName;
 
             BindRemotesDropDown(null);
 
