@@ -2835,7 +2835,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    private void deleteBranchTagToolStripMenuItem_Click(object sender, EventArgs e)
+    private void PerformFirstDropdownItemClick(object sender, EventArgs e)
     {
         ToolStripMenuItem item = (ToolStripMenuItem)sender;
 
