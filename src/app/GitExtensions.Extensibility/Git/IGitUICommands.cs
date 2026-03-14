@@ -88,7 +88,7 @@ public interface IGitUICommands : IServiceProvider
     bool StartPullDialogAndPullImmediately(out bool pullCompleted, IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None);
     void StartPullRequestsDialog(IWin32Window? owner, IRepositoryHostPlugin gitHoster);
     bool StartPushDialog(IWin32Window? owner, bool pushOnShow);
-    bool StartPushDialog(IWin32Window? owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted);
+    bool StartPushDialog(IWin32Window? owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted, string? branchName = null);
     bool StartRebase(IWin32Window? owner, string onto);
     bool StartRebaseDialog(IWin32Window? owner, string? from, string? to, string? onto, bool interactive = false, bool startRebaseImmediately = true);
     bool StartRebaseDialog(IWin32Window? owner, string? onto);
