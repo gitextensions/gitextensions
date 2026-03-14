@@ -2825,17 +2825,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         Refresh();
     }
 
-    private void renameBranchToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        ToolStripMenuItem item = (ToolStripMenuItem)sender;
-
-        if (item.DropDown is not null && item.DropDown.Items.Count == 1)
-        {
-            item.DropDown.Items[0].PerformClick();
-        }
-    }
-
-    private void PerformFirstDropdownItemClick(object sender, EventArgs e)
+    private static void PerformFirstDropdownItemClick(object sender, EventArgs e)
     {
         ToolStripMenuItem item = (ToolStripMenuItem)sender;
 

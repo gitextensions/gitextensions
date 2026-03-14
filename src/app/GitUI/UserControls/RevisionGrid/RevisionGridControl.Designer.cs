@@ -309,7 +309,7 @@ partial class RevisionGridControl
         renameBranchToolStripMenuItem.Name = "renameBranchToolStripMenuItem";
         renameBranchToolStripMenuItem.Size = new Size(223, 22);
         renameBranchToolStripMenuItem.Text = "R&ename branch...";
-        renameBranchToolStripMenuItem.Click += renameBranchToolStripMenuItem_Click;
+        renameBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         // 
         // deleteBranchToolStripMenuItem
         // 
