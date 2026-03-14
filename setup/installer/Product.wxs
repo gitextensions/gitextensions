@@ -353,15 +353,6 @@
       <Component Id="ReleaseNotesGenerator.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.ReleaseNotesGenerator.dll" />
       </Component>
-      <Component Id="JiraCommitHintPlugin.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.JiraCommitHintPlugin.dll" />
-      </Component>
-      <Component Id="Atlassian.Jira.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\Atlassian.Jira.dll" />
-      </Component>
-      <Component Id="NString.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\NString.dll" />
-      </Component>
       <Component Id="FindLargeFiles.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.FindLargeFiles.dll" />
       </Component>
@@ -766,12 +757,6 @@
         </Feature>
         <Feature Id="GitlabIntegration" Title="Gitlab integration" Level="1">
           <ComponentRef Id="GitlabIntegration.dll" />
-        </Feature>
-        <Feature Id="JiraCommitHintPlugin" Title="Jira Commit Hint Plugin" Level="1">
-          <ComponentRef Id="JiraCommitHintPlugin.dll" />
-          <ComponentRef Id="Atlassian.Jira.dll" />
-          <ComponentRef Id="RestSharp.dll" />
-          <ComponentRef Id="NString.dll" />
         </Feature>
       </Feature>
       <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
