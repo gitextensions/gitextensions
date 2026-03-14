@@ -347,9 +347,6 @@
       <Component Id="Github3.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitHub3.dll" />
       </Component>
-      <Component Id="GitFlow.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitFlow.dll" />
-      </Component>
       <Component Id="ReleaseNotesGenerator.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.ReleaseNotesGenerator.dll" />
       </Component>
@@ -730,9 +727,6 @@
         </Feature>
         <Feature Id="Github" Title="Github integration" Level="1">
           <ComponentRef Id="Github3.dll" />
-        </Feature>
-        <Feature Id="GitFlow" Title="GitFlow" Level="1">
-          <ComponentRef Id="GitFlow.dll" />
         </Feature>
         <Feature Id="Gource" Title="Gource visualization" Level="1">
           <ComponentRef Id="Gource.dll" />
