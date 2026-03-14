@@ -12,7 +12,7 @@ namespace GitCommands.Settings;
 ///  <br>Only the last value of multi-value settings is provided - in contrast to <see cref="GitConfigSettings"/>.</br>
 ///  <br>"Implements" <see cref="IConfigValueStore"/> so it can be used with <see cref="SettingsSource{T}"/>.</br>
 /// </summary>
-/// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the repo of interest.</param>
+/// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the repo of interest.</param>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
 public sealed class EffectiveGitConfigSettings(IExecutable gitExecutable) : GitConfigSettingsBase(gitExecutable, GitSettingLevel.Effective), IConfigValueStore
 {

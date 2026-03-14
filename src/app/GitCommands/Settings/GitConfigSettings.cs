@@ -20,7 +20,7 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
     /// <summary>
     ///  The constructor.
     /// </summary>
-    /// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the repo of interest.</param>
+    /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the repo of interest.</param>
     /// <param name="gitSettingLevel">The scope (excluding <see cref="GitSettingLevel.Effective"/>) of the git config settings.</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public GitConfigSettings(IExecutable gitExecutable, GitSettingLevel gitSettingLevel)
