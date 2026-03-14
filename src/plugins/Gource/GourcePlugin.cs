@@ -190,17 +190,17 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
         // All Gource releases do not have binary releases, use a fallback
         const string latestApiUrl = "https://api.github.com/repos/acaudwell/Gource/releases/latest";
         const string latestBinReleaseUrl = "https://api.github.com/repos/acaudwell/Gource/releases/tags/gource-0.53";
-        const string win32ZipSuffix = ".win64.zip";
+        const string win64ZipSuffix = ".win64.zip";
 
         try
         {
-            string url = await FindWin32AssetAsync(latestApiUrl);
+            string url = await FindWin64AssetAsync(latestApiUrl);
             if (!string.IsNullOrEmpty(url))
             {
                 return url;
             }
 
-            return await FindWin32AssetAsync(latestBinReleaseUrl);
+            return await FindWin64AssetAsync(latestBinReleaseUrl);
         }
         catch (Exception ex)
         {
@@ -208,7 +208,7 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
             return string.Empty;
         }
 
-        async Task<string> FindWin32AssetAsync(string apiUrl)
+        async Task<string> FindWin64AssetAsync(string apiUrl)
         {
             using HttpRequestMessage request = new(HttpMethod.Get, apiUrl);
             request.Headers.UserAgent.ParseAdd("GitExtensions");
@@ -225,7 +225,7 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
             {
                 string name = asset.GetProperty("name").GetString() ?? string.Empty;
                 if (name.StartsWith("gource-", StringComparison.OrdinalIgnoreCase)
-                    && name.EndsWith(win32ZipSuffix, StringComparison.OrdinalIgnoreCase))
+                    && name.EndsWith(win64ZipSuffix, StringComparison.OrdinalIgnoreCase))
                 {
                     return asset.GetProperty("browser_download_url").GetString() ?? string.Empty;
                 }
