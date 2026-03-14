@@ -133,15 +133,15 @@ partial class RevisionGridControl
         dropStashToolStripMenuItem,
         stashStripSeparator,
         checkoutBranchToolStripMenuItem,
+        tsmiPushBranch,
         mergeBranchToolStripMenuItem,
         rebaseOnToolStripMenuItem,
         resetCurrentBranchToHereToolStripMenuItem,
         toolStripSeparator3,
         createNewBranchToolStripMenuItem,
-        tsmiPushBranch,
+        resetAnotherBranchToHereToolStripMenuItem,
         renameBranchToolStripMenuItem,
         deleteBranchToolStripMenuItem,
-        resetAnotherBranchToHereToolStripMenuItem,
         toolStripSeparator4,
         createTagToolStripMenuItem,
         deleteTagToolStripMenuItem,
@@ -292,7 +292,7 @@ partial class RevisionGridControl
         createNewBranchToolStripMenuItem.Name = "createNewBranchToolStripMenuItem";
         createNewBranchToolStripMenuItem.ShortcutKeys = ((Keys)((Keys.Control | Keys.B)));
         createNewBranchToolStripMenuItem.Size = new Size(264, 24);
-        createNewBranchToolStripMenuItem.Text = "Create new branc&h here...";
+        createNewBranchToolStripMenuItem.Text = "Create new branch here (&x)...";
         createNewBranchToolStripMenuItem.Click += CreateNewBranchToolStripMenuItemClick;
         // 
         // tsmiPushBranch
@@ -300,7 +300,7 @@ partial class RevisionGridControl
         tsmiPushBranch.Image = Properties.Images.Push;
         tsmiPushBranch.Name = "tsmiPushBranch";
         tsmiPushBranch.Size = new Size(264, 24);
-        tsmiPushBranch.Text = "Push branch (&x)...";
+        tsmiPushBranch.Text = "Pus&h branch...";
         tsmiPushBranch.Click += PerformFirstDropdownItemClick;
         // 
         // renameBranchToolStripMenuItem

@@ -65,7 +65,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     // E renameBranchToolStripMenuItem
     // F
     // G createTagToolStripMenuItem
-    // H createNewBranchToolStripMenuItem
+    // H tsmiPushBranch
     // I archiveRevisionToolStripMenuItem
     // J
     // K checkoutBranchToolStripMenuItem
@@ -81,7 +81,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     // U resetCurrentBranchToHereToolStripMenuItem
     // V revertCommitToolStripMenuItem
     // W openPullRequestPageStripMenuItem
-    // X tsmiPushBranch
+    // X createNewBranchToolStripMenuItem
     // Y cherryPickCommitToolStripMenuItem, applyStashToolStripMenuItem
     // Z
 

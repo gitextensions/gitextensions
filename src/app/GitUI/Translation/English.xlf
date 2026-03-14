@@ -9477,7 +9477,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="createNewBranchToolStripMenuItem.Text">
-        <source>Create new branc&amp;h here...</source>
+        <source>Create new branch here (&amp;x)...</source>
         <target />
       </trans-unit>
       <trans-unit id="createTagToolStripMenuItem.Text">
@@ -9597,7 +9597,7 @@ Reset the filter via View &gt; Show all branches.</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiPushBranch.Text">
-        <source>Push branch (&amp;x)...</source>
+        <source>Pus&amp;h branch...</source>
         <target />
       </trans-unit>
       <trans-unit id="tsmiSelectInLeftPanel.Text">
