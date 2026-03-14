@@ -137,6 +137,8 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
                 Directory.CreateDirectory(outputFolder);
             }
 
+            string outputFolderFullPath = Path.GetFullPath(string.IsNullOrEmpty(outputFolder) ? "." : outputFolder);
+
             using (ZipArchive archive = ZipFile.OpenRead(zipPathAndFile))
             {
                 foreach (ZipArchiveEntry entry in archive.Entries)
@@ -146,14 +148,20 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
                         continue;
                     }
 
-                    string fullPath = Path.Combine(outputFolder, entry.FullName).Replace("\\ ", "\\");
-                    string? fullDirPath = Path.GetDirectoryName(fullPath);
+                    string destinationPath = Path.Combine(outputFolder, entry.FullName).Replace("\\ ", "\\");
+                    string fullDestinationPath = Path.GetFullPath(destinationPath);
+                    if (!fullDestinationPath.StartsWith(outputFolderFullPath, StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    string? fullDirPath = Path.GetDirectoryName(fullDestinationPath);
                     if (fullDirPath is not null && !Directory.Exists(fullDirPath))
                     {
                         Directory.CreateDirectory(fullDirPath);
                     }
 
-                    entry.ExtractToFile(fullPath, overwrite: true);
+                    entry.ExtractToFile(fullDestinationPath, overwrite: true);
                 }
             }
 
