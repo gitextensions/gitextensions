@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using System.Diagnostics;
 using GitExtensions.Extensibility;
@@ -21,7 +21,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
     /// The recommended Git version (normally latest official before a GE release).
     /// This and later versions are green in the settings check.
     /// </summary>
-    public static readonly GitVersion LastRecommendedVersion = new("2.51.0");
+    public static readonly GitVersion LastRecommendedVersion = new("2.53.0");
 
     /// <summary>
     /// The oldest version with reasonable reliable support in GE.
