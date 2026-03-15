@@ -1,5 +1,6 @@
 <Project>
-  <Target Name="_UpdateEnglishTranslations" AfterTargets="Build">
+  <Target Name="_UpdateEnglishTranslations" AfterTargets="Build"
+          Condition="'$(SolutionFileName)' == 'GitExtensions.sln'">
     <PropertyGroup>
       <_RepoRoot>$([MSBuild]::NormalizeDirectory('$(SolutionDir)'))</_RepoRoot>
       <_TranslationExtractorProject>$(_RepoRoot)setup\TranslationExtractor\TranslationExtractor.csproj</_TranslationExtractorProject>
