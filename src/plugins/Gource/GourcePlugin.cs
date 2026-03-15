@@ -188,6 +188,7 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
         }
         catch (Exception e)
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             MessageBoxes.ShowError(owner, e.Message);
             return 0;
         }
@@ -212,6 +213,7 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
         }
         catch (Exception ex)
         {
+            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             MessageBoxes.ShowError(owner, ex.Message);
             return string.Empty;
         }
