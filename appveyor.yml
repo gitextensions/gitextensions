@@ -74,19 +74,13 @@ build_script:
     dotnet build .\src\native\build.proj -c Release --verbosity q --nologo /bl:.\artifacts\log\native.binlog
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 - ps: |
-    # build .NET
+    # build .NET (also runs TranslationExtractor to update English*.xlf)
     $cmd = "dotnet build -c Release --verbosity q --nologo /bl:.\artifacts\log\build.binlog $buildArgs"
     Invoke-Expression $cmd
     if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 - ps: |
     # We are done with the build, reset all pending changes
     git reset --hard HEAD
-- ps: |
-    # Verify that new strings (if any) have been processed and ready for localisation
-    Push-Location .\src\app\GitExtensions
-    dotnet msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
-    Pop-Location
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
 
 
 # to run your custom scripts instead of automatic tests
