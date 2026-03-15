@@ -1,19 +1,19 @@
 ﻿using System.ComponentModel.Composition;
+using System.IO.Compression;
 using System.Net;
-using System.Text;
-using System.Text.RegularExpressions;
+using System.Text.Json;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.Gource.Properties;
-using ICSharpCode.SharpZipLib.Zip;
+using GitUI;
 using ResourceManager;
 
 namespace GitExtensions.Plugins.Gource;
 
 [Export(typeof(IGitPlugin))]
-public partial class GourcePlugin : GitPluginBase, IGitPluginForRepository
+public class GourcePlugin : GitPluginBase, IGitPluginForRepository
 {
     #region Translation
     private readonly TranslationString _currentDirectoryIsNotValidGit = new("The current directory is not a valid git repository.\n\n" +
@@ -35,10 +35,11 @@ public partial class GourcePlugin : GitPluginBase, IGitPluginForRepository
     private readonly StringSetting _gourcePath = new("Path to Gource", "");
     private readonly StringSetting _gourceArguments = new("Arguments", "--hide filenames --user-image-dir \"$(AVATARS)\"");
 
-    // find http://gource.googlecode.com/files/gource-0.26b.win32.zip
-    // find http://gource.googlecode.com/files/gource-0.34-rc2.win32.zip
-    [GeneratedRegex(@"(?:<a .*href="")(?<path>.*gource-.{3,15}win32\.zip)""", RegexOptions.ExplicitCapture)]
-    private static partial Regex GourceRegex { get; }
+    private static readonly HttpClient _httpClient = new(new HttpClientHandler
+    {
+        UseProxy = true,
+        DefaultProxyCredentials = CredentialCache.DefaultCredentials
+    });
 
     public GourcePlugin() : base(true)
     {
@@ -61,13 +62,13 @@ public partial class GourcePlugin : GitPluginBase, IGitPluginForRepository
     {
         if (!args.GitModule.IsValidGitWorkingDir())
         {
-            MessageBox.Show(args.OwnerForm, _currentDirectoryIsNotValidGit.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(args.OwnerForm, _currentDirectoryIsNotValidGit.Text);
             return false;
         }
 
         string pathToGource = _gourcePath.ValueOrDefault(Settings);
 
-        if (!File.Exists(pathToGource))
+        if (!string.IsNullOrEmpty(pathToGource) && !File.Exists(pathToGource))
         {
             DialogResult result = MessageBox.Show(
                 args.OwnerForm,
@@ -86,22 +87,22 @@ public partial class GourcePlugin : GitPluginBase, IGitPluginForRepository
                     args.OwnerForm, _doYouWantDownloadGource.Text, _download.Text,
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                string gourceUrl = SearchForGourceUrl();
+                string gourceUrl = ThreadHelper.JoinableTaskFactory.Run(() => SearchForGourceUrlAsync(args.OwnerForm));
 
                 if (string.IsNullOrEmpty(gourceUrl))
                 {
-                    MessageBox.Show(args.OwnerForm, _cannotFindGource.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.ShowError(args.OwnerForm, _cannotFindGource.Text);
                     return false;
                 }
 
                 string downloadDir = Path.GetTempPath();
                 string fileName = Path.Combine(downloadDir, "gource.zip");
-                int downloadSize = DownloadFile(gourceUrl, fileName);
+                int downloadSize = ThreadHelper.JoinableTaskFactory.Run(() => DownloadFileAsync(args.OwnerForm, gourceUrl, fileName));
                 if (downloadSize > 0)
                 {
-                    MessageBox.Show(string.Format(_bytesDownloaded.Text, downloadSize), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    MessageBox.Show(args.OwnerForm, string.Format(_bytesDownloaded.Text, downloadSize), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     Directory.CreateDirectory(Path.Combine(downloadDir, "gource"));
-                    UnZipFiles(fileName, Path.Combine(downloadDir, "gource"), true);
+                    UnZipFiles(args.OwnerForm, fileName, Path.Combine(downloadDir, "gource"), true);
 
                     string newGourcePath = Path.Combine(downloadDir, "gource\\gource.exe");
                     if (File.Exists(newGourcePath))
@@ -112,7 +113,7 @@ public partial class GourcePlugin : GitPluginBase, IGitPluginForRepository
                 }
                 else
                 {
-                    MessageBox.Show(args.OwnerForm, _downloadingFailed.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.ShowError(args.OwnerForm, _downloadingFailed.Text);
                 }
             }
         }
@@ -127,7 +128,7 @@ public partial class GourcePlugin : GitPluginBase, IGitPluginForRepository
 
     #endregion
 
-    private static void UnZipFiles(string zipPathAndFile, string outputFolder, bool deleteZipFile)
+    private static void UnZipFiles(IWin32Window? owner, string zipPathAndFile, string outputFolder, bool deleteZipFile)
     {
         try
         {
@@ -136,34 +137,31 @@ public partial class GourcePlugin : GitPluginBase, IGitPluginForRepository
                 Directory.CreateDirectory(outputFolder);
             }
 
-            using (FileStream zipFileStream = File.OpenRead(zipPathAndFile))
-            using (ZipInputStream zipInputStream = new(zipFileStream))
+            string outputFolderFullPath = Path.GetFullPath(string.IsNullOrEmpty(outputFolder) ? "." : outputFolder);
+
+            using (ZipArchive archive = ZipFile.OpenRead(zipPathAndFile))
             {
-                while (true)
+                foreach (ZipArchiveEntry entry in archive.Entries)
                 {
-                    ZipEntry entry = zipInputStream.GetNextEntry();
-
-                    if (entry is null)
-                    {
-                        break;
-                    }
-
-                    string fileName = Path.GetFileName(entry.Name);
-
-                    if (fileName == string.Empty || entry.Name.Contains(".ini"))
+                    if (string.IsNullOrEmpty(entry.Name) || entry.FullName.Contains(".ini"))
                     {
                         continue;
                     }
 
-                    string fullPath = Path.Combine(outputFolder, entry.Name).Replace("\\ ", "\\");
-                    string fullDirPath = Path.GetDirectoryName(fullPath);
+                    string destinationPath = Path.Combine(outputFolder, entry.FullName).Replace("\\ ", "\\");
+                    string fullDestinationPath = Path.GetFullPath(destinationPath);
+                    if (!fullDestinationPath.StartsWith(outputFolderFullPath, StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    string? fullDirPath = Path.GetDirectoryName(fullDestinationPath);
                     if (fullDirPath is not null && !Directory.Exists(fullDirPath))
                     {
                         Directory.CreateDirectory(fullDirPath);
                     }
 
-                    using FileStream fileStream = File.Create(fullPath);
-                    zipInputStream.CopyTo(fileStream);
+                    entry.ExtractToFile(fullDestinationPath, overwrite: true);
                 }
             }
 
@@ -174,104 +172,73 @@ public partial class GourcePlugin : GitPluginBase, IGitPluginForRepository
         }
         catch (Exception e)
         {
-            MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(owner, e.Message);
         }
     }
 
-    private static int DownloadFile(string remoteFilename, string localFilename)
+    private static async Task<int> DownloadFileAsync(IWin32Window? owner, string remoteFilename, string localFilename)
     {
-        // Function will return the number of bytes processed
-        // to the caller. Initialize to 0 here.
-        int bytesProcessed = 0;
-
-        // Assign values to these objects here so that they can
-        // be referenced in the finally block
-        Stream? localStream = null;
-
-        // Use a try/catch/finally block as both the WebRequest and Stream
-        // classes throw exceptions upon error
         try
         {
-#pragma warning disable SYSLIB0014 // 'WebClient' is obsolete
-            using WebClient webClient = new() { Proxy = WebRequest.DefaultWebProxy };
-#pragma warning restore SYSLIB0014 // 'WebClient' is obsolete
-            webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
+            using Stream remoteStream = await _httpClient.GetStreamAsync(remoteFilename);
+            using FileStream localStream = File.Create(localFilename);
+            await remoteStream.CopyToAsync(localStream);
 
-            // Once the WebResponse object has been retrieved,
-            // get the stream object associated with the response's data
-            Stream remoteStream = webClient.OpenRead(remoteFilename);
-
-            // Create the local file
-            localStream = File.Create(localFilename);
-
-            // Allocate a 1k buffer
-            byte[] buffer = new byte[1024];
-            int bytesRead;
-
-            // Simple do/while loop to read from stream until
-            // no bytes are returned
-            do
-            {
-                // Read data (up to 1k) from the stream
-                bytesRead = remoteStream.Read(buffer, 0, buffer.Length);
-
-                // Write the data to the local file
-                localStream.Write(buffer, 0, bytesRead);
-
-                // Increment total bytes processed
-                bytesProcessed += bytesRead;
-            }
-            while (bytesRead > 0);
+            return (int)localStream.Position;
         }
         catch (Exception e)
         {
-            MessageBox.Show(e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(owner, e.Message);
+            return 0;
         }
-        finally
-        {
-            // Close the response and streams objects here
-            // to make sure they're closed even if an exception
-            // is thrown at some point
-            localStream?.Close();
-        }
-
-        // Return total bytes processed to caller.
-        return bytesProcessed;
     }
 
-    private static string SearchForGourceUrl()
+    private static async Task<string> SearchForGourceUrlAsync(IWin32Window? owner)
     {
+        // All Gource releases do not have binary releases, use a fallback
+        const string latestApiUrl = "https://api.github.com/repos/acaudwell/Gource/releases/latest";
+        const string latestBinReleaseUrl = "https://api.github.com/repos/acaudwell/Gource/releases/tags/gource-0.53";
+        const string win64ZipSuffix = ".win64.zip";
+
         try
         {
-#pragma warning disable SYSLIB0014 // 'WebClient' is obsolete
-            using WebClient webClient = new() { Proxy = WebRequest.DefaultWebProxy };
-#pragma warning restore SYSLIB0014 // 'WebClient' is obsolete
-            webClient.Proxy.Credentials = CredentialCache.DefaultCredentials;
-            webClient.Encoding = Encoding.UTF8;
-
-            string response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/latest");
-
-            MatchCollection matches = GourceRegex.Matches(response);
-
-            foreach (Match match in matches)
+            string url = await FindWin64AssetAsync(latestApiUrl);
+            if (!string.IsNullOrEmpty(url))
             {
-                return "https://github.com" + match.Groups["path"].Value;
+                return url;
             }
 
-            response = webClient.DownloadString(@"https://github.com/acaudwell/Gource/releases/tag/gource-0.42");
-
-            matches = GourceRegex.Matches(response);
-
-            foreach (Match match in matches)
-            {
-                return "https://github.com" + match.Groups["path"].Value;
-            }
-
-            return string.Empty;
+            return await FindWin64AssetAsync(latestBinReleaseUrl);
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(owner, ex.Message);
+            return string.Empty;
+        }
+
+        async Task<string> FindWin64AssetAsync(string apiUrl)
+        {
+            using HttpRequestMessage request = new(HttpMethod.Get, apiUrl);
+            request.Headers.UserAgent.ParseAdd("GitExtensions");
+            using HttpResponseMessage response = await _httpClient.SendAsync(request);
+            if (!response.IsSuccessStatusCode)
+            {
+                return string.Empty;
+            }
+
+            string json = await response.Content.ReadAsStringAsync();
+            using JsonDocument doc = JsonDocument.Parse(json);
+
+            foreach (JsonElement asset in doc.RootElement.GetProperty("assets").EnumerateArray())
+            {
+                string name = asset.GetProperty("name").GetString() ?? string.Empty;
+                if (name.StartsWith("gource-", StringComparison.OrdinalIgnoreCase)
+                    && name.EndsWith(win64ZipSuffix, StringComparison.OrdinalIgnoreCase))
+                {
+                    return asset.GetProperty("browser_download_url").GetString() ?? string.Empty;
+                }
+            }
+
             return string.Empty;
         }
     }
