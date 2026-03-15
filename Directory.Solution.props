@@ -1,7 +1,1 @@
-<Project>
-  <!--
-    Solution-level properties for Git Extensions.
-    TranslationExtractor is included in the solution and built alongside all projects.
-    Directory.Solution.targets runs the extraction after the full solution build.
-  -->
-</Project>
+<Project />
