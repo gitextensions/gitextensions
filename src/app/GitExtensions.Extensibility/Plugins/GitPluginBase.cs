@@ -17,7 +17,6 @@ public abstract class GitPluginBase : IGitPlugin, ITranslate
         HasSettings = hasSettings;
     }
 
-    // required for the TranslationApp to work
     protected GitPluginBase()
         : this(false)
     {
