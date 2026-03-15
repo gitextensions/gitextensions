@@ -1,0 +1,41 @@
+<Project>
+  <Target Name="_UpdateEnglishTranslations" AfterTargets="Build">
+    <PropertyGroup>
+      <_RepoRoot>$([MSBuild]::NormalizeDirectory('$(SolutionDir)'))</_RepoRoot>
+      <_TranslationExtractorProject>$(_RepoRoot)setup\TranslationExtractor\TranslationExtractor.csproj</_TranslationExtractorProject>
+      <_TranslationsSourceDir>$([MSBuild]::NormalizeDirectory('$(_RepoRoot)', 'src', 'app', 'GitUI', 'Translation'))</_TranslationsSourceDir>
+    </PropertyGroup>
+
+    <Message Text="Extracting translatable strings from source code..." Importance="High" />
+
+    <Exec Command="dotnet run --no-build --project &quot;$(_TranslationExtractorProject)&quot; -- &quot;$(_RepoRoot.TrimEnd('\'))&quot; &quot;$(_TranslationsSourceDir.TrimEnd('\'))&quot;"
+          WorkingDirectory="$(_RepoRoot)"
+          EchoOff="true"
+          ConsoleToMsBuild="true"
+          StandardOutputImportance="normal">
+      <Output TaskParameter="ExitCode" PropertyName="_TranslationExtractorErrorCode" />
+    </Exec>
+    <Error Text="TranslationExtractor failed with exit code $(_TranslationExtractorErrorCode)"
+           Condition="$(_TranslationExtractorErrorCode) != 0" />
+
+    <!-- On CI: verify no changes to English*.xlf -->
+    <Exec Command="git -c core.autocrlf=false add *.xlf --ignore-errors"
+          IgnoreStandardErrorWarningFormat="true"
+          WorkingDirectory="$(_RepoRoot)"
+          IgnoreExitCode="true"
+          Condition="$(ContinuousIntegrationBuild) == true" />
+
+    <Exec Command="git status --porcelain | findstr /i /r &quot;English.xlf English.Plugins.xlf&quot; "
+          WorkingDirectory="$(_RepoRoot)"
+          IgnoreExitCode="true"
+          ConsoleToMSBuild="true"
+          Condition="$(ContinuousIntegrationBuild) == true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_TranslationDiff" />
+    </Exec>
+
+    <Message Text="English translations are up-to date" Importance="High"
+           Condition="$(ContinuousIntegrationBuild) == true and '$(_TranslationDiff)' == ''" />
+    <Error Text="Please update English translations and re-submit the pull-request. Refer to https://github.com/gitextensions/gitextensions/wiki/Translations"
+           Condition="$(ContinuousIntegrationBuild) == true and '$(_TranslationDiff)' != ''" />
+  </Target>
+</Project>

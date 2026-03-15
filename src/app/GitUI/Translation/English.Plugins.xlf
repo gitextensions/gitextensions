@@ -6,6 +6,26 @@
         <source>Display test results in build status summary for each build result (network intensive!)</source>
         <target />
       </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>If you want to use the result of different projects, separate your different projects names by a '|'.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Token used to be able to query AppVeyor rest Api. You will find out in the user account menu.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAccountName.Text">
+        <source>Account name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblApiToken.Text">
+        <source>Api token</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblProjects.Text">
+        <source>Project(s) Name(s)</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
@@ -38,6 +58,36 @@
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="AzureDevOpsAdapter" source-language="en">
+    <body>
+      <trans-unit id="_badTokenErrorMessage.Text">
+        <source>The personal access token is invalid or has expired. Update it in the 'Build server integration' settings.
+
+The build server integration has been disabled for this session.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_buildIntegrationErrorCaption.Text">
+        <source>Azure DevOps error</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_genericErrorMessage.Text">
+        <source>An error occurred when requesting build server results.
+
+As a consequence, the build server integration has been disabled for this session.
+
+Detail of the error:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_ignoreButton.Text">
+        <source>Ignore</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_openSettingsButton.Text">
+        <source>Open settings</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en">
     <body>
       <trans-unit id="Description.Text">
@@ -62,6 +112,14 @@
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_warningForceWithLease.Caption">
+        <source>WARNING: be careful when force push with lease having the periodic background fetch enabled but chose not to auto-refresh after each fetch.
+
+You could lose new commits pushed by others to the remote branch.
+
+Be sure to refresh the revision grid before doing a force push with lease.</source>
         <target />
       </trans-unit>
     </body>
@@ -363,6 +421,10 @@ Are you sure you want to continue?</source>
         <source>/(feature|develop)/</source>
         <target />
       </trans-unit>
+      <trans-unit id="statusStrip1.Text">
+        <source>statusStrip1</source>
+        <target />
+      </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
         <target />
@@ -609,6 +671,122 @@ Are you sure you want to continue?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitFlowForm" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>GitFlow</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_gitFlowTooltip.Text">
+        <source>A good branch model for your project with Git...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_loading.Text">
+        <source>Loading...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_noBranchExist.Text">
+        <source>No {0} branches exist.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnClose.Text">
+        <source>Close</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnCreateBranch.Text">
+        <source>Start!</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnFinish.Text">
+        <source>Finish</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnInit.Text">
+        <source>Init GitFlow</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnPublish.Text">
+        <source>Publish</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="btnPull.Text">
+        <source>Pull</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbBasedOn.Text">
+        <source>based on:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbPushAfterFinish.Text">
+        <source>Push after finish</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="cbSquash.Text">
+        <source>Squash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbManage.Text">
+        <source>Manage existing branches:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="gbStart.Text">
+        <source>Start branch:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>branch:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>Expected name:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>command:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>Remote to pull from :</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblCaptionHead.Text">
+        <source>HEAD:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblHead.Text">
+        <source>ref/...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblPrefixManage.Text">
+        <source>[prefix]/</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblPrefixName.Text">
+        <source>[prefix]/</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lnkGitFlow.Text">
+        <source>About GitFlow</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lnkGitFlow.ttGitFlow">
+        <source>A good branch model for your project with Git...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="panel3.Text">
+        <source>Result of git flow command run</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitFlowPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>GitFlow</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en">
     <body>
       <trans-unit id="Description.Text">
@@ -677,6 +855,26 @@ Are you sure you want to continue?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Statistics</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_codeFiles.Caption">
+        <source>Code files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_ignoreDirectories.Caption">
+        <source>Directories to ignore (EndsWith)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_ignoreSubmodules.Caption">
+        <source>Ignore submodules</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en">
     <body>
       <trans-unit id="GetProjectIdLink.Text">
@@ -701,26 +899,6 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Statistics</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_codeFiles.Caption">
-        <source>Code files</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_ignoreDirectories.Caption">
-        <source>Directories to ignore (EndsWith)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_ignoreSubmodules.Caption">
-        <source>Ignore submodules</source>
         <target />
       </trans-unit>
     </body>
@@ -837,6 +1015,74 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Jira Commit Hint</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="EmptyQueryResultCaption.Text">
+        <source>First Task Preview</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="EmptyQueryResultMessage.Text">
+        <source>[Empty Jira Query Result]</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="InvalidUrlCaption.Text">
+        <source>Invalid Jira url</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="InvalidUrlMessage.Text">
+        <source>A valid url is required to launch the Jira query helper</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="JiraFieldsLabel.Text">
+        <source>Jira fields</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="JiraPluginConfigurationErrorText.Text">
+        <source>Jira plugin configuration incomplete!</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="PreviewButtonText.Text">
+        <source>Preview</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="QueryHelperLinkText.Text">
+        <source>Open the query helper inside Jira</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="QueryHelperOpenErrorText.Text">
+        <source>Unable to open Jira query helper</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_authTypeSettings.Caption">
+        <source>Auth type</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_credentialsSettings.Caption">
+        <source>Jira credentials</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_enabledSettings.Caption">
+        <source>Jira hint plugin enabled</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_jqlQuerySettings.Caption">
+        <source>JQL Query</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_stringTemplateSetting.Caption">
+        <source>Message Template</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_urlSettings.Caption">
+        <source>Jira URL</source>
         <target />
       </trans-unit>
     </body>
@@ -1017,6 +1263,10 @@ branch names, tag names)</source>
         <source>Extract data from a build result url copied in the clipboard</source>
         <target />
       </trans-unit>
+      <trans-unit id="RestApiTokenLabel.Text">
+        <source>Rest Api Token</source>
+        <target />
+      </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
         <target />
@@ -1049,14 +1299,43 @@ Please ensure that the url is valid and that the API token has access to build a
  - https://yourorganization.visualstudio.com/projectname/</source>
         <target />
       </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Project Url</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Build definition name
+(all existing if left empty)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
  - 'Build (read)'
  - 'Project and team (read)'</source>
         <target />
       </trans-unit>
+      <trans-unit id="labelBuildIdFilter.Text">
+        <source>If needed, use the '*' wildcard or enter a Regular Expression</source>
+        <target />
+      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TeamCityBuildChooser" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Choose the TeamCity build...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonCancel.Text">
+        <source>Cancel</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonOK.Text">
+        <source>OK</source>
         <target />
       </trans-unit>
     </body>
@@ -1085,6 +1364,26 @@ Please copy in the clipboard the url of the build before retrying.
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Project name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>TeamCity server URL</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelBuildFilter.Text">
+        <source>Build Id Filter</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelBuildIdFilter.Text">
+        <source>Regexp</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelProjectNameComment.Text">
+        <source>Several names splitted by | char</source>
         <target />
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
