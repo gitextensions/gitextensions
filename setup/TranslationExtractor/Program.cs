@@ -35,6 +35,8 @@ internal static class Program
 
         List<TranslationEntry> mainEntries = [];
         List<TranslationEntry> pluginEntries = [];
+        HashSet<string> mainClassNames = new(StringComparer.Ordinal);
+        HashSet<string> pluginClassNames = new(StringComparer.Ordinal);
 
         // Process main app source files (Externals are excluded, matching the reflection tool's UnTranslatableDLLs)
         string[] appDirs =
@@ -49,14 +51,14 @@ internal static class Program
                 continue;
             }
 
-            ProcessDirectory(appDir, mainEntries, isPlugin: false);
+            ProcessDirectory(appDir, mainEntries, mainClassNames, isPlugin: false);
         }
 
         // Process plugin source files
         string pluginsDir = Path.Combine(repoRoot, "src", "plugins");
         if (Directory.Exists(pluginsDir))
         {
-            ProcessDirectory(pluginsDir, pluginEntries, isPlugin: true);
+            ProcessDirectory(pluginsDir, pluginEntries, pluginClassNames, isPlugin: true);
         }
 
         // Deduplicate entries (same category + id should only appear once)
@@ -70,8 +72,8 @@ internal static class Program
         string mainXlf = Path.Combine(outputDir, "English.xlf");
         string pluginsXlf = Path.Combine(outputDir, "English.Plugins.xlf");
 
-        mainEntries = MergeWithExisting(mainEntries, mainXlf);
-        pluginEntries = MergeWithExisting(pluginEntries, pluginsXlf);
+        mainEntries = MergeWithExisting(mainEntries, mainXlf, mainClassNames);
+        pluginEntries = MergeWithExisting(pluginEntries, pluginsXlf, pluginClassNames);
 
         Console.WriteLine($"Main app entries (after merge): {mainEntries.Count} across {mainEntries.Select(e => e.Category).Distinct().Count()} categories");
         Console.WriteLine($"Plugin entries (after merge): {pluginEntries.Count} across {pluginEntries.Select(e => e.Category).Distinct().Count()} categories");
@@ -90,10 +92,12 @@ internal static class Program
 
     /// <summary>
     ///  Merges extracted entries with entries from the existing XLIFF file.
-    ///  Any entry present in the existing file but missing from the extracted set is preserved.
-    ///  Extracted entries always take precedence (their source text may have changed).
+    ///  Any entry present in the existing file but missing from the extracted set is preserved,
+    ///  provided the category still has at least one extracted entry. Categories with zero
+    ///  extracted entries are considered removed from the codebase and are not preserved.
     /// </summary>
-    private static List<TranslationEntry> MergeWithExisting(List<TranslationEntry> extracted, string existingXlfPath)
+    private static List<TranslationEntry> MergeWithExisting(
+        List<TranslationEntry> extracted, string existingXlfPath, IReadOnlySet<string> knownClassNames)
     {
         List<TranslationEntry> existing = XliffReader.Read(existingXlfPath);
         if (existing.Count == 0)
@@ -105,13 +109,24 @@ internal static class Program
             extracted.Select(e => (e.Category, e.Id)));
 
         int merged = 0;
+        int dropped = 0;
         foreach (TranslationEntry entry in existing)
         {
-            if (!extractedKeys.Contains((entry.Category, entry.Id)))
+            if (extractedKeys.Contains((entry.Category, entry.Id)))
             {
-                extracted.Add(entry);
-                merged++;
+                continue;
             }
+
+            // Only preserve entries whose category still maps to a class in the codebase.
+            // If the class no longer exists, the source was removed and entries should not be preserved.
+            if (!knownClassNames.Contains(entry.Category))
+            {
+                dropped++;
+                continue;
+            }
+
+            extracted.Add(entry);
+            merged++;
         }
 
         if (merged > 0)
@@ -119,10 +134,15 @@ internal static class Program
             Console.WriteLine($"  Preserved {merged} entries from existing file that static analysis could not discover");
         }
 
+        if (dropped > 0)
+        {
+            Console.WriteLine($"  Dropped {dropped} entries from categories no longer in the codebase");
+        }
+
         return extracted;
     }
 
-    private static void ProcessDirectory(string directory, List<TranslationEntry> entries, bool isPlugin)
+    private static void ProcessDirectory(string directory, List<TranslationEntry> entries, HashSet<string> classNames, bool isPlugin)
     {
         foreach (string file in Directory.EnumerateFiles(directory, "*.cs", SearchOption.AllDirectories))
         {
@@ -150,11 +170,15 @@ internal static class Program
                 string? className = InferClassNameFromDesignerFile(file, sourceText);
                 if (className is not null)
                 {
+                    classNames.Add(className);
                     entries.AddRange(DesignerExtractor.Extract(file, sourceText, className));
                 }
             }
             else
             {
+                // Collect all class names from the file for merge category validation
+                CollectClassNames(sourceText, classNames);
+
                 // Extract TranslationString fields from regular .cs files
                 entries.AddRange(TranslationStringExtractor.Extract(file, sourceText));
 
@@ -204,5 +228,42 @@ internal static class Program
         }
 
         return result;
+    }
+
+    /// <summary>
+    ///  Collects all class/struct names declared in the source text using simple text scanning.
+    ///  Used to determine which xlf categories still have corresponding source code.
+    /// </summary>
+    private static void CollectClassNames(string sourceText, HashSet<string> classNames)
+    {
+        ReadOnlySpan<char> span = sourceText.AsSpan();
+        string[] keywords = ["class ", "struct "];
+
+        foreach (string keyword in keywords)
+        {
+            int searchFrom = 0;
+            while (searchFrom < span.Length)
+            {
+                int idx = sourceText.IndexOf(keyword, searchFrom, StringComparison.Ordinal);
+                if (idx < 0)
+                {
+                    break;
+                }
+
+                idx += keyword.Length;
+                int end = idx;
+                while (end < span.Length && (char.IsLetterOrDigit(span[end]) || span[end] == '_'))
+                {
+                    end++;
+                }
+
+                if (end > idx)
+                {
+                    classNames.Add(sourceText[idx..end]);
+                }
+
+                searchFrom = end;
+            }
+        }
     }
 }

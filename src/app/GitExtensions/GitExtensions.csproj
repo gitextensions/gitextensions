@@ -2,7 +2,6 @@
   <Import Project="$(RepoRoot)\eng\Localisation.targets" />
   <Import Project="$(MSBuildProjectDirectory)\Project.Build.targets" />
   <Import Project="$(MSBuildProjectDirectory)\Project.Publish.targets" />
-  <Import Project="$(MSBuildProjectDirectory)\Project.Loc.targets" />
 
   <PropertyGroup>
     <OutputType>WinExe</OutputType>

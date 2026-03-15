@@ -77,12 +77,6 @@ build_script:
       git checkout                                     --force -- "GitUI/Translation/English.xlf" "GitUI/Translation/English.Plugins.xlf"
     }
 
-    # it would be nice to run '.\cibuild.cmd -loc -logFileName localise.binlog /p:NoBuild=true' but it doesn't work without `-build` switch :\
-    Push-Location .\src\app\GitExtensions
-    msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:..\artifacts\log\localise.binlog
-    if ($LastExitCode -ne 0) { $host.SetShouldExit($LastExitCode) }
-    Pop-Location
-
 
 # to run your custom scripts instead of automatic tests
 test_script:

@@ -52,32 +52,6 @@
                 "kind": "build"
             },
             "dependsOn": ["build", "build-vc"]
-        },
-        {
-            "label": "watch",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "watch",
-                "run",
-                "--project",
-                "${workspaceFolder}/GitExtensions.sln"
-            ],
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "label": "translate",
-            "command": "dotnet",
-            "type": "process",
-            "args": [
-                "build",
-                "/p:RunTranslationApp=true"
-            ],
-            "problemMatcher": "$msCompile",
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
         }
     ]
 }
