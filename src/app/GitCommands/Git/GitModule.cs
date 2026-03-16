@@ -169,16 +169,12 @@ public sealed partial class GitModule : IGitModule
     /// </summary>
     public IGitVersion GitVersion => Git.GitVersion.CurrentVersion(GitExecutable);
 
-    /// <inheritdoc/>
     public string WorkingDir => _executor.WorkingDir;
 
-    /// <inheritdoc/>
     public IExecutable GitExecutable => _executor.GitExecutable;
 
-    /// <inheritdoc/>
     public IGitCommandRunner GitCommandRunner => _executor.GitCommandRunner;
 
-    /// <inheritdoc/>
     public string GetSelectedBranch(bool emptyIfDetached = false) => _executor.GetSelectedBranch(emptyIfDetached);
 
     /// <summary>

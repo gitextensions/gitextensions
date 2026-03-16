@@ -43,10 +43,8 @@ internal sealed class GitExecutor : IGitExecutor
     {
     }
 
-    /// <inheritdoc/>
     public IGitCommandRunner GitCommandRunner { get; private set; }
 
-    /// <inheritdoc/>
     public IExecutable GitExecutable { get; private set; }
 
     /// <summary>
@@ -54,7 +52,6 @@ internal sealed class GitExecutor : IGitExecutor
     /// </summary>
     public static Encoding SystemEncoding => _systemEncoding ??= new SystemEncodingReader().Read();
 
-    /// <inheritdoc/>
     public string WorkingDir { get; init; }
 
     /// <summary>
@@ -78,7 +75,6 @@ internal sealed class GitExecutor : IGitExecutor
     /// </summary>
     internal bool IsReftableRepo { get; set; }
 
-    /// <inheritdoc/>
     public string GetSelectedBranch(bool emptyIfDetached = false)
     {
         if (!IsReftableRepo)
