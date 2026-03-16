@@ -170,7 +170,7 @@ internal sealed class GitExecutor : IGitExecutor
     /// <summary>
     ///  Gets the ".git" directory path.
     /// </summary>
-    internal string GetGitDirectory()
+    public string GetGitDirectory()
     {
         return GetGitDirectory(WorkingDir);
     }
