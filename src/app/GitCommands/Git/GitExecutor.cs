@@ -44,9 +44,9 @@ internal sealed class GitExecutor : IGitExecutor
     {
     }
 
-    public IGitCommandRunner GitCommandRunner { get; private init; }
+    public IGitCommandRunner GitCommandRunner { get; private set; }
 
-    public IExecutable GitExecutable { get; private init; }
+    public IExecutable GitExecutable { get; private set; }
 
     /// <summary>
     ///  Gets the system encoding.
@@ -58,7 +58,7 @@ internal sealed class GitExecutor : IGitExecutor
     /// <summary>
     ///  Gets the  Windows Git executable associated with this executor.
     /// </summary>
-    public IExecutable GitWindowsExecutable { get; private init; }
+    public IExecutable GitWindowsExecutable { get; private set; }
 
     /// <summary>
     ///  Gets the access to the Windows git executable associated with this executor.
@@ -186,5 +186,35 @@ internal sealed class GitExecutor : IGitExecutor
     internal string GetGitDirectory(string repositoryPath)
     {
         return _gitDirectoryResolverInstance.Resolve(repositoryPath);
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly GitExecutor _executor;
+
+        public TestAccessor(GitExecutor executor)
+        {
+            _executor = executor;
+        }
+
+        public IExecutable GitExecutable
+        {
+            get => _executor.GitExecutable;
+            set => _executor.GitExecutable = value;
+        }
+
+        public IExecutable GitWindowsExecutable
+        {
+            get => _executor.GitWindowsExecutable;
+            set => _executor.GitWindowsExecutable = value;
+        }
+
+        public IGitCommandRunner GitCommandRunner
+        {
+            get => _executor.GitCommandRunner;
+            set => _executor.GitCommandRunner = value;
+        }
     }
 }

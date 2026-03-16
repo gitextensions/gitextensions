@@ -4005,6 +4005,8 @@ public sealed partial class GitModule : IGitModule
             _gitModule = gitModule;
         }
 
+        public GitExecutor.TestAccessor Executor => _gitModule._executor.GetTestAccessor();
+
         public DistributedSettings? EffectiveSettings => _gitModule._effectiveSettings;
 
         public FrozenDictionary<string, Color>? RemoteColors => _gitModule._remoteColors;
