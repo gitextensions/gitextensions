@@ -1,6 +1,4 @@
-﻿using System.Text;
-
-namespace GitExtensions.Extensibility.Git;
+﻿namespace GitExtensions.Extensibility.Git;
 
 /// <summary>
 ///  Provides a minimal git execution context for lightweight repository operations such as reading the current branch.
