@@ -1,4 +1,5 @@
-﻿using System.Security;
+﻿using System.Diagnostics;
+using System.Security;
 using System.Text;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -109,9 +110,10 @@ internal sealed class GitExecutor : IGitExecutor
 
             return emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return string.Empty;
+            Trace.WriteLine(ex);
+            return "???";
         }
     }
 
