@@ -182,7 +182,7 @@ public sealed partial class GitModule : IGitModule
     public string GetSelectedBranch(bool emptyIfDetached = false) => _executor.GetSelectedBranch(emptyIfDetached);
 
     /// <summary>
-    /// Gets the system encoding.
+    ///  Gets the system encoding.
     /// </summary>
     public static Encoding SystemEncoding => GitExecutor.SystemEncoding;
 
@@ -303,13 +303,17 @@ public sealed partial class GitModule : IGitModule
         LocalGitConfigSettings.Invalidate();
     }
 
-    /// <summary>Indicates whether the <see cref="IGitExecutor.WorkingDir"/> contains a git repository.</summary>
+    /// <summary>
+    ///  Indicates whether the <see cref="IGitExecutor.WorkingDir"/> contains a git repository.
+    /// </summary>
     public bool IsValidGitWorkingDir()
     {
         return IsValidGitWorkingDir(WorkingDir);
     }
 
-    /// <summary>Indicates whether the specified directory contains a git repository.</summary>
+    /// <summary>
+    ///  Indicates whether the specified directory contains a git repository.
+    /// </summary>
     public static bool IsValidGitWorkingDir(string? dir)
     {
         if (string.IsNullOrEmpty(dir))

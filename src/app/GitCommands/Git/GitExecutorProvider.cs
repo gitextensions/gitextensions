@@ -5,7 +5,7 @@ using GitExtensions.Extensibility.Git;
 namespace GitCommands;
 
 /// <summary>
-/// Creates and caches <see cref="GitExecutor"/> instances by repository path.
+///  Creates and caches <see cref="GitExecutor"/> instances by repository path.
 /// </summary>
 internal sealed class GitExecutorProvider : IGitExecutorProvider
 {
