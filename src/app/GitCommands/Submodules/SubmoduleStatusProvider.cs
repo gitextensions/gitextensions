@@ -32,22 +32,17 @@ public interface ISubmoduleStatusProvider : IDisposable
     Task UpdateSubmodulesStatusAsync(string workingDirectory, IReadOnlyList<GitItemStatus>? gitStatus, bool forceUpdate = false);
 }
 
-internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
+internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvider) : ISubmoduleStatusProvider
 {
     // Throttle updates triggered from status updates
     private const int MinRefreshInterval = 15;
 
-    private readonly IGitExecutorProvider _executorProvider;
+    private readonly IGitExecutorProvider _executorProvider = executorProvider;
     private readonly CancellationTokenSequence _submodulesStructureSequence = new();
     private readonly CancellationTokenSequence _submodulesStatusSequence = new();
     private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = [];
     private DateTime _previousSubmoduleUpdateTime;
     private SubmoduleInfoResult? _submoduleInfoResult;
-
-    public SubmoduleStatusProvider(IGitExecutorProvider executorProvider)
-    {
-        _executorProvider = executorProvider;
-    }
 
     // Invoked when status update is requested (use to clear/lock UI)
     public event EventHandler? StatusUpdating;
