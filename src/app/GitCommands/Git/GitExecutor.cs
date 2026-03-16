@@ -44,9 +44,9 @@ internal sealed class GitExecutor : IGitExecutor
     {
     }
 
-    public IGitCommandRunner GitCommandRunner { get; private set; }
+    public IGitCommandRunner GitCommandRunner { get; private init; }
 
-    public IExecutable GitExecutable { get; private set; }
+    public IExecutable GitExecutable { get; private init; }
 
     /// <summary>
     ///  Gets the system encoding.
@@ -58,7 +58,7 @@ internal sealed class GitExecutor : IGitExecutor
     /// <summary>
     ///  Gets the  Windows Git executable associated with this executor.
     /// </summary>
-    public IExecutable GitWindowsExecutable { get; private set; }
+    public IExecutable GitWindowsExecutable { get; private init; }
 
     /// <summary>
     ///  Gets the access to the Windows git executable associated with this executor.
