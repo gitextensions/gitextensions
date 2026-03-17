@@ -18,18 +18,28 @@ public partial class PluginSettingsPage : AutoLayoutSettingsPage
 
     private void CreateSettingsControls()
     {
+        string state = "uninitialized";
         try
         {
+            state = _gitPlugin is null ? "null" : $"{(_gitPlugin.HasSettings ? "" : "not ")}having settings";
+
             IEnumerable<ISetting> settings = GetSettings();
 
-            foreach (ISetting setting in settings)
+            state += ", enumerable";
+
+            ISetting[] settingsArray = [.. settings];
+
+            state = $"{settingsArray.Length} setting(s)";
+
+            foreach (ISetting setting in settingsArray)
             {
                 AddSettingControl(setting.CreateControlBinding());
+                state += '.';
             }
         }
         catch (Exception ex)
         {
-            throw new ExternalOperationException(command: $"Cannot load settings for plugin {_gitPlugin?.Name ?? "unknown"}", innerException: ex);
+            throw new ExternalOperationException(command: $"Cannot load settings for plugin {_gitPlugin?.Name ?? "unknown"}: {state}", innerException: ex);
         }
     }
 
