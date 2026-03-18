@@ -45,7 +45,6 @@ public static class TranslationUtil
         "SMDiag",
         "System",
         "vshost",
-        "Atlassian",
         "RestSharp",
         "EnvDTE",
         "Newtonsoft",
