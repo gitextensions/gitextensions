@@ -7,6 +7,7 @@ using System.Text;
 using BugReporter.Serialization;
 using GitCommands;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 
 namespace GitUI.NBugReports;
@@ -24,6 +25,12 @@ public static class BugReportInvoker
 
     private static readonly IBugReporter _bugReporter = new UIReporter();
     private static bool _isReportingDubiousOwnershipSecurity;
+
+    /// <summary>
+    ///  Gets or sets the <see cref="IGitExecutorProvider"/> used to create git executors
+    ///  that respect WSL routing for dubious ownership trust commands.
+    /// </summary>
+    public static IGitExecutorProvider? ExecutorProvider { get; set; }
 
     /// <summary>
     ///  Set to <see langword="true" /> on application exit

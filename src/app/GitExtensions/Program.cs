@@ -62,6 +62,7 @@ internal static class Program
         Control.CheckForIllegalCrossThreadCalls = checkForIllegalCrossThreadCalls;
 
         ServiceContainerRegistry.RegisterServices(_serviceContainer);
+        BugReportInvoker.ExecutorProvider = _serviceContainer.GetRequiredService<IGitExecutorProvider>();
 
         // If an error happens before we had a chance to init the environment information
         // the call to GetInformation() from BugReporter.ShowNBug() will fail.
