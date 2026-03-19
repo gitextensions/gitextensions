@@ -201,31 +201,24 @@ internal sealed class GitExecutor : IGitExecutor
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal readonly struct TestAccessor
+    internal readonly struct TestAccessor(GitExecutor executor)
     {
-        private readonly GitExecutor _executor;
-
-        public TestAccessor(GitExecutor executor)
-        {
-            _executor = executor;
-        }
-
         public IExecutable GitExecutable
         {
-            get => _executor.GitExecutable;
-            set => _executor.GitExecutable = value;
+            get => executor.GitExecutable;
+            set => executor.GitExecutable = value;
         }
 
         public IExecutable GitWindowsExecutable
         {
-            get => _executor.GitWindowsExecutable;
-            set => _executor.GitWindowsExecutable = value;
+            get => executor.GitWindowsExecutable;
+            set => executor.GitWindowsExecutable = value;
         }
 
         public IGitCommandRunner GitCommandRunner
         {
-            get => _executor.GitCommandRunner;
-            set => _executor.GitCommandRunner = value;
+            get => executor.GitCommandRunner;
+            set => executor.GitCommandRunner = value;
         }
     }
 }
