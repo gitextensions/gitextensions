@@ -3,7 +3,7 @@ using GitExtensions.Extensibility;
 
 namespace GitExtUtils;
 
-public static class Priorites
+public static class Priority
 {
     /// <summary>
     /// Returns a dictionary with priorities for the references whose key matches the given list of regexes.
@@ -12,7 +12,7 @@ public static class Priorites
     /// <param name="references">The branches or remotes to prioritize.</param>
     /// <param name="keySelector">Function in T to get the sort key.</param>
     /// <param name="regexes">Array with the priority regexes.</param>
-    /// <param name="regexList">String with regexes with priorities separated by semicolon; alternative to <paramref name="regexes"/>.</param>
+    /// <param name="regexList">String with the priority regexes separated by semicolon; used if<paramref name="regexes"/> is null.</param>
     /// <returns>Priorities for the references that match a regex.</returns>
     public static Dictionary<T, int> Priorities<T>(IReadOnlyList<T> references, Func<T, string> keySelector, string[]? regexes = null, string? regexList = null)
     {

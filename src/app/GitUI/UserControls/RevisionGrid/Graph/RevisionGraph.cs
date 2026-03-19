@@ -452,7 +452,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
             .AsReadOnlyList();
 
         // Find first revision with a ref at priority 1 (usually 'main' or 'master')
-        HashSet<IGitRef> priority1Refs = [.. Priorites.Priorities(refs, x => x.LocalName, regexList: AppSettings.PrioritizedBranchNames)
+        HashSet<IGitRef> priority1Refs = [.. Priority.Priorities(refs, x => x.LocalName, regexList: AppSettings.PrioritizedBranchNames)
             .Where(kv => kv.Value == 0)
             .Select(kv => kv.Key)];
 
