@@ -19,6 +19,7 @@ public partial class PluginSettingsPage : AutoLayoutSettingsPage
 
     private void CreateSettingsControls()
     {
+        // Gather debug info for exceptions
         StringBuilder state = new();
         try
         {
