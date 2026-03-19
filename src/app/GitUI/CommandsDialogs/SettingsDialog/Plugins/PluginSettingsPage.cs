@@ -1,4 +1,5 @@
-﻿using GitExtensions.Extensibility;
+﻿using System.Text;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
@@ -18,18 +19,29 @@ public partial class PluginSettingsPage : AutoLayoutSettingsPage
 
     private void CreateSettingsControls()
     {
+        // Gather debug info for exceptions
+        StringBuilder state = new();
         try
         {
+            state.Append(_gitPlugin is null ? "null" : $"{(_gitPlugin.HasSettings ? "" : "not ")}having settings");
+
             IEnumerable<ISetting> settings = GetSettings();
 
-            foreach (ISetting setting in settings)
+            state.Append(", enumerable");
+
+            ISetting[] settingsArray = [.. settings];
+
+            state.Append($" with {settingsArray.Length} setting(s)");
+
+            foreach (ISetting setting in settingsArray)
             {
                 AddSettingControl(setting.CreateControlBinding());
+                state.Append('.');
             }
         }
         catch (Exception ex)
         {
-            throw new ExternalOperationException(command: $"Cannot load settings for plugin {_gitPlugin?.Name ?? "unknown"}", innerException: ex);
+            throw new ExternalOperationException(command: $"Cannot load settings for plugin {_gitPlugin?.Name ?? "unknown"}: {state}", innerException: ex);
         }
     }
 
