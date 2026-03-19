@@ -66,16 +66,9 @@ internal sealed class GitExecutor : IGitExecutor
     /// </remarks>
     public IExecutable GitWindowsExecutable { get; private set; }
 
-    /// <summary>
-    ///  Gets the access to the Windows git executable associated with this executor.
-    /// </summary>
-    internal IGitCommandRunner GitWindowsCommandRunner { get; }
+    public IGitCommandRunner GitWindowsCommandRunner { get; }
 
-    /// <summary>
-    ///  Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
-    ///  This can be seen as the Git "instance" identifier.
-    /// </summary>
-    internal string WslDistro { get; }
+    public string WslDistro { get; }
 
     /// <summary>
     ///  Gets a value indicating whether this repository is using the reftable format.

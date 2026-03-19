@@ -23,6 +23,27 @@ public interface IGitExecutor
     IGitCommandRunner GitCommandRunner { get; }
 
     /// <summary>
+    ///  Gets the Windows Git executable associated with this executor.
+    /// </summary>
+    IExecutable GitWindowsExecutable { get; }
+
+    /// <summary>
+    ///  Gets the access to the Windows git executable associated with this executor.
+    /// </summary>
+    IGitCommandRunner GitWindowsCommandRunner { get; }
+
+    /// <summary>
+    ///  Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
+    ///  This can be seen as the Git "instance" identifier.
+    /// </summary>
+    string WslDistro { get; }
+
+    /// <summary>
+    ///  Gets the ".git" directory path.
+    /// </summary>
+    string GetGitDirectory();
+
+    /// <summary>
     ///  Gets the name of the currently checked out branch.
     /// </summary>
     /// <param name="emptyIfDetached">Defines the value returned if HEAD is detached. <see langword="true"/> to return <see cref="string.Empty"/>; <see langword="false"/> to return "(no branch)".</param>

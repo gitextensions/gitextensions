@@ -39,7 +39,7 @@ public sealed partial class GitModule : IGitModule
     public static CommandCache GitCommandCache { get; } = new();
 
     private readonly IGitExecutorProvider _executorProvider;
-    private readonly GitExecutor _executor;
+    private readonly IGitExecutor _executor;
     private readonly Lock _lock = new();
     private readonly IIndexLockManager _indexLockManager;
     private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
@@ -79,7 +79,7 @@ public sealed partial class GitModule : IGitModule
     public GitModule(IGitExecutorProvider executorProvider, string? workingDir)
     {
         _executorProvider = executorProvider;
-        _executor = (GitExecutor)executorProvider.GetExecutor(workingDir ?? "");
+        _executor = executorProvider.GetExecutor(workingDir ?? "");
         WorkingDirGitDir = _executor.GetGitDirectory();
         _indexLockManager = new IndexLockManager(this);
         _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => this);
@@ -178,6 +178,14 @@ public sealed partial class GitModule : IGitModule
     public IGitCommandRunner GitCommandRunner => _executor.GitCommandRunner;
 
     public string GetSelectedBranch(bool emptyIfDetached = false) => _executor.GetSelectedBranch(emptyIfDetached);
+
+    public IExecutable GitWindowsExecutable => _executor.GitWindowsExecutable;
+
+    public IGitCommandRunner GitWindowsCommandRunner => _executor.GitWindowsCommandRunner;
+
+    public string WslDistro => _executor.WslDistro;
+
+    public string GetGitDirectory() => _executor.GetGitDirectory();
 
     /// <summary>
     ///  Gets the system encoding.
@@ -4007,7 +4015,7 @@ public sealed partial class GitModule : IGitModule
             _gitModule = gitModule;
         }
 
-        public GitExecutor.TestAccessor Executor => _gitModule._executor.GetTestAccessor();
+        public GitExecutor.TestAccessor Executor => ((GitExecutor)_gitModule._executor).GetTestAccessor();
 
         public DistributedSettings? EffectiveSettings => _gitModule._effectiveSettings;
 

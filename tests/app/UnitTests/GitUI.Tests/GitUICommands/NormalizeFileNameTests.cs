@@ -1,8 +1,8 @@
 ﻿using FluentAssertions;
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitUI;
-using NSubstitute;
 
 namespace GitUITests.GitUICommandsTests;
 
@@ -22,7 +22,7 @@ public sealed class NormalizeFileNameTests
     [TestCase(@"C:/working/dir/path/file.ext", "C:/working/dir/path/file.ext")]
     public void NormalizeFileNameTest(string fileName, string expected)
     {
-        GitModule module = new(Substitute.For<IGitExecutorProvider>(), @"c:\working\dir");
+        GitModule module = new(new GitExecutorProvider(new GitDirectoryResolver()), @"c:\working\dir");
         GitUICommands commands = new(GitUICommands.EmptyServiceProvider, module);
 
         commands.GetTestAccessor().NormalizeFileName(fileName).Should().Be(expected);

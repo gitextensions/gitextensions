@@ -1,5 +1,7 @@
 ﻿using CommonTestUtils;
 using FluentAssertions;
+using GitCommands;
+using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -11,7 +13,7 @@ namespace GitUITests.CommandsDialogs;
 public class FormOpenDirectoryTests
 {
     // Created once for the fixture
-    private static readonly IGitExecutorProvider _executorProvider = Substitute.For<IGitExecutorProvider>();
+    private static readonly IGitExecutorProvider _executorProvider = new GitExecutorProvider(new GitDirectoryResolver());
     private ReferenceRepository _referenceRepository;
     private ILocalRepositoryManager _localRepositoryManager;
 
