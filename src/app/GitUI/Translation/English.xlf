@@ -2831,6 +2831,11 @@ compare with first:</source>
         <source>Superproject: {0}</source>
         <target />
       </trans-unit>
+      <trans-unit id="_toolTip.Text">
+        <source>Change working directory
+Hold Ctrl in order to open the selected repository in a new instance.</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_topProjectModuleFormat.Text">
         <source>Top project: {0}</source>
         <target />
