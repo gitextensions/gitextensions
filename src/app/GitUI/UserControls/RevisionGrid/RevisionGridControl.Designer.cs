@@ -1,4 +1,4 @@
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using GitUI.Hotkey;
 using GitUI.UserControls.RevisionGrid;
 
@@ -41,6 +41,7 @@ partial class RevisionGridControl
         rebaseOnToolStripMenuItem = new ToolStripMenuItem();
         toolStripSeparator3 = new ToolStripSeparator();
         createNewBranchToolStripMenuItem = new ToolStripMenuItem();
+        tsmiPushBranch = new ToolStripMenuItem();
         deleteBranchToolStripMenuItem = new ToolStripMenuItem();
         renameBranchToolStripMenuItem = new ToolStripMenuItem();
         toolStripSeparator4 = new ToolStripSeparator();
@@ -132,14 +133,15 @@ partial class RevisionGridControl
         dropStashToolStripMenuItem,
         stashStripSeparator,
         checkoutBranchToolStripMenuItem,
+        tsmiPushBranch,
         mergeBranchToolStripMenuItem,
         rebaseOnToolStripMenuItem,
         resetCurrentBranchToHereToolStripMenuItem,
         toolStripSeparator3,
         createNewBranchToolStripMenuItem,
+        resetAnotherBranchToHereToolStripMenuItem,
         renameBranchToolStripMenuItem,
         deleteBranchToolStripMenuItem,
-        resetAnotherBranchToHereToolStripMenuItem,
         toolStripSeparator4,
         createTagToolStripMenuItem,
         deleteTagToolStripMenuItem,
@@ -240,7 +242,7 @@ partial class RevisionGridControl
         checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
         checkoutBranchToolStripMenuItem.Size = new Size(264, 24);
         checkoutBranchToolStripMenuItem.Text = "Chec&kout branch...";
-        checkoutBranchToolStripMenuItem.Click += deleteBranchTagToolStripMenuItem_Click;
+        checkoutBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         // 
         // mergeBranchToolStripMenuItem
         // 
@@ -248,7 +250,7 @@ partial class RevisionGridControl
         mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
         mergeBranchToolStripMenuItem.Size = new Size(264, 24);
         mergeBranchToolStripMenuItem.Text = "&Merge into current branch...";
-        mergeBranchToolStripMenuItem.Click += deleteBranchTagToolStripMenuItem_Click;
+        mergeBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         // 
         // rebaseOnToolStripMenuItem
         // 
@@ -290,8 +292,16 @@ partial class RevisionGridControl
         createNewBranchToolStripMenuItem.Name = "createNewBranchToolStripMenuItem";
         createNewBranchToolStripMenuItem.ShortcutKeys = ((Keys)((Keys.Control | Keys.B)));
         createNewBranchToolStripMenuItem.Size = new Size(264, 24);
-        createNewBranchToolStripMenuItem.Text = "Create new branc&h here...";
+        createNewBranchToolStripMenuItem.Text = "Create new branch here (&x)...";
         createNewBranchToolStripMenuItem.Click += CreateNewBranchToolStripMenuItemClick;
+        // 
+        // tsmiPushBranch
+        // 
+        tsmiPushBranch.Image = Properties.Images.Push;
+        tsmiPushBranch.Name = "tsmiPushBranch";
+        tsmiPushBranch.Size = new Size(264, 24);
+        tsmiPushBranch.Text = "Pus&h branch...";
+        tsmiPushBranch.Click += PerformFirstDropdownItemClick;
         // 
         // renameBranchToolStripMenuItem
         // 
@@ -299,7 +309,7 @@ partial class RevisionGridControl
         renameBranchToolStripMenuItem.Name = "renameBranchToolStripMenuItem";
         renameBranchToolStripMenuItem.Size = new Size(223, 22);
         renameBranchToolStripMenuItem.Text = "R&ename branch...";
-        renameBranchToolStripMenuItem.Click += renameBranchToolStripMenuItem_Click;
+        renameBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         // 
         // deleteBranchToolStripMenuItem
         // 
@@ -307,7 +317,7 @@ partial class RevisionGridControl
         deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
         deleteBranchToolStripMenuItem.Size = new Size(264, 24);
         deleteBranchToolStripMenuItem.Text = "&Delete branch...";
-        deleteBranchToolStripMenuItem.Click += deleteBranchTagToolStripMenuItem_Click;
+        deleteBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         // 
         // toolStripSeparator4
         // 
@@ -407,7 +417,7 @@ partial class RevisionGridControl
         deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
         deleteTagToolStripMenuItem.Size = new Size(264, 24);
         deleteTagToolStripMenuItem.Text = "&Delete tag...";
-        deleteTagToolStripMenuItem.Click += deleteBranchTagToolStripMenuItem_Click;
+        deleteTagToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         // 
         // toolStripSeparator2
         // 
@@ -640,6 +650,7 @@ partial class RevisionGridControl
     private ToolStripMenuItem rebaseWithAdvOptionsToolStripMenuItem;
     private ToolStripMenuItem createTagToolStripMenuItem;
     private ToolStripMenuItem createNewBranchToolStripMenuItem;
+    private ToolStripMenuItem tsmiPushBranch;
     private ToolStripMenuItem resetCurrentBranchToHereToolStripMenuItem;
     private ToolStripMenuItem resetAnotherBranchToHereToolStripMenuItem;
     private GitUI.UserControls.RevisionGrid.CopyContextMenuItem copyToClipboardToolStripMenuItem;

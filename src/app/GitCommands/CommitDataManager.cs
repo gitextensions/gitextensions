@@ -1,15 +1,18 @@
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using GitCommands.Git.Extensions;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI;
 using GitUIPluginInterfaces;
 
 namespace GitCommands;
 
 public interface ICommitDataManager
 {
+    event EventHandler<GitRevision> RevisionDetailsLoaded;
+
     /// <summary>
     /// Converts a <see cref="GitRevision"/> object into a <see cref="CommitData"/>.
     /// </summary>
@@ -30,13 +33,21 @@ public interface ICommitDataManager
     CommitData? GetCommitData(string commitId, bool includeNotes = false);
 
     /// <summary>
-    /// Updates the <see cref="CommitData.Body"/> (commit message) property of <paramref name="commitData"/>.
+    ///  Requests background loading of <see cref="GitRevision.Body"/> (commit message) and <see cref="GitRevision.Notes"/> properties of <paramref name="revision"/>.
+    ///  <br/>The last request wins. The execution is delayed in order to avoid loading data for a revision which has been scrolled out of view.
+    ///  <br/>Emits <see cref="RevisionDetailsLoaded"/> when finished.
     /// </summary>
-    void UpdateBody(CommitData commitData, bool appendNotesOnly, out string? error);
+    void InitiateDelayedLoadingOfDetails(GitRevision revision);
+
+    /// <summary>
+    /// Updates the <see cref="GitRevision.Body"/> (commit message) and <see cref="GitRevision.Notes"/> properties of <paramref name="revision"/>.
+    /// </summary>
+    void UpdateBodyAndNotes(GitRevision revision);
 }
 
 public sealed class CommitDataManager : ICommitDataManager
 {
+    private readonly CancellationTokenSequence _cancellationTokenSequence = new();
     private readonly Func<IGitModule> _getModule;
 
     public CommitDataManager(Func<IGitModule> getModule)
@@ -44,34 +55,56 @@ public sealed class CommitDataManager : ICommitDataManager
         _getModule = getModule;
     }
 
-    /// <inheritdoc />
-    public void UpdateBody(CommitData commitData, bool appendNotesOnly, out string? error)
-    {
-        const string BodyAndNotesFormat = "%B%nNotes:%n%-N";
-        const string NotesFormat = "%-N";
+    public event EventHandler<GitRevision>? RevisionDetailsLoaded;
 
-        if (!TryGetCommitLog(commitData.ObjectId.ToString(), appendNotesOnly ? NotesFormat : BodyAndNotesFormat, out error, out string? data, cache: false))
+    public void InitiateDelayedLoadingOfDetails(GitRevision revision)
+    {
+        CancellationToken cancellationToken = _cancellationTokenSequence.Next();
+        ThreadHelper.FileAndForget(async () =>
         {
+            const int millisecondsDelayBetweenSubsequentDetailLoading = 100;
+            await Task.Delay(millisecondsDelayBetweenSubsequentDetailLoading, cancellationToken);
+            if (revision.Notes is null || revision.Body is null)
+            {
+                UpdateBodyAndNotes(revision);
+            }
+        });
+    }
+
+    public void UpdateBodyAndNotes(GitRevision revision)
+    {
+        bool appendNotesOnly = revision.Body is not null;
+        const string BodyAndNotesFormat = $"%B{RevisionReader.NotesFormat}";
+        const string NotesFormat = "%N";
+
+        if (!TryGetCommitLog(revision.ObjectId.ToString(), appendNotesOnly ? NotesFormat : BodyAndNotesFormat, out string? error, out string? data, cache: false))
+        {
+            Trace.WriteLine($"Exception in {nameof(UpdateBodyAndNotes)}: {error}", category: "git");
             return;
         }
 
-        if (appendNotesOnly)
-        {
-            if (!string.IsNullOrWhiteSpace(data))
-            {
-                commitData.Body += $"\nNotes:\n    {GetModule().ReEncodeCommitMessage(data.Replace('\v', '\n'))}";
-            }
-        }
-        else
-        {
-            string[] lines = data.Split(Delimiters.LineAndVerticalFeed);
+        // Commit message is not re-encoded by Git when format is given
+        data = GetModule().ReEncodeCommitMessage(data.Replace('\v', '\n'));
 
-            // Commit message is not re-encoded by Git when format is given
-            commitData.Body = GetModule().ReEncodeCommitMessage(ProcessDiffNotes(startIndex: 0, lines));
+        try
+        {
+            if (appendNotesOnly)
+            {
+                revision.Notes = data;
+                return;
+            }
+
+            int splitPos = data.LastIndexOf(RevisionReader.NotesMarkerWithoutTrailingLF);
+            revision.Body = data[0..splitPos].TrimEnd();
+            splitPos += RevisionReader.NotesMarkerWithoutTrailingLF.Length + /*LF*/ 1;
+            revision.Notes = splitPos >= data.Length ? "" : data[splitPos..];
+        }
+        finally
+        {
+            RevisionDetailsLoaded?.Invoke(this, revision);
         }
     }
 
-    /// <inheritdoc />
     public CommitData? GetCommitData(string commitId, bool includeNotes = false)
     {
         GitRevision? revision = new RevisionReader(GetModule(), allBodies: true).GetRevision(commitId, hasNotes: includeNotes, throwOnError: false, cancellationToken: default);
@@ -80,7 +113,6 @@ public sealed class CommitDataManager : ICommitDataManager
             : null;
     }
 
-    /// <inheritdoc />
     public CommitData CreateFromRevision(GitRevision revision, IReadOnlyList<ObjectId>? children)
     {
         ArgumentNullException.ThrowIfNull(revision);
@@ -94,7 +126,7 @@ public sealed class CommitDataManager : ICommitDataManager
             FormatUser(revision.Author, revision.AuthorEmail), revision.AuthorDate,
             FormatUser(revision.Committer, revision.CommitterEmail), revision.CommitDate,
             revision.Body ?? revision.Subject)
-        { ChildIds = children };
+        { ChildIds = children, Notes = revision.Notes };
 
         static string FormatUser(string user, string email) => string.IsNullOrWhiteSpace(email) ? user : $"{user} <{email}>";
     }
@@ -135,37 +167,5 @@ public sealed class CommitDataManager : ICommitDataManager
         data = exec.StandardOutput;
         error = null;
         return true;
-    }
-
-    private static string ProcessDiffNotes(int startIndex, string[] lines)
-    {
-        int endIndex = lines.Length - 1;
-        if (lines[endIndex] == "Notes:")
-        {
-            // No Notes, ignore
-            endIndex--;
-        }
-
-        StringBuilder message = new();
-        bool notesStart = false;
-
-        for (int i = startIndex; i <= endIndex; i++)
-        {
-            string line = lines[i];
-
-            if (notesStart)
-            {
-                message.Append("    ");
-            }
-
-            message.AppendLine(line);
-
-            if (line == "Notes:")
-            {
-                notesStart = true;
-            }
-        }
-
-        return message.ToString();
     }
 }

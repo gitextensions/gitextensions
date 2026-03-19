@@ -2,6 +2,7 @@
 using System.Text;
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility.Git;
+using GitUIPluginInterfaces;
 using Microsoft;
 
 namespace ResourceManager.CommitDataRenders;

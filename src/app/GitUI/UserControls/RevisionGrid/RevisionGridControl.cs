@@ -57,6 +57,34 @@ public enum SortDirection
 [DefaultEvent("DoubleClick")]
 public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, IRevisionGridFilter, IRevisionGridInfo, IRevisionGridUpdate
 {
+    // Mnemonics:
+    // A manipulateCommitToolStripMenuItem
+    // B openBuildReportToolStripMenuItem
+    // C Copy to clipboard
+    // D deleteBranchToolStripMenuItem, deleteTagToolStripMenuItem, dropStashToolStripMenuItem
+    // E renameBranchToolStripMenuItem
+    // F
+    // G createTagToolStripMenuItem
+    // H tsmiPushBranch
+    // I archiveRevisionToolStripMenuItem
+    // J
+    // K checkoutBranchToolStripMenuItem
+    // L tsmiSelectInLeftPanel
+    // M mergeBranchToolStripMenuItem
+    // N navigateToolStripMenuItem
+    // O resetAnotherBranchToHereToolStripMenuItem
+    // P compareToolStripMenuItem
+    // Q
+    // R rebaseOnToolStripMenuItem
+    // S runScriptToolStripMenuItem, popStashToolStripMenuItem
+    // T checkoutRevisionToolStripMenuItem
+    // U resetCurrentBranchToHereToolStripMenuItem
+    // V revertCommitToolStripMenuItem
+    // W openPullRequestPageStripMenuItem
+    // X createNewBranchToolStripMenuItem
+    // Y cherryPickCommitToolStripMenuItem, applyStashToolStripMenuItem
+    // Z
+
     public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
     public event EventHandler<FilterChangedEventArgs>? FilterChanged;
     public event EventHandler? SelectionChanged;
@@ -162,6 +190,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     internal Action<string>? SelectInLeftPanel { get;  set; } = null;
 
     public RevisionGridControl()
+        : this(commitDataManager: null)
+    {
+    }
+
+    public RevisionGridControl(ICommitDataManager? commitDataManager)
     {
         InitializeComponent();
         openPullRequestPageStripMenuItem.AdaptImageLightness();
@@ -200,6 +233,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         };
 
         _toolTipProvider = new RevisionGridToolTipProvider(_gridView);
+        _toolTipProvider.ShowRevisionGridTooltips = AppSettings.ShowRevisionGridTooltips.Value;
 
         _quickSearchProvider = new QuickSearchProvider(_gridView, () => Module.WorkingDir);
 
@@ -250,7 +284,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         GitRevisionSummaryBuilder gitRevisionSummaryBuilder = new();
         _revisionGraphColumnProvider = new RevisionGraphColumnProvider(_gridView._revisionGraph, gitRevisionSummaryBuilder);
         _gridView.AddColumn(_revisionGraphColumnProvider);
-        _gridView.AddColumn(new MessageColumnProvider(this, gitRevisionSummaryBuilder));
+        _gridView.AddColumn(new MessageColumnProvider(this, gitRevisionSummaryBuilder, commitDataManager));
+        _gridView.AddColumn(new NotesColumnProvider(this, commitDataManager));
         _gridView.AddColumn(new AvatarColumnProvider(_gridView, AvatarService.DefaultProvider, AvatarService.CacheCleaner));
         _gridView.AddColumn(new AuthorNameColumnProvider(this, _authorHighlighting));
         _gridView.AddColumn(new DateColumnProvider(this));
@@ -1101,7 +1136,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                         observeRevisions,
                         _filterInfo.GetRevisionFilter(currentCheckout),
                         pathFilter,
-                        AppSettings.ShowGitNotes,
+                        AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes,
                         ResourceManager.TranslatedStrings.Autostash,
                         cancellationToken);
                 },
@@ -1327,7 +1362,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 CommitterEmail = userEmail,
                 Subject = ResourceManager.TranslatedStrings.Workspace,
                 ParentIds = new[] { ObjectId.IndexId },
-                HasNotes = true
+                Notes = ""
             };
             GitRevision indexRev = new(ObjectId.IndexId)
             {
@@ -1339,7 +1374,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 CommitterEmail = userEmail,
                 Subject = ResourceManager.TranslatedStrings.Index,
                 ParentIds = CurrentCheckout is null ? null : new[] { CurrentCheckout },
-                HasNotes = true
+                Notes = ""
             };
 
             if (headParents is null)
@@ -1994,6 +2029,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         ContextMenuStrip deleteBranchDropDown = new();
         ContextMenuStrip checkoutBranchDropDown = new();
         ContextMenuStrip mergeBranchDropDown = new();
+        ContextMenuStrip pushBranchDropDown = new();
         ContextMenuStrip renameDropDown = new();
         ContextMenuStrip selectInLeftPanelDropDown = new();
 
@@ -2067,6 +2103,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 }
 
                 AddBranchMenuItem(renameDropDown, head, delegate { UICommands.StartRenameDialog(ParentForm, head.Name); });
+                AddBranchMenuItem(pushBranchDropDown, head, (_, _) => UICommands.StartPushDialog(ParentForm, pushOnShow: false, forceWithLease: false, out _, head.Name));
             }
 
             if (head.CompleteName != currentBranchRef)
@@ -2125,12 +2162,15 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
 
         checkoutBranchToolStripMenuItem.DropDown = checkoutBranchDropDown;
-        SetEnabled(checkoutBranchToolStripMenuItem, !bareRepositoryOrArtificial && HasEnabledItem(checkoutBranchDropDown) && !Module.IsBareRepository());
+        SetEnabled(checkoutBranchToolStripMenuItem, !bareRepositoryOrArtificial && HasEnabledItem(checkoutBranchDropDown));
 
         mergeBranchToolStripMenuItem.DropDown = mergeBranchDropDown;
-        SetEnabled(mergeBranchToolStripMenuItem, !bareRepositoryOrArtificial && HasEnabledItem(mergeBranchDropDown) && !Module.IsBareRepository());
+        SetEnabled(mergeBranchToolStripMenuItem, !bareRepositoryOrArtificial && HasEnabledItem(mergeBranchDropDown));
 
-        SetEnabled(rebaseOnToolStripMenuItem, !bareRepositoryOrArtificial && !Module.IsBareRepository());
+        tsmiPushBranch.DropDown = pushBranchDropDown;
+        SetEnabled(tsmiPushBranch, !bareRepositoryOrArtificial && HasEnabledItem(pushBranchDropDown));
+
+        SetEnabled(rebaseOnToolStripMenuItem, !bareRepositoryOrArtificial);
 
         renameBranchToolStripMenuItem.DropDown = renameDropDown;
         SetEnabled(renameBranchToolStripMenuItem, renameDropDown.Items.Count > 0);
@@ -2630,6 +2670,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         PerformRefreshRevisions();
     }
 
+    internal void ToggleShowGitNotesColumn()
+    {
+        AppSettings.ShowGitNotesColumn.Value = !AppSettings.ShowGitNotesColumn.Value;
+        PerformRefreshRevisions();
+    }
+
     internal void ToggleHideMergeCommits()
     {
         AppSettings.HideMergeCommits = !AppSettings.HideMergeCommits;
@@ -2779,17 +2825,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         Refresh();
     }
 
-    private void renameBranchToolStripMenuItem_Click(object sender, EventArgs e)
-    {
-        ToolStripMenuItem item = (ToolStripMenuItem)sender;
-
-        if (item.DropDown is not null && item.DropDown.Items.Count == 1)
-        {
-            item.DropDown.Items[0].PerformClick();
-        }
-    }
-
-    private void deleteBranchTagToolStripMenuItem_Click(object sender, EventArgs e)
+    private static void PerformFirstDropdownItemClick(object sender, EventArgs e)
     {
         ToolStripMenuItem item = (ToolStripMenuItem)sender;
 
@@ -3241,6 +3277,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             case Command.ToggleShowRelativeDate: ToggleShowRelativeDate(); break;
             case Command.ToggleDrawNonRelativesGray: ToggleDrawNonRelativesGray(); break;
             case Command.ToggleShowGitNotes: ToggleShowGitNotes(); break;
+            case Command.ToggleShowGitNotesColumn: ToggleShowGitNotesColumn(); break;
             case Command.ToggleHideMergeCommits: ToggleHideMergeCommits(); break;
             case Command.ToggleShowTags: ToggleShowTags(); break;
             case Command.ShowAllBranches: ShowAllBranches(); break;

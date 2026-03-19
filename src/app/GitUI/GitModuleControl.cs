@@ -23,6 +23,8 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl
     [Browsable(false)]
     public event EventHandler<GitUICommandsSourceEventArgs>? UICommandsSourceSet;
 
+    protected override IServiceProvider ServiceProvider => UICommands;
+
     /// <summary>
     /// Gets a <see cref="IGitUICommandsSource"/> for this control.
     /// </summary>
@@ -147,7 +149,7 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl
         }
     }
 
-    internal IScriptOptionsProvider? FindScriptOptionsProvider()
+    internal IScriptOptionsProvider FindScriptOptionsProvider()
     {
         for (Control control = this; control != null; control = control.Parent)
         {
@@ -162,7 +164,7 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl
             }
         }
 
-        return null;
+        return ScriptOptionsProviderBase.Default;
     }
 
     protected virtual IScriptOptionsProvider? GetScriptOptionsProvider()

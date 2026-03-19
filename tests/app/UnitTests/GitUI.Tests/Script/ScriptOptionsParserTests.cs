@@ -129,7 +129,7 @@ public class ScriptOptionsParserTests
     [Test]
     public void Parse_should_throw_if_module_null()
     {
-        ((Action)(() => ScriptOptionsParser.Parse(arguments: "bla", uiCommands: null, owner: null, scriptOptionsProvider: null))).Should()
+        ((Action)(() => ScriptOptionsParser.Parse(arguments: "bla", uiCommands: null, owner: null, _scriptOptionsProvider))).Should()
             .Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'uiCommands')");
     }
@@ -140,7 +140,7 @@ public class ScriptOptionsParserTests
     [TestCase("\t")]
     public void Parse_should_return_without_process_if_arguments_unset(string arguments)
     {
-        (string? arguments, bool abort) result = ScriptOptionsParser.Parse(arguments, uiCommands: null, owner: null, scriptOptionsProvider: null);
+        (string? arguments, bool abort) result = ScriptOptionsParser.Parse(arguments, uiCommands: null, owner: null, _scriptOptionsProvider);
 
         result.arguments.Should().Be(arguments);
         result.abort.Should().Be(false);
@@ -151,7 +151,7 @@ public class ScriptOptionsParserTests
     {
         const string arguments = "{openUrl} https://gitlab.com{zeDefaultRemotePathFromUrl}/tree/{zeBranch}";
 
-        (string? arguments, bool abort) result = ScriptOptionsParser.Parse(arguments: arguments, _commands, owner: null, scriptOptionsProvider: null);
+        (string? arguments, bool abort) result = ScriptOptionsParser.Parse(arguments: arguments, _commands, owner: null, _scriptOptionsProvider);
 
         result.arguments.Should().Be(arguments);
         result.abort.Should().Be(false);
@@ -170,7 +170,7 @@ public class ScriptOptionsParserTests
 
         string expectedMessage = $"{Subject}\\n\\nline3";
 
-        (string? arguments, bool abort) result = ScriptOptionsParser.Parse("echo {{cSubject}} {{cMessage}}", _commands, owner: null, scriptOptionsProvider: null);
+        (string? arguments, bool abort) result = ScriptOptionsParser.Parse("echo {{cSubject}} {{cMessage}}", _commands, owner: null, _scriptOptionsProvider);
 
         result.arguments.Should().Be($"echo \"{revision.Subject}\" \"{expectedMessage}\"");
         result.abort.Should().Be(false);
@@ -191,7 +191,7 @@ public class ScriptOptionsParserTests
 
         string expectedMessage = $"{Subject}\\n\\nline3";
 
-        (string? arguments, bool abort) result = ScriptOptionsParser.Parse("echo {{sSubject}} {{sMessage}}", _commands, owner: null, scriptOptionsProvider: null);
+        (string? arguments, bool abort) result = ScriptOptionsParser.Parse("echo {{sSubject}} {{sMessage}}", _commands, owner: null, _scriptOptionsProvider);
 
         result.arguments.Should().Be($"echo \"{revision.Subject}\" \"{expectedMessage}\"");
         result.abort.Should().Be(false);
@@ -202,7 +202,7 @@ public class ScriptOptionsParserTests
     {
         string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{openUrl} https://gitlab.com{cDefaultRemotePathFromUrl}/tree/{sBranch}", option: "cDefaultRemotePathFromUrl",
-            owner: null, scriptOptionsProvider: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
+            owner: null, _scriptOptionsProvider, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
             selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
             currentTags: null,
             currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -218,7 +218,7 @@ public class ScriptOptionsParserTests
 
         string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{openUrl} https://gitlab.com{cDefaultRemotePathFromUrl}/tree/{sBranch}", option: "cDefaultRemotePathFromUrl",
-            owner: null, scriptOptionsProvider: null, _commands, allSelectedRevisions: null, selectedTags: null,
+            owner: null, _scriptOptionsProvider, _commands, allSelectedRevisions: null, selectedTags: null,
             selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
             currentTags: null,
             currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote);
@@ -233,7 +233,7 @@ public class ScriptOptionsParserTests
 
         string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{openUrl} https://gitlab.com{sRemotePathFromUrl}/tree/{sBranch}", option: "sRemotePathFromUrl",
-            owner: null, scriptOptionsProvider: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
+            owner: null, _scriptOptionsProvider, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
             selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, noSelectedRemotes, selectedRevision: null,
             currentTags: null,
             currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -250,7 +250,7 @@ public class ScriptOptionsParserTests
 
         string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{openUrl} https://gitlab.com{sRemotePathFromUrl}/tree/{sBranch}", option: "sRemotePathFromUrl",
-            owner: null, scriptOptionsProvider: null, _commands, allSelectedRevisions: null, selectedTags: null,
+            owner: null, _scriptOptionsProvider, _commands, allSelectedRevisions: null, selectedTags: null,
             selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes, selectedRevision: null,
             currentTags: null,
             currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -269,7 +269,7 @@ public class ScriptOptionsParserTests
 
         string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{" + option + "}", option,
-            owner: null, scriptOptionsProvider: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
+            owner: null, _scriptOptionsProvider, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
             selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: remoteBranches, selectedRemotes: null, selectedRevision: null,
             currentTags: null,
             currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -288,7 +288,7 @@ public class ScriptOptionsParserTests
 
         string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{" + option + "}", option,
-            owner: null, scriptOptionsProvider: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
+            owner: null, _scriptOptionsProvider, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
             selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: remoteBranches, selectedRemotes: null, selectedRevision: null,
             currentTags: null,
             currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -307,7 +307,7 @@ public class ScriptOptionsParserTests
 
         string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{" + option + "}", option,
-            owner: null, scriptOptionsProvider: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
+            owner: null, _scriptOptionsProvider, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
             selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
             currentTags: null,
             currentBranches: null, currentLocalBranches: null, currentRemoteBranches: remoteBranches, currentRevision: null, currentRemote: null);
@@ -326,7 +326,7 @@ public class ScriptOptionsParserTests
 
         string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{" + option + "}", option,
-            owner: null, scriptOptionsProvider: null, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
+            owner: null, _scriptOptionsProvider, uiCommands: null, allSelectedRevisions: null, selectedTags: null,
             selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
             currentTags: null,
             currentBranches: null, currentLocalBranches: null, currentRemoteBranches: remoteBranches, currentRevision: null, currentRemote: null);
@@ -350,7 +350,7 @@ public class ScriptOptionsParserTests
 
         string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{" + option + "}", option,
-            owner: null, scriptOptionsProvider: null, _commands, allSelectedRevisions: null, selectedTags: null,
+            owner: null, _scriptOptionsProvider, _commands, allSelectedRevisions: null, selectedTags: null,
             selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
             currentTags: null,
             currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -367,7 +367,7 @@ public class ScriptOptionsParserTests
 
         string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{" + option + "}", option,
-            owner: null, scriptOptionsProvider: null, uiCommands: _commands, allSelectedRevisions: null, selectedTags: null,
+            owner: null, _scriptOptionsProvider, uiCommands: _commands, allSelectedRevisions: null, selectedTags: null,
             selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
             currentTags: null,
             currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null, currentRevision: null, currentRemote: null);
@@ -384,7 +384,7 @@ public class ScriptOptionsParserTests
 
         string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{" + option + "}", option,
-            owner: null, scriptOptionsProvider: null, uiCommands: _commands, allSelectedRevisions: null, selectedTags: null,
+            owner: null, _scriptOptionsProvider, uiCommands: _commands, allSelectedRevisions: null, selectedTags: null,
             selectedBranches: null, selectedLocalBranches: null, selectedRemoteBranches: null, selectedRemotes: null, selectedRevision: null,
             currentTags: null, currentBranches: null, currentLocalBranches: null, currentRemoteBranches: null,
             currentRevision: new GitRevision(ObjectId.Parse(detachedHeadHash)), currentRemote: null);

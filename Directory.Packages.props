@@ -4,7 +4,6 @@
     <!-- Solution dependencies -->
     <PackageVersion Include="AdysTech.CredentialManager" Version="2.3.0" />
     <PackageVersion Include="AppInsights.WindowsDesktop" Version="2.18.1" />
-    <PackageVersion Include="Atlassian.SDK" Version="13.0.0" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="ConEmu.Core" Version="23.07.24" />
     <PackageVersion Include="EnvDTE" Version="17.0.32112.339" />
@@ -19,7 +18,6 @@
     <PackageVersion Include="Microsoft.VisualStudio.Composition" Version="17.2.41" />
     <PackageVersion Include="Microsoft.VisualStudio.Threading" Version="17.13.61" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageVersion Include="NString" Version="2.1.1" />
     <PackageVersion Include="RestSharp" Version="106.12.0" />
     <PackageVersion Include="SmartFormat" Version="3.6.0" />
     <PackageVersion Include="StrongOf" Version="1.2.4" />

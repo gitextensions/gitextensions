@@ -12,7 +12,7 @@ namespace GitUI;
 // NOTE do not make this class abstract as it breaks the WinForms designer in VS
 
 /// <summary>Base <see cref="Form"/> that provides access to <see cref="GitModule"/> and <see cref="IGitUICommands"/>.</summary>
-public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModuleForm
+public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModuleForm, IScriptOptionsForm
 {
     private bool _isReactivation;
     private IHotkeySettingsLoader? _hotkeySettingsLoader;
@@ -124,9 +124,9 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModule
         }
     }
 
-    public virtual IScriptOptionsProvider? GetScriptOptionsProvider()
+    public virtual IScriptOptionsProvider GetScriptOptionsProvider()
     {
-        return null;
+        return ScriptOptionsProviderBase.Default;
     }
 
     protected override void OnApplicationActivated()
@@ -146,5 +146,11 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModule
     protected virtual void OnUICommandsChanged(GitUICommandsChangedEventArgs e)
     {
         UICommandsChanged?.Invoke(this, e);
+    }
+
+    public override bool TryGetUICommands([NotNullWhen(returnValue: true)] out IGitUICommands? commands)
+    {
+        commands = UICommands;
+        return commands is not null;
     }
 }

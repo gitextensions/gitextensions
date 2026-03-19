@@ -347,29 +347,14 @@
       <Component Id="Github3.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitHub3.dll" />
       </Component>
-      <Component Id="GitFlow.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitFlow.dll" />
-      </Component>
       <Component Id="ReleaseNotesGenerator.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.ReleaseNotesGenerator.dll" />
-      </Component>
-      <Component Id="JiraCommitHintPlugin.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.JiraCommitHintPlugin.dll" />
-      </Component>
-      <Component Id="Atlassian.Jira.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\Atlassian.Jira.dll" />
-      </Component>
-      <Component Id="NString.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\NString.dll" />
       </Component>
       <Component Id="FindLargeFiles.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.FindLargeFiles.dll" />
       </Component>
       <Component Id="ProxySwitcher.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.ProxySwitcher.dll" />
-      </Component>
-      <Component Id="Bitbucket.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.Bitbucket.dll" />
       </Component>
       <Component Id="TeamCityIntegration.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.TeamCityIntegration.dll" />
@@ -621,7 +606,9 @@
     <ComponentGroup Id="Component.PluginResources" />
     <DirectoryRef Id="ProgramMenuFolder">
       <Component Id="GitExtensions.newstartmenu" Guid="*">
-        <Shortcut Id="GitExtensions.newstartmenu" Name="$(var.ProductName)" Description="$(var.ProductName)" Icon="gitextensions.ico" Target="[INSTALLDIR]GitExtensions.exe" WorkingDirectory="INSTALLDIR" />
+        <Shortcut Id="GitExtensions.newstartmenu" Name="$(var.ProductName)" Description="$(var.ProductName)" Icon="gitextensions.ico" Target="[INSTALLDIR]GitExtensions.exe" WorkingDirectory="INSTALLDIR">
+          <ShortcutProperty Key="System.AppUserModel.ID" Value="$(var.InstallName)" />
+        </Shortcut>
         <RegistryValue Root="HKCU" Key="$(var.InstalledRegKey)" Name="GitExtensions.newstartmenu" Value="" Type="string" KeyPath="yes" />
       </Component>
     </DirectoryRef>
@@ -729,9 +716,6 @@
         <Feature Id="Github" Title="Github integration" Level="1">
           <ComponentRef Id="Github3.dll" />
         </Feature>
-        <Feature Id="GitFlow" Title="GitFlow" Level="1">
-          <ComponentRef Id="GitFlow.dll" />
-        </Feature>
         <Feature Id="Gource" Title="Gource visualization" Level="1">
           <ComponentRef Id="Gource.dll" />
         </Feature>
@@ -747,9 +731,6 @@
         <Feature Id="ReleaseNotesGenerator" Title="Release notes generator" Level="1">
           <ComponentRef Id="ReleaseNotesGenerator.dll" />
         </Feature>
-        <Feature Id="Bitbucket" Title="Atlassian Bitbucket Server integration" Level="1">
-          <ComponentRef Id="Bitbucket.dll" />
-        </Feature>
         <Feature Id="AppVeyorIntegration" Title="AppVeyor integration" Level="1">
           <ComponentRef Id="AppVeyorIntegration.dll" />
         </Feature>
@@ -764,12 +745,6 @@
         </Feature>
         <Feature Id="GitlabIntegration" Title="Gitlab integration" Level="1">
           <ComponentRef Id="GitlabIntegration.dll" />
-        </Feature>
-        <Feature Id="JiraCommitHintPlugin" Title="Jira Commit Hint Plugin" Level="1">
-          <ComponentRef Id="JiraCommitHintPlugin.dll" />
-          <ComponentRef Id="Atlassian.Jira.dll" />
-          <ComponentRef Id="RestSharp.dll" />
-          <ComponentRef Id="NString.dll" />
         </Feature>
       </Feature>
       <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">

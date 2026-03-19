@@ -29,7 +29,7 @@
   "Subject": "wip tests",
   "Body": "wip tests\n\nsecond line\nthird line before multiple whitespace",
   "HasMultiLineMessage": true,
-  "HasNotes": false,
+  "Notes": null,
   "IsArtificial": false,
   "IsAutostash": false,
   "IsStash": true,

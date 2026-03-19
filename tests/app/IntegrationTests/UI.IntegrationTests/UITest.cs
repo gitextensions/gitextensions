@@ -8,9 +8,6 @@ namespace GitExtensions.UITests;
 
 public static class UITest
 {
-    // Same delay as RevisionDataGridView.BackgroundThreadUpdatePeriod
-    private const int _processDelayMilliseconds = 25;
-
     public static async Task WaitForIdleAsync()
     {
         TaskCompletionSource<VoidResult> idleCompletionSource = new();
@@ -116,32 +113,10 @@ public static class UITest
     }
 
     public static void ProcessUntil(string processName, Func<bool> condition, int maxMilliseconds = 1500)
-    {
-        int maxIterations = (maxMilliseconds + _processDelayMilliseconds - 1) / _processDelayMilliseconds;
-        for (int iteration = 0; iteration < maxIterations; ++iteration)
-        {
-            if (condition())
-            {
-                Debug.WriteLine($"'{processName}' successfully finished in iteration {iteration}");
-                return;
-            }
-
-            Application.DoEvents();
-            Thread.Sleep(_processDelayMilliseconds);
-        }
-
-        ClassicAssert.Fail($"'{processName}' didn't finish in {maxIterations} iterations");
-    }
+        => WinFormsTestHelper.ProcessUntil(processName, condition, maxMilliseconds);
 
     public static void ProcessEventsFor(int milliseconds)
-    {
-        int maxIterations = (milliseconds + _processDelayMilliseconds - 1) / _processDelayMilliseconds;
-        for (int iteration = 0; iteration < maxIterations; ++iteration)
-        {
-            Application.DoEvents();
-            Thread.Sleep(_processDelayMilliseconds);
-        }
-    }
+        => WinFormsTestHelper.ProcessEventsFor(milliseconds);
 
     private readonly struct VoidResult
     {

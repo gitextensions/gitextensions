@@ -1228,6 +1228,8 @@ public static partial class AppSettings
         set => SetBool("showgitnotes", value);
     }
 
+    public static ISetting<bool> ShowGitNotesColumn { get; } = Setting.Create(AppearanceSettingsPath, nameof(ShowGitNotesColumn), false);
+
     public static bool ShowAnnotatedTagsMessages
     {
         get => GetBool("showannotatedtagsmessages", true);
@@ -1378,6 +1380,7 @@ public static partial class AppSettings
     }
 
     public static ISetting<bool> ShowFindInCommitFilesGitGrep { get; } = Setting.Create(AppearanceSettingsPath, nameof(ShowFindInCommitFilesGitGrep), false);
+    public static ISetting<bool> ShowRevisionGridTooltips { get; } = Setting.Create(AppearanceSettingsPath, nameof(ShowRevisionGridTooltips), true);
 
     public static bool ShowAvailableDiffTools
     {

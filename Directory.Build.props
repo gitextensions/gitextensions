@@ -4,7 +4,11 @@
 
   <PropertyGroup>
     <LangVersion>14.0</LangVersion>
+
     <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
+    <!-- URIs should not be hardcoded -->
+    <NoWarn>$(NoWarn);S1075</NoWarn>
+
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Nullable>enable</Nullable>
 

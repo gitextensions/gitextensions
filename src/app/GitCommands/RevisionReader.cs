@@ -38,9 +38,9 @@ public sealed class RevisionReader
         /* Notes placeholder */ "{1}";
 
     private const string _reflogSelectorFormat = "%gD%n";
-    private const string _notesPrefix = "Notes:";
-    private const string _notesMarker = $"\n{_notesPrefix}";
-    private const string _notesFormat = $"%n{_notesPrefix}%n%N";
+    private const string _notesPrefix = "\u039d\u043et\u0435\u0282:"; // Unicode l00k-alikes, Νоtеʂ:
+    internal const string NotesMarkerWithoutTrailingLF = $"\n{_notesPrefix}";
+    internal const string NotesFormat = $"%n{_notesPrefix}%n%N";
 
     // Trace info for parse errors
     private int _noOfParseError = 0;
@@ -80,7 +80,7 @@ public sealed class RevisionReader
         _hasReflogSelector = hasReflogSelector;
         _hasNotes = hasNotes;
 
-        return string.Format(_fullFormat, hasReflogSelector ? _reflogSelectorFormat : "", hasNotes ? _notesFormat : "");
+        return string.Format(_fullFormat, hasReflogSelector ? _reflogSelectorFormat : "", hasNotes ? NotesFormat : "");
     }
 
     private static long GetUnixTimeForOffset(int days)
@@ -586,80 +586,48 @@ public sealed class RevisionReader
 
         // Subject can also be defined as the contents before empty line (%s for --pretty),
         // this uses the alternative definition of first line in body.
-        int lengthSubject = decoded.IndexOfAny(Delimiters.LineAndVerticalFeed);
-        revision.HasMultiLineMessage = _hasNotes
-            ? decoded.Length != lengthSubject + _notesMarker.Length + 1 // Notes must always include the notes marker
-            : lengthSubject >= 0;
-
-        revision.Subject = (lengthSubject >= 0
-            ? decoded.Slice(0, lengthSubject).TrimEnd()
-            : decoded)
-            .ToString();
-
-        if (keepBody && revision.HasMultiLineMessage)
+        int firstLineEnd = decoded.IndexOfAny(Delimiters.LineAndVerticalFeed);
+        if (firstLineEnd < 0)
         {
-            // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
-            int currentOffset = lengthSubject;
-            int verticalFeedIndex;
-            while ((verticalFeedIndex = decoded.Slice(currentOffset).IndexOf('\v')) >= 0)
-            {
-                currentOffset += verticalFeedIndex;
-                decoded[currentOffset] = '\n';
-                currentOffset++;
-            }
+            revision.Subject = decoded.ToString();
+            revision.HasMultiLineMessage = false;
+        }
+        else
+        {
+            revision.Subject = decoded[..firstLineEnd].TrimEnd().ToString();
+            Split(decoded, out ReadOnlySpan<char> body, out ReadOnlySpan<char> notes);
+            revision.HasMultiLineMessage = revision.Subject.Length < body.Length;
 
-            // Removes empty Notes markers (this is the most common case)
-            bool hasNonEmptyNotes = _hasNotes;
-            if (hasNonEmptyNotes)
+            if (keepBody)
             {
-                if (decoded.EndsWith(_notesMarker))
+                // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
+                int currentOffset = firstLineEnd;
+                int verticalFeedIndex;
+                while ((verticalFeedIndex = decoded.Slice(currentOffset).IndexOf('\v')) >= 0)
                 {
-                    // Remove the empty marker
-                    decoded = decoded[..^_notesMarker.Length].TrimEnd();
-                    hasNonEmptyNotes = false;
-                }
-            }
-
-            if (hasNonEmptyNotes)
-            {
-                // Format Notes, add indentation
-                int notesStartIndex = ((ReadOnlySpan<char>)decoded).IndexOf(_notesMarker, StringComparison.Ordinal);
-
-                StringBuilder message = new();
-                currentOffset = notesStartIndex + _notesMarker.Length + 1;
-                message.Append(decoded.Slice(0, currentOffset));
-                while (currentOffset < decoded.Length)
-                {
-                    message.Append("    ");
-                    int lineLength = decoded.Slice(currentOffset).IndexOf('\n');
-                    if (lineLength == -1)
-                    {
-                        message.Append(decoded.Slice(currentOffset));
-                        break;
-                    }
-                    else
-                    {
-                        message.Append(decoded.Slice(currentOffset, lineLength))
-                            .Append('\n');
-                    }
-
-                    currentOffset += lineLength + 1;
+                    currentOffset += verticalFeedIndex;
+                    decoded[currentOffset] = '\n';
+                    currentOffset++;
                 }
 
-                revision.Body = message.ToString();
+                if (revision.HasMultiLineMessage)
+                {
+                    revision.Body = body.ToString();
+                }
+
+                if (_hasNotes)
+                {
+                    revision.Notes = notes.ToString();
+                }
             }
-            else
+            else if (_hasNotes && notes.Length == 0)
             {
-                revision.Body = decoded.ToString();
+                revision.Notes = "";
             }
         }
 
-        if (_hasNotes)
-        {
-            revision.HasNotes = true;
-        }
 #if DEBUG
-        if (revision.Author is null || revision.AuthorEmail is null || revision.Committer is null || revision.CommitterEmail is null || revision.Subject is null || (keepBody && revision.HasMultiLineMessage && revision.Body is null))
+        if (revision.Author is null || revision.AuthorEmail is null || revision.Committer is null || revision.CommitterEmail is null || revision.Subject is null || (keepBody && revision.HasMultiLineMessage && revision.Body is null) || (keepBody && _hasNotes && revision.Notes is null))
         {
             ParseAssert($"Log parse error, decoded fields ({revision.Subject}::{revision.Body}) for {objectId}");
             revision = default;
@@ -697,6 +665,20 @@ public sealed class RevisionReader
             _noOfParseError++;
             DebugHelpers.Assert(!Debugger.IsAttached || _noOfParseError > 1, message);
             Trace.WriteLineIf(_noOfParseError < 10, message);
+        }
+
+        void Split(ReadOnlySpan<char> decoded, out ReadOnlySpan<char> body, out ReadOnlySpan<char> notes)
+        {
+            if (_hasNotes && decoded.LastIndexOf(NotesMarkerWithoutTrailingLF, StringComparison.Ordinal) is int splitPos and >= 0)
+            {
+                body = decoded[..splitPos].TrimEnd();
+                splitPos += NotesMarkerWithoutTrailingLF.Length + /*LF*/ 1;
+                notes = decoded.Slice(Math.Min(splitPos, decoded.Length));
+                return;
+            }
+
+            body = decoded;
+            notes = [];
         }
     }
 

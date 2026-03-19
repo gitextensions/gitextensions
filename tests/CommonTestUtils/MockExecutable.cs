@@ -149,7 +149,7 @@ public sealed class MockExecutable : IExecutable
             }
             else
             {
-                CancellationTokenSource cts = new();
+                using CancellationTokenSource cts = new();
                 CancellationToken ct = cts.Token;
                 ThreadHelper.JoinableTaskFactory.RunAsync(() => cts.CancelAsync());
                 return Task.FromCanceled<int>(ct);

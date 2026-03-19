@@ -154,7 +154,7 @@ partial class FileStatusList
 
                 static bool StartsWith(RelativePath longPath, RelativePath shortPath)
                 {
-                    return longPath.Value.StartsWith(shortPath.Value)
+                    return longPath.Value.StartsWith(shortPath.Value, StringComparison.InvariantCulture)
                         && longPath.Value[shortPath.Length] == '/';
                 }
             }

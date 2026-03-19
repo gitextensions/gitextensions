@@ -30,6 +30,8 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
 
         if (!outputHistoryProvider.Enabled)
         {
+            _verticalSplitContainer1.Panel2Collapsed = true;
+            _verticalSplitContainer2.Panel2Collapsed = true;
             return;
         }
 

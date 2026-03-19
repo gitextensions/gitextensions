@@ -365,7 +365,7 @@ public sealed partial class FormVerify : GitModuleForm
 
     private void UpdateFilteredLostObjects()
     {
-        if (ShowOtherObjects.Checked & !_typeDetected)
+        if (ShowOtherObjects.Checked && !_typeDetected)
         {
             ThreadHelper.FileAndForget(async () =>
             {

@@ -115,7 +115,7 @@ public sealed class CancellationTokenSequenceTests
         using CountdownEvent countdown = new(loopCount * threadCount);
         int completedCount = 0;
 
-        CancellationTokenSource completionTokenSource = new();
+        using CancellationTokenSource completionTokenSource = new();
         CancellationToken completionToken = completionTokenSource.Token;
         int[] winnerByIndex = new int[threadCount];
 

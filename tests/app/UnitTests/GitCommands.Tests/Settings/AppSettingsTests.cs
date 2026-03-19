@@ -287,6 +287,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.HideMergeCommits)], false, false, false);
             yield return (properties[nameof(AppSettings.ShowTags)], true, false, false);
             yield return (properties[nameof(AppSettings.ShowRevisionGridGraphColumn)], true, false, false);
+            yield return (properties[nameof(AppSettings.ShowRevisionGridTooltips)], true, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.ShowAuthorAvatarColumn)], true, false, false);
             yield return (properties[nameof(AppSettings.ShowAuthorNameColumn)], true, false, false);
             yield return (properties[nameof(AppSettings.ShowDateColumn)], true, false, false);
