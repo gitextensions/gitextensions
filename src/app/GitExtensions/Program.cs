@@ -4,6 +4,8 @@ using System.Diagnostics;
 using GitCommands;
 using GitCommands.Utils;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
@@ -144,7 +146,7 @@ internal static class Program
                     }
                 }
 
-                GitUICommands uiCommands = new(_serviceContainer, new GitModule(""));
+                GitUICommands uiCommands = new(_serviceContainer, new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), ""));
                 CommonLogic commonLogic = new(uiCommands.Module);
                 if (AppSettings.CheckSettings)
                 {
@@ -175,7 +177,7 @@ internal static class Program
             MouseWheelRedirector.Active = true;
         }
 
-        GitUICommands commands = new(_serviceContainer, new GitModule(GetWorkingDir(args)));
+        GitUICommands commands = new(_serviceContainer, new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), GetWorkingDir(args)));
 
         if (args.Length <= 1)
         {

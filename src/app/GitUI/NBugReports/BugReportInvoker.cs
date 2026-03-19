@@ -428,7 +428,7 @@ public static class BugReportInvoker
 
             button.Click += (_, _) =>
             {
-                new GitModule(workingDir).GitExecutable.Start(command).WaitForExit();
+                new Executable(() => AppSettings.GitCommand, workingDir).Start(command).WaitForExit();
                 ShowGitRepo(OwnerForm, workingDir);
             };
 

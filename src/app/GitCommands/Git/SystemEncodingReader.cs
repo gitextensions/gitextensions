@@ -17,16 +17,16 @@ public interface ISystemEncodingReader
 
 public sealed class SystemEncodingReader : ISystemEncodingReader
 {
-    private readonly IGitModule _module;
+    private readonly IExecutable _gitExecutable;
 
-    public SystemEncodingReader(IGitModule? module)
+    public SystemEncodingReader(IGitModule module)
     {
-        _module = module ?? new GitModule("");
+        _gitExecutable = module.GitExecutable;
     }
 
     public SystemEncodingReader()
-        : this(null)
     {
+        _gitExecutable = new Executable(() => AppSettings.GitCommand, "");
     }
 
     /// <inheritdoc />
@@ -48,7 +48,7 @@ public sealed class SystemEncodingReader : ISystemEncodingReader
                 controlStr
             };
 
-            ExecutionResult result = _module.GitExecutable.Execute(arguments, outputEncoding: Encoding.UTF8, throwOnErrorExit: false);
+            ExecutionResult result = _gitExecutable.Execute(arguments, outputEncoding: Encoding.UTF8, throwOnErrorExit: false);
             string? s = result.StandardError;
             systemEncoding = s?.IndexOf(controlStr) is >= 0
                 ? new UTF8Encoding(false)

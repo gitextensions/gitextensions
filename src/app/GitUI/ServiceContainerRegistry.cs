@@ -46,6 +46,6 @@ public static class ServiceContainerRegistry
         InvalidRepositoryRemover invalidRepositoryRemover = new();
         serviceContainer.AddService<IRepositoryCurrentBranchNameProvider>(repositoryCurrentBranchNameProvider);
         serviceContainer.AddService<IInvalidRepositoryRemover>(invalidRepositoryRemover);
-        serviceContainer.AddService<IRepositoryHistoryUIService>(new RepositoryHistoryUIService(repositoryCurrentBranchNameProvider, invalidRepositoryRemover));
+        serviceContainer.AddService<IRepositoryHistoryUIService>(new RepositoryHistoryUIService(serviceContainer.GetRequiredService<IGitExecutorProvider>(), repositoryCurrentBranchNameProvider, invalidRepositoryRemover));
     }
 }

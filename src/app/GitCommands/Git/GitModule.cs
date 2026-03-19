@@ -38,6 +38,7 @@ public sealed partial class GitModule : IGitModule
     public static readonly string NoNewLineAtTheEnd = "\\ No newline at end of file";
     public static CommandCache GitCommandCache { get; } = new();
 
+    private readonly IGitExecutorProvider _executorProvider;
     private readonly GitExecutor _executor;
     private readonly Lock _lock = new();
     private readonly IIndexLockManager _indexLockManager;
@@ -75,9 +76,10 @@ public sealed partial class GitModule : IGitModule
     /// Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
     /// This can be seen as the Git "instance" identifier.
     /// </summary>
-    public GitModule(string? workingDir)
+    public GitModule(IGitExecutorProvider executorProvider, string? workingDir)
     {
-        _executor = new GitExecutor(workingDir);
+        _executorProvider = executorProvider;
+        _executor = (GitExecutor)executorProvider.GetExecutor(workingDir ?? "");
         WorkingDirGitDir = _executor.GetGitDirectory();
         _indexLockManager = new IndexLockManager(this);
         _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => this);
@@ -151,7 +153,7 @@ public sealed partial class GitModule : IGitModule
             {
                 if (configSection.GetValue("path") == submodulePath.ToPosixPath())
                 {
-                    GitModule superprojectModule = new(superprojectPath);
+                    GitModule superprojectModule = new(_executorProvider, superprojectPath);
 
                     return (superprojectModule, submodulePath);
                 }
@@ -1158,7 +1160,7 @@ public sealed partial class GitModule : IGitModule
 
     public IGitModule GetSubmodule(string? localPath)
     {
-        return new GitModule(GetSubmoduleFullPath(localPath));
+        return new GitModule(_executorProvider, GetSubmoduleFullPath(localPath));
     }
 
     IGitModule IGitModule.GetSubmodule(string submoduleName)

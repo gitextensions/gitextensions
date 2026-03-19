@@ -39,11 +39,6 @@ internal sealed class GitExecutor : IGitExecutor
         }
     }
 
-    public GitExecutor(string? workingDir)
-        : this(new GitDirectoryResolver(), workingDir)
-    {
-    }
-
     /// <inheritdoc />
     /// <remarks>
     ///  Setter is needed for tests that need to replace the GitCommandRunner with a mock.

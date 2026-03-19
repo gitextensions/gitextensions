@@ -648,7 +648,7 @@ public sealed partial class GitModuleTests
     /// <returns>The GitModule</returns>
     private static GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "", GitModule module = null)
     {
-        module ??= new GitModule(path);
+        module ??= new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), path);
 
         GitModule.TestAccessor testAccessor = module.GetTestAccessor();
         GitExecutor.TestAccessor executorAccessor = testAccessor.Executor;

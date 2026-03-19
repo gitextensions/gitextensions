@@ -2110,7 +2110,7 @@ public sealed partial class FormCommit : GitModuleForm
             if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
             {
                 sb.AppendLine("Submodule " + path + ":");
-                GitModule module = new(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
+                GitModule module = new(UICommands.GetRequiredService<IGitExecutorProvider>(), _fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
                 args = new GitArgumentBuilder("log")
                 {
                     "--pretty=format:\"    %m %h - %s\"",

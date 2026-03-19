@@ -28,6 +28,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
     private readonly string _codeFilePattern;
     private readonly bool _countSubmodules;
     private readonly IGitModule _module;
+    private readonly IGitExecutorProvider _executorProvider;
 
     private LineCounter? _lineCounter;
 
@@ -50,10 +51,11 @@ public partial class FormGitStatistics : GitExtensionsFormBase
 
     public string DirectoriesToIgnore { get; set; } = "";
 
-    public FormGitStatistics(IGitModule module, string codeFilePattern, bool countSubmodules)
+    public FormGitStatistics(IGitExecutorProvider executorProvider, IGitModule module, string codeFilePattern, bool countSubmodules)
     {
         ThreadHelper.ThrowIfNotOnUIThread();
 
+        _executorProvider = executorProvider;
         _module = module;
         _codeFilePattern = codeFilePattern;
         _countSubmodules = countSubmodules;
@@ -166,7 +168,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
             {
                 IEnumerable<GitModule> submodules = _module.GetSubmodulesInfo()
                     .WhereNotNull()
-                    .Select(submodule => new GitModule(Path.Combine(_module.WorkingDir, submodule.LocalPath)));
+                    .Select(submodule => new GitModule(_executorProvider, Path.Combine(_module.WorkingDir, submodule.LocalPath)));
 
                 foreach (GitModule submodule in submodules)
                 {

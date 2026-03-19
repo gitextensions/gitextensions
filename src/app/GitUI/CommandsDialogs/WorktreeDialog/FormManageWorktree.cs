@@ -270,7 +270,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
 
         if (formCreateWorktree.OpenWorktree)
         {
-            GitModule newModule = new(formCreateWorktree.WorktreeDirectory);
+            GitModule newModule = new(UICommands.GetRequiredService<IGitExecutorProvider>(), formCreateWorktree.WorktreeDirectory);
             if (newModule.IsValidGitWorkingDir())
             {
                 OpenWorktree(formCreateWorktree.WorktreeDirectory);

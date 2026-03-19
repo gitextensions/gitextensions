@@ -3,6 +3,7 @@ using GitCommands;
 using GitCommands.Submodules;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
@@ -167,7 +168,7 @@ internal sealed class SubmoduleNode : Node
             // Prefer submodule status, shows ahead/behind
             await TaskScheduler.Default;
             toolTip = SubmoduleResources.GetSubmoduleStatusText(
-                new GitModule(Info.Path),
+                new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), Info.Path),
                 Info.Detailed.RawStatus,
                 moduleIsParent: false,
                 limitOutput: true);

@@ -81,7 +81,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
         await TaskScheduler.Default;
 
         // Start gathering new submodule structure asynchronously.
-        GitModule currentModule = new(workingDirectory);
+        GitModule currentModule = new(_executorProvider, workingDirectory);
         SubmoduleInfoResult result = GetSuperProjectRepositorySubmodulesStructure(currentModule, noBranchText);
 
         // Prepare info for status updates
@@ -155,7 +155,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
             cancelToken.ThrowIfCancellationRequested();
         }
 
-        GitModule currentModule = new(workingDirectory);
+        GitModule currentModule = new(_executorProvider, workingDirectory);
         await UpdateSubmodulesStatusAsync(currentModule, gitStatus, cancelToken);
 
         OnStatusUpdated(_submoduleInfoResult, structureUpdated: false, cancelToken);
@@ -435,7 +435,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
             };
 
         // Recursively update submodules
-        GitModule module = new(path);
+        GitModule module = new(_executorProvider, path);
         if (submoduleStatus?.IsDirty is true)
         {
             await GetSubmoduleDetailedStatusAsync(module, cancelToken);
@@ -474,7 +474,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
         }
 
         info.Detailed = null;
-        GitModule module = new(path);
+        GitModule module = new(_executorProvider, path);
         foreach (string name in module.GetSubmodulesLocalPaths(false))
         {
             SetSubmoduleEmptyDetailedStatus(module, name);

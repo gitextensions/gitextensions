@@ -4,6 +4,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using Microsoft;
@@ -386,7 +387,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             return;
         }
 
-        GitModule module = new(targetDir);
+        GitModule module = new(_commands.GetRequiredService<IGitExecutorProvider>(), targetDir);
 
         if (addUpstreamRemoteAsCB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentUrl))
         {

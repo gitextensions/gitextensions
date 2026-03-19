@@ -908,7 +908,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
             string dir = fileNameArray[0];
             if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
             {
-                GitModule module = new(dir);
+                GitModule module = new(ServiceProvider.GetRequiredService<IGitExecutorProvider>(), dir);
 
                 if (!module.IsValidGitWorkingDir())
                 {
@@ -954,7 +954,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
         if (Controller.IsValidGitWorkingDir(repository.Path))
         {
-            OnModuleChanged(new GitModuleEventArgs(new GitModule(repository.Path)));
+            OnModuleChanged(new GitModuleEventArgs(new GitModule(ServiceProvider.GetRequiredService<IGitExecutorProvider>(), repository.Path)));
             return true;
         }
 

@@ -44,7 +44,7 @@ public sealed class GitBlameParserTest
 
         string gitExtensionsRepoPath = Path.GetFullPath(@"..\..\..\..\..\..\..");
 
-        GitModule gitModule = new(gitExtensionsRepoPath);
+        GitModule gitModule = new(new GitCommands.GitExecutorProvider(new GitCommands.Git.GitDirectoryResolver()), gitExtensionsRepoPath);
 
         // Revision corresponding to line 2281
         GitRevision selectedBlamedRevision = gitModule.GetRevision(ObjectId.Parse("52476f30670ba5338756b606841fb0a346fd6460"));

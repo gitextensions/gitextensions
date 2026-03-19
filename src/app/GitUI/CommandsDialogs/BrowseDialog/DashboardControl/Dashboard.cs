@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
@@ -216,7 +217,7 @@ public partial class Dashboard : GitModuleControl
 
     private void openItem_Click(object sender, EventArgs e)
     {
-        IGitModule? module = FormOpenDirectory.OpenModule(this, currentModule: null);
+        IGitModule? module = FormOpenDirectory.OpenModule(this, UICommands.GetRequiredService<IGitExecutorProvider>(), currentModule: null);
         if (module is not null)
         {
             OnModuleChanged(this, new GitModuleEventArgs(module));

@@ -389,7 +389,7 @@ internal sealed class SubmoduleTree : Tree
             return;
         }
 
-        GitModule module = new(node.Info.Path);
+        GitModule module = new(UICommands.GetRequiredService<IGitExecutorProvider>(), node.Info.Path);
         module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete);
     }
 
