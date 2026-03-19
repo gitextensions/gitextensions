@@ -650,8 +650,7 @@ public sealed partial class GitModuleTests
     {
         module ??= new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), path);
 
-        GitModule.TestAccessor testAccessor = module.GetTestAccessor();
-        GitExecutor.TestAccessor executorAccessor = testAccessor.Executor;
+        GitExecutor.TestAccessor executorAccessor = module.GetTestAccessor().Executor;
         executorAccessor.GitExecutable = executable;
         executorAccessor.GitWindowsExecutable = executable;
         executorAccessor.GitCommandRunner = new GitCommandRunner(executable, () => GitModule.SystemEncoding);

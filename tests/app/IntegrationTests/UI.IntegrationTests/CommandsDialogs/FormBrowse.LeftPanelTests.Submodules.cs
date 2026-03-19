@@ -71,8 +71,7 @@ public class FormBrowse_LeftPanel_SubmodulesTests
         _repo2Module = submodules.ElementAt(0);
         _repo3Module = submodules.ElementAt(1);
 
-        GitDirectoryResolver gitDirectoryResolver = new();
-        _provider = new SubmoduleStatusProvider(new GitExecutorProvider(gitDirectoryResolver));
+        _provider = new SubmoduleStatusProvider(new GitExecutorProvider(new GitDirectoryResolver()));
 
         IServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
         serviceContainer.RemoveService<ISubmoduleStatusProvider>();

@@ -38,13 +38,10 @@ public class CommitInfoTests
 
         // mock git executable
         _gitExecutable = new MockExecutable();
-        object executor = typeof(GitModule).GetField("_executor", BindingFlags.Instance | BindingFlags.NonPublic)
-            .GetValue(_commands.Module);
-        typeof(GitExecutor).GetProperty("GitExecutable", BindingFlags.Instance | BindingFlags.Public)
-            .SetValue(executor, _gitExecutable);
-        GitCommandRunner cmdRunner = new(_gitExecutable, () => GitModule.SystemEncoding);
-        typeof(GitExecutor).GetProperty("GitCommandRunner", BindingFlags.Instance | BindingFlags.Public)
-            .SetValue(executor, cmdRunner);
+        GitExecutor.TestAccessor executorAccessor = _referenceRepository.Module.GetTestAccessor().Executor;
+        executorAccessor.GitExecutable = _gitExecutable;
+        executorAccessor.GitWindowsExecutable = _gitExecutable;
+        executorAccessor.GitCommandRunner = new GitCommandRunner(_gitExecutable, () => GitModule.SystemEncoding);
     }
 
     [TearDown]

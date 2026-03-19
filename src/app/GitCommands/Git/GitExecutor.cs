@@ -73,7 +73,7 @@ internal sealed class GitExecutor : IGitExecutor
     /// <summary>
     ///  Gets a value indicating whether this repository is using the reftable format.
     /// </summary>
-    internal bool IsReftableRepo { get; set; }
+    public bool IsReftableRepo { get; set; }
 
     public string GetSelectedBranch(bool emptyIfDetached = false)
     {

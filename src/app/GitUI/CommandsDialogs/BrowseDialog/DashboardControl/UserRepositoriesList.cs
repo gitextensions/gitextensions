@@ -59,24 +59,21 @@ public partial class UserRepositoriesList : GitExtensionsControl
     private Brush _hoverColorBrush = new SolidBrush(SystemColors.InactiveCaption);
     private ListViewItem? _hoveredItem;
     private readonly ListViewGroup _lvgRecentRepositories;
-    private readonly Lazy<IUserRepositoriesListController> _controller;
     private bool _hasInvalidRepos;
     private ListViewItem? _rightClickedItem;
 
     public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
 
-    private IUserRepositoriesListController Controller => _controller.Value;
+    private IUserRepositoriesListController Controller
+        => field ??= new UserRepositoriesListController(
+            RepositoryHistoryManager.Locals,
+            new InvalidRepositoryRemover(),
+            ServiceProvider.GetRequiredService<IGitExecutorProvider>());
 
     public UserRepositoriesList()
     {
-        _controller = new Lazy<IUserRepositoriesListController>(() => new UserRepositoriesListController(
-            RepositoryHistoryManager.Locals,
-            new InvalidRepositoryRemover(),
-            ServiceProvider.GetRequiredService<IGitExecutorProvider>()));
-
         InitializeComponent();
         InitializeComplete();
-
         mnuTop.DropDownItems.Clear();
 
         _lvgRecentRepositories = new ListViewGroup(_groupRecentRepositories.Text, HorizontalAlignment.Left)

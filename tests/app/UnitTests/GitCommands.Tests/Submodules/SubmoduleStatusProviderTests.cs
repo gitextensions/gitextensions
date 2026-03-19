@@ -58,8 +58,7 @@ internal class SubmoduleStatusProviderTests
             Debug.WriteLine($"Repo[{i + 1}]:{actualModules[i].WorkingDir}");
         }
 
-        GitDirectoryResolver gitDirectoryResolver = new();
-        _provider = new SubmoduleStatusProvider(new GitExecutorProvider(gitDirectoryResolver));
+        _provider = new SubmoduleStatusProvider(new GitExecutorProvider(new GitDirectoryResolver()));
     }
 
     [TearDown]
