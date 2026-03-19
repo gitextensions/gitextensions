@@ -44,8 +44,16 @@ internal sealed class GitExecutor : IGitExecutor
     {
     }
 
+    /// <inheritdoc />
+    /// <remarks>
+    ///  Setter is needed for tests that need to replace the GitCommandRunner with a mock.
+    /// </remarks>
     public IGitCommandRunner GitCommandRunner { get; private set; }
 
+    /// <inheritdoc />
+    /// <remarks>
+    ///  Setter is needed for tests that need to replace the GitExecutable with a mock.
+    /// </remarks>
     public IExecutable GitExecutable { get; private set; }
 
     /// <summary>
@@ -58,6 +66,9 @@ internal sealed class GitExecutor : IGitExecutor
     /// <summary>
     ///  Gets the  Windows Git executable associated with this executor.
     /// </summary>
+    /// <remarks>
+    ///  Setter is needed for tests that need to replace the GitWindowsExecutable with a mock.
+    /// </remarks>
     public IExecutable GitWindowsExecutable { get; private set; }
 
     /// <summary>
