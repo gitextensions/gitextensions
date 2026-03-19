@@ -4,8 +4,10 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Graph;
@@ -443,7 +445,18 @@ public class RevisionGraph : IRevisionGraphRowProvider
             return;
         }
 
-        int mainRevisionIndex = orderedNodesCache.IndexOf(x => x.GitRevision.Refs.Any(r => r.LocalName == "main" || r.LocalName == "master"));
+        // Collect all refs for known revisions
+        IReadOnlyList<IGitRef> refs = orderedNodesCache
+            .Where(x => x.GitRevision is not null)
+            .SelectMany(x => x.GitRevision?.Refs)
+            .AsReadOnlyList();
+
+        // Find first revision with a ref at priority 1 (usually 'main' or 'master')
+        HashSet<IGitRef> priority1Refs = [.. Priorites.Priorities(refs, x => x.LocalName, regexList: AppSettings.PrioritizedBranchNames)
+            .Where(kv => kv.Value == 0)
+            .Select(kv => kv.Key)];
+
+        int mainRevisionIndex = orderedNodesCache.IndexOf(x => x.GitRevision.Refs.Any(r => priority1Refs.Contains(r)));
 
         for (int nextIndex = startIndex; nextIndex <= lastToCacheRowIndex; ++nextIndex)
         {
