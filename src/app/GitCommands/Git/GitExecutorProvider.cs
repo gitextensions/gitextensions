@@ -23,6 +23,6 @@ internal sealed class GitExecutorProvider : IGitExecutorProvider
     public IGitExecutor GetNewExecutor(string repositoryPath)
     {
         _cache.TryRemove(repositoryPath, out _);
-        return _cache.GetOrAdd(repositoryPath, path => new GitExecutor(_gitDirectoryResolver, path));
+        return GetExecutor(repositoryPath);
     }
 }
