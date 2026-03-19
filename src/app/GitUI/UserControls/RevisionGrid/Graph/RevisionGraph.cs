@@ -2,6 +2,7 @@
 using System.Collections.Immutable;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Linq;
 using System.Runtime.CompilerServices;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -442,6 +443,8 @@ public class RevisionGraph : IRevisionGraphRowProvider
             return;
         }
 
+        int mainRevisionIndex = orderedNodesCache.IndexOf(x => x.GitRevision.Refs.Any(r => r.LocalName == "main" || r.LocalName == "master"));
+
         for (int nextIndex = startIndex; nextIndex <= lastToCacheRowIndex; ++nextIndex)
         {
             cancellationToken.ThrowIfCancellationRequested();
@@ -479,6 +482,14 @@ public class RevisionGraph : IRevisionGraphRowProvider
 
                 bool startSegmentsAdded = false;
 
+                List<RevisionGraphSegment> segmentsForNode = segments;
+                if (nextIndex == mainRevisionIndex)
+                {
+                    // The segments connecting to this row's node are put in their own list, which
+                    // will be inserted first in 'segments'
+                    segmentsForNode = [];
+                }
+
                 // Loop through all segments that do not end in the previous row
                 int prevRevisionSegmentCount = previousRevisionGraphRow.Segments.Count;
                 for (int prevRevisionSegmentIndex = 0; prevRevisionSegmentIndex < prevRevisionSegmentCount; ++prevRevisionSegmentIndex)
@@ -489,54 +500,58 @@ public class RevisionGraph : IRevisionGraphRowProvider
                         continue;
                     }
 
-                    segments.Add(segment);
+                    if (revision != segment.Parent)
+                    {
+                        segments.Add(segment);
+                        continue;
+                    }
+
+                    segmentsForNode.Add(segment);
 
                     // This segment that is copied from the previous row, connects to the node in this row.
                     // Copy all new segments that start from this node (revision) to this lane.
-                    if (revision == segment.Parent)
+
+                    RevisionGraphSegment prevSegment = segment;
+                    RevisionGraphSegment? nextSegment = GetNextSegment();
+                    RevisionGraphSegment? GetNextSegment()
                     {
-                        RevisionGraphSegment prevSegment = segment;
-                        RevisionGraphSegment? nextSegment = GetNextSegment();
-                        RevisionGraphSegment? GetNextSegment()
+                        for (int nextSegmentIndex = prevRevisionSegmentIndex + 1; nextSegmentIndex < prevRevisionSegmentCount; ++nextSegmentIndex)
                         {
-                            for (int nextSegmentIndex = prevRevisionSegmentIndex + 1; nextSegmentIndex < prevRevisionSegmentCount; ++nextSegmentIndex)
+                            RevisionGraphSegment nextSegment = previousRevisionGraphRow.Segments[nextSegmentIndex];
+                            if (nextSegment.Parent != previousRevisionGraphRow.Revision && nextSegment.Parent != revision)
                             {
-                                RevisionGraphSegment nextSegment = previousRevisionGraphRow.Segments[nextSegmentIndex];
-                                if (nextSegment.Parent != previousRevisionGraphRow.Revision && nextSegment.Parent != revision)
-                                {
-                                    return nextSegment;
-                                }
+                                return nextSegment;
                             }
-
-                            return null;
                         }
 
-                        if (!startSegmentsAdded)
+                        return null;
+                    }
+
+                    if (!startSegmentsAdded)
+                    {
+                        startSegmentsAdded = true;
+                        segmentsForNode.AddRange(revisionStartSegments);
+                    }
+
+                    int startSegmentsCount = revisionStartSegments.Length;
+                    for (int startSegmentIndex = 0; startSegmentIndex < startSegmentsCount; ++startSegmentIndex)
+                    {
+                        RevisionGraphSegment startSegment = revisionStartSegments[startSegmentIndex];
+                        if (startSegment == revisionStartSegments[0])
                         {
-                            startSegmentsAdded = true;
-                            segments.AddRange(revisionStartSegments);
+                            if (startSegment.LaneInfo is null || startSegment.LaneInfo.StartScore > segment.LaneInfo?.StartScore)
+                            {
+                                startSegment.LaneInfo = segment.LaneInfo;
+                            }
+                        }
+                        else
+                        {
+                            startSegment.LaneInfo ??= segment.LaneInfo is null
+                                    ? new LaneInfo(startSegment, prevSegment, nextSegment)
+                                    : new LaneInfo(startSegment, prevSegment, nextSegment, derivedFrom: segment.LaneInfo);
                         }
 
-                        int startSegmentsCount = revisionStartSegments.Length;
-                        for (int startSegmentIndex = 0; startSegmentIndex < startSegmentsCount; ++startSegmentIndex)
-                        {
-                            RevisionGraphSegment startSegment = revisionStartSegments[startSegmentIndex];
-                            if (startSegment == revisionStartSegments[0])
-                            {
-                                if (startSegment.LaneInfo is null || startSegment.LaneInfo.StartScore > segment.LaneInfo?.StartScore)
-                                {
-                                    startSegment.LaneInfo = segment.LaneInfo;
-                                }
-                            }
-                            else
-                            {
-                                startSegment.LaneInfo ??= segment.LaneInfo is null
-                                        ? new LaneInfo(startSegment, prevSegment, nextSegment)
-                                        : new LaneInfo(startSegment, prevSegment, nextSegment, derivedFrom: segment.LaneInfo);
-                            }
-
-                            prevSegment = startSegment;
-                        }
+                        prevSegment = startSegment;
                     }
                 }
 
@@ -546,7 +561,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
                     RevisionGraphSegment? prevSegment = segments.LastOrDefault();
 
                     // Add new segments started by this revision to the end
-                    segments.AddRange(revisionStartSegments);
+                    segmentsForNode.AddRange(revisionStartSegments);
 
                     int revisionStartSegmentsCount = revisionStartSegments.Length;
                     for (int i = 0; i < revisionStartSegmentsCount; i++)
@@ -556,9 +571,23 @@ public class RevisionGraph : IRevisionGraphRowProvider
                         prevSegment = startSegment;
                     }
                 }
+
+                if (!ReferenceEquals(segments, segmentsForNode))
+                {
+                    segments.InsertRange(0, segmentsForNode);
+                }
             }
 
-            _orderedRowCache.Add(new RevisionGraphRow(revision, segments, Config.MergeGraphLanesHavingCommonParent));
+            int emptyLaneCount = 0;
+            if (mainRevisionIndex != -1 && nextIndex < mainRevisionIndex)
+            {
+                // Reserve the first lane for the 'main' commit
+                ++emptyLaneCount;
+            }
+
+            RevisionGraphRow row = new(revision, segments, Config.MergeGraphLanesHavingCommonParent, emptyLaneCount);
+
+            _orderedRowCache.Add(row);
         }
 
         // Straightening does not apply to the first and the last row. The single node there shall not be moved.
@@ -901,6 +930,14 @@ public class RevisionGraph : IRevisionGraphRowProvider
                             bool lastChance = endLane.Sharing == LaneSharing.DifferentStart;
                             if (moveBy < 0 || endLane.Index < 0 || !(endLane.Sharing == LaneSharing.ExclusiveOrPrimary || lastChance))
                             {
+                                return false;
+                            }
+
+                            if (segmentOrAncestor.Parent == endRow.Revision && endLane.Index == 0)
+                            {
+                                // The segment ends in the leftmost lane of this row, which is the node lane.
+                                // We don't want to move this lane (this should only happen for the 'main'
+                                // commit when it's fixed to the leftmost lane).
                                 return false;
                             }
 

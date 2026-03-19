@@ -3,6 +3,7 @@ using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUIPluginInterfaces;
+using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid;
 public class RevisionGraphTests
@@ -255,6 +256,44 @@ public class RevisionGraphTests
         await VerifyGraphLayoutAsync(revisionGraph);
     }
 
+    [Test]
+    public async Task MainGetsTheLeftmostLane()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  m:1:main  3:1  4:3 ");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task MainGetsTheLeftmostLane2()
+    {
+        RevisionGraph revisionGraph = CreateGraph(" 1  m:1:main 3:1 4:3 5:m 6:m 7:m");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task MainGetsTheLeftmostLane3([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 b:1 c:2 m:1,b:main _i:m _w:_i 4:c,m 5:4");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
+    [Test]
+    public async Task MainGetsTheLeftmostLane4([Values] bool mergeGraphLanesHavingCommonParent, [Values] bool straightenGraphDiagonals)
+    {
+        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.StraightenGraphDiagonals.Value = straightenGraphDiagonals;
+
+        RevisionGraph revisionGraph = CreateGraph(" 1 2:1 b:1 c:2 m:b:main _i:m _w:_i 4:c,m 5:4");
+
+        await VerifyGraphLayoutAsync(revisionGraph);
+    }
+
     private const string graphWithMultiLaneCrossings = "0:C,1,2,3,4,5,6,7,8,9,A,B 1:R 2:R 3:R 4:C 5:C 6:C 7:R 8:C 9:R A:C B:R C:D D:E E:F F:G G:H,K,R H:I,R I:J,R J:R K:R R";
 
     [Test]
@@ -454,9 +493,15 @@ public class RevisionGraphTests
     /// or just {id} if it has no parent.
     ///
     /// E.g.: " 1   2:1   3:1   4:2,3 "
+    ///
+    /// The special IDs "_w" and "_i" denote the working tree and index, respectively.
+    ///
+    /// Refs can be specified after an additional colon, e.g.: " 1   2:1:tag1  3:2:tag2  4:3:tag3,main "
     /// </summary>
     private static RevisionGraph CreateGraph(string commitSpecs)
     {
+        IGitModule module = Substitute.For<IGitModule>();
+
         List<GitRevision> commits = [];
         Dictionary<string, GitRevision> commitsById = [];
 
@@ -466,7 +511,13 @@ public class RevisionGraphTests
             string[] parts = spec.Split(':');
             string id = parts[0];
 
-            GitRevision commit = new(ObjectId.Random())
+            ObjectId objectId = id switch
+            {
+                "_w" => ObjectId.WorkTreeId,
+                "_i" => ObjectId.IndexId,
+                _ => ObjectId.Random()
+            };
+            GitRevision commit = new(objectId)
             {
                 Subject = id
             };
@@ -478,6 +529,12 @@ public class RevisionGraphTests
                 string[] parentIds = parts[1].Split(',');
                 commit.ParentIds = parentIds.Select(id => commitsById[id].ObjectId).ToList();
             }
+
+            if (parts.Length > 2)
+            {
+                string[] refNames = parts[2].Split(',');
+                commit.Refs = refNames.Select(name => new GitRef(module, null, name)).AsReadOnlyList();
+        }
         }
 
         // Add commits to graph from newest to oldest
@@ -524,11 +581,23 @@ public class RevisionGraphTests
                 line[row.GetLaneForSegment(segment).Index * 2] = '|';
             }
 
-            // Show '*' in lane of actual commit
+            // Show first char of commit ID, or '*', in lane of actual commit
             string? subject = row!.Revision.GitRevision?.Subject;
             line[row.GetCurrentRevisionLane() * 2] = subject?.Length is 1 ? subject[0] : '*';
 
-            graph.Add(new string(line).TrimEnd());
+            // List refs applying to commit
+            string refs = string.Join(" ", row.Revision.GitRevision.Refs.Select(r => r.Name));
+            if (row.Revision.Objectid == ObjectId.WorkTreeId)
+            {
+                refs += " [Working directory]";
+            }
+
+            if (row.Revision.Objectid == ObjectId.IndexId)
+            {
+                refs += " [Commit index]";
+            }
+
+            graph.Add((new string(line) + refs).TrimEnd());
 
             IRevisionGraphRow? nextRow = revisionGraph.GetSegmentsForRow(rowIndex + 1);
             if (nextRow == null)
