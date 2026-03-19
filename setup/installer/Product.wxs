@@ -356,9 +356,6 @@
       <Component Id="ProxySwitcher.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.ProxySwitcher.dll" />
       </Component>
-      <Component Id="Bitbucket.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.Bitbucket.dll" />
-      </Component>
       <Component Id="TeamCityIntegration.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.TeamCityIntegration.dll" />
       </Component>
@@ -733,9 +730,6 @@
         </Feature>
         <Feature Id="ReleaseNotesGenerator" Title="Release notes generator" Level="1">
           <ComponentRef Id="ReleaseNotesGenerator.dll" />
-        </Feature>
-        <Feature Id="Bitbucket" Title="Atlassian Bitbucket Server integration" Level="1">
-          <ComponentRef Id="Bitbucket.dll" />
         </Feature>
         <Feature Id="AppVeyorIntegration" Title="AppVeyor integration" Level="1">
           <ComponentRef Id="AppVeyorIntegration.dll" />
