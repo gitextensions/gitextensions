@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -17,17 +17,7 @@ public interface ISystemEncodingReader
 
 public sealed class SystemEncodingReader : ISystemEncodingReader
 {
-    private readonly IExecutable _gitExecutable;
-
-    public SystemEncodingReader(IGitModule module)
-    {
-        _gitExecutable = module.GitExecutable;
-    }
-
-    public SystemEncodingReader()
-    {
-        _gitExecutable = new Executable(() => AppSettings.GitCommand, "");
-    }
+    private readonly IExecutable _gitExecutable = new Executable(() => AppSettings.GitCommand, "");
 
     /// <inheritdoc />
     public Encoding Read()
