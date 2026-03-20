@@ -18,7 +18,23 @@
     <ProjectReference Include="..\..\src\app\GitUI\GitUI.csproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
   </ItemGroup>
 
-  <Target Name="_UpdateEnglishTranslations" AfterTargets="Build">
+    <!--
+    ============================================================
+                       _UpdateEnglishTranslations
+
+    Extracts translatable strings from the source code and produces
+    English.xlf and English.Plugins.xlf using static analysis (Roslyn).
+
+    Runs automatically after every build of this project, ensuring the
+    xlf files are always up-to-date.
+
+    On CI, verifies that no changes were introduced (i.e. the developer
+    already ran the build and committed the updated xlf files).
+    ============================================================
+    -->
+  <Target Name="_UpdateEnglishTranslations"
+          AfterTargets="Build"
+          BeforeTargets="_CopyTranslations">
     <PropertyGroup>
       <_TranslationExtractorProject>$(MSBuildProjectFullPath)</_TranslationExtractorProject>
       <_TranslationsSourceDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'src', 'app', 'GitUI', 'Translation'))</_TranslationsSourceDir>
