@@ -342,7 +342,6 @@
       </Component>
       <Component Id="Gource.dll" Guid="52F03345-7A36-5CFC-9287-94F03E72556B">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.Gource.dll" />
-        <File Source="$(var.ArtifactsPublishPath)\Plugins\ICSharpCode.SharpZipLib.dll" />
       </Component>
       <Component Id="Github3.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitHub3.dll" />
