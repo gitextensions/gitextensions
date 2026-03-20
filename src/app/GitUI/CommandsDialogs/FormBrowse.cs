@@ -1746,10 +1746,13 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             ShowDashboard();
         }
 
-        RegisterPlugins();
+        _loadOperations.InvokeAndForget(this, () =>
+        {
+            RegisterPlugins();
 
-        revisionDiff.RegisterGitHostingPluginInBlameControl();
-        fileTree.RegisterGitHostingPluginInBlameControl();
+            revisionDiff.RegisterGitHostingPluginInBlameControl();
+            fileTree.RegisterGitHostingPluginInBlameControl();
+        });
     }
 
     private void FileExplorerToolStripMenuItemClick(object sender, EventArgs e)
