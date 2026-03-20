@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -18,6 +18,7 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
     private static readonly TranslationString _noWorkingFolderText = new("No working directory");
     private static readonly TranslationString _configureWorkingDirMenu = new("Co&nfigure this menu...");
     private static readonly TranslationString _repositorySearchPlaceholder = new("Search repositories...");
+    private static readonly TranslationString _toolTip = new("Change working directory\nHold Ctrl in order to open the selected repository in a new instance.");
 
     private class Implementation
     {
@@ -67,6 +68,7 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
             button.ButtonClick += (s, e) => button.ShowDropDown();
             button.DropDownOpening += (s, e) => FillDropDown(button);
             button.MouseUp += MouseUpHandler;
+            button.ToolTipText = _toolTip.Text;
 
             _getUICommands = getUICommands;
             _repositoryHistoryUIService = repositoryHistoryUIService;

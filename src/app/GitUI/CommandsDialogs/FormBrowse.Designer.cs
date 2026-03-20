@@ -315,7 +315,6 @@ partial class FormBrowse
         // 
         _NO_TRANSLATE_WorkingDir.Size = new Size(83, 22);
         _NO_TRANSLATE_WorkingDir.Text = "WorkingDir";
-        _NO_TRANSLATE_WorkingDir.ToolTipText = "Change working directory";
         // 
         // branchSelect
         // 
