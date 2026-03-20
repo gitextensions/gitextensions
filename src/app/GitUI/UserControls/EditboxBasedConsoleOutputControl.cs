@@ -88,7 +88,7 @@ public sealed class EditboxBasedConsoleOutputControl : ConsoleOutputControl
             return;
         }
 
-        _logProcessKilled();
+        _logProcessKilled?.Invoke();
 
         try
         {
