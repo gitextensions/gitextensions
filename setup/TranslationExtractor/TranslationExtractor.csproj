@@ -27,7 +27,7 @@
 
     <Message Text="Extracting translatable strings from source code..." Importance="High" />
 
-    <Exec Command="dotnet run --no-build --project &quot;$(_TranslationExtractorProject)&quot; -- &quot;$(_RepoRoot.TrimEnd('\'))&quot; &quot;$(_TranslationsSourceDir.TrimEnd('\'))&quot;"
+    <Exec Command="dotnet run --no-build --configuration $(Configuration) --project &quot;$(_TranslationExtractorProject)&quot; -- &quot;$(_RepoRoot.TrimEnd('\'))&quot; &quot;$(_TranslationsSourceDir.TrimEnd('\'))&quot;"
           WorkingDirectory="$(_RepoRoot)"
           EchoOff="true"
           ConsoleToMsBuild="true"
