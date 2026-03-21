@@ -6,6 +6,26 @@
         <source>Display test results in build status summary for each build result (network intensive!)</source>
         <target />
       </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>If you want to use the result of different projects, separate your different projects names by a '|'.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Token used to be able to query AppVeyor rest Api. You will find out in the user account menu.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblAccountName.Text">
+        <source>Account name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblApiToken.Text">
+        <source>Api token</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblProjects.Text">
+        <source>Project(s) Name(s)</source>
+        <target />
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en">
@@ -38,6 +58,36 @@
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="AzureDevOpsAdapter" source-language="en">
+    <body>
+      <trans-unit id="_badTokenErrorMessage.Text">
+        <source>The personal access token is invalid or has expired. Update it in the 'Build server integration' settings.
+
+The build server integration has been disabled for this session.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_buildIntegrationErrorCaption.Text">
+        <source>Azure DevOps error</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_genericErrorMessage.Text">
+        <source>An error occurred when requesting build server results.
+
+As a consequence, the build server integration has been disabled for this session.
+
+Detail of the error:</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_ignoreButton.Text">
+        <source>Ignore</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_openSettingsButton.Text">
+        <source>Open settings</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en">
     <body>
       <trans-unit id="Description.Text">
@@ -62,6 +112,14 @@
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_warningForceWithLease.Caption">
+        <source>WARNING: be careful when force push with lease having the periodic background fetch enabled but chose not to auto-refresh after each fetch.
+
+You could lose new commits pushed by others to the remote branch.
+
+Be sure to refresh the revision grid before doing a force push with lease.</source>
         <target />
       </trans-unit>
     </body>
@@ -200,6 +258,10 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="regexFilter.Text">
         <source>/(feature|develop)/</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="statusStrip1.Text">
+        <source>statusStrip1</source>
         <target />
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
@@ -516,6 +578,26 @@ Are you sure you want to continue?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Statistics</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_codeFiles.Caption">
+        <source>Code files</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_ignoreDirectories.Caption">
+        <source>Directories to ignore (EndsWith)</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_ignoreSubmodules.Caption">
+        <source>Ignore submodules</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en">
     <body>
       <trans-unit id="GetProjectIdLink.Text">
@@ -540,26 +622,6 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
-        <target />
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Statistics</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_codeFiles.Caption">
-        <source>Code files</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_ignoreDirectories.Caption">
-        <source>Directories to ignore (EndsWith)</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="_ignoreSubmodules.Caption">
-        <source>Ignore submodules</source>
         <target />
       </trans-unit>
     </body>
@@ -856,6 +918,10 @@ branch names, tag names)</source>
         <source>Extract data from a build result url copied in the clipboard</source>
         <target />
       </trans-unit>
+      <trans-unit id="RestApiTokenLabel.Text">
+        <source>Rest Api Token</source>
+        <target />
+      </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
         <target />
@@ -888,14 +954,43 @@ Please ensure that the url is valid and that the API token has access to build a
  - https://yourorganization.visualstudio.com/projectname/</source>
         <target />
       </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>Project Url</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Build definition name
+(all existing if left empty)</source>
+        <target />
+      </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
  - 'Build (read)'
  - 'Project and team (read)'</source>
         <target />
       </trans-unit>
+      <trans-unit id="labelBuildIdFilter.Text">
+        <source>If needed, use the '*' wildcard or enter a Regular Expression</source>
+        <target />
+      </trans-unit>
       <trans-unit id="labelRegexError.Text">
         <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TeamCityBuildChooser" source-language="en">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Choose the TeamCity build...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonCancel.Text">
+        <source>Cancel</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="buttonOK.Text">
+        <source>OK</source>
         <target />
       </trans-unit>
     </body>
@@ -924,6 +1019,26 @@ Please copy in the clipboard the url of the build before retrying.
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Project name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="label13.Text">
+        <source>TeamCity server URL</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelBuildFilter.Text">
+        <source>Build Id Filter</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelBuildIdFilter.Text">
+        <source>Regexp</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="labelProjectNameComment.Text">
+        <source>Several names splitted by | char</source>
         <target />
       </trans-unit>
       <trans-unit id="labelRegexError.Text">

@@ -1,0 +1,76 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <IsPublishable>false</IsPublishable>
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\app\GitUI\GitUI.csproj" ReferenceOutputAssembly="false" SkipGetTargetFrameworkProperties="true" />
+  </ItemGroup>
+
+    <!--
+    ============================================================
+                       _UpdateEnglishTranslations
+
+    Extracts translatable strings from the source code and produces
+    English.xlf and English.Plugins.xlf using static analysis (Roslyn).
+
+    Runs automatically after every build of this project, ensuring the
+    xlf files are always up-to-date.
+
+    On CI, verifies that no changes were introduced (i.e. the developer
+    already ran the build and committed the updated xlf files).
+    ============================================================
+    -->
+  <Target Name="_UpdateEnglishTranslations"
+          AfterTargets="Build"
+          BeforeTargets="_CopyTranslations">
+    <PropertyGroup>
+      <_TranslationExtractorProject>$(MSBuildProjectFullPath)</_TranslationExtractorProject>
+      <_TranslationsSourceDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'src', 'app', 'GitUI', 'Translation'))</_TranslationsSourceDir>
+    </PropertyGroup>
+
+    <Message Text="Extracting translatable strings from source code..." Importance="High" />
+
+    <Exec Command="dotnet run --no-build --configuration $(Configuration) --project &quot;$(_TranslationExtractorProject)&quot; -- &quot;$(RepoRoot.TrimEnd('\'))&quot; &quot;$(_TranslationsSourceDir.TrimEnd('\'))&quot;"
+          WorkingDirectory="$(RepoRoot)"
+          EchoOff="true"
+          ConsoleToMsBuild="true"
+          StandardOutputImportance="normal">
+      <Output TaskParameter="ExitCode" PropertyName="_TranslationExtractorErrorCode" />
+    </Exec>
+    <Error Text="TranslationExtractor failed with exit code $(_TranslationExtractorErrorCode)"
+           Condition="$(_TranslationExtractorErrorCode) != 0" />
+
+    <!-- On CI: verify no changes to English*.xlf -->
+    <Exec Command="git -c core.autocrlf=false add *.xlf --ignore-errors"
+          IgnoreStandardErrorWarningFormat="true"
+          WorkingDirectory="$(RepoRoot)"
+          IgnoreExitCode="true"
+          Condition="$(ContinuousIntegrationBuild) == true" />
+
+    <Exec Command="git status --porcelain | findstr /i /r &quot;English.xlf English.Plugins.xlf&quot; "
+          WorkingDirectory="$(RepoRoot)"
+          IgnoreExitCode="true"
+          ConsoleToMSBuild="true"
+          Condition="$(ContinuousIntegrationBuild) == true">
+      <Output TaskParameter="ConsoleOutput" PropertyName="_TranslationDiff" />
+    </Exec>
+
+    <Message Text="English translations are up-to date" Importance="High"
+           Condition="$(ContinuousIntegrationBuild) == true and '$(_TranslationDiff)' == ''" />
+    <Error Text="Please update English translations and re-submit the pull-request. Refer to https://github.com/gitextensions/gitextensions/wiki/Translations"
+           Condition="$(ContinuousIntegrationBuild) == true and '$(_TranslationDiff)' != ''" />
+  </Target>
+
+</Project>
