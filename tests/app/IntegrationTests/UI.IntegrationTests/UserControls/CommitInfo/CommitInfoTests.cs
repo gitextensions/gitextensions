@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.Design;
-using System.Reflection;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;

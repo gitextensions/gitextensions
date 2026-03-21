@@ -74,6 +74,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
     {
         InitializeComponent();
         InitializeComplete();
+
         mnuTop.DropDownItems.Clear();
 
         _lvgRecentRepositories = new ListViewGroup(_groupRecentRepositories.Text, HorizontalAlignment.Left)

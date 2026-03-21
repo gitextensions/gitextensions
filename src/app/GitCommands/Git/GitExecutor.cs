@@ -13,8 +13,10 @@ namespace GitCommands;
 /// </summary>
 internal sealed class GitExecutor : IGitExecutor
 {
-    private readonly IGitDirectoryResolver _gitDirectoryResolverInstance;
     private static Encoding? _systemEncoding;
+
+    private readonly IGitDirectoryResolver _gitDirectoryResolverInstance;
+    private bool _isReftableRepo;
 
     public GitExecutor(IGitDirectoryResolver gitDirectoryResolver, string? workingDir)
     {
@@ -70,24 +72,19 @@ internal sealed class GitExecutor : IGitExecutor
 
     public string WslDistro { get; }
 
-    /// <summary>
-    ///  Gets a value indicating whether this repository is using the reftable format.
-    /// </summary>
-    public bool IsReftableRepo { get; set; }
-
     public string GetSelectedBranch(bool emptyIfDetached = false)
     {
-        if (!IsReftableRepo)
+        if (!_isReftableRepo)
         {
             string head = GetSelectedBranchFast(WorkingDir, emptyIfDetached);
 
             if (head == ".invalid")
             {
-                IsReftableRepo = true;
+                _isReftableRepo = true;
             }
             else if (head.Length > 0)
             {
-                IsReftableRepo = false;
+                _isReftableRepo = false;
                 return head;
             }
         }
