@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Collections.Concurrent;
+using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
@@ -33,6 +34,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 {
     private readonly IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
+    private readonly ConcurrentDictionary<string, string> _branchNameCache = new();
 
     public event EventHandler<GitModuleEventArgs> GitModuleChanged;
 
@@ -67,6 +69,11 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             item.ToolTipText = repo.Path;
         }
 
+        if (_branchNameCache.TryGetValue(repo.Path, out string? cachedBranchName))
+        {
+            item.ShortcutKeyDisplayString = cachedBranchName;
+        }
+
         return item;
     }
 
@@ -74,20 +81,43 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     {
         ThreadHelper.FileAndForget(async () =>
         {
-            (ToolStripMenuItem Item, string BranchName)[] updates = [.. items
+            (ToolStripMenuItem Item, string Path, string BranchName)[] fetched = [.. items
                 .AsParallel()
-                .Select(x => (x.Item, BranchName: _repositoryCurrentBranchNameProvider.GetCurrentBranchName(x.Path)))
-                .Where(x => !string.IsNullOrWhiteSpace(x.BranchName))];
+                .Select(x => (x.Item, x.Path, BranchName: _repositoryCurrentBranchNameProvider.GetCurrentBranchName(x.Path)))];
 
-            if (updates.Length is 0)
+            bool anyChange = false;
+            foreach ((ToolStripMenuItem Item, string Path, string BranchName) entry in fetched)
+            {
+                if (string.IsNullOrWhiteSpace(entry.BranchName))
+                {
+                    anyChange |= _branchNameCache.TryRemove(entry.Path, out _);
+                }
+                else if (!_branchNameCache.TryGetValue(entry.Path, out string? existing) || existing != entry.BranchName)
+                {
+                    _branchNameCache[entry.Path] = entry.BranchName;
+                    anyChange = true;
+                }
+            }
+
+            if (!anyChange)
             {
                 return;
             }
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            foreach ((ToolStripMenuItem item, string branchName) in updates)
+            foreach ((ToolStripMenuItem Item, string Path, string BranchName) entry in fetched)
             {
-                item.ShortcutKeyDisplayString = branchName;
+                if (!string.IsNullOrWhiteSpace(entry.BranchName))
+                {
+                    if (entry.Item.ShortcutKeyDisplayString != entry.BranchName)
+                    {
+                        entry.Item.ShortcutKeyDisplayString = entry.BranchName;
+                    }
+                }
+                else if (!string.IsNullOrWhiteSpace(entry.Item.ShortcutKeyDisplayString))
+                {
+                    entry.Item.ShortcutKeyDisplayString = string.Empty;
+                }
             }
         });
     }
