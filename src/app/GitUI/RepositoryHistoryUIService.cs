@@ -70,6 +70,11 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         ThreadHelper.FileAndForget(async () =>
         {
             string branchName = _repositoryCurrentBranchNameProvider.GetCurrentBranchName(repo.Path);
+            if (string.IsNullOrWhiteSpace(branchName))
+            {
+                return;
+            }
+
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             item.ShortcutKeyDisplayString = branchName;
         });
@@ -121,12 +126,12 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
 
-        foreach (IGrouping<string, RecentRepoInfo> repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
+        foreach (IGrouping<string, RecentRepoInfo> repo in pinnedRepos.Concat(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
         {
-            AddFavouriteRepositories(repo.Key, [.. repo]);
+            AddFavouriteRepositories(repo.Key, repo);
         }
 
-        void AddFavouriteRepositories(string? category, IList<RecentRepoInfo> repos)
+        void AddFavouriteRepositories(string? category, IEnumerable<RecentRepoInfo> repos)
         {
             ToolStripMenuItem menuItemCategory;
             if (!container.DropDownItems.ContainsKey(category))
