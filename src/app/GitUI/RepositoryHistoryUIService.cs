@@ -79,44 +79,21 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
     private void UpdateBranchNames(List<(ToolStripMenuItem Item, string Path)> items)
     {
-        ThreadHelper.FileAndForget(async () =>
+        ThreadHelper.FileAndForget(() =>
         {
-            (ToolStripMenuItem Item, string Path, string BranchName)[] fetched = [.. items
+            (string Path, string BranchName)[] fetched = [.. items
                 .AsParallel()
-                .Select(x => (x.Item, x.Path, BranchName: _repositoryCurrentBranchNameProvider.GetCurrentBranchName(x.Path)))];
+                .Select(x => (x.Path, BranchName: _repositoryCurrentBranchNameProvider.GetCurrentBranchName(x.Path)))];
 
-            bool anyChange = false;
-            foreach ((ToolStripMenuItem Item, string Path, string BranchName) entry in fetched)
+            foreach ((string path, string branchName) in fetched)
             {
-                if (string.IsNullOrWhiteSpace(entry.BranchName))
+                if (string.IsNullOrWhiteSpace(branchName))
                 {
-                    anyChange |= _branchNameCache.TryRemove(entry.Path, out _);
+                    _branchNameCache.TryRemove(path, out _);
                 }
-                else if (!_branchNameCache.TryGetValue(entry.Path, out string? existing) || existing != entry.BranchName)
+                else
                 {
-                    _branchNameCache[entry.Path] = entry.BranchName;
-                    anyChange = true;
-                }
-            }
-
-            if (!anyChange)
-            {
-                return;
-            }
-
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            foreach ((ToolStripMenuItem Item, string Path, string BranchName) entry in fetched)
-            {
-                if (!string.IsNullOrWhiteSpace(entry.BranchName))
-                {
-                    if (entry.Item.ShortcutKeyDisplayString != entry.BranchName)
-                    {
-                        entry.Item.ShortcutKeyDisplayString = entry.BranchName;
-                    }
-                }
-                else if (!string.IsNullOrWhiteSpace(entry.Item.ShortcutKeyDisplayString))
-                {
-                    entry.Item.ShortcutKeyDisplayString = string.Empty;
+                    _branchNameCache[path] = branchName;
                 }
             }
         });
