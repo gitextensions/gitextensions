@@ -42,7 +42,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         _invalidRepositoryRemover = invalidRepositoryRemover;
     }
 
-    private void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number, bool anchored = false)
+    private ToolStripMenuItem AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number, bool anchored = false)
     {
         string numberString = number switch { < 10 => $"&{number}", 10 => "1&0", _ => $"{number}" };
         ToolStripMenuItem item = new($"{numberString}: {caption}")
@@ -67,16 +67,28 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             item.ToolTipText = repo.Path;
         }
 
+        return item;
+    }
+
+    private void UpdateBranchNames(List<(ToolStripMenuItem Item, string Path)> items)
+    {
         ThreadHelper.FileAndForget(async () =>
         {
-            string branchName = _repositoryCurrentBranchNameProvider.GetCurrentBranchName(repo.Path);
-            if (string.IsNullOrWhiteSpace(branchName))
+            (ToolStripMenuItem Item, string BranchName)[] updates = [.. items
+                .AsParallel()
+                .Select(x => (x.Item, BranchName: _repositoryCurrentBranchNameProvider.GetCurrentBranchName(x.Path)))
+                .Where(x => !string.IsNullOrWhiteSpace(x.BranchName))];
+
+            if (updates.Length is 0)
             {
                 return;
             }
 
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            item.ShortcutKeyDisplayString = branchName;
+            foreach ((ToolStripMenuItem item, string branchName) in updates)
+            {
+                item.ShortcutKeyDisplayString = branchName;
+            }
         });
     }
 
@@ -126,10 +138,15 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
 
+        List<(ToolStripMenuItem Item, string Path)> itemsForBranchUpdate = new(pinnedRepos.Count + allRecentRepos.Count);
         foreach (IGrouping<string, RecentRepoInfo> repo in pinnedRepos.Concat(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
         {
             AddFavouriteRepositories(repo.Key, repo);
         }
+
+        UpdateBranchNames(itemsForBranchUpdate);
+
+        return;
 
         void AddFavouriteRepositories(string? category, IEnumerable<RecentRepoInfo> repos)
         {
@@ -148,7 +165,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             int number = 0;
             foreach (RecentRepoInfo r in repos)
             {
-                AddRecentRepositories(menuItemCategory, r.Repo, r.Caption, ++number);
+                itemsForBranchUpdate.Add((AddRecentRepositories(menuItemCategory, r.Repo, r.Caption, ++number), r.Repo.Path));
             }
 
             menuItemCategory.DropDown.ResumeLayout();
@@ -173,10 +190,11 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
 
+        List<(ToolStripMenuItem Item, string Path)> itemsForBranchUpdate = new(pinnedRepos.Count + allRecentRepos.Count);
         int number = 0;
         foreach (RecentRepoInfo repo in pinnedRepos)
         {
-            AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored);
+            itemsForBranchUpdate.Add((AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored), repo.Repo.Path));
         }
 
         if (allRecentRepos.Count > 0)
@@ -188,9 +206,11 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
             foreach (RecentRepoInfo repo in allRecentRepos)
             {
-                AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored);
+                itemsForBranchUpdate.Add((AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored), repo.Repo.Path));
             }
         }
+
+        UpdateBranchNames(itemsForBranchUpdate);
     }
 
     internal TestAccessor GetTestAccessor()
