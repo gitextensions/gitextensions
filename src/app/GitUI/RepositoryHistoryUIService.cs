@@ -4,6 +4,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI;
 
@@ -28,6 +29,11 @@ public interface IRepositoryHistoryUIService
     /// </summary>
     /// <param name="container">The container to populate with menu items.</param>
     void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container);
+
+    /// <summary>
+    ///  Initiates a background update of the branch name cache for all recent and favourite repositories.
+    /// </summary>
+    Task UpdateBranchNameCacheAsync();
 }
 
 internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
@@ -35,6 +41,8 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private readonly IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
     private readonly ConcurrentDictionary<string, string> _branchNameCache = new();
+    private readonly Lock _historyTaskLock = new();
+    private JoinableTask<(IList<Repository> Recent, IList<Repository> Favourite)>? _historyTask;
 
     public event EventHandler<GitModuleEventArgs> GitModuleChanged;
 
@@ -77,26 +85,69 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         return item;
     }
 
-    private void UpdateBranchNames(List<(ToolStripMenuItem Item, string Path)> items)
+    private void UpdateBranchNames(IReadOnlyList<string> paths)
     {
-        ThreadHelper.FileAndForget(() =>
-        {
-            (string Path, string BranchName)[] fetched = [.. items
-                .AsParallel()
-                .Select(x => (x.Path, BranchName: _repositoryCurrentBranchNameProvider.GetCurrentBranchName(x.Path)))];
+        (string Path, string BranchName)[] fetched = [.. paths
+            .AsParallel()
+            .Select(path => (path, BranchName: _repositoryCurrentBranchNameProvider.GetCurrentBranchName(path)))];
 
-            foreach ((string path, string branchName) in fetched)
+        foreach ((string path, string branchName) in fetched)
+        {
+            if (string.IsNullOrWhiteSpace(branchName))
             {
-                if (string.IsNullOrWhiteSpace(branchName))
-                {
-                    _branchNameCache.TryRemove(path, out _);
-                }
-                else
-                {
-                    _branchNameCache[path] = branchName;
-                }
+                _branchNameCache.TryRemove(path, out _);
             }
-        });
+            else
+            {
+                _branchNameCache[path] = branchName;
+            }
+        }
+    }
+
+    public async Task UpdateBranchNameCacheAsync()
+    {
+        lock (_historyTaskLock)
+        {
+            _historyTask = null;
+        }
+
+        (IList<Repository> recentHistory, IList<Repository> favouriteHistory) = await GetOrCreateHistoryTask();
+
+        string[] paths = [.. recentHistory
+            .Concat(favouriteHistory)
+            .Select(r => r.Path)
+            .Distinct(StringComparer.OrdinalIgnoreCase)];
+
+        if (paths.Length > 0)
+        {
+            UpdateBranchNames(paths);
+        }
+    }
+
+    private static async Task<(IList<Repository> Recent, IList<Repository> Favourite)> LoadHistoryAsync()
+    {
+        IList<Repository> recent = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
+        IList<Repository> favourite = await RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync();
+        return (recent, favourite);
+    }
+
+    private JoinableTask<(IList<Repository> Recent, IList<Repository> Favourite)> GetOrCreateHistoryTask()
+    {
+        JoinableTask<(IList<Repository> Recent, IList<Repository> Favourite)>? task = _historyTask;
+        if (task is not null)
+        {
+            return task;
+        }
+
+        lock (_historyTaskLock)
+        {
+            if (_historyTask is null)
+            {
+                _historyTask = ThreadHelper.JoinableTaskFactory.RunAsync(LoadHistoryAsync);
+            }
+
+            return _historyTask;
+        }
     }
 
     private void ChangeWorkingDir(string path)
@@ -124,7 +175,9 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
     public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container)
     {
-        IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
+        IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
+            async () => (await GetOrCreateHistoryTask()).Favourite);
+
         if (repositoryHistory.Count < 1)
         {
             return;
@@ -145,13 +198,11 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
 
-        List<(ToolStripMenuItem Item, string Path)> itemsForBranchUpdate = new(pinnedRepos.Count + allRecentRepos.Count);
+        List<string> pathsForBranchUpdate = new(pinnedRepos.Count + allRecentRepos.Count);
         foreach (IGrouping<string, RecentRepoInfo> repo in pinnedRepos.Concat(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
         {
             AddFavouriteRepositories(repo.Key, repo);
         }
-
-        UpdateBranchNames(itemsForBranchUpdate);
 
         return;
 
@@ -172,7 +223,8 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             int number = 0;
             foreach (RecentRepoInfo r in repos)
             {
-                itemsForBranchUpdate.Add((AddRecentRepositories(menuItemCategory, r.Repo, r.Caption, ++number), r.Repo.Path));
+                AddRecentRepositories(menuItemCategory, r.Repo, r.Caption, ++number);
+                pathsForBranchUpdate.Add(r.Repo.Path);
             }
 
             menuItemCategory.DropDown.ResumeLayout();
@@ -184,7 +236,9 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         List<RecentRepoInfo> pinnedRepos = [];
         List<RecentRepoInfo> allRecentRepos = [];
 
-        IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
+        IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
+            async () => (await GetOrCreateHistoryTask()).Recent);
+
         if (repositoryHistory.Count < 1)
         {
             return;
@@ -197,11 +251,12 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
 
-        List<(ToolStripMenuItem Item, string Path)> itemsForBranchUpdate = new(pinnedRepos.Count + allRecentRepos.Count);
+        List<string> pathsForBranchUpdate = new(pinnedRepos.Count + allRecentRepos.Count);
         int number = 0;
         foreach (RecentRepoInfo repo in pinnedRepos)
         {
-            itemsForBranchUpdate.Add((AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored), repo.Repo.Path));
+            AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored);
+            pathsForBranchUpdate.Add(repo.Repo.Path);
         }
 
         if (allRecentRepos.Count > 0)
@@ -213,11 +268,10 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
             foreach (RecentRepoInfo repo in allRecentRepos)
             {
-                itemsForBranchUpdate.Add((AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored), repo.Repo.Path));
+                AddRecentRepositories(container, repo.Repo, repo.Caption, ++number, repo.Anchored);
+                pathsForBranchUpdate.Add(repo.Repo.Path);
             }
         }
-
-        UpdateBranchNames(itemsForBranchUpdate);
     }
 
     internal TestAccessor GetTestAccessor()
