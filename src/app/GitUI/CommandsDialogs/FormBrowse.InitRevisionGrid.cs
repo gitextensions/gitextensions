@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs;
@@ -73,6 +74,16 @@ partial class FormBrowse
             }
 
             repoObjectsTree.RefreshRevisionsLoaded();
+        };
+
+        RevisionGrid.RevisionsLoaded += (sender, e) =>
+        {
+            ThreadHelper.FileAndForget(async () =>
+            {
+                // update the branchname cache for the repo menu
+                await Task.Delay(TimeSpan.FromMilliseconds(500));
+                await UICommands.GetRequiredService<IRepositoryHistoryUIService>().UpdateBranchNameCacheAsync();
+            });
         };
 
         RevisionGrid.SelectionChanged += (sender, e) =>

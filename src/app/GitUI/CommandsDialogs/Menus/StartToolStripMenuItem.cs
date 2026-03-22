@@ -94,6 +94,7 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
     {
         tsmiRecentRepositories.DropDown.SuspendLayout();
         tsmiRecentRepositories.DropDownItems.Clear();
+        _repositoryHistoryUIService.UpdateBranchNameCacheAsync();
         _repositoryHistoryUIService.PopulateRecentRepositoriesMenu(tsmiRecentRepositories);
         if (tsmiRecentRepositories.DropDownItems.Count < 1)
         {
