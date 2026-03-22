@@ -1,9 +1,8 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Reflection;
 using GitCommands;
 using GitExtensions.Extensibility;
-using GitUI.NBugReports;
 using Microsoft.Win32;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
