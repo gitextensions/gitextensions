@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
 
@@ -31,13 +32,15 @@ public interface IRepositoryHistoryUIService
 
 internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 {
+    private readonly IGitExecutorProvider _executorProvider;
     private readonly IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
 
     public event EventHandler<GitModuleEventArgs> GitModuleChanged;
 
-    internal RepositoryHistoryUIService(IRepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider, IInvalidRepositoryRemover invalidRepositoryRemover)
+    internal RepositoryHistoryUIService(IGitExecutorProvider executorProvider, IRepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider, IInvalidRepositoryRemover invalidRepositoryRemover)
     {
+        _executorProvider = executorProvider;
         _repositoryCurrentBranchNameProvider = repositoryCurrentBranchNameProvider;
         _invalidRepositoryRemover = invalidRepositoryRemover;
     }
@@ -77,7 +80,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
     private void ChangeWorkingDir(string path)
     {
-        GitModule module = new(path);
+        GitModule module = new(_executorProvider, path);
         if (module.IsValidGitWorkingDir())
         {
             GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));

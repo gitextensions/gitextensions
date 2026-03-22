@@ -25,7 +25,7 @@ public class GetAllChangedFilesOutputParserTest
     public async Task TestGetStatusChangedFilesFromString(string testName, string statusString)
     {
         // TODO produce a valid working directory
-        GitModule module = new(Path.GetTempPath());
+        GitModule module = new(new GitExecutorProvider(new GitDirectoryResolver()), Path.GetTempPath());
         GetAllChangedFilesOutputParser getAllChangedFilesOutputParser = new(() => module);
 
         // git status --porcelain=2 --untracked-files=no -z
@@ -68,7 +68,7 @@ public class GetAllChangedFilesOutputParserTest
     public async Task GetDiffChangedFilesFromString(string testName, StagedStatus stagedStatus, string statusString)
     {
         // TODO produce a valid working directory
-        GitModule module = new(Path.GetTempPath());
+        GitModule module = new(new GitExecutorProvider(new GitDirectoryResolver()), Path.GetTempPath());
         // git diff --find-renames --find-copies -z --raw
         List<GitItemStatus> statuses = module.GetTestAccessor().GetDiffChangedFilesFromString(statusString, stagedStatus);
 

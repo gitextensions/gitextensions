@@ -4,6 +4,7 @@ using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using ResourceManager;
@@ -242,7 +243,7 @@ public partial class FormClone : GitExtensionsDialog
 
             if (!string.IsNullOrEmpty(_puttySshKey))
             {
-                GitModule clonedGitModule = new(dirTo);
+                GitModule clonedGitModule = new(UICommands.GetRequiredService<IGitExecutorProvider>(), dirTo);
                 clonedGitModule.SetSetting(string.Format(SettingKeyString.RemotePuttySshKey, "origin"), _puttySshKey);
             }
 
@@ -255,7 +256,7 @@ public partial class FormClone : GitExtensionsDialog
             else if (ShowInTaskbar == false && _gitModuleChanged is not null &&
                 AskIfNewRepositoryShouldBeOpened(dirTo))
             {
-                _gitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
+                _gitModuleChanged(this, new GitModuleEventArgs(new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), dirTo)));
             }
 
             Close();

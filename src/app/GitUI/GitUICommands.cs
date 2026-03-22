@@ -9,6 +9,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
+using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
@@ -1931,7 +1932,7 @@ public sealed class GitUICommands : IGitUICommands
     /// </summary>
     /// <param name="workingDirectory">The git repository working directory.</param>
     /// <returns>A new instance of <see cref="IGitUICommands"/>.</returns>
-    public IGitUICommands WithWorkingDirectory(string? workingDirectory) => new GitUICommands(_serviceProvider, new GitModule(workingDirectory));
+    public IGitUICommands WithWorkingDirectory(string? workingDirectory) => new GitUICommands(_serviceProvider, new GitModule(this.GetRequiredService<IGitExecutorProvider>(), workingDirectory));
 
     #region Nested class: GitRemoteCommand
 

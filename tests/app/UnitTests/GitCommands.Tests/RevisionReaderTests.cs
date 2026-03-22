@@ -5,6 +5,7 @@ using System.Text;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
@@ -26,7 +27,7 @@ public sealed class RevisionReaderTests
     [Test]
     public void BuildArguments_should_be_NUL_terminated()
     {
-        RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
+        RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), ""), _logOutputEncoding, _sixMonths);
         ArgumentBuilder args = reader.GetTestAccessor().BuildArguments("", "");
 
         args.ToString().Should().Contain(" log -z ");
@@ -92,7 +93,7 @@ public sealed class RevisionReaderTests
     [Test]
     public void GetRevision_should_return_null_if_objectid_does_not_exist()
     {
-        RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
+        RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), ""), _logOutputEncoding, _sixMonths);
         GitRevision? revision = reader.GetRevision(ObjectId.Random().ToString(), hasNotes: false, throwOnError: false, cancellationToken: default);
 
         revision.Should().BeNull();
@@ -101,7 +102,7 @@ public sealed class RevisionReaderTests
     [Test]
     public void GetRevision_should_return_null_if_revision_does_not_exist()
     {
-        RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
+        RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), ""), _logOutputEncoding, _sixMonths);
         GitRevision? revision = reader.GetRevision("non/existing/ref", hasNotes: false, throwOnError: false, cancellationToken: default);
 
         revision.Should().BeNull();
@@ -110,7 +111,7 @@ public sealed class RevisionReaderTests
     [Test]
     public void GetRevision_should_throw_if_revision_is_artificial()
     {
-        RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
+        RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), ""), _logOutputEncoding, _sixMonths);
         ClassicAssert.Throws<InvalidOperationException>(() =>
             reader.GetRevision(GitRevision.WorkTreeGuid, hasNotes: false, throwOnError: true, cancellationToken: default));
     }
@@ -119,7 +120,7 @@ public sealed class RevisionReaderTests
     public void TryParseRevisionshould_return_false_if_argument_is_invalid()
     {
         ArraySegment<byte> chunk = null;
-        RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
+        RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), ""), _logOutputEncoding, _sixMonths);
 
         // Set to a high value so Debug.Assert do not raise exceptions
         reader.GetTestAccessor().NoOfParseError = 100;
@@ -155,7 +156,7 @@ public sealed class RevisionReaderTests
     {
         string path = Path.Combine(TestContext.CurrentContext.TestDirectory, "TestData/RevisionReader", testName + ".bin");
         ArraySegment<byte> chunk = File.ReadAllBytes(path);
-        RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(""), _logOutputEncoding, _sixMonths);
+        RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), ""), _logOutputEncoding, _sixMonths);
         reader.GetTestAccessor().SetParserAttributes(hasReflogSelector, hasNotes);
 
         // Set to a high value so Debug.Assert do not raise exceptions

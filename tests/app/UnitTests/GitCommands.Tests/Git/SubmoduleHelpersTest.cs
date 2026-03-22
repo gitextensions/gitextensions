@@ -19,7 +19,7 @@ public class SubmoduleHelpersTest
         Directory.CreateDirectory(Path.Combine(root, "Externals", "conemu-inside-b"));
         Directory.CreateDirectory(Path.Combine(root, "Assets", "Core", "Vehicle Physics core assets"));
 
-        GitModule testModule = new(root);
+        GitModule testModule = new(new GitExecutorProvider(new GitDirectoryResolver()), root);
 
         // Submodule name without spaces in the name
 

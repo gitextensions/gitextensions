@@ -1,6 +1,7 @@
 ﻿using System.Text;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitExtUtils;
 
 namespace GitCommandsTests.Config;
@@ -15,7 +16,7 @@ public class ConfigFileTest
 {
     private GitModule _module;
 
-    private GitModule Module => _module ??= new GitModule(GetTempFolder());
+    private GitModule Module => _module ??= new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), GetTempFolder());
 
     private static string GetTempFolder()
     {

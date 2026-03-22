@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs;
@@ -55,7 +56,7 @@ public partial class FormInit : GitExtensionsDialog
             return;
         }
 
-        GitModule module = new(directoryPath);
+        GitModule module = new(UICommands.GetRequiredService<IGitExecutorProvider>(), directoryPath);
 
         if (!System.IO.Directory.Exists(module.WorkingDir))
         {

@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
@@ -58,11 +59,16 @@ public partial class UserRepositoriesList : GitExtensionsControl
     private Brush _hoverColorBrush = new SolidBrush(SystemColors.InactiveCaption);
     private ListViewItem? _hoveredItem;
     private readonly ListViewGroup _lvgRecentRepositories;
-    private readonly IUserRepositoriesListController _controller = new UserRepositoriesListController(RepositoryHistoryManager.Locals, new InvalidRepositoryRemover());
     private bool _hasInvalidRepos;
     private ListViewItem? _rightClickedItem;
 
     public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
+
+    private IUserRepositoriesListController Controller
+        => field ??= new UserRepositoriesListController(
+            RepositoryHistoryManager.Locals,
+            new InvalidRepositoryRemover(),
+            ServiceProvider.GetRequiredService<IGitExecutorProvider>());
 
     public UserRepositoriesList()
     {
@@ -290,12 +296,12 @@ public partial class UserRepositoriesList : GitExtensionsControl
     {
         if (reloadData)
         {
-            _controller.ClearCache();
+            Controller.ClearCache();
         }
 
         IReadOnlyList<RecentRepoInfo> recentRepositories;
         IReadOnlyList<RecentRepoInfo> favouriteRepositories;
-        (recentRepositories, favouriteRepositories) = _controller.PreRenderRepositories(textBoxSearch.Text);
+        (recentRepositories, favouriteRepositories) = Controller.PreRenderRepositories(textBoxSearch.Text);
 
         try
         {
@@ -352,8 +358,8 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
                 ThreadHelper.FileAndForget(async () =>
                 {
-                    bool isValidGitDir = _controller.IsValidGitWorkingDir(recent.Repo.Path);
-                    string branchName = isValidGitDir ? _controller.GetCurrentBranchName(recent.Repo.Path) : "";
+                    bool isValidGitDir = Controller.IsValidGitWorkingDir(recent.Repo.Path);
+                    string branchName = isValidGitDir ? Controller.GetCurrentBranchName(recent.Repo.Path) : "";
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     if (isValidGitDir)
                     {
@@ -545,7 +551,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
     {
         foreach (Repository repository in GetRepositories().Where(r => r.Category == originalName))
         {
-            ThreadHelper.JoinableTaskFactory.Run(() => _controller.AssignCategoryAsync(repository, newName));
+            ThreadHelper.JoinableTaskFactory.Run(() => Controller.AssignCategoryAsync(repository, newName));
         }
 
         ShowRecentRepositories();
@@ -804,7 +810,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
         }
 
         string category = (sender as ToolStripMenuItem)?.Tag as string;
-        ThreadHelper.JoinableTaskFactory.Run(() => _controller.AssignCategoryAsync(selectedRepositoryItem.Repository, category));
+        ThreadHelper.JoinableTaskFactory.Run(() => Controller.AssignCategoryAsync(selectedRepositoryItem.Repository, category));
         ShowRecentRepositories();
     }
 
@@ -814,7 +820,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
         {
             if (PromptCategoryName(GetCategories(), originalName: null, out string? categoryName))
             {
-                ThreadHelper.JoinableTaskFactory.Run(() => _controller.AssignCategoryAsync(selectedRepositoryItem.Repository, categoryName));
+                ThreadHelper.JoinableTaskFactory.Run(() => Controller.AssignCategoryAsync(selectedRepositoryItem.Repository, categoryName));
                 ShowRecentRepositories();
             }
         });
@@ -839,7 +845,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
     {
         RepositoryContextAction(sender as ToolStripMenuItem, selectedRepositoryItem =>
         {
-            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(_controller.IsValidGitWorkingDir));
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(Controller.IsValidGitWorkingDir));
             ShowRecentRepositories();
         });
     }
@@ -902,7 +908,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
             string dir = fileNameArray[0];
             if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
             {
-                GitModule module = new(dir);
+                GitModule module = new(ServiceProvider.GetRequiredService<IGitExecutorProvider>(), dir);
 
                 if (!module.IsValidGitWorkingDir())
                 {
@@ -946,13 +952,13 @@ public partial class UserRepositoriesList : GitExtensionsControl
             return false;
         }
 
-        if (_controller.IsValidGitWorkingDir(repository.Path))
+        if (Controller.IsValidGitWorkingDir(repository.Path))
         {
-            OnModuleChanged(new GitModuleEventArgs(new GitModule(repository.Path)));
+            OnModuleChanged(new GitModuleEventArgs(new GitModule(ServiceProvider.GetRequiredService<IGitExecutorProvider>(), repository.Path)));
             return true;
         }
 
-        if (_controller.RemoveInvalidRepository(repository.Path))
+        if (Controller.RemoveInvalidRepository(repository.Path))
         {
             ShowRecentRepositories();
             return true;

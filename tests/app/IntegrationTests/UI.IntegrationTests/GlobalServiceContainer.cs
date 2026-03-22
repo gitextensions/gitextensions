@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel.Design;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Submodules;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
 using GitUI.Hotkey;
@@ -34,6 +36,8 @@ public static class GlobalServiceContainer
         serviceContainer.AddService(Substitute.For<IHotkeySettingsLoader>());
 
         serviceContainer.AddService(Substitute.For<ISubmoduleStatusProvider>());
+
+        serviceContainer.AddService<IGitExecutorProvider>(new GitExecutorProvider(new GitDirectoryResolver()));
 
         return serviceContainer;
     }

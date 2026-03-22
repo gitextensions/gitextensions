@@ -9,7 +9,7 @@ public static partial class Commands
     /// <summary>
     ///  Get all config settings from git according to the scope.
     /// </summary>
-    /// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the affected repo.</param>
+    /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
     /// <param name="settingLevel">The scope for the config.</param>
     /// <returns>The names and values of the settings delimited by '\0'.</returns>
     public static string GetGitSettings(this IExecutable gitExecutable, GitSettingLevel settingLevel)
@@ -47,7 +47,7 @@ public static partial class Commands
     /// <summary>
     ///  Removes a git config (sub)section.
     /// </summary>
-    /// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the affected repo.</param>
+    /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
     /// <param name="settingLevel">The scope for the config (must not be <see cref="GitSettingLevel.Effective"/>).</param>
     /// <param name="section">The name of the section.</param>
     /// <param name="subsection">The optional name of the subsection.</param>
@@ -72,7 +72,7 @@ public static partial class Commands
     /// <summary>
     ///  Sets or unsets a git config setting.
     /// </summary>
-    /// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the affected repo.</param>
+    /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the affected repo.</param>
     /// <param name="settingLevel">The scope for the config (must not be <see cref="GitSettingLevel.Effective"/>).</param>
     /// <param name="setting">The name of the setting (may contain dots, e.g. "core.autocrlf").</param>
     /// <param name="value">The value of the setting or <see langword="null"/> for removing the setting.</param>

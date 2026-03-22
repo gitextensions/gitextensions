@@ -1,6 +1,7 @@
 ﻿using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
 using NSubstitute;
@@ -21,7 +22,7 @@ public sealed class RepositoryHistoryUIServiceTests
         _repositoryCurrentBranchNameProvider = Substitute.For<IRepositoryCurrentBranchNameProvider>();
         _invalidRepositoryRemover = Substitute.For<IInvalidRepositoryRemover>();
 
-        _service = new RepositoryHistoryUIService(_repositoryCurrentBranchNameProvider, _invalidRepositoryRemover);
+        _service = new RepositoryHistoryUIService(Substitute.For<IGitExecutorProvider>(), _repositoryCurrentBranchNameProvider, _invalidRepositoryRemover);
     }
 
     [Test]

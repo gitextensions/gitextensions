@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using System.Reflection;
 using System.Text;
 using CommonTestUtils;
 using FluentAssertions;
@@ -649,15 +648,12 @@ public sealed partial class GitModuleTests
     /// <returns>The GitModule</returns>
     private static GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "", GitModule module = null)
     {
-        module ??= new GitModule(path);
+        module ??= new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), path);
 
-        typeof(GitModule).GetField("_gitExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
-            .SetValue(module, executable);
-        typeof(GitModule).GetField("_gitWindowsExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
-            .SetValue(module, executable);
-        GitCommandRunner cmdRunner = new(executable, () => GitModule.SystemEncoding);
-        typeof(GitModule).GetField("_gitCommandRunner", BindingFlags.Instance | BindingFlags.NonPublic)
-            .SetValue(module, cmdRunner);
+        GitExecutor.TestAccessor executorAccessor = module.GetTestAccessor().Executor;
+        executorAccessor.GitExecutable = executable;
+        executorAccessor.GitWindowsExecutable = executable;
+        executorAccessor.GitCommandRunner = new GitCommandRunner(executable, () => GitModule.SystemEncoding);
 
         return module;
     }

@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
@@ -188,7 +189,7 @@ internal class AuthorRevisionHighlightingTests
 
     private static GitModule NewModule()
     {
-        return new GitModule(Path.GetTempPath());
+        return new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), Path.GetTempPath());
     }
 
     private static GitRevision NewRevisionWithAuthorEmail(string authorEmail)

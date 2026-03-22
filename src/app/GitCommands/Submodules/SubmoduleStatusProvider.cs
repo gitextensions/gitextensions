@@ -32,11 +32,12 @@ public interface ISubmoduleStatusProvider : IDisposable
     Task UpdateSubmodulesStatusAsync(string workingDirectory, IReadOnlyList<GitItemStatus>? gitStatus, bool forceUpdate = false);
 }
 
-internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
+internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvider) : ISubmoduleStatusProvider
 {
     // Throttle updates triggered from status updates
     private const int MinRefreshInterval = 15;
 
+    private readonly IGitExecutorProvider _executorProvider = executorProvider;
     private readonly CancellationTokenSequence _submodulesStructureSequence = new();
     private readonly CancellationTokenSequence _submodulesStatusSequence = new();
     private readonly Dictionary<string, SubmoduleInfo> _submoduleInfos = [];
@@ -80,7 +81,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         await TaskScheduler.Default;
 
         // Start gathering new submodule structure asynchronously.
-        GitModule currentModule = new(workingDirectory);
+        GitModule currentModule = new(_executorProvider, workingDirectory);
         SubmoduleInfoResult result = GetSuperProjectRepositorySubmodulesStructure(currentModule, noBranchText);
 
         // Prepare info for status updates
@@ -154,7 +155,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
             cancelToken.ThrowIfCancellationRequested();
         }
 
-        GitModule currentModule = new(workingDirectory);
+        GitModule currentModule = new(_executorProvider, workingDirectory);
         await UpdateSubmodulesStatusAsync(currentModule, gitStatus, cancelToken);
 
         OnStatusUpdated(_submoduleInfoResult, structureUpdated: false, cancelToken);
@@ -176,7 +177,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
     /// </summary>
     /// <param name="currentModule">The current module.</param>
     /// <param name="noBranchText">text with no branches.</param>
-    private static SubmoduleInfoResult GetSuperProjectRepositorySubmodulesStructure(IGitModule currentModule, string noBranchText)
+    private SubmoduleInfoResult GetSuperProjectRepositorySubmodulesStructure(IGitModule currentModule, string noBranchText)
     {
         SubmoduleInfoResult result = new() { Module = currentModule, CurrentSubmoduleStatus = null };
 
@@ -195,7 +196,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         return result;
     }
 
-    private static void SetTopProjectSubmoduleInfo(SubmoduleInfoResult result,
+    private void SetTopProjectSubmoduleInfo(SubmoduleInfoResult result,
         string noBranchText,
         IGitModule topProject,
         bool isCurrentTopProject)
@@ -210,7 +211,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         result.TopProject = new SubmoduleInfo(text: name, path, bold: isCurrentTopProject);
     }
 
-    private static void SetSubmoduleData(IGitModule currentModule, SubmoduleInfoResult result, string noBranchText, IGitModule topProject)
+    private void SetSubmoduleData(IGitModule currentModule, SubmoduleInfoResult result, string noBranchText, IGitModule topProject)
     {
         string[] submodules = [.. topProject.GetSubmodulesLocalPaths().OrderBy(submoduleName => submoduleName)];
         if (submodules.Length == 0)
@@ -262,7 +263,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         }
     }
 
-    private static string GetBranchNameSuffix(string repositoryPath, string noBranchText)
+    private string GetBranchNameSuffix(string repositoryPath, string noBranchText)
     {
         if (AppSettings.ShowRepoCurrentBranch && !GitModule.IsBareRepository(repositoryPath))
         {
@@ -272,10 +273,10 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         return string.Empty;
     }
 
-    private static string GetModuleBranch(string path, string noBranchText)
+    private string GetModuleBranch(string path, string noBranchText)
     {
         // Note: This will fail for WSL symbolic links to .git directories
-        string branch = GitModule.GetSelectedBranchFast(path);
+        string branch = _executorProvider.GetExecutor(path).GetSelectedBranch();
         string text = DetachedHeadParser.IsDetachedHead(branch) ? noBranchText : branch;
         return $"({text})";
     }
@@ -434,7 +435,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
             };
 
         // Recursively update submodules
-        GitModule module = new(path);
+        GitModule module = new(_executorProvider, path);
         if (submoduleStatus?.IsDirty is true)
         {
             await GetSubmoduleDetailedStatusAsync(module, cancelToken);
@@ -473,7 +474,7 @@ internal sealed class SubmoduleStatusProvider : ISubmoduleStatusProvider
         }
 
         info.Detailed = null;
-        GitModule module = new(path);
+        GitModule module = new(_executorProvider, path);
         foreach (string name in module.GetSubmodulesLocalPaths(false))
         {
             SetSubmoduleEmptyDetailedStatus(module, name);

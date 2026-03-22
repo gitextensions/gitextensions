@@ -54,6 +54,8 @@ public sealed partial class GitModuleTestHelper : IDisposable
 
         GitModule module;
 
+        IGitExecutorProvider executorProvider = new GitExecutorProvider(new GitDirectoryResolver());
+
         if (useExisting)
         {
             if (!Directory.Exists(path))
@@ -61,7 +63,7 @@ public sealed partial class GitModuleTestHelper : IDisposable
                 throw new ArgumentException($"Repository '{path}' does not exist", nameof(repositoryName));
             }
 
-            module = new(path);
+            module = new(executorProvider, path);
         }
         else
         {
@@ -72,7 +74,7 @@ public sealed partial class GitModuleTestHelper : IDisposable
 
             Directory.CreateDirectory(path);
 
-            module = new(path);
+            module = new(executorProvider, path);
             module.Init(bare: false, shared: false);
 
             // Don't assume global user/email
@@ -227,9 +229,10 @@ public sealed partial class GitModuleTestHelper : IDisposable
 
         Module.GitExecutable.Execute(args);
         IReadOnlyList<string> paths = Module.GetSubmodulesLocalPaths(recursive: true);
+        IGitExecutorProvider executorProvider = new GitExecutorProvider(new GitDirectoryResolver());
         return paths.Select(path =>
         {
-            GitModule module = new(Path.Combine(Module.WorkingDir, path).ToNativePath());
+            GitModule module = new(executorProvider, Path.Combine(Module.WorkingDir, path).ToNativePath());
             SetRepoConfig(module);
             return module;
         });

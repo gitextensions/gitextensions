@@ -1,5 +1,7 @@
 ﻿using CommonTestUtils;
 using FluentAssertions;
+using GitCommands;
+using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -11,6 +13,7 @@ namespace GitUITests.CommandsDialogs;
 public class FormOpenDirectoryTests
 {
     // Created once for the fixture
+    private static readonly IGitExecutorProvider _executorProvider = new GitExecutorProvider(new GitDirectoryResolver());
     private ReferenceRepository _referenceRepository;
     private ILocalRepositoryManager _localRepositoryManager;
 
@@ -32,7 +35,7 @@ public class FormOpenDirectoryTests
     {
         string path = @"C:\some\directory\that\does\not\exist\at\all";
 
-        FormOpenDirectory.TestAccessor.OpenGitRepository(path, _localRepositoryManager).Should().BeNull();
+        FormOpenDirectory.TestAccessor.OpenGitRepository(_executorProvider, path, _localRepositoryManager).Should().BeNull();
         _localRepositoryManager.DidNotReceive().AddAsMostRecentAsync(Arg.Any<string>());
     }
 
@@ -43,7 +46,7 @@ public class FormOpenDirectoryTests
         string path = Path.GetTempPath();
         path[^1].Should().Be(Path.DirectorySeparatorChar);
 
-        FormOpenDirectory.TestAccessor.OpenGitRepository(path, _localRepositoryManager).Should().BeNull();
+        FormOpenDirectory.TestAccessor.OpenGitRepository(_executorProvider, path, _localRepositoryManager).Should().BeNull();
         _localRepositoryManager.DidNotReceive().AddAsMostRecentAsync(Arg.Any<string>());
     }
 
@@ -56,7 +59,7 @@ public class FormOpenDirectoryTests
 
         // ensure absence of the trailing slash isn't a problem
         path = path[..^1];
-        ClassicAssert.DoesNotThrow(() => FormOpenDirectory.TestAccessor.OpenGitRepository(path, _localRepositoryManager));
+        ClassicAssert.DoesNotThrow(() => FormOpenDirectory.TestAccessor.OpenGitRepository(_executorProvider, path, _localRepositoryManager));
     }
 
     [Test]
@@ -66,7 +69,7 @@ public class FormOpenDirectoryTests
         string path = Path.GetTempPath();
         path[^1].Should().Be(Path.DirectorySeparatorChar);
 
-        IGitModule module = FormOpenDirectory.TestAccessor.OpenGitRepository(_referenceRepository.Module.WorkingDir, _localRepositoryManager);
+        IGitModule module = FormOpenDirectory.TestAccessor.OpenGitRepository(_executorProvider, _referenceRepository.Module.WorkingDir, _localRepositoryManager);
 
         module.Should().NotBeNull();
         module.WorkingDir.Should().Be(_referenceRepository.Module.WorkingDir);

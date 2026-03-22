@@ -2,6 +2,7 @@
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -345,7 +346,7 @@ public class ScriptOptionsParserTests
         ServiceContainer serviceContainer = new();
         serviceContainer.AddService(repositoryDescriptionProvider);
 
-        _commands = new GitUICommands(serviceContainer, new GitModule(""));
+        _commands = new GitUICommands(serviceContainer, new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), ""));
 
         string result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{" + option + "}", option,

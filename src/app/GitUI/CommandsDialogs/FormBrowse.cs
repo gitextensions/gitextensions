@@ -493,7 +493,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _formBrowseDiagnosticsReporter.Report();
 
         // All app init is done, make all repo related similar to switching repos
-        SetGitModule(this, new GitModuleEventArgs(new GitModule(Module.WorkingDir)));
+        SetGitModule(this, new GitModuleEventArgs(new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), Module.WorkingDir)));
         bool isDashboard = _dashboard?.Visible ?? false;
         _loadOperations.InvokeAndForget(this, async () =>
         {
@@ -1681,7 +1681,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     {
         RevisionGrid.SelectedId = selectedId;
         RevisionGrid.FirstId = firstId;
-        SetGitModule(this, new GitModuleEventArgs(new GitModule(path)));
+        SetGitModule(this, new GitModuleEventArgs(new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), path)));
     }
 
     private void SetGitModule(object sender, GitModuleEventArgs e)
@@ -2817,7 +2817,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
                 !AppSettings.ShowStashes
                 ? []
-                : new RevisionReader(new GitModule(UICommands.Module.WorkingDir)).GetStashes(CancellationToken.None));
+                : new RevisionReader(new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), UICommands.Module.WorkingDir)).GetStashes(CancellationToken.None));
 
             RefreshLeftPanel(new FilteredGitRefsProvider(UICommands.Module).GetRefs, getStashRevs, forceRefresh: true);
             repoObjectsTree.RefreshRevisionsLoaded();

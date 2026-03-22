@@ -1,9 +1,9 @@
 ﻿using System.ComponentModel.Design;
-using System.Reflection;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
@@ -38,11 +38,10 @@ public class CommitInfoTests
 
         // mock git executable
         _gitExecutable = new MockExecutable();
-        typeof(GitModule).GetField("_gitExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
-            .SetValue(_commands.Module, _gitExecutable);
-        GitCommandRunner cmdRunner = new(_gitExecutable, () => GitModule.SystemEncoding);
-        typeof(GitModule).GetField("_gitCommandRunner", BindingFlags.Instance | BindingFlags.NonPublic)
-            .SetValue(_commands.Module, cmdRunner);
+        GitExecutor.TestAccessor executorAccessor = _referenceRepository.Module.GetTestAccessor().Executor;
+        executorAccessor.GitExecutable = _gitExecutable;
+        executorAccessor.GitWindowsExecutable = _gitExecutable;
+        executorAccessor.GitCommandRunner = new GitCommandRunner(_gitExecutable, () => GitModule.SystemEncoding);
     }
 
     [TearDown]

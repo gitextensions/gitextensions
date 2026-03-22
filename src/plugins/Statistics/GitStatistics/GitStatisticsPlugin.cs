@@ -4,6 +4,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Plugins.GitStatistics.Properties;
+using GitExtUtils;
 
 namespace GitExtensions.Plugins.GitStatistics;
 
@@ -42,7 +43,7 @@ public class GitStatisticsPlugin : GitPluginBase, IGitPluginForRepository
 
         bool countSubmodule = !_ignoreSubmodules.ValueOrDefault(Settings);
 
-        FormGitStatistics formStatistics = new(args.GitModule, _codeFiles.ValueOrDefault(Settings), countSubmodule)
+        FormGitStatistics formStatistics = new(args.GitUICommands.GetRequiredService<IGitExecutorProvider>(), args.GitModule, _codeFiles.ValueOrDefault(Settings), countSubmodule)
         {
             DirectoriesToIgnore = _ignoreDirectories.ValueOrDefault(Settings).Replace("/", "\\")
         };

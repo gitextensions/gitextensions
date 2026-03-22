@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using ResourceManager;
 
@@ -10,10 +11,13 @@ public partial class FormOpenDirectory : GitExtensionsForm
 {
     private readonly TranslationString _warningOpenFailed = new("The selected directory is not a valid git repository.");
 
+    private readonly IGitExecutorProvider _executorProvider;
     private IGitModule? _chosenModule;
 
-    public FormOpenDirectory(IGitModule? currentModule)
+    public FormOpenDirectory(IGitExecutorProvider executorProvider, IGitModule? currentModule)
     {
+        _executorProvider = executorProvider;
+
         ThreadHelper.ThrowIfNotOnUIThread();
 
         InitializeComponent();
@@ -74,9 +78,9 @@ public partial class FormOpenDirectory : GitExtensionsForm
         return directories.Distinct().ToList();
     }
 
-    public static IGitModule? OpenModule(IWin32Window owner, IGitModule? currentModule)
+    public static IGitModule? OpenModule(IWin32Window owner, IGitExecutorProvider executorProvider, IGitModule? currentModule)
     {
-        using FormOpenDirectory open = new(currentModule);
+        using FormOpenDirectory open = new(executorProvider, currentModule);
         open.ShowDialog(owner);
         return open._chosenModule;
     }
@@ -85,7 +89,7 @@ public partial class FormOpenDirectory : GitExtensionsForm
     {
         _NO_TRANSLATE_Directory.Text = _NO_TRANSLATE_Directory.Text.Trim();
 
-        _chosenModule = OpenGitRepository(_NO_TRANSLATE_Directory.Text, RepositoryHistoryManager.Locals);
+        _chosenModule = OpenGitRepository(_executorProvider, _NO_TRANSLATE_Directory.Text, RepositoryHistoryManager.Locals);
         if (_chosenModule is not null)
         {
             Close();
@@ -148,14 +152,14 @@ public partial class FormOpenDirectory : GitExtensionsForm
         }
     }
 
-    private static IGitModule? OpenGitRepository(string path, ILocalRepositoryManager localRepositoryManager)
+    private static IGitModule? OpenGitRepository(IGitExecutorProvider executorProvider, string path, ILocalRepositoryManager localRepositoryManager)
     {
         if (!Directory.Exists(path))
         {
             return null;
         }
 
-        GitModule chosenModule = new(path.EnsureTrailingPathSeparator());
+        GitModule chosenModule = new(executorProvider, path.EnsureTrailingPathSeparator());
         if (!chosenModule.IsValidGitWorkingDir())
         {
             return null;
@@ -177,7 +181,7 @@ public partial class FormOpenDirectory : GitExtensionsForm
             _form = form;
         }
 
-        public static IGitModule? OpenGitRepository(string path, ILocalRepositoryManager localRepositoryManager)
-            => FormOpenDirectory.OpenGitRepository(path, localRepositoryManager);
+        public static IGitModule? OpenGitRepository(IGitExecutorProvider executorProvider, string path, ILocalRepositoryManager localRepositoryManager)
+            => FormOpenDirectory.OpenGitRepository(executorProvider, path, localRepositoryManager);
     }
 }

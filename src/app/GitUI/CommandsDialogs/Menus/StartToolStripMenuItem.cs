@@ -70,7 +70,7 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
 
     private void OpenToolStripMenuItemClick(object sender, EventArgs e)
     {
-        IGitModule? module = FormOpenDirectory.OpenModule(OwnerForm, UICommands.Module);
+        IGitModule? module = FormOpenDirectory.OpenModule(OwnerForm, UICommands.GetRequiredService<IGitExecutorProvider>(), UICommands.Module);
         if (module is not null)
         {
             GitModuleChanged?.Invoke(OwnerForm, new GitModuleEventArgs(module));

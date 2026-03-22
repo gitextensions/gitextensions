@@ -1,6 +1,7 @@
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.UserControls;
 
 namespace GitUI.HelperDialogs;
@@ -143,7 +144,7 @@ public partial class FormProcess : FormStatus
         {
             ConsoleOutput.KillProcess();
 
-            GitModule module = new(WorkingDirectory);
+            GitModule module = new(UICommands.GetRequiredService<IGitExecutorProvider>(), WorkingDirectory);
             module.UnlockIndex(includeSubmodules: true);
         }
         catch

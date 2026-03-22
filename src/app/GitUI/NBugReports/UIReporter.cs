@@ -5,6 +5,7 @@ using BugReporter.Serialization;
 using GitCommands;
 using GitCommands.Utils;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
 
 namespace GitUI.NBugReports;
@@ -112,7 +113,11 @@ internal class UIReporter : IBugReporter
 
             button.Click += (_, _) =>
             {
-                new GitModule(workingDir).GitExecutable.Start(command).WaitForExit();
+                IGitExecutorProvider executorProvider = BugReportInvoker.ExecutorProvider;
+
+                // ExecutorProvider is set in Program.cs Main method before any error can be reported so it should never be null here.
+                executorProvider!.GetExecutor(workingDir).GitExecutable.Start(command).WaitForExit();
+
                 ShowGitRepo(OwnerForm, workingDir);
             };
 
