@@ -289,6 +289,9 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         internal void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number)
             => _service.AddRecentRepositories(menuItemContainer, repo, caption, number);
 
+        internal void UpdateBranchNames(IReadOnlyList<string> paths)
+            => _service.UpdateBranchNames(paths);
+
         internal void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
             => _service.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
     }

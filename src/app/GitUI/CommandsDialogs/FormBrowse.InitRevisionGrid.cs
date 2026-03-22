@@ -80,6 +80,7 @@ partial class FormBrowse
         {
             ThreadHelper.FileAndForget(async () =>
             {
+                // update the branchname cache for the repo menu
                 await Task.Delay(TimeSpan.FromMilliseconds(500));
                 await UICommands.GetRequiredService<IRepositoryHistoryUIService>().UpdateBranchNameCacheAsync();
             });
