@@ -25,7 +25,6 @@ using GitUI.HelperDialogs;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.LeftPanel;
 using GitUI.Models;
-using GitUI.NBugReports;
 using GitUI.Properties;
 using GitUI.ScriptsEngine;
 using GitUI.Shells;

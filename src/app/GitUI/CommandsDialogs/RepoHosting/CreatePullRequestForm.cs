@@ -2,7 +2,6 @@
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
-using GitUI.NBugReports;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting;

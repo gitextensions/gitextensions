@@ -1,6 +1,4 @@
-﻿using GitExtensions.Extensibility;
-
-namespace GitUI.NBugReports;
+﻿namespace GitExtensions.Extensibility;
 
 /// <summary>
 /// Represents errors that occur during execution of user-configured operation, e.g. a script.
