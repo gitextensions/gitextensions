@@ -69,13 +69,11 @@ public sealed class RepositoryHistoryUIServiceTests
         const string caption = "CAPTION";
         Repository repository = new(path);
 
+        _service.GetTestAccessor().UpdateBranchNames([path]);
         _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption, number: 1);
 
-        // await adding branch name in ShortcutKeyDisplayString, done async
-        AsyncTestHelper.JoinPendingOperations();
-
         ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
-        item.ShortcutKeyDisplayString.Should().Be(branch);
+        item.ShortcutKeyDisplayString.Should().Be(string.IsNullOrWhiteSpace(branch) ? null : branch);
     }
 
     [Test]
