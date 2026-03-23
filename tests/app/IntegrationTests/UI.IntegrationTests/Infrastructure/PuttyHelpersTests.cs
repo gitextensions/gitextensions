@@ -1,9 +1,9 @@
 ﻿using System.Runtime.InteropServices;
 using FluentAssertions;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitUI;
 using GitUI.Infrastructure;
-using GitUI.NBugReports;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUITests.Infrastructure;

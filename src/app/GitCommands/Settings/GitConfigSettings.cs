@@ -1,4 +1,4 @@
-#nullable enable
+﻿#nullable enable
 
 using System.Diagnostics;
 using GitCommands.Git;
@@ -110,7 +110,11 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
     {
         if (_multiValueSettings.ContainsKey(name))
         {
-            throw new InvalidOperationException(@$"Changing multi-value git settings is not supported. Tried to set ""{name}"" = ""{value}"".");
+            throw new UserExternalOperationException(new InvalidOperationException($"""
+                Changing multi-value git settings is not supported. Tried to set "{name}" = "{value}".
+                But you have set multiple values for "{name}" in the {GitSettingLevel.ToString().ToLower()} git config file. This is unusual for this configuration entry.
+                Please make the entry unique manually.
+                """));
         }
 
         name = NormalizeSettingName(name);
