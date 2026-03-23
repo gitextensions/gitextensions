@@ -20,7 +20,8 @@ public static class ThreadHelper
         internal set => _taskManager = value is null ? null : new(value);
     }
 
-    public static JoinableTaskFactory JoinableTaskFactory => _taskManager.JoinableTaskFactory;
+    public static JoinableTaskFactory JoinableTaskFactory => _taskManager?.JoinableTaskFactory
+        ?? throw new InvalidOperationException($"{nameof(JoinableTaskContext)} has not been initialized.");
 
     internal static void CancelSwitchToMainThread()
         => TaskManager.CancelSwitchToMainThread();
