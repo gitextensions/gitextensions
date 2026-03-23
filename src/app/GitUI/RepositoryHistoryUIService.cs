@@ -131,7 +131,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
-    private ToolStripMenuItem AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number, bool anchored = false)
+    private void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number, bool anchored = false)
     {
         string numberString = number switch { < 10 => $"&{number}", 10 => "1&0", _ => $"{number}" };
         ToolStripMenuItem item = new($"{numberString}: {caption}")
@@ -160,8 +160,6 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         {
             item.ShortcutKeyDisplayString = cachedBranchName;
         }
-
-        return item;
     }
 
     private void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
