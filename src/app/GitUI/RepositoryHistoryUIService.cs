@@ -1,5 +1,6 @@
 ﻿using System.Collections.Concurrent;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
@@ -44,6 +45,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private readonly IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
     private readonly ConcurrentDictionary<string, string> _branchNameCache = new();
+    private readonly CancellationTokenSequence _branchCacheSequence = new();
 
     // history can be loaded both by trigger and menu opening
     private volatile AsyncLazy<(IList<Repository> Recent, IList<Repository> Favourite)>? _historyLazy;
@@ -116,18 +118,25 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
     public async Task UpdateBranchNameCacheAsync()
     {
-        _historyLazy = CreateHistoryLazy();
-
-        (IList<Repository> recentHistory, IList<Repository> favouriteHistory) = await HistoryLazy.GetValueAsync();
-
-        string[] paths = [.. recentHistory
-            .Concat(favouriteHistory)
-            .Select(r => r.Path)
-            .Distinct(StringComparer.InvariantCulture)];
-
-        if (paths.Length > 0)
+        try
         {
-            ThreadHelper.FileAndForget(() => UpdateBranchNamesCache(paths));
+            _historyLazy = CreateHistoryLazy();
+            CancellationToken cancellationToken = _branchCacheSequence.Next();
+            (IList<Repository> recentHistory, IList<Repository> favouriteHistory) = await HistoryLazy.GetValueAsync(cancellationToken);
+
+            string[] paths = [.. recentHistory
+                .Concat(favouriteHistory)
+                .Select(r => r.Path)
+                .Distinct(StringComparer.InvariantCulture)];
+
+            if (paths.Length > 0)
+            {
+                ThreadHelper.FileAndForget(() => UpdateBranchNamesCache(paths, cancellationToken));
+            }
+        }
+        catch (OperationCanceledException)
+        {
+            // This call was superseded by a newer UpdateBranchNameCacheAsync; the replacement run will proceed.
         }
     }
 
@@ -197,15 +206,18 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
-    private void UpdateBranchNamesCache(IReadOnlyList<string> paths)
+    private void UpdateBranchNamesCache(IReadOnlyList<string> paths, CancellationToken cancellationToken)
     {
+        const int MaxBranchNameFetchParallelism = 4;
         (string Path, string BranchName)[] fetched = [.. paths
             .AsParallel()
+            .WithCancellation(cancellationToken)
+            .WithDegreeOfParallelism(Math.Min(MaxBranchNameFetchParallelism, Math.Max(1, Environment.ProcessorCount / 2)))
             .Select(path => (path, BranchName: _repositoryCurrentBranchNameProvider.GetCurrentBranchName(path)))];
 
         foreach ((string path, string branchName) in fetched)
         {
-            if (string.IsNullOrWhiteSpace(branchName))
+            if (string.IsNullOrWhiteSpace(branchName) || branchName == DetachedHeadParser.UnknownBranchName)
             {
                 _branchNameCache.TryRemove(path, out _);
             }
@@ -265,7 +277,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             => _service.AddRecentRepositories(menuItemContainer, repo, caption, number);
 
         internal void UpdateBranchNames(IReadOnlyList<string> paths)
-            => _service.UpdateBranchNamesCache(paths);
+            => _service.UpdateBranchNamesCache(paths, CancellationToken.None);
 
         internal void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
             => _service.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);

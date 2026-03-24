@@ -109,7 +109,7 @@ internal sealed class GitExecutor : IGitExecutor
         catch (Exception ex)
         {
             Trace.WriteLine(ex);
-            return "???";
+            return DetachedHeadParser.UnknownBranchName;
         }
     }
 
