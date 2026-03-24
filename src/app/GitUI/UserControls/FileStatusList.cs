@@ -285,6 +285,7 @@ public sealed partial class FileStatusList : GitModuleControl
         base.OnRuntimeLoad();
         ReloadHotkeys();
         VisualStudioIntegration.Init();
+        VSCodeIntegration.Init();
     }
 
     // Wire up events to respond to Settings changes

@@ -1786,6 +1786,14 @@ Suitable for some config files modified locally.</source>
         <source>Find in &amp;commit files using git-grep...</source>
         <target />
       </trans-unit>
+      <trans-unit id="tsmiOpenInVSCode.Text">
+        <source>Open in VS &amp;Code</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="tsmiOpenInVSCodeInsiders.Text">
+        <source>Open in VS Code &amp;Insiders</source>
+        <target />
+      </trans-unit>
       <trans-unit id="tsmiOpenInVisualStudio.Text">
         <source>Open in &amp;Visual Studio</source>
         <target />

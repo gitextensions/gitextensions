@@ -2643,6 +2643,26 @@ public class Images {
     /// <summary>
     ///   Looks up a localized resource of type System.Drawing.Bitmap.
     /// </summary>
+    public static System.Drawing.Bitmap VSCode {
+        get {
+            object obj = ResourceManager.GetObject("VSCode", resourceCulture);
+            return ((System.Drawing.Bitmap)(obj));
+        }
+    }
+    
+    /// <summary>
+    ///   Looks up a localized resource of type System.Drawing.Bitmap.
+    /// </summary>
+    public static System.Drawing.Bitmap VSCodeInsiders {
+        get {
+            object obj = ResourceManager.GetObject("VSCodeInsiders", resourceCulture);
+            return ((System.Drawing.Bitmap)(obj));
+        }
+    }
+    
+    /// <summary>
+    ///   Looks up a localized resource of type System.Drawing.Bitmap.
+    /// </summary>
     public static System.Drawing.Bitmap VisualStudioTeamServices {
         get {
             object obj = ResourceManager.GetObject("VisualStudioTeamServices", resourceCulture);
