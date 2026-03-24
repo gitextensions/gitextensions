@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.ComponentModel;
+using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
@@ -134,6 +135,9 @@ public sealed partial class FormCommit : GitModuleForm
     private readonly ICommitTemplateManager _commitTemplateManager;
     private readonly GitRevision? _editedCommit;
     private readonly ToolStripMenuItem _addSelectionToCommitMessageToolStripMenuItem;
+    private readonly ToolStripMenuItem _openInVisualStudioToolStripMenuItem;
+    private readonly ToolStripMenuItem _openInVSCodeToolStripMenuItem;
+    private readonly ToolStripMenuItem _openInVSCodeInsidersToolStripMenuItem;
     private readonly AsyncLoader _unstagedLoader = new();
     private readonly bool _useFormCommitMessage = AppSettings.UseFormCommitMessage;
     private readonly CancellationTokenSequence _customDiffToolsSequence = new();
@@ -247,6 +251,17 @@ public sealed partial class FormCommit : GitModuleForm
         SelectedDiff.AddContextMenuSeparator();
         _addSelectionToCommitMessageToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_addSelectionToCommitMessage.Text, (s, e) => AddSelectionToCommitMessage());
         _addSelectionToCommitMessageToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.AddSelectionToCommitMessage);
+
+        SelectedDiff.AddContextMenuSeparator();
+        _openInVisualStudioToolStripMenuItem = SelectedDiff.AddContextMenuEntry("Open in &Visual Studio", (s, e) => OpenCurrentItemInVS(VisualStudioIntegration.OpenFile));
+        _openInVisualStudioToolStripMenuItem.Image = Properties.Images.VisualStudio16;
+        _openInVSCodeToolStripMenuItem = SelectedDiff.AddContextMenuEntry("Open in VS &Code", (s, e) => OpenCurrentItemInVSCode(VSCodeIntegration.StableInstallation));
+        _openInVSCodeToolStripMenuItem.Image = Properties.Images.VSCode;
+        _openInVSCodeInsidersToolStripMenuItem = SelectedDiff.AddContextMenuEntry("Open in VS Code &Insiders", (s, e) => OpenCurrentItemInVSCode(VSCodeIntegration.InsidersInstallation));
+        _openInVSCodeInsidersToolStripMenuItem.Image = Properties.Images.VSCodeInsiders;
+
+        SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
+
         fileTooltip.SetToolTip(modifyCommitMessageButton, _modifyCommitMessageButtonToolTip.Text);
         commitAuthorStatus.ToolTipText = _commitCommitterToolTip.Text;
         toolStageAllItem.ToolTipText = _stageAll.Text;
@@ -689,6 +704,38 @@ public sealed partial class FormCommit : GitModuleForm
         Message.SelectionStart = selectionStart + selectedText.Length;
 
         return true;
+    }
+
+    private string? GetCurrentItemFullPath()
+    {
+        return _currentItem?.Item.Name is string fileName
+            ? _fullPathResolver.Resolve(fileName)
+            : null;
+    }
+
+    private void OpenCurrentItemInVS(Action<string, int> openFile)
+    {
+        if (GetCurrentItemFullPath() is string fullPath && File.Exists(fullPath))
+        {
+            openFile(fullPath, SelectedDiff.CurrentFileLine);
+        }
+    }
+
+    private void OpenCurrentItemInVSCode(VSCodeInstallation? installation)
+    {
+        if (installation is not null && GetCurrentItemFullPath() is string fullPath && File.Exists(fullPath))
+        {
+            VSCodeIntegration.OpenFile(installation, fullPath, SelectedDiff.CurrentFileLine);
+        }
+    }
+
+    private void SelectedDiff_ContextMenuOpening(object? sender, CancelEventArgs e)
+    {
+        bool fileExists = GetCurrentItemFullPath() is string fullPath && File.Exists(fullPath);
+
+        _openInVisualStudioToolStripMenuItem.Visible = fileExists && VisualStudioIntegration.IsVisualStudioInstalled;
+        _openInVSCodeToolStripMenuItem.Visible = fileExists && VSCodeIntegration.StableInstallation is not null;
+        _openInVSCodeInsidersToolStripMenuItem.Visible = fileExists && VSCodeIntegration.InsidersInstallation is not null;
     }
 
     private bool FocusStagedFiles()
