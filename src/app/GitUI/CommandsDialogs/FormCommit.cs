@@ -93,6 +93,9 @@ public sealed partial class FormCommit : GitModuleForm
     private readonly TranslationString _unstageFiltered = new("Unstage filtered");
 
     private readonly TranslationString _addSelectionToCommitMessage = new("Add selection to commit message");
+    private readonly TranslationString _openInVisualStudio = new("Open in &Visual Studio");
+    private readonly TranslationString _openInVSCode = new("Open in VS &Code");
+    private readonly TranslationString _openInVSCodeInsiders = new("Open in VS Code &Insiders");
     private readonly TranslationString _formTitle = new("Commit to {0} ({1})");
 
     private readonly TranslationString _selectionFilterToolTip = new("Enter a regular expression to select unstaged files.");
@@ -253,11 +256,11 @@ public sealed partial class FormCommit : GitModuleForm
         _addSelectionToCommitMessageToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(Command.AddSelectionToCommitMessage);
 
         SelectedDiff.AddContextMenuSeparator();
-        _openInVisualStudioToolStripMenuItem = SelectedDiff.AddContextMenuEntry("Open in &Visual Studio", (s, e) => OpenCurrentItemInVS(VisualStudioIntegration.OpenFile));
+        _openInVisualStudioToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_openInVisualStudio.Text, (s, e) => OpenCurrentItemInVS(VisualStudioIntegration.OpenFile));
         _openInVisualStudioToolStripMenuItem.Image = Properties.Images.VisualStudio16;
-        _openInVSCodeToolStripMenuItem = SelectedDiff.AddContextMenuEntry("Open in VS &Code", (s, e) => OpenCurrentItemInVSCode(VSCodeIntegration.StableInstallation));
+        _openInVSCodeToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_openInVSCode.Text, (s, e) => OpenCurrentItemInVSCode(VSCodeIntegration.StableInstallation));
         _openInVSCodeToolStripMenuItem.Image = Properties.Images.VSCode;
-        _openInVSCodeInsidersToolStripMenuItem = SelectedDiff.AddContextMenuEntry("Open in VS Code &Insiders", (s, e) => OpenCurrentItemInVSCode(VSCodeIntegration.InsidersInstallation));
+        _openInVSCodeInsidersToolStripMenuItem = SelectedDiff.AddContextMenuEntry(_openInVSCodeInsiders.Text, (s, e) => OpenCurrentItemInVSCode(VSCodeIntegration.InsidersInstallation));
         _openInVSCodeInsidersToolStripMenuItem.Image = Properties.Images.VSCodeInsiders;
 
         SelectedDiff.ContextMenuOpening += SelectedDiff_ContextMenuOpening;
