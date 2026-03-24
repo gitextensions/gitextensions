@@ -32,7 +32,6 @@ internal enum VSCodeVariant
 /// </summary>
 internal static class VSCodeIntegration
 {
-    private static readonly object _lock = new();
     private static VSCodeInstallation? _stableInstallation;
     private static VSCodeInstallation? _insidersInstallation;
 
@@ -132,11 +131,8 @@ internal static class VSCodeIntegration
         VSCodeInstallation? stable = await DetectInstallationAsync("code", VSCodeVariant.Stable);
         VSCodeInstallation? insiders = await DetectInstallationAsync("code-insiders", VSCodeVariant.Insiders);
 
-        lock (_lock)
-        {
-            _stableInstallation = stable;
-            _insidersInstallation = insiders;
-        }
+        _stableInstallation = stable;
+        _insidersInstallation = insiders;
     }
 
     private static Task<VSCodeInstallation?> DetectInstallationAsync(string executableName, VSCodeVariant variant)
