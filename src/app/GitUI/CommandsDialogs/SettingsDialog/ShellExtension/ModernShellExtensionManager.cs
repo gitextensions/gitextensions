@@ -151,6 +151,6 @@ public static class ModernShellExtensionManager
             msg = context + $" failed with HRESULT 0x{hr:X8}";
         }
 
-        throw new Exception(msg);
+        throw new InvalidOperationException(msg);
     }
 }

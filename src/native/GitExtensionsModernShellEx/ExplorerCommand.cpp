@@ -47,8 +47,7 @@ std::atomic_ulong& GetDllRef()
 
 ExplorerCommandBase::ExplorerCommandBase(
     std::shared_ptr<const std::wstring> sitePath)
-    : m_ref(1),
-    m_sitePath(std::move(sitePath))
+    : m_sitePath(std::move(sitePath))
 {
     GetDllRef().fetch_add(1);
 }
@@ -217,24 +216,25 @@ HRESULT ExplorerCommandBase::GetSite(
 bool ExplorerCommandBase::ShouldDisplay(
     const SelectionContext& selection) const
 {
+    using enum CommandFlags;
     const auto flags = Definition().Flags;
 
-    const bool disqualified =
-        (HasFlag(flags, CommandFlags::RequiresGit) &&
+    if (const bool disqualified =
+        (HasFlag(flags, RequiresGit) &&
             !selection.IsGitRepository) ||
-        (HasFlag(flags, CommandFlags::HideInsideGitRepository) &&
+        (HasFlag(flags, HideInsideGitRepository) &&
             selection.IsGitRepository) ||
-        (HasFlag(flags, CommandFlags::RequiresFolderSelection) &&
+        (HasFlag(flags, RequiresFolderSelection) &&
             !selection.PrimaryIsDirectory) ||
-        (HasFlag(flags, CommandFlags::RequiresFileSelection) &&
+        (HasFlag(flags, RequiresFileSelection) &&
             !selection.PrimaryIsFile) ||
-        (HasFlag(flags, CommandFlags::SingleSelectionOnly) &&
+        (HasFlag(flags, SingleSelectionOnly) &&
             !selection.IsSingleSelection);
-
-    if (disqualified) return false;
+        disqualified)
+        return false;
 
     return selection.HasSelection ||
-        !HasFlag(flags, CommandFlags::RequiresGit);
+        !HasFlag(flags, RequiresGit);
 }
 
 CommandRunner& ExplorerCommandBase::Runner()
@@ -328,13 +328,6 @@ const CommandDefinition& GitExtensionsRootCommand::Definition() const
     return RootDefinition;
 }
 
-CommandRunner& GitExtensionsRootCommand::Runner()
-{
-    // The root command does not invoke GitExtensions.exe directly,
-    // selection is handled by subcommands.
-    return ExplorerCommandBase::Runner();
-}
-
 HRESULT GitExtensionsRootCommand::GetFlags(
     EXPCMDSTATE* pFlags)
 {
@@ -373,9 +366,7 @@ HRESULT GitExtensionsRootCommand::SetSite(
 
 CommandEnumerator::CommandEnumerator(
     const std::vector<GitExtensionsSubCommandPtr>& commands)
-    : m_ref(1),
-    m_commands(commands),
-    m_index(0)
+    : m_commands(commands)
 {
     GetDllRef().fetch_add(1);
 }
@@ -428,7 +419,8 @@ HRESULT CommandEnumerator::Next(
     ULONG fetched = 0;
     while (fetched < celt && m_index < m_commands.size())
     {
-        if (auto& command = m_commands[m_index++])
+        const auto& command = m_commands[m_index++];
+        if (command)
         {
             command->AddRef();
             pUICommand[fetched] = command.Get();

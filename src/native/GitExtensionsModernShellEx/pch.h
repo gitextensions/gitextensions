@@ -24,10 +24,13 @@
 #include <wrl.h>
 #include <wrl/client.h>
 
+#include <array>
 #include <atomic>
+#include <format>
 #include <memory>
 #include <string>
 #include <string_view>
+#include <utility>
 #include <vector>
 #include <algorithm>
 #include <mutex>

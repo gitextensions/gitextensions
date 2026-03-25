@@ -73,7 +73,7 @@ namespace
         if (FAILED(selection->GetPropertyStore(GPS_DEFAULT,
             IID_PPV_ARGS(&store))) || !store) return {};
 
-        const PROPERTYKEY* keys[] =
+        const std::array<const PROPERTYKEY*, 3> keys
         {
             &PKEY_ParsingPath,
             &PKEY_ItemFolderPathDisplay,
@@ -84,8 +84,8 @@ namespace
         {
             PROPVARIANT variant;
             PropVariantInit(&variant);
-            const HRESULT hr = store->GetValue(*key, &variant);
-            if (SUCCEEDED(hr) && variant.vt == VT_LPWSTR && variant.pwszVal &&
+            if (const HRESULT hr = store->GetValue(*key, &variant);
+                SUCCEEDED(hr) && variant.vt == VT_LPWSTR && variant.pwszVal &&
                 variant.pwszVal[0] != L'\0')
             {
                 std::wstring value(variant.pwszVal);

@@ -78,8 +78,8 @@ protected:
     const std::wstring& SitePath() const;
 
 private:
-    std::atomic_ulong m_ref;
-    CommandRunner m_runner;
+    std::atomic_ulong m_ref{ 1 };
+    [[msvc::no_unique_address]] CommandRunner m_runner;
     Microsoft::WRL::ComPtr<IUnknown> m_site;
     std::shared_ptr<const std::wstring> m_sitePath;
 };
@@ -103,9 +103,7 @@ private:
     CommandDefinition m_definition;
 };
 
-typedef
-Microsoft::WRL::ComPtr<GitExtensionsSubCommand>
-GitExtensionsSubCommandPtr;
+using GitExtensionsSubCommandPtr = Microsoft::WRL::ComPtr<GitExtensionsSubCommand>;
 
 class GitExtensionsRootCommand final
     : public ExplorerCommandBase
@@ -134,7 +132,6 @@ public:
 
 protected:
     const CommandDefinition& Definition() const override;
-    CommandRunner& Runner() override;
 
 private:
     explicit GitExtensionsRootCommand(
@@ -176,7 +173,7 @@ public:
         IEnumExplorerCommand** ppenum) override;
 
 private:
-    std::atomic_ulong m_ref;
+    std::atomic_ulong m_ref{ 1 };
     std::vector<GitExtensionsSubCommandPtr> m_commands;
-    size_t m_index;
+    size_t m_index{ 0 };
 };

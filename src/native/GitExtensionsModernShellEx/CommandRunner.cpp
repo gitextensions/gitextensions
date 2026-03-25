@@ -46,9 +46,9 @@ namespace
 
         UINT32 length = 0;
         UINT32 count = 0;
-        const LONG initial = GetCurrentPackageInfo2(PACKAGE_FILTER_HEAD,
+        if (const LONG initial = GetCurrentPackageInfo2(PACKAGE_FILTER_HEAD,
             PackagePathType_EffectiveExternal, &length, nullptr, &count);
-        if (initial != ERROR_INSUFFICIENT_BUFFER || length == 0) return {};
+            initial != ERROR_INSUFFICIENT_BUFFER || length == 0) return {};
 
         std::vector<BYTE> buffer(length);
         if (GetCurrentPackageInfo2(PACKAGE_FILTER_HEAD,
@@ -89,8 +89,8 @@ namespace
 
             // Ambiguous case: could be exactly cap-1 chars, or truncated.
             // If truncated, grow and retry.
-            const auto error = GetLastError();
-            if (error != ERROR_INSUFFICIENT_BUFFER && bufferSize >= 32768) return {};
+            if (const auto error = GetLastError();
+                error != ERROR_INSUFFICIENT_BUFFER && bufferSize >= 32768) return {};
 
             bufferSize *= 2;
             bufferSize = std::min<DWORD>(bufferSize, 32768);
@@ -154,8 +154,7 @@ std::wstring CommandRunner::BuildArguments(
         return args;
     }
 
-    const auto primary = selection.PrimaryPath();
-    if (!primary.empty())
+    if (const auto& primary = selection.PrimaryPath(); !primary.empty())
         args.append(QuotePath(primary));
 
     return args;
@@ -176,9 +175,9 @@ HRESULT CommandRunner::Run(
     exePath.append(L"GitExtensions.exe");
 
     const std::wstring arguments = BuildArguments(definition, selection);
-    const HINSTANCE result = ShellExecuteW(nullptr, L"open", exePath.c_str(),
+    if (const HINSTANCE result = ShellExecuteW(nullptr, L"open", exePath.c_str(),
         arguments.c_str(), nullptr, SW_SHOWNORMAL);
-    if (reinterpret_cast<INT_PTR>(result) <= 32)
+        reinterpret_cast<INT_PTR>(result) <= 32)
         return HRESULT_FROM_WIN32(GetLastError());
 
     return S_OK;

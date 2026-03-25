@@ -10,7 +10,7 @@ namespace
     std::mutex g_registrationErrorMutex;
 
     void SetLastErrorMessage(
-        const std::wstring& msg)
+        std::wstring_view msg)
     {
         std::scoped_lock lock(g_registrationErrorMutex);
         g_lastRegistrationError = msg;
@@ -24,10 +24,8 @@ namespace
         if (!msg.empty()) msg += L": ";
         msg += e.message().c_str();
 
-        wchar_t hrBuf[32];
         const auto errorCode = static_cast<unsigned int>(e.code());
-        swprintf_s(hrBuf, L" (0x%08X)", errorCode);
-        msg += hrBuf;
+        msg += std::format(L" (0x{:08X})", errorCode);
 
         SetLastErrorMessage(msg);
     }
@@ -107,16 +105,14 @@ STDAPI RegisterExtension(
 
         const Uri packageUri(packagePath);
         const auto op = pm.AddPackageByUriAsync(packageUri, options);
-        const auto deploymentResult = op.get();
-
-        if (op.Status() == AsyncStatus::Error || !deploymentResult.IsRegistered())
+        if (const auto deploymentResult = op.get();
+            op.Status() == AsyncStatus::Error || !deploymentResult.IsRegistered())
         {
             const auto hr = op.ErrorCode();
 
             // Extract the "PowerShell-style" detailed error text
-            const winrt::hstring detailedError = deploymentResult.ErrorText();
-
-            if (!detailedError.empty())
+            if (const winrt::hstring detailedError = deploymentResult.ErrorText();
+                !detailedError.empty())
             {
                 SetLastErrorMessage(detailedError.c_str());
             }

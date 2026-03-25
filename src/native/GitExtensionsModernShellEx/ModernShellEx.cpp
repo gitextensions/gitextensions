@@ -11,7 +11,7 @@ static constexpr GUID CLSID_GitExtensionsModernShellEx =
 class GitExtensionsClassFactory final : public IClassFactory
 {
 public:
-    GitExtensionsClassFactory() : m_ref(1)
+    GitExtensionsClassFactory()
     {
         GetDllRef().fetch_add(1);
     }
@@ -92,7 +92,7 @@ public:
     }
 
 private:
-    std::atomic_ulong m_ref;
+    std::atomic_ulong m_ref{ 1 };
 };
 
 namespace

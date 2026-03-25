@@ -41,7 +41,7 @@ constexpr CommandFlags operator|(
     CommandFlags b)
 {
     return static_cast<CommandFlags>(
-        static_cast<uint8_t>(a) | static_cast<uint8_t>(b));
+        std::to_underlying(a) | std::to_underlying(b));
 }
 
 constexpr CommandFlags& operator|=(
@@ -55,8 +55,8 @@ constexpr bool HasFlag(
     CommandFlags value,
     CommandFlags flag)
 {
-    return (static_cast<uint8_t>(value) &
-        static_cast<uint8_t>(flag)) != 0;
+    return (std::to_underlying(value) &
+        std::to_underlying(flag)) != 0;
 }
 
 struct CommandDefinition
