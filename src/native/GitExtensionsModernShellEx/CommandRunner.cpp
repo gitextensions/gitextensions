@@ -31,34 +31,46 @@ namespace
         return aggregated;
     }
 
-    std::wstring GetExternalPackageRoot()
+    std::wstring GetExternalPackageRoot() noexcept
     {
-        // ReSharper disable once CppInconsistentNaming
-        using PFN_GetCurrentPackageInfo2 =
-            LONG(WINAPI*)(UINT32, UINT32, UINT32*, PBYTE, UINT32*);
+        try
+        {
+            // ReSharper disable once CppInconsistentNaming
+            using PFN_GetCurrentPackageInfo2 =
+                LONG(WINAPI*)(UINT32, UINT32, UINT32*, PBYTE, UINT32*);
 
-        static const auto GetCurrentPackageInfo2 =
-            reinterpret_cast<PFN_GetCurrentPackageInfo2>(  // NOLINT(clang-diagnostic-cast-function-type-strict)
-                GetProcAddress(GetModuleHandleW(L"kernel32.dll"),
-                    "GetCurrentPackageInfo2"));
+#pragma warning(push)
+#pragma warning(disable: 4191)
+            static const auto GetCurrentPackageInfo2 =
+                reinterpret_cast<PFN_GetCurrentPackageInfo2>(  // NOLINT(clang-diagnostic-cast-function-type-strict)
+                    GetProcAddress(GetModuleHandleW(L"kernel32.dll"),
+                        "GetCurrentPackageInfo2"));
+#pragma warning(pop)
 
-        if (!GetCurrentPackageInfo2) return {};
+            if (!GetCurrentPackageInfo2) return {};
 
-        UINT32 length = 0;
-        UINT32 count = 0;
-        if (const LONG initial = GetCurrentPackageInfo2(PACKAGE_FILTER_HEAD,
-            PackagePathType_EffectiveExternal, &length, nullptr, &count);
-            initial != ERROR_INSUFFICIENT_BUFFER || length == 0) return {};
+            UINT32 length = 0;
+            UINT32 count = 0;
+            if (const LONG initial = GetCurrentPackageInfo2(PACKAGE_FILTER_HEAD,
+                PackagePathType_EffectiveExternal, &length, nullptr, &count);
+                initial != ERROR_INSUFFICIENT_BUFFER || length == 0) return {};
 
-        std::vector<BYTE> buffer(length);
-        if (GetCurrentPackageInfo2(PACKAGE_FILTER_HEAD,
-            PackagePathType_EffectiveExternal, &length, buffer.data(),
-            &count) != ERROR_SUCCESS) return {};
+            std::vector<BYTE> buffer(length);
+            if (GetCurrentPackageInfo2(PACKAGE_FILTER_HEAD,
+                PackagePathType_EffectiveExternal, &length, buffer.data(),
+                &count) != ERROR_SUCCESS) return {};
 
-        const auto packageInfo = reinterpret_cast<PACKAGE_INFO*>(buffer.data());
-        if (count == 0 || packageInfo->path == nullptr) return {};
+            const auto packageInfo = reinterpret_cast<PACKAGE_INFO*>(buffer.data());
+            if (count == 0 || packageInfo->path == nullptr) return {};
 
-        return { packageInfo->path };
+            // Potential throw: std::bad_alloc (string construction)
+            return { packageInfo->path };
+        }
+        catch (...)
+        {
+            // Fail gracefully in a shell context
+            return {};
+        }
     }
 
     std::wstring GetModuleDirectory()

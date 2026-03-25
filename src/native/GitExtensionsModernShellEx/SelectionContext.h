@@ -11,7 +11,7 @@ struct SelectionContext
     bool IsGitRepository;
     bool IsSingleSelection;
 
-    std::wstring PrimaryPath() const
+    [[nodiscard]] std::wstring PrimaryPath() const
     {
         return Paths.empty()
             ? std::wstring()

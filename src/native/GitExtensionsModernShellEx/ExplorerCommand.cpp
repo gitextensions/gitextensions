@@ -1,15 +1,14 @@
 #include "pch.h"
 
 #include "ExplorerCommand.h"
-
 #include "SelectionContext.h"
+#include <type_traits>
 
 using Microsoft::WRL::ComPtr;
+using Microsoft::WRL::Make;
 
 namespace
 {
-    std::atomic_ulong g_dllRef{ 0 };
-
     std::wstring ExtractSitePath(
         IUnknown* site)
     {
@@ -40,61 +39,10 @@ namespace
     }
 }
 
-std::atomic_ulong& GetDllRef()
-{
-    return g_dllRef;
-}
-
 ExplorerCommandBase::ExplorerCommandBase(
     std::shared_ptr<const std::wstring> sitePath)
     : m_sitePath(std::move(sitePath))
-{
-    GetDllRef().fetch_add(1);
-}
-
-ExplorerCommandBase::~ExplorerCommandBase()
-{
-    GetDllRef().fetch_sub(1);
-}
-
-ULONG ExplorerCommandBase::AddRef()
-{
-    return m_ref.fetch_add(1) + 1;
-}
-
-ULONG ExplorerCommandBase::Release()
-{
-    const ULONG count = m_ref.fetch_sub(1) - 1;
-
-    if (count == 0)
-        delete this;
-
-    return count;
-}
-
-HRESULT ExplorerCommandBase::QueryInterface(
-    REFIID riid,
-    void** ppv)
-{
-    if (!ppv) return E_POINTER;
-
-    if (riid == IID_IUnknown || riid == IID_IExplorerCommand)
-    {
-        *ppv = static_cast<IExplorerCommand*>(this);
-        AddRef();
-        return S_OK;
-    }
-
-    if (riid == IID_IObjectWithSite)
-    {
-        *ppv = static_cast<IObjectWithSite*>(this);
-        AddRef();
-        return S_OK;
-    }
-
-    *ppv = nullptr;
-    return E_NOINTERFACE;
-}
+{}
 
 HRESULT ExplorerCommandBase::GetTitle(
     [[maybe_unused]] IShellItemArray* psiItemArray,
@@ -253,8 +201,7 @@ GitExtensionsSubCommand::GitExtensionsSubCommand(
     std::shared_ptr<const std::wstring> sitePath)
     : ExplorerCommandBase(std::move(sitePath)),
     m_definition(definition)
-{
-}
+{}
 
 GitExCommand GitExtensionsSubCommand::CommandId() const
 {
@@ -268,8 +215,7 @@ const CommandDefinition& GitExtensionsSubCommand::Definition() const
 
 GitExtensionsRootCommand::GitExtensionsRootCommand()
     : GitExtensionsRootCommand(std::make_shared<std::wstring>())
-{
-}
+{}
 
 GitExtensionsRootCommand::GitExtensionsRootCommand(
     std::shared_ptr<std::wstring> sitePathStorage)
@@ -278,11 +224,8 @@ GitExtensionsRootCommand::GitExtensionsRootCommand(
 {
     for (const auto& definition : GetCommandDefinitions())
     {
-        GitExtensionsSubCommandPtr command;
-        command.Attach(new (std::nothrow)
-            GitExtensionsSubCommand(definition, m_sitePathStorage));
-
-        if (command)
+        if (GitExtensionsSubCommandPtr command =
+            Make<GitExtensionsSubCommand>(definition, m_sitePathStorage))
             m_subCommands.push_back(command);
     }
 }
@@ -333,7 +276,7 @@ HRESULT GitExtensionsRootCommand::GetFlags(
 {
     if (!pFlags) return E_POINTER;
     *pFlags = static_cast<EXPCMDSTATE>(
-        ECS_ENABLED | ECF_HASSUBCOMMANDS);
+        static_cast<int>(ECS_ENABLED) | static_cast<int>(ECF_HASSUBCOMMANDS));
     return S_OK;
 }
 
@@ -342,12 +285,10 @@ HRESULT GitExtensionsRootCommand::EnumSubCommands(
 {
     if (!ppEnum) return E_POINTER;
 
-    const auto enumerator = new (std::nothrow)
-        CommandEnumerator(m_subCommands);
-
+    ComPtr<CommandEnumerator> enumerator = Make<CommandEnumerator>(m_subCommands);
     if (!enumerator) return E_OUTOFMEMORY;
 
-    *ppEnum = enumerator;
+    *ppEnum = enumerator.Detach();
     return S_OK;
 }
 
@@ -367,46 +308,7 @@ HRESULT GitExtensionsRootCommand::SetSite(
 CommandEnumerator::CommandEnumerator(
     const std::vector<GitExtensionsSubCommandPtr>& commands)
     : m_commands(commands)
-{
-    GetDllRef().fetch_add(1);
-}
-
-CommandEnumerator::~CommandEnumerator()
-{
-    GetDllRef().fetch_sub(1);
-}
-
-ULONG CommandEnumerator::AddRef()
-{
-    return m_ref.fetch_add(1) + 1;
-}
-
-ULONG CommandEnumerator::Release()
-{
-    const ULONG count = m_ref.fetch_sub(1) - 1;
-
-    if (count == 0)
-        delete this;
-
-    return count;
-}
-
-HRESULT CommandEnumerator::QueryInterface(
-    REFIID riid,
-    void** ppv)
-{
-    if (!ppv) return E_POINTER;
-
-    if (riid == IID_IUnknown || riid == IID_IEnumExplorerCommand)
-    {
-        *ppv = static_cast<IEnumExplorerCommand*>(this);
-        AddRef();
-        return S_OK;
-    }
-
-    *ppv = nullptr;
-    return E_NOINTERFACE;
-}
+{}
 
 HRESULT CommandEnumerator::Next(
     const ULONG celt,
@@ -458,12 +360,10 @@ HRESULT CommandEnumerator::Clone(
 {
     if (!ppenum) return E_POINTER;
 
-    const auto clone = new (std::nothrow)
-        CommandEnumerator(m_commands);
-
+    ComPtr<CommandEnumerator> clone = Make<CommandEnumerator>(m_commands);
     if (!clone) return E_OUTOFMEMORY;
 
     clone->m_index = m_index;
-    *ppenum = clone;
+    *ppenum = clone.Detach();
     return S_OK;
 }

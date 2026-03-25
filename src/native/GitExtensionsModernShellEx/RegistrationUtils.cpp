@@ -1,5 +1,10 @@
 #include "pch.h"
 
+#include <winrt/base.h>
+#include <winrt/Windows.Foundation.Collections.h>
+#include <winrt/Windows.ApplicationModel.h>
+#include <winrt/Windows.Management.Deployment.h>
+
 using namespace winrt;
 using namespace winrt::Windows::Foundation;
 using namespace winrt::Windows::Management::Deployment;

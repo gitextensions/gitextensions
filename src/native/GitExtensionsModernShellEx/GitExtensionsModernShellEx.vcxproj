@@ -64,13 +64,18 @@
     <ClCompile>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <WarningLevel>Level4</WarningLevel>
+      <WarningLevel>EnableAllWarnings</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>_SILENCE_CXX23_ALIGNED_STORAGE_DEPRECATION_WARNING;WIN32;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp23</LanguageStandard>
       <AdditionalOptions>/permissive- %(AdditionalOptions)</AdditionalOptions>
       <RuntimeLibrary Condition="'$(Configuration)'=='Debug'">MultiThreadedDebug</RuntimeLibrary>
       <RuntimeLibrary Condition="'$(Configuration)'=='Release'">MultiThreaded</RuntimeLibrary>
+      <TreatWarningAsError>true</TreatWarningAsError>
+      <ExternalWarningLevel>TurnOffAllWarnings</ExternalWarningLevel>
+      <ExternalTemplatesDiagnostics>false</ExternalTemplatesDiagnostics>
+      <DisableAnalyzeExternal>true</DisableAnalyzeExternal>
+      <DisableSpecificWarnings>4710;4820;5045</DisableSpecificWarnings>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>

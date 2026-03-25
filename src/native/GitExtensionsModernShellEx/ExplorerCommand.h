@@ -8,24 +8,20 @@
 
 #include <memory>
 
-std::atomic_ulong& GetDllRef();
-
 class ExplorerCommandBase
-    : public IExplorerCommand,
-    public IObjectWithSite
+    : public Microsoft::WRL::RuntimeClass<
+        Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::ClassicCom>,
+        IExplorerCommand,
+        IObjectWithSite>
 {
 public:
     explicit ExplorerCommandBase(
         std::shared_ptr<const std::wstring> sitePath);
-    virtual ~ExplorerCommandBase();
 
-    // IUnknown
-    IFACEMETHODIMP QueryInterface(
-        REFIID riid,
-        void** ppv) override;
+    virtual ~ExplorerCommandBase() = default;
 
-    IFACEMETHODIMP_(ULONG) AddRef() override;
-    IFACEMETHODIMP_(ULONG) Release() override;
+    ExplorerCommandBase(const ExplorerCommandBase&) = delete;
+    ExplorerCommandBase& operator=(const ExplorerCommandBase&) = delete;
 
     // IExplorerCommand
     IFACEMETHODIMP GetTitle(
@@ -78,7 +74,6 @@ protected:
     const std::wstring& SitePath() const;
 
 private:
-    std::atomic_ulong m_ref{ 1 };
     [[msvc::no_unique_address]] CommandRunner m_runner;
     Microsoft::WRL::ComPtr<IUnknown> m_site;
     std::shared_ptr<const std::wstring> m_sitePath;
@@ -93,6 +88,9 @@ public:
         std::shared_ptr<const std::wstring> sitePath);
 
     ~GitExtensionsSubCommand() override = default;
+
+    GitExtensionsSubCommand(const GitExtensionsSubCommand&) = delete;
+    GitExtensionsSubCommand& operator=(const GitExtensionsSubCommand&) = delete;
 
     GitExCommand CommandId() const override;
 
@@ -111,6 +109,9 @@ class GitExtensionsRootCommand final
 public:
     GitExtensionsRootCommand();
     ~GitExtensionsRootCommand() override = default;
+
+    GitExtensionsRootCommand(const GitExtensionsRootCommand&) = delete;
+    GitExtensionsRootCommand& operator=(const GitExtensionsRootCommand&) = delete;
 
     GitExCommand CommandId() const override;
 
@@ -142,21 +143,18 @@ private:
 };
 
 class CommandEnumerator final
-    : public IEnumExplorerCommand
+    : public Microsoft::WRL::RuntimeClass<
+        Microsoft::WRL::RuntimeClassFlags<Microsoft::WRL::ClassicCom>,
+        IEnumExplorerCommand>
 {
 public:
     explicit CommandEnumerator(
         const std::vector<GitExtensionsSubCommandPtr>& commands);
 
-    ~CommandEnumerator();
+    ~CommandEnumerator() = default;
 
-    // IUnknown
-    IFACEMETHODIMP QueryInterface(
-        REFIID riid,
-        void** ppv) override;
-
-    IFACEMETHODIMP_(ULONG) AddRef() override;
-    IFACEMETHODIMP_(ULONG) Release() override;
+    CommandEnumerator(const CommandEnumerator&) = delete;
+    CommandEnumerator& operator=(const CommandEnumerator&) = delete;
 
     // IEnumExplorerCommand
     IFACEMETHODIMP Next(
@@ -173,7 +171,6 @@ public:
         IEnumExplorerCommand** ppenum) override;
 
 private:
-    std::atomic_ulong m_ref{ 1 };
     std::vector<GitExtensionsSubCommandPtr> m_commands;
     size_t m_index{ 0 };
 };

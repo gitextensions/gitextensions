@@ -12,7 +12,7 @@
 #define _WIN32_WINNT 0x0A00
 #endif
 
-#include <windows.h>
+#include <Windows.h>
 #include <ShlObj.h>
 #include <Shlwapi.h>
 #include <appmodel.h>
@@ -34,9 +34,3 @@
 #include <vector>
 #include <algorithm>
 #include <mutex>
-
-#include <winrt/base.h>
-#include <winrt/Windows.Foundation.h>
-#include <winrt/Windows.Foundation.Collections.h>
-#include <winrt/Windows.ApplicationModel.h>
-#include <winrt/Windows.Management.Deployment.h>
