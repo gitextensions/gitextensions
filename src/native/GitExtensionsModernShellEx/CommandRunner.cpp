@@ -63,11 +63,11 @@ namespace
 
     std::wstring GetModuleDirectory()
     {
-        HMODULE module = nullptr;
+        HMODULE moduleHandle = nullptr;
         if (!GetModuleHandleExW(GET_MODULE_HANDLE_EX_FLAG_FROM_ADDRESS |
             GET_MODULE_HANDLE_EX_FLAG_UNCHANGED_REFCOUNT,
             reinterpret_cast<LPCWSTR>(&GetExternalPackageRoot),
-            &module)) return {};
+            &moduleHandle)) return {};
 
         std::wstring path;
         // Typical start size; will grow as needed.
@@ -77,7 +77,7 @@ namespace
         {
             path.resize(bufferSize);
 
-            const auto length = GetModuleFileNameW(module, path.data(), bufferSize);
+            const auto length = GetModuleFileNameW(moduleHandle, path.data(), bufferSize);
 
             if (length == 0) return {};
 
