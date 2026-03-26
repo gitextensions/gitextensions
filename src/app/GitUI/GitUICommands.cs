@@ -13,6 +13,7 @@ using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
+using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -254,6 +255,121 @@ public sealed class GitUICommands : IGitUICommands
         }
 
         return DoActionOnRepo(owner, Action);
+    }
+
+    public bool WorktreeDelete(IWin32Window? owner, string worktreePath)
+    {
+        return DoActionOnRepo(owner, action: () =>
+        {
+            TaskDialogButton result = TaskDialog.ShowDialog(owner, new TaskDialogPage
+            {
+                Text = string.Format(TranslatedStrings.DeleteWorktreeConfirmation, worktreePath),
+                Caption = TranslatedStrings.DeleteWorktreeCaption,
+                Heading = TranslatedStrings.CannotBeUndone,
+                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                Icon = TaskDialogIcon.Warning,
+                SizeToContent = true
+            });
+
+            if (result != TaskDialogButton.Yes)
+            {
+                return false;
+            }
+
+            if (!worktreePath.TryDeleteDirectory(out string? errorMessage))
+            {
+                TaskDialog.ShowDialog(owner, new TaskDialogPage
+                {
+                    Text = $"{string.Format(TranslatedStrings.DeleteWorktreeFailed, worktreePath)}\n{errorMessage}",
+                    Caption = TranslatedStrings.Error,
+                    Icon = TaskDialogIcon.Error,
+                    SizeToContent = true
+                });
+
+                return false;
+            }
+
+            StartCommandLineProcessDialog(owner, command: null, "worktree prune");
+            return true;
+        });
+    }
+
+    public bool WorktreeSwitch(IWin32Window? owner, string worktreePath)
+    {
+        if (!AppSettings.DontConfirmSwitchWorktree)
+        {
+            TaskDialogButton result = TaskDialog.ShowDialog(owner, new TaskDialogPage
+            {
+                Text = string.Format(TranslatedStrings.SwitchWorktreeConfirmation, worktreePath),
+                Caption = TranslatedStrings.SwitchWorktreeCaption,
+                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                Icon = TaskDialogIcon.Information,
+                SizeToContent = true
+            });
+
+            if (result != TaskDialogButton.Yes)
+            {
+                return false;
+            }
+        }
+
+        if (!Directory.Exists(worktreePath))
+        {
+            return false;
+        }
+
+        if (FindFormBrowse(owner) is FormBrowse browse)
+        {
+            browse.SetWorkingDir(Path.GetFullPath(worktreePath));
+        }
+
+        return true;
+    }
+
+    public bool WorktreeCreate(IWin32Window? owner, string mainWorktreePath)
+    {
+        return DoActionOnRepo(owner, action: () =>
+        {
+            using FormCreateWorktree form = new(this, mainWorktreePath);
+            if (form.ShowDialog(owner) != DialogResult.OK)
+            {
+                return false;
+            }
+
+            if (form.OpenWorktree)
+            {
+                GitModule newModule = new(this.GetRequiredService<IGitExecutorProvider>(), form.WorktreeDirectory);
+                if (newModule.IsValidGitWorkingDir() && FindFormBrowse(owner) is FormBrowse browse)
+                {
+                    browse.SetWorkingDir(Path.GetFullPath(form.WorktreeDirectory));
+                }
+            }
+
+            return true;
+        });
+    }
+
+    private static FormBrowse? FindFormBrowse(IWin32Window? window)
+    {
+        if (window is FormBrowse browse)
+        {
+            return browse;
+        }
+
+        if (window is Form form)
+        {
+            while (form.Owner is not null)
+            {
+                if (form.Owner is FormBrowse ownerBrowse)
+                {
+                    return ownerBrowse;
+                }
+
+                form = form.Owner;
+            }
+        }
+
+        return null;
     }
 
     public void ShowModelessForm(IWin32Window? owner, bool requiresValidWorkingDir,
@@ -1260,15 +1376,18 @@ public sealed class GitUICommands : IGitUICommands
 
     private bool InvokeEvent(IWin32Window? ownerForm, EventHandler<GitUIEventArgs>? gitUIEventHandler)
     {
-        try
+        if (gitUIEventHandler is null)
         {
-            GitUIEventArgs e = new(ownerForm, this);
-            gitUIEventHandler?.Invoke(this, e);
-            return !e.Cancel;
-        }
-        catch (Exception ex)
-        {
-            MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            try
+            {
+                GitUIEventArgs e = new(ownerForm, this);
+                gitUIEventHandler?.Invoke(this, e);
+                return !e.Cancel;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         return true;

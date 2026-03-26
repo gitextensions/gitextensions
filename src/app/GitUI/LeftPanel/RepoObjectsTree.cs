@@ -33,6 +33,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private TagTree _tagTree;
     private StashTree _stashTree;
     private SubmoduleTree _submoduleTree;
+    private WorktreeTree _worktreeTree;
     private List<TreeNode>? _searchResult;
     private Action<string?> _filterRevisionGridBySpaceSeparatedRefs;
     private IAheadBehindDataProvider? _aheadBehindDataProvider;
@@ -71,6 +72,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         tsbShowTags.Checked = AppSettings.RepoObjectsTreeShowTags;
         tsbShowSubmodules.Checked = AppSettings.RepoObjectsTreeShowSubmodules;
         tsbShowStashes.Checked = AppSettings.RepoObjectsTreeShowStashes;
+        tsbShowWorktrees.Checked = AppSettings.RepoObjectsTreeShowWorktrees;
 
         _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
         _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
@@ -99,6 +101,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                     { nameof(Images.BranchLocal), Pad(Images.BranchLocal) },
                     { nameof(Images.BranchLocalMerged), Pad(Images.BranchLocalMerged) },
                     { nameof(Images.Branch), Pad(Images.Branch.AdaptLightness()) },
+                    { nameof(Images.WorkTree), Pad(Images.WorkTree) },
                     { nameof(Images.Remote), Pad(Images.Remote) },
                     { nameof(Images.BitBucket), Pad(Images.BitBucket) },
                     { nameof(Images.GitHub), Pad(Images.GitHub) },
@@ -241,6 +244,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     {
         _branchesTree.Refresh(getRefs);
         _remotesTree.Refresh(getRefs);
+        _worktreeTree.Refresh();
         _tagTree.Refresh(getRefs);
         _stashTree.Refresh(getStashRevs);
     }
@@ -364,6 +368,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         CreateBranches();
         CreateRemotes();
+        CreateWorktrees();
         CreateTags();
         CreateSubmodules();
         CreateStashes();
@@ -401,6 +406,18 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         };
 
         _remotesTree = new RemoteBranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource);
+    }
+
+    private void CreateWorktrees()
+    {
+        TreeNode rootNode = new(TranslatedStrings.Worktrees)
+        {
+            Name = TranslatedStrings.Worktrees,
+            ImageKey = nameof(Images.WorkTree),
+            SelectedImageKey = nameof(Images.WorkTree)
+        };
+
+        _worktreeTree = new WorktreeTree(rootNode, UICommandsSource);
     }
 
     private void CreateTags()

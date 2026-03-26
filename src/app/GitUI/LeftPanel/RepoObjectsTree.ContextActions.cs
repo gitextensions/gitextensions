@@ -94,6 +94,14 @@ partial class RepoObjectsTree : IMenuItemFactory
         _sortOrderContextMenuItem.Enable(isSingleRefSelected && showSortOrder);
     }
 
+    private void EnableWorktreeContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
+    {
+        bool isSingleWorktreeSelected = hasSingleSelection && selectedNode is WorktreeNode;
+        WorktreeNode? worktreeNode = selectedNode as WorktreeNode;
+        mnubtnOpenWorktree.Enable(isSingleWorktreeSelected && worktreeNode?.IsCurrent is false && worktreeNode?.IsDeleted is false);
+        mnubtnDeleteWorktree.Enable(isSingleWorktreeSelected && worktreeNode?.IsCurrent is false);
+    }
+
     private void EnableStashContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
     {
         bool isSingleStashSelected = hasSingleSelection && selectedNode is StashNode;
@@ -192,6 +200,13 @@ partial class RepoObjectsTree : IMenuItemFactory
         RegisterClick<StashNode>(mnubtnPopStash, node => node.PopStash(this));
         RegisterClick<StashNode>(mnubtnDropStash, node => node.DropStash(this));
 
+        // Worktree
+        RegisterClick(mnubtnCreateWorktreeFromRootNode, () => _worktreeTree.CreateWorktree(this));
+        RegisterClick(mnubtnPruneWorktreesFromRootNode, () => _worktreeTree.PruneWorktrees(this));
+        RegisterClick(mnubtnManageWorktreesFromRootNode, () => _worktreeTree.ManageWorktrees(this));
+        RegisterClick<WorktreeNode>(mnubtnOpenWorktree, node => node.OpenWorktree());
+        RegisterClick<WorktreeNode>(mnubtnDeleteWorktree, node => node.DeleteWorktree());
+
         // Expand / Collapse
         RegisterClick(mnubtnCollapse, () => GetSelectedNodes().HavingChildren().Collapsible().ForEach(node => node.TreeViewNode.Collapse()));
         RegisterClick(mnubtnExpand, () => GetSelectedNodes().HavingChildren().Expandable().ForEach(node => node.TreeViewNode.ExpandAll()));
@@ -243,6 +258,8 @@ partial class RepoObjectsTree : IMenuItemFactory
         EnableMenuItems(hasSingleSelection && selectedNode is StashTree, mnubtnStashAllFromRootNode, mnubtnStashStagedFromRootNode, mnubtnManageStashFromRootNode);
         EnableStashContextMenu(hasSingleSelection, selectedNode);
         EnableSubmoduleContextMenu(hasSingleSelection, selectedNode);
+        EnableWorktreeContextMenu(hasSingleSelection, selectedNode);
+        EnableMenuItems(hasSingleSelection && selectedNode is WorktreeTree, mnubtnCreateWorktreeFromRootNode, mnubtnPruneWorktreesFromRootNode, mnubtnManageWorktreesFromRootNode);
         EnableMenuItems(hasSingleSelection && selectedNode is BranchPathNode, mnubtnCreateBranch, mnubtnDeleteAllBranches);
         EnableExpandCollapseContextMenu(selectedNodes);
         EnableMoveTreeUpDownContexMenu(hasSingleSelection, selectedNode);

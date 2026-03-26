@@ -39,6 +39,7 @@ internal sealed class TranslatedStrings : Translate
     private readonly TranslationString _tagsText = new("Tags");
     private readonly TranslationString _stashesText = new("Stashes");
     private readonly TranslationString _submodulesText = new("Submodules");
+    private readonly TranslationString _worktreesText = new("Worktrees");
     private readonly TranslationString _bodyNotLoaded = new("\n\nFull message text is not present in older commits.\nSelect this commit to populate the full message.");
     private readonly TranslationString _searchingFor = new("Searching for: ");
     private readonly TranslationString _loadingDataText = new("Loading data...");
@@ -134,6 +135,13 @@ the last selected commit.");
     private readonly TranslationString _stashDropConfirmTitle = new("Drop Stash Confirmation");
     private readonly TranslationString _cannotBeUndone = new("This action cannot be undone.");
     private readonly TranslationString _areYouSure = new("Are you sure you want to drop the stash? This action cannot be undone.");
+
+    private readonly TranslationString _switchWorktreeConfirmation = new("Switch to worktree at {0}?");
+    private readonly TranslationString _switchWorktreeCaption = new("Open worktree");
+    private readonly TranslationString _deleteWorktreeConfirmation = new("Are you sure you want to delete the worktree at {0}?");
+    private readonly TranslationString _deleteWorktreeCaption = new("Delete worktree");
+    private readonly TranslationString _deleteWorktreeFailed = new("Failed to delete worktree: {0}");
+
     private readonly TranslationString _nonexistingGitRevision = new("Git revision does not exist");
     private readonly TranslationString _ignoringReference = new("\"{0}\" is not a Git revision and will be ignored.");
 
@@ -226,6 +234,7 @@ Copy error details to clipboard?");
     public static string Tags => _instance.Value._tagsText.Text;
     public static string Stashes => _instance.Value._stashesText.Text;
     public static string Submodules => _instance.Value._submodulesText.Text;
+    public static string Worktrees => _instance.Value._worktreesText.Text;
 
     public static string BodyNotLoaded => _instance.Value._bodyNotLoaded.Text;
     public static string SearchingFor => _instance.Value._searchingFor.Text;
@@ -339,6 +348,12 @@ Copy error details to clipboard?");
     public static string StashDropConfirmTitle => _instance.Value._stashDropConfirmTitle.Text;
     public static string CannotBeUndone => _instance.Value._cannotBeUndone.Text;
     public static string AreYouSure => _instance.Value._areYouSure.Text;
+
+    public static string SwitchWorktreeConfirmation => _instance.Value._switchWorktreeConfirmation.Text;
+    public static string SwitchWorktreeCaption => _instance.Value._switchWorktreeCaption.Text;
+    public static string DeleteWorktreeConfirmation => _instance.Value._deleteWorktreeConfirmation.Text;
+    public static string DeleteWorktreeCaption => _instance.Value._deleteWorktreeCaption.Text;
+    public static string DeleteWorktreeFailed => _instance.Value._deleteWorktreeFailed.Text;
     public static string NonexistingGitRevision => _instance.Value._nonexistingGitRevision.Text;
     public static string IgnoringReference => _instance.Value._ignoringReference.Text;
 
