@@ -1376,12 +1376,12 @@ public sealed class GitUICommands : IGitUICommands
 
     private bool InvokeEvent(IWin32Window? ownerForm, EventHandler<GitUIEventArgs>? gitUIEventHandler)
     {
-        if (gitUIEventHandler is null)
+        if (gitUIEventHandler is not null)
         {
             try
             {
                 GitUIEventArgs e = new(ownerForm, this);
-                gitUIEventHandler?.Invoke(this, e);
+                gitUIEventHandler.Invoke(this, e);
                 return !e.Cancel;
             }
             catch (Exception ex)

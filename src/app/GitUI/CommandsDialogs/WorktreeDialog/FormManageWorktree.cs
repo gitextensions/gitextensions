@@ -150,7 +150,11 @@ public partial class FormManageWorktree : GitExtensionsDialog
 
     private void buttonCreateNewWorktree_Click(object sender, EventArgs e)
     {
-        if (UICommands.WorktreeCreate(this, _worktrees![0].Path))
+        string basePath = _worktrees is { Count: > 0 }
+            ? _worktrees[0].Path
+            : UICommands.Module.WorkingDir;
+
+        if (UICommands.WorktreeCreate(this, basePath))
         {
             ShouldRefreshRevisionGrid = true;
             Initialize();

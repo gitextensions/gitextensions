@@ -40,6 +40,9 @@ internal sealed class WorktreeNode(Tree tree, string worktreePath, string? branc
         }
     }
 
+    protected override FontStyle GetFontStyle()
+        => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
+
     public override void ApplyStyle()
     {
         base.ApplyStyle();
@@ -47,10 +50,6 @@ internal sealed class WorktreeNode(Tree tree, string worktreePath, string? branc
         if (IsDeleted)
         {
             TreeViewNode.ForeColor = SystemColors.GrayText;
-        }
-        else if (IsCurrent)
-        {
-            TreeViewNode.NodeFont = new Font(TreeViewNode.TreeView!.Font, FontStyle.Bold);
         }
 
         TreeViewNode.ImageKey = TreeViewNode.SelectedImageKey = nameof(Images.WorkTree);
