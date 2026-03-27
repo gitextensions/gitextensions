@@ -69,7 +69,7 @@ public partial class FormProcess : FormStatus
 
         using FormProcess formProcess = new(commands, arguments, workingDirectory, input, useDialogSettings, process);
 
-        if (envVariables != null)
+        if (envVariables is not null)
         {
             foreach (KeyValuePair<string, string> pair in envVariables)
             {
