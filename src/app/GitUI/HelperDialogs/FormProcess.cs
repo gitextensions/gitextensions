@@ -77,7 +77,7 @@ public partial class FormProcess : FormStatus
 
         formProcess.ShowDialog(owner);
 
-        if (envVariables != null)
+        if (envVariables is not null)
         {
             envVariables.Add("_output_string", formProcess.GetOutputString());
         }
