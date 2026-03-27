@@ -57,9 +57,9 @@ internal sealed class WorktreeTree(TreeNode treeNode, IGitUICommandsSource uiCom
 
     protected override void PostFillTreeViewNode(bool firstTime)
     {
-        if (firstTime)
+        if (firstTime && TreeViewNode.Nodes.Count > 1)
         {
-            TreeViewNode.Collapse();
+            TreeViewNode.Expand();
         }
     }
 
