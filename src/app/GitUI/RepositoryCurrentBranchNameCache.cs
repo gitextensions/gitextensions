@@ -10,13 +10,13 @@ namespace GitUI;
 public interface IRepositoryCurrentBranchNameCache : IRepositoryCurrentBranchNameProvider
 {
     /// <summary>Returns the cached branch name for <paramref name="repositoryPath"/>, or <see langword="null"/> if not yet cached.</summary>
-    public string? GetCachedBranchName(string repositoryPath);
+    string? GetCachedBranchName(string repositoryPath);
 
-    /// <summary>Writes the resolved branch name into the cache, or removes the entry when the name is blank or detached.</summary>
-    public void UpdateCache(string repositoryPath, string branchName);
+    /// <summary>Writes the resolved branch name into the cache, or removes the entry when the name is blank or error occurred.</summary>
+    void UpdateCache(string repositoryPath, string branchName);
 
     /// <summary>Clears all cached branch names, forcing fresh reads on the next access.</summary>
-    public void InvalidateAll();
+    void InvalidateAll();
 }
 
 public sealed class RepositoryCurrentBranchNameCache(IRepositoryCurrentBranchNameProvider inner) : IRepositoryCurrentBranchNameCache

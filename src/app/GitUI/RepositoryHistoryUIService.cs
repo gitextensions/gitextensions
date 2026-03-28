@@ -140,25 +140,8 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
 
         _triggerBranchNameCacheUpdate = false;
-        ThreadHelper.FileAndForget(UpdateBranchNameCacheAsync);
-    }
-
-    public async Task UpdateBranchNameCacheAsync()
-    {
-        CancellationToken cancellationToken = _branchCacheSequence.Next();
-        (IList<Repository> recentHistory, IList<Repository> favouriteHistory) = await HistoryLazy.GetValueAsync(cancellationToken);
-
-        string[] paths = [.. recentHistory
-                .Concat(favouriteHistory)
-                .Select(r => r.Path)
-                .Distinct(StringComparer.InvariantCulture)];
-
-        if (paths.Length > 0)
-        {
-            // Capture the parent form on the UI thread before handing off to the background thread.
-            Form? parentForm = Form.ActiveForm;
-            UpdateBranchNamesCache(paths, parentForm, cancellationToken);
-        }
+        Form? parentForm = Form.ActiveForm;
+        ThreadHelper.FileAndForget(() => UpdateBranchNameCacheAsync(parentForm));
     }
 
     private static async Task<(IList<Repository> Recent, IList<Repository> Favourite)> LoadHistoryAsync()
@@ -258,31 +241,19 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
-    private void RefreshBranchNamesInMenu(ToolStripDropDownItem container)
+    private async Task UpdateBranchNameCacheAsync(Form? parentForm)
     {
-        ToolStripDropDown dropDown = container.DropDown;
-        bool layoutSuspended = false;
+        CancellationToken cancellationToken = _branchCacheSequence.Next();
+        (IList<Repository> recentHistory, IList<Repository> favouriteHistory) = await HistoryLazy.GetValueAsync(cancellationToken);
 
-        foreach (ToolStripItem dropDownItem in dropDown.Items)
+        string[] paths = [.. recentHistory
+                .Concat(favouriteHistory)
+                .Select(r => r.Path)
+                .Distinct(StringComparer.InvariantCulture)];
+
+        if (paths.Length > 0)
         {
-            if (dropDownItem is ToolStripMenuItem menuItem
-                && menuItem.Tag is string path
-                && _branchNameCache.GetCachedBranchName(path) is string branchName
-                && menuItem.ShortcutKeyDisplayString != branchName)
-            {
-                if (!layoutSuspended)
-                {
-                    dropDown.SuspendLayout();
-                    layoutSuspended = true;
-                }
-
-                menuItem.ShortcutKeyDisplayString = branchName;
-            }
-        }
-
-        if (layoutSuspended)
-        {
-            dropDown.ResumeLayout(false);
+            UpdateBranchNamesCache(paths, parentForm, cancellationToken);
         }
     }
 

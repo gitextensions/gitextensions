@@ -42,8 +42,8 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
 
     /// <summary>
     /// Clears the repository cache. After this call the repository list will be loaded from disk.
-    /// Note: _branchNameCache is not used in main dashboard, but by the repo menues in
-    /// both Dashboard and Browse.
+    /// Note: The cache in _branchNameCache is not used in main dashboard, but the dashboard updates
+    /// the cache for the repo menus in both Dashboard and Browse.
     /// </summary>
     public void ClearCache()
     {
