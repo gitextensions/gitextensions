@@ -1059,7 +1059,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                     });
                 }
 
-                ActiveControl = RevisionGrid;
+                // Do not steal focus from an open dropdown menu.
+                if (!_NO_TRANSLATE_WorkingDir.DropDown.Visible)
+                {
+                    ActiveControl = RevisionGrid;
+                }
             }
 
             _windowsJumpListManager.EnableThumbnailToolbar(validBrowseDir);

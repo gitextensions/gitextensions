@@ -1,5 +1,4 @@
-﻿using CommonTestUtils;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI;

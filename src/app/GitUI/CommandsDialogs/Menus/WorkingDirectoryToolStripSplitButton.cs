@@ -54,7 +54,11 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
         private readonly ToolStripMenuItem _tsmiRecentReposSettings;
         private readonly ToolStripTextBox _txtFilter = new();
 
-        // NOTE: This is pretty bad, but we want to share the same look and feel of the menu items defined in the Start menu.
+        // Set to true by DropDownOpened (after the dropdown is fully visible) and false by
+        // DropDownClosed. Guards the Closing cancel so spurious AppFocusChange events that fire
+        // during DropDownOpening cannot permanently block the first-open dismiss.
+        private bool _dropDownFullyOpen;
+
         private readonly StartToolStripMenuItem _startToolStripMenuItem;
         private readonly ToolStripMenuItem _closeToolStripMenuItem;
 
@@ -67,6 +71,31 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
         {
             button.ButtonClick += (s, e) => button.ShowDropDown();
             button.DropDownOpening += (s, e) => FillDropDown(button);
+            button.DropDownOpened += (s, e) =>
+            {
+                _dropDownFullyOpen = true;
+                repositoryHistoryUIService.TriggerBranchNameCacheUpdateIfNeeded();
+            };
+            button.DropDownClosed += (s, e) => _dropDownFullyOpen = false;
+            button.DropDown.Closing += (s, e) =>
+            {
+                // ToolStripManager.ModalMenuFilter.ProcessActivationChange() fires AppFocusChange
+                // on any HWND activation change. WM_ACTIVATEAPP is unreliable because Windows also
+                // sends it for child git processes. Instead, check whether the foreground window
+                // belongs to our own process: if yes, the activation change is spurious (a helper
+                // HWND within our process); if the foreground belongs to a different process, the
+                // user genuinely switched to another application — allow close.
+                if (_dropDownFullyOpen
+                    && e.CloseReason == ToolStripDropDownCloseReason.AppFocusChange)
+                {
+                    IntPtr foreground = NativeMethods.GetForegroundWindow();
+                    NativeMethods.GetWindowThreadProcessId(foreground, out uint foregroundPid);
+                    if (foregroundPid == (uint)Environment.ProcessId)
+                    {
+                        e.Cancel = true;
+                    }
+                }
+            };
             button.MouseUp += MouseUpHandler;
             button.ToolTipText = _toolTip.Text;
 
@@ -161,6 +190,16 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
 
         private void FillDropDown(ToolStripDropDownItem button)
         {
+            // Do not rebuild while the dropdown is open — Clear() would close it.
+            if (button.DropDown.Visible)
+            {
+                return;
+            }
+
+            // Suppress auto-close during fill: JoinableTaskFactory.Run() inside
+            // PopulateRecentRepositoriesMenu pumps the message loop, which can fire
+            // DropDownOpened early and deliver a spurious AppFocusChange. Restored
+            // unconditionally in the finally block.
             button.DropDown.SuspendLayout();
             try
             {

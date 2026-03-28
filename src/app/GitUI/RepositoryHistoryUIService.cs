@@ -20,6 +20,11 @@ public interface IRepositoryHistoryUIService
     event EventHandler<GitModuleEventArgs> GitModuleChanged;
 
     /// <summary>
+    ///  Mark the branch name cache as requiring an update.
+    /// </summary>
+    void MarkBranchNameCacheForUpdate();
+
+    /// <summary>
     ///  Populates the "Favourite repositories" menu in the Dashboard.
     ///  Both the submenu to the WorkingDir button in Browse and menu in Dashboard.
     /// </summary>
@@ -34,9 +39,9 @@ public interface IRepositoryHistoryUIService
     void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container);
 
     /// <summary>
-    ///  Initiates a background update of the branch name cache for all recent and favourite repositories.
+    ///  If the branch name cache is marked for update, start the background update.
     /// </summary>
-    Task UpdateBranchNameCacheAsync();
+    void TriggerBranchNameCacheUpdateIfNeeded();
 }
 
 internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
@@ -44,13 +49,15 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private readonly IGitExecutorProvider _executorProvider;
     private readonly IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
-    private readonly ConcurrentDictionary<string, string> _branchNameCache = new();
+    private static readonly ConcurrentDictionary<string, string> _branchNameCache = new();
     private readonly CancellationTokenSequence _branchCacheSequence = new();
+    private WeakReference<ToolStripDropDownItem>? _recentMenuContainer;
 
     // history can be loaded both by trigger and menu opening
     private volatile AsyncLazy<(IList<Repository> Recent, IList<Repository> Favourite)>? _historyLazy;
     private AsyncLazy<(IList<Repository> Recent, IList<Repository> Favourite)> HistoryLazy
         => _historyLazy ??= CreateHistoryLazy();
+    private static bool _triggerBranchNameCacheUpdate = true;
 
     public event EventHandler<GitModuleEventArgs> GitModuleChanged;
 
@@ -61,8 +68,20 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         _invalidRepositoryRemover = invalidRepositoryRemover;
     }
 
+    public void MarkBranchNameCacheForUpdate()
+       => _triggerBranchNameCacheUpdate = true;
+
     public void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container)
     {
+        // Do not rebuild while the dropdown is open — Clear() would close it.
+        // The next open will pick up fresh data via HistoryLazy.
+        if (container.DropDown.Visible)
+        {
+            return;
+        }
+
+        _recentMenuContainer = new WeakReference<ToolStripDropDownItem>(container);
+
         List<RecentRepoInfo> pinnedRepos = [];
         List<RecentRepoInfo> allRecentRepos = [];
 
@@ -116,36 +135,52 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
     }
 
+    public void TriggerBranchNameCacheUpdateIfNeeded()
+    {
+        if (!_triggerBranchNameCacheUpdate)
+        {
+            return;
+        }
+
+        _triggerBranchNameCacheUpdate = false;
+        ThreadHelper.FileAndForget(UpdateBranchNameCacheAsync);
+    }
+
     public async Task UpdateBranchNameCacheAsync()
     {
-        try
-        {
-            _historyLazy = CreateHistoryLazy();
-            CancellationToken cancellationToken = _branchCacheSequence.Next();
-            (IList<Repository> recentHistory, IList<Repository> favouriteHistory) = await HistoryLazy.GetValueAsync(cancellationToken);
+        CancellationToken cancellationToken = _branchCacheSequence.Next();
+        (IList<Repository> recentHistory, IList<Repository> favouriteHistory) = await HistoryLazy.GetValueAsync(cancellationToken);
 
-            string[] paths = [.. recentHistory
+        string[] paths = [.. recentHistory
                 .Concat(favouriteHistory)
                 .Select(r => r.Path)
                 .Distinct(StringComparer.InvariantCulture)];
 
-            if (paths.Length > 0)
-            {
-                ThreadHelper.FileAndForget(() => UpdateBranchNamesCache(paths, cancellationToken));
-            }
-        }
-        catch (OperationCanceledException)
+        if (paths.Length > 0)
         {
-            // This call was superseded by a newer UpdateBranchNameCacheAsync; the replacement run will proceed.
+            // Capture the parent form on the UI thread before handing off to the background thread.
+            Form? parentForm = Form.ActiveForm;
+            UpdateBranchNamesCache(paths, parentForm, cancellationToken);
         }
     }
+
+    private static async Task<(IList<Repository> Recent, IList<Repository> Favourite)> LoadHistoryAsync()
+    {
+        IList<Repository> recent = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
+        IList<Repository> favourite = await RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync();
+        return (recent, favourite);
+    }
+
+    private static AsyncLazy<(IList<Repository> Recent, IList<Repository> Favourite)> CreateHistoryLazy()
+        => new(LoadHistoryAsync, ThreadHelper.JoinableTaskFactory);
 
     private void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number, bool anchored = false)
     {
         string numberString = number switch { < 10 => $"&{number}", 10 => "1&0", _ => $"{number}" };
         ToolStripMenuItem item = new($"{numberString}: {caption}")
         {
-            DisplayStyle = ToolStripItemDisplayStyle.ImageAndText
+            DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+            Tag = repo.Path,
         };
 
         if (anchored)
@@ -155,10 +190,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         menuItemContainer.DropDownItems.Add(item);
 
-        item.Click += (obj, args) =>
-        {
-            OpenRepo(repo.Path);
-        };
+        item.Click += (_, _) => OpenRepo(repo.Path);
 
         if (repo.Path != caption)
         {
@@ -169,6 +201,29 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         {
             item.ShortcutKeyDisplayString = cachedBranchName;
         }
+    }
+
+    private void ChangeWorkingDir(string path)
+    {
+        GitModule module = new(_executorProvider, path);
+        if (module.IsValidGitWorkingDir())
+        {
+            GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
+            return;
+        }
+
+        _invalidRepositoryRemover.ShowDeleteInvalidRepositoryDialog(path);
+    }
+
+    private void OpenRepo(string repoPath)
+    {
+        if (Control.ModifierKeys != Keys.Control)
+        {
+            ChangeWorkingDir(repoPath);
+            return;
+        }
+
+        GitUICommands.LaunchBrowse(repoPath);
     }
 
     private void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
@@ -206,80 +261,75 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
-    private void UpdateBranchNamesCache(IReadOnlyList<string> paths, CancellationToken cancellationToken)
+    private void UpdateBranchNamesCache(IReadOnlyList<string> paths, Form? parentForm, CancellationToken cancellationToken)
     {
         const int MaxBranchNameFetchParallelism = 4;
-        (string Path, string BranchName)[] fetched = [.. paths
+        paths
             .AsParallel()
             .WithCancellation(cancellationToken)
             .WithDegreeOfParallelism(Math.Min(MaxBranchNameFetchParallelism, Math.Max(1, Environment.ProcessorCount / 2)))
-            .Select(path => (path, BranchName: _repositoryCurrentBranchNameProvider.GetCurrentBranchName(path)))];
-
-        foreach ((string path, string branchName) in fetched)
-        {
-            if (string.IsNullOrWhiteSpace(branchName) || branchName == DetachedHeadParser.UnknownBranchName)
+            .ForAll(path =>
             {
-                _branchNameCache.TryRemove(path, out _);
-            }
-            else
+                string branchName = _repositoryCurrentBranchNameProvider.GetCurrentBranchName(path);
+                if (string.IsNullOrWhiteSpace(branchName) || branchName == DetachedHeadParser.UnknownBranchName)
+                {
+                    _branchNameCache.TryRemove(path, out _);
+                }
+                else
+                {
+                    _branchNameCache[path] = branchName;
+                }
+            });
+
+        // After all paths are fetched, push one update to the UI thread if the menu container is still alive.
+        if (parentForm is not null
+            && parentForm.IsHandleCreated
+            && _recentMenuContainer?.TryGetTarget(out ToolStripDropDownItem? menu) is true)
+        {
+            parentForm.BeginInvoke(() => RefreshBranchNamesInMenu(menu));
+        }
+
+        void RefreshBranchNamesInMenu(ToolStripDropDownItem container)
+        {
+            ToolStripDropDown dropDown = container.DropDown;
+            bool layoutSuspended = false;
+
+            foreach (ToolStripItem dropDownItem in dropDown.Items)
             {
-                _branchNameCache[path] = branchName;
+                if (dropDownItem is ToolStripMenuItem menuItem
+                    && menuItem.Tag is string path
+                    && _branchNameCache.TryGetValue(path, out string? branchName)
+                    && menuItem.ShortcutKeyDisplayString != branchName)
+                {
+                    if (!layoutSuspended)
+                    {
+                        dropDown.SuspendLayout();
+                        layoutSuspended = true;
+                    }
+
+                    menuItem.ShortcutKeyDisplayString = branchName;
+                }
+            }
+
+            if (layoutSuspended)
+            {
+                dropDown.ResumeLayout(false);
             }
         }
-    }
-
-    private static async Task<(IList<Repository> Recent, IList<Repository> Favourite)> LoadHistoryAsync()
-    {
-        IList<Repository> recent = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
-        IList<Repository> favourite = await RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync();
-        return (recent, favourite);
-    }
-
-    private static AsyncLazy<(IList<Repository> Recent, IList<Repository> Favourite)> CreateHistoryLazy()
-        => new(LoadHistoryAsync, ThreadHelper.JoinableTaskFactory);
-
-    private void ChangeWorkingDir(string path)
-    {
-        GitModule module = new(_executorProvider, path);
-        if (module.IsValidGitWorkingDir())
-        {
-            GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
-            return;
-        }
-
-        _invalidRepositoryRemover.ShowDeleteInvalidRepositoryDialog(path);
-    }
-
-    private void OpenRepo(string repoPath)
-    {
-        if (Control.ModifierKeys != Keys.Control)
-        {
-            ChangeWorkingDir(repoPath);
-            return;
-        }
-
-        GitUICommands.LaunchBrowse(repoPath);
     }
 
     internal TestAccessor GetTestAccessor()
         => new(this);
 
-    internal readonly struct TestAccessor
+    internal readonly struct TestAccessor(RepositoryHistoryUIService service)
     {
-        private readonly RepositoryHistoryUIService _service;
-
-        public TestAccessor(RepositoryHistoryUIService service)
-        {
-            _service = service;
-        }
-
         internal void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number)
-            => _service.AddRecentRepositories(menuItemContainer, repo, caption, number);
+            => service.AddRecentRepositories(menuItemContainer, repo, caption, number);
 
         internal void UpdateBranchNames(IReadOnlyList<string> paths)
-            => _service.UpdateBranchNamesCache(paths, CancellationToken.None);
+            => service.UpdateBranchNamesCache(paths, parentForm: null, CancellationToken.None);
 
         internal void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
-            => _service.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
+            => service.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
     }
 }

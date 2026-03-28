@@ -12,16 +12,15 @@ public static class ThreadHelper
 {
     private const int RPC_E_WRONG_THREAD = unchecked((int)0x8001010E);
 
-    private static TaskManager TaskManager
-    {
-        get => field ?? throw new InvalidOperationException($"{nameof(JoinableTaskContext)} has not been initialized.");
-        set;
-    }
+    private static TaskManager? _taskManager;
+
+    private static TaskManager TaskManager =>
+        _taskManager ?? throw new InvalidOperationException($"{nameof(JoinableTaskContext)} has not been initialized.");
 
     public static JoinableTaskContext JoinableTaskContext
     {
-        get => TaskManager?.JoinableTaskContext;
-        internal set => TaskManager = value is null ? null : new(value);
+        get => _taskManager?.JoinableTaskContext;
+        internal set => _taskManager = value is null ? null : new(value);
     }
 
     public static JoinableTaskFactory JoinableTaskFactory => TaskManager.JoinableTaskFactory;

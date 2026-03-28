@@ -94,7 +94,6 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
     {
         tsmiRecentRepositories.DropDown.SuspendLayout();
         tsmiRecentRepositories.DropDownItems.Clear();
-        ThreadHelper.FileAndForget(_repositoryHistoryUIService.UpdateBranchNameCacheAsync);
         _repositoryHistoryUIService.PopulateRecentRepositoriesMenu(tsmiRecentRepositories);
         if (tsmiRecentRepositories.DropDownItems.Count < 1)
         {
@@ -102,9 +101,11 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
         }
 
         tsmiRecentRepositories.DropDownItems.Add(clearRecentRepositoriesListToolStripMenuItem);
-        ////TranslateItem(tsmiRecentRepositoriesClear.Name, tsmiRecentRepositoriesClear);
         tsmiRecentRepositories.DropDownItems.Add(tsmiRecentRepositoriesClear);
         tsmiRecentRepositories.DropDown.ResumeLayout();
+
+        _repositoryHistoryUIService.MarkBranchNameCacheForUpdate();
+        _repositoryHistoryUIService.TriggerBranchNameCacheUpdateIfNeeded();
     }
 
     private void tsmiRecentRepositoriesClear_Click(object sender, EventArgs e)

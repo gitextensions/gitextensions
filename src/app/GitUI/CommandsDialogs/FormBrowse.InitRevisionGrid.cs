@@ -66,6 +66,8 @@ partial class FormBrowse
 
         RevisionGrid.RevisionsLoaded += (sender, e) =>
         {
+            UICommands.GetRequiredService<IRepositoryHistoryUIService>().MarkBranchNameCacheForUpdate();
+
             if (sender is null || MainSplitContainer.Panel1Collapsed)
             {
                 // - the event is either not originated from the revision grid, or
@@ -74,16 +76,6 @@ partial class FormBrowse
             }
 
             repoObjectsTree.RefreshRevisionsLoaded();
-        };
-
-        RevisionGrid.RevisionsLoaded += (sender, e) =>
-        {
-            ThreadHelper.FileAndForget(async () =>
-            {
-                // update the branchname cache for the repo menu
-                await Task.Delay(TimeSpan.FromMilliseconds(500));
-                await UICommands.GetRequiredService<IRepositoryHistoryUIService>().UpdateBranchNameCacheAsync();
-            });
         };
 
         RevisionGrid.SelectionChanged += (sender, e) =>
