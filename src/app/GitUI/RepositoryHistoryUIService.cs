@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-using GitCommands;
-using GitCommands.Git;
+﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
@@ -47,9 +45,8 @@ public interface IRepositoryHistoryUIService
 internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 {
     private readonly IGitExecutorProvider _executorProvider;
-    private readonly IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
+    private readonly IRepositoryCurrentBranchNameCache _branchNameCache;
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
-    private static readonly ConcurrentDictionary<string, string> _branchNameCache = new();
     private readonly CancellationTokenSequence _branchCacheSequence = new();
     private WeakReference<ToolStripDropDownItem>? _recentMenuContainer;
 
@@ -61,10 +58,10 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
     public event EventHandler<GitModuleEventArgs> GitModuleChanged;
 
-    internal RepositoryHistoryUIService(IGitExecutorProvider executorProvider, IRepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider, IInvalidRepositoryRemover invalidRepositoryRemover)
+    internal RepositoryHistoryUIService(IGitExecutorProvider executorProvider, IRepositoryCurrentBranchNameCache branchNameCache, IInvalidRepositoryRemover invalidRepositoryRemover)
     {
         _executorProvider = executorProvider;
-        _repositoryCurrentBranchNameProvider = repositoryCurrentBranchNameProvider;
+        _branchNameCache = branchNameCache;
         _invalidRepositoryRemover = invalidRepositoryRemover;
     }
 
@@ -197,7 +194,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             item.ToolTipText = repo.Path;
         }
 
-        if (_branchNameCache.TryGetValue(repo.Path, out string? cachedBranchName))
+        if (_branchNameCache.GetCachedBranchName(repo.Path) is string cachedBranchName)
         {
             item.ShortcutKeyDisplayString = cachedBranchName;
         }
@@ -261,8 +258,37 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
+    private void RefreshBranchNamesInMenu(ToolStripDropDownItem container)
+    {
+        ToolStripDropDown dropDown = container.DropDown;
+        bool layoutSuspended = false;
+
+        foreach (ToolStripItem dropDownItem in dropDown.Items)
+        {
+            if (dropDownItem is ToolStripMenuItem menuItem
+                && menuItem.Tag is string path
+                && _branchNameCache.GetCachedBranchName(path) is string branchName
+                && menuItem.ShortcutKeyDisplayString != branchName)
+            {
+                if (!layoutSuspended)
+                {
+                    dropDown.SuspendLayout();
+                    layoutSuspended = true;
+                }
+
+                menuItem.ShortcutKeyDisplayString = branchName;
+            }
+        }
+
+        if (layoutSuspended)
+        {
+            dropDown.ResumeLayout(false);
+        }
+    }
+
     private void UpdateBranchNamesCache(IReadOnlyList<string> paths, Form? parentForm, CancellationToken cancellationToken)
     {
+        _branchNameCache.InvalidateAll();
         const int MaxBranchNameFetchParallelism = 4;
         paths
             .AsParallel()
@@ -270,15 +296,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             .WithDegreeOfParallelism(Math.Min(MaxBranchNameFetchParallelism, Math.Max(1, Environment.ProcessorCount / 2)))
             .ForAll(path =>
             {
-                string branchName = _repositoryCurrentBranchNameProvider.GetCurrentBranchName(path);
-                if (string.IsNullOrWhiteSpace(branchName) || branchName == DetachedHeadParser.UnknownBranchName)
-                {
-                    _branchNameCache.TryRemove(path, out _);
-                }
-                else
-                {
-                    _branchNameCache[path] = branchName;
-                }
+                _branchNameCache.GetCurrentBranchName(path);
             });
 
         // After all paths are fetched, push one update to the UI thread if the menu container is still alive.
@@ -298,7 +316,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             {
                 if (dropDownItem is ToolStripMenuItem menuItem
                     && menuItem.Tag is string path
-                    && _branchNameCache.TryGetValue(path, out string? branchName)
+                    && _branchNameCache.GetCachedBranchName(path) is string branchName
                     && menuItem.ShortcutKeyDisplayString != branchName)
                 {
                     if (!layoutSuspended)

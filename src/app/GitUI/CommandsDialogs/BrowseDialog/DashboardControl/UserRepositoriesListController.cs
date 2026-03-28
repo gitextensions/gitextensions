@@ -1,6 +1,7 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
+using GitUI;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 
@@ -18,18 +19,18 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
 {
     private readonly ILocalRepositoryManager _localRepositoryManager;
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
-    private readonly IGitExecutorProvider _executorProvider;
+    private readonly IRepositoryCurrentBranchNameCache _branchNameCache;
 
     // Holds the raw, unfiltered list of repositories.
     // This is done to allow fast filtering of all known repos.
     private IList<Repository>? _allRecentRepositories;
     private IList<Repository>? _allFavoriteRepositories;
 
-    public UserRepositoriesListController(ILocalRepositoryManager localRepositoryManager, IInvalidRepositoryRemover invalidRepositoryRemover, IGitExecutorProvider executorProvider)
+    public UserRepositoriesListController(ILocalRepositoryManager localRepositoryManager, IInvalidRepositoryRemover invalidRepositoryRemover, IRepositoryCurrentBranchNameCache branchNameCache)
     {
         _localRepositoryManager = localRepositoryManager;
         _invalidRepositoryRemover = invalidRepositoryRemover;
-        _executorProvider = executorProvider;
+        _branchNameCache = branchNameCache;
     }
 
     public async Task AssignCategoryAsync(Repository repository, string? category)
@@ -41,11 +42,14 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
 
     /// <summary>
     /// Clears the repository cache. After this call the repository list will be loaded from disk.
+    /// Note: _branchNameCache is not used in main dashboard, but by the repo menues in
+    /// both Dashboard and Browse.
     /// </summary>
     public void ClearCache()
     {
         _allRecentRepositories = null;
         _allFavoriteRepositories = null;
+        _branchNameCache.InvalidateAll();
     }
 
     public string GetCurrentBranchName(string path)
@@ -55,7 +59,7 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
             return string.Empty;
         }
 
-        return _executorProvider.GetExecutor(path).GetSelectedBranch();
+        return _branchNameCache.GetCurrentBranchName(path);
     }
 
     public bool IsValidGitWorkingDir(string path)

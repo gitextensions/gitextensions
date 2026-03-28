@@ -13,15 +13,17 @@ public sealed class RepositoryHistoryUIServiceTests
 {
     private RepositoryHistoryUIService _service;
     private IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
+    private RepositoryCurrentBranchNameCache _branchNameCache;
     private IInvalidRepositoryRemover _invalidRepositoryRemover;
 
     [SetUp]
     public void Setup()
     {
         _repositoryCurrentBranchNameProvider = Substitute.For<IRepositoryCurrentBranchNameProvider>();
+        _branchNameCache = new RepositoryCurrentBranchNameCache(_repositoryCurrentBranchNameProvider);
         _invalidRepositoryRemover = Substitute.For<IInvalidRepositoryRemover>();
 
-        _service = new RepositoryHistoryUIService(Substitute.For<IGitExecutorProvider>(), _repositoryCurrentBranchNameProvider, _invalidRepositoryRemover);
+        _service = new RepositoryHistoryUIService(Substitute.For<IGitExecutorProvider>(), _branchNameCache, _invalidRepositoryRemover);
     }
 
     [Test]

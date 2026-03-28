@@ -74,7 +74,6 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
             button.DropDownOpened += (s, e) =>
             {
                 _dropDownFullyOpen = true;
-                repositoryHistoryUIService.TriggerBranchNameCacheUpdateIfNeeded();
             };
             button.DropDownClosed += (s, e) => _dropDownFullyOpen = false;
             button.DropDown.Closing += (s, e) =>
@@ -216,7 +215,11 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
                     button.DropDown.Items.Add(_tsmiCategorisedRepos);
                 }
 
+                // Populate both favorites and recent with current branch name cache
+                // to get a fast opening, then initiate a cache refresh so correctly updating.
+                // The background updating can cause spurious menu closes.
                 _repositoryHistoryUIService.PopulateRecentRepositoriesMenu(button);
+                _repositoryHistoryUIService.TriggerBranchNameCacheUpdateIfNeeded();
 
                 button.DropDown.Items.Add(new ToolStripSeparator());
                 button.DropDown.Items.Add(_tsmiOpenLocalRepository);

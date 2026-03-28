@@ -68,7 +68,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
         => field ??= new UserRepositoriesListController(
             RepositoryHistoryManager.Locals,
             new InvalidRepositoryRemover(),
-            ServiceProvider.GetRequiredService<IGitExecutorProvider>());
+            ServiceProvider.GetRequiredService<IRepositoryCurrentBranchNameCache>());
 
     public UserRepositoriesList()
     {

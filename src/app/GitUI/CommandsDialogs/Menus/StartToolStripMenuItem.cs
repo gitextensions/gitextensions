@@ -92,6 +92,7 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
 
     private void tsmiRecentRepositories_DropDownOpening(object sender, EventArgs e)
     {
+        // Note: repo-branch name cache is shared with the dashboard, no update needed
         tsmiRecentRepositories.DropDown.SuspendLayout();
         tsmiRecentRepositories.DropDownItems.Clear();
         _repositoryHistoryUIService.PopulateRecentRepositoriesMenu(tsmiRecentRepositories);
@@ -103,9 +104,6 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
         tsmiRecentRepositories.DropDownItems.Add(clearRecentRepositoriesListToolStripMenuItem);
         tsmiRecentRepositories.DropDownItems.Add(tsmiRecentRepositoriesClear);
         tsmiRecentRepositories.DropDown.ResumeLayout();
-
-        _repositoryHistoryUIService.MarkBranchNameCacheForUpdate();
-        _repositoryHistoryUIService.TriggerBranchNameCacheUpdateIfNeeded();
     }
 
     private void tsmiRecentRepositoriesClear_Click(object sender, EventArgs e)
