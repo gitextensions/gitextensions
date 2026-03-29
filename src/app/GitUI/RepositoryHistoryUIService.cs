@@ -49,7 +49,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private readonly CancellationTokenSequence _branchCacheSequence = new();
     private WeakReference<ToolStripDropDownItem>? _recentMenuContainer;
 
-    private static bool _triggerBranchNameCacheUpdate = true;
+    private bool _triggerBranchNameCacheUpdate = true;
 
     public event EventHandler<GitModuleEventArgs> GitModuleChanged;
 

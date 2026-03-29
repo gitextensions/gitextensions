@@ -12,15 +12,13 @@ namespace GitUITests;
 public sealed class RepositoryHistoryUIServiceTests
 {
     private RepositoryHistoryUIService _service;
-    private IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
-    private RepositoryCurrentBranchNameCache _branchNameCache;
+    private IRepositoryCurrentBranchNameCache _branchNameCache;
     private IInvalidRepositoryRemover _invalidRepositoryRemover;
 
     [SetUp]
     public void Setup()
     {
-        _repositoryCurrentBranchNameProvider = Substitute.For<IRepositoryCurrentBranchNameProvider>();
-        _branchNameCache = new RepositoryCurrentBranchNameCache(_repositoryCurrentBranchNameProvider);
+        _branchNameCache = Substitute.For<IRepositoryCurrentBranchNameCache>();
         _invalidRepositoryRemover = Substitute.For<IInvalidRepositoryRemover>();
 
         _service = new RepositoryHistoryUIService(Substitute.For<IGitExecutorProvider>(), _branchNameCache, _invalidRepositoryRemover);
@@ -63,7 +61,7 @@ public sealed class RepositoryHistoryUIServiceTests
     [TestCase("(no branch)")]
     public void AddRecentRepositories_should_show_branch_correctly(string branch)
     {
-        _repositoryCurrentBranchNameProvider.GetCurrentBranchName(Arg.Any<string>()).Returns(x => branch);
+        _branchNameCache.GetCachedBranchName(Arg.Any<string>()).Returns(string.IsNullOrWhiteSpace(branch) ? null : branch);
 
         ToolStripMenuItem containerMenu = new();
 
@@ -71,7 +69,6 @@ public sealed class RepositoryHistoryUIServiceTests
         const string caption = "CAPTION";
         Repository repository = new(path);
 
-        _service.GetTestAccessor().UpdateBranchNames([path]);
         _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption, number: 1);
 
         ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
