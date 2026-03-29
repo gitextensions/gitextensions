@@ -71,10 +71,7 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
         {
             button.ButtonClick += (s, e) => button.ShowDropDown();
             button.DropDownOpening += (s, e) => FillDropDown(button);
-            button.DropDownOpened += (s, e) =>
-            {
-                _dropDownFullyOpen = true;
-            };
+            button.DropDownOpened += (s, e) => _dropDownFullyOpen = true;
             button.DropDownClosed += (s, e) => _dropDownFullyOpen = false;
             button.DropDown.Closing += (s, e) =>
             {

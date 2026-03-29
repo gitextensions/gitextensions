@@ -1,7 +1,5 @@
 ﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
-using GitExtensions.Extensibility.Git;
-using GitUI;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 

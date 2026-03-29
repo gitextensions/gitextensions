@@ -60,8 +60,110 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         _invalidRepositoryRemover = invalidRepositoryRemover;
     }
 
+    private void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number, bool anchored = false)
+    {
+        string numberString = number switch { < 10 => $"&{number}", 10 => "1&0", _ => $"{number}" };
+        ToolStripMenuItem item = new($"{numberString}: {caption}")
+        {
+            DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
+            Tag = repo.Path,
+        };
+
+        if (anchored)
+        {
+            item.Image = Images.Pin;
+        }
+
+        menuItemContainer.DropDownItems.Add(item);
+
+        item.Click += (_, _) => OpenRepo(repo.Path);
+
+        if (repo.Path != caption)
+        {
+            item.ToolTipText = repo.Path;
+        }
+
+        if (_branchNameCache.GetCachedBranchName(repo.Path) is string cachedBranchName)
+        {
+            item.ShortcutKeyDisplayString = cachedBranchName;
+        }
+    }
+
+    private void ChangeWorkingDir(string path)
+    {
+        GitModule module = new(_executorProvider, path);
+        if (module.IsValidGitWorkingDir())
+        {
+            GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
+            return;
+        }
+
+        _invalidRepositoryRemover.ShowDeleteInvalidRepositoryDialog(path);
+    }
+
     public void MarkBranchNameCacheForUpdate()
        => _triggerBranchNameCacheUpdate = true;
+
+    private void OpenRepo(string repoPath)
+    {
+        if (Control.ModifierKeys != Keys.Control)
+        {
+            ChangeWorkingDir(repoPath);
+            return;
+        }
+
+        GitUICommands.LaunchBrowse(repoPath);
+    }
+
+    public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container)
+    {
+        container.DropDownItems.Clear();
+
+        IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
+            RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
+
+        if (repositoryHistory.Count < 1)
+        {
+            return;
+        }
+
+        PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
+    }
+
+    private void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
+    {
+        List<RecentRepoInfo> pinnedRepos = [];
+        List<RecentRepoInfo> allRecentRepos = [];
+
+        RecentRepoSplitter splitter = new()
+        {
+            MeasureFont = container.Font,
+        };
+
+        splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
+
+        foreach (IGrouping<string, RecentRepoInfo> repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
+        {
+            AddFavouriteRepositories(repo.Key, repo);
+        }
+
+        return;
+
+        void AddFavouriteRepositories(string? category, IEnumerable<RecentRepoInfo> repos)
+        {
+            ToolStripMenuItem menuItemCategory = new(category);
+            container.DropDownItems.Add(menuItemCategory);
+
+            menuItemCategory.DropDown.SuspendLayout();
+            int number = 0;
+            foreach (RecentRepoInfo r in repos)
+            {
+                AddRecentRepositories(menuItemCategory, r.Repo, r.Caption, ++number);
+            }
+
+            menuItemCategory.DropDown.ResumeLayout();
+        }
+    }
 
     public void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container)
     {
@@ -112,21 +214,6 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
-    public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container)
-    {
-        container.DropDownItems.Clear();
-
-        IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
-            RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
-
-        if (repositoryHistory.Count < 1)
-        {
-            return;
-        }
-
-        PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
-    }
-
     public void TriggerBranchNameCacheUpdateIfNeeded()
     {
         if (!_triggerBranchNameCacheUpdate)
@@ -137,93 +224,6 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         _triggerBranchNameCacheUpdate = false;
         Form? parentForm = Form.ActiveForm;
         ThreadHelper.FileAndForget(() => UpdateBranchNameCacheAsync(parentForm));
-    }
-
-    private void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number, bool anchored = false)
-    {
-        string numberString = number switch { < 10 => $"&{number}", 10 => "1&0", _ => $"{number}" };
-        ToolStripMenuItem item = new($"{numberString}: {caption}")
-        {
-            DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
-            Tag = repo.Path,
-        };
-
-        if (anchored)
-        {
-            item.Image = Images.Pin;
-        }
-
-        menuItemContainer.DropDownItems.Add(item);
-
-        item.Click += (_, _) => OpenRepo(repo.Path);
-
-        if (repo.Path != caption)
-        {
-            item.ToolTipText = repo.Path;
-        }
-
-        if (_branchNameCache.GetCachedBranchName(repo.Path) is string cachedBranchName)
-        {
-            item.ShortcutKeyDisplayString = cachedBranchName;
-        }
-    }
-
-    private void ChangeWorkingDir(string path)
-    {
-        GitModule module = new(_executorProvider, path);
-        if (module.IsValidGitWorkingDir())
-        {
-            GitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
-            return;
-        }
-
-        _invalidRepositoryRemover.ShowDeleteInvalidRepositoryDialog(path);
-    }
-
-    private void OpenRepo(string repoPath)
-    {
-        if (Control.ModifierKeys != Keys.Control)
-        {
-            ChangeWorkingDir(repoPath);
-            return;
-        }
-
-        GitUICommands.LaunchBrowse(repoPath);
-    }
-
-    private void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
-    {
-        List<RecentRepoInfo> pinnedRepos = [];
-        List<RecentRepoInfo> allRecentRepos = [];
-
-        RecentRepoSplitter splitter = new()
-        {
-            MeasureFont = container.Font,
-        };
-
-        splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
-
-        foreach (IGrouping<string, RecentRepoInfo> repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
-        {
-            AddFavouriteRepositories(repo.Key, repo);
-        }
-
-        return;
-
-        void AddFavouriteRepositories(string? category, IEnumerable<RecentRepoInfo> repos)
-        {
-            ToolStripMenuItem menuItemCategory = new(category);
-            container.DropDownItems.Add(menuItemCategory);
-
-            menuItemCategory.DropDown.SuspendLayout();
-            int number = 0;
-            foreach (RecentRepoInfo r in repos)
-            {
-                AddRecentRepositories(menuItemCategory, r.Repo, r.Caption, ++number);
-            }
-
-            menuItemCategory.DropDown.ResumeLayout();
-        }
     }
 
     private async Task UpdateBranchNameCacheAsync(Form? parentForm)
@@ -269,26 +269,31 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             ToolStripDropDown dropDown = container.DropDown;
             bool layoutSuspended = false;
 
-            foreach (ToolStripItem dropDownItem in dropDown.Items)
+            try
             {
-                if (dropDownItem is ToolStripMenuItem menuItem
-                    && menuItem.Tag is string path
-                    && _branchNameCache.GetCachedBranchName(path) is string branchName
-                    && menuItem.ShortcutKeyDisplayString != branchName)
+                foreach (ToolStripItem dropDownItem in dropDown.Items)
                 {
-                    if (!layoutSuspended)
+                    if (dropDownItem is ToolStripMenuItem menuItem
+                        && menuItem.Tag is string path
+                        && _branchNameCache.GetCachedBranchName(path) is string branchName
+                        && menuItem.ShortcutKeyDisplayString != branchName)
                     {
-                        dropDown.SuspendLayout();
-                        layoutSuspended = true;
-                    }
+                        if (!layoutSuspended)
+                        {
+                            dropDown.SuspendLayout();
+                            layoutSuspended = true;
+                        }
 
-                    menuItem.ShortcutKeyDisplayString = branchName;
+                        menuItem.ShortcutKeyDisplayString = branchName;
+                    }
                 }
             }
-
-            if (layoutSuspended)
+            finally
             {
-                dropDown.ResumeLayout(false);
+                if (layoutSuspended)
+                {
+                    dropDown.ResumeLayout(false);
+                }
             }
         }
     }

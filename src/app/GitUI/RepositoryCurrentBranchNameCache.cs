@@ -19,7 +19,7 @@ public interface IRepositoryCurrentBranchNameCache : IRepositoryCurrentBranchNam
     void InvalidateAll();
 }
 
-public sealed class RepositoryCurrentBranchNameCache(IRepositoryCurrentBranchNameProvider inner) : IRepositoryCurrentBranchNameCache
+internal sealed class RepositoryCurrentBranchNameCache(IRepositoryCurrentBranchNameProvider inner) : IRepositoryCurrentBranchNameCache
 {
     private readonly ConcurrentDictionary<string, string> _cache = new(StringComparer.InvariantCulture);
 
