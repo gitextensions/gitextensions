@@ -17,7 +17,7 @@ public static class ThreadHelper
     private static TaskManager? _taskManager;
 
     private static TaskManager TaskManager =>
-        _taskManager ?? throw new InvalidOperationException($"{nameof(JoinableTaskContext)} has not been initialized.");
+        _taskManager ?? throw new InvalidOperationException($"{nameof(ThreadHelper)}.{nameof(JoinableTaskContext)} has not been initialized.");
 
     public static bool HasJoinableTaskContext => _taskManager is not null;
 
