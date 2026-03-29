@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using GitCommands;
 using GitCommands.Config;
@@ -192,7 +192,7 @@ public sealed partial class GitModuleTestHelper : IDisposable
             // Note that the intermittent failures mentioned below are likely related too.
             if (Module.GetTestAccessor().EffectiveSettings is not null)
             {
-                if (ThreadHelper.JoinableTaskContext is null)
+                if (!ThreadHelper.HasJoinableTaskContext)
                 {
                     Trace.WriteLine($"{nameof(ThreadHelper)}{nameof(ThreadHelper.JoinableTaskContext)} should not be null if {nameof(Module.EffectiveSettings)} exist! Disposing too late?");
                 }
