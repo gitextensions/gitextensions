@@ -21,8 +21,6 @@ public static class ThreadHelper
 
     public static bool HasJoinableTaskContext => _taskManager is not null;
 
-    public static bool HasJoinableTaskContext => _taskManager is not null;
-
     public static JoinableTaskContext JoinableTaskContext
     {
         get => TaskManager.JoinableTaskContext;
