@@ -54,11 +54,6 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
         private readonly ToolStripMenuItem _tsmiRecentReposSettings;
         private readonly ToolStripTextBox _txtFilter = new();
 
-        // Set to true by DropDownOpened (after the dropdown is fully visible) and false by
-        // DropDownClosed. Guards the Closing cancel so spurious AppFocusChange events that fire
-        // during DropDownOpening cannot permanently block the first-open dismiss.
-        private bool _dropDownFullyOpen;
-
         private readonly StartToolStripMenuItem _startToolStripMenuItem;
         private readonly ToolStripMenuItem _closeToolStripMenuItem;
 
@@ -71,27 +66,6 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
         {
             button.ButtonClick += (s, e) => button.ShowDropDown();
             button.DropDownOpening += (s, e) => FillDropDown(button);
-            button.DropDownOpened += (s, e) => _dropDownFullyOpen = true;
-            button.DropDownClosed += (s, e) => _dropDownFullyOpen = false;
-            button.DropDown.Closing += (s, e) =>
-            {
-                // ToolStripManager.ModalMenuFilter.ProcessActivationChange() fires AppFocusChange
-                // on any HWND activation change. WM_ACTIVATEAPP is unreliable because Windows also
-                // sends it for child git processes. Instead, check whether the foreground window
-                // belongs to our own process: if yes, the activation change is spurious (a helper
-                // HWND within our process); if the foreground belongs to a different process, the
-                // user genuinely switched to another application — allow close.
-                if (_dropDownFullyOpen
-                    && e.CloseReason == ToolStripDropDownCloseReason.AppFocusChange)
-                {
-                    IntPtr foreground = NativeMethods.GetForegroundWindow();
-                    NativeMethods.GetWindowThreadProcessId(foreground, out uint foregroundPid);
-                    if (foregroundPid == (uint)Environment.ProcessId)
-                    {
-                        e.Cancel = true;
-                    }
-                }
-            };
             button.MouseUp += MouseUpHandler;
             button.ToolTipText = _toolTip.Text;
 
@@ -206,17 +180,23 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
                 button.DropDown.Items.Add(_txtFilter);
                 button.DropDown.Items.Add(new ToolStripSeparator());
 
+                // On first open the cache is empty (unless the Dashboard has updated it):
+                // fill it synchronously so branch names appear immediately.
+                // Otherwise populate fast with cached data and refresh in the background if needed.
+                // Background updates can cause spurious menu closes, so skip them when the cache is fresh.
+                if (_repositoryHistoryUIService.IsBranchNameCacheEmpty)
+                {
+                    _repositoryHistoryUIService.TriggerBranchNameCacheUpdateIfNeeded(awaitUpdate: true);
+                }
+
                 _repositoryHistoryUIService.PopulateFavouriteRepositoriesMenu(_tsmiCategorisedRepos);
                 if (_tsmiCategorisedRepos.DropDownItems.Count > 0)
                 {
                     button.DropDown.Items.Add(_tsmiCategorisedRepos);
                 }
 
-                // Populate both favorites and recent with current branch name cache
-                // to get a fast opening, then initiate a cache refresh so correctly updating.
-                // The background updating can cause spurious menu closes.
                 _repositoryHistoryUIService.PopulateRecentRepositoriesMenu(button);
-                _repositoryHistoryUIService.TriggerBranchNameCacheUpdateIfNeeded();
+                _repositoryHistoryUIService.TriggerBranchNameCacheUpdateIfNeeded(awaitUpdate: false);
 
                 button.DropDown.Items.Add(new ToolStripSeparator());
                 button.DropDown.Items.Add(_tsmiOpenLocalRepository);

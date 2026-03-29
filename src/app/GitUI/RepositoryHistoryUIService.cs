@@ -36,9 +36,16 @@ public interface IRepositoryHistoryUIService
     void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container);
 
     /// <summary>
-    ///  If the branch name cache is marked for update, start the background update.
+    ///  If the branch name cache is marked for update, start the update.
+    ///  When <paramref name="awaitUpdate"/> is <see langword="true"/> the call blocks until the update completes.
     /// </summary>
-    void TriggerBranchNameCacheUpdateIfNeeded();
+    /// <param name="awaitUpdate">When <see langword="true"/>, waits for the cache to be fully populated before returning.</param>
+    void TriggerBranchNameCacheUpdateIfNeeded(bool awaitUpdate = false);
+
+    /// <summary>
+    ///  <see langword="true"/> when no branch names have been cached yet.
+    /// </summary>
+    bool IsBranchNameCacheEmpty { get; }
 }
 
 internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
@@ -100,6 +107,8 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         _invalidRepositoryRemover.ShowDeleteInvalidRepositoryDialog(path);
     }
+
+    public bool IsBranchNameCacheEmpty => _branchNameCache.IsEmpty;
 
     public void MarkBranchNameCacheForUpdate()
        => _triggerBranchNameCacheUpdate = true;
@@ -214,7 +223,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
-    public void TriggerBranchNameCacheUpdateIfNeeded()
+    public void TriggerBranchNameCacheUpdateIfNeeded(bool awaitUpdate)
     {
         if (!_triggerBranchNameCacheUpdate)
         {
@@ -223,7 +232,14 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         _triggerBranchNameCacheUpdate = false;
         Form? parentForm = Form.ActiveForm;
-        ThreadHelper.FileAndForget(() => UpdateBranchNameCacheAsync(parentForm));
+        if (awaitUpdate)
+        {
+            ThreadHelper.JoinableTaskFactory.Run(() => UpdateBranchNameCacheAsync(parentForm));
+        }
+        else
+        {
+            ThreadHelper.FileAndForget(() => UpdateBranchNameCacheAsync(parentForm));
+        }
     }
 
     private async Task UpdateBranchNameCacheAsync(Form? parentForm)
@@ -255,47 +271,6 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             {
                 _branchNameCache.GetCurrentBranchName(path);
             });
-
-        // After all paths are fetched, push one update to the UI thread if the menu container is still alive.
-        if (parentForm is not null
-            && parentForm.IsHandleCreated
-            && _recentMenuContainer?.TryGetTarget(out ToolStripDropDownItem? menu) is true)
-        {
-            parentForm.BeginInvoke(() => RefreshBranchNamesInMenu(menu));
-        }
-
-        void RefreshBranchNamesInMenu(ToolStripDropDownItem container)
-        {
-            ToolStripDropDown dropDown = container.DropDown;
-            bool layoutSuspended = false;
-
-            try
-            {
-                foreach (ToolStripItem dropDownItem in dropDown.Items)
-                {
-                    if (dropDownItem is ToolStripMenuItem menuItem
-                        && menuItem.Tag is string path
-                        && _branchNameCache.GetCachedBranchName(path) is string branchName
-                        && menuItem.ShortcutKeyDisplayString != branchName)
-                    {
-                        if (!layoutSuspended)
-                        {
-                            dropDown.SuspendLayout();
-                            layoutSuspended = true;
-                        }
-
-                        menuItem.ShortcutKeyDisplayString = branchName;
-                    }
-                }
-            }
-            finally
-            {
-                if (layoutSuspended)
-                {
-                    dropDown.ResumeLayout(false);
-                }
-            }
-        }
     }
 
     internal TestAccessor GetTestAccessor()

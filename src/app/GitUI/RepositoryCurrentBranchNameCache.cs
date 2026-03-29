@@ -17,6 +17,9 @@ public interface IRepositoryCurrentBranchNameCache : IRepositoryCurrentBranchNam
 
     /// <summary>Clears all cached branch names, forcing fresh reads on the next access.</summary>
     void InvalidateAll();
+
+    /// <summary><see langword="true"/> when no branch names have been cached yet.</summary>
+    bool IsEmpty { get; }
 }
 
 internal sealed class RepositoryCurrentBranchNameCache(IRepositoryCurrentBranchNameProvider inner) : IRepositoryCurrentBranchNameCache
@@ -52,4 +55,6 @@ internal sealed class RepositoryCurrentBranchNameCache(IRepositoryCurrentBranchN
     }
 
     public void InvalidateAll() => _cache.Clear();
+
+    public bool IsEmpty => _cache.IsEmpty;
 }
