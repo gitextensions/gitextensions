@@ -3,7 +3,6 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI;
 
@@ -50,10 +49,6 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private readonly CancellationTokenSequence _branchCacheSequence = new();
     private WeakReference<ToolStripDropDownItem>? _recentMenuContainer;
 
-    // history can be loaded both by trigger and menu opening
-    private volatile AsyncLazy<(IList<Repository> Recent, IList<Repository> Favourite)>? _historyLazy;
-    private AsyncLazy<(IList<Repository> Recent, IList<Repository> Favourite)> HistoryLazy
-        => _historyLazy ??= CreateHistoryLazy();
     private static bool _triggerBranchNameCacheUpdate = true;
 
     public event EventHandler<GitModuleEventArgs> GitModuleChanged;
@@ -71,7 +66,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     public void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container)
     {
         // Do not rebuild while the dropdown is open — Clear() would close it.
-        // The next open will pick up fresh data via HistoryLazy.
+        // The next open will load fresh data.
         if (container.DropDown.Visible)
         {
             return;
@@ -83,7 +78,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         List<RecentRepoInfo> allRecentRepos = [];
 
         IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
-            async () => (await HistoryLazy.GetValueAsync()).Recent);
+            RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
 
         if (repositoryHistory.Count < 1)
         {
@@ -122,7 +117,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         container.DropDownItems.Clear();
 
         IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
-            async () => (await HistoryLazy.GetValueAsync()).Favourite);
+            RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
 
         if (repositoryHistory.Count < 1)
         {
@@ -143,16 +138,6 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         Form? parentForm = Form.ActiveForm;
         ThreadHelper.FileAndForget(() => UpdateBranchNameCacheAsync(parentForm));
     }
-
-    private static async Task<(IList<Repository> Recent, IList<Repository> Favourite)> LoadHistoryAsync()
-    {
-        IList<Repository> recent = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
-        IList<Repository> favourite = await RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync();
-        return (recent, favourite);
-    }
-
-    private static AsyncLazy<(IList<Repository> Recent, IList<Repository> Favourite)> CreateHistoryLazy()
-        => new(LoadHistoryAsync, ThreadHelper.JoinableTaskFactory);
 
     private void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number, bool anchored = false)
     {
@@ -244,7 +229,8 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private async Task UpdateBranchNameCacheAsync(Form? parentForm)
     {
         CancellationToken cancellationToken = _branchCacheSequence.Next();
-        (IList<Repository> recentHistory, IList<Repository> favouriteHistory) = await HistoryLazy.GetValueAsync(cancellationToken);
+        IList<Repository> recentHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
+        IList<Repository> favouriteHistory = await RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync();
 
         string[] paths = [.. recentHistory
                 .Concat(favouriteHistory)
