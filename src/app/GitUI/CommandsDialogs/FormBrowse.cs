@@ -792,7 +792,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         Text = _appTitleGenerator.Generate(branchName: TranslatedStrings.NoBranch);
 
-        _dashboard.RefreshContent();
         _dashboard.Visible = true;
         _dashboard.BringToFront();
 
