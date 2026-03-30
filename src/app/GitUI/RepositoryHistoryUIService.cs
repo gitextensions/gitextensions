@@ -54,7 +54,6 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private readonly IRepositoryCurrentBranchNameCache _branchNameCache;
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
     private readonly CancellationTokenSequence _branchCacheSequence = new();
-    private WeakReference<ToolStripDropDownItem>? _recentMenuContainer;
 
     private bool _triggerBranchNameCacheUpdate = true;
 
@@ -183,8 +182,6 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             return;
         }
 
-        _recentMenuContainer = new WeakReference<ToolStripDropDownItem>(container);
-
         List<RecentRepoInfo> pinnedRepos = [];
         List<RecentRepoInfo> allRecentRepos = [];
 
@@ -223,7 +220,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
-    public void TriggerBranchNameCacheUpdateIfNeeded(bool awaitUpdate)
+    public void TriggerBranchNameCacheUpdateIfNeeded(bool awaitUpdate = false)
     {
         if (!_triggerBranchNameCacheUpdate)
         {
@@ -231,18 +228,17 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
 
         _triggerBranchNameCacheUpdate = false;
-        Form? parentForm = Form.ActiveForm;
         if (awaitUpdate)
         {
-            ThreadHelper.JoinableTaskFactory.Run(() => UpdateBranchNameCacheAsync(parentForm));
+            ThreadHelper.JoinableTaskFactory.Run(() => UpdateBranchNameCacheAsync());
         }
         else
         {
-            ThreadHelper.FileAndForget(() => UpdateBranchNameCacheAsync(parentForm));
+            ThreadHelper.FileAndForget(() => UpdateBranchNameCacheAsync());
         }
     }
 
-    private async Task UpdateBranchNameCacheAsync(Form? parentForm)
+    private async Task UpdateBranchNameCacheAsync()
     {
         CancellationToken cancellationToken = _branchCacheSequence.Next();
         IList<Repository> recentHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
@@ -255,11 +251,11 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         if (paths.Length > 0)
         {
-            UpdateBranchNamesCache(paths, parentForm, cancellationToken);
+            UpdateBranchNamesCache(paths, cancellationToken);
         }
     }
 
-    private void UpdateBranchNamesCache(IReadOnlyList<string> paths, Form? parentForm, CancellationToken cancellationToken)
+    private void UpdateBranchNamesCache(IReadOnlyList<string> paths, CancellationToken cancellationToken)
     {
         _branchNameCache.InvalidateAll();
         const int MaxBranchNameFetchParallelism = 4;
@@ -282,7 +278,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             => service.AddRecentRepositories(menuItemContainer, repo, caption, number);
 
         internal void UpdateBranchNames(IReadOnlyList<string> paths)
-            => service.UpdateBranchNamesCache(paths, parentForm: null, CancellationToken.None);
+            => service.UpdateBranchNamesCache(paths, CancellationToken.None);
 
         internal void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
             => service.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);
