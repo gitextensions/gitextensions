@@ -3,6 +3,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
 using GitUI.Properties;
+using Microsoft.VisualStudio.Threading;
 
 namespace GitUI;
 
@@ -15,11 +16,6 @@ public interface IRepositoryHistoryUIService
     ///  Occurs whenever the git module changes.
     /// </summary>
     event EventHandler<GitModuleEventArgs> GitModuleChanged;
-
-    /// <summary>
-    ///  Mark the branch name cache as requiring an update.
-    /// </summary>
-    void MarkBranchNameCacheForUpdate();
 
     /// <summary>
     ///  Populates the "Favourite repositories" menu in the Dashboard.
@@ -36,10 +32,9 @@ public interface IRepositoryHistoryUIService
     void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container);
 
     /// <summary>
-    ///  If the branch name cache is marked for update, start the update.
-    ///  The call blocks until the update completes, which can be seconds if there are updates.
+    ///  Start updating the branch name cache.
     /// </summary>
-    void TriggerBranchNameCacheUpdateIfNeeded();
+    void TriggerBranchNameCacheUpdate();
 }
 
 internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
@@ -48,8 +43,8 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private readonly IRepositoryCurrentBranchNameCache _branchNameCache;
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
     private readonly CancellationTokenSequence _branchCacheSequence = new();
+    private JoinableTask? _branchCacheUpdateTask;
 
-    private bool _triggerBranchNameCacheUpdate = true;
     private bool _openedAlready = false;
 
     public event EventHandler<GitModuleEventArgs> GitModuleChanged;
@@ -102,9 +97,6 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         _invalidRepositoryRemover.ShowDeleteInvalidRepositoryDialog(path);
     }
 
-    public void MarkBranchNameCacheForUpdate()
-       => _triggerBranchNameCacheUpdate = true;
-
     private void OpenRepo(string repoPath)
     {
         if (Control.ModifierKeys != Keys.Control)
@@ -118,6 +110,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
     public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container)
     {
+        _branchCacheUpdateTask?.Join();
         container.DropDownItems.Clear();
 
         IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
@@ -175,6 +168,8 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
             return;
         }
 
+        _branchCacheUpdateTask?.Join();
+
         List<RecentRepoInfo> pinnedRepos = [];
         List<RecentRepoInfo> allRecentRepos = [];
 
@@ -213,20 +208,17 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
-    public void TriggerBranchNameCacheUpdateIfNeeded()
+    public void TriggerBranchNameCacheUpdate()
     {
-        if (!_branchNameCache.IsEmpty && (!_triggerBranchNameCacheUpdate
-
-            // first time opening and cache not empty - filled from dashboard
-            || !_openedAlready))
+        // first time opening and cache not empty - filled from dashboard
+        if (!_branchNameCache.IsEmpty && !_openedAlready)
         {
             _openedAlready = true;
             return;
         }
 
         _openedAlready = true;
-        _triggerBranchNameCacheUpdate = false;
-        ThreadHelper.JoinableTaskFactory.Run(() => UpdateBranchNameCacheAsync());
+        _branchCacheUpdateTask = ThreadHelper.JoinableTaskFactory.RunAsync(UpdateBranchNameCacheAsync);
     }
 
     private async Task UpdateBranchNameCacheAsync()

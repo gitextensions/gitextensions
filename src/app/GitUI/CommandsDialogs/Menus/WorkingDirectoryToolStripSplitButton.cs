@@ -166,11 +166,6 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
                 return;
             }
 
-            // update the branchname cache if it is needed
-            // The update can take several seconds and the cache is refreshed when the grid is refreshed.
-            // Update when menu is open can cause spurious menu closes, so skip them when the cache is fresh.
-            _repositoryHistoryUIService.TriggerBranchNameCacheUpdateIfNeeded();
-
             button.DropDown.SuspendLayout();
             try
             {

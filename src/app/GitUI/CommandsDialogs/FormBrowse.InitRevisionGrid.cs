@@ -66,7 +66,7 @@ partial class FormBrowse
 
         RevisionGrid.RevisionsLoaded += (sender, e) =>
         {
-            UICommands.GetRequiredService<IRepositoryHistoryUIService>().MarkBranchNameCacheForUpdate();
+            UICommands.GetRequiredService<IRepositoryHistoryUIService>().TriggerBranchNameCacheUpdate();
 
             if (sender is null || MainSplitContainer.Panel1Collapsed)
             {
