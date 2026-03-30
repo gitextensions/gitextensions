@@ -166,10 +166,11 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
                 return;
             }
 
-            // Suppress auto-close during fill: JoinableTaskFactory.Run() inside
-            // PopulateRecentRepositoriesMenu pumps the message loop, which can fire
-            // DropDownOpened early and deliver a spurious AppFocusChange. Restored
-            // unconditionally in the finally block.
+            // update the branchname cache if it is needed
+            // The update can take several seconds and the cache is refreshed when the grid is refreshed.
+            // Update when menu is open can cause spurious menu closes, so skip them when the cache is fresh.
+            _repositoryHistoryUIService.TriggerBranchNameCacheUpdateIfNeeded();
+
             button.DropDown.SuspendLayout();
             try
             {
@@ -180,15 +181,6 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
                 button.DropDown.Items.Add(_txtFilter);
                 button.DropDown.Items.Add(new ToolStripSeparator());
 
-                // On first open the cache is empty (unless the Dashboard has updated it):
-                // fill it synchronously so branch names appear immediately.
-                // Otherwise populate fast with cached data and refresh in the background if needed.
-                // Background updates can cause spurious menu closes, so skip them when the cache is fresh.
-                if (_repositoryHistoryUIService.IsBranchNameCacheEmpty)
-                {
-                    _repositoryHistoryUIService.TriggerBranchNameCacheUpdateIfNeeded(awaitUpdate: true);
-                }
-
                 _repositoryHistoryUIService.PopulateFavouriteRepositoriesMenu(_tsmiCategorisedRepos);
                 if (_tsmiCategorisedRepos.DropDownItems.Count > 0)
                 {
@@ -196,7 +188,6 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
                 }
 
                 _repositoryHistoryUIService.PopulateRecentRepositoriesMenu(button);
-                _repositoryHistoryUIService.TriggerBranchNameCacheUpdateIfNeeded(awaitUpdate: false);
 
                 button.DropDown.Items.Add(new ToolStripSeparator());
                 button.DropDown.Items.Add(_tsmiOpenLocalRepository);

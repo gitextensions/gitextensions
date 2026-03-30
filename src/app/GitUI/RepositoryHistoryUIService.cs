@@ -37,15 +37,9 @@ public interface IRepositoryHistoryUIService
 
     /// <summary>
     ///  If the branch name cache is marked for update, start the update.
-    ///  When <paramref name="awaitUpdate"/> is <see langword="true"/> the call blocks until the update completes.
+    ///  The call blocks until the update completes, which can be seconds if there are updates.
     /// </summary>
-    /// <param name="awaitUpdate">When <see langword="true"/>, waits for the cache to be fully populated before returning.</param>
-    void TriggerBranchNameCacheUpdateIfNeeded(bool awaitUpdate = false);
-
-    /// <summary>
-    ///  <see langword="true"/> when no branch names have been cached yet.
-    /// </summary>
-    bool IsBranchNameCacheEmpty { get; }
+    void TriggerBranchNameCacheUpdateIfNeeded();
 }
 
 internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
@@ -56,6 +50,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private readonly CancellationTokenSequence _branchCacheSequence = new();
 
     private bool _triggerBranchNameCacheUpdate = true;
+    private bool _openedAlready = false;
 
     public event EventHandler<GitModuleEventArgs> GitModuleChanged;
 
@@ -106,8 +101,6 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         _invalidRepositoryRemover.ShowDeleteInvalidRepositoryDialog(path);
     }
-
-    public bool IsBranchNameCacheEmpty => _branchNameCache.IsEmpty;
 
     public void MarkBranchNameCacheForUpdate()
        => _triggerBranchNameCacheUpdate = true;
@@ -220,22 +213,20 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
-    public void TriggerBranchNameCacheUpdateIfNeeded(bool awaitUpdate = false)
+    public void TriggerBranchNameCacheUpdateIfNeeded()
     {
-        if (!_triggerBranchNameCacheUpdate)
+        if (!_branchNameCache.IsEmpty && (!_triggerBranchNameCacheUpdate
+
+            // first time opening and cache not empty - filled from dashboard
+            || !_openedAlready))
         {
+            _openedAlready = true;
             return;
         }
 
+        _openedAlready = true;
         _triggerBranchNameCacheUpdate = false;
-        if (awaitUpdate)
-        {
-            ThreadHelper.JoinableTaskFactory.Run(() => UpdateBranchNameCacheAsync());
-        }
-        else
-        {
-            ThreadHelper.FileAndForget(() => UpdateBranchNameCacheAsync());
-        }
+        ThreadHelper.JoinableTaskFactory.Run(() => UpdateBranchNameCacheAsync());
     }
 
     private async Task UpdateBranchNameCacheAsync()
