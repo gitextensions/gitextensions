@@ -44,8 +44,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
     private readonly CancellationTokenSequence _branchCacheSequence = new();
     private JoinableTask? _branchCacheUpdateTask;
-
-    private bool _openedAlready = false;
+    private bool _firstLoad = true;
 
     public event EventHandler<GitModuleEventArgs> GitModuleChanged;
 
@@ -110,7 +109,19 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
     public void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container)
     {
-        _branchCacheUpdateTask?.Join();
+        JoinableTask? branchCacheUpdateTask = _branchCacheUpdateTask;
+        if (branchCacheUpdateTask is not null && branchCacheUpdateTask.IsCompleted)
+        {
+            try
+            {
+                branchCacheUpdateTask.Join();
+            }
+            catch (OperationCanceledException)
+            {
+                // OK
+            }
+        }
+
         container.DropDownItems.Clear();
 
         IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(
@@ -161,14 +172,18 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
     public void PopulateRecentRepositoriesMenu(ToolStripDropDownItem container)
     {
-        // Do not rebuild while the dropdown is open — Clear() would close it.
-        // The next open will load fresh data.
-        if (container.DropDown.Visible)
+        JoinableTask? branchCacheUpdateTask = _branchCacheUpdateTask;
+        if (branchCacheUpdateTask is not null && branchCacheUpdateTask.IsCompleted)
         {
-            return;
+            try
+            {
+                branchCacheUpdateTask.Join();
+            }
+            catch (OperationCanceledException)
+            {
+                // OK
+            }
         }
-
-        _branchCacheUpdateTask?.Join();
 
         List<RecentRepoInfo> pinnedRepos = [];
         List<RecentRepoInfo> allRecentRepos = [];
@@ -211,13 +226,13 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     public void TriggerBranchNameCacheUpdate()
     {
         // first time opening and cache not empty - filled from dashboard
-        if (!_branchNameCache.IsEmpty && !_openedAlready)
+        if (!_branchNameCache.IsEmpty && _firstLoad)
         {
-            _openedAlready = true;
+            _firstLoad = false;
             return;
         }
 
-        _openedAlready = true;
+        _firstLoad = false;
         _branchCacheUpdateTask = ThreadHelper.JoinableTaskFactory.RunAsync(UpdateBranchNameCacheAsync);
     }
 
@@ -236,20 +251,21 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         {
             UpdateBranchNamesCache(paths, cancellationToken);
         }
-    }
 
-    private void UpdateBranchNamesCache(IReadOnlyList<string> paths, CancellationToken cancellationToken)
-    {
-        _branchNameCache.InvalidateAll();
-        const int MaxBranchNameFetchParallelism = 4;
-        paths
-            .AsParallel()
-            .WithCancellation(cancellationToken)
-            .WithDegreeOfParallelism(Math.Min(MaxBranchNameFetchParallelism, Math.Max(1, Environment.ProcessorCount / 2)))
-            .ForAll(path =>
-            {
-                _branchNameCache.GetCurrentBranchName(path);
-            });
+        return;
+
+        void UpdateBranchNamesCache(IReadOnlyList<string> paths, CancellationToken cancellationToken)
+        {
+            const int MaxBranchNameFetchParallelism = 4;
+            paths
+                .AsParallel()
+                .WithCancellation(cancellationToken)
+                .WithDegreeOfParallelism(Math.Min(MaxBranchNameFetchParallelism, Math.Max(1, Environment.ProcessorCount / 2)))
+                .ForAll(path =>
+                {
+                    _branchNameCache.GetCurrentBranchName(path);
+                });
+        }
     }
 
     internal TestAccessor GetTestAccessor()
@@ -259,9 +275,6 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     {
         internal void AddRecentRepositories(ToolStripDropDownItem menuItemContainer, Repository repo, string? caption, int number)
             => service.AddRecentRepositories(menuItemContainer, repo, caption, number);
-
-        internal void UpdateBranchNames(IReadOnlyList<string> paths)
-            => service.UpdateBranchNamesCache(paths, CancellationToken.None);
 
         internal void PopulateFavouriteRepositoriesMenu(ToolStripDropDownItem container, in IList<Repository> repositoryHistory)
             => service.PopulateFavouriteRepositoriesMenu(container, repositoryHistory);

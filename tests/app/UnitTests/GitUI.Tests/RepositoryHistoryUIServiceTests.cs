@@ -72,7 +72,14 @@ public sealed class RepositoryHistoryUIServiceTests
         _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption, number: 1);
 
         ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
-        item.ShortcutKeyDisplayString.Should().Be(string.IsNullOrWhiteSpace(branch) ? null : branch);
+        if (string.IsNullOrWhiteSpace(branch))
+        {
+            item.ShortcutKeyDisplayString.Should().BeNullOrEmpty();
+        }
+        else
+        {
+            item.ShortcutKeyDisplayString.Should().Be(branch);
+        }
     }
 
     [Test]
