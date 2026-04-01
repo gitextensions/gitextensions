@@ -34,7 +34,7 @@ public interface IRepositoryHistoryUIService
     /// <summary>
     ///  Start updating the branch name cache.
     /// </summary>
-    void TriggerBranchNameCacheUpdate();
+    void TriggerBranchNameCacheUpdate(bool onlyIfEmpty = false);
 }
 
 internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
@@ -223,16 +223,37 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
     }
 
-    public void TriggerBranchNameCacheUpdate()
+    public void TriggerBranchNameCacheUpdate(bool onlyIfEmpty = false)
     {
-        // first time opening and cache not empty - filled from dashboard
-        if (!_branchNameCache.IsEmpty && _firstLoad)
+        // (a) not filled by dashboard, OnLoad -> update, 1st OnRevisionsLoaded -> skip
+        // (b)     filled by dashboard, OnLoad -> skip,   1st OnRevisionsLoaded -> skip
+        // (c) not filled by dashboard, 1st OnRevisionsLoaded -> update, OnLoad -> skip
+        // (d)     filled by dashboard, 1st OnRevisionsLoaded -> skip,   OnLoad -> skip
+        // (e) later OnRevisionLoaded -> update
+        // (onlyIfEmpty: true by OnLoad, false by OnRevisionsLoaded)
+        bool skipUpdate;
+        if (_branchNameCache.IsEmpty)
         {
-            _firstLoad = false;
+            // (a) OnLoad, (c) 1st
+            skipUpdate = false;
+        }
+        else if (_firstLoad)
+        {
+            // (a) 1st, (b), (d) 1st
+            skipUpdate = true;
+            _firstLoad = onlyIfEmpty;
+        }
+        else
+        {
+            // (c) OnLoad, (d) OnLoad, (e)
+            skipUpdate = onlyIfEmpty;
+        }
+
+        if (skipUpdate)
+        {
             return;
         }
 
-        _firstLoad = false;
         _branchCacheUpdateTask = ThreadHelper.JoinableTaskFactory.RunAsync(UpdateBranchNameCacheAsync);
     }
 
@@ -261,10 +282,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
                 .AsParallel()
                 .WithCancellation(cancellationToken)
                 .WithDegreeOfParallelism(Math.Min(MaxBranchNameFetchParallelism, Math.Max(1, Environment.ProcessorCount / 2)))
-                .ForAll(path =>
-                {
-                    _branchNameCache.GetCurrentBranchName(path);
-                });
+                .ForAll(path => _ = _branchNameCache.GetCurrentBranchName(path));
         }
     }
 

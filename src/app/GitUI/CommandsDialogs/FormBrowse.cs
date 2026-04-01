@@ -526,6 +526,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             }
 
             await InitializeAndRegisterAllPluginsAsync();
+
+            await Task.Delay(millisecondsDelay: 100);
+            UICommands.GetRequiredService<IRepositoryHistoryUIService>().TriggerBranchNameCacheUpdate(onlyIfEmpty: true);
         });
 
         return;
