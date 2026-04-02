@@ -586,6 +586,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         ReloadHotkeys();
         LoadCustomDifftools();
+
+        FindForm()?.Deactivate += (_, _) => _toolTipProvider.Hide();
     }
 
     public new void Load()
