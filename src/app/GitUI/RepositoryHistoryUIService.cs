@@ -34,6 +34,7 @@ public interface IRepositoryHistoryUIService
     /// <summary>
     ///  Start updating the branch name cache.
     /// </summary>
+    /// <param name="onlyIfEmpty">Start updating only if the cache is empty.</param>
     void TriggerBranchNameCacheUpdate(bool onlyIfEmpty = false);
 }
 
@@ -61,7 +62,6 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         ToolStripMenuItem item = new($"{numberString}: {caption}")
         {
             DisplayStyle = ToolStripItemDisplayStyle.ImageAndText,
-            Tag = repo.Path,
         };
 
         if (anchored)
@@ -225,27 +225,28 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
     public void TriggerBranchNameCacheUpdate(bool onlyIfEmpty = false)
     {
-        // (a) not filled by dashboard, OnLoad -> update, 1st OnRevisionsLoaded -> skip
-        // (b)     filled by dashboard, OnLoad -> skip,   1st OnRevisionsLoaded -> skip
-        // (c) not filled by dashboard, 1st OnRevisionsLoaded -> update, OnLoad -> skip
-        // (d)     filled by dashboard, 1st OnRevisionsLoaded -> skip,   OnLoad -> skip
-        // (e) later OnRevisionLoaded -> update
+        // Race condition for OnLoad vs OnRevisionsLoaded
         // (onlyIfEmpty: true by OnLoad, false by OnRevisionsLoaded)
         bool skipUpdate;
         if (_branchNameCache.IsEmpty)
         {
-            // (a) OnLoad, (c) 1st
+            // first OnLoad or OnRevisionsLoaded, mark cache as non empty
             skipUpdate = false;
+            const string invalidPath = ":::invalid:::";
+            _branchNameCache.UpdateCache(invalidPath, "");
         }
         else if (_firstLoad)
         {
-            // (a) 1st, (b), (d) 1st
+            // cache exists so either Dashbord filled it or 'other trigger' started
             skipUpdate = true;
+
+            // suppress second load if OnLoad is first
+            // (if OnRevisionsLoaded is first load will be done twice but the the load is very quick).
             _firstLoad = onlyIfEmpty;
         }
         else
         {
-            // (c) OnLoad, (d) OnLoad, (e)
+            // Following OnRevisionsLoaded
             skipUpdate = onlyIfEmpty;
         }
 
@@ -255,34 +256,36 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
         }
 
         _branchCacheUpdateTask = ThreadHelper.JoinableTaskFactory.RunAsync(UpdateBranchNameCacheAsync);
-    }
 
-    private async Task UpdateBranchNameCacheAsync()
-    {
-        CancellationToken cancellationToken = _branchCacheSequence.Next();
-        IList<Repository> recentHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
-        IList<Repository> favouriteHistory = await RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync();
+        return;
 
-        string[] paths = [.. recentHistory
+        async Task UpdateBranchNameCacheAsync()
+        {
+            CancellationToken cancellationToken = _branchCacheSequence.Next();
+            IList<Repository> recentHistory = await RepositoryHistoryManager.Locals.LoadRecentHistoryAsync();
+            IList<Repository> favouriteHistory = await RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync();
+
+            string[] paths = [.. recentHistory
                 .Concat(favouriteHistory)
                 .Select(r => r.Path)
                 .Distinct(StringComparer.InvariantCulture)];
 
-        if (paths.Length > 0)
-        {
-            UpdateBranchNamesCache(paths, cancellationToken);
-        }
+            if (paths.Length > 0)
+            {
+                UpdateBranchNamesCache(paths, cancellationToken);
+            }
 
-        return;
+            return;
 
-        void UpdateBranchNamesCache(IReadOnlyList<string> paths, CancellationToken cancellationToken)
-        {
-            const int MaxBranchNameFetchParallelism = 4;
-            paths
-                .AsParallel()
-                .WithCancellation(cancellationToken)
-                .WithDegreeOfParallelism(Math.Min(MaxBranchNameFetchParallelism, Math.Max(1, Environment.ProcessorCount / 2)))
-                .ForAll(path => _ = _branchNameCache.GetCurrentBranchName(path));
+            void UpdateBranchNamesCache(IReadOnlyList<string> paths, CancellationToken cancellationToken)
+            {
+                const int MaxBranchNameFetchParallelism = 4;
+                paths
+                    .AsParallel()
+                    .WithCancellation(cancellationToken)
+                    .WithDegreeOfParallelism(Math.Min(MaxBranchNameFetchParallelism, Math.Max(1, Environment.ProcessorCount / 2)))
+                    .ForAll(path => _ = _branchNameCache.GetCurrentBranchName(path));
+            }
         }
     }
 
