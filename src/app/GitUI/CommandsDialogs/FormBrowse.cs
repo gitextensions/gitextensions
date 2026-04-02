@@ -1134,6 +1134,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         fileToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
         helpToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
         toolsToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
+        _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
         ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys);
         ToolStripFilters.RefreshRevisionGridShortcutKeys(GetHotkeys(RevisionGridControl.HotkeySettingsName));
 
