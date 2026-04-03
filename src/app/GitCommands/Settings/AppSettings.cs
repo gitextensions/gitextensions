@@ -1937,12 +1937,6 @@ public static partial class AppSettings
         set => SetBool("RepoObjectsTree.ShowRemotes", value);
     }
 
-    public static bool RepoObjectsTreeShowWorktrees
-    {
-        get => GetBool("RepoObjectsTree.ShowWorktrees", true);
-        set => SetBool("RepoObjectsTree.ShowWorktrees", value);
-    }
-
     public static bool RepoObjectsTreeShowTags
     {
         get => GetBool("RepoObjectsTree.ShowTags", true);
@@ -1959,6 +1953,12 @@ public static partial class AppSettings
     {
         get => GetBool("RepoObjectsTree.ShowStashes", true);
         set => SetBool("RepoObjectsTree.ShowStashes", value);
+    }
+
+    public static bool RepoObjectsTreeShowWorktrees
+    {
+        get => GetBool("RepoObjectsTree.ShowWorktrees", true);
+        set => SetBool("RepoObjectsTree.ShowWorktrees", value);
     }
 
     public static int RepoObjectsTreeBranchesIndex
