@@ -60,7 +60,6 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
         private readonly ToolStripMenuItem _tsmiRecentReposSettings;
         private readonly ToolStripTextBox _txtFilter = new();
 
-        // NOTE: This is pretty bad, but we want to share the same look and feel of the menu items defined in the Start menu.
         private readonly StartToolStripMenuItem _startToolStripMenuItem;
         private readonly ToolStripMenuItem _closeToolStripMenuItem;
 
@@ -167,6 +166,12 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
 
         private void FillDropDown(ToolStripDropDownItem button)
         {
+            // Do not rebuild while the dropdown is open — Clear() would close it.
+            if (button.DropDown.Visible)
+            {
+                return;
+            }
+
             button.DropDown.SuspendLayout();
             try
             {

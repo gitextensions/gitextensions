@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs;
@@ -65,6 +66,8 @@ partial class FormBrowse
 
         RevisionGrid.RevisionsLoaded += (sender, e) =>
         {
+            UICommands.GetRequiredService<IRepositoryHistoryUIService>().TriggerBranchNameCacheUpdate();
+
             if (sender is null || MainSplitContainer.Panel1Collapsed)
             {
                 // - the event is either not originated from the revision grid, or

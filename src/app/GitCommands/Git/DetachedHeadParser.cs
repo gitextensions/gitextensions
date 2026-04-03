@@ -6,6 +6,7 @@ namespace GitCommands.Git;
 public static partial class DetachedHeadParser
 {
     public static readonly string DetachedBranch = "(no branch)";
+    public static readonly string UnknownBranchName = "???";
 
     private static readonly string[] DetachedPrefixes = ["(no branch", "(detached from ", "(HEAD detached at "];
 
