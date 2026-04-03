@@ -11,6 +11,7 @@ public static class AppColorDefaults
             { AppColor.EditorBackground, SystemColors.Window },
             { AppColor.LineNumberBackground, SystemColors.Window },
             { AppColor.AuthoredHighlight, Color.FromArgb(0xea, 0xf1, 0xff) },
+            { AppColor.Selection, Color.FromArgb(0x00, 0x00, 0x76) },
             { AppColor.HighlightAllOccurences, Color.FromArgb(0xe8, 0xe8, 0xff) },
             { AppColor.InactiveSelectionHighlight, Color.FromArgb(0xe6, 0xe6, 0xe6) },
             { AppColor.GraphBranch1, Color.FromArgb(0xf0, 0x64, 0xa0) },

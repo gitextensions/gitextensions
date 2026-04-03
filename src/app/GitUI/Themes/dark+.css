@@ -7,5 +7,6 @@
 .EditorBackground { color: #1e1e1e; }
 .LineNumberBackground { color: #303030; }
 .AuthoredHighlight { color: #33331E; }
+.Selection { color: #000076; }
 
 .Branch { color: #00d76b; }

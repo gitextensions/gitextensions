@@ -44,6 +44,7 @@ WindowText: fff0f0f0
 .EditorBackground { color: #323232; }
 .LineNumberBackground { color: #323232; }
 .AuthoredHighlight { color: #393920; }
+.Selection { color: #00009b; }
 .HighlightAllOccurences { color: #1d4897; }
 .InactiveSelectionHighlight { color: #436689; }
 
