@@ -49,7 +49,6 @@ public static class TranslationUtil
         "EnvDTE",
         "Newtonsoft",
         "ConEmuWinForms",
-        "TranslationApp",
         "netstandard",
     ];
 
