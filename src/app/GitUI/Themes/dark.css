@@ -65,47 +65,47 @@ WindowText: fff0f0f0
 .DiffSection { color: #5f5e5e; }
 
 /* translation of terminal (cli) ansi color output sequences */
-/* Named 3/4 bit colors from the "theme" at https://github.com/mintty/mintty/blob/master/themes/kohlrausch */
-/* Adjusted to match dark apps */
+/* Colors match VS Code Dark terminal ANSI palette */
+/* https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/terminal/common/terminalColorRegistry.ts */
 
 .AnsiTerminalBlackForeNormal { color: #000000; }
-.AnsiTerminalBlackBackNormal { color: #606060; }
-.AnsiTerminalBlackForeBold { color: #000000; }
-.AnsiTerminalBlackBackBold { color: #7f7f7f; }
+.AnsiTerminalBlackBackNormal { color: #4d4d4d; }
+.AnsiTerminalBlackForeBold { color: #666666; }
+.AnsiTerminalBlackBackBold { color: #666666; }
 
-.AnsiTerminalRedForeNormal { color: #a21e29; }
-.AnsiTerminalRedBackNormal { color: #620707; }
-.AnsiTerminalRedBackNormal.colorblind { color: #080646; }
-.AnsiTerminalRedForeBold { color: #ff7676; }
-.AnsiTerminalRedBackBold { color: #920202; }
-.AnsiTerminalRedBackBold.colorblind { color: #09058a; }
+.AnsiTerminalRedForeNormal { color: #cd3131; }
+.AnsiTerminalRedBackNormal { color: #6e1919; }
+.AnsiTerminalRedBackNormal.colorblind { color: #0d0a5e; }
+.AnsiTerminalRedForeBold { color: #f14c4c; }
+.AnsiTerminalRedBackBold { color: #8a2c2c; }
+.AnsiTerminalRedBackBold.colorblind { color: #110e8a; }
 
-.AnsiTerminalGreenForeNormal { color: #1c9b02; }
-.AnsiTerminalGreenForeBold { color: #00f200; }
-.AnsiTerminalGreenBackNormal { color: #086738; }
-.AnsiTerminalGreenBackBold { color: #008f37; }
+.AnsiTerminalGreenForeNormal { color: #0dbc79; }
+.AnsiTerminalGreenForeBold { color: #23d18b; }
+.AnsiTerminalGreenBackNormal { color: #076641; }
+.AnsiTerminalGreenBackBold { color: #0d7a4e; }
 
-.AnsiTerminalYellowForeNormal { color: #7c6c19; }
-.AnsiTerminalYellowBackNormal { color: #a1ac09; }
-.AnsiTerminalYellowForeBold { color: #e2e211; }
-.AnsiTerminalYellowBackBold { color: #d3d30e; }
+.AnsiTerminalYellowForeNormal { color: #e5e510; }
+.AnsiTerminalYellowBackNormal { color: #79790a; }
+.AnsiTerminalYellowForeBold { color: #f5f543; }
+.AnsiTerminalYellowBackBold { color: #9e9e0d; }
 
-.AnsiTerminalBlueForeNormal { color: #5368d1; }
-.AnsiTerminalBlueBackNormal { color: #6873d8; }
-.AnsiTerminalBlueForeBold { color: #6282ff; }
-.AnsiTerminalBlueBackBold { color: #9090ff; }
+.AnsiTerminalBlueForeNormal { color: #2472c8; }
+.AnsiTerminalBlueBackNormal { color: #12396b; }
+.AnsiTerminalBlueForeBold { color: #3b8eea; }
+.AnsiTerminalBlueBackBold { color: #1d4e80; }
 
-.AnsiTerminalMagentaForeNormal { color: #873f96; }
-.AnsiTerminalMagentaBackNormal { color: #a53fb9; }
-.AnsiTerminalMagentaForeBold { color: #ff70ff; }
-.AnsiTerminalMagentaBackBold { color: #c01ac0; }
+.AnsiTerminalMagentaForeNormal { color: #bc3fbc; }
+.AnsiTerminalMagentaBackNormal { color: #622163; }
+.AnsiTerminalMagentaForeBold { color: #d670d6; }
+.AnsiTerminalMagentaBackBold { color: #7d3a7d; }
 
-.AnsiTerminalCyanForeNormal { color: #007e73; }
-.AnsiTerminalCyanBackNormal { color: #039185; }
-.AnsiTerminalCyanForeBold { color: #00f0f0; }
-.AnsiTerminalCyanBackBold { color: #00dbdb; }
+.AnsiTerminalCyanForeNormal { color: #11a8cd; }
+.AnsiTerminalCyanBackNormal { color: #0a5a6e; }
+.AnsiTerminalCyanForeBold { color: #29b8db; }
+.AnsiTerminalCyanBackBold { color: #146375; }
 
-.AnsiTerminalWhiteForeNormal { color: #bfbfbf; }
-.AnsiTerminalWhiteBackNormal { color: #bfbfbf; }
-.AnsiTerminalWhiteForeBold { color: #ffffff; }
-.AnsiTerminalWhiteBackBold { color: #ffffff; }
+.AnsiTerminalWhiteForeNormal { color: #e5e5e5; }
+.AnsiTerminalWhiteBackNormal { color: #c0c0c0; }
+.AnsiTerminalWhiteForeBold { color: #e5e5e5; }
+.AnsiTerminalWhiteBackBold { color: #e5e5e5; }
