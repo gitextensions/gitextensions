@@ -88,6 +88,14 @@ For example:
 * Use https://www.conventionalcommits.org/en/v1.0.0/ for commit messages.
 * Note especially that changes in directory src/app/GitExtensions.Extensibility affects the version for the plugin interface. This must be annotated in the commit message.
 
+## Translations
+
+* When adding or modifying UI elements (forms, controls, toolbar items, menu items, or `TranslationString` fields), the English translation file `src/app/GitUI/Translation/English.xlf` must be updated.
+* Run `.\update-loc.cmd` from the repository root to regenerate translation files. This requires a successful build first (`dotnet build /v:q`).
+* The script runs `TranslationApp`, which discovers all translatable types via reflection, regenerates `English.xlf`, and stages the changes.
+* CI will **fail** if `English.xlf` is out of date. Always run `update-loc.cmd` and commit the updated `.xlf` file alongside your code changes.
+* Do not manually edit `.xlf` files — they are generated.
+
 ## Git Commands
 
 * All git executable invocations should be invoked through `IGitModule`, with unit tests added.
