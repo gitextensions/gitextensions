@@ -10202,6 +10202,10 @@ Select this commit to populate the full message.</source>
         <source>Create pull request</source>
         <target />
       </trans-unit>
+      <trans-unit id="_createWorktree.Text">
+        <source>Create worktree...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_dateText.Text">
         <source>Date</source>
         <target />
@@ -10419,6 +10423,10 @@ To be able to open this repository, you need to either:
         <source>You are not working on a branch</source>
         <target />
       </trans-unit>
+      <trans-unit id="_manageWorktrees.Text">
+        <source>Manage worktrees...</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_markBisectAsBad.Text">
         <source>Marked as bad in bisect</source>
         <target />
@@ -10493,6 +10501,10 @@ To be able to open this repository, you need to either:
       </trans-unit>
       <trans-unit id="_pathFilter.Text">
         <source>Path filter</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_pruneWorktrees.Text">
+        <source>Prune worktrees</source>
         <target />
       </trans-unit>
       <trans-unit id="_remote.Text">
@@ -10739,6 +10751,10 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="_workspaceText.Text">
         <source>Working directory</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_worktreeDirectoryNotFound.Text">
+        <source>Worktree directory does not exist: {0}</source>
         <target />
       </trans-unit>
       <trans-unit id="_worktreesText.Text">

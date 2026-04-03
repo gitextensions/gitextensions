@@ -2988,7 +2988,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 currentWorkingDir,
                 StringComparison.OrdinalIgnoreCase);
 
-            string displayName = GetWorktreeDisplayName(worktree);
+            string displayName = worktree.GetDisplayName(
+                Path.GetFileName(worktree.Path.TrimEnd(Path.DirectorySeparatorChar)));
             ToolStripMenuItem item = new(displayName)
             {
                 Tag = worktree.Path,
@@ -3008,7 +3009,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         toolStripWorktrees.DropDownItems.Add(new ToolStripSeparator());
 
-        ToolStripMenuItem createItem = new("Create worktree...", Images.WorkTree);
+        ToolStripMenuItem createItem = new(TranslatedStrings.CreateWorktree, Images.WorkTree);
         createItem.Click += (_, _) =>
         {
             string mainPath = worktrees.Count > 0 ? worktrees[0].Path : Module.WorkingDir;
@@ -3019,7 +3020,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         };
         toolStripWorktrees.DropDownItems.Add(createItem);
 
-        ToolStripMenuItem pruneItem = new("Prune worktrees");
+        ToolStripMenuItem pruneItem = new(TranslatedStrings.PruneWorktrees);
         pruneItem.Click += (_, _) =>
         {
             if (UICommands.StartCommandLineProcessDialog(this, command: null, "worktree prune"))
@@ -3029,33 +3030,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         };
         toolStripWorktrees.DropDownItems.Add(pruneItem);
 
-        ToolStripMenuItem manageItem = new("Manage worktrees...");
+        ToolStripMenuItem manageItem = new(TranslatedStrings.ManageWorktrees);
         manageItem.Click += manageWorktreeToolStripMenuItem_Click;
         toolStripWorktrees.DropDownItems.Add(manageItem);
 
         toolStripWorktrees.DropDown.ResumeLayout();
-
-        return;
-
-        static string GetWorktreeDisplayName(GitWorktree worktree)
-        {
-            string dirName = Path.GetFileName(worktree.Path.TrimEnd(Path.DirectorySeparatorChar));
-
-            if (worktree.HeadType is GitWorktreeHeadType.Bare)
-            {
-                return $"{dirName} (bare)";
-            }
-
-            if (worktree.HeadType is GitWorktreeHeadType.Detached)
-            {
-                string shortSha = worktree.Sha1?.Length >= 7 ? worktree.Sha1[..7] : worktree.Sha1 ?? "???";
-                return $"{dirName} (detached at {shortSha})";
-            }
-
-            return worktree.Branch is not null
-                ? $"{dirName} ({worktree.Branch})"
-                : dirName;
-        }
     }
 
     private void WorktreeToolStripMenuItem_Click(object? sender, EventArgs e)
@@ -3067,7 +3046,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         if (!Directory.Exists(path))
         {
-            MessageBox.Show(this, $"Worktree directory does not exist: {path}", TranslatedStrings.Error,
+            MessageBox.Show(this, string.Format(TranslatedStrings.WorktreeDirectoryNotFound, path), TranslatedStrings.Error,
                 MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }

@@ -142,6 +142,11 @@ the last selected commit.");
     private readonly TranslationString _deleteWorktreeCaption = new("Delete worktree");
     private readonly TranslationString _deleteWorktreeFailed = new("Failed to delete worktree: {0}");
 
+    private readonly TranslationString _createWorktree = new("Create worktree...");
+    private readonly TranslationString _pruneWorktrees = new("Prune worktrees");
+    private readonly TranslationString _manageWorktrees = new("Manage worktrees...");
+    private readonly TranslationString _worktreeDirectoryNotFound = new("Worktree directory does not exist: {0}");
+
     private readonly TranslationString _nonexistingGitRevision = new("Git revision does not exist");
     private readonly TranslationString _ignoringReference = new("\"{0}\" is not a Git revision and will be ignored.");
 
@@ -354,6 +359,11 @@ Copy error details to clipboard?");
     public static string DeleteWorktreeConfirmation => _instance.Value._deleteWorktreeConfirmation.Text;
     public static string DeleteWorktreeCaption => _instance.Value._deleteWorktreeCaption.Text;
     public static string DeleteWorktreeFailed => _instance.Value._deleteWorktreeFailed.Text;
+
+    public static string CreateWorktree => _instance.Value._createWorktree.Text;
+    public static string PruneWorktrees => _instance.Value._pruneWorktrees.Text;
+    public static string ManageWorktrees => _instance.Value._manageWorktrees.Text;
+    public static string WorktreeDirectoryNotFound => _instance.Value._worktreeDirectoryNotFound.Text;
     public static string NonexistingGitRevision => _instance.Value._nonexistingGitRevision.Text;
     public static string IgnoringReference => _instance.Value._ignoringReference.Text;
 

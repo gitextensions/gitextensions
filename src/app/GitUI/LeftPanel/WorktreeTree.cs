@@ -40,15 +40,7 @@ internal sealed class WorktreeTree(TreeNode treeNode, IGitUICommandsSource uiCom
                 currentWorkingDir,
                 StringComparison.OrdinalIgnoreCase);
 
-            WorktreeNode node = new(
-                this,
-                worktree.Path,
-                worktree.Branch,
-                worktree.Sha1,
-                isCurrent,
-                isDetached: worktree.HeadType is GitWorktreeHeadType.Detached,
-                isBare: worktree.HeadType is GitWorktreeHeadType.Bare,
-                worktree.IsDeleted);
+            WorktreeNode node = new(this, worktree, isCurrent);
             nodes.AddNode(node);
         }
 
@@ -96,7 +88,7 @@ internal sealed class WorktreeTree(TreeNode treeNode, IGitUICommandsSource uiCom
         {
             if (node is WorktreeNode wt)
             {
-                return wt.WorktreePath;
+                return wt.Worktree.Path;
             }
         }
 

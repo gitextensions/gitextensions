@@ -1,22 +1,18 @@
 ﻿using System.Diagnostics;
+using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
 
 namespace GitUI.LeftPanel;
 
-[DebuggerDisplay("(Worktree) Path = {WorktreePath}, Branch = {Branch}")]
-internal sealed class WorktreeNode(Tree tree, string worktreePath, string? branch, string? sha1, bool isCurrent, bool isDetached, bool isBare, bool isDeleted) : Node(tree)
+[DebuggerDisplay("(Worktree) Path = {Worktree.Path}, Branch = {Worktree.Branch}")]
+internal sealed class WorktreeNode(Tree tree, GitWorktree worktree, bool isCurrent) : Node(tree)
 {
-    public string WorktreePath { get; } = worktreePath;
-    public string? Branch { get; } = branch;
-    public string? Sha1 { get; } = sha1;
+    public GitWorktree Worktree { get; } = worktree;
     public bool IsCurrent { get; } = isCurrent;
-    public bool IsDetached { get; } = isDetached;
-    public bool IsBare { get; } = isBare;
-    public bool IsDeleted { get; } = isDeleted;
 
     internal override void OnDoubleClick()
     {
-        if (!IsCurrent && !IsDeleted)
+        if (!IsCurrent && !Worktree.IsDeleted)
         {
             OpenWorktree();
         }
@@ -24,17 +20,17 @@ internal sealed class WorktreeNode(Tree tree, string worktreePath, string? branc
 
     public void OpenWorktree()
     {
-        if (IsDeleted)
+        if (Worktree.IsDeleted)
         {
             return;
         }
 
-        UICommands.WorktreeSwitch(ParentWindow(), WorktreePath);
+        UICommands.WorktreeSwitch(ParentWindow(), Worktree.Path);
     }
 
     public void DeleteWorktree()
     {
-        if (UICommands.WorktreeDelete(ParentWindow(), WorktreePath))
+        if (UICommands.WorktreeDelete(ParentWindow(), Worktree.Path))
         {
             ((WorktreeTree)Tree).Refresh();
         }
@@ -47,7 +43,7 @@ internal sealed class WorktreeNode(Tree tree, string worktreePath, string? branc
     {
         base.ApplyStyle();
 
-        if (IsDeleted)
+        if (Worktree.IsDeleted)
         {
             TreeViewNode.ForeColor = SystemColors.GrayText;
         }
@@ -59,40 +55,25 @@ internal sealed class WorktreeNode(Tree tree, string worktreePath, string? branc
 
         string GetToolTipText()
         {
-            string shortSha = Sha1?.Length >= 7 ? Sha1[..7] : Sha1;
+            string shortSha = Worktree.Sha1?.Length >= 7 ? Worktree.Sha1[..7] : Worktree.Sha1;
 
             string status = IsCurrent ? " (current)"
-                : IsDeleted ? " (deleted)"
+                : Worktree.IsDeleted ? " (deleted)"
                 : "";
 
-            string branchLine = IsBare ? "bare"
-                : IsDetached ? $"detached at {shortSha}"
-                : Branch ?? "unknown";
+            string branchLine = Worktree.HeadType is GitWorktreeHeadType.Bare ? "bare"
+                : Worktree.HeadType is GitWorktreeHeadType.Detached ? $"detached at {shortSha}"
+                : Worktree.Branch ?? "unknown";
 
             return shortSha is not null
-                ? $"{WorktreePath}{status}\nBranch: {branchLine}\nHEAD: {shortSha}"
-                : $"{WorktreePath}{status}\nBranch: {branchLine}";
+                ? $"{Worktree.Path}{status}\nBranch: {branchLine}\nHEAD: {shortSha}"
+                : $"{Worktree.Path}{status}\nBranch: {branchLine}";
         }
     }
 
     protected override string DisplayText()
     {
-        string relativePath = GetRelativePath();
-
-        if (IsBare)
-        {
-            return $"{relativePath} (bare)";
-        }
-
-        if (IsDetached)
-        {
-            string shortSha = Sha1?.Length >= 7 ? Sha1[..7] : Sha1 ?? "???";
-            return $"{relativePath} (detached at {shortSha})";
-        }
-
-        return Branch is not null
-            ? $"{relativePath} ({Branch})"
-            : relativePath;
+        return Worktree.GetDisplayName(GetRelativePath());
 
         string GetRelativePath()
         {
@@ -101,12 +82,11 @@ internal sealed class WorktreeNode(Tree tree, string worktreePath, string? branc
 
             try
             {
-                string relative = Path.GetRelativePath(parentDir, WorktreePath);
-                return relative;
+                return Path.GetRelativePath(parentDir, Worktree.Path);
             }
             catch
             {
-                return WorktreePath;
+                return Worktree.Path;
             }
         }
     }

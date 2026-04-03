@@ -23,4 +23,28 @@ public sealed record GitWorktree(
     GitWorktreeHeadType HeadType,
     string? Sha1,
     string? Branch,
-    bool IsDeleted);
+    bool IsDeleted)
+{
+    /// <summary>
+    /// Formats a display name by combining <paramref name="name"/> with the branch, detached HEAD, or bare status.
+    /// </summary>
+    /// <param name="name">The name portion to display (e.g. directory name or relative path).</param>
+    /// <returns>A string like <c>"my-worktree (main)"</c> or <c>"my-worktree (detached at abc1234)"</c>.</returns>
+    public string GetDisplayName(string name)
+    {
+        if (HeadType is GitWorktreeHeadType.Bare)
+        {
+            return $"{name} (bare)";
+        }
+
+        if (HeadType is GitWorktreeHeadType.Detached)
+        {
+            string shortSha = Sha1?.Length >= 7 ? Sha1[..7] : Sha1 ?? "???";
+            return $"{name} (detached at {shortSha})";
+        }
+
+        return Branch is not null
+            ? $"{name} ({Branch})"
+            : name;
+    }
+}
