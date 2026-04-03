@@ -3282,6 +3282,10 @@ Do you want to continue?</source>
         <source>Manage stashes</source>
         <target />
       </trans-unit>
+      <trans-unit id="toolStripWorktrees.ToolTipText">
+        <source>Worktrees</source>
+        <target />
+      </trans-unit>
       <trans-unit id="toolbarsMenuItem.Text">
         <source>Toolbars</source>
         <target />
