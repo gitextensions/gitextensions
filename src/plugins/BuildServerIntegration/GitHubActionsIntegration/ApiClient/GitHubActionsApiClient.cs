@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using GitExtensions.Plugins.GitHubActionsIntegration.ApiClient.Models;
 using Microsoft;
@@ -6,20 +6,19 @@ using Newtonsoft.Json;
 
 namespace GitExtensions.Plugins.GitHubActionsIntegration.ApiClient;
 
-public class GitHubActionsApiClient : IGitHubActionsApiClient
+public sealed class GitHubActionsApiClient : IGitHubActionsApiClient
 {
     private const int DefaultPerPage = 100;
     private readonly HttpClient _httpClient;
-    private readonly string _owner;
     private readonly string _repository;
 
     public GitHubActionsApiClient(string apiUrl, string owner, string repository, string? apiToken)
     {
-        _owner = owner;
         _repository = repository;
 
         string baseUrl = apiUrl.TrimEnd('/');
-        BaseUrl = $"{baseUrl}/repos/{_owner}/{_repository}";
+
+        BaseUrl = $"{baseUrl}/repos/{owner}/{_repository}";
 
         _httpClient = CreateHttpClient(baseUrl, apiToken);
     }
@@ -104,6 +103,5 @@ public class GitHubActionsApiClient : IGitHubActionsApiClient
     public void Dispose()
     {
         _httpClient.Dispose();
-        GC.SuppressFinalize(this);
     }
 }

@@ -1,4 +1,4 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
@@ -20,7 +20,7 @@ namespace JenkinsIntegration;
 
 [MetadataAttribute]
 [AttributeUsage(AttributeTargets.Class)]
-public class JenkinsIntegrationMetadata : BuildServerAdapterMetadataAttribute
+public sealed class JenkinsIntegrationMetadata : BuildServerAdapterMetadataAttribute
 {
     public JenkinsIntegrationMetadata(string buildServerType)
         : base(buildServerType)
@@ -604,8 +604,6 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
-
         _httpClient?.Dispose();
     }
 }
