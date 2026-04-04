@@ -126,6 +126,8 @@ partial class FileStatusList
         tsmiOpenRevisionFileWith = new ToolStripMenuItem();
         tsmiEditWorkingDirectoryFile = new ToolStripMenuItem();
         tsmiOpenInVisualStudio = new ToolStripMenuItem();
+        tsmiOpenInVSCode = new ToolStripMenuItem();
+        tsmiOpenInVSCodeInsiders = new ToolStripMenuItem();
         tsmiSaveAs = new ToolStripMenuItem();
         tsmiMove = new ToolStripMenuItem();
         tsmiDeleteFile = new ToolStripMenuItem();
@@ -697,7 +699,7 @@ partial class FileStatusList
         // 
         // ItemContextMenu
         // 
-        ItemContextMenu.Items.AddRange(new ToolStripItem[] { tsmiUpdateSubmodule, tsmiResetSubmoduleChanges, tsmiStashSubmoduleChanges, tsmiCommitSubmoduleChanges, sepSubmodule, tsmiStageFile, tsmiUnstageFile, tsmiResetFileTo, tsmiResetChunkOfFile, tsmiInteractiveAdd, tsmiCherryPickChanges, sepGit, tsmiOpenWithDifftool, tsmiOpenWorkingDirectoryFile, tsmiOpenWorkingDirectoryFileWith, tsmiOpenRevisionFile, tsmiOpenRevisionFileWith, tsmiEditWorkingDirectoryFile, tsmiOpenInVisualStudio, tsmiSaveAs, tsmiMove, tsmiDeleteFile, sepFile, tsmiCopyPaths, tsmiShowInFolder, sepBrowse, tsmiShowInFileTree, tsmiFilterFileInGrid, tsmiFileHistory, tsmiBlame, tsmiFindFile, tsmiOpenFindInCommitFilesGitGrepDialog, tsmiShowFindInCommitFilesGitGrep, sepIgnore, tsmiAddFileToGitIgnore, tsmiAddFileToGitInfoExclude, tsmiSkipWorktree, tsmiAssumeUnchanged, tsmiStopTracking, sepScripts, tsmiRunScript });
+        ItemContextMenu.Items.AddRange(new ToolStripItem[] { tsmiUpdateSubmodule, tsmiResetSubmoduleChanges, tsmiStashSubmoduleChanges, tsmiCommitSubmoduleChanges, sepSubmodule, tsmiStageFile, tsmiUnstageFile, tsmiResetFileTo, tsmiResetChunkOfFile, tsmiInteractiveAdd, tsmiCherryPickChanges, sepGit, tsmiOpenWithDifftool, tsmiOpenWorkingDirectoryFile, tsmiOpenWorkingDirectoryFileWith, tsmiOpenRevisionFile, tsmiOpenRevisionFileWith, tsmiEditWorkingDirectoryFile, tsmiOpenInVisualStudio, tsmiOpenInVSCode, tsmiOpenInVSCodeInsiders, tsmiSaveAs, tsmiMove, tsmiDeleteFile, sepFile, tsmiCopyPaths, tsmiShowInFolder, sepBrowse, tsmiShowInFileTree, tsmiFilterFileInGrid, tsmiFileHistory, tsmiBlame, tsmiFindFile, tsmiOpenFindInCommitFilesGitGrepDialog, tsmiShowFindInCommitFilesGitGrep, sepIgnore, tsmiAddFileToGitIgnore, tsmiAddFileToGitInfoExclude, tsmiSkipWorktree, tsmiAssumeUnchanged, tsmiStopTracking, sepScripts, tsmiRunScript });
         ItemContextMenu.Name = "DiffContextMenu";
         ItemContextMenu.Size = new Size(296, 832);
         ItemContextMenu.Opening += ItemContextMenu_Opening;
@@ -930,6 +932,22 @@ partial class FileStatusList
         tsmiOpenInVisualStudio.Size = new Size(295, 22);
         tsmiOpenInVisualStudio.Text = "Open in &Visual Studio";
         tsmiOpenInVisualStudio.Click += OpenInVisualStudio_Click;
+        // 
+        // tsmiOpenInVSCode
+        // 
+        tsmiOpenInVSCode.Image = Properties.Images.VSCode;
+        tsmiOpenInVSCode.Name = "tsmiOpenInVSCode";
+        tsmiOpenInVSCode.Size = new Size(295, 22);
+        tsmiOpenInVSCode.Text = "Open in VS &Code";
+        tsmiOpenInVSCode.Click += OpenInVSCode_Click;
+        // 
+        // tsmiOpenInVSCodeInsiders
+        // 
+        tsmiOpenInVSCodeInsiders.Image = Properties.Images.VSCodeInsiders;
+        tsmiOpenInVSCodeInsiders.Name = "tsmiOpenInVSCodeInsiders";
+        tsmiOpenInVSCodeInsiders.Size = new Size(295, 22);
+        tsmiOpenInVSCodeInsiders.Text = "Open in VS Code &Insiders";
+        tsmiOpenInVSCodeInsiders.Click += OpenInVSCodeInsiders_Click;
         // 
         // tsmiSaveAs
         // 
@@ -1211,6 +1229,8 @@ partial class FileStatusList
     private ToolStripMenuItem tsmiOpenRevisionFileWith;
     internal ToolStripMenuItem tsmiEditWorkingDirectoryFile;
     private ToolStripMenuItem tsmiOpenInVisualStudio;
+    private ToolStripMenuItem tsmiOpenInVSCode;
+    private ToolStripMenuItem tsmiOpenInVSCodeInsiders;
     private ToolStripMenuItem tsmiSaveAs;
     private ToolStripMenuItem tsmiMove;
     private ToolStripMenuItem tsmiDeleteFile;

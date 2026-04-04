@@ -760,6 +760,22 @@ partial class FileStatusList
         }
     }
 
+    private void OpenInVSCode_Click(object sender, EventArgs e)
+    {
+        if (VSCodeIntegration.StableInstallation is VSCodeInstallation installation && SelectedItemAbsolutePath is string itemName)
+        {
+            VSCodeIntegration.OpenFile(installation, itemName, GetLineNumber());
+        }
+    }
+
+    private void OpenInVSCodeInsiders_Click(object sender, EventArgs e)
+    {
+        if (VSCodeIntegration.InsidersInstallation is VSCodeInstallation installation && SelectedItemAbsolutePath is string itemName)
+        {
+            VSCodeIntegration.OpenFile(installation, itemName, GetLineNumber());
+        }
+    }
+
     private void OpenRevisionFile_Click(object sender, EventArgs e)
     {
         SaveSelectedItemToTempFile(fileName => OsShellUtil.Open(fileName));
@@ -1250,6 +1266,8 @@ partial class FileStatusList
         tsmiShowInFolder.Visible = _revisionDiffController.ShouldShowMenuShowInFolder(selectionInfo);
         tsmiEditWorkingDirectoryFile.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo);
         tsmiOpenInVisualStudio.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo) && VisualStudioIntegration.IsVisualStudioInstalled;
+        tsmiOpenInVSCode.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo) && VSCodeIntegration.StableInstallation is not null;
+        tsmiOpenInVSCodeInsiders.Visible = _revisionDiffController.ShouldShowMenuEditWorkingDirectoryFile(selectionInfo) && VSCodeIntegration.InsidersInstallation is not null;
         tsmiMove.Visible = _revisionDiffController.ShouldShowMenuMove(selectionInfo);
         tsmiDeleteFile.Text = ResourceManager.TranslatedStrings.GetDeleteFile(selectionInfo.SelectedGitItemCount);
         tsmiDeleteFile.Enabled = _revisionDiffController.ShouldShowMenuDeleteFile(selectionInfo);
