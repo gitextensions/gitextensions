@@ -370,6 +370,9 @@
       <Component Id="GitlabIntegration.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitlabIntegration.dll" />
       </Component>
+      <Component Id="GitHubActionsIntegration.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitHubActionsIntegration.dll" />
+      </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginManagerDir">
       <Component Id="GitExtensions.PluginManager.dll" Guid="*">
@@ -744,6 +747,9 @@
         </Feature>
         <Feature Id="GitlabIntegration" Title="Gitlab integration" Level="1">
           <ComponentRef Id="GitlabIntegration.dll" />
+        </Feature>
+        <Feature Id="GitHubActionsIntegration" Title="GitHub Actions integration" Level="1">
+          <ComponentRef Id="GitHubActionsIntegration.dll" />
         </Feature>
       </Feature>
       <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">
