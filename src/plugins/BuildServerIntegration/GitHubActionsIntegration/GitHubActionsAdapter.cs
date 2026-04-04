@@ -15,7 +15,7 @@ namespace GitExtensions.Plugins.GitHubActionsIntegration;
 [Export(typeof(IBuildServerAdapter))]
 [GitHubActionsIntegrationMetadata(PluginName)]
 [PartCreationPolicy(CreationPolicy.NonShared)]
-public class GitHubActionsAdapter : IBuildServerAdapter
+public sealed class GitHubActionsAdapter : IBuildServerAdapter
 {
     public const string PluginName = "GitHub Actions";
 
@@ -73,74 +73,62 @@ public class GitHubActionsAdapter : IBuildServerAdapter
 
     private IObservable<BuildInfo> GetBuilds(DateTime? sinceDate, bool running)
     {
-        return Observable.Create<BuildInfo>((observer, cancellationToken) =>
-            ObserveBuildsAsync(sinceDate, running, observer, cancellationToken));
-    }
+        return Observable.Create<BuildInfo>(ObserveBuildsAsync);
 
-    private async Task ObserveBuildsAsync(DateTime? sinceDate, bool running, IObserver<BuildInfo> observer, CancellationToken cancellationToken)
-    {
-        if (_apiClient is null)
+        async Task ObserveBuildsAsync(IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
+            if (_apiClient is null)
+            {
+                observer.OnCompleted();
+                return;
+            }
+
+            try
+            {
+                int page = 1;
+
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    GitHubActionsWorkflowRunsResponse response = await _apiClient.GetWorkflowRunsAsync(
+                        running,
+                        sinceDate,
+                        page,
+                        PageSize,
+                        cancellationToken);
+
+                    foreach (GitHubActionsWorkflowRun run in response.WorkflowRuns)
+                    {
+                        if (!_loadedItems.TryGetValue(run.HeadSha, out DateTime lastUpdated) || lastUpdated < run.UpdatedAt)
+                        {
+                            _loadedItems[run.HeadSha] = run.UpdatedAt;
+                            observer.OnNext(run.ToBuildInfo());
+                        }
+                    }
+
+                    if (response.WorkflowRuns.Count < PageSize)
+                    {
+                        break;
+                    }
+
+                    page++;
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                // Expected during cancellation
+            }
+            catch (Exception ex)
+            {
+                observer.OnError(ex);
+                return;
+            }
+
             observer.OnCompleted();
-            return;
-        }
-
-        try
-        {
-            int page = 1;
-
-            while (!cancellationToken.IsCancellationRequested)
-            {
-                GitHubActionsWorkflowRunsResponse response = await _apiClient.GetWorkflowRunsAsync(
-                    running,
-                    sinceDate,
-                    page,
-                    PageSize,
-                    cancellationToken);
-
-                if (response.WorkflowRuns.Count == 0)
-                {
-                    break;
-                }
-
-                ProcessWorkflowRuns(response.WorkflowRuns, observer);
-
-                if (response.WorkflowRuns.Count < PageSize)
-                {
-                    break;
-                }
-
-                page++;
-            }
-        }
-        catch (OperationCanceledException)
-        {
-            // Expected during cancellation
-        }
-        catch (Exception ex)
-        {
-            observer.OnError(ex);
-            return;
-        }
-
-        observer.OnCompleted();
-    }
-
-    private void ProcessWorkflowRuns(List<GitHubActionsWorkflowRun> runs, IObserver<BuildInfo> observer)
-    {
-        foreach (GitHubActionsWorkflowRun run in runs)
-        {
-            if (!_loadedItems.TryGetValue(run.HeadSha, out DateTime lastUpdated) || lastUpdated < run.UpdatedAt)
-            {
-                _loadedItems[run.HeadSha] = run.UpdatedAt;
-                observer.OnNext(run.ToBuildInfo());
-            }
         }
     }
 
     public void Dispose()
     {
         _apiClient?.Dispose();
-        GC.SuppressFinalize(this);
     }
 }

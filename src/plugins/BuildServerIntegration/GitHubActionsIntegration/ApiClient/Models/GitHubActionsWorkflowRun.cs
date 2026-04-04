@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility.BuildServerIntegration;
+﻿using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
 using Newtonsoft.Json;
 
@@ -53,6 +53,8 @@ public class GitHubActionsWorkflowRun
 
     public BuildInfo ToBuildInfo()
     {
+        BuildStatus status = MapStatus();
+
         BuildInfo result = new()
         {
             Id = Id.ToString(),
@@ -60,11 +62,10 @@ public class GitHubActionsWorkflowRun
             CommitHashList = [ObjectId.Parse(HeadSha)],
             Url = HtmlUrl,
             ShowInBuildReportTab = false,
+            Status = status,
+            Duration = (long)(UpdatedAt - (RunStartedAt ?? CreatedAt)).TotalMilliseconds,
+            Description = FormatDescription()
         };
-
-        result.Status = MapStatus();
-        result.Duration = (long)(UpdatedAt - (RunStartedAt ?? CreatedAt)).TotalMilliseconds;
-        result.Description = FormatDescription();
 
         return result;
 
@@ -88,7 +89,7 @@ public class GitHubActionsWorkflowRun
 
         string FormatDescription()
         {
-            string statusText = result.Status switch
+            string statusText = status switch
             {
                 BuildStatus.InProgress => Status ?? "in progress",
                 _ => Conclusion ?? Status ?? "unknown",
