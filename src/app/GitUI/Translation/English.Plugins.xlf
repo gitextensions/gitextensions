@@ -510,24 +510,24 @@ Are you sure you want to continue?</source>
   </file>
   <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en">
     <body>
-      <trans-unit id="TokenManagementLink.Text">
-        <source>Create a GitHub personal access token</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="labelApiToken.Text">
+      <trans-unit id="lblApiToken.Text">
         <source>API Token</source>
         <target />
       </trans-unit>
-      <trans-unit id="labelApiUrl.Text">
+      <trans-unit id="lblApiUrl.Text">
         <source>API URL</source>
         <target />
       </trans-unit>
-      <trans-unit id="labelOwner.Text">
+      <trans-unit id="lblOwner.Text">
         <source>Owner</source>
         <target />
       </trans-unit>
-      <trans-unit id="labelRepository.Text">
+      <trans-unit id="lblRepository.Text">
         <source>Repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lnkTokenManagement.Text">
+        <source>Create a GitHub personal access token</source>
         <target />
       </trans-unit>
     </body>
