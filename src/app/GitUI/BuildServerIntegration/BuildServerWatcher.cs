@@ -346,7 +346,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
                 return null;
             }
 
-            buildServerName = TryAutoDetectBuildServerType();
+            buildServerName = TryAutoDetectBuildServerType(buildServerSettings.SettingsSource);
             if (string.IsNullOrEmpty(buildServerName))
             {
                 return null;
@@ -355,6 +355,12 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         else if (!buildServerSettings.IntegrationEnabledOrDefault)
         {
             return null;
+        }
+
+        // For GitHub Actions with explicit config, ensure owner/repo are populated from remotes
+        if (buildServerName == "GitHub Actions")
+        {
+            TryAutoDetectBuildServerType(buildServerSettings.SettingsSource);
         }
 
         IEnumerable<Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>> exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
@@ -400,11 +406,14 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     /// <summary>
     ///  Attempts to detect the build server type from the repository's remote URLs.
     ///  Currently detects GitHub-hosted repositories and returns "GitHub Actions".
+    ///  When detected, writes the owner and repository to <paramref name="settingsSource"/>
+    ///  (if not already set) so the adapter can use them without re-parsing.
     /// </summary>
-    private string? TryAutoDetectBuildServerType()
+    private string? TryAutoDetectBuildServerType(GitExtensions.Extensibility.Settings.SettingsSource? settingsSource = null)
     {
         try
         {
+            GitHubRemoteParser parser = new();
             IGitModule module = _module();
             IReadOnlyList<string> remoteNames = module.GetRemoteNames();
 
@@ -412,8 +421,21 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
             {
                 string remoteUrl = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
                 if (!string.IsNullOrWhiteSpace(remoteUrl)
-                    && remoteUrl.Contains("github.com", StringComparison.OrdinalIgnoreCase))
+                    && parser.TryExtractGitHubDataFromRemoteUrl(remoteUrl, out string? owner, out string? repository))
                 {
+                    if (settingsSource is not null)
+                    {
+                        if (string.IsNullOrWhiteSpace(settingsSource.GetString("GitHubActionsOwner", null)))
+                        {
+                            settingsSource.SetString("GitHubActionsOwner", owner);
+                        }
+
+                        if (string.IsNullOrWhiteSpace(settingsSource.GetString("GitHubActionsRepository", null)))
+                        {
+                            settingsSource.SetString("GitHubActionsRepository", repository);
+                        }
+                    }
+
                     return "GitHub Actions";
                 }
             }

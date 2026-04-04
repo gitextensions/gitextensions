@@ -51,44 +51,38 @@ internal class GitHubActionsAdapterTests
     }
 
     [Test]
-    public void Initialize_should_auto_detect_owner_and_repo_from_remote()
+    public void Initialize_should_use_owner_and_repo_from_settings()
     {
         GitHubActionsAdapter adapter = new(_apiClientFactory);
 
-        IBuildServerWatcher watcher = Substitute.For<IBuildServerWatcher>();
-        watcher.ReplaceVariables("{cRepoProject}").Returns("auto-owner");
-        watcher.ReplaceVariables("{cRepoShortName}").Returns("auto-repo");
-
         MemorySettings settings = new();
+        settings.SetString("GitHubActionsOwner", "my-owner");
+        settings.SetString("GitHubActionsRepository", "my-repo");
 
-        adapter.Initialize(watcher, settings, () => { });
+        adapter.Initialize(Substitute.For<IBuildServerWatcher>(), settings, () => { });
 
         _apiClientFactory.Received(1).CreateApiClient(
             "https://api.github.com",
-            "auto-owner",
-            "auto-repo",
+            "my-owner",
+            "my-repo",
             Arg.Any<string?>());
     }
 
     [Test]
-    public void Initialize_should_prefer_explicit_settings_over_auto_detect()
+    public void Initialize_should_not_create_client_when_owner_is_missing()
     {
-        GitHubActionsAdapter adapter = new(_apiClientFactory);
-
-        IBuildServerWatcher watcher = Substitute.For<IBuildServerWatcher>();
-        watcher.ReplaceVariables("{cRepoProject}").Returns("auto-owner");
-        watcher.ReplaceVariables("{cRepoShortName}").Returns("auto-repo");
+        IGitHubActionsApiClientFactory freshFactory = Substitute.For<IGitHubActionsApiClientFactory>();
+        GitHubActionsAdapter adapter = new(freshFactory);
 
         MemorySettings settings = new();
-        settings.SetString("GitHubActionsOwner", "explicit-owner");
-        settings.SetString("GitHubActionsRepository", "explicit-repo");
+        settings.SetString("GitHubActionsRepository", "my-repo");
 
-        adapter.Initialize(watcher, settings, () => { });
+        adapter.Initialize(Substitute.For<IBuildServerWatcher>(), settings, () => { });
 
-        _apiClientFactory.Received(1).CreateApiClient(
-            "https://api.github.com",
-            "explicit-owner",
-            "explicit-repo",
+        freshFactory.DidNotReceive().CreateApiClient(
+            Arg.Any<string>(),
+            Arg.Any<string>(),
+            Arg.Any<string>(),
             Arg.Any<string?>());
     }
 

@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -41,19 +41,8 @@ public class GitHubActionsAdapter : IBuildServerAdapter
     {
         string apiUrl = config.GetString("GitHubActionsApiUrl", null) ?? DefaultApiUrl;
         string? apiToken = config.GetString("GitHubActionsApiToken", null);
-
-        // Use explicit settings if available, otherwise auto-detect from the current git remote
         string? owner = config.GetString("GitHubActionsOwner", null);
-        if (string.IsNullOrWhiteSpace(owner))
-        {
-            owner = buildServerWatcher.ReplaceVariables("{cRepoProject}");
-        }
-
         string? repository = config.GetString("GitHubActionsRepository", null);
-        if (string.IsNullOrWhiteSpace(repository))
-        {
-            repository = buildServerWatcher.ReplaceVariables("{cRepoShortName}");
-        }
 
         if (string.IsNullOrWhiteSpace(owner) || string.IsNullOrWhiteSpace(repository))
         {
@@ -127,6 +116,11 @@ public class GitHubActionsAdapter : IBuildServerAdapter
         catch (OperationCanceledException)
         {
             // Expected during cancellation
+        }
+        catch (Exception ex)
+        {
+            observer.OnError(ex);
+            return;
         }
 
         observer.OnCompleted();
