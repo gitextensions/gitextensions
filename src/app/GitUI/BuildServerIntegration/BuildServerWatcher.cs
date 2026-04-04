@@ -415,8 +415,8 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     ///  Currently detects GitHub-hosted repositories and returns "GitHub Actions".
     ///  When detected, writes the owner and repository to <paramref name="settingsSource"/>
     ///  (if not already set) so the adapter can use them without re-parsing.
-    ///  Prefers "upstream" remote over "origin" over others, so that forks resolve
-    ///  to the upstream project's CI rather than the fork's.
+    ///  Respects <see cref="AppSettings.PrioritizedBuildServerRemoteNames"/> for remote ordering,
+    ///  so that forks resolve to the upstream project's CI rather than the fork's.
     /// </summary>
     private string? TryAutoDetectBuildServerType(GitExtensions.Extensibility.Settings.SettingsSource? settingsSource = null)
     {
@@ -426,13 +426,14 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
             IGitModule module = _module();
             IReadOnlyList<string> remoteNames = module.GetRemoteNames();
 
-            // Prefer "upstream", then "origin", then any other remote
+            string[] prioritizedNames = AppSettings.PrioritizedBuildServerRemoteNames
+                .Split('|', StringSplitOptions.RemoveEmptyEntries);
+
             IEnumerable<string> orderedRemotes = remoteNames
-                .OrderBy(r => r switch
+                .OrderBy(r =>
                 {
-                    "upstream" => 0,
-                    "origin" => 1,
-                    _ => 2,
+                    int index = Array.IndexOf(prioritizedNames, r);
+                    return index >= 0 ? index : prioritizedNames.Length;
                 });
 
             foreach (string remoteName in orderedRemotes)

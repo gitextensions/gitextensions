@@ -1997,6 +1997,16 @@ public static partial class AppSettings
         set => SetString("PrioritizedRemoteNames", value);
     }
 
+    /// <summary>
+    ///  Remote names to prefer when auto-detecting build server integration, separated by <c>|</c>.
+    ///  Defaults to <c>upstream|origin</c> so that forks resolve to the upstream project's CI.
+    /// </summary>
+    public static string PrioritizedBuildServerRemoteNames
+    {
+        get => GetString("PrioritizedBuildServerRemoteNames", "upstream|origin");
+        set => SetString("PrioritizedBuildServerRemoteNames", value);
+    }
+
     public static bool BlameDisplayAuthorFirst
     {
         get => GetBool("Blame.DisplayAuthorFirst", false);

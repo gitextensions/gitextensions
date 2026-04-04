@@ -19,6 +19,11 @@ public sealed class GitHubActionsAdapter : IBuildServerAdapter
 {
     public const string PluginName = "GitHub Actions";
 
+    internal const string SettingApiUrl = "GitHubActionsApiUrl";
+    internal const string SettingApiToken = "GitHubActionsApiToken";
+    internal const string SettingOwner = "GitHubActionsOwner";
+    internal const string SettingRepository = "GitHubActionsRepository";
+
     private const string DefaultApiUrl = "https://api.github.com";
     private const int PageSize = 100;
 
@@ -39,10 +44,10 @@ public sealed class GitHubActionsAdapter : IBuildServerAdapter
 
     public void Initialize(IBuildServerWatcher buildServerWatcher, SettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
     {
-        string apiUrl = config.GetString("GitHubActionsApiUrl", null) ?? DefaultApiUrl;
-        string? apiToken = config.GetString("GitHubActionsApiToken", null);
-        string? owner = config.GetString("GitHubActionsOwner", null);
-        string? repository = config.GetString("GitHubActionsRepository", null);
+        string apiUrl = config.GetString(SettingApiUrl, null) ?? DefaultApiUrl;
+        string? apiToken = config.GetString(SettingApiToken, null);
+        string? owner = config.GetString(SettingOwner, null);
+        string? repository = config.GetString(SettingRepository, null);
 
         if (string.IsNullOrWhiteSpace(owner) || string.IsNullOrWhiteSpace(repository))
         {

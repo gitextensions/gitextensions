@@ -39,10 +39,10 @@ public partial class GitHubActionsSettingsUserControl : GitExtensionsControl, IB
 
     public void LoadSettings(SettingsSource buildServerConfig)
     {
-        string? apiUrl = buildServerConfig.GetString("GitHubActionsApiUrl", null);
-        string? owner = buildServerConfig.GetString("GitHubActionsOwner", null);
-        string? repository = buildServerConfig.GetString("GitHubActionsRepository", null);
-        string? apiToken = buildServerConfig.GetString("GitHubActionsApiToken", null);
+        string? apiUrl = buildServerConfig.GetString(GitHubActionsAdapter.SettingApiUrl, null);
+        string? owner = buildServerConfig.GetString(GitHubActionsAdapter.SettingOwner, null);
+        string? repository = buildServerConfig.GetString(GitHubActionsAdapter.SettingRepository, null);
+        string? apiToken = buildServerConfig.GetString(GitHubActionsAdapter.SettingApiToken, null);
 
         txtApiUrl.Text = apiUrl ?? DefaultApiUrl;
 
@@ -67,10 +67,10 @@ public partial class GitHubActionsSettingsUserControl : GitExtensionsControl, IB
             apiUrl = null;
         }
 
-        buildServerConfig.SetString("GitHubActionsApiUrl", apiUrl);
-        buildServerConfig.SetString("GitHubActionsOwner", txtOwner.Text.NullIfEmpty());
-        buildServerConfig.SetString("GitHubActionsRepository", txtRepository.Text.NullIfEmpty());
-        buildServerConfig.SetString("GitHubActionsApiToken", txtApiToken.Text.NullIfEmpty());
+        buildServerConfig.SetString(GitHubActionsAdapter.SettingApiUrl, apiUrl);
+        buildServerConfig.SetString(GitHubActionsAdapter.SettingOwner, txtOwner.Text.NullIfEmpty());
+        buildServerConfig.SetString(GitHubActionsAdapter.SettingRepository, txtRepository.Text.NullIfEmpty());
+        buildServerConfig.SetString(GitHubActionsAdapter.SettingApiToken, txtApiToken.Text.NullIfEmpty());
     }
 
     private void lnkTokenManagement_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
