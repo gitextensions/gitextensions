@@ -5,6 +5,7 @@ using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
 using GitCommands.Settings;
@@ -65,6 +66,13 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
         _buildServerAdapter?.Dispose();
         _buildServerAdapter = buildServerAdapter;
+
+        // When a build server adapter is available (including auto-detected),
+        // ensure the build status column is visible
+        if (buildServerAdapter is not null)
+        {
+            ColumnProvider.Column.Visible = AppSettings.ShowBuildStatusIconColumn || AppSettings.ShowBuildStatusTextColumn;
+        }
 
         await TaskScheduler.Default;
 
@@ -408,6 +416,8 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     ///  Currently detects GitHub-hosted repositories and returns "GitHub Actions".
     ///  When detected, writes the owner and repository to <paramref name="settingsSource"/>
     ///  (if not already set) so the adapter can use them without re-parsing.
+    ///  Prefers "upstream" remote over "origin" over others, so that forks resolve
+    ///  to the upstream project's CI rather than the fork's.
     /// </summary>
     private string? TryAutoDetectBuildServerType(GitExtensions.Extensibility.Settings.SettingsSource? settingsSource = null)
     {
@@ -417,7 +427,16 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
             IGitModule module = _module();
             IReadOnlyList<string> remoteNames = module.GetRemoteNames();
 
-            foreach (string remoteName in remoteNames)
+            // Prefer "upstream", then "origin", then any other remote
+            IEnumerable<string> orderedRemotes = remoteNames
+                .OrderBy(r => r switch
+                {
+                    "upstream" => 0,
+                    "origin" => 1,
+                    _ => 2,
+                });
+
+            foreach (string remoteName in orderedRemotes)
             {
                 string remoteUrl = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
                 if (!string.IsNullOrWhiteSpace(remoteUrl)
