@@ -1,5 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
-
+<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <ProjectReference Include="..\..\..\app\GitExtUtils\GitExtUtils.csproj">
       <PrivateAssets>build;buildTransitive;compile</PrivateAssets>

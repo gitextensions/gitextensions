@@ -9,11 +9,11 @@ public class GitlabPipeline
     [JsonProperty("id")]
     public int Id { get; set; }
     [JsonProperty("status")]
-    public string Status { get; set; }
+    public string Status { get; set; } = null!;
     [JsonProperty("sha")]
-    public string Sha { get; set; }
+    public string Sha { get; set; } = null!;
     [JsonProperty("web_url")]
-    public string WebUrl { get; set; }
+    public string WebUrl { get; set; } = null!;
     [JsonProperty("created_at")]
     public DateTime CreatedAt { get; set; }
     [JsonProperty("updated_at")]

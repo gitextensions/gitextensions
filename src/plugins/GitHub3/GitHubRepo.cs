@@ -89,7 +89,7 @@ public class GitHubRepo : IHostedRepository
 
     public IReadOnlyList<IPullRequestInformation> GetPullRequests()
     {
-        IReadOnlyList<PullRequest> pullRequests = _repo?.GetPullRequests();
+        IReadOnlyList<PullRequest>? pullRequests = _repo?.GetPullRequests();
 
         if (pullRequests is not null)
         {

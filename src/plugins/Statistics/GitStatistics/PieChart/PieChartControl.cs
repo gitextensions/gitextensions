@@ -306,7 +306,7 @@ public class PieChartControl : Panel
                 }
 
                 SliceSelected?.Invoke(this,
-                    new SliceSelectedArgs(_values[index], _toolTip.GetToolTip(this), _tags?[index]));
+                    new SliceSelectedArgs(_values[index], _toolTip.GetToolTip(this)!, _tags?[index]));
             }
             else
             {

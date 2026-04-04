@@ -149,16 +149,16 @@ public sealed class ImpactLoader : IDisposable
 
     private void LoadModuleInfo(IGitModule module, CancellationToken token)
     {
-        if (_modulesCommits.TryGetValue(module.WorkingDir, out List<Commit> commitsBatch))
+        if (_modulesCommits.TryGetValue(module.WorkingDir, out List<Commit>? commitsBatch))
         {
-            CommitLoaded(commitsBatch);
+            CommitLoaded?.Invoke(commitsBatch);
             return;
         }
 
         commitsBatch = LoadModuleInfoData(module, token);
         if (!token.IsCancellationRequested)
         {
-            CommitLoaded(commitsBatch);
+            CommitLoaded?.Invoke(commitsBatch);
         }
     }
 

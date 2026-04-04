@@ -71,7 +71,7 @@ public class GitlabApiClientBase : IDisposable
             PageNumber = GetIntHeader(response, "X-Page"),
             PageSize = GetIntHeader(response, "X-Per-Page"),
             NextPage = GetIntHeader(response, "X-Next-Page"),
-            Items = list
+            Items = list ?? []
         };
 
         return result;
