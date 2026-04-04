@@ -64,8 +64,8 @@ and to perform additional work on the changes in response to review feedback.
 ## Git Blame
 
 This repository includes a `.git-blame-ignore-revs` file that lists commits with
-large-scale, non-functional changes (e.g. formatting, namespace style). GitHub uses
-this file automatically. To use it locally, run once per clone:
+large-scale, non-functional changes (e.g. formatting, namespace style). GitHub's
+blame view can use this file. To enable the same behavior locally, run this once per clone:
 
 ```
 git config blame.ignoreRevsFile .git-blame-ignore-revs
