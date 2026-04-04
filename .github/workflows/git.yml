@@ -17,7 +17,7 @@ jobs:
       run: |
         fixup_commits=$(git log --oneline origin/${{ github.base_ref }}..HEAD --grep="^fixup! \|^squash! " --format="%h %s")
         if [ -n "$fixup_commits" ]; then
-          echo "::error::PR contains fixup/squash commits that must be rebased before merging:"
+          echo "::error::PR contains fixup/squash commits that must be squashed before merging:"
           echo "$fixup_commits"
           exit 1
         fi
