@@ -61,8 +61,8 @@ public partial class GitHubActionsSettingsUserControl : GitExtensionsControl, IB
 
     public void SaveSettings(SettingsSource buildServerConfig)
     {
-        string? apiUrl = txtApiUrl.Text.NullIfEmpty();
-        if (apiUrl == DefaultApiUrl)
+        string? apiUrl = txtApiUrl.Text.Trim().TrimEnd('/').NullIfEmpty();
+        if (string.Equals(apiUrl, DefaultApiUrl, StringComparison.OrdinalIgnoreCase))
         {
             apiUrl = null;
         }
@@ -75,6 +75,6 @@ public partial class GitHubActionsSettingsUserControl : GitExtensionsControl, IB
 
     private void lnkTokenManagement_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-        OsShellUtil.OpenUrlInDefaultBrowser("https://github.com/settings/tokens/new?scopes=repo&description=GitExtensions");
+        OsShellUtil.OpenUrlInDefaultBrowser("https://github.com/settings/personal-access-tokens/new");
     }
 }

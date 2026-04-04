@@ -271,30 +271,44 @@ internal class GitHubActionsAdapterTests
 
     private List<BuildInfo> ProcessGetFinishedBuildsRequest()
     {
-        ManualResetEvent observableEvent = new(false);
+        using ManualResetEvent observableEvent = new(false);
         List<BuildInfo> result = [];
+        Exception? observableException = null;
 
         IObservable<BuildInfo> observable = _target.GetFinishedBuildsSince(_scheduler);
-        observable.Subscribe(
+        using IDisposable subscription = observable.Subscribe(
             e => result.Add(e),
+            ex =>
+            {
+                observableException = ex;
+                observableEvent.Set();
+            },
             () => observableEvent.Set());
 
         Assert.That(observableEvent.WaitOne(TimeSpan.FromSeconds(10)), Is.True, "Observable did not complete in time");
+        Assert.That(observableException, Is.Null, () => $"Observable faulted: {observableException}");
 
         return result;
     }
 
     private List<BuildInfo> ProcessGetRunningBuildsRequest()
     {
-        ManualResetEvent observableEvent = new(false);
+        using ManualResetEvent observableEvent = new(false);
         List<BuildInfo> result = [];
+        Exception? observableException = null;
 
         IObservable<BuildInfo> observable = _target.GetRunningBuilds(_scheduler);
-        observable.Subscribe(
+        using IDisposable subscription = observable.Subscribe(
             e => result.Add(e),
+            ex =>
+            {
+                observableException = ex;
+                observableEvent.Set();
+            },
             () => observableEvent.Set());
 
         Assert.That(observableEvent.WaitOne(TimeSpan.FromSeconds(10)), Is.True, "Observable did not complete in time");
+        Assert.That(observableException, Is.Null, () => $"Observable faulted: {observableException}");
 
         return result;
     }

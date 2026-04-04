@@ -94,6 +94,26 @@ internal class GitHubActionsWorkflowRunTests
         Assert.That(result.Status, Is.EqualTo(BuildStatus.Success));
     }
 
+    [Test]
+    public void ToBuildInfo_should_map_neutral_to_success()
+    {
+        GitHubActionsWorkflowRun run = CreateRun(status: "completed", conclusion: "neutral");
+
+        BuildInfo result = run.ToBuildInfo();
+
+        Assert.That(result.Status, Is.EqualTo(BuildStatus.Success));
+    }
+
+    [Test]
+    public void ToBuildInfo_should_map_stale_to_unstable()
+    {
+        GitHubActionsWorkflowRun run = CreateRun(status: "completed", conclusion: "stale");
+
+        BuildInfo result = run.ToBuildInfo();
+
+        Assert.That(result.Status, Is.EqualTo(BuildStatus.Unstable));
+    }
+
     [TestCase("waiting")]
     [TestCase("pending")]
     [TestCase("requested")]

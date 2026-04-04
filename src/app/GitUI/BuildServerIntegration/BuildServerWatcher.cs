@@ -427,12 +427,12 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
             IReadOnlyList<string> remoteNames = module.GetRemoteNames();
 
             string[] prioritizedNames = AppSettings.PrioritizedBuildServerRemoteNames
-                .Split('|', StringSplitOptions.RemoveEmptyEntries);
+                .Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
 
             IEnumerable<string> orderedRemotes = remoteNames
                 .OrderBy(r =>
                 {
-                    int index = Array.IndexOf(prioritizedNames, r);
+                    int index = Array.FindIndex(prioritizedNames, n => string.Equals(n, r, StringComparison.OrdinalIgnoreCase));
                     return index >= 0 ? index : prioritizedNames.Length;
                 });
 

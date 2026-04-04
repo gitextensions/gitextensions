@@ -5,7 +5,7 @@ namespace GitExtensions.Plugins.GitHubActionsIntegration;
 
 [MetadataAttribute]
 [AttributeUsage(AttributeTargets.Class)]
-public class GitHubActionsIntegrationMetadataAttribute : BuildServerAdapterMetadataAttribute
+public sealed class GitHubActionsIntegrationMetadataAttribute : BuildServerAdapterMetadataAttribute
 {
     public GitHubActionsIntegrationMetadataAttribute(string buildServerType)
         : base(buildServerType)
