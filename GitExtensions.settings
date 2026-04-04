@@ -2,14 +2,6 @@
 <dictionary>
   <item>
     <key>
-      <string>BuildServer.AppVeyor.AppVeyorProjectName</string>
-    </key>
-    <value>
-      <string>gitextensions/gitextensions</string>
-    </value>
-  </item>
-  <item>
-    <key>
       <string>BuildServer.EnableIntegration</string>
     </key>
     <value>
@@ -21,7 +13,7 @@
       <string>BuildServer.Type</string>
     </key>
     <value>
-      <string>AppVeyor</string>
+      <string>GitHub Actions</string>
     </value>
   </item>
   <item>
