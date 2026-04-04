@@ -25,10 +25,15 @@ env:
 
 jobs:
   build-and-test:
-    name: Build & Test
+    name: Build & Test (${{ matrix.platform }})
     # Windows runner is required: the project targets net10.0-windows (WinForms),
     # builds native C++ shell extensions (MSVC), and creates MSI installers (WiX).
     runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [x64, arm64]
 
     steps:
     - name: Checkout
@@ -68,12 +73,12 @@ jobs:
         "BUILD_ARGS=/p:GitCommit=$gitCommit /p:GitSha=$prHeadSha" >> $env:GITHUB_ENV
 
     - name: Build native code
-      run: dotnet build src\native\build.proj -c Release --verbosity q --nologo /bl:artifacts\log\native.binlog
+      run: dotnet build src\native\build.proj -c Release --verbosity q --nologo /p:TargetPlatform=${{ matrix.platform }} /bl:artifacts\log\native.binlog
 
     - name: Build .NET
       shell: pwsh
       run: |
-        $buildArgs = "/p:ContinuousIntegrationBuild=true $env:BUILD_ARGS".Trim()
+        $buildArgs = "/p:ContinuousIntegrationBuild=true /p:TargetPlatform=${{ matrix.platform }} $env:BUILD_ARGS".Trim()
         dotnet build -c Release --verbosity q --nologo /bl:artifacts\log\build.binlog $buildArgs.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
 
     - name: Verify localisation
@@ -87,12 +92,13 @@ jobs:
         if ($exitCode -ne 0) { exit $exitCode }
 
     - name: Run tests
+      if: matrix.platform == 'x64'
       run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx /bl:artifacts\log\tests.binlog
 
     - name: Test report
       # v1 @ 2024-08-30
       uses: dorny/test-reporter@d61b558e8df85cb60d09ca3e5b09653b4477cea7
-      if: always() && github.event.pull_request.head.repo.full_name == github.repository
+      if: always() && matrix.platform == 'x64' && github.event.pull_request.head.repo.full_name == github.repository
       continue-on-error: true
       with:
         name: Test Results
@@ -102,14 +108,14 @@ jobs:
     - name: Publish
       shell: pwsh
       run: |
-        $publishArgs = "/p:ContinuousIntegrationBuild=true $env:BUILD_ARGS".Trim()
+        $publishArgs = "/p:ContinuousIntegrationBuild=true /p:TargetPlatform=${{ matrix.platform }} $env:BUILD_ARGS".Trim()
         dotnet publish -c Release --no-build /bl:artifacts\log\publish.binlog $publishArgs.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
 
     - name: Upload portable artifact
       id: upload-unsigned-artifact
       uses: actions/upload-artifact@v4
       with:
-        name: GitExtensions-Portable
+        name: GitExtensions-Portable-${{ matrix.platform }}
         path: artifacts\Release\publish\*.zip
         if-no-files-found: warn
 
@@ -127,7 +133,7 @@ jobs:
         output-artifact-directory: artifacts\Release\publish\signed
 
     - name: Upload test results
-      if: always()
+      if: always() && matrix.platform == 'x64'
       uses: actions/upload-artifact@v4
       with:
         name: test-results
@@ -138,7 +144,7 @@ jobs:
       if: failure()
       uses: actions/upload-artifact@v4
       with:
-        name: build-logs
+        name: build-logs-${{ matrix.platform }}
         path: |
           artifacts\**\log\**\*.binlog
           artifacts\Release\TestsResults\**\*.trx
