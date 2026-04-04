@@ -82,7 +82,7 @@ public class GitRefsSortOrderContextMenuItemTests
 
     private void AssertOnlyCheckedItemIs(GitRefsSortOrder sortType)
     {
-        ToolStripMenuItem matchingSubItem = _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Single(i => i!.Tag.Equals(sortType));
+        ToolStripMenuItem matchingSubItem = _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Single(i => i!.Tag!.Equals(sortType));
         ClassicAssert.IsTrue(matchingSubItem.Checked);
 
         foreach (ToolStripMenuItem otherItem in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Except(new[] { matchingSubItem }))

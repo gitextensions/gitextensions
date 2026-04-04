@@ -98,7 +98,7 @@ public class ScriptsManagerScriptRunnerTests
             _values = values;
         }
 
-        public IUserInputPrompt Create(string? title, string label, string defaultValue)
+        public IUserInputPrompt Create(string? title, string? label, string? defaultValue)
         {
             if (_indexOfNextFakeValueReturned >= _values.Length)
             {

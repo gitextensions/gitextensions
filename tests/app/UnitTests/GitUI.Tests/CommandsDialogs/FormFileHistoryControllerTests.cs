@@ -20,7 +20,7 @@ public sealed class FormFileHistoryControllerTests
     public void TryGetExactPathName_Should_return_null_on_not_existing_file(string path)
     {
         string lowercasePath = path.ToLower();
-        bool isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string exactPath);
+        bool isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string? exactPath);
 
         ClassicAssert.IsFalse(isExistingOnFileSystem);
         ClassicAssert.IsNull(exactPath);
@@ -32,7 +32,7 @@ public sealed class FormFileHistoryControllerTests
         string path = @"\\" + Environment.MachineName.ToLower() + @"\c$\Windows\System32";
 
         string lowercasePath = path.ToLower();
-        bool isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string exactPath);
+        bool isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string? exactPath);
 
         ClassicAssert.IsTrue(isExistingOnFileSystem);
 
@@ -52,7 +52,7 @@ public sealed class FormFileHistoryControllerTests
 
         string expected = Path.Combine(repo.TemporaryPath, relativePath);
 
-        ClassicAssert.AreEqual(isResolved, _controller.TryGetExactPath(expected, out string exactPath));
+        ClassicAssert.AreEqual(isResolved, _controller.TryGetExactPath(expected, out string? exactPath));
         ClassicAssert.AreEqual(doesMatch, exactPath == expected);
     }
 }

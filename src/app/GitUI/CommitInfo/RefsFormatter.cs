@@ -83,7 +83,7 @@ public sealed class RefsFormatter
                 // so this check is not 100% reliable.
                 // This shouldn't be a big problem if we're only displaying information.
                 // This could be solved by listing local and remote branches separately.
-                branchIsLocal = !branch.StartsWith(remotesPrefix);
+                branchIsLocal = !branch!.StartsWith(remotesPrefix);
                 if (!branchIsLocal)
                 {
                     noPrefixBranch = branch[remotesPrefix.Length..];

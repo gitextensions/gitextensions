@@ -104,7 +104,7 @@ public class LaneNodeLocatorTests
         const int row = 100;
         const int lane = 3;
         SetupLaneRow(row, lane, laneCount: lane + 1);
-        _revisionGraphRowProvider!.GetSegmentsForRow(row).GetSegmentsForIndex(lane).Returns(x => new List<RevisionGraphSegment>());
+        _revisionGraphRowProvider!.GetSegmentsForRow(row)!.GetSegmentsForIndex(lane).Returns(x => new List<RevisionGraphSegment>());
 
         // segmentsForLane.Count() <= 0
         _laneNodeLocator.FindPrevNode(row, lane).Should().Be((null, false, null));

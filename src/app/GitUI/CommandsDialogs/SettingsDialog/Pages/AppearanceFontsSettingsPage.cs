@@ -48,7 +48,7 @@ public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
 
     private void diffFontChangeButton_Click(object sender, EventArgs e)
     {
-        diffFontDialog.Font = _diffFont;
+        diffFontDialog.Font = _diffFont!;
         DialogResult result = diffFontDialog.ShowDialog(this);
 
         if (result is (DialogResult.OK or DialogResult.Yes))
@@ -60,7 +60,7 @@ public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
 
     private void applicationFontChangeButton_Click(object sender, EventArgs e)
     {
-        applicationDialog.Font = _applicationFont;
+        applicationDialog.Font = _applicationFont!;
         DialogResult result = applicationDialog.ShowDialog(this);
 
         if (result is (DialogResult.OK or DialogResult.Yes))
@@ -72,7 +72,7 @@ public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
 
     private void commitFontChangeButton_Click(object sender, EventArgs e)
     {
-        commitFontDialog.Font = _commitFont;
+        commitFontDialog.Font = _commitFont!;
         DialogResult result = commitFontDialog.ShowDialog(this);
 
         if (result is (DialogResult.OK or DialogResult.Yes))
@@ -84,7 +84,7 @@ public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
 
     private void monospaceFontChangeButton_Click(object sender, EventArgs e)
     {
-        monospaceFontDialog.Font = _monospaceFont;
+        monospaceFontDialog.Font = _monospaceFont!;
         DialogResult result = monospaceFontDialog.ShowDialog(this);
 
         if (result is (DialogResult.OK or DialogResult.Yes))

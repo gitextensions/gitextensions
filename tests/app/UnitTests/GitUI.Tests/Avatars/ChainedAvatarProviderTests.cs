@@ -74,19 +74,19 @@ public class ChainedAvatarProviderTests
         provider3.GetAvatarAsync(_email1, _name1, _size).Returns(_img3);
 
         // Case 2: Second provider hit
-        provider1.GetAvatarAsync(_email2, _name2, _size).Returns((Image)null);
+        provider1.GetAvatarAsync(_email2, _name2, _size).Returns((Image?)null);
         provider2.GetAvatarAsync(_email2, _name2, _size).Returns(_img4);
         provider3.GetAvatarAsync(_email2, _name2, _size).Returns(_img5);
 
         // Case 3: Third provider hit
-        provider1.GetAvatarAsync(_email3, _name3, _size).Returns((Image)null);
-        provider2.GetAvatarAsync(_email3, _name3, _size).Returns((Image)null);
+        provider1.GetAvatarAsync(_email3, _name3, _size).Returns((Image?)null);
+        provider2.GetAvatarAsync(_email3, _name3, _size).Returns((Image?)null);
         provider3.GetAvatarAsync(_email3, _name3, _size).Returns(_img6);
 
         // Case 4: No provider hit
-        provider1.GetAvatarAsync(_email4, _name4, _size).Returns((Image)null);
-        provider2.GetAvatarAsync(_email4, _name4, _size).Returns((Image)null);
-        provider3.GetAvatarAsync(_email4, _name4, _size).Returns((Image)null);
+        provider1.GetAvatarAsync(_email4, _name4, _size).Returns((Image?)null);
+        provider2.GetAvatarAsync(_email4, _name4, _size).Returns((Image?)null);
+        provider3.GetAvatarAsync(_email4, _name4, _size).Returns((Image?)null);
 
         ChainedAvatarProvider chainedProvider = new(provider1, provider2, provider3);
 

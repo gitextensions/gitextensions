@@ -260,7 +260,7 @@ public partial class FormRebase : GitExtensionsDialog
     {
         using (WaitCursorScope.Enter())
         {
-            PatchFile applyingPatch = PatchGrid.PatchFiles.FirstOrDefault(p => p.IsNext);
+            PatchFile? applyingPatch = PatchGrid.PatchFiles!.FirstOrDefault(p => p.IsNext);
             if (applyingPatch is not null)
             {
                 applyingPatch.IsSkipped = true;
@@ -405,18 +405,18 @@ public partial class FormRebase : GitExtensionsDialog
         try
         {
             AppSettings.ShowStashes = false;
-            ObjectId firstParent = UICommands.Module.RevParse("HEAD~");
+            ObjectId? firstParent = UICommands.Module.RevParse("HEAD~");
             string preSelectedCommit = !string.IsNullOrWhiteSpace(txtFrom.Text) ? txtFrom.Text : firstParent?.ToString() ?? string.Empty;
 
-            string mergeBaseCommitId = null;
+            string? mergeBaseCommitId = null;
 
             if (!string.IsNullOrWhiteSpace(cboBranches.Text))
             {
                 try
                 {
-                    ObjectId commit1 = UICommands.Module.RevParse(cboBranches.Text);
-                    ObjectId commit2 = UICommands.Module.RevParse("HEAD");
-                    mergeBaseCommitId = UICommands.Module.GetMergeBase(commit1, commit2)?.ToString();
+                    ObjectId? commit1 = UICommands.Module.RevParse(cboBranches.Text);
+                    ObjectId? commit2 = UICommands.Module.RevParse("HEAD");
+                    mergeBaseCommitId = UICommands.Module.GetMergeBase(commit1!, commit2!)?.ToString();
                 }
                 catch (Exception)
                 {

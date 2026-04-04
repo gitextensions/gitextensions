@@ -1,8 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
     <Compile Include="..\UI.IntegrationTests\UITest.cs" Link="UITest.cs" />
   </ItemGroup>

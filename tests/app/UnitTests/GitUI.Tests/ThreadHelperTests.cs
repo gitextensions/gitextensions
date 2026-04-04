@@ -169,11 +169,7 @@ public sealed class ThreadHelperTests
             Application.ThreadException += HandleThreadException;
         }
 
-        public Exception Exception
-        {
-            get;
-            private set;
-        }
+        public Exception Exception { get; private set; } = null!;
 
         [CanBeNull]
         public string Message => Exception?.Message!;

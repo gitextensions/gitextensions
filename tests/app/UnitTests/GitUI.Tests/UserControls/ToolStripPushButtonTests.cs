@@ -44,7 +44,7 @@ public class ToolStripPushButtonTests
 
         _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.Image);
         _sut.ToolTipText.Should().Be("Push");
-        _sut!.Image.RawFormat.GetHashCode().Should().Be(PushImageHashCode);
+        _sut!.Image!.RawFormat.GetHashCode().Should().Be(PushImageHashCode);
     }
 
     [TestCaseSource(nameof(GetInvalidAheadBehindData))]
@@ -55,7 +55,7 @@ public class ToolStripPushButtonTests
 
         _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.Image);
         _sut.ToolTipText.Should().Be("Push");
-        _sut!.Image.RawFormat.GetHashCode().Should().Be(PushImageHashCode);
+        _sut!.Image!.RawFormat.GetHashCode().Should().Be(PushImageHashCode);
     }
 
     private static IEnumerable<TestCaseData> GetInvalidAheadBehindData
@@ -85,7 +85,7 @@ public class ToolStripPushButtonTests
 
         _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.Image);
         _sut.ToolTipText.Should().Be("Push");
-        _sut!.Image.RawFormat.GetHashCode().Should().Be(PushImageHashCode);
+        _sut!.Image!.RawFormat.GetHashCode().Should().Be(PushImageHashCode);
     }
 
     [Test]
@@ -103,7 +103,7 @@ public class ToolStripPushButtonTests
         _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
         _sut.ToolTipText.Should().Contain("9 new commit(s) will be pushed");
         _sut.ToolTipText.Should().NotContain("commit(s) should be integrated");
-        _sut!.Image.RawFormat.GetHashCode().Should().Be(PushImageHashCode);
+        _sut!.Image!.RawFormat.GetHashCode().Should().Be(PushImageHashCode);
     }
 
     [Test]
@@ -121,7 +121,7 @@ public class ToolStripPushButtonTests
         _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
         _sut.ToolTipText.Should().NotContain("new commit(s) will be pushed");
         _sut.ToolTipText.Should().Contain("2 commit(s) should be integrated");
-        _sut!.Image.RawFormat.GetHashCode().Should().Be(Images.Unstage.RawFormat.GetHashCode());
+        _sut!.Image!.RawFormat.GetHashCode().Should().Be(Images.Unstage.RawFormat.GetHashCode());
     }
 
     [Test]
@@ -139,7 +139,7 @@ public class ToolStripPushButtonTests
         _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
         _sut.ToolTipText.Should().Contain("99 new commit(s) will be pushed");
         _sut.ToolTipText.Should().Contain("3 commit(s) should be integrated");
-        _sut!.Image.RawFormat.GetHashCode().Should().Be(Images.Unstage.RawFormat.GetHashCode());
+        _sut!.Image!.RawFormat.GetHashCode().Should().Be(Images.Unstage.RawFormat.GetHashCode());
     }
 
     [Test]
@@ -154,7 +154,7 @@ public class ToolStripPushButtonTests
         _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.Image);
         _sut.ToolTipText.Should().NotContain("99 new commit(s) will be pushed");
         _sut.ToolTipText.Should().NotContain("3 commit(s) should be integrated");
-        _sut!.Image.RawFormat.GetHashCode().Should().Be(Images.Unstage.RawFormat.GetHashCode());
+        _sut!.Image!.RawFormat.GetHashCode().Should().Be(Images.Unstage.RawFormat.GetHashCode());
     }
 
     [Test]

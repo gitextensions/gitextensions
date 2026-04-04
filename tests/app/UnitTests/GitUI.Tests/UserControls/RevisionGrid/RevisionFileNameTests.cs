@@ -55,7 +55,7 @@ public class RevisionFileNameTests
         {
             using (_executable.StageOutput(line, $"????{objectId}\n{expectedFileName}"))
             {
-                actualFileName = _revisionGridControl.GetRevisionFileName(path, ObjectId.Parse(objectId));
+                actualFileName = _revisionGridControl.GetRevisionFileName(path, ObjectId.Parse(objectId))!;
             }
         }
         finally

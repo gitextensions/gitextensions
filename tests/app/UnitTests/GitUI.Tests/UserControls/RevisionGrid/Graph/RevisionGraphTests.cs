@@ -78,13 +78,13 @@ public class RevisionGraphTests
         Setup(mergeGraphLanesHavingCommonParent);
 
         _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
-        ClassicAssert.IsTrue(_revisionGraph!.GetNodeForRow(0).IsRelative);
-        ClassicAssert.IsTrue(_revisionGraph!.GetNodeForRow(1).IsRelative);
-        ClassicAssert.IsTrue(_revisionGraph!.GetNodeForRow(4).IsRelative);
-        _revisionGraph.HighlightBranch(_revisionGraph!.GetNodeForRow(1).Objectid);
-        ClassicAssert.IsFalse(_revisionGraph!.GetNodeForRow(0).IsRelative);
-        ClassicAssert.IsTrue(_revisionGraph!.GetNodeForRow(1).IsRelative);
-        ClassicAssert.IsTrue(_revisionGraph!.GetNodeForRow(4).IsRelative);
+        ClassicAssert.IsTrue(_revisionGraph.GetNodeForRow(0)!.IsRelative);
+        ClassicAssert.IsTrue(_revisionGraph.GetNodeForRow(1)!.IsRelative);
+        ClassicAssert.IsTrue(_revisionGraph.GetNodeForRow(4)!.IsRelative);
+        _revisionGraph.HighlightBranch(_revisionGraph.GetNodeForRow(1)!.Objectid);
+        ClassicAssert.IsFalse(_revisionGraph.GetNodeForRow(0)!.IsRelative);
+        ClassicAssert.IsTrue(_revisionGraph.GetNodeForRow(1)!.IsRelative);
+        ClassicAssert.IsTrue(_revisionGraph.GetNodeForRow(4)!.IsRelative);
     }
 
     [Test]
@@ -98,12 +98,12 @@ public class RevisionGraphTests
         }
 
         _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
-        ClassicAssert.AreEqual(1, _revisionGraph!.GetSegmentsForRow(0).GetLaneCount());
-        ClassicAssert.AreEqual(1, _revisionGraph!.GetSegmentsForRow(1).GetLaneCount());
-        ClassicAssert.AreEqual(2, _revisionGraph!.GetSegmentsForRow(2).GetLaneCount());
-        ClassicAssert.AreEqual(2, _revisionGraph!.GetSegmentsForRow(3).GetLaneCount());
-        ClassicAssert.AreEqual(1, _revisionGraph!.GetSegmentsForRow(4).GetLaneCount());
-        ClassicAssert.AreEqual(1, _revisionGraph!.GetSegmentsForRow(5).GetLaneCount());
+        ClassicAssert.AreEqual(1, _revisionGraph.GetSegmentsForRow(0)!.GetLaneCount());
+        ClassicAssert.AreEqual(1, _revisionGraph.GetSegmentsForRow(1)!.GetLaneCount());
+        ClassicAssert.AreEqual(2, _revisionGraph.GetSegmentsForRow(2)!.GetLaneCount());
+        ClassicAssert.AreEqual(2, _revisionGraph.GetSegmentsForRow(3)!.GetLaneCount());
+        ClassicAssert.AreEqual(1, _revisionGraph.GetSegmentsForRow(4)!.GetLaneCount());
+        ClassicAssert.AreEqual(1, _revisionGraph.GetSegmentsForRow(5)!.GetLaneCount());
     }
 
     [Test]
@@ -118,7 +118,7 @@ public class RevisionGraphTests
 
         GitRevision commit2 = new(ObjectId.Random());
         commit1.ParentIds = new ObjectId[] { commit2.ObjectId };
-        commit2.ParentIds = new ObjectId[] { _revisionGraph!.GetNodeForRow(4).Objectid };
+        commit2.ParentIds = new ObjectId[] { _revisionGraph.GetNodeForRow(4)!.Objectid };
 
         _revisionGraph.Add(commit2); // This commit is now dangling
 
@@ -133,7 +133,7 @@ public class RevisionGraphTests
         // Add a new head
         GitRevision newHead = new(ObjectId.Random())
         {
-            ParentIds = new ObjectId[] { _revisionGraph!.GetNodeForRow(0).Objectid }
+            ParentIds = new ObjectId[] { _revisionGraph.GetNodeForRow(0)!.Objectid }
         };
         _revisionGraph.Add(newHead); // Add commit that has the current top node as parent.
 
@@ -180,7 +180,7 @@ public class RevisionGraphTests
 
         _revisionGraph.CacheTo(_revisionGraph.Count, _revisionGraph.Count);
 
-        ClassicAssert.AreEqual(1, _revisionGraph!.GetSegmentsForRow(1).GetCurrentRevisionLane());
+        ClassicAssert.AreEqual(1, _revisionGraph.GetSegmentsForRow(1)!.GetCurrentRevisionLane());
 
         await VerifyGraphLayoutAsync(_revisionGraph);
     }
@@ -528,7 +528,7 @@ public class RevisionGraphTests
             }
 
             // Show '*' in lane of actual commit
-            string? subject = row!.Revision.GitRevision.Subject;
+            string? subject = row!.Revision.GitRevision?.Subject;
             line[row.GetCurrentRevisionLane() * 2] = subject?.Length is 1 ? subject[0] : '*';
 
             graph.Add(new string(line).TrimEnd());

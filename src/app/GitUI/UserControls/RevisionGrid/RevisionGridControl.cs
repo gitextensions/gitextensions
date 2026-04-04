@@ -132,7 +132,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private readonly BuildServerWatcher _buildServerWatcher;
     private readonly System.Windows.Forms.Timer _selectionTimer;
     private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
-    private readonly DataGridViewColumn _maximizedColumn;
+    private readonly DataGridViewColumn? _maximizedColumn;
     private DataGridViewColumn? _lastVisibleResizableColumn;
     private readonly ArtificialCommitChangeCount _workTreeChangeCount = new();
     private readonly ArtificialCommitChangeCount _indexChangeCount = new();
@@ -225,7 +225,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         // Delay raising the SelectionChanged event for a barely noticeable period to throttle
         // rapid changes, for example by holding the down arrow key in the revision grid.
         // 75ms is longer than the default keyboard repeat rate of 15 keypresses per second.
-        _selectionTimer = new System.Windows.Forms.Timer(components) { Interval = 75 };
+        _selectionTimer = new System.Windows.Forms.Timer(components!) { Interval = 75 };
         _selectionTimer.Tick += (_, e) =>
         {
             _selectionTimer.Stop();
@@ -242,7 +242,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         {
             if (!SetSelectedRevision(commitId))
             {
-                MessageBoxes.RevisionFilteredInGrid(this, commitId);
+                MessageBoxes.RevisionFilteredInGrid(this, commitId!);
             }
         });
         _authorHighlighting = new AuthorRevisionHighlighting();
@@ -382,8 +382,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             flags |= TextFormatFlags.EndEllipsis;
         }
 
-        Size size = TextRenderer.MeasureText(e.Graphics, text, font, bounds.Size, flags);
-        TextRenderer.DrawText(e.Graphics, text, font, bounds, color, flags);
+        Size size = TextRenderer.MeasureText(e.Graphics!, text, font, bounds.Size, flags);
+        TextRenderer.DrawText(e.Graphics!, text, font, bounds, color, flags);
 
         _toolTipProvider.SetTruncation(e.ColumnIndex, e.RowIndex, truncated: size.Width > bounds.Width);
 
@@ -696,9 +696,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    public GitRevision? GetRevision(ObjectId objectId)
+    public GitRevision GetRevision(ObjectId objectId)
     {
-        return _gridView.GetRevision(objectId);
+        return _gridView.GetRevision(objectId)!;
     }
 
     private void HighlightBranch(ObjectId id)
@@ -716,7 +716,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         GitRefListsForRevision gitRefListsForRevision = new(revision);
 
-        IGitRef descriptiveRef = gitRefListsForRevision.AllBranches
+        IGitRef? descriptiveRef = gitRefListsForRevision.AllBranches
             .Concat(gitRefListsForRevision.AllTags)
             .FirstOrDefault();
 
@@ -809,7 +809,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     /// <returns>The GitRevision or null if not found</returns>
     public GitRevision? GetActualRevision(ObjectId objectId)
     {
-        GitRevision revision = GetRevision(objectId);
+        GitRevision? revision = GetRevision(objectId);
         if (revision is not null)
         {
             return GetActualRevision(revision);
@@ -907,7 +907,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     /// </summary>
     /// <exception cref="Exception"></exception>
     /// <param name="forceRefresh">Refresh may be required as references may be changed.</param>
-    public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null, bool forceRefresh = false)
+    public void PerformRefreshRevisions(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs = null!, bool forceRefresh = false)
     {
         ThreadHelper.AssertOnUIThread();
 
@@ -938,12 +938,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         CancellationToken cancellationToken = _refreshRevisionsSequence.Next();
         _isRefreshingRevisions = true;
 
-        ILookup<ObjectId, IGitRef> refsByObjectId = null;
+        ILookup<ObjectId, IGitRef>? refsByObjectId = null;
         bool firstRevisionReceived = false;
         bool headIsHandled = false;
-        Dictionary<ObjectId, GitRevision> stashesById = null;
-        Dictionary<ObjectId, GitRevision> untrackedByStashId = null;
-        ILookup<ObjectId, GitRevision> stashesByParentId = null;
+        Dictionary<ObjectId, GitRevision>? stashesById = null;
+        Dictionary<ObjectId, GitRevision>? untrackedByStashId = null;
+        ILookup<ObjectId, GitRevision>? stashesByParentId = null;
 
         // getRefs (refreshing from Browse) is Lazy already, but not from RevGrid (updating filters etc)
         Lazy<IReadOnlyList<IGitRef>> getUnfilteredRefs = new(() => (getRefs ?? capturedModule.GetRefs)(RefsFilter.NoFilter));
@@ -1035,14 +1035,14 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 refsByObjectId = (showStashes
                     ? getUnfilteredRefs.Value.Where(r => r.CompleteName != GitRefName.RefsStashPrefix)
                     : getUnfilteredRefs.Value)
-                    .ToLookup(gitRef => gitRef.ObjectId);
+                    .ToLookup(gitRef => gitRef.ObjectId)!;
                 cancellationToken.ThrowIfCancellationRequested();
                 ResetNavigationHistory();
                 UpdateSelectedRef(capturedModule, getUnfilteredRefs.Value, headRef.Value);
-                _gridView.ToBeSelectedObjectIds = GetToBeSelectedRevisions(CurrentCheckout, currentlySelectedObjectIds);
+                _gridView.ToBeSelectedObjectIds = GetToBeSelectedRevisions(CurrentCheckout, currentlySelectedObjectIds)!;
 
                 _gridView._revisionGraph.OnlyFirstParent = _filterInfo.ShowOnlyFirstParent;
-                _gridView._revisionGraph.HeadId = CurrentCheckout;
+                _gridView._revisionGraph.HeadId = CurrentCheckout!;
 
                 // Allow add revisions to the grid
                 semaphoreUpdateGrid.Release();
@@ -1084,28 +1084,28 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                         }
 
                         // "stash" commits to insert (before regular commits)
-                        stashesByParentId = getStashRevs.Value.ToLookup(r => r.FirstParentId);
+                        stashesByParentId = getStashRevs.Value.ToLookup(r => r.FirstParentId!);
 
                         // "untracked" commits to insert (parent to "stash" commits)
                         Dictionary<ObjectId, ObjectId> untrackedIdByStashId = getStashRevs.Value
-                            .Where(stash => stash.ParentIds.Count >= 3)
+                            .Where(stash => stash.ParentIds!.Count >= 3)
                             .Take(AppSettings.MaxStashesWithUntrackedFiles)
-                            .ToDictionary(stash => stash.ObjectId, stash => stash.ParentIds[2]);
+                            .ToDictionary(stash => stash.ObjectId, stash => stash.ParentIds![2]);
                         List<ObjectId> untrackedIds = [.. untrackedIdByStashId.Values.Distinct()];
                         Dictionary<ObjectId, GitRevision> untrackedRevs = new RevisionReader(capturedModule)
                             .GetRevisionsFromList(untrackedIds, cancellationToken)
                             .ToDictionary(r => r.ObjectId);
                         untrackedByStashId = untrackedIdByStashId
-                            .Select(e => (e.Key, untrackedRevs.TryGetValue(e.Value, out GitRevision rev) ? rev : null))
+                            .Select(e => (e.Key, untrackedRevs.TryGetValue(e.Value, out GitRevision? rev) ? rev : null))
                             .Where(e => e.Item2 is not null)
-                            .ToDictionary();
+                            .ToDictionary(e => e.Key, e => e.Item2!);
 
                         // Remove parents not included ("index" and empty "untracked" commits).
                         foreach (GitRevision stash in getStashRevs.Value)
                         {
-                            stash.ParentIds = untrackedByStashId.ContainsKey(stash.ObjectId)
-                                ? [stash.FirstParentId, stash.ParentIds[2]]
-                                : [stash.FirstParentId];
+                            stash.ParentIds = untrackedByStashId!.ContainsKey(stash.ObjectId)
+                                ? [stash.FirstParentId!, stash.ParentIds![2]]
+                                : [stash.FirstParentId!];
                         }
                     }
                     catch
@@ -1167,7 +1167,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
             string selectedRemote = selectedRef.TrackingRemote;
             string selectedMerge = selectedRef.MergeWith;
-            IGitRef selectedHeadMergeSource = gitRefs.FirstOrDefault(
+            IGitRef? selectedHeadMergeSource = gitRefs.FirstOrDefault(
                 gitRef => gitRef.IsRemote
                      && selectedRemote == gitRef.Remote
                      && selectedMerge == gitRef.LocalName);
@@ -1288,7 +1288,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             {
                 if (stashesById is not null && stashesById.Count != 0)
                 {
-                    if (stashesById.TryGetValue(revision.ObjectId, out GitRevision gridStash))
+                    if (stashesById.TryGetValue(revision.ObjectId, out GitRevision? gridStash))
                     {
                         revision.ReflogSelector = gridStash.ReflogSelector;
 
@@ -1307,7 +1307,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                                 // Remove current stash from list of stashes to display
                                 stashesById.Remove(stash.ObjectId);
 
-                                if (untrackedByStashId.TryGetValue(stash.ObjectId, out GitRevision untracked))
+                                if (untrackedByStashId!.TryGetValue(stash.ObjectId, out GitRevision? untracked))
                                 {
                                     revisionsToDisplay.Add(untracked);
                                 }
@@ -1317,7 +1317,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 }
 
                 // Look up any refs associated with this revision
-                revision.Refs = refsByObjectId[revision.ObjectId].AsReadOnlyList();
+                revision.Refs = refsByObjectId![revision.ObjectId].AsReadOnlyList();
 
                 if (!headIsHandled && (revision.ObjectId.Equals(CurrentCheckout) || CurrentCheckout is null))
                 {
@@ -1643,7 +1643,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         ObjectId? currentObjectId = null;
 
-        foreach (string line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
+        foreach (string? line in lines.Select(GitModule.ReEncodeFileNameFromLossless))
         {
             if (string.IsNullOrEmpty(line))
             {
@@ -1692,7 +1692,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     #region Graph event handlers
 
-    private void OnGridViewSelectionChanged(object sender, EventArgs e)
+    private void OnGridViewSelectionChanged(object? sender, EventArgs e)
     {
         _parentChildNavigationHistory.RevisionsSelectionChanged();
 
@@ -1704,7 +1704,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         _selectionTimer.Stop();
         _selectionTimer.Start();
 
-        (ObjectId first, GitRevision selected) = GetFirstAndSelected();
+        (ObjectId? first, GitRevision? selected) = GetFirstAndSelected();
 
         compareToWorkingDirectoryMenuItem.Enabled = selected is not null && selected.ObjectId != ObjectId.WorkTreeId;
         compareWithCurrentBranchToolStripMenuItem.Enabled = !string.IsNullOrWhiteSpace(CurrentBranch.Value);
@@ -1772,7 +1772,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             FormQuickGitRefSelector.QuickAction.Delete);
     }
 
-    private void OnGridViewMouseDown(object sender, MouseEventArgs e)
+    private void OnGridViewMouseDown(object? sender, MouseEventArgs e)
     {
         switch (e.Button)
         {
@@ -1785,7 +1785,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 _lastVisibleResizableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
                 break;
 
-                void OnGridViewMouseCaptureChanged(object ignoredSender, EventArgs ignoredArgs)
+                void OnGridViewMouseCaptureChanged(object? ignoredSender, EventArgs ignoredArgs)
                 {
                     _gridView.MouseCaptureChanged -= OnGridViewMouseCaptureChanged;
                     _lastVisibleResizableColumn.AutoSizeMode = DataGridViewAutoSizeColumnMode.None; // None must be set before Fill
@@ -1802,7 +1802,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         return spi is not null;
     }
 
-    private void OnGridViewDoubleClick(object sender, MouseEventArgs e)
+    private void OnGridViewDoubleClick(object? sender, MouseEventArgs e)
     {
         if (e.Button != MouseButtons.Left)
         {
@@ -1817,7 +1817,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    private void OnGridViewMouseClick(object sender, MouseEventArgs e)
+    private void OnGridViewMouseClick(object? sender, MouseEventArgs e)
     {
         DataGridView.HitTestInfo hti = _gridView.HitTest(e.X, e.Y);
         _latestSelectedRowIndex = hti.RowIndex;
@@ -1832,7 +1832,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     {
         if (e.ColumnIndex == _buildServerWatcher.ColumnProvider.Index)
         {
-            GitRevision revision = GetRevision(e.RowIndex);
+            GitRevision? revision = GetRevision(e.RowIndex);
             _gridView.Cursor = string.IsNullOrWhiteSpace(revision?.BuildStatus?.Url) ? Cursors.Default : Cursors.Hand;
         }
         else
@@ -1841,7 +1841,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    private void OnGridViewCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
+    private void OnGridViewCellMouseDown(object? sender, DataGridViewCellMouseEventArgs e)
     {
         try
         {
@@ -1899,7 +1899,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void CreateTagToolStripMenuItemClick(object sender, EventArgs e)
     {
-        GitRevision revision = LatestSelectedRevision;
+        GitRevision? revision = LatestSelectedRevision;
 
         UICommands.DoActionOnRepo(() =>
         {
@@ -1938,7 +1938,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void CreateNewBranchToolStripMenuItemClick(object sender, EventArgs e)
     {
-        GitRevision revision = LatestSelectedRevision;
+        GitRevision? revision = LatestSelectedRevision;
 
         UICommands.DoActionOnRepo(() =>
         {
@@ -2066,7 +2066,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 ToolStripMenuItem toolStripItem = AddBranchMenuItem(mergeBranchDropDown, head,
                     delegate { UICommands.StartMergeBranchDialog(ParentForm, GetRefUnambiguousName(head)); });
 
-                _rebaseOnTopOf ??= (string)toolStripItem.Tag;
+                _rebaseOnTopOf ??= (string?)toolStripItem.Tag;
             }
         }
 
@@ -2258,7 +2258,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private string GetRefUnambiguousName(IGitRef gitRef)
     {
-        return _ambiguousRefs.Value.Contains(gitRef.Name)
+        return _ambiguousRefs!.Value.Contains(gitRef.Name)
             ? gitRef.CompleteName
             : gitRef.Name;
     }
@@ -2476,13 +2476,13 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void ApplyStashToolStripMenuItemClick(object sender, EventArgs e)
     {
-        UICommands.StashApply(this, LatestSelectedRevision.ObjectId.ToString());
+        UICommands.StashApply(this, LatestSelectedRevision!.ObjectId.ToString());
         PerformRefreshRevisions();
     }
 
     private void PopStashToolStripMenuItemClick(object sender, EventArgs e)
     {
-        string stashName = LatestSelectedRevision.ReflogSelector;
+        string? stashName = LatestSelectedRevision!.ReflogSelector;
         if (string.IsNullOrEmpty(stashName))
         {
             return;
@@ -2494,7 +2494,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void DropStashToolStripMenuItemClick(object sender, EventArgs e)
     {
-        string stashName = LatestSelectedRevision.ReflogSelector;
+        string? stashName = LatestSelectedRevision!.ReflogSelector;
         if (string.IsNullOrEmpty(stashName))
         {
             return;
@@ -2572,8 +2572,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private void SelectInLeftPanel_Click(object? sender, EventArgs e)
     {
         mainContextMenu.Close();
-        string gitRef = sender != tsmiSelectInLeftPanel && sender is ToolStripMenuItem item ? item.Text : (string)tsmiSelectInLeftPanel.Tag;
-        SelectInLeftPanel(gitRef);
+        string? gitRef = sender != tsmiSelectInLeftPanel && sender is ToolStripMenuItem item ? item.Text : (string?)tsmiSelectInLeftPanel.Tag;
+        SelectInLeftPanel?.Invoke(gitRef!);
     }
 
     internal void ToggleShowRelativeDate()
@@ -2612,10 +2612,10 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         {
             DebugHelpers.Assert(objectId == ObjectId.WorkTreeId || objectId == ObjectId.IndexId,
                 $"Unexpected Git object id {objectId}");
-            ArtificialCommitChangeCount changeCount = GetChangeCount(objectId);
+            ArtificialCommitChangeCount? changeCount = GetChangeCount(objectId);
             Validates.NotNull(changeCount);
             StagedStatus staged = objectId == ObjectId.WorkTreeId ? StagedStatus.WorkTree : StagedStatus.Index;
-            List<GitItemStatus> items = status?.Where(item => item.Staged == staged).ToList();
+            List<GitItemStatus>? items = status?.Where(item => item.Staged == staged).ToList();
             changeCount.Update(items);
         }
     }
@@ -2839,25 +2839,25 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void GoToFirstParent()
     {
-        GitRevision r = LatestSelectedRevision;
+        GitRevision? r = LatestSelectedRevision;
         if (r?.HasParent is true)
         {
-            _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.FirstParentId);
+            _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.FirstParentId!);
         }
     }
 
     private void GoToLastParent()
     {
-        GitRevision r = LatestSelectedRevision;
+        GitRevision? r = LatestSelectedRevision;
         if (r?.HasParent is true)
         {
-            _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.ParentIds[^1]);
+            _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.ParentIds![^1]);
         }
     }
 
     private void goToParentToolStripMenuItem_Click()
     {
-        GitRevision r = LatestSelectedRevision;
+        GitRevision? r = LatestSelectedRevision;
         if (r is not null)
         {
             if (_parentChildNavigationHistory.HasPreviousParent)
@@ -2866,7 +2866,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             }
             else if (r.HasParent)
             {
-                _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.FirstParentId);
+                _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.FirstParentId!);
             }
         }
     }
@@ -2880,14 +2880,14 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
 
         GitRevision revision = revisions[^1];
-        while (revision.IsArtificial)
+        while (revision!.IsArtificial)
         {
-            revision = GetRevision(revision.FirstParentId);
+            revision = GetRevision(revision.FirstParentId!)!;
         }
 
         do
         {
-            GitRevision prevRev = GetRevision(revision.FirstParentId);
+            GitRevision? prevRev = GetRevision(revision.FirstParentId!);
             if (prevRev == null)
             {
                 break;
@@ -2953,7 +2953,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void goToChildToolStripMenuItem_Click()
     {
-        GitRevision r = LatestSelectedRevision;
+        GitRevision? r = LatestSelectedRevision;
         if (r is not null)
         {
             IReadOnlyList<ObjectId> children = GetRevisionChildren(r.ObjectId);
@@ -3109,7 +3109,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void compareSelectedCommitsMenuItem_Click(object sender, EventArgs e)
     {
-        (ObjectId firstId, GitRevision selected) = GetFirstAndSelected();
+        (ObjectId? firstId, GitRevision? selected) = GetFirstAndSelected();
 
         if (selected is not null && firstId is not null)
         {
@@ -3122,22 +3122,22 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    private void diffSelectedCommitsMenuItem_Click(object sender, EventArgs e)
+    private void diffSelectedCommitsMenuItem_Click(object? sender, EventArgs e)
     {
-        ToolStripMenuItem item = sender as ToolStripMenuItem;
+        ToolStripMenuItem? item = sender as ToolStripMenuItem;
         if (item?.DropDownItems != null)
         {
             // "main menu" clicked, cancel dropdown manually, invoke default difftool
             item.HideDropDown();
         }
 
-        string toolName = item?.Tag as string;
+        string? toolName = item?.Tag as string;
         DiffSelectedCommitsWithDifftool(toolName);
     }
 
     public void DiffSelectedCommitsWithDifftool(string? customTool = null)
     {
-        (ObjectId first, GitRevision selected) = GetFirstAndSelected();
+        (ObjectId? first, GitRevision? selected) = GetFirstAndSelected();
         if (selected is not null)
         {
             Module.OpenWithDifftoolDirDiff(first?.ToString(), selected.ObjectId.ToString(), customTool: customTool);
@@ -3214,9 +3214,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     #region Drag/drop patch files on revision grid
 
-    private void OnGridViewDragDrop(object sender, DragEventArgs e)
+    private void OnGridViewDragDrop(object? sender, DragEventArgs e)
     {
-        if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
+        if (e.Data?.GetData(DataFormats.FileDrop) is Array fileNameArray)
         {
             FindForm()?.ForceActivate();
 
@@ -3229,7 +3229,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
             foreach (object fileNameObject in fileNameArray)
             {
-                string fileName = fileNameObject as string;
+                string? fileName = fileNameObject as string;
 
                 if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -3240,13 +3240,13 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    private static void OnGridViewDragEnter(object sender, DragEventArgs e)
+    private static void OnGridViewDragEnter(object? sender, DragEventArgs e)
     {
-        if (e.Data.GetData(DataFormats.FileDrop) is Array fileNameArray)
+        if (e.Data?.GetData(DataFormats.FileDrop) is Array fileNameArray)
         {
             foreach (object fileNameObject in fileNameArray)
             {
-                string fileName = fileNameObject as string;
+                string? fileName = fileNameObject as string;
 
                 if (!string.IsNullOrEmpty(fileName) && fileName.EndsWith(".patch", StringComparison.InvariantCultureIgnoreCase))
                 {
@@ -3292,7 +3292,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             case Command.SelectCurrentRevision:
                 if (!SetSelectedRevision(CurrentCheckout))
                 {
-                    MessageBoxes.RevisionFilteredInGrid(this, CurrentCheckout);
+                    MessageBoxes.RevisionFilteredInGrid(this, CurrentCheckout!);
                 }
 
                 break;

@@ -66,7 +66,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
             AppSettings.OutputHistoryPanelVisible.Value = !chkShowOutputHistoryAsTab.Checked && outputHistoryDepth > 0;
         }
 
-        AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem).Name.ToLowerInvariant();
+        AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem!).Name.ToLowerInvariant();
 
         base.PageToSettings();
     }

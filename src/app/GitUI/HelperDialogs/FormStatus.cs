@@ -183,7 +183,7 @@ public partial class FormStatus : GitExtensionsDialog
 
             try
             {
-                RunProcessInfo runProcessInfo = new(ProcessString, ProcessArguments, GetOutputString(), DateTime.Now);
+                RunProcessInfo runProcessInfo = new(ProcessString!, ProcessArguments!, GetOutputString(), DateTime.Now);
                 UICommands.GetRequiredService<IOutputHistoryRecorder>().RecordHistory(runProcessInfo);
             }
             catch (Exception exception)
@@ -230,7 +230,7 @@ public partial class FormStatus : GitExtensionsDialog
 
     private void SetIcon(Bitmap image)
     {
-        Icon oldIcon = Icon;
+        Icon? oldIcon = Icon;
         Icon = image.ToIcon();
         oldIcon?.Dispose();
     }

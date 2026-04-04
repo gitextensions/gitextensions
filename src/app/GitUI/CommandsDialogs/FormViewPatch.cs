@@ -33,7 +33,7 @@ public partial class FormViewPatch : GitModuleForm
 
         InitializeComplete();
 
-        typeDataGridViewTextBoxColumn.DataPropertyName = nameof(Patch.ChangeType);
+        typeDataGridViewTextBoxColumn.DataPropertyName= nameof(Patch.ChangeType);
         File.DataPropertyName = nameof(Patch.FileType);
         FileNameA.DataPropertyName = nameof(Patch.FileNameA);
     }
@@ -44,14 +44,14 @@ public partial class FormViewPatch : GitModuleForm
         LoadPatchFile();
     }
 
-    private void GridChangedFiles_SelectionChanged(object sender, EventArgs e)
+    private void GridChangedFiles_SelectionChanged(object? sender, EventArgs e)
     {
         if (GridChangedFiles.SelectedRows.Count == 0)
         {
             return;
         }
 
-        Patch patch = (Patch)GridChangedFiles.SelectedRows[0].DataBoundItem;
+        Patch? patch = (Patch?)GridChangedFiles.SelectedRows[0].DataBoundItem;
 
         if (patch is null)
         {

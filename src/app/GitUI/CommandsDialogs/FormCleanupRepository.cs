@@ -47,8 +47,8 @@ public partial class FormCleanupRepository : GitModuleForm
 
     private void CleanUp(bool dryRun)
     {
-        string includePathArgument = GetInclusivePathArgumentFromGui();
-        string excludePathArguments = GetExclusivePathArgumentFromGui();
+        string? includePathArgument = GetInclusivePathArgumentFromGui();
+        string? excludePathArguments = GetExclusivePathArgumentFromGui();
         CleanMode mode = GetCleanMode();
         ArgumentString cleanUpCmd = Commands.Clean(mode, dryRun, directories: RemoveDirectories.Checked,
             paths: includePathArgument, excludes: excludePathArguments);
@@ -145,7 +145,7 @@ public partial class FormCleanupRepository : GitModuleForm
 
     private void AddIncludePath_Click(object sender, EventArgs e)
     {
-        string path = RequestUserFolderPath();
+        string? path = RequestUserFolderPath();
 
         if (path is not null)
         {
@@ -155,7 +155,7 @@ public partial class FormCleanupRepository : GitModuleForm
 
     private void AddExcludePath_Click(object sender, EventArgs e)
     {
-        string path = RequestUserFilePath();
+        string? path = RequestUserFilePath();
 
         if (path is not null)
         {

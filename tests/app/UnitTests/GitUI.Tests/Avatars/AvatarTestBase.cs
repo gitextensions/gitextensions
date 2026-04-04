@@ -60,7 +60,7 @@ public abstract class AvatarTestBase
         _inner.GetAvatarAsync(_email2, _name2, _size).Returns(Task.FromResult<Image?>(_img2));
         _inner.GetAvatarAsync(_email3, _name3, _size).Returns(Task.FromResult<Image?>(_img3));
         _inner.GetAvatarAsync(_email4, _name4, _size).Returns(Task.FromResult<Image?>(_img4));
-        _inner.GetAvatarAsync(_emailMissing, _nameMissing, _size).Returns(Task.FromResult((Image)null));
+        _inner.GetAvatarAsync(_emailMissing, _nameMissing, _size).Returns(Task.FromResult((Image?)null));
     }
 
     protected async Task MissAsync(string email, string name,  Image expected = null!)

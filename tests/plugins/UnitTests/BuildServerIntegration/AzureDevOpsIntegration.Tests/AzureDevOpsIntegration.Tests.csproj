@@ -1,8 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\..\..\src\plugins\BuildServerIntegration\AzureDevOpsIntegration\GitExtensions.Plugins.AzureDevOpsIntegration.csproj" />

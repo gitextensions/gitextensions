@@ -82,7 +82,7 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
         }
 
         string text = (AppSettings.ShowBuildStatusIconColumn ? revision.BuildStatus.StatusSymbol : string.Empty)
-            + (AppSettings.ShowBuildStatusTextColumn ? (string)e.FormattedValue : string.Empty);
+            + (AppSettings.ShowBuildStatusTextColumn ? (string)e.FormattedValue! : string.Empty);
 
         if (_fontWithUnicodeCache?.Size != style.NormalFont.Size)
         {

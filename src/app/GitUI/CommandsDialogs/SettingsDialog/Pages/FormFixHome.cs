@@ -37,7 +37,7 @@ public partial class FormFixHome : GitExtensionsForm
     {
         try
         {
-            string home = Environment.GetEnvironmentVariable("HOME");
+            string? home = Environment.GetEnvironmentVariable("HOME");
             if (string.IsNullOrEmpty(home) || !Directory.Exists(home))
             {
                 return true;
@@ -56,9 +56,9 @@ public partial class FormFixHome : GitExtensionsForm
 
             string[] candidates =
             [
-                        Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User),
+                        Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)!,
                         Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH"),
-                        Environment.GetEnvironmentVariable("USERPROFILE"),
+                        Environment.GetEnvironmentVariable("USERPROFILE")!,
                         Environment.GetFolderPath(Environment.SpecialFolder.Personal)
             ];
 
@@ -138,7 +138,7 @@ public partial class FormFixHome : GitExtensionsForm
 
         try
         {
-            string userHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
+            string? userHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
             if (!string.IsNullOrEmpty(userHomeDir) && File.Exists(Path.Combine(userHomeDir, ".gitconfig")))
             {
                 MessageBox.Show(this, string.Format(_gitconfigFoundHome.Text, userHomeDir), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -173,7 +173,7 @@ public partial class FormFixHome : GitExtensionsForm
 
         try
         {
-            string path = Environment.GetEnvironmentVariable("USERPROFILE");
+            string? path = Environment.GetEnvironmentVariable("USERPROFILE");
             if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
             {
                 MessageBox.Show(this, string.Format(_gitconfigFoundUserprofile.Text, path), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
@@ -227,7 +227,7 @@ public partial class FormFixHome : GitExtensionsForm
         AppSettings.UserProfileHomeDir = userprofileHome.Checked;
 
         EnvironmentConfiguration.SetEnvironmentVariables();
-        string path = Environment.GetEnvironmentVariable("HOME");
+        string? path = Environment.GetEnvironmentVariable("HOME");
         if (!Directory.Exists(path) || string.IsNullOrEmpty(path))
         {
             MessageBox.Show(this, string.Format(_homeNotAccessible.Text, path), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -240,7 +240,7 @@ public partial class FormFixHome : GitExtensionsForm
 
     private void otherHomeBrowse_Click(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this, Environment.GetEnvironmentVariable("USERPROFILE"));
+        string? userSelectedPath = OsShellUtil.PickFolder(this, Environment.GetEnvironmentVariable("USERPROFILE"));
 
         if (userSelectedPath is not null)
         {

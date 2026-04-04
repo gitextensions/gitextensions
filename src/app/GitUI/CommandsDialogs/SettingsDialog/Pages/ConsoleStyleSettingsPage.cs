@@ -39,7 +39,7 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
 
     private void consoleFontChangeButton_Click(object sender, EventArgs e)
     {
-        consoleFontDialog.Font = _consoleFont;
+        consoleFontDialog.Font = _consoleFont!;
         DialogResult result = consoleFontDialog.ShowDialog(this);
 
         if (result is (DialogResult.OK or DialogResult.Yes))

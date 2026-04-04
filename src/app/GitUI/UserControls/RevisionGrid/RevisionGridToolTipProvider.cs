@@ -38,7 +38,7 @@ internal sealed class RevisionGridToolTipProvider
             return;
         }
 
-        GitUIPluginInterfaces.GitRevision revision = _gridView.GetRevision(e.RowIndex);
+        GitUIPluginInterfaces.GitRevision? revision = _gridView.GetRevision(e.RowIndex);
 
         if (revision is null)
         {

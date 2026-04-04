@@ -95,7 +95,7 @@ internal abstract class Tree : NodeBase, IDisposable
     // making sure to disable/enable the control.
     protected JoinableTask ReloadNodesDetached(Func<Func<RefsFilter, IReadOnlyList<IGitRef>>, CancellationToken, Task<Nodes>> loadNodesTask, Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
-        TreeView treeView = TreeViewNode.TreeView;
+        TreeView? treeView = TreeViewNode.TreeView;
 
         return _reloadTaskRunner.RunDetached(async cancellationToken =>
         {
@@ -166,11 +166,11 @@ internal abstract class Tree : NodeBase, IDisposable
         HashSet<string> expandedNodesState = firstTime ? [] : TreeViewNode.GetExpandedNodesState();
         Nodes.FillTreeViewNode(TreeViewNode);
 
-        TreeNode selectedNode = TreeViewNode.TreeView.SelectedNode;
+        TreeNode? selectedNode = TreeViewNode.TreeView!.SelectedNode;
 
         if (originalSelectedNodeFullNamePath != selectedNode?.GetFullNamePath())
         {
-            TreeNode node = TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath);
+            TreeNode? node = TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath);
 
             if (node is not null)
             {
@@ -194,7 +194,7 @@ internal abstract class Tree : NodeBase, IDisposable
 
     private void ExpandPathToSelectedNode()
     {
-        if (TreeViewNode.TreeView.Nodes.Count == 0)
+        if (TreeViewNode.TreeView!.Nodes.Count == 0)
         {
             return;
         }

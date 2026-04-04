@@ -86,7 +86,7 @@ public partial class FormAvailableEncodings : GitExtensionsForm
     private void ListIncludedEncodings_SelectedValueChanged(object sender, EventArgs e)
     {
         // Get selected encoding
-        Encoding encoding = ListIncludedEncodings.SelectedItem as Encoding;
+        Encoding? encoding = ListIncludedEncodings.SelectedItem as Encoding;
         Type? encodingType = null;
 
         // Get type if exists

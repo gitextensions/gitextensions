@@ -56,7 +56,7 @@ internal static class ContextMenuExtensions
         ToolStripItem[] items = [.. contextMenu.Items.Cast<ToolStripItem>()];
 
         // toggle all separators (but the last) looking behind for visible items other than separators
-        ToolStripItem lastPrecedingVisibleItem = null;
+        ToolStripItem? lastPrecedingVisibleItem = null;
 
         foreach (ToolStripItem item in items)
         {
@@ -74,7 +74,7 @@ internal static class ContextMenuExtensions
         }
 
         // hide the last visible separator that above look-behind loop may have left over
-        ToolStripItem lastVisible = items.LastOrDefault(i => i.Visible);
+        ToolStripItem? lastVisible = items.LastOrDefault(i => i.Visible);
 
         if (lastVisible is ToolStripSeparator)
         {

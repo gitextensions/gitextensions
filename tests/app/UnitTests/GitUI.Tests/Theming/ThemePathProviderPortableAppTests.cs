@@ -8,7 +8,7 @@ namespace GitUITests.Theming;
 public class ThemePathProviderPortableAppTests
 {
     private string _originalAppExecutablePath = null!;
-    private Lazy<string> _originalAppDataPath = null!;
+    private Lazy<string?> _originalAppDataPath = null!;
 
     // appInstall and AppData paths are same for portable app
     private const string MockAppInstallPath = "c:\\portable\\GitExtensions";

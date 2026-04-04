@@ -9,7 +9,7 @@ namespace GitUITests.Theming;
 public class ThemePathProviderInstalledAppTests
 {
     private string _originalAppExecutablePath = null!;
-    private Lazy<string> _originalAppDataPath = null!;
+    private Lazy<string?> _originalAppDataPath = null!;
 
     private const string MockAppInstallPath = "c:\\GitExtensions";
     private const string MockAppDataPath = "c:\\user\\username\\appdata";

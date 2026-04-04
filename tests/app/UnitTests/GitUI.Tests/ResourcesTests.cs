@@ -20,7 +20,7 @@ public class ResourcesTests
         ResourceSet? resourceSet = Images.ResourceManager.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists: true, tryParents: false);
 
         // act & assert
-        foreach (DictionaryEntry resourceEntry in resourceSet)
+        foreach (DictionaryEntry resourceEntry in resourceSet!)
         {
             if (resourceEntry.Value is not Bitmap bitmap || !ImageFormat.Png.Equals(bitmap.RawFormat))
             {

@@ -138,7 +138,7 @@ public class RevisionDiffControllerTests
         _fullPathResolver.Received(1).Resolve(item1.Item.Name);
         _fullPathResolver.Received(1).Resolve(item2.Item.Name);
         _fullPathResolver.Received(1).Resolve(item3.Item.Name);
-        _module.ReceivedWithAnyArgs(3).SaveBlobAs(default, default);
+        _module.ReceivedWithAnyArgs(3).SaveBlobAs(default!, default!);
         _module.Received(1).SaveBlobAs("c:\\temp\\item1.txt", Arg.Any<string>());
         _module.Received(1).SaveBlobAs("c:\\temp\\folder1\\item2.txt", Arg.Any<string>());
         _module.Received(1).SaveBlobAs("c:\\temp\\folder1\\folder2\\item3.txt", Arg.Any<string>());
@@ -171,7 +171,7 @@ public class RevisionDiffControllerTests
         _fullPathResolver.Received(1).Resolve(item1.Item.Name);
         _fullPathResolver.Received(1).Resolve(item2.Item.Name);
         _fullPathResolver.Received(1).Resolve(item3.Item.Name);
-        _module.ReceivedWithAnyArgs(3).SaveBlobAs(default, default);
+        _module.ReceivedWithAnyArgs(3).SaveBlobAs(default!, default!);
         _module.Received(1).SaveBlobAs("c:\\myproject\\src\\item1.txt", Arg.Any<string>());
         _module.Received(1).SaveBlobAs("c:\\myproject\\src\\folder1\\item2.txt", Arg.Any<string>());
         _module.Received(1).SaveBlobAs("c:\\myproject\\src\\folder1\\folder2\\item3.txt", Arg.Any<string>());

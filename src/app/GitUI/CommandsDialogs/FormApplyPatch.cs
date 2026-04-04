@@ -218,7 +218,7 @@ public partial class FormApplyPatch : GitModuleForm
         try
         {
             using StreamReader sr = new(path);
-            string line = sr.ReadLine();
+            string? line = sr.ReadLine();
 
             return line is not null && (line.StartsWith("diff ") || line.StartsWith("Index: "));
         }
@@ -238,7 +238,7 @@ public partial class FormApplyPatch : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
-            PatchFile applyingPatch = PatchGrid.PatchFiles.FirstOrDefault(p => p.IsNext);
+            PatchFile? applyingPatch = PatchGrid.PatchFiles!.FirstOrDefault(p => p.IsNext);
             if (applyingPatch is not null)
             {
                 applyingPatch.IsSkipped = true;
@@ -285,7 +285,7 @@ public partial class FormApplyPatch : GitModuleForm
 
     private void BrowseDir_Click(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this);
+        string? userSelectedPath = OsShellUtil.PickFolder(this);
 
         if (userSelectedPath is not null)
         {
