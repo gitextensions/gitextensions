@@ -9,7 +9,7 @@ namespace GitCommandsTests;
 [TestFixture]
 public class SshPathLocatorTest
 {
-    private IFileSystem _fileSystem;
+    private IFileSystem _fileSystem = null!;
 
     [SetUp]
     public void Setup()

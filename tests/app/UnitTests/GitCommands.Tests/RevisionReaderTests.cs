@@ -119,7 +119,7 @@ public sealed class RevisionReaderTests
     [Test]
     public void TryParseRevisionshould_return_false_if_argument_is_invalid()
     {
-        ArraySegment<byte> chunk = null;
+        ArraySegment<byte> chunk = null!;
         RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), ""), _logOutputEncoding, _sixMonths);
 
         // Set to a high value so Debug.Assert do not raise exceptions
@@ -161,7 +161,7 @@ public sealed class RevisionReaderTests
 
         // Set to a high value so Debug.Assert do not raise exceptions
         reader.GetTestAccessor().NoOfParseError = 100;
-        reader.GetTestAccessor().TryParseRevision(chunk, out GitRevision rev)
+        reader.GetTestAccessor().TryParseRevision(chunk, out GitRevision? rev)
             .Should().Be(expectedReturn);
 
         if (!expectedReturn)
@@ -177,11 +177,11 @@ public sealed class RevisionReaderTests
 
         if (hasEmptyReflogSelector)
         {
-            rev.ReflogSelector.Should().BeNull();
+            rev!.ReflogSelector.Should().BeNull();
         }
         else
         {
-            rev.ReflogSelector.Should().NotBeNull();
+            rev!.ReflogSelector.Should().NotBeNull();
         }
 
         await Verifier.VerifyJson(JsonConvert.SerializeObject(rev, timeZoneSettings))

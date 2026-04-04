@@ -40,7 +40,7 @@ public sealed class ArgumentBuilderExtensionsTests
             new ArgumentBuilder
             {
                 "foo",
-                { true, (string)null }
+                { true, (string?)null }
             });
 
         static void Test(string expected, ArgumentBuilder command)
@@ -127,7 +127,7 @@ public sealed class ArgumentBuilderExtensionsTests
             "foo",
             [
                 "foo",
-                (IEnumerable<string>)null
+                (IEnumerable<string>?)null
             ]);
 
         static void Test(string expected, ArgumentBuilder command)
@@ -176,7 +176,7 @@ public sealed class ArgumentBuilderExtensionsTests
             new ArgumentBuilder
             {
                 "foo",
-                { true, (IEnumerable<string>)null }
+                { true, (IEnumerable<string>?)null }
             });
 
         Test(
@@ -184,7 +184,7 @@ public sealed class ArgumentBuilderExtensionsTests
             new ArgumentBuilder
             {
                 "foo",
-                { false, (IEnumerable<string>)null }
+                { false, (IEnumerable<string>?)null }
             });
 
         static void Test(string expected, ArgumentBuilder command)
@@ -203,7 +203,7 @@ public sealed class ArgumentBuilderExtensionsTests
 
         void Test<T>()
         {
-            System.Reflection.MethodInfo method = typeof(ArgumentBuilderExtensions).GetMethod(
+            System.Reflection.MethodInfo? method = typeof(ArgumentBuilderExtensions).GetMethod(
                 nameof(ArgumentBuilderExtensions.Add),
                 [
                     typeof(ArgumentBuilder),
@@ -216,7 +216,7 @@ public sealed class ArgumentBuilderExtensionsTests
             {
                 ArgumentBuilder args = [];
 
-                ClassicAssert.DoesNotThrow(() => method.Invoke(null, [args, member]));
+                ClassicAssert.DoesNotThrow(() => method!.Invoke(null, [args, member]));
             }
         }
     }

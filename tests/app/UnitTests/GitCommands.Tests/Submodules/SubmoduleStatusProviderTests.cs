@@ -16,18 +16,18 @@ namespace GitCommandsTests.Submodules;
 [Parallelizable]
 internal class SubmoduleStatusProviderTests
 {
-    private GitModuleTestHelper _repo1;
-    private GitModuleTestHelper _repo2;
-    private GitModuleTestHelper _repo3;
+    private GitModuleTestHelper _repo1 = null!;
+    private GitModuleTestHelper _repo2 = null!;
+    private GitModuleTestHelper _repo3 = null!;
 
     // Note that _repo2Module and _repo3Module point to the submodules under _repo1Module,
     // not the 'origin' _repo2.Module and _repo3.Module respectively. In general, the tests should here
     // should interact with these modules, not with _repo2 and _repo3.
-    private IGitModule _repo1Module;
-    private IGitModule _repo2Module;
-    private IGitModule _repo3Module;
+    private IGitModule _repo1Module = null!;
+    private IGitModule _repo2Module = null!;
+    private IGitModule _repo3Module = null!;
 
-    private ISubmoduleStatusProvider _provider;
+    private ISubmoduleStatusProvider _provider = null!;
 
     [SetUp]
     public void SetUp()
@@ -77,7 +77,7 @@ internal class SubmoduleStatusProviderTests
         SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo1Module);
 
         result.Should().NotBeNull();
-        result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
+        result.TopProject!.Path.Should().Be(_repo1Module.WorkingDir);
         result.SuperProject.Should().Be(null);
         result.CurrentSubmoduleName.Should().Be(null);
         result.AllSubmodules.Select(info => info.Path).Should().Contain(_repo2Module.WorkingDir, _repo3Module.WorkingDir);
@@ -92,7 +92,7 @@ internal class SubmoduleStatusProviderTests
         SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo2Module);
 
         result.Should().NotBeNull();
-        result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
+        result.TopProject!.Path.Should().Be(_repo1Module.WorkingDir);
         result.SuperProject.Should().Be(result.TopProject);
         result.CurrentSubmoduleName.Should().Be("repo2");
         result.AllSubmodules.Select(info => info.Path).Should().Contain(_repo2Module.WorkingDir, _repo3Module.WorkingDir);
@@ -108,8 +108,8 @@ internal class SubmoduleStatusProviderTests
         SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, _repo3Module);
 
         result.Should().NotBeNull();
-        result.TopProject.Path.Should().Be(_repo1Module.WorkingDir);
-        result.SuperProject.Path.Should().Be(_repo2Module.WorkingDir);
+        result.TopProject!.Path.Should().Be(_repo1Module.WorkingDir);
+        result.SuperProject!.Path.Should().Be(_repo2Module.WorkingDir);
         result.CurrentSubmoduleName.Should().Be("repo3");
         result.AllSubmodules.Select(info => info.Path).Should().Contain(_repo2Module.WorkingDir, _repo3Module.WorkingDir);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
@@ -131,14 +131,14 @@ internal class SubmoduleStatusProviderTests
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Make a change in repo2
         _repo1.CreateFile(_repo2Module.WorkingDir, "test.txt", "test");
         changedFiles = GetStatusChangedFiles(currentModule);
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeTrue();
         result.AllSubmodules[1].Detailed.Should().BeNull();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
@@ -164,15 +164,15 @@ internal class SubmoduleStatusProviderTests
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Update commit in repo2
         _repo2Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
         changedFiles = GetStatusChangedFiles(currentModule);
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeFalse();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeFalse();
+        result.AllSubmodules[0].Detailed!.Status.Should().Be(SubmoduleStatus.FastForward);
         result.AllSubmodules[1].Detailed.Should().BeNull();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
@@ -198,7 +198,7 @@ internal class SubmoduleStatusProviderTests
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Make a change and update commit in repo2
         _repo1.CreateFile(_repo2Module.WorkingDir, "test.txt", "test");
@@ -206,8 +206,8 @@ internal class SubmoduleStatusProviderTests
         changedFiles = GetStatusChangedFiles(currentModule);
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[0].Detailed!.Status.Should().Be(SubmoduleStatus.FastForward);
         result.AllSubmodules[1].Detailed.Should().BeNull();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
@@ -234,17 +234,17 @@ internal class SubmoduleStatusProviderTests
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Make a change in repo3
         _repo1.CreateFile(_repo3Module.WorkingDir, "test.txt", "test");
         changedFiles = GetStatusChangedFiles(currentModule);
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.SameCommit);
-        result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.SameCommit);
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[0].Detailed!.Status.Should().Be(SubmoduleStatus.SameCommit);
+        result.AllSubmodules[1].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[1].Detailed!.Status.Should().Be(SubmoduleStatus.SameCommit);
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
         result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
@@ -269,7 +269,7 @@ internal class SubmoduleStatusProviderTests
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Make a change in repo3
         _repo1.CreateFile(_repo3Module.WorkingDir, "test.txt", "test");
@@ -277,10 +277,10 @@ internal class SubmoduleStatusProviderTests
         changedFiles = GetStatusChangedFiles(currentModule);
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
-        result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.SameCommit);
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[0].Detailed!.Status.Should().Be(SubmoduleStatus.FastForward);
+        result.AllSubmodules[1].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[1].Detailed!.Status.Should().Be(SubmoduleStatus.SameCommit);
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
         result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
@@ -290,8 +290,8 @@ internal class SubmoduleStatusProviderTests
         changedFiles = GetStatusChangedFiles(currentModule);
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeFalse();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeFalse();
+        result.AllSubmodules[0].Detailed!.Status.Should().Be(SubmoduleStatus.FastForward);
         result.AllSubmodules[1].Detailed.Should().BeNull();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
@@ -317,17 +317,17 @@ internal class SubmoduleStatusProviderTests
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Update commit in repo3
         _repo3Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
         changedFiles = GetStatusChangedFiles(currentModule);
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.SameCommit);
-        result.AllSubmodules[1].Detailed.IsDirty.Should().BeFalse();
-        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[0].Detailed!.Status.Should().Be(SubmoduleStatus.SameCommit);
+        result.AllSubmodules[1].Detailed!.IsDirty.Should().BeFalse();
+        result.AllSubmodules[1].Detailed!.Status.Should().Be(SubmoduleStatus.FastForward);
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
         result.TopProject.Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
@@ -352,7 +352,7 @@ internal class SubmoduleStatusProviderTests
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Make a change in repo1
         _repo1.CreateFile(_repo1Module.WorkingDir, "test.txt", "test");
@@ -385,7 +385,7 @@ internal class SubmoduleStatusProviderTests
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Update commit in topmodule
         currentModule.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
@@ -416,7 +416,7 @@ internal class SubmoduleStatusProviderTests
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Make a change in repo1
         _repo1.CreateFile(_repo1Module.WorkingDir, "test.txt", "test");
@@ -447,17 +447,17 @@ internal class SubmoduleStatusProviderTests
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Make a change in repo3
         _repo1.CreateFile(_repo3Module.WorkingDir, "test.txt", "test");
         changedFiles = GetStatusChangedFiles(currentModule);
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
-        result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.SameCommit);
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[0].Detailed!.Status.Should().Be(SubmoduleStatus.Unknown);
+        result.AllSubmodules[1].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[1].Detailed!.Status.Should().Be(SubmoduleStatus.SameCommit);
         result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
@@ -481,17 +481,17 @@ internal class SubmoduleStatusProviderTests
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Update commit in repo3
         _repo3Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
         changedFiles = GetStatusChangedFiles(currentModule);
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
-        result.AllSubmodules[1].Detailed.IsDirty.Should().BeFalse();
-        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[0].Detailed!.Status.Should().Be(SubmoduleStatus.Unknown);
+        result.AllSubmodules[1].Detailed!.IsDirty.Should().BeFalse();
+        result.AllSubmodules[1].Detailed!.Status.Should().Be(SubmoduleStatus.FastForward);
         result.OurSubmodules[0].Should().BeEquivalentTo(result.AllSubmodules[1]);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
@@ -514,17 +514,17 @@ internal class SubmoduleStatusProviderTests
         changedFiles.Should().BeEmpty();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Make a change in repo3
         _repo1.CreateFile(_repo3Module.WorkingDir, "test.txt", "test");
         changedFiles = GetStatusChangedFiles(currentModule);
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
-        result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[0].Detailed!.Status.Should().Be(SubmoduleStatus.Unknown);
+        result.AllSubmodules[1].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[1].Detailed!.Status.Should().Be(SubmoduleStatus.Unknown);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
         // Revert the change
@@ -546,7 +546,7 @@ internal class SubmoduleStatusProviderTests
         changedFiles.Should().BeEmpty();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Update commit in repo3
         _repo3Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
@@ -575,7 +575,7 @@ internal class SubmoduleStatusProviderTests
         changedFiles.Should().BeEmpty();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Update commit in repo2
         _repo2Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
@@ -606,7 +606,7 @@ internal class SubmoduleStatusProviderTests
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Make a change in repo1 without force update, should take 15s
         DateTime statusStart = DateTime.Now;
@@ -640,7 +640,7 @@ internal class SubmoduleStatusProviderTests
         // When top module is current, only structure is updated and no changes seen until explicit git-status
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
         result.OurSubmodules.Should().BeEquivalentTo(result.AllSubmodules);
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
         changedFiles.Should().ContainSingle();
@@ -668,10 +668,10 @@ internal class SubmoduleStatusProviderTests
         result.Should().NotBeNull();
 
         result.AllSubmodules[0].Detailed.Should().NotBeNull();
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeFalse();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeFalse();
+        result.AllSubmodules[0].Detailed!.Status.Should().Be(SubmoduleStatus.FastForward);
         result.AllSubmodules[1].Detailed.Should().BeNull();
-        result.TopProject.Detailed.IsDirty.Should().BeTrue();
+        result.TopProject!.Detailed!.IsDirty.Should().BeTrue();
 
         // Revert the change
         _repo2Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
@@ -698,7 +698,7 @@ internal class SubmoduleStatusProviderTests
         result.Should().NotBeNull();
 
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
 
         // Revert the change
         _repo1Module.GitExecutable.Execute(@"checkout HEAD^", throwOnErrorExit: false);
@@ -723,20 +723,20 @@ internal class SubmoduleStatusProviderTests
         result.Should().NotBeNull();
 
         result.AllSubmodules[0].Detailed.Should().NotBeNull();
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeFalse();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeFalse();
+        result.AllSubmodules[0].Detailed!.Status.Should().Be(SubmoduleStatus.FastForward);
         result.AllSubmodules[1].Detailed.Should().BeNull();
-        result.TopProject.Detailed.IsDirty.Should().BeTrue();
+        result.TopProject!.Detailed!.IsDirty.Should().BeTrue();
 
         // Make a change in repo3, still not changing
         _repo1.CreateFile(_repo3Module.WorkingDir, "test.txt", "test");
         IReadOnlyList<GitItemStatus> changedFiles = GetStatusChangedFiles(currentModule);
         changedFiles.Should().ContainSingle();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, currentModule, changedFiles);
-        result.AllSubmodules[0].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[0].Detailed.Status.Should().Be(SubmoduleStatus.FastForward);
-        result.AllSubmodules[1].Detailed.IsDirty.Should().BeTrue();
-        result.AllSubmodules[1].Detailed.Status.Should().Be(SubmoduleStatus.Unknown);
+        result.AllSubmodules[0].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[0].Detailed!.Status.Should().Be(SubmoduleStatus.FastForward);
+        result.AllSubmodules[1].Detailed!.IsDirty.Should().BeTrue();
+        result.AllSubmodules[1].Detailed!.Status.Should().Be(SubmoduleStatus.Unknown);
         result.TopProject.Detailed.IsDirty.Should().BeTrue();
 
         // Revert the change
@@ -757,7 +757,7 @@ internal class SubmoduleStatusProviderTests
         changedFiles.Should().BeEmpty();
         await SubmoduleTestHelpers.UpdateSubmoduleStatusAndWaitForResultAsync(_provider, _repo1Module, changedFiles);
         result.AllSubmodules.All(i => i.Detailed is null).Should().BeTrue();
-        result.TopProject.Detailed.Should().BeNull();
+        result.TopProject!.Detailed.Should().BeNull();
     }
 
     private static IReadOnlyList<GitItemStatus> GetStatusChangedFiles(IGitModule module)

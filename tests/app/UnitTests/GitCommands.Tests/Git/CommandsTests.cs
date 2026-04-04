@@ -31,7 +31,7 @@ public partial class CommandsTests
 
         ClassicAssert.AreEqual(
             $"{config}submodule add \"remotepath\" \"localpath\"",
-            Commands.AddSubmodule("remotepath", "localpath", branch: null, force: false, configs).Arguments);
+            Commands.AddSubmodule("remotepath", "localpath", branch: null!, force: false, configs).Arguments);
 
         ClassicAssert.AreEqual(
             $"{config}submodule add -f -b \"branch\" \"remotepath\" \"localpath\"",
@@ -78,7 +78,7 @@ public partial class CommandsTests
             Commands.Branch("branch", "revision", checkout: false).Arguments);
         ClassicAssert.AreEqual(
             "checkout -b \"branch\"",
-            Commands.Branch("branch", null, checkout: true).Arguments);
+            Commands.Branch("branch", null!, checkout: true).Arguments);
         ClassicAssert.AreEqual(
             "checkout -b \"branch\"",
             Commands.Branch("branch", "", checkout: true).Arguments);
@@ -450,7 +450,7 @@ public partial class CommandsTests
     [TestCase("branchx", @"c:/my/path", true, true, ExpectedResult = @"push ""file://c:/my/path"" ""1111111111111111111111111111111111111111:branchx"" --force --dry-run")]
     public string PushLocalCmd(string gitRef, string repoDir, bool force, bool dryRun)
     {
-        return Commands.PushLocal(gitRef, ObjectId.WorkTreeId, repoDir, PathUtil.ToPosixPath, force, dryRun).Arguments;
+        return Commands.PushLocal(gitRef, ObjectId.WorkTreeId, repoDir, PathUtil.ToPosixPath, force, dryRun).Arguments!;
     }
 
     [Test]
@@ -642,23 +642,23 @@ public partial class CommandsTests
 
         ClassicAssert.AreEqual(
             "stash save",
-            Commands.StashSave(untracked: false, keepIndex: false, null, []).Arguments);
+            Commands.StashSave(untracked: false, keepIndex: false, null!, []).Arguments);
 
         ClassicAssert.AreEqual(
             "stash save",
-            Commands.StashSave(untracked: false, keepIndex: false, null, null).Arguments);
+            Commands.StashSave(untracked: false, keepIndex: false, null!, null).Arguments);
 
         ClassicAssert.AreEqual(
             "stash save -u",
-            Commands.StashSave(untracked: true, keepIndex: false, null, null).Arguments);
+            Commands.StashSave(untracked: true, keepIndex: false, null!, null).Arguments);
 
         ClassicAssert.AreEqual(
             "stash save --keep-index",
-            Commands.StashSave(untracked: false, keepIndex: true, null, null).Arguments);
+            Commands.StashSave(untracked: false, keepIndex: true, null!, null).Arguments);
 
         ClassicAssert.AreEqual(
             "stash save --keep-index",
-            Commands.StashSave(untracked: false, keepIndex: true, null, null).Arguments);
+            Commands.StashSave(untracked: false, keepIndex: true, null!, null).Arguments);
 
         ClassicAssert.AreEqual(
             "stash save \"message\"",
@@ -666,7 +666,7 @@ public partial class CommandsTests
 
         ClassicAssert.AreEqual(
             "stash push -- \"a\" \"b\"",
-            Commands.StashSave(untracked: false, keepIndex: false, null, new[] { "a", "b" }).Arguments);
+            Commands.StashSave(untracked: false, keepIndex: false, null!, new[] { "a", "b" }).Arguments);
     }
 
     [Test]
@@ -693,7 +693,7 @@ public partial class CommandsTests
     {
         ClassicAssert.AreEqual(
            "stash push -- \"a\"",
-           Commands.StashSave(untracked: false, keepIndex: false, null, new[] { null, "", "a" }).Arguments);
+           Commands.StashSave(untracked: false, keepIndex: false, null!, new[] { null!, "", "a" }).Arguments);
     }
 
     [TestCase(null)]
@@ -727,6 +727,6 @@ public partial class CommandsTests
     [TestCase("mybranch", "2111111111111111111111111111111111111111", ExpectedResult = @"update-ref ""mybranch"" 2111111111111111111111111111111111111111")]
     public string UpdateRef(string gitRef, string hash)
     {
-        return Commands.UpdateRef(gitRef, ObjectId.Parse(hash)).Arguments;
+        return Commands.UpdateRef(gitRef, ObjectId.Parse(hash)).Arguments!;
     }
 }

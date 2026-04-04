@@ -14,7 +14,7 @@ namespace GitCommandsTests.Config;
 [TestFixture]
 public class ConfigFileTest
 {
-    private GitModule _module;
+    private GitModule _module = null!;
 
     private GitModule Module => _module ??= new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), GetTempFolder());
 
@@ -85,7 +85,7 @@ public class ConfigFileTest
     {
         try
         {
-            ConfigFile file = new(fileName: null);
+            ConfigFile file = new(fileName: null!);
             file.GetValue("nonexistentSetting", string.Empty);
         }
         catch (Exception e)
@@ -200,7 +200,7 @@ public class ConfigFileTest
     public void TestWithNullSettings()
     {
         ConfigFile file = new(GetConfigFileName());
-        ClassicAssert.Throws<ArgumentNullException>(() => file.GetValue(null, null));
+        ClassicAssert.Throws<ArgumentNullException>(() => file.GetValue(null!, null!));
     }
 
     [Test]

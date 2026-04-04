@@ -10,10 +10,10 @@ namespace GitCommandsTests.Git.Tag;
 public class GitTagControllerTest
 {
     private readonly string _workingDir = TestContext.CurrentContext.TestDirectory;
-    private string _tagMessageFile;
-    private IGitTagController _controller;
-    private IFileSystem _fileSystem;
-    private IGitUICommands _uiCommands;
+    private string _tagMessageFile = null!;
+    private IGitTagController _controller = null!;
+    private IFileSystem _fileSystem = null!;
+    private IGitUICommands _uiCommands = null!;
 
     [SetUp]
     public void Setup()
@@ -34,7 +34,7 @@ public class GitTagControllerTest
     public void CreateTagWithMessageThrowsIfTheWindowIsNull()
     {
         GitCreateTagArgs args = CreateAnnotatedTagArgs();
-        ClassicAssert.Throws<ArgumentNullException>(() => _controller.CreateTag(args, parentWindow: null));
+        ClassicAssert.Throws<ArgumentNullException>(() => _controller.CreateTag(args, parentWindow: null!));
     }
 
     [Test]

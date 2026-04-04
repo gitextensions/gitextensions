@@ -12,9 +12,9 @@ namespace GitCommandsTests.Git;
 [TestFixture]
 public sealed class ExecutableExtensionsTests
 {
-    private MockExecutable _executable;
-    private Executable _gitExecutable;
-    private string _appPath;
+    private MockExecutable _executable = null!;
+    private Executable _gitExecutable = null!;
+    private string _appPath = null!;
 
     [SetUp]
     public void SetUp()
@@ -32,8 +32,8 @@ public sealed class ExecutableExtensionsTests
         // Execute process in GitExtension working directory, so that git will return success exit-code
         // git always return non-zero exit code when run git reset outside of git repository
         // NUnit working directory always default to MS test host
-        string workingDir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(ExecutableExtensionsTests)).Location);
-        _gitExecutable = new Executable(_appPath, workingDir);
+        string? workingDir = Path.GetDirectoryName(Assembly.GetAssembly(typeof(ExecutableExtensionsTests))!.Location);
+        _gitExecutable = new Executable(_appPath, workingDir!);
     }
 
     [TearDown]
@@ -128,8 +128,8 @@ public sealed class ExecutableExtensionsTests
                 GenerateStringByLength(Math.Max(1, arg2Len - _appPath.Length - 4))
             }, _appPath.Length + 3, maxLength);
 
-        ExternalOperationException ex = ClassicAssert.Throws<ExternalOperationException>(() => _gitExecutable.RunBatchCommand(args));
-        ClassicAssert.IsInstanceOf<Win32Exception>(ex.InnerException);
+        ExternalOperationException? ex = ClassicAssert.Throws<ExternalOperationException>(() => _gitExecutable.RunBatchCommand(args));
+        ClassicAssert.IsInstanceOf<Win32Exception>(ex!.InnerException);
     }
 
     private static string GenerateStringByLength(int length)

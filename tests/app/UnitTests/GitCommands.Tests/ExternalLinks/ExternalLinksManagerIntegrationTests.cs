@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.ExternalLinks;
@@ -10,14 +10,14 @@ namespace GitCommandsTests.ExternalLinks;
 [TestFixture]
 public class ExternalLinksManagerIntegrationTests
 {
-    private GitModuleTestHelper _testHelper;
-    private string _level1;
-    private string _level2;
-    private string _level3;
-    private DistributedSettings _userRoaming;
-    private DistributedSettings _repoDistributed;
-    private DistributedSettings _repoLocal;
-    private ExternalLinksStorage _externalLinksStorage;
+    private GitModuleTestHelper _testHelper = null!;
+    private string _level1 = null!;
+    private string _level2 = null!;
+    private string _level3 = null!;
+    private DistributedSettings _userRoaming = null!;
+    private DistributedSettings _repoDistributed = null!;
+    private DistributedSettings _repoLocal = null!;
+    private ExternalLinksStorage _externalLinksStorage = null!;
 
     [SetUp]
     public void Setup()

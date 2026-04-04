@@ -13,10 +13,10 @@ namespace GitCommandsTests.Git;
 [TestFixture]
 public class GitRevisionTesterTests
 {
-    private FileBase _file;
-    private IFileSystem _fileSystem;
-    private IFullPathResolver _fullPathResolver;
-    private GitRevisionTester _tester;
+    private FileBase _file = null!;
+    private IFileSystem _fileSystem = null!;
+    private IFullPathResolver _fullPathResolver = null!;
+    private GitRevisionTester _tester = null!;
 
     [SetUp]
     public void Setup()
@@ -118,7 +118,7 @@ public class GitRevisionTesterTests
     [Test]
     public void Matches_should_not_throw_if_revision_null()
     {
-        _tester.Matches(null, null).Should().BeFalse();
+        _tester.Matches(null, null!).Should().BeFalse();
     }
 
     [TestCase(null)]

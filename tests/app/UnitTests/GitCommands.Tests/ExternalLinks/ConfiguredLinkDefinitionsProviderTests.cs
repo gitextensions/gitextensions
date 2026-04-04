@@ -1,4 +1,4 @@
-using System.Reflection;
+﻿using System.Reflection;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands.ExternalLinks;
@@ -11,15 +11,15 @@ namespace GitCommandsTests.ExternalLinks;
 [TestFixture]
 public class ConfiguredLinkDefinitionsProviderTests
 {
-    private GitModuleTestHelper _testHelper;
-    private string _repoLocalConfigFilePath;
-    private string _repoDistributedConfigFilePath;
-    private string _userRoamingConfigFilePath;
-    private DistributedSettings _userRoaming;
-    private DistributedSettings _repoDistributed;
-    private DistributedSettings _repoLocal;
-    private IExternalLinksStorage _externalLinksStorage;
-    private ConfiguredLinkDefinitionsProvider _provider;
+    private GitModuleTestHelper _testHelper = null!;
+    private string _repoLocalConfigFilePath = null!;
+    private string _repoDistributedConfigFilePath = null!;
+    private string _userRoamingConfigFilePath = null!;
+    private DistributedSettings _userRoaming = null!;
+    private DistributedSettings _repoDistributed = null!;
+    private DistributedSettings _repoLocal = null!;
+    private IExternalLinksStorage _externalLinksStorage = null!;
+    private ConfiguredLinkDefinitionsProvider _provider = null!;
 
     [SetUp]
     public void Setup()
@@ -55,7 +55,7 @@ public class ConfiguredLinkDefinitionsProviderTests
     [Test]
     public void Get_should_throw_if_data_null()
     {
-        ((Action)(() => _provider.Get(null))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => _provider.Get(null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
