@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -85,7 +85,7 @@ public partial class FormGitAttributes : GitModuleForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, _cannotAccessGitattributes.Text + Environment.NewLine + ex.Message,
+            MessageBoxes.Show(this, _cannotAccessGitattributes.Text + Environment.NewLine + ex.Message,
                 _cannotAccessGitattributesCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
@@ -97,7 +97,7 @@ public partial class FormGitAttributes : GitModuleForm
 
         if (!IsFileUpToDate())
         {
-            switch (MessageBox.Show(this, _saveFileQuestion.Text, _saveFileQuestionCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+            switch (MessageBoxes.Show(this, _saveFileQuestion.Text, _saveFileQuestionCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
             {
                 case DialogResult.Yes:
                     if (SaveFile())
@@ -129,7 +129,7 @@ public partial class FormGitAttributes : GitModuleForm
             return;
         }
 
-        MessageBox.Show(this, _noWorkingDir.Text, _noWorkingDirCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBoxes.Show(this, _noWorkingDir.Text, _noWorkingDirCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         Close();
     }
 

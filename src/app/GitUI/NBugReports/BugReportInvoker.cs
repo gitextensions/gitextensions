@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.ComponentModel;
 using System.Diagnostics;
@@ -79,7 +79,7 @@ public static class BugReportInvoker
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Failed to log error to {tempFile}\r\n{ex.Message}", "Error writing log", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show($"Failed to log error to {tempFile}\r\n{ex.Message}", "Error writing log", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

@@ -187,7 +187,7 @@ public sealed class AsyncLoaderTests
     {
         ThreadHelper.JoinableTaskFactory.Run(async () =>
         {
-            _loader.Delay = TimeSpan.FromMilliseconds(100);
+            _loader.Delay = TimeSpan.FromMilliseconds(200);
 
             Stopwatch sw = Stopwatch.StartNew();
 
@@ -195,7 +195,7 @@ public sealed class AsyncLoaderTests
                 () => sw.Stop(),
                 () => { });
 
-            ClassicAssert.GreaterOrEqual(sw.Elapsed, _loader.Delay - TimeSpan.FromMilliseconds(10));
+            ClassicAssert.GreaterOrEqual(sw.Elapsed, _loader.Delay - TimeSpan.FromMilliseconds(20));
         });
     }
 

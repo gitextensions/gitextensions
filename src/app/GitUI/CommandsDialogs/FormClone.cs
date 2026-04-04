@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -167,14 +167,14 @@ public partial class FormClone : GitExtensionsDialog
             string destination = _NO_TRANSLATE_To.Text;
             if (string.IsNullOrWhiteSpace(destination))
             {
-                MessageBox.Show(this, _errorDestinationNotSupplied.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _errorDestinationNotSupplied.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _NO_TRANSLATE_To.Focus();
                 return;
             }
 
             if (!Path.IsPathRooted(destination))
             {
-                MessageBox.Show(this, _errorDestinationNotRooted.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _errorDestinationNotRooted.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _NO_TRANSLATE_To.Focus();
                 return;
             }
@@ -263,13 +263,13 @@ public partial class FormClone : GitExtensionsDialog
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, "Exception: " + ex.Message, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, "Exception: " + ex.Message, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
     private bool AskIfNewRepositoryShouldBeOpened(string dirTo)
     {
-        return MessageBox.Show(this, string.Format(_questionOpenRepo.Text, dirTo), _questionOpenRepoCaption.Text,
+        return MessageBoxes.Show(this, string.Format(_questionOpenRepo.Text, dirTo), _questionOpenRepoCaption.Text,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
     }
 

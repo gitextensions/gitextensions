@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Text;
 using GitCommands;
@@ -89,7 +89,7 @@ public sealed class CommonLogic : Translate
         }
         catch (UnauthorizedAccessException)
         {
-            MessageBox.Show(_cantReadRegistry.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(_cantReadRegistry.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         return value ?? "";

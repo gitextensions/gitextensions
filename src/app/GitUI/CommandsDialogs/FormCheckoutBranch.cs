@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -273,14 +273,14 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
                 newBranchMode = CheckoutNewBranchMode.Create;
                 if (string.IsNullOrWhiteSpace(newBranchName))
                 {
-                    MessageBox.Show(_customBranchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(_customBranchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     DialogResult = DialogResult.None;
                     return DialogResult.None;
                 }
 
                 if (!Module.CheckBranchFormat(newBranchName))
                 {
-                    MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, newBranchName), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(string.Format(_customBranchNameIsNotValid.Text, newBranchName), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     DialogResult = DialogResult.None;
                     return DialogResult.None;
                 }
@@ -302,7 +302,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
                         string warningMessage = string.Format(_resetNonFastForwardBranch.Text, _localBranchName, mergeBaseText);
 
-                        if (MessageBox.Show(this, warningMessage, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
+                        if (MessageBoxes.Show(this, warningMessage, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                         {
                             DialogResult = DialogResult.None;
                             return DialogResult.None;

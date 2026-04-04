@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -89,7 +89,7 @@ public partial class FormMailMap : GitModuleForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, _cannotAccessMailmap.Text + Environment.NewLine + ex.Message,
+            MessageBoxes.Show(this, _cannotAccessMailmap.Text + Environment.NewLine + ex.Message,
                 _cannotAccessMailmapCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
@@ -101,7 +101,7 @@ public partial class FormMailMap : GitModuleForm
 
         if (!IsFileUpToDate())
         {
-            switch (MessageBox.Show(this, _saveFileQuestion.Text, _saveFileQuestionCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+            switch (MessageBoxes.Show(this, _saveFileQuestion.Text, _saveFileQuestionCaption.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
             {
                 case DialogResult.Yes:
                     if (SaveFile())
@@ -133,7 +133,7 @@ public partial class FormMailMap : GitModuleForm
             return;
         }
 
-        MessageBox.Show(this, _mailmapOnlyInWorkingDirSupported.Text, _mailmapOnlyInWorkingDirSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBoxes.Show(this, _mailmapOnlyInWorkingDirSupported.Text, _mailmapOnlyInWorkingDirSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         Close();
     }
 

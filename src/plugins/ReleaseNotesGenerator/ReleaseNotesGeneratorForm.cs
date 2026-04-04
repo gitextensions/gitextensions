@@ -2,6 +2,7 @@
 using System.Text;
 using GitCommands;
 using GitCommands.Utils;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using ResourceManager;
@@ -44,14 +45,14 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
 
         if (string.IsNullOrWhiteSpace(textBoxRevFrom.Text))
         {
-            MessageBox.Show(this, _fromCommitNotSpecified.Text, _caption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, _fromCommitNotSpecified.Text, _caption.Text);
             textBoxRevFrom.Focus();
             return;
         }
 
         if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_textBoxRevTo.Text))
         {
-            MessageBox.Show(this, _toCommitNotSpecified.Text, _caption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, _toCommitNotSpecified.Text, _caption.Text);
             _NO_TRANSLATE_textBoxRevTo.Focus();
             return;
         }

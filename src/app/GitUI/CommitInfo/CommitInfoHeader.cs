@@ -123,7 +123,7 @@ public partial class CommitInfoHeader : GitModuleControl
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

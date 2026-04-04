@@ -4,6 +4,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text.Json.Nodes;
 using AzureDevOpsIntegration.Settings;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
@@ -257,7 +258,7 @@ Detail of the error:");
             if (_projectOnErrorKey is null || _projectOnErrorKey != CacheKey)
             {
                 _projectOnErrorKey = CacheKey;
-                MessageBox.Show(errorMessage, _buildIntegrationErrorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.ShowError(owner: null, errorMessage, _buildIntegrationErrorCaption.Text);
             }
         }
 

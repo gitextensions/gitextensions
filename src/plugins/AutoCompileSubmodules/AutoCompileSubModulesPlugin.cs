@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel.Composition;
 using System.Text;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
@@ -75,7 +76,7 @@ public class AutoCompileSubModulesPlugin : GitPluginBase, IGitPluginForRepositor
             FileInfo solutionFile = solutionFiles[n];
 
             DialogResult result =
-                MessageBox.Show(args.OwnerForm,
+                MessageBoxes.Show(args.OwnerForm,
                     string.Format(_doYouWantBuild.Text,
                                   solutionFile.Name,
                                   SolutionFilesToString(solutionFiles)),
@@ -95,7 +96,7 @@ public class AutoCompileSubModulesPlugin : GitPluginBase, IGitPluginForRepositor
 
             if (string.IsNullOrEmpty(msbuildPath) || !File.Exists(msbuildPath))
             {
-                MessageBox.Show(args.OwnerForm, _enterCorrectMsBuildPath.Text, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.ShowError(args.OwnerForm, _enterCorrectMsBuildPath.Text);
             }
             else
             {
