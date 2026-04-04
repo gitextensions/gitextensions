@@ -38,7 +38,7 @@ public sealed class TranslationTest
                 try
                 {
                     using ITranslate obj = (ITranslate)TranslationUtil.CreateInstanceOfClass(type);
-                    obj.AddTranslationItems(translation);
+                    obj!.AddTranslationItems(translation);
                     obj.TranslateItems(translation);
                 }
                 catch (Exception ex)

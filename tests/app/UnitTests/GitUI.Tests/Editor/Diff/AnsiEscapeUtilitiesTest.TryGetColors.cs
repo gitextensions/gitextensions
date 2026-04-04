@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
@@ -20,7 +20,7 @@ public class AnsiEscapeUtilitiesTest_TryGetColors
         Color.Empty, Color.Empty, Color.FromArgb(255, 216, 216), Color.FromArgb(254, 235, 235)];
 
     private ThemeId _themeId;
-    private string[] _themeVariations;
+    private string[] _themeVariations = null!;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()

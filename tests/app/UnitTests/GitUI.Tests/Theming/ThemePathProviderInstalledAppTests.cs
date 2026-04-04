@@ -8,8 +8,8 @@ namespace GitUITests.Theming;
 [TestFixture]
 public class ThemePathProviderInstalledAppTests
 {
-    private string _originalAppExecutablePath;
-    private Lazy<string> _originalAppDataPath;
+    private string _originalAppExecutablePath = null!;
+    private Lazy<string> _originalAppDataPath = null!;
 
     private const string MockAppInstallPath = "c:\\GitExtensions";
     private const string MockAppDataPath = "c:\\user\\username\\appdata";
@@ -22,7 +22,7 @@ public class ThemePathProviderInstalledAppTests
         testAccessor.ApplicationExecutablePath = Path.Combine(MockAppInstallPath, "gitextensions.exe");
 
         _originalAppDataPath = testAccessor.ApplicationDataPath;
-        testAccessor.ApplicationDataPath = new Lazy<string>(() => MockAppDataPath);
+        testAccessor.ApplicationDataPath = new Lazy<string?>(() => MockAppDataPath);
     }
 
     [OneTimeTearDown]

@@ -20,15 +20,15 @@ public abstract class AvatarTestBase
     protected const string _name4 = "Ringo Starr";
     protected const string _nameMissing = "Fifth Beatle";
 
-    protected Image _img1;
-    protected Image _img2;
-    protected Image _img3;
-    protected Image _img4;
-    protected Image _imgGenerated;
+    protected Image _img1 = null!;
+    protected Image _img2 = null!;
+    protected Image _img3 = null!;
+    protected Image _img4 = null!;
+    protected Image _imgGenerated = null!;
 
-    protected IAvatarProvider _inner;
-    protected IAvatarProvider _cache;
-    protected IAvatarCacheCleaner _cacheCleaner => _cache as IAvatarCacheCleaner;
+    protected IAvatarProvider _inner = null!;
+    protected IAvatarProvider _cache = null!;
+    protected IAvatarCacheCleaner _cacheCleaner => (_cache as IAvatarCacheCleaner)!;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
@@ -56,18 +56,18 @@ public abstract class AvatarTestBase
         _inner = Substitute.For<IAvatarProvider>();
 
         _inner.PerformsIo.Returns(true);
-        _inner.GetAvatarAsync(_email1, _name1, _size).Returns(Task.FromResult(_img1));
-        _inner.GetAvatarAsync(_email2, _name2, _size).Returns(Task.FromResult(_img2));
-        _inner.GetAvatarAsync(_email3, _name3, _size).Returns(Task.FromResult(_img3));
-        _inner.GetAvatarAsync(_email4, _name4, _size).Returns(Task.FromResult(_img4));
+        _inner.GetAvatarAsync(_email1, _name1, _size).Returns(Task.FromResult<Image?>(_img1));
+        _inner.GetAvatarAsync(_email2, _name2, _size).Returns(Task.FromResult<Image?>(_img2));
+        _inner.GetAvatarAsync(_email3, _name3, _size).Returns(Task.FromResult<Image?>(_img3));
+        _inner.GetAvatarAsync(_email4, _name4, _size).Returns(Task.FromResult<Image?>(_img4));
         _inner.GetAvatarAsync(_emailMissing, _nameMissing, _size).Returns(Task.FromResult((Image)null));
     }
 
-    protected async Task MissAsync(string email, string name,  Image expected = null)
+    protected async Task MissAsync(string email, string name,  Image expected = null!)
     {
         _inner.ClearReceivedCalls();
 
-        Image actual = await _cache.GetAvatarAsync(email, name, _size);
+        Image? actual = await _cache.GetAvatarAsync(email, name, _size);
 
         _ = _inner.Received(1).GetAvatarAsync(email, name, _size);
 
@@ -77,11 +77,11 @@ public abstract class AvatarTestBase
         }
     }
 
-    protected async Task HitAsync(string email, string name, Image expected = null)
+    protected async Task HitAsync(string email, string name, Image expected = null!)
     {
         _inner.ClearReceivedCalls();
 
-        Image actual = await _cache.GetAvatarAsync(email, name, _size);
+        Image? actual = await _cache.GetAvatarAsync(email, name, _size);
 
         _ = _inner.Received(0).GetAvatarAsync(email, name, _size);
 

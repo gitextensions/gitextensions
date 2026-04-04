@@ -13,9 +13,9 @@ namespace GitUITests.CommandsDialogs;
 [TestFixture]
 public class RevisionDiffControllerTests
 {
-    private IGitModule _module;
-    private IFullPathResolver _fullPathResolver;
-    private RevisionDiffController _controller;
+    private IGitModule _module = null!;
+    private IFullPathResolver _fullPathResolver = null!;
+    private RevisionDiffController _controller = null!;
 
     [SetUp]
     public void Setup()
@@ -28,7 +28,7 @@ public class RevisionDiffControllerTests
     [Test]
     public void SaveFiles_should_throw_if_files_null()
     {
-        ((Action)(() => _controller.SaveFiles(files: null, userSelection: null))).Should()
+        ((Action)(() => _controller.SaveFiles(files: null!, userSelection: null!))).Should()
             .Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'files')");
     }
@@ -38,7 +38,7 @@ public class RevisionDiffControllerTests
     {
         List<FileStatusItem> files = [];
 
-        ((Action)(() => _controller.SaveFiles(files, userSelection: null))).Should().NotThrow();
+        ((Action)(() => _controller.SaveFiles(files, userSelection: null!))).Should().NotThrow();
     }
 
     [Test]
@@ -49,7 +49,7 @@ public class RevisionDiffControllerTests
             new(default, new(ObjectId.Random()), new(""))
         ];
 
-        ((Action)(() => _controller.SaveFiles(files, userSelection: null))).Should()
+        ((Action)(() => _controller.SaveFiles(files, userSelection: null!))).Should()
             .Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'userSelection')");
     }

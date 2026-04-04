@@ -20,7 +20,7 @@ public static class UITest
         await idleCompletionSource.Task;
         Application.Idle -= HandleApplicationIdle;
 
-        void HandleApplicationIdle(object sender, EventArgs e)
+        void HandleApplicationIdle(object? sender, EventArgs e)
         {
             idleCompletionSource.TrySetResult(default);
         }
@@ -37,7 +37,7 @@ public static class UITest
         // Needed for FormBrowse, ScriptOptionsParser
         ManagedExtensibility.Initialise();
 
-        T form = null;
+        T? form = null;
         try
         {
             // Start runTestAsync before calling showForm, since the latter might block until the form is closed.
@@ -100,7 +100,7 @@ public static class UITest
         Func<T, Task> runTestAsync)
         where T : Control
     {
-        T control = null;
+        T? control = null;
         RunForm<Form>(
             showForm: () =>
             {
@@ -109,7 +109,7 @@ public static class UITest
                 ClassicAssert.True(form.Controls.Contains(control));
                 Application.Run(form);
             },
-            runTestAsync: form => runTestAsync(control));
+            runTestAsync: form => runTestAsync(control!));
     }
 
     public static void ProcessUntil(string processName, Func<bool> condition, int maxMilliseconds = 1500)

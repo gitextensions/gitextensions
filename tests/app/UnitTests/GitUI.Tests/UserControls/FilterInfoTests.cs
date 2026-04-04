@@ -1144,7 +1144,7 @@ public class FilterInfoTests
 
             if (showCurrentBranchOnly && objectId is not null)
             {
-                string head = Regex.Escape(objectId?.ToString());
+                string head = Regex.Escape(objectId?.ToString()!);
                 args.ToString().Should().MatchRegex(@$"(^|\s){head}($|\s)");
             }
 

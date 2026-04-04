@@ -11,12 +11,12 @@ namespace GitUITests.Avatars;
 public sealed class AvatarPersistentCacheTests : AvatarCacheTestBase
 {
     private string _avatarImageCachePath = AppSettings.AvatarImageCachePath;
-    private string _email1AvatarPath;
-    private IFileSystem _fileSystem;
-    private DirectoryBase _directory;
-    private FileBase _file;
-    private FileInfoBase _fileInfo;
-    private IFileInfoFactory _fileInfoFactory;
+    private string _email1AvatarPath = null!;
+    private IFileSystem _fileSystem = null!;
+    private DirectoryBase _directory = null!;
+    private FileBase _file = null!;
+    private FileInfoBase _fileInfo = null!;
+    private IFileInfoFactory _fileInfoFactory = null!;
 
     [SetUp]
     public override void SetUp()
@@ -83,7 +83,7 @@ public sealed class AvatarPersistentCacheTests : AvatarCacheTestBase
         _fileInfo.ClearReceivedCalls();
         _file.ClearReceivedCalls();
 
-        Image image = await _cache.GetAvatarAsync(_email1, _name1, 16);
+        Image? image = await _cache.GetAvatarAsync(_email1, _name1, 16);
 
         image.Should().NotBeNull();
         _ = _fileInfo.Received(1).LastWriteTime;

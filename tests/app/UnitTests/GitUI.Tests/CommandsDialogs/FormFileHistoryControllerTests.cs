@@ -6,7 +6,7 @@ namespace GitUITests.CommandsDialogs;
 [TestFixture]
 public sealed class FormFileHistoryControllerTests
 {
-    private FormFileHistoryController _controller;
+    private FormFileHistoryController _controller = null!;
 
     [SetUp]
     public void Setup()

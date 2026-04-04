@@ -11,8 +11,8 @@ namespace GitUITests.UserControls;
 [TestFixture]
 public class GitRefsSortOrderContextMenuItemTests
 {
-    private Action _onSortOrderChanged;
-    private GitRefsSortOrderContextMenuItem _itemUnderTest;
+    private Action _onSortOrderChanged = null!;
+    private GitRefsSortOrderContextMenuItem _itemUnderTest = null!;
 
     [SetUp]
     public void Setup()
@@ -82,7 +82,7 @@ public class GitRefsSortOrderContextMenuItemTests
 
     private void AssertOnlyCheckedItemIs(GitRefsSortOrder sortType)
     {
-        ToolStripMenuItem matchingSubItem = _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Single(i => i.Tag.Equals(sortType));
+        ToolStripMenuItem matchingSubItem = _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Single(i => i!.Tag.Equals(sortType));
         ClassicAssert.IsTrue(matchingSubItem.Checked);
 
         foreach (ToolStripMenuItem otherItem in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Except(new[] { matchingSubItem }))

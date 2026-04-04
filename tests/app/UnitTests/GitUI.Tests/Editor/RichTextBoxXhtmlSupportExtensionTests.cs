@@ -15,8 +15,8 @@ public class RichTextBoxXhtmlSupportExtensionTests
     private const string _defaultSuffix = " suf";
     private const string _linkSeparator = "|||";
 
-    private RichTextBox _rtb;
-    private ILinkFactory _linkFactory;
+    private RichTextBox _rtb = null!;
+    private ILinkFactory _linkFactory = null!;
 
     [SetUp]
     public void Setup()
@@ -62,7 +62,7 @@ public class RichTextBoxXhtmlSupportExtensionTests
     [Test]
     public void GetLink_should_return_null_if_index_is_invalid()
     {
-        SetupLink(prefix: "", linkText: null, uri: null, suffix: "");
+        SetupLink(prefix: "", linkText: null!, uri: null!, suffix: "");
         _rtb.GetLink(-1).Should().BeNull();
         _rtb.GetLink(0).Should().BeNull();
 
@@ -127,7 +127,7 @@ public class RichTextBoxXhtmlSupportExtensionTests
     [Test]
     public void GetLink_should_return_uri_if_begins_with_link()
     {
-        SetupLink(prefix: null, _defaultLinkText, _defaultLinkUri, _defaultSuffix);
+        SetupLink(prefix: null!, _defaultLinkText, _defaultLinkUri, _defaultSuffix);
         _rtb.GetLink(0).Should().Be(_defaultLinkUri);
     }
 
@@ -141,7 +141,7 @@ public class RichTextBoxXhtmlSupportExtensionTests
     [Test]
     public void GetLink_should_return_uri_if_ends_with_link()
     {
-        SetupLink(_defaultPrefix, _defaultLinkText, _defaultLinkUri, suffix: null);
+        SetupLink(_defaultPrefix, _defaultLinkText, _defaultLinkUri, suffix: null!);
         _rtb.GetLink(_defaultPrefix.Length).Should().Be(_defaultLinkUri);
     }
 
@@ -162,14 +162,14 @@ public class RichTextBoxXhtmlSupportExtensionTests
     [Test]
     public void GetLink_should_return_uri_if_without_link_text()
     {
-        SetupLink(_defaultPrefix, null, _defaultLinkUri, _defaultSuffix);
+        SetupLink(_defaultPrefix, null!, _defaultLinkUri, _defaultSuffix);
         _rtb.GetLink(_defaultPrefix.Length).Should().Be(null);
     }
 
     [Test]
     public void GetLink_should_return_uri_if_ends_with_link_without_link_text()
     {
-        SetupLink(_defaultPrefix, null, _defaultLinkUri, suffix: null);
+        SetupLink(_defaultPrefix, null!, _defaultLinkUri, suffix: null!);
         _rtb.GetLink(_defaultPrefix.Length).Should().Be(null);
     }
 }

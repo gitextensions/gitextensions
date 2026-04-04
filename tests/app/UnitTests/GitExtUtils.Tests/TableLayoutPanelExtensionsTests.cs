@@ -11,7 +11,7 @@ public class TableLayoutPanelExtensionsTests
     [Test]
     public void AdjustWidthToSize_should_throw_if_table_null()
     {
-        ((Action)(() => ((TableLayoutPanel)null).AdjustWidthToSize(0, []))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => ((TableLayoutPanel)null!).AdjustWidthToSize(0, []))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -41,7 +41,7 @@ public class TableLayoutPanelExtensionsTests
         {
             ColumnCount = 3
         };
-        ((Action)(() => table.AdjustWidthToSize(0, null))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => table.AdjustWidthToSize(0, null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]

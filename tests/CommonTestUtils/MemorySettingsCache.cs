@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using GitCommands;
+﻿using GitCommands;
 
 namespace CommonTestUtils;
 

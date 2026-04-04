@@ -9,7 +9,7 @@ namespace GitUITests;
 [TestFixture]
 public class GitExtensionsFormTests
 {
-    private IWindowPositionManager _windowPositionManager;
+    private IWindowPositionManager _windowPositionManager = null!;
 
     [SetUp]
     public void Setup()

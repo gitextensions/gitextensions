@@ -10,17 +10,17 @@ public class DiffKindRevisionTests
     [Test]
     public void DiffKindRevisionTests_error()
     {
-        IReadOnlyList<GitRevision> revisions = null;
+        IReadOnlyList<GitRevision>? revisions = null;
         ClassicAssert.False(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffAB, out _, out _, out _), "null rev");
 
-        revisions = new List<GitRevision> { null };
+        revisions = new List<GitRevision> { null! };
         ClassicAssert.False(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffAB, out _, out _, out _), "1 null rev");
 
-        revisions = new List<GitRevision> { null, null };
+        revisions = new List<GitRevision> { null!, null! };
         ClassicAssert.False(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffAB, out _, out _, out _), "2 null rev");
 
         ObjectId head = ObjectId.Random();
-        revisions = new List<GitRevision> { new(head), null };
+        revisions = new List<GitRevision> { new(head), null! };
         ClassicAssert.False(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffBLocal, out _, out _, out _), "2nd null rev DiffBLocal");
     }
 
@@ -63,7 +63,7 @@ public class DiffKindRevisionTests
     public void DiffKindRevisionTests_AB_null()
     {
         ObjectId head = ObjectId.Random();
-        GitRevision[] revisions = [new GitRevision(head), null];
+        GitRevision[] revisions = [new GitRevision(head), null!];
 
         ClassicAssert.True(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffAB, out string? firstRevision, out string? secondRevision, out _), "null rev");
         ClassicAssert.AreEqual("--root", firstRevision, "first");
@@ -97,7 +97,7 @@ public class DiffKindRevisionTests
     public void DiffKindRevisionTests_AL_3()
     {
         ObjectId head = ObjectId.Random();
-        GitRevision[] revisions = [new GitRevision(head), null];
+        GitRevision[] revisions = [new GitRevision(head), null!];
 
         ClassicAssert.True(RevisionDiffInfoProvider.TryGet(revisions, RevisionDiffKind.DiffALocal, out string? firstRevision, out string? secondRevision, out _), "null rev");
         ClassicAssert.AreEqual("--root", firstRevision, "first");

@@ -9,8 +9,8 @@ namespace GitUITests.Editor;
 [TestFixture]
 public class CurrentViewPositionCacheTests
 {
-    private FileViewerInternal _fileViewerInternal;
-    private FileViewerInternal.CurrentViewPositionCache _viewPositionCache;
+    private FileViewerInternal _fileViewerInternal = null!;
+    private FileViewerInternal.CurrentViewPositionCache _viewPositionCache = null!;
 
     [SetUp]
     public void Setup()

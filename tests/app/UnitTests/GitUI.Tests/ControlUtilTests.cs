@@ -49,7 +49,7 @@ public sealed class ControlUtilTests
 
         Button? foundButton = root.FindDescendantOfType<Button>(t => t.Text == "Click me");
         ClassicAssert.NotNull(foundButton);
-        ClassicAssert.AreEqual("Click me", foundButton.Text);
+        ClassicAssert.AreEqual("Click me", foundButton!.Text);
 
         Button? notFoundButton = root.FindDescendantOfType<Button>(t => t.Text == "Non-existent");
         ClassicAssert.Null(notFoundButton);

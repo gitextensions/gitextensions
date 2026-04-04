@@ -5,7 +5,7 @@ namespace GitlabIntegrationTests;
 
 internal class BuildInfoEqualityComparer : IEqualityComparer<BuildInfo>
 {
-    public bool Equals(BuildInfo x, BuildInfo y)
+    public bool Equals(BuildInfo? x, BuildInfo? y)
     {
         if (ReferenceEquals(x, y))
         {

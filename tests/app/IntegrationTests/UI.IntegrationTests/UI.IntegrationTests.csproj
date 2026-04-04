@@ -1,5 +1,6 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <Nullable>enable</Nullable>
     <DefineConstants>$(DefineConstants);GITUI;</DefineConstants>
   </PropertyGroup>
 

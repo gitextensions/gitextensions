@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -14,13 +14,13 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid;
 public class RevisionGridControlTests
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
-    private string _initialCommit;
-    private string _headCommit;
-    private string _branch1Commit;
+    private ReferenceRepository _referenceRepository = null!;
+    private string _initialCommit = null!;
+    private string _headCommit = null!;
+    private string _branch1Commit = null!;
 
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     [OneTimeSetUp]
     public void SetUpFixture()
@@ -35,16 +35,16 @@ public class RevisionGridControlTests
     public void SetUp()
     {
         _referenceRepository = new ReferenceRepository();
-        _initialCommit = _referenceRepository.CommitHash;
+        _initialCommit = _referenceRepository.CommitHash!;
 
         _referenceRepository.CreateCommit("Commit1", "Commit1");
-        _branch1Commit = _referenceRepository.CommitHash;
+        _branch1Commit = _referenceRepository.CommitHash!;
         _referenceRepository.CreateBranch("Branch1", _branch1Commit);
         _referenceRepository.CreateCommit("Commit2", "Commit2");
-        _referenceRepository.CreateBranch("Branch2", _referenceRepository.CommitHash);
+        _referenceRepository.CreateBranch("Branch2", _referenceRepository.CommitHash!);
 
         _referenceRepository.CreateCommit("head commit");
-        _headCommit = _referenceRepository.CommitHash;
+        _headCommit = _referenceRepository.CommitHash!;
 
         _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
 
@@ -129,7 +129,7 @@ public class RevisionGridControlTests
 #endif
 
                 // Verify the view hasn't changed until we refresh
-                revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_headCommit);
+                revisionGridControl.LatestSelectedRevision!.ObjectId.ToString().Should().Be(_headCommit);
 
                 // set filter
                 revisionGridControl.SetAndApplyBranchFilter("Branch1");
@@ -167,7 +167,7 @@ public class RevisionGridControlTests
                 ta.VisibleRevisionCount.Should().Be(2);
 
                 // Verify the view hasn't changed until we refresh
-                revisionGridControl.LatestSelectedRevision.ObjectId.ToString().Should().Be(_branch1Commit);
+                revisionGridControl.LatestSelectedRevision!.ObjectId.ToString().Should().Be(_branch1Commit);
 
                 // reset filter
                 revisionGridControl.SetAndApplyBranchFilter(string.Empty);
@@ -198,26 +198,26 @@ public class RevisionGridControlTests
             {
                 // If showGitStatusForArtificialCommits is false, we do not update ChangeCount and HasChanges returns false.
                 // Then ToggleBetweenArtificialAndHeadCommits does not check HasChanges and toggles through all three commits.
-                while (revisionGridControl.GetChangeCount(ObjectId.WorkTreeId).HasChanges != showGitStatusForArtificialCommits
-                    || revisionGridControl.GetChangeCount(ObjectId.IndexId).HasChanges != showGitStatusForArtificialCommits)
+                while (revisionGridControl.GetChangeCount(ObjectId.WorkTreeId)!.HasChanges != showGitStatusForArtificialCommits
+                    || revisionGridControl.GetChangeCount(ObjectId.IndexId)!.HasChanges != showGitStatusForArtificialCommits)
                 {
                     DoEvents();
                 }
 
                 revisionGridControl.GoToRef(_initialCommit, showNoRevisionMsg: false);
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(_initialCommit);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(_initialCommit);
 
                 revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(GitRevision.WorkTreeGuid);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(GitRevision.WorkTreeGuid);
 
                 revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(GitRevision.IndexGuid);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(GitRevision.IndexGuid);
 
                 revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(_headCommit);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(_headCommit);
 
                 revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(GitRevision.WorkTreeGuid);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(GitRevision.WorkTreeGuid);
             });
     }
 
@@ -231,29 +231,29 @@ public class RevisionGridControlTests
             showGitStatusForArtificialCommits,
             revisionGridControl =>
             {
-                while (revisionGridControl.GetChangeCount(ObjectId.WorkTreeId).HasChanges != false
-                    || revisionGridControl.GetChangeCount(ObjectId.IndexId).HasChanges != showGitStatusForArtificialCommits)
+                while (revisionGridControl.GetChangeCount(ObjectId.WorkTreeId)!.HasChanges != false
+                    || revisionGridControl.GetChangeCount(ObjectId.IndexId)!.HasChanges != showGitStatusForArtificialCommits)
                 {
                     DoEvents();
                 }
 
                 revisionGridControl.GoToRef(_initialCommit, showNoRevisionMsg: false);
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(_initialCommit);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(_initialCommit);
 
                 if (!showGitStatusForArtificialCommits)
                 {
                     revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                    revisionGridControl.LatestSelectedRevision.Guid.Should().Be(GitRevision.WorkTreeGuid);
+                    revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(GitRevision.WorkTreeGuid);
                 }
 
                 revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(GitRevision.IndexGuid);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(GitRevision.IndexGuid);
 
                 revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(_headCommit);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(_headCommit);
 
                 revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                revisionGridControl.LatestSelectedRevision.Guid
+                revisionGridControl.LatestSelectedRevision!.Guid
                     .Should().Be(showGitStatusForArtificialCommits ? GitRevision.IndexGuid : GitRevision.WorkTreeGuid);
             });
     }
@@ -267,29 +267,29 @@ public class RevisionGridControlTests
             showGitStatusForArtificialCommits,
             revisionGridControl =>
             {
-                while (revisionGridControl.GetChangeCount(ObjectId.WorkTreeId).HasChanges != showGitStatusForArtificialCommits
-                    || revisionGridControl.GetChangeCount(ObjectId.IndexId).HasChanges != false)
+                while (revisionGridControl.GetChangeCount(ObjectId.WorkTreeId)!.HasChanges != showGitStatusForArtificialCommits
+                    || revisionGridControl.GetChangeCount(ObjectId.IndexId)!.HasChanges != false)
                 {
                     DoEvents();
                 }
 
                 revisionGridControl.GoToRef(_initialCommit, showNoRevisionMsg: false);
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(_initialCommit);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(_initialCommit);
 
                 revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(GitRevision.WorkTreeGuid);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(GitRevision.WorkTreeGuid);
 
                 if (!showGitStatusForArtificialCommits)
                 {
                     revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                    revisionGridControl.LatestSelectedRevision.Guid.Should().Be(GitRevision.IndexGuid);
+                    revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(GitRevision.IndexGuid);
                 }
 
                 revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(_headCommit);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(_headCommit);
 
                 revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(GitRevision.WorkTreeGuid);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(GitRevision.WorkTreeGuid);
             });
     }
 
@@ -300,29 +300,29 @@ public class RevisionGridControlTests
             showGitStatusForArtificialCommits,
             revisionGridControl =>
             {
-                while (revisionGridControl.GetChangeCount(ObjectId.WorkTreeId).HasChanges != false
-                    || revisionGridControl.GetChangeCount(ObjectId.IndexId).HasChanges != false)
+                while (revisionGridControl.GetChangeCount(ObjectId.WorkTreeId)!.HasChanges != false
+                    || revisionGridControl.GetChangeCount(ObjectId.IndexId)!.HasChanges != false)
                 {
                     DoEvents();
                 }
 
                 revisionGridControl.GoToRef(_initialCommit, showNoRevisionMsg: false);
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(_initialCommit);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(_initialCommit);
 
                 if (!showGitStatusForArtificialCommits)
                 {
                     revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                    revisionGridControl.LatestSelectedRevision.Guid.Should().Be(GitRevision.WorkTreeGuid);
+                    revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(GitRevision.WorkTreeGuid);
 
                     revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                    revisionGridControl.LatestSelectedRevision.Guid.Should().Be(GitRevision.IndexGuid);
+                    revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(GitRevision.IndexGuid);
                 }
 
                 revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                revisionGridControl.LatestSelectedRevision.Guid.Should().Be(_headCommit);
+                revisionGridControl.LatestSelectedRevision!.Guid.Should().Be(_headCommit);
 
                 revisionGridControl.ToggleBetweenArtificialAndHeadCommits();
-                revisionGridControl.LatestSelectedRevision.Guid
+                revisionGridControl.LatestSelectedRevision!.Guid
                     .Should().Be(showGitStatusForArtificialCommits ? _headCommit : GitRevision.WorkTreeGuid);
             });
     }
@@ -376,7 +376,7 @@ public class RevisionGridControlTests
                 // wait for the revisions to be loaded
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-                formBrowse.RevisionGridControl.LatestSelectedRevision.Guid.Should().Be(_headCommit);
+                formBrowse.RevisionGridControl.LatestSelectedRevision!.Guid.Should().Be(_headCommit);
 
                 FormBrowse.TestAccessor ta = formBrowse.GetTestAccessor();
                 ta.CommitInfoTabControl.SelectedTab = ta.TreeTabPage;

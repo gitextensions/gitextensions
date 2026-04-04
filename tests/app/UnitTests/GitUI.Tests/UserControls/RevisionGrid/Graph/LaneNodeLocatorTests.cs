@@ -8,8 +8,8 @@ namespace GitUITests.UserControls.RevisionGrid.Graph;
 [TestFixture]
 public class LaneNodeLocatorTests
 {
-    private IRevisionGraphRowProvider _revisionGraphRowProvider;
-    private LaneNodeLocator _laneNodeLocator;
+    private IRevisionGraphRowProvider _revisionGraphRowProvider = null!;
+    private LaneNodeLocator _laneNodeLocator = null!;
 
     [SetUp]
     public void Setup()
@@ -18,7 +18,7 @@ public class LaneNodeLocatorTests
         _laneNodeLocator = new LaneNodeLocator(_revisionGraphRowProvider);
     }
 
-    private RevisionGraphRevision SetupLaneRow(int row, int lane, int laneCount, int nodeLane = -1, RevisionGraphSegment firstSegment = null, RevisionGraphRevision child = null)
+    private RevisionGraphRevision SetupLaneRow(int row, int lane, int laneCount, int nodeLane = -1, RevisionGraphSegment firstSegment = null!, RevisionGraphRevision child = null!)
     {
         RevisionGraphRevision node = new(ObjectId.WorkTreeId, 0);
         IRevisionGraphRow revisionGraphRow = Substitute.For<IRevisionGraphRow>();
@@ -104,7 +104,7 @@ public class LaneNodeLocatorTests
         const int row = 100;
         const int lane = 3;
         SetupLaneRow(row, lane, laneCount: lane + 1);
-        _revisionGraphRowProvider.GetSegmentsForRow(row).GetSegmentsForIndex(lane).Returns(x => new List<RevisionGraphSegment>());
+        _revisionGraphRowProvider!.GetSegmentsForRow(row).GetSegmentsForIndex(lane).Returns(x => new List<RevisionGraphSegment>());
 
         // segmentsForLane.Count() <= 0
         _laneNodeLocator.FindPrevNode(row, lane).Should().Be((null, false, null));

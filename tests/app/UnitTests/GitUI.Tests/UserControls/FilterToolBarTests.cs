@@ -16,9 +16,9 @@ public class FilterToolBarTests
 {
     private bool _originalShowOnlyFirstParent;
     private bool _originalShowReflogReferences;
-    private FilterToolBar _filterToolBar;
-    private IGitModule _gitModule;
-    private IRevisionGridFilter _revisionGridFilter;
+    private FilterToolBar _filterToolBar = null!;
+    private IGitModule _gitModule = null!;
+    private IRevisionGridFilter _revisionGridFilter = null!;
 
     [SetUp]
     public void Setup()

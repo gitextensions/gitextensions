@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -16,24 +16,24 @@ namespace GitExtensions.UITests.CommandsDialogs;
 public class FormBrowse_LeftPanel_SubmodulesTests
 {
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     // Track the original setting value
     private bool _originalShowAuthorAvatarColumn;
     private bool _showAvailableDiffTools;
 
-    private GitModuleTestHelper _repo1;
-    private GitModuleTestHelper _repo2;
-    private GitModuleTestHelper _repo3;
+    private GitModuleTestHelper _repo1 = null!;
+    private GitModuleTestHelper _repo2 = null!;
+    private GitModuleTestHelper _repo3 = null!;
 
     // Note that _repo2Module and _repo3Module point to the submodules under _repo1Module,
     // not _repo2.Module and _repo3.Module respectively. In general, the tests should here
     // should interact with these modules, not with _repo2 and _repo3.
-    private IGitModule _repo1Module;
-    private IGitModule _repo2Module;
-    private IGitModule _repo3Module;
+    private IGitModule _repo1Module = null!;
+    private IGitModule _repo2Module = null!;
+    private IGitModule _repo3Module = null!;
 
-    private ISubmoduleStatusProvider _provider;
+    private ISubmoduleStatusProvider _provider = null!;
 
     [OneTimeSetUp]
     public void SetUpFixture()
@@ -122,9 +122,9 @@ public class FormBrowse_LeftPanel_SubmodulesTests
     private static TreeNode GetSubmoduleNode(FormBrowse form)
     {
         GitUI.UserControls.NativeTreeView treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
-        TreeNode remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Submodules);
+        TreeNode? remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Submodules);
         remotesNode.Should().NotBeNull();
-        return remotesNode;
+        return remotesNode!;
     }
 
     private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)

@@ -1,4 +1,4 @@
-﻿using CommonTestUtils;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -11,10 +11,10 @@ namespace GitExtensions.UITests.CommandsDialogs;
 public class FormPullTests
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
     private GitPullAction _originalDefaultPullAction;
     private GitPullAction _originalFormPullAction;
     private bool _originalAutoStash;
@@ -53,7 +53,7 @@ public class FormPullTests
 
                 accessor.Title.Should().StartWith(expected);
             },
-            null, null,
+            null!, null!,
             //// select an action different from Merge
             GitPullAction.FetchAll);
     }
@@ -71,7 +71,7 @@ public class FormPullTests
 
                 accessor.Title.Should().StartWith(expected);
             },
-            null, null,
+            null!, null!,
             //// select an action different from Rebase
             GitPullAction.FetchAll);
     }
@@ -89,7 +89,7 @@ public class FormPullTests
 
                 accessor.Title.Should().StartWith(expected);
             },
-            null, null,
+            null!, null!,
             //// select an action different from None/fetch
             GitPullAction.Merge);
     }
@@ -127,7 +127,7 @@ public class FormPullTests
                     AppSettings.DefaultPullAction = defaultPullAction;
                 }
             },
-            null, null, pullAction);
+            null!, null!, pullAction);
     }
 
     [TestCase(GitPullAction.None, true, false, false, false, false, false, false, false)]
@@ -156,7 +156,7 @@ public class FormPullTests
                 accessor.PruneTags.Enabled.Should().Be(pruneRemoteBranchesAndTagsEnabled);
                 accessor.Remotes.Text.Should().Be("[ All ]");
             },
-            null, null, GitPullAction.None);
+            null!, null!, GitPullAction.None);
     }
 
     [TestCase(true, false, false, GitPullAction.Merge)]
@@ -177,7 +177,7 @@ public class FormPullTests
 
                 AppSettings.FormPullAction.Should().Be(expectedFormPullAction);
             },
-            null, null,
+            null!, null!,
             //// select an action different from None/fetch
             GitPullAction.Merge);
     }
@@ -196,12 +196,12 @@ public class FormPullTests
 
                 AppSettings.AutoStash.Should().Be(autoStashChecked);
             },
-            null, null,
+            null!, null!,
             //// select an action different from None/fetch
             GitPullAction.Merge);
     }
 
-    private void RunFormTest(Action<FormPull> testDriver, string remoteBranch, string remote, GitPullAction pullAction)
+    private void RunFormTest(Action<FormPull> testDriver, string? remoteBranch, string? remote, GitPullAction pullAction)
     {
         RunFormTest(
             form =>
@@ -212,7 +212,7 @@ public class FormPullTests
             remoteBranch, remote, pullAction);
     }
 
-    private void RunFormTest(Func<FormPull, Task> testDriverAsync, string remoteBranch, string remote, GitPullAction pullAction)
+    private void RunFormTest(Func<FormPull, Task> testDriverAsync, string? remoteBranch, string? remote, GitPullAction pullAction)
     {
         UITest.RunForm(
             () =>

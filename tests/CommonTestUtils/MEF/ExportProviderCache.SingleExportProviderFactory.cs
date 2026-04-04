@@ -30,7 +30,7 @@ public static partial class ExportProviderCache
             ComposableCatalog expectedCatalog = Interlocked.CompareExchange(ref _scope.ExpectedCatalog, _catalog, null) ?? _catalog;
             RequireForSingleExportProvider(expectedCatalog == _catalog);
 
-            ExportProvider expected = _scope.ExpectedProviderForCatalog;
+            ExportProvider? expected = _scope.ExpectedProviderForCatalog;
             if (expected == null)
             {
                 foreach (IReadOnlyCollection<ComposedPartDiagnostic> errorCollection in _configuration.CompositionErrors)
@@ -67,7 +67,7 @@ public static partial class ExportProviderCache
                 Interlocked.CompareExchange(ref _scope.CurrentExportProvider, expected, null);
             }
 
-            ExportProvider exportProvider = _scope.CurrentExportProvider;
+            ExportProvider? exportProvider = _scope.CurrentExportProvider;
             RequireForSingleExportProvider(exportProvider == expected);
 
             return exportProvider;

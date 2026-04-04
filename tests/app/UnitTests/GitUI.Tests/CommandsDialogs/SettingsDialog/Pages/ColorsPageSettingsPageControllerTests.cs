@@ -196,21 +196,21 @@ public class ColorsPageSettingsPageControllerTests
         {
             ThemeId.WindowsAppColorModeId,
             new[] { ThemeVariations.Colorblind },
-            null // useSystemVisualStyle, depends on Application.SystemColorMode
+            null! // useSystemVisualStyle, depends on Application.SystemColorMode
         };
 
         yield return new object[]
         {
             new ThemeId("non_default", isBuiltin: true),
             new[] { ThemeVariations.Colorblind },
-            null // useSystemVisualStyle, unknown
+            null! // useSystemVisualStyle, unknown
         };
     }
 
     private class MockColorsSettingsPage : IColorsSettingsPage
     {
         public ThemeId SelectedThemeId { get; set; }
-        public string[] SelectedThemeVariations { get; set; }
+        public string[] SelectedThemeVariations { get; set; } = null!;
         public bool UseSystemVisualStyle { get; set; }
         public bool LabelRestartIsNeededVisible { get; set; }
         public bool IsChoosingVisualStyleEnabled { get; set; }

@@ -17,7 +17,7 @@ public class ResourcesTests
     {
         // arrange
         // Note: do not dispose it, as it's a global resource used by others.
-        ResourceSet resourceSet = Images.ResourceManager.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists: true, tryParents: false);
+        ResourceSet? resourceSet = Images.ResourceManager.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists: true, tryParents: false);
 
         // act & assert
         foreach (DictionaryEntry resourceEntry in resourceSet)

@@ -9,7 +9,7 @@ public class FindFilePredicateProviderTest
     private static readonly string patternDefault = "test2";
     private static readonly string workingDirDefault = @"D:\";
 
-    private IFindFilePredicateProvider _provider;
+    private IFindFilePredicateProvider _provider = null!;
 
     [SetUp]
     public void Init()
