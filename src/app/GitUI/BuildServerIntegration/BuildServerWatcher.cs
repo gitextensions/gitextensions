@@ -342,8 +342,8 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         if (!string.IsNullOrEmpty(buildServerName))
         {
             // A build server type is explicitly configured.
-            // Only proceed if integration is also explicitly enabled.
-            if (!buildServerSettings.IntegrationEnabledOrDefault)
+            // Only proceed if integration is enabled or hasn't been explicitly disabled.
+            if (buildServerSettings.IntegrationEnabled == false)
             {
                 return null;
             }
