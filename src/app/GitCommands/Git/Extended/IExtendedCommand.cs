@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 namespace GitCommands.Git.Extended;
 
 public interface IExtendedCommand<TArguments>

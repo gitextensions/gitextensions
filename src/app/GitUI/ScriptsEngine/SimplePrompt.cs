@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 namespace GitUI.ScriptsEngine;
 
 internal partial class SimplePrompt : Form, IUserInputPrompt

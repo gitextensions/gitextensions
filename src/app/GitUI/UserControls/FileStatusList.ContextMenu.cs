@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.Text;
 using GitCommands;
 using GitCommands.Git;

@@ -1,5 +1,3 @@
-#nullable enable
-
 namespace GitCommands.Utils;
 
 public static class WslUtil

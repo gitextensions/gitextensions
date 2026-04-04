@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Security;

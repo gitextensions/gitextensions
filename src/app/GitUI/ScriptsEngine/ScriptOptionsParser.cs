@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.Text.RegularExpressions;
 using GitCommands.Config;
 using GitCommands.UserRepositoryHistory;
