@@ -1,5 +1,13 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+∩╗┐<?xml version="1.0" encoding="utf-8"?>
 <dictionary>
+  <item>
+    <key>
+      <string>BuildServer.AppVeyor.AppVeyorProjectName</string>
+    </key>
+    <value>
+      <string>gitextensions/gitextensions</string>
+    </value>
+  </item>
   <item>
     <key>
       <string>BuildServer.EnableIntegration</string>
@@ -13,7 +21,7 @@
       <string>BuildServer.Type</string>
     </key>
     <value>
-      <string>GitHub Actions</string>
+      <string>AppVeyor</string>
     </value>
   </item>
   <item>
