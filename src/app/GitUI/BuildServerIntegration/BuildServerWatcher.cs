@@ -337,18 +337,21 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
         IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings().GetBuildServerSettings();
 
-        // If integration was explicitly disabled, respect that
-        if (buildServerSettings.IntegrationEnabled == false)
-        {
-            return null;
-        }
-
         string buildServerName = buildServerSettings.ServerName;
-        if (string.IsNullOrEmpty(buildServerName))
+
+        if (!string.IsNullOrEmpty(buildServerName))
         {
-            // Nothing configured — try to auto-detect from remotes.
-            // Only auto-detect when IntegrationEnabled is unset (null), not when explicitly true
-            // with an empty server name (which would be a misconfiguration).
+            // A build server type is explicitly configured.
+            // Only proceed if integration is also explicitly enabled.
+            if (!buildServerSettings.IntegrationEnabledOrDefault)
+            {
+                return null;
+            }
+        }
+        else
+        {
+            // Nothing configured. Auto-detect only when the user hasn't touched
+            // integration settings at all (both ServerName and IntegrationEnabled are unset).
             if (buildServerSettings.IntegrationEnabled is not null)
             {
                 return null;
@@ -359,10 +362,6 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
             {
                 return null;
             }
-        }
-        else if (!buildServerSettings.IntegrationEnabledOrDefault)
-        {
-            return null;
         }
 
         // For GitHub Actions with explicit config, ensure owner/repo are populated from remotes
