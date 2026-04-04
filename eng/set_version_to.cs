@@ -23,7 +23,9 @@ for (int i = 0; i < args.Length; i++)
     }
 }
 
-if (version is null || !Regex.IsMatch(version, @"^\d+\.\d+"))
+TimeSpan regexTimeout = TimeSpan.FromSeconds(1);
+
+if (version is null || !Regex.IsMatch(version, @"^\d+\.\d+", RegexOptions.None, regexTimeout))
 {
     Console.Error.WriteLine("Usage: dotnet run set_version_to.cs -- -v <version> [-t <text-version>]");
     return 1;
@@ -37,7 +39,7 @@ string[] verData = ["0", "0", "0", "0"];
 
 for (int i = 0; i < Math.Min(versionParts.Length, 4); i++)
 {
-    Match m = Regex.Match(versionParts[i], @"^(\d+)");
+    Match m = Regex.Match(versionParts[i], @"^(\d+)", RegexOptions.None, regexTimeout);
     if (m.Success)
     {
         verData[i] = m.Groups[1].Value;
