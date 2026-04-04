@@ -59,11 +59,10 @@ jobs:
       run: |
         dotnet --version
         git --version
-        python --version
 
     - name: Set version
       working-directory: eng
-      run: python set_version_to.py -v 7.0.0.${{ github.run_number }} -t 7.0.0.${{ github.run_number }}
+      run: dotnet run set_version_to.cs -- -v 7.0.0.${{ github.run_number }} -t 7.0.0.${{ github.run_number }}
 
     - name: Resolve PR build properties
       if: github.event_name == 'pull_request'
