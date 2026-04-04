@@ -16,6 +16,7 @@ concurrency:
 permissions:
   contents: read
   checks: write
+  actions: read
 
 env:
   DOTNET_NOLOGO: true
@@ -105,11 +106,25 @@ jobs:
         dotnet publish -c Release --no-build /bl:artifacts\log\publish.binlog $publishArgs.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
 
     - name: Upload portable artifact
+      id: upload-unsigned-artifact
       uses: actions/upload-artifact@v4
       with:
         name: GitExtensions-Portable
         path: artifacts\Release\publish\*.zip
         if-no-files-found: warn
+
+    - name: Sign artifact with SignPath
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      # v2 @ 2025-10-07
+      uses: signpath/github-action-submit-signing-request@3f9250c56651ff692d6729a2fbb0603a42d7d322
+      with:
+        api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
+        organization-id: '${{ vars.SIGNPATH_ORGANIZATION_ID }}'
+        project-slug: '${{ vars.SIGNPATH_PROJECT_SLUG }}'
+        signing-policy-slug: '${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}'
+        github-artifact-id: '${{ steps.upload-unsigned-artifact.outputs.artifact-id }}'
+        wait-for-completion: true
+        output-artifact-directory: artifacts\Release\publish\signed
 
     - name: Upload test results
       if: always()
