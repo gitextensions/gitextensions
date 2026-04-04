@@ -61,6 +61,16 @@ and to perform additional work on the changes in response to review feedback.
 
 [Learn how we deal with translations](https://github.com/gitextensions/gitextensions/wiki/Translations).
 
+## Git Blame
+
+This repository includes a `.git-blame-ignore-revs` file that lists commits with
+large-scale, non-functional changes (e.g. formatting, namespace style). GitHub uses
+this file automatically. To use it locally, run once per clone:
+
+```
+git config blame.ignoreRevsFile .git-blame-ignore-revs
+```
+
 ## Conduct
 
 Please review our [code of conduct](CODE_OF_CONDUCT.md).
