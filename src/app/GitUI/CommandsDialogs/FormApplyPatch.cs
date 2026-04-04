@@ -175,7 +175,7 @@ public partial class FormApplyPatch : GitModuleForm
 
         if (string.IsNullOrEmpty(patchFile) && string.IsNullOrEmpty(dirText))
         {
-            MessageBox.Show(this, _noFileSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK,  MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _noFileSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK,  MessageBoxIcon.Error);
             return;
         }
 

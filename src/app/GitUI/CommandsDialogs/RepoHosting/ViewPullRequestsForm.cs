@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
@@ -49,7 +49,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _diffViewer.ExtraDiffArgumentsChanged += _fileStatusList_SelectedIndexChanged;
         _loader.LoadingError += (sender, ex) =>
         {
-            MessageBox.Show(this, ex.Exception.ToString(), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, ex.Exception.ToString(), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             this.UnMask();
         };
         _diffViewer.TopScrollReached += FileViewer_TopScrollReached;
@@ -142,7 +142,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
-                    MessageBox.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(this, _strFailedToFetchPullData.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             });
 
@@ -340,7 +340,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
-                    MessageBox.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(this, _strCouldNotLoadDiscussion.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     LoadDiscussion(null);
                 }
             });
@@ -376,7 +376,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 }
                 catch (Exception ex) when (ex is not OperationCanceledException)
                 {
-                    MessageBox.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(this, _strFailedToLoadDiffData.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             });
     }
@@ -393,7 +393,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         GitRevision? secondRev = ObjectId.TryParse(secondSha, out ObjectId? secondId) ? new GitRevision(secondId) : null;
         if (secondRev is null)
         {
-            MessageBox.Show(this, _strUnableUnderstandPatch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _strUnableUnderstandPatch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -402,7 +402,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
             Match match = FilePartRegex.Match(part);
             if (!match.Success)
             {
-                MessageBox.Show(this, _strUnableUnderstandPatch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _strUnableUnderstandPatch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -464,7 +464,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 hostedRepository.CloneProtocol = _cloneGitProtocol;
                 if (hostedRepository.CloneUrl != remoteUrl)
                 {
-                    MessageBox.Show(this, string.Format(_strRemoteAlreadyExist.Text, remoteName, hostedRepository.CloneUrl, remoteUrl),
+                    MessageBoxes.Show(this, string.Format(_strRemoteAlreadyExist.Text, remoteName, hostedRepository.CloneUrl, remoteUrl),
                         TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
@@ -474,7 +474,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
                 string error = Module.AddRemote(remoteName, remoteUrl);
                 if (!string.IsNullOrEmpty(error))
                 {
-                    MessageBox.Show(this, error, string.Format(_strCouldNotAddRemote.Text, remoteName, remoteUrl), MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(this, error, string.Format(_strCouldNotAddRemote.Text, remoteName, remoteUrl), MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -540,7 +540,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, _strFailedToClosePullRequest.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _strFailedToClosePullRequest.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

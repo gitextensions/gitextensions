@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -139,7 +139,7 @@ public partial class FormSubmodules : GitModuleForm
     private void RemoveSubmoduleClick(object sender, EventArgs e)
     {
         if (Submodules.SelectedRows.Count != 1 ||
-            MessageBox.Show(this, _removeSelectedSubmodule.Text, _removeSelectedSubmoduleCaption.Text,
+            MessageBoxes.Show(this, _removeSelectedSubmodule.Text, _removeSelectedSubmoduleCaption.Text,
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning) !=
             DialogResult.Yes)
         {

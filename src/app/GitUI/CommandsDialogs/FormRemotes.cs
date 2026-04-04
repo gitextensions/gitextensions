@@ -457,14 +457,14 @@ Inactive remote is completely invisible to git.");
 
         if (_remotesManager.EnabledRemoteExists(remote))
         {
-            MessageBox.Show(this, string.Format(_enabledRemoteAlreadyExists.Text, remote), _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            MessageBoxes.Show(this, string.Format(_enabledRemoteAlreadyExists.Text, remote), _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
             return false;
         }
 
         if (_remotesManager.DisabledRemoteExists(remote))
         {
-            MessageBox.Show(this, string.Format(_disabledRemoteAlreadyExists.Text, remote), _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            MessageBoxes.Show(this, string.Format(_disabledRemoteAlreadyExists.Text, remote), _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
 
             return false;
         }
@@ -518,7 +518,7 @@ Inactive remote is completely invisible to git.");
 
             if (!string.IsNullOrEmpty(result.UserMessage))
             {
-                MessageBox.Show(this, result.UserMessage, _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                MessageBoxes.Show(this, result.UserMessage, _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 return;
             }
             else
@@ -545,7 +545,7 @@ Inactive remote is completely invisible to git.");
             // there may be a need to configure it
             if (result.ShouldUpdateRemote &&
                 !string.IsNullOrEmpty(remoteUrl) &&
-                MessageBox.Show(this,
+                MessageBoxes.Show(this,
                     _questionAutoPullBehaviour.Text,
                     _questionAutoPullBehaviourCaption.Text,
                     MessageBoxButtons.YesNo,
@@ -579,7 +579,7 @@ Inactive remote is completely invisible to git.");
             return;
         }
 
-        if (MessageBox.Show(this,
+        if (MessageBoxes.Show(this,
                             _questionDeleteRemote.Text,
                             _questionDeleteRemoteCaption.Text,
                             MessageBoxButtons.YesNo,
@@ -591,7 +591,7 @@ Inactive remote is completely invisible to git.");
             string output = _remotesManager.RemoveRemote(_selectedRemote);
             if (!string.IsNullOrEmpty(output))
             {
-                MessageBox.Show(this, output, _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxes.Show(this, output, _gitMessage.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             // Deleting a remote from the history list may be undesirable as
@@ -629,7 +629,7 @@ Inactive remote is completely invisible to git.");
 
     private void RemoteBranchesDataError(object sender, DataGridViewDataErrorEventArgs e)
     {
-        MessageBox.Show(this,
+        MessageBoxes.Show(this,
                         string.Format(_remoteBranchDataError.Text, RemoteBranches.Rows[e.RowIndex].Cells[0].Value, RemoteBranches.Columns[e.ColumnIndex].HeaderText),
                         TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         RemoteBranches.Rows[e.RowIndex].Cells[e.ColumnIndex].Value = "";

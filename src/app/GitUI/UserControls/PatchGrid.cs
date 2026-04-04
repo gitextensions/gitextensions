@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Net.Mail;
 using System.Text.RegularExpressions;
@@ -406,7 +406,7 @@ public partial class PatchGrid : GitModuleControl
 
         if (string.IsNullOrEmpty(patchFile.FullName))
         {
-            MessageBox.Show(_unableToShowPatchDetails.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(_unableToShowPatchDetails.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 

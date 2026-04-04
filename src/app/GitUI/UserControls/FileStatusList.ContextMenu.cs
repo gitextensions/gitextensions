@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Text;
 using GitCommands;
@@ -237,7 +237,7 @@ partial class FileStatusList
         {
             FileStatusItem[] selected = [.. SelectedItems];
             if (selected.Length == 0 || !selected[0].SecondRevision.IsArtificial ||
-                MessageBox.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo,
+                MessageBoxes.Show(this, _deleteSelectedFiles.Text, _deleteSelectedFilesCaption.Text, MessageBoxButtons.YesNo,
                     MessageBoxIcon.Warning) !=
                 DialogResult.Yes)
             {
@@ -257,7 +257,7 @@ partial class FileStatusList
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _deleteFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         return;
@@ -999,7 +999,7 @@ partial class FileStatusList
 
                     if (output.Length > 0)
                     {
-                        MessageBox.Show(this, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxes.Show(this, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
             }
@@ -1184,7 +1184,7 @@ partial class FileStatusList
         }
         else
         {
-            MessageBox.Show(string.Format(_stopTrackingFail.Text, filename), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(string.Format(_stopTrackingFail.Text, filename), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

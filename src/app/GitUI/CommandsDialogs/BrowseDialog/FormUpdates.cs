@@ -268,7 +268,7 @@ public partial class FormUpdates : GitExtensionsDialog
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, _errorMessage.Text + Environment.NewLine + ex.Message, _errorHeading.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBoxes.Show(this, _errorMessage.Text + Environment.NewLine + ex.Message, _errorHeading.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 

@@ -45,7 +45,7 @@ internal partial class FailedPluginWrapper : IGitPlugin
 
     public bool Execute(GitUIEventArgs args)
     {
-        DialogResult result = MessageBox.Show(string.Format(TranslatedStrings.FailedToLoadPluginPopupText, _exception),
+        DialogResult result = MessageBoxes.Show(string.Format(TranslatedStrings.FailedToLoadPluginPopupText, _exception),
             TranslatedStrings.FailedToLoadPlugin, MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
         if (result == DialogResult.OK)
         {

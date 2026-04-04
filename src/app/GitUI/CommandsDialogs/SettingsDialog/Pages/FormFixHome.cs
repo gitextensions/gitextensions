@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -91,7 +91,7 @@ public partial class FormFixHome : GitExtensionsForm
 
     public void ShowIfUserWant()
     {
-        if (MessageBox.Show(string.Format(_gitGlobalConfigNotFound.Text, Environment.GetEnvironmentVariable("HOME")),
+        if (MessageBoxes.Show(string.Format(_gitGlobalConfigNotFound.Text, Environment.GetEnvironmentVariable("HOME")),
                  _gitGlobalConfigNotFoundCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
         {
             ShowDialog();
@@ -141,7 +141,7 @@ public partial class FormFixHome : GitExtensionsForm
             string userHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
             if (!string.IsNullOrEmpty(userHomeDir) && File.Exists(Path.Combine(userHomeDir, ".gitconfig")))
             {
-                MessageBox.Show(this, string.Format(_gitconfigFoundHome.Text, userHomeDir), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxes.Show(this, string.Format(_gitconfigFoundHome.Text, userHomeDir), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 defaultHome.Checked = true;
                 return;
             }
@@ -159,7 +159,7 @@ public partial class FormFixHome : GitExtensionsForm
                        Environment.GetEnvironmentVariable("HOMEPATH");
             if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
             {
-                MessageBox.Show(this, string.Format(_gitconfigFoundHomedrive.Text, path), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxes.Show(this, string.Format(_gitconfigFoundHomedrive.Text, path), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 defaultHome.Checked = true;
                 return;
             }
@@ -176,7 +176,7 @@ public partial class FormFixHome : GitExtensionsForm
             string path = Environment.GetEnvironmentVariable("USERPROFILE");
             if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
             {
-                MessageBox.Show(this, string.Format(_gitconfigFoundUserprofile.Text, path), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxes.Show(this, string.Format(_gitconfigFoundUserprofile.Text, path), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 userprofileHome.Checked = true;
                 return;
             }
@@ -193,7 +193,7 @@ public partial class FormFixHome : GitExtensionsForm
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
             if (!string.IsNullOrEmpty(path) && File.Exists(Path.Combine(path, ".gitconfig")))
             {
-                MessageBox.Show(this, string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)),
+                MessageBoxes.Show(this, string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)),
                     "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 otherHome.Checked = true;
                 otherHomeDir.Text = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
@@ -213,7 +213,7 @@ public partial class FormFixHome : GitExtensionsForm
         {
             if (string.IsNullOrEmpty(otherHomeDir.Text))
             {
-                MessageBox.Show(this, _noHomeDirectorySpecified.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _noHomeDirectorySpecified.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -230,7 +230,7 @@ public partial class FormFixHome : GitExtensionsForm
         string path = Environment.GetEnvironmentVariable("HOME");
         if (!Directory.Exists(path) || string.IsNullOrEmpty(path))
         {
-            MessageBox.Show(this, string.Format(_homeNotAccessible.Text, path), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, string.Format(_homeNotAccessible.Text, path), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             return;
         }

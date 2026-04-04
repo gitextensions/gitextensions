@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -537,7 +537,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private bool PromptUserConfirm(string question, string caption)
     {
-        DialogResult dialogResult = MessageBox.Show(this,
+        DialogResult dialogResult = MessageBoxes.Show(this,
             question,
             caption,
             MessageBoxButtons.YesNo,
@@ -912,7 +912,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
                 if (!module.IsValidGitWorkingDir())
                 {
-                    MessageBox.Show(this, TranslatedStrings.DirectoryInvalidRepository,
+                    MessageBoxes.Show(this, TranslatedStrings.DirectoryInvalidRepository,
                         _cannotOpenTheFolder.Text, MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                     return;

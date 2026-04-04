@@ -36,6 +36,8 @@ public class GitlabAdapter : IBuildServerAdapter
 
     public void Initialize(IBuildServerWatcher buildServerWatcher, SettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
     {
+        _loadedItems.Clear();
+
         _apiClient = _apiClientFactory.CreateGitlabApiClient(
             config.GetString("InstanceUrl", string.Empty),
             config.GetString("ApiToken", string.Empty),

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -124,7 +124,7 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
             objectId = commitPicker.SelectedObjectId;
             if (objectId is null)
             {
-                MessageBox.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
                 return;
             }
@@ -133,14 +133,14 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
         string branchName = BranchNameTextBox.Text.Trim();
         if (string.IsNullOrWhiteSpace(branchName))
         {
-            MessageBox.Show(_branchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(_branchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             DialogResult = DialogResult.None;
             return;
         }
 
         if (!Module.CheckBranchFormat(branchName))
         {
-            MessageBox.Show(string.Format(_branchNameIsNotValid.Text, branchName), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(string.Format(_branchNameIsNotValid.Text, branchName), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             DialogResult = DialogResult.None;
             return;
         }

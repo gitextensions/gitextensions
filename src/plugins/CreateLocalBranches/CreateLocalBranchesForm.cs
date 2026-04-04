@@ -25,7 +25,7 @@ public partial class CreateLocalBranchesForm : ResourceManager.GitExtensionsForm
 
         if (references.Length == 0)
         {
-            MessageBox.Show(this, "No remote branches found.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, "No remote branches found.");
             DialogResult = DialogResult.Cancel;
             return;
         }
@@ -52,7 +52,7 @@ public partial class CreateLocalBranchesForm : ResourceManager.GitExtensionsForm
             }
         }
 
-        MessageBox.Show(this, string.Format("{0} local tracking branches have been created/updated.", references.Length),
+        MessageBoxes.Show(this, string.Format("{0} local tracking branches have been created/updated.", references.Length),
             "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         Close();
     }

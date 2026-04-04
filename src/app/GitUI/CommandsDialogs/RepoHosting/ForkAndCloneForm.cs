@@ -165,7 +165,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
                 {
                     await this.SwitchToMainThreadAsync();
 
-                    MessageBox.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     searchBtn.Enabled = true;
                 }
             });
@@ -197,11 +197,11 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
                     if (ex.Message.Contains("404"))
                     {
-                        MessageBox.Show(this, _strUserNotFound.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxes.Show(this, _strUserNotFound.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
                     {
-                        MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine +
+                        MessageBoxes.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine +
                                               ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
@@ -247,7 +247,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     {
         if (searchResultsLV.SelectedItems.Count != 1)
         {
-            MessageBox.Show(this, _strSelectOneItem.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _strSelectOneItem.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -258,7 +258,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, _strFailedToFork.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _strFailedToFork.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         tabControl.SelectedTab = myReposPage;
@@ -322,7 +322,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         string hp = CurrentySelectedGitRepo.Homepage;
         if (string.IsNullOrEmpty(hp) || (!hp.StartsWith("http://") && !hp.StartsWith("https://")))
         {
-            MessageBox.Show(this, _strNoHomepageDefined.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _strNoHomepageDefined.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         else
         {
@@ -394,7 +394,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             string error = module.AddRemote(addUpstreamRemoteAsCB.Text.Trim(), repo.ParentUrl);
             if (!string.IsNullOrEmpty(error))
             {
-                MessageBox.Show(this, error, _strCouldNotAddRemote.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, error, _strCouldNotAddRemote.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -504,7 +504,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         string targetDir = destinationTB.Text.Trim();
         if (targetDir.Length == 0)
         {
-            MessageBox.Show(this, _strCloneFolderCanNotBeEmpty.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _strCloneFolderCanNotBeEmpty.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return null;
         }
 
