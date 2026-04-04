@@ -42,6 +42,7 @@
 .EditorBackground { color: #ffffff; }
 .LineNumberBackground { color: #ffffff; }
 .AuthoredHighlight { color: #eaf1ff; }
+.Selection { color: #c3c3ff; }
 .HighlightAllOccurences { color: #e8e8ff; }
 .InactiveSelectionHighlight { color: #e6e6e6; }
 

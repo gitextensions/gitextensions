@@ -2,11 +2,14 @@ name: Git Checks
 
 on: [pull_request]
 
+permissions:
+  contents: read
+
 jobs:
   block-fixup:
     runs-on: ubuntu-22.04
 
     steps:
-    - uses: actions/checkout@v2.0.0
+    - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683 # v4.2.2
     - name: Check no !fixup commits
-      uses: 13rac1/block-fixup-merge-action@v2.0.0
+      uses: 13rac1/block-fixup-merge-action@6521b8e62ce59799891a2cdbcbcc75b7319b0b35 # v1.1.2

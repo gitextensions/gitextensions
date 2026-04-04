@@ -1,0 +1,163 @@
+<Solution>
+  <Folder Name="/analyzers/">
+    <Project Path="src/app/GitExtensions.Analyzers.CSharp/GitExtensions.Analyzers.CSharp.csproj" />
+  </Folder>
+  <Folder Name="/externals/">
+    <File Path="externals/Directory.Build.props" />
+    <File Path="externals/Directory.Build.targets" />
+    <Project Path="externals/conemu-inside/ConEmuWinForms/ConEmuWinForms.csproj" />
+    <Project Path="externals/Git.hub/Git.hub/Git.hub.csproj" />
+    <Project Path="externals/ICSharpCode.TextEditor/Project/ICSharpCode.TextEditor.csproj" />
+    <Project Path="externals/NetSpell.SpellChecker/SpellChecker.csproj" />
+  </Folder>
+  <Folder Name="/setup/">
+    <File Path="setup/assets/PrivacyPolicy.md" />
+    <File Path="setup/assets/PrivacyPolicy.rtf" />
+    <File Path="setup/assets/set-telemetry.ps1" />
+    <Project Path="setup/installer/Setup.wixproj">
+      <BuildDependency Project="src/app/GitExtensions/GitExtensions.csproj" />
+      <Platform Project="x86" />
+    </Project>
+    <Project Path="setup/TranslationApp/TranslationApp.csproj" />
+  </Folder>
+  <Folder Name="/setup/assets/">
+    <File Path="setup/assets/PrivacyPolicy.md" />
+    <File Path="setup/assets/PrivacyPolicy.rtf" />
+    <File Path="setup/assets/set-telemetry.ps1" />
+  </Folder>
+  <Folder Name="/setup/transifex/">
+    <File Path="setup/transifex/.tx/config" />
+    <File Path="setup/transifex/DownloadTransifexTranslations.ps1" />
+  </Folder>
+  <Folder Name="/Solution Items/">
+    <File Path=".editorconfig" />
+    <File Path=".gitattributes" />
+    <File Path=".gitignore" />
+    <File Path=".gitmodules" />
+    <File Path=".mailmap" />
+    <File Path="appveyor.yml" />
+    <File Path="CommonAssemblyInfo.cs" />
+    <File Path="CommonAssemblyInfoExternals.cs" />
+    <File Path="Directory.Build.props" />
+    <File Path="Directory.Build.targets" />
+    <File Path="Directory.Packages.props" />
+    <File Path="global.json" />
+  </Folder>
+  <Folder Name="/Solution Items/eng/">
+    <File Path="eng/Download-PluginManager.ps1" />
+    <File Path="eng/GitExtensions.ruleset" />
+    <File Path="eng/GitExtensionsTest.ruleset" />
+    <File Path="eng/Localisation.targets" />
+    <File Path="eng/Mark-RepoClean.ps1" />
+    <File Path="eng/Publish.targets" />
+    <File Path="eng/RepoLayout.props" />
+    <File Path="eng/stylecop.json" />
+    <File Path="eng/Tests.props" />
+    <File Path="eng/Tests.targets" />
+    <File Path="eng/vs-threading.MainThreadAssertingMethods.txt" />
+    <File Path="eng/vs-threading.MainThreadSwitchingMethods.txt" />
+    <File Path="eng/vs-threading.TypesRequiringMainThread.txt" />
+    <File Path="update-loc.cmd" />
+  </Folder>
+  <Folder Name="/Solution Items/GitHub/">
+    <File Path=".github/copilot-instructions.md" />
+    <File Path=".github/PULL_REQUEST_TEMPLATE.md" />
+  </Folder>
+  <Folder Name="/Solution Items/GitHub/ISSUE_TEMPLATE/">
+    <File Path=".github/ISSUE_TEMPLATE/bug_report.yml" />
+    <File Path=".github/ISSUE_TEMPLATE/feature_request.yml" />
+  </Folder>
+  <Folder Name="/src/" />
+  <Folder Name="/src/app/">
+    <Project Path="src/app/BugReporter/BugReporter.csproj" />
+    <Project Path="src/app/GitCommands/GitCommands.csproj" />
+    <Project Path="src/app/GitExtensions.Extensibility/GitExtensions.Extensibility.csproj" />
+    <Project Path="src/app/GitExtensions/GitExtensions.csproj">
+      <BuildDependency Project="externals/conemu-inside/ConEmuWinForms/ConEmuWinForms.csproj" />
+      <BuildDependency Project="externals/Git.hub/Git.hub/Git.hub.csproj" />
+      <BuildDependency Project="externals/NetSpell.SpellChecker/SpellChecker.csproj" />
+      <BuildDependency Project="setup/TranslationApp/TranslationApp.csproj" />
+      <BuildDependency Project="src/plugins/AutoCompileSubmodules/GitExtensions.Plugins.AutoCompileSubmodules.csproj" />
+      <BuildDependency Project="src/plugins/BackgroundFetch/GitExtensions.Plugins.BackgroundFetch.csproj" />
+      <BuildDependency Project="src/plugins/BuildServerIntegration/AppVeyorIntegration/GitExtensions.Plugins.AppVeyorIntegration.csproj" />
+      <BuildDependency Project="src/plugins/BuildServerIntegration/AzureDevOpsIntegration/GitExtensions.Plugins.AzureDevOpsIntegration.csproj" />
+      <BuildDependency Project="src/plugins/BuildServerIntegration/GitHubActionsIntegration/GitExtensions.Plugins.GitHubActionsIntegration.csproj" />
+      <BuildDependency Project="src/plugins/BuildServerIntegration/GitlabIntegration/GitExtensions.Plugins.GitlabIntegration.csproj" />
+      <BuildDependency Project="src/plugins/BuildServerIntegration/JenkinsIntegration/GitExtensions.Plugins.JenkinsIntegration.csproj" />
+      <BuildDependency Project="src/plugins/BuildServerIntegration/TeamCityIntegration/GitExtensions.Plugins.TeamCityIntegration.csproj" />
+      <BuildDependency Project="src/plugins/CreateLocalBranches/GitExtensions.Plugins.CreateLocalBranches.csproj" />
+      <BuildDependency Project="src/plugins/DeleteUnusedBranches/GitExtensions.Plugins.DeleteUnusedBranches.csproj" />
+      <BuildDependency Project="src/plugins/FindLargeFiles/GitExtensions.Plugins.FindLargeFiles.csproj" />
+      <BuildDependency Project="src/plugins/GitHub3/GitExtensions.Plugins.GitHub3.csproj" />
+      <BuildDependency Project="src/plugins/Gource/GitExtensions.Plugins.Gource.csproj" />
+      <BuildDependency Project="src/plugins/ProxySwitcher/GitExtensions.Plugins.ProxySwitcher.csproj" />
+      <BuildDependency Project="src/plugins/ReleaseNotesGenerator/GitExtensions.Plugins.ReleaseNotesGenerator.csproj" />
+      <BuildDependency Project="src/plugins/Statistics/GitImpact/GitExtensions.Plugins.GitImpact.csproj" />
+      <BuildDependency Project="src/plugins/Statistics/GitStatistics/GitExtensions.Plugins.GitStatistics.csproj" />
+    </Project>
+    <Project Path="src/app/GitExtUtils/GitExtUtils.csproj" />
+    <Project Path="src/app/GitUI/GitUI.csproj" />
+    <Project Path="src/app/ResourceManager/ResourceManager.csproj" />
+  </Folder>
+  <Folder Name="/src/plugins/">
+    <File Path="src/plugins/Directory.Build.props" />
+    <File Path="src/plugins/Directory.Build.targets" />
+    <Project Path="src/plugins/AutoCompileSubmodules/GitExtensions.Plugins.AutoCompileSubmodules.csproj" />
+    <Project Path="src/plugins/BackgroundFetch/GitExtensions.Plugins.BackgroundFetch.csproj" />
+    <Project Path="src/plugins/CreateLocalBranches/GitExtensions.Plugins.CreateLocalBranches.csproj" />
+    <Project Path="src/plugins/DeleteUnusedBranches/GitExtensions.Plugins.DeleteUnusedBranches.csproj" />
+    <Project Path="src/plugins/FindLargeFiles/GitExtensions.Plugins.FindLargeFiles.csproj" />
+    <Project Path="src/plugins/GitHub3/GitExtensions.Plugins.GitHub3.csproj" />
+    <Project Path="src/plugins/GitUIPluginInterfaces/GitUIPluginInterfaces.csproj" />
+    <Project Path="src/plugins/Gource/GitExtensions.Plugins.Gource.csproj" />
+    <Project Path="src/plugins/ProxySwitcher/GitExtensions.Plugins.ProxySwitcher.csproj" />
+    <Project Path="src/plugins/ReleaseNotesGenerator/GitExtensions.Plugins.ReleaseNotesGenerator.csproj" />
+  </Folder>
+  <Folder Name="/src/plugins/BuildServerIntegration/">
+    <File Path="src/plugins/BuildServerIntegration/Directory.Build.props" />
+    <Project Path="src/plugins/BuildServerIntegration/AppVeyorIntegration/GitExtensions.Plugins.AppVeyorIntegration.csproj" />
+    <Project Path="src/plugins/BuildServerIntegration/AzureDevOpsIntegration/GitExtensions.Plugins.AzureDevOpsIntegration.csproj" />
+    <Project Path="src/plugins/BuildServerIntegration/GitHubActionsIntegration/GitExtensions.Plugins.GitHubActionsIntegration.csproj" />
+    <Project Path="src/plugins/BuildServerIntegration/GitlabIntegration/GitExtensions.Plugins.GitlabIntegration.csproj" />
+    <Project Path="src/plugins/BuildServerIntegration/JenkinsIntegration/GitExtensions.Plugins.JenkinsIntegration.csproj" />
+    <Project Path="src/plugins/BuildServerIntegration/TeamCityIntegration/GitExtensions.Plugins.TeamCityIntegration.csproj" />
+  </Folder>
+  <Folder Name="/src/plugins/Statistics/">
+    <File Path="src/plugins/Statistics/Directory.Build.props" />
+    <Project Path="src/plugins/Statistics/GitImpact/GitExtensions.Plugins.GitImpact.csproj" />
+    <Project Path="src/plugins/Statistics/GitStatistics/GitExtensions.Plugins.GitStatistics.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <File Path="tests/Directory.Build.props" />
+    <Project Path="tests/CommonTestUtils/CommonTestUtils.csproj" />
+  </Folder>
+  <Folder Name="/tests/app/" />
+  <Folder Name="/tests/app/IntegrationTests/">
+    <File Path="tests/app/IntegrationTests/Directory.Build.props" />
+    <Project Path="tests/app/IntegrationTests/BugReporter.IntegrationTests/BugReporter.IntegrationTests.csproj" />
+    <Project Path="tests/app/IntegrationTests/UI.IntegrationTests/UI.IntegrationTests.csproj" />
+  </Folder>
+  <Folder Name="/tests/app/UnitTests/">
+    <File Path="tests/app/UnitTests/Directory.Build.props" />
+    <Project Path="tests/app/UnitTests/BugReporter.Tests/BugReporter.Tests.csproj" />
+    <Project Path="tests/app/UnitTests/GitCommands.Tests/GitCommands.Tests.csproj" />
+    <Project Path="tests/app/UnitTests/GitExtensions.Extensibility.Tests/GitExtensions.Extensibility.Tests.csproj" />
+    <Project Path="tests/app/UnitTests/GitExtUtils.Tests/GitExtUtils.Tests.csproj" />
+    <Project Path="tests/app/UnitTests/GitUI.Tests/GitUI.Tests.csproj" />
+    <Project Path="tests/app/UnitTests/ResourceManager.Tests/ResourceManager.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/plugins/" />
+  <Folder Name="/tests/plugins/UnitTests/">
+    <File Path="tests/plugins/UnitTests/Directory.Build.props" />
+    <Project Path="tests/plugins/UnitTests/DeleteUnusedBranches.Tests/DeleteUnusedBranches.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/FindLargeFiles.Tests/FindLargeFiles.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/GitUIPluginInterfaces.Tests/GitUIPluginInterfaces.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/ReleaseNotesGenerator.Tests/ReleaseNotesGenerator.Tests.csproj" />
+  </Folder>
+  <Folder Name="/tests/plugins/UnitTests/BuildServerIntegration/">
+    <Project Path="tests/plugins/UnitTests/BuildServerIntegration/AppVeyorIntegration.Tests/AppVeyorIntegration.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/BuildServerIntegration/AzureDevOpsIntegration.Tests/AzureDevOpsIntegration.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/BuildServerIntegration/GitHubActionsIntegration.Tests/GitHubActionsIntegration.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/BuildServerIntegration/GitlabIntegration.Tests/GitlabIntegration.Tests.csproj" />
+  </Folder>
+</Solution>
