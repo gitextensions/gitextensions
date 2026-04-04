@@ -20,7 +20,7 @@ public sealed class GitHubActionsApiClient : IGitHubActionsApiClient
 
         BaseUrl = $"{baseUrl}/repos/{owner}/{_repository}";
 
-        _httpClient = CreateHttpClient(baseUrl, apiToken);
+        _httpClient = CreateHttpClient(apiToken);
     }
 
     public string BaseUrl { get; }
@@ -49,7 +49,8 @@ public sealed class GitHubActionsApiClient : IGitHubActionsApiClient
 
         if (sinceDate.HasValue)
         {
-            queryParams.Add($"created=>={sinceDate.Value:yyyy-MM-ddTHH:mm:ssZ}");
+            string createdFilter = $">={sinceDate.Value:yyyy-MM-ddTHH:mm:ssZ}";
+            queryParams.Add($"created={Uri.EscapeDataString(createdFilter)}");
         }
 
         string query = string.Join("&", queryParams);
@@ -81,7 +82,7 @@ public sealed class GitHubActionsApiClient : IGitHubActionsApiClient
         return result;
     }
 
-    private static HttpClient CreateHttpClient(string baseUrl, string? apiToken)
+    private static HttpClient CreateHttpClient(string? apiToken)
     {
         HttpClient client = new()
         {

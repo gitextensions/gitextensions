@@ -18,7 +18,7 @@ internal class GitHubActionsAdapterTests
     private const string TestSha3 = "cccccccccccccccccccccccccccccccccccccccc";
 
     private GitHubActionsAdapter _target = null!;
-    private IScheduler _scheduler = null!;
+    private readonly IScheduler _scheduler = ImmediateScheduler.Instance;
     private IGitHubActionsApiClient _apiClient = null!;
 
     private IGitHubActionsApiClientFactory _apiClientFactory = null!;
@@ -32,8 +32,6 @@ internal class GitHubActionsAdapterTests
         _apiClientFactory = Substitute.For<IGitHubActionsApiClientFactory>();
         _apiClientFactory.CreateApiClient(Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string>(), Arg.Any<string?>())
             .Returns(_apiClient);
-
-        _scheduler = Substitute.For<IScheduler>();
 
         _target = new GitHubActionsAdapter(_apiClientFactory);
 
@@ -281,7 +279,7 @@ internal class GitHubActionsAdapterTests
             e => result.Add(e),
             () => observableEvent.Set());
 
-        observableEvent.WaitOne();
+        Assert.That(observableEvent.WaitOne(TimeSpan.FromSeconds(10)), Is.True, "Observable did not complete in time");
 
         return result;
     }
@@ -296,7 +294,7 @@ internal class GitHubActionsAdapterTests
             e => result.Add(e),
             () => observableEvent.Set());
 
-        observableEvent.WaitOne();
+        Assert.That(observableEvent.WaitOne(TimeSpan.FromSeconds(10)), Is.True, "Observable did not complete in time");
 
         return result;
     }

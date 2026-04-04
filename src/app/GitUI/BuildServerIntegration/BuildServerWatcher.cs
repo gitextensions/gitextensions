@@ -68,7 +68,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         _buildServerAdapter = buildServerAdapter;
 
         // When a build server adapter is available (including auto-detected),
-        // ensure the build status column is visible
+        // ensure the column visibility reflects the user's display preferences
         if (buildServerAdapter is not null)
         {
             ColumnProvider.Column.Visible = AppSettings.ShowBuildStatusIconColumn || AppSettings.ShowBuildStatusTextColumn;

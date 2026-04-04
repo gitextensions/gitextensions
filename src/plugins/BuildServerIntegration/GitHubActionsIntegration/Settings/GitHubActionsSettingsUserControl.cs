@@ -75,13 +75,6 @@ public partial class GitHubActionsSettingsUserControl : GitExtensionsControl, IB
 
     private void TokenManagementLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
-        string owner = OwnerTextBox.Text.Trim();
-        string repository = RepositoryTextBox.Text.Trim();
-
-        string url = !string.IsNullOrWhiteSpace(owner) && !string.IsNullOrWhiteSpace(repository)
-            ? $"https://github.com/{owner}/{repository}/settings/actions"
-            : "https://github.com/settings/tokens/new?scopes=repo&description=GitExtensions";
-
-        OsShellUtil.OpenUrlInDefaultBrowser(url);
+        OsShellUtil.OpenUrlInDefaultBrowser("https://github.com/settings/tokens/new?scopes=repo&description=GitExtensions");
     }
 }

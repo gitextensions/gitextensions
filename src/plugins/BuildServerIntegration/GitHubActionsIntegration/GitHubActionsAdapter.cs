@@ -63,17 +63,18 @@ public sealed class GitHubActionsAdapter : IBuildServerAdapter
 
     public IObservable<BuildInfo> GetFinishedBuildsSince(IScheduler scheduler, DateTime? sinceDate = null)
     {
-        return GetBuilds(sinceDate, running: false);
+        return GetBuilds(scheduler, sinceDate, running: false);
     }
 
     public IObservable<BuildInfo> GetRunningBuilds(IScheduler scheduler)
     {
-        return GetBuilds(sinceDate: null, running: true);
+        return GetBuilds(scheduler, sinceDate: null, running: true);
     }
 
-    private IObservable<BuildInfo> GetBuilds(DateTime? sinceDate, bool running)
+    private IObservable<BuildInfo> GetBuilds(IScheduler scheduler, DateTime? sinceDate, bool running)
     {
-        return Observable.Create<BuildInfo>(ObserveBuildsAsync);
+        return Observable.Create<BuildInfo>(ObserveBuildsAsync)
+            .SubscribeOn(scheduler);
 
         async Task ObserveBuildsAsync(IObserver<BuildInfo> observer, CancellationToken cancellationToken)
         {
