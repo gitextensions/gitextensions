@@ -98,7 +98,7 @@ For example:
 
 ## Git Commands
 
-* All git executable invocations should be invoked through `IGitModule`, with unit tests added.
+* All interactive git operations should be invoked through `IGitModule`, with unit tests added.
 * Structure git command arguments using `Commands` (in `GitCommands.Git`), which returns `IGitCommand` instances via the private `GitCommand` record. `IGitCommand` declares whether the command accesses a remote and whether it changes repo state.
 * Execute commands with UI feedback through `GitUICommands` (implements `IGitUICommands`). Use `StartCommandLineProcessDialog(owner, IGitCommand)` to run a structured command — it automatically selects the right process dialog (remote vs local) and fires `RepoChangedNotifier` based on `IGitCommand.ChangesRepoState`. For operations that need a dedicated form, use the existing `Start*Dialog` methods on `GitUICommands`.
 * Prefer the `-z` flag when available (e.g. `git worktree list`, `git status`) to use NUL-delimited output, which avoids issues with newlines or special characters in paths.

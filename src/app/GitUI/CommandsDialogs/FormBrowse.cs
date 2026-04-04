@@ -1119,26 +1119,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 ToolStripScripts.Items.Add(button);
             }
         }
-
-        void UpdateWorktreeToolStripVisibility()
-        {
-            if (!Module.IsValidGitWorkingDir())
-            {
-                toolStripWorktrees.Visible = false;
-                return;
-            }
-
-            ThreadHelper.FileAndForget(async () =>
-            {
-                await TaskScheduler.Default;
-
-                IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
-
-                await this.SwitchToMainThreadAsync();
-
-                toolStripWorktrees.Visible = worktrees.Count > 1;
-            });
-        }
     }
 
     private void SetShortcutKeyDisplayStringsFromHotkeySettings()
@@ -1876,7 +1856,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
         else
         {
-            MessageBox.Show(this, _noReposHostPluginLoaded.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, _noReposHostPluginLoaded.Text, TranslatedStrings.Error);
         }
     }
 
@@ -3053,8 +3033,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         if (!Directory.Exists(path))
         {
-            MessageBox.Show(this, string.Format(TranslatedStrings.WorktreeDirectoryNotFound, path), TranslatedStrings.Error,
-                MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, string.Format(TranslatedStrings.WorktreeDirectoryNotFound, path), TranslatedStrings.Error);
             return;
         }
 

@@ -1943,16 +1943,16 @@ public static partial class AppSettings
         set => SetBool("RepoObjectsTree.ShowTags", value);
     }
 
-    public static bool RepoObjectsTreeShowSubmodules
-    {
-        get => GetBool("RepoObjectsTree.ShowSubmodules", true);
-        set => SetBool("RepoObjectsTree.ShowSubmodules", value);
-    }
-
     public static bool RepoObjectsTreeShowStashes
     {
         get => GetBool("RepoObjectsTree.ShowStashes", true);
         set => SetBool("RepoObjectsTree.ShowStashes", value);
+    }
+
+    public static bool RepoObjectsTreeShowSubmodules
+    {
+        get => GetBool("RepoObjectsTree.ShowSubmodules", true);
+        set => SetBool("RepoObjectsTree.ShowSubmodules", value);
     }
 
     public static bool RepoObjectsTreeShowWorktrees
