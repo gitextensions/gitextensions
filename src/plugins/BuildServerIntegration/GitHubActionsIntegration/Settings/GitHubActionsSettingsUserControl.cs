@@ -30,8 +30,8 @@ public partial class GitHubActionsSettingsUserControl : GitExtensionsControl, IB
             if (remote is not null
                 && _remoteParser.TryExtractGitHubDataFromRemoteUrl(remote, out string? owner, out string? repository))
             {
-                OwnerTextBox.Text = owner;
-                RepositoryTextBox.Text = repository;
+                txtOwner.Text = owner;
+                txtRepository.Text = repository;
                 break;
             }
         }
@@ -44,36 +44,36 @@ public partial class GitHubActionsSettingsUserControl : GitExtensionsControl, IB
         string? repository = buildServerConfig.GetString("GitHubActionsRepository", null);
         string? apiToken = buildServerConfig.GetString("GitHubActionsApiToken", null);
 
-        ApiUrlTextBox.Text = apiUrl ?? DefaultApiUrl;
+        txtApiUrl.Text = apiUrl ?? DefaultApiUrl;
 
         if (!string.IsNullOrWhiteSpace(owner))
         {
-            OwnerTextBox.Text = owner;
+            txtOwner.Text = owner;
         }
 
         if (!string.IsNullOrWhiteSpace(repository))
         {
-            RepositoryTextBox.Text = repository;
+            txtRepository.Text = repository;
         }
 
-        ApiTokenTextBox.Text = apiToken;
+        txtApiToken.Text = apiToken;
     }
 
     public void SaveSettings(SettingsSource buildServerConfig)
     {
-        string? apiUrl = ApiUrlTextBox.Text.NullIfEmpty();
+        string? apiUrl = txtApiUrl.Text.NullIfEmpty();
         if (apiUrl == DefaultApiUrl)
         {
             apiUrl = null;
         }
 
         buildServerConfig.SetString("GitHubActionsApiUrl", apiUrl);
-        buildServerConfig.SetString("GitHubActionsOwner", OwnerTextBox.Text.NullIfEmpty());
-        buildServerConfig.SetString("GitHubActionsRepository", RepositoryTextBox.Text.NullIfEmpty());
-        buildServerConfig.SetString("GitHubActionsApiToken", ApiTokenTextBox.Text.NullIfEmpty());
+        buildServerConfig.SetString("GitHubActionsOwner", txtOwner.Text.NullIfEmpty());
+        buildServerConfig.SetString("GitHubActionsRepository", txtRepository.Text.NullIfEmpty());
+        buildServerConfig.SetString("GitHubActionsApiToken", txtApiToken.Text.NullIfEmpty());
     }
 
-    private void TokenManagementLink_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+    private void lnkTokenManagement_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
         OsShellUtil.OpenUrlInDefaultBrowser("https://github.com/settings/tokens/new?scopes=repo&description=GitExtensions");
     }
