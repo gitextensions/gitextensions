@@ -1,5 +1,4 @@
-﻿using CommonTestUtils;
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI;
@@ -13,16 +12,16 @@ namespace GitUITests;
 public sealed class RepositoryHistoryUIServiceTests
 {
     private RepositoryHistoryUIService _service;
-    private IRepositoryCurrentBranchNameProvider _repositoryCurrentBranchNameProvider;
+    private IRepositoryCurrentBranchNameCache _branchNameCache;
     private IInvalidRepositoryRemover _invalidRepositoryRemover;
 
     [SetUp]
     public void Setup()
     {
-        _repositoryCurrentBranchNameProvider = Substitute.For<IRepositoryCurrentBranchNameProvider>();
+        _branchNameCache = Substitute.For<IRepositoryCurrentBranchNameCache>();
         _invalidRepositoryRemover = Substitute.For<IInvalidRepositoryRemover>();
 
-        _service = new RepositoryHistoryUIService(Substitute.For<IGitExecutorProvider>(), _repositoryCurrentBranchNameProvider, _invalidRepositoryRemover);
+        _service = new RepositoryHistoryUIService(Substitute.For<IGitExecutorProvider>(), _branchNameCache, _invalidRepositoryRemover);
     }
 
     [Test]
@@ -62,7 +61,7 @@ public sealed class RepositoryHistoryUIServiceTests
     [TestCase("(no branch)")]
     public void AddRecentRepositories_should_show_branch_correctly(string branch)
     {
-        _repositoryCurrentBranchNameProvider.GetCurrentBranchName(Arg.Any<string>()).Returns(x => branch);
+        _branchNameCache.GetCachedBranchName(Arg.Any<string>()).Returns(string.IsNullOrWhiteSpace(branch) ? null : branch);
 
         ToolStripMenuItem containerMenu = new();
 
@@ -72,11 +71,15 @@ public sealed class RepositoryHistoryUIServiceTests
 
         _service.GetTestAccessor().AddRecentRepositories(containerMenu, repository, caption, number: 1);
 
-        // await adding branch name in ShortcutKeyDisplayString, done async
-        AsyncTestHelper.JoinPendingOperations();
-
         ToolStripMenuItem item = (ToolStripMenuItem)containerMenu.DropDownItems[0];
-        item.ShortcutKeyDisplayString.Should().Be(branch);
+        if (string.IsNullOrWhiteSpace(branch))
+        {
+            item.ShortcutKeyDisplayString.Should().BeNullOrEmpty();
+        }
+        else
+        {
+            item.ShortcutKeyDisplayString.Should().Be(branch);
+        }
     }
 
     [Test]

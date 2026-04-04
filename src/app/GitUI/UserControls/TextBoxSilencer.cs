@@ -31,13 +31,14 @@ internal sealed class TextBoxSilencer
         bool isAtEndColumn = position == GetLineEnd(text, startIndex: position);
         bool isAtFirstLine = position <= GetLineEnd(text, startIndex: 0);
         bool isAtLastLine = text.IndexOfAny(Delimiters.LineFeedAndCarriageReturn, startIndex: position) < 0;
+        bool ctrl = e.Control;
 
         switch (e.KeyCode)
         {
             case Keys.Up when isAtFirstLine:
             case Keys.Down when isAtLastLine:
-            case Keys.Home when isAtFirstColumn:
-            case Keys.End when isAtEndColumn:
+            case Keys.Home when isAtFirstColumn && (!ctrl || isAtFirstLine):
+            case Keys.End when isAtEndColumn && (!ctrl || isAtLastLine):
             case Keys.Left or Keys.PageUp when isAtFirstLine && isAtFirstColumn:
             case Keys.Right or Keys.PageDown when isAtLastLine && isAtEndColumn:
                 e.Handled = true;

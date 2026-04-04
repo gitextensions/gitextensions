@@ -42,10 +42,10 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IOutputHistoryProvider>(outputHistoryModel);
         serviceContainer.AddService<IOutputHistoryRecorder>(outputHistoryModel);
 
-        RepositoryCurrentBranchNameProvider repositoryCurrentBranchNameProvider = new(serviceContainer.GetRequiredService<IGitExecutorProvider>());
+        IRepositoryCurrentBranchNameCache branchNameCache = new RepositoryCurrentBranchNameCache(new RepositoryCurrentBranchNameProvider(serviceContainer.GetRequiredService<IGitExecutorProvider>()));
         InvalidRepositoryRemover invalidRepositoryRemover = new();
-        serviceContainer.AddService<IRepositoryCurrentBranchNameProvider>(repositoryCurrentBranchNameProvider);
+        serviceContainer.AddService<IRepositoryCurrentBranchNameCache>(branchNameCache);
         serviceContainer.AddService<IInvalidRepositoryRemover>(invalidRepositoryRemover);
-        serviceContainer.AddService<IRepositoryHistoryUIService>(new RepositoryHistoryUIService(serviceContainer.GetRequiredService<IGitExecutorProvider>(), repositoryCurrentBranchNameProvider, invalidRepositoryRemover));
+        serviceContainer.AddService<IRepositoryHistoryUIService>(new RepositoryHistoryUIService(serviceContainer.GetRequiredService<IGitExecutorProvider>(), branchNameCache, invalidRepositoryRemover));
     }
 }

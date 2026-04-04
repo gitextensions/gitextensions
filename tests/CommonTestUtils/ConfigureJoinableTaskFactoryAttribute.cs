@@ -27,7 +27,7 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
 
     public void BeforeTest(ITest test)
     {
-        ClassicAssert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
+        ClassicAssert.False(ThreadHelper.HasJoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
 
         IList apartmentState = null;
         for (ITest scope = test; scope is not null; scope = scope.Parent)

@@ -526,6 +526,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             }
 
             await InitializeAndRegisterAllPluginsAsync();
+
+            await Task.Delay(millisecondsDelay: 100);
+            UICommands.GetRequiredService<IRepositoryHistoryUIService>().TriggerBranchNameCacheUpdate(onlyIfEmpty: true);
         });
 
         return;
@@ -792,7 +795,6 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         Text = _appTitleGenerator.Generate(branchName: TranslatedStrings.NoBranch);
 
-        _dashboard.RefreshContent();
         _dashboard.Visible = true;
         _dashboard.BringToFront();
 
@@ -1060,7 +1062,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                     });
                 }
 
-                ActiveControl = RevisionGrid;
+                // Do not steal focus from an open dropdown menu.
+                if (!_NO_TRANSLATE_WorkingDir.DropDown.Visible)
+                {
+                    ActiveControl = RevisionGrid;
+                }
             }
 
             _windowsJumpListManager.EnableThumbnailToolbar(validBrowseDir);
@@ -1156,6 +1162,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         fileToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
         helpToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
         toolsToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
+        _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
         ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys);
         ToolStripFilters.RefreshRevisionGridShortcutKeys(GetHotkeys(RevisionGridControl.HotkeySettingsName));
 

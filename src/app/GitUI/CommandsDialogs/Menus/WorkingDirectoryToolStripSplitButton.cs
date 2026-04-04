@@ -7,6 +7,7 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
 using ResourceManager;
+using ResourceManager.Hotkey;
 
 namespace GitUI.CommandsDialogs.Menus;
 
@@ -18,7 +19,12 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
     private static readonly TranslationString _noWorkingFolderText = new("No working directory");
     private static readonly TranslationString _configureWorkingDirMenu = new("Co&nfigure this menu...");
     private static readonly TranslationString _repositorySearchPlaceholder = new("Search repositories...");
-    private static readonly TranslationString _toolTip = new("Change working directory\nHold Ctrl in order to open the selected repository in a new instance.");
+    private static readonly TranslationString _toolTip = new("""
+        Change working directory
+        Left click opens the drop-down menu.
+        Then hold Ctrl in order to open the selected repository in a new instance.
+        Right click starts the "Open repository" dialog.
+        """);
 
     private class Implementation
     {
@@ -54,7 +60,6 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
         private readonly ToolStripMenuItem _tsmiRecentReposSettings;
         private readonly ToolStripTextBox _txtFilter = new();
 
-        // NOTE: This is pretty bad, but we want to share the same look and feel of the menu items defined in the Start menu.
         private readonly StartToolStripMenuItem _startToolStripMenuItem;
         private readonly ToolStripMenuItem _closeToolStripMenuItem;
 
@@ -161,6 +166,12 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
 
         private void FillDropDown(ToolStripDropDownItem button)
         {
+            // Do not rebuild while the dropdown is open — Clear() would close it.
+            if (button.DropDown.Visible)
+            {
+                return;
+            }
+
             button.DropDown.SuspendLayout();
             try
             {
@@ -249,6 +260,12 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
                 button.AutoSize = true;
             }
         }
+
+        internal void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
+        {
+            _tsmiOpenLocalRepository.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.OpenRepo);
+            _tsmiCloseRepo.ShortcutKeyDisplayString = hotkeys.GetShortcutDisplay(FormBrowse.Command.CloseRepository);
+        }
     }
 
     private Implementation? _implementation;
@@ -279,6 +296,11 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
     {
         // If the component is not initialized, no point doing anything.
         _implementation?.RefreshContent(this);
+    }
+
+    public void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)
+    {
+        _implementation?.RefreshShortcutKeys(hotkeys);
     }
 
     void ITranslate.AddTranslationItems(ITranslation translation)

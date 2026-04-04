@@ -2833,7 +2833,9 @@ compare with first:</source>
       </trans-unit>
       <trans-unit id="_toolTip.Text">
         <source>Change working directory
-Hold Ctrl in order to open the selected repository in a new instance.</source>
+Left click opens the drop-down menu.
+Then hold Ctrl in order to open the selected repository in a new instance.
+Right click starts the "Open repository" dialog.</source>
         <target />
       </trans-unit>
       <trans-unit id="_topProjectModuleFormat.Text">
