@@ -5,14 +5,8 @@ on:
     branches-ignore:
       - configdata
       - gh-pages
-      - 'experimental/**'
       - 'translations_*'
   pull_request:
-    branches-ignore:
-      - configdata
-      - gh-pages
-      - 'experimental/**'
-      - 'translations_*'
   workflow_dispatch:
 
 concurrency:
@@ -78,8 +72,8 @@ jobs:
     - name: Build .NET
       shell: pwsh
       run: |
-        $cmd = "dotnet build -c Release --verbosity q --nologo /bl:artifacts\log\build.binlog /p:ContinuousIntegrationBuild=true $env:BUILD_ARGS"
-        Invoke-Expression $cmd
+        $buildArgs = "/p:ContinuousIntegrationBuild=true $env:BUILD_ARGS".Trim()
+        dotnet build -c Release --verbosity q --nologo /bl:artifacts\log\build.binlog $buildArgs.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
 
     - name: Verify localisation
       shell: pwsh
@@ -95,8 +89,10 @@ jobs:
       run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx /bl:artifacts\log\tests.binlog
 
     - name: Test report
-      uses: dorny/test-reporter@v1
-      if: always()
+      # v1 @ 2024-08-30
+      uses: dorny/test-reporter@d61b558e8df85cb60d09ca3e5b09653b4477cea7
+      if: always() && github.event.pull_request.head.repo.full_name == github.repository
+      continue-on-error: true
       with:
         name: Test Results
         path: 'artifacts/**/TestsResults/**/*.trx'
@@ -105,8 +101,8 @@ jobs:
     - name: Publish
       shell: pwsh
       run: |
-        $cmd = "dotnet publish -c Release --no-build /bl:artifacts\log\publish.binlog /p:ContinuousIntegrationBuild=true $env:BUILD_ARGS"
-        Invoke-Expression $cmd
+        $publishArgs = "/p:ContinuousIntegrationBuild=true $env:BUILD_ARGS".Trim()
+        dotnet publish -c Release --no-build /bl:artifacts\log\publish.binlog $publishArgs.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
 
     - name: Upload portable artifact
       uses: actions/upload-artifact@v4
