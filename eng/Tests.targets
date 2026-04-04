@@ -23,7 +23,6 @@
     <PackageReference Include="NUnit" PrivateAssets="all" Publish="true" />
     <PackageReference Include="NUnit3TestAdapter" PrivateAssets="all" Publish="true" />
     <PackageReference Include="Verify.NUnit" PrivateAssets="all" Publish="true" />
-    <PackageReference Include="Appveyor.TestLogger" PrivateAssets="all" Publish="true" />
 
     <PackageReference Include="NUnit.ConsoleRunner" PrivateAssets="all" Publish="true" />
   </ItemGroup>
