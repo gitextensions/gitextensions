@@ -98,8 +98,13 @@ partial class RepoObjectsTree : IMenuItemFactory
     {
         bool isSingleWorktreeSelected = hasSingleSelection && selectedNode is WorktreeNode;
         WorktreeNode? worktreeNode = selectedNode as WorktreeNode;
-        mnubtnOpenWorktree.Enable(isSingleWorktreeSelected && worktreeNode is { IsCurrent: false, Worktree.IsDeleted: false });
-        mnubtnDeleteWorktree.Enable(isSingleWorktreeSelected && worktreeNode is { IsCurrent: false, Worktree.IsDeleted: false });
+        bool canActOnWorktree = isSingleWorktreeSelected && worktreeNode is { IsCurrent: false, Worktree.IsDeleted: false };
+
+        // Always show menu items for any worktree node, but disable for current/deleted
+        mnubtnOpenWorktree.Enable(isSingleWorktreeSelected);
+        mnubtnOpenWorktree.Enabled = canActOnWorktree;
+        mnubtnDeleteWorktree.Enable(isSingleWorktreeSelected);
+        mnubtnDeleteWorktree.Enabled = canActOnWorktree;
     }
 
     private void EnableStashContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
