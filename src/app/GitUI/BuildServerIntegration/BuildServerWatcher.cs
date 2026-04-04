@@ -328,13 +328,31 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         await TaskScheduler.Default;
 
         IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings().GetBuildServerSettings();
-        if (!buildServerSettings.IntegrationEnabledOrDefault)
+
+        // If integration was explicitly disabled, respect that
+        if (buildServerSettings.IntegrationEnabled == false)
         {
             return null;
         }
 
         string buildServerName = buildServerSettings.ServerName;
         if (string.IsNullOrEmpty(buildServerName))
+        {
+            // Nothing configured — try to auto-detect from remotes.
+            // Only auto-detect when IntegrationEnabled is unset (null), not when explicitly true
+            // with an empty server name (which would be a misconfiguration).
+            if (buildServerSettings.IntegrationEnabled is not null)
+            {
+                return null;
+            }
+
+            buildServerName = TryAutoDetectBuildServerType();
+            if (string.IsNullOrEmpty(buildServerName))
+            {
+                return null;
+            }
+        }
+        else if (!buildServerSettings.IntegrationEnabledOrDefault)
         {
             return null;
         }
@@ -374,6 +392,35 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
                 // Invalid arguments, do not return a build server adapter
             }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    ///  Attempts to detect the build server type from the repository's remote URLs.
+    ///  Currently detects GitHub-hosted repositories and returns "GitHub Actions".
+    /// </summary>
+    private string? TryAutoDetectBuildServerType()
+    {
+        try
+        {
+            IGitModule module = _module();
+            IReadOnlyList<string> remoteNames = module.GetRemoteNames();
+
+            foreach (string remoteName in remoteNames)
+            {
+                string remoteUrl = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
+                if (!string.IsNullOrWhiteSpace(remoteUrl)
+                    && remoteUrl.Contains("github.com", StringComparison.OrdinalIgnoreCase))
+                {
+                    return "GitHub Actions";
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.Write($"Auto-detect build server failed: {ex}");
         }
 
         return null;
