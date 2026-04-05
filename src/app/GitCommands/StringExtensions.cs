@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Text;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 
 // ReSharper disable once CheckNamespace
@@ -213,7 +212,7 @@ public static class StringExtensions
     [Pure]
     public static string EscapeForCommandLine(this string s, bool? forWindows = null)
     {
-        return (forWindows ?? EnvUtils.RunningOnWindows()) ? EscapeForWindowsCommandLine(s) : EscapeForPosixCommandLine(s);
+        return (forWindows ?? OperatingSystem.IsWindows()) ? EscapeForWindowsCommandLine(s) : EscapeForPosixCommandLine(s);
 
         static string EscapeForWindowsCommandLine(string s) => s.Replace("\"", "\"\"");
         static string EscapeForPosixCommandLine(string s) => s.Replace(@"\", @"\\").Replace("\"", "\\\"").Replace("'", @"\'");

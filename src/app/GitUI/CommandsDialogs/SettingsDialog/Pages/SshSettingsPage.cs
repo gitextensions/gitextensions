@@ -1,5 +1,4 @@
 ﻿using GitCommands;
-using GitCommands.Utils;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
 using Microsoft.Win32;
@@ -134,7 +133,7 @@ public partial class SshSettingsPage : SettingsPageWithHeader
 
     public bool AutoFindPuttyPaths()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return false;
         }

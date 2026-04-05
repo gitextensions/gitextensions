@@ -1,14 +1,12 @@
 ﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
-using GitCommands.Utils;
-
 namespace GitCommands.Git.Extensions;
 
 public static class ProcessExtensions
 {
     public static void TerminateTree(this Process process)
     {
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             // Send Ctrl+C
             NativeMethods.AttachConsole(process.Id);

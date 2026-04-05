@@ -1,6 +1,5 @@
 ﻿using FluentAssertions;
 using GitCommands;
-using GitCommands.Utils;
 using NSubstitute;
 
 namespace GitCommandsTests;
@@ -15,7 +14,7 @@ public class EnvironmentPathsProviderTests
     [SetUp]
     public void Setup()
     {
-        _separator = EnvUtils.EnvVariableSeparator.ToString();
+        _separator = Path.PathSeparator.ToString();
 
         _environment = Substitute.For<IEnvironmentAbstraction>();
         _provider = new EnvironmentPathsProvider(_environment);

@@ -1,5 +1,4 @@
 ﻿using GitCommands.Config;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -169,9 +168,9 @@ public static partial class Commands
 
         toPath = getPathForGitExecution(toPath.Trim());
 
-        DebugHelpers.Assert(!EnvUtils.RunningOnWindows() || fromPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
+        DebugHelpers.Assert(!OperatingSystem.IsWindows() || fromPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
            $"'CloneCmd' must be called with 'fromPath' in Posix format");
-        DebugHelpers.Assert(!EnvUtils.RunningOnWindows() || toPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
+        DebugHelpers.Assert(!OperatingSystem.IsWindows() || toPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
            $"'CloneCmd' must be called with 'toPath' in Posix format");
 
         return new GitArgumentBuilder("clone")

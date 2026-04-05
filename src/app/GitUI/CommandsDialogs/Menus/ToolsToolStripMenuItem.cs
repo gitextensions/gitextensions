@@ -1,5 +1,4 @@
 ﻿using GitCommands;
-using GitCommands.Utils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Infrastructure;
 using GitUI.Shells;
@@ -19,7 +18,7 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
 
         gitBashToolStripMenuItem.Tag = new ShellProvider().GetShell(BashShell.ShellName);
 
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             toolStripSeparator6.Visible = false;
             PuTTYToolStripMenuItem.Visible = false;

@@ -5,7 +5,6 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
@@ -27,18 +26,7 @@ public class JenkinsIntegrationMetadata : BuildServerAdapterMetadataAttribute
     {
     }
 
-    public override string? CanBeLoaded
-    {
-        get
-        {
-            if (EnvUtils.IsNet4FullOrHigher())
-            {
-                return null;
-            }
-
-            return ".NET Framework 4 or higher required";
-        }
-    }
+    public override string? CanBeLoaded => null;
 }
 
 [Export(typeof(IBuildServerAdapter))]

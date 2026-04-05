@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Logging;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using Microsoft;
 
@@ -35,7 +34,7 @@ public class ConsoleEmulatorOutputControl : ConsoleOutputControl
 
     public override bool IsDisplayingFullProcessOutput => true;
 
-    public static bool IsSupportedInThisEnvironment => EnvUtils.RunningOnWindows();
+    public static bool IsSupportedInThisEnvironment => OperatingSystem.IsWindows();
 
     public override void AppendMessageFreeThreaded(string text)
     {

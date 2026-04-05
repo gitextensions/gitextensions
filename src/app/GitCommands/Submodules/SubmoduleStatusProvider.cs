@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics;
 using GitCommands.Git;
-using GitCommands.Utils;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using Microsoft;
@@ -242,7 +241,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
             }
 
             if (string.IsNullOrWhiteSpace(path)
-                || (EnvUtils.RunningOnWindows()
+                || (OperatingSystem.IsWindows()
                     && result.AllSubmodules.Any(info => path.Equals(info.Path, StringComparison.OrdinalIgnoreCase))))
             {
                 Trace.WriteLine($"Ignoring duplicate submodule path: {path} ({name})");

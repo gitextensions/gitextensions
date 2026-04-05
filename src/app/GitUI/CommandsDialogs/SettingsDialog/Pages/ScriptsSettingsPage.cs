@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.ScriptsEngine;
@@ -159,7 +158,7 @@ Diff selection:
 
     public override void OnPageShown()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return;
         }

@@ -1,6 +1,4 @@
-﻿using GitCommands.Utils;
-
-namespace GitCommands;
+﻿namespace GitCommands;
 
 public static class EnvironmentConfiguration
 {
@@ -54,7 +52,7 @@ public static class EnvironmentConfiguration
 
         // SSH_ASKPASS variable
 
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             string sshAskPass = Path.Combine(AppSettings.GetInstallDir(), "GitExtSshAskPass.exe");
 
@@ -108,7 +106,7 @@ public static class EnvironmentConfiguration
             return UserHomeDir;
         }
 
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             // Use the Windows default home directory
             string homeDrive = Env.GetEnvironmentVariable("HOMEDRIVE");

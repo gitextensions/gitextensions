@@ -10,7 +10,6 @@ using GitCommands.Git.Extensions;
 using GitCommands.Patches;
 using GitCommands.Remotes;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
@@ -895,7 +894,7 @@ public sealed partial class GitModule : IGitModule
 
     public void RunGitK()
     {
-        if (EnvUtils.RunningOnUnix())
+        if (!OperatingSystem.IsWindows())
         {
             new Executable("gitk", WorkingDir).Start(createWindow: true);
         }
@@ -915,7 +914,7 @@ public sealed partial class GitModule : IGitModule
     public void RunGui()
     {
         ArgumentBuilder args;
-        if (EnvUtils.RunningOnUnix())
+        if (!OperatingSystem.IsWindows())
         {
             args = new GitArgumentBuilder("gui");
             _ = GitExecutable.Start(args, createWindow: true);
@@ -3629,7 +3628,7 @@ public sealed partial class GitModule : IGitModule
             return true;
         }
 
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             return Process.GetProcessesByName("git").Length > 0;
         }

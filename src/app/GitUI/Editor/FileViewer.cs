@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Patches;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -1891,7 +1890,7 @@ public partial class FileViewer : GitModuleControl
         // TODO Cleanup the handling and separate AllOutput to StandardOutput/StandardError
         ExecutionResult result = Module.GitExecutable.Execute(args, inputWriter => inputWriter.BaseStream.Write(patch), throwOnErrorExit: false);
         string output = result.AllOutput.Trim();
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             // remove file mode warnings
             output = output.RemoveLines(FileModeWarningRegex.IsMatch);
