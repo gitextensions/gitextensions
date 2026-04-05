@@ -176,9 +176,6 @@
       <Component Id="Microsoft.WindowsAPICodePack.Shell.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Microsoft.WindowsAPICodePack.Shell.dll" />
       </Component>
-      <Component Id="Newtonsoft.Json.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Newtonsoft.Json.dll" />
-      </Component>
       <Component Id="ResourceManager.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\ResourceManager.dll" />
       </Component>
@@ -660,7 +657,6 @@
       <ComponentRef Id="Microsoft.VisualStudio.Validation.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
-      <ComponentRef Id="Newtonsoft.Json.dll" />
       <ComponentRef Id="ResourceManager.dll" />
       <ComponentRef Id="RestSharp.dll" />
       <ComponentRef Id="SmartFormat.dll" />

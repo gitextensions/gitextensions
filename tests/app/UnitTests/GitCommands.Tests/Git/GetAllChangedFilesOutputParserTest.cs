@@ -1,8 +1,8 @@
-﻿using GitCommands;
+﻿using System.Text.Json;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Newtonsoft.Json;
 
 namespace GitCommandsTests.Git.Commands;
 
@@ -30,7 +30,7 @@ public class GetAllChangedFilesOutputParserTest
 
         // git status --porcelain=2 --untracked-files=no -z
         IReadOnlyList<GitItemStatus> statuses = getAllChangedFilesOutputParser.Parse(statusString);
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(statuses))
+        await Verifier.VerifyJson(JsonSerializer.Serialize(statuses))
             .UseParameters(testName);
     }
 
@@ -39,7 +39,7 @@ public class GetAllChangedFilesOutputParserTest
     {
         GitItemStatus item = GitItemStatus.GetDefaultStatus("filename.txt");
 
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(item));
+        await Verifier.VerifyJson(JsonSerializer.Serialize(item));
     }
 
     private const string _rawinfo = ":100644 100644 96b438fc ffe29e27 ";
@@ -72,7 +72,7 @@ public class GetAllChangedFilesOutputParserTest
         // git diff --find-renames --find-copies -z --raw
         List<GitItemStatus> statuses = module.GetTestAccessor().GetDiffChangedFilesFromString(statusString, stagedStatus);
 
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(statuses))
+        await Verifier.VerifyJson(JsonSerializer.Serialize(statuses))
             .UseParameters(testName);
     }
 }

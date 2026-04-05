@@ -76,7 +76,6 @@
       <UnnecessaryFiles Include="$(AppPublishDir)\TranslationApp.*"/>
       <UnnecessaryFiles Include="$(AppPublishDir)\ApplicationInsights.config"/>
       <!-- Duplicates -->
-      <UnnecessaryFiles Include="$(_AppPluginsPublishDir)\Newtonsoft.Json.dll"/>
 
       <!-- Keep this one -->
       <UnnecessaryFiles Remove="$(AppPublishDir)\GitExtensions.dll.*"/>

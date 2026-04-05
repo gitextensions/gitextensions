@@ -17,7 +17,6 @@
     <PackageVersion Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageVersion Include="Microsoft.VisualStudio.Composition" Version="17.2.41" />
     <PackageVersion Include="Microsoft.VisualStudio.Threading" Version="17.13.61" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageVersion Include="RestSharp" Version="106.12.0" />
     <PackageVersion Include="SmartFormat" Version="3.6.0" />
     <PackageVersion Include="StrongOf" Version="1.2.4" />

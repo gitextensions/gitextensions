@@ -99,7 +99,12 @@ internal class AppVeyorAdapter : IBuildServerAdapter
                 {
                     foreach (JsonNode? project in projects)
                     {
-                        string repoName = project!["slug"]!.GetValue<string>();
+                        string? repoName = GetNodeString(project?["slug"]);
+                        if (string.IsNullOrEmpty(repoName))
+                        {
+                            continue;
+                        }
+
                         string projectId = accountName.Combine("/", repoName)!;
                         projectNames.Add(projectId);
                     }
@@ -400,7 +405,12 @@ internal class AppVeyorAdapter : IBuildServerAdapter
         }
         catch
         {
-            string buildHistoryUrl = buildDetails.BaseApiUrl + "/history?recordsNumber=1&startBuildId=" + (int.Parse(buildDetails.BuildId!) + 1);
+            if (!int.TryParse(buildDetails.BuildId, out int buildId))
+            {
+                throw;
+            }
+
+            string buildHistoryUrl = buildDetails.BaseApiUrl + "/history?recordsNumber=1&startBuildId=" + (buildId + 1);
             JsonNode builds = JsonNode.Parse(await GetResponseAsync(_httpClientAppVeyor, buildHistoryUrl, cancellationToken).ConfigureAwait(false))!;
 
             string? version = GetNodeString(builds["builds"]?[0]?["version"]);
@@ -412,10 +422,8 @@ internal class AppVeyorAdapter : IBuildServerAdapter
         }
     }
 
-    /// <summary>
-    ///  Extracts a string from a <see cref="JsonNode"/>, converting non-string values (numbers, booleans) to their
-    ///  string representations. This mirrors Newtonsoft's <c>ToObject&lt;string&gt;()</c> behavior.
-    /// </summary>
+    // Converts non-string JSON values (numbers, booleans) to their string representations,
+    // aligned with Newtonsoft's ToObject<string>() behavior.
     private static string? GetNodeString(JsonNode? node)
     {
         if (node is null)
