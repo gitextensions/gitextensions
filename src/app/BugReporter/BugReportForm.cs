@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using BugReporter.Properties;
 using BugReporter.Serialization;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Translations;
 using GitExtensions.Extensibility.Translations.Xliff;
 using GitExtUtils.GitUI;
@@ -156,13 +157,13 @@ Send report?");
         bool hasUserText = CheckContainsInfo(descriptionTextBox.Text);
         if (!hasUserText)
         {
-            MessageBox.Show(this, _noReproStepsSuppliedErrorMessage.Text, _title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, _noReproStepsSuppliedErrorMessage.Text, _title.Text);
             descriptionTextBox.Focus();
             return;
         }
 
-        if (MessageBox.Show(this, _submitGitHubMessage.Text, _title.Text,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
+        if (!MessageBoxes.Confirm(this, _submitGitHubMessage.Text, _title.Text,
+                MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
         {
             return;
         }

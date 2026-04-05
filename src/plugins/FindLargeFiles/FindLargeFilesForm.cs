@@ -218,7 +218,7 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
 
     private void Delete_Click(object sender, EventArgs e)
     {
-        if (MessageBox.Show(this, _areYouSureToDelete.Text, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+        if (MessageBoxes.Show(this, _areYouSureToDelete.Text, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
         {
             _commands.StartBatchFileProcessDialog(GenerateCommand(_gitObjects));
         }

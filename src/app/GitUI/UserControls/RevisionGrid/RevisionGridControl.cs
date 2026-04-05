@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Concurrency;
@@ -2387,7 +2387,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         IReadOnlyList<GitRevision> selectedRevisions = GetSelectedRevisions();
         if (selectedRevisions.Count is > 2)
         {
-            MessageBox.Show(this, "Select only one or two revisions. Abort.", "Archive revision", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, "Select only one or two revisions. Abort.", "Archive revision", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -2991,7 +2991,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
         else if (showNoRevisionMsg)
         {
-            MessageBox.Show(this, _noRevisionFoundError.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _noRevisionFoundError.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -3054,7 +3054,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     {
         if (string.IsNullOrWhiteSpace(CurrentBranch.Value) || CurrentCheckout is null)
         {
-            MessageBox.Show(this, "No branch is currently selected", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, "No branch is currently selected", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -3077,7 +3077,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     {
         if (_baseCommitToCompare is null)
         {
-            MessageBox.Show(this, _baseForCompareNotSelectedError.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _baseForCompareNotSelectedError.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -3100,7 +3100,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         if (baseCommit.ObjectId == ObjectId.WorkTreeId)
         {
-            MessageBox.Show(this, "Cannot diff working directory to itself", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, "Cannot diff working directory to itself", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -3118,7 +3118,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
         else
         {
-            MessageBox.Show(this, "You must have two commits selected to compare", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, "You must have two commits selected to compare", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -3223,7 +3223,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             if (fileNameArray.Length > 10)
             {
                 // Some users need to be protected against themselves!
-                MessageBox.Show(this, _droppingFilesBlocked.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _droppingFilesBlocked.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 

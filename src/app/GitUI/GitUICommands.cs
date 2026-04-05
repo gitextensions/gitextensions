@@ -181,7 +181,7 @@ public sealed class GitUICommands : IGitUICommands
         ObjectId objectId = Module.RevParse(branch);
         if (objectId is null)
         {
-            MessageBox.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
@@ -552,7 +552,7 @@ public sealed class GitUICommands : IGitUICommands
         ObjectId objectId = Module.RevParse(branch);
         if (objectId is null)
         {
-            MessageBox.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
@@ -904,7 +904,7 @@ public sealed class GitUICommands : IGitUICommands
             Module.ResetChanges(resetId: null, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out StringBuilder output, progressAction: null);
             if (output.Length > 0)
             {
-                MessageBox.Show(null, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(owner: null, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1298,7 +1298,7 @@ public sealed class GitUICommands : IGitUICommands
 
         if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out string firstRevision, out string secondRevision, out string error))
         {
-            MessageBox.Show(owner, error, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(owner, error, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         else
         {
@@ -1386,7 +1386,7 @@ public sealed class GitUICommands : IGitUICommands
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -1418,7 +1418,7 @@ public sealed class GitUICommands : IGitUICommands
             }
             catch (Exception ex)
             {
-                MessageBox.Show(
+                MessageBoxes.Show(
                     string.Format("ERROR: {0} failed. Message: {1}\r\n\r\n{2}", name, ex.Message, ex.StackTrace),
                     "Error! :(", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
@@ -1467,7 +1467,7 @@ public sealed class GitUICommands : IGitUICommands
 
         if (relevantHosts.Count == 0)
         {
-            MessageBox.Show(owner, "Could not find any repo hosts for current working directory", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(owner, "Could not find any repo hosts for current working directory", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         else if (relevantHosts.Count == 1)
         {
@@ -1475,7 +1475,7 @@ public sealed class GitUICommands : IGitUICommands
         }
         else
         {
-            MessageBox.Show("StartCreatePullRequest:Selection not implemented!", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show("StartCreatePullRequest:Selection not implemented!", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -1508,31 +1508,31 @@ public sealed class GitUICommands : IGitUICommands
 
         if (command == "blame" && args.Count <= 2)
         {
-            MessageBox.Show("Cannot open blame, there is no file selected.", "Blame", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show("Cannot open blame, there is no file selected.", "Blame", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
         if (command == "difftool" && args.Count <= 2)
         {
-            MessageBox.Show("Cannot open difftool, there is no file selected.", "Difftool", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show("Cannot open difftool, there is no file selected.", "Difftool", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
         if (command is (BlameHistoryCommand or FileHistoryCommand) && args.Count <= 2)
         {
-            MessageBox.Show("Cannot open blame / file history, there is no file selected.", "Blame / file history", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show("Cannot open blame / file history, there is no file selected.", "Blame / file history", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
         if (command == "fileeditor" && args.Count <= 2)
         {
-            MessageBox.Show("Cannot open file editor, there is no file selected.", "File editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show("Cannot open file editor, there is no file selected.", "File editor", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
         if (command == "revert" && args.Count <= 2)
         {
-            MessageBox.Show("Cannot open revert, there is no file selected.", "Revert", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show("Cannot open revert, there is no file selected.", "Revert", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 

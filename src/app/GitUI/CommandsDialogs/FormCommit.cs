@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
@@ -539,12 +539,12 @@ public sealed partial class FormCommit : GitModuleForm
             }
             catch (FileNotFoundException ex)
             {
-                MessageBox.Show(this, string.Format(_templateNotFound.Text, ex.FileName),
+                MessageBoxes.Show(this, string.Format(_templateNotFound.Text, ex.FileName),
                     _templateNotFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message,
+                MessageBoxes.Show(this, ex.Message,
                     _templateLoadErrorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
@@ -1101,7 +1101,7 @@ public sealed partial class FormCommit : GitModuleForm
                 // commit, because amend may be used just to change the commit message or timestamp.
                 if (!AppSettings.DontConfirmAmend)
                 {
-                    if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    if (MessageBoxes.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                     {
                         return false;
                     }
@@ -1114,7 +1114,7 @@ public sealed partial class FormCommit : GitModuleForm
             {
                 // it is a merge commit, so user can commit just for merging two branches even the changeset is empty,
                 // but also user may forget to add files, so only ask for confirmation that user really wants to commit an empty changeset
-                if (MessageBox.Show(this, _noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                if (MessageBoxes.Show(this, _noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 {
                     return false;
                 }
@@ -1173,13 +1173,13 @@ public sealed partial class FormCommit : GitModuleForm
         {
             if (Module.InTheMiddleOfConflictedMerge())
             {
-                MessageBox.Show(this, _mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (_useFormCommitMessage && (string.IsNullOrEmpty(Message.Text) || Message.Text == _commitTemplate))
             {
-                MessageBox.Show(this, _enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                MessageBoxes.Show(this, _enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
             }
 
@@ -1323,7 +1323,7 @@ public sealed partial class FormCommit : GitModuleForm
             }
             catch (Exception e)
             {
-                MessageBox.Show(this, $"Exception: {e.Message}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, $"Exception: {e.Message}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return;
@@ -1334,7 +1334,7 @@ public sealed partial class FormCommit : GitModuleForm
                 {
                     string firstLine = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.RemoveEmptyEntries)[0];
                     if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine &&
-                        MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                        MessageBoxes.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                     {
                         return false;
                     }
@@ -1346,7 +1346,7 @@ public sealed partial class FormCommit : GitModuleForm
                     foreach (string line in lines)
                     {
                         if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine &&
-                            MessageBox.Show(this, string.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                            MessageBoxes.Show(this, string.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
                             return false;
                         }
@@ -1358,7 +1358,7 @@ public sealed partial class FormCommit : GitModuleForm
                     string[] lines = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.None);
                     if (lines.Length > 2 &&
                         lines[1].Length != 0 &&
-                        MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                        MessageBoxes.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                     {
                         return false;
                     }
@@ -1371,7 +1371,7 @@ public sealed partial class FormCommit : GitModuleForm
                         if (!Message.Text.StartsWith(CommitKind.Fixup.GetPrefix()) &&
                             !Message.Text.StartsWith(CommitKind.Squash.GetPrefix()) &&
                             !Regex.IsMatch(GetTextToValidate(Message.Text), AppSettings.CommitValidationRegEx) &&
-                            MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                            MessageBoxes.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
                             return false;
                         }
@@ -1946,7 +1946,7 @@ public sealed partial class FormCommit : GitModuleForm
     {
         if (!AppSettings.DontConfirmAmend)
         {
-            if (MessageBox.Show(this, _amendResetSoft.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            if (MessageBoxes.Show(this, _amendResetSoft.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
                 return;
             }
