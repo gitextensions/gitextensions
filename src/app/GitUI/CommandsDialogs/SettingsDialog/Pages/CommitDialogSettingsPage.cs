@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
@@ -13,30 +13,30 @@ public partial class CommitDialogSettingsPage : SettingsPageWithHeader
 
     protected override void SettingsToPage()
     {
-        chkShowErrorsWhenStagingFiles.Checked = AppSettings.ShowErrorsWhenStagingFiles;
-        chkEnsureCommitMessageSecondLineEmpty.Checked = AppSettings.EnsureCommitMessageSecondLineEmpty;
-        chkWriteCommitMessageInCommitWindow.Checked = AppSettings.UseFormCommitMessage;
-        _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Value = AppSettings.CommitDialogNumberOfPreviousMessages;
-        chkShowCommitAndPush.Checked = AppSettings.ShowCommitAndPush;
-        chkShowResetWorkTreeChanges.Checked = AppSettings.ShowResetWorkTreeChanges;
-        chkShowResetAllChanges.Checked = AppSettings.ShowResetAllChanges;
-        chkAutocomplete.Checked = AppSettings.ProvideAutocompletion;
-        cbRememberAmendCommitState.Checked = AppSettings.RememberAmendCommitState;
+        chkShowErrorsWhenStagingFiles.Checked = AppSettings.ShowErrorsWhenStagingFiles.Value;
+        chkEnsureCommitMessageSecondLineEmpty.Checked = AppSettings.EnsureCommitMessageSecondLineEmpty.Value;
+        chkWriteCommitMessageInCommitWindow.Checked = AppSettings.UseFormCommitMessage.Value;
+        _NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Value = AppSettings.CommitDialogNumberOfPreviousMessages.Value;
+        chkShowCommitAndPush.Checked = AppSettings.ShowCommitAndPush.Value;
+        chkShowResetWorkTreeChanges.Checked = AppSettings.ShowResetWorkTreeChanges.Value;
+        chkShowResetAllChanges.Checked = AppSettings.ShowResetAllChanges.Value;
+        chkAutocomplete.Checked = AppSettings.ProvideAutocompletion.Value;
+        cbRememberAmendCommitState.Checked = AppSettings.RememberAmendCommitState.Value;
 
         base.SettingsToPage();
     }
 
     protected override void PageToSettings()
     {
-        AppSettings.ShowErrorsWhenStagingFiles = chkShowErrorsWhenStagingFiles.Checked;
-        AppSettings.EnsureCommitMessageSecondLineEmpty = chkEnsureCommitMessageSecondLineEmpty.Checked;
-        AppSettings.UseFormCommitMessage = chkWriteCommitMessageInCommitWindow.Checked;
-        AppSettings.CommitDialogNumberOfPreviousMessages = (int)_NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Value;
-        AppSettings.ShowCommitAndPush = chkShowCommitAndPush.Checked;
-        AppSettings.ShowResetWorkTreeChanges = chkShowResetWorkTreeChanges.Checked;
-        AppSettings.ShowResetAllChanges = chkShowResetAllChanges.Checked;
-        AppSettings.ProvideAutocompletion = chkAutocomplete.Checked;
-        AppSettings.RememberAmendCommitState = cbRememberAmendCommitState.Checked;
+        AppSettings.ShowErrorsWhenStagingFiles.Value = chkShowErrorsWhenStagingFiles.Checked;
+        AppSettings.EnsureCommitMessageSecondLineEmpty.Value = chkEnsureCommitMessageSecondLineEmpty.Checked;
+        AppSettings.UseFormCommitMessage.Value = chkWriteCommitMessageInCommitWindow.Checked;
+        AppSettings.CommitDialogNumberOfPreviousMessages.Value = (int)_NO_TRANSLATE_CommitDialogNumberOfPreviousMessages.Value;
+        AppSettings.ShowCommitAndPush.Value = chkShowCommitAndPush.Checked;
+        AppSettings.ShowResetWorkTreeChanges.Value = chkShowResetWorkTreeChanges.Checked;
+        AppSettings.ShowResetAllChanges.Value = chkShowResetAllChanges.Checked;
+        AppSettings.ProvideAutocompletion.Value = chkAutocomplete.Checked;
+        AppSettings.RememberAmendCommitState.Value = cbRememberAmendCommitState.Checked;
 
         base.PageToSettings();
     }

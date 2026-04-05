@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitUI.HelperDialogs;
 
 namespace GitUI.UserControls;
@@ -25,7 +25,7 @@ public abstract class ConsoleOutputControl : ContainerControl
     /// </summary>
     public static ConsoleOutputControl CreateInstance()
     {
-        if (ConsoleEmulatorOutputControl.IsSupportedInThisEnvironment && AppSettings.UseConsoleEmulatorForCommands)
+        if (ConsoleEmulatorOutputControl.IsSupportedInThisEnvironment && AppSettings.UseConsoleEmulatorForCommands.Value)
         {
             return new ConsoleEmulatorOutputControl();
         }

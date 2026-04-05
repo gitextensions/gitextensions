@@ -18,8 +18,8 @@ public sealed class TestAppSettingsAttribute : Attribute, ITestAction
         File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
         AppSettings.SettingsContainer.SettingsCache.Load();
 
-        AppSettings.CheckForUpdates = false;
-        AppSettings.ShowAvailableDiffTools = false;
+        AppSettings.CheckForUpdates.Value = false;
+        AppSettings.ShowAvailableDiffTools.Value = false;
 
         // Create the settings file so that the SettingsCache does not think it should reload the file again and again
         AppSettings.SettingsContainer.SettingsCache.Save();

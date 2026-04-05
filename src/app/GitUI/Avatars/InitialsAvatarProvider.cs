@@ -1,4 +1,4 @@
-﻿using System.Drawing.Drawing2D;
+using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -143,13 +143,13 @@ public class InitialsAvatarProvider : IAvatarProvider
         return $"{name[0]}{names[^1][0]}".ToUpper();
     }
 
-    private readonly (Brush foregroundBrush, Color backgroundColor)[] _avatarColors = [.. AppSettings.AvatarAuthorInitialsPalette.Split(',').Select(GetAvatarDrawingMaterial)];
+    private readonly (Brush foregroundBrush, Color backgroundColor)[] _avatarColors = [.. AppSettings.AvatarAuthorInitialsPalette.Value.Split(',').Select(GetAvatarDrawingMaterial)];
 
     private static (Brush foregroundBrush, Color backgroundColor) GetAvatarDrawingMaterial(string colorCode)
     {
         Color backgroundColor = ConvertToColor(colorCode);
 
-        return (new SolidBrush(backgroundColor.GetContrastColor(AppSettings.AvatarAuthorInitialsLuminanceThreshold)), backgroundColor);
+        return (new SolidBrush(backgroundColor.GetContrastColor(AppSettings.AvatarAuthorInitialsLuminanceThreshold.Value)), backgroundColor);
 
         static Color ConvertToColor(string colorCode)
         {

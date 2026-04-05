@@ -1,4 +1,4 @@
-﻿using System.CodeDom.Compiler;
+using System.CodeDom.Compiler;
 using System.Reflection;
 using FluentAssertions;
 using GitCommands;

@@ -293,7 +293,7 @@ public sealed class RevisionReader
         string autostashLabel,
         CancellationToken cancellationToken)
     {
-        if (AppSettings.ShowStashes)
+        if (AppSettings.ShowStashes.Value)
         {
             AddAutoStash(_module.WorkingDirGitDir, subject, autostashLabel);
         }

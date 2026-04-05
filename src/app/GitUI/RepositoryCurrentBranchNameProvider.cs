@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 
 namespace GitUI;
@@ -22,7 +22,7 @@ internal sealed class RepositoryCurrentBranchNameProvider(IGitExecutorProvider e
 
     public string GetCurrentBranchName(string repositoryPath)
     {
-        if (!AppSettings.ShowRepoCurrentBranch)
+        if (!AppSettings.ShowRepoCurrentBranch.Value)
         {
             return string.Empty;
         }

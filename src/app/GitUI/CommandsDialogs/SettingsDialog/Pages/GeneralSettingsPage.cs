@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
@@ -72,28 +72,28 @@ public partial class GeneralSettingsPage : SettingsPageWithHeader
 
     protected override void SettingsToPage()
     {
-        chkCheckForUncommittedChangesInCheckoutBranch.Checked = AppSettings.CheckForUncommittedChangesInCheckoutBranch;
-        chkStartWithRecentWorkingDir.Checked = AppSettings.StartWithRecentWorkingDir;
-        chkUseHistogramDiffAlgorithm.Checked = AppSettings.UseHistogramDiffAlgorithm;
-        RevisionGridQuickSearchTimeout.Value = AppSettings.RevisionGridQuickSearchTimeout;
-        chkFollowRenamesInFileHistory.Checked = AppSettings.FollowRenamesInFileHistory;
-        chkStashUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInAutoStash;
+        chkCheckForUncommittedChangesInCheckoutBranch.Checked = AppSettings.CheckForUncommittedChangesInCheckoutBranch.Value;
+        chkStartWithRecentWorkingDir.Checked = AppSettings.StartWithRecentWorkingDir.Value;
+        chkUseHistogramDiffAlgorithm.Checked = AppSettings.UseHistogramDiffAlgorithm.Value;
+        RevisionGridQuickSearchTimeout.Value = AppSettings.RevisionGridQuickSearchTimeout.Value;
+        chkFollowRenamesInFileHistory.Checked = AppSettings.FollowRenamesInFileHistory.Value;
+        chkStashUntrackedFiles.Checked = AppSettings.IncludeUntrackedFilesInAutoStash.Value;
         chkUpdateModules.CheckState = ToCheckboxState(AppSettings.UpdateSubmodulesOnCheckout);
-        chkShowStashCountInBrowseWindow.Checked = AppSettings.ShowStashCount;
-        chkShowAheadBehindDataInBrowseWindow.Checked = AppSettings.ShowAheadBehindData;
-        chkShowGitStatusInToolbar.Checked = AppSettings.ShowGitStatusInBrowseToolbar;
-        chkShowGitStatusForArtificialCommits.Checked = AppSettings.ShowGitStatusForArtificialCommits;
-        chkShowSubmoduleStatusInBrowse.Checked = AppSettings.ShowSubmoduleStatus;
-        lblCommitsLimit.Checked = AppSettings.MaxRevisionGraphCommits != 0;
-        _NO_TRANSLATE_MaxCommits.Value = AppSettings.MaxRevisionGraphCommits;
-        _NO_TRANSLATE_MaxCommits.Enabled = AppSettings.MaxRevisionGraphCommits != 0;
-        chkCloseProcessDialog.Checked = AppSettings.CloseProcessDialog;
-        chkShowGitCommandLine.Checked = AppSettings.ShowGitCommandLine;
-        cbDefaultCloneDestination.Text = AppSettings.DefaultCloneDestinationPath;
+        chkShowStashCountInBrowseWindow.Checked = AppSettings.ShowStashCount.Value;
+        chkShowAheadBehindDataInBrowseWindow.Checked = AppSettings.ShowAheadBehindData.Value;
+        chkShowGitStatusInToolbar.Checked = AppSettings.ShowGitStatusInBrowseToolbar.Value;
+        chkShowGitStatusForArtificialCommits.Checked = AppSettings.ShowGitStatusForArtificialCommits.Value;
+        chkShowSubmoduleStatusInBrowse.Checked = AppSettings.ShowSubmoduleStatus.Value;
+        lblCommitsLimit.Checked = AppSettings.MaxRevisionGraphCommits.Value != 0;
+        _NO_TRANSLATE_MaxCommits.Value = AppSettings.MaxRevisionGraphCommits.Value;
+        _NO_TRANSLATE_MaxCommits.Enabled = AppSettings.MaxRevisionGraphCommits.Value != 0;
+        chkCloseProcessDialog.Checked = AppSettings.CloseProcessDialog.Value;
+        chkShowGitCommandLine.Checked = AppSettings.ShowGitCommandLine.Value;
+        cbDefaultCloneDestination.Text = AppSettings.DefaultCloneDestinationPath.Value;
         cboDefaultPullAction.SelectedValue
-            = AppSettings.DefaultPullAction != GitPullAction.Default ?
-              AppSettings.DefaultPullAction : GitPullAction.None;
-        chkFollowRenamesInFileHistoryExact.Checked = AppSettings.FollowRenamesInFileHistoryExactOnly;
+            = AppSettings.DefaultPullAction.Value != GitPullAction.Default ?
+              AppSettings.DefaultPullAction.Value : GitPullAction.None;
+        chkFollowRenamesInFileHistoryExact.Checked = AppSettings.FollowRenamesInFileHistoryExactOnly.Value;
         SetSubmoduleStatus();
 
         chkTelemetry.Checked = AppSettings.TelemetryEnabled ?? false;
@@ -103,25 +103,25 @@ public partial class GeneralSettingsPage : SettingsPageWithHeader
 
     protected override void PageToSettings()
     {
-        AppSettings.CheckForUncommittedChangesInCheckoutBranch = chkCheckForUncommittedChangesInCheckoutBranch.Checked;
-        AppSettings.StartWithRecentWorkingDir = chkStartWithRecentWorkingDir.Checked;
-        AppSettings.UseHistogramDiffAlgorithm = chkUseHistogramDiffAlgorithm.Checked;
-        AppSettings.IncludeUntrackedFilesInAutoStash = chkStashUntrackedFiles.Checked;
+        AppSettings.CheckForUncommittedChangesInCheckoutBranch.Value = chkCheckForUncommittedChangesInCheckoutBranch.Checked;
+        AppSettings.StartWithRecentWorkingDir.Value = chkStartWithRecentWorkingDir.Checked;
+        AppSettings.UseHistogramDiffAlgorithm.Value = chkUseHistogramDiffAlgorithm.Checked;
+        AppSettings.IncludeUntrackedFilesInAutoStash.Value = chkStashUntrackedFiles.Checked;
         AppSettings.UpdateSubmodulesOnCheckout = ToBoolean(chkUpdateModules.CheckState);
-        AppSettings.FollowRenamesInFileHistory = chkFollowRenamesInFileHistory.Checked;
-        AppSettings.ShowGitStatusInBrowseToolbar = chkShowGitStatusInToolbar.Checked;
-        AppSettings.ShowGitStatusForArtificialCommits = chkShowGitStatusForArtificialCommits.Checked;
-        AppSettings.CloseProcessDialog = chkCloseProcessDialog.Checked;
-        AppSettings.ShowGitCommandLine = chkShowGitCommandLine.Checked;
-        AppSettings.MaxRevisionGraphCommits = lblCommitsLimit.Checked ? (int)_NO_TRANSLATE_MaxCommits.Value : 0;
-        AppSettings.RevisionGridQuickSearchTimeout = (int)RevisionGridQuickSearchTimeout.Value;
-        AppSettings.ShowStashCount = chkShowStashCountInBrowseWindow.Checked;
-        AppSettings.ShowAheadBehindData = chkShowAheadBehindDataInBrowseWindow.Checked;
-        AppSettings.ShowSubmoduleStatus = chkShowSubmoduleStatusInBrowse.Checked;
+        AppSettings.FollowRenamesInFileHistory.Value = chkFollowRenamesInFileHistory.Checked;
+        AppSettings.ShowGitStatusInBrowseToolbar.Value = chkShowGitStatusInToolbar.Checked;
+        AppSettings.ShowGitStatusForArtificialCommits.Value = chkShowGitStatusForArtificialCommits.Checked;
+        AppSettings.CloseProcessDialog.Value = chkCloseProcessDialog.Checked;
+        AppSettings.ShowGitCommandLine.Value = chkShowGitCommandLine.Checked;
+        AppSettings.MaxRevisionGraphCommits.Value = lblCommitsLimit.Checked ? (int)_NO_TRANSLATE_MaxCommits.Value : 0;
+        AppSettings.RevisionGridQuickSearchTimeout.Value = (int)RevisionGridQuickSearchTimeout.Value;
+        AppSettings.ShowStashCount.Value = chkShowStashCountInBrowseWindow.Checked;
+        AppSettings.ShowAheadBehindData.Value = chkShowAheadBehindDataInBrowseWindow.Checked;
+        AppSettings.ShowSubmoduleStatus.Value = chkShowSubmoduleStatusInBrowse.Checked;
 
-        AppSettings.DefaultCloneDestinationPath = cbDefaultCloneDestination.Text;
-        AppSettings.DefaultPullAction = (GitPullAction)cboDefaultPullAction.SelectedValue;
-        AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
+        AppSettings.DefaultCloneDestinationPath.Value = cbDefaultCloneDestination.Text;
+        AppSettings.DefaultPullAction.Value = (GitPullAction)cboDefaultPullAction.SelectedValue;
+        AppSettings.FollowRenamesInFileHistoryExactOnly.Value = chkFollowRenamesInFileHistoryExact.Checked;
 
         AppSettings.TelemetryEnabled = chkTelemetry.Checked;
 

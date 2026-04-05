@@ -64,10 +64,10 @@ public partial class FormRebase : GitExtensionsDialog
         btnSolveMergeconflicts.SetForeColorForBackColor();
         PanelLeftImage.Image1 = Properties.Images.HelpCommandRebase.AdaptLightness();
 
-        PanelLeftImage.Visible = !AppSettings.DontShowHelpImages;
+        PanelLeftImage.Visible = !AppSettings.DontShowHelpImages.Value;
         PanelLeftImage.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
         PatchGrid.SetSkipped(Skipped);
-        if (AppSettings.AlwaysShowAdvOpt)
+        if (AppSettings.AlwaysShowAdvOpt.Value)
         {
             ShowOptions_LinkClicked(this, null!);
         }
@@ -135,7 +135,7 @@ public partial class FormRebase : GitExtensionsDialog
             checkBoxUpdateRefs.Checked = true;
         }
 
-        chkStash.Checked = AppSettings.RebaseAutoStash;
+        chkStash.Checked = AppSettings.RebaseAutoStash.Value;
         if (_startRebaseImmediately)
         {
             OkClick(this, EventArgs.Empty);
@@ -324,7 +324,7 @@ public partial class FormRebase : GitExtensionsDialog
                 return;
             }
 
-            AppSettings.RebaseAutoStash = chkStash.Checked;
+            AppSettings.RebaseAutoStash.Value = chkStash.Checked;
 
             Skipped.Clear();
 
@@ -400,11 +400,11 @@ public partial class FormRebase : GitExtensionsDialog
         bool previousValueBranchFilterEnabled = AppSettings.BranchFilterEnabled;
         bool previousValueShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
         bool previousValueShowReflogReferences = AppSettings.ShowReflogReferences;
-        bool previousValueShowStashes = AppSettings.ShowStashes;
+        bool previousValueShowStashes = AppSettings.ShowStashes.Value;
 
         try
         {
-            AppSettings.ShowStashes = false;
+            AppSettings.ShowStashes.Value = false;
             ObjectId firstParent = UICommands.Module.RevParse("HEAD~");
             string preSelectedCommit = !string.IsNullOrWhiteSpace(txtFrom.Text) ? txtFrom.Text : firstParent?.ToString() ?? string.Empty;
 
@@ -432,7 +432,7 @@ public partial class FormRebase : GitExtensionsDialog
         }
         finally
         {
-            AppSettings.ShowStashes = previousValueShowStashes;
+            AppSettings.ShowStashes.Value = previousValueShowStashes;
             AppSettings.BranchFilterEnabled.Value = previousValueBranchFilterEnabled;
             AppSettings.ShowCurrentBranchOnly.Value = previousValueShowCurrentBranchOnly;
             AppSettings.ShowReflogReferences.Value = previousValueShowReflogReferences;

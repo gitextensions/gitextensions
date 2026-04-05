@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections.Specialized;
 using System.ComponentModel;
@@ -62,7 +62,7 @@ public sealed partial class FileStatusList : GitModuleControl
     private FormFindInCommitFilesGitGrep? _formFindInCommitFilesGitGrep;
     private bool _showDiffGroups = false;
 
-    // Enable menu item to disable AppSettings.ShowDiffForAllParents in some forms
+    // Enable menu item to disable AppSettings.ShowDiffForAllParents.Value in some forms
     private bool _enableDisablingShowDiffForAllParents = false;
 
     [GeneratedRegex(@"(^|\s)-e(\s|\s+['""])", RegexOptions.ExplicitCapture)]
@@ -1603,7 +1603,7 @@ public sealed partial class FileStatusList : GitModuleControl
         _NO_TRANSLATE_openSubmoduleMenuItem.Visible = isSubmoduleSelected;
         if (isSubmoduleSelected && !DisableSubmoduleMenuItemBold)
         {
-            _NO_TRANSLATE_openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow
+            _NO_TRANSLATE_openSubmoduleMenuItem.Font = AppSettings.OpenSubmoduleDiffInSeparateWindow.Value
                 ? new Font(_NO_TRANSLATE_openSubmoduleMenuItem.Font, FontStyle.Bold)
                 : new Font(_NO_TRANSLATE_openSubmoduleMenuItem.Font, FontStyle.Regular);
         }
@@ -1660,7 +1660,7 @@ public sealed partial class FileStatusList : GitModuleControl
                 return;
             }
 
-            if (AppSettings.OpenSubmoduleDiffInSeparateWindow && SelectedItem.Item.IsSubmodule)
+            if (AppSettings.OpenSubmoduleDiffInSeparateWindow.Value && SelectedItem.Item.IsSubmodule)
             {
                 this.InvokeAndForget(OpenSubmoduleAsync);
             }
@@ -1931,7 +1931,7 @@ public sealed partial class FileStatusList : GitModuleControl
         string name = item.Name.TrimEnd(PathUtil.PosixDirectorySeparatorChar);
         string? oldName = item.OldName;
 
-        if (AppSettings.TruncatePathMethod == TruncatePathMethod.FileNameOnly)
+        if (AppSettings.TruncatePathMethod.Value == TruncatePathMethod.FileNameOnly)
         {
             name = Path.GetFileName(name);
             oldName = Path.GetFileName(oldName);

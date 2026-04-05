@@ -28,21 +28,21 @@ partial class RepoObjectsTree
     {
         return new Dictionary<Tree, int>
         {
-            [_branchesTree] = AppSettings.RepoObjectsTreeBranchesIndex,
-            [_remotesTree] = AppSettings.RepoObjectsTreeRemotesIndex,
-            [_tagTree] = AppSettings.RepoObjectsTreeTagsIndex,
-            [_submoduleTree] = AppSettings.RepoObjectsTreeSubmodulesIndex,
-            [_stashTree] = AppSettings.RepoObjectsTreeStashesIndex
+            [_branchesTree] = AppSettings.RepoObjectsTreeBranchesIndex.Value,
+            [_remotesTree] = AppSettings.RepoObjectsTreeRemotesIndex.Value,
+            [_tagTree] = AppSettings.RepoObjectsTreeTagsIndex.Value,
+            [_submoduleTree] = AppSettings.RepoObjectsTreeSubmodulesIndex.Value,
+            [_stashTree] = AppSettings.RepoObjectsTreeStashesIndex.Value
         };
     }
 
     private void SaveTreeToPositionIndex(Dictionary<Tree, int> treeToPositionIndex)
     {
-        AppSettings.RepoObjectsTreeBranchesIndex = treeToPositionIndex[_branchesTree];
-        AppSettings.RepoObjectsTreeRemotesIndex = treeToPositionIndex[_remotesTree];
-        AppSettings.RepoObjectsTreeTagsIndex = treeToPositionIndex[_tagTree];
-        AppSettings.RepoObjectsTreeSubmodulesIndex = treeToPositionIndex[_submoduleTree];
-        AppSettings.RepoObjectsTreeStashesIndex = treeToPositionIndex[_stashTree];
+        AppSettings.RepoObjectsTreeBranchesIndex.Value = treeToPositionIndex[_branchesTree];
+        AppSettings.RepoObjectsTreeRemotesIndex.Value = treeToPositionIndex[_remotesTree];
+        AppSettings.RepoObjectsTreeTagsIndex.Value = treeToPositionIndex[_tagTree];
+        AppSettings.RepoObjectsTreeSubmodulesIndex.Value = treeToPositionIndex[_submoduleTree];
+        AppSettings.RepoObjectsTreeStashesIndex.Value = treeToPositionIndex[_stashTree];
     }
 
     private void ReorderTreeNode(TreeNode node, bool up)
@@ -124,7 +124,7 @@ partial class RepoObjectsTree
 
     private void tsbShowBranches_Click(object sender, EventArgs e)
     {
-        AppSettings.RepoObjectsTreeShowBranches = tsbShowBranches.Checked;
+        AppSettings.RepoObjectsTreeShowBranches.Value = tsbShowBranches.Checked;
         _searchResult = null;
         if (tsbShowBranches.Checked)
         {
@@ -139,7 +139,7 @@ partial class RepoObjectsTree
 
     private void tsbShowRemotes_Click(object sender, EventArgs e)
     {
-        AppSettings.RepoObjectsTreeShowRemotes = tsbShowRemotes.Checked;
+        AppSettings.RepoObjectsTreeShowRemotes.Value = tsbShowRemotes.Checked;
         _searchResult = null;
         if (tsbShowRemotes.Checked)
         {
@@ -154,7 +154,7 @@ partial class RepoObjectsTree
 
     private void tsbShowTags_Click(object sender, EventArgs e)
     {
-        AppSettings.RepoObjectsTreeShowTags = tsbShowTags.Checked;
+        AppSettings.RepoObjectsTreeShowTags.Value = tsbShowTags.Checked;
         _searchResult = null;
         if (tsbShowTags.Checked)
         {
@@ -169,7 +169,7 @@ partial class RepoObjectsTree
 
     private void tsbShowSubmodules_Click(object sender, EventArgs e)
     {
-        AppSettings.RepoObjectsTreeShowSubmodules = tsbShowSubmodules.Checked;
+        AppSettings.RepoObjectsTreeShowSubmodules.Value = tsbShowSubmodules.Checked;
         _searchResult = null;
         if (tsbShowSubmodules.Checked)
         {
@@ -184,7 +184,7 @@ partial class RepoObjectsTree
 
     private void tsbShowStashes_Click(object sender, EventArgs e)
     {
-        AppSettings.RepoObjectsTreeShowStashes = tsbShowStashes.Checked;
+        AppSettings.RepoObjectsTreeShowStashes.Value = tsbShowStashes.Checked;
         _searchResult = null;
         if (tsbShowStashes.Checked)
         {

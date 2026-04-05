@@ -151,7 +151,7 @@ public class GitExtensionsFormBase : Form, ITranslate
             if (m.Msg == NativeMethods.WM_ACTIVATEAPP && m.WParam != IntPtr.Zero)
             {
                 OnApplicationActivated();
-                if (WindowState == FormWindowState.Minimized && Owner is null && AppSettings.WorkaroundActivateFromMinimize)
+                if (WindowState == FormWindowState.Minimized && Owner is null && AppSettings.WorkaroundActivateFromMinimize.Value)
                 {
                     // Application occasionally requires explicit "restore" in Taskbar.
                     // See https://github.com/gitextensions/gitextensions/pull/10119.
@@ -180,7 +180,7 @@ public class GitExtensionsFormBase : Form, ITranslate
             return;
         }
 
-        AutoScaleMode = AppSettings.EnableAutoScale
+        AutoScaleMode = AppSettings.EnableAutoScale.Value
             ? AutoScaleMode.Dpi
             : AutoScaleMode.None;
 

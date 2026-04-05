@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
@@ -12,7 +12,7 @@ public sealed partial class FileStatusDiffCalculator
 
     private readonly Func<IGitModule> _getModule;
 
-    // Currently bound revisions etc. Cache so we can reload the view, if AppSettings.ShowDiffForAllParents is changed.
+    // Currently bound revisions etc. Cache so we can reload the view, if AppSettings.ShowDiffForAllParents.Value is changed.
     private FileStatusDiffCalculatorInfo _fileStatusDiffCalculatorInfo = new();
     private const string _grepSummaryPrefix = "grep: ";
 
@@ -98,7 +98,7 @@ public sealed partial class FileStatusDiffCalculator
             {
                 // Get the parents for the selected revision
                 // Exclude the optional third group with the diff to the orphan commit containing the untracked files of a stash
-                int multipleParents = AppSettings.ShowDiffForAllParents ? actualRev.ParentIds.Count : 1;
+                int multipleParents = AppSettings.ShowDiffForAllParents.Value ? actualRev.ParentIds.Count : 1;
                 fileStatusDescs.AddRange(actualRev
                     .ParentIds
                     .Take(multipleParents)
@@ -132,7 +132,7 @@ public sealed partial class FileStatusDiffCalculator
 
             // Show combined (merge conflicts) when a single merge commit is selected
             bool isMergeCommit = (selectedRev.ParentIds?.Count ?? 0) > 1;
-            if (isMergeCommit && AppSettings.ShowDiffForAllParents)
+            if (isMergeCommit && AppSettings.ShowDiffForAllParents.Value)
             {
                 IReadOnlyList<GitItemStatus> conflicts = module.GetCombinedDiffFileList(selectedRev.ObjectId);
                 if (conflicts.Count != 0)
@@ -152,7 +152,7 @@ public sealed partial class FileStatusDiffCalculator
 
         // With 4 selected, assume that ranges are selected: baseA..headA baseB..headB
         // the first item is therefore the second selected
-        GitRevision firstRev = AppSettings.ShowDiffForAllParents && revisions.Count == maxMultiCompare
+        GitRevision firstRev = AppSettings.ShowDiffForAllParents.Value && revisions.Count == maxMultiCompare
             ? revisions[2]
             : revisions[^1];
 
@@ -162,7 +162,7 @@ public sealed partial class FileStatusDiffCalculator
             summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev.ObjectId),
             statuses: module.GetDiffFilesWithSubmodulesStatus(firstRev.ObjectId, selectedRev.ObjectId, selectedRev.FirstParentId, cancellationToken: cancellationToken)));
 
-        if (!AppSettings.ShowDiffForAllParents || revisions.Count > maxMultiCompare || !allowMultiDiff)
+        if (!AppSettings.ShowDiffForAllParents.Value || revisions.Count > maxMultiCompare || !allowMultiDiff)
         {
             return fileStatusDescs;
         }

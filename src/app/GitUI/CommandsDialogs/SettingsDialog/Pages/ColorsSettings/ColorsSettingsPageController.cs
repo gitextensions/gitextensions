@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 
@@ -37,7 +37,7 @@ internal class ColorsSettingsPageController
             ? ThemeId.DefaultLight == ThemeId.ColorModeThemeId
             : _page.SelectedThemeId == ThemeId.DefaultLight
                 ? true
-                : AppSettings.UseSystemVisualStyle;
+                : AppSettings.UseSystemVisualStyle.Value;
 
         EndUpdateThemeSettings();
     }
@@ -49,7 +49,7 @@ internal class ColorsSettingsPageController
         if (_page.SelectedThemeId != ThemeId.WindowsAppColorModeId && _page.SelectedThemeId != ThemeId.DefaultLight)
         {
             // set only if UseSystemVisualStyle is not overridden
-            AppSettings.UseSystemVisualStyle = _page.UseSystemVisualStyle;
+            AppSettings.UseSystemVisualStyle.Value = _page.UseSystemVisualStyle;
         }
     }
 

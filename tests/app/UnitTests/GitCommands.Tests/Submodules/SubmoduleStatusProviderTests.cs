@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -692,7 +692,7 @@ internal class SubmoduleStatusProviderTests
         _repo1.CreateFile(_repo3Module.WorkingDir, "test.txt", "test");
         _repo3Module.GitExecutable.GetOutput(@"commit --allow-empty -m ""Dummy commit""");
 
-        // Update requires: AppSettings.ShowSubmoduleStatus && (AppSettings.ShowGitStatusInBrowseToolbar || (AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowWorkingDirChanges))
+        // Update requires: AppSettings.ShowSubmoduleStatus.Value && (AppSettings.ShowGitStatusInBrowseToolbar.Value || (AppSettings.ShowGitStatusForArtificialCommits.Value && AppSettings.RevisionGraphShowWorkingDirChanges))
         SubmoduleInfoResult result = await SubmoduleTestHelpers.UpdateSubmoduleStructureAndWaitForResultAsync(_provider, currentModule, false);
 
         result.Should().NotBeNull();

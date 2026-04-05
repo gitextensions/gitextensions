@@ -90,7 +90,7 @@ public static class BugReportInvoker
     /// <param name="isTerminating">Indicates whether the exception is terminating the application.</param>
     public static void Report(Exception exception, bool isTerminating)
     {
-        if (AppSettings.WriteErrorLog)
+        if (AppSettings.WriteErrorLog.Value)
         {
             LogError(exception, isTerminating);
         }
@@ -140,7 +140,7 @@ public static class BugReportInvoker
 
             // Treat all git errors as user issues
             || string.Equals(AppSettings.GitCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase)
-            || string.Equals(AppSettings.WslCommand, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase);
+            || string.Equals(AppSettings.WslCommand.Value, externalOperationException?.Command, StringComparison.InvariantCultureIgnoreCase);
         bool isExternalOperation = isUserExternalOperation
             || exception is ExternalOperationException
                          or IOException

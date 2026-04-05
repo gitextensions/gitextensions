@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 
 namespace GitCommandsTests;
 
@@ -13,13 +13,13 @@ public class DiffListSortServiceTests
     [SetUp]
     public void Setup()
     {
-        _storedSetting = AppSettings.DiffListSorting;
+        _storedSetting = AppSettings.DiffListSorting.Value;
     }
 
     [TearDown]
     public void Teardown()
     {
-        AppSettings.DiffListSorting = _storedSetting;
+        AppSettings.DiffListSorting.Value = _storedSetting;
     }
 
     [Test]
@@ -28,7 +28,7 @@ public class DiffListSortServiceTests
     [TestCase(DiffListSortType.FileStatus)]
     public void Constructor_loads_persisted_setting(DiffListSortType persistedSetting)
     {
-        AppSettings.DiffListSorting = persistedSetting;
+        AppSettings.DiffListSorting.Value = persistedSetting;
         DiffListSortService service = new();
 
         ClassicAssert.AreEqual(persistedSetting, service.DiffListSorting);
@@ -45,7 +45,7 @@ public class DiffListSortServiceTests
             DiffListSorting = sortType
         };
 
-        ClassicAssert.AreEqual(sortType, AppSettings.DiffListSorting);
+        ClassicAssert.AreEqual(sortType, AppSettings.DiffListSorting.Value);
     }
 
     [Test]

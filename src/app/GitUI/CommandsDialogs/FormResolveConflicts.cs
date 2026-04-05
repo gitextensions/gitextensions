@@ -283,7 +283,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
                 if (!Module.InTheMiddleOfPatch() && !_inTheMiddleOfRebase && _offerCommit)
                 {
-                    if (AppSettings.DontConfirmCommitAfterConflictsResolved ||
+                    if (AppSettings.DontConfirmCommitAfterConflictsResolved.Value ||
                         MessageBoxes.Show(this, _allConflictsResolved.Text, _allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         UICommands.StartCommitDialog(this);
@@ -747,7 +747,7 @@ public partial class FormResolveConflicts : GitModuleForm
         if (MessageBoxes.Show(_abortCurrentOperation.Text, _resetCaption.Text,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
-            if (AppSettings.DontConfirmSecondAbortConfirmation ||
+            if (AppSettings.DontConfirmSecondAbortConfirmation.Value ||
                 MessageBoxes.Show(_areYouSureYouWantDeleteFiles.Text, _areYouSureYouWantDeleteFilesCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {

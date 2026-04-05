@@ -33,13 +33,13 @@ internal sealed class AvatarColumnProvider : ColumnProvider
             SortMode = DataGridViewColumnSortMode.NotSortable,
             Resizable = DataGridViewTriState.False,
             Width = DpiUtil.Scale(32),
-            Visible = AppSettings.ShowAuthorAvatarColumn
+            Visible = AppSettings.ShowAuthorAvatarColumn.Value
         };
     }
 
     public override void ApplySettings()
     {
-        Column.Visible = AppSettings.ShowAuthorAvatarColumn;
+        Column.Visible = AppSettings.ShowAuthorAvatarColumn.Value;
     }
 
     private string _email = null;

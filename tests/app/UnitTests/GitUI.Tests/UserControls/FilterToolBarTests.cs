@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
@@ -23,9 +23,9 @@ public class FilterToolBarTests
     [SetUp]
     public void Setup()
     {
-        _originalShowOnlyFirstParent = AppSettings.ShowOnlyFirstParent;
+        _originalShowOnlyFirstParent = AppSettings.ShowOnlyFirstParent.Value;
         _originalShowReflogReferences = AppSettings.ShowReflogReferences;
-        AppSettings.ShowOnlyFirstParent = false;
+        AppSettings.ShowOnlyFirstParent.Value = false;
         AppSettings.ShowReflogReferences.Value = false;
 
         _gitModule = Substitute.For<IGitModule>();
@@ -38,7 +38,7 @@ public class FilterToolBarTests
     [TearDown]
     public void TearDown()
     {
-        AppSettings.ShowOnlyFirstParent = _originalShowOnlyFirstParent;
+        AppSettings.ShowOnlyFirstParent.Value = _originalShowOnlyFirstParent;
         AppSettings.ShowReflogReferences.Value = _originalShowReflogReferences;
     }
 
@@ -230,17 +230,17 @@ public class FilterToolBarTests
     [TestCase(true)]
     public void ShowOnlyFirstParent_should_be_bound_via_FilterChanged(bool settingValue)
     {
-        bool original = AppSettings.ShowOnlyFirstParent;
+        bool original = AppSettings.ShowOnlyFirstParent.Value;
         try
         {
-            AppSettings.ShowOnlyFirstParent = settingValue;
+            AppSettings.ShowOnlyFirstParent.Value = settingValue;
 
             _revisionGridFilter.FilterChanged += Raise.EventWith(_revisionGridFilter, new FilterChangedEventArgs(new()));
             _filterToolBar.GetTestAccessor().tsmiShowOnlyFirstParent.Checked.Should().Be(settingValue);
         }
         finally
         {
-            AppSettings.ShowOnlyFirstParent = original;
+            AppSettings.ShowOnlyFirstParent.Value = original;
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 
 namespace GitUI.UserControls.RevisionGrid.Graph;
 

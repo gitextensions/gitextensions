@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -50,7 +50,7 @@ public class ColorsPageSettingsPageControllerTests
     public void When_user_switches_to_default_theme_UseSystemVisualStyle_should_be_checked()
     {
         AppSettings.ThemeId = new ThemeId("non_default", isBuiltin: true);
-        AppSettings.UseSystemVisualStyle = false;
+        AppSettings.UseSystemVisualStyle.Value = false;
         ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
         _context.Controller.ShowThemeSettings();
         _context.Page.UseSystemVisualStyle.Should().BeFalse();
@@ -64,7 +64,7 @@ public class ColorsPageSettingsPageControllerTests
     public void When_user_switches_to_non_default_theme_UseSystemVisualStyle_should_be_unchecked()
     {
         AppSettings.ThemeId = ThemeId.DefaultLight;
-        AppSettings.UseSystemVisualStyle = true;
+        AppSettings.UseSystemVisualStyle.Value = true;
         ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
         _context.Controller.ShowThemeSettings();
         _context.Page.UseSystemVisualStyle.Should().BeTrue();
@@ -94,7 +94,7 @@ public class ColorsPageSettingsPageControllerTests
     {
         AppSettings.ThemeId = themeId;
         AppSettings.ThemeVariations = themeVariations;
-        AppSettings.UseSystemVisualStyle = useSystemVisualStyle is true;
+        AppSettings.UseSystemVisualStyle.Value = useSystemVisualStyle is true;
         ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
         _context.Controller.ShowThemeSettings();
 
@@ -108,7 +108,7 @@ public class ColorsPageSettingsPageControllerTests
     {
         AppSettings.ThemeId = themeId;
         AppSettings.ThemeVariations = themeVariations;
-        AppSettings.UseSystemVisualStyle = useSystemVisualStyle is true;
+        AppSettings.UseSystemVisualStyle.Value = useSystemVisualStyle is true;
         ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
 
         _context.Controller.ShowThemeSettings();
@@ -131,7 +131,7 @@ public class ColorsPageSettingsPageControllerTests
     {
         AppSettings.ThemeId = themeId;
         AppSettings.ThemeVariations = themeVariations;
-        AppSettings.UseSystemVisualStyle = useSystemVisualStyle is true;
+        AppSettings.UseSystemVisualStyle.Value = useSystemVisualStyle is true;
         ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
 
         _context.Controller.ShowThemeSettings();
@@ -163,7 +163,7 @@ public class ColorsPageSettingsPageControllerTests
     public void Theme_WindowsAppColorModeId_should_set_SystemColorMode()
     {
         AppSettings.ThemeId = ThemeId.WindowsAppColorModeId;
-        AppSettings.UseSystemVisualStyle = true;
+        AppSettings.UseSystemVisualStyle.Value = true;
         ThemeModule.TestAccessor.ReloadThemeSettings(_context.ThemeRepository);
 
         _context.Controller.ShowThemeSettings();

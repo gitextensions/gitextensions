@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
@@ -120,7 +120,7 @@ public sealed partial class AvatarControl : GitExtensionsControl
 
         string email = Email;
 
-        if (!AppSettings.ShowAuthorAvatarInCommitInfo || string.IsNullOrWhiteSpace(email))
+        if (!AppSettings.ShowAuthorAvatarInCommitInfo.Value || string.IsNullOrWhiteSpace(email))
         {
             RefreshImage(Images.User80);
             return;

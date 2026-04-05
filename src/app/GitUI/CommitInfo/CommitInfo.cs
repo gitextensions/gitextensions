@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.ComponentModel;
 using System.Net;
@@ -311,12 +311,12 @@ public partial class CommitInfo : GitModuleControl
 
     private void ReloadCommitInfo(CancellationToken cancellationToken)
     {
-        showContainedInBranchesToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesLocal;
-        showContainedInBranchesRemoteToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemote;
-        showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-        showContainedInTagsToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInTags;
-        showMessagesOfAnnotatedTagsToolStripMenuItem.Checked = AppSettings.ShowAnnotatedTagsMessages;
-        showTagThisCommitDerivesFromMenuItem.Checked = AppSettings.CommitInfoShowTagThisCommitDerivesFrom;
+        showContainedInBranchesToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesLocal.Value;
+        showContainedInBranchesRemoteToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemote.Value;
+        showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal.Value;
+        showContainedInTagsToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInTags.Value;
+        showMessagesOfAnnotatedTagsToolStripMenuItem.Checked = AppSettings.ShowAnnotatedTagsMessages.Value;
+        showTagThisCommitDerivesFromMenuItem.Checked = AppSettings.CommitInfoShowTagThisCommitDerivesFrom.Value;
 
         _showAllBranches = false;
         _showAllTags = false;
@@ -364,7 +364,7 @@ public partial class CommitInfo : GitModuleControl
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (_revision.Body is null || (_revision.Notes is null && (AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes)))
+            if (_revision.Body is null || (_revision.Notes is null && (AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes.Value)))
             {
                 _commitDataManager.UpdateBodyAndNotes(_revision);
             }
@@ -406,17 +406,17 @@ public partial class CommitInfo : GitModuleControl
                     tasks.Add(LoadBranchInfoAsync(initialRevision.ObjectId).WithCancellation(cancellationToken));
                 }
 
-                if (AppSettings.ShowAnnotatedTagsMessages)
+                if (AppSettings.ShowAnnotatedTagsMessages.Value)
                 {
                     tasks.Add(LoadAnnotatedTagInfoAsync(initialRevision.Refs).WithCancellation(cancellationToken));
                 }
 
-                if (AppSettings.CommitInfoShowContainedInTags)
+                if (AppSettings.CommitInfoShowContainedInTags.Value)
                 {
                     tasks.Add(LoadTagInfoAsync(initialRevision.ObjectId).WithCancellation(cancellationToken));
                 }
 
-                if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom)
+                if (AppSettings.CommitInfoShowTagThisCommitDerivesFrom.Value)
                 {
                     tasks.Add(LoadDescribeInfoAsync(initialRevision.ObjectId).WithCancellation(cancellationToken));
                 }
@@ -547,12 +547,12 @@ public partial class CommitInfo : GitModuleControl
                 await TaskScheduler.Default;
 
                 // Include local branches if explicitly requested or when needed to decide whether to show remotes
-                bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
-                                AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+                bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal.Value ||
+                                AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal.Value;
 
                 // Include remote branches if requested
-                bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
-                                 AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+                bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote.Value ||
+                                 AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal.Value;
                 List<string> branches = [.. Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote, cancellationToken)];
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
@@ -690,19 +690,19 @@ public partial class CommitInfo : GitModuleControl
 
     private void showContainedInBranchesToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        AppSettings.CommitInfoShowContainedInBranchesLocal = !AppSettings.CommitInfoShowContainedInBranchesLocal;
+        AppSettings.CommitInfoShowContainedInBranchesLocal.Value = !AppSettings.CommitInfoShowContainedInBranchesLocal.Value;
         ReloadCommitInfo();
     }
 
     private void showContainedInTagsToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        AppSettings.CommitInfoShowContainedInTags = !AppSettings.CommitInfoShowContainedInTags;
+        AppSettings.CommitInfoShowContainedInTags.Value = !AppSettings.CommitInfoShowContainedInTags.Value;
         ReloadCommitInfo();
     }
 
     private void showTagThisCommitDerivesFromMenuItem_Click(object sender, EventArgs e)
     {
-        AppSettings.CommitInfoShowTagThisCommitDerivesFrom = !AppSettings.CommitInfoShowTagThisCommitDerivesFrom;
+        AppSettings.CommitInfoShowTagThisCommitDerivesFrom.Value = !AppSettings.CommitInfoShowTagThisCommitDerivesFrom.Value;
         ReloadCommitInfo();
     }
 
@@ -714,19 +714,19 @@ public partial class CommitInfo : GitModuleControl
 
     private void showContainedInBranchesRemoteToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        AppSettings.CommitInfoShowContainedInBranchesRemote = !AppSettings.CommitInfoShowContainedInBranchesRemote;
+        AppSettings.CommitInfoShowContainedInBranchesRemote.Value = !AppSettings.CommitInfoShowContainedInBranchesRemote.Value;
         ReloadCommitInfo();
     }
 
     private void showContainedInBranchesRemoteIfNoLocalToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal = !AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+        AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal.Value = !AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal.Value;
         ReloadCommitInfo();
     }
 
     private void showMessagesOfAnnotatedTagsToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        AppSettings.ShowAnnotatedTagsMessages = !AppSettings.ShowAnnotatedTagsMessages;
+        AppSettings.ShowAnnotatedTagsMessages.Value = !AppSettings.ShowAnnotatedTagsMessages.Value;
         ReloadCommitInfo();
     }
 
@@ -861,10 +861,10 @@ public partial class CommitInfo : GitModuleControl
         {
             _currentBranch = currentBranch;
             _isDetachedHead = DetachedHeadParser.IsDetachedHead(currentBranch);
-            string[] branchRegexes = AppSettings.PrioritizedBranchNames.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+            string[] branchRegexes = AppSettings.PrioritizedBranchNames.Value!.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
             string[] localBranchRegexes = [.. branchRegexes.Select(regex => $"^({regex})$")];
             string[] remoteBranchRegexes = [.. branchRegexes.Select(regex => $"^{_remoteBranchPrefix}[^/]+/({regex})$")];
-            string[] remoteRegexes = [.. AppSettings.PrioritizedRemoteNames.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(regex => $"^{_remoteBranchPrefix}({regex})/")];
+            string[] remoteRegexes = [.. AppSettings.PrioritizedRemoteNames.Value!.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(regex => $"^{_remoteBranchPrefix}({regex})/")];
 
             foreach (string branch in branches)
             {

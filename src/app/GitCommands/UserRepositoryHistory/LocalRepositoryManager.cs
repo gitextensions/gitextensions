@@ -194,7 +194,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
     {
         await TaskScheduler.Default;
 
-        int size = AppSettings.RecentRepositoriesHistorySize;
+        int size = AppSettings.RecentRepositoriesHistorySize.Value;
 
         IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyRecentHistory);
         if (history is null)
@@ -291,7 +291,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
         ArgumentNullException.ThrowIfNull(repositoryHistory);
 
         await TaskScheduler.Default;
-        _repositoryStorage.Save(KeyRecentHistory, AdjustHistorySize(repositoryHistory, AppSettings.RecentRepositoriesHistorySize));
+        _repositoryStorage.Save(KeyRecentHistory, AdjustHistorySize(repositoryHistory, AppSettings.RecentRepositoriesHistorySize.Value));
     }
 
     private static IEnumerable<Repository> AdjustHistorySize(IEnumerable<Repository> repositories, int recentRepositoriesHistorySize)

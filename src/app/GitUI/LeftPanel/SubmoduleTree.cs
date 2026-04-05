@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using GitCommands.Submodules;
 using GitExtensions.Extensibility;
@@ -396,7 +396,7 @@ internal sealed class SubmoduleTree : Tree
     public void StashSubmodule(IWin32Window owner, SubmoduleNode node)
     {
         IGitUICommands uiCmds = UICommands.WithWorkingDirectory(node.Info.Path);
-        uiCmds.StashSave(owner, AppSettings.IncludeUntrackedFilesInManualStash);
+        uiCmds.StashSave(owner, AppSettings.IncludeUntrackedFilesInManualStash.Value);
     }
 
     public void CommitSubmodule(IWin32Window owner, SubmoduleNode node)

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -48,8 +48,8 @@ public class RevisionFileNameTests
         string actualFileName;
         string line = $"-c log.showsignature=false log --format=\"????%H\" --name-only --follow --diff-merges=separate  --find-renames --find-copies {objectId} --max-count=1 -- \"a.txt\"";
 
-        bool originalFollowRenamesInFileHistoryExactOnly = AppSettings.FollowRenamesInFileHistoryExactOnly;
-        AppSettings.FollowRenamesInFileHistoryExactOnly = false;
+        bool originalFollowRenamesInFileHistoryExactOnly = AppSettings.FollowRenamesInFileHistoryExactOnly.Value;
+        AppSettings.FollowRenamesInFileHistoryExactOnly.Value = false;
 
         try
         {
@@ -60,7 +60,7 @@ public class RevisionFileNameTests
         }
         finally
         {
-            AppSettings.FollowRenamesInFileHistoryExactOnly = originalFollowRenamesInFileHistoryExactOnly;
+            AppSettings.FollowRenamesInFileHistoryExactOnly.Value = originalFollowRenamesInFileHistoryExactOnly;
         }
 
         ClassicAssert.AreEqual(expectedFileName, actualFileName);

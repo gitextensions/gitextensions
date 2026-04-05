@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using GitCommands;
 
 namespace GitUITests.UserControls.CommitInfo;
@@ -10,8 +10,8 @@ public class BranchComparerTests
     [Test]
     public void BranchComparer([Values(null, "", "current", "(no branch)")] string? currentBranch)
     {
-        AppSettings.PrioritizedBranchNames = "master;dummy;main[^/]*|master[^/]*;release/.*";
-        AppSettings.PrioritizedRemoteNames = "zzz;origin|upstream";
+        AppSettings.PrioritizedBranchNames.Value = "master;dummy;main[^/]*|master[^/]*;release/.*";
+        AppSettings.PrioritizedRemoteNames.Value = "zzz;origin|upstream";
 
         List<string> expectedBranches =
         [

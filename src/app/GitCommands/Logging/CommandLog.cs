@@ -107,8 +107,8 @@ public sealed partial class CommandLogEntry
             // git executable name the log will display only `NativeGitLogName` alternatively `WslGitLogName` when the git command is run via WSL.
             // All other commands are displayed as is without any special treatment.
 
-            string wslCmd = AppSettings.WslCommand;
-            string wslGitCmd = AppSettings.WslGitCommand;
+            string wslCmd = AppSettings.WslCommand.Value;
+            string wslGitCmd = AppSettings.WslGitCommand.Value;
             string gitCmd = AppSettings.GitCommand;
 
             string duration = Duration is null
@@ -224,7 +224,7 @@ public static class CommandLog
 
         CommandLogEntry entry = new(fileName, arguments, workDir, DateTime.Now, ThreadHelper.JoinableTaskContext.IsOnMainThread);
 
-        if (AppSettings.LogCaptureCallStacks)
+        if (AppSettings.LogCaptureCallStacks.Value)
         {
             entry.CallStack = new StackTrace();
         }

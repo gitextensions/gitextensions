@@ -1,4 +1,4 @@
-﻿using System.Net;
+using System.Net;
 using System.Text;
 using GitCommands;
 using ResourceManager;
@@ -63,13 +63,13 @@ public sealed class RefsFormatter
         const string remotesPrefix = "remotes/";
 
         // Include local branches if explicitly requested or when needed to decide whether to show remotes
-        bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal ||
-                        AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
+        bool getLocal = AppSettings.CommitInfoShowContainedInBranchesLocal.Value ||
+                        AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal.Value;
 
         // Include remote branches if requested
-        bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
-                         AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-        bool allowLocal = AppSettings.CommitInfoShowContainedInBranchesLocal;
+        bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote.Value ||
+                         AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal.Value;
+        bool allowLocal = AppSettings.CommitInfoShowContainedInBranchesLocal.Value;
         bool allowRemote = getRemote;
 
         foreach (string branch in branches)
@@ -110,7 +110,7 @@ public sealed class RefsFormatter
                 formattedBranches.Add(branchText);
             }
 
-            if (branchIsLocal && AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal)
+            if (branchIsLocal && AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal.Value)
             {
                 allowRemote = false;
             }

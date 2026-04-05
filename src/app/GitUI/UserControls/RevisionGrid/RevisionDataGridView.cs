@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Collections.Frozen;
 using System.ComponentModel;
@@ -422,7 +422,7 @@ public sealed partial class RevisionDataGridView : DataGridView
         }
 
         // Reload settings that will be used during drawing
-        _revisionGraphDrawNonRelativesTextGray = AppSettings.RevisionGraphDrawNonRelativesTextGray;
+        _revisionGraphDrawNonRelativesTextGray = AppSettings.RevisionGraphDrawNonRelativesTextGray.Value;
 
         // relativeNonSelectedSubject: SystemColors.ControlText
         _relativeNonSelectedSubjectColor = Application.IsDarkModeEnabled ? SystemColors.ControlText : SystemColors.HighlightText;
@@ -434,8 +434,8 @@ public sealed partial class RevisionDataGridView : DataGridView
         _nonRelativeNonSelectedBodyColor = Application.IsDarkModeEnabled ? Color.FromArgb(130, 130, 130) : GetGrayControlTextColor(degreeOfGrayness: 1.4f);
         _nonRelativeSelectedBodyColor = Application.IsDarkModeEnabled ? Color.FromArgb(170, 170, 150) : GetHighlightedGrayTextColor(degreeOfGrayness: 1.4f);
 
-        _highlightAuthoredRevisions = AppSettings.HighlightAuthoredRevisions;
-        _revisionGraphDrawAlternateBackColor = AppSettings.RevisionGraphDrawAlternateBackColor;
+        _highlightAuthoredRevisions = AppSettings.HighlightAuthoredRevisions.Value;
+        _revisionGraphDrawAlternateBackColor = AppSettings.RevisionGraphDrawAlternateBackColor.Value;
 
         // Redraw
         Invalidate(invalidateChildren: true);
@@ -745,7 +745,7 @@ public sealed partial class RevisionDataGridView : DataGridView
 
     private async Task UpdateVisibleRowRangeInternalAsync()
     {
-        if (!AppSettings.ShowRevisionGridGraphColumn
+        if (!AppSettings.ShowRevisionGridGraphColumn.Value
             || _columnProviders.Count == 0
             || _columnProviders[0] is not RevisionGraphColumnProvider revisionGraphColumnProvider)
         {

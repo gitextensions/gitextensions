@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using GitCommands;
 using GitCommands.Logging;
 
@@ -24,8 +24,8 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
         LogOutput.Font = font;
         commandCacheOutput.Font = font;
 
-        chkCaptureCallStacks.Checked = AppSettings.LogCaptureCallStacks;
-        chkCaptureCallStacks.CheckedChanged += delegate { AppSettings.LogCaptureCallStacks = chkCaptureCallStacks.Checked; };
+        chkCaptureCallStacks.Checked = AppSettings.LogCaptureCallStacks.Value;
+        chkCaptureCallStacks.CheckedChanged += delegate { AppSettings.LogCaptureCallStacks.Value = chkCaptureCallStacks.Checked; };
 
         chkWordWrap.CheckedChanged += delegate
         {

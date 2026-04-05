@@ -391,7 +391,7 @@ Inactive remote is completely invisible to git.");
 
         pnlMgtPuttySsh.Visible = GitSshHelpers.IsPlink;
 
-        if (!AppSettings.AlwaysShowAdvOpt)
+        if (!AppSettings.AlwaysShowAdvOpt.Value)
         {
             lblRemoteColor.Visible = false;
             flpnlRemoteColors.Visible = false;

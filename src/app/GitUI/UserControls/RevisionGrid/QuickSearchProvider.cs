@@ -38,7 +38,7 @@ internal sealed class QuickSearchProvider
             UseMnemonic = false
         };
 
-        _quickSearchTimer = new Timer { Interval = AppSettings.RevisionGridQuickSearchTimeout };
+        _quickSearchTimer = new Timer { Interval = AppSettings.RevisionGridQuickSearchTimeout.Value };
         _quickSearchTimer.Tick += (sender, e) =>
         {
             _quickSearchTimer.Stop();
@@ -144,7 +144,7 @@ internal sealed class QuickSearchProvider
     private void RestartQuickSearchTimer()
     {
         _quickSearchTimer.Stop();
-        _quickSearchTimer.Interval = AppSettings.RevisionGridQuickSearchTimeout;
+        _quickSearchTimer.Interval = AppSettings.RevisionGridQuickSearchTimeout.Value;
         _quickSearchTimer.Start();
     }
 

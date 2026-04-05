@@ -1,4 +1,4 @@
-﻿using CommonTestUtils;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -58,7 +58,7 @@ public class FormFileHistoryTests
         string renameRevision = _referenceRepository.RenameRepoFile(string.Empty, "a.txt", "b.txt", commitMessage: "Rename to 'b.txt'");
         string anotherRenameRevision = _referenceRepository.RenameRepoFile(string.Empty, "b.txt", "c.txt", commitMessage: "Rename to 'c.txt'");
 
-        AppSettings.FollowRenamesInFileHistory = true;
+        AppSettings.FollowRenamesInFileHistory.Value = true;
 
         bool textLoaded;
 

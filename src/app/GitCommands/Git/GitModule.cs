@@ -781,9 +781,9 @@ public sealed partial class GitModule : IGitModule
     public async Task<Dictionary<IGitRef, IGitItem?>> GetSubmoduleItemsForEachRefAsync(string? filename, bool noLocks = false)
     {
         const int maxSuperRefCount = 100;
-        RefsFilter refsFilter = (AppSettings.ShowSuperprojectBranches ? RefsFilter.Heads : RefsFilter.NoFilter)
-            | (AppSettings.ShowSuperprojectRemoteBranches ? RefsFilter.Remotes : RefsFilter.NoFilter)
-            | (AppSettings.ShowSuperprojectTags ? RefsFilter.Tags : RefsFilter.NoFilter);
+        RefsFilter refsFilter = (AppSettings.ShowSuperprojectBranches.Value ? RefsFilter.Heads : RefsFilter.NoFilter)
+            | (AppSettings.ShowSuperprojectRemoteBranches.Value ? RefsFilter.Remotes : RefsFilter.NoFilter)
+            | (AppSettings.ShowSuperprojectTags.Value ? RefsFilter.Tags : RefsFilter.NoFilter);
         if (refsFilter == RefsFilter.NoFilter)
         {
             return [];
@@ -1541,7 +1541,7 @@ public sealed partial class GitModule : IGitModule
     {
         if (string.IsNullOrEmpty(remote) ||
             string.IsNullOrEmpty(AppSettings.Pageant) ||
-            !AppSettings.AutoStartPageant ||
+            !AppSettings.AutoStartPageant.Value ||
             !GitSshHelpers.IsPlink)
         {
             return "";
@@ -1748,7 +1748,7 @@ public sealed partial class GitModule : IGitModule
         if (nonDeletedFiles.Count != 0)
         {
             ExecutionResult execution = GitExecutable.Execute(
-                UpdateIndexCmd(AppSettings.ShowErrorsWhenStagingFiles),
+                UpdateIndexCmd(AppSettings.ShowErrorsWhenStagingFiles.Value),
                 inputWriter =>
                 {
                     foreach (GitItemStatus file in nonDeletedFiles)
@@ -2248,7 +2248,7 @@ public sealed partial class GitModule : IGitModule
             "--find-renames",
             "--find-copies",
             { useGitColoring, "--color=always" },
-            { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
+            { AppSettings.UseHistogramDiffAlgorithm.Value, "--histogram" },
             extraDiffArguments,
             diffOptions
         };
@@ -2304,7 +2304,7 @@ public sealed partial class GitModule : IGitModule
         {
             "--find-renames",
             "--find-copies",
-            { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
+            { AppSettings.UseHistogramDiffAlgorithm.Value, "--histogram" },
             { useGitColoring, "--color=always" },
             extraDiffArguments,
             { firstBase is null || secondBase is null,  $"{first}...{second}", $"{firstBase}..{first} {secondBase}..{second}" },
@@ -2930,7 +2930,7 @@ public sealed partial class GitModule : IGitModule
         // Assume that all GetRefs() are done in the background, which may not be correct in the future.
         const bool noLocks = true;
 
-        ArgumentString cmd = Commands.GetRefs(getRef, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
+        ArgumentString cmd = Commands.GetRefs(getRef, noLocks, AppSettings.RefsSortBy.Value, AppSettings.RefsSortOrder.Value);
         ExecutionResult result = GitExecutable.Execute(cmd, throwOnErrorExit: false);
         return result.ExitedSuccessfully
             ? ParseRefs(result.StandardOutput)
@@ -3180,9 +3180,9 @@ public sealed partial class GitModule : IGitModule
         GitArgumentBuilder args = new("blame")
         {
             "--porcelain",
-            { AppSettings.DetectCopyInFileOnBlame, "-M" }, // as git-diff --find-renames
-            { AppSettings.DetectCopyInAllOnBlame, "-C" }, // as git-diff --find-copies
-            { AppSettings.IgnoreWhitespaceOnBlame, "-w" }, // as git-diff --ignore-all-space
+            { AppSettings.DetectCopyInFileOnBlame.Value, "-M" }, // as git-diff --find-renames
+            { AppSettings.DetectCopyInAllOnBlame.Value, "-C" }, // as git-diff --find-copies
+            { AppSettings.IgnoreWhitespaceOnBlame.Value, "-w" }, // as git-diff --ignore-all-space
             "-l",
             { lines is not null, $"-L {lines}" },
             from.ToPosixPath().Quote(),
@@ -3860,9 +3860,9 @@ public sealed partial class GitModule : IGitModule
     {
         GitArgumentBuilder args = new("diff-tree", commandConfiguration)
         {
-            { AppSettings.OmitUninterestingDiff, "--cc", "-c -p" },
+            { AppSettings.OmitUninterestingDiff.Value, "--cc", "-c -p" },
             "--no-commit-id",
-            { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
+            { AppSettings.UseHistogramDiffAlgorithm.Value, "--histogram" },
             { useGitColoring, "--color=always" },
             extraArgs,
             revisionOfMergeCommit,

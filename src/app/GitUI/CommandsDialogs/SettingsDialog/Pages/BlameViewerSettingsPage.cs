@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility.Settings;
 using ResourceManager;
 
@@ -19,34 +19,34 @@ public partial class BlameViewerSettingsPage : SettingsPageWithHeader
 
     protected override void SettingsToPage()
     {
-        cbIgnoreWhitespace.Checked = AppSettings.IgnoreWhitespaceOnBlame;
-        cbDetectMoveAndCopyInThisFile.Checked = AppSettings.DetectCopyInFileOnBlame;
-        cbDetectMoveAndCopyInAllFiles.Checked = AppSettings.DetectCopyInAllOnBlame;
+        cbIgnoreWhitespace.Checked = AppSettings.IgnoreWhitespaceOnBlame.Value;
+        cbDetectMoveAndCopyInThisFile.Checked = AppSettings.DetectCopyInFileOnBlame.Value;
+        cbDetectMoveAndCopyInAllFiles.Checked = AppSettings.DetectCopyInAllOnBlame.Value;
 
-        cbDisplayAuthorFirst.Checked = AppSettings.BlameDisplayAuthorFirst;
-        cbShowAuthor.Checked = AppSettings.BlameShowAuthor;
-        cbShowAuthorDate.Checked = AppSettings.BlameShowAuthorDate;
-        cbShowAuthorTime.Checked = AppSettings.BlameShowAuthorTime;
-        cbShowLineNumbers.Checked = AppSettings.BlameShowLineNumbers;
-        cbShowOriginalFilePath.Checked = AppSettings.BlameShowOriginalFilePath;
-        cbShowAuthorAvatar.Checked = AppSettings.BlameShowAuthorAvatar;
+        cbDisplayAuthorFirst.Checked = AppSettings.BlameDisplayAuthorFirst.Value;
+        cbShowAuthor.Checked = AppSettings.BlameShowAuthor.Value;
+        cbShowAuthorDate.Checked = AppSettings.BlameShowAuthorDate.Value;
+        cbShowAuthorTime.Checked = AppSettings.BlameShowAuthorTime.Value;
+        cbShowLineNumbers.Checked = AppSettings.BlameShowLineNumbers.Value;
+        cbShowOriginalFilePath.Checked = AppSettings.BlameShowOriginalFilePath.Value;
+        cbShowAuthorAvatar.Checked = AppSettings.BlameShowAuthorAvatar.Value;
 
         base.SettingsToPage();
     }
 
     protected override void PageToSettings()
     {
-        AppSettings.IgnoreWhitespaceOnBlame = cbIgnoreWhitespace.Checked;
-        AppSettings.DetectCopyInAllOnBlame = cbDetectMoveAndCopyInAllFiles.Checked;
-        AppSettings.DetectCopyInFileOnBlame = cbDetectMoveAndCopyInThisFile.Checked;
+        AppSettings.IgnoreWhitespaceOnBlame.Value = cbIgnoreWhitespace.Checked;
+        AppSettings.DetectCopyInAllOnBlame.Value = cbDetectMoveAndCopyInAllFiles.Checked;
+        AppSettings.DetectCopyInFileOnBlame.Value = cbDetectMoveAndCopyInThisFile.Checked;
 
-        AppSettings.BlameDisplayAuthorFirst = cbDisplayAuthorFirst.Checked;
-        AppSettings.BlameShowAuthor = cbShowAuthor.Checked;
-        AppSettings.BlameShowAuthorDate = cbShowAuthorDate.Checked;
-        AppSettings.BlameShowAuthorTime = cbShowAuthorTime.Checked;
-        AppSettings.BlameShowLineNumbers = cbShowLineNumbers.Checked;
-        AppSettings.BlameShowOriginalFilePath = cbShowOriginalFilePath.Checked;
-        AppSettings.BlameShowAuthorAvatar = cbShowAuthorAvatar.Checked;
+        AppSettings.BlameDisplayAuthorFirst.Value = cbDisplayAuthorFirst.Checked;
+        AppSettings.BlameShowAuthor.Value = cbShowAuthor.Checked;
+        AppSettings.BlameShowAuthorDate.Value = cbShowAuthorDate.Checked;
+        AppSettings.BlameShowAuthorTime.Value = cbShowAuthorTime.Checked;
+        AppSettings.BlameShowLineNumbers.Value = cbShowLineNumbers.Checked;
+        AppSettings.BlameShowOriginalFilePath.Value = cbShowOriginalFilePath.Checked;
+        AppSettings.BlameShowAuthorAvatar.Value = cbShowAuthorAvatar.Checked;
 
         base.PageToSettings();
     }

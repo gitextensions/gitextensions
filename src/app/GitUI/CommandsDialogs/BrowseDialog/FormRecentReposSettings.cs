@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -28,13 +28,13 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
     private void LoadSettings()
     {
-        SetShorteningStrategy(AppSettings.ShorteningRecentRepoPathStrategy);
+        SetShorteningStrategy(AppSettings.ShorteningRecentRepoPathStrategy.Value);
         hideTopRepositoriesFromRecentList.Checked = AppSettings.HideTopRepositoriesFromRecentList.Value;
-        sortTopRepos.Checked = AppSettings.SortTopRepos;
-        sortRecentRepos.Checked = AppSettings.SortRecentRepos;
-        comboMinWidthEdit.Value = AppSettings.RecentReposComboMinWidth;
-        SetNumericUpDownValue(_NO_TRANSLATE_maxRecentRepositories, AppSettings.MaxTopRepositories);
-        SetNumericUpDownValue(_NO_TRANSLATE_RecentRepositoriesHistorySize, AppSettings.RecentRepositoriesHistorySize);
+        sortTopRepos.Checked = AppSettings.SortTopRepos.Value;
+        sortRecentRepos.Checked = AppSettings.SortRecentRepos.Value;
+        comboMinWidthEdit.Value = AppSettings.RecentReposComboMinWidth.Value;
+        SetNumericUpDownValue(_NO_TRANSLATE_maxRecentRepositories, AppSettings.MaxTopRepositories.Value);
+        SetNumericUpDownValue(_NO_TRANSLATE_RecentRepositoriesHistorySize, AppSettings.RecentRepositoriesHistorySize.Value);
 
         _previousValue = comboMinWidthEdit.Value;
 
@@ -68,13 +68,13 @@ public partial class FormRecentReposSettings : GitExtensionsForm
     {
         Validates.NotNull(_repositoryHistory);
 
-        AppSettings.ShorteningRecentRepoPathStrategy = GetShorteningStrategy();
+        AppSettings.ShorteningRecentRepoPathStrategy.Value = GetShorteningStrategy();
         AppSettings.HideTopRepositoriesFromRecentList.Value = hideTopRepositoriesFromRecentList.Checked;
-        AppSettings.SortTopRepos = sortTopRepos.Checked;
-        AppSettings.SortRecentRepos = sortRecentRepos.Checked;
-        AppSettings.MaxTopRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
-        AppSettings.RecentReposComboMinWidth = (int)comboMinWidthEdit.Value;
-        AppSettings.RecentRepositoriesHistorySize = (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
+        AppSettings.SortTopRepos.Value = sortTopRepos.Checked;
+        AppSettings.SortRecentRepos.Value = sortRecentRepos.Checked;
+        AppSettings.MaxTopRepositories.Value = (int)_NO_TRANSLATE_maxRecentRepositories.Value;
+        AppSettings.RecentReposComboMinWidth.Value = (int)comboMinWidthEdit.Value;
+        AppSettings.RecentRepositoriesHistorySize.Value = (int)_NO_TRANSLATE_RecentRepositoriesHistorySize.Value;
 
         ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(_repositoryHistory));
     }

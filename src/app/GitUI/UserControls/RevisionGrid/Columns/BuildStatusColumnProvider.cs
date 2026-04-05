@@ -41,8 +41,8 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
 
     public override void ApplySettings()
     {
-        bool showIcon = AppSettings.ShowBuildStatusIconColumn;
-        bool showText = AppSettings.ShowBuildStatusTextColumn;
+        bool showIcon = AppSettings.ShowBuildStatusIconColumn.Value;
+        bool showText = AppSettings.ShowBuildStatusTextColumn.Value;
 
         IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings().GetBuildServerSettings();
         bool columnVisible = buildServerSettings.IntegrationEnabledOrDefault && (showIcon || showText);
@@ -81,8 +81,8 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
             return;
         }
 
-        string text = (AppSettings.ShowBuildStatusIconColumn ? revision.BuildStatus.StatusSymbol : string.Empty)
-            + (AppSettings.ShowBuildStatusTextColumn ? (string)e.FormattedValue : string.Empty);
+        string text = (AppSettings.ShowBuildStatusIconColumn.Value ? revision.BuildStatus.StatusSymbol : string.Empty)
+            + (AppSettings.ShowBuildStatusTextColumn.Value ? (string)e.FormattedValue : string.Empty);
 
         if (_fontWithUnicodeCache?.Size != style.NormalFont.Size)
         {

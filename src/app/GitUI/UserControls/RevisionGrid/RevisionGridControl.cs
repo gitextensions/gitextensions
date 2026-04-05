@@ -418,7 +418,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     // returns " --find-renames=... --find-copies=..." according to app settings
     private static ArgumentString FindRenamesAndCopiesOpts()
     {
-        return AppSettings.FollowRenamesInFileHistoryExactOnly
+        return AppSettings.FollowRenamesInFileHistoryExactOnly.Value
             ? " --find-renames=\"100%\" --find-copies=\"100%\""
             : " --find-renames --find-copies";
     }
@@ -951,14 +951,14 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         // Get the "main" stash commit, including the reflog selector
         Lazy<IReadOnlyCollection<GitRevision>> getStashRevs = new(() =>
-            !AppSettings.ShowStashes || Module.IsBareRepository()
+            !AppSettings.ShowStashes.Value || Module.IsBareRepository()
             ? []
             : new RevisionReader(capturedModule).GetStashes(cancellationToken));
 
         try
         {
             _revisionGraphColumnProvider.RevisionGraphDrawStyle
-                = AppSettings.RevisionGraphDrawNonRelativesGray ? RevisionGraphDrawStyle.DrawNonRelativesGray : RevisionGraphDrawStyle.Normal;
+                = AppSettings.RevisionGraphDrawNonRelativesGray.Value ? RevisionGraphDrawStyle.DrawNonRelativesGray : RevisionGraphDrawStyle.Normal;
 
             // Apply checkboxes changes also to FormBrowse main menu
             MenuCommands.TriggerMenuChanged();
@@ -1009,7 +1009,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
             ObjectId? previousCheckout = CurrentCheckout;
 
-            bool showStashes = AppSettings.ShowStashes;
+            bool showStashes = AppSettings.ShowStashes.Value;
 
             // Evaluate GitRefs and current commit
             ThreadHelper.FileAndForget(async () =>
@@ -1089,7 +1089,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                         // "untracked" commits to insert (parent to "stash" commits)
                         Dictionary<ObjectId, ObjectId> untrackedIdByStashId = getStashRevs.Value
                             .Where(stash => stash.ParentIds.Count >= 3)
-                            .Take(AppSettings.MaxStashesWithUntrackedFiles)
+                            .Take(AppSettings.MaxStashesWithUntrackedFiles.Value)
                             .ToDictionary(stash => stash.ObjectId, stash => stash.ParentIds[2]);
                         List<ObjectId> untrackedIds = [.. untrackedIdByStashId.Values.Distinct()];
                         Dictionary<ObjectId, GitRevision> untrackedRevs = new RevisionReader(capturedModule)
@@ -1138,7 +1138,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                         observeRevisions,
                         _filterInfo.GetRevisionFilter(currentCheckout),
                         pathFilter,
-                        AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes,
+                        AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes.Value,
                         ResourceManager.TranslatedStrings.Autostash,
                         cancellationToken);
                 },
@@ -1206,7 +1206,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 multpleArgs = true;
             }
 
-            if (!AppSettings.FollowRenamesInFileHistory
+            if (!AppSettings.FollowRenamesInFileHistory.Value
 
                 // The command line can be very long for folders, just ignore.
                 || path.EndsWith('/')
@@ -1339,7 +1339,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         bool ShowArtificialRevisions()
         {
             return ShowUncommittedChangesIfPossible
-                && AppSettings.RevisionGraphShowArtificialCommits
+                && AppSettings.RevisionGraphShowArtificialCommits.Value
                 && !Module.IsBareRepository();
         }
 
@@ -2281,7 +2281,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return;
         }
 
-        if (AppSettings.DontConfirmRebase)
+        if (AppSettings.DontConfirmRebase.Value)
         {
             UICommands.StartRebase(ParentForm, _rebaseOnTopOf);
             return;
@@ -2305,7 +2305,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         if (page.Verification.Checked)
         {
-            AppSettings.DontConfirmRebase = true;
+            AppSettings.DontConfirmRebase.Value = true;
         }
 
         if (result == TaskDialogButton.Yes)
@@ -2321,7 +2321,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return;
         }
 
-        if (AppSettings.DontConfirmRebase)
+        if (AppSettings.DontConfirmRebase.Value)
         {
             UICommands.StartInteractiveRebase(ParentForm, _rebaseOnTopOf);
             return;
@@ -2345,7 +2345,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         if (page.Verification.Checked)
         {
-            AppSettings.DontConfirmRebase = true;
+            AppSettings.DontConfirmRebase.Value = true;
         }
 
         if (result == TaskDialogButton.Yes)
@@ -2399,21 +2399,21 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void ToggleShowAuthorDate()
     {
-        AppSettings.ShowAuthorDate = !AppSettings.ShowAuthorDate;
+        AppSettings.ShowAuthorDate.Value = !AppSettings.ShowAuthorDate.Value;
         MenuCommands.TriggerMenuChanged();
         Refresh();
     }
 
     internal void ToggleShowRemoteBranches()
     {
-        AppSettings.ShowRemoteBranches = !AppSettings.ShowRemoteBranches;
+        AppSettings.ShowRemoteBranches.Value = !AppSettings.ShowRemoteBranches.Value;
         MenuCommands.TriggerMenuChanged();
         _gridView.Invalidate();
     }
 
     internal void ToggleShowArtificialCommits()
     {
-        AppSettings.RevisionGraphShowArtificialCommits = !AppSettings.RevisionGraphShowArtificialCommits;
+        AppSettings.RevisionGraphShowArtificialCommits.Value = !AppSettings.RevisionGraphShowArtificialCommits.Value;
         PerformRefreshRevisions();
     }
 
@@ -2437,25 +2437,25 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void ToggleShowStashes()
     {
-        AppSettings.ShowStashes = !AppSettings.ShowStashes;
+        AppSettings.ShowStashes.Value = !AppSettings.ShowStashes.Value;
         PerformRefreshRevisions();
     }
 
     internal void ToggleShowSuperprojectTags()
     {
-        AppSettings.ShowSuperprojectTags = !AppSettings.ShowSuperprojectTags;
+        AppSettings.ShowSuperprojectTags.Value = !AppSettings.ShowSuperprojectTags.Value;
         PerformRefreshRevisions();
     }
 
     internal void ShowSuperprojectBranches_ToolStripMenuItemClick()
     {
-        AppSettings.ShowSuperprojectBranches = !AppSettings.ShowSuperprojectBranches;
+        AppSettings.ShowSuperprojectBranches.Value = !AppSettings.ShowSuperprojectBranches.Value;
         PerformRefreshRevisions();
     }
 
     internal void ShowSuperprojectRemoteBranches_ToolStripMenuItemClick()
     {
-        AppSettings.ShowSuperprojectRemoteBranches = !AppSettings.ShowSuperprojectRemoteBranches;
+        AppSettings.ShowSuperprojectRemoteBranches.Value = !AppSettings.ShowSuperprojectRemoteBranches.Value;
         PerformRefreshRevisions();
     }
 
@@ -2578,7 +2578,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void ToggleShowRelativeDate()
     {
-        AppSettings.RelativeDate = !AppSettings.RelativeDate;
+        AppSettings.RelativeDate.Value = !AppSettings.RelativeDate.Value;
         MenuCommands.TriggerMenuChanged();
         Refresh();
     }
@@ -2601,7 +2601,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     public void UpdateArtificialCommitCount(IReadOnlyList<GitItemStatus>? status)
     {
-        // Note that the count is updated also if AppSettings.ShowGitStatusForArtificialCommits is not set
+        // Note that the count is updated also if AppSettings.ShowGitStatusForArtificialCommits.Value is not set
         UpdateChangeCount(ObjectId.WorkTreeId, status);
         UpdateChangeCount(ObjectId.IndexId, status);
 
@@ -2624,7 +2624,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void ToggleDrawNonRelativesGray()
     {
-        AppSettings.RevisionGraphDrawNonRelativesGray = !AppSettings.RevisionGraphDrawNonRelativesGray;
+        AppSettings.RevisionGraphDrawNonRelativesGray.Value = !AppSettings.RevisionGraphDrawNonRelativesGray.Value;
         MenuCommands.TriggerMenuChanged();
         _gridView.Refresh();
     }
@@ -2668,7 +2668,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void ToggleShowGitNotes()
     {
-        AppSettings.ShowGitNotes = !AppSettings.ShowGitNotes;
+        AppSettings.ShowGitNotes.Value = !AppSettings.ShowGitNotes.Value;
         PerformRefreshRevisions();
     }
 
@@ -2686,7 +2686,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void ToggleShowCommitBodyInRevisionGrid()
     {
-        AppSettings.ShowCommitBodyInRevisionGrid = !AppSettings.ShowCommitBodyInRevisionGrid;
+        AppSettings.ShowCommitBodyInRevisionGrid.Value = !AppSettings.ShowCommitBodyInRevisionGrid.Value;
         MenuCommands.TriggerMenuChanged();
         Refresh();
     }
@@ -2699,13 +2699,13 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     public void ToggleFullHistory()
     {
-        AppSettings.FullHistoryInFileHistory = !AppSettings.FullHistoryInFileHistory;
+        AppSettings.FullHistoryInFileHistory.Value = !AppSettings.FullHistoryInFileHistory.Value;
         PerformRefreshRevisions();
     }
 
     public void ToggleSimplifyMerges()
     {
-        AppSettings.SimplifyMergesInFileHistory = !AppSettings.SimplifyMergesInFileHistory;
+        AppSettings.SimplifyMergesInFileHistory.Value = !AppSettings.SimplifyMergesInFileHistory.Value;
         PerformRefreshRevisions();
     }
 
@@ -2725,12 +2725,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 if (idToSelect is null
 
                     // WorkTree and Index are skipped if and only if we do retrieve the ChangeCount info (only for artificial) and HasChanges returns false.
-                    || (AppSettings.ShowGitStatusForArtificialCommits && (GetChangeCount(idToSelect)?.HasChanges is false)))
+                    || (AppSettings.ShowGitStatusForArtificialCommits.Value && (GetChangeCount(idToSelect)?.HasChanges is false)))
                 {
                     continue;
                 }
 
-                if (idToSelect == CurrentCheckout && AppSettings.RevisionGraphShowArtificialCommits && _gridView.GetRevision(idToSelect) is null)
+                if (idToSelect == CurrentCheckout && AppSettings.RevisionGraphShowArtificialCommits.Value && _gridView.GetRevision(idToSelect) is null)
                 {
                     // HEAD is not in revision grid (filtered)
                     return ObjectId.WorkTreeId;
@@ -2752,35 +2752,35 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void ToggleRevisionGraphColumn()
     {
-        AppSettings.ShowRevisionGridGraphColumn = !AppSettings.ShowRevisionGridGraphColumn;
+        AppSettings.ShowRevisionGridGraphColumn.Value = !AppSettings.ShowRevisionGridGraphColumn.Value;
         MenuCommands.TriggerMenuChanged();
         Refresh();
     }
 
     internal void ToggleAuthorAvatarColumn()
     {
-        AppSettings.ShowAuthorAvatarColumn = !AppSettings.ShowAuthorAvatarColumn;
+        AppSettings.ShowAuthorAvatarColumn.Value = !AppSettings.ShowAuthorAvatarColumn.Value;
         MenuCommands.TriggerMenuChanged();
         Refresh();
     }
 
     internal void ToggleAuthorNameColumn()
     {
-        AppSettings.ShowAuthorNameColumn = !AppSettings.ShowAuthorNameColumn;
+        AppSettings.ShowAuthorNameColumn.Value = !AppSettings.ShowAuthorNameColumn.Value;
         MenuCommands.TriggerMenuChanged();
         Refresh();
     }
 
     internal void ToggleDateColumn()
     {
-        AppSettings.ShowDateColumn = !AppSettings.ShowDateColumn;
+        AppSettings.ShowDateColumn.Value = !AppSettings.ShowDateColumn.Value;
         MenuCommands.TriggerMenuChanged();
         Refresh();
     }
 
     internal void ToggleObjectIdColumn()
     {
-        AppSettings.ShowObjectIdColumn = !AppSettings.ShowObjectIdColumn;
+        AppSettings.ShowObjectIdColumn.Value = !AppSettings.ShowObjectIdColumn.Value;
         MenuCommands.TriggerMenuChanged();
         Refresh();
     }
@@ -2788,7 +2788,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     internal void ToggleBuildStatusIconColumn()
     {
         ////Module.EffectiveSettings.BuildServer.ShowBuildIconInGrid.Value = !Module.EffectiveSettings.BuildServer.ShowBuildIconInGrid.Value;
-        AppSettings.ShowBuildStatusIconColumn = !AppSettings.ShowBuildStatusIconColumn;
+        AppSettings.ShowBuildStatusIconColumn.Value = !AppSettings.ShowBuildStatusIconColumn.Value;
         MenuCommands.TriggerMenuChanged();
         Refresh();
     }
@@ -2796,7 +2796,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     internal void ToggleBuildStatusTextColumn()
     {
         ////Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.Value = !Module.EffectiveSettings.BuildServer.ShowBuildSummaryInGrid.Value;
-        AppSettings.ShowBuildStatusTextColumn = !AppSettings.ShowBuildStatusTextColumn;
+        AppSettings.ShowBuildStatusTextColumn.Value = !AppSettings.ShowBuildStatusTextColumn.Value;
         MenuCommands.TriggerMenuChanged();
         Refresh();
     }
@@ -2805,7 +2805,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void ToggleShowTags()
     {
-        AppSettings.ShowTags = !AppSettings.ShowTags;
+        AppSettings.ShowTags.Value = !AppSettings.ShowTags.Value;
         MenuCommands.TriggerMenuChanged();
         Refresh();
     }

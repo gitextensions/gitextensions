@@ -82,7 +82,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
             // The dirty check is very expensive on large repositories. Without this setting
             // the checkout branch dialog is too slow.
-            if (AppSettings.CheckForUncommittedChangesInCheckoutBranch)
+            if (AppSettings.CheckForUncommittedChangesInCheckoutBranch.Value)
             {
                 _isDirtyDir = Module.IsDirtyDir();
             }
@@ -92,8 +92,8 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
             }
 
             localChangesGB.Visible = HasUncommittedChanges;
-            ChangesMode = AppSettings.CheckoutBranchAction;
-            rbCreateBranchWithCustomName.Checked = AppSettings.CreateLocalBranchForRemote;
+            ChangesMode = AppSettings.CheckoutBranchAction.Value;
+            rbCreateBranchWithCustomName.Checked = AppSettings.CreateLocalBranchForRemote.Value;
         }
         finally
         {
@@ -144,8 +144,8 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
     public DialogResult DoDefaultActionOrShow(IWin32Window? owner)
     {
         bool localBranchSelected = !string.IsNullOrWhiteSpace(Branches.Text) && !Remotebranch.Checked;
-        if (!AppSettings.AlwaysShowCheckoutBranchDlg && localBranchSelected &&
-            (!HasUncommittedChanges || AppSettings.UseDefaultCheckoutBranchAction))
+        if (!AppSettings.AlwaysShowCheckoutBranchDlg.Value && localBranchSelected &&
+            (!HasUncommittedChanges || AppSettings.UseDefaultCheckoutBranchAction.Value))
         {
             return PerformCheckout(owner);
         }
@@ -322,10 +322,10 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
         LocalChangesAction localChanges = ChangesMode;
         if (localChanges != LocalChangesAction.Reset && chkSetLocalChangesActionAsDefault.Checked)
         {
-            AppSettings.CheckoutBranchAction = localChanges;
+            AppSettings.CheckoutBranchAction.Value = localChanges;
         }
 
-        if ((!Visible && !AppSettings.UseDefaultCheckoutBranchAction) || !HasUncommittedChanges)
+        if ((!Visible && !AppSettings.UseDefaultCheckoutBranchAction.Value) || !HasUncommittedChanges)
         {
             localChanges = LocalChangesAction.DontChange;
         }
@@ -341,7 +341,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
             stash = _isDirtyDir == true;
             if (stash)
             {
-                UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash);
+                UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash.Value);
             }
         }
 
@@ -544,7 +544,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
     private void txtCustomBranchName_Leave(object sender, EventArgs e)
     {
-        if (!AppSettings.AutoNormaliseBranchName || !txtCustomBranchName.Text.Any(GitBranchNameNormaliser.IsValidChar))
+        if (!AppSettings.AutoNormaliseBranchName.Value || !txtCustomBranchName.Text.Any(GitBranchNameNormaliser.IsValidChar))
         {
             return;
         }

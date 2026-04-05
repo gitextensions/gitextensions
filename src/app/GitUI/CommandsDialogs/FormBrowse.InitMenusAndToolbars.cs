@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -49,7 +49,7 @@ partial class FormBrowse
         mainMenuStrip.ForeColor = toolForeColor;
         InitToolStripStyles(toolForeColor, Color.Transparent);
 
-        UpdateCommitButtonAndGetBrush(status: null, AppSettings.ShowGitStatusInBrowseToolbar);
+        UpdateCommitButtonAndGetBrush(status: null, AppSettings.ShowGitStatusInBrowseToolbar.Value);
 
         FillNextPullActionAsDefaultToolStripMenuItems();
         RefreshDefaultPullAction();
@@ -202,7 +202,7 @@ partial class FormBrowse
         void SetDefaultPullActionMenuItemClick(object sender, EventArgs eventArgs)
         {
             ToolStripMenuItem clickedMenuItem = (ToolStripMenuItem)sender;
-            AppSettings.DefaultPullAction = (GitPullAction)clickedMenuItem.Tag;
+            AppSettings.DefaultPullAction.Value = (GitPullAction)clickedMenuItem.Tag;
             RefreshDefaultPullAction();
         }
     }
@@ -262,7 +262,7 @@ partial class FormBrowse
             return;
         }
 
-        GitPullAction defaultPullAction = AppSettings.DefaultPullAction;
+        GitPullAction defaultPullAction = AppSettings.DefaultPullAction.Value;
 
         foreach (ToolStripMenuItem menuItem in setDefaultPullButtonActionToolStripMenuItem.DropDown.Items)
         {

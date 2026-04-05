@@ -39,7 +39,7 @@ public partial class FormFormatPatch : GitModuleForm
 
     private void FormFormatPath_Load(object sender, EventArgs e)
     {
-        OutputPath.Text = AppSettings.LastFormatPatchDir;
+        OutputPath.Text = AppSettings.LastFormatPatchDir.Value;
         string selectedHead = Module.GetSelectedBranch();
         SelectedBranch.Text = _currentBranchText.Text + " " + selectedHead;
 
@@ -51,7 +51,7 @@ public partial class FormFormatPatch : GitModuleForm
     {
         if (Directory.Exists(OutputPath.Text))
         {
-            AppSettings.LastFormatPatchDir = OutputPath.Text;
+            AppSettings.LastFormatPatchDir.Value = OutputPath.Text;
         }
     }
 

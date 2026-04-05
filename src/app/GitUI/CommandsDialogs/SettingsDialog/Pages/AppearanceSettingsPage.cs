@@ -67,18 +67,18 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
 
     protected override void SettingsToPage()
     {
-        chkShowRelativeDate.Checked = AppSettings.RelativeDate;
-        chkShowRepoCurrentBranch.Checked = AppSettings.ShowRepoCurrentBranch;
+        chkShowRelativeDate.Checked = AppSettings.RelativeDate.Value;
+        chkShowRepoCurrentBranch.Checked = AppSettings.ShowRepoCurrentBranch.Value;
         chkShowCurrentBranchInVisualStudio.Checked = AppSettings.ShowCurrentBranchInVisualStudio;
-        chkEnableAutoScale.Checked = AppSettings.EnableAutoScale;
-        truncatePathMethod.SelectedIndex = GetTruncatePathMethodIndex(AppSettings.TruncatePathMethod);
+        chkEnableAutoScale.Checked = AppSettings.EnableAutoScale.Value;
+        truncatePathMethod.SelectedIndex = GetTruncatePathMethodIndex(AppSettings.TruncatePathMethod.Value);
 
-        _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays;
-        ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo;
-        ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn;
+        _NO_TRANSLATE_DaysToCacheImages.Value = AppSettings.AvatarImageCacheDays.Value;
+        ShowAuthorAvatarInCommitInfo.Checked = AppSettings.ShowAuthorAvatarInCommitInfo.Value;
+        ShowAuthorAvatarInCommitGraph.Checked = AppSettings.ShowAuthorAvatarColumn.Value;
         AvatarProvider.SelectedValue = AppSettings.AvatarProvider;
         _NO_TRANSLATE_NoImageService.SelectedValue = AppSettings.AvatarFallbackType;
-        txtCustomAvatarTemplate.Text = AppSettings.CustomAvatarTemplate;
+        txtCustomAvatarTemplate.Text = AppSettings.CustomAvatarTemplate.Value;
         ManageAvatarOptionsDisplay();
 
         Language.Items.Clear();
@@ -123,21 +123,21 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
 
     protected override void PageToSettings()
     {
-        AppSettings.RelativeDate = chkShowRelativeDate.Checked;
-        AppSettings.ShowRepoCurrentBranch = chkShowRepoCurrentBranch.Checked;
+        AppSettings.RelativeDate.Value = chkShowRelativeDate.Checked;
+        AppSettings.ShowRepoCurrentBranch.Value = chkShowRepoCurrentBranch.Checked;
         AppSettings.ShowCurrentBranchInVisualStudio = chkShowCurrentBranchInVisualStudio.Checked;
-        AppSettings.EnableAutoScale = chkEnableAutoScale.Checked;
-        AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
+        AppSettings.EnableAutoScale.Value = chkEnableAutoScale.Checked;
+        AppSettings.TruncatePathMethod.Value = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
 
         bool shouldClearCache =
             AppSettings.AvatarProvider != (AvatarProvider)AvatarProvider.SelectedValue
             || AppSettings.AvatarFallbackType != (AvatarFallbackType)_NO_TRANSLATE_NoImageService.SelectedValue
-            || AppSettings.CustomAvatarTemplate != txtCustomAvatarTemplate.Text;
+            || AppSettings.CustomAvatarTemplate.Value != txtCustomAvatarTemplate.Text;
 
-        AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.Checked;
-        AppSettings.ShowAuthorAvatarInCommitInfo = ShowAuthorAvatarInCommitInfo.Checked;
-        AppSettings.AvatarImageCacheDays = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
-        AppSettings.CustomAvatarTemplate = txtCustomAvatarTemplate.Text;
+        AppSettings.ShowAuthorAvatarColumn.Value = ShowAuthorAvatarInCommitGraph.Checked;
+        AppSettings.ShowAuthorAvatarInCommitInfo.Value = ShowAuthorAvatarInCommitInfo.Checked;
+        AppSettings.AvatarImageCacheDays.Value = (int)_NO_TRANSLATE_DaysToCacheImages.Value;
+        AppSettings.CustomAvatarTemplate.Value = txtCustomAvatarTemplate.Text;
 
         AppSettings.Translation = Language.Text;
         ResourceManager.TranslatedStrings.Reinitialize();

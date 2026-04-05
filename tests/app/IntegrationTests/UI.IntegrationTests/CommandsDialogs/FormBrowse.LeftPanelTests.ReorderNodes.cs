@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -27,39 +27,39 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
     public void SetUpFixture()
     {
         // Remember the current settings...
-        _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
-        _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools;
+        _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn.Value;
+        _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools.Value;
 
         // Stop loading custom diff tools
-        AppSettings.ShowAvailableDiffTools = false;
+        AppSettings.ShowAvailableDiffTools.Value = false;
 
         // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
-        AppSettings.ShowAuthorAvatarColumn = false;
+        AppSettings.ShowAuthorAvatarColumn.Value = false;
 
         // Show all root nodes for test, restore when done
-        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowBranches);
-        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowRemotes);
-        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowTags);
-        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowStashes);
-        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowSubmodules);
-        AppSettings.RepoObjectsTreeShowBranches = true;
-        AppSettings.RepoObjectsTreeShowRemotes = true;
-        AppSettings.RepoObjectsTreeShowTags = true;
-        AppSettings.RepoObjectsTreeShowStashes = true;
-        AppSettings.RepoObjectsTreeShowSubmodules = true;
+        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowBranches.Value);
+        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowRemotes.Value);
+        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowTags.Value);
+        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowStashes.Value);
+        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowSubmodules.Value);
+        AppSettings.RepoObjectsTreeShowBranches.Value = true;
+        AppSettings.RepoObjectsTreeShowRemotes.Value = true;
+        AppSettings.RepoObjectsTreeShowTags.Value = true;
+        AppSettings.RepoObjectsTreeShowStashes.Value = true;
+        AppSettings.RepoObjectsTreeShowSubmodules.Value = true;
     }
 
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
-        AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
+        AppSettings.ShowAuthorAvatarColumn.Value = _originalShowAuthorAvatarColumn;
+        AppSettings.ShowAvailableDiffTools.Value = _showAvailableDiffTools;
 
-        AppSettings.RepoObjectsTreeShowBranches = _originalRepoObjectsTreeShow[0];
-        AppSettings.RepoObjectsTreeShowRemotes = _originalRepoObjectsTreeShow[1];
-        AppSettings.RepoObjectsTreeShowTags = _originalRepoObjectsTreeShow[2];
-        AppSettings.RepoObjectsTreeShowSubmodules = _originalRepoObjectsTreeShow[3];
-        AppSettings.RepoObjectsTreeShowStashes = _originalRepoObjectsTreeShow[4];
+        AppSettings.RepoObjectsTreeShowBranches.Value = _originalRepoObjectsTreeShow[0];
+        AppSettings.RepoObjectsTreeShowRemotes.Value = _originalRepoObjectsTreeShow[1];
+        AppSettings.RepoObjectsTreeShowTags.Value = _originalRepoObjectsTreeShow[2];
+        AppSettings.RepoObjectsTreeShowSubmodules.Value = _originalRepoObjectsTreeShow[3];
+        AppSettings.RepoObjectsTreeShowStashes.Value = _originalRepoObjectsTreeShow[4];
     }
 
     [SetUp]

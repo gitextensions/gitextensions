@@ -26,12 +26,12 @@ internal sealed class GitExecutor : IGitExecutor
         GitWindowsExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
         GitWindowsCommandRunner = new GitCommandRunner(GitWindowsExecutable, () => SystemEncoding);
 
-        WslDistro = AppSettings.WslGitEnabled ? PathUtil.GetWslDistro(WorkingDir) : "";
+        WslDistro = AppSettings.WslGitEnabled.Value ? PathUtil.GetWslDistro(WorkingDir) : "";
         if (!string.IsNullOrEmpty(WslDistro))
         {
             // In some WSL environments the current working directory is not passed along to the git command without using the `--cd` argument. Adding it to
             // the command line is required for these environments. For those that do not need it using the argument is just redundant.
-            GitExecutable = new Executable(() => AppSettings.WslCommand, WorkingDir, $"-d {WslDistro} --cd {WorkingDir.RemoveTrailingPathSeparator().Quote()} {AppSettings.WslGitCommand} ");
+            GitExecutable = new Executable(() => AppSettings.WslCommand.Value, WorkingDir, $"-d {WslDistro} --cd {WorkingDir.RemoveTrailingPathSeparator().Quote()} {AppSettings.WslGitCommand.Value} ");
             GitCommandRunner = new GitCommandRunner(GitExecutable, () => SystemEncoding);
         }
         else

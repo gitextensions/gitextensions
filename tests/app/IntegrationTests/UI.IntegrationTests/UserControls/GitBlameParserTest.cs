@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
@@ -17,23 +17,23 @@ public sealed class GitBlameParserTest
     [OneTimeSetUp]
     public void OneTimeSetUp()
     {
-        _useHistogramDiffAlgorithm = AppSettings.UseHistogramDiffAlgorithm;
-        _detectCopyInFileOnBlame = AppSettings.DetectCopyInFileOnBlame;
-        _detectCopyInAllOnBlame = AppSettings.DetectCopyInAllOnBlame;
-        _ignoreWhitespaceOnBlame = AppSettings.IgnoreWhitespaceOnBlame;
-        AppSettings.UseHistogramDiffAlgorithm = false;
-        AppSettings.DetectCopyInFileOnBlame = false;
-        AppSettings.DetectCopyInAllOnBlame = false;
-        AppSettings.IgnoreWhitespaceOnBlame = true;
+        _useHistogramDiffAlgorithm = AppSettings.UseHistogramDiffAlgorithm.Value;
+        _detectCopyInFileOnBlame = AppSettings.DetectCopyInFileOnBlame.Value;
+        _detectCopyInAllOnBlame = AppSettings.DetectCopyInAllOnBlame.Value;
+        _ignoreWhitespaceOnBlame = AppSettings.IgnoreWhitespaceOnBlame.Value;
+        AppSettings.UseHistogramDiffAlgorithm.Value = false;
+        AppSettings.DetectCopyInFileOnBlame.Value = false;
+        AppSettings.DetectCopyInAllOnBlame.Value = false;
+        AppSettings.IgnoreWhitespaceOnBlame.Value = true;
     }
 
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        AppSettings.UseHistogramDiffAlgorithm = _useHistogramDiffAlgorithm;
-        AppSettings.DetectCopyInFileOnBlame = _detectCopyInFileOnBlame;
-        AppSettings.DetectCopyInAllOnBlame = _detectCopyInAllOnBlame;
-        AppSettings.IgnoreWhitespaceOnBlame = _ignoreWhitespaceOnBlame;
+        AppSettings.UseHistogramDiffAlgorithm.Value = _useHistogramDiffAlgorithm;
+        AppSettings.DetectCopyInFileOnBlame.Value = _detectCopyInFileOnBlame;
+        AppSettings.DetectCopyInAllOnBlame.Value = _detectCopyInAllOnBlame;
+        AppSettings.IgnoreWhitespaceOnBlame.Value = _ignoreWhitespaceOnBlame;
     }
 
     [Test]
