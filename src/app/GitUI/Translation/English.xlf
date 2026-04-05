@@ -9423,6 +9423,50 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Rebase Confirmation</source>
         <target />
       </trans-unit>
+      <trans-unit id="_refApplyStash.Text">
+        <source>&amp;Apply stash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_refCheckoutBranch.Text">
+        <source>&amp;Checkout this branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_refCopyName.Text">
+        <source>Cop&amp;y name to clipboard</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_refDeleteBranch.Text">
+        <source>&amp;Delete this branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_refDeleteTag.Text">
+        <source>&amp;Delete this tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_refDropStash.Text">
+        <source>Dr&amp;op stash...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_refMergeIntoCurrent.Text">
+        <source>&amp;Merge into current branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_refPopStash.Text">
+        <source>P&amp;op stash</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_refPushBranch.Text">
+        <source>&amp;Push this branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_refRebaseOnto.Text">
+        <source>&amp;Rebase current branch onto this</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_refRenameBranch.Text">
+        <source>Re&amp;name this branch</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_strLoading.Text">
         <source>Loading</source>
         <target />
