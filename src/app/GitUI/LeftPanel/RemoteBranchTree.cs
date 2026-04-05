@@ -46,7 +46,7 @@ internal sealed class RemoteBranchTree : BaseRefTree
                     remoteBranchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), $"{GitRefName.RefsHeadsPrefix}{aheadBehind.Branch}");
                 }
 
-                BaseRevisionNode parent = remoteBranchNode.CreateRootNode(
+                BaseRevisionNode? parent = remoteBranchNode.CreateRootNode(
                     pathToNodes,
                     (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
 

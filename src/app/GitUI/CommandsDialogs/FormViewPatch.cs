@@ -33,7 +33,7 @@ public partial class FormViewPatch : GitModuleForm
 
         InitializeComplete();
 
-        typeDataGridViewTextBoxColumn.DataPropertyName= nameof(Patch.ChangeType);
+        typeDataGridViewTextBoxColumn.DataPropertyName = nameof(Patch.ChangeType);
         File.DataPropertyName = nameof(Patch.FileType);
         FileNameA.DataPropertyName = nameof(Patch.FileNameA);
     }

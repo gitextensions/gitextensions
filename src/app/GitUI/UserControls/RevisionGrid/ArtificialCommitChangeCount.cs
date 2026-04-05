@@ -57,11 +57,11 @@ public sealed class ArtificialCommitChangeCount
         DataValid = items is not null;
         if (DataValid)
         {
-            Changed = items.Where(item => !item.IsNew && !item.IsDeleted && !item.IsSubmodule).ToList();
-            New = items.Where(item => item.IsNew && !item.IsSubmodule).ToList();
-            Deleted = items.Where(item => item.IsDeleted && !item.IsSubmodule).ToList();
-            SubmodulesChanged = items.Where(item => item.IsSubmodule && item.IsChanged).ToList();
-            SubmodulesDirty = items.Where(item => item.IsSubmodule && item.IsDirty).ToList();
+            Changed = items!.Where(item => !item.IsNew && !item.IsDeleted && !item.IsSubmodule).ToList();
+            New = items!.Where(item => item.IsNew && !item.IsSubmodule).ToList();
+            Deleted = items!.Where(item => item.IsDeleted && !item.IsSubmodule).ToList();
+            SubmodulesChanged = items!.Where(item => item.IsSubmodule && item.IsChanged).ToList();
+            SubmodulesDirty = items!.Where(item => item.IsSubmodule && item.IsDirty).ToList();
         }
     }
 

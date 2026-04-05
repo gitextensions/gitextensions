@@ -30,7 +30,7 @@ public partial class GitHostingRemoteParser : RemoteParser
         repository = null;
         gitHosting = null;
 
-        Match m = MatchRegExes(remoteUrl, _gitHostingRegexes);
+        Match? m = MatchRegExes(remoteUrl, _gitHostingRegexes);
 
         if (m is null || !m.Success)
         {

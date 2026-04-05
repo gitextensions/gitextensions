@@ -131,7 +131,7 @@ partial class FormBrowse
         => UpdateTooltipWithShortcut(button, GetShortcutKeys(command));
 
     private static void UpdateTooltipWithShortcut(ToolStripItem button, Keys keys)
-        => button.ToolTipText = button.ToolTipText.UpdateSuffix(keys.ToShortcutKeyToolTipString());
+        => button.ToolTipText = button.ToolTipText!.UpdateSuffix(keys.ToShortcutKeyToolTipString());
 
     private void InsertFetchPullShortcuts()
     {
@@ -145,14 +145,14 @@ partial class FormBrowse
 
         ToolStripButton CreateCorrespondingToolbarButton(ToolStripMenuItem toolStripMenuItem, Command? command = null)
         {
-            string toolTipText = toolStripMenuItem.Text.Replace("&", string.Empty);
+            string toolTipText = toolStripMenuItem.Text!.Replace("&", string.Empty);
             ToolStripButton clonedToolStripMenuItem = new()
             {
                 Image = toolStripMenuItem.Image,
                 Name = FetchPullToolbarShortcutsPrefix + toolStripMenuItem.Name,
                 Size = toolStripMenuItem.Size,
                 Text = toolTipText,
-                ToolTipText = toolTipText.UpdateSuffix(command.HasValue ? GetShortcutKeyTooltipString(command.Value) : null),
+                ToolTipText = toolTipText.UpdateSuffix(command.HasValue ? GetShortcutKeyTooltipString(command.Value) : null!),
                 DisplayStyle = ToolStripItemDisplayStyle.Image,
             };
 
@@ -199,10 +199,10 @@ partial class FormBrowse
 
         setDefaultPullActionDropDown.Items.AddRange([.. setDefaultPullActionDropDownItems]);
 
-        void SetDefaultPullActionMenuItemClick(object sender, EventArgs eventArgs)
+        void SetDefaultPullActionMenuItemClick(object? sender, EventArgs eventArgs)
         {
-            ToolStripMenuItem clickedMenuItem = (ToolStripMenuItem)sender;
-            AppSettings.DefaultPullAction = (GitPullAction)clickedMenuItem.Tag;
+            ToolStripMenuItem clickedMenuItem = (ToolStripMenuItem)sender!;
+            AppSettings.DefaultPullAction = (GitPullAction)clickedMenuItem.Tag!;
             RefreshDefaultPullAction();
         }
     }
@@ -247,7 +247,7 @@ partial class FormBrowse
         // set the first available shell as default
         if (userShell.Visible && !userShellAccessible)
         {
-            IShellDescriptor shell = (IShellDescriptor)userShell.DropDownItems[0].Tag;
+            IShellDescriptor shell = (IShellDescriptor)userShell.DropDownItems[0].Tag!;
             userShell.Image = shell.Icon;
             userShell.ToolTipText = shell.Name;
             userShell.Tag = shell;
@@ -266,7 +266,7 @@ partial class FormBrowse
 
         foreach (ToolStripMenuItem menuItem in setDefaultPullButtonActionToolStripMenuItem.DropDown.Items)
         {
-            menuItem.Checked = (GitPullAction)menuItem.Tag == defaultPullAction;
+            menuItem.Checked = (GitPullAction)menuItem.Tag! == defaultPullAction;
         }
 
         switch (defaultPullAction)

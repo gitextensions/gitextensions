@@ -8,14 +8,14 @@ namespace GitUI;
 /// </summary>
 public class ToolStripEx : ToolStrip, IToolStripEx
 {
-    private readonly ToolStripButton _gripButton;
+    private readonly ToolStripButton _gripButton = null!;
 
     public ToolStripEx()
     {
         Renderer = new ToolStripExSystemRenderer();
 
-        PropertyInfo propGrip = GetType().GetProperty("Grip", BindingFlags.Instance | BindingFlags.NonPublic);
-        _gripButton = propGrip.GetValue(this) as ToolStripButton;
+        PropertyInfo? propGrip = GetType().GetProperty("Grip", BindingFlags.Instance | BindingFlags.NonPublic);
+        _gripButton = (propGrip!.GetValue(this) as ToolStripButton)!;
     }
 
     protected override void OnItemAdded(ToolStripItemEventArgs e)

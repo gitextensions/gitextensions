@@ -77,9 +77,9 @@ public partial class AnsiEscapeUtilities
                                 },
                                 prevMarker: null,
                                 sb,
-                                out TextMarker tm))
+                                out TextMarker? tm))
                         {
-                            textMarkers.Add(tm);
+                            textMarkers.Add(tm!);
                         }
                     }
 
@@ -181,9 +181,9 @@ public partial class AnsiEscapeUtilities
 
             currentHighlight.Length = len;
             TextMarker? prevMarker = textMarkers.Count == 0 ? null : textMarkers[^1];
-            if (TryGetTextMarker(currentHighlight, prevMarker, sb, out TextMarker tm))
+            if (TryGetTextMarker(currentHighlight, prevMarker, sb, out TextMarker? tm))
             {
-                textMarkers.Add(tm);
+                textMarkers.Add(tm!);
             }
 
             currentHighlight.Length = -1;

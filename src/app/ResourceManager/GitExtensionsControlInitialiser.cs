@@ -8,7 +8,7 @@ namespace ResourceManager;
 internal sealed class GitExtensionsControlInitialiser
 {
     private static bool? _isDesignMode;
-    private readonly ITranslate _translate;
+    private readonly ITranslate _translate = null!;
 
     // Indicates whether the initialisation has been signalled as complete.
     private bool _initialiseCompleteCalled;
@@ -72,11 +72,11 @@ internal sealed class GitExtensionsControlInitialiser
         Translator.Translate(_translate, AppSettings.CurrentTranslation);
     }
 
-    private void LoadHandler(object control, EventArgs e)
+    private void LoadHandler(object? control, EventArgs e)
     {
         if (!_initialiseCompleteCalled)
         {
-            throw new Exception($"{control.GetType().Name} must call {nameof(InitializeComplete)} in its constructor, ideally as the final statement.");
+            throw new Exception($"{control?.GetType().Name} must call {nameof(InitializeComplete)} in its constructor, ideally as the final statement.");
         }
     }
 }

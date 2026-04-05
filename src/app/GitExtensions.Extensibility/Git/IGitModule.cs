@@ -149,7 +149,7 @@ public interface IGitModule : IGitExecutor
     /// </remarks>
     IReadOnlyList<string> GetSubmodulesLocalPaths(bool recursive = true);
 
-    IGitModule GetSubmodule(string submoduleName);
+    IGitModule GetSubmodule(string? submoduleName);
 
     /// <summary>
     /// Retrieves registered remotes by running <c>git remote show</c> command.
@@ -196,9 +196,11 @@ public interface IGitModule : IGitExecutor
     SettingsSource GetEffectiveSettings();
     SettingsSource GetLocalSettings();
 
+    [return: NotNullIfNotNull(nameof(s))]
     string? ReEncodeStringFromLossless(string? s);
 
-    string ReEncodeCommitMessage(string s);
+    [return: NotNullIfNotNull(nameof(s))]
+    string? ReEncodeCommitMessage(string? s);
 
     string? GetDescribe(ObjectId commitId, CancellationToken cancellationToken);
 
@@ -206,7 +208,7 @@ public interface IGitModule : IGitExecutor
 
     void SaveBlobAs(string saveAs, string blob, CancellationToken cancellationToken = default);
     Task SaveBlobAsAsync(string saveAs, string blob, CancellationToken cancellationToken = default);
-    Task<(char Code, ObjectId CommitId)> GetSuperprojectCurrentCheckoutAsync();
+    Task<(char Code, ObjectId? CommitId)> GetSuperprojectCurrentCheckoutAsync();
     Task<Patch?> GetCurrentChangesAsync(string? fileName, string? oldFileName, bool staged, string extraDiffArguments, Encoding? encoding = null, bool noLocks = false);
     Task<string?> GetFileContentsAsync(GitItemStatus file);
     IReadOnlyList<GitStash> GetStashes(bool noLocks);

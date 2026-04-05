@@ -122,25 +122,27 @@ public partial class PatchGrid : GitModuleControl
         foreach (string[] parts in commitsInfos)
         {
             string commitHash = parts[1];
-            CommitData? data = rebasedCommitsRevisions.TryGetValue(commitHash, out GitRevision commitRevision)
+            CommitData? data = rebasedCommitsRevisions.TryGetValue(commitHash, out GitRevision? commitRevision)
                 ? _commitDataManager.CreateFromRevision(commitRevision, null)
                 : _commitDataManager.GetCommitData(commitHash);
 
             bool isApplying = currentCommitShortHash is not null && commitHash.StartsWith(currentCommitShortHash);
             isCurrentFound |= isApplying;
 
-            ObjectId objectId;
+            ObjectId? objectId;
             if (data is not null)
             {
                 objectId = data.ObjectId;
             }
             else
             {
-                if (!ObjectId.TryParse(parts[1], out objectId))
+                if (!ObjectId.TryParse(parts[1], out ObjectId? parsedId))
                 {
                     Trace.Write($"PatchGrid: GetInteractiveRebasePatchFiles: Unable to parse commit hash '{parts[1]}' from '{todoCommits}'. Skipping this entry.");
                     continue;
                 }
+
+                objectId = parsedId;
             }
 
             patchFiles.Add(new PatchFile
@@ -248,7 +250,7 @@ public partial class PatchGrid : GitModuleControl
                     else if (string.IsNullOrWhiteSpace(line) || m.Success)
                     {
                         // decode QuotedPrintable text using .NET internal decoder
-                        value = Attachment.CreateAttachmentFromString("", value).Name;
+                        value = Attachment.CreateAttachmentFromString("", value).Name!;
                         switch (key)
                         {
                             case "From":
@@ -287,7 +289,7 @@ public partial class PatchGrid : GitModuleControl
                     }
                     else if (!string.IsNullOrEmpty(line))
                     {
-                        value = AppendQuotedString(value, line.Trim());
+                        value = AppendQuotedString(value, line.Trim())!;
                     }
 
                     if (string.IsNullOrEmpty(line) ||
@@ -395,7 +397,7 @@ public partial class PatchGrid : GitModuleControl
             return;
         }
 
-        PatchFile patchFile = (PatchFile)Patches.SelectedRows[0].DataBoundItem;
+        PatchFile? patchFile = (PatchFile?)Patches.SelectedRows[0].DataBoundItem;
 
         if (patchFile?.ObjectId?.IsArtificial is false)
         {
@@ -404,7 +406,7 @@ public partial class PatchGrid : GitModuleControl
             return;
         }
 
-        if (string.IsNullOrEmpty(patchFile.FullName))
+        if (string.IsNullOrEmpty(patchFile!.FullName))
         {
             MessageBox.Show(_unableToShowPatchDetails.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;

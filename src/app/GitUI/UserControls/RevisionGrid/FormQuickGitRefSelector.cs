@@ -65,7 +65,7 @@ internal class FormQuickGitRefSelector : FormQuickItemSelector
             {
                 IGitRef gitRef = (IGitRef)list[0].Item;
 
-                TranslationString chosenText = gitRef switch
+                TranslationString? chosenText = gitRef switch
                 {
                     { IsHead: true } => localText,
                     { IsRemote: true } => remoteText,

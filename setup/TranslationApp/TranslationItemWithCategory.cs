@@ -12,13 +12,13 @@ public class TranslationItemWithCategory : INotifyPropertyChanged, ICloneable
         _item = new TranslationItem();
     }
 
-    public TranslationItemWithCategory(string category, TranslationItem item)
+    public TranslationItemWithCategory(string? category, TranslationItem item)
     {
         Category = category;
         _item = item;
     }
 
-    public string Category { get; set; }
+    public string? Category { get; set; }
 
     private readonly TranslationItem _item;
     public TranslationItem GetTranslationItem()
@@ -26,25 +26,25 @@ public class TranslationItemWithCategory : INotifyPropertyChanged, ICloneable
         return _item;
     }
 
-    public string Name
+    public string? Name
     {
         get => _item.Name;
         set => _item.Name = value;
     }
 
-    public string Property
+    public string? Property
     {
         get => _item.Property;
         set => _item.Property = value;
     }
 
-    public string NeutralValue
+    public string? NeutralValue
     {
         get => _item.Source;
         set => _item.Source = value;
     }
 
-    public string TranslatedValue
+    public string? TranslatedValue
     {
         get => _item.Value;
         set
@@ -54,7 +54,7 @@ public class TranslationItemWithCategory : INotifyPropertyChanged, ICloneable
         }
     }
 
-    public event PropertyChangedEventHandler PropertyChanged;
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     public bool IsSourceEqual(string value)
     {

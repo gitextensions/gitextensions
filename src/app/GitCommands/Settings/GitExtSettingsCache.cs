@@ -81,9 +81,9 @@ public class GitExtSettingsCache : FileSettingsCache
         }
     }
 
-    protected override string GetValueImpl(string key)
+    protected override string? GetValueImpl(string key)
     {
-        _encodedNameMap.TryGetValue(key, out string value);
+        _encodedNameMap.TryGetValue(key, out string? value);
         return value;
     }
 }

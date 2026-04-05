@@ -446,9 +446,9 @@ public sealed partial class GitModuleTests
         // Assert
         ThreadHelper.JoinableTaskFactory.Run(async () =>
         {
-            (char code, ObjectId commitId) = await moduleSub.GetSuperprojectCurrentCheckoutAsync();
+            (char code, ObjectId? commitId) = await moduleSub.GetSuperprojectCurrentCheckoutAsync();
             ClassicAssert.AreEqual(32, code);
-            ClassicAssert.AreEqual(commitRef, commitId.ToString());
+            ClassicAssert.AreEqual(commitRef, commitId?.ToString());
         });
     }
 

@@ -28,7 +28,7 @@ public sealed partial class AzureDevOpsRemoteParser : RemoteParser
         project = null;
         repository = null;
 
-        Match m = MatchRegExes(remoteUrl, _azureDevopsRegexes);
+        Match? m = MatchRegExes(remoteUrl, _azureDevopsRegexes);
 
         if (m is null || !m.Success)
         {

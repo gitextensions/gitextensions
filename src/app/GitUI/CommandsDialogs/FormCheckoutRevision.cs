@@ -30,7 +30,7 @@ public partial class FormCheckoutRevision : GitExtensionsDialog
     {
         try
         {
-            ObjectId selectedObjectId = commitPickerSmallControl1.SelectedObjectId;
+            ObjectId? selectedObjectId = commitPickerSmallControl1.SelectedObjectId;
 
             if (selectedObjectId is null)
             {
@@ -38,7 +38,7 @@ public partial class FormCheckoutRevision : GitExtensionsDialog
                 return;
             }
 
-            ObjectId checkedOutObjectId = Module.GetCurrentCheckout();
+            ObjectId? checkedOutObjectId = Module.GetCurrentCheckout();
 
             DebugHelpers.Assert(checkedOutObjectId is not null, "checkedOutObjectId is not null");
 

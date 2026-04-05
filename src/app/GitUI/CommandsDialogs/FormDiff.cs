@@ -19,7 +19,7 @@ public partial class FormDiff : GitModuleForm
     private GitRevision? _firstRevision;
     private GitRevision? _secondRevision;
     private readonly GitRevision? _mergeBase;
-    private Lazy<ObjectId?> _currentHead = null!;
+    private Lazy<ObjectId?> _currentHead;
 
     private readonly IGitRevisionTester _revisionTester;
     private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;

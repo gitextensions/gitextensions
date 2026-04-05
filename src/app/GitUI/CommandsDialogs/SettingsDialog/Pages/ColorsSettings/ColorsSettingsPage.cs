@@ -33,7 +33,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
     {
         get
         {
-            return ((FormattedThemeId)_NO_TRANSLATE_cbSelectTheme.SelectedItem).ThemeId;
+            return ((FormattedThemeId)_NO_TRANSLATE_cbSelectTheme.SelectedItem!).ThemeId;
         }
         set
         {
@@ -142,13 +142,13 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
         _NO_TRANSLATE_cbSelectTheme.Items.AddRange(formattedThemeIds);
     }
 
-    private void ComboBoxTheme_SelectedIndexChanged(object sender, EventArgs e) =>
+    private void ComboBoxTheme_SelectedIndexChanged(object? sender, EventArgs e) =>
         _controller.HandleSelectedThemeChanged();
 
-    private void ChkUseSystemVisualStyle_CheckedChanged(object sender, EventArgs e) =>
+    private void ChkUseSystemVisualStyle_CheckedChanged(object? sender, EventArgs e) =>
         _controller.HandleUseSystemVisualStyleChanged();
 
-    private void ChkColorblind_CheckedChanged(object sender, EventArgs e) =>
+    private void ChkColorblind_CheckedChanged(object? sender, EventArgs e) =>
         _controller.HandleUseColorblindVariationChanged();
 
     private void tsmiApplicationFolder_Click(object sender, EventArgs e)
@@ -166,7 +166,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
 
         public ThemeId ThemeId { get; }
 
-        public override bool Equals(object obj) =>
+        public override bool Equals(object? obj) =>
             obj is FormattedThemeId other && Equals(other);
 
         public override readonly int GetHashCode() =>

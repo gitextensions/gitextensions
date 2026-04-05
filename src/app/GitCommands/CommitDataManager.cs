@@ -128,7 +128,7 @@ public sealed class CommitDataManager : ICommitDataManager
             revision.Body ?? revision.Subject)
         { ChildIds = children, Notes = revision.Notes };
 
-        static string FormatUser(string user, string email) => string.IsNullOrWhiteSpace(email) ? user : $"{user} <{email}>";
+        static string? FormatUser(string? user, string? email) => user is null ? null : string.IsNullOrWhiteSpace(email) ? user : $"{user} <{email}>";
     }
 
     private IGitModule GetModule()

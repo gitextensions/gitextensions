@@ -225,7 +225,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private bool _fileBlameHistoryLeftPanelStartupState;
 
     private TabPage? _consoleTabPage;
-    private OutputHistoryControllerBase _outputHistoryController = null!;
+    private OutputHistoryControllerBase? _outputHistoryController;
 
     private readonly Dictionary<Brush, Icon> _overlayIconByBrush = [];
 
@@ -516,7 +516,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 UpdateRepositoryHostsMenu();
 
                 // Check if during plugin loading user left dashboard
-                if (_dashboard!.Visible)
+                if (_dashboard?.Visible is true)
                 {
                     _dashboard.RefreshContent();
                 }
@@ -655,7 +655,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         TranslationUtils.TranslateItemsFromFields(Name, ToolStripFilters, translation);
     }
 
-    public override void CancelButtonClick(object sender, EventArgs e)
+    public override void CancelButtonClick(object? sender, EventArgs e)
     {
         // If a filter is applied, clear it
         if (RevisionGrid.FilterIsApplied())
@@ -1347,7 +1347,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UICommands.StartApplyPatchDialog(this);
     }
 
-    private void userShell_Click(object sender, EventArgs e)
+    private void userShell_Click(object? sender, EventArgs e)
     {
         if (userShell.DropDownButtonPressed)
         {
@@ -2307,7 +2307,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
     }
 
-    private void CommandsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+    private void CommandsToolStripMenuItem_DropDownOpening(object? sender, EventArgs e)
     {
         // Most options do not make sense for artificial commits or no revision selected at all
         IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();

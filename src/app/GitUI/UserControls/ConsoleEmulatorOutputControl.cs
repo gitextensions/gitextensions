@@ -46,7 +46,7 @@ public class ConsoleEmulatorOutputControl : ConsoleOutputControl
     public override void AppendInput(string text)
     {
         Validates.NotNull(_terminal);
-        this.InvokeAndForget(() => _terminal.RunningSession?.WriteInputTextAsync(text));
+        this.InvokeAndForget(() => _terminal.RunningSession?.WriteInputTextAsync(text)!);
     }
 
     public override void KillProcess()
@@ -175,7 +175,7 @@ public partial class ConsoleCommandLineOutputProcessor
         return outputChunk;
     }
 
-    public void AnsiStreamChunkReceived(object sender, AnsiStreamChunkEventArgs args)
+    public void AnsiStreamChunkReceived(object? sender, AnsiStreamChunkEventArgs args)
     {
         string text = args.GetText(GitModule.SystemEncoding);
         string? filtered = FilterOutConsoleCommandLine(text);

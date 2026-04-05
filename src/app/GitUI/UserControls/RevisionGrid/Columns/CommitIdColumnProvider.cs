@@ -39,7 +39,7 @@ internal sealed class CommitIdColumnProvider : ColumnProvider
     private int GetCharLengthForColumnWidth(int width)
     {
         Font monospaceFont = AppSettings.MonospaceFont;
-        if (!_widthByLengthByFont.TryGetValue(monospaceFont, out int[] widthByLength))
+        if (!_widthByLengthByFont.TryGetValue(monospaceFont, out int[]? widthByLength))
         {
             widthByLength = [.. Enumerable.Range(0, ObjectId.Sha1CharCount + 1).Select(c => TextRenderer.MeasureText(new string('8', c), monospaceFont).Width)];
 

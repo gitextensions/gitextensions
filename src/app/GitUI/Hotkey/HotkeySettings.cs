@@ -25,7 +25,7 @@ public class HotkeySettings
         Commands = commands;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is HotkeySettings other && Commands.SequenceEqual(other.Commands);
     }

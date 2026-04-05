@@ -1511,7 +1511,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             }
 
             SuperProjectInfo spi = new();
-            (char code, ObjectId commit) = await gitModule.GetSuperprojectCurrentCheckoutAsync().ConfigureAwait(false);
+            (char code, ObjectId? commit) = await gitModule.GetSuperprojectCurrentCheckoutAsync().ConfigureAwait(false);
             if (code == 'U')
             {
                 // return local and remote hashes

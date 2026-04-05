@@ -105,7 +105,7 @@ public static partial class Commands
 
         return;
 
-        string QuoteSettingValue(string value)
+        string QuoteSettingValue(string? value)
         {
             value = value.Quote();
 

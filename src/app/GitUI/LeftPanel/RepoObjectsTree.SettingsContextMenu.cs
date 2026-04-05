@@ -47,11 +47,11 @@ partial class RepoObjectsTree
 
     private void ReorderTreeNode(TreeNode node, bool up)
     {
-        Tree tree = (Tree)node.Tag;
+        Tree? tree = (Tree?)node.Tag;
         Dictionary<Tree, int> treeToIndex = GetTreeToPositionIndex();
         Dictionary<int, Tree> indexToTree = treeToIndex.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
 
-        int currIndex = treeToIndex[tree];
+        int currIndex = treeToIndex[tree!];
 
         // Find next visible tree to swap with, if any
         int swapIndex = currIndex;
@@ -70,7 +70,7 @@ partial class RepoObjectsTree
         Tree swapWithTree = indexToTree[swapIndex];
 
         // Swap indices
-        treeToIndex[tree] = treeToIndex[swapWithTree];
+        treeToIndex[tree!] = treeToIndex[swapWithTree];
         treeToIndex[swapWithTree] = currIndex;
 
         // Save new indices

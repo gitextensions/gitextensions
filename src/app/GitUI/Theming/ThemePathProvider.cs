@@ -30,7 +30,7 @@ public class ThemePathProvider : IThemePathProvider
         // hence we don't have a separate directory for user themes
         UserThemesDirectory = string.Equals(appDirectory, userDirectory, StringComparison.OrdinalIgnoreCase)
             ? null
-            : Path.Combine(userDirectory, Subdirectory);
+            : Path.Combine(userDirectory!, Subdirectory);
 
         ThemeExtension = ".css";
     }

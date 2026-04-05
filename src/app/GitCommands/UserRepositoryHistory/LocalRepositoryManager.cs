@@ -100,7 +100,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
             await TaskScheduler.Default;
             IList<Repository> repositoryHistory = await LoadRecentHistoryAsync();
 
-            Repository repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
+            Repository? repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
             if (repository is not null)
             {
                 if (repositoryHistory[0] == repository)
@@ -139,7 +139,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
         await TaskScheduler.Default;
 
         IList<Repository> favourites = await LoadFavouriteHistoryAsync();
-        Repository favourite = favourites.FirstOrDefault(f => string.Equals(f.Path, repository.Path, StringComparison.OrdinalIgnoreCase));
+        Repository? favourite = favourites.FirstOrDefault(f => string.Equals(f.Path, repository.Path, StringComparison.OrdinalIgnoreCase));
 
         if (favourite is null)
         {
@@ -220,7 +220,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
 
         await TaskScheduler.Default;
         IList<Repository> repositoryHistory = await LoadFavouriteHistoryAsync();
-        Repository repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
+        Repository? repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
         if (repository is null)
         {
             return repositoryHistory;
@@ -250,7 +250,7 @@ public sealed class LocalRepositoryManager : ILocalRepositoryManager
 
         await TaskScheduler.Default;
         IList<Repository> repositoryHistory = await LoadRecentHistoryAsync();
-        Repository repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
+        Repository? repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
         if (repository is null)
         {
             return repositoryHistory;

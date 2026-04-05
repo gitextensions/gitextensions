@@ -6,7 +6,7 @@ namespace GitUI.CommandsDialogs.Menus;
 
 internal partial class CopyPathsToolStripMenuItem : ToolStripMenuItemEx
 {
-    private Func<IEnumerable<string?>> _getSelectedFilePaths;
+    private Func<IEnumerable<string?>>? _getSelectedFilePaths;
 
     public CopyPathsToolStripMenuItem()
     {
@@ -38,7 +38,7 @@ internal partial class CopyPathsToolStripMenuItem : ToolStripMenuItemEx
         return selectedFilePaths
             .Where(path => path is not null)
             .Distinct()
-            .Select(path => prefixDir.Length == 0 && path.Length == 0 ? "." : convertPath(Path.Combine(prefixDir, path)))
+            .Select(path => prefixDir.Length == 0 && path!.Length == 0 ? "." : convertPath(Path.Combine(prefixDir, path!)))
             .Join(Environment.NewLine);
     }
 

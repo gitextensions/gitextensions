@@ -23,7 +23,7 @@ internal static class HighDpiMouseCursors
 
         static void SetCursor(string fieldName, IDC idc)
         {
-            FieldInfo field = typeof(Cursors).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Static);
+            FieldInfo? field = typeof(Cursors).GetField(fieldName, BindingFlags.NonPublic | BindingFlags.Static);
             field?.SetValue(null, new Cursor(NativeMethods.LoadCursor(IntPtr.Zero, idc)));
         }
     }

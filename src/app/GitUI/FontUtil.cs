@@ -23,7 +23,7 @@ public static class FontUtil
         }
         else
         {
-            MainInstructionFont = SystemFonts.CaptionFont;
+            MainInstructionFont = SystemFonts.CaptionFont!;
             MainInstructionColor = SystemColors.WindowText;
         }
     }

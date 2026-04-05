@@ -151,7 +151,7 @@ public class GitModuleControl : GitExtensionsControl, IGitModuleControl
 
     internal IScriptOptionsProvider FindScriptOptionsProvider()
     {
-        for (Control control = this; control != null; control = control.Parent)
+        for (Control? control = this; control is not null; control = control.Parent)
         {
             if (control is GitModuleControl gitModuleControl && gitModuleControl.GetScriptOptionsProvider() is IScriptOptionsProvider scriptOptionsProvider)
             {

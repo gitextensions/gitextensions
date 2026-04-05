@@ -1,5 +1,6 @@
 using System.ComponentModel;
 using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
@@ -78,6 +79,7 @@ public partial class EditNetSpell : GitModuleControl
         }
     }
 
+    [AllowNull]
     public override string Text
     {
         get
@@ -153,7 +155,7 @@ public partial class EditNetSpell : GitModuleControl
 
     public event EventHandler? SelectionChanged;
 
-    private void EditNetSpellEnabledChanged(object sender, EventArgs e)
+    private void EditNetSpellEnabledChanged(object? sender, EventArgs e)
     {
         if (Enabled)
         {
@@ -407,14 +409,14 @@ public partial class EditNetSpell : GitModuleControl
 
         ThreadHelper.FileAndForget(async () =>
             {
-                IEnumerable<AutoCompleteWord> words = await _autoCompleteListTask.GetValueAsync(cancellationToken);
+                IEnumerable<AutoCompleteWord>? words = await _autoCompleteListTask.GetValueAsync(cancellationToken);
                 await this.SwitchToMainThreadAsync(cancellationToken);
 
-                _spelling.AddAutoCompleteWords(words.Select(x => x.Word));
+                _spelling.AddAutoCompleteWords(words!.Select(x => x.Word));
             });
     }
 
-    private void SpellingMisspelledWord(object sender, SpellingEventArgs e)
+    private void SpellingMisspelledWord(object? sender, SpellingEventArgs e)
     {
         Validates.NotNull(_customUnderlines);
         _customUnderlines.Lines.Add(new TextPos(e.TextIndex, e.TextIndex + e.Word.Length));
@@ -483,7 +485,7 @@ public partial class EditNetSpell : GitModuleControl
         }
     }
 
-    private void SpellingDeletedWord(object sender, SpellingEventArgs e)
+    private void SpellingDeletedWord(object? sender, SpellingEventArgs e)
     {
         int start = TextBox.SelectionStart;
         int length = TextBox.SelectionLength;
@@ -504,7 +506,7 @@ public partial class EditNetSpell : GitModuleControl
         TextBox.Select(start, length);
     }
 
-    private void SpellingReplacedWord(object sender, ReplaceWordEventArgs e)
+    private void SpellingReplacedWord(object? sender, ReplaceWordEventArgs e)
     {
         int start = TextBox.SelectionStart;
         int length = TextBox.SelectionLength;
@@ -569,41 +571,41 @@ public partial class EditNetSpell : GitModuleControl
         SpellCheckContextMenu.Items.Add(mi);
     }
 
-    private void RemoveWordClick(object sender, EventArgs e)
+    private void RemoveWordClick(object? sender, EventArgs e)
     {
         Validates.NotNull(_spelling);
         _spelling.DeleteWord();
         CheckSpelling();
     }
 
-    private void IgnoreWordClick(object sender, EventArgs e)
+    private void IgnoreWordClick(object? sender, EventArgs e)
     {
         Validates.NotNull(_spelling);
         _spelling.IgnoreWord();
         CheckSpelling();
     }
 
-    private void AddToDictionaryClick(object sender, EventArgs e)
+    private void AddToDictionaryClick(object? sender, EventArgs e)
     {
         Validates.NotNull(_spelling);
         _spelling.Dictionary.Add(_spelling.CurrentWord);
         CheckSpelling();
     }
 
-    private void MarkIllFormedLinesInCommitMsgClick(object sender, EventArgs e)
+    private void MarkIllFormedLinesInCommitMsgClick(object? sender, EventArgs e)
     {
         AppSettings.MarkIllFormedLinesInCommitMsg = !AppSettings.MarkIllFormedLinesInCommitMsg;
         CheckSpelling();
     }
 
-    private void SuggestionToolStripItemClick(object sender, EventArgs e)
+    private void SuggestionToolStripItemClick(object? sender, EventArgs e)
     {
         Validates.NotNull(_spelling);
-        _spelling.ReplaceWord(((ToolStripItem)sender).Text);
+        _spelling.ReplaceWord(((ToolStripItem)sender!).Text);
         CheckSpelling();
     }
 
-    private void DicToolStripMenuItemClick(object sender, EventArgs e)
+    private void DicToolStripMenuItemClick(object? sender, EventArgs e)
     {
         // if a Module is available, then always change the "repository local" setting
         // it will set a dictionary only for this Module (repository) locally
@@ -611,13 +613,13 @@ public partial class EditNetSpell : GitModuleControl
         DistributedSettings settings = Module.GetLocalSettings() as DistributedSettings ?? Settings;
         IDetachedSettings detachedSettings = settings.Detached();
 
-        detachedSettings.Dictionary = ((ToolStripItem)sender).Text;
+        detachedSettings.Dictionary = ((ToolStripItem)sender!).Text!;
 
         LoadDictionary();
         CheckSpelling();
     }
 
-    private void SpellCheckTimerTick(object sender, EventArgs e)
+    private void SpellCheckTimerTick(object? sender, EventArgs e)
     {
         Validates.NotNull(_customUnderlines);
         if (!_customUnderlines.IsImeStartingComposition)
@@ -629,7 +631,7 @@ public partial class EditNetSpell : GitModuleControl
         }
     }
 
-    private void TextBoxTextChanged(object sender, EventArgs e)
+    private void TextBoxTextChanged(object? sender, EventArgs e)
     {
         Validates.NotNull(_customUnderlines);
         if (_customUnderlines.IsImeStartingComposition)
@@ -788,12 +790,12 @@ public partial class EditNetSpell : GitModuleControl
         OnKeyPress(e);
     }
 
-    private void TextBox_SelectionChanged(object sender, EventArgs e)
+    private void TextBox_SelectionChanged(object? sender, EventArgs e)
     {
         SelectionChanged?.Invoke(sender, e);
     }
 
-    private void TextBox_DoubleClick(object sender, EventArgs e)
+    private void TextBox_DoubleClick(object? sender, EventArgs e)
     {
         int charIndexAtMousePosition = TextBox.GetCharIndexFromPosition(TextBox.PointToClient(MousePosition));
         (int start, int length) = _wordAtCursorExtractor.GetWordBounds(TextBox.Text, charIndexAtMousePosition);
@@ -832,18 +834,18 @@ public partial class EditNetSpell : GitModuleControl
         HideWatermark();
     }
 
-    private void CutMenuItemClick(object sender, EventArgs e)
+    private void CutMenuItemClick(object? sender, EventArgs e)
     {
         TextBox.Cut();
         CheckSpelling();
     }
 
-    private void CopyMenuItemdClick(object sender, EventArgs e)
+    private void CopyMenuItemdClick(object? sender, EventArgs e)
     {
         TextBox.Copy();
     }
 
-    private void PasteMenuItemClick(object sender, EventArgs e)
+    private void PasteMenuItemClick(object? sender, EventArgs e)
     {
         if (!Clipboard.ContainsText())
         {
@@ -854,13 +856,13 @@ public partial class EditNetSpell : GitModuleControl
         CheckSpelling();
     }
 
-    private void DeleteMenuItemClick(object sender, EventArgs e)
+    private void DeleteMenuItemClick(object? sender, EventArgs e)
     {
         TextBox.SelectedText = string.Empty;
         CheckSpelling();
     }
 
-    private void SelectAllMenuItemClick(object sender, EventArgs e)
+    private void SelectAllMenuItemClick(object? sender, EventArgs e)
     {
         TextBox.SelectAll();
     }
@@ -989,10 +991,10 @@ public partial class EditNetSpell : GitModuleControl
 
     private void AcceptAutoComplete(AutoCompleteWord? completionWord = null)
     {
-        completionWord ??= (AutoCompleteWord)AutoComplete.SelectedItem;
+        completionWord ??= (AutoCompleteWord?)AutoComplete.SelectedItem;
         string word = GetWordAtCursor();
         TextBox.Select(TextBox.SelectionStart - word.Length, word.Length);
-        TextBox.SelectedText = completionWord.Word;
+        TextBox.SelectedText = completionWord!.Word;
         CloseAutoComplete();
     }
 
@@ -1050,8 +1052,8 @@ public partial class EditNetSpell : GitModuleControl
             return;
         }
 
-        IEnumerable<AutoCompleteWord> autoCompleteList = ThreadHelper.JoinableTaskFactory.Run(_autoCompleteListTask.GetValueAsync);
-        IReadOnlyList<AutoCompleteWord> list = autoCompleteList.Where(x => x.Matches(word)).ToList();
+        IEnumerable<AutoCompleteWord>? autoCompleteList = ThreadHelper.JoinableTaskFactory.Run(_autoCompleteListTask.GetValueAsync);
+        IReadOnlyList<AutoCompleteWord> list = autoCompleteList!.Where(x => x.Matches(word)).ToList();
 
         if (list.Count == 0)
         {

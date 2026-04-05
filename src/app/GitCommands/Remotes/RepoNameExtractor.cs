@@ -55,7 +55,7 @@ public sealed class RepoNameExtractor : IRepoNameExtractor
         {
             try
             {
-                return Path.GetFileNameWithoutExtension(Path.GetDirectoryName(remoteUrl));
+                return Path.GetFileNameWithoutExtension(Path.GetDirectoryName(remoteUrl))!;
             }
             catch
             {

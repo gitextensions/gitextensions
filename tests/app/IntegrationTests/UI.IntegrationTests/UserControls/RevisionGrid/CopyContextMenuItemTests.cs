@@ -10,7 +10,7 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid;
 [TestFixture]
 public class CopyContextMenuItemTests
 {
-    private string _originalTranslation = null!;
+    private string? _originalTranslation;
     private CopyContextMenuItem _copyContextMenuItem = null!;
 
     [OneTimeSetUp]

@@ -39,7 +39,7 @@ Send report?");
     private static readonly GitHubUrlBuilder UrlBuilder;
     private SerializableException? _lastException;
     private Report? _lastReport;
-    private string _exceptionInfo;
+    private string? _exceptionInfo;
     private string? _environmentInfo;
 
     [GeneratedRegex(@"\s|\r|\n", RegexOptions.ExplicitCapture)]
@@ -58,7 +58,7 @@ Send report?");
         Icon = Resources.GitExtensionsLogoIcon;
 
         // Scaling
-        exceptionTypeLabel.Image = DpiUtil.Scale(exceptionTypeLabel.Image);
+        exceptionTypeLabel.Image = DpiUtil.Scale(exceptionTypeLabel.Image!);
         exceptionDetails.PropertyColumnWidth = DpiUtil.Scale(101);
         exceptionDetails.InformationColumnWidth = DpiUtil.Scale(350);
 
@@ -77,7 +77,7 @@ Send report?");
         toolTip.SetToolTip(quitButton, _toolTipQuit.Text);
 
         // ToDo: Displaying report contents properly requires some more work.
-        mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]);
+        mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]!);
     }
 
     public DialogResult ShowDialog(IWin32Window? owner, SerializableException exception, string exceptionInfo, string environmentInfo, bool canIgnore, bool showIgnore, bool focusDetails)

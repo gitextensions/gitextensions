@@ -27,11 +27,13 @@ public static class LinqExtensions
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         Func<TKey, TKey, int> comparer)
+        where TKey : notnull
     {
         return source.OrderBy(keySelector, new DelegateComparer<TKey>(comparer));
     }
 
     private sealed class DelegateComparer<T> : IComparer<T>
+        where T : notnull
     {
         private readonly Func<T, T, int> _comparer;
 
@@ -40,9 +42,9 @@ public static class LinqExtensions
             _comparer = comparer;
         }
 
-        public int Compare(T x, T y)
+        public int Compare(T? x, T? y)
         {
-            return _comparer(x, y);
+            return _comparer(x!, y!);
         }
     }
 
@@ -168,7 +170,7 @@ public static class LinqExtensions
     [MustUseReturnValue]
     public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source)
     {
-        foreach (T item in source)
+        foreach (T? item in source)
         {
             if (item is not null)
             {
@@ -181,7 +183,7 @@ public static class LinqExtensions
     [MustUseReturnValue]
     public static IEnumerable<string> WhereNotNullOrWhiteSpace(this IEnumerable<string?> source)
     {
-        foreach (string item in source)
+        foreach (string? item in source)
         {
             if (!string.IsNullOrWhiteSpace(item))
             {

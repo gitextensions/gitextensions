@@ -386,7 +386,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     protected virtual void OnModuleChanged(GitModuleEventArgs args)
     {
-        EventHandler<GitModuleEventArgs> handler = GitModuleChanged;
+        EventHandler<GitModuleEventArgs>? handler = GitModuleChanged;
         handler?.Invoke(this, args);
     }
 
@@ -416,17 +416,17 @@ public partial class UserRepositoriesList : GitExtensionsControl
     private IEnumerable<Repository> GetRepositories()
     {
         return listView1.Items.Cast<ListViewItem>()
-            .Select(lvi => (Repository)lvi.Tag)
-            .Where(r => r is not null);
+            .Select(lvi => (Repository?)lvi.Tag)
+            .WhereNotNull();
     }
 
     private static SelectedRepositoryItem? GetSelectedRepositoryItem(ToolStripItem? menuItem)
     {
         // Retrieve the ContextMenuStrip that owns this ToolStripItem
-        ContextMenuStrip contextMenu = menuItem?.Owner as ContextMenuStrip;
+        ContextMenuStrip? contextMenu = menuItem?.Owner as ContextMenuStrip;
 
         // Get the control that is displaying this context menu
-        SelectedRepositoryItem selected = contextMenu?.Tag as SelectedRepositoryItem;
+        SelectedRepositoryItem? selected = contextMenu?.Tag as SelectedRepositoryItem;
         if (string.IsNullOrWhiteSpace(selected?.Repository?.Path))
         {
             return null;
@@ -442,7 +442,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
             return null;
         }
 
-        Repository selected = listView1.SelectedItems[0].Tag as Repository;
+        Repository? selected = listView1.SelectedItems[0].Tag as Repository;
         if (string.IsNullOrWhiteSpace(selected?.Path))
         {
             return null;
@@ -454,7 +454,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
     private ListViewGroup GetTileGroup(Repository repository)
     {
         return listView1.Groups.Cast<ListViewGroup>()
-            .SingleOrDefault(x => GroupHeaderComparer.Equals(x.Header, repository.Category));
+            .SingleOrDefault(x => GroupHeaderComparer.Equals(x.Header, repository.Category))!;
     }
 
     private Size GetTileSize(IEnumerable<RecentRepoInfo> recentRepositories, IEnumerable<RecentRepoInfo> favouriteRepositories)
@@ -492,7 +492,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private static void RepositoryContextAction(ToolStripItem? menuItem, Action<SelectedRepositoryItem> action)
     {
-        SelectedRepositoryItem selected = GetSelectedRepositoryItem(menuItem);
+        SelectedRepositoryItem? selected = GetSelectedRepositoryItem(menuItem);
         if (selected is not null)
         {
             action(selected);
@@ -547,7 +547,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
         return dialogResult == DialogResult.Yes;
     }
 
-    private void UpdateCategoryName(string originalName, string? newName)
+    private void UpdateCategoryName(string? originalName, string? newName)
     {
         foreach (Repository repository in GetRepositories().Where(r => r.Category == originalName))
         {
@@ -565,7 +565,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
     {
-        Repository selected = GetSelectedRepository();
+        Repository? selected = GetSelectedRepository();
 
         tsmiRemoveFromList.Visible =
             toolStripMenuItem1.Visible =
@@ -745,15 +745,15 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private void RecentRepositoriesList_Load(object sender, EventArgs e)
     {
-        if (Parent.FindForm() is not FormBrowse form)
+        if (Parent!.FindForm() is not FormBrowse form)
         {
             return;
         }
 
         ToolStripItem[] menus = [mnuConfigure];
-        MenuStrip menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "mainMenuStrip");
+        MenuStrip? menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "mainMenuStrip");
         Validates.NotNull(menuStrip);
-        ToolStripMenuItem dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
+        ToolStripMenuItem? dashboardMenu = menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem") as ToolStripMenuItem;
         dashboardMenu?.DropDownItems.AddRange(menus);
 
         BeginInvoke(textBoxSearch.Focus);
@@ -801,15 +801,15 @@ public partial class UserRepositoriesList : GitExtensionsControl
         });
     }
 
-    private void tsmiCategory_Click(object sender, EventArgs e)
+    private void tsmiCategory_Click(object? sender, EventArgs e)
     {
-        SelectedRepositoryItem selectedRepositoryItem = GetSelectedRepositoryItem((sender as ToolStripMenuItem)?.OwnerItem);
+        SelectedRepositoryItem? selectedRepositoryItem = GetSelectedRepositoryItem((sender as ToolStripMenuItem)?.OwnerItem);
         if (selectedRepositoryItem is null)
         {
             return;
         }
 
-        string category = (sender as ToolStripMenuItem)?.Tag as string;
+        string? category = (sender as ToolStripMenuItem)?.Tag as string;
         ThreadHelper.JoinableTaskFactory.Run(() => Controller.AssignCategoryAsync(selectedRepositoryItem.Repository, category));
         ShowRecentRepositories();
     }
@@ -852,11 +852,11 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private void tsmiCategoryRename_Click(object sender, EventArgs e)
     {
-        ListViewGroup categoryGroup = (ListViewGroup)contextMenuStripCategory.Tag;
-        string originalName = categoryGroup.Name;
+        ListViewGroup categoryGroup = (ListViewGroup)contextMenuStripCategory.Tag!;
+        string? originalName = categoryGroup.Name;
 
         List<string> categories = GetCategories();
-        categories.Remove(originalName);
+        categories.Remove(originalName!);
 
         if (PromptCategoryName(categories, originalName, out string? newName))
         {
@@ -866,8 +866,8 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private void tsmiCategoryDelete_Click(object sender, EventArgs e)
     {
-        ListViewGroup categoryGroup = (ListViewGroup)contextMenuStripCategory.Tag;
-        string name = categoryGroup.Name;
+        ListViewGroup categoryGroup = (ListViewGroup)contextMenuStripCategory.Tag!;
+        string? name = categoryGroup.Name;
         string question = string.Format(_deleteCategoryQuestion.Text, name, categoryGroup.Items.Count);
 
         if (!PromptUserConfirm(question, _deleteCategoryCaption.Text))
@@ -896,9 +896,9 @@ public partial class UserRepositoriesList : GitExtensionsControl
         ShowRecentRepositories();
     }
 
-    private void OnDragDrop(object sender, DragEventArgs e)
+    private void OnDragDrop(object? sender, DragEventArgs e)
     {
-        if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
+        if (e.Data!.GetData(DataFormats.FileDrop) is string[] fileNameArray)
         {
             if (fileNameArray.Length != 1)
             {
@@ -923,9 +923,9 @@ public partial class UserRepositoriesList : GitExtensionsControl
         }
     }
 
-    private static void OnDragEnter(object sender, DragEventArgs e)
+    private static void OnDragEnter(object? sender, DragEventArgs e)
     {
-        if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
+        if (e.Data!.GetData(DataFormats.FileDrop) is string[] fileNameArray)
         {
             if (fileNameArray.Length != 1)
             {

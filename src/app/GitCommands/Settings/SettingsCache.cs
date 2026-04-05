@@ -67,11 +67,11 @@ public abstract class SettingsCache : IDisposable
             });
     }
 
-    public void Import(IEnumerable<(string name, string value)> keyValuePairs)
+    public void Import(IEnumerable<(string name, string? value)> keyValuePairs)
     {
         LockedAction(() =>
             {
-                foreach ((string key, string value) in keyValuePairs)
+                foreach ((string key, string? value) in keyValuePairs)
                 {
                     if (value is not null)
                     {

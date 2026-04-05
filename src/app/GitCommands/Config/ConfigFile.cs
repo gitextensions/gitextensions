@@ -152,7 +152,7 @@ public class ConfigFile : IConfigFile
         string configSectionName = setting[..keyIndex];
         string keyName = setting[(keyIndex + 1)..];
 
-        IConfigSection configSection = FindConfigSection(configSectionName);
+        IConfigSection? configSection = FindConfigSection(configSectionName);
 
         if (configSection is null)
         {
@@ -174,7 +174,7 @@ public class ConfigFile : IConfigFile
         string configSectionName = setting[..keyIndex];
         string keyName = setting[(keyIndex + 1)..];
 
-        IConfigSection configSection = FindConfigSection(configSectionName);
+        IConfigSection? configSection = FindConfigSection(configSectionName);
 
         if (configSection is null)
         {
@@ -186,7 +186,7 @@ public class ConfigFile : IConfigFile
 
     public IConfigSection FindOrCreateConfigSection(string name)
     {
-        IConfigSection result = FindConfigSection(name);
+        IConfigSection? result = FindConfigSection(name);
         if (result is null)
         {
             result = new ConfigSection(name, true);
@@ -208,7 +208,7 @@ public class ConfigFile : IConfigFile
 
     public void RemoveConfigSection(string configSectionName)
     {
-        IConfigSection configSection = FindConfigSection(configSectionName);
+        IConfigSection? configSection = FindConfigSection(configSectionName);
 
         if (configSection is null)
         {

@@ -38,6 +38,6 @@ public class Report
         serializer.Serialize(stream, this);
         stream.Position = 0;
         XDocument doc = XDocument.Load(stream);
-        return doc.Root.ToString();
+        return doc.Root!.ToString();
     }
 }

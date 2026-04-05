@@ -132,6 +132,6 @@ public sealed partial class FormCommitTemplateSettings : GitExtensionsDialog
 
     private void checkBoxRegexEnabled_CheckedChanged(object sender, EventArgs e)
     {
-        _commitTemplates[_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].IsRegex = checkBoxRegexEnabled.Checked;
+        _commitTemplates![_NO_TRANSLATE_comboBoxCommitTemplates.SelectedIndex].IsRegex = checkBoxRegexEnabled.Checked;
     }
 }

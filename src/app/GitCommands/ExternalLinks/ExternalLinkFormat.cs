@@ -24,7 +24,7 @@ public class ExternalLinkFormat
         string? uri;
         try
         {
-            caption = string.Format(Caption, groupsArray);
+            caption = string.Format(Caption!, groupsArray);
             Validates.NotNull(Format);
             uri = Format.Replace("%COMMIT_HASH%", revision.Guid);
             uri = string.Format(uri, groupsArray);

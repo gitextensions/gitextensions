@@ -108,7 +108,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
 
         Worktrees.DataSource = _worktrees;
 
-        Font font = Worktrees.DefaultCellStyle.Font;
+        Font font = Worktrees.DefaultCellStyle.Font!;
         Font deletedFont = new(font.FontFamily, font.Size, font.Style | FontStyle.Strikeout);
 
         for (int i = 0; i < Worktrees.Rows.Count; i++)
@@ -224,7 +224,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
 
     private void OpenWorktree(string workTreePath)
     {
-        ((FormBrowse)Owner).SetWorkingDir(System.IO.Path.GetFullPath(workTreePath));
+        ((FormBrowse)Owner!).SetWorkingDir(System.IO.Path.GetFullPath(workTreePath));
         Close();
     }
 
@@ -239,7 +239,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
 
     private bool CanActOnSelectedWorkspace(out WorkTree workTree)
     {
-        workTree = null;
+        workTree = null!;
 
         if (_worktrees == null || _worktrees.Count == 1 || Worktrees.SelectedRows.Count == 0)
         {
@@ -257,11 +257,11 @@ public partial class FormManageWorktree : GitExtensionsDialog
     }
 
     private bool IsCurrentlyOpenedWorktree(WorkTree workTree)
-        => new DirectoryInfo(UICommands.Module.WorkingDir).FullName.TrimEnd('\\') == new DirectoryInfo(workTree.Path).FullName.TrimEnd('\\');
+        => new DirectoryInfo(UICommands.Module.WorkingDir).FullName.TrimEnd('\\') == new DirectoryInfo(workTree.Path!).FullName.TrimEnd('\\');
 
     private void buttonCreateNewWorktree_Click(object sender, EventArgs e)
     {
-        using FormCreateWorktree formCreateWorktree = new(UICommands, _worktrees[0].Path);
+        using FormCreateWorktree formCreateWorktree = new(UICommands, _worktrees![0].Path!);
         DialogResult dialogResult = formCreateWorktree.ShowDialog(this);
         if (dialogResult != DialogResult.OK)
         {

@@ -57,7 +57,7 @@ public sealed class RepositoryStorage : IRepositoryStorage
             return [];
         }
 
-        IReadOnlyList<Repository> history = _repositorySerialiser.Deserialize(setting);
+        IReadOnlyList<Repository>? history = _repositorySerialiser.Deserialize(setting);
         if (history is null)
         {
             return [];
@@ -82,7 +82,7 @@ public sealed class RepositoryStorage : IRepositoryStorage
 
         ArgumentNullException.ThrowIfNull(repositories);
 
-        string xml = _repositorySerialiser.Serialize(repositories);
+        string? xml = _repositorySerialiser.Serialize(repositories);
         if (xml is null)
         {
             return;

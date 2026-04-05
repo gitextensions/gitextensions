@@ -32,7 +32,7 @@ public partial class FormAddSubmodule : GitModuleForm
 
     private void BrowseClick(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this, Directory.Text);
+        string? userSelectedPath = OsShellUtil.PickFolder(this, Directory.Text);
 
         if (userSelectedPath is not null)
         {

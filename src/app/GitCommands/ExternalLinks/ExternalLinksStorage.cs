@@ -27,7 +27,7 @@ public sealed class ExternalLinksStorage : IExternalLinksStorage
     /// </summary>
     public IReadOnlyList<ExternalLinkDefinition>? Load(DistributedSettings settings)
     {
-        string xml = settings.GetString(SettingName, null);
+        string? xml = settings.GetString(SettingName, null);
         return LoadFromXmlString(xml);
     }
 

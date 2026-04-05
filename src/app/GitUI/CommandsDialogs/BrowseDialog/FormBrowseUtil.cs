@@ -6,7 +6,7 @@ internal static class FormBrowseUtil
 {
     public static bool FileOrParentDirectoryExists(string path)
     {
-        return File.Exists(path) || (Directory.Exists(path) && new FileInfo(path).Directory.Exists);
+        return File.Exists(path) || (Directory.Exists(path) && new FileInfo(path).Directory!.Exists);
     }
 
     public static bool IsFileOrDirectory(string? path)
@@ -24,7 +24,7 @@ internal static class FormBrowseUtil
         else if (Directory.Exists(path))
         {
             FileInfo fileInfo = new(path);
-            OsShellUtil.OpenWithFileExplorer(fileInfo.Directory.FullName);
+            OsShellUtil.OpenWithFileExplorer(fileInfo.Directory!.FullName);
         }
     }
 

@@ -48,7 +48,7 @@ internal sealed class PathFormatter
 
                 BinarySearch.Find(min: 0, count: maxStep + 1, step =>
                 {
-                (string? tmpPrefix, string? tmpText, string? tmpSuffix) = FormatString(name, oldName, step, isNameTruncated: step % 2 == 0);
+                    (string? tmpPrefix, string? tmpText, string? tmpSuffix) = FormatString(name, oldName, step, isNameTruncated: step % 2 == 0);
                     int measuredWidth = MeasureString(tmpPrefix, tmpText, tmpSuffix).Width;
                     bool isShortEnough = measuredWidth <= maxWidth;
 

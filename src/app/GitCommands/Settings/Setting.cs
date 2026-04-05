@@ -48,7 +48,7 @@ public static class Setting
         {
             get
             {
-                object storedValue = GetValue(Name);
+                object? storedValue = GetValue(Name);
 
                 if (default(T) is null)
                 {
@@ -68,7 +68,7 @@ public static class Setting
 
             set
             {
-                object storedValue = GetValue(Name);
+                object? storedValue = GetValue(Name);
 
                 if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
                 {
@@ -111,7 +111,7 @@ public static class Setting
                     }
                 }
 
-                object storedValue = GetValue(Name);
+                object? storedValue = GetValue(Name);
 
                 return storedValue is null;
             }

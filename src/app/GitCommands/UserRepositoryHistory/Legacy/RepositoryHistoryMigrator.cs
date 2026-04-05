@@ -79,7 +79,7 @@ public sealed class RepositoryHistoryMigrator : IRepositoryHistoryMigrator
 
             foreach (Repository repository in category.Repositories)
             {
-                Current.Repository repo = history.FirstOrDefault(hr => hr.Path == repository.Path);
+                Current.Repository? repo = history.FirstOrDefault(hr => hr.Path == repository.Path);
                 if (repo is null)
                 {
                     repo = new Current.Repository(repository.Path!);

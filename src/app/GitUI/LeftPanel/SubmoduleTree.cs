@@ -32,12 +32,12 @@ internal sealed class SubmoduleTree : Tree
         _submoduleStatusProvider.StatusUpdated -= Provider_StatusUpdated;
     }
 
-    private void Provider_StatusUpdating(object sender, EventArgs e)
+    private void Provider_StatusUpdating(object? sender, EventArgs e)
     {
         _currentNodes = null;
     }
 
-    private void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
+    private void Provider_StatusUpdated(object? sender, SubmoduleStatusEventArgs e)
     {
         _currentSubmoduleInfo = e;
 
@@ -49,7 +49,7 @@ internal sealed class SubmoduleTree : Tree
 
     private void OnStatusUpdated(SubmoduleStatusEventArgs e)
     {
-        TreeViewNode.TreeView.InvokeAndForget(async () =>
+        TreeViewNode.TreeView!.InvokeAndForget(async () =>
         {
             CancellationTokenSource? cts = null;
             Task<Nodes>? loadNodesTask = null;
@@ -101,7 +101,7 @@ internal sealed class SubmoduleTree : Tree
                         loadNodesTask = LoadNodesAsync(e.Info, cts.Token);
                         return loadNodesTask;
                     },
-                    getRefs: null);
+                    getRefs: null!);
                 await joinableTask.JoinAsync(e.Token);
             }
 
@@ -192,7 +192,7 @@ internal sealed class SubmoduleTree : Tree
     {
         Validates.NotNull(result.TopProject);
 
-        GitModule threadModule = (GitModule?)result.Module;
+        GitModule? threadModule = (GitModule?)result.Module;
 
         Validates.NotNull(threadModule);
 
@@ -213,7 +213,7 @@ internal sealed class SubmoduleTree : Tree
         List<string> modulePaths = [.. result.AllSubmodules.Select(info => info.Path)];
 
         // Add current and parent module paths
-        IGitModule parentModule = threadModule;
+        IGitModule? parentModule = threadModule;
 
         while (parentModule is not null)
         {
@@ -234,7 +234,7 @@ internal sealed class SubmoduleTree : Tree
                 continue;
             }
 
-            string localPath = Path.GetDirectoryName(submoduleInfo.Path[superPath.Length..]).ToPosixPath();
+            string? localPath = Path.GetDirectoryName(submoduleInfo.Path[superPath.Length..]).ToPosixPath();
 
             bool isCurrent = submoduleInfo.Bold;
 
@@ -242,7 +242,7 @@ internal sealed class SubmoduleTree : Tree
                 submoduleInfo,
                 isCurrent,
                 isCurrent ? result.CurrentSubmoduleStatus : null,
-                localPath,
+                localPath!,
                 superPath));
         }
 

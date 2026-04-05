@@ -60,9 +60,9 @@ internal sealed class GraphCache
     internal void CopyFrom(GraphCache source)
     {
         Capacity = source.Capacity;
-        Bitmap sourceBitmap = source.GraphBitmap;
-        Allocate(sourceBitmap.Width, sourceBitmap.Height);
-        GraphBitmapGraphics.CompositingMode = CompositingMode.SourceCopy;
+        Bitmap? sourceBitmap = source.GraphBitmap;
+        Allocate(sourceBitmap!.Width, sourceBitmap.Height);
+        GraphBitmapGraphics!.CompositingMode = CompositingMode.SourceCopy;
         GraphBitmapGraphics.DrawImage(sourceBitmap, 0, 0);
         Count = source.Count;
         Head = source.Head;

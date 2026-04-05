@@ -29,12 +29,12 @@ public sealed class CommitTemplateItem : ISerializable
 
     private CommitTemplateItem(SerializationInfo info, StreamingContext context)
     {
-        Name = (string)info.GetValue("Name", typeof(string));
-        Text = (string)info.GetValue("Text", typeof(string));
+        Name = (string)info.GetValue("Name", typeof(string))!;
+        Text = (string)info.GetValue("Text", typeof(string))!;
 
         if (HasKey(info, "IsRegex"))
         {
-            IsRegex = (bool)info.GetValue("IsRegex", typeof(bool));
+            IsRegex = (bool)info.GetValue("IsRegex", typeof(bool))!;
         }
     }
 
@@ -67,7 +67,7 @@ public sealed class CommitTemplateItem : ISerializable
     public static CommitTemplateItem[]? LoadFromSettings()
     {
         string serializedString = AppSettings.CommitTemplates;
-        CommitTemplateItem[] templates = DeserializeCommitTemplates(serializedString, out bool shouldBeUpdated);
+        CommitTemplateItem[]? templates = DeserializeCommitTemplates(serializedString, out bool shouldBeUpdated);
         if (shouldBeUpdated)
         {
             SaveToSettings(templates!);

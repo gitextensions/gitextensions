@@ -72,7 +72,7 @@ public abstract class GitPluginBase : IGitPlugin, ITranslate
     /// false, otherwise </returns>
     public abstract bool Execute(GitUIEventArgs args);
 
-    protected void Translate(string currentTranslation)
+    protected void Translate(string? currentTranslation)
     {
         // Description for old plugin setting processing as key
         Description = Name;
