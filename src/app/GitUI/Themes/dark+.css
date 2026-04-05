@@ -3,10 +3,12 @@
 @import url("dark.css");
 
 /* Application colors */
-.PanelBackground { color: #252526; }
-.EditorBackground { color: #1e1e1e; }
-.LineNumberBackground { color: #303030; }
-.AuthoredHighlight { color: #33331E; }
-.Selection { color: #000076; }
+.PanelBackground { color: #191a1b; }
+.EditorBackground { color: #121314; }
+.LineNumberBackground { color: #252526; }
+.AuthoredHighlight { color: #232c00; }
+.Selection { color: #2d6981; }
+.HighlightAllOccurences { color: #1a475a; }
+.InactiveSelectionHighlight { color: #1e3d4b; }
 
 .Branch { color: #00d76b; }
