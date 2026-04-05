@@ -40,6 +40,23 @@ internal sealed class MessageColumnProvider : ColumnProvider
     private readonly RevisionGridControl _grid;
     private readonly IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
 
+    /// <summary>
+    ///  Caches painted ref label hit regions per row index for mouse hit-testing.
+    /// </summary>
+    private readonly Dictionary<int, List<RefLabelHitInfo>> _refLabelHitInfoByRow = [];
+
+    // Pool of reusable lists to reduce allocations during scrolling.
+    private readonly Stack<List<RefLabelHitInfo>> _hitInfoListPool = new();
+
+    // The ref currently under the mouse cursor, used to draw a highlight border.
+    private IGitRef? _highlightedRef;
+
+    // The row index of the currently highlighted ref label.
+    private int _highlightedRowIndex = -1;
+
+    // The row index of the currently highlighted stash label (which has no IGitRef).
+    private int _highlightedStashRow = -1;
+
     private Settings _settings;
 
     public MessageColumnProvider(RevisionGridControl grid, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder, ICommitDataManager? commitDataManager)
@@ -82,6 +99,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
         List<IGitRef> superprojectRefs = [];
         int offset = ColumnLeftMargin;
 
+        List<RefLabelHitInfo>? hitInfos = null;
+
         if (_grid.TryGetSuperProjectInfo(out SuperProjectInfo? spi))
         {
             // Draw super project references (for submodules)
@@ -111,7 +130,13 @@ internal sealed class MessageColumnProvider : ColumnProvider
                     superprojectRefs.Remove(superprojectRef);
                 }
 
-                DrawRef(e, gitRef, superprojectRef, style, messageBounds, ref offset);
+                bool isHighlighted = _highlightedRowIndex == e.RowIndex && ReferenceEquals(_highlightedRef, gitRef);
+                Rectangle refRect = DrawRef(e, gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted);
+                if (refRect != Rectangle.Empty)
+                {
+                    hitInfos ??= RentHitInfoList();
+                    hitInfos.Add(new RefLabelHitInfo(refRect, gitRef, StashReflogSelector: null));
+                }
             }
         }
 
@@ -119,7 +144,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         if (revision.IsStash || revision.IsAutostash)
         {
-            RevisionGridRefRenderer.DrawRef(
+            bool isStashHighlighted = _highlightedRowIndex == e.RowIndex && _highlightedRef is null && _highlightedStashRow == e.RowIndex;
+            Rectangle stashRect = RevisionGridRefRenderer.DrawRef(
                 e.State.HasFlag(DataGridViewElementStates.Selected),
                 style.NormalFont,
                 ref offset,
@@ -129,7 +155,13 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 messageBounds,
                 e.Graphics,
                 dashedLine: false,
-                fill: _settings.FillRefLabels);
+                fill: _settings.FillRefLabels,
+                highlight: isStashHighlighted);
+            if (stashRect != Rectangle.Empty)
+            {
+                hitInfos ??= RentHitInfoList();
+                hitInfos.Add(new RefLabelHitInfo(stashRect, GitRef: null, StashReflogSelector: revision.ReflogSelector));
+            }
         }
 
         if (revision.IsArtificial)
@@ -139,6 +171,20 @@ internal sealed class MessageColumnProvider : ColumnProvider
         else if (!revision.IsAutostash)
         {
             DrawCommitMessage(e, revision, style, messageBounds, indicator, ref offset);
+        }
+
+        if (hitInfos is not null)
+        {
+            if (_refLabelHitInfoByRow.Remove(e.RowIndex, out List<RefLabelHitInfo>? oldList))
+            {
+                ReturnHitInfoList(oldList);
+            }
+
+            _refLabelHitInfoByRow[e.RowIndex] = hitInfos;
+        }
+        else if (_refLabelHitInfoByRow.Remove(e.RowIndex, out List<RefLabelHitInfo>? oldList))
+        {
+            ReturnHitInfoList(oldList);
         }
     }
 
@@ -366,26 +412,27 @@ internal sealed class MessageColumnProvider : ColumnProvider
         }
     }
 
-    private void DrawRef(
+    private Rectangle DrawRef(
         DataGridViewCellPaintingEventArgs e,
         IGitRef gitRef,
         IGitRef? superprojectRef,
         CellStyle style,
         Rectangle messageBounds,
-        ref int offset)
+        ref int offset,
+        bool highlight)
     {
         if (gitRef.IsBisect)
         {
             if (gitRef.IsBisectGood)
             {
                 DrawImage(e, _bisectGoodImage, messageBounds, ref offset);
-                return;
+                return Rectangle.Empty;
             }
 
             if (gitRef.IsBisectBad)
             {
                 DrawImage(e, _bisectBadImage, messageBounds, ref offset);
-                return;
+                return Rectangle.Empty;
             }
         }
 
@@ -413,7 +460,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             name += " [...]";
         }
 
-        RevisionGridRefRenderer.DrawRef(
+        return RevisionGridRefRenderer.DrawRef(
             e.State.HasFlag(DataGridViewElementStates.Selected),
             font,
             ref offset,
@@ -423,7 +470,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
             messageBounds,
             e.Graphics!,
             dashedLine: superprojectRef is not null,
-            fill: _settings.FillRefLabels);
+            fill: _settings.FillRefLabels,
+            highlight: highlight);
     }
 
     private static void DrawImage(
@@ -572,5 +620,71 @@ internal sealed class MessageColumnProvider : ColumnProvider
         return _settings.NotesInSeparateColumn
             ? revision.Body
             : UIExtensions.FormatBodyAndNotes(revision.Body, revision.Notes);
+    }
+
+    /// <summary>
+    ///  Performs a hit test to find which ref label (if any) contains the given point in the specified row.
+    /// </summary>
+    /// <returns>The matching <see cref="RefLabelHitInfo"/>, or <see langword="null"/> if no ref label was hit.</returns>
+    public RefLabelHitInfo? HitTest(int rowIndex, Point gridClientPoint)
+    {
+        if (!_refLabelHitInfoByRow.TryGetValue(rowIndex, out List<RefLabelHitInfo>? hitInfos))
+        {
+            return null;
+        }
+
+        foreach (RefLabelHitInfo hitInfo in hitInfos)
+        {
+            if (hitInfo.Bounds.Contains(gridClientPoint))
+            {
+                return hitInfo;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    ///  Sets the ref or stash label to be drawn with a highlight border, triggering a repaint if the highlight changed.
+    /// </summary>
+    /// <returns><see langword="true"/> if the highlight state changed and a repaint is needed.</returns>
+    public bool SetHighlight(int rowIndex, RefLabelHitInfo? hitInfo)
+    {
+        IGitRef? gitRef = hitInfo?.GitRef;
+        int stashRow = hitInfo?.StashReflogSelector is not null ? rowIndex : -1;
+
+        if (_highlightedRowIndex == rowIndex && ReferenceEquals(_highlightedRef, gitRef) && _highlightedStashRow == stashRow)
+        {
+            return false;
+        }
+
+        _highlightedRef = gitRef;
+        _highlightedRowIndex = hitInfo is not null ? rowIndex : -1;
+        _highlightedStashRow = stashRow;
+        return true;
+    }
+
+    public override void Clear()
+    {
+        foreach (List<RefLabelHitInfo> list in _refLabelHitInfoByRow.Values)
+        {
+            ReturnHitInfoList(list);
+        }
+
+        _refLabelHitInfoByRow.Clear();
+        _highlightedRef = null;
+        _highlightedRowIndex = -1;
+        _highlightedStashRow = -1;
+    }
+
+    private List<RefLabelHitInfo> RentHitInfoList()
+    {
+        return _hitInfoListPool.TryPop(out List<RefLabelHitInfo>? list) ? list : [];
+    }
+
+    private void ReturnHitInfoList(List<RefLabelHitInfo> list)
+    {
+        list.Clear();
+        _hitInfoListPool.Push(list);
     }
 }

@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Reactive.Concurrency;
@@ -120,6 +120,18 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private readonly TranslationString _noMergeBaseCommit = new("There is no common ancestor for the selected commits.");
     private readonly TranslationString _invalidDiffContainsFilter = new("Filter text '{0}' not valid for \"Diff contains\" filter.");
 
+    private readonly TranslationString _refCheckoutBranch = new("&Checkout this branch");
+    private readonly TranslationString _refMergeIntoCurrent = new("&Merge into current branch");
+    private readonly TranslationString _refRebaseOnto = new("&Rebase current branch onto this");
+    private readonly TranslationString _refRenameBranch = new("Re&name this branch");
+    private readonly TranslationString _refDeleteBranch = new("&Delete this branch");
+    private readonly TranslationString _refDeleteTag = new("&Delete this tag");
+    private readonly TranslationString _refPushBranch = new("&Push this branch");
+    private readonly TranslationString _refApplyStash = new("&Apply stash");
+    private readonly TranslationString _refPopStash = new("P&op stash");
+    private readonly TranslationString _refDropStash = new("Dr&op stash...");
+    private readonly TranslationString _refCopyName = new("Cop&y name to clipboard");
+
     private readonly FilterInfo _filterInfo = new();
     private readonly NavigationHistory _navigationHistory = new();
     private readonly Control _loadingControlText;
@@ -132,6 +144,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private readonly BuildServerWatcher _buildServerWatcher;
     private readonly System.Windows.Forms.Timer _selectionTimer;
     private readonly RevisionGraphColumnProvider _revisionGraphColumnProvider;
+    private readonly MessageColumnProvider _messageColumnProvider;
     private readonly DataGridViewColumn _maximizedColumn;
     private DataGridViewColumn? _lastVisibleResizableColumn;
     private readonly ArtificialCommitChangeCount _workTreeChangeCount = new();
@@ -153,6 +166,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private bool _isRefreshingRevisions;
     private SuperProjectInfo? _superprojectCurrentCheckout;
     private int _latestSelectedRowIndex;
+
+    // Tracks the ref label that was right-clicked so the context menu can offer ref-specific actions.
+    private RefLabelHitInfo? _rightClickedHitInfo;
+
+    // The currently shown ref-specific context menu, kept to dispose before showing a new one.
+    private ContextMenuStrip? _refContextMenu;
 
     /// <summary>
     /// A prefix to use in git log output for parsing file names for individual revisions
@@ -271,8 +290,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         _gridView.CellMouseDown += OnGridViewCellMouseDown;
         _gridView.MouseDoubleClick += OnGridViewDoubleClick;
         _gridView.MouseClick += OnGridViewMouseClick;
-        _gridView.CellMouseMove += (_, e) => _toolTipProvider.OnCellMouseMove(e);
+        _gridView.CellMouseMove += OnGridViewCellMouseMove;
         _gridView.CellMouseEnter += _gridView_CellMouseEnter;
+        _gridView.CellMouseLeave += OnGridViewCellMouseLeave;
 
         // Allow to drop patch file on revision grid
         _gridView.AllowDrop = true;
@@ -284,7 +304,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         GitRevisionSummaryBuilder gitRevisionSummaryBuilder = new();
         _revisionGraphColumnProvider = new RevisionGraphColumnProvider(_gridView._revisionGraph, gitRevisionSummaryBuilder);
         _gridView.AddColumn(_revisionGraphColumnProvider);
-        _gridView.AddColumn(new MessageColumnProvider(this, gitRevisionSummaryBuilder, commitDataManager));
+        _messageColumnProvider = new MessageColumnProvider(this, gitRevisionSummaryBuilder, commitDataManager);
+        _gridView.AddColumn(_messageColumnProvider);
         _gridView.AddColumn(new NotesColumnProvider(this, commitDataManager));
         _gridView.AddColumn(new AvatarColumnProvider(_gridView, AvatarService.DefaultProvider, AvatarService.CacheCleaner));
         _gridView.AddColumn(new AuthorNameColumnProvider(this, _authorHighlighting));
@@ -1841,6 +1862,46 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
+    private void OnGridViewCellMouseMove(object? sender, DataGridViewCellMouseEventArgs e)
+    {
+        _toolTipProvider.OnCellMouseMove(e);
+
+        if (e.RowIndex < 0 || e.ColumnIndex != _messageColumnProvider.Index)
+        {
+            ClearRefHighlight();
+            return;
+        }
+
+        Rectangle cellBounds = _gridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, cutOverflow: false);
+        Point clientPoint = new(cellBounds.X + e.X, cellBounds.Y + e.Y);
+        RefLabelHitInfo? hitInfo = _messageColumnProvider.HitTest(e.RowIndex, clientPoint);
+
+        if (_messageColumnProvider.SetHighlight(e.RowIndex, hitInfo))
+        {
+            _gridView.InvalidateRow(e.RowIndex);
+        }
+
+        _gridView.Cursor = hitInfo is not null ? Cursors.Hand : Cursors.Default;
+    }
+
+    private void OnGridViewCellMouseLeave(object? sender, DataGridViewCellEventArgs e)
+    {
+        ClearRefHighlight();
+    }
+
+    private void ClearRefHighlight()
+    {
+        if (_messageColumnProvider.SetHighlight(-1, hitInfo: null))
+        {
+            _gridView.Invalidate();
+        }
+
+        if (_gridView.Cursor == Cursors.Hand)
+        {
+            _gridView.Cursor = Cursors.Default;
+        }
+    }
+
     private void OnGridViewCellMouseDown(object sender, DataGridViewCellMouseEventArgs e)
     {
         try
@@ -1854,6 +1915,15 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             if (e.Button != MouseButtons.Right)
             {
                 return;
+            }
+
+            // Check if a ref label was right-clicked in the message column
+            _rightClickedHitInfo = null;
+            if (e.RowIndex >= 0 && e.ColumnIndex == _messageColumnProvider.Index)
+            {
+                Rectangle cellBounds = _gridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, cutOverflow: false);
+                Point clientPoint = new(cellBounds.X + e.X, cellBounds.Y + e.Y);
+                _rightClickedHitInfo = _messageColumnProvider.HitTest(e.RowIndex, clientPoint);
             }
 
             if (_latestSelectedRowIndex == e.RowIndex
@@ -2017,6 +2087,24 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     {
         if (LatestSelectedRevision is null)
         {
+            return;
+        }
+
+        // If a ref label was right-clicked, show a focused context menu for that ref
+        if (_rightClickedHitInfo is { } hitInfo)
+        {
+            e.Cancel = true;
+
+            if (hitInfo.GitRef is IGitRef gitRef)
+            {
+                ShowRefContextMenu(gitRef);
+            }
+            else if (hitInfo.StashReflogSelector is not null)
+            {
+                ShowStashContextMenu(hitInfo.StashReflogSelector);
+            }
+
+            _rightClickedHitInfo = null;
             return;
         }
 
@@ -2261,6 +2349,190 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         return _ambiguousRefs.Value.Contains(gitRef.Name)
             ? gitRef.CompleteName
             : gitRef.Name;
+    }
+
+    private void ShowRefContextMenu(IGitRef gitRef)
+    {
+        ContextMenuStrip refMenu = new();
+        bool isBareRepository = Module.IsBareRepository();
+        string currentBranchRef = GitRefName.RefsHeadsPrefix + CurrentBranch.Value;
+        bool isAtCurrentHead = gitRef.ObjectId == CurrentCheckout;
+
+        if (gitRef.IsHead)
+        {
+            if (!isBareRepository && gitRef.CompleteName != currentBranchRef)
+            {
+                ToolStripMenuItem checkout = new(_refCheckoutBranch.Text, Images.BranchCheckout);
+                checkout.Click += (_, _) => UICommands.StartCheckoutBranch(ParentForm, gitRef.Name);
+                refMenu.Items.Add(checkout);
+            }
+
+            if (!isBareRepository && !isAtCurrentHead)
+            {
+                string refUnambiguousName = GetRefUnambiguousName(gitRef);
+                ToolStripMenuItem merge = new(_refMergeIntoCurrent.Text, Images.Merge);
+                merge.Click += (_, _) => UICommands.StartMergeBranchDialog(ParentForm, refUnambiguousName);
+                refMenu.Items.Add(merge);
+
+                ToolStripMenuItem rebase = new(_refRebaseOnto.Text, Images.Rebase);
+                rebase.Click += (_, _) => UICommands.StartRebase(ParentForm, refUnambiguousName);
+                refMenu.Items.Add(rebase);
+            }
+
+            refMenu.Items.Add(new ToolStripSeparator());
+
+            ToolStripMenuItem rename = new(_refRenameBranch.Text, Images.EditFile);
+            rename.Click += (_, _) => UICommands.StartRenameDialog(ParentForm, gitRef.Name);
+            refMenu.Items.Add(rename);
+
+            if (gitRef.CompleteName != currentBranchRef)
+            {
+                ToolStripMenuItem delete = new(_refDeleteBranch.Text, Images.BranchDelete);
+                delete.Click += (_, _) => UICommands.StartDeleteBranchDialog(ParentForm, gitRef.Name);
+                refMenu.Items.Add(delete);
+            }
+
+            if (!isBareRepository)
+            {
+                ToolStripMenuItem push = new(_refPushBranch.Text, Images.Push);
+                push.Click += (_, _) => UICommands.StartPushDialog(ParentForm, pushOnShow: false, forceWithLease: false, out _, gitRef.Name);
+                refMenu.Items.Add(push);
+            }
+        }
+        else if (gitRef.IsRemote)
+        {
+            if (!isBareRepository)
+            {
+                ToolStripMenuItem checkout = new(_refCheckoutBranch.Text, Images.BranchCheckout);
+                checkout.Click += (_, _) => UICommands.StartCheckoutRemoteBranch(ParentForm, gitRef.Name);
+                refMenu.Items.Add(checkout);
+
+                if (!isAtCurrentHead)
+                {
+                    string refUnambiguousName = GetRefUnambiguousName(gitRef);
+                    ToolStripMenuItem merge = new(_refMergeIntoCurrent.Text, Images.Merge);
+                    merge.Click += (_, _) => UICommands.StartMergeBranchDialog(ParentForm, refUnambiguousName);
+                    refMenu.Items.Add(merge);
+
+                    ToolStripMenuItem rebase = new(_refRebaseOnto.Text, Images.Rebase);
+                    rebase.Click += (_, _) => UICommands.StartRebase(ParentForm, refUnambiguousName);
+                    refMenu.Items.Add(rebase);
+                }
+
+                refMenu.Items.Add(new ToolStripSeparator());
+            }
+
+            ToolStripMenuItem delete = new(_refDeleteBranch.Text, Images.BranchDelete);
+            delete.Click += (_, _) => UICommands.StartDeleteRemoteBranchDialog(ParentForm, gitRef.Name);
+            refMenu.Items.Add(delete);
+        }
+        else if (gitRef.IsTag)
+        {
+            if (!isBareRepository && !isAtCurrentHead)
+            {
+                string refUnambiguousName = GetRefUnambiguousName(gitRef);
+                ToolStripMenuItem merge = new(_refMergeIntoCurrent.Text, Images.Merge);
+                merge.Click += (_, _) => UICommands.StartMergeBranchDialog(ParentForm, refUnambiguousName);
+                refMenu.Items.Add(merge);
+
+                refMenu.Items.Add(new ToolStripSeparator());
+            }
+
+            ToolStripMenuItem delete = new(_refDeleteTag.Text, Images.TagDelete);
+            delete.Click += (_, _) => UICommands.StartDeleteTagDialog(ParentForm, gitRef.Name);
+            refMenu.Items.Add(delete);
+        }
+        else if (gitRef.IsStash)
+        {
+            ToolStripMenuItem apply = new(_refApplyStash.Text, Images.Stash);
+            apply.Click += (_, _) =>
+            {
+                UICommands.StashApply(this, LatestSelectedRevision?.ObjectId.ToString());
+                PerformRefreshRevisions();
+            };
+            refMenu.Items.Add(apply);
+
+            ToolStripMenuItem pop = new(_refPopStash.Text, Images.Stash);
+            pop.Click += (_, _) =>
+            {
+                string? stashName = LatestSelectedRevision?.ReflogSelector;
+                if (!string.IsNullOrEmpty(stashName))
+                {
+                    UICommands.StashPop(this, stashName);
+                    PerformRefreshRevisions();
+                }
+            };
+            refMenu.Items.Add(pop);
+
+            ToolStripMenuItem drop = new(_refDropStash.Text, Images.Stash);
+            drop.Click += (_, _) => DropStashToolStripMenuItemClick(drop, EventArgs.Empty);
+            refMenu.Items.Add(drop);
+        }
+
+        if (refMenu.Items.Count == 0)
+        {
+            refMenu.Dispose();
+            return;
+        }
+
+        refMenu.Items.Add(new ToolStripSeparator());
+        ToolStripMenuItem copy = new(_refCopyName.Text, Images.CopyToClipboard);
+        copy.Click += (_, _) => ClipboardUtil.TrySetText(gitRef.Name);
+        refMenu.Items.Add(copy);
+
+        ShowRefSpecificContextMenu(refMenu);
+    }
+
+    private void ShowStashContextMenu(string stashReflogSelector)
+    {
+        GitRevision? revision = LatestSelectedRevision;
+        if (revision is null || (!revision.IsStash && !revision.IsAutostash))
+        {
+            return;
+        }
+
+        ContextMenuStrip stashMenu = new();
+
+        ToolStripMenuItem apply = new(_refApplyStash.Text, Images.Stash);
+        apply.Click += (_, _) =>
+        {
+            UICommands.StashApply(this, revision.ObjectId.ToString());
+            PerformRefreshRevisions();
+        };
+        stashMenu.Items.Add(apply);
+
+        if (revision.IsStash)
+        {
+            ToolStripMenuItem pop = new(_refPopStash.Text, Images.Stash);
+            pop.Click += (_, _) =>
+            {
+                UICommands.StashPop(this, stashReflogSelector);
+                PerformRefreshRevisions();
+            };
+            stashMenu.Items.Add(pop);
+
+            ToolStripMenuItem drop = new(_refDropStash.Text, Images.Stash);
+            drop.Click += (_, _) => DropStashToolStripMenuItemClick(drop, EventArgs.Empty);
+            stashMenu.Items.Add(drop);
+        }
+
+        stashMenu.Items.Add(new ToolStripSeparator());
+        ToolStripMenuItem copy = new(_refCopyName.Text, Images.CopyToClipboard);
+        copy.Click += (_, _) => ClipboardUtil.TrySetText(stashReflogSelector);
+        stashMenu.Items.Add(copy);
+
+        ShowRefSpecificContextMenu(stashMenu);
+    }
+
+    private void ShowRefSpecificContextMenu(ContextMenuStrip menu)
+    {
+        // Dispose the previous menu before showing a new one. This avoids an
+        // ObjectDisposedException when rapidly right-clicking different ref labels,
+        // where WinForms tries to close the previous menu after it's already disposed.
+        _refContextMenu?.Dispose();
+        _refContextMenu = menu;
+        Point cursorPosition = _gridView.PointToClient(Cursor.Position);
+        menu.Show(_gridView, cursorPosition);
     }
 
     private void RebaseOnToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
