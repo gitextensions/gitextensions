@@ -9355,6 +9355,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Show git &amp;notes</source>
         <target />
       </trans-unit>
+      <trans-unit id="ShowSessionCheckpoints.Text">
+        <source>Show session checkpoints</source>
+        <target />
+      </trans-unit>
       <trans-unit id="showIdColumnToolStripMenuItem.Text">
         <source>Show SHA&amp;-1 column</source>
         <target />

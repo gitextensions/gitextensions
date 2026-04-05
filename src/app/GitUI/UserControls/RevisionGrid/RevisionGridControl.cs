@@ -2672,6 +2672,12 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         PerformRefreshRevisions();
     }
 
+    internal void ToggleShowSessionRefs()
+    {
+        AppSettings.ShowSessionRefs = !AppSettings.ShowSessionRefs;
+        PerformRefreshRevisions();
+    }
+
     internal void ToggleShowGitNotesColumn()
     {
         AppSettings.ShowGitNotesColumn.Value = !AppSettings.ShowGitNotesColumn.Value;
