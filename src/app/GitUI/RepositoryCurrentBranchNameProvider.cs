@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 
 namespace GitUI;
@@ -27,6 +28,6 @@ internal sealed class RepositoryCurrentBranchNameProvider(IGitExecutorProvider e
             return string.Empty;
         }
 
-        return _executorProvider.GetExecutor(repositoryPath).GetSelectedBranch();
+        return Commands.GetSelectedBranch(_executorProvider.GetExecutor(repositoryPath));
     }
 }

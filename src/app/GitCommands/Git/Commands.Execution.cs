@@ -1,4 +1,6 @@
-﻿using GitExtensions.Extensibility;
+﻿using System.Diagnostics;
+using System.Security;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 
@@ -42,6 +44,97 @@ public static partial class Commands
 
         result.ThrowIfErrorExit("Error getting config values");
         return "unreachable code";
+    }
+
+    /// <summary>
+    ///  Gets the name of the currently checked out branch.
+    /// </summary>
+    /// <param name="gitExecutor">The IGitExecutor for the repo of interest.</param>
+    /// <param name="emptyIfDetached">Defines the value returned if HEAD is detached. <see langword="true"/> to return <see cref="string.Empty"/>; <see langword="false"/> to return "(no branch)".</param>
+    /// <returns>
+    ///  The name of the branch (for example: "main"); the value requested by <paramref name="emptyIfDetached"/>, if HEAD is detached; <see cref="string.Empty"/> if it fails to retrieve the branch name for any reason (for example, if the repository is not reachable).
+    /// </returns>
+    public static string GetSelectedBranch(IGitExecutor gitExecutor, bool emptyIfDetached = false)
+    {
+        if (!gitExecutor.IsReftableRepo && !string.IsNullOrEmpty(gitExecutor.WorkingDir))
+        {
+            string head = GetSelectedBranchFast(gitExecutor.GetGitDirectory(), emptyIfDetached);
+
+            if (head == ".invalid")
+            {
+                gitExecutor.IsReftableRepo = true;
+            }
+            else if (head.Length > 0)
+            {
+                gitExecutor.IsReftableRepo = false;
+                return head;
+            }
+        }
+
+        GitArgumentBuilder args = new("symbolic-ref")
+        {
+            "--quiet",
+            "HEAD"
+        };
+
+        try
+        {
+            ExecutionResult result = gitExecutor.GitExecutable.Execute(args, throwOnErrorExit: false);
+
+            if (result.ExitedSuccessfully)
+            {
+                return result.StandardOutput[GitRefName.RefsHeadsPrefix.Length..].TrimEnd();
+            }
+
+            return emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
+        }
+        catch (Exception ex)
+        {
+            Trace.WriteLine(ex);
+        }
+
+        return DetachedHeadParser.UnknownBranchName;
+
+        // Attempt to read the branch name from the HEAD file instead of calling a git command.
+        // Dirty but fast. This sometimes fails. In reftable repos, it always returns ".invalid".
+        static string GetSelectedBranchFast(string gitDirectory, bool emptyIfDetached)
+        {
+            string headFileContents;
+            try
+            {
+                // eg. "/path/to/repo/.git/HEAD"
+                string headFileName = Path.Combine(gitDirectory, "HEAD");
+
+                if (!File.Exists(headFileName))
+                {
+                    return string.Empty;
+                }
+
+                headFileContents = File.ReadAllText(headFileName, GitExecutor.SystemEncoding);
+            }
+            catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is SecurityException)
+            {
+                // ignore inaccessible file
+                return string.Empty;
+            }
+
+            // eg. "ref: refs/heads/master"
+            //     "9601551c564b48208bccd50b705264e9bd68140d"
+
+            if (!headFileContents.StartsWith("ref: "))
+            {
+                return emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
+            }
+
+            const string prefix = "ref: refs/heads/";
+
+            if (!headFileContents.StartsWith(prefix))
+            {
+                return string.Empty;
+            }
+
+            return headFileContents[prefix.Length..].TrimEnd();
+        }
     }
 
     /// <summary>

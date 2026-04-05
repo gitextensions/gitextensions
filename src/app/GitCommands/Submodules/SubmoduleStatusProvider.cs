@@ -276,7 +276,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
     private string GetModuleBranch(string path, string noBranchText)
     {
         // Note: This will fail for WSL symbolic links to .git directories
-        string branch = _executorProvider.GetExecutor(path).GetSelectedBranch();
+        string branch = Commands.GetSelectedBranch(_executorProvider.GetExecutor(path));
         string text = DetachedHeadParser.IsDetachedHead(branch) ? noBranchText : branch;
         return $"({text})";
     }

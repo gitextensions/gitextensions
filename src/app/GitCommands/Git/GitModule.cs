@@ -1,7 +1,6 @@
 ﻿using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Config;
@@ -177,15 +176,7 @@ public sealed partial class GitModule : IGitModule
 
     public IGitCommandRunner GitCommandRunner => _executor.GitCommandRunner;
 
-    public string GetSelectedBranch(bool emptyIfDetached = false) => _executor.GetSelectedBranch(emptyIfDetached);
-
-    public IExecutable GitWindowsExecutable => _executor.GitWindowsExecutable;
-
-    public IGitCommandRunner GitWindowsCommandRunner => _executor.GitWindowsCommandRunner;
-
-    public string WslDistro => _executor.WslDistro;
-
-    public string GetGitDirectory() => _executor.GetGitDirectory();
+    public string GetSelectedBranch(bool emptyIfDetached = false) => Commands.GetSelectedBranch(_executor, emptyIfDetached);
 
     /// <summary>
     ///  Gets the system encoding.
