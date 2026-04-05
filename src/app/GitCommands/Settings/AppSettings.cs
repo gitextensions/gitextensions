@@ -2003,7 +2003,7 @@ public static partial class AppSettings
     /// </summary>
     public static string PrioritizedBuildServerRemoteNames
     {
-        get => GetString("PrioritizedBuildServerRemoteNames", "upstream|origin");
+        get => GetString("PrioritizedBuildServerRemoteNames", "upstream|origin|remote");
         set => SetString("PrioritizedBuildServerRemoteNames", value);
     }
 
