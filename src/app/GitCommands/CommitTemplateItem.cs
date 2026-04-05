@@ -1,10 +1,8 @@
-﻿using System.Runtime.Serialization;
-using GitCommands.Utils;
+﻿using GitCommands.Utils;
 
 namespace GitCommands;
 
-[Serializable]
-public sealed class CommitTemplateItem : ISerializable
+public sealed class CommitTemplateItem
 {
     public string Name { get; set; }
     public string Text { get; set; }
@@ -25,37 +23,6 @@ public sealed class CommitTemplateItem : ISerializable
         Text = string.Empty;
         Icon = null;
         IsRegex = false;
-    }
-
-    private CommitTemplateItem(SerializationInfo info, StreamingContext context)
-    {
-        Name = (string)info.GetValue("Name", typeof(string));
-        Text = (string)info.GetValue("Text", typeof(string));
-
-        if (HasKey(info, "IsRegex"))
-        {
-            IsRegex = (bool)info.GetValue("IsRegex", typeof(bool));
-        }
-    }
-
-    public void GetObjectData(SerializationInfo info, StreamingContext context)
-    {
-        info.AddValue("Name", Name);
-        info.AddValue("Text", Text);
-        info.AddValue("IsRegex", IsRegex);
-    }
-
-    private bool HasKey(SerializationInfo info, string key)
-    {
-        foreach (SerializationEntry entry in info)
-        {
-            if (entry.Name == key)
-            {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     public static void SaveToSettings(CommitTemplateItem[]? items)

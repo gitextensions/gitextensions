@@ -3,7 +3,6 @@ using System.Xml.Serialization;
 
 namespace ResourceManager;
 
-[Serializable]
 [DebuggerDisplay("Hotkey: {CommandCode} {Name}")]
 public class HotkeyCommand
 {

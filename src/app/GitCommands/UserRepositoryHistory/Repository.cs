@@ -2,7 +2,6 @@
 
 namespace GitCommands.UserRepositoryHistory;
 
-[Serializable]
 public class Repository
 {
     private string? _path;
