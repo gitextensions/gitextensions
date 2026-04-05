@@ -361,7 +361,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
     private const string _jenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1,branch[name]],totalCount,failCount,skipCount],building,duration";
 
-    private BuildInfo? CreateBuildInfo(JObject buildDescription)
+    internal BuildInfo? CreateBuildInfo(JObject buildDescription)
     {
         string idValue = buildDescription["number"].ToObject<string>();
         string statusValue = buildDescription["result"].ToObject<string>();

@@ -156,5 +156,6 @@
     <Project Path="tests/plugins/UnitTests/BuildServerIntegration/AppVeyorIntegration.Tests/AppVeyorIntegration.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/BuildServerIntegration/AzureDevOpsIntegration.Tests/AzureDevOpsIntegration.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/BuildServerIntegration/GitlabIntegration.Tests/GitlabIntegration.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/BuildServerIntegration/JenkinsIntegration.Tests/JenkinsIntegration.Tests.csproj" />
   </Folder>
 </Solution>
