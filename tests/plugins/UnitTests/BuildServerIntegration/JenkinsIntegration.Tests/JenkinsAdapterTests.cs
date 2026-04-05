@@ -1,10 +1,10 @@
 using System.Reflection;
+using System.Text.Json.Nodes;
 using CommonTestUtils;
 using FluentAssertions;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
 using JenkinsIntegration;
-using Newtonsoft.Json.Linq;
 
 namespace JenkinsIntegrationTests;
 
@@ -28,7 +28,7 @@ public class JenkinsAdapterTests
     [Test]
     public void CreateBuildInfo_should_parse_successful_freestyle_build()
     {
-        JObject json = LoadMockJson("JenkinsResult_freestyle_success.json");
+        JsonNode json = LoadMockJson("JenkinsResult_freestyle_success.json");
 
         BuildInfo? result = _adapter.CreateBuildInfo(json);
 
@@ -44,7 +44,7 @@ public class JenkinsAdapterTests
     [Test]
     public void CreateBuildInfo_should_parse_failed_build()
     {
-        JObject json = LoadMockJson("JenkinsResult_freestyle_failure.json");
+        JsonNode json = LoadMockJson("JenkinsResult_freestyle_failure.json");
 
         BuildInfo? result = _adapter.CreateBuildInfo(json);
 
@@ -59,7 +59,7 @@ public class JenkinsAdapterTests
     [Test]
     public void CreateBuildInfo_should_parse_running_build()
     {
-        JObject json = LoadMockJson("JenkinsResult_freestyle_running.json");
+        JsonNode json = LoadMockJson("JenkinsResult_freestyle_running.json");
 
         BuildInfo? result = _adapter.CreateBuildInfo(json);
 
@@ -71,7 +71,7 @@ public class JenkinsAdapterTests
     [Test]
     public void CreateBuildInfo_should_parse_build_with_test_results()
     {
-        JObject json = LoadMockJson("JenkinsResult_with_tests.json");
+        JsonNode json = LoadMockJson("JenkinsResult_with_tests.json");
 
         BuildInfo? result = _adapter.CreateBuildInfo(json);
 
@@ -85,7 +85,7 @@ public class JenkinsAdapterTests
     [Test]
     public void CreateBuildInfo_should_parse_build_with_multiple_branches()
     {
-        JObject json = LoadMockJson("JenkinsResult_with_branches.json");
+        JsonNode json = LoadMockJson("JenkinsResult_with_branches.json");
 
         BuildInfo? result = _adapter.CreateBuildInfo(json);
 
@@ -97,7 +97,7 @@ public class JenkinsAdapterTests
     [Test]
     public void CreateBuildInfo_should_set_start_date_from_timestamp()
     {
-        JObject json = LoadMockJson("JenkinsResult_freestyle_success.json");
+        JsonNode json = LoadMockJson("JenkinsResult_freestyle_success.json");
 
         BuildInfo? result = _adapter.CreateBuildInfo(json);
 
@@ -105,11 +105,11 @@ public class JenkinsAdapterTests
         result!.StartDate.Year.Should().Be(2019);
     }
 
-    private static JObject LoadMockJson(string filename)
+    private static JsonNode LoadMockJson(string filename)
     {
         string json = EmbeddedResourceLoader.Load(
             Assembly.GetExecutingAssembly(),
             $"JenkinsIntegrationTests.MockData.{filename}");
-        return JObject.Parse(json);
+        return JsonNode.Parse(json)!;
     }
 }
