@@ -120,7 +120,7 @@ partial class ScriptsManager
             }
 
             if (script.AskConfirmation &&
-                MessageBox.Show(owner, $"{TranslatedStrings.ScriptConfirmExecute}: '{script.GetDisplayName()}'?", TranslatedStrings.ScriptText,
+                MessageBoxes.Show(owner, $"{TranslatedStrings.ScriptConfirmExecute}: '{script.GetDisplayName()}'?", TranslatedStrings.ScriptText,
                                 MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 return false;
@@ -132,7 +132,7 @@ partial class ScriptsManager
 
             if (cancelled)
             {
-                MessageBox.Show(owner, TranslatedStrings.ScriptUserCanceledRun, script.GetDisplayName(), MessageBoxButtons.OK);
+                MessageBoxes.Show(owner, TranslatedStrings.ScriptUserCanceledRun, script.GetDisplayName(), MessageBoxButtons.OK);
                 return false;
             }
 

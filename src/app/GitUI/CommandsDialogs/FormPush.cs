@@ -1,4 +1,4 @@
-﻿using System.Data;
+using System.Data;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
@@ -166,7 +166,7 @@ public partial class FormPush : GitModuleForm
 
         if (UserGitRemotes.Count < 1)
         {
-            if (MessageBox.Show(this, _configureRemote.Text, _errorPushToRemoteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
+            if (MessageBoxes.Show(this, _configureRemote.Text, _errorPushToRemoteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Error) == DialogResult.Yes)
             {
                 OpenRemotesDialogAndRefreshList(null);
                 return UserGitRemotes.Count > 0;
@@ -260,7 +260,7 @@ public partial class FormPush : GitModuleForm
         ErrorOccurred = false;
         if (PushToUrl.Checked && !Uri.IsWellFormedUriString(PushDestination.Text, UriKind.Absolute))
         {
-            MessageBox.Show(owner, _selectDestinationDirectory.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(owner, _selectDestinationDirectory.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
@@ -274,7 +274,7 @@ public partial class FormPush : GitModuleForm
         string? selectedRemoteName = _selectedRemote.Name;
         if (TabControlTagBranch.SelectedTab == TagTab && string.IsNullOrEmpty(TagComboBox.Text))
         {
-            MessageBox.Show(owner, _selectTag.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(owner, _selectTag.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
@@ -284,7 +284,7 @@ public partial class FormPush : GitModuleForm
                 || string.IsNullOrWhiteSpace(RemoteBranch.Text)
                 || RemoteBranch.Text == DetachedHeadParser.DetachedBranch))
         {
-            MessageBox.Show(owner, _noCurrentBranch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(owner, _noCurrentBranch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
@@ -302,7 +302,7 @@ public partial class FormPush : GitModuleForm
             {
                 // Ask if this is really what the user wants
                 if (!AppSettings.DontConfirmPushNewBranch &&
-                    MessageBox.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+                    MessageBoxes.Show(owner, _branchNewForRemote.Text, _pushCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
                 {
                     return false;
                 }
@@ -350,7 +350,7 @@ public partial class FormPush : GitModuleForm
                 if (track && !AppSettings.DontConfirmAddTrackingRef)
                 {
                     Validates.NotNull(selectedLocalBranch);
-                    DialogResult result = MessageBox.Show(owner,
+                    DialogResult result = MessageBoxes.Show(owner,
                                                  string.Format(_updateTrackingReference.Text, selectedLocalBranch.Name, RemoteBranch.Text),
                                                  _pushCaption.Text,
                                                  MessageBoxButtons.YesNoCancel,
@@ -367,7 +367,7 @@ public partial class FormPush : GitModuleForm
 
             if (ForcePushBranches.Checked)
             {
-                DialogResult choice = MessageBox.Show(owner,
+                DialogResult choice = MessageBoxes.Show(owner,
                                              _useForceWithLeaseInstead.Text,
                                              "Question", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question,
                                              MessageBoxDefaultButton.Button1);

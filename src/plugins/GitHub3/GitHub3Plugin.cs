@@ -3,6 +3,7 @@ using Git.hub;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
@@ -148,7 +149,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         }
         catch (Exception ex)
         {
-            MessageBox.Show(_openLinkFailed.Text + ex.Message);
+            MessageBoxes.Show(owner: null, _openLinkFailed.Text + ex.Message, caption: string.Empty, MessageBoxButtons.OK, MessageBoxIcon.None);
         }
     }
 
@@ -242,7 +243,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         }
         else
         {
-            MessageBox.Show(args.OwnerForm, _tokenAlreadyExist.Text, _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(args.OwnerForm, _tokenAlreadyExist.Text, _error.Text);
         }
 
         return false;

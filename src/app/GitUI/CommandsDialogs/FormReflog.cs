@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -145,7 +145,7 @@ public partial class FormReflog : GitModuleForm
     {
         if (_isDirtyDir)
         {
-            if (MessageBox.Show(this, _continueResetCurrentBranchEvenWithChangesText.Text,
+            if (MessageBoxes.Show(this, _continueResetCurrentBranchEvenWithChangesText.Text,
                     _continueResetCurrentBranchCaptionText.Text,
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
             {

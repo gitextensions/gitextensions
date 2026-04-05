@@ -2,6 +2,14 @@
 
 <https://github.blog/changelog/2025-01-21-custom-repository-instructions-are-now-available-for-copilot-on-github-com-public-preview/>
 
+## Repository setup
+
+This repository uses git submodules (under `externals/`). After cloning or creating a new worktree, always run:
+
+```shell
+git submodule update --init --recursive
+```
+
 ## General
 
 * Make only high confidence suggestions when reviewing code changes.
@@ -81,6 +89,7 @@ For example:
 * Do not repeat in a comment what the test name already expresses.
 * Use `NSubstitute` for mocking.
 * Use `FluentAssertions` for assertions, i.e. do not use `ClassicAssert`.
+* When you encounter a flaky test failure, take the time to understand the root cause and fix it. Do not dismiss it as a pre-existing issue. Flaky tests erode confidence and should be fixed or removed.
 
 ## Commit Messages
 

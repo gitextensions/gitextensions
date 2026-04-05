@@ -98,7 +98,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
         IGitRef? gitRefToReset = _localGitRefs!.FirstOrDefault(b => b.Name == Branches.Text);
         if (gitRefToReset is null)
         {
-            MessageBox.Show(string.Format(_localRefInvalid.Text, Branches.Text), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(string.Format(_localRefInvalid.Text, Branches.Text), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 

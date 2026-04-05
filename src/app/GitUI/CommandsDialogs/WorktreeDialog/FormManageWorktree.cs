@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -170,7 +170,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
             return;
         }
 
-        if (MessageBox.Show(this, _deleteWorktreeText.Text, _deleteWorktreeTitle.Text,
+        if (MessageBoxes.Show(this, _deleteWorktreeText.Text, _deleteWorktreeTitle.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
         {
             Validates.NotNull(workTree.Path);
@@ -181,7 +181,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
             }
             else
             {
-                MessageBox.Show(this, $@"{_deleteWorktreeFailedText.Text}: {workTree.Path}{Environment.NewLine}{errorMessage}", TranslatedStrings.Error,
+                MessageBoxes.Show(this, $@"{_deleteWorktreeFailedText.Text}: {workTree.Path}{Environment.NewLine}{errorMessage}", TranslatedStrings.Error,
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
@@ -212,7 +212,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
             return;
         }
 
-        if (AppSettings.DontConfirmSwitchWorktree || MessageBox.Show(this,
+        if (AppSettings.DontConfirmSwitchWorktree || MessageBoxes.Show(this,
                 _switchWorktreeText.Text, _switchWorktreeTitle.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
             if (Directory.Exists(workTree.Path))

@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Git;
 using GitCommands.Utils;
 using GitExtensions.Extensibility;
@@ -71,7 +71,7 @@ public partial class FormCleanupRepository : GitModuleForm
 
     private void Cleanup_Click(object sender, EventArgs e)
     {
-        if (MessageBox.Show(this, _reallyCleanupQuestion.Text, _reallyCleanupQuestionCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+        if (MessageBoxes.Show(this, _reallyCleanupQuestion.Text, _reallyCleanupQuestionCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
             CleanUp(dryRun: false);
         }

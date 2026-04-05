@@ -70,7 +70,7 @@ public class GitVersion : IComparable<GitVersion>, IGitVersion
                 if (gitVersion < LastVersionWithoutKnownLimitations)
                 {
                     // Report the last supported version rather than the last version without known issues
-                    MessageBox.Show(null, $"{gitVersion} is lower than {LastSupportedVersion}. Some commands can fail.", "Unsupported Git version", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.ShowError(owner: null, $"{gitVersion} is lower than {LastSupportedVersion}. Some commands can fail.", "Unsupported Git version");
                 }
             }
             catch (Exception exception)

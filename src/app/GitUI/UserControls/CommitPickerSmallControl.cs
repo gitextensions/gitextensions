@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
 
@@ -33,7 +33,7 @@ public partial class CommitPickerSmallControl : GitModuleControl
         if (SelectedObjectId is null && !string.IsNullOrWhiteSpace(commitHash))
         {
             SelectedObjectId = oldCommitHash;
-            MessageBox.Show("The given commit hash is not valid for this repository and was therefore discarded.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show("The given commit hash is not valid for this repository and was therefore discarded.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         else
         {

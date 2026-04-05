@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -320,7 +320,7 @@ public partial class FormRebase : GitExtensionsDialog
         {
             if (string.IsNullOrEmpty(cboBranches.Text))
             {
-                MessageBox.Show(this, _noBranchSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _noBranchSelectedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
@@ -362,7 +362,7 @@ public partial class FormRebase : GitExtensionsDialog
             string cmdOutput = FormProcess.ReadDialog(this, UICommands, arguments: rebaseCmd, Module.WorkingDir, input: null, useDialogSettings: true);
             if (cmdOutput.Trim() == "Current branch a is up to date.")
             {
-                MessageBox.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxes.Show(this, _branchUpToDateText.Text, _branchUpToDateCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
 
             if (!Module.InTheMiddleOfAction() &&

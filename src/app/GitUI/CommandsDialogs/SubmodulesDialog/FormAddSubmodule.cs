@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -44,7 +44,7 @@ public partial class FormAddSubmodule : GitModuleForm
     {
         if (string.IsNullOrEmpty(Directory.Text) || string.IsNullOrEmpty(LocalPath.Text))
         {
-            MessageBox.Show(this, _remoteAndLocalPathRequired.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _remoteAndLocalPathRequired.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 

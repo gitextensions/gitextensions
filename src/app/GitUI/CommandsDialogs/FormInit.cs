@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -46,13 +46,13 @@ public partial class FormInit : GitExtensionsDialog
 
         if (!IsRootedDirectoryPath(directoryPath))
         {
-            MessageBox.Show(this, _chooseDirectory.Text, _chooseDirectoryCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _chooseDirectory.Text, _chooseDirectoryCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
         if (File.Exists(directoryPath))
         {
-            MessageBox.Show(this, _chooseDirectoryNotFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _chooseDirectoryNotFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -63,7 +63,7 @@ public partial class FormInit : GitExtensionsDialog
             System.IO.Directory.CreateDirectory(module.WorkingDir);
         }
 
-        MessageBox.Show(this, module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        MessageBoxes.Show(this, module.Init(Central.Checked, Central.Checked), _initMsgBoxCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         _gitModuleChanged?.Invoke(this, new GitModuleEventArgs(module));
 

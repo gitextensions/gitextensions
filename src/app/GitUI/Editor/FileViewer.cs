@@ -1072,7 +1072,7 @@ public partial class FileViewer : GitModuleControl
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, $"{ex.Message}{Environment.NewLine}{fullPath}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, $"{ex.Message}{Environment.NewLine}{fullPath}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             // If the file does not exist, it doesn't matter what size we
@@ -1899,7 +1899,7 @@ public partial class FileViewer : GitModuleControl
 
         if (!result.ExitedSuccessfully && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false)))
         {
-            MessageBox.Show(this, $"{output}\n\n{Encoding.GetString(patch)}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, $"{output}\n\n{Encoding.GetString(patch)}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         else if (!result.ExitedSuccessfully || output.StartsWith("error: ") || output.StartsWith("warning: "))
         {

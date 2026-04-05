@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
@@ -262,7 +262,7 @@ public sealed partial class FormPull : GitExtensionsDialog
             }
 
             bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
-                                     || MessageBox.Show(
+                                     || MessageBoxes.Show(
                                          owner,
                                          _pullFetchPruneAllConfirmation.Text,
                                          messageBoxTitle,
@@ -292,7 +292,7 @@ public sealed partial class FormPull : GitExtensionsDialog
     {
         Module.RunMergeTool();
 
-        if (MessageBox.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
+        if (MessageBoxes.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
                             MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
         {
             return;
@@ -480,19 +480,19 @@ public sealed partial class FormPull : GitExtensionsDialog
         {
             if (PullFromUrl.Checked && string.IsNullOrEmpty(comboBoxPullSource.Text))
             {
-                MessageBox.Show(this, _selectSourceDirectory.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _selectSourceDirectory.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (PullFromRemote.Checked && string.IsNullOrEmpty(_NO_TRANSLATE_Remotes.Text) && !IsPullAll())
             {
-                MessageBox.Show(this, _selectRemoteRepository.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _selectRemoteRepository.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
             if (!Fetch.Checked && Branches.Text == "*")
             {
-                MessageBox.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _fetchAllBranchesCanOnlyWithFetch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -542,7 +542,7 @@ public sealed partial class FormPull : GitExtensionsDialog
 
             bool AskIfSubmodulesShouldBeInitialized()
             {
-                return MessageBox.Show(this, _questionInitSubmodules.Text, _questionInitSubmodulesCaption.Text,
+                return MessageBoxes.Show(this, _questionInitSubmodules.Text, _questionInitSubmodulesCaption.Text,
                            MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
             }
         }
@@ -643,7 +643,7 @@ public sealed partial class FormPull : GitExtensionsDialog
         // ask only if exists commit not pushed to remote yet
         if (Rebase.Checked && PullFromRemote.Checked && MergeCommitExists())
         {
-            dialogResult = MessageBox.Show(this, _areYouSureYouWantToRebaseMerge.Text,
+            dialogResult = MessageBoxes.Show(this, _areYouSureYouWantToRebaseMerge.Text,
                                               _areYouSureYouWantToRebaseMergeCaption.Text,
                                               MessageBoxButtons.YesNoCancel,
                                               MessageBoxIcon.Warning,

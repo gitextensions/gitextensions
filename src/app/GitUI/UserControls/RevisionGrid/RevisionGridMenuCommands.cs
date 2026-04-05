@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
@@ -179,7 +179,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
                 Name = "QuickSearch",
                 Text = "&Quick search",
                 ToolTipText = _quickSearchQuickHelp.Text,
-                ExecuteAction = () => MessageBox.Show(_quickSearchQuickHelp.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                ExecuteAction = () => MessageBoxes.Show(_quickSearchQuickHelp.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
             },
             new MenuCommand
             {

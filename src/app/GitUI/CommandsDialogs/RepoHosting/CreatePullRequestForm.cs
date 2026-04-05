@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
@@ -52,7 +52,7 @@ public partial class CreatePullRequestForm : GitModuleForm
             {
                 if (foreignHostedRemotes.Length == 0)
                 {
-                    MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
+                    MessageBoxes.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
                                           _strPleaseCloneGitHubRep.Text, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Close();
                     return;
@@ -217,7 +217,7 @@ public partial class CreatePullRequestForm : GitModuleForm
         string body = _bodyTB.Text.Trim();
         if (title.Length == 0)
         {
-            MessageBox.Show(this, _strYouMustSpecifyATitle.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _strYouMustSpecifyATitle.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -226,12 +226,12 @@ public partial class CreatePullRequestForm : GitModuleForm
             IHostedRepository hostedRepo = _currentHostedRemote.GetHostedRepository();
 
             hostedRepo.CreatePullRequest(_yourBranchesCB.Text, _remoteBranchesCB.Text, title, body);
-            MessageBox.Show(this, _strDone.Text, _strPullRequest.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBoxes.Show(this, _strDone.Text, _strPullRequest.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             Close();
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
+            MessageBoxes.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
                 ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }

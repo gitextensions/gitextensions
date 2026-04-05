@@ -114,7 +114,7 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
         bool hasUnmergedBranches = selectedBranches.Any(branch => !_mergedBranches.Contains(branch.CompleteName));
         if (hasUnmergedBranches)
         {
-            if (MessageBox.Show(this,
+            if (MessageBoxes.Show(this,
                                 _confirmDeleteUnmergedRemoteBranchMessage.Text,
                                 _deleteRemoteBranchesCaption.Text,
                                 MessageBoxButtons.YesNo,

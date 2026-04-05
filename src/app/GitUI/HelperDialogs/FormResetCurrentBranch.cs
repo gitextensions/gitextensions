@@ -80,7 +80,7 @@ public partial class FormResetCurrentBranch : GitModuleForm
         }
         else if (Hard.Checked)
         {
-            if (MessageBox.Show(this, _resetHardWarning.Text, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            if (MessageBoxes.Show(this, _resetHardWarning.Text, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 ObjectId? currentCheckout = Module.GetCurrentCheckout();
                 bool success = FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Hard, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
 using System.Globalization;
@@ -1855,7 +1855,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
         else
         {
-            MessageBox.Show(this, _noReposHostPluginLoaded.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _noReposHostPluginLoaded.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -1894,7 +1894,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         repoHost = PluginRegistry.TryGetGitHosterForModule(Module);
         if (repoHost is null)
         {
-            MessageBox.Show(this, _noReposHostFound.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _noReposHostFound.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
@@ -2771,7 +2771,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             catch (InvalidOperationException)
             {
 #if DEBUG
-                MessageBox.Show(@"ConEmu appears to be missing. Please perform a full rebuild and try again.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(@"ConEmu appears to be missing. Please perform a full rebuild and try again.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
 #else
                 throw;
 #endif
@@ -2956,7 +2956,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void undoLastCommitToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (AppSettings.DontConfirmUndoLastCommit || MessageBox.Show(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+        if (AppSettings.DontConfirmUndoLastCommit || MessageBoxes.Show(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
         {
             ArgumentString args = Commands.Reset(ResetMode.Soft, "HEAD~1");
             Module.GitExecutable.GetOutput(args);

@@ -135,7 +135,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
     {
         if (string.IsNullOrEmpty(txtLookFor.Text))
         {
-            MessageBox.Show(this, _noSearchString.Text, Text, MessageBoxButtons.OK,
+            MessageBoxes.Show(this, _noSearchString.Text, Text, MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
             return null;
         }
@@ -208,7 +208,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         while (range is null && startItem != currentItem && currentItem is not null);
         if (range is null && messageIfNotFound is not null)
         {
-            MessageBox.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBoxes.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         return range;
@@ -274,7 +274,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
 
             if (count == 0)
             {
-                MessageBox.Show(this, _textNotFoundString2.Text, _notFoundString.Text, MessageBoxButtons.OK,
+                MessageBoxes.Show(this, _textNotFoundString2.Text, _notFoundString.Text, MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
             }
             else
@@ -356,11 +356,11 @@ public partial class FindAndReplaceForm : GitExtensionsForm
 
         if (count == 0)
         {
-            MessageBox.Show(this, _noOccurrencesFoundString.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBoxes.Show(this, _noOccurrencesFoundString.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         else
         {
-            MessageBox.Show(this, string.Format(_replacedOccurrencesString.Text, count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBoxes.Show(this, string.Format(_replacedOccurrencesString.Text, count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Close();
         }
     }

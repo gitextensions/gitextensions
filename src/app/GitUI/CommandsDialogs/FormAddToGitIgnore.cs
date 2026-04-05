@@ -88,7 +88,7 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, ex.ToString(), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, ex.ToString(), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         Close();

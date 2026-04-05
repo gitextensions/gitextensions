@@ -1,4 +1,4 @@
-﻿using GitCommands.Git;
+using GitCommands.Git;
 using GitCommands.Git.Tag;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -145,7 +145,7 @@ public sealed partial class FormVerify : GitModuleForm
 
     private void RemoveClick(object sender, EventArgs e)
     {
-        if (MessageBox.Show(this,
+        if (MessageBoxes.Show(this,
             _removeDanglingObjectsQuestion.Text,
             _removeDanglingObjectsCaption.Text,
             MessageBoxButtons.YesNo,
@@ -199,7 +199,7 @@ public sealed partial class FormVerify : GitModuleForm
             return;
         }
 
-        MessageBox.Show(this, string.Format(_xTagsCreated.Text, restoredObjectsCount), "Tags created", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        MessageBoxes.Show(this, string.Format(_xTagsCreated.Text, restoredObjectsCount), "Tags created", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         // if user restored all items, nothing else to do in this form.
         // User wants to see restored commits, so close this dialog and return to the main window.
@@ -453,7 +453,7 @@ public sealed partial class FormVerify : GitModuleForm
 
         if (selectedLostObjects.Count == 0)
         {
-            MessageBox.Show(this, _selectLostObjectsToRestoreMessage.Text, _selectLostObjectsToRestoreCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBoxes.Show(this, _selectLostObjectsToRestoreMessage.Text, _selectLostObjectsToRestoreCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
             return 0;
         }
 

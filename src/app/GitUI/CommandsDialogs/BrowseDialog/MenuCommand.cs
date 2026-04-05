@@ -1,4 +1,4 @@
-﻿namespace GitUI.CommandsDialogs.BrowseDialog;
+namespace GitUI.CommandsDialogs.BrowseDialog;
 
 /// <summary>
 /// Represents a menu command with Text, ShortcutKey or ShortcutDisplayString, Action,
@@ -64,7 +64,7 @@ internal class MenuCommand
             }
             else
             {
-                MessageBox.Show("No ExecuteAction assigned to this MenuCommand. Please submit a bug report.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show("No ExecuteAction assigned to this MenuCommand. Please submit a bug report.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         };
 

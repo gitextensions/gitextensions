@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Utils;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
@@ -189,7 +189,7 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         }
         catch
         {
-            MessageBox.Show(this, string.Format(_noDictFilesFound.Text, AppSettings.GetDictionaryDir()), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, string.Format(_noDictFilesFound.Text, AppSettings.GetDictionaryDir()), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

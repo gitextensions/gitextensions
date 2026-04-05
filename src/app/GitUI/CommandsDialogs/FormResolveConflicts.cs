@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -285,7 +285,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 if (!Module.InTheMiddleOfPatch() && !_inTheMiddleOfRebase && _offerCommit)
                 {
                     if (AppSettings.DontConfirmCommitAfterConflictsResolved ||
-                        MessageBox.Show(this, _allConflictsResolved.Text, _allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        MessageBoxes.Show(this, _allConflictsResolved.Text, _allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         UICommands.StartCommitDialog(this);
                     }
@@ -407,7 +407,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 if (_mergeScripts.TryGetValue(extension!, out string? mergeScript) &&
                     File.Exists(Path.Combine(dir!, mergeScript)))
                 {
-                    if (MessageBox.Show(this, string.Format(_uskUseCustomMergeScript.Text, mergeScript),
+                    if (MessageBoxes.Show(this, string.Format(_uskUseCustomMergeScript.Text, mergeScript),
                                         _uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                         DialogResult.Yes)
                     {
@@ -420,7 +420,7 @@ public partial class FormResolveConflicts : GitModuleForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, "Merge using script failed.\n" + ex, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, "Merge using script failed.\n" + ex, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         return false;
@@ -443,7 +443,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
         new Executable("wscript", Module.WorkingDir).Start(args);
 
-        if (MessageBox.Show(this, string.Format(_askMergeConflictSolvedAfterCustomMergeScript.Text,
+        if (MessageBoxes.Show(this, string.Format(_askMergeConflictSolvedAfterCustomMergeScript.Text,
             FixPath(filePath)), _askMergeConflictSolvedCaption.Text,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
@@ -452,7 +452,7 @@ public partial class FormResolveConflicts : GitModuleForm
             // The file is not modified, do not stage file and present warning
             if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
             {
-                MessageBox.Show(this, _fileUnchangedAfterMerge.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxes.Show(this, _fileUnchangedAfterMerge.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -575,7 +575,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
                 if (FileHelper.IsBinaryFileName(Module, item.Local.Filename))
                 {
-                    if (MessageBox.Show(this, string.Format(_fileIsBinary.Text, _mergetool),
+                    if (MessageBoxes.Show(this, string.Format(_fileIsBinary.Text, _mergetool),
                             TranslatedStrings.Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
                             MessageBoxDefaultButton.Button2) == DialogResult.No)
                     {
@@ -603,7 +603,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 if (item.Base.Filename is null)
                 {
                     string text = string.Format(_noBaseRevision.Text, item.Filename);
-                    DialogResult result = MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
+                    DialogResult result = MessageBoxes.Show(this, text, _noBaseFileMergeCaption.Text,
                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
@@ -633,7 +633,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 catch (Exception)
                 {
                     string text = string.Format(_errorStartingMergetool.Text, _mergetoolPath);
-                    MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
+                    MessageBoxes.Show(this, text, _noBaseFileMergeCaption.Text,
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
@@ -652,7 +652,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 if ((res.ExitCode == 1 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge) ||
                     (res.ExitCode == 0 && lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge))
                 {
-                    if (MessageBox.Show(this, _askMergeConflictSolved.Text, _askMergeConflictSolvedCaption.Text,
+                    if (MessageBoxes.Show(this, _askMergeConflictSolved.Text, _askMergeConflictSolvedCaption.Text,
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         StageFile(item.Filename);
@@ -696,7 +696,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
         if (string.IsNullOrEmpty(_mergetool))
         {
-            MessageBox.Show(this, _noMergeTool.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _noMergeTool.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
@@ -733,7 +733,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
             if (!PathUtil.TryFindFullPath(_mergetoolPath!, out string? fullPath))
             {
-                MessageBox.Show(this, _noMergeToolConfigured.Text, TranslatedStrings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBoxes.Show(this, _noMergeToolConfigured.Text, TranslatedStrings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -745,11 +745,11 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private bool ShowAbortMessage()
     {
-        if (MessageBox.Show(_abortCurrentOperation.Text, _resetCaption.Text,
+        if (MessageBoxes.Show(_abortCurrentOperation.Text, _resetCaption.Text,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
             if (AppSettings.DontConfirmSecondAbortConfirmation ||
-                MessageBox.Show(_areYouSureYouWantDeleteFiles.Text, _areYouSureYouWantDeleteFilesCaption.Text,
+                MessageBoxes.Show(_areYouSureYouWantDeleteFiles.Text, _areYouSureYouWantDeleteFilesCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 return true;
@@ -890,7 +890,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         if (!Module.HandleConflictSelectSide(fileName, "BASE"))
         {
-            MessageBox.Show(this, _chooseBaseFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _chooseBaseFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -917,7 +917,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         if (!Module.HandleConflictSelectSide(fileName, "LOCAL"))
         {
-            MessageBox.Show(this, _chooseLocalFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _chooseLocalFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -944,7 +944,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         if (!Module.HandleConflictSelectSide(fileName, "REMOTE"))
         {
-            MessageBox.Show(this, _chooseRemoteFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _chooseRemoteFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -1318,7 +1318,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
             if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileName, side))
             {
-                MessageBox.Show(this, _failureWhileOpenFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _failureWhileOpenFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             OsShellUtil.OpenAs(fileName);
@@ -1373,7 +1373,7 @@ public partial class FormResolveConflicts : GitModuleForm
             {
                 if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileDialog.FileName, side))
                 {
-                    MessageBox.Show(this, _failureWhileSaveFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(this, _failureWhileSaveFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }

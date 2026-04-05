@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.GitIgnoreDialog;
@@ -153,7 +153,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, _dialogModel.CannotAccessFile + Environment.NewLine + ex.Message,
+            MessageBoxes.Show(this, _dialogModel.CannotAccessFile + Environment.NewLine + ex.Message,
                 _dialogModel.CannotAccessFileCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
@@ -163,7 +163,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
     {
         if (HasUnsavedChanges())
         {
-            switch (MessageBox.Show(this, _dialogModel.SaveFileQuestion, _saveFileQuestionCaption.Text,
+            switch (MessageBoxes.Show(this, _dialogModel.SaveFileQuestion, _saveFileQuestionCaption.Text,
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
             {
                 case DialogResult.Yes:
@@ -187,7 +187,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
             return;
         }
 
-        MessageBox.Show(this, _dialogModel.FileOnlyInWorkingDirSupported, _gitignoreOnlyInWorkingDirSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBoxes.Show(this, _dialogModel.FileOnlyInWorkingDirSupported, _gitignoreOnlyInWorkingDirSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         Close();
     }
 

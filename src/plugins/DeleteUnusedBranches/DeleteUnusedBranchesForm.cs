@@ -12,6 +12,7 @@ using GitUI.NBugReports;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 using ResourceManager;
+using MessageBoxes = GitUI.MessageBoxes;
 
 namespace GitExtensions.Plugins.DeleteUnusedBranches;
 
@@ -136,7 +137,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
 
         if (!result.ExitedSuccessfully)
         {
-            MessageBox.Show(this, result.AllOutput, $"git {args}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, result.AllOutput, $"git {args}", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return [];
         }
 
@@ -152,11 +153,11 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
         List<Branch> selectedBranches = [.. _branches.Where(branch => branch.Delete)];
         if (selectedBranches.Count == 0)
         {
-            MessageBox.Show(string.Format(_selectBranchesToDelete.Text, _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText), _deleteCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(string.Format(_selectBranchesToDelete.Text, _NO_TRANSLATE_deleteDataGridViewCheckBoxColumn.HeaderText), _deleteCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
-        if (MessageBox.Show(this, string.Format(_areYouSureToDelete.Text, selectedBranches.Count), _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+        if (MessageBoxes.Show(this, string.Format(_areYouSureToDelete.Text, selectedBranches.Count), _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
         {
             return;
         }
@@ -171,7 +172,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
         if (remoteBranches.Count > 0)
         {
             string message = string.Format(_dangerousAction.Text, remoteName);
-            if (MessageBox.Show(this, message, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            if (MessageBoxes.Show(this, message, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
                 return;
             }
@@ -247,7 +248,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
 
         if (includeUnmergedBranches.Checked)
         {
-            MessageBox.Show(this, _deletingUnmergedBranches.Text, _deleteCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            MessageBoxes.Show(this, _deletingUnmergedBranches.Text, _deleteCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
         }
     }
 
