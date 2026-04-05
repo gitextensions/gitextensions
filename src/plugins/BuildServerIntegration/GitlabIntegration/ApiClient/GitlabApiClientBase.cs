@@ -1,12 +1,17 @@
 ﻿using System.Net;
+using System.Text.Json;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
 using Microsoft;
-using Newtonsoft.Json;
 
 namespace GitExtensions.Plugins.GitlabIntegration.ApiClient;
 
 public class GitlabApiClientBase : IDisposable
 {
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
+
     private readonly HttpClient _httpClient;
 
     public GitlabApiClientBase(string instanceUrl, string apiToken)
@@ -62,7 +67,7 @@ public class GitlabApiClientBase : IDisposable
 
         string json = await response.Content.ReadAsStringAsync(cancellationToken);
 
-        IEnumerable<TItem>? list = JsonConvert.DeserializeObject<IEnumerable<TItem>>(json);
+        IEnumerable<TItem>? list = JsonSerializer.Deserialize<IEnumerable<TItem>>(json, _jsonOptions);
 
         PagedResponse<TItem> result = new()
         {
@@ -84,7 +89,7 @@ public class GitlabApiClientBase : IDisposable
 
         string json = await response.Content.ReadAsStringAsync();
 
-        TItem? item = JsonConvert.DeserializeObject<TItem>(json);
+        TItem? item = JsonSerializer.Deserialize<TItem>(json, _jsonOptions);
 
         return item;
     }
