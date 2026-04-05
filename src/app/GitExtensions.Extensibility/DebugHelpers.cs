@@ -19,7 +19,6 @@ public static class DebugHelpers
     }
 
     [Conditional("DEBUG")]
-    [DoesNotReturn]
     public static void Fail(string message)
     {
         if (Debugger.IsAttached || IsTestRunning)

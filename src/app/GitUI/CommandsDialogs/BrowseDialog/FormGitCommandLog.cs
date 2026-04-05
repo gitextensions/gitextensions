@@ -54,7 +54,7 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
             this.InvokeAndForget(RefreshLogItems);
         }
 
-        void OnCachedCommandsLogChanged(object sender, EventArgs e)
+        void OnCachedCommandsLogChanged(object? sender, EventArgs e)
         {
             this.InvokeAndForget(RefreshCommandCacheItems);
         }
@@ -115,7 +115,7 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
 
     private void CommandCacheItems_SelectedIndexChanged(object sender, EventArgs e)
     {
-        string command = ((CacheItem)CommandCacheItems.SelectedItem).Key;
+        string command = ((CacheItem)CommandCacheItems.SelectedItem!).Key;
 
         if (GitModule.GitCommandCache.TryGet(command, out string? cmdOut, out string? cmdErr))
         {
@@ -146,7 +146,7 @@ public sealed partial class FormGitCommandLog : GitExtensionsForm
 
     private void LogItems_SelectedIndexChanged(object sender, EventArgs e)
     {
-        CommandLogEntry entry = (CommandLogEntry)LogItems.SelectedItem;
+        CommandLogEntry entry = (CommandLogEntry)LogItems.SelectedItem!;
 
         LogOutput.Text = entry.Detail;
     }

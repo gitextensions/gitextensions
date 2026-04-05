@@ -66,8 +66,8 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
         _buildServerWatcher = buildServerWatcher;
 
-        string projectName = config.GetString("ProjectName", null);
-        string hostName = config.GetString("BuildServerUrl", null);
+        string? projectName = config.GetString("ProjectName", null);
+        string? hostName = config.GetString("BuildServerUrl", null);
 
         if (!string.IsNullOrEmpty(hostName) && !string.IsNullOrEmpty(projectName))
         {
@@ -81,7 +81,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
                 BaseAddress = baseAddress
             };
 
-            IBuildServerCredentials buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
+            IBuildServerCredentials? buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
 
             UpdateHttpClientOptions(buildServerCredentials);
 
@@ -105,7 +105,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
         get
         {
             Validates.NotNull(_httpClient);
-            return _httpClient.BaseAddress.Host;
+            return _httpClient.BaseAddress!.Host;
         }
     }
 
@@ -139,14 +139,14 @@ internal class JenkinsAdapter : IBuildServerAdapter
             if (jobDescription["builds"] is not null)
             {
                 // Freestyle jobs
-                s = jobDescription["builds"];
+                s = jobDescription["builds"]!;
             }
             else if (jobDescription["jobs"] is not null)
             {
                 // Multi-branch pipeline
-                s = jobDescription["jobs"]
-                    .SelectMany(j => j["builds"]);
-                foreach (JToken j in jobDescription["jobs"])
+                s = jobDescription["jobs"]!
+                    .SelectMany(j => j["builds"]!);
+                foreach (JToken j in jobDescription["jobs"]!)
                 {
                     try
                     {
@@ -155,7 +155,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
                             continue;
                         }
 
-                        JToken ts = j["lastBuild"]["timestamp"];
+                        JToken ts = j["lastBuild"]!["timestamp"]!;
                         timestamp = Math.Max(timestamp, ts.ToObject<long>());
                     }
                     catch
@@ -168,7 +168,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
             // else: The server had no response (overloaded?) or a multi-branch pipeline is not configured
             if (timestamp == 0 && jobDescription["lastBuild"]?["timestamp"] is not null)
             {
-                timestamp = jobDescription["lastBuild"]["timestamp"].ToObject<long>();
+                timestamp = jobDescription["lastBuild"]!["timestamp"]!.ToObject<long>();
             }
         }
 
@@ -280,7 +280,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
                     try
                     {
-                        BuildInfo buildInfo = CreateBuildInfo((JObject)buildDetails);
+                        BuildInfo? buildInfo = CreateBuildInfo((JObject)buildDetails);
                         if (buildInfo is null)
                         {
                             continue;
@@ -375,32 +375,32 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
     private BuildInfo? CreateBuildInfo(JObject buildDescription)
     {
-        string idValue = buildDescription["number"].ToObject<string>();
-        string statusValue = buildDescription["result"].ToObject<string>();
-        long startDateTicks = buildDescription["timestamp"].ToObject<long>();
-        string webUrl = buildDescription["url"].ToObject<string>();
+        string? idValue = buildDescription["number"]?.ToObject<string>();
+        string? statusValue = buildDescription["result"]?.ToObject<string>();
+        long startDateTicks = buildDescription["timestamp"]!.ToObject<long>();
+        string? webUrl = buildDescription["url"]?.ToObject<string>();
 
-        JToken action = buildDescription["actions"];
+        JToken? action = buildDescription["actions"];
         List<ObjectId> commitHashList = [];
         string testResults = string.Empty;
-        foreach (JToken element in action)
+        foreach (JToken element in action!)
         {
             if (element["lastBuiltRevision"] is not null)
             {
-                commitHashList.Add(ObjectId.Parse(element["lastBuiltRevision"]["SHA1"].ToObject<string>()));
-                JToken branches = element["lastBuiltRevision"]["branch"];
+                commitHashList.Add(ObjectId.Parse(element["lastBuiltRevision"]!["SHA1"]!.ToObject<string>()!));
+                JToken? branches = element["lastBuiltRevision"]!["branch"];
                 if (_ignoreBuilds is not null && branches is not null)
                 {
                     // Ignore build events for specified branches
                     foreach (JToken branch in branches)
                     {
-                        JToken name = branch["name"];
+                        JToken? name = branch["name"];
                         if (name is null)
                         {
                             continue;
                         }
 
-                        string name2 = name.ToObject<string>();
+                        string? name2 = name.ToObject<string>();
                         if (!string.IsNullOrWhiteSpace(name2) && _ignoreBuilds.IsMatch(name2))
                         {
                             return null;
@@ -414,16 +414,16 @@ internal class JenkinsAdapter : IBuildServerAdapter
                 continue;
             }
 
-            int testCount = element["totalCount"].ToObject<int>();
+            int testCount = element["totalCount"]!.ToObject<int>();
             if (testCount != 0)
             {
-                int failedTestCount = element["failCount"].ToObject<int>();
-                int skippedTestCount = element["skipCount"].ToObject<int>();
+                int failedTestCount = element["failCount"]!.ToObject<int>();
+                int skippedTestCount = element["skipCount"]!.ToObject<int>();
                 testResults = $"{testCount} tests ({failedTestCount} failed, {skippedTestCount} skipped)";
             }
         }
 
-        bool isRunning = buildDescription["building"].ToObject<bool>();
+        bool isRunning = buildDescription["building"]!.ToObject<bool>();
         long? buildDuration;
         if (isRunning)
         {
@@ -431,10 +431,10 @@ internal class JenkinsAdapter : IBuildServerAdapter
         }
         else
         {
-            buildDuration = buildDescription["duration"].ToObject<long>();
+            buildDuration = buildDescription["duration"]!.ToObject<long>();
         }
 
-        BuildStatus status = isRunning ? BuildStatus.InProgress : ParseBuildStatus(statusValue);
+        BuildStatus status = isRunning ? BuildStatus.InProgress : ParseBuildStatus(statusValue ?? string.Empty);
         string statusText = status.ToString("G");
         BuildInfo buildInfo = new()
         {
@@ -493,7 +493,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
             {
                 HttpContent httpContent = resp.Content;
 
-                if (httpContent.Headers.ContentType.MediaType == "text/html")
+                if (httpContent.Headers.ContentType?.MediaType == "text/html")
                 {
                     // Jenkins responds with an HTML login page when guest access is denied.
                     unauthorized = true;
@@ -545,8 +545,8 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
     private async Task<string> GetResponseAsync(string relativePath, CancellationToken cancellationToken)
     {
-        using Stream responseStream = await GetStreamAsync(relativePath, cancellationToken).ConfigureAwait(false);
-        using StreamReader reader = new(responseStream);
+        using Stream? responseStream = await GetStreamAsync(relativePath, cancellationToken).ConfigureAwait(false);
+        using StreamReader reader = new(responseStream ?? Stream.Null);
         return await reader.ReadToEndAsync(cancellationToken);
     }
 

@@ -14,7 +14,7 @@ public sealed class GitStashTests
         ClassicAssert.IsTrue(GitStash.TryParse(rawStash, out GitStash? stash));
 
         ClassicAssert.NotNull(stash);
-        ClassicAssert.AreEqual(index, stash.Index);
+        ClassicAssert.AreEqual(index, stash!.Index);
         ClassicAssert.AreEqual(message, stash.Message);
         ClassicAssert.AreEqual(name, stash.Name);
     }

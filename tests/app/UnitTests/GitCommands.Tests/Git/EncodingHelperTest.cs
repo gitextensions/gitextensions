@@ -11,7 +11,7 @@ public class EncodingHelperTest
     [Test]
     public void GetStringEncodingNull()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => EncodingHelper.GetString([0x30], [0x31], null));
+        ClassicAssert.Throws<ArgumentNullException>(() => EncodingHelper.GetString([0x30], [0x31], null!));
     }
 
     [Test]
@@ -66,7 +66,7 @@ public class EncodingHelperTest
     [Test]
     public void ConvertToTestEncodingNull()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => EncodingHelper.ConvertTo(null, "abcd"));
+        ClassicAssert.Throws<ArgumentNullException>(() => EncodingHelper.ConvertTo(null!, "abcd"));
     }
 
     [Test]
@@ -100,8 +100,8 @@ public class EncodingHelperTest
     [Test]
     public void DecodeStringTestEncodingNull()
     {
-        Encoding enc = null;
-        ClassicAssert.Throws<ArgumentNullException>(() => EncodingHelper.DecodeString([0x30], [0x31], ref enc));
+        Encoding? enc = null;
+        ClassicAssert.Throws<ArgumentNullException>(() => EncodingHelper.DecodeString([0x30], [0x31], ref enc!));
     }
 
     [Test]

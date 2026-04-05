@@ -103,7 +103,7 @@ public partial class FormRevertCommit : GitExtensionsDialog
                     });
                 }
 
-                lvParentsList.TopItem.Selected = true;
+                lvParentsList.TopItem!.Selected = true;
                 Size size = MinimumSize;
                 size.Height += DpiUtil.Scale(_parentsListItemHeight * parents.Count);
                 Size = size;

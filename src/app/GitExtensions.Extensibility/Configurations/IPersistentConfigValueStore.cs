@@ -1,5 +1,3 @@
-#nullable enable
-
 namespace GitExtensions.Extensibility.Configurations;
 
 public interface IPersistentConfigValueStore : IConfigValueStore

@@ -17,7 +17,7 @@ public partial class TeamCityBuildChooser : Form
         TeamCityBuildIdFilter = teamCityBuildIdFilter;
         _teamCityAdapter.InitializeHttpClient(teamCityServerUrl);
 
-        Project rootProject = _teamCityAdapter.GetProjectsTree();
+        Project? rootProject = _teamCityAdapter.GetProjectsTree();
 
         if (rootProject is not null)
         {
@@ -60,7 +60,7 @@ public partial class TeamCityBuildChooser : Form
             Tag = project,
         };
 
-        projectNode.Nodes.AddRange([.. project.SubProjects.Select(ConvertProjectInTreeNode).OrderBy(p => p.Name)]);
+        projectNode.Nodes.AddRange([.. project.SubProjects!.Select(ConvertProjectInTreeNode).OrderBy(p => p.Name)]);
         if (projectNode.Nodes.Count == 0)
         {
             projectNode.Nodes.Add(new TreeNode("Loading..."));
@@ -76,12 +76,12 @@ public partial class TeamCityBuildChooser : Form
 
     private void treeViewTeamCityProjects_BeforeExpand(object sender, TreeViewCancelEventArgs e)
     {
-        LoadProjectBuilds(e.Node);
+        LoadProjectBuilds(e.Node!);
     }
 
     private void LoadProjectBuilds(TreeNode treeNode)
     {
-        Project project = (Project)treeNode.Tag;
+        Project project = (Project)treeNode.Tag!;
         if (project.Builds is null)
         {
             Validates.NotNull(project.Id);
@@ -135,7 +135,7 @@ public partial class TeamCityBuildChooser : Form
         Close();
     }
 
-    private static bool IsBuildSelected(TreeNode selectedNode)
+    private static bool IsBuildSelected(TreeNode? selectedNode)
     {
         return selectedNode?.Tag is Build;
     }

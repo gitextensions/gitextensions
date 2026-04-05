@@ -22,7 +22,7 @@ public sealed class LineCounter
 
         foreach (FileInfo file in GetFiles())
         {
-            if (DirectoryIsFiltered(file.Directory, directoryFilter))
+            if (DirectoryIsFiltered(file.Directory!, directoryFilter))
             {
                 continue;
             }
@@ -48,7 +48,7 @@ public sealed class LineCounter
         {
             foreach (string file in filesToCheck)
             {
-                FileInfo fileInfo = null;
+                FileInfo? fileInfo = null;
                 try
                 {
                     if (extensions.Contains(Path.GetExtension(file)))

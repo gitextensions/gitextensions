@@ -145,7 +145,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
                             fileContent += Environment.NewLine;
                         }
 
-                        Directory.CreateDirectory(Path.GetDirectoryName(x));
+                        Directory.CreateDirectory(Path.GetDirectoryName(x)!);
                         File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(fileContent));
                         _originalGitIgnoreFileContent = fileContent;
                     });
@@ -226,7 +226,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
         return _originalGitIgnoreFileContent != _NO_TRANSLATE_GitIgnoreEdit.GetText();
     }
 
-    private void GitIgnoreFileLoaded(object sender, EventArgs e)
+    private void GitIgnoreFileLoaded(object? sender, EventArgs e)
     {
         _originalGitIgnoreFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
     }

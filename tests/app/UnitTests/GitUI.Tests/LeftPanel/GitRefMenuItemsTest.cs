@@ -13,7 +13,7 @@ public class GitRefMenuItemsTest
     private const int expectedMenuItems = 7;
     private const int expectedTotal = expectedMenuItems + 1; // + end separator
     private Queue<ToolStripMenuItem> _factoryQueue = new();
-    private IMenuItemFactory _factory = null;
+    private IMenuItemFactory _factory = null!;
     private TestBranchNode _testNode = new();
 
     [SetUp]
@@ -99,8 +99,8 @@ public class GitRefMenuItemsTest
 
     private void AssertItem(ToolStripItemWithKey menuItem, string caption)
     {
-        ToolStripMenuItem item = menuItem.Item as ToolStripMenuItem;
-        item.PerformClick();
+        ToolStripMenuItem? item = menuItem.Item as ToolStripMenuItem;
+        item!.PerformClick();
         ClassicAssert.AreEqual(caption, _testNode.CallStatck.Pop());
     }
 

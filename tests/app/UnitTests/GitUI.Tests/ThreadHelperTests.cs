@@ -96,8 +96,8 @@ public sealed class ThreadHelperTests
     {
         TaskCompletionSource<int> tcs = new();
         tcs.SetCanceled();
-        AggregateException actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
-        ClassicAssert.IsInstanceOf<TaskCanceledException>(actual.InnerException);
+        AggregateException? actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
+        ClassicAssert.IsInstanceOf<TaskCanceledException>(actual!.InnerException);
     }
 
     [Test]
@@ -106,8 +106,8 @@ public sealed class ThreadHelperTests
         TaskCompletionSource<int> tcs = new();
         Exception ex = new();
         tcs.SetException(ex);
-        AggregateException actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
-        ClassicAssert.AreSame(ex, actual.InnerException);
+        AggregateException? actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
+        ClassicAssert.AreSame(ex, actual!.InnerException);
         ClassicAssert.AreEqual(1, actual.InnerExceptions.Count);
     }
 
@@ -131,8 +131,8 @@ public sealed class ThreadHelperTests
     {
         TaskCompletionSource<int> tcs = new();
         tcs.SetCanceled();
-        AggregateException actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
-        ClassicAssert.IsInstanceOf<TaskCanceledException>(actual.InnerException);
+        AggregateException? actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
+        ClassicAssert.IsInstanceOf<TaskCanceledException>(actual!.InnerException);
     }
 
     [Test]
@@ -141,8 +141,8 @@ public sealed class ThreadHelperTests
         TaskCompletionSource<int> tcs = new();
         Exception ex = new();
         tcs.SetException(ex);
-        AggregateException actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
-        ClassicAssert.AreSame(ex, actual.InnerException);
+        AggregateException? actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
+        ClassicAssert.AreSame(ex, actual!.InnerException);
         ClassicAssert.AreEqual(1, actual.InnerExceptions.Count);
     }
 
@@ -169,14 +169,10 @@ public sealed class ThreadHelperTests
             Application.ThreadException += HandleThreadException;
         }
 
-        public Exception Exception
-        {
-            get;
-            private set;
-        }
+        public Exception Exception { get; private set; } = null!;
 
         [CanBeNull]
-        public string Message => Exception?.Message;
+        public string Message => Exception?.Message!;
 
         public void Dispose()
         {

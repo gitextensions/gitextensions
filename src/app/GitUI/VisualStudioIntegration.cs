@@ -56,8 +56,8 @@ internal static class VisualStudioIntegration
                 catch (COMException exception) when ((uint)exception.HResult == RPC_E_CALL_REJECTED)
                 {
                     Trace.WriteLine(exception);
-                    Form activeForm = Form.ActiveForm;
-                    await activeForm.SwitchToMainThreadAsync();
+                    Form? activeForm = Form.ActiveForm;
+                    await activeForm!.SwitchToMainThreadAsync();
                     if (!MessageBoxes.ConfirmRetryOpenVisualStudio(activeForm))
                     {
                         return;

@@ -25,7 +25,7 @@ public static partial class Commands
             });
     }
 
-    public static IGitCommand CreateTag(GitCreateTagArgs gitCreateTagArgs, string? tagMessageFileName, Func<string, string?> getPathForGitExecution)
+    public static IGitCommand CreateTag(GitCreateTagArgs gitCreateTagArgs, string? tagMessageFileName, Func<string?, string?> getPathForGitExecution)
     {
         Validate(gitCreateTagArgs, tagMessageFileName);
 
@@ -56,7 +56,7 @@ public static partial class Commands
             };
         }
 
-        static void Validate(GitCreateTagArgs gitCreateTagArgs, string tagMessageFileName)
+        static void Validate(GitCreateTagArgs gitCreateTagArgs, string? tagMessageFileName)
         {
             if (gitCreateTagArgs.ObjectId is null)
             {

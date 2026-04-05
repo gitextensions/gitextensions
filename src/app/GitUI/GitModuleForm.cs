@@ -58,7 +58,7 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModule
         {
             ArgumentNullException.ThrowIfNull(value);
 
-            IGitUICommands oldCommands = _uiCommands;
+            IGitUICommands? oldCommands = _uiCommands;
             _uiCommands = value;
 
             _hotkeySettingsLoader = _uiCommands.GetRequiredService<IHotkeySettingsLoader>();
@@ -94,10 +94,10 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, IGitModule
         }
         else
         {
-            UICommands = commands;
+            UICommands = commands!;
         }
 
-        DiagnosticsClient.TrackPageView(GetType().FullName);
+        DiagnosticsClient.TrackPageView(GetType().FullName!);
     }
 
     protected GitModuleForm([NotNull] IGitUICommands commands)

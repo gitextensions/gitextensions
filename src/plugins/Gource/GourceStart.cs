@@ -31,13 +31,13 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         Arguments.Text = GourceArguments;
     }
 
-    private GitUIEventArgs GitUIArgs { get; }
+    private GitUIEventArgs GitUIArgs { get; } = null!;
 
-    public string PathToGource { get; set; }
+    public string PathToGource { get; set; } = "";
 
     public string? GitWorkingDir { get; set; }
 
-    public string GourceArguments { get; set; }
+    public string GourceArguments { get; set; } = "";
 
     private void RunRealCmdDetached(string cmd, string arguments)
     {
@@ -110,7 +110,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         {
             try
             {
-                Image image = await AvatarService.DefaultProvider.GetAvatarAsync(author.email, author.name, imageSize: 90);
+                Image? image = await AvatarService.DefaultProvider.GetAvatarAsync(author.email, author.name, imageSize: 90);
                 string filename = author.name + ".png";
 
                 if (image is null || filename.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)

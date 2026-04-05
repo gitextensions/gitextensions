@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.Collections.Frozen;
 using System.ComponentModel;
 using System.Diagnostics;

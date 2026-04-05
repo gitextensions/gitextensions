@@ -8,6 +8,7 @@ namespace GitCommands;
 [XmlRoot("dictionary")]
 [Serializable]
 public class XmlSerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
+    where TKey : notnull
 {
     public XmlSerializableDictionary()
     {
@@ -52,17 +53,17 @@ public class XmlSerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
                 reader.ReadStartElement("item");
 
                 reader.ReadStartElement("key");
-                TKey key = (TKey)keySerializer.Deserialize(reader);
+                TKey? key = (TKey?)keySerializer.Deserialize(reader);
                 reader.ReadEndElement();
 
                 reader.ReadStartElement("value");
-                TValue value = (TValue)valueSerializer.Deserialize(reader);
+                TValue? value = (TValue?)valueSerializer.Deserialize(reader);
                 reader.ReadEndElement();
 
                 reader.ReadEndElement();
                 reader.MoveToContent();
 
-                this[key] = value;
+                this[key!] = value!;
             }
         }
 

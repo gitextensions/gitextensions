@@ -1,5 +1,3 @@
-#nullable enable
-
 namespace GitExtensions.Extensibility.Settings;
 
 public static class PathSetting

@@ -68,7 +68,7 @@ public partial class FormChooseTranslation : GitExtensionsForm
         ListView.SelectedListViewItemCollection selectedItems = ((ListView)sender).SelectedItems;
         if (selectedItems.Count > 0)
         {
-            AppSettings.Translation = selectedItems[0].Tag.ToString();
+            AppSettings.Translation = selectedItems[0].Tag!.ToString()!;
         }
 
         Close();

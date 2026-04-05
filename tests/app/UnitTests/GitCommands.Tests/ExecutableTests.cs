@@ -107,7 +107,7 @@ public sealed class ExecutableTests
         CancellationToken cancellationToken = cancellationTokenSource.Token;
         IExecutable executable = new Executable(exeFile);
 
-        Exception exception = null;
+        Exception? exception = null;
         ExecutionResult? executionResult = null;
         async Task ExecuteAsync()
         {

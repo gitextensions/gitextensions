@@ -203,8 +203,8 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     {
         List<CustomDiffMergeTool> menus =
         [
-            new(openWithDifftoolToolStripMenuItem, OpenWithDifftoolToolStripMenuItem_Click),
-            new(diffToolRemoteLocalStripMenuItem, diffToolRemoteLocalStripMenuItem_Click),
+            new(openWithDifftoolToolStripMenuItem, OpenWithDifftoolToolStripMenuItem_Click!),
+            new(diffToolRemoteLocalStripMenuItem, diffToolRemoteLocalStripMenuItem_Click!),
         ];
 
         new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true, cancellationToken: _customDiffToolsSequence.Next());
@@ -234,7 +234,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         return RevisionGrid.GetRevisionFileName(FileName, objectId);
     }
 
-    private void FileChangesSelectionChanged(object sender, EventArgs e)
+    private void FileChangesSelectionChanged(object? sender, EventArgs e)
     {
         UpdateSelectedFileViewers();
     }
@@ -279,7 +279,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
             = _commitInfoTabPageText
             + (isFolder || fileAvailable ? "" : string.Format(_fileNotFound.Text, fileName.Quote()));
 
-        TabPage preferredTab = null;
+        TabPage? preferredTab = null;
         if (revision.IsArtificial)
         {
             CommitInfoTabPage.Parent = null;
@@ -362,8 +362,9 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
             };
             CancellationToken cancellationToken = _viewChangesSequence.Next();
             View.GetUpdateTreeId(file, revision.ObjectId, cancellationToken);
-            FileStatusItem item = new(firstRev: selectedRevisions.Count > 1 ? selectedRevisions[^1] : null,
-                secondRev: selectedRevisions.Count > 0 ? selectedRevisions[0] : null,
+            FileStatusItem item = new(
+                firstRev: selectedRevisions.Count > 1 ? selectedRevisions[^1] : null,
+                secondRev: selectedRevisions.Count > 0 ? selectedRevisions[0] : null!,
                 file);
             _ = Diff.ViewChangesAsync(item, defaultText: TranslatedStrings.NoChanges, cancellationToken: cancellationToken);
         }
@@ -387,24 +388,24 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         RevisionGrid.ViewSelectedRevisions();
     }
 
-    private void OpenWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
+    private void OpenWithDifftoolToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         OpenFilesWithDiffTool(RevisionDiffKind.DiffAB, sender);
     }
 
-    private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object sender)
+    private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object? sender)
     {
-        ToolStripMenuItem item = sender as ToolStripMenuItem;
+        ToolStripMenuItem? item = sender as ToolStripMenuItem;
         if (item?.DropDownItems != null)
         {
             // "main menu" clicked, cancel dropdown manually, invoke default mergetool
             item.HideDropDown();
-            item.Owner.Hide();
+            item.Owner?.Hide();
         }
 
-        string toolName = item?.Tag as string;
+        string? toolName = item?.Tag as string;
         IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
-        string orgFileName = selectedRevisions.Count != 0
+        string? orgFileName = selectedRevisions.Count != 0
             ? GetFileNameForRevision(selectedRevisions[0])
             : null;
 
@@ -526,7 +527,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
             selectedRevisions.Count >= 1 && !selectedRevisions[0].IsArtificial;
     }
 
-    private void diffToolRemoteLocalStripMenuItem_Click(object sender, EventArgs e)
+    private void diffToolRemoteLocalStripMenuItem_Click(object? sender, EventArgs e)
     {
         OpenFilesWithDiffTool(RevisionDiffKind.DiffBLocal, sender);
     }

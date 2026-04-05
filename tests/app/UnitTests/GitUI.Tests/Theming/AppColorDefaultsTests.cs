@@ -9,7 +9,7 @@ namespace GitUITests.Theming;
 [TestFixture]
 public class AppColorDefaultsTests
 {
-    private string _originalPath;
+    private string _originalPath = null!;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()

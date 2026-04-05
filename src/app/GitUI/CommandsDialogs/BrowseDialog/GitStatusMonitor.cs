@@ -135,13 +135,13 @@ public sealed class GitStatusMonitor : IDisposable
 
         return;
 
-        void WorkTreeWatcherError(object sender, ErrorEventArgs e)
+        void WorkTreeWatcherError(object? sender, ErrorEventArgs e)
         {
             // Called for instance at buffer overflow
             ScheduleNextUpdateTime(FileChangedUpdateDelay);
         }
 
-        void GitDirChanged(object sender, FileSystemEventArgs e)
+        void GitDirChanged(object? sender, FileSystemEventArgs e)
         {
             Validates.NotNull(_gitPath);
 
@@ -158,7 +158,7 @@ public sealed class GitStatusMonitor : IDisposable
 
             // submodules directory's subdir changed
             // cut/paste/rename/delete operations are not expected on directories inside nested .git dirs
-            if (e.FullPath.StartsWith(_submodulesPath) && Directory.Exists(e.FullPath))
+            if (e.FullPath.StartsWith(_submodulesPath!) && Directory.Exists(e.FullPath))
             {
                 return;
             }
@@ -167,9 +167,9 @@ public sealed class GitStatusMonitor : IDisposable
             ScheduleNextUpdateTime(FileChangedUpdateDelay);
         }
 
-        void WorkTreeChanged(object sender, FileSystemEventArgs e)
+        void WorkTreeChanged(object? sender, FileSystemEventArgs e)
         {
-            if (e.FullPath.StartsWith(_gitPath))
+            if (e.FullPath.StartsWith(_gitPath!))
             {
                 GitDirChanged(sender, e);
                 return;
@@ -336,9 +336,9 @@ public sealed class GitStatusMonitor : IDisposable
 
         return;
 
-        void commandsSource_GitUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
+        void commandsSource_GitUICommandsChanged(object? sender, GitUICommandsChangedEventArgs e)
         {
-            IGitUICommands oldCommands = e.OldCommands;
+            IGitUICommands? oldCommands = e.OldCommands;
             if (oldCommands is not null)
             {
                 oldCommands.PreCheckoutBranch -= GitUICommands_PreCheckout;
@@ -348,7 +348,7 @@ public sealed class GitStatusMonitor : IDisposable
                 oldCommands.PostRepositoryChanged -= GitUICommands_PostRepositoryChanged;
             }
 
-            commandsSource_activate((IGitUICommandsSource)sender);
+            commandsSource_activate((IGitUICommandsSource)sender!);
         }
 
         void commandsSource_activate(IGitUICommandsSource sender)
@@ -364,17 +364,17 @@ public sealed class GitStatusMonitor : IDisposable
             StartWatchingChanges(module.WorkingDir, module.WorkingDirGitDir);
         }
 
-        void GitUICommands_PreCheckout(object sender, GitUIEventArgs e)
+        void GitUICommands_PreCheckout(object? sender, GitUIEventArgs e)
         {
             CurrentStatus = GitStatusMonitorState.Paused;
         }
 
-        void GitUICommands_PostCheckout(object sender, GitUIPostActionEventArgs e)
+        void GitUICommands_PostCheckout(object? sender, GitUIPostActionEventArgs e)
         {
             CurrentStatus = GitStatusMonitorState.Running;
         }
 
-        void GitUICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
+        void GitUICommands_PostRepositoryChanged(object? sender, GitUIEventArgs e)
         {
             lock (_statusSequenceLock)
             {
@@ -397,7 +397,7 @@ public sealed class GitStatusMonitor : IDisposable
                 if (isValidGitDir)
                 {
                     _gitDirWatcher.Path = PathUtil.RemoveTrailingPathSeparator(gitDirPath);
-                    _submodulesPath = Path.Combine(_gitPath, "modules");
+                    _submodulesPath = Path.Combine(_gitPath!, "modules");
                 }
                 else
                 {

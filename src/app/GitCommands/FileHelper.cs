@@ -87,7 +87,7 @@ public static class FileHelper
             attributes[lines[i + 1].Trim()] = lines[i + 2].Trim();
         }
 
-        if (attributes.TryGetValue("diff", out string diff))
+        if (attributes.TryGetValue("diff", out string? diff))
         {
             if (diff == "unset")
             {
@@ -100,7 +100,7 @@ public static class FileHelper
             }
         }
 
-        if (attributes.TryGetValue("text", out string text))
+        if (attributes.TryGetValue("text", out string? text))
         {
             if (text != "unset" && text != "unspecified")
             {
@@ -108,7 +108,7 @@ public static class FileHelper
             }
         }
 
-        if (attributes.TryGetValue("crlf", out string crlf))
+        if (attributes.TryGetValue("crlf", out string? crlf))
         {
             if (crlf != "unset" && crlf != "unspecified")
             {
@@ -116,7 +116,7 @@ public static class FileHelper
             }
         }
 
-        if (attributes.TryGetValue("eol", out string eol))
+        if (attributes.TryGetValue("eol", out string? eol))
         {
             if (eol != "unset" && eol != "unspecified")
             {

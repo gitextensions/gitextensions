@@ -73,7 +73,7 @@ public sealed class GitDirectoryResolver : IGitDirectoryResolver
         if (_fileSystem.File.Exists(gitPath))
         {
             const string gitdir = "gitdir:";
-            string line;
+            string? line;
             try
             {
                 line = _fileSystem.File.ReadLines(gitPath).FirstOrDefault(l => l.StartsWith(gitdir));

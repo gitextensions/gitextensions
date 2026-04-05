@@ -43,7 +43,7 @@ public class CustomAvatarTemplateFormatter
         {
             "val1" => input => input.val1,
             "val2" => input => input.val2,
-            _ => input => null,
+            _ => input => null!,
         };
     }
 }

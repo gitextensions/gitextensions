@@ -108,7 +108,7 @@ internal class AppVeyorAdapter : IBuildServerAdapter
                 foreach (JToken project in JArray.Parse(result))
                 {
                     // "slug" and "name" are normally the same
-                    string repoName = project["slug"].ToString();
+                    string repoName = project["slug"]!.ToString();
                     string projectId = accountName.Combine("/", repoName)!;
                     projectNames.Add(projectId);
                 }
@@ -178,11 +178,11 @@ internal class AppVeyorAdapter : IBuildServerAdapter
 
         JObject content = JObject.Parse(result);
 
-        JToken projectData = content["project"];
-        JToken repositoryName = projectData["repositoryName"];
-        JToken repositoryType = projectData["repositoryType"];
+        JToken? projectData = content["project"];
+        JToken? repositoryName = projectData?["repositoryName"];
+        JToken? repositoryType = projectData?["repositoryType"];
 
-        JEnumerable<JToken> builds = content["builds"].Children();
+        JEnumerable<JToken> builds = content["builds"]!.Children();
         string baseWebUrl = $"{WebSiteUrl}/project/{projectId}/build/";
         string baseApiUrl = $"{ApiBaseUrl}{projectId}/";
 
@@ -191,28 +191,28 @@ internal class AppVeyorAdapter : IBuildServerAdapter
         {
             try
             {
-                if (!ObjectId.TryParse((b["pullRequestHeadCommitId"] ?? b["commitId"]).ToObject<string>(),
+                if (!ObjectId.TryParse((b["pullRequestHeadCommitId"] ?? b["commitId"])!.ToObject<string>(),
                         out ObjectId? objectId) || !_isCommitInRevisionGrid(objectId))
                 {
                     continue;
                 }
 
-                JToken pullRequestId = b["pullRequestId"];
-                string version = b["version"].ToObject<string>();
-                BuildStatus status = ParseBuildStatus(b["status"].ToObject<string>());
+                JToken? pullRequestId = b["pullRequestId"];
+                string? version = b["version"]?.ToObject<string>();
+                BuildStatus status = ParseBuildStatus(b["status"]?.ToObject<string>());
                 long? duration = null;
                 if (status is (BuildStatus.Success or BuildStatus.Failure))
                 {
                     duration = GetBuildDuration(b);
                 }
 
-                JToken pullRequestTitle = b["pullRequestName"];
+                JToken? pullRequestTitle = b["pullRequestName"];
 
                 buildDetails.Add(new AppVeyorBuildInfo
                 {
                     Id = version,
-                    BuildId = b["buildId"].ToObject<string>(),
-                    Branch = b["branch"].ToObject<string>(),
+                    BuildId = b["buildId"]?.ToObject<string>(),
+                    Branch = b["branch"]?.ToObject<string>(),
                     CommitId = objectId,
                     CommitHashList = new[] { objectId },
                     Status = status,
@@ -220,8 +220,8 @@ internal class AppVeyorAdapter : IBuildServerAdapter
                     BaseWebUrl = baseWebUrl,
                     Url = baseWebUrl + version,
                     PullRequestUrl = repositoryType is not null && repositoryName is not null && pullRequestId is not null
-                        ? BuildPullRequetUrl(repositoryType.Value<string>(), repositoryName.Value<string>(),
-                            pullRequestId.Value<string>())
+                        ? BuildPullRequetUrl(repositoryType.Value<string>()!, repositoryName.Value<string>()!,
+                            pullRequestId.Value<string>()!)
                         : null,
                     BaseApiUrl = baseApiUrl,
                     AppVeyorBuildReportUrl = baseApiUrl + "build/" + version,
@@ -261,7 +261,7 @@ internal class AppVeyorAdapter : IBuildServerAdapter
         get
         {
             Validates.NotNull(_httpClientAppVeyor);
-            return _httpClientAppVeyor.BaseAddress.Host;
+            return _httpClientAppVeyor.BaseAddress!.Host;
         }
     }
 
@@ -352,11 +352,11 @@ internal class AppVeyorAdapter : IBuildServerAdapter
             return;
         }
 
-        JToken buildData = buildDetailsParsed["build"];
-        IList<JToken> buildJobs = (JContainer)buildData["jobs"];
+        JToken buildData = buildDetailsParsed["build"]!;
+        IList<JToken> buildJobs = (JContainer)buildData["jobs"]!;
         JToken buildDescription = buildJobs[^1];
 
-        string status = buildDescription["status"].ToObject<string>();
+        string? status = buildDescription["status"]?.ToObject<string>();
         buildDetails.Status = ParseBuildStatus(status);
 
         buildDetails.ChangeProgressCounter();
@@ -365,11 +365,11 @@ internal class AppVeyorAdapter : IBuildServerAdapter
             buildDetails.Duration = GetBuildDuration(buildData);
         }
 
-        int testCount = buildDescription["testsCount"].ToObject<int>();
+        int testCount = buildDescription["testsCount"]!.ToObject<int>();
         if (testCount != 0)
         {
-            int failedTestCount = buildDescription["failedTestsCount"].ToObject<int>();
-            int skippedTestCount = testCount - buildDescription["passedTestsCount"].ToObject<int>();
+            int failedTestCount = buildDescription["failedTestsCount"]!.ToObject<int>();
+            int skippedTestCount = testCount - buildDescription["passedTestsCount"]!.ToObject<int>();
             string testResults = testCount + " tests";
             if (failedTestCount != 0 || skippedTestCount != 0)
             {
@@ -403,10 +403,10 @@ internal class AppVeyorAdapter : IBuildServerAdapter
         }
         catch
         {
-            string buildHistoryUrl = buildDetails.BaseApiUrl + "/history?recordsNumber=1&startBuildId=" + (int.Parse(buildDetails.BuildId) + 1);
+            string buildHistoryUrl = buildDetails.BaseApiUrl + "/history?recordsNumber=1&startBuildId=" + (int.Parse(buildDetails.BuildId!) + 1);
             JObject builds = JObject.Parse(await GetResponseAsync(_httpClientAppVeyor, buildHistoryUrl, cancellationToken).ConfigureAwait(false));
 
-            string version = builds["builds"][0]["version"].ToObject<string>();
+            string? version = builds["builds"]?[0]?["version"]?.ToObject<string>();
             buildDetails.Id = version;
             buildDetails.AppVeyorBuildReportUrl = buildDetails.BaseApiUrl + "/build/" + version;
             buildDetails.Url = buildDetails.BaseWebUrl + version;
@@ -415,7 +415,7 @@ internal class AppVeyorAdapter : IBuildServerAdapter
         }
     }
 
-    private static BuildStatus ParseBuildStatus(string statusValue)
+    private static BuildStatus ParseBuildStatus(string? statusValue)
     {
         return statusValue switch
         {
@@ -453,7 +453,7 @@ internal class AppVeyorAdapter : IBuildServerAdapter
 
         if (task.Status == TaskStatus.RanToCompletion && task.CompletedResult().IsSuccessStatusCode)
         {
-            return task.CompletedResult().Content.ReadAsStreamAsync(cancellationToken);
+            return task.CompletedResult().Content.ReadAsStreamAsync(cancellationToken)!;
         }
 
         return Task.FromResult<Stream?>(null);
@@ -472,7 +472,7 @@ internal class AppVeyorAdapter : IBuildServerAdapter
                     return string.Empty;
                 }
 
-                using Stream responseStream = task.Result;
+                using Stream? responseStream = task.Result;
 
                 if (responseStream is null)
                 {

@@ -7,6 +7,6 @@ public class PagedResponse<TItem>
     public int? PageNumber { get; set; }
     public int? NextPage { get; set; }
 
-    public IEnumerable<TItem> Items { get; set; }
+    public IEnumerable<TItem> Items { get; set; } = [];
     public int? TotalPages { get; set; }
 }

@@ -95,7 +95,7 @@ Do you want to register the host's fingerprint and restart the process?");
                     if (!string.IsNullOrEmpty(loadedKey) && !string.IsNullOrEmpty(Remote) &&
                         string.IsNullOrEmpty(Commands.Module.GetSetting("remote.{0}.puttykeyfile")))
                     {
-                        Commands.Module.SetSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey.ConvertPathToGitSetting());
+                        Commands.Module.SetSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey.ConvertPathToGitSetting()!);
                     }
 
                     // Retry the command.

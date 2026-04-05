@@ -153,7 +153,7 @@ Detail of the error:");
 
             if (running)
             {
-                IEnumerable<Build> builds = FilterRunningBuilds(await _apiClient.QueryRunningBuildsAsync(_buildDefinitions));
+                IEnumerable<Build> builds = FilterRunningBuilds(await _apiClient.QueryRunningBuildsAsync(_buildDefinitions!));
                 foreach (Build build in builds)
                 {
                     observer.OnNext(CreateBuildInfo(build));
@@ -162,7 +162,7 @@ Detail of the error:");
             else
             {
                 // Display cached builds results
-                if (!sinceDate.HasValue && _buildsCache.FinishedBuilds.Count != 0)
+                if (!sinceDate.HasValue && _buildsCache is not null && _buildsCache.FinishedBuilds.Count != 0)
                 {
                     foreach (BuildInfo buildInfo in _buildsCache.FinishedBuilds)
                     {
@@ -173,15 +173,15 @@ Detail of the error:");
                     sinceDate = _buildsCache.LastCall;
                 }
 
-                IEnumerable<Build> builds = await _apiClient.QueryFinishedBuildsAsync(_buildDefinitions, sinceDate);
-                IEnumerable<IGrouping<string, Build>> buildsByCommit = builds.GroupBy(b => b.SourceVersion);
+                IEnumerable<Build> builds = await _apiClient.QueryFinishedBuildsAsync(_buildDefinitions!, sinceDate);
+                IEnumerable<IGrouping<string?, Build>> buildsByCommit = builds.GroupBy(b => b.SourceVersion);
 
-                foreach (IGrouping<string, Build> buildsForACommit in buildsByCommit)
+                foreach (IGrouping<string?, Build> buildsForACommit in buildsByCommit)
                 {
                     Build buildToDisplay = buildsForACommit.OrderByDescending(b => b.FinishTime).First();
                     BuildInfo buildInfo = CreateBuildInfo(buildToDisplay);
                     observer.OnNext(buildInfo);
-                    _buildsCache.FinishedBuilds.Add(buildInfo);
+                    _buildsCache!.FinishedBuilds.Add(buildInfo);
                     if (buildToDisplay.FinishTime.HasValue && buildToDisplay.FinishTime.Value >= _buildsCache.LastCall)
                     {
                         _buildsCache.LastCall = buildToDisplay.FinishTime.Value.AddSeconds(1);
@@ -279,12 +279,12 @@ Detail of the error:");
             return runningBuilds;
         }
 
-        IEnumerable<IGrouping<string, Build>> byCommitBuilds = runningBuilds.GroupBy(b => b.SourceVersion);
+        IEnumerable<IGrouping<string?, Build>> byCommitBuilds = runningBuilds.GroupBy(b => b.SourceVersion);
         runningBuilds = [];
 
         // Filter running builds to display the best build as we can only display one build for a commit
         // by selecting the first started or if none, one that is waiting to start
-        foreach (IGrouping<string, Build> commitBuilds in byCommitBuilds)
+        foreach (IGrouping<string?, Build> commitBuilds in byCommitBuilds)
         {
             Build buildSelected = commitBuilds.Where(b => b.StartTime.HasValue).MinBy(b => b.StartTime)
                                 ?? commitBuilds.First();
@@ -309,7 +309,7 @@ Detail of the error:");
                 : buildDetail.FinishTime.HasValue ? _buildDurationFormatter.Format((long)(buildDetail.FinishTime.Value - buildDetail.StartTime.Value).TotalMilliseconds) : "???";
         }
 
-        return (duration, $"{buildDetail.BuildNumber} {ConvertResult(buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result)} - {duration} [{buildDetail.Definition.Name}]");
+        return (duration, $"{buildDetail.BuildNumber} {ConvertResult(buildDetail.IsInProgress ? buildDetail.Status : buildDetail.Result)} - {duration} [{buildDetail.Definition?.Name}]");
     }
 
     private static BuildInfo CreateBuildInfo(Build buildDetail)
@@ -318,22 +318,21 @@ Detail of the error:");
         Validates.NotNull(buildDetail.SourceVersion);
 
         string pullRequestTooltip = string.Empty;
-        string pullRequestUrl = null;
+        string? pullRequestUrl = null;
         if (buildDetail.IsPullRequest)
         {
-            // It's a PR and we need to dive into "Parameters" json to get the real commit hash
-            JsonNode pullRequestNode = JsonNode.Parse(buildDetail.Parameters);
-            string commitHash = GetNodeValue(pullRequestNode, "system.pullRequest.sourceCommitId");
+            JsonNode? pullRequestNode = buildDetail.Parameters is not null ? JsonNode.Parse(buildDetail.Parameters) : null;
+            string? commitHash = GetNodeValue(pullRequestNode, "system.pullRequest.sourceCommitId");
             if (!string.IsNullOrEmpty(commitHash))
             {
                 buildDetail.SourceVersion = commitHash;
             }
 
-            string pullRequestId = GetNodeValue(pullRequestNode, "system.pullRequest.pullRequestId");
+            string? pullRequestId = GetNodeValue(pullRequestNode, "system.pullRequest.pullRequestId");
             if (!string.IsNullOrWhiteSpace(pullRequestId))
             {
                 pullRequestTooltip = $"{Environment.NewLine}PR #{pullRequestId}";
-                pullRequestUrl = $"{buildDetail.Repository.Url}/pullrequest/{pullRequestId}";
+                pullRequestUrl = $"{buildDetail.Repository?.Url}/pullrequest/{pullRequestId}";
             }
         }
 
@@ -353,7 +352,7 @@ Detail of the error:");
         return buildInfo;
     }
 
-    private static string? GetNodeValue(JsonNode node, string key)
+    private static string? GetNodeValue(JsonNode? node, string key)
     {
         if (node is null)
         {
@@ -362,7 +361,7 @@ Detail of the error:");
 
         try
         {
-            return node[key].GetValue<string>();
+            return node[key]?.GetValue<string>();
         }
         catch (Exception)
         {

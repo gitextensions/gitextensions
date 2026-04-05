@@ -12,23 +12,23 @@ namespace GitUI.LeftPanel;
 
 partial class RepoObjectsTree : IMenuItemFactory
 {
-    private GitRefsSortOrderContextMenuItem _sortOrderContextMenuItem;
-    private GitRefsSortByContextMenuItem _sortByContextMenuItem;
+    private GitRefsSortOrderContextMenuItem _sortOrderContextMenuItem = null!;
+    private GitRefsSortByContextMenuItem _sortByContextMenuItem = null!;
 
     /// <summary>
     /// Local branch context menu [git ref / rename / delete] actions.
     /// </summary>
-    private LocalBranchMenuItems<LocalBranchNode> _localBranchMenuItems;
+    private LocalBranchMenuItems<LocalBranchNode> _localBranchMenuItems = null!;
 
     /// <summary>
     /// Remote branch context menu [git ref / rename / delete] actions.
     /// </summary>
-    private MenuItemsGenerator<RemoteBranchNode> _remoteBranchMenuItems;
+    private MenuItemsGenerator<RemoteBranchNode> _remoteBranchMenuItems = null!;
 
     /// <summary>
     /// Tags context menu [git ref] actions.
     /// </summary>
-    private MenuItemsGenerator<TagNode> _tagNodeMenuItems;
+    private MenuItemsGenerator<TagNode> _tagNodeMenuItems = null!;
 
     private static void EnableMenuItems(bool enabled, params ToolStripItem[] items)
     {
@@ -197,8 +197,8 @@ partial class RepoObjectsTree : IMenuItemFactory
         RegisterClick(mnubtnExpand, () => GetSelectedNodes().HavingChildren().Expandable().ForEach(node => node.TreeViewNode.ExpandAll()));
 
         // Move up / down (for top level Trees)
-        RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode, up: true));
-        RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode, up: false));
+        RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode!, up: true));
+        RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode!, up: false));
 
         // Sort by / order
         _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() => ResortRefs(new FilteredGitRefsProvider(UICommands.Module).GetRefs));
@@ -220,7 +220,7 @@ partial class RepoObjectsTree : IMenuItemFactory
         copyContextMenuItem.Enable(hasSingleSelection && (selectedNode is BaseBranchLeafNode or StashNode) && selectedNode.Visible);
         filterForSelectedRefsMenuItem.Enable(selectedNodes.OfType<IGitRefActions>().Any()); // enable if selection contains refs
 
-        LocalBranchNode selectedLocalBranch = selectedNode as LocalBranchNode;
+        LocalBranchNode? selectedLocalBranch = selectedNode as LocalBranchNode;
 
         foreach (ToolStripItemWithKey item in _localBranchMenuItems)
         {

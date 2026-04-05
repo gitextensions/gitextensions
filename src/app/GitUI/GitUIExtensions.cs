@@ -33,7 +33,7 @@ public static partial class GitUIExtensions
         int? line = null,
         string defaultText = "",
         Action? openWithDiffTool = null,
-        string additionalCommandInfo = null,
+        string additionalCommandInfo = null!,
         bool forceFileView = false)
     {
         if (item?.Item.IsStatusOnly ?? false)
@@ -76,7 +76,7 @@ public static partial class GitUIExtensions
             await fileViewer.ViewTextAsync(fileName: null, $"git range-diff {range} -- {additionalCommandInfo}", cancellationToken: cancellationToken);
 
             ExecutionResult result = await fileViewer.Module.GetRangeDiffAsync(
-                    firstId,
+                    firstId!,
                     item.SecondRevision.ObjectId,
                     item.BaseA,
                     item.BaseB,
@@ -200,7 +200,7 @@ public static partial class GitUIExtensions
         }
 
         // diff of text file
-        string selectedPatch = (await GetSelectedPatchAsync(fileViewer, firstId, item.SecondRevision.ObjectId, item.Item, cancellationToken))
+        string selectedPatch = (await GetSelectedPatchAsync(fileViewer, firstId!, item.SecondRevision.ObjectId, item.Item, cancellationToken))
             ?? defaultText;
 
         await fileViewer.ViewPatchAsync(item, text: selectedPatch, line: line, openWithDifftool: openWithDiffTool, cancellationToken: cancellationToken);
@@ -312,7 +312,7 @@ public static partial class GitUIExtensions
 
     public static void UnMask(this Control control)
     {
-        LoadingControl panel = FindMaskPanel(control);
+        LoadingControl? panel = FindMaskPanel(control);
         if (panel is not null)
         {
             control.Controls.Remove(panel);
@@ -353,7 +353,7 @@ public static partial class GitUIExtensions
             }
             else
             {
-                return container.ActiveControl;
+                return container.ActiveControl!;
             }
         }
     }

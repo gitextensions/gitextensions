@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using System.Reflection;
 using CommonTestUtils;
 using FluentAssertions;
@@ -26,18 +26,18 @@ public class ScriptRunnerTests
     private const int _keyOfExampleScript = 9002;
 
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // perf optimisation: get hold of the static ScriptsManager.ScriptRunner.RunScript method for test invocations
     // we could have used TestAccessor, but it would involve more code.
-    private static readonly MethodInfo _miRunScript = typeof(ScriptsManager.ScriptRunner).GetMethod("RunScriptInternal", BindingFlags.NonPublic | BindingFlags.Static);
+    private static readonly MethodInfo? _miRunScript = typeof(ScriptsManager.ScriptRunner).GetMethod("RunScriptInternal", BindingFlags.NonPublic | BindingFlags.Static);
 
     // Created once for each test
-    private GitUICommands _uiCommands;
-    private ScriptInfo _exampleScript;
-    private MockForm _mockForm;
-    private IGitModule _module;
-    private IGitUICommands _commands;
+    private GitUICommands _uiCommands = null!;
+    private ScriptInfo _exampleScript = null!;
+    private MockForm _mockForm = null!;
+    private IGitModule _module = null!;
+    private IGitUICommands _commands = null!;
 
     [SetUp]
     public void Setup()
@@ -63,7 +63,7 @@ public class ScriptRunnerTests
 
         _mockForm = new(_commands);
 
-        _exampleScript = scriptsManager.GetScript(_keyOfExampleScript);
+        _exampleScript = scriptsManager.GetScript(_keyOfExampleScript)!;
         _exampleScript.AskConfirmation = false; // avoid any dialogs popping up
         _exampleScript.RunInBackground = true; // avoid any dialogs popping up
 
@@ -131,7 +131,7 @@ public class ScriptRunnerTests
         _exampleScript.Command = "cmd";
         _exampleScript.Arguments = "/c echo {cHash}";
 
-        _module.GetCurrentCheckout().Returns((ObjectId)null);
+        _module.GetCurrentCheckout().Returns((ObjectId?)null);
 
         ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _commands, ScriptOptionsProviderBase.Default))).Should()
             .Throw<UserExternalOperationException>();
@@ -196,7 +196,7 @@ public class ScriptRunnerTests
 
             ClassicAssert.AreEqual(1, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
 
-            string errorMessage = null;
+            string? errorMessage = null;
             bool result = ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, ScriptOptionsProviderBase.Default);
 
             errorMessage.Should().BeNull();
@@ -208,18 +208,18 @@ public class ScriptRunnerTests
     {
         try
         {
-            bool result = (bool)_miRunScript.Invoke(null,
+            bool result = (bool)_miRunScript!.Invoke(null,
                 [
                     script,
                     owner,
                     uiCommands,
                     scriptOptionsProvider
-                ]);
+                ])!;
             return result;
         }
         catch (TargetInvocationException ex)
         {
-            throw ex.InnerException;
+            throw ex.InnerException!;
         }
     }
 

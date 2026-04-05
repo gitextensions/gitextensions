@@ -88,7 +88,7 @@ public static class AppColorDefaults
 
         foreach (string variation in variations)
         {
-            if (!_variations.TryGetValue(variation, out Dictionary<AppColor, Color> colorOverrides))
+            if (!_variations.TryGetValue(variation, out Dictionary<AppColor, Color>? colorOverrides))
             {
                 continue;
             }

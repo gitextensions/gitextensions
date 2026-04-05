@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.Text;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;

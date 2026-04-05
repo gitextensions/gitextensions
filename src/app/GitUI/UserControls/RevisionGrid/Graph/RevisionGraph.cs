@@ -111,7 +111,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
     public int Count { get; private set; }
 
     public bool OnlyFirstParent { get; set; }
-    public ObjectId HeadId { get; set; }
+    public ObjectId HeadId { get; set; } = null!;
 
     /// <summary>
     /// Checks whether the given hash is present in the graph.
@@ -198,7 +198,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
 
     public bool TryGetRowIndex(ObjectId objectId, out int index)
     {
-        if (!TryGetNode(objectId, out RevisionGraphRevision revision))
+        if (!TryGetNode(objectId, out RevisionGraphRevision? revision))
         {
             index = 0;
             return false;
@@ -250,7 +250,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
         }
 
         // Highlight revision
-        if (TryGetNode(id, out RevisionGraphRevision revisionGraphRevision))
+        if (TryGetNode(id, out RevisionGraphRevision? revisionGraphRevision))
         {
             revisionGraphRevision.MakeRelative();
         }
@@ -267,7 +267,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
 
         // The commits will be sorted by the score (not continuous numbering, there may be gaps).
         // This revision will be ordered after existing, 1+_maxScore is a preliminary score.
-        if (_incompleteRevisionByObjectId.TryGetValue(revision.ObjectId, out RevisionGraphRevision revisionGraphRevision))
+        if (_incompleteRevisionByObjectId.TryGetValue(revision.ObjectId, out RevisionGraphRevision? revisionGraphRevision))
         {
             // This revision was added as a parent, but is now found in the log.
             // Increase the score for this revision to keep the order intact.
@@ -291,7 +291,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
         {
             foreach (ObjectId parentObjectId in revision.ParentIds)
             {
-                if (_incompleteRevisionByObjectId.TryGetValue(parentObjectId, out RevisionGraphRevision parentRevisionGraphRevision))
+                if (_incompleteRevisionByObjectId.TryGetValue(parentObjectId, out RevisionGraphRevision? parentRevisionGraphRevision))
                 {
                     // Node seen as parent but not in grid (revisionGraphRevision is likely a separate branch).
                     // Set a new preliminary score (checked in AddParents), will be updated when seen in grid.

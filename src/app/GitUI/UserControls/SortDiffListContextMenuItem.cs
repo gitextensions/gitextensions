@@ -91,10 +91,10 @@ public class SortDiffListContextMenuItem : ToolStripMenuItem
         }
     }
 
-    private void Item_Click(object sender, EventArgs e)
+    private void Item_Click(object? sender, EventArgs e)
     {
-        ToolStripMenuItem item = (ToolStripMenuItem)sender;
-        DiffListSortType sortingType = (DiffListSortType)item.Tag;
+        ToolStripMenuItem item = (ToolStripMenuItem)sender!;
+        DiffListSortType sortingType = (DiffListSortType)item.Tag!;
         _sortService.DiffListSorting = sortingType;
     }
 

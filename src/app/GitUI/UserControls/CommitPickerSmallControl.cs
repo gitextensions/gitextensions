@@ -26,9 +26,9 @@ public partial class CommitPickerSmallControl : GitModuleControl
     /// </summary>
     public void SetSelectedCommitHash(string? commitHash)
     {
-        ObjectId oldCommitHash = SelectedObjectId;
+        ObjectId? oldCommitHash = SelectedObjectId;
 
-        SelectedObjectId = Module.RevParse(commitHash);
+        SelectedObjectId = Module.RevParse(commitHash!);
 
         if (SelectedObjectId is null && !string.IsNullOrWhiteSpace(commitHash))
         {
@@ -53,7 +53,7 @@ public partial class CommitPickerSmallControl : GitModuleControl
             textBoxCommitHash.Text = SelectedObjectId.ToShortString();
             ThreadHelper.FileAndForget(async () =>
                 {
-                    ObjectId currentCheckout = Module.GetCurrentCheckout();
+                    ObjectId? currentCheckout = Module.GetCurrentCheckout();
 
                     if (currentCheckout is null)
                     {

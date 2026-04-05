@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -13,7 +13,7 @@ namespace GitExtensions.UITests.CommandsDialogs;
 public class FormBrowse_LeftPanel_ReorderNodesTest
 {
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     // Track the original setting value
     private bool _originalShowAuthorAvatarColumn;
@@ -21,7 +21,7 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
 
     private List<bool> _originalRepoObjectsTreeShow = [];
 
-    private GitModuleTestHelper _repo1;
+    private GitModuleTestHelper _repo1 = null!;
 
     [OneTimeSetUp]
     public void SetUpFixture()
@@ -182,7 +182,7 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
             return;
         }
 
-        string items = collection.OfType<object>().Select(n => n.ToString()).Join(", ");
+        string items = collection.OfType<object>().Select(n => n.ToString()!).Join(", ");
         ClassicAssert.Fail($"Actual count {actualCount} differs from expected {expectedCount}.{Environment.NewLine}Actual items: {items}");
     }
 

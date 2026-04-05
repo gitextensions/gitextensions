@@ -64,7 +64,7 @@ public static class KeysExtensions
         }
 
         // Get the string representation
-        string str = key.ToCultureSpecificString();
+        string? str = key.ToCultureSpecificString();
 
         // Strip the leading 'D' if it's a Decimal Key (D1, D2, ...)
         if (str?.Length is 2 && str[0] == 'D')

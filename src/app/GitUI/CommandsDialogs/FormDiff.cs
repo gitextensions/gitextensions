@@ -19,7 +19,7 @@ public partial class FormDiff : GitModuleForm
     private GitRevision? _firstRevision;
     private GitRevision? _secondRevision;
     private readonly GitRevision? _mergeBase;
-    private Lazy<ObjectId?> _currentHead = null;
+    private Lazy<ObjectId?> _currentHead;
 
     private readonly IGitRevisionTester _revisionTester;
     private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
@@ -69,7 +69,7 @@ public partial class FormDiff : GitModuleForm
         }
         else
         {
-            ObjectId mergeBase = Module.GetMergeBase(firstMergeId, secondMergeId);
+            ObjectId? mergeBase = Module.GetMergeBase(firstMergeId, secondMergeId);
             _mergeBase = mergeBase is not null ? new GitRevision(mergeBase) : null;
         }
 
@@ -107,13 +107,13 @@ public partial class FormDiff : GitModuleForm
         base.Dispose(disposing);
     }
 
-    private void FileViewer_TopScrollReached(object sender, EventArgs e)
+    private void FileViewer_TopScrollReached(object? sender, EventArgs e)
     {
         DiffFiles.SelectPreviousVisibleItem();
         DiffText.ScrollToBottom();
     }
 
-    private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+    private void FileViewer_BottomScrollReached(object? sender, EventArgs e)
     {
         DiffFiles.SelectNextVisibleItem();
         DiffText.ScrollToTop();
@@ -221,7 +221,7 @@ public partial class FormDiff : GitModuleForm
         if (form.ShowDialog(this) == DialogResult.OK)
         {
             displayStr = form.BranchName;
-            ObjectId objectId = Module.RevParse(form.BranchName);
+            ObjectId? objectId = Module.RevParse(form.BranchName!);
             revision = objectId is null ? null : new GitRevision(objectId);
             PopulateDiffFiles();
         }

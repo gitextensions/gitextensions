@@ -5,7 +5,7 @@ namespace GitUI;
 public static class ControlUtil
 {
     private static readonly MethodInfo SetStyleMethod = typeof(TabControl)
-        .GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic);
+        .GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic)!;
 
     /// <summary>
     /// Enumerates all descendant controls.
@@ -57,7 +57,7 @@ public static class ControlUtil
     /// </remarks>
     public static IEnumerable<Control> FindAncestors(this Control control)
     {
-        Control parent = control.Parent;
+        Control? parent = control.Parent;
 
         while (parent is not null)
         {

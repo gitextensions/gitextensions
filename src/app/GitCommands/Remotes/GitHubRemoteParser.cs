@@ -8,5 +8,5 @@ public sealed partial class GitHubRemoteParser : GitHostingRemoteParser
         => TryExtractGitHubDataFromRemoteUrl(remoteUrl, out _, out _);
 
     public bool TryExtractGitHubDataFromRemoteUrl(string remoteUrl, [NotNullWhen(returnValue: true)] out string? owner, [NotNullWhen(returnValue: true)] out string? repository)
-        => TryExtractGitHostingDataFromRemoteUrl(remoteUrl, out string gitHosting, out owner, out repository) && gitHosting == "github.com";
+        => TryExtractGitHostingDataFromRemoteUrl(remoteUrl, out string? gitHosting, out owner, out repository) && gitHosting == "github.com";
 }

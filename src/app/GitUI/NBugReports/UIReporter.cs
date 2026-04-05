@@ -63,7 +63,7 @@ internal class UIReporter : IBugReporter
 
     private static TaskDialogPage CreateDubiousOwnershipReport(ExternalOperationException exception)
     {
-        string error = exception.InnerException.Message;
+        string error = exception.InnerException!.Message;
         TaskDialogPage pageSecurity = new()
         {
             Icon = TaskDialogIcon.Error,
@@ -113,7 +113,7 @@ internal class UIReporter : IBugReporter
 
             button.Click += (_, _) =>
             {
-                IGitExecutorProvider executorProvider = BugReportInvoker.ExecutorProvider;
+                IGitExecutorProvider? executorProvider = BugReportInvoker.ExecutorProvider;
 
                 // ExecutorProvider is set in Program.cs Main method before any error can be reported so it should never be null here.
                 executorProvider!.GetExecutor(workingDir).GitExecutable.Start(command).WaitForExit();

@@ -33,14 +33,14 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
 
     public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
     {
-        Uri uri = await BuildAvatarUriAsync(email, imageSize);
+        Uri? uri = await BuildAvatarUriAsync(email, imageSize);
 
         if (uri is null)
         {
             return null;
         }
 
-        Image image = await _downloader.DownloadImageAsync(uri);
+        Image? image = await _downloader.DownloadImageAsync(uri);
 
         // Sadly GitHub doesn't provide an option to return a 404 error for non-custom avatars
         // and always provides a fallback image (identicon). Using GitHubs fallback image would

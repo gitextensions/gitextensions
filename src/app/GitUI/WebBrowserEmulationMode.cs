@@ -20,7 +20,7 @@ public static class WebBrowserEmulationMode
         }
 
         // FeatureControl settings are per-process
-        string appName = System.IO.Path.GetFileName(Environment.ProcessPath);
+        string? appName = System.IO.Path.GetFileName(Environment.ProcessPath);
 
         const string featureControlRegKey = @"HKEY_CURRENT_USER\Software\Microsoft\Internet Explorer\Main\FeatureControl\";
 
@@ -46,21 +46,21 @@ public static class WebBrowserEmulationMode
         try
         {
             int browserVersion;
-            using (RegistryKey ieKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer",
+            using (RegistryKey? ieKey = Registry.LocalMachine.OpenSubKey(@"SOFTWARE\Microsoft\Internet Explorer",
                 RegistryKeyPermissionCheck.ReadSubTree,
                 System.Security.AccessControl.RegistryRights.QueryValues))
             {
-                object version = ieKey.GetValue("svcVersion");
+                object? version = ieKey!.GetValue("svcVersion");
                 if (version is null)
                 {
-                    version = ieKey.GetValue("Version");
+                    version = ieKey!.GetValue("Version");
                     if (version is null)
                     {
                         return false;
                     }
                 }
 
-                if (!int.TryParse(version.ToString().LazySplit('.').First(), out browserVersion))
+                if (!int.TryParse(version.ToString()!.LazySplit('.').First(), out browserVersion))
                 {
                     Trace.WriteLine($"Could not parse browser version: {version}");
                     return false;

@@ -5,7 +5,7 @@ namespace GitUI.CommandsDialogs;
 
 public partial class FormBlame : GitModuleForm
 {
-    public string FileName { get; }
+    public string? FileName { get; }
 
     private FormBlame(IGitUICommands commands) : base(commands)
     {

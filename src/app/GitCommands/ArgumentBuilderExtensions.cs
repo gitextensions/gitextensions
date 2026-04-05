@@ -63,7 +63,7 @@ public static class ArgumentBuilderExtensions
             return;
         }
 
-        foreach (string value in values)
+        foreach (string? value in values)
         {
             builder.Add(value);
         }
@@ -89,7 +89,7 @@ public static class ArgumentBuilderExtensions
             return;
         }
 
-        foreach (string value in ifConditionTrue)
+        foreach (string? value in ifConditionTrue)
         {
             builder.Add(value);
         }
@@ -267,7 +267,7 @@ public static class ArgumentBuilderExtensions
             return;
         }
 
-        foreach (ObjectId objectId in objectIds)
+        foreach (ObjectId? objectId in objectIds)
         {
             builder.Add(objectId);
         }

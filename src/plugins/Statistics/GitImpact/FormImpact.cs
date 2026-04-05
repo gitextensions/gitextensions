@@ -30,7 +30,7 @@ public sealed partial class FormImpact : GitExtensionsFormBase
         Impact.Dispose();
     }
 
-    private void Impact_Invalidated(object sender, InvalidateEventArgs e)
+    private void Impact_Invalidated(object? sender, InvalidateEventArgs e)
     {
         ThreadHelper.JoinableTaskFactory.Run(
             async () =>

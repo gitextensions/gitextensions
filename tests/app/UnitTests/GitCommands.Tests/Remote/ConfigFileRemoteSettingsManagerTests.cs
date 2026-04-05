@@ -13,8 +13,8 @@ namespace GitCommandsTests.Remote;
 [TestFixture]
 internal class ConfigFileRemoteSettingsManagerTests
 {
-    private IGitModule _module;
-    private IConfigFileRemoteSettingsManager _remotesManager;
+    private IGitModule _module = null!;
+    private IConfigFileRemoteSettingsManager _remotesManager = null!;
 
     [SetUp]
     public void Setup()
@@ -27,7 +27,7 @@ internal class ConfigFileRemoteSettingsManagerTests
     [Test]
     public void LoadRemotes_should_not_throw_if_module_is_null()
     {
-        _module = null;
+        _module = null!;
 
         ((Action)(() => _remotesManager.LoadRemotes(true))).Should().NotThrow();
     }
@@ -48,7 +48,7 @@ internal class ConfigFileRemoteSettingsManagerTests
     [Test]
     public void LoadRemotes_should_not_populate_remotes_if_those_are_null_or_whitespace()
     {
-        _module.GetRemoteNames().Returns(x => new[] { null, "", " ", "    ", "\t" });
+        _module.GetRemoteNames().Returns(x => new[] { null!, "", " ", "    ", "\t" });
 
         IEnumerable<ConfigFileRemote> remotes = _remotesManager.LoadRemotes(true);
 
@@ -64,7 +64,7 @@ internal class ConfigFileRemoteSettingsManagerTests
     {
         const string remoteName1 = "name1";
         const string remoteName2 = "name2";
-        _module.GetRemoteNames().Returns(x => new[] { null, "", " ", "    ", remoteName1, "\t" });
+        _module.GetRemoteNames().Returns(x => new[] { null!, "", " ", "    ", remoteName1, "\t" });
         (string Setting, string Value)[] settings = [($"{ConfigFileRemoteSettingsManager.DisabledSectionPrefix}{ConfigFileRemoteSettingsManager.SectionRemote}.{remoteName2}.dummy-name", "dummy value")];
         _module.GetAllLocalSettings().Returns(x => settings);
 
@@ -89,7 +89,7 @@ internal class ConfigFileRemoteSettingsManagerTests
     [Test]
     public void RemoveRemote_should_throw_if_remote_is_null()
     {
-        ((Action)(() => _remotesManager.RemoveRemote(null))).Should().Throw<ArgumentNullException>()
+        ((Action)(() => _remotesManager.RemoveRemote(null!))).Should().Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'remote')");
     }
 
@@ -106,7 +106,7 @@ internal class ConfigFileRemoteSettingsManagerTests
     [Test]
     public void SaveRemote_should_throw_if_remoteName_is_null_or_empty()
     {
-        ((Action)(() => _remotesManager.SaveRemote(null, null, "b", "c", "d", "e"))).Should().Throw<ArgumentNullException>()
+        ((Action)(() => _remotesManager.SaveRemote(null, null!, "b", "c", "d", "e"))).Should().Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'remoteName')");
         ((Action)(() => _remotesManager.SaveRemote(null, "", "b", "c", "d", "e"))).Should().Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'remoteName')");
@@ -122,7 +122,7 @@ internal class ConfigFileRemoteSettingsManagerTests
         const string output = "";
         _module.AddRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
-        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(null, remoteName, remoteUrl, null, null, null);
+        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(null, remoteName, remoteUrl, null, null!, null);
 
         result.UserMessage.Should().Be(output);
         result.ShouldUpdateRemote.Should().BeTrue();
@@ -159,7 +159,7 @@ internal class ConfigFileRemoteSettingsManagerTests
         ConfigFileRemote gitRemote = new() { Name = "old", Url = remoteUrl };
         _module.RenameRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
-        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(gitRemote, remoteName, remoteUrl, null, null, null);
+        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(gitRemote, remoteName, remoteUrl, null, null!, null);
 
         result.UserMessage.Should().Be(output);
         result.ShouldUpdateRemote.Should().BeFalse();
@@ -175,7 +175,7 @@ internal class ConfigFileRemoteSettingsManagerTests
         ConfigFileRemote gitRemote = new() { Name = "old", Url = "old" };
         _module.RenameRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
-        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(gitRemote, remoteName, remoteUrl, null, null, null);
+        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(gitRemote, remoteName, remoteUrl, null, null!, null);
 
         result.UserMessage.Should().Be(output);
         result.ShouldUpdateRemote.Should().BeTrue();
@@ -191,7 +191,7 @@ internal class ConfigFileRemoteSettingsManagerTests
     {
         ConfigFileRemote remote = new() { Name = "bla", Url = remoteUrl };
 
-        _remotesManager.SaveRemote(remote, remote.Name, remoteUrl, remotePushUrl, remotePuttySshKey, remoteColor);
+        _remotesManager.SaveRemote(remote, remote.Name, remoteUrl!, remotePushUrl, remotePuttySshKey!, remoteColor);
 
         void Ensure(string setting, string value)
         {
@@ -206,15 +206,15 @@ internal class ConfigFileRemoteSettingsManagerTests
             }
         }
 
-        Ensure(SettingKeyString.RemoteUrl, remoteUrl);
-        Ensure(SettingKeyString.RemotePushUrl, remotePushUrl);
-        Ensure(SettingKeyString.RemotePuttySshKey, remotePuttySshKey);
+        Ensure(SettingKeyString.RemoteUrl, remoteUrl!);
+        Ensure(SettingKeyString.RemotePushUrl, remotePushUrl!);
+        Ensure(SettingKeyString.RemotePuttySshKey, remotePuttySshKey!);
     }
 
     [Test]
     public void SetRemoteState_should_throw_if_remote_is_null()
     {
-        ((Action)(() => _remotesManager.ToggleRemoteState(null, false))).Should().Throw<ArgumentNullException>()
+        ((Action)(() => _remotesManager.ToggleRemoteState(null!, false))).Should().Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'remoteName')");
     }
 

@@ -50,7 +50,7 @@ public partial class AdvancedSettingsPage : SettingsPageWithHeader
         AppSettings.CheckForReleaseCandidates = chkCheckForRCVersions.Checked;
         AppSettings.UseConsoleEmulatorForCommands = chkConsoleEmulator.Checked;
         AppSettings.AutoNormaliseBranchName = chkAutoNormaliseBranchName.Checked;
-        AppSettings.AutoNormaliseSymbol = (string)cboAutoNormaliseSymbol.SelectedValue;
+        AppSettings.AutoNormaliseSymbol = (string)cboAutoNormaliseSymbol.SelectedValue!;
         AppSettings.CommitAndPushForcedWhenAmend = chkCommitAndPushForcedWhenAmend.Checked;
 
         base.PageToSettings();

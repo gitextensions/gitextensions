@@ -88,7 +88,7 @@ public sealed partial class TestComposition
 
         lock (_factoryCacheLock)
         {
-            if (_factoryCache.TryGetValue(key, out IExportProviderFactory existing))
+            if (_factoryCache.TryGetValue(key, out IExportProviderFactory? existing))
             {
                 return existing;
             }
@@ -98,7 +98,7 @@ public sealed partial class TestComposition
 
         lock (_factoryCacheLock)
         {
-            if (_factoryCache.TryGetValue(key, out IExportProviderFactory existing))
+            if (_factoryCache.TryGetValue(key, out IExportProviderFactory? existing))
             {
                 return existing;
             }
@@ -164,8 +164,8 @@ public sealed partial class TestComposition
             return this;
         }
 
-        Assembly testAssembly = assemblies.FirstOrDefault(IsTestAssembly);
-        if (testAssembly == null)
+        Assembly? testAssembly = assemblies.FirstOrDefault(IsTestAssembly);
+        if (testAssembly is null)
         {
             throw new NullReferenceException($"Test assemblies are not allowed in test composition: {testAssembly}. Specify explicit test parts instead.");
         }

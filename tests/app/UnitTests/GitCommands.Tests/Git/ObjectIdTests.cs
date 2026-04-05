@@ -24,7 +24,7 @@ public sealed partial class ObjectIdTests
     public void TryParse_handles_valid_hashes(string sha1)
     {
         ClassicAssert.True(ObjectId.TryParse(sha1, out ObjectId? id));
-        ClassicAssert.AreEqual(sha1.ToLower(), id.ToString());
+        ClassicAssert.AreEqual(sha1.ToLower(), id!.ToString());
     }
 
     [TestCase("00000000000000000000000000000000000000")]
@@ -49,7 +49,7 @@ public sealed partial class ObjectIdTests
         ClassicAssert.True(ObjectId.TryParse(sha1, offset, out ObjectId? id));
         ClassicAssert.AreEqual(
             sha1.Substring(offset, 40),
-            id.ToString());
+            id!.ToString());
     }
 
     [TestCase("0000000000000000000000000000000000000000")]
@@ -250,7 +250,7 @@ public sealed partial class ObjectIdTests
     {
         byte[] sourceBytes = Encoding.ASCII.GetBytes(source);
 
-        ClassicAssert.AreEqual(expected is not null, ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId id));
+        ClassicAssert.AreEqual(expected is not null, ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId? id));
 
         if (expected is not null)
         {
@@ -262,13 +262,13 @@ public sealed partial class ObjectIdTests
     public void TryParse_bytes_throws_with_illegal_input(string source, int offset, [CanBeNull] string expected)
     {
         byte[] sourceBytes = Encoding.ASCII.GetBytes(source);
-        ClassicAssert.AreEqual(expected is not null, ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId id));
+        ClassicAssert.AreEqual(expected is not null, ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId? id));
     }
 
     [Test]
     public void TryParse_returns_false_when_array_null()
     {
-        ClassicAssert.False(ObjectId.TryParse(default, out ObjectId objectId));
+        ClassicAssert.False(ObjectId.TryParse(default, out ObjectId? objectId));
         ClassicAssert.Null(objectId);
         ClassicAssert.False(ObjectId.TryParse(default(Span<byte>), out objectId));
         ClassicAssert.Null(objectId);
@@ -279,7 +279,7 @@ public sealed partial class ObjectIdTests
     {
         byte[] bytes = new byte[ObjectId.Sha1CharCount];
 
-        ClassicAssert.False(ObjectId.TryParse(bytes.AsSpan(1), out ObjectId objectId));
+        ClassicAssert.False(ObjectId.TryParse(bytes.AsSpan(1), out ObjectId? objectId));
         ClassicAssert.Null(objectId);
     }
 

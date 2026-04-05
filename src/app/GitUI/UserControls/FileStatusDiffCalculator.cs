@@ -168,8 +168,8 @@ public sealed partial class FileStatusDiffCalculator
         }
 
         // Get merge base commit, use HEAD for artificial
-        ObjectId? firstRevHead = GetRevisionOrHead(firstRev, headId);
-        ObjectId? selectedRevHead = GetRevisionOrHead(selectedRev, headId);
+        ObjectId? firstRevHead = GetRevisionOrHead(firstRev, headId!);
+        ObjectId? selectedRevHead = GetRevisionOrHead(selectedRev, headId!);
         ObjectId? baseRevId = null;
         if (revisions.Count != 3)
         {
@@ -207,10 +207,10 @@ public sealed partial class FileStatusDiffCalculator
             // Four: Two ranges must be selected
             else
             {
-                baseA = GetMergeBase(GetRevisionOrHead(revisions[3], headId), firstRevHead);
+                baseA = GetMergeBase(GetRevisionOrHead(revisions[3], headId!), firstRevHead);
                 if (baseA == revisions[3].ObjectId)
                 {
-                    baseB = GetMergeBase(GetRevisionOrHead(revisions[1], headId), selectedRevHead);
+                    baseB = GetMergeBase(GetRevisionOrHead(revisions[1], headId!), selectedRevHead);
                     if (baseB != revisions[1].ObjectId)
                     {
                         baseB = null;

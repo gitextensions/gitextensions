@@ -33,7 +33,7 @@ internal class FormBrowseDiagnosticsReporter
 
                 // other
                 { nameof(AppSettings.ShowAheadBehindData).FormatKey(), AppSettings.ShowAheadBehindData.ToString() },
-                { nameof(AppSettings.CurrentTranslation).FormatKey(), AppSettings.CurrentTranslation },
+                { nameof(AppSettings.CurrentTranslation).FormatKey(), AppSettings.CurrentTranslation ?? "" },
                 { nameof(AppSettings.ShowGitStatusInBrowseToolbar).FormatKey(), AppSettings.ShowGitStatusInBrowseToolbar.ToString() },
                 { nameof(AppSettings.ShowGitStatusForArtificialCommits).FormatKey(), AppSettings.ShowGitStatusForArtificialCommits.ToString() },
                 { nameof(AppSettings.RevisionGraphShowArtificialCommits).FormatKey(), AppSettings.RevisionGraphShowArtificialCommits.ToString() },

@@ -11,7 +11,7 @@ public sealed class FullBleedTabControl : TabControl
     {
         if (m.Msg == 0x1300 + 40)
         {
-            RECT rc = (RECT)m.GetLParam(typeof(RECT));
+            RECT rc = (RECT)m.GetLParam(typeof(RECT))!;
             rc.Left -= 3;
             rc.Right += 3;
             rc.Top -= 1;

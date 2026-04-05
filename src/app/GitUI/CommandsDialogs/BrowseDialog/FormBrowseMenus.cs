@@ -145,12 +145,12 @@ internal class FormBrowseMenus : ITranslate, IDisposable
                     continue;
                 }
 
-                currentGroup = (string)toolbarItem.Tag;
+                currentGroup = (string?)toolbarItem.Tag;
                 key = groupName;
             }
             else
             {
-                key = toolbarItem.Name;
+                key = toolbarItem.Name!;
             }
 
             bool visible = LoadVisibilitySetting(key, IsVisibleByDefault(key));
@@ -171,11 +171,11 @@ internal class FormBrowseMenus : ITranslate, IDisposable
 
                 if (!BelongToAGroup(toolbarItem, out string group))
                 {
-                    SaveVisibilitySetting(toolbarItem.Name, toolbarItem.Visible, IsVisibleByDefault(toolbarItem.Name));
+                    SaveVisibilitySetting(toolbarItem.Name!, toolbarItem.Visible, IsVisibleByDefault(toolbarItem.Name!));
                 }
                 else
                 {
-                    SaveVisibilitySetting(group, toolbarItem.Visible, IsVisibleByDefault(toolbarItem.Name));
+                    SaveVisibilitySetting(group, toolbarItem.Visible, IsVisibleByDefault(toolbarItem.Name!));
                     foreach (ToolStripItem item in senderToolStrip.Items)
                     {
                         if (item.Tag == (object)group)
@@ -377,7 +377,7 @@ internal class FormBrowseMenus : ITranslate, IDisposable
         {
             Validates.NotNull(menuItem);
 
-            yield return (menuItem.Name, menuItem);
+            yield return (menuItem.Name!, menuItem);
         }
     }
 
@@ -407,8 +407,8 @@ internal class FormBrowseMenus : ITranslate, IDisposable
     //         see also ResetMenuCommandSets()?
     public void RemoveRevisionGridMainMenuItems()
     {
-        _mainMenuStrip.Items.Remove(_navigateToolStripMenuItem);
-        _mainMenuStrip.Items.Remove(_viewToolStripMenuItem);
+        _mainMenuStrip.Items.Remove(_navigateToolStripMenuItem!);
+        _mainMenuStrip.Items.Remove(_viewToolStripMenuItem!);
 
         // don't forget to clear old associated menu items
         if (_itemsRegisteredWithMenuCommand is not null)

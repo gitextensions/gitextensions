@@ -35,7 +35,7 @@ public class WindowPosition
 [Serializable]
 public class WindowPositionList
 {
-    private static readonly string ConfigFilePath = Path.Combine(AppSettings.LocalApplicationDataPath.Value, "WindowPositions.xml");
+    private static readonly string ConfigFilePath = Path.Combine(AppSettings.LocalApplicationDataPath.Value!, "WindowPositions.xml");
     private static readonly XmlSerializer _serializer = new(typeof(WindowPositionList));
 
     public List<WindowPosition> WindowPositions { get; set; } = [];
@@ -65,7 +65,7 @@ public class WindowPositionList
         try
         {
             using FileStream stream = File.Open(ConfigFilePath, FileMode.OpenOrCreate, FileAccess.Read, FileShare.ReadWrite);
-            return (WindowPositionList)_serializer.Deserialize(stream);
+            return (WindowPositionList?)_serializer.Deserialize(stream);
         }
         catch
         {

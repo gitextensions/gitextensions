@@ -1,4 +1,6 @@
-﻿namespace GitCommands.UserRepositoryHistory;
+﻿using Microsoft;
+
+namespace GitCommands.UserRepositoryHistory;
 
 public class RecentRepoInfo
 {
@@ -178,17 +180,19 @@ public class RecentRepoSplitter
             repoInfo.Caption = repoInfo.Repo.Path;
         }
 
-        bool existsShortName = orderedRepos.TryGetValue(repoInfo.Caption!, out List<RecentRepoInfo> list);
+        Validates.NotNull(repoInfo.Caption);
+
+        bool existsShortName = orderedRepos.TryGetValue(repoInfo.Caption, out List<RecentRepoInfo>? list);
         if (!existsShortName)
         {
             list = [];
-            orderedRepos.Add(repoInfo.Caption!, list);
+            orderedRepos.Add(repoInfo.Caption, list);
         }
 
         List<RecentRepoInfo> tmpList = [];
         if (existsShortName)
         {
-            for (int i = list.Count - 1; i >= 0; i--)
+            for (int i = list!.Count - 1; i >= 0; i--)
             {
                 RecentRepoInfo r = list[i];
                 if (!r.FullPath)
@@ -201,7 +205,7 @@ public class RecentRepoSplitter
 
         if (repoInfo.FullPath || !existsShortName)
         {
-            list.Add(repoInfo);
+            list!.Add(repoInfo);
         }
         else
         {
@@ -269,7 +273,7 @@ public class RecentRepoSplitter
             {
                 if (dirInfo.FullName != PathUtil.UserProfilePath)
                 {
-                    while (dirInfo.Parent?.Parent is not null && (isInUserProfile && dirInfo.Parent?.FullName != PathUtil.UserProfilePath))
+                    while (dirInfo!.Parent?.Parent is not null && (isInUserProfile && dirInfo.Parent?.FullName != PathUtil.UserProfilePath))
                     {
                         dirInfo = dirInfo.Parent;
                         addDots = true;
@@ -368,10 +372,12 @@ public class RecentRepoSplitter
             }
         }
 
-        if (!orderedRepos.TryGetValue(repoInfo.Caption!, out List<RecentRepoInfo> list))
+        Validates.NotNull(repoInfo.Caption);
+
+        if (!orderedRepos.TryGetValue(repoInfo.Caption, out List<RecentRepoInfo>? list))
         {
             list = [];
-            orderedRepos.Add(repoInfo.Caption!, list);
+            orderedRepos.Add(repoInfo.Caption, list);
         }
 
         list.Add(repoInfo);

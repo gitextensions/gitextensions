@@ -24,8 +24,8 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture)]
     private static partial Regex AheadBehindRegex { get; }
     private readonly string _refFormat = @"%(push:track,nobracket)::%(upstream:track,nobracket)::%(push)::%(upstream)::%(refname:short)";
-    private Lazy<IDictionary<string, AheadBehindData>?> _lazyData;
-    private string _branchName;
+    private Lazy<IDictionary<string, AheadBehindData>?>? _lazyData;
+    private string? _branchName;
     private readonly Lock _lock = new();
 
     public AheadBehindDataProvider(Func<IExecutable> getGitExecutable)

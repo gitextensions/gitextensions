@@ -35,7 +35,7 @@ internal sealed class DateColumnProvider : ColumnProvider
 
     public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
     {
-        _grid.DrawColumnText(e, e.FormattedValue.ToString(), style.NormalFont, style.ForeColor, e.CellBounds);
+        _grid.DrawColumnText(e, e.FormattedValue?.ToString()!, style.NormalFont, style.ForeColor, e.CellBounds);
     }
 
     public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)

@@ -2,9 +2,6 @@
 
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-
-    <!-- To be removed when NRT annotations are complete -->
-    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

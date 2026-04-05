@@ -90,7 +90,7 @@ public static class EnvUtils
                 {
                     using (registryKey)
                     {
-                        object v = registryKey.GetValue("Install");
+                        object? v = registryKey.GetValue("Install");
                         return v?.ToString() is "1";
                     }
                 }

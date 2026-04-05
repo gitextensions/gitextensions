@@ -20,7 +20,7 @@ namespace GitCommands;
 public static partial class AppSettings
 {
     // semi-constants
-    public static Version AppVersion => Assembly.GetCallingAssembly().GetName().Version;
+    public static Version AppVersion => Assembly.GetCallingAssembly().GetName().Version!;
     public static string ProductVersion => Application.ProductVersion;
     public static readonly string ApplicationName = "Git Extensions";
     public static readonly string ApplicationId = ApplicationName.Replace(" ", "");
@@ -31,8 +31,8 @@ public static partial class AppSettings
 
     public static Lazy<string?> ApplicationDataPath { get; private set; }
     public static readonly Lazy<string?> LocalApplicationDataPath;
-    public static string SettingsFilePath => Path.Combine(ApplicationDataPath.Value, SettingsFileName);
-    public static string UserPluginsPath => Path.Combine(LocalApplicationDataPath.Value, UserPluginsDirectoryName);
+    public static string SettingsFilePath => Path.Combine(ApplicationDataPath.Value!, SettingsFileName);
+    public static string UserPluginsPath => Path.Combine(LocalApplicationDataPath.Value!, UserPluginsDirectoryName);
 
     public static DistributedSettings SettingsContainer { get; private set; }
 
@@ -48,7 +48,7 @@ public static partial class AppSettings
     private static readonly SettingsPath HiddenSettingsPath = new AppSettingsPath("Hidden");
     private static readonly SettingsPath MigrationSettingsPath = new AppSettingsPath(HiddenSettingsPath, "Migration");
 
-    private static Mutex _globalMutex;
+    private static Mutex? _globalMutex;
 
     [GeneratedRegex(@"^(?<major>\d+)\.(?<minor>\d+)", RegexOptions.ExplicitCapture)]
     private static partial Regex VersionRegex { get; }
@@ -104,7 +104,7 @@ public static partial class AppSettings
         {
             try
             {
-                string dir = Path.GetDirectoryName(SettingsFilePath);
+                string? dir = Path.GetDirectoryName(SettingsFilePath);
                 if (!Directory.Exists(dir) || File.Exists(SettingsFilePath))
                 {
                     return false;
@@ -595,7 +595,7 @@ public static partial class AppSettings
 
     #region Avatars
 
-    public static string AvatarImageCachePath => Path.Combine(LocalApplicationDataPath.Value, "Images\\");
+    public static string AvatarImageCachePath => Path.Combine(LocalApplicationDataPath.Value!, "Images\\");
 
     public static AvatarFallbackType AvatarFallbackType
     {
@@ -664,7 +664,7 @@ public static partial class AppSettings
     private static TEnum GetEnumViaString<TEnum>(string settingName, TEnum defaultValue)
         where TEnum : struct
     {
-        string settingStringValue = GetString(settingName, defaultValue.ToString());
+        string? settingStringValue = GetString(settingName, defaultValue.ToString());
 
         if (Enum.TryParse(settingStringValue, out TEnum settingEnumValue))
         {
@@ -737,7 +737,7 @@ public static partial class AppSettings
         if (!string.IsNullOrEmpty(ssh))
         {
             // OpenSSH uses empty path, compatibility with path set in 3.4
-            string path = new SshPathLocator().GetSshFromGitDir(LinuxToolsDir);
+            string? path = new SshPathLocator().GetSshFromGitDir(LinuxToolsDir);
             if (path == ssh)
             {
                 AppSettings.SshPath = "";
@@ -788,7 +788,7 @@ public static partial class AppSettings
 
     private static string? _currentTranslation;
 
-    public static string CurrentTranslation
+    public static string? CurrentTranslation
     {
         get => _currentTranslation ?? Translation;
         set => _currentTranslation = value;
@@ -820,7 +820,7 @@ public static partial class AppSettings
     {
         get
         {
-            if (_languageCodes.TryGetValue(CurrentTranslation, out string code))
+            if (CurrentTranslation is not null && _languageCodes.TryGetValue(CurrentTranslation, out string? code))
             {
                 return code;
             }
@@ -1505,7 +1505,7 @@ public static partial class AppSettings
 
     public static Font CommitFont
     {
-        get => GetFont("commitfont", SystemFonts.MessageBoxFont);
+        get => GetFont("commitfont", SystemFonts.MessageBoxFont!);
         set => SetFont("commitfont", value);
     }
 
@@ -1517,7 +1517,7 @@ public static partial class AppSettings
 
     public static Font Font
     {
-        get => GetFont("font", SystemFonts.MessageBoxFont);
+        get => GetFont("font", SystemFonts.MessageBoxFont!);
         set => SetFont("font", value);
     }
 
@@ -1641,7 +1641,7 @@ public static partial class AppSettings
 
     public static string GetDictionaryDir()
     {
-        return Path.Combine(GetResourceDir(), "Dictionaries");
+        return Path.Combine(GetResourceDir()!, "Dictionaries");
     }
 
     public static void SaveSettings()
@@ -2087,9 +2087,9 @@ public static partial class AppSettings
 
     public static ISetting<string> UninformativeRepoNameRegex { get; } = Setting.Create(DetailedSettingsPath, nameof(UninformativeRepoNameRegex), "app|(repo(sitory)?)");
 
-    private static IEnumerable<(string name, string value)> GetSettingsFromRegistry()
+    private static IEnumerable<(string name, string? value)> GetSettingsFromRegistry()
     {
-        RegistryKey oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
+        RegistryKey? oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
 
         if (oldSettings is null)
         {
@@ -2098,7 +2098,7 @@ public static partial class AppSettings
 
         foreach (string name in oldSettings.GetValueNames())
         {
-            object value = oldSettings.GetValue(name, null);
+            object? value = oldSettings.GetValue(name, null);
 
             if (value is not null)
             {

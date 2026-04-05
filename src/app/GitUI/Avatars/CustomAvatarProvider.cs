@@ -30,7 +30,7 @@ public sealed partial class CustomAvatarProvider : IAvatarProvider
 
         foreach (IAvatarProvider provider in _subProvider)
         {
-            Image avatar = provider switch
+            Image? avatar = provider switch
             {
                 UriTemplateResolver r => await _downloader.DownloadImageAsync(r.ResolveTemplate(templateData)),
                 _ => await provider.GetAvatarAsync(email, name, imageSize),

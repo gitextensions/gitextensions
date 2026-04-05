@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
@@ -189,13 +189,13 @@ public sealed partial class FormStash : GitModuleForm
         }
     }
 
-    private void FileViewer_TopScrollReached(object sender, EventArgs e)
+    private void FileViewer_TopScrollReached(object? sender, EventArgs e)
     {
         Stashed.SelectPreviousVisibleItem();
         View.ScrollToBottom();
     }
 
-    private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+    private void FileViewer_BottomScrollReached(object? sender, EventArgs e)
     {
         Stashed.SelectNextVisibleItem();
         View.ScrollToTop();
@@ -241,7 +241,7 @@ public sealed partial class FormStash : GitModuleForm
 
     private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus> gitItemStatuses)
     {
-        GitStash gitStash = (GitStash)Stashes.SelectedItem;
+        GitStash gitStash = (GitStash)Stashes.SelectedItem!;
         if (gitStash == _currentWorkingDirStashItem)
         {
             // FileStatusList has no interface for both worktree<-index, index<-HEAD at the same time
@@ -270,10 +270,10 @@ public sealed partial class FormStash : GitModuleForm
         }
         else
         {
-            ObjectId firstId = Module.RevParse(gitStash.Name + "^");
+            ObjectId? firstId = Module.RevParse(gitStash.Name + "^");
             GitRevision? firstRev = firstId is null ? null : new(firstId);
 
-            ObjectId selectedId = Module.RevParse(gitStash.Name);
+            ObjectId? selectedId = Module.RevParse(gitStash.Name);
             Validates.NotNull(selectedId);
             GitRevision secondRev = new(selectedId);
             if (firstId is not null)
@@ -369,7 +369,7 @@ public sealed partial class FormStash : GitModuleForm
 
     private string GetStashName()
     {
-        return ((GitStash)Stashes.SelectedItem).Name;
+        return ((GitStash)Stashes.SelectedItem!).Name;
     }
 
     private void ApplyClick(object sender, EventArgs e)

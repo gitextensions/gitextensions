@@ -96,7 +96,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
             }
             else if (diffLine.LineType != DiffLineType.Context)
             {
-                using Brush brush = diffLine.LineType switch
+                using Brush? brush = diffLine.LineType switch
                 {
                     DiffLineType.Plus => new SolidBrush(AppColor.AnsiTerminalGreenBackNormal.GetThemeColor()),
                     DiffLineType.Minus => new SolidBrush(AppColor.AnsiTerminalRedBackNormal.GetThemeColor()),

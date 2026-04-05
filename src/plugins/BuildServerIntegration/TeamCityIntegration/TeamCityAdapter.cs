@@ -136,7 +136,7 @@ internal class TeamCityAdapter : IBuildServerAdapter
                     {
                         XDocument response = await GetProjectFromNameXmlResponseAsync(name, CancellationToken.None).ConfigureAwait(false);
                         return from element in response.XPathSelectElements("/project/buildTypes/buildType")
-                               select element.Attribute("id").Value;
+                               select element.Attribute("id")!.Value;
                     }));
                 }
             }
@@ -170,7 +170,7 @@ internal class TeamCityAdapter : IBuildServerAdapter
         get
         {
             Validates.NotNull(_httpClient);
-            return _httpClient.BaseAddress.Host;
+            return _httpClient.BaseAddress!.Host;
         }
     }
 
@@ -221,7 +221,7 @@ internal class TeamCityAdapter : IBuildServerAdapter
                                                              buildIdTask =>
                                                              buildIdTask.CompletedResult()
                                                                         .XPathSelectElements("/builds/build")
-                                                                        .Select(x => x.Attribute("id").Value))];
+                                                                        .Select(x => x.Attribute("id")!.Value))];
 
                             NotifyObserverOfBuilds(buildIds, observer, cancellationToken);
                         },
@@ -229,7 +229,7 @@ internal class TeamCityAdapter : IBuildServerAdapter
                     TaskContinuationOptions.AttachedToParent | TaskContinuationOptions.ExecuteSynchronously,
                     TaskScheduler.Current)
                 .ContinueWith(
-                    task => localObserver.OnError(task.Exception),
+                    task => localObserver.OnError(task.Exception!),
                     CancellationToken.None,
                     TaskContinuationOptions.AttachedToParent | TaskContinuationOptions.ExecuteSynchronously | TaskContinuationOptions.OnlyOnFaulted,
                     TaskScheduler.Current);
@@ -316,22 +316,22 @@ internal class TeamCityAdapter : IBuildServerAdapter
 
     private BuildInfo CreateBuildInfo(XDocument buildXmlDocument)
     {
-        XElement buildXElement = buildXmlDocument.Element("build");
-        string idValue = buildXElement.Attribute("id").Value;
-        string statusValue = buildXElement.Attribute("status").Value;
-        string startDateText = buildXElement.Element("startDate").Value;
-        string statusText = buildXElement.Element("statusText").Value;
-        string webUrl = buildXElement.Attribute("webUrl").Value + LogAsGuestUrlParameter;
+        XElement buildXElement = buildXmlDocument.Element("build")!;
+        string idValue = buildXElement.Attribute("id")!.Value;
+        string statusValue = buildXElement.Attribute("status")!.Value;
+        string startDateText = buildXElement.Element("startDate")!.Value;
+        string statusText = buildXElement.Element("statusText")!.Value;
+        string webUrl = buildXElement.Attribute("webUrl")!.Value + LogAsGuestUrlParameter;
         IEnumerable<XElement> revisionsElements = buildXElement.XPathSelectElements("revisions/revision");
-        List<ObjectId> commitHashList = [.. revisionsElements.Select(x => ObjectId.Parse(x.Attribute("version").Value))];
-        XAttribute runningAttribute = buildXElement.Attribute("running");
+        List<ObjectId> commitHashList = [.. revisionsElements.Select(x => ObjectId.Parse(x.Attribute("version")!.Value))];
+        XAttribute? runningAttribute = buildXElement.Attribute("running");
 
         if (runningAttribute is not null && Convert.ToBoolean(runningAttribute.Value))
         {
-            XElement runningInfoXElement = buildXElement.Element("running-info");
-            string currentStageText = runningInfoXElement.Attribute("currentStageText").Value;
+            XElement? runningInfoXElement = buildXElement.Element("running-info");
+            string? currentStageText = runningInfoXElement?.Attribute("currentStageText")?.Value;
 
-            statusText = currentStageText;
+            statusText = currentStageText ?? statusText;
         }
 
         BuildInfo buildInfo = new()
@@ -390,7 +390,7 @@ internal class TeamCityAdapter : IBuildServerAdapter
             {
                 HttpContent httpContent = task.CompletedResult().Content;
 
-                if (httpContent.Headers.ContentType.MediaType == "text/html")
+                if (httpContent.Headers.ContentType?.MediaType == "text/html")
                 {
                     // TeamCity responds with an HTML login page when guest access is denied.
                     unauthorized = true;
@@ -453,7 +453,7 @@ internal class TeamCityAdapter : IBuildServerAdapter
 
             _httpClientHostSuffix = "httpAuth";
             CreateNewHttpClient(HostName);
-            _httpClientHandler.CookieContainer = GetTeamCityNtlmAuthCookie(_httpClient.BaseAddress.AbsoluteUri, buildServerCredentials);
+            _httpClientHandler.CookieContainer = GetTeamCityNtlmAuthCookie(_httpClient.BaseAddress!.AbsoluteUri, buildServerCredentials);
         }
         catch (Exception exception)
         {
@@ -598,15 +598,15 @@ internal class TeamCityAdapter : IBuildServerAdapter
     public Project? GetProjectsTree()
     {
         XDocument projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetProjectsResponseAsync(CancellationToken.None));
-        List<Project> projects = [.. projectsRootElement.Root.Elements().Where(e => (string)e.Attribute("archived") != "true").Select(e => new Project
+        List<Project> projects = [.. projectsRootElement.Root!.Elements().Where(e => (string?)e.Attribute("archived") != "true").Select(e => new Project
         {
-            Id = (string)e.Attribute("id"),
-            Name = (string)e.Attribute("name"),
-            ParentProject = (string)e.Attribute("parentProjectId"),
+            Id = (string?)e.Attribute("id"),
+            Name = (string?)e.Attribute("name"),
+            ParentProject = (string?)e.Attribute("parentProjectId"),
             SubProjects = []
         })];
 
-        Dictionary<string, Project> projectDictionary = projects.ToDictionary(p => p.Id, p => p);
+        Dictionary<string, Project> projectDictionary = projects.ToDictionary(p => p.Id!, p => p);
 
         Project? rootProject = null;
         foreach (Project project in projects)
@@ -629,23 +629,23 @@ internal class TeamCityAdapter : IBuildServerAdapter
     public List<Build> GetProjectBuilds(string projectId)
     {
         XDocument projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetProjectFromNameXmlResponseAsync(projectId, CancellationToken.None));
-        return [.. projectsRootElement.Root.Element("buildTypes").Elements().Select(e => new Build
+        return [.. projectsRootElement.Root!.Element("buildTypes")!.Elements().Select(e => new Build
         {
-            Id = (string)e.Attribute("id"),
-            Name = (string)e.Attribute("name"),
-            ParentProject = (string)e.Attribute("projectId")
+            Id = (string?)e.Attribute("id"),
+            Name = (string?)e.Attribute("name"),
+            ParentProject = (string?)e.Attribute("projectId")
         })];
     }
 
     public Build GetBuildType(string buildId)
     {
         XDocument projectsRootElement = ThreadHelper.JoinableTaskFactory.Run(() => GetBuildTypeFromIdXmlResponseAsync(buildId, CancellationToken.None));
-        XElement buildType = projectsRootElement.Root;
+        XElement? buildType = projectsRootElement.Root;
         return new Build
         {
             Id = buildId,
-            Name = (string)buildType.Attribute("name"),
-            ParentProject = (string)buildType.Attribute("projectId")
+            Name = (string?)buildType?.Attribute("name"),
+            ParentProject = (string?)buildType?.Attribute("projectId")
         };
     }
 }

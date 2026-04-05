@@ -18,7 +18,7 @@ public partial class FormCompareToBranch : GitModuleForm
         Activated += OnActivated;
     }
 
-    private void OnActivated(object sender, EventArgs eventArgs)
+    private void OnActivated(object? sender, EventArgs eventArgs)
     {
         branchSelector.Focus();
     }

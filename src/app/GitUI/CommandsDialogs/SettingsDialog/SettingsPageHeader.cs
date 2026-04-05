@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 namespace GitUI.CommandsDialogs.SettingsDialog;
 
 public interface IGlobalSettingsPage : ISettingsPage

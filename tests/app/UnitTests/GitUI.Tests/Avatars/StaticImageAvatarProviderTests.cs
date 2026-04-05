@@ -22,7 +22,7 @@ public class StaticImageAvatarProviderTests
     {
         StaticImageAvatarProvider provider = new(_img);
 
-        Image result = await provider.GetAvatarAsync(_email, _name, _size);
+        Image? result = await provider.GetAvatarAsync(_email, _name, _size);
 
         ClassicAssert.AreSame(_img, result);
     }
@@ -33,8 +33,8 @@ public class StaticImageAvatarProviderTests
         StaticImageAvatarProvider provider = new(_img);
         int otherSize = 32;
 
-        Image result1 = await provider.GetAvatarAsync(_email, _name, otherSize);
-        Image result2 = await provider.GetAvatarAsync(_email, _name, otherSize);
+        Image? result1 = await provider.GetAvatarAsync(_email, _name, otherSize);
+        Image? result2 = await provider.GetAvatarAsync(_email, _name, otherSize);
 
         ClassicAssert.AreSame(result1, result2);
     }

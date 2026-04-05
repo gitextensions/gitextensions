@@ -7,7 +7,7 @@ namespace GitCommandsTests.Git;
 
 public sealed class FilteredGitRefsProviderTests
 {
-    private IGitModule _module;
+    private IGitModule _module = null!;
 
     [SetUp]
     public void Setup()

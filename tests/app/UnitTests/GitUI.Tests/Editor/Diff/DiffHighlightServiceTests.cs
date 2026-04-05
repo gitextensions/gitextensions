@@ -143,7 +143,7 @@ public class DiffHighlightServiceTests
     private sealed class MarkerComparer : IComparer<TextMarker>
     {
         public int Compare(TextMarker? left, TextMarker? right)
-            => left.Offset < right.Offset ? -1
+            => left!.Offset < right!.Offset ? -1
                 : left.Offset > right.Offset ? 1
                 : left.TextMarkerType == TextMarkerType.InterChar ? -1
                 : right.TextMarkerType == TextMarkerType.InterChar ? 1

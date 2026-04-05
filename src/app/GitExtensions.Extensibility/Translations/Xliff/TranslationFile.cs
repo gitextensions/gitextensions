@@ -12,7 +12,7 @@ public class TranslationFile : ITranslation
         TranslationCategories = [];
     }
 
-    public TranslationFile(string sourceLanguage, string targetLanguage)
+    public TranslationFile(string sourceLanguage, string? targetLanguage)
         : this()
     {
         GitExVersion = "";
@@ -35,7 +35,7 @@ public class TranslationFile : ITranslation
     [XmlElement(ElementName = "file")]
     public List<TranslationCategory> TranslationCategories { get; set; }
 
-    public TranslationCategory FindOrAddTranslationCategory(string translationCategory)
+    public TranslationCategory FindOrAddTranslationCategory(string? translationCategory)
     {
         TranslationCategory? tc = GetTranslationCategory(translationCategory);
         if (tc is null)
@@ -57,9 +57,9 @@ public class TranslationFile : ITranslation
         TranslationCategories.Add(translationCategory);
     }
 
-    public TranslationCategory? GetTranslationCategory(string name)
+    public TranslationCategory? GetTranslationCategory(string? name)
     {
-        return TranslationCategories.Find(t => t.Name != null && t.Name.TrimStart('_') == name.TrimStart('_'));
+        return TranslationCategories.Find(t => t.Name is not null && name is not null && t.Name.TrimStart('_') == name.TrimStart('_'));
     }
 
     public void Sort()

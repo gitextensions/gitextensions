@@ -177,7 +177,7 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool StartResetCurrentBranchDialog(IWin32Window? owner, string branch)
     {
-        ObjectId objectId = Module.RevParse(branch);
+        ObjectId? objectId = Module.RevParse(branch);
         if (objectId is null)
         {
             MessageBoxes.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -271,7 +271,7 @@ public sealed class GitUICommands : IGitUICommands
 
         Form form = provideForm();
 
-        void FormClosed(object sender, FormClosedEventArgs e)
+        void FormClosed(object? sender, FormClosedEventArgs e)
         {
             form.FormClosed -= FormClosed;
             InvokePostEvent(owner, true, postEvent);
@@ -433,7 +433,7 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool StartCreateBranchDialog(IWin32Window? owner, string? branch)
     {
-        ObjectId objectId = Module.RevParse(branch);
+        ObjectId? objectId = Module.RevParse(branch!);
         if (objectId is null)
         {
             MessageBoxes.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -714,7 +714,7 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action, changesRepo: false);
     }
 
-    public bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true, string initialStash = null)
+    public bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true, string? initialStash = null)
     {
         bool Action()
         {
@@ -1180,7 +1180,7 @@ public sealed class GitUICommands : IGitUICommands
     {
         // Note: Order in revisions is that first clicked is last in array
 
-        if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out string firstRevision, out string secondRevision, out string error))
+        if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out string? firstRevision, out string? secondRevision, out string? error))
         {
             MessageBoxes.Show(owner, error, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -1332,7 +1332,7 @@ public sealed class GitUICommands : IGitUICommands
                             {
                                 ThreadHelper.FileAndForget(async () =>
                                 {
-                                    string remoteName = await gh.AddUpstreamRemoteAsync();
+                                    string? remoteName = await gh.AddUpstreamRemoteAsync();
                                     if (!string.IsNullOrEmpty(remoteName))
                                     {
                                         StartPullDialogAndPullImmediately(owner, remoteBranch: null, remoteName, GitPullAction.Fetch);
@@ -1539,7 +1539,7 @@ public sealed class GitUICommands : IGitUICommands
                 }
 
                 // User supplied a path. Open the repository if its a valid path
-                string dir = !string.IsNullOrWhiteSpace(command) && File.Exists(command) ? Path.GetDirectoryName(command) : command;
+                string? dir = !string.IsNullOrWhiteSpace(command) && File.Exists(command) ? Path.GetDirectoryName(command) : command;
                 if (args.Count == 2 && Directory.Exists(dir))
                 {
                     LaunchBrowse(dir);

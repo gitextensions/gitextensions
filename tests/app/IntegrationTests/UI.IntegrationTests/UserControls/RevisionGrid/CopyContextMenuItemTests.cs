@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
@@ -10,8 +10,8 @@ namespace GitExtensions.UITests.UserControls.RevisionGrid;
 [TestFixture]
 public class CopyContextMenuItemTests
 {
-    private string _originalTranslation;
-    private CopyContextMenuItem _copyContextMenuItem;
+    private string? _originalTranslation;
+    private CopyContextMenuItem _copyContextMenuItem = null!;
 
     [OneTimeSetUp]
     public void OneTimeSetup()
@@ -38,13 +38,13 @@ public class CopyContextMenuItemTests
     [TearDown]
     public void TearDown()
     {
-        _copyContextMenuItem.Owner.Dispose();
+        _copyContextMenuItem.Owner!.Dispose();
     }
 
     [Test]
     public void Should_should_contain_single_item_if_no_revision_supplied()
     {
-        _copyContextMenuItem.SetRevisionFunc(() => null);
+        _copyContextMenuItem.SetRevisionFunc(() => null!);
 
         _copyContextMenuItem.ShowDropDown();
 
@@ -73,8 +73,8 @@ public class CopyContextMenuItemTests
         GitRevision revision = new(ObjectId.Random());
         List<IGitRef> refs =
         [
-            new GitRef(null, revision.ObjectId, "refs/heads/branch1"),
-            new GitRef(null, revision.ObjectId, "refs/heads/branch2")
+            new GitRef(null!, revision.ObjectId, "refs/heads/branch1"),
+            new GitRef(null!, revision.ObjectId, "refs/heads/branch2")
         ];
         revision.Refs = refs;
         GitRevision[] revisions = [revision];
@@ -99,8 +99,8 @@ public class CopyContextMenuItemTests
         GitRevision revision = new(ObjectId.Random());
         List<IGitRef> refs =
         [
-            new GitRef(null, revision.ObjectId, "refs/tags/tag1"),
-            new GitRef(null, revision.ObjectId, "refs/tags/tag2")
+            new GitRef(null!, revision.ObjectId, "refs/tags/tag1"),
+            new GitRef(null!, revision.ObjectId, "refs/tags/tag2")
         ];
         revision.Refs = refs;
         GitRevision[] revisions = [revision];
@@ -125,10 +125,10 @@ public class CopyContextMenuItemTests
         GitRevision revision = new(ObjectId.Random());
         List<IGitRef> refs =
         [
-            new GitRef(null, revision.ObjectId, "refs/tags/tag1"),
-            new GitRef(null, revision.ObjectId, "refs/heads/branch1"),
-            new GitRef(null, revision.ObjectId, "refs/tags/tag2"),
-            new GitRef(null, revision.ObjectId, "refs/heads/branch2"),
+            new GitRef(null!, revision.ObjectId, "refs/tags/tag1"),
+            new GitRef(null!, revision.ObjectId, "refs/heads/branch1"),
+            new GitRef(null!, revision.ObjectId, "refs/tags/tag2"),
+            new GitRef(null!, revision.ObjectId, "refs/heads/branch2"),
         ];
         revision.Refs = refs;
         GitRevision[] revisions = [revision];

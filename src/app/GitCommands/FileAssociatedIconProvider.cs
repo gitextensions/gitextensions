@@ -54,7 +54,7 @@ public sealed class FileAssociatedIconProvider : IFileAssociatedIconProvider
             return null;
         }
 
-        Icon icon = LoadedFileIcons.GetOrAdd(extension, ext =>
+        Icon? icon = LoadedFileIcons.GetOrAdd(extension, ext =>
         {
             string? tempFile = null;
             try

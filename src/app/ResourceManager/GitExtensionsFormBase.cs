@@ -96,7 +96,7 @@ public class GitExtensionsFormBase : Form, ITranslate
             return [];
         }
 
-        if (!TryGetUICommands(out IGitUICommands commands))
+        if (!TryGetUICommands(out IGitUICommands? commands))
         {
             DebugHelpers.Fail($"{GetType().FullName}: service provider is unavailable.");
             return [];

@@ -41,7 +41,7 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
 
         _timer.Tick += SetSizeByVerticalSplitContainer1;
         _verticalSplitContainer1.Invalidated += SetSizeByVerticalSplitContainer1Deferred;
-        _verticalSplitContainer1.Parent.VisibleChanged += SetSizeByVerticalSplitContainer1Deferred;
+        _verticalSplitContainer1.Parent!.VisibleChanged += SetSizeByVerticalSplitContainer1Deferred;
         _verticalSplitContainer1.SplitterMoved += SetSizeByVerticalSplitContainer1;
         _verticalSplitContainer2.SplitterMoved += SetSizeByVerticalSplitContainer2;
         horizontalSplitContainer.SplitterMoved += SetSizeByVerticalSplitContainer1;
@@ -84,7 +84,7 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
 
         if (show)
         {
-            _textBox.FindForm().ActiveControl = _textBox;
+            _textBox.FindForm()!.ActiveControl = _textBox;
         }
 
         return true;
@@ -137,7 +137,7 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
         if (visible)
         {
             int width = (2 * offset) + GetWidth();
-            _outputHistoryControl.SetBounds(margin, _outputHistoryControl.Parent.Height - height - offset - margin, width, (2 * offset) + height);
+            _outputHistoryControl.SetBounds(margin, _outputHistoryControl.Parent!.Height - height - offset - margin, width, (2 * offset) + height);
 
             _verticalSplitContainer1.SplitterDistance = Math.Max(0, _verticalSplitContainer1.ClientSize.Height - _verticalSplitContainer1.SplitterWidth - height);
             _verticalSplitContainer2.SplitterDistance = Math.Max(0, _verticalSplitContainer2.ClientSize.Height - _verticalSplitContainer2.SplitterWidth - height);

@@ -94,7 +94,7 @@ public partial class ImpactControl : UserControl
         _impactLoader?.Stop();
     }
 
-    private void ImpactControl_MouseWheel(object sender, MouseEventArgs e)
+    private void ImpactControl_MouseWheel(object? sender, MouseEventArgs e)
     {
         _scrollBar.Value = Math.Min(_scrollBar.Maximum, Math.Max(_scrollBar.Minimum, _scrollBar.Value + e.Delta));
 
@@ -111,7 +111,7 @@ public partial class ImpactControl : UserControl
                 // UPDATE IMPACT
 
                 // If week does not exist yet in the impact dictionary
-                if (!_impact.TryGetValue(commit.Week, out Dictionary<string, ImpactLoader.DataPoint> weekData))
+                if (!_impact.TryGetValue(commit.Week, out Dictionary<string, ImpactLoader.DataPoint>? weekData))
                 {
                     // Create it
                     _impact.Add(commit.Week, weekData = []);
@@ -249,7 +249,7 @@ public partial class ImpactControl : UserControl
 
             void DrawAuthorContribution(string author)
             {
-                if (_brushes.TryGetValue(author, out SolidBrush authorBrush) && _paths.TryGetValue(author, out GraphicsPath? authorPath))
+                if (_brushes.TryGetValue(author, out SolidBrush? authorBrush) && _paths.TryGetValue(author, out GraphicsPath? authorPath))
                 {
                     e.Graphics.FillPath(authorBrush, authorPath);
                 }
@@ -260,7 +260,7 @@ public partial class ImpactControl : UserControl
 
         void DrawAuthorLinesLabels(string author)
         {
-            if (!_lineLabels.TryGetValue(author, out List<(PointF position, string changeCount)> authorData))
+            if (!_lineLabels.TryGetValue(author, out List<(PointF position, string changeCount)>? authorData))
             {
                 return;
             }
@@ -381,7 +381,7 @@ public partial class ImpactControl : UserControl
                     points[i] = (rect, changeCount);
 
                     // Add lines-changed-labels
-                    if (!_lineLabels.TryGetValue(author, out List<(PointF point, string changeCount)> authorLineLabels))
+                    if (!_lineLabels.TryGetValue(author, out List<(PointF point, string changeCount)>? authorLineLabels))
                     {
                         _lineLabels.Add(author, authorLineLabels = []);
                     }
@@ -469,7 +469,7 @@ public partial class ImpactControl : UserControl
             for (int i = _authorStack.Count - 1; i >= 0; i--)
             {
                 string author = _authorStack[i];
-                if (_paths.TryGetValue(author, out GraphicsPath authorGraphicsPath)
+                if (_paths.TryGetValue(author, out GraphicsPath? authorGraphicsPath)
                     && authorGraphicsPath.IsVisible(x + _scrollBar.Value, y))
                 {
                     if (SelectedAuthor != author)

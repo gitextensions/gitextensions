@@ -1,4 +1,4 @@
-﻿using CommonTestUtils;
+using CommonTestUtils;
 using CommonTestUtils.MEF;
 using GitCommands;
 using GitExtensions.Extensibility.Settings;
@@ -15,9 +15,9 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages;
 public class BuildServerIntegrationSettingsPageTests_NoPlugins
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
-    private MockHost _form;
-    private BuildServerIntegrationSettingsPage _settingsPage;
+    private ReferenceRepository _referenceRepository = null!;
+    private MockHost _form = null!;
+    private BuildServerIntegrationSettingsPage _settingsPage = null!;
 
     [SetUp]
     public void SetUp()

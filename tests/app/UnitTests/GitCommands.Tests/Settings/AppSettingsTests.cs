@@ -46,14 +46,14 @@ internal sealed class AppSettingsTests
 #pragma warning restore IDE0060 // Remove unused parameter
     {
         // Arrange
-        object root = null;
+        object? root = null;
 
         if (isISetting)
         {
             root = property.GetValue(null);
 
             property = property.PropertyType
-                .GetProperty(nameof(ISetting<>.Value));
+                .GetProperty(nameof(ISetting<>.Value))!;
         }
 
         using TempFileCollection tempFiles = new();
@@ -64,12 +64,12 @@ internal sealed class AppSettingsTests
 
         using GitExtSettingsCache cache = GitExtSettingsCache.Create(filePath);
         DistributedSettings container = new(lowerPriority: null, cache, SettingLevel.Unknown);
-        object storedValue = null;
+        object? storedValue = null;
 
         // Act
         AppSettings.UsingContainer(container, () =>
         {
-            storedValue = property.GetValue(root);
+            storedValue = property!.GetValue(root);
         });
 
         // Assert
@@ -81,14 +81,14 @@ internal sealed class AppSettingsTests
     public void Should_save_value(PropertyInfo property, object value, object defaultValue, bool isISetting)
     {
         // Arrange
-        object root = null;
+        object? root = null;
 
         if (isISetting)
         {
             root = property.GetValue(null);
 
             property = property.PropertyType
-                .GetProperty(nameof(ISetting<>.Value));
+                .GetProperty(nameof(ISetting<>.Value))!;
         }
 
         using TempFileCollection tempFiles = new();
@@ -99,18 +99,18 @@ internal sealed class AppSettingsTests
 
         using GitExtSettingsCache cache = GitExtSettingsCache.Create(filePath);
         DistributedSettings container = new(lowerPriority: null, cache, SettingLevel.Unknown);
-        object storedValue = null;
+        object? storedValue = null;
 
         // Act
         AppSettings.UsingContainer(container, () =>
         {
-            property.SetValue(root, value);
+            property!.SetValue(root, value);
 
             storedValue = property.GetValue(root);
         });
 
         // Assert
-        if (Type.GetTypeCode(property.PropertyType) == TypeCode.String)
+        if (Type.GetTypeCode(property!.PropertyType) == TypeCode.String)
         {
             if (isISetting)
             {
@@ -136,11 +136,11 @@ internal sealed class AppSettingsTests
 
     private static IEnumerable<object[]> TestCases()
     {
-        foreach ((PropertyInfo property, object defaultValue, bool isNullable, bool isISetting) in PropertyInfos())
+        foreach ((PropertyInfo property, object? defaultValue, bool isNullable, bool isISetting) in PropertyInfos())
         {
             if (isNullable)
             {
-                yield return new object[] { property, null, defaultValue, isISetting };
+                yield return new object[] { property, null!, defaultValue!, isISetting };
             }
 
             Type? propertyType = property.PropertyType;
@@ -149,7 +149,7 @@ internal sealed class AppSettingsTests
                 propertyType = propertyType.GetProperty(nameof(ISetting<>.Value))?.PropertyType;
             }
 
-            propertyType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
+            propertyType = Nullable.GetUnderlyingType(propertyType!) ?? propertyType;
             Validates.NotNull(propertyType);
 
             foreach (object value in Values())
@@ -157,12 +157,12 @@ internal sealed class AppSettingsTests
                 Type valueType = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
                 if (valueType == propertyType)
                 {
-                    yield return new object[] { property, value, defaultValue, isISetting };
+                    yield return new object[] { property, value, defaultValue!, isISetting };
                 }
             }
         }
 
-        static IEnumerable<(PropertyInfo property, object defaultValue, bool isNullable, bool isISetting)> PropertyInfos()
+        static IEnumerable<(PropertyInfo property, object? defaultValue, bool isNullable, bool isISetting)> PropertyInfos()
         {
             Dictionary<string, PropertyInfo> properties = typeof(AppSettings).GetProperties()
                 .ToDictionary(x => x.Name, x => x);

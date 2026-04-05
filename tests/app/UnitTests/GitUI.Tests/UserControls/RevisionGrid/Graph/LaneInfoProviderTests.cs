@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
@@ -81,14 +81,14 @@ public class LaneInfoProviderTests
         "yyy", "zz.z"
     ];
 
-    private RevisionGraphRevision _artificialCommitNode;
-    private RevisionGraphRevision _realCommitNode;
-    private RevisionGraphRevision _mergeCommitNode;
-    private RevisionGraphRevision _undetectedMergeCommitNode;
-    private RevisionGraphRevision _innerCommitNode;
-    private ILaneNodeLocator _laneNodeLocator;
-    private IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder;
-    private LaneInfoProvider _infoProvider;
+    private RevisionGraphRevision _artificialCommitNode = null!;
+    private RevisionGraphRevision _realCommitNode = null!;
+    private RevisionGraphRevision _mergeCommitNode = null!;
+    private RevisionGraphRevision _undetectedMergeCommitNode = null!;
+    private RevisionGraphRevision _innerCommitNode = null!;
+    private ILaneNodeLocator _laneNodeLocator = null!;
+    private IGitRevisionSummaryBuilder _gitRevisionSummaryBuilder = null!;
+    private LaneInfoProvider _infoProvider = null!;
 
     [SetUp]
     public void Setup()
@@ -161,22 +161,22 @@ public class LaneInfoProviderTests
     }
 
     private void GetLaneInfo_should_display(RevisionGraphRevision node,
-        string branch = null, string mergedWith = null,
-        string prefix = "", string suffix = "", RevisionGraphRevision child = null)
+        string branch = null!, string mergedWith = null!,
+        string prefix = "", string suffix = "", RevisionGraphRevision child = null!)
     {
         string expected = child is null ? "" : string.Format("{0}: {1}{2}|{2}",
-            child.GitRevision.Guid.Substring(0, 8),
-            child.GitRevision.Subject,
+            child!.GitRevision!.Guid.Substring(0, 8),
+            child.GitRevision!.Subject,
             Environment.NewLine);
         expected += string.Format(branch is null ? "{0}{1}{2}{2}{6}{7}"
                                                  : "{0}{1}{2}\n{3}: {4}{5}{2}{6}{7}",
             prefix,
-            node.GitRevision.Guid,
+            node!.GitRevision!.Guid,
             Environment.NewLine,
             TranslatedStrings.Branch,
             branch,
             mergedWith is null ? "" : string.Format(LaneInfoProvider.TestAccessor.MergedWithText.Text, mergedWith),
-            node.GitRevision.Body,
+            node.GitRevision!.Body,
             suffix);
         _infoProvider.GetLaneInfo(0, 0).Should().Be(expected);
     }
@@ -191,7 +191,7 @@ public class LaneInfoProviderTests
     public void GetLaneInfo_should_return_no_info_if_node_revision_null()
     {
         RevisionGraphRevision nodeWithoutRevision = new(ObjectId.WorkTreeId, 0);
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (nodeWithoutRevision, isAtNode: false, null));
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (nodeWithoutRevision, isAtNode: false, (RevisionGraphRevision?)null));
 
         _infoProvider.GetLaneInfo(0, 0).Should().Be(LaneInfoProvider.TestAccessor.NoInfoText.Text);
     }
@@ -199,7 +199,7 @@ public class LaneInfoProviderTests
     [Test]
     public void GetLaneInfo_for_non_artificial_commit_should_contain_guid_and_mark_if_at_node()
     {
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: true, null));
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: true, (RevisionGraphRevision?)null));
 
         GetLaneInfo_should_display(_realCommitNode, prefix: "* ");
     }
@@ -207,7 +207,7 @@ public class LaneInfoProviderTests
     [Test]
     public void GetLaneInfo_for_non_artificial_commit_should_contain_guid_and_no_mark_if_not_at_node()
     {
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, null));
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
         GetLaneInfo_should_display(_realCommitNode);
     }
@@ -215,25 +215,25 @@ public class LaneInfoProviderTests
     [Test]
     public void GetLaneInfo_for_artificial_commit_should_not_add_guid_and_mark_if_at_node()
     {
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_artificialCommitNode, isAtNode: true, null));
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_artificialCommitNode, isAtNode: true, (RevisionGraphRevision?)null));
 
-        _infoProvider.GetLaneInfo(0, 0).Should().Be(_artificialCommitNode.GitRevision.Body);
+        _infoProvider.GetLaneInfo(0, 0).Should().Be(_artificialCommitNode.GitRevision!.Body);
     }
 
     [Test]
     public void GetLaneInfo_for_artificial_commit_should_not_add_guid_and_mark_if_not_at_node()
     {
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_artificialCommitNode, isAtNode: false, null));
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_artificialCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
-        _infoProvider.GetLaneInfo(0, 0).Should().Be(_artificialCommitNode.GitRevision.Body);
+        _infoProvider.GetLaneInfo(0, 0).Should().Be(_artificialCommitNode.GitRevision!.Body);
     }
 
     [Test]
     public void GetLaneInfo_should_display_the_subject_if_singleline_body_null()
     {
-        _realCommitNode.GitRevision.Body = null;
-        _realCommitNode.GitRevision.HasMultiLineMessage = false;
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, null));
+        _realCommitNode.GitRevision!.Body = null;
+        _realCommitNode.GitRevision!.HasMultiLineMessage = false;
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
         GetLaneInfo_should_display(_realCommitNode);
     }
@@ -241,24 +241,24 @@ public class LaneInfoProviderTests
     [Test]
     public void GetLaneInfo_should_display_the_subject_and_hint_if_multiline_body_null()
     {
-        _realCommitNode.GitRevision.Body = null;
-        _realCommitNode.GitRevision.HasMultiLineMessage = true;
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, null));
+        _realCommitNode.GitRevision!.Body = null;
+        _realCommitNode.GitRevision!.HasMultiLineMessage = true;
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
-        GetLaneInfo_should_display(_realCommitNode, suffix: _realCommitNode.GitRevision.Subject + TranslatedStrings.BodyNotLoaded);
+        GetLaneInfo_should_display(_realCommitNode, suffix: _realCommitNode.GitRevision!.Subject + TranslatedStrings.BodyNotLoaded);
     }
 
     [Test]
     public void GetLaneInfo_should_display_branch_and_source_from_merge_node()
     {
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_mergeCommitNode, isAtNode: false, null));
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_mergeCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
         for (int index = 0; index < MergeSubjectsWithDecoding.Count; index += 3)
         {
             string subject = MergeSubjectsWithDecoding[index + 0];
             string mergedWith = MergeSubjectsWithDecoding[index + 1];
             string into = MergeSubjectsWithDecoding[index + 2];
-            _mergeCommitNode.GitRevision.Subject = subject;
+            _mergeCommitNode.GitRevision!.Subject = subject;
 
             GetLaneInfo_should_display(_mergeCommitNode, into, mergedWith);
         }
@@ -268,14 +268,14 @@ public class LaneInfoProviderTests
     public void GetLaneInfo_should_display_only_the_branch_from_next_merge_node()
     {
         _mergeCommitNode.GetTestAccessor().AddParent(_realCommitNode);
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, null));
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
         for (int index = 0; index < MergeSubjectsWithDecoding.Count; index += 3)
         {
             string subject = MergeSubjectsWithDecoding[index + 0];
             string mergedWith = MergeSubjectsWithDecoding[index + 1];
             string into = MergeSubjectsWithDecoding[index + 2];
-            _mergeCommitNode.GitRevision.Subject = subject;
+            _mergeCommitNode.GitRevision!.Subject = subject;
 
             GetLaneInfo_should_display(_realCommitNode, into);
         }
@@ -296,12 +296,12 @@ public class LaneInfoProviderTests
         _mergeCommitNode.GetTestAccessor().AddParent(_innerCommitNode);
         _innerCommitNode.GetTestAccessor().AddParent(_undetectedMergeCommitNode);
         _undetectedMergeCommitNode.GetTestAccessor().AddParent(_realCommitNode);
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, null));
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
         string subject = MergeSubjectsWithDecoding[0];
         string mergedWith = MergeSubjectsWithDecoding[1];
         string into = MergeSubjectsWithDecoding[2];
-        _mergeCommitNode.GitRevision.Subject = subject;
+        _mergeCommitNode.GitRevision!.Subject = subject;
 
         GetLaneInfo_should_display(_realCommitNode, into);
     }
@@ -318,18 +318,18 @@ public class LaneInfoProviderTests
         // real
         _mergeCommitNode.GetTestAccessor().AddParent(_innerCommitNode);
         _innerCommitNode.GetTestAccessor().AddParent(_realCommitNode);
-        _realCommitNode.GitRevision.Refs = [new GitRef(null, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored")];
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, null));
+        _realCommitNode.GitRevision!.Refs = [new GitRef(null!, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored")];
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
-        Check(new GitRef(null, null, GitRefName.RefsHeadsPrefix + "local_branch"));
-        Check(new GitRef(null, null, GitRefName.RefsRemotesPrefix + "remote_branch", "origin"));
-        Check(new GitRef(null, null, GitRefName.RefsStashPrefix + "@0"));
+        Check(new GitRef(null!, null, GitRefName.RefsHeadsPrefix + "local_branch"));
+        Check(new GitRef(null!, null, GitRefName.RefsRemotesPrefix + "remote_branch", "origin"));
+        Check(new GitRef(null!, null, GitRefName.RefsStashPrefix + "@0"));
 
         return;
 
         void Check(GitRef gitRef)
         {
-            _innerCommitNode.GitRevision.Refs = [gitRef];
+            _innerCommitNode!.GitRevision!.Refs = [gitRef];
 
             GetLaneInfo_should_display(_realCommitNode, gitRef.Name);
         }
@@ -366,15 +366,15 @@ public class LaneInfoProviderTests
 
     private void GetLaneInfo_should_prefer_the_branch_from_merge_to_a_GitRef()
     {
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, null));
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
         string subject = MergeSubjectsWithDecoding[0];
         string mergedWith = MergeSubjectsWithDecoding[1];
         string into = MergeSubjectsWithDecoding[2];
-        _mergeCommitNode.GitRevision.Subject = subject;
+        _mergeCommitNode.GitRevision!.Subject = subject;
 
-        GitRef gitRef = new(null, null, GitRefName.RefsHeadsPrefix + "local_branch");
-        _mergeCommitNode.GitRevision.Refs = [gitRef];
+        GitRef gitRef = new(null!, null, GitRefName.RefsHeadsPrefix + "local_branch");
+        _mergeCommitNode.GitRevision!.Refs = [gitRef];
 
         GetLaneInfo_should_display(_realCommitNode, into);
     }
@@ -389,12 +389,12 @@ public class LaneInfoProviderTests
         // inner real
         _mergeCommitNode.GetTestAccessor().AddParent(_innerCommitNode);
         _mergeCommitNode.GetTestAccessor().AddParent(_realCommitNode);
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, null));
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
         string subject = MergeSubjectsWithDecoding[0];
         string mergedWith = MergeSubjectsWithDecoding[1];
         string into = MergeSubjectsWithDecoding[2];
-        _mergeCommitNode.GitRevision.Subject = subject;
+        _mergeCommitNode.GitRevision!.Subject = subject;
 
         GetLaneInfo_should_display(_realCommitNode, branch: mergedWith);
     }
@@ -415,7 +415,7 @@ public class LaneInfoProviderTests
         _undetectedMergeCommitNode.GetTestAccessor().AddParent(_realCommitNode);
         _undetectedMergeCommitNode.GetTestAccessor().AddParent(_innerCommitNode);
         _innerCommitNode.GetTestAccessor().AddParent(_realCommitNode);
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, null));
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
         GetLaneInfo_should_display(_realCommitNode);
     }
@@ -437,12 +437,12 @@ public class LaneInfoProviderTests
         _undetectedMergeCommitNode.GetTestAccessor().AddParent(_realCommitNode);
         _mergeCommitNode.GetTestAccessor().AddParent(_innerCommitNode);
         _innerCommitNode.GetTestAccessor().AddParent(_undetectedMergeCommitNode);
-        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, null));
+        _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
         string subject = MergeSubjectsWithDecoding[0];
         string mergedWith = MergeSubjectsWithDecoding[1];
         string into = MergeSubjectsWithDecoding[2];
-        _mergeCommitNode.GitRevision.Subject = subject;
+        _mergeCommitNode.GitRevision!.Subject = subject;
 
         GetLaneInfo_should_display(_realCommitNode);
     }
@@ -456,18 +456,18 @@ public class LaneInfoProviderTests
         // |
         // real (parent)
         _innerCommitNode.AddParent(_realCommitNode);
-        _realCommitNode.GitRevision.Refs = [new GitRef(null, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored")];
+        _realCommitNode.GitRevision!.Refs = [new GitRef(null!, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored")];
         _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, _innerCommitNode));
 
-        Check(new GitRef(null, null, GitRefName.RefsHeadsPrefix + "local_branch"));
-        Check(new GitRef(null, null, GitRefName.RefsRemotesPrefix + "remote_branch", "origin"));
-        Check(new GitRef(null, null, GitRefName.RefsStashPrefix + "@0"));
+        Check(new GitRef(null!, null, GitRefName.RefsHeadsPrefix + "local_branch"));
+        Check(new GitRef(null!, null, GitRefName.RefsRemotesPrefix + "remote_branch", "origin"));
+        Check(new GitRef(null!, null, GitRefName.RefsStashPrefix + "@0"));
 
         return;
 
         void Check(GitRef gitRef)
         {
-            _innerCommitNode.GitRevision.Refs = [gitRef];
+            _innerCommitNode.GitRevision!.Refs = [gitRef];
 
             GetLaneInfo_should_display(_realCommitNode, gitRef.Name, child: _innerCommitNode);
         }

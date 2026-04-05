@@ -103,10 +103,10 @@ public partial class BranchSelector : GitModuleControl
         }
     }
 
-    private void Branches_SelectedIndexChanged(object sender, EventArgs e)
+    private void Branches_SelectedIndexChanged(object? sender, EventArgs e)
     {
         lbChanges.Text = "";
-        FireSelectionChangedEvent(sender, e);
+        FireSelectionChangedEvent(sender!, e);
 
         if (string.IsNullOrWhiteSpace(SelectedBranchName))
         {
@@ -115,7 +115,7 @@ public partial class BranchSelector : GitModuleControl
         else
         {
             string branchName = SelectedBranchName;
-            ObjectId currentCheckout = CommitToCompare ?? Module.GetCurrentCheckout();
+            ObjectId? currentCheckout = CommitToCompare ?? Module.GetCurrentCheckout();
 
             if (currentCheckout is null)
             {

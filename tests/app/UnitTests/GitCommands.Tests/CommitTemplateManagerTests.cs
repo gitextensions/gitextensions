@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.IO.Abstractions;
 using CommonTestUtils;
 using FluentAssertions;
@@ -13,11 +13,11 @@ namespace GitCommandsTests;
 public class CommitTemplateManagerTests
 {
     private readonly string _workingDir = @"c:\dev\repo";
-    private IGitModule _module;
-    private FileBase _file;
-    private IFileSystem _fileSystem;
-    private IFullPathResolver _fullPathResolver;
-    private CommitTemplateManager _manager;
+    private IGitModule _module = null!;
+    private FileBase _file = null!;
+    private IFileSystem _fileSystem = null!;
+    private IFullPathResolver _fullPathResolver = null!;
+    private CommitTemplateManager _manager = null!;
 
     [SetUp]
     public void Setup()
@@ -64,7 +64,7 @@ public class CommitTemplateManagerTests
         _file.Exists(fullPath).Returns(true);
         _file.ReadAllText(fullPath).Returns("line1");
 
-        string content = _manager.LoadGitCommitTemplate();
+        string? content = _manager.LoadGitCommitTemplate();
 
         content.Should().NotBeEmpty();
     }
@@ -132,7 +132,7 @@ public class CommitTemplateManagerTests
             helper.Module.SetSetting("commit.template", "template.txt");
             helper.CreateRepoFile("template.txt", content);
 
-            string body = manager.LoadGitCommitTemplate();
+            string? body = manager.LoadGitCommitTemplate();
 
             body.Should().Be(content);
         }

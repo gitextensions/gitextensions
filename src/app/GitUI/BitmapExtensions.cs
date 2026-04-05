@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 namespace GitUI;
 
 public static class BitmapExtensions

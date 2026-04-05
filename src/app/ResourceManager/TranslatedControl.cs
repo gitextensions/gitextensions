@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI.Theming;
 
@@ -20,6 +21,7 @@ public class TranslatedControl : UserControl, ITranslate
 
     [Browsable(false)] // because we always read from settings
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [AllowNull]
     public override Font Font
     {
         get => base.Font;

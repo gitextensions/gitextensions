@@ -40,7 +40,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     {
         try
         {
-            DrawGraphCellFromCache(e.RowIndex, rowHeight, e.CellBounds, e.Graphics);
+            DrawGraphCellFromCache(e.RowIndex, rowHeight, e.CellBounds, e.Graphics!);
         }
         catch (Exception ex)
         {
@@ -79,7 +79,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
             rowHeight);
 
         graphics.DrawImage(
-            _graphDisplayCache.GraphBitmap,
+            _graphDisplayCache.GraphBitmap!,
             cellBounds,
             cellRect,
             GraphicsUnit.Pixel);
@@ -195,7 +195,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
             laneRect.Y = _graphRenderCache.GetCacheRow(rowIndex) * rowHeight;
 
             using Region newClip = new(laneRect);
-            _graphRenderCache.GraphBitmapGraphics.Clip = newClip;
+            _graphRenderCache.GraphBitmapGraphics!.Clip = newClip;
 
             _graphRenderCache.GraphBitmapGraphics.RenderingOrigin = new Point(x, laneRect.Y);
 

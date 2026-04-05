@@ -48,7 +48,7 @@ public sealed class MouseWheelRedirector : IMessageFilter
             return false;
         }
 
-        Control control = Control.FromHandle(hwnd);
+        Control? control = Control.FromHandle(hwnd);
         if (control is null)
         {
             return false;
@@ -66,7 +66,7 @@ public sealed class MouseWheelRedirector : IMessageFilter
             control = control.Parent;
             if (nonScrollableRtbx)
             {
-                hwnd = control.Handle;
+                hwnd = control!.Handle;
             }
         }
 

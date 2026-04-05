@@ -821,13 +821,13 @@ public class FilterInfoTests
                                     {
                                         foreach (bool hideMergeCommits in new[] { false, true })
                                         {
-                                            foreach (string pathFilter in new[] { "file1", "", null })
+                                            foreach (string? pathFilter in new[] { "file1", "", null })
                                             {
                                                 foreach (bool showCurrentBranchOnly in new[] { false, true })
                                                 {
                                                     foreach (bool showReflogReferences in new[] { false, true })
                                                     {
-                                                        foreach (string branchFilter in new[] { "branch1", "", null })
+                                                        foreach (string? branchFilter in new[] { "branch1", "", null })
                                                         {
                                                             yield return new TestCaseData(byDateFrom, byDateTo, byAuthor, byCommitter, byMessage, byDiffContent, showSimplifyByDecoration, hideMergeCommits, pathFilter, showCurrentBranchOnly, showReflogReferences, branchFilter);
                                                         }
@@ -1090,7 +1090,7 @@ public class FilterInfoTests
                             {
                                 foreach (bool showFilteredBranches in new[] { false, true })
                                 {
-                                    foreach (string branchFilter in new[] { "branch1", "", null })
+                                    foreach (string? branchFilter in new[] { "branch1", "", null })
                                     {
                                         yield return new TestCaseData(showNotes, showStash, showReflog, showCurrentBranchOnly, isValidCheckout, showFilteredBranches, branchFilter);
                                     }
@@ -1144,7 +1144,7 @@ public class FilterInfoTests
 
             if (showCurrentBranchOnly && objectId is not null)
             {
-                string head = Regex.Escape(objectId?.ToString());
+                string head = Regex.Escape(objectId?.ToString()!);
                 args.ToString().Should().MatchRegex(@$"(^|\s){head}($|\s)");
             }
 

@@ -32,7 +32,7 @@ public sealed class IndexWatcher : IDisposable
         RefsWatcher.Changed += fileSystemWatcher_Changed;
     }
 
-    private void OnUICommandsChanged(object sender, GitUICommandsChangedEventArgs e)
+    private void OnUICommandsChanged(object? sender, GitUICommandsChangedEventArgs e)
     {
         Clear();
     }

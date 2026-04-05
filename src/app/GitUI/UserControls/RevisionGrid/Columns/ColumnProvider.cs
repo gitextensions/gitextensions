@@ -12,7 +12,7 @@ internal abstract class ColumnProvider
     public int ColumnLeftMargin { get; } = DpiUtil.Scale(6);
 
     /// <summary>The DataGrid column object that models this column.</summary>
-    public DataGridViewColumn Column { get; init; }
+    public DataGridViewColumn Column { get; init; } = null!;
 
     /// <summary>The display friendly name of this column.</summary>
     public string Name { get; }

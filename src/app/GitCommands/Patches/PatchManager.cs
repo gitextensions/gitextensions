@@ -11,7 +11,7 @@ public static class PatchManager
 {
     public static byte[]? GetResetWorkTreeLinesAsPatch(string text, int selectionPosition, int selectionLength, Encoding fileContentEncoding)
     {
-        IReadOnlyList<Chunk> selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out string? header);
+        IReadOnlyList<Chunk>? selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out string? header);
 
         if (selectedChunks is null)
         {
@@ -32,7 +32,7 @@ public static class PatchManager
 
     public static byte[]? GetSelectedLinesAsPatch(string text, int selectionPosition, int selectionLength, bool isIndex, Encoding fileContentEncoding, bool reset, bool isNewFile, bool isRenamed)
     {
-        IReadOnlyList<Chunk>? selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out string header);
+        IReadOnlyList<Chunk>? selectedChunks = GetSelectedChunks(text, selectionPosition, selectionLength, out string? header);
 
         if (selectedChunks is null || header is null)
         {

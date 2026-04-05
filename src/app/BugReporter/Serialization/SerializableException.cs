@@ -166,16 +166,16 @@ public class SerializableException
         serializer.Serialize(stream, this);
         stream.Position = 0;
         XDocument doc = XDocument.Load(stream);
-        return doc.Root.ToString();
+        return doc.Root!.ToString();
     }
 
     public static SerializableException FromXmlString(string xml)
     {
         XmlSerializer serializer = new(typeof(SerializableException));
         using StringReader reader = new(xml);
-        SerializableException exception = (SerializableException)serializer.Deserialize(reader);
+        SerializableException? exception = (SerializableException?)serializer.Deserialize(reader);
 
-        if (exception.StackTrace?.IndexOf(Environment.NewLine) < 0)
+        if (exception!.StackTrace?.IndexOf(Environment.NewLine) < 0)
         {
             // Presume that the payload was serialized with \n only
             exception.StackTrace = exception.StackTrace.Replace("\n", Environment.NewLine);
@@ -199,7 +199,7 @@ public class SerializableException
 
             foreach (PropertyInfo property in extendedProperties.Where(property => property.GetValue(exception, null) is not null))
             {
-                extendedInformation.Add(property.Name, property.GetValue(exception, null));
+                extendedInformation.Add(property.Name, property.GetValue(exception, null)!);
             }
 
             return extendedInformation;

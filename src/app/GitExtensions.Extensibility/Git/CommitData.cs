@@ -8,9 +8,9 @@ public sealed class CommitData
     public CommitData(
         ObjectId objectId,
         IReadOnlyList<ObjectId>? parentIds,
-        string author,
+        string? author,
         DateTime authorDate,
-        string committer,
+        string? committer,
         DateTime commitDate,
         string body)
     {
@@ -25,9 +25,9 @@ public sealed class CommitData
 
     public ObjectId ObjectId { get; }
     public IReadOnlyList<ObjectId>? ParentIds { get; }
-    public string Author { get; }
+    public string? Author { get; }
     public DateTimeOffset AuthorDate { get; }
-    public string Committer { get; }
+    public string? Committer { get; }
     public DateTimeOffset CommitDate { get; }
 
     // TODO mutable properties need review

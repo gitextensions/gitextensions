@@ -99,7 +99,7 @@ public class FileSettingsCacheTests
             throw new NotImplementedException();
         }
 
-        protected override void SetValueImpl(string key, string value)
+        protected override void SetValueImpl(string key, string? value)
         {
             throw new NotImplementedException();
         }

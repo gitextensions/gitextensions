@@ -135,7 +135,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
 
         IGitModule module = GetModule();
 
-        GitRef remoteHead = remote.Push
+        GitRef? remoteHead = remote.Push?
                                .Select(s => s.Split(Delimiters.Colon))
                                .Where(t => t.Length == 2)
                                .Where(t => IsSettingForBranch(t[0], branch))
@@ -147,7 +147,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
             return remoteHead.Name;
         }
 
-        GitRef remoteWildcardHead = remote.Push
+        GitRef? remoteWildcardHead = remote.Push?
                                .Select(s => s.Split(Delimiters.Colon))
                                .Where(t => t.Length == 2)
                                .Where(t => IsSettingForWildcardBranch(t[0]))
@@ -196,7 +196,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
             .Distinct()
             .ToList();
 
-        IEnumerable<string> EnumerateDisabledRemoteNames()
+        IEnumerable<string?> EnumerateDisabledRemoteNames()
         {
             foreach ((string setting, string _) in module.GetAllLocalSettings())
             {
@@ -218,7 +218,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
     public IEnumerable<ConfigFileRemote> LoadRemotes(bool loadDisabled)
     {
         List<ConfigFileRemote> remotes = [];
-        IGitModule module = _getModule();
+        IGitModule? module = _getModule();
         if (module is null)
         {
             return remotes;

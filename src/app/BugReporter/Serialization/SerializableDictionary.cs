@@ -64,7 +64,7 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IX
     {
         foreach (TKey key in Keys)
         {
-            writer.WriteStartElement(key.ToString().Replace(" ", ""));
+            writer.WriteStartElement(key.ToString()!.Replace(" ", ""));
 
             // Check to see if we can actually serialize element
 #pragma warning disable SYSLIB0050 // 'Type.IsSerializable' is obsolete: 'Formatter-based serialization is obsolete and should not be used.'

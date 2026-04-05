@@ -118,7 +118,7 @@ public sealed partial class AvatarControl : GitExtensionsControl
 
         Size = _avatarImage.Size = size;
 
-        string email = Email;
+        string? email = Email;
 
         if (!AppSettings.ShowAuthorAvatarInCommitInfo || string.IsNullOrWhiteSpace(email))
         {
@@ -127,7 +127,7 @@ public sealed partial class AvatarControl : GitExtensionsControl
         }
 
         CancellationToken token = _cancellationTokenSequence.Next();
-        Image image = await _avatarProvider.GetAvatarAsync(email, AuthorName, Math.Max(size.Width, size.Height));
+        Image? image = await _avatarProvider.GetAvatarAsync(email, AuthorName, Math.Max(size.Width, size.Height));
 
         if (!token.IsCancellationRequested)
         {
@@ -161,7 +161,7 @@ public sealed partial class AvatarControl : GitExtensionsControl
     {
         foreach (ToolStripMenuItem item in toolStripItems)
         {
-            item.Checked = Equals((T)item.Tag, currentValue);
+            item.Checked = Equals((T)item.Tag!, currentValue);
         }
     }
 }

@@ -102,7 +102,7 @@ public partial class FileViewer : GitModuleControl
                 {
                     ResetView(ViewMode.Text, null);
                     internalFileViewer.SetText("Unsupported file: \n\n" + e.Exception.ToString(), openWithDifftool: null /* not applicable */);
-                    TextLoaded?.Invoke(this, null);
+                    TextLoaded?.Invoke(this, null!);
                 }
             };
 
@@ -313,7 +313,7 @@ public partial class FileViewer : GitModuleControl
             lock (_difftasticCmdCacheLock)
             {
                 // GetEffectiveSettings() checks Windows only, this need to be checked for each instance
-                if (_difftasticCmdCache.TryGetValue(Module.WorkingDir, out Lazy<bool> isEnabled))
+                if (_difftasticCmdCache.TryGetValue(Module.WorkingDir, out Lazy<bool>? isEnabled))
                 {
                     return isEnabled;
                 }
@@ -575,7 +575,7 @@ public partial class FileViewer : GitModuleControl
         CancellationToken cancellationToken = default)
     {
         ThreadHelper.JoinableTaskFactory.Run(
-            () => ViewFixedPatchAsync(fileName, text, openWithDifftool, cancellationToken));
+            () => ViewFixedPatchAsync(fileName!, text, openWithDifftool, cancellationToken));
     }
 
     public Task ViewDifftasticAsync(string fileName,
@@ -634,7 +634,7 @@ public partial class FileViewer : GitModuleControl
                 {
                     try
                     {
-                        DisplayAsHexDump(_binaryFile.Text, fileName, text, openWithDifftool);
+                        DisplayAsHexDump(_binaryFile.Text, fileName!, text, openWithDifftool);
                     }
                     catch
                     {
@@ -653,7 +653,7 @@ public partial class FileViewer : GitModuleControl
                     }
                 }
 
-                TextLoaded?.Invoke(this, null);
+                TextLoaded?.Invoke(this, null!);
                 return Task.CompletedTask;
             });
     }
@@ -744,7 +744,7 @@ public partial class FileViewer : GitModuleControl
         {
             try
             {
-                using MemoryStream stream = await Module.GetFileStreamAsync(blobId.ToString(), cancellationToken: default);
+                using MemoryStream? stream = await Module.GetFileStreamAsync(blobId.ToString(), cancellationToken: default);
                 if (stream is not null)
                 {
                     return CreateImage(file.Name, stream);
@@ -892,7 +892,7 @@ public partial class FileViewer : GitModuleControl
             _async.Dispose();
             components?.Dispose();
 
-            if (TryGetUICommandsDirect(out IGitUICommands uiCommands))
+            if (TryGetUICommandsDirect(out IGitUICommands? uiCommands))
             {
                 uiCommands.PostSettings -= UICommands_PostSettings;
             }
@@ -948,7 +948,7 @@ public partial class FileViewer : GitModuleControl
                     internalFileViewer.GoToFirstChange(NumberOfContextLines);
                 }
 
-                TextLoaded?.Invoke(this, null);
+                TextLoaded?.Invoke(this, null!);
                 return Task.CompletedTask;
             });
     }
@@ -1403,14 +1403,14 @@ public partial class FileViewer : GitModuleControl
 
     // Event handlers
 
-    private void OnUICommandsChanged(object sender, GitUICommandsChangedEventArgs? e)
+    private void OnUICommandsChanged(object? sender, GitUICommandsChangedEventArgs? e)
     {
         if (e?.OldCommands is not null)
         {
             e.OldCommands.PostSettings -= UICommands_PostSettings;
         }
 
-        IGitUICommandsSource commandSource = sender as IGitUICommandsSource;
+        IGitUICommandsSource? commandSource = sender as IGitUICommandsSource;
         if (commandSource?.UICommands is not null)
         {
             commandSource.UICommands.PostSettings += UICommands_PostSettings;
@@ -1420,7 +1420,7 @@ public partial class FileViewer : GitModuleControl
         Encoding = null;
     }
 
-    private void UICommands_PostSettings(object sender, GitUIPostActionEventArgs? e)
+    private void UICommands_PostSettings(object? sender, GitUIPostActionEventArgs? e)
     {
         internalFileViewer.InvokeAndForget(() => internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition);
     }
@@ -1515,10 +1515,10 @@ public partial class FileViewer : GitModuleControl
         OnExtraDiffArgumentsChanged();
     }
 
-    private void _continuousScrollEventManager_BottomScrollReached(object sender, EventArgs e)
+    private void _continuousScrollEventManager_BottomScrollReached(object? sender, EventArgs e)
         => BottomScrollReached?.Invoke(sender, e);
 
-    private void _continuousScrollEventManager_TopScrollReached(object sender, EventArgs e)
+    private void _continuousScrollEventManager_TopScrollReached(object? sender, EventArgs e)
         => TopScrollReached?.Invoke(sender, e);
 
     private void llShowPreview_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1527,23 +1527,23 @@ public partial class FileViewer : GitModuleControl
         ThreadHelper.JoinableTaskFactory.Run(() => _deferShowFunc?.Invoke() ?? Task.CompletedTask);
     }
 
-    private void PictureBox_MouseWheel(object sender, MouseEventArgs e)
+    private void PictureBox_MouseWheel(object? sender, MouseEventArgs e)
     {
         bool isScrollingTowardTop = e.Delta > 0;
         bool isScrollingTowardBottom = e.Delta < 0;
 
         if (isScrollingTowardTop)
         {
-            _continuousScrollEventManager.RaiseTopScrollReached(sender, e);
+            _continuousScrollEventManager.RaiseTopScrollReached(sender!, e);
         }
 
         if (isScrollingTowardBottom)
         {
-            _continuousScrollEventManager.RaiseBottomScrollReached(sender, e);
+            _continuousScrollEventManager.RaiseBottomScrollReached(sender!, e);
         }
     }
 
-    private void OnUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
+    private void OnUICommandsSourceSet(object? sender, GitUICommandsSourceEventArgs e)
     {
         UICommandsSource.UICommandsChanged += OnUICommandsChanged;
         OnUICommandsChanged(UICommandsSource, null);

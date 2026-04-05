@@ -77,7 +77,7 @@ public partial class FormReflog : GitModuleForm
 
         async Task DisplayRefLogAsync()
         {
-            string item = (string)Branches.SelectedItem;
+            string item = (string)Branches.SelectedItem!;
             await TaskScheduler.Default;
             GitArgumentBuilder arguments = new("reflog")
             {
@@ -122,7 +122,7 @@ public partial class FormReflog : GitModuleForm
     private ObjectId GetShaOfRefLine()
     {
         DataGridViewRow row = GetSelectedRow();
-        RefLine refLine = (RefLine)row.DataBoundItem;
+        RefLine refLine = (RefLine)row.DataBoundItem!;
         return refLine.Sha;
 
         DataGridViewRow GetSelectedRow()
@@ -137,7 +137,7 @@ public partial class FormReflog : GitModuleForm
                 return gridReflog.Rows[gridReflog.SelectedCells[0].RowIndex];
             }
 
-            return gridReflog.CurrentRow;
+            return gridReflog.CurrentRow!;
         }
     }
 

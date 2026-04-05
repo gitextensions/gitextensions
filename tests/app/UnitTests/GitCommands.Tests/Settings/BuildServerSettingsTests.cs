@@ -10,14 +10,14 @@ namespace GitCommandsTests.Settings;
 [TestFixture]
 internal sealed class BuildServerSettingsTests
 {
-    private GitModuleTestHelper _testHelper;
-    private DistributedSettings _userRoaming;
-    private DistributedSettings _repoDistributed;
-    private DistributedSettings _repoLocal;
-    private DistributedSettings _effective;
-    private string _userRoamingConfigFilePath;
-    private string _repoDistributedConfigFilePath;
-    private string _repoLocalConfigFilePath;
+    private GitModuleTestHelper _testHelper = null!;
+    private DistributedSettings _userRoaming = null!;
+    private DistributedSettings _repoDistributed = null!;
+    private DistributedSettings _repoLocal = null!;
+    private DistributedSettings _effective = null!;
+    private string _userRoamingConfigFilePath = null!;
+    private string _repoDistributedConfigFilePath = null!;
+    private string _repoLocalConfigFilePath = null!;
 
     [SetUp]
     public void Setup()
@@ -34,7 +34,7 @@ internal sealed class BuildServerSettingsTests
         _userRoaming = new DistributedSettings(lowerPriority: null, new GitExtSettingsCache(_userRoamingConfigFilePath), SettingLevel.Global);
         _repoDistributed = new DistributedSettings(lowerPriority: _userRoaming, new GitExtSettingsCache(_repoDistributedConfigFilePath), SettingLevel.Distributed);
         _repoLocal = new DistributedSettings(lowerPriority: _repoDistributed, new GitExtSettingsCache(_repoLocalConfigFilePath), SettingLevel.Local);
-        _effective = new DistributedSettings(lowerPriority: _repoLocal, new GitExtSettingsCache(settingsFilePath: null), SettingLevel.Effective);
+        _effective = new DistributedSettings(lowerPriority: _repoLocal, new GitExtSettingsCache(settingsFilePath: null!), SettingLevel.Effective);
     }
 
     [TearDown]

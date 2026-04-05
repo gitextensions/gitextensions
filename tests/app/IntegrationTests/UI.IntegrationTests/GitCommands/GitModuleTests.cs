@@ -1,4 +1,4 @@
-﻿using CommonTestUtils;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -8,8 +8,8 @@ namespace UITests.GitCommands;
 [TestFixture]
 public sealed class GitModuleTests
 {
-    private ReferenceRepository _refRepo;
-    private GitModule _gitModule;
+    private ReferenceRepository _refRepo = null!;
+    private GitModule _gitModule = null!;
 
     [SetUp]
     public void SetUp()

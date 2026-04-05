@@ -27,7 +27,7 @@ public static class ControlHotkeyExtensions
         }
     }
 
-    private static void HandleKeyDown(object sender, KeyEventArgs e)
+    private static void HandleKeyDown(object? sender, KeyEventArgs e)
     {
         if (e.KeyData == (Keys.Control | Keys.Back) && !IsReadOnly(sender))
         {
@@ -103,7 +103,7 @@ public static class ControlHotkeyExtensions
             }
 
             string GetText() =>
-                ((Control)sender).Text;
+                ((Control)sender!).Text;
 
             int GetSelectionStart()
             {
@@ -173,13 +173,13 @@ public static class ControlHotkeyExtensions
         }
     }
 
-    private static void HandleDisposed(object sender, EventArgs e)
+    private static void HandleDisposed(object? sender, EventArgs e)
     {
-        ((Control)sender).Disposed -= HandleDisposed;
-        ((Control)sender).KeyDown -= HandleKeyDown;
+        ((Control)sender!).Disposed -= HandleDisposed;
+        ((Control)sender!).KeyDown -= HandleKeyDown;
     }
 
-    private static bool IsReadOnly(object sender)
+    private static bool IsReadOnly(object? sender)
     {
         return sender switch
         {
@@ -191,7 +191,7 @@ public static class ControlHotkeyExtensions
 
     private static readonly MethodInfo _beginUpdateMethod =
         typeof(Control).GetMethod("BeginUpdateInternal",
-            BindingFlags.Instance | BindingFlags.NonPublic);
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
 
     // there are 2 EndUpdateInternal methods, we are looking the one with parameterless signature
     private static readonly MethodInfo _endUpdateMethod =
@@ -199,9 +199,9 @@ public static class ControlHotkeyExtensions
             BindingFlags.Instance | BindingFlags.NonPublic,
             binder: null,
             types: Type.EmptyTypes,
-            modifiers: []);
+            modifiers: [])!;
 
     private static readonly MethodInfo _setSelectedTextInternalMethod =
         typeof(TextBoxBase).GetMethod("SetSelectedTextInternal",
-            BindingFlags.Instance | BindingFlags.NonPublic);
+            BindingFlags.Instance | BindingFlags.NonPublic)!;
 }

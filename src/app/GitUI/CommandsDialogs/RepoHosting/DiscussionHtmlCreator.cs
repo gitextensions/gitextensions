@@ -17,7 +17,7 @@ internal static class DiscussionHtmlCreator
         {
             foreach (IDiscussionEntry entry in entries)
             {
-                ICommitDiscussionEntry cde = entry as ICommitDiscussionEntry;
+                ICommitDiscussionEntry? cde = entry as ICommitDiscussionEntry;
 
                 AddLine(html, "<div class='entry {0}'>", cde is null ? "commentEntry" : " commitEntry");
 
@@ -43,7 +43,7 @@ internal static class DiscussionHtmlCreator
 
     private static void AddLine(StringBuilder html, string input, params object?[] p)
     {
-        html.AppendFormat(input + "\r\n", (from el in p select (el is null) ? "[UNKNOWN]" : el.ToString().Replace("\r", "").Replace("\n", "<br/>\n").Replace("\"", "&quot;")).ToArray());
+        html.AppendFormat(input + "\r\n", (from el in p select (el is null) ? "[UNKNOWN]" : el.ToString()!.Replace("\r", "").Replace("\n", "<br/>\n").Replace("\"", "&quot;")).ToArray());
     }
 
     private static string CssData
@@ -75,14 +75,14 @@ internal static class DiscussionHtmlCreator
 
                 IEnumerable<KeyValuePair<string, string>> kvps = from prop in props
                            where prop.PropertyType == typeof(Color)
-                           let c = (Color)prop.GetValue(null, null)
+                           let c = (Color)prop.GetValue(null, null)!
                            select new KeyValuePair<string, string>("SC." + prop.Name, string.Format("#{0:X2}{1:X2}{2:X2}", c.R, c.G, c.B));
 
                 _systemInfoReplacement = [.. kvps];
 
                 // TODO: is it safe to rename the keys ('SF.DialogFont', 'SF.DialogFontSize') to 'SF.MessageBoxFont' or not?
-                _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFont", SystemFonts.MessageBoxFont.Name));
-                _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFontSize", string.Format("{0}pt", SystemFonts.MessageBoxFont.SizeInPoints)));
+                _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFont", SystemFonts.MessageBoxFont!.Name));
+                _systemInfoReplacement.Add(new KeyValuePair<string, string>("SF.DialogFontSize", string.Format("{0}pt", SystemFonts.MessageBoxFont!.SizeInPoints)));
 
                 _systemInfoReplacement.Sort((p1, p2) => p2.Key.CompareTo(p1.Key)); // Required.
             }

@@ -4,10 +4,10 @@ namespace GitCommands;
 
 public class PathEqualityComparer : IEqualityComparer<string>
 {
-    public bool Equals(string path1, string path2)
+    public bool Equals(string? path1, string? path2)
     {
-        path1 = Path.GetFullPath(path1).TrimEnd('\\');
-        path2 = Path.GetFullPath(path2).TrimEnd('\\');
+        path1 = Path.GetFullPath(path1!).TrimEnd('\\');
+        path2 = Path.GetFullPath(path2!).TrimEnd('\\');
         StringComparison comparison = !EnvUtils.RunningOnWindows()
             ? StringComparison.InvariantCulture
             : StringComparison.InvariantCultureIgnoreCase;

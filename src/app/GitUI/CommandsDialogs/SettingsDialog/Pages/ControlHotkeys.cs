@@ -111,7 +111,7 @@ internal partial class ControlHotkeys : GitExtensionsControl
                 if (cmd is not null)
                 {
                     listMappings.Items.Add(
-                        new ListViewItem([cmd.Name, cmd.KeyData.ToText()])
+                        new ListViewItem([cmd.Name!, cmd.KeyData.ToText()])
                         {
                             Tag = cmd
                         });
@@ -142,17 +142,17 @@ internal partial class ControlHotkeys : GitExtensionsControl
 
     private void listMappings_SelectedIndexChanged(object sender, EventArgs e)
     {
-        ListViewItem lvi = listMappings.SelectedItems.Count > 0 ? listMappings.SelectedItems[0] : null;
+        ListViewItem? lvi = listMappings.SelectedItems.Count > 0 ? listMappings.SelectedItems[0] : null;
         if (lvi is not null)
         {
-            HotkeyCommand hotkey = lvi.Tag as HotkeyCommand;
+            HotkeyCommand? hotkey = lvi.Tag as HotkeyCommand;
             SelectedHotkeyCommand = hotkey;
         }
     }
 
     private void bApply_Click(object sender, EventArgs e)
     {
-        HotkeyCommand hotkey = SelectedHotkeyCommand;
+        HotkeyCommand? hotkey = SelectedHotkeyCommand;
         if (hotkey is not null)
         {
             // Update the KeyData with the chosen one
@@ -165,7 +165,7 @@ internal partial class ControlHotkeys : GitExtensionsControl
 
     private void bClear_Click(object sender, EventArgs e)
     {
-        HotkeyCommand hotkey = SelectedHotkeyCommand;
+        HotkeyCommand? hotkey = SelectedHotkeyCommand;
         if (hotkey is not null)
         {
             // Update the KeyData with the chosen one

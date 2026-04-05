@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.ComponentModel;
 using System.Net;
 using System.Reactive.Linq;

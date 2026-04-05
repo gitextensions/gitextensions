@@ -7,7 +7,7 @@ namespace GitUITests.CommandsDialogs;
 [TestFixture]
 public class FormRemotesControllerTests
 {
-    private FormRemotesController _controller;
+    private FormRemotesController _controller = null!;
 
     [SetUp]
     public void Setup()

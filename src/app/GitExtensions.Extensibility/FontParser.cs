@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.Globalization;
 
 namespace GitExtensions.Extensibility;

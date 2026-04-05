@@ -23,7 +23,7 @@ internal class LinkFactoryTests
         linkFactory.CreateBranchLink("master");
         string expected = "gitext://gotobranch/master";
         ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink("master#gitext://gotobranch/master", out Uri? actualUri));
-        ClassicAssert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
+        ClassicAssert.That(actualUri!.AbsoluteUri, Is.EqualTo(expected));
     }
 
     [Test]
@@ -33,7 +33,7 @@ internal class LinkFactoryTests
         linkFactory.CreateBranchLink("PR#23");
         string expected = "gitext://gotobranch/PR#23";
         ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink("PR#23#gitext://gotobranch/PR#23", out Uri? actualUri));
-        ClassicAssert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
+        ClassicAssert.That(actualUri!.AbsoluteUri, Is.EqualTo(expected));
     }
 
     public void ParseGoToBranchLinkWithDetachedHead()
@@ -43,7 +43,7 @@ internal class LinkFactoryTests
         linkFactory.CreateBranchLink(linkCaption);
         string expected = "gitext://gotobranch/HEAD";
         ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink($"{linkCaption}#{expected}", out Uri? actualUri));
-        ClassicAssert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
+        ClassicAssert.That(actualUri!.AbsoluteUri, Is.EqualTo(expected));
     }
 
     private static void TestCreateLink(string caption, string uri)
@@ -52,7 +52,7 @@ internal class LinkFactoryTests
         linkFactory.CreateLink(caption, uri);
         string expected = uri;
         ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink(caption + "#" + uri, out Uri? actualUri));
-        ClassicAssert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
+        ClassicAssert.That(actualUri!.AbsoluteUri, Is.EqualTo(expected));
     }
 
     [Test]
@@ -74,7 +74,7 @@ internal class LinkFactoryTests
 
         string expected = "https://github.com/gitextensions/gitextensions/pull/3471#end";
         ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink("https://github.com/gitextensions/gitextensions/pull/3471#end", out Uri? actualUri));
-        ClassicAssert.That(actualUri.AbsoluteUri, Is.EqualTo(expected));
+        ClassicAssert.That(actualUri!.AbsoluteUri, Is.EqualTo(expected));
     }
 
     [Test]
@@ -87,7 +87,7 @@ internal class LinkFactoryTests
     public void ParseInternalScheme_Null()
     {
         LinkFactory linkFactory = new();
-        ClassicAssert.False(linkFactory.GetTestAccessor().ParseInternalScheme(null, out CommandEventArgs? actualCommandEventArgs));
+        ClassicAssert.False(linkFactory.GetTestAccessor().ParseInternalScheme(null!, out CommandEventArgs? actualCommandEventArgs));
         ClassicAssert.That(actualCommandEventArgs, Is.Null);
     }
 
@@ -116,7 +116,7 @@ internal class LinkFactoryTests
         LinkFactory linkFactory = new();
         Uri uri = new(link);
         ClassicAssert.True(linkFactory.GetTestAccessor().ParseInternalScheme(uri, out CommandEventArgs? actualCommandEventArgs));
-        ClassicAssert.That(actualCommandEventArgs.Command, Is.EqualTo(expectedCommand));
+        ClassicAssert.That(actualCommandEventArgs!.Command, Is.EqualTo(expectedCommand));
         ClassicAssert.That(actualCommandEventArgs.Data, Is.EqualTo(expectedData));
     }
 
@@ -135,11 +135,11 @@ internal class LinkFactoryTests
         bool omitShowAll)
     {
         LinkFactory linkFactory = new();
-        CommandEventArgs actualCommandEventArgs = null;
-        string actualShowAll = null;
+        CommandEventArgs? actualCommandEventArgs = null;
+        string? actualShowAll = null;
         string actualException = "";
-        Action<CommandEventArgs> handleInternalLink = commandEventArgs => actualCommandEventArgs = commandEventArgs;
-        Action<string> showAll = what => actualShowAll = what;
+        Action<CommandEventArgs>? handleInternalLink = commandEventArgs => actualCommandEventArgs = commandEventArgs;
+        Action<string?>? showAll = what => actualShowAll = what;
         if (omitHandler)
         {
             handleInternalLink = null;

@@ -67,7 +67,7 @@ public sealed class DiffMergeToolConfigurationManager
             return;
         }
 
-        IConfigValueStore fileSettings = _getFileSettings();
+        IConfigValueStore? fileSettings = _getFileSettings();
         if (fileSettings is null)
         {
             return;
@@ -92,7 +92,7 @@ public sealed class DiffMergeToolConfigurationManager
             return string.Empty;
         }
 
-        string command = GetToolSetting(toolName, toolType, "cmd");
+        string? command = GetToolSetting(toolName, toolType, "cmd");
         if (!string.IsNullOrWhiteSpace(command))
         {
             return command;
@@ -121,7 +121,7 @@ public sealed class DiffMergeToolConfigurationManager
             return string.Empty;
         }
 
-        string path = GetToolSetting(toolName, toolType, "path");
+        string? path = GetToolSetting(toolName, toolType, "path");
         if (!string.IsNullOrWhiteSpace(path))
         {
             return path;
@@ -139,7 +139,7 @@ public sealed class DiffMergeToolConfigurationManager
 
         string? fullPath;
 
-        DiffMergeTool diffTool = RegisteredDiffMergeTools.Get(toolName);
+        DiffMergeTool? diffTool = RegisteredDiffMergeTools.Get(toolName);
         if (diffTool is null)
         {
             string exeName = toolName + ".exe";
@@ -189,7 +189,7 @@ public sealed class DiffMergeToolConfigurationManager
     /// <param name="toolType">Type of the tool.</param>
     public void UnsetCurrentTool(DiffMergeToolType toolType)
     {
-        IConfigValueStore fileSettings = _getFileSettings();
+        IConfigValueStore? fileSettings = _getFileSettings();
         if (fileSettings is null)
         {
             return;

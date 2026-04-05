@@ -30,7 +30,7 @@ public partial class FormChooseCommit : GitModuleForm
 
         if (!string.IsNullOrEmpty(preselectCommit))
         {
-            ObjectId objectId = Module.RevParse(preselectCommit);
+            ObjectId? objectId = Module.RevParse(preselectCommit);
             if (objectId is not null)
             {
                 revisionGrid.SelectedId = objectId;
@@ -77,7 +77,7 @@ public partial class FormChooseCommit : GitModuleForm
     private void linkLabelParent_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
     {
         LinkLabel linkLabel = (LinkLabel)sender;
-        ObjectId parentId = (ObjectId)linkLabel.Tag;
+        ObjectId parentId = (ObjectId)linkLabel.Tag!;
 
         if (!revisionGrid.SetSelectedRevision(parentId))
         {
@@ -108,7 +108,7 @@ public partial class FormChooseCommit : GitModuleForm
             return;
         }
 
-        IReadOnlyList<ObjectId> parents = SelectedRevision.ParentIds;
+        IReadOnlyList<ObjectId>? parents = SelectedRevision.ParentIds;
 
         if (parents?.Count is not > 0)
         {

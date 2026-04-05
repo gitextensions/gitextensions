@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 
 namespace GitUI.UserControls.Settings;
@@ -60,6 +61,7 @@ public partial class SettingsLinkLabel : UserControl
     [Browsable(true)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
     [Bindable(true)]
+    [AllowNull]
     public override string Text
     {
         get => linkLabel.Text;

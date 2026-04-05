@@ -94,7 +94,7 @@ internal static class GraphRenderer
                 int centerX = g.RenderingOrigin.X + (int)((currentRow.GetCurrentRevisionLane() + 0.5) * LaneWidth);
                 Rectangle nodeRect = new(centerX - (NodeDimension / 2), p.Center.Y - (NodeDimension / 2), NodeDimension, NodeDimension);
 
-                bool square = currentRow.Revision.GitRevision.Refs.Count > 0;
+                bool square = currentRow.Revision.GitRevision!.Refs.Count > 0;
                 bool hasOutline = currentRow.Revision.GitRevision.ObjectId == headId;
 
                 Brush brush = GetBrushForLaneInfo(currentRowRevisionLaneInfo, currentRow.Revision.IsRelative, revisionGraphDrawStyle);

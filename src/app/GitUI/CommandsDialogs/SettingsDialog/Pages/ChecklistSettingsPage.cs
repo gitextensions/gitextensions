@@ -1,5 +1,3 @@
-#nullable enable
-
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
