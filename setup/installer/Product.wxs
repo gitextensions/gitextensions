@@ -151,9 +151,6 @@
       <Component Id="Microsoft.ApplicationInsights.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Microsoft.ApplicationInsights.dll" />
       </Component>
-      <Component Id="Microsoft.Toolkit.HighPerformance.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Microsoft.Toolkit.HighPerformance.dll" />
-      </Component>
       <Component Id="Microsoft.VisualStudio.Composition.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Microsoft.VisualStudio.Composition.dll" />
       </Component>
@@ -652,7 +649,6 @@
       <ComponentRef Id="ICSharpCode.TextEditor.dll" />
       <ComponentRef Id="Microsoft.AI.DependencyCollector.dll" />
       <ComponentRef Id="Microsoft.ApplicationInsights.dll" />
-      <ComponentRef Id="Microsoft.Toolkit.HighPerformance.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Composition.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Composition.NetFxAttributes.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Interop.dll" />
