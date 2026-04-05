@@ -8,7 +8,7 @@ namespace GitUI;
 /// </summary>
 public class ToolStripEx : ToolStrip, IToolStripEx
 {
-    private readonly ToolStripButton _gripButton = null!;
+    private readonly ToolStripButton _gripButton;
 
     public ToolStripEx()
     {

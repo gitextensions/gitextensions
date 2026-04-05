@@ -24,8 +24,8 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private readonly CancellationTokenSequence _selectionCancellationTokenSequence = new();
     private readonly TranslationString _searchTooltip = new("Search");
 
-    private NativeTreeViewDoubleClickDecorator _doubleClickDecorator = null!;
-    private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator = null!;
+    private NativeTreeViewDoubleClickDecorator _doubleClickDecorator;
+    private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
     private readonly List<Tree> _rootNodes = [];
     private readonly SearchControl<string> _txtBranchCriterion;
     private LocalBranchTree _branchesTree = null!;
