@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace GitCommands.Settings;
 
@@ -138,8 +138,8 @@ public static class Setting
                 case TypeCode.Object:
                     try
                     {
-                        return JsonConvert
-                            .DeserializeObject<T>(stringValue);
+                        return JsonSerializer
+                            .Deserialize<T>(stringValue);
                     }
                     catch
                     {
@@ -176,8 +176,8 @@ public static class Setting
                     stringValue = (string?)value;
                     break;
                 case TypeCode.Object:
-                    stringValue = JsonConvert
-                        .SerializeObject(value);
+                    stringValue = JsonSerializer
+                        .Serialize(value);
                     break;
                 default:
                     TypeConverter converter = TypeDescriptor

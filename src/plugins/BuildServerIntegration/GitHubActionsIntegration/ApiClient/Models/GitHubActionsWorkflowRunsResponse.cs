@@ -1,4 +1,4 @@
-using Newtonsoft.Json;
+using System.Text.Json.Serialization;
 
 namespace GitExtensions.Plugins.GitHubActionsIntegration.ApiClient.Models;
 
@@ -7,9 +7,9 @@ namespace GitExtensions.Plugins.GitHubActionsIntegration.ApiClient.Models;
 /// </summary>
 public class GitHubActionsWorkflowRunsResponse
 {
-    [JsonProperty("total_count")]
+    [JsonPropertyName("total_count")]
     public int TotalCount { get; set; }
 
-    [JsonProperty("workflow_runs")]
+    [JsonPropertyName("workflow_runs")]
     public List<GitHubActionsWorkflowRun> WorkflowRuns { get; set; } = [];
 }

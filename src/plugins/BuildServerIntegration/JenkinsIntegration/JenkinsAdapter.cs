@@ -128,14 +128,14 @@ internal class JenkinsAdapter : IBuildServerAdapter
             if (jobDescription["builds"] is not null)
             {
                 // Freestyle jobs
-                s = jobDescription["builds"]!.AsArray().Where(n => n is not null)!;
+                s = jobDescription["builds"]!.AsArray().OfType<JsonNode>();
             }
             else if (jobDescription["jobs"] is not null)
             {
                 // Multi-branch pipeline
                 s = jobDescription["jobs"]!.AsArray()
-                    .Where(j => j is not null)
-                    .SelectMany(j => j!["builds"]!.AsArray().Where(n => n is not null))!;
+                    .OfType<JsonNode>()
+                    .SelectMany(j => j["builds"]!.AsArray().OfType<JsonNode>());
                 foreach (JsonNode? j in jobDescription["jobs"]!.AsArray())
                 {
                     try
@@ -373,7 +373,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
         JsonArray? action = buildDescription["actions"]?.AsArray();
         List<ObjectId> commitHashList = [];
         string testResults = string.Empty;
-        foreach (JsonNode? element in action!)
+        foreach (JsonNode? element in action ?? [])
         {
             if (element is null)
             {
@@ -460,10 +460,8 @@ internal class JenkinsAdapter : IBuildServerAdapter
         return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
     }
 
-    /// <summary>
-    ///  Extracts a string from a <see cref="JsonNode"/>, converting non-string values (numbers, booleans) to their
-    ///  string representations. This mirrors Newtonsoft's <c>ToObject&lt;string&gt;()</c> behavior.
-    /// </summary>
+    // Converts non-string JSON values (numbers, booleans) to their string representations,
+    // aligned with Newtonsoft's ToObject<string>() behavior.
     private static string? GetNodeString(JsonNode? node)
     {
         if (node is null)
