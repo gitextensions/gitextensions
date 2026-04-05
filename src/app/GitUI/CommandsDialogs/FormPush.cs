@@ -856,7 +856,7 @@ public partial class FormPush : GitModuleForm
         }
     }
 
-    private void RemotesUpdated(object sender, EventArgs e)
+    private void RemotesUpdated(object? sender, EventArgs e)
     {
         _selectedRemote = _NO_TRANSLATE_Remotes.SelectedItem as ConfigFileRemote;
         if (_selectedRemote is null)

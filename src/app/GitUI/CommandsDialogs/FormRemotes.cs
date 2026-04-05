@@ -832,7 +832,7 @@ Inactive remote is completely invisible to git.");
             if (candidates.Count > 0)
             {
                 string previousValues = combobox.Text;
-                IList<Repository> proposedRepositories = [.. _repositoryHistory];
+                IList<Repository> proposedRepositories = [.. _repositoryHistory!];
                 bool added = false;
                 foreach (string url in candidates)
                 {

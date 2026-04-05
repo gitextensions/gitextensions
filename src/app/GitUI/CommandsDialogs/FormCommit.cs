@@ -2257,7 +2257,7 @@ public sealed partial class FormCommit : GitModuleForm
     private void OpenConventionalCommitMenu(bool insertScope)
     {
         commitTemplatesToolStripMenuItem.ShowDropDown();
-        _conventionalCommitItem.ShowDropDown();
+        _conventionalCommitItem!.ShowDropDown();
         _conventionalCommitItem.DropDownItems.Cast<ToolStripItem>().First(i => i.Text == _feat).Select();
         _insertScopeParentheses = insertScope;
     }
