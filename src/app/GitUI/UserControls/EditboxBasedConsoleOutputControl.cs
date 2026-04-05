@@ -33,7 +33,7 @@ public sealed class EditboxBasedConsoleOutputControl : ConsoleOutputControl
     {
         _editbox = new RichTextBox
         {
-            BackColor = Application.IsDarkModeEnabled ? AppColor.EditorBackground.GetThemeColor() : SystemColors.Info,
+            BackColor = AppColor.EditorBackground.GetThemeColor(),
             BorderStyle = BorderStyle.FixedSingle,
             Dock = DockStyle.Fill,
             Font = AppSettings.MonospaceFont,

@@ -2766,7 +2766,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
             try
             {
-                _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.Value, AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString(CultureInfo.InvariantCulture));
+                _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.GetEffectiveConEmuStyle(), AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString(CultureInfo.InvariantCulture));
             }
             catch (InvalidOperationException)
             {
