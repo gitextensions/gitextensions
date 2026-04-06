@@ -1,6 +1,6 @@
-﻿using GitExtensions.Extensibility.BuildServerIntegration;
+﻿using System.Text.Json.Serialization;
+using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
-using Newtonsoft.Json;
 
 namespace GitExtensions.Plugins.GitHubActionsIntegration.ApiClient.Models;
 
@@ -9,46 +9,46 @@ namespace GitExtensions.Plugins.GitHubActionsIntegration.ApiClient.Models;
 /// </summary>
 public class GitHubActionsWorkflowRun
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public long Id { get; set; }
 
-    [JsonProperty("name")]
+    [JsonPropertyName("name")]
     public string? Name { get; set; }
 
-    [JsonProperty("head_sha")]
+    [JsonPropertyName("head_sha")]
     public string HeadSha { get; set; } = string.Empty;
 
-    [JsonProperty("head_branch")]
+    [JsonPropertyName("head_branch")]
     public string? HeadBranch { get; set; }
 
-    [JsonProperty("status")]
+    [JsonPropertyName("status")]
     public string? Status { get; set; }
 
-    [JsonProperty("conclusion")]
+    [JsonPropertyName("conclusion")]
     public string? Conclusion { get; set; }
 
-    [JsonProperty("html_url")]
+    [JsonPropertyName("html_url")]
     public string? HtmlUrl { get; set; }
 
-    [JsonProperty("created_at")]
+    [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; set; }
 
-    [JsonProperty("updated_at")]
+    [JsonPropertyName("updated_at")]
     public DateTime UpdatedAt { get; set; }
 
-    [JsonProperty("run_started_at")]
+    [JsonPropertyName("run_started_at")]
     public DateTime? RunStartedAt { get; set; }
 
-    [JsonProperty("display_title")]
+    [JsonPropertyName("display_title")]
     public string? DisplayTitle { get; set; }
 
-    [JsonProperty("event")]
+    [JsonPropertyName("event")]
     public string? Event { get; set; }
 
-    [JsonProperty("run_number")]
+    [JsonPropertyName("run_number")]
     public int RunNumber { get; set; }
 
-    [JsonProperty("run_attempt")]
+    [JsonPropertyName("run_attempt")]
     public int RunAttempt { get; set; }
 
     public BuildInfo ToBuildInfo()

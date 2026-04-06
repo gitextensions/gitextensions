@@ -41,6 +41,7 @@ partial class RepoObjectsTree
             _tagTree?.Dispose();
             _submoduleTree?.Dispose();
             _stashTree?.Dispose();
+            _worktreeTree?.Dispose();
         }
 
         base.Dispose(disposing);
@@ -98,6 +99,13 @@ partial class RepoObjectsTree
         mnubtnApplyStash = new ToolStripMenuItem();
         mnubtnPopStash = new ToolStripMenuItem();
         mnubtnDropStash = new ToolStripMenuItem();
+        toolStripSeparator11 = new ToolStripSeparator();
+        mnubtnCreateWorktreeFromRootNode = new ToolStripMenuItem();
+        mnubtnPruneWorktreesFromRootNode = new ToolStripMenuItem();
+        mnubtnManageWorktreesFromRootNode = new ToolStripMenuItem();
+        toolStripSeparator12 = new ToolStripSeparator();
+        mnubtnOpenWorktree = new ToolStripMenuItem();
+        mnubtnDeleteWorktree = new ToolStripMenuItem();
         toolStripSeparator9 = new ToolStripSeparator();
         mnubtnCollapse = new ToolStripMenuItem();
         mnubtnExpand = new ToolStripMenuItem();
@@ -116,6 +124,7 @@ partial class RepoObjectsTree
         tsbShowTags = new ToolStripButton();
         tsbShowStashes = new ToolStripButton();
         tsbShowSubmodules = new ToolStripButton();
+        tsbShowWorktrees = new ToolStripButton();
         branchSearchPanel = new TableLayoutPanel();
         btnSearch = new Button();
         toolTip = new ToolTip(components);
@@ -183,6 +192,13 @@ partial class RepoObjectsTree
         mnubtnApplyStash,
         mnubtnPopStash,
         mnubtnDropStash,
+        toolStripSeparator11,
+        mnubtnCreateWorktreeFromRootNode,
+        mnubtnPruneWorktreesFromRootNode,
+        mnubtnManageWorktreesFromRootNode,
+        toolStripSeparator12,
+        mnubtnOpenWorktree,
+        mnubtnDeleteWorktree,
         toolStripSeparator9,
         mnubtnCollapse,
         mnubtnExpand,
@@ -485,6 +501,49 @@ partial class RepoObjectsTree
         mnubtnDropStash.Text = "&Drop stash...";
         mnubtnDropStash.ToolTipText = "Drop this stash";
         // 
+        // toolStripSeparator11
+        // 
+        toolStripSeparator11.Name = "toolStripSeparator11";
+        toolStripSeparator11.Size = new Size(263, 6);
+        // 
+        // mnubtnCreateWorktreeFromRootNode
+        // 
+        mnubtnCreateWorktreeFromRootNode.Name = "mnubtnCreateWorktreeFromRootNode";
+        mnubtnCreateWorktreeFromRootNode.Size = new Size(266, 26);
+        mnubtnCreateWorktreeFromRootNode.Text = "&Create worktree...";
+        // 
+        // mnubtnPruneWorktreesFromRootNode
+        // 
+        mnubtnPruneWorktreesFromRootNode.Name = "mnubtnPruneWorktreesFromRootNode";
+        mnubtnPruneWorktreesFromRootNode.Size = new Size(266, 26);
+        mnubtnPruneWorktreesFromRootNode.Text = "&Prune worktrees";
+        // 
+        // mnubtnManageWorktreesFromRootNode
+        // 
+        mnubtnManageWorktreesFromRootNode.Name = "mnubtnManageWorktreesFromRootNode";
+        mnubtnManageWorktreesFromRootNode.Size = new Size(266, 26);
+        mnubtnManageWorktreesFromRootNode.Text = "&Manage worktrees...";
+        // 
+        // toolStripSeparator12
+        // 
+        toolStripSeparator12.Name = "toolStripSeparator12";
+        toolStripSeparator12.Size = new Size(263, 6);
+        // 
+        // mnubtnOpenWorktree
+        // 
+        mnubtnOpenWorktree.Image = Properties.Images.FolderOpen;
+        mnubtnOpenWorktree.Name = "mnubtnOpenWorktree";
+        mnubtnOpenWorktree.Size = new Size(266, 26);
+        mnubtnOpenWorktree.Text = "&Open worktree";
+        mnubtnOpenWorktree.ToolTipText = "Open this worktree";
+        // 
+        // mnubtnDeleteWorktree
+        // 
+        mnubtnDeleteWorktree.Name = "mnubtnDeleteWorktree";
+        mnubtnDeleteWorktree.Size = new Size(266, 26);
+        mnubtnDeleteWorktree.Text = "&Delete worktree...";
+        mnubtnDeleteWorktree.ToolTipText = "Delete this worktree";
+        // 
         // toolStripSeparator9
         // 
         toolStripSeparator9.Name = "toolStripSeparator9";
@@ -578,6 +637,7 @@ partial class RepoObjectsTree
         tsbCollapseAll,
         tsbShowBranches,
         tsbShowRemotes,
+        tsbShowWorktrees,
         tsbShowTags,
         tsbShowSubmodules,
         tsbShowStashes});
@@ -643,6 +703,16 @@ partial class RepoObjectsTree
         tsbShowStashes.Size = new Size(29, 24);
         tsbShowStashes.Text = "St&ashes";
         tsbShowStashes.Click += tsbShowStashes_Click;
+        // 
+        // tsbShowWorktrees
+        // 
+        tsbShowWorktrees.CheckOnClick = true;
+        tsbShowWorktrees.DisplayStyle = ToolStripItemDisplayStyle.Image;
+        tsbShowWorktrees.Image = Properties.Images.WorkTree;
+        tsbShowWorktrees.Name = "tsbShowWorktrees";
+        tsbShowWorktrees.Size = new Size(29, 24);
+        tsbShowWorktrees.Text = "&Worktrees";
+        tsbShowWorktrees.Click += tsbShowWorktrees_Click;
         // 
         // branchSearchPanel
         // 
@@ -721,6 +791,7 @@ partial class RepoObjectsTree
     private ToolStripButton tsbShowTags;
     private ToolStripButton tsbShowStashes;
     private ToolStripButton tsbShowSubmodules;
+    private ToolStripButton tsbShowWorktrees;
     private UserControls.RevisionGrid.CopyContextMenuItem copyContextMenuItem;
     private ToolStripMenuItem filterForSelectedRefsMenuItem;
     private ToolStripSeparator toolStripSeparator2;
@@ -763,6 +834,13 @@ partial class RepoObjectsTree
     private ToolStripMenuItem mnubtnApplyStash;
     private ToolStripMenuItem mnubtnPopStash;
     private ToolStripMenuItem mnubtnDropStash;
+    private ToolStripSeparator toolStripSeparator11;
+    private ToolStripMenuItem mnubtnCreateWorktreeFromRootNode;
+    private ToolStripMenuItem mnubtnPruneWorktreesFromRootNode;
+    private ToolStripMenuItem mnubtnManageWorktreesFromRootNode;
+    private ToolStripSeparator toolStripSeparator12;
+    private ToolStripMenuItem mnubtnOpenWorktree;
+    private ToolStripMenuItem mnubtnDeleteWorktree;
     private ToolStripSeparator toolStripSeparator9;
     private ToolStripSeparator toolStripSeparator1;
     private ToolStripMenuItem runScriptToolStripMenuItem;

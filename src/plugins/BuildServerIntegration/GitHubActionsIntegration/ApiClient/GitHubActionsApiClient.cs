@@ -1,8 +1,8 @@
 ﻿using System.Net;
 using System.Net.Http.Headers;
+using System.Text.Json;
 using GitExtensions.Plugins.GitHubActionsIntegration.ApiClient.Models;
 using Microsoft;
-using Newtonsoft.Json;
 
 namespace GitExtensions.Plugins.GitHubActionsIntegration.ApiClient;
 
@@ -59,6 +59,11 @@ public sealed class GitHubActionsApiClient : IGitHubActionsApiClient
         return await GetAsync<GitHubActionsWorkflowRunsResponse>(url, cancellationToken);
     }
 
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
+
     private async Task<T> GetAsync<T>(string url, CancellationToken cancellationToken)
         where T : class
     {
@@ -76,7 +81,7 @@ public sealed class GitHubActionsApiClient : IGitHubActionsApiClient
         response.EnsureSuccessStatusCode();
 
         string json = await response.Content.ReadAsStringAsync(cancellationToken);
-        T? result = JsonConvert.DeserializeObject<T>(json);
+        T? result = JsonSerializer.Deserialize<T>(json, _jsonOptions);
         Validates.NotNull(result);
 
         return result;

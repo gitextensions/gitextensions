@@ -127,6 +127,24 @@ partial class FormBrowse
         }
     }
 
+    private void UpdateWorktreeToolStripVisibility()
+    {
+        if (!Module.IsValidGitWorkingDir())
+        {
+            toolStripWorktrees.Visible = false;
+            return;
+        }
+
+        ThreadHelper.FileAndForget(async () =>
+        {
+            IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
+
+            await this.SwitchToMainThreadAsync();
+
+            toolStripWorktrees.Visible = worktrees.Count > 1;
+        });
+    }
+
     private void UpdateTooltipWithShortcut(ToolStripItem button, Command command)
         => UpdateTooltipWithShortcut(button, GetShortcutKeys(command));
 
