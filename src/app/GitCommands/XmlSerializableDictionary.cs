@@ -1,24 +1,15 @@
-﻿using System.Runtime.Serialization;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace GitCommands;
 
 [XmlRoot("dictionary")]
-[Serializable]
 public class XmlSerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
 {
     public XmlSerializableDictionary()
     {
     }
-
-#pragma warning disable SYSLIB0051 // This ctor is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.'
-    protected XmlSerializableDictionary(SerializationInfo info, StreamingContext context)
-        : base(info, context)
-    {
-    }
-#pragma warning restore SYSLIB0051
 
     #region IXmlSerializable Members
 
