@@ -2,7 +2,6 @@
 using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
-using GitCommands.Utils;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
@@ -22,18 +21,7 @@ public class AppVeyorIntegrationMetadata : BuildServerAdapterMetadataAttribute
     {
     }
 
-    public override string? CanBeLoaded
-    {
-        get
-        {
-            if (EnvUtils.IsNet4FullOrHigher())
-            {
-                return null;
-            }
-
-            return ".NET Framework 4 or higher required";
-        }
-    }
+    public override string? CanBeLoaded => null;
 }
 
 [Export(typeof(IBuildServerAdapter))]

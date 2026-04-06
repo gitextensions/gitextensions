@@ -2,7 +2,6 @@
 
 using GitCommands;
 using GitCommands.Git;
-using GitCommands.Utils;
 using GitExtensions.Extensibility.Git;
 using Microsoft.Win32;
 
@@ -20,7 +19,7 @@ public class CheckSettingsLogic
 
     public bool AutoSolveAllSettings()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return SolveGitCommand();
         }
@@ -50,7 +49,7 @@ public class CheckSettingsLogic
 
     public static bool SolveLinuxToolsDir(string? possibleNewPath = null)
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             AppSettings.LinuxToolsDir = string.Empty;
             return true;
@@ -163,7 +162,7 @@ public class CheckSettingsLogic
 
     public static bool SolveGitCommand(string? possibleNewPath = null)
     {
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             foreach (string command in GetWindowsCommandLocations())
             {

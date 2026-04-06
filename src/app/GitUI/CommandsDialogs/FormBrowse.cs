@@ -2689,7 +2689,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     /// </summary>
     private void FillTerminalTab()
     {
-        if (!EnvUtils.RunningOnWindows() || !AppSettings.ShowConEmuTab.Value)
+        if (!OperatingSystem.IsWindows() || !AppSettings.ShowConEmuTab.Value)
         {
             // ConEmu only works on WinNT
             return;

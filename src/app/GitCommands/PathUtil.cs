@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using GitCommands.Utils;
 
 namespace GitCommands;
 
@@ -19,7 +18,7 @@ public static partial class PathUtil
     /// <summary>The user's profile folder path.</summary>
     // TODO verify whether the user profile contains forwards/backwards slashes on other platforms
     public static readonly string UserProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-    private static StringComparison _pathComparison = EnvUtils.RunningOnWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+    private static StringComparison _pathComparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
     [GeneratedRegex(@"^(\w+):\/\/([\S]+)", RegexOptions.ExplicitCapture)]
     private static partial Regex DriveLetterRegex { get; }

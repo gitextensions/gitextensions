@@ -7,7 +7,6 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Settings;
 using Microsoft;
@@ -75,7 +74,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
 
         const string gitCredentialHelperPrefix = "git-credential-";
         string[] linuxCredentialHelpers = ["oauth"];
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             cbxCredentialHelper.Items.AddRange(PathUtil.IsWslPath(Module?.WorkingDir)
                 ? [.. FindGitCredentialHelpers().Select(path => path.ToWslPath().Replace(" ", @"\ ")), .. linuxCredentialHelpers]

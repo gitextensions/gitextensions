@@ -3,7 +3,6 @@ using System.Text;
 using BugReporter;
 using BugReporter.Serialization;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
@@ -132,7 +131,7 @@ internal class UIReporter : IBugReporter
         // out: git config --global -add safe.directory "d:/folder/to/repo with space in name"
         static string ReplaceRepoPathQuotes(string command)
         {
-            if (!EnvUtils.RunningOnWindows() || !command.EndsWith('\''))
+            if (!OperatingSystem.IsWindows() || !command.EndsWith('\''))
             {
                 return command;
             }
