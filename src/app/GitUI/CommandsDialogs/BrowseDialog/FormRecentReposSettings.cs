@@ -222,14 +222,15 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
     private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
     {
-        if (GetSelectedRepos(sender, out List<RecentRepoInfo?>? repos))
+        if (GetSelectedRepos(sender, out List<RecentRepoInfo>? repos))
         {
             e.Cancel = false;
-            foreach (RecentRepoInfo? repo in repos)
+
+            foreach (RecentRepoInfo repo in repos)
             {
-                anchorToTopReposToolStripMenuItem.Enabled = repo!.Repo.Anchor != Repository.RepositoryAnchor.AnchoredInTop;
-                anchorToRecentReposToolStripMenuItem.Enabled = repo!.Repo.Anchor != Repository.RepositoryAnchor.AnchoredInRecent;
-                removeAnchorToolStripMenuItem.Enabled = repo!.Repo.Anchor != Repository.RepositoryAnchor.None;
+                anchorToTopReposToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.AnchoredInTop;
+                anchorToRecentReposToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.AnchoredInRecent;
+                removeAnchorToolStripMenuItem.Enabled = repo.Repo.Anchor != Repository.RepositoryAnchor.None;
             }
         }
         else
@@ -238,7 +239,7 @@ public partial class FormRecentReposSettings : GitExtensionsForm
         }
     }
 
-    private bool GetSelectedRepos(object? sender, [NotNullWhen(returnValue: true)] out List<RecentRepoInfo?>? repos)
+    private bool GetSelectedRepos(object? sender, [NotNullWhen(returnValue: true)] out List<RecentRepoInfo>? repos)
     {
         if (sender is ContextMenuStrip strip)
         {
@@ -268,7 +269,10 @@ public partial class FormRecentReposSettings : GitExtensionsForm
         {
             foreach (ListViewItem item in lb.SelectedItems)
             {
-                repos.Add(item.Tag as RecentRepoInfo);
+                if (item.Tag is RecentRepoInfo repo)
+                {
+                    repos.Add(repo);
+                }
             }
         }
 
@@ -292,11 +296,11 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
     private void AnchorToMostRecentRepositories(object sender)
     {
-        if (GetSelectedRepos(sender, out List<RecentRepoInfo?>? repos))
+        if (GetSelectedRepos(sender, out List<RecentRepoInfo>? repos))
         {
-            foreach (RecentRepoInfo? repo in repos)
+            foreach (RecentRepoInfo repo in repos)
             {
-                repo!.Repo.Anchor = Repository.RepositoryAnchor.AnchoredInTop;
+                repo.Repo.Anchor = Repository.RepositoryAnchor.AnchoredInTop;
             }
 
             RefreshRepos();
@@ -310,11 +314,11 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
     private void AnchorToLessRecentRepositories(object sender)
     {
-        if (GetSelectedRepos(sender, out List<RecentRepoInfo?>? repos))
+        if (GetSelectedRepos(sender, out List<RecentRepoInfo>? repos))
         {
-            foreach (RecentRepoInfo? repo in repos)
+            foreach (RecentRepoInfo repo in repos)
             {
-                repo!.Repo.Anchor = Repository.RepositoryAnchor.AnchoredInRecent;
+                repo.Repo.Anchor = Repository.RepositoryAnchor.AnchoredInRecent;
             }
 
             RefreshRepos();
@@ -323,11 +327,11 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
     private void removeAnchorToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (GetSelectedRepos(sender, out List<RecentRepoInfo?>? repos))
+        if (GetSelectedRepos(sender, out List<RecentRepoInfo>? repos))
         {
-            foreach (RecentRepoInfo? repo in repos)
+            foreach (RecentRepoInfo repo in repos)
             {
-                repo!.Repo.Anchor = Repository.RepositoryAnchor.None;
+                repo.Repo.Anchor = Repository.RepositoryAnchor.None;
             }
 
             RefreshRepos();
@@ -338,18 +342,19 @@ public partial class FormRecentReposSettings : GitExtensionsForm
     {
         ThreadHelper.ThrowIfNotOnUIThread();
 
-        if (!GetSelectedRepos(sender, out List<RecentRepoInfo?>? repos))
+        if (!GetSelectedRepos(sender, out List<RecentRepoInfo>? repos))
         {
             return;
         }
 
         ThreadHelper.JoinableTaskFactory.Run(async () =>
         {
-            foreach (RecentRepoInfo? repo in repos)
+            foreach (RecentRepoInfo repo in repos)
             {
-                _repositoryHistory = await RepositoryHistoryManager.Locals.RemoveRecentAsync(repo!.Repo.Path);
+                _repositoryHistory = await RepositoryHistoryManager.Locals.RemoveRecentAsync(repo.Repo.Path);
             }
         });
+
         RefreshRepos();
     }
 
