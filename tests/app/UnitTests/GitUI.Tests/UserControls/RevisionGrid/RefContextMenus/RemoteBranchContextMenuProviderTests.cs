@@ -8,10 +8,10 @@ namespace GitUITests.UserControls.RevisionGrid.RefContextMenus;
 [TestFixture]
 public class RemoteBranchContextMenuProviderTests
 {
-    private RemoteBranchContextMenuProvider _provider;
-    private IGitUICommands _uiCommands;
-    private RefContextMenuContext _context;
-    private ObjectId _currentCheckout;
+    private RemoteBranchContextMenuProvider _provider = null!;
+    private IGitUICommands _uiCommands = null!;
+    private RefContextMenuContext _context = null!;
+    private ObjectId _currentCheckout = null!;
 
     [SetUp]
     public void Setup()
@@ -91,7 +91,7 @@ public class RemoteBranchContextMenuProviderTests
 
         IEnumerable<string> texts = menu.Items.Cast<ToolStripItem>()
             .Where(i => i is not ToolStripSeparator)
-            .Select(i => i.Text);
+            .Select(i => i.Text!);
         texts.Should().Contain(t => t.Contains("Merge"));
         texts.Should().Contain(t => t.Contains("Rebase"));
     }

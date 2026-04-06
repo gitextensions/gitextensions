@@ -8,8 +8,8 @@ namespace GitUITests.UserControls.RevisionGrid.RefContextMenus;
 [TestFixture]
 public class RefContextMenuComposerTests
 {
-    private IGitUICommands _uiCommands;
-    private RefContextMenuContext _context;
+    private IGitUICommands _uiCommands = null!;
+    private RefContextMenuContext _context = null!;
 
     [SetUp]
     public void Setup()

@@ -8,10 +8,10 @@ namespace GitUITests.UserControls.RevisionGrid.RefContextMenus;
 [TestFixture]
 public class TagContextMenuProviderTests
 {
-    private TagContextMenuProvider _provider;
-    private IGitUICommands _uiCommands;
-    private RefContextMenuContext _context;
-    private ObjectId _currentCheckout;
+    private TagContextMenuProvider _provider = null!;
+    private IGitUICommands _uiCommands = null!;
+    private RefContextMenuContext _context = null!;
+    private ObjectId _currentCheckout = null!;
 
     [SetUp]
     public void Setup()

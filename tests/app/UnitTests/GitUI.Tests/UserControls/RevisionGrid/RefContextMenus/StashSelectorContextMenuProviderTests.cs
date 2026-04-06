@@ -10,8 +10,8 @@ namespace GitUITests.UserControls.RevisionGrid.RefContextMenus;
 [TestFixture]
 public class StashSelectorContextMenuProviderTests
 {
-    private StashSelectorContextMenuProvider _provider;
-    private IGitUICommands _uiCommands;
+    private StashSelectorContextMenuProvider _provider = null!;
+    private IGitUICommands _uiCommands = null!;
 
     [SetUp]
     public void Setup()
@@ -74,7 +74,7 @@ public class StashSelectorContextMenuProviderTests
 
         _provider.Populate(menu, gitRef: null, stashReflogSelector: "stash@{0}", context);
 
-        IEnumerable<string> texts = menu.Items.Cast<ToolStripItem>().Select(i => i.Text);
+        IEnumerable<string> texts = menu.Items.Cast<ToolStripItem>().Select(i => i.Text!);
         texts.Should().Contain(t => t.Contains("Apply"));
         texts.Should().Contain(t => t.StartsWith("P") && t.Contains("op stash"));
         texts.Should().Contain(t => t.StartsWith("Dr"));
