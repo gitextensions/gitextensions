@@ -1,0 +1,153 @@
+name: CI
+
+on:
+  push:
+    branches-ignore:
+      - configdata
+      - gh-pages
+      - 'translations_*'
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  checks: write
+  actions: read
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  build-and-test:
+    name: Build & Test (${{ matrix.platform }})
+    # Windows runner is required: the project targets net10.0-windows (WinForms),
+    # builds native C++ shell extensions (MSVC), and creates MSI installers (WiX).
+    runs-on: windows-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        platform: [x64, arm64]
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Cache NuGet packages
+      uses: actions/cache@v4
+      with:
+        path: ~/.nuget/packages
+        key: nuget-${{ runner.os }}-${{ hashFiles('Directory.Packages.props') }}
+        restore-keys: |
+          nuget-${{ runner.os }}-
+
+    - name: Show tool versions
+      run: |
+        dotnet --version
+        git --version
+
+    - name: Set version
+      working-directory: eng
+      run: dotnet run set_version_to.cs -- -v 7.0.0.${{ github.run_number }} -t 7.0.0.${{ github.run_number }}
+
+    - name: Resolve PR build properties
+      if: github.event_name == 'pull_request'
+      shell: pwsh
+      run: |
+        $prHeadSha = "${{ github.event.pull_request.head.sha }}"
+        $gitCommit = git rev-parse --short $prHeadSha
+        "BUILD_ARGS=/p:GitCommit=$gitCommit /p:GitSha=$prHeadSha" >> $env:GITHUB_ENV
+
+    - name: Build native code
+      run: dotnet build src\native\build.proj -c Release --verbosity q --nologo /p:TargetPlatform=${{ matrix.platform }} /bl:artifacts\log\native.binlog
+
+    - name: Build .NET
+      shell: pwsh
+      run: |
+        $buildArgs = "/p:ContinuousIntegrationBuild=true /p:TargetPlatform=${{ matrix.platform }} $env:BUILD_ARGS".Trim()
+        dotnet build -c Release --verbosity q --nologo /bl:artifacts\log\build.binlog $buildArgs.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+
+    - name: Verify localisation
+      shell: pwsh
+      run: |
+        git reset --hard HEAD
+        Push-Location src\app\GitExtensions
+        dotnet msbuild /p:Configuration=Release /t:_UpdateEnglishTranslations /p:RunTranslationApp=true /p:ContinuousIntegrationBuild=true /v:m /bl:${{ github.workspace }}\artifacts\log\localise.binlog
+        $exitCode = $LASTEXITCODE
+        Pop-Location
+        if ($exitCode -ne 0) { exit $exitCode }
+
+    - name: Run tests
+      if: matrix.platform == 'x64'
+      run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx /bl:artifacts\log\tests.binlog
+
+    - name: Test report
+      # v1 @ 2024-08-30
+      uses: dorny/test-reporter@d61b558e8df85cb60d09ca3e5b09653b4477cea7
+      if: always() && matrix.platform == 'x64' && github.event.pull_request.head.repo.full_name == github.repository
+      continue-on-error: true
+      with:
+        name: Test Results
+        path: 'artifacts/**/TestsResults/**/*.trx'
+        reporter: dotnet-trx
+
+    - name: Publish
+      shell: pwsh
+      run: |
+        $publishArgs = "/p:ContinuousIntegrationBuild=true /p:TargetPlatform=${{ matrix.platform }} $env:BUILD_ARGS".Trim()
+        dotnet publish -c Release --no-build /bl:artifacts\log\publish.binlog $publishArgs.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+
+    - name: Upload portable artifact
+      id: upload-unsigned-artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: GitExtensions-Portable-${{ matrix.platform }}
+        path: artifacts\Release\publish\*.zip
+        if-no-files-found: warn
+
+    - name: Sign artifact with SignPath
+      if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+      # v2 @ 2025-10-07
+      uses: signpath/github-action-submit-signing-request@3f9250c56651ff692d6729a2fbb0603a42d7d322
+      with:
+        api-token: '${{ secrets.SIGNPATH_API_TOKEN }}'
+        organization-id: '${{ vars.SIGNPATH_ORGANIZATION_ID }}'
+        project-slug: '${{ vars.SIGNPATH_PROJECT_SLUG }}'
+        signing-policy-slug: '${{ vars.SIGNPATH_SIGNING_POLICY_SLUG }}'
+        github-artifact-id: '${{ steps.upload-unsigned-artifact.outputs.artifact-id }}'
+        wait-for-completion: true
+        output-artifact-directory: artifacts\Release\publish\signed
+
+    - name: Upload test results
+      if: always() && matrix.platform == 'x64'
+      uses: actions/upload-artifact@v4
+      with:
+        name: test-results
+        path: 'artifacts\Release\TestsResults\**\*.trx'
+        if-no-files-found: ignore
+
+    - name: Upload build logs on failure
+      if: failure()
+      uses: actions/upload-artifact@v4
+      with:
+        name: build-logs-${{ matrix.platform }}
+        path: |
+          artifacts\**\log\**\*.binlog
+          artifacts\Release\TestsResults\**\*.trx
+          **\English*.xlf
+          artifacts\Release\**\*.dgml
+        if-no-files-found: ignore

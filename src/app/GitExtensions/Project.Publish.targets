@@ -232,7 +232,7 @@
       <!-- Resolve the output file -->
       <_PublishPortableVersionSuffix>-$(CurrentBuildVersion.ToString())</_PublishPortableVersionSuffix>
 
-      <!-- This property comes from GitInfo package, but can be overriden on AppVeyor -->
+      <!-- This property comes from GitInfo package, but can be overridden via /p:GitCommit= on CI -->
       <_PublishPortableCommitHashSuffix Condition="'$(GitCommit)' != ''">-$(GitCommit)</_PublishPortableCommitHashSuffix>
       <_PublishPortableFileName>GitExtensions-Portable-$(TargetPlatform)$(_PublishPortableVersionSuffix)$(_PublishPortableCommitHashSuffix).zip</_PublishPortableFileName>
       <_PublishPortablePath>$([MSBuild]::NormalizePath('$(ArtifactsPublishDir)', '$(_PublishPortableFileName)'))</_PublishPortablePath>
@@ -272,11 +272,9 @@
     -->
   <Target Name="CreateMsi" AfterTargets="CreatePortable">
     <PropertyGroup>
-      <_AppVeyorSuffix>$(ARTIFACT_BUILD_SUFFIX)</_AppVeyorSuffix>
-      <_PublishMsiVersionSuffix>-$(CurrentBuildVersion.ToString())$(_AppVeyorSuffix)</_PublishMsiVersionSuffix>
+      <_PublishMsiVersionSuffix>-$(CurrentBuildVersion.ToString())</_PublishMsiVersionSuffix>
       <_PublishMsiCommitHashSuffix Condition="'$(GitCommit)' != ''">-$(GitCommit)</_PublishMsiCommitHashSuffix>
-      <_PublishMsiCommitHashSuffix Condition="'$(env:APPVEYOR_REPO_COMMIT)' != ''">-$(env:APPVEYOR_REPO_COMMIT)</_PublishMsiCommitHashSuffix>
-      <_PublishMsiCommitHashSuffix Condition="'$(env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)' != ''">-$(env:APPVEYOR_PULL_REQUEST_HEAD_COMMIT)</_PublishMsiCommitHashSuffix>
+      <_PublishMsiCommitHashSuffix Condition="'$(GitSha)' != ''">-$(GitSha)</_PublishMsiCommitHashSuffix>
       <_PublishMsiFileName>GitExtensions-$(TargetPlatform)$(_PublishMsiVersionSuffix)$(_PublishMsiCommitHashSuffix)</_PublishMsiFileName>
       <_PublishMsiPath>$([MSBuild]::NormalizePath('$(ArtifactsPublishDir)'))</_PublishMsiPath>
     </PropertyGroup>
