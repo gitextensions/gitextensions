@@ -1,5 +1,5 @@
-using System.Text;
-using FluentAssertions;
+﻿using System.Text;
+using AwesomeAssertions;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;

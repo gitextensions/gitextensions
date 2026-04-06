@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility.BuildServerIntegration;
+﻿using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
 
 namespace GitHubActionsIntegrationTests;

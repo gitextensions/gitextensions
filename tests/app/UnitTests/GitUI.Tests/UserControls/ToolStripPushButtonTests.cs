@@ -1,5 +1,5 @@
-﻿using Castle.Core.Internal;
-using FluentAssertions;
+﻿using AwesomeAssertions;
+using Castle.Core.Internal;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs;

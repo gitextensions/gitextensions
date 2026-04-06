@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitCommands.Config;
 using GitCommands.Remotes;
 using GitExtensions.Extensibility.Git;

@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitExtensions.Plugins.GitlabIntegration.Settings;
 
 namespace GitlabIntegrationTests;

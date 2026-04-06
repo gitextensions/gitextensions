@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitCommands.ExternalLinks;
 using GitCommands.Remotes;
 using GitExtensions.Extensibility.Git;

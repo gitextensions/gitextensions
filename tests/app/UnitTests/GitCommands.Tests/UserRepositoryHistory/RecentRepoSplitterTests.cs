@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory;

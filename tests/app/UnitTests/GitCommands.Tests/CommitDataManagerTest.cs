@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
 

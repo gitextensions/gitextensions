@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.Design;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;

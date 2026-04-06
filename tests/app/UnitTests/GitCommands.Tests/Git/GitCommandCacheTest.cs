@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 
 namespace GitCommandsTests.Git;
 

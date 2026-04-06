@@ -4,7 +4,7 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.Resources;
 using System.Text;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitUI.Properties;
 
 namespace GitUITests;

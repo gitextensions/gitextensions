@@ -1,4 +1,4 @@
-using GitCommands.Submodules;
+﻿using GitCommands.Submodules;
 using GitExtensions.Extensibility.Git;
 
 namespace CommonTestUtils;

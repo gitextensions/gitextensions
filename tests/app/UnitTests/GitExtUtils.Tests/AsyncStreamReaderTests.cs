@@ -1,5 +1,5 @@
 ﻿using System.Threading.Channels;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitExtUtils;
 using GitUI;
 using Microsoft.VisualStudio.Threading;

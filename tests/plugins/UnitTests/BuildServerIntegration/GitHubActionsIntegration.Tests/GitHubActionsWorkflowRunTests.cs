@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility.BuildServerIntegration;
+﻿using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Plugins.GitHubActionsIntegration.ApiClient.Models;
 

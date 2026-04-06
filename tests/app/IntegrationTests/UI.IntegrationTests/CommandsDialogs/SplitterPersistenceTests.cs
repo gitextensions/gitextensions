@@ -1,6 +1,6 @@
-﻿using CommonTestUtils;
-using FluentAssertions;
-using FluentAssertions.Execution;
+﻿using AwesomeAssertions;
+using AwesomeAssertions.Execution;
+using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.UITests;

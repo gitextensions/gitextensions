@@ -1,7 +1,7 @@
-using System.Reflection;
+﻿using System.Reflection;
 using System.Text.Json.Nodes;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
 using JenkinsIntegration;

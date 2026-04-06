@@ -1,6 +1,6 @@
-using System.IO.Abstractions;
+﻿using System.IO.Abstractions;
 using System.Text.Json;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;

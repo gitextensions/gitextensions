@@ -63,7 +63,7 @@ public abstract class AvatarTestBase
         _inner.GetAvatarAsync(_emailMissing, _nameMissing, _size).Returns(Task.FromResult((Image)null));
     }
 
-    protected async Task MissAsync(string email, string name,  Image expected = null)
+    protected async Task MissAsync(string email, string name, Image expected = null)
     {
         _inner.ClearReceivedCalls();
 

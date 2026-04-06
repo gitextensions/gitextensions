@@ -1,6 +1,6 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitCommands;
 using GitUI.Avatars;
 using NSubstitute;
