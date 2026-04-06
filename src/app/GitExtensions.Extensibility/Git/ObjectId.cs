@@ -1,8 +1,10 @@
-﻿using System.Buffers.Binary;
+﻿using System.Buffers;
+using System.Buffers.Binary;
 using System.Buffers.Text;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 
 namespace GitExtensions.Extensibility.Git;
@@ -17,6 +19,7 @@ namespace GitExtensions.Extensibility.Git;
 public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
 {
     private static readonly ThreadLocal<byte[]> _buffer = new(() => new byte[_sha1ByteCount], trackAllValues: false);
+    private static readonly SearchValues<char> _hexChars = SearchValues.Create("0123456789abcdef");
     private static readonly Random _random = new();
 
     /// <summary>
@@ -225,21 +228,7 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     [Pure]
     public static bool IsValidPartial(string s, int minLength) => s.Length >= minLength && s.Length <= Sha1CharCount && IsValidCharacters(s);
 
-    private static bool IsValidCharacters(string s)
-    {
-        // ReSharper disable once LoopCanBeConvertedToQuery
-        // ReSharper disable once ForCanBeConvertedToForeach
-        for (int i = 0; i < s.Length; i++)
-        {
-            char c = s[i];
-            if (!char.IsDigit(c) && (c < 'a' || c > 'f'))
-            {
-                return false;
-            }
-        }
-
-        return true;
-    }
+    private static bool IsValidCharacters(string s) => !s.AsSpan().ContainsAnyExcept(_hexChars);
 
     private readonly ulong _i1;
     private readonly ulong _i2;
@@ -287,6 +276,7 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     /// <param name="length">The length of the returned string. Defaults to <c>8</c>.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is less than one, or more than 40.</exception>
     [Pure]
+    [SkipLocalsInit]
     [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
     public unsafe string ToShortString(int length = 8)
     {
@@ -306,8 +296,8 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
         BinaryPrimitives.WriteUInt64BigEndian(buffer, _i1);
         if (neededBytesCount > 8)
         {
-        BinaryPrimitives.WriteUInt64BigEndian(buffer.Slice(8, 8), _i2);
-        BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(16, 4), _i3);
+            BinaryPrimitives.WriteUInt64BigEndian(buffer.Slice(8, 8), _i2);
+            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(16, 4), _i3);
         }
 
         // Operate on the smaller buffer possible
