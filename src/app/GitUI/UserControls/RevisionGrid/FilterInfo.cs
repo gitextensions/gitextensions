@@ -478,6 +478,11 @@ public record FilterInfo
                 filter.Add($"--exclude={GitRefName.RefsStashPrefix}");
             }
 
+            if (!AppSettings.ShowSessionRefs)
+            {
+                filter.Add($"--exclude={GitRefName.RefsSessionsPrefix}**");
+            }
+
             // All refs/
             filter.Add("--all");
 

@@ -331,6 +331,13 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
                 ExecuteAction = () => _revisionGrid.ToggleShowGitNotes(),
                 IsCheckedFunc = () => AppSettings.ShowGitNotes
             },
+            new MenuCommand
+            {
+                Name = "ShowSessionCheckpoints",
+                Text = "Show session checkpoints",
+                ExecuteAction = () => _revisionGrid.ToggleShowSessionRefs(),
+                IsCheckedFunc = () => AppSettings.ShowSessionRefs
+            },
 
             MenuCommand.CreateSeparator(),
 
