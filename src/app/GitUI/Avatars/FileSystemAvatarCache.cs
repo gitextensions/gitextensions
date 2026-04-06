@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Drawing.Imaging;
 using System.IO.Abstractions;
 using GitCommands;
@@ -20,7 +20,7 @@ public sealed class FileSystemAvatarCache : IAvatarProvider, IAvatarCacheCleaner
         _inner = inner;
         _fileSystem = fileSystem ?? new FileSystem();
 
-        _cacheDays = AppSettings.AvatarImageCacheDays;
+        _cacheDays = AppSettings.AvatarImageCacheDays.Value;
         if (_cacheDays < 1)
         {
             const int DefaultCacheDays = 30;

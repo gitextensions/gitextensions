@@ -52,12 +52,12 @@ public class RecentRepoSplitter
 
     public RecentRepoSplitter()
     {
-        MaxTopRepositories = AppSettings.MaxTopRepositories;
+        MaxTopRepositories = AppSettings.MaxTopRepositories.Value;
         HideTopRepositoriesFromRecentList = AppSettings.HideTopRepositoriesFromRecentList.Value;
-        ShorteningStrategy = AppSettings.ShorteningRecentRepoPathStrategy;
-        SortTopRepos = AppSettings.SortTopRepos;
-        SortRecentRepos = AppSettings.SortRecentRepos;
-        RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth;
+        ShorteningStrategy = AppSettings.ShorteningRecentRepoPathStrategy.Value;
+        SortTopRepos = AppSettings.SortTopRepos.Value;
+        SortRecentRepos = AppSettings.SortRecentRepos.Value;
+        RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth.Value;
     }
 
     public void SplitRecentRepos(IList<Repository> repositories, List<RecentRepoInfo> topRepoList, List<RecentRepoInfo> recentRepoList)

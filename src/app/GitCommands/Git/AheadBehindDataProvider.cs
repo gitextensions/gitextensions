@@ -41,7 +41,7 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
 
     public IDictionary<string, AheadBehindData>? GetData(string branchName = "")
     {
-        if (!AppSettings.ShowAheadBehindData)
+        if (!AppSettings.ShowAheadBehindData.Value)
         {
             return null;
         }

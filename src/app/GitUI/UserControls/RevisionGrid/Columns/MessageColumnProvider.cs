@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -63,14 +63,14 @@ internal sealed class MessageColumnProvider : ColumnProvider
     public override void ApplySettings()
     {
         _settings = new Settings(
-            FillRefLabels: AppSettings.FillRefLabels,
+            FillRefLabels: AppSettings.FillRefLabels.Value,
             NotesInSeparateColumn: AppSettings.ShowGitNotesColumn.Value,
-            ShowAnnotatedTagsMessages: AppSettings.ShowAnnotatedTagsMessages,
-            ShowCommitBodyInRevisionGrid: AppSettings.ShowCommitBodyInRevisionGrid,
-            ShowGitNotes: AppSettings.ShowGitNotes,
-            ShowGitStatusForArtificialCommits: AppSettings.ShowGitStatusForArtificialCommits,
-            ShowRemoteBranches: AppSettings.ShowRemoteBranches,
-            ShowTags: AppSettings.ShowTags);
+            ShowAnnotatedTagsMessages: AppSettings.ShowAnnotatedTagsMessages.Value,
+            ShowCommitBodyInRevisionGrid: AppSettings.ShowCommitBodyInRevisionGrid.Value,
+            ShowGitNotes: AppSettings.ShowGitNotes.Value,
+            ShowGitStatusForArtificialCommits: AppSettings.ShowGitStatusForArtificialCommits.Value,
+            ShowRemoteBranches: AppSettings.ShowRemoteBranches.Value,
+            ShowTags: AppSettings.ShowTags.Value);
     }
 
     public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)

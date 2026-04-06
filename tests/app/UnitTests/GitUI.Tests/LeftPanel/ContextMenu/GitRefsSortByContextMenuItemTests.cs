@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Utils;
 using GitUI.LeftPanel.ContextMenu;
 using GitUIPluginInterfaces;
@@ -42,10 +42,10 @@ public class GitRefsSortByContextMenuItemTests
     [TestCaseSource(nameof(SortOrderOptions))]
     public void Only_the_current_sort_option_is_selected(GitRefsSortBy order)
     {
-        GitRefsSortBy original = AppSettings.RefsSortBy;
+        GitRefsSortBy original = AppSettings.RefsSortBy.Value;
         try
         {
-            AppSettings.RefsSortBy = order;
+            AppSettings.RefsSortBy.Value = order;
 
             // invoke the requery method to reselect the proper sub item
             _itemUnderTest.GetTestAccessor().RaiseDropDownOpening();
@@ -54,18 +54,18 @@ public class GitRefsSortByContextMenuItemTests
         }
         finally
         {
-            AppSettings.RefsSortBy = original;
+            AppSettings.RefsSortBy.Value = original;
         }
     }
 
     [Test]
     public void Clicking_an_item_sets_sort_in_service()
     {
-        GitRefsSortBy original = AppSettings.RefsSortBy;
+        GitRefsSortBy original = AppSettings.RefsSortBy.Value;
         try
         {
             // Reset to the default
-            AppSettings.RefsSortBy = GitRefsSortBy.Default;
+            AppSettings.RefsSortBy.Value = GitRefsSortBy.Default;
 
             foreach (ToolStripMenuItem item in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>())
             {
@@ -76,7 +76,7 @@ public class GitRefsSortByContextMenuItemTests
         }
         finally
         {
-            AppSettings.RefsSortBy = original;
+            AppSettings.RefsSortBy.Value = original;
         }
     }
 

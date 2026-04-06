@@ -1,4 +1,4 @@
-﻿using System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using GitCommands;
 using GitExtUtils;
@@ -29,7 +29,7 @@ internal sealed class PathFormatter
         string? text = string.Empty;
         string? suffix = null;
 
-        switch (AppSettings.TruncatePathMethod)
+        switch (AppSettings.TruncatePathMethod.Value)
         {
             case TruncatePathMethod.FileNameOnly:
                 (text, suffix) = FormatTextForFileNameOnly(name, oldName);
@@ -128,7 +128,7 @@ internal sealed class PathFormatter
             }
 
             // The win32 method PathCompactPathEx is only supported on Windows
-            TruncatePathMethod truncatePathMethod = AppSettings.TruncatePathMethod;
+            TruncatePathMethod truncatePathMethod = AppSettings.TruncatePathMethod.Value;
 
             if (truncatePathMethod == TruncatePathMethod.Compact && OperatingSystem.IsWindows())
             {

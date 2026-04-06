@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -42,10 +42,10 @@ internal partial class GitBlameParser : IGitBlameParser
             {
                 "--no-ext-diff",
                 "-U0",
-                $"--diff-algorithm={(AppSettings.UseHistogramDiffAlgorithm ? "histogram" : "default")}",
-                { AppSettings.DetectCopyInFileOnBlame, "--find-renames" }, // git-blame only has -M
-                { AppSettings.DetectCopyInAllOnBlame, "--find-copies" }, // git-blame only has -C
-                { AppSettings.IgnoreWhitespaceOnBlame, "--ignore-all-space" }, // git-blame only has -w
+                $"--diff-algorithm={(AppSettings.UseHistogramDiffAlgorithm.Value ? "histogram" : "default")}",
+                { AppSettings.DetectCopyInFileOnBlame.Value, "--find-renames" }, // git-blame only has -M
+                { AppSettings.DetectCopyInAllOnBlame.Value, "--find-copies" }, // git-blame only has -C
+                { AppSettings.IgnoreWhitespaceOnBlame.Value, "--ignore-all-space" }, // git-blame only has -w
                 parentId,
                 selectedBlamedRevision.ObjectId,
                 "--",

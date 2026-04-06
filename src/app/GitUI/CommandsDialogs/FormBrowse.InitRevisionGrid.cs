@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.Properties;
@@ -17,7 +17,7 @@ partial class FormBrowse
         {
             bool indexChanged = args.IsIndexChanged;
             this.InvokeAndForget(() =>
-                RefreshButton.Image = indexChanged && AppSettings.ShowGitStatusInBrowseToolbar && Module.IsValidGitWorkingDir()
+                RefreshButton.Image = indexChanged && AppSettings.ShowGitStatusInBrowseToolbar.Value && Module.IsValidGitWorkingDir()
                     ? Images.ReloadRevisionsDirty
                     : Images.ReloadRevisions);
         };

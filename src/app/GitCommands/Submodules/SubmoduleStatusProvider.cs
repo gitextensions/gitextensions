@@ -264,7 +264,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
 
     private string GetBranchNameSuffix(string repositoryPath, string noBranchText)
     {
-        if (AppSettings.ShowRepoCurrentBranch && !GitModule.IsBareRepository(repositoryPath))
+        if (AppSettings.ShowRepoCurrentBranch.Value && !GitModule.IsBareRepository(repositoryPath))
         {
             return " " + GetModuleBranch(repositoryPath, noBranchText);
         }

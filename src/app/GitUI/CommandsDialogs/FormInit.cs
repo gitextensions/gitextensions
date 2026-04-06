@@ -36,7 +36,7 @@ public partial class FormInit : GitExtensionsDialog
         _NO_TRANSLATE_Directory.DataSource = repositoryHistory;
         _NO_TRANSLATE_Directory.DisplayMember = nameof(Repository.Path);
         _NO_TRANSLATE_Directory.SelectedIndex = -1;
-        _NO_TRANSLATE_Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath : dir;
+        _NO_TRANSLATE_Directory.Text = string.IsNullOrEmpty(dir) ? AppSettings.DefaultCloneDestinationPath.Value : dir;
         _NO_TRANSLATE_Directory.ResizeDropDownWidth();
     }
 

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.ApplicationInsights.Extensibility;
@@ -12,7 +12,7 @@ internal class AppInfoTelemetryInitializer : ITelemetryInitializer
     private static readonly string AppEnvironmentKey = "Environment".FormatKey();
     private static readonly string AppIsPortableKey = "IsPortable".FormatKey();
     private static readonly string AppIsReleaseKey = "IsRelease".FormatKey();
-    private static readonly string AppStartWithRecentWorkingDirKey = nameof(AppSettings.StartWithRecentWorkingDir).FormatKey();
+    private static readonly string AppStartWithRecentWorkingDirKey = nameof(AppSettings.StartWithRecentWorkingDir.Value).FormatKey();
 
     public AppInfoTelemetryInitializer(bool isDirty)
     {
@@ -25,7 +25,7 @@ internal class AppInfoTelemetryInitializer : ITelemetryInitializer
         telemetry.Context.GlobalProperties[AppIsReleaseKey] = (!_isDirty).ToString();
         telemetry.Context.GlobalProperties[AppIsPortableKey] = AppSettings.IsPortable().ToString();
         telemetry.Context.GlobalProperties[AppCurrentTranslationKey] = AppSettings.CurrentTranslation;
-        telemetry.Context.GlobalProperties[AppStartWithRecentWorkingDirKey] = AppSettings.StartWithRecentWorkingDir.ToString();
+        telemetry.Context.GlobalProperties[AppStartWithRecentWorkingDirKey] = AppSettings.StartWithRecentWorkingDir.Value.ToString();
 
         // Always default to development if we're in the debugger
         if (Debugger.IsAttached)

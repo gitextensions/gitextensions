@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Text;
@@ -1886,22 +1886,22 @@ public sealed class GitUICommands : IGitUICommands
     {
         if (arguments.ContainsKey("merge"))
         {
-            AppSettings.DefaultPullAction = GitPullAction.Merge;
+            AppSettings.DefaultPullAction.Value = GitPullAction.Merge;
         }
 
         if (arguments.ContainsKey("rebase"))
         {
-            AppSettings.DefaultPullAction = GitPullAction.Rebase;
+            AppSettings.DefaultPullAction.Value = GitPullAction.Rebase;
         }
 
         if (arguments.ContainsKey("fetch"))
         {
-            AppSettings.DefaultPullAction = GitPullAction.Fetch;
+            AppSettings.DefaultPullAction.Value = GitPullAction.Fetch;
         }
 
         if (arguments.ContainsKey("autostash"))
         {
-            AppSettings.AutoStash = true;
+            AppSettings.AutoStash.Value = true;
         }
     }
 

@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -279,8 +279,8 @@ public partial class FormApplyPatch : GitModuleForm
         PatchFile.Select();
 
         Text = _applyPatchMsgBox.Text + " (" + Module.WorkingDir + ")";
-        IgnoreWhitespace.Checked = AppSettings.ApplyPatchIgnoreWhitespace;
-        SignOff.Checked = AppSettings.ApplyPatchSignOff;
+        IgnoreWhitespace.Checked = AppSettings.ApplyPatchIgnoreWhitespace.Value;
+        SignOff.Checked = AppSettings.ApplyPatchSignOff.Value;
     }
 
     private void BrowseDir_Click(object sender, EventArgs e)
@@ -305,11 +305,11 @@ public partial class FormApplyPatch : GitModuleForm
 
     private void IgnoreWhitespace_CheckedChanged(object sender, EventArgs e)
     {
-        AppSettings.ApplyPatchIgnoreWhitespace = IgnoreWhitespace.Checked;
+        AppSettings.ApplyPatchIgnoreWhitespace.Value = IgnoreWhitespace.Checked;
     }
 
     private void SignOff_CheckedChanged(object sender, EventArgs e)
     {
-        AppSettings.ApplyPatchSignOff = SignOff.Checked;
+        AppSettings.ApplyPatchSignOff.Value = SignOff.Checked;
     }
 }

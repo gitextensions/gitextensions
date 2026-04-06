@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
@@ -56,10 +56,10 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
     protected override void SettingsToPage()
     {
         _NO_TRANSLATE_cmbRevisionsSortBy.SelectedIndex = (int)AppSettings.RevisionSortOrder.Value;
-        _NO_TRANSLATE_cmbBranchesOrder.SelectedIndex = (int)AppSettings.RefsSortOrder;
-        _NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex = (int)AppSettings.RefsSortBy;
-        txtPrioBranchNames.Text = AppSettings.PrioritizedBranchNames;
-        txtPrioRemoteNames.Text = AppSettings.PrioritizedRemoteNames;
+        _NO_TRANSLATE_cmbBranchesOrder.SelectedIndex = (int)AppSettings.RefsSortOrder.Value;
+        _NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex = (int)AppSettings.RefsSortBy.Value;
+        txtPrioBranchNames.Text = AppSettings.PrioritizedBranchNames.Value;
+        txtPrioRemoteNames.Text = AppSettings.PrioritizedRemoteNames.Value;
 
         base.SettingsToPage();
     }
@@ -68,10 +68,10 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
     {
         AppSettings.RevisionSortOrder.Value = (RevisionSortOrder)_NO_TRANSLATE_cmbRevisionsSortBy.SelectedIndex;
         AppSettings.RevisionSortOrder.Save();
-        AppSettings.RefsSortOrder = (GitRefsSortOrder)_NO_TRANSLATE_cmbBranchesOrder.SelectedIndex;
-        AppSettings.RefsSortBy = (GitRefsSortBy)_NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex;
-        AppSettings.PrioritizedBranchNames = txtPrioBranchNames.Text;
-        AppSettings.PrioritizedRemoteNames = txtPrioRemoteNames.Text;
+        AppSettings.RefsSortOrder.Value = (GitRefsSortOrder)_NO_TRANSLATE_cmbBranchesOrder.SelectedIndex;
+        AppSettings.RefsSortBy.Value = (GitRefsSortBy)_NO_TRANSLATE_cmbBranchesSortBy.SelectedIndex;
+        AppSettings.PrioritizedBranchNames.Value = txtPrioBranchNames.Text;
+        AppSettings.PrioritizedRemoteNames.Value = txtPrioRemoteNames.Text;
 
         ResourceManager.TranslatedStrings.Reinitialize();
         TranslatedStrings.Reinitialize();

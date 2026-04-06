@@ -66,7 +66,7 @@ Send report?");
         warningLabel.MaximumSize = new Size(warningLabel.Width, 0);
         warningLabel.AutoSize = true;
 
-        AutoScaleMode = AppSettings.EnableAutoScale
+        AutoScaleMode = AppSettings.EnableAutoScale.Value
             ? AutoScaleMode.Dpi
             : AutoScaleMode.None;
 

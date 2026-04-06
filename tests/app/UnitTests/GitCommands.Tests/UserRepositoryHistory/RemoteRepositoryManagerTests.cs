@@ -17,8 +17,8 @@ public class RemoteRepositoryManagerTests
     public void Setup()
     {
         // backup the user setting, will restore it at the end of the test run
-        _userSetting = AppSettings.RecentRepositoriesHistorySize;
-        AppSettings.RecentRepositoriesHistorySize = 30;
+        _userSetting = AppSettings.RecentRepositoriesHistorySize.Value;
+        AppSettings.RecentRepositoriesHistorySize.Value = 30;
 
         _repositoryStorage = Substitute.For<IRepositoryStorage>();
         _manager = new RemoteRepositoryManager(_repositoryStorage);
@@ -27,7 +27,7 @@ public class RemoteRepositoryManagerTests
     [TearDown]
     public void TearDown()
     {
-        AppSettings.RecentRepositoriesHistorySize = _userSetting;
+        AppSettings.RecentRepositoriesHistorySize.Value = _userSetting;
     }
 
     [Test]
@@ -169,7 +169,7 @@ public class RemoteRepositoryManagerTests
     public async Task SaveRecentHistoryAsync_should_trim_history_size()
     {
         const int size = 3;
-        AppSettings.RecentRepositoriesHistorySize = size;
+        AppSettings.RecentRepositoriesHistorySize.Value = size;
         List<Repository> history =
         [
             new Repository("path1"),

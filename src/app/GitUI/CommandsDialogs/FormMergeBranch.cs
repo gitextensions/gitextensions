@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Git;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
@@ -31,10 +31,10 @@ public partial class FormMergeBranch : GitModuleForm
         _commitMessageManager = new CommitMessageManager(this, Module.WorkingDirGitDir, Module.CommitEncoding);
 
         currentBranchLabel.Font = new Font(currentBranchLabel.Font, FontStyle.Bold);
-        noCommit.Checked = AppSettings.DontCommitMerge;
+        noCommit.Checked = AppSettings.DontCommitMerge.Value;
 
         helpImageDisplayUserControl1.IsOnHoverShowImage2NoticeText = _formMergeBranchHoverShowImageLabelText.Text;
-        helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages;
+        helpImageDisplayUserControl1.Visible = !AppSettings.DontShowHelpImages.Value;
         _defaultBranch = defaultBranch;
 
         IDetachedSettings detachedSettings = Module.GetEffectiveSettings()
@@ -48,7 +48,7 @@ public partial class FormMergeBranch : GitModuleForm
         addLogMessages.Checked = detailedSettings.AddMergeLogMessages;
         nbMessages.Value = detailedSettings.MergeLogMessagesCount;
 
-        advanced.Checked = AppSettings.AlwaysShowAdvOpt;
+        advanced.Checked = AppSettings.AlwaysShowAdvOpt.Value;
         advanced_CheckedChanged(this, EventArgs.Empty);
 
         Branches.Select();
@@ -83,7 +83,7 @@ public partial class FormMergeBranch : GitModuleForm
         IDetachedSettings detachedSettings = Module.GetEffectiveSettings().Detached();
 
         detachedSettings.NoFastForwardMerge = noFastForward.Checked;
-        AppSettings.DontCommitMerge = noCommit.Checked;
+        AppSettings.DontCommitMerge.Value = noCommit.Checked;
 
         bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeMerge, this);
         if (!success)
@@ -94,7 +94,7 @@ public partial class FormMergeBranch : GitModuleForm
         string? mergeMessagePath = null;
         if (addMergeMessage.Checked)
         {
-            // [!] Do not reset the last commit message stored in AppSettings.LastCommitMessage
+            // [!] Do not reset the last commit message stored in AppSettings.LastCommitMessage.Value
 
             ThreadHelper.JoinableTaskFactory.Run(
                 () => _commitMessageManager.WriteCommitMessageToFileAsync(mergeMessage.Text, CommitMessageType.Merge,

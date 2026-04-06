@@ -477,7 +477,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
                                            .First();
         Size branchTextSize = TextRenderer.MeasureText("A", _secondaryFont);
 
-        int width = AppSettings.RecentReposComboMinWidth;
+        int width = AppSettings.RecentReposComboMinWidth.Value;
         if (width < 1)
         {
             width = longestPath.Width + imageList1.ImageSize.Width;

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -205,7 +205,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
     public override void ApplySettings()
     {
-        Column.Visible = AppSettings.ShowRevisionGridGraphColumn;
+        Column.Visible = AppSettings.ShowRevisionGridGraphColumn.Value;
     }
 
     public override void Clear()

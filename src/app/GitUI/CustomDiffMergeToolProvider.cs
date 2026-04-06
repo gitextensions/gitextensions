@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 
@@ -40,7 +40,7 @@ public class CustomDiffMergeToolProvider
     {
         InitMenus(menus);
 
-        if (isDiff && !AppSettings.ShowAvailableDiffTools)
+        if (isDiff && !AppSettings.ShowAvailableDiffTools.Value)
         {
             return;
         }
@@ -97,7 +97,7 @@ public class CustomDiffMergeToolProvider
                         // Disables the dropdown in the current form only
                         // RevDiff will not be affected from other forms, requires a restart
                         // To overcome this limitation other forms would require a reference to RevDiff
-                        AppSettings.ShowAvailableDiffTools = false;
+                        AppSettings.ShowAvailableDiffTools.Value = false;
                         InitMenus(menus);
                     };
                     menu.MenuItem.DropDown.Items.Add(disableItem);

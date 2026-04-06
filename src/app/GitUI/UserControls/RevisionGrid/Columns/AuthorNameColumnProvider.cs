@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
@@ -29,7 +29,7 @@ internal sealed class AuthorNameColumnProvider : ColumnProvider
 
     public override void ApplySettings()
     {
-        Column.Visible = AppSettings.ShowAuthorNameColumn;
+        Column.Visible = AppSettings.ShowAuthorNameColumn.Value;
     }
 
     public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)

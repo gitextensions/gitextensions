@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Utils;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
@@ -37,7 +37,7 @@ internal class GitRefsSortOrderContextMenuItem : ToolStripMenuItem
 
     private void RequerySortingMethod()
     {
-        GitRefsSortOrder currentSort = AppSettings.RefsSortOrder;
+        GitRefsSortOrder currentSort = AppSettings.RefsSortOrder.Value;
         foreach (ToolStripMenuItem item in DropDownItems)
         {
             item.Checked = currentSort.Equals(item.Tag);
@@ -49,7 +49,7 @@ internal class GitRefsSortOrderContextMenuItem : ToolStripMenuItem
         if (sender is ToolStripMenuItem item)
         {
             GitRefsSortOrder sortingType = (GitRefsSortOrder)item.Tag;
-            AppSettings.RefsSortOrder = sortingType;
+            AppSettings.RefsSortOrder.Value = sortingType;
 
             _onSortOrderChanged?.Invoke();
         }

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
@@ -109,12 +109,12 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
 
     protected override void SettingsToPage()
     {
-        MulticolorBranches.Checked = AppSettings.MulticolorBranches;
-        chkDrawAlternateBackColor.Checked = AppSettings.RevisionGraphDrawAlternateBackColor;
-        DrawNonRelativesGray.Checked = AppSettings.RevisionGraphDrawNonRelativesGray;
-        DrawNonRelativesTextGray.Checked = AppSettings.RevisionGraphDrawNonRelativesTextGray;
-        chkHighlightAuthored.Checked = AppSettings.HighlightAuthoredRevisions;
-        chkFillRefLabels.Checked = AppSettings.FillRefLabels;
+        MulticolorBranches.Checked = AppSettings.MulticolorBranches.Value;
+        chkDrawAlternateBackColor.Checked = AppSettings.RevisionGraphDrawAlternateBackColor.Value;
+        DrawNonRelativesGray.Checked = AppSettings.RevisionGraphDrawNonRelativesGray.Value;
+        DrawNonRelativesTextGray.Checked = AppSettings.RevisionGraphDrawNonRelativesTextGray.Value;
+        chkHighlightAuthored.Checked = AppSettings.HighlightAuthoredRevisions.Value;
+        chkFillRefLabels.Checked = AppSettings.FillRefLabels.Value;
         _controller.ShowThemeSettings();
 
         base.SettingsToPage();
@@ -122,12 +122,12 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
 
     protected override void PageToSettings()
     {
-        AppSettings.MulticolorBranches = MulticolorBranches.Checked;
-        AppSettings.RevisionGraphDrawAlternateBackColor = chkDrawAlternateBackColor.Checked;
-        AppSettings.RevisionGraphDrawNonRelativesGray = DrawNonRelativesGray.Checked;
-        AppSettings.RevisionGraphDrawNonRelativesTextGray = DrawNonRelativesTextGray.Checked;
-        AppSettings.HighlightAuthoredRevisions = chkHighlightAuthored.Checked;
-        AppSettings.FillRefLabels = chkFillRefLabels.Checked;
+        AppSettings.MulticolorBranches.Value = MulticolorBranches.Checked;
+        AppSettings.RevisionGraphDrawAlternateBackColor.Value = chkDrawAlternateBackColor.Checked;
+        AppSettings.RevisionGraphDrawNonRelativesGray.Value = DrawNonRelativesGray.Checked;
+        AppSettings.RevisionGraphDrawNonRelativesTextGray.Value = DrawNonRelativesTextGray.Checked;
+        AppSettings.HighlightAuthoredRevisions.Value = chkHighlightAuthored.Checked;
+        AppSettings.FillRefLabels.Value = chkFillRefLabels.Checked;
         _controller.ApplyThemeSettings();
 
         base.PageToSettings();

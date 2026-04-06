@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.UserRepositoryHistory;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
@@ -52,7 +52,7 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
 
     public string GetCurrentBranchName(string path)
     {
-        if (!AppSettings.ShowRepoCurrentBranch || GitModule.IsBareRepository(path))
+        if (!AppSettings.ShowRepoCurrentBranch.Value || GitModule.IsBareRepository(path))
         {
             return string.Empty;
         }
@@ -74,11 +74,11 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
         {
             MeasureFont = AppSettings.Font,
 
-            MaxTopRepositories = AppSettings.MaxTopRepositories,
-            RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth,
-            ShorteningStrategy = AppSettings.ShorteningRecentRepoPathStrategy,
-            SortRecentRepos = AppSettings.SortRecentRepos,
-            SortTopRepos = AppSettings.SortTopRepos
+            MaxTopRepositories = AppSettings.MaxTopRepositories.Value,
+            RecentReposComboMinWidth = AppSettings.RecentReposComboMinWidth.Value,
+            ShorteningStrategy = AppSettings.ShorteningRecentRepoPathStrategy.Value,
+            SortRecentRepos = AppSettings.SortRecentRepos.Value,
+            SortTopRepos = AppSettings.SortTopRepos.Value
         };
 
         _allRecentRepositories ??= ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);

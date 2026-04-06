@@ -119,13 +119,13 @@ public partial class FormFixHome : GitExtensionsForm
 
     private void LoadSettings()
     {
-        if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
+        if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir.Value))
         {
             defaultHome.Checked = userprofileHome.Checked = false;
             otherHome.Checked = true;
-            otherHomeDir.Text = AppSettings.CustomHomeDir;
+            otherHomeDir.Text = AppSettings.CustomHomeDir.Value;
         }
-        else if (AppSettings.UserProfileHomeDir)
+        else if (AppSettings.UserProfileHomeDir.Value)
         {
             defaultHome.Checked = otherHome.Checked = false;
             userprofileHome.Checked = true;
@@ -217,14 +217,14 @@ public partial class FormFixHome : GitExtensionsForm
                 return;
             }
 
-            AppSettings.CustomHomeDir = otherHomeDir.Text;
+            AppSettings.CustomHomeDir.Value = otherHomeDir.Text;
         }
         else
         {
-            AppSettings.CustomHomeDir = "";
+            AppSettings.CustomHomeDir.Value = "";
         }
 
-        AppSettings.UserProfileHomeDir = userprofileHome.Checked;
+        AppSettings.UserProfileHomeDir.Value = userprofileHome.Checked;
 
         EnvironmentConfiguration.SetEnvironmentVariables();
         string path = Environment.GetEnvironmentVariable("HOME");

@@ -82,7 +82,7 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
 
     private void BranchNameTextBox_Leave(object sender, EventArgs e)
     {
-        if (!AppSettings.AutoNormaliseBranchName || !BranchNameTextBox.Text.Any(GitBranchNameNormaliser.IsValidChar))
+        if (!AppSettings.AutoNormaliseBranchName.Value || !BranchNameTextBox.Text.Any(GitBranchNameNormaliser.IsValidChar))
         {
             return;
         }

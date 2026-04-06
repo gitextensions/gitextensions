@@ -281,7 +281,7 @@ public static partial class Commands
                 "--no-ext-diff",
                 "--find-renames",
                 "--find-copies",
-                { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
+                { AppSettings.UseHistogramDiffAlgorithm.Value, "--histogram" },
                 extraDiffArguments,
                 { staged, "--cached" },
                 "--",

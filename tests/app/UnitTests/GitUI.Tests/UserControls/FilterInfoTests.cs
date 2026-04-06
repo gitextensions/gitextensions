@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -16,12 +16,12 @@ public class FilterInfoTests
     [SetUp]
     public void SetUp()
     {
-        AppSettings.ShowGitNotes = false;
+        AppSettings.ShowGitNotes.Value = false;
         AppSettings.HideMergeCommits = false;
-        AppSettings.ShowOnlyFirstParent = false;
-        AppSettings.ShowSimplifyByDecoration = false;
-        AppSettings.SimplifyMergesInFileHistory = false;
-        AppSettings.MaxRevisionGraphCommits = 0;
+        AppSettings.ShowOnlyFirstParent.Value = false;
+        AppSettings.ShowSimplifyByDecoration.Value = false;
+        AppSettings.SimplifyMergesInFileHistory.Value = false;
+        AppSettings.MaxRevisionGraphCommits.Value = 0;
     }
 
     [Test]
@@ -33,7 +33,7 @@ public class FilterInfoTests
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
         AppSettings.BranchFilterEnabled.Value = false;
-        AppSettings.MaxRevisionGraphCommits = 1;
+        AppSettings.MaxRevisionGraphCommits.Value = 1;
 
         try
         {
@@ -57,7 +57,7 @@ public class FilterInfoTests
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
         AppSettings.BranchFilterEnabled.Value = false;
-        AppSettings.MaxRevisionGraphCommits = 1;
+        AppSettings.MaxRevisionGraphCommits.Value = 1;
 
         try
         {
@@ -333,12 +333,12 @@ public class FilterInfoTests
     [Test]
     public void FilterInfo_HasCommitsLimit_expected()
     {
-        AppSettings.MaxRevisionGraphCommits = 1;
+        AppSettings.MaxRevisionGraphCommits.Value = 1;
         FilterInfo filterInfo = new() { IsRaw = true };
         filterInfo.HasCommitsLimit.Should().BeTrue();
         filterInfo.HasFilter.Should().BeFalse();
 
-        AppSettings.MaxRevisionGraphCommits = 0;
+        AppSettings.MaxRevisionGraphCommits.Value = 0;
         filterInfo.ByCommitsLimit = true;
         filterInfo.CommitsLimit = 0;
         filterInfo.HasCommitsLimit.Should().BeFalse();
@@ -385,7 +385,7 @@ public class FilterInfoTests
         }
         else
         {
-            filterInfo.CommitsLimit.Should().Be(AppSettings.MaxRevisionGraphCommits);
+            filterInfo.CommitsLimit.Should().Be(AppSettings.MaxRevisionGraphCommits.Value);
         }
     }
 
@@ -649,33 +649,33 @@ public class FilterInfoTests
     [Test]
     public void FilterInfo_ShowOnlyFirstParent_expected()
     {
-        bool originalShowOnlyFirstParent = AppSettings.ShowOnlyFirstParent;
-        AppSettings.ShowOnlyFirstParent = false;
+        bool originalShowOnlyFirstParent = AppSettings.ShowOnlyFirstParent.Value;
+        AppSettings.ShowOnlyFirstParent.Value = false;
 
         try
         {
             FilterInfo filterInfo = new();
             filterInfo.ShowOnlyFirstParent.Should().BeFalse();
-            AppSettings.ShowOnlyFirstParent.Should().BeFalse();
+            AppSettings.ShowOnlyFirstParent.Value.Should().BeFalse();
             filterInfo.HasFilter.Should().BeFalse();
 
             filterInfo.ShowOnlyFirstParent = true;
             filterInfo.ShowOnlyFirstParent.Should().BeTrue();
-            AppSettings.ShowOnlyFirstParent.Should().BeTrue();
+            AppSettings.ShowOnlyFirstParent.Value.Should().BeTrue();
             filterInfo.HasFilter.Should().BeTrue();
 
             filterInfo.ShowOnlyFirstParent = false;
             filterInfo.ShowOnlyFirstParent.Should().BeFalse();
-            AppSettings.ShowOnlyFirstParent.Should().BeFalse();
+            AppSettings.ShowOnlyFirstParent.Value.Should().BeFalse();
             filterInfo.HasFilter.Should().BeFalse();
 
-            AppSettings.ShowOnlyFirstParent = true;
+            AppSettings.ShowOnlyFirstParent.Value = true;
             filterInfo.ShowOnlyFirstParent.Should().BeTrue();
             filterInfo.HasFilter.Should().BeTrue();
         }
         finally
         {
-            AppSettings.ShowOnlyFirstParent = originalShowOnlyFirstParent;
+            AppSettings.ShowOnlyFirstParent.Value = originalShowOnlyFirstParent;
         }
     }
 
@@ -771,33 +771,33 @@ public class FilterInfoTests
     [Test]
     public void FilterInfo_ShowSimplifyByDecoration_expected()
     {
-        bool originalShowSimplifyByDecoration = AppSettings.ShowSimplifyByDecoration;
-        AppSettings.ShowSimplifyByDecoration = false;
+        bool originalShowSimplifyByDecoration = AppSettings.ShowSimplifyByDecoration.Value;
+        AppSettings.ShowSimplifyByDecoration.Value = false;
 
         try
         {
             FilterInfo filterInfo = new();
             filterInfo.ShowSimplifyByDecoration.Should().BeFalse();
-            AppSettings.ShowSimplifyByDecoration.Should().BeFalse();
+            AppSettings.ShowSimplifyByDecoration.Value.Should().BeFalse();
             filterInfo.HasFilter.Should().BeFalse();
 
             filterInfo.ShowSimplifyByDecoration = true;
             filterInfo.ShowSimplifyByDecoration.Should().BeTrue();
-            AppSettings.ShowSimplifyByDecoration.Should().BeTrue();
+            AppSettings.ShowSimplifyByDecoration.Value.Should().BeTrue();
             filterInfo.HasFilter.Should().BeTrue();
 
             filterInfo.ShowSimplifyByDecoration = false;
             filterInfo.ShowSimplifyByDecoration.Should().BeFalse();
-            AppSettings.ShowSimplifyByDecoration.Should().BeFalse();
+            AppSettings.ShowSimplifyByDecoration.Value.Should().BeFalse();
             filterInfo.HasFilter.Should().BeFalse();
 
-            AppSettings.ShowSimplifyByDecoration = true;
+            AppSettings.ShowSimplifyByDecoration.Value = true;
             filterInfo.ShowSimplifyByDecoration.Should().BeTrue();
             filterInfo.HasFilter.Should().BeTrue();
         }
         finally
         {
-            AppSettings.ShowSimplifyByDecoration = originalShowSimplifyByDecoration;
+            AppSettings.ShowSimplifyByDecoration.Value = originalShowSimplifyByDecoration;
         }
     }
 
@@ -912,7 +912,7 @@ public class FilterInfoTests
         @"--max-count=100000 --since=""2021-10-01 01:30:34"" --until=""2021-11-01 01:30:34"" --no-merges --simplify-by-decoration --author=""author1"" --committer=""committer2"" --regexp-ignore-case -G""diffContent4"" --grep=""message3"" --parents --glob=refs/stas[h] branchFilter8")]
     public void FilterInfo_GetRevisionFilter(string author, string committer, string message, string diffContent, bool showSimplifyByDecoration, bool hideMergeCommits, string pathFilter, bool showReflog, bool showCurrentBranchOnly, string branchFilter, string expectedSummary, string expectedArgs)
     {
-        AppSettings.MaxRevisionGraphCommits = 100000;
+        AppSettings.MaxRevisionGraphCommits.Value = 100000;
         DateTime dateFrom = new(2021, 10, 1, 1, 30, 34, DateTimeKind.Local);
         DateTime dateTo = new(2021, 11, 1, 1, 30, 34, DateTimeKind.Local);
         FilterInfo filterInfo = new()
@@ -1106,10 +1106,10 @@ public class FilterInfoTests
     [TestCaseSource(nameof(FilterInfo_NotesStash))]
     public void FilterInfo_GitNotes_Stashes(bool showGitNotes, bool showStash, bool showReflog, bool showCurrentBranchOnly, bool isValidCheckout, bool showFilteredBranches, string branchFilter)
     {
-        bool originalShowGitNotes = AppSettings.ShowGitNotes;
-        AppSettings.ShowGitNotes = showGitNotes;
-        bool originalShowStash = AppSettings.ShowStashes;
-        AppSettings.ShowStashes = showStash;
+        bool originalShowGitNotes = AppSettings.ShowGitNotes.Value;
+        AppSettings.ShowGitNotes.Value = showGitNotes;
+        bool originalShowStash = AppSettings.ShowStashes.Value;
+        AppSettings.ShowStashes.Value = showStash;
         FilterInfo filterInfo = new()
         {
             ShowReflogReferences = showReflog,
@@ -1161,8 +1161,8 @@ public class FilterInfoTests
         }
         finally
         {
-            AppSettings.ShowGitNotes = originalShowGitNotes;
-            AppSettings.ShowStashes = originalShowStash;
+            AppSettings.ShowGitNotes.Value = originalShowGitNotes;
+            AppSettings.ShowStashes.Value = originalShowStash;
         }
 
         return;

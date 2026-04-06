@@ -1,4 +1,4 @@
-﻿#nullable enable
+#nullable enable
 
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -248,12 +248,12 @@ internal class WorkingDirectoryToolStripSplitButton : ToolStripSplitButton, ITra
 
             button.Text = PathUtil.GetDisplayPath(ri?.Caption ?? path);
 
-            if (AppSettings.RecentReposComboMinWidth > 0)
+            if (AppSettings.RecentReposComboMinWidth.Value > 0)
             {
                 button.AutoSize = false;
                 float captionWidth = graphics.MeasureString(button.Text, button.Font).Width;
                 captionWidth = captionWidth + button.DropDownButtonWidth + 5;
-                button.Width = Math.Max(AppSettings.RecentReposComboMinWidth, (int)captionWidth);
+                button.Width = Math.Max(AppSettings.RecentReposComboMinWidth.Value, (int)captionWidth);
             }
             else
             {

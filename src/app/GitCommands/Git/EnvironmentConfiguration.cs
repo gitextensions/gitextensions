@@ -75,12 +75,12 @@ public static class EnvironmentConfiguration
 
         static string? ComputeHomeLocation()
         {
-            if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir))
+            if (!string.IsNullOrEmpty(AppSettings.CustomHomeDir.Value))
             {
-                return AppSettings.CustomHomeDir;
+                return AppSettings.CustomHomeDir.Value;
             }
 
-            if (AppSettings.UserProfileHomeDir)
+            if (AppSettings.UserProfileHomeDir.Value)
             {
                 return Env.GetEnvironmentVariable("USERPROFILE");
             }

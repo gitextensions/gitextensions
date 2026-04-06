@@ -212,7 +212,7 @@ public partial class FormManageWorktree : GitExtensionsDialog
             return;
         }
 
-        if (AppSettings.DontConfirmSwitchWorktree || MessageBoxes.Show(this,
+        if (AppSettings.DontConfirmSwitchWorktree.Value || MessageBoxes.Show(this,
                 _switchWorktreeText.Text, _switchWorktreeTitle.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
             if (Directory.Exists(workTree.Path))

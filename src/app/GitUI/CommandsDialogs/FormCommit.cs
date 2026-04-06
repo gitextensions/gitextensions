@@ -135,7 +135,7 @@ public sealed partial class FormCommit : GitModuleForm
     private readonly GitRevision? _editedCommit;
     private readonly ToolStripMenuItem _addSelectionToCommitMessageToolStripMenuItem;
     private readonly AsyncLoader _unstagedLoader = new();
-    private readonly bool _useFormCommitMessage = AppSettings.UseFormCommitMessage;
+    private readonly bool _useFormCommitMessage = AppSettings.UseFormCommitMessage.Value;
     private readonly CancellationTokenSequence _customDiffToolsSequence = new();
     private readonly CancellationTokenSequence _interactiveAddSequence = new();
     private readonly CancellationTokenSequence _viewChangesSequence = new();
@@ -196,7 +196,7 @@ public sealed partial class FormCommit : GitModuleForm
     /// Flag whether the push needs to be forced, i.e. after amending a commit or after soft reset to the previous commit.
     /// </summary>
     /// The Amend checkbox is disabled after soft reset.
-    private bool PushForced => (Amend.Checked || !Amend.Enabled) && AppSettings.CommitAndPushForcedWhenAmend;
+    private bool PushForced => (Amend.Checked || !Amend.Enabled) && AppSettings.CommitAndPushForcedWhenAmend.Value;
 
     public FormCommit(IGitUICommands commands, CommitKind commitKind = CommitKind.Normal, GitRevision? editedCommit = null, string? commitMessage = null)
         : base(commands)
@@ -227,10 +227,10 @@ public sealed partial class FormCommit : GitModuleForm
         SolveMergeconflicts.Font = new Font(SolveMergeconflicts.Font, FontStyle.Bold);
 
         StageInSuperproject.Visible = Module.SuperprojectModule is not null;
-        StageInSuperproject.Checked = AppSettings.StageInSuperprojectAfterCommit;
-        closeDialogAfterEachCommitToolStripMenuItem.Checked = AppSettings.CloseCommitDialogAfterCommit;
-        closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = AppSettings.CloseCommitDialogAfterLastCommit;
-        ShowOnlyMyMessagesToolStripMenuItem.Checked = AppSettings.CommitDialogShowOnlyMyMessages;
+        StageInSuperproject.Checked = AppSettings.StageInSuperprojectAfterCommit.Value;
+        closeDialogAfterEachCommitToolStripMenuItem.Checked = AppSettings.CloseCommitDialogAfterCommit.Value;
+        closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = AppSettings.CloseCommitDialogAfterLastCommit.Value;
+        ShowOnlyMyMessagesToolStripMenuItem.Checked = AppSettings.CommitDialogShowOnlyMyMessages.Value;
 
         Unstaged.SetNoFilesText(_noUnstagedChanges.Text);
         Unstaged.DisableSubmoduleMenuItemBold = true;
@@ -283,10 +283,10 @@ public sealed partial class FormCommit : GitModuleForm
             flowCommitButtons.Controls.Remove(StashStaged);
         }
 
-        SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter);
-        btnResetAllChanges.Visible = AppSettings.ShowResetAllChanges;
-        btnResetUnstagedChanges.Visible = AppSettings.ShowResetWorkTreeChanges;
-        CommitAndPush.Visible = AppSettings.ShowCommitAndPush;
+        SetVisibilityOfSelectionFilter(AppSettings.CommitDialogSelectionFilter.Value);
+        btnResetAllChanges.Visible = AppSettings.ShowResetAllChanges.Value;
+        btnResetUnstagedChanges.Visible = AppSettings.ShowResetWorkTreeChanges.Value;
+        CommitAndPush.Visible = AppSettings.ShowCommitAndPush.Value;
         splitRight.Panel2MinSize = Math.Max(splitRight.Panel2MinSize, flowCommitButtons.PreferredSize.Height);
         splitRight.SplitterDistance = Math.Min(splitRight.SplitterDistance, splitRight.Height - splitRight.Panel2MinSize);
 
@@ -298,7 +298,7 @@ public sealed partial class FormCommit : GitModuleForm
         SolveMergeconflicts.BackColor = OtherColors.MergeConflictsColor;
         SolveMergeconflicts.SetForeColorForBackColor();
 
-        if (AppSettings.DontConfirmAmend)
+        if (AppSettings.DontConfirmAmend.Value)
         {
             ResetSoft.BackColor = OtherColors.AmendButtonForcedColor;
             ResetSoft.SetForeColorForBackColor();
@@ -425,7 +425,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     protected override void OnApplicationActivated()
     {
-        if (!_bypassActivatedEventHandler && AppSettings.RefreshArtificialCommitOnApplicationActivated)
+        if (!_bypassActivatedEventHandler && AppSettings.RefreshArtificialCommitOnApplicationActivated.Value)
         {
             RescanChanges();
         }
@@ -744,7 +744,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void ShowOnlyMyMessagesToolStripMenuItem_CheckedChanged(object sender, EventArgs e)
     {
-        AppSettings.CommitDialogShowOnlyMyMessages = ShowOnlyMyMessagesToolStripMenuItem.Checked;
+        AppSettings.CommitDialogShowOnlyMyMessages.Value = ShowOnlyMyMessagesToolStripMenuItem.Checked;
     }
 
     protected override bool ExecuteCommand(int cmd)
@@ -1099,7 +1099,7 @@ public sealed partial class FormCommit : GitModuleForm
             {
                 // This is an amend commit.  Confirm the user understands the implications.  We don't want to prompt for an empty
                 // commit, because amend may be used just to change the commit message or timestamp.
-                if (!AppSettings.DontConfirmAmend)
+                if (!AppSettings.DontConfirmAmend.Value)
                 {
                     if (MessageBoxes.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                     {
@@ -1188,7 +1188,7 @@ public sealed partial class FormCommit : GitModuleForm
                 return;
             }
 
-            if (!AppSettings.DontConfirmCommitIfNoBranch && Module.IsDetachedHead() && !Module.InTheMiddleOfRebase())
+            if (!AppSettings.DontConfirmCommitIfNoBranch.Value && Module.IsDetachedHead() && !Module.InTheMiddleOfRebase())
             {
                 TaskDialogPage page = new()
                 {
@@ -1235,11 +1235,11 @@ public sealed partial class FormCommit : GitModuleForm
                 if (_useFormCommitMessage)
                 {
                     // Save last commit message in settings. This way it can be used in multiple repositories.
-                    AppSettings.LastCommitMessage = Message.Text;
+                    AppSettings.LastCommitMessage.Value = Message.Text;
                     ThreadHelper.JoinableTaskFactory.Run(
                         () => _commitMessageManager.WriteCommitMessageToFileAsync(Message.Text, CommitMessageType.Normal,
                                                                                   usingCommitTemplate: !string.IsNullOrEmpty(_commitTemplate),
-                                                                                  ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty));
+                                                                                  ensureCommitMessageSecondLineEmpty: AppSettings.EnsureCommitMessageSecondLineEmpty.Value));
                 }
 
                 bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCommit, this);
@@ -1294,13 +1294,13 @@ public sealed partial class FormCommit : GitModuleForm
                 }
 
                 if (pushCompleted && Module.SuperprojectModule is not null &&
-                    AppSettings.StageInSuperprojectAfterCommit &&
+                    AppSettings.StageInSuperprojectAfterCommit.Value &&
                     !string.IsNullOrWhiteSpace(Module.SubmodulePath))
                 {
                     Module.SuperprojectModule.StageFile(Module.SubmodulePath);
                 }
 
-                if (AppSettings.CloseCommitDialogAfterCommit)
+                if (AppSettings.CloseCommitDialogAfterCommit.Value)
                 {
                     Close();
                     return;
@@ -1312,7 +1312,7 @@ public sealed partial class FormCommit : GitModuleForm
                     return;
                 }
 
-                if (AppSettings.CloseCommitDialogAfterLastCommit)
+                if (AppSettings.CloseCommitDialogAfterLastCommit.Value)
                 {
                     Close();
                 }
@@ -1330,22 +1330,22 @@ public sealed partial class FormCommit : GitModuleForm
 
             bool IsCommitMessageValid()
             {
-                if (AppSettings.CommitValidationMaxCntCharsFirstLine > 0)
+                if (AppSettings.CommitValidationMaxCntCharsFirstLine.Value > 0)
                 {
                     string firstLine = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.RemoveEmptyEntries)[0];
-                    if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine &&
+                    if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine.Value &&
                         MessageBoxes.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                     {
                         return false;
                     }
                 }
 
-                if (AppSettings.CommitValidationMaxCntCharsPerLine > 0)
+                if (AppSettings.CommitValidationMaxCntCharsPerLine.Value > 0)
                 {
                     string[] lines = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.RemoveEmptyEntries);
                     foreach (string line in lines)
                     {
-                        if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine &&
+                        if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine.Value &&
                             MessageBoxes.Show(this, string.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
                             return false;
@@ -1353,7 +1353,7 @@ public sealed partial class FormCommit : GitModuleForm
                     }
                 }
 
-                if (AppSettings.CommitValidationSecondLineMustBeEmpty)
+                if (AppSettings.CommitValidationSecondLineMustBeEmpty.Value)
                 {
                     string[] lines = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.None);
                     if (lines.Length > 2 &&
@@ -1364,13 +1364,13 @@ public sealed partial class FormCommit : GitModuleForm
                     }
                 }
 
-                if (!string.IsNullOrEmpty(AppSettings.CommitValidationRegEx))
+                if (!string.IsNullOrEmpty(AppSettings.CommitValidationRegEx.Value))
                 {
                     try
                     {
                         if (!Message.Text.StartsWith(CommitKind.Fixup.GetPrefix()) &&
                             !Message.Text.StartsWith(CommitKind.Squash.GetPrefix()) &&
-                            !Regex.IsMatch(GetTextToValidate(Message.Text), AppSettings.CommitValidationRegEx) &&
+                            !Regex.IsMatch(GetTextToValidate(Message.Text), AppSettings.CommitValidationRegEx.Value) &&
                             MessageBoxes.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
                             return false;
@@ -1723,7 +1723,7 @@ public sealed partial class FormCommit : GitModuleForm
             EnableStageButtons(true);
         }
 
-        if (AppSettings.RevisionGraphShowArtificialCommits)
+        if (AppSettings.RevisionGraphShowArtificialCommits.Value)
         {
             UICommands.RepoChangedNotifier.Notify();
         }
@@ -1866,7 +1866,7 @@ public sealed partial class FormCommit : GitModuleForm
                 }
 
                 bool wereErrors = !Module.StageFiles(files, out string output);
-                if (wereErrors && AppSettings.ShowErrorsWhenStagingFiles)
+                if (wereErrors && AppSettings.ShowErrorsWhenStagingFiles.Value)
                 {
                     FormStatus.ShowErrorDialog(this, UICommands, _stageDetails.Text, string.Format(_stageFiles.Text + "\n", files.Count), output);
                 }
@@ -1936,7 +1936,7 @@ public sealed partial class FormCommit : GitModuleForm
             Commit.Enabled = true;
         }
 
-        if (AppSettings.RevisionGraphShowArtificialCommits)
+        if (AppSettings.RevisionGraphShowArtificialCommits.Value)
         {
             UICommands.RepoChangedNotifier.Notify();
         }
@@ -1944,7 +1944,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void ResetSoftClick(object sender, EventArgs e)
     {
-        if (!AppSettings.DontConfirmAmend)
+        if (!AppSettings.DontConfirmAmend.Value)
         {
             if (MessageBoxes.Show(this, _amendResetSoft.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
@@ -1977,8 +1977,8 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void CommitMessageToolStripMenuItemDropDownOpening(object sender, EventArgs e)
     {
-        string msg = AppSettings.LastCommitMessage;
-        int maxCount = AppSettings.CommitDialogNumberOfPreviousMessages;
+        string msg = AppSettings.LastCommitMessage.Value;
+        int maxCount = AppSettings.CommitDialogNumberOfPreviousMessages.Value;
         string authorPattern = string.Empty;
 
         if (ShowOnlyMyMessagesToolStripMenuItem.Checked)
@@ -2281,11 +2281,11 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void FormatAllText(int startLine)
     {
-        int limit1 = AppSettings.CommitValidationMaxCntCharsFirstLine;
-        int limitX = AppSettings.CommitValidationMaxCntCharsPerLine;
-        bool empty2 = AppSettings.CommitValidationSecondLineMustBeEmpty;
-        bool commitValidationAutoWrap = AppSettings.CommitValidationAutoWrap;
-        bool commitValidationIndentAfterFirstLine = AppSettings.CommitValidationIndentAfterFirstLine;
+        int limit1 = AppSettings.CommitValidationMaxCntCharsFirstLine.Value;
+        int limitX = AppSettings.CommitValidationMaxCntCharsPerLine.Value;
+        bool empty2 = AppSettings.CommitValidationSecondLineMustBeEmpty.Value;
+        bool commitValidationAutoWrap = AppSettings.CommitValidationAutoWrap.Value;
+        bool commitValidationIndentAfterFirstLine = AppSettings.CommitValidationIndentAfterFirstLine.Value;
 
         int lineCount = Message.LineCount();
 
@@ -2425,19 +2425,19 @@ public sealed partial class FormCommit : GitModuleForm
     private void closeDialogAfterEachCommitToolStripMenuItem_Click(object sender, EventArgs e)
     {
         closeDialogAfterEachCommitToolStripMenuItem.Checked = !closeDialogAfterEachCommitToolStripMenuItem.Checked;
-        AppSettings.CloseCommitDialogAfterCommit = closeDialogAfterEachCommitToolStripMenuItem.Checked;
+        AppSettings.CloseCommitDialogAfterCommit.Value = closeDialogAfterEachCommitToolStripMenuItem.Checked;
     }
 
     private void closeDialogAfterAllFilesCommittedToolStripMenuItem_Click(object sender, EventArgs e)
     {
         closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked = !closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
-        AppSettings.CloseCommitDialogAfterLastCommit = closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
+        AppSettings.CloseCommitDialogAfterLastCommit.Value = closeDialogAfterAllFilesCommittedToolStripMenuItem.Checked;
     }
 
     private void refreshDialogOnFormFocusToolStripMenuItem_Click(object sender, EventArgs e)
     {
         refreshDialogOnFormFocusToolStripMenuItem.Checked = !refreshDialogOnFormFocusToolStripMenuItem.Checked;
-        AppSettings.RefreshArtificialCommitOnApplicationActivated = refreshDialogOnFormFocusToolStripMenuItem.Checked;
+        AppSettings.RefreshArtificialCommitOnApplicationActivated.Value = refreshDialogOnFormFocusToolStripMenuItem.Checked;
     }
 
     private void signOffToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2734,7 +2734,7 @@ public sealed partial class FormCommit : GitModuleForm
 
         ResetSoft.Enabled = ResetSoft.Visible && Amend.Checked && Module.RevParse(_resetSoftRevision) is not null;
 
-        if (AppSettings.CommitAndPushForcedWhenAmend)
+        if (AppSettings.CommitAndPushForcedWhenAmend.Value)
         {
             CommitAndPush.BackColor = PushForced
                 ? OtherColors.AmendButtonForcedColor
@@ -2755,7 +2755,7 @@ public sealed partial class FormCommit : GitModuleForm
     {
         if (StageInSuperproject.Visible)
         {
-            AppSettings.StageInSuperprojectAfterCommit = StageInSuperproject.Checked;
+            AppSettings.StageInSuperprojectAfterCommit.Value = StageInSuperproject.Checked;
         }
     }
 
@@ -2819,7 +2819,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void Options_DropDownOpening(object sender, EventArgs e)
     {
-        refreshDialogOnFormFocusToolStripMenuItem.Checked = AppSettings.RefreshArtificialCommitOnApplicationActivated;
+        refreshDialogOnFormFocusToolStripMenuItem.Checked = AppSettings.RefreshArtificialCommitOnApplicationActivated.Value;
         tsmiSelectStagedOnEnterMessage.Checked = AppSettings.CommitDialogSelectStagedOnEnterMessage.Value;
     }
 

@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -45,9 +45,9 @@ public partial class FormOpenDirectory : GitExtensionsForm
     {
         List<string> directories = [];
 
-        if (!string.IsNullOrWhiteSpace(AppSettings.DefaultCloneDestinationPath))
+        if (!string.IsNullOrWhiteSpace(AppSettings.DefaultCloneDestinationPath.Value))
         {
-            directories.Add(AppSettings.DefaultCloneDestinationPath.EnsureTrailingPathSeparator());
+            directories.Add(AppSettings.DefaultCloneDestinationPath.Value.EnsureTrailingPathSeparator());
         }
 
         if (!string.IsNullOrWhiteSpace(currentModule?.WorkingDir))

@@ -105,7 +105,7 @@ public sealed class CommitMessageManager : ICommitMessageManager
     {
         bool amendState = false;
 
-        if (AppSettings.RememberAmendCommitState)
+        if (AppSettings.RememberAmendCommitState.Value)
         {
             string amendStateRawValue = await ReadFileAsync(_amendSaveStatePath, CannotReadAmendState, cancellationToken: cancellationToken);
             _ = bool.TryParse(amendStateRawValue, out amendState);
@@ -118,7 +118,7 @@ public sealed class CommitMessageManager : ICommitMessageManager
     {
         await TaskScheduler.Default;
 
-        if (AppSettings.RememberAmendCommitState && amendState)
+        if (AppSettings.RememberAmendCommitState.Value && amendState)
         {
             await WriteFileAsync(_amendSaveStatePath, CannotSaveAmendState, true.ToString(), cancellationToken: cancellationToken);
             return;

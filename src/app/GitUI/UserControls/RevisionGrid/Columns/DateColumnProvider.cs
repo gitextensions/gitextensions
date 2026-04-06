@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
@@ -15,7 +15,7 @@ internal sealed class DateColumnProvider : ColumnProvider
     {
         _grid = grid;
 
-        int initialWidth = AppSettings.RelativeDate ? DpiUtil.Scale(130) : TextRenderer.MeasureText(DateTime.Now.ToString("G"), AppSettings.Font).Width;
+        int initialWidth = AppSettings.RelativeDate.Value ? DpiUtil.Scale(130) : TextRenderer.MeasureText(DateTime.Now.ToString("G"), AppSettings.Font).Width;
 
         Column = new DataGridViewTextBoxColumn
         {
@@ -30,7 +30,7 @@ internal sealed class DateColumnProvider : ColumnProvider
 
     public override void ApplySettings()
     {
-        Column.Visible = AppSettings.ShowDateColumn;
+        Column.Visible = AppSettings.ShowDateColumn.Value;
     }
 
     public override void OnCellPainting(DataGridViewCellPaintingEventArgs e, GitRevision revision, int rowHeight, in CellStyle style)
@@ -40,7 +40,7 @@ internal sealed class DateColumnProvider : ColumnProvider
 
     public override void OnCellFormatting(DataGridViewCellFormattingEventArgs e, GitRevision revision)
     {
-        DateTime dateTime = AppSettings.ShowAuthorDate
+        DateTime dateTime = AppSettings.ShowAuthorDate.Value
             ? revision.AuthorDate
             : revision.CommitDate;
 
@@ -54,7 +54,7 @@ internal sealed class DateColumnProvider : ColumnProvider
                 return "";
             }
 
-            if (AppSettings.RelativeDate)
+            if (AppSettings.RelativeDate.Value)
             {
                 return LocalizationHelpers.GetRelativeDateString(DateTime.Now, dt, displayWeeks: false);
             }

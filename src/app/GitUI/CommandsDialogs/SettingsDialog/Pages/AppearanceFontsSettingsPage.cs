@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -24,7 +24,7 @@ public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
         SetCurrentCommitFont(AppSettings.CommitFont);
         SetCurrentMonospaceFont(AppSettings.MonospaceFont);
 
-        ShowEolMarkerAsGlyph.Checked = AppSettings.ShowEolMarkerAsGlyph;
+        ShowEolMarkerAsGlyph.Checked = AppSettings.ShowEolMarkerAsGlyph.Value;
 
         base.SettingsToPage();
     }
@@ -41,7 +41,7 @@ public partial class AppearanceFontsSettingsPage : SettingsPageWithHeader
         AppSettings.CommitFont = _commitFont;
         AppSettings.MonospaceFont = _monospaceFont;
 
-        AppSettings.ShowEolMarkerAsGlyph = ShowEolMarkerAsGlyph.Checked;
+        AppSettings.ShowEolMarkerAsGlyph.Value = ShowEolMarkerAsGlyph.Checked;
 
         base.PageToSettings();
     }

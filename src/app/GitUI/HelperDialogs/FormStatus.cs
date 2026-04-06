@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -44,7 +44,7 @@ public partial class FormStatus : GitExtensionsDialog
 
         if (_useDialogSettings)
         {
-            KeepDialogOpen.Checked = !AppSettings.CloseProcessDialog;
+            KeepDialogOpen.Checked = !AppSettings.CloseProcessDialog.Value;
         }
         else
         {
@@ -204,7 +204,7 @@ public partial class FormStatus : GitExtensionsDialog
             Bitmap image = isSuccess ? Images.StatusBadgeSuccess : Images.StatusBadgeError;
             SetIcon(image);
 
-            if (isSuccess && (_useDialogSettings && AppSettings.CloseProcessDialog))
+            if (isSuccess && (_useDialogSettings && AppSettings.CloseProcessDialog.Value))
             {
                 Close();
             }
@@ -290,7 +290,7 @@ public partial class FormStatus : GitExtensionsDialog
 
     private void KeepDialogOpen_CheckedChanged(object sender, EventArgs e)
     {
-        AppSettings.CloseProcessDialog = !KeepDialogOpen.Checked;
+        AppSettings.CloseProcessDialog.Value = !KeepDialogOpen.Checked;
 
         // Maintain the invariant: if changing to "don't keep" and conditions are such that the dialog would have closed in dont-keep mode, then close it
         // Not checking for UseDialogSettings because checkbox is only visible with True

@@ -1,4 +1,4 @@
-﻿using System.Collections.Concurrent;
+using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -105,7 +105,7 @@ public partial class FileViewer : GitModuleControl
                 }
             };
 
-        IgnoreWhitespace = AppSettings.IgnoreWhitespaceKind.GetValue(reload: !AppSettings.RememberIgnoreWhiteSpacePreference);
+        IgnoreWhitespace = AppSettings.IgnoreWhitespaceKind.GetValue(reload: !AppSettings.RememberIgnoreWhiteSpacePreference.Value);
         OnIgnoreWhitespaceChanged();
 
         ignoreWhitespaceAtEol.Image = Images.WhitespaceIgnoreEol.AdaptLightness();
@@ -117,23 +117,23 @@ public partial class FileViewer : GitModuleControl
         ignoreAllWhitespaces.Image = Images.WhitespaceIgnoreAll.AdaptLightness();
         ignoreAllWhitespaceChangesToolStripMenuItem.Image = ignoreAllWhitespaces.Image;
 
-        ShowEntireFile = AppSettings.ShowEntireFile.GetValue(reload: !AppSettings.RememberShowEntireFilePreference);
+        ShowEntireFile = AppSettings.ShowEntireFile.GetValue(reload: !AppSettings.RememberShowEntireFilePreference.Value);
         showEntireFileButton.Checked = ShowEntireFile;
         showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
         diffAppearanceToolStripMenuItem.Visible = false;
         SetStateOfContextLinesButtons();
 
         automaticContinuousScrollToolStripMenuItem.AdaptImageLightness();
-        automaticContinuousScrollToolStripMenuItem.Checked = AppSettings.AutomaticContinuousScroll;
+        automaticContinuousScrollToolStripMenuItem.Checked = AppSettings.AutomaticContinuousScroll.Value;
 
         showNonPrintChars.AdaptImageLightness();
         showNonprintableCharactersToolStripMenuItem.Image = showNonPrintChars.Image;
-        bool showNonPrintingChars = AppSettings.ShowNonPrintingChars.GetValue(reload: !AppSettings.RememberShowNonPrintingCharsPreference);
+        bool showNonPrintingChars = AppSettings.ShowNonPrintingChars.GetValue(reload: !AppSettings.RememberShowNonPrintingCharsPreference.Value);
         showNonPrintChars.Checked = showNonPrintingChars;
         showNonprintableCharactersToolStripMenuItem.Checked = showNonPrintingChars;
         ToggleNonPrintingChars(showNonPrintingChars);
 
-        ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff.GetValue(reload: !AppSettings.RememberShowSyntaxHighlightingInDiff);
+        ShowSyntaxHighlightingInDiff = AppSettings.ShowSyntaxHighlightingInDiff.GetValue(reload: !AppSettings.RememberShowSyntaxHighlightingInDiff.Value);
         showSyntaxHighlighting.AdaptImageLightness();
         showSyntaxHighlighting.Checked = ShowSyntaxHighlightingInDiff;
         showSyntaxHighlightingToolStripMenuItem.AdaptImageLightness();
@@ -362,9 +362,9 @@ public partial class FileViewer : GitModuleControl
 
     public void SetGitBlameGutter(IEnumerable<GitBlameEntry> gitBlameEntries)
     {
-        internalFileViewer.ShowGutterAvatars = AppSettings.BlameShowAuthorAvatar;
+        internalFileViewer.ShowGutterAvatars = AppSettings.BlameShowAuthorAvatar.Value;
 
-        if (AppSettings.BlameShowAuthorAvatar)
+        if (AppSettings.BlameShowAuthorAvatar.Value)
         {
             internalFileViewer.SetGitBlameGutter(gitBlameEntries);
         }
@@ -1392,7 +1392,7 @@ public partial class FileViewer : GitModuleControl
     private void ToggleNonPrintingChars(bool show)
     {
         internalFileViewer.EolMarkerStyle = show
-            ? AppSettings.ShowEolMarkerAsGlyph
+            ? AppSettings.ShowEolMarkerAsGlyph.Value
                 ? ICSharpCode.TextEditor.Document.EolMarkerStyle.Glyph
                 : ICSharpCode.TextEditor.Document.EolMarkerStyle.Text
             : ICSharpCode.TextEditor.Document.EolMarkerStyle.None;
@@ -1421,7 +1421,7 @@ public partial class FileViewer : GitModuleControl
 
     private void UICommands_PostSettings(object sender, GitUIPostActionEventArgs? e)
     {
-        internalFileViewer.InvokeAndForget(() => internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition);
+        internalFileViewer.InvokeAndForget(() => internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition.Value);
     }
 
     private void IgnoreWhitespaceAtEolToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2028,7 +2028,7 @@ public partial class FileViewer : GitModuleControl
     private void ContinuousScrollToolStripMenuItemClick(object sender, EventArgs e)
     {
         automaticContinuousScrollToolStripMenuItem.Checked = !automaticContinuousScrollToolStripMenuItem.Checked;
-        AppSettings.AutomaticContinuousScroll = automaticContinuousScrollToolStripMenuItem.Checked;
+        AppSettings.AutomaticContinuousScroll.Value = automaticContinuousScrollToolStripMenuItem.Checked;
     }
 
     private void ShowNonprintableCharactersToolStripMenuItemClick(object sender, EventArgs e)

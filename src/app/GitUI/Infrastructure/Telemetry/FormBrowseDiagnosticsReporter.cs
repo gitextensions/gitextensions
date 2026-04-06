@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitUI.CommandsDialogs;
 
 namespace GitUI.Infrastructure.Telemetry;
@@ -18,25 +18,25 @@ internal class FormBrowseDiagnosticsReporter
             {
                 // layout
                 { "ShowLeftPanel".FormatKey(), _owner.MainSplitContainer.Panel1Collapsed.ToString() },
-                { nameof(AppSettings.ShowSplitViewLayout).FormatKey(), AppSettings.ShowSplitViewLayout.ToString() },
+                { nameof(AppSettings.ShowSplitViewLayout.Value).FormatKey(), AppSettings.ShowSplitViewLayout.Value.ToString() },
                 { nameof(AppSettings.CommitInfoPosition).FormatKey(), AppSettings.CommitInfoPosition.ToString() },
 
                 // revision grid
-                { nameof(AppSettings.ShowAuthorAvatarColumn).FormatKey(), AppSettings.ShowAuthorAvatarColumn.ToString() },
-                { nameof(AppSettings.ShowAuthorNameColumn).FormatKey(), AppSettings.ShowAuthorNameColumn.ToString() },
-                { nameof(AppSettings.ShowBuildStatusIconColumn).FormatKey(), AppSettings.ShowBuildStatusIconColumn.ToString() },
-                { nameof(AppSettings.ShowBuildStatusTextColumn).FormatKey(), AppSettings.ShowBuildStatusTextColumn.ToString() },
+                { nameof(AppSettings.ShowAuthorAvatarColumn.Value).FormatKey(), AppSettings.ShowAuthorAvatarColumn.Value.ToString() },
+                { nameof(AppSettings.ShowAuthorNameColumn.Value).FormatKey(), AppSettings.ShowAuthorNameColumn.Value.ToString() },
+                { nameof(AppSettings.ShowBuildStatusIconColumn.Value).FormatKey(), AppSettings.ShowBuildStatusIconColumn.Value.ToString() },
+                { nameof(AppSettings.ShowBuildStatusTextColumn.Value).FormatKey(), AppSettings.ShowBuildStatusTextColumn.Value.ToString() },
 
                 // commit info panel
-                { nameof(AppSettings.ShowAuthorAvatarInCommitInfo).FormatKey(), AppSettings.ShowAuthorAvatarInCommitInfo.ToString() },
-                { nameof(AppSettings.ShowGpgInformation).FormatKey(), AppSettings.ShowGpgInformation.Value.ToString() },
+                { nameof(AppSettings.ShowAuthorAvatarInCommitInfo.Value).FormatKey(), AppSettings.ShowAuthorAvatarInCommitInfo.Value.ToString() },
+                { nameof(AppSettings.ShowGpgInformation.Value).FormatKey(), AppSettings.ShowGpgInformation.Value.ToString() },
 
                 // other
-                { nameof(AppSettings.ShowAheadBehindData).FormatKey(), AppSettings.ShowAheadBehindData.ToString() },
+                { nameof(AppSettings.ShowAheadBehindData.Value).FormatKey(), AppSettings.ShowAheadBehindData.Value.ToString() },
                 { nameof(AppSettings.CurrentTranslation).FormatKey(), AppSettings.CurrentTranslation },
-                { nameof(AppSettings.ShowGitStatusInBrowseToolbar).FormatKey(), AppSettings.ShowGitStatusInBrowseToolbar.ToString() },
-                { nameof(AppSettings.ShowGitStatusForArtificialCommits).FormatKey(), AppSettings.ShowGitStatusForArtificialCommits.ToString() },
-                { nameof(AppSettings.RevisionGraphShowArtificialCommits).FormatKey(), AppSettings.RevisionGraphShowArtificialCommits.ToString() },
+                { nameof(AppSettings.ShowGitStatusInBrowseToolbar.Value).FormatKey(), AppSettings.ShowGitStatusInBrowseToolbar.Value.ToString() },
+                { nameof(AppSettings.ShowGitStatusForArtificialCommits.Value).FormatKey(), AppSettings.ShowGitStatusForArtificialCommits.Value.ToString() },
+                { nameof(AppSettings.RevisionGraphShowArtificialCommits.Value).FormatKey(), AppSettings.RevisionGraphShowArtificialCommits.Value.ToString() },
             };
 
         DiagnosticsClient.TrackEvent($"{_owner.GetType().Name}Start", properties);

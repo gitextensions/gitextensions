@@ -1,4 +1,4 @@
-﻿using System.Drawing.Imaging;
+using System.Drawing.Imaging;
 using GitCommands;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
@@ -87,7 +87,7 @@ public sealed class SpellCheckEditControl : NativeWindow, IDisposable
 
             // check for textBox.Text.Length>1 instead of textBox.Text.Length!=0 because there might be only a \n
             _richTextBox.Lines.Length > 0 && _richTextBox.Lines[0].Length == 0
-            && ypos >= -lh && AppSettings.MarkIllFormedLinesInCommitMsg)
+            && ypos >= -lh && AppSettings.MarkIllFormedLinesInCommitMsg.Value)
         {
             DrawMark(new Point(0, lh + ypos), new Point(_richTextBox.Width - 3, lh + ypos));
         }

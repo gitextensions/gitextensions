@@ -65,7 +65,7 @@ public static class ThemeModule
             AppSettings.ThemeId = themeId;
         }
 
-        bool systemVisualStyle = AppSettings.UseSystemVisualStyle;
+        bool systemVisualStyle = AppSettings.UseSystemVisualStyle.Value;
         if (themeId == ThemeId.WindowsAppColorModeId)
         {
             // fix systemVisualStyle for WindowsAppColorModeId mode (always for DefaultLight)

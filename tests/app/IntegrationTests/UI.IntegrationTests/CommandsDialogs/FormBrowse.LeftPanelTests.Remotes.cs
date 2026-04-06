@@ -1,4 +1,4 @@
-﻿using CommonTestUtils;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Remotes;
@@ -27,21 +27,21 @@ public class FormBrowse_LeftPanel_RemotesTests
     public void SetUpFixture()
     {
         // Remember the current settings...
-        _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
-        _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools;
+        _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn.Value;
+        _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools.Value;
 
         // Stop loading custom diff tools
-        AppSettings.ShowAvailableDiffTools = false;
+        AppSettings.ShowAvailableDiffTools.Value = false;
 
         // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
-        AppSettings.ShowAuthorAvatarColumn = false;
+        AppSettings.ShowAuthorAvatarColumn.Value = false;
     }
 
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
-        AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
+        AppSettings.ShowAuthorAvatarColumn.Value = _originalShowAuthorAvatarColumn;
+        AppSettings.ShowAvailableDiffTools.Value = _showAvailableDiffTools;
     }
 
     [SetUp]

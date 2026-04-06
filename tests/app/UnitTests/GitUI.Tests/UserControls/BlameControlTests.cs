@@ -1,4 +1,4 @@
-﻿using System.Globalization;
+using System.Globalization;
 using System.Text;
 using CommonTestUtils;
 using FluentAssertions;
@@ -133,11 +133,11 @@ public class BlameControlTests
     [Test]
     public void BuildBlameContents_WithDateAndTime()
     {
-        bool originalValue = AppSettings.BlameShowAuthorTime;
+        bool originalValue = AppSettings.BlameShowAuthorTime.Value;
 
         try
         {
-            AppSettings.BlameShowAuthorTime = true;
+            AppSettings.BlameShowAuthorTime.Value = true;
 
             (string gutter, string content, List<GitUI.Editor.GitBlameEntry> _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
 
@@ -153,19 +153,19 @@ public class BlameControlTests
         }
         finally
         {
-            AppSettings.BlameShowAuthorTime = originalValue;
+            AppSettings.BlameShowAuthorTime.Value = originalValue;
         }
     }
 
     [Test]
     public void BuildBlameContents_WithDateButNotTime()
     {
-        bool originalValue = AppSettings.BlameShowAuthorTime;
+        bool originalValue = AppSettings.BlameShowAuthorTime.Value;
 
         try
         {
             // Given
-            AppSettings.BlameShowAuthorTime = false;
+            AppSettings.BlameShowAuthorTime.Value = false;
 
             // When
             (string gutter, string content, List<GitUI.Editor.GitBlameEntry> _) = _blameControl.GetTestAccessor().BuildBlameContents("fileName.txt");
@@ -183,7 +183,7 @@ public class BlameControlTests
         }
         finally
         {
-            AppSettings.BlameShowAuthorTime = originalValue;
+            AppSettings.BlameShowAuthorTime.Value = originalValue;
         }
     }
 

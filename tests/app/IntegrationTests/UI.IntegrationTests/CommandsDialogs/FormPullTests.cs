@@ -1,4 +1,4 @@
-﻿using CommonTestUtils;
+using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -22,9 +22,9 @@ public class FormPullTests
     [SetUp]
     public void SetUp()
     {
-        _originalDefaultPullAction = AppSettings.DefaultPullAction;
-        _originalFormPullAction = AppSettings.FormPullAction;
-        _originalAutoStash = AppSettings.AutoStash;
+        _originalDefaultPullAction = AppSettings.DefaultPullAction.Value;
+        _originalFormPullAction = AppSettings.FormPullAction.Value;
+        _originalAutoStash = AppSettings.AutoStash.Value;
 
         _referenceRepository = new ReferenceRepository();
         _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
@@ -33,9 +33,9 @@ public class FormPullTests
     [TearDown]
     public void TearDown()
     {
-        AppSettings.DefaultPullAction = _originalDefaultPullAction;
-        AppSettings.FormPullAction = _originalFormPullAction;
-        AppSettings.AutoStash = _originalAutoStash;
+        AppSettings.DefaultPullAction.Value = _originalDefaultPullAction;
+        AppSettings.FormPullAction.Value = _originalFormPullAction;
+        AppSettings.AutoStash.Value = _originalAutoStash;
 
         _referenceRepository.Dispose();
     }
@@ -103,8 +103,8 @@ public class FormPullTests
     public void Should_correctly_setup_for_defined_pull_action(GitPullAction pullAction,
         bool mergeChecked, bool pruneRemoteBranches, bool pruneRemoteBranchesAndTags, bool rebaseChecked, bool fetchChecked, bool autoStashChecked, bool pruneRemoteBranchesEnabled, bool pruneRemoteBranchesAndTagsEnabled)
     {
-        GitPullAction defaultPullAction = AppSettings.DefaultPullAction;
-        AppSettings.DefaultPullAction = GitPullAction.Merge;
+        GitPullAction defaultPullAction = AppSettings.DefaultPullAction.Value;
+        AppSettings.DefaultPullAction.Value = GitPullAction.Merge;
         RunFormTest(
             form =>
             {
@@ -124,7 +124,7 @@ public class FormPullTests
                 }
                 finally
                 {
-                    AppSettings.DefaultPullAction = defaultPullAction;
+                    AppSettings.DefaultPullAction.Value = defaultPullAction;
                 }
             },
             null, null, pullAction);
@@ -139,7 +139,7 @@ public class FormPullTests
     public void Should_use_user_DefaultPullAction_pull_action_None(GitPullAction pullAction,
         bool mergeChecked, bool pruneRemoteBranches, bool pruneRemoteBranchesAndTags, bool rebaseChecked, bool fetchChecked, bool autoStashChecked, bool pruneRemoteBranchesEnabled, bool pruneRemoteBranchesAndTagsEnabled)
     {
-        AppSettings.DefaultPullAction = pullAction;
+        AppSettings.DefaultPullAction.Value = pullAction;
 
         RunFormTest(
             form =>
@@ -175,7 +175,7 @@ public class FormPullTests
 
                 accessor.UpdateSettingsDuringPull();
 
-                AppSettings.FormPullAction.Should().Be(expectedFormPullAction);
+                AppSettings.FormPullAction.Value.Should().Be(expectedFormPullAction);
             },
             null, null,
             //// select an action different from None/fetch
@@ -194,7 +194,7 @@ public class FormPullTests
 
                 accessor.UpdateSettingsDuringPull();
 
-                AppSettings.AutoStash.Should().Be(autoStashChecked);
+                AppSettings.AutoStash.Value.Should().Be(autoStashChecked);
             },
             null, null,
             //// select an action different from None/fetch

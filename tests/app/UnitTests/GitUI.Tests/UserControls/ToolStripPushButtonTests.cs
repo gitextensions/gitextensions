@@ -1,4 +1,4 @@
-﻿using Castle.Core.Internal;
+using Castle.Core.Internal;
 using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
@@ -20,8 +20,8 @@ public class ToolStripPushButtonTests
     [SetUp]
     public void Setup()
     {
-        _originalShowAheadBehindData = AppSettings.ShowAheadBehindData;
-        AppSettings.ShowAheadBehindData = true;
+        _originalShowAheadBehindData = AppSettings.ShowAheadBehindData.Value;
+        AppSettings.ShowAheadBehindData.Value = true;
 
         _aheadBehindDataProvider = Substitute.For<IAheadBehindDataProvider>();
 
@@ -32,7 +32,7 @@ public class ToolStripPushButtonTests
     [TearDown]
     public void TearDown()
     {
-        AppSettings.ShowAheadBehindData = _originalShowAheadBehindData;
+        AppSettings.ShowAheadBehindData.Value = _originalShowAheadBehindData;
     }
 
     [Test]
@@ -145,7 +145,7 @@ public class ToolStripPushButtonTests
     [Test]
     public void DisplayAheadBehindInformation_should_display_nothing_when_disabled()
     {
-        AppSettings.ShowAheadBehindData = false;
+        AppSettings.ShowAheadBehindData.Value = false;
 
         string branchName = "my-branch";
 

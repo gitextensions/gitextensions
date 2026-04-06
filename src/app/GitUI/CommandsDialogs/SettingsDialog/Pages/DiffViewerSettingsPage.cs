@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -18,18 +18,18 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
 
     protected override void SettingsToPage()
     {
-        chkRememberIgnoreWhiteSpacePreference.Checked = AppSettings.RememberIgnoreWhiteSpacePreference;
-        chkOmitUninterestingDiff.Checked = AppSettings.OmitUninterestingDiff;
-        chkRememberShowEntireFilePreference.Checked = AppSettings.RememberShowEntireFilePreference;
+        chkRememberIgnoreWhiteSpacePreference.Checked = AppSettings.RememberIgnoreWhiteSpacePreference.Value;
+        chkOmitUninterestingDiff.Checked = AppSettings.OmitUninterestingDiff.Value;
+        chkRememberShowEntireFilePreference.Checked = AppSettings.RememberShowEntireFilePreference.Value;
         chkRememberDiffAppearancePreference.Checked = AppSettings.RememberDiffDisplayAppearance.Value;
-        chkRememberShowNonPrintingCharsPreference.Checked = AppSettings.RememberShowNonPrintingCharsPreference;
-        chkRememberNumberOfContextLines.Checked = AppSettings.RememberNumberOfContextLines;
-        chkRememberShowSyntaxHighlightingInDiff.Checked = AppSettings.RememberShowSyntaxHighlightingInDiff;
-        chkOpenSubmoduleDiffInSeparateWindow.Checked = AppSettings.OpenSubmoduleDiffInSeparateWindow;
-        chkContScrollToNextFileOnlyWithAlt.Checked = AppSettings.AutomaticContinuousScroll;
-        chkShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents;
-        chkShowAllCustomDiffTools.Checked = AppSettings.ShowAvailableDiffTools;
-        VerticalRulerPosition.Value = AppSettings.DiffVerticalRulerPosition;
+        chkRememberShowNonPrintingCharsPreference.Checked = AppSettings.RememberShowNonPrintingCharsPreference.Value;
+        chkRememberNumberOfContextLines.Checked = AppSettings.RememberNumberOfContextLines.Value;
+        chkRememberShowSyntaxHighlightingInDiff.Checked = AppSettings.RememberShowSyntaxHighlightingInDiff.Value;
+        chkOpenSubmoduleDiffInSeparateWindow.Checked = AppSettings.OpenSubmoduleDiffInSeparateWindow.Value;
+        chkContScrollToNextFileOnlyWithAlt.Checked = AppSettings.AutomaticContinuousScroll.Value;
+        chkShowDiffForAllParents.Checked = AppSettings.ShowDiffForAllParents.Value;
+        chkShowAllCustomDiffTools.Checked = AppSettings.ShowAvailableDiffTools.Value;
+        VerticalRulerPosition.Value = AppSettings.DiffVerticalRulerPosition.Value;
         chkUseGitColoring.Checked = AppSettings.UseGitColoring.Value;
         chkUseGEThemeGitColoring.Checked = AppSettings.ReverseGitColoring.Value;
         chkUseGEThemeGitColoring.Enabled = chkUseGitColoring.Checked;
@@ -39,18 +39,18 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
 
     protected override void PageToSettings()
     {
-        AppSettings.RememberIgnoreWhiteSpacePreference = chkRememberIgnoreWhiteSpacePreference.Checked;
-        AppSettings.OmitUninterestingDiff = chkOmitUninterestingDiff.Checked;
-        AppSettings.RememberShowEntireFilePreference = chkRememberShowEntireFilePreference.Checked;
+        AppSettings.RememberIgnoreWhiteSpacePreference.Value = chkRememberIgnoreWhiteSpacePreference.Checked;
+        AppSettings.OmitUninterestingDiff.Value = chkOmitUninterestingDiff.Checked;
+        AppSettings.RememberShowEntireFilePreference.Value = chkRememberShowEntireFilePreference.Checked;
         AppSettings.RememberDiffDisplayAppearance.Value = chkRememberDiffAppearancePreference.Checked;
-        AppSettings.RememberShowNonPrintingCharsPreference = chkRememberShowNonPrintingCharsPreference.Checked;
-        AppSettings.RememberNumberOfContextLines = chkRememberNumberOfContextLines.Checked;
-        AppSettings.RememberShowSyntaxHighlightingInDiff = chkRememberShowSyntaxHighlightingInDiff.Checked;
-        AppSettings.OpenSubmoduleDiffInSeparateWindow = chkOpenSubmoduleDiffInSeparateWindow.Checked;
-        AppSettings.AutomaticContinuousScroll = chkContScrollToNextFileOnlyWithAlt.Checked;
-        AppSettings.ShowDiffForAllParents = chkShowDiffForAllParents.Checked;
-        AppSettings.ShowAvailableDiffTools = chkShowAllCustomDiffTools.Checked;
-        AppSettings.DiffVerticalRulerPosition = (int)VerticalRulerPosition.Value;
+        AppSettings.RememberShowNonPrintingCharsPreference.Value = chkRememberShowNonPrintingCharsPreference.Checked;
+        AppSettings.RememberNumberOfContextLines.Value = chkRememberNumberOfContextLines.Checked;
+        AppSettings.RememberShowSyntaxHighlightingInDiff.Value = chkRememberShowSyntaxHighlightingInDiff.Checked;
+        AppSettings.OpenSubmoduleDiffInSeparateWindow.Value = chkOpenSubmoduleDiffInSeparateWindow.Checked;
+        AppSettings.AutomaticContinuousScroll.Value = chkContScrollToNextFileOnlyWithAlt.Checked;
+        AppSettings.ShowDiffForAllParents.Value = chkShowDiffForAllParents.Checked;
+        AppSettings.ShowAvailableDiffTools.Value = chkShowAllCustomDiffTools.Checked;
+        AppSettings.DiffVerticalRulerPosition.Value = (int)VerticalRulerPosition.Value;
         AppSettings.UseGitColoring.Value = chkUseGitColoring.Checked;
         AppSettings.ReverseGitColoring.Value = chkUseGEThemeGitColoring.Checked;
 

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Text;
 using GitCommands;
@@ -101,7 +101,7 @@ public sealed partial class BlameControl : GitModuleControl
 
     public void UpdateShowLineNumbers()
     {
-        BlameAuthor.ShowLineNumbers = AppSettings.BlameShowLineNumbers;
+        BlameAuthor.ShowLineNumbers = AppSettings.BlameShowLineNumbers.Value;
     }
 
     public int CurrentFileColumn => BlameFile.CurrentFileColumn;
@@ -369,10 +369,10 @@ public sealed partial class BlameControl : GitModuleControl
 
         GitBlameCommit? lastCommit = null;
 
-        bool showAuthorAvatar = AppSettings.BlameShowAuthorAvatar;
+        bool showAuthorAvatar = AppSettings.BlameShowAuthorAvatar.Value;
         List<GitBlameEntry> gitBlameDisplays = showAuthorAvatar ? CalculateBlameGutterData(_blame.Lines) : [];
 
-        string dateTimeFormat = AppSettings.BlameShowAuthorTime
+        string dateTimeFormat = AppSettings.BlameShowAuthorTime.Value
             ? CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern + " " +
               CultureInfo.CurrentCulture.DateTimeFormat.ShortTimePattern
             : CultureInfo.CurrentCulture.DateTimeFormat.ShortDatePattern;
@@ -429,7 +429,7 @@ public sealed partial class BlameControl : GitModuleControl
 
                 if (!authorLineCache.TryGetValue(line.Commit.ObjectId, out string authorLine))
                 {
-                    authorLine = BuildAuthorLine(line, lineBuilder, lineLength, dateTimeFormat, filename, AppSettings.BlameShowAuthor, AppSettings.BlameShowAuthorDate, AppSettings.BlameShowOriginalFilePath, AppSettings.BlameDisplayAuthorFirst);
+                    authorLine = BuildAuthorLine(line, lineBuilder, lineLength, dateTimeFormat, filename, AppSettings.BlameShowAuthor.Value, AppSettings.BlameShowAuthorDate.Value, AppSettings.BlameShowOriginalFilePath.Value, AppSettings.BlameDisplayAuthorFirst.Value);
                     authorLineCache.Add(line.Commit.ObjectId, authorLine);
                     lineBuilder.Clear();
                 }

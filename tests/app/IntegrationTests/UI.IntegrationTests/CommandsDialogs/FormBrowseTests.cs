@@ -1,4 +1,4 @@
-﻿using System.Runtime.CompilerServices;
+using System.Runtime.CompilerServices;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -25,21 +25,21 @@ public class FormBrowseTests
     public void SetUpFixture()
     {
         // Remember the current settings...
-        _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn;
-        _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools;
+        _originalShowAuthorAvatarColumn = AppSettings.ShowAuthorAvatarColumn.Value;
+        _showAvailableDiffTools = AppSettings.ShowAvailableDiffTools.Value;
 
         // Stop loading custom diff tools
-        AppSettings.ShowAvailableDiffTools = false;
+        AppSettings.ShowAvailableDiffTools.Value = false;
 
         // We don't want avatars during tests, otherwise we will be attempting to download them from gravatar....
-        AppSettings.ShowAuthorAvatarColumn = false;
+        AppSettings.ShowAuthorAvatarColumn.Value = false;
     }
 
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        AppSettings.ShowAuthorAvatarColumn = _originalShowAuthorAvatarColumn;
-        AppSettings.ShowAvailableDiffTools = _showAvailableDiffTools;
+        AppSettings.ShowAuthorAvatarColumn.Value = _originalShowAuthorAvatarColumn;
+        AppSettings.ShowAvailableDiffTools.Value = _showAvailableDiffTools;
     }
 
     [SetUp]
@@ -71,11 +71,11 @@ public class FormBrowseTests
         bool reflogEnabled = AppSettings.ShowReflogReferences;
         bool branchFilterEnabled = AppSettings.BranchFilterEnabled;
         bool showCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
-        bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
+        bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits.Value;
         AppSettings.ShowReflogReferences.Value = false;
         AppSettings.BranchFilterEnabled.Value = false;
         AppSettings.ShowCurrentBranchOnly.Value = false;
-        AppSettings.RevisionGraphShowArtificialCommits = false;
+        AppSettings.RevisionGraphShowArtificialCommits.Value = false;
 
         RunFormTest(
             form =>
@@ -146,7 +146,7 @@ public class FormBrowseTests
                     AppSettings.ShowReflogReferences.Value = reflogEnabled;
                     AppSettings.BranchFilterEnabled.Value = branchFilterEnabled;
                     AppSettings.ShowCurrentBranchOnly.Value = showCurrentBranchOnly;
-                    AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;
+                    AppSettings.RevisionGraphShowArtificialCommits.Value = revisionGraphShowArtificialCommits;
                 }
             });
     }
@@ -259,11 +259,11 @@ public class FormBrowseTests
         referenceRepository.Stash("Stash2");
         referenceRepository.CreateCommit("Commit3");
 
-        bool showStashes = AppSettings.ShowStashes;
-        bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
+        bool showStashes = AppSettings.ShowStashes.Value;
+        bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits.Value;
 
-        AppSettings.ShowStashes = false;
-        AppSettings.RevisionGraphShowArtificialCommits = false;
+        AppSettings.ShowStashes.Value = false;
+        AppSettings.RevisionGraphShowArtificialCommits.Value = false;
 
         RunFormTest(
             form =>
@@ -274,7 +274,7 @@ public class FormBrowseTests
                     Console.WriteLine("Scenario 1: set 'Show stashes' to false");
                     WaitForRevisionsToBeLoaded(form);
                     // Assert
-                    AppSettings.ShowStashes.Should().BeFalse();
+                    AppSettings.ShowStashes.Value.Should().BeFalse();
                     form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
 
                     // 2. Change ShowStashes to enabled
@@ -282,13 +282,13 @@ public class FormBrowseTests
                     form.GetTestAccessor().RevisionGrid.ToggleShowStashes();
                     WaitForRevisionsToBeLoaded(form);
                     // Assert
-                    AppSettings.ShowStashes.Should().BeTrue();
+                    AppSettings.ShowStashes.Value.Should().BeTrue();
                     form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(7);
                 }
                 finally
                 {
-                    AppSettings.ShowStashes = showStashes;
-                    AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;
+                    AppSettings.ShowStashes.Value = showStashes;
+                    AppSettings.RevisionGraphShowArtificialCommits.Value = revisionGraphShowArtificialCommits;
                 }
             },
             commands);
@@ -306,11 +306,11 @@ public class FormBrowseTests
         referenceRepository.Stash("Stash2");
         referenceRepository.CreateCommit("Commit3");
 
-        bool showStashes = AppSettings.ShowStashes;
-        bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits;
+        bool showStashes = AppSettings.ShowStashes.Value;
+        bool revisionGraphShowArtificialCommits = AppSettings.RevisionGraphShowArtificialCommits.Value;
 
-        AppSettings.ShowStashes = true;
-        AppSettings.RevisionGraphShowArtificialCommits = false;
+        AppSettings.ShowStashes.Value = true;
+        AppSettings.RevisionGraphShowArtificialCommits.Value = false;
         RunFormTest(
             form =>
             {
@@ -320,7 +320,7 @@ public class FormBrowseTests
                     Console.WriteLine("Scenario 1: set 'Show stash' to true");
                     WaitForRevisionsToBeLoaded(form);
                     // Assert
-                    AppSettings.ShowStashes.Should().BeTrue();
+                    AppSettings.ShowStashes.Value.Should().BeTrue();
                     form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(7);
 
                     // 2. Change ShowStashes to disabled
@@ -328,15 +328,15 @@ public class FormBrowseTests
                     form.GetTestAccessor().RevisionGrid.ToggleShowStashes();
                     WaitForRevisionsToBeLoaded(form);
                     // Assert
-                    AppSettings.ShowStashes.Should().BeFalse();
+                    AppSettings.ShowStashes.Value.Should().BeFalse();
                     // https://github.com/gitextensions/gitextensions/issues/10170
                     // This test occasionaly fails with 3 visible revisions
                     form.GetTestAccessor().RevisionGrid.GetTestAccessor().VisibleRevisionCount.Should().Be(4);
                 }
                 finally
                 {
-                    AppSettings.ShowStashes = showStashes;
-                    AppSettings.RevisionGraphShowArtificialCommits = revisionGraphShowArtificialCommits;
+                    AppSettings.ShowStashes.Value = showStashes;
+                    AppSettings.RevisionGraphShowArtificialCommits.Value = revisionGraphShowArtificialCommits;
                 }
             },
             commands);

@@ -73,7 +73,7 @@ public sealed class RemoteRepositoryManager : IRepositoryManager
         await TaskScheduler.Default;
 
         IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyRemoteHistory);
-        return history is null ? [] : AdjustHistorySize(history, AppSettings.RemotesCacheLength).ToList();
+        return history is null ? [] : AdjustHistorySize(history, AppSettings.RemotesCacheLength.Value).ToList();
     }
 
     /// <summary>
@@ -121,7 +121,7 @@ public sealed class RemoteRepositoryManager : IRepositoryManager
 
         // BUG: this must be a separate settings
         // TODO: to be addressed separately
-        _repositoryStorage.Save(KeyRemoteHistory, AdjustHistorySize(repositoryHistory, AppSettings.RecentRepositoriesHistorySize));
+        _repositoryStorage.Save(KeyRemoteHistory, AdjustHistorySize(repositoryHistory, AppSettings.RecentRepositoriesHistorySize.Value));
     }
 
     private static IEnumerable<Repository> AdjustHistorySize(IEnumerable<Repository> repositories, int recentRepositoriesHistorySize)

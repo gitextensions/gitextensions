@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtUtils;
@@ -80,7 +80,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
         TextEditor.ActiveTextAreaControl.TextEditorProperties.EnableFolding = false;
         _lineNumbersControl = new DiffViewerLineNumberControl(TextEditor.ActiveTextAreaControl.TextArea);
-        VRulerPosition = AppSettings.DiffVerticalRulerPosition;
+        VRulerPosition = AppSettings.DiffVerticalRulerPosition.Value;
         TextEditor.ActiveTextAreaControl.Caret.PositionChanged += GutterSelectedLineChanged;
     }
 
@@ -282,10 +282,10 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             // Difftastic set the position (0 to hide)
             VRulerPosition = vrulerpos;
         }
-        else if (VRulerPosition != AppSettings.DiffVerticalRulerPosition)
+        else if (VRulerPosition != AppSettings.DiffVerticalRulerPosition.Value)
         {
             // Reset if Difftastic changed the position
-            VRulerPosition = AppSettings.DiffVerticalRulerPosition;
+            VRulerPosition = AppSettings.DiffVerticalRulerPosition.Value;
         }
 
         TextEditor.Text = text;

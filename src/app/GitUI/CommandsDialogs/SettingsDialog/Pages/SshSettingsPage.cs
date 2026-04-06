@@ -26,7 +26,7 @@ public partial class SshSettingsPage : SettingsPageWithHeader
         PlinkPath.Text = AppSettings.Plink;
         PuttygenPath.Text = AppSettings.Puttygen;
         PageantPath.Text = AppSettings.Pageant;
-        AutostartPageant.Checked = AppSettings.AutoStartPageant;
+        AutostartPageant.Checked = AppSettings.AutoStartPageant.Value;
 
         string sshPath = AppSettings.SshPath;
         if (string.IsNullOrEmpty(sshPath))
@@ -53,7 +53,7 @@ public partial class SshSettingsPage : SettingsPageWithHeader
         AppSettings.Plink = PlinkPath.Text;
         AppSettings.Puttygen = PuttygenPath.Text;
         AppSettings.Pageant = PageantPath.Text;
-        AppSettings.AutoStartPageant = AutostartPageant.Checked;
+        AppSettings.AutoStartPageant.Value = AutostartPageant.Checked;
 
         string path;
         if (OpenSSH.Checked)

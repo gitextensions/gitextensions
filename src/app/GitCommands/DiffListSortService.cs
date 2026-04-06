@@ -16,7 +16,7 @@ public class DiffListSortService : IDiffListSortService
             if (previous != value)
             {
                 _diffListSorting = value;
-                AppSettings.DiffListSorting = value;
+                AppSettings.DiffListSorting.Value = value;
                 OnDiffListSortingChanged();
             }
         }
@@ -29,7 +29,7 @@ public class DiffListSortService : IDiffListSortService
 
     private static DiffListSortType GetSettingValueOrDefault()
     {
-        return AppSettings.DiffListSorting;
+        return AppSettings.DiffListSorting.Value;
     }
 
     protected void OnDiffListSortingChanged()

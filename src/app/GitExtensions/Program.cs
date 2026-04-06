@@ -242,7 +242,7 @@ internal static class Program
             }
         }
 
-        if (args.Length <= 1 && workingDir is null && AppSettings.StartWithRecentWorkingDir)
+        if (args.Length <= 1 && workingDir is null && AppSettings.StartWithRecentWorkingDir.Value)
         {
             if (GitModule.IsValidGitWorkingDir(AppSettings.RecentWorkingDir))
             {
