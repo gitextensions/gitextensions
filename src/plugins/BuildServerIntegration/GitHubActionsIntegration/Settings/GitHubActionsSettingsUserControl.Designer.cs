@@ -69,7 +69,7 @@ partial class GitHubActionsSettingsUserControl
         lblApiUrl.Name = "lblApiUrl";
         lblApiUrl.Size = new Size(50, 15);
         lblApiUrl.TabIndex = 0;
-        lblApiUrl.Text = "API URL";
+        lblApiUrl.Text = "&API URL";
         //
         // txtApiUrl
         //
@@ -89,7 +89,7 @@ partial class GitHubActionsSettingsUserControl
         lblOwner.Name = "lblOwner";
         lblOwner.Size = new Size(42, 15);
         lblOwner.TabIndex = 2;
-        lblOwner.Text = "Owner";
+        lblOwner.Text = "&Owner";
         //
         // txtOwner
         //
@@ -109,7 +109,7 @@ partial class GitHubActionsSettingsUserControl
         lblRepository.Name = "lblRepository";
         lblRepository.Size = new Size(63, 15);
         lblRepository.TabIndex = 4;
-        lblRepository.Text = "Repository";
+        lblRepository.Text = "&Repository";
         //
         // txtRepository
         //
@@ -129,7 +129,7 @@ partial class GitHubActionsSettingsUserControl
         lblApiToken.Name = "lblApiToken";
         lblApiToken.Size = new Size(59, 15);
         lblApiToken.TabIndex = 6;
-        lblApiToken.Text = "API Token";
+        lblApiToken.Text = "API &Token";
         //
         // txtApiToken
         //
