@@ -8,7 +8,7 @@ namespace GitUI.UserControls.RevisionGrid.RefContextMenus;
 /// <summary>
 ///  Provides context menu items for stash refs (identified via <see cref="IGitRef.IsStash"/>).
 /// </summary>
-internal sealed class StashRefContextMenuProvider : IRefContextMenuProvider
+internal sealed class StashRefContextMenuProvider : Translate, IRefContextMenuProvider
 {
     private readonly TranslationString _applyStash = new("&Apply stash");
     private readonly TranslationString _popStash = new("P&op stash");

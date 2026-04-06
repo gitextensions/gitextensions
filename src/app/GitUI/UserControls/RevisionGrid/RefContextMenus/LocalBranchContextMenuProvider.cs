@@ -8,7 +8,7 @@ namespace GitUI.UserControls.RevisionGrid.RefContextMenus;
 /// <summary>
 ///  Provides context menu items for local branch (head) refs.
 /// </summary>
-internal sealed class LocalBranchContextMenuProvider : IRefContextMenuProvider
+internal sealed class LocalBranchContextMenuProvider : Translate, IRefContextMenuProvider
 {
     private readonly TranslationString _checkoutBranch = new("&Checkout this branch");
     private readonly TranslationString _mergeIntoCurrent = new("&Merge into current branch");

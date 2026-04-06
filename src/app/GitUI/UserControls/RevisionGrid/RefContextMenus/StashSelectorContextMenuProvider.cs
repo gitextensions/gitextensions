@@ -11,7 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.RefContextMenus;
 ///  Provides context menu items for stash entries identified by a reflog selector string
 ///  (e.g. right-clicking a stash label that is not an <see cref="IGitRef"/>).
 /// </summary>
-internal sealed class StashSelectorContextMenuProvider : IRefContextMenuProvider
+internal sealed class StashSelectorContextMenuProvider : Translate, IRefContextMenuProvider
 {
     private readonly TranslationString _applyStash = new("&Apply stash");
     private readonly TranslationString _popStash = new("P&op stash");

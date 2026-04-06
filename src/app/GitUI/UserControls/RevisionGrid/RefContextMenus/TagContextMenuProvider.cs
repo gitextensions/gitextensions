@@ -8,7 +8,7 @@ namespace GitUI.UserControls.RevisionGrid.RefContextMenus;
 /// <summary>
 ///  Provides context menu items for tag refs.
 /// </summary>
-internal sealed class TagContextMenuProvider : IRefContextMenuProvider
+internal sealed class TagContextMenuProvider : Translate, IRefContextMenuProvider
 {
     private readonly TranslationString _mergeIntoCurrent = new("&Merge into current branch");
     private readonly TranslationString _deleteTag = new("&Delete this tag");

@@ -9,7 +9,7 @@ namespace GitUI.UserControls.RevisionGrid.RefContextMenus;
 ///  Composes a <see cref="ContextMenuStrip"/> for a right-clicked ref label by delegating
 ///  to the first matching <see cref="IRefContextMenuProvider"/>.
 /// </summary>
-internal sealed class RefContextMenuComposer
+internal sealed class RefContextMenuComposer : Translate
 {
     private readonly TranslationString _copyName = new("Cop&y name to clipboard");
 
