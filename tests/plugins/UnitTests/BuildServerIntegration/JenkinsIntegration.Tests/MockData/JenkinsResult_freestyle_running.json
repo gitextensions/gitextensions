@@ -1,0 +1,19 @@
+{
+    "number": 44,
+    "result": null,
+    "timestamp": 1551872888000,
+    "url": "https://jenkins.example.com/job/my-project/44/",
+    "actions": [
+        {
+            "lastBuiltRevision": {
+                "SHA1": "b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6e7f8a9b0c1",
+                "branch": [
+                    { "name": "refs/remotes/origin/develop" }
+                ]
+            }
+        },
+        {}
+    ],
+    "building": true,
+    "duration": 0
+}

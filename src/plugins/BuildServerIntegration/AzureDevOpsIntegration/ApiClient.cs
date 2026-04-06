@@ -1,9 +1,9 @@
 using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft;
-using Newtonsoft.Json;
 
 namespace AzureDevOpsIntegration;
 
@@ -50,6 +50,11 @@ public class ApiClient : IDisposable
         _httpClient.BaseAddress = new Uri(projectUrl.EndsWith('/') ? projectUrl + "_apis/" : projectUrl + "/_apis/");
     }
 
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
+
     private async Task<T> HttpGetAsync<T>(string url)
     {
         using HttpResponseMessage response = await _httpClient.GetAsync(url);
@@ -61,7 +66,7 @@ public class ApiClient : IDisposable
         response.EnsureSuccessStatusCode();
         string json = await response.Content.ReadAsStringAsync();
 
-        return JsonConvert.DeserializeObject<T>(json);
+        return JsonSerializer.Deserialize<T>(json, _jsonOptions)!;
     }
 
     public async Task<string?> GetBuildDefinitionsAsync(string buildDefinitionNameFilter)
