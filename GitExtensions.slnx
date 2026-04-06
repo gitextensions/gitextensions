@@ -81,6 +81,7 @@
       <BuildDependency Project="src/plugins/BackgroundFetch/GitExtensions.Plugins.BackgroundFetch.csproj" />
       <BuildDependency Project="src/plugins/BuildServerIntegration/AppVeyorIntegration/GitExtensions.Plugins.AppVeyorIntegration.csproj" />
       <BuildDependency Project="src/plugins/BuildServerIntegration/AzureDevOpsIntegration/GitExtensions.Plugins.AzureDevOpsIntegration.csproj" />
+      <BuildDependency Project="src/plugins/BuildServerIntegration/GitHubActionsIntegration/GitExtensions.Plugins.GitHubActionsIntegration.csproj" />
       <BuildDependency Project="src/plugins/BuildServerIntegration/GitlabIntegration/GitExtensions.Plugins.GitlabIntegration.csproj" />
       <BuildDependency Project="src/plugins/BuildServerIntegration/JenkinsIntegration/GitExtensions.Plugins.JenkinsIntegration.csproj" />
       <BuildDependency Project="src/plugins/BuildServerIntegration/TeamCityIntegration/GitExtensions.Plugins.TeamCityIntegration.csproj" />
@@ -116,6 +117,7 @@
     <File Path="src/plugins/BuildServerIntegration/Directory.Build.props" />
     <Project Path="src/plugins/BuildServerIntegration/AppVeyorIntegration/GitExtensions.Plugins.AppVeyorIntegration.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/AzureDevOpsIntegration/GitExtensions.Plugins.AzureDevOpsIntegration.csproj" />
+    <Project Path="src/plugins/BuildServerIntegration/GitHubActionsIntegration/GitExtensions.Plugins.GitHubActionsIntegration.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/GitlabIntegration/GitExtensions.Plugins.GitlabIntegration.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/JenkinsIntegration/GitExtensions.Plugins.JenkinsIntegration.csproj" />
     <Project Path="src/plugins/BuildServerIntegration/TeamCityIntegration/GitExtensions.Plugins.TeamCityIntegration.csproj" />
@@ -155,6 +157,7 @@
   <Folder Name="/tests/plugins/UnitTests/BuildServerIntegration/">
     <Project Path="tests/plugins/UnitTests/BuildServerIntegration/AppVeyorIntegration.Tests/AppVeyorIntegration.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/BuildServerIntegration/AzureDevOpsIntegration.Tests/AzureDevOpsIntegration.Tests.csproj" />
+    <Project Path="tests/plugins/UnitTests/BuildServerIntegration/GitHubActionsIntegration.Tests/GitHubActionsIntegration.Tests.csproj" />
     <Project Path="tests/plugins/UnitTests/BuildServerIntegration/GitlabIntegration.Tests/GitlabIntegration.Tests.csproj" />
   </Folder>
 </Solution>
