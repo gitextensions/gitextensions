@@ -2171,6 +2171,79 @@ public sealed partial class GitModule : IGitModule
         return stashes;
     }
 
+    /// <summary>
+    /// Returns the list of git worktrees for this repository by parsing
+    /// the output of <c>git worktree list --porcelain -z</c>.
+    /// </summary>
+    public IReadOnlyList<GitWorktree> GetWorktrees()
+    {
+        GitArgumentBuilder args = new("worktree")
+        {
+            "list",
+            "--porcelain",
+            "-z"
+        };
+
+        string output = GitExecutable.GetOutput(args);
+        List<GitWorktree> worktrees = [];
+
+        string? path = null;
+        string? sha1 = null;
+        string? branch = null;
+        GitWorktreeHeadType headType = GitWorktreeHeadType.Branch;
+
+        foreach (string field in output.LazySplit('\0'))
+        {
+            // Double \0 (empty field) marks the boundary between worktree records
+            if (field.Length == 0)
+            {
+                if (path is not null)
+                {
+                    string fullPath = GetWindowsPath(path);
+                    bool isDeleted = !Directory.Exists(fullPath);
+                    worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted));
+                }
+
+                path = null;
+                sha1 = null;
+                branch = null;
+                headType = GitWorktreeHeadType.Branch;
+                continue;
+            }
+
+            int spaceIndex = field.IndexOf(' ');
+            string key = spaceIndex >= 0 ? field[..spaceIndex] : field;
+            string value = spaceIndex >= 0 ? field[(spaceIndex + 1)..] : "";
+            switch (key)
+            {
+                case "worktree":
+                    path = value;
+                    break;
+                case "HEAD":
+                    sha1 = value;
+                    break;
+                case "branch":
+                    branch = value.RemovePrefix(GitRefName.RefsHeadsPrefix);
+                    break;
+                case "bare":
+                    headType = GitWorktreeHeadType.Bare;
+                    break;
+                case "detached":
+                    headType = GitWorktreeHeadType.Detached;
+                    break;
+            }
+        }
+
+        if (path is not null)
+        {
+            string fullPath = GetWindowsPath(path);
+            bool isDeleted = !Directory.Exists(fullPath);
+            worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted));
+        }
+
+        return worktrees;
+    }
+
     public async Task<ExecutionResult> GetSingleDifftoolAsync(
         ObjectId? firstId,
         ObjectId? secondId,

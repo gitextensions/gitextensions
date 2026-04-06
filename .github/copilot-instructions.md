@@ -24,7 +24,7 @@ git submodule update --init --recursive
 * When a string literal is used more than once in a class, extract it into a `const` field with a descriptive name.
 * Omit comments which just describe _what_ is done. In situations where a comment may be necessary describe _why_ an implementation was chosen.
 
-# Xml doc comments
+## XML Doc Comments
 
 * Use XML documentation comments for non-private APIs, including properties, methods, and classes. Do not add XML documentation comments to private members.
 * Do not add `/// <inheritdoc />` nor other xmldoc when just implementing interface or abstract members.
@@ -43,12 +43,12 @@ For example:
 ## Formatting
 
 * Apply code-formatting style defined in `.editorconfig`.
-* Prefer file-scoped namespace declarations and single-line using directives.
+* Prefer file-scoped namespace declarations and single-line `using` declarations.
 * Insert a newline before the opening curly brace of any code block (e.g., after `if`, `for`, `while`, `foreach`, `using`, `try`, etc.).
 * Ensure that the final return statement of a method is on its own line.
 * Use pattern matching and switch expressions wherever possible.
-* Use `nameof` instead of string literals when referring to member names.
-* Local methods must be 
+* Use `nameof` instead of string literals when referring to code symbols.
+* Local methods must be
     - placed at the end of the parent method,
     - sorted in alphabetical order,
     - preceded with a `return` statement.
@@ -67,6 +67,7 @@ For example:
   ```
 * Do not add trailing whitespace to any lines (StyleCop SA1028).
 * Add blank lines after closing braces when required (StyleCop SA1513).
+* Prefer C# raw (`"""`) string literals for multi-line strings.
 
 ## Variable Declarations
 
@@ -95,3 +96,19 @@ For example:
 
 * Use https://www.conventionalcommits.org/en/v1.0.0/ for commit messages.
 * Note especially that changes in directory src/app/GitExtensions.Extensibility affects the version for the plugin interface. This must be annotated in the commit message.
+
+## Translations
+
+* When adding or modifying UI elements (forms, controls, toolbar items, menu items, or `TranslationString` fields), the English translation file `src/app/GitUI/Translation/English.xlf` must be updated.
+* Run `.\update-loc.cmd` from the repository root to regenerate translation files. This requires a successful build first (`dotnet build /v:q`).
+* The script runs `TranslationApp`, which discovers all translatable types via reflection, regenerates `English.xlf`, and stages the changes.
+* CI will **fail** if `English.xlf` is out of date. Always run `update-loc.cmd` and commit the updated `.xlf` file alongside your code changes.
+* Do not manually edit `.xlf` files — they are generated.
+
+## Git Commands
+
+* All interactive git operations should be invoked through `IGitModule`, with unit tests added.
+* Structure git command arguments using `Commands` (in `GitCommands.Git`), which returns `IGitCommand` instances via the private `GitCommand` record. `IGitCommand` declares whether the command accesses a remote and whether it changes repo state.
+* Execute commands with UI feedback through `GitUICommands` (implements `IGitUICommands`). Use `StartCommandLineProcessDialog(owner, IGitCommand)` to run a structured command — it automatically selects the right process dialog (remote vs local) and fires `RepoChangedNotifier` based on `IGitCommand.ChangesRepoState`. For operations that need a dedicated form, use the existing `Start*Dialog` methods on `GitUICommands`.
+* Prefer the `-z` flag when available (e.g. `git worktree list`, `git status`) to use NUL-delimited output, which avoids issues with newlines or special characters in paths.
+* When parsing NUL or line-delimited git output that contains key-value pairs (e.g. `worktree /path/to/dir`), split on the first space only to handle values that contain spaces.

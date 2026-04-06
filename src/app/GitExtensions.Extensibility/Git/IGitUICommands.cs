@@ -128,4 +128,28 @@ public interface IGitUICommands : IServiceProvider
     void UpdateSubmodules(IWin32Window? owner);
     IGitUICommands WithGitModule(IGitModule module);
     IGitUICommands WithWorkingDirectory(string? workingDirectory);
+
+    /// <summary>
+    ///  Shows the create worktree dialog and optionally switches to the new worktree.
+    /// </summary>
+    /// <param name="owner">Owner window for dialogs.</param>
+    /// <param name="mainWorktreePath">Path of the main worktree (used as the base directory).</param>
+    /// <returns><see langword="true"/> if a worktree was created.</returns>
+    bool WorktreeCreate(IWin32Window? owner, string mainWorktreePath);
+
+    /// <summary>
+    ///  Confirms with the user, deletes a worktree directory on disk, and runs <c>git worktree prune</c>.
+    /// </summary>
+    /// <param name="owner">Owner window for dialogs.</param>
+    /// <param name="worktreePath">Absolute path of the worktree to delete.</param>
+    /// <returns><see langword="true"/> if the user confirmed and the directory was successfully removed.</returns>
+    bool WorktreeDelete(IWin32Window? owner, string worktreePath);
+
+    /// <summary>
+    ///  Optionally confirms with the user, then switches the current browse window to the specified worktree.
+    /// </summary>
+    /// <param name="owner">Owner window for the confirmation dialog. Must be or have <see cref="IBrowseRepo"/> as the owning <c>FormBrowse</c>.</param>
+    /// <param name="worktreePath">Absolute path of the worktree to switch to.</param>
+    /// <returns><see langword="true"/> if the switch was performed.</returns>
+    bool WorktreeSwitch(IWin32Window? owner, string worktreePath);
 }

@@ -1973,6 +1973,12 @@ public static partial class AppSettings
         set => SetBool("RepoObjectsTree.ShowSubmodules", value);
     }
 
+    public static bool RepoObjectsTreeShowWorktrees
+    {
+        get => GetBool("RepoObjectsTree.ShowWorktrees", true);
+        set => SetBool("RepoObjectsTree.ShowWorktrees", value);
+    }
+
     public static int RepoObjectsTreeBranchesIndex
     {
         get => GetInt("RepoObjectsTree.BranchesIndex", 0);
@@ -1985,21 +1991,27 @@ public static partial class AppSettings
         set => SetInt("RepoObjectsTree.RemotesIndex", value);
     }
 
+    public static int RepoObjectsTreeWorktreesIndex
+    {
+        get => GetInt("RepoObjectsTree.WorktreesIndex", 2);
+        set => SetInt("RepoObjectsTree.WorktreesIndex", value);
+    }
+
     public static int RepoObjectsTreeTagsIndex
     {
-        get => GetInt("RepoObjectsTree.TagsIndex", 2);
+        get => GetInt("RepoObjectsTree.TagsIndex", 3);
         set => SetInt("RepoObjectsTree.TagsIndex", value);
     }
 
     public static int RepoObjectsTreeSubmodulesIndex
     {
-        get => GetInt("RepoObjectsTree.SubmodulesIndex", 3);
+        get => GetInt("RepoObjectsTree.SubmodulesIndex", 4);
         set => SetInt("RepoObjectsTree.SubmodulesIndex", value);
     }
 
     public static int RepoObjectsTreeStashesIndex
     {
-        get => GetInt("RepoObjectsTree.StashesIndex", 4);
+        get => GetInt("RepoObjectsTree.StashesIndex", 5);
         set => SetInt("RepoObjectsTree.StashesIndex", value);
     }
 

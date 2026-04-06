@@ -962,6 +962,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                     : DetachedHeadParser.DetachedBranch
                 : "";
             toolStripButtonLevelUp.Enabled = hasWorkingDir && !bareRepository;
+            UpdateWorktreeToolStripVisibility();
             CommitInfoTabControl.Visible = validBrowseDir;
             fileExplorerToolStripMenuItem.Enabled = validBrowseDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validBrowseDir;
@@ -1855,7 +1856,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
         else
         {
-            MessageBoxes.Show(this, _noReposHostPluginLoaded.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, _noReposHostPluginLoaded.Text, TranslatedStrings.Error);
         }
     }
 
@@ -2952,6 +2953,91 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             RefreshRevisions();
         }
+    }
+
+    private void toolStripWorktrees_ButtonClick(object sender, EventArgs e)
+    {
+        manageWorktreeToolStripMenuItem_Click(sender, e);
+    }
+
+    private void toolStripWorktrees_DropDownOpening(object sender, EventArgs e)
+    {
+        toolStripWorktrees.DropDown.SuspendLayout();
+        toolStripWorktrees.DropDownItems.Clear();
+
+        string currentWorkingDir = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
+        IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
+
+        foreach (GitWorktree worktree in worktrees)
+        {
+            bool isCurrent = string.Equals(
+                worktree.Path.TrimEnd(Path.DirectorySeparatorChar),
+                currentWorkingDir,
+                StringComparison.OrdinalIgnoreCase);
+
+            string displayName = worktree.GetDisplayName(
+                Path.GetFileName(worktree.Path.TrimEnd(Path.DirectorySeparatorChar)));
+            ToolStripMenuItem item = new(displayName)
+            {
+                Tag = worktree.Path,
+                Image = Images.WorkTree,
+                Checked = isCurrent,
+                Enabled = !isCurrent && !worktree.IsDeleted
+            };
+
+            if (worktree.IsDeleted)
+            {
+                item.ForeColor = SystemColors.GrayText;
+            }
+
+            item.Click += WorktreeToolStripMenuItem_Click;
+            toolStripWorktrees.DropDownItems.Add(item);
+        }
+
+        toolStripWorktrees.DropDownItems.Add(new ToolStripSeparator());
+
+        ToolStripMenuItem createItem = new(TranslatedStrings.CreateWorktree, Images.WorkTree);
+        createItem.Click += (_, _) =>
+        {
+            string mainPath = worktrees.Count > 0 ? worktrees[0].Path : Module.WorkingDir;
+            if (UICommands.WorktreeCreate(this, mainPath))
+            {
+                RefreshRevisions();
+            }
+        };
+        toolStripWorktrees.DropDownItems.Add(createItem);
+
+        ToolStripMenuItem pruneItem = new(TranslatedStrings.PruneWorktrees);
+        pruneItem.Click += (_, _) =>
+        {
+            if (UICommands.StartCommandLineProcessDialog(this, command: null, "worktree prune"))
+            {
+                RefreshRevisions();
+            }
+        };
+        toolStripWorktrees.DropDownItems.Add(pruneItem);
+
+        ToolStripMenuItem manageItem = new(TranslatedStrings.ManageWorktrees);
+        manageItem.Click += manageWorktreeToolStripMenuItem_Click;
+        toolStripWorktrees.DropDownItems.Add(manageItem);
+
+        toolStripWorktrees.DropDown.ResumeLayout();
+    }
+
+    private void WorktreeToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        if (sender is not ToolStripMenuItem { Tag: string path })
+        {
+            return;
+        }
+
+        if (!Directory.Exists(path))
+        {
+            MessageBoxes.ShowError(this, string.Format(TranslatedStrings.WorktreeDirectoryNotFound, path), TranslatedStrings.Error);
+            return;
+        }
+
+        SetWorkingDir(Path.GetFullPath(path));
     }
 
     private void undoLastCommitToolStripMenuItem_Click(object sender, EventArgs e)

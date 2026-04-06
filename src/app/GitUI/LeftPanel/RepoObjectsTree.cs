@@ -33,6 +33,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private TagTree _tagTree;
     private StashTree _stashTree;
     private SubmoduleTree _submoduleTree;
+    private WorktreeTree _worktreeTree;
     private List<TreeNode>? _searchResult;
     private Action<string?> _filterRevisionGridBySpaceSeparatedRefs;
     private IAheadBehindDataProvider? _aheadBehindDataProvider;
@@ -71,6 +72,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         tsbShowTags.Checked = AppSettings.RepoObjectsTreeShowTags;
         tsbShowSubmodules.Checked = AppSettings.RepoObjectsTreeShowSubmodules;
         tsbShowStashes.Checked = AppSettings.RepoObjectsTreeShowStashes;
+        tsbShowWorktrees.Checked = AppSettings.RepoObjectsTreeShowWorktrees;
 
         _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
         _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
@@ -93,37 +95,38 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 ImageSize = DpiUtil.Scale(new Size(16, 16 + rowPadding + rowPadding)), // Scale ImageSize and images scale automatically
                 Images =
                 {
-                    { nameof(Images.ArrowUp), Pad(Images.ArrowUp) },
                     { nameof(Images.ArrowDown), Pad(Images.ArrowDown) },
-                    { nameof(Images.FolderClosed), Pad(Images.FolderClosed) },
+                    { nameof(Images.ArrowUp), Pad(Images.ArrowUp) },
+                    { nameof(Images.BitBucket), Pad(Images.BitBucket) },
+                    { nameof(Images.Branch), Pad(Images.Branch.AdaptLightness()) },
+                    { nameof(Images.BranchFolder), Pad(Images.BranchFolder) },
                     { nameof(Images.BranchLocal), Pad(Images.BranchLocal) },
                     { nameof(Images.BranchLocalMerged), Pad(Images.BranchLocalMerged) },
-                    { nameof(Images.Branch), Pad(Images.Branch.AdaptLightness()) },
-                    { nameof(Images.Remote), Pad(Images.Remote) },
-                    { nameof(Images.BitBucket), Pad(Images.BitBucket) },
-                    { nameof(Images.GitHub), Pad(Images.GitHub) },
-                    { nameof(Images.VisualStudioTeamServices), Pad(Images.VisualStudioTeamServices) },
                     { nameof(Images.BranchLocalRoot), Pad(Images.BranchLocalRoot) },
-                    { nameof(Images.BranchRemoteRoot), Pad(Images.BranchRemoteRoot) },
                     { nameof(Images.BranchRemote), Pad(Images.BranchRemote) },
                     { nameof(Images.BranchRemoteMerged), Pad(Images.BranchRemoteMerged) },
-                    { nameof(Images.BranchFolder), Pad(Images.BranchFolder) },
-                    { nameof(Images.TagHorizontal), Pad(Images.TagHorizontal) },
-                    { nameof(Images.EyeOpened), Pad(Images.EyeOpened.AdaptLightness()) },
+                    { nameof(Images.BranchRemoteRoot), Pad(Images.BranchRemoteRoot) },
                     { nameof(Images.EyeClosed), Pad(Images.EyeClosed.AdaptLightness()) },
-                    { nameof(Images.RemoteEnableAndFetch), Pad(Images.RemoteEnableAndFetch.AdaptLightness()) },
+                    { nameof(Images.EyeOpened), Pad(Images.EyeOpened.AdaptLightness()) },
                     { nameof(Images.FileStatusModified), Pad(Images.FileStatusModified) },
+                    { nameof(Images.FolderClosed), Pad(Images.FolderClosed) },
                     { nameof(Images.FolderSubmodule), Pad(Images.FolderSubmodule) },
+                    { nameof(Images.GitHub), Pad(Images.GitHub) },
+                    { nameof(Images.Remote), Pad(Images.Remote) },
+                    { nameof(Images.RemoteEnableAndFetch), Pad(Images.RemoteEnableAndFetch.AdaptLightness()) },
                     { nameof(Images.Stash), Pad(Images.Stash) },
                     { nameof(Images.SubmoduleDirty), Pad(Images.SubmoduleDirty) },
-                    { nameof(Images.SubmoduleRevisionUp), Pad(Images.SubmoduleRevisionUp) },
                     { nameof(Images.SubmoduleRevisionDown), Pad(Images.SubmoduleRevisionDown) },
-                    { nameof(Images.SubmoduleRevisionSemiUp), Pad(Images.SubmoduleRevisionSemiUp) },
-                    { nameof(Images.SubmoduleRevisionSemiDown), Pad(Images.SubmoduleRevisionSemiDown) },
-                    { nameof(Images.SubmoduleRevisionUpDirty), Pad(Images.SubmoduleRevisionUpDirty) },
                     { nameof(Images.SubmoduleRevisionDownDirty), Pad(Images.SubmoduleRevisionDownDirty) },
-                    { nameof(Images.SubmoduleRevisionSemiUpDirty), Pad(Images.SubmoduleRevisionSemiUpDirty) },
+                    { nameof(Images.SubmoduleRevisionSemiDown), Pad(Images.SubmoduleRevisionSemiDown) },
                     { nameof(Images.SubmoduleRevisionSemiDownDirty), Pad(Images.SubmoduleRevisionSemiDownDirty) },
+                    { nameof(Images.SubmoduleRevisionSemiUp), Pad(Images.SubmoduleRevisionSemiUp) },
+                    { nameof(Images.SubmoduleRevisionSemiUpDirty), Pad(Images.SubmoduleRevisionSemiUpDirty) },
+                    { nameof(Images.SubmoduleRevisionUp), Pad(Images.SubmoduleRevisionUp) },
+                    { nameof(Images.SubmoduleRevisionUpDirty), Pad(Images.SubmoduleRevisionUpDirty) },
+                    { nameof(Images.TagHorizontal), Pad(Images.TagHorizontal) },
+                    { nameof(Images.VisualStudioTeamServices), Pad(Images.VisualStudioTeamServices) },
+                    { nameof(Images.WorkTree), Pad(Images.WorkTree) },
                 }
             };
             treeMain.SelectedImageKey = treeMain.ImageKey;
@@ -241,6 +244,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     {
         _branchesTree.Refresh(getRefs);
         _remotesTree.Refresh(getRefs);
+        _worktreeTree.Refresh();
         _tagTree.Refresh(getRefs);
         _stashTree.Refresh(getStashRevs);
     }
@@ -364,6 +368,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         CreateBranches();
         CreateRemotes();
+        CreateWorktrees();
         CreateTags();
         CreateSubmodules();
         CreateStashes();
@@ -401,6 +406,18 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         };
 
         _remotesTree = new RemoteBranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource);
+    }
+
+    private void CreateWorktrees()
+    {
+        TreeNode rootNode = new(TranslatedStrings.Worktrees)
+        {
+            Name = TranslatedStrings.Worktrees,
+            ImageKey = nameof(Images.WorkTree),
+            SelectedImageKey = nameof(Images.WorkTree)
+        };
+
+        _worktreeTree = new WorktreeTree(rootNode, UICommandsSource);
     }
 
     private void CreateTags()
