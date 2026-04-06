@@ -23,7 +23,6 @@
 
   <ItemGroup>
     <PackageReference Include="JetBrains.Annotations" />
-    <PackageReference Include="Microsoft.Toolkit.HighPerformance" />
     <PackageReference Include="Newtonsoft.Json" />
     <PackageReference Include="System.IO.Abstractions" />
     <PackageReference Include="System.Reactive.Linq" />
