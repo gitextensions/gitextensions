@@ -103,7 +103,7 @@ For example:
   For example, a test for a method "MyMethod" should be named as "MyMethod_should_return_expected".
 * Do not repeat in a comment what the test name already expresses.
 * Use `NSubstitute` for mocking.
-* Use `FluentAssertions` for assertions, i.e. do not use `ClassicAssert`.
+* Use `AwesomeAssertions` for assertions, i.e. do not use `ClassicAssert`.
 * When you encounter a flaky test failure, take the time to understand the root cause and fix it. Do not dismiss it as a pre-existing issue. Flaky tests erode confidence and should be fixed or removed.
 
 ## Commit Messages
