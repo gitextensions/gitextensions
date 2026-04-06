@@ -128,8 +128,6 @@ public sealed class CancellationTokenSequenceTests
             completed == allTasks,
             "Test should have completed within a reasonable amount of time");
 
-        await allTasks;
-
         ClassicAssert.AreEqual(loopCount, completedCount);
 
         await Console.Out.WriteLineAsync("Winner by index: " + string.Join(",", winnerByIndex));
