@@ -26,7 +26,7 @@ git submodule update --init --recursive
 
 ## XML Doc Comments
 
-* Use XML documentation comments for non-private APIs, including properties, methods, and classes. Do not add XML documentation comments to private members.
+* Use XML documentation comments for non-private APIs, including properties, methods, and classes. Do not remove existing XML documentation comments from private members.
 * Do not add `/// <inheritdoc />` nor other xmldoc when just implementing interface or abstract members.
 * Do not add XML documentation comments to `TestAccessor` structs or their members.
 * Use correct xmldoc tags, as well as "see", "langword", and "paramref" tags where appropriate.

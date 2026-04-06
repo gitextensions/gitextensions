@@ -139,14 +139,25 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
 
         string currentDir = Path.GetFullPath(Module.WorkingDir).TrimEnd(Path.DirectorySeparatorChar);
 
+        bool hasDeletedWorktrees = false;
         List<(IGitRef Branch, GitWorktree Worktree)> mainWorktreeBranches = [];
         List<(IGitRef Branch, GitWorktree Worktree)> linkedWorktreeBranches = [];
 
         for (int i = 0; i < worktrees.Count; i++)
         {
             GitWorktree wt = worktrees[i];
-            if (wt.Branch is null || wt.IsDeleted)
+            if (wt.Branch is null)
             {
+                continue;
+            }
+
+            if (wt.IsDeleted)
+            {
+                if (selectedBranches.Any(b => b.Name == wt.Branch))
+                {
+                    hasDeletedWorktrees = true;
+                }
+
                 continue;
             }
 
@@ -174,9 +185,16 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
             }
         }
 
-        if (mainWorktreeBranches.Count == 0 && linkedWorktreeBranches.Count == 0)
+        if (!hasDeletedWorktrees && mainWorktreeBranches.Count == 0 && linkedWorktreeBranches.Count == 0)
         {
             return selectedBranches;
+        }
+
+        // Prune stale worktree entries whose directories no longer exist,
+        // so they no longer block branch deletion.
+        if (hasDeletedWorktrees)
+        {
+            UICommands.StartCommandLineProcessDialog(Owner, command: null, "worktree prune");
         }
 
         HashSet<string> excludedBranches = [];
