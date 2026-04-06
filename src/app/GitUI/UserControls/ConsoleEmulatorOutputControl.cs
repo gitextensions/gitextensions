@@ -130,7 +130,7 @@ public class ConsoleEmulatorOutputControl : ConsoleOutputControl
             };
 
             Validates.NotNull(_terminal);
-            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.Value, AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString("F0", CultureInfo.InvariantCulture));
+            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.GetEffectiveConEmuStyle(), AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString("F0", CultureInfo.InvariantCulture));
         }
         catch (Exception ex)
         {
