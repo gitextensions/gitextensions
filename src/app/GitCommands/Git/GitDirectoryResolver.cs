@@ -69,7 +69,7 @@ public sealed class GitDirectoryResolver : IGitDirectoryResolver
 
         // Workaround for links to .git directories on WSL
         bool isWslLink = false;
-        string gitPath = Path.Combine(repositoryPath, ".git");
+        string gitPath = Path.Join(repositoryPath, ".git");
         if (_fileSystem.File.Exists(gitPath))
         {
             const string gitdir = "gitdir:";
@@ -94,7 +94,7 @@ public sealed class GitDirectoryResolver : IGitDirectoryResolver
                     return path.EnsureTrailingPathSeparator();
                 }
 
-                return Path.GetFullPath(Path.Combine(repositoryPath, path)).EnsureTrailingPathSeparator();
+                return Path.GetFullPath(Path.Join(repositoryPath, path)).EnsureTrailingPathSeparator();
             }
         }
 

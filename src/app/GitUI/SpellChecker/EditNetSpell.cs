@@ -376,7 +376,7 @@ public partial class EditNetSpell : GitModuleControl
         }
 
         IDetachedSettings detachedSettings = Settings.Detached();
-        string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), detachedSettings.Dictionary), ".dic");
+        string dictionaryFile = string.Concat(Path.Join(AppSettings.GetDictionaryDir(), detachedSettings.Dictionary), ".dic");
 
         if (_wordDictionary is null || _wordDictionary.DictionaryFile != dictionaryFile)
         {

@@ -120,7 +120,7 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
     /// </summary>
     public FileInfo GetPathToSparseCheckoutFile()
     {
-        return new FileInfo(Path.Combine(_gitCommands.Module.ResolveGitInternalPath("info"), "sparse-checkout"));
+        return new FileInfo(Path.Join(_gitCommands.Module.ResolveGitInternalPath("info"), "sparse-checkout"));
     }
 
     /// <summary>

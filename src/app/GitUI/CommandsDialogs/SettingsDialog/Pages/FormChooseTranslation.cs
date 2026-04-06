@@ -31,7 +31,7 @@ public partial class FormChooseTranslation : GitExtensionsForm
 
         foreach (string translation in translations)
         {
-            string imagePath = Path.Combine(Translator.GetTranslationDir(), translation + ".gif");
+            string imagePath = Path.Join(Translator.GetTranslationDir(), translation + ".gif");
             if (File.Exists(imagePath))
             {
                 Image image = Image.FromFile(imagePath);

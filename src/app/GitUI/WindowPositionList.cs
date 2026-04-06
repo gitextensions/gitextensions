@@ -33,7 +33,7 @@ public class WindowPosition
 
 public class WindowPositionList
 {
-    private static readonly string ConfigFilePath = Path.Combine(AppSettings.LocalApplicationDataPath.Value!, "WindowPositions.xml");
+    private static readonly string ConfigFilePath = Path.Join(AppSettings.LocalApplicationDataPath.Value!, "WindowPositions.xml");
     private static readonly XmlSerializer _serializer = new(typeof(WindowPositionList));
 
     public List<WindowPosition> WindowPositions { get; set; } = [];

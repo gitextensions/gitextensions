@@ -17,7 +17,7 @@ public sealed class MoveCommand(IExecutable _gitExecutable) : IExtendedCommand<M
             return;
         }
 
-        string fullPath = Path.Combine(workingDir, relativePath);
+        string fullPath = Path.Join(workingDir, relativePath);
         if (!Directory.Exists(fullPath))
         {
             Directory.CreateDirectory(fullPath);

@@ -48,7 +48,7 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
             }
             else
             {
-                return Path.Combine(Module.ResolveGitInternalPath("info"), "exclude");
+                return Path.Join(Module.ResolveGitInternalPath("info"), "exclude");
             }
         }
     }

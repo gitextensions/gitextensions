@@ -85,7 +85,7 @@ internal sealed class RevisionDiffController(Func<IGitModule> getModule, IFullPa
                 // TODO: allow cancel the whole sequence
 
                 Directory.CreateDirectory(targetDirectory);
-                string targetFileName = Path.Combine(targetDirectory, Path.GetFileName(selectedItemFullName)!).ToNativePath();
+                string targetFileName = Path.Join(targetDirectory, Path.GetFileName(selectedItemFullName)!).ToNativePath();
                 Debug.WriteLine($"Saving {selectedItemFullName} --> {targetFileName}");
 
                 GetModule().SaveBlobAs(targetFileName, $"{item.SecondRevision.Guid}:\"{item.Item.Name}\"");

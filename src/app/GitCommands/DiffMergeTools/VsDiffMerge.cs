@@ -39,7 +39,7 @@ internal class VsDiffMerge : DiffMergeTool
             string? path = localMachineKey?.GetValue("InstallDir") as string;
             if (!string.IsNullOrEmpty(path))
             {
-                return Path.Combine(path, ExeName);
+                return Path.Join(path, ExeName);
             }
         }
 

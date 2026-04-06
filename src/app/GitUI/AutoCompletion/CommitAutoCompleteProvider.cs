@@ -99,7 +99,7 @@ public class CommitAutoCompleteProvider : IAutoCompleteProvider
 
         Validates.NotNull(appDataPath);
 
-        string path = Path.Combine(appDataPath, "AutoCompleteRegexes.txt");
+        string path = Path.Join(appDataPath, "AutoCompleteRegexes.txt");
 
         if (File.Exists(path))
         {

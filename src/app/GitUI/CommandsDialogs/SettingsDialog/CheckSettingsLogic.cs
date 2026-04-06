@@ -141,7 +141,7 @@ public class CheckSettingsLogic
 
         // cygwin has old git version on windows and bash has a lot of bugs
         yield return @"C:\cygwin\";
-        yield return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
+        yield return Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
             "Programs", "Git\\");
     }
 

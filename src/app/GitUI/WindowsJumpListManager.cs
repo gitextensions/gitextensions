@@ -100,7 +100,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
                 return;
             }
 
-            string baseFolder = Path.Combine(AppSettings.ApplicationDataPath.Value!, "Recent");
+            string baseFolder = Path.Join(AppSettings.ApplicationDataPath.Value!, "Recent");
             if (!Directory.Exists(baseFolder))
             {
                 Directory.CreateDirectory(baseFolder);
@@ -114,7 +114,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
                 sb.Replace(c, '_');
             }
 
-            string path = Path.Combine(baseFolder, $"{sb}.gitext");
+            string path = Path.Join(baseFolder, $"{sb}.gitext");
             File.WriteAllText(path, workingDir);
             JumpList.AddToRecent(path);
             UpdateJumpList(); // in order to refresh at once

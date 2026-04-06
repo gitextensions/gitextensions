@@ -397,13 +397,13 @@ public sealed class GitStatusMonitor : IDisposable
                 if (isValidGitDir)
                 {
                     _gitDirWatcher.Path = PathUtil.RemoveTrailingPathSeparator(gitDirPath);
-                    _submodulesPath = Path.Combine(_gitPath!, "modules");
+                    _submodulesPath = Path.Join(_gitPath!, "modules");
                 }
                 else
                 {
                     // WSL link, FileSystemWatcher will throw on directories that are symbolic links
                     _gitDirWatcher.Path = workTreePath;
-                    _submodulesPath = Path.Combine(gitDirPath, "modules");
+                    _submodulesPath = Path.Join(gitDirPath, "modules");
                 }
 
                 CurrentStatus = GitStatusMonitorState.Running;

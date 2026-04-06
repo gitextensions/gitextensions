@@ -94,7 +94,7 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         }
         else
         {
-            string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), AppSettings.Dictionary), ".dic");
+            string dictionaryFile = string.Concat(Path.Join(AppSettings.GetDictionaryDir(), AppSettings.Dictionary), ".dic");
             if (File.Exists(dictionaryFile))
             {
                 Dictionary.Items.Add(AppSettings.Dictionary);

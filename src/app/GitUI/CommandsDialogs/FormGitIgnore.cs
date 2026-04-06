@@ -19,7 +19,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
 
     #region default patterns
 
-    private static readonly string DefaultIgnorePatternsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
+    private static readonly string DefaultIgnorePatternsFile = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
 
     private static readonly string[] DefaultIgnorePatterns =
     [

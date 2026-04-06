@@ -118,7 +118,7 @@ public sealed class RepositoryDescriptionProvider : IRepositoryDescriptionProvid
     private string? ReadRepositoryDescription(string workingDir)
     {
         string gitDir = _gitDirectoryResolver.Resolve(workingDir);
-        string descriptionFilePath = Path.Combine(gitDir, _repositoryDescriptionFileName);
+        string descriptionFilePath = Path.Join(gitDir, _repositoryDescriptionFileName);
 
         if (!File.Exists(descriptionFilePath))
         {

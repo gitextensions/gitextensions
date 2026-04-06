@@ -60,7 +60,7 @@ public class CommitMessageManagerTests
         _directory = Substitute.For<DirectoryBase>();
 
         PathBase path = Substitute.For<PathBase>();
-        path.Combine(Arg.Any<string>(), Arg.Any<string>()).Returns(x => Path.Combine((string)x[0], (string)x[1]));
+        path.Join(Arg.Any<string>(), Arg.Any<string>()).Returns(x => Path.Join((string)x[0], (string)x[1]));
 
         _fileSystem = Substitute.For<IFileSystem>();
         _fileSystem.File.Returns(_file);

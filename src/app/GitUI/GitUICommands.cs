@@ -99,7 +99,7 @@ public sealed class GitUICommands : IGitUICommands
 
     public void StartBatchFileProcessDialog(string batchFile)
     {
-        string tempFile = Path.Combine(Path.GetTempPath(), $"GitExtensions-{Guid.NewGuid():N}.cmd");
+        string tempFile = Path.Join(Path.GetTempPath(), $"GitExtensions-{Guid.NewGuid():N}.cmd");
 
         try
         {
@@ -875,7 +875,7 @@ public sealed class GitUICommands : IGitUICommands
     private bool StartResetChangesDialog(string[] names)
     {
         ImmutableHashSet<string> relativeFilePaths = [.. names.Select(fileName => Path.GetRelativePath(Module.WorkingDir, fileName).ToPosixPath())];
-        ImmutableHashSet<string> relativeFolderPaths = [.. relativeFilePaths.Where(name => Directory.Exists(Path.Combine(Module.WorkingDir, name)))];
+        ImmutableHashSet<string> relativeFolderPaths = [.. relativeFilePaths.Where(name => Directory.Exists(Path.Join(Module.WorkingDir, name)))];
         bool allItems = relativeFolderPaths.Contains(".");
         GitItemStatus[] selectedItems = [.. Module.GetAllChangedFilesWithSubmodulesStatus(cancellationToken: default)
             .Where(item => allItems || relativeFilePaths.Contains(item.Name) || relativeFolderPaths.Any(folder => item.Path.Value.StartsWith(folder)))];

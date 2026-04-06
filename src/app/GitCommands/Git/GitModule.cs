@@ -102,7 +102,7 @@ public sealed partial class GitModule : IGitModule
 
             // If we didn't find it, but there's a .git file in the current folder, look for a gitdir:
             // line in that file that points to the location of the .git folder
-            string gitDir = Path.Combine(WorkingDir, ".git");
+            string gitDir = Path.Join(WorkingDir, ".git");
             if (superprojectPath is null && File.Exists(gitDir))
             {
                 IEnumerable<string> lines;
@@ -145,7 +145,7 @@ public sealed partial class GitModule : IGitModule
             }
 
             string submodulePath = currentPath[superprojectPath.Length..].ToPosixPath();
-            ConfigFile configFile = new(Path.Combine(superprojectPath, ".gitmodules"));
+            ConfigFile configFile = new(Path.Join(superprojectPath, ".gitmodules"));
 
             foreach (IConfigSection configSection in configFile.ConfigSections)
             {
@@ -160,7 +160,7 @@ public sealed partial class GitModule : IGitModule
             return (null, submodulePath);
 
             static bool HasGitModulesFile(string path)
-                => File.Exists(Path.Combine(path, ".gitmodules")) && IsValidGitWorkingDir(path);
+                => File.Exists(Path.Join(path, ".gitmodules")) && IsValidGitWorkingDir(path);
         }
     }
 
@@ -1939,7 +1939,7 @@ public sealed partial class GitModule : IGitModule
 
     public bool InTheMiddleOfBisect()
     {
-        return File.Exists(Path.Combine(_executor.GetGitDirectory(), "BISECT_START"));
+        return File.Exists(Path.Join(_executor.GetGitDirectory(), "BISECT_START"));
     }
 
     public bool InTheMiddleOfRebase() => InTheMiddleOfGitOperation("applying");
@@ -1954,7 +1954,7 @@ public sealed partial class GitModule : IGitModule
 
     public bool InTheMiddleOfMerge()
     {
-        return File.Exists(Path.Combine(_executor.GetGitDirectory(), "MERGE_HEAD"));
+        return File.Exists(Path.Join(_executor.GetGitDirectory(), "MERGE_HEAD"));
     }
 
     public bool InTheMiddleOfAction()
@@ -3698,7 +3698,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         // Get processes by "ps" command.
-        string cmd = Path.Combine(AppSettings.LinuxToolsDir, "ps");
+        string cmd = Path.Join(AppSettings.LinuxToolsDir, "ps");
         string[] lines = new Executable(cmd).GetOutput("x").Split(Delimiters.LineFeed);
 
         if (lines.Length <= 2)

@@ -400,17 +400,17 @@ public partial class FormResolveConflicts : GitModuleForm
                 return false;
             }
 
-            string dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath)!, "Diff-Scripts").EnsureTrailingPathSeparator();
+            string dir = Path.Join(Path.GetDirectoryName(Application.ExecutablePath)!, "Diff-Scripts").EnsureTrailingPathSeparator();
             if (Directory.Exists(dir))
             {
                 if (_mergeScripts.TryGetValue(extension!, out string? mergeScript) &&
-                    File.Exists(Path.Combine(dir!, mergeScript)))
+                    File.Exists(Path.Join(dir!, mergeScript)))
                 {
                     if (MessageBoxes.Show(this, string.Format(_uskUseCustomMergeScript.Text, mergeScript),
                                         _uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                         DialogResult.Yes)
                     {
-                        UseMergeWithScript(fileName, Path.Combine(dir, mergeScript), baseFileName, localFileName, remoteFileName);
+                        UseMergeWithScript(fileName, Path.Join(dir, mergeScript), baseFileName, localFileName, remoteFileName);
 
                         return true;
                     }

@@ -58,7 +58,7 @@ public sealed class IndexWatcher : IDisposable
                 GitIndexWatcher.IncludeSubdirectories = false;
                 GitIndexWatcher.EnableRaisingEvents = _enabled;
 
-                RefsWatcher.Path = Path.Combine(Module.GitCommonDirectory, "refs");
+                RefsWatcher.Path = Path.Join(Module.GitCommonDirectory, "refs");
                 RefsWatcher.IncludeSubdirectories = true;
                 RefsWatcher.EnableRaisingEvents = _enabled;
             }

@@ -95,7 +95,7 @@ public partial class CreatePullRequestForm : GitModuleForm
 
     private void LoadPRTemplate()
     {
-        string templatePath = Path.Combine(Module.WorkingDir, ".github", "PULL_REQUEST_TEMPLATE.md");
+        string templatePath = Path.Join(Module.WorkingDir, ".github", "PULL_REQUEST_TEMPLATE.md");
 
         if (!File.Exists(templatePath))
         {

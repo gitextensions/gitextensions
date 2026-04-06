@@ -31,8 +31,8 @@ public static partial class AppSettings
 
     public static Lazy<string?> ApplicationDataPath { get; private set; }
     public static readonly Lazy<string?> LocalApplicationDataPath;
-    public static string SettingsFilePath => Path.Combine(ApplicationDataPath.Value!, SettingsFileName);
-    public static string UserPluginsPath => Path.Combine(LocalApplicationDataPath.Value!, UserPluginsDirectoryName);
+    public static string SettingsFilePath => Path.Join(ApplicationDataPath.Value!, SettingsFileName);
+    public static string UserPluginsPath => Path.Join(LocalApplicationDataPath.Value!, UserPluginsDirectoryName);
 
     public static DistributedSettings SettingsContainer { get; private set; }
 
@@ -77,7 +77,7 @@ public static partial class AppSettings
                 return GetGitExtensionsDirectory();
             }
 
-            string path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ApplicationId);
+            string path = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), ApplicationId);
             if (!Directory.Exists(path))
             {
                 Directory.CreateDirectory(path);
@@ -244,7 +244,7 @@ public static partial class AppSettings
             if (debugPath.ToPosixPath() == path.ToPosixPath())
             {
                 string projectPath = gitExtDir[..^len];
-                return Path.Combine(projectPath, "Bin");
+                return Path.Join(projectPath, "Bin");
             }
         }
 #endif
@@ -613,7 +613,7 @@ public static partial class AppSettings
 
     #region Avatars
 
-    public static string AvatarImageCachePath => Path.Combine(LocalApplicationDataPath.Value!, "Images\\");
+    public static string AvatarImageCachePath => Path.Join(LocalApplicationDataPath.Value!, "Images\\");
 
     public static AvatarFallbackType AvatarFallbackType
     {
@@ -1665,7 +1665,7 @@ public static partial class AppSettings
 
     public static string GetDictionaryDir()
     {
-        return Path.Combine(GetResourceDir()!, "Dictionaries");
+        return Path.Join(GetResourceDir()!, "Dictionaries");
     }
 
     public static void SaveSettings()

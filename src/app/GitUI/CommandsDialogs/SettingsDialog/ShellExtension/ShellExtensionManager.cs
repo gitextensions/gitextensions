@@ -106,7 +106,7 @@ public static class ShellExtensionManager
     {
         foreach (string binDirectory in GetBinDirectories())
         {
-            string filePath = Path.Combine(binDirectory, fileName);
+            string filePath = Path.Join(binDirectory, fileName);
             if (File.Exists(filePath))
             {
                 return filePath;

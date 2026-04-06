@@ -24,8 +24,8 @@ internal class SemanticMerge : DiffMergeTool
         string folder = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
         return
         [
-            Path.Combine(folder, @"semanticmerge"),
-            Path.Combine(folder, @"PlasticSCM4\semanticmerge")
+            Path.Join(folder, @"semanticmerge"),
+            Path.Join(folder, @"PlasticSCM4\semanticmerge")
         ];
     }
 }

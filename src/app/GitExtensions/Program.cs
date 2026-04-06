@@ -275,7 +275,7 @@ internal static class Program
             // saves having to have a reference to System.Xml just to check that we have an XmlException
             if (in3?.GetType().Name == "XmlException")
             {
-                string localSettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
+                string localSettingsPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
 
                 // assume that if we are having this error and the installation is not a portable one then the folder will exist.
                 if (Directory.Exists(localSettingsPath))

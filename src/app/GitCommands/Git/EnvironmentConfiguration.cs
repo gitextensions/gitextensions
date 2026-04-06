@@ -54,7 +54,7 @@ public static class EnvironmentConfiguration
 
         if (OperatingSystem.IsWindows())
         {
-            string sshAskPass = Path.Combine(AppSettings.GetInstallDir()!, "GitExtSshAskPass.exe");
+            string sshAskPass = Path.Join(AppSettings.GetInstallDir()!, "GitExtSshAskPass.exe");
 
             if (File.Exists(sshAskPass))
             {

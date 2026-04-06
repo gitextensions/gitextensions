@@ -80,7 +80,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
 
     private async Task<string> LoadAvatarsAsync()
     {
-        string gourceAvatarsDir = Path.Combine(Path.GetTempPath(), "GitAvatars");
+        string gourceAvatarsDir = Path.Join(Path.GetTempPath(), "GitAvatars");
 
         Directory.CreateDirectory(gourceAvatarsDir);
 
@@ -118,7 +118,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
                     return;
                 }
 
-                string filePath = Path.Combine(gourceAvatarsDir, filename);
+                string filePath = Path.Join(gourceAvatarsDir, filename);
                 image.Save(filePath, ImageFormat.Png);
             }
             catch

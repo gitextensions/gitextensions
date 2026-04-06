@@ -353,7 +353,7 @@ public sealed class RevisionReader
 
     private static void AddAutoStash(string workingDirGitDir, IObserver<IReadOnlyList<GitRevision>> subject, string autostashLabel)
     {
-        string autoStashFileName = Path.Combine(workingDirGitDir, "rebase-merge/autostash");
+        string autoStashFileName = Path.Join(workingDirGitDir, "rebase-merge/autostash");
         if (!File.Exists(autoStashFileName)
             || !ObjectId.TryParse(File.ReadLines(autoStashFileName).FirstOrDefault(), out ObjectId? autoStashCommitId))
         {
@@ -369,7 +369,7 @@ public sealed class RevisionReader
             Subject = autostashLabel
         };
 
-        string origHeadFileName = Path.Combine(workingDirGitDir, "rebase-merge/orig-head");
+        string origHeadFileName = Path.Join(workingDirGitDir, "rebase-merge/orig-head");
         if (File.Exists(origHeadFileName)
             && ObjectId.TryParse(File.ReadLines(origHeadFileName).FirstOrDefault(), out ObjectId? origHeadCommitId))
         {
