@@ -137,7 +137,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
 
         if (!result.ExitedSuccessfully)
         {
-            MessageBoxes.Show(this, result.AllOutput, $"git {args}", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, result.AllOutput, $"git {args}");
             return [];
         }
 

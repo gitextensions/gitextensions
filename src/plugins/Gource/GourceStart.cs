@@ -52,7 +52,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         }
         catch (Exception e)
         {
-            MessageBoxes.Show(this, e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, e.Message, "Error");
         }
     }
 
@@ -62,7 +62,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
 
         if (!File.Exists(GourcePath.Text))
         {
-            MessageBoxes.Show(this, "Cannot find Gource.\nPlease download Gource and set the correct path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, "Cannot find Gource.\nPlease download Gource and set the correct path.", "Error");
             return;
         }
 
