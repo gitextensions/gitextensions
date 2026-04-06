@@ -344,7 +344,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
         int insertScore = int.MinValue;
 
         // Find the first parent that is already in the graph.
-        foreach (ObjectId parentId in parents!)
+        foreach (ObjectId parentId in parents)
         {
             if (TryGetNode(parentId, out RevisionGraphRevision? parentRev))
             {

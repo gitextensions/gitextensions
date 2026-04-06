@@ -2842,7 +2842,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         GitRevision? r = LatestSelectedRevision;
         if (r?.HasParent is true)
         {
-            _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.FirstParentId!);
+            _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.FirstParentId);
         }
     }
 
@@ -2866,7 +2866,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             }
             else if (r.HasParent)
             {
-                _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.FirstParentId!);
+                _parentChildNavigationHistory.NavigateToParent(r.ObjectId, r.FirstParentId);
             }
         }
     }

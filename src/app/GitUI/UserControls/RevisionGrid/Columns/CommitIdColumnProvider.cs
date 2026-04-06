@@ -78,7 +78,7 @@ internal sealed class CommitIdColumnProvider : ColumnProvider
             // Enforce from outside the current method because it is not allowed (exception thrown...)
             Task.Run(async () =>
             {
-                await Column.DataGridView!.SwitchToMainThreadAsync();
+                await Column.DataGridView.SwitchToMainThreadAsync();
                 e.Column.Width = _maxWidth;
             });
         }

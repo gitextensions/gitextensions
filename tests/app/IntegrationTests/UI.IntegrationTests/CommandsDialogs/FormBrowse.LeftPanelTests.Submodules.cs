@@ -124,7 +124,7 @@ public class FormBrowse_LeftPanel_SubmodulesTests
         GitUI.UserControls.NativeTreeView treeView = form.GetTestAccessor().RepoObjectsTree.GetTestAccessor().TreeView;
         TreeNode? remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Submodules);
         remotesNode.Should().NotBeNull();
-        return remotesNode!;
+        return remotesNode;
     }
 
     private void RunFormTest(Func<FormBrowse, Task> testDriverAsync)

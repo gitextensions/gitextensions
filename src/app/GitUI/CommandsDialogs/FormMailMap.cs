@@ -48,7 +48,7 @@ public partial class FormMailMap : GitModuleForm
             string? path = _fullPathResolver.Resolve(".mailmap");
             if (File.Exists(path))
             {
-                _NO_TRANSLATE_MailMapText.ViewFileAsync(path!);
+                _NO_TRANSLATE_MailMapText.ViewFileAsync(path);
             }
         }
         catch (Exception ex)

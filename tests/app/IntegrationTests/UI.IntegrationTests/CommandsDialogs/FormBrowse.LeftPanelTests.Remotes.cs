@@ -180,7 +180,7 @@ public class FormBrowse_LeftPanel_RemotesTests
         TreeNode? remotesNode = treeView.Nodes.OfType<TreeNode>().FirstOrDefault(n => n.Text == TranslatedStrings.Remotes);
         remotesNode.Should().NotBeNull();
 
-        return remotesNode!;
+        return remotesNode;
     }
 
     private void RunRepoObjectsTreeTest(Action<TreeNode> testDriver)

@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
@@ -12,23 +13,23 @@ namespace GitUI.LeftPanel;
 
 partial class RepoObjectsTree : IMenuItemFactory
 {
-    private GitRefsSortOrderContextMenuItem _sortOrderContextMenuItem = null!;
-    private GitRefsSortByContextMenuItem _sortByContextMenuItem = null!;
+    private GitRefsSortOrderContextMenuItem _sortOrderContextMenuItem;
+    private GitRefsSortByContextMenuItem _sortByContextMenuItem;
 
     /// <summary>
     /// Local branch context menu [git ref / rename / delete] actions.
     /// </summary>
-    private LocalBranchMenuItems<LocalBranchNode> _localBranchMenuItems = null!;
+    private LocalBranchMenuItems<LocalBranchNode> _localBranchMenuItems;
 
     /// <summary>
     /// Remote branch context menu [git ref / rename / delete] actions.
     /// </summary>
-    private MenuItemsGenerator<RemoteBranchNode> _remoteBranchMenuItems = null!;
+    private MenuItemsGenerator<RemoteBranchNode> _remoteBranchMenuItems;
 
     /// <summary>
     /// Tags context menu [git ref] actions.
     /// </summary>
-    private MenuItemsGenerator<TagNode> _tagNodeMenuItems = null!;
+    private MenuItemsGenerator<TagNode> _tagNodeMenuItems;
 
     private static void EnableMenuItems(bool enabled, params ToolStripItem[] items)
     {
@@ -122,6 +123,7 @@ partial class RepoObjectsTree : IMenuItemFactory
         item.Click += (o, e) => Node.OnNode(treeMain.SelectedNode, onClick);
     }
 
+    [MemberNotNull(nameof(_sortByContextMenuItem), nameof(_sortOrderContextMenuItem), nameof(_localBranchMenuItems), nameof(_remoteBranchMenuItems), nameof(_tagNodeMenuItems))]
     private void RegisterContextActions()
     {
         copyContextMenuItem.SetRevisionFunc(() => _revisionGridInfo.GetSelectedRevisions());

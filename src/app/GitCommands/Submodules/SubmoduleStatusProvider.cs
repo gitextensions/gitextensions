@@ -360,7 +360,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
         }
         else
         {
-            info.Detailed!.IsDirty = true;
+            info.Detailed.IsDirty = true;
         }
     }
 

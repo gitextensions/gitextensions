@@ -48,7 +48,7 @@ public partial class FormGitAttributes : GitModuleForm
             string? path = _fullPathResolver.Resolve(".gitattributes");
             if (File.Exists(path))
             {
-                _NO_TRANSLATE_GitAttributesText.ViewFileAsync(path!);
+                _NO_TRANSLATE_GitAttributesText.ViewFileAsync(path);
             }
         }
         catch (Exception ex)

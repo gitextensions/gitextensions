@@ -416,7 +416,7 @@ public sealed partial class BlameControl : GitModuleControl
                         }
                         else
                         {
-                            Image? avatar = ThreadHelper.JoinableTaskFactory.Run(() => AvatarService.DefaultProvider.GetAvatarAsync(authorEmail!, line.Commit.Author, avatarSize));
+                            Image? avatar = ThreadHelper.JoinableTaskFactory.Run(() => AvatarService.DefaultProvider.GetAvatarAsync(authorEmail, line.Commit.Author, avatarSize));
                             cacheAvatars.Add(authorEmail, avatar);
                             gitBlameDisplays[index].Avatar = avatar;
                         }

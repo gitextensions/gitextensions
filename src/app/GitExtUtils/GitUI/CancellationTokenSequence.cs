@@ -118,7 +118,7 @@ public sealed class CancellationTokenSequence : IDisposable
     /// </remarks>
     public void Dispose()
     {
-        CancellationTokenSource? cancellationTokenSource = Interlocked.Exchange(ref _cancellationTokenSource, null!);
+        CancellationTokenSource? cancellationTokenSource = Interlocked.Exchange(ref _cancellationTokenSource, null);
 
         if (cancellationTokenSource is null)
         {

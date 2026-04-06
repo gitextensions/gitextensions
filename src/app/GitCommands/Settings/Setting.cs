@@ -54,7 +54,7 @@ public static class Setting
                 {
                     if (Type.GetTypeCode(typeof(T)) != TypeCode.String)
                     {
-                        return (T?)storedValue!;
+                        return (T?)storedValue;
                     }
                 }
 

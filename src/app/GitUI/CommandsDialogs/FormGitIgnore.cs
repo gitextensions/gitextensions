@@ -110,7 +110,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
         {
             if (File.Exists(ExcludeFile))
             {
-                _NO_TRANSLATE_GitIgnoreEdit.ViewFileAsync(ExcludeFile!);
+                _NO_TRANSLATE_GitIgnoreEdit.ViewFileAsync(ExcludeFile);
             }
         }
         catch (Exception ex)
