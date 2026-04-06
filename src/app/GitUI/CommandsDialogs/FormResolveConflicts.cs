@@ -1278,6 +1278,7 @@ public partial class FormResolveConflicts : GitModuleForm
         ToolStripMenuItem? item = sender as ToolStripMenuItem;
         if (item?.DropDownItems != null)
         {
+            // "main menu" clicked, cancel dropdown manually, invoke default mergetool
             item.HideDropDown();
             item.Owner!.Hide();
         }

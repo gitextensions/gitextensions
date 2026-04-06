@@ -321,6 +321,7 @@ Detail of the error:");
         string? pullRequestUrl = null;
         if (buildDetail.IsPullRequest)
         {
+            // It's a PR and we need to dive into "Parameters" json to get the real commit hash
             JsonNode? pullRequestNode = buildDetail.Parameters is not null ? JsonNode.Parse(buildDetail.Parameters) : null;
             string? commitHash = GetNodeValue(pullRequestNode, "system.pullRequest.sourceCommitId");
             if (!string.IsNullOrEmpty(commitHash))

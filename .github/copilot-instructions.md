@@ -22,7 +22,8 @@ git submodule update --init --recursive
 
 * Add const with speaking name instead of using magic numbers or repeated string literals. Avoid hard-to-maintain comments which contain the magic number again.
 * When a string literal is used more than once in a class, extract it into a `const` field with a descriptive name.
-* Omit comments which just describe _what_ is done. In situations where a comment may be necessary describe _why_ an implementation was chosen.
+* When writing new comments, describe _why_ an implementation was chosen rather than _what_ is done.
+* Do not delete or modify existing comments unless they are factually incorrect. These guidelines apply to new code only.
 
 # Xml doc comments
 

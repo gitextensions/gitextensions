@@ -669,6 +669,7 @@ public sealed partial class BlameControl : GitModuleControl
             selectedRevision = _revisionGridInfo!.GetActualRevision(selectedRevision!);
         }
 
+        // Origin line of commit selected is final line of the previous blame commit
         int finalLineNumberOfPreviousBlame = _lastBlameLine!.OriginLineNumber;
         int originalLineNumberOfPreviousBlame = _gitBlameParser.GetOriginalLineInPreviousCommit(selectedRevision!, blameInfo.Filename!, finalLineNumberOfPreviousBlame);
 

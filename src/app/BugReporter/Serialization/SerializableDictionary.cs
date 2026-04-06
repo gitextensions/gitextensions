@@ -65,12 +65,17 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IX
         {
             writer.WriteStartElement(key.ToString()!.Replace(" ", ""));
 
+            // Check to see if we can actually serialize element
+            // if it's Serializable doesn't mean serialization will succeed (IE. GUID and SQLError types)
             try
             {
                 writer.WriteValue(this[key]);
             }
             catch (Exception)
             {
+                // we're not Throwing anything here, otherwise evil thing will happen
+                // If Type has custom implementation of ToString() we'll get something useful here
+                // Otherwise we'll get Type string. (Still better than crashing).
                 writer.WriteValue(this[key].ToString());
             }
 

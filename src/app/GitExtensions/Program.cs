@@ -272,6 +272,7 @@ internal static class Program
             // perhaps this should be checked for if it is null
             Exception? in3 = ce.InnerException?.InnerException;
 
+            // saves having to have a reference to System.Xml just to check that we have an XmlException
             if (in3?.GetType().Name == "XmlException")
             {
                 string localSettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");

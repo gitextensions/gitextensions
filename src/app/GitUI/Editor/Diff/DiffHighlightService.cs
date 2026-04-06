@@ -33,6 +33,7 @@ public abstract class DiffHighlightService : TextHighlightService
     {
         if (!useGitColoring)
         {
+            // Use default
             return null!;
         }
 
