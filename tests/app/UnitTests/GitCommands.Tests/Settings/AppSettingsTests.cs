@@ -195,7 +195,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowResetAllChanges)], true, false, false);
 
             yield return (properties[nameof(AppSettings.ShowConEmuTab)], true, false, true);
-            yield return (properties[nameof(AppSettings.ConEmuStyle)], "<Solarized Light>", true, true);
+            yield return (properties[nameof(AppSettings.ConEmuStyle)], "Default", true, true);
             yield return (properties[nameof(AppSettings.ConEmuTerminal)], "bash", true, true);
             yield return (properties[nameof(AppSettings.OutputHistoryDepth)], 20, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.OutputHistoryPanelVisible)], false, isNotNullable, isISetting);

@@ -13,7 +13,6 @@ using System.Xml.Serialization;
 
 namespace BugReporter.Serialization;
 
-[Serializable]
 public class SerializableException
 {
     /// <summary>

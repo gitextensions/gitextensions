@@ -71,7 +71,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
         }
     }
 
-    private static bool IsSupported => EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported;
+    private static bool IsSupported => OperatingSystem.IsWindows() && TaskbarManager.IsPlatformSupported;
     private static bool IsSupportedAndVisible => EnvUtils.RunningOnWindowsWithMainWindow() && TaskbarManager.IsPlatformSupported;
 
     /// <summary>

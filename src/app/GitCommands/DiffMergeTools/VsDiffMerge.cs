@@ -1,4 +1,3 @@
-using GitCommands.Utils;
 using Microsoft.Win32;
 
 namespace GitCommands.DiffMergeTools;
@@ -24,7 +23,7 @@ internal class VsDiffMerge : DiffMergeTool
 
     private static string GetVsDiffMergePath()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return ExeName;
         }

@@ -1,4 +1,3 @@
-using GitCommands.Utils;
 using GitExtUtils.GitUI;
 
 namespace GitUI.SpellChecker;
@@ -13,7 +12,7 @@ internal static class TextBoxHelper
 
     internal static int GetBaselineOffsetAtCharIndex(TextBoxBase tb, int index)
     {
-        if (tb is not RichTextBox rtb || !EnvUtils.RunningOnWindows())
+        if (tb is not RichTextBox rtb || !OperatingSystem.IsWindows())
         {
             return tb.Font.Height;
         }

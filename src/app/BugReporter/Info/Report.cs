@@ -10,7 +10,6 @@ using BugReporter.Serialization;
 
 namespace BugReporter.Info;
 
-[Serializable]
 public class Report
 {
     /// <summary>

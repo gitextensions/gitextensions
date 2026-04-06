@@ -1,7 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtUtils;
 
 namespace GitUI;
@@ -37,7 +36,7 @@ internal sealed class PathFormatter
                 return (prefix, text, suffix);
 
             case TruncatePathMethod.None:
-            case TruncatePathMethod.Compact when !EnvUtils.RunningOnWindows():
+            case TruncatePathMethod.Compact when !OperatingSystem.IsWindows():
                 (prefix, text, suffix) = FormatString(name, oldName, step: 0, isNameTruncated: false);
                 return (prefix, text, suffix);
 
@@ -131,7 +130,7 @@ internal sealed class PathFormatter
             // The win32 method PathCompactPathEx is only supported on Windows
             TruncatePathMethod truncatePathMethod = AppSettings.TruncatePathMethod;
 
-            if (truncatePathMethod == TruncatePathMethod.Compact && EnvUtils.RunningOnWindows())
+            if (truncatePathMethod == TruncatePathMethod.Compact && OperatingSystem.IsWindows())
             {
                 StringBuilder result = new(length);
                 NativeMethods.PathCompactPathEx(result, path, length, 0);

@@ -1,4 +1,3 @@
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtUtils;
 
@@ -56,6 +55,6 @@ public sealed class MoveCommand(IExecutable _gitExecutable) : IExtendedCommand<M
         // Git does not support changing only the case of folders in Windows
         return !arguments.IsFolder || string.Compare(arguments.OldName, arguments.NewName, ignoreCase: true) != 0 || !IsRunningOnNativeWindows();
 
-        bool IsRunningOnNativeWindows() => EnvUtils.RunningOnWindows() && !PathUtil.IsWslPath(_gitExecutable.WorkingDir);
+        bool IsRunningOnNativeWindows() => OperatingSystem.IsWindows() && !PathUtil.IsWslPath(_gitExecutable.WorkingDir);
     }
 }

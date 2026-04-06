@@ -9,7 +9,6 @@ namespace GitUI;
 ///   Stores the state and position of a single window.
 /// </summary>
 [DebuggerDisplay("Name={Name} Rect={Rect} DeviceDpi={DeviceDpi} State={State}")]
-[Serializable]
 public class WindowPosition
 {
     protected WindowPosition()
@@ -32,7 +31,6 @@ public class WindowPosition
     public string? Name { get; set; }
 }
 
-[Serializable]
 public class WindowPositionList
 {
     private static readonly string ConfigFilePath = Path.Combine(AppSettings.LocalApplicationDataPath.Value!, "WindowPositions.xml");

@@ -1,6 +1,5 @@
 using GitCommands;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
@@ -131,7 +130,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
         settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ScriptsSettingsPage>(this, serviceProvider), gitExtPageRef, Images.Console);
         settingsTreeView.AddSettingsPage(SettingsPageBase.Create<HotkeysSettingsPage>(this, serviceProvider), gitExtPageRef, Images.Hotkey);
 
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             settingsTreeView.AddSettingsPage(SettingsPageBase.Create<ShellExtensionSettingsPage>(this, serviceProvider), gitExtPageRef, Images.ShellExtensions);
         }
@@ -238,7 +237,7 @@ public sealed partial class FormSettings : GitModuleForm, ISettingsPageHost
             _commonLogic.GitConfigSettingsSet.Save();
             _commonLogic.DistributedSettingsSet.Save();
 
-            if (EnvUtils.RunningOnWindows())
+            if (OperatingSystem.IsWindows())
             {
                 FormFixHome.CheckHomePath();
             }

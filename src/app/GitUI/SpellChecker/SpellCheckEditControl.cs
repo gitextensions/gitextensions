@@ -1,6 +1,5 @@
 ﻿using System.Drawing.Imaging;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 
@@ -185,7 +184,7 @@ public sealed class SpellCheckEditControl : NativeWindow, IDisposable
 
     private int LineHeight()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return 12;
         }

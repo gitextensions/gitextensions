@@ -1,7 +1,6 @@
 ﻿using System.Net;
 using System.Text;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -64,7 +63,7 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
 
         string result = _gitUiCommands.GitModule.GitExecutable.GetOutput(args);
 
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             result = string.Join(Environment.NewLine, result.Split([Environment.NewLine], StringSplitOptions.None).SelectMany(l => l.Split('\n')));
         }

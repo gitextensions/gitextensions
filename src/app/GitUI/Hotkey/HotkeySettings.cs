@@ -6,7 +6,6 @@ namespace GitUI.Hotkey;
 /// <summary>
 /// Stores all hotkey mappings of one target.
 /// </summary>
-[Serializable]
 public class HotkeySettings
 {
     [XmlArray]

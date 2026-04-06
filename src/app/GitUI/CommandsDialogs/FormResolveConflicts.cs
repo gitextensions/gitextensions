@@ -3,7 +3,6 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -388,7 +387,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private bool TryMergeWithScript(string fileName, string? baseFileName, string? localFileName, string? remoteFileName)
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return false;
         }
@@ -719,7 +718,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 }
             }
 
-            if (EnvUtils.RunningOnWindows() && _mergetoolCmd is not null)
+            if (OperatingSystem.IsWindows() && _mergetoolCmd is not null)
             {
                 // This only works when on Windows....
                 const string executablePattern = ".exe";
