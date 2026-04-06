@@ -1,4 +1,4 @@
-﻿using CommonTestUtils;
+using CommonTestUtils;
 using FluentAssertions;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -8,8 +8,8 @@ namespace GitExtensions.UITests.CommandsDialogs;
 [Apartment(ApartmentState.STA)]
 public class FormRebaseTests
 {
-    private ReferenceRepository _referenceRepository;
-    private GitUICommands _commands;
+    private ReferenceRepository _referenceRepository = null!;
+    private GitUICommands _commands = null!;
 
     [SetUp]
     public void SetUp()
@@ -36,7 +36,7 @@ public class FormRebaseTests
 
                 accessor.chkAutosquash.Enabled.Should().BeTrue();
             },
-            from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
+            from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
     }
 
     [Test]
@@ -52,7 +52,7 @@ public class FormRebaseTests
 
                 accessor.chkAutosquash.Enabled.Should().BeFalse();
             },
-            from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
+            from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
     }
 
     [Test]
@@ -70,7 +70,7 @@ public class FormRebaseTests
                 accessor.chkAutosquash.Enabled.Should().BeFalse();
                 accessor.chkCommitterDateIsAuthorDate.Enabled.Should().BeFalse();
             },
-            from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
+            from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
     }
 
     [Test]
@@ -90,7 +90,7 @@ public class FormRebaseTests
                 accessor.chkAutosquash.Enabled.Should().BeTrue();
                 accessor.chkCommitterDateIsAuthorDate.Enabled.Should().BeTrue();
             },
-            from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
+            from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
     }
 
     [Test]
@@ -109,7 +109,7 @@ public class FormRebaseTests
                 accessor.chkAutosquash.Enabled.Should().BeFalse();
                 accessor.chkCommitterDateIsAuthorDate.Enabled.Should().BeTrue();
             },
-            from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
+            from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
     }
 
     [Test]
@@ -127,7 +127,7 @@ public class FormRebaseTests
                 accessor.chkAutosquash.Enabled.Should().BeFalse();
                 accessor.chkIgnoreDate.Enabled.Should().BeFalse();
             },
-            from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
+            from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
     }
 
     [Test]
@@ -147,7 +147,7 @@ public class FormRebaseTests
                 accessor.chkAutosquash.Enabled.Should().BeTrue();
                 accessor.chkIgnoreDate.Enabled.Should().BeTrue();
             },
-            from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
+            from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
     }
 
     [Test]
@@ -166,10 +166,10 @@ public class FormRebaseTests
                 accessor.chkAutosquash.Enabled.Should().BeFalse();
                 accessor.chkIgnoreDate.Enabled.Should().BeTrue();
             },
-            from: "", to: null, onto: null, interactive: false, startRebaseImmediately: false);
+            from: "", to: null!, onto: null!, interactive: false, startRebaseImmediately: false);
     }
 
-    private void RunFormTest(Action<FormRebase> testDriver, string from, string to, string onto,
+    private void RunFormTest(Action<FormRebase> testDriver, string from, string? to, string? onto,
         bool interactive, bool startRebaseImmediately)
     {
         RunFormTest(
@@ -181,8 +181,8 @@ public class FormRebaseTests
             from, to, onto, interactive, startRebaseImmediately);
     }
 
-    private void RunFormTest(Func<FormRebase, Task> testDriverAsync, string from, string to,
-        string onto, bool interactive, bool startRebaseImmediately)
+    private void RunFormTest(Func<FormRebase, Task> testDriverAsync, string from, string? to,
+        string? onto, bool interactive, bool startRebaseImmediately)
     {
         UITest.RunForm(
             () =>

@@ -31,8 +31,8 @@ public sealed class ExternalLinkRevisionParser : IExternalLinkRevisionParser
             return remotes;
         }
 
-        IEnumerable<ConfigFileRemote> matchingRemotes = remotes.Where(r => definition.UseRemotesRegex.Value.IsMatch(r.Name))
-                                                        .OrderBy(r => definition.UseRemotesPattern.IndexOf(r.Name, StringComparison.OrdinalIgnoreCase));
+        IEnumerable<ConfigFileRemote> matchingRemotes = remotes.Where(r => definition.UseRemotesRegex.Value.IsMatch(r.Name!))
+                                                        .OrderBy(r => definition.UseRemotesPattern.IndexOf(r.Name!, StringComparison.OrdinalIgnoreCase));
         if (definition.UseOnlyFirstRemote)
         {
             matchingRemotes = matchingRemotes.Take(1);

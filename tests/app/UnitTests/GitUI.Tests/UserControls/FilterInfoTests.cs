@@ -821,13 +821,13 @@ public class FilterInfoTests
                                     {
                                         foreach (bool hideMergeCommits in new[] { false, true })
                                         {
-                                            foreach (string pathFilter in new[] { "file1", "", null })
+                                            foreach (string? pathFilter in new[] { "file1", "", null })
                                             {
                                                 foreach (bool showCurrentBranchOnly in new[] { false, true })
                                                 {
                                                     foreach (bool showReflogReferences in new[] { false, true })
                                                     {
-                                                        foreach (string branchFilter in new[] { "branch1", "", null })
+                                                        foreach (string? branchFilter in new[] { "branch1", "", null })
                                                         {
                                                             yield return new TestCaseData(byDateFrom, byDateTo, byAuthor, byCommitter, byMessage, byDiffContent, showSimplifyByDecoration, hideMergeCommits, pathFilter, showCurrentBranchOnly, showReflogReferences, branchFilter);
                                                         }
@@ -1082,17 +1082,20 @@ public class FilterInfoTests
             {
                 foreach (bool showStash in new[] { false, true })
                 {
-                    foreach (bool showReflog in new[] { false, true })
+                    foreach (bool showSessionRefs in new[] { false, true })
                     {
-                        foreach (bool showCurrentBranchOnly in new[] { false, true })
+                        foreach (bool showReflog in new[] { false, true })
                         {
-                            foreach (bool isValidCheckout in new[] { false, true })
+                            foreach (bool showCurrentBranchOnly in new[] { false, true })
                             {
-                                foreach (bool showFilteredBranches in new[] { false, true })
+                                foreach (bool isValidCheckout in new[] { false, true })
                                 {
-                                    foreach (string branchFilter in new[] { "branch1", "", null })
+                                    foreach (bool showFilteredBranches in new[] { false, true })
                                     {
-                                        yield return new TestCaseData(showNotes, showStash, showReflog, showCurrentBranchOnly, isValidCheckout, showFilteredBranches, branchFilter);
+                                        foreach (string? branchFilter in new[] { "branch1", "", null })
+                                        {
+                                            yield return new TestCaseData(showNotes, showStash, showSessionRefs, showReflog, showCurrentBranchOnly, isValidCheckout, showFilteredBranches, branchFilter);
+                                        }
                                     }
                                 }
                             }
@@ -1104,12 +1107,14 @@ public class FilterInfoTests
     }
 
     [TestCaseSource(nameof(FilterInfo_NotesStash))]
-    public void FilterInfo_GitNotes_Stashes(bool showGitNotes, bool showStash, bool showReflog, bool showCurrentBranchOnly, bool isValidCheckout, bool showFilteredBranches, string branchFilter)
+    public void FilterInfo_GitNotes_Stashes(bool showGitNotes, bool showStash, bool showSessionRefs, bool showReflog, bool showCurrentBranchOnly, bool isValidCheckout, bool showFilteredBranches, string branchFilter)
     {
         bool originalShowGitNotes = AppSettings.ShowGitNotes;
         AppSettings.ShowGitNotes = showGitNotes;
         bool originalShowStash = AppSettings.ShowStashes;
         AppSettings.ShowStashes = showStash;
+        bool originalShowSessionRefs = AppSettings.ShowSessionRefs;
+        AppSettings.ShowSessionRefs = showSessionRefs;
         FilterInfo filterInfo = new()
         {
             ShowReflogReferences = showReflog,
@@ -1142,9 +1147,18 @@ public class FilterInfoTests
                 args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/stash($|\s)");
             }
 
+            if (showAll && !showSessionRefs)
+            {
+                args.ToString().Should().MatchRegex(@"(^|\s)--exclude=refs/sessions/\*\*($|\s)");
+            }
+            else
+            {
+                args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/sessions/\*\*($|\s)");
+            }
+
             if (showCurrentBranchOnly && objectId is not null)
             {
-                string head = Regex.Escape(objectId?.ToString());
+                string head = Regex.Escape(objectId?.ToString()!);
                 args.ToString().Should().MatchRegex(@$"(^|\s){head}($|\s)");
             }
 
@@ -1163,6 +1177,7 @@ public class FilterInfoTests
         {
             AppSettings.ShowGitNotes = originalShowGitNotes;
             AppSettings.ShowStashes = originalShowStash;
+            AppSettings.ShowSessionRefs = originalShowSessionRefs;
         }
 
         return;

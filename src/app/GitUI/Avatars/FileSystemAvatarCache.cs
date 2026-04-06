@@ -49,7 +49,7 @@ public sealed class FileSystemAvatarCache : IAvatarProvider, IAvatarCacheCleaner
 
         string path = Path.Combine(_cacheDir, $"{email}.{imageSize}px.png");
 
-        Image image = ReadImage();
+        Image? image = ReadImage();
 
         if (image is not null)
         {

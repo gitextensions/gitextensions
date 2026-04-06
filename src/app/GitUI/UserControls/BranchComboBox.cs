@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -26,7 +26,7 @@ public partial class BranchComboBox : GitExtensionsControl
     [Browsable(true)]
     [Category("Action")]
     [Description("Occurs whenever the branch selection has changed.")]
-    public event EventHandler SelectedValueChanged;
+    public event EventHandler? SelectedValueChanged;
 
     private IReadOnlyList<IGitRef>? _branchesToSelect;
     public IReadOnlyList<IGitRef>? BranchesToSelect
@@ -52,9 +52,14 @@ public partial class BranchComboBox : GitExtensionsControl
 
     public IEnumerable<IGitRef> GetSelectedBranches()
     {
+        if (_branchesToSelect is null)
+        {
+            yield break;
+        }
+
         foreach (string branch in branches.Text.LazySplit(' ', StringSplitOptions.RemoveEmptyEntries))
         {
-            IGitRef gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
+            IGitRef? gitHead = _branchesToSelect.FirstOrDefault(g => g.Name == branch);
             if (gitHead is null)
             {
                 MessageBoxes.Show(string.Format(_branchCheckoutError.Text, branch), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);

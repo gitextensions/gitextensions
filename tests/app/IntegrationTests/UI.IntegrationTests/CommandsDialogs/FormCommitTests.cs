@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.ComponentModel.Design;
 using CommonTestUtils;
 using FluentAssertions;
@@ -20,14 +20,14 @@ namespace GitExtensions.UITests.CommandsDialogs;
 public class FormCommitTests
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // Track the original setting value
     private bool _provideAutocompletion;
     private bool _showAvailableDiffTools;
 
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     [SetUp]
     public void SetUp()
@@ -213,7 +213,7 @@ public class FormCommitTests
     [Test]
     public void PreserveCommitMessageOnReopenFromAmendCommit()
     {
-        string oldCommitMessage = _referenceRepository.Module.GetRevision().Body;
+        string? oldCommitMessage = _referenceRepository.Module.GetRevision().Body;
         string newCommitMessageWithAmend = $"amend! {oldCommitMessage}\n\nNew commit message";
 
         RunFormTest(
@@ -501,7 +501,7 @@ public class FormCommitTests
             Application.DoEvents();
             AsyncTestHelper.JoinPendingOperations();
 
-            _commands.Module.RevParse("HEAD").Should().Be(previousCommitId);
+            _commands.Module.RevParse("HEAD").Should().Be(previousCommitId!);
             ta.Amend.Enabled.Should().BeFalse();
             ta.Amend.Checked.Should().BeFalse();
             ta.CommitAndPush.BackColor.ToArgb().Should().Be(forceBackColor);

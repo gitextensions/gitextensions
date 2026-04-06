@@ -27,14 +27,14 @@ public sealed class GitHubUrlBuilder
     /// <param name="environmentInfo">Git version, directory etc.</param>
     /// <param name="additionalInfo">Information from the popup textbox.</param>
     /// <returns>The URL as a string</returns>
-    public string? Build(string url, SerializableException exception, string exceptionInfo, string? environmentInfo, string? additionalInfo)
+    public string? Build(string url, SerializableException exception, string? exceptionInfo, string? environmentInfo, string? additionalInfo)
     {
         if (string.IsNullOrWhiteSpace(url) || exception is null)
         {
             return null;
         }
 
-        if (!Uri.TryCreate(url, UriKind.Absolute, out Uri validatedUri) ||
+        if (!Uri.TryCreate(url, UriKind.Absolute, out Uri? validatedUri) ||
             !(validatedUri.Scheme == Uri.UriSchemeHttp || validatedUri.Scheme == Uri.UriSchemeHttps))
         {
             return null;

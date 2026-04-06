@@ -14,8 +14,8 @@ public class DiffMergeToolConfigurationManagerTests
     private const string DiffToolName = "customDiffTool";
     private const string MergeToolName = "customMergeTool";
     private const string MergeToolNameNoGui = "customMergeToolNoGui";
-    private IConfigValueStore _fileSettings;
-    private DiffMergeToolConfigurationManager _configurationManager;
+    private IConfigValueStore _fileSettings = null!;
+    private DiffMergeToolConfigurationManager _configurationManager = null!;
 
     private const string DiffToolKey = "diff.guitool";
     private const string MergeToolKey = "merge.guitool";
@@ -82,7 +82,7 @@ public class DiffMergeToolConfigurationManagerTests
     [Test]
     public void ConfigureDiffMergeTool_should_return_if_file_unset()
     {
-        _fileSettings = null;
+        _fileSettings = null!;
 
         _configurationManager.ConfigureDiffMergeTool("bla", DiffMergeToolType.Diff, "", "");
     }
@@ -188,7 +188,7 @@ public class DiffMergeToolConfigurationManagerTests
 
         return;
 
-        string FindFileInFolders(string fileName, IEnumerable<string> folders)
+        string FindFileInFolders(string fileName, IEnumerable<string?> folders)
         {
             folders.Should().BeEquivalentTo(new[] { toolPath }.Union(tool.SearchPaths));
             return toolPath;
@@ -232,7 +232,7 @@ public class DiffMergeToolConfigurationManagerTests
     public void GetToolSetting_should_return_empty_if_toolName_is_empty()
     {
         _fileSettings.GetValue(Arg.Any<string>()).Returns(string.Empty);
-        string settings = _configurationManager.GetTestAccessor().GetToolSetting(string.Empty, DiffMergeToolType.Diff, "");
+        string? settings = _configurationManager.GetTestAccessor().GetToolSetting(string.Empty, DiffMergeToolType.Diff, "");
 
         settings.Should().BeEmpty();
         _fileSettings.Received(1).GetValue(Arg.Any<string>());
@@ -243,7 +243,7 @@ public class DiffMergeToolConfigurationManagerTests
     [TestCase(DiffMergeToolType.Merge, "mergetool")]
     public void GetToolSetting_should_load_setting_for_requested_toolName(DiffMergeToolType toolType, string expectedPrefix)
     {
-        string settings = _configurationManager.GetTestAccessor().GetToolSetting(DiffToolName, toolType, "customSuffix");
+        string? settings = _configurationManager.GetTestAccessor().GetToolSetting(DiffToolName, toolType, "customSuffix");
 
         settings.Should().BeEmpty();
         _fileSettings.GetValue($"{expectedPrefix}.{DiffToolName}.customSuffix");

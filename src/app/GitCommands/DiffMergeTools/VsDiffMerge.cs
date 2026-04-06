@@ -1,4 +1,3 @@
-using GitCommands.Utils;
 using Microsoft.Win32;
 
 namespace GitCommands.DiffMergeTools;
@@ -24,7 +23,7 @@ internal class VsDiffMerge : DiffMergeTool
 
     private static string GetVsDiffMergePath()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return ExeName;
         }
@@ -37,7 +36,7 @@ internal class VsDiffMerge : DiffMergeTool
         {
             string registryKeyString = $@"SOFTWARE{(Environment.Is64BitProcess ? @"\Wow6432Node\" : "\\")}Microsoft\VisualStudio\{version}";
             using RegistryKey? localMachineKey = Registry.LocalMachine.OpenSubKey(registryKeyString);
-            string path = localMachineKey?.GetValue("InstallDir") as string;
+            string? path = localMachineKey?.GetValue("InstallDir") as string;
             if (!string.IsNullOrEmpty(path))
             {
                 return Path.Combine(path, ExeName);

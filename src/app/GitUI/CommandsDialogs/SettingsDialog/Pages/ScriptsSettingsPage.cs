@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.ScriptsEngine;
@@ -159,7 +158,7 @@ Diff selection:
 
     public override void OnPageShown()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return;
         }
@@ -171,7 +170,7 @@ Diff selection:
             // dummy request; for some strange reason the ResourceSets are not loaded until after the first object request... bug?
             rm.GetObject("dummy");
 
-            using System.Resources.ResourceSet resourceSet = rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
+            using System.Resources.ResourceSet? resourceSet = rm.GetResourceSet(CultureInfo.CurrentUICulture, true, true);
             Validates.NotNull(resourceSet);
             foreach (DictionaryEntry icon in resourceSet.Cast<DictionaryEntry>().OrderBy(icon => icon.Key))
             {
@@ -276,7 +275,7 @@ Diff selection:
 
             if (selectedScript is not null)
             {
-                ListViewItem lvi = lvScripts.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag == selectedScript);
+                ListViewItem? lvi = lvScripts.Items.Cast<ListViewItem>().FirstOrDefault(x => x.Tag == selectedScript);
                 if (lvi is not null)
                 {
                     lvi.Selected = true;
@@ -378,7 +377,7 @@ Diff selection:
         BindScripts(_scripts, script);
     }
 
-    private void lvScripts_ItemChecked(object sender, ItemCheckedEventArgs e)
+    private void lvScripts_ItemChecked(object? sender, ItemCheckedEventArgs e)
     {
         if (_handlingCheck)
         {
@@ -391,7 +390,7 @@ Diff selection:
         _handlingCheck = false;
     }
 
-    private void lvScripts_SelectedIndexChanged(object sender, EventArgs e)
+    private void lvScripts_SelectedIndexChanged(object? sender, EventArgs e)
     {
         if (lvScripts.SelectedItems.Count < 1 || lvScripts.SelectedItems[0].Tag is not ScriptInfoProxy script)
         {

@@ -1,4 +1,4 @@
-﻿using CommonTestUtils;
+using CommonTestUtils;
 using FluentAssertions;
 using GitUI;
 using GitUI.CommandsDialogs.BrowseDialog;
@@ -9,10 +9,10 @@ namespace GitExtensions.UITests.CommandsDialogs;
 public class FormUpdatesTests
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     [SetUp]
     public void SetUp()
@@ -35,7 +35,7 @@ public class FormUpdatesTests
             {
                 FormUpdates.TestAccessor accessor = form.GetTestAccessor();
 
-                accessor.DisplayNetRuntimeLink("Required: .NET {0} Desktop Runtime {1} or later {2}.x", requiredNetRuntimeVersion: null);
+                accessor.DisplayNetRuntimeLink("Required: .NET {0} Desktop Runtime {1} or later {2}.x", requiredNetRuntimeVersion: null!);
                 accessor.linkRequiredNetRuntime.Visible.Should().BeFalse();
             });
     }

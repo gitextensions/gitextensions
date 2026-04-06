@@ -19,7 +19,7 @@ public static class ManagedExtensibility
     /// Sets a root path to a folder where user plugins are located.
     /// </summary>
     /// <param name="userPluginsPath">A root path to a folder where user plugins are located.</param>
-    public static void SetUserPluginsPath(string userPluginsPath)
+    public static void SetUserPluginsPath(string? userPluginsPath)
     {
         if (UserPluginsPath is not null)
         {
@@ -31,10 +31,10 @@ public static class ManagedExtensibility
 
     private static Lazy<ExportProvider> GetOrCreateLazyExportProvider(string? applicationDataFolder)
     {
-        Lazy<ExportProvider> lazyExportProvider = Volatile.Read(ref _exportProvider);
+        Lazy<ExportProvider>? lazyExportProvider = Volatile.Read(ref _exportProvider);
         if (lazyExportProvider is null)
         {
-            string capturedApplicationDataFolder = applicationDataFolder;
+            string? capturedApplicationDataFolder = applicationDataFolder;
             Lazy<ExportProvider> newLazyExportProvider = new(() => CreateExportProvider(capturedApplicationDataFolder), LazyThreadSafetyMode.ExecutionAndPublication);
             lazyExportProvider = Interlocked.CompareExchange(ref _exportProvider, newLazyExportProvider, null) ?? newLazyExportProvider;
         }
@@ -46,7 +46,7 @@ public static class ManagedExtensibility
     {
         Stopwatch stopwatch = Stopwatch.StartNew();
 
-        string defaultPluginsPath = Path.Combine(new FileInfo(Application.ExecutablePath).Directory.FullName, "Plugins");
+        string defaultPluginsPath = Path.Combine(new FileInfo(Application.ExecutablePath).Directory!.FullName, "Plugins");
         string? userPluginsPath = UserPluginsPath;
 
         // The plugins that are bundled up with the app must follow this naming convention: GitExtensions.Plugins.*.dll
@@ -73,7 +73,7 @@ public static class ManagedExtensibility
                 new AttributedPartDiscovery(Resolver.DefaultInstance, isNonPublicSupported: true));
             DiscoveredParts? parts = ThreadHelper.JoinableTaskFactory.Run(() => discovery.CreatePartsAsync(assemblies));
             ComposableCatalog catalog = ComposableCatalog.Create(Resolver.DefaultInstance)
-                .AddCatalog(_aggregateCatalog)
+                .AddCatalog(_aggregateCatalog!)
                 .AddParts(parts);
 
             CompositionConfiguration configuration = CompositionConfiguration.Create(catalog.WithCompositionService());
@@ -105,7 +105,7 @@ public static class ManagedExtensibility
         }
     }
 
-    public static void Initialise(IReadOnlyCollection<Assembly>? assemblies = null, string userPluginsPath = null)
+    public static void Initialise(IReadOnlyCollection<Assembly>? assemblies = null, string? userPluginsPath = null)
     {
         AppDomain.CurrentDomain.AssemblyResolve += CurrentDomain_AssemblyResolve;
         SetUserPluginsPath(userPluginsPath);
@@ -160,7 +160,7 @@ public static class ManagedExtensibility
                 return null;
             }
 
-            string fullName = Directory.GetParent(args.RequestingAssembly.Location)?.FullName;
+            string? fullName = Directory.GetParent(args.RequestingAssembly.Location)?.FullName;
             if (fullName is null)
             {
                 return null;

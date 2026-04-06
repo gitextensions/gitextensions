@@ -6,15 +6,15 @@ namespace GitUITests.UserControls;
 [TestFixture]
 public class TreeViewExtensionsTests
 {
-    private TreeView _treeView;
-    private TreeNode _root;
-    private TreeNode _a;
-    private TreeNode _b;
-    private TreeNode _c;
-    private TreeNode _b1;
-    private TreeNode _b2;
-    private TreeNode _b3;
-    private TreeNode _b2_1;
+    private TreeView _treeView = null!;
+    private TreeNode _root = null!;
+    private TreeNode _a = null!;
+    private TreeNode _b = null!;
+    private TreeNode _c = null!;
+    private TreeNode _b1 = null!;
+    private TreeNode _b2 = null!;
+    private TreeNode _b3 = null!;
+    private TreeNode _b2_1 = null!;
 
     [SetUp]
     public void Setup()

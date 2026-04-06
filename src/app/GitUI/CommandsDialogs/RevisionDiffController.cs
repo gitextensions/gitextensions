@@ -54,21 +54,21 @@ internal sealed class RevisionDiffController(Func<IGitModule> getModule, IFullPa
 
         void SaveMultipleFiles(List<FileStatusItem> selectedFiles)
         {
-            string baseSourceDirectory = _fullPathResolver.Resolve(GetLongestCommonPath(selectedFiles)).EnsureTrailingPathSeparator();
+            string? baseSourceDirectory = _fullPathResolver.Resolve(GetLongestCommonPath(selectedFiles)).EnsureTrailingPathSeparator();
 
-            string selectedPath = userSelection(baseSourceDirectory);
+            string? selectedPath = userSelection(baseSourceDirectory!);
             if (selectedPath is null)
             {
                 // User has cancelled the selection
                 return;
             }
 
-            Uri baseSourceDirectoryUri = new(baseSourceDirectory);
+            Uri baseSourceDirectoryUri = new(baseSourceDirectory!);
 
             foreach (FileStatusItem item in selectedFiles)
             {
-                string selectedItemFullName = _fullPathResolver.Resolve(item.Item.Name);
-                string selectedItemSourceDirectory = Path.GetDirectoryName(selectedItemFullName).EnsureTrailingPathSeparator();
+                string? selectedItemFullName = _fullPathResolver.Resolve(item.Item.Name);
+                string? selectedItemSourceDirectory = Path.GetDirectoryName(selectedItemFullName).EnsureTrailingPathSeparator();
 
                 string targetDirectory;
                 if (selectedItemSourceDirectory == baseSourceDirectory)
@@ -77,7 +77,7 @@ internal sealed class RevisionDiffController(Func<IGitModule> getModule, IFullPa
                 }
                 else
                 {
-                    Uri selectedItemUri = new(selectedItemSourceDirectory);
+                    Uri selectedItemUri = new(selectedItemSourceDirectory!);
                     targetDirectory = Path.Combine(selectedPath, baseSourceDirectoryUri.MakeRelativeUri(selectedItemUri).OriginalString);
                 }
 
@@ -85,7 +85,7 @@ internal sealed class RevisionDiffController(Func<IGitModule> getModule, IFullPa
                 // TODO: allow cancel the whole sequence
 
                 Directory.CreateDirectory(targetDirectory);
-                string targetFileName = Path.Combine(targetDirectory, Path.GetFileName(selectedItemFullName)).ToNativePath();
+                string targetFileName = Path.Combine(targetDirectory, Path.GetFileName(selectedItemFullName)!).ToNativePath();
                 Debug.WriteLine($"Saving {selectedItemFullName} --> {targetFileName}");
 
                 GetModule().SaveBlobAs(targetFileName, $"{item.SecondRevision.Guid}:\"{item.Item.Name}\"");
@@ -101,7 +101,7 @@ internal sealed class RevisionDiffController(Func<IGitModule> getModule, IFullPa
                     string possibleMatch = firstFile[..length];
                     if (files.All(f => f.Item.Name.StartsWith(possibleMatch)))
                     {
-                        return Path.GetDirectoryName(possibleMatch);
+                        return Path.GetDirectoryName(possibleMatch)!;
                     }
                 }
 
@@ -111,8 +111,8 @@ internal sealed class RevisionDiffController(Func<IGitModule> getModule, IFullPa
 
         void SaveSingleFile(FileStatusItem item)
         {
-            string fullName = _fullPathResolver.Resolve(item.Item.Name);
-            string selectedFileName = userSelection(fullName);
+            string? fullName = _fullPathResolver.Resolve(item.Item.Name);
+            string? selectedFileName = userSelection(fullName!);
             if (selectedFileName is null)
             {
                 // User has cancelled the selection

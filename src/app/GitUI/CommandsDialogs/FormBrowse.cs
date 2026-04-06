@@ -225,7 +225,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private bool _fileBlameHistoryLeftPanelStartupState;
 
     private TabPage? _consoleTabPage;
-    private OutputHistoryControllerBase _outputHistoryController;
+    private OutputHistoryControllerBase? _outputHistoryController;
 
     private readonly Dictionary<Brush, Icon> _overlayIconByBrush = [];
 
@@ -416,7 +416,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
                     lastBrush = brush;
 
-                    if (!_overlayIconByBrush.TryGetValue(brush, out Icon overlay))
+                    if (!_overlayIconByBrush.TryGetValue(brush, out Icon? overlay))
                     {
                         const int imgDim = 32;
                         const int dotDim = 15;
@@ -433,7 +433,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
                     TaskbarManager.Instance.SetOverlayIcon(overlay, "");
 
-                    _windowsJumpListManager.UpdateCommitIcon(toolStripButtonCommit.Image);
+                    _windowsJumpListManager.UpdateCommitIcon(toolStripButtonCommit.Image!);
                 }
             };
         }
@@ -516,7 +516,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 UpdateRepositoryHostsMenu();
 
                 // Check if during plugin loading user left dashboard
-                if (_dashboard.Visible)
+                if (_dashboard?.Visible is true)
                 {
                     _dashboard.RefreshContent();
                 }
@@ -562,9 +562,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             _windowsJumpListManager.CreateJumpList(
                 Handle,
                 new WindowsThumbnailToolbarButtons(
-                    new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text, toolStripButtonCommit.Image, CommitToolStripMenuItemClick),
-                    new WindowsThumbnailToolbarButton(toolStripButtonPush.Text, toolStripButtonPush.Image, PushToolStripMenuItemClick),
-                    new WindowsThumbnailToolbarButton(toolStripButtonPull.Text, toolStripButtonPull.Image, PullToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton(toolStripButtonCommit.Text!, toolStripButtonCommit.Image!, CommitToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton(toolStripButtonPush.Text!, toolStripButtonPush.Image!, PushToolStripMenuItemClick),
+                    new WindowsThumbnailToolbarButton(toolStripButtonPull.Text!, toolStripButtonPull.Image!, PullToolStripMenuItemClick),
                     new WindowsThumbnailToolbarButton(_closeAll.Text, Images.DeleteFile, (s, e) => NativeMethods.PostMessageW(NativeMethods.HWND_BROADCAST, _closeAllMessage))));
         }
 
@@ -612,7 +612,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     protected override void OnUICommandsChanged(GitUICommandsChangedEventArgs e)
     {
-        IGitUICommands oldCommands = e.OldCommands;
+        IGitUICommands? oldCommands = e.OldCommands;
         RefreshDefaultPullAction();
 
         if (oldCommands is not null)
@@ -655,7 +655,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         TranslationUtils.TranslateItemsFromFields(Name, ToolStripFilters, translation);
     }
 
-    public override void CancelButtonClick(object sender, EventArgs e)
+    public override void CancelButtonClick(object? sender, EventArgs e)
     {
         // If a filter is applied, clear it
         if (RevisionGrid.FilterIsApplied())
@@ -670,7 +670,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         return AppSettings.ShowGitStatusInBrowseToolbar || (AppSettings.ShowGitStatusForArtificialCommits && AppSettings.RevisionGraphShowArtificialCommits);
     }
 
-    private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
+    private void UICommands_PostRepositoryChanged(object? sender, GitUIEventArgs e)
     {
         // Note that this called in most FormBrowse context to "be sure"
         // that the repo has not been updated externally.
@@ -708,7 +708,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
-        _aheadBehindDataProvider.ResetCache();
+        _aheadBehindDataProvider?.ResetCache();
         bool isDashboard = string.IsNullOrEmpty(Module.WorkingDir) || (_dashboard?.Visible ?? false);
         if (isDashboard)
         {
@@ -813,7 +813,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
-        _dashboard.Visible = false;
+        _dashboard!.Visible = false;
         toolPanel.SuspendLayout();
         toolPanel.TopToolStripPanelVisible = true;
         toolPanel.BottomToolStripPanelVisible = true;
@@ -840,7 +840,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private void RegisterPlugins()
     {
         const string PluginManagerName = "Plugin Manager";
-        ILookup<object, ToolStripMenuItem> existingPluginMenus = pluginsToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>().ToLookup(c => c.Tag);
+        ILookup<object, ToolStripMenuItem> existingPluginMenus = pluginsToolStripMenuItem.DropDownItems.OfType<ToolStripMenuItem>().ToLookup(c => c.Tag)!;
 
         lock (PluginRegistry.Plugins)
         {
@@ -962,6 +962,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                     : DetachedHeadParser.DetachedBranch
                 : "";
             toolStripButtonLevelUp.Enabled = hasWorkingDir && !bareRepository;
+            UpdateWorktreeToolStripVisibility();
             CommitInfoTabControl.Visible = validBrowseDir;
             fileExplorerToolStripMenuItem.Enabled = validBrowseDir;
             manageRemoteRepositoriesToolStripMenuItem1.Enabled = validBrowseDir;
@@ -1055,7 +1056,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                         // because getting ahead - behind data for all branches will be (very ?) long
                         // * when there are few branches, we will end up here not in 1st
                         // and the data will be taken from cache (so what we pass as argument is kind of useless)
-                        IDictionary<string, AheadBehindData> aheadBehindData = _aheadBehindDataProvider?.GetData(currentBranch);
+                        IDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData(currentBranch);
                         await this.SwitchToMainThreadAsync();
                         toolStripButtonPush.DisplayAheadBehindInformation(aheadBehindData, currentBranch, GetShortcutKeyTooltipString(Command.Push));
                     });
@@ -1142,7 +1143,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         helpToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
         toolsToolStripMenuItem.RefreshShortcutKeys(Hotkeys);
         _NO_TRANSLATE_WorkingDir.RefreshShortcutKeys(Hotkeys);
-        ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys);
+        ToolStripFilters.RefreshBrowseDialogShortcutKeys(Hotkeys!);
         ToolStripFilters.RefreshRevisionGridShortcutKeys(GetHotkeys(RevisionGridControl.HotkeySettingsName));
 
         // Set shortcuts on the Browse toolbar with commands in RevGrid
@@ -1300,7 +1301,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
-        GpgInfo info = await _controller.LoadGpgInfoAsync(revision);
+        GpgInfo? info = await _controller.LoadGpgInfoAsync(revision);
         revisionGpgInfo1.DisplayGpgInfo(info);
     }
 
@@ -1314,13 +1315,13 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UICommands.StartCheckoutRevisionDialog(this);
     }
 
-    private void CommitToolStripMenuItemClick(object sender, EventArgs e)
+    private void CommitToolStripMenuItemClick(object? sender, EventArgs e)
     {
         this.ForceActivate();
         UICommands.StartCommitDialog(this);
     }
 
-    private void PushToolStripMenuItemClick(object sender, EventArgs e)
+    private void PushToolStripMenuItemClick(object? sender, EventArgs e)
     {
         this.ForceActivate();
         UICommands.StartPushDialog(this, pushOnShow: ModifierKeys.HasFlag(Keys.Shift));
@@ -1347,7 +1348,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UICommands.StartApplyPatchDialog(this);
     }
 
-    private void userShell_Click(object sender, EventArgs e)
+    private void userShell_Click(object? sender, EventArgs e)
     {
         if (userShell.DropDownButtonPressed)
         {
@@ -1377,7 +1378,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UICommands.StartFormatPatchDialog(this);
     }
 
-    private void CheckoutBranchToolStripMenuItemClick(object sender, EventArgs e)
+    private void CheckoutBranchToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartCheckoutBranch(this);
     }
@@ -1486,7 +1487,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         _dashboard?.RefreshContent();
 
-        _gitStatusMonitor.Active = NeedsGitStatusMonitor() && Module.IsValidGitWorkingDir();
+        _gitStatusMonitor.Active = NeedsGitStatusMonitor() && Module!.IsValidGitWorkingDir();
 
         RefreshDefaultPullAction();
     }
@@ -1577,7 +1578,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
     }
 
-    private void CommitInfoTabControl_SelectedIndexChanged(object sender, EventArgs e)
+    private void CommitInfoTabControl_SelectedIndexChanged(object? sender, EventArgs e)
     {
         RefreshSelection();
         FillTerminalTab();
@@ -1603,11 +1604,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UpdateSubmodulesStructure();
     }
 
-    private void UpdateSubmoduleToolStripMenuItemClick(object sender, EventArgs e)
+    private void UpdateSubmoduleToolStripMenuItemClick(object? sender, EventArgs e)
     {
         if (sender is ToolStripMenuItem toolStripMenuItem)
         {
-            string submodule = toolStripMenuItem.Tag as string;
+            string? submodule = toolStripMenuItem.Tag as string;
             Validates.NotNull(Module.SuperprojectModule);
             FormProcess.ShowDialog(this, UICommands, arguments: Commands.SubmoduleUpdate(submodule), Module.SuperprojectModule.WorkingDir, input: null, useDialogSettings: true);
         }
@@ -1615,7 +1616,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         RefreshRevisions();
     }
 
-    private void UpdateAllSubmodulesToolStripMenuItemClick(object sender, EventArgs e)
+    private void UpdateAllSubmodulesToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartUpdateSubmodulesDialog(this);
         UpdateSubmodulesStructure();
@@ -1690,7 +1691,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         SetGitModule(this, new GitModuleEventArgs(new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), path)));
     }
 
-    private void SetGitModule(object sender, GitModuleEventArgs e)
+    private void SetGitModule(object? sender, GitModuleEventArgs e)
     {
         string originalWorkingDir = Module.WorkingDir;
 
@@ -1832,7 +1833,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 ToolStripItem toolStripItem = branchSelect.DropDownItems.Add(branch.Name);
                 toolStripItem.ForeColor = isBranchVisible ? branchSelect.ForeColor : Color.Silver.AdaptTextColor();
                 toolStripItem.Image = (isBranchVisible ? Images.Branch : Images.EyeClosed).AdaptLightness();
-                toolStripItem.Click += (s, e) => UICommands.StartCheckoutBranch(this, toolStripItem.Text);
+                toolStripItem.Click += (s, e) => UICommands.StartCheckoutBranch(this, toolStripItem.Text!);
             }
 
             IEnumerable<IGitRef> GetBranches()
@@ -1846,7 +1847,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
     }
 
-    private void _forkCloneMenuItem_Click(object sender, EventArgs e)
+    private void _forkCloneMenuItem_Click(object? sender, EventArgs e)
     {
         if (PluginRegistry.GitHosters.Count > 0)
         {
@@ -1855,7 +1856,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
         else
         {
-            MessageBoxes.Show(this, _noReposHostPluginLoaded.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, _noReposHostPluginLoaded.Text, TranslatedStrings.Error);
         }
     }
 
@@ -2073,7 +2074,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             case Command.FocusGpgInfo when AppSettings.ShowGpgInformation.Value: FocusTabOf(revisionGpgInfo1, (c, alreadyContainedFocus) => c.Focus()); break;
             case Command.FocusGitConsole: FocusGitConsole(); break;
             case Command.FocusBuildServerStatus: FocusTabOf(_buildReportTabPageExtension?.Control, (c, alreadyContainedFocus) => c.Focus()); break;
-            case Command.FocusOutputHistoryAndToggleIfPanel: return _outputHistoryController.FocusAndToggleIfPanel();
+            case Command.FocusOutputHistoryAndToggleIfPanel: return _outputHistoryController!.FocusAndToggleIfPanel();
             case Command.FocusNextTab: FocusNextTab(); break;
             case Command.FocusPrevTab: FocusNextTab(forward: false); break;
             case Command.FocusFilter: ToolStripFilters.SetFocus(); break;
@@ -2138,8 +2139,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             if (control is not null)
             {
-                TabPage tabPage = control.Parent as TabPage;
-                if (CommitInfoTabControl.TabPages.IndexOf(tabPage) >= 0)
+                TabPage? tabPage = control.Parent as TabPage;
+                if (CommitInfoTabControl.TabPages.IndexOf(tabPage!) >= 0)
                 {
                     bool alreadyContainedFocus = control.ContainsFocus;
 
@@ -2307,7 +2308,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
     }
 
-    private void CommandsToolStripMenuItem_DropDownOpening(object sender, EventArgs e)
+    private void CommandsToolStripMenuItem_DropDownOpening(object? sender, EventArgs e)
     {
         // Most options do not make sense for artificial commits or no revision selected at all
         IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
@@ -2346,7 +2347,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             !Module.IsBareRepository();
     }
 
-    private void PullToolStripMenuItemClick(object sender, EventArgs e)
+    private void PullToolStripMenuItemClick(object? sender, EventArgs e)
     {
         this.ForceActivate();
 
@@ -2422,7 +2423,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             case "gotocommit":
                 Validates.NotNull(e.Data);
-                if (!Module.TryResolvePartialCommitId(e.Data, out ObjectId commitId) || !RevisionGrid.SetSelectedRevision(commitId))
+                if (!Module.TryResolvePartialCommitId(e.Data, out ObjectId? commitId) || !RevisionGrid.SetSelectedRevision(commitId))
                 {
                     if (commitId is null)
                     {
@@ -2461,17 +2462,17 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
     }
 
-    private void SubmoduleToolStripButtonClick(object sender, EventArgs e)
+    private void SubmoduleToolStripButtonClick(object? sender, EventArgs e)
     {
         if (sender is not ToolStripMenuItem menuSender)
         {
             return;
         }
 
-        string path = menuSender.Tag as string;
+        string? path = menuSender.Tag as string;
         if (!Directory.Exists(path))
         {
-            MessageBoxes.SubmoduleDirectoryDoesNotExist(this, path);
+            MessageBoxes.SubmoduleDirectoryDoesNotExist(this, path!);
             return;
         }
 
@@ -2549,7 +2550,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         });
     }
 
-    private void SubmoduleStatusProvider_StatusUpdating(object sender, EventArgs e)
+    private void SubmoduleStatusProvider_StatusUpdating(object? sender, EventArgs e)
     {
         this.InvokeAndForget(() =>
         {
@@ -2558,7 +2559,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         });
     }
 
-    private void SubmoduleStatusProvider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
+    private void SubmoduleStatusProvider_StatusUpdated(object? sender, SubmoduleStatusEventArgs e)
     {
         this.InvokeAndForget(() =>
         {
@@ -2639,7 +2640,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         infos[result.TopProject.Path] = result.TopProject;
         foreach (ToolStripItem item in _currentSubmoduleMenuItems)
         {
-            string path = item.Tag as string;
+            string? path = item.Tag as string;
             if (string.IsNullOrWhiteSpace(path))
             {
                 // not a submodule
@@ -2672,7 +2673,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     #endregion
 
-    private void toolStripButtonLevelUp_ButtonClick(object sender, EventArgs e)
+    private void toolStripButtonLevelUp_ButtonClick(object? sender, EventArgs e)
     {
         if (Module.SuperprojectModule is not null)
         {
@@ -2689,7 +2690,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     /// </summary>
     private void FillTerminalTab()
     {
-        if (!EnvUtils.RunningOnWindows() || !AppSettings.ShowConEmuTab.Value)
+        if (!OperatingSystem.IsWindows() || !AppSettings.ShowConEmuTab.Value)
         {
             // ConEmu only works on WinNT
             return;
@@ -2751,7 +2752,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator
             };
 
-            string shellType = AppSettings.ConEmuTerminal.Value;
+            string? shellType = AppSettings.ConEmuTerminal.Value;
             startInfo.ConsoleProcessCommandLine = _shellProvider.GetShellCommandLine(shellType);
 
             // Set path to git in this window (actually, effective with CMD only)
@@ -2766,7 +2767,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
             try
             {
-                _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.Value, AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString(CultureInfo.InvariantCulture));
+                _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.GetEffectiveConEmuStyle(), AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString(CultureInfo.InvariantCulture));
             }
             catch (InvalidOperationException)
             {
@@ -2944,7 +2945,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     #endregion
 
-    private void manageWorktreeToolStripMenuItem_Click(object sender, EventArgs e)
+    private void manageWorktreeToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         using FormManageWorktree formManageWorktree = new(UICommands);
         formManageWorktree.ShowDialog(this);
@@ -2952,6 +2953,91 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             RefreshRevisions();
         }
+    }
+
+    private void toolStripWorktrees_ButtonClick(object sender, EventArgs e)
+    {
+        manageWorktreeToolStripMenuItem_Click(sender, e);
+    }
+
+    private void toolStripWorktrees_DropDownOpening(object sender, EventArgs e)
+    {
+        toolStripWorktrees.DropDown.SuspendLayout();
+        toolStripWorktrees.DropDownItems.Clear();
+
+        string currentWorkingDir = Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
+        IReadOnlyList<GitWorktree> worktrees = Module.GetWorktrees();
+
+        foreach (GitWorktree worktree in worktrees)
+        {
+            bool isCurrent = string.Equals(
+                worktree.Path.TrimEnd(Path.DirectorySeparatorChar),
+                currentWorkingDir,
+                StringComparison.OrdinalIgnoreCase);
+
+            string displayName = worktree.GetDisplayName(
+                Path.GetFileName(worktree.Path.TrimEnd(Path.DirectorySeparatorChar)));
+            ToolStripMenuItem item = new(displayName)
+            {
+                Tag = worktree.Path,
+                Image = Images.WorkTree,
+                Checked = isCurrent,
+                Enabled = !isCurrent && !worktree.IsDeleted
+            };
+
+            if (worktree.IsDeleted)
+            {
+                item.ForeColor = SystemColors.GrayText;
+            }
+
+            item.Click += WorktreeToolStripMenuItem_Click;
+            toolStripWorktrees.DropDownItems.Add(item);
+        }
+
+        toolStripWorktrees.DropDownItems.Add(new ToolStripSeparator());
+
+        ToolStripMenuItem createItem = new(TranslatedStrings.CreateWorktree, Images.WorkTree);
+        createItem.Click += (_, _) =>
+        {
+            string mainPath = worktrees.Count > 0 ? worktrees[0].Path : Module.WorkingDir;
+            if (UICommands.WorktreeCreate(this, mainPath))
+            {
+                RefreshRevisions();
+            }
+        };
+        toolStripWorktrees.DropDownItems.Add(createItem);
+
+        ToolStripMenuItem pruneItem = new(TranslatedStrings.PruneWorktrees);
+        pruneItem.Click += (_, _) =>
+        {
+            if (UICommands.StartCommandLineProcessDialog(this, command: null, "worktree prune"))
+            {
+                RefreshRevisions();
+            }
+        };
+        toolStripWorktrees.DropDownItems.Add(pruneItem);
+
+        ToolStripMenuItem manageItem = new(TranslatedStrings.ManageWorktrees);
+        manageItem.Click += manageWorktreeToolStripMenuItem_Click;
+        toolStripWorktrees.DropDownItems.Add(manageItem);
+
+        toolStripWorktrees.DropDown.ResumeLayout();
+    }
+
+    private void WorktreeToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        if (sender is not ToolStripMenuItem { Tag: string path })
+        {
+            return;
+        }
+
+        if (!Directory.Exists(path))
+        {
+            MessageBoxes.ShowError(this, string.Format(TranslatedStrings.WorktreeDirectoryNotFound, path), TranslatedStrings.Error);
+            return;
+        }
+
+        SetWorkingDir(Path.GetFullPath(path));
     }
 
     private void undoLastCommitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -2992,7 +3078,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         public void RefreshRevisions() => _form.RefreshRevisions();
     }
 
-    private void FormBrowse_DragDrop(object sender, DragEventArgs e)
+    private void FormBrowse_DragDrop(object? sender, DragEventArgs e)
     {
         HandleDrop(e);
     }
@@ -3005,7 +3091,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         {
-            string? itemPath = (e.Data.GetData(DataFormats.Text) ?? e.Data.GetData(DataFormats.UnicodeText)) as string;
+            string? itemPath = (e.Data!.GetData(DataFormats.Text) ?? e.Data.GetData(DataFormats.UnicodeText)) as string;
             if (GetRelativePathExistingInRepo(itemPath) is RelativePath relativePath)
             {
                 fileTree.SelectFileOrFolder(FocusView, relativePath);
@@ -3033,7 +3119,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
         void FocusView() => CommitInfoTabControl.SelectedTab = TreeTabPage;
 
-        RelativePath? GetRelativePathExistingInRepo(string path)
+        RelativePath? GetRelativePathExistingInRepo(string? path)
         {
             if (path is null
                 || !(File.Exists(path) || Directory.Exists(path))
@@ -3048,9 +3134,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
     }
 
-    private static void FormBrowse_DragEnter(object sender, DragEventArgs e)
+    private static void FormBrowse_DragEnter(object? sender, DragEventArgs e)
     {
-        if (e.Data.GetDataPresent(DataFormats.FileDrop)
+        if (e.Data!.GetDataPresent(DataFormats.FileDrop)
             || e.Data.GetDataPresent(DataFormats.Text)
             || e.Data.GetDataPresent(DataFormats.UnicodeText))
         {

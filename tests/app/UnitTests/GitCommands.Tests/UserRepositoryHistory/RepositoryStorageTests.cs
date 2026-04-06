@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using NSubstitute;
@@ -8,8 +8,8 @@ namespace GitCommandsTests.UserRepositoryHistory;
 [TestFixture]
 public class RepositoryStorageTests
 {
-    private IRepositorySerialiser<Repository> _repositorySerialiser;
-    private RepositoryStorage _repositoryStorage;
+    private IRepositorySerialiser<Repository> _repositorySerialiser = null!;
+    private RepositoryStorage _repositoryStorage = null!;
 
     [SetUp]
     public void Setup()
@@ -73,12 +73,12 @@ public class RepositoryStorageTests
     [TestCase("\t")]
     public void Save_should_throw_if_key_null(string key)
     {
-        ((Action)(() => _repositoryStorage.Save(key, null))).Should().Throw<ArgumentException>();
+        ((Action)(() => _repositoryStorage.Save(key, null!))).Should().Throw<ArgumentException>();
     }
 
     [Test]
     public void Save_should_throw_if_repositories_null()
     {
-        ((Action)(() => _repositoryStorage.Save("a", null))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => _repositoryStorage.Save("a", null!))).Should().Throw<ArgumentNullException>();
     }
 }

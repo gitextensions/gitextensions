@@ -1,7 +1,6 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtUtils;
 
 namespace GitUI;
@@ -37,7 +36,7 @@ internal sealed class PathFormatter
                 return (prefix, text, suffix);
 
             case TruncatePathMethod.None:
-            case TruncatePathMethod.Compact when !EnvUtils.RunningOnWindows():
+            case TruncatePathMethod.Compact when !OperatingSystem.IsWindows():
                 (prefix, text, suffix) = FormatString(name, oldName, step: 0, isNameTruncated: false);
                 return (prefix, text, suffix);
 
@@ -48,7 +47,7 @@ internal sealed class PathFormatter
 
                 BinarySearch.Find(min: 0, count: maxStep + 1, step =>
                 {
-                    (string tmpPrefix, string tmpText, string tmpSuffix) = FormatString(name, oldName, step, isNameTruncated: step % 2 == 0);
+                    (string? tmpPrefix, string? tmpText, string? tmpSuffix) = FormatString(name, oldName, step, isNameTruncated: step % 2 == 0);
                     int measuredWidth = MeasureString(tmpPrefix, tmpText, tmpSuffix).Width;
                     bool isShortEnough = measuredWidth <= maxWidth;
 
@@ -70,8 +69,8 @@ internal sealed class PathFormatter
     {
         name = name.TrimEnd(PathUtil.PosixDirectorySeparatorChar);
         string fileName = Path.GetFileName(name);
-        string oldFileName = Path.GetFileName(oldName);
-        string? suffix = fileName == oldFileName ? null : FormatOldName(oldFileName);
+        string? oldFileName = Path.GetFileName(oldName);
+        string? suffix = fileName == oldFileName ? null : FormatOldName(oldFileName!);
         return (fileName, suffix);
     }
 
@@ -108,12 +107,12 @@ internal sealed class PathFormatter
             int nameTruncatedChars = isNameTruncated ? step - numberOfTruncatedChars : numberOfTruncatedChars;
             int oldNameTruncatedChars = step - nameTruncatedChars;
 
-            (string path, string filename) = SplitPathName(TruncatePath(name, name.Length - oldNameTruncatedChars));
+            (string? path, string? filename) = SplitPathName(TruncatePath(name, name.Length - oldNameTruncatedChars));
             string? suffix = FormatOldName(TruncatePath(oldName, oldName.Length - oldNameTruncatedChars));
             return (path, filename, suffix);
         }
 
-        (string prefix, string text) = SplitPathName(TruncatePath(name, name.Length - step));
+        (string? prefix, string? text) = SplitPathName(TruncatePath(name, name.Length - step));
         return (prefix, text, null);
 
         static string TruncatePath(string path, int length)
@@ -131,7 +130,7 @@ internal sealed class PathFormatter
             // The win32 method PathCompactPathEx is only supported on Windows
             TruncatePathMethod truncatePathMethod = AppSettings.TruncatePathMethod;
 
-            if (truncatePathMethod == TruncatePathMethod.Compact && EnvUtils.RunningOnWindows())
+            if (truncatePathMethod == TruncatePathMethod.Compact && OperatingSystem.IsWindows())
             {
                 StringBuilder result = new(length);
                 NativeMethods.PathCompactPathEx(result, path, length, 0);

@@ -11,9 +11,9 @@ internal sealed class SettingTests
     private const string SettingsFileContent = @"<?xml version=""1.0"" encoding=""utf-8""?><dictionary />";
 
     private static readonly TempFileCollection _tempFiles = new();
-    private static string _settingFilePath;
-    private static GitExtSettingsCache _gitExtSettingsCache;
-    private static DistributedSettings _settingContainer;
+    private static string _settingFilePath = null!;
+    private static GitExtSettingsCache _gitExtSettingsCache = null!;
+    private static DistributedSettings _settingContainer = null!;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
@@ -263,7 +263,7 @@ internal sealed class SettingTests
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-        string storedValue = null;
+        string? storedValue = null;
 
         // Act
         AppSettings.UsingContainer(_settingContainer, () =>
@@ -1318,7 +1318,7 @@ internal sealed class SettingTests
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        string storedValue = string.Empty;
+        string? storedValue = string.Empty;
 
         // Act
         AppSettings.UsingContainer(_settingContainer, () =>
@@ -1660,22 +1660,22 @@ internal sealed class SettingTests
 
     private static IEnumerable<object[]> CreateStringCases()
     {
-        yield return new object[] { null };
+        yield return new object[] { null! };
         yield return new object[] { string.Empty };
         yield return new object[] { "_" };
     }
 
     private static IEnumerable<object[]> SaveStringCases()
     {
-        yield return new object[] { null, null };
-        yield return new object[] { null, string.Empty };
-        yield return new object[] { null, "_" };
+        yield return new object[] { null!, null! };
+        yield return new object[] { null!, string.Empty };
+        yield return new object[] { null!, "_" };
 
-        yield return new object[] { string.Empty, null };
+        yield return new object[] { string.Empty, null! };
         yield return new object[] { string.Empty, string.Empty };
         yield return new object[] { string.Empty, "_" };
 
-        yield return new object[] { "_", null };
+        yield return new object[] { "_", null! };
         yield return new object[] { "_", string.Empty };
         yield return new object[] { "_", "_" };
     }

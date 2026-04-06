@@ -13,6 +13,7 @@ using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.RepoHosting;
 using GitUI.CommandsDialogs.SettingsDialog;
+using GitUI.CommandsDialogs.WorktreeDialog;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -177,7 +178,7 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool StartResetCurrentBranchDialog(IWin32Window? owner, string branch)
     {
-        ObjectId objectId = Module.RevParse(branch);
+        ObjectId? objectId = Module.RevParse(branch);
         if (objectId is null)
         {
             MessageBoxes.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -256,6 +257,121 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action);
     }
 
+    public bool WorktreeDelete(IWin32Window? owner, string worktreePath)
+    {
+        return DoActionOnRepo(owner, action: () =>
+        {
+            TaskDialogButton result = TaskDialog.ShowDialog(owner!, new TaskDialogPage
+            {
+                Text = string.Format(TranslatedStrings.DeleteWorktreeConfirmation, worktreePath),
+                Caption = TranslatedStrings.DeleteWorktreeCaption,
+                Heading = TranslatedStrings.CannotBeUndone,
+                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                Icon = TaskDialogIcon.Warning,
+                SizeToContent = true
+            });
+
+            if (result != TaskDialogButton.Yes)
+            {
+                return false;
+            }
+
+            if (!worktreePath.TryDeleteDirectory(out string? errorMessage))
+            {
+                TaskDialog.ShowDialog(owner!, new TaskDialogPage
+                {
+                    Text = $"{string.Format(TranslatedStrings.DeleteWorktreeFailed, worktreePath)}\n{errorMessage}",
+                    Caption = TranslatedStrings.Error,
+                    Icon = TaskDialogIcon.Error,
+                    SizeToContent = true
+                });
+
+                return false;
+            }
+
+            StartCommandLineProcessDialog(owner, command: null, "worktree prune");
+            return true;
+        });
+    }
+
+    public bool WorktreeSwitch(IWin32Window? owner, string worktreePath)
+    {
+        if (!AppSettings.DontConfirmSwitchWorktree)
+        {
+            TaskDialogButton result = TaskDialog.ShowDialog(owner!, new TaskDialogPage
+            {
+                Text = string.Format(TranslatedStrings.SwitchWorktreeConfirmation, worktreePath),
+                Caption = TranslatedStrings.SwitchWorktreeCaption,
+                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                Icon = TaskDialogIcon.Information,
+                SizeToContent = true
+            });
+
+            if (result != TaskDialogButton.Yes)
+            {
+                return false;
+            }
+        }
+
+        if (!Directory.Exists(worktreePath))
+        {
+            return false;
+        }
+
+        if (FindFormBrowse(owner) is FormBrowse browse)
+        {
+            browse.SetWorkingDir(Path.GetFullPath(worktreePath));
+        }
+
+        return true;
+    }
+
+    public bool WorktreeCreate(IWin32Window? owner, string mainWorktreePath)
+    {
+        return DoActionOnRepo(owner, action: () =>
+        {
+            using FormCreateWorktree form = new(this, mainWorktreePath);
+            if (form.ShowDialog(owner) != DialogResult.OK)
+            {
+                return false;
+            }
+
+            if (form.OpenWorktree)
+            {
+                GitModule newModule = new(this.GetRequiredService<IGitExecutorProvider>(), form.WorktreeDirectory);
+                if (newModule.IsValidGitWorkingDir() && FindFormBrowse(owner) is FormBrowse browse)
+                {
+                    browse.SetWorkingDir(Path.GetFullPath(form.WorktreeDirectory));
+                }
+            }
+
+            return true;
+        });
+    }
+
+    private static FormBrowse? FindFormBrowse(IWin32Window? window)
+    {
+        if (window is FormBrowse browse)
+        {
+            return browse;
+        }
+
+        if (window is Form form)
+        {
+            while (form.Owner is not null)
+            {
+                if (form.Owner is FormBrowse ownerBrowse)
+                {
+                    return ownerBrowse;
+                }
+
+                form = form.Owner;
+            }
+        }
+
+        return null;
+    }
+
     public void ShowModelessForm(IWin32Window? owner, bool requiresValidWorkingDir,
         EventHandler<GitUIEventArgs>? preEvent, EventHandler<GitUIPostActionEventArgs>? postEvent, Func<Form> provideForm)
     {
@@ -271,7 +387,7 @@ public sealed class GitUICommands : IGitUICommands
 
         Form form = provideForm();
 
-        void FormClosed(object sender, FormClosedEventArgs e)
+        void FormClosed(object? sender, FormClosedEventArgs e)
         {
             form.FormClosed -= FormClosed;
             InvokePostEvent(owner, true, postEvent);
@@ -433,7 +549,7 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool StartCreateBranchDialog(IWin32Window? owner, string? branch)
     {
-        ObjectId objectId = Module.RevParse(branch);
+        ObjectId? objectId = Module.RevParse(branch!);
         if (objectId is null)
         {
             MessageBoxes.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -714,7 +830,7 @@ public sealed class GitUICommands : IGitUICommands
         return DoActionOnRepo(owner, Action, changesRepo: false);
     }
 
-    public bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true, string initialStash = null)
+    public bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true, string? initialStash = null)
     {
         bool Action()
         {
@@ -1180,7 +1296,7 @@ public sealed class GitUICommands : IGitUICommands
     {
         // Note: Order in revisions is that first clicked is last in array
 
-        if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out string firstRevision, out string secondRevision, out string error))
+        if (!RevisionDiffInfoProvider.TryGet(revisions, diffKind, out string? firstRevision, out string? secondRevision, out string? error))
         {
             MessageBoxes.Show(owner, error, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
@@ -1260,15 +1376,18 @@ public sealed class GitUICommands : IGitUICommands
 
     private bool InvokeEvent(IWin32Window? ownerForm, EventHandler<GitUIEventArgs>? gitUIEventHandler)
     {
-        try
+        if (gitUIEventHandler is not null)
         {
-            GitUIEventArgs e = new(ownerForm, this);
-            gitUIEventHandler?.Invoke(this, e);
-            return !e.Cancel;
-        }
-        catch (Exception ex)
-        {
-            MessageBoxes.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            try
+            {
+                GitUIEventArgs e = new(ownerForm, this);
+                gitUIEventHandler.Invoke(this, e);
+                return !e.Cancel;
+            }
+            catch (Exception ex)
+            {
+                MessageBoxes.Show(ex.Message, "Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         return true;
@@ -1332,7 +1451,7 @@ public sealed class GitUICommands : IGitUICommands
                             {
                                 ThreadHelper.FileAndForget(async () =>
                                 {
-                                    string remoteName = await gh.AddUpstreamRemoteAsync();
+                                    string? remoteName = await gh.AddUpstreamRemoteAsync();
                                     if (!string.IsNullOrEmpty(remoteName))
                                     {
                                         StartPullDialogAndPullImmediately(owner, remoteBranch: null, remoteName, GitPullAction.Fetch);
@@ -1539,7 +1658,7 @@ public sealed class GitUICommands : IGitUICommands
                 }
 
                 // User supplied a path. Open the repository if its a valid path
-                string dir = !string.IsNullOrWhiteSpace(command) && File.Exists(command) ? Path.GetDirectoryName(command) : command;
+                string? dir = !string.IsNullOrWhiteSpace(command) && File.Exists(command) ? Path.GetDirectoryName(command) : command;
                 if (args.Count == 2 && Directory.Exists(dir))
                 {
                     LaunchBrowse(dir);

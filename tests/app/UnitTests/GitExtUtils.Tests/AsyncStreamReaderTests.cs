@@ -18,7 +18,7 @@ public sealed class AsyncStreamReaderTests
     [TearDown]
     public void TearDown()
     {
-        ThreadHelper.JoinableTaskContext = null;
+        ThreadHelper.JoinableTaskContext = null!;
     }
 
     [Test]

@@ -11,7 +11,6 @@ using System.Xml.Serialization;
 
 namespace BugReporter.Serialization;
 
-[Serializable]
 [XmlRoot("dictionary")]
 public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable where TKey : notnull where TValue : notnull
 {
@@ -64,26 +63,17 @@ public class SerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IX
     {
         foreach (TKey key in Keys)
         {
-            writer.WriteStartElement(key.ToString().Replace(" ", ""));
+            writer.WriteStartElement(key.ToString()!.Replace(" ", ""));
 
             // Check to see if we can actually serialize element
-#pragma warning disable SYSLIB0050 // 'Type.IsSerializable' is obsolete: 'Formatter-based serialization is obsolete and should not be used.'
-            if (this[key].GetType().IsSerializable)
-#pragma warning restore SYSLIB0050
+            // if it's Serializable doesn't mean serialization will succeed (IE. GUID and SQLError types)
+            try
             {
-                // if it's Serializable doesn't mean serialization will succeed (IE. GUID and SQLError types)
-                try
-                {
-                    writer.WriteValue(this[key]);
-                }
-                catch (Exception)
-                {
-                    // we're not Throwing anything here, otherwise evil thing will happen
-                    writer.WriteValue(this[key].ToString());
-                }
+                writer.WriteValue(this[key]);
             }
-            else
+            catch (Exception)
             {
+                // we're not Throwing anything here, otherwise evil thing will happen
                 // If Type has custom implementation of ToString() we'll get something useful here
                 // Otherwise we'll get Type string. (Still better than crashing).
                 writer.WriteValue(this[key].ToString());

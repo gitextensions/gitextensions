@@ -17,8 +17,8 @@ internal partial class FilterToolBar : ToolStripEx
     private IRevisionGridFilter? _revisionGridFilter;
     private bool _isApplyingFilter;
     private bool _filterBeingChanged;
-    private Func<RefsFilter, IReadOnlyList<IGitRef>> _getRefs;
-    private string _tslblRevisionFilterToolTip;
+    private Func<RefsFilter, IReadOnlyList<IGitRef>> _getRefs = null!;
+    private string _tslblRevisionFilterToolTip = null!;
 
     public FilterToolBar()
     {
@@ -79,7 +79,7 @@ internal partial class FilterToolBar : ToolStripEx
 
             // Split at whitespace (char[])null is default) but with split options.
             // Ignore quoting, Git revisions do not allow spaces.
-            foreach (string branch in filter.Split((char[])null, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+            foreach (string branch in filter.Split((char[]?)null, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
             {
                 bool wildcardBranchFilter = branch.IndexOfAny(['?', '*', '[']) >= 0;
                 if (branch.StartsWith("--") || refs.Any(r => r.LocalName == branch) || branch.Contains(".."))
@@ -93,7 +93,7 @@ internal partial class FilterToolBar : ToolStripEx
                 else
                 {
                     string gitref = branch.StartsWith('^') ? branch[1..] : branch;
-                    ObjectId oid = GetModule().RevParse(gitref);
+                    ObjectId? oid = GetModule().RevParse(gitref);
                     if (oid is null)
                     {
                         TaskDialogPage page = new()
@@ -384,7 +384,7 @@ internal partial class FilterToolBar : ToolStripEx
 
         // Add to dropdown and settings, unless already included
         string filter = tstxtRevisionFilter.Text.Trim();
-        if (!string.IsNullOrWhiteSpace(filter) && (tstxtRevisionFilter.Items.Count == 0 || filter != (string)tstxtRevisionFilter.Items[0]))
+        if (!string.IsNullOrWhiteSpace(filter) && (tstxtRevisionFilter.Items.Count == 0 || filter != (string?)tstxtRevisionFilter.Items[0]))
         {
             if (tstxtRevisionFilter.Items.Contains(filter))
             {
@@ -395,7 +395,7 @@ internal partial class FilterToolBar : ToolStripEx
             tstxtRevisionFilter.Text = filter;
             const int maxFilterItems = 30;
             AppSettings.RevisionFilterDropdowns = [.. tstxtRevisionFilter.Items.Cast<object>()
-                .Select(item => item.ToString()).Take(maxFilterItems)];
+                .Select(item => item.ToString()!).Take(maxFilterItems)];
         }
 
         tsbtnAdvancedFilter.ToolTipText = e.FilterSummary;
@@ -490,7 +490,7 @@ internal partial class FilterToolBar : ToolStripEx
 
     internal void RefreshBrowseDialogShortcutKeys(IReadOnlyList<HotkeyCommand> hotkeys)
     {
-        _tslblRevisionFilterToolTip ??= tslblRevisionFilter.ToolTipText;
+        _tslblRevisionFilterToolTip ??= tslblRevisionFilter.ToolTipText!;
 
         tslblRevisionFilter.ToolTipText = _tslblRevisionFilterToolTip.UpdateSuffix(hotkeys.GetShortcutToolTip(FormBrowse.Command.FocusFilter));
     }

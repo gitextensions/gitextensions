@@ -2,6 +2,8 @@
 using System.Reactive.Subjects;
 using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -9,7 +11,6 @@ using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
-using Newtonsoft.Json;
 
 namespace GitCommandsTests;
 
@@ -119,7 +120,7 @@ public sealed class RevisionReaderTests
     [Test]
     public void TryParseRevisionshould_return_false_if_argument_is_invalid()
     {
-        ArraySegment<byte> chunk = null;
+        ArraySegment<byte> chunk = null!;
         RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), ""), _logOutputEncoding, _sixMonths);
 
         // Set to a high value so Debug.Assert do not raise exceptions
@@ -161,7 +162,7 @@ public sealed class RevisionReaderTests
 
         // Set to a high value so Debug.Assert do not raise exceptions
         reader.GetTestAccessor().NoOfParseError = 100;
-        reader.GetTestAccessor().TryParseRevision(chunk, out GitRevision rev)
+        reader.GetTestAccessor().TryParseRevision(chunk, out GitRevision? rev)
             .Should().Be(expectedReturn);
 
         if (!expectedReturn)
@@ -170,21 +171,48 @@ public sealed class RevisionReaderTests
         }
 
         // No LocalTime for the time stamps
-        JsonSerializerSettings timeZoneSettings = new()
+        JsonSerializerOptions timeZoneOptions = new()
         {
-            DateTimeZoneHandling = DateTimeZoneHandling.Utc
+            Converters =
+            {
+                new UtcDateTimeJsonConverter(),
+                new EncodingJsonConverter(),
+            },
+            ReferenceHandler = ReferenceHandler.IgnoreCycles,
         };
 
         if (hasEmptyReflogSelector)
         {
-            rev.ReflogSelector.Should().BeNull();
+            rev!.ReflogSelector.Should().BeNull();
         }
         else
         {
-            rev.ReflogSelector.Should().NotBeNull();
+            rev!.ReflogSelector.Should().NotBeNull();
         }
 
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(rev, timeZoneSettings))
+        await Verifier.VerifyJson(JsonSerializer.Serialize(rev, timeZoneOptions))
             .UseParameters(testName);
+    }
+
+    /// <summary>
+    ///  Serializes <see cref="DateTime"/> values as UTC to keep snapshot output stable across time zones.
+    /// </summary>
+    private sealed class UtcDateTimeJsonConverter : JsonConverter<DateTime>
+    {
+        public override DateTime Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            => reader.GetDateTime();
+
+        public override void Write(Utf8JsonWriter writer, DateTime value, JsonSerializerOptions options)
+            => writer.WriteStringValue(DateTime.SpecifyKind(value, DateTimeKind.Utc));
+    }
+
+    // STJ cannot serialize Encoding (contains ReadOnlySpan<byte> Preamble). Serialize as name string.
+    private sealed class EncodingJsonConverter : JsonConverter<Encoding>
+    {
+        public override Encoding Read(ref Utf8JsonReader reader, Type typeToConvert, JsonSerializerOptions options)
+            => Encoding.GetEncoding(reader.GetString()!);
+
+        public override void Write(Utf8JsonWriter writer, Encoding value, JsonSerializerOptions options)
+            => writer.WriteStringValue(value.WebName);
     }
 }

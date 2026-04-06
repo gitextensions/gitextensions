@@ -1,7 +1,6 @@
 ﻿using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Config;
@@ -10,7 +9,6 @@ using GitCommands.Git.Extensions;
 using GitCommands.Patches;
 using GitCommands.Remotes;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
@@ -100,7 +98,7 @@ public sealed partial class GitModule : IGitModule
             string currentPath = WorkingDir.RemoveTrailingPathSeparator();
 
             // Try to find an ancestor path that contains a .gitmodules file and is a valid work dir
-            string superprojectPath = PathUtil.FindAncestors(currentPath).FirstOrDefault(HasGitModulesFile);
+            string? superprojectPath = PathUtil.FindAncestors(currentPath).FirstOrDefault(HasGitModulesFile);
 
             // If we didn't find it, but there's a .git file in the current folder, look for a gitdir:
             // line in that file that points to the location of the .git folder
@@ -177,15 +175,7 @@ public sealed partial class GitModule : IGitModule
 
     public IGitCommandRunner GitCommandRunner => _executor.GitCommandRunner;
 
-    public string GetSelectedBranch(bool emptyIfDetached = false) => _executor.GetSelectedBranch(emptyIfDetached);
-
-    public IExecutable GitWindowsExecutable => _executor.GitWindowsExecutable;
-
-    public IGitCommandRunner GitWindowsCommandRunner => _executor.GitWindowsCommandRunner;
-
-    public string WslDistro => _executor.WslDistro;
-
-    public string GetGitDirectory() => _executor.GetGitDirectory();
+    public string GetSelectedBranch(bool emptyIfDetached = false) => Commands.GetSelectedBranch(_executor, emptyIfDetached);
 
     /// <summary>
     ///  Gets the system encoding.
@@ -486,7 +476,7 @@ public sealed partial class GitModule : IGitModule
     /// </summary>
     public static string? TryFindGitWorkingDir(string? startDir)
     {
-        string dir = startDir?.Trim();
+        string? dir = startDir?.Trim();
 
         while (!string.IsNullOrWhiteSpace(dir))
         {
@@ -622,7 +612,7 @@ public sealed partial class GitModule : IGitModule
 
     public async Task SaveBlobAsAsync(string saveAs, string blob, CancellationToken cancellationToken)
     {
-        using MemoryStream blobStream = await GetFileStreamAsync(blob, cancellationToken);
+        using MemoryStream? blobStream = await GetFileStreamAsync(blob, cancellationToken);
         if (blobStream is null)
         {
             return;
@@ -665,9 +655,9 @@ public sealed partial class GitModule : IGitModule
     {
         Directory.SetCurrentDirectory(WorkingDir);
 
-        string baseFile = CheckoutPart(1, unmergedData.Filename + ".BASE", unmergedData.Base.Filename);
-        string localFile = CheckoutPart(2, unmergedData.Filename + ".LOCAL", unmergedData.Local.Filename);
-        string remoteFile = CheckoutPart(3, unmergedData.Filename + ".REMOTE", unmergedData.Remote.Filename);
+        string? baseFile = CheckoutPart(1, unmergedData.Filename + ".BASE", unmergedData.Base.Filename);
+        string? localFile = CheckoutPart(2, unmergedData.Filename + ".LOCAL", unmergedData.Local.Filename);
+        string? remoteFile = CheckoutPart(3, unmergedData.Filename + ".REMOTE", unmergedData.Remote.Filename);
 
         return (baseFile, localFile, remoteFile);
 
@@ -876,7 +866,7 @@ public sealed partial class GitModule : IGitModule
 
     public string GetCommitCountString(ObjectId fromId, string to)
     {
-        bool cache = !fromId.IsArtificial && ObjectId.TryParse(to, out ObjectId toId) && !toId.IsArtificial;
+        bool cache = !fromId.IsArtificial && ObjectId.TryParse(to, out ObjectId? toId) && !toId.IsArtificial;
         (int? added, int? removed) = GetRevListLeftRightCount(fromId, to, cache);
 
         if (removed is null || added is null)
@@ -895,7 +885,7 @@ public sealed partial class GitModule : IGitModule
 
     public void RunGitK()
     {
-        if (EnvUtils.RunningOnUnix())
+        if (!OperatingSystem.IsWindows())
         {
             new Executable("gitk", WorkingDir).Start(createWindow: true);
         }
@@ -915,7 +905,7 @@ public sealed partial class GitModule : IGitModule
     public void RunGui()
     {
         ArgumentBuilder args;
-        if (EnvUtils.RunningOnUnix())
+        if (!OperatingSystem.IsWindows())
         {
             args = new GitArgumentBuilder("gui");
             _ = GitExecutable.Start(args, createWindow: true);
@@ -971,7 +961,7 @@ public sealed partial class GitModule : IGitModule
 
     public GitRevision GetRevision(ObjectId? objectId = null, bool shortFormat = false, bool loadRefs = false)
     {
-        GitRevision revision = new RevisionReader(this, allBodies: true).GetRevision(objectId?.ToString(), hasNotes: !shortFormat, throwOnError: true, cancellationToken: default)!;
+        GitRevision revision = new RevisionReader(this, allBodies: true).GetRevision(objectId?.ToString()!, hasNotes: !shortFormat, throwOnError: true, cancellationToken: default)!;
 
         if (loadRefs)
         {
@@ -1111,7 +1101,7 @@ public sealed partial class GitModule : IGitModule
         string submodule = lines[0];
 
         if (submodule.Length < ObjectId.Sha1CharCount + 3
-            || !ObjectId.TryParse(submodule, 1, out ObjectId commitId))
+            || !ObjectId.TryParse(submodule, 1, out ObjectId? commitId))
         {
             return (' ', null);
         }
@@ -1171,7 +1161,7 @@ public sealed partial class GitModule : IGitModule
         return new GitModule(_executorProvider, GetSubmoduleFullPath(localPath));
     }
 
-    IGitModule IGitModule.GetSubmodule(string submoduleName)
+    IGitModule IGitModule.GetSubmodule(string? submoduleName)
     {
         return GetSubmodule(submoduleName);
     }
@@ -1257,7 +1247,7 @@ public sealed partial class GitModule : IGitModule
 
             Validates.NotNull(configFile);
 
-            IConfigSection configSection = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
+            IConfigSection? configSection = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
 
             Assumes.True(configSection is not null, $"`git submodule status` returned submodule \"{localPath}\" that was not found in .gitmodules");
             Assumes.True(configSection.SubSection is not null, $"Config section must have a non-null sub-section");
@@ -1427,18 +1417,18 @@ public sealed partial class GitModule : IGitModule
                     continue;
                 }
 
-                filesToCheckout.Add(item.IsRenamed ? item.OldName : item.Name);
+                filesToCheckout.Add(item.IsRenamed ? item.OldName! : item.Name);
             }
             else if (!item.IsNew && !postUnstageStatus.Value.Any(i => i.IsNew && i.Name == item.Name))
             {
                 if (resetId is not null || UnmergedNotIndex(item, postUnstageStatus))
                 {
-                    filesToCheckout.Add(item.IsRenamed ? item.OldName : item.Name);
+                    filesToCheckout.Add(item.IsRenamed ? item.OldName! : item.Name);
                 }
                 else
                 {
                     // reset to head
-                    filesToReset.Add(item.IsRenamed ? item.OldName : item.Name);
+                    filesToReset.Add(item.IsRenamed ? item.OldName! : item.Name);
                 }
             }
         }
@@ -1507,7 +1497,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         // Reset to index has no revision string
-        string revStr = revision == ObjectId.IndexId ? "" : revision?.ToString() ?? RevParse("HEAD").ToString();
+        string revStr = revision == ObjectId.IndexId ? "" : revision?.ToString() ?? RevParse("HEAD")!.ToString();
 
         // Run batch arguments to work around max command line length on Windows. Fix #6593
         // 3: double quotes + ' '
@@ -2116,7 +2106,7 @@ public sealed partial class GitModule : IGitModule
                 _remoteColors ??= new ConfigFileRemoteSettingsManager(getModule: () => this)
                             .LoadRemotes(loadDisabled: false)
                             .Where(r => !string.IsNullOrEmpty(r.Color) && !string.IsNullOrEmpty(r.Name))
-                            .ToFrozenDictionary(r => r.Name, r => ColorTranslator.FromHtml(r.Color), StringComparer.Ordinal);
+                            .ToFrozenDictionary(r => r.Name!, r => ColorTranslator.FromHtml(r.Color!), StringComparer.Ordinal);
             }
         }
 
@@ -2170,6 +2160,79 @@ public sealed partial class GitModule : IGitModule
         }
 
         return stashes;
+    }
+
+    /// <summary>
+    /// Returns the list of git worktrees for this repository by parsing
+    /// the output of <c>git worktree list --porcelain -z</c>.
+    /// </summary>
+    public IReadOnlyList<GitWorktree> GetWorktrees()
+    {
+        GitArgumentBuilder args = new("worktree")
+        {
+            "list",
+            "--porcelain",
+            "-z"
+        };
+
+        string output = GitExecutable.GetOutput(args);
+        List<GitWorktree> worktrees = [];
+
+        string? path = null;
+        string? sha1 = null;
+        string? branch = null;
+        GitWorktreeHeadType headType = GitWorktreeHeadType.Branch;
+
+        foreach (string field in output.LazySplit('\0'))
+        {
+            // Double \0 (empty field) marks the boundary between worktree records
+            if (field.Length == 0)
+            {
+                if (path is not null)
+                {
+                    string fullPath = GetWindowsPath(path);
+                    bool isDeleted = !Directory.Exists(fullPath);
+                    worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted));
+                }
+
+                path = null;
+                sha1 = null;
+                branch = null;
+                headType = GitWorktreeHeadType.Branch;
+                continue;
+            }
+
+            int spaceIndex = field.IndexOf(' ');
+            string key = spaceIndex >= 0 ? field[..spaceIndex] : field;
+            string value = spaceIndex >= 0 ? field[(spaceIndex + 1)..] : "";
+            switch (key)
+            {
+                case "worktree":
+                    path = value;
+                    break;
+                case "HEAD":
+                    sha1 = value;
+                    break;
+                case "branch":
+                    branch = value.RemovePrefix(GitRefName.RefsHeadsPrefix);
+                    break;
+                case "bare":
+                    headType = GitWorktreeHeadType.Bare;
+                    break;
+                case "detached":
+                    headType = GitWorktreeHeadType.Detached;
+                    break;
+            }
+        }
+
+        if (path is not null)
+        {
+            string fullPath = GetWindowsPath(path);
+            bool isDeleted = !Directory.Exists(fullPath);
+            worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted));
+        }
+
+        return worktrees;
     }
 
     public async Task<ExecutionResult> GetSingleDifftoolAsync(
@@ -2998,7 +3061,7 @@ public sealed partial class GitModule : IGitModule
         // do not show default head if remote has a branch on the same commit
         foreach (IGitRef gitRef in gitRefs)
         {
-            if (headByRemote.TryGetValue(gitRef.Remote, out GitRef defaultHead) &&
+            if (headByRemote.TryGetValue(gitRef.Remote, out GitRef? defaultHead) &&
                 gitRef.ObjectId == defaultHead.ObjectId)
             {
                 headByRemote.Remove(gitRef.Remote);
@@ -3629,7 +3692,7 @@ public sealed partial class GitModule : IGitModule
             return true;
         }
 
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             return Process.GetProcessesByName("git").Length > 0;
         }
@@ -3741,7 +3804,8 @@ public sealed partial class GitModule : IGitModule
         return ReEncodeStringFromLossless(s, LogOutputEncoding);
     }
 
-    public string? ReEncodeCommitMessage(string s)
+    [return: NotNullIfNotNull(nameof(s))]
+    public string? ReEncodeCommitMessage(string? s)
     {
         return ReEncodeStringFromLossless(s, LogOutputEncoding)?.Trim();
     }

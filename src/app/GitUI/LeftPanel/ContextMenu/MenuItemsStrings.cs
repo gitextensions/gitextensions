@@ -10,8 +10,8 @@ public class MenuItemsStrings : Translate
     // the name of the members act as keys for the generated entries in the translation files (xlf)
 
     /// <see cref="IGitRefActions"/>
-    internal TranslationString Checkout;
-    internal TranslationString Rebase;
+    internal TranslationString Checkout = null!;
+    internal TranslationString Rebase = null!;
     internal readonly TranslationString Merge = new("&Merge into current branch...");
     internal readonly TranslationString CreateBranch = new("Create &branch...");
     internal readonly TranslationString Reset = new("Re&set current branch to here...");
@@ -20,7 +20,7 @@ public class MenuItemsStrings : Translate
     internal TranslationString Rename = new("R&ename branch...");
 
     /// <see cref="ICanDelete"/>
-    internal TranslationString Delete;
+    internal TranslationString Delete = null!;
 
     internal Dictionary<MenuItemKey, TranslationString> Tooltips { get; } = [];
 

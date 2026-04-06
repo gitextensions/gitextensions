@@ -1,22 +1,22 @@
-﻿using GitExtensions.Extensibility.BuildServerIntegration;
+﻿using System.Text.Json.Serialization;
+using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
-using Newtonsoft.Json;
 
 namespace GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
 
 public class GitlabPipeline
 {
-    [JsonProperty("id")]
+    [JsonPropertyName("id")]
     public int Id { get; set; }
-    [JsonProperty("status")]
-    public string Status { get; set; }
-    [JsonProperty("sha")]
-    public string Sha { get; set; }
-    [JsonProperty("web_url")]
-    public string WebUrl { get; set; }
-    [JsonProperty("created_at")]
+    [JsonPropertyName("status")]
+    public string Status { get; set; } = null!;
+    [JsonPropertyName("sha")]
+    public string Sha { get; set; } = null!;
+    [JsonPropertyName("web_url")]
+    public string WebUrl { get; set; } = null!;
+    [JsonPropertyName("created_at")]
     public DateTime CreatedAt { get; set; }
-    [JsonProperty("updated_at")]
+    [JsonPropertyName("updated_at")]
     public DateTime UpdatedAt { get; set; }
 
     public BuildInfo ToBuildInfo()

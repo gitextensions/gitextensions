@@ -28,7 +28,7 @@ public sealed class MockExecutable : IExecutable
         return new DelegateDisposable(
             () =>
             {
-                if (_outputStackByArguments.TryGetValue(arguments, out ConcurrentStack<(string output, int? exitCode, string? error)> queue) &&
+                if (_outputStackByArguments.TryGetValue(arguments, out ConcurrentStack<(string output, int? exitCode, string? error)>? queue) &&
                     queue.TryPeek(out (string output, int? exitCode, string? error) item) &&
                     output == item.output && error == item.error)
                 {
@@ -73,14 +73,14 @@ public sealed class MockExecutable : IExecutable
         bool createWindow,
         bool redirectInput,
         bool redirectOutput,
-        Encoding outputEncoding,
+        Encoding? outputEncoding,
         bool useShellExecute = false,
         bool throwOnErrorExit = true,
         CancellationToken cancellationToken = default)
     {
         System.Diagnostics.Debug.WriteLine($"mock-git {arguments}");
 
-        if (_outputStackByArguments.TryRemove(arguments, out ConcurrentStack<(string output, int? exitCode, string? error)> queue) &&
+        if (_outputStackByArguments.TryRemove(arguments, out ConcurrentStack<(string output, int? exitCode, string? error)>? queue) &&
             queue.TryPop(out (string output, int? exitCode, string? error) item))
         {
             if (queue.IsEmpty)

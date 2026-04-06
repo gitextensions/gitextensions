@@ -52,7 +52,7 @@ internal sealed class LocalBranchTree : BaseRefTree
         #endregion
 
         Nodes nodes = new(this);
-        IDictionary<string, AheadBehindData> aheadBehindData = _aheadBehindDataProvider?.GetData();
+        IDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData();
         string currentBranch = _revisionGridInfo.GetCurrentBranch();
         Dictionary<string, BaseRevisionNode> pathToNode = [];
         foreach (IGitRef branch in PrioritizedBranches(branches))
@@ -68,7 +68,7 @@ internal sealed class LocalBranchTree : BaseRefTree
                 localBranchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), aheadBehind.RemoteRef);
             }
 
-            BaseRevisionNode parent = localBranchNode.CreateRootNode(pathToNode, (tree, parentPath) => new BranchPathNode(tree, parentPath));
+            BaseRevisionNode? parent = localBranchNode.CreateRootNode(pathToNode, (tree, parentPath) => new BranchPathNode(tree, parentPath));
             if (parent is not null)
             {
                 nodes.AddNode(parent);
@@ -97,7 +97,7 @@ internal sealed class LocalBranchTree : BaseRefTree
             return;
         }
 
-        LocalBranchNode currentBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsCurrent);
+        LocalBranchNode? currentBranch = Nodes.DepthEnumerator<LocalBranchNode>().FirstOrDefault(b => b.IsCurrent);
         TreeViewNode.TreeView.SelectedNode = currentBranch?.TreeViewNode;
     }
 }

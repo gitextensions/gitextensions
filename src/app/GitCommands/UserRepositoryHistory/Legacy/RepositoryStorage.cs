@@ -52,7 +52,7 @@ public sealed class RepositoryStorage : IRepositoryStorage
         // backup the original setting
         AppSettings.SetString(KeyHistoryBackup, legacySetting);
 
-        IReadOnlyList<RepositoryCategory> history = _repositoryCategorySerialiser.Deserialize(legacySetting);
+        IReadOnlyList<RepositoryCategory>? history = _repositoryCategorySerialiser.Deserialize(legacySetting);
         if (history is null)
         {
             return [];

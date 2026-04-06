@@ -88,7 +88,7 @@ public sealed class AsyncStreamReader : IDisposable
 
         return;
 
-        CancellationToken GetReadCancellation(bool addTimeout, ref CancellationTokenSource readTimeoutCancellationTokenSource)
+        CancellationToken GetReadCancellation(bool addTimeout, ref CancellationTokenSource? readTimeoutCancellationTokenSource)
         {
             if (!addTimeout)
             {

@@ -72,7 +72,7 @@ public sealed class AvatarMemoryCache : IAvatarProvider, IAvatarCacheCleaner
                 _requested.Add(key);
             }
 
-            Image image = await _inner.GetAvatarAsync(email, name, imageSize);
+            Image? image = await _inner.GetAvatarAsync(email, name, imageSize);
 
             if (image is not null)
             {
@@ -108,7 +108,7 @@ public sealed class AvatarMemoryCache : IAvatarProvider, IAvatarCacheCleaner
         {
             foreach ((string email, int imageSize) key in _cache.Keys)
             {
-                if (_cache.TryGetValue(key, out Image cachedImage))
+                if (_cache.TryGetValue(key, out Image? cachedImage))
                 {
                     cachedImage.Dispose();
                 }

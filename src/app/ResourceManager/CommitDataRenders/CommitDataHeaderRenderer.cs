@@ -119,7 +119,7 @@ public sealed partial class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
             header.AppendLine(_labelFormatter.FormatLabel(TranslatedStrings.GetChildren(commitData.ChildIds.Count), padding) + RenderObjectIds(commitData.ChildIds, showRevisionsAsLinks));
         }
 
-        IReadOnlyList<ObjectId> parentIds = commitData.ParentIds;
+        IReadOnlyList<ObjectId>? parentIds = commitData.ParentIds;
         if (parentIds?.Count > 0)
         {
             header.AppendLine(_labelFormatter.FormatLabel(TranslatedStrings.GetParents(parentIds.Count), padding) + RenderObjectIds(parentIds, showRevisionsAsLinks));
@@ -160,7 +160,7 @@ public sealed partial class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
         return header.ToString();
     }
 
-    private static string GetEmail(string author)
+    private static string GetEmail(string? author)
     {
         if (string.IsNullOrEmpty(author))
         {

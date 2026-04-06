@@ -145,7 +145,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
         return _commandOutputParser.GetBranchNames(result.StandardOutput, context.RemoteBranches)
                                     .Where(branchName => branchName != curBranch && branchName != context.ReferenceBranch)
                                     .Where(branchName => (!context.RemoteBranches || branchName.StartsWith(context.RemoteRepositoryName + "/"))
-                                                        && (withoutRegexFilter || Regex.IsMatch(branchName, context.RegexFilter, options) == regexMustMatch));
+                                                        && (withoutRegexFilter || Regex.IsMatch(branchName, context.RegexFilter!, options) == regexMustMatch));
     }
 
     private void Delete_Click(object sender, EventArgs e)
@@ -265,7 +265,7 @@ public sealed partial class DeleteUnusedBranchesForm : GitExtensionsFormBase
         this.InvokeAndForget(RefreshObsoleteBranchesAsync);
     }
 
-    private void CheckBoxHeader_OnCheckBoxClicked(object sender, CheckBoxHeaderCellEventArgs e)
+    private void CheckBoxHeader_OnCheckBoxClicked(object? sender, CheckBoxHeaderCellEventArgs e)
     {
         BranchesGrid.CommitEdit(DataGridViewDataErrorContexts.Commit);
 

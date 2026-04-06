@@ -35,6 +35,7 @@ partial class FormBrowse
         commitInfoRightwardMenuItem = new ToolStripMenuItem();
         toolStripSeparator17 = new ToolStripSeparator();
         toolStripButtonLevelUp = new ToolStripSplitButton();
+        toolStripWorktrees = new ToolStripSplitButton();
         _NO_TRANSLATE_WorkingDir = new WorkingDirectoryToolStripSplitButton();
         branchSelect = new ToolStripSplitButton();
         toolStripSeparator1 = new ToolStripSeparator();
@@ -209,6 +210,7 @@ partial class FormBrowse
         menuCommitInfoPosition,
         toolStripSeparator17,
         toolStripButtonLevelUp,
+        toolStripWorktrees,
         _NO_TRANSLATE_WorkingDir,
         branchSelect,
         toolStripSeparator1,
@@ -310,6 +312,17 @@ partial class FormBrowse
         toolStripButtonLevelUp.Size = new Size(32, 22);
         toolStripButtonLevelUp.ToolTipText = "Submodules";
         toolStripButtonLevelUp.ButtonClick += toolStripButtonLevelUp_ButtonClick;
+        // 
+        // toolStripWorktrees
+        // 
+        toolStripWorktrees.DisplayStyle = ToolStripItemDisplayStyle.Image;
+        toolStripWorktrees.Image = Properties.Images.WorkTree;
+        toolStripWorktrees.Name = "toolStripWorktrees";
+        toolStripWorktrees.Size = new Size(32, 22);
+        toolStripWorktrees.ToolTipText = "Worktrees";
+        toolStripWorktrees.Visible = false;
+        toolStripWorktrees.ButtonClick += toolStripWorktrees_ButtonClick;
+        toolStripWorktrees.DropDownOpening += toolStripWorktrees_DropDownOpening;
         // 
         // _NO_TRANSLATE_WorkingDir
         // 
@@ -1554,6 +1567,7 @@ partial class FormBrowse
     private ToolStripSeparator toolStripSeparator22;
     private ToolStripSeparator toolStripSeparator23;
     private ToolStripSplitButton toolStripButtonLevelUp;
+    private ToolStripSplitButton toolStripWorktrees;
     private ToolStripSplitButton toolStripButtonPull;
     private ToolStripMenuItem mergeToolStripMenuItem;
     private ToolStripMenuItem rebaseToolStripMenuItem1;

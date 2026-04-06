@@ -279,7 +279,7 @@ partial class GitModuleTests
             FrozenDictionary<string, Color> colors = _gitModule.GetRemoteColors();
 
             colors.Count.Should().Be(1);
-            _gitModule.GetTestAccessor().RemoteColors.Count.Should().Be(1);
+            _gitModule.GetTestAccessor().RemoteColors!.Count.Should().Be(1);
 
             _gitModule.ResetRemoteColors();
 

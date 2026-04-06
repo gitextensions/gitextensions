@@ -9,7 +9,7 @@ namespace GitCommandsTests;
 [Apartment(ApartmentState.STA)]
 public sealed class AsyncLoaderTests
 {
-    private AsyncLoader _loader;
+    private AsyncLoader _loader = null!;
 
     [SetUp]
     public void SetUp()
@@ -64,8 +64,8 @@ public sealed class AsyncLoaderTests
         ThreadHelper.JoinableTaskFactory.Run(async () =>
         {
             Thread callerThread = Thread.CurrentThread;
-            Thread loadThread = null;
-            Thread continuationThread = null;
+            Thread? loadThread = null;
+            Thread? continuationThread = null;
 
             ClassicAssert.False(callerThread.IsThreadPoolThread);
 
@@ -74,7 +74,7 @@ public sealed class AsyncLoaderTests
                 () => loadThread = Thread.CurrentThread,
                 () => continuationThread = Thread.CurrentThread);
 
-            ClassicAssert.True(loadThread.IsThreadPoolThread);
+            ClassicAssert.True(loadThread!.IsThreadPoolThread);
             ClassicAssert.AreNotSame(loadThread, callerThread);
             ClassicAssert.AreNotSame(loadThread, continuationThread);
         });
@@ -233,7 +233,7 @@ public sealed class AsyncLoaderTests
                 loadContent: () => throw ex,
                 onLoaded: ClassicAssert.Fail));
 
-        Exception oe = ClassicAssert.Throws<Exception>(() => loadTask.Join());
+        Exception? oe = ClassicAssert.Throws<Exception>(() => loadTask.Join());
         ClassicAssert.AreSame(oe, ex);
     }
 
@@ -254,7 +254,7 @@ public sealed class AsyncLoaderTests
             () => throw ex,
             ClassicAssert.Fail));
 
-        Exception oe = ClassicAssert.Throws<Exception>(() => loadTask.Join());
+        Exception? oe = ClassicAssert.Throws<Exception>(() => loadTask.Join());
 
         ClassicAssert.AreEqual(1, observed.Count);
         ClassicAssert.AreSame(ex, observed[0]);

@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using NSubstitute;
@@ -9,8 +9,8 @@ namespace GitCommandsTests.UserRepositoryHistory;
 public class RemoteRepositoryManagerTests
 {
     private const string Key = "history remote";
-    private IRepositoryStorage _repositoryStorage;
-    private RemoteRepositoryManager _manager;
+    private IRepositoryStorage _repositoryStorage = null!;
+    private RemoteRepositoryManager _manager = null!;
     private int _userSetting;
 
     [SetUp]
@@ -161,7 +161,7 @@ public class RemoteRepositoryManagerTests
     [Test]
     public void SaveRecentHistoryAsync_should_throw_if_repositories_null()
     {
-        Func<Task> action = async () => await _manager.SaveRecentHistoryAsync(null);
+        Func<Task> action = async () => await _manager.SaveRecentHistoryAsync(null!);
         action.Should().ThrowAsync<ArgumentNullException>();
     }
 

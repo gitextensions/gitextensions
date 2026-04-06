@@ -105,10 +105,10 @@ public class ControlThreadingExtensionsTests
         await cancellationTokenSource.CancelAsync();
 
         ClassicAssert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
-        OperationCanceledException exception = await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await form.SwitchToMainThreadAsync(cancellationTokenSource.Token));
+        OperationCanceledException? exception = await AssertEx.ThrowsAsync<OperationCanceledException>(async () => await form.SwitchToMainThreadAsync(cancellationTokenSource.Token));
 
         // If both conditions are met on entry, the explicit cancellation token is the one used for the exception
-        ClassicAssert.AreEqual(cancellationTokenSource.Token, exception.CancellationToken);
+        ClassicAssert.AreEqual(cancellationTokenSource.Token, exception!.CancellationToken);
     }
 
     [Test]

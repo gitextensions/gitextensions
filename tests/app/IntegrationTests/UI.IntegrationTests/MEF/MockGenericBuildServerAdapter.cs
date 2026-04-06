@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Composition;
+using System.ComponentModel.Composition;
 using System.Reactive.Concurrency;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
@@ -13,7 +13,7 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages;
 [PartCreationPolicy(CreationPolicy.NonShared)]
 internal class MockGenericBuildServerAdapter : IBuildServerAdapter
 {
-    public string UniqueKey { get; }
+    public string UniqueKey { get; } = null!;
 
     public void Dispose()
     {

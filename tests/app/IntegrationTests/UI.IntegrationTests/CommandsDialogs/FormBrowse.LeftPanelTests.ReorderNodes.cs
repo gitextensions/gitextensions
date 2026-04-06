@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using CommonTestUtils;
 using FluentAssertions;
 using GitCommands;
@@ -13,7 +13,7 @@ namespace GitExtensions.UITests.CommandsDialogs;
 public class FormBrowse_LeftPanel_ReorderNodesTest
 {
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     // Track the original setting value
     private bool _originalShowAuthorAvatarColumn;
@@ -21,7 +21,7 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
 
     private List<bool> _originalRepoObjectsTreeShow = [];
 
-    private GitModuleTestHelper _repo1;
+    private GitModuleTestHelper _repo1 = null!;
 
     [OneTimeSetUp]
     public void SetUpFixture()
@@ -39,11 +39,13 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
         // Show all root nodes for test, restore when done
         _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowBranches);
         _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowRemotes);
+        _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowWorktrees);
         _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowTags);
         _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowStashes);
         _originalRepoObjectsTreeShow.Add(AppSettings.RepoObjectsTreeShowSubmodules);
         AppSettings.RepoObjectsTreeShowBranches = true;
         AppSettings.RepoObjectsTreeShowRemotes = true;
+        AppSettings.RepoObjectsTreeShowWorktrees = true;
         AppSettings.RepoObjectsTreeShowTags = true;
         AppSettings.RepoObjectsTreeShowStashes = true;
         AppSettings.RepoObjectsTreeShowSubmodules = true;
@@ -57,9 +59,10 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
 
         AppSettings.RepoObjectsTreeShowBranches = _originalRepoObjectsTreeShow[0];
         AppSettings.RepoObjectsTreeShowRemotes = _originalRepoObjectsTreeShow[1];
-        AppSettings.RepoObjectsTreeShowTags = _originalRepoObjectsTreeShow[2];
-        AppSettings.RepoObjectsTreeShowSubmodules = _originalRepoObjectsTreeShow[3];
-        AppSettings.RepoObjectsTreeShowStashes = _originalRepoObjectsTreeShow[4];
+        AppSettings.RepoObjectsTreeShowWorktrees = _originalRepoObjectsTreeShow[2];
+        AppSettings.RepoObjectsTreeShowTags = _originalRepoObjectsTreeShow[3];
+        AppSettings.RepoObjectsTreeShowSubmodules = _originalRepoObjectsTreeShow[4];
+        AppSettings.RepoObjectsTreeShowStashes = _originalRepoObjectsTreeShow[5];
     }
 
     [SetUp]
@@ -89,19 +92,19 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
                 List<TreeNode> initialNodes = [.. currNodes.OfType<TreeNode>()];
 
                 // assert
-                AssertListCount(currNodes, 5);
-                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+                AssertListCount(currNodes, 6);
+                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4, 5);
 
                 int first = 0;
                 int last = currNodes.Count - 1;
 
                 // Trying to move first node up should do nothing
                 testAccessor.ReorderTreeNode(currNodes[first], up: true);
-                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4, 5);
 
                 // Similarly, moving last node down should do nothing
                 testAccessor.ReorderTreeNode(currNodes[last], up: false);
-                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4, 5);
             });
     }
 
@@ -118,24 +121,24 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
                 List<TreeNode> initialNodes = [.. currNodes.OfType<TreeNode>()];
 
                 // assert
-                AssertListCount(currNodes, 5);
-                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+                AssertListCount(currNodes, 6);
+                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4, 5);
 
                 // Move first down
                 testAccessor.ReorderTreeNode(currNodes[0], up: false);
-                ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3, 4);
+                ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3, 4, 5);
                 testAccessor.ReorderTreeNode(currNodes[1], up: false);
-                ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3, 4);
+                ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3, 4, 5);
                 testAccessor.ReorderTreeNode(currNodes[2], up: false);
-                ValidateOrder(initialNodes, currNodes, 1, 2, 3, 0, 4);
+                ValidateOrder(initialNodes, currNodes, 1, 2, 3, 0, 4, 5);
 
                 // Then back up
                 testAccessor.ReorderTreeNode(currNodes[3], up: true);
-                ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3, 4);
+                ValidateOrder(initialNodes, currNodes, 1, 2, 0, 3, 4, 5);
                 testAccessor.ReorderTreeNode(currNodes[2], up: true);
-                ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3, 4);
+                ValidateOrder(initialNodes, currNodes, 1, 0, 2, 3, 4, 5);
                 testAccessor.ReorderTreeNode(currNodes[1], up: true);
-                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4);
+                ValidateOrder(initialNodes, currNodes, 0, 1, 2, 3, 4, 5);
             });
     }
 
@@ -150,14 +153,14 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
                 // act
                 TreeNodeCollection currNodes = testAccessor.TreeView.Nodes;
                 List<TreeNode> initialNodes = [.. currNodes.OfType<TreeNode>()];
-                AssertListCount(initialNodes, 5);
+                AssertListCount(initialNodes, 6);
 
                 // Hide nodes between first and last
                 testAccessor.SetTreeVisibleByIndex(1, false);
                 testAccessor.SetTreeVisibleByIndex(2, false);
 
                 // assert
-                AssertListCount(currNodes, 3);
+                AssertListCount(currNodes, 4);
 
                 // Move node 0 down, which should move it to index 3
                 testAccessor.ReorderTreeNode(currNodes[0], up: false);
@@ -167,10 +170,10 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
                 testAccessor.SetTreeVisibleByIndex(2, true);
 
                 // Reset currNodes, should be back
-                AssertListCount(currNodes, 5);
+                AssertListCount(currNodes, 6);
 
-                // Only first and last nodes should have swapped
-                ValidateOrder(initialNodes, currNodes, 3, 1, 2, 0, 4);
+                // Only first and last-visible nodes should have swapped
+                ValidateOrder(initialNodes, currNodes, 3, 1, 2, 0, 4, 5);
             });
     }
 
@@ -182,7 +185,7 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
             return;
         }
 
-        string items = collection.OfType<object>().Select(n => n.ToString()).Join(", ");
+        string items = collection.OfType<object>().Select(n => n.ToString()!).Join(", ");
         ClassicAssert.Fail($"Actual count {actualCount} differs from expected {expectedCount}.{Environment.NewLine}Actual items: {items}");
     }
 

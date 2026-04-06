@@ -1,4 +1,4 @@
-﻿using CommonTestUtils;
+using CommonTestUtils;
 using FluentAssertions;
 using FluentAssertions.Execution;
 using GitCommands;
@@ -14,14 +14,14 @@ namespace UITests.CommandsDialogs;
 [Apartment(ApartmentState.STA)]
 public class SplitterPersistenceTests
 {
-    private IWindowPositionManager _windowPositionManager;
-    private MemorySettings _settings;
+    private IWindowPositionManager _windowPositionManager = null!;
+    private MemorySettings _settings = null!;
 
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     [SetUp]
     public void SetUp()
@@ -170,12 +170,12 @@ public class SplitterPersistenceTests
                     // instead of manually validating each individual setting.
                     foreach (SplitterManager.SplitterData splitterData in form.GetTestAccessor().SplitterManager.GetTestAccessor().Splitters)
                     {
-                        splitters[splitterData.SizeSettingsKey] = null;
-                        splitters[splitterData.DpiSettingsKey] = null;
-                        splitters[splitterData.DistanceSettingsKey] = null;
-                        splitters[splitterData.FontSizeSettingsKey] = null;
-                        splitters[splitterData.Panel1CollapsedSettingsKey] = null;
-                        splitters[splitterData.Panel2CollapsedSettingsKey] = null;
+                        splitters[splitterData.SizeSettingsKey] = null!;
+                        splitters[splitterData.DpiSettingsKey] = null!;
+                        splitters[splitterData.DistanceSettingsKey] = null!;
+                        splitters[splitterData.FontSizeSettingsKey] = null!;
+                        splitters[splitterData.Panel1CollapsedSettingsKey] = null!;
+                        splitters[splitterData.Panel2CollapsedSettingsKey] = null!;
                     }
                 };
 
@@ -198,7 +198,7 @@ public class SplitterPersistenceTests
         {
             if (key.EndsWith("Collapsed"))
             {
-                splitters[key] = _settings.GetBool(key).ToString();
+                splitters[key] = _settings.GetBool(key).ToString()!;
             }
             else
             {

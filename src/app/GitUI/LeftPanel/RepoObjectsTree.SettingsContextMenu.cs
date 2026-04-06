@@ -30,6 +30,7 @@ partial class RepoObjectsTree
         {
             [_branchesTree] = AppSettings.RepoObjectsTreeBranchesIndex,
             [_remotesTree] = AppSettings.RepoObjectsTreeRemotesIndex,
+            [_worktreeTree] = AppSettings.RepoObjectsTreeWorktreesIndex,
             [_tagTree] = AppSettings.RepoObjectsTreeTagsIndex,
             [_submoduleTree] = AppSettings.RepoObjectsTreeSubmodulesIndex,
             [_stashTree] = AppSettings.RepoObjectsTreeStashesIndex
@@ -40,6 +41,7 @@ partial class RepoObjectsTree
     {
         AppSettings.RepoObjectsTreeBranchesIndex = treeToPositionIndex[_branchesTree];
         AppSettings.RepoObjectsTreeRemotesIndex = treeToPositionIndex[_remotesTree];
+        AppSettings.RepoObjectsTreeWorktreesIndex = treeToPositionIndex[_worktreeTree];
         AppSettings.RepoObjectsTreeTagsIndex = treeToPositionIndex[_tagTree];
         AppSettings.RepoObjectsTreeSubmodulesIndex = treeToPositionIndex[_submoduleTree];
         AppSettings.RepoObjectsTreeStashesIndex = treeToPositionIndex[_stashTree];
@@ -47,11 +49,11 @@ partial class RepoObjectsTree
 
     private void ReorderTreeNode(TreeNode node, bool up)
     {
-        Tree tree = (Tree)node.Tag;
+        Tree? tree = (Tree?)node.Tag;
         Dictionary<Tree, int> treeToIndex = GetTreeToPositionIndex();
         Dictionary<int, Tree> indexToTree = treeToIndex.ToDictionary(kvp => kvp.Value, kvp => kvp.Key);
 
-        int currIndex = treeToIndex[tree];
+        int currIndex = treeToIndex[tree!];
 
         // Find next visible tree to swap with, if any
         int swapIndex = currIndex;
@@ -70,7 +72,7 @@ partial class RepoObjectsTree
         Tree swapWithTree = indexToTree[swapIndex];
 
         // Swap indices
-        treeToIndex[tree] = treeToIndex[swapWithTree];
+        treeToIndex[tree!] = treeToIndex[swapWithTree];
         treeToIndex[swapWithTree] = currIndex;
 
         // Save new indices
@@ -79,6 +81,7 @@ partial class RepoObjectsTree
         // Remove all trees, then show enabled ones at new indices
         RemoveTree(_branchesTree);
         RemoveTree(_remotesTree);
+        RemoveTree(_worktreeTree);
         RemoveTree(_tagTree);
         RemoveTree(_submoduleTree);
         RemoveTree(_stashTree);
@@ -89,6 +92,7 @@ partial class RepoObjectsTree
     {
         _branchesTree.ClearTree();
         _remotesTree.ClearTree();
+        _worktreeTree.ClearTree();
         _tagTree.ClearTree();
         _submoduleTree.ClearTree();
         _stashTree.ClearTree();
@@ -104,6 +108,11 @@ partial class RepoObjectsTree
         if (tsbShowRemotes.Checked)
         {
             AddTree(_remotesTree);
+        }
+
+        if (tsbShowWorktrees.Checked)
+        {
+            AddTree(_worktreeTree);
         }
 
         if (tsbShowTags.Checked)
@@ -129,7 +138,6 @@ partial class RepoObjectsTree
         if (tsbShowBranches.Checked)
         {
             AddTree(_branchesTree);
-            _searchResult = null;
         }
         else
         {
@@ -144,11 +152,24 @@ partial class RepoObjectsTree
         if (tsbShowRemotes.Checked)
         {
             AddTree(_remotesTree);
-            _searchResult = null;
         }
         else
         {
             RemoveTree(_remotesTree);
+        }
+    }
+
+    private void tsbShowWorktrees_Click(object sender, EventArgs e)
+    {
+        AppSettings.RepoObjectsTreeShowWorktrees = tsbShowWorktrees.Checked;
+        _searchResult = null;
+        if (tsbShowWorktrees.Checked)
+        {
+            AddTree(_worktreeTree);
+        }
+        else
+        {
+            RemoveTree(_worktreeTree);
         }
     }
 
@@ -159,7 +180,6 @@ partial class RepoObjectsTree
         if (tsbShowTags.Checked)
         {
             AddTree(_tagTree);
-            _searchResult = null;
         }
         else
         {
@@ -174,7 +194,6 @@ partial class RepoObjectsTree
         if (tsbShowSubmodules.Checked)
         {
             AddTree(_submoduleTree);
-            _searchResult = null;
         }
         else
         {
@@ -189,7 +208,6 @@ partial class RepoObjectsTree
         if (tsbShowStashes.Checked)
         {
             AddTree(_stashTree);
-            _searchResult = null;
         }
         else
         {

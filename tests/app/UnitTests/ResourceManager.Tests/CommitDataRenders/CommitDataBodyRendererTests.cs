@@ -10,11 +10,11 @@ namespace ResourceManagerTests.CommitDataRenders;
 [TestFixture]
 public class CommitDataBodyRendererTests
 {
-    private IGitModule _module;
-    private Func<IGitModule> _getModule;
-    private ILinkFactory _linkFactory;
-    private CommitDataBodyRenderer _renderer;
-    private CommitDataBodyRenderer _rendererReal;
+    private IGitModule _module = null!;
+    private Func<IGitModule> _getModule = null!;
+    private ILinkFactory _linkFactory = null!;
+    private CommitDataBodyRenderer _renderer = null!;
+    private CommitDataBodyRenderer _rendererReal = null!;
 
     [SetUp]
     public void Setup()

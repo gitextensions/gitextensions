@@ -6,7 +6,7 @@ namespace GitUITests.CommandsDialogs.SettingsDialog.Pages;
 [TestFixture]
 public class GitConfigSettingsPageControllerTests
 {
-    private GitConfigSettingsPageController _controller;
+    private GitConfigSettingsPageController _controller = null!;
 
     [SetUp]
     public void Setup()
@@ -29,17 +29,17 @@ public class GitConfigSettingsPageControllerTests
     public void GetInitialDirectory_CalculateInitialDirectory_should_return_directory_for_supplied_path()
     {
         string tempFolder = @"c:\";
-        _controller.GetInitialDirectory(tempFolder, null).Should().Be(@"c:\");
+        _controller.GetInitialDirectory(tempFolder, null!).Should().Be(@"c:\");
 
         tempFolder = @"c:";
-        _controller.GetInitialDirectory(tempFolder, null).Should().Be(@"c:\");
+        _controller.GetInitialDirectory(tempFolder, null!).Should().Be(@"c:\");
 
         tempFolder = Path.GetTempPath(); // something like: C:\Users\user\AppData\Local\Temp\
-        _controller.GetInitialDirectory(tempFolder, null).Should().Be(tempFolder);
+        _controller.GetInitialDirectory(tempFolder, null!).Should().Be(tempFolder);
 
-        _controller.GetInitialDirectory(tempFolder[..^1], null).Should().Be(tempFolder);
+        _controller.GetInitialDirectory(tempFolder[..^1], null!).Should().Be(tempFolder);
 
         string tempFile = Path.GetTempFileName(); // something like: C:\Users\user\AppData\Local\Temp\tmp97C5.tmp
-        _controller.GetInitialDirectory(tempFile, null).Should().Be(tempFolder);
+        _controller.GetInitialDirectory(tempFile, null!).Should().Be(tempFolder);
     }
 }

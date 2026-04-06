@@ -16,9 +16,9 @@ namespace GitUITests.Editor;
 [TestFixture]
 public class FileViewerTextTests
 {
-    private IServiceProvider _serviceProvider;
-    private IGitUICommandsSource _uiCommandsSource;
-    private FileViewer _fileViewer;
+    private IServiceProvider _serviceProvider = null!;
+    private IGitUICommandsSource _uiCommandsSource = null!;
+    private FileViewer _fileViewer = null!;
 
     [SetUp]
     public void SetUp()

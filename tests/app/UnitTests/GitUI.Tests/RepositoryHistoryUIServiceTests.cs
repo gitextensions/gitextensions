@@ -11,9 +11,9 @@ namespace GitUITests;
 [TestFixture]
 public sealed class RepositoryHistoryUIServiceTests
 {
-    private RepositoryHistoryUIService _service;
-    private IRepositoryCurrentBranchNameCache _branchNameCache;
-    private IInvalidRepositoryRemover _invalidRepositoryRemover;
+    private RepositoryHistoryUIService _service = null!;
+    private IRepositoryCurrentBranchNameCache _branchNameCache = null!;
+    private IInvalidRepositoryRemover _invalidRepositoryRemover = null!;
 
     [SetUp]
     public void Setup()
@@ -117,7 +117,7 @@ public sealed class RepositoryHistoryUIServiceTests
         _service.GetTestAccessor().PopulateFavouriteRepositoriesMenu(tsmiFavouriteRepositories, repositoryHistory);
 
         // assert
-        List<string> categories = [.. tsmiFavouriteRepositories.DropDownItems.Cast<ToolStripMenuItem>().Select(x => x.Text)];
+        List<string> categories = [.. tsmiFavouriteRepositories.DropDownItems.Cast<ToolStripMenuItem>().Select(x => x.Text!)];
         categories.Should().BeInAscendingOrder();
     }
 }

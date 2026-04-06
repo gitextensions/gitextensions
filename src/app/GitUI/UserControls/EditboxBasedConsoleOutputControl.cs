@@ -209,7 +209,7 @@ public sealed class EditboxBasedConsoleOutputControl : ConsoleOutputControl
                         operation.LogProcessEnd(_exitcode);
                         _process.Dispose();
                         _process = null;
-                        await _input.DisposeAsync();
+                        await _input!.DisposeAsync();
                         _input = null;
                         _outputThrottle?.Stop(flush: true);
                         FireProcessExited();

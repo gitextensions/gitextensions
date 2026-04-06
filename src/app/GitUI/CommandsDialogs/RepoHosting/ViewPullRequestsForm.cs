@@ -105,7 +105,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
     private void _selectedOwner_SelectedIndexChanged(object sender, EventArgs e)
     {
-        IHostedRemote hostedRemote = _selectHostedRepoCB.SelectedItem as IHostedRemote;
+        IHostedRemote? hostedRemote = _selectHostedRepoCB.SelectedItem as IHostedRemote;
 
         _pullRequestsList.Items.Clear();
         IHostedRepository? hostedRepo;
@@ -157,13 +157,13 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
     }
 
-    private void FileViewer_TopScrollReached(object sender, EventArgs e)
+    private void FileViewer_TopScrollReached(object? sender, EventArgs e)
     {
         _fileStatusList.SelectPreviousVisibleItem();
         _diffViewer.ScrollToBottom();
     }
 
-    private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+    private void FileViewer_BottomScrollReached(object? sender, EventArgs e)
     {
         _fileStatusList.SelectNextVisibleItem();
         _diffViewer.ScrollToTop();
@@ -205,7 +205,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         // So there will always be at least 1 remote when this dialog is open
         _cloneGitProtocol = ThreadHelper.JoinableTaskFactory.Run(Module.GetRemotesAsync)
             .First(r => string.IsNullOrEmpty(currentRemote) || r.Name == currentRemote).FetchUrl.IsUrlUsingHttp() ? GitProtocol.Https : GitProtocol.Ssh;
-        IHostedRemote hostedRemote = _selectHostedRepoCB.Items.
+        IHostedRemote? hostedRemote = _selectHostedRepoCB.Items.
             Cast<IHostedRemote>().
             FirstOrDefault(remote => string.Equals(remote.Name, currentRemote, StringComparison.OrdinalIgnoreCase));
 
@@ -288,7 +288,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
 
     private void _pullRequestsList_SelectedIndexChanged(object sender, EventArgs e)
     {
-        IPullRequestInformation prevPri = _currentPullRequestInfo;
+        IPullRequestInformation? prevPri = _currentPullRequestInfo;
 
         if (_pullRequestsList.SelectedItems.Count != 1)
         {
@@ -353,7 +353,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         _discussionWB.DocumentText = t;
     }
 
-    private void _discussionWB_DocumentCompleted(object sender, WebBrowserDocumentCompletedEventArgs e)
+    private void _discussionWB_DocumentCompleted(object? sender, WebBrowserDocumentCompletedEventArgs e)
     {
         if (_discussionWB.Document?.Window is not null && _discussionWB.Document.Body is not null)
         {
@@ -457,7 +457,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
             string remoteUrl = _currentPullRequestInfo.HeadRepo.CloneUrl;
             string remoteRef = _currentPullRequestInfo.HeadRef;
 
-            IHostedRemote existingRepo = _hostedRemotes.FirstOrDefault(el => el.Name == remoteName);
+            IHostedRemote? existingRepo = _hostedRemotes!.FirstOrDefault(el => el.Name == remoteName);
             if (existingRepo is not null)
             {
                 IHostedRepository hostedRepository = existingRepo.GetHostedRepository();
@@ -505,9 +505,9 @@ public partial class ViewPullRequestsForm : GitModuleForm
         Close();
     }
 
-    private void _fileStatusList_SelectedIndexChanged(object sender, EventArgs e)
+    private void _fileStatusList_SelectedIndexChanged(object? sender, EventArgs e)
     {
-        GitItemStatus gis = _fileStatusList.SelectedItem?.Item;
+        GitItemStatus? gis = _fileStatusList.SelectedItem?.Item;
         if (gis is null)
         {
             return;
@@ -526,7 +526,7 @@ public partial class ViewPullRequestsForm : GitModuleForm
         }
     }
 
-    private void _closePullRequestBtn_Click(object sender, EventArgs e)
+    private void _closePullRequestBtn_Click(object? sender, EventArgs e)
     {
         if (_currentPullRequestInfo is null)
         {

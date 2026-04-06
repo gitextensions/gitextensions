@@ -78,7 +78,7 @@ public sealed partial class FormCreateTag : GitModuleForm
 
     private string CreateTag()
     {
-        ObjectId objectId = commitPickerSmallControl1.SelectedObjectId;
+        ObjectId? objectId = commitPickerSmallControl1.SelectedObjectId;
 
         if (objectId is null)
         {

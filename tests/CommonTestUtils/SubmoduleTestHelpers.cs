@@ -7,7 +7,7 @@ public class SubmoduleTestHelpers
 {
     public static async Task<SubmoduleInfoResult> UpdateSubmoduleStructureAndWaitForResultAsync(ISubmoduleStatusProvider provider, IGitModule module, bool updateStatus = true)
     {
-        SubmoduleInfoResult result = null;
+        SubmoduleInfoResult? result = null;
         provider.StatusUpdated += ProviderStatusUpdated;
         try
         {
@@ -23,9 +23,9 @@ public class SubmoduleTestHelpers
             provider.StatusUpdated -= ProviderStatusUpdated;
         }
 
-        return result;
+        return result!;
 
-        void ProviderStatusUpdated(object sender, SubmoduleStatusEventArgs e)
+        void ProviderStatusUpdated(object? sender, SubmoduleStatusEventArgs e)
         {
             result = e.Info;
         }
@@ -46,7 +46,7 @@ public class SubmoduleTestHelpers
 
         return;
 
-        static void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
+        static void Provider_StatusUpdated(object? sender, SubmoduleStatusEventArgs e)
         {
         }
     }

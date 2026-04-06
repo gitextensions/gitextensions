@@ -58,7 +58,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
 
     public void TriggerMenuChanged()
     {
-        MenuChanged?.Invoke(this, null);
+        MenuChanged?.Invoke(this, null!);
 
         foreach (MenuCommand menuCommand in GetMenuCommandsWithoutSeparators())
         {
@@ -331,6 +331,13 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
                 ExecuteAction = () => _revisionGrid.ToggleShowGitNotes(),
                 IsCheckedFunc = () => AppSettings.ShowGitNotes
             },
+            new MenuCommand
+            {
+                Name = "ShowSessionCheckpoints",
+                Text = "Show session checkpoints",
+                ExecuteAction = () => _revisionGrid.ToggleShowSessionRefs(),
+                IsCheckedFunc = () => AppSettings.ShowSessionRefs
+            },
 
             MenuCommand.CreateSeparator(),
 
@@ -516,7 +523,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
             return;
         }
 
-        ObjectId commitId = formGoToCommit.ValidateAndGetSelectedRevision();
+        ObjectId? commitId = formGoToCommit.ValidateAndGetSelectedRevision();
 
         if (commitId is not null)
         {

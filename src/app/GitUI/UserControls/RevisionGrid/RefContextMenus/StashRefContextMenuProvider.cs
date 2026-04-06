@@ -21,7 +21,7 @@ internal sealed class StashRefContextMenuProvider : Translate, IRefContextMenuPr
         ToolStripMenuItem apply = new(_applyStash.Text, Images.Stash);
         apply.Click += (_, _) =>
         {
-            context.UICommands.StashApply(menu, context.GetLatestSelectedRevision()?.ObjectId.ToString());
+            context.UICommands.StashApply(menu, context.GetLatestSelectedRevision()?.ObjectId.ToString() ?? "");
             context.PerformRefreshRevisions();
         };
         menu.Items.Add(apply);

@@ -74,7 +74,7 @@ public sealed class RefsFormatter
 
         foreach (string branch in branches)
         {
-            string noPrefixBranch = branch ?? string.Empty;
+            string noPrefixBranch = branch;
             bool branchIsLocal;
             if (getLocal && getRemote)
             {

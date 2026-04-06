@@ -130,8 +130,8 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
 
         bool shouldClearCache =
-            AppSettings.AvatarProvider != (AvatarProvider)AvatarProvider.SelectedValue
-            || AppSettings.AvatarFallbackType != (AvatarFallbackType)_NO_TRANSLATE_NoImageService.SelectedValue
+            AppSettings.AvatarProvider != (AvatarProvider)AvatarProvider.SelectedValue!
+            || AppSettings.AvatarFallbackType != (AvatarFallbackType)_NO_TRANSLATE_NoImageService.SelectedValue!
             || AppSettings.CustomAvatarTemplate != txtCustomAvatarTemplate.Text;
 
         AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.Checked;
@@ -221,7 +221,7 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
 
     private void ManageAvatarOptionsDisplay()
     {
-        bool showCustomTemplate = (AvatarProvider)AvatarProvider.SelectedValue == GitCommands.AvatarProvider.Custom;
+        bool showCustomTemplate = (AvatarProvider)AvatarProvider.SelectedValue! == GitCommands.AvatarProvider.Custom;
 
         lblCustomAvatarTemplate.Visible = showCustomTemplate;
         txtCustomAvatarTemplate.Visible = showCustomTemplate;

@@ -182,6 +182,6 @@ public sealed class StringExtensionTests
 
     public void RemoveQuotes(string? str, string? expected)
     {
-        ClassicAssert.AreEqual(expected, str.RemoveQuotes());
+        ClassicAssert.AreEqual(expected, str!.RemoveQuotes());
     }
 }

@@ -3,7 +3,6 @@ using System.Text;
 using BugReporter;
 using BugReporter.Serialization;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
@@ -63,7 +62,7 @@ internal class UIReporter : IBugReporter
 
     private static TaskDialogPage CreateDubiousOwnershipReport(ExternalOperationException exception)
     {
-        string error = exception.InnerException.Message;
+        string error = exception.InnerException!.Message;
         TaskDialogPage pageSecurity = new()
         {
             Icon = TaskDialogIcon.Error,
@@ -113,7 +112,7 @@ internal class UIReporter : IBugReporter
 
             button.Click += (_, _) =>
             {
-                IGitExecutorProvider executorProvider = BugReportInvoker.ExecutorProvider;
+                IGitExecutorProvider? executorProvider = BugReportInvoker.ExecutorProvider;
 
                 // ExecutorProvider is set in Program.cs Main method before any error can be reported so it should never be null here.
                 executorProvider!.GetExecutor(workingDir).GitExecutable.Start(command).WaitForExit();
@@ -132,7 +131,7 @@ internal class UIReporter : IBugReporter
         // out: git config --global -add safe.directory "d:/folder/to/repo with space in name"
         static string ReplaceRepoPathQuotes(string command)
         {
-            if (!EnvUtils.RunningOnWindows() || !command.EndsWith('\''))
+            if (!OperatingSystem.IsWindows() || !command.EndsWith('\''))
             {
                 return command;
             }

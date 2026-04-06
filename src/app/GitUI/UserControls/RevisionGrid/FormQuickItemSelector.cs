@@ -92,7 +92,7 @@ internal partial class FormQuickItemSelector : GitExtensionsForm
 
     private void lbxRefs_MouseDoubleClick(object sender, MouseEventArgs e)
     {
-        AcceptButton.PerformClick();
+        AcceptButton!.PerformClick();
     }
 
     internal sealed class ItemData

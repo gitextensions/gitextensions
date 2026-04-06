@@ -10,7 +10,7 @@ namespace GitExtensions.Extensibility.Git;
 /// <summary>
 ///  Provides the ability to manipulate the git module.
 /// </summary>
-public interface IGitModule : IGitExecutor
+public interface IGitModule
 {
     string AddRemote(string remoteName, string? path);
 
@@ -77,6 +77,18 @@ public interface IGitModule : IGitExecutor
     string GitCommonDirectory { get; }
 
     /// <summary>
+    ///  Gets the default Git executable associated with this module.
+    ///  This executable can be non-native (i.e. WSL).
+    /// </summary>
+    IExecutable GitExecutable { get; }
+
+    /// <summary>
+    ///  Gets the access to the current git executable associated with this module.
+    ///  This command runner can be non-native (i.e. WSL).
+    /// </summary>
+    IGitCommandRunner GitCommandRunner { get; }
+
+    /// <summary>
     /// Encoding for commit header (message, notes, author, committer, emails).
     /// </summary>
     Encoding LogOutputEncoding { get; }
@@ -93,6 +105,11 @@ public interface IGitModule : IGitExecutor
     ///  If this module is a submodule, returns its super-project <see cref="IGitModule"/>, otherwise <c>null</c>.
     /// </value>
     public IGitModule? SuperprojectModule { get; }
+
+    /// <summary>
+    ///  Gets the directory which contains the git repository.
+    /// </summary>
+    string WorkingDir { get; }
 
     /// <summary>
     /// Gets the location of .git directory for the current working folder.
@@ -149,7 +166,7 @@ public interface IGitModule : IGitExecutor
     /// </remarks>
     IReadOnlyList<string> GetSubmodulesLocalPaths(bool recursive = true);
 
-    IGitModule GetSubmodule(string submoduleName);
+    IGitModule GetSubmodule(string? submoduleName);
 
     /// <summary>
     /// Retrieves registered remotes by running <c>git remote show</c> command.
@@ -188,6 +205,15 @@ public interface IGitModule : IGitExecutor
     /// </exception>
     T? GetEffectiveSetting<T>(string setting) where T : struct;
 
+    /// <summary>
+    ///  Gets the name of the currently checked out branch.
+    /// </summary>
+    /// <param name="emptyIfDetached">Defines the value returned if HEAD is detached. <see langword="true"/> to return <see cref="string.Empty"/>; <see langword="false"/> to return "(no branch)".</param>
+    /// <returns>
+    ///  The name of the branch (for example: "main"); the value requested by <paramref name="emptyIfDetached"/>, if HEAD is detached; <see cref="string.Empty"/> if it fails to retrieve the branch name for any reason (for example, if the repository is not reachable).
+    /// </returns>
+    string GetSelectedBranch(bool emptyIfDetached = false);
+
     /// <summary>true if ".git" directory does NOT exist.</summary>
     bool IsBareRepository();
 
@@ -196,9 +222,11 @@ public interface IGitModule : IGitExecutor
     SettingsSource GetEffectiveSettings();
     SettingsSource GetLocalSettings();
 
+    [return: NotNullIfNotNull(nameof(s))]
     string? ReEncodeStringFromLossless(string? s);
 
-    string ReEncodeCommitMessage(string s);
+    [return: NotNullIfNotNull(nameof(s))]
+    string? ReEncodeCommitMessage(string? s);
 
     string? GetDescribe(ObjectId commitId, CancellationToken cancellationToken);
 
@@ -206,10 +234,11 @@ public interface IGitModule : IGitExecutor
 
     void SaveBlobAs(string saveAs, string blob, CancellationToken cancellationToken = default);
     Task SaveBlobAsAsync(string saveAs, string blob, CancellationToken cancellationToken = default);
-    Task<(char Code, ObjectId CommitId)> GetSuperprojectCurrentCheckoutAsync();
+    Task<(char Code, ObjectId? CommitId)> GetSuperprojectCurrentCheckoutAsync();
     Task<Patch?> GetCurrentChangesAsync(string? fileName, string? oldFileName, bool staged, string extraDiffArguments, Encoding? encoding = null, bool noLocks = false);
     Task<string?> GetFileContentsAsync(GitItemStatus file);
     IReadOnlyList<GitStash> GetStashes(bool noLocks);
+    IReadOnlyList<GitWorktree> GetWorktrees();
     IReadOnlyList<GitItemStatus> GetWorkTreeFiles();
     bool ResetAllChanges(bool clean, bool onlyWorkTree = false);
 

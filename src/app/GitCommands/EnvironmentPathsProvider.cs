@@ -1,5 +1,4 @@
-﻿using GitCommands.Utils;
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 
 namespace GitCommands;
 
@@ -40,7 +39,7 @@ public sealed class EnvironmentPathsProvider : IEnvironmentPathsProvider
             yield break;
         }
 
-        foreach (string rawDir in pathVariable.LazySplit(EnvUtils.EnvVariableSeparator))
+        foreach (string rawDir in pathVariable.LazySplit(Path.PathSeparator))
         {
             string dir = rawDir;
 

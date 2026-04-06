@@ -1,16 +1,16 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using Microsoft;
-using Newtonsoft.Json;
 
 namespace AzureDevOpsIntegration;
 
 /// <summary>
 /// Provides access to the REST API of a Azure DevOps (or TFS>=2015) instance
 /// </summary>
-public class ApiClient : IDisposable
+public sealed class ApiClient : IDisposable
 {
     private const string BuildDefinitionsUrl = "build/definitions?api-version=2.0";
     private const string Properties = "properties=sourceVersion,status,buildNumber,result,definition,_links,startTime,finishTime";
@@ -50,6 +50,11 @@ public class ApiClient : IDisposable
         _httpClient.BaseAddress = new Uri(projectUrl.EndsWith('/') ? projectUrl + "_apis/" : projectUrl + "/_apis/");
     }
 
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
+
     private async Task<T> HttpGetAsync<T>(string url)
     {
         using HttpResponseMessage response = await _httpClient.GetAsync(url);
@@ -61,7 +66,7 @@ public class ApiClient : IDisposable
         response.EnsureSuccessStatusCode();
         string json = await response.Content.ReadAsStringAsync();
 
-        return JsonConvert.DeserializeObject<T>(json);
+        return JsonSerializer.Deserialize<T>(json, _jsonOptions)!;
     }
 
     public async Task<string?> GetBuildDefinitionsAsync(string buildDefinitionNameFilter)
@@ -81,7 +86,7 @@ public class ApiClient : IDisposable
 
         buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl);
 
-        return GetBuildDefinitionsIds(buildDefinitions.Value.Where(b => Regex.IsMatch(b.Name, buildDefinitionNameFilter)));
+        return GetBuildDefinitionsIds(buildDefinitions.Value?.Where(b => b.Name is not null && Regex.IsMatch(b.Name, buildDefinitionNameFilter)));
     }
 
     private static string? GetBuildDefinitionsIds(IEnumerable<BuildDefinition>? buildDefinitions)
@@ -118,7 +123,7 @@ public class ApiClient : IDisposable
 
     private async Task<IList<Build>> QueryBuildsAsync(string queryUrl)
     {
-        IList<Build> builds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
+        IList<Build>? builds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
         Validates.NotNull(builds);
         return builds;
     }
@@ -135,12 +140,6 @@ public class ApiClient : IDisposable
         => $"build/builds?{Properties}&definitions={buildDefinitionsToQuery}&statusFilter={statusFilter}";
 
     public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
     {
         _httpClient?.Dispose();
     }

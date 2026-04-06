@@ -14,9 +14,9 @@ namespace GitCommandsTests.Git.Gpg;
 [TestFixture]
 public class GitGpgControllerTests
 {
-    private IGitModule _module;
-    private GitGpgController _gpgController;
-    private MockExecutable _executable;
+    private IGitModule _module = null!;
+    private GitGpgController _gpgController = null!;
+    private MockExecutable _executable = null!;
 
     [SetUp]
     public void Setup()
@@ -57,13 +57,13 @@ public class GitGpgControllerTests
     [TestCase]
     public void Validate_GetRevisionCommitSignatureStatusAsync_null_revision()
     {
-        ((Func<Task>)(() => _gpgController.GetRevisionCommitSignatureStatusAsync(null))).Should().ThrowAsync<ArgumentNullException>();
+        ((Func<Task>)(() => _gpgController.GetRevisionCommitSignatureStatusAsync(null!))).Should().ThrowAsync<ArgumentNullException>();
     }
 
     [TestCase]
     public void Validate_GetRevisionTagSignatureStatusAsync_null_revision()
     {
-        ((Func<Task>)(() => _gpgController.GetRevisionTagSignatureStatusAsync(null))).Should().ThrowAsync<ArgumentNullException>();
+        ((Func<Task>)(() => _gpgController.GetRevisionTagSignatureStatusAsync(null!))).Should().ThrowAsync<ArgumentNullException>();
     }
 
     [TestCase(TagStatus.NoTag, 0)]
@@ -131,13 +131,13 @@ public class GitGpgControllerTests
     [TestCase]
     public void Validate_GetCommitVerificationMessage_null_revision()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => _gpgController.GetCommitVerificationMessage(null));
+        ClassicAssert.Throws<ArgumentNullException>(() => _gpgController.GetCommitVerificationMessage(null!));
     }
 
     [TestCase]
     public void Validate_GetTagVerifyMessage_null_revision()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => _gpgController.GetTagVerifyMessage(null));
+        ClassicAssert.Throws<ArgumentNullException>(() => _gpgController.GetTagVerifyMessage(null!));
     }
 
     [TestCase(0, "")]
@@ -148,7 +148,7 @@ public class GitGpgControllerTests
         ObjectId objectId = ObjectId.Random();
         GitRevision revision = new(objectId);
 
-        IDisposable validate = null;
+        IDisposable? validate = null;
 
         switch (usefulTagRefNumber)
         {
@@ -191,7 +191,7 @@ public class GitGpgControllerTests
                 }
         }
 
-        string actual = _gpgController.GetTagVerifyMessage(revision);
+        string? actual = _gpgController.GetTagVerifyMessage(revision);
 
         ClassicAssert.AreEqual(expected, actual);
 

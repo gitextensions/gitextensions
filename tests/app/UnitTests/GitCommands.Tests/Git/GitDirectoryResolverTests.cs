@@ -11,12 +11,12 @@ namespace GitCommandsTests.Git;
 public class GitDirectoryResolverTests
 {
     private readonly string _workingDir = @"c:\dev\repo";
-    private string _gitWorkingDir;
-    private string _gitFile;
-    private FileBase _file;
-    private DirectoryBase _directory;
-    private IFileSystem _fileSystem;
-    private GitDirectoryResolver _resolver;
+    private string _gitWorkingDir = null!;
+    private string _gitFile = null!;
+    private FileBase _file = null!;
+    private DirectoryBase _directory = null!;
+    private IFileSystem _fileSystem = null!;
+    private GitDirectoryResolver _resolver = null!;
 
     [SetUp]
     public void Setup()
@@ -38,7 +38,7 @@ public class GitDirectoryResolverTests
     [Test]
     public void Resolve_should_throw_if_path_is_null()
     {
-        ((Action)(() => _resolver.Resolve(null))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => _resolver.Resolve(null!))).Should().Throw<ArgumentNullException>();
     }
 
     [TestCase("")]

@@ -12,9 +12,9 @@ namespace GitUITests.UserControls.RevisionGrid;
 [Apartment(ApartmentState.STA)]
 public class RevisionFileNameTests
 {
-    private RevisionGridControl _revisionGridControl;
-    private MockExecutable _executable;
-    private IGitCommandRunner _commandRunner;
+    private RevisionGridControl _revisionGridControl = null!;
+    private MockExecutable _executable = null!;
+    private IGitCommandRunner _commandRunner = null!;
 
     [SetUp]
     public void SetUp()
@@ -55,7 +55,7 @@ public class RevisionFileNameTests
         {
             using (_executable.StageOutput(line, $"????{objectId}\n{expectedFileName}"))
             {
-                actualFileName = _revisionGridControl.GetRevisionFileName(path, ObjectId.Parse(objectId));
+                actualFileName = _revisionGridControl.GetRevisionFileName(path, ObjectId.Parse(objectId))!;
             }
         }
         finally

@@ -198,7 +198,7 @@ public record FilterInfo
     /// The hash of the last revision to display (i.e. the oldest one displayed at the bottom).
     /// This hash is used to query history only until this given commit.
     /// </summary>
-    public string LastRevisionToDisplayHash { get; internal set; }
+    public string LastRevisionToDisplayHash { get; internal set; } = null!;
 
     /// <summary>
     /// Disables all active filters.
@@ -454,7 +454,7 @@ public record FilterInfo
 
             // Split at whitespace (char[])null is default) but with split options.
             // Ignore quouting, Git revisions do not allow spaces.
-            foreach (string branch in BranchFilter.Split((char[])null, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
+            foreach (string branch in BranchFilter.Split((char[]?)null, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
             {
                 bool wildcardBranchFilter = branch.IndexOfAny(['?', '*', '[']) >= 0;
                 filter.Add(wildcardBranchFilter && !branch.StartsWith("--") && !branch.Contains("..")
@@ -476,6 +476,11 @@ public record FilterInfo
             if (!AppSettings.ShowStashes)
             {
                 filter.Add($"--exclude={GitRefName.RefsStashPrefix}");
+            }
+
+            if (!AppSettings.ShowSessionRefs)
+            {
+                filter.Add($"--exclude={GitRefName.RefsSessionsPrefix}**");
             }
 
             // All refs/

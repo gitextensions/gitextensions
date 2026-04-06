@@ -1,6 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using GitCommands.Utils;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs;
@@ -30,7 +29,7 @@ public sealed class FormFileHistoryController
         // The section below contains native windows (kernel32) calls
         // and breaks on Linux. Only use it on Windows. Casing is only
         // a Windows problem anyway.
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             // grab the 8.3 file path
             StringBuilder shortPath = new(4096);

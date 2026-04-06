@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 
@@ -7,7 +7,7 @@ namespace GitCommandsTests.Git;
 [TestFixture]
 public class GitTreeParserTests
 {
-    private IGitTreeParser _parser;
+    private IGitTreeParser _parser = null!;
 
     [SetUp]
     public void Setup()
@@ -68,9 +68,9 @@ public class GitTreeParserTests
     public void ParseSingle_should_return_GitItem()
     {
         const string s = "100644 blob 25d7b5d771e84982a3dfd8bd537531d8fb45d491\t.editorconfig";
-        GitItem item = _parser.ParseSingle(s);
+        GitItem? item = _parser.ParseSingle(s);
 
-        item.Guid.Should().Be("25d7b5d771e84982a3dfd8bd537531d8fb45d491");
+        item!.Guid.Should().Be("25d7b5d771e84982a3dfd8bd537531d8fb45d491");
         item.Mode.Should().Be(100644);
         item.Name.Should().Be(".editorconfig");
         item.ObjectType.Should().Be(GitObjectType.Blob);

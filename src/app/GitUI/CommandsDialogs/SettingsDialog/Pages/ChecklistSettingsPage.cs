@@ -1,10 +1,7 @@
-#nullable enable
-
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Git;
-using GitCommands.Utils;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI.Theming;
@@ -331,7 +328,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
                 yield return CheckDiffToolConfiguration;
                 yield return CheckTranslationConfigSettings;
 
-                if (EnvUtils.RunningOnWindows())
+                if (OperatingSystem.IsWindows())
                 {
                     yield return CheckGitExtensionsInstall;
                     yield return CheckGitExtensionRegistrySettings;
@@ -508,7 +505,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     private bool CheckGitExtensionRegistrySettings()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return true;
         }
@@ -534,7 +531,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     private bool CheckGitExtensionsInstall()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return true;
         }

@@ -13,9 +13,9 @@ namespace GitUITests.CommandsDialogs;
 [TestFixture]
 public class RevisionDiffControllerTests
 {
-    private IGitModule _module;
-    private IFullPathResolver _fullPathResolver;
-    private RevisionDiffController _controller;
+    private IGitModule _module = null!;
+    private IFullPathResolver _fullPathResolver = null!;
+    private RevisionDiffController _controller = null!;
 
     [SetUp]
     public void Setup()
@@ -28,7 +28,7 @@ public class RevisionDiffControllerTests
     [Test]
     public void SaveFiles_should_throw_if_files_null()
     {
-        ((Action)(() => _controller.SaveFiles(files: null, userSelection: null))).Should()
+        ((Action)(() => _controller.SaveFiles(files: null!, userSelection: null!))).Should()
             .Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'files')");
     }
@@ -38,7 +38,7 @@ public class RevisionDiffControllerTests
     {
         List<FileStatusItem> files = [];
 
-        ((Action)(() => _controller.SaveFiles(files, userSelection: null))).Should().NotThrow();
+        ((Action)(() => _controller.SaveFiles(files, userSelection: null!))).Should().NotThrow();
     }
 
     [Test]
@@ -49,7 +49,7 @@ public class RevisionDiffControllerTests
             new(default, new(ObjectId.Random()), new(""))
         ];
 
-        ((Action)(() => _controller.SaveFiles(files, userSelection: null))).Should()
+        ((Action)(() => _controller.SaveFiles(files, userSelection: null!))).Should()
             .Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'userSelection')");
     }
@@ -138,7 +138,7 @@ public class RevisionDiffControllerTests
         _fullPathResolver.Received(1).Resolve(item1.Item.Name);
         _fullPathResolver.Received(1).Resolve(item2.Item.Name);
         _fullPathResolver.Received(1).Resolve(item3.Item.Name);
-        _module.ReceivedWithAnyArgs(3).SaveBlobAs(default, default);
+        _module.ReceivedWithAnyArgs(3).SaveBlobAs(default!, default!);
         _module.Received(1).SaveBlobAs("c:\\temp\\item1.txt", Arg.Any<string>());
         _module.Received(1).SaveBlobAs("c:\\temp\\folder1\\item2.txt", Arg.Any<string>());
         _module.Received(1).SaveBlobAs("c:\\temp\\folder1\\folder2\\item3.txt", Arg.Any<string>());
@@ -171,7 +171,7 @@ public class RevisionDiffControllerTests
         _fullPathResolver.Received(1).Resolve(item1.Item.Name);
         _fullPathResolver.Received(1).Resolve(item2.Item.Name);
         _fullPathResolver.Received(1).Resolve(item3.Item.Name);
-        _module.ReceivedWithAnyArgs(3).SaveBlobAs(default, default);
+        _module.ReceivedWithAnyArgs(3).SaveBlobAs(default!, default!);
         _module.Received(1).SaveBlobAs("c:\\myproject\\src\\item1.txt", Arg.Any<string>());
         _module.Received(1).SaveBlobAs("c:\\myproject\\src\\folder1\\item2.txt", Arg.Any<string>());
         _module.Received(1).SaveBlobAs("c:\\myproject\\src\\folder1\\folder2\\item3.txt", Arg.Any<string>());

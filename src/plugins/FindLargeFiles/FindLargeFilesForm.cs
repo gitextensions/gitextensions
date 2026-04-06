@@ -15,8 +15,8 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
     private readonly TranslationString _deleteCaption = new("Delete");
 
     private readonly float _threshold;
-    private readonly IGitUICommands _commands;
-    private readonly IGitModule _gitModule;
+    private readonly IGitUICommands _commands = null!;
+    private readonly IGitModule _gitModule = null!;
     private string[] _revList = [];
     private readonly Dictionary<string, GitObject> _list = [];
     private readonly SortableObjectsList _gitObjects = [];
@@ -78,7 +78,7 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
                     revData.Add(commit, date);
                 }
 
-                if (!_list.TryGetValue(d.SHA, out GitObject curGitObject))
+                if (!_list.TryGetValue(d.SHA, out GitObject? curGitObject))
                 {
                     d.LastCommitDate = date;
                     _list.Add(d.SHA, d);
@@ -125,7 +125,7 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
                     foreach (string gitObject in objects.Where(x => x.Contains(" blob ")))
                     {
                         string[] dataFields = gitObject.Split([' '], StringSplitOptions.RemoveEmptyEntries);
-                        if (_list.TryGetValue(dataFields[0], out GitObject curGitObject))
+                        if (_list.TryGetValue(dataFields[0], out GitObject? curGitObject))
                         {
                             if (int.TryParse(dataFields[3], out int compressedSize))
                             {

@@ -9,8 +9,8 @@ namespace GitCommandsTests;
 [TestFixture]
 public class RepoNameExtractorTest
 {
-    private IGitModule _module;
-    private IRepoNameExtractor _repoNameExtractor;
+    private IGitModule _module = null!;
+    private IRepoNameExtractor _repoNameExtractor = null!;
 
     [SetUp]
     public void Setup()

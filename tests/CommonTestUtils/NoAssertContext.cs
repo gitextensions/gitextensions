@@ -27,7 +27,7 @@ public sealed class NoAssertContext : IDisposable
     private static readonly ConcurrentDictionary<int, int> s_suppressedThreads = new();
 
     // "Default" is the listener that terminates the process when debug assertions fail.
-    private static readonly TraceListener s_defaultListener = Trace.Listeners["Default"];
+    private static readonly TraceListener s_defaultListener = Trace.Listeners["Default"]!;
     private static readonly NoAssertListener s_noAssertListener = new();
 #pragma warning restore SA1308 // Variable names should not be prefixed
 
@@ -91,7 +91,7 @@ public sealed class NoAssertContext : IDisposable
         {
         }
 
-        public override void Fail(string message)
+        public override void Fail(string? message)
         {
             if (!s_suppressedThreads.TryGetValue(Environment.CurrentManagedThreadId, out _))
             {
@@ -99,7 +99,7 @@ public sealed class NoAssertContext : IDisposable
             }
         }
 
-        public override void Fail(string message, string detailMessage)
+        public override void Fail(string? message, string? detailMessage)
         {
             if (!s_suppressedThreads.TryGetValue(Environment.CurrentManagedThreadId, out _))
             {
@@ -109,7 +109,7 @@ public sealed class NoAssertContext : IDisposable
 
         // Write and WriteLine are virtual
 
-        public override void Write(string message)
+        public override void Write(string? message)
         {
             if (!s_suppressedThreads.TryGetValue(Environment.CurrentManagedThreadId, out _))
             {
@@ -117,7 +117,7 @@ public sealed class NoAssertContext : IDisposable
             }
         }
 
-        public override void WriteLine(string message)
+        public override void WriteLine(string? message)
         {
             if (!s_suppressedThreads.TryGetValue(Environment.CurrentManagedThreadId, out _))
             {

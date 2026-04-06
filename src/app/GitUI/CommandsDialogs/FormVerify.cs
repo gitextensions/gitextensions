@@ -277,7 +277,7 @@ public sealed partial class FormVerify : GitModuleForm
         ViewCurrentItem();
     }
 
-    private void Warnings_SelectionChanged(object sender, EventArgs e)
+    private void Warnings_SelectionChanged(object? sender, EventArgs e)
     {
         _defaultFilename = null;
         if (CurrentItem is null || _previewedItem == CurrentItem)
@@ -427,7 +427,7 @@ public sealed partial class FormVerify : GitModuleForm
 
     private void ViewCurrentItem()
     {
-        LostObject currentItem = CurrentItem;
+        LostObject? currentItem = CurrentItem;
         if (currentItem is null)
         {
             return;
@@ -437,7 +437,7 @@ public sealed partial class FormVerify : GitModuleForm
 
         if (!string.IsNullOrEmpty(obj))
         {
-            using FormEdit frm = new(UICommands, obj, _defaultFilename);
+            using FormEdit frm = new(UICommands, obj, _defaultFilename!);
             frm.IsReadOnly = true;
             frm.ShowDialog(this);
         }
@@ -461,7 +461,7 @@ public sealed partial class FormVerify : GitModuleForm
         foreach (LostObject lostObject in selectedLostObjects)
         {
             currentTag++;
-            string tagName = lostObject.ObjectType == LostObjectType.Tag ? lostObject.TagName : currentTag.ToString();
+            string tagName = lostObject.ObjectType == LostObjectType.Tag ? lostObject.TagName! : currentTag.ToString();
             GitCreateTagArgs createTagArgs = new($"{_restoredObjectsTagPrefix}{tagName}", lostObject.ObjectId);
             _gitTagController.CreateTag(createTagArgs, this);
         }
@@ -506,10 +506,10 @@ public sealed partial class FormVerify : GitModuleForm
     {
         if (Warnings?.SelectedRows.Count is > 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
         {
-            LostObject lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+            LostObject lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem!;
             bool isCommit = lostObject.ObjectType == LostObjectType.Commit;
             bool isBlob = lostObject.ObjectType == LostObjectType.Blob;
-            ContextMenuStrip contextMenu = Warnings.SelectedRows[0].ContextMenuStrip;
+            ContextMenuStrip contextMenu = Warnings.SelectedRows[0].ContextMenuStrip!;
             contextMenu.Items[1].Enabled = isCommit;
             contextMenu.Items[2].Enabled = isCommit;
             contextMenu.Items[4].Enabled = isCommit;
@@ -531,7 +531,7 @@ public sealed partial class FormVerify : GitModuleForm
     {
         if (Warnings?.SelectedRows.Count is > 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
         {
-            LostObject lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+            LostObject lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem!;
             ClipboardUtil.TrySetText(lostObject.ObjectId.ToString());
         }
     }
@@ -540,7 +540,7 @@ public sealed partial class FormVerify : GitModuleForm
     {
         if (Warnings?.SelectedRows.Count is > 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
         {
-            LostObject lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+            LostObject lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem!;
             ObjectId? parent = lostObject.Parent;
 
             if (parent is not null)
@@ -557,14 +557,14 @@ public sealed partial class FormVerify : GitModuleForm
             return;
         }
 
-        LostObject lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem;
+        LostObject lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem!;
 
         if (lostObject.ObjectType == LostObjectType.Blob)
         {
             string filename = _defaultFilename ?? lostObject.ObjectId.ToString() + "_LOST_FOUND.txt";
             string extension = Path.GetExtension(filename).TrimStart('.');
             string filter = $"{extension} Files (*.{extension})|*.{extension}";
-            if (_fileTypesEquivalences.TryGetValue(extension, out string[] types))
+            if (_fileTypesEquivalences.TryGetValue(extension, out string[]? types))
             {
                 filter += "|" + string.Join("|", types.Select(t => $"{t} Files (*.{t})|*.{t}"));
             }

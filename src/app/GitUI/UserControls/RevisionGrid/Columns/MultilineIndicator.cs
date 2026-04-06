@@ -63,7 +63,7 @@ internal readonly struct MultilineIndicator
             _indicatorRectWidth,
             _indicatorRectHeight);
 
-        _e.Graphics.FillRectangle(_indicatorBackBrush, indicatorRect);
+        _e.Graphics!.FillRectangle(_indicatorBackBrush, indicatorRect);
 
         int x = indicatorRect.X + paddingX;
         int y = indicatorRect.Y + paddingTop;

@@ -2,7 +2,6 @@
 using System.Configuration;
 using System.Diagnostics;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -114,7 +113,7 @@ internal static class Program
 
         AppSettings.LoadSettings();
 
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             WebBrowserEmulationMode.SetBrowserFeatureControl();
             FormFixHome.CheckHomePath();
@@ -175,7 +174,7 @@ internal static class Program
             // TODO: remove catch-all
         }
 
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             MouseWheelRedirector.Active = true;
         }
@@ -226,7 +225,7 @@ internal static class Program
             {
                 if (!Directory.Exists(dirArg))
                 {
-                    dirArg = Path.GetDirectoryName(dirArg);
+                    dirArg = Path.GetDirectoryName(dirArg)!;
                 }
 
                 workingDir = GitModule.TryFindGitWorkingDir(dirArg);
@@ -271,10 +270,10 @@ internal static class Program
         try
         {
             // perhaps this should be checked for if it is null
-            Exception in3 = ce.InnerException.InnerException;
+            Exception? in3 = ce.InnerException?.InnerException;
 
             // saves having to have a reference to System.Xml just to check that we have an XmlException
-            if (in3.GetType().Name == "XmlException")
+            if (in3?.GetType().Name == "XmlException")
             {
                 string localSettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
 

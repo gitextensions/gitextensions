@@ -13,9 +13,9 @@ public class LocalRepositoryManagerTests
 {
     private const string KeyRecentHistory = "history";
     private const string KeyFavouriteHistory = "history-favourite";
-    private IRepositoryStorage _repositoryStorage;
-    private IRepositoryHistoryMigrator _repositoryHistoryMigrator;
-    private LocalRepositoryManager _manager;
+    private IRepositoryStorage _repositoryStorage = null!;
+    private IRepositoryHistoryMigrator _repositoryHistoryMigrator = null!;
+    private LocalRepositoryManager _manager = null!;
     private int _userSetting;
 
     [SetUp]
@@ -121,14 +121,14 @@ public class LocalRepositoryManagerTests
     [Test]
     public void AssignCategoryAsync_should_throw_if_key_null()
     {
-        Func<Task> f = async () => { await _manager.AssignCategoryAsync(null, null); };
+        Func<Task> f = async () => { await _manager.AssignCategoryAsync(null!, null); };
         f.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Test]
     public async Task LoadFavouriteHistoryAsync_should_return_empty_list_if_nothing_loaded()
     {
-        _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => null);
+        _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => null!);
 
         IList<Repository> history = await _manager.LoadFavouriteHistoryAsync();
 
@@ -150,7 +150,7 @@ public class LocalRepositoryManagerTests
     [Test]
     public async Task LoadRecentHistoryAsync_should_return_empty_list_if_nothing_loaded()
     {
-        _repositoryStorage.Load(KeyRecentHistory).Returns(x => null);
+        _repositoryStorage.Load(KeyRecentHistory).Returns(x => null!);
 
         IList<Repository> history = await _manager.LoadRecentHistoryAsync();
 
@@ -283,7 +283,7 @@ public class LocalRepositoryManagerTests
     [Test]
     public void SaveFavouriteHistoryAsync_should_throw_if_repositories_null()
     {
-        Func<Task> action = async () => await _manager.SaveFavouriteHistoryAsync(null);
+        Func<Task> action = async () => await _manager.SaveFavouriteHistoryAsync(null!);
         action.Should().ThrowAsync<ArgumentNullException>();
     }
 
@@ -307,7 +307,7 @@ public class LocalRepositoryManagerTests
     [Test]
     public void SaveRecentHistoryAsync_should_throw_if_repositories_null()
     {
-        Func<Task> action = async () => await _manager.SaveRecentHistoryAsync(null);
+        Func<Task> action = async () => await _manager.SaveRecentHistoryAsync(null!);
         action.Should().ThrowAsync<ArgumentNullException>();
     }
 

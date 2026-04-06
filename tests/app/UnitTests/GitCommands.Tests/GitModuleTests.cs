@@ -18,8 +18,8 @@ public sealed partial class GitModuleTests
     private static readonly ObjectId Sha2 = ObjectId.Parse("d12782217535ef00f4f84773d5d33691bbf81d00");
     private static readonly ObjectId Sha3 = ObjectId.Parse("dd678b7160a9a5890c8725e33930947af210c765");
 
-    private GitModule _gitModule;
-    private MockExecutable _executable;
+    private GitModule _gitModule = null!;
+    private MockExecutable _executable = null!;
 
     [SetUp]
     public void SetUp()
@@ -39,7 +39,7 @@ public sealed partial class GitModuleTests
     public void ParseGitBlame()
     {
         using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
-        using IDisposable configList = _executable.StageOutput("config list --includes --null", null);
+        using IDisposable configList = _executable.StageOutput("config list --includes --null", null!);
         GitVersion.ResetVersion();
 
         string path = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData/README.blame");
@@ -86,45 +86,45 @@ public sealed partial class GitModuleTests
     public void FetchCmd()
     {
         using IDisposable gitVersion = _executable.StageOutput("--version", "git version 2.46.0");
-        using IDisposable configList = _executable.StageOutput("config list --includes --null", null);
+        using IDisposable configList = _executable.StageOutput("config list --includes --null", null!);
         GitVersion.ResetVersion();
 
-        using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
+        using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null!))
         {
             ClassicAssert.AreEqual(
                 "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags",
                 _gitModule.FetchCmd("remote", "remotebranch", "localbranch").Arguments);
         }
 
-        using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
+        using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null!))
         {
             ClassicAssert.AreEqual(
                 "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --tags",
                 _gitModule.FetchCmd("remote", "remotebranch", "localbranch", true).Arguments);
         }
 
-        using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
+        using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null!))
         {
             ClassicAssert.AreEqual(
                 "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch",
                 _gitModule.FetchCmd("remote", "remotebranch", "localbranch", null).Arguments);
         }
 
-        using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
+        using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null!))
         {
             ClassicAssert.AreEqual(
                 "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --unshallow",
                 _gitModule.FetchCmd("remote", "remotebranch", "localbranch", isUnshallow: true).Arguments);
         }
 
-        using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
+        using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null!))
         {
             ClassicAssert.AreEqual(
                 "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force",
                 _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true).Arguments);
         }
 
-        using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null))
+        using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null!))
         {
             ClassicAssert.AreEqual(
                 "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force --prune-tags",
@@ -284,7 +284,7 @@ public sealed partial class GitModuleTests
     [Test]
     public void GetCurrentCheckout_should_query_git_and_return_sha_for_HEAD()
     {
-        ObjectId objectId;
+        ObjectId? objectId;
         string headId = "69a7c7a40230346778e7eebed809773a6bc45268";
 
         using (_executable.StageOutput("rev-parse HEAD", headId))
@@ -292,7 +292,7 @@ public sealed partial class GitModuleTests
             objectId = _gitModule.GetCurrentCheckout();
         }
 
-        ClassicAssert.AreEqual(headId, objectId.ToString());
+        ClassicAssert.AreEqual(headId, objectId?.ToString());
     }
 
     [Test]
@@ -446,9 +446,9 @@ public sealed partial class GitModuleTests
         // Assert
         ThreadHelper.JoinableTaskFactory.Run(async () =>
         {
-            (char code, ObjectId commitId) = await moduleSub.GetSuperprojectCurrentCheckoutAsync();
+            (char code, ObjectId? commitId) = await moduleSub.GetSuperprojectCurrentCheckoutAsync();
             ClassicAssert.AreEqual(32, code);
-            ClassicAssert.AreEqual(commitRef, commitId.ToString());
+            ClassicAssert.AreEqual(commitRef, commitId?.ToString());
         });
     }
 
@@ -469,10 +469,10 @@ public sealed partial class GitModuleTests
     {
         // add initial tag message
         using ReferenceRepository repo = new();
-        repo.CreateAnnotatedTag("test_tag", repo.CommitHash, tagMessage);
+        repo.CreateAnnotatedTag("test_tag", repo.CommitHash!, tagMessage);
 
         // execute test look-up
-        string actualReturnedMessage = repo.Module.GetTagMessage("test_tag", cancellationToken: default);
+        string? actualReturnedMessage = repo.Module.GetTagMessage("test_tag", cancellationToken: default);
 
         // compare result to expectations
         ClassicAssert.AreEqual(expectedReturnedMessage, actualReturnedMessage);
@@ -535,7 +535,7 @@ public sealed partial class GitModuleTests
     [TestCase(new string[] { }, "")]
     public void ResetFiles_should_handle_empty_list(string[] files, string expectedOutput)
     {
-        ClassicAssert.AreEqual(expectedOutput, _gitModule.CheckoutIndexFiles(files?.ToList()));
+        ClassicAssert.AreEqual(expectedOutput, _gitModule.CheckoutIndexFiles(files?.ToList()!));
     }
 
     [TestCase(new string[] { "abc", "def" }, "checkout-index --index --force -- \"abc\" \"def\"")]
@@ -646,7 +646,7 @@ public sealed partial class GitModuleTests
     /// <param name="path">Path to the module</param>
     /// <param name="executable">The mock executable</param>
     /// <returns>The GitModule</returns>
-    private static GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "", GitModule module = null)
+    private static GitModule GetGitModuleWithExecutable(IExecutable executable, string path = "", GitModule module = null!)
     {
         module ??= new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), path);
 

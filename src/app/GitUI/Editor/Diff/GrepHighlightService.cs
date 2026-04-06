@@ -45,7 +45,7 @@ public partial class GrepHighlightService : TextHighlightService
         int increase = next ? 1 : -1;
 
         // If start index is on a match, move to next
-        if (_diffLinesInfo.DiffLines.TryGetValue(rowIndexInText, out DiffLineInfo lineInfo) && lineInfo.LineType == DiffLineType.Grep)
+        if (_diffLinesInfo.DiffLines.TryGetValue(rowIndexInText, out DiffLineInfo? lineInfo) && lineInfo.LineType == DiffLineType.Grep)
         {
             rowIndexInText += increase;
         }

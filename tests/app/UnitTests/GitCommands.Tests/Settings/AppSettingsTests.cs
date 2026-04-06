@@ -46,14 +46,14 @@ internal sealed class AppSettingsTests
 #pragma warning restore IDE0060 // Remove unused parameter
     {
         // Arrange
-        object root = null;
+        object? root = null;
 
         if (isISetting)
         {
             root = property.GetValue(null);
 
             property = property.PropertyType
-                .GetProperty(nameof(ISetting<>.Value));
+                .GetProperty(nameof(ISetting<>.Value))!;
         }
 
         using TempFileCollection tempFiles = new();
@@ -64,12 +64,12 @@ internal sealed class AppSettingsTests
 
         using GitExtSettingsCache cache = GitExtSettingsCache.Create(filePath);
         DistributedSettings container = new(lowerPriority: null, cache, SettingLevel.Unknown);
-        object storedValue = null;
+        object? storedValue = null;
 
         // Act
         AppSettings.UsingContainer(container, () =>
         {
-            storedValue = property.GetValue(root);
+            storedValue = property!.GetValue(root);
         });
 
         // Assert
@@ -81,14 +81,14 @@ internal sealed class AppSettingsTests
     public void Should_save_value(PropertyInfo property, object value, object defaultValue, bool isISetting)
     {
         // Arrange
-        object root = null;
+        object? root = null;
 
         if (isISetting)
         {
             root = property.GetValue(null);
 
             property = property.PropertyType
-                .GetProperty(nameof(ISetting<>.Value));
+                .GetProperty(nameof(ISetting<>.Value))!;
         }
 
         using TempFileCollection tempFiles = new();
@@ -99,18 +99,18 @@ internal sealed class AppSettingsTests
 
         using GitExtSettingsCache cache = GitExtSettingsCache.Create(filePath);
         DistributedSettings container = new(lowerPriority: null, cache, SettingLevel.Unknown);
-        object storedValue = null;
+        object? storedValue = null;
 
         // Act
         AppSettings.UsingContainer(container, () =>
         {
-            property.SetValue(root, value);
+            property!.SetValue(root, value);
 
             storedValue = property.GetValue(root);
         });
 
         // Assert
-        if (Type.GetTypeCode(property.PropertyType) == TypeCode.String)
+        if (Type.GetTypeCode(property!.PropertyType) == TypeCode.String)
         {
             if (isISetting)
             {
@@ -136,11 +136,11 @@ internal sealed class AppSettingsTests
 
     private static IEnumerable<object[]> TestCases()
     {
-        foreach ((PropertyInfo property, object defaultValue, bool isNullable, bool isISetting) in PropertyInfos())
+        foreach ((PropertyInfo property, object? defaultValue, bool isNullable, bool isISetting) in PropertyInfos())
         {
             if (isNullable)
             {
-                yield return new object[] { property, null, defaultValue, isISetting };
+                yield return new object[] { property, null!, defaultValue!, isISetting };
             }
 
             Type? propertyType = property.PropertyType;
@@ -149,7 +149,7 @@ internal sealed class AppSettingsTests
                 propertyType = propertyType.GetProperty(nameof(ISetting<>.Value))?.PropertyType;
             }
 
-            propertyType = Nullable.GetUnderlyingType(propertyType) ?? propertyType;
+            propertyType = Nullable.GetUnderlyingType(propertyType!) ?? propertyType;
             Validates.NotNull(propertyType);
 
             foreach (object value in Values())
@@ -157,12 +157,12 @@ internal sealed class AppSettingsTests
                 Type valueType = Nullable.GetUnderlyingType(value.GetType()) ?? value.GetType();
                 if (valueType == propertyType)
                 {
-                    yield return new object[] { property, value, defaultValue, isISetting };
+                    yield return new object[] { property, value, defaultValue!, isISetting };
                 }
             }
         }
 
-        static IEnumerable<(PropertyInfo property, object defaultValue, bool isNullable, bool isISetting)> PropertyInfos()
+        static IEnumerable<(PropertyInfo property, object? defaultValue, bool isNullable, bool isISetting)> PropertyInfos()
         {
             Dictionary<string, PropertyInfo> properties = typeof(AppSettings).GetProperties()
                 .ToDictionary(x => x.Name, x => x);
@@ -195,7 +195,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowResetAllChanges)], true, false, false);
 
             yield return (properties[nameof(AppSettings.ShowConEmuTab)], true, false, true);
-            yield return (properties[nameof(AppSettings.ConEmuStyle)], "<Solarized Light>", true, true);
+            yield return (properties[nameof(AppSettings.ConEmuStyle)], "Default", true, true);
             yield return (properties[nameof(AppSettings.ConEmuTerminal)], "bash", true, true);
             yield return (properties[nameof(AppSettings.OutputHistoryDepth)], 20, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.OutputHistoryPanelVisible)], false, isNotNullable, isISetting);
@@ -368,14 +368,16 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.DiffListSorting)], DiffListSortType.FilePath, false, false);
             yield return (properties[nameof(AppSettings.RepoObjectsTreeShowBranches)], true, false, false);
             yield return (properties[nameof(AppSettings.RepoObjectsTreeShowRemotes)], true, false, false);
+            yield return (properties[nameof(AppSettings.RepoObjectsTreeShowWorktrees)], true, false, false);
             yield return (properties[nameof(AppSettings.RepoObjectsTreeShowTags)], true, false, false);
             yield return (properties[nameof(AppSettings.RepoObjectsTreeShowStashes)], true, false, false);
             yield return (properties[nameof(AppSettings.RepoObjectsTreeShowSubmodules)], true, false, false);
             yield return (properties[nameof(AppSettings.RepoObjectsTreeBranchesIndex)], 0, false, false);
             yield return (properties[nameof(AppSettings.RepoObjectsTreeRemotesIndex)], 1, false, false);
-            yield return (properties[nameof(AppSettings.RepoObjectsTreeTagsIndex)], 2, false, false);
-            yield return (properties[nameof(AppSettings.RepoObjectsTreeSubmodulesIndex)], 3, false, false);
-            yield return (properties[nameof(AppSettings.RepoObjectsTreeStashesIndex)], 4, false, false);
+            yield return (properties[nameof(AppSettings.RepoObjectsTreeWorktreesIndex)], 2, false, false);
+            yield return (properties[nameof(AppSettings.RepoObjectsTreeTagsIndex)], 3, false, false);
+            yield return (properties[nameof(AppSettings.RepoObjectsTreeSubmodulesIndex)], 4, false, false);
+            yield return (properties[nameof(AppSettings.RepoObjectsTreeStashesIndex)], 5, false, false);
             yield return (properties[nameof(AppSettings.BlameDisplayAuthorFirst)], false, false, false);
             yield return (properties[nameof(AppSettings.BlameShowAuthor)], true, false, false);
             yield return (properties[nameof(AppSettings.BlameShowAuthorDate)], true, false, false);

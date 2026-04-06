@@ -3,7 +3,6 @@ using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -309,7 +308,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private ConflictData GetConflict()
     {
-        return (ConflictData)ConflictedFiles.SelectedRows[0].DataBoundItem;
+        return (ConflictData)ConflictedFiles.SelectedRows[0].DataBoundItem!;
     }
 
     private (IReadOnlyList<ConflictData> conflicts,
@@ -319,7 +318,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         IReadOnlyList<ConflictData> conflicts = ConflictedFiles.SelectedRows
             .Cast<DataGridViewRow>()
-            .Select(selectedRow => (ConflictData)selectedRow.DataBoundItem)
+            .Select(selectedRow => (ConflictData)selectedRow.DataBoundItem!)
             .ToArray();
 
         _conflictItemsCount = conflicts.Count;
@@ -388,7 +387,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private bool TryMergeWithScript(string fileName, string? baseFileName, string? localFileName, string? remoteFileName)
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return false;
         }
@@ -401,10 +400,10 @@ public partial class FormResolveConflicts : GitModuleForm
                 return false;
             }
 
-            string dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Diff-Scripts").EnsureTrailingPathSeparator();
+            string dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath)!, "Diff-Scripts").EnsureTrailingPathSeparator();
             if (Directory.Exists(dir))
             {
-                if (_mergeScripts.TryGetValue(extension, out string mergeScript) &&
+                if (_mergeScripts.TryGetValue(extension!, out string? mergeScript) &&
                     File.Exists(Path.Combine(dir!, mergeScript)))
                 {
                     if (MessageBoxes.Show(this, string.Format(_uskUseCustomMergeScript.Text, mergeScript),
@@ -429,7 +428,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private void UseMergeWithScript(string fileName, string mergeScript, string? baseFileName, string? localFileName, string? remoteFileName)
     {
         // get timestamp of file before merge. This is an extra check to verify if merge was successfully
-        string filePath = _fullPathResolver.Resolve(fileName);
+        string? filePath = _fullPathResolver.Resolve(fileName);
         DateTime lastWriteTimeBeforeMerge = File.Exists(filePath) ? File.GetLastWriteTime(filePath) : DateTime.Now;
 
         ArgumentBuilder args =
@@ -560,7 +559,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void ResolveFilesConflict(ConflictData item)
     {
-        (string baseFile, string localFile, string remoteFile) = Module.CheckoutConflictedFiles(item);
+        (string? baseFile, string? localFile, string? remoteFile) = Module.CheckoutConflictedFiles(item);
 
         try
         {
@@ -622,7 +621,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 arguments = arguments.Replace("$MERGED", item.Filename);
 
                 // get timestamp of file before merge. This is an extra check to verify if merge was successful
-                string filePath = _fullPathResolver.Resolve(item.Filename);
+                string? filePath = _fullPathResolver.Resolve(item.Filename);
                 DateTime lastWriteTimeBeforeMerge = File.Exists(filePath) ? File.GetLastWriteTime(filePath) : DateTime.Now;
 
                 ExecutionResult res;
@@ -719,7 +718,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 }
             }
 
-            if (EnvUtils.RunningOnWindows() && _mergetoolCmd is not null)
+            if (OperatingSystem.IsWindows() && _mergetoolCmd is not null)
             {
                 // This only works when on Windows....
                 const string executablePattern = ".exe";
@@ -731,7 +730,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 }
             }
 
-            if (!PathUtil.TryFindFullPath(_mergetoolPath, out string? fullPath))
+            if (!PathUtil.TryFindFullPath(_mergetoolPath!, out string? fullPath))
             {
                 MessageBoxes.Show(this, _noMergeToolConfigured.Text, TranslatedStrings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
@@ -778,7 +777,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private string GetShortHash(ConflictedFileData item)
         => $"@{(item.ObjectId is null ? _deleted.Text : item.ObjectId.ToShortString())}";
 
-    private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
+    private void ConflictedFiles_SelectionChanged(object? sender, EventArgs e)
     {
         UpdateConflictedFilesMenu();
     }
@@ -1274,19 +1273,19 @@ public partial class FormResolveConflicts : GitModuleForm
         OpenMergeTool();
     }
 
-    private void customMergetool_Click(object sender, EventArgs e)
+    private void customMergetool_Click(object? sender, EventArgs e)
     {
-        ToolStripMenuItem item = sender as ToolStripMenuItem;
+        ToolStripMenuItem? item = sender as ToolStripMenuItem;
         if (item?.DropDownItems != null)
         {
             // "main menu" clicked, cancel dropdown manually, invoke default mergetool
             item.HideDropDown();
-            item.Owner.Hide();
+            item.Owner!.Hide();
         }
 
         using (WaitCursorScope.Enter())
         {
-            string customTool = item?.Tag as string;
+            string? customTool = item?.Tag as string;
 
             foreach (ConflictData conflict in GetConflicts().conflicts)
             {
@@ -1358,7 +1357,7 @@ public partial class FormResolveConflicts : GitModuleForm
         {
             ConflictData conflictData = GetConflict();
             string fileName = PathUtil.GetFileName(conflictData.Filename);
-            string initialDirectory = _fullPathResolver.Resolve(Path.GetDirectoryName(conflictData.Filename));
+            string? initialDirectory = _fullPathResolver.Resolve(Path.GetDirectoryName(conflictData.Filename));
 
             using SaveFileDialog fileDialog = new()
             {

@@ -64,7 +64,7 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
 
         try
         {
-            string fileName = ExcludeFile;
+            string? fileName = ExcludeFile;
             Validates.NotNull(fileName);
             FileInfoExtensions.MakeFileTemporaryWritable(fileName, x =>
             {
@@ -81,7 +81,7 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
                     gitIgnoreFileAddition.Append(Environment.NewLine);
                 }
 
-                Directory.CreateDirectory(Path.GetDirectoryName(x));
+                Directory.CreateDirectory(Path.GetDirectoryName(x)!);
                 using StreamWriter writer = new(x, append: true, GitModule.SystemEncoding);
                 writer.Write(gitIgnoreFileAddition);
             });

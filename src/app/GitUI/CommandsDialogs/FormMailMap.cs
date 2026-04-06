@@ -45,10 +45,10 @@ public partial class FormMailMap : GitModuleForm
     {
         try
         {
-            string path = _fullPathResolver.Resolve(".mailmap");
+            string? path = _fullPathResolver.Resolve(".mailmap");
             if (File.Exists(path))
             {
-                _NO_TRANSLATE_MailMapText.ViewFileAsync(path!);
+                _NO_TRANSLATE_MailMapText.ViewFileAsync(path);
             }
         }
         catch (Exception ex)
@@ -142,7 +142,7 @@ public partial class FormMailMap : GitModuleForm
         return MailMapFile == _NO_TRANSLATE_MailMapText.GetText();
     }
 
-    private void MailMapFileLoaded(object sender, EventArgs e)
+    private void MailMapFileLoaded(object? sender, EventArgs e)
     {
         MailMapFile = _NO_TRANSLATE_MailMapText.GetText();
     }

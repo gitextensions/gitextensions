@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using GitCommands.Utils;
 
 namespace GitCommands;
 
@@ -19,7 +18,7 @@ public static partial class PathUtil
     /// <summary>The user's profile folder path.</summary>
     // TODO verify whether the user profile contains forwards/backwards slashes on other platforms
     public static readonly string UserProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-    private static StringComparison _pathComparison = EnvUtils.RunningOnWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+    private static StringComparison _pathComparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
 
     [GeneratedRegex(@"^(\w+):\/\/([\S]+)", RegexOptions.ExplicitCapture)]
     private static partial Regex DriveLetterRegex { get; }
@@ -273,7 +272,7 @@ public static partial class PathUtil
     public static string GetWslDistro(string? path)
     {
         int distroLen = GetWslDistroLength(path);
-        return distroLen <= 0 ? "" : path.Substring(WslPrefix.Length, distroLen);
+        return distroLen <= 0 ? "" : path!.Substring(WslPrefix.Length, distroLen);
 
         static int GetWslDistroLength(string? path)
         {
@@ -489,7 +488,7 @@ public static partial class PathUtil
 
         while (true)
         {
-            path = Path.GetDirectoryName(path);
+            path = Path.GetDirectoryName(path)!;
 
             if (string.IsNullOrEmpty(path))
             {
@@ -543,7 +542,7 @@ public static partial class PathUtil
 
         static string? FindFileInEnvVarFolder(string environmentVariable, string location, string fileName1)
         {
-            string envVarFolder = Environment.GetEnvironmentVariable(environmentVariable);
+            string? envVarFolder = Environment.GetEnvironmentVariable(environmentVariable);
             if (string.IsNullOrEmpty(envVarFolder))
             {
                 return null;

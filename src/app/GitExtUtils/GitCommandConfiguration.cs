@@ -43,7 +43,7 @@ public sealed class GitCommandConfiguration : IGitCommandConfiguration
 
     public IReadOnlyList<GitConfigItem> Get(string command)
     {
-        return _configByCommand.TryGetValue(command, out GitConfigItem[] items)
+        return _configByCommand.TryGetValue(command, out GitConfigItem[]? items)
             ? items
             : [];
     }

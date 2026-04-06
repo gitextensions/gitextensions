@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
@@ -9,8 +9,8 @@ namespace GitCommandsTests;
 [TestFixture]
 public class GitRevisionInfoProviderTests
 {
-    private IGitModule _module;
-    private GitRevisionInfoProvider _provider;
+    private IGitModule _module = null!;
+    private GitRevisionInfoProvider _provider = null!;
 
     [SetUp]
     public void Setup()
@@ -22,7 +22,7 @@ public class GitRevisionInfoProviderTests
     [Test]
     public void LoadChildren_should_throw_if_null()
     {
-        ((Action)(() => _provider.LoadChildren(null))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => _provider.LoadChildren(null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -31,7 +31,7 @@ public class GitRevisionInfoProviderTests
         IGitItem item = Substitute.For<IGitItem>();
 
         // ObjectId checks input, use Try to get an illegal value
-        ObjectId.TryParse("", out ObjectId objectId);
+        ObjectId.TryParse("", out ObjectId? objectId);
         item.ObjectId.Returns(objectId);
 
         ((Action)(() => _provider.LoadChildren(item))).Should().Throw<ArgumentException>();
@@ -44,7 +44,7 @@ public class GitRevisionInfoProviderTests
         IGitItem item = Substitute.For<IGitItem>();
         item.Guid.Returns(objectId);
 
-        _provider = new GitRevisionInfoProvider(() => null);
+        _provider = new GitRevisionInfoProvider(() => null!);
 
         ((Action)(() => _provider.LoadChildren(item))).Should().Throw<ArgumentException>();
     }

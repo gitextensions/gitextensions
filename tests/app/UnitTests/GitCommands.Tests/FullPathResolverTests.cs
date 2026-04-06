@@ -1,4 +1,4 @@
-using FluentAssertions;
+﻿using FluentAssertions;
 using GitCommands;
 
 namespace GitCommandsTests;
@@ -7,7 +7,7 @@ namespace GitCommandsTests;
 public class FullPathResolverTests
 {
     private readonly string _workingDir = @"c:\dev\repo";
-    private FullPathResolver _resolver;
+    private FullPathResolver _resolver = null!;
 
     [SetUp]
     public void Setup()

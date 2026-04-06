@@ -1,5 +1,4 @@
 ﻿using GitCommands.Config;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -28,7 +27,7 @@ public static partial class Commands
         return new GitArgumentBuilder("rebase") { "--abort" };
     }
 
-    public static ArgumentString AddSubmodule(string remotePath, string localPath, string branch, bool force, IEnumerable<GitConfigItem> configs = null)
+    public static ArgumentString AddSubmodule(string remotePath, string localPath, string branch, bool force, IEnumerable<GitConfigItem>? configs = null)
     {
         GitArgumentBuilder argsBuilder = new("submodule")
         {
@@ -50,7 +49,7 @@ public static partial class Commands
         return argsBuilder;
     }
 
-    public static ArgumentString ApplyDiffPatch(bool ignoreWhiteSpace, string patchFile, Func<string, string?> getPathForGitExecution)
+    public static ArgumentString ApplyDiffPatch(bool ignoreWhiteSpace, string patchFile, Func<string?, string?> getPathForGitExecution)
     {
         return new GitArgumentBuilder("apply")
         {
@@ -62,7 +61,7 @@ public static partial class Commands
     public static ArgumentString ApplyMailboxPatch(bool signOff, bool ignoreWhiteSpace)
         => ApplyMailboxPatch(signOff, ignoreWhiteSpace, patchFile: null, path => path);
 
-    public static ArgumentString ApplyMailboxPatch(bool signOff, bool ignoreWhiteSpace, string? patchFile, Func<string, string?> getPathForGitExecution)
+    public static ArgumentString ApplyMailboxPatch(bool signOff, bool ignoreWhiteSpace, string? patchFile, Func<string?, string?> getPathForGitExecution)
     {
         return new GitArgumentBuilder("am")
         {
@@ -159,19 +158,19 @@ public static partial class Commands
     /// <para><c>False</c>: --no-single-branch.</para>
     /// <para><c>NULL</c>: don't pass any such param to git.</para>
     /// </param>
-    public static ArgumentString Clone(string fromPath, string toPath, Func<string, string?> getPathForGitExecution, bool central = false, bool initSubmodules = false, string? branch = "", int? depth = null, bool? isSingleBranch = null)
+    public static ArgumentString Clone(string fromPath, string toPath, Func<string?, string?> getPathForGitExecution, bool central = false, bool initSubmodules = false, string? branch = "", int? depth = null, bool? isSingleBranch = null)
     {
         fromPath = fromPath.Trim();
         if (PathUtil.IsLocalFile(fromPath))
         {
-            fromPath = getPathForGitExecution(fromPath);
+            fromPath = getPathForGitExecution(fromPath)!;
         }
 
-        toPath = getPathForGitExecution(toPath.Trim());
+        toPath = getPathForGitExecution(toPath.Trim())!;
 
-        DebugHelpers.Assert(!EnvUtils.RunningOnWindows() || fromPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
+        DebugHelpers.Assert(!OperatingSystem.IsWindows() || fromPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
            $"'CloneCmd' must be called with 'fromPath' in Posix format");
-        DebugHelpers.Assert(!EnvUtils.RunningOnWindows() || toPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
+        DebugHelpers.Assert(!OperatingSystem.IsWindows() || toPath.IndexOf(PathUtil.NativeDirectorySeparatorChar) < 0,
            $"'CloneCmd' must be called with 'toPath' in Posix format");
 
         return new GitArgumentBuilder("clone")
@@ -190,7 +189,7 @@ public static partial class Commands
         };
     }
 
-    public static ArgumentString Commit(bool amend, bool signOff, string author, bool useExplicitCommitMessage, string? commitMessageFile, Func<string, string?> getPathForGitExecution, bool noVerify = false, bool? gpgSign = null, string gpgKeyId = "", bool allowEmpty = false, bool resetAuthor = false)
+    public static ArgumentString Commit(bool amend, bool signOff, string author, bool useExplicitCommitMessage, string? commitMessageFile, Func<string?, string?> getPathForGitExecution, bool noVerify = false, bool? gpgSign = null, string gpgKeyId = "", bool allowEmpty = false, bool resetAuthor = false)
     {
         if (useExplicitCommitMessage && string.IsNullOrEmpty(commitMessageFile))
         {
@@ -376,7 +375,7 @@ public static partial class Commands
         }
     }
 
-    public static ArgumentString MergeBranch(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string? mergeCommitFilePath, Func<string, string?> getPathForGitExecution, int? log)
+    public static ArgumentString MergeBranch(string branch, bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string? mergeCommitFilePath, Func<string?, string?> getPathForGitExecution, int? log)
     {
         return new GitArgumentBuilder("merge")
         {
@@ -480,7 +479,7 @@ public static partial class Commands
     /// <param name="force">Push the reference also if commits are lost.</param>
     /// <param name="dryRun">Just test whether Git would perform the operation.</param>
     /// <returns>The Git command to execute.</returns>
-    public static ArgumentString PushLocal(string gitRef, ObjectId targetId, string repoDir, Func<string, string?> getPathForGitExecution, bool force = false, bool dryRun = false)
+    public static ArgumentString PushLocal(string gitRef, ObjectId targetId, string repoDir, Func<string?, string?> getPathForGitExecution, bool force = false, bool dryRun = false)
     {
         return new GitArgumentBuilder("push")
         {

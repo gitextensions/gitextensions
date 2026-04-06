@@ -61,7 +61,7 @@ public partial class ScriptInfo
     /// <summary>
     ///  Returns the name with mnemonic ampersands removed.
     /// </summary>
-    public string GetDisplayName() => MnemonicAmpersandRegex.Replace(Name, "");
+    public string GetDisplayName() => MnemonicAmpersandRegex.Replace(Name!, "");
 
     /// <summary>
     /// Gets the associated bitmap.
