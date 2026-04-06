@@ -106,7 +106,7 @@ public partial class BranchSelector : GitModuleControl
     private void Branches_SelectedIndexChanged(object? sender, EventArgs e)
     {
         lbChanges.Text = "";
-        FireSelectionChangedEvent(sender!, e);
+        FireSelectionChangedEvent(sender, e);
 
         if (string.IsNullOrWhiteSpace(SelectedBranchName))
         {
@@ -140,7 +140,7 @@ public partial class BranchSelector : GitModuleControl
         ////BranchTypeChanged();
     }
 
-    private void Remotebranch_CheckedChanged(object sender, EventArgs e)
+    private void Remotebranch_CheckedChanged(object? sender, EventArgs e)
     {
         Branches.Focus();
         if (!_isLoading)
@@ -151,7 +151,7 @@ public partial class BranchSelector : GitModuleControl
         FireSelectionChangedEvent(sender, e);
     }
 
-    private void FireSelectionChangedEvent(object sender, EventArgs e)
+    private void FireSelectionChangedEvent(object? sender, EventArgs e)
     {
         SelectedIndexChanged?.Invoke(sender, e);
     }
