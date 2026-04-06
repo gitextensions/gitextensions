@@ -80,6 +80,8 @@ For example:
 * Declare variables non-nullable, and check for `null` at entry points.
 * Always use `is null` or `is not null` instead of `== null` or `!= null`.
 * Trust the C# null annotations and don't add null checks when the type system says a value cannot be null.
+* Avoid null-forgiving (`!`) suppressions. Prefer making nullability explicit in the type system — for example, by declaring a parameter or property as nullable, adding a null guard, or restructuring code so that null states are unrepresentable. Use `!` only as a last resort when the type system cannot express a known invariant.
+* When modifying code that contains existing `!` suppressions, look for opportunities to remove them safely. Use `Validates.NotNull` for runtime null checks where a value is expected to be non-null but the type system cannot prove it.
 
 ## Testing
 
