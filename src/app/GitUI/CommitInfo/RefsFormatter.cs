@@ -72,8 +72,13 @@ public sealed class RefsFormatter
         bool allowLocal = AppSettings.CommitInfoShowContainedInBranchesLocal;
         bool allowRemote = getRemote;
 
-        foreach (string branch in branches)
+        foreach (string? branch in branches)
         {
+            if (branch is null)
+            {
+                continue;
+            }
+
             string noPrefixBranch = branch;
             bool branchIsLocal;
             if (getLocal && getRemote)

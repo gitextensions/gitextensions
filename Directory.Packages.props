@@ -14,7 +14,6 @@
     <PackageVersion Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
     <PackageVersion Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.201" />
-    <PackageVersion Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
     <PackageVersion Include="Microsoft.VisualStudio.Composition" Version="17.2.41" />
     <PackageVersion Include="Microsoft.VisualStudio.Threading" Version="17.13.61" />
     <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />

@@ -5,11 +5,11 @@ using Newtonsoft.Json;
 
 namespace GitExtensions.Plugins.GitlabIntegration.ApiClient;
 
-public class GitlabApiClientBase : IDisposable
+public abstract class GitlabApiClientBase : IDisposable
 {
     private readonly HttpClient _httpClient;
 
-    public GitlabApiClientBase(string instanceUrl, string apiToken)
+    protected GitlabApiClientBase(string instanceUrl, string apiToken)
     {
         InstanceUrl = instanceUrl;
         _httpClient = InitClient(instanceUrl, apiToken);
@@ -17,7 +17,7 @@ public class GitlabApiClientBase : IDisposable
 
     public string InstanceUrl { get; }
 
-    private HttpClient InitClient(string instanceUrl, string apiToken)
+    private static HttpClient InitClient(string instanceUrl, string apiToken)
     {
         HttpClient? client = new()
         {

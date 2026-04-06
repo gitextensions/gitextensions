@@ -27,7 +27,7 @@ public class AppVeyorIntegrationMetadata : BuildServerAdapterMetadataAttribute
 [Export(typeof(IBuildServerAdapter))]
 [AppVeyorIntegrationMetadata(PluginName)]
 [PartCreationPolicy(CreationPolicy.NonShared)]
-internal class AppVeyorAdapter : IBuildServerAdapter
+internal sealed class AppVeyorAdapter : IBuildServerAdapter
 {
     public const string PluginName = "AppVeyor";
     private const uint ProjectsToRetrieveCount = 25;
@@ -476,8 +476,6 @@ internal class AppVeyorAdapter : IBuildServerAdapter
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
-
         _httpClientAppVeyor?.Dispose();
     }
 }

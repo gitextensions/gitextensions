@@ -21,7 +21,7 @@ namespace TeamCityIntegration;
 
 [MetadataAttribute]
 [AttributeUsage(AttributeTargets.Class)]
-public class TeamCityIntegrationMetadataAttribute : BuildServerAdapterMetadataAttribute
+public sealed class TeamCityIntegrationMetadataAttribute : BuildServerAdapterMetadataAttribute
 {
     public TeamCityIntegrationMetadataAttribute(string buildServerType)
         : base(buildServerType)
@@ -576,8 +576,6 @@ internal class TeamCityAdapter : IBuildServerAdapter
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
-
         _httpClient?.Dispose();
     }
 

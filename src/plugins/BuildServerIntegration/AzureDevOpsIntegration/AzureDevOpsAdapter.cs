@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Composition;
-using System.Globalization;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text.Json.Nodes;
@@ -32,7 +31,7 @@ public class AzureDevOpsIntegrationMetadata : BuildServerAdapterMetadataAttribut
 [Export(typeof(IBuildServerAdapter))]
 [AzureDevOpsIntegrationMetadata(PluginName)]
 [PartCreationPolicy(CreationPolicy.NonShared)]
-internal class AzureDevOpsAdapter : IBuildServerAdapter
+internal sealed class AzureDevOpsAdapter : IBuildServerAdapter
 {
     public const string PluginName = "Azure DevOps and Team Foundation Server (since TFS2015)";
 
@@ -403,7 +402,6 @@ Detail of the error:");
     public void Dispose()
     {
         _apiClient?.Dispose();
-        GC.SuppressFinalize(this);
     }
 
     #region TestAccessor

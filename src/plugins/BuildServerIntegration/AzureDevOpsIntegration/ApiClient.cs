@@ -1,4 +1,4 @@
-using System.Net;
+﻿using System.Net;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -10,7 +10,7 @@ namespace AzureDevOpsIntegration;
 /// <summary>
 /// Provides access to the REST API of a Azure DevOps (or TFS>=2015) instance
 /// </summary>
-public class ApiClient : IDisposable
+public sealed class ApiClient : IDisposable
 {
     private const string BuildDefinitionsUrl = "build/definitions?api-version=2.0";
     private const string Properties = "properties=sourceVersion,status,buildNumber,result,definition,_links,startTime,finishTime";
@@ -135,12 +135,6 @@ public class ApiClient : IDisposable
         => $"build/builds?{Properties}&definitions={buildDefinitionsToQuery}&statusFilter={statusFilter}";
 
     public void Dispose()
-    {
-        Dispose(true);
-        GC.SuppressFinalize(this);
-    }
-
-    protected virtual void Dispose(bool disposing)
     {
         _httpClient?.Dispose();
     }
