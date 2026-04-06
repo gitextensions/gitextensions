@@ -9,7 +9,7 @@ internal sealed class ConfigSectionTests
     private static readonly string _keyName = Guid.NewGuid().ToString();
     private static readonly string _sectionName = Guid.NewGuid().ToString();
 
-    private static ConfigSection _configSection;
+    private static ConfigSection _configSection = null!;
 
     [SetUp]
     public void SetUp()
@@ -20,7 +20,7 @@ internal sealed class ConfigSectionTests
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        _configSection = null;
+        _configSection = null!;
     }
 
     [Test]

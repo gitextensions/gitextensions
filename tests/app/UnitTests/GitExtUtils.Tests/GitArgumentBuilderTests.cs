@@ -161,7 +161,7 @@ public sealed class GitArgumentBuilderTests
     [Test]
     public void Throws_for_invalid_command_strings()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => new GitArgumentBuilder(null));
+        ClassicAssert.Throws<ArgumentNullException>(() => new GitArgumentBuilder(null!));
         ClassicAssert.Throws<ArgumentException>(() => new GitArgumentBuilder(""));
         ClassicAssert.Throws<ArgumentException>(() => new GitArgumentBuilder(" "));
         ClassicAssert.Throws<ArgumentException>(() => new GitArgumentBuilder(" a banana "));

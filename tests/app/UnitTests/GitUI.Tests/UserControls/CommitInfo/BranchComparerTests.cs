@@ -15,7 +15,7 @@ public class BranchComparerTests
 
         List<string> expectedBranches =
         [
-            currentBranch,
+            currentBranch!,
 
             // local branch important
             // order 0

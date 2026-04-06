@@ -12,7 +12,7 @@ public class SingleHtmlUserManual : IProvideUserManual
         {
             if (_location is null)
             {
-                string path = Path.Combine(AppSettings.GetInstallDir(), "help");
+                string path = Path.Combine(AppSettings.GetInstallDir()!, "help");
                 Uri uri = new(path);
                 _location = uri.AbsolutePath;
             }

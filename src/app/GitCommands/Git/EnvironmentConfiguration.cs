@@ -54,7 +54,7 @@ public static class EnvironmentConfiguration
 
         if (OperatingSystem.IsWindows())
         {
-            string sshAskPass = Path.Combine(AppSettings.GetInstallDir(), "GitExtSshAskPass.exe");
+            string sshAskPass = Path.Combine(AppSettings.GetInstallDir()!, "GitExtSshAskPass.exe");
 
             if (File.Exists(sshAskPass))
             {
@@ -109,7 +109,7 @@ public static class EnvironmentConfiguration
         if (OperatingSystem.IsWindows())
         {
             // Use the Windows default home directory
-            string homeDrive = Env.GetEnvironmentVariable("HOMEDRIVE");
+            string? homeDrive = Env.GetEnvironmentVariable("HOMEDRIVE");
 
             if (!string.IsNullOrEmpty(homeDrive))
             {

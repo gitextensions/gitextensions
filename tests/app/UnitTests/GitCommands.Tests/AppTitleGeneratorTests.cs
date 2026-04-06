@@ -10,8 +10,8 @@ public class AppTitleGeneratorTests
 {
     private const string ShortName = "gitextension";
     private string _defaultBranchName = "no branch";
-    private IRepositoryDescriptionProvider _repositoryDescriptionProvider;
-    private AppTitleGenerator _appTitleGenerator;
+    private IRepositoryDescriptionProvider _repositoryDescriptionProvider = null!;
+    private AppTitleGenerator _appTitleGenerator = null!;
 
     [SetUp]
     public void Setup()

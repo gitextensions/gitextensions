@@ -100,7 +100,7 @@ public class GitExtensionsControl : TranslatedControl
 
     protected void UpdateTooltipWithShortcut<T>(ToolStripItem button, T commandCode) where T : struct, Enum
     {
-        button.ToolTipText = button.ToolTipText.UpdateSuffix(_hotkeys.GetShortcutToolTip(commandCode));
+        button.ToolTipText = button.ToolTipText!.UpdateSuffix(_hotkeys.GetShortcutToolTip(commandCode));
     }
 
     /// <summary>

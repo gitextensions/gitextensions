@@ -18,8 +18,8 @@ internal class ScriptOptionsProviderBase : IScriptOptionsProvider
             .Where(type => type != interfaceType && interfaceType.IsAssignableFrom(type))
             .SelectMany(implementingType =>
                 {
-                    PropertyInfo property = implementingType.GetProperty(nameof(ImplementedOptions), BindingFlags.Static | BindingFlags.NonPublic);
-                    return (string[])property.GetValue(obj: null);
+                    PropertyInfo? property = implementingType.GetProperty(nameof(ImplementedOptions), BindingFlags.Static | BindingFlags.NonPublic);
+                    return (string[])property!.GetValue(obj: null)!;
                 })];
     }
 

@@ -8,8 +8,8 @@ namespace GitCommandsTests.Git;
 [TestFixture]
 public class OsShellUtilTests
 {
-    private IExecutable _executable;
-    private IProcess _process;
+    private IExecutable _executable = null!;
+    private IProcess _process = null!;
 
     [SetUp]
     public void SetUp()

@@ -15,7 +15,7 @@ internal sealed class WorktreeTree(TreeNode treeNode, IGitUICommandsSource uiCom
             return;
         }
 
-        ReloadNodesDetached((_, cancellationToken) => LoadNodesAsync(cancellationToken), getRefs: null);
+        ReloadNodesDetached((_, cancellationToken) => LoadNodesAsync(cancellationToken), getRefs: null!);
     }
 
     private async Task<Nodes> LoadNodesAsync(CancellationToken token)

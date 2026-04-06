@@ -6,8 +6,8 @@ namespace GitCommandsTests.Git;
 [TestFixture]
 public sealed class GitBranchNameNormaliserTest
 {
-    private GitBranchNameNormaliser _gitBranchNameNormaliser;
-    private GitBranchNameOptions _gitBranchNameOptions;
+    private GitBranchNameNormaliser _gitBranchNameNormaliser = null!;
+    private GitBranchNameOptions _gitBranchNameOptions = null!;
 
     [SetUp]
     public void Setup()

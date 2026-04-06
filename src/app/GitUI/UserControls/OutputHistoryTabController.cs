@@ -36,7 +36,7 @@ internal partial class OutputHistoryTabController : OutputHistoryControllerBase
             return false;
         }
 
-        ((TabControl)_tabPage.Parent).SelectedTab = _tabPage;
+        ((TabControl)_tabPage.Parent!).SelectedTab = _tabPage;
         _tabPage.Controls[0].Focus();
         return true;
     }

@@ -28,7 +28,7 @@ public class AzureDevOpsExternalLinkDefinitionExtractorTests
     [Test]
     public void Should_get_link_definitions_When_no_remote_url_provided()
     {
-        IList<ExternalLinkDefinition> externalLinkDefinitions = new AzureDevopsExternalLinkDefinitionExtractor().GetDefinitions(null);
+        IList<ExternalLinkDefinition> externalLinkDefinitions = new AzureDevopsExternalLinkDefinitionExtractor().GetDefinitions(null!);
         externalLinkDefinitions.Should().HaveCount(2);
         foreach (ExternalLinkDefinition externalLinkDefinition in externalLinkDefinitions)
         {

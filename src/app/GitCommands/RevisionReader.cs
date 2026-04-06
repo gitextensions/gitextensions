@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System.Buffers.Text;
+﻿using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;

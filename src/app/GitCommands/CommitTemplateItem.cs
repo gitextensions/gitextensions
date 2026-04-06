@@ -33,8 +33,8 @@ public sealed class CommitTemplateItem
 
     public static CommitTemplateItem[]? LoadFromSettings()
     {
-        string serializedString = AppSettings.CommitTemplates;
-        CommitTemplateItem[] templates = DeserializeCommitTemplates(serializedString, out bool shouldBeUpdated);
+        string? serializedString = AppSettings.CommitTemplates;
+        CommitTemplateItem[]? templates = DeserializeCommitTemplates(serializedString, out bool shouldBeUpdated);
         if (shouldBeUpdated)
         {
             SaveToSettings(templates!);

@@ -10,7 +10,7 @@ public class ScriptManagerTests
     [Test]
     public async Task Can_save_settings()
     {
-        string originalScripts = AppSettings.OwnScripts;
+        string? originalScripts = AppSettings.OwnScripts;
 
         try
         {

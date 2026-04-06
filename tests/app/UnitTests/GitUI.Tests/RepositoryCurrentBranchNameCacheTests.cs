@@ -11,8 +11,8 @@ public sealed class RepositoryCurrentBranchNameCacheTests
     private const string Path = @"C:\repo";
     private const string BranchName = "main";
 
-    private IRepositoryCurrentBranchNameProvider _inner;
-    private IRepositoryCurrentBranchNameCache _cache;
+    private IRepositoryCurrentBranchNameProvider _inner = null!;
+    private IRepositoryCurrentBranchNameCache _cache = null!;
 
     [SetUp]
     public void SetUp()

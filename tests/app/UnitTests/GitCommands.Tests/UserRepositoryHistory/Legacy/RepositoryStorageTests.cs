@@ -9,8 +9,8 @@ namespace GitCommandsTests.UserRepositoryHistory.Legacy;
 [TestFixture]
 public class RepositoryStorageTests
 {
-    private Current.IRepositorySerialiser<RepositoryCategory> _repositoryCategorySerialiser;
-    private RepositoryStorage _repositoryStorage;
+    private Current.IRepositorySerialiser<RepositoryCategory> _repositoryCategorySerialiser = null!;
+    private RepositoryStorage _repositoryStorage = null!;
 
     [SetUp]
     public void Setup()

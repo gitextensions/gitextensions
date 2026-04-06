@@ -118,7 +118,7 @@ internal class TabControlPaintContext
 
     private void RenderTabImage(int index)
     {
-        Image image = _tabImages[index];
+        Image? image = _tabImages[index];
         if (image is null)
         {
             return;
@@ -147,7 +147,7 @@ internal class TabControlPaintContext
 
     private static Image? GetTabImage(TabControl tabs, int index)
     {
-        ImageList.ImageCollection images = tabs.ImageList?.Images;
+        ImageList.ImageCollection? images = tabs.ImageList?.Images;
         if (images is null)
         {
             return null;
@@ -264,7 +264,7 @@ internal class TabControlPaintContext
 
     private static Color GetParentBackColor(TabControl tabs)
     {
-        Control parent = tabs.Parent;
+        Control? parent = tabs.Parent;
         while (parent is not null)
         {
             if (parent.BackColor != Color.Transparent)

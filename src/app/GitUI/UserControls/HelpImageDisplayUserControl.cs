@@ -195,7 +195,7 @@ public partial class HelpImageDisplayUserControl : GitExtensionsControl
         }
 
         // apply size to control
-        Form form = TopLevelControl as Form;
+        Form? form = TopLevelControl as Form;
         Size s = new();
         Size ms = new();
         if (form is not null)

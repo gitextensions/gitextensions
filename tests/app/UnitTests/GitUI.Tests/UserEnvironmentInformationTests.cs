@@ -48,7 +48,7 @@ public sealed class UserEnvironmentInformationTests
     [TestCase("Microsoft.WindowsDesktop.App 1.2.z ")]
     public void GetDotnetDesktopRuntimeVersions_shall_return_empty(string? versions)
     {
-        UserEnvironmentInformation.GetDotnetDesktopRuntimeVersions(versions)
+        UserEnvironmentInformation.GetDotnetDesktopRuntimeVersions(versions!)
             .Should().BeEmpty();
     }
 

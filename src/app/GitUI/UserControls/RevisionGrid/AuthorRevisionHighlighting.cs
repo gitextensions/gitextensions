@@ -18,7 +18,7 @@ internal sealed class AuthorRevisionHighlighting
             return false;
         }
 
-        GitRevision revision = selectedRevisions.FirstOrDefault();
+        GitRevision? revision = selectedRevisions.FirstOrDefault();
 
         bool changed = !string.Equals(revision?.AuthorEmail, AuthorEmailToHighlight, StringComparison.OrdinalIgnoreCase);
         if (changed)

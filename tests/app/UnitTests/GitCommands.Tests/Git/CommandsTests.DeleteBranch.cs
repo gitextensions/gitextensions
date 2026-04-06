@@ -10,7 +10,7 @@ partial class CommandsTests
     [Test]
     public void ctor_should_throw_if_branches_is_null()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => Commands.DeleteBranch(branches: null, force: false));
+        ClassicAssert.Throws<ArgumentNullException>(() => Commands.DeleteBranch(branches: null!, force: false));
     }
 
     [Test]

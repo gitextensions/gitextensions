@@ -228,7 +228,7 @@ public sealed partial class FormPull : GitExtensionsDialog
             selectedRemoteName = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, _branch));
         }
 
-        ConfigFileRemote currentBranchRemote = remotes.FirstOrDefault(x => StringComparer.OrdinalIgnoreCase.Equals(x.Name, selectedRemoteName));
+        ConfigFileRemote? currentBranchRemote = remotes.FirstOrDefault(x => StringComparer.OrdinalIgnoreCase.Equals(x.Name, selectedRemoteName));
         if (currentBranchRemote is not null)
         {
             _NO_TRANSLATE_Remotes.SelectedItem = currentBranchRemote;
@@ -911,7 +911,7 @@ public sealed partial class FormPull : GitExtensionsDialog
 
             if (IsPullAll())
             {
-                foreach (ConfigFileRemote remote in (IEnumerable<ConfigFileRemote>)_NO_TRANSLATE_Remotes.DataSource)
+                foreach (ConfigFileRemote remote in (IEnumerable<ConfigFileRemote>)_NO_TRANSLATE_Remotes.DataSource!)
                 {
                     if (!string.IsNullOrWhiteSpace(remote.Name) && remote.Name != AllRemotes)
                     {

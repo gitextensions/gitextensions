@@ -56,11 +56,11 @@ public sealed class CancellationTokenSequence : IDisposable
 
         // The following block is identical to Interlocked.Exchange, except no replacement is
         // made if the current field value is null (latch on null).
-        CancellationTokenSource prior = Volatile.Read(ref _cancellationTokenSource);
+        CancellationTokenSource? prior = Volatile.Read(ref _cancellationTokenSource);
 
         while (prior is not null)
         {
-            CancellationTokenSource candidate = Interlocked.CompareExchange(ref _cancellationTokenSource, next, prior);
+            CancellationTokenSource? candidate = Interlocked.CompareExchange(ref _cancellationTokenSource, next, prior);
 
             if (candidate == prior)
             {
@@ -118,7 +118,7 @@ public sealed class CancellationTokenSequence : IDisposable
     /// </remarks>
     public void Dispose()
     {
-        CancellationTokenSource cancellationTokenSource = Interlocked.Exchange(ref _cancellationTokenSource, null);
+        CancellationTokenSource? cancellationTokenSource = Interlocked.Exchange(ref _cancellationTokenSource, null);
 
         if (cancellationTokenSource is null)
         {

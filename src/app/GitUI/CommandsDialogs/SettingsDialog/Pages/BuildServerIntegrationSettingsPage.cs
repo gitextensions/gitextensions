@@ -37,8 +37,8 @@ public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPag
                 IEnumerable<Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>> exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
                 string[] buildServerTypes = [.. exports.Select(export =>
                     {
-                        string canBeLoaded = export.Metadata.CanBeLoaded;
-                        return export.Metadata.BuildServerType.Combine(" - ", canBeLoaded);
+                        string? canBeLoaded = export.Metadata.CanBeLoaded;
+                        return export.Metadata.BuildServerType.Combine(" - ", canBeLoaded)!;
                     })];
 
                 await this.SwitchToMainThreadAsync();
@@ -88,7 +88,7 @@ public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPag
             ? null
             : checkBoxShowBuildResultPage.Checked;
 
-        IBuildServerSettingsUserControl control = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().SingleOrDefault();
+        IBuildServerSettingsUserControl? control = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().SingleOrDefault();
         control?.SaveSettings(buildServerSettings.SettingsSource);
 
         base.PageToSettings();
@@ -97,10 +97,10 @@ public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPag
     private void ActivateBuildServerSettingsControl()
     {
         IEnumerable<Control> controls = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().Cast<Control>();
-        Control previousControl = controls.SingleOrDefault();
+        Control? previousControl = controls.SingleOrDefault();
         previousControl?.Dispose();
 
-        IBuildServerSettingsUserControl control = CreateBuildServerSettingsUserControl();
+        IBuildServerSettingsUserControl? control = CreateBuildServerSettingsUserControl();
 
         buildServerSettingsPanel.Controls.Clear();
 
@@ -127,12 +127,12 @@ public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPag
         string defaultProjectName = Module.WorkingDir.Split(Delimiters.PathSeparators, StringSplitOptions.RemoveEmptyEntries)[^1];
 
         IEnumerable<Lazy<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>> exports = ManagedExtensibility.GetExports<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>();
-        Lazy<IBuildServerSettingsUserControl, IBuildServerTypeMetadata> selectedExport = exports.SingleOrDefault(export => export.Metadata.BuildServerType == GetSelectedBuildServerType());
+        Lazy<IBuildServerSettingsUserControl, IBuildServerTypeMetadata>? selectedExport = exports.SingleOrDefault(export => export.Metadata.BuildServerType == GetSelectedBuildServerType());
         if (selectedExport is not null)
         {
             IBuildServerSettingsUserControl buildServerSettingsUserControl = selectedExport.Value;
             Validates.NotNull(_remotesManager);
-            IEnumerable<string> remoteUrls = _remotesManager.LoadRemotes(false).Select(r => string.IsNullOrEmpty(r.PushUrl) ? r.Url : r.PushUrl);
+            IEnumerable<string> remoteUrls = _remotesManager.LoadRemotes(false).Select(r => string.IsNullOrEmpty(r.PushUrl) ? r.Url! : r.PushUrl!);
 
             buildServerSettingsUserControl.Initialize(defaultProjectName, remoteUrls);
             return buildServerSettingsUserControl;
@@ -148,7 +148,7 @@ public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPag
             return null;
         }
 
-        return (string)BuildServerType.SelectedItem;
+        return (string?)BuildServerType.SelectedItem;
     }
 
     private void BuildServerType_SelectedIndexChanged(object sender, EventArgs e)

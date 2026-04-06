@@ -111,7 +111,7 @@ public interface IGitUICommands : IServiceProvider
     bool StartSettingsDialog(Type pageType);
     bool StartSparseWorkingCopyDialog(IWin32Window? owner);
     bool StartSquashCommitDialog(IWin32Window? owner, GitRevision revision);
-    bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true, string initialStash = null);
+    bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true, string? initialStash = null);
     bool StartSubmodulesDialog(IWin32Window? owner);
     bool StartSyncSubmodulesDialog(IWin32Window? owner);
     bool StartTheContinueRebaseDialog(IWin32Window? owner);

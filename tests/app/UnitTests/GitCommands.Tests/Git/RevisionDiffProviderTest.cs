@@ -10,7 +10,7 @@ public class RevisionDiffProviderTest
     // See RevisionDiffProvider.ArtificialToDiffOptions() for possible "aliases" for artificial commits
     // All variants are not tested in all situations
 
-    private RevisionDiffProvider _revisionDiffProvider;
+    private RevisionDiffProvider _revisionDiffProvider = null!;
 
     [SetUp]
     public void Setup()

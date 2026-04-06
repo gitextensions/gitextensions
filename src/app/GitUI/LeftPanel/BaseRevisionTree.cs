@@ -28,7 +28,7 @@ internal abstract class BaseRevisionTree : Tree
 
     internal virtual void UpdateVisibility()
     {
-        TreeView treeView = TreeViewNode.TreeView;
+        TreeView? treeView = TreeViewNode.TreeView;
 
         if (treeView is null || !IsAttached)
         {

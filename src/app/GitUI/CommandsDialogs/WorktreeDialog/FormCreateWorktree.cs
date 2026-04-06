@@ -99,11 +99,11 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
     private void CreateWorktree()
     {
         string relativePath = Path.GetRelativePath(Module.WorkingDir, WorktreeDirectory).ToPosixPath().Quote();
-        string newBranchOption =
+        string? newBranchOption =
             rbCreateNewBranch.Checked
             ? $"-b {txtNewBranchName.Text}"
             : (cbxBranches.SelectedItem as GitRef)?.Name;
-        DialogResult = UICommands.StartGitCommandProcessDialog(this, CreateWorktreeCommand(Module, relativePath, newBranchOption)) ? DialogResult.OK : DialogResult.None;
+        DialogResult = UICommands.StartGitCommandProcessDialog(this, CreateWorktreeCommand(Module, relativePath, newBranchOption!)) ? DialogResult.OK : DialogResult.None;
     }
 
     private GitArgumentBuilder CreateWorktreeCommand(IGitModule module, string relativePath, string newBranchOption)
@@ -150,7 +150,7 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         else
         {
             btnCreateWorktree.Enabled = !(string.IsNullOrWhiteSpace(txtNewBranchName.Text)
-                                             || ExistingBranches.Any(b => b.Name == txtNewBranchName.Text));
+                                             || ExistingBranches!.Any(b => b.Name == txtNewBranchName.Text));
         }
 
         if (btnCreateWorktree.Enabled)
@@ -198,7 +198,7 @@ public sealed partial class FormCreateWorktree : GitExtensionsDialog
         void UpdateWorktreePath()
         {
             string branchNameNormalized = NormalizeBranchName(rbCheckoutExistingBranch.Checked
-                ? ((IGitRef)cbxBranches.SelectedItem)?.Name ?? string.Empty
+                ? ((IGitRef?)cbxBranches.SelectedItem)?.Name ?? string.Empty
                 : txtNewBranchName.Text);
             txtWorktreeDirectory.Text = $"{_initialDirectoryPath}_{branchNameNormalized}";
         }

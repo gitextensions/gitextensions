@@ -27,7 +27,7 @@ public partial class GitlabRemoteParser : RemoteParser
         owner = null;
         repository = null;
 
-        Match m = MatchRegExes(remoteUrl, _gitLabRegexes);
+        Match? m = MatchRegExes(remoteUrl, _gitLabRegexes);
 
         if (m is null || !m.Success)
         {

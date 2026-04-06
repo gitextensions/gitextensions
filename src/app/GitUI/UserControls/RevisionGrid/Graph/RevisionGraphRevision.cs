@@ -75,7 +75,7 @@ public sealed class RevisionGraphRevision
         {
             RevisionGraphRevision revision = stack.Pop();
 
-            RevisionGraphRevision previous = null;
+            RevisionGraphRevision? previous = null;
             foreach (RevisionGraphSegment segment in revision._startSegments)
             {
                 RevisionGraphRevision parent = segment.Parent;

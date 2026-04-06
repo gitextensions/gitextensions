@@ -78,7 +78,7 @@ public class PathUtilTest
     [Test]
     public void EnsureTrailingPathSeparatorTest()
     {
-        ClassicAssert.IsNull(((string)null).EnsureTrailingPathSeparator());
+        ClassicAssert.IsNull(((string?)null).EnsureTrailingPathSeparator());
         ClassicAssert.AreEqual("".EnsureTrailingPathSeparator(), "");
 
         if (Path.DirectorySeparatorChar == '\\')
@@ -104,7 +104,7 @@ public class PathUtilTest
     [Test]
     public void RemoveTrailingPathSeparatorTest()
     {
-        ClassicAssert.IsNull(((string)null).RemoveTrailingPathSeparator());
+        ClassicAssert.IsNull(((string?)null).RemoveTrailingPathSeparator());
         ClassicAssert.AreEqual("".RemoveTrailingPathSeparator(), "");
 
         char s = Path.DirectorySeparatorChar;
@@ -401,7 +401,7 @@ public class PathUtilTest
     [Test, TestCaseSource(nameof(InvalidFolders))]
     public void DeleteWithExtremePrejudice_should_return_true_for_empty_input_or_absent_folders(string path)
     {
-        path.TryDeleteDirectory(out string errorMessage).Should().BeTrue();
+        path.TryDeleteDirectory(out string? errorMessage).Should().BeTrue();
         errorMessage.Should().BeNull();
     }
 
@@ -412,7 +412,7 @@ public class PathUtilTest
         Directory.CreateDirectory(tempPath);
         Directory.Exists(tempPath).Should().BeTrue();
 
-        tempPath.TryDeleteDirectory(out string errorMessage).Should().BeTrue();
+        tempPath.TryDeleteDirectory(out string? errorMessage).Should().BeTrue();
         errorMessage.Should().BeNull();
         Directory.Exists(tempPath).Should().BeFalse();
     }

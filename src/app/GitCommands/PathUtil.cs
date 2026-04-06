@@ -272,7 +272,7 @@ public static partial class PathUtil
     public static string GetWslDistro(string? path)
     {
         int distroLen = GetWslDistroLength(path);
-        return distroLen <= 0 ? "" : path.Substring(WslPrefix.Length, distroLen);
+        return distroLen <= 0 ? "" : path!.Substring(WslPrefix.Length, distroLen);
 
         static int GetWslDistroLength(string? path)
         {
@@ -488,7 +488,7 @@ public static partial class PathUtil
 
         while (true)
         {
-            path = Path.GetDirectoryName(path);
+            path = Path.GetDirectoryName(path)!;
 
             if (string.IsNullOrEmpty(path))
             {
@@ -542,7 +542,7 @@ public static partial class PathUtil
 
         static string? FindFileInEnvVarFolder(string environmentVariable, string location, string fileName1)
         {
-            string envVarFolder = Environment.GetEnvironmentVariable(environmentVariable);
+            string? envVarFolder = Environment.GetEnvironmentVariable(environmentVariable);
             if (string.IsNullOrEmpty(envVarFolder))
             {
                 return null;

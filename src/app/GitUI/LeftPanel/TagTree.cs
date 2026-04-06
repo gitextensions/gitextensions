@@ -21,7 +21,7 @@ internal sealed class TagTree : BaseRefTree
             token.ThrowIfCancellationRequested();
 
             TagNode tagNode = new(this, tag.ObjectId, tag.Name, visible: true);
-            BaseRevisionNode parent = tagNode.CreateRootNode(pathToNodes, (tree, parentPath) => new BasePathNode(tree, parentPath));
+            BaseRevisionNode? parent = tagNode.CreateRootNode(pathToNodes, (tree, parentPath) => new BasePathNode(tree, parentPath));
 
             if (parent is not null)
             {

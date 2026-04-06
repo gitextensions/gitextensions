@@ -7,11 +7,11 @@ namespace GitUITests.UserControls.CommitInfo;
 public class RefsFormatterTests
 {
     private readonly IReadOnlyList<string> _refs
-        = new List<string> { "r1", null, "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13" };
+        = new List<string> { "r1", null!, "r3", "r4", "r5", "r6", "r7", "r8", "r9", "r10", "r11", "r12", "r13" };
 
     // Created once for each test
-    private ILinkFactory _linkFactory;
-    private RefsFormatter _refsFormatter;
+    private ILinkFactory _linkFactory = null!;
+    private RefsFormatter _refsFormatter = null!;
 
     [SetUp]
     public void SetUp()
@@ -23,7 +23,7 @@ public class RefsFormatterTests
     [Test]
     public void LinkFactoryNull()
     {
-        ((Action)(() => new RefsFormatter(null))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => new RefsFormatter(null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -32,7 +32,7 @@ public class RefsFormatterTests
         _refsFormatter.FormatBranches(branches: null, showAsLinks: true, limit: true)
             .Should().Be(string.Empty);
 
-        _refsFormatter.FormatTags(tags: null, showAsLinks: true, limit: true)
+        _refsFormatter.FormatTags(tags: null!, showAsLinks: true, limit: true)
             .Should().Be(string.Empty);
     }
 

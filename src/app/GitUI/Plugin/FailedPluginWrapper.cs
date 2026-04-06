@@ -13,7 +13,7 @@ internal partial class FailedPluginWrapper : IGitPlugin
     private static partial Regex PluginNameRegex { get; }
 
     private readonly string _exception;
-    private string _pluginName;
+    private string _pluginName = null!;
 
     public FailedPluginWrapper(Exception loadingException)
     {

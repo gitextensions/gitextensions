@@ -86,7 +86,7 @@ public sealed class ApiClient : IDisposable
 
         buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl);
 
-        return GetBuildDefinitionsIds(buildDefinitions.Value.Where(b => Regex.IsMatch(b.Name, buildDefinitionNameFilter)));
+        return GetBuildDefinitionsIds(buildDefinitions.Value?.Where(b => b.Name is not null && Regex.IsMatch(b.Name, buildDefinitionNameFilter)));
     }
 
     private static string? GetBuildDefinitionsIds(IEnumerable<BuildDefinition>? buildDefinitions)
@@ -123,7 +123,7 @@ public sealed class ApiClient : IDisposable
 
     private async Task<IList<Build>> QueryBuildsAsync(string queryUrl)
     {
-        IList<Build> builds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
+        IList<Build>? builds = (await HttpGetAsync<ListWrapper<Build>>(queryUrl)).Value;
         Validates.NotNull(builds);
         return builds;
     }

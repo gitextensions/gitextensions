@@ -30,7 +30,7 @@ public class NativeTreeViewDoubleClickDecorator
     {
     }
 
-    private void HandleBeforeDoubleClickExpandCollapse(object sender, TreeViewCancelEventArgs e)
+    private void HandleBeforeDoubleClickExpandCollapse(object? sender, TreeViewCancelEventArgs e)
     {
         // Once detected, reset double-clicked state so that if BeforeDoubleClickExpandCollapse does
         // anything that collapses/expands nodes on the tree, this function won't erroneously resend
@@ -46,7 +46,7 @@ public class NativeTreeViewDoubleClickDecorator
         }
     }
 
-    private void OnMouseDown(object sender, MouseEventArgs e)
+    private void OnMouseDown(object? sender, MouseEventArgs e)
     {
         // We only care about double-clicks on the node itself, not the plus/minus part
         TreeViewHitTestInfo hitTest = _treeView.HitTest(e.Location);

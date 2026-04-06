@@ -6,7 +6,7 @@ namespace GitUITests.UserManual;
 [TestFixture]
 public class SingleHtmlUserManualFixture
 {
-    [TestCase((string)null)]
+    [TestCase((string?)null)]
     [TestCase("merge-conflicts")]
     public void GetUrl(string anchor)
     {

@@ -31,7 +31,7 @@ public class BlameAuthorMargin : AbstractMargin
         _avatars = [.. _blameLines.Select(a => a.Avatar)];
 
         // Update the resolution otherwise the image is not drawn at the good size :(
-        foreach (Image avatar in _avatars)
+        foreach (Image? avatar in _avatars)
         {
             if (avatar is Bitmap bitmapAvatar)
             {
@@ -85,7 +85,7 @@ public class BlameAuthorMargin : AbstractMargin
 
             if (_avatars[lineStart + i] is not null)
             {
-                g.DrawImage(_avatars[lineStart + i], new Point(AgeBucketMarkerWidth, y));
+                g.DrawImage(_avatars[lineStart + i]!, new Point(AgeBucketMarkerWidth, y));
             }
         }
 

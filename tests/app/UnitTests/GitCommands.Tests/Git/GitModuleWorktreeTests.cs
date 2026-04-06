@@ -10,8 +10,8 @@ namespace GitCommandsTests.Git;
 [TestFixture]
 public sealed class GitModuleWorktreeTests
 {
-    private GitModule _gitModule;
-    private MockExecutable _executable;
+    private GitModule _gitModule = null!;
+    private MockExecutable _executable = null!;
 
     [SetUp]
     public void SetUp()

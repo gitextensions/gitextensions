@@ -6,9 +6,6 @@
     <DebugType>full</DebugType>
 
     <CodeAnalysisRuleSet>$(RepoRoot)\eng\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
-
-    <!-- To be removed when NRT annotations are complete -->
-    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

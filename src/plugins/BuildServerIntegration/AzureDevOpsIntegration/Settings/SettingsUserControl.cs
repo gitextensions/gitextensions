@@ -99,7 +99,7 @@ public partial class SettingsUserControl : GitExtensionsControl, IBuildServerSet
         {
             Validates.NotNull(_remotes);
 
-            (bool vstsOrTfsProjectFound, string autoDetectedProjectUrl) = ProjectUrlHelper.TryDetectProjectFromRemoteUrls(_remotes);
+            (bool vstsOrTfsProjectFound, string? autoDetectedProjectUrl) = ProjectUrlHelper.TryDetectProjectFromRemoteUrls(_remotes);
             if (vstsOrTfsProjectFound)
             {
                 settings.ProjectUrl = autoDetectedProjectUrl!;
@@ -134,7 +134,7 @@ public partial class SettingsUserControl : GitExtensionsControl, IBuildServerSet
         this.InvokeAndForget(async () =>
         {
             string buildUrl = Clipboard.ContainsText() ? Clipboard.GetText() : "";
-            (bool success, string projectUrl, int buildId) = ProjectUrlHelper.TryParseBuildUrl(buildUrl);
+            (bool success, string? projectUrl, int buildId) = ProjectUrlHelper.TryParseBuildUrl(buildUrl);
             if (success)
             {
                 Validates.NotNull(projectUrl);

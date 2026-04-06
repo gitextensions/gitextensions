@@ -60,7 +60,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
         CancellationToken launchToken = _launchCancellation.Next();
 
-        IBuildServerAdapter buildServerAdapter = await GetBuildServerAdapterAsync().ConfigureAwait(false);
+        IBuildServerAdapter? buildServerAdapter = await GetBuildServerAdapterAsync().ConfigureAwait(false);
 
         await _revisionGridView.SwitchToMainThreadAsync(launchToken);
 
@@ -142,7 +142,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
     public void CancelBuildStatusFetchOperation()
     {
-        IDisposable cancellationToken = Interlocked.Exchange(ref _buildStatusCancellationToken, null);
+        IDisposable? cancellationToken = Interlocked.Exchange(ref _buildStatusCancellationToken, null);
 
         cancellationToken?.Dispose();
     }
@@ -179,7 +179,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
                             credentialsConfig.LoadFromString(textReader.ReadToEnd());
                         }
 
-                        IConfigSection section = credentialsConfig.FindConfigSection(CredentialsConfigName);
+                        IConfigSection? section = credentialsConfig.FindConfigSection(CredentialsConfigName);
 
                         if (section is not null)
                         {
@@ -309,7 +309,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
                 continue;
             }
 
-            GitRevision revision = _revisionGridView.GetRevision(index.Value);
+            GitRevision? revision = _revisionGridView.GetRevision(index.Value);
 
             if (revision is null)
             {
@@ -337,7 +337,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
         IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings().GetBuildServerSettings();
 
-        string buildServerName = buildServerSettings.ServerName;
+        string? buildServerName = buildServerSettings.ServerName;
 
         if (!string.IsNullOrEmpty(buildServerName))
         {
@@ -371,13 +371,13 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         }
 
         IEnumerable<Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>> exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
-        Lazy<IBuildServerAdapter, IBuildServerTypeMetadata> export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerName);
+        Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>? export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerName);
 
         if (export is not null)
         {
             try
             {
-                string canBeLoaded = export.Metadata.CanBeLoaded;
+                string? canBeLoaded = export.Metadata.CanBeLoaded;
                 if (!string.IsNullOrEmpty(canBeLoaded))
                 {
                     Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);

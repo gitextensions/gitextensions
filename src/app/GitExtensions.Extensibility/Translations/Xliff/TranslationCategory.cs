@@ -10,7 +10,7 @@ public class TranslationCategory : IComparable<TranslationCategory>
     {
     }
 
-    public TranslationCategory(string name, string? sourceLanguage, string? targetLanguage = null)
+    public TranslationCategory(string? name, string? sourceLanguage, string? targetLanguage = null)
     {
         Name = name;
         SourceLanguage = sourceLanguage;

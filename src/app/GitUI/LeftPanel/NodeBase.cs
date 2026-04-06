@@ -6,12 +6,12 @@ namespace GitUI.LeftPanel;
 internal abstract class NodeBase
 {
     /// <summary>The child nodes.</summary>
-    protected internal Nodes Nodes { get; protected set; }
+    protected internal Nodes Nodes { get; protected set; } = null!;
 
     internal bool HasChildren => Nodes.Count > 0;
 
     /// <summary>The corresponding tree node.</summary>
-    protected internal virtual TreeNode TreeViewNode { get; set; }
+    protected internal virtual TreeNode TreeViewNode { get; set; } = null!;
 
     /// <summary>
     /// Marks this node to be included in multi-selection. See <see cref="Select(bool, bool)"/>.
@@ -76,7 +76,7 @@ internal abstract class NodeBase
 
     private void ResetFont()
     {
-        TreeViewNode.NodeFont.Dispose();
+        TreeViewNode.NodeFont!.Dispose();
         TreeViewNode.NodeFont = null;
     }
     #endregion

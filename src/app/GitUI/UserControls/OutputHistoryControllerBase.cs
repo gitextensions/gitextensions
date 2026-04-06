@@ -28,7 +28,7 @@ internal abstract class OutputHistoryControllerBase : IDisposable
 
     internal abstract bool FocusAndToggleIfPanel();
 
-    private void Update(object sender, EventArgs args)
+    private void Update(object? sender, EventArgs args)
     {
         string history = _outputHistoryProvider.History;
         _textBox.InvokeAndForget(() =>
@@ -39,7 +39,7 @@ internal abstract class OutputHistoryControllerBase : IDisposable
         });
     }
 
-    private void CopyToClipboard(object sender, EventArgs args)
+    private void CopyToClipboard(object? sender, EventArgs args)
     {
         string text = _textBox.SelectedText;
         if (string.IsNullOrEmpty(text))

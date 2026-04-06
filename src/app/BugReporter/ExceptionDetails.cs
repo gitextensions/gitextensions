@@ -136,12 +136,12 @@ internal partial class ExceptionDetails : UserControl
     private void ExceptionDetailsListView_ItemMouseHover(object sender, ListViewItemMouseHoverEventArgs e)
     {
         toolTip.RemoveAll();
-        toolTip.Show(e.Item.SubItems[1].Text, exceptionDetailsListView);
+        toolTip.Show(e.Item!.SubItems[1].Text, exceptionDetailsListView);
     }
 
     private void ExceptionTreeView_AfterSelect(object sender, TreeViewEventArgs e)
     {
-        DisplayExceptionDetails(e.Node);
+        DisplayExceptionDetails(e.Node!);
     }
 
     private void FillInnerExceptionTree(SerializableException innerException, TreeNode innerNode)

@@ -203,7 +203,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
         string path = topProject.WorkingDir;
 
         // Workaround for links to .git directories on WSL, assume links are to .git directories
-        string name = (Directory.Exists(path) || File.Exists(PathUtil.RemoveTrailingPathSeparator(path)) || PathUtil.IsWslLink(path))
+        string? name = (Directory.Exists(path) || File.Exists(PathUtil.RemoveTrailingPathSeparator(path)) || PathUtil.IsWslLink(path))
                 ? Path.GetFileName(Path.GetDirectoryName(path))
                 : path;
         name += GetBranchNameSuffix(path, noBranchText);
@@ -218,7 +218,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
             return;
         }
 
-        string superWorkDir = currentModule.SuperprojectModule?.WorkingDir;
+        string? superWorkDir = currentModule.SuperprojectModule?.WorkingDir;
         string currentWorkDir = currentModule.WorkingDir;
         string localPath = currentWorkDir[topProject.WorkingDir.Length..];
         if (string.IsNullOrWhiteSpace(localPath))
@@ -226,7 +226,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
             localPath = ".";
         }
 
-        localPath = Path.GetDirectoryName(localPath).ToPosixPath();
+        localPath = Path.GetDirectoryName(localPath)!.ToPosixPath();
 
         foreach (string submodule in submodules)
         {
@@ -360,7 +360,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
         }
         else
         {
-            info.Detailed!.IsDirty = true;
+            info.Detailed.IsDirty = true;
         }
     }
 
@@ -421,7 +421,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
 
         cancelToken.ThrowIfCancellationRequested();
 
-        GitSubmoduleStatus submoduleStatus = await SubmoduleHelpers.GetSubmoduleCurrentChangesAsync(superModule, fileName: submoduleName, oldFileName: submoduleName, staged: false, noLocks: true)
+        GitSubmoduleStatus? submoduleStatus = await SubmoduleHelpers.GetSubmoduleCurrentChangesAsync(superModule, fileName: submoduleName, oldFileName: submoduleName, staged: false, noLocks: true)
             .ConfigureAwait(false);
 
         // If no changes, set info.Detailed to null

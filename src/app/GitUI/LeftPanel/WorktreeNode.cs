@@ -55,7 +55,7 @@ internal sealed class WorktreeNode(Tree tree, GitWorktree worktree, bool isCurre
 
         string GetToolTipText()
         {
-            string shortSha = Worktree.Sha1?.Length >= 7 ? Worktree.Sha1[..7] : Worktree.Sha1;
+            string? shortSha = Worktree.Sha1?.Length >= 7 ? Worktree.Sha1[..7] : Worktree.Sha1;
 
             string status = IsCurrent ? " (current)"
                 : Worktree.IsDeleted ? " (deleted)"

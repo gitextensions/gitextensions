@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Diagnostics.CodeAnalysis;
+using GitCommands;
 using Microsoft;
 using ResourceManager;
 
@@ -21,6 +22,7 @@ public partial class FolderBrowserButton : GitExtensionsControl
     /// <summary>
     /// Specifies the text label of the button.
     /// </summary>
+    [AllowNull]
     public override string Text
     {
         get => base.Text;
@@ -51,7 +53,7 @@ public partial class FolderBrowserButton : GitExtensionsControl
         directoryInfoPath ??= getter();
 
         // TODO: do we need ParentForm or is "this" ok?
-        string userSelectedPath = OsShellUtil.PickFolder(ParentForm, directoryInfoPath);
+        string? userSelectedPath = OsShellUtil.PickFolder(ParentForm!, directoryInfoPath!);
 
         if (userSelectedPath is not null)
         {

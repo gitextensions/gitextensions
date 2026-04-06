@@ -13,7 +13,7 @@ namespace GitUITests.CommandsDialogs;
 public class FormCommitTests
 {
     private IGitModule _gitModule = Substitute.For<IGitModule>();
-    private FormCommit _formCommit;
+    private FormCommit _formCommit = null!;
     [SetUp]
     public void Setup()
     {

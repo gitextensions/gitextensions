@@ -14,10 +14,10 @@ public static class ListViewExtensions
         listView.Groups.Cast<ListViewGroup>();
 
     public static T Tag<T>(this ListViewItem item) =>
-        (T)item.Tag;
+        (T)item.Tag!;
 
     public static T Tag<T>(this ListViewGroup grp) =>
-        (T)grp.Tag;
+        (T)grp.Tag!;
 
     public static Image? Image(this ListViewItem item)
     {
@@ -59,10 +59,10 @@ public static class ListViewExtensions
     /// on item from a collapsed <see cref="ListViewGroup"/>.
     /// </summary>
     public static Rectangle BoundsOrEmpty(this ListViewItem item) =>
-        (Rectangle)_getItemRectOrEmptyMethod.Value.Invoke(item.ListView, [item.Index]);
+        (Rectangle)_getItemRectOrEmptyMethod.Value.Invoke(item.ListView, [item.Index])!;
 
     private static readonly Lazy<MethodInfo> _getItemRectOrEmptyMethod =
         new(() => typeof(ListView).GetMethod(
             "GetItemRectOrEmpty",
-            BindingFlags.Instance | BindingFlags.NonPublic));
+            BindingFlags.Instance | BindingFlags.NonPublic)!);
 }

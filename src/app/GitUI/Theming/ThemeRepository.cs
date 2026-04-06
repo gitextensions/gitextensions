@@ -39,7 +39,7 @@ public class ThemeRepository : IThemeRepository
 
     public void Save(Theme theme)
     {
-        Directory.CreateDirectory(_themePathProvider.UserThemesDirectory);
+        Directory.CreateDirectory(_themePathProvider.UserThemesDirectory!);
         _persistence.Save(theme, _themePathProvider.GetThemePath(theme.Id));
     }
 

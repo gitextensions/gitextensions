@@ -98,7 +98,7 @@ public partial class FormClone : GitExtensionsDialog
             // that the cloned repository is hosted on the same server
             if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_From.Text) && Module.IsValidGitWorkingDir())
             {
-                string currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
+                string? currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
                 if (string.IsNullOrEmpty(currentBranchRemote))
                 {
                     IReadOnlyList<string> remotes = Module.GetRemoteNames();
@@ -275,7 +275,7 @@ public partial class FormClone : GitExtensionsDialog
 
     private void FromBrowseClick(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_From.Text);
+        string? userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_From.Text);
 
         if (userSelectedPath is not null)
         {
@@ -287,7 +287,7 @@ public partial class FormClone : GitExtensionsDialog
 
     private void ToBrowseClick(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_To.Text);
+        string? userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_To.Text);
 
         if (userSelectedPath is not null)
         {
@@ -393,7 +393,7 @@ public partial class FormClone : GitExtensionsDialog
         else
         {
             string text = _NO_TRANSLATE_Branches.Text;
-            List<string> names = [.. _defaultBranchItems, .. branchList.Result.Select(o => o.LocalName)];
+            List<string> names = [.. _defaultBranchItems, .. branchList.Result!.Select(o => o.LocalName!)];
             _NO_TRANSLATE_Branches.DataSource = names;
             if (names.Any(a => a == text))
             {

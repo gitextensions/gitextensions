@@ -126,21 +126,21 @@ public partial class CreatePullRequestForm : GitModuleForm
             return;
         }
 
-        _currentHostedRemote = (IHostedRemote)_pullReqTargetsCB.SelectedItem;
+        _currentHostedRemote = (IHostedRemote)_pullReqTargetsCB.SelectedItem!;
 
         _remoteBranchesCB.Items.Clear();
         _remoteBranchesCB.Text = _strLoading.Text;
 
-        PopulateBranchesComboAndEnableCreateButton(_currentHostedRemote, _remoteBranchesCB);
+        PopulateBranchesComboAndEnableCreateButton(_currentHostedRemote!, _remoteBranchesCB);
     }
 
-    private IHostedRemote? MyRemote => _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
+    private IHostedRemote? MyRemote => _hostedRemotes!.FirstOrDefault(r => r.IsOwnedByMe);
 
     private void LoadMyBranches()
     {
         _yourBranchesCB.Items.Clear();
 
-        IHostedRemote myRemote = MyRemote;
+        IHostedRemote? myRemote = MyRemote;
 
         if (myRemote is null)
         {
@@ -200,7 +200,7 @@ public partial class CreatePullRequestForm : GitModuleForm
     {
         if (_prevTitle == _titleTB.Text && !string.IsNullOrWhiteSpace(_yourBranchesCB.Text) && MyRemote is not null)
         {
-            string lastMsg = Module.GetPreviousCommitMessages(count: 1, revision: MyRemote.Name.Combine("/", _yourBranchesCB.Text)!, authorPattern: string.Empty).FirstOrDefault();
+            string? lastMsg = Module.GetPreviousCommitMessages(count: 1, revision: MyRemote.Name.Combine("/", _yourBranchesCB.Text)!, authorPattern: string.Empty).FirstOrDefault();
             _titleTB.Text = lastMsg?.SubstringUntil('\n');
             _prevTitle = _titleTB.Text;
         }

@@ -32,17 +32,17 @@ public class CacheControlAvatarProviderTests
     {
         ClassicAssert.Throws<ArgumentNullException>(() =>
         {
-            new MultiCacheCleaner(null);
+            new MultiCacheCleaner(null!);
         });
 
         ClassicAssert.Throws<ArgumentNullException>(() =>
         {
-            new MultiCacheCleaner(null);
+            new MultiCacheCleaner(null!);
         });
 
         ClassicAssert.Throws<ArgumentNullException>(() =>
         {
-            new MultiCacheCleaner(null, null);
+            new MultiCacheCleaner(null!, null!);
         });
     }
 }

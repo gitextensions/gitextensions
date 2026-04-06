@@ -26,9 +26,9 @@ public class FindAndReplaceFormTests
             => $"[[Line = {Start.X}, Column = {Start.Y}], [Line = {End.X}, Column = {End.Y}]]";
     }
 
-    private FindAndReplaceForm _findAndReplaceForm;
+    private FindAndReplaceForm _findAndReplaceForm = null!;
     private FindAndReplaceForm.TestAccessor _testAccessor;
-    private TextEditorControl _textEditorControl;
+    private TextEditorControl _textEditorControl = null!;
 
     [SetUp]
     public void SetUp()
@@ -61,9 +61,9 @@ public class FindAndReplaceFormTests
     {
         Arrange(text, searchPhrase, matchCase);
 
-        TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
+        TextRange? actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
 
-        AssertTextRange(expectedRange, actualRange);
+        AssertTextRange(expectedRange, actualRange!);
     }
 
     private static IEnumerable<TestCaseData> MatchWholeWordOnly
@@ -80,9 +80,9 @@ public class FindAndReplaceFormTests
     {
         Arrange(text, searchPhrase, matchWholeWordOnly: true);
 
-        TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, true, null);
+        TextRange? actualRange = await _findAndReplaceForm.FindNextAsync(false, true, null);
 
-        AssertTextRange(expectedRange, actualRange);
+        AssertTextRange(expectedRange, actualRange!);
     }
 
     private static IEnumerable<TestCaseData> LoopAround
@@ -135,9 +135,9 @@ public class FindAndReplaceFormTests
 
         foreach (TextRange expectedRange in expectedRanges)
         {
-            TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, searchBackwards, null);
+            TextRange? actualRange = await _findAndReplaceForm.FindNextAsync(false, searchBackwards, null);
 
-            AssertTextRange(expectedRange, actualRange);
+            AssertTextRange(expectedRange, actualRange!);
         }
     }
 
@@ -146,15 +146,15 @@ public class FindAndReplaceFormTests
     {
         Arrange("line one\r\nline two\r\nline three", "line", scanRegion: new TextRegion(new TextLocation(0, 0), new TextLocation(0, 1)));
 
-        TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
-        AssertTextRange(new TextRange(0, 4), actualRange);
+        TextRange? actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
+        AssertTextRange(new TextRange(0, 4), actualRange!);
 
         // Move the caret outside of the originally selected region.
         TextLocation newCaretPosition = new(1, 1);
         _textEditorControl.ActiveTextAreaControl.Caret.Position = newCaretPosition;
 
         actualRange = await _findAndReplaceForm.FindNextAsync(true, false, null);
-        AssertTextRange(new TextRange(20, 4), actualRange);
+        AssertTextRange(new TextRange(20, 4), actualRange!);
     }
 
     private static IEnumerable<TestCaseData> MultiFileSearch
@@ -202,9 +202,9 @@ public class FindAndReplaceFormTests
 
         foreach (TextRange expectedRange in expectedRanges)
         {
-            TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
+            TextRange? actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
 
-            AssertTextRange(expectedRange, actualRange);
+            AssertTextRange(expectedRange, actualRange!);
         }
     }
 
@@ -225,7 +225,7 @@ public class FindAndReplaceFormTests
         bool matchCase = false,
         bool matchWholeWordOnly = false,
         TextRegion scanRegion = default,
-        GetNextFileFnc fileLoader = null)
+        GetNextFileFnc fileLoader = null!)
     {
         _textEditorControl.Text = text;
         _testAccessor.SetEditor(_textEditorControl);

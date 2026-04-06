@@ -7,7 +7,7 @@ namespace GitUITests.Editor;
 [Apartment(ApartmentState.STA)]
 public class FileViewerTests
 {
-    private FileViewer _fileViewer;
+    private FileViewer _fileViewer = null!;
 
     [SetUp]
     public void SetUp()
@@ -42,13 +42,13 @@ public class FileViewerTests
         switch (newIgnoreWhitespace)
         {
             case IgnoreWhitespaceKind.Eol:
-                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null, null);
+                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null!, null!);
                 break;
             case IgnoreWhitespaceKind.Change:
-                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
+                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null!, null!);
                 break;
             case IgnoreWhitespaceKind.AllSpace:
-                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null, null);
+                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null!, null!);
                 break;
         }
 
@@ -85,16 +85,16 @@ public class FileViewerTests
         switch (newIgnoreWhitespace)
         {
             case IgnoreWhitespaceKind.Eol:
-                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null, null);
-                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null, null);
+                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null!, null!);
+                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null!, null!);
                 break;
             case IgnoreWhitespaceKind.Change:
-                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
-                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
+                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null!, null!);
+                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null!, null!);
                 break;
             case IgnoreWhitespaceKind.AllSpace:
-                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null, null);
-                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null, null);
+                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null!, null!);
+                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null!, null!);
                 break;
         }
 

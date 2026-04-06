@@ -100,7 +100,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
                 return;
             }
 
-            string baseFolder = Path.Combine(AppSettings.ApplicationDataPath.Value, "Recent");
+            string baseFolder = Path.Combine(AppSettings.ApplicationDataPath.Value!, "Recent");
             if (!Directory.Exists(baseFolder))
             {
                 Directory.CreateDirectory(baseFolder);
@@ -250,7 +250,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
     /// <returns>An icon!!.</returns>
     private static Icon MakeIcon(Image img, int size, bool keepAspectRatio)
     {
-        if (_iconByImage.TryGetValue(img, out Icon icon))
+        if (_iconByImage.TryGetValue(img, out Icon? icon))
         {
             return icon;
         }

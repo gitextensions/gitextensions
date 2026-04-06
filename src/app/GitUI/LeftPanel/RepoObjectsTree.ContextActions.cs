@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
@@ -135,6 +136,7 @@ partial class RepoObjectsTree : IMenuItemFactory
         item.Click += (o, e) => Node.OnNode(treeMain.SelectedNode, onClick);
     }
 
+    [MemberNotNull(nameof(_sortByContextMenuItem), nameof(_sortOrderContextMenuItem), nameof(_localBranchMenuItems), nameof(_remoteBranchMenuItems), nameof(_tagNodeMenuItems))]
     private void RegisterContextActions()
     {
         copyContextMenuItem.SetRevisionFunc(() => _revisionGridInfo.GetSelectedRevisions());
@@ -217,8 +219,8 @@ partial class RepoObjectsTree : IMenuItemFactory
         RegisterClick(mnubtnExpand, () => GetSelectedNodes().HavingChildren().Expandable().ForEach(node => node.TreeViewNode.ExpandAll()));
 
         // Move up / down (for top level Trees)
-        RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode, up: true));
-        RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode, up: false));
+        RegisterClick(mnubtnMoveUp, () => ReorderTreeNode(treeMain.SelectedNode!, up: true));
+        RegisterClick(mnubtnMoveDown, () => ReorderTreeNode(treeMain.SelectedNode!, up: false));
 
         // Sort by / order
         _sortByContextMenuItem = new GitRefsSortByContextMenuItem(() => ResortRefs(new FilteredGitRefsProvider(UICommands.Module).GetRefs));
@@ -240,7 +242,7 @@ partial class RepoObjectsTree : IMenuItemFactory
         copyContextMenuItem.Enable(hasSingleSelection && (selectedNode is BaseBranchLeafNode or StashNode) && selectedNode.Visible);
         filterForSelectedRefsMenuItem.Enable(selectedNodes.OfType<IGitRefActions>().Any()); // enable if selection contains refs
 
-        LocalBranchNode selectedLocalBranch = selectedNode as LocalBranchNode;
+        LocalBranchNode? selectedLocalBranch = selectedNode as LocalBranchNode;
 
         foreach (ToolStripItemWithKey item in _localBranchMenuItems)
         {

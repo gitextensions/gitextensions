@@ -6,7 +6,7 @@ namespace GitCommandsTests.UserRepositoryHistory;
 [TestFixture]
 public class RepositoryXmlSerialiserTests
 {
-    private RepositoryXmlSerialiser _repositoryXmlSerialiser;
+    private RepositoryXmlSerialiser _repositoryXmlSerialiser = null!;
 
     [SetUp]
     public void Setup()
@@ -17,7 +17,7 @@ public class RepositoryXmlSerialiserTests
     [Test]
     public void Deserialize_should_throw_if_null()
     {
-        ((Action)(() => _repositoryXmlSerialiser.Deserialize(null))).Should().Throw<ArgumentException>();
+        ((Action)(() => _repositoryXmlSerialiser.Deserialize(null!))).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -51,7 +51,7 @@ public class RepositoryXmlSerialiserTests
   <CategoryType>Repositories</CategoryType>
 </RepositoryHistory>";
 
-        IReadOnlyList<Repository> repositories = _repositoryXmlSerialiser.Deserialize(settingHistoryValue);
+        IReadOnlyList<Repository>? repositories = _repositoryXmlSerialiser.Deserialize(settingHistoryValue);
 
         await Verifier.Verify(repositories);
     }
@@ -87,7 +87,7 @@ public class RepositoryXmlSerialiserTests
   <CategoryType>Repositories</CategoryType>
 </RepositoryHistory>";
 
-        IReadOnlyList<Repository> repositories = _repositoryXmlSerialiser.Deserialize(settingHistoryValue);
+        IReadOnlyList<Repository>? repositories = _repositoryXmlSerialiser.Deserialize(settingHistoryValue);
 
         await Verifier.Verify(repositories);
     }
@@ -95,7 +95,7 @@ public class RepositoryXmlSerialiserTests
     [Test]
     public void Serialize_should_throw_if_null()
     {
-        ((Action)(() => _repositoryXmlSerialiser.Serialize(null))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => _repositoryXmlSerialiser.Serialize(null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -115,7 +115,7 @@ public class RepositoryXmlSerialiserTests
 
         ];
 
-        string xml = _repositoryXmlSerialiser.Serialize(history);
+        string? xml = _repositoryXmlSerialiser.Serialize(history);
         await Verifier.VerifyXml(xml);
     }
 }

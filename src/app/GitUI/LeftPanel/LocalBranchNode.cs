@@ -20,7 +20,7 @@ internal class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename,
     protected override FontStyle GetFontStyle()
         => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
         => base.Equals(obj) && obj is LocalBranchNode;
 
     public override int GetHashCode()

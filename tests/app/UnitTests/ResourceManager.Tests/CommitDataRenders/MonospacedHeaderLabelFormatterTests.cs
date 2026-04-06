@@ -6,7 +6,7 @@ namespace ResourceManagerTests.CommitDataRenders;
 [TestFixture]
 public class MonospacedHeaderLabelFormatterTests
 {
-    private MonospacedHeaderLabelFormatter _formatter;
+    private MonospacedHeaderLabelFormatter _formatter = null!;
 
     [SetUp]
     public void Setup()

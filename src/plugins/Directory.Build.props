@@ -3,9 +3,6 @@
   <Import Project="$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory)\.., Directory.Build.props))\Directory.Build.props" />
  
   <PropertyGroup>
-    <!-- To be removed when NRT annotations are complete -->
-    <Nullable>annotations</Nullable>
-
     <!-- Any NuGet package dependencies are copied to the output directory -->
     <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
   </PropertyGroup>

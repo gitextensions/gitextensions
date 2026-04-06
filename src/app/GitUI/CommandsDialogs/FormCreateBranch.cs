@@ -48,7 +48,7 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
             if (string.IsNullOrWhiteSpace(newBranchNamePrefix))
             {
                 GitRevision revision = Module.GetRevision(objectId, shortFormat: true, loadRefs: true);
-                IGitRef firstRef = revision.Refs.FirstOrDefault(r => !r.IsTag) ?? revision.Refs.FirstOrDefault(r => r.IsTag);
+                IGitRef? firstRef = revision.Refs.FirstOrDefault(r => !r.IsTag) ?? revision.Refs.FirstOrDefault(r => r.IsTag);
                 newBranchNamePrefix = firstRef?.LocalName;
 
                 commitSummaryUserControl1.Revision = revision;
@@ -117,7 +117,7 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
         // if the user hits [Enter] at any point, we need to trigger BranchNameTextBox Leave event
         cmdOk.Focus();
 
-        ObjectId objectId = null;
+        ObjectId? objectId = null;
 
         if (!chkCreateOrphan.Checked)
         {
@@ -147,11 +147,11 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
 
         try
         {
-            ObjectId originalHash = Module.GetCurrentCheckout();
+            ObjectId? originalHash = Module.GetCurrentCheckout();
 
             ArgumentString command = chkCreateOrphan.Checked
                 ? Commands.CreateOrphan(branchName, objectId)
-                : Commands.Branch(branchName, objectId.ToString(), chkCheckoutAfterCreate.Checked);
+                : Commands.Branch(branchName, objectId!.ToString(), chkCheckoutAfterCreate.Checked);
 
             bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (chkCreateOrphan.Checked && success && chkClearOrphan.Checked)
