@@ -90,7 +90,7 @@ public static partial class Commands
         }
         catch (Exception ex)
         {
-            Trace.WriteLine(ex);
+            Trace.WriteLine($"Failed to read repo '{gitExecutor.WorkingDir}': {ex.Message}");
         }
 
         return DetachedHeadParser.UnknownBranchName;

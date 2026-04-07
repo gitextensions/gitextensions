@@ -146,7 +146,17 @@ public sealed class Executable : IExecutable
 
             try
             {
-                _process.Start();
+                try
+                {
+                    _process.Start();
+                }
+                catch (Exception ex)
+                {
+                    _process.Exited -= OnProcessExit;
+                    _exitHandlerRemoved = true;
+                    _exitTaskCompletionSource.TrySetException(ex);
+                    throw;
+                }
 
                 if (_errorOutputStream is not null)
                 {
