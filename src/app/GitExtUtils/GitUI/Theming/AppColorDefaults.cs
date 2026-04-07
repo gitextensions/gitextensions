@@ -27,6 +27,7 @@ public static class AppColorDefaults
             { AppColor.RemoteBranch, Color.FromArgb(0x8b, 0x00, 0x09) },
             { AppColor.Tag, Color.DarkBlue },
             { AppColor.OtherTag, Color.Gray },
+            { AppColor.Stash, Color.FromArgb(0x9a, 0x72, 0x00) },
             { AppColor.DiffSection, Color.FromArgb(230, 230, 230) },
             { AppColor.AnsiTerminalBlackForeNormal, Color.FromArgb(0x00, 0x00, 0x00) },
             { AppColor.AnsiTerminalBlackBackNormal, Color.FromArgb(0x60, 0x60, 0x60) },

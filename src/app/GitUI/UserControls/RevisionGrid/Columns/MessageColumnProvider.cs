@@ -114,12 +114,26 @@ internal sealed class MessageColumnProvider : ColumnProvider
         if (revision.Refs.Count != 0)
         {
             IReadOnlyList<IGitRef> gitRefs = SortRefs(revision.Refs.Where(FilterRef));
+            Dictionary<string, List<IGitRef>> trackedRemotes = BuildTrackedRemoteMap(gitRefs);
+            HashSet<IGitRef> suppressedRemotes = [];
+            foreach (List<IGitRef> remotes in trackedRemotes.Values)
+            {
+                suppressedRemotes.UnionWith(remotes);
+            }
+
             foreach (IGitRef gitRef in gitRefs)
             {
                 if (offset > messageBounds.Width)
                 {
                     // Stop drawing refs if we run out of room
                     break;
+                }
+
+                // Remote refs that are tracked by a local branch in this row are drawn
+                // condensed immediately after that local branch instead.
+                if (suppressedRemotes.Contains(gitRef))
+                {
+                    continue;
                 }
 
                 IGitRef? superprojectRef = superprojectRefs.FirstOrDefault(superGitRef => gitRef.CompleteName == superGitRef.CompleteName);
@@ -129,6 +143,15 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 }
 
                 bool isHighlighted = _highlightedRowIndex == e.RowIndex && ReferenceEquals(_highlightedRef, gitRef);
+
+                // If this branch has tracked remotes, draw the group with correct z-order:
+                // remotes first (behind), then the branch on top.
+                if (gitRef.IsHead && trackedRemotes.TryGetValue(gitRef.Name, out List<IGitRef>? remotes) && remotes.Count > 0)
+                {
+                    DrawBranchWithNestledRemotes(e, gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted, remotes, ref hitInfos);
+                    continue;
+                }
+
                 Rectangle refRect = DrawRef(e, gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted);
                 if (refRect != Rectangle.Empty)
                 {
@@ -148,8 +171,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 style.NormalFont,
                 ref offset,
                 revision.IsAutostash ? revision.Subject : (revision.ReflogSelector ?? throw new InvalidOperationException($"{nameof(revision.ReflogSelector)} must not be null"))[5..],
-                AppColor.OtherTag.GetThemeColor(),
-                RefArrowType.None,
+                AppColor.Stash.GetThemeColor(),
+                RefLabelIcon.Stash,
                 messageBounds,
                 e.Graphics,
                 dashedLine: false,
@@ -261,7 +284,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             ref offset,
             revision.Subject,
             AppColor.OtherTag.GetThemeColor(),
-            RefArrowType.None,
+            RefLabelIcon.None,
             messageBounds,
             graphics,
             dashedLine: false,
@@ -271,13 +294,27 @@ internal sealed class MessageColumnProvider : ColumnProvider
             TextRenderer.MeasureText(ResourceManager.TranslatedStrings.Workspace, style.NormalFont).Width,
             TextRenderer.MeasureText(ResourceManager.TranslatedStrings.Index, style.NormalFont).Width);
 
-        offset = baseOffset + max + DpiUtil.Scale(6);
+        // Align icons consistently across both artificial commit rows.
+        // Decompose the capsule layout to stay in sync if ref label sizing changes:
+        // paddingLeft(6) + textWidth + paddingRight(6) - borderAdjustment(1) + marginRight(5) + breathingRoom(4).
+        int refLabelHorizontalPadding = DpiUtil.Scale(6);
+        int refLabelBorderAdjustment = DpiUtil.Scale(1);
+        int refLabelTrailingMargin = DpiUtil.Scale(5);
+        int iconBreathingRoom = DpiUtil.Scale(4);
+        int refLabelWidth = max + (refLabelHorizontalPadding * 2) - refLabelBorderAdjustment;
+        offset = baseOffset + refLabelWidth + refLabelTrailingMargin + iconBreathingRoom;
 
         // Summary of changes
         if (!_settings.ShowGitStatusForArtificialCommits || _grid.GetChangeCount(revision.ObjectId) is not ArtificialCommitChangeCount changeCount)
         {
             return;
         }
+
+        // Compute capsule height metrics so icons align with the capsule's vertical extent.
+        int paddingTopBottom = DpiUtil.Scale(2);
+        int textHeight = TextRenderer.MeasureText(graphics, " ", style.NormalFont, Size.Empty, TextFormatFlags.NoPadding).Height;
+        int capsuleHeight = textHeight + (paddingTopBottom * 2) - 1;
+        int capsuleTopOffset = (e.CellBounds.Height - capsuleHeight) / 2;
 
         if (changeCount.DataValid)
         {
@@ -311,12 +348,14 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 return;
             }
 
-            int imageVerticalPadding = DpiUtil.Scale(6);
             int textHorizontalPadding = DpiUtil.Scale(4);
-            int imageSize = e.CellBounds.Height - imageVerticalPadding - imageVerticalPadding;
+
+            // Keep original icon size; centre it within the capsule's vertical extent.
+            int imageSize = e.CellBounds.Height - DpiUtil.Scale(12);
+            int imageTop = capsuleTopOffset + ((capsuleHeight - imageSize) / 2);
             Rectangle imageRect = new(
                 messageBounds.Left + offset,
-                e.CellBounds.Top + imageVerticalPadding,
+                e.CellBounds.Top + imageTop,
                 imageSize,
                 imageSize);
 
@@ -347,11 +386,11 @@ internal sealed class MessageColumnProvider : ColumnProvider
             Color headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
             string gitRefName = i < (MaxSuperprojectRefs - 1) ? gitRef.Name : "…";
 
-            RefArrowType arrowType = gitRef.IsSelected
-                ? RefArrowType.Filled
+            RefLabelIcon icon = gitRef.IsSelected
+                ? RefLabelIcon.ArrowFilled
                 : gitRef.IsSelectedHeadMergeSource
-                    ? RefArrowType.NotFilled
-                    : RefArrowType.None;
+                    ? RefLabelIcon.ArrowNotFilled
+                    : RefLabelIcon.None;
             Font font = gitRef.IsSelected ? style.BoldFont : style.NormalFont;
 
             RevisionGridRefRenderer.DrawRef(
@@ -360,7 +399,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 ref offset,
                 gitRefName,
                 headColor,
-                arrowType,
+                icon,
                 messageBounds,
                 e.Graphics!,
                 dashedLine: true);
@@ -403,7 +442,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 ref currentOffset,
                 label,
                 headColor: Color.OrangeRed.AdaptTextColor(),
-                isSelected ? RefArrowType.Filled : RefArrowType.NotFilled,
+                isSelected ? RefLabelIcon.ArrowFilled : RefLabelIcon.ArrowNotFilled,
                 messageBounds,
                 e.Graphics!,
                 dashedLine: true);
@@ -439,11 +478,13 @@ internal sealed class MessageColumnProvider : ColumnProvider
             headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
         }
 
-        RefArrowType arrowType = gitRef.IsSelected
-            ? RefArrowType.Filled
-            : gitRef.IsSelectedHeadMergeSource
-                ? RefArrowType.NotFilled
-                : RefArrowType.None;
+        RefLabelIcon icon = gitRef.IsSelected
+            ? RefLabelIcon.Head
+            : gitRef.IsTag
+                ? RefLabelIcon.Tag
+                : gitRef.IsRemote
+                    ? RefLabelIcon.Remote
+                    : RefLabelIcon.Branch;
 
         Font font = gitRef.IsSelected
             ? style.BoldFont
@@ -464,12 +505,172 @@ internal sealed class MessageColumnProvider : ColumnProvider
             ref offset,
             name,
             headColor,
-            arrowType,
+            icon,
             messageBounds,
             e.Graphics!,
             dashedLine: superprojectRef is not null,
             fill: _settings.FillRefLabels,
             highlight: highlight);
+    }
+
+    /// <summary>
+    /// Draws a local branch capsule with its tracked remote capsules nestled against it,
+    /// appearing as a single visual group.
+    /// </summary>
+    /// <remarks>
+    /// <para>
+    /// Each remote is a D-shape (neck + right semicircle) drawn behind the branch.
+    /// Drawing order is back-to-front: remote[N-1] first, then … remote[0], then the branch on top.
+    /// This way each shape's right rounded cap covers the left neck of the shape in front of it,
+    /// revealing only each remote's semicircle as a "right-half-capsule".
+    /// </para>
+    /// <para>
+    /// The combined outer outline — branch left cap + shared straight top/bottom edges + last
+    /// remote's right cap — is itself a capsule shape.
+    /// </para>
+    /// </remarks>
+    private void DrawBranchWithNestledRemotes(
+        DataGridViewCellPaintingEventArgs e,
+        IGitRef gitRef,
+        IGitRef? superprojectRef,
+        CellStyle style,
+        Rectangle messageBounds,
+        ref int offset,
+        bool isHighlighted,
+        List<IGitRef> remotes,
+        ref List<RefLabelHitInfo>? hitInfos)
+    {
+        RefLabelIcon branchIcon = gitRef.IsSelected ? RefLabelIcon.Head : RefLabelIcon.Branch;
+        Font branchFont = gitRef.IsSelected ? style.BoldFont : style.NormalFont;
+        (int branchIdealWidth, int backgroundHeight) = RevisionGridRefRenderer.MeasureRef(branchFont, gitRef.Name, branchIcon, e.Graphics!);
+
+        int branchWidth = Math.Min(messageBounds.Width - offset, branchIdealWidth);
+        if (branchWidth <= 0)
+        {
+            return;
+        }
+
+        // Absolute x where the branch capsule's right edge will be.
+        int branchRight = messageBounds.X + offset + branchWidth;
+        int diameter = backgroundHeight;
+
+        // capsuleTop: y-coordinate of the capsule top edge (same formula as DrawRef uses).
+        int outerMarginTopBottom = (messageBounds.Height - backgroundHeight) / 2;
+        int capsuleTop = messageBounds.Y + outerMarginTopBottom;
+
+        // Count how many remotes fit within the cell width.
+        int remoteCount = 0;
+        for (int i = 0; i < remotes.Count; i++)
+        {
+            if ((branchRight + ((i + 1) * diameter)) - messageBounds.X > messageBounds.Width)
+            {
+                break;
+            }
+
+            remoteCount++;
+        }
+
+        // Draw remotes back-to-front so each covers the neck of the one behind it.
+        // remote[N-1] is drawn first (furthest back), remote[0] last (just behind branch).
+        Rectangle[] remoteRects = new Rectangle[remoteCount];
+        for (int i = remoteCount - 1; i >= 0; i--)
+        {
+            IGitRef remote = remotes[i];
+            bool isRemoteHighlighted = _highlightedRowIndex == e.RowIndex && ReferenceEquals(_highlightedRef, remote);
+
+            if (!style.RemoteColors.TryGetValue(remote.Remote, out Color remoteColor))
+            {
+                remoteColor = RevisionGridRefRenderer.GetHeadColor(remote);
+            }
+
+            // Each remote[i] anchors at branchRight + i*diameter.
+            int precedingRight = branchRight + (i * diameter);
+
+            remoteRects[i] = RevisionGridRefRenderer.DrawNestledRemoteRef(
+                e.State.HasFlag(DataGridViewElementStates.Selected),
+                remoteColor,
+                precedingRight,
+                capsuleTop,
+                backgroundHeight,
+                e.Graphics!,
+                highlight: isRemoteHighlighted);
+        }
+
+        // Draw the branch on top so its solid fill fully hides the D-shape necks.
+        Rectangle branchRect = DrawRef(e, gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted);
+
+        // Advance offset past the last remote's right edge.
+        offset = (branchRight + (remoteCount * diameter)) - messageBounds.X + DpiUtil.Scale(5);
+
+        // Register hit-boxes.
+        if (branchRect != Rectangle.Empty)
+        {
+            hitInfos ??= RentHitInfoList();
+            hitInfos.Add(new RefLabelHitInfo(branchRect, gitRef, StashReflogSelector: null));
+        }
+
+        for (int i = 0; i < remoteCount; i++)
+        {
+            if (remoteRects[i] == Rectangle.Empty)
+            {
+                continue;
+            }
+
+            // Each remote's visible area is exactly its semicircle region.
+            int hitLeft = branchRight + (i * diameter);
+            hitInfos ??= RentHitInfoList();
+            hitInfos.Add(new RefLabelHitInfo(
+                remoteRects[i] with { X = hitLeft, Width = diameter },
+                remotes[i],
+                StashReflogSelector: null));
+        }
+    }
+
+    /// <summary>
+    /// Builds a map of local branch name → remote refs that appear to track it,
+    /// based on the remote ref's <see cref="IGitRef.LocalName"/> matching the local
+    /// branch name. No I/O is performed.
+    /// </summary>
+    private static Dictionary<string, List<IGitRef>> BuildTrackedRemoteMap(IReadOnlyList<IGitRef> refs)
+    {
+        // Collect all local branch names (including the checked-out HEAD branch, which
+        // still benefits from condensed remote tracking even though it uses a target icon).
+        HashSet<string> localBranchNames = [];
+        foreach (IGitRef r in refs)
+        {
+            if (r.IsHead)
+            {
+                localBranchNames.Add(r.Name);
+            }
+        }
+
+        if (localBranchNames.Count == 0)
+        {
+            return [];
+        }
+
+        Dictionary<string, List<IGitRef>> map = [];
+        foreach (IGitRef r in refs)
+        {
+            if (!r.IsRemote)
+            {
+                continue;
+            }
+
+            string localName = r.LocalName;
+            if (localBranchNames.Contains(localName))
+            {
+                if (!map.TryGetValue(localName, out List<IGitRef>? list))
+                {
+                    list = [];
+                    map[localName] = list;
+                }
+
+                list.Add(r);
+            }
+        }
+
+        return map;
     }
 
     private static void DrawImage(

@@ -29,6 +29,7 @@ public enum AppColor
     RemoteBranch,
     Tag,
     OtherTag,
+    Stash,
     DiffSection,
     AnsiTerminalBlackForeNormal,
     AnsiTerminalBlackBackNormal,

@@ -61,6 +61,7 @@
 .RemoteBranch.colorblind { color: #0600a8; }
 .Tag { color: #00008b; }
 .OtherTag { color: #808080; }
+.Stash { color: #9a7200; }
 .DiffSection { color: #e6e6e6; }
 
 /* translation of terminal (cli) ansi color output sequences */

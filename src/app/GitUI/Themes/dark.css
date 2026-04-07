@@ -63,6 +63,7 @@ WindowText: fff0f0f0
 .RemoteBranch.colorblind { color: #0080ff; } /* hsl(210, 100%, 50%) */
 .Tag { color: #40BAF7; }
 .OtherTag { color: #cfb3b3; }
+.Stash { color: #e8c040; }
 .DiffSection { color: #5f5e5e; }
 
 /* translation of terminal (cli) ansi color output sequences */
