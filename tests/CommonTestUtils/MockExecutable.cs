@@ -104,11 +104,6 @@ public sealed class MockExecutable : IExecutable
         throw new Exception("Unexpected arguments: " + arguments);
     }
 
-    public string GetWorkingDirectory()
-    {
-        return WorkingDir;
-    }
-
     private sealed class MockProcess : IProcess
     {
         public MockProcess(string? output, int? exitCode = 0, string? error = null)

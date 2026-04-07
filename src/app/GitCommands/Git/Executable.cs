@@ -63,8 +63,6 @@ public sealed class Executable : IExecutable
         return new ProcessWrapper(fileName, PrefixArguments, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit, cancellationToken);
     }
 
-    public string GetWorkingDirectory() => _workingDir;
-
     #region ProcessWrapper
 
     /// <summary>
