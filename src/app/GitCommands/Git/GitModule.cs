@@ -2172,7 +2172,7 @@ public sealed partial class GitModule : IGitModule
         {
             "list",
             "--porcelain",
-            "-z"
+            { GitVersion.SupportWorktreeZ, "-z" },
         };
 
         string output = GitExecutable.GetOutput(args);
@@ -2183,7 +2183,11 @@ public sealed partial class GitModule : IGitModule
         string? branch = null;
         GitWorktreeHeadType headType = GitWorktreeHeadType.Branch;
 
-        foreach (string field in output.LazySplit('\0'))
+        // Note: -z for separator is not configurable before Git 2.36 so paths with \n will fail
+        // Just ignore this case, require Git update (no user feedback other than NBug).
+        char sep = GitVersion.SupportWorktreeZ ? '\0' : '\n';
+
+        foreach (string field in output.LazySplit(sep))
         {
             // Double \0 (empty field) marks the boundary between worktree records
             if (field.Length == 0)

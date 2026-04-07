@@ -5,14 +5,14 @@ public interface IGitVersion : IComparable<IGitVersion>
     bool IsUnknown { get; }
     bool SupportAmendCommits { get; }
     bool SupportGuiMergeTool { get; }
+    bool SupportLsFilesFormat { get; }
     bool SupportNewGitConfigSyntax { get; }
     bool SupportRangeDiffPath { get; }
     bool SupportRangeDiffTool { get; }
     bool SupportRebaseMerges { get; }
     bool SupportStashStaged { get; }
     bool SupportUpdateRefs { get; }
-
-    bool SupportLsFilesFormat { get; }
+    bool SupportWorktreeZ { get; }
 
     string ToString();
 
