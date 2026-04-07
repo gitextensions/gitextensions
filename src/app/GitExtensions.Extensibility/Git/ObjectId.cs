@@ -19,7 +19,6 @@ namespace GitExtensions.Extensibility.Git;
 public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
 {
     private static readonly ThreadLocal<byte[]> _buffer = new(() => new byte[_sha1ByteCount], trackAllValues: false);
-    
     // only lowercase
     private static readonly SearchValues<char> _hexChars = SearchValues.Create("0123456789abcdef");
     private static readonly Random _random = new();
