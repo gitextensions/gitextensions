@@ -171,7 +171,7 @@ public sealed partial class FormCommit : GitModuleForm
     /// <summary>
     /// Regex to find message replace pattern: {{ group1 }}[ group2 ]
     /// </summary>
-    [GeneratedRegex(@"\{\{(.*?)\}\}(?:\[(\d+)\])?")]
+    [GeneratedRegex(@"\{\{(?<pattern>.*?)\}\}(?:\[(?<index>\d+)\])?", RegexOptions.ExplicitCapture)]
     private static partial Regex ReplaceMessageRegex();
 
     private CommitKind CommitKind
@@ -1426,10 +1426,10 @@ public sealed partial class FormCommit : GitModuleForm
 
             foreach (Match regexMatch in ReplaceMessageRegex().Matches(message))
             {
-                string pattern = regexMatch.Groups[1].Value;
+                string pattern = regexMatch.Groups["pattern"].Value;
                 int groupIndex = 1;
 
-                if (regexMatch.Groups.Count > 2 && int.TryParse(regexMatch.Groups[2].Value, out int parsedIndex))
+                if (int.TryParse(regexMatch.Groups["index"].Value, out int parsedIndex))
                 {
                     groupIndex = parsedIndex;
                 }

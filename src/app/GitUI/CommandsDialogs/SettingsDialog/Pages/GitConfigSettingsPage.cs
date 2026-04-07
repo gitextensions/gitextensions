@@ -18,7 +18,7 @@ public partial class GitConfigSettingsPage : GitConfigBaseSettingsPage
     private readonly GitConfigSettingsPageController _controller;
     private DiffMergeToolConfigurationManager? _diffMergeToolConfigurationManager;
 
-    [GeneratedRegex(@"\$(LOCAL|REMOTE|BASE|MERGED)")]
+    [GeneratedRegex(@"\$(?:LOCAL|REMOTE|BASE|MERGED)", RegexOptions.ExplicitCapture)]
     private static partial Regex WslRebaseRegex { get; }
 
     public GitConfigSettingsPage(IServiceProvider serviceProvider)

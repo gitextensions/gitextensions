@@ -7,7 +7,7 @@ namespace GitUI.ScriptsEngine;
 public partial class ScriptInfo
 {
     // Match a single '&' (lookahead to not be followed by a second '&')
-    [GeneratedRegex("&(?!&)")]
+    [GeneratedRegex("&(?!&)", RegexOptions.ExplicitCapture)]
     private static partial Regex MnemonicAmpersandRegex { get; }
 
     private Bitmap? _icon;

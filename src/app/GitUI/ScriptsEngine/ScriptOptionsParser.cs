@@ -17,7 +17,7 @@ public sealed partial class ScriptOptionsParser
 
     private const string head = "HEAD";
 
-    [GeneratedRegex(@"(?<!\\)""")]
+    [GeneratedRegex(@"(?<!\\)""", RegexOptions.ExplicitCapture)]
     private static partial Regex QuoteRegex { get; }
 
     /// <summary>
