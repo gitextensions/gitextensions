@@ -137,71 +137,30 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
             return selectedBranches;
         }
 
-        string currentDir = Path.GetFullPath(Module.WorkingDir).TrimEnd(Path.DirectorySeparatorChar);
+        string currentWorkingDir = Path.GetFullPath(Module.WorkingDir).TrimEnd(Path.DirectorySeparatorChar);
 
-        bool hasDeletedWorktrees = false;
-        List<(IGitRef Branch, GitWorktree Worktree)> mainWorktreeBranches = [];
-        List<(IGitRef Branch, GitWorktree Worktree)> linkedWorktreeBranches = [];
+        WorktreeBranchClassification classification = ClassifyWorktreeBranches(
+            selectedBranches, worktrees, currentWorkingDir);
 
-        for (int i = 0; i < worktrees.Count; i++)
-        {
-            GitWorktree wt = worktrees[i];
-            if (wt.Branch is null)
-            {
-                continue;
-            }
-
-            if (wt.IsDeleted)
-            {
-                if (selectedBranches.Any(b => b.Name == wt.Branch))
-                {
-                    hasDeletedWorktrees = true;
-                }
-
-                continue;
-            }
-
-            string worktreeDir = Path.GetFullPath(wt.Path).TrimEnd(Path.DirectorySeparatorChar);
-            if (string.Equals(worktreeDir, currentDir, StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
-
-            foreach (IGitRef branch in selectedBranches)
-            {
-                if (branch.Name == wt.Branch)
-                {
-                    if (i == 0)
-                    {
-                        mainWorktreeBranches.Add((branch, wt));
-                    }
-                    else
-                    {
-                        linkedWorktreeBranches.Add((branch, wt));
-                    }
-
-                    break;
-                }
-            }
-        }
-
-        if (!hasDeletedWorktrees && mainWorktreeBranches.Count == 0 && linkedWorktreeBranches.Count == 0)
+        if (!classification.HasDeletedWorktrees
+            && classification.MainWorktreeBranches.Count == 0
+            && classification.LinkedWorktreeBranches.Count == 0)
         {
             return selectedBranches;
         }
 
         // Prune stale worktree entries whose directories no longer exist,
         // so they no longer block branch deletion.
-        if (hasDeletedWorktrees)
+        if (classification.HasDeletedWorktrees)
         {
             UICommands.StartCommandLineProcessDialog(Owner, command: null, "worktree prune");
         }
 
         HashSet<string> excludedBranches = [];
 
-        if (mainWorktreeBranches.Count > 0)
+        if (classification.MainWorktreeBranches.Count > 0)
         {
-            (IGitRef branch, GitWorktree worktree) = mainWorktreeBranches[0];
+            (IGitRef branch, GitWorktree worktree) = classification.MainWorktreeBranches[0];
             MessageBoxes.Show(
                 this,
                 string.Format(_cannotDeleteBranchInMainWorktree.Text, branch.Name, worktree.Path),
@@ -211,11 +170,11 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
             excludedBranches.Add(branch.Name);
         }
 
-        if (linkedWorktreeBranches.Count > 0)
+        if (classification.LinkedWorktreeBranches.Count > 0)
         {
             string branchList = string.Join(
                 "\n",
-                linkedWorktreeBranches.Select(x => $"\u2022 {x.Branch.Name}  \u2192  {x.Worktree.Path}"));
+                classification.LinkedWorktreeBranches.Select(x => $"\u2022 {x.Branch.Name}  \u2192  {x.Worktree.Path}"));
 
             TaskDialogPage page = new()
             {
@@ -231,7 +190,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
             if (TaskDialog.ShowDialog(Handle, page) == TaskDialogButton.Yes)
             {
                 bool anyDeleted = false;
-                foreach ((IGitRef branch, GitWorktree worktree) in linkedWorktreeBranches)
+                foreach ((IGitRef branch, GitWorktree worktree) in classification.LinkedWorktreeBranches)
                 {
                     if (worktree.Path.TryDeleteDirectory(out string? errorMessage))
                     {
@@ -256,7 +215,7 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
             }
             else
             {
-                foreach ((IGitRef branch, _) in linkedWorktreeBranches)
+                foreach ((IGitRef branch, _) in classification.LinkedWorktreeBranches)
                 {
                     excludedBranches.Add(branch.Name);
                 }
@@ -267,4 +226,68 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
             ? selectedBranches.Where(b => !excludedBranches.Contains(b.Name)).ToArray()
             : selectedBranches;
     }
+
+    /// <summary>
+    ///  Classifies selected branches by how they relate to worktrees: in the main worktree,
+    ///  in a linked worktree, or in a deleted (stale) worktree. Branches in the current
+    ///  working directory's worktree are excluded (handled separately as "current branch").
+    /// </summary>
+    internal static WorktreeBranchClassification ClassifyWorktreeBranches(
+        IReadOnlyList<IGitRef> selectedBranches,
+        IReadOnlyList<GitWorktree> worktrees,
+        string currentWorkingDir)
+    {
+        bool hasDeletedWorktrees = false;
+        List<(IGitRef Branch, GitWorktree Worktree)> mainWorktreeBranches = [];
+        List<(IGitRef Branch, GitWorktree Worktree)> linkedWorktreeBranches = [];
+
+        for (int i = 0; i < worktrees.Count; i++)
+        {
+            GitWorktree worktree = worktrees[i];
+            if (worktree.Branch is null)
+            {
+                continue;
+            }
+
+            if (worktree.IsDeleted)
+            {
+                if (selectedBranches.Any(b => b.Name == worktree.Branch))
+                {
+                    hasDeletedWorktrees = true;
+                }
+
+                continue;
+            }
+
+            string worktreeDir = Path.GetFullPath(worktree.Path).TrimEnd(Path.DirectorySeparatorChar);
+            if (string.Equals(worktreeDir, currentWorkingDir, StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            foreach (IGitRef branch in selectedBranches)
+            {
+                if (branch.Name == worktree.Branch)
+                {
+                    if (i == 0)
+                    {
+                        mainWorktreeBranches.Add((branch, worktree));
+                    }
+                    else
+                    {
+                        linkedWorktreeBranches.Add((branch, worktree));
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        return new(hasDeletedWorktrees, mainWorktreeBranches, linkedWorktreeBranches);
+    }
+
+    internal readonly record struct WorktreeBranchClassification(
+        bool HasDeletedWorktrees,
+        IReadOnlyList<(IGitRef Branch, GitWorktree Worktree)> MainWorktreeBranches,
+        IReadOnlyList<(IGitRef Branch, GitWorktree Worktree)> LinkedWorktreeBranches);
 }
