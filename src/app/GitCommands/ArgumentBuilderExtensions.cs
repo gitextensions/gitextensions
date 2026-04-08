@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -228,7 +229,7 @@ public static class ArgumentBuilderExtensions
     }
 
     /// <summary>
-    /// Adds <paramref name="objectId"/> as a SHA-1 argument.
+    /// Adds <paramref name="objectId"/> as a SHA-1 argument without allocating a string.
     /// </summary>
     /// <remarks>
     /// If <paramref name="objectId"/> is <c>null</c> then no change is made to the arguments.
@@ -236,6 +237,7 @@ public static class ArgumentBuilderExtensions
     /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
     /// <param name="objectId">The SHA-1 object ID to add to the builder, or <c>null</c>.</param>
     /// <exception cref="ArgumentException"><paramref name="objectId"/> represents an artificial commit.</exception>
+    [SkipLocalsInit]
     public static void Add(this ArgumentBuilder builder, ObjectId? objectId)
     {
         if (objectId is null)
@@ -248,7 +250,9 @@ public static class ArgumentBuilderExtensions
             throw new ArgumentException("Unexpected artificial commit in Git command: " + objectId);
         }
 
-        builder.Add(objectId.ToString());
+        Span<char> buffer = stackalloc char[ObjectId.Sha1CharCount];
+        objectId.WriteTo(buffer);
+        builder.Add((ReadOnlySpan<char>)buffer);
     }
 
     /// <summary>

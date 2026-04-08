@@ -61,6 +61,29 @@ public class ArgumentBuilder : IEnumerable
     }
 
     /// <summary>
+    /// Adds the characters in <paramref name="value"/> to the argument list.
+    /// </summary>
+    /// <remarks>
+    /// If <paramref name="value"/> is empty or white-space, then no change is made
+    /// to the argument list.
+    /// </remarks>
+    /// <param name="value">The span of characters to add.</param>
+    public void Add(ReadOnlySpan<char> value)
+    {
+        if (value.IsEmpty || value.IsWhiteSpace())
+        {
+            return;
+        }
+
+        if (_arguments.Length != 0)
+        {
+            _arguments.Append(' ');
+        }
+
+        _arguments.Append(value);
+    }
+
+    /// <summary>
     /// Adds a range of arguments.
     /// </summary>
     /// <param name="args">The arguments to add to this builder.</param>

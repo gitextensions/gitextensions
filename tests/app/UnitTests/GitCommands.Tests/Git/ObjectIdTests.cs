@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
+using AwesomeAssertions;
 using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -306,5 +307,122 @@ public sealed partial class ObjectIdTests
         ClassicAssert.IsFalse(ObjectId.Parse(objectIdString) != ObjectId.Parse(objectIdString));
         ClassicAssert.IsFalse(ObjectId.Parse(objectIdString) == ObjectId.Random());
         ClassicAssert.IsTrue(ObjectId.Parse(objectIdString) != ObjectId.Random());
+    }
+
+    [TestCase("0102030405060708091011121314151617181920")]
+    [TestCase("abcdefabcdefabcdefabcdefabcdefabcdefabcd")]
+    [TestCase("0000000000000000000000000000000000000000")]
+    public void WriteTo_writes_full_hex(string sha1)
+    {
+        ObjectId id = ObjectId.Parse(sha1);
+        Span<char> buffer = stackalloc char[ObjectId.Sha1CharCount];
+
+        id.WriteTo(buffer).Should().BeTrue();
+        new string(buffer).Should().Be(sha1);
+    }
+
+    [Test]
+    public void WriteTo_returns_false_when_destination_too_small()
+    {
+        ObjectId id = ObjectId.Parse("0102030405060708091011121314151617181920");
+        Span<char> buffer = stackalloc char[39];
+
+        id.WriteTo(buffer).Should().BeFalse();
+    }
+
+    [Test]
+    public void WriteTo_writes_into_larger_buffer()
+    {
+        const string sha1 = "abcdefabcdefabcdefabcdefabcdefabcdefabcd";
+        ObjectId id = ObjectId.Parse(sha1);
+        Span<char> buffer = stackalloc char[50];
+        buffer.Fill('X');
+
+        id.WriteTo(buffer).Should().BeTrue();
+        new string(buffer.Slice(0, ObjectId.Sha1CharCount)).Should().Be(sha1);
+        buffer[40].Should().Be('X');
+    }
+
+    [TestCase("0102030405060708091011121314151617181920")]
+    [TestCase("abcdefabcdefabcdefabcdefabcdefabcdefabcd")]
+    public void ISpanFormattable_writes_hex(string sha1)
+    {
+        ObjectId id = ObjectId.Parse(sha1);
+
+        Span<char> buffer = stackalloc char[ObjectId.Sha1CharCount];
+        bool result = ((ISpanFormattable)id).TryFormat(buffer, out int charsWritten, default, null);
+
+        result.Should().BeTrue();
+        charsWritten.Should().Be(ObjectId.Sha1CharCount);
+        new string(buffer).Should().Be(sha1);
+    }
+
+    [Test]
+    public void ISpanFormattable_returns_false_when_destination_too_small()
+    {
+        ObjectId id = ObjectId.Parse("0102030405060708091011121314151617181920");
+
+        Span<char> buffer = stackalloc char[39];
+        bool result = ((ISpanFormattable)id).TryFormat(buffer, out int charsWritten, default, null);
+
+        result.Should().BeFalse();
+        charsWritten.Should().Be(0);
+    }
+
+    [Test]
+    public void ISpanFormattable_works_with_interpolation()
+    {
+        const string sha1 = "0102030405060708091011121314151617181920";
+        ObjectId id = ObjectId.Parse(sha1);
+
+        string result = $"{id}";
+
+        result.Should().Be(sha1);
+    }
+
+    [Test]
+    public void CompareTo_returns_zero_for_equal_ids()
+    {
+        ObjectId id = ObjectId.Parse("0102030405060708091011121314151617181920");
+
+        id.CompareTo(ObjectId.Parse("0102030405060708091011121314151617181920")).Should().Be(0);
+    }
+
+    [Test]
+    public void CompareTo_returns_positive_for_null()
+    {
+        ObjectId id = ObjectId.Parse("0102030405060708091011121314151617181920");
+
+        id.CompareTo(null).Should().BePositive();
+    }
+
+    [Test]
+    public void CompareTo_respects_ordering()
+    {
+        ObjectId lower = ObjectId.Parse("0000000000000000000000000000000000000001");
+        ObjectId higher = ObjectId.Parse("ff00000000000000000000000000000000000000");
+
+        lower.CompareTo(higher).Should().BeNegative();
+        higher.CompareTo(lower).Should().BePositive();
+    }
+
+    [TestCase("0123456789abcdef0123456789abcdef01234567")]
+    public void TryParse_bytes_roundtrips_correctly(string sha1)
+    {
+        byte[] asciiBytes = Encoding.ASCII.GetBytes(sha1);
+        ObjectId.TryParse(asciiBytes.AsSpan(), out ObjectId? id).Should().BeTrue();
+
+        id!.ToString().Should().Be(sha1);
+    }
+
+    [Test]
+    public void TryParse_bytes_rejects_uppercase()
+    {
+        byte[] asciiBytes = Encoding.ASCII.GetBytes("ABCDEFABCDEFABCDEFABCDEFABCDEFABCDEFABCD");
+
+        // Convert.FromHexString accepts uppercase, so this will parse successfully.
+        // SHA-1 strings are always lowercase in git output, and ToString normalises to lowercase.
+        ObjectId.TryParse(asciiBytes.AsSpan(), out ObjectId? id).Should().BeTrue();
+        id!.ToString().Should().Be("abcdefabcdefabcdefabcdefabcdefabcdefabcd");
     }
 }

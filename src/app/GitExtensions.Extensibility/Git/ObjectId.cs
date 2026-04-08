@@ -1,10 +1,8 @@
 ﻿using System.Buffers;
-using System.Buffers.Binary;
-using System.Buffers.Text;
 using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
-using System.Globalization;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 namespace GitExtensions.Extensibility.Git;
@@ -15,27 +13,36 @@ namespace GitExtensions.Extensibility.Git;
 /// <remarks>
 /// <para>Instances are immutable and are guaranteed to contain valid, 160-bit (20-byte) SHA1 hashes.</para>
 /// <para>String forms of this object must be in lower case.</para>
+/// <para>Data is stored in a fixed-size 20-byte buffer in big-endian byte order (SHA-1 natural order),
+///  enabling direct hex conversion and SIMD-accelerated equality and comparison via
+///  <see cref="MemoryExtensions.SequenceEqual{T}(ReadOnlySpan{T}, ReadOnlySpan{T})"/>.</para>
 /// </remarks>
-public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
+public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>, ISpanFormattable
 {
-    // only lowercase
+    /// <summary>
+    /// A set of valid hex characters for validating input strings without allocating.
+    /// </summary>
+    /// <remarks>
+    /// Note that this set contains only lowercase characters, since uppercase hex is not valid for our purposes.
+    /// </remarks>
     private static readonly SearchValues<char> _hexChars = SearchValues.Create("0123456789abcdef");
+
     private static readonly Random _random = new();
 
     /// <summary>
     /// Gets the artificial ObjectId used to represent working directory tree (unstaged) changes.
     /// </summary>
-    public static ObjectId WorkTreeId { get; } = new(0x1111_1111_1111_1111, 0x1111_1111_1111_1111, 0x1111_1111);
+    public static ObjectId WorkTreeId { get; } = Parse("1111111111111111111111111111111111111111");
 
     /// <summary>
     /// Gets the artificial ObjectId used to represent changes staged to the index.
     /// </summary>
-    public static ObjectId IndexId { get; } = new(0x2222_2222_2222_2222, 0x2222_2222_2222_2222, 0x2222_2222);
+    public static ObjectId IndexId { get; } = Parse("2222222222222222222222222222222222222222");
 
     /// <summary>
     /// Gets the artificial ObjectId used to represent combined diff for merge commits.
     /// </summary>
-    public static ObjectId CombinedDiffId { get; } = new(0x3333_3333_3333_3333, 0x3333_3333_3333_3333, 0x3333_3333);
+    public static ObjectId CombinedDiffId { get; } = Parse("3333333333333333333333333333333333333333");
 
     /// <summary>
     /// Produces an <see cref="ObjectId"/> populated with random bytes.
@@ -43,16 +50,31 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     [Pure]
     public static ObjectId Random()
     {
-        return new ObjectId(
-            unchecked((ulong)_random.NextInt64()),
-            unchecked((ulong)_random.NextInt64()),
-            unchecked((uint)_random.Next()));
+        Sha1 data = default;
+        _random.NextBytes((Span<byte>)data);
+        return new ObjectId(data);
     }
 
     public bool IsArtificial => this == WorkTreeId || this == IndexId || this == CombinedDiffId;
 
     private const int _sha1ByteCount = 20;
     public const int Sha1CharCount = 40;
+
+    /// <summary>
+    /// Fixed-size 20-byte inline buffer for SHA-1 data, stored in big-endian byte order.
+    /// </summary>
+    [InlineArray(_sha1ByteCount)]
+    private struct Sha1
+    {
+        private byte _element0;
+    }
+
+    private readonly Sha1 _data;
+
+    private ObjectId(Sha1 data)
+    {
+        _data = data;
+    }
 
     #region Parsing
 
@@ -145,68 +167,60 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     }
 
     /// <summary>
-    /// Parses an <see cref="ObjectId"/> from a span of chars <paramref name="array"/>.
+    /// Parses an <see cref="ObjectId"/> from a span of hex chars.
     /// </summary>
     /// <remarks>
-    /// <para>This method reads human-readable chars.
-    /// Several git commands emit them in this form.</para>
-    /// <para>For parsing to succeed, <paramref name="array"/> must contain 40 chars.</para>
+    /// <para>For parsing to succeed, <paramref name="hex"/> must contain exactly 40 hex characters.</para>
     /// </remarks>
-    /// <param name="array">The char span to parse.</param>
+    /// <param name="hex">The char span to parse.</param>
     /// <param name="objectId">The parsed <see cref="ObjectId"/>.</param>
     /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
     [Pure]
-    [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
-    public static bool TryParse(in ReadOnlySpan<char> array, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
+    public static bool TryParse(in ReadOnlySpan<char> hex, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
     {
-        if (array.Length != Sha1CharCount)
+        if (hex.Length != Sha1CharCount)
         {
             objectId = default;
             return false;
         }
 
-        if (!ulong.TryParse(array.Slice(0, 16), NumberStyles.AllowHexSpecifier, provider: null, out ulong i1)
-            || !ulong.TryParse(array.Slice(16, 16), NumberStyles.AllowHexSpecifier, provider: null, out ulong i2)
-            || !uint.TryParse(array.Slice(32, 8), NumberStyles.AllowHexSpecifier, provider: null, out uint i3))
+        Sha1 data = default;
+        if (Convert.FromHexString(hex, data, out _, out int bytesWritten) != OperationStatus.Done || bytesWritten != _sha1ByteCount)
         {
             objectId = default;
             return false;
         }
 
-        objectId = new ObjectId(i1, i2, i3);
+        objectId = new ObjectId(data);
         return true;
     }
 
     /// <summary>
-    /// Parses an <see cref="ObjectId"/> from a span of bytes <paramref name="array"/> containing ASCII characters.
+    /// Parses an <see cref="ObjectId"/> from a span of ASCII hex bytes.
     /// </summary>
     /// <remarks>
-    /// <para>This method reads human-readable ASCII-encoded bytes (more verbose than raw values).
-    /// Several git commands emit them in this form.</para>
-    /// <para>For parsing to succeed, <paramref name="array"/> must contain 40 bytes.</para>
+    /// <para>For parsing to succeed, <paramref name="hex"/> must contain exactly 40 ASCII hex bytes.</para>
     /// </remarks>
-    /// <param name="array">The byte span to parse.</param>
+    /// <param name="hex">The byte span to parse.</param>
     /// <param name="objectId">The parsed <see cref="ObjectId"/>.</param>
     /// <returns><c>true</c> if parsing succeeded, otherwise <c>false</c>.</returns>
     [Pure]
-    [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
-    public static bool TryParse(in ReadOnlySpan<byte> array, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
+    public static bool TryParse(in ReadOnlySpan<byte> hex, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
     {
-        if (array.Length != Sha1CharCount)
+        if (hex.Length != Sha1CharCount)
         {
             objectId = default;
             return false;
         }
 
-        if (!Utf8Parser.TryParse(array.Slice(0, 16), out ulong i1, out int _, standardFormat: 'X')
-            || !Utf8Parser.TryParse(array.Slice(16, 16), out ulong i2, out int _, standardFormat: 'X')
-            || !Utf8Parser.TryParse(array.Slice(32, 8), out uint i3, out int _, standardFormat: 'X'))
+        Sha1 data = default;
+        if (Convert.FromHexString(hex, data, out _, out int bytesWritten) != OperationStatus.Done || bytesWritten != _sha1ByteCount)
         {
             objectId = default;
             return false;
         }
 
-        objectId = new ObjectId(i1, i2, i3);
+        objectId = new ObjectId(data);
         return true;
     }
 
@@ -215,6 +229,9 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     /// <summary>
     /// Identifies whether <paramref name="s"/> contains a valid 40-character SHA-1 hash.
     /// </summary>
+    /// <remarks>
+    /// Valid hash strings may only contain lowercase hex characters, and must be exactly 40 characters long.
+    /// </remarks>
     /// <param name="s">The string to validate.</param>
     /// <returns><c>true</c> if <paramref name="s"/> is a valid SHA-1 hash, otherwise <c>false</c>.</returns>
     [Pure]
@@ -230,34 +247,16 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
 
     private static bool IsValidCharacters(string s) => !s.AsSpan().ContainsAnyExcept(_hexChars);
 
-    private readonly ulong _i1;
-    private readonly ulong _i2;
-    private readonly uint _i3;
-
-    private ObjectId(ulong i1, ulong i2, uint i3)
-    {
-        _i1 = i1;
-        _i2 = i2;
-        _i3 = i3;
-    }
-
     #region IComparable<ObjectId>
 
     public int CompareTo(ObjectId? other)
     {
-        int result = _i1.CompareTo(other?._i1);
-        if (result != 0)
+        if (other is null)
         {
-            return result;
+            return 1;
         }
 
-        result = _i2.CompareTo(other?._i2);
-        if (result != 0)
-        {
-            return result;
-        }
-
-        return _i3.CompareTo(other?._i3);
+        return ((ReadOnlySpan<byte>)_data).SequenceCompareTo(other._data);
     }
 
     #endregion
@@ -276,9 +275,8 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     /// <param name="length">The length of the returned string. Defaults to <c>8</c>.</param>
     /// <exception cref="ArgumentOutOfRangeException"><paramref name="length"/> is less than one, or more than 40.</exception>
     [Pure]
-    [SkipLocalsInit]
     [SuppressMessage("Style", "IDE0057:Use range operator", Justification = "Performance")]
-    public unsafe string ToShortString(int length = 8)
+    public string ToShortString(int length = 8)
     {
         if (length < 1)
         {
@@ -290,21 +288,59 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
             throw new ArgumentOutOfRangeException(nameof(length), length, $"Cannot be greater than {Sha1CharCount}.");
         }
 
-        int neededBytesCount = (length + 1) / 2; // equivalent to Math.Ceiling(length / 2.0) with only int calculation
-        Span<byte> buffer = stackalloc byte[_sha1ByteCount];
-
-        BinaryPrimitives.WriteUInt64BigEndian(buffer, _i1);
-        if (neededBytesCount > 8)
+        // Even lengths: write hex directly into the string buffer — single allocation, no Substring.
+        if ((length & 1) == 0)
         {
-            BinaryPrimitives.WriteUInt64BigEndian(buffer.Slice(8, 8), _i2);
-            BinaryPrimitives.WriteUInt32BigEndian(buffer.Slice(16, 4), _i3);
+            return string.Create(length, this, static (chars, self) =>
+            {
+                int neededBytes = chars.Length / 2;
+                ReadOnlySpan<byte> src = ((ReadOnlySpan<byte>)self._data).Slice(0, neededBytes);
+                Convert.TryToHexStringLower(src, chars, out _);
+            });
         }
 
-        // Operate on the smaller buffer possible
-        Span<byte> bufferSlice = buffer.Slice(0, neededBytesCount);
-
-        return Convert.ToHexStringLower(bufferSlice).Substring(0, length);
+        // Odd lengths: decode one extra byte then trim.
+        int neededBytesCount = (length + 1) / 2;
+        ReadOnlySpan<byte> bytes = ((ReadOnlySpan<byte>)_data).Slice(0, neededBytesCount);
+        return Convert.ToHexStringLower(bytes).Substring(0, length);
     }
+
+    /// <summary>
+    /// Writes the full 40-character lowercase hex SHA-1 directly into <paramref name="destination"/>
+    /// without allocating a string. Ideal for building git command arguments.
+    /// </summary>
+    /// <param name="destination">A span of at least <see cref="Sha1CharCount"/> characters.</param>
+    /// <returns><see langword="true"/> if the write succeeded, <see langword="false"/> if the destination is too small.</returns>
+    [Pure]
+    public bool WriteTo(Span<char> destination)
+    {
+        if (destination.Length < Sha1CharCount)
+        {
+            return false;
+        }
+
+        return Convert.TryToHexStringLower((ReadOnlySpan<byte>)_data, destination, out _);
+    }
+
+    #region ISpanFormattable
+
+    /// <inheritdoc />
+    string IFormattable.ToString(string? format, IFormatProvider? formatProvider) => ToString();
+
+    /// <inheritdoc />
+    bool ISpanFormattable.TryFormat(Span<char> destination, out int charsWritten, ReadOnlySpan<char> format, IFormatProvider? provider)
+    {
+        if (destination.Length < Sha1CharCount)
+        {
+            charsWritten = 0;
+            return false;
+        }
+
+        bool result = Convert.TryToHexStringLower((ReadOnlySpan<byte>)_data, destination, out charsWritten);
+        return result;
+    }
+
+    #endregion
 
     #region Equality and hashing
 
@@ -312,16 +348,17 @@ public sealed class ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>
     public bool Equals(ObjectId? other)
     {
         return other is not null &&
-               _i1 == other._i1 &&
-               _i2 == other._i2 &&
-               _i3 == other._i3;
+               ((ReadOnlySpan<byte>)_data).SequenceEqual(other._data);
     }
 
     /// <inheritdoc />
     public override bool Equals(object? obj) => obj is ObjectId id && Equals(id);
 
     /// <inheritdoc />
-    public override int GetHashCode() => unchecked((int)_i2);
+    public override int GetHashCode()
+    {
+        return Unsafe.ReadUnaligned<int>(ref MemoryMarshal.GetReference((ReadOnlySpan<byte>)_data));
+    }
 
     public static bool operator ==(ObjectId? left, ObjectId? right) => Equals(left, right);
     public static bool operator !=(ObjectId? left, ObjectId? right) => !Equals(left, right);
