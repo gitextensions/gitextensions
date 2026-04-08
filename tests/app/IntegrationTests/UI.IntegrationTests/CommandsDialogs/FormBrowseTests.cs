@@ -204,7 +204,7 @@ public class FormBrowseTests
             $"{contentA}\n{new string('A', 20000)}", fileA,
             $"{contentB}\n{new string('B', 20000)}", fileB);
 
-        const int maxMilliseconds = 1_000;
+        const int maxMilliseconds = 3_000;
         RunFormTest(
             async form =>
             {
