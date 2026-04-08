@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -405,8 +405,8 @@ public partial class FormRebase : GitExtensionsDialog
         try
         {
             AppSettings.ShowStashes = false;
-            ObjectId? firstParent = UICommands.Module.RevParse("HEAD~");
-            string preSelectedCommit = !string.IsNullOrWhiteSpace(txtFrom.Text) ? txtFrom.Text : firstParent?.ToString() ?? string.Empty;
+            ObjectId firstParent = UICommands.Module.RevParse("HEAD~");
+            string preSelectedCommit = !string.IsNullOrWhiteSpace(txtFrom.Text) ? txtFrom.Text : firstParent.IsZero ? string.Empty : firstParent.ToString();
 
             string? mergeBaseCommitId = null;
 
@@ -414,9 +414,10 @@ public partial class FormRebase : GitExtensionsDialog
             {
                 try
                 {
-                    ObjectId? commit1 = UICommands.Module.RevParse(cboBranches.Text);
-                    ObjectId? commit2 = UICommands.Module.RevParse("HEAD");
-                    mergeBaseCommitId = UICommands.Module.GetMergeBase(commit1!, commit2!)?.ToString();
+                    ObjectId commit1 = UICommands.Module.RevParse(cboBranches.Text);
+                    ObjectId commit2 = UICommands.Module.RevParse("HEAD");
+                    ObjectId mergeBase = UICommands.Module.GetMergeBase(commit1, commit2);
+                    mergeBaseCommitId = mergeBase.IsZero ? null : mergeBase.ToString();
                 }
                 catch (Exception)
                 {

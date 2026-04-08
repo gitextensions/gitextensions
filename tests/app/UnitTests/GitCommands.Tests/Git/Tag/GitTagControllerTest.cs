@@ -80,6 +80,6 @@ public class GitTagControllerTest
 
     private static GitCreateTagArgs CreateAnnotatedTagArgs()
     {
-        return new GitCreateTagArgs("tagname", ObjectId.Parse("0000000000000000000000000000000000000000"), TagOperation.Annotate, "hello world");
+        return new GitCreateTagArgs("tagname", ObjectId.Random(), TagOperation.Annotate, "hello world");
     }
 }

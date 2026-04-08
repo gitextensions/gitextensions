@@ -12,7 +12,7 @@ internal sealed class RefContextMenuContext
     public required IGitUICommands UICommands { get; init; }
     public required Form? ParentForm { get; init; }
     public required string CurrentBranchRef { get; init; }
-    public required ObjectId? CurrentCheckout { get; init; }
+    public required ObjectId CurrentCheckout { get; init; }
     public required bool IsBareRepository { get; init; }
     public required Func<IGitRef, string> GetRefUnambiguousName { get; init; }
     public required Func<GitRevision?> GetLatestSelectedRevision { get; init; }

@@ -8,7 +8,7 @@ namespace GitUI.LeftPanel;
 [DebuggerDisplay("(Tag) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
 internal sealed class StashNode : BaseRevisionNode
 {
-    public StashNode(Tree tree, in ObjectId? objectId, string reflogSelector, string subject, bool visible)
+    public StashNode(Tree tree, in ObjectId objectId, string reflogSelector, string subject, bool visible)
         : base(tree, reflogSelector.RemovePrefix("refs/"), visible)
     {
         ObjectId = objectId;

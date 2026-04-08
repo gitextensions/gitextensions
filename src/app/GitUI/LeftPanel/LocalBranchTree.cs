@@ -59,7 +59,10 @@ internal sealed class LocalBranchTree : BaseRefTree
         {
             token.ThrowIfCancellationRequested();
 
-            Validates.NotNull(branch.ObjectId);
+            if (branch.ObjectId.IsZero)
+            {
+                throw new InvalidOperationException($"Branch '{branch.Name}' has no ObjectId.");
+            }
 
             LocalBranchNode localBranchNode = new(this, branch.ObjectId, branch.Name, branch.Name == currentBranch, visible: true);
 

@@ -191,7 +191,7 @@ public class BlameControlTests
         {
             DateTime lineDate = lineDates[index];
             yield return new GitBlameLine(
-                new GitBlameCommit(null!, "Author1", "@Author1", lineDate, string.Empty,
+                new GitBlameCommit(ObjectId.Random(), "Author1", "@Author1", lineDate, string.Empty,
                     "Commiter", "@Committer", lineDate, string.Empty, "Summary1", "file"),
                 index + 1, index + 1, "text");
         }

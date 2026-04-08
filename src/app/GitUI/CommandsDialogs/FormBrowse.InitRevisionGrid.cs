@@ -9,7 +9,7 @@ partial class FormBrowse
 {
     // This file is dedicated to init logic for FormBrowse revisiong grid control
 
-    private void InitRevisionGrid(ObjectId? selectedId, ObjectId? firstId, bool isFileHistoryMode)
+    private void InitRevisionGrid(ObjectId selectedId, ObjectId firstId, bool isFileHistoryMode)
     {
         RevisionGrid.ArtificialChanged += (_, _) => RefreshGitStatusMonitor();
 

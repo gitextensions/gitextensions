@@ -1,14 +1,17 @@
 ﻿{
   "ObjectId": {
+    "IsZero": false,
     "IsArtificial": false
   },
   "Guid": "5899baad9014356f7a334da660a7b304b4b00da2",
   "ParentIds": [
     {
+      "IsZero": false,
       "IsArtificial": false
     }
   ],
-  "TreeGuid": {
+  "TreeId": {
+    "IsZero": false,
     "IsArtificial": false
   },
   "Author": "Gerhard Olsson",
@@ -30,6 +33,7 @@
   "ReflogSelector": null,
   "HasParent": true,
   "FirstParentId": {
+    "IsZero": false,
     "IsArtificial": false
   }
 }

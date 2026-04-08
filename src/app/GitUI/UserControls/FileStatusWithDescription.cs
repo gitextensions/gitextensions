@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
 using GitUIPluginInterfaces;
 
@@ -6,7 +6,7 @@ namespace GitUI;
 
 public class FileStatusWithDescription
 {
-    public FileStatusWithDescription(GitRevision? firstRev, GitRevision secondRev, string summary, IReadOnlyList<GitItemStatus> statuses, ObjectId? baseA = null, ObjectId? baseB = null, string iconName = nameof(Images.Diff))
+    public FileStatusWithDescription(GitRevision? firstRev, GitRevision secondRev, string summary, IReadOnlyList<GitItemStatus> statuses, ObjectId baseA = default, ObjectId baseB = default, string iconName = nameof(Images.Diff))
     {
         FirstRev = firstRev;
         SecondRev = secondRev ?? throw new ArgumentNullException(nameof(secondRev));
@@ -21,7 +21,7 @@ public class FileStatusWithDescription
     public GitRevision SecondRev { get; }
     public string Summary { get; }
     public IReadOnlyList<GitItemStatus> Statuses { get; }
-    public ObjectId? BaseA { get; }
-    public ObjectId? BaseB { get; }
+    public ObjectId BaseA { get; }
+    public ObjectId BaseB { get; }
     public string IconName { get; }
 }

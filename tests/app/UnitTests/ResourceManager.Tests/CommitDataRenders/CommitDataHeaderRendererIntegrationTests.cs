@@ -16,14 +16,14 @@ public class CommitDataHeaderRendererIntegrationTests
     [SetUp]
     public void Setup()
     {
-        ObjectId commitGuid = ObjectId.Random();
+        ObjectId commitId = ObjectId.Random();
         ObjectId parentId1 = ObjectId.Random();
         ObjectId parentId2 = ObjectId.Random();
         DateTime authorTime = DateTime.UtcNow.AddDays(-3);
         DateTime commitTime = DateTime.UtcNow.AddDays(-2);
 
         _data = new CommitData(
-            commitGuid,
+            commitId,
             new[] { parentId1, parentId2 },
             "John Doe (Acme Inc) <John.Doe@test.com>", authorTime,
             "Jane Doe <Jane.Doe@test.com>", commitTime,

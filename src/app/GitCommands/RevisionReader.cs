@@ -178,11 +178,13 @@ public sealed class RevisionReader
     public async Task<GitRevision?> GetRevisionAsync(string commitHash, bool hasNotes, bool throwOnError, CancellationToken cancellationToken)
     {
         // output can be cached if git-notes is not included and hash is a sha.
-        bool doCacheGitOutput = ObjectId.TryParse(commitHash, out ObjectId? objectId) && !hasNotes;
-        if (objectId?.IsArtificial is true)
+        bool isValidSha = ObjectId.TryParse(commitHash, out ObjectId objectId);
+        if (isValidSha && objectId.IsArtificial)
         {
             throw new InvalidOperationException(nameof(commitHash));
         }
+
+        bool doCacheGitOutput = isValidSha && !hasNotes;
 
         GitArgumentBuilder arguments = new("log")
         {
@@ -355,7 +357,7 @@ public sealed class RevisionReader
     {
         string autoStashFileName = Path.Join(workingDirGitDir, "rebase-merge/autostash");
         if (!File.Exists(autoStashFileName)
-            || !ObjectId.TryParse(File.ReadLines(autoStashFileName).FirstOrDefault(), out ObjectId? autoStashCommitId))
+            || !ObjectId.TryParse(File.ReadLines(autoStashFileName).FirstOrDefault(), out ObjectId autoStashCommitId))
         {
             return;
         }
@@ -371,7 +373,7 @@ public sealed class RevisionReader
 
         string origHeadFileName = Path.Join(workingDirGitDir, "rebase-merge/orig-head");
         if (File.Exists(origHeadFileName)
-            && ObjectId.TryParse(File.ReadLines(origHeadFileName).FirstOrDefault(), out ObjectId? origHeadCommitId))
+            && ObjectId.TryParse(File.ReadLines(origHeadFileName).FirstOrDefault(), out ObjectId origHeadCommitId))
         {
             autoStashRevision.ParentIds = [origHeadCommitId];
         }
@@ -420,7 +422,7 @@ public sealed class RevisionReader
         // The first 40 bytes are the revision ID and the tree ID back to back
         ReadOnlyMemory<byte> commitHash = buffer.Slice(0, ObjectId.Sha1CharCount);
         ReadOnlySpan<byte> commitHashSpan = commitHash.Span;
-        ObjectId? objectId;
+        ObjectId objectId;
         if (_cache is not null && commitHashSpan.SequenceEqual(_cache.Value.buffer.Span))
         {
             objectId = _cache.Value.objectId;
@@ -436,7 +438,7 @@ public sealed class RevisionReader
         }
 
         ReadOnlyMemory<byte> parentCommitHash = buffer.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount);
-        if (!ObjectId.TryParse(parentCommitHash.Span, out ObjectId? treeId))
+        if (!ObjectId.TryParse(parentCommitHash.Span, out ObjectId treeId))
         {
             ParseAssert($"Log parse error, object id: {buffer.Length}({parentCommitHash}");
             revision = default;
@@ -488,7 +490,7 @@ public sealed class RevisionReader
             for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
             {
                 ReadOnlyMemory<byte> hashParent = buffer.Slice(offset, ObjectId.Sha1CharCount);
-                if (!ObjectId.TryParse(hashParent.Span, out ObjectId? parentId))
+                if (!ObjectId.TryParse(hashParent.Span, out ObjectId parentId))
                 {
                     ParseAssert($"Log parse error, parent {parentIndex} for {objectId}");
                     revision = default;
@@ -536,7 +538,7 @@ public sealed class RevisionReader
         revision = new GitRevision(objectId)
         {
             ParentIds = parentIds,
-            TreeGuid = treeId,
+            TreeId = treeId,
 
             Author = GetNextLine(bufferSpan),
             AuthorEmail = GetNextLine(bufferSpan),

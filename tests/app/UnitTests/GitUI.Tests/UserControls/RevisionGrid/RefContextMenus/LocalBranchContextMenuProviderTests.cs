@@ -8,7 +8,7 @@ public class LocalBranchContextMenuProviderTests
     private LocalBranchContextMenuProvider _provider = null!;
     private IGitUICommands _uiCommands = null!;
     private RefContextMenuContext _context = null!;
-    private ObjectId _currentCheckout = null!;
+    private ObjectId _currentCheckout = ObjectId.Random();
 
     [SetUp]
     public void Setup()

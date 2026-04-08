@@ -23,10 +23,10 @@ partial class CommandsTests
     }
 
     [Test]
-    public void Validate_should_throw_if_tag_revision_invalid()
+    public void GitCreateTagArgs_should_throw_if_tag_revision_invalid()
     {
-        GitCreateTagArgs args = new(TagName, null!);
-        ((Action)(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath))).Should().Throw<ArgumentException>();
+        Action act = () => new GitCreateTagArgs(TagName, ObjectId.IndexId);
+        act.Should().Throw<ArgumentException>();
     }
 
     [TestCase(null)]

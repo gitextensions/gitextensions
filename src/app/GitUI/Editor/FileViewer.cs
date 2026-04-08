@@ -697,27 +697,27 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
-    /// View the git item with the TreeGuid.
+    /// View the git item with the TreeId.
     /// </summary>
-    /// <param name="file">GitItem file, with TreeGuid.</param>
-    /// <param name="objectId">Revision to present. Can be null if file.TreeGuid is set.</param>
+    /// <param name="file">GitItem file, with TreeId.</param>
+    /// <param name="objectId">Revision to present. Can be the zero <see cref="ObjectId"/> if file.TreeId is set.</param>
     /// <param name="item">Metadata for line patching and presentation.</param>
     /// <param name="line">The line to display.</param>
     /// <param name="openWithDifftool">difftool command</param>
     /// <returns>Task to view the item</returns>
     private Task ViewGitItemAsync(GitItemStatus file,
-        ObjectId? objectId,
+        ObjectId objectId,
         FileStatusItem? item,
         int? line,
         Action? openWithDifftool,
         CancellationToken cancellationToken = default)
     {
         // set fields possibly not set from git-diff (etc); treeGuid and IsSubmodule.
-        // (git-status does not report submodule, IsSubmodule is not set if not TreeGuid is)
+        // (git-status does not report submodule, IsSubmodule is not set if not TreeId is)
         // treeId (blobId) is only recalculated if required.
-        ObjectId? blobId = GetUpdateTreeId(file, objectId, cancellationToken);
+        ObjectId blobId = GetUpdateTreeId(file, objectId, cancellationToken);
 
-        return blobId is null
+        return blobId.IsZero
             ? ViewFileAsync(file.Name, file.IsSubmodule, item, line, openWithDifftool, cancellationToken)
             : ViewItemAsync(
                 file.Name,
@@ -786,7 +786,7 @@ public partial class FileViewer : GitModuleControl
         // Especially, if GE is invoked as git-config core.editor when rebasing,
         // another Git command must not be called (will fail the rebase).
         if (!isSubmodule
-            && (item is null || item.Item.TreeGuid is null)
+            && (item is null || item.Item.TreeId.IsZero)
             && (fileName.EndsWith('/') || Directory.Exists(fullPath)))
         {
             if (!GitModule.IsValidGitWorkingDir(fullPath))
@@ -959,9 +959,9 @@ public partial class FileViewer : GitModuleControl
         StagedStatus stagedStatus = _viewItem?.Item?.Staged ?? StagedStatus.Unknown;
         if (stagedStatus == StagedStatus.Unknown)
         {
-            stagedStatus = GitModule.GetStagedStatus(_viewItem?.FirstRevision?.ObjectId,
-                _viewItem?.SecondRevision?.ObjectId,
-                _viewItem?.SecondRevision?.FirstParentId);
+            stagedStatus = GitModule.GetStagedStatus(_viewItem?.FirstRevision?.ObjectId ?? default,
+                _viewItem?.SecondRevision?.ObjectId ?? default,
+                _viewItem?.SecondRevision?.FirstParentId ?? default);
             if (_viewItem?.Item is not null)
             {
                 _viewItem.Item.Staged = stagedStatus;
@@ -1604,21 +1604,21 @@ public partial class FileViewer : GitModuleControl
     /// <param fileName="cancellationToken">The cancellation token.</param>
     /// <returns>the current TreeId (normally blob id, could be commit id) to be used.
     /// For worktree null is always returned also if there is a treeid (that really applies to the index)</returns>
-    public ObjectId? GetUpdateTreeId(GitItemStatus file,
-        ObjectId? commitId,
+    public ObjectId GetUpdateTreeId(GitItemStatus file,
+        ObjectId commitId,
         CancellationToken cancellationToken = default)
     {
-        if (file.TreeGuid is not null && commitId?.IsArtificial is false)
+        if (!file.TreeId.IsZero && !commitId.IsArtificial)
         {
             // current value is immutable (and IsSubmodule should have been set)
-            return file.TreeGuid;
+            return file.TreeId;
         }
 
-        if (commitId == ObjectId.WorkTreeId && (file.TreeGuid is not null || file.IsSubmodule))
+        if (commitId == ObjectId.WorkTreeId && (!file.TreeId.IsZero || file.IsSubmodule))
         {
             // treeId already calculated, no point in doing it again.
             // (if treeId is set, it means that IsSubmodule is set).
-            return null;
+            return default;
         }
 
         cancellationToken.ThrowIfCancellationRequested();
@@ -1627,11 +1627,11 @@ public partial class FileViewer : GitModuleControl
         {
             IObjectGitItem gitItem = items[0];
             file.IsSubmodule = gitItem.ObjectType == GitObjectType.Commit;
-            file.TreeGuid = gitItem.ObjectId;
-            return commitId == ObjectId.WorkTreeId ? null : file.TreeGuid;
+            file.TreeId = gitItem.ObjectId;
+            return commitId == ObjectId.WorkTreeId ? default : file.TreeId;
         }
 
-        return null;
+        return default;
     }
 
     /// <summary>
@@ -1702,7 +1702,7 @@ public partial class FileViewer : GitModuleControl
         {
             Validates.NotNull(FilePreamble);
 
-            ObjectId? itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
+            ObjectId itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
             patch = PatchManager.GetSelectedLinesAsNewPatch(
                 Module,
                 _viewItem.Item.Name,
@@ -1712,7 +1712,7 @@ public partial class FileViewer : GitModuleControl
                 Encoding,
                 reset: false,
                 FilePreamble,
-                itemBlobId?.ToString());
+                itemBlobId.ToString());
         }
         else
         {
@@ -1765,7 +1765,7 @@ public partial class FileViewer : GitModuleControl
         {
             Validates.NotNull(FilePreamble);
 
-            ObjectId? itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
+            ObjectId itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
             patch = PatchManager.GetSelectedLinesAsNewPatch(
                 Module,
                 _viewItem.Item.Name,
@@ -1775,7 +1775,7 @@ public partial class FileViewer : GitModuleControl
                 Encoding,
                 reset: true,
                 FilePreamble,
-                itemBlobId?.ToString());
+                itemBlobId.ToString());
         }
         else if (currentItemStaged)
         {
@@ -1839,7 +1839,7 @@ public partial class FileViewer : GitModuleControl
         {
             Validates.NotNull(FilePreamble);
 
-            ObjectId? itemBlobId = reverse ? GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId) : null;
+            ObjectId itemBlobId = reverse ? GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId) : default;
             patch = PatchManager.GetSelectedLinesAsNewPatch(
                 Module,
                 _viewItem.Item.Name,
@@ -1849,7 +1849,7 @@ public partial class FileViewer : GitModuleControl
                 Encoding,
                 reset: reverse,
                 FilePreamble,
-                itemBlobId?.ToString());
+                itemBlobId.ToString());
         }
         else if (!reverse)
         {

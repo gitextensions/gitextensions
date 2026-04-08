@@ -178,8 +178,8 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool StartResetCurrentBranchDialog(IWin32Window? owner, string branch)
     {
-        ObjectId? objectId = Module.RevParse(branch);
-        if (objectId is null)
+        ObjectId objectId = Module.RevParse(branch);
+        if (objectId.IsZero)
         {
             MessageBoxes.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
@@ -462,18 +462,18 @@ public sealed class GitUICommands : IGitUICommands
 
     #region Checkout
 
-    public bool StartCheckoutBranch(IWin32Window? owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId>? containRevisions = null)
+    public bool StartCheckoutBranch(IWin32Window? owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId>? containObjectIds = null)
     {
         return DoActionOnRepo(owner, action: () =>
         {
-            using FormCheckoutBranch form = new(this, branch, remote, containRevisions);
+            using FormCheckoutBranch form = new(this, branch, remote, containObjectIds);
             return form.DoDefaultActionOrShow(owner) != DialogResult.Cancel;
         }, preEvent: PreCheckoutBranch, postEvent: PostCheckoutBranch);
     }
 
-    public bool StartCheckoutBranch(IWin32Window? owner, IReadOnlyList<ObjectId>? containRevisions)
+    public bool StartCheckoutBranch(IWin32Window? owner, IReadOnlyList<ObjectId>? containObjectIds)
     {
-        return StartCheckoutBranch(owner, "", false, containRevisions);
+        return StartCheckoutBranch(owner, "", false, containObjectIds);
     }
 
     public bool StartCheckoutRemoteBranch(IWin32Window? owner, string branch)
@@ -498,7 +498,7 @@ public sealed class GitUICommands : IGitUICommands
     /// <param name="workingDir">The working directory for the new process.</param>
     /// <param name="selectedId">The optional commit to be selected.</param>
     /// <param name="firstId">The first commit to be selected, the first commit in a diff.</param>
-    internal static void LaunchBrowse(string workingDir = "", ObjectId? selectedId = null, ObjectId? firstId = null)
+    internal static void LaunchBrowse(string workingDir = "", ObjectId selectedId = default, ObjectId firstId = default)
     {
         if (!Directory.Exists(workingDir))
         {
@@ -508,16 +508,16 @@ public sealed class GitUICommands : IGitUICommands
 
         StringBuilder arguments = new("browse");
 
-        if (selectedId is null)
+        if (selectedId.IsZero)
         {
             selectedId = firstId;
-            firstId = null;
+            firstId = default;
         }
 
-        if (selectedId is not null)
+        if (!selectedId.IsZero)
         {
             arguments.Append(" -commit=").Append(selectedId);
-            if (firstId is not null)
+            if (!firstId.IsZero)
             {
                 arguments.Append(',').Append(firstId);
             }
@@ -549,8 +549,8 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool StartCreateBranchDialog(IWin32Window? owner, string? branch)
     {
-        ObjectId? objectId = Module.RevParse(branch!);
-        if (objectId is null)
+        ObjectId objectId = Module.RevParse(branch!);
+        if (objectId.IsZero)
         {
             MessageBoxes.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
@@ -559,9 +559,9 @@ public sealed class GitUICommands : IGitUICommands
         return StartCreateBranchDialog(owner, objectId);
     }
 
-    public bool StartCreateBranchDialog(IWin32Window? owner = null, ObjectId? objectId = null, string? newBranchNamePrefix = null)
+    public bool StartCreateBranchDialog(IWin32Window? owner = null, ObjectId objectId = default, string? newBranchNamePrefix = null)
     {
-        if (Module.IsBareRepository() || objectId?.IsArtificial is true)
+        if (Module.IsBareRepository() || objectId.IsArtificial)
         {
             return false;
         }
@@ -901,7 +901,7 @@ public sealed class GitUICommands : IGitUICommands
                 return false;
             }
 
-            Module.ResetChanges(resetId: null, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out StringBuilder output, progressAction: null);
+            Module.ResetChanges(resetId: default, selectedItems, resetAndDelete: resetType == FormResetChanges.ActionEnum.ResetAndDelete, _fullPathResolver, out StringBuilder output, progressAction: null);
             if (output.Length > 0)
             {
                 MessageBoxes.Show(owner: null, output.ToString(), TranslatedStrings.ResetChangesCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -1013,7 +1013,7 @@ public sealed class GitUICommands : IGitUICommands
 
         bool Action()
         {
-            using FormCreateTag form = new(this, revision?.ObjectId);
+            using FormCreateTag form = new(this, revision?.ObjectId ?? default);
             return form.ShowDialog(owner) == DialogResult.OK;
         }
 
@@ -1723,7 +1723,7 @@ public sealed class GitUICommands : IGitUICommands
                 });
         }
 
-        if (TryGetObjectIds(arg, Module, out ObjectId? selectedId, out ObjectId? firstId))
+        if (TryGetObjectIds(arg, Module, out ObjectId selectedId, out ObjectId firstId))
         {
             return StartBrowseDialog(owner: null,
                 new BrowseArguments
@@ -1739,22 +1739,22 @@ public sealed class GitUICommands : IGitUICommands
         Console.Error.WriteLine($"No commit found matching: {arg}");
         return false;
 
-        static bool TryGetObjectIds(string arg, IGitModule module, out ObjectId? selectedId, out ObjectId? firstId)
+        static bool TryGetObjectIds(string arg, IGitModule module, out ObjectId selectedId, out ObjectId firstId)
         {
-            selectedId = null;
-            firstId = null;
+            selectedId = default;
+            firstId = default;
             foreach (string part in arg.LazySplit(','))
             {
-                if (!module.TryResolvePartialCommitId(part, out ObjectId? objectId))
+                if (!module.TryResolvePartialCommitId(part, out ObjectId objectId))
                 {
                     return false;
                 }
 
-                if (selectedId is null)
+                if (selectedId.IsZero)
                 {
                     selectedId = objectId;
                 }
-                else if (firstId is null)
+                else if (firstId.IsZero)
                 {
                     firstId = objectId;
 
@@ -1852,7 +1852,7 @@ public sealed class GitUICommands : IGitUICommands
         GitRevision? revision = null;
         if (args.Count > 3)
         {
-            if (!ObjectId.TryParse(args[3], out ObjectId? objectId))
+            if (!ObjectId.TryParse(args[3], out ObjectId objectId))
             {
                 return false;
             }
@@ -1882,7 +1882,7 @@ public sealed class GitUICommands : IGitUICommands
                              {
                                  RevFilter = filterByRevision ? revision?.ObjectId.ToString() : null,
                                  PathFilter = fileHistoryFileName,
-                                 SelectedId = revision?.ObjectId,
+                                 SelectedId = revision?.ObjectId ?? default,
                                  IsFileHistoryMode = true
                              }));
         }

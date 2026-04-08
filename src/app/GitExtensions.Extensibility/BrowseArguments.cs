@@ -17,12 +17,12 @@ public record BrowseArguments
     /// <summary>
     ///  Gets the currently (last) selected commit id.
     /// </summary>
-    public ObjectId? SelectedId { get; init; }
+    public ObjectId SelectedId { get; init; }
 
     /// <summary>
     ///  Gets the first selected commit id (as in a diff).
     /// </summary>
-    public ObjectId? FirstId { get; init; }
+    public ObjectId FirstId { get; init; }
 
     /// <summary>
     /// If to start in "FileHistory mode", hiding left panel.

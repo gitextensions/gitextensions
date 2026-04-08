@@ -104,7 +104,7 @@ public class GetAllChangedFilesOutputParser
                 gitItemStatusX.IsSubmodule = true;
             }
 
-            // ignore the sha in status (could be used to set TreeGuid)
+            // ignore the sha in status (could be used to set TreeId)
 
             diffFiles.Add(gitItemStatusX);
         }

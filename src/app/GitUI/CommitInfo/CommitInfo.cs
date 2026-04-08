@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Net;
 using System.Reactive.Linq;
 using System.Text;
@@ -537,7 +537,7 @@ public partial class CommitInfo : GitModuleControl
                 _tags = tags;
             }
 
-            async Task LoadBranchInfoAsync(ObjectId revision)
+            async Task LoadBranchInfoAsync(ObjectId objectId)
             {
                 await TaskScheduler.Default;
 
@@ -548,7 +548,7 @@ public partial class CommitInfo : GitModuleControl
                 // Include remote branches if requested
                 bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                                  AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-                List<string> branches = [.. Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote, cancellationToken)];
+                List<string> branches = [.. Module.GetAllBranchesWhichContainGivenCommit(objectId, getLocal, getRemote, cancellationToken)];
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
                 _branches = branches;

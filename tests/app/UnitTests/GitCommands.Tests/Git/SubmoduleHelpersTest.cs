@@ -70,7 +70,7 @@ public class SubmoduleHelpersTest
 
         status.Commit.Should().Be(ObjectId.Parse("05321769f039f39fa7f6748e8f30d5c8f157c7dc"));
         status.Name.Should().Be(fileName);
-        status.OldCommit.Should().BeNull();
+        status.OldCommit.IsZero.Should().BeTrue();
         status.OldName.Should().Be("Externals/ICSharpCode.TextEditor");
 
         // With user customized `diff.srcPrefix` and `diff.dstPrefix` settings: Submodule name with spaces in the name

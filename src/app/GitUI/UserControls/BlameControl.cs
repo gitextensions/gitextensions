@@ -39,7 +39,7 @@ public sealed partial class BlameControl : GitModuleControl
     private GitBlame? _blame;
     private IRevisionGridInfo? _revisionGridInfo;
     private IRevisionGridFileUpdate? _revisionGridFileUpdate;
-    private ObjectId? _blameId;
+    private ObjectId _blameId;
     private string? _fileName;
     private Encoding? _encoding;
     private int _lastTooltipX = int.MinValue;
@@ -558,7 +558,10 @@ public sealed partial class BlameControl : GitModuleControl
     private void contextMenu_Opened(object sender, EventArgs e)
     {
         Validates.NotNull(_fileName);
-        Validates.NotNull(_blameId);
+        if (_blameId.IsZero)
+        {
+            throw new InvalidOperationException("_blameId must not be zero");
+        }
 
         contextMenu.Tag = new GitBlameContext(_fileName, _lineIndex, GetBlameLine(), _blameId);
 
@@ -589,7 +592,7 @@ public sealed partial class BlameControl : GitModuleControl
         return;
 
         bool RevisionHasParent(GitRevision? revision)
-            => (revision?.HasParent is true) && (_revisionGridInfo?.GetRevision(revision!.FirstParentId!) is not null);
+            => (revision?.HasParent is true) && (_revisionGridInfo?.GetRevision(revision!.FirstParentId) is not null);
     }
 
     private GitBlameCommit? GetBlameCommit()
@@ -674,7 +677,7 @@ public sealed partial class BlameControl : GitModuleControl
         int originalLineNumberOfPreviousBlame = _gitBlameParser.GetOriginalLineInPreviousCommit(selectedRevision!, blameInfo.Filename!, finalLineNumberOfPreviousBlame);
 
         GitBlameLine blameLine = new(_lastBlameLine.Commit, finalLineNumberOfPreviousBlame, originalLineNumberOfPreviousBlame, "Dummy Git blame line used only to store the good 'originLineNumber' value to display and select it");
-        BlameRevision(selectedRevision!.FirstParentId!, blameInfo.Filename!, blameLine);
+        BlameRevision(selectedRevision!.FirstParentId, blameInfo.Filename!, blameLine);
     }
 
     /// <summary>

@@ -142,7 +142,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
                                .Select(s => s.Split(Delimiters.Colon))
                                .Where(t => t.Length == 2)
                                .Where(t => IsSettingForBranch(t[0], branch))
-                               .Select(t => new GitRef(module, objectId: null, t[1]))
+                               .Select(t => new GitRef(module, objectId: default, t[1]))
                                .FirstOrDefault(h => h.IsHead);
 
         if (remoteHead is not null)
@@ -154,20 +154,20 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
                                .Select(s => s.Split(Delimiters.Colon))
                                .Where(t => t.Length == 2)
                                .Where(t => IsSettingForWildcardBranch(t[0]))
-                               .Select(t => new GitRef(module, objectId: null, t[1].Replace("*", branch)))
+                               .Select(t => new GitRef(module, objectId: default, t[1].Replace("*", branch)))
                                .FirstOrDefault(h => h.IsHead);
 
         return remoteWildcardHead?.Name;
 
         bool IsSettingForBranch(string setting, string branchName)
         {
-            GitRef head = new(module, objectId: null, setting);
+            GitRef head = new(module, objectId: default, setting);
             return head.IsHead && head.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase);
         }
 
         bool IsSettingForWildcardBranch(string setting)
         {
-            GitRef head = new(module, objectId: null, setting);
+            GitRef head = new(module, objectId: default, setting);
             return head.IsHead && head.Name == "*";
         }
     }

@@ -10,7 +10,7 @@ internal abstract class BaseBranchLeafNode : BaseRevisionNode
 
     private bool _isMerged = false;
 
-    public BaseBranchLeafNode(Tree tree, in ObjectId? objectId, string fullPath, bool visible, string imageKeyUnmerged, string imageKeyMerged)
+    public BaseBranchLeafNode(Tree tree, in ObjectId objectId, string fullPath, bool visible, string imageKeyUnmerged, string imageKeyMerged)
         : base(tree, fullPath, visible)
     {
         ObjectId = objectId;

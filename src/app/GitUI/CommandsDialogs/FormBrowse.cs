@@ -1686,7 +1686,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         UICommands.StartCleanupRepositoryDialog(this);
     }
 
-    public void SetWorkingDir(string? path, ObjectId? selectedId = null, ObjectId? firstId = null)
+    public void SetWorkingDir(string? path, ObjectId selectedId = default, ObjectId firstId = default)
     {
         RevisionGrid.SelectedId = selectedId;
         RevisionGrid.FirstId = firstId;
@@ -1771,7 +1771,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void CreateBranchToolStripMenuItemClick(object sender, EventArgs e)
     {
-        UICommands.StartCreateBranchDialog(this, RevisionGrid.LatestSelectedRevision?.ObjectId);
+        UICommands.StartCreateBranchDialog(this, RevisionGrid.LatestSelectedRevision?.ObjectId ?? default);
     }
 
     private void editGitAttributesToolStripMenuItem_Click(object sender, EventArgs e)
@@ -1829,7 +1829,11 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             foreach (IGitRef branch in GetBranches())
             {
-                Validates.NotNull(branch.ObjectId);
+                if (branch.ObjectId.IsZero)
+                {
+                    throw new InvalidOperationException($"Branch '{branch.Name}' has no ObjectId.");
+                }
+
                 bool isBranchVisible = ((ICheckRefs)RevisionGridControl).Contains(branch.ObjectId);
 
                 ToolStripItem toolStripItem = branchSelect.DropDownItems.Add(branch.Name);
@@ -2007,7 +2011,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         if (selectedRevisions.Count > 1 || (selectedRevisions.Count == 1 && selectedRevisions[0].IsArtificial))
         {
             GitRevision potentialRevision = selectedRevisions[0];
-            ObjectId? targetCommit = potentialRevision.IsArtificial ? RevisionGrid.CurrentCheckout : potentialRevision.ObjectId;
+            ObjectId targetCommit = potentialRevision.IsArtificial ? RevisionGrid.CurrentCheckout : potentialRevision.ObjectId;
             RevisionGrid.SetSelectedRevision(targetCommit);
         }
 
@@ -2112,7 +2116,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             case Command.GoToParent: RestoreFileStatusListFocus(() => RevisionGrid?.ExecuteCommand(RevisionGridControl.Command.GoToParent)); break;
             case Command.PullOrFetch: DoPull(pullAction: AppSettings.FormPullAction, isSilent: false); break;
             case Command.Push: UICommands.StartPushDialog(this, pushOnShow: ModifierKeys.HasFlag(Keys.Shift)); break;
-            case Command.CreateBranch: UICommands.StartCreateBranchDialog(this, RevisionGrid.LatestSelectedRevision?.ObjectId); break;
+            case Command.CreateBranch: UICommands.StartCreateBranchDialog(this, RevisionGrid.LatestSelectedRevision?.ObjectId ?? default); break;
             case Command.MergeBranches: UICommands.StartMergeBranchDialog(this, null); break;
             case Command.CreateTag: UICommands.StartCreateTagDialog(this, RevisionGrid.LatestSelectedRevision); break;
             case Command.Rebase: rebaseToolStripMenuItem.PerformClick(); break;
@@ -2428,9 +2432,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         {
             case "gotocommit":
                 Validates.NotNull(e.Data);
-                if (!Module.TryResolvePartialCommitId(e.Data, out ObjectId? commitId) || !RevisionGrid.SetSelectedRevision(commitId))
+                if (!Module.TryResolvePartialCommitId(e.Data, out ObjectId commitId) || !RevisionGrid.SetSelectedRevision(commitId))
                 {
-                    if (commitId is null)
+                    if (commitId.IsZero)
                     {
                         return;
                     }

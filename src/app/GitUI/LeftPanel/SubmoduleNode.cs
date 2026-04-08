@@ -81,20 +81,20 @@ internal sealed class SubmoduleNode : Node
             return;
         }
 
-        ObjectId? selected;
-        ObjectId? first;
+        ObjectId selected;
+        ObjectId first;
         if (IsCurrent)
         {
             // Get the current (most likely) selections from the grid
             IReadOnlyList<GitRevision> revs = UICommands.BrowseRepo?.GetSelectedRevisions() ?? [];
-            selected = revs.Count > 0 ? revs[0].ObjectId : null;
-            first = revs.Count > 1 ? revs[^1].ObjectId : null;
+            selected = revs.Count > 0 ? revs[0].ObjectId : default;
+            first = revs.Count > 1 ? revs[^1].ObjectId : default;
         }
         else
         {
             // Try select a "diff" from the expected commit to worktree for a submodule
             selected = ObjectId.WorkTreeId;
-            first = Info?.Detailed?.RawStatus?.OldCommit;
+            first = Info?.Detailed?.RawStatus?.OldCommit ?? default;
         }
 
         GitUICommands.LaunchBrowse(workingDir: Info!.Path.EnsureTrailingPathSeparator(), selected, first);

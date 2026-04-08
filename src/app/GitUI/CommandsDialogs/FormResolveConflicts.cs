@@ -775,7 +775,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private string GetLocalSideString() => _inTheMiddleOfRebase ? _theirs.Text : _ours.Text;
 
     private string GetShortHash(ConflictedFileData item)
-        => $"@{(item.ObjectId is null ? _deleted.Text : item.ObjectId.ToShortString())}";
+        => $"@{(item.ObjectId.IsZero ? _deleted.Text : item.ObjectId.ToShortString())}";
 
     private void ConflictedFiles_SelectionChanged(object? sender, EventArgs e)
     {

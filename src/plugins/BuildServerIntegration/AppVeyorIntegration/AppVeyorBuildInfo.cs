@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility.BuildServerIntegration;
+﻿using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
@@ -11,7 +11,7 @@ public sealed class AppVeyorBuildInfo : BuildInfo
     private int _buildProgressCount;
 
     public string? BuildId { get; set; }
-    public ObjectId? CommitId { get; set; }
+    public ObjectId CommitId { get; set; }
     public string? AppVeyorBuildReportUrl { get; set; }
     public string? Branch { get; set; }
     public string? BaseApiUrl { get; set; }

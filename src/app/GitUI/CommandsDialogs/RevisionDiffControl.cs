@@ -339,7 +339,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
             filterFileInGrid: FilterFileInGrid,
             openInFileTreeTab_AsBlame: OpenInFileTreeTab,
             refreshParent: RequestRefresh,
-            getCurrentRevision: () => _revisionGridInfo?.GetRevision(_revisionGridInfo.CurrentCheckout!)!,
+            getCurrentRevision: () => _revisionGridInfo?.GetRevision(_revisionGridInfo.CurrentCheckout)!,
             getLineNumber: () => BlameControl.Visible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine,
             getSelectedText: DiffText.GetSelectedText,
             getSupportLinePatching: () => DiffText.SupportLinePatching);
@@ -382,9 +382,9 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         base.Dispose(disposing);
     }
 
-    private string DescribeRevision(ObjectId? objectId, int maxLength = 0)
+    private string DescribeRevision(ObjectId objectId, int maxLength = 0)
     {
-        if (objectId is null)
+        if (objectId.IsZero)
         {
             // No parent at all, present as working directory
             return ResourceManager.TranslatedStrings.Workspace;
@@ -451,7 +451,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         }
 
         GitRevision? rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
-            ? _revisionGridInfo!.GetActualRevision(_revisionGridInfo.CurrentCheckout!)
+            ? _revisionGridInfo!.GetActualRevision(_revisionGridInfo.CurrentCheckout)
             : DiffFiles.SelectedItem.SecondRevision;
         await BlameControl.LoadBlameAsync(rev!, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGridInfo, revisionGridFileUpdate: this,
             controlToMask: null, DiffText.Encoding, line, cancellationTokenSequence: _viewChangesSequence);

@@ -104,7 +104,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             // Draw super project references (for submodules)
             DrawSuperprojectInfo(e, spi, revision, style, messageBounds, ref offset);
 
-            if (spi.Refs is not null && revision.ObjectId is not null &&
+            if (spi.Refs is not null && !revision.ObjectId.IsZero &&
                 spi.Refs.TryGetValue(revision.ObjectId, out IReadOnlyList<IGitRef>? refs))
             {
                 superprojectRefs.AddRange(refs);

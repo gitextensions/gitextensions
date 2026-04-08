@@ -468,7 +468,7 @@ public class FormCommitTests
         const string originalCommitMessage = "commit to be amended by reset soft";
         const string amendedCommitMessage = "replacement commit";
 
-        ObjectId? previousCommitId = _commands.Module.RevParse("HEAD");
+        ObjectId previousCommitId = _commands.Module.RevParse("HEAD");
         string originalCommitHash = _referenceRepository.CreateCommit(originalCommitMessage, "original content", "theFile");
 
         RunFormTest(form =>
@@ -500,7 +500,7 @@ public class FormCommitTests
             Application.DoEvents();
             AsyncTestHelper.JoinPendingOperations();
 
-            _commands.Module.RevParse("HEAD").Should().Be(previousCommitId!);
+            _commands.Module.RevParse("HEAD").Should().Be(previousCommitId);
             ta.Amend.Enabled.Should().BeFalse();
             ta.Amend.Checked.Should().BeFalse();
             ta.CommitAndPush.BackColor.ToArgb().Should().Be(forceBackColor);

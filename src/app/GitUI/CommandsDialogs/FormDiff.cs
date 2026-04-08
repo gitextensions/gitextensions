@@ -19,7 +19,7 @@ public partial class FormDiff : GitModuleForm
     private GitRevision? _firstRevision;
     private GitRevision? _secondRevision;
     private readonly GitRevision? _mergeBase;
-    private Lazy<ObjectId?> _currentHead;
+    private Lazy<ObjectId> _currentHead;
 
     private readonly IGitRevisionTester _revisionTester;
     private readonly IFileStatusListContextMenuController _revisionDiffContextMenuController;
@@ -61,16 +61,16 @@ public partial class FormDiff : GitModuleForm
         // _mergeBase is not changed if first/second is changed
         // similar, _currentHead is not updated if changed in Browse
         _currentHead = new(() => Module.GetCurrentCheckout());
-        ObjectId? firstMergeId = firstId.IsArtificial ? _currentHead.Value : firstId;
-        ObjectId? secondMergeId = secondId.IsArtificial ? _currentHead.Value : secondId;
-        if (firstMergeId is null || secondMergeId is null || firstMergeId == secondMergeId)
+        ObjectId firstMergeId = firstId.IsArtificial ? _currentHead.Value : firstId;
+        ObjectId secondMergeId = secondId.IsArtificial ? _currentHead.Value : secondId;
+        if (firstMergeId.IsZero || secondMergeId.IsZero || firstMergeId == secondMergeId)
         {
             _mergeBase = null;
         }
         else
         {
-            ObjectId? mergeBase = Module.GetMergeBase(firstMergeId, secondMergeId);
-            _mergeBase = mergeBase is not null ? new GitRevision(mergeBase) : null;
+            ObjectId mergeBase = Module.GetMergeBase(firstMergeId, secondMergeId);
+            _mergeBase = mergeBase.IsZero ? null : new GitRevision(mergeBase);
         }
 
         ckCompareToMergeBase.Text = $"{_ckCompareToMergeBase} ({_mergeBase?.ObjectId.ToShortString()})";
@@ -221,8 +221,8 @@ public partial class FormDiff : GitModuleForm
         if (form.ShowDialog(this) == DialogResult.OK)
         {
             displayStr = form.BranchName;
-            ObjectId? objectId = Module.RevParse(form.BranchName!);
-            revision = objectId is null ? null : new GitRevision(objectId);
+            ObjectId objectId = Module.RevParse(form.BranchName!);
+            revision = objectId.IsZero ? null : new GitRevision(objectId);
             PopulateDiffFiles();
         }
     }

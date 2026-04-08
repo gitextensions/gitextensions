@@ -28,7 +28,12 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
 
     public GitRevision(ObjectId objectId)
     {
-        ObjectId = objectId ?? throw new ArgumentNullException(nameof(objectId));
+        if (objectId.IsZero)
+        {
+            throw new ArgumentException("ObjectId must not be the default (zero) value.", nameof(objectId));
+        }
+
+        ObjectId = objectId;
     }
 
     /// <summary>
@@ -56,7 +61,7 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
     /// </remarks>
     public IReadOnlyList<ObjectId>? ParentIds { get; set; }
 
-    public ObjectId? TreeGuid { get; set; }
+    public ObjectId TreeId { get; set; }
 
     public string? Author { get; set; }
     public string? AuthorEmail { get; set; }
@@ -134,7 +139,7 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
 
     public bool HasParent => ParentIds?.Count > 0;
 
-    public ObjectId? FirstParentId => HasParent ? ParentIds?[0] : null;
+    public ObjectId FirstParentId => HasParent ? ParentIds![0] : default;
 
     #region INotifyPropertyChanged
 

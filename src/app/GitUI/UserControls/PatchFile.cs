@@ -10,7 +10,7 @@ public sealed class PatchFile
 
     public string? Action { get; set; }
     public string? Name { get; set; }
-    public ObjectId? ObjectId { get; set; }
+    public ObjectId ObjectId { get; set; }
 
     public string? Author { get; set; }
 

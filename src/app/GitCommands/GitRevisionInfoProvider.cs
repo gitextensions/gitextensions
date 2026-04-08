@@ -31,7 +31,7 @@ public sealed class GitRevisionInfoProvider : IGitRevisionInfoProvider
     {
         ArgumentNullException.ThrowIfNull(item);
 
-        if (item.ObjectId is null)
+        if (item.ObjectId.IsZero)
         {
             throw new ArgumentException("Item must have a valid identifier", nameof(item));
         }

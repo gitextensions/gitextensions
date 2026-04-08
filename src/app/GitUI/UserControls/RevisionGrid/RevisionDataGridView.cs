@@ -854,9 +854,9 @@ public sealed partial class RevisionDataGridView : DataGridView
         return _revisionGraph.TryGetNode(objectId, out RevisionGraphRevision? node) ? node.GitRevision : null;
     }
 
-    public int? TryGetRevisionIndex(ObjectId? objectId)
+    public int? TryGetRevisionIndex(ObjectId objectId)
     {
-        return objectId is not null && _revisionGraph.TryGetRowIndex(objectId, out int index) ? index : null;
+        return !objectId.IsZero && _revisionGraph.TryGetRowIndex(objectId, out int index) ? index : null;
     }
 
     public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
@@ -897,10 +897,10 @@ public sealed partial class RevisionDataGridView : DataGridView
 
                 break;
             case Keys.Control | Keys.C:
-                IReadOnlyList<ObjectId>? selectedRevisions = SelectedObjectIds;
-                if (selectedRevisions?.Count is > 0)
+                IReadOnlyList<ObjectId>? selectedObjectIds = SelectedObjectIds;
+                if (selectedObjectIds?.Count is > 0)
                 {
-                    ClipboardUtil.TrySetText(string.Join(Environment.NewLine, selectedRevisions));
+                    ClipboardUtil.TrySetText(string.Join(Environment.NewLine, selectedObjectIds));
                 }
 
                 break;

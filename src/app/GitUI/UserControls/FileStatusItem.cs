@@ -5,7 +5,7 @@ namespace GitUI.UserControls;
 
 public sealed class FileStatusItem
 {
-    public FileStatusItem(GitRevision? firstRev, GitRevision secondRev, GitItemStatus item, ObjectId? baseA = null, ObjectId? baseB = null)
+    public FileStatusItem(GitRevision? firstRev, GitRevision secondRev, GitItemStatus item, ObjectId baseA = default, ObjectId baseB = default)
     {
         FirstRevision = firstRev;
         SecondRevision = secondRev ?? throw new ArgumentNullException(nameof(secondRev));
@@ -29,12 +29,12 @@ public sealed class FileStatusItem
     /// <summary>
     /// If ranges are selected, the first commit (base) for <see cref="FirstRevision"/> (head).
     /// </summary>
-    public ObjectId? BaseA { get; }
+    public ObjectId BaseA { get; }
 
     /// <summary>
     /// If ranges are selected, the first commit (base) for <see cref="SecondRevision"/> (head).
     /// </summary>
-    public ObjectId? BaseB { get; }
+    public ObjectId BaseB { get; }
 
     /// <summary>
     /// The status item in the list.

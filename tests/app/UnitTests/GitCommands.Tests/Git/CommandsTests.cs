@@ -53,12 +53,10 @@ public partial class CommandsTests
     public void BranchCmd()
     {
         // TODO split this into BranchCmd and CheckoutCmd
-
-        Commands.Branch("branch", "revision", checkout: true).Arguments.Should().Be("checkout -b \"branch\" \"revision\"");
-        Commands.Branch("branch", "revision", checkout: false).Arguments.Should().Be("branch \"branch\" \"revision\"");
-        Commands.Branch("branch", null!, checkout: true).Arguments.Should().Be("checkout -b \"branch\"");
-        Commands.Branch("branch", "", checkout: true).Arguments.Should().Be("checkout -b \"branch\"");
-        Commands.Branch("branch", "  ", checkout: true).Arguments.Should().Be("checkout -b \"branch\"");
+        ObjectId objectId = ObjectId.Random();
+        Commands.Branch("branch", objectId, checkout: true).Arguments.Should().Be($"checkout -b \"branch\" {objectId}");
+        Commands.Branch("branch", objectId, checkout: false).Arguments.Should().Be($"branch \"branch\" {objectId}");
+        Commands.Branch("branch", default, checkout: true).Arguments.Should().Be("checkout -b \"branch\"");
     }
 
     [Test]

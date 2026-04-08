@@ -24,6 +24,6 @@ internal sealed class BranchPathNode : BasePathNode
     public void CreateBranch()
     {
         string newBranchNamePrefix = FullPath + PathSeparator;
-        UICommands.StartCreateBranchDialog(ParentWindow(), objectId: null, newBranchNamePrefix);
+        UICommands.StartCreateBranchDialog(ParentWindow(), objectId: default, newBranchNamePrefix);
     }
 }

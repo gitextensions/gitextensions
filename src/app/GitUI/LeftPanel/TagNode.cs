@@ -8,7 +8,7 @@ namespace GitUI.LeftPanel;
 [DebuggerDisplay("(Tag) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
 internal sealed class TagNode : BaseRevisionNode, IGitRefActions, ICanDelete
 {
-    public TagNode(Tree tree, in ObjectId? objectId, string fullPath, bool visible)
+    public TagNode(Tree tree, in ObjectId objectId, string fullPath, bool visible)
         : base(tree, fullPath, visible)
     {
         ObjectId = objectId;

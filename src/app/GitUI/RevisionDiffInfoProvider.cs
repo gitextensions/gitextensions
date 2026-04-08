@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
@@ -105,7 +105,7 @@ public static class RevisionDiffInfoProvider
 
         static string GetParentRef(GitRevision revision)
         {
-            return revision.FirstParentId?.ToString() ?? revision.Guid + '^';
+            return revision.FirstParentId.IsZero ? revision.Guid + '^' : revision.FirstParentId.ToString();
         }
     }
 }

@@ -54,7 +54,7 @@ internal abstract class BaseRevisionTree : Tree
             foreach (BaseRevisionNode node in Nodes.DepthEnumerator<BaseRevisionNode>())
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                if (node.ObjectId is null)
+                if (node.ObjectId.IsZero)
                 {
                     continue;
                 }
