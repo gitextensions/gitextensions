@@ -27,7 +27,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Runtime environment
     </td>
     <td>
-      MS Windows 7SP1+ // <a href="https://dotnet.microsoft.com/download/dotnet/9.0" target=_blank>.NET Desktop 10.0 SDK</a>
+      MS Windows 10+ // <a href="https://dotnet.microsoft.com/download/dotnet/10.0" target=_blank>.NET Desktop 10.0 SDK</a>
     </td>
   </tr>
   <tr>
