@@ -2,6 +2,14 @@
 
 <https://github.blog/changelog/2025-01-21-custom-repository-instructions-are-now-available-for-copilot-on-github-com-public-preview/>
 
+## Repository setup
+
+This repository uses git submodules (under `externals/`). After cloning or creating a new worktree, always run:
+
+```shell
+git submodule update --init --recursive
+```
+
 ## General
 
 * Make only high confidence suggestions when reviewing code changes.
@@ -14,9 +22,10 @@
 
 * Add const with speaking name instead of using magic numbers or repeated string literals. Avoid hard-to-maintain comments which contain the magic number again.
 * When a string literal is used more than once in a class, extract it into a `const` field with a descriptive name.
-* Omit comments which just describe _what_ is done. In situations where a comment may be necessary describe _why_ an implementation was chosen.
+* When writing new comments, describe _why_ an implementation was chosen rather than _what_ is done.
+* Do not delete or modify existing comments unless they are factually incorrect. These guidelines apply to new code only.
 
-# Xml doc comments
+## XML Doc Comments
 
 * Use XML documentation comments for non-private APIs, including properties, methods, and classes. Do not add XML documentation comments to private members.
 * Do not add `/// <inheritdoc />` nor other xmldoc when just implementing interface or abstract members.
@@ -35,12 +44,12 @@ For example:
 ## Formatting
 
 * Apply code-formatting style defined in `.editorconfig`.
-* Prefer file-scoped namespace declarations and single-line using directives.
+* Prefer file-scoped namespace declarations and single-line `using` declarations.
 * Insert a newline before the opening curly brace of any code block (e.g., after `if`, `for`, `while`, `foreach`, `using`, `try`, etc.).
 * Ensure that the final return statement of a method is on its own line.
 * Use pattern matching and switch expressions wherever possible.
-* Use `nameof` instead of string literals when referring to member names.
-* Local methods must be 
+* Use `nameof` instead of string literals when referring to code symbols.
+* Local methods must be
     - placed at the end of the parent method,
     - sorted in alphabetical order,
     - preceded with a `return` statement.
@@ -59,6 +68,7 @@ For example:
   ```
 * Do not add trailing whitespace to any lines (StyleCop SA1028).
 * Add blank lines after closing braces when required (StyleCop SA1513).
+* Prefer C# raw (`"""`) string literals for multi-line strings.
 
 ## Variable Declarations
 
@@ -71,6 +81,22 @@ For example:
 * Declare variables non-nullable, and check for `null` at entry points.
 * Always use `is null` or `is not null` instead of `== null` or `!= null`.
 * Trust the C# null annotations and don't add null checks when the type system says a value cannot be null.
+* Avoid null-forgiving (`!`) suppressions. Prefer making nullability explicit in the type system — for example, by declaring a parameter or property as nullable, adding a null guard, or restructuring code so that null states are unrepresentable. Use `!` only as a last resort when the type system cannot express a known invariant.
+* When modifying code that contains existing `!` suppressions, look for opportunities to remove them safely. Use `Validates.NotNull` for runtime null checks where a value is expected to be non-null but the type system cannot prove it.
+
+## WinForms UI
+
+* Follow the naming conventions in `.github/ui_design_guidelines.md` for all WinForms controls:
+  - Label: `lbl` prefix (e.g. `lblMainText`)
+  - Button: `btn` prefix (e.g. `btnAccept`)
+  - TextBox: `txt` prefix (e.g. `txtBranchName`)
+  - ComboBox: `cbx` prefix (e.g. `cbxOrders`)
+  - CheckBox: `chk` prefix (e.g. `chkOpenWorktree`)
+  - RadioButton: `rb` prefix (e.g. `rbCheckoutExisting`)
+  - GroupBox: `gbx` prefix (e.g. `gbxOrderDetails`)
+  - TableLayoutPanel: `tlpnl` prefix (e.g. `tlpnlMain`)
+  - FlowLayoutPanel: `flpnl` prefix (e.g. `flpnlLocalOptions`)
+  - LinkLabel: `lnk` prefix (e.g. `lnkTokenManagement`)
 
 ## Testing
 
@@ -80,9 +106,26 @@ For example:
   For example, a test for a method "MyMethod" should be named as "MyMethod_should_return_expected".
 * Do not repeat in a comment what the test name already expresses.
 * Use `NSubstitute` for mocking.
-* Use `FluentAssertions` for assertions, i.e. do not use `ClassicAssert`.
+* Use `AwesomeAssertions` for assertions, i.e. do not use `ClassicAssert`.
+* When you encounter a flaky test failure, take the time to understand the root cause and fix it. Do not dismiss it as a pre-existing issue. Flaky tests erode confidence and should be fixed or removed.
 
 ## Commit Messages
 
 * Use https://www.conventionalcommits.org/en/v1.0.0/ for commit messages.
 * Note especially that changes in directory src/app/GitExtensions.Extensibility affects the version for the plugin interface. This must be annotated in the commit message.
+
+## Translations
+
+* When adding or modifying UI elements (forms, controls, toolbar items, menu items, or `TranslationString` fields), the English translation file `src/app/GitUI/Translation/English.xlf` must be updated.
+* Run `.\update-loc.cmd` from the repository root to regenerate translation files. This requires a successful build first (`dotnet build /v:q`).
+* The script runs `TranslationApp`, which discovers all translatable types via reflection, regenerates `English.xlf`, and stages the changes.
+* CI will **fail** if `English.xlf` is out of date. Always run `update-loc.cmd` and commit the updated `.xlf` file alongside your code changes.
+* Do not manually edit `.xlf` files — they are generated.
+
+## Git Commands
+
+* All interactive git operations should be invoked through `IGitModule`, with unit tests added.
+* Structure git command arguments using `Commands` (in `GitCommands.Git`), which returns `IGitCommand` instances via the private `GitCommand` record. `IGitCommand` declares whether the command accesses a remote and whether it changes repo state.
+* Execute commands with UI feedback through `GitUICommands` (implements `IGitUICommands`). Use `StartCommandLineProcessDialog(owner, IGitCommand)` to run a structured command — it automatically selects the right process dialog (remote vs local) and fires `RepoChangedNotifier` based on `IGitCommand.ChangesRepoState`. For operations that need a dedicated form, use the existing `Start*Dialog` methods on `GitUICommands`.
+* Prefer the `-z` flag when available (e.g. `git worktree list`, `git status`) to use NUL-delimited output, which avoids issues with newlines or special characters in paths.
+* When parsing NUL or line-delimited git output that contains key-value pairs (e.g. `worktree /path/to/dir`), split on the first space only to handle values that contain spaces.

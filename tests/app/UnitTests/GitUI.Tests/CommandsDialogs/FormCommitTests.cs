@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.Design;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
@@ -13,7 +13,7 @@ namespace GitUITests.CommandsDialogs;
 public class FormCommitTests
 {
     private IGitModule _gitModule = Substitute.For<IGitModule>();
-    private FormCommit _formCommit;
+    private FormCommit _formCommit = null!;
     [SetUp]
     public void Setup()
     {

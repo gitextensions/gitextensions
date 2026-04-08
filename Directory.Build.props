@@ -70,6 +70,9 @@
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)eng\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)eng\BannedSymbols.txt">
+      <Visible>False</Visible>
+    </AdditionalFiles>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)eng\vs-threading.MainThreadAssertingMethods.txt">
       <Visible>False</Visible>
     </AdditionalFiles>

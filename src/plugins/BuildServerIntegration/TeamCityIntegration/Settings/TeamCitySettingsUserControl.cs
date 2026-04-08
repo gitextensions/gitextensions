@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.Composition;
 using System.Text.RegularExpressions;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces.BuildServerIntegration;
@@ -96,7 +97,7 @@ public partial class TeamCitySettingsUserControl : GitExtensionsControl, IBuildS
         }
         catch
         {
-            MessageBox.Show(this, _failToLoadProjectMessage.Text, _failToLoadProjectCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, _failToLoadProjectMessage.Text, _failToLoadProjectCaption.Text);
         }
     }
 
@@ -135,7 +136,7 @@ public partial class TeamCitySettingsUserControl : GitExtensionsControl, IBuildS
             }
         }
 
-        MessageBox.Show(this, _failToExtractDataFromClipboardMessage.Text, _failToExtractDataFromClipboardCaption.Text,
+        MessageBoxes.Show(this, _failToExtractDataFromClipboardMessage.Text, _failToExtractDataFromClipboardCaption.Text,
             MessageBoxButtons.OK, MessageBoxIcon.Warning);
     }
 }

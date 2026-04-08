@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitExtensions.Extensibility;
 
 namespace GitUIPluginInterfacesTests;
@@ -6,7 +6,7 @@ namespace GitUIPluginInterfacesTests;
 [TestFixture]
 public class FontParserTests
 {
-    private Font _defaultFont;
+    private Font _defaultFont = null!;
 
     [SetUp]
     public void Setup()

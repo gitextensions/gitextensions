@@ -10,7 +10,6 @@ using GitCommands;
 
 namespace BugReporter.Info;
 
-[Serializable]
 public class GeneralInfo
 {
     /// <summary>

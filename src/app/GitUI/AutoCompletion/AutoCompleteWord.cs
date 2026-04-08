@@ -31,7 +31,7 @@ public class AutoCompleteWord : IEquatable<AutoCompleteWord?>
         return string.Equals(Word, other.Word);
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         if (obj is null)
         {

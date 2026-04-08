@@ -34,7 +34,7 @@ public class GitLocalExcludeModel : Translate, IGitIgnoreDialogModel
 
     public string FormCaption => _editLocalExcludeTitle.Text;
 
-    public string ExcludeFile => Path.Combine(_module.ResolveGitInternalPath("info"), "exclude");
+    public string ExcludeFile => Path.Join(_module.ResolveGitInternalPath("info"), "exclude");
 
     public string FileOnlyInWorkingDirSupported => _localExcludeOnlyInWorkingDirSupported.Text;
 

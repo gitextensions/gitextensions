@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
@@ -25,6 +25,8 @@ public static class ThemeModule
         DefaultHighlightingStrategy strategy = HighlightingManager.Manager.DefaultHighlighting;
         strategy.SetColorFor("Default",
             new HighlightColor(SystemColors.WindowText, AppColor.EditorBackground.GetThemeColor(), bold: false, italic: false, adaptable: false));
+        strategy.SetColorFor("Selection",
+            new HighlightColor(SystemColors.WindowText, AppColor.Selection.GetThemeColor(), bold: false, italic: false, adaptable: false));
         strategy.SetColorFor("LineNumbers",
             new HighlightColor(SystemColors.GrayText, AppColor.LineNumberBackground.GetThemeColor(), bold: false, italic: false, adaptable: false));
         strategy.SetColorFor("LineNumberSelected",

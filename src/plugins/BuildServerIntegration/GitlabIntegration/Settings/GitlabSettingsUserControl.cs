@@ -15,7 +15,7 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings;
 public partial class GitlabSettingsUserControl : GitExtensionsControl, IBuildServerSettingsUserControl
 {
     private readonly GitlabRemoteParser _remoteParser = new();
-    private IEnumerable<string?> _remotes;
+    private IEnumerable<string?> _remotes = null!;
     private string? _repositoryNamespace;
     private string? _repositoryName;
 

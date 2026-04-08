@@ -13,7 +13,7 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages;
 [PartCreationPolicy(CreationPolicy.NonShared)]
 internal class MockGenericBuildServerAdapter : IBuildServerAdapter
 {
-    public string UniqueKey { get; }
+    public string UniqueKey { get; } = null!;
 
     public void Dispose()
     {

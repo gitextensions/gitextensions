@@ -13,6 +13,7 @@ public enum AppColor
     EditorBackground,
     LineNumberBackground,
     AuthoredHighlight,
+    Selection,
     HighlightAllOccurences,
     InactiveSelectionHighlight,
     GraphBranch1,

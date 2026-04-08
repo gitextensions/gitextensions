@@ -1,10 +1,7 @@
-﻿#nullable enable
-
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.DiffMergeTools;
 using GitCommands.Git;
-using GitCommands.Utils;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI.Theming;
@@ -188,7 +185,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
             Validates.NotNull(SshSettingsPage);
             if (SshSettingsPage.AutoFindPuttyPaths())
             {
-                MessageBox.Show(this, _puttyFoundAuto.Text, _putty, MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxes.Show(this, _puttyFoundAuto.Text, _putty, MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -211,12 +208,12 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
     {
         if (!CheckSettingsLogic.SolveLinuxToolsDir())
         {
-            MessageBox.Show(this, _linuxToolsShNotFound.Text, _linuxToolsShNotFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _linuxToolsShNotFound.Text, _linuxToolsShNotFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             PageHost.GotoPage(GitSettingsPage.GetPageReference());
             return;
         }
 
-        MessageBox.Show(this, string.Format(_shCanBeRun.Text, AppSettings.LinuxToolsDir), _shCanBeRunCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        MessageBoxes.Show(this, string.Format(_shCanBeRun.Text, AppSettings.LinuxToolsDir), _shCanBeRunCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
         PageHost.LoadAll(); // apply settings to dialog controls (otherwise the later called SaveAndRescan_Click would overwrite settings again)
         SaveAndRescan_Click(this, EventArgs.Empty);
     }
@@ -270,13 +267,13 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
     {
         if (!CheckSettingsLogic.SolveGitCommand())
         {
-            MessageBox.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _solveGitCommandFailed.Text, _solveGitCommandFailedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
             PageHost.GotoPage(GitSettingsPage.GetPageReference());
             return;
         }
 
-        MessageBox.Show(this, string.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+        MessageBoxes.Show(this, string.Format(_gitCanBeRun.Text, AppSettings.GitCommandValue), _gitCanBeRunCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
 
         PageHost.GotoPage(GitSettingsPage.GetPageReference());
         SaveAndRescan_Click(this, EventArgs.Empty);
@@ -316,7 +313,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
                 }
                 catch (Exception e)
                 {
-                    MessageBox.Show(this, e.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(this, e.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
 
@@ -331,7 +328,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
                 yield return CheckDiffToolConfiguration;
                 yield return CheckTranslationConfigSettings;
 
-                if (EnvUtils.RunningOnWindows())
+                if (OperatingSystem.IsWindows())
                 {
                     yield return CheckGitExtensionsInstall;
                     yield return CheckGitExtensionRegistrySettings;
@@ -508,7 +505,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     private bool CheckGitExtensionRegistrySettings()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return true;
         }
@@ -534,7 +531,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     private bool CheckGitExtensionsInstall()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return true;
         }

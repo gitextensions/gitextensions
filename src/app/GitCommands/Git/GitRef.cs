@@ -108,7 +108,7 @@ public sealed class GitRef : IGitRef
     }
 
     public string CompleteName { get; }
-    public bool IsSelected { get; set; } = false;
+    public bool IsSelected { get; set; }
     public bool IsSelectedHeadMergeSource { get; set; }
 
     public bool IsTag => _type == GitRefType.Tag;

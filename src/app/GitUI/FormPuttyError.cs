@@ -26,7 +26,7 @@ public partial class FormPuttyError : GitExtensionsForm
 
     private void LoadSSHKey_Click(object sender, EventArgs e)
     {
-        string pathLoaded = BrowseForPrivateKey.BrowseAndLoad(this);
+        string? pathLoaded = BrowseForPrivateKey.BrowseAndLoad(this);
         if (!string.IsNullOrEmpty(pathLoaded))
         {
             KeyPath = pathLoaded;

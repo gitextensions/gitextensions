@@ -4,9 +4,6 @@
     <OutputType>WinExe</OutputType>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <ApplicationIcon>Resources\git-extensions-logo.ico</ApplicationIcon>
-
-    <!-- To be removed when NRT annotations are complete -->
-    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

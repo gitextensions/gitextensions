@@ -1,0 +1,42 @@
+# Format code with CodeFormatter
+9af8c0909790755a136dd080bcda69f05121c9a2
+
+# Add StyleCop.Analyzers
+8d2d71ba426dec75e3df2bd3438cbbdcc7581da6
+
+# Use expression bodies
+649b27841de032b7bcc239373df5e50076be6d7f
+
+# Fix SA1028 (Code should not contain trailing whitespace)
+bc286f5c6077c2c44b5ddf685177aebf49340149
+
+# Fixup namespace of GitExtUtils files
+266c19240f4677dd50ab1011ecf8d2b69207da86
+
+# Enable <ImplicitUsings> and clean unneeded namespace declarations (#10243)
+6eab7392839c4d103bad1581fba5eaf6f008d766
+eafeeab5a5538e2d52076096d4c59dde174d48ec
+
+# Remove use of `var` to follow project code style (#11276)
+ba7b679180c46ce39948c6bf17386b17d340c1a0
+
+# IDE0008 Use explicit type instead of var (#11284)
+89962d9f88b7efd8995492e2565e2ba1693c30e3
+
+# Update namespaces
+4d609aaaedaf7250fbf9cacd959aac79cc0219ca
+
+# IDE000028 Collection expressions (#11372)
+1cfb0e4441e260ff252f258b08cb403df76801e5
+
+# Rename namespaces
+912369eda6c58a54ab595b46c596a5c69d4006d8
+
+# chore: file scoped namespace (#12550)
+1cf12ebc43bbc81a9bafe1178d38624be2024011
+
+# style: IDE0305: Collection initialization can be simplified
+87c44feb9f55802e42bacac9cd5f6c987a28b49a
+
+# style: IDE0300: Collection initialization can be simplified
+44073ffb3f59288d3dbac0e3c6c6a17c253d08fb

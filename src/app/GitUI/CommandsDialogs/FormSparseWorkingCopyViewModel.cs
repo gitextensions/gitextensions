@@ -104,7 +104,7 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
 
     public void FirePropertyChanged()
     {
-        PropertyChanged(this, new PropertyChangedEventArgs(""));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(""));
     }
 
     /// <summary>
@@ -120,7 +120,7 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
     /// </summary>
     public FileInfo GetPathToSparseCheckoutFile()
     {
-        return new FileInfo(Path.Combine(_gitCommands.Module.ResolveGitInternalPath("info"), "sparse-checkout"));
+        return new FileInfo(Path.Join(_gitCommands.Module.ResolveGitInternalPath("info"), "sparse-checkout"));
     }
 
     /// <summary>
@@ -202,7 +202,7 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
     /// <summary>
     /// Fires on any prop change. Lightweight reactive.
     /// </summary>
-    public event PropertyChangedEventHandler PropertyChanged = delegate { };
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     /// Make sure WC gets unsparsed when turning off sparse.

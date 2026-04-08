@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace GitCommands.Settings;
 
@@ -48,13 +48,13 @@ public static class Setting
         {
             get
             {
-                object storedValue = GetValue(Name);
+                object? storedValue = GetValue(Name);
 
                 if (default(T) is null)
                 {
                     if (Type.GetTypeCode(typeof(T)) != TypeCode.String)
                     {
-                        return (T?)storedValue!;
+                        return (T?)storedValue;
                     }
                 }
 
@@ -68,7 +68,7 @@ public static class Setting
 
             set
             {
-                object storedValue = GetValue(Name);
+                object? storedValue = GetValue(Name);
 
                 if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
                 {
@@ -111,7 +111,7 @@ public static class Setting
                     }
                 }
 
-                object storedValue = GetValue(Name);
+                object? storedValue = GetValue(Name);
 
                 return storedValue is null;
             }
@@ -138,8 +138,8 @@ public static class Setting
                 case TypeCode.Object:
                     try
                     {
-                        return JsonConvert
-                            .DeserializeObject<T>(stringValue);
+                        return JsonSerializer
+                            .Deserialize<T>(stringValue);
                     }
                     catch
                     {
@@ -176,8 +176,8 @@ public static class Setting
                     stringValue = (string?)value;
                     break;
                 case TypeCode.Object:
-                    stringValue = JsonConvert
-                        .SerializeObject(value);
+                    stringValue = JsonSerializer
+                        .Serialize(value);
                     break;
                 default:
                     TypeConverter converter = TypeDescriptor

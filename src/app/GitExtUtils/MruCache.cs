@@ -8,7 +8,7 @@ namespace GitExtUtils;
 /// </summary>
 /// <typeparam name="TKey">Type of keys in the cache.</typeparam>
 /// <typeparam name="TValue">Type of values in the cache.</typeparam>
-public sealed class MruCache<TKey, TValue> where TValue : notnull
+public sealed class MruCache<TKey, TValue> where TKey : notnull where TValue : notnull
 {
     private readonly Dictionary<TKey, LinkedListNode<Entry>> _nodeByKey;
     private readonly LinkedList<Entry> _entries = new();
@@ -48,7 +48,7 @@ public sealed class MruCache<TKey, TValue> where TValue : notnull
     {
         Entry entry = new(key, value);
 
-        if (_nodeByKey.TryGetValue(key, out LinkedListNode<MruCache<TKey, TValue>.Entry> node))
+        if (_nodeByKey.TryGetValue(key, out LinkedListNode<MruCache<TKey, TValue>.Entry>? node))
         {
             node.Value = entry;
             _entries.Remove(node);
@@ -58,9 +58,9 @@ public sealed class MruCache<TKey, TValue> where TValue : notnull
         {
             if (_entries.Count == Capacity)
             {
-                LinkedListNode<MruCache<TKey, TValue>.Entry> last = _entries.Last;
+                LinkedListNode<MruCache<TKey, TValue>.Entry>? last = _entries.Last;
                 _entries.RemoveLast();
-                _nodeByKey.Remove(last.Value.Key);
+                _nodeByKey.Remove(last!.Value.Key);
             }
 
             node = _entries.AddFirst(entry);
@@ -85,7 +85,7 @@ public sealed class MruCache<TKey, TValue> where TValue : notnull
     /// <returns><c>true</c> if <paramref name="key"/> exists in the cache, otherwise <c>false</c>.</returns>
     public bool TryGetValue(TKey key, [NotNullWhen(returnValue: true)] out TValue? value)
     {
-        if (!_nodeByKey.TryGetValue(key, out LinkedListNode<MruCache<TKey, TValue>.Entry> node))
+        if (!_nodeByKey.TryGetValue(key, out LinkedListNode<MruCache<TKey, TValue>.Entry>? node))
         {
             value = default;
             return false;
@@ -108,7 +108,7 @@ public sealed class MruCache<TKey, TValue> where TValue : notnull
     [ContractAnnotation("=>false,value:null")]
     public bool TryRemove(TKey key, [NotNullWhen(returnValue: true)] out TValue? value)
     {
-        if (!_nodeByKey.TryGetValue(key, out LinkedListNode<MruCache<TKey, TValue>.Entry> node))
+        if (!_nodeByKey.TryGetValue(key, out LinkedListNode<MruCache<TKey, TValue>.Entry>? node))
         {
             value = default;
             return false;

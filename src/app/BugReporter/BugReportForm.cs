@@ -11,6 +11,7 @@ using System.Text.RegularExpressions;
 using BugReporter.Properties;
 using BugReporter.Serialization;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Translations;
 using GitExtensions.Extensibility.Translations.Xliff;
 using GitExtUtils.GitUI;
@@ -39,7 +40,7 @@ Send report?");
     private static readonly GitHubUrlBuilder UrlBuilder;
     private SerializableException? _lastException;
     private Report? _lastReport;
-    private string _exceptionInfo;
+    private string? _exceptionInfo;
     private string? _environmentInfo;
 
     [GeneratedRegex(@"\s|\r|\n", RegexOptions.ExplicitCapture)]
@@ -58,7 +59,7 @@ Send report?");
         Icon = Resources.GitExtensionsLogoIcon;
 
         // Scaling
-        exceptionTypeLabel.Image = DpiUtil.Scale(exceptionTypeLabel.Image);
+        exceptionTypeLabel.Image = DpiUtil.Scale(exceptionTypeLabel.Image!);
         exceptionDetails.PropertyColumnWidth = DpiUtil.Scale(101);
         exceptionDetails.InformationColumnWidth = DpiUtil.Scale(350);
 
@@ -77,7 +78,7 @@ Send report?");
         toolTip.SetToolTip(quitButton, _toolTipQuit.Text);
 
         // ToDo: Displaying report contents properly requires some more work.
-        mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]);
+        mainTabs.TabPages.Remove(mainTabs.TabPages["reportContentsTabPage"]!);
     }
 
     public DialogResult ShowDialog(IWin32Window? owner, SerializableException exception, string exceptionInfo, string environmentInfo, bool canIgnore, bool showIgnore, bool focusDetails)
@@ -156,13 +157,13 @@ Send report?");
         bool hasUserText = CheckContainsInfo(descriptionTextBox.Text);
         if (!hasUserText)
         {
-            MessageBox.Show(this, _noReproStepsSuppliedErrorMessage.Text, _title.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, _noReproStepsSuppliedErrorMessage.Text, _title.Text);
             descriptionTextBox.Focus();
             return;
         }
 
-        if (MessageBox.Show(this, _submitGitHubMessage.Text, _title.Text,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
+        if (!MessageBoxes.Confirm(this, _submitGitHubMessage.Text, _title.Text,
+                MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2))
         {
             return;
         }

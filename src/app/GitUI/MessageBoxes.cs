@@ -59,9 +59,7 @@ public class MessageBoxes : Translate
         Translator.Translate(this, AppSettings.CurrentTranslation);
     }
 
-    private static MessageBoxes? instance;
-
-    private static MessageBoxes Instance => instance ??= new();
+    private static MessageBoxes Instance => field ??= new();
 
     public static void RevisionFilteredInGrid(IWin32Window? owner, ObjectId objectId)
         => ShowError(owner, string.Format(Instance._cannotFindRevisionFilter.Text, objectId.ToShortString()), Instance._cannotFindRevisionCaption.Text);
@@ -146,9 +144,41 @@ public class MessageBoxes : Translate
     public static void ShowError(IWin32Window? owner, string text, string? caption = null)
         => Show(owner, text, caption ?? TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
 
-    private static bool Confirm(IWin32Window? owner, string text, string caption)
-        => Show(owner, text, caption, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
+    public static bool Confirm(IWin32Window? owner, string text, string caption, MessageBoxIcon icon = MessageBoxIcon.Question, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1)
+        => Show(owner, text, caption, MessageBoxButtons.YesNo, icon, defaultButton) == DialogResult.Yes;
 
-    private static DialogResult Show(IWin32Window? owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
-        => MessageBox.Show(owner ?? Form.ActiveForm, text, caption, buttons, icon);
+    /// <summary>
+    ///  Shows a message box with the specified parameters.
+    /// </summary>
+    /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
+    public static DialogResult Show(IWin32Window? owner, string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton = MessageBoxDefaultButton.Button1)
+        => GitExtensions.Extensibility.MessageBoxes.Show(owner, text, caption, buttons, icon, defaultButton);
+
+    /// <summary>
+    ///  Shows a message box without specifying an icon.
+    /// </summary>
+    /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
+    public static DialogResult Show(IWin32Window? owner, string text, string caption, MessageBoxButtons buttons)
+        => GitExtensions.Extensibility.MessageBoxes.Show(owner, text, caption, buttons);
+
+    /// <summary>
+    ///  Shows a message box without an explicit owner window.
+    /// </summary>
+    /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
+    public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon, MessageBoxDefaultButton defaultButton)
+        => GitExtensions.Extensibility.MessageBoxes.Show(text, caption, buttons, icon, defaultButton);
+
+    /// <summary>
+    ///  Shows a message box without an explicit owner window.
+    /// </summary>
+    /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
+    public static DialogResult Show(string text, string caption, MessageBoxButtons buttons, MessageBoxIcon icon)
+        => GitExtensions.Extensibility.MessageBoxes.Show(text, caption, buttons, icon);
+
+    /// <summary>
+    ///  Shows a message box without an explicit owner window or icon.
+    /// </summary>
+    /// <returns>The <see cref="DialogResult"/> selected by the user.</returns>
+    public static DialogResult Show(string text, string caption, MessageBoxButtons buttons)
+        => GitExtensions.Extensibility.MessageBoxes.Show(text, caption, buttons);
 }

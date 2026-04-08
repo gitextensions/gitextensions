@@ -52,7 +52,7 @@ internal abstract class Node : NodeBase, INode
 
     protected virtual string DisplayText()
     {
-        return ToString();
+        return ToString()!;
     }
 
     // Override to provide a unique node name (key), otherwise DisplayText is used
@@ -97,7 +97,7 @@ internal abstract class Node : NodeBase, INode
 
     public static Node GetNode(TreeNode treeNode)
     {
-        return (Node)treeNode.Tag;
+        return (Node)treeNode.Tag!;
     }
 
     internal static T? GetNodeSafe<T>(TreeNode? treeNode) where T : class, INode

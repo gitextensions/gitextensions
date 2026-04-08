@@ -151,9 +151,6 @@
       <Component Id="Microsoft.ApplicationInsights.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Microsoft.ApplicationInsights.dll" />
       </Component>
-      <Component Id="Microsoft.Toolkit.HighPerformance.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Microsoft.Toolkit.HighPerformance.dll" />
-      </Component>
       <Component Id="Microsoft.VisualStudio.Composition.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Microsoft.VisualStudio.Composition.dll" />
       </Component>
@@ -175,9 +172,6 @@
       </Component>
       <Component Id="Microsoft.WindowsAPICodePack.Shell.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Microsoft.WindowsAPICodePack.Shell.dll" />
-      </Component>
-      <Component Id="Newtonsoft.Json.dll" Guid="*">
-        <File Source="$(var.ArtifactsPublishPath)\Newtonsoft.Json.dll" />
       </Component>
       <Component Id="ResourceManager.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\ResourceManager.dll" />
@@ -369,6 +363,9 @@
       </Component>
       <Component Id="GitlabIntegration.dll" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitlabIntegration.dll" />
+      </Component>
+      <Component Id="GitHubActionsIntegration.dll" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Plugins\GitExtensions.Plugins.GitHubActionsIntegration.dll" />
       </Component>
     </DirectoryRef>
     <DirectoryRef Id="PluginManagerDir">
@@ -652,7 +649,6 @@
       <ComponentRef Id="ICSharpCode.TextEditor.dll" />
       <ComponentRef Id="Microsoft.AI.DependencyCollector.dll" />
       <ComponentRef Id="Microsoft.ApplicationInsights.dll" />
-      <ComponentRef Id="Microsoft.Toolkit.HighPerformance.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Composition.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Composition.NetFxAttributes.dll" />
       <ComponentRef Id="Microsoft.VisualStudio.Interop.dll" />
@@ -660,7 +656,6 @@
       <ComponentRef Id="Microsoft.VisualStudio.Validation.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.dll" />
       <ComponentRef Id="Microsoft.WindowsAPICodePack.Shell.dll" />
-      <ComponentRef Id="Newtonsoft.Json.dll" />
       <ComponentRef Id="ResourceManager.dll" />
       <ComponentRef Id="RestSharp.dll" />
       <ComponentRef Id="SmartFormat.dll" />
@@ -744,6 +739,9 @@
         </Feature>
         <Feature Id="GitlabIntegration" Title="Gitlab integration" Level="1">
           <ComponentRef Id="GitlabIntegration.dll" />
+        </Feature>
+        <Feature Id="GitHubActionsIntegration" Title="GitHub Actions integration" Level="1">
+          <ComponentRef Id="GitHubActionsIntegration.dll" />
         </Feature>
       </Feature>
       <Feature Id="GitExtensions.desktop" Title="Desktop shortcut" Level="1">

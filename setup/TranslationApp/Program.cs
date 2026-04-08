@@ -38,7 +38,7 @@ internal static class Program
         // Set the flag that will stop this from happening.
         GitModuleForm.IsUnitTestActive = true;
 
-        AppSettings.Font = SystemFonts.MessageBoxFont;
+        AppSettings.Font = SystemFonts.MessageBoxFont!;
 
         IDictionary<string, List<TranslationItemWithCategory>> neutralItems = TranslationHelpers.LoadNeutralItems();
         string filename = Path.Combine(Translator.GetTranslationDir(), "English.xlf");
@@ -50,7 +50,7 @@ internal static class Program
             IDictionary<string, TranslationFile> translation = Translator.GetTranslation(name);
             IDictionary<string, List<TranslationItemWithCategory>> translateItems = TranslationHelpers.LoadTranslation(translation, neutralItems);
             filename = Path.Combine(Translator.GetTranslationDir(), name + ".xlf");
-            TranslationHelpers.SaveTranslation(translation.First().Value.TargetLanguage, translateItems, filename);
+            TranslationHelpers.SaveTranslation(translation.First().Value.TargetLanguage!, translateItems, filename);
         }
     }
 }

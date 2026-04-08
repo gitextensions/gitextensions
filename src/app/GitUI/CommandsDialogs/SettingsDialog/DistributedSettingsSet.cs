@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using GitCommands.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog;

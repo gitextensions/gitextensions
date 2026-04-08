@@ -45,7 +45,7 @@ public sealed partial class FormGoToCommit : GitModuleForm
     /// </summary>
     public ObjectId? ValidateAndGetSelectedRevision()
     {
-        return Module.RevParse(_selectedRevision);
+        return Module.RevParse(_selectedRevision!);
     }
 
     private void commitExpression_TextChanged(object sender, EventArgs e)
@@ -101,7 +101,7 @@ public sealed partial class FormGoToCommit : GitModuleForm
 
     private static IReadOnlyList<IGitRef> DataSourceToGitRefs(ComboBox cb)
     {
-        return (IReadOnlyList<IGitRef>)cb.DataSource;
+        return (IReadOnlyList<IGitRef>)cb.DataSource!;
     }
 
     private void comboBoxTags_Enter(object sender, EventArgs e)
@@ -134,7 +134,7 @@ public sealed partial class FormGoToCommit : GitModuleForm
         }
     }
 
-    private void comboBoxTags_TextChanged(object sender, EventArgs e)
+    private void comboBoxTags_TextChanged(object? sender, EventArgs e)
     {
         if (comboBoxTags.DataSource is null)
         {
@@ -145,7 +145,7 @@ public sealed partial class FormGoToCommit : GitModuleForm
         SetSelectedRevisionByFocusedControl();
     }
 
-    private void comboBoxBranches_TextChanged(object sender, EventArgs e)
+    private void comboBoxBranches_TextChanged(object? sender, EventArgs e)
     {
         if (comboBoxBranches.DataSource is null)
         {
@@ -206,7 +206,7 @@ public sealed partial class FormGoToCommit : GitModuleForm
             return;
         }
 
-        ObjectId guid = Module.RevParse(text);
+        ObjectId? guid = Module.RevParse(text);
         if (guid is not null)
         {
             textboxCommitExpression.Text = text;

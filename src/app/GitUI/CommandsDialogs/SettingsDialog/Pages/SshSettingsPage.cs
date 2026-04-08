@@ -1,5 +1,4 @@
 ﻿using GitCommands;
-using GitCommands.Utils;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
 using Microsoft.Win32;
@@ -96,13 +95,13 @@ public partial class SshSettingsPage : SettingsPageWithHeader
 
     private static IEnumerable<string> GetPuttyLocations()
     {
-        string envVariable = Environment.GetEnvironmentVariable("GITEXT_PUTTY");
+        string? envVariable = Environment.GetEnvironmentVariable("GITEXT_PUTTY");
         if (!string.IsNullOrEmpty(envVariable))
         {
             yield return envVariable;
         }
 
-        string programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
+        string? programFiles = Environment.GetEnvironmentVariable("ProgramFiles");
         string? programFilesX86 = (IntPtr.Size == 8
             || !string.IsNullOrEmpty(Environment.GetEnvironmentVariable("PROCESSOR_ARCHITEW6432")))
             ? Environment.GetEnvironmentVariable("ProgramFiles(x86)")
@@ -134,7 +133,7 @@ public partial class SshSettingsPage : SettingsPageWithHeader
 
     public bool AutoFindPuttyPaths()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return false;
         }

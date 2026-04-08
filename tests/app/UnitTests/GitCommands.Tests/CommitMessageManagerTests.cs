@@ -1,8 +1,8 @@
-using System.Collections;
+﻿using System.Collections;
 using System.IO.Abstractions;
 using System.Text;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using NSubstitute;
 
@@ -17,7 +17,7 @@ public class CommitMessageManagerTests
     private const string _overriddenCommitMessage = "commandline message";
 
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     private readonly string _workingDirGitDir = @"c:\dev\repo\.git";
     private readonly Encoding _encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
@@ -27,10 +27,10 @@ public class CommitMessageManagerTests
     private readonly string _mergeMessagePath;
     private readonly bool _rememberAmendCommitState;
 
-    private FileBase _file;
-    private DirectoryBase _directory;
-    private IFileSystem _fileSystem;
-    private CommitMessageManager _manager;
+    private FileBase _file = null!;
+    private DirectoryBase _directory = null!;
+    private IFileSystem _fileSystem = null!;
+    private CommitMessageManager _manager = null!;
 
     // We don't expect any failures so that we won't be switching to the main thread or showing messages
     private readonly Control _owner = ReferenceRepository.DummyOwner;
@@ -60,7 +60,7 @@ public class CommitMessageManagerTests
         _directory = Substitute.For<DirectoryBase>();
 
         PathBase path = Substitute.For<PathBase>();
-        path.Combine(Arg.Any<string>(), Arg.Any<string>()).Returns(x => Path.Combine((string)x[0], (string)x[1]));
+        path.Join(Arg.Any<string>(), Arg.Any<string>()).Returns(x => Path.Join((string)x[0], (string)x[1]));
 
         _fileSystem = Substitute.For<IFileSystem>();
         _fileSystem.File.Returns(_file);
@@ -212,8 +212,8 @@ public class CommitMessageManagerTests
         File.Exists(manager.CommitMessagePath).Should().BeFalse();
 
         // null message isn't formatted, since we're only interested in testing File.Write logic
-        string message = null;
-        await manager.WriteCommitMessageToFileAsync(message, CommitMessageType.Normal, false, false);
+        string? message = null;
+        await manager.WriteCommitMessageToFileAsync(message!, CommitMessageType.Normal, false, false);
 
         File.Exists(manager.CommitMessagePath).Should().BeTrue();
     }
@@ -245,8 +245,8 @@ public class CommitMessageManagerTests
         File.Exists(manager.MergeMessagePath).Should().BeFalse();
 
         // null message isn't formatted, since we're only interested in testing File.Write logic
-        string message = null;
-        await manager.WriteCommitMessageToFileAsync(message, CommitMessageType.Merge, false, false);
+        string? message = null;
+        await manager.WriteCommitMessageToFileAsync(message!, CommitMessageType.Merge, false, false);
 
         File.Exists(manager.MergeMessagePath).Should().BeTrue();
     }

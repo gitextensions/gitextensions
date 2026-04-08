@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
 
@@ -26,14 +26,14 @@ public partial class CommitPickerSmallControl : GitModuleControl
     /// </summary>
     public void SetSelectedCommitHash(string? commitHash)
     {
-        ObjectId oldCommitHash = SelectedObjectId;
+        ObjectId? oldCommitHash = SelectedObjectId;
 
-        SelectedObjectId = Module.RevParse(commitHash);
+        SelectedObjectId = Module.RevParse(commitHash!);
 
         if (SelectedObjectId is null && !string.IsNullOrWhiteSpace(commitHash))
         {
             SelectedObjectId = oldCommitHash;
-            MessageBox.Show("The given commit hash is not valid for this repository and was therefore discarded.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show("The given commit hash is not valid for this repository and was therefore discarded.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         else
         {
@@ -53,7 +53,7 @@ public partial class CommitPickerSmallControl : GitModuleControl
             textBoxCommitHash.Text = SelectedObjectId.ToShortString();
             ThreadHelper.FileAndForget(async () =>
                 {
-                    ObjectId currentCheckout = Module.GetCurrentCheckout();
+                    ObjectId? currentCheckout = Module.GetCurrentCheckout();
 
                     if (currentCheckout is null)
                     {

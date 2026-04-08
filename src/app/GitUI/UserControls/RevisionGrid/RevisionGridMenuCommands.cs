@@ -1,4 +1,4 @@
-﻿using System.Reflection;
+using System.Reflection;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
@@ -58,7 +58,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
 
     public void TriggerMenuChanged()
     {
-        MenuChanged?.Invoke(this, null);
+        MenuChanged?.Invoke(this, null!);
 
         foreach (MenuCommand menuCommand in GetMenuCommandsWithoutSeparators())
         {
@@ -179,7 +179,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
                 Name = "QuickSearch",
                 Text = "&Quick search",
                 ToolTipText = _quickSearchQuickHelp.Text,
-                ExecuteAction = () => MessageBox.Show(_quickSearchQuickHelp.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                ExecuteAction = () => MessageBoxes.Show(_quickSearchQuickHelp.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
             },
             new MenuCommand
             {
@@ -330,6 +330,13 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
                 Text = "Show git &notes",
                 ExecuteAction = () => _revisionGrid.ToggleShowGitNotes(),
                 IsCheckedFunc = () => AppSettings.ShowGitNotes
+            },
+            new MenuCommand
+            {
+                Name = "ShowSessionCheckpoints",
+                Text = "Show session checkpoints",
+                ExecuteAction = () => _revisionGrid.ToggleShowSessionRefs(),
+                IsCheckedFunc = () => AppSettings.ShowSessionRefs
             },
 
             MenuCommand.CreateSeparator(),
@@ -516,7 +523,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
             return;
         }
 
-        ObjectId commitId = formGoToCommit.ValidateAndGetSelectedRevision();
+        ObjectId? commitId = formGoToCommit.ValidateAndGetSelectedRevision();
 
         if (commitId is not null)
         {

@@ -1,5 +1,5 @@
-﻿using CommonTestUtils;
-using FluentAssertions;
+﻿using AwesomeAssertions;
+using CommonTestUtils;
 using GitCommands.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -10,10 +10,10 @@ namespace GitExtensions.UITests.CommandsDialogs;
 public class FormPushTests
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     [SetUp]
     public void SetUp()

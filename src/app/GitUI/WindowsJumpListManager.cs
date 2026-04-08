@@ -71,7 +71,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
         }
     }
 
-    private static bool IsSupported => EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported;
+    private static bool IsSupported => OperatingSystem.IsWindows() && TaskbarManager.IsPlatformSupported;
     private static bool IsSupportedAndVisible => EnvUtils.RunningOnWindowsWithMainWindow() && TaskbarManager.IsPlatformSupported;
 
     /// <summary>
@@ -100,7 +100,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
                 return;
             }
 
-            string baseFolder = Path.Combine(AppSettings.ApplicationDataPath.Value, "Recent");
+            string baseFolder = Path.Join(AppSettings.ApplicationDataPath.Value!, "Recent");
             if (!Directory.Exists(baseFolder))
             {
                 Directory.CreateDirectory(baseFolder);
@@ -114,7 +114,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
                 sb.Replace(c, '_');
             }
 
-            string path = Path.Combine(baseFolder, $"{sb}.gitext");
+            string path = Path.Join(baseFolder, $"{sb}.gitext");
             File.WriteAllText(path, workingDir);
             JumpList.AddToRecent(path);
             UpdateJumpList(); // in order to refresh at once
@@ -250,7 +250,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
     /// <returns>An icon!!.</returns>
     private static Icon MakeIcon(Image img, int size, bool keepAspectRatio)
     {
-        if (_iconByImage.TryGetValue(img, out Icon icon))
+        if (_iconByImage.TryGetValue(img, out Icon? icon))
         {
             return icon;
         }

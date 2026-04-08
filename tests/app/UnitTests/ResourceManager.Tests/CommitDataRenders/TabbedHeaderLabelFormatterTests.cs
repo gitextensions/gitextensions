@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using ResourceManager.CommitDataRenders;
 
 namespace ResourceManagerTests.CommitDataRenders;
@@ -6,7 +6,7 @@ namespace ResourceManagerTests.CommitDataRenders;
 [TestFixture]
 public class TabbedHeaderLabelFormatterTests
 {
-    private TabbedHeaderLabelFormatter _formatter;
+    private TabbedHeaderLabelFormatter _formatter = null!;
 
     [SetUp]
     public void Setup()

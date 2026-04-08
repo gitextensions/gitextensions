@@ -71,7 +71,7 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
         return ScriptRunner.RunScript(scriptInfo, owner, commands, scriptOptionsProvider);
     }
 
-    public string? SerializeIntoXml()
+    public string SerializeIntoXml()
     {
         try
         {
@@ -87,7 +87,7 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
         }
         catch
         {
-            return null;
+            return null!;
         }
     }
 
@@ -103,7 +103,7 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
         {
             using StringReader stringReader = new(xml);
             using XmlTextReader xmlReader = new(stringReader);
-            return (BindingList<ScriptInfo>)_serializer.Deserialize(xmlReader);
+            return (BindingList<ScriptInfo>)_serializer.Deserialize(xmlReader)!;
         }
         catch (Exception ex)
         {

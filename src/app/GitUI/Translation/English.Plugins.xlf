@@ -508,6 +508,30 @@ Are you sure you want to continue?</source>
       </trans-unit>
     </body>
   </file>
+  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en">
+    <body>
+      <trans-unit id="lblApiToken.Text">
+        <source>API &amp;Token</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblApiUrl.Text">
+        <source>&amp;API URL</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblOwner.Text">
+        <source>&amp;Owner</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblRepository.Text">
+        <source>&amp;Repository</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lnkTokenManagement.Text">
+        <source>Create a GitHub personal access token</source>
+        <target />
+      </trans-unit>
+    </body>
+  </file>
   <file datatype="plaintext" original="GitImpactPlugin" source-language="en">
     <body>
       <trans-unit id="Description.Text">

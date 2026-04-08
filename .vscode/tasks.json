@@ -61,7 +61,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/GitExtensions.sln"
+                "${workspaceFolder}/GitExtensions.slnx"
             ],
             "problemMatcher": "$msCompile"
         },

@@ -636,7 +636,7 @@ internal static class RichTextBoxXhtmlSupportExtension
 
     public static string GetUrl(this LinkClickedEventArgs e)
     {
-        string[] v = e.LinkText.Split(Delimiters.Hash, 2);
+        string[] v = e.LinkText!.Split(Delimiters.Hash, 2);
         return v.Length switch
         {
             0 => "",
@@ -647,7 +647,7 @@ internal static class RichTextBoxXhtmlSupportExtension
 
     public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
     {
-        string[] v = e.LinkText.Split(Delimiters.Hash, 2);
+        string[] v = e.LinkText!.Split(Delimiters.Hash, 2);
         if (v.Length == 0)
         {
             url = "";

@@ -103,7 +103,7 @@ public partial class FormArchive : GitModuleForm
     {
         if (checkboxRevisionFilter.Checked && DiffSelectedRevision is null)
         {
-            MessageBox.Show(this, _noRevisionSelected.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            MessageBoxes.Show(this, _noRevisionSelected.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             return;
         }
 

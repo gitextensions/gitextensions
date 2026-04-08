@@ -42,11 +42,11 @@ internal class GitRefsSortByContextMenuItem : ToolStripMenuItem
         }
     }
 
-    private void Item_Click(object sender, EventArgs e)
+    private void Item_Click(object? sender, EventArgs e)
     {
         if (sender is ToolStripMenuItem item)
         {
-            GitRefsSortBy sortingType = (GitRefsSortBy)item.Tag;
+            GitRefsSortBy sortingType = (GitRefsSortBy)item.Tag!;
             AppSettings.RefsSortBy = sortingType;
 
             _onSortByChanged?.Invoke();

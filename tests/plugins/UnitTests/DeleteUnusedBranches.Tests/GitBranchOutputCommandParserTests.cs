@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitExtensions.Plugins.DeleteUnusedBranches;
 
 namespace DeleteUnusedBranchesTests;
@@ -6,7 +6,7 @@ namespace DeleteUnusedBranchesTests;
 [TestFixture]
 public class GitBranchOutputCommandParserTests
 {
-    private GitBranchOutputCommandParser _parser;
+    private GitBranchOutputCommandParser _parser = null!;
 
     [SetUp]
     public void Setup()

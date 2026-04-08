@@ -36,7 +36,7 @@ public readonly struct CodeFile
             using StreamReader reader = new(file.FullName, detectEncodingFromByteOrderMarks: true);
             while (true)
             {
-                string line = reader.ReadLine();
+                string? line = reader.ReadLine();
 
                 if (line is null)
                 {

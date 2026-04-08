@@ -3,6 +3,7 @@ using Git.hub;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
@@ -130,12 +131,12 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         yield return _issueCommitMessageHelperMaxCount;
     }
 
-    private void GenerateTokenLink_Click(object sender, EventArgs e)
+    private void GenerateTokenLink_Click(object? sender, EventArgs e)
     {
         OpenLink($"https://{GitHubHost.ValueOrDefault(Instance.Settings)}/settings/tokens/new?description=Token%20for%20GitExtensions&scopes=repo,public_repo");
     }
 
-    private void ManageTokenLink_Click(object sender, EventArgs e)
+    private void ManageTokenLink_Click(object? sender, EventArgs e)
     {
         OpenLink($"https://{GitHubHost.ValueOrDefault(Instance.Settings)}/settings/tokens");
     }
@@ -148,7 +149,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         }
         catch (Exception ex)
         {
-            MessageBox.Show(_openLinkFailed.Text + ex.Message);
+            MessageBoxes.Show(owner: null, _openLinkFailed.Text + ex.Message, caption: string.Empty, MessageBoxButtons.OK, MessageBoxIcon.None);
         }
     }
 
@@ -219,7 +220,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         });
     }
 
-    private void GitUiCommands_PostCommit(object sender, GitUIEventArgs e)
+    private void GitUiCommands_PostCommit(object? sender, GitUIEventArgs e)
     {
         if (_currentMessages.Count == 0)
         {
@@ -242,7 +243,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         }
         else
         {
-            MessageBox.Show(args.OwnerForm, _tokenAlreadyExist.Text, _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(args.OwnerForm, _tokenAlreadyExist.Text, _error.Text);
         }
 
         return false;
@@ -279,7 +280,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         Validates.NotNull(_currentGitUiCommands);
 
         IGitModule gitModule = _currentGitUiCommands.Module;
-        IHostedRemote hostedRemote = GetHostedRemotesForModule().FirstOrDefault(r => r.IsOwnedByMe);
+        IHostedRemote? hostedRemote = GetHostedRemotesForModule().FirstOrDefault(r => r.IsOwnedByMe);
         if (hostedRemote is null)
         {
             return null;
@@ -313,7 +314,12 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
     {
         HashSet<IHostedRemote> set = [];
 
-        IGitModule gitModule = _currentGitUiCommands.Module;
+        IGitModule? gitModule = _currentGitUiCommands?.Module;
+        if (gitModule is null)
+        {
+            yield break;
+        }
+
         foreach (string remote in gitModule.GetRemoteNames())
         {
             string url = gitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
@@ -342,7 +348,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         for (int i = contextMenu.Items.Count - 1; i >= 0; i--)
         {
             ToolStripItem item = contextMenu.Items[i];
-            if (item is ToolStripMenuItem tsmi && (string)tsmi.Tag == HostedRemoteMenuItem)
+            if (item is ToolStripMenuItem tsmi && tsmi.Tag as string == HostedRemoteMenuItem)
             {
                 contextMenu.Items.RemoveAt(i);
             }

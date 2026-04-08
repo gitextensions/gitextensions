@@ -97,7 +97,7 @@ internal sealed class SubmoduleNode : Node
             first = Info?.Detailed?.RawStatus?.OldCommit;
         }
 
-        GitUICommands.LaunchBrowse(workingDir: Info.Path.EnsureTrailingPathSeparator(), selected, first);
+        GitUICommands.LaunchBrowse(workingDir: Info!.Path.EnsureTrailingPathSeparator(), selected, first);
     }
 
     internal override void OnSelected()

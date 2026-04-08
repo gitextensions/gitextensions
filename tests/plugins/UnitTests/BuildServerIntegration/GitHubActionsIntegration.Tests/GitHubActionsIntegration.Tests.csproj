@@ -1,0 +1,9 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\plugins\BuildServerIntegration\GitHubActionsIntegration\GitExtensions.Plugins.GitHubActionsIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\..\src\app\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+</Project>

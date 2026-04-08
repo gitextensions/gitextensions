@@ -1,5 +1,6 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
 using GitUI;
@@ -98,7 +99,7 @@ public partial class SettingsUserControl : GitExtensionsControl, IBuildServerSet
         {
             Validates.NotNull(_remotes);
 
-            (bool vstsOrTfsProjectFound, string autoDetectedProjectUrl) = ProjectUrlHelper.TryDetectProjectFromRemoteUrls(_remotes);
+            (bool vstsOrTfsProjectFound, string? autoDetectedProjectUrl) = ProjectUrlHelper.TryDetectProjectFromRemoteUrls(_remotes);
             if (vstsOrTfsProjectFound)
             {
                 settings.ProjectUrl = autoDetectedProjectUrl!;
@@ -133,7 +134,7 @@ public partial class SettingsUserControl : GitExtensionsControl, IBuildServerSet
         this.InvokeAndForget(async () =>
         {
             string buildUrl = Clipboard.ContainsText() ? Clipboard.GetText() : "";
-            (bool success, string projectUrl, int buildId) = ProjectUrlHelper.TryParseBuildUrl(buildUrl);
+            (bool success, string? projectUrl, int buildId) = ProjectUrlHelper.TryParseBuildUrl(buildUrl);
             if (success)
             {
                 Validates.NotNull(projectUrl);
@@ -148,14 +149,14 @@ public partial class SettingsUserControl : GitExtensionsControl, IBuildServerSet
                     }
                     catch (Exception)
                     {
-                        MessageBox.Show(_failToLoadBuildDefinitionInfoMessage.Text, _failToExtractDataFromClipboardCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxes.ShowError(owner: null, _failToLoadBuildDefinitionInfoMessage.Text, _failToExtractDataFromClipboardCaption.Text);
                         return;
                     }
                 }
                 else
                 {
                     buildDefinitionName = "";
-                    MessageBox.Show(_infoNoApiTokenMessage.Text, _failToExtractDataFromClipboardCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBoxes.Show(owner: null, _infoNoApiTokenMessage.Text, _failToExtractDataFromClipboardCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
 
                 _currentSettings.ProjectUrl = projectUrl;
@@ -164,7 +165,7 @@ public partial class SettingsUserControl : GitExtensionsControl, IBuildServerSet
             }
             else
             {
-                MessageBox.Show(_failToExtractDataFromClipboardMessage.Text, _failToExtractDataFromClipboardCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.ShowError(owner: null, _failToExtractDataFromClipboardMessage.Text, _failToExtractDataFromClipboardCaption.Text);
             }
         });
     }

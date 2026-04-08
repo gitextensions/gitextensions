@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -102,7 +102,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
         return;
 
-        void FormCheckoutBranch_Shown(object sender, EventArgs e)
+        void FormCheckoutBranch_Shown(object? sender, EventArgs e)
         {
             Shown -= FormCheckoutBranch_Shown;
             RecalculateSizeConstraints();
@@ -262,7 +262,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
         string branchName = Branches.Text.Trim();
         bool isRemote = Remotebranch.Checked;
-        string newBranchName = (string?)null;
+        string? newBranchName = (string?)null;
         CheckoutNewBranchMode newBranchMode = CheckoutNewBranchMode.DontCreate;
 
         if (isRemote)
@@ -273,14 +273,14 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
                 newBranchMode = CheckoutNewBranchMode.Create;
                 if (string.IsNullOrWhiteSpace(newBranchName))
                 {
-                    MessageBox.Show(_customBranchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(_customBranchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     DialogResult = DialogResult.None;
                     return DialogResult.None;
                 }
 
                 if (!Module.CheckBranchFormat(newBranchName))
                 {
-                    MessageBox.Show(string.Format(_customBranchNameIsNotValid.Text, newBranchName), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(string.Format(_customBranchNameIsNotValid.Text, newBranchName), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     DialogResult = DialogResult.None;
                     return DialogResult.None;
                 }
@@ -291,7 +291,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
                 IGitRef remoteBranchRef = GetRemoteBranchRef(branchName);
                 if (localBranchRef is not null && remoteBranchRef is not null && localBranchRef.ObjectId is not null && remoteBranchRef.ObjectId is not null)
                 {
-                    ObjectId mergeBaseGuid = Module.GetMergeBase(localBranchRef.ObjectId, remoteBranchRef.ObjectId);
+                    ObjectId? mergeBaseGuid = Module.GetMergeBase(localBranchRef.ObjectId, remoteBranchRef.ObjectId);
                     bool isResetFastForward = localBranchRef.ObjectId == mergeBaseGuid;
 
                     if (!isResetFastForward)
@@ -302,7 +302,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
                         string warningMessage = string.Format(_resetNonFastForwardBranch.Text, _localBranchName, mergeBaseText);
 
-                        if (MessageBox.Show(this, warningMessage, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
+                        if (MessageBoxes.Show(this, warningMessage, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.No)
                         {
                             DialogResult = DialogResult.None;
                             return DialogResult.None;
@@ -345,7 +345,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
             }
         }
 
-        ObjectId originalId = Module.GetCurrentCheckout();
+        ObjectId? originalId = Module.GetCurrentCheckout();
 
         bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCheckout, this);
         if (!success)
@@ -387,7 +387,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
                 }
             }
 
-            ObjectId currentId = Module.GetCurrentCheckout();
+            ObjectId? currentId = Module.GetCurrentCheckout();
 
             if (originalId != currentId)
             {
@@ -403,12 +403,12 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
         IGitRef GetLocalBranchRef(string name)
         {
-            return GetLocalBranches().FirstOrDefault(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return GetLocalBranches().FirstOrDefault(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase))!;
         }
 
         IGitRef GetRemoteBranchRef(string name)
         {
-            return GetRemoteBranches().FirstOrDefault(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase));
+            return GetRemoteBranches().FirstOrDefault(head => head.Name.Equals(name, StringComparison.OrdinalIgnoreCase))!;
         }
     }
 
@@ -528,7 +528,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
                    + tlpnlMain.Height + tlpnlMain.Margin.Top + tlpnlMain.Margin.Bottom + DpiUtil.Scale(30);
 
         MinimumSize = new Size(tlpnlMain.PreferredSize.Width + DpiUtil.Scale(70), height);
-        MaximumSize = new Size(Screen.PrimaryScreen.Bounds.Width, height);
+        MaximumSize = new Size(Screen.PrimaryScreen!.Bounds.Width, height);
         Size = new Size(Width, height);
         ResumeLayout();
     }

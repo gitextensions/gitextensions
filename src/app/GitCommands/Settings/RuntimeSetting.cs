@@ -1,4 +1,6 @@
-﻿namespace GitCommands.Settings;
+﻿using System.Diagnostics.CodeAnalysis;
+
+namespace GitCommands.Settings;
 
 /// <summary>
 ///  Represents a setting which has to be explicitly saved, if changed at runtime.
@@ -20,7 +22,7 @@ public class RuntimeSetting<T> : IRuntimeSetting<T>
 {
     private bool _loaded;
     private readonly ISetting<T> _persistentSetting;
-    private T _value;
+    private T? _value = default;
 
     /// <summary>
     ///  Initializes a new instance of the <see cref="RuntimeSetting{T}"/> class.
@@ -33,7 +35,7 @@ public class RuntimeSetting<T> : IRuntimeSetting<T>
         _persistentSetting = persistentSetting;
     }
 
-    public T Default => _persistentSetting.Default;
+    public T Default => _persistentSetting.Default!;
 
     public string FullPath => _persistentSetting.FullPath;
 
@@ -43,12 +45,12 @@ public class RuntimeSetting<T> : IRuntimeSetting<T>
 
     public SettingsPath SettingsSource => _persistentSetting.SettingsSource;
 
-    public T Value
+    public T? Value
     {
         get => GetValue();
         set
         {
-            if (_value.Equals(value))
+            if (EqualityComparer<T>.Default.Equals(_value, value))
             {
                 return;
             }
@@ -70,7 +72,7 @@ public class RuntimeSetting<T> : IRuntimeSetting<T>
             Reload();
         }
 
-        return _value;
+        return _value!;
     }
 
     public void Reload()
@@ -90,5 +92,5 @@ public class RuntimeSetting<T> : IRuntimeSetting<T>
     ///  Implicit conversion for direct access to the RuntimeSetting value.
     /// </summary>
     /// <param name="setting">The RuntimeSetting whose value is returned as conversion result.</param>
-    public static implicit operator T(RuntimeSetting<T> setting) => setting.Value;
+    public static implicit operator T(RuntimeSetting<T> setting) => setting.Value!;
 }

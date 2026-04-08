@@ -95,7 +95,7 @@ Do you want to register the host's fingerprint and restart the process?");
                     if (!string.IsNullOrEmpty(loadedKey) && !string.IsNullOrEmpty(Remote) &&
                         string.IsNullOrEmpty(Commands.Module.GetSetting("remote.{0}.puttykeyfile")))
                     {
-                        Commands.Module.SetSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey.ConvertPathToGitSetting());
+                        Commands.Module.SetSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey.ConvertPathToGitSetting()!);
                     }
 
                     // Retry the command.
@@ -146,7 +146,7 @@ Do you want to register the host's fingerprint and restart the process?");
     {
         if (Plink && e.Text.Contains("If you trust this host, enter \"y\" to add the key to"))
         {
-            if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBoxes.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 string remoteUrl;
                 if (string.IsNullOrEmpty(_urlTryingToConnect))

@@ -1,7 +1,6 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Diagnostics.Contracts;
 using System.Text;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 
 // ReSharper disable once CheckNamespace
@@ -16,7 +15,8 @@ public static class StringExtensions
     /// Returns <paramref name="str"/> without the mnemonic marker "&amp;".
     /// </summary>
     [Pure]
-    public static string RemoveMnemonicMarker(this string? str)
+    [return: NotNullIfNotNull(nameof(str))]
+    public static string? RemoveMnemonicMarker(this string? str)
         => str?.Replace("&", "");
 
     /// <summary>
@@ -213,7 +213,7 @@ public static class StringExtensions
     [Pure]
     public static string EscapeForCommandLine(this string s, bool? forWindows = null)
     {
-        return (forWindows ?? EnvUtils.RunningOnWindows()) ? EscapeForWindowsCommandLine(s) : EscapeForPosixCommandLine(s);
+        return (forWindows ?? OperatingSystem.IsWindows()) ? EscapeForWindowsCommandLine(s) : EscapeForPosixCommandLine(s);
 
         static string EscapeForWindowsCommandLine(string s) => s.Replace("\"", "\"\"");
         static string EscapeForPosixCommandLine(string s) => s.Replace(@"\", @"\\").Replace("\"", "\\\"").Replace("'", @"\'");
@@ -272,7 +272,7 @@ public static class StringExtensions
     /// </summary>
     [Pure]
     [return: NotNullIfNotNull(nameof(str))]
-    public static string RemoveQuotes(this string str, char quote = '"')
+    public static string? RemoveQuotes(this string? str, char quote = '"')
     {
         if (str?.Length is >= 2 && str[0] == quote && str[^1] == quote)
         {

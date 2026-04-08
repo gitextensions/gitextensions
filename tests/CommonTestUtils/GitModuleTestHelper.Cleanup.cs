@@ -1,4 +1,4 @@
-using GitUI;
+﻿using GitUI;
 using Microsoft.VisualStudio.Threading;
 
 namespace CommonTestUtils;

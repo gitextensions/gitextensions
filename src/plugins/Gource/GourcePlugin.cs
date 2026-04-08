@@ -70,7 +70,7 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
 
         if (!string.IsNullOrEmpty(pathToGource) && !File.Exists(pathToGource))
         {
-            DialogResult result = MessageBox.Show(
+            DialogResult result = MessageBoxes.Show(
                 args.OwnerForm,
                 string.Format(_resetConfigPath.Text, pathToGource), _gource.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 
@@ -83,7 +83,7 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
 
         if (string.IsNullOrEmpty(pathToGource))
         {
-            if (MessageBox.Show(
+            if (MessageBoxes.Show(
                     args.OwnerForm, _doYouWantDownloadGource.Text, _download.Text,
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
@@ -96,18 +96,18 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
                 }
 
                 string downloadDir = Path.GetTempPath();
-                string fileName = Path.Combine(downloadDir, "gource.zip");
+                string fileName = Path.Join(downloadDir, "gource.zip");
                 int downloadSize = ThreadHelper.JoinableTaskFactory.Run(() => DownloadFileAsync(args.OwnerForm, gourceUrl, fileName));
                 if (downloadSize > 0)
                 {
-                    MessageBox.Show(args.OwnerForm, string.Format(_bytesDownloaded.Text, downloadSize), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Directory.CreateDirectory(Path.Combine(downloadDir, "gource"));
-                    UnZipFiles(args.OwnerForm, fileName, Path.Combine(downloadDir, "gource"), true);
+                    MessageBoxes.Show(args.OwnerForm, string.Format(_bytesDownloaded.Text, downloadSize), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    Directory.CreateDirectory(Path.Join(downloadDir, "gource"));
+                    UnZipFiles(args.OwnerForm, fileName, Path.Join(downloadDir, "gource"), true);
 
-                    string newGourcePath = Path.Combine(downloadDir, "gource\\gource.exe");
+                    string newGourcePath = Path.Join(downloadDir, "gource\\gource.exe");
                     if (File.Exists(newGourcePath))
                     {
-                        MessageBox.Show(args.OwnerForm, _gourceDownloadedAndUnzipped.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        MessageBoxes.Show(args.OwnerForm, _gourceDownloadedAndUnzipped.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         pathToGource = newGourcePath;
                     }
                 }

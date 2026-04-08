@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -98,7 +98,7 @@ public partial class FormClone : GitExtensionsDialog
             // that the cloned repository is hosted on the same server
             if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_From.Text) && Module.IsValidGitWorkingDir())
             {
-                string currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
+                string? currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
                 if (string.IsNullOrEmpty(currentBranchRemote))
                 {
                     IReadOnlyList<string> remotes = Module.GetRemoteNames();
@@ -167,14 +167,14 @@ public partial class FormClone : GitExtensionsDialog
             string destination = _NO_TRANSLATE_To.Text;
             if (string.IsNullOrWhiteSpace(destination))
             {
-                MessageBox.Show(this, _errorDestinationNotSupplied.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _errorDestinationNotSupplied.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _NO_TRANSLATE_To.Focus();
                 return;
             }
 
             if (!Path.IsPathRooted(destination))
             {
-                MessageBox.Show(this, _errorDestinationNotRooted.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _errorDestinationNotRooted.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _NO_TRANSLATE_To.Focus();
                 return;
             }
@@ -263,19 +263,19 @@ public partial class FormClone : GitExtensionsDialog
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, "Exception: " + ex.Message, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, "Exception: " + ex.Message, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
     private bool AskIfNewRepositoryShouldBeOpened(string dirTo)
     {
-        return MessageBox.Show(this, string.Format(_questionOpenRepo.Text, dirTo), _questionOpenRepoCaption.Text,
+        return MessageBoxes.Show(this, string.Format(_questionOpenRepo.Text, dirTo), _questionOpenRepoCaption.Text,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
     }
 
     private void FromBrowseClick(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_From.Text);
+        string? userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_From.Text);
 
         if (userSelectedPath is not null)
         {
@@ -287,7 +287,7 @@ public partial class FormClone : GitExtensionsDialog
 
     private void ToBrowseClick(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_To.Text);
+        string? userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_To.Text);
 
         if (userSelectedPath is not null)
         {
@@ -393,7 +393,7 @@ public partial class FormClone : GitExtensionsDialog
         else
         {
             string text = _NO_TRANSLATE_Branches.Text;
-            List<string> names = [.. _defaultBranchItems, .. branchList.Result.Select(o => o.LocalName)];
+            List<string> names = [.. _defaultBranchItems, .. branchList.Result!.Select(o => o.LocalName!)];
             _NO_TRANSLATE_Branches.DataSource = names;
             if (names.Any(a => a == text))
             {

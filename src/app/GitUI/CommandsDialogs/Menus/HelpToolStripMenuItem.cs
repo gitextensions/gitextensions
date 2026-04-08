@@ -33,7 +33,7 @@ internal partial class HelpToolStripMenuItem : ToolStripMenuItemEx
     private void checkForUpdatesToolStripMenuItem_Click(object sender, EventArgs e)
     {
         FormUpdates updateForm = new(AppSettings.AppVersion);
-        updateForm.SearchForUpdatesAndShow(Owner, true);
+        updateForm.SearchForUpdatesAndShow(Owner!, true);
     }
 
     private void DonateToolStripMenuItemClick(object sender, EventArgs e)

@@ -41,13 +41,13 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         BlameControl.HideCommitInfo();
     }
 
-    private void FileViewer_TopScrollReached(object sender, EventArgs e)
+    private void FileViewer_TopScrollReached(object? sender, EventArgs e)
     {
         DiffFiles.SelectPreviousVisibleItem();
         DiffText.ScrollToBottom();
     }
 
-    private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+    private void FileViewer_BottomScrollReached(object? sender, EventArgs e)
     {
         DiffFiles.SelectNextVisibleItem();
         DiffText.ScrollToTop();
@@ -339,7 +339,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
             filterFileInGrid: FilterFileInGrid,
             openInFileTreeTab_AsBlame: OpenInFileTreeTab,
             refreshParent: RequestRefresh,
-            getCurrentRevision: () => _revisionGridInfo?.GetRevision(_revisionGridInfo.CurrentCheckout),
+            getCurrentRevision: () => _revisionGridInfo?.GetRevision(_revisionGridInfo.CurrentCheckout!)!,
             getLineNumber: () => BlameControl.Visible ? BlameControl.CurrentFileLine : DiffText.CurrentFileLine,
             getSelectedText: DiffText.GetSelectedText,
             getSupportLinePatching: () => DiffText.SupportLinePatching);
@@ -406,7 +406,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
     {
         loadFileContent = Task.CompletedTask;
 
-        FileStatusItem prevItem = DiffFiles.SelectedItem;
+        FileStatusItem? prevItem = DiffFiles.SelectedItem;
         selectedItem = DiffFiles.SelectNextItem(searchBackward, loop, notify: false);
         if (selectedItem is null || (!loop && selectedItem == prevItem))
         {
@@ -450,10 +450,10 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
             BlameControl.Focus();
         }
 
-        GitRevision rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
-            ? _revisionGridInfo.GetActualRevision(_revisionGridInfo.CurrentCheckout)
+        GitRevision? rev = DiffFiles.SelectedItem.SecondRevision.IsArtificial
+            ? _revisionGridInfo!.GetActualRevision(_revisionGridInfo.CurrentCheckout!)
             : DiffFiles.SelectedItem.SecondRevision;
-        await BlameControl.LoadBlameAsync(rev, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGridInfo, revisionGridFileUpdate: this,
+        await BlameControl.LoadBlameAsync(rev!, children: null, DiffFiles.SelectedItem.Item.Name, _revisionGridInfo, revisionGridFileUpdate: this,
             controlToMask: null, DiffText.Encoding, line, cancellationTokenSequence: _viewChangesSequence);
     }
 
@@ -619,7 +619,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
         {
             int? line = DiffText.Visible ? DiffText.CurrentFileLine : BlameControl.CurrentFileLine;
             DiffFiles.tsmiBlame.Checked = !DiffFiles.tsmiBlame.Checked;
-            _selectedBlameItem = DiffFiles.tsmiBlame.Checked ? DiffFiles.SelectedItem.Item : null;
+            _selectedBlameItem = DiffFiles.tsmiBlame.Checked ? DiffFiles.SelectedItem!.Item : null;
             ShowSelectedFile(ensureNoSwitchToFilter: true, line);
             return;
         }
@@ -678,7 +678,7 @@ public partial class RevisionDiffControl : GitModuleControl, IRevisionGridFileUp
     {
         _lastExplicitlySelectedItem = filename;
         _lastExplicitlySelectedItemLine = null;
-        return _revisionGridUpdate.SetSelectedRevision(commitId);
+        return _revisionGridUpdate!.SetSelectedRevision(commitId);
     }
 
     internal TestAccessor GetTestAccessor()

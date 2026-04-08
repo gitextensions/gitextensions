@@ -96,7 +96,7 @@ public partial class FormOpenDirectory : GitExtensionsForm
             return;
         }
 
-        MessageBox.Show(this, _warningOpenFailed.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBoxes.Show(this, _warningOpenFailed.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
     }
 
     private void DirectoryKeyPress(object sender, KeyPressEventArgs e)

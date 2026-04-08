@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Security;
@@ -70,7 +68,7 @@ public static class BugReportInvoker
     {
         string tempFolder = Path.GetTempPath();
         string tempFileName = $"{AppSettings.ApplicationId}.{AppSettings.AppVersion}.{DateTime.Now:yyyyMMdd.HHmmssfff}.log";
-        string tempFile = Path.Combine(tempFolder, tempFileName);
+        string tempFile = Path.Join(tempFolder, tempFileName);
 
         try
         {
@@ -79,7 +77,7 @@ public static class BugReportInvoker
         }
         catch (Exception ex)
         {
-            MessageBox.Show($"Failed to log error to {tempFile}\r\n{ex.Message}", "Error writing log", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show($"Failed to log error to {tempFile}\r\n{ex.Message}", "Error writing log", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

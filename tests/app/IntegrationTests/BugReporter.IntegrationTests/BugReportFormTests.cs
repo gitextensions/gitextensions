@@ -7,7 +7,7 @@ namespace GitExtensions.UITests.NBugReports;
 [TestFixture]
 public class BugReportFormTests
 {
-    private BugReportForm _form;
+    private BugReportForm _form = null!;
 
     [SetUp]
     public void Setup()
@@ -50,7 +50,7 @@ public class BugReportFormTests
                 ClassicAssert.AreEqual(exception.TargetSite, listView.Items[index].SubItems[1].Text);
                 index++;
                 ClassicAssert.AreEqual("Inner Exception", listView.Items[index].Text);
-                ClassicAssert.AreEqual(exception.InnerException.Type, listView.Items[index].SubItems[1].Text);
+                ClassicAssert.AreEqual(exception.InnerException!.Type, listView.Items[index].SubItems[1].Text);
                 index++;
                 ClassicAssert.AreEqual("Source", listView.Items[index].Text);
                 ClassicAssert.AreEqual(exception.Source, listView.Items[index].SubItems[1].Text);
@@ -58,7 +58,7 @@ public class BugReportFormTests
                 ClassicAssert.AreEqual("Stack Trace", listView.Items[index].Text);
                 ClassicAssert.AreEqual(exception.StackTrace, listView.Items[index].SubItems[1].Text);
 
-                foreach (KeyValuePair<string, object> info in exception.ExtendedInformation)
+                foreach (KeyValuePair<string, object> info in exception.ExtendedInformation!)
                 {
                     index++;
                     ClassicAssert.AreEqual(info.Key, listView.Items[index].Text);

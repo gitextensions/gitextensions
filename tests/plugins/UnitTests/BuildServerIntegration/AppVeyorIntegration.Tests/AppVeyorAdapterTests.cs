@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using AppVeyorIntegration;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces.BuildServerIntegration;
@@ -81,21 +81,21 @@ public class CommitsYamlTypeConverter : IYamlTypeConverter
         throw new NotImplementedException();
     }
 
-    public void WriteYaml(IEmitter emitter, object value, Type type, ObjectSerializer serializer)
+    public void WriteYaml(IEmitter emitter, object? value, Type type, ObjectSerializer serializer)
     {
         if (type == typeof(DateTime))
         {
-            emitter.Emit(new Scalar(null, ((DateTime)value).ToUniversalTime().ToString("O")));
+            emitter.Emit(new Scalar(null, ((DateTime)value!).ToUniversalTime().ToString("O")));
         }
 
         if (type == typeof(ObjectId))
         {
-            emitter.Emit(new Scalar(null, value.ToString()));
+            emitter.Emit(new Scalar(null, value!.ToString()!));
         }
 
         if (type == typeof(ObjectId[]))
         {
-            ObjectId[] commits = (ObjectId[])value;
+            ObjectId[] commits = (ObjectId[])value!;
             emitter.Emit(new SequenceStart(null, null, false, SequenceStyle.Block));
 
             foreach (ObjectId commit in commits)

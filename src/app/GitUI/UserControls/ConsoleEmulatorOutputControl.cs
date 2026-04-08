@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Logging;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using Microsoft;
 
@@ -35,7 +34,7 @@ public class ConsoleEmulatorOutputControl : ConsoleOutputControl
 
     public override bool IsDisplayingFullProcessOutput => true;
 
-    public static bool IsSupportedInThisEnvironment => EnvUtils.RunningOnWindows();
+    public static bool IsSupportedInThisEnvironment => OperatingSystem.IsWindows();
 
     public override void AppendMessageFreeThreaded(string text)
     {
@@ -46,7 +45,7 @@ public class ConsoleEmulatorOutputControl : ConsoleOutputControl
     public override void AppendInput(string text)
     {
         Validates.NotNull(_terminal);
-        this.InvokeAndForget(() => _terminal.RunningSession?.WriteInputTextAsync(text));
+        this.InvokeAndForget(() => _terminal.RunningSession?.WriteInputTextAsync(text)!);
     }
 
     public override void KillProcess()
@@ -131,7 +130,7 @@ public class ConsoleEmulatorOutputControl : ConsoleOutputControl
             };
 
             Validates.NotNull(_terminal);
-            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.ConEmuStyle.Value, AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString("F0", CultureInfo.InvariantCulture));
+            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.GetEffectiveConEmuStyle(), AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString("F0", CultureInfo.InvariantCulture));
         }
         catch (Exception ex)
         {
@@ -175,7 +174,7 @@ public partial class ConsoleCommandLineOutputProcessor
         return outputChunk;
     }
 
-    public void AnsiStreamChunkReceived(object sender, AnsiStreamChunkEventArgs args)
+    public void AnsiStreamChunkReceived(object? sender, AnsiStreamChunkEventArgs args)
     {
         string text = args.GetText(GitModule.SystemEncoding);
         string? filtered = FilterOutConsoleCommandLine(text);

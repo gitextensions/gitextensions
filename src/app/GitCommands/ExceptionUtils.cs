@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Text;
+using GitExtensions.Extensibility;
 
 namespace GitCommands;
 
@@ -19,7 +20,7 @@ public static class ExceptionUtils
     {
         if (!(canIgnore && IsIgnorable(e)))
         {
-            MessageBox.Show(owner, string.Join(Environment.NewLine + Environment.NewLine, info, e.ToStringWithData()), "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(owner, string.Join(Environment.NewLine + Environment.NewLine, info, e.ToStringWithData()));
         }
     }
 

@@ -111,8 +111,8 @@ public partial class FindAndReplaceForm : GitExtensionsForm
 
         ReplaceMode = replaceMode;
 
-        Owner = (Form)editor.TopLevelControl;
-        Location = new Point(Owner.Location.X + 100, Owner.Location.Y + 100);
+        Owner = (Form)editor.TopLevelControl!;
+        Location = new Point(Owner!.Location.X + 100, Owner.Location.Y + 100);
         Show();
 
         txtLookFor.SelectAll();
@@ -135,7 +135,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
     {
         if (string.IsNullOrEmpty(txtLookFor.Text))
         {
-            MessageBox.Show(this, _noSearchString.Text, Text, MessageBoxButtons.OK,
+            MessageBoxes.Show(this, _noSearchString.Text, Text, MessageBoxButtons.OK,
                             MessageBoxIcon.Information);
             return null;
         }
@@ -147,8 +147,8 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         _search.MatchCase = chkMatchCase.Checked;
         _search.MatchWholeWordOnly = chkMatchWholeWord.Checked;
 
-        FileStatusItem startItem = null;
-        FileStatusItem currentItem = null;
+        FileStatusItem? startItem = null;
+        FileStatusItem? currentItem = null;
         TextRange? range;
         do
         {
@@ -208,7 +208,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         while (range is null && startItem != currentItem && currentItem is not null);
         if (range is null && messageIfNotFound is not null)
         {
-            MessageBox.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBoxes.Show(this, messageIfNotFound, " ", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
         return range;
@@ -228,7 +228,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         _editor.ActiveTextAreaControl.Caret.Position = p2;
     }
 
-    private void ScanRegionChanged(object sender, EventArgs e)
+    private void ScanRegionChanged(object? sender, EventArgs e)
     {
         UpdateTitleBar();
     }
@@ -274,7 +274,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
 
             if (count == 0)
             {
-                MessageBox.Show(this, _textNotFoundString2.Text, _notFoundString.Text, MessageBoxButtons.OK,
+                MessageBoxes.Show(this, _textNotFoundString2.Text, _notFoundString.Text, MessageBoxButtons.OK,
                                 MessageBoxIcon.Information);
             }
             else
@@ -356,11 +356,11 @@ public partial class FindAndReplaceForm : GitExtensionsForm
 
         if (count == 0)
         {
-            MessageBox.Show(this, _noOccurrencesFoundString.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBoxes.Show(this, _noOccurrencesFoundString.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
         else
         {
-            MessageBox.Show(this, string.Format(_replacedOccurrencesString.Text, count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBoxes.Show(this, string.Format(_replacedOccurrencesString.Text, count), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             Close();
         }
     }
@@ -702,7 +702,7 @@ public sealed class TextEditorSearcher : IDisposable
         return substr == _lookFor2;
     }
 
-    private void DocumentOnTextContentChanged(object sender, EventArgs e)
+    private void DocumentOnTextContentChanged(object? sender, EventArgs e)
     {
         ClearScanRegion();
     }

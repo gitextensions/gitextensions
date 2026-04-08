@@ -3,7 +3,6 @@ using System.Xml.Serialization;
 
 namespace ResourceManager;
 
-[Serializable]
 [DebuggerDisplay("Hotkey: {CommandCode} {Name}")]
 public class HotkeyCommand
 {
@@ -32,10 +31,10 @@ public class HotkeyCommand
 
     public static HotkeyCommand[] FromEnum(Type enumType)
     {
-        return [.. Enum.GetValues(enumType).Cast<object>().Select(c => new HotkeyCommand((int)c, c.ToString()))];
+        return [.. Enum.GetValues(enumType).Cast<object>().Select(c => new HotkeyCommand((int)c, c.ToString()!))];
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is HotkeyCommand other &&
                GetFieldsToCompare().SequenceEqual(other.GetFieldsToCompare());

@@ -136,7 +136,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         pie.SetColors([.. DecentColors.Select(c => c.AdaptBackColor())]);
         pie.SetShadowStyle(ShadowStyle.GradualShadow);
 
-        if (pie.Parent.Width > pie.Parent.Height)
+        if (pie.Parent!.Width > pie.Parent.Height)
         {
             pie.Height = pie.Parent.Height;
             pie.Width = pie.Parent.Height;
@@ -192,7 +192,7 @@ public partial class FormGitStatistics : GitExtensionsFormBase
         }
     }
 
-    private void OnLineCounterUpdated(object sender, EventArgs e)
+    private void OnLineCounterUpdated(object? sender, EventArgs e)
     {
         Validates.NotNull(_lineCounter);
 

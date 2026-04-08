@@ -5,7 +5,7 @@
 /// </summary>
 internal class PictureBoxEx : PictureBox
 {
-    public event EventHandler<Exception> PaintFailed;
+    public event EventHandler<Exception>? PaintFailed;
 
     protected override void OnPaint(PaintEventArgs e)
     {

@@ -3,7 +3,7 @@
 public static class ControlTagExtensions
 {
     public static bool HasTag<TValue>(this Control control) =>
-        control.HasTag<TValue>(typeof(TValue).FullName);
+        control.HasTag<TValue>(typeof(TValue).FullName!);
 
     public static bool HasTag<TValue>(this Control control, string key)
     {
@@ -13,12 +13,12 @@ public static class ControlTagExtensions
         }
 
         return control.Tag is Dictionary<string, object> dict &&
-            dict.TryGetValue(key, out object value) &&
+            dict.TryGetValue(key, out object? value) &&
             value is TValue;
     }
 
     public static TValue? GetTag<TValue>(this Control control) =>
-        GetTag<TValue>(control, typeof(TValue).FullName);
+        GetTag<TValue>(control, typeof(TValue).FullName!);
 
     public static TValue? GetTag<TValue>(this Control control, string key)
     {
@@ -35,7 +35,7 @@ public static class ControlTagExtensions
     }
 
     public static void SetTag<TValue>(this Control control, TValue value) =>
-        control.SetTag(typeof(TValue).FullName, value);
+        control.SetTag(typeof(TValue).FullName!, value);
 
     public static void SetTag<TValue>(this Control control, string key, TValue value)
     {

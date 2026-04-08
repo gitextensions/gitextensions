@@ -17,7 +17,7 @@ public class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCell
             if (_checked != value)
             {
                 _checked = value;
-                DataGridView.InvalidateCell(this);
+                DataGridView?.InvalidateCell(this);
             }
         }
     }
@@ -27,9 +27,9 @@ public class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCell
         Rectangle cellBounds,
         int rowIndex,
         DataGridViewElementStates dataGridViewElementState,
-        object value,
-        object formattedValue,
-        string errorText,
+        object? value,
+        object? formattedValue,
+        string? errorText,
         DataGridViewCellStyle cellStyle,
         DataGridViewAdvancedBorderStyle advancedBorderStyle,
         DataGridViewPaintParts paintParts)
@@ -72,7 +72,7 @@ public class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCell
             if (CheckBoxClicked is not null)
             {
                 OnCheckBoxClicked(new CheckBoxHeaderCellEventArgs(Checked));
-                DataGridView.InvalidateCell(this);
+                DataGridView?.InvalidateCell(this);
             }
         }
 

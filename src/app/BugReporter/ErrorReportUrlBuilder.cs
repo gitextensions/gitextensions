@@ -5,13 +5,13 @@ namespace BugReporter;
 
 public interface IErrorReportUrlBuilder
 {
-    string Build(SerializableException exception, string exceptionInfo, string environmentInfo, string? additionalInfo);
-    string CopyText(SerializableException exception, string exceptionInfo, string environmentInfo, string? additionalInfo);
+    string Build(SerializableException exception, string? exceptionInfo, string? environmentInfo, string? additionalInfo);
+    string CopyText(SerializableException exception, string? exceptionInfo, string? environmentInfo, string? additionalInfo);
 }
 
 public sealed class ErrorReportUrlBuilder : IErrorReportUrlBuilder
 {
-    public string Build(SerializableException exception, string exceptionInfo, string environmentInfo, string? additionalInfo)
+    public string Build(SerializableException exception, string? exceptionInfo, string? environmentInfo, string? additionalInfo)
     {
         ArgumentNullException.ThrowIfNull(exception);
 
@@ -19,13 +19,13 @@ public sealed class ErrorReportUrlBuilder : IErrorReportUrlBuilder
 
         sb.Append($"template=bug_report.yml");
         sb.Append($"&labels={Uri.EscapeDataString("type: NBug")}");
-        sb.Append($"&about={Uri.EscapeDataString(environmentInfo)}");
+        sb.Append($"&about={Uri.EscapeDataString(environmentInfo ?? "")}");
         sb.Append($"&description={Uri.EscapeDataString(GetExceptionDetails(exception, exceptionInfo, additionalInfo).ToString())}");
 
         return sb.ToString();
     }
 
-    public string CopyText(SerializableException exception, string exceptionInfo, string environmentInfo, string? additionalInfo)
+    public string CopyText(SerializableException exception, string? exceptionInfo, string? environmentInfo, string? additionalInfo)
     {
         ArgumentNullException.ThrowIfNull(exception);
 
@@ -36,7 +36,7 @@ public sealed class ErrorReportUrlBuilder : IErrorReportUrlBuilder
         return sb.ToString();
     }
 
-    private static StringBuilder GetExceptionDetails(SerializableException exception, string exceptionInfo, string? additionalInfo)
+    private static StringBuilder GetExceptionDetails(SerializableException exception, string? exceptionInfo, string? additionalInfo)
     {
         StringBuilder exceptionDetails = new();
         if (!string.IsNullOrEmpty(exceptionInfo))

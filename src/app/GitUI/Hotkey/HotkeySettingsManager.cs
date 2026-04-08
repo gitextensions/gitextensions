@@ -57,7 +57,7 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
     {
         // Get the default settings
         IReadOnlyList<HotkeySettings> defaultSettings = CreateDefaultSettings();
-        HotkeySettings[] loadedSettings = LoadSerializedSettings();
+        HotkeySettings[]? loadedSettings = LoadSerializedSettings();
 
         MergeIntoDefaultSettings(defaultSettings, loadedSettings);
 
@@ -94,7 +94,7 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
             using StringWriter sw = new();
             using XmlWriter xmlWriter = XmlWriter.Create(sw, xmlWriterSettings);
 
-            _serializer.Serialize(xmlWriter, settings.ToArray());
+            _serializer!.Serialize(xmlWriter, settings.ToArray());
             AppSettings.SerializedHotkeys = sw.ToString();
         }
         catch
@@ -124,7 +124,7 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
                     foreach (HotkeyCommand command in setting.Commands)
                     {
                         string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                        if (defaultCommands.TryGetValue(dictKey, out HotkeyCommand defaultCommand))
+                        if (defaultCommands.TryGetValue(dictKey, out HotkeyCommand? defaultCommand))
                         {
                             defaultCommand.KeyData = command.KeyData;
                         }
@@ -166,7 +166,7 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
         try
         {
             using StringReader reader = new(serializedHotkeys);
-            return (HotkeySettings[])_serializer.Deserialize(reader);
+            return (HotkeySettings[]?)_serializer!.Deserialize(reader);
         }
         catch
         {
@@ -176,7 +176,7 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
 
     public IReadOnlyList<HotkeySettings> CreateDefaultSettings()
     {
-        HotkeyCommand Hk(object en, Keys k) => new((int)en, en.ToString()) { KeyData = k };
+        HotkeyCommand Hk(object en, Keys k) => new((int)en, en.ToString()!) { KeyData = k };
 
         const Keys OpenWithDifftoolHotkey = Keys.F3;
         const Keys OpenWithDifftoolFirstToLocalHotkey = Keys.Alt | Keys.F3;

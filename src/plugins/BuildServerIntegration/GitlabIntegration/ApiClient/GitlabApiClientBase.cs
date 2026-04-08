@@ -1,15 +1,20 @@
 ﻿using System.Net;
+using System.Text.Json;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient.Models;
 using Microsoft;
-using Newtonsoft.Json;
 
 namespace GitExtensions.Plugins.GitlabIntegration.ApiClient;
 
-public class GitlabApiClientBase : IDisposable
+public abstract class GitlabApiClientBase : IDisposable
 {
+    private static readonly JsonSerializerOptions _jsonOptions = new()
+    {
+        PropertyNameCaseInsensitive = true,
+    };
+
     private readonly HttpClient _httpClient;
 
-    public GitlabApiClientBase(string instanceUrl, string apiToken)
+    protected GitlabApiClientBase(string instanceUrl, string apiToken)
     {
         InstanceUrl = instanceUrl;
         _httpClient = InitClient(instanceUrl, apiToken);
@@ -17,7 +22,7 @@ public class GitlabApiClientBase : IDisposable
 
     public string InstanceUrl { get; }
 
-    private HttpClient InitClient(string instanceUrl, string apiToken)
+    private static HttpClient InitClient(string instanceUrl, string apiToken)
     {
         HttpClient? client = new()
         {
@@ -62,7 +67,7 @@ public class GitlabApiClientBase : IDisposable
 
         string json = await response.Content.ReadAsStringAsync(cancellationToken);
 
-        IEnumerable<TItem>? list = JsonConvert.DeserializeObject<IEnumerable<TItem>>(json);
+        IEnumerable<TItem>? list = JsonSerializer.Deserialize<IEnumerable<TItem>>(json, _jsonOptions);
 
         PagedResponse<TItem> result = new()
         {
@@ -71,7 +76,7 @@ public class GitlabApiClientBase : IDisposable
             PageNumber = GetIntHeader(response, "X-Page"),
             PageSize = GetIntHeader(response, "X-Per-Page"),
             NextPage = GetIntHeader(response, "X-Next-Page"),
-            Items = list
+            Items = list ?? []
         };
 
         return result;
@@ -84,7 +89,7 @@ public class GitlabApiClientBase : IDisposable
 
         string json = await response.Content.ReadAsStringAsync();
 
-        TItem? item = JsonConvert.DeserializeObject<TItem>(json);
+        TItem? item = JsonSerializer.Deserialize<TItem>(json, _jsonOptions);
 
         return item;
     }

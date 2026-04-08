@@ -6,7 +6,6 @@ namespace GitUI.Hotkey;
 /// <summary>
 /// Stores all hotkey mappings of one target.
 /// </summary>
-[Serializable]
 public class HotkeySettings
 {
     [XmlArray]
@@ -25,7 +24,7 @@ public class HotkeySettings
         Commands = commands;
     }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is HotkeySettings other && Commands.SequenceEqual(other.Commands);
     }

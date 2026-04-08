@@ -1,5 +1,5 @@
-﻿using CommonTestUtils;
-using FluentAssertions;
+﻿using AwesomeAssertions;
+using CommonTestUtils;
 using GitExtUtils;
 using GitUI.CommandsDialogs.SubmodulesDialog;
 
@@ -21,7 +21,7 @@ public class FormAddSubmoduleTests
     private readonly string[] _branches = ["master", "branch", "", "b123", "b456", "b789"];
 
     // Created once for each test
-    private MockExecutable _gitExecutable;
+    private MockExecutable _gitExecutable = null!;
 
     [SetUp]
     public void SetUp()

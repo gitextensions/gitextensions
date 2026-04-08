@@ -1,5 +1,5 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitCommands;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
@@ -9,7 +9,7 @@ namespace GitCommandsTests;
 [TestFixture]
 public class SshPathLocatorTest
 {
-    private IFileSystem _fileSystem;
+    private IFileSystem _fileSystem = null!;
 
     [SetUp]
     public void Setup()

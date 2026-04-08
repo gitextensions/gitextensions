@@ -59,7 +59,7 @@ public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
         RecreateObservable();
     }
 
-    private void OnPostSettings(object sender, GitUIPostActionEventArgs e)
+    private void OnPostSettings(object? sender, GitUIPostActionEventArgs e)
     {
         RecreateObservable();
     }
@@ -134,7 +134,7 @@ public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
 
             try
             {
-                _currentGitUiCommands.Module.GitExecutable.GetOutput(args);
+                _currentGitUiCommands!.Module.GitExecutable.GetOutput(args);
             }
             catch
             {
@@ -156,7 +156,7 @@ public class BackgroundFetchPlugin : GitPluginBase, IGitPluginForRepository
             // git fetch is writing result details into standard error and not standard output, see:
             // https://github.com/gitextensions/gitextensions/pull/10793
             // https://lore.kernel.org/git/xmqq7cvqrdu6.fsf@gitster.g/
-            msg = _currentGitUiCommands.Module.GitExecutable.Execute(args).StandardError;
+            msg = _currentGitUiCommands!.Module.GitExecutable.Execute(args).StandardError;
         }
         catch
         {

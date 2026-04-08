@@ -22,7 +22,7 @@ public partial class GotoUserManualControl : GitExtensionsControl
         UpdateTooltip();
     }
 
-    private string _manualSectionAnchorName;
+    private string _manualSectionAnchorName = null!;
     public string ManualSectionAnchorName
     {
         get { return _manualSectionAnchorName; }
@@ -36,7 +36,7 @@ public partial class GotoUserManualControl : GitExtensionsControl
         }
     }
 
-    private string _manualSectionSubfolder;
+    private string _manualSectionSubfolder = null!;
     public string ManualSectionSubfolder
     {
         get { return _manualSectionSubfolder; }

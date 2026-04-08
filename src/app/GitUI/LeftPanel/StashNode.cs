@@ -32,7 +32,7 @@ internal sealed class StashNode : BaseRevisionNode
 
     internal override void OnDoubleClick()
     {
-        OpenStash(TreeViewNode.TreeView);
+        OpenStash(TreeViewNode.TreeView!);
     }
 
     internal bool OpenStash(IWin32Window owner)

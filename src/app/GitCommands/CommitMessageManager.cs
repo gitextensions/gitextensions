@@ -91,6 +91,7 @@ public sealed class CommitMessageManager : ICommitMessageManager
     internal CommitMessageManager(Control owner, string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string? overriddenCommitMessage = null)
     {
         ArgumentNullException.ThrowIfNull(owner);
+        ArgumentNullException.ThrowIfNull(workingDirGitDir);
 
         _owner = owner;
         _fileSystem = fileSystem;
@@ -211,7 +212,7 @@ public sealed class CommitMessageManager : ICommitMessageManager
         return formattedCommitMessage.ToString();
     }
 
-    private string GetFilePath(string workingDirGitDir, string fileName) => _fileSystem.Path.Combine(workingDirGitDir, fileName);
+    private string GetFilePath(string workingDirGitDir, string fileName) => _fileSystem.Path.Join(workingDirGitDir, fileName);
 
     private string GetMergeOrCommitMessagePath() => IsMergeCommit ? MergeMessagePath : CommitMessagePath;
 
@@ -231,7 +232,7 @@ public sealed class CommitMessageManager : ICommitMessageManager
         catch (Exception ex) when (ex is not (OperationCanceledException or ObjectDisposedException))
         {
             await _owner.SwitchToMainThreadAsync(cancellationToken: cancellationToken);
-            MessageBox.Show(_owner, string.Format(CannotAccessFile, ex.Message, filePath), errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            MessageBoxes.Show(_owner, string.Format(CannotAccessFile, ex.Message, filePath), errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
             return string.Empty;
         }
     }
@@ -255,7 +256,7 @@ public sealed class CommitMessageManager : ICommitMessageManager
             await _owner.SwitchToMainThreadAsync(cancellationToken: cancellationToken);
 
             // No need to cancel the other operations in FormCommit - just let the user know that something went wrong
-            MessageBox.Show(_owner, string.Format(CannotAccessFile, ex.Message, filePath), errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+            MessageBoxes.Show(_owner, string.Format(CannotAccessFile, ex.Message, filePath), errorTitle, MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
         }
     }
 }

@@ -40,7 +40,7 @@ public class CaseSensitiveComboBox : ComboBox
     {
         for (int i = 0; i < Items.Count; i++)
         {
-            if (GetItemText(Items[i]).Equals(s, StringComparison.Ordinal))
+            if (GetItemText(Items[i])!.Equals(s, StringComparison.Ordinal))
             {
                 return i;
             }

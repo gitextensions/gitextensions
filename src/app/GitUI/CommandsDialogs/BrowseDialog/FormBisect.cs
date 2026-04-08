@@ -43,7 +43,7 @@ public sealed partial class FormBisect : GitModuleForm
         IReadOnlyList<GitRevision> revisions = _revisionGridInfo.GetSelectedRevisions();
         if (revisions.Count > 1)
         {
-            if (MessageBox.Show(this, _bisectStart.Text, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            if (MessageBoxes.Show(this, _bisectStart.Text, Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 BisectRange(revisions[0].ObjectId, revisions[^1].ObjectId);
                 Close();

@@ -6,10 +6,10 @@ namespace GitExtensions.Plugins.GitlabIntegration.Settings;
 
 public partial class GitlabRemoteParser : RemoteParser
 {
-    [GeneratedRegex(@"git(?:@|://)(?<host>[^/]+)[:/](?<owner>[^/]+)/(?<repo>[\w_\.\-]+)\.git")]
+    [GeneratedRegex(@"git(?:@|://)(?<host>[^/]+)[:/](?<owner>[^/]+)/(?<repo>[\w_\.\-]+)\.git", RegexOptions.ExplicitCapture)]
     private static partial Regex GitlabSshUrlRegex { get; }
 
-    [GeneratedRegex(@"https?://(?<host>[^/@]+)/(?<owner>.+)/(?<repo>[\w_\.\-]+)(?:.git)?")]
+    [GeneratedRegex(@"https?://(?<host>[^/@]+)/(?<owner>.+)/(?<repo>[\w_\.\-]+)(?:\.git)?", RegexOptions.ExplicitCapture)]
     private static partial Regex GitlabHttpsUrlRegex { get; }
 
     private static readonly Regex[] _gitLabRegexes = [GitlabHttpsUrlRegex, GitlabSshUrlRegex];
@@ -27,7 +27,7 @@ public partial class GitlabRemoteParser : RemoteParser
         owner = null;
         repository = null;
 
-        Match m = MatchRegExes(remoteUrl, _gitLabRegexes);
+        Match? m = MatchRegExes(remoteUrl, _gitLabRegexes);
 
         if (m is null || !m.Success)
         {

@@ -1,4 +1,4 @@
-﻿using GitCommands.Git;
+using GitCommands.Git;
 using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
 using GitExtensions.Extensibility;
@@ -72,17 +72,17 @@ public sealed partial class FormCreateTag : GitModuleForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
     private string CreateTag()
     {
-        ObjectId objectId = commitPickerSmallControl1.SelectedObjectId;
+        ObjectId? objectId = commitPickerSmallControl1.SelectedObjectId;
 
         if (objectId is null)
         {
-            MessageBox.Show(this, _noRevisionSelected.Text, _messageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _noRevisionSelected.Text, _messageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return "";
         }
 

@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using GitUI.Properties;
 using GitUI.UserControls;
 

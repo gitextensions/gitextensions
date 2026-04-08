@@ -1,11 +1,12 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 using System.Net;
 using System.Net.Http.Headers;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Nodes;
 using System.Text.RegularExpressions;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
@@ -14,31 +15,19 @@ using GitUI;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
-using Newtonsoft.Json.Linq;
 
 namespace JenkinsIntegration;
 
 [MetadataAttribute]
 [AttributeUsage(AttributeTargets.Class)]
-public class JenkinsIntegrationMetadata : BuildServerAdapterMetadataAttribute
+public sealed class JenkinsIntegrationMetadata : BuildServerAdapterMetadataAttribute
 {
     public JenkinsIntegrationMetadata(string buildServerType)
         : base(buildServerType)
     {
     }
 
-    public override string? CanBeLoaded
-    {
-        get
-        {
-            if (EnvUtils.IsNet4FullOrHigher())
-            {
-                return null;
-            }
-
-            return ".NET Framework 4 or higher required";
-        }
-    }
+    public override string? CanBeLoaded => null;
 }
 
 [Export(typeof(IBuildServerAdapter))]
@@ -66,8 +55,8 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
         _buildServerWatcher = buildServerWatcher;
 
-        string projectName = config.GetString("ProjectName", null);
-        string hostName = config.GetString("BuildServerUrl", null);
+        string? projectName = config.GetString("ProjectName", null);
+        string? hostName = config.GetString("BuildServerUrl", null);
 
         if (!string.IsNullOrEmpty(hostName) && !string.IsNullOrEmpty(projectName))
         {
@@ -81,7 +70,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
                 BaseAddress = baseAddress
             };
 
-            IBuildServerCredentials buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
+            IBuildServerCredentials? buildServerCredentials = buildServerWatcher.GetBuildServerCredentials(this, true);
 
             UpdateHttpClientOptions(buildServerCredentials);
 
@@ -105,7 +94,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
         get
         {
             Validates.NotNull(_httpClient);
-            return _httpClient.BaseAddress.Host;
+            return _httpClient.BaseAddress!.Host;
         }
     }
 
@@ -113,14 +102,14 @@ internal class JenkinsAdapter : IBuildServerAdapter
     {
         public string? Url { get; set; }
         public long Timestamp { get; set; }
-        public IEnumerable<JToken>? JobDescription { get; set; }
+        public IEnumerable<JsonNode>? JobDescription { get; set; }
     }
 
     private async Task<ResponseInfo> GetBuildInfoTaskAsync(string projectUrl, bool fullInfo, CancellationToken cancellationToken)
     {
         string? t;
         long timestamp = 0;
-        IEnumerable<JToken> s = [];
+        IEnumerable<JsonNode> s = [];
 
         try
         {
@@ -135,28 +124,29 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
         if (!string.IsNullOrWhiteSpace(t) && !cancellationToken.IsCancellationRequested)
         {
-            JObject jobDescription = JObject.Parse(t);
+            JsonNode jobDescription = JsonNode.Parse(t)!;
             if (jobDescription["builds"] is not null)
             {
                 // Freestyle jobs
-                s = jobDescription["builds"];
+                s = jobDescription["builds"]!.AsArray().OfType<JsonNode>();
             }
             else if (jobDescription["jobs"] is not null)
             {
                 // Multi-branch pipeline
-                s = jobDescription["jobs"]
-                    .SelectMany(j => j["builds"]);
-                foreach (JToken j in jobDescription["jobs"])
+                s = jobDescription["jobs"]!.AsArray()
+                    .OfType<JsonNode>()
+                    .SelectMany(j => j["builds"]!.AsArray().OfType<JsonNode>());
+                foreach (JsonNode? j in jobDescription["jobs"]!.AsArray())
                 {
                     try
                     {
-                        if (j["lastBuild"]?["timestamp"] is null)
+                        if (j?["lastBuild"]?["timestamp"] is null)
                         {
                             continue;
                         }
 
-                        JToken ts = j["lastBuild"]["timestamp"];
-                        timestamp = Math.Max(timestamp, ts.ToObject<long>());
+                        long ts = j!["lastBuild"]!["timestamp"]!.GetValue<long>();
+                        timestamp = Math.Max(timestamp, ts);
                     }
                     catch
                     {
@@ -168,7 +158,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
             // else: The server had no response (overloaded?) or a multi-branch pipeline is not configured
             if (timestamp == 0 && jobDescription["lastBuild"]?["timestamp"] is not null)
             {
-                timestamp = jobDescription["lastBuild"]["timestamp"].ToObject<long>();
+                timestamp = jobDescription["lastBuild"]!["timestamp"]!.GetValue<long>();
             }
         }
 
@@ -271,7 +261,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
                 _lastProjectBuildTime[buildResponse.Url] = buildResponse.Timestamp;
 
-                foreach (JToken buildDetails in buildResponse.JobDescription)
+                foreach (JsonNode buildDetails in buildResponse.JobDescription)
                 {
                     if (cancellationToken.IsCancellationRequested)
                     {
@@ -280,7 +270,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
                     try
                     {
-                        BuildInfo buildInfo = CreateBuildInfo((JObject)buildDetails);
+                        BuildInfo? buildInfo = CreateBuildInfo(buildDetails);
                         if (buildInfo is null)
                         {
                             continue;
@@ -373,35 +363,44 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
     private const string _jenkinsTreeBuildInfo = "number,result,timestamp,url,actions[lastBuiltRevision[SHA1,branch[name]],totalCount,failCount,skipCount],building,duration";
 
-    private BuildInfo? CreateBuildInfo(JObject buildDescription)
+    internal BuildInfo? CreateBuildInfo(JsonNode buildDescription)
     {
-        string idValue = buildDescription["number"].ToObject<string>();
-        string statusValue = buildDescription["result"].ToObject<string>();
-        long startDateTicks = buildDescription["timestamp"].ToObject<long>();
-        string webUrl = buildDescription["url"].ToObject<string>();
+        string? idValue = GetNodeString(buildDescription["number"]);
+        string? statusValue = GetNodeString(buildDescription["result"]);
+        long startDateTicks = buildDescription["timestamp"]!.GetValue<long>();
+        string? webUrl = GetNodeString(buildDescription["url"]);
 
-        JToken action = buildDescription["actions"];
+        JsonArray? action = buildDescription["actions"]?.AsArray();
         List<ObjectId> commitHashList = [];
         string testResults = string.Empty;
-        foreach (JToken element in action)
+        foreach (JsonNode? element in action ?? [])
         {
+            if (element is null)
+            {
+                continue;
+            }
+
             if (element["lastBuiltRevision"] is not null)
             {
-                commitHashList.Add(ObjectId.Parse(element["lastBuiltRevision"]["SHA1"].ToObject<string>()));
-                JToken branches = element["lastBuiltRevision"]["branch"];
+                commitHashList.Add(ObjectId.Parse(GetNodeString(element["lastBuiltRevision"]!["SHA1"])!));
+                JsonArray? branches = element["lastBuiltRevision"]!["branch"]?.AsArray();
                 if (_ignoreBuilds is not null && branches is not null)
                 {
                     // Ignore build events for specified branches
-                    foreach (JToken branch in branches)
+                    foreach (JsonNode? branch in branches)
                     {
-                        JToken name = branch["name"];
+                        if (branch is null)
+                        {
+                            continue;
+                        }
+
+                        string? name = GetNodeString(branch["name"]);
                         if (name is null)
                         {
                             continue;
                         }
 
-                        string name2 = name.ToObject<string>();
-                        if (!string.IsNullOrWhiteSpace(name2) && _ignoreBuilds.IsMatch(name2))
+                        if (!string.IsNullOrWhiteSpace(name) && _ignoreBuilds.IsMatch(name))
                         {
                             return null;
                         }
@@ -414,16 +413,16 @@ internal class JenkinsAdapter : IBuildServerAdapter
                 continue;
             }
 
-            int testCount = element["totalCount"].ToObject<int>();
+            int testCount = element["totalCount"]!.GetValue<int>();
             if (testCount != 0)
             {
-                int failedTestCount = element["failCount"].ToObject<int>();
-                int skippedTestCount = element["skipCount"].ToObject<int>();
+                int failedTestCount = element["failCount"]!.GetValue<int>();
+                int skippedTestCount = element["skipCount"]!.GetValue<int>();
                 testResults = $"{testCount} tests ({failedTestCount} failed, {skippedTestCount} skipped)";
             }
         }
 
-        bool isRunning = buildDescription["building"].ToObject<bool>();
+        bool isRunning = buildDescription["building"]!.GetValue<bool>();
         long? buildDuration;
         if (isRunning)
         {
@@ -431,10 +430,10 @@ internal class JenkinsAdapter : IBuildServerAdapter
         }
         else
         {
-            buildDuration = buildDescription["duration"].ToObject<long>();
+            buildDuration = buildDescription["duration"]!.GetValue<long>();
         }
 
-        BuildStatus status = isRunning ? BuildStatus.InProgress : ParseBuildStatus(statusValue);
+        BuildStatus status = isRunning ? BuildStatus.InProgress : ParseBuildStatus(statusValue ?? string.Empty);
         string statusText = status.ToString("G");
         BuildInfo buildInfo = new()
         {
@@ -459,6 +458,23 @@ internal class JenkinsAdapter : IBuildServerAdapter
     {
         byte[] byteArray = Encoding.UTF8.GetBytes($"{username}:{password}");
         return new AuthenticationHeaderValue("Basic", Convert.ToBase64String(byteArray));
+    }
+
+    // Converts non-string JSON values (numbers, booleans) to their string representations,
+    // aligned with Newtonsoft's ToObject<string>() behavior.
+    private static string? GetNodeString(JsonNode? node)
+    {
+        if (node is null)
+        {
+            return null;
+        }
+
+        if (node is JsonValue jsonValue && jsonValue.TryGetValue(out string? stringValue))
+        {
+            return stringValue;
+        }
+
+        return node.GetValue<JsonElement>().ToString();
     }
 
     private static BuildStatus ParseBuildStatus(string statusValue)
@@ -493,7 +509,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
             {
                 HttpContent httpContent = resp.Content;
 
-                if (httpContent.Headers.ContentType.MediaType == "text/html")
+                if (httpContent.Headers.ContentType?.MediaType == "text/html")
                 {
                     // Jenkins responds with an HTML login page when guest access is denied.
                     unauthorized = true;
@@ -545,8 +561,8 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
     private async Task<string> GetResponseAsync(string relativePath, CancellationToken cancellationToken)
     {
-        using Stream responseStream = await GetStreamAsync(relativePath, cancellationToken).ConfigureAwait(false);
-        using StreamReader reader = new(responseStream);
+        using Stream? responseStream = await GetStreamAsync(relativePath, cancellationToken).ConfigureAwait(false);
+        using StreamReader reader = new(responseStream ?? Stream.Null);
         return await reader.ReadToEndAsync(cancellationToken);
     }
 
@@ -604,8 +620,6 @@ internal class JenkinsAdapter : IBuildServerAdapter
 
     public void Dispose()
     {
-        GC.SuppressFinalize(this);
-
         _httpClient?.Dispose();
     }
 }

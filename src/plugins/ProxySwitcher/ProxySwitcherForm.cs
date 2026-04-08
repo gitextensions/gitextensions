@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Settings;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
@@ -52,7 +53,7 @@ public partial class ProxySwitcherForm : GitExtensionsFormBase
     {
         if (string.IsNullOrEmpty(_plugin.HttpProxy.ValueOrDefault(_settings)))
         {
-            MessageBox.Show(this, _pleaseSetProxy.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, _pleaseSetProxy.Text, Text);
             Close();
         }
         else

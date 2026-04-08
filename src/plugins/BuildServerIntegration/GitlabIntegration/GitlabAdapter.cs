@@ -15,7 +15,7 @@ namespace GitExtensions.Plugins.GitlabIntegration;
 [Export(typeof(IBuildServerAdapter))]
 [GitlabIntegrationMetadata(PluginName)]
 [PartCreationPolicy(CreationPolicy.NonShared)]
-public class GitlabAdapter : IBuildServerAdapter
+public sealed class GitlabAdapter : IBuildServerAdapter
 {
     public const string PluginName = "Gitlab";
     private readonly ConcurrentDictionary<string, DateTime> _loadedItems = new();
@@ -36,6 +36,8 @@ public class GitlabAdapter : IBuildServerAdapter
 
     public void Initialize(IBuildServerWatcher buildServerWatcher, SettingsSource config, Action openSettings, Func<ObjectId, bool>? isCommitInRevisionGrid = null)
     {
+        _loadedItems.Clear();
+
         _apiClient = _apiClientFactory.CreateGitlabApiClient(
             config.GetString("InstanceUrl", string.Empty),
             config.GetString("ApiToken", string.Empty),
@@ -143,6 +145,5 @@ public class GitlabAdapter : IBuildServerAdapter
     public void Dispose()
     {
         _apiClient?.Dispose();
-        GC.SuppressFinalize(this);
     }
 }

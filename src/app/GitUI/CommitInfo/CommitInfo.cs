@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.ComponentModel;
 using System.Net;
 using System.Reactive.Linq;
@@ -213,7 +211,7 @@ public partial class CommitInfo : GitModuleControl
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -300,7 +298,7 @@ public partial class CommitInfo : GitModuleControl
         catch (RefsWarningException ex)
         {
             await this.SwitchToMainThreadAsync();
-            MessageBox.Show(this, string.Format("{0}{1}{1}{2}", _brokenRefs.Text, Environment.NewLine, ex.Message), _repoFailure.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, string.Format("{0}{1}{1}{2}", _brokenRefs.Text, Environment.NewLine, ex.Message), _repoFailure.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

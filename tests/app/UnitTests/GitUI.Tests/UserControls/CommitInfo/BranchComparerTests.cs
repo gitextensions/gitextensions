@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitCommands;
 
 namespace GitUITests.UserControls.CommitInfo;
@@ -15,7 +15,7 @@ public class BranchComparerTests
 
         List<string> expectedBranches =
         [
-            currentBranch,
+            currentBranch!,
 
             // local branch important
             // order 0

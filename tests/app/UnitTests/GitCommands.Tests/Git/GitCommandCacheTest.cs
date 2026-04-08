@@ -1,11 +1,11 @@
-using GitCommands;
+﻿using GitCommands;
 
 namespace GitCommandsTests.Git;
 
 [TestFixture]
 public class GitCommandCacheTest
 {
-    private CommandCache _cache;
+    private CommandCache _cache = null!;
 
     [SetUp]
     public void SetUp()
@@ -28,7 +28,7 @@ public class GitCommandCacheTest
     [Test]
     public void TestAddCannotCache()
     {
-        _cache.Add(null, null, null);
+        _cache.Add(null, null!, null!);
         ClassicAssert.IsFalse(_cache.GetCachedCommands().Any());
     }
 

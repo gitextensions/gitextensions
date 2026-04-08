@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -6,6 +6,7 @@ using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
 using GitUI.Infrastructure;
 using GitUI.ScriptsEngine;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs;
@@ -20,7 +21,7 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
 
     private readonly string _defaultRemoteBranch;
     private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
-    private HashSet<string> _mergedBranches;
+    private HashSet<string>? _mergedBranches;
 
     public FormDeleteRemoteBranch(IGitUICommands commands, string defaultRemoteBranch)
         : base(commands, enablePositionRestore: false)
@@ -108,10 +109,12 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
         // wait for _mergedBranches to be filled
         _taskManager.JoinPendingOperations();
 
+        Validates.NotNull(_mergedBranches);
+
         bool hasUnmergedBranches = selectedBranches.Any(branch => !_mergedBranches.Contains(branch.CompleteName));
         if (hasUnmergedBranches)
         {
-            if (MessageBox.Show(this,
+            if (MessageBoxes.Show(this,
                                 _confirmDeleteUnmergedRemoteBranchMessage.Text,
                                 _deleteRemoteBranchesCaption.Text,
                                 MessageBoxButtons.YesNo,

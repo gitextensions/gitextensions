@@ -18,10 +18,10 @@ internal class TabControlRenderer
         _tabs.Disposed += HandleDisposed;
     }
 
-    private static void HandlePaint(object s, PaintEventArgs e) =>
-        new TabControlPaintContext((TabControl)s, e).Paint();
+    private static void HandlePaint(object? s, PaintEventArgs e) =>
+        new TabControlPaintContext((TabControl)s!, e).Paint();
 
-    private void HandleDisposed(object sender, EventArgs e)
+    private void HandleDisposed(object? sender, EventArgs e)
     {
         _tabs.Paint -= HandlePaint;
         _tabs.Disposed -= HandleDisposed;

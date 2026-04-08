@@ -12,7 +12,7 @@ public sealed class RepoStateVisualiserTests
         _repoStateVisualiser = new RepoStateVisualiser();
     }
 
-    private RepoStateVisualiser _repoStateVisualiser;
+    private RepoStateVisualiser _repoStateVisualiser = null!;
 
     private static GitItemStatus CreateGitItemStatus(
         bool isStaged = false,

@@ -120,7 +120,7 @@ public partial class GeneralSettingsPage : SettingsPageWithHeader
         AppSettings.ShowSubmoduleStatus = chkShowSubmoduleStatusInBrowse.Checked;
 
         AppSettings.DefaultCloneDestinationPath = cbDefaultCloneDestination.Text;
-        AppSettings.DefaultPullAction = (GitPullAction)cboDefaultPullAction.SelectedValue;
+        AppSettings.DefaultPullAction = (GitPullAction)cboDefaultPullAction.SelectedValue!;
         AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
 
         AppSettings.TelemetryEnabled = chkTelemetry.Checked;
@@ -150,7 +150,7 @@ public partial class GeneralSettingsPage : SettingsPageWithHeader
 
     private void DefaultCloneDestinationBrowseClick(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this, cbDefaultCloneDestination.Text);
+        string? userSelectedPath = OsShellUtil.PickFolder(this, cbDefaultCloneDestination.Text);
 
         if (userSelectedPath is not null)
         {

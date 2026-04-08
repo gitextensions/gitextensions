@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests.Git;

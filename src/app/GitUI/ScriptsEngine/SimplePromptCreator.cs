@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 namespace GitUI.ScriptsEngine;
 
 internal interface ISimplePromptCreator

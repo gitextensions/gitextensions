@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -48,7 +48,7 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
             if (string.IsNullOrWhiteSpace(newBranchNamePrefix))
             {
                 GitRevision revision = Module.GetRevision(objectId, shortFormat: true, loadRefs: true);
-                IGitRef firstRef = revision.Refs.FirstOrDefault(r => !r.IsTag) ?? revision.Refs.FirstOrDefault(r => r.IsTag);
+                IGitRef? firstRef = revision.Refs.FirstOrDefault(r => !r.IsTag) ?? revision.Refs.FirstOrDefault(r => r.IsTag);
                 newBranchNamePrefix = firstRef?.LocalName;
 
                 commitSummaryUserControl1.Revision = revision;
@@ -117,14 +117,14 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
         // if the user hits [Enter] at any point, we need to trigger BranchNameTextBox Leave event
         cmdOk.Focus();
 
-        ObjectId objectId = null;
+        ObjectId? objectId = null;
 
         if (!chkCreateOrphan.Checked)
         {
             objectId = commitPicker.SelectedObjectId;
             if (objectId is null)
             {
-                MessageBox.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
                 return;
             }
@@ -133,25 +133,25 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
         string branchName = BranchNameTextBox.Text.Trim();
         if (string.IsNullOrWhiteSpace(branchName))
         {
-            MessageBox.Show(_branchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(_branchNameIsEmpty.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             DialogResult = DialogResult.None;
             return;
         }
 
         if (!Module.CheckBranchFormat(branchName))
         {
-            MessageBox.Show(string.Format(_branchNameIsNotValid.Text, branchName), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(string.Format(_branchNameIsNotValid.Text, branchName), Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             DialogResult = DialogResult.None;
             return;
         }
 
         try
         {
-            ObjectId originalHash = Module.GetCurrentCheckout();
+            ObjectId? originalHash = Module.GetCurrentCheckout();
 
             ArgumentString command = chkCreateOrphan.Checked
                 ? Commands.CreateOrphan(branchName, objectId)
-                : Commands.Branch(branchName, objectId.ToString(), chkCheckoutAfterCreate.Checked);
+                : Commands.Branch(branchName, objectId!.ToString(), chkCheckoutAfterCreate.Checked);
 
             bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (chkCreateOrphan.Checked && success && chkClearOrphan.Checked)
