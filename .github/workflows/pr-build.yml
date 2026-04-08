@@ -1,4 +1,4 @@
-name: CI
+name: PR Build
 
 on:
   push:
