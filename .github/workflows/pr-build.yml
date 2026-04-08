@@ -15,6 +15,7 @@ concurrency:
 
 permissions:
   contents: read
+  checks: write
 
 env:
   DOTNET_NOLOGO: true
@@ -85,6 +86,16 @@ jobs:
 
     - name: Run tests
       run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx /bl:artifacts\log\tests.binlog
+
+    - name: Test report
+      # v1 @ 2024-08-30
+      uses: dorny/test-reporter@d61b558e8df85cb60d09ca3e5b09653b4477cea7
+      if: always() && github.event.pull_request.head.repo.full_name == github.repository
+      continue-on-error: true
+      with:
+        name: Test Results
+        path: 'artifacts/**/TestsResults/**/*.trx'
+        reporter: dotnet-trx
 
     - name: Upload test results
       if: always()
