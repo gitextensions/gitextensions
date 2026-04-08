@@ -41,7 +41,7 @@ public sealed partial class GitLogLineParser : IGitLogLineParser
         LogLine? logLineCurrent = null;
         foreach (string line in lines)
         {
-            LogLine logLine1 = Parse(line);
+            LogLine? logLine1 = Parse(line);
             if (logLine1 is not null)
             {
                 if (logLineCurrent is not null)

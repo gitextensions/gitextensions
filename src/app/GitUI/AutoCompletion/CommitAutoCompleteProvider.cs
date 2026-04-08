@@ -54,13 +54,13 @@ public class CommitAutoCompleteProvider : IAutoCompleteProvider
                 continue;
             }
 
-            Regex regex = GetRegexForExtension(Path.GetExtension(file.Name) ?? "");
+            Regex? regex = GetRegexForExtension(Path.GetExtension(file.Name) ?? "");
 
             if (regex is not null)
             {
                 // HACK: need to expose require methods at IGitModule level
-                string text = await GetChangedFileTextAsync((GitModule)module, file);
-                MatchCollection matches = regex.Matches(text);
+                string? text = await GetChangedFileTextAsync((GitModule)module, file);
+                MatchCollection matches = regex.Matches(text!);
                 foreach (Match match in matches)
                 {
                     // Skip first group since it always contains the entire matched string (regardless of capture groups)
@@ -99,7 +99,7 @@ public class CommitAutoCompleteProvider : IAutoCompleteProvider
 
         Validates.NotNull(appDataPath);
 
-        string path = Path.Combine(appDataPath, "AutoCompleteRegexes.txt");
+        string path = Path.Join(appDataPath, "AutoCompleteRegexes.txt");
 
         if (File.Exists(path))
         {

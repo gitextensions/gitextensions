@@ -10,7 +10,7 @@ namespace GitUI.CommandsDialogs.Menus;
 
 internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
 {
-    public event EventHandler<SettingsChangedEventArgs> SettingsChanged;
+    public event EventHandler<SettingsChangedEventArgs>? SettingsChanged;
 
     public ToolsToolStripMenuItem()
     {
@@ -44,7 +44,7 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
 
     private void GitcommandLogToolStripMenuItemClick(object sender, EventArgs e)
     {
-        FormGitCommandLog.ShowOrActivate(OwnerForm);
+        FormGitCommandLog.ShowOrActivate(OwnerForm!);
     }
 
     private void GitGuiToolStripMenuItemClick(object sender, EventArgs e)

@@ -49,7 +49,7 @@ public sealed class IndexLockManager : IIndexLockManager
     /// <returns><see langword="true"/> if index is locked; otherwise <see langword="false"/>.</returns>
     public bool IsIndexLocked()
     {
-        string indexLockFile = Path.Combine(_gitDirectoryResolver.Resolve(_module.WorkingDir), IndexLock);
+        string indexLockFile = Path.Join(_gitDirectoryResolver.Resolve(_module.WorkingDir), IndexLock);
         return _fileSystem.File.Exists(indexLockFile);
     }
 
@@ -62,7 +62,7 @@ public sealed class IndexLockManager : IIndexLockManager
     /// <exception cref="FileDeleteException">Unable to delete specific index.lock.</exception>
     public void UnlockIndex(bool includeSubmodules = true)
     {
-        string workingFolderIndexLock = Path.Combine(_gitDirectoryResolver.Resolve(_module.WorkingDir), IndexLock);
+        string workingFolderIndexLock = Path.Join(_gitDirectoryResolver.Resolve(_module.WorkingDir), IndexLock);
         if (!includeSubmodules)
         {
             DeleteIndexLock(workingFolderIndexLock);
@@ -74,7 +74,7 @@ public sealed class IndexLockManager : IIndexLockManager
         IEnumerable<string> list = submodules.Select(sm =>
         {
             string submodulePath = _module.GetSubmoduleFullPath(sm);
-            string submoduleIndexLock = Path.Combine(_gitDirectoryResolver.Resolve(submodulePath), IndexLock);
+            string submoduleIndexLock = Path.Join(_gitDirectoryResolver.Resolve(submodulePath), IndexLock);
             return submoduleIndexLock;
         }).Union(new[] { workingFolderIndexLock });
 

@@ -51,7 +51,7 @@ public abstract class SortableBindingList<T> : BindingList<T>
     /// <param name="isReversedComparing">Use reversed sorting order.</param>
     public static Comparison<T> CreateComparison(PropertyDescriptor propertyDescriptor, bool isReversedComparing)
     {
-        if (PropertyComparers.TryGetValue(propertyDescriptor.Name, out Comparison<T> comparer))
+        if (PropertyComparers.TryGetValue(propertyDescriptor.Name, out Comparison<T>? comparer))
         {
             return isReversedComparing ? (x, y) => comparer(y, x) : comparer;
         }

@@ -53,7 +53,7 @@ public class ExternalLinkDefinition
             {
                 try
                 {
-                    return new Regex(NestedSearchPattern, RegexOptions.Compiled);
+                    return new Regex(NestedSearchPattern!, RegexOptions.Compiled);
                 }
                 catch (Exception e)
                 {
@@ -80,7 +80,7 @@ public class ExternalLinkDefinition
             {
                 try
                 {
-                    return new Regex(RemoteSearchPattern, RegexOptions.Compiled);
+                    return new Regex(RemoteSearchPattern!, RegexOptions.Compiled);
                 }
                 catch (Exception e)
                 {
@@ -107,7 +107,7 @@ public class ExternalLinkDefinition
                 {
                     try
                     {
-                        return new Regex(SearchPattern, RegexOptions.Compiled);
+                        return new Regex(SearchPattern!, RegexOptions.Compiled);
                     }
                     catch (Exception e)
                     {
@@ -132,7 +132,7 @@ public class ExternalLinkDefinition
                 {
                     try
                     {
-                        return new Regex(UseRemotesPattern, RegexOptions.Compiled);
+                        return new Regex(UseRemotesPattern!, RegexOptions.Compiled);
                     }
                     catch (Exception e)
                     {

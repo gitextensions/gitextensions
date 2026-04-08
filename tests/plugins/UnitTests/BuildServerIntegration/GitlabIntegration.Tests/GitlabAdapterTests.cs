@@ -1,6 +1,6 @@
 ﻿using System.Reactive.Concurrency;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Plugins.GitlabIntegration;
 using GitExtensions.Plugins.GitlabIntegration.ApiClient;
@@ -14,10 +14,10 @@ namespace GitlabIntegrationTests;
 [TestFixture]
 internal class GitlabAdapterTests
 {
-    private GitlabAdapter _target;
+    private GitlabAdapter _target = null!;
 
-    private IScheduler _scheduler;
-    private IGitlabApiClient _apiClient;
+    private IScheduler _scheduler = null!;
+    private IGitlabApiClient _apiClient = null!;
 
     [SetUp]
     public void SetUp()

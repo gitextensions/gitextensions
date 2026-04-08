@@ -1,6 +1,6 @@
 ﻿using System.Reflection;
+using AwesomeAssertions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands.ExternalLinks;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
@@ -10,7 +10,7 @@ namespace GitCommandsTests.ExternalLinks;
 [TestFixture]
 public class ExternalLinksStorageIntegrationTests
 {
-    private ExternalLinksStorage _externalLinksStorage;
+    private ExternalLinksStorage _externalLinksStorage = null!;
 
     [SetUp]
     public void Setup()
@@ -30,7 +30,7 @@ public class ExternalLinksStorageIntegrationTests
         using GitExtSettingsCache settingsCache = new(settingsFile);
         DistributedSettings settings = new(lowerPriority: null, settingsCache, SettingLevel.Unknown);
 
-        IReadOnlyList<ExternalLinkDefinition> definitions = _externalLinksStorage.Load(settings);
+        IReadOnlyList<ExternalLinkDefinition>? definitions = _externalLinksStorage.Load(settings);
         definitions.Should().HaveCount(expected);
     }
 

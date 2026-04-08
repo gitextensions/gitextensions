@@ -1,5 +1,5 @@
-﻿using CommonTestUtils;
-using FluentAssertions;
+﻿using AwesomeAssertions;
+using CommonTestUtils;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
@@ -9,7 +9,7 @@ namespace GitUITests.Theming;
 [TestFixture]
 public class AppColorDefaultsTests
 {
-    private string _originalPath;
+    private string _originalPath = null!;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
@@ -37,7 +37,7 @@ public class AppColorDefaultsTests
     }
 
     [Test]
-    public void Default_values_are_used_when_not_overridden_in_settings([Values]AppColor name)
+    public void Default_values_are_used_when_not_overridden_in_settings([Values] AppColor name)
     {
         // This only applies when migrating colors from AppSettings to a theme.
         // Fixes https://github.com/gitextensions/gitextensions/issues/11629

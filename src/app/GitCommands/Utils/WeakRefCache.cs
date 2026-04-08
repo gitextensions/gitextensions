@@ -26,7 +26,7 @@ public class WeakRefCache : IDisposable
 
         lock (_weakMapLock)
         {
-            if (_weakMap.TryGetValue(objectUniqueKey, out WeakReference weakReference))
+            if (_weakMap.TryGetValue(objectUniqueKey, out WeakReference? weakReference))
             {
                 cached = weakReference.Target;
             }
@@ -50,7 +50,7 @@ public class WeakRefCache : IDisposable
         return (T)cached!;
     }
 
-    private void OnClearTimer(object source, ElapsedEventArgs e)
+    private void OnClearTimer(object? source, ElapsedEventArgs e)
     {
         lock (_weakMapLock)
         {

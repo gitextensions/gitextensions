@@ -17,6 +17,7 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
 
     protected override void SettingsToPage()
     {
+        // Bind settings with controls
         AddSettingBinding(AppSettings.ConEmuStyle, _NO_TRANSLATE_cboStyle);
         SetCurrentConsoleFont(AppSettings.ConEmuConsoleFont);
 
@@ -38,7 +39,7 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
 
     private void consoleFontChangeButton_Click(object sender, EventArgs e)
     {
-        consoleFontDialog.Font = _consoleFont;
+        consoleFontDialog.Font = _consoleFont!;
         DialogResult result = consoleFontDialog.ShowDialog(this);
 
         if (result is (DialogResult.OK or DialogResult.Yes))

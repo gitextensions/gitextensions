@@ -1,4 +1,4 @@
-using System.Diagnostics.Contracts;
+﻿using System.Diagnostics.Contracts;
 using System.Drawing.Drawing2D;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
@@ -13,7 +13,11 @@ internal static class RevisionGridRefRenderer
     private static readonly float[] _dashPattern = [4, 4];
     private static readonly PointF[] _arrowPoints = new PointF[4];
 
-    public static void DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false)
+    /// <summary>
+    ///  Draws a ref label and returns the painted rectangle in the same coordinate space as <paramref name="bounds"/>.
+    /// </summary>
+    /// <returns>The bounding rectangle of the drawn ref label in DataGridView client coordinates, or <see cref="Rectangle.Empty"/> if nothing was drawn.</returns>
+    public static Rectangle DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false, bool highlight = false)
     {
         int paddingLeftRight = !string.IsNullOrEmpty(name) ? DpiUtil.Scale(4) : DpiUtil.Scale(1);
         int paddingTopBottom = DpiUtil.Scale(2);
@@ -38,7 +42,7 @@ internal static class RevisionGridRefRenderer
         if (rect.Width == 0 || rect.Height == 0)
         {
             // it may happen, as observe in #5396
-            return;
+            return Rectangle.Empty;
         }
 
         DrawRefBackground(
@@ -46,7 +50,7 @@ internal static class RevisionGridRefRenderer
             graphics,
             headColor,
             rect,
-            radius: 3, arrowType, dashedLine, fill);
+            radius: 3, arrowType, dashedLine, fill, highlight);
 
         Rectangle textBounds = new(
             rect.X + arrowWidth + paddingLeftRight,
@@ -57,9 +61,10 @@ internal static class RevisionGridRefRenderer
         TextRenderer.DrawText(graphics, name, font, textBounds, textColor, TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
 
         offset += rect.Width + marginRight;
+        return rect;
     }
 
-    private static void DrawRefBackground(bool isRowSelected, Graphics graphics, Color color, Rectangle bounds, int radius, RefArrowType arrowType, bool dashedLine, bool fill)
+    private static void DrawRefBackground(bool isRowSelected, Graphics graphics, Color color, Rectangle bounds, int radius, RefArrowType arrowType, bool dashedLine, bool fill, bool highlight)
     {
         SmoothingMode oldMode = graphics.SmoothingMode;
         graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -87,6 +92,12 @@ internal static class RevisionGridRefRenderer
             }
 
             graphics.DrawPath(pen, path);
+
+            if (highlight)
+            {
+                using Pen highlightPen = new(color, 2f);
+                graphics.DrawPath(highlightPen, path);
+            }
 
             // arrow if the head is the current branch
             if (arrowType != RefArrowType.None)

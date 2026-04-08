@@ -17,7 +17,7 @@ public static partial class UserEnvironmentInformation
     private static bool _dirty;
     private static string? _sha;
 
-    [GeneratedRegex(@"^Microsoft\.WindowsDesktop\.App\s+([\w.-]+)\s+.*$", RegexOptions.Multiline)]
+    [GeneratedRegex(@"^Microsoft\.WindowsDesktop\.App\s+(?<version>[\w.-]+)\s+.*$", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
     private static partial Regex DesktopAppRegex { get; }
     [GeneratedRegex(@"^", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
     private static partial Regex LineStartRegex { get; }
@@ -100,7 +100,7 @@ public static partial class UserEnvironmentInformation
         try
         {
             return GetDotnetDesktopRuntimeMatches(versions)
-                .Select(match => Parse(match.Groups[1].Value))
+                .Select(match => Parse(match.Groups["version"].Value))
                 .WhereNotNull();
         }
         catch (Exception ex)

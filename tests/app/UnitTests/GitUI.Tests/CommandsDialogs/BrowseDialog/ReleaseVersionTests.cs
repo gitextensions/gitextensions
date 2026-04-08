@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitCommands.Config;
 using GitUI.CommandsDialogs.BrowseDialog;
 

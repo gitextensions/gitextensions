@@ -24,7 +24,7 @@ public class ToolStripPushButton : ToolStripButton
             || aheadBehindData?.TryGetValue(branchName, out AheadBehindData data) is not true)
         {
             ResetToDefaultState();
-            ToolTipText = ToolTipText.UpdateSuffix(shortcut);
+            ToolTipText = ToolTipText!.UpdateSuffix(shortcut);
             return;
         }
 
@@ -32,7 +32,7 @@ public class ToolStripPushButton : ToolStripButton
         AutoSize = true;
         Text = data.ToDisplay();
         DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
-        ToolTipText = GetToolTipText(data).UpdateSuffix(shortcut);
+        ToolTipText = GetToolTipText(data)!.UpdateSuffix(shortcut);
 
         if (!string.IsNullOrEmpty(data.BehindCount))
         {
@@ -91,7 +91,7 @@ public class ToolStripPushButton : ToolStripButton
             _button = button;
         }
 
-        public string GetButtonText() => _button.Text;
+        public string GetButtonText() => _button.Text!;
         public int GetButtonWidth() => _button.Width;
     }
 }

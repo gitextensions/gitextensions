@@ -54,14 +54,23 @@ public sealed class ArtificialCommitChangeCount
     /// <param name="items">Git items.</param>
     public void Update(IReadOnlyList<GitItemStatus>? items)
     {
-        DataValid = items is not null;
-        if (DataValid)
+        if (items is not null)
         {
+            DataValid = true;
             Changed = items.Where(item => !item.IsNew && !item.IsDeleted && !item.IsSubmodule).ToList();
             New = items.Where(item => item.IsNew && !item.IsSubmodule).ToList();
             Deleted = items.Where(item => item.IsDeleted && !item.IsSubmodule).ToList();
             SubmodulesChanged = items.Where(item => item.IsSubmodule && item.IsChanged).ToList();
             SubmodulesDirty = items.Where(item => item.IsSubmodule && item.IsDirty).ToList();
+        }
+        else
+        {
+            DataValid = false;
+            Changed = [];
+            New = [];
+            Deleted = [];
+            SubmodulesChanged = [];
+            SubmodulesDirty = [];
         }
     }
 

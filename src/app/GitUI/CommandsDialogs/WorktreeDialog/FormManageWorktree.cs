@@ -51,8 +51,8 @@ public partial class FormManageWorktree : GitExtensionsDialog
 
         Worktrees.DataSource = _worktrees;
 
-        Font font = Worktrees.DefaultCellStyle.Font;
-        Font deletedFont = new(font.FontFamily, font.Size, font.Style | FontStyle.Strikeout);
+        Font? font = Worktrees.DefaultCellStyle.Font;
+        Font deletedFont = new(font?.FontFamily ?? FontFamily.GenericSansSerif, font?.Size ?? 8.25f, (font?.Style ?? FontStyle.Regular) | FontStyle.Strikeout);
 
         for (int i = 0; i < Worktrees.Rows.Count; i++)
         {

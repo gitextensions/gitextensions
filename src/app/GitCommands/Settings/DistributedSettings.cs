@@ -35,7 +35,7 @@ public class DistributedSettings : SettingsContainer<DistributedSettings, GitExt
     private static DistributedSettings CreateLocal(IGitModule module, DistributedSettings? lowerPriority, SettingLevel settingLevel, bool useSharedCache = true)
     {
         return new DistributedSettings(lowerPriority,
-            GitExtSettingsCache.Create(Path.Combine(module.GitCommonDirectory, AppSettings.SettingsFileName), useSharedCache),
+            GitExtSettingsCache.Create(Path.Join(module.GitCommonDirectory, AppSettings.SettingsFileName), useSharedCache),
             settingLevel);
     }
 
@@ -47,7 +47,7 @@ public class DistributedSettings : SettingsContainer<DistributedSettings, GitExt
     private static DistributedSettings CreateDistributed(IGitModule module, DistributedSettings? lowerPriority, bool useSharedCache = true)
     {
         return new DistributedSettings(lowerPriority,
-            GitExtSettingsCache.Create(Path.Combine(module.WorkingDir, AppSettings.SettingsFileName), useSharedCache),
+            GitExtSettingsCache.Create(Path.Join(module.WorkingDir, AppSettings.SettingsFileName), useSharedCache),
             SettingLevel.Distributed);
     }
 

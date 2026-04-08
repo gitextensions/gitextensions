@@ -135,7 +135,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private static void ResizeColumnToFitContent(ColumnHeader column)
     {
-        int resizeStrategy = column.ListView.Items.Count == 0 ? ResizeOnHeader : ResizeOnContent;
+        int resizeStrategy = column.ListView!.Items.Count == 0 ? ResizeOnHeader : ResizeOnContent;
         column.Width = resizeStrategy;
     }
 
@@ -251,7 +251,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             return;
         }
 
-        IHostedRepository hostedRepo = searchResultsLV.SelectedItems[0].Tag as IHostedRepository;
+        IHostedRepository? hostedRepo = searchResultsLV.SelectedItems[0].Tag as IHostedRepository;
         try
         {
             hostedRepo?.Fork();
@@ -285,7 +285,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         }
 
         forkBtn.Enabled = true;
-        IHostedRepository hostedRepo = (IHostedRepository)searchResultsLV.SelectedItems[0].Tag;
+        IHostedRepository hostedRepo = (IHostedRepository)searchResultsLV.SelectedItems[0].Tag!;
         searchResultItemDescription.Text = hostedRepo.Description;
     }
 
@@ -293,7 +293,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     {
         string initialDir = destinationTB.Text.Length > 0 ? destinationTB.Text : "C:\\";
 
-        string userSelectedPath = OsShellUtil.PickFolder(this, initialDir);
+        string? userSelectedPath = OsShellUtil.PickFolder(this, initialDir);
 
         if (userSelectedPath is not null)
         {
@@ -304,7 +304,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private void _cloneBtn_Click(object sender, EventArgs e)
     {
-        IHostedRepository repo = CurrentySelectedGitRepo;
+        IHostedRepository? repo = CurrentySelectedGitRepo;
 
         if (repo is not null)
         {
@@ -414,7 +414,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
                     return null;
                 }
 
-                return (IHostedRepository)searchResultsLV.SelectedItems[0].Tag;
+                return (IHostedRepository)searchResultsLV.SelectedItems[0].Tag!;
             }
 
             if (myReposLV.SelectedItems.Count != 1)
@@ -422,13 +422,13 @@ public partial class ForkAndCloneForm : GitExtensionsForm
                 return null;
             }
 
-            return (IHostedRepository)myReposLV.SelectedItems[0].Tag;
+            return (IHostedRepository)myReposLV.SelectedItems[0].Tag!;
         }
     }
 
     private void UpdateCloneInfo(bool updateCreateDirTB = true, bool updateProtocols = true)
     {
-        IHostedRepository repo = CurrentySelectedGitRepo;
+        IHostedRepository? repo = CurrentySelectedGitRepo;
 
         if (repo is not null)
         {
@@ -542,7 +542,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     {
         Validates.NotNull(CurrentySelectedGitRepo);
 
-        CurrentySelectedGitRepo.CloneProtocol = (GitProtocol)ProtocolDropdownList.SelectedItem;
+        CurrentySelectedGitRepo.CloneProtocol = (GitProtocol)ProtocolDropdownList.SelectedItem!;
         SetCloneInfoText(CurrentySelectedGitRepo);
     }
 }

@@ -22,7 +22,8 @@ git submodule update --init --recursive
 
 * Add const with speaking name instead of using magic numbers or repeated string literals. Avoid hard-to-maintain comments which contain the magic number again.
 * When a string literal is used more than once in a class, extract it into a `const` field with a descriptive name.
-* Omit comments which just describe _what_ is done. In situations where a comment may be necessary describe _why_ an implementation was chosen.
+* When writing new comments, describe _why_ an implementation was chosen rather than _what_ is done.
+* Do not delete or modify existing comments unless they are factually incorrect. These guidelines apply to new code only.
 
 ## XML Doc Comments
 
@@ -80,6 +81,8 @@ For example:
 * Declare variables non-nullable, and check for `null` at entry points.
 * Always use `is null` or `is not null` instead of `== null` or `!= null`.
 * Trust the C# null annotations and don't add null checks when the type system says a value cannot be null.
+* Avoid null-forgiving (`!`) suppressions. Prefer making nullability explicit in the type system — for example, by declaring a parameter or property as nullable, adding a null guard, or restructuring code so that null states are unrepresentable. Use `!` only as a last resort when the type system cannot express a known invariant.
+* When modifying code that contains existing `!` suppressions, look for opportunities to remove them safely. Use `Validates.NotNull` for runtime null checks where a value is expected to be non-null but the type system cannot prove it.
 
 ## WinForms UI
 
@@ -103,7 +106,7 @@ For example:
   For example, a test for a method "MyMethod" should be named as "MyMethod_should_return_expected".
 * Do not repeat in a comment what the test name already expresses.
 * Use `NSubstitute` for mocking.
-* Use `FluentAssertions` for assertions, i.e. do not use `ClassicAssert`.
+* Use `AwesomeAssertions` for assertions, i.e. do not use `ClassicAssert`.
 * When you encounter a flaky test failure, take the time to understand the root cause and fix it. Do not dismiss it as a pre-existing issue. Flaky tests erode confidence and should be fixed or removed.
 
 ## Commit Messages

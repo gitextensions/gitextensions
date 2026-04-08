@@ -47,7 +47,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
     private JoinableTask? _branchCacheUpdateTask;
     private bool _firstLoad = true;
 
-    public event EventHandler<GitModuleEventArgs> GitModuleChanged;
+    public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
 
     internal RepositoryHistoryUIService(IGitExecutorProvider executorProvider, IRepositoryCurrentBranchNameCache branchNameCache, IInvalidRepositoryRemover invalidRepositoryRemover)
     {
@@ -147,7 +147,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
 
         splitter.SplitRecentRepos(repositoryHistory, pinnedRepos, allRecentRepos);
 
-        foreach (IGrouping<string, RecentRepoInfo> repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
+        foreach (IGrouping<string?, RecentRepoInfo> repo in pinnedRepos.Union(allRecentRepos).GroupBy(k => k.Repo.Category).OrderBy(k => k.Key))
         {
             AddFavouriteRepositories(repo.Key, repo);
         }

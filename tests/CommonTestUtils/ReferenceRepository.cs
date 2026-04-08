@@ -61,7 +61,7 @@ public class ReferenceRepository : IDisposable
     public void CheckoutRevision()
     {
         using Repository repository = new(Module.WorkingDir);
-        Commands.Checkout(repository, CommitHash, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
+        Commands.Checkout(repository, CommitHash!, new CheckoutOptions { CheckoutModifiers = CheckoutModifiers.Force });
     }
 
     private GitModuleTestHelper ClaimNextModuleTestHelper(ref Task<(GitModuleTestHelper Helper, string? CommitHash)>? initializer, ref GitModuleTestSnapshot? snapshot, bool createCommit)
@@ -85,7 +85,7 @@ public class ReferenceRepository : IDisposable
         }
 
         // Start background initialization of the Git module for the next call.
-        initializer = BeginFastCloneGitModuleTestHelper(snapshot);
+        initializer = BeginFastCloneGitModuleTestHelper(snapshot!);
 
         return moduleTestHelper;
     }
@@ -112,7 +112,7 @@ public class ReferenceRepository : IDisposable
         Console.WriteLine($"Created branch: {commitHash}, message: {branchName}");
     }
 
-    public string CreateCommit(string commitMessage, string content = null)
+    public string CreateCommit(string commitMessage, string? content = null)
     {
         CommitHash = CreateCommit(_moduleTestHelper, commitMessage, content);
 
@@ -135,7 +135,7 @@ public class ReferenceRepository : IDisposable
         return CommitHash;
     }
 
-    private static string CreateCommit(GitModuleTestHelper moduleTestHelper, string commitMessage, string content = null)
+    private static string CreateCommit(GitModuleTestHelper moduleTestHelper, string commitMessage, string? content = null)
     {
         using Repository repository = new(moduleTestHelper.Module.WorkingDir);
         moduleTestHelper.CreateRepoFile(_fileName, content ?? commitMessage);
@@ -146,13 +146,13 @@ public class ReferenceRepository : IDisposable
         return commitHash;
     }
 
-    public string CreateCommitRelative(string fileRelativePath, string fileName, string commitMessage, string content = null)
+    public string CreateCommitRelative(string fileRelativePath, string fileName, string commitMessage, string? content = null)
     {
         using Repository repository = new(Module.WorkingDir);
         _moduleTestHelper.CreateRepoFile(fileRelativePath, fileName, content ?? commitMessage);
         IndexAdd(repository, Path.Combine(fileRelativePath, fileName));
 
-        CommitHash = Commit(repository, commitMessage);
+        CommitHash = Commit(repository, commitMessage!);
         Console.WriteLine($"Created commit: {CommitHash}, message: {commitMessage}");
 
         return CommitHash;
@@ -224,8 +224,8 @@ public class ReferenceRepository : IDisposable
 
     public static void ReleaseNextRepositories()
     {
-        Task<(GitModuleTestHelper Helper, string? CommitHash)> next;
-        Task<(GitModuleTestHelper Helper, string? CommitHash)> nextWithCommit;
+        Task<(GitModuleTestHelper Helper, string? CommitHash)>? next;
+        Task<(GitModuleTestHelper Helper, string? CommitHash)>? nextWithCommit;
 
         lock (_nextLock)
         {
@@ -257,13 +257,13 @@ public class ReferenceRepository : IDisposable
         Commands.Stage(repository, Path.Combine(fileRelativePath, oldFileName));
         Commands.Stage(repository, Path.Combine(fileRelativePath, newFileName));
 
-        CommitHash = Commit(repository, commitMessage);
+        CommitHash = Commit(repository, commitMessage!);
         Console.WriteLine($"Created commit: {CommitHash}, message: {commitMessage}");
 
         return CommitHash;
     }
 
-    public void Stash(string stashMessage, string content = null)
+    public void Stash(string stashMessage, string? content = null)
     {
         using Repository repository = new(Module.WorkingDir);
         _moduleTestHelper.CreateRepoFile(_fileName, content ?? stashMessage);

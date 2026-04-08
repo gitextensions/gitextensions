@@ -28,18 +28,18 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
     private readonly List<Tree> _rootNodes = [];
     private readonly SearchControl<string> _txtBranchCriterion;
-    private LocalBranchTree _branchesTree;
-    private RemoteBranchTree _remotesTree;
-    private TagTree _tagTree;
-    private StashTree _stashTree;
-    private SubmoduleTree _submoduleTree;
-    private WorktreeTree _worktreeTree;
+    private LocalBranchTree _branchesTree = null!;
+    private RemoteBranchTree _remotesTree = null!;
+    private TagTree _tagTree = null!;
+    private StashTree _stashTree = null!;
+    private SubmoduleTree _submoduleTree = null!;
+    private WorktreeTree _worktreeTree = null!;
     private List<TreeNode>? _searchResult;
-    private Action<string?> _filterRevisionGridBySpaceSeparatedRefs;
+    private Action<string?> _filterRevisionGridBySpaceSeparatedRefs = null!;
     private IAheadBehindDataProvider? _aheadBehindDataProvider;
     private bool _searchCriteriaChanged;
-    private ICheckRefs _refsSource;
-    private IRevisionGridInfo _revisionGridInfo;
+    private ICheckRefs _refsSource = null!;
+    private IRevisionGridInfo _revisionGridInfo = null!;
 
     public RepoObjectsTree()
     {
@@ -203,7 +203,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
-    private void BeforeDoubleClickExpandCollapse(object sender, CancelEventArgs e)
+    private void BeforeDoubleClickExpandCollapse(object? sender, CancelEventArgs e)
     {
         // If node is an inner node, and overrides OnDoubleClick, then disable expand/collapse
         if (treeMain.SelectedNode?.Tag is Node { HasChildren: true } node
@@ -287,7 +287,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         // If we arrived here through the chain of events after selecting a node in the tree,
         // and the selected revision is the one we have selected - do nothing.
         if ((selectedRevisions.Count == 0 && treeMain.SelectedNode is null)
-            || (selectedRevisions.Count == 1 && selectedRevisions[0].ObjectId == GetSelectedNodeObjectId(treeMain.SelectedNode)))
+            || (selectedRevisions.Count == 1 && selectedRevisions[0].ObjectId == GetSelectedNodeObjectId(treeMain.SelectedNode!)))
         {
             return;
         }
@@ -468,7 +468,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         nodeList.Add(tree.TreeViewNode);
         treeMain.Nodes.Clear();
         Dictionary<Tree, int> treeToPositionIndex = GetTreeToPositionIndex();
-        treeMain.Nodes.AddRange([.. nodeList.OrderBy(treeNode => treeToPositionIndex[(Tree)treeNode.Tag])]);
+        treeMain.Nodes.AddRange([.. nodeList.OrderBy(treeNode => treeToPositionIndex[(Tree)treeNode.Tag!])]);
         treeMain.EndUpdate();
 
         treeMain.Font = AppSettings.Font;
@@ -512,7 +512,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             }
         }
 
-        TreeNode node = GetNextSearchResult();
+        TreeNode? node = GetNextSearchResult();
 
         if (node is null)
         {
@@ -580,12 +580,12 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         treeMain.CollapseAll();
     }
 
-    private void OnBranchCriterionChanged(object sender, EventArgs e)
+    private void OnBranchCriterionChanged(object? sender, EventArgs e)
     {
         _searchCriteriaChanged = true;
     }
 
-    private void TxtBranchCriterion_KeyDown(object sender, KeyEventArgs e)
+    private void TxtBranchCriterion_KeyDown(object? sender, KeyEventArgs e)
     {
         if (e.KeyCode != Keys.Enter)
         {
@@ -621,7 +621,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
-    private void OnNodeSelected(object sender, TreeViewEventArgs e)
+    private void OnNodeSelected(object? sender, TreeViewEventArgs e)
     {
         Node.OnNode<Node>(e.Node, node =>
         {
@@ -636,13 +636,18 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private IEnumerable<NodeBase> GetSelectedNodes()
         => _rootNodes.SelectMany(tree => tree.GetSelectedNodes());
 
-    private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
+    private void OnNodeClick(object? sender, TreeNodeMouseClickEventArgs e)
     {
-        NodeBase node = (NodeBase)e.Node.Tag;
+        NodeBase? node = (NodeBase?)e.Node?.Tag;
 
-        if (e.Button == MouseButtons.Right && node.IsSelected)
+        if (e.Button == MouseButtons.Right && node?.IsSelected is true)
         {
             return; // don't undo multi-selection on opening context menu, even without Ctrl
+        }
+
+        if (node is null)
+        {
+            return;
         }
 
         try
@@ -679,7 +684,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
-    private void OnNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+    private void OnNodeDoubleClick(object? sender, TreeNodeMouseClickEventArgs e)
     {
         // Don't consider-double clicking on the PlusMinus as a double-click event
         // for nodes in tree. This prevents opening inner submodules, for example,
@@ -738,9 +743,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 nodes = node.Nodes.Cast<TreeNode>();
             }
 
-            if (node?.Tag.GetType() != typeof(TExpected))
+            if (node?.Tag?.GetType() != typeof(TExpected))
             {
-                throw new ArgumentException($"The selected node is of type {node?.Tag.GetType()} instead of the expected type {typeof(TExpected)}.", nameof(TExpected));
+                throw new ArgumentException($"The selected node is of type {node?.Tag?.GetType()} instead of the expected type {typeof(TExpected)}.", nameof(TExpected));
             }
 
             TreeView.SelectedNode = node; // simulates a node click well enough for UI tests

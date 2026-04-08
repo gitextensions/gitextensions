@@ -37,19 +37,19 @@ public sealed class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCel
     {
         if (_wasAttached)
         {
-            DataGridView.CurrentCellDirtyStateChanged -= OnCurrentCellDirtyStateChanged;
+            DataGridView!.CurrentCellDirtyStateChanged -= OnCurrentCellDirtyStateChanged;
             DataGridView.Rows.CollectionChanged -= OnCollectionChanged;
         }
     }
 
-    private void OnCollectionChanged(object sender, CollectionChangeEventArgs e)
+    private void OnCollectionChanged(object? sender, CollectionChangeEventArgs e)
     {
         UpdateCheckedState();
     }
 
-    private void OnCurrentCellDirtyStateChanged(object sender, EventArgs e)
+    private void OnCurrentCellDirtyStateChanged(object? sender, EventArgs e)
     {
-        if (DataGridView.CurrentCell.ColumnIndex != OwningColumn.Index || _selfChanging)
+        if (DataGridView!.CurrentCell!.ColumnIndex != OwningColumn!.Index || _selfChanging)
         {
             return;
         }
@@ -73,9 +73,9 @@ public sealed class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCel
     {
         get
         {
-            return DataGridView.Rows
+            return DataGridView!.Rows
                 .Cast<DataGridViewRow>()
-                .Select(row => row.Cells[OwningColumn.Index])
+                .Select(row => row.Cells[OwningColumn!.Index])
                 .Cast<DataGridViewCheckBoxCell>();
         }
     }
@@ -91,7 +91,7 @@ public sealed class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCel
             }
 
             _checkedState = value;
-            DataGridView.InvalidateCell(this);
+            DataGridView!.InvalidateCell(this);
         }
     }
 
@@ -110,7 +110,7 @@ public sealed class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCel
     }
 
     protected override void Paint(Graphics graphics, Rectangle clipBounds, Rectangle cellBounds, int rowIndex, DataGridViewElementStates dataGridViewElementState,
-        object value, object formattedValue, string errorText, DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
+        object? value, object? formattedValue, string? errorText, DataGridViewCellStyle cellStyle, DataGridViewAdvancedBorderStyle advancedBorderStyle, DataGridViewPaintParts paintParts)
     {
         base.Paint(graphics, clipBounds, cellBounds, rowIndex, dataGridViewElementState, value, formattedValue, errorText, cellStyle, advancedBorderStyle, paintParts);
 
@@ -131,7 +131,7 @@ public sealed class DataGridViewCheckBoxHeaderCell : DataGridViewColumnHeaderCel
             _selfChanging = true;
             foreach (DataGridViewCheckBoxCell cell in Cells)
             {
-                if (cell == DataGridView.CurrentCell)
+                if (cell == DataGridView!.CurrentCell)
                 {
                     // workaround for updating current cell
                     DataGridView.CurrentCell = null;

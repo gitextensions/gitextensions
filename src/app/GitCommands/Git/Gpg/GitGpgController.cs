@@ -146,19 +146,19 @@ public partial class GitGpgController : IGitGpgController
             string? rawGpgMessage = GetTagVerificationMessage(usefulTagRefs[0], true);
 
             /* Look for icon to be shown */
-            if (GoodSignatureTagRegex.IsMatch(rawGpgMessage) && ValidSignatureTagRegex.IsMatch(rawGpgMessage))
+            if (GoodSignatureTagRegex.IsMatch(rawGpgMessage!) && ValidSignatureTagRegex.IsMatch(rawGpgMessage!))
             {
                 /* It's only one good tag */
                 return TagStatus.OneGood;
             }
 
-            if (NoSignatureFoundTagRegex.IsMatch(rawGpgMessage))
+            if (NoSignatureFoundTagRegex.IsMatch(rawGpgMessage!))
             {
                 /* One tag, but not signed */
                 return TagStatus.TagNotSigned;
             }
 
-            if (NoPubKeyTagRegex.IsMatch(rawGpgMessage))
+            if (NoPubKeyTagRegex.IsMatch(rawGpgMessage!))
             {
                 /* One tag, signed, but user has not the public key */
                 return TagStatus.NoPubKey;

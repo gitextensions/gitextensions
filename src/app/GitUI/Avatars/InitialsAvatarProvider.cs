@@ -3,6 +3,7 @@ using System.Drawing.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtUtils.GitUI.Theming;
+using Microsoft;
 
 namespace GitUI.Avatars;
 
@@ -14,8 +15,8 @@ public class InitialsAvatarProvider : IAvatarProvider
     private const float _fontSizeEstimation = 20f;
     private int _unkownCounter = 0;
     private static readonly char[] _emailInitialSeparator = ['.', '-', '_'];
-    private FontFamily _fontFamily;
-    private Font _estimationFont;
+    private FontFamily? _fontFamily;
+    private Font? _estimationFont;
 
     public InitialsAvatarProvider()
     {
@@ -59,7 +60,7 @@ public class InitialsAvatarProvider : IAvatarProvider
 
     protected internal (string initials, int hashCode) GetInitialsAndColorIndex(string email, string? name)
     {
-        (string selectedName, char[] separator) = NameSelector(name, email);
+        (string? selectedName, char[]? separator) = NameSelector(name, email);
 
         if (selectedName is null)
         {
@@ -97,7 +98,7 @@ public class InitialsAvatarProvider : IAvatarProvider
             return "?";
         }
 
-        string[]? names = possibleNames?.Where(s => char.IsLetter(s[0]) || char.IsDigit(s[0])).ToArray();
+        string[]? names = possibleNames.Where(s => char.IsLetter(s[0]) || char.IsDigit(s[0])).ToArray();
 
         // if no valid name-elements are found, return acceptable fallback
         if (names?.Length is not > 0)
@@ -166,6 +167,9 @@ public class InitialsAvatarProvider : IAvatarProvider
 
     private Image DrawText(string? text, Brush foreColor, Color backColor, int avatarSize)
     {
+        Validates.NotNull(_estimationFont);
+        Validates.NotNull(_fontFamily);
+
         text ??= "?";
 
         Bitmap bitmap = new(avatarSize, avatarSize);
@@ -193,7 +197,7 @@ public class InitialsAvatarProvider : IAvatarProvider
 
     public void UpdateFontsSettings()
     {
-        Font oldFont = _estimationFont;
+        Font? oldFont = _estimationFont;
         _fontFamily = AppSettings.Font.FontFamily;
         _estimationFont = new(_fontFamily, _fontSizeEstimation);
         oldFont?.Dispose();

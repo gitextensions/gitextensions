@@ -14,7 +14,7 @@ public static partial class SubmoduleHelpers
 
     public static async Task<GitSubmoduleStatus?> GetSubmoduleDiffChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
     {
-        (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true, isTracked: true, useGitColoring: false, commandConfiguration: null, cancellationToken: cancellationToken).ConfigureAwait(false);
+        (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true, isTracked: true, useGitColoring: false, commandConfiguration: null!, cancellationToken: cancellationToken).ConfigureAwait(false);
         return GetSubmoduleChanges(patch, errorMessage, module, fileName);
     }
 
@@ -24,7 +24,7 @@ public static partial class SubmoduleHelpers
         return GetSubmoduleChanges(patch, "", module, fileName);
     }
 
-    private static GitSubmoduleStatus GetSubmoduleChanges(Patch? patch, string? errorMessage, IGitModule module, string? fileName)
+    private static GitSubmoduleStatus? GetSubmoduleChanges(Patch? patch, string? errorMessage, IGitModule module, string? fileName)
     {
         if (!string.IsNullOrEmpty(errorMessage))
         {
@@ -43,7 +43,7 @@ public static partial class SubmoduleHelpers
         return ParseSubmoduleStatus(patch.Text, submodule, commitId => commitDataManager.GetCommitData(commitId));
     }
 
-    private static GitSubmoduleStatus ParseSubmoduleStatus(string text, IGitModule submodule, Func<string, CommitData?> getCommitData)
+    private static GitSubmoduleStatus ParseSubmoduleStatus(string text, IGitModule submodule, Func<string, CommitData?>? getCommitData)
     {
         string? name = null;
         string? oldName = null;

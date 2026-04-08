@@ -134,7 +134,7 @@ internal sealed class WindowPositionManager : IWindowPositionManager
         {
             _windowPositionList ??= WindowPositionList.Load();
 
-            WindowPosition pos = _windowPositionList?.Get(form.GetType().Name);
+            WindowPosition? pos = _windowPositionList?.Get(form.GetType().Name);
             if (pos is not null && !pos.Rect.IsEmpty)
             {
                 return pos;

@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 using System.Text;
-using FluentAssertions;
+using AwesomeAssertions;
 using GitExtensions.Extensibility;
 using GitUI.NBugReports;
 
@@ -82,7 +82,7 @@ public class TestExceptions
                 + $"Command: {_command}{Environment.NewLine}"
                 + $"Arguments: {_arguments}{Environment.NewLine}"
                 + $"Working directory: {_directory}{Environment.NewLine}");
-            yield return new TestCaseData(new UserExternalOperationException(context: null,
+            yield return new TestCaseData(new UserExternalOperationException(context: null!,
                 new ExternalOperationException(null, null, null, null, new Exception(_messageInner))),
                 _messageInner,
                 "");

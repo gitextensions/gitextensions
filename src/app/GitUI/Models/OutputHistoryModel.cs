@@ -13,7 +13,7 @@ internal sealed class OutputHistoryModel : IOutputHistoryProvider, IOutputHistor
     private readonly Lock _outputHistoryLock = new();
     private readonly List<StringBuilder> _outputHistory;
 
-    public event EventHandler HistoryChanged;
+    public event EventHandler? HistoryChanged;
 
     public OutputHistoryModel(in int historyDepth)
     {

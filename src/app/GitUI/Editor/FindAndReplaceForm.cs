@@ -111,8 +111,8 @@ public partial class FindAndReplaceForm : GitExtensionsForm
 
         ReplaceMode = replaceMode;
 
-        Owner = (Form)editor.TopLevelControl;
-        Location = new Point(Owner.Location.X + 100, Owner.Location.Y + 100);
+        Owner = (Form)editor.TopLevelControl!;
+        Location = new Point(Owner!.Location.X + 100, Owner.Location.Y + 100);
         Show();
 
         txtLookFor.SelectAll();
@@ -147,8 +147,8 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         _search.MatchCase = chkMatchCase.Checked;
         _search.MatchWholeWordOnly = chkMatchWholeWord.Checked;
 
-        FileStatusItem startItem = null;
-        FileStatusItem currentItem = null;
+        FileStatusItem? startItem = null;
+        FileStatusItem? currentItem = null;
         TextRange? range;
         do
         {
@@ -228,7 +228,7 @@ public partial class FindAndReplaceForm : GitExtensionsForm
         _editor.ActiveTextAreaControl.Caret.Position = p2;
     }
 
-    private void ScanRegionChanged(object sender, EventArgs e)
+    private void ScanRegionChanged(object? sender, EventArgs e)
     {
         UpdateTitleBar();
     }
@@ -702,7 +702,7 @@ public sealed class TextEditorSearcher : IDisposable
         return substr == _lookFor2;
     }
 
-    private void DocumentOnTextContentChanged(object sender, EventArgs e)
+    private void DocumentOnTextContentChanged(object? sender, EventArgs e)
     {
         ClearScanRegion();
     }

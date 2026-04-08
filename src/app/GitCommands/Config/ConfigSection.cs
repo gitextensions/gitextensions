@@ -97,7 +97,7 @@ public class ConfigSection : IConfigSection
 
     public string GetValue(string key, string defaultValue)
     {
-        if (_configKeys.TryGetValue(key, out List<string> list))
+        if (_configKeys.TryGetValue(key, out List<string>? list))
         {
             if (list.Count > 0)
             {

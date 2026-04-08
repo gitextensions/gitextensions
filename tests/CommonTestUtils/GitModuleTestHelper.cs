@@ -107,7 +107,7 @@ public sealed partial class GitModuleTestHelper : IDisposable
         // Even though above is set, adding a file protocol submodule fails unless -c... is used for protocol.file.allow config.
         IEnumerable<GitConfigItem> cfgs = Commands.GetAllowFileConfig();
 
-        ExecutionResult result = Module.GitExecutable.Execute(Commands.AddSubmodule(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null, true, cfgs));
+        ExecutionResult result = Module.GitExecutable.Execute(Commands.AddSubmodule(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null!, true, cfgs));
         Debug.WriteLine(result.AllOutput);
 
         Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");

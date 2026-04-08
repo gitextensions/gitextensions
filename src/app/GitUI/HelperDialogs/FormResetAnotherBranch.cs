@@ -28,7 +28,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
 
         InitializeComponent();
 
-        pictureBox1.Image = DpiUtil.Scale(pictureBox1.Image);
+        pictureBox1.Image = DpiUtil.Scale(pictureBox1.Image!);
         lblResetBranchWarning.AutoSize = true;
         lblResetBranchWarning.Dock = DockStyle.Fill;
         lblResetBranchWarning.SetForeColorForBackColor();
@@ -46,7 +46,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
         Ok.Enabled = false;
     }
 
-    private void Application_Idle(object sender, EventArgs e)
+    private void Application_Idle(object? sender, EventArgs e)
     {
         Application.Idle -= Application_Idle;
 
@@ -86,7 +86,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
         InitLocalBranchesWithoutCurrent();
 
         Branches.DisplayMember = nameof(IGitRef.Name);
-        Branches.Items.AddRange(_localGitRefs);
+        Branches.Items.AddRange(_localGitRefs!);
 
         commitSummaryUserControl.Revision = _revision;
 
@@ -95,7 +95,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
 
     private void Ok_Click(object sender, EventArgs e)
     {
-        IGitRef gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
+        IGitRef? gitRefToReset = _localGitRefs!.FirstOrDefault(b => b.Name == Branches.Text);
         if (gitRefToReset is null)
         {
             MessageBoxes.Show(string.Format(_localRefInvalid.Text, Branches.Text), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);

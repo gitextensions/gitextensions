@@ -24,7 +24,7 @@ internal abstract class BaseRevisionNode : Node
         if (nameIndex == -1)
         {
             Name = fullPath;
-            ParentPath = null;
+            ParentPath = null!;
         }
         else
         {
@@ -62,7 +62,7 @@ internal abstract class BaseRevisionNode : Node
 
     public override int GetHashCode() => FullPath.GetHashCode();
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is BaseRevisionNode other
             && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath));
@@ -88,7 +88,7 @@ internal abstract class BaseRevisionNode : Node
 
         BaseRevisionNode? result;
 
-        if (pathToNode.TryGetValue(ParentPath, out BaseRevisionNode parent))
+        if (pathToNode.TryGetValue(ParentPath, out BaseRevisionNode? parent))
         {
             result = null;
         }

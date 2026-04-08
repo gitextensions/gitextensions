@@ -53,7 +53,7 @@ public sealed class AvatarDownloader : IAvatarDownloader
                 continue;
             }
 
-            Image image = await task;
+            Image? image = await task;
             if (image?.PixelFormat == System.Drawing.Imaging.PixelFormat.DontCare)
             {
                 // Image from cached download has been disposed (in all probability during a cache cleanup)

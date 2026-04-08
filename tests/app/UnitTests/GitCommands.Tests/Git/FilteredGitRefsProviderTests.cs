@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
@@ -7,7 +7,7 @@ namespace GitCommandsTests.Git;
 
 public sealed class FilteredGitRefsProviderTests
 {
-    private IGitModule _module;
+    private IGitModule _module = null!;
 
     [SetUp]
     public void Setup()

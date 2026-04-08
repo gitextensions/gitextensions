@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls;
@@ -9,7 +9,7 @@ namespace GitUITests.CommandsDialogs;
 [TestFixture]
 public class RememberFileContextMenuControllerTests
 {
-    private RememberFileContextMenuController _rememberFileContextMenuController;
+    private RememberFileContextMenuController _rememberFileContextMenuController = null!;
 
     /// <summary>
     /// Mock of GitModule.GetFileBlobHash

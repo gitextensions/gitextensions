@@ -1,4 +1,4 @@
-using GitUI;
+﻿using GitUI;
 
 namespace GitExtUtilsTests;
 

@@ -95,7 +95,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         _continuousScrollEventManager = continuousScrollEventManager;
     }
 
-    internal void GutterSelectedLineChanged(object sender, EventArgs e)
+    internal void GutterSelectedLineChanged(object? sender, EventArgs e)
     {
         GutterSelectedLineChanged(TextEditor.ActiveTextAreaControl.Caret.Line);
     }
@@ -106,7 +106,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         TextEditor.ActiveTextAreaControl.TextArea.GutterMargin.SelectedLineChanged(lineNo);
     }
 
-    private void SelectionManagerSelectionChanged(object sender, EventArgs e)
+    private void SelectionManagerSelectionChanged(object? sender, EventArgs e)
     {
         string text = TextEditor.ActiveTextAreaControl.TextArea.SelectionManager.SelectedText;
         TextEditor.Document.MarkerStrategy.RemoveAll(m => true);
@@ -170,7 +170,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         List<TextMarker> markers = TextEditor.Document.MarkerStrategy.GetMarkers(offset,
             TextEditor.Document.TextLength - offset);
 
-        TextMarker marker =
+        TextMarker? marker =
             markers.FirstOrDefault(x => x.Offset > offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
         if (marker is not null)
         {
@@ -188,7 +188,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
         List<TextMarker> markers = TextEditor.Document.MarkerStrategy.GetMarkers(0, offset);
 
-        TextMarker marker =
+        TextMarker? marker =
             markers.LastOrDefault(x => x.Offset < offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
         if (marker is not null)
         {
@@ -768,7 +768,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         _findAndReplaceForm.SetFileLoader(fileLoader);
     }
 
-    private void TextArea_MouseWheel(object sender, MouseEventArgs e)
+    private void TextArea_MouseWheel(object? sender, MouseEventArgs e)
     {
         bool isScrollingTowardTop = e.Delta > 0;
         bool isScrollingTowardBottom = e.Delta < 0;
@@ -776,12 +776,12 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
         if (isScrollingTowardTop && (scrollBar.Value == 0))
         {
-            _continuousScrollEventManager?.RaiseTopScrollReached(sender, e);
+            _continuousScrollEventManager?.RaiseTopScrollReached(sender!, e);
         }
 
         if (isScrollingTowardBottom && (!scrollBar.Visible || scrollBar.Value + scrollBar.Height > scrollBar.Maximum))
         {
-            _continuousScrollEventManager?.RaiseBottomScrollReached(sender, e);
+            _continuousScrollEventManager?.RaiseBottomScrollReached(sender!, e);
         }
     }
 

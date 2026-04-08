@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using GitExtensions.Extensibility.Git;
 using GitUI.Properties;
 using GitUIPluginInterfaces;

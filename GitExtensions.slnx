@@ -14,7 +14,7 @@
     <File Path="setup/assets/PrivacyPolicy.md" />
     <File Path="setup/assets/PrivacyPolicy.rtf" />
     <File Path="setup/assets/set-telemetry.ps1" />
-    <Project Path="setup/installer/Setup.wixproj">
+    <Project Path="setup/installer/Setup.wixproj" Id="9380c29c-3c7f-47a8-a4c9-a5ee9d7b386a">
       <BuildDependency Project="src/app/GitExtensions/GitExtensions.csproj" />
       <Platform Project="x86" />
     </Project>

@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitCommands.Remotes;
 
 namespace GitCommandsTests.Remote;

@@ -96,15 +96,15 @@ public class GourcePlugin : GitPluginBase, IGitPluginForRepository
                 }
 
                 string downloadDir = Path.GetTempPath();
-                string fileName = Path.Combine(downloadDir, "gource.zip");
+                string fileName = Path.Join(downloadDir, "gource.zip");
                 int downloadSize = ThreadHelper.JoinableTaskFactory.Run(() => DownloadFileAsync(args.OwnerForm, gourceUrl, fileName));
                 if (downloadSize > 0)
                 {
                     MessageBoxes.Show(args.OwnerForm, string.Format(_bytesDownloaded.Text, downloadSize), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Directory.CreateDirectory(Path.Combine(downloadDir, "gource"));
-                    UnZipFiles(args.OwnerForm, fileName, Path.Combine(downloadDir, "gource"), true);
+                    Directory.CreateDirectory(Path.Join(downloadDir, "gource"));
+                    UnZipFiles(args.OwnerForm, fileName, Path.Join(downloadDir, "gource"), true);
 
-                    string newGourcePath = Path.Combine(downloadDir, "gource\\gource.exe");
+                    string newGourcePath = Path.Join(downloadDir, "gource\\gource.exe");
                     if (File.Exists(newGourcePath))
                     {
                         MessageBoxes.Show(args.OwnerForm, _gourceDownloadedAndUnzipped.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);

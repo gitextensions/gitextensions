@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.Text.RegularExpressions;
 using GitCommands.Config;
 using GitCommands.UserRepositoryHistory;
@@ -19,7 +17,7 @@ public sealed partial class ScriptOptionsParser
 
     private const string head = "HEAD";
 
-    [GeneratedRegex(@"(?<!\\)""")]
+    [GeneratedRegex(@"(?<!\\)""", RegexOptions.ExplicitCapture)]
     private static partial Regex QuoteRegex { get; }
 
     /// <summary>

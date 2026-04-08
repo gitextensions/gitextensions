@@ -10,7 +10,7 @@ public static class Translator
     private static IDictionary<string, TranslationFile> _translation = new Dictionary<string, TranslationFile>();
     private static string? _name;
 
-    public static IDictionary<string, TranslationFile> GetTranslation(string translationName)
+    public static IDictionary<string, TranslationFile> GetTranslation(string? translationName)
     {
         if (string.IsNullOrEmpty(translationName))
         {
@@ -41,7 +41,7 @@ public static class Translator
 
     public static string GetTranslationDir()
     {
-        return Path.Combine(Path.GetDirectoryName(typeof(Translator).Assembly.Location)!, "Translation");
+        return Path.Join(Path.GetDirectoryName(typeof(Translator).Assembly.Location)!, "Translation");
     }
 
     public static string[] GetAllTranslations()
@@ -78,7 +78,7 @@ public static class Translator
         return [.. translations];
     }
 
-    public static void Translate(ITranslate obj, string translationName)
+    public static void Translate(ITranslate obj, string? translationName)
     {
         IDictionary<string, TranslationFile> translation = GetTranslation(translationName);
         if (translation.Count == 0)

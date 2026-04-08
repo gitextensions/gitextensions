@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitExtensions.Extensibility;
 
 namespace GitExtUtilsTests;
@@ -64,7 +64,7 @@ public sealed class ArgumentBuilderTests
         builder.GetTestAccessor().Arguments.Length.Should().Be(expectedLength + /* 'test ' */5);
     }
 
-    [TestCase(new[] { (string)null }, 0, "")]
+    [TestCase(new[] { (string?)null }, 0, "")]
     [TestCase(new[] { "" }, 0, "")]
     [TestCase(new[] { "", null }, 0, "")]
     [TestCase(new[] { "test" }, 4, "test")]

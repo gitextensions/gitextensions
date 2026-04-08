@@ -5,7 +5,7 @@ namespace GitCommandsTests;
 [TestFixture]
 public class PathEqualityComparerTests
 {
-    private PathEqualityComparer _comparer;
+    private PathEqualityComparer _comparer = null!;
 
     [SetUp]
     public void Setup()

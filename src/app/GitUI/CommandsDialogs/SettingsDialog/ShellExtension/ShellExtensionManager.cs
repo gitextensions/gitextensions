@@ -43,7 +43,7 @@ public static class ShellExtensionManager
     /// <exception cref="Exception">Other potential error</exception>
     public static void Register()
     {
-        AppSettings.SetInstallDir(AppSettings.GetGitExtensionsDirectory());
+        AppSettings.SetInstallDir(AppSettings.GetGitExtensionsDirectory()!);
         RunRegSvrForShellExtensionDlls("/s {0}");
     }
 
@@ -93,7 +93,7 @@ public static class ShellExtensionManager
             }
             catch (ExternalOperationException ex)
             {
-                throw new UserExternalOperationException(context: null, ex);
+                throw new UserExternalOperationException(context: null!, ex);
             }
             catch (Exception ex)
             {
@@ -106,7 +106,7 @@ public static class ShellExtensionManager
     {
         foreach (string binDirectory in GetBinDirectories())
         {
-            string filePath = Path.Combine(binDirectory, fileName);
+            string filePath = Path.Join(binDirectory, fileName);
             if (File.Exists(filePath))
             {
                 return filePath;
@@ -117,16 +117,16 @@ public static class ShellExtensionManager
 
         static IEnumerable<string> GetBinDirectories()
         {
-            string installDir = AppSettings.GetInstallDir();
+            string? installDir = AppSettings.GetInstallDir();
             if (!string.IsNullOrEmpty(installDir))
             {
                 yield return installDir;
             }
 
-            string assemblyPath = Assembly.GetAssembly(typeof(ShellExtensionManager))?.Location;
+            string? assemblyPath = Assembly.GetAssembly(typeof(ShellExtensionManager))?.Location;
             if (!string.IsNullOrEmpty(assemblyPath))
             {
-                string assemblyDir = Path.GetDirectoryName(assemblyPath);
+                string? assemblyDir = Path.GetDirectoryName(assemblyPath);
                 if (!string.IsNullOrEmpty(assemblyDir))
                 {
                     yield return assemblyDir;

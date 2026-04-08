@@ -104,7 +104,7 @@ public partial class FormProcess : FormStatus
     private void ProcessStart(FormStatus form)
     {
         BeforeProcessStart();
-        string quotedProcessString = ProcessString;
+        string quotedProcessString = ProcessString!;
         if (quotedProcessString.Contains(' '))
         {
             quotedProcessString = quotedProcessString.Quote();
@@ -114,7 +114,7 @@ public partial class FormProcess : FormStatus
 
         try
         {
-            ConsoleOutput.StartProcess(ProcessString, ProcessArguments, WorkingDirectory, ProcessEnvVariables);
+            ConsoleOutput.StartProcess(ProcessString!, ProcessArguments!, WorkingDirectory, ProcessEnvVariables);
 
             if (!string.IsNullOrEmpty(ProcessInput))
             {
@@ -187,7 +187,7 @@ public partial class FormProcess : FormStatus
     {
     }
 
-    private void DataReceivedCore(object sender, TextEventArgs e)
+    private void DataReceivedCore(object? sender, TextEventArgs e)
     {
         // CarriageReturn has its literal meaning here, i.e. it is not a line end, but terminates transient progress information
         if (e.Text.EndsWith(Delimiters.CarriageReturn))
@@ -209,7 +209,7 @@ public partial class FormProcess : FormStatus
             }
         }
 
-        DataReceived(sender, e);
+        DataReceived(sender!, e);
     }
 
     /// <summary>

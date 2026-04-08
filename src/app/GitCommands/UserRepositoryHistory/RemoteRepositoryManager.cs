@@ -41,7 +41,7 @@ public sealed class RemoteRepositoryManager : IRepositoryManager
             await TaskScheduler.Default;
             IList<Repository> repositoryHistory = await LoadRecentHistoryAsync();
 
-            Repository repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
+            Repository? repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
             if (repository is not null)
             {
                 if (repositoryHistory[0] == repository)
@@ -91,7 +91,7 @@ public sealed class RemoteRepositoryManager : IRepositoryManager
 
         await TaskScheduler.Default;
         IList<Repository> repositoryHistory = await LoadRecentHistoryAsync();
-        Repository repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
+        Repository? repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
         if (repository is null)
         {
             return repositoryHistory;

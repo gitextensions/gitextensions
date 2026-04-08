@@ -4,7 +4,6 @@
     <IsPackable>true</IsPackable>
 
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

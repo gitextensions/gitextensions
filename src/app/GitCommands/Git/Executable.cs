@@ -209,7 +209,7 @@ public sealed class Executable : IExecutable
 
             string? ReadErrorOutput()
             {
-                if (_errorOutputStream is null)
+                if (_errorOutputStream is null || _errorEncoding is null)
                 {
                     return null;
                 }
@@ -227,7 +227,7 @@ public sealed class Executable : IExecutable
             }
         }
 
-        private void OnProcessExit(object sender, EventArgs eventArgs)
+        private void OnProcessExit(object? sender, EventArgs eventArgs)
         {
             lock (_lock)
             {

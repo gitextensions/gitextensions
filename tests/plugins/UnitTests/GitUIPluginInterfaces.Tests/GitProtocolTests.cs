@@ -1,4 +1,4 @@
-﻿using FluentAssertions;
+﻿using AwesomeAssertions;
 using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitUIPluginInterfacesTests;

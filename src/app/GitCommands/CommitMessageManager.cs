@@ -91,6 +91,7 @@ public sealed class CommitMessageManager : ICommitMessageManager
     internal CommitMessageManager(Control owner, string workingDirGitDir, Encoding commitEncoding, IFileSystem fileSystem, string? overriddenCommitMessage = null)
     {
         ArgumentNullException.ThrowIfNull(owner);
+        ArgumentNullException.ThrowIfNull(workingDirGitDir);
 
         _owner = owner;
         _fileSystem = fileSystem;
@@ -211,7 +212,7 @@ public sealed class CommitMessageManager : ICommitMessageManager
         return formattedCommitMessage.ToString();
     }
 
-    private string GetFilePath(string workingDirGitDir, string fileName) => _fileSystem.Path.Combine(workingDirGitDir, fileName);
+    private string GetFilePath(string workingDirGitDir, string fileName) => _fileSystem.Path.Join(workingDirGitDir, fileName);
 
     private string GetMergeOrCommitMessagePath() => IsMergeCommit ? MergeMessagePath : CommitMessagePath;
 

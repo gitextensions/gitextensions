@@ -30,15 +30,15 @@ public partial class PasswordInput : TranslatedControl
 
     private void Text_DragDrop(object sender, DragEventArgs e)
     {
-        if (e.Data.GetDataPresent(DataFormats.Text))
+        if (e.Data!.GetDataPresent(DataFormats.Text))
         {
-            Password.Paste(e.Data.GetData(DataFormats.Text).ToString());
+            Password.Paste(e.Data.GetData(DataFormats.Text)!.ToString());
         }
     }
 
     private void Text_DragEnter(object sender, DragEventArgs e)
     {
-        if (e.Data.GetDataPresent(DataFormats.Text))
+        if (e.Data!.GetDataPresent(DataFormats.Text))
         {
             e.Effect = DragDropEffects.Copy;
             Password.Focus();
