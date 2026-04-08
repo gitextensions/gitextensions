@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility.Extensions;
+﻿using GitExtensions.Extensibility.Extensions;
 
 namespace GitExtUtilsTests.GitUI;
-
-[TestFixture]
 public sealed class UiExtensionsTests
 {
     [TestCase(null, null, null)]
@@ -16,6 +13,6 @@ public sealed class UiExtensionsTests
     [TestCase("b", "  ", "b\r\n\r\nNotes:\r\n      ")]
     [TestCase("b", null, "b")]
     [TestCase("", "n", "\r\nNotes:\r\n    n")]
-    public void FormatBodyAndNotes(string body, string notes, string expected)
-        => UIExtensions.FormatBodyAndNotes(body, notes)?.ReplaceLineEndings("\r\n").Should().Be(expected); // under linux we`d get only \n newline sequences, leading to failing tests
+    public void FormatBodyAndNotes(string? body, string? notes, string? expected)
+        => UIExtensions.FormatBodyAndNotes(body!, notes)?.ReplaceLineEndings("\r\n").Should().Be(expected); // under linux we`d get only \n newline sequences, leading to failing tests
 }

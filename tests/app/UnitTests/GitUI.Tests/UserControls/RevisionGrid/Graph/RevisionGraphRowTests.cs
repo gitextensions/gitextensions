@@ -1,10 +1,7 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.Graph;
 
 namespace GitUITests.UserControls.RevisionGrid.Graph;
-
-[TestFixture]
 public class RevisionGraphRowTests
 {
     private RevisionGraphSegment _segment = new(parent: new(ObjectId.IndexId, guessScore: 0), child: new(ObjectId.WorkTreeId, guessScore: 0));

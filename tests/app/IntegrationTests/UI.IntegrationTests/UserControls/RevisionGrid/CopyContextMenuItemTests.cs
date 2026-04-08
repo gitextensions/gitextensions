@@ -1,13 +1,10 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 
 namespace GitExtensions.UITests.UserControls.RevisionGrid;
-
-[TestFixture]
 public class CopyContextMenuItemTests
 {
     private string? _originalTranslation;
@@ -39,6 +36,7 @@ public class CopyContextMenuItemTests
     public void TearDown()
     {
         _copyContextMenuItem.Owner!.Dispose();
+        _copyContextMenuItem.Dispose();
     }
 
     [Test]

@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using Castle.Core.Internal;
+﻿using Castle.Core.Internal;
 using GitCommands;
 using GitCommands.Git;
 using GitUI.CommandsDialogs;
@@ -8,8 +7,6 @@ using JetBrains.Annotations;
 using NSubstitute;
 
 namespace GitUITests.UserControls;
-
-[TestFixture]
 public class ToolStripPushButtonTests
 {
     private static readonly int PushImageHashCode = Images.Push.RawFormat.GetHashCode();
@@ -32,6 +29,7 @@ public class ToolStripPushButtonTests
     [TearDown]
     public void TearDown()
     {
+        _sut.Dispose();
         AppSettings.ShowAheadBehindData = _originalShowAheadBehindData;
     }
 

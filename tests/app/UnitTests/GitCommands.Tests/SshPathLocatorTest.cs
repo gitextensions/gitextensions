@@ -1,12 +1,9 @@
 ﻿using System.IO.Abstractions;
-using AwesomeAssertions;
 using GitCommands;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class SshPathLocatorTest
 {
     private IFileSystem _fileSystem = null!;
@@ -22,10 +19,10 @@ public class SshPathLocatorTest
     [TestCase("nul")]
     [TestCase(@"y:\unknown\dir")]
     [TestCase("$?")]
-    public void GetSshFromGitDir_should_return_null_if_invalid_gitgir(string gitdir)
+    public void GetSshFromGitDir_should_return_null_if_invalid_gitgir(string? gitdir)
     {
         SshPathLocator sshPathLocator = new(_fileSystem);
-        sshPathLocator.GetSshFromGitDir(gitdir).Should().BeNull();
+        sshPathLocator.GetSshFromGitDir(gitdir!).Should().BeNull();
     }
 
     [Test]

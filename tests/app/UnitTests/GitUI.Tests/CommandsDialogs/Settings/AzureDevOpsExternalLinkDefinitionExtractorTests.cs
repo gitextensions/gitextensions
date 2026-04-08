@@ -1,10 +1,7 @@
-﻿using AwesomeAssertions;
-using GitCommands.ExternalLinks;
+﻿using GitCommands.ExternalLinks;
 using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
 
 namespace GitUITests.CommandsDialogs.Settings;
-
-[TestFixture]
 public class AzureDevOpsExternalLinkDefinitionExtractorTests
 {
     [TestCase("https://owner@dev.azure.com/owner/project/_git/repo")]

@@ -1,20 +1,21 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitUI.UserControls;
 
 namespace GitUITests.UserControls;
-
-[TestFixture]
 [Apartment(ApartmentState.STA)]
 public class WatermarkComboBoxTests
 {
     private const string Watermark = "Enter text here...";
     private Form _form = null!;
+
+    // Child controls are disposed transitively via _form.Dispose()
+#pragma warning disable NUnit1032
     private TabControl _tabControl = null!;
     private TabPage _tab1 = null!;
     private TabPage _tab2 = null!;
     private WatermarkComboBox _comboBox1 = null!;
     private TextBox _textBox = null!;
+#pragma warning restore NUnit1032
     private Font _originalFont = null!;
     private Color _originalForeColor;
     private Font _watermarkFont = null!;
@@ -46,6 +47,7 @@ public class WatermarkComboBoxTests
     [TearDown]
     public void TearDown()
     {
+        _form.Close();
         _form.Dispose();
         _watermarkFont.Dispose();
         _originalFont.Dispose();
@@ -92,7 +94,7 @@ public class WatermarkComboBoxTests
         FocusAway();
 
         AssertWatermarkVisible(_comboBox1, Watermark);
-        Assert.That(eventOccurred, Is.Zero, "No events should have been triggered during focus and blur.");
+        eventOccurred.Should().Be(0);
     }
 
     [Test]
@@ -106,7 +108,7 @@ public class WatermarkComboBoxTests
         _comboBox1.Text = "New Text";
 
         AssertWatermarkHidden(_comboBox1, "New Text");
-        Assert.That(textEventOccurred, Is.EqualTo(1), "Event should have been triggered once.");
+        textEventOccurred.Should().Be(1);
     }
 
     [Test]
@@ -121,7 +123,7 @@ public class WatermarkComboBoxTests
         _comboBox1.Text = "";
 
         AssertWatermarkVisible(_comboBox1, Watermark);
-        Assert.That(textEventOccurred, Is.EqualTo(1), "Event should have been triggered once.");
+        textEventOccurred.Should().Be(1);
     }
 
     [Test]

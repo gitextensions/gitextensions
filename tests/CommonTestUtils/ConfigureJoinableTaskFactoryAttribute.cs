@@ -27,7 +27,7 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
 
     public void BeforeTest(ITest test)
     {
-        ClassicAssert.False(ThreadHelper.HasJoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
+        ThreadHelper.HasJoinableTaskContext.Should().BeFalse("Tests with joinable tasks must not be run in parallel!");
 
         IList? apartmentState = null;
         for (ITest? scope = test; scope is not null; scope = scope.Parent)
@@ -46,7 +46,7 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
             return;
         }
 
-        ClassicAssert.AreEqual(ApartmentState.STA, Thread.CurrentThread.GetApartmentState());
+        Thread.CurrentThread.GetApartmentState().Should().Be(ApartmentState.STA);
 
         // This form is created to obtain a UI synchronization context only.
         using (new Form())

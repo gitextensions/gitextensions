@@ -45,7 +45,7 @@ public sealed class ArgumentBuilderExtensionsTests
 
         static void Test(string expected, ArgumentBuilder command)
         {
-            ClassicAssert.AreEqual(expected, command.ToString());
+            command.ToString().Should().Be(expected);
         }
     }
 
@@ -102,7 +102,7 @@ public sealed class ArgumentBuilderExtensionsTests
 
         static void Test(string expected, ArgumentBuilder command)
         {
-            ClassicAssert.AreEqual(expected, command.ToString());
+            command.ToString().Should().Be(expected);
         }
     }
 
@@ -132,7 +132,7 @@ public sealed class ArgumentBuilderExtensionsTests
 
         static void Test(string expected, ArgumentBuilder command)
         {
-            ClassicAssert.AreEqual(expected, command.ToString());
+            command.ToString().Should().Be(expected);
         }
     }
 
@@ -189,7 +189,7 @@ public sealed class ArgumentBuilderExtensionsTests
 
         static void Test(string expected, ArgumentBuilder command)
         {
-            ClassicAssert.AreEqual(expected, command.ToString());
+            command.ToString().Should().Be(expected);
         }
     }
 
@@ -210,13 +210,13 @@ public sealed class ArgumentBuilderExtensionsTests
                     typeof(T)
                 ]);
 
-            ClassicAssert.NotNull(method);
+            method.Should().NotBeNull();
 
             foreach (T member in Enum.GetValues(typeof(T)))
             {
                 ArgumentBuilder args = [];
 
-                ClassicAssert.DoesNotThrow(() => method!.Invoke(null, [args, member]));
+                ((Action)(() => method!.Invoke(null, [args, member]))).Should().NotThrow();
             }
         }
     }
@@ -224,28 +224,28 @@ public sealed class ArgumentBuilderExtensionsTests
     [Test]
     public void Handle_artificial_objectid()
     {
-        ClassicAssert.Throws<ArgumentException>(() => new ArgumentBuilder
+        ((Action)(() => new ArgumentBuilder
         {
             ObjectId.WorkTreeId
-        });
-        ClassicAssert.Throws<ArgumentException>(() => new ArgumentBuilder
+        })).Should().Throw<ArgumentException>();
+        ((Action)(() => new ArgumentBuilder
         {
             ObjectId.IndexId
-        });
-        ClassicAssert.Throws<ArgumentException>(() => new ArgumentBuilder
+        })).Should().Throw<ArgumentException>();
+        ((Action)(() => new ArgumentBuilder
         {
             ObjectId.CombinedDiffId
-        });
+        })).Should().Throw<ArgumentException>();
     }
 
     [TestCase(null)]
-    public void Handle_null_objectid(ObjectId id)
+    public void Handle_null_objectid(ObjectId? id)
     {
         ArgumentBuilder args =
         [
             id
         ];
-        ClassicAssert.AreEqual(args.ToString(), "");
+        "".Should().Be(args.ToString());
     }
 
     [Test]
@@ -334,8 +334,8 @@ public sealed class ArgumentBuilderExtensionsTests
         string[] args = [.. batch.Select(item => item.Argument.ToString())];
         int[] counts = [.. batch.Select(item => item.BatchItemsCount)];
 
-        ClassicAssert.AreEqual(expected, args);
-        ClassicAssert.AreEqual(expectedCounts, counts);
+        args.Should().Equal(expected);
+        counts.Should().Equal(expectedCounts);
     }
 
     // 8: 'checkout'
@@ -355,6 +355,6 @@ public sealed class ArgumentBuilderExtensionsTests
     public void BuildBatchArguments_builder_throw_invalid_argument_exception(string command, string[] arguments, int maxLength,
         int baseLength = 0)
     {
-        ClassicAssert.Throws<ArgumentException>(() => new GitArgumentBuilder(command).BuildBatchArguments(arguments, baseLength, maxLength));
+        ((Action)(() => new GitArgumentBuilder(command).BuildBatchArguments(arguments, baseLength, maxLength))).Should().Throw<ArgumentException>();
     }
 }

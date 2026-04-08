@@ -1,13 +1,10 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.Theming;
 using NSubstitute;
 
 namespace GitUITests.CommandsDialogs.SettingsDialog.Pages;
-
-[TestFixture]
 public class ColorsPageSettingsPageControllerTests
 {
     private ColorSettingsPageTestContext _context = null!;

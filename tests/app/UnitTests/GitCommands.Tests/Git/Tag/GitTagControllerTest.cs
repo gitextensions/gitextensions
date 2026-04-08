@@ -5,8 +5,6 @@ using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests.Git.Tag;
-
-[TestFixture]
 public class GitTagControllerTest
 {
     private readonly string _workingDir = TestContext.CurrentContext.TestDirectory;
@@ -34,7 +32,7 @@ public class GitTagControllerTest
     public void CreateTagWithMessageThrowsIfTheWindowIsNull()
     {
         GitCreateTagArgs args = CreateAnnotatedTagArgs();
-        ClassicAssert.Throws<ArgumentNullException>(() => _controller.CreateTag(args, parentWindow: null!));
+        ((Action)(() => _controller.CreateTag(args, parentWindow: null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -59,7 +57,7 @@ public class GitTagControllerTest
         _uiCommands.StartCommandLineProcessDialog(Arg.Any<IWin32Window>(), Arg.Is<IGitCommand>(cmd => cmd.Arguments.StartsWith("tag")))
             .Returns(uiResult);
 
-        ClassicAssert.AreEqual(uiResult, _controller.CreateTag(args, CreateTestingWindow()));
+        _controller.CreateTag(args, CreateTestingWindow()).Should().Be(uiResult);
 
         _fileSystem.File.Received(1).Delete(_tagMessageFile);
     }

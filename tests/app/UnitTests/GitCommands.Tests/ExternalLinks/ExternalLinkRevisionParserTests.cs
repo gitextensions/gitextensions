@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
-using AwesomeAssertions;
 using GitCommands.ExternalLinks;
 using GitCommands.Remotes;
 using GitExtensions.Extensibility.Git;
@@ -10,8 +9,6 @@ using JetBrains.Annotations;
 using NSubstitute;
 
 namespace GitCommandsTests.ExternalLinks;
-
-[TestFixture]
 public class ExternalLinkRevisionParserTests
 {
     private IConfigFileRemoteSettingsManager _remotesManager = null!;

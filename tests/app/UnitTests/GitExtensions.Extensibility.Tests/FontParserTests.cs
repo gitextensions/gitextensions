@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 
 namespace GitUIPluginInterfacesTests;
-
-[TestFixture]
 public class FontParserTests
 {
     private Font _defaultFont = null!;
@@ -24,7 +21,7 @@ public class FontParserTests
     [TestCase(FontStyle.Bold, "Arial;9;_IC_;1;0")]
     [TestCase(FontStyle.Italic, "Arial;9;_IC_;0;1")]
     [TestCase(FontStyle.Bold | FontStyle.Italic, "Arial;9;_IC_;1;1")]
-    public void AsString_should_persist_font_with_styles(FontStyle fontStyle, string serialised)
+    public void AsString_should_persist_font_with_styles(FontStyle fontStyle, string? serialised)
     {
         using Font font = new("Arial", 9, fontStyle);
         font.AsString().Should().Be(serialised);
@@ -33,7 +30,7 @@ public class FontParserTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("\t")]
-    public void Parse_should_return_default_if_null_or_empty(string serialised)
+    public void Parse_should_return_default_if_null_or_empty(string? serialised)
     {
         Font font = serialised.Parse(_defaultFont);
 
@@ -42,7 +39,7 @@ public class FontParserTests
 
     [TestCase("Arial")]
     [TestCase("Arial;")]
-    public void Parse_should_return_default_if_less_then_two_parts(string serialised)
+    public void Parse_should_return_default_if_less_then_two_parts(string? serialised)
     {
         Font font = serialised.Parse(_defaultFont);
 
@@ -57,7 +54,7 @@ public class FontParserTests
     [TestCase("Courier;12;_IC_;1;0", "Courier", 12f, FontStyle.Bold)]
     [TestCase("Courier;12;_IC_;0;1", "Courier", 12f, FontStyle.Italic)]
     [TestCase("Courier;12;_IC_;1;1", "Courier", 12f, FontStyle.Italic | FontStyle.Bold)]
-    public void Parse_should_parse(string serialised, string name, float size, FontStyle style)
+    public void Parse_should_parse(string? serialised, string name, float size, FontStyle style)
     {
         Font font = serialised.Parse(_defaultFont);
 

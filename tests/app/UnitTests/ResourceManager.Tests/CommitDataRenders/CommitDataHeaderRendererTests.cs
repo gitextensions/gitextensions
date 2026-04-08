@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using ResourceManager;
@@ -9,7 +8,6 @@ namespace ResourceManagerTests.CommitDataRenders;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class CommitDataHeaderRendererTests
 {
     private IHeaderLabelFormatter _labelFormatter = null!;

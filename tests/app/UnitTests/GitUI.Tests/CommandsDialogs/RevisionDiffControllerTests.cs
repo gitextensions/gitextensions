@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls;
@@ -10,7 +9,6 @@ namespace GitUITests.CommandsDialogs;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class RevisionDiffControllerTests
 {
     private IGitModule _module = null!;

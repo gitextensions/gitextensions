@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitUI.CommitInfo;
+﻿using GitUI.CommitInfo;
 using ResourceManager;
 
 namespace GitUITests.UserControls.CommitInfo;

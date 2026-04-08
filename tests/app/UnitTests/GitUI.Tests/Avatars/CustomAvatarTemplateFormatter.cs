@@ -1,8 +1,6 @@
 ﻿using GitUI.Avatars;
 
 namespace GitUITests.Avatars;
-
-[TestFixture]
 public class CustomAvatarTemplateFormatter
 {
     [Test]
@@ -16,7 +14,7 @@ public class CustomAvatarTemplateFormatter
         Func<(string val1, string val2), string> formatter = TemplateFormatter.Create(template, ValueMappingProvider);
         string result = formatter((val1, val2));
 
-        ClassicAssert.AreEqual(expectation, result);
+        result.Should().Be(expectation);
     }
 
     [Test]
@@ -27,8 +25,8 @@ public class CustomAvatarTemplateFormatter
         string result1 = formatter(("x", "y"));
         string result2 = formatter(("a", "b"));
 
-        ClassicAssert.AreEqual("Example x Template y", result1);
-        ClassicAssert.AreEqual("Example a Template b", result2);
+        result1.Should().Be("Example x Template y");
+        result2.Should().Be("Example a Template b");
     }
 
     /// <summary>

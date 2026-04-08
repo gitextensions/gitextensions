@@ -1,16 +1,13 @@
-﻿using AwesomeAssertions;
-using GitUI.UserManual;
+﻿using GitUI.UserManual;
 
 namespace GitUITests.UserManual;
-
-[TestFixture]
 public class SingleHtmlUserManualFixture
 {
     [TestCase((string?)null)]
     [TestCase("merge-conflicts")]
-    public void GetUrl(string anchor)
+    public void GetUrl(string? anchor)
     {
-        SingleHtmlUserManual sut = new(anchor);
+        SingleHtmlUserManual sut = new(anchor!);
 
         string expected = SingleHtmlUserManual.Location + "/index.html".Combine("#", anchor);
 

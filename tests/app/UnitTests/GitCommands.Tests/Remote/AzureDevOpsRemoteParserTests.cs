@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitCommands.Remotes;
+﻿using GitCommands.Remotes;
 
 namespace GitCommandsTests.Remote;
-
-[TestFixture]
 public class AzureDevOpsRemoteParserTests
 {
     [TestCase("https://owner@dev.azure.com/owner/project/_git/repo")]

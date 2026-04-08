@@ -1,12 +1,9 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
 using GitUI.Theming;
 
 namespace GitUITests.Editor.Diff;
-
-[TestFixture]
 public class AnsiEscapeUtilitiesTest_TryGetColors
 {
     private const int _blackId = 0;

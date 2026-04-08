@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.IO.Abstractions;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -8,8 +7,6 @@ using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class CommitTemplateManagerTests
 {
     private readonly string _workingDir = @"c:\dev\repo";
@@ -34,7 +31,7 @@ public class CommitTemplateManagerTests
 
     [TestCase(null)]
     [TestCase("")]
-    public void LoadGitCommitTemplate_commit_template_not_defined(string template)
+    public void LoadGitCommitTemplate_commit_template_not_defined(string? template)
     {
         _module.GetEffectiveSetting("commit.template").Returns(template);
 
@@ -44,7 +41,7 @@ public class CommitTemplateManagerTests
     [TestCase("~/template.txt")]
     [TestCase("./template.txt")]
     [TestCase("template.txt")]
-    public void LoadGitCommitTemplate_should_throw_if_template_not_found(string template)
+    public void LoadGitCommitTemplate_should_throw_if_template_not_found(string? template)
     {
         _module.WorkingDir.Returns(_workingDir);
         _module.GetEffectiveSetting("commit.template").Returns(template);

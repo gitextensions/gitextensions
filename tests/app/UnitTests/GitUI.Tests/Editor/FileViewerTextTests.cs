@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Design;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitExtUtils;
 using GitUI;
@@ -13,7 +12,6 @@ using ResourceManager;
 namespace GitUITests.Editor;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public class FileViewerTextTests
 {
     private IServiceProvider _serviceProvider = null!;

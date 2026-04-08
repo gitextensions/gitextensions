@@ -1,7 +1,6 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using AppVeyorIntegration;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
@@ -12,8 +11,6 @@ using YamlDotNet.Core.Events;
 using YamlDotNet.Serialization;
 
 namespace AppVeyorIntegrationTests;
-
-[TestFixture]
 public class AppVeyorAdapterTests
 {
     private const string _projectId = "account/repo";

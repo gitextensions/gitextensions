@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitCommands.DiffMergeTools;
+﻿using GitCommands.DiffMergeTools;
 
 namespace GitCommandsTests.DiffMergeTools;
-
-[TestFixture]
 public class RegisteredDiffMergeToolsTests
 {
     [Test]

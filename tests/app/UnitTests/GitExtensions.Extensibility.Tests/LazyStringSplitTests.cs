@@ -2,8 +2,6 @@
 using GitExtensions.Extensibility;
 
 namespace GitExtUtilsTests;
-
-[TestFixture]
 public sealed class LazyStringSplitTests
 {
     [TestCase("a;b;c", ';', new[] { "a", "b", "c" })]
@@ -31,15 +29,15 @@ public sealed class LazyStringSplitTests
         // This boxes
         IEnumerable<string> actual = new LazyStringSplit(input, delimiter, StringSplitOptions.None);
 
-        AssertEx.SequenceEqual(expected, actual);
+        actual.Should().Equal(expected);
 
         // Non boxing foreach
         List<string> list = [.. new LazyStringSplit(input, delimiter, StringSplitOptions.None)];
 
-        AssertEx.SequenceEqual(expected, list);
+        list.Should().Equal(expected);
 
         // Equivalence with string.Split
-        AssertEx.SequenceEqual(expected, input.Split([delimiter], StringSplitOptions.None));
+        input.Split([delimiter], StringSplitOptions.None).Should().Equal(expected);
     }
 
     [TestCase("a;b;c", ';', new[] { "a", "b", "c" })]
@@ -67,20 +65,20 @@ public sealed class LazyStringSplitTests
         // This boxes
         IEnumerable<string> actual = new LazyStringSplit(input, delimiter, StringSplitOptions.RemoveEmptyEntries);
 
-        AssertEx.SequenceEqual(expected, actual);
+        actual.Should().Equal(expected);
 
         // Non boxing foreach
         List<string> list = [.. new LazyStringSplit(input, delimiter, StringSplitOptions.RemoveEmptyEntries)];
 
-        AssertEx.SequenceEqual(expected, list);
+        list.Should().Equal(expected);
 
         // Equivalence with string.Split
-        AssertEx.SequenceEqual(expected, input.Split([delimiter], StringSplitOptions.RemoveEmptyEntries));
+        input.Split([delimiter], StringSplitOptions.RemoveEmptyEntries).Should().Equal(expected);
     }
 
     [Test]
     public void Constructor_WithNullInput_Throws()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => _ = new LazyStringSplit(null!, ' ', StringSplitOptions.RemoveEmptyEntries));
+        ((Action)(() => _ = new LazyStringSplit(null!, ';'))).Should().Throw<ArgumentNullException>();
     }
 }

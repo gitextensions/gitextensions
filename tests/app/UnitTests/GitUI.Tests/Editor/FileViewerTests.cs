@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitCommands.Settings;
+﻿using GitCommands.Settings;
 using GitUI.Editor;
 
 namespace GitUITests.Editor;
@@ -33,7 +32,7 @@ public class FileViewerTests
     [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Change, true, true, false)]
     public void Should_correctly_setup_IgnoreWhitespaceMethod_with_one_click(IgnoreWhitespaceKind oldIgnoreWhitespace, IgnoreWhitespaceKind newIgnoreWhitespace, bool ignoreEol, bool ignoreChange, bool ignoreAllSpace)
     {
-        ClassicAssert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
+        newIgnoreWhitespace.Should().NotBe(oldIgnoreWhitespace);
 
         FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
 
@@ -76,7 +75,7 @@ public class FileViewerTests
     [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Change)]
     public void Should_correctly_reset_IgnoreWhitespaceMethod_to_None_with_two_clicks(IgnoreWhitespaceKind oldIgnoreWhitespace, IgnoreWhitespaceKind newIgnoreWhitespace)
     {
-        ClassicAssert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
+        newIgnoreWhitespace.Should().NotBe(oldIgnoreWhitespace);
 
         FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
 

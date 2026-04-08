@@ -1,11 +1,8 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using NSubstitute;
 
 namespace GitCommandsTests.UserRepositoryHistory;
-
-[TestFixture]
 public class RemoteRepositoryManagerTests
 {
     private const string Key = "history remote";

@@ -1,12 +1,9 @@
 ﻿using System.Net;
 using System.Text;
-using AwesomeAssertions;
 using GitUI.Editor.RichTextBoxExtension;
 using ResourceManager;
 
 namespace GitUITests.Editor;
-
-[TestFixture]
 public class RichTextBoxXhtmlSupportExtensionTests
 {
     private const string _defaultLinkText = "link";
@@ -23,6 +20,12 @@ public class RichTextBoxXhtmlSupportExtensionTests
     {
         _rtb = new RichTextBox();
         _linkFactory = new LinkFactory();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _rtb.Dispose();
     }
 
     private void SetupLink(string prefix, string linkText, string uri, string suffix)

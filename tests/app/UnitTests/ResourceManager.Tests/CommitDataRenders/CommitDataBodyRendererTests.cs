@@ -1,13 +1,10 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
 
 namespace ResourceManagerTests.CommitDataRenders;
-
-[TestFixture]
 public class CommitDataBodyRendererTests
 {
     private IGitModule _module = null!;

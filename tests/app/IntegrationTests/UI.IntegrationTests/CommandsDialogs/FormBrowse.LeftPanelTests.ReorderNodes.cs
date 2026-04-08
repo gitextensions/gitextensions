@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitUI;
@@ -186,7 +185,7 @@ public class FormBrowse_LeftPanel_ReorderNodesTest
         }
 
         string items = collection.OfType<object>().Select(n => n.ToString()!).Join(", ");
-        ClassicAssert.Fail($"Actual count {actualCount} differs from expected {expectedCount}.{Environment.NewLine}Actual items: {items}");
+        Assert.Fail($"Actual count {actualCount} differs from expected {expectedCount}.{Environment.NewLine}Actual items: {items}");
     }
 
     private static void ValidateOrder(List<TreeNode> initialNodes, TreeNodeCollection currNodes, params int[] expectedOrder)

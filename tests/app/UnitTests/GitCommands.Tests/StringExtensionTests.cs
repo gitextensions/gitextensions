@@ -1,6 +1,4 @@
 ﻿namespace GitCommandsTests;
-
-[TestFixture]
 public sealed class StringExtensionTests
 {
     [TestCase(null, 10, "")]
@@ -9,9 +7,9 @@ public sealed class StringExtensionTests
     [TestCase("Hello", 4, "H...")]
     [TestCase("Hello", 3, "...")]
     [TestCase("Hello", 2, "He")]
-    public void ShortenTo_works_as_expected(string s, int length, string expected)
+    public void ShortenTo_works_as_expected(string? s, int length, string expected)
     {
-        ClassicAssert.AreEqual(expected, s.ShortenTo(length));
+        s.ShortenTo(length).Should().Be(expected);
     }
 
     [TestCase("Hello World", "Hello", true)]
@@ -22,7 +20,7 @@ public sealed class StringExtensionTests
     [TestCase("Hello World", "ldi", false)]
     public void Contains_works_as_expected(string str, string other, bool expected)
     {
-        ClassicAssert.AreEqual(expected, str.Contains(other, StringComparison.InvariantCultureIgnoreCase));
+        str.Contains(other, StringComparison.InvariantCultureIgnoreCase).Should().Be(expected);
     }
 
     [TestCase("ABCDEFG", "ABC", "DEFG")]
@@ -33,7 +31,7 @@ public sealed class StringExtensionTests
     [TestCase("AB", "ABCD", "AB")]
     public void RemovePrefix_works_as_expected(string str, string prefix, string expected)
     {
-        ClassicAssert.AreEqual(expected, str.RemovePrefix(prefix));
+        str.RemovePrefix(prefix).Should().Be(expected);
     }
 
     [TestCase("ABCDEFG", "EFG", "ABCD")]
@@ -46,7 +44,7 @@ public sealed class StringExtensionTests
     [TestCase("ABCD", "", "ABCD")]
     public void RemoveSuffix_works_as_expected(string str, string prefix, string expected)
     {
-        ClassicAssert.AreEqual(expected, str.RemoveSuffix(prefix));
+        str.RemoveSuffix(prefix).Should().Be(expected);
     }
 
     [TestCase("ABCDEFG", 'A', "")]
@@ -59,7 +57,7 @@ public sealed class StringExtensionTests
     [TestCase("A", 'A', "")]
     public void SubstringUntil_works_as_expected(string str, char c, string expected)
     {
-        ClassicAssert.AreEqual(expected, str.SubstringUntil(c));
+        str.SubstringUntil(c).Should().Be(expected);
     }
 
     [TestCase("ABCABC", 'A', "ABC")]
@@ -71,7 +69,7 @@ public sealed class StringExtensionTests
     [TestCase("AAAA", 'A', "AAA")]
     public void SubstringUntilLast_works_as_expected(string str, char c, string expected)
     {
-        ClassicAssert.AreEqual(expected, str.SubstringUntilLast(c));
+        str.SubstringUntilLast(c).Should().Be(expected);
     }
 
     [TestCase("ABCDEFG", 'A', "BCDEFG")]
@@ -83,7 +81,7 @@ public sealed class StringExtensionTests
     [TestCase("ABBA", 'A', "BBA")]
     public void SubstringAfter_char_works_as_expected(string str, char c, string expected)
     {
-        ClassicAssert.AreEqual(expected, str.SubstringAfter(c));
+        str.SubstringAfter(c).Should().Be(expected);
     }
 
     [TestCase("ABCDEFG", "A", "BCDEFG")]
@@ -94,9 +92,9 @@ public sealed class StringExtensionTests
     [TestCase("", "Z", "")]
     [TestCase("A", "A", "")]
     [TestCase("ABBA", "A", "BBA")]
-    public void SubstringAfter_string_works_as_expected(string str, string s, string expected)
+    public void SubstringAfter_string_works_as_expected(string str, string? s, string expected)
     {
-        ClassicAssert.AreEqual(expected, str.SubstringAfter(s));
+        str.SubstringAfter(s!).Should().Be(expected);
     }
 
     [TestCase("ABCABC", 'A', "BC")]
@@ -111,7 +109,7 @@ public sealed class StringExtensionTests
     [TestCase("ABBA", 'A', "")]
     public void SubstringAfterLast_char_works_as_expected(string str, char c, string expected)
     {
-        ClassicAssert.AreEqual(expected, str.SubstringAfterLast(c));
+        str.SubstringAfterLast(c).Should().Be(expected);
     }
 
     [TestCase("ABCABC", "A", "BC")]
@@ -126,9 +124,9 @@ public sealed class StringExtensionTests
     [TestCase("", "Z", "")]
     [TestCase("A", "A", "")]
     [TestCase("ABBA", "A", "")]
-    public void SubstringAfterLast_string_works_as_expected(string str, string s, string expected)
+    public void SubstringAfterLast_string_works_as_expected(string str, string? s, string expected)
     {
-        ClassicAssert.AreEqual(expected, str.SubstringAfterLast(s));
+        str.SubstringAfterLast(s!).Should().Be(expected);
     }
 
     [TestCase("/usr/bin", false, "/usr/bin")]
@@ -144,9 +142,9 @@ public sealed class StringExtensionTests
     [TestCase("cmd /c \"echo \\\"Hello world\\\"\"", true, "cmd /c \"\"echo \\\"\"Hello world\\\"\"\"\"")]
     [TestCase("cmd /c \"echo \"\"Hello world\"\"\"", false, "cmd /c \\\"echo \\\"\\\"Hello world\\\"\\\"\\\"")]
     [TestCase("cmd /c \"echo \"\"Hello world\"\"\"", true, "cmd /c \"\"echo \"\"\"\"Hello world\"\"\"\"\"\"")]
-    public void EscapeForCommandLine_works_as_expected(string s, bool forWindows, string expected)
+    public void EscapeForCommandLine_works_as_expected(string? s, bool forWindows, string expected)
     {
-        ClassicAssert.AreEqual(expected, s.EscapeForCommandLine(forWindows));
+        s!.EscapeForCommandLine(forWindows).Should().Be(expected);
     }
 
     [TestCase(null, null)]
@@ -165,7 +163,7 @@ public sealed class StringExtensionTests
 
     public void QuoteIfUnquotedAndNE(string? str, string? expected)
     {
-        ClassicAssert.AreEqual(expected, str.QuoteIfNotQuotedAndNE());
+        str.QuoteIfNotQuotedAndNE().Should().Be(expected);
     }
 
     [TestCase(null, null)]
@@ -182,6 +180,6 @@ public sealed class StringExtensionTests
 
     public void RemoveQuotes(string? str, string? expected)
     {
-        ClassicAssert.AreEqual(expected, str!.RemoveQuotes());
+        str!.RemoveQuotes().Should().Be(expected);
     }
 }

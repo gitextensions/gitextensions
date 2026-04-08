@@ -1,11 +1,8 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.RefContextMenus;
 using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid.RefContextMenus;
-
-[TestFixture]
 public class TagContextMenuProviderTests
 {
     private TagContextMenuProvider _provider = null!;
@@ -31,6 +28,12 @@ public class TagContextMenuProviderTests
             PerformRefreshRevisions = () => { },
             DropStash = (_, _) => { },
         };
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        ((IDisposable)_provider).Dispose();
     }
 
     [Test]

@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using AwesomeAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
@@ -9,7 +8,6 @@ namespace GitUITests.UserControls;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 [NonParallelizable]
 public class FilterInfoTests
 {

@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitUI.Theming;
+﻿using GitUI.Theming;
 
 namespace GitUITests.Theming;
-
-[TestFixture]
 public class ThemeFileReaderTests
 {
     [Test]

@@ -1,12 +1,9 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 
 namespace GitUITests.GitUICommandsTests;
-
-[TestFixture]
 public sealed class NormalizeFileNameTests
 {
     [TestCase(@"file", "file")]

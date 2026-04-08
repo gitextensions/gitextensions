@@ -1,5 +1,4 @@
 ﻿using System.Text.Json.Nodes;
-using AwesomeAssertions;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.UserControls;

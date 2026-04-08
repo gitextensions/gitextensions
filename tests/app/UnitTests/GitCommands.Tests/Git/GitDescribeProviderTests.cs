@@ -1,11 +1,8 @@
-﻿using AwesomeAssertions;
-using GitCommands.Git;
+﻿using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class GitDescribeProviderTests
 {
     private IGitModule _module = null!;

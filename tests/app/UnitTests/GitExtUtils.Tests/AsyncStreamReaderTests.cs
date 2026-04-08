@@ -1,12 +1,9 @@
 ﻿using System.Threading.Channels;
-using AwesomeAssertions;
 using GitExtUtils;
 using GitUI;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public sealed class AsyncStreamReaderTests
 {
     [SetUp]

@@ -1,14 +1,11 @@
 ﻿using System.Collections;
 using System.IO.Abstractions;
 using System.Text;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class CommitMessageManagerTests
 {
     private const string _commitMessage = "commit message";
@@ -84,17 +81,17 @@ public class CommitMessageManagerTests
     }
 
     [TestCase(null)]
-    public void Constructor_should_throw(string workingDirGitDir)
+    public void Constructor_should_throw(string? workingDirGitDir)
     {
-        ((Action)(() => new CommitMessageManager(_owner, workingDirGitDir, _encoding))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => new CommitMessageManager(_owner, workingDirGitDir!, _encoding))).Should().Throw<ArgumentNullException>();
     }
 
     [TestCase("")]
     [TestCase(" ")]
     [TestCase("::")]
-    public void Constructor_should_not_throw(string workingDirGitDir)
+    public void Constructor_should_not_throw(string? workingDirGitDir)
     {
-        new CommitMessageManager(_owner, workingDirGitDir, _encoding).Should().NotBeNull();
+        new CommitMessageManager(_owner, workingDirGitDir!, _encoding).Should().NotBeNull();
     }
 
     [Test]
@@ -159,7 +156,7 @@ public class CommitMessageManagerTests
         AppSettings.RememberAmendCommitState = true;
         await _manager.SetAmendStateAsync(amendState: true);
 
-        ClassicAssert.That(correctlyWritten);
+        correctlyWritten.Should().BeTrue();
     }
 
     [Test]
@@ -172,7 +169,7 @@ public class CommitMessageManagerTests
         AppSettings.RememberAmendCommitState = false;
         await _manager.SetAmendStateAsync(amendState: true);
 
-        ClassicAssert.That(correctlyDeleted);
+        correctlyDeleted.Should().BeTrue();
     }
 
     [TestCase(true)]
@@ -186,7 +183,7 @@ public class CommitMessageManagerTests
         AppSettings.RememberAmendCommitState = rememberAmendCommitState;
         await _manager.SetAmendStateAsync(amendState: false);
 
-        ClassicAssert.That(correctlyDeleted);
+        correctlyDeleted.Should().BeTrue();
     }
 
     [Test]
@@ -325,7 +322,7 @@ public class CommitMessageManagerTests
 
         await _manager.SetMergeOrCommitMessageAsync(_newMessage);
 
-        ClassicAssert.That(correctlyWritten);
+        correctlyWritten.Should().BeTrue();
     }
 
     [Test]
@@ -353,7 +350,7 @@ public class CommitMessageManagerTests
 
         await _manager.SetMergeOrCommitMessageAsync(_newMessage);
 
-        ClassicAssert.That(correctlyWritten);
+        correctlyWritten.Should().BeTrue();
     }
 
     [Test]
@@ -367,7 +364,7 @@ public class CommitMessageManagerTests
 
         await _manager.SetMergeOrCommitMessageAsync(_newMessage);
 
-        ClassicAssert.That(correctlyWritten);
+        correctlyWritten.Should().BeTrue();
     }
 
     [Test]
@@ -381,7 +378,7 @@ public class CommitMessageManagerTests
 
         await _manager.SetMergeOrCommitMessageAsync(message: null);
 
-        ClassicAssert.That(correctlyWritten);
+        correctlyWritten.Should().BeTrue();
     }
 
     [Test]
@@ -395,7 +392,7 @@ public class CommitMessageManagerTests
 
         await _manager.SetMergeOrCommitMessageAsync(message: null);
 
-        ClassicAssert.That(!correctlyWritten);
+        correctlyWritten.Should().BeFalse();
     }
 
     [Test]
@@ -410,9 +407,9 @@ public class CommitMessageManagerTests
 
         await _manager.ResetCommitMessageAsync();
 
-        ClassicAssert.That(deletedA);
-        ClassicAssert.That(deletedC);
-        ClassicAssert.That(!deletedM);
+        deletedA.Should().BeTrue();
+        deletedC.Should().BeTrue();
+        deletedM.Should().BeFalse();
     }
 
     [Test, TestCaseSource(typeof(FormatCommitMessageTestData), nameof(FormatCommitMessageTestData.FormatCommitMessageTestCases))]

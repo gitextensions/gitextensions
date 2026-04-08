@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
@@ -8,8 +7,6 @@ using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitUITests.UserControls;
-
-[TestFixture]
 internal class AuthorRevisionHighlightingTests
 {
     private const string ExpectedAuthorEmail1 = "doe1@example.org";
@@ -44,15 +41,15 @@ internal class AuthorRevisionHighlightingTests
     {
         AuthorRevisionHighlighting sut = new();
         GitModule currentModule = NewModule();
-        ClassicAssert.True(sut.ProcessRevisionSelectionChange(currentModule,
-                                           new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) }));
+        sut.ProcessRevisionSelectionChange(currentModule,
+                                           new[] { NewRevisionWithAuthorEmail(ExpectedAuthorEmail1) }).Should().BeTrue();
 
-        ClassicAssert.False(sut.ProcessRevisionSelectionChange(currentModule,
+        sut.ProcessRevisionSelectionChange(currentModule,
                                            new[]
                                                {
                                                    NewRevisionWithAuthorEmail(ExpectedAuthorEmail2),
                                                    NewRevisionWithAuthorEmail(ExpectedAuthorEmail1)
-                                               }));
+                                               }).Should().BeFalse();
 
         sut.AuthorEmailToHighlight.Should().Be(ExpectedAuthorEmail1);
     }
@@ -164,7 +161,7 @@ internal class AuthorRevisionHighlightingTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("\t")]
-    public void IsHighlighted_should_return_false_if_revision_AuthorEmail_is_null_or_whitespace(string authorEmail)
+    public void IsHighlighted_should_return_false_if_revision_AuthorEmail_is_null_or_whitespace(string? authorEmail)
     {
         AuthorRevisionHighlighting sut = new();
 
@@ -177,7 +174,7 @@ internal class AuthorRevisionHighlightingTests
     [TestCase("a@a.aaa", null, false)]
     [TestCase("a@a.aaa", "", false)]
     [TestCase("a@a.aaa", "\t", false)]
-    public void IsHighlighted_should_return_true_if_revision_AuthorEmail_matches_AuthorEmailToHighlight(string authorEmail, string highlightEmail, bool expected)
+    public void IsHighlighted_should_return_true_if_revision_AuthorEmail_matches_AuthorEmailToHighlight(string? authorEmail, string? highlightEmail, bool expected)
     {
         GitModule currentModule = NewModule();
         AuthorRevisionHighlighting sut = new();
@@ -192,7 +189,7 @@ internal class AuthorRevisionHighlightingTests
         return new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), Path.GetTempPath());
     }
 
-    private static GitRevision NewRevisionWithAuthorEmail(string authorEmail)
+    private static GitRevision NewRevisionWithAuthorEmail(string? authorEmail)
     {
         return new GitRevision(ObjectId.Random())
         {

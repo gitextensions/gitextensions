@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Plugins.ReleaseNotesGenerator;
+﻿using GitExtensions.Plugins.ReleaseNotesGenerator;
 
 namespace ReleaseNotesGeneratorTests;
-
-[TestFixture]
 public class GitLogLineParserTests
 {
     private IGitLogLineParser _parser = null!;
@@ -17,9 +14,9 @@ public class GitLogLineParserTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("    ")]
-    public void Parse_line_should_return_null(string line)
+    public void Parse_line_should_return_null(string? line)
     {
-        _parser.Parse(line).Should().BeNull();
+        _parser.Parse(line!).Should().BeNull();
     }
 
     [Test]
@@ -33,9 +30,9 @@ public class GitLogLineParserTests
     [TestCase("0824e058c@RevisionDiffProvider Release tests", "0824e058c", "RevisionDiffProvider Release tests")]
     [TestCase("0824e058c0123@RevisionDiffProvider Release tests", "0824e058c0123", "RevisionDiffProvider Release tests")]
     [TestCase("0824e058c@RevisionDiffProvider@ Release tests", "0824e058c", "RevisionDiffProvider@ Release tests")]
-    public void Parse_line_should_parse_correctly(string line, string expectedHash, string expectedMessage)
+    public void Parse_line_should_parse_correctly(string? line, string expectedHash, string expectedMessage)
     {
-        LogLine? logLine = _parser.Parse(line);
+        LogLine? logLine = _parser.Parse(line!);
 
         logLine.Should().NotBeNull();
         logLine.Commit.Should().Be(expectedHash);

@@ -1,13 +1,10 @@
 ﻿using System.Reflection;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands.ExternalLinks;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
 
 namespace GitCommandsTests.ExternalLinks;
-
-[TestFixture]
 public class ExternalLinksStorageIntegrationTests
 {
     private ExternalLinksStorage _externalLinksStorage = null!;

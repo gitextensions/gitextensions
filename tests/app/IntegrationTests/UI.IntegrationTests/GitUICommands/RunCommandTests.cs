@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.UITests;
@@ -9,7 +8,6 @@ using GitUI.CommandsDialogs;
 namespace GitUITests.GitUICommandsTests;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public sealed class RunCommandTests
 {
     // Created once for the fixture

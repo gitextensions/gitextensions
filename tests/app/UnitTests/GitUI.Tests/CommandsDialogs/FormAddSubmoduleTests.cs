@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitExtUtils;
 using GitUI.CommandsDialogs.SubmodulesDialog;
 
@@ -30,19 +29,19 @@ public class FormAddSubmoduleTests
     }
 
     [Test]
-    public void LoadRemoteRepoBranches_NoUrl([Values(null, "", " ")] string url)
+    public void LoadRemoteRepoBranches_NoUrl([Values(null, "", " ")] string? url)
     {
-        FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, url)
+        FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, url!)
             .Should().BeEmpty();
     }
 
     [TestCase("git@github.com:gitextensions/gitextensions.git", "\"git@github.com:gitextensions/gitextensions.git\"")]
     [TestCase("https://github.com/gitextensions/gitextensions.git", "\"https://github.com/gitextensions/gitextensions.git\"")]
     [TestCase("C:\\Repo", "\"C:/Repo\"")]
-    public void LoadRemoteRepoBranches_Url(string url, string encodedUrl)
+    public void LoadRemoteRepoBranches_Url(string? url, string encodedUrl)
     {
         using IDisposable _ = MockupGitOutput(Heads, encodedUrl);
-        FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, url)
+        FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, url!)
             .Should().BeEquivalentTo(_branches);
     }
 

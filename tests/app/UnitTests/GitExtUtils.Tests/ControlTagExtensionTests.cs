@@ -1,8 +1,6 @@
 ﻿using GitExtUtils.GitUI;
 
 namespace GitExtUtilsTests;
-
-[TestFixture]
 public class ControlTagExtensionTests
 {
     [Test]
@@ -13,10 +11,10 @@ public class ControlTagExtensionTests
         control.SetTag(1);
         control.SetTag(2f);
 
-        ClassicAssert.That(control.HasTag<int>(), Is.True);
-        ClassicAssert.That(control.GetTag<int>(), Is.EqualTo(1));
-        ClassicAssert.That(control.HasTag<float>(), Is.True);
-        ClassicAssert.That(control.GetTag<float>(), Is.EqualTo(2f));
+        control.HasTag<int>().Should().BeTrue();
+        control.GetTag<int>().Should().Be(1);
+        control.HasTag<float>().Should().BeTrue();
+        control.GetTag<float>().Should().Be(2f);
     }
 
     [Test]
@@ -27,8 +25,8 @@ public class ControlTagExtensionTests
             Tag = new object()
         };
 
-        ClassicAssert.That(control.HasTag<int>(), Is.False);
-        ClassicAssert.That(control.GetTag<int>(), Is.EqualTo(default(int)));
+        control.HasTag<int>().Should().BeFalse();
+        control.GetTag<int>().Should().Be(default(int));
     }
 
     [Test]
@@ -41,8 +39,8 @@ public class ControlTagExtensionTests
 
         control.SetTag(1);
 
-        ClassicAssert.That(control.HasTag<int>(), Is.True);
-        ClassicAssert.That(control.GetTag<int>(), Is.EqualTo(1));
+        control.HasTag<int>().Should().BeTrue();
+        control.GetTag<int>().Should().Be(1);
     }
 
     [Test]
@@ -52,10 +50,10 @@ public class ControlTagExtensionTests
         control.SetTag("key", 1);
         control.SetTag("key", 2f);
 
-        ClassicAssert.That(control.HasTag<int>("key"), Is.False);
-        ClassicAssert.That(control.GetTag<int>("key"), Is.EqualTo(default(int)));
+        control.HasTag<int>("key").Should().BeFalse();
+        control.GetTag<int>("key").Should().Be(default(int));
 
-        ClassicAssert.That(control.HasTag<float>("key"), Is.True);
-        ClassicAssert.That(control.GetTag<float>("key"), Is.EqualTo(2f));
+        control.HasTag<float>("key").Should().BeTrue();
+        control.GetTag<float>("key").Should().Be(2f);
     }
 }

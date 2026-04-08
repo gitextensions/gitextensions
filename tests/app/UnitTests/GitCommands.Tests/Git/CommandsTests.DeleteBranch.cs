@@ -10,13 +10,13 @@ partial class CommandsTests
     [Test]
     public void ctor_should_throw_if_branches_is_null()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => Commands.DeleteBranch(branches: null!, force: false));
+        ((Action)(() => Commands.DeleteBranch(branches: null!, force: false))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
     public void ctor_should_throw_if_branches_is_empty()
     {
-        ClassicAssert.Throws<ArgumentException>(() => Commands.DeleteBranch([], force: false));
+        ((Action)(() => Commands.DeleteBranch([], force: false))).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -28,8 +28,8 @@ partial class CommandsTests
 
         IGitCommand cmd = Commands.DeleteBranch(new IGitRef[] { remoteBranchRef }, force: false);
 
-        ClassicAssert.IsFalse(cmd.AccessesRemote);
-        ClassicAssert.IsTrue(cmd.ChangesRepoState);
+        cmd.AccessesRemote.Should().BeFalse();
+        cmd.ChangesRepoState.Should().BeTrue();
     }
 
     private static IEnumerable<TestCaseData> DeleteBranchTestData
@@ -72,7 +72,7 @@ partial class CommandsTests
     public void Arguments_are_Expected(IReadOnlyCollection<IGitRef> branches, bool force, string expected)
     {
         IGitCommand cmd = Commands.DeleteBranch(branches, force);
-        ClassicAssert.AreEqual(expected, cmd.Arguments);
+        cmd.Arguments.Should().Be(expected);
     }
 
     private static GitRef SetupRawRemoteRef(string localBranchName, string remoteName, string completeName)

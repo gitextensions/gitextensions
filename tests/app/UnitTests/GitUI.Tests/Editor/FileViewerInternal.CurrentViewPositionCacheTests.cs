@@ -1,12 +1,10 @@
-﻿using AwesomeAssertions;
-using GitUI.Editor;
+﻿using GitUI.Editor;
 using GitUI.Editor.Diff;
 using ICSharpCode.TextEditor;
 
 namespace GitUITests.Editor;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public class CurrentViewPositionCacheTests
 {
     private FileViewerInternal _fileViewerInternal = null!;
@@ -28,7 +26,7 @@ public class CurrentViewPositionCacheTests
 
     [TestCase(null)]
     [TestCase("a")]
-    public void Capture_should_not_change_capture_if_less_then_two_lines(string text)
+    public void Capture_should_not_change_capture_if_less_then_two_lines(string? text)
     {
         FileViewerInternal.CurrentViewPositionCache.TestAccessor test = _viewPositionCache.GetTestAccessor();
 

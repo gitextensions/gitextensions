@@ -1,10 +1,7 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Settings;
 
 namespace GitCommandsTests.Settings;
-
-[TestFixture]
 internal sealed class RuntimeSettingTests
 {
     [OneTimeSetUp]

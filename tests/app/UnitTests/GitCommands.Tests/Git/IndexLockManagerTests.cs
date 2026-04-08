@@ -1,5 +1,4 @@
 ﻿using System.IO.Abstractions;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitCommands.Git;
@@ -7,8 +6,6 @@ using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class IndexLockManagerTests
 {
     private const string IndexLock = "index.lock";
@@ -91,7 +88,8 @@ public class IndexLockManagerTests
         _file.Exists(_indexLockFile).Returns(true);
         _file.When(x => x.Delete(_indexLockFile)).Throw(new DivideByZeroException("boom"));
 
-        FileDeleteException? ex = ClassicAssert.Throws<FileDeleteException>(() => _manager.UnlockIndex(false));
+        Action act = () => _manager.UnlockIndex(false);
+        FileDeleteException ex = act.Should().Throw<FileDeleteException>().Which;
 
         ex!.FileName.Should().Be(_indexLockFile);
         _module.DidNotReceive().GetSubmodulesLocalPaths();

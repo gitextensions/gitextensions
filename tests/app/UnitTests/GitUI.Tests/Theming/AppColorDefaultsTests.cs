@@ -1,12 +1,9 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 
 namespace GitUITests.Theming;
-
-[TestFixture]
 public class AppColorDefaultsTests
 {
     private string _originalPath = null!;

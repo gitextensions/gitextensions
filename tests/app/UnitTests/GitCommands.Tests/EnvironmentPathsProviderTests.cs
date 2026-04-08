@@ -1,10 +1,7 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class EnvironmentPathsProviderTests
 {
     private string _separator = null!;
@@ -28,7 +25,7 @@ public class EnvironmentPathsProviderTests
 
         IEnumerable<string> validPaths = _provider.GetEnvironmentValidPaths();
 
-        CollectionAssert.AreEqual(GetValidPaths().ToArray(), validPaths.ToArray());
+        validPaths.ToArray().Should().Equal(GetValidPaths().ToArray());
     }
 
     [Test]
@@ -41,7 +38,7 @@ public class EnvironmentPathsProviderTests
 
         IEnumerable<string> validPaths = _provider.GetEnvironmentValidPaths();
 
-        CollectionAssert.AreEqual(GetValidPaths().ToArray(), validPaths.ToArray());
+        validPaths.ToArray().Should().Equal(GetValidPaths().ToArray());
     }
 
     [Platform(Include = "Win")]

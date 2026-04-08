@@ -1,11 +1,8 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.RefContextMenus;
 using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid.RefContextMenus;
-
-[TestFixture]
 public class RefContextMenuComposerTests
 {
     private IGitUICommands _uiCommands = null!;

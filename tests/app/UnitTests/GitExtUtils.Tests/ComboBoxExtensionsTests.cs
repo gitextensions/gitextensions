@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitUI;
+﻿using GitUI;
 
 namespace GitExtUtilsTests;
-
-[TestFixture]
 public class ComboBoxExtensionsTests
 {
     [Test]

@@ -4,12 +4,9 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.Resources;
 using System.Text;
-using AwesomeAssertions;
 using GitUI.Properties;
 
 namespace GitUITests;
-
-[TestFixture]
 public class ResourcesTests
 {
     [Test]

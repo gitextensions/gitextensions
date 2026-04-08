@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitCommands.Git;
+﻿using GitCommands.Git;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public sealed class GitBranchNameNormaliserTest
 {
     private GitBranchNameNormaliser _gitBranchNameNormaliser = null!;

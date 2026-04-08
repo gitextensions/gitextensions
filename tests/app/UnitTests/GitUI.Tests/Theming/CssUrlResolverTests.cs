@@ -1,11 +1,8 @@
-﻿using AwesomeAssertions;
-using GitExtUtils.GitUI.Theming;
+﻿using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using NSubstitute;
 
 namespace GitUITests.Theming;
-
-[TestFixture]
 public class CssUrlResolverTests
 {
     private const string PreinstalledThemesMockPath = "pre-installed\\themes";

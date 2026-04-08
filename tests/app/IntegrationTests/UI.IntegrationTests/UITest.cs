@@ -32,7 +32,7 @@ public static class UITest
         bool debug = false)
         where T : Form
     {
-        ClassicAssert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) before test");
+        Application.OpenForms.OfType<T>().Should().BeEmpty($"{Application.OpenForms.OfType<T>().Count()} open form(s) before test");
 
         // Needed for FormBrowse, ScriptOptionsParser
         ManagedExtensibility.Initialise();
@@ -81,7 +81,7 @@ public static class UITest
         finally
         {
             form?.Dispose();
-            ClassicAssert.IsEmpty(Application.OpenForms.OfType<T>(), $"{Application.OpenForms.OfType<T>().Count()} open form(s) after test");
+            Application.OpenForms.OfType<T>().Should().BeEmpty($"{Application.OpenForms.OfType<T>().Count()} open form(s) after test");
         }
 
         return;
@@ -106,7 +106,7 @@ public static class UITest
             {
                 Form form = new() { Text = $"Test {typeof(T).Name}" };
                 control = createControl(form);
-                ClassicAssert.True(form.Controls.Contains(control));
+                form.Controls.Contains(control).Should().BeTrue();
                 Application.Run(form);
             },
             runTestAsync: form => runTestAsync(control!));

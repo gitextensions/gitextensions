@@ -2,8 +2,6 @@
 using NSubstitute;
 
 namespace GitUITests.Avatars;
-
-[TestFixture]
 public class ChainedAvatarProviderTests
 {
     private const int _size = 16;
@@ -35,27 +33,32 @@ public class ChainedAvatarProviderTests
         _img6 = new Bitmap(_size, _size);
     }
 
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        _img1.Dispose();
+        _img2.Dispose();
+        _img3.Dispose();
+        _img4.Dispose();
+        _img5.Dispose();
+        _img6.Dispose();
+    }
+
     [Test]
     public async Task Construction_without_parameter_is_allowed_and_returns_null()
     {
         ChainedAvatarProvider provider = new();
 
         Image? image = await provider.GetAvatarAsync(_email1, _name1, _size);
-        ClassicAssert.Null(image);
+        image.Should().BeNull();
     }
 
     [Test]
     public void Construction_with_null_parameters_is_permitted()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() =>
-        {
-            new ChainedAvatarProvider(null!);
-        });
+        ((Action)(() => new ChainedAvatarProvider(null!))).Should().Throw<ArgumentNullException>();
 
-        ClassicAssert.Throws<ArgumentNullException>(() =>
-        {
-            new ChainedAvatarProvider(null!, null!);
-        });
+        ((Action)(() => new ChainedAvatarProvider(null!, null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -95,9 +98,9 @@ public class ChainedAvatarProviderTests
         Image? res3 = await chainedProvider.GetAvatarAsync(_email3, _name3, _size);
         Image? res4 = await chainedProvider.GetAvatarAsync(_email4, _name4, _size);
 
-        ClassicAssert.AreSame(_img1, res1);
-        ClassicAssert.AreSame(_img4, res2);
-        ClassicAssert.AreSame(_img6, res3);
-        ClassicAssert.AreSame(null, res4);
+        res1.Should().BeSameAs(_img1);
+        res2.Should().BeSameAs(_img4);
+        res3.Should().BeSameAs(_img6);
+        res4.Should().BeSameAs(null);
     }
 }

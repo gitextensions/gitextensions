@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
@@ -218,7 +217,7 @@ public class FormPullTests
             () =>
             {
                 // False because we haven't performed any actions
-                ClassicAssert.False(_commands.StartPullDialog(owner: null, remoteBranch: remoteBranch, remote: remote, pullAction: pullAction));
+                _commands.StartPullDialog(owner: null, remoteBranch: remoteBranch, remote: remote, pullAction: pullAction).Should().BeFalse();
             },
             testDriverAsync);
     }

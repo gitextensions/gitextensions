@@ -1,13 +1,10 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.RefContextMenus;
 using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid.RefContextMenus;
-
-[TestFixture]
 public class StashSelectorContextMenuProviderTests
 {
     private StashSelectorContextMenuProvider _provider = null!;
@@ -18,6 +15,12 @@ public class StashSelectorContextMenuProviderTests
     {
         _provider = new StashSelectorContextMenuProvider();
         _uiCommands = Substitute.For<IGitUICommands>();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        ((IDisposable)_provider).Dispose();
     }
 
     [Test]

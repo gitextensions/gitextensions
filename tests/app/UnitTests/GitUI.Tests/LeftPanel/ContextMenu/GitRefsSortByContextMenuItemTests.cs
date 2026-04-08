@@ -8,7 +8,6 @@ namespace GitUITests.UserControls;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class GitRefsSortByContextMenuItemTests
 {
     private Action _onSortOrderChanged = null!;
@@ -21,11 +20,17 @@ public class GitRefsSortByContextMenuItemTests
         _itemUnderTest = new GitRefsSortByContextMenuItem(_onSortOrderChanged);
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _itemUnderTest.Dispose();
+    }
+
     [Test]
     public void Should_show_all_sort_options()
     {
-        ClassicAssert.IsTrue(_itemUnderTest.HasDropDownItems);
-        ClassicAssert.AreEqual(EnumHelper.GetValues<GitRefsSortBy>().Length, _itemUnderTest.DropDownItems.Count);
+        _itemUnderTest.HasDropDownItems.Should().BeTrue();
+        _itemUnderTest.DropDownItems.Count.Should().Be(EnumHelper.GetValues<GitRefsSortBy>().Length);
     }
 
     private static IEnumerable<TestCaseData> SortOrderOptions
@@ -83,11 +88,11 @@ public class GitRefsSortByContextMenuItemTests
     private void AssertOnlyCheckedItemIs(GitRefsSortBy sortType)
     {
         ToolStripMenuItem matchingSubItem = _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Single(i => i!.Tag!.Equals(sortType));
-        ClassicAssert.IsTrue(matchingSubItem.Checked);
+        matchingSubItem.Checked.Should().BeTrue();
 
         foreach (ToolStripMenuItem otherItem in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Except(new[] { matchingSubItem }))
         {
-            ClassicAssert.IsFalse(otherItem.Checked);
+            otherItem.Checked.Should().BeFalse();
         }
     }
 }

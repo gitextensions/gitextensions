@@ -1,6 +1,5 @@
 ﻿using System.ComponentModel.Design;
 using System.Reflection;
-using AwesomeAssertions;
 using AwesomeAssertions.Specialized;
 using CommonTestUtils;
 using GitExtensions.Extensibility;
@@ -14,8 +13,6 @@ using NSubstitute;
 using ResourceManager;
 
 namespace GitExtensions.UITests.ScriptEngine;
-
-[TestFixture]
 [Apartment(ApartmentState.STA)]
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
@@ -80,7 +77,7 @@ public class ScriptRunnerTests
     }
 
     [Test]
-    public void RunScript_without_command_shall_return_false([Values(null, "")] string command)
+    public void RunScript_without_command_shall_return_false([Values(null, "")] string? command)
     {
         _exampleScript.Command = command;
 
@@ -170,7 +167,7 @@ public class ScriptRunnerTests
 
             // check for correct test setup
             formBrowse.RevisionGridControl.GetTestAccessor().ClearSelection();
-            ClassicAssert.AreEqual(0, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
+            formBrowse.RevisionGridControl.GetSelectedRevisions().Count.Should().Be(0);
             formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull();
 
             ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, ScriptOptionsProviderBase.Default))).Should()
@@ -194,7 +191,7 @@ public class ScriptRunnerTests
             // wait until the revisions are loaded
             await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-            ClassicAssert.AreEqual(1, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
+            formBrowse.RevisionGridControl.GetSelectedRevisions().Count.Should().Be(1);
 
             string? errorMessage = null;
             bool result = ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, ScriptOptionsProviderBase.Default);

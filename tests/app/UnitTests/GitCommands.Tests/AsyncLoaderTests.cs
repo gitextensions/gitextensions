@@ -42,19 +42,19 @@ public sealed class AsyncLoaderTests
                 },
                 () => completed++);
 
-            ClassicAssert.True(await loadSignal.WaitAsync(1000));
+            (await loadSignal.WaitAsync(1000)).Should().BeTrue();
 
-            ClassicAssert.AreEqual(1, started);
-            ClassicAssert.AreEqual(0, completed);
+            started.Should().Be(1);
+            completed.Should().Be(0);
 
             completeSignal.Release();
 
             await task;
 
-            ClassicAssert.AreEqual(1, started);
-            ClassicAssert.AreEqual(1, completed);
+            started.Should().Be(1);
+            completed.Should().Be(1);
 
-            ClassicAssert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+            task.Status.Should().Be(TaskStatus.RanToCompletion);
         });
     }
 
@@ -67,16 +67,16 @@ public sealed class AsyncLoaderTests
             Thread? loadThread = null;
             Thread? continuationThread = null;
 
-            ClassicAssert.False(callerThread.IsThreadPoolThread);
+            callerThread.IsThreadPoolThread.Should().BeFalse();
 
             using AsyncLoader loader = new();
             await loader.LoadAsync(
                 () => loadThread = Thread.CurrentThread,
                 () => continuationThread = Thread.CurrentThread);
 
-            ClassicAssert.True(loadThread!.IsThreadPoolThread);
-            ClassicAssert.AreNotSame(loadThread, callerThread);
-            ClassicAssert.AreNotSame(loadThread, continuationThread);
+            loadThread!.IsThreadPoolThread.Should().BeTrue();
+            callerThread.Should().NotBeSameAs(loadThread);
+            continuationThread.Should().NotBeSameAs(loadThread);
         });
     }
 
@@ -99,20 +99,20 @@ public sealed class AsyncLoaderTests
                 },
                 () => completed++);
 
-            ClassicAssert.True(await loadSignal.WaitAsync(1000));
+            (await loadSignal.WaitAsync(1000)).Should().BeTrue();
 
-            ClassicAssert.AreEqual(1, started);
-            ClassicAssert.AreEqual(0, completed);
+            started.Should().Be(1);
+            completed.Should().Be(0);
 
             _loader.Cancel();
             completeSignal.Release();
 
             await task;
 
-            ClassicAssert.AreEqual(1, started);
-            ClassicAssert.AreEqual(0, completed, "Should not have called the follow-up action");
+            started.Should().Be(1);
+            completed.Should().Be(0, "Should not have called the follow-up action");
 
-            ClassicAssert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+            task.Status.Should().Be(TaskStatus.RanToCompletion);
         });
     }
 
@@ -132,17 +132,17 @@ public sealed class AsyncLoaderTests
 
             await Task.Delay(50);
 
-            ClassicAssert.AreEqual(0, started);
-            ClassicAssert.AreEqual(0, completed);
+            started.Should().Be(0);
+            completed.Should().Be(0);
 
             _loader.Cancel();
 
             await task;
 
-            ClassicAssert.AreEqual(0, started);
-            ClassicAssert.AreEqual(0, completed);
+            started.Should().Be(0);
+            completed.Should().Be(0);
 
-            ClassicAssert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+            task.Status.Should().Be(TaskStatus.RanToCompletion);
         });
     }
 
@@ -165,20 +165,20 @@ public sealed class AsyncLoaderTests
                 },
                 () => completed++);
 
-            ClassicAssert.True(await loadSignal.WaitAsync(1000));
+            (await loadSignal.WaitAsync(1000)).Should().BeTrue();
 
-            ClassicAssert.AreEqual(1, started);
-            ClassicAssert.AreEqual(0, completed);
+            started.Should().Be(1);
+            completed.Should().Be(0);
 
             _loader.Dispose();
             completeSignal.Release();
 
             await task;
 
-            ClassicAssert.AreEqual(1, started);
-            ClassicAssert.AreEqual(0, completed, "Should not have called the follow-up action");
+            started.Should().Be(1);
+            completed.Should().Be(0, "Should not have called the follow-up action");
 
-            ClassicAssert.AreEqual(TaskStatus.RanToCompletion, task.Status);
+            task.Status.Should().Be(TaskStatus.RanToCompletion);
         });
     }
 
@@ -195,7 +195,7 @@ public sealed class AsyncLoaderTests
                 () => sw.Stop(),
                 () => { });
 
-            ClassicAssert.GreaterOrEqual(sw.Elapsed, _loader.Delay - TimeSpan.FromMilliseconds(20));
+            sw.Elapsed.Should().BeGreaterThanOrEqualTo(_loader.Delay - TimeSpan.FromMilliseconds(20));
         });
     }
 
@@ -216,10 +216,10 @@ public sealed class AsyncLoaderTests
 
             await _loader.LoadAsync(
                 () => throw ex,
-                ClassicAssert.Fail);
+                Assert.Fail);
 
-            ClassicAssert.AreEqual(1, observed.Count);
-            ClassicAssert.AreSame(ex, observed[0]);
+            observed.Count.Should().Be(1);
+            observed[0].Should().BeSameAs(ex);
         });
     }
 
@@ -231,10 +231,11 @@ public sealed class AsyncLoaderTests
         JoinableTask loadTask = ThreadHelper.JoinableTaskFactory.RunAsync(() =>
             _loader.LoadAsync(
                 loadContent: () => throw ex,
-                onLoaded: ClassicAssert.Fail));
+                onLoaded: Assert.Fail));
 
-        Exception? oe = ClassicAssert.Throws<Exception>(() => loadTask.Join());
-        ClassicAssert.AreSame(oe, ex);
+        Action act = () => loadTask.Join();
+        Exception oe = act.Should().Throw<Exception>().Which;
+        ex.Should().BeSameAs(oe);
     }
 
     [Test]
@@ -252,13 +253,14 @@ public sealed class AsyncLoaderTests
 
         JoinableTask loadTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => _loader.LoadAsync(
             () => throw ex,
-            ClassicAssert.Fail));
+            Assert.Fail));
 
-        Exception? oe = ClassicAssert.Throws<Exception>(() => loadTask.Join());
+        Action act = () => loadTask.Join();
+        Exception oe = act.Should().Throw<Exception>().Which;
 
-        ClassicAssert.AreEqual(1, observed.Count);
-        ClassicAssert.AreSame(ex, observed[0]);
-        ClassicAssert.AreSame(oe, observed[0]);
+        observed.Count.Should().Be(1);
+        observed[0].Should().BeSameAs(ex);
+        observed[0].Should().BeSameAs(oe);
     }
 
     [Test]
@@ -272,10 +274,15 @@ public sealed class AsyncLoaderTests
         loader.Dispose();
 
         // Any use after dispose should throw
-        await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(() => { }, () => { }));
-        await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(() => 1, i => { }));
-        await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(_ => { }, () => { }));
-        await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(_ => 1, i => { }));
-        ClassicAssert.Throws<ObjectDisposedException>(() => loader.Cancel());
+        Func<Task> act1 = async () => await loader.LoadAsync(() => { }, () => { });
+        await act1.Should().ThrowAsync<ObjectDisposedException>();
+        Func<Task> act2 = async () => await loader.LoadAsync(() => 1, i => { });
+        await act2.Should().ThrowAsync<ObjectDisposedException>();
+        Func<Task> act3 = async () => await loader.LoadAsync(_ => { }, () => { });
+        await act3.Should().ThrowAsync<ObjectDisposedException>();
+        Func<Task> act4 = async () => await loader.LoadAsync(_ => 1, i => { });
+        await act4.Should().ThrowAsync<ObjectDisposedException>();
+        Action act5 = () => loader.Cancel();
+        act5.Should().Throw<ObjectDisposedException>();
     }
 }

@@ -3,8 +3,6 @@ using System.Text.RegularExpressions;
 using BugReporter.Serialization;
 
 namespace BugReporterTests;
-
-[TestFixture]
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
 public sealed partial class SerializableExceptionTests

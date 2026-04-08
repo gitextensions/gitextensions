@@ -1,11 +1,8 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.Graph;
 using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid.Graph;
-
-[TestFixture]
 public class LaneNodeLocatorTests
 {
     private IRevisionGraphRowProvider _revisionGraphRowProvider = null!;

@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitCommands.Settings;
+﻿using GitCommands.Settings;
 
 namespace GitCommandsTests.Settings;
-
-[TestFixture]
 public class FileSettingsCacheTests
 {
     [SetUp]
@@ -14,32 +11,32 @@ public class FileSettingsCacheTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("boo")]
-    public void ctor_FileWatcher_Path_should_not_set_if_invalid_dir(string settingsFilePath)
+    public void ctor_FileWatcher_Path_should_not_set_if_invalid_dir(string? settingsFilePath)
     {
-        new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().FileSystemWatcher.Path.Should().BeNullOrEmpty();
+        new MockFileSettingsCache(settingsFilePath!, false).GetTestAccessor().FileSystemWatcher.Path.Should().BeNullOrEmpty();
     }
 
     [TestCase(null)]
     [TestCase("")]
     [TestCase("boo")]
-    public void ctor_FileWatcher_Filter_should_be_default_if_invalid_dir(string settingsFilePath)
+    public void ctor_FileWatcher_Filter_should_be_default_if_invalid_dir(string? settingsFilePath)
     {
-        new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().FileSystemWatcher.Filter.Should().Be("*");
+        new MockFileSettingsCache(settingsFilePath!, false).GetTestAccessor().FileSystemWatcher.Filter.Should().Be("*");
     }
 
     [TestCase(null)]
     [TestCase("")]
     [TestCase("boo")]
-    public void ctor_FileWatcher_EnableRaisingEvents_should_be_false_if_invalid_dir(string settingsFilePath)
+    public void ctor_FileWatcher_EnableRaisingEvents_should_be_false_if_invalid_dir(string? settingsFilePath)
     {
-        new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor().FileSystemWatcher.EnableRaisingEvents.Should().BeFalse();
+        new MockFileSettingsCache(settingsFilePath!, false).GetTestAccessor().FileSystemWatcher.EnableRaisingEvents.Should().BeFalse();
     }
 
     [TestCase(null)]
     [TestCase("")]
-    public void SaveImpl_should_throw_if_invalid_path(string settingsFilePath)
+    public void SaveImpl_should_throw_if_invalid_path(string? settingsFilePath)
     {
-        FileSettingsCache.TestAccessor cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();
+        FileSettingsCache.TestAccessor cache = new MockFileSettingsCache(settingsFilePath!, false).GetTestAccessor();
         cache.SetLastModificationDate(DateTime.Now);
         ((Action)(() => cache.SaveImpl())).Should().Throw<SaveSettingsException>();
     }
@@ -52,7 +49,7 @@ public class FileSettingsCacheTests
 
         try
         {
-            FileSettingsCache.TestAccessor cache = new MockFileSettingsCache(settingsFilePath, false).GetTestAccessor();
+            FileSettingsCache.TestAccessor cache = new MockFileSettingsCache(settingsFilePath!, false).GetTestAccessor();
             cache.SetLastModificationDate(DateTime.Now);
 
             Directory.Exists(tempPath).Should().BeFalse();
@@ -80,7 +77,7 @@ public class FileSettingsCacheTests
     private class MockFileSettingsCache : FileSettingsCache
     {
         public MockFileSettingsCache(string settingsFilePath, bool autoSave = true)
-            : base(settingsFilePath, autoSave)
+            : base(settingsFilePath!, autoSave)
         {
         }
 

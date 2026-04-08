@@ -1,6 +1,5 @@
 ﻿using System.Collections;
 using System.ComponentModel.Design;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -79,7 +78,7 @@ public class FormCommitTests
             await Task.Delay(1000);
             await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-            ClassicAssert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
+            commitAuthorStatus.Text.Should().Be("Committer author <author@mail.com>");
         });
     }
 
@@ -92,7 +91,7 @@ public class FormCommitTests
 
             await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-            ClassicAssert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
+            commitAuthorStatus.Text.Should().Be("Committer author <author@mail.com>");
 
             using (Form tempForm = new())
             {
@@ -109,7 +108,7 @@ public class FormCommitTests
 
             await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-            ClassicAssert.AreEqual("Committer author <author@mail.com>", commitAuthorStatus.Text);
+            commitAuthorStatus.Text.Should().Be("Committer author <author@mail.com>");
         });
     }
 
@@ -126,8 +125,8 @@ public class FormCommitTests
             ToolStripStatusLabel currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
             ToolStripStatusLabel remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
-            ClassicAssert.AreEqual($"{branchName} →", currentBranchNameLabelStatus.Text);
-            ClassicAssert.AreEqual("(remote not configured)", remoteNameLabelStatus.Text);
+            currentBranchNameLabelStatus.Text.Should().Be($"{branchName} →");
+            remoteNameLabelStatus.Text.Should().Be("(remote not configured)");
         });
     }
 
@@ -149,8 +148,8 @@ public class FormCommitTests
                 await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
             }
 
-            ClassicAssert.AreEqual("(no branch)", currentBranchNameLabelStatus.Text);
-            ClassicAssert.AreEqual(string.Empty, remoteNameLabelStatus.Text);
+            currentBranchNameLabelStatus.Text.Should().Be("(no branch)");
+            remoteNameLabelStatus.Text.Should().Be(string.Empty);
         });
     }
 
@@ -167,8 +166,8 @@ public class FormCommitTests
             ToolStripStatusLabel currentBranchNameLabelStatus = form.GetTestAccessor().CurrentBranchNameLabelStatus;
             ToolStripStatusLabel remoteNameLabelStatus = form.GetTestAccessor().RemoteNameLabelStatus;
 
-            ClassicAssert.AreEqual($"{branchName} →", currentBranchNameLabelStatus.Text);
-            ClassicAssert.AreEqual($"origin/{branchName}", remoteNameLabelStatus.Text);
+            currentBranchNameLabelStatus.Text.Should().Be($"{branchName} →");
+            remoteNameLabelStatus.Text.Should().Be($"origin/{branchName}");
         });
     }
 
@@ -179,13 +178,13 @@ public class FormCommitTests
 
         RunFormTest(form =>
         {
-            ClassicAssert.IsEmpty(form.GetTestAccessor().Message.Text);
+            form.GetTestAccessor().Message.Text.Should().BeEmpty();
             form.GetTestAccessor().Message.Text = generatedCommitMessage;
         });
 
         RunFormTest(form =>
         {
-            ClassicAssert.AreEqual(generatedCommitMessage, form.GetTestAccessor().Message.Text);
+            form.GetTestAccessor().Message.Text.Should().Be(generatedCommitMessage);
         });
     }
 
@@ -199,14 +198,14 @@ public class FormCommitTests
             form =>
             {
                 string prefix = commitKind.ToString().ToLowerInvariant();
-                ClassicAssert.AreEqual($"{prefix}! A commit message", form.GetTestAccessor().Message.Text);
+                form.GetTestAccessor().Message.Text.Should().Be($"{prefix}! A commit message");
                 form.GetTestAccessor().Message.Text = generatedCommitMessage;
             },
             commitKind);
 
         RunFormTest(form =>
         {
-            ClassicAssert.IsEmpty(form.GetTestAccessor().Message.Text);
+            form.GetTestAccessor().Message.Text.Should().BeEmpty();
         });
     }
 
@@ -219,14 +218,14 @@ public class FormCommitTests
         RunFormTest(
             form =>
             {
-                ClassicAssert.AreEqual($"amend! {oldCommitMessage}\n\n{oldCommitMessage}", form.GetTestAccessor().Message.Text);
+                form.GetTestAccessor().Message.Text.Should().Be($"amend! {oldCommitMessage}\n\n{oldCommitMessage}");
                 form.GetTestAccessor().Message.Text = newCommitMessageWithAmend;
             },
             CommitKind.Amend);
 
         RunFormTest(form =>
         {
-            ClassicAssert.AreEqual(newCommitMessageWithAmend, form.GetTestAccessor().Message.Text);
+            form.GetTestAccessor().Message.Text.Should().Be(newCommitMessageWithAmend);
         });
     }
 
@@ -283,7 +282,7 @@ public class FormCommitTests
         {
             await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-            ClassicAssert.AreEqual("Stage all", form.GetTestAccessor().StageAllToolItem.ToolTipText);
+            form.GetTestAccessor().StageAllToolItem.ToolTipText.Should().Be("Stage all");
         });
 
         RunFormTest(async form =>
@@ -295,15 +294,15 @@ public class FormCommitTests
             testform.UnstagedList.ClearSelected();
             testform.UnstagedList.SetFilter("file1");
 
-            ClassicAssert.AreEqual("Stage filtered", testform.StageAllToolItem.ToolTipText);
+            testform.StageAllToolItem.ToolTipText.Should().Be("Stage filtered");
 
             testform.StageAllToolItem.PerformClick();
 
             bool fileNotMatchedByFilterIsStillUnstaged = testform.UnstagedList.AllItems.Any(i => i.Item.Name == "file2.txt");
 
-            ClassicAssert.AreEqual(2, testform.StagedList.AllItemsCount);
-            ClassicAssert.AreEqual(1, testform.UnstagedList.AllItemsCount);
-            ClassicAssert.IsTrue(fileNotMatchedByFilterIsStillUnstaged);
+            testform.StagedList.AllItemsCount.Should().Be(2);
+            testform.UnstagedList.AllItemsCount.Should().Be(1);
+            fileNotMatchedByFilterIsStillUnstaged.Should().BeTrue();
         });
     }
 
@@ -320,7 +319,7 @@ public class FormCommitTests
         {
             await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-            ClassicAssert.AreEqual("Unstage all", form.GetTestAccessor().UnstageAllToolItem.ToolTipText);
+            form.GetTestAccessor().UnstageAllToolItem.ToolTipText.Should().Be("Unstage all");
         });
 
         RunFormTest(async form =>
@@ -329,27 +328,27 @@ public class FormCommitTests
 
             FormCommit.TestAccessor testform = form.GetTestAccessor();
 
-            ClassicAssert.AreEqual(0, testform.StagedList.AllItemsCount);
-            ClassicAssert.AreEqual(3, testform.UnstagedList.AllItemsCount);
+            testform.StagedList.AllItemsCount.Should().Be(0);
+            testform.UnstagedList.AllItemsCount.Should().Be(3);
 
             testform.StagedList.SetFilter("");
             testform.StageAllToolItem.PerformClick();
 
-            ClassicAssert.AreEqual(3, testform.StagedList.AllItemsCount);
-            ClassicAssert.AreEqual(0, testform.UnstagedList.AllItemsCount);
+            testform.StagedList.AllItemsCount.Should().Be(3);
+            testform.UnstagedList.AllItemsCount.Should().Be(0);
 
             testform.StagedList.ClearSelected();
             testform.StagedList.SetFilter("file1");
 
-            ClassicAssert.AreEqual("Unstage filtered", testform.UnstageAllToolItem.ToolTipText);
+            testform.UnstageAllToolItem.ToolTipText.Should().Be("Unstage filtered");
 
             testform.UnstageAllToolItem.PerformClick();
 
             bool fileNotMatchedByFilterIsStillStaged = testform.StagedList.AllItems.Any(i => i.Item.Name == "file2.txt");
 
-            ClassicAssert.AreEqual(2, testform.UnstagedList.AllItemsCount);
-            ClassicAssert.AreEqual(1, testform.StagedList.AllItemsCount);
-            ClassicAssert.IsTrue(fileNotMatchedByFilterIsStillStaged);
+            testform.UnstagedList.AllItemsCount.Should().Be(2);
+            testform.StagedList.AllItemsCount.Should().Be(1);
+            fileNotMatchedByFilterIsStillStaged.Should().BeTrue();
         });
     }
 
@@ -424,33 +423,33 @@ public class FormCommitTests
             FormCommit.TestAccessor testForm = form.GetTestAccessor();
 
             // check initial state
-            ClassicAssert.False(testForm.Amend.Checked);
-            ClassicAssert.False(testForm.ResetAuthor.Checked);
-            ClassicAssert.False(testForm.ResetAuthor.Visible);
+            testForm.Amend.Checked.Should().BeFalse();
+            testForm.ResetAuthor.Checked.Should().BeFalse();
+            testForm.ResetAuthor.Visible.Should().BeFalse();
 
             testForm.Amend.Checked = true;
 
             // check that reset author checkbox becomes visible when amend is checked
-            ClassicAssert.True(testForm.Amend.Checked);
-            ClassicAssert.True(testForm.ResetAuthor.Visible);
+            testForm.Amend.Checked.Should().BeTrue();
+            testForm.ResetAuthor.Visible.Should().BeTrue();
 
             testForm.ResetAuthor.Checked = true;
 
-            ClassicAssert.True(testForm.Amend.Checked);
+            testForm.Amend.Checked.Should().BeTrue();
 
             testForm.Amend.Checked = false;
 
             // check that reset author checkbox becomes invisible and unchecked when amend is unchecked
-            ClassicAssert.False(testForm.Amend.Checked);
-            ClassicAssert.False(testForm.ResetAuthor.Checked);
-            ClassicAssert.False(testForm.ResetAuthor.Visible);
+            testForm.Amend.Checked.Should().BeFalse();
+            testForm.ResetAuthor.Checked.Should().BeFalse();
+            testForm.ResetAuthor.Visible.Should().BeFalse();
 
             testForm.Amend.Checked = true;
 
             // check that when amend is checked again reset author is still unchecked
-            ClassicAssert.True(testForm.Amend.Checked);
-            ClassicAssert.True(testForm.ResetAuthor.Visible);
-            ClassicAssert.False(testForm.ResetAuthor.Checked);
+            testForm.Amend.Checked.Should().BeTrue();
+            testForm.ResetAuthor.Visible.Should().BeTrue();
+            testForm.ResetAuthor.Checked.Should().BeFalse();
         });
     }
 
@@ -556,7 +555,7 @@ public class FormCommitTests
                 // - if the user does not change the geometry, the height will oscillate to a constant value
                 int height1 = bounds1.Height;
                 int height2 = bounds2.Height;
-                ClassicAssert.IsTrue(height1 >= height2 - 1 && height1 <= height2 + 1);
+                (height1 >= height2 - 1 && height1 <= height2 + 1).Should().BeTrue();
             });
     }
 
@@ -579,8 +578,8 @@ public class FormCommitTests
             testForm.SetMessageState(initialText, initialPosition);
             testForm.IncludeFeatureParentheses = false;
             (string message, int selectionStart) = testForm.PrefixOrReplaceKeyword("feat");
-            ClassicAssert.AreEqual(expectedText, message);
-            ClassicAssert.AreEqual(expectedPosition, selectionStart);
+            message.Should().Be(expectedText);
+            selectionStart.Should().Be(expectedPosition);
         });
     }
 
@@ -595,8 +594,8 @@ public class FormCommitTests
             testForm.SetMessageState(initialText, initialPosition);
             testForm.IncludeFeatureParentheses = true;
             (string message, int selectionStart) = testForm.PrefixOrReplaceKeyword("feat");
-            ClassicAssert.AreEqual(expectedText, message);
-            ClassicAssert.AreEqual(expectedPosition, selectionStart);
+            message.Should().Be(expectedText);
+            selectionStart.Should().Be(expectedPosition);
         });
     }
 
@@ -611,8 +610,8 @@ public class FormCommitTests
             testForm.SetMessageState(initialText, initialPosition);
             testForm.IncludeFeatureParentheses = false;
             (string message, int selectionStart) = testForm.PrefixOrReplaceKeyword("feat");
-            ClassicAssert.AreEqual(expectedText, message);
-            ClassicAssert.AreEqual(expectedPosition, selectionStart);
+            message.Should().Be(expectedText);
+            selectionStart.Should().Be(expectedPosition);
         });
     }
 
@@ -629,8 +628,8 @@ public class FormCommitTests
             testForm.SetMessageState(initialText, initialPosition);
             testForm.IncludeFeatureParentheses = true;
             (string message, int selectionStart) = testForm.PrefixOrReplaceKeyword("feat");
-            ClassicAssert.AreEqual(expectedText, message);
-            ClassicAssert.AreEqual(expectedPosition, selectionStart);
+            message.Should().Be(expectedText);
+            selectionStart.Should().Be(expectedPosition);
         });
     }
 
@@ -765,14 +764,14 @@ public class FormCommitTests
         UITest.RunForm(
             showForm: () =>
             {
-                ClassicAssert.True(commitKind switch
+                (commitKind switch
                 {
                     CommitKind.Normal => _commands.StartCommitDialog(owner: null),
                     CommitKind.Squash => _commands.StartSquashCommitDialog(owner: null, _referenceRepository.Module.GetRevision()),
                     CommitKind.Fixup => _commands.StartFixupCommitDialog(owner: null, _referenceRepository.Module.GetRevision()),
                     CommitKind.Amend => _commands.StartAmendCommitDialog(owner: null, _referenceRepository.Module.GetRevision()),
                     _ => throw new ArgumentException($"Unsupported commit kind: {commitKind}", nameof(commitKind))
-                });
+                }).Should().BeTrue();
 
                 // Await updated FileViewer
                 AsyncTestHelper.JoinPendingOperations();

@@ -1,8 +1,6 @@
 ﻿using GitExtUtils.GitUI;
 
 namespace GitUITests;
-
-[TestFixture]
 public sealed class ToolStripUtilTests
 {
     [Test]
@@ -17,7 +15,7 @@ public sealed class ToolStripUtilTests
             }
         };
 
-        ClassicAssert.AreEqual(5, root.FindToolStripItems().Count());
-        ClassicAssert.AreEqual(5, root.FindToolStripItems().Distinct().Count());
+        root.FindToolStripItems().Count().Should().Be(5);
+        root.FindToolStripItems().Distinct().Count().Should().Be(5);
     }
 }

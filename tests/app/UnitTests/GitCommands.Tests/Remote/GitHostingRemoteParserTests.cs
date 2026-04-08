@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitCommands.Remotes;
+﻿using GitCommands.Remotes;
 
 namespace GitCommandsTests.Remote;
-
-[TestFixture]
 public class GitHostingRemoteParserTests
 {
     [TestCase("https://github.com/owner/repo.git", "github.com")]

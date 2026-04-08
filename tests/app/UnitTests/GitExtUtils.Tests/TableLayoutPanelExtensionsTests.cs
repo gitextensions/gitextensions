@@ -1,11 +1,9 @@
-﻿using AwesomeAssertions;
-using GitUI;
+﻿using GitUI;
 
 namespace GitExtUtilsTests;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class TableLayoutPanelExtensionsTests
 {
     [Test]

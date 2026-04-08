@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitCommands.UserRepositoryHistory;
+﻿using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -8,7 +7,6 @@ using NSubstitute;
 namespace GitUITests;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public sealed class RepositoryHistoryUIServiceTests
 {
     private RepositoryHistoryUIService _service = null!;
@@ -59,7 +57,7 @@ public sealed class RepositoryHistoryUIServiceTests
     [TestCase("")]
     [TestCase("master")]
     [TestCase("(no branch)")]
-    public void AddRecentRepositories_should_show_branch_correctly(string branch)
+    public void AddRecentRepositories_should_show_branch_correctly(string? branch)
     {
         _branchNameCache.GetCachedBranchName(Arg.Any<string>()).Returns(string.IsNullOrWhiteSpace(branch) ? null : branch);
 

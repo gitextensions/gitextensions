@@ -1,11 +1,8 @@
-using AwesomeAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
 using NSubstitute;
 
 namespace GitUITests.CommandsDialogs;
-
-[TestFixture]
 public sealed class FormDeleteBranchTests
 {
     private const string MainWorktreePath = @"C:\repos\main";

@@ -11,7 +11,6 @@ namespace GitCommandsTests.Config;
 /// The ConfigFile class should respond the same as "git config".
 /// Since .gitconfig is often hidden, also make sure this is tested.
 /// </summary>
-[TestFixture]
 public class ConfigFileTest
 {
     private GitModule _module = null!;
@@ -56,14 +55,14 @@ public class ConfigFileTest
 
     private void CheckValueIsEqual(ConfigFile configFile, string key, string expectedValue)
     {
-        ClassicAssert.AreEqual(GetConfigValue(configFile.FileName, key), configFile.GetValue(key, string.Empty), "git config --get");
-        ClassicAssert.AreEqual(expectedValue, configFile.GetValue(key, string.Empty), "ConfigFile");
+        configFile.GetValue(key, string.Empty).Should().Be(GetConfigValue(configFile.FileName, key), "git config --get");
+        configFile.GetValue(key, string.Empty).Should().Be(expectedValue, "ConfigFile");
     }
 
     private void CheckIsNotEqual(ConfigFile configFile, string key, string expectedValue)
     {
-        ClassicAssert.AreNotEqual(GetConfigValue(configFile.FileName, key), expectedValue, "git config --get");
-        ClassicAssert.AreNotEqual(expectedValue, configFile.GetValue(key, string.Empty), "ConfigFile");
+        expectedValue.Should().NotBe(GetConfigValue(configFile.FileName, key), "git config --get");
+        configFile.GetValue(key, string.Empty).Should().NotBe(expectedValue, "ConfigFile");
     }
 
     [Test]
@@ -77,7 +76,7 @@ public class ConfigFileTest
 
         ConfigFile configFile = new(GetConfigFileName() + "\\");
 
-        ClassicAssert.IsNotNull(configFile);
+        configFile.Should().NotBeNull();
     }
 
     [Test]
@@ -90,7 +89,7 @@ public class ConfigFileTest
         }
         catch (Exception e)
         {
-            ClassicAssert.AreEqual("invalid setting name: nonexistentsetting", e.Message.ToLower());
+            e.Message.ToLower().Should().Be("invalid setting name: nonexistentsetting");
         }
     }
 
@@ -105,13 +104,13 @@ public class ConfigFileTest
             GitModule.SystemEncoding.GetBytes(
                 string.Format("[branch \"BranchName1\"]{0}\tremote = origin1{0}", Environment.NewLine));
 
-        ClassicAssert.IsTrue(File.Exists(GetConfigFileName()));
+        File.Exists(GetConfigFileName()).Should().BeTrue();
         byte[] fileContent = File.ReadAllBytes(GetConfigFileName());
 
-        ClassicAssert.AreEqual(expectedFileContent.Length, fileContent.Length);
+        fileContent.Length.Should().Be(expectedFileContent.Length);
         for (int index = 0; index < fileContent.Length; index++)
         {
-            ClassicAssert.AreEqual(expectedFileContent[index], fileContent[index]);
+            fileContent[index].Should().Be(expectedFileContent[index]);
         }
     }
 
@@ -200,7 +199,7 @@ public class ConfigFileTest
     public void TestWithNullSettings()
     {
         ConfigFile file = new(GetConfigFileName());
-        ClassicAssert.Throws<ArgumentNullException>(() => file.GetValue(null!, null!));
+        ((Action)(() => file.GetValue(null!, null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -506,24 +505,24 @@ public class ConfigFileTest
             CheckIsNotEqual(configFile, remote, "origin1");
 
             remote = "branch \"BranchName1\".remote";
-            ClassicAssert.AreEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), configFile.GetValue(remote, string.Empty), "git config --get");
-            ClassicAssert.AreEqual("origin1", configFile.GetValue(remote, string.Empty), "ConfigFile");
+            configFile.GetValue(remote, string.Empty).Should().Be(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), "git config --get");
+            configFile.GetValue(remote, string.Empty).Should().Be("origin1", "ConfigFile");
 
             remote = "branch \"BranchName2\".remote";
-            ClassicAssert.AreEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), configFile.GetValue(remote, string.Empty), "git config --get");
-            ClassicAssert.AreEqual("origin2", configFile.GetValue(remote, string.Empty), "ConfigFile");
+            configFile.GetValue(remote, string.Empty).Should().Be(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), "git config --get");
+            configFile.GetValue(remote, string.Empty).Should().Be("origin2", "ConfigFile");
 
             remote = "branch \"branchName2\".remote";
-            ClassicAssert.AreNotEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), "origin2", "git config --get");
-            ClassicAssert.AreNotEqual("origin2", configFile.GetValue(remote, string.Empty), "ConfigFile");
+            "origin2".Should().NotBe(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), "git config --get");
+            configFile.GetValue(remote, string.Empty).Should().NotBe("origin2", "ConfigFile");
 
             remote = "branch \"branchName2\".remote";
-            ClassicAssert.AreEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), configFile.GetValue(remote, string.Empty), string.Empty, "git config --get");
-            ClassicAssert.AreEqual("origin3", configFile.GetValue(remote, string.Empty), "ConfigFile");
+            configFile.GetValue(remote, string.Empty).Should().Be(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), string.Empty, "git config --get");
+            configFile.GetValue(remote, string.Empty).Should().Be("origin3", "ConfigFile");
 
             remote = "branch \"branchname2\".remote";
-            ClassicAssert.AreEqual(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), configFile.GetValue(remote, string.Empty), "git config --get");
-            ClassicAssert.AreEqual("", configFile.GetValue(remote, string.Empty), "ConfigFile");
+            configFile.GetValue(remote, string.Empty).Should().Be(GetConfigValue(configFile.FileName, remote.Replace(" ", ".")), "git config --get");
+            configFile.GetValue(remote, string.Empty).Should().Be("", "ConfigFile");
         }
     }
 
@@ -540,7 +539,7 @@ public class ConfigFileTest
         cfg.LoadFromString(configFileContent);
         string actual = cfg.GetValue("status.showuntrackedfiles", string.Empty);
         string expected = "no";
-        ClassicAssert.AreEqual(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Test]
@@ -556,7 +555,7 @@ public class ConfigFileTest
         cfg.LoadFromString(configFileContent);
         string actual = cfg.GetValue("status.showuntrackedfiles", string.Empty);
         string expected = "no";
-        ClassicAssert.AreEqual(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Test]
@@ -573,7 +572,7 @@ public class ConfigFileTest
         cfg.LoadFromString(configFileContent);
         string actual = cfg.GetValue("status.showuntrackedfiles", string.Empty);
         string expected = "no";
-        ClassicAssert.AreEqual(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Test]
@@ -590,7 +589,7 @@ public class ConfigFileTest
         cfg.LoadFromString(configFileContent);
         IEnumerable<string> actual = cfg.GetValues("status.showuntrackedfiles");
         IEnumerable<string> expected = new[] { "yes", "no" };
-        ClassicAssert.True(expected.SequenceEqual(actual));
+        expected.SequenceEqual(actual).Should().BeTrue();
     }
 
     [Test]
@@ -606,7 +605,7 @@ public class ConfigFileTest
         cfg.LoadFromString(content.ToString());
         string actual = cfg.GetValue("branch.reporting_bad_behaviour.merge", string.Empty);
         string expected = "refs/heads/[en]reporting_bad_behaviour";
-        ClassicAssert.AreEqual(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [Test]
@@ -622,7 +621,7 @@ public class ConfigFileTest
         cfg.LoadFromString(content.ToString());
         string actual = cfg.GetValue("branch.[en]reporting_bad_behaviour.merge", string.Empty);
         string expected = "refs/heads/reporting_bad_behaviour";
-        ClassicAssert.AreEqual(expected, actual);
+        actual.Should().Be(expected);
     }
 
     /// <summary>

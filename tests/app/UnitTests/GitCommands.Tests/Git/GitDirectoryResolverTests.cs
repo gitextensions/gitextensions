@@ -1,13 +1,10 @@
 ﻿using System.IO.Abstractions;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitCommands.Git;
 using NSubstitute;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class GitDirectoryResolverTests
 {
     private readonly string _workingDir = @"c:\dev\repo";

@@ -1,8 +1,6 @@
 ﻿using GitUI.SpellChecker;
 
 namespace GitUITests.SpellChecker;
-
-[TestFixture]
 public class WordAtCursorExtractorTests
 {
     private WordAtCursorExtractor _wordAtCursorExtractor = null!;

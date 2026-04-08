@@ -1,6 +1,5 @@
 ﻿using System.Globalization;
 using System.Text;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -13,7 +12,6 @@ namespace GitUITests.UserControls;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 [Apartment(ApartmentState.STA)]
 public class BlameControlTests
 {

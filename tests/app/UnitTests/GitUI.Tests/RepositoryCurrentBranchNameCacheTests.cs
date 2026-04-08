@@ -1,11 +1,8 @@
-﻿using AwesomeAssertions;
-using GitCommands.Git;
+﻿using GitCommands.Git;
 using GitUI;
 using NSubstitute;
 
 namespace GitUITests;
-
-[TestFixture]
 public sealed class RepositoryCurrentBranchNameCacheTests
 {
     private const string Path = @"C:\repo";

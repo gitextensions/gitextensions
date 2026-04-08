@@ -1,12 +1,9 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 
 namespace GitUITests.CommandsDialogs;
-
-[TestFixture]
 public class RememberFileContextMenuControllerTests
 {
     private RememberFileContextMenuController _rememberFileContextMenuController = null!;

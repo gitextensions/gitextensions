@@ -1,8 +1,6 @@
 ﻿using GitUI.Avatars;
 
 namespace GitUITests.Avatars;
-
-[TestFixture]
 public class StaticImageAvatarProviderTests
 {
     private const int _size = 64;
@@ -17,6 +15,12 @@ public class StaticImageAvatarProviderTests
         _img = new Bitmap(_size, _size);
     }
 
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        _img.Dispose();
+    }
+
     [Test]
     public async Task Original_image_is_returned_if_size_matches()
     {
@@ -24,7 +28,7 @@ public class StaticImageAvatarProviderTests
 
         Image? result = await provider.GetAvatarAsync(_email, _name, _size);
 
-        ClassicAssert.AreSame(_img, result);
+        result.Should().BeSameAs(_img);
     }
 
     [Test]
@@ -36,6 +40,6 @@ public class StaticImageAvatarProviderTests
         Image? result1 = await provider.GetAvatarAsync(_email, _name, otherSize);
         Image? result2 = await provider.GetAvatarAsync(_email, _name, otherSize);
 
-        ClassicAssert.AreSame(result1, result2);
+        result2.Should().BeSameAs(result1);
     }
 }

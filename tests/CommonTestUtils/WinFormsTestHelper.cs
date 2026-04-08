@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using NUnit.Framework;
 
 namespace CommonTestUtils;
 
@@ -32,7 +33,7 @@ public static class WinFormsTestHelper
             Thread.Sleep(_processDelayMilliseconds);
         }
 
-        ClassicAssert.Fail($"'{processName}' didn't finish in {maxIterations} iterations");
+        Assert.Fail($"'{processName}' didn't finish in {maxIterations} iterations");
     }
 
     /// <summary>

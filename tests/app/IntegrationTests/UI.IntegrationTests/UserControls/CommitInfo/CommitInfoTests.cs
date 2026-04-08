@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Design;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitCommands.Git;

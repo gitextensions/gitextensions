@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using BugReporter;
+﻿using BugReporter;
 
 namespace GitUITests;
-
-[TestFixture]
 public class BugReportFormTests
 {
     [TestCase("", false)]

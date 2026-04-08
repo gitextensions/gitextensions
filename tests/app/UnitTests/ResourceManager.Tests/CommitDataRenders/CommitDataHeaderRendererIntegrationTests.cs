@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
@@ -8,7 +7,6 @@ namespace ResourceManagerTests.CommitDataRenders;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class CommitDataHeaderRendererIntegrationTests
 {
     private CommitData _data = null!;

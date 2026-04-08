@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -70,12 +69,12 @@ public class RevisionGridControlTests
             grepMessage: "",
             revisionGridControl =>
             {
-                ClassicAssert.False(AppSettings.BranchFilterEnabled);
-                ClassicAssert.False(AppSettings.ShowCurrentBranchOnly);
+                AppSettings.BranchFilterEnabled.Value.Should().BeFalse();
+                AppSettings.ShowCurrentBranchOnly.Value.Should().BeFalse();
 
-                ClassicAssert.True(revisionGridControl.CurrentFilter.IsShowAllBranchesChecked);
-                ClassicAssert.False(revisionGridControl.CurrentFilter.IsShowCurrentBranchOnlyChecked);
-                ClassicAssert.False(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
+                revisionGridControl.CurrentFilter.IsShowAllBranchesChecked.Should().BeTrue();
+                revisionGridControl.CurrentFilter.IsShowCurrentBranchOnlyChecked.Should().BeFalse();
+                revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked.Should().BeFalse();
             });
 
         RunSetAndApplyBranchFilterTest(
@@ -83,12 +82,12 @@ public class RevisionGridControlTests
             grepMessage: "",
             revisionGridControl =>
             {
-                ClassicAssert.True(AppSettings.BranchFilterEnabled);
-                ClassicAssert.False(AppSettings.ShowCurrentBranchOnly);
+                AppSettings.BranchFilterEnabled.Value.Should().BeTrue();
+                AppSettings.ShowCurrentBranchOnly.Value.Should().BeFalse();
 
-                ClassicAssert.False(revisionGridControl.CurrentFilter.IsShowAllBranchesChecked);
-                ClassicAssert.False(revisionGridControl.CurrentFilter.IsShowCurrentBranchOnlyChecked);
-                ClassicAssert.True(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
+                revisionGridControl.CurrentFilter.IsShowAllBranchesChecked.Should().BeFalse();
+                revisionGridControl.CurrentFilter.IsShowCurrentBranchOnlyChecked.Should().BeFalse();
+                revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked.Should().BeTrue();
             });
 
         RunSetAndApplyBranchFilterTest(
@@ -96,12 +95,12 @@ public class RevisionGridControlTests
             grepMessage: "Commit1",
             revisionGridControl =>
             {
-                ClassicAssert.False(AppSettings.BranchFilterEnabled);
-                ClassicAssert.False(AppSettings.ShowCurrentBranchOnly);
+                AppSettings.BranchFilterEnabled.Value.Should().BeFalse();
+                AppSettings.ShowCurrentBranchOnly.Value.Should().BeFalse();
 
-                ClassicAssert.True(revisionGridControl.CurrentFilter.IsShowAllBranchesChecked);
-                ClassicAssert.False(revisionGridControl.CurrentFilter.IsShowCurrentBranchOnlyChecked);
-                ClassicAssert.False(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
+                revisionGridControl.CurrentFilter.IsShowAllBranchesChecked.Should().BeTrue();
+                revisionGridControl.CurrentFilter.IsShowCurrentBranchOnlyChecked.Should().BeFalse();
+                revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked.Should().BeFalse();
             });
     }
 
@@ -121,7 +120,7 @@ public class RevisionGridControlTests
                 WaitForRevisionsToBeLoaded(revisionGridControl);
 
                 RevisionGridControl.TestAccessor ta = revisionGridControl.GetTestAccessor();
-                ClassicAssert.False(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
+                revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked.Should().BeFalse();
 #if DEBUG
                 // https://github.com/gitextensions/gitextensions/issues/10170
                 // This test occasionaly fails with 3 visible revisions
@@ -133,7 +132,7 @@ public class RevisionGridControlTests
 
                 // set filter
                 revisionGridControl.SetAndApplyBranchFilter("Branch1");
-                ClassicAssert.True(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
+                revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked.Should().BeTrue();
 
 #if DEBUG
                 // https://github.com/gitextensions/gitextensions/issues/10170
@@ -163,7 +162,7 @@ public class RevisionGridControlTests
                 WaitForRevisionsToBeLoaded(revisionGridControl);
 
                 RevisionGridControl.TestAccessor ta = revisionGridControl.GetTestAccessor();
-                ClassicAssert.True(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
+                revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked.Should().BeTrue();
                 ta.VisibleRevisionCount.Should().Be(2);
 
                 // Verify the view hasn't changed until we refresh
@@ -171,7 +170,7 @@ public class RevisionGridControlTests
 
                 // reset filter
                 revisionGridControl.SetAndApplyBranchFilter(string.Empty);
-                ClassicAssert.False(revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked);
+                revisionGridControl.CurrentFilter.IsShowFilteredBranchesChecked.Should().BeFalse();
 
 #if DEBUG
                 // https://github.com/gitextensions/gitextensions/issues/10170
@@ -398,7 +397,7 @@ public class RevisionGridControlTests
                 // let the focus events be handled
                 DoEvents();
 
-                ClassicAssert.IsTrue(ta.CommitInfoTabControl.SelectedTab == ta.DiffTabPage, "Diff tab should be active");
+                ta.CommitInfoTabControl.SelectedTab.Should().Be(ta.DiffTabPage, "Diff tab should be active");
             });
     }
 

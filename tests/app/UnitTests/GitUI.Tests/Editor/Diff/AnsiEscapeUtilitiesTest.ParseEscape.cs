@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using AwesomeAssertions;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
@@ -7,8 +6,6 @@ using GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUITests.Editor.Diff;
-
-[TestFixture]
 public class AnsiEscapeUtilitiesTest_ParseEscape
 {
     private const string _escape_sequence = "\u001b[";

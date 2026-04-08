@@ -1,6 +1,5 @@
 ﻿using System.CodeDom.Compiler;
 using System.Reflection;
-using AwesomeAssertions;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
@@ -9,8 +8,6 @@ using GitUIPluginInterfaces;
 using Microsoft;
 
 namespace GitCommandsTests.Settings;
-
-[TestFixture]
 internal sealed class AppSettingsTests
 {
     private const string SettingsFileContent = @"<?xml version=""1.0"" encoding=""utf-8""?><dictionary />";
@@ -31,11 +28,11 @@ internal sealed class AppSettingsTests
     [TestCase("4.5.2.1", "https://git-extensions-documentation.readthedocs.org/en/release-4.5/")]
     [TestCase("4.5.2x", "https://git-extensions-documentation.readthedocs.org/en/release-4.5/")]
     [TestCase("40.501.123", "https://git-extensions-documentation.readthedocs.org/en/release-40.501/")]
-    public void SetDocumentationBaseUrl_should_currectly_append_version(string version, string expected)
+    public void SetDocumentationBaseUrl_should_currectly_append_version(string? version, string expected)
     {
         AppSettings.GetTestAccessor().ResetDocumentationBaseUrl();
 
-        AppSettings.SetDocumentationBaseUrl(version);
+        AppSettings.SetDocumentationBaseUrl(version!);
         AppSettings.DocumentationBaseUrl.Should().Be(expected);
     }
 
@@ -73,7 +70,7 @@ internal sealed class AppSettingsTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.EqualTo(defaultValue));
+        storedValue.Should().Be(defaultValue);
     }
 
     [Test]
@@ -114,21 +111,21 @@ internal sealed class AppSettingsTests
         {
             if (isISetting)
             {
-                ClassicAssert.That(storedValue, Is.EqualTo(value ?? string.Empty));
+                storedValue.Should().Be(value ?? string.Empty);
             }
             else
             {
-                ClassicAssert.That(storedValue, Is.EqualTo(value ?? defaultValue));
+                storedValue.Should().Be(value ?? defaultValue);
             }
         }
         else if (Type.GetTypeCode(property.PropertyType) == TypeCode.DateTime)
         {
             // We keep only the date
-            ClassicAssert.That(storedValue, Is.EqualTo(((DateTime)value).Date));
+            storedValue.Should().Be(((DateTime)value).Date);
         }
         else
         {
-            ClassicAssert.That(storedValue, Is.EqualTo(value));
+            storedValue.Should().Be(value);
         }
     }
 

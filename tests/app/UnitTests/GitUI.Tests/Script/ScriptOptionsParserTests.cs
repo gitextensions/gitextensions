@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Design;
-using AwesomeAssertions;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -16,7 +15,6 @@ namespace GitUITests.Script;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class ScriptOptionsParserTests
 {
     private IGitUICommands _commands = null!;
@@ -55,9 +53,9 @@ public class ScriptOptionsParserTests
     [TestCase(" ", " ", true)]
     [TestCase("{openUrl} https://gitlab.com{cDefaultRemotePathFromUrl}/tree/{sBranch}", "sBranch", true)]
     [TestCase("{openUrl} https://gitlab.com{cDefaultRemotePathFromUrl}/tree/{sBranch}", "zeBranch", false)]
-    public void Contains_should_return_expected(string arguments, string option, bool expected)
+    public void Contains_should_return_expected(string? arguments, string option, bool expected)
     {
-        ScriptOptionsParser.Contains(arguments, option).Should().Be(expected);
+        ScriptOptionsParser.Contains(arguments!, option).Should().Be(expected);
     }
 
     [Test]
@@ -138,7 +136,7 @@ public class ScriptOptionsParserTests
     [TestCase("")]
     [TestCase(" ")]
     [TestCase("\t")]
-    public void Parse_should_return_without_process_if_arguments_unset(string arguments)
+    public void Parse_should_return_without_process_if_arguments_unset(string? arguments)
     {
         (string? arguments, bool abort) result = ScriptOptionsParser.Parse(arguments, uiCommands: null!, owner: null!, _scriptOptionsProvider);
 

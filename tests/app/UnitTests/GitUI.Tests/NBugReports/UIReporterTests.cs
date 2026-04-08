@@ -1,11 +1,8 @@
 ﻿using System.Text;
-using AwesomeAssertions;
 using GitExtensions.Extensibility;
 using GitUI.NBugReports;
 
 namespace GitUITests.NBugReports;
-
-[TestFixture]
 public sealed class UIReporterTests
 {
     private const string RootError = "root error";
@@ -95,9 +92,9 @@ public sealed class UIReporterTests
     [TestCase("", false)]
     [TestCase("   ", false)]
     [TestCase(null, false)]
-    public void IsDotNetFrameworkAssembly_should_identify_framework_assemblies(string assemblyName, bool expected)
+    public void IsDotNetFrameworkAssembly_should_identify_framework_assemblies(string? assemblyName, bool expected)
     {
-        bool result = UIReporter.TestAccessor.IsDotNetFrameworkAssembly(assemblyName);
+        bool result = UIReporter.TestAccessor.IsDotNetFrameworkAssembly(assemblyName!);
         result.Should().Be(expected);
     }
 
@@ -111,9 +108,9 @@ public sealed class UIReporterTests
     [TestCase("", false)]
     [TestCase("   ", false)]
     [TestCase(null, false)]
-    public void IsVCRuntimeDll_should_identify_vcruntime_dlls(string dllName, bool expected)
+    public void IsVCRuntimeDll_should_identify_vcruntime_dlls(string? dllName, bool expected)
     {
-        bool result = UIReporter.TestAccessor.IsVCRuntimeDll(dllName);
+        bool result = UIReporter.TestAccessor.IsVCRuntimeDll(dllName!);
         result.Should().Be(expected);
     }
 

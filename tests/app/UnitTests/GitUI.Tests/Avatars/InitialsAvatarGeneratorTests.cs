@@ -1,8 +1,6 @@
 ﻿using GitUI.Avatars;
 
 namespace GitUITests.Avatars;
-
-[TestFixture]
 public sealed class InitialsAvatarGeneratorTests
 {
     [TestCase("albert.einstein@noreply.com", "albert einstein", "AE")]
@@ -29,10 +27,10 @@ public sealed class InitialsAvatarGeneratorTests
     [TestCase("/*+=/°¨", "'µ *", "'*")] // Fallback when no letters or digit found
     [TestCase("", "", "?")]
     [TestCase(null, null, "?")]
-    public void GetInitialsAndHashCode_return_initials_of_a_user(string email, string name, string expected)
+    public void GetInitialsAndHashCode_return_initials_of_a_user(string? email, string? name, string expected)
     {
-        (string initials, int _) = new InitialsAvatarProvider().GetInitialsAndColorIndex(email, name);
+        (string initials, int _) = new InitialsAvatarProvider().GetInitialsAndColorIndex(email!, name);
 
-        ClassicAssert.AreEqual(expected, initials);
+        initials.Should().Be(expected);
     }
 }

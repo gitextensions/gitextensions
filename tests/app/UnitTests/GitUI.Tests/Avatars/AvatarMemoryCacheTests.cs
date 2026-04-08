@@ -1,8 +1,6 @@
 ﻿using GitUI.Avatars;
 
 namespace GitUITests.Avatars;
-
-[TestFixture]
 public sealed class AvatarMemoryCacheTests : AvatarCacheTestBase
 {
     public override void SetUp()

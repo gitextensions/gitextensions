@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
@@ -10,7 +9,6 @@ namespace GitUITests.Script;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class ScriptsManagerScriptRunnerTests
 {
     private IGitUICommands _commands = null!;
