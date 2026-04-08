@@ -75,6 +75,22 @@ internal abstract class Node : NodeBase, INode
         }
     }
 
+    /// <summary>
+    ///  Navigates the revision grid to the specified ref (commit SHA, branch name, tag, etc.)
+    ///  and returns focus to the tree view.
+    /// </summary>
+    protected void GoToRevision(string @ref)
+    {
+        TreeView? treeView = TreeViewNode.TreeView;
+        bool toggleSelection = Control.ModifierKeys.HasFlag(Keys.Control);
+
+        treeView?.BeginInvoke(() =>
+        {
+            UICommands.BrowseRepo?.GoToRef(@ref, showNoRevisionMsg: true, toggleSelection: toggleSelection);
+            treeView.Focus();
+        });
+    }
+
     internal virtual void OnSelected()
     {
     }

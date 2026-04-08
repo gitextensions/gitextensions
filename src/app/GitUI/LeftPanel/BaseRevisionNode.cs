@@ -111,15 +111,9 @@ internal abstract class BaseRevisionNode : Node
 
     protected virtual void SelectRevision()
     {
-        if (ObjectId is null)
+        if (ObjectId is not null)
         {
-            return;
+            GoToRevision(ObjectId.ToString());
         }
-
-        TreeViewNode.TreeView?.BeginInvoke(() =>
-        {
-            UICommands.BrowseRepo?.GoToRef(ObjectId.ToString(), showNoRevisionMsg: true, toggleSelection: Control.ModifierKeys.HasFlag(Keys.Control));
-            TreeViewNode.TreeView?.Focus();
-        });
     }
 }

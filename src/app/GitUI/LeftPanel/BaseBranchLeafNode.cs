@@ -69,13 +69,9 @@ internal abstract class BaseBranchLeafNode : BaseRevisionNode
 
     protected override void SelectRevision()
     {
-        TreeViewNode.TreeView?.BeginInvoke(() =>
-        {
-            string branch = RelatedBranch is null || !Control.ModifierKeys.HasFlag(Keys.Alt)
-                ? FullPath
-                : RelatedBranch;
-            UICommands.BrowseRepo?.GoToRef(branch, showNoRevisionMsg: true, toggleSelection: Control.ModifierKeys.HasFlag(Keys.Control));
-            TreeViewNode.TreeView?.Focus();
-        });
+        string branch = RelatedBranch is null || !Control.ModifierKeys.HasFlag(Keys.Alt)
+            ? FullPath
+            : RelatedBranch;
+        GoToRevision(branch);
     }
 }

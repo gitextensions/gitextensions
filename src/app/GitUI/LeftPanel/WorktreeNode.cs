@@ -10,6 +10,19 @@ internal sealed class WorktreeNode(Tree tree, GitWorktree worktree, bool isCurre
     public GitWorktree Worktree { get; } = worktree;
     public bool IsCurrent { get; } = isCurrent;
 
+    internal override void OnSelected()
+    {
+        if (Tree.IgnoreSelectionChangedEvent)
+        {
+            return;
+        }
+
+        if (Worktree.Sha1 is not null)
+        {
+            GoToRevision(Worktree.Sha1);
+        }
+    }
+
     internal override void OnDoubleClick()
     {
         if (!IsCurrent && !Worktree.IsDeleted)
