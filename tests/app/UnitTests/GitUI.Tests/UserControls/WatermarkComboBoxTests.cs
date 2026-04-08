@@ -175,6 +175,7 @@ public class WatermarkComboBoxTests
     }
 
     [Test]
+    [Explicit("Requires an interactive Windows session for SendKeys to work — fails in headless CI")]
     public void Typing_into_initially_active_control_with_watermark_should_hide_it([Values] bool focusBeforeShow)
     {
         using Form form = new();

@@ -101,7 +101,11 @@ public sealed class ExecutableTests
         const int cancelDelay = 1000;
         const int exitDelay = cancelDelay;
         const int minRuntime = cancelDelay + exitDelay;
-        string arguments = exeFile.Contains("ping") ? $"-n {(minRuntime / 1000) + 2} 127.0.0.1" : "";
+        // cmd.exe with no arguments exits immediately when stdin is not a terminal (e.g., on CI runners).
+        // Run a subcommand that blocks for the required duration instead.
+        string arguments = exeFile.Contains("ping") ? $"-n {(minRuntime / 1000) + 2} 127.0.0.1"
+                         : exeFile.Contains("cmd") ? $"/c ping -n {(minRuntime / 1000) + 2} 127.0.0.1"
+                         : "";
 
         using CancellationTokenSource cancellationTokenSource = new();
         CancellationToken cancellationToken = cancellationTokenSource.Token;
