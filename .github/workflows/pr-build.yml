@@ -2,10 +2,9 @@ name: PR Build
 
 on:
   push:
-    branches-ignore:
-      - configdata
-      - gh-pages
-      - 'translations_*'
+    branches:
+      - master
+      - 'release/**'
   pull_request:
   workflow_dispatch:
 
