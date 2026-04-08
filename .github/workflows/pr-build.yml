@@ -15,7 +15,6 @@ concurrency:
 
 permissions:
   contents: read
-  checks: write
 
 env:
   DOTNET_NOLOGO: true
@@ -30,18 +29,18 @@ jobs:
 
     steps:
     - name: Checkout
-      uses: actions/checkout@v4
+      uses: actions/checkout@34e114876b0b11c390a56381ad16ebd13914f8d5 # v4
       with:
         submodules: recursive
         fetch-depth: 0
 
     - name: Setup .NET SDK
-      uses: actions/setup-dotnet@v4
+      uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9 # v4
       with:
         dotnet-version: '10.0.x'
 
     - name: Cache NuGet packages
-      uses: actions/cache@v4
+      uses: actions/cache@0057852bfaa89a56745cba8c7296529d2fc39830 # v4
       with:
         path: ~/.nuget/packages
         key: nuget-${{ runner.os }}-${{ hashFiles('Directory.Packages.props') }}
@@ -87,19 +86,9 @@ jobs:
     - name: Run tests
       run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx /bl:artifacts\log\tests.binlog
 
-    - name: Test report
-      # v1 @ 2024-08-30
-      uses: dorny/test-reporter@d61b558e8df85cb60d09ca3e5b09653b4477cea7
-      if: always() && github.event.pull_request.head.repo.full_name == github.repository
-      continue-on-error: true
-      with:
-        name: Test Results
-        path: 'artifacts/**/TestsResults/**/*.trx'
-        reporter: dotnet-trx
-
     - name: Upload test results
       if: always()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: test-results
         path: 'artifacts\Release\TestsResults\**\*.trx'
@@ -107,7 +96,7 @@ jobs:
 
     - name: Upload build logs on failure
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
       with:
         name: build-logs
         path: |
