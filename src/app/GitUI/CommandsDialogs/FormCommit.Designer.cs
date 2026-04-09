@@ -247,7 +247,7 @@ partial class FormCommit
         toolStripProgressBar1.Margin = new Padding(0);
         toolStripProgressBar1.Name = "toolStripProgressBar1";
         toolStripProgressBar1.Overflow = ToolStripItemOverflow.Never;
-        toolStripProgressBar1.Size = new Size(150, 27);
+        toolStripProgressBar1.Size = new Size(150, 15);
         toolStripProgressBar1.Visible = false;
         // 
         // toolbarSelectionFilter
