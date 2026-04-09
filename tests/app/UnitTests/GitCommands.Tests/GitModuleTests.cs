@@ -6,7 +6,6 @@ using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitUI;
 
 namespace GitCommandsTests;
 public sealed partial class GitModuleTests
@@ -410,7 +409,7 @@ public sealed partial class GitModuleTests
     }
 
     [Test]
-    public void GetSuperprojectCurrentCheckout()
+    public async Task GetSuperprojectCurrentCheckout()
     {
         // Create super and sub repo
         using GitModuleTestHelper moduleTestHelperSuper = new("super repo"),
@@ -421,20 +420,16 @@ public sealed partial class GitModuleTests
         IGitModule moduleSub = moduleTestHelperSuper.GetSubmodulesRecursive().ElementAt(0);
 
         // Commit in submodule
-        moduleSub.GitExecutable.GetOutput(@"commit --allow-empty -am ""First commit""");
-        string commitRef = moduleSub.GitExecutable.GetOutput("show HEAD").LazySplit('\n').First().LazySplit(' ').Skip(1).First();
+        await moduleSub.GitExecutable.GetOutputAsync(@"commit --allow-empty -am ""First commit""");
+        string commitRef = (await moduleSub.GitExecutable.GetOutputAsync("show HEAD")).LazySplit('\n').First().LazySplit(' ').Skip(1).First();
 
         // Update ref in superproject
-        moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"add ""sub repo""");
-        moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"commit -am ""Update submodule ref""");
+        await moduleTestHelperSuper.Module.GitExecutable.GetOutputAsync(@"add ""sub repo""");
+        await moduleTestHelperSuper.Module.GitExecutable.GetOutputAsync(@"commit -am ""Update submodule ref""");
 
-        // Assert
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            (char code, ObjectId? commitId) = await moduleSub.GetSuperprojectCurrentCheckoutAsync();
-            code.Should().Be(' ');
-            commitId?.ToString().Should().Be(commitRef);
-        });
+        (char code, ObjectId? commitId) = await moduleSub.GetSuperprojectCurrentCheckoutAsync();
+        code.Should().Be(' ');
+        commitId?.ToString().Should().Be(commitRef);
     }
 
     [TestCase(false, @"stash list")]

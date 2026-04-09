@@ -45,33 +45,31 @@ public sealed class ThreadHelperTests
     }
 
     [Test]
-    public void ThrowIfNotOnUIThread()
+    public async Task ThrowIfNotOnUIThread()
     {
         ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeTrue();
+#pragma warning disable VSTHRD109 // Switch instead of assert in async methods -- intentionally testing ThrowIfNotOnUIThread
         ThreadHelper.ThrowIfNotOnUIThread();
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            await TaskScheduler.Default;
+#pragma warning restore VSTHRD109
 
-            ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeFalse();
+        await TaskScheduler.Default;
 
-            ((Action)(() => ThreadHelper.ThrowIfNotOnUIThread())).Should().Throw<COMException>();
-        });
+        ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeFalse();
+
+        ((Action)(() => ThreadHelper.ThrowIfNotOnUIThread())).Should().Throw<COMException>();
     }
 
     [Test]
-    public void ThrowIfOnUIThread()
+    public async Task ThrowIfOnUIThread()
     {
         ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeTrue();
         ((Action)(() => ThreadHelper.ThrowIfOnUIThread())).Should().Throw<COMException>();
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            await TaskScheduler.Default;
 
-            ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeFalse();
+        await TaskScheduler.Default;
 
-            ThreadHelper.ThrowIfOnUIThread();
-        });
+        ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeFalse();
+
+        ThreadHelper.ThrowIfOnUIThread();
     }
 
     [Test]
