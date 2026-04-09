@@ -87,6 +87,18 @@ jobs:
     - name: Run tests
       run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx /bl:artifacts\log\tests.binlog
 
+    - name: Publish
+      shell: pwsh
+      run: |
+        $buildArgs = "/p:ContinuousIntegrationBuild=true $env:BUILD_ARGS".Trim()
+        dotnet publish -c Release --no-build /bl:artifacts\log\publish.binlog $buildArgs.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
+
+    - name: Upload portable archive
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      with:
+        name: portable
+        path: 'artifacts\Release\publish\*.zip'
+
     - name: Test report
       # v1 @ 2024-08-30
       uses: dorny/test-reporter@d61b558e8df85cb60d09ca3e5b09653b4477cea7
