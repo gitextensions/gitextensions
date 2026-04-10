@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
 using Microsoft;
 
@@ -161,6 +161,7 @@ partial class FileStatusList
         internal static class TestAccessor
         {
             public static string GetCommonPath(string a, string b) => StatusSorter.GetCommonPath(RelativePath.From(a), RelativePath.From(b)).Value;
+            public static int Compare(string l, string r) => new PathFirstComparer().Compare(new GitItemStatus(l), new GitItemStatus(r));
         }
     }
 }

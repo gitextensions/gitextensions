@@ -20,7 +20,14 @@ public class FileStatusListSorterTests
     }
 
     [Test]
-    public async Task Sort_should_first_add_folders_then_files([Values(false, true)] bool flat, [Values(false, true)] bool mergeSingleItemsWithFolder)
+    public void Compare_should_not_compare_path_separator()
+    {
+        FileStatusList.StatusSorter.TestAccessor.Compare("dir/sub/file", "dir.ext/file").Should().Be(-1);
+        FileStatusList.StatusSorter.TestAccessor.Compare("dir.ext/file", "dir/sub/file").Should().Be(+1);
+    }
+
+    [Test]
+    public async Task Sort_should_first_add_folders_then_files([Values] bool flat, [Values] bool mergeSingleItemsWithFolder)
     {
         const string oldFolder = "oldfolder/of/renamed/file/";
         GitItemStatus[] statuses =
@@ -55,7 +62,23 @@ public class FileStatusListSorterTests
     }
 
     [Test]
-    public async Task Sort_should_not_merge_single_file_with_root_node([Values(false, true)] bool flat)
+    public async Task Sort_should_not_split_folders()
+    {
+        GitItemStatus[] statuses =
+        [
+            new("core/c.1"),
+            new("core/c.2"),
+            new("core.dot/cd.3"),
+            new("core/api/c_a.0"),
+        ];
+
+        FileStatusList.StatusSorter statusSorter = new();
+        TreeNode rootNode = statusSorter.CreateTreeSortedByPath(statuses, flat: false, mergeSingleItemsWithFolder: false, createNode: status => new TreeNode(status.ToString()) { Tag = new FileStatusItem(firstRev: null, secondRev: new GitRevision(ObjectId.WorkTreeId), status) });
+        await Verify(Serialize(rootNode).ToString());
+    }
+
+    [Test]
+    public async Task Sort_should_not_merge_single_file_with_root_node([Values] bool flat)
     {
         GitItemStatus[] statuses =
         [
@@ -68,7 +91,7 @@ public class FileStatusListSorterTests
     }
 
     [Test]
-    public async Task Sort_should_optionally_create_subfolder_nodes_for_single_files([Values(false, true)] bool mergeSingleItemsWithFolder)
+    public async Task Sort_should_optionally_create_subfolder_nodes_for_single_files([Values] bool mergeSingleItemsWithFolder)
     {
         GitItemStatus[] statuses =
         [
