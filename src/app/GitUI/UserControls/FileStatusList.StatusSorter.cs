@@ -140,7 +140,7 @@ partial class FileStatusList
                     ("", "") => 0,
                     (_, "") => -1,
                     ("", _) => 1,
-                    _ => StringComparer.InvariantCulture.Compare(l.Path.Value, r.Path.Value)
+                    _ => ComparePath(l.Path.Value.AsSpan(), r.Path.Value.AsSpan())
                 };
 
                 return pathComparison switch
@@ -149,6 +149,37 @@ partial class FileStatusList
                     1 => StartsWith(l.Path, r.Path) ? -1 : 1,
                     _ => StringComparer.InvariantCulture.Compare(l.Name, r.Name)
                 };
+
+                static int ComparePath(ReadOnlySpan<char> l, ReadOnlySpan<char> r)
+                {
+                    if (l.IsEmpty || r.IsEmpty)
+                    {
+                        return l.IsEmpty && r.IsEmpty ? 0 : l.IsEmpty ? -1 : 1;
+                    }
+
+                    Split(l, out ReadOnlySpan<char> topL, out ReadOnlySpan<char> subL);
+                    Split(r, out ReadOnlySpan<char> topR, out ReadOnlySpan<char> subR);
+                    return topL.CompareTo(topR, StringComparison.InvariantCulture) switch
+                    {
+                        -1 => -1,
+                        +1 => +1,
+                        _ => ComparePath(subL, subR)
+                    };
+
+                    static void Split(ReadOnlySpan<char> path, out ReadOnlySpan<char> top, out ReadOnlySpan<char> sub)
+                    {
+                        int separatorIndex = path.IndexOf('/');
+                        if (separatorIndex == -1)
+                        {
+                            top = path;
+                            sub = ReadOnlySpan<char>.Empty;
+                            return;
+                        }
+
+                        top = path[..separatorIndex];
+                        sub = path[(separatorIndex + 1)..];
+                    }
+                }
 
                 static bool StartsWith(RelativePath longPath, RelativePath shortPath)
                 {
