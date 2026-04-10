@@ -26,6 +26,11 @@ public class ConfigFileRemote
     public IReadOnlyList<string>? Push { get; set; }
 
     /// <summary>
+    /// Gets or sets the prefix stored in .git/config via <see cref="SettingKeyString.RemotePrefix"/> key.
+    /// </summary>
+    public string? Prefix { get; set; }
+
+    /// <summary>
     /// Gets or sets the last pushurl stored in .git/config via <see cref="SettingKeyString.RemotePushUrl"/> key.
     /// </summary>
     public string? PushUrl { get; set; }

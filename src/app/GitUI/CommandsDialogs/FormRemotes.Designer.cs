@@ -87,6 +87,8 @@ partial class FormRemotes
         MergeWith = new DataGridViewTextBoxColumn();
         toolTip1 = new ToolTip(components);
         colorDialog = new ColorDialog();
+        lblRemotePrefix = new Label();
+        txtRemotePrefix = new TextBox();
         flowLayoutPanelSsh = new FlowLayoutPanel();
         flowLayoutPanelSsh.SuspendLayout();
         flpnlRemoteColors.SuspendLayout();
@@ -163,11 +165,11 @@ partial class FormRemotes
         flpnlRemoteColors.Controls.Add(btnRemoteColor);
         flpnlRemoteColors.Controls.Add(btnRemoteColorReset);
         flpnlRemoteColors.Dock = DockStyle.Fill;
-        flpnlRemoteColors.Location = new Point(106, 60);
+        flpnlRemoteColors.Location = new Point(106, 89);
         flpnlRemoteColors.Margin = new Padding(0);
         flpnlRemoteColors.Name = "flpnlRemoteColors";
         flpnlRemoteColors.Size = new Size(414, 31);
-        flpnlRemoteColors.TabIndex = 6;
+        flpnlRemoteColors.TabIndex = 8;
         // 
         // btnRemoteColor
         // 
@@ -176,7 +178,7 @@ partial class FormRemotes
         btnRemoteColor.Location = new Point(3, 3);
         btnRemoteColor.Name = "btnRemoteColor";
         btnRemoteColor.Size = new Size(63, 25);
-        btnRemoteColor.TabIndex = 7;
+        btnRemoteColor.TabIndex = 0;
         btnRemoteColor.Text = "Set &color";
         btnRemoteColor.UseVisualStyleBackColor = false;
         btnRemoteColor.Click += btnRemoteColor_Click;
@@ -188,11 +190,11 @@ partial class FormRemotes
         btnRemoteColorReset.Location = new Point(72, 3);
         btnRemoteColorReset.Name = "btnRemoteColorReset";
         btnRemoteColorReset.Size = new Size(85, 25);
-        btnRemoteColorReset.TabIndex = 8;
+        btnRemoteColorReset.TabIndex = 1;
         btnRemoteColorReset.Text = "Default color";
         btnRemoteColorReset.UseVisualStyleBackColor = false;
-        btnRemoteColorReset.Click += btnRemoteColorReset_Click;
         btnRemoteColorReset.Visible = false;
+        btnRemoteColorReset.Click += btnRemoteColorReset_Click;
         // 
         // flpnlRemoteManagement
         // 
@@ -210,7 +212,7 @@ partial class FormRemotes
         flpnlRemoteManagement.RowStyles.Add(new RowStyle());
         flpnlRemoteManagement.RowStyles.Add(new RowStyle());
         flpnlRemoteManagement.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-        flpnlRemoteManagement.Size = new Size(564, 309);
+        flpnlRemoteManagement.Size = new Size(564, 338);
         flpnlRemoteManagement.TabIndex = 0;
         // 
         // pnlMgtDetails
@@ -222,7 +224,7 @@ partial class FormRemotes
         pnlMgtDetails.Location = new Point(3, 3);
         pnlMgtDetails.Name = "pnlMgtDetails";
         pnlMgtDetails.Padding = new Padding(0, 0, 0, 8);
-        pnlMgtDetails.Size = new Size(558, 169);
+        pnlMgtDetails.Size = new Size(558, 198);
         pnlMgtDetails.TabIndex = 0;
         pnlMgtDetails.Text = "Details";
         // 
@@ -238,21 +240,24 @@ partial class FormRemotes
         tblpnlMgtDetails.Controls.Add(folderBrowserButtonUrl, 2, 0);
         tblpnlMgtDetails.Controls.Add(label1, 0, 1);
         tblpnlMgtDetails.Controls.Add(RemoteName, 1, 1);
-        tblpnlMgtDetails.Controls.Add(lblRemoteColor, 0, 2);
-        tblpnlMgtDetails.Controls.Add(flpnlRemoteColors, 1, 2);
-        tblpnlMgtDetails.Controls.Add(checkBoxSepPushUrl, 0, 3);
-        tblpnlMgtDetails.Controls.Add(labelPushUrl, 0, 4);
-        tblpnlMgtDetails.Controls.Add(comboBoxPushUrl, 1, 4);
-        tblpnlMgtDetails.Controls.Add(folderBrowserButtonPushUrl, 2, 4);
+        tblpnlMgtDetails.Controls.Add(lblRemotePrefix, 0, 2);
+        tblpnlMgtDetails.Controls.Add(txtRemotePrefix, 1, 2);
+        tblpnlMgtDetails.Controls.Add(lblRemoteColor, 0, 3);
+        tblpnlMgtDetails.Controls.Add(flpnlRemoteColors, 1, 3);
+        tblpnlMgtDetails.Controls.Add(checkBoxSepPushUrl, 0, 4);
+        tblpnlMgtDetails.Controls.Add(labelPushUrl, 0, 5);
+        tblpnlMgtDetails.Controls.Add(comboBoxPushUrl, 1, 5);
+        tblpnlMgtDetails.Controls.Add(folderBrowserButtonPushUrl, 2, 5);
         tblpnlMgtDetails.Location = new Point(16, 11);
         tblpnlMgtDetails.Name = "tblpnlMgtDetails";
-        tblpnlMgtDetails.RowCount = 5;
+        tblpnlMgtDetails.RowCount = 6;
         tblpnlMgtDetails.RowStyles.Add(new RowStyle());
         tblpnlMgtDetails.RowStyles.Add(new RowStyle());
         tblpnlMgtDetails.RowStyles.Add(new RowStyle());
         tblpnlMgtDetails.RowStyles.Add(new RowStyle());
         tblpnlMgtDetails.RowStyles.Add(new RowStyle());
-        tblpnlMgtDetails.Size = new Size(520, 147);
+        tblpnlMgtDetails.RowStyles.Add(new RowStyle());
+        tblpnlMgtDetails.Size = new Size(520, 176);
         tblpnlMgtDetails.TabIndex = 11;
         // 
         // label2
@@ -316,10 +321,10 @@ partial class FormRemotes
         // 
         lblRemoteColor.AutoSize = true;
         lblRemoteColor.Dock = DockStyle.Fill;
-        lblRemoteColor.Location = new Point(3, 60);
+        lblRemoteColor.Location = new Point(3, 89);
         lblRemoteColor.Name = "lblRemoteColor";
         lblRemoteColor.Size = new Size(100, 31);
-        lblRemoteColor.TabIndex = 5;
+        lblRemoteColor.TabIndex = 7;
         lblRemoteColor.Text = "Color";
         lblRemoteColor.TextAlign = ContentAlignment.MiddleLeft;
         // 
@@ -328,7 +333,7 @@ partial class FormRemotes
         checkBoxSepPushUrl.AutoSize = true;
         tblpnlMgtDetails.SetColumnSpan(checkBoxSepPushUrl, 2);
         checkBoxSepPushUrl.Dock = DockStyle.Fill;
-        checkBoxSepPushUrl.Location = new Point(3, 94);
+        checkBoxSepPushUrl.Location = new Point(3, 123);
         checkBoxSepPushUrl.Name = "checkBoxSepPushUrl";
         checkBoxSepPushUrl.Padding = new Padding(24, 0, 0, 0);
         checkBoxSepPushUrl.Size = new Size(354, 19);
@@ -341,7 +346,7 @@ partial class FormRemotes
         // 
         labelPushUrl.AutoSize = true;
         labelPushUrl.Dock = DockStyle.Fill;
-        labelPushUrl.Location = new Point(3, 116);
+        labelPushUrl.Location = new Point(3, 145);
         labelPushUrl.Name = "labelPushUrl";
         labelPushUrl.Size = new Size(100, 31);
         labelPushUrl.TabIndex = 10;
@@ -355,7 +360,7 @@ partial class FormRemotes
         comboBoxPushUrl.AutoCompleteMode = AutoCompleteMode.SuggestAppend;
         comboBoxPushUrl.AutoCompleteSource = AutoCompleteSource.ListItems;
         comboBoxPushUrl.FormattingEnabled = true;
-        comboBoxPushUrl.Location = new Point(109, 120);
+        comboBoxPushUrl.Location = new Point(109, 149);
         comboBoxPushUrl.Name = "comboBoxPushUrl";
         comboBoxPushUrl.Size = new Size(298, 23);
         comboBoxPushUrl.TabIndex = 11;
@@ -367,7 +372,7 @@ partial class FormRemotes
         folderBrowserButtonPushUrl.AutoSize = true;
         folderBrowserButtonPushUrl.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         folderBrowserButtonPushUrl.Dock = DockStyle.Fill;
-        folderBrowserButtonPushUrl.Location = new Point(413, 119);
+        folderBrowserButtonPushUrl.Location = new Point(413, 148);
         folderBrowserButtonPushUrl.MinimumSize = new Size(104, 25);
         folderBrowserButtonPushUrl.Name = "folderBrowserButtonPushUrl";
         folderBrowserButtonPushUrl.PathShowingControl = comboBoxPushUrl;
@@ -384,7 +389,7 @@ partial class FormRemotes
         pnlMgtPuttySsh.Controls.Add(lblMgtPuttyPanelHeader);
         pnlMgtPuttySsh.Controls.Add(lblHeaderLine2);
         pnlMgtPuttySsh.Dock = DockStyle.Top;
-        pnlMgtPuttySsh.Location = new Point(3, 178);
+        pnlMgtPuttySsh.Location = new Point(3, 207);
         pnlMgtPuttySsh.Name = "pnlMgtPuttySsh";
         pnlMgtPuttySsh.Padding = new Padding(0, 0, 0, 8);
         pnlMgtPuttySsh.Size = new Size(558, 91);
@@ -474,7 +479,7 @@ partial class FormRemotes
         flowLayoutPanel2.Controls.Add(Save);
         flowLayoutPanel2.Dock = DockStyle.Top;
         flowLayoutPanel2.FlowDirection = FlowDirection.RightToLeft;
-        flowLayoutPanel2.Location = new Point(3, 275);
+        flowLayoutPanel2.Location = new Point(3, 304);
         flowLayoutPanel2.Name = "flowLayoutPanel2";
         flowLayoutPanel2.Padding = new Padding(0, 0, 20, 0);
         flowLayoutPanel2.Size = new Size(558, 31);
@@ -782,6 +787,26 @@ partial class FormRemotes
         colorDialog.AnyColor = true;
         colorDialog.FullOpen = true;
         // 
+        // lblRemotePrefix
+        // 
+        lblRemotePrefix.AutoSize = true;
+        lblRemotePrefix.Dock = DockStyle.Fill;
+        lblRemotePrefix.Location = new Point(3, 60);
+        lblRemotePrefix.Name = "lblRemotePrefix";
+        lblRemotePrefix.Size = new Size(100, 29);
+        lblRemotePrefix.TabIndex = 5;
+        lblRemotePrefix.Text = "Prefix";
+        lblRemotePrefix.TextAlign = ContentAlignment.MiddleLeft;
+        // 
+        // txtRemotePrefix
+        // 
+        txtRemotePrefix.Dock = DockStyle.Fill;
+        txtRemotePrefix.Location = new Point(109, 63);
+        txtRemotePrefix.MaxLength = 100;
+        txtRemotePrefix.Name = "txtRemotePrefix";
+        txtRemotePrefix.Size = new Size(298, 23);
+        txtRemotePrefix.TabIndex = 6;
+        // 
         // FormRemotes
         // 
         AutoScaleDimensions = new SizeF(96F, 96F);
@@ -883,4 +908,6 @@ partial class FormRemotes
     private ColorDialog colorDialog;
     private Button btnRemoteColorReset;
     private FlowLayoutPanel flpnlRemoteColors;
+    private Label lblRemotePrefix;
+    private TextBox txtRemotePrefix;
 }

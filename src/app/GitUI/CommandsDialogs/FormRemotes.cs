@@ -395,6 +395,9 @@ Inactive remote is completely invisible to git.");
         {
             lblRemoteColor.Visible = false;
             flpnlRemoteColors.Visible = false;
+
+            lblRemotePrefix.Visible = false;
+            txtRemotePrefix.Visible = false;
         }
 
         // if Putty SSH isn't enabled, reduce the minimum height of the form
@@ -483,6 +486,7 @@ Inactive remote is completely invisible to git.");
         string remoteUrl = Url.Text.Trim();
         string remotePushUrl = comboBoxPushUrl.Text.Trim();
         bool creatingNew = _selectedRemote is null;
+        string remotePrefix = txtRemotePrefix.Text.Trim(); // TODO: validate/sanitize the prefix
 
         string? color = null;
         if (btnRemoteColor.BackColor != Color.Transparent)
@@ -514,7 +518,8 @@ Inactive remote is completely invisible to git.");
                                                    remoteUrl,
                                                    checkBoxSepPushUrl.Checked ? remotePushUrl : null,
                                                    PuttySshKey.Text,
-                                                   color);
+                                                   color,
+                                                   remotePrefix);
 
             if (!string.IsNullOrEmpty(result.UserMessage))
             {
@@ -733,6 +738,8 @@ Inactive remote is completely invisible to git.");
         checkBoxSepPushUrl.Checked = false;
         PuttySshKey.Text = string.Empty;
         gbMgtPanel.Text = _gbMgtPanelHeaderNew.Text;
+        txtRemotePrefix.Text = string.Empty;
+        SetRemoteColor(Color.Transparent);
 
         if (Remotes.SelectedIndices.Count < 1)
         {
@@ -758,6 +765,7 @@ Inactive remote is completely invisible to git.");
         BindBtnToggleState(_selectedRemote.Disabled);
         btnToggleState.Visible = true;
         flpnlRemoteManagement.Enabled = !_selectedRemote.Disabled;
+        txtRemotePrefix.Text = _selectedRemote.Prefix;
 
         if (string.IsNullOrWhiteSpace(_selectedRemote.Color))
         {

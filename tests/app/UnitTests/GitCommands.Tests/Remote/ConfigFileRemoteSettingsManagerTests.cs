@@ -106,11 +106,11 @@ internal class ConfigFileRemoteSettingsManagerTests
     [Test]
     public void SaveRemote_should_throw_if_remoteName_is_null_or_empty()
     {
-        ((Action)(() => _remotesManager.SaveRemote(null, null!, "b", "c", "d", "e"))).Should().Throw<ArgumentNullException>()
+        ((Action)(() => _remotesManager.SaveRemote(null, null!, "b", "c", "d", "e", "f"))).Should().Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'remoteName')");
-        ((Action)(() => _remotesManager.SaveRemote(null, "", "b", "c", "d", "e"))).Should().Throw<ArgumentNullException>()
+        ((Action)(() => _remotesManager.SaveRemote(null, "", "b", "c", "d", "e", "f"))).Should().Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'remoteName')");
-        ((Action)(() => _remotesManager.SaveRemote(null, "  ", "b", "c", "d", "e"))).Should().Throw<ArgumentNullException>()
+        ((Action)(() => _remotesManager.SaveRemote(null, "  ", "b", "c", "d", "e", "f"))).Should().Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'remoteName')");
     }
 
@@ -122,7 +122,7 @@ internal class ConfigFileRemoteSettingsManagerTests
         const string output = "";
         _module.AddRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
-        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(null, remoteName, remoteUrl, null, null!, null);
+        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(null, remoteName, remoteUrl, null, null!, null, null);
 
         result.UserMessage.Should().Be(output);
         result.ShouldUpdateRemote.Should().BeTrue();
@@ -137,10 +137,11 @@ internal class ConfigFileRemoteSettingsManagerTests
         const string remotePushUrl = "c";
         const string remotePuttySshKey = "";
         const string remoteColor = "";
+        const string remotePrefix = "";
         const string output = "";
         _module.AddRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
-        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(null, remoteName, remoteUrl, remotePushUrl, remotePuttySshKey, remoteColor);
+        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(null, remoteName, remoteUrl, remotePushUrl, remotePuttySshKey, remoteColor, remotePrefix);
 
         result.UserMessage.Should().Be(output);
         result.ShouldUpdateRemote.Should().BeTrue();
@@ -159,7 +160,7 @@ internal class ConfigFileRemoteSettingsManagerTests
         ConfigFileRemote gitRemote = new() { Name = "old", Url = remoteUrl };
         _module.RenameRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
-        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(gitRemote, remoteName, remoteUrl, null, null!, null);
+        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(gitRemote, remoteName, remoteUrl, null, null!, null, null);
 
         result.UserMessage.Should().Be(output);
         result.ShouldUpdateRemote.Should().BeFalse();
@@ -175,23 +176,24 @@ internal class ConfigFileRemoteSettingsManagerTests
         ConfigFileRemote gitRemote = new() { Name = "old", Url = "old" };
         _module.RenameRemote(Arg.Any<string>(), Arg.Any<string>()).Returns(x => output);
 
-        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(gitRemote, remoteName, remoteUrl, null, null!, null);
+        ConfigFileRemoteSaveResult result = _remotesManager.SaveRemote(gitRemote, remoteName, remoteUrl, null, null!, null, null);
 
         result.UserMessage.Should().Be(output);
         result.ShouldUpdateRemote.Should().BeTrue();
         _module.Received(1).RenameRemote(gitRemote.Name, remoteName);
     }
 
-    [TestCase(null, null, null, null)]
-    [TestCase("a", null, null, null)]
-    [TestCase("a", "b", null, null)]
-    [TestCase("a", "b", "c", null)]
-    [TestCase("a", "b", "c", "d")]
-    public void SaveRemote_should_update_settings(string? remoteUrl, string? remotePushUrl, string? remotePuttySshKey, string? remoteColor)
+    [TestCase(null, null, null, null, null)]
+    [TestCase("a", null, null, null, null)]
+    [TestCase("a", "b", null, null, null)]
+    [TestCase("a", "b", "c", null, null)]
+    [TestCase("a", "b", "c", "d", null)]
+    [TestCase("a", "b", "c", "d", "e")]
+    public void SaveRemote_should_update_settings(string? remoteUrl, string? remotePushUrl, string? remotePuttySshKey, string? remoteColor, string? remotePrefix)
     {
         ConfigFileRemote remote = new() { Name = "bla", Url = remoteUrl };
 
-        _remotesManager.SaveRemote(remote, remote.Name, remoteUrl!, remotePushUrl, remotePuttySshKey!, remoteColor);
+        _remotesManager.SaveRemote(remote, remote.Name, remoteUrl!, remotePushUrl, remotePuttySshKey!, remoteColor, remotePrefix);
 
         void Ensure(string setting, string value)
         {
