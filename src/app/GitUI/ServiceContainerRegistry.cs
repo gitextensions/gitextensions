@@ -6,6 +6,7 @@ using GitExtUtils;
 using GitUI.CommandsDialogs;
 using GitUI.ConsoleEmulation;
 using GitUI.ConsoleEmulation.ConEmu;
+using GitUI.ConsoleEmulation.Mintty;
 using GitUI.Hotkey;
 using GitUI.Models;
 using GitUI.ScriptsEngine;
@@ -52,8 +53,9 @@ public static class ServiceContainerRegistry
 
         serviceContainer.AddService<IConsoleEmulatorsRegistry>(
             new ConsoleEmulatorsRegistry(
-                consoleEmulators: [new ConEmuConsoleEmulator()],
+                consoleEmulators: [new ConEmuConsoleEmulator(), new MinttyConsoleEmulator()],
                 useConsoleEmulation: AppSettings.UseConsoleEmulatorForCommands,
-                consoleEmulatorName: AppSettings.ConsoleEmulatorName));
+                consoleEmulatorName: AppSettings.ConsoleEmulatorName,
+                consoleEmulatorTheme: AppSettings.ConsoleEmulatorTheme));
     }
 }

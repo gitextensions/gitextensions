@@ -1881,6 +1881,8 @@ public static partial class AppSettings
 
     public static ISetting<string> ConsoleEmulatorName { get; } = Setting.Create(DetailedSettingsPath, nameof(ConsoleEmulatorName), "ConEmu");
 
+    public static ISetting<string> ConsoleEmulatorTheme { get; } = Setting.Create(DetailedSettingsPath, nameof(ConsoleEmulatorTheme), "");
+
     public static GitRefsSortBy RefsSortBy
     {
         get => GetEnum("RefsSortBy", GitRefsSortBy.Default);

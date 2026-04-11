@@ -1,4 +1,4 @@
-﻿using GitCommands.Settings;
+using GitCommands.Settings;
 using GitUI.ConsoleEmulation.ConEmu;
 using GitUI.ConsoleEmulation.PlainText;
 
@@ -7,7 +7,8 @@ namespace GitUI.ConsoleEmulation;
 internal class ConsoleEmulatorsRegistry(
     IConsoleEmulator[] consoleEmulators,
     ISetting<bool> useConsoleEmulation,
-    ISetting<string> consoleEmulatorName)
+    ISetting<string> consoleEmulatorName,
+    ISetting<string> consoleEmulatorTheme)
     : IConsoleEmulatorsRegistry
 {
     public IReadOnlyCollection<IConsoleEmulator> AvailableConsoleEmulators { get; } =
@@ -25,12 +26,12 @@ internal class ConsoleEmulatorsRegistry(
 
         if (TryGetConfiguredConsoleEmulator() is { } configuredEmulator)
         {
-            return configuredEmulator.CreateCommandRunner();
+            return configuredEmulator.CreateCommandRunner(ResolveTheme(configuredEmulator));
         }
 
         if (TryGetFallbackConsoleEmulator() is { } fallbackConsoleEmulator)
         {
-            return fallbackConsoleEmulator.CreateCommandRunner();
+            return fallbackConsoleEmulator.CreateCommandRunner(ResolveTheme(fallbackConsoleEmulator));
         }
 
         // Fallback to no console emulation
@@ -44,15 +45,27 @@ internal class ConsoleEmulatorsRegistry(
     {
         if (TryGetConfiguredConsoleEmulator() is { } configuredEmulator)
         {
-            return configuredEmulator.CreateShellRunner();
+            return configuredEmulator.CreateShellRunner(ResolveTheme(configuredEmulator));
         }
 
         if (TryGetFallbackConsoleEmulator() is { } fallbackConsoleEmulator)
         {
-            return fallbackConsoleEmulator.CreateShellRunner();
+            return fallbackConsoleEmulator.CreateShellRunner(ResolveTheme(fallbackConsoleEmulator));
         }
 
         return null;
+    }
+
+    private string? ResolveTheme(IConsoleEmulator emulator)
+    {
+        string? configured = consoleEmulatorTheme.Value;
+        if (!string.IsNullOrEmpty(configured)
+            && emulator.AvailableThemes.Contains(configured, StringComparer.OrdinalIgnoreCase))
+        {
+            return configured;
+        }
+
+        return emulator.DefaultTheme;
     }
 
     private IConsoleEmulator? TryGetConfiguredConsoleEmulator()

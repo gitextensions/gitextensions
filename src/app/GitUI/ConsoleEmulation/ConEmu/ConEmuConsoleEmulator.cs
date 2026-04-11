@@ -1,4 +1,4 @@
-﻿namespace GitUI.ConsoleEmulation.ConEmu;
+namespace GitUI.ConsoleEmulation.ConEmu;
 
 internal class ConEmuConsoleEmulator : IConsoleEmulator
 {
@@ -8,12 +8,16 @@ internal class ConEmuConsoleEmulator : IConsoleEmulator
 
     public bool IsSupportedInCurrentEnvironment => OperatingSystem.IsWindows();
 
-    public IConsoleCommandRunner CreateCommandRunner()
+    public IReadOnlyCollection<string> AvailableThemes => [];
+
+    public string? DefaultTheme => null;
+
+    public IConsoleCommandRunner CreateCommandRunner(string? theme)
     {
         return new ConEmuConsoleCommandRunner();
     }
 
-    public IConsoleShellRunner CreateShellRunner()
+    public IConsoleShellRunner CreateShellRunner(string? theme)
     {
         return new ConEmuConsoleShellRunner();
     }

@@ -37,6 +37,8 @@ partial class FormBrowseRepoSettingsPage
         lblDefaultShell = new Label();
         lblConsoleEmulatorChoice = new Label();
         cboConsoleEmulator = new ComboBox();
+        lblConsoleEmulatorTheme = new Label();
+        cboConsoleEmulatorTheme = new ComboBox();
         chkUseBrowseForFileHistory = new SettingsCheckBox();
         chkUseDiffViewerForBlame = new SettingsCheckBox();
         chkShowFindInCommitFilesGitGrep = new SettingsCheckBox();
@@ -130,9 +132,30 @@ partial class FormBrowseRepoSettingsPage
         cboConsoleEmulator.Name = "cboConsoleEmulator";
         cboConsoleEmulator.Size = new Size(262, 23);
         cboConsoleEmulator.TabIndex = 12;
-        // 
+        //
+        // lblConsoleEmulatorTheme
+        //
+        lblConsoleEmulatorTheme.AutoSize = true;
+        lblConsoleEmulatorTheme.Dock = DockStyle.Fill;
+        lblConsoleEmulatorTheme.Location = new Point(3, 54);
+        lblConsoleEmulatorTheme.Name = "lblConsoleEmulatorTheme";
+        lblConsoleEmulatorTheme.Size = new Size(251, 27);
+        lblConsoleEmulatorTheme.TabIndex = 13;
+        lblConsoleEmulatorTheme.Text = "Console emulator theme";
+        lblConsoleEmulatorTheme.TextAlign = ContentAlignment.MiddleLeft;
+        //
+        // cboConsoleEmulatorTheme
+        //
+        cboConsoleEmulatorTheme.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboConsoleEmulatorTheme.FormattingEnabled = true;
+        cboConsoleEmulatorTheme.Location = new Point(260, 56);
+        cboConsoleEmulatorTheme.Margin = new Padding(3, 2, 3, 2);
+        cboConsoleEmulatorTheme.Name = "cboConsoleEmulatorTheme";
+        cboConsoleEmulatorTheme.Size = new Size(262, 23);
+        cboConsoleEmulatorTheme.TabIndex = 14;
+        //
         // chkUseBrowseForFileHistory
-        // 
+        //
         chkUseBrowseForFileHistory.AutoSize = true;
         chkUseBrowseForFileHistory.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         chkUseBrowseForFileHistory.Checked = false;
@@ -238,14 +261,17 @@ partial class FormBrowseRepoSettingsPage
         tlpnlGeneral.Controls.Add(lblDefaultShell, 0, 0);
         tlpnlGeneral.Controls.Add(lblConsoleEmulatorChoice, 0, 1);
         tlpnlGeneral.Controls.Add(cboConsoleEmulator, 1, 1);
-        tlpnlGeneral.Controls.Add(chkUseBrowseForFileHistory, 0, 2);
-        tlpnlGeneral.Controls.Add(chkUseDiffViewerForBlame, 0, 3);
-        tlpnlGeneral.Controls.Add(chkShowFindInCommitFilesGitGrep, 0, 4);
-        tlpnlGeneral.Controls.Add(chkShowRevisionGridTooltip, 0, 5);
+        tlpnlGeneral.Controls.Add(lblConsoleEmulatorTheme, 0, 2);
+        tlpnlGeneral.Controls.Add(cboConsoleEmulatorTheme, 1, 2);
+        tlpnlGeneral.Controls.Add(chkUseBrowseForFileHistory, 0, 3);
+        tlpnlGeneral.Controls.Add(chkUseDiffViewerForBlame, 0, 4);
+        tlpnlGeneral.Controls.Add(chkShowFindInCommitFilesGitGrep, 0, 5);
+        tlpnlGeneral.Controls.Add(chkShowRevisionGridTooltip, 0, 6);
         tlpnlGeneral.Dock = DockStyle.Fill;
         tlpnlGeneral.Location = new Point(8, 24);
         tlpnlGeneral.Name = "tlpnlGeneral";
-        tlpnlGeneral.RowCount = 6;
+        tlpnlGeneral.RowCount = 7;
+        tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
@@ -360,6 +386,8 @@ partial class FormBrowseRepoSettingsPage
     private Label lblDefaultShell;
     private Label lblConsoleEmulatorChoice;
     private ComboBox cboConsoleEmulator;
+    private Label lblConsoleEmulatorTheme;
+    private ComboBox cboConsoleEmulatorTheme;
     private SettingsCheckBox chkUseBrowseForFileHistory;
     private SettingsCheckBox chkUseDiffViewerForBlame;
     private SettingsCheckBox chkShowFindInCommitFilesGitGrep;

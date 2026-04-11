@@ -37,6 +37,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
 
         cboConsoleEmulator.DisplayMember = nameof(IConsoleEmulator.DisplayName);
         cboConsoleEmulator.ValueMember = nameof(IConsoleEmulator.Name);
+        cboConsoleEmulator.SelectedIndexChanged += (_, _) => RefreshConsoleEmulatorThemeDropdown();
         InitializeComplete();
         string hotkey = serviceProvider.GetRequiredService<IHotkeySettingsManager>()
             .LoadHotkeys(FormBrowse.HotkeySettingsName)
@@ -52,8 +53,8 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
     protected override void OnRuntimeLoad()
     {
         // align 1st columns across all tables
-        tlpnlGeneral.AdjustWidthToSize(0, lblDefaultShell, lblConsoleEmulatorChoice, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowRevisionGridTooltip, chkShowConsoleTab, chkShowGpgInformation);
-        tlpnlTabs.AdjustWidthToSize(0, lblDefaultShell, lblConsoleEmulatorChoice, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowRevisionGridTooltip, chkShowConsoleTab, chkShowGpgInformation);
+        tlpnlGeneral.AdjustWidthToSize(0, lblDefaultShell, lblConsoleEmulatorChoice, lblConsoleEmulatorTheme, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowRevisionGridTooltip, chkShowConsoleTab, chkShowGpgInformation);
+        tlpnlTabs.AdjustWidthToSize(0, lblDefaultShell, lblConsoleEmulatorChoice, lblConsoleEmulatorTheme, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowRevisionGridTooltip, chkShowConsoleTab, chkShowGpgInformation);
 
         base.OnRuntimeLoad();
     }
@@ -78,6 +79,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
 
         AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem!).Name.ToLowerInvariant();
         AppSettings.ConsoleEmulatorName.Value = (cboConsoleEmulator.SelectedItem as IConsoleEmulator)?.Name ?? "";
+        AppSettings.ConsoleEmulatorTheme.Value = cboConsoleEmulatorTheme.SelectedItem as string ?? "";
 
         base.PageToSettings();
     }
@@ -111,7 +113,38 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
             cboConsoleEmulator.SelectedIndex = 0;
         }
 
+        RefreshConsoleEmulatorThemeDropdown();
+
         base.SettingsToPage();
+    }
+
+    private void RefreshConsoleEmulatorThemeDropdown()
+    {
+        cboConsoleEmulatorTheme.Items.Clear();
+
+        if (cboConsoleEmulator.SelectedItem is not IConsoleEmulator emulator
+            || emulator.AvailableThemes.Count == 0)
+        {
+            cboConsoleEmulatorTheme.SelectedItem = null;
+            cboConsoleEmulatorTheme.Enabled = false;
+            return;
+        }
+
+        cboConsoleEmulatorTheme.Enabled = true;
+        foreach (string theme in emulator.AvailableThemes)
+        {
+            cboConsoleEmulatorTheme.Items.Add(theme);
+        }
+
+        string? saved = AppSettings.ConsoleEmulatorTheme.Value;
+        if (!string.IsNullOrEmpty(saved) && cboConsoleEmulatorTheme.Items.Contains(saved))
+        {
+            cboConsoleEmulatorTheme.SelectedItem = saved;
+        }
+        else if (emulator.DefaultTheme is { } defaultTheme)
+        {
+            cboConsoleEmulatorTheme.SelectedItem = defaultTheme;
+        }
     }
 
     public static SettingsPageReference GetPageReference()
