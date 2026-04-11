@@ -1883,6 +1883,12 @@ public static partial class AppSettings
         set => SetBool("UseConsoleEmulatorForCommands", value);
     }
 
+    public static string ConsoleEmulatorName
+    {
+        get => GetString("ConsoleEmulatorName", "");
+        set => SetString("ConsoleEmulatorName", value);
+    }
+
     public static GitRefsSortBy RefsSortBy
     {
         get => GetEnum("RefsSortBy", GitRefsSortBy.Default);

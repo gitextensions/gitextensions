@@ -1,8 +1,6 @@
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
-using System.Globalization;
-using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -219,7 +217,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
     private readonly ShellProvider _shellProvider = new();
-    private ConEmuControl? _terminal;
+    private IConsoleShellController? _terminal;
     private Dashboard? _dashboard;
     private bool _isFileHistoryMode;
     private bool _fileBlameHistoryLeftPanelStartupState;
@@ -2687,19 +2685,19 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     /// <summary>
     /// Adds a tab with console interface to Git over the current working copy. Recreates the terminal on tab activation if user exits the shell.
+    /// Uses the configured console emulator (plugin or ConEmu).
     /// </summary>
     private void FillTerminalTab()
     {
         if (!OperatingSystem.IsWindows() || !AppSettings.ShowConEmuTab.Value)
         {
-            // ConEmu only works on WinNT
             return;
         }
 
+        // If terminal control already exists, just focus it
         if (_terminal is not null)
         {
-            // Terminal already created; give it focus
-            _terminal.Focus();
+            _terminal.FocusTerminal();
             return;
         }
 
@@ -2729,62 +2727,34 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
             if (_terminal is null)
             {
-                // Lazy-create on first opening the tab
-                _consoleTabPage.Controls.Clear();
-                _consoleTabPage.Controls.Add(
-                    _terminal = new ConEmuControl
-                    {
-                        Dock = DockStyle.Fill,
-                        IsStatusbarVisible = false
-                    });
+                _terminal = ConsoleControllersFactory.CreateConsoleShellControl();
+                if (_terminal is null)
+                {
+                    return;
+                }
+
+                _terminal.Control.Dock = DockStyle.Fill;
+                _consoleTabPage!.Controls.Add(_terminal.Control);
             }
 
-            // If user has typed "exit" in there, restart the shell; otherwise just return
-            if (_terminal.IsConsoleEmulatorOpen)
+            if (_terminal.IsShellRunning)
             {
+                _terminal.FocusTerminal();
                 return;
             }
 
-            // Create the terminal
-            ConEmuStartInfo startInfo = new()
-            {
-                StartupDirectory = Module.WorkingDir,
-                WhenConsoleProcessExits = WhenConsoleProcessExits.CloseConsoleEmulator
-            };
-
-            string? shellType = AppSettings.ConEmuTerminal.Value;
-            startInfo.ConsoleProcessCommandLine = _shellProvider.GetShellCommandLine(shellType);
-
-            // Set path to git in this window (actually, effective with CMD only)
-            if (!string.IsNullOrEmpty(AppSettings.GitCommandValue))
-            {
-                string? dirGit = Path.GetDirectoryName(AppSettings.GitCommandValue);
-                if (!string.IsNullOrEmpty(dirGit))
-                {
-                    startInfo.SetEnv("PATH", dirGit + ";" + "%PATH%");
-                }
-            }
-
-            try
-            {
-                _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.GetEffectiveConEmuStyle(), AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString(CultureInfo.InvariantCulture));
-            }
-            catch (InvalidOperationException)
-            {
-#if DEBUG
-                MessageBoxes.Show(@"ConEmu appears to be missing. Please perform a full rebuild and try again.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
-#else
-                throw;
-#endif
-            }
+            _terminal.StartShell(Module.WorkingDir);
         };
     }
 
     public void ChangeTerminalActiveFolder(string path)
     {
-        string? shellType = AppSettings.ConEmuTerminal.Value;
-        IShellDescriptor shell = _shellProvider.GetShell(shellType);
-        _terminal?.ChangeFolder(shell, path);
+        if (_terminal is null || !_terminal.IsShellRunning)
+        {
+            return;
+        }
+
+        _terminal.ChangeWorkingDirectory(path);
     }
 
     private void menuitemSparseWorkingCopy_Click(object sender, EventArgs e)

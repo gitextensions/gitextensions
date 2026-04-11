@@ -1,5 +1,6 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility.Settings;
+using GitUI.UserControls;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
@@ -21,6 +22,28 @@ public partial class AdvancedSettingsPage : SettingsPageWithHeader
         cboAutoNormaliseSymbol.ValueMember = "Value";
         cboAutoNormaliseSymbol.DataSource = autoNormaliseSymbols;
         cboAutoNormaliseSymbol.SelectedIndex = 0;
+
+        // Populate emulator selector; hide the row entirely when there is nothing to choose between.
+        IReadOnlyList<ConsoleControllersFactory.EmulatorInfo> emulators = ConsoleControllersFactory.GetAvailableEmulators();
+        if (emulators.Count > 1)
+        {
+            cboConsoleEmulator.Items.Clear();
+            foreach (ConsoleControllersFactory.EmulatorInfo emulator in emulators)
+            {
+                cboConsoleEmulator.Items.Add(emulator);
+            }
+
+            cboConsoleEmulator.DisplayMember = nameof(ConsoleControllersFactory.EmulatorInfo.Label);
+            cboConsoleEmulator.ValueMember = nameof(ConsoleControllersFactory.EmulatorInfo.Key);
+
+            lblConsoleEmulatorChoice.Visible = true;
+            cboConsoleEmulator.Visible = true;
+        }
+        else
+        {
+            lblConsoleEmulatorChoice.Visible = false;
+            cboConsoleEmulator.Visible = false;
+        }
     }
 
     protected override void SettingsToPage()
@@ -37,6 +60,16 @@ public partial class AdvancedSettingsPage : SettingsPageWithHeader
         cboAutoNormaliseSymbol.SelectedValue = AppSettings.AutoNormaliseSymbol;
         chkCommitAndPushForcedWhenAmend.Checked = AppSettings.CommitAndPushForcedWhenAmend;
 
+        // Select the currently configured emulator in the combobox.
+        cboConsoleEmulator.SelectedItem = cboConsoleEmulator.Items
+            .OfType<ConsoleControllersFactory.EmulatorInfo>()
+            .FirstOrDefault(x => string.Equals(x.Key, AppSettings.ConsoleEmulatorName, StringComparison.OrdinalIgnoreCase));
+
+        if (cboConsoleEmulator.SelectedIndex < 0 && cboConsoleEmulator.Items.Count > 0)
+        {
+            cboConsoleEmulator.SelectedIndex = 0;
+        }
+
         base.SettingsToPage();
     }
 
@@ -52,6 +85,11 @@ public partial class AdvancedSettingsPage : SettingsPageWithHeader
         AppSettings.AutoNormaliseBranchName = chkAutoNormaliseBranchName.Checked;
         AppSettings.AutoNormaliseSymbol = (string)cboAutoNormaliseSymbol.SelectedValue!;
         AppSettings.CommitAndPushForcedWhenAmend = chkCommitAndPushForcedWhenAmend.Checked;
+
+        if (cboConsoleEmulator.SelectedItem is ConsoleControllersFactory.EmulatorInfo selected)
+        {
+            AppSettings.ConsoleEmulatorName = selected.Key;
+        }
 
         base.PageToSettings();
     }

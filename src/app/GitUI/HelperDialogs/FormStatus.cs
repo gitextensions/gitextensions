@@ -2,6 +2,7 @@
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
 using GitUI.Models;
 using GitUI.Properties;
@@ -18,15 +19,15 @@ public partial class FormStatus : GitExtensionsDialog
     private protected Action<FormStatus>? ProcessCallback;
     private protected Action<FormStatus>? AbortCallback;
 
-    public FormStatus(IGitUICommands commands, ConsoleOutputControl? consoleOutput, bool useDialogSettings)
+    public FormStatus(IGitUICommands commands, IConsoleProcessController? consoleConsoleProcess, bool useDialogSettings)
         : base(commands, enablePositionRestore: true)
     {
         ArgumentNullException.ThrowIfNull(commands);
 
         _useDialogSettings = useDialogSettings;
 
-        ConsoleOutput = consoleOutput ?? ConsoleOutputControl.CreateInstance();
-        ConsoleOutput.Terminated += (s, e) =>
+        ConsoleProcessController = consoleConsoleProcess ?? ConsoleControllersFactory.CreateConsoleProcessController();
+        ConsoleProcessController.ConsoleHostTerminated += (s, e) =>
         {
             // This means the control is not visible anymore, no use in keeping.
             // Expected scenario: user hits ESC in the prompt after the git process exits
@@ -37,8 +38,8 @@ public partial class FormStatus : GitExtensionsDialog
 
         SetIcon(Images.StatusBadgeWaiting);
 
-        pnlOutput.Controls.Add(ConsoleOutput);
-        ConsoleOutput.Dock = DockStyle.Fill;
+        pnlOutput.Controls.Add(ConsoleProcessController.Control);
+        ConsoleProcessController.Control.Dock = DockStyle.Fill;
 
         ShowPassword.Checked = AppSettings.ShowProcessDialogPasswordInput.Value;
 
@@ -87,7 +88,7 @@ public partial class FormStatus : GitExtensionsDialog
         }
     }
 
-    private protected ConsoleOutputControl ConsoleOutput { get; }
+    private protected IConsoleProcessController ConsoleProcessController { get; }
 
     /// <summary>
     /// Gets the logged output text. Note that this is a separate string from what you see in the console output control.
@@ -113,7 +114,7 @@ public partial class FormStatus : GitExtensionsDialog
 
     public static void ShowErrorDialog(IWin32Window owner, IGitUICommands commands, string text, params string[] output)
     {
-        using FormStatus form = new(commands, consoleOutput: new EditboxBasedConsoleOutputControl(), useDialogSettings: true);
+        using FormStatus form = new(commands, consoleConsoleProcess: new EditboxBasedConsoleProcessController(), useDialogSettings: true);
         form.Text = text;
         if (output?.Length > 0)
         {
@@ -160,7 +161,7 @@ public partial class FormStatus : GitExtensionsDialog
     /// </summary>
     private protected void AppendMessage(string text)
     {
-        ConsoleOutput.AppendMessageFreeThreaded(text);
+        ConsoleProcessController.WriteConsoleOutput(text);
 
         if (!text.EndsWith(Delimiters.LineFeed))
         {
@@ -219,7 +220,7 @@ public partial class FormStatus : GitExtensionsDialog
     private protected void Reset()
     {
         SetIcon(Images.StatusBadgeWaiting);
-        ConsoleOutput.Reset();
+        ConsoleProcessController.ResetConsole();
         OutputLog.Clear();
         ShowPassword.Visible = true;
         PasswordInput.Visible = ShowPassword.CheckState != CheckState.Unchecked;
@@ -249,7 +250,7 @@ public partial class FormStatus : GitExtensionsDialog
         }
 
         // Show last progress message in the title, unless it's showing in the control body already
-        if (!ConsoleOutput.IsDisplayingFullProcessOutput)
+        if (!ConsoleProcessController.IsDisplayingFullProcessOutput)
         {
             Text = text;
         }
@@ -308,7 +309,7 @@ public partial class FormStatus : GitExtensionsDialog
 
     private void PasswordInput_PasswordEntered(object sender, TextEventArgs e)
     {
-        ConsoleOutput.AppendInput($"{e.Text}\n");
+        ConsoleProcessController.WriteProcessInput($"{e.Text}\n");
     }
 
     private void Ok_Click(object sender, EventArgs e)

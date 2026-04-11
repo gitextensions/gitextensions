@@ -1,9 +1,10 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Text;
 using GitCommands;
 using GitCommands.Git.Extensions;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
@@ -15,11 +16,9 @@ namespace GitUI.UserControls;
 /// <summary>
 /// Uses an edit box and process output streams redirection.
 /// </summary>
-public sealed class EditboxBasedConsoleOutputControl : ConsoleOutputControl
+public sealed class EditboxBasedConsoleProcessController : ContainerControl, IConsoleProcessController
 {
     private readonly RichTextBox _editbox;
-
-    private int _exitcode;
 
     private Process? _process;
 
@@ -29,7 +28,7 @@ public sealed class EditboxBasedConsoleOutputControl : ConsoleOutputControl
 
     private StreamWriter? _input;
 
-    public EditboxBasedConsoleOutputControl()
+    public EditboxBasedConsoleProcessController()
     {
         _editbox = new RichTextBox
         {
@@ -61,22 +60,30 @@ public sealed class EditboxBasedConsoleOutputControl : ConsoleOutputControl
         }
     }
 
-    public override int ExitCode => _exitcode;
+    public Control Control => this;
 
-    public override bool IsDisplayingFullProcessOutput => false;
+    public bool IsDisplayingFullProcessOutput => false;
 
-    public override void AppendMessageFreeThreaded(string text)
+    public event EventHandler<ConsoleTextEventArgs>? ProcessOutputReceived;
+    public event EventHandler<ConsoleProcessExitEventArgs>? ProcessExited;
+
+    // Editbox-based output never terminates independently; event is required by the interface.
+#pragma warning disable CS0067
+    public event EventHandler? ConsoleHostTerminated;
+#pragma warning restore CS0067
+
+    public void WriteConsoleOutput(string text)
     {
         _outputThrottle?.Append(text);
     }
 
-    public override void AppendInput(string text)
+    public void WriteProcessInput(string text)
     {
         Validates.NotNull(_input);
         _input.Write(text);
     }
 
-    public override void KillProcess()
+    public void KillProcess()
     {
         if (InvokeRequired)
         {
@@ -103,17 +110,18 @@ public sealed class EditboxBasedConsoleOutputControl : ConsoleOutputControl
         _process = null;
         _input?.Dispose();
         _input = null;
-        FireProcessExited();
+        ProcessExited?.Invoke(this, new ConsoleProcessExitEventArgs(-1));
     }
 
-    public override void Reset()
+    public void ResetConsole()
     {
+        KillProcess();
         _outputThrottle?.Clear();
         _editbox.Text = "";
         _editbox.Visible = false;
     }
 
-    public override void StartProcess(string command, string arguments, string workDir, Dictionary<string, string> envVariables)
+    public void StartProcess(string command, string arguments, string workDir, Dictionary<string, string> envVariables)
     {
         ProcessOperation operation = CommandLog.LogProcessStart(command, arguments, workDir);
 
@@ -189,7 +197,7 @@ public sealed class EditboxBasedConsoleOutputControl : ConsoleOutputControl
                             operation.LogProcessEnd(ex);
                         }
 
-                        _exitcode = _process.ExitCode;
+                        int exitCode = _process.ExitCode;
 
                         using CancellationTokenSource eofTimeoutTokenSource = new(millisecondsDelay: 5000);
 
@@ -206,13 +214,13 @@ public sealed class EditboxBasedConsoleOutputControl : ConsoleOutputControl
                         }
 
                         await this.SwitchToMainThreadAsync();
-                        operation.LogProcessEnd(_exitcode);
+                        operation.LogProcessEnd(exitCode);
                         _process.Dispose();
                         _process = null;
                         await _input!.DisposeAsync();
                         _input = null;
                         _outputThrottle?.Stop(flush: true);
-                        FireProcessExited();
+                        ProcessExited?.Invoke(this, new ConsoleProcessExitEventArgs(exitCode));
                     });
             };
 
@@ -244,7 +252,7 @@ public sealed class EditboxBasedConsoleOutputControl : ConsoleOutputControl
                     nextLineEnd = output.Length;
                 }
 
-                FireDataReceived(new TextEventArgs(output[startIndex..nextLineEnd]));
+                ProcessOutputReceived?.Invoke(this, new ConsoleTextEventArgs(output[startIndex..nextLineEnd]));
                 startIndex = nextLineEnd;
             }
         }
