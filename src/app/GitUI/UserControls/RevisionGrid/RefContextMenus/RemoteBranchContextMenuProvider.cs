@@ -10,7 +10,7 @@ namespace GitUI.UserControls.RevisionGrid.RefContextMenus;
 /// </summary>
 internal sealed class RemoteBranchContextMenuProvider : Translate, IRefContextMenuProvider
 {
-    private readonly TranslationString _checkoutBranch = new("&Checkout this branch");
+    private readonly TranslationString _checkoutBranch = new("Chec&kout this branch");
     private readonly TranslationString _mergeIntoCurrent = new("&Merge into current branch");
     private readonly TranslationString _rebaseOnto = new("&Rebase current branch onto this");
     private readonly TranslationString _deleteBranch = new("&Delete this branch");

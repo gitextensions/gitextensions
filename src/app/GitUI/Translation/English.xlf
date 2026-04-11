@@ -8557,7 +8557,7 @@ help</source>
   <file datatype="plaintext" original="LocalBranchContextMenuProvider" source-language="en">
     <body>
       <trans-unit id="_checkoutBranch.Text">
-        <source>&amp;Checkout this branch</source>
+        <source>Chec&amp;kout this branch</source>
         <target />
       </trans-unit>
       <trans-unit id="_deleteBranch.Text">
@@ -8569,7 +8569,7 @@ help</source>
         <target />
       </trans-unit>
       <trans-unit id="_pushBranch.Text">
-        <source>&amp;Push this branch</source>
+        <source>Pus&amp;h this branch</source>
         <target />
       </trans-unit>
       <trans-unit id="_rebaseOnto.Text">
@@ -8577,7 +8577,7 @@ help</source>
         <target />
       </trans-unit>
       <trans-unit id="_renameBranch.Text">
-        <source>Re&amp;name this branch</source>
+        <source>R&amp;ename this branch</source>
         <target />
       </trans-unit>
     </body>
@@ -8823,7 +8823,7 @@ This will just checkout on the submodule the commit determined by the superproje
   <file datatype="plaintext" original="RefContextMenuComposer" source-language="en">
     <body>
       <trans-unit id="_copyName.Text">
-        <source>Cop&amp;y name to clipboard</source>
+        <source>&amp;Copy name to clipboard</source>
         <target />
       </trans-unit>
     </body>
@@ -8831,7 +8831,7 @@ This will just checkout on the submodule the commit determined by the superproje
   <file datatype="plaintext" original="RemoteBranchContextMenuProvider" source-language="en">
     <body>
       <trans-unit id="_checkoutBranch.Text">
-        <source>&amp;Checkout this branch</source>
+        <source>Chec&amp;kout this branch</source>
         <target />
       </trans-unit>
       <trans-unit id="_deleteBranch.Text">
@@ -10087,15 +10087,15 @@ When OpenSSH is used, command line dialogs are shown!
   <file datatype="plaintext" original="StashRefContextMenuProvider" source-language="en">
     <body>
       <trans-unit id="_applyStash.Text">
-        <source>&amp;Apply stash</source>
+        <source>Appl&amp;y stash</source>
         <target />
       </trans-unit>
       <trans-unit id="_dropStash.Text">
-        <source>Dr&amp;op stash...</source>
+        <source>&amp;Drop stash...</source>
         <target />
       </trans-unit>
       <trans-unit id="_popStash.Text">
-        <source>P&amp;op stash</source>
+        <source>Pop &amp;stash</source>
         <target />
       </trans-unit>
     </body>
@@ -10103,15 +10103,15 @@ When OpenSSH is used, command line dialogs are shown!
   <file datatype="plaintext" original="StashSelectorContextMenuProvider" source-language="en">
     <body>
       <trans-unit id="_applyStash.Text">
-        <source>&amp;Apply stash</source>
+        <source>Appl&amp;y stash</source>
         <target />
       </trans-unit>
       <trans-unit id="_dropStash.Text">
-        <source>Dr&amp;op stash...</source>
+        <source>&amp;Drop stash...</source>
         <target />
       </trans-unit>
       <trans-unit id="_popStash.Text">
-        <source>P&amp;op stash</source>
+        <source>Pop &amp;stash</source>
         <target />
       </trans-unit>
     </body>

@@ -2088,13 +2088,21 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
 
         // If a ref label was right-clicked, show a focused context menu for that ref
-        if (_rightClickedHitInfo is { } hitInfo)
+        if (_rightClickedHitInfo is RefLabelHitInfo hitInfo && (ModifierKeys == Keys.Control || (ModifierKeys != Keys.Shift && !AppSettings.AlwaysShowAdvOpt)))
         {
             e.Cancel = true;
             ShowRefSpecificContextMenu(hitInfo.GitRef, hitInfo.StashReflogSelector);
             _rightClickedHitInfo = null;
             return;
         }
+
+        IGitRef? clickedRef = _rightClickedHitInfo?.GitRef;
+        Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefs = clickedRef is null
+            ? refs => refs
+            : refs => refs.Where(r => r == clickedRef);
+        copyToClipboardToolStripMenuItem.SetFilterRefsFunc(clickedRef is null
+            ? refNames => refNames
+            : refNames => refNames.Where(r => r == clickedRef.Name));
 
         bool inTheMiddleOfBisect = Module.InTheMiddleOfBisect();
         SetEnabled(markRevisionAsBadToolStripMenuItem, inTheMiddleOfBisect);
@@ -2115,7 +2123,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         GitRefListsForRevision gitRefListsForRevision = new(revision);
         _rebaseOnTopOf = null;
 
-        foreach (IGitRef head in gitRefListsForRevision.AllTags)
+        foreach (IGitRef head in filterRefs(gitRefListsForRevision.AllTags))
         {
             AddBranchMenuItem(deleteTagDropDown, head, delegate { UICommands.StartDeleteTagDialog(ParentForm, head.Name); });
             AddBranchMenuItem(selectInLeftPanelDropDown, head, SelectInLeftPanel_Click);
@@ -2128,10 +2136,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         // For now there is no action that could be done on currentBranch
         string currentBranchRef = GitRefName.RefsHeadsPrefix + CurrentBranch.Value;
-        IReadOnlyList<IGitRef> branchesWithNoIdenticalRemotes = gitRefListsForRevision.BranchesWithNoIdenticalRemotes;
 
         bool currentBranchPointsToRevision = false;
-        foreach (IGitRef head in branchesWithNoIdenticalRemotes)
+        foreach (IGitRef head in filterRefs(gitRefListsForRevision.BranchesWithNoIdenticalRemotes))
         {
             if (head.CompleteName == currentBranchRef)
             {
@@ -2161,7 +2168,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             _rebaseOnTopOf ??= toolStripItem.Tag as string;
         }
 
-        IReadOnlyList<IGitRef> allBranches = gitRefListsForRevision.AllBranches;
+        IReadOnlyList<IGitRef> allBranches = [.. filterRefs(gitRefListsForRevision.AllBranches)];
         bool isHeadOfCurrentBranch = false;
         bool firstRemoteBranchForCheckout = false;
         foreach (IGitRef head in allBranches)

@@ -13,9 +13,9 @@ namespace GitUI.UserControls.RevisionGrid.RefContextMenus;
 /// </summary>
 internal sealed class StashSelectorContextMenuProvider : Translate, IRefContextMenuProvider
 {
-    private readonly TranslationString _applyStash = new("&Apply stash");
-    private readonly TranslationString _popStash = new("P&op stash");
-    private readonly TranslationString _dropStash = new("Dr&op stash...");
+    private readonly TranslationString _applyStash = new("Appl&y stash");
+    private readonly TranslationString _popStash = new("Pop &stash");
+    private readonly TranslationString _dropStash = new("&Drop stash...");
 
     public bool Handles(IGitRef? gitRef, string? stashReflogSelector) => gitRef is null && stashReflogSelector is not null;
 

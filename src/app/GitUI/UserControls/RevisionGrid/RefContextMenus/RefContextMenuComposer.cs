@@ -11,7 +11,7 @@ namespace GitUI.UserControls.RevisionGrid.RefContextMenus;
 /// </summary>
 internal sealed class RefContextMenuComposer : Translate
 {
-    private readonly TranslationString _copyName = new("Cop&y name to clipboard");
+    private readonly TranslationString _copyName = new("&Copy name to clipboard");
 
     private readonly IReadOnlyList<IRefContextMenuProvider> _providers;
 
