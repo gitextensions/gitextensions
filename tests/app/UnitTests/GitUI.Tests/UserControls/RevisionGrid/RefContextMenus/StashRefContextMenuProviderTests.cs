@@ -65,10 +65,10 @@ public class StashRefContextMenuProviderTests
 
         _provider.Populate(menu, gitRef, stashReflogSelector: null, _context);
 
-        IEnumerable<string> texts = menu.Items.Cast<ToolStripItem>().Select(i => i.Text!);
+        IEnumerable<string> texts = menu.Items.Cast<ToolStripItem>().Select(i => i.Text!.Replace("&", ""));
         texts.Should().Contain(t => t.Contains("Apply"));
-        texts.Should().Contain(t => t.Contains("op stash") && !t.Contains("Drop") && !t.Contains("Dr"));
-        texts.Should().Contain(t => t.StartsWith("Dr"));
+        texts.Should().Contain(t => t.Contains("Pop"));
+        texts.Should().Contain(t => t.Contains("Drop"));
     }
 
     [Test]

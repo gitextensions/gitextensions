@@ -74,10 +74,10 @@ public class StashSelectorContextMenuProviderTests
 
         _provider.Populate(menu, gitRef: null, stashReflogSelector: "stash@{0}", context);
 
-        IEnumerable<string> texts = menu.Items.Cast<ToolStripItem>().Select(i => i.Text!);
+        IEnumerable<string> texts = menu.Items.Cast<ToolStripItem>().Select(i => i.Text!.Replace("&", ""));
         texts.Should().Contain(t => t.Contains("Apply"));
-        texts.Should().Contain(t => t.StartsWith("P") && t.Contains("op stash"));
-        texts.Should().Contain(t => t.StartsWith("Dr"));
+        texts.Should().Contain(t => t.Contains("Pop"));
+        texts.Should().Contain(t => t.Contains("Drop"));
         menu.Items.Count.Should().Be(3);
     }
 
@@ -94,7 +94,7 @@ public class StashSelectorContextMenuProviderTests
         _provider.Populate(menu, gitRef: null, stashReflogSelector: "stash@{0}", context);
 
         menu.Items.Count.Should().Be(1);
-        menu.Items[0].Text.Should().Contain("Apply");
+        menu.Items[0].Text?.Replace("&", "").Should().Contain("Apply");
     }
 
     private RefContextMenuContext CreateContext(Func<GitRevision?> getLatestSelectedRevision)
