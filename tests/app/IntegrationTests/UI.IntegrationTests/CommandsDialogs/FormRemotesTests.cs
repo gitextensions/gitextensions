@@ -1,4 +1,5 @@
-﻿using AwesomeAssertions;
+﻿using System.ComponentModel.Design;
+using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitCommands.Git;
@@ -14,7 +15,6 @@ public class FormRemotesTests
 {
     private ReferenceRepository _referenceRepository = null!;
     private GitUICommands _commands = null!;
-    private IGitBranchNameNormaliser _branchNameNormaliser = null!;
     private bool _originalAlwaysShowAdvOpt;
 
     [SetUp]
@@ -23,10 +23,8 @@ public class FormRemotesTests
         _originalAlwaysShowAdvOpt = AppSettings.AlwaysShowAdvOpt;
 
         _referenceRepository = new ReferenceRepository();
-        _branchNameNormaliser = Substitute.For<IGitBranchNameNormaliser>();
 
-        System.ComponentModel.Design.ServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
-        serviceContainer.AddService(_branchNameNormaliser);
+        ServiceContainer serviceContainer = GlobalServiceContainer.CreateDefaultMockServiceContainer();
 
         _commands = new GitUICommands(serviceContainer, _referenceRepository.Module);
     }
@@ -106,7 +104,9 @@ public class FormRemotesTests
     public void Should_normalise_remote_prefix_on_leave()
     {
         AppSettings.AlwaysShowAdvOpt = true;
-        _branchNameNormaliser.Normalise("invalid branch name", Arg.Any<GitBranchNameOptions>()).Returns("invalid-branch-name");
+
+        IGitBranchNameNormaliser branchNameNormaliser = _commands.GetRequiredService<IGitBranchNameNormaliser>();
+        branchNameNormaliser.Normalise("invalid branch name", Arg.Any<GitBranchNameOptions>()).Returns("invalid-branch-name");
 
         RunFormTest(
             form =>
