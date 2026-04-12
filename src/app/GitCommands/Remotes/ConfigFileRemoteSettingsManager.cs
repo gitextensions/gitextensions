@@ -304,10 +304,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
         ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl,
         string remotePuttySshKey, string? remoteColor, string? remotePrefix)
     {
-        if (string.IsNullOrWhiteSpace(remoteName))
-        {
-            throw new ArgumentNullException(nameof(remoteName));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(remoteName);
 
         remoteName = remoteName.Trim();
 
@@ -379,10 +376,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
 
     public void ToggleRemoteState(string remoteName, bool disabled)
     {
-        if (string.IsNullOrWhiteSpace(remoteName))
-        {
-            throw new ArgumentNullException(nameof(remoteName));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(remoteName);
 
         // disabled is the new state, so if the new state is 'false' (=enabled), then the existing state is 'true' (=disabled, i.e. '-remote')
         string sectionName = disabled ? SectionRemote : SectionRemoteDisabled;

@@ -108,10 +108,10 @@ internal class ConfigFileRemoteSettingsManagerTests
     {
         ((Action)(() => _remotesManager.SaveRemote(null, null!, "b", "c", "d", "e", "f"))).Should().Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'remoteName')");
-        ((Action)(() => _remotesManager.SaveRemote(null, "", "b", "c", "d", "e", "f"))).Should().Throw<ArgumentNullException>()
-            .WithMessage("Value cannot be null. (Parameter 'remoteName')");
-        ((Action)(() => _remotesManager.SaveRemote(null, "  ", "b", "c", "d", "e", "f"))).Should().Throw<ArgumentNullException>()
-            .WithMessage("Value cannot be null. (Parameter 'remoteName')");
+        ((Action)(() => _remotesManager.SaveRemote(null, "", "b", "c", "d", "e", "f"))).Should().Throw<ArgumentException>()
+            .WithMessage("The value cannot be an empty string or composed entirely of whitespace. (Parameter 'remoteName')");
+        ((Action)(() => _remotesManager.SaveRemote(null, "  ", "b", "c", "d", "e", "f"))).Should().Throw<ArgumentException>()
+            .WithMessage("The value cannot be an empty string or composed entirely of whitespace. (Parameter 'remoteName')");
     }
 
     [Test]
