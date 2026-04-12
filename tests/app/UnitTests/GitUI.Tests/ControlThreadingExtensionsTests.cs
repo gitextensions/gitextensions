@@ -16,6 +16,12 @@ public class ControlThreadingExtensionsTests
         ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeTrue();
         await form.SwitchToMainThreadAsync();
         ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeTrue();
+    }
+
+    [Test]
+    public async Task ControlSwitchToMainThreadOnMainThread_with_cancellation_token()
+    {
+        Form form = new();
 
         using CancellationTokenSource cancellationTokenSource = new();
         ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeTrue();
@@ -53,6 +59,12 @@ public class ControlThreadingExtensionsTests
         ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeFalse();
         await form.SwitchToMainThreadAsync();
         ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeTrue();
+    }
+
+    [Test]
+    public async Task ControlSwitchToMainThreadOnBackgroundThread_with_cancellation_token()
+    {
+        Form form = new();
 
         using CancellationTokenSource cancellationTokenSource = new();
         await TaskScheduler.Default;
