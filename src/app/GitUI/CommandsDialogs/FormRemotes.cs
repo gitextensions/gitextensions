@@ -891,4 +891,23 @@ Inactive remote is completely invisible to git.");
             RemoteName.SelectAll();
         }
     }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly FormRemotes _form;
+
+        public TestAccessor(FormRemotes form)
+        {
+            _form = form;
+        }
+
+        public Button Delete => _form.Delete;
+        public TextBox RemoteName => _form.RemoteName;
+        public TextBox RemotePrefix => _form.txtRemotePrefix;
+        public Button Save => _form.Save;
+        public TabControl TabControl => _form.tabControl1;
+        public Button ToggleState => _form.btnToggleState;
+    }
 }

@@ -6,6 +6,61 @@ namespace GitCommandsTests.Helpers;
 [TestFixture]
 public class PathUtilTest
 {
+    [TestCase('a', true)]
+    [TestCase('z', true)]
+    [TestCase('A', true)]
+    [TestCase('Z', true)]
+    [TestCase('0', true)]
+    [TestCase('9', true)]
+    [TestCase('-', true)]
+    [TestCase('_', true)]
+    [TestCase('.', true)]
+    [TestCase('/', true)]
+    [TestCase('!', true)]
+    [TestCase('}', true)]
+    [TestCase('@', true)]
+    [TestCase(' ', false)]
+    [TestCase('~', false)]
+    [TestCase('^', false)]
+    [TestCase(':', false)]
+    [TestCase('\0', false)]
+    [TestCase('\t', false)]
+    [TestCase('\n', false)]
+    [TestCase('\r', false)]
+    [TestCase('\x7F', false)]
+    public void IsValidPathChar_should_return_expected(char c, bool expected)
+    {
+        PathUtil.IsValidPathChar(c).Should().Be(expected);
+    }
+
+    [Test]
+    public void IsValidPathChar_should_return_false_for_all_invalid_path_chars()
+    {
+        foreach (char c in Path.GetInvalidPathChars())
+        {
+            PathUtil.IsValidPathChar(c).Should().BeFalse($"character U+{(int)c:X4} should be invalid");
+        }
+    }
+
+    [Test]
+    public void IsValidPathChar_should_accept_all_ascii_letters_and_digits()
+    {
+        for (char c = 'a'; c <= 'z'; c++)
+        {
+            PathUtil.IsValidPathChar(c).Should().BeTrue();
+        }
+
+        for (char c = 'A'; c <= 'Z'; c++)
+        {
+            PathUtil.IsValidPathChar(c).Should().BeTrue();
+        }
+
+        for (char c = '0'; c <= '9'; c++)
+        {
+            PathUtil.IsValidPathChar(c).Should().BeTrue();
+        }
+    }
+
     [Test]
     public void ToPosixPathTest()
     {
