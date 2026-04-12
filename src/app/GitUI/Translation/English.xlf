@@ -6766,6 +6766,10 @@ Value has been reset to empty value.</source>
         <source>Color</source>
         <target />
       </trans-unit>
+      <trans-unit id="lblRemotePrefix.Text">
+        <source>Prefix</source>
+        <target />
+      </trans-unit>
       <trans-unit id="pnlMgtDetails.Text">
         <source>Details</source>
         <target />
