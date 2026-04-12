@@ -1,8 +1,9 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using ResourceManager;
@@ -15,8 +16,8 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
     private readonly TranslationString _branchNameIsEmpty = new("Enter branch name.");
     private readonly TranslationString _branchNameIsNotValid = new("“{0}” is not valid branch name.");
     private readonly TranslationString _creatingOrphanBranch = new("Creating orphan branch (repository has no commits)");
-    private readonly IGitBranchNameNormaliser _branchNameNormaliser = new GitBranchNameNormaliser();
     private readonly GitBranchNameOptions _gitBranchNameOptions = new(AppSettings.AutoNormaliseSymbol);
+    private readonly IGitBranchNameNormaliser _branchNameNormaliser;
 
     public bool CheckoutAfterCreation { get; set; } = true;
     public bool UserAbleToChangeRevision { get; set; } = true;
@@ -30,6 +31,8 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
         MinimumSize = new Size(Width, PreferredMinimumHeight);
 
         InitializeComplete();
+
+        _branchNameNormaliser = commands.GetRequiredService<IGitBranchNameNormaliser>();
 
         grpOrphan.AutoSize = true;
 
@@ -82,7 +85,7 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
 
     private void BranchNameTextBox_Leave(object sender, EventArgs e)
     {
-        if (!AppSettings.AutoNormaliseBranchName || !BranchNameTextBox.Text.Any(GitBranchNameNormaliser.IsValidChar))
+        if (!AppSettings.AutoNormaliseBranchName || !BranchNameTextBox.Text.Any(PathUtil.IsValidPathChar))
         {
             return;
         }

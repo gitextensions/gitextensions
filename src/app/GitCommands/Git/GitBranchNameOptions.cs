@@ -1,4 +1,4 @@
-namespace GitCommands.Git;
+﻿namespace GitCommands.Git;
 
 /// <summary>
 /// Options used by <see cref="GitBranchNameNormaliser"/> to ensures compliance with the GIT branch naming conventions.
@@ -14,7 +14,7 @@ public sealed class GitBranchNameOptions
                 throw new ArgumentOutOfRangeException(nameof(replacementToken), "Replacement token must be a single character");
             }
 
-            if (!GitBranchNameNormaliser.IsValidChar(replacementToken[0]))
+            if (!PathUtil.IsValidPathChar(replacementToken[0]))
             {
                 throw new ArgumentOutOfRangeException(nameof(replacementToken), string.Format("Replacement token invalid: '{0}'", replacementToken));
             }

@@ -1,9 +1,11 @@
 ﻿using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Infrastructure;
@@ -29,6 +31,7 @@ public partial class FormRemotes : GitModuleForm
 
     private readonly FormRemotesController _formRemotesController = new();
     private IConfigFileRemoteSettingsManager? _remotesManager;
+    private IGitBranchNameNormaliser _branchNameNormaliser;
     private ConfigFileRemote? _selectedRemote;
     private readonly ListViewGroup _lvgEnabled;
     private readonly ListViewGroup _lvgDisabled;
@@ -106,6 +109,9 @@ Inactive remote is completely invisible to git.");
     {
         InitializeComponent();
         InitializeComplete();
+
+        _branchNameNormaliser = commands.GetRequiredService<IGitBranchNameNormaliser>();
+        txtRemotePrefix.Leave += (sender, e) => txtRemotePrefix.Text = _branchNameNormaliser.Normalise(txtRemotePrefix.Text, new(AppSettings.AutoNormaliseSymbol));
 
         btnRemoteColor.BackColor = Color.Transparent;
 
@@ -486,7 +492,7 @@ Inactive remote is completely invisible to git.");
         string remoteUrl = Url.Text.Trim();
         string remotePushUrl = comboBoxPushUrl.Text.Trim();
         bool creatingNew = _selectedRemote is null;
-        string remotePrefix = txtRemotePrefix.Text.Trim(); // TODO: validate/sanitize the prefix
+        string remotePrefix = txtRemotePrefix.Text;
 
         string? color = null;
         if (btnRemoteColor.BackColor != Color.Transparent)
