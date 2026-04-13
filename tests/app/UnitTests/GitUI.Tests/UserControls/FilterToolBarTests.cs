@@ -36,6 +36,7 @@ public class FilterToolBarTests
     [TearDown]
     public void TearDown()
     {
+        _filterToolBar.Dispose();
         AppSettings.ShowOnlyFirstParent = _originalShowOnlyFirstParent;
         AppSettings.ShowReflogReferences.Value = _originalShowReflogReferences;
     }

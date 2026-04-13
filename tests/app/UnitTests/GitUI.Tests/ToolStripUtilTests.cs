@@ -6,7 +6,7 @@ public sealed class ToolStripUtilTests
     [Test]
     public void FindToolStripItems()
     {
-        ToolStrip root = new()
+        using ToolStrip root = new()
         {
             Items =
             {

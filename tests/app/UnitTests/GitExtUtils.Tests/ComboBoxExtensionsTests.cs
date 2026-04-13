@@ -27,7 +27,7 @@ public class ComboBoxExtensionsTests
         // Arrange
         string somewhatLongString = "This is a somewhat long string to force ComboBox drop-down to be adjusted";
 
-        ComboBox comboBox = new();
+        using ComboBox comboBox = new();
         comboBox.Items.Add(somewhatLongString);
 
         int initialWidth = comboBox.Width;
@@ -61,7 +61,7 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ToolStripComboBox comboBox = new();
+        using ToolStripComboBox comboBox = new();
         comboBox.Items.Add(veryLongString);
 
         // Act
@@ -77,7 +77,7 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ToolStripComboBox comboBox = new();
+        using ToolStripComboBox comboBox = new();
         comboBox.Items.Add(veryLongString);
 
         // Act
@@ -93,7 +93,7 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ComboBox comboBox = new()
+        using ComboBox comboBox = new()
         {
             DisplayMember = "Value"
         };
@@ -112,7 +112,7 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ComboBox comboBox = new()
+        using ComboBox comboBox = new()
         {
             DisplayMember = "Value"
         };
@@ -131,7 +131,7 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ComboBox comboBox = new();
+        using ComboBox comboBox = new();
         comboBox.Items.Add(new ComboBoxItem(Value: "", ToStringValue: veryLongString));
 
         // Act
@@ -147,7 +147,7 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ComboBox comboBox = new()
+        using ComboBox comboBox = new()
         {
             DisplayMember = "NonExistentMemberName"
         };

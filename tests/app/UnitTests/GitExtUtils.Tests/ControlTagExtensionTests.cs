@@ -6,7 +6,7 @@ public class ControlTagExtensionTests
     [Test]
     public void Multiple_values_can_be_set()
     {
-        Control control = new();
+        using Control control = new();
 
         control.SetTag(1);
         control.SetTag(2f);
@@ -20,7 +20,7 @@ public class ControlTagExtensionTests
     [Test]
     public void When_tag_field_is_occupied_GetTag_returns_default()
     {
-        Control control = new()
+        using Control control = new()
         {
             Tag = new object()
         };
@@ -32,7 +32,7 @@ public class ControlTagExtensionTests
     [Test]
     public void When_tag_field_is_occupied_SetTag_replaces_existing_tag()
     {
-        Control control = new()
+        using Control control = new()
         {
             Tag = new object()
         };
@@ -46,7 +46,7 @@ public class ControlTagExtensionTests
     [Test]
     public void When_another_type_is_stored_at_key_GetTag_return_default()
     {
-        Control control = new();
+        using Control control = new();
         control.SetTag("key", 1);
         control.SetTag("key", 2f);
 

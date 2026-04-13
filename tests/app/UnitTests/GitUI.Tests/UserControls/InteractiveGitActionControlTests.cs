@@ -5,12 +5,20 @@ namespace GitUITests.UserControls;
 [Apartment(ApartmentState.STA)]
 public class InteractiveGitActionControlTests
 {
+    private InteractiveGitActionControl _control = null!;
     private InteractiveGitActionControl.TestAccessor _accessor;
 
     [SetUp]
     public void SetUp()
     {
-        _accessor = new InteractiveGitActionControl().GetTestAccessor();
+        _control = new InteractiveGitActionControl();
+        _accessor = _control.GetTestAccessor();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _control.Dispose();
     }
 
     [TestCase(InteractiveGitActionControl.GitAction.Rebase, false)]

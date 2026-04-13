@@ -23,7 +23,7 @@ public sealed class ControlUtilTests
     [Test]
     public void FindDescendants()
     {
-        Control root = CreateTestHierarchy();
+        using Control root = CreateTestHierarchy();
 
         // child1, child2, child3, grandchild1, grandchild2
         root.FindDescendants().Count().Should().Be(5);
@@ -33,7 +33,7 @@ public sealed class ControlUtilTests
     [Test]
     public void FindDescendantsOfType()
     {
-        Control root = CreateTestHierarchy();
+        using Control root = CreateTestHierarchy();
 
         root.FindDescendantsOfType<TextBox>().Count().Should().Be(1);
         root.FindDescendantsOfType<Button>().Count().Should().Be(1);
@@ -43,7 +43,7 @@ public sealed class ControlUtilTests
     [Test]
     public void FindDescendantsOfTypeWithPredicate()
     {
-        Control root = CreateTestHierarchy();
+        using Control root = CreateTestHierarchy();
 
         Button? foundButton = root.FindDescendantOfType<Button>(t => t.Text == "Click me");
         foundButton.Should().NotBeNull();

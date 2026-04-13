@@ -28,6 +28,15 @@ public class GitRefMenuItemsTest
         Enumerable.Range(0, expectedMenuItems).ForEach(_ => _factoryQueue.Enqueue(new ToolStripMenuItem()));
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        while (_factoryQueue.Count > 0)
+        {
+            _factoryQueue.Dequeue().Dispose();
+        }
+    }
+
     [Test]
     public void WithInactiveLocalBranch_HasAllMenuItems()
     {
