@@ -1,49 +1,29 @@
 ﻿namespace GitCommands.Settings;
 
+/// <summary>
+///  Immutable metadata describing a persisted setting.
+///  Use <see cref="Setting.GetValue{T}"/> and <see cref="Setting.SetValue{T}"/> to read and write values.
+/// </summary>
+/// <typeparam name="T">The type of the setting value.</typeparam>
 public interface ISetting<T>
 {
     /// <summary>
-    ///  Event triggered after settings update.
-    /// </summary>
-    event EventHandler Updated;
-
-    /// <summary>
-    ///  Settings provider.
-    /// </summary>
-    SettingsPath SettingsSource { get; }
-
-    /// <summary>
-    /// Name of the setting.
+    ///  The settings key name.
     /// </summary>
     string Name { get; }
 
     /// <summary>
-    ///  Default value for setting type.
-    ///  For nullable except "string" is default(T).
-    ///  For "string" is the defaultValue ?? string.Empty from constructor.
-    ///  For non nullable is the defaultValue from constructor.
+    ///  The settings path that provides hierarchical grouping and storage access.
+    /// </summary>
+    SettingsPath SettingsSource { get; }
+
+    /// <summary>
+    ///  The default value for the setting, used when no value is stored.
     /// </summary>
     T? Default { get; }
 
     /// <summary>
-    ///  Value of the setting.
-    ///  For nullable except "string" is the value from storage.
-    ///  For "string" is the value from storage or <see cref="Default"/>.
-    ///  For non nullable is the value from storage or <see cref="Default"/>.
-    /// </summary>
-    T? Value { get; set; }
-
-    /// <summary>
-    ///  Value of the setting.
-    ///  For nullable except "string" always false (null is value too).
-    ///  For "string" is true when the stored value is null or is false when the stored value not null.
-    ///  For non nullable is true when the stored value is null or is false when the stored value not null.
-    /// </summary>
-    bool IsUnset { get; }
-
-    /// <summary>
-    ///  Full name of the setting.
-    ///  Includes section name and setting name.
+    ///  The full settings path, including the section prefix and setting name.
     /// </summary>
     string FullPath { get; }
 }

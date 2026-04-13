@@ -434,7 +434,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
                 Name = "showGitNotesColumnToolStripMenuItem",
                 Text = "Show Git &notes column",
                 ExecuteAction = () => _revisionGrid.ToggleShowGitNotesColumn(),
-                IsCheckedFunc = () => AppSettings.ShowGitNotesColumn.Value
+                IsCheckedFunc = () => AppSettings.ShowGitNotesColumn
             },
             new MenuCommand
             {

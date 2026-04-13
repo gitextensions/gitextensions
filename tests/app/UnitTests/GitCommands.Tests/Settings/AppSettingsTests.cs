@@ -50,7 +50,7 @@ internal sealed class AppSettingsTests
             root = property.GetValue(null);
 
             property = property.PropertyType
-                .GetProperty(nameof(ISetting<>.Value))!;
+                .GetProperty("Value")!;
         }
 
         using TempFileCollection tempFiles = new();
@@ -85,7 +85,7 @@ internal sealed class AppSettingsTests
             root = property.GetValue(null);
 
             property = property.PropertyType
-                .GetProperty(nameof(ISetting<>.Value))!;
+                .GetProperty("Value")!;
         }
 
         using TempFileCollection tempFiles = new();
@@ -143,7 +143,7 @@ internal sealed class AppSettingsTests
             Type? propertyType = property.PropertyType;
             if (isISetting)
             {
-                propertyType = propertyType.GetProperty(nameof(ISetting<>.Value))?.PropertyType;
+                propertyType = propertyType.GetProperty("Value")?.PropertyType;
             }
 
             propertyType = Nullable.GetUnderlyingType(propertyType!) ?? propertyType;
@@ -170,38 +170,38 @@ internal sealed class AppSettingsTests
 
             yield return (properties[nameof(AppSettings.TelemetryEnabled)], null, true, false);
             yield return (properties[nameof(AppSettings.AutoNormaliseBranchName)], true, false, false);
-            yield return (properties[nameof(AppSettings.FileStatusFindInFilesGitGrepTypeIndex)], 1, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.FileStatusMergeSingleItemWithFolder)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.FileStatusShowGroupNodesInFlatList)], false, isNotNullable, isISetting);
+            yield return (properties[nameof(AppSettings.FileStatusFindInFilesGitGrepTypeIndex)], 1, isNotNullable, isNoISetting);
+            yield return (properties[nameof(AppSettings.FileStatusMergeSingleItemWithFolder)], false, isNotNullable, isNoISetting);
+            yield return (properties[nameof(AppSettings.FileStatusShowGroupNodesInFlatList)], false, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.RememberAmendCommitState)], true, false, false);
             yield return (properties[nameof(AppSettings.StashKeepIndex)], false, false, false);
             yield return (properties[nameof(AppSettings.DontConfirmStashDrop)], false, false, false);
             yield return (properties[nameof(AppSettings.ApplyPatchIgnoreWhitespace)], false, false, false);
             yield return (properties[nameof(AppSettings.ApplyPatchSignOff)], true, false, false);
             yield return (properties[nameof(AppSettings.UseHistogramDiffAlgorithm)], false, false, false);
-            yield return (properties[nameof(AppSettings.UseGitColoring)], true, false, true);
-            yield return (properties[nameof(AppSettings.ReverseGitColoring)], true, false, true);
+            yield return (properties[nameof(AppSettings.UseGitColoring)], true, false, false);
+            yield return (properties[nameof(AppSettings.ReverseGitColoring)], true, false, false);
             yield return (properties[nameof(AppSettings.ShowErrorsWhenStagingFiles)], true, false, false);
             yield return (properties[nameof(AppSettings.EnsureCommitMessageSecondLineEmpty)], true, false, false);
             yield return (properties[nameof(AppSettings.LastCommitMessage)], string.Empty, true, false);
             yield return (properties[nameof(AppSettings.CommitDialogNumberOfPreviousMessages)], 6, false, false);
-            yield return (properties[nameof(AppSettings.CommitDialogSelectStagedOnEnterMessage)], true, isNotNullable, isISetting);
+            yield return (properties[nameof(AppSettings.CommitDialogSelectStagedOnEnterMessage)], true, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.CommitDialogShowOnlyMyMessages)], false, false, false);
             yield return (properties[nameof(AppSettings.ShowCommitAndPush)], true, false, false);
             yield return (properties[nameof(AppSettings.ShowResetWorkTreeChanges)], true, false, false);
             yield return (properties[nameof(AppSettings.ShowResetAllChanges)], true, false, false);
 
-            yield return (properties[nameof(AppSettings.ShowConEmuTab)], true, false, true);
-            yield return (properties[nameof(AppSettings.ConEmuStyle)], "Default", true, true);
-            yield return (properties[nameof(AppSettings.ConEmuTerminal)], "bash", true, true);
-            yield return (properties[nameof(AppSettings.OutputHistoryDepth)], 20, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.OutputHistoryPanelVisible)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.ShowOutputHistoryAsTab)], true, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.UseBrowseForFileHistory)], true, false, true);
-            yield return (properties[nameof(AppSettings.UseDiffViewerForBlame)], false, false, true);
-            yield return (properties[nameof(AppSettings.ShowGpgInformation)], true, false, true);
+            yield return (properties[nameof(AppSettings.ShowConEmuTab)], true, false, false);
+            yield return (properties[nameof(AppSettings.ConEmuStyle)], "Default", false, false);
+            yield return (properties[nameof(AppSettings.ConEmuTerminal)], "bash", false, false);
+            yield return (properties[nameof(AppSettings.OutputHistoryDepth)], 20, isNotNullable, isNoISetting);
+            yield return (properties[nameof(AppSettings.OutputHistoryPanelVisible)], false, isNotNullable, isNoISetting);
+            yield return (properties[nameof(AppSettings.ShowOutputHistoryAsTab)], true, isNotNullable, isNoISetting);
+            yield return (properties[nameof(AppSettings.UseBrowseForFileHistory)], true, false, false);
+            yield return (properties[nameof(AppSettings.UseDiffViewerForBlame)], false, false, false);
+            yield return (properties[nameof(AppSettings.ShowGpgInformation)], true, false, false);
 
-            yield return (properties[nameof(AppSettings.MessageEditorWordWrap)], false, isNotNullable, isISetting);
+            yield return (properties[nameof(AppSettings.MessageEditorWordWrap)], false, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.ShowSplitViewLayout)], true, false, false);
             yield return (properties[nameof(AppSettings.ProvideAutocompletion)], true, false, false);
             yield return (properties[nameof(AppSettings.TruncatePathMethod)], TruncatePathMethod.None, false, false);
@@ -246,7 +246,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.AutoStash)], false, false, false);
             yield return (properties[nameof(AppSettings.RebaseAutoStash)], false, false, false);
             yield return (properties[nameof(AppSettings.CheckoutBranchAction)], LocalChangesAction.DontChange, false, false);
-            yield return (properties[nameof(AppSettings.CheckoutOtherBranchAfterReset)], true, isNotNullable, isISetting);
+            yield return (properties[nameof(AppSettings.CheckoutOtherBranchAfterReset)], true, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.UseDefaultCheckoutBranchAction)], false, false, false);
             yield return (properties[nameof(AppSettings.DontShowHelpImages)], false, false, false);
             yield return (properties[nameof(AppSettings.AlwaysShowAdvOpt)], false, false, false);
@@ -284,7 +284,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.HideMergeCommits)], false, false, false);
             yield return (properties[nameof(AppSettings.ShowTags)], true, false, false);
             yield return (properties[nameof(AppSettings.ShowRevisionGridGraphColumn)], true, false, false);
-            yield return (properties[nameof(AppSettings.ShowRevisionGridTooltips)], true, isNotNullable, isISetting);
+            yield return (properties[nameof(AppSettings.ShowRevisionGridTooltips)], true, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.ShowAuthorAvatarColumn)], true, false, false);
             yield return (properties[nameof(AppSettings.ShowAuthorNameColumn)], true, false, false);
             yield return (properties[nameof(AppSettings.ShowDateColumn)], true, false, false);
@@ -302,12 +302,12 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.RevisionGridQuickSearchTimeout)], 4000, false, false);
             yield return (properties[nameof(AppSettings.MaxRevisionGraphCommits)], 100000, false, false);
             yield return (properties[nameof(AppSettings.ShowDiffForAllParents)], true, false, false);
-            yield return (properties[nameof(AppSettings.ShowFindInCommitFilesGitGrep)], false, isNotNullable, isISetting);
+            yield return (properties[nameof(AppSettings.ShowFindInCommitFilesGitGrep)], false, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.ShowAvailableDiffTools)], true, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.DiffVerticalRulerPosition)], 0, isNotNullable, isNoISetting);
-            yield return (properties[nameof(AppSettings.GitGrepUserArguments)], "", isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.GitGrepIgnoreCase)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.GitGrepMatchWholeWord)], false, isNotNullable, isISetting);
+            yield return (properties[nameof(AppSettings.GitGrepUserArguments)], "", isNotNullable, isNoISetting);
+            yield return (properties[nameof(AppSettings.GitGrepIgnoreCase)], false, isNotNullable, isNoISetting);
+            yield return (properties[nameof(AppSettings.GitGrepMatchWholeWord)], false, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.RecentWorkingDir)], null, true, false);
             yield return (properties[nameof(AppSettings.StartWithRecentWorkingDir)], false, false, false);
             yield return (properties[nameof(AppSettings.AutoStartPageant)], true, false, false);
@@ -316,10 +316,10 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.MulticolorBranches)], true, false, false);
             yield return (properties[nameof(AppSettings.HighlightAuthoredRevisions)], true, false, false);
             yield return (properties[nameof(AppSettings.FillRefLabels)], false, false, false);
-            yield return (properties[nameof(AppSettings.MergeGraphLanesHavingCommonParent)], true, false, true);
-            yield return (properties[nameof(AppSettings.RenderGraphWithDiagonals)], true, false, true);
-            yield return (properties[nameof(AppSettings.StraightenGraphDiagonals)], true, false, true);
-            yield return (properties[nameof(AppSettings.StraightenGraphSegmentsLimit)], 80, false, true);
+            yield return (properties[nameof(AppSettings.MergeGraphLanesHavingCommonParent)], true, false, false);
+            yield return (properties[nameof(AppSettings.RenderGraphWithDiagonals)], true, false, false);
+            yield return (properties[nameof(AppSettings.StraightenGraphDiagonals)], true, false, false);
+            yield return (properties[nameof(AppSettings.StraightenGraphSegmentsLimit)], 80, false, false);
             yield return (properties[nameof(AppSettings.LastFormatPatchDir)], string.Empty, true, false);
             yield return (properties[nameof(AppSettings.IgnoreWhitespaceKind)], IgnoreWhitespaceKind.None, false, true);
             yield return (properties[nameof(AppSettings.RememberIgnoreWhiteSpacePreference)], true, false, false);
@@ -328,7 +328,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowEntireFile)], false, false, true);
             yield return (properties[nameof(AppSettings.RememberShowEntireFilePreference)], false, false, false);
             yield return (properties[nameof(AppSettings.DiffDisplayAppearance)], DiffDisplayAppearance.Patch, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.RememberDiffDisplayAppearance)], false, isNotNullable, isISetting);
+            yield return (properties[nameof(AppSettings.RememberDiffDisplayAppearance)], false, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.RememberNumberOfContextLines)], false, false, false);
             yield return (properties[nameof(AppSettings.ShowSyntaxHighlightingInDiff)], true, false, true);
             yield return (properties[nameof(AppSettings.RememberShowSyntaxHighlightingInDiff)], true, false, false);
@@ -338,7 +338,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShorteningRecentRepoPathStrategy)], ShorteningRecentRepoPathStrategy.None, false, false);
             yield return (properties[nameof(AppSettings.MaxTopRepositories)], 0, false, false);
             yield return (properties[nameof(AppSettings.RecentRepositoriesHistorySize)], 30, false, false);
-            yield return (properties[nameof(AppSettings.HideTopRepositoriesFromRecentList)], false, isNotNullable, isISetting);
+            yield return (properties[nameof(AppSettings.HideTopRepositoriesFromRecentList)], false, isNotNullable, isNoISetting);
             yield return (properties[nameof(AppSettings.RecentReposComboMinWidth)], 0, false, false);
             yield return (properties[nameof(AppSettings.SerializedHotkeys)], null, true, false);
             yield return (properties[nameof(AppSettings.SortTopRepos)], false, false, false);
@@ -384,9 +384,9 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.BlameShowAuthorAvatar)], true, false, false);
             yield return (properties[nameof(AppSettings.AutomaticContinuousScroll)], false, false, false);
             yield return (properties[nameof(AppSettings.AutomaticContinuousScrollDelay)], 600, false, false);
-            yield return (properties[nameof(AppSettings.IsEditorSettingsMigrated)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.ShowProcessDialogPasswordInput)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.UninformativeRepoNameRegex)], "app|(repo(sitory)?)", isNotNullable, isISetting);
+            yield return (properties[nameof(AppSettings.IsEditorSettingsMigrated)], false, isNotNullable, isNoISetting);
+            yield return (properties[nameof(AppSettings.ShowProcessDialogPasswordInput)], false, isNotNullable, isNoISetting);
+            yield return (properties[nameof(AppSettings.UninformativeRepoNameRegex)], "app|(repo(sitory)?)", isNotNullable, isNoISetting);
         }
 
         static IEnumerable<object> Values()

@@ -1,5 +1,7 @@
 ﻿namespace GitCommands.UserRepositoryHistory.Legacy;
 
+#pragma warning disable CS0618
+
 /// <summary>
 /// Provides the ability to persist and retrieve collections of user's git repositories.
 /// </summary>

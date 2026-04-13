@@ -1,4 +1,4 @@
-﻿using System.Drawing.Drawing2D;
+using System.Drawing.Drawing2D;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -295,7 +295,7 @@ internal static class GraphRenderer
         if (current.DrawFromStart)
         {
             DiagonalSegmentInfo previous = previousSegmentInfo.Value;
-            DebugHelpers.Assert(previous.DrawToEnd || AppSettings.MergeGraphLanesHavingCommonParent.Value, nameof(previous.DrawToEnd));
+            DebugHelpers.Assert(previous.DrawToEnd || AppSettings.MergeGraphLanesHavingCommonParent, nameof(previous.DrawToEnd));
             int startX = p.Start.X + previous.HorizontalOffset;
             if (previous.DrawCenterToEndPerpendicularly)
             {
@@ -331,7 +331,7 @@ internal static class GraphRenderer
         if (current.DrawToEnd)
         {
             DiagonalSegmentInfo next = nextSegmentInfo.Value;
-            DebugHelpers.Assert(next.DrawFromStart || AppSettings.MergeGraphLanesHavingCommonParent.Value, nameof(next.DrawFromStart));
+            DebugHelpers.Assert(next.DrawFromStart || AppSettings.MergeGraphLanesHavingCommonParent, nameof(next.DrawFromStart));
             int endX = p.End.X + next.HorizontalOffset;
             if (next.DrawCenterToStartPerpendicularly)
             {

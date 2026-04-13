@@ -4,6 +4,8 @@ using ResourceManager;
 
 namespace GitUI.Help;
 
+#pragma warning disable CS0618
+
 public partial class HelpImageDisplayUserControl : GitExtensionsControl
 {
     private Image? _image1;

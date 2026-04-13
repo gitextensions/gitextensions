@@ -362,7 +362,7 @@ public partial class CommitInfo : GitModuleControl
         {
             cancellationToken.ThrowIfCancellationRequested();
 
-            if (_revision.Body is null || (_revision.Notes is null && (AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes)))
+            if (_revision.Body is null || (_revision.Notes is null && (AppSettings.ShowGitNotesColumn || AppSettings.ShowGitNotes)))
             {
                 _commitDataManager.UpdateBodyAndNotes(_revision);
             }

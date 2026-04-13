@@ -427,8 +427,8 @@ public class DiffLineNumAnalyzerTests
         string text = _sampleDifftastic;
         EnvironmentAbstraction env = new();
         env.SetEnvironmentVariable("DFT_WIDTH", "200"); // Matching the value when getting the sample
-        bool theme = AppSettings.ReverseGitColoring.Value;
-        AppSettings.ReverseGitColoring.Value = false;
+        bool theme = AppSettings.ReverseGitColoring;
+        AppSettings.ReverseGitColoring = false;
 
         _ = new DifftasticHighlightService(ref text, _diffViewerLineNumber, out int vrulerpos);
         _textEditor.Text = text;
@@ -466,7 +466,7 @@ public class DiffLineNumAnalyzerTests
         result.DiffLines[56].RightLineNumber.Should().Be(342);
         result.DiffLines[56].LineType.Should().Be(DiffLineType.PlusRight);
 
-        AppSettings.ReverseGitColoring.Value = theme;
+        AppSettings.ReverseGitColoring = theme;
     }
 
     private static void GenericResultCheck(DiffLinesInfo result, bool allowNotApplicable = true)

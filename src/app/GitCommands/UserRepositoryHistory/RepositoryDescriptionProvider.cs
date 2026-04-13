@@ -34,7 +34,7 @@ public sealed class RepositoryDescriptionProvider : IRepositoryDescriptionProvid
     private const string _repositoryDescriptionFileName = "description";
     private const string _defaultDescription = "Unnamed repository; edit this file 'description' to name the repository.";
 
-    private readonly Regex _uninformativeNameRegex = new($"^({AppSettings.UninformativeRepoNameRegex.Value})$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
+    private readonly Regex _uninformativeNameRegex = new($"^({AppSettings.UninformativeRepoNameRegex})$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture);
 
     private readonly IGitDirectoryResolver _gitDirectoryResolver;
 

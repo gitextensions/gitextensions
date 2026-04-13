@@ -12,13 +12,13 @@ public class RevisionGraphTests
     [SetUp]
     public void Setup()
     {
-        AppSettings.MergeGraphLanesHavingCommonParent.Value = false;
-        AppSettings.StraightenGraphDiagonals.Value = false;
+        AppSettings.MergeGraphLanesHavingCommonParent = false;
+        AppSettings.StraightenGraphDiagonals = false;
     }
 
     private void Setup(bool mergeGraphLanesHavingCommonParent, bool finishLoading = false, IEnumerable<GitRevision>? revisions = null)
     {
-        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.MergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
 
         _revisionGraph = new RevisionGraph();
 
@@ -185,7 +185,7 @@ public class RevisionGraphTests
     [Test]
     public async Task SegmentsAreStraightened([Values] bool mergeGraphLanesHavingCommonParent)
     {
-        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.MergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
 
         RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:4  6:5  7:5,6  8:7,2 ");
 
@@ -195,7 +195,7 @@ public class RevisionGraphTests
     [Test]
     public async Task SegmentsWithCommitsAreStraightened([Values] bool mergeGraphLanesHavingCommonParent)
     {
-        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.MergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
 
         RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2  6:5  7:4  8:4,7  9:8,6 ");
 
@@ -205,7 +205,7 @@ public class RevisionGraphTests
     [Test]
     public async Task SegmentsWithOutgoingSecondaryMergesAreNotStraightened([Values] bool mergeGraphLanesHavingCommonParent)
     {
-        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.MergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
 
         RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2  6:4,5  7:6  8:6,7  9:8,5 ");
 
@@ -215,7 +215,7 @@ public class RevisionGraphTests
     [Test]
     public async Task SegmentsWithIncomingMergesAreStraightened([Values] bool mergeGraphLanesHavingCommonParent)
     {
-        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.MergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
 
         RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1,3  5:2,4  6:4  7:4,6  8:7,5 ");
 
@@ -225,7 +225,7 @@ public class RevisionGraphTests
     [Test]
     public async Task SegmentsAreStraightenedAlthoughThisCausesWidthIncrease([Values] bool mergeGraphLanesHavingCommonParent)
     {
-        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.MergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
 
         RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  4:1  5:1,4  6:2  7:2,6  8:5  9:5,8,3,7 ");
 
@@ -235,7 +235,7 @@ public class RevisionGraphTests
     [Test]
     public async Task SegmentsWithOutgoingPrimaryMergesAreStraightened([Values] bool mergeGraphLanesHavingCommonParent)
     {
-        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.MergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
 
         RevisionGraph revisionGraph = CreateGraph(" 1  2:1  3:1  6:1  7:1,6  8:3,2  9:7  10:7,9,8 ");
 
@@ -245,7 +245,7 @@ public class RevisionGraphTests
     [Test]
     public async Task SegmentsAreNotStraightenedIfThisCausesAShiftForPrimarySegment([Values] bool mergeGraphLanesHavingCommonParent)
     {
-        AppSettings.MergeGraphLanesHavingCommonParent.Value = mergeGraphLanesHavingCommonParent;
+        AppSettings.MergeGraphLanesHavingCommonParent = mergeGraphLanesHavingCommonParent;
 
         RevisionGraph revisionGraph = CreateGraph(" 1  a:1  b:1  2:1  3:1  4:1  5:4,1  6:3  7:5,6  8:7,2,6  c:8  d:8  e:8  9:8,e,d,c,b,a ");
 
@@ -260,7 +260,7 @@ public class RevisionGraphTests
     [Test]
     public async Task SegmentsAreNotStraightenedOverMultiLaneCrossings()
     {
-        AppSettings.MergeGraphLanesHavingCommonParent.Value = true;
+        AppSettings.MergeGraphLanesHavingCommonParent = true;
 
         RevisionGraph revisionGraph = CreateGraphTopDown(graphWithMultiLaneCrossings);
 
@@ -280,7 +280,7 @@ public class RevisionGraphTests
     [Test]
     public async Task SegmentsAreNotStraightenedOverMultiLaneCrossings_NoMergeGraphLanesHavingCommonParent_StraightenGraphDiagonals()
     {
-        AppSettings.StraightenGraphDiagonals.Value = true;
+        AppSettings.StraightenGraphDiagonals = true;
 
         RevisionGraph revisionGraph = CreateGraphTopDown(graphWithMultiLaneCrossings);
 
@@ -294,7 +294,7 @@ public class RevisionGraphTests
     [TestCase("R 8:R 7:R 6:R 5:R 4:R 3:R,8,7,6,5 2:3 1:2 0:1,4")]
     public async Task TurnMultiLaneCrossingsIntoDiagonals(string commitSpecs)
     {
-        AppSettings.StraightenGraphDiagonals.Value = true;
+        AppSettings.StraightenGraphDiagonals = true;
 
         RevisionGraph revisionGraph = CreateGraph(commitSpecs);
 
@@ -308,7 +308,7 @@ public class RevisionGraphTests
     [TestCase(4, "0:4 1:3,2 2:6 3:8,B 4:5 5:A,6 6:7 7:8 8:C,R 9:A A:B,R B:R C:R R")]
     public async Task UnfoldOneLaneShiftsToDiagonals(int testCaseIndex, string commitSpecs)
     {
-        AppSettings.StraightenGraphDiagonals.Value = true;
+        AppSettings.StraightenGraphDiagonals = true;
 
         await VerifyGraphLayoutAsync(commitSpecs, testCaseIndex);
     }
@@ -326,7 +326,7 @@ public class RevisionGraphTests
     [TestCase(5, "0:5,1,2,3,4 1:5 2:5 3:6 4:8 5:R 6:7 7:8,B 8:9 9:R,A A:R,C B:R C:R R")]
     public async Task DoNotUnfoldOneLaneShiftFollowedByDiagonal(int testCaseIndex, string commitSpecs)
     {
-        AppSettings.StraightenGraphDiagonals.Value = true;
+        AppSettings.StraightenGraphDiagonals = true;
 
         await VerifyGraphLayoutAsync(commitSpecs, testCaseIndex);
     }
@@ -338,7 +338,7 @@ public class RevisionGraphTests
     [TestCase(4, "0:R,3 1:2 2:8,7 3:4,5,6 4:R 5:R 6:R 7:8 8:R R")]
     public async Task JoinMultiLaneCrossings(int testCaseIndex, string commitSpecs)
     {
-        AppSettings.StraightenGraphDiagonals.Value = true;
+        AppSettings.StraightenGraphDiagonals = true;
 
         await VerifyGraphLayoutAsync(commitSpecs, testCaseIndex);
     }
@@ -348,7 +348,7 @@ public class RevisionGraphTests
     [TestCase(2, "0:1,4,R 1:2,R 2:3,R 3:R 4:R R")]
     public async Task DoNotJoinMultiLaneCrossings(int testCaseIndex, string commitSpecs)
     {
-        AppSettings.StraightenGraphDiagonals.Value = true;
+        AppSettings.StraightenGraphDiagonals = true;
 
         await VerifyGraphLayoutAsync(commitSpecs, testCaseIndex);
     }

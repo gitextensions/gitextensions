@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 
 namespace GitUI;
@@ -107,9 +107,9 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
     {
         base.OnShown(e);
 
-        txtOptions.Text = AppSettings.GitGrepUserArguments.Value;
-        chkMatchCase.Checked = !AppSettings.GitGrepIgnoreCase.Value;
-        chkMatchWholeWord.Checked = AppSettings.GitGrepMatchWholeWord.Value;
+        txtOptions.Text = AppSettings.GitGrepUserArguments;
+        chkMatchCase.Checked = !AppSettings.GitGrepIgnoreCase;
+        chkMatchWholeWord.Checked = AppSettings.GitGrepMatchWholeWord;
         cboFindInCommitFilesGitGrep.Focus();
         _hasLoaded = true;
     }
@@ -124,17 +124,17 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
 
     private void chkMatchCase_CheckedChanged(object sender, EventArgs e)
     {
-        AppSettings.GitGrepIgnoreCase.Value = !chkMatchCase.Checked;
+        AppSettings.GitGrepIgnoreCase = !chkMatchCase.Checked;
     }
 
     private void chkMatchWholeWord_CheckedChanged(object sender, EventArgs e)
     {
-        AppSettings.GitGrepMatchWholeWord.Value = chkMatchWholeWord.Checked;
+        AppSettings.GitGrepMatchWholeWord = chkMatchWholeWord.Checked;
     }
 
     private void chkShowSearchBox_CheckedChanged(object sender, EventArgs e)
     {
-        AppSettings.ShowFindInCommitFilesGitGrep.Value = chkShowSearchBox.Checked;
+        AppSettings.ShowFindInCommitFilesGitGrep = chkShowSearchBox.Checked;
         if (!_hasLoaded)
         {
             return;
@@ -145,6 +145,6 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
 
     private void txtOptions_TextChanged(object sender, EventArgs e)
     {
-        AppSettings.GitGrepUserArguments.Value = txtOptions.Text;
+        AppSettings.GitGrepUserArguments = txtOptions.Text;
     }
 }

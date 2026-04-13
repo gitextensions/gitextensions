@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using System.Text;
@@ -1287,7 +1287,7 @@ public sealed class GitUICommands : IGitUICommands
 
     public void StartFileHistoryDialog(IWin32Window? owner, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
     {
-        string arguments = AppSettings.UseBrowseForFileHistory.Value ? $"browse {PathFilterArg}={fileName.Quote()} -commit={revision?.ObjectId}"
+        string arguments = AppSettings.UseBrowseForFileHistory ? $"browse {PathFilterArg}={fileName.Quote()} -commit={revision?.ObjectId}"
             : $"{(showBlame ? BlameHistoryCommand : FileHistoryCommand)} {fileName.Quote()} {revision?.ObjectId} {(filterByRevision ? FilterByRevisionArg : string.Empty)}";
         Launch(arguments, Module.WorkingDir);
     }
@@ -1880,7 +1880,7 @@ public sealed class GitUICommands : IGitUICommands
         }
 
         // Similar to StartFileHistoryDialog()
-        if (AppSettings.UseBrowseForFileHistory.Value)
+        if (AppSettings.UseBrowseForFileHistory)
         {
             // NOTE: fileHistoryFileName doesn't need to be quoted, as it the filter will get quoted
             // when the filter gets set.

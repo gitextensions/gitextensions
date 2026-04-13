@@ -1,4 +1,4 @@
-﻿using System.Text.RegularExpressions;
+using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtUtils.GitUI.Theming;
@@ -15,7 +15,7 @@ public partial class DiffLineNumAnalyzer
     public static DiffLinesInfo Analyze(string text, IReadOnlyList<TextMarker> allTextMarkers, bool isCombinedDiff, bool isGitWordDiff = false)
     {
         DiffLinesInfo ret = new();
-        bool reverseGitColoring = AppSettings.ReverseGitColoring.Value;
+        bool reverseGitColoring = AppSettings.ReverseGitColoring;
         int lineNumInDiff = 0;
         int leftLineNum = DiffLineInfo.NotApplicableLineNum;
         int rightLineNum = DiffLineInfo.NotApplicableLineNum;

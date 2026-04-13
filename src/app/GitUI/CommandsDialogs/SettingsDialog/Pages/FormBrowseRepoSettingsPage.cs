@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitUI.Hotkey;
@@ -50,43 +50,43 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
 
     protected override void PageToSettings()
     {
-        AppSettings.ShowConEmuTab.Value = chkShowConsoleTab.Checked;
-        AppSettings.UseBrowseForFileHistory.Value = chkUseBrowseForFileHistory.Checked;
-        AppSettings.UseDiffViewerForBlame.Value = chkUseDiffViewerForBlame.Checked;
-        AppSettings.ShowGpgInformation.Value = chkShowGpgInformation.Checked;
-        AppSettings.ShowFindInCommitFilesGitGrep.Value = chkShowFindInCommitFilesGitGrep.Checked;
-        AppSettings.ShowRevisionGridTooltips.Value = chkShowRevisionGridTooltip.Checked;
+        AppSettings.ShowConEmuTab = chkShowConsoleTab.Checked;
+        AppSettings.UseBrowseForFileHistory = chkUseBrowseForFileHistory.Checked;
+        AppSettings.UseDiffViewerForBlame = chkUseDiffViewerForBlame.Checked;
+        AppSettings.ShowGpgInformation = chkShowGpgInformation.Checked;
+        AppSettings.ShowFindInCommitFilesGitGrep = chkShowFindInCommitFilesGitGrep.Checked;
+        AppSettings.ShowRevisionGridTooltips = chkShowRevisionGridTooltip.Checked;
 
         int outputHistoryDepth = (int)_NO_TRANSLATE_OutputHistoryDepth.Value;
-        bool changed = AppSettings.ShowOutputHistoryAsTab.Value != chkShowOutputHistoryAsTab.Checked || AppSettings.OutputHistoryDepth.Value != outputHistoryDepth;
+        bool changed = AppSettings.ShowOutputHistoryAsTab != chkShowOutputHistoryAsTab.Checked || AppSettings.OutputHistoryDepth != outputHistoryDepth;
         if (changed)
         {
-            AppSettings.ShowOutputHistoryAsTab.Value = chkShowOutputHistoryAsTab.Checked;
-            AppSettings.OutputHistoryDepth.Value = outputHistoryDepth;
-            AppSettings.OutputHistoryPanelVisible.Value = !chkShowOutputHistoryAsTab.Checked && outputHistoryDepth > 0;
+            AppSettings.ShowOutputHistoryAsTab = chkShowOutputHistoryAsTab.Checked;
+            AppSettings.OutputHistoryDepth = outputHistoryDepth;
+            AppSettings.OutputHistoryPanelVisible = !chkShowOutputHistoryAsTab.Checked && outputHistoryDepth > 0;
         }
 
-        AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem!).Name.ToLowerInvariant();
+        AppSettings.ConEmuTerminal = ((IShellDescriptor)cboTerminal.SelectedItem!).Name.ToLowerInvariant();
 
         base.PageToSettings();
     }
 
     protected override void SettingsToPage()
     {
-        chkShowConsoleTab.Checked = AppSettings.ShowConEmuTab.Value;
-        chkUseBrowseForFileHistory.Checked = AppSettings.UseBrowseForFileHistory.Value;
-        chkUseDiffViewerForBlame.Checked = AppSettings.UseDiffViewerForBlame.Value;
-        chkShowGpgInformation.Checked = AppSettings.ShowGpgInformation.Value;
-        chkShowFindInCommitFilesGitGrep.Checked = AppSettings.ShowFindInCommitFilesGitGrep.Value;
-        chkShowRevisionGridTooltip.Checked = AppSettings.ShowRevisionGridTooltips.Value;
-        chkShowOutputHistoryAsTab.Checked = AppSettings.ShowOutputHistoryAsTab.Value;
-        _NO_TRANSLATE_OutputHistoryDepth.Value = Math.Clamp(AppSettings.OutputHistoryDepth.Value, _NO_TRANSLATE_OutputHistoryDepth.Minimum, _NO_TRANSLATE_OutputHistoryDepth.Maximum);
+        chkShowConsoleTab.Checked = AppSettings.ShowConEmuTab;
+        chkUseBrowseForFileHistory.Checked = AppSettings.UseBrowseForFileHistory;
+        chkUseDiffViewerForBlame.Checked = AppSettings.UseDiffViewerForBlame;
+        chkShowGpgInformation.Checked = AppSettings.ShowGpgInformation;
+        chkShowFindInCommitFilesGitGrep.Checked = AppSettings.ShowFindInCommitFilesGitGrep;
+        chkShowRevisionGridTooltip.Checked = AppSettings.ShowRevisionGridTooltips;
+        chkShowOutputHistoryAsTab.Checked = AppSettings.ShowOutputHistoryAsTab;
+        _NO_TRANSLATE_OutputHistoryDepth.Value = Math.Clamp(AppSettings.OutputHistoryDepth, _NO_TRANSLATE_OutputHistoryDepth.Minimum, _NO_TRANSLATE_OutputHistoryDepth.Maximum);
 
         foreach (IShellDescriptor shell in _shellProvider.GetShells())
         {
             cboTerminal.Items.Add(shell);
 
-            if (string.Equals(shell.Name, AppSettings.ConEmuTerminal.Value, StringComparison.InvariantCultureIgnoreCase))
+            if (string.Equals(shell.Name, AppSettings.ConEmuTerminal, StringComparison.InvariantCultureIgnoreCase))
             {
                 cboTerminal.SelectedItem = shell;
             }

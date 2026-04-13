@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility.Settings;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -25,7 +25,7 @@ public partial class ConfirmationsSettingsPage : SettingsPageWithHeader
         chkPushNewBranch.Checked = !AppSettings.DontConfirmPushNewBranch;
         chkAddTrackingRef.Checked = !AppSettings.DontConfirmAddTrackingRef;
         chkBranchDeleteUnmerged.Checked = !AppSettings.DontConfirmDeleteUnmergedBranch;
-        chkBranchCheckoutConfirmation.Checked = AppSettings.ConfirmBranchCheckout.Value;
+        chkBranchCheckoutConfirmation.Checked = AppSettings.ConfirmBranchCheckout;
 
         // Stashes:
         chkAutoPopStashAfterPull.CheckState = ToCheckboxStateInverted(AppSettings.AutoPopStashAfterPull);
@@ -59,7 +59,7 @@ public partial class ConfirmationsSettingsPage : SettingsPageWithHeader
         AppSettings.DontConfirmPushNewBranch = !chkPushNewBranch.Checked;
         AppSettings.DontConfirmAddTrackingRef = !chkAddTrackingRef.Checked;
         AppSettings.DontConfirmDeleteUnmergedBranch = !chkBranchDeleteUnmerged.Checked;
-        AppSettings.ConfirmBranchCheckout.Value = chkBranchCheckoutConfirmation.Checked;
+        AppSettings.ConfirmBranchCheckout = chkBranchCheckoutConfirmation.Checked;
 
         // Stashes:
         AppSettings.AutoPopStashAfterPull = ToBooleanInverted(chkAutoPopStashAfterPull.CheckState);

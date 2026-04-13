@@ -4,6 +4,9 @@ using NSubstitute;
 using Current = GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory.Legacy;
+
+#pragma warning disable CS0618
+
 public class RepositoryStorageTests
 {
     private Current.IRepositorySerialiser<RepositoryCategory> _repositoryCategorySerialiser = null!;

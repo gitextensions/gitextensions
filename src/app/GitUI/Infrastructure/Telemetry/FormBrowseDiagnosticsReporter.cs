@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitUI.CommandsDialogs;
 
 namespace GitUI.Infrastructure.Telemetry;
@@ -29,7 +29,7 @@ internal class FormBrowseDiagnosticsReporter
 
                 // commit info panel
                 { nameof(AppSettings.ShowAuthorAvatarInCommitInfo).FormatKey(), AppSettings.ShowAuthorAvatarInCommitInfo.ToString() },
-                { nameof(AppSettings.ShowGpgInformation).FormatKey(), AppSettings.ShowGpgInformation.Value.ToString() },
+                { nameof(AppSettings.ShowGpgInformation).FormatKey(), AppSettings.ShowGpgInformation.ToString() },
 
                 // other
                 { nameof(AppSettings.ShowAheadBehindData).FormatKey(), AppSettings.ShowAheadBehindData.ToString() },

@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -40,7 +40,7 @@ public partial class FormStatus : GitExtensionsDialog
         pnlOutput.Controls.Add(ConsoleOutput);
         ConsoleOutput.Dock = DockStyle.Fill;
 
-        ShowPassword.Checked = AppSettings.ShowProcessDialogPasswordInput.Value;
+        ShowPassword.Checked = AppSettings.ShowProcessDialogPasswordInput;
 
         if (_useDialogSettings)
         {
@@ -302,7 +302,7 @@ public partial class FormStatus : GitExtensionsDialog
 
     private void ShowPassword_CheckedChanged(object sender, EventArgs e)
     {
-        AppSettings.ShowProcessDialogPasswordInput.Value = ShowPassword.CheckState == CheckState.Checked;
+        AppSettings.ShowProcessDialogPasswordInput = ShowPassword.CheckState == CheckState.Checked;
         PasswordInput.Visible = ShowPassword.CheckState != CheckState.Unchecked;
     }
 

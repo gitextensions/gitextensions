@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace GitCommands.Settings;
+﻿namespace GitCommands.Settings;
 
 /// <summary>
 ///  Represents a setting which has to be explicitly saved, if changed at runtime.
@@ -8,6 +6,11 @@ namespace GitCommands.Settings;
 /// <typeparam name="T">The type of setting.</typeparam>
 public interface IRuntimeSetting<T> : ISetting<T>, IRuntimeSetting
 {
+    /// <summary>
+    ///  The current in-memory value.
+    /// </summary>
+    T? Value { get; set; }
+
     /// <summary>
     ///  Optionally calls <cref>Reload</cref> and returns the current value.
     /// </summary>
@@ -38,8 +41,6 @@ public class RuntimeSetting<T> : IRuntimeSetting<T>
     public T Default => _persistentSetting.Default!;
 
     public string FullPath => _persistentSetting.FullPath;
-
-    public bool IsUnset => _persistentSetting.IsUnset;
 
     public string Name => _persistentSetting.Name;
 
@@ -77,7 +78,7 @@ public class RuntimeSetting<T> : IRuntimeSetting<T>
 
     public void Reload()
     {
-        Value = _persistentSetting.Value;
+        Value = Setting.GetRawValue(_persistentSetting);
         _loaded = true;
     }
 
@@ -85,7 +86,7 @@ public class RuntimeSetting<T> : IRuntimeSetting<T>
 
     public void Save()
     {
-        _persistentSetting.Value = Value;
+        Setting.SetValue(_persistentSetting, Value);
     }
 
     /// <summary>

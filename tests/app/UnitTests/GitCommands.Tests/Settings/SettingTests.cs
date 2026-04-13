@@ -52,8 +52,8 @@ internal sealed class SettingTests
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().Be(settingDefault);
-        setting.Value.Should().Be(settingDefault);
-        setting.IsUnset.Should().BeTrue();
+        Setting.GetRawValue(setting).Should().Be(settingDefault);
+        Setting.IsUnset(setting).Should().BeTrue();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
@@ -74,7 +74,7 @@ internal sealed class SettingTests
         {
             ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
-            setting.Value = value;
+            Setting.SetValue(setting, value);
 
             AppSettings.SaveSettings();
         });
@@ -90,77 +90,11 @@ internal sealed class SettingTests
         {
             ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
         storedValue.Should().Be(value);
-    }
-
-    [Test]
-    [TestCaseSource(nameof(SaveCases))]
-    public void Should_trigger_updated_event_for_setting<T>(T settingDefault, T value)
-        where T : struct
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(settingDefault);
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeTrue();
-    }
-
-    [Test]
-    [TestCaseSource(nameof(SaveCases))]
-    public void Should_not_trigger_updated_event_for_setting<T>(T settingDefault, T value)
-        where T : struct
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(settingDefault);
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeFalse();
     }
 
     [Test]
@@ -180,7 +114,7 @@ internal sealed class SettingTests
         {
             ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -204,7 +138,7 @@ internal sealed class SettingTests
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
-            setting.Value = Guid.NewGuid().ToString();
+            Setting.SetValue(setting, Guid.NewGuid().ToString());
 
             AppSettings.SaveSettings();
         });
@@ -220,7 +154,7 @@ internal sealed class SettingTests
         {
             ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -248,8 +182,8 @@ internal sealed class SettingTests
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().Be(settingDefault ?? string.Empty);
-        setting.Value.Should().Be(settingDefault ?? string.Empty);
-        setting.IsUnset.Should().BeTrue();
+        Setting.GetRawValue(setting).Should().Be(settingDefault ?? string.Empty);
+        Setting.IsUnset(setting).Should().BeTrue();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
@@ -268,7 +202,7 @@ internal sealed class SettingTests
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
-            setting.Value = value;
+            Setting.SetValue(setting, value);
 
             AppSettings.SaveSettings();
         });
@@ -284,75 +218,11 @@ internal sealed class SettingTests
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
         storedValue.Should().Be(value ?? string.Empty);
-    }
-
-    [Test]
-    [TestCaseSource(nameof(SaveStringCases))]
-    public void Should_trigger_updated_event_for_string_setting(string settingDefault, string value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(settingDefault ?? string.Empty);
-        setting.Value.Should().Be(value ?? string.Empty);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeTrue();
-    }
-
-    [Test]
-    [TestCaseSource(nameof(SaveStringCases))]
-    public void Should_not_trigger_updated_event_for_string_setting(string settingDefault, string value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(settingDefault ?? string.Empty);
-        setting.Value.Should().Be(value ?? string.Empty);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeFalse();
     }
 
     #endregion String Setting
@@ -375,8 +245,8 @@ internal sealed class SettingTests
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().BeNull();
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().BeNull();
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
@@ -394,83 +264,16 @@ internal sealed class SettingTests
         // Act
         ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
 
-        setting.Value = value;
+        Setting.SetValue(setting, value);
 
         // Assert
         setting.Should().NotBeNull();
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().Be(value);
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
-    [TestCase(false)]
-    [TestCase(true)]
-    public void Should_trigger_updated_event_for_nullable_bool_setting(bool? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeTrue();
-    }
-
-    [Test]
-    [TestCase(null)]
-    [TestCase(false)]
-    [TestCase(true)]
-    public void Should_not_trigger_updated_event_for_nullable_bool_setting(bool? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeFalse();
     }
 
     [Test]
@@ -488,7 +291,7 @@ internal sealed class SettingTests
         {
             ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -510,7 +313,7 @@ internal sealed class SettingTests
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
-            setting.Value = Guid.NewGuid().ToString();
+            Setting.SetValue(setting, Guid.NewGuid().ToString());
 
             AppSettings.SaveSettings();
         });
@@ -526,7 +329,7 @@ internal sealed class SettingTests
         {
             ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -553,8 +356,8 @@ internal sealed class SettingTests
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().BeNull();
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().BeNull();
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
@@ -572,83 +375,16 @@ internal sealed class SettingTests
         // Act
         ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
 
-        setting.Value = value;
+        Setting.SetValue(setting, value);
 
         // Assert
         setting.Should().NotBeNull();
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().Be(value);
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
-    [TestCase(char.MinValue)]
-    [TestCase(' ')]
-    public void Should_trigger_updated_event_for_nullable_char_setting(char? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeTrue();
-    }
-
-    [Test]
-    [TestCase(null)]
-    [TestCase(char.MinValue)]
-    [TestCase(' ')]
-    public void Should_not_trigger_updated_event_for_nullable_char_setting(char? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeFalse();
     }
 
     [Test]
@@ -666,7 +402,7 @@ internal sealed class SettingTests
         {
             ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -688,7 +424,7 @@ internal sealed class SettingTests
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
-            setting.Value = Guid.NewGuid().ToString();
+            Setting.SetValue(setting, Guid.NewGuid().ToString());
 
             AppSettings.SaveSettings();
         });
@@ -704,7 +440,7 @@ internal sealed class SettingTests
         {
             ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -731,8 +467,8 @@ internal sealed class SettingTests
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().BeNull();
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().BeNull();
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
@@ -751,85 +487,16 @@ internal sealed class SettingTests
         // Act
         ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
 
-        setting.Value = value;
+        Setting.SetValue(setting, value);
 
         // Assert
         setting.Should().NotBeNull();
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().Be(value);
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
-    [TestCase(byte.MinValue)]
-    [TestCase(byte.MaxValue)]
-    [TestCase(0)]
-    public void Should_trigger_updated_event_for_nullable_byte_setting(byte? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeTrue();
-    }
-
-    [Test]
-    [TestCase(null)]
-    [TestCase(byte.MinValue)]
-    [TestCase(byte.MaxValue)]
-    [TestCase(0)]
-    public void Should_not_trigger_updated_event_for_nullable_byte_setting(byte? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeFalse();
     }
 
     [Test]
@@ -847,7 +514,7 @@ internal sealed class SettingTests
         {
             ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -869,7 +536,7 @@ internal sealed class SettingTests
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
-            setting.Value = Guid.NewGuid().ToString();
+            Setting.SetValue(setting, Guid.NewGuid().ToString());
 
             AppSettings.SaveSettings();
         });
@@ -885,7 +552,7 @@ internal sealed class SettingTests
         {
             ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -912,8 +579,8 @@ internal sealed class SettingTests
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().BeNull();
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().BeNull();
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
@@ -932,85 +599,16 @@ internal sealed class SettingTests
         // Act
         ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
 
-        setting.Value = value;
+        Setting.SetValue(setting, value);
 
         // Assert
         setting.Should().NotBeNull();
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().Be(value);
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
-    [TestCase(int.MinValue)]
-    [TestCase(int.MaxValue)]
-    [TestCase(0)]
-    public void Should_trigger_updated_event_for_nullable_int_setting(int? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeTrue();
-    }
-
-    [Test]
-    [TestCase(null)]
-    [TestCase(int.MinValue)]
-    [TestCase(int.MaxValue)]
-    [TestCase(0)]
-    public void Should_not_trigger_updated_event_for_nullable_int_setting(int? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeFalse();
     }
 
     [Test]
@@ -1028,7 +626,7 @@ internal sealed class SettingTests
         {
             ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -1050,7 +648,7 @@ internal sealed class SettingTests
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
-            setting.Value = Guid.NewGuid().ToString();
+            Setting.SetValue(setting, Guid.NewGuid().ToString());
 
             AppSettings.SaveSettings();
         });
@@ -1066,7 +664,7 @@ internal sealed class SettingTests
         {
             ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -1093,8 +691,8 @@ internal sealed class SettingTests
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().BeNull();
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().BeNull();
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
@@ -1113,85 +711,16 @@ internal sealed class SettingTests
         // Act
         ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
 
-        setting.Value = value;
+        Setting.SetValue(setting, value);
 
         // Assert
         setting.Should().NotBeNull();
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().Be(value);
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
-    [TestCase(float.MinValue)]
-    [TestCase(float.MaxValue)]
-    [TestCase(0f)]
-    public void Should_trigger_updated_event_for_nullable_float_setting(float? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeTrue();
-    }
-
-    [Test]
-    [TestCase(null)]
-    [TestCase(float.MinValue)]
-    [TestCase(float.MaxValue)]
-    [TestCase(0f)]
-    public void Should_not_trigger_updated_event_for_nullable_float_setting(float? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeFalse();
     }
 
     [Test]
@@ -1209,7 +738,7 @@ internal sealed class SettingTests
         {
             ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -1231,7 +760,7 @@ internal sealed class SettingTests
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
-            setting.Value = Guid.NewGuid().ToString();
+            Setting.SetValue(setting, Guid.NewGuid().ToString());
 
             AppSettings.SaveSettings();
         });
@@ -1247,7 +776,7 @@ internal sealed class SettingTests
         {
             ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -1274,8 +803,8 @@ internal sealed class SettingTests
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().BeNull();
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().BeNull();
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
@@ -1293,15 +822,15 @@ internal sealed class SettingTests
         // Act
         ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
-        setting.Value = value;
+        Setting.SetValue(setting, value);
 
         // Assert
         setting.Should().NotBeNull();
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().Be(value);
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
@@ -1323,7 +852,7 @@ internal sealed class SettingTests
         {
             ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
-            setting.Value = value;
+            Setting.SetValue(setting, value);
 
             AppSettings.SaveSettings();
         });
@@ -1339,80 +868,13 @@ internal sealed class SettingTests
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         bool isNumber = int.TryParse(storedValue, out _);
 
         // Assert
         isNumber.Should().BeFalse();
-    }
-
-    [Test]
-    [TestCase(TestEnum.First)]
-    [TestCase(TestEnum.Second)]
-    public void Should_trigger_updated_event_for_nullable_enum_setting(TestEnum? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeTrue();
-    }
-
-    [Test]
-    [TestCase(null)]
-    [TestCase(TestEnum.First)]
-    [TestCase(TestEnum.Second)]
-    public void Should_not_trigger_updated_event_for_nullable_enum_setting(TestEnum? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeFalse();
     }
 
     [Test]
@@ -1430,7 +892,7 @@ internal sealed class SettingTests
         {
             ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -1452,7 +914,7 @@ internal sealed class SettingTests
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
-            setting.Value = Guid.NewGuid().ToString();
+            Setting.SetValue(setting, Guid.NewGuid().ToString());
 
             AppSettings.SaveSettings();
         });
@@ -1468,7 +930,7 @@ internal sealed class SettingTests
         {
             ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
-            storedValue = setting.Value;
+            storedValue = Setting.GetRawValue(setting);
         });
 
         // Assert
@@ -1501,8 +963,8 @@ internal sealed class SettingTests
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().BeNull();
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().BeNull();
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
@@ -1525,96 +987,16 @@ internal sealed class SettingTests
         // Act
         ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
 
-        setting.Value = value;
+        Setting.SetValue(setting, value);
 
         // Assert
         setting.Should().NotBeNull();
         setting.SettingsSource.Should().Be(settingsPath);
         setting.Name.Should().Be(settingName);
         setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(setting).Should().Be(value);
+        Setting.IsUnset(setting).Should().BeFalse();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
-    public void Should_trigger_updated_event_for_nullable_struct_setting()
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        TestStruct? value = new TestStruct
-        {
-            Bool = false,
-            Char = ' ',
-            Byte = 0,
-            Int = 0,
-            Float = 0f
-        };
-
-        bool updated = false;
-
-        // Act
-        ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeTrue();
-    }
-
-    [Test]
-    public void Should_not_trigger_updated_event_for_nullable_struct_setting()
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        TestStruct? value = new TestStruct
-        {
-            Bool = false,
-            Char = ' ',
-            Byte = 0,
-            Int = 0,
-            Float = 0f
-        };
-
-        bool updated = false;
-
-        // Act
-        ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        setting.Should().NotBeNull();
-        setting.SettingsSource.Should().Be(settingsPath);
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.IsUnset.Should().BeFalse();
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-        updated.Should().BeFalse();
     }
 
     public struct TestStruct

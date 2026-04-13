@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitUI.Models;
 using Timer = System.Windows.Forms.Timer;
 
@@ -72,8 +72,8 @@ internal partial class OutputHistoryPanelController : OutputHistoryControllerBas
             return false;
         }
 
-        bool show = !AppSettings.OutputHistoryPanelVisible.Value;
-        AppSettings.OutputHistoryPanelVisible.Value = show;
+        bool show = !AppSettings.OutputHistoryPanelVisible;
+        AppSettings.OutputHistoryPanelVisible = show;
         _verticalSplitContainer1.Panel2Collapsed = !show;
         if (show && !_verticalSplitContainer1.Visible)
         {

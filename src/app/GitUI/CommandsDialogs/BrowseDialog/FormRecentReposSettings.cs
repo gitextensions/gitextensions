@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -29,7 +29,7 @@ public partial class FormRecentReposSettings : GitExtensionsForm
     private void LoadSettings()
     {
         SetShorteningStrategy(AppSettings.ShorteningRecentRepoPathStrategy);
-        hideTopRepositoriesFromRecentList.Checked = AppSettings.HideTopRepositoriesFromRecentList.Value;
+        hideTopRepositoriesFromRecentList.Checked = AppSettings.HideTopRepositoriesFromRecentList;
         sortTopRepos.Checked = AppSettings.SortTopRepos;
         sortRecentRepos.Checked = AppSettings.SortRecentRepos;
         comboMinWidthEdit.Value = AppSettings.RecentReposComboMinWidth;
@@ -69,7 +69,7 @@ public partial class FormRecentReposSettings : GitExtensionsForm
         Validates.NotNull(_repositoryHistory);
 
         AppSettings.ShorteningRecentRepoPathStrategy = GetShorteningStrategy();
-        AppSettings.HideTopRepositoriesFromRecentList.Value = hideTopRepositoriesFromRecentList.Checked;
+        AppSettings.HideTopRepositoriesFromRecentList = hideTopRepositoriesFromRecentList.Checked;
         AppSettings.SortTopRepos = sortTopRepos.Checked;
         AppSettings.SortRecentRepos = sortRecentRepos.Checked;
         AppSettings.MaxTopRepositories = (int)_NO_TRANSLATE_maxRecentRepositories.Value;

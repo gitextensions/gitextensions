@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
@@ -33,7 +33,7 @@ public partial class DifftasticHighlightService : TextHighlightService
         int halfColumn = column / 2;
         bool nextIsHeader = true;
         bool debugPrinted = false;
-        bool reverseGitColoring = AppSettings.ReverseGitColoring.Value;
+        bool reverseGitColoring = AppSettings.ReverseGitColoring;
 
         foreach (string rawLine in text.LazySplit('\n'))
         {

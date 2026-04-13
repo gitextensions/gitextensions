@@ -19,7 +19,7 @@ public class FormFileHistoryTests
         _referenceRepository = new ReferenceRepository();
         _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
 
-        AppSettings.UseBrowseForFileHistory.Value = false;
+        AppSettings.UseBrowseForFileHistory = false;
     }
 
     [TearDown]

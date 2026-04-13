@@ -1106,8 +1106,8 @@ partial class FileStatusList
 
     private void ShowFindInCommitFilesGitGrep_Click(object sender, EventArgs e)
     {
-        AppSettings.ShowFindInCommitFilesGitGrep.Value = tsmiShowFindInCommitFilesGitGrep.Checked;
-        SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value);
+        AppSettings.ShowFindInCommitFilesGitGrep = tsmiShowFindInCommitFilesGitGrep.Checked;
+        SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
     }
 
     private void ShowInFileTree_Click(object sender, EventArgs e)
@@ -1259,7 +1259,7 @@ partial class FileStatusList
         tsmiShowInFileTree.Visible = !_isFileTreeMode && _openInFileTreeTab_AsBlame is not null && _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         tsmiFilterFileInGrid.Enabled = _filterFileInGrid is not null && _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
         tsmiFileHistory.Enabled = _revisionDiffController.ShouldShowMenuFileHistory(selectionInfo);
-        tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame.Value || _blame is null
+        tsmiBlame.Enabled = AppSettings.UseDiffViewerForBlame || _blame is null
             ? _revisionDiffController.ShouldShowMenuBlame(selectionInfo)
             : _revisionDiffController.ShouldShowMenuShowInFileTree(selectionInfo);
         if (!tsmiBlame.Enabled)

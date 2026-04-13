@@ -33,31 +33,31 @@ internal sealed class RuntimeSettingTests
         RuntimeSetting<Enum> runtimeSetting = new(persistentSetting);
 
         runtimeSetting.Value.Should().Be(Enum.HardCodedDefault);
-        runtimeSetting.IsUnset.Should().BeTrue();
+        Setting.IsUnset(persistentSetting).Should().BeTrue();
 
         runtimeSetting.Value = Enum.PersistentValue;
         runtimeSetting.Value.Should().Be(Enum.PersistentValue);
-        persistentSetting.Value.Should().Be(Enum.HardCodedDefault);
-        runtimeSetting.IsUnset.Should().BeTrue();
+        Setting.GetRawValue(persistentSetting).Should().Be(Enum.HardCodedDefault);
+        Setting.IsUnset(persistentSetting).Should().BeTrue();
 
         runtimeSetting.Save();
         runtimeSetting.Value.Should().Be(Enum.PersistentValue);
-        persistentSetting.Value.Should().Be(Enum.PersistentValue);
-        runtimeSetting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(persistentSetting).Should().Be(Enum.PersistentValue);
+        Setting.IsUnset(persistentSetting).Should().BeFalse();
 
         runtimeSetting.Value = Enum.RuntimeValue;
         runtimeSetting.Value.Should().Be(Enum.RuntimeValue);
-        persistentSetting.Value.Should().Be(Enum.PersistentValue);
-        runtimeSetting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(persistentSetting).Should().Be(Enum.PersistentValue);
+        Setting.IsUnset(persistentSetting).Should().BeFalse();
 
         runtimeSetting.Reload();
         runtimeSetting.Value.Should().Be(Enum.PersistentValue);
-        persistentSetting.Value.Should().Be(Enum.PersistentValue);
-        runtimeSetting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(persistentSetting).Should().Be(Enum.PersistentValue);
+        Setting.IsUnset(persistentSetting).Should().BeFalse();
 
         runtimeSetting.ResetToDefault();
         runtimeSetting.Value.Should().Be(Enum.HardCodedDefault);
-        persistentSetting.Value.Should().Be(Enum.PersistentValue);
-        runtimeSetting.IsUnset.Should().BeFalse();
+        Setting.GetRawValue(persistentSetting).Should().Be(Enum.PersistentValue);
+        Setting.IsUnset(persistentSetting).Should().BeFalse();
     }
 }

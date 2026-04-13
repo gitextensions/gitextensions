@@ -3,6 +3,9 @@ using GitCommands.UserRepositoryHistory;
 using NSubstitute;
 
 namespace GitCommandsTests.UserRepositoryHistory;
+
+#pragma warning disable CS0618
+
 public class RepositoryStorageTests
 {
     private IRepositorySerialiser<Repository> _repositorySerialiser = null!;

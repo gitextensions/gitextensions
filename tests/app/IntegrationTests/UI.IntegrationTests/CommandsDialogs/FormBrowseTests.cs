@@ -163,9 +163,9 @@ public class FormBrowseTests
         string revision2 = referenceRepository.CreateCommitRelative(fileRelativePath, fileName, $"Update '{fileName}' in directory '{fileRelativePath}'");
         string revision3 = referenceRepository.CreateCommitRelative(fileRelativePath, fileName, $"Update '{fileName}' in directory '{fileRelativePath}' again");
 
-        bool useBrowseForFileHistory = AppSettings.UseBrowseForFileHistory.Value;
+        bool useBrowseForFileHistory = AppSettings.UseBrowseForFileHistory;
 
-        AppSettings.UseBrowseForFileHistory.Value = true;
+        AppSettings.UseBrowseForFileHistory = true;
 
         UITest.RunForm(
             showForm: () => commands.GetTestAccessor().ShowFileHistoryDialog(Path.Combine(fileRelativePath, fileName)),
@@ -183,7 +183,7 @@ public class FormBrowseTests
                 }
                 finally
                 {
-                    AppSettings.UseBrowseForFileHistory.Value = useBrowseForFileHistory;
+                    AppSettings.UseBrowseForFileHistory = useBrowseForFileHistory;
                 }
             });
     }

@@ -6,6 +6,8 @@ using Microsoft;
 
 namespace GitUI.CommandsDialogs;
 
+#pragma warning disable CS0618
+
 /// <summary>
 /// Add MenuCommands as menus to the FormBrowse main menu.
 /// This class is intended to have NO dependency to FormBrowse

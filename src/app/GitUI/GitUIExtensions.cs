@@ -1,4 +1,4 @@
-﻿using System.Text;
+using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Git;
@@ -133,7 +133,7 @@ public static partial class GitUIExtensions
                 fileViewer.Encoding,
                 out string diffOfConflict,
                 useGitColoring: fileViewer.PatchUseGitColoring,
-                commandConfiguration: CombinedDiffHighlightService.GetGitCommandConfiguration(fileViewer.Module, AppSettings.UseGitColoring.Value),
+                commandConfiguration: CombinedDiffHighlightService.GetGitCommandConfiguration(fileViewer.Module, AppSettings.UseGitColoring),
                 cancellationToken);
 
             if (!result)

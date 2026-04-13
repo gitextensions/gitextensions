@@ -98,8 +98,8 @@ public sealed partial class FileStatusList : GitModuleControl
                 ? [relativePath.Value]
                 : SelectedItems.Select(fsi => fsi.Item.Name));
         tsmiFilterFileInGrid.Text = TranslatedStrings.FilterFileInGrid;
-        tsmiShowFindInCommitFilesGitGrep.Checked = AppSettings.ShowFindInCommitFilesGitGrep.Value;
-        SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value);
+        tsmiShowFindInCommitFilesGitGrep.Checked = AppSettings.ShowFindInCommitFilesGitGrep;
+        SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep);
 
         CreateTreeContextMenuItems();
         _NO_TRANSLATE_openSubmoduleMenuItem = CreateOpenSubmoduleMenuItem();
@@ -312,7 +312,7 @@ public sealed partial class FileStatusList : GitModuleControl
         {
             if (CanUseFindInCommitFilesGitGrep && Visible)
             {
-                BeginInvoke(() => SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep.Value));
+                BeginInvoke(() => SetFindInCommitFilesGitGrepVisibility(AppSettings.ShowFindInCommitFilesGitGrep));
             }
         }
     }
@@ -332,7 +332,7 @@ public sealed partial class FileStatusList : GitModuleControl
         {
             Toolbar.Visible = false;
             lblSplitter.Height = DpiUtil.Scale(1);
-            SetFindInCommitFilesGitGrepVisibilityImpl(AppSettings.ShowFindInCommitFilesGitGrep.Value);
+            SetFindInCommitFilesGitGrepVisibilityImpl(AppSettings.ShowFindInCommitFilesGitGrep);
             _diffCalculator.SetGrep("", fileTreeMode: true);
             GroupByRevision = false;
             FileStatusListView.ShowRootLines = true;
@@ -1244,8 +1244,8 @@ public sealed partial class FileStatusList : GitModuleControl
         bool filesPresent = items.Any(x => x.Statuses.Count > 0);
         bool hasGrepGroup = gitGrepState != GitGrepState.None && (gitGrepState != GitGrepState.Unknown || items.Any(FileStatusDiffCalculator.IsGrepItemStatuses));
         bool showGroupLabel = (filesPresent && (items.Count > 1 || groupByRevision)) || hasGrepGroup;
-        bool mergeSingleItemsWithFolder = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
-        bool showGroupNodes = !flatList || AppSettings.FileStatusShowGroupNodesInFlatList.Value;
+        bool mergeSingleItemsWithFolder = AppSettings.FileStatusMergeSingleItemWithFolder;
+        bool showGroupNodes = !flatList || AppSettings.FileStatusShowGroupNodesInFlatList;
 
         foreach (FileStatusWithDescription i in items)
         {

@@ -35,7 +35,7 @@ public sealed class RunCommandTests
 
         AppSettings.UseConsoleEmulatorForCommands = false;
         AppSettings.CloseProcessDialog = true;
-        AppSettings.UseBrowseForFileHistory.Value = false;
+        AppSettings.UseBrowseForFileHistory = false;
 
         _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
     }

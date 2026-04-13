@@ -18,7 +18,7 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
     protected override void SettingsToPage()
     {
         // Bind settings with controls
-        AddSettingBinding(AppSettings.ConEmuStyle, _NO_TRANSLATE_cboStyle);
+        AddSettingBinding(AppSettings.ConEmuStyleSetting, _NO_TRANSLATE_cboStyle);
         SetCurrentConsoleFont(AppSettings.ConEmuConsoleFont);
 
         base.SettingsToPage();

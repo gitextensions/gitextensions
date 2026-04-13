@@ -6,6 +6,8 @@ using GitUIPluginInterfaces;
 
 namespace GitUI;
 
+#pragma warning disable CS0618
+
 partial class FileStatusList
 {
     private readonly Image _treeImage = Images.FileTree;
@@ -89,7 +91,7 @@ partial class FileStatusList
 
     private void DenseTree_Click(object sender, EventArgs e)
     {
-        AppSettings.FileStatusMergeSingleItemWithFolder.Value = tsmiDenseTree.Checked;
+        AppSettings.FileStatusMergeSingleItemWithFolder = tsmiDenseTree.Checked;
         UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
     }
 
@@ -118,7 +120,7 @@ partial class FileStatusList
         bool setVisible = sender != btnFindInFilesGitGrep || !isVisible;
 
         bool inputBoxVisible = setVisible && usingInputBox;
-        AppSettings.ShowFindInCommitFilesGitGrep.Value = inputBoxVisible;
+        AppSettings.ShowFindInCommitFilesGitGrep = inputBoxVisible;
         SetFindInCommitFilesGitGrepVisibility(inputBoxVisible);
         if (!inputBoxVisible)
         {
@@ -137,19 +139,19 @@ partial class FileStatusList
 
     private void FindUsingMatchCase_Click(object sender, EventArgs e)
     {
-        AppSettings.GitGrepIgnoreCase.Value = !tsmiFindUsingMatchCase.Checked;
+        AppSettings.GitGrepIgnoreCase = !tsmiFindUsingMatchCase.Checked;
         FindInCommitFilesGitGrep();
     }
 
     private void FindUsingWholeWord_Click(object sender, EventArgs e)
     {
-        AppSettings.GitGrepMatchWholeWord.Value = tsmiFindUsingWholeWord.Checked;
+        AppSettings.GitGrepMatchWholeWord = tsmiFindUsingWholeWord.Checked;
         FindInCommitFilesGitGrep();
     }
 
     private void FindUsingOption_Click(object sender, EventArgs e)
     {
-        AppSettings.GitGrepUserArguments.Value = ((ToolStripMenuItem)sender).Text;
+        AppSettings.GitGrepUserArguments = ((ToolStripMenuItem)sender).Text ?? "";
         FindInCommitFilesGitGrep();
     }
 
@@ -157,7 +159,7 @@ partial class FileStatusList
     {
         if (sender is ToolStripMenuItem item)
         {
-            AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value = Array.IndexOf(FindUsingMenuItems, item);
+            AppSettings.FileStatusFindInFilesGitGrepTypeIndex = Array.IndexOf(FindUsingMenuItems, item);
         }
 
         foreach (ToolStripMenuItem menuItem in FindUsingMenuItems)
@@ -209,10 +211,10 @@ partial class FileStatusList
 
     private void FindInFilesGitGrep_DropDownOpening(object sender, EventArgs e)
     {
-        tsmiFindUsingMatchCase.Checked = !AppSettings.GitGrepIgnoreCase.Value;
-        tsmiFindUsingWholeWord.Checked = AppSettings.GitGrepMatchWholeWord.Value;
+        tsmiFindUsingMatchCase.Checked = !AppSettings.GitGrepIgnoreCase;
+        tsmiFindUsingWholeWord.Checked = AppSettings.GitGrepMatchWholeWord;
         _findUsingOptionsPrefix ??= tsmiFindUsingOptions.Text + ": ";
-        tsmiFindUsingOptions.Text = _findUsingOptionsPrefix + AppSettings.GitGrepUserArguments.Value;
+        tsmiFindUsingOptions.Text = _findUsingOptionsPrefix + AppSettings.GitGrepUserArguments;
     }
 
     private void ShowAssumeUnchangedFiles_Click(object sender, EventArgs e)
@@ -236,7 +238,7 @@ partial class FileStatusList
 
     private void ShowGroupNodesInFlatList_Click(object sender, EventArgs e)
     {
-        AppSettings.FileStatusShowGroupNodesInFlatList.Value = tsmiShowGroupNodesInFlatList.Checked;
+        AppSettings.FileStatusShowGroupNodesInFlatList = tsmiShowGroupNodesInFlatList.Checked;
         UpdateFileStatusListView(GitItemStatusesWithDescription, updateCausedByFilter: true);
     }
 
@@ -275,9 +277,9 @@ partial class FileStatusList
         tsmiGroupByFileStatusTree.Checked = sortType == DiffListSortType.FileStatus;
         tsmiGroupByFileStatusFlat.Checked = sortType == DiffListSortType.FileStatusFlat;
 
-        tsmiDenseTree.Checked = AppSettings.FileStatusMergeSingleItemWithFolder.Value;
+        tsmiDenseTree.Checked = AppSettings.FileStatusMergeSingleItemWithFolder;
         tsmiDenseTree.Enabled = !flatList;
-        tsmiShowGroupNodesInFlatList.Checked = AppSettings.FileStatusShowGroupNodesInFlatList.Value;
+        tsmiShowGroupNodesInFlatList.Checked = AppSettings.FileStatusShowGroupNodesInFlatList;
         tsmiShowGroupNodesInFlatList.Enabled = _groupBy is not null && flatList;
 
         bool filterByDiffStatus = HasDiffABGroups();
@@ -293,7 +295,7 @@ partial class FileStatusList
 
         for (int itemIndex = 0; itemIndex < FindUsingMenuItems.Length; ++itemIndex)
         {
-            FindUsingMenuItems[itemIndex].Checked = AppSettings.FileStatusFindInFilesGitGrepTypeIndex.Value == itemIndex;
+            FindUsingMenuItems[itemIndex].Checked = AppSettings.FileStatusFindInFilesGitGrepTypeIndex == itemIndex;
         }
 
         if (tsmiToolbar.DropDown.Items.Count == 0)

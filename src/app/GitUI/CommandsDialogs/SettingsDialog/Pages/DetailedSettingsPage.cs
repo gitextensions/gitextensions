@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
 
@@ -20,9 +20,9 @@ public partial class DetailedSettingsPage : DistributedSettingsPage
 
     protected override void SettingsToPage()
     {
-        chkMergeGraphLanesHavingCommonParent.Checked = AppSettings.MergeGraphLanesHavingCommonParent.Value;
-        chkRenderGraphWithDiagonals.Checked = AppSettings.RenderGraphWithDiagonals.Value;
-        chkStraightenGraphDiagonals.Checked = AppSettings.StraightenGraphDiagonals.Value;
+        chkMergeGraphLanesHavingCommonParent.Checked = AppSettings.MergeGraphLanesHavingCommonParent;
+        chkRenderGraphWithDiagonals.Checked = AppSettings.RenderGraphWithDiagonals;
+        chkStraightenGraphDiagonals.Checked = AppSettings.StraightenGraphDiagonals;
 
         IDetailedSettings detailedSettings = GetCurrentSettings()
             .Detailed();
@@ -36,9 +36,9 @@ public partial class DetailedSettingsPage : DistributedSettingsPage
 
     protected override void PageToSettings()
     {
-        AppSettings.MergeGraphLanesHavingCommonParent.Value = chkMergeGraphLanesHavingCommonParent.Checked;
-        AppSettings.RenderGraphWithDiagonals.Value = chkRenderGraphWithDiagonals.Checked;
-        AppSettings.StraightenGraphDiagonals.Value = chkStraightenGraphDiagonals.Checked;
+        AppSettings.MergeGraphLanesHavingCommonParent = chkMergeGraphLanesHavingCommonParent.Checked;
+        AppSettings.RenderGraphWithDiagonals = chkRenderGraphWithDiagonals.Checked;
+        AppSettings.StraightenGraphDiagonals = chkStraightenGraphDiagonals.Checked;
 
         IDetailedSettings detailedSettings = GetCurrentSettings()
             .Detailed();

@@ -79,7 +79,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
     {
         _settings = new Settings(
             FillRefLabels: AppSettings.FillRefLabels,
-            NotesInSeparateColumn: AppSettings.ShowGitNotesColumn.Value,
+            NotesInSeparateColumn: AppSettings.ShowGitNotesColumn,
             ShowAnnotatedTagsMessages: AppSettings.ShowAnnotatedTagsMessages,
             ShowCommitBodyInRevisionGrid: AppSettings.ShowCommitBodyInRevisionGrid,
             ShowGitNotes: AppSettings.ShowGitNotes,
