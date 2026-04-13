@@ -1,5 +1,6 @@
 ﻿using System.CodeDom.Compiler;
 using System.Reflection;
+using System.Text;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
@@ -126,6 +127,39 @@ internal sealed class AppSettingsTests
         else
         {
             storedValue.Should().Be(value);
+        }
+    }
+
+    /// <summary>
+    ///  Verifies that ISetting property names (storage keys) remain stable across changes.
+    /// </summary>
+    [Test]
+    public Task ISetting_properties_should_have_stable_storage_keys()
+    {
+        StringBuilder sb = new();
+        IOrderedEnumerable<PropertyInfo> properties = typeof(AppSettings)
+            .GetProperties(BindingFlags.Public | BindingFlags.Static)
+            .Where(p => IsISettingType(p.PropertyType))
+            .OrderBy(p => p.Name, StringComparer.Ordinal);
+        foreach (PropertyInfo property in properties)
+        {
+            object setting = property.GetValue(null)!;
+            string fullPath = (string)setting.GetType()
+                .GetProperty(nameof(ISetting<int>.FullPath))!
+                .GetValue(setting)!;
+            sb.AppendLine($"{property.Name} = {fullPath}");
+        }
+
+        return Verifier.Verify(sb.ToString());
+
+        static bool IsISettingType(Type type)
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ISetting<>))
+            {
+                return true;
+            }
+
+            return type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISetting<>));
         }
     }
 
