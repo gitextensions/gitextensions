@@ -1,5 +1,4 @@
-﻿using System.ComponentModel;
-using System.Text.Json;
+﻿using System.Globalization;
 
 namespace GitCommands.Settings;
 
@@ -9,68 +8,134 @@ namespace GitCommands.Settings;
 public static class Setting
 {
     /// <summary>
-    ///  Creates a string setting.
+    ///  Creates a <see cref="string"/> setting.
     /// </summary>
     public static ISetting<string> Create(SettingsPath settingsSource, string name, string? defaultValue)
     {
-        return new SettingOf<string>(settingsSource, name, defaultValue ?? string.Empty);
+        return new SettingOf<string>(
+            settingsSource,
+            name,
+            defaultValue: defaultValue ?? string.Empty,
+            read: static s => (true, s),
+            store: static v => v);
     }
 
     /// <summary>
-    ///  Creates a non-nullable value-type setting with a default value.
+    ///  Creates a <see cref="bool"/> setting with a default value.
     /// </summary>
-    public static ISetting<T> Create<T>(SettingsPath settingsSource, string name, T defaultValue)
-        where T : struct
+    public static ISetting<bool> CreateBool(SettingsPath settingsSource, string name, bool defaultValue)
     {
-        return new SettingOf<T>(settingsSource, name, defaultValue);
+        return new SettingOf<bool>(
+            settingsSource,
+            name,
+            defaultValue: defaultValue,
+            read: static s => (true, s == "True"),
+            store: static v => v ? "True" : "False");
     }
 
     /// <summary>
-    ///  Creates a nullable value-type setting with no default.
+    ///  Creates a nullable <see cref="bool"/> setting.
     /// </summary>
-    public static ISetting<T?> Create<T>(SettingsPath settingsSource, string name)
-        where T : struct
+    public static ISetting<bool?> CreateNullableBool(SettingsPath settingsSource, string name)
     {
-        return new SettingOf<T?>(settingsSource, name);
+        return new SettingOf<bool?>(
+            settingsSource,
+            name,
+            defaultValue: null,
+            read: static s => (true, (bool?)(s == "True")),
+            store: static v => v is true ? "True" : v is false ? "False" : null);
     }
 
     /// <summary>
-    ///  Creates a setting that transforms values between a storage representation and the exposed type.
+    ///  Creates an <see cref="int"/> setting with a default value.
     /// </summary>
-    /// <typeparam name="TStored">The type used for storage (serialized form).</typeparam>
-    /// <typeparam name="TExposed">The type exposed to callers.</typeparam>
+    public static ISetting<int> CreateInt(SettingsPath settingsSource, string name, int defaultValue)
+    {
+        return new SettingOf<int>(
+            settingsSource,
+            name,
+            defaultValue: defaultValue,
+            read: static s => int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out int v) ? (true, v) : default,
+            store: static v => v.ToString(CultureInfo.InvariantCulture));
+    }
+
+    /// <summary>
+    ///  Creates a <see cref="float"/> setting with a default value.
+    /// </summary>
+    public static ISetting<float> CreateFloat(SettingsPath settingsSource, string name, float defaultValue)
+    {
+        return new SettingOf<float>(
+            settingsSource,
+            name,
+            defaultValue: defaultValue,
+            read: static s => float.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out float v) ? (true, v) : default,
+            store: static v => v.ToString(CultureInfo.InvariantCulture));
+    }
+
+    /// <summary>
+    ///  Creates an <see cref="Enum"/> setting with a default value.
+    /// </summary>
+    public static ISetting<T> CreateEnum<T>(SettingsPath settingsSource, string name, T defaultValue)
+        where T : struct, Enum
+    {
+        return new SettingOf<T>(
+            settingsSource,
+            name,
+            defaultValue: defaultValue,
+            read: static s => Enum.TryParse(s, out T v) ? (true, v) : default,
+            store: static v => v.ToString());
+    }
+
+    /// <summary>
+    ///  Creates a nullable <see cref="Enum"/> setting.
+    /// </summary>
+    public static ISetting<T?> CreateNullableEnum<T>(SettingsPath settingsSource, string name)
+        where T : struct, Enum
+    {
+        return new SettingOf<T?>(
+            settingsSource,
+            name,
+            defaultValue: null,
+            read: static s => Enum.TryParse(s, out T v) ? (true, (T?)v) : default,
+            store: static v => v?.ToString());
+    }
+
+    /// <summary>
+    ///  Creates a setting with custom conversion between the stored string and the exposed type.
+    /// </summary>
+    /// <typeparam name="T">The type exposed to callers.</typeparam>
     /// <param name="settingsSource">The settings path to store the value under.</param>
     /// <param name="name">The settings key name.</param>
-    /// <param name="defaultValue">The default value in <typeparamref name="TExposed"/> form.</param>
-    /// <param name="read">Converts from stored to exposed form.</param>
-    /// <param name="store">Converts from exposed to stored form.</param>
-    public static ISetting<TExposed> CreateIntercepted<TStored, TExposed>(
+    /// <param name="defaultValue">The default value.</param>
+    /// <param name="read">
+    ///  Converts from the stored string to <typeparamref name="T"/>, returning a tuple
+    ///  of <c>(success, value)</c>. When <c>success</c> is <see langword="false"/>, the default is used.
+    /// </param>
+    /// <param name="store">Converts from <typeparamref name="T"/> to the stored string.</param>
+    public static ISetting<T> Create<T>(
         SettingsPath settingsSource,
         string name,
-        TExposed defaultValue,
-        Func<TStored, TExposed> read,
-        Func<TExposed, TStored> store)
+        T defaultValue,
+        Func<string, (bool success, T value)> read,
+        Func<T, string?> store)
     {
-        ISetting<TStored> inner = new SettingOf<TStored>(settingsSource, name, store(defaultValue));
-        return new InterceptedSetting<TStored, TExposed>(inner, defaultValue, read, store);
+        return new SettingOf<T>(settingsSource, name, defaultValue, read, store);
     }
 
     /// <summary>
     ///  Reads the current value of a non-nullable value-type setting from storage.
-    ///  Returns the setting's default when no value is stored.
     /// </summary>
     internal static T GetValue<T>(ISetting<T> setting) where T : struct
     {
-        return ((ISettingAccessor<T>)setting).GetValue();
+        return ((SettingOf<T>)setting).GetValue();
     }
 
     /// <summary>
-    ///  Reads the current value of a string setting from storage.
-    ///  Returns the setting's default when no value is stored.
+    ///  Reads the current value of a <see cref="string"/> setting from storage.
     /// </summary>
     internal static string GetValue(ISetting<string> setting)
     {
-        return ((ISettingAccessor<string>)setting).GetValue();
+        return ((SettingOf<string>)setting).GetValue();
     }
 
     /// <summary>
@@ -78,16 +143,16 @@ public static class Setting
     /// </summary>
     internal static T? GetNullableValue<T>(ISetting<T?> setting) where T : struct
     {
-        return ((ISettingAccessor<T?>)setting).GetValue();
+        return ((SettingOf<T?>)setting).GetValue();
     }
 
     /// <summary>
     ///  Reads the current value of a setting from storage (unconstrained).
-    ///  Used internally by <see cref="RuntimeSetting{T}"/> and <see cref="InterceptedSetting{TStored, TExposed}"/>.
+    ///  Used internally by <see cref="RuntimeSetting{T}"/>.
     /// </summary>
     internal static T GetRawValue<T>(ISetting<T> setting)
     {
-        return ((ISettingAccessor<T>)setting).GetValue();
+        return ((SettingOf<T>)setting).GetValue();
     }
 
     /// <summary>
@@ -95,24 +160,38 @@ public static class Setting
     /// </summary>
     internal static void SetValue<T>(ISetting<T> setting, T? value)
     {
-        ((ISettingAccessor<T>)setting).SetValue(value);
+        ((SettingOf<T>)setting).SetValue(value);
     }
 
     /// <summary>
-    ///  Gets whether the setting has no value in storage.
+    ///  Gets whether the setting has no value stored.
     /// </summary>
     internal static bool IsUnset<T>(ISetting<T> setting)
     {
-        return ((ISettingAccessor<T>)setting).IsUnset;
+        return ((SettingOf<T>)setting).IsUnset;
     }
 
-    private sealed class SettingOf<T> : ISetting<T>, ISettingAccessor<T>
+    /// <summary>
+    ///  Concrete implementation of <see cref="ISetting{T}"/> that stores immutable metadata
+    ///  and baked-in conversion functions for reading/writing string-based storage.
+    /// </summary>
+    private sealed class SettingOf<T> : ISetting<T>
     {
-        public SettingOf(SettingsPath settingsSource, string name, T? defaultValue = default)
+        private readonly Func<string, (bool success, T value)> _read;
+        private readonly Func<T, string?> _store;
+
+        public SettingOf(
+            SettingsPath settingsSource,
+            string name,
+            T? defaultValue,
+            Func<string, (bool success, T value)> read,
+            Func<T, string?> store)
         {
             SettingsSource = settingsSource;
             Name = name;
             Default = defaultValue;
+            _read = read;
+            _store = store;
         }
 
         public SettingsPath SettingsSource { get; }
@@ -123,161 +202,27 @@ public static class Setting
 
         public string FullPath => SettingsSource.PathFor(Name);
 
-        T ISettingAccessor<T>.GetValue()
+        internal T GetValue()
         {
-            object? storedValue = ReadFromStorage(Name);
+            string? raw = SettingsSource.GetValue(Name);
 
-            if (default(T) is null)
-            {
-                if (Type.GetTypeCode(typeof(T)) != TypeCode.String)
-                {
-                    return (T)(object?)storedValue!;
-                }
-            }
-
-            if (storedValue is null)
+            if (raw is null)
             {
                 return Default!;
             }
 
-            return (T)storedValue;
+            (bool success, T value) = _read(raw);
+
+            return success ? value : Default!;
         }
 
-        void ISettingAccessor<T>.SetValue(T? value)
+        internal void SetValue(T? value)
         {
-            object? storedValue = ReadFromStorage(Name);
+            string? raw = value is not null ? _store(value) : null;
 
-            if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
-            {
-                if (storedValue?.Equals((object?)value ?? string.Empty) ?? false)
-                {
-                    return;
-                }
-            }
-            else
-            {
-                if (storedValue?.Equals(value) ?? ((default(T) is null) && (value is null)))
-                {
-                    return;
-                }
-            }
-
-            if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
-            {
-                WriteToStorage(Name, (object?)value ?? string.Empty);
-            }
-            else
-            {
-                WriteToStorage(Name, value);
-            }
+            SettingsSource.SetValue(Name, raw);
         }
 
-        bool ISettingAccessor<T>.IsUnset
-        {
-            get
-            {
-                if (default(T) is null)
-                {
-                    if (Type.GetTypeCode(typeof(T)) != TypeCode.String)
-                    {
-                        return false;
-                    }
-                }
-
-                object? storedValue = ReadFromStorage(Name);
-
-                return storedValue is null;
-            }
-        }
-
-        private object? ReadFromStorage(string name)
-        {
-            string? stringValue = SettingsSource.GetValue(name);
-            if (stringValue is null)
-            {
-                return null;
-            }
-
-            Type type = typeof(T);
-            Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
-
-            switch (Type.GetTypeCode(underlyingType))
-            {
-                case TypeCode.String:
-                    return stringValue;
-                case TypeCode.Object:
-                    try
-                    {
-                        return JsonSerializer.Deserialize<T>(stringValue);
-                    }
-                    catch
-                    {
-                        return null;
-                    }
-
-                default:
-                    TypeConverter converter = TypeDescriptor.GetConverter(underlyingType);
-
-                    try
-                    {
-                        return converter.ConvertFromInvariantString(stringValue);
-                    }
-                    catch
-                    {
-                        return null;
-                    }
-            }
-        }
-
-        private void WriteToStorage(string name, object? value)
-        {
-            string? stringValue;
-
-            Type type = typeof(T);
-            Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
-
-            switch (Type.GetTypeCode(underlyingType))
-            {
-                case TypeCode.String:
-                    stringValue = (string?)value;
-                    break;
-                case TypeCode.Object:
-                    stringValue = JsonSerializer.Serialize(value);
-                    break;
-                default:
-                    TypeConverter converter = TypeDescriptor.GetConverter(underlyingType);
-                    stringValue = converter.ConvertToInvariantString(value);
-                    break;
-            }
-
-            SettingsSource.SetValue(name, stringValue);
-        }
-    }
-
-    private sealed class InterceptedSetting<TStored, TExposed>(
-        ISetting<TStored> inner,
-        TExposed defaultValue,
-        Func<TStored, TExposed> read,
-        Func<TExposed, TStored> store) : ISetting<TExposed>, ISettingAccessor<TExposed>
-    {
-        public string Name => inner.Name;
-
-        public SettingsPath SettingsSource => inner.SettingsSource;
-
-        public TExposed? Default => defaultValue;
-
-        public string FullPath => inner.FullPath;
-
-        TExposed ISettingAccessor<TExposed>.GetValue()
-        {
-            return IsUnset(inner) ? defaultValue! : read(GetRawValue(inner)!);
-        }
-
-        void ISettingAccessor<TExposed>.SetValue(TExposed? value)
-        {
-            Setting.SetValue(inner, value is not null ? store(value) : default);
-        }
-
-        bool ISettingAccessor<TExposed>.IsUnset => Setting.IsUnset(inner);
+        internal bool IsUnset => SettingsSource.GetValue(Name) is null;
     }
 }

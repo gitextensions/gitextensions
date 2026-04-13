@@ -10,7 +10,7 @@ public sealed class EnumRuntimeSetting<T> : RuntimeSetting<T> where T : struct, 
     /// <param name="name">The setting name.</param>
     /// <param name="defaultValue">The default value.</param>
     public EnumRuntimeSetting(SettingsPath settingsSource, string name, T defaultValue)
-        : base(Setting.Create(settingsSource, name, defaultValue))
+        : base(Setting.CreateEnum(settingsSource, name, defaultValue))
     {
     }
 }

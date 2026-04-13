@@ -52,20 +52,20 @@ public static partial class AppSettings
     private static readonly SettingsPath MigrationSettingsPath = new AppSettingsPath(HiddenSettingsPath, "Migration");
 
     #region Setting declarations
-    private static readonly ISetting<bool?> _telemetryEnabled = Setting.Create<bool>(RootSettingsPath, "TelemetryEnabled");
+    private static readonly ISetting<bool?> _telemetryEnabled = Setting.CreateNullableBool(RootSettingsPath, "TelemetryEnabled");
 
-    private static readonly ISetting<bool> _autoNormaliseBranchName = Setting.Create(RootSettingsPath, "AutoNormaliseBranchName", defaultValue: true);
+    private static readonly ISetting<bool> _autoNormaliseBranchName = Setting.CreateBool(RootSettingsPath, "AutoNormaliseBranchName", defaultValue: true);
 
-    private static readonly ISetting<bool> _rememberAmendCommitState = Setting.Create(RootSettingsPath, "RememberAmendCommitState", defaultValue: true);
+    private static readonly ISetting<bool> _rememberAmendCommitState = Setting.CreateBool(RootSettingsPath, "RememberAmendCommitState", defaultValue: true);
 
-    private static readonly ISetting<int> _fileStatusFindInFilesGitGrepTypeIndex = Setting.Create(FileStatusSettingsPath, nameof(FileStatusFindInFilesGitGrepTypeIndex), defaultValue: 1);
+    private static readonly ISetting<int> _fileStatusFindInFilesGitGrepTypeIndex = Setting.CreateInt(FileStatusSettingsPath, nameof(FileStatusFindInFilesGitGrepTypeIndex), defaultValue: 1);
 
-    private static readonly ISetting<bool> _fileStatusMergeSingleItemWithFolder = Setting.Create(FileStatusSettingsPath, nameof(FileStatusMergeSingleItemWithFolder), defaultValue: false);
+    private static readonly ISetting<bool> _fileStatusMergeSingleItemWithFolder = Setting.CreateBool(FileStatusSettingsPath, nameof(FileStatusMergeSingleItemWithFolder), defaultValue: false);
 
-    private static readonly ISetting<bool> _fileStatusShowGroupNodesInFlatList = Setting.Create(FileStatusSettingsPath, nameof(FileStatusShowGroupNodesInFlatList), defaultValue: false);
+    private static readonly ISetting<bool> _fileStatusShowGroupNodesInFlatList = Setting.CreateBool(FileStatusSettingsPath, nameof(FileStatusShowGroupNodesInFlatList), defaultValue: false);
 
     // Currently not configurable in UI (Set manually in settings file)
-    private static readonly ISetting<bool> _wslGitEnabled = Setting.Create(RootSettingsPath, "WslGitEnabled", defaultValue: true);
+    private static readonly ISetting<bool> _wslGitEnabled = Setting.CreateBool(RootSettingsPath, "WslGitEnabled", defaultValue: true);
 
     // Currently not configurable in UI (Set manually in settings file)
     private static readonly ISetting<string> _wslCommand = Setting.Create(RootSettingsPath, nameof(WslCommand), defaultValue: "wsl");
@@ -73,105 +73,105 @@ public static partial class AppSettings
     // Currently not configurable in UI (Set manually in settings file)
     private static readonly ISetting<string> _wslGitCommand = Setting.Create(RootSettingsPath, nameof(WslGitCommand), defaultValue: "git");
 
-    private static readonly ISetting<bool> _stashKeepIndex = Setting.Create(RootSettingsPath, "stashkeepindex", defaultValue: false);
+    private static readonly ISetting<bool> _stashKeepIndex = Setting.CreateBool(RootSettingsPath, "stashkeepindex", defaultValue: false);
 
     // History Compatibility: The setting was originally called 'StashConfirmDropShow', and then it was inverted.
     // To maintain compat with existing user settings, negate the stored value.
-    private static readonly ISetting<bool> _dontConfirmStashDrop = Setting.CreateIntercepted<bool, bool>(
+    private static readonly ISetting<bool> _dontConfirmStashDrop = Setting.Create(
         RootSettingsPath,
         "stashconfirmdropshow",
         defaultValue: false,
-        read: v => !v,
-        store: v => !v);
+        read: static s => (true, s != "True"),
+        store: static v => v ? "False" : "True");
 
-    private static readonly ISetting<bool> _applyPatchIgnoreWhitespace = Setting.Create(RootSettingsPath, "applypatchignorewhitespace", defaultValue: false);
+    private static readonly ISetting<bool> _applyPatchIgnoreWhitespace = Setting.CreateBool(RootSettingsPath, "applypatchignorewhitespace", defaultValue: false);
 
-    private static readonly ISetting<bool> _applyPatchSignOff = Setting.Create(RootSettingsPath, "applypatchsignoff", defaultValue: true);
+    private static readonly ISetting<bool> _applyPatchSignOff = Setting.CreateBool(RootSettingsPath, "applypatchsignoff", defaultValue: true);
 
     // History Compatibility: The settings key has patience in the name for historical reasons
-    private static readonly ISetting<bool> _useHistogramDiffAlgorithm = Setting.Create(RootSettingsPath, "usepatiencediffalgorithm", defaultValue: false);
+    private static readonly ISetting<bool> _useHistogramDiffAlgorithm = Setting.CreateBool(RootSettingsPath, "usepatiencediffalgorithm", defaultValue: false);
 
     /// <summary>
     /// Use Git coloring for selected commands
     /// </summary>
-    private static readonly ISetting<bool> _useGitColoring = Setting.Create(AppearanceSettingsPath, nameof(UseGitColoring), defaultValue: true);
+    private static readonly ISetting<bool> _useGitColoring = Setting.CreateBool(AppearanceSettingsPath, nameof(UseGitColoring), defaultValue: true);
 
     /// <summary>
     /// Color the background at changes (invert colors).
     /// </summary>
-    private static readonly ISetting<bool> _reverseGitColoring = Setting.Create(AppearanceSettingsPath, nameof(ReverseGitColoring), defaultValue: true);
+    private static readonly ISetting<bool> _reverseGitColoring = Setting.CreateBool(AppearanceSettingsPath, nameof(ReverseGitColoring), defaultValue: true);
 
-    private static readonly ISetting<bool> _showErrorsWhenStagingFiles = Setting.Create(RootSettingsPath, "showerrorswhenstagingfiles", defaultValue: true);
+    private static readonly ISetting<bool> _showErrorsWhenStagingFiles = Setting.CreateBool(RootSettingsPath, "showerrorswhenstagingfiles", defaultValue: true);
 
-    private static readonly ISetting<bool> _ensureCommitMessageSecondLineEmpty = Setting.Create(RootSettingsPath, "addnewlinetocommitmessagewhenmissing", defaultValue: true);
+    private static readonly ISetting<bool> _ensureCommitMessageSecondLineEmpty = Setting.CreateBool(RootSettingsPath, "addnewlinetocommitmessagewhenmissing", defaultValue: true);
 
     private static readonly ISetting<string> _lastCommitMessage = Setting.Create(RootSettingsPath, "lastCommitMessage", defaultValue: "");
 
-    private static readonly ISetting<int> _commitDialogNumberOfPreviousMessages = Setting.Create(RootSettingsPath, "commitDialogNumberOfPreviousMessages", defaultValue: 6);
+    private static readonly ISetting<int> _commitDialogNumberOfPreviousMessages = Setting.CreateInt(RootSettingsPath, "commitDialogNumberOfPreviousMessages", defaultValue: 6);
 
-    private static readonly ISetting<bool> _commitDialogSelectStagedOnEnterMessage = Setting.Create(DialogSettingsPath, nameof(CommitDialogSelectStagedOnEnterMessage), defaultValue: true);
+    private static readonly ISetting<bool> _commitDialogSelectStagedOnEnterMessage = Setting.CreateBool(DialogSettingsPath, nameof(CommitDialogSelectStagedOnEnterMessage), defaultValue: true);
 
-    private static readonly ISetting<bool> _commitDialogShowOnlyMyMessages = Setting.Create(RootSettingsPath, "commitDialogShowOnlyMyMessages", defaultValue: false);
+    private static readonly ISetting<bool> _commitDialogShowOnlyMyMessages = Setting.CreateBool(RootSettingsPath, "commitDialogShowOnlyMyMessages", defaultValue: false);
 
-    private static readonly ISetting<bool> _showCommitAndPush = Setting.Create(RootSettingsPath, "showcommitandpush", defaultValue: true);
+    private static readonly ISetting<bool> _showCommitAndPush = Setting.CreateBool(RootSettingsPath, "showcommitandpush", defaultValue: true);
 
-    private static readonly ISetting<bool> _showResetWorkTreeChanges = Setting.Create(RootSettingsPath, "showresetunstagedchanges", defaultValue: true);
+    private static readonly ISetting<bool> _showResetWorkTreeChanges = Setting.CreateBool(RootSettingsPath, "showresetunstagedchanges", defaultValue: true);
 
-    private static readonly ISetting<bool> _showResetAllChanges = Setting.Create(RootSettingsPath, "showresetallchanges", defaultValue: true);
+    private static readonly ISetting<bool> _showResetAllChanges = Setting.CreateBool(RootSettingsPath, "showresetallchanges", defaultValue: true);
 
-    private static readonly ISetting<bool> _showConEmuTab = Setting.Create(DetailedSettingsPath, nameof(ShowConEmuTab), defaultValue: true);
+    private static readonly ISetting<bool> _showConEmuTab = Setting.CreateBool(DetailedSettingsPath, nameof(ShowConEmuTab), defaultValue: true);
 
     private static readonly ISetting<string> _conEmuStyle = Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), defaultValue: ConEmuStyleDefault);
 
     private static readonly ISetting<string> _conEmuTerminal = Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), defaultValue: "bash");
 
-    private static readonly ISetting<int> _outputHistoryDepth = Setting.Create(DetailedSettingsPath, nameof(OutputHistoryDepth), defaultValue: 20);
+    private static readonly ISetting<int> _outputHistoryDepth = Setting.CreateInt(DetailedSettingsPath, nameof(OutputHistoryDepth), defaultValue: 20);
 
-    private static readonly ISetting<bool> _outputHistoryPanelVisible = Setting.Create(DetailedSettingsPath, nameof(OutputHistoryPanelVisible), defaultValue: false);
+    private static readonly ISetting<bool> _outputHistoryPanelVisible = Setting.CreateBool(DetailedSettingsPath, nameof(OutputHistoryPanelVisible), defaultValue: false);
 
-    private static readonly ISetting<bool> _showOutputHistoryAsTab = Setting.Create(DetailedSettingsPath, nameof(ShowOutputHistoryAsTab), defaultValue: true);
+    private static readonly ISetting<bool> _showOutputHistoryAsTab = Setting.CreateBool(DetailedSettingsPath, nameof(ShowOutputHistoryAsTab), defaultValue: true);
 
-    private static readonly ISetting<bool> _useBrowseForFileHistory = Setting.Create(DetailedSettingsPath, nameof(UseBrowseForFileHistory), defaultValue: true);
+    private static readonly ISetting<bool> _useBrowseForFileHistory = Setting.CreateBool(DetailedSettingsPath, nameof(UseBrowseForFileHistory), defaultValue: true);
 
-    private static readonly ISetting<bool> _useDiffViewerForBlame = Setting.Create(DetailedSettingsPath, nameof(UseDiffViewerForBlame), defaultValue: false);
+    private static readonly ISetting<bool> _useDiffViewerForBlame = Setting.CreateBool(DetailedSettingsPath, nameof(UseDiffViewerForBlame), defaultValue: false);
 
-    private static readonly ISetting<bool> _showGpgInformation = Setting.Create(DetailedSettingsPath, nameof(ShowGpgInformation), defaultValue: true);
+    private static readonly ISetting<bool> _showGpgInformation = Setting.CreateBool(DetailedSettingsPath, nameof(ShowGpgInformation), defaultValue: true);
 
-    private static readonly ISetting<bool> _messageEditorWordWrap = Setting.Create(DetailedSettingsPath, nameof(MessageEditorWordWrap), defaultValue: false);
+    private static readonly ISetting<bool> _messageEditorWordWrap = Setting.CreateBool(DetailedSettingsPath, nameof(MessageEditorWordWrap), defaultValue: false);
 
-    private static readonly ISetting<bool> _showSplitViewLayout = Setting.Create(DetailedSettingsPath, "ShowSplitViewLayout", defaultValue: true);
+    private static readonly ISetting<bool> _showSplitViewLayout = Setting.CreateBool(DetailedSettingsPath, "ShowSplitViewLayout", defaultValue: true);
 
-    private static readonly ISetting<bool> _provideAutocompletion = Setting.Create(RootSettingsPath, "provideautocompletion", defaultValue: true);
+    private static readonly ISetting<bool> _provideAutocompletion = Setting.CreateBool(RootSettingsPath, "provideautocompletion", defaultValue: true);
 
-    private static readonly ISetting<TruncatePathMethod> _truncatePathMethod = Setting.Create(RootSettingsPath, "truncatepathmethod", defaultValue: TruncatePathMethod.None);
+    private static readonly ISetting<TruncatePathMethod> _truncatePathMethod = Setting.CreateEnum(RootSettingsPath, "truncatepathmethod", defaultValue: TruncatePathMethod.None);
 
-    private static readonly ISetting<bool> _showGitStatusInBrowseToolbar = Setting.Create(RootSettingsPath, "showgitstatusinbrowsetoolbar", defaultValue: true);
+    private static readonly ISetting<bool> _showGitStatusInBrowseToolbar = Setting.CreateBool(RootSettingsPath, "showgitstatusinbrowsetoolbar", defaultValue: true);
 
-    private static readonly ISetting<bool> _showGitStatusForArtificialCommits = Setting.Create(RootSettingsPath, "showgitstatusforartificialcommits", defaultValue: true);
+    private static readonly ISetting<bool> _showGitStatusForArtificialCommits = Setting.CreateBool(RootSettingsPath, "showgitstatusforartificialcommits", defaultValue: true);
 
-    private static readonly ISetting<bool> _commitInfoShowContainedInBranchesLocal = Setting.Create(RootSettingsPath, "commitinfoshowcontainedinbrancheslocal", defaultValue: true);
+    private static readonly ISetting<bool> _commitInfoShowContainedInBranchesLocal = Setting.CreateBool(RootSettingsPath, "commitinfoshowcontainedinbrancheslocal", defaultValue: true);
 
-    private static readonly ISetting<bool> _checkForUncommittedChangesInCheckoutBranch = Setting.Create(RootSettingsPath, "checkforuncommittedchangesincheckoutbranch", defaultValue: true);
+    private static readonly ISetting<bool> _checkForUncommittedChangesInCheckoutBranch = Setting.CreateBool(RootSettingsPath, "checkforuncommittedchangesincheckoutbranch", defaultValue: true);
 
-    private static readonly ISetting<bool> _alwaysShowCheckoutBranchDlg = Setting.Create(RootSettingsPath, "AlwaysShowCheckoutBranchDlg", defaultValue: false);
+    private static readonly ISetting<bool> _alwaysShowCheckoutBranchDlg = Setting.CreateBool(RootSettingsPath, "AlwaysShowCheckoutBranchDlg", defaultValue: false);
 
-    private static readonly ISetting<bool> _commitAndPushForcedWhenAmend = Setting.Create(RootSettingsPath, "CommitAndPushForcedWhenAmend", defaultValue: false);
+    private static readonly ISetting<bool> _commitAndPushForcedWhenAmend = Setting.CreateBool(RootSettingsPath, "CommitAndPushForcedWhenAmend", defaultValue: false);
 
-    private static readonly ISetting<bool> _commitInfoShowContainedInBranchesRemote = Setting.Create(RootSettingsPath, "commitinfoshowcontainedinbranchesremote", defaultValue: false);
+    private static readonly ISetting<bool> _commitInfoShowContainedInBranchesRemote = Setting.CreateBool(RootSettingsPath, "commitinfoshowcontainedinbranchesremote", defaultValue: false);
 
-    private static readonly ISetting<bool> _commitInfoShowContainedInBranchesRemoteIfNoLocal = Setting.Create(RootSettingsPath, "commitinfoshowcontainedinbranchesremoteifnolocal", defaultValue: false);
+    private static readonly ISetting<bool> _commitInfoShowContainedInBranchesRemoteIfNoLocal = Setting.CreateBool(RootSettingsPath, "commitinfoshowcontainedinbranchesremoteifnolocal", defaultValue: false);
 
-    private static readonly ISetting<bool> _commitInfoShowContainedInTags = Setting.Create(RootSettingsPath, "commitinfoshowcontainedintags", defaultValue: true);
+    private static readonly ISetting<bool> _commitInfoShowContainedInTags = Setting.CreateBool(RootSettingsPath, "commitinfoshowcontainedintags", defaultValue: true);
 
-    private static readonly ISetting<bool> _commitInfoShowTagThisCommitDerivesFrom = Setting.Create(RootSettingsPath, "commitinfoshowtagthiscommitderivesfrom", defaultValue: true);
+    private static readonly ISetting<bool> _commitInfoShowTagThisCommitDerivesFrom = Setting.CreateBool(RootSettingsPath, "commitinfoshowtagthiscommitderivesfrom", defaultValue: true);
 
     private static readonly ISetting<string> _customAvatarTemplate = Setting.Create(RootSettingsPath, "CustomAvatarTemplate", defaultValue: string.Empty);
 
-    private static readonly ISetting<int> _avatarImageCacheDays = Setting.Create(RootSettingsPath, "authorimagecachedays", defaultValue: 13);
+    private static readonly ISetting<int> _avatarImageCacheDays = Setting.CreateInt(RootSettingsPath, "authorimagecachedays", defaultValue: 13);
 
-    private static readonly ISetting<bool> _showAuthorAvatarInCommitInfo = Setting.Create(RootSettingsPath, "showauthorgravatar", defaultValue: true);
+    private static readonly ISetting<bool> _showAuthorAvatarInCommitInfo = Setting.CreateBool(RootSettingsPath, "showauthorgravatar", defaultValue: true);
 
-    private static readonly ISetting<int> _avatarCacheSize = Setting.Create(RootSettingsPath, "Appearance.AvatarCacheSize", defaultValue: 200);
+    private static readonly ISetting<int> _avatarCacheSize = Setting.CreateInt(RootSettingsPath, "Appearance.AvatarCacheSize", defaultValue: 200);
 
     // Currently not configurable in UI (Set manually in settings file)
     // Names from here: https://learn.microsoft.com/en-us/dotnet/api/system.windows.media.brushes?view=windowsdesktop-7.0
@@ -180,225 +180,225 @@ public static partial class AppSettings
 
     private static readonly ISetting<string> _translation = Setting.Create(RootSettingsPath, "translation", defaultValue: "");
 
-    private static readonly ISetting<bool> _userProfileHomeDir = Setting.Create(RootSettingsPath, "userprofilehomedir", defaultValue: false);
+    private static readonly ISetting<bool> _userProfileHomeDir = Setting.CreateBool(RootSettingsPath, "userprofilehomedir", defaultValue: false);
 
     private static readonly ISetting<string> _customHomeDir = Setting.Create(RootSettingsPath, "customhomedir", defaultValue: "");
 
-    private static readonly ISetting<bool> _enableAutoScale = Setting.Create(RootSettingsPath, "enableautoscale", defaultValue: true);
+    private static readonly ISetting<bool> _enableAutoScale = Setting.CreateBool(RootSettingsPath, "enableautoscale", defaultValue: true);
 
-    private static readonly ISetting<bool> _closeCommitDialogAfterCommit = Setting.Create(RootSettingsPath, "closecommitdialogaftercommit", defaultValue: true);
+    private static readonly ISetting<bool> _closeCommitDialogAfterCommit = Setting.CreateBool(RootSettingsPath, "closecommitdialogaftercommit", defaultValue: true);
 
-    private static readonly ISetting<bool> _closeCommitDialogAfterLastCommit = Setting.Create(RootSettingsPath, "closecommitdialogafterlastcommit", defaultValue: true);
+    private static readonly ISetting<bool> _closeCommitDialogAfterLastCommit = Setting.CreateBool(RootSettingsPath, "closecommitdialogafterlastcommit", defaultValue: true);
 
-    private static readonly ISetting<bool> _refreshArtificialCommitOnApplicationActivated = Setting.Create(RootSettingsPath, "refreshcommitdialogonformfocus", defaultValue: false);
+    private static readonly ISetting<bool> _refreshArtificialCommitOnApplicationActivated = Setting.CreateBool(RootSettingsPath, "refreshcommitdialogonformfocus", defaultValue: false);
 
-    private static readonly ISetting<bool> _stageInSuperprojectAfterCommit = Setting.Create(RootSettingsPath, "stageinsuperprojectaftercommit", defaultValue: true);
+    private static readonly ISetting<bool> _stageInSuperprojectAfterCommit = Setting.CreateBool(RootSettingsPath, "stageinsuperprojectaftercommit", defaultValue: true);
 
-    private static readonly ISetting<bool> _followRenamesInFileHistory = Setting.Create(RootSettingsPath, "followrenamesinfilehistory", defaultValue: true);
+    private static readonly ISetting<bool> _followRenamesInFileHistory = Setting.CreateBool(RootSettingsPath, "followrenamesinfilehistory", defaultValue: true);
 
-    private static readonly ISetting<bool> _followRenamesInFileHistoryExactOnly = Setting.Create(RootSettingsPath, "followrenamesinfilehistoryexactonly", defaultValue: false);
+    private static readonly ISetting<bool> _followRenamesInFileHistoryExactOnly = Setting.CreateBool(RootSettingsPath, "followrenamesinfilehistoryexactonly", defaultValue: false);
 
-    private static readonly ISetting<bool> _fullHistoryInFileHistory = Setting.Create(RootSettingsPath, "fullhistoryinfilehistory", defaultValue: false);
+    private static readonly ISetting<bool> _fullHistoryInFileHistory = Setting.CreateBool(RootSettingsPath, "fullhistoryinfilehistory", defaultValue: false);
 
-    private static readonly ISetting<bool> _simplifyMergesInFileHistory = Setting.Create(RootSettingsPath, "simplifymergesinfileHistory", defaultValue: false);
+    private static readonly ISetting<bool> _simplifyMergesInFileHistory = Setting.CreateBool(RootSettingsPath, "simplifymergesinfileHistory", defaultValue: false);
 
-    private static readonly ISetting<bool> _loadFileHistoryOnShow = Setting.Create(RootSettingsPath, "LoadFileHistoryOnShow", defaultValue: true);
+    private static readonly ISetting<bool> _loadFileHistoryOnShow = Setting.CreateBool(RootSettingsPath, "LoadFileHistoryOnShow", defaultValue: true);
 
-    private static readonly ISetting<bool> _loadBlameOnShow = Setting.Create(RootSettingsPath, "LoadBlameOnShow", defaultValue: true);
+    private static readonly ISetting<bool> _loadBlameOnShow = Setting.CreateBool(RootSettingsPath, "LoadBlameOnShow", defaultValue: true);
 
-    private static readonly ISetting<bool> _detectCopyInFileOnBlame = Setting.Create(RootSettingsPath, "DetectCopyInFileOnBlame", defaultValue: false);
+    private static readonly ISetting<bool> _detectCopyInFileOnBlame = Setting.CreateBool(RootSettingsPath, "DetectCopyInFileOnBlame", defaultValue: false);
 
-    private static readonly ISetting<bool> _detectCopyInAllOnBlame = Setting.Create(RootSettingsPath, "DetectCopyInAllOnBlame", defaultValue: false);
+    private static readonly ISetting<bool> _detectCopyInAllOnBlame = Setting.CreateBool(RootSettingsPath, "DetectCopyInAllOnBlame", defaultValue: false);
 
-    private static readonly ISetting<bool> _ignoreWhitespaceOnBlame = Setting.Create(RootSettingsPath, "IgnoreWhitespaceOnBlame", defaultValue: true);
+    private static readonly ISetting<bool> _ignoreWhitespaceOnBlame = Setting.CreateBool(RootSettingsPath, "IgnoreWhitespaceOnBlame", defaultValue: true);
 
-    private static readonly ISetting<bool> _openSubmoduleDiffInSeparateWindow = Setting.Create(RootSettingsPath, "opensubmodulediffinseparatewindow", defaultValue: false);
+    private static readonly ISetting<bool> _openSubmoduleDiffInSeparateWindow = Setting.CreateBool(RootSettingsPath, "opensubmodulediffinseparatewindow", defaultValue: false);
 
     /// <summary>
     /// Gets or sets whether to show artificial commits in the revision graph.
     /// </summary>
-    private static readonly ISetting<bool> _revisionGraphShowArtificialCommits = Setting.Create(RootSettingsPath, "revisiongraphshowworkingdirchanges", defaultValue: true);
+    private static readonly ISetting<bool> _revisionGraphShowArtificialCommits = Setting.CreateBool(RootSettingsPath, "revisiongraphshowworkingdirchanges", defaultValue: true);
 
-    private static readonly ISetting<bool> _revisionGraphDrawAlternateBackColor = Setting.Create(RootSettingsPath, "RevisionGraphDrawAlternateBackColor", defaultValue: true);
+    private static readonly ISetting<bool> _revisionGraphDrawAlternateBackColor = Setting.CreateBool(RootSettingsPath, "RevisionGraphDrawAlternateBackColor", defaultValue: true);
 
-    private static readonly ISetting<bool> _revisionGraphDrawNonRelativesGray = Setting.Create(RootSettingsPath, "revisiongraphdrawnonrelativesgray", defaultValue: true);
+    private static readonly ISetting<bool> _revisionGraphDrawNonRelativesGray = Setting.CreateBool(RootSettingsPath, "revisiongraphdrawnonrelativesgray", defaultValue: true);
 
-    private static readonly ISetting<bool> _revisionGraphDrawNonRelativesTextGray = Setting.Create(RootSettingsPath, "revisiongraphdrawnonrelativestextgray", defaultValue: false);
+    private static readonly ISetting<bool> _revisionGraphDrawNonRelativesTextGray = Setting.CreateBool(RootSettingsPath, "revisiongraphdrawnonrelativestextgray", defaultValue: false);
 
     /// <summary>
     /// Gets or sets the default pull action that is performed by the toolbar icon when it is clicked on.
     /// </summary>
-    private static readonly ISetting<GitPullAction> _defaultPullAction = Setting.Create(RootSettingsPath, "DefaultPullAction", defaultValue: GitPullAction.Merge);
+    private static readonly ISetting<GitPullAction> _defaultPullAction = Setting.CreateEnum(RootSettingsPath, "DefaultPullAction", defaultValue: GitPullAction.Merge);
 
     /// <summary>
     /// Gets or sets the default pull action as configured in the FormPull dialog.
     /// </summary>
-    private static readonly ISetting<GitPullAction> _formPullAction = Setting.Create(RootSettingsPath, "FormPullAction", defaultValue: GitPullAction.Merge);
+    private static readonly ISetting<GitPullAction> _formPullAction = Setting.CreateEnum(RootSettingsPath, "FormPullAction", defaultValue: GitPullAction.Merge);
 
-    private static readonly ISetting<bool> _autoStash = Setting.Create(RootSettingsPath, "autostash", defaultValue: false);
+    private static readonly ISetting<bool> _autoStash = Setting.CreateBool(RootSettingsPath, "autostash", defaultValue: false);
 
-    private static readonly ISetting<bool> _rebaseAutoStash = Setting.Create(RootSettingsPath, "RebaseAutostash", defaultValue: false);
+    private static readonly ISetting<bool> _rebaseAutoStash = Setting.CreateBool(RootSettingsPath, "RebaseAutostash", defaultValue: false);
 
-    private static readonly ISetting<LocalChangesAction> _checkoutBranchAction = Setting.Create(RootSettingsPath, "checkoutbranchaction", defaultValue: LocalChangesAction.DontChange);
+    private static readonly ISetting<LocalChangesAction> _checkoutBranchAction = Setting.CreateEnum(RootSettingsPath, "checkoutbranchaction", defaultValue: LocalChangesAction.DontChange);
 
-    private static readonly ISetting<bool> _checkoutOtherBranchAfterReset = Setting.Create(DialogSettingsPath, nameof(CheckoutOtherBranchAfterReset), defaultValue: true);
+    private static readonly ISetting<bool> _checkoutOtherBranchAfterReset = Setting.CreateBool(DialogSettingsPath, nameof(CheckoutOtherBranchAfterReset), defaultValue: true);
 
-    private static readonly ISetting<bool> _useDefaultCheckoutBranchAction = Setting.Create(RootSettingsPath, "UseDefaultCheckoutBranchAction", defaultValue: false);
+    private static readonly ISetting<bool> _useDefaultCheckoutBranchAction = Setting.CreateBool(RootSettingsPath, "UseDefaultCheckoutBranchAction", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontShowHelpImages = Setting.Create(RootSettingsPath, "DontShowHelpImages", defaultValue: false);
+    private static readonly ISetting<bool> _dontShowHelpImages = Setting.CreateBool(RootSettingsPath, "DontShowHelpImages", defaultValue: false);
 
-    private static readonly ISetting<bool> _alwaysShowAdvOpt = Setting.Create(RootSettingsPath, "AlwaysShowAdvOpt", defaultValue: false);
+    private static readonly ISetting<bool> _alwaysShowAdvOpt = Setting.CreateBool(RootSettingsPath, "AlwaysShowAdvOpt", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontConfirmAmend = Setting.Create(RootSettingsPath, "DontConfirmAmend", defaultValue: false);
+    private static readonly ISetting<bool> _dontConfirmAmend = Setting.CreateBool(RootSettingsPath, "DontConfirmAmend", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontConfirmDeleteUnmergedBranch = Setting.Create(RootSettingsPath, "DontConfirmDeleteUnmergedBranch", defaultValue: false);
+    private static readonly ISetting<bool> _dontConfirmDeleteUnmergedBranch = Setting.CreateBool(RootSettingsPath, "DontConfirmDeleteUnmergedBranch", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontConfirmCommitIfNoBranch = Setting.Create(RootSettingsPath, "DontConfirmCommitIfNoBranch", defaultValue: false);
+    private static readonly ISetting<bool> _dontConfirmCommitIfNoBranch = Setting.CreateBool(RootSettingsPath, "DontConfirmCommitIfNoBranch", defaultValue: false);
 
-    private static readonly ISetting<bool> _confirmBranchCheckout = Setting.Create(ConfirmationsSettingsPath, nameof(ConfirmBranchCheckout), defaultValue: false);
+    private static readonly ISetting<bool> _confirmBranchCheckout = Setting.CreateBool(ConfirmationsSettingsPath, nameof(ConfirmBranchCheckout), defaultValue: false);
 
-    private static readonly ISetting<bool?> _autoPopStashAfterPull = Setting.Create<bool>(RootSettingsPath, "AutoPopStashAfterPull");
+    private static readonly ISetting<bool?> _autoPopStashAfterPull = Setting.CreateNullableBool(RootSettingsPath, "AutoPopStashAfterPull");
 
-    private static readonly ISetting<bool?> _autoPopStashAfterCheckoutBranch = Setting.Create<bool>(RootSettingsPath, "AutoPopStashAfterCheckoutBranch");
+    private static readonly ISetting<bool?> _autoPopStashAfterCheckoutBranch = Setting.CreateNullableBool(RootSettingsPath, "AutoPopStashAfterCheckoutBranch");
 
-    private static readonly ISetting<bool> _dontConfirmPushNewBranch = Setting.Create(RootSettingsPath, "DontConfirmPushNewBranch", defaultValue: false);
+    private static readonly ISetting<bool> _dontConfirmPushNewBranch = Setting.CreateBool(RootSettingsPath, "DontConfirmPushNewBranch", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontConfirmAddTrackingRef = Setting.Create(RootSettingsPath, "DontConfirmAddTrackingRef", defaultValue: false);
+    private static readonly ISetting<bool> _dontConfirmAddTrackingRef = Setting.CreateBool(RootSettingsPath, "DontConfirmAddTrackingRef", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontConfirmCommitAfterConflictsResolved = Setting.Create(RootSettingsPath, "DontConfirmCommitAfterConflictsResolved", defaultValue: false);
+    private static readonly ISetting<bool> _dontConfirmCommitAfterConflictsResolved = Setting.CreateBool(RootSettingsPath, "DontConfirmCommitAfterConflictsResolved", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontConfirmSecondAbortConfirmation = Setting.Create(RootSettingsPath, "DontConfirmSecondAbortConfirmation", defaultValue: false);
+    private static readonly ISetting<bool> _dontConfirmSecondAbortConfirmation = Setting.CreateBool(RootSettingsPath, "DontConfirmSecondAbortConfirmation", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontConfirmRebase = Setting.Create(RootSettingsPath, "DontConfirmRebase", defaultValue: false);
+    private static readonly ISetting<bool> _dontConfirmRebase = Setting.CreateBool(RootSettingsPath, "DontConfirmRebase", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontConfirmResolveConflicts = Setting.Create(RootSettingsPath, "DontConfirmResolveConflicts", defaultValue: false);
+    private static readonly ISetting<bool> _dontConfirmResolveConflicts = Setting.CreateBool(RootSettingsPath, "DontConfirmResolveConflicts", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontConfirmUndoLastCommit = Setting.Create(RootSettingsPath, "DontConfirmUndoLastCommit", defaultValue: false);
+    private static readonly ISetting<bool> _dontConfirmUndoLastCommit = Setting.CreateBool(RootSettingsPath, "DontConfirmUndoLastCommit", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontConfirmFetchAndPruneAll = Setting.Create(RootSettingsPath, "DontConfirmFetchAndPruneAll", defaultValue: false);
+    private static readonly ISetting<bool> _dontConfirmFetchAndPruneAll = Setting.CreateBool(RootSettingsPath, "DontConfirmFetchAndPruneAll", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontConfirmSwitchWorktree = Setting.Create(RootSettingsPath, "DontConfirmSwitchWorktree", defaultValue: false);
+    private static readonly ISetting<bool> _dontConfirmSwitchWorktree = Setting.CreateBool(RootSettingsPath, "DontConfirmSwitchWorktree", defaultValue: false);
 
-    private static readonly ISetting<bool> _includeUntrackedFilesInAutoStash = Setting.Create(RootSettingsPath, "includeUntrackedFilesInAutoStash", defaultValue: false);
+    private static readonly ISetting<bool> _includeUntrackedFilesInAutoStash = Setting.CreateBool(RootSettingsPath, "includeUntrackedFilesInAutoStash", defaultValue: false);
 
-    private static readonly ISetting<bool> _includeUntrackedFilesInManualStash = Setting.Create(RootSettingsPath, "includeUntrackedFilesInManualStash", defaultValue: false);
+    private static readonly ISetting<bool> _includeUntrackedFilesInManualStash = Setting.CreateBool(RootSettingsPath, "includeUntrackedFilesInManualStash", defaultValue: false);
 
-    private static readonly ISetting<bool> _showRemoteBranches = Setting.Create(RootSettingsPath, "showRemoteBranches", defaultValue: true);
+    private static readonly ISetting<bool> _showRemoteBranches = Setting.CreateBool(RootSettingsPath, "showRemoteBranches", defaultValue: true);
 
-    private static readonly ISetting<bool> _showStashes = Setting.Create(RootSettingsPath, "showStashes", defaultValue: true);
+    private static readonly ISetting<bool> _showStashes = Setting.CreateBool(RootSettingsPath, "showStashes", defaultValue: true);
 
     // Currently not configurable in UI (Set manually in settings file)
-    private static readonly ISetting<int> _maxStashesWithUntrackedFiles = Setting.Create(RootSettingsPath, "maxStashesWithUntrackedFiles", defaultValue: 10);
+    private static readonly ISetting<int> _maxStashesWithUntrackedFiles = Setting.CreateInt(RootSettingsPath, "maxStashesWithUntrackedFiles", defaultValue: 10);
 
-    private static readonly ISetting<bool> _showSuperprojectTags = Setting.Create(RootSettingsPath, "showSuperprojectTags", defaultValue: false);
+    private static readonly ISetting<bool> _showSuperprojectTags = Setting.CreateBool(RootSettingsPath, "showSuperprojectTags", defaultValue: false);
 
-    private static readonly ISetting<bool> _showSuperprojectBranches = Setting.Create(RootSettingsPath, "showSuperprojectBranches", defaultValue: true);
+    private static readonly ISetting<bool> _showSuperprojectBranches = Setting.CreateBool(RootSettingsPath, "showSuperprojectBranches", defaultValue: true);
 
-    private static readonly ISetting<bool> _showSuperprojectRemoteBranches = Setting.Create(RootSettingsPath, "showSuperprojectRemoteBranches", defaultValue: false);
+    private static readonly ISetting<bool> _showSuperprojectRemoteBranches = Setting.CreateBool(RootSettingsPath, "showSuperprojectRemoteBranches", defaultValue: false);
 
-    private static readonly ISetting<bool?> _updateSubmodulesOnCheckout = Setting.Create<bool>(RootSettingsPath, "updateSubmodulesOnCheckout");
+    private static readonly ISetting<bool?> _updateSubmodulesOnCheckout = Setting.CreateNullableBool(RootSettingsPath, "updateSubmodulesOnCheckout");
 
-    private static readonly ISetting<bool?> _dontConfirmUpdateSubmodulesOnCheckout = Setting.Create<bool>(RootSettingsPath, "dontConfirmUpdateSubmodulesOnCheckout");
+    private static readonly ISetting<bool?> _dontConfirmUpdateSubmodulesOnCheckout = Setting.CreateNullableBool(RootSettingsPath, "dontConfirmUpdateSubmodulesOnCheckout");
 
-    private static readonly ISetting<bool> _showGitCommandLine = Setting.Create(RootSettingsPath, "showgitcommandline", defaultValue: false);
+    private static readonly ISetting<bool> _showGitCommandLine = Setting.CreateBool(RootSettingsPath, "showgitcommandline", defaultValue: false);
 
-    private static readonly ISetting<bool> _showStashCount = Setting.Create(RootSettingsPath, "showstashcount", defaultValue: false);
+    private static readonly ISetting<bool> _showStashCount = Setting.CreateBool(RootSettingsPath, "showstashcount", defaultValue: false);
 
-    private static readonly ISetting<bool> _showAheadBehindData = Setting.Create(RootSettingsPath, "showaheadbehinddata", defaultValue: true);
+    private static readonly ISetting<bool> _showAheadBehindData = Setting.CreateBool(RootSettingsPath, "showaheadbehinddata", defaultValue: true);
 
-    private static readonly ISetting<bool> _showSubmoduleStatus = Setting.Create(RootSettingsPath, "showsubmodulestatus", defaultValue: false);
+    private static readonly ISetting<bool> _showSubmoduleStatus = Setting.CreateBool(RootSettingsPath, "showsubmodulestatus", defaultValue: false);
 
-    private static readonly ISetting<bool> _relativeDate = Setting.Create(RootSettingsPath, "relativedate", defaultValue: true);
+    private static readonly ISetting<bool> _relativeDate = Setting.CreateBool(RootSettingsPath, "relativedate", defaultValue: true);
 
-    private static readonly ISetting<bool> _showGitNotes = Setting.Create(RootSettingsPath, "showgitnotes", defaultValue: false);
+    private static readonly ISetting<bool> _showGitNotes = Setting.CreateBool(RootSettingsPath, "showgitnotes", defaultValue: false);
 
-    private static readonly ISetting<bool> _showSessionRefs = Setting.Create(RootSettingsPath, "showSessionRefs", defaultValue: false);
+    private static readonly ISetting<bool> _showSessionRefs = Setting.CreateBool(RootSettingsPath, "showSessionRefs", defaultValue: false);
 
-    private static readonly ISetting<bool> _showGitNotesColumn = Setting.Create(AppearanceSettingsPath, nameof(ShowGitNotesColumn), defaultValue: false);
+    private static readonly ISetting<bool> _showGitNotesColumn = Setting.CreateBool(AppearanceSettingsPath, nameof(ShowGitNotesColumn), defaultValue: false);
 
-    private static readonly ISetting<bool> _showAnnotatedTagsMessages = Setting.Create(RootSettingsPath, "showannotatedtagsmessages", defaultValue: true);
+    private static readonly ISetting<bool> _showAnnotatedTagsMessages = Setting.CreateBool(RootSettingsPath, "showannotatedtagsmessages", defaultValue: true);
 
     // History Compatibility: The meaning of this value is changed in the GUI, setting name is kept for compatibility
-    private static readonly ISetting<bool> _hideMergeCommits = Setting.CreateIntercepted<bool, bool>(
+    private static readonly ISetting<bool> _hideMergeCommits = Setting.Create(
         RootSettingsPath,
         "showmergecommits",
         defaultValue: false,
-        read: v => !v,
-        store: v => !v);
+        read: static s => (true, s != "True"),
+        store: static v => v ? "False" : "True");
 
-    private static readonly ISetting<bool> _showTags = Setting.Create(RootSettingsPath, "showtags", defaultValue: true);
+    private static readonly ISetting<bool> _showTags = Setting.CreateBool(RootSettingsPath, "showtags", defaultValue: true);
 
-    private static readonly ISetting<bool> _showRevisionGridGraphColumn = Setting.Create(RootSettingsPath, "showrevisiongridgraphcolumn", defaultValue: true);
+    private static readonly ISetting<bool> _showRevisionGridGraphColumn = Setting.CreateBool(RootSettingsPath, "showrevisiongridgraphcolumn", defaultValue: true);
 
-    private static readonly ISetting<bool> _showAuthorAvatarColumn = Setting.Create(RootSettingsPath, "showrevisiongridauthoravatarcolumn", defaultValue: true);
+    private static readonly ISetting<bool> _showAuthorAvatarColumn = Setting.CreateBool(RootSettingsPath, "showrevisiongridauthoravatarcolumn", defaultValue: true);
 
-    private static readonly ISetting<bool> _showAuthorNameColumn = Setting.Create(RootSettingsPath, "showrevisiongridauthornamecolumn", defaultValue: true);
+    private static readonly ISetting<bool> _showAuthorNameColumn = Setting.CreateBool(RootSettingsPath, "showrevisiongridauthornamecolumn", defaultValue: true);
 
-    private static readonly ISetting<bool> _showDateColumn = Setting.Create(RootSettingsPath, "showrevisiongriddatecolumn", defaultValue: true);
+    private static readonly ISetting<bool> _showDateColumn = Setting.CreateBool(RootSettingsPath, "showrevisiongriddatecolumn", defaultValue: true);
 
-    private static readonly ISetting<bool> _showObjectIdColumn = Setting.Create(RootSettingsPath, "showids", defaultValue: true);
+    private static readonly ISetting<bool> _showObjectIdColumn = Setting.CreateBool(RootSettingsPath, "showids", defaultValue: true);
 
-    private static readonly ISetting<bool> _showBuildStatusIconColumn = Setting.Create(RootSettingsPath, "showbuildstatusiconcolumn", defaultValue: true);
+    private static readonly ISetting<bool> _showBuildStatusIconColumn = Setting.CreateBool(RootSettingsPath, "showbuildstatusiconcolumn", defaultValue: true);
 
-    private static readonly ISetting<bool> _showBuildStatusTextColumn = Setting.Create(RootSettingsPath, "showbuildstatustextcolumn", defaultValue: false);
+    private static readonly ISetting<bool> _showBuildStatusTextColumn = Setting.CreateBool(RootSettingsPath, "showbuildstatustextcolumn", defaultValue: false);
 
-    private static readonly ISetting<bool> _showAuthorDate = Setting.Create(RootSettingsPath, "showauthordate", defaultValue: true);
+    private static readonly ISetting<bool> _showAuthorDate = Setting.CreateBool(RootSettingsPath, "showauthordate", defaultValue: true);
 
-    private static readonly ISetting<bool> _closeProcessDialog = Setting.Create(RootSettingsPath, "closeprocessdialog", defaultValue: false);
+    private static readonly ISetting<bool> _closeProcessDialog = Setting.CreateBool(RootSettingsPath, "closeprocessdialog", defaultValue: false);
 
-    private static readonly ISetting<bool> _showProcessDialogPasswordInput = Setting.Create(DetailedSettingsPath, nameof(ShowProcessDialogPasswordInput), defaultValue: false);
+    private static readonly ISetting<bool> _showProcessDialogPasswordInput = Setting.CreateBool(DetailedSettingsPath, nameof(ShowProcessDialogPasswordInput), defaultValue: false);
 
-    private static readonly ISetting<bool> _showSimplifyByDecoration = Setting.Create(RootSettingsPath, "showsimplifybydecoration", defaultValue: false);
+    private static readonly ISetting<bool> _showSimplifyByDecoration = Setting.CreateBool(RootSettingsPath, "showsimplifybydecoration", defaultValue: false);
 
-    private static readonly ISetting<bool> _showOnlyFirstParent = Setting.Create(RootSettingsPath, "showfirstparent", defaultValue: false);
+    private static readonly ISetting<bool> _showOnlyFirstParent = Setting.CreateBool(RootSettingsPath, "showfirstparent", defaultValue: false);
 
-    private static readonly ISetting<bool> _commitDialogSelectionFilter = Setting.Create(RootSettingsPath, "commitdialogselectionfilter", defaultValue: false);
+    private static readonly ISetting<bool> _commitDialogSelectionFilter = Setting.CreateBool(RootSettingsPath, "commitdialogselectionfilter", defaultValue: false);
 
     private static readonly ISetting<string> _defaultCloneDestinationPath = Setting.Create(RootSettingsPath, "defaultclonedestinationpath", defaultValue: string.Empty);
 
-    private static readonly ISetting<int> _revisionGridQuickSearchTimeout = Setting.Create(RootSettingsPath, "revisiongridquicksearchtimeout", defaultValue: 4000);
+    private static readonly ISetting<int> _revisionGridQuickSearchTimeout = Setting.CreateInt(RootSettingsPath, "revisiongridquicksearchtimeout", defaultValue: 4000);
 
-    private static readonly ISetting<bool> _showCommitBodyInRevisionGrid = Setting.Create(RootSettingsPath, "ShowCommitBodyInRevisionGrid", defaultValue: true);
+    private static readonly ISetting<bool> _showCommitBodyInRevisionGrid = Setting.CreateBool(RootSettingsPath, "ShowCommitBodyInRevisionGrid", defaultValue: true);
 
-    private static readonly ISetting<int> _maxRevisionGraphCommits = Setting.Create(RootSettingsPath, "maxrevisiongraphcommits", defaultValue: 100000);
+    private static readonly ISetting<int> _maxRevisionGraphCommits = Setting.CreateInt(RootSettingsPath, "maxrevisiongraphcommits", defaultValue: 100000);
 
-    private static readonly ISetting<bool> _showDiffForAllParents = Setting.Create(RootSettingsPath, "showdiffforallparents", defaultValue: true);
+    private static readonly ISetting<bool> _showDiffForAllParents = Setting.CreateBool(RootSettingsPath, "showdiffforallparents", defaultValue: true);
 
-    private static readonly ISetting<bool> _showFindInCommitFilesGitGrep = Setting.Create(AppearanceSettingsPath, nameof(ShowFindInCommitFilesGitGrep), defaultValue: false);
+    private static readonly ISetting<bool> _showFindInCommitFilesGitGrep = Setting.CreateBool(AppearanceSettingsPath, nameof(ShowFindInCommitFilesGitGrep), defaultValue: false);
 
-    private static readonly ISetting<bool> _showRevisionGridTooltips = Setting.Create(AppearanceSettingsPath, nameof(ShowRevisionGridTooltips), defaultValue: true);
+    private static readonly ISetting<bool> _showRevisionGridTooltips = Setting.CreateBool(AppearanceSettingsPath, nameof(ShowRevisionGridTooltips), defaultValue: true);
 
-    private static readonly ISetting<bool> _showAvailableDiffTools = Setting.Create(RootSettingsPath, "difftools.showavailable", defaultValue: true);
+    private static readonly ISetting<bool> _showAvailableDiffTools = Setting.CreateBool(RootSettingsPath, "difftools.showavailable", defaultValue: true);
 
-    private static readonly ISetting<int> _diffVerticalRulerPosition = Setting.Create(RootSettingsPath, "diffverticalrulerposition", defaultValue: 0);
+    private static readonly ISetting<int> _diffVerticalRulerPosition = Setting.CreateInt(RootSettingsPath, "diffverticalrulerposition", defaultValue: 0);
 
     private static readonly ISetting<string> _gitGrepUserArguments = Setting.Create(DialogSettingsPath, nameof(GitGrepUserArguments), defaultValue: "");
 
-    private static readonly ISetting<bool> _gitGrepIgnoreCase = Setting.Create(DialogSettingsPath, nameof(GitGrepIgnoreCase), defaultValue: false);
+    private static readonly ISetting<bool> _gitGrepIgnoreCase = Setting.CreateBool(DialogSettingsPath, nameof(GitGrepIgnoreCase), defaultValue: false);
 
-    private static readonly ISetting<bool> _gitGrepMatchWholeWord = Setting.Create(DialogSettingsPath, nameof(GitGrepMatchWholeWord), defaultValue: false);
+    private static readonly ISetting<bool> _gitGrepMatchWholeWord = Setting.CreateBool(DialogSettingsPath, nameof(GitGrepMatchWholeWord), defaultValue: false);
 
-    private static readonly ISetting<bool> _startWithRecentWorkingDir = Setting.Create(RootSettingsPath, "StartWithRecentWorkingDir", defaultValue: false);
+    private static readonly ISetting<bool> _startWithRecentWorkingDir = Setting.CreateBool(RootSettingsPath, "StartWithRecentWorkingDir", defaultValue: false);
 
-    private static readonly ISetting<bool> _autoStartPageant = Setting.Create(RootSettingsPath, "autostartpageant", defaultValue: true);
+    private static readonly ISetting<bool> _autoStartPageant = Setting.CreateBool(RootSettingsPath, "autostartpageant", defaultValue: true);
 
-    private static readonly ISetting<bool> _markIllFormedLinesInCommitMsg = Setting.Create(RootSettingsPath, "markillformedlinesincommitmsg", defaultValue: true);
+    private static readonly ISetting<bool> _markIllFormedLinesInCommitMsg = Setting.CreateBool(RootSettingsPath, "markillformedlinesincommitmsg", defaultValue: true);
 
-    private static readonly ISetting<bool> _useSystemVisualStyle = Setting.Create(RootSettingsPath, "systemvisualstyle", defaultValue: true);
+    private static readonly ISetting<bool> _useSystemVisualStyle = Setting.CreateBool(RootSettingsPath, "systemvisualstyle", defaultValue: true);
 
-    private static readonly ISetting<bool> _showEolMarkerAsGlyph = Setting.Create(RootSettingsPath, "ShowEolMarkerAsGlyph", defaultValue: false);
+    private static readonly ISetting<bool> _showEolMarkerAsGlyph = Setting.CreateBool(RootSettingsPath, "ShowEolMarkerAsGlyph", defaultValue: false);
 
-    private static readonly ISetting<bool> _multicolorBranches = Setting.Create(RootSettingsPath, "multicolorbranches", defaultValue: true);
+    private static readonly ISetting<bool> _multicolorBranches = Setting.CreateBool(RootSettingsPath, "multicolorbranches", defaultValue: true);
 
-    private static readonly ISetting<bool> _highlightAuthoredRevisions = Setting.Create(RootSettingsPath, "highlightauthoredrevisions", defaultValue: true);
+    private static readonly ISetting<bool> _highlightAuthoredRevisions = Setting.CreateBool(RootSettingsPath, "highlightauthoredrevisions", defaultValue: true);
 
-    private static readonly ISetting<bool> _fillRefLabels = Setting.Create(RootSettingsPath, "FillRefLabels", defaultValue: false);
+    private static readonly ISetting<bool> _fillRefLabels = Setting.CreateBool(RootSettingsPath, "FillRefLabels", defaultValue: false);
 
-    private static readonly ISetting<bool> _mergeGraphLanesHavingCommonParent = Setting.Create(RevisionGraphSettingsPath, nameof(MergeGraphLanesHavingCommonParent), defaultValue: true);
+    private static readonly ISetting<bool> _mergeGraphLanesHavingCommonParent = Setting.CreateBool(RevisionGraphSettingsPath, nameof(MergeGraphLanesHavingCommonParent), defaultValue: true);
 
-    private static readonly ISetting<bool> _renderGraphWithDiagonals = Setting.Create(RevisionGraphSettingsPath, nameof(RenderGraphWithDiagonals), defaultValue: true);
+    private static readonly ISetting<bool> _renderGraphWithDiagonals = Setting.CreateBool(RevisionGraphSettingsPath, nameof(RenderGraphWithDiagonals), defaultValue: true);
 
-    private static readonly ISetting<bool> _straightenGraphDiagonals = Setting.Create(RevisionGraphSettingsPath, nameof(StraightenGraphDiagonals), defaultValue: true);
+    private static readonly ISetting<bool> _straightenGraphDiagonals = Setting.CreateBool(RevisionGraphSettingsPath, nameof(StraightenGraphDiagonals), defaultValue: true);
 
     /// <summary>
     ///  The limit when to skip the straightening of revision graph segments.
@@ -408,108 +408,108 @@ public static partial class AppSettings
     ///  Straightening inserts gaps making the graph wider. If it already has to display many segments, i.e. parallel branches, there would be a low benefit of straightening.<br></br>
     ///  So rather skip the - in this case particularly expensive - RevisionGraphRow.BuildSegmentLanes function and call it only if the row is visible.
     /// </remarks>
-    private static readonly ISetting<int> _straightenGraphSegmentsLimit = Setting.Create(RevisionGraphSettingsPath, nameof(StraightenGraphSegmentsLimit), defaultValue: 80);
+    private static readonly ISetting<int> _straightenGraphSegmentsLimit = Setting.CreateInt(RevisionGraphSettingsPath, nameof(StraightenGraphSegmentsLimit), defaultValue: 80);
 
     private static readonly ISetting<string> _lastFormatPatchDir = Setting.Create(RootSettingsPath, "lastformatpatchdir", defaultValue: "");
 
-    private static readonly ISetting<bool> _rememberIgnoreWhiteSpacePreference = Setting.Create(RootSettingsPath, "rememberIgnoreWhiteSpacePreference", defaultValue: true);
+    private static readonly ISetting<bool> _rememberIgnoreWhiteSpacePreference = Setting.CreateBool(RootSettingsPath, "rememberIgnoreWhiteSpacePreference", defaultValue: true);
 
-    private static readonly ISetting<bool> _rememberShowNonPrintingCharsPreference = Setting.Create(RootSettingsPath, "RememberShowNonPrintableCharsPreference", defaultValue: false);
+    private static readonly ISetting<bool> _rememberShowNonPrintingCharsPreference = Setting.CreateBool(RootSettingsPath, "RememberShowNonPrintableCharsPreference", defaultValue: false);
 
-    private static readonly ISetting<bool> _rememberShowEntireFilePreference = Setting.Create(RootSettingsPath, "RememberShowEntireFilePreference", defaultValue: false);
+    private static readonly ISetting<bool> _rememberShowEntireFilePreference = Setting.CreateBool(RootSettingsPath, "RememberShowEntireFilePreference", defaultValue: false);
 
     /// <summary>
     /// Gets or sets whether to remember the preference for diff appearance.
     /// </summary>
-    private static readonly ISetting<bool> _rememberDiffDisplayAppearance = Setting.Create(AppearanceSettingsPath, nameof(RememberDiffDisplayAppearance), defaultValue: false);
+    private static readonly ISetting<bool> _rememberDiffDisplayAppearance = Setting.CreateBool(AppearanceSettingsPath, nameof(RememberDiffDisplayAppearance), defaultValue: false);
 
-    private static readonly ISetting<bool> _rememberNumberOfContextLines = Setting.Create(RootSettingsPath, "RememberNumberOfContextLines", defaultValue: false);
+    private static readonly ISetting<bool> _rememberNumberOfContextLines = Setting.CreateBool(RootSettingsPath, "RememberNumberOfContextLines", defaultValue: false);
 
-    private static readonly ISetting<bool> _rememberShowSyntaxHighlightingInDiff = Setting.Create(RootSettingsPath, "RememberShowSyntaxHighlightingInDiff", defaultValue: true);
+    private static readonly ISetting<bool> _rememberShowSyntaxHighlightingInDiff = Setting.CreateBool(RootSettingsPath, "RememberShowSyntaxHighlightingInDiff", defaultValue: true);
 
-    private static readonly ISetting<bool> _showRepoCurrentBranch = Setting.Create(RootSettingsPath, "dashboardshowcurrentbranch", defaultValue: true);
+    private static readonly ISetting<bool> _showRepoCurrentBranch = Setting.CreateBool(RootSettingsPath, "dashboardshowcurrentbranch", defaultValue: true);
 
-    private static readonly ISetting<int> _recursiveSubmodules = Setting.Create(RootSettingsPath, "RecursiveSubmodules", defaultValue: 1);
+    private static readonly ISetting<int> _recursiveSubmodules = Setting.CreateInt(RootSettingsPath, "RecursiveSubmodules", defaultValue: 1);
 
-    private static readonly ISetting<ShorteningRecentRepoPathStrategy> _shorteningRecentRepoPathStrategy = Setting.Create(RootSettingsPath, "ShorteningRecentRepoPathStrategy", defaultValue: ShorteningRecentRepoPathStrategy.None);
+    private static readonly ISetting<ShorteningRecentRepoPathStrategy> _shorteningRecentRepoPathStrategy = Setting.CreateEnum(RootSettingsPath, "ShorteningRecentRepoPathStrategy", defaultValue: ShorteningRecentRepoPathStrategy.None);
 
     // History Compatibility: Keep original key to maintain the compatibility with the existing user settings
-    private static readonly ISetting<int> _maxTopRepositories = Setting.Create(RootSettingsPath, "MaxMostRecentRepositories", defaultValue: 0);
+    private static readonly ISetting<int> _maxTopRepositories = Setting.CreateInt(RootSettingsPath, "MaxMostRecentRepositories", defaultValue: 0);
 
-    private static readonly ISetting<int> _recentRepositoriesHistorySize = Setting.Create(RootSettingsPath, "history size", defaultValue: 30);
+    private static readonly ISetting<int> _recentRepositoriesHistorySize = Setting.CreateInt(RootSettingsPath, "history size", defaultValue: 30);
 
-    private static readonly ISetting<bool> _hideTopRepositoriesFromRecentList = Setting.Create(RecentRepositories, nameof(HideTopRepositoriesFromRecentList), defaultValue: false);
+    private static readonly ISetting<bool> _hideTopRepositoriesFromRecentList = Setting.CreateBool(RecentRepositories, nameof(HideTopRepositoriesFromRecentList), defaultValue: false);
 
     // Currently not configurable in UI (Set manually in settings file)
-    private static readonly ISetting<int> _remotesCacheLength = Setting.Create(RootSettingsPath, "RemotesCacheLength", defaultValue: 30);
+    private static readonly ISetting<int> _remotesCacheLength = Setting.CreateInt(RootSettingsPath, "RemotesCacheLength", defaultValue: 30);
 
-    private static readonly ISetting<int> _recentReposComboMinWidth = Setting.Create(RootSettingsPath, "RecentReposComboMinWidth", defaultValue: 0);
+    private static readonly ISetting<int> _recentReposComboMinWidth = Setting.CreateInt(RootSettingsPath, "RecentReposComboMinWidth", defaultValue: 0);
 
-    private static readonly ISetting<bool> _sortTopRepos = Setting.Create(RootSettingsPath, "SortMostRecentRepos", defaultValue: false);
+    private static readonly ISetting<bool> _sortTopRepos = Setting.CreateBool(RootSettingsPath, "SortMostRecentRepos", defaultValue: false);
 
-    private static readonly ISetting<bool> _sortRecentRepos = Setting.Create(RootSettingsPath, "SortLessRecentRepos", defaultValue: false);
+    private static readonly ISetting<bool> _sortRecentRepos = Setting.CreateBool(RootSettingsPath, "SortLessRecentRepos", defaultValue: false);
 
-    private static readonly ISetting<bool> _dontCommitMerge = Setting.Create(RootSettingsPath, "DontCommitMerge", defaultValue: false);
+    private static readonly ISetting<bool> _dontCommitMerge = Setting.CreateBool(RootSettingsPath, "DontCommitMerge", defaultValue: false);
 
-    private static readonly ISetting<int> _commitValidationMaxCntCharsFirstLine = Setting.Create(RootSettingsPath, "CommitValidationMaxCntCharsFirstLine", defaultValue: 0);
+    private static readonly ISetting<int> _commitValidationMaxCntCharsFirstLine = Setting.CreateInt(RootSettingsPath, "CommitValidationMaxCntCharsFirstLine", defaultValue: 0);
 
-    private static readonly ISetting<int> _commitValidationMaxCntCharsPerLine = Setting.Create(RootSettingsPath, "CommitValidationMaxCntCharsPerLine", defaultValue: 0);
+    private static readonly ISetting<int> _commitValidationMaxCntCharsPerLine = Setting.CreateInt(RootSettingsPath, "CommitValidationMaxCntCharsPerLine", defaultValue: 0);
 
-    private static readonly ISetting<bool> _commitValidationSecondLineMustBeEmpty = Setting.Create(RootSettingsPath, "CommitValidationSecondLineMustBeEmpty", defaultValue: false);
+    private static readonly ISetting<bool> _commitValidationSecondLineMustBeEmpty = Setting.CreateBool(RootSettingsPath, "CommitValidationSecondLineMustBeEmpty", defaultValue: false);
 
-    private static readonly ISetting<bool> _commitValidationIndentAfterFirstLine = Setting.Create(RootSettingsPath, "CommitValidationIndentAfterFirstLine", defaultValue: true);
+    private static readonly ISetting<bool> _commitValidationIndentAfterFirstLine = Setting.CreateBool(RootSettingsPath, "CommitValidationIndentAfterFirstLine", defaultValue: true);
 
-    private static readonly ISetting<bool> _commitValidationAutoWrap = Setting.Create(RootSettingsPath, "CommitValidationAutoWrap", defaultValue: true);
+    private static readonly ISetting<bool> _commitValidationAutoWrap = Setting.CreateBool(RootSettingsPath, "CommitValidationAutoWrap", defaultValue: true);
 
     private static readonly ISetting<string> _commitValidationRegEx = Setting.Create(RootSettingsPath, "CommitValidationRegEx", defaultValue: string.Empty);
 
     private static readonly ISetting<string> _commitTemplates = Setting.Create(RootSettingsPath, "CommitTemplates", defaultValue: string.Empty);
 
-    private static readonly ISetting<bool> _createLocalBranchForRemote = Setting.Create(RootSettingsPath, "CreateLocalBranchForRemote", defaultValue: false);
+    private static readonly ISetting<bool> _createLocalBranchForRemote = Setting.CreateBool(RootSettingsPath, "CreateLocalBranchForRemote", defaultValue: false);
 
-    private static readonly ISetting<bool> _useFormCommitMessage = Setting.Create(RootSettingsPath, "UseFormCommitMessage", defaultValue: true);
+    private static readonly ISetting<bool> _useFormCommitMessage = Setting.CreateBool(RootSettingsPath, "UseFormCommitMessage", defaultValue: true);
 
-    private static readonly ISetting<bool> _commitAutomaticallyAfterCherryPick = Setting.Create(RootSettingsPath, "CommitAutomaticallyAfterCherryPick", defaultValue: false);
+    private static readonly ISetting<bool> _commitAutomaticallyAfterCherryPick = Setting.CreateBool(RootSettingsPath, "CommitAutomaticallyAfterCherryPick", defaultValue: false);
 
-    private static readonly ISetting<bool> _addCommitReferenceToCherryPick = Setting.Create(RootSettingsPath, "AddCommitReferenceToCherryPick", defaultValue: false);
+    private static readonly ISetting<bool> _addCommitReferenceToCherryPick = Setting.CreateBool(RootSettingsPath, "AddCommitReferenceToCherryPick", defaultValue: false);
 
-    private static readonly ISetting<bool> _checkForUpdates = Setting.Create(RootSettingsPath, "CheckForUpdates", defaultValue: true);
+    private static readonly ISetting<bool> _checkForUpdates = Setting.CreateBool(RootSettingsPath, "CheckForUpdates", defaultValue: true);
 
-    private static readonly ISetting<bool> _checkForReleaseCandidates = Setting.Create(RootSettingsPath, "CheckForReleaseCandidates", defaultValue: false);
+    private static readonly ISetting<bool> _checkForReleaseCandidates = Setting.CreateBool(RootSettingsPath, "CheckForReleaseCandidates", defaultValue: false);
 
-    private static readonly ISetting<bool> _omitUninterestingDiff = Setting.Create(RootSettingsPath, "OmitUninterestingDiff", defaultValue: false);
+    private static readonly ISetting<bool> _omitUninterestingDiff = Setting.CreateBool(RootSettingsPath, "OmitUninterestingDiff", defaultValue: false);
 
-    private static readonly ISetting<bool> _useConsoleEmulatorForCommands = Setting.Create(RootSettingsPath, "UseConsoleEmulatorForCommands", defaultValue: true);
+    private static readonly ISetting<bool> _useConsoleEmulatorForCommands = Setting.CreateBool(RootSettingsPath, "UseConsoleEmulatorForCommands", defaultValue: true);
 
-    private static readonly ISetting<GitRefsSortBy> _refsSortBy = Setting.Create(RootSettingsPath, "RefsSortBy", defaultValue: GitRefsSortBy.Default);
+    private static readonly ISetting<GitRefsSortBy> _refsSortBy = Setting.CreateEnum(RootSettingsPath, "RefsSortBy", defaultValue: GitRefsSortBy.Default);
 
-    private static readonly ISetting<GitRefsSortOrder> _refsSortOrder = Setting.Create(RootSettingsPath, "RefsSortOrder", defaultValue: GitRefsSortOrder.Descending);
+    private static readonly ISetting<GitRefsSortOrder> _refsSortOrder = Setting.CreateEnum(RootSettingsPath, "RefsSortOrder", defaultValue: GitRefsSortOrder.Descending);
 
-    private static readonly ISetting<DiffListSortType> _diffListSorting = Setting.Create(RootSettingsPath, "DiffListSortType", defaultValue: DiffListSortType.FilePath);
+    private static readonly ISetting<DiffListSortType> _diffListSorting = Setting.CreateEnum(RootSettingsPath, "DiffListSortType", defaultValue: DiffListSortType.FilePath);
 
-    private static readonly ISetting<bool> _repoObjectsTreeShowBranches = Setting.Create(RootSettingsPath, "RepoObjectsTree.ShowBranches", defaultValue: true);
+    private static readonly ISetting<bool> _repoObjectsTreeShowBranches = Setting.CreateBool(RootSettingsPath, "RepoObjectsTree.ShowBranches", defaultValue: true);
 
-    private static readonly ISetting<bool> _repoObjectsTreeShowRemotes = Setting.Create(RootSettingsPath, "RepoObjectsTree.ShowRemotes", defaultValue: true);
+    private static readonly ISetting<bool> _repoObjectsTreeShowRemotes = Setting.CreateBool(RootSettingsPath, "RepoObjectsTree.ShowRemotes", defaultValue: true);
 
-    private static readonly ISetting<bool> _repoObjectsTreeShowTags = Setting.Create(RootSettingsPath, "RepoObjectsTree.ShowTags", defaultValue: true);
+    private static readonly ISetting<bool> _repoObjectsTreeShowTags = Setting.CreateBool(RootSettingsPath, "RepoObjectsTree.ShowTags", defaultValue: true);
 
-    private static readonly ISetting<bool> _repoObjectsTreeShowStashes = Setting.Create(RootSettingsPath, "RepoObjectsTree.ShowStashes", defaultValue: true);
+    private static readonly ISetting<bool> _repoObjectsTreeShowStashes = Setting.CreateBool(RootSettingsPath, "RepoObjectsTree.ShowStashes", defaultValue: true);
 
-    private static readonly ISetting<bool> _repoObjectsTreeShowSubmodules = Setting.Create(RootSettingsPath, "RepoObjectsTree.ShowSubmodules", defaultValue: true);
+    private static readonly ISetting<bool> _repoObjectsTreeShowSubmodules = Setting.CreateBool(RootSettingsPath, "RepoObjectsTree.ShowSubmodules", defaultValue: true);
 
-    private static readonly ISetting<bool> _repoObjectsTreeShowWorktrees = Setting.Create(RootSettingsPath, "RepoObjectsTree.ShowWorktrees", defaultValue: true);
+    private static readonly ISetting<bool> _repoObjectsTreeShowWorktrees = Setting.CreateBool(RootSettingsPath, "RepoObjectsTree.ShowWorktrees", defaultValue: true);
 
-    private static readonly ISetting<int> _repoObjectsTreeBranchesIndex = Setting.Create(RootSettingsPath, "RepoObjectsTree.BranchesIndex", defaultValue: 0);
+    private static readonly ISetting<int> _repoObjectsTreeBranchesIndex = Setting.CreateInt(RootSettingsPath, "RepoObjectsTree.BranchesIndex", defaultValue: 0);
 
-    private static readonly ISetting<int> _repoObjectsTreeRemotesIndex = Setting.Create(RootSettingsPath, "RepoObjectsTree.RemotesIndex", defaultValue: 1);
+    private static readonly ISetting<int> _repoObjectsTreeRemotesIndex = Setting.CreateInt(RootSettingsPath, "RepoObjectsTree.RemotesIndex", defaultValue: 1);
 
-    private static readonly ISetting<int> _repoObjectsTreeWorktreesIndex = Setting.Create(RootSettingsPath, "RepoObjectsTree.WorktreesIndex", defaultValue: 2);
+    private static readonly ISetting<int> _repoObjectsTreeWorktreesIndex = Setting.CreateInt(RootSettingsPath, "RepoObjectsTree.WorktreesIndex", defaultValue: 2);
 
-    private static readonly ISetting<int> _repoObjectsTreeTagsIndex = Setting.Create(RootSettingsPath, "RepoObjectsTree.TagsIndex", defaultValue: 3);
+    private static readonly ISetting<int> _repoObjectsTreeTagsIndex = Setting.CreateInt(RootSettingsPath, "RepoObjectsTree.TagsIndex", defaultValue: 3);
 
-    private static readonly ISetting<int> _repoObjectsTreeSubmodulesIndex = Setting.Create(RootSettingsPath, "RepoObjectsTree.SubmodulesIndex", defaultValue: 4);
+    private static readonly ISetting<int> _repoObjectsTreeSubmodulesIndex = Setting.CreateInt(RootSettingsPath, "RepoObjectsTree.SubmodulesIndex", defaultValue: 4);
 
-    private static readonly ISetting<int> _repoObjectsTreeStashesIndex = Setting.Create(RootSettingsPath, "RepoObjectsTree.StashesIndex", defaultValue: 5);
+    private static readonly ISetting<int> _repoObjectsTreeStashesIndex = Setting.CreateInt(RootSettingsPath, "RepoObjectsTree.StashesIndex", defaultValue: 5);
 
     private static readonly ISetting<string> _prioritizedBranchNames = Setting.Create(RootSettingsPath, "PrioritizedBranchNames", defaultValue: "main[^/]*|master[^/]*|release/.*");
 
@@ -521,79 +521,79 @@ public static partial class AppSettings
     /// </summary>
     private static readonly ISetting<string> _prioritizedBuildServerRemoteNames = Setting.Create(RootSettingsPath, "PrioritizedBuildServerRemoteNames", defaultValue: "upstream|origin|remote");
 
-    private static readonly ISetting<bool> _blameDisplayAuthorFirst = Setting.Create(RootSettingsPath, "Blame.DisplayAuthorFirst", defaultValue: false);
+    private static readonly ISetting<bool> _blameDisplayAuthorFirst = Setting.CreateBool(RootSettingsPath, "Blame.DisplayAuthorFirst", defaultValue: false);
 
-    private static readonly ISetting<bool> _blameShowAuthor = Setting.Create(RootSettingsPath, "Blame.ShowAuthor", defaultValue: true);
+    private static readonly ISetting<bool> _blameShowAuthor = Setting.CreateBool(RootSettingsPath, "Blame.ShowAuthor", defaultValue: true);
 
-    private static readonly ISetting<bool> _blameShowAuthorDate = Setting.Create(RootSettingsPath, "Blame.ShowAuthorDate", defaultValue: true);
+    private static readonly ISetting<bool> _blameShowAuthorDate = Setting.CreateBool(RootSettingsPath, "Blame.ShowAuthorDate", defaultValue: true);
 
-    private static readonly ISetting<bool> _blameShowAuthorTime = Setting.Create(RootSettingsPath, "Blame.ShowAuthorTime", defaultValue: true);
+    private static readonly ISetting<bool> _blameShowAuthorTime = Setting.CreateBool(RootSettingsPath, "Blame.ShowAuthorTime", defaultValue: true);
 
-    private static readonly ISetting<bool> _blameShowLineNumbers = Setting.Create(RootSettingsPath, "Blame.ShowLineNumbers", defaultValue: false);
+    private static readonly ISetting<bool> _blameShowLineNumbers = Setting.CreateBool(RootSettingsPath, "Blame.ShowLineNumbers", defaultValue: false);
 
-    private static readonly ISetting<bool> _blameShowOriginalFilePath = Setting.Create(RootSettingsPath, "Blame.ShowOriginalFilePath", defaultValue: true);
+    private static readonly ISetting<bool> _blameShowOriginalFilePath = Setting.CreateBool(RootSettingsPath, "Blame.ShowOriginalFilePath", defaultValue: true);
 
-    private static readonly ISetting<bool> _blameShowAuthorAvatar = Setting.Create(RootSettingsPath, "Blame.ShowAuthorAvatar", defaultValue: true);
+    private static readonly ISetting<bool> _blameShowAuthorAvatar = Setting.CreateBool(RootSettingsPath, "Blame.ShowAuthorAvatar", defaultValue: true);
 
-    private static readonly ISetting<bool> _automaticContinuousScroll = Setting.Create(RootSettingsPath, "DiffViewer.AutomaticContinuousScroll", defaultValue: false);
+    private static readonly ISetting<bool> _automaticContinuousScroll = Setting.CreateBool(RootSettingsPath, "DiffViewer.AutomaticContinuousScroll", defaultValue: false);
 
-    private static readonly ISetting<int> _automaticContinuousScrollDelay = Setting.Create(RootSettingsPath, "DiffViewer.AutomaticContinuousScrollDelay", defaultValue: 600);
+    private static readonly ISetting<int> _automaticContinuousScrollDelay = Setting.CreateInt(RootSettingsPath, "DiffViewer.AutomaticContinuousScrollDelay", defaultValue: 600);
 
-    private static readonly ISetting<bool> _logCaptureCallStacks = Setting.Create(RootSettingsPath, "Log.CaptureCallStacks", defaultValue: false);
-
-    // Currently not configurable in UI (Set manually in settings file)
-    private static readonly ISetting<bool> _writeErrorLog = Setting.Create(RootSettingsPath, "WriteErrorLog", defaultValue: false);
+    private static readonly ISetting<bool> _logCaptureCallStacks = Setting.CreateBool(RootSettingsPath, "Log.CaptureCallStacks", defaultValue: false);
 
     // Currently not configurable in UI (Set manually in settings file)
-    private static readonly ISetting<bool> _workaroundActivateFromMinimize = Setting.Create(RootSettingsPath, "WorkaroundActivateFromMinimize", defaultValue: false);
+    private static readonly ISetting<bool> _writeErrorLog = Setting.CreateBool(RootSettingsPath, "WriteErrorLog", defaultValue: false);
 
-    private static readonly ISetting<bool> _gitAsyncWhenMinimized = Setting.Create(RootSettingsPath, "GitAsyncWhenMinimized", defaultValue: false);
+    // Currently not configurable in UI (Set manually in settings file)
+    private static readonly ISetting<bool> _workaroundActivateFromMinimize = Setting.CreateBool(RootSettingsPath, "WorkaroundActivateFromMinimize", defaultValue: false);
 
-    private static readonly ISetting<bool> _isEditorSettingsMigrated = Setting.Create(MigrationSettingsPath, nameof(IsEditorSettingsMigrated), defaultValue: false);
+    private static readonly ISetting<bool> _gitAsyncWhenMinimized = Setting.CreateBool(RootSettingsPath, "GitAsyncWhenMinimized", defaultValue: false);
+
+    private static readonly ISetting<bool> _isEditorSettingsMigrated = Setting.CreateBool(MigrationSettingsPath, nameof(IsEditorSettingsMigrated), defaultValue: false);
 
     private static readonly ISetting<string> _uninformativeRepoNameRegex = Setting.Create(DetailedSettingsPath, nameof(UninformativeRepoNameRegex), defaultValue: "app|(repo(sitory)?)");
 
-    private static readonly ISetting<string> _autoNormaliseSymbol = Setting.CreateIntercepted<string, string>(
+    private static readonly ISetting<string> _autoNormaliseSymbol = Setting.Create(
         RootSettingsPath,
         "AutoNormaliseSymbol",
         defaultValue: "_",
-        read: v => v == "+" ? "" : v,
-        store: v => string.IsNullOrWhiteSpace(v) ? "+" : v);
+        read: static s => (true, s == "+" ? "" : s),
+        store: static v => string.IsNullOrWhiteSpace(v) ? "+" : v);
 
-    private static readonly ISetting<AvatarFallbackType> _avatarFallbackType = Setting.CreateIntercepted<string, AvatarFallbackType>(
+    private static readonly ISetting<AvatarFallbackType> _avatarFallbackType = Setting.Create(
         RootSettingsPath,
         "GravatarDefaultImageType",
         defaultValue: GitCommands.AvatarFallbackType.AuthorInitials,
-        read: v => v switch { "None" => GitCommands.AvatarFallbackType.AuthorInitials, _ => Enum.TryParse(v, out AvatarFallbackType e) ? e : GitCommands.AvatarFallbackType.AuthorInitials },
-        store: v => v.ToString());
+        read: static s => (true, s switch { "None" => GitCommands.AvatarFallbackType.AuthorInitials, _ => Enum.TryParse(s, out AvatarFallbackType e) ? e : GitCommands.AvatarFallbackType.AuthorInitials }),
+        store: static v => v.ToString());
 
-    private static readonly ISetting<AvatarProvider> _avatarProvider = Setting.CreateIntercepted<string, AvatarProvider>(
+    private static readonly ISetting<AvatarProvider> _avatarProvider = Setting.Create(
         RootSettingsPath,
         "Appearance.AvatarProvider",
         defaultValue: GitCommands.AvatarProvider.None,
-        read: v => v switch { "AuthorInitials" => GitCommands.AvatarProvider.None, "Gravatar" => GitCommands.AvatarProvider.Default, _ => Enum.TryParse(v, out AvatarProvider e) ? e : GitCommands.AvatarProvider.None },
-        store: v => v.ToString());
+        read: static s => (true, s switch { "AuthorInitials" => GitCommands.AvatarProvider.None, "Gravatar" => GitCommands.AvatarProvider.Default, _ => Enum.TryParse(s, out AvatarProvider e) ? e : GitCommands.AvatarProvider.None }),
+        store: static v => v.ToString());
 
-    private static readonly ISetting<string[]> _revisionFilterDropdowns = Setting.CreateIntercepted<string, string[]>(
+    private static readonly ISetting<string[]> _revisionFilterDropdowns = Setting.Create(
         RootSettingsPath,
         "RevisionFilterDropdowns",
-        defaultValue: [],
-        read: v => v.Split('\n', StringSplitOptions.RemoveEmptyEntries),
-        store: v => string.Join("\n", v ?? []));
+        defaultValue: Array.Empty<string>(),
+        read: static s => (true, s.Split('\n', StringSplitOptions.RemoveEmptyEntries)),
+        store: static v => string.Join("\n", v ?? []));
 
-    private static readonly ISetting<string[]> _themeVariations = Setting.CreateIntercepted<string, string[]>(
+    private static readonly ISetting<string[]> _themeVariations = Setting.Create(
         RootSettingsPath,
         "uithemevariations",
-        defaultValue: [],
-        read: v => v.Split(Delimiters.Comma, StringSplitOptions.RemoveEmptyEntries),
-        store: v => string.Join(",", v ?? []));
+        defaultValue: Array.Empty<string>(),
+        read: static s => (true, s.Split(Delimiters.Comma, StringSplitOptions.RemoveEmptyEntries)),
+        store: static v => string.Join(",", v ?? []));
 
-    private static readonly ISetting<string[]> _customGenericRemoteNames = Setting.CreateIntercepted<string, string[]>(
+    private static readonly ISetting<string[]> _customGenericRemoteNames = Setting.Create(
         RootSettingsPath,
         "CustomGenericRemoteNames",
-        defaultValue: [],
-        read: v => v.Split(',', StringSplitOptions.RemoveEmptyEntries),
-        store: v => string.Join(",", v ?? []));
+        defaultValue: Array.Empty<string>(),
+        read: static s => (true, s.Split(',', StringSplitOptions.RemoveEmptyEntries)),
+        store: static v => string.Join(",", v ?? []));
 
     #endregion
 
