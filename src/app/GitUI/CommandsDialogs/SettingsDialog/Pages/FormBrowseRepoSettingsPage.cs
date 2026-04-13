@@ -77,10 +77,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
         }
 
         AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem!).Name.ToLowerInvariant();
-        if (cboConsoleEmulator.SelectedItem is IConsoleEmulator selectedConsoleEmulator)
-        {
-            AppSettings.ConsoleEmulatorName = selectedConsoleEmulator.Name;
-        }
+        AppSettings.ConsoleEmulatorName = (cboConsoleEmulator.SelectedItem as IConsoleEmulator)?.Name ?? "";
 
         base.PageToSettings();
     }
