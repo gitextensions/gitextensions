@@ -73,7 +73,7 @@ public abstract class AvatarTestBase
 
         if (expected is not null)
         {
-            ClassicAssert.AreSame(expected, actual);
+            actual.Should().BeSameAs(expected);
         }
     }
 
@@ -87,7 +87,7 @@ public abstract class AvatarTestBase
 
         if (expected is not null)
         {
-            ClassicAssert.AreSame(expected, actual);
+            actual.Should().BeSameAs(expected);
         }
     }
 

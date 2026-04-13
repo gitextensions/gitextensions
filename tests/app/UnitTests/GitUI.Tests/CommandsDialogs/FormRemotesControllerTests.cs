@@ -1,10 +1,7 @@
-﻿using AwesomeAssertions;
-using GitCommands.UserRepositoryHistory;
+﻿using GitCommands.UserRepositoryHistory;
 using GitUI.CommandsDialogs;
 
 namespace GitUITests.CommandsDialogs;
-
-[TestFixture]
 public class FormRemotesControllerTests
 {
     private FormRemotesController _controller = null!;
@@ -18,7 +15,7 @@ public class FormRemotesControllerTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("\t")]
-    public void RemoteDelete_should_not_throw_or_mutate_list_of_remotes_if_oldRemoteUrl_null_or_empty(string oldRemoteUrl)
+    public void RemoteDelete_should_not_throw_or_mutate_list_of_remotes_if_oldRemoteUrl_null_or_empty(string? oldRemoteUrl)
     {
         List<Repository> remotes =
         [
@@ -63,7 +60,7 @@ public class FormRemotesControllerTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("\t")]
-    public void RemoteUpdate_should_not_throw_or_mutate_list_of_remotes_if_newRemoteUrl_null_or_empty(string newRemoteUrl)
+    public void RemoteUpdate_should_not_throw_or_mutate_list_of_remotes_if_newRemoteUrl_null_or_empty(string? newRemoteUrl)
     {
         List<Repository> remotes =
         [

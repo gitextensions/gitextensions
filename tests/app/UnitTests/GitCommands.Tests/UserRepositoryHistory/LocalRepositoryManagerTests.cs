@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitCommands.UserRepositoryHistory.Legacy;
 using NSubstitute;
@@ -7,8 +6,6 @@ using IRepositoryStorage = GitCommands.UserRepositoryHistory.IRepositoryStorage;
 using Repository = GitCommands.UserRepositoryHistory.Repository;
 
 namespace GitCommandsTests.UserRepositoryHistory;
-
-[TestFixture]
 public class LocalRepositoryManagerTests
 {
     private const string KeyRecentHistory = "history";

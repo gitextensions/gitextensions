@@ -23,6 +23,15 @@ public static partial class PathUtil
     [GeneratedRegex(@"^(\w+):\/\/([\S]+)", RegexOptions.ExplicitCapture)]
     private static partial Regex DriveLetterRegex { get; }
 
+    /// <summary>
+    ///  Indicates whether the given character can be used in a git branch name (and in a file path).
+    /// </summary>
+    public static bool IsValidPathChar(char c)
+    {
+        return c is (> ' ' and < '~' and not ('^' or ':')) &&
+                Array.IndexOf(Path.GetInvalidPathChars(), c) < 0;
+    }
+
     /// <summary>Replaces native path separator with posix path separator (/).</summary>
     [return: NotNullIfNotNull(nameof(path))]
     public static string? ToPosixPath(this string? path)

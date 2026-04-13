@@ -1,13 +1,10 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using AwesomeAssertions;
 using GitCommands;
 using GitUI.Avatars;
 using NSubstitute;
 
 namespace GitUITests.Avatars;
-
-[TestFixture]
 public sealed class AvatarPersistentCacheTests : AvatarCacheTestBase
 {
     private string _avatarImageCachePath = AppSettings.AvatarImageCachePath;
@@ -47,7 +44,7 @@ public sealed class AvatarPersistentCacheTests : AvatarCacheTestBase
         fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeFalse();
         _cache = new FileSystemAvatarCache(_inner, fileSystem);
 
-        ClassicAssert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
+        (await _cache.GetAvatarAsync(_email1, _name1, _size)).Should().BeSameAs(_img1);
 
         fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeTrue();
     }
@@ -59,7 +56,7 @@ public sealed class AvatarPersistentCacheTests : AvatarCacheTestBase
         fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeFalse();
         _cache = new FileSystemAvatarCache(_inner, fileSystem);
 
-        ClassicAssert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
+        (await _cache.GetAvatarAsync(_email1, _name1, _size)).Should().BeSameAs(_img1);
 
         fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeTrue();
         fileSystem.File.Exists(_email1AvatarPath).Should().BeTrue();

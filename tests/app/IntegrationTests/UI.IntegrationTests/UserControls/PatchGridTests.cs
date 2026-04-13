@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -10,7 +9,6 @@ using NSubstitute;
 namespace UITests.UserControls;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public sealed class PatchGridTests
 {
     // Created once for the fixture

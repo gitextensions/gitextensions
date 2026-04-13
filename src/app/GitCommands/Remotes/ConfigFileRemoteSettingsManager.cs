@@ -57,8 +57,11 @@ public interface IConfigFileRemoteSettingsManager
     /// <param name="remotePushUrl">An optional alternative remote push URL.</param>
     /// <param name="remotePuttySshKey">An optional Putty SSH key.</param>
     /// <param name="remoteColor">An optional color for the remote.</param>
+    /// <param name="remotePrefix">An optional prefix for the remote.</param>
     /// <returns>Result of the operation.</returns>
-    ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey, string? remoteColor);
+    ConfigFileRemoteSaveResult SaveRemote(
+        ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl,
+        string remotePuttySshKey, string? remoteColor, string? remotePrefix);
 
     /// <summary>
     ///  Marks the remote as enabled or disabled in .git/config file.
@@ -258,6 +261,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
                 Url = module.GetSetting(GetSettingKey(SettingKeyString.RemoteUrl, remote, enabled)),
                 Push = module.GetSettings(GetSettingKey(SettingKeyString.RemotePush, remote, enabled)).ToList(),
                 Color = module.GetSetting(GetSettingKey(SettingKeyString.RemoteColor, remote, enabled)),
+                Prefix = module.GetSetting(GetSettingKey(SettingKeyString.RemotePrefix, remote, enabled)),
 
                 // Note: This only gets the last pushurl
                 PushUrl = module.GetSetting(GetSettingKey(SettingKeyString.RemotePushUrl, remote, enabled)),
@@ -296,12 +300,11 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
         return GetDisabledRemoteNames().Any(r => r == remoteName);
     }
 
-    public ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey, string? remoteColor)
+    public ConfigFileRemoteSaveResult SaveRemote(
+        ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl,
+        string remotePuttySshKey, string? remoteColor, string? remotePrefix)
     {
-        if (string.IsNullOrWhiteSpace(remoteName))
-        {
-            throw new ArgumentNullException(nameof(remoteName));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(remoteName);
 
         remoteName = remoteName.Trim();
 
@@ -366,16 +369,14 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
         UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePushUrl, remotePushUrl);
         UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePuttySshKey, remotePuttySshKey);
         UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemoteColor, remoteColor);
+        UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePrefix, remotePrefix);
 
         return new ConfigFileRemoteSaveResult(output, updateRemoteRequired);
     }
 
     public void ToggleRemoteState(string remoteName, bool disabled)
     {
-        if (string.IsNullOrWhiteSpace(remoteName))
-        {
-            throw new ArgumentNullException(nameof(remoteName));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(remoteName);
 
         // disabled is the new state, so if the new state is 'false' (=enabled), then the existing state is 'true' (=disabled, i.e. '-remote')
         string sectionName = disabled ? SectionRemote : SectionRemoteDisabled;

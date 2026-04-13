@@ -1,7 +1,8 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.ScriptsEngine;
 using ResourceManager;
@@ -45,7 +46,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
     public FormCheckoutBranch(IGitUICommands commands, string branch, bool remote, IReadOnlyList<ObjectId>? containRevisions = null)
         : base(commands, true)
     {
-        _branchNameNormaliser = new GitBranchNameNormaliser();
+        _branchNameNormaliser = commands.GetRequiredService<IGitBranchNameNormaliser>();
         InitializeComponent();
         InitializeComplete();
         _rbResetBranchDefaultText = rbResetBranch.Text;
@@ -544,7 +545,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
     private void txtCustomBranchName_Leave(object sender, EventArgs e)
     {
-        if (!AppSettings.AutoNormaliseBranchName || !txtCustomBranchName.Text.Any(GitBranchNameNormaliser.IsValidChar))
+        if (!AppSettings.AutoNormaliseBranchName || !txtCustomBranchName.Text.Any(PathUtil.IsValidPathChar))
         {
             return;
         }

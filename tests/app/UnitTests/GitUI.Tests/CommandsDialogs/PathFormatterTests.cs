@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitUI;
+﻿using GitUI;
 
 namespace GitUITests.CommandsDialogs;
 
@@ -18,9 +17,9 @@ public class PathFormatterTests
     [TestCase("path/new.ext", "C:/oldPath/old.ext", "new.ext", " (old.ext)")]
     [TestCase("path/new.ext", "C:\\oldPath\\old.ext", "new.ext", " (old.ext)")]
     [TestCase("path/new.ext", "oldPath\\old.ext", "new.ext", " (old.ext)")]
-    public void Test_FormatTextForFileNameOnly(string name, string oldName, string expectedText, string expectedSuffix)
+    public void Test_FormatTextForFileNameOnly(string? name, string? oldName, string expectedText, string? expectedSuffix)
     {
-        PathFormatter.FormatTextForFileNameOnly(name, oldName).Should().Be((expectedText, expectedSuffix));
+        PathFormatter.FormatTextForFileNameOnly(name!, oldName).Should().Be((expectedText, expectedSuffix));
     }
 
     [TestCase(null, null)]
@@ -31,9 +30,9 @@ public class PathFormatterTests
     [TestCase("nested/path/filename.ext", " (nested/path/filename.ext)")]
     [TestCase("/nested/path/filename.ext", " (/nested/path/filename.ext)")]
     [TestCase("path\\filename.ext", " (path\\filename.ext)")]
-    public void Test_FormatOldName(string oldName, string expectedSuffix)
+    public void Test_FormatOldName(string? oldName, string? expectedSuffix)
     {
-        PathFormatter.TestAccessor.FormatOldName(oldName).Should().Be(expectedSuffix);
+        PathFormatter.TestAccessor.FormatOldName(oldName!).Should().Be(expectedSuffix);
     }
 
     [TestCase(null, null, null)]
@@ -51,8 +50,8 @@ public class PathFormatterTests
     [TestCase("/submodule.dir/", "/", "submodule.dir/")]
     [TestCase("path/submodule.dir/", "path/", "submodule.dir/")]
     [TestCase("/path/submodule.dir/", "/path/", "submodule.dir/")]
-    public void Test_SplitPathName(string name, string expectedPath, string expectedFileName)
+    public void Test_SplitPathName(string? name, string? expectedPath, string? expectedFileName)
     {
-        PathFormatter.TestAccessor.SplitPathName(name).Should().Be((expectedPath, expectedFileName));
+        PathFormatter.TestAccessor.SplitPathName(name!).Should().Be((expectedPath, expectedFileName));
     }
 }

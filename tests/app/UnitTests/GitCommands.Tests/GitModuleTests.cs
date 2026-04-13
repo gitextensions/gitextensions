@@ -1,17 +1,13 @@
 ﻿using System.Diagnostics;
 using System.Text;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitUI;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public sealed partial class GitModuleTests
 {
     private static readonly ObjectId Sha1 = ObjectId.Parse("3183d1e95383c44302d4b25a7c647ee169765bd8");
@@ -45,19 +41,19 @@ public sealed partial class GitModuleTests
         string path = Path.Combine(TestContext.CurrentContext.TestDirectory, @"TestData/README.blame");
         GitBlame result = _gitModule.ParseGitBlame(File.ReadAllText(path), Encoding.UTF8);
 
-        ClassicAssert.AreEqual(80, result.Lines.Count);
+        result.Lines.Count.Should().Be(80);
 
-        ClassicAssert.AreEqual(ObjectId.Parse("957ff3ce9193fec3bd2578378e71676841804935"), result.Lines[0].Commit.ObjectId);
-        ClassicAssert.AreEqual("# Git Extensions", result.Lines[0].Text);
+        result.Lines[0].Commit.ObjectId.Should().Be(ObjectId.Parse("957ff3ce9193fec3bd2578378e71676841804935"));
+        result.Lines[0].Text.Should().Be("# Git Extensions");
 
-        ClassicAssert.AreEqual(1, result.Lines[0].OriginLineNumber);
-        ClassicAssert.AreEqual(1, result.Lines[0].FinalLineNumber);
+        result.Lines[0].OriginLineNumber.Should().Be(1);
+        result.Lines[0].FinalLineNumber.Should().Be(1);
 
-        ClassicAssert.AreSame(result.Lines[0].Commit, result.Lines[1].Commit);
-        ClassicAssert.AreSame(result.Lines[0].Commit, result.Lines[6].Commit);
+        result.Lines[1].Commit.Should().BeSameAs(result.Lines[0].Commit);
+        result.Lines[6].Commit.Should().BeSameAs(result.Lines[0].Commit);
 
-        ClassicAssert.AreEqual(ObjectId.Parse("e3268019c66da7534414e9562ececdee5d455b1b"), result.Lines[^1].Commit.ObjectId);
-        ClassicAssert.AreEqual("", result.Lines[^1].Text);
+        result.Lines[^1].Commit.ObjectId.Should().Be(ObjectId.Parse("e3268019c66da7534414e9562ececdee5d455b1b"));
+        result.Lines[^1].Text.Should().Be("");
     }
 
     [TestCase(null, null)]
@@ -68,9 +64,9 @@ public sealed partial class GitModuleTests
     [TestCase(@"Invalid byte \777.txt", @"Invalid byte \777.txt")] // 777 is an invalid byte, which is omitted from the output
     [TestCase(@"\353\221\220\353\213\244 \777.txt", @"두다 \777.txt")] // valid and invalid in the same string
     [TestCase(@"\353\221\220\353\213\244\777.txt", @"\353\221\220\353\213\244\777.txt")] // valid and invalid in the same string
-    public void UnescapeOctalCodePoints_handles_octal_codes(string input, string expected)
+    public void UnescapeOctalCodePoints_handles_octal_codes(string? input, string? expected)
     {
-        ClassicAssert.AreEqual(expected, GitModule.UnescapeOctalCodePoints(input));
+        GitModule.UnescapeOctalCodePoints(input).Should().Be(expected);
     }
 
     [Test]
@@ -79,7 +75,7 @@ public sealed partial class GitModuleTests
         // If nothing was escaped in the original string, the same string instance is returned.
         const string s = "Hello, World!";
 
-        ClassicAssert.AreSame(s, GitModule.UnescapeOctalCodePoints(s));
+        GitModule.UnescapeOctalCodePoints(s).Should().BeSameAs(s);
     }
 
     [Test]
@@ -91,52 +87,40 @@ public sealed partial class GitModuleTests
 
         using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null!))
         {
-            ClassicAssert.AreEqual(
-                "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags",
-                _gitModule.FetchCmd("remote", "remotebranch", "localbranch").Arguments);
+            _gitModule.FetchCmd("remote", "remotebranch", "localbranch").Arguments.Should().Be("-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags");
         }
 
         using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null!))
         {
-            ClassicAssert.AreEqual(
-                "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --tags",
-                _gitModule.FetchCmd("remote", "remotebranch", "localbranch", true).Arguments);
+            _gitModule.FetchCmd("remote", "remotebranch", "localbranch", true).Arguments.Should().Be("-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --tags");
         }
 
         using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null!))
         {
-            ClassicAssert.AreEqual(
-                "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch",
-                _gitModule.FetchCmd("remote", "remotebranch", "localbranch", null).Arguments);
+            _gitModule.FetchCmd("remote", "remotebranch", "localbranch", null).Arguments.Should().Be("-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch");
         }
 
         using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null!))
         {
-            ClassicAssert.AreEqual(
-                "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --unshallow",
-                _gitModule.FetchCmd("remote", "remotebranch", "localbranch", isUnshallow: true).Arguments);
+            _gitModule.FetchCmd("remote", "remotebranch", "localbranch", isUnshallow: true).Arguments.Should().Be("-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --unshallow");
         }
 
         using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null!))
         {
-            ClassicAssert.AreEqual(
-                "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force",
-                _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true).Arguments);
+            _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true).Arguments.Should().Be("-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force");
         }
 
         using (_executable.StageOutput("rev-parse --quiet --verify \"refs/heads/remotebranch~0\"", null!))
         {
-            ClassicAssert.AreEqual(
-                "-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force --prune-tags",
-                _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true, pruneRemoteBranchesAndTags: true).Arguments);
+            _gitModule.FetchCmd("remote", "remotebranch", "localbranch", pruneRemoteBranches: true, pruneRemoteBranchesAndTags: true).Arguments.Should().Be("-c fetch.parallel=0 -c submodule.fetchjobs=0 fetch --progress \"remote\" +remotebranch:refs/heads/localbranch --no-tags --prune --force --prune-tags");
         }
     }
 
     [Test]
     public void ParseRefs()
     {
-        ClassicAssert.IsEmpty(_gitModule.ParseRefs(""));
-        ClassicAssert.IsEmpty(_gitModule.ParseRefs("Foo"));
+        _gitModule.ParseRefs("").Should().BeEmpty();
+        _gitModule.ParseRefs("Foo").Should().BeEmpty();
 
         const string refList =
             "69a7c7a40230346778e7eebed809773a6bc45268 refs/heads/master\n" +
@@ -146,43 +130,43 @@ public sealed partial class GitModuleTests
 
         IReadOnlyList<IGitRef> refs = _gitModule.ParseRefs(refList);
 
-        ClassicAssert.AreEqual(4, refs.Count);
+        refs.Count.Should().Be(4);
 
-        ClassicAssert.AreEqual("69a7c7a40230346778e7eebed809773a6bc45268", refs[0].Guid);
-        ClassicAssert.AreEqual("refs/heads/master", refs[0].CompleteName);
-        ClassicAssert.AreEqual("master", refs[0].LocalName);
-        ClassicAssert.AreEqual("", refs[0].Remote);
-        ClassicAssert.IsTrue(refs[0].IsHead);
-        ClassicAssert.IsFalse(refs[0].IsRemote);
-        ClassicAssert.IsFalse(refs[0].IsTag);
-        ClassicAssert.AreSame(_gitModule, refs[0].Module);
+        refs[0].Guid.Should().Be("69a7c7a40230346778e7eebed809773a6bc45268");
+        refs[0].CompleteName.Should().Be("refs/heads/master");
+        refs[0].LocalName.Should().Be("master");
+        refs[0].Remote.Should().Be("");
+        refs[0].IsHead.Should().BeTrue();
+        refs[0].IsRemote.Should().BeFalse();
+        refs[0].IsTag.Should().BeFalse();
+        refs[0].Module.Should().BeSameAs(_gitModule);
 
-        ClassicAssert.AreEqual("69a7c7a40230346778e7eebed809773a6bc45268", refs[1].Guid);
-        ClassicAssert.AreEqual("refs/remotes/origin/master", refs[1].CompleteName);
-        ClassicAssert.AreEqual("master", refs[1].LocalName);
-        ClassicAssert.AreEqual("origin", refs[1].Remote);
-        ClassicAssert.IsFalse(refs[1].IsHead);
-        ClassicAssert.IsTrue(refs[1].IsRemote);
-        ClassicAssert.IsFalse(refs[1].IsTag);
-        ClassicAssert.AreSame(_gitModule, refs[1].Module);
+        refs[1].Guid.Should().Be("69a7c7a40230346778e7eebed809773a6bc45268");
+        refs[1].CompleteName.Should().Be("refs/remotes/origin/master");
+        refs[1].LocalName.Should().Be("master");
+        refs[1].Remote.Should().Be("origin");
+        refs[1].IsHead.Should().BeFalse();
+        refs[1].IsRemote.Should().BeTrue();
+        refs[1].IsTag.Should().BeFalse();
+        refs[1].Module.Should().BeSameAs(_gitModule);
 
-        ClassicAssert.AreEqual("5303e7114f1896c639dea0231fac522752cc44a2", refs[2].Guid);
-        ClassicAssert.AreEqual("refs/remotes/upstream/mono", refs[2].CompleteName);
-        ClassicAssert.AreEqual("mono", refs[2].LocalName);
-        ClassicAssert.AreEqual("upstream", refs[2].Remote);
-        ClassicAssert.IsFalse(refs[2].IsHead);
-        ClassicAssert.IsTrue(refs[2].IsRemote);
-        ClassicAssert.IsFalse(refs[2].IsTag);
-        ClassicAssert.AreSame(_gitModule, refs[2].Module);
+        refs[2].Guid.Should().Be("5303e7114f1896c639dea0231fac522752cc44a2");
+        refs[2].CompleteName.Should().Be("refs/remotes/upstream/mono");
+        refs[2].LocalName.Should().Be("mono");
+        refs[2].Remote.Should().Be("upstream");
+        refs[2].IsHead.Should().BeFalse();
+        refs[2].IsRemote.Should().BeTrue();
+        refs[2].IsTag.Should().BeFalse();
+        refs[2].Module.Should().BeSameAs(_gitModule);
 
-        ClassicAssert.AreEqual("366dfba1abf6cb98d2934455713f3d190df2ba34", refs[3].Guid);
-        ClassicAssert.AreEqual("refs/tags/2.51", refs[3].CompleteName);
-        ClassicAssert.AreEqual("2.51", refs[3].LocalName);
-        ClassicAssert.AreEqual("", refs[3].Remote);
-        ClassicAssert.IsFalse(refs[3].IsHead);
-        ClassicAssert.IsFalse(refs[3].IsRemote);
-        ClassicAssert.IsTrue(refs[3].IsTag);
-        ClassicAssert.AreSame(_gitModule, refs[3].Module);
+        refs[3].Guid.Should().Be("366dfba1abf6cb98d2934455713f3d190df2ba34");
+        refs[3].CompleteName.Should().Be("refs/tags/2.51");
+        refs[3].LocalName.Should().Be("2.51");
+        refs[3].Remote.Should().Be("");
+        refs[3].IsHead.Should().BeFalse();
+        refs[3].IsRemote.Should().BeFalse();
+        refs[3].IsTag.Should().BeTrue();
+        refs[3].Module.Should().BeSameAs(_gitModule);
     }
 
     [TestCase("branch -a --contains",
@@ -210,7 +194,7 @@ public sealed partial class GitModuleTests
         using (_executable.StageOutput(cmd + " " + Sha1.ToString(), output))
         {
             IReadOnlyList<string> result = _gitModule.GetAllBranchesWhichContainGivenCommit(Sha1, getLocal, getRemote, cancellationToken: default);
-            ClassicAssert.AreEqual(result, expected);
+            result.Should().Equal(expected);
         }
     }
 
@@ -224,13 +208,13 @@ public sealed partial class GitModuleTests
         string[] expected)
     {
         IReadOnlyList<string> result = _gitModule.GetAllBranchesWhichContainGivenCommit(Sha1, getLocal, getRemote, cancellationToken: default);
-        ClassicAssert.AreEqual(result, expected);
+        result.Should().Equal(expected);
     }
 
     [TestCase(null)]
     [TestCase("")]
     [TestCase("\t")]
-    public void RevParse_should_return_null_if_invalid(string revisionExpression)
+    public void RevParse_should_return_null_if_invalid(string? revisionExpression)
     {
         _gitModule.RevParse(revisionExpression).Should().BeNull();
     }
@@ -292,7 +276,7 @@ public sealed partial class GitModuleTests
             objectId = _gitModule.GetCurrentCheckout();
         }
 
-        ClassicAssert.AreEqual(headId, objectId?.ToString());
+        objectId?.ToString().Should().Be(headId);
     }
 
     [Test]
@@ -309,13 +293,13 @@ public sealed partial class GitModuleTests
         {
             IReadOnlyList<ObjectId> parents = _gitModule.GetParents(Sha1);
 
-            ClassicAssert.AreEqual(parents, new[] { Sha2, Sha3 });
+            parents.Should().Equal(new[] { Sha2, Sha3 });
         }
     }
 
     [TestCase(null, "reset --hard --")]
     [TestCase("file.txt", "reset --hard -- \"file.txt\"")]
-    public void Reset_with_Hard_should_issue_correct_command_and_parse_response(string file, string args)
+    public void Reset_with_Hard_should_issue_correct_command_and_parse_response(string? file, string args)
     {
         using (_executable.StageCommand(args))
         {
@@ -359,7 +343,7 @@ public sealed partial class GitModuleTests
     public void GetStagedStatus(ObjectId firstRevision, ObjectId secondRevision, ObjectId parentToSecond, StagedStatus status)
     {
         StagedStatus stagedStatus = _gitModule.GetTestAccessor().GetStagedStatus(firstRevision, secondRevision, parentToSecond);
-        ClassicAssert.AreEqual(status, stagedStatus);
+        stagedStatus.Should().Be(status);
     }
 
     [Test]
@@ -398,10 +382,10 @@ public sealed partial class GitModuleTests
             root.Module.GitExecutable.Execute(Commands.SubmoduleUpdate(name: null, cfgs));
 
             IReadOnlyList<string> paths = root.Module.GetSubmodulesLocalPaths(recursive: true);
-            ClassicAssert.AreEqual(new string[] { "repo1", "repo1/repo2", "repo1/repo2/repo3" }, paths, $"Modules: {string.Join(" ", paths)}");
+            paths.Should().Equal(new string[] { "repo1", "repo1/repo2", "repo1/repo2/repo3" }, $"Modules: {string.Join(" ", paths)}");
 
             paths = root.Module.GetSubmodulesLocalPaths(recursive: false);
-            ClassicAssert.AreEqual(new string[] { "repo1" }, paths, $"Modules: {string.Join(" ", paths)}");
+            paths.Should().Equal(new string[] { "repo1" }, $"Modules: {string.Join(" ", paths)}");
         }
         finally
         {
@@ -425,7 +409,7 @@ public sealed partial class GitModuleTests
     }
 
     [Test]
-    public void GetSuperprojectCurrentCheckout()
+    public async Task GetSuperprojectCurrentCheckout()
     {
         // Create super and sub repo
         using GitModuleTestHelper moduleTestHelperSuper = new("super repo"),
@@ -436,27 +420,23 @@ public sealed partial class GitModuleTests
         IGitModule moduleSub = moduleTestHelperSuper.GetSubmodulesRecursive().ElementAt(0);
 
         // Commit in submodule
-        moduleSub.GitExecutable.GetOutput(@"commit --allow-empty -am ""First commit""");
-        string commitRef = moduleSub.GitExecutable.GetOutput("show HEAD").LazySplit('\n').First().LazySplit(' ').Skip(1).First();
+        await moduleSub.GitExecutable.GetOutputAsync(@"commit --allow-empty -am ""First commit""");
+        string commitRef = (await moduleSub.GitExecutable.GetOutputAsync("show HEAD")).LazySplit('\n').First().LazySplit(' ').Skip(1).First();
 
         // Update ref in superproject
-        moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"add ""sub repo""");
-        moduleTestHelperSuper.Module.GitExecutable.GetOutput(@"commit -am ""Update submodule ref""");
+        await moduleTestHelperSuper.Module.GitExecutable.GetOutputAsync(@"add ""sub repo""");
+        await moduleTestHelperSuper.Module.GitExecutable.GetOutputAsync(@"commit -am ""Update submodule ref""");
 
-        // Assert
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            (char code, ObjectId? commitId) = await moduleSub.GetSuperprojectCurrentCheckoutAsync();
-            ClassicAssert.AreEqual(32, code);
-            ClassicAssert.AreEqual(commitRef, commitId?.ToString());
-        });
+        (char code, ObjectId? commitId) = await moduleSub.GetSuperprojectCurrentCheckoutAsync();
+        code.Should().Be(' ');
+        commitId?.ToString().Should().Be(commitRef);
     }
 
     [TestCase(false, @"stash list")]
     [TestCase(true, @"--no-optional-locks stash list")]
-    public void GetStashesCmd(bool noLocks, string expected)
+    public void GetStashesCmd(bool noLocks, string? expected)
     {
-        ClassicAssert.AreEqual(expected, _gitModule.GetStashesCmd(noLocks).ToString());
+        _gitModule.GetStashesCmd(noLocks).ToString().Should().Be(expected);
     }
 
     [TestCase("", "")] // empty message
@@ -475,7 +455,7 @@ public sealed partial class GitModuleTests
         string? actualReturnedMessage = repo.Module.GetTagMessage("test_tag", cancellationToken: default);
 
         // compare result to expectations
-        ClassicAssert.AreEqual(expectedReturnedMessage, actualReturnedMessage);
+        actualReturnedMessage.Should().Be(expectedReturnedMessage);
     }
 
     // TODO: add GetTagMessage "sad-path" tests, ones that test what happens if we try to execute it on a non-tag object.
@@ -483,18 +463,18 @@ public sealed partial class GitModuleTests
 
     [TestCase(false, @"-c core.safecrlf=false update-index --add --stdin")]
     [TestCase(true, @"update-index --add --stdin")]
-    public void UpdateIndexCmd_should_add_core_safecrlf(bool showErrorsWhenStagingFiles, string expected)
+    public void UpdateIndexCmd_should_add_core_safecrlf(bool showErrorsWhenStagingFiles, string? expected)
     {
         GitModule.TestAccessor accessor = _gitModule.GetTestAccessor();
 
         string actual = accessor.UpdateIndexCmd(showErrorsWhenStagingFiles).ToString();
-        ClassicAssert.AreEqual(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [TestCase(["123", "567", "output.file", null])]
     [TestCase(["123", "567", "output.file", 1])]
     [TestCase(["123", "567", "output.file", 2])]
-    public void Test_FormatPatch(string from, string to, string outputFile, int? start)
+    public void Test_FormatPatch(string? from, string to, string outputFile, int? start)
     {
         StringBuilder arguments = new();
         arguments.Append("format-patch --find-renames --find-copies --break-rewrites");
@@ -508,13 +488,13 @@ public sealed partial class GitModuleTests
         string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
 
         _executable.StageOutput(arguments.ToString(), dummyCommandOutput);
-        _gitModule.FormatPatch(from, to, outputFile, start).Should().Be(dummyCommandOutput);
+        _gitModule.FormatPatch(from!, to, outputFile, start).Should().Be(dummyCommandOutput);
     }
 
     [TestCase(["", "567", "output.file", null])]
     [TestCase(["", "567", "output.file", 1])]
     [TestCase([null, "567", "output.file", 2])]
-    public void Test_FormatPatchInRoot(string from, string to, string outputFile, int? start)
+    public void Test_FormatPatchInRoot(string? from, string to, string outputFile, int? start)
     {
         StringBuilder arguments = new();
         arguments.Append("format-patch --find-renames --find-copies --break-rewrites");
@@ -528,14 +508,14 @@ public sealed partial class GitModuleTests
         string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
 
         _executable.StageOutput(arguments.ToString(), dummyCommandOutput);
-        _gitModule.FormatPatch(from, to, outputFile, start).Should().Be(dummyCommandOutput);
+        _gitModule.FormatPatch(from!, to, outputFile, start).Should().Be(dummyCommandOutput);
     }
 
     [TestCase(null, "")]
     [TestCase(new string[] { }, "")]
-    public void ResetFiles_should_handle_empty_list(string[] files, string expectedOutput)
+    public void ResetFiles_should_handle_empty_list(string[]? files, string? expectedOutput)
     {
-        ClassicAssert.AreEqual(expectedOutput, _gitModule.CheckoutIndexFiles(files?.ToList()!));
+        _gitModule.CheckoutIndexFiles(files?.ToList()!).Should().Be(expectedOutput);
     }
 
     [TestCase(new string[] { "abc", "def" }, "checkout-index --index --force -- \"abc\" \"def\"")]
@@ -547,7 +527,7 @@ public sealed partial class GitModuleTests
         string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
         _executable.StageOutput(args, dummyCommandOutput);
         string result = gitModule.CheckoutIndexFiles(files.ToList());
-        ClassicAssert.AreEqual(dummyCommandOutput, result);
+        result.Should().Be(dummyCommandOutput);
     }
 
     [TestCase(new string[] { "abc", "def" }, "rm -- \"abc\" \"def\"")]
@@ -559,13 +539,13 @@ public sealed partial class GitModuleTests
         string dummyCommandOutput = "The answer is 42. Just check that the Git arguments are as expected.";
         _executable.StageOutput(args, dummyCommandOutput);
         string result = gitModule.RemoveFiles(files.ToList(), false);
-        ClassicAssert.AreEqual(dummyCommandOutput, result);
+        result.Should().Be(dummyCommandOutput);
     }
 
     [TestCase(new string[] { }, "")]
     public void RemoveFiles_should_handle_empty_list(string[] files, string expectedOutput)
     {
-        ClassicAssert.AreEqual(expectedOutput, _gitModule.RemoveFiles(files.ToList(), false));
+        _gitModule.RemoveFiles(files.ToList(), false).Should().Be(expectedOutput);
     }
 
     [TestCaseSource(nameof(BatchUnstageFilesTestCases))]
@@ -581,7 +561,7 @@ public sealed partial class GitModuleTests
         }
 
         bool result = gitModule.BatchUnstageFiles(files);
-        ClassicAssert.AreEqual(expectedResult, result);
+        result.Should().Be(expectedResult);
     }
 
     [TestCase("refs/heads/feature/my-test-branch", "feature/my-test-branch")]
@@ -591,7 +571,7 @@ public sealed partial class GitModuleTests
 
         string result = _gitModule.GetSelectedBranch();
 
-        ClassicAssert.AreEqual(expectedResult, result);
+        result.Should().Be(expectedResult);
     }
 
     [TestCase(false)]
@@ -603,7 +583,7 @@ public sealed partial class GitModuleTests
         string expectedResult = emptyIfDetached ? "" : DetachedHeadParser.DetachedBranch;
         string result = _gitModule.GetSelectedBranch(emptyIfDetached);
 
-        ClassicAssert.AreEqual(expectedResult, result);
+        result.Should().Be(expectedResult);
     }
 
     private static IEnumerable<TestCaseData> BatchUnstageFilesTestCases

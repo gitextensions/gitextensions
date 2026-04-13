@@ -1,14 +1,11 @@
 ﻿using System.Reflection;
 using System.Text.Json.Nodes;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Git;
 using JenkinsIntegration;
 
 namespace JenkinsIntegrationTests;
-
-[TestFixture]
 public class JenkinsAdapterTests
 {
     private JenkinsAdapter _adapter = null!;

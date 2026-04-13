@@ -5,8 +5,6 @@ using JetBrains.Annotations;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUITests;
-
-[TestFixture]
 [Apartment(ApartmentState.STA)]
 public sealed class ThreadHelperTests
 {
@@ -30,7 +28,7 @@ public sealed class ThreadHelperTests
         ThrowExceptionAsync(ex).FileAndForget();
 
         await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-        ClassicAssert.AreSame(ex, helper.Exception);
+        helper.Exception.Should().BeSameAs(ex);
     }
 
     [Test]
@@ -43,44 +41,42 @@ public sealed class ThreadHelperTests
         YieldOntoControlMainThreadAsync(form).FileAndForget();
 
         await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
-        ClassicAssert.Null(helper.Exception, helper.Message);
+        helper.Exception.Should().BeNull(helper.Message);
     }
 
     [Test]
-    public void ThrowIfNotOnUIThread()
+    public async Task ThrowIfNotOnUIThread()
     {
-        ClassicAssert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+        ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeTrue();
+#pragma warning disable VSTHRD109 // Switch instead of assert in async methods -- intentionally testing ThrowIfNotOnUIThread
         ThreadHelper.ThrowIfNotOnUIThread();
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            await TaskScheduler.Default;
+#pragma warning restore VSTHRD109
 
-            ClassicAssert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+        await TaskScheduler.Default;
 
-            ClassicAssert.Throws<COMException>(() => ThreadHelper.ThrowIfNotOnUIThread());
-        });
+        ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeFalse();
+
+        ((Action)(() => ThreadHelper.ThrowIfNotOnUIThread())).Should().Throw<COMException>();
     }
 
     [Test]
-    public void ThrowIfOnUIThread()
+    public async Task ThrowIfOnUIThread()
     {
-        ClassicAssert.True(ThreadHelper.JoinableTaskContext.IsOnMainThread);
-        ClassicAssert.Throws<COMException>(() => ThreadHelper.ThrowIfOnUIThread());
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            await TaskScheduler.Default;
+        ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeTrue();
+        ((Action)(() => ThreadHelper.ThrowIfOnUIThread())).Should().Throw<COMException>();
 
-            ClassicAssert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+        await TaskScheduler.Default;
 
-            ThreadHelper.ThrowIfOnUIThread();
-        });
+        ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeFalse();
+
+        ThreadHelper.ThrowIfOnUIThread();
     }
 
     [Test]
     public void CompletedResultThrowsIfNotCompleted()
     {
         TaskCompletionSource<int> tcs = new();
-        ClassicAssert.Throws<InvalidOperationException>(() => tcs.Task.CompletedResult());
+        ((Action)(() => tcs.Task.CompletedResult())).Should().Throw<InvalidOperationException>();
     }
 
     [Test]
@@ -88,7 +84,7 @@ public sealed class ThreadHelperTests
     {
         TaskCompletionSource<int> tcs = new();
         tcs.SetResult(1);
-        ClassicAssert.AreEqual(1, tcs.Task.CompletedResult());
+        tcs.Task.CompletedResult().Should().Be(1);
     }
 
     [Test]
@@ -96,8 +92,9 @@ public sealed class ThreadHelperTests
     {
         TaskCompletionSource<int> tcs = new();
         tcs.SetCanceled();
-        AggregateException? actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
-        ClassicAssert.IsInstanceOf<TaskCanceledException>(actual!.InnerException);
+        Action act = () => tcs.Task.CompletedResult();
+        AggregateException actual = act.Should().Throw<AggregateException>().Which;
+        actual.InnerException.Should().BeOfType<TaskCanceledException>();
     }
 
     [Test]
@@ -106,16 +103,17 @@ public sealed class ThreadHelperTests
         TaskCompletionSource<int> tcs = new();
         Exception ex = new();
         tcs.SetException(ex);
-        AggregateException? actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedResult());
-        ClassicAssert.AreSame(ex, actual!.InnerException);
-        ClassicAssert.AreEqual(1, actual.InnerExceptions.Count);
+        Action act = () => tcs.Task.CompletedResult();
+        AggregateException actual = act.Should().Throw<AggregateException>().Which;
+        actual.InnerException.Should().BeSameAs(ex);
+        actual.InnerExceptions.Count.Should().Be(1);
     }
 
     [Test]
     public void CompletedOrDefaultReturnsDefaultIfNotCompleted()
     {
         TaskCompletionSource<int> tcs = new();
-        ClassicAssert.AreEqual(0, tcs.Task.CompletedOrDefault());
+        tcs.Task.CompletedOrDefault().Should().Be(0);
     }
 
     [Test]
@@ -123,7 +121,7 @@ public sealed class ThreadHelperTests
     {
         TaskCompletionSource<int> tcs = new();
         tcs.SetResult(1);
-        ClassicAssert.AreEqual(1, tcs.Task.CompletedOrDefault());
+        tcs.Task.CompletedOrDefault().Should().Be(1);
     }
 
     [Test]
@@ -131,8 +129,9 @@ public sealed class ThreadHelperTests
     {
         TaskCompletionSource<int> tcs = new();
         tcs.SetCanceled();
-        AggregateException? actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
-        ClassicAssert.IsInstanceOf<TaskCanceledException>(actual!.InnerException);
+        Action act = () => tcs.Task.CompletedOrDefault();
+        AggregateException actual = act.Should().Throw<AggregateException>().Which;
+        actual.InnerException.Should().BeOfType<TaskCanceledException>();
     }
 
     [Test]
@@ -141,20 +140,21 @@ public sealed class ThreadHelperTests
         TaskCompletionSource<int> tcs = new();
         Exception ex = new();
         tcs.SetException(ex);
-        AggregateException? actual = ClassicAssert.Throws<AggregateException>(() => tcs.Task.CompletedOrDefault());
-        ClassicAssert.AreSame(ex, actual!.InnerException);
-        ClassicAssert.AreEqual(1, actual.InnerExceptions.Count);
+        Action act = () => tcs.Task.CompletedOrDefault();
+        AggregateException actual = act.Should().Throw<AggregateException>().Which;
+        actual.InnerException.Should().BeSameAs(ex);
+        actual.InnerExceptions.Count.Should().Be(1);
     }
 
     [Test]
     [Apartment(ApartmentState.MTA)]
     public void JoinableTaskFactoryConfiguredForMTA()
     {
-        ClassicAssert.AreEqual(ApartmentState.MTA, Thread.CurrentThread.GetApartmentState());
-        ClassicAssert.Null(SynchronizationContext.Current);
-        ClassicAssert.NotNull(ThreadHelper.JoinableTaskContext);
-        ClassicAssert.NotNull(ThreadHelper.JoinableTaskFactory);
-        ClassicAssert.False(ThreadHelper.JoinableTaskContext.IsOnMainThread);
+        Thread.CurrentThread.GetApartmentState().Should().Be(ApartmentState.MTA);
+        SynchronizationContext.Current.Should().BeNull();
+        ThreadHelper.JoinableTaskContext.Should().NotBeNull();
+        ThreadHelper.JoinableTaskFactory.Should().NotBeNull();
+        ThreadHelper.JoinableTaskContext.IsOnMainThread.Should().BeFalse();
     }
 
     [Test]

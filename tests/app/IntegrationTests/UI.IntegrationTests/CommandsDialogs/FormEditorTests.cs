@@ -45,16 +45,16 @@ public class FormEditorTests
                 },
                 form =>
                 {
-                    ClassicAssert.False(form.GetTestAccessor().HasChanges);
+                    form.GetTestAccessor().HasChanges.Should().BeFalse();
 
                     FileViewerInternal fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
                     fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null);
 
-                    ClassicAssert.True(form.GetTestAccessor().HasChanges);
+                    form.GetTestAccessor().HasChanges.Should().BeTrue();
 
                     form.GetTestAccessor().SaveChanges();
 
-                    ClassicAssert.False(form.GetTestAccessor().HasChanges);
+                    form.GetTestAccessor().HasChanges.Should().BeFalse();
 
                     return Task.CompletedTask;
                 });
@@ -83,19 +83,19 @@ public class FormEditorTests
                 },
                 form =>
                 {
-                    ClassicAssert.False(form.GetTestAccessor().HasChanges);
+                    form.GetTestAccessor().HasChanges.Should().BeFalse();
 
                     FileViewerInternal fileViewerInternal = form.GetTestAccessor().FileViewer.GetTestAccessor().FileViewerInternal;
                     fileViewerInternal.GetTestAccessor().CurrentViewPositionCache.GetTestAccessor().SetCurrentIdentification("hello-world");
                     fileViewerInternal.SetText(fileViewerInternal.GetText() + "!", openWithDifftool: null, ViewMode.Text, true, "hello-world");
 
-                    ClassicAssert.True(form.GetTestAccessor().HasChanges);
+                    form.GetTestAccessor().HasChanges.Should().BeTrue();
 
                     form.GetTestAccessor().SaveChanges();
 
-                    ClassicAssert.False(form.GetTestAccessor().HasChanges);
+                    form.GetTestAccessor().HasChanges.Should().BeFalse();
 
-                    ClassicAssert.AreEqual(lineNumberDefault, fileViewerInternal.CurrentFileLine());
+                    fileViewerInternal.CurrentFileLine().Should().Be(lineNumberDefault);
 
                     return Task.CompletedTask;
                 });
@@ -121,9 +121,9 @@ public class FormEditorTests
 
     private void Should_preserve_encoding(Encoding encoding)
     {
-        ClassicAssert.AreEqual(_commands.Module.FilesEncoding.ToString(), UTF8Encoding.Default.ToString());
-        ClassicAssert.That(_commands.Module.FilesEncoding.GetPreamble().SequenceEqual(UTF8Encoding.Default.GetPreamble())
-            || _commands.Module.FilesEncoding.GetPreamble().SequenceEqual(encoding.GetPreamble()));
+        UTF8Encoding.Default.ToString().Should().Be(_commands.Module.FilesEncoding.ToString());
+        (_commands.Module.FilesEncoding.GetPreamble().SequenceEqual(UTF8Encoding.Default.GetPreamble())
+            || _commands.Module.FilesEncoding.GetPreamble().SequenceEqual(encoding.GetPreamble())).Should().BeTrue();
 
         string filePath = Path.Combine(_referenceRepository.Module.WorkingDir, Path.GetRandomFileName());
 
@@ -145,7 +145,7 @@ public class FormEditorTests
                     return Task.CompletedTask;
                 });
 
-            ClassicAssert.That(File.ReadAllBytes(filePath), Is.EquivalentTo(encoding.GetPreamble().Concat(encoding.GetBytes("Hello↔world!"))));
+            File.ReadAllBytes(filePath).Should().BeEquivalentTo(encoding.GetPreamble().Concat(encoding.GetBytes("Hello↔world!")));
         }
         finally
         {

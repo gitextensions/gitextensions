@@ -1,0 +1,29 @@
+name: Test Report
+
+on:
+  workflow_run:
+    workflows: ["PR Build"]
+    types:
+      - completed
+
+permissions:
+  actions: read
+  contents: read
+  checks: write
+
+jobs:
+  test-report:
+    name: Test Results
+    runs-on: ubuntu-latest
+    if: github.event.workflow_run.conclusion != 'cancelled' && github.event.workflow_run.event == 'pull_request'
+
+    steps:
+    - name: Test report
+      # v1 @ 2024-08-30
+      uses: dorny/test-reporter@d61b558e8df85cb60d09ca3e5b09653b4477cea7
+      continue-on-error: true
+      with:
+        artifact: test-results
+        name: Test Results
+        path: '**/*.trx'
+        reporter: dotnet-trx

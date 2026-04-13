@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;

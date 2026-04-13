@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitCommands.UserRepositoryHistory;
+﻿using GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory;
-
-[TestFixture]
 public class RepositoryXmlSerialiserTests
 {
     private RepositoryXmlSerialiser _repositoryXmlSerialiser = null!;

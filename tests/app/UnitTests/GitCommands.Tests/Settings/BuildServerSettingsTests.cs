@@ -1,13 +1,10 @@
 ﻿using System.Reflection;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitCommandsTests.Settings;
-
-[TestFixture]
 internal sealed class BuildServerSettingsTests
 {
     private GitModuleTestHelper _testHelper = null!;

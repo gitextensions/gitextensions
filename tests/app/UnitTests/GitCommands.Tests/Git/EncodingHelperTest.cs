@@ -2,8 +2,6 @@
 using GitCommands;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class EncodingHelperTest
 {
     #region Unit tests of single methods
@@ -11,7 +9,7 @@ public class EncodingHelperTest
     [Test]
     public void GetStringEncodingNull()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => EncodingHelper.GetString([0x30], [0x31], null!));
+        ((Action)(() => EncodingHelper.GetString([0x30], [0x31], null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -22,7 +20,7 @@ public class EncodingHelperTest
 
         string getString = EncodingHelper.GetString(testBytes, null, Encoding.ASCII);
 
-        ClassicAssert.AreEqual(asciiString, getString);
+        getString.Should().Be(asciiString);
     }
 
     [Test]
@@ -33,7 +31,7 @@ public class EncodingHelperTest
 
         string getString = EncodingHelper.GetString(null, testBytes, Encoding.ASCII);
 
-        ClassicAssert.AreEqual(asciiString, getString);
+        getString.Should().Be(asciiString);
     }
 
     [Test]
@@ -45,7 +43,7 @@ public class EncodingHelperTest
 
         string getString = EncodingHelper.GetString(testBytesOutput, testBytesError, Encoding.ASCII);
 
-        ClassicAssert.AreEqual(asciiString + Environment.NewLine + asciiString.ToUpper(), getString);
+        getString.Should().Be(asciiString + Environment.NewLine + asciiString.ToUpper());
     }
 
     [Test]
@@ -60,13 +58,13 @@ public class EncodingHelperTest
 
         string getString = EncodingHelper.GetString(null, testBytes, Encoding.UTF8);
 
-        ClassicAssert.AreEqual(utf8String, getString);
+        getString.Should().Be(utf8String);
     }
 
     [Test]
     public void ConvertToTestEncodingNull()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => EncodingHelper.ConvertTo(null!, "abcd"));
+        ((Action)(() => EncodingHelper.ConvertTo(null!, "abcd"))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -75,13 +73,13 @@ public class EncodingHelperTest
         string unicodeString = "\u30a2\u30c3";
         byte[] convertedBytes = EncodingHelper.ConvertTo(Encoding.UTF8, unicodeString);
 
-        ClassicAssert.AreEqual(convertedBytes.Length, 6);
-        ClassicAssert.AreEqual(convertedBytes[0], 0xE3);
-        ClassicAssert.AreEqual(convertedBytes[1], 0x82);
-        ClassicAssert.AreEqual(convertedBytes[2], 0xA2);
-        ClassicAssert.AreEqual(convertedBytes[3], 0xE3);
-        ClassicAssert.AreEqual(convertedBytes[4], 0x83);
-        ClassicAssert.AreEqual(convertedBytes[5], 0x83);
+        6.Should().Be(convertedBytes.Length);
+        0xE3.Should().Be(convertedBytes[0]);
+        0x82.Should().Be(convertedBytes[1]);
+        0xA2.Should().Be(convertedBytes[2]);
+        0xE3.Should().Be(convertedBytes[3]);
+        0x83.Should().Be(convertedBytes[4]);
+        0x83.Should().Be(convertedBytes[5]);
     }
 
     [Test]
@@ -90,18 +88,18 @@ public class EncodingHelperTest
         string unicodeString = "\u30a2\u30c3";
         byte[] convertedBytes = EncodingHelper.ConvertTo(Encoding.Unicode, unicodeString);
 
-        ClassicAssert.AreEqual(convertedBytes.Length, 4);
-        ClassicAssert.AreEqual(convertedBytes[0], 0xA2);
-        ClassicAssert.AreEqual(convertedBytes[1], 0x30);
-        ClassicAssert.AreEqual(convertedBytes[2], 0xC3);
-        ClassicAssert.AreEqual(convertedBytes[3], 0x30);
+        4.Should().Be(convertedBytes.Length);
+        0xA2.Should().Be(convertedBytes[0]);
+        0x30.Should().Be(convertedBytes[1]);
+        0xC3.Should().Be(convertedBytes[2]);
+        0x30.Should().Be(convertedBytes[3]);
     }
 
     [Test]
     public void DecodeStringTestEncodingNull()
     {
         Encoding? enc = null;
-        ClassicAssert.Throws<ArgumentNullException>(() => EncodingHelper.DecodeString([0x30], [0x31], ref enc!));
+        ((Action)(() => EncodingHelper.DecodeString([0x30], [0x31], ref enc!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -114,7 +112,7 @@ public class EncodingHelperTest
 
         string decodedString = EncodingHelper.DecodeString(testBytes, null, ref enc);
 
-        ClassicAssert.AreEqual(asciiString, decodedString);
+        decodedString.Should().Be(asciiString);
     }
 
     [Test]
@@ -127,7 +125,7 @@ public class EncodingHelperTest
 
         string decodedString = EncodingHelper.DecodeString(null, testBytes, ref enc);
 
-        ClassicAssert.AreEqual(asciiString, decodedString);
+        decodedString.Should().Be(asciiString);
     }
 
     [Test]
@@ -141,7 +139,7 @@ public class EncodingHelperTest
 
         string decodedString = EncodingHelper.DecodeString(testBytesOutput, testBytesError, ref enc);
 
-        ClassicAssert.AreEqual(asciiString + Environment.NewLine + asciiString.ToUpper(), decodedString);
+        decodedString.Should().Be(asciiString + Environment.NewLine + asciiString.ToUpper());
     }
 
     [Test]
@@ -158,8 +156,8 @@ public class EncodingHelperTest
 
         string decodedString = EncodingHelper.DecodeString(null, testBytes, ref enc);
 
-        ClassicAssert.AreEqual(utf8String, decodedString);
-        ClassicAssert.AreEqual(new UTF8Encoding(), enc);
+        decodedString.Should().Be(utf8String);
+        enc.Should().Be(new UTF8Encoding());
     }
 
     // Insert a Test here which checks whether EncodingHelper.DecodeString

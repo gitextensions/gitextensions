@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class FullPathResolverTests
 {
     private readonly string _workingDir = @"c:\dev\repo";
@@ -18,13 +15,13 @@ public class FullPathResolverTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase(" ")]
-    public void Resolve_should_return_null_if_path_null_or_illegal_chars(string path)
+    public void Resolve_should_return_null_if_path_null_or_illegal_chars(string? path)
     {
         _resolver.Resolve(path).Should().BeNull();
     }
 
     [TestCase(@"c:\")]
-    public void Resolve_should_return_original_path_if_rooted(string path)
+    public void Resolve_should_return_original_path_if_rooted(string? path)
     {
         _resolver.Resolve(path).Should().Be(path);
     }
@@ -40,33 +37,33 @@ public class FullPathResolverTests
     [TestCase("folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\filename.txt")]
     [TestCase("folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder#\\filename.txt")]
     [TestCase("folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\folder\\filename.txt")]
-    public void Resolve_should_return_full_path(string path)
+    public void Resolve_should_return_full_path(string? path)
     {
         _resolver.Resolve(path).Should().Be($"{_workingDir}\\{path}");
     }
 
     [TestCase("drivers/gpu/drm/nouveau/nvkm/subdev/i2c/aux.c")]
-    public void Resolve_handles_system_filenames(string path)
+    public void Resolve_handles_system_filenames(string? path)
     {
-        _resolver.Resolve(path).Should().Be($"{_workingDir}\\{path.Replace("/", "\\")}");
+        _resolver.Resolve(path).Should().Be($"{_workingDir}\\{path!.Replace("/", "\\")}");
     }
 
     [TestCase(@"C:\dev\repo")]
     [TestCase(@"C:\dev\repo\")]
     [TestCase(@"C:\dev\repo/")]
     [TestCase(@"C:\dev\c#\repo\")]
-    public void Resolve_combines_paths(string workingDir)
+    public void Resolve_combines_paths(string? workingDir)
     {
-        FullPathResolver resolver = new(() => workingDir);
-        resolver.Resolve("file.txt").Should().Be(Path.Combine(workingDir, "file.txt").Replace("/", "\\"));
+        FullPathResolver resolver = new(() => workingDir!);
+        resolver.Resolve("file.txt").Should().Be(Path.Combine(workingDir!, "file.txt").Replace("/", "\\"));
     }
 
     [TestCase(null)]
     [TestCase("")]
     [TestCase(" ")]
-    public void Resolve_does_not_throw_on_invalid_workingDir(string workingDir)
+    public void Resolve_does_not_throw_on_invalid_workingDir(string? workingDir)
     {
-        FullPathResolver resolver = new(() => workingDir);
+        FullPathResolver resolver = new(() => workingDir!);
         resolver.Resolve("file.txt").Should().Be(Path.Combine(Environment.CurrentDirectory, "file.txt").Replace("/", "\\"));
     }
 }

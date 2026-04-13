@@ -4,7 +4,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitCommands.Git;
@@ -13,8 +12,6 @@ using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public sealed class RevisionReaderTests
 {
     private readonly Encoding _logOutputEncoding = Encoding.UTF8;
@@ -113,8 +110,8 @@ public sealed class RevisionReaderTests
     public void GetRevision_should_throw_if_revision_is_artificial()
     {
         RevisionReader reader = RevisionReader.TestAccessor.RevisionReader(new GitModule(new GitExecutorProvider(new GitDirectoryResolver()), ""), _logOutputEncoding, _sixMonths);
-        ClassicAssert.Throws<InvalidOperationException>(() =>
-            reader.GetRevision(GitRevision.WorkTreeGuid, hasNotes: false, throwOnError: true, cancellationToken: default));
+        ((Action)(() =>
+            reader.GetRevision(GitRevision.WorkTreeGuid, hasNotes: false, throwOnError: true, cancellationToken: default))).Should().Throw<InvalidOperationException>();
     }
 
     [Test]

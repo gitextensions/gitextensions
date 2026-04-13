@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.UserControls;
@@ -10,7 +9,6 @@ namespace GitUITests.UserControls;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 [Apartment(ApartmentState.STA)]
 public class FilterToolBarTests
 {
@@ -38,6 +36,7 @@ public class FilterToolBarTests
     [TearDown]
     public void TearDown()
     {
+        _filterToolBar.Dispose();
         AppSettings.ShowOnlyFirstParent = _originalShowOnlyFirstParent;
         AppSettings.ShowReflogReferences.Value = _originalShowReflogReferences;
     }
@@ -181,7 +180,7 @@ public class FilterToolBarTests
     [TestCase(null, "")]
     [TestCase("", "")]
     [TestCase("foo", "foo")]
-    public void SetBranchFilter(string given, string expected)
+    public void SetBranchFilter(string? given, string expected)
     {
         _filterToolBar.GetTestAccessor().tscboBranchFilter.Items.AddRange(new[] { "one", "two" });
 
@@ -193,7 +192,7 @@ public class FilterToolBarTests
 
     [TestCase(null, "")]
     [TestCase("", "")]
-    public void SetRevisionFilter_when_empty(string given, string expected)
+    public void SetRevisionFilter_when_empty(string? given, string expected)
     {
         _filterToolBar.SetRevisionFilter(given);
 
@@ -202,7 +201,7 @@ public class FilterToolBarTests
     }
 
     [TestCase("foo", "foo")]
-    public void SetRevisionFilter(string given, string expected)
+    public void SetRevisionFilter(string? given, string expected)
     {
         _filterToolBar.SetRevisionFilter(given);
 

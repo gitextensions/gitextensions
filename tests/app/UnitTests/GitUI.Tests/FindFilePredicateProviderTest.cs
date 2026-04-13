@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitUI;
+﻿using GitUI;
 
 namespace GitUITests;
-
-[TestFixture]
 public class FindFilePredicateProviderTest
 {
     private static readonly string patternDefault = "test2";
@@ -18,47 +15,47 @@ public class FindFilePredicateProviderTest
     }
 
     [TestCase(null)]
-    public void Get_should_throw_if_pattern_is_null(string pattern)
+    public void Get_should_throw_if_pattern_is_null(string? pattern)
     {
-        Action predicate = () => { _provider.Get(pattern, workingDirDefault); };
+        Action predicate = () => { _provider.Get(pattern!, workingDirDefault); };
         predicate.Should().Throw<ArgumentNullException>();
     }
 
     [TestCase("")]
     [TestCase(" ")]
-    public void Get_should_not_throw_if_pattern_is_empty(string pattern)
+    public void Get_should_not_throw_if_pattern_is_empty(string? pattern)
     {
-        Action predicate = () => { _provider.Get(pattern, workingDirDefault); };
+        Action predicate = () => { _provider.Get(pattern!, workingDirDefault); };
         predicate.Should().NotThrow<ArgumentNullException>();
     }
 
     [TestCase(null)]
-    public void Get_should_throw_if_workingDir_is_null(string workingDir)
+    public void Get_should_throw_if_workingDir_is_null(string? workingDir)
     {
-        Action predicate = () => { _provider.Get(patternDefault, workingDir); };
+        Action predicate = () => { _provider.Get(patternDefault, workingDir!); };
         predicate.Should().Throw<ArgumentNullException>();
     }
 
     [TestCase("")]
     [TestCase(" ")]
-    public void Get_should_throw_if_workingDir_is_empty(string workingDir)
+    public void Get_should_throw_if_workingDir_is_empty(string? workingDir)
     {
-        Action predicate = () => { _provider.Get(patternDefault, workingDir); };
+        Action predicate = () => { _provider.Get(patternDefault, workingDir!); };
         predicate.Should().NotThrow<ArgumentNullException>();
     }
 
     [TestCase(@"test2/t", "test1/test2/test3")]
     [TestCase(@"\test2\t", "test1/test2/test3")]
-    public void Get_should_correct_work_with_slashes_and_backslashes_in_pattern(string pattern, string filePath)
+    public void Get_should_correct_work_with_slashes_and_backslashes_in_pattern(string? pattern, string? filePath)
     {
-        Func<string?, bool> predicate = _provider.Get(pattern, workingDirDefault);
-        ClassicAssert.True(predicate(filePath));
+        Func<string?, bool> predicate = _provider.Get(pattern!, workingDirDefault);
+        predicate(filePath).Should().BeTrue();
     }
 
     [TestCase(@"\test2\t", "D:/test1/test2/test3/")]
-    public void Get_should_not_throw_then_workingDir_length_greater_that_pattern_length(string pattern, string workingDir)
+    public void Get_should_not_throw_then_workingDir_length_greater_that_pattern_length(string? pattern, string? workingDir)
     {
-        Action predicate = () => { _provider.Get(pattern, workingDir); };
+        Action predicate = () => { _provider.Get(pattern!, workingDir!); };
         predicate.Should().NotThrow<ArgumentNullException>();
     }
 
@@ -68,42 +65,42 @@ public class FindFilePredicateProviderTest
     [TestCase(@"D:/test1", @"D:\", "test1/test2/test3/")]
     [TestCase(@"D:\test1", @"D:", "test1/test2/test3/")]
     [TestCase(@"D:/test1", @"D:", "test1/test2/test3/")]
-    public void Get_should_work_correct_when_workingDir_end_with_slash_or_not(string pattern, string workingDir, string filePath)
+    public void Get_should_work_correct_when_workingDir_end_with_slash_or_not(string? pattern, string? workingDir, string? filePath)
     {
-        Func<string?, bool> predicate = _provider.Get(pattern, workingDir);
-        ClassicAssert.True(predicate(filePath));
+        Func<string?, bool> predicate = _provider.Get(pattern!, workingDir!);
+        predicate(filePath).Should().BeTrue();
     }
 
     [TestCase(@"tEsT2", @"D:/", "Test1/teST2/test3/")]
     [TestCase(@"D:\Test\test1", @"D:/TEST", "teSt1/test2/test3/")]
-    public void Get_should_work_with_different_cases(string pattern, string workingDir, string filePath)
+    public void Get_should_work_with_different_cases(string? pattern, string? workingDir, string? filePath)
     {
-        Func<string?, bool> predicate = _provider.Get(pattern, workingDir);
-        ClassicAssert.True(predicate(filePath));
+        Func<string?, bool> predicate = _provider.Get(pattern!, workingDir!);
+        predicate(filePath).Should().BeTrue();
     }
 
     [TestCase(@"D:/test1", @"D:/", "test1/test2/test3/", ExpectedResult = true)]
     [TestCase(@"D:/test2", @"D:/", "test1/test2/test3/", ExpectedResult = false)]
     [TestCase(@"D:/test/test1", @"D:/test", "test1/test2/test3/", ExpectedResult = true)]
     [TestCase(@"//d/test/test1", @"//d/test\", "test1/test2/test3/", ExpectedResult = true)]
-    public bool Get_should_use_startwith_when_pattern_started_with_workingDir(string pattern, string workingDir, string filePath)
+    public bool Get_should_use_startwith_when_pattern_started_with_workingDir(string? pattern, string? workingDir, string? filePath)
     {
-        Func<string?, bool> predicate = _provider.Get(pattern, workingDir);
+        Func<string?, bool> predicate = _provider.Get(pattern!, workingDir!);
         return predicate(filePath);
     }
 
     [TestCase(@"test2", @"D:/", "test1/test2/test3/", ExpectedResult = true)]
     [TestCase(@"test1", @"D:/test", "test1/test2/test3/", ExpectedResult = true)]
-    public bool Get_should_use_contains_when_pattern_does_not_started_with_workingDir(string pattern, string workingDir, string filePath)
+    public bool Get_should_use_contains_when_pattern_does_not_started_with_workingDir(string? pattern, string? workingDir, string? filePath)
     {
-        Func<string?, bool> predicate = _provider.Get(pattern, workingDir);
+        Func<string?, bool> predicate = _provider.Get(pattern!, workingDir!);
         return predicate(filePath);
     }
 
     [TestCase(null)]
     [TestCase("")]
     [TestCase(" ")]
-    public void Get_should_not_throw_then_filePath_is_null_or_empty(string filePath)
+    public void Get_should_not_throw_then_filePath_is_null_or_empty(string? filePath)
     {
         Func<string?, bool> predicate = _provider.Get(patternDefault, workingDirDefault);
 

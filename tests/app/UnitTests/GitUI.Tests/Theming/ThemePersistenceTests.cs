@@ -1,8 +1,6 @@
 ﻿using GitUI.Theming;
 
 namespace GitUITests.Theming;
-
-[TestFixture]
 public class ThemePersistenceTests
 {
     private static IEnumerable<TestCaseData> ColorFormatCases()

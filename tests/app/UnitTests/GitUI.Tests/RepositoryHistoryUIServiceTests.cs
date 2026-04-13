@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitCommands.UserRepositoryHistory;
+﻿using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -8,7 +7,6 @@ using NSubstitute;
 namespace GitUITests;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public sealed class RepositoryHistoryUIServiceTests
 {
     private RepositoryHistoryUIService _service = null!;
@@ -27,7 +25,7 @@ public sealed class RepositoryHistoryUIServiceTests
     [Test]
     public void PopulateRecentRepositoriesMenu_should_add_new_item()
     {
-        ToolStripMenuItem containerMenu = new();
+        using ToolStripMenuItem containerMenu = new();
 
         const string path = "";
         const string caption = "CAPTION";
@@ -41,7 +39,7 @@ public sealed class RepositoryHistoryUIServiceTests
     [Test]
     public void AddRecentRepositories_should_set_properties_correctly()
     {
-        ToolStripMenuItem containerMenu = new();
+        using ToolStripMenuItem containerMenu = new();
 
         const string path = "";
         const string caption = "CAPTION";
@@ -59,11 +57,11 @@ public sealed class RepositoryHistoryUIServiceTests
     [TestCase("")]
     [TestCase("master")]
     [TestCase("(no branch)")]
-    public void AddRecentRepositories_should_show_branch_correctly(string branch)
+    public void AddRecentRepositories_should_show_branch_correctly(string? branch)
     {
         _branchNameCache.GetCachedBranchName(Arg.Any<string>()).Returns(string.IsNullOrWhiteSpace(branch) ? null : branch);
 
-        ToolStripMenuItem containerMenu = new();
+        using ToolStripMenuItem containerMenu = new();
 
         const string path = "somepath";
         const string caption = "CAPTION";
@@ -85,7 +83,7 @@ public sealed class RepositoryHistoryUIServiceTests
     [Test]
     public void ChangeWorkingDir_should_promt_user_to_delete_invalid_repo()
     {
-        ToolStripMenuItem containerMenu = new();
+        using ToolStripMenuItem containerMenu = new();
 
         const string path = "";
         const string caption = "CAPTION";
@@ -102,7 +100,7 @@ public sealed class RepositoryHistoryUIServiceTests
     [Test]
     public void PopulateFavouriteRepositoriesMenu_should_order_favourites_alphabetically()
     {
-        ToolStripMenuItem tsmiFavouriteRepositories = new();
+        using ToolStripMenuItem tsmiFavouriteRepositories = new();
         List<Repository> repositoryHistory =
         [
             new Repository(@"c:\") { Category = "D" },

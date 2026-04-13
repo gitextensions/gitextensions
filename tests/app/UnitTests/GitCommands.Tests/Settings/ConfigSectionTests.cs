@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitCommands.Config;
+﻿using GitCommands.Config;
 
 namespace GitCommandsTests.Settings;
-
-[TestFixture]
 internal sealed class ConfigSectionTests
 {
     private static readonly string _keyName = Guid.NewGuid().ToString();
@@ -24,7 +21,7 @@ internal sealed class ConfigSectionTests
     }
 
     [Test]
-    public void should_remove_setting([Values(null, "")] string noValue)
+    public void should_remove_setting([Values(null, "")] string? noValue)
     {
         string value = Guid.NewGuid().ToString();
         string defaultValue = Guid.NewGuid().ToString();

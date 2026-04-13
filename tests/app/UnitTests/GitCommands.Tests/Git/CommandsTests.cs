@@ -6,14 +6,12 @@ using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
 namespace GitCommandsTests_Git;
-
-[TestFixture]
 public partial class CommandsTests
 {
     [Test]
     public void AbortMergeCmd()
     {
-        ClassicAssert.AreEqual("merge --abort", Commands.AbortMerge().Arguments);
+        Commands.AbortMerge().Arguments.Should().Be("merge --abort");
     }
 
     private static IEnumerable<TestCaseData> AddSubmoduleTestCases()
@@ -25,32 +23,20 @@ public partial class CommandsTests
     [Test, TestCaseSource(nameof(AddSubmoduleTestCases))]
     public void AddSubmoduleCmd(string config, IEnumerable<GitConfigItem> configs)
     {
-        ClassicAssert.AreEqual(
-            $"{config}submodule add -b \"branch\" \"remotepath\" \"localpath\"",
-            Commands.AddSubmodule("remotepath", "localpath", "branch", force: false, configs).Arguments);
+        Commands.AddSubmodule("remotepath", "localpath", "branch", force: false, configs).Arguments.Should().Be($"{config}submodule add -b \"branch\" \"remotepath\" \"localpath\"");
 
-        ClassicAssert.AreEqual(
-            $"{config}submodule add \"remotepath\" \"localpath\"",
-            Commands.AddSubmodule("remotepath", "localpath", branch: null!, force: false, configs).Arguments);
+        Commands.AddSubmodule("remotepath", "localpath", branch: null!, force: false, configs).Arguments.Should().Be($"{config}submodule add \"remotepath\" \"localpath\"");
 
-        ClassicAssert.AreEqual(
-            $"{config}submodule add -f -b \"branch\" \"remotepath\" \"localpath\"",
-            Commands.AddSubmodule("remotepath", "localpath", "branch", force: true, configs).Arguments);
+        Commands.AddSubmodule("remotepath", "localpath", "branch", force: true, configs).Arguments.Should().Be($"{config}submodule add -f -b \"branch\" \"remotepath\" \"localpath\"");
 
-        ClassicAssert.AreEqual(
-            $"{config}submodule add -f -b \"branch\" \"remote/path\" \"local/path\"",
-            Commands.AddSubmodule("remote\\path", "local\\path", "branch", force: true, configs).Arguments);
+        Commands.AddSubmodule("remote\\path", "local\\path", "branch", force: true, configs).Arguments.Should().Be($"{config}submodule add -f -b \"branch\" \"remote/path\" \"local/path\"");
     }
 
     [Test]
     public void ApplyDiffPatchCmd()
     {
-        ClassicAssert.AreEqual(
-            "apply \"hello/world.patch\"",
-            Commands.ApplyDiffPatch(false, "hello\\world.patch", PathUtil.ToPosixPath).Arguments);
-        ClassicAssert.AreEqual(
-            "apply --ignore-whitespace \"hello/world.patch\"",
-            Commands.ApplyDiffPatch(true, "hello\\world.patch", PathUtil.ToPosixPath).Arguments);
+        Commands.ApplyDiffPatch(false, "hello\\world.patch", PathUtil.ToPosixPath).Arguments.Should().Be("apply \"hello/world.patch\"");
+        Commands.ApplyDiffPatch(true, "hello\\world.patch", PathUtil.ToPosixPath).Arguments.Should().Be("apply --ignore-whitespace \"hello/world.patch\"");
     }
 
     [TestCase(false, false, "hello\\world.patch", "am --3way \"hello/world.patch\"")]
@@ -58,11 +44,9 @@ public partial class CommandsTests
     [TestCase(true, false, "hello\\world.patch", "am --3way --signoff \"hello/world.patch\"")]
     [TestCase(true, true, "hello\\world.patch", "am --3way --signoff --ignore-whitespace \"hello/world.patch\"")]
     [TestCase(true, true, null, "am --3way --signoff --ignore-whitespace")]
-    public void ApplyMailboxPatchCmd(bool signOff, bool ignoreWhitespace, string patchFile, string expected)
+    public void ApplyMailboxPatchCmd(bool signOff, bool ignoreWhitespace, string? patchFile, string expected)
     {
-        ClassicAssert.AreEqual(
-            expected,
-            Commands.ApplyMailboxPatch(signOff, ignoreWhitespace, patchFile, PathUtil.ToPosixPath).Arguments);
+        Commands.ApplyMailboxPatch(signOff, ignoreWhitespace, patchFile, PathUtil.ToPosixPath).Arguments.Should().Be(expected);
     }
 
     [Test]
@@ -70,38 +54,20 @@ public partial class CommandsTests
     {
         // TODO split this into BranchCmd and CheckoutCmd
 
-        ClassicAssert.AreEqual(
-            "checkout -b \"branch\" \"revision\"",
-            Commands.Branch("branch", "revision", checkout: true).Arguments);
-        ClassicAssert.AreEqual(
-            "branch \"branch\" \"revision\"",
-            Commands.Branch("branch", "revision", checkout: false).Arguments);
-        ClassicAssert.AreEqual(
-            "checkout -b \"branch\"",
-            Commands.Branch("branch", null!, checkout: true).Arguments);
-        ClassicAssert.AreEqual(
-            "checkout -b \"branch\"",
-            Commands.Branch("branch", "", checkout: true).Arguments);
-        ClassicAssert.AreEqual(
-            "checkout -b \"branch\"",
-            Commands.Branch("branch", "  ", checkout: true).Arguments);
+        Commands.Branch("branch", "revision", checkout: true).Arguments.Should().Be("checkout -b \"branch\" \"revision\"");
+        Commands.Branch("branch", "revision", checkout: false).Arguments.Should().Be("branch \"branch\" \"revision\"");
+        Commands.Branch("branch", null!, checkout: true).Arguments.Should().Be("checkout -b \"branch\"");
+        Commands.Branch("branch", "", checkout: true).Arguments.Should().Be("checkout -b \"branch\"");
+        Commands.Branch("branch", "  ", checkout: true).Arguments.Should().Be("checkout -b \"branch\"");
     }
 
     [Test]
     public void CheckoutCmd()
     {
-        ClassicAssert.AreEqual(
-            "checkout \"branch\"",
-            Commands.Checkout("branch", LocalChangesAction.DontChange).Arguments);
-        ClassicAssert.AreEqual(
-            "checkout --merge \"branch\"",
-            Commands.Checkout("branch", LocalChangesAction.Merge).Arguments);
-        ClassicAssert.AreEqual(
-            "checkout --force \"branch\"",
-            Commands.Checkout("branch", LocalChangesAction.Reset).Arguments);
-        ClassicAssert.AreEqual(
-            "checkout \"branch\"",
-            Commands.Checkout("branch", LocalChangesAction.Stash).Arguments);
+        Commands.Checkout("branch", LocalChangesAction.DontChange).Arguments.Should().Be("checkout \"branch\"");
+        Commands.Checkout("branch", LocalChangesAction.Merge).Arguments.Should().Be("checkout --merge \"branch\"");
+        Commands.Checkout("branch", LocalChangesAction.Reset).Arguments.Should().Be("checkout --force \"branch\"");
+        Commands.Checkout("branch", LocalChangesAction.Stash).Arguments.Should().Be("checkout \"branch\"");
     }
 
     [TestCase(CleanMode.OnlyNonIgnored, true, false, null, null, "clean --dry-run")]
@@ -115,9 +81,9 @@ public partial class CommandsTests
     [TestCase(CleanMode.OnlyNonIgnored, false, false, null, "--exclude=exclude1 --exclude=exclude2", "clean -f --exclude=exclude1 --exclude=exclude2")]
     [TestCase(CleanMode.OnlyIgnored, false, false, null, null, "clean -X -f")]
     [TestCase(CleanMode.All, false, false, null, null, "clean -x -f")]
-    public void CleanCmd(CleanMode mode, bool dryRun, bool directories, string paths, string excludes, string expected)
+    public void CleanCmd(CleanMode mode, bool dryRun, bool directories, string? paths, string? excludes, string expected)
     {
-        ClassicAssert.AreEqual(expected, Commands.Clean(mode, dryRun, directories, paths, excludes).Arguments);
+        Commands.Clean(mode, dryRun, directories, paths, excludes).Arguments.Should().Be(expected);
     }
 
     [TestCase(CleanMode.OnlyNonIgnored, true, false, null, "clean --dry-run")]
@@ -126,80 +92,40 @@ public partial class CommandsTests
     [TestCase(CleanMode.OnlyNonIgnored, false, false, "paths", "clean -f paths")]
     [TestCase(CleanMode.OnlyIgnored, false, false, null, "clean -X -f")]
     [TestCase(CleanMode.All, false, false, null, "clean -x -f")]
-    public void CleanupSubmoduleCommand(CleanMode mode, bool dryRun, bool directories, string paths, string expected)
+    public void CleanupSubmoduleCommand(CleanMode mode, bool dryRun, bool directories, string? paths, string expected)
     {
         string subExpected = "submodule foreach --recursive git " + expected;
-        ClassicAssert.AreEqual(subExpected, Commands.CleanSubmodules(mode, dryRun, directories, paths).Arguments);
+        Commands.CleanSubmodules(mode, dryRun, directories, paths).Arguments.Should().Be(subExpected);
     }
 
     [Test]
     public void CloneCmd()
     {
-        ClassicAssert.AreEqual(
-            "clone -v --progress \"from\" \"to\"",
-            Commands.Clone("from", "to", PathUtil.ToPosixPath).Arguments);
-        ClassicAssert.AreEqual(
-            "clone -v --progress \"from/path\" \"to/path\"",
-            Commands.Clone("from/path", "to/path", PathUtil.ToPosixPath).Arguments);
-        ClassicAssert.AreEqual(
-            "clone -v --bare --progress \"from\" \"to\"",
-            Commands.Clone("from", "to", PathUtil.ToPosixPath, central: true).Arguments);
-        ClassicAssert.AreEqual(
-            "clone -v --recurse-submodules --progress \"from\" \"to\"",
-            Commands.Clone("from", "to", PathUtil.ToPosixPath, initSubmodules: true).Arguments);
-        ClassicAssert.AreEqual(
-            "clone -v --recurse-submodules --progress \"from\" \"to\"",
-            Commands.Clone("from", "to", PathUtil.ToPosixPath, initSubmodules: true).Arguments);
-        ClassicAssert.AreEqual(
-            "clone -v --depth 2 --progress \"from\" \"to\"",
-            Commands.Clone("from", "to", PathUtil.ToPosixPath, depth: 2).Arguments);
-        ClassicAssert.AreEqual(
-            "clone -v --single-branch --progress \"from\" \"to\"",
-            Commands.Clone("from", "to", PathUtil.ToPosixPath, isSingleBranch: true).Arguments);
-        ClassicAssert.AreEqual(
-            "clone -v --no-single-branch --progress \"from\" \"to\"",
-            Commands.Clone("from", "to", PathUtil.ToPosixPath, isSingleBranch: false).Arguments);
-        ClassicAssert.AreEqual(
-            "clone -v --progress --branch branch \"from\" \"to\"",
-            Commands.Clone("from", "to", PathUtil.ToPosixPath, branch: "branch").Arguments);
-        ClassicAssert.AreEqual(
-            "clone -v --progress --no-checkout \"from\" \"to\"",
-            Commands.Clone("from", "to", PathUtil.ToPosixPath, branch: null).Arguments);
+        Commands.Clone("from", "to", PathUtil.ToPosixPath).Arguments.Should().Be("clone -v --progress \"from\" \"to\"");
+        Commands.Clone("from/path", "to/path", PathUtil.ToPosixPath).Arguments.Should().Be("clone -v --progress \"from/path\" \"to/path\"");
+        Commands.Clone("from", "to", PathUtil.ToPosixPath, central: true).Arguments.Should().Be("clone -v --bare --progress \"from\" \"to\"");
+        Commands.Clone("from", "to", PathUtil.ToPosixPath, initSubmodules: true).Arguments.Should().Be("clone -v --recurse-submodules --progress \"from\" \"to\"");
+        Commands.Clone("from", "to", PathUtil.ToPosixPath, initSubmodules: true).Arguments.Should().Be("clone -v --recurse-submodules --progress \"from\" \"to\"");
+        Commands.Clone("from", "to", PathUtil.ToPosixPath, depth: 2).Arguments.Should().Be("clone -v --depth 2 --progress \"from\" \"to\"");
+        Commands.Clone("from", "to", PathUtil.ToPosixPath, isSingleBranch: true).Arguments.Should().Be("clone -v --single-branch --progress \"from\" \"to\"");
+        Commands.Clone("from", "to", PathUtil.ToPosixPath, isSingleBranch: false).Arguments.Should().Be("clone -v --no-single-branch --progress \"from\" \"to\"");
+        Commands.Clone("from", "to", PathUtil.ToPosixPath, branch: "branch").Arguments.Should().Be("clone -v --progress --branch branch \"from\" \"to\"");
+        Commands.Clone("from", "to", PathUtil.ToPosixPath, branch: null).Arguments.Should().Be("clone -v --progress --no-checkout \"from\" \"to\"");
     }
 
     [Test]
     public void CommitCmd()
     {
-        ClassicAssert.AreEqual(
-            "commit -F \"COMMITMESSAGE\"",
-            Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: null).Arguments);
-        ClassicAssert.AreEqual(
-            "commit -F \"adapted_commit_message_path\"",
-            Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", path => "adapted_commit_message_path", gpgSign: null).Arguments);
-        ClassicAssert.AreEqual(
-            "commit --amend -F \"COMMITMESSAGE\"",
-            Commands.Commit(amend: true, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: null).Arguments);
-        ClassicAssert.AreEqual(
-            "commit --signoff -F \"COMMITMESSAGE\"",
-            Commands.Commit(amend: false, signOff: true, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: null).Arguments);
-        ClassicAssert.AreEqual(
-            "commit --author=\"foo\" -F \"COMMITMESSAGE\"",
-            Commands.Commit(amend: false, signOff: false, author: "foo", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: null).Arguments);
-        ClassicAssert.AreEqual(
-            "commit",
-            Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: false, commitMessageFile: null, PathUtil.ToPosixPath, gpgSign: null).Arguments);
-        ClassicAssert.AreEqual(
-            "commit --no-verify -F \"COMMITMESSAGE\"",
-            Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, noVerify: true, gpgSign: null).Arguments);
-        ClassicAssert.AreEqual(
-            "commit --no-gpg-sign -F \"COMMITMESSAGE\"",
-            Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: false).Arguments);
-        ClassicAssert.AreEqual(
-            "commit --gpg-sign -F \"COMMITMESSAGE\"",
-            Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: true).Arguments);
-        ClassicAssert.AreEqual(
-            "commit --gpg-sign=key -F \"COMMITMESSAGE\"",
-            Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: true, gpgKeyId: "key").Arguments);
+        Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: null).Arguments.Should().Be("commit -F \"COMMITMESSAGE\"");
+        Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", path => "adapted_commit_message_path", gpgSign: null).Arguments.Should().Be("commit -F \"adapted_commit_message_path\"");
+        Commands.Commit(amend: true, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: null).Arguments.Should().Be("commit --amend -F \"COMMITMESSAGE\"");
+        Commands.Commit(amend: false, signOff: true, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: null).Arguments.Should().Be("commit --signoff -F \"COMMITMESSAGE\"");
+        Commands.Commit(amend: false, signOff: false, author: "foo", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: null).Arguments.Should().Be("commit --author=\"foo\" -F \"COMMITMESSAGE\"");
+        Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: false, commitMessageFile: null, PathUtil.ToPosixPath, gpgSign: null).Arguments.Should().Be("commit");
+        Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, noVerify: true, gpgSign: null).Arguments.Should().Be("commit --no-verify -F \"COMMITMESSAGE\"");
+        Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: false).Arguments.Should().Be("commit --no-gpg-sign -F \"COMMITMESSAGE\"");
+        Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: true).Arguments.Should().Be("commit --gpg-sign -F \"COMMITMESSAGE\"");
+        Commands.Commit(amend: false, signOff: false, author: "", useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath, gpgSign: true, gpgKeyId: "key").Arguments.Should().Be("commit --gpg-sign=key -F \"COMMITMESSAGE\"");
     }
 
     [TestCase(@"  ""author <author@mail.com>""  ", @"commit --author=""author <author@mail.com>"" -F ""COMMITMESSAGE""")]
@@ -208,7 +134,7 @@ public partial class CommandsTests
     public void CommitCmdShouldTrimAuthor(string input, string expected)
     {
         ArgumentString actual = Commands.Commit(amend: false, signOff: false, author: input, useExplicitCommitMessage: true, commitMessageFile: "COMMITMESSAGE", PathUtil.ToPosixPath);
-        StringAssert.AreEqualIgnoringCase(expected, actual);
+        actual.Arguments.Should().Be(expected);
     }
 
     [TestCase(false, false, @"", false, false, null, @"", @"commit")]
@@ -223,10 +149,10 @@ public partial class CommandsTests
     [TestCase(false, false, @"", false, false, true, null, @"commit --gpg-sign")]
     [TestCase(false, false, @"", false, false, true, @"12345678", @"commit --gpg-sign=12345678")]
     [TestCase(true, true, @"", true, true, true, @"12345678", @"commit --amend --no-verify --signoff --gpg-sign=12345678 -F ""COMMITMESSAGE""")]
-    public void CommitCmdTests(bool amend, bool signOff, string author, bool useExplicitCommitMessage, bool noVerify, bool? gpgSign, string gpgKeyId, string expected)
+    public void CommitCmdTests(bool amend, bool signOff, string author, bool useExplicitCommitMessage, bool noVerify, bool? gpgSign, string? gpgKeyId, string expected)
     {
-        ArgumentString actual = Commands.Commit(amend, signOff, author, useExplicitCommitMessage, "COMMITMESSAGE", PathUtil.ToPosixPath, noVerify, gpgSign, gpgKeyId);
-        StringAssert.AreEqualIgnoringCase(expected, actual);
+        ArgumentString actual = Commands.Commit(amend, signOff, author, useExplicitCommitMessage, "COMMITMESSAGE", PathUtil.ToPosixPath, noVerify, gpgSign, gpgKeyId!);
+        actual.Arguments.Should().Be(expected);
     }
 
     [Test]
@@ -235,62 +161,32 @@ public partial class CommandsTests
         ObjectId id1 = ObjectId.Random();
         ObjectId id2 = ObjectId.Random();
 
-        ClassicAssert.AreEqual(
-            "bisect good",
-            Commands.ContinueBisect(GitBisectOption.Good).Arguments);
-        ClassicAssert.AreEqual(
-            "bisect bad",
-            Commands.ContinueBisect(GitBisectOption.Bad).Arguments);
-        ClassicAssert.AreEqual(
-            "bisect skip",
-            Commands.ContinueBisect(GitBisectOption.Skip).Arguments);
-        ClassicAssert.AreEqual(
-            $"bisect good {id1} {id2}",
-            Commands.ContinueBisect(GitBisectOption.Good, id1, id2).Arguments);
+        Commands.ContinueBisect(GitBisectOption.Good).Arguments.Should().Be("bisect good");
+        Commands.ContinueBisect(GitBisectOption.Bad).Arguments.Should().Be("bisect bad");
+        Commands.ContinueBisect(GitBisectOption.Skip).Arguments.Should().Be("bisect skip");
+        Commands.ContinueBisect(GitBisectOption.Good, id1, id2).Arguments.Should().Be($"bisect good {id1} {id2}");
     }
 
     [Test]
     public void ContinueMergeCmd()
     {
-        ClassicAssert.AreEqual("merge --continue", Commands.ContinueMerge().Arguments);
+        Commands.ContinueMerge().Arguments.Should().Be("merge --continue");
     }
 
     [Test]
     public void GetAllChangedFilesCmd()
     {
-        ClassicAssert.AreEqual(
-            "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules",
-            Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments);
-        ClassicAssert.AreEqual(
-            "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignored --ignore-submodules",
-            Commands.GetAllChangedFiles(excludeIgnoredFiles: false, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments);
-        ClassicAssert.AreEqual(
-            "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files=no --ignore-submodules",
-            Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Arguments);
-        ClassicAssert.AreEqual(
-            "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files=normal --ignore-submodules",
-            Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Normal, IgnoreSubmodulesMode.Default).Arguments);
-        ClassicAssert.AreEqual(
-            "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files=all --ignore-submodules",
-            Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Arguments);
-        ClassicAssert.AreEqual(
-            "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files",
-            Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.None).Arguments);
-        ClassicAssert.AreEqual(
-            "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files",
-            Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default).Arguments);
-        ClassicAssert.AreEqual(
-            "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=untracked",
-            Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Untracked).Arguments);
-        ClassicAssert.AreEqual(
-            "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=dirty",
-            Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Dirty).Arguments);
-        ClassicAssert.AreEqual(
-            "-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=all",
-            Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.All).Arguments);
-        ClassicAssert.AreEqual(
-            "--no-optional-locks -c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules",
-            Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default, noLocks: true).Arguments);
+        Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments.Should().Be("-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules");
+        Commands.GetAllChangedFiles(excludeIgnoredFiles: false, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default).Arguments.Should().Be("-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignored --ignore-submodules");
+        Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.No, IgnoreSubmodulesMode.Default).Arguments.Should().Be("-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files=no --ignore-submodules");
+        Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Normal, IgnoreSubmodulesMode.Default).Arguments.Should().Be("-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files=normal --ignore-submodules");
+        Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.All, IgnoreSubmodulesMode.Default).Arguments.Should().Be("-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files=all --ignore-submodules");
+        Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.None).Arguments.Should().Be("-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files");
+        Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default).Arguments.Should().Be("-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files");
+        Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Untracked).Arguments.Should().Be("-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=untracked");
+        Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Dirty).Arguments.Should().Be("-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=dirty");
+        Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.All).Arguments.Should().Be("-c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules=all");
+        Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.Default, IgnoreSubmodulesMode.Default, noLocks: true).Arguments.Should().Be("--no-optional-locks -c diff.ignoresubmodules=none status --porcelain=2 -z --untracked-files --ignore-submodules");
     }
 
     [TestCase(@"-c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoresubmodules=none -c core.safecrlf=false diff --no-ext-diff --find-renames --find-copies extra --cached -- ""new"" ""old""", "new", "old", true, "extra", false)]
@@ -298,8 +194,8 @@ public partial class CommandsTests
     [TestCase(@"--no-optional-locks -c color.ui=never -c diff.submodule=short -c diff.noprefix=false -c diff.mnemonicprefix=false -c diff.ignoresubmodules=none -c core.safecrlf=false diff --no-ext-diff --find-renames --find-copies extra --cached -- ""new"" ""old""", "new", "old", true, "extra", true)]
     public void GetCurrentChangesCmd(string expected, string fileName, string oldFileName, bool staged, string extraDiffArguments, bool noLocks)
     {
-        ClassicAssert.AreEqual(expected, Commands.GetCurrentChanges(fileName, oldFileName, staged,
-            extraDiffArguments, noLocks).ToString());
+        Commands.GetCurrentChanges(fileName, oldFileName, staged,
+            extraDiffArguments, noLocks).ToString().Should().Be(expected);
     }
 
     private static IEnumerable<TestCaseData> GetRefsTestData
@@ -354,7 +250,7 @@ public partial class CommandsTests
     [TestCaseSource(nameof(GetRefsTestData))]
     public void GetRefsCmd(RefsFilter getRefs, bool noLocks, GitRefsSortBy sortBy, GitRefsSortOrder sortOrder, int count, string expected)
     {
-        ClassicAssert.AreEqual(expected, Commands.GetRefs(getRefs, noLocks, sortBy, sortOrder, count).ToString());
+        Commands.GetRefs(getRefs, noLocks, sortBy, sortOrder, count).ToString().Should().Be(expected);
     }
 
     // Don't care about permutations because the args aren't correlated
@@ -373,76 +269,50 @@ public partial class CommandsTests
     [TestCase(true, true, false, null, false, null, -1, "merge --squash branch")]
     [TestCase(true, true, false, null, false, null, 0, "merge --squash branch")]
     [TestCase(true, true, false, null, false, null, 5, "merge --squash --log=5 branch")]
-    public void MergeBranchCmd(bool allowFastForward, bool squash, bool noCommit, string strategy, bool allowUnrelatedHistories, string mergeCommitFilePath, int? log, string expected)
+    public void MergeBranchCmd(bool allowFastForward, bool squash, bool noCommit, string? strategy, bool allowUnrelatedHistories, string? mergeCommitFilePath, int? log, string expected)
     {
-        ClassicAssert.AreEqual(expected, Commands.MergeBranch("branch", allowFastForward, squash, noCommit, strategy, allowUnrelatedHistories, mergeCommitFilePath, PathUtil.ToPosixPath, log).Arguments);
+        Commands.MergeBranch("branch", allowFastForward, squash, noCommit, strategy!, allowUnrelatedHistories, mergeCommitFilePath, PathUtil.ToPosixPath, log).Arguments.Should().Be(expected);
     }
 
     [Test]
     public void MergedBranchesCmd([Values(true, false)] bool includeRemote, [Values(true, false)] bool fullRefname,
-         [Values(null, "", "HEAD", "1234567890")] string commit)
+         [Values(null, "", "HEAD", "1234567890")] string? commit)
     {
         string formatArg = fullRefname ? @" --format=""%(refname)""" : string.Empty;
         string remoteArg = includeRemote ? " -a" : string.Empty;
         string commitArg = string.IsNullOrWhiteSpace(commit) ? string.Empty : $" {commit.Quote()}";
         string expected = $"branch{formatArg}{remoteArg} --merged{commitArg}";
 
-        ClassicAssert.AreEqual(expected, Commands.MergedBranches(includeRemote, fullRefname, commit).Arguments);
+        Commands.MergedBranches(includeRemote, fullRefname, commit).Arguments.Should().Be(expected);
     }
 
     [Test]
     public void PushAllCmd()
     {
-        ClassicAssert.AreEqual(
-            "push --progress --all \"remote\"",
-            Commands.PushAll("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0).Arguments);
-        ClassicAssert.AreEqual(
-            "push -f --progress --all \"remote\"",
-            Commands.PushAll("remote", ForcePushOptions.Force, track: false, recursiveSubmodules: 0).Arguments);
-        ClassicAssert.AreEqual(
-            "push --force-with-lease --progress --all \"remote\"",
-            Commands.PushAll("remote", ForcePushOptions.ForceWithLease, track: false, recursiveSubmodules: 0).Arguments);
-        ClassicAssert.AreEqual(
-            "push -u --progress --all \"remote\"",
-            Commands.PushAll("remote", ForcePushOptions.DoNotForce, track: true, recursiveSubmodules: 0).Arguments);
-        ClassicAssert.AreEqual(
-            "push --recurse-submodules=check --progress --all \"remote\"",
-            Commands.PushAll("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 1).Arguments);
-        ClassicAssert.AreEqual(
-            "push --recurse-submodules=on-demand --progress --all \"remote\"",
-            Commands.PushAll("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 2).Arguments);
+        Commands.PushAll("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0).Arguments.Should().Be("push --progress --all \"remote\"");
+        Commands.PushAll("remote", ForcePushOptions.Force, track: false, recursiveSubmodules: 0).Arguments.Should().Be("push -f --progress --all \"remote\"");
+        Commands.PushAll("remote", ForcePushOptions.ForceWithLease, track: false, recursiveSubmodules: 0).Arguments.Should().Be("push --force-with-lease --progress --all \"remote\"");
+        Commands.PushAll("remote", ForcePushOptions.DoNotForce, track: true, recursiveSubmodules: 0).Arguments.Should().Be("push -u --progress --all \"remote\"");
+        Commands.PushAll("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 1).Arguments.Should().Be("push --recurse-submodules=check --progress --all \"remote\"");
+        Commands.PushAll("remote", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 2).Arguments.Should().Be("push --recurse-submodules=on-demand --progress --all \"remote\"");
     }
 
     [Test]
     public void PushCmd()
     {
-        ClassicAssert.AreEqual(
-            "push --progress \"remote\" from-branch",
-            Commands.Push("remote", "from-branch", null, ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0).Arguments);
+        Commands.Push("remote", "from-branch", null, ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0).Arguments.Should().Be("push --progress \"remote\" from-branch");
 
-        ClassicAssert.AreEqual(
-            "push --progress \"remote\" from-branch:refs/heads/to-branch",
-            Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0).Arguments);
+        Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 0).Arguments.Should().Be("push --progress \"remote\" from-branch:refs/heads/to-branch");
 
-        ClassicAssert.AreEqual(
-            "push -f --progress \"remote\" from-branch:refs/heads/to-branch",
-            Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.Force, track: false, recursiveSubmodules: 0).Arguments);
+        Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.Force, track: false, recursiveSubmodules: 0).Arguments.Should().Be("push -f --progress \"remote\" from-branch:refs/heads/to-branch");
 
-        ClassicAssert.AreEqual(
-            "push --force-with-lease --progress \"remote\" from-branch:refs/heads/to-branch",
-            Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.ForceWithLease, track: false, recursiveSubmodules: 0).Arguments);
+        Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.ForceWithLease, track: false, recursiveSubmodules: 0).Arguments.Should().Be("push --force-with-lease --progress \"remote\" from-branch:refs/heads/to-branch");
 
-        ClassicAssert.AreEqual(
-            "push -u --progress \"remote\" from-branch:refs/heads/to-branch",
-            Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: true, recursiveSubmodules: 0).Arguments);
+        Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: true, recursiveSubmodules: 0).Arguments.Should().Be("push -u --progress \"remote\" from-branch:refs/heads/to-branch");
 
-        ClassicAssert.AreEqual(
-            "push --recurse-submodules=check --progress \"remote\" from-branch:refs/heads/to-branch",
-            Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 1).Arguments);
+        Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 1).Arguments.Should().Be("push --recurse-submodules=check --progress \"remote\" from-branch:refs/heads/to-branch");
 
-        ClassicAssert.AreEqual(
-            "push --recurse-submodules=on-demand --progress \"remote\" from-branch:refs/heads/to-branch",
-            Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 2).Arguments);
+        Commands.Push("remote", "from-branch", "to-branch", ForcePushOptions.DoNotForce, track: false, recursiveSubmodules: 2).Arguments.Should().Be("push --recurse-submodules=on-demand --progress \"remote\" from-branch:refs/heads/to-branch");
     }
 
     [TestCase("mybranch", ".", false, false, ExpectedResult = @"push ""file://."" ""1111111111111111111111111111111111111111:mybranch""")]
@@ -456,34 +326,20 @@ public partial class CommandsTests
     [Test]
     public void PushTagCmd()
     {
-        ClassicAssert.AreEqual(
-            "push --progress \"path\" tag tag",
-            Commands.PushTag("path", "tag", all: false).Arguments);
-        ClassicAssert.AreEqual(
-            "push --progress \"path\" tag tag",
-            Commands.PushTag("path", " tag ", all: false).Arguments);
-        ClassicAssert.AreEqual(
-            "push --progress \"path/path\" tag tag",
-            Commands.PushTag("path\\path", " tag ", all: false).Arguments);
-        ClassicAssert.AreEqual(
-            "push --progress \"path\" --tags",
-            Commands.PushTag("path", "tag", all: true).Arguments);
-        ClassicAssert.AreEqual(
-            "push -f --progress \"path\" --tags",
-            Commands.PushTag("path", "tag", all: true, force: ForcePushOptions.Force).Arguments);
-        ClassicAssert.AreEqual(
-            "push --force-with-lease --progress \"path\" --tags",
-            Commands.PushTag("path", "tag", all: true, force: ForcePushOptions.ForceWithLease).Arguments);
+        Commands.PushTag("path", "tag", all: false).Arguments.Should().Be("push --progress \"path\" tag tag");
+        Commands.PushTag("path", " tag ", all: false).Arguments.Should().Be("push --progress \"path\" tag tag");
+        Commands.PushTag("path\\path", " tag ", all: false).Arguments.Should().Be("push --progress \"path/path\" tag tag");
+        Commands.PushTag("path", "tag", all: true).Arguments.Should().Be("push --progress \"path\" --tags");
+        Commands.PushTag("path", "tag", all: true, force: ForcePushOptions.Force).Arguments.Should().Be("push -f --progress \"path\" --tags");
+        Commands.PushTag("path", "tag", all: true, force: ForcePushOptions.ForceWithLease).Arguments.Should().Be("push --force-with-lease --progress \"path\" --tags");
 
         // TODO this should probably throw rather than return an empty string
-        ClassicAssert.AreEqual(
-            "",
-            Commands.PushTag("path", "", all: false).Arguments);
+        Commands.PushTag("path", "", all: false).Arguments.Should().Be("");
     }
 
     [TestCase(null, "onto")]
     [TestCase("from", null)]
-    public void RebaseCmd_throws_ArgumentException_if_from_or_onto_null(string from, string onto)
+    public void RebaseCmd_throws_ArgumentException_if_from_or_onto_null(string? from, string? onto)
     {
         Commands.RebaseOptions rebaseOptions = new()
         {
@@ -492,7 +348,7 @@ public partial class CommandsTests
             OnTo = onto
         };
 
-        ClassicAssert.Throws<ArgumentException>(() => Commands.Rebase(rebaseOptions));
+        ((Action)(() => Commands.Rebase(rebaseOptions))).Should().Throw<ArgumentException>();
     }
 
     [TestCase(false, false, false, false, false, false, true, null, "-c rebase.autosquash=false rebase \"branch\"")]
@@ -525,12 +381,12 @@ public partial class CommandsTests
             UpdateRefs = updateRefs
         };
 
-        ClassicAssert.AreEqual(expected, Commands.Rebase(rebaseOptions).Arguments);
+        Commands.Rebase(rebaseOptions).Arguments.Should().Be(expected);
     }
 
     [TestCase(false, false, false, false, false, false, null, "from", "onto", "-c rebase.autosquash=false rebase --onto onto \"from\" \"branch\"")]
     [TestCase(false, false, false, false, true, false, null, "from", "onto", "-c rebase.autosquash=false rebase --ignore-date --onto onto \"from\" \"branch\"")]
-    public void RebaseCmd_specific_range(bool interactive, bool preserveMerges, bool autoSquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, bool? updateRefs, string from, string onto, string expected)
+    public void RebaseCmd_specific_range(bool interactive, bool preserveMerges, bool autoSquash, bool autoStash, bool ignoreDate, bool committerDateIsAuthorDate, bool? updateRefs, string? from, string? onto, string expected)
     {
         Commands.RebaseOptions rebaseOptions = new()
         {
@@ -546,7 +402,7 @@ public partial class CommandsTests
             OnTo = onto
         };
 
-        ClassicAssert.AreEqual(expected, Commands.Rebase(rebaseOptions).Arguments);
+        Commands.Rebase(rebaseOptions).Arguments.Should().Be(expected);
     }
 
     [Test]
@@ -554,18 +410,10 @@ public partial class CommandsTests
     {
         // TODO file names should be quoted
 
-        ClassicAssert.AreEqual(
-            "rm --force -r .",
-            Commands.Remove().Arguments);
-        ClassicAssert.AreEqual(
-            "rm -r .",
-            Commands.Remove(force: false).Arguments);
-        ClassicAssert.AreEqual(
-            "rm --force .",
-            Commands.Remove(isRecursive: false).Arguments);
-        ClassicAssert.AreEqual(
-            "rm --force -r a b c",
-            Commands.Remove(files: ["a", "b", "c"]).Arguments);
+        Commands.Remove().Arguments.Should().Be("rm --force -r .");
+        Commands.Remove(force: false).Arguments.Should().Be("rm -r .");
+        Commands.Remove(isRecursive: false).Arguments.Should().Be("rm --force .");
+        Commands.Remove(files: ["a", "b", "c"]).Arguments.Should().Be("rm --force -r a b c");
     }
 
     [Test]
@@ -574,18 +422,15 @@ public partial class CommandsTests
         const string oldName = "foo";
         const string newName = "far";
 
-        ClassicAssert.AreEqual(
-            $"branch -m \"{oldName}\" \"{newName}\"",
-            Commands.RenameBranch(oldName, newName).Arguments);
+        Commands.RenameBranch(oldName, newName).Arguments.Should().Be($"branch -m \"{oldName}\" \"{newName}\"");
     }
 
     [TestCase(null)]
     [TestCase("")]
     [TestCase("\t")]
-    public void ResetCmd_should_throw_if_ResetIndex_and_hash_is_null_or_empty(string hash)
+    public void ResetCmd_should_throw_if_ResetIndex_and_hash_is_null_or_empty(string? hash)
     {
-        ClassicAssert.Throws<ArgumentException>(
-            () => Commands.Reset(ResetMode.ResetIndex, commit: hash, file: "file.txt"));
+        ((Action)(() => Commands.Reset(ResetMode.ResetIndex, commit: hash, file: "file.txt"))).Should().Throw<ArgumentException>();
     }
 
     [TestCase(ResetMode.ResetIndex, "tree-ish", null, @"reset ""tree-ish"" --")]
@@ -610,9 +455,9 @@ public partial class CommandsTests
     [TestCase(ResetMode.Hard, "tree-ish", "file.txt", @"reset --hard ""tree-ish"" -- ""file.txt""")]
     [TestCase(ResetMode.Merge, "tree-ish", "file.txt", @"reset --merge ""tree-ish"" -- ""file.txt""")]
     [TestCase(ResetMode.Keep, "tree-ish", "file.txt", @"reset --keep ""tree-ish"" -- ""file.txt""")]
-    public void ResetCmd(ResetMode mode, string commit, string file, string expected)
+    public void ResetCmd(ResetMode mode, string? commit, string? file, string expected)
     {
-        ClassicAssert.AreEqual(expected, Commands.Reset(mode, commit, file).Arguments);
+        Commands.Reset(mode, commit, file).Arguments.Should().Be(expected);
     }
 
     [Test]
@@ -620,17 +465,11 @@ public partial class CommandsTests
     {
         ObjectId commitId = ObjectId.Random();
 
-        ClassicAssert.AreEqual(
-            $"revert {commitId}",
-            Commands.Revert(commitId, autoCommit: true, parentIndex: 0).Arguments);
+        Commands.Revert(commitId, autoCommit: true, parentIndex: 0).Arguments.Should().Be($"revert {commitId}");
 
-        ClassicAssert.AreEqual(
-            $"revert --no-commit {commitId}",
-            Commands.Revert(commitId, autoCommit: false, parentIndex: 0).Arguments);
+        Commands.Revert(commitId, autoCommit: false, parentIndex: 0).Arguments.Should().Be($"revert --no-commit {commitId}");
 
-        ClassicAssert.AreEqual(
-            $"revert -m 1 {commitId}",
-            Commands.Revert(commitId, autoCommit: true, parentIndex: 1).Arguments);
+        Commands.Revert(commitId, autoCommit: true, parentIndex: 1).Arguments.Should().Be($"revert -m 1 {commitId}");
     }
 
     [Test]
@@ -640,88 +479,64 @@ public partial class CommandsTests
         // TODO test case where message string contains newlines
         // TODO test case where selectedFiles contains whitespaces (not currently quoted)
 
-        ClassicAssert.AreEqual(
-            "stash save",
-            Commands.StashSave(untracked: false, keepIndex: false, null!, []).Arguments);
+        Commands.StashSave(untracked: false, keepIndex: false, null!, []).Arguments.Should().Be("stash save");
 
-        ClassicAssert.AreEqual(
-            "stash save",
-            Commands.StashSave(untracked: false, keepIndex: false, null!, null).Arguments);
+        Commands.StashSave(untracked: false, keepIndex: false, null!, null).Arguments.Should().Be("stash save");
 
-        ClassicAssert.AreEqual(
-            "stash save -u",
-            Commands.StashSave(untracked: true, keepIndex: false, null!, null).Arguments);
+        Commands.StashSave(untracked: true, keepIndex: false, null!, null).Arguments.Should().Be("stash save -u");
 
-        ClassicAssert.AreEqual(
-            "stash save --keep-index",
-            Commands.StashSave(untracked: false, keepIndex: true, null!, null).Arguments);
+        Commands.StashSave(untracked: false, keepIndex: true, null!, null).Arguments.Should().Be("stash save --keep-index");
 
-        ClassicAssert.AreEqual(
-            "stash save --keep-index",
-            Commands.StashSave(untracked: false, keepIndex: true, null!, null).Arguments);
+        Commands.StashSave(untracked: false, keepIndex: true, null!, null).Arguments.Should().Be("stash save --keep-index");
 
-        ClassicAssert.AreEqual(
-            "stash save \"message\"",
-            Commands.StashSave(untracked: false, keepIndex: false, "message", null).Arguments);
+        Commands.StashSave(untracked: false, keepIndex: false, "message", null).Arguments.Should().Be("stash save \"message\"");
 
-        ClassicAssert.AreEqual(
-            "stash push -- \"a\" \"b\"",
-            Commands.StashSave(untracked: false, keepIndex: false, null!, new[] { "a", "b" }).Arguments);
+        Commands.StashSave(untracked: false, keepIndex: false, null!, new[] { "a", "b" }).Arguments.Should().Be("stash push -- \"a\" \"b\"");
     }
 
     [Test]
     public void StashSave_should_add_message_if_provided_partial_stash()
     {
-        ClassicAssert.AreEqual(
-           "stash push -m \"test message\" -- \"a\" \"b\"",
-           Commands.StashSave(untracked: false, keepIndex: false, "test message", new[] { "a", "b" }).Arguments);
+        Commands.StashSave(untracked: false, keepIndex: false, "test message", new[] { "a", "b" }).Arguments.Should().Be("stash push -m \"test message\" -- \"a\" \"b\"");
     }
 
     [TestCase(null)]
     [TestCase("")]
     [TestCase(" ")]
     [TestCase("\t")]
-    public void StashSave_should_not_add_empty_message_partial_stash(string theMessage)
+    public void StashSave_should_not_add_empty_message_partial_stash(string? theMessage)
     {
-        ClassicAssert.AreEqual(
-           "stash push -- \"a\" \"b\"",
-           Commands.StashSave(untracked: false, keepIndex: false, theMessage, new[] { "a", "b" }).Arguments);
+        Commands.StashSave(untracked: false, keepIndex: false, theMessage!, new[] { "a", "b" }).Arguments.Should().Be("stash push -- \"a\" \"b\"");
     }
 
     [Test]
     public void StashSave_should_not_add_null_or_empty_filenames()
     {
-        ClassicAssert.AreEqual(
-           "stash push -- \"a\"",
-           Commands.StashSave(untracked: false, keepIndex: false, null!, new[] { null!, "", "a" }).Arguments);
+        Commands.StashSave(untracked: false, keepIndex: false, null!, new[] { null!, "", "a" }).Arguments.Should().Be("stash push -- \"a\"");
     }
 
     [TestCase(null)]
     [TestCase("")]
     [TestCase(" ")]
     [TestCase("\t")]
-    public void StashSaveCmd_should_not_add_empty_message_full_stash(string theMessage)
+    public void StashSaveCmd_should_not_add_empty_message_full_stash(string? theMessage)
     {
-        ClassicAssert.AreEqual(
-           "stash save",
-           Commands.StashSave(untracked: false, keepIndex: false, theMessage, []).Arguments);
+        Commands.StashSave(untracked: false, keepIndex: false, theMessage!, []).Arguments.Should().Be("stash save");
     }
 
     [Test]
     public void StashSaveCmd_should_add_message_if_provided_full_stash()
     {
-        ClassicAssert.AreEqual(
-           "stash save \"test message\"",
-           Commands.StashSave(untracked: false, keepIndex: false, "test message", []).Arguments);
+        Commands.StashSave(untracked: false, keepIndex: false, "test message", []).Arguments.Should().Be("stash save \"test message\"");
     }
 
     [Test]
     public void SubmoduleSyncCmd()
     {
         string config = "";
-        ClassicAssert.AreEqual($"{config}submodule sync \"foo\"", Commands.SubmoduleSync("foo").Arguments);
-        ClassicAssert.AreEqual($"{config}submodule sync", Commands.SubmoduleSync("").Arguments);
-        ClassicAssert.AreEqual($"{config}submodule sync", Commands.SubmoduleSync(null).Arguments);
+        Commands.SubmoduleSync("foo").Arguments.Should().Be($"{config}submodule sync \"foo\"");
+        Commands.SubmoduleSync("").Arguments.Should().Be($"{config}submodule sync");
+        Commands.SubmoduleSync(null).Arguments.Should().Be($"{config}submodule sync");
     }
 
     [TestCase("mybranch", "2111111111111111111111111111111111111111", ExpectedResult = @"update-ref ""mybranch"" 2111111111111111111111111111111111111111")]

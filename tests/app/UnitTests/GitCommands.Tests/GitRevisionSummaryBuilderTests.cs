@@ -10,16 +10,16 @@ public sealed class GitRevisionSummaryBuilderTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("  ")]
-    public void Should_return_null_When_body_is_null_or_whitespace(string bodyContent)
+    public void Should_return_null_When_body_is_null_or_whitespace(string? bodyContent)
     {
-        ClassicAssert.AreEqual(null, new GitRevisionSummaryBuilder().BuildSummary(bodyContent));
+        new GitRevisionSummaryBuilder().BuildSummary(bodyContent).Should().Be(null);
     }
 
     [TestCase("toto")]
     [TestCase("toto\ntata\ntiti")]
-    public void Should_have_same_content_When_no_ellipsis(string bodyContent)
+    public void Should_have_same_content_When_no_ellipsis(string? bodyContent)
     {
-        ClassicAssert.AreEqual(bodyContent, new GitRevisionSummaryBuilder().BuildSummary(bodyContent));
+        new GitRevisionSummaryBuilder().BuildSummary(bodyContent).Should().Be(bodyContent);
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]

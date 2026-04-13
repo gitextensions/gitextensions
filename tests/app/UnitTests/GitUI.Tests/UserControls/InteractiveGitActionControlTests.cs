@@ -5,12 +5,20 @@ namespace GitUITests.UserControls;
 [Apartment(ApartmentState.STA)]
 public class InteractiveGitActionControlTests
 {
+    private InteractiveGitActionControl _control = null!;
     private InteractiveGitActionControl.TestAccessor _accessor;
 
     [SetUp]
     public void SetUp()
     {
-        _accessor = new InteractiveGitActionControl().GetTestAccessor();
+        _control = new InteractiveGitActionControl();
+        _accessor = _control.GetTestAccessor();
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _control.Dispose();
     }
 
     [TestCase(InteractiveGitActionControl.GitAction.Rebase, false)]
@@ -26,33 +34,33 @@ public class InteractiveGitActionControlTests
     {
         _accessor.SetGitAction(action, conflicts);
 
-        ClassicAssert.AreEqual(action, _accessor.Action);
-        ClassicAssert.AreEqual(conflicts, _accessor.HasConflicts);
+        _accessor.Action.Should().Be(action);
+        _accessor.HasConflicts.Should().Be(conflicts);
 
         switch (action)
         {
             case InteractiveGitActionControl.GitAction.None:
-                ClassicAssert.AreEqual(conflicts, _accessor.Visible);
-                ClassicAssert.AreEqual(conflicts, _accessor.Controls.Contains(_accessor.ResolveButton));
-                ClassicAssert.AreEqual(!conflicts, _accessor.Controls.Count == 0);
+                _accessor.Visible.Should().Be(conflicts);
+                _accessor.Controls.Contains(_accessor.ResolveButton).Should().Be(conflicts);
+                _accessor.Controls.Count.Should().Be(conflicts ? 1 : 0);
                 break;
             case InteractiveGitActionControl.GitAction.Bisect:
-                ClassicAssert.That(_accessor.Visible);
-                ClassicAssert.That(_accessor.Controls.Contains(_accessor.MoreButton));
+                _accessor.Visible.Should().BeTrue();
+                _accessor.Controls.Contains(_accessor.MoreButton).Should().BeTrue();
                 break;
             case InteractiveGitActionControl.GitAction.Rebase:
             case InteractiveGitActionControl.GitAction.Patch:
-                ClassicAssert.That(_accessor.Visible);
-                ClassicAssert.AreEqual(conflicts, _accessor.Controls.Contains(_accessor.ResolveButton));
-                ClassicAssert.AreEqual(!conflicts, _accessor.Controls.Contains(_accessor.ContinueButton));
-                ClassicAssert.That(_accessor.Controls.Contains(_accessor.AbortButton));
-                ClassicAssert.That(_accessor.Controls.Contains(_accessor.MoreButton));
+                _accessor.Visible.Should().BeTrue();
+                _accessor.Controls.Contains(_accessor.ResolveButton).Should().Be(conflicts);
+                _accessor.Controls.Contains(_accessor.ContinueButton).Should().Be(!conflicts);
+                _accessor.Controls.Contains(_accessor.AbortButton).Should().BeTrue();
+                _accessor.Controls.Contains(_accessor.MoreButton).Should().BeTrue();
                 break;
             case InteractiveGitActionControl.GitAction.Merge:
-                ClassicAssert.That(_accessor.Visible);
-                ClassicAssert.AreEqual(conflicts, _accessor.Controls.Contains(_accessor.ResolveButton));
-                ClassicAssert.AreEqual(!conflicts, _accessor.Controls.Contains(_accessor.ContinueButton));
-                ClassicAssert.That(_accessor.Controls.Contains(_accessor.AbortButton));
+                _accessor.Visible.Should().BeTrue();
+                _accessor.Controls.Contains(_accessor.ResolveButton).Should().Be(conflicts);
+                _accessor.Controls.Contains(_accessor.ContinueButton).Should().Be(!conflicts);
+                _accessor.Controls.Contains(_accessor.AbortButton).Should().BeTrue();
                 break;
         }
     }

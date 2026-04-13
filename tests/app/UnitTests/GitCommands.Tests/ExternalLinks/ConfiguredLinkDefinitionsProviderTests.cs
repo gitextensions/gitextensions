@@ -1,5 +1,4 @@
 ﻿using System.Reflection;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands.ExternalLinks;
 using GitCommands.Settings;
@@ -7,8 +6,6 @@ using GitExtensions.Extensibility.Settings;
 using NSubstitute;
 
 namespace GitCommandsTests.ExternalLinks;
-
-[TestFixture]
 public class ConfiguredLinkDefinitionsProviderTests
 {
     private GitModuleTestHelper _testHelper = null!;

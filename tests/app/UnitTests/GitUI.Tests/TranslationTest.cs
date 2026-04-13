@@ -3,8 +3,6 @@ using GitExtensions.Extensibility.Translations.Xliff;
 using GitUI;
 
 namespace GitUITests;
-
-[TestFixture]
 public sealed class TranslationTest
 {
     [SetUp]
@@ -50,7 +48,7 @@ public sealed class TranslationTest
 
         if (problems.Count != 0)
         {
-            ClassicAssert.Fail(string.Join(
+            Assert.Fail(string.Join(
                 "\n\n--------\n\n",
                 problems.Select(p => $"Problem with type {p.typeName}\n\n{p.exception}")));
         }

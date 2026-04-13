@@ -1,8 +1,6 @@
 ﻿using GitUI;
 
 namespace GitExtUtilsTests;
-
-[TestFixture]
 public class Win32ApiTests
 {
     [Test]
@@ -12,8 +10,8 @@ public class Win32ApiTests
     {
         Point point = ToLParam(x, y).ToPoint();
 
-        ClassicAssert.That(point.X, Is.EqualTo(x));
-        ClassicAssert.That(point.Y, Is.EqualTo(y));
+        point.X.Should().Be(x);
+        point.Y.Should().Be(y);
     }
 
     [Test]
@@ -23,8 +21,8 @@ public class Win32ApiTests
     {
         Point point = ICSharpCode.TextEditor.Util.Win32Util.ToPoint(ToLParam(x, y));
 
-        ClassicAssert.That(point.X, Is.EqualTo(x));
-        ClassicAssert.That(point.Y, Is.EqualTo(y));
+        point.X.Should().Be(x);
+        point.Y.Should().Be(y);
     }
 
     private static IntPtr ToLParam(short x, short y) =>

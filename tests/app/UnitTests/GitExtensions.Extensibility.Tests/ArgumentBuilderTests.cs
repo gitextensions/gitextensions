@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 
 namespace GitExtUtilsTests;
-
-[TestFixture]
 public sealed class ArgumentBuilderTests
 {
     [Test]
@@ -35,7 +32,7 @@ public sealed class ArgumentBuilderTests
 
         static void Test(string expected, ArgumentBuilder command)
         {
-            ClassicAssert.AreEqual(expected, command.ToString());
+            command.ToString().Should().Be(expected);
         }
     }
 

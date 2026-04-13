@@ -1,8 +1,4 @@
-﻿using AwesomeAssertions;
-
-namespace GitUIPluginInterfaces.Tests;
-
-[TestFixture]
+﻿namespace GitUIPluginInterfaces.Tests;
 public class PluginsPathScannerTests
 {
     [TestCase(@".\PathScanningData", "PluginInRootDir.dll", "PluginInOwnDir.dll")]

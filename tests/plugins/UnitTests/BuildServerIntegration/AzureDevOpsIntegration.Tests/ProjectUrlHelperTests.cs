@@ -1,8 +1,4 @@
-﻿using AwesomeAssertions;
-
-namespace AzureDevOpsIntegrationTests;
-
-[TestFixture]
+﻿namespace AzureDevOpsIntegrationTests;
 public class ProjectUrlHelperTests
 {
     [TestCase("https://user.visualstudio.com/DefaultCollection/MyProject/_git/MyProject", "https://user.visualstudio.com/MyProject")]
@@ -17,7 +13,7 @@ public class ProjectUrlHelperTests
     [TestCase("http://somehost:8080/tfs/DefaultCollection/_git/MyProject", "http://somehost:8080/tfs/DefaultCollection/MyProject")]
     [TestCase("https://somehost:8080/tfs/DefaultCollection/MyProject/_git/SecondaryRepo", "https://somehost:8080/tfs/DefaultCollection/MyProject")]
     [TestCase("http://somehost:8080/tfs/DefaultCollection/MyProject/_git/SecondaryRepo", "http://somehost:8080/tfs/DefaultCollection/MyProject")]
-    public void TryDetectProjectFromRemoteUrl_should_succeed_with_expected_url_from_valid_remote(string remoteUrl, string expectedProjectUrl)
+    public void TryDetectProjectFromRemoteUrl_should_succeed_with_expected_url_from_valid_remote(string? remoteUrl, string expectedProjectUrl)
     {
         (bool success, string? projectUrl) = AzureDevOpsIntegration.Settings.ProjectUrlHelper.TryDetectProjectFromRemoteUrl(remoteUrl);
         success.Should().Be(true);
@@ -33,7 +29,7 @@ public class ProjectUrlHelperTests
     [TestCase("https://user@bitbucket.org/example/project.git")]
     [TestCase("git@bitbucket.org:example/project.git")]
     [TestCase(@"[TestCase(""http://somehost:8080/tfs/DefaultCollection/MyProject/_git/SecondaryRepo"", ""http://somehost:8080/tfs/DefaultCollection/MyProject"")]")]
-    public void TryDetectProjectFromRemoteUrl_should_fail_with_invalid_remote(string remoteUrl)
+    public void TryDetectProjectFromRemoteUrl_should_fail_with_invalid_remote(string? remoteUrl)
     {
         (bool success, string? projectUrl) = AzureDevOpsIntegration.Settings.ProjectUrlHelper.TryDetectProjectFromRemoteUrl(remoteUrl);
         success.Should().Be(false);
@@ -46,7 +42,7 @@ public class ProjectUrlHelperTests
     [TestCase("http://dev.azure.com/user/MyProject", "http://dev.azure.com/user/_details/security/tokens")]
     [TestCase("https://somehost:8080/tfs/DefaultCollection/MyProject", "https://somehost:8080/tfs/DefaultCollection/_details/security/tokens")]
     [TestCase("http://somehost:8080/tfs/DefaultCollection/MyProject", "http://somehost:8080/tfs/DefaultCollection/_details/security/tokens")]
-    public void TryGetTokenManagementUrlFromProject_should_succeed_with_expected_url_from_valid_projecturl(string projectUrl, string expectedTokenManagementUrl)
+    public void TryGetTokenManagementUrlFromProject_should_succeed_with_expected_url_from_valid_projecturl(string? projectUrl, string expectedTokenManagementUrl)
     {
         (bool success, string? tokenManagementUrl) = AzureDevOpsIntegration.Settings.ProjectUrlHelper.TryGetTokenManagementUrlFromProject(projectUrl);
         success.Should().Be(true);
@@ -62,7 +58,7 @@ public class ProjectUrlHelperTests
     [TestCase("notAurl")]
     [TestCase("https://www.google.de")]
     [TestCase(@"[TestCase(""http://somehost:8080/tfs/DefaultCollection/MyProject"", ""http://somehost:8080/tfs/DefaultCollection/_details/security/tokens"")]")]
-    public void TryGetTokenManagementUrlFromProject_should_fail_with_url_that_does_not_look_like_a_project_url(string projectUrl)
+    public void TryGetTokenManagementUrlFromProject_should_fail_with_url_that_does_not_look_like_a_project_url(string? projectUrl)
     {
         (bool success, string? tokenManagementUrl) = AzureDevOpsIntegration.Settings.ProjectUrlHelper.TryGetTokenManagementUrlFromProject(projectUrl);
         success.Should().Be(false);
@@ -75,7 +71,7 @@ public class ProjectUrlHelperTests
     [TestCase("http://dev.azure.com/user/MyProject/_build/results?buildId=42&view=results", "http://dev.azure.com/user/MyProject", 42)]
     [TestCase("https://somehost:8080/tfs/DefaultCollection/MyProject/_build/index?buildId=1&view=summary", "https://somehost:8080/tfs/DefaultCollection/MyProject", 1)]
     [TestCase("http://somehost:8080/tfs/DefaultCollection/MyProject/_build/index?buildId=987&view=summary", "http://somehost:8080/tfs/DefaultCollection/MyProject", 987)]
-    public void TryParseBuildUrl_should_succeed_with_expected_build_info_from_valid_buildurl(string buildUrl, string expectedProjectUrl, int expectedBuildId)
+    public void TryParseBuildUrl_should_succeed_with_expected_build_info_from_valid_buildurl(string? buildUrl, string expectedProjectUrl, int expectedBuildId)
     {
         (bool success, string? projectUrl, int buildId) = AzureDevOpsIntegration.Settings.ProjectUrlHelper.TryParseBuildUrl(buildUrl);
         success.Should().Be(true);
@@ -88,7 +84,7 @@ public class ProjectUrlHelperTests
     [TestCase("notAurl")]
     [TestCase("https://www.google.de")]
     [TestCase(@"[TestCase(""https://somehost:8080/tfs/DefaultCollection/MyProject/_build/index?buildId=42&view=summary"", ""https://somehost:8080/tfs/DefaultCollection/MyProject"", 42)]")]
-    public void TryParseBuildUrl_should_fail_with_invalid_buildurl(string buildUrl)
+    public void TryParseBuildUrl_should_fail_with_invalid_buildurl(string? buildUrl)
     {
         (bool success, string? projectUrl, int buildId) = AzureDevOpsIntegration.Settings.ProjectUrlHelper.TryParseBuildUrl(buildUrl);
         success.Should().Be(false);

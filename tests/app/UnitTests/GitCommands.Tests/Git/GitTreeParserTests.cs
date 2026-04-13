@@ -1,10 +1,7 @@
-﻿using AwesomeAssertions;
-using GitCommands.Git;
+﻿using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class GitTreeParserTests
 {
     private IGitTreeParser _parser = null!;
@@ -59,7 +56,7 @@ public class GitTreeParserTests
     [TestCase("1006444 blob 0000000000000000000000000000000000000000\tREADME.md")]
     [TestCase("10064 blob 0000000000000000000000000000000000000000\tREADME.md")]
     [TestCase("100644 blob 960498876e233a6119e20fc73171bca2e26f57c0 space")]
-    public void ParseSingle_should_return_null_if_input_invalid(string s)
+    public void ParseSingle_should_return_null_if_input_invalid(string? s)
     {
         _parser.ParseSingle(s).Should().BeNull();
     }

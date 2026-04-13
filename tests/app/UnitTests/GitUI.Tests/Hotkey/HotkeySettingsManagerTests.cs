@@ -1,13 +1,10 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitUI.Hotkey;
 using GitUI.ScriptsEngine;
 using NSubstitute;
 using ResourceManager;
 
 namespace GitUITests.Hotkey;
-
-[TestFixture]
 public class HotkeySettingsManagerTests
 {
     private HotkeySettingsManager _settingsManager = null!;

@@ -5,8 +5,6 @@ using GitExtensions.Extensibility.Git;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 
 namespace GitCommandsTests.Git.Commands;
-
-[TestFixture]
 public class GetAllChangedFilesOutputParserTest
 {
     [Test]

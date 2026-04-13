@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -59,7 +58,7 @@ public class FormOpenDirectoryTests
 
         // ensure absence of the trailing slash isn't a problem
         path = path[..^1];
-        ClassicAssert.DoesNotThrow(() => FormOpenDirectory.TestAccessor.OpenGitRepository(_executorProvider, path, _localRepositoryManager));
+        ((Action)(() => FormOpenDirectory.TestAccessor.OpenGitRepository(_executorProvider, path, _localRepositoryManager))).Should().NotThrow();
     }
 
     [Test]

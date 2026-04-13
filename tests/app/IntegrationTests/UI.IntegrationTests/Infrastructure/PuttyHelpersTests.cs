@@ -1,5 +1,4 @@
 ﻿using System.Runtime.InteropServices;
-using AwesomeAssertions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitUI;
@@ -9,7 +8,6 @@ using Microsoft.VisualStudio.Threading;
 namespace GitUITests.Infrastructure;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public sealed class PuttyHelpersTests
 {
     private const string Plink = "plink.exe";
@@ -48,7 +46,7 @@ public sealed class PuttyHelpersTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("\t")]
-    public Task StartPageantIfConfigured_returns_false_if_key_empty(string bogusKey)
+    public Task StartPageantIfConfigured_returns_false_if_key_empty(string? bogusKey)
     {
         // Copy notepad.exe from %SYSTEM32%\notepad.exe to be our plink.exe
         string notepadPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.System), "notepad.exe");

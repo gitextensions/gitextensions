@@ -2,8 +2,6 @@
 using GitCommands.Git;
 
 namespace BugReporterTests;
-
-[TestFixture]
 public sealed class UserEnvironmentInformationTests
 {
     [Test]
@@ -11,7 +9,7 @@ public sealed class UserEnvironmentInformationTests
     {
         string gitString = UserEnvironmentInformation.GetGitVersionInfo("2.21.0.windows.1", new GitVersion("2.18.0"),
             new GitVersion("2.21.0"));
-        ClassicAssert.AreEqual("2.21.0.windows.1", gitString);
+        gitString.Should().Be("2.21.0.windows.1");
     }
 
     [Test]
@@ -19,7 +17,7 @@ public sealed class UserEnvironmentInformationTests
     {
         string gitString = UserEnvironmentInformation.GetGitVersionInfo("2.20.1.windows.1", new GitVersion("2.18.0"),
             new GitVersion("2.21.0"));
-        ClassicAssert.AreEqual("2.20.1.windows.1 (recommended: 2.21.0 or later)", gitString);
+        gitString.Should().Be("2.20.1.windows.1 (recommended: 2.21.0 or later)");
     }
 
     [Test]
@@ -27,7 +25,7 @@ public sealed class UserEnvironmentInformationTests
     {
         string gitString = UserEnvironmentInformation.GetGitVersionInfo("1.6.5.windows.1", new GitVersion("2.18.0"),
             new GitVersion("2.21.0"));
-        ClassicAssert.AreEqual("1.6.5.windows.1 (minimum: 2.18.0, please update!)", gitString);
+        gitString.Should().Be("1.6.5.windows.1 (minimum: 2.18.0, please update!)");
     }
 
     [Test]
@@ -35,6 +33,6 @@ public sealed class UserEnvironmentInformationTests
     {
         string gitString = UserEnvironmentInformation.GetGitVersionInfo(null, new GitVersion("2.18.0"),
             new GitVersion("2.21.0"));
-        ClassicAssert.AreEqual("- (minimum: 2.18.0, recommended: 2.21.0)", gitString);
+        gitString.Should().Be("- (minimum: 2.18.0, recommended: 2.21.0)");
     }
 }

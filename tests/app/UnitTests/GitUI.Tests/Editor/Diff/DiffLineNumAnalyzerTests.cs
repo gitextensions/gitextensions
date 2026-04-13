@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
 using GitUI.Theming;
@@ -8,7 +7,6 @@ using ICSharpCode.TextEditor;
 namespace GitUITests.Editor.Diff;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public class DiffLineNumAnalyzerTests
 {
     private static readonly string _testDataDir = Path.Combine(TestContext.CurrentContext.TestDirectory, "Editor", "Diff");
@@ -48,8 +46,8 @@ public class DiffLineNumAnalyzerTests
         }
     }
 
-    [TearDown]
-    public void TearDown()
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
     {
         _textEditor.Dispose();
     }

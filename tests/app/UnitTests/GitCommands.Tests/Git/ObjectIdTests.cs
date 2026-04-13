@@ -8,8 +8,6 @@ using JetBrains.Annotations;
 namespace GitCommandsTests.Git;
 
 // TODO SUT is in GitUIPluginInterfaces but no test assembly exists for that assembly
-
-[TestFixture]
 public sealed partial class ObjectIdTests
 {
     [GeneratedRegex(@"[a-f0-9]{40}", RegexOptions.ExplicitCapture)]
@@ -24,8 +22,8 @@ public sealed partial class ObjectIdTests
     [TestCase("0123456789abcdef0123456789abcdef01234567")]
     public void TryParse_handles_valid_hashes(string sha1)
     {
-        ClassicAssert.True(ObjectId.TryParse(sha1, out ObjectId? id));
-        ClassicAssert.AreEqual(sha1.ToLower(), id!.ToString());
+        ObjectId.TryParse(sha1, out ObjectId? id).Should().BeTrue();
+        id!.ToString().Should().Be(sha1.ToLower());
     }
 
     [TestCase("00000000000000000000000000000000000000")]
@@ -36,7 +34,7 @@ public sealed partial class ObjectIdTests
     [TestCase("  0000000000000000000000000000000000000000  ")]
     public void TryParse_identifies_invalid_hashes(string sha1)
     {
-        ClassicAssert.False(ObjectId.TryParse(sha1, out _));
+        ObjectId.TryParse(sha1, out _).Should().BeFalse();
     }
 
     [TestCase("0000000000000000000000000000000000000000", 0)]
@@ -47,10 +45,8 @@ public sealed partial class ObjectIdTests
     [TestCase("__0102030405060708091011121314151617181920__", 2)]
     public void TryParse_with_offset_handles_valid_hashes(string sha1, int offset)
     {
-        ClassicAssert.True(ObjectId.TryParse(sha1, offset, out ObjectId? id));
-        ClassicAssert.AreEqual(
-            sha1.Substring(offset, 40),
-            id!.ToString());
+        ObjectId.TryParse(sha1, offset, out ObjectId? id).Should().BeTrue();
+        id!.ToString().Should().Be(sha1.Substring(offset, 40));
     }
 
     [TestCase("0000000000000000000000000000000000000000")]
@@ -58,9 +54,7 @@ public sealed partial class ObjectIdTests
     [TestCase("0123456789abcdef0123456789abcdef01234567")]
     public void Parse_handles_valid_hashes(string sha1)
     {
-        ClassicAssert.AreEqual(
-            sha1.ToLower(),
-            ObjectId.Parse(sha1).ToString());
+        ObjectId.Parse(sha1).ToString().Should().Be(sha1.ToLower());
     }
 
     [TestCase("00000000000000000000000000000000000000")]
@@ -71,7 +65,7 @@ public sealed partial class ObjectIdTests
     [TestCase("  0000000000000000000000000000000000000000  ")]
     public void Parse_throws_for_invalid_hashes(string sha1)
     {
-        ClassicAssert.Throws<FormatException>(() => ObjectId.Parse(sha1));
+        ((Action)(() => ObjectId.Parse(sha1))).Should().Throw<FormatException>();
     }
 
     [TestCase("0000000000000000000000000000000000000000")]
@@ -79,7 +73,7 @@ public sealed partial class ObjectIdTests
     [TestCase("0123456789abcdef0123456789abcdef01234567")]
     public void IsValid_identifies_valid_hashes(string sha1)
     {
-        ClassicAssert.True(ObjectId.IsValid(sha1));
+        ObjectId.IsValid(sha1).Should().BeTrue();
     }
 
     [TestCase("00000000000000000000000000000000000000")]
@@ -90,7 +84,7 @@ public sealed partial class ObjectIdTests
     [TestCase("  0000000000000000000000000000000000000000  ")]
     public void IsValid_identifies_invalid_hashes(string sha1)
     {
-        ClassicAssert.False(ObjectId.IsValid(sha1));
+        ObjectId.IsValid(sha1).Should().BeFalse();
     }
 
     [TestCase("0000000000000000000000000000000000000000", 0)]
@@ -101,9 +95,7 @@ public sealed partial class ObjectIdTests
     [TestCase("__0102030405060708091011121314151617181920__", 2)]
     public void Parse_with_offset_handles_valid_hashes(string sha1, int offset)
     {
-        ClassicAssert.AreEqual(
-            sha1.Substring(offset, 40),
-            ObjectId.Parse(sha1.Substring(offset, 40)).ToString());
+        ObjectId.Parse(sha1.Substring(offset, 40)).ToString().Should().Be(sha1.Substring(offset, 40));
     }
 
     [Test]
@@ -112,131 +104,93 @@ public sealed partial class ObjectIdTests
         ObjectId objectId = ObjectId.Random();
         string str = "XYZ" + objectId + "XYZ";
 
-        ClassicAssert.AreEqual(objectId, ObjectId.Parse(str, Sha40Regex.Match(str)));
-        ClassicAssert.Throws<FormatException>(() => ObjectId.Parse(str, Sha39Regex.Match(str)));
-        ClassicAssert.Throws<FormatException>(() => ObjectId.Parse(str, ShaXYZRegex.Match(str)));
+        ObjectId.Parse(str, Sha40Regex.Match(str)).Should().Be(objectId);
+        ((Action)(() => ObjectId.Parse(str, Sha39Regex.Match(str)))).Should().Throw<FormatException>();
+        ((Action)(() => ObjectId.Parse(str, ShaXYZRegex.Match(str)))).Should().Throw<FormatException>();
     }
 
     [Test]
     public void WorkTreeId_has_expected_value()
     {
-        ClassicAssert.AreEqual(
-            "1111111111111111111111111111111111111111",
-            ObjectId.WorkTreeId.ToString());
+        ObjectId.WorkTreeId.ToString().Should().Be("1111111111111111111111111111111111111111");
     }
 
     [Test]
     public void IndexId_has_expected_value()
     {
-        ClassicAssert.AreEqual(
-            "2222222222222222222222222222222222222222",
-            ObjectId.IndexId.ToString());
+        ObjectId.IndexId.ToString().Should().Be("2222222222222222222222222222222222222222");
     }
 
     [Test]
     public void CombinedDiffId_has_expected_value()
     {
-        ClassicAssert.AreEqual(
-            "3333333333333333333333333333333333333333",
-            ObjectId.CombinedDiffId.ToString());
+        ObjectId.CombinedDiffId.ToString().Should().Be("3333333333333333333333333333333333333333");
     }
 
     [Test]
     public void WorkTreeId_is_artificial()
     {
-        ClassicAssert.IsTrue(ObjectId.WorkTreeId.IsArtificial);
+        ObjectId.WorkTreeId.IsArtificial.Should().BeTrue();
     }
 
     [Test]
     public void IndexId_is_artificial()
     {
-        ClassicAssert.IsTrue(ObjectId.IndexId.IsArtificial);
+        ObjectId.IndexId.IsArtificial.Should().BeTrue();
     }
 
     [Test]
     public void CombinedDiffId_is_artificial()
     {
-        ClassicAssert.IsTrue(ObjectId.CombinedDiffId.IsArtificial);
+        ObjectId.CombinedDiffId.IsArtificial.Should().BeTrue();
     }
 
     [Test]
     public void Equivalent_ids_are_equal()
     {
-        ClassicAssert.AreEqual(
-            ObjectId.Parse("0102030405060708091011121314151617181920"),
-            ObjectId.Parse("0102030405060708091011121314151617181920"));
+        ObjectId.Parse("0102030405060708091011121314151617181920").Should().Be(ObjectId.Parse("0102030405060708091011121314151617181920"));
 
-        ClassicAssert.AreEqual(
-            ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd"),
-            ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd"));
+        ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd").Should().Be(ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd"));
 
-        ClassicAssert.AreEqual(
-            ObjectId.WorkTreeId,
-            ObjectId.WorkTreeId);
+        ObjectId.WorkTreeId.Should().Be(ObjectId.WorkTreeId);
 
-        ClassicAssert.AreEqual(
-            ObjectId.WorkTreeId,
-            ObjectId.Parse(GitRevision.WorkTreeGuid));
+        ObjectId.Parse(GitRevision.WorkTreeGuid).Should().Be(ObjectId.WorkTreeId);
 
-        ClassicAssert.AreEqual(
-            ObjectId.IndexId,
-            ObjectId.IndexId);
+        ObjectId.IndexId.Should().Be(ObjectId.IndexId);
 
-        ClassicAssert.AreEqual(
-            ObjectId.IndexId,
-            ObjectId.Parse(GitRevision.IndexGuid));
+        ObjectId.Parse(GitRevision.IndexGuid).Should().Be(ObjectId.IndexId);
 
-        ClassicAssert.AreEqual(
-            ObjectId.CombinedDiffId,
-            ObjectId.CombinedDiffId);
+        ObjectId.CombinedDiffId.Should().Be(ObjectId.CombinedDiffId);
 
-        ClassicAssert.AreEqual(
-            ObjectId.CombinedDiffId,
-            ObjectId.Parse(GitRevision.CombinedDiffGuid));
+        ObjectId.Parse(GitRevision.CombinedDiffGuid).Should().Be(ObjectId.CombinedDiffId);
     }
 
     [Test]
     public void Different_ids_are_not_equal()
     {
-        ClassicAssert.AreNotEqual(
-            ObjectId.Parse("0000000000000000000000000000000000000000"),
-            ObjectId.Parse("0102030405060708091011121314151617181920"));
+        ObjectId.Parse("0102030405060708091011121314151617181920").Should().NotBe(ObjectId.Parse("0000000000000000000000000000000000000000"));
 
-        ClassicAssert.AreNotEqual(
-            ObjectId.WorkTreeId,
-            ObjectId.IndexId);
+        ObjectId.IndexId.Should().NotBe(ObjectId.WorkTreeId);
     }
 
     [Test]
     public void Equivalent_ids_have_equal_hash_codes()
     {
-        ClassicAssert.AreEqual(
-            ObjectId.Parse("0102030405060708091011121314151617181920").GetHashCode(),
-            ObjectId.Parse("0102030405060708091011121314151617181920").GetHashCode());
+        ObjectId.Parse("0102030405060708091011121314151617181920").GetHashCode().Should().Be(ObjectId.Parse("0102030405060708091011121314151617181920").GetHashCode());
 
-        ClassicAssert.AreEqual(
-            ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd").GetHashCode(),
-            ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd").GetHashCode());
+        ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd").GetHashCode().Should().Be(ObjectId.Parse("abcdefabcdefabcdefabcdefabcdefabcdefabcd").GetHashCode());
 
-        ClassicAssert.AreEqual(
-            ObjectId.WorkTreeId.GetHashCode(),
-            ObjectId.WorkTreeId.GetHashCode());
+        ObjectId.WorkTreeId.GetHashCode().Should().Be(ObjectId.WorkTreeId.GetHashCode());
 
-        ClassicAssert.AreEqual(
-            ObjectId.IndexId.GetHashCode(),
-            ObjectId.IndexId.GetHashCode());
+        ObjectId.IndexId.GetHashCode().Should().Be(ObjectId.IndexId.GetHashCode());
     }
 
     [Test]
     public void Different_ids_have_different_hash_codes()
     {
-        ClassicAssert.AreNotEqual(
-            ObjectId.Parse("0000000000000000000000000000000000000000").GetHashCode(),
-            ObjectId.Parse("0102030405060708091011121314151617181920").GetHashCode());
+        ObjectId.Parse("0102030405060708091011121314151617181920").GetHashCode().Should().NotBe(ObjectId.Parse("0000000000000000000000000000000000000000").GetHashCode());
 
-        ClassicAssert.AreNotEqual(
-            ObjectId.WorkTreeId.GetHashCode(),
-            ObjectId.IndexId.GetHashCode());
+        ObjectId.IndexId.GetHashCode().Should().NotBe(ObjectId.WorkTreeId.GetHashCode());
     }
 
     private const string NonHexAscii = "0123456789abcdefghijklmnopqrstuvwxyz0123456789abcdefghijklmnopqrstuvwxyz";
@@ -247,32 +201,32 @@ public sealed partial class ObjectIdTests
     [TestCase(HexAscii, 2, "0102030405060708090a0b0c0d0e0f1011121314")]
     [TestCase(HexAscii, 3, "102030405060708090a0b0c0d0e0f10111213141")]
     [TestCase(HexAscii, 26, "0d0e0f101112131415161718191a1b1c1d1e1f20")]
-    public void TryParse_works_as_expected(string source, int offset, [CanBeNull] string expected)
+    public void TryParse_works_as_expected(string source, int offset, [CanBeNull] string? expected)
     {
         byte[] sourceBytes = Encoding.ASCII.GetBytes(source);
 
-        ClassicAssert.AreEqual(expected is not null, ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId? id));
+        ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId? id).Should().Be(expected is not null);
 
         if (expected is not null)
         {
-            ClassicAssert.AreEqual(ObjectId.Parse(expected), id);
+            id.Should().Be(ObjectId.Parse(expected));
         }
     }
 
     [TestCase(NonHexAscii, 0, null)]
-    public void TryParse_bytes_throws_with_illegal_input(string source, int offset, [CanBeNull] string expected)
+    public void TryParse_bytes_throws_with_illegal_input(string source, int offset, [CanBeNull] string? expected)
     {
         byte[] sourceBytes = Encoding.ASCII.GetBytes(source);
-        ClassicAssert.AreEqual(expected is not null, ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId? id));
+        ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId? id).Should().Be(expected is not null);
     }
 
     [Test]
     public void TryParse_returns_false_when_array_null()
     {
-        ClassicAssert.False(ObjectId.TryParse(default, out ObjectId? objectId));
-        ClassicAssert.Null(objectId);
-        ClassicAssert.False(ObjectId.TryParse(default(Span<byte>), out objectId));
-        ClassicAssert.Null(objectId);
+        ObjectId.TryParse(default, out ObjectId? objectId).Should().BeFalse();
+        objectId.Should().BeNull();
+        ObjectId.TryParse(default(Span<byte>), out objectId).Should().BeFalse();
+        objectId.Should().BeNull();
     }
 
     [Test]
@@ -280,8 +234,8 @@ public sealed partial class ObjectIdTests
     {
         byte[] bytes = new byte[ObjectId.Sha1CharCount];
 
-        ClassicAssert.False(ObjectId.TryParse(bytes.AsSpan(1), out ObjectId? objectId));
-        ClassicAssert.Null(objectId);
+        ObjectId.TryParse(bytes.AsSpan(1), out ObjectId? objectId).Should().BeFalse();
+        objectId.Should().BeNull();
     }
 
     [Test]
@@ -292,21 +246,21 @@ public sealed partial class ObjectIdTests
 
         for (int length = 1; length < ObjectId.Sha1CharCount; length++)
         {
-            ClassicAssert.AreEqual(s[..length], id.ToShortString(length));
+            id.ToShortString(length).Should().Be(s[..length]);
         }
 
-        ClassicAssert.Throws<ArgumentOutOfRangeException>(() => id.ToShortString(-1));
-        ClassicAssert.Throws<ArgumentOutOfRangeException>(() => id.ToShortString(ObjectId.Sha1CharCount + 1));
+        ((Action)(() => id.ToShortString(-1))).Should().Throw<ArgumentOutOfRangeException>();
+        ((Action)(() => id.ToShortString(ObjectId.Sha1CharCount + 1))).Should().Throw<ArgumentOutOfRangeException>();
     }
 
     [Test]
     public void Equals_using_operator()
     {
         string objectIdString = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
-        ClassicAssert.IsTrue(ObjectId.Parse(objectIdString) == ObjectId.Parse(objectIdString));
-        ClassicAssert.IsFalse(ObjectId.Parse(objectIdString) != ObjectId.Parse(objectIdString));
-        ClassicAssert.IsFalse(ObjectId.Parse(objectIdString) == ObjectId.Random());
-        ClassicAssert.IsTrue(ObjectId.Parse(objectIdString) != ObjectId.Random());
+        (ObjectId.Parse(objectIdString) == ObjectId.Parse(objectIdString)).Should().BeTrue();
+        (ObjectId.Parse(objectIdString) != ObjectId.Parse(objectIdString)).Should().BeFalse();
+        (ObjectId.Parse(objectIdString) == ObjectId.Random()).Should().BeFalse();
+        (ObjectId.Parse(objectIdString) != ObjectId.Random()).Should().BeTrue();
     }
 
     [TestCase("0102030405060708091011121314151617181920")]

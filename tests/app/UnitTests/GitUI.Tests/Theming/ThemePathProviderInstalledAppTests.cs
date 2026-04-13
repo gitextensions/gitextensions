@@ -1,11 +1,8 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 
 namespace GitUITests.Theming;
-
-[TestFixture]
 public class ThemePathProviderInstalledAppTests
 {
     private string _originalAppExecutablePath = null!;

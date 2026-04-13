@@ -1,11 +1,8 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 partial class CommandsTests
 {
     private string _tempDir = null!;

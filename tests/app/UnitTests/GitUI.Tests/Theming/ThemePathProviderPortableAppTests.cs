@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 

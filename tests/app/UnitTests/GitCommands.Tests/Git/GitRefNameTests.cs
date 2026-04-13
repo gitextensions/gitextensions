@@ -7,73 +7,71 @@ public sealed class GitRefNameTests
     [Test]
     public void GetFullBranchNameTest()
     {
-        ClassicAssert.AreEqual(null, GitRefName.GetFullBranchName(null));
-        ClassicAssert.AreEqual("", GitRefName.GetFullBranchName(""));
-        ClassicAssert.AreEqual("", GitRefName.GetFullBranchName("    "));
-        ClassicAssert.AreEqual("4e0f0fe3f6add43557913c354de02560b8faec32", GitRefName.GetFullBranchName("4e0f0fe3f6add43557913c354de02560b8faec32"));
-        ClassicAssert.AreEqual("refs/heads/master", GitRefName.GetFullBranchName("master"));
-        ClassicAssert.AreEqual("refs/heads/master", GitRefName.GetFullBranchName(" master "));
-        ClassicAssert.AreEqual("refs/heads/master", GitRefName.GetFullBranchName("refs/heads/master"));
-        ClassicAssert.AreEqual("refs/heads/release/2.48", GitRefName.GetFullBranchName("refs/heads/release/2.48"));
-        ClassicAssert.AreEqual("refs/tags/my-tag", GitRefName.GetFullBranchName("refs/tags/my-tag"));
+        GitRefName.GetFullBranchName(null).Should().Be(null);
+        GitRefName.GetFullBranchName("").Should().Be("");
+        GitRefName.GetFullBranchName("    ").Should().Be("");
+        GitRefName.GetFullBranchName("4e0f0fe3f6add43557913c354de02560b8faec32").Should().Be("4e0f0fe3f6add43557913c354de02560b8faec32");
+        GitRefName.GetFullBranchName("master").Should().Be("refs/heads/master");
+        GitRefName.GetFullBranchName(" master ").Should().Be("refs/heads/master");
+        GitRefName.GetFullBranchName("refs/heads/master").Should().Be("refs/heads/master");
+        GitRefName.GetFullBranchName("refs/heads/release/2.48").Should().Be("refs/heads/release/2.48");
+        GitRefName.GetFullBranchName("refs/tags/my-tag").Should().Be("refs/tags/my-tag");
     }
 
     [Test]
     public void GetRemoteName()
     {
-        ClassicAssert.AreEqual("foo", GitRefName.GetRemoteName("refs/remotes/foo/master"));
-        ClassicAssert.AreEqual("", GitRefName.GetRemoteName("refs/tags/1.0.0"));
+        GitRefName.GetRemoteName("refs/remotes/foo/master").Should().Be("foo");
+        GitRefName.GetRemoteName("refs/tags/1.0.0").Should().Be("");
 
         string[] remotes = ["foo", "bar"];
 
-        ClassicAssert.AreEqual("foo", GitRefName.GetRemoteName("foo/master", remotes));
-        ClassicAssert.AreEqual("", GitRefName.GetRemoteName("food/master", remotes));
-        ClassicAssert.AreEqual("", GitRefName.GetRemoteName("refs/tags/1.0.0", remotes));
+        GitRefName.GetRemoteName("foo/master", remotes).Should().Be("foo");
+        GitRefName.GetRemoteName("food/master", remotes).Should().Be("");
+        GitRefName.GetRemoteName("refs/tags/1.0.0", remotes).Should().Be("");
     }
 
     [Test]
     public void GetRemoteBranch()
     {
-        ClassicAssert.AreEqual("master", GitRefName.GetRemoteBranch("refs/remotes/foo/master"));
-        ClassicAssert.AreEqual("tmp/master", GitRefName.GetRemoteBranch("refs/remotes/foo/tmp/master"));
+        GitRefName.GetRemoteBranch("refs/remotes/foo/master").Should().Be("master");
+        GitRefName.GetRemoteBranch("refs/remotes/foo/tmp/master").Should().Be("tmp/master");
 
-        ClassicAssert.AreEqual("", GitRefName.GetRemoteBranch("refs/remotes/foo"));
-        ClassicAssert.AreEqual("", GitRefName.GetRemoteBranch("short"));
+        GitRefName.GetRemoteBranch("refs/remotes/foo").Should().Be("");
+        GitRefName.GetRemoteBranch("short").Should().Be("");
     }
 
     [Test]
     public void GetFullBranchName()
     {
-        ClassicAssert.AreEqual("refs/heads/foo", GitRefName.GetFullBranchName("foo"));
+        GitRefName.GetFullBranchName("foo").Should().Be("refs/heads/foo");
 
-        ClassicAssert.AreEqual("refs/foo", GitRefName.GetFullBranchName("refs/foo"));
+        GitRefName.GetFullBranchName("refs/foo").Should().Be("refs/foo");
 
-        ClassicAssert.AreEqual(
-            "4e0f0fe3f6add43557913c354de02560b8faec32",
-            GitRefName.GetFullBranchName("4e0f0fe3f6add43557913c354de02560b8faec32"));
+        GitRefName.GetFullBranchName("4e0f0fe3f6add43557913c354de02560b8faec32").Should().Be("4e0f0fe3f6add43557913c354de02560b8faec32");
 
-        ClassicAssert.AreEqual("", GitRefName.GetFullBranchName(""));
-        ClassicAssert.AreEqual("", GitRefName.GetFullBranchName("    "));
+        GitRefName.GetFullBranchName("").Should().Be("");
+        GitRefName.GetFullBranchName("    ").Should().Be("");
 
-        ClassicAssert.IsNull(GitRefName.GetFullBranchName(null));
+        GitRefName.GetFullBranchName(null).Should().BeNull();
     }
 
     [Test]
     public void IsRemoteHead()
     {
-        ClassicAssert.IsTrue(GitRefName.IsRemoteHead("refs/remotes/origin/HEAD"));
-        ClassicAssert.IsTrue(GitRefName.IsRemoteHead("refs/remotes/upstream/HEAD"));
+        GitRefName.IsRemoteHead("refs/remotes/origin/HEAD").Should().BeTrue();
+        GitRefName.IsRemoteHead("refs/remotes/upstream/HEAD").Should().BeTrue();
 
-        ClassicAssert.IsFalse(GitRefName.IsRemoteHead("refs/remotes/ori/gin/HEAD"));
-        ClassicAssert.IsFalse(GitRefName.IsRemoteHead("refs/remotes//HEAD"));
-        ClassicAssert.IsFalse(GitRefName.IsRemoteHead("refs/remotes/HEAD"));
-        ClassicAssert.IsFalse(GitRefName.IsRemoteHead("refs/origin/HEAD"));
-        ClassicAssert.IsFalse(GitRefName.IsRemoteHead("ref/remotes/origin/HEAD"));
-        ClassicAssert.IsFalse(GitRefName.IsRemoteHead("remotes/origin/HEAD"));
-        ClassicAssert.IsFalse(GitRefName.IsRemoteHead("wat/refs/remotes/origin/HEAD"));
-        ClassicAssert.IsFalse(GitRefName.IsRemoteHead("refs/remotes/origin/HEADZ"));
-        ClassicAssert.IsFalse(GitRefName.IsRemoteHead("refs/remotes/origin/HEAD/wat"));
-        ClassicAssert.IsFalse(GitRefName.IsRemoteHead("refs/remotes/origin/HEAD  "));
-        ClassicAssert.IsFalse(GitRefName.IsRemoteHead("  refs/remotes/origin/HEAD"));
+        GitRefName.IsRemoteHead("refs/remotes/ori/gin/HEAD").Should().BeFalse();
+        GitRefName.IsRemoteHead("refs/remotes//HEAD").Should().BeFalse();
+        GitRefName.IsRemoteHead("refs/remotes/HEAD").Should().BeFalse();
+        GitRefName.IsRemoteHead("refs/origin/HEAD").Should().BeFalse();
+        GitRefName.IsRemoteHead("ref/remotes/origin/HEAD").Should().BeFalse();
+        GitRefName.IsRemoteHead("remotes/origin/HEAD").Should().BeFalse();
+        GitRefName.IsRemoteHead("wat/refs/remotes/origin/HEAD").Should().BeFalse();
+        GitRefName.IsRemoteHead("refs/remotes/origin/HEADZ").Should().BeFalse();
+        GitRefName.IsRemoteHead("refs/remotes/origin/HEAD/wat").Should().BeFalse();
+        GitRefName.IsRemoteHead("refs/remotes/origin/HEAD  ").Should().BeFalse();
+        GitRefName.IsRemoteHead("  refs/remotes/origin/HEAD").Should().BeFalse();
     }
 }

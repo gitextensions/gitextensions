@@ -4,7 +4,6 @@ using BugReporter.Serialization;
 namespace GitExtensions.UITests.NBugReports;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public class BugReportFormTests
 {
     private BugReportForm _form = null!;
@@ -32,41 +31,41 @@ public class BugReportFormTests
         RunFormTest(
             form =>
             {
-                ClassicAssert.AreEqual(exception.Message, form.GetTestAccessor().ExceptionMessageTextBox.Text);
-                ClassicAssert.AreEqual(exception.Type, form.GetTestAccessor().ExceptionTextBox.Text);
-                ClassicAssert.AreEqual(exception.TargetSite, form.GetTestAccessor().TargetSiteTextBox.Text);
+                form.GetTestAccessor().ExceptionMessageTextBox.Text.Should().Be(exception.Message);
+                form.GetTestAccessor().ExceptionTextBox.Text.Should().Be(exception.Type);
+                form.GetTestAccessor().TargetSiteTextBox.Text.Should().Be(exception.TargetSite);
 
                 ListView listView = form.GetTestAccessor().ExceptionDetails.GetTestAccessor().ExceptionDetailsListView;
-                ClassicAssert.AreEqual(10, listView.Items.Count);
+                listView.Items.Count.Should().Be(10);
 
                 int index = 0;
-                ClassicAssert.AreEqual("Exception", listView.Items[index].Text);
-                ClassicAssert.AreEqual(exception.Type, listView.Items[index].SubItems[1].Text);
+                listView.Items[index].Text.Should().Be("Exception");
+                listView.Items[index].SubItems[1].Text.Should().Be(exception.Type);
                 index++;
-                ClassicAssert.AreEqual("Message", listView.Items[index].Text);
-                ClassicAssert.AreEqual(exception.Message, listView.Items[index].SubItems[1].Text);
+                listView.Items[index].Text.Should().Be("Message");
+                listView.Items[index].SubItems[1].Text.Should().Be(exception.Message);
                 index++;
-                ClassicAssert.AreEqual("Target Site", listView.Items[index].Text);
-                ClassicAssert.AreEqual(exception.TargetSite, listView.Items[index].SubItems[1].Text);
+                listView.Items[index].Text.Should().Be("Target Site");
+                listView.Items[index].SubItems[1].Text.Should().Be(exception.TargetSite);
                 index++;
-                ClassicAssert.AreEqual("Inner Exception", listView.Items[index].Text);
-                ClassicAssert.AreEqual(exception.InnerException!.Type, listView.Items[index].SubItems[1].Text);
+                listView.Items[index].Text.Should().Be("Inner Exception");
+                listView.Items[index].SubItems[1].Text.Should().Be(exception.InnerException!.Type);
                 index++;
-                ClassicAssert.AreEqual("Source", listView.Items[index].Text);
-                ClassicAssert.AreEqual(exception.Source, listView.Items[index].SubItems[1].Text);
+                listView.Items[index].Text.Should().Be("Source");
+                listView.Items[index].SubItems[1].Text.Should().Be(exception.Source);
                 index++;
-                ClassicAssert.AreEqual("Stack Trace", listView.Items[index].Text);
-                ClassicAssert.AreEqual(exception.StackTrace, listView.Items[index].SubItems[1].Text);
+                listView.Items[index].Text.Should().Be("Stack Trace");
+                listView.Items[index].SubItems[1].Text.Should().Be(exception.StackTrace);
 
                 foreach (KeyValuePair<string, object> info in exception.ExtendedInformation!)
                 {
                     index++;
-                    ClassicAssert.AreEqual(info.Key, listView.Items[index].Text);
-                    ClassicAssert.AreEqual(info.Value.ToString(), listView.Items[index].SubItems[1].Text);
+                    listView.Items[index].Text.Should().Be(info.Key);
+                    listView.Items[index].SubItems[1].Text.Should().Be(info.Value.ToString());
                 }
 
                 // Count=1-based, index=0-based
-                ClassicAssert.AreEqual(listView.Items.Count - 1, index);
+                index.Should().Be(listView.Items.Count - 1);
             },
             exception,
             exceptionInfo: "",
@@ -90,7 +89,7 @@ public class BugReportFormTests
         UITest.RunForm(
             () =>
             {
-                ClassicAssert.AreEqual(expected, _form.ShowDialog(owner: null, exception, exceptionInfo, environmentInfo, canIgnore: true, showIgnore: false, focusDetails: false));
+                _form.ShowDialog(owner: null, exception, exceptionInfo, environmentInfo, canIgnore: true, showIgnore: false, focusDetails: false).Should().Be(expected);
             },
             testDriverAsync);
     }

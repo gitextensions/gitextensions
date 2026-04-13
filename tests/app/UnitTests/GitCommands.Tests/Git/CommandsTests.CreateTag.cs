@@ -16,33 +16,33 @@ partial class CommandsTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("  ")]
-    public void Validate_should_throw_if_tag_name_invalid(string tagName)
+    public void Validate_should_throw_if_tag_name_invalid(string? tagName)
     {
-        GitCreateTagArgs args = new(tagName, Revision);
-        ClassicAssert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
+        GitCreateTagArgs args = new(tagName!, Revision);
+        ((Action)(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath))).Should().Throw<ArgumentException>();
     }
 
     [Test]
     public void Validate_should_throw_if_tag_revision_invalid()
     {
         GitCreateTagArgs args = new(TagName, null!);
-        ClassicAssert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
+        ((Action)(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath))).Should().Throw<ArgumentException>();
     }
 
     [TestCase(null)]
     [TestCase("")]
     [TestCase("  ")]
-    public void Validate_should_throw_for_SignWithSpecificKey_if_tag_keyId_invalid(string signKeyId)
+    public void Validate_should_throw_for_SignWithSpecificKey_if_tag_keyId_invalid(string? signKeyId)
     {
-        GitCreateTagArgs args = new(TagName, Revision, TagOperation.SignWithSpecificKey, signKeyId: signKeyId);
-        ClassicAssert.Throws<ArgumentException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
+        GitCreateTagArgs args = new(TagName, Revision, TagOperation.SignWithSpecificKey, signKeyId: signKeyId!);
+        ((Action)(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath))).Should().Throw<ArgumentException>();
     }
 
     [Test]
     public void ToLine_should_throw_if_operation_not_supported()
     {
         GitCreateTagArgs args = new(TagName, Revision, (TagOperation)10);
-        ClassicAssert.Throws<NotSupportedException>(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath));
+        ((Action)(() => Commands.CreateTag(args, TagMessageFile, PathUtil.ToPosixPath))).Should().Throw<NotSupportedException>();
     }
 
     [TestCase(true, "tag -f -s -F \"c:/.git/TAGMESSAGE\" \"bla\" -- 0123456789012345678901234567890123456789")]
@@ -54,7 +54,7 @@ partial class CommandsTests
 
         string cmdLine = cmd.Arguments;
 
-        ClassicAssert.AreEqual(expected, cmdLine);
+        cmdLine.Should().Be(expected);
     }
 
     [TestCase(TagOperation.Lightweight, "tag -f \"bla\" -- 0123456789012345678901234567890123456789")]
@@ -68,6 +68,6 @@ partial class CommandsTests
 
         string actualCmdLine = cmd.Arguments;
 
-        ClassicAssert.AreEqual(expected, actualCmdLine);
+        actualCmdLine.Should().Be(expected);
     }
 }

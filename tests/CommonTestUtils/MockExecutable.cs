@@ -59,8 +59,8 @@ public sealed class MockExecutable : IExecutable
 
     public void Verify()
     {
-        ClassicAssert.IsEmpty(_outputStackByArguments, "All staged output should have been consumed.");
-        ClassicAssert.IsEmpty(_commandArgumentsSet, "All staged output should have been consumed.");
+        _outputStackByArguments.Should().BeEmpty("All staged output should have been consumed.");
+        _commandArgumentsSet.Should().BeEmpty("All staged output should have been consumed.");
 
         foreach (MockProcess process in _processes)
         {
@@ -169,14 +169,14 @@ public sealed class MockExecutable : IExecutable
         public void Verify()
         {
             // all output should have been read
-            ClassicAssert.AreEqual(StandardOutput.BaseStream.Length, StandardOutput.BaseStream.Position);
+            StandardOutput.BaseStream.Position.Should().Be(StandardOutput.BaseStream.Length);
 
             // Only verify if std input is not closed.
             // ExecutableExtensions.ExecuteAsync will close std input when writeInput action is specified
             if (StandardInput.BaseStream is not null && StandardInput.BaseStream.CanRead)
             {
                 // no input should have been written (yet)
-                ClassicAssert.AreEqual(0, StandardInput.BaseStream.Length);
+                StandardInput.BaseStream.Length.Should().Be(0);
             }
         }
     }

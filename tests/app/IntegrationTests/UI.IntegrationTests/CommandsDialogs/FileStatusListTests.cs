@@ -1,5 +1,4 @@
 ﻿using System.ComponentModel.Design;
-using AwesomeAssertions;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.UserControls;
@@ -235,7 +234,7 @@ public class FileStatusListTests
 
     [Test]
     public void Test_FilterWatermarkLabelVisibility_on_FilterVisibleChange(
-        [Values(null, "", "x")] string filterText,
+        [Values(null, "", "x")] string? filterText,
         [Values(true, false)] bool filterFocused)
     {
         FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
@@ -272,14 +271,14 @@ public class FileStatusListTests
     [TestCase(null, false)]
     [TestCase("", false)]
     [TestCase("\\.cs", true)]
-    public void Test_StoreFilter_valid(string regex, bool active)
+    public void Test_StoreFilter_valid(string? regex, bool active)
     {
         FileStatusList.TestAccessor accessor = _fileStatusList.GetTestAccessor();
 
         Color expectedColor = active ? accessor.ActiveInputColor : SystemColors.Window;
         string? expectedRegex = string.IsNullOrEmpty(regex) ? null : regex;
 
-        _fileStatusList.SetFilter(regex);
+        _fileStatusList.SetFilter(regex!);
         accessor.SetFileStatusListVisibility(showNoFiles: false);
 
         CheckStoreFilter(expectedColor, expectedRegex!, accessor);

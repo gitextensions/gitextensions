@@ -1,19 +1,17 @@
 ﻿using ResourceManager;
 
 namespace ResourceManagerTests;
-
-[TestFixture]
 internal class LinkFactoryTests
 {
     [TestCase(null)]
     [TestCase("")]
     [TestCase(" ")]
     [TestCase("no link")]
-    public void ParseInvalidLink(string link)
+    public void ParseInvalidLink(string? link)
     {
         LinkFactory linkFactory = new();
-        ClassicAssert.False(linkFactory.GetTestAccessor().TryParseLink(link, out Uri? actualUri));
-        ClassicAssert.That(actualUri, Is.Null);
+        linkFactory.GetTestAccessor().TryParseLink(link, out Uri? actualUri).Should().BeFalse();
+        actualUri.Should().BeNull();
     }
 
     [Test]
@@ -22,8 +20,8 @@ internal class LinkFactoryTests
         LinkFactory linkFactory = new();
         linkFactory.CreateBranchLink("master");
         string expected = "gitext://gotobranch/master";
-        ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink("master#gitext://gotobranch/master", out Uri? actualUri));
-        ClassicAssert.That(actualUri!.AbsoluteUri, Is.EqualTo(expected));
+        linkFactory.GetTestAccessor().TryParseLink("master#gitext://gotobranch/master", out Uri? actualUri).Should().BeTrue();
+        actualUri!.AbsoluteUri.Should().Be(expected);
     }
 
     [Test]
@@ -32,8 +30,8 @@ internal class LinkFactoryTests
         LinkFactory linkFactory = new();
         linkFactory.CreateBranchLink("PR#23");
         string expected = "gitext://gotobranch/PR#23";
-        ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink("PR#23#gitext://gotobranch/PR#23", out Uri? actualUri));
-        ClassicAssert.That(actualUri!.AbsoluteUri, Is.EqualTo(expected));
+        linkFactory.GetTestAccessor().TryParseLink("PR#23#gitext://gotobranch/PR#23", out Uri? actualUri).Should().BeTrue();
+        actualUri!.AbsoluteUri.Should().Be(expected);
     }
 
     public void ParseGoToBranchLinkWithDetachedHead()
@@ -42,8 +40,8 @@ internal class LinkFactoryTests
         LinkFactory linkFactory = new();
         linkFactory.CreateBranchLink(linkCaption);
         string expected = "gitext://gotobranch/HEAD";
-        ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink($"{linkCaption}#{expected}", out Uri? actualUri));
-        ClassicAssert.That(actualUri!.AbsoluteUri, Is.EqualTo(expected));
+        linkFactory.GetTestAccessor().TryParseLink($"{linkCaption}#{expected}", out Uri? actualUri).Should().BeTrue();
+        actualUri!.AbsoluteUri.Should().Be(expected);
     }
 
     private static void TestCreateLink(string caption, string uri)
@@ -51,8 +49,8 @@ internal class LinkFactoryTests
         LinkFactory linkFactory = new();
         linkFactory.CreateLink(caption, uri);
         string expected = uri;
-        ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink(caption + "#" + uri, out Uri? actualUri));
-        ClassicAssert.That(actualUri!.AbsoluteUri, Is.EqualTo(expected));
+        linkFactory.GetTestAccessor().TryParseLink(caption + "#" + uri, out Uri? actualUri).Should().BeTrue();
+        actualUri!.AbsoluteUri.Should().Be(expected);
     }
 
     [Test]
@@ -73,8 +71,8 @@ internal class LinkFactoryTests
         LinkFactory linkFactory = new();
 
         string expected = "https://github.com/gitextensions/gitextensions/pull/3471#end";
-        ClassicAssert.True(linkFactory.GetTestAccessor().TryParseLink("https://github.com/gitextensions/gitextensions/pull/3471#end", out Uri? actualUri));
-        ClassicAssert.That(actualUri!.AbsoluteUri, Is.EqualTo(expected));
+        linkFactory.GetTestAccessor().TryParseLink("https://github.com/gitextensions/gitextensions/pull/3471#end", out Uri? actualUri).Should().BeTrue();
+        actualUri!.AbsoluteUri.Should().Be(expected);
     }
 
     [Test]
@@ -87,20 +85,20 @@ internal class LinkFactoryTests
     public void ParseInternalScheme_Null()
     {
         LinkFactory linkFactory = new();
-        ClassicAssert.False(linkFactory.GetTestAccessor().ParseInternalScheme(null!, out CommandEventArgs? actualCommandEventArgs));
-        ClassicAssert.That(actualCommandEventArgs, Is.Null);
+        linkFactory.GetTestAccessor().ParseInternalScheme(null!, out CommandEventArgs? actualCommandEventArgs).Should().BeFalse();
+        actualCommandEventArgs.Should().BeNull();
     }
 
     [TestCase("slkldfjdfkj:fkjsd")]
     [TestCase("slkldfjdfkj://fkjsd")]
     [TestCase("slkldfjdfkj://")]
     [TestCase("http://x")]
-    public void ParseInternalScheme_None(string link)
+    public void ParseInternalScheme_None(string? link)
     {
         LinkFactory linkFactory = new();
-        Uri uri = new(link);
-        ClassicAssert.False(linkFactory.GetTestAccessor().ParseInternalScheme(uri, out CommandEventArgs? actualCommandEventArgs));
-        ClassicAssert.That(actualCommandEventArgs, Is.Null);
+        Uri uri = new(link!);
+        linkFactory.GetTestAccessor().ParseInternalScheme(uri, out CommandEventArgs? actualCommandEventArgs).Should().BeFalse();
+        actualCommandEventArgs.Should().BeNull();
     }
 
     [TestCase("gitext://command/data", "command", "data")]
@@ -111,13 +109,13 @@ internal class LinkFactoryTests
     [TestCase("gitext://command/d", "command", "d")]
     [TestCase("gitext://command/d/", "command", "d/")]
     [TestCase("gitext:not/an/internal/link", "", "not/an/internal/link")]
-    public void ParseInternalScheme(string link, string expectedCommand, string expectedData)
+    public void ParseInternalScheme(string? link, string? expectedCommand, string? expectedData)
     {
         LinkFactory linkFactory = new();
-        Uri uri = new(link);
-        ClassicAssert.True(linkFactory.GetTestAccessor().ParseInternalScheme(uri, out CommandEventArgs? actualCommandEventArgs));
-        ClassicAssert.That(actualCommandEventArgs!.Command, Is.EqualTo(expectedCommand));
-        ClassicAssert.That(actualCommandEventArgs.Data, Is.EqualTo(expectedData));
+        Uri uri = new(link!);
+        linkFactory.GetTestAccessor().ParseInternalScheme(uri, out CommandEventArgs? actualCommandEventArgs).Should().BeTrue();
+        actualCommandEventArgs!.Command.Should().Be(expectedCommand);
+        actualCommandEventArgs.Data.Should().Be(expectedData);
     }
 
     [TestCase("gitext://command/data", "command", "data", null, "", false, true)]
@@ -126,10 +124,10 @@ internal class LinkFactoryTests
     [TestCase("gitext://showall/what", null, null, "what", "", false, false)]
     [TestCase("gitext://command/data", null, null, null, "unexpected internal link: gitext://command/data", true, false)]
     [TestCase("gitext://showall/what", null, null, null, "unexpected internal link: gitext://showall/what", false, true)]
-    public void ExecuteLink(string link,
-        string expectedCommand,
-        string expectedData,
-        string expectedShowAll,
+    public void ExecuteLink(string? link,
+        string? expectedCommand,
+        string? expectedData,
+        string? expectedShowAll,
         string expectedException,
         bool omitHandler,
         bool omitShowAll)
@@ -159,9 +157,9 @@ internal class LinkFactoryTests
             actualException = ex.Message;
         }
 
-        ClassicAssert.That(actualCommandEventArgs?.Command, Is.EqualTo(expectedCommand));
-        ClassicAssert.That(actualCommandEventArgs?.Data, Is.EqualTo(expectedData));
-        ClassicAssert.That(actualShowAll, Is.EqualTo(expectedShowAll));
-        ClassicAssert.That(actualException, Is.EqualTo(expectedException));
+        actualCommandEventArgs?.Command.Should().Be(expectedCommand);
+        actualCommandEventArgs?.Data.Should().Be(expectedData);
+        actualShowAll.Should().Be(expectedShowAll);
+        actualException.Should().Be(expectedException);
     }
 }

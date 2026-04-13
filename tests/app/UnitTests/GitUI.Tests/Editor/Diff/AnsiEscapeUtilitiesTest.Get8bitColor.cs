@@ -1,12 +1,9 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
 using GitUI.Theming;
 
 namespace GitUITests.Editor.Diff;
-
-[TestFixture]
 public class AnsiEscapeUtilitiesTest_Get8bitColor
 {
     private const int _redId = 1;
@@ -128,9 +125,6 @@ public class AnsiEscapeUtilitiesTest_Get8bitColor
     {
         int colorCode = 256;
 
-        ClassicAssert.Throws<ArgumentOutOfRangeException>(() =>
-        {
-            AnsiEscapeUtilities.TestAccessor.Get8bitColor(colorCode, fore: true, bold: false, dim: false);
-        });
+        ((Action)(() => AnsiEscapeUtilities.TestAccessor.Get8bitColor(colorCode, fore: true, bold: false, dim: false))).Should().Throw<ArgumentOutOfRangeException>();
     }
 }

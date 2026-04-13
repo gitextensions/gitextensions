@@ -1,10 +1,8 @@
 ﻿using System.Collections.Frozen;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
-using GitUI;
 
 namespace GitCommandsTests;
 
@@ -24,14 +22,14 @@ partial class GitModuleTests
             using IDisposable configListLocal = _executable.StageOutput("config list --local --includes --null", "");
             GitVersion.ResetVersion();
 
-            ClassicAssert.AreEqual(output, _gitModule.AddRemote(name, path));
+            _gitModule.AddRemote(name, path).Should().Be(output);
 
             _gitModule.GetEffectiveSetting("reload now");
             _gitModule.GetSettings("reload local settings, too");
         }
 
-        ClassicAssert.AreEqual("Please enter a name.", _gitModule.AddRemote("", path));
-        ClassicAssert.AreEqual("Please enter a name.", _gitModule.AddRemote(null, path));
+        _gitModule.AddRemote("", path).Should().Be("Please enter a name.");
+        _gitModule.AddRemote(null, path).Should().Be("Please enter a name.");
     }
 
     [Test]
@@ -46,7 +44,7 @@ partial class GitModuleTests
         using IDisposable configListLocal = _executable.StageOutput("config list --local --includes --null", "");
         GitVersion.ResetVersion();
 
-        ClassicAssert.AreEqual(output, _gitModule.RemoveRemote(remoteName));
+        _gitModule.RemoveRemote(remoteName).Should().Be(output);
 
         _gitModule.GetEffectiveSetting("reload now");
         _gitModule.GetSettings("reload local settings, too");
@@ -65,7 +63,7 @@ partial class GitModuleTests
         using IDisposable configListLocal = _executable.StageOutput("config list --local --includes --null", "");
         GitVersion.ResetVersion();
 
-        ClassicAssert.AreEqual(output, _gitModule.RenameRemote(oldName, newName));
+        _gitModule.RenameRemote(oldName, newName).Should().Be(output);
 
         _gitModule.GetEffectiveSetting("reload now");
         _gitModule.GetSettings("reload local settings, too");
@@ -77,16 +75,15 @@ partial class GitModuleTests
     {
         using (_executable.StageOutput("remote -v", line))
         {
-            await AssertEx.ThrowsAsync<Exception>(async () => await _gitModule.GetRemotesAsync());
+            Func<Task> act = async () => await _gitModule.GetRemotesAsync();
+            await act.Should().ThrowAsync<Exception>();
         }
     }
 
     [Test]
-    public void GetRemotes_should_parse_correctly_configured_remotes()
+    public async Task GetRemotes_should_parse_correctly_configured_remotes()
     {
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            string[] lines =
+        string[] lines =
             [
                 "RussKie\tgit://github.com/RussKie/gitextensions.git (fetch)",
                 "RussKie\tgit://github.com/RussKie/gitextensions.git (push)",
@@ -113,49 +110,48 @@ partial class GitModuleTests
                 "with_option\thttps://github.com/flannelhead/jsmn-stream.git (push) [ignored]"
             ];
 
-            using (_executable.StageOutput("remote -v", string.Join("\n", lines)))
-            {
-                IReadOnlyList<GitExtensions.Extensibility.Git.Remote> remotes = await _gitModule.GetRemotesAsync();
+        using (_executable.StageOutput("remote -v", string.Join("\n", lines)))
+        {
+            IReadOnlyList<GitExtensions.Extensibility.Git.Remote> remotes = await _gitModule.GetRemotesAsync();
 
-                ClassicAssert.AreEqual(7, remotes.Count);
+            remotes.Count.Should().Be(7);
 
-                ClassicAssert.AreEqual("RussKie", remotes[0].Name);
-                ClassicAssert.AreEqual("git://github.com/RussKie/gitextensions.git", remotes[0].FetchUrl);
-                ClassicAssert.AreEqual(1, remotes[0].PushUrls.Count);
-                ClassicAssert.AreEqual("git://github.com/RussKie/gitextensions.git", remotes[0].PushUrls[0]);
+            remotes[0].Name.Should().Be("RussKie");
+            remotes[0].FetchUrl.Should().Be("git://github.com/RussKie/gitextensions.git");
+            remotes[0].PushUrls.Count.Should().Be(1);
+            remotes[0].PushUrls[0].Should().Be("git://github.com/RussKie/gitextensions.git");
 
-                ClassicAssert.AreEqual("origin", remotes[1].Name);
-                ClassicAssert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[1].FetchUrl);
-                ClassicAssert.AreEqual(1, remotes[1].PushUrls.Count);
-                ClassicAssert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[1].PushUrls[0]);
+            remotes[1].Name.Should().Be("origin");
+            remotes[1].FetchUrl.Should().Be("git@github.com:drewnoakes/gitextensions.git");
+            remotes[1].PushUrls.Count.Should().Be(1);
+            remotes[1].PushUrls[0].Should().Be("git@github.com:drewnoakes/gitextensions.git");
 
-                ClassicAssert.AreEqual("upstream", remotes[2].Name);
-                ClassicAssert.AreEqual("git@github.com:gitextensions/gitextensions.git", remotes[2].FetchUrl);
-                ClassicAssert.AreEqual(1, remotes[2].PushUrls.Count);
-                ClassicAssert.AreEqual("git@github.com:gitextensions/gitextensions.git", remotes[2].PushUrls[0]);
+            remotes[2].Name.Should().Be("upstream");
+            remotes[2].FetchUrl.Should().Be("git@github.com:gitextensions/gitextensions.git");
+            remotes[2].PushUrls.Count.Should().Be(1);
+            remotes[2].PushUrls[0].Should().Be("git@github.com:gitextensions/gitextensions.git");
 
-                ClassicAssert.AreEqual("asymmetrical", remotes[3].Name);
-                ClassicAssert.AreEqual("https://github.com/gitextensions/fetch.git", remotes[3].FetchUrl);
-                ClassicAssert.AreEqual(1, remotes[3].PushUrls.Count);
-                ClassicAssert.AreEqual("https://github.com/gitextensions/push.git", remotes[3].PushUrls[0]);
+            remotes[3].Name.Should().Be("asymmetrical");
+            remotes[3].FetchUrl.Should().Be("https://github.com/gitextensions/fetch.git");
+            remotes[3].PushUrls.Count.Should().Be(1);
+            remotes[3].PushUrls[0].Should().Be("https://github.com/gitextensions/push.git");
 
-                ClassicAssert.AreEqual("with-space", remotes[4].Name);
-                ClassicAssert.AreEqual("c:/Bare Repo", remotes[4].FetchUrl);
-                ClassicAssert.AreEqual(1, remotes[4].PushUrls.Count);
-                ClassicAssert.AreEqual("c:/Bare Repo", remotes[4].PushUrls[0]);
+            remotes[4].Name.Should().Be("with-space");
+            remotes[4].FetchUrl.Should().Be("c:/Bare Repo");
+            remotes[4].PushUrls.Count.Should().Be(1);
+            remotes[4].PushUrls[0].Should().Be("c:/Bare Repo");
 
-                ClassicAssert.AreEqual("multi", remotes[5].Name);
-                ClassicAssert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[5].FetchUrl);
-                ClassicAssert.AreEqual(2, remotes[5].PushUrls.Count);
-                ClassicAssert.AreEqual("git@github.com:drewnoakes/gitextensions.git", remotes[5].PushUrls[0]);
-                ClassicAssert.AreEqual("git@gitlab.com:drewnoakes/gitextensions.git", remotes[5].PushUrls[1]);
+            remotes[5].Name.Should().Be("multi");
+            remotes[5].FetchUrl.Should().Be("git@github.com:drewnoakes/gitextensions.git");
+            remotes[5].PushUrls.Count.Should().Be(2);
+            remotes[5].PushUrls[0].Should().Be("git@github.com:drewnoakes/gitextensions.git");
+            remotes[5].PushUrls[1].Should().Be("git@gitlab.com:drewnoakes/gitextensions.git");
 
-                ClassicAssert.AreEqual("with_option", remotes[6].Name);
-                ClassicAssert.AreEqual("https://github.com/flannelhead/jsmn-stream.git", remotes[6].FetchUrl);
-                ClassicAssert.AreEqual(1, remotes[6].PushUrls.Count);
-                ClassicAssert.AreEqual("https://github.com/flannelhead/jsmn-stream.git", remotes[6].PushUrls[0]);
-            }
-        });
+            remotes[6].Name.Should().Be("with_option");
+            remotes[6].FetchUrl.Should().Be("https://github.com/flannelhead/jsmn-stream.git");
+            remotes[6].PushUrls.Count.Should().Be(1);
+            remotes[6].PushUrls[0].Should().Be("https://github.com/flannelhead/jsmn-stream.git");
+        }
     }
 
     [Test]
@@ -167,7 +163,7 @@ partial class GitModuleTests
         {
             IReadOnlyList<string> remotes = _gitModule.GetRemoteNames();
 
-            ClassicAssert.AreEqual(lines, remotes);
+            remotes.Should().Equal(lines);
         }
     }
 

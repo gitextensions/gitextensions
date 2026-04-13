@@ -4,8 +4,6 @@ using GitExtensions.Extensibility;
 using NSubstitute;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class OsShellUtilTests
 {
     private IExecutable _executable = null!;
@@ -33,6 +31,7 @@ public class OsShellUtilTests
     [TearDown]
     public void TearDown()
     {
+        _process?.Dispose();
         OsShellUtil.TestAccessor.MockExecutable = null;
     }
 

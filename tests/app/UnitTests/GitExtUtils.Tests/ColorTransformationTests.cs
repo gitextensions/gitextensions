@@ -1,8 +1,6 @@
 ﻿using GitExtUtils.GitUI.Theming;
 
 namespace GitExtUtilsTests;
-
-[TestFixture]
 public class ColorTransformationTests
 {
     [Test, Combinatorial]
@@ -21,7 +19,7 @@ public class ColorTransformationTests
             opposite);
 
         double expected = (example * (1 - alpha)) + (opposite * alpha);
-        ClassicAssert.That(transformed, Is.EqualTo(expected).Within(0.001));
+        transformed.Should().BeApproximately(expected, 0.001);
     }
 
     [TestCase(0.4d, 0.7d, 0.6d, 0.8d, 0.2d, 0.3d)]
@@ -46,7 +44,7 @@ public class ColorTransformationTests
             example,
             opposite);
 
-        ClassicAssert.That(transformed, Is.EqualTo(expected).Within(0.001));
+        transformed.Should().BeApproximately(expected, 0.001);
     }
 
     [TestCase("#000000", 0.5f)]
@@ -56,7 +54,7 @@ public class ColorTransformationTests
     {
         Color correspondingForeColor = ColorHelper.TestAccessor.GetContrastColor(ColorTranslator.FromHtml(backgroundColor), luminanceThreshold);
 
-        ClassicAssert.That(correspondingForeColor, Is.EqualTo(Color.White));
+        correspondingForeColor.Should().Be(Color.White);
     }
 
     [TestCase("#FFFFFF", 0.5f)]
@@ -66,6 +64,6 @@ public class ColorTransformationTests
     {
         Color correspondingForeColor = ColorHelper.TestAccessor.GetContrastColor(ColorTranslator.FromHtml(backgroundColor), luminanceThreshold);
 
-        ClassicAssert.That(correspondingForeColor, Is.EqualTo(Color.Black));
+        correspondingForeColor.Should().Be(Color.Black);
     }
 }

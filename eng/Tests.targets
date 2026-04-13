@@ -21,6 +21,7 @@
     <PackageReference Include="AwesomeAssertions" PrivateAssets="all" Publish="true" />
     <PackageReference Include="NSubstitute" PrivateAssets="all" Publish="true" />
     <PackageReference Include="NUnit" PrivateAssets="all" Publish="true" />
+    <PackageReference Include="NUnit.Analyzers" PrivateAssets="all" Publish="true" />
     <PackageReference Include="NUnit3TestAdapter" PrivateAssets="all" Publish="true" />
     <PackageReference Include="Verify.NUnit" PrivateAssets="all" Publish="true" />
 

@@ -14,5 +14,7 @@ public static class ServiceContainerRegistry
         GitExecutorProvider executorProvider = new(gitDirectoryResolver);
         serviceContainer.AddService<IGitExecutorProvider>(executorProvider);
         serviceContainer.AddService<ISubmoduleStatusProvider>(new SubmoduleStatusProvider(executorProvider));
+
+        serviceContainer.AddService<IGitBranchNameNormaliser>(new GitBranchNameNormaliser());
     }
 }

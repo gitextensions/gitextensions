@@ -1,12 +1,9 @@
 ﻿using System.Text;
-using AwesomeAssertions;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using NSubstitute;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class AheadBehindDataProviderTests
 {
     private MemoryStream _standardOutputStream = null!;
@@ -44,9 +41,9 @@ public class AheadBehindDataProviderTests
     }
 
     [TestCase(null)]
-    public void GetData_should_throw_if_branch_null(string branchName)
+    public void GetData_should_throw_if_branch_null(string? branchName)
     {
-        ((Action)(() => _provider.GetTestAccessor().GetData(Encoding.UTF8, branchName))).Should().Throw<ArgumentException>();
+        ((Action)(() => _provider.GetTestAccessor().GetData(Encoding.UTF8, branchName!))).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -63,7 +60,7 @@ public class AheadBehindDataProviderTests
 
     [TestCase("")]
     [TestCase(null)]
-    public void GetData_should_return_null_result_if_unable_match_branch(string result)
+    public void GetData_should_return_null_result_if_unable_match_branch(string? result)
     {
         SetResultOfGitCommand(result);
 
@@ -80,7 +77,7 @@ public class AheadBehindDataProviderTests
     // Cover the case where a push refspec is defined for the remote. When this value is set, for-each-ref shows
     // 'refs/remotes/origin/name' as the default push location for any untracked branch 'name'.
     [TestCase("gone::::refs/remotes/origin/new-branch::::new-branch")]
-    public void GetData_should_return_empty_if_git_output_has_no_data(string result)
+    public void GetData_should_return_empty_if_git_output_has_no_data(string? result)
     {
         SetResultOfGitCommand(result);
 
@@ -91,7 +88,7 @@ public class AheadBehindDataProviderTests
 
     [TestCase("::ahead 1::::::my-branch")]
     [TestCase("results!")]
-    public void GetData_should_return_empty_if_no_remote(string result)
+    public void GetData_should_return_empty_if_no_remote(string? result)
     {
         SetResultOfGitCommand(result);
 
@@ -165,7 +162,7 @@ public class AheadBehindDataProviderTests
 
     [TestCase("::ahead 99, behind 3::::refs/remotes/upstream/branch::my-branch")]
     [TestCase("ahead 99, behind 3::::refs/remotes/upstream/branch::::my-branch")]
-    public void GetData_should_return_ahead_and_behind_for_a_branch(string result)
+    public void GetData_should_return_ahead_and_behind_for_a_branch(string? result)
     {
         SetResultOfGitCommand(result);
 
@@ -181,7 +178,7 @@ public class AheadBehindDataProviderTests
     }
 
     [TestCase("ahead 99, behind 97::ahead 9, behind 7::refs/remotes/upstream/push-branch::refs/remotes/upstream/upstream-branch::my-branch")]
-    public void GetData_should_prefer_push_before_upstream_ahead_behind(string result)
+    public void GetData_should_prefer_push_before_upstream_ahead_behind(string? result)
     {
         SetResultOfGitCommand(result);
 
@@ -197,7 +194,7 @@ public class AheadBehindDataProviderTests
     }
 
     [TestCase("ahead 99::ahead 9, behind 7::refs/remotes/upstream/push-branch::refs/remotes/upstream/upstream-branch::my-branch")]
-    public void GetData_should_prefer_push_before_upstream_ahead(string result)
+    public void GetData_should_prefer_push_before_upstream_ahead(string? result)
     {
         SetResultOfGitCommand(result);
 
@@ -213,7 +210,7 @@ public class AheadBehindDataProviderTests
     }
 
     [TestCase("behind 97::ahead 9, behind 7::refs/remotes/upstream/push-branch::refs/remotes/upstream/upstream-branch::my-branch")]
-    public void GetData_should_prefer_push_before_upstream_behind(string result)
+    public void GetData_should_prefer_push_before_upstream_behind(string? result)
     {
         SetResultOfGitCommand(result);
 
@@ -250,7 +247,7 @@ public class AheadBehindDataProviderTests
             });
     }
 
-    private void SetResultOfGitCommand(string result)
+    private void SetResultOfGitCommand(string? result)
     {
         StreamWriter writer = new(_standardOutputStream);
         writer.Write(result);

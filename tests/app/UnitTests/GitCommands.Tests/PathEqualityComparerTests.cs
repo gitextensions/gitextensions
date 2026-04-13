@@ -1,8 +1,6 @@
 ﻿using GitCommands;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class PathEqualityComparerTests
 {
     private PathEqualityComparer _comparer = null!;
@@ -17,6 +15,6 @@ public class PathEqualityComparerTests
     [TestCase("\\\\my-pc\\Work\\GitExtensions\\", "//my-pc/WORK/GitExtensions/")]
     public void Equals(string input, string expected)
     {
-        ClassicAssert.AreEqual(_comparer.Equals(input, expected), true);
+        true.Should().Be(_comparer.Equals(input, expected));
     }
 }

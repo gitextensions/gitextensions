@@ -3,8 +3,6 @@ using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class SubmoduleHelpersTest
 {
     [Test]
@@ -30,10 +28,10 @@ public class SubmoduleHelpersTest
 
         GitSubmoduleStatus status = SubmoduleHelpers.TestAccessor.ParseSubmoduleStatus(text, submodule, commitId => commitDataManager.GetCommitData(commitId));
 
-        ClassicAssert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
-        ClassicAssert.AreEqual(fileName, status.Name);
-        ClassicAssert.AreEqual(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"), status.OldCommit);
-        ClassicAssert.AreEqual(fileName, status.OldName);
+        status.Commit.Should().Be(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"));
+        status.Name.Should().Be(fileName);
+        status.OldCommit.Should().Be(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"));
+        status.OldName.Should().Be(fileName);
 
         // Submodule name with spaces in the name
 
@@ -44,10 +42,10 @@ public class SubmoduleHelpersTest
 
         status = SubmoduleHelpers.TestAccessor.ParseSubmoduleStatus(text, submodule, commitId => commitDataManager.GetCommitData(commitId));
 
-        ClassicAssert.AreEqual(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"), status.Commit);
-        ClassicAssert.AreEqual(fileName, status.Name);
-        ClassicAssert.AreEqual(ObjectId.Parse("2fb88514cfdc37a2708c24f71eca71c424b8d402"), status.OldCommit);
-        ClassicAssert.AreEqual(fileName, status.OldName);
+        status.Commit.Should().Be(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"));
+        status.Name.Should().Be(fileName);
+        status.OldCommit.Should().Be(ObjectId.Parse("2fb88514cfdc37a2708c24f71eca71c424b8d402"));
+        status.OldName.Should().Be(fileName);
 
         // Submodule name in reverse diff, rename
 
@@ -58,10 +56,10 @@ public class SubmoduleHelpersTest
 
         status = SubmoduleHelpers.TestAccessor.ParseSubmoduleStatus(text, submodule, commitId => commitDataManager.GetCommitData(commitId));
 
-        ClassicAssert.AreEqual(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"), status.Commit);
-        ClassicAssert.AreEqual(fileName, status.Name);
-        ClassicAssert.AreEqual(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"), status.OldCommit);
-        ClassicAssert.AreEqual("Externals/conemu-inside-a", status.OldName);
+        status.Commit.Should().Be(ObjectId.Parse("b5a3d51777c85a9aeee534c382b5ccbb86b485d3"));
+        status.Name.Should().Be(fileName);
+        status.OldCommit.Should().Be(ObjectId.Parse("a17ea0c8ebe9d8cd7e634ba44559adffe633c11d"));
+        status.OldName.Should().Be("Externals/conemu-inside-a");
 
         text = "diff --git a/Externals/ICSharpCode.TextEditor b/Externals/ICSharpCode.TextEditor\r\nnew file mode 160000\r\nindex 000000000..05321769f\r\n--- /dev/null\r\n+++ b/Externals/ICSharpCode.TextEditor\r\n@@ -0,0 +1 @@\r\n+Subproject commit 05321769f039f39fa7f6748e8f30d5c8f157c7dc\r\n";
         fileName = "Externals/ICSharpCode.TextEditor";
@@ -70,10 +68,10 @@ public class SubmoduleHelpersTest
 
         status = SubmoduleHelpers.TestAccessor.ParseSubmoduleStatus(text, submodule, commitId => commitDataManager.GetCommitData(commitId));
 
-        ClassicAssert.AreEqual(ObjectId.Parse("05321769f039f39fa7f6748e8f30d5c8f157c7dc"), status.Commit);
-        ClassicAssert.AreEqual(fileName, status.Name);
-        ClassicAssert.IsNull(status.OldCommit);
-        ClassicAssert.AreEqual("Externals/ICSharpCode.TextEditor", status.OldName);
+        status.Commit.Should().Be(ObjectId.Parse("05321769f039f39fa7f6748e8f30d5c8f157c7dc"));
+        status.Name.Should().Be(fileName);
+        status.OldCommit.Should().BeNull();
+        status.OldName.Should().Be("Externals/ICSharpCode.TextEditor");
 
         // With user customized `diff.srcPrefix` and `diff.dstPrefix` settings: Submodule name with spaces in the name
 
@@ -84,10 +82,10 @@ public class SubmoduleHelpersTest
 
         status = SubmoduleHelpers.TestAccessor.ParseSubmoduleStatus(text, submodule, commitId => commitDataManager.GetCommitData(commitId));
 
-        ClassicAssert.AreEqual(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"), status.Commit);
-        ClassicAssert.AreEqual(fileName, status.Name);
-        ClassicAssert.AreEqual(ObjectId.Parse("2fb88514cfdc37a2708c24f71eca71c424b8d402"), status.OldCommit);
-        ClassicAssert.AreEqual(fileName, status.OldName);
+        status.Commit.Should().Be(ObjectId.Parse("0cc457d030e92f804569407c7cd39893320f9740"));
+        status.Name.Should().Be(fileName);
+        status.OldCommit.Should().Be(ObjectId.Parse("2fb88514cfdc37a2708c24f71eca71c424b8d402"));
+        status.OldName.Should().Be(fileName);
 
         try
         {

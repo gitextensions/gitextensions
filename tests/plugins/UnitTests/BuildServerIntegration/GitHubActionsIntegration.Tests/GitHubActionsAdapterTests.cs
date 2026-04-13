@@ -1,5 +1,4 @@
 ﻿using System.Reactive.Concurrency;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Plugins.GitHubActionsIntegration;
@@ -9,8 +8,6 @@ using GitUIPluginInterfaces.BuildServerIntegration;
 using NSubstitute;
 
 namespace GitHubActionsIntegrationTests;
-
-[TestFixture]
 internal class GitHubActionsAdapterTests
 {
     private const string TestSha1 = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -40,6 +37,13 @@ internal class GitHubActionsAdapterTests
         settings.SetString("GitHubActionsRepository", "repo");
 
         _target.Initialize(Substitute.For<IBuildServerWatcher>(), settings, () => { });
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        _target.Dispose();
+        _apiClient.Dispose();
     }
 
     [Test]
@@ -285,8 +289,8 @@ internal class GitHubActionsAdapterTests
             },
             () => observableEvent.Set());
 
-        Assert.That(observableEvent.WaitOne(TimeSpan.FromSeconds(10)), Is.True, "Observable did not complete in time");
-        Assert.That(observableException, Is.Null, () => $"Observable faulted: {observableException}");
+        observableEvent.WaitOne(TimeSpan.FromSeconds(10)).Should().BeTrue();
+        observableException.Should().BeNull();
 
         return result;
     }
@@ -307,8 +311,8 @@ internal class GitHubActionsAdapterTests
             },
             () => observableEvent.Set());
 
-        Assert.That(observableEvent.WaitOne(TimeSpan.FromSeconds(10)), Is.True, "Observable did not complete in time");
-        Assert.That(observableException, Is.Null, () => $"Observable faulted: {observableException}");
+        observableEvent.WaitOne(TimeSpan.FromSeconds(10)).Should().BeTrue();
+        observableException.Should().BeNull();
 
         return result;
     }

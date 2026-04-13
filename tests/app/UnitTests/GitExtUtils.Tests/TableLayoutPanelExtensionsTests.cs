@@ -1,11 +1,9 @@
-﻿using AwesomeAssertions;
-using GitUI;
+﻿using GitUI;
 
 namespace GitExtUtilsTests;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class TableLayoutPanelExtensionsTests
 {
     [Test]
@@ -24,7 +22,7 @@ public class TableLayoutPanelExtensionsTests
     [Test]
     public void AdjustWidthToSize_should_throw_if_index_outside_table_columns_count()
     {
-        TableLayoutPanel table = new()
+        using TableLayoutPanel table = new()
         {
             ColumnCount = 3
         };
@@ -37,7 +35,7 @@ public class TableLayoutPanelExtensionsTests
     [Test]
     public void AdjustWidthToSize_should_throw_if_no_widths_given()
     {
-        TableLayoutPanel table = new()
+        using TableLayoutPanel table = new()
         {
             ColumnCount = 3
         };
@@ -47,7 +45,7 @@ public class TableLayoutPanelExtensionsTests
     [Test]
     public void AdjustWidthToSize_should_throw_if_no_widths_given1()
     {
-        TableLayoutPanel table = new()
+        using TableLayoutPanel table = new()
         {
             ColumnCount = 3
         };
@@ -58,7 +56,7 @@ public class TableLayoutPanelExtensionsTests
     [Test]
     public void AdjustWidthToSize_should_set_width_to_largest_value()
     {
-        TableLayoutPanel table = new()
+        using TableLayoutPanel table = new()
         {
             ColumnCount = 3
         };

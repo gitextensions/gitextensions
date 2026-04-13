@@ -2,24 +2,18 @@
 using GitExtUtils;
 
 namespace GitExtUtilsTests;
-
-[TestFixture]
 public sealed class GitArgumentBuilderTests
 {
     [Test]
     public void Command_with_one_argument()
     {
-        ClassicAssert.AreEqual(
-            "foo --bar",
-            new GitArgumentBuilder("foo") { "--bar" }.ToString());
+        new GitArgumentBuilder("foo") { "--bar" }.ToString().Should().Be("foo --bar");
     }
 
     [Test]
     public void Command_with_no_arguments()
     {
-        ClassicAssert.AreEqual(
-            "foo",
-            new GitArgumentBuilder("foo").ToString());
+        new GitArgumentBuilder("foo").ToString().Should().Be("foo");
     }
 
     [Test]
@@ -30,9 +24,7 @@ public sealed class GitArgumentBuilderTests
             "-n 1"
         };
 
-        ClassicAssert.AreEqual(
-            "-c log.showsignature=false log -n 1",
-            args.ToString());
+        args.ToString().Should().Be("-c log.showsignature=false log -n 1");
     }
 
     [Test]
@@ -43,9 +35,7 @@ public sealed class GitArgumentBuilderTests
             new GitConfigItem("bar", "baz")
         };
 
-        ClassicAssert.AreEqual(
-            "-c bar=baz foo",
-            args.ToString());
+        args.ToString().Should().Be("-c bar=baz foo");
     }
 
     [Test]
@@ -56,9 +46,7 @@ public sealed class GitArgumentBuilderTests
             new GitConfigItem("bar", "baz bax")
         };
 
-        ClassicAssert.AreEqual(
-            "-c bar=\"baz bax\" foo",
-            args.ToString());
+        args.ToString().Should().Be("-c bar=\"baz bax\" foo");
     }
 
     [Test]
@@ -69,9 +57,7 @@ public sealed class GitArgumentBuilderTests
             new GitConfigItem("bar", "\"baz bax\"")
         };
 
-        ClassicAssert.AreEqual(
-            "-c bar=\"baz bax\" foo",
-            args.ToString());
+        args.ToString().Should().Be("-c bar=\"baz bax\" foo");
     }
 
     [Test]
@@ -83,9 +69,7 @@ public sealed class GitArgumentBuilderTests
             "--arg"
         };
 
-        ClassicAssert.AreEqual(
-            "-c bar=baz foo --arg",
-            args.ToString());
+        args.ToString().Should().Be("-c bar=baz foo --arg");
     }
 
     [Test]
@@ -97,9 +81,7 @@ public sealed class GitArgumentBuilderTests
             new GitConfigItem("bar", "baz") // order doesn't matter
         };
 
-        ClassicAssert.AreEqual(
-            "-c bar=baz foo --arg",
-            args.ToString());
+        args.ToString().Should().Be("-c bar=baz foo --arg");
     }
 
     [Test]
@@ -111,9 +93,7 @@ public sealed class GitArgumentBuilderTests
             "-n 1"
         };
 
-        ClassicAssert.AreEqual(
-            "-c log.showsignature=false -c bar=baz log -n 1",
-            args.ToString());
+        args.ToString().Should().Be("-c log.showsignature=false -c bar=baz log -n 1");
     }
 
     [Test]
@@ -125,9 +105,7 @@ public sealed class GitArgumentBuilderTests
             "-n 1"
         };
 
-        ClassicAssert.AreEqual(
-            "-c log.showsignature=false -c bar=baz log -n 1",
-            args.ToString());
+        args.ToString().Should().Be("-c log.showsignature=false -c bar=baz log -n 1");
     }
 
     [Test]
@@ -139,9 +117,7 @@ public sealed class GitArgumentBuilderTests
             "-n 1"
         };
 
-        ClassicAssert.AreEqual(
-            "-c log.showsignature=true log -n 1",
-            args.ToString());
+        args.ToString().Should().Be("-c log.showsignature=true log -n 1");
     }
 
     [Test]
@@ -153,18 +129,16 @@ public sealed class GitArgumentBuilderTests
             "-n 1"
         };
 
-        ClassicAssert.AreEqual(
-            "-c LOG.showSIGNATURE=true log -n 1",
-            args.ToString());
+        args.ToString().Should().Be("-c LOG.showSIGNATURE=true log -n 1");
     }
 
     [Test]
     public void Throws_for_invalid_command_strings()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => new GitArgumentBuilder(null!));
-        ClassicAssert.Throws<ArgumentException>(() => new GitArgumentBuilder(""));
-        ClassicAssert.Throws<ArgumentException>(() => new GitArgumentBuilder(" "));
-        ClassicAssert.Throws<ArgumentException>(() => new GitArgumentBuilder(" a banana "));
-        ClassicAssert.Throws<ArgumentException>(() => new GitArgumentBuilder("!£$%^&*("));
+        ((Action)(() => new GitArgumentBuilder(null!))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => new GitArgumentBuilder(""))).Should().Throw<ArgumentException>();
+        ((Action)(() => new GitArgumentBuilder(" "))).Should().Throw<ArgumentException>();
+        ((Action)(() => new GitArgumentBuilder(" a banana "))).Should().Throw<ArgumentException>();
+        ((Action)(() => new GitArgumentBuilder("!£$%^&*("))).Should().Throw<ArgumentException>();
     }
 }

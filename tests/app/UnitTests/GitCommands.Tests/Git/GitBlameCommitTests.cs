@@ -2,8 +2,6 @@
 using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class GitBlameCommitTests
 {
     [Test]
@@ -37,7 +35,7 @@ public class GitBlameCommitTests
             "test summary",
             "fileName.txt");
 
-        ClassicAssert.AreEqual(str.ToString(), commit.ToString());
+        commit.ToString().Should().Be(str.ToString());
     }
 
     [Test]
@@ -73,7 +71,7 @@ public class GitBlameCommitTests
             "test summary",
             "fileName.txt");
 
-        ClassicAssert.AreEqual(str.ToString(), commit.ToString(summaryBuilder));
+        commit.ToString(summaryBuilder).Should().Be(str.ToString());
     }
 
     [Test]
@@ -109,6 +107,6 @@ public class GitBlameCommitTests
             "test summary",
             "fileName.txt");
 
-        ClassicAssert.AreEqual(str.ToString(), commit.ToString(summaryBuilder));
+        commit.ToString(summaryBuilder).Should().Be(str.ToString());
     }
 }

@@ -4,8 +4,6 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
 
 namespace GitCommandsTests.Settings;
-
-[TestFixture]
 internal sealed class SettingTests
 {
     private const string SettingsFileContent = @"<?xml version=""1.0"" encoding=""utf-8""?><dictionary />";
@@ -50,13 +48,13 @@ internal sealed class SettingTests
         ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault));
-        ClassicAssert.That(setting.Value, Is.EqualTo(settingDefault));
-        ClassicAssert.That(setting.IsUnset, Is.True);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(settingDefault);
+        setting.Value.Should().Be(settingDefault);
+        setting.IsUnset.Should().BeTrue();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -96,7 +94,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.EqualTo(value));
+        storedValue.Should().Be(value);
     }
 
     [Test]
@@ -121,14 +119,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault));
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(settingDefault);
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeTrue();
     }
 
     [Test]
@@ -155,14 +153,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault));
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(settingDefault);
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeFalse();
     }
 
     [Test]
@@ -186,7 +184,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.EqualTo(settingDefault));
+        storedValue.Should().Be(settingDefault);
     }
 
     [Test]
@@ -226,7 +224,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.EqualTo(settingDefault));
+        storedValue.Should().Be(settingDefault);
     }
 
     #endregion Setting
@@ -246,13 +244,13 @@ internal sealed class SettingTests
         ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault ?? string.Empty));
-        ClassicAssert.That(setting.Value, Is.EqualTo(settingDefault ?? string.Empty));
-        ClassicAssert.That(setting.IsUnset, Is.True);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(settingDefault ?? string.Empty);
+        setting.Value.Should().Be(settingDefault ?? string.Empty);
+        setting.IsUnset.Should().BeTrue();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -290,7 +288,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.EqualTo(value ?? string.Empty));
+        storedValue.Should().Be(value ?? string.Empty);
     }
 
     [Test]
@@ -314,14 +312,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault ?? string.Empty));
-        ClassicAssert.That(setting.Value, Is.EqualTo(value ?? string.Empty));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(settingDefault ?? string.Empty);
+        setting.Value.Should().Be(value ?? string.Empty);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeTrue();
     }
 
     [Test]
@@ -347,14 +345,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault ?? string.Empty));
-        ClassicAssert.That(setting.Value, Is.EqualTo(value ?? string.Empty));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(settingDefault ?? string.Empty);
+        setting.Value.Should().Be(value ?? string.Empty);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeFalse();
     }
 
     #endregion String Setting
@@ -373,13 +371,13 @@ internal sealed class SettingTests
         ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -399,13 +397,13 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -430,14 +428,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeTrue();
     }
 
     [Test]
@@ -465,14 +463,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeFalse();
     }
 
     [Test]
@@ -494,7 +492,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.Null);
+        storedValue.Should().BeNull();
     }
 
     [Test]
@@ -532,7 +530,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.Null);
+        storedValue.Should().BeNull();
     }
 
     #endregion Bool Setting
@@ -551,13 +549,13 @@ internal sealed class SettingTests
         ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -577,13 +575,13 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -608,14 +606,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeTrue();
     }
 
     [Test]
@@ -643,14 +641,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeFalse();
     }
 
     [Test]
@@ -672,7 +670,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.Null);
+        storedValue.Should().BeNull();
     }
 
     [Test]
@@ -710,7 +708,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.Null);
+        storedValue.Should().BeNull();
     }
 
     #endregion Char Setting
@@ -729,13 +727,13 @@ internal sealed class SettingTests
         ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -756,13 +754,13 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -788,14 +786,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeTrue();
     }
 
     [Test]
@@ -824,14 +822,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeFalse();
     }
 
     [Test]
@@ -853,7 +851,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.Null);
+        storedValue.Should().BeNull();
     }
 
     [Test]
@@ -891,7 +889,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.Null);
+        storedValue.Should().BeNull();
     }
 
     #endregion Byte Setting
@@ -910,13 +908,13 @@ internal sealed class SettingTests
         ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -937,13 +935,13 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -969,14 +967,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeTrue();
     }
 
     [Test]
@@ -1005,14 +1003,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeFalse();
     }
 
     [Test]
@@ -1034,7 +1032,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.Null);
+        storedValue.Should().BeNull();
     }
 
     [Test]
@@ -1072,7 +1070,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.Null);
+        storedValue.Should().BeNull();
     }
 
     #endregion Int Setting
@@ -1091,13 +1089,13 @@ internal sealed class SettingTests
         ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -1118,13 +1116,13 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -1150,14 +1148,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeTrue();
     }
 
     [Test]
@@ -1186,14 +1184,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeFalse();
     }
 
     [Test]
@@ -1215,7 +1213,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.Null);
+        storedValue.Should().BeNull();
     }
 
     [Test]
@@ -1253,7 +1251,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.Null);
+        storedValue.Should().BeNull();
     }
 
     #endregion Float Setting
@@ -1272,13 +1270,13 @@ internal sealed class SettingTests
         ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -1298,13 +1296,13 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -1347,7 +1345,7 @@ internal sealed class SettingTests
         bool isNumber = int.TryParse(storedValue, out _);
 
         // Assert
-        ClassicAssert.That(isNumber, Is.False);
+        isNumber.Should().BeFalse();
     }
 
     [Test]
@@ -1372,14 +1370,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeTrue();
     }
 
     [Test]
@@ -1407,14 +1405,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeFalse();
     }
 
     [Test]
@@ -1436,7 +1434,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.Null);
+        storedValue.Should().BeNull();
     }
 
     [Test]
@@ -1474,7 +1472,7 @@ internal sealed class SettingTests
         });
 
         // Assert
-        ClassicAssert.That(storedValue, Is.Null);
+        storedValue.Should().BeNull();
     }
 
     public enum TestEnum
@@ -1499,13 +1497,13 @@ internal sealed class SettingTests
         ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -1530,13 +1528,13 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -1568,14 +1566,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeTrue();
     }
 
     [Test]
@@ -1609,14 +1607,14 @@ internal sealed class SettingTests
         setting.Value = value;
 
         // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
+        setting.Should().NotBeNull();
+        setting.SettingsSource.Should().Be(settingsPath);
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().Be(value);
+        setting.IsUnset.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+        updated.Should().BeFalse();
     }
 
     public struct TestStruct

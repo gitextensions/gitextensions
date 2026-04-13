@@ -1,5 +1,4 @@
 ﻿using System.Runtime.CompilerServices;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility.Git;

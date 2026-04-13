@@ -4,8 +4,6 @@ using GitExtensions.Extensibility.Plugins;
 using GitUI.UserControls;
 
 namespace GitUITests.UserControls;
-
-[TestFixture]
 public class ConsoleEmulatorOutputControllerFixture
 {
     [Test]
@@ -27,7 +25,7 @@ public class ConsoleEmulatorOutputControllerFixture
         filter.AnsiStreamChunkReceived(null!, new AnsiStreamChunkEventArgs(GitModule.SystemEncoding.GetBytes(chunk1)));
         filter.AnsiStreamChunkReceived(null!, new AnsiStreamChunkEventArgs(GitModule.SystemEncoding.GetBytes(chunk2)));
 
-        ClassicAssert.AreEqual(string.Empty, received);
+        received.Should().Be(string.Empty);
     }
 
     [Test]
@@ -50,7 +48,7 @@ public class ConsoleEmulatorOutputControllerFixture
         filter.AnsiStreamChunkReceived(null!, new AnsiStreamChunkEventArgs(GitModule.SystemEncoding.GetBytes(chunk2)));
         filter.Flush();
 
-        ClassicAssert.AreEqual(outputData, received);
+        received.Should().Be(outputData);
     }
 
     [Test]
@@ -95,7 +93,7 @@ public class ConsoleEmulatorOutputControllerFixture
             "Received data\n"
         ];
 
-        CollectionAssert.AreEqual(expectedData, received);
+        received.Should().Equal(expectedData);
     }
 
     [Test]
@@ -142,6 +140,6 @@ public class ConsoleEmulatorOutputControllerFixture
             "data\n"
         ];
 
-        CollectionAssert.AreEqual(expectedData, received);
+        received.Should().Equal(expectedData);
     }
 }

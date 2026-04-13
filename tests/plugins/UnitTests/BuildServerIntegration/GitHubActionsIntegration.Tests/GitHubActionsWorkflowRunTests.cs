@@ -3,8 +3,6 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Plugins.GitHubActionsIntegration.ApiClient.Models;
 
 namespace GitHubActionsIntegrationTests;
-
-[TestFixture]
 internal class GitHubActionsWorkflowRunTests
 {
     private const string TestSha = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
@@ -16,12 +14,12 @@ internal class GitHubActionsWorkflowRunTests
 
         BuildInfo result = run.ToBuildInfo();
 
-        Assert.That(result.Status, Is.EqualTo(BuildStatus.Success));
-        Assert.That(result.Id, Is.EqualTo("42"));
-        Assert.That(result.CommitHashList, Has.Count.EqualTo(1));
-        Assert.That(result.CommitHashList[0], Is.EqualTo(ObjectId.Parse(TestSha)));
-        Assert.That(result.Url, Is.EqualTo("https://github.com/owner/repo/actions/runs/42"));
-        Assert.That(result.ShowInBuildReportTab, Is.False);
+        result.Status.Should().Be(BuildStatus.Success);
+        result.Id.Should().Be("42");
+        result.CommitHashList.Should().HaveCount(1);
+        result.CommitHashList[0].Should().Be(ObjectId.Parse(TestSha));
+        result.Url.Should().Be("https://github.com/owner/repo/actions/runs/42");
+        result.ShowInBuildReportTab.Should().BeFalse();
     }
 
     [Test]
@@ -31,7 +29,7 @@ internal class GitHubActionsWorkflowRunTests
 
         BuildInfo result = run.ToBuildInfo();
 
-        Assert.That(result.Status, Is.EqualTo(BuildStatus.Failure));
+        result.Status.Should().Be(BuildStatus.Failure);
     }
 
     [Test]
@@ -41,7 +39,7 @@ internal class GitHubActionsWorkflowRunTests
 
         BuildInfo result = run.ToBuildInfo();
 
-        Assert.That(result.Status, Is.EqualTo(BuildStatus.Stopped));
+        result.Status.Should().Be(BuildStatus.Stopped);
     }
 
     [Test]
@@ -51,7 +49,7 @@ internal class GitHubActionsWorkflowRunTests
 
         BuildInfo result = run.ToBuildInfo();
 
-        Assert.That(result.Status, Is.EqualTo(BuildStatus.InProgress));
+        result.Status.Should().Be(BuildStatus.InProgress);
     }
 
     [Test]
@@ -61,7 +59,7 @@ internal class GitHubActionsWorkflowRunTests
 
         BuildInfo result = run.ToBuildInfo();
 
-        Assert.That(result.Status, Is.EqualTo(BuildStatus.InProgress));
+        result.Status.Should().Be(BuildStatus.InProgress);
     }
 
     [Test]
@@ -71,7 +69,7 @@ internal class GitHubActionsWorkflowRunTests
 
         BuildInfo result = run.ToBuildInfo();
 
-        Assert.That(result.Status, Is.EqualTo(BuildStatus.Failure));
+        result.Status.Should().Be(BuildStatus.Failure);
     }
 
     [Test]
@@ -81,7 +79,7 @@ internal class GitHubActionsWorkflowRunTests
 
         BuildInfo result = run.ToBuildInfo();
 
-        Assert.That(result.Status, Is.EqualTo(BuildStatus.Unstable));
+        result.Status.Should().Be(BuildStatus.Unstable);
     }
 
     [Test]
@@ -91,7 +89,7 @@ internal class GitHubActionsWorkflowRunTests
 
         BuildInfo result = run.ToBuildInfo();
 
-        Assert.That(result.Status, Is.EqualTo(BuildStatus.Success));
+        result.Status.Should().Be(BuildStatus.Success);
     }
 
     [Test]
@@ -101,7 +99,7 @@ internal class GitHubActionsWorkflowRunTests
 
         BuildInfo result = run.ToBuildInfo();
 
-        Assert.That(result.Status, Is.EqualTo(BuildStatus.Success));
+        result.Status.Should().Be(BuildStatus.Success);
     }
 
     [Test]
@@ -111,7 +109,7 @@ internal class GitHubActionsWorkflowRunTests
 
         BuildInfo result = run.ToBuildInfo();
 
-        Assert.That(result.Status, Is.EqualTo(BuildStatus.Unstable));
+        result.Status.Should().Be(BuildStatus.Unstable);
     }
 
     [TestCase("waiting")]
@@ -123,7 +121,7 @@ internal class GitHubActionsWorkflowRunTests
 
         BuildInfo result = run.ToBuildInfo();
 
-        Assert.That(result.Status, Is.EqualTo(BuildStatus.InProgress));
+        result.Status.Should().Be(BuildStatus.InProgress);
     }
 
     [Test]
@@ -135,7 +133,7 @@ internal class GitHubActionsWorkflowRunTests
 
         BuildInfo result = run.ToBuildInfo();
 
-        Assert.That(result.Description, Is.EqualTo("CI Build #123 (success)"));
+        result.Description.Should().Be("CI Build #123 (success)");
     }
 
     private static GitHubActionsWorkflowRun CreateRun(string status, string? conclusion)

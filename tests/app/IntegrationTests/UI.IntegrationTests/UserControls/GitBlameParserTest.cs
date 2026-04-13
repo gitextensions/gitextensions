@@ -51,16 +51,16 @@ public sealed class GitBlameParserTest
         GitRevision selectedBlamedRevision = gitModule.GetRevision(ObjectId.Parse("52476f30670ba5338756b606841fb0a346fd6460"));
 
         // line content is still: internal bool ExecuteCommand(Command cmd)
-        ClassicAssert.AreEqual(2192, GetOriginalLineInPreviousCommit(2281));
+        GetOriginalLineInPreviousCommit(2281).Should().Be(2192);
 
         // line content is still around: internal enum Command -> internal enum Commands
-        ClassicAssert.AreEqual(2085, GetOriginalLineInPreviousCommit(2090));
+        GetOriginalLineInPreviousCommit(2090).Should().Be(2085);
 
         // line content from offset in diff
         //   kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Command.GitGitK).ToShortcutKeyDisplayString();
         //  ->
         //   kGitToolStripMenuItem.ShortcutKeyDisplayString = GetShortcutKeys(Commands.GitGitK).ToShortcutKeyDisplayString();
-        ClassicAssert.AreEqual(824, GetOriginalLineInPreviousCommit(824));
+        GetOriginalLineInPreviousCommit(824).Should().Be(824);
 
         int GetOriginalLineInPreviousCommit(int blamedLineNumber)
             => new GitBlameParser(() => gitModule)

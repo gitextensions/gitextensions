@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitCommands.UserRepositoryHistory;
+﻿using GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory;
-
-[TestFixture]
 public class RecentRepoSplitterTests
 {
     private const string _relativeLongRepoPath = @"this\is\a\very_very_very_very_very_very_very\long\repo_path";

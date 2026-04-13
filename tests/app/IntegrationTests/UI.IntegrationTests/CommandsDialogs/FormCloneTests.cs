@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 
@@ -35,14 +34,14 @@ public class FormCloneTests
     [TestCase("git clone ssh://username@gerrit-server:/PROJECT", true, "ssh://username@gerrit-server:/PROJECT")]
     [TestCase("git clone https://github.com/gitextensions/gitextensions && git clone https://github.com/gitextensions/git.hub", true, "https://github.com/gitextensions/gitextensions")]
     public void Test_Url_extract_from_string(
-        string text, bool expected, string expectedUrl)
+        string? text, bool expected, string expectedUrl)
     {
         RunFormTest(
             form =>
             {
                 FormClone.TestAccessor accessor = form.GetTestAccessor();
 
-                accessor.TryExtractUrl(text, out string url).Should().Be(expected);
+                accessor.TryExtractUrl(text!, out string url).Should().Be(expected);
 
                 // No need to compare URL if the result was expected to be false
                 if (expected)

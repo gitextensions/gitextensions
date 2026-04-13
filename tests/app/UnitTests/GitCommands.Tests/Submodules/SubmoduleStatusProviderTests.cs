@@ -1,5 +1,4 @@
 ﻿using System.Diagnostics;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands;
 using GitCommands.Git;
@@ -11,7 +10,6 @@ namespace GitCommandsTests.Submodules;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 
 [Parallelizable]
 internal class SubmoduleStatusProviderTests

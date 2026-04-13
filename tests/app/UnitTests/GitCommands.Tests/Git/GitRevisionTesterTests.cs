@@ -1,6 +1,5 @@
 ﻿using System.IO.Abstractions;
 using System.Text.Json;
-using AwesomeAssertions;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -9,8 +8,6 @@ using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using NSubstitute;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class GitRevisionTesterTests
 {
     private FileBase _file = null!;
@@ -124,34 +121,34 @@ public class GitRevisionTesterTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("\t")]
-    public void Matches_should_not_throw_if_criteria_null_or_empty(string criteria)
+    public void Matches_should_not_throw_if_criteria_null_or_empty(string? criteria)
     {
-        _tester.Matches(new GitRevision(ObjectId.Random()), criteria).Should().BeFalse();
+        _tester.Matches(new GitRevision(ObjectId.Random()), criteria!).Should().BeFalse();
     }
 
     [TestCase("myname")]
     [TestCase("myName")]
-    public void Matches_should_match_name(string criteria)
+    public void Matches_should_match_name(string? criteria)
     {
         IGitRef gitRef = Substitute.For<IGitRef>();
         gitRef.Name.Returns(x => "Name is MyName");
         GitRevision revision = new(ObjectId.Random()) { Refs = new[] { gitRef } };
 
-        _tester.Matches(revision, criteria).Should().BeTrue();
+        _tester.Matches(revision, criteria!).Should().BeTrue();
     }
 
     [TestCase("001122", true)]
     [TestCase("", false)]
     [TestCase("0", false)]
     [TestCase("012", false)]
-    public void Matches_should_match_guid(string criteria, bool expected)
+    public void Matches_should_match_guid(string? criteria, bool expected)
     {
         IGitRef gitRef = Substitute.For<IGitRef>();
         gitRef.Name.Returns(x => "Name is MyName");
 
         GitRevision revision = new(ObjectId.Parse("0011223344556677889900112233445566778899")) { Refs = new[] { gitRef } };
 
-        _tester.Matches(revision, criteria).Should().Be(expected);
+        _tester.Matches(revision, criteria!).Should().Be(expected);
     }
 
     [Test]

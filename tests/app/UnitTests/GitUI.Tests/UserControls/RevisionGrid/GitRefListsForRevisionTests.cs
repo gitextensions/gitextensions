@@ -1,13 +1,10 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
 using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid;
-
-[TestFixture]
 public class GitRefListsForRevisionTests
 {
     private GitRevision _revision = null!;

@@ -1,11 +1,8 @@
-﻿using AwesomeAssertions;
-using GitCommands.Git;
+﻿using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using NSubstitute;
 
 namespace GitCommandsTests.UserRepositoryHistory;
-
-[TestFixture]
 public class RepositoryDescriptionProviderTests
 {
     private string _tempDir = null!;

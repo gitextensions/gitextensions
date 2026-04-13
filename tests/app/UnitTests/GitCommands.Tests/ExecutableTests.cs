@@ -1,5 +1,4 @@
 ﻿using System.Text;
-using AwesomeAssertions;
 using GitCommands;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
@@ -45,7 +44,7 @@ public sealed class ExecutableTests
             {
                 ctsWaitExit.CancelAfter(cancelDelay);
                 int exitCode = await process.WaitForExitAsync(ctsWaitExit.Token);
-                ClassicAssert.Fail($"should not have exited, received: {exitCode}");
+                Assert.Fail($"should not have exited, received: {exitCode}");
             }
             catch (OperationCanceledException)
             {

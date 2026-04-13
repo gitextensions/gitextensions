@@ -8,7 +8,6 @@ using ICSharpCode.TextEditor.Document;
 namespace GitUITests.Editor;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public class FindAndReplaceFormTests
 {
     public struct TextRegion
@@ -213,11 +212,11 @@ public class FindAndReplaceFormTests
     {
         Arrange("line 1\r\nline 2\r\nline 3", "line", scanRegion: new TextRegion(new TextLocation(0, 1), new TextLocation(0, 2)));
 
-        ClassicAssert.IsTrue(_testAccessor.Search.HasScanRegion);
+        _testAccessor.Search.HasScanRegion.Should().BeTrue();
 
         _textEditorControl.Text = "new text";
 
-        ClassicAssert.IsFalse(_testAccessor.Search.HasScanRegion);
+        _testAccessor.Search.HasScanRegion.Should().BeFalse();
     }
 
     private void Arrange(string text,
@@ -246,7 +245,7 @@ public class FindAndReplaceFormTests
     private void AssertTextRange(TextRange expectedRange, TextRange actualRange)
     {
         // Assert returned value
-        ClassicAssert.That(actualRange, Is.EqualTo(expectedRange).Using(new SegmentComparer()));
+        actualRange.Should().BeEquivalentTo(expectedRange);
 
         if (expectedRange is null)
         {
@@ -255,10 +254,10 @@ public class FindAndReplaceFormTests
 
         // Assert text selected
         ISelection actualSelection = _textEditorControl.ActiveTextAreaControl.SelectionManager.SelectionCollection.Single();
-        ClassicAssert.AreEqual(expectedRange.Offset, actualSelection.Offset);
-        ClassicAssert.AreEqual(expectedRange.Length, actualSelection.Length);
+        actualSelection.Offset.Should().Be(expectedRange.Offset);
+        actualSelection.Length.Should().Be(expectedRange.Length);
 
         // Assert caret is at the end of the found range.
-        ClassicAssert.AreEqual(expectedRange.Offset + expectedRange.Length, _textEditorControl.ActiveTextAreaControl.Caret.Offset);
+        _textEditorControl.ActiveTextAreaControl.Caret.Offset.Should().Be(expectedRange.Offset + expectedRange.Length);
     }
 }

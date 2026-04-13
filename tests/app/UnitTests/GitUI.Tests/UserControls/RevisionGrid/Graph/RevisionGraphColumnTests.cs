@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
@@ -8,8 +7,6 @@ using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid.Graph;
-
-[TestFixture]
 public class RevisionGraphColumnTests
 {
     private const int _rowHeight = 42;

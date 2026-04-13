@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 
 namespace GitUITests.Shells;
-
-[TestFixture]
 public sealed class ShellTests
 {
     // Tests verify that shell command patterns properly quote paths containing spaces,

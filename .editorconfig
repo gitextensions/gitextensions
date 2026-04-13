@@ -304,5 +304,8 @@ csharp_prefer_system_threading_lock = true:suggestion
 # Silent for now, see https://github.com/dotnet/winforms/issues/12476
 dotnet_diagnostic.WFO1000.severity = silent
 
+# VSTHRD103: Call async methods when in an async method
+dotnet_diagnostic.VSTHRD103.severity = warning
+
 # IDE0290: Use primary constructor
 dotnet_diagnostic.IDE0290.severity = none

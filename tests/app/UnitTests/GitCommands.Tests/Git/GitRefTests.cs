@@ -15,7 +15,7 @@ public sealed class GitRefTests
 
         GitRef remoteBranchRef = SetupRemoteRef(remoteBranchShortName, remoteName);
 
-        ClassicAssert.IsTrue(localBranchRef.IsTrackingRemote(remoteBranchRef));
+        localBranchRef.IsTrackingRemote(remoteBranchRef).Should().BeTrue();
     }
 
     [Test]
@@ -23,7 +23,7 @@ public sealed class GitRefTests
     {
         GitRef localBranchRef = SetupLocalBranchWithATrackingReference("remote_branch", "origin");
 
-        ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(null));
+        localBranchRef.IsTrackingRemote(null).Should().BeFalse();
     }
 
     [Test]
@@ -34,7 +34,7 @@ public sealed class GitRefTests
 
         GitRef remoteBranchRef = SetupRemoteRef(remoteBranchShortName, "upstream");
 
-        ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+        localBranchRef.IsTrackingRemote(remoteBranchRef).Should().BeFalse();
     }
 
     [Test]
@@ -44,7 +44,7 @@ public sealed class GitRefTests
 
         GitRef remoteBranchRef = SetupRemoteRef("another_remote_branch", "origin");
 
-        ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+        localBranchRef.IsTrackingRemote(remoteBranchRef).Should().BeFalse();
     }
 
     [Test]
@@ -54,7 +54,7 @@ public sealed class GitRefTests
 
         GitRef remoteBranchRef = SetupRemoteRef("a_remote_branch", "origin");
 
-        ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+        localBranchRef.IsTrackingRemote(remoteBranchRef).Should().BeFalse();
     }
 
     [Test]
@@ -64,7 +64,7 @@ public sealed class GitRefTests
 
         GitRef remoteBranchRef = SetupLocalBranchWithATrackingReference("a_remote_branch", "origin");
 
-        ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+        localBranchRef.IsTrackingRemote(remoteBranchRef).Should().BeFalse();
     }
 
     [Test]
@@ -77,7 +77,7 @@ public sealed class GitRefTests
 
         GitRef remoteBranchRef = SetupLocalBranchWithATrackingReference("a_remote_branch", "origin");
 
-        ClassicAssert.IsFalse(localBranchRef.IsTrackingRemote(remoteBranchRef));
+        localBranchRef.IsTrackingRemote(remoteBranchRef).Should().BeFalse();
     }
 
     [Test]
@@ -88,7 +88,7 @@ public sealed class GitRefTests
         string completeName = $"refs/remotes/{remoteName}/{name}";
 
         GitRef remoteBranchRef = SetupRawRemoteRef(remoteName, completeName);
-        ClassicAssert.AreEqual(remoteBranchRef.LocalName, name);
+        name.Should().Be(remoteBranchRef.LocalName);
     }
 
     [Test]
@@ -100,7 +100,7 @@ public sealed class GitRefTests
         string completeName = $"refs/remotes/{name}";
 
         GitRef remoteBranchRef = SetupRawRemoteRef(remoteName, completeName);
-        ClassicAssert.AreEqual(remoteBranchRef.LocalName, name);
+        name.Should().Be(remoteBranchRef.LocalName);
     }
 
     private static GitRef SetupRawRemoteRef(string remoteName, string completeName)

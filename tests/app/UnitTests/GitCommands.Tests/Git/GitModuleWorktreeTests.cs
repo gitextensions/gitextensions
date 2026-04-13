@@ -1,13 +1,10 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public sealed class GitModuleWorktreeTests
 {
     private GitModule _gitModule = null!;

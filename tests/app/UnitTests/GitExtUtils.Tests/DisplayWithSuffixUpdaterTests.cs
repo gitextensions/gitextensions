@@ -1,19 +1,17 @@
 ﻿using GitExtUtils;
 
 namespace GitExtUtilsTests;
-
-[TestFixture]
 public sealed class DisplayWithSuffixUpdaterTests
 {
     [Test]
     public void FromInitialValue()
     {
-        ClassicAssert.AreEqual(DisplayWithSuffixUpdater.UpdateSuffixWithinParenthesis("a", "b"), "a\u00A0(b)");
+        "a\u00A0(b)".Should().Be(DisplayWithSuffixUpdater.UpdateSuffixWithinParenthesis("a", "b"));
     }
 
     [Test]
     public void FromValueContainingAlreadyTheSuffix()
     {
-        ClassicAssert.AreEqual(DisplayWithSuffixUpdater.UpdateSuffixWithinParenthesis("a (b)", "c"), "a\u00A0(c)");
+        "a\u00A0(c)".Should().Be(DisplayWithSuffixUpdater.UpdateSuffixWithinParenthesis("a (b)", "c"));
     }
 }

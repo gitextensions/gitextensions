@@ -2,8 +2,6 @@
 using GitExtensions.Plugins.FindLargeFiles;
 
 namespace DeleteUnusedBranchesTests;
-
-[TestFixture]
 public class FindLargeFilesFormTests
 {
     [Test]

@@ -1,1 +1,4 @@
 T:System.Windows.Forms.MessageBox; Use MessageBoxes instead
+T:NUnit.Framework.Legacy.ClassicAssert; Use AwesomeAssertions .Should() methods instead
+T:NUnit.Framework.Legacy.CollectionAssert; Use AwesomeAssertions .Should() methods instead
+T:NUnit.Framework.Legacy.StringAssert; Use AwesomeAssertions .Should() methods instead

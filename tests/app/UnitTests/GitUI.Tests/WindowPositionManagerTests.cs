@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitUI;
+﻿using GitUI;
 
 namespace GitUITests;
-
-[TestFixture]
 public class WindowPositionManagerTests
 {
     [Test]

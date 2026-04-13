@@ -27,6 +27,11 @@ public static class SettingKeyString
     public static string RemoteColor = "remote.{0}.color";
 
     /// <summary>
+    /// "remote.{0}.prefix"
+    /// </summary>
+    public static readonly string RemotePrefix = "remote.{0}.prefix";
+
+    /// <summary>
     /// "remote.{0}.push"
     /// </summary>
     public static readonly string RemotePush = "remote.{0}.push";

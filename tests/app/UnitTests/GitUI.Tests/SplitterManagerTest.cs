@@ -1,10 +1,7 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitUI;
 
 namespace GitUITests;
-
-[TestFixture]
 public partial class SplitterManagerTest
 {
     private MemorySettings _settings = null!;

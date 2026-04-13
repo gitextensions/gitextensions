@@ -46,9 +46,9 @@ public class BuildServerIntegrationSettingsPageTests_WithPlugins
           {
               await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-              ClassicAssert.AreEqual(/* default None + GenericBuildServerMock */2, _settingsPage.GetTestAccessor().BuildServerType.Items.Count);
-              ClassicAssert.AreEqual(0, _settingsPage.GetTestAccessor().BuildServerType.SelectedIndex);
-              ClassicAssert.AreEqual("GenericBuildServerMock", _settingsPage.GetTestAccessor().BuildServerType.Items[1]);
+              _settingsPage.GetTestAccessor().BuildServerType.Items.Count.Should().Be(/* default None + GenericBuildServerMock */2);
+              _settingsPage.GetTestAccessor().BuildServerType.SelectedIndex.Should().Be(0);
+              _settingsPage.GetTestAccessor().BuildServerType.Items[1].Should().Be("GenericBuildServerMock");
           });
     }
 
@@ -61,12 +61,12 @@ public class BuildServerIntegrationSettingsPageTests_WithPlugins
               await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
               // Default option, no custom control
-              ClassicAssert.AreEqual(0, _settingsPage.GetTestAccessor().buildServerSettingsPanel.Controls.Count);
+              _settingsPage.GetTestAccessor().buildServerSettingsPanel.Controls.Count.Should().Be(0);
 
               // Select the custom build server
               _settingsPage.GetTestAccessor().BuildServerType.SelectedIndex = 1;
-              ClassicAssert.AreEqual(1, _settingsPage.GetTestAccessor().buildServerSettingsPanel.Controls.Count);
-              ClassicAssert.IsInstanceOf<IBuildServerSettingsUserControl>(_settingsPage.GetTestAccessor().buildServerSettingsPanel.Controls[0]);
+              _settingsPage.GetTestAccessor().buildServerSettingsPanel.Controls.Count.Should().Be(1);
+              _settingsPage.GetTestAccessor().buildServerSettingsPanel.Controls[0].Should().BeAssignableTo<IBuildServerSettingsUserControl>();
           });
     }
 

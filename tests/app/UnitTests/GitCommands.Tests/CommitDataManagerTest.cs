@@ -3,8 +3,6 @@ using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class CommitDataManagerTest
 {
     private CommitDataManager _commitDataManager = null!;

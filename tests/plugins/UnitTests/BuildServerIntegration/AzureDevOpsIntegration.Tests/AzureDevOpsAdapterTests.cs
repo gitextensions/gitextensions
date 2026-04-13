@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using AzureDevOpsIntegration;
+﻿using AzureDevOpsIntegration;
 
 namespace AzureDevOpsIntegrationTests;
-
-[TestFixture]
 public class AzureDevOpsAdapterTests
 {
     private AzureDevOpsAdapter.TestAccessor _sut;

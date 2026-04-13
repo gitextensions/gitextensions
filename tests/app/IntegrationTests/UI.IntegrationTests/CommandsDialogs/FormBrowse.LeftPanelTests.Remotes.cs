@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitCommands;
 using GitCommands.Remotes;
 using GitUI;
@@ -171,7 +170,7 @@ public class FormBrowse_LeftPanel_RemotesTests
 
     private static TreeNode GetRemoteNode(FormBrowse form)
     {
-        ClassicAssert.IsFalse(form.MainSplitContainer.Panel1Collapsed);
+        form.MainSplitContainer.Panel1Collapsed.Should().BeFalse();
 
         // Await all async operation such as load of branches and remotes in the left panel
         AsyncTestHelper.JoinPendingOperations();

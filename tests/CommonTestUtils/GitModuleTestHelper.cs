@@ -102,7 +102,7 @@ public sealed partial class GitModuleTestHelper : IDisposable
 
         // Ensure config is set to allow file submodules
         string fileEnabled = Module.GetEffectiveSetting(SettingKeyString.AllowFileProtocol);
-        ClassicAssert.That(fileEnabled == "always");
+        fileEnabled.Should().Be("always");
 
         // Even though above is set, adding a file protocol submodule fails unless -c... is used for protocol.file.allow config.
         IEnumerable<GitConfigItem> cfgs = Commands.GetAllowFileConfig();

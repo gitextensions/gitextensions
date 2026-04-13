@@ -1,8 +1,6 @@
 ﻿using GitUIPluginInterfaces;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public sealed class GitStashTests
 {
     [TestCase("stash@{0}: Very descriptive message", 0, "stash@{0}", "Very descriptive message")]
@@ -11,12 +9,12 @@ public sealed class GitStashTests
     [TestCase("stash@{3}: WIP on master: Test", 3, "stash@{3}", "WIP on master: Test")]
     public void Can_parse_stash_names(string rawStash, int index, string name, string message)
     {
-        ClassicAssert.IsTrue(GitStash.TryParse(rawStash, out GitStash? stash));
+        GitStash.TryParse(rawStash, out GitStash? stash).Should().BeTrue();
 
-        ClassicAssert.NotNull(stash);
-        ClassicAssert.AreEqual(index, stash!.Index);
-        ClassicAssert.AreEqual(message, stash.Message);
-        ClassicAssert.AreEqual(name, stash.Name);
+        stash.Should().NotBeNull();
+        stash!.Index.Should().Be(index);
+        stash.Message.Should().Be(message);
+        stash.Name.Should().Be(name);
     }
 
     [TestCase("stash@{0}:Very descriptive message")]
@@ -28,7 +26,7 @@ public sealed class GitStashTests
     [TestCase("  ")]
     public void Identifies_invalid_stash_strings(string rawStash)
     {
-        ClassicAssert.IsFalse(GitStash.TryParse(rawStash, out GitStash? stash));
-        ClassicAssert.Null(stash);
+        GitStash.TryParse(rawStash, out GitStash? stash).Should().BeFalse();
+        stash.Should().BeNull();
     }
 }

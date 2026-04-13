@@ -4,8 +4,6 @@ using GitCommands;
 using GitCommands.Settings;
 
 namespace GitCommandsTests.Helpers;
-
-[TestFixture]
 public class AutoCrlfExtensionsTests
 {
     [Test]

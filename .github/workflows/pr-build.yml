@@ -93,21 +93,18 @@ jobs:
         $buildArgs = "/p:ContinuousIntegrationBuild=true $env:BUILD_ARGS".Trim()
         dotnet publish -c Release --no-build /bl:artifacts\log\publish.binlog $buildArgs.Split(' ', [StringSplitOptions]::RemoveEmptyEntries)
 
+    - name: Resolve portable archive name
+      id: portable-name
+      shell: pwsh
+      run: |
+        $zip = Get-ChildItem artifacts\Release\publish\*.zip | Select-Object -First 1
+        "name=$($zip.BaseName)" >> $env:GITHUB_OUTPUT
+
     - name: Upload portable archive
       uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       with:
-        name: portable
+        name: ${{ steps.portable-name.outputs.name }}
         path: 'artifacts\Release\publish\*.zip'
-
-    - name: Test report
-      # v1 @ 2024-08-30
-      uses: dorny/test-reporter@d61b558e8df85cb60d09ca3e5b09653b4477cea7
-      if: always() && github.event.pull_request.head.repo.full_name == github.repository
-      continue-on-error: true
-      with:
-        name: Test Results
-        path: 'artifacts/**/TestsResults/**/*.trx'
-        reporter: dotnet-trx
 
     - name: Upload test results
       if: always()

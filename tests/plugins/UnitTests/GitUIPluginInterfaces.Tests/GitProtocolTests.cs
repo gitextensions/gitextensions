@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitUIPluginInterfaces.RepositoryHosts;
+﻿using GitUIPluginInterfaces.RepositoryHosts;
 
 namespace GitUIPluginInterfacesTests;
-
-[TestFixture]
 public class GitProtocolTests
 {
     [TestCase("https://github.com/gitextensions/gitextensions.git", true)]

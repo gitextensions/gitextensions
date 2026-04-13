@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitCommands.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -69,7 +68,7 @@ public class FormPushTests
             () =>
             {
                 // False because we haven't performed any actions
-                ClassicAssert.False(_commands.StartPushDialog(owner: null, pushOnShow: false, forceWithLease: false, out _));
+                _commands.StartPushDialog(owner: null, pushOnShow: false, forceWithLease: false, out _).Should().BeFalse();
             },
             testDriverAsync);
     }

@@ -1,8 +1,6 @@
 ﻿using GitExtUtils;
 
 namespace GitExtUtilsTests;
-
-[TestFixture]
 public sealed class MruCacheTests
 {
     [Test]
@@ -14,16 +12,16 @@ public sealed class MruCacheTests
         cache.Add(2, "two");
         cache.Add(3, "three");
 
-        ClassicAssert.True(cache.TryGetValue(1, out _));
-        ClassicAssert.True(cache.TryGetValue(2, out _));
-        ClassicAssert.True(cache.TryGetValue(3, out _));
+        cache.TryGetValue(1, out _).Should().BeTrue();
+        cache.TryGetValue(2, out _).Should().BeTrue();
+        cache.TryGetValue(3, out _).Should().BeTrue();
 
         cache.Add(4, "four");
 
-        ClassicAssert.False(cache.TryGetValue(1, out _));
-        ClassicAssert.True(cache.TryGetValue(2, out _));
-        ClassicAssert.True(cache.TryGetValue(3, out _));
-        ClassicAssert.True(cache.TryGetValue(4, out _));
+        cache.TryGetValue(1, out _).Should().BeFalse();
+        cache.TryGetValue(2, out _).Should().BeTrue();
+        cache.TryGetValue(3, out _).Should().BeTrue();
+        cache.TryGetValue(4, out _).Should().BeTrue();
     }
 
     [Test]
@@ -35,16 +33,16 @@ public sealed class MruCacheTests
         cache.Add(2, "two");
         cache.Add(3, "three");
 
-        ClassicAssert.True(cache.TryGetValue(3, out _));
-        ClassicAssert.True(cache.TryGetValue(2, out _));
-        ClassicAssert.True(cache.TryGetValue(1, out _));
+        cache.TryGetValue(3, out _).Should().BeTrue();
+        cache.TryGetValue(2, out _).Should().BeTrue();
+        cache.TryGetValue(1, out _).Should().BeTrue();
 
         cache.Add(4, "four");
 
-        ClassicAssert.True(cache.TryGetValue(1, out _));
-        ClassicAssert.True(cache.TryGetValue(2, out _));
-        ClassicAssert.False(cache.TryGetValue(3, out _));
-        ClassicAssert.True(cache.TryGetValue(4, out _));
+        cache.TryGetValue(1, out _).Should().BeTrue();
+        cache.TryGetValue(2, out _).Should().BeTrue();
+        cache.TryGetValue(3, out _).Should().BeFalse();
+        cache.TryGetValue(4, out _).Should().BeTrue();
     }
 
     [Test]
@@ -58,9 +56,9 @@ public sealed class MruCacheTests
 
         cache.Clear();
 
-        ClassicAssert.False(cache.TryGetValue(1, out _));
-        ClassicAssert.False(cache.TryGetValue(2, out _));
-        ClassicAssert.False(cache.TryGetValue(3, out _));
+        cache.TryGetValue(1, out _).Should().BeFalse();
+        cache.TryGetValue(2, out _).Should().BeFalse();
+        cache.TryGetValue(3, out _).Should().BeFalse();
     }
 
     [Test]
@@ -72,12 +70,12 @@ public sealed class MruCacheTests
         cache.Add(2, "two");
         cache.Add(3, "three");
 
-        ClassicAssert.True(cache.TryRemove(1, out string? removed));
-        ClassicAssert.AreEqual("one", removed);
-        ClassicAssert.False(cache.TryGetValue(1, out _));
+        cache.TryRemove(1, out string? removed).Should().BeTrue();
+        removed.Should().Be("one");
+        cache.TryGetValue(1, out _).Should().BeFalse();
 
-        ClassicAssert.True(cache.TryGetValue(2, out _));
-        ClassicAssert.True(cache.TryGetValue(3, out _));
+        cache.TryGetValue(2, out _).Should().BeTrue();
+        cache.TryGetValue(3, out _).Should().BeTrue();
     }
 
     [Test]
@@ -87,7 +85,7 @@ public sealed class MruCacheTests
 
         cache.Add(1, "one");
 
-        ClassicAssert.False(cache.TryRemove(2, out string? removed));
-        ClassicAssert.Null(removed);
+        cache.TryRemove(2, out string? removed).Should().BeFalse();
+        removed.Should().BeNull();
     }
 }

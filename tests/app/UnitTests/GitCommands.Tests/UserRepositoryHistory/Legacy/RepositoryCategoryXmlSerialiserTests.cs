@@ -1,14 +1,11 @@
 ﻿using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands.UserRepositoryHistory.Legacy;
 using Current = GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory.Legacy;
-
-[TestFixture]
 public class RepositoryCategorySerialiserTests
 {
     private RepositoryCategoryXmlSerialiser _repositoryXmlSerialiser = null!;

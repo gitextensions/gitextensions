@@ -1,15 +1,12 @@
 ﻿using System.Collections;
 using System.Text;
-using AwesomeAssertions;
 using GitExtensions.Extensibility;
 using GitUI.NBugReports;
 
 namespace GitUITests.NBugReports;
-
-[TestFixture]
 public sealed class BugReportInvokerTests
 {
-    [Test, TestCaseSource(typeof(TestExceptions), "TestCases")]
+    [Test, TestCaseSource(typeof(TestExceptions), nameof(TestExceptions.TestCases))]
     public void Append(Exception exception, string expectedRootError, string expectedText)
     {
         StringBuilder text = exception.GetExceptionInfo();

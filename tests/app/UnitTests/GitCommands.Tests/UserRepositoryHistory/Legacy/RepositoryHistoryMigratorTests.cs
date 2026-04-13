@@ -1,13 +1,10 @@
 ﻿using System.Reflection;
-using AwesomeAssertions;
 using CommonTestUtils;
 using GitCommands.UserRepositoryHistory.Legacy;
 using NSubstitute;
 using Current = GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory.Legacy;
-
-[TestFixture]
 public class RepositoryHistoryMigratorTests
 {
     private IRepositoryStorage _repositoryStorage = null!;

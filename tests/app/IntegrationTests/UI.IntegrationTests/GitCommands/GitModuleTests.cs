@@ -1,11 +1,8 @@
-﻿using AwesomeAssertions;
-using CommonTestUtils;
+﻿using CommonTestUtils;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 
 namespace UITests.GitCommands;
-
-[TestFixture]
 public sealed class GitModuleTests
 {
     private ReferenceRepository _refRepo = null!;

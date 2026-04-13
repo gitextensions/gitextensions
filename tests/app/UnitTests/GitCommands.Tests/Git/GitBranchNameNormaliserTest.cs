@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitCommands.Git;
+﻿using GitCommands.Git;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public sealed class GitBranchNameNormaliserTest
 {
     private GitBranchNameNormaliser _gitBranchNameNormaliser = null!;
@@ -39,7 +36,7 @@ public sealed class GitBranchNameNormaliserTest
     [TestCase("hierarchy/sher.lok/foo", "hierarchy/sher.lok/foo")]
     public void Normalise_rule01(string input, string expected)
     {
-        _gitBranchNameNormaliser.Rule01(input, _gitBranchNameOptions).Should().Be(expected);
+        GitBranchNameNormaliser.Rule01(input, _gitBranchNameOptions).Should().Be(expected);
     }
 
     // They cannot have two consecutive dots .. anywhere.
@@ -61,7 +58,7 @@ public sealed class GitBranchNameNormaliserTest
     [TestCase("hier.....archy/sher...lok/fo..o", "hier_archy/sher_lok/fo_o")]
     public void Normalise_rule03(string input, string expected)
     {
-        _gitBranchNameNormaliser.Rule03(input, _gitBranchNameOptions).Should().Be(expected);
+        GitBranchNameNormaliser.Rule03(input, _gitBranchNameOptions).Should().Be(expected);
     }
 
     // Branch name cannot have ASCII control characters (i.e. bytes whose values are lower than \040, or \127 'DEL'),
@@ -77,7 +74,7 @@ public sealed class GitBranchNameNormaliserTest
     [TestCase("Anhörung`!@#$%", "Anhörung`!@#$%")]
     public void Normalise_rule04(string input, string expected)
     {
-        _gitBranchNameNormaliser.Rule04(input, _gitBranchNameOptions).Should().Be(expected);
+        GitBranchNameNormaliser.Rule04(input, _gitBranchNameOptions).Should().Be(expected);
     }
 
     // Branch name cannot have question-mark '?', asterisk '*', or open bracket '[' anywhere.
@@ -92,7 +89,7 @@ public sealed class GitBranchNameNormaliserTest
     [TestCase("testing?[*]*test", "testing___]_test")]
     public void Normalise_rule05(string input, string expected)
     {
-        _gitBranchNameNormaliser.Rule05(input, _gitBranchNameOptions).Should().Be(expected);
+        GitBranchNameNormaliser.Rule05(input, _gitBranchNameOptions).Should().Be(expected);
     }
 
     // Branch name begin or end with a slash '/' or contain multiple consecutive slashes.
@@ -103,7 +100,7 @@ public sealed class GitBranchNameNormaliserTest
     [TestCase("///test///test///", "test/test")]
     public void Normalise_rule06(string input, string expected)
     {
-        _gitBranchNameNormaliser.Rule06(input).Should().Be(expected);
+        GitBranchNameNormaliser.Rule06(input).Should().Be(expected);
     }
 
     // Branch name end with a dot '.'.
@@ -112,7 +109,7 @@ public sealed class GitBranchNameNormaliserTest
     [TestCase("test...", "test_")]
     public void Normalise_rule07(string input, string expected)
     {
-        _gitBranchNameNormaliser.Rule07(input, _gitBranchNameOptions).Should().Be(expected);
+        GitBranchNameNormaliser.Rule07(input, _gitBranchNameOptions).Should().Be(expected);
     }
 
     // Branch name cannot contain a sequence '@{'.
@@ -122,20 +119,20 @@ public sealed class GitBranchNameNormaliserTest
     [TestCase("test@{bla}", "test_bla}")]
     public void Normalise_rule08(string input, string expected)
     {
-        _gitBranchNameNormaliser.Rule08(input, _gitBranchNameOptions).Should().Be(expected);
+        GitBranchNameNormaliser.Rule08(input, _gitBranchNameOptions).Should().Be(expected);
     }
 
     // Branch name cannot be the single character '@'.
     [TestCase(@"@", "_")]
     public void Normalise_rule09(string input, string expected)
     {
-        _gitBranchNameNormaliser.Rule09(input, _gitBranchNameOptions).Should().Be(expected);
+        GitBranchNameNormaliser.Rule09(input, _gitBranchNameOptions).Should().Be(expected);
     }
 
     // Branch name cannot contain a '\'.
     [TestCase(@"test\foo\\bar\", "test_foo_bar_")]
     public void Normalise_rule10(string input, string expected)
     {
-        _gitBranchNameNormaliser.Rule10(input, _gitBranchNameOptions).Should().Be(expected);
+        GitBranchNameNormaliser.Rule10(input, _gitBranchNameOptions).Should().Be(expected);
     }
 }

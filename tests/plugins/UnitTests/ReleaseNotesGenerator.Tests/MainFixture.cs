@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Plugins.ReleaseNotesGenerator;
+﻿using GitExtensions.Plugins.ReleaseNotesGenerator;
 
 namespace ReleaseNotesGeneratorTests;
-
-[TestFixture]
 public class MainFixture
 {
     [Test]

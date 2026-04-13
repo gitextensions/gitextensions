@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitUI.CommandsDialogs.SettingsDialog.Pages;
+﻿using GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 namespace GitUITests.CommandsDialogs.SettingsDialog.Pages;
-
-[TestFixture]
 public class GitConfigSettingsPageControllerTests
 {
     private GitConfigSettingsPageController _controller = null!;
@@ -18,11 +15,11 @@ public class GitConfigSettingsPageControllerTests
     [TestCase(null, "")]
     [TestCase("", null)]
     [TestCase("", "")]
-    public void GetInitialDirectory_CalculateInitialDirectory_should_return_ProgramFiles_if_path_and_toolPreferredPath_unset(string path, string toolPreferredPath)
+    public void GetInitialDirectory_CalculateInitialDirectory_should_return_ProgramFiles_if_path_and_toolPreferredPath_unset(string? path, string? toolPreferredPath)
     {
         string expected = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles);
 
-        _controller.GetInitialDirectory(path, toolPreferredPath).Should().Be(expected);
+        _controller.GetInitialDirectory(path!, toolPreferredPath!).Should().Be(expected);
     }
 
     [Test]

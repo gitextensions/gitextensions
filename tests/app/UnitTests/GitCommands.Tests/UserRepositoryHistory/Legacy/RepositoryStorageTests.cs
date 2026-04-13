@@ -1,12 +1,9 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.UserRepositoryHistory.Legacy;
 using NSubstitute;
 using Current = GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory.Legacy;
-
-[TestFixture]
 public class RepositoryStorageTests
 {
     private Current.IRepositorySerialiser<RepositoryCategory> _repositoryCategorySerialiser = null!;
@@ -22,9 +19,9 @@ public class RepositoryStorageTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("   ")]
-    public void LoadLegacy_should_return_empty_collection_if_settings_empty(string setting)
+    public void LoadLegacy_should_return_empty_collection_if_settings_empty(string? setting)
     {
-        AppSettings.SetString("repositories", setting);
+        AppSettings.SetString("repositories", setting!);
         RepositoryStorage repositoryStorage = new();
         IReadOnlyList<RepositoryCategory> repositories = repositoryStorage.Load();
 

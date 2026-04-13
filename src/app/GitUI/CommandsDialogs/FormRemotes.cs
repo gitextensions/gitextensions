@@ -1,9 +1,11 @@
 ﻿using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitCommands.Remotes;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Infrastructure;
@@ -29,6 +31,7 @@ public partial class FormRemotes : GitModuleForm
 
     private readonly FormRemotesController _formRemotesController = new();
     private IConfigFileRemoteSettingsManager? _remotesManager;
+    private IGitBranchNameNormaliser _branchNameNormaliser;
     private ConfigFileRemote? _selectedRemote;
     private readonly ListViewGroup _lvgEnabled;
     private readonly ListViewGroup _lvgDisabled;
@@ -106,6 +109,9 @@ Inactive remote is completely invisible to git.");
     {
         InitializeComponent();
         InitializeComplete();
+
+        _branchNameNormaliser = commands.GetRequiredService<IGitBranchNameNormaliser>();
+        txtRemotePrefix.Leave += (sender, e) => txtRemotePrefix.Text = _branchNameNormaliser.Normalise(txtRemotePrefix.Text, new(AppSettings.AutoNormaliseSymbol));
 
         btnRemoteColor.BackColor = Color.Transparent;
 
@@ -395,6 +401,9 @@ Inactive remote is completely invisible to git.");
         {
             lblRemoteColor.Visible = false;
             flpnlRemoteColors.Visible = false;
+
+            lblRemotePrefix.Visible = false;
+            txtRemotePrefix.Visible = false;
         }
 
         // if Putty SSH isn't enabled, reduce the minimum height of the form
@@ -483,6 +492,7 @@ Inactive remote is completely invisible to git.");
         string remoteUrl = Url.Text.Trim();
         string remotePushUrl = comboBoxPushUrl.Text.Trim();
         bool creatingNew = _selectedRemote is null;
+        string remotePrefix = txtRemotePrefix.Text;
 
         string? color = null;
         if (btnRemoteColor.BackColor != Color.Transparent)
@@ -514,7 +524,8 @@ Inactive remote is completely invisible to git.");
                                                    remoteUrl,
                                                    checkBoxSepPushUrl.Checked ? remotePushUrl : null,
                                                    PuttySshKey.Text,
-                                                   color);
+                                                   color,
+                                                   remotePrefix);
 
             if (!string.IsNullOrEmpty(result.UserMessage))
             {
@@ -733,6 +744,8 @@ Inactive remote is completely invisible to git.");
         checkBoxSepPushUrl.Checked = false;
         PuttySshKey.Text = string.Empty;
         gbMgtPanel.Text = _gbMgtPanelHeaderNew.Text;
+        txtRemotePrefix.Text = string.Empty;
+        SetRemoteColor(Color.Transparent);
 
         if (Remotes.SelectedIndices.Count < 1)
         {
@@ -758,6 +771,7 @@ Inactive remote is completely invisible to git.");
         BindBtnToggleState(_selectedRemote.Disabled);
         btnToggleState.Visible = true;
         flpnlRemoteManagement.Enabled = !_selectedRemote.Disabled;
+        txtRemotePrefix.Text = _selectedRemote.Prefix;
 
         if (string.IsNullOrWhiteSpace(_selectedRemote.Color))
         {
@@ -876,5 +890,24 @@ Inactive remote is completely invisible to git.");
             RemoteName.Text = owner;
             RemoteName.SelectAll();
         }
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly FormRemotes _form;
+
+        public TestAccessor(FormRemotes form)
+        {
+            _form = form;
+        }
+
+        public Button Delete => _form.Delete;
+        public TextBox RemoteName => _form.RemoteName;
+        public TextBox RemotePrefix => _form.txtRemotePrefix;
+        public Button Save => _form.Save;
+        public TabControl TabControl => _form.tabControl1;
+        public Button ToggleState => _form.btnToggleState;
     }
 }

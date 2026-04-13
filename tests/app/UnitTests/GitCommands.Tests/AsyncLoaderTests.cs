@@ -24,203 +24,182 @@ public sealed class AsyncLoaderTests
     }
 
     [Test]
-    public void Load_should_execute_async_operation_and_callback()
+    public async Task Load_should_execute_async_operation_and_callback()
     {
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            SemaphoreSlim loadSignal = new(0);
-            SemaphoreSlim completeSignal = new(0);
+        SemaphoreSlim loadSignal = new(0);
+        SemaphoreSlim completeSignal = new(0);
 
-            int started = 0;
-            int completed = 0;
-            Task task = _loader.LoadAsync(
-                () =>
-                {
-                    started++;
-                    loadSignal.Release();
-                    completeSignal.Wait();
-                },
-                () => completed++);
-
-            ClassicAssert.True(await loadSignal.WaitAsync(1000));
-
-            ClassicAssert.AreEqual(1, started);
-            ClassicAssert.AreEqual(0, completed);
-
-            completeSignal.Release();
-
-            await task;
-
-            ClassicAssert.AreEqual(1, started);
-            ClassicAssert.AreEqual(1, completed);
-
-            ClassicAssert.AreEqual(TaskStatus.RanToCompletion, task.Status);
-        });
-    }
-
-    [Test]
-    public void Load_performed_on_thread_pool_and_result_handled_via_callers_context()
-    {
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            Thread callerThread = Thread.CurrentThread;
-            Thread? loadThread = null;
-            Thread? continuationThread = null;
-
-            ClassicAssert.False(callerThread.IsThreadPoolThread);
-
-            using AsyncLoader loader = new();
-            await loader.LoadAsync(
-                () => loadThread = Thread.CurrentThread,
-                () => continuationThread = Thread.CurrentThread);
-
-            ClassicAssert.True(loadThread!.IsThreadPoolThread);
-            ClassicAssert.AreNotSame(loadThread, callerThread);
-            ClassicAssert.AreNotSame(loadThread, continuationThread);
-        });
-    }
-
-    [Test]
-    public void Cancel_during_load_means_callback_not_fired()
-    {
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            SemaphoreSlim loadSignal = new(0);
-            SemaphoreSlim completeSignal = new(0);
-
-            int started = 0;
-            int completed = 0;
-            Task task = _loader.LoadAsync(
-                () =>
-                {
-                    started++;
-                    loadSignal.Release();
-                    completeSignal.Wait();
-                },
-                () => completed++);
-
-            ClassicAssert.True(await loadSignal.WaitAsync(1000));
-
-            ClassicAssert.AreEqual(1, started);
-            ClassicAssert.AreEqual(0, completed);
-
-            _loader.Cancel();
-            completeSignal.Release();
-
-            await task;
-
-            ClassicAssert.AreEqual(1, started);
-            ClassicAssert.AreEqual(0, completed, "Should not have called the follow-up action");
-
-            ClassicAssert.AreEqual(TaskStatus.RanToCompletion, task.Status);
-        });
-    }
-
-    [Test]
-    public void Cancel_during_delay_means_load_not_fired()
-    {
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            // Deliberately use a long delay as cancellation should cut it short
-            _loader.Delay = TimeSpan.FromMilliseconds(5000);
-
-            int started = 0;
-            int completed = 0;
-            Task task = _loader.LoadAsync(
-                () => started++,
-                () => completed++);
-
-            await Task.Delay(50);
-
-            ClassicAssert.AreEqual(0, started);
-            ClassicAssert.AreEqual(0, completed);
-
-            _loader.Cancel();
-
-            await task;
-
-            ClassicAssert.AreEqual(0, started);
-            ClassicAssert.AreEqual(0, completed);
-
-            ClassicAssert.AreEqual(TaskStatus.RanToCompletion, task.Status);
-        });
-    }
-
-    [Test]
-    public void Dispose_during_load_means_callback_not_fired()
-    {
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            SemaphoreSlim loadSignal = new(0);
-            SemaphoreSlim completeSignal = new(0);
-
-            int started = 0;
-            int completed = 0;
-            Task task = _loader.LoadAsync(
-                () =>
-                {
-                    started++;
-                    loadSignal.Release();
-                    completeSignal.Wait();
-                },
-                () => completed++);
-
-            ClassicAssert.True(await loadSignal.WaitAsync(1000));
-
-            ClassicAssert.AreEqual(1, started);
-            ClassicAssert.AreEqual(0, completed);
-
-            _loader.Dispose();
-            completeSignal.Release();
-
-            await task;
-
-            ClassicAssert.AreEqual(1, started);
-            ClassicAssert.AreEqual(0, completed, "Should not have called the follow-up action");
-
-            ClassicAssert.AreEqual(TaskStatus.RanToCompletion, task.Status);
-        });
-    }
-
-    [Test]
-    public void Delay_causes_load_callback_to_be_deferred()
-    {
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            _loader.Delay = TimeSpan.FromMilliseconds(200);
-
-            Stopwatch sw = Stopwatch.StartNew();
-
-            await _loader.LoadAsync(
-                () => sw.Stop(),
-                () => { });
-
-            ClassicAssert.GreaterOrEqual(sw.Elapsed, _loader.Delay - TimeSpan.FromMilliseconds(20));
-        });
-    }
-
-    [Test]
-    public void Error_raised_via_event_and_marked_as_handled_does_not_fault_task()
-    {
-        ThreadHelper.JoinableTaskFactory.Run(async () =>
-        {
-            List<Exception> observed = [];
-
-            _loader.LoadingError += (_, e) =>
+        int started = 0;
+        int completed = 0;
+        Task task = _loader.LoadAsync(
+            () =>
             {
-                observed.Add(e.Exception);
-                e.Handled = true;
-            };
+                started++;
+                loadSignal.Release();
+                completeSignal.Wait();
+            },
+            () => completed++);
 
-            Exception ex = new();
+        (await loadSignal.WaitAsync(1000)).Should().BeTrue();
 
-            await _loader.LoadAsync(
-                () => throw ex,
-                ClassicAssert.Fail);
+        started.Should().Be(1);
+        completed.Should().Be(0);
 
-            ClassicAssert.AreEqual(1, observed.Count);
-            ClassicAssert.AreSame(ex, observed[0]);
-        });
+        completeSignal.Release();
+
+        await task;
+
+        started.Should().Be(1);
+        completed.Should().Be(1);
+
+        task.Status.Should().Be(TaskStatus.RanToCompletion);
+    }
+
+    [Test]
+    public async Task Load_performed_on_thread_pool_and_result_handled_via_callers_context()
+    {
+        Thread callerThread = Thread.CurrentThread;
+        Thread? loadThread = null;
+        Thread? continuationThread = null;
+
+        callerThread.IsThreadPoolThread.Should().BeFalse();
+
+        using AsyncLoader loader = new();
+        await loader.LoadAsync(
+            () => loadThread = Thread.CurrentThread,
+            () => continuationThread = Thread.CurrentThread);
+
+        loadThread!.IsThreadPoolThread.Should().BeTrue();
+        callerThread.Should().NotBeSameAs(loadThread);
+        continuationThread.Should().NotBeSameAs(loadThread);
+    }
+
+    [Test]
+    public async Task Cancel_during_load_means_callback_not_fired()
+    {
+        SemaphoreSlim loadSignal = new(0);
+        SemaphoreSlim completeSignal = new(0);
+
+        int started = 0;
+        int completed = 0;
+        Task task = _loader.LoadAsync(
+            () =>
+            {
+                started++;
+                loadSignal.Release();
+                completeSignal.Wait();
+            },
+            () => completed++);
+
+        (await loadSignal.WaitAsync(1000)).Should().BeTrue();
+
+        started.Should().Be(1);
+        completed.Should().Be(0);
+
+        _loader.Cancel();
+        completeSignal.Release();
+
+        await task;
+
+        started.Should().Be(1);
+        completed.Should().Be(0, "Should not have called the follow-up action");
+
+        task.Status.Should().Be(TaskStatus.RanToCompletion);
+    }
+
+    [Test]
+    public async Task Cancel_during_delay_means_load_not_fired()
+    {
+        // Deliberately use a long delay as cancellation should cut it short
+        _loader.Delay = TimeSpan.FromMilliseconds(5000);
+
+        int started = 0;
+        int completed = 0;
+        Task task = _loader.LoadAsync(
+            () => started++,
+            () => completed++);
+
+        await Task.Delay(50);
+
+        started.Should().Be(0);
+        completed.Should().Be(0);
+
+        _loader.Cancel();
+
+        await task;
+
+        started.Should().Be(0);
+        completed.Should().Be(0);
+
+        task.Status.Should().Be(TaskStatus.RanToCompletion);
+    }
+
+    [Test]
+    public async Task Dispose_during_load_means_callback_not_fired()
+    {
+        SemaphoreSlim loadSignal = new(0);
+        SemaphoreSlim completeSignal = new(0);
+
+        int started = 0;
+        int completed = 0;
+        Task task = _loader.LoadAsync(
+            () =>
+            {
+                started++;
+                loadSignal.Release();
+                completeSignal.Wait();
+            },
+            () => completed++);
+
+        (await loadSignal.WaitAsync(1000)).Should().BeTrue();
+
+        started.Should().Be(1);
+        completed.Should().Be(0);
+
+        _loader.Dispose();
+        completeSignal.Release();
+
+        await task;
+
+        started.Should().Be(1);
+        completed.Should().Be(0, "Should not have called the follow-up action");
+
+        task.Status.Should().Be(TaskStatus.RanToCompletion);
+    }
+
+    [Test]
+    public async Task Delay_causes_load_callback_to_be_deferred()
+    {
+        _loader.Delay = TimeSpan.FromMilliseconds(200);
+
+        Stopwatch sw = Stopwatch.StartNew();
+
+        await _loader.LoadAsync(
+            () => sw.Stop(),
+            () => { });
+
+        sw.Elapsed.Should().BeGreaterThanOrEqualTo(_loader.Delay - TimeSpan.FromMilliseconds(20));
+    }
+
+    [Test]
+    public async Task Error_raised_via_event_and_marked_as_handled_does_not_fault_task()
+    {
+        List<Exception> observed = [];
+
+        _loader.LoadingError += (_, e) =>
+        {
+            observed.Add(e.Exception);
+            e.Handled = true;
+        };
+
+        Exception ex = new();
+
+        await _loader.LoadAsync(
+            () => throw ex,
+            Assert.Fail);
+
+        observed.Count.Should().Be(1);
+        observed[0].Should().BeSameAs(ex);
     }
 
     [Test]
@@ -231,10 +210,11 @@ public sealed class AsyncLoaderTests
         JoinableTask loadTask = ThreadHelper.JoinableTaskFactory.RunAsync(() =>
             _loader.LoadAsync(
                 loadContent: () => throw ex,
-                onLoaded: ClassicAssert.Fail));
+                onLoaded: Assert.Fail));
 
-        Exception? oe = ClassicAssert.Throws<Exception>(() => loadTask.Join());
-        ClassicAssert.AreSame(oe, ex);
+        Action act = () => loadTask.Join();
+        Exception oe = act.Should().Throw<Exception>().Which;
+        ex.Should().BeSameAs(oe);
     }
 
     [Test]
@@ -252,13 +232,14 @@ public sealed class AsyncLoaderTests
 
         JoinableTask loadTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => _loader.LoadAsync(
             () => throw ex,
-            ClassicAssert.Fail));
+            Assert.Fail));
 
-        Exception? oe = ClassicAssert.Throws<Exception>(() => loadTask.Join());
+        Action act = () => loadTask.Join();
+        Exception oe = act.Should().Throw<Exception>().Which;
 
-        ClassicAssert.AreEqual(1, observed.Count);
-        ClassicAssert.AreSame(ex, observed[0]);
-        ClassicAssert.AreSame(oe, observed[0]);
+        observed.Count.Should().Be(1);
+        observed[0].Should().BeSameAs(ex);
+        observed[0].Should().BeSameAs(oe);
     }
 
     [Test]
@@ -272,10 +253,15 @@ public sealed class AsyncLoaderTests
         loader.Dispose();
 
         // Any use after dispose should throw
-        await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(() => { }, () => { }));
-        await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(() => 1, i => { }));
-        await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(_ => { }, () => { }));
-        await AssertEx.ThrowsAsync<ObjectDisposedException>(() => loader.LoadAsync(_ => 1, i => { }));
-        ClassicAssert.Throws<ObjectDisposedException>(() => loader.Cancel());
+        Func<Task> act1 = async () => await loader.LoadAsync(() => { }, () => { });
+        await act1.Should().ThrowAsync<ObjectDisposedException>();
+        Func<Task> act2 = async () => await loader.LoadAsync(() => 1, i => { });
+        await act2.Should().ThrowAsync<ObjectDisposedException>();
+        Func<Task> act3 = async () => await loader.LoadAsync(_ => { }, () => { });
+        await act3.Should().ThrowAsync<ObjectDisposedException>();
+        Func<Task> act4 = async () => await loader.LoadAsync(_ => 1, i => { });
+        await act4.Should().ThrowAsync<ObjectDisposedException>();
+        Action act5 = () => loader.Cancel();
+        act5.Should().Throw<ObjectDisposedException>();
     }
 }

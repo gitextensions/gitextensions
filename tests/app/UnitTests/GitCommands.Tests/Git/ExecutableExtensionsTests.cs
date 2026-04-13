@@ -8,8 +8,6 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Settings;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public sealed class ExecutableExtensionsTests
 {
     private MockExecutable _executable = null!;
@@ -57,10 +55,10 @@ public sealed class ExecutableExtensionsTests
         // GetOutput always ignore error output (will not add to cache).
         string output = _executable.GetOutput(arguments, cache: cache);
 
-        ClassicAssert.AreEqual($"Hello", output);
+        output.Should().Be($"Hello");
 
         // Cache should still have a single item
-        ClassicAssert.AreEqual(1, cache.GetCachedCommands().Count);
+        cache.GetCachedCommands().Count.Should().Be(1);
     }
 
     [Test]
@@ -76,14 +74,14 @@ public sealed class ExecutableExtensionsTests
         {
             string output = _executable.GetOutput(arguments, cache: cache);
 
-            ClassicAssert.AreEqual(commandOutput, output);
+            output.Should().Be(commandOutput);
         }
 
         // Validate data stored in cache afterwards
-        ClassicAssert.AreEqual(1, cache.GetCachedCommands().Count);
-        ClassicAssert.IsTrue(cache.TryGet(arguments, out string? outputBytes, out string? errorBytes));
-        ClassicAssert.AreEqual(GitModule.SystemEncoding.GetBytes(commandOutput), outputBytes);
-        ClassicAssert.IsEmpty(errorBytes);
+        cache.GetCachedCommands().Count.Should().Be(1);
+        cache.TryGet(arguments, out string? outputBytes, out string? errorBytes).Should().BeTrue();
+        outputBytes.Should().Be(commandOutput);
+        errorBytes.Should().BeEmpty();
     }
 
     // Process argument upper bound is actually (short.MaxValue - 1)
@@ -104,14 +102,14 @@ public sealed class ExecutableExtensionsTests
             GenerateStringByLength(Math.Max(1, arg2Len - appLength - len - 1))
         }, appLength, maxLength);
 
-        ClassicAssert.AreEqual(argCount, args.Count);
+        args.Count.Should().Be(argCount);
 
         // The reset command runs in the GE repo dir, so the result depends on workTree contents
         int index = 0;
         ExecutionResult? result = _gitExecutable.RunBatchCommand(args, (eventArgs) =>
         {
-            ClassicAssert.IsTrue(eventArgs.ExecutionResult);
-            ClassicAssert.AreEqual(expectedProcessedCounts[index], eventArgs.ProcessedCount);
+            eventArgs.ExecutionResult.Should().BeTrue();
+            eventArgs.ProcessedCount.Should().Be(expectedProcessedCounts[index]);
             index++;
         });
     }
@@ -128,8 +126,9 @@ public sealed class ExecutableExtensionsTests
                 GenerateStringByLength(Math.Max(1, arg2Len - _appPath.Length - 4))
             }, _appPath.Length + 3, maxLength);
 
-        ExternalOperationException? ex = ClassicAssert.Throws<ExternalOperationException>(() => _gitExecutable.RunBatchCommand(args));
-        ClassicAssert.IsInstanceOf<Win32Exception>(ex!.InnerException);
+        Action act = () => _gitExecutable.RunBatchCommand(args);
+        ExternalOperationException ex = act.Should().Throw<ExternalOperationException>().Which;
+        ex.InnerException.Should().BeOfType<Win32Exception>();
     }
 
     private static string GenerateStringByLength(int length)

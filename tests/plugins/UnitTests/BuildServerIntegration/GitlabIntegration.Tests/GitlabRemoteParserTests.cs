@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitExtensions.Plugins.GitlabIntegration.Settings;
+﻿using GitExtensions.Plugins.GitlabIntegration.Settings;
 
 namespace GitlabIntegrationTests;
-
-[TestFixture]
 internal class GitlabRemoteParserTests
 {
     [TestCase("https://gitlab.com/owner/repo.git/")]

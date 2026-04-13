@@ -1,16 +1,14 @@
-﻿using AwesomeAssertions;
-using GitCommands.Git;
+﻿using GitCommands.Git;
 
 namespace GitCommandsTests.Git;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class GitBranchNameOptionsTest
 {
     [TestCase(null, "")]
     [TestCase("", "")]
-    public void ReplacementToken_can_be_null_or_empty(string token, string expected)
+    public void ReplacementToken_can_be_null_or_empty(string? token, string expected)
     {
         GitBranchNameOptions options = new(token);
 
@@ -28,7 +26,7 @@ public class GitBranchNameOptionsTest
     [TestCase("^", '^')]
     [TestCase("~", '~')]
     [TestCase(":", ':')]
-    public void ReplacementToken_cant_be_invalid(string token, char expected)
+    public void ReplacementToken_cant_be_invalid(string? token, char expected)
     {
         ((Action)(() => new GitBranchNameOptions(token))).Should().Throw<ArgumentOutOfRangeException>()
             .WithMessage(string.Format("Replacement token invalid: '{0}' (Parameter 'replacementToken')", expected));

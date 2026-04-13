@@ -1,9 +1,6 @@
-﻿using AwesomeAssertions;
-using GitExtUtils.GitUI.Theming;
+﻿using GitExtUtils.GitUI.Theming;
 
 namespace GitUITests.Theming;
-
-[TestFixture]
 public class WhatSystemColorsAreThemeableTests
 {
     [Test]

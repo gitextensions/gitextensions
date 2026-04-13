@@ -1,5 +1,4 @@
-﻿using AwesomeAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.UserControls.RevisionGrid.Graph;
@@ -7,8 +6,6 @@ using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid.Graph;
-
-[TestFixture]
 public class LaneInfoProviderTests
 {
     /// <summary>

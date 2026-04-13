@@ -6,7 +6,6 @@ namespace GitUITests.UserControls;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class SortDiffListContextMenuItemTests
 {
     private SortDiffListContextMenuItem _itemUnderTest = null!;
@@ -20,11 +19,17 @@ public class SortDiffListContextMenuItemTests
         _itemUnderTest = new SortDiffListContextMenuItem(_testingSortService);
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _itemUnderTest.Dispose();
+    }
+
     [Test]
     public void Should_show_all_sort_options()
     {
-        ClassicAssert.IsTrue(_itemUnderTest.HasDropDownItems);
-        ClassicAssert.AreEqual(6, _itemUnderTest.DropDownItems.Count);
+        _itemUnderTest.HasDropDownItems.Should().BeTrue();
+        _itemUnderTest.DropDownItems.Count.Should().Be(6);
 
         AssertMenuItemTextAndLinkedSortType(_itemUnderTest.DropDownItems[0], "File &path - tree", DiffListSortType.FilePath);
         AssertMenuItemTextAndLinkedSortType(_itemUnderTest.DropDownItems[1], "&File path - flat", DiffListSortType.FilePathFlat);
@@ -64,17 +69,17 @@ public class SortDiffListContextMenuItemTests
     private void AssertOnlyCheckedItemIs(DiffListSortType sortType)
     {
         ToolStripMenuItem matchingSubItem = _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Single(i => i!.Tag!.Equals(sortType));
-        ClassicAssert.IsTrue(matchingSubItem.Checked);
+        matchingSubItem.Checked.Should().BeTrue();
 
         foreach (ToolStripMenuItem otherItem in _itemUnderTest.DropDownItems.Cast<ToolStripMenuItem>().Except(new[] { matchingSubItem }))
         {
-            ClassicAssert.IsFalse(otherItem.Checked);
+            otherItem.Checked.Should().BeFalse();
         }
     }
 
     private static void AssertMenuItemTextAndLinkedSortType(ToolStripItem menuItem, string expectedText, DiffListSortType expectedSortType)
     {
-        ClassicAssert.AreEqual(expectedText, menuItem.Text);
-        ClassicAssert.AreEqual(expectedSortType, menuItem.Tag);
+        menuItem.Text.Should().Be(expectedText);
+        menuItem.Tag.Should().Be(expectedSortType);
     }
 }

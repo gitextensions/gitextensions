@@ -2,8 +2,6 @@
 using NSubstitute;
 
 namespace GitUITests.Avatars;
-
-[TestFixture]
 public class CacheControlAvatarProviderTests
 {
     [Test]
@@ -30,19 +28,10 @@ public class CacheControlAvatarProviderTests
     [Test]
     public void Construction_with_null_parameters_is_permitted()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() =>
-        {
-            new MultiCacheCleaner(null!);
-        });
+        ((Action)(() => new MultiCacheCleaner(null!))).Should().Throw<ArgumentNullException>();
 
-        ClassicAssert.Throws<ArgumentNullException>(() =>
-        {
-            new MultiCacheCleaner(null!);
-        });
+        ((Action)(() => new MultiCacheCleaner(null!))).Should().Throw<ArgumentNullException>();
 
-        ClassicAssert.Throws<ArgumentNullException>(() =>
-        {
-            new MultiCacheCleaner(null!, null!);
-        });
+        ((Action)(() => new MultiCacheCleaner(null!, null!))).Should().Throw<ArgumentNullException>();
     }
 }

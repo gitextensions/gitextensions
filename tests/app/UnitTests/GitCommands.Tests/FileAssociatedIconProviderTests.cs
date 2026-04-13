@@ -1,11 +1,8 @@
 ﻿using System.IO.Abstractions;
-using AwesomeAssertions;
 using GitCommands;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class FileAssociatedIconProviderTests
 {
     private FileBase _file = null!;
@@ -24,9 +21,9 @@ public class FileAssociatedIconProviderTests
 
     [TestCase(null, null)]
     [TestCase("", "")]
-    public void Get_should_return_null_if_path_null_or_empty(string workingDirectory, string relativeFilePath)
+    public void Get_should_return_null_if_path_null_or_empty(string? workingDirectory, string? relativeFilePath)
     {
-        _iconProvider.Get(workingDirectory, relativeFilePath).Should().BeNull();
+        _iconProvider.Get(workingDirectory!, relativeFilePath!).Should().BeNull();
     }
 
     [Test]

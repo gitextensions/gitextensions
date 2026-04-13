@@ -2,8 +2,6 @@
 using GitUI.CommandsDialogs;
 
 namespace GitUITests.CommandsDialogs;
-
-[TestFixture]
 public sealed class FormFileHistoryControllerTests
 {
     private FormFileHistoryController _controller = null!;
@@ -22,8 +20,8 @@ public sealed class FormFileHistoryControllerTests
         string lowercasePath = path.ToLower();
         bool isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string? exactPath);
 
-        ClassicAssert.IsFalse(isExistingOnFileSystem);
-        ClassicAssert.IsNull(exactPath);
+        isExistingOnFileSystem.Should().BeFalse();
+        exactPath.Should().BeNull();
     }
 
     [Test]
@@ -34,9 +32,9 @@ public sealed class FormFileHistoryControllerTests
         string lowercasePath = path.ToLower();
         bool isExistingOnFileSystem = _controller.TryGetExactPath(lowercasePath, out string? exactPath);
 
-        ClassicAssert.IsTrue(isExistingOnFileSystem);
+        isExistingOnFileSystem.Should().BeTrue();
 
-        ClassicAssert.AreEqual(path, exactPath);
+        exactPath.Should().Be(path);
     }
 
     [TestCase("Folder1\\file1.txt", true, true)]
@@ -52,7 +50,14 @@ public sealed class FormFileHistoryControllerTests
 
         string expected = Path.Combine(repo.TemporaryPath, relativePath);
 
-        ClassicAssert.AreEqual(isResolved, _controller.TryGetExactPath(expected, out string? exactPath));
-        ClassicAssert.AreEqual(doesMatch, exactPath == expected);
+        _controller.TryGetExactPath(expected, out string? exactPath).Should().Be(isResolved);
+        if (doesMatch)
+        {
+            exactPath.Should().Be(expected);
+        }
+        else
+        {
+            exactPath.Should().NotBe(expected);
+        }
     }
 }

@@ -1,12 +1,9 @@
-﻿using AwesomeAssertions;
-using GitCommands.Config;
+﻿using GitCommands.Config;
 using GitCommands.Remotes;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class RepoNameExtractorTest
 {
     private IGitModule _module = null!;
@@ -28,10 +25,10 @@ public class RepoNameExtractorTest
     [TestCase(null, null, null, null)]
     [TestCase("remote", "https://github.com/project/", "project", "")]
     [TestCase("origin", "git@github.com/project/repo.git", "project", "repo")]
-    public void RepoNameExtractorTest_ValidCurrentRemote(string remote, string url, string expProject, string expRepo)
+    public void RepoNameExtractorTest_ValidCurrentRemote(string? remote, string? url, string? expProject, string? expRepo)
     {
         _module.GetCurrentRemote().Returns(x => remote);
-        _module.GetRemoteNames().Returns(x => new[] { remote, "    ", "\t" });
+        _module.GetRemoteNames().Returns(x => new[] { remote!, "    ", "\t" });
         _module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote)).Returns(x => url);
 
         (string project, string repo) = _repoNameExtractor.Get();
@@ -42,10 +39,10 @@ public class RepoNameExtractorTest
 
     [TestCase("origin", "https://github.com/project/repo.git", "project", "repo")]
     [TestCase("origin", "git@github.com/project/repo.git", "project", "repo")]
-    public void RepoNameExtractorTest_NoValidCurrentRemote(string remote, string url, string expProject, string expRepo)
+    public void RepoNameExtractorTest_NoValidCurrentRemote(string? remote, string? url, string? expProject, string? expRepo)
     {
         _module.GetCurrentRemote().Returns("");
-        _module.GetRemoteNames().Returns(x => new[] { remote, "    ", "\t" });
+        _module.GetRemoteNames().Returns(x => new[] { remote!, "    ", "\t" });
         _module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote)).Returns(x => url);
 
         (string project, string repo) = _repoNameExtractor.Get();
