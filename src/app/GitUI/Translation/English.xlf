@@ -8956,6 +8956,14 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Commit changes in selected submodule</source>
         <target />
       </trans-unit>
+      <trans-unit id="mnubtnCopyWorktreePath.Text">
+        <source>Copy &amp;path</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnCopyWorktreePath.ToolTipText">
+        <source>Copy the worktree path to clipboard</source>
+        <target />
+      </trans-unit>
       <trans-unit id="mnubtnCreateBranch.Text">
         <source>Create Branch...</source>
         <target />
@@ -9146,6 +9154,14 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="mnubtnResetSubmodule.ToolTipText">
         <source>Reset selected submodule</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnShowWorktreeInFolder.Text">
+        <source>Show &amp;in folder</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="mnubtnShowWorktreeInFolder.ToolTipText">
+        <source>Show the worktree in File Explorer</source>
         <target />
       </trans-unit>
       <trans-unit id="mnubtnStashAllFromRootNode.Text">

@@ -106,6 +106,9 @@ partial class RepoObjectsTree
         toolStripSeparator12 = new ToolStripSeparator();
         mnubtnOpenWorktree = new ToolStripMenuItem();
         mnubtnDeleteWorktree = new ToolStripMenuItem();
+        toolStripSeparator13 = new ToolStripSeparator();
+        mnubtnCopyWorktreePath = new ToolStripMenuItem();
+        mnubtnShowWorktreeInFolder = new ToolStripMenuItem();
         toolStripSeparator9 = new ToolStripSeparator();
         mnubtnCollapse = new ToolStripMenuItem();
         mnubtnExpand = new ToolStripMenuItem();
@@ -199,6 +202,9 @@ partial class RepoObjectsTree
         toolStripSeparator12,
         mnubtnOpenWorktree,
         mnubtnDeleteWorktree,
+        toolStripSeparator13,
+        mnubtnCopyWorktreePath,
+        mnubtnShowWorktreeInFolder,
         toolStripSeparator9,
         mnubtnCollapse,
         mnubtnExpand,
@@ -544,6 +550,27 @@ partial class RepoObjectsTree
         mnubtnDeleteWorktree.Text = "&Delete worktree...";
         mnubtnDeleteWorktree.ToolTipText = "Delete this worktree";
         // 
+        // toolStripSeparator13
+        // 
+        toolStripSeparator13.Name = "toolStripSeparator13";
+        toolStripSeparator13.Size = new Size(263, 6);
+        // 
+        // mnubtnCopyWorktreePath
+        // 
+        mnubtnCopyWorktreePath.Image = Properties.Images.CopyToClipboard;
+        mnubtnCopyWorktreePath.Name = "mnubtnCopyWorktreePath";
+        mnubtnCopyWorktreePath.Size = new Size(266, 26);
+        mnubtnCopyWorktreePath.Text = "Copy &path";
+        mnubtnCopyWorktreePath.ToolTipText = "Copy the worktree path to clipboard";
+        // 
+        // mnubtnShowWorktreeInFolder
+        // 
+        mnubtnShowWorktreeInFolder.Image = Properties.Images.BrowseFileExplorer;
+        mnubtnShowWorktreeInFolder.Name = "mnubtnShowWorktreeInFolder";
+        mnubtnShowWorktreeInFolder.Size = new Size(266, 26);
+        mnubtnShowWorktreeInFolder.Text = "Show &in folder";
+        mnubtnShowWorktreeInFolder.ToolTipText = "Show the worktree in File Explorer";
+        // 
         // toolStripSeparator9
         // 
         toolStripSeparator9.Name = "toolStripSeparator9";
@@ -841,6 +868,9 @@ partial class RepoObjectsTree
     private ToolStripSeparator toolStripSeparator12;
     private ToolStripMenuItem mnubtnOpenWorktree;
     private ToolStripMenuItem mnubtnDeleteWorktree;
+    private ToolStripSeparator toolStripSeparator13;
+    private ToolStripMenuItem mnubtnCopyWorktreePath;
+    private ToolStripMenuItem mnubtnShowWorktreeInFolder;
     private ToolStripSeparator toolStripSeparator9;
     private ToolStripSeparator toolStripSeparator1;
     private ToolStripMenuItem runScriptToolStripMenuItem;
