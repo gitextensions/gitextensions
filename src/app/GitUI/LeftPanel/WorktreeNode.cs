@@ -5,10 +5,11 @@ using GitUI.Properties;
 namespace GitUI.LeftPanel;
 
 [DebuggerDisplay("(Worktree) Path = {Worktree.Path}, Branch = {Worktree.Branch}")]
-internal sealed class WorktreeNode(Tree tree, GitWorktree worktree, bool isCurrent) : Node(tree)
+internal sealed class WorktreeNode(Tree tree, GitWorktree worktree, bool isCurrent, string displayPath) : Node(tree)
 {
     public GitWorktree Worktree { get; } = worktree;
     public bool IsCurrent { get; } = isCurrent;
+    private string DisplayPath { get; } = displayPath;
 
     internal override void OnSelected()
     {
@@ -85,22 +86,8 @@ internal sealed class WorktreeNode(Tree tree, GitWorktree worktree, bool isCurre
     }
 
     protected override string DisplayText()
-    {
-        return Worktree.GetDisplayName(GetRelativePath());
+        => Worktree.GetDisplayName(DisplayPath);
 
-        string GetRelativePath()
-        {
-            string workingDir = Tree.UICommands.Module.WorkingDir.TrimEnd(Path.DirectorySeparatorChar);
-            string parentDir = Path.GetDirectoryName(workingDir) ?? workingDir;
-
-            try
-            {
-                return Path.GetRelativePath(parentDir, Worktree.Path);
-            }
-            catch
-            {
-                return Worktree.Path;
-            }
-        }
-    }
+    protected override string NodeName()
+        => Worktree.Path;
 }
