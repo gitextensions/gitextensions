@@ -76,7 +76,7 @@ internal sealed class ConEmuConsoleShellController : IConsoleShellController
         catch (InvalidOperationException)
         {
 #if DEBUG
-            MessageBoxes.Show(_conEmu, "ConEmu appears to be missing. Please perform a full rebuild and try again.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(_conEmu, "ConEmu appears to be missing. Please perform a full rebuild and try again.");
 #else
             throw;
 #endif
