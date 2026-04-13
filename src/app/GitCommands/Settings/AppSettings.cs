@@ -1885,7 +1885,7 @@ public static partial class AppSettings
 
     public static string ConsoleEmulatorName
     {
-        get => GetString("ConsoleEmulatorName", "");
+        get => GetString("ConsoleEmulatorName", "conemu");
         set => SetString("ConsoleEmulatorName", value);
     }
 

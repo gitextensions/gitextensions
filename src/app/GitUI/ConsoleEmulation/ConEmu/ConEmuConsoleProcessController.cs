@@ -4,15 +4,14 @@ using ConEmu.WinForms;
 using GitCommands;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
-using GitExtensions.Extensibility.Plugins;
 using Microsoft;
 
-namespace GitUI.UserControls;
+namespace GitUI.ConsoleEmulation.ConEmu;
 
 /// <summary>
-/// An output control which inserts a fully-functional console emulator window using ConEmu.
+///  Embeds a ConEmu terminal in the output panel so command dialogs can host an interactive console.
 /// </summary>
-public class ConEmuConsoleProcessController : ContainerControl, IConsoleProcessController
+internal class ConEmuConsoleProcessController : ContainerControl, IConsoleProcessController
 {
     private int _nLastExitCode;
 
@@ -35,11 +34,9 @@ public class ConEmuConsoleProcessController : ContainerControl, IConsoleProcessC
 
     public bool IsDisplayingFullProcessOutput => true;
 
-    public event EventHandler<ConsoleTextEventArgs>? ProcessOutputReceived;
+    public event EventHandler<ConsoleOutputEventArgs>? ProcessOutputReceived;
     public event EventHandler<ConsoleProcessExitEventArgs>? ProcessExited;
     public event EventHandler? ConsoleHostTerminated;
-
-    public static bool IsSupportedInThisEnvironment => OperatingSystem.IsWindows();
 
     public void WriteConsoleOutput(string text)
     {
@@ -147,14 +144,14 @@ public class ConEmuConsoleProcessController : ContainerControl, IConsoleProcessC
 
 public partial class ConsoleCommandLineOutputProcessor
 {
-    private readonly Action<ConsoleTextEventArgs> _fireDataReceived;
+    private readonly Action<ConsoleOutputEventArgs> _fireDataReceived;
     private int _commandLineCharsInOutput;
     private string? _lineChunk;
 
     [GeneratedRegex(@"(?<=[\n\r])", RegexOptions.ExplicitCapture)]
     private static partial Regex NewLineRegex { get; }
 
-    public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<ConsoleTextEventArgs> fireDataReceived)
+    public ConsoleCommandLineOutputProcessor(int commandLineCharsInOutput, Action<ConsoleOutputEventArgs> fireDataReceived)
     {
         _fireDataReceived = fireDataReceived;
         _commandLineCharsInOutput = commandLineCharsInOutput;
@@ -220,7 +217,7 @@ public partial class ConsoleCommandLineOutputProcessor
                 }
             }
 
-            _fireDataReceived(new ConsoleTextEventArgs(outputLine));
+            _fireDataReceived(new ConsoleOutputEventArgs(outputLine));
         }
     }
 
@@ -228,7 +225,7 @@ public partial class ConsoleCommandLineOutputProcessor
     {
         if (_lineChunk is not null)
         {
-            _fireDataReceived(new ConsoleTextEventArgs(_lineChunk));
+            _fireDataReceived(new ConsoleOutputEventArgs(_lineChunk));
             _lineChunk = null;
         }
     }

@@ -1,14 +1,12 @@
 using System.Globalization;
 using ConEmu.WinForms;
 using GitCommands;
-using GitExtensions.Extensibility.Plugins;
 using GitUI.Shells;
 
-namespace GitUI.UserControls;
+namespace GitUI.ConsoleEmulation.ConEmu;
 
 /// <summary>
-/// Implements <see cref="IConsoleShellController"/> by wrapping a <see cref="ConEmuControl"/>.
-/// Used for the interactive terminal tab in the repository browser when no plugin is available.
+///  Wraps <see cref="ConEmuControl"/> for the repository browser's terminal tab.
 /// </summary>
 internal sealed class ConEmuConsoleShellController : IConsoleShellController
 {
@@ -24,15 +22,22 @@ internal sealed class ConEmuConsoleShellController : IConsoleShellController
         };
     }
 
-    /// <inheritdoc/>
     public Control Control => _conEmu;
 
-    public bool SupportsChangingWorkingDirectory => true;
-
-    /// <inheritdoc/>
     public bool IsShellRunning => _conEmu.IsConsoleEmulatorOpen;
 
-    /// <inheritdoc/>
+    public void ChangeWorkingDirectory(string path)
+    {
+        string? shellType = AppSettings.ConEmuTerminal.Value;
+        IShellDescriptor shell = _shellProvider.GetShell(shellType);
+        _conEmu.ChangeFolder(shell, path);
+    }
+
+    public void FocusTerminal()
+    {
+        _conEmu.Focus();
+    }
+
     public void StartShell(string workDir)
     {
         if (_conEmu.IsConsoleEmulatorOpen)
@@ -76,18 +81,5 @@ internal sealed class ConEmuConsoleShellController : IConsoleShellController
             throw;
 #endif
         }
-    }
-
-    public void ChangeWorkingDirectory(string path)
-    {
-        string? shellType = AppSettings.ConEmuTerminal.Value;
-        IShellDescriptor shell = _shellProvider.GetShell(shellType);
-        _conEmu.ChangeFolder(shell, path);
-    }
-
-    /// <inheritdoc/>
-    public void FocusTerminal()
-    {
-        _conEmu.Focus();
     }
 }

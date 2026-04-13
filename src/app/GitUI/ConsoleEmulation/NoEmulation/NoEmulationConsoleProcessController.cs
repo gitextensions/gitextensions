@@ -4,19 +4,18 @@ using GitCommands;
 using GitCommands.Git.Extensions;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
-using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using Microsoft;
 using Timer = System.Windows.Forms.Timer;
 
-namespace GitUI.UserControls;
+namespace GitUI.ConsoleEmulation.NoEmulation;
 
 /// <summary>
-/// Uses an edit box and process output streams redirection.
+///  Displays redirected process output in an edit box when no embedded terminal is being used.
 /// </summary>
-public sealed class EditboxBasedConsoleProcessController : ContainerControl, IConsoleProcessController
+public sealed class NoEmulationConsoleProcessController : ContainerControl, IConsoleProcessController
 {
     private readonly RichTextBox _editbox;
 
@@ -28,7 +27,7 @@ public sealed class EditboxBasedConsoleProcessController : ContainerControl, ICo
 
     private StreamWriter? _input;
 
-    public EditboxBasedConsoleProcessController()
+    public NoEmulationConsoleProcessController()
     {
         _editbox = new RichTextBox
         {
@@ -64,7 +63,7 @@ public sealed class EditboxBasedConsoleProcessController : ContainerControl, ICo
 
     public bool IsDisplayingFullProcessOutput => false;
 
-    public event EventHandler<ConsoleTextEventArgs>? ProcessOutputReceived;
+    public event EventHandler<ConsoleOutputEventArgs>? ProcessOutputReceived;
     public event EventHandler<ConsoleProcessExitEventArgs>? ProcessExited;
 
     // Editbox-based output never terminates independently; event is required by the interface.
@@ -252,7 +251,7 @@ public sealed class EditboxBasedConsoleProcessController : ContainerControl, ICo
                     nextLineEnd = output.Length;
                 }
 
-                ProcessOutputReceived?.Invoke(this, new ConsoleTextEventArgs(output[startIndex..nextLineEnd]));
+                ProcessOutputReceived?.Invoke(this, new ConsoleOutputEventArgs(output[startIndex..nextLineEnd]));
                 startIndex = nextLineEnd;
             }
         }

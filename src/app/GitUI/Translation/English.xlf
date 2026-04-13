@@ -77,10 +77,6 @@ This action will be performed without warning while checking out branch.</source
         <source>Symbol to use:</source>
         <target />
       </trans-unit>
-      <trans-unit id="lblConsoleEmulatorChoice.Text">
-        <source>Console emulator:</source>
-        <target />
-      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="AppearanceFontsSettingsPage" source-language="en">
@@ -3499,6 +3495,10 @@ Focus the output history and (when displayed as panel) toggle its visibility usi
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>General</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblConsoleEmulatorChoice.Text">
+        <source>Console emulator</source>
         <target />
       </trans-unit>
       <trans-unit id="lblDefaultShell.Text">

@@ -19,6 +19,7 @@ using GitUI.Avatars;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 using GitUI.CommandsDialogs.WorktreeDialog;
+using GitUI.ConsoleEmulation;
 using GitUI.HelperDialogs;
 using GitUI.Infrastructure.Telemetry;
 using GitUI.LeftPanel;
@@ -2689,7 +2690,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     /// </summary>
     private void FillTerminalTab()
     {
-        if (!OperatingSystem.IsWindows() || !AppSettings.ShowConEmuTab.Value)
+        if (!AppSettings.ShowConEmuTab.Value)
         {
             return;
         }
@@ -2704,6 +2705,13 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         if (_consoleTabPage is not null)
         {
             // Tab page already created
+            return;
+        }
+
+        // Check if there are available console emulators
+        IConsoleControllersFactory consoleControllersFactory = UICommands.GetRequiredService<IConsoleControllersFactory>();
+        if (consoleControllersFactory.AvailableConsoleEmulators.Count == 0)
+        {
             return;
         }
 
@@ -2727,7 +2735,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
             if (_terminal is null)
             {
-                _terminal = ConsoleControllersFactory.CreateConsoleShellControl();
+                _terminal = consoleControllersFactory.CreateConsoleShellControl(AppSettings.ConsoleEmulatorName);
                 if (_terminal is null)
                 {
                     return;
@@ -2749,7 +2757,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     public void ChangeTerminalActiveFolder(string path)
     {
-        if (_terminal is null || !_terminal.IsShellRunning)
+        if (_terminal?.IsShellRunning is not true)
         {
             return;
         }

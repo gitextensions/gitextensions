@@ -1,8 +1,8 @@
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
+using GitUI.ConsoleEmulation;
 
 namespace GitUI.HelperDialogs;
 
@@ -183,11 +183,11 @@ public partial class FormProcess : FormStatus
         });
     }
 
-    protected virtual void DataReceived(object sender, ConsoleTextEventArgs e)
+    protected virtual void DataReceived(object sender, ConsoleOutputEventArgs e)
     {
     }
 
-    private void DataReceivedCore(object? sender, ConsoleTextEventArgs e)
+    private void DataReceivedCore(object? sender, ConsoleOutputEventArgs e)
     {
         // CarriageReturn has its literal meaning here, i.e. it is not a line end, but terminates transient progress information
         if (e.Text.EndsWith(Delimiters.CarriageReturn))

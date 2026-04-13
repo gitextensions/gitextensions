@@ -4,6 +4,8 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
+using GitUI.ConsoleEmulation;
+using GitUI.ConsoleEmulation.ConEmu;
 using GitUI.Hotkey;
 using GitUI.Models;
 using GitUI.ScriptsEngine;
@@ -47,5 +49,9 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IRepositoryCurrentBranchNameCache>(branchNameCache);
         serviceContainer.AddService<IInvalidRepositoryRemover>(invalidRepositoryRemover);
         serviceContainer.AddService<IRepositoryHistoryUIService>(new RepositoryHistoryUIService(serviceContainer.GetRequiredService<IGitExecutorProvider>(), branchNameCache, invalidRepositoryRemover));
+
+        serviceContainer.AddService<IConsoleControllersFactory>(new ConsoleControllersFactory([
+            new ConEmuConsoleEmulator()
+        ]));
     }
 }

@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
+using GitUI.ConsoleEmulation;
 using GitUI.Hotkey;
 using GitUI.Shells;
 using ResourceManager;
@@ -27,6 +28,15 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
     {
         InitializeComponent();
         cboTerminal.DisplayMember = "Name";
+
+        IReadOnlyCollection<IConsoleEmulator> emulators = serviceProvider.GetRequiredService<IConsoleControllersFactory>().AvailableConsoleEmulators;
+        foreach (IConsoleEmulator emulator in emulators)
+        {
+            cboConsoleEmulator.Items.Add(emulator);
+        }
+
+        cboConsoleEmulator.DisplayMember = nameof(IConsoleEmulator.DisplayName);
+        cboConsoleEmulator.ValueMember = nameof(IConsoleEmulator.Name);
         InitializeComplete();
         string hotkey = serviceProvider.GetRequiredService<IHotkeySettingsManager>()
             .LoadHotkeys(FormBrowse.HotkeySettingsName)
@@ -42,8 +52,8 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
     protected override void OnRuntimeLoad()
     {
         // align 1st columns across all tables
-        tlpnlGeneral.AdjustWidthToSize(0, lblDefaultShell, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowRevisionGridTooltip, chkShowConsoleTab, chkShowGpgInformation);
-        tlpnlTabs.AdjustWidthToSize(0, lblDefaultShell, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowRevisionGridTooltip, chkShowConsoleTab, chkShowGpgInformation);
+        tlpnlGeneral.AdjustWidthToSize(0, lblDefaultShell, lblConsoleEmulatorChoice, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowRevisionGridTooltip, chkShowConsoleTab, chkShowGpgInformation);
+        tlpnlTabs.AdjustWidthToSize(0, lblDefaultShell, lblConsoleEmulatorChoice, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowRevisionGridTooltip, chkShowConsoleTab, chkShowGpgInformation);
 
         base.OnRuntimeLoad();
     }
@@ -67,6 +77,10 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
         }
 
         AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem!).Name.ToLowerInvariant();
+        if (cboConsoleEmulator.SelectedItem is IConsoleEmulator selectedConsoleEmulator)
+        {
+            AppSettings.ConsoleEmulatorName = selectedConsoleEmulator.Name;
+        }
 
         base.PageToSettings();
     }
@@ -90,6 +104,14 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
             {
                 cboTerminal.SelectedItem = shell;
             }
+        }
+
+        cboConsoleEmulator.SelectedItem = cboConsoleEmulator.Items
+            .OfType<IConsoleEmulator>()
+            .FirstOrDefault(x => string.Equals(x.Name, AppSettings.ConsoleEmulatorName, StringComparison.OrdinalIgnoreCase));
+        if (cboConsoleEmulator.SelectedIndex < 0 && cboConsoleEmulator.Items.Count > 0)
+        {
+            cboConsoleEmulator.SelectedIndex = 0;
         }
 
         base.SettingsToPage();

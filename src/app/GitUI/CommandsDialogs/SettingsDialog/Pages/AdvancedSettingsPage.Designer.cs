@@ -49,9 +49,6 @@ partial class AdvancedSettingsPage
         chkAlwaysShowAdvOpt = new CheckBox();
         chkDontSHowHelpImages = new CheckBox();
         chkConsoleEmulator = new GitUI.UserControls.Settings.SettingsCheckBox();
-        tableLayoutPanelEmulatorChoice = new TableLayoutPanel();
-        lblConsoleEmulatorChoice = new Label();
-        cboConsoleEmulator = new ComboBox();
         tableLayoutPanel4 = new TableLayoutPanel();
         chkAutoNormaliseBranchName = new GitUI.UserControls.Settings.SettingsCheckBox();
         label1 = new Label();
@@ -65,7 +62,6 @@ partial class AdvancedSettingsPage
         tableLayoutPanel3.SuspendLayout();
         GeneralGB.SuspendLayout();
         tableLayoutPanel1.SuspendLayout();
-        tableLayoutPanelEmulatorChoice.SuspendLayout();
         tableLayoutPanel4.SuspendLayout();
         SuspendLayout();
         // 
@@ -270,13 +266,11 @@ partial class AdvancedSettingsPage
         tableLayoutPanel1.Controls.Add(chkAlwaysShowAdvOpt, 0, 1);
         tableLayoutPanel1.Controls.Add(chkDontSHowHelpImages, 0, 0);
         tableLayoutPanel1.Controls.Add(chkConsoleEmulator, 0, 4);
-        tableLayoutPanel1.Controls.Add(tableLayoutPanelEmulatorChoice, 0, 5);
-        tableLayoutPanel1.Controls.Add(tableLayoutPanel4, 0, 6);
+        tableLayoutPanel1.Controls.Add(tableLayoutPanel4, 0, 5);
         tableLayoutPanel1.Dock = DockStyle.Fill;
         tableLayoutPanel1.Location = new Point(8, 22);
         tableLayoutPanel1.Name = "tableLayoutPanel1";
-        tableLayoutPanel1.RowCount = 7;
-        tableLayoutPanel1.RowStyles.Add(new RowStyle());
+        tableLayoutPanel1.RowCount = 6;
         tableLayoutPanel1.RowStyles.Add(new RowStyle());
         tableLayoutPanel1.RowStyles.Add(new RowStyle());
         tableLayoutPanel1.RowStyles.Add(new RowStyle());
@@ -319,45 +313,7 @@ partial class AdvancedSettingsPage
         chkConsoleEmulator.TabIndex = 3;
         chkConsoleEmulator.Text = "Use Console Emulator for console output in command dialogs";
         chkConsoleEmulator.ToolTipText = resources.GetString("chkConsoleEmulator.ToolTip");
-        //
-        // tableLayoutPanelEmulatorChoice
-        //
-        tableLayoutPanelEmulatorChoice.AutoSize = true;
-        tableLayoutPanelEmulatorChoice.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-        tableLayoutPanelEmulatorChoice.ColumnCount = 2;
-        tableLayoutPanelEmulatorChoice.ColumnStyles.Add(new ColumnStyle());
-        tableLayoutPanelEmulatorChoice.ColumnStyles.Add(new ColumnStyle());
-        tableLayoutPanelEmulatorChoice.Controls.Add(lblConsoleEmulatorChoice, 0, 0);
-        tableLayoutPanelEmulatorChoice.Controls.Add(cboConsoleEmulator, 1, 0);
-        tableLayoutPanelEmulatorChoice.Dock = DockStyle.Fill;
-        tableLayoutPanelEmulatorChoice.Location = new Point(0, 92);
-        tableLayoutPanelEmulatorChoice.Margin = new Padding(0);
-        tableLayoutPanelEmulatorChoice.Name = "tableLayoutPanelEmulatorChoice";
-        tableLayoutPanelEmulatorChoice.RowCount = 1;
-        tableLayoutPanelEmulatorChoice.RowStyles.Add(new RowStyle());
-        tableLayoutPanelEmulatorChoice.Size = new Size(1578, 27);
-        tableLayoutPanelEmulatorChoice.TabIndex = 6;
-        //
-        // lblConsoleEmulatorChoice
-        //
-        lblConsoleEmulatorChoice.AutoSize = true;
-        lblConsoleEmulatorChoice.Dock = DockStyle.Fill;
-        lblConsoleEmulatorChoice.Location = new Point(3, 0);
-        lblConsoleEmulatorChoice.Name = "lblConsoleEmulatorChoice";
-        lblConsoleEmulatorChoice.Size = new Size(110, 27);
-        lblConsoleEmulatorChoice.TabIndex = 0;
-        lblConsoleEmulatorChoice.Text = "Console emulator:";
-        lblConsoleEmulatorChoice.TextAlign = ContentAlignment.MiddleLeft;
-        //
-        // cboConsoleEmulator
-        //
-        cboConsoleEmulator.DropDownStyle = ComboBoxStyle.DropDownList;
-        cboConsoleEmulator.FormattingEnabled = true;
-        cboConsoleEmulator.Location = new Point(119, 3);
-        cboConsoleEmulator.Name = "cboConsoleEmulator";
-        cboConsoleEmulator.Size = new Size(200, 21);
-        cboConsoleEmulator.TabIndex = 1;
-        //
+        // 
         // tableLayoutPanel4
         // 
         tableLayoutPanel4.AutoSize = true;
@@ -443,8 +399,6 @@ partial class AdvancedSettingsPage
         GeneralGB.PerformLayout();
         tableLayoutPanel1.ResumeLayout(false);
         tableLayoutPanel1.PerformLayout();
-        tableLayoutPanelEmulatorChoice.ResumeLayout(false);
-        tableLayoutPanelEmulatorChoice.PerformLayout();
         tableLayoutPanel4.ResumeLayout(false);
         tableLayoutPanel4.PerformLayout();
         ResumeLayout(false);
@@ -464,9 +418,6 @@ partial class AdvancedSettingsPage
     private CheckBox chkUseLocalChangesAction;
     private CheckBox chkAlwaysShowAdvOpt;
     private SettingsCheckBox chkConsoleEmulator;
-    private TableLayoutPanel tableLayoutPanelEmulatorChoice;
-    private Label lblConsoleEmulatorChoice;
-    private ComboBox cboConsoleEmulator;
     private TableLayoutPanel tableLayoutPanel4;
     private SettingsCheckBox chkAutoNormaliseBranchName;
     private Label label1;

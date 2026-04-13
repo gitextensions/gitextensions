@@ -2,8 +2,9 @@
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using GitExtensions.Extensibility.Plugins;
 using GitExtUtils;
+using GitUI.ConsoleEmulation;
+using GitUI.ConsoleEmulation.NoEmulation;
 using GitUI.Models;
 using GitUI.Properties;
 using GitUI.UserControls;
@@ -26,7 +27,13 @@ public partial class FormStatus : GitExtensionsDialog
 
         _useDialogSettings = useDialogSettings;
 
-        ConsoleProcessController = consoleConsoleProcess ?? ConsoleControllersFactory.CreateConsoleProcessController();
+        ConsoleProcessController = consoleConsoleProcess ??
+                                   commands
+                                       .GetRequiredService<IConsoleControllersFactory>()
+                                       .CreateConsoleProcessController(
+                                           useConsoleEmulation: AppSettings.UseConsoleEmulatorForCommands,
+                                           configuredConsoleEmulator: AppSettings.ConsoleEmulatorName);
+
         ConsoleProcessController.ConsoleHostTerminated += (s, e) =>
         {
             // This means the control is not visible anymore, no use in keeping.
@@ -114,7 +121,7 @@ public partial class FormStatus : GitExtensionsDialog
 
     public static void ShowErrorDialog(IWin32Window owner, IGitUICommands commands, string text, params string[] output)
     {
-        using FormStatus form = new(commands, consoleConsoleProcess: new EditboxBasedConsoleProcessController(), useDialogSettings: true);
+        using FormStatus form = new(commands, consoleConsoleProcess: new NoEmulationConsoleProcessController(), useDialogSettings: true);
         form.Text = text;
         if (output?.Length > 0)
         {

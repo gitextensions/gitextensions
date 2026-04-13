@@ -35,6 +35,8 @@ partial class FormBrowseRepoSettingsPage
         chkShowConsoleTab = new SettingsCheckBox();
         cboTerminal = new ComboBox();
         lblDefaultShell = new Label();
+        lblConsoleEmulatorChoice = new Label();
+        cboConsoleEmulator = new ComboBox();
         chkUseBrowseForFileHistory = new SettingsCheckBox();
         chkUseDiffViewerForBlame = new SettingsCheckBox();
         chkShowFindInCommitFilesGitGrep = new SettingsCheckBox();
@@ -107,6 +109,27 @@ partial class FormBrowseRepoSettingsPage
         lblDefaultShell.TabIndex = 0;
         lblDefaultShell.Text = "Default shell";
         lblDefaultShell.TextAlign = ContentAlignment.MiddleLeft;
+        //
+        // lblConsoleEmulatorChoice
+        //
+        lblConsoleEmulatorChoice.AutoSize = true;
+        lblConsoleEmulatorChoice.Dock = DockStyle.Fill;
+        lblConsoleEmulatorChoice.Location = new Point(3, 27);
+        lblConsoleEmulatorChoice.Name = "lblConsoleEmulatorChoice";
+        lblConsoleEmulatorChoice.Size = new Size(251, 27);
+        lblConsoleEmulatorChoice.TabIndex = 11;
+        lblConsoleEmulatorChoice.Text = "Console emulator";
+        lblConsoleEmulatorChoice.TextAlign = ContentAlignment.MiddleLeft;
+        //
+        // cboConsoleEmulator
+        //
+        cboConsoleEmulator.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboConsoleEmulator.FormattingEnabled = true;
+        cboConsoleEmulator.Location = new Point(260, 29);
+        cboConsoleEmulator.Margin = new Padding(3, 2, 3, 2);
+        cboConsoleEmulator.Name = "cboConsoleEmulator";
+        cboConsoleEmulator.Size = new Size(262, 23);
+        cboConsoleEmulator.TabIndex = 12;
         // 
         // chkUseBrowseForFileHistory
         // 
@@ -114,7 +137,7 @@ partial class FormBrowseRepoSettingsPage
         chkUseBrowseForFileHistory.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         chkUseBrowseForFileHistory.Checked = false;
         chkUseBrowseForFileHistory.Dock = DockStyle.Fill;
-        chkUseBrowseForFileHistory.Location = new Point(4, 30);
+        chkUseBrowseForFileHistory.Location = new Point(4, 57);
         chkUseBrowseForFileHistory.ManualSectionAnchorName = "general-show-file-history-in-the-main-window";
         chkUseBrowseForFileHistory.Margin = new Padding(4, 3, 4, 3);
         chkUseBrowseForFileHistory.Name = "chkUseBrowseForFileHistory";
@@ -130,7 +153,7 @@ partial class FormBrowseRepoSettingsPage
         chkUseDiffViewerForBlame.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         chkUseDiffViewerForBlame.Checked = false;
         chkUseDiffViewerForBlame.Dock = DockStyle.Fill;
-        chkUseDiffViewerForBlame.Location = new Point(4, 55);
+        chkUseDiffViewerForBlame.Location = new Point(4, 82);
         chkUseDiffViewerForBlame.ManualSectionAnchorName = "general-show-blame-in-diff-view";
         chkUseDiffViewerForBlame.Margin = new Padding(4, 3, 4, 3);
         chkUseDiffViewerForBlame.Name = "chkUseDiffViewerForBlame";
@@ -146,7 +169,7 @@ partial class FormBrowseRepoSettingsPage
         chkShowFindInCommitFilesGitGrep.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         chkShowFindInCommitFilesGitGrep.Checked = false;
         chkShowFindInCommitFilesGitGrep.Dock = DockStyle.Fill;
-        chkShowFindInCommitFilesGitGrep.Location = new Point(4, 80);
+        chkShowFindInCommitFilesGitGrep.Location = new Point(4, 107);
         chkShowFindInCommitFilesGitGrep.ManualSectionAnchorName = null;
         chkShowFindInCommitFilesGitGrep.Margin = new Padding(4, 3, 4, 3);
         chkShowFindInCommitFilesGitGrep.Name = "chkShowFindInCommitFilesGitGrep";
@@ -162,7 +185,7 @@ partial class FormBrowseRepoSettingsPage
         chkShowRevisionGridTooltip.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         chkShowRevisionGridTooltip.Checked = false;
         chkShowRevisionGridTooltip.Dock = DockStyle.Fill;
-        chkShowRevisionGridTooltip.Location = new Point(4, 105);
+        chkShowRevisionGridTooltip.Location = new Point(4, 132);
         chkShowRevisionGridTooltip.ManualSectionAnchorName = "";
         chkShowRevisionGridTooltip.Margin = new Padding(4, 3, 4, 3);
         chkShowRevisionGridTooltip.Name = "chkShowRevisionGridTooltip";
@@ -213,21 +236,24 @@ partial class FormBrowseRepoSettingsPage
         tlpnlGeneral.ColumnStyles.Add(new ColumnStyle());
         tlpnlGeneral.Controls.Add(cboTerminal, 1, 0);
         tlpnlGeneral.Controls.Add(lblDefaultShell, 0, 0);
-        tlpnlGeneral.Controls.Add(chkUseBrowseForFileHistory, 0, 1);
-        tlpnlGeneral.Controls.Add(chkUseDiffViewerForBlame, 0, 2);
-        tlpnlGeneral.Controls.Add(chkShowFindInCommitFilesGitGrep, 0, 3);
-        tlpnlGeneral.Controls.Add(chkShowRevisionGridTooltip, 0, 4);
+        tlpnlGeneral.Controls.Add(lblConsoleEmulatorChoice, 0, 1);
+        tlpnlGeneral.Controls.Add(cboConsoleEmulator, 1, 1);
+        tlpnlGeneral.Controls.Add(chkUseBrowseForFileHistory, 0, 2);
+        tlpnlGeneral.Controls.Add(chkUseDiffViewerForBlame, 0, 3);
+        tlpnlGeneral.Controls.Add(chkShowFindInCommitFilesGitGrep, 0, 4);
+        tlpnlGeneral.Controls.Add(chkShowRevisionGridTooltip, 0, 5);
         tlpnlGeneral.Dock = DockStyle.Fill;
         tlpnlGeneral.Location = new Point(8, 24);
         tlpnlGeneral.Name = "tlpnlGeneral";
-        tlpnlGeneral.RowCount = 5;
+        tlpnlGeneral.RowCount = 6;
+        tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.Size = new Size(700, 127);
+        tlpnlGeneral.Size = new Size(700, 154);
         tlpnlGeneral.TabIndex = 0;
         // 
         // gbTabs
@@ -332,6 +358,8 @@ partial class FormBrowseRepoSettingsPage
     private SettingsCheckBox chkShowConsoleTab;
     private ComboBox cboTerminal;
     private Label lblDefaultShell;
+    private Label lblConsoleEmulatorChoice;
+    private ComboBox cboConsoleEmulator;
     private SettingsCheckBox chkUseBrowseForFileHistory;
     private SettingsCheckBox chkUseDiffViewerForBlame;
     private SettingsCheckBox chkShowFindInCommitFilesGitGrep;

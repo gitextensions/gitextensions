@@ -1,7 +1,7 @@
 ﻿using ConEmu.WinForms;
 using GitCommands;
-using GitExtensions.Extensibility.Plugins;
-using GitUI.UserControls;
+using GitUI.ConsoleEmulation;
+using GitUI.ConsoleEmulation.ConEmu;
 
 namespace GitUITests.UserControls;
 public class ConsoleEmulatorOutputControllerFixture
@@ -13,7 +13,7 @@ public class ConsoleEmulatorOutputControllerFixture
         string outputData = "output data";
         string received = string.Empty;
 
-        void FireDataReceived(ConsoleTextEventArgs e)
+        void FireDataReceived(ConsoleOutputEventArgs e)
         {
             received += e.Text;
         }
@@ -35,7 +35,7 @@ public class ConsoleEmulatorOutputControllerFixture
         string outputData = "output data";
         string received = string.Empty;
 
-        void FireDataReceived(ConsoleTextEventArgs e)
+        void FireDataReceived(ConsoleOutputEventArgs e)
         {
             received += e.Text;
         }
@@ -69,7 +69,7 @@ public class ConsoleEmulatorOutputControllerFixture
 
         List<string> received = [];
 
-        void FireDataReceived(ConsoleTextEventArgs e)
+        void FireDataReceived(ConsoleOutputEventArgs e)
         {
             received.Add(e.Text);
         }
@@ -114,7 +114,7 @@ public class ConsoleEmulatorOutputControllerFixture
 
         List<string> received = [];
 
-        void FireDataReceived(ConsoleTextEventArgs e)
+        void FireDataReceived(ConsoleOutputEventArgs e)
         {
             received.Add(e.Text);
         }
