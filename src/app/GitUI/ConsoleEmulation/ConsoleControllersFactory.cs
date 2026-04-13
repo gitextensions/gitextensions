@@ -1,4 +1,4 @@
-using GitUI.ConsoleEmulation.ConEmu;
+﻿using GitUI.ConsoleEmulation.ConEmu;
 using GitUI.ConsoleEmulation.NoEmulation;
 
 namespace GitUI.ConsoleEmulation;
@@ -8,7 +8,9 @@ internal class ConsoleControllersFactory(IConsoleEmulator[] consoleEmulators) : 
     public IReadOnlyCollection<IConsoleEmulator> AvailableConsoleEmulators { get; } =
         consoleEmulators.Where(x => x.IsSupportedInCurrentEnvironment).ToArray();
 
-    /// <summary>Creates a console process controller for the configured emulator.</summary>
+    /// <summary>
+    ///  Creates a console process controller for the configured emulator.
+    /// </summary>
     public IConsoleProcessController CreateConsoleProcessController(bool useConsoleEmulation, string configuredConsoleEmulator)
     {
         if (!useConsoleEmulation)
@@ -16,8 +18,7 @@ internal class ConsoleControllersFactory(IConsoleEmulator[] consoleEmulators) : 
             return new NoEmulationConsoleProcessController();
         }
 
-        IConsoleEmulator? configuredEmulator = TryGetConfiguredConsoleEmulator(configuredConsoleEmulator);
-        if (configuredEmulator is not null)
+        if (TryGetConfiguredConsoleEmulator(configuredConsoleEmulator) is { } configuredEmulator)
         {
             return configuredEmulator.CreateConsoleProcessController();
         }
@@ -31,11 +32,12 @@ internal class ConsoleControllersFactory(IConsoleEmulator[] consoleEmulators) : 
         return new NoEmulationConsoleProcessController();
     }
 
-    /// <summary>Creates a console shell controller for the configured emulator, if available.</summary>
+    /// <summary>
+    ///  Creates a console shell controller for the configured emulator, if available.
+    /// </summary>
     public IConsoleShellController? CreateConsoleShellControl(string configuredConsoleEmulator)
     {
-        IConsoleEmulator? configuredEmulator = TryGetConfiguredConsoleEmulator(configuredConsoleEmulator);
-        if (configuredEmulator is not null)
+        if (TryGetConfiguredConsoleEmulator(configuredConsoleEmulator) is { } configuredEmulator)
         {
             return configuredEmulator.CreateConsoleShellController();
         }
