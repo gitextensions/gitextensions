@@ -12,6 +12,7 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.HelperDialogs;
@@ -68,10 +69,17 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         _buildServerAdapter = buildServerAdapter;
 
         // When a build server adapter is available (including auto-detected),
-        // ensure the column visibility reflects the user's display preferences
+        // ensure the column visibility and width reflect the user's display preferences
         if (buildServerAdapter is not null)
         {
-            ColumnProvider.Column.Visible = AppSettings.ShowBuildStatusIconColumn || AppSettings.ShowBuildStatusTextColumn;
+            bool showIcon = AppSettings.ShowBuildStatusIconColumn;
+            bool showText = AppSettings.ShowBuildStatusTextColumn;
+            ColumnProvider.Column.Visible = showIcon || showText;
+
+            if (showIcon && !showText)
+            {
+                ColumnProvider.Column.Width = DpiUtil.Scale(16);
+            }
         }
 
         await TaskScheduler.Default;
@@ -364,11 +372,8 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
             }
         }
 
-        // For GitHub Actions with explicit config, ensure owner/repo are populated from remotes
-        if (buildServerName == "GitHub Actions")
-        {
-            TryAutoDetectBuildServerType(buildServerSettings.SettingsSource);
-        }
+        // When explicitly configured, let the matching detector populate settings from remotes
+        TryPopulateSettingsForBuildServer(buildServerName, buildServerSettings.SettingsSource);
 
         IEnumerable<Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>> exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
         Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>? export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerName);
@@ -411,9 +416,9 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     }
 
     /// <summary>
-    ///  Attempts to detect the build server type from the repository's remote URLs.
-    ///  Currently detects GitHub-hosted repositories and returns "GitHub Actions".
-    ///  When detected, writes the owner and repository to <paramref name="settingsSource"/>
+    ///  Attempts to detect the build server type from the repository's remote URLs
+    ///  by querying registered <see cref="IBuildServerAutoDetector"/> exports.
+    ///  When detected, writes adapter-specific settings to <paramref name="settingsSource"/>
     ///  (if not already set) so the adapter can use them without re-parsing.
     ///  Respects <see cref="AppSettings.PrioritizedBuildServerRemoteNames"/> for remote ordering,
     ///  so that forks resolve to the upstream project's CI rather than the fork's.
@@ -422,40 +427,17 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     {
         try
         {
-            GitHubRemoteParser parser = new();
-            IGitModule module = _module();
-            IReadOnlyList<string> remoteNames = module.GetRemoteNames();
-
-            string[] prioritizedNames = AppSettings.PrioritizedBuildServerRemoteNames
-                .Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-
-            IEnumerable<string> orderedRemotes = remoteNames
-                .OrderBy(r =>
-                {
-                    int index = Array.FindIndex(prioritizedNames, n => string.Equals(n, r, StringComparison.OrdinalIgnoreCase));
-                    return index >= 0 ? index : prioritizedNames.Length;
-                });
-
-            foreach (string remoteName in orderedRemotes)
+            List<string> remoteUrls = GetOrderedRemoteUrls();
+            if (remoteUrls.Count == 0)
             {
-                string remoteUrl = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
-                if (!string.IsNullOrWhiteSpace(remoteUrl)
-                    && parser.TryExtractGitHubDataFromRemoteUrl(remoteUrl, out string? owner, out string? repository))
+                return null;
+            }
+
+            foreach (Lazy<IBuildServerAutoDetector> export in ManagedExtensibility.GetExports<IBuildServerAutoDetector>())
+            {
+                if (export.Value.TryDetect(remoteUrls, settingsSource))
                 {
-                    if (settingsSource is not null)
-                    {
-                        if (string.IsNullOrWhiteSpace(settingsSource.GetString("GitHubActionsOwner", null)))
-                        {
-                            settingsSource.SetString("GitHubActionsOwner", owner);
-                        }
-
-                        if (string.IsNullOrWhiteSpace(settingsSource.GetString("GitHubActionsRepository", null)))
-                        {
-                            settingsSource.SetString("GitHubActionsRepository", repository);
-                        }
-                    }
-
-                    return "GitHub Actions";
+                    return export.Value.BuildServerType;
                 }
             }
         }
@@ -465,6 +447,67 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         }
 
         return null;
+    }
+
+    /// <summary>
+    ///  For an explicitly configured build server, runs the matching auto-detector
+    ///  to populate adapter-specific settings from remote URLs.
+    /// </summary>
+    private void TryPopulateSettingsForBuildServer(string buildServerName, GitExtensions.Extensibility.Settings.SettingsSource settingsSource)
+    {
+        try
+        {
+            List<string> remoteUrls = GetOrderedRemoteUrls();
+            if (remoteUrls.Count == 0)
+            {
+                return;
+            }
+
+            foreach (Lazy<IBuildServerAutoDetector> export in ManagedExtensibility.GetExports<IBuildServerAutoDetector>())
+            {
+                if (export.Value.BuildServerType == buildServerName)
+                {
+                    export.Value.TryDetect(remoteUrls, settingsSource);
+                    return;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.Write($"Populate build server settings failed: {ex}");
+        }
+    }
+
+    /// <summary>
+    ///  Collects remote URLs from the current module, ordered by
+    ///  <see cref="AppSettings.PrioritizedBuildServerRemoteNames"/>.
+    /// </summary>
+    private List<string> GetOrderedRemoteUrls()
+    {
+        IGitModule module = _module();
+        IReadOnlyList<string> remoteNames = module.GetRemoteNames();
+
+        string[] prioritizedNames = AppSettings.PrioritizedBuildServerRemoteNames
+            .Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        IEnumerable<string> orderedRemotes = remoteNames
+            .OrderBy(r =>
+            {
+                int index = Array.FindIndex(prioritizedNames, n => string.Equals(n, r, StringComparison.OrdinalIgnoreCase));
+                return index >= 0 ? index : prioritizedNames.Length;
+            });
+
+        List<string> remoteUrls = [];
+        foreach (string remoteName in orderedRemotes)
+        {
+            string remoteUrl = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
+            if (!string.IsNullOrWhiteSpace(remoteUrl))
+            {
+                remoteUrls.Add(remoteUrl);
+            }
+        }
+
+        return remoteUrls;
     }
 
     public void Dispose()

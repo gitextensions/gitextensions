@@ -85,21 +85,24 @@ Detail of the error:");
 
         if (!_settings.IsValid())
         {
-            return;
+            throw new InvalidOperationException("Azure DevOps integration settings are incomplete (project URL missing).");
         }
 
         _projectUrl = _buildServerWatcher.ReplaceVariables(_settings.ProjectUrl);
 
-        if (!Uri.IsWellFormedUriString(_projectUrl, UriKind.Absolute) || string.IsNullOrWhiteSpace(_settings.ApiToken))
+        if (!Uri.IsWellFormedUriString(_projectUrl, UriKind.Absolute))
         {
-            return;
+            throw new InvalidOperationException("Azure DevOps project URL is not a valid absolute URI.");
         }
 
         _apiClient = new ApiClient(_projectUrl, _settings.ApiToken);
         if (_buildsCache is null || _buildsCache.Id != CacheKey)
         {
             _buildsCache = null;
-            _buildDefinitionsTask = ThreadHelper.JoinableTaskFactory.RunAsync(() => _apiClient.GetBuildDefinitionsAsync(_settings.BuildDefinitionFilter));
+            _buildDefinitionsTask = ThreadHelper.JoinableTaskFactory.RunAsync(
+                () => _apiClient.GetBuildDefinitionsAsync(
+                    _settings.BuildDefinitionFilter,
+                    string.IsNullOrWhiteSpace(_settings.RepositoryName) ? null : _settings.RepositoryName));
         }
         else
         {
