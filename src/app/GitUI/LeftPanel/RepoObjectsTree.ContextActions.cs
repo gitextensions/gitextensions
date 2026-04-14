@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.LeftPanel.ContextMenu;
@@ -100,12 +101,16 @@ partial class RepoObjectsTree : IMenuItemFactory
         bool isSingleWorktreeSelected = hasSingleSelection && selectedNode is WorktreeNode;
         WorktreeNode? worktreeNode = selectedNode as WorktreeNode;
         bool canActOnWorktree = isSingleWorktreeSelected && worktreeNode is { IsCurrent: false, Worktree.IsDeleted: false };
+        bool worktreePathExists = isSingleWorktreeSelected && worktreeNode is not null && Directory.Exists(worktreeNode.Worktree.Path);
 
         // Always show menu items for any worktree node, but disable for current/deleted
         mnubtnOpenWorktree.Enable(isSingleWorktreeSelected);
         mnubtnOpenWorktree.Enabled = canActOnWorktree;
         mnubtnDeleteWorktree.Enable(isSingleWorktreeSelected);
         mnubtnDeleteWorktree.Enabled = canActOnWorktree;
+        mnubtnCopyWorktreePath.Enable(isSingleWorktreeSelected);
+        mnubtnShowWorktreeInFolder.Enable(isSingleWorktreeSelected);
+        mnubtnShowWorktreeInFolder.Enabled = worktreePathExists;
     }
 
     private void EnableStashContextMenu(bool hasSingleSelection, NodeBase? selectedNode)
@@ -213,6 +218,8 @@ partial class RepoObjectsTree : IMenuItemFactory
         RegisterClick(mnubtnManageWorktreesFromRootNode, () => _worktreeTree.ManageWorktrees(this));
         RegisterClick<WorktreeNode>(mnubtnOpenWorktree, node => node.OpenWorktree());
         RegisterClick<WorktreeNode>(mnubtnDeleteWorktree, node => node.DeleteWorktree());
+        RegisterClick<WorktreeNode>(mnubtnCopyWorktreePath, node => ClipboardUtil.TrySetText(node.Worktree.Path));
+        RegisterClick<WorktreeNode>(mnubtnShowWorktreeInFolder, node => OsShellUtil.OpenWithFileExplorer(node.Worktree.Path));
 
         // Expand / Collapse
         RegisterClick(mnubtnCollapse, () => GetSelectedNodes().HavingChildren().Collapsible().ForEach(node => node.TreeViewNode.Collapse()));

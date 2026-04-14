@@ -472,7 +472,14 @@ public partial class FormPush : GitModuleForm
             ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
             if (_createPullRequestCB.Checked)
             {
-                UICommands.StartCreatePullRequest(owner);
+                if (PluginRegistry.TryGetGitHosterForModule(Module) is not null)
+                {
+                    UICommands.StartCreatePullRequest(owner);
+                }
+                else
+                {
+                    TryOpenAzureDevOpsPullRequestInBrowser();
+                }
             }
 
             return true;
@@ -825,7 +832,7 @@ public partial class FormPush : GitModuleForm
         Text = string.Concat(_pushCaption.Text, " (", Module.WorkingDir, ")");
 
         IRepositoryHostPlugin? gitHoster = PluginRegistry.TryGetGitHosterForModule(Module);
-        _createPullRequestCB.Enabled = gitHoster is not null;
+        _createPullRequestCB.Enabled = gitHoster is not null || HasAzureDevOpsRemote();
     }
 
     private void AddRemoteClick(object sender, EventArgs e)
@@ -1275,6 +1282,56 @@ public partial class FormPush : GitModuleForm
 
             pushCheckBox.Value = willPush(row);
         }
+    }
+
+    /// <summary>
+    ///  Checks whether any configured remote points to an Azure DevOps repository.
+    /// </summary>
+    private bool HasAzureDevOpsRemote()
+    {
+        AzureDevOpsRemoteParser parser = new();
+        foreach (string remoteName in Module.GetRemoteNames())
+        {
+            string remoteUrl = Module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
+            if (!string.IsNullOrWhiteSpace(remoteUrl) && parser.IsValidRemoteUrl(remoteUrl))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /// <summary>
+    ///  Opens the Azure DevOps "create pull request" page in the default browser
+    ///  for the currently selected remote and branch.
+    /// </summary>
+    private void TryOpenAzureDevOpsPullRequestInBrowser()
+    {
+        string? remoteUrl = _selectedRemote?.Url;
+        if (string.IsNullOrWhiteSpace(remoteUrl))
+        {
+            return;
+        }
+
+        AzureDevOpsRemoteParser parser = new();
+        if (!parser.TryExtractAzureDevopsDataFromRemoteUrl(remoteUrl, out string? owner, out string? project, out string? repo))
+        {
+            return;
+        }
+
+        string? repoWebUrl = AzureDevOpsRemoteParser.BuildRepositoryUrl(remoteUrl, owner, project, repo);
+        if (repoWebUrl is null)
+        {
+            return;
+        }
+
+        string branch = _selectedBranch is not null and not HeadText and not AllRefs
+            ? _selectedBranch
+            : Module.GetSelectedBranch();
+
+        string pullRequestUrl = $"{repoWebUrl}/pullrequestcreate?sourceRef={Uri.EscapeDataString(branch)}";
+        OsShellUtil.OpenUrlInDefaultBrowser(pullRequestUrl);
     }
 
     internal TestAccessor GetTestAccessor() => new(this);

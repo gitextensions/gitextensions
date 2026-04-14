@@ -11,6 +11,7 @@ public class IntegrationSettings
     private const string ProjectUrlKey = "ProjectUrl";
     private const string BuildDefinitionFilterKey = "BuildDefinitionNameFilter";
     private const string ApiTokenKey = "RestApiToken";
+    private const string RepositoryNameKey = "RepositoryName";
 
     /// <summary>
     /// Reads these settings from the given <see cref="SettingsSource"/>
@@ -20,12 +21,14 @@ public class IntegrationSettings
         string projectUrl = config?.GetString(ProjectUrlKey, "") ?? "";
         string buildDefinitionFilter = config?.GetString(BuildDefinitionFilterKey, "") ?? "";
         string apiToken = config?.GetString(ApiTokenKey, "") ?? "";
+        string repositoryName = config?.GetString(RepositoryNameKey, "") ?? "";
 
         return new IntegrationSettings()
         {
             ProjectUrl = projectUrl,
             BuildDefinitionFilter = buildDefinitionFilter,
             ApiToken = apiToken,
+            RepositoryName = repositoryName,
         };
     }
 
@@ -45,6 +48,11 @@ public class IntegrationSettings
     public string ApiToken { get; set; } = "";
 
     /// <summary>
+    ///  The repository name, used to scope build definition queries to the correct repository.
+    /// </summary>
+    public string RepositoryName { get; set; } = "";
+
+    /// <summary>
     /// Writes these settings to the given <see cref="SettingsSource"/>
     /// </summary>
     public void WriteTo(SettingsSource config)
@@ -52,13 +60,15 @@ public class IntegrationSettings
         config.SetString(ProjectUrlKey, ProjectUrl);
         config.SetString(BuildDefinitionFilterKey, BuildDefinitionFilter);
         config.SetString(ApiTokenKey, ApiToken);
+        config.SetString(RepositoryNameKey, RepositoryName);
     }
 
     /// <summary>
     /// Validates if these settings are valid and good to use.
+    /// A PAT is optional — when absent, default Windows credentials are used.
     /// </summary>
     public bool IsValid()
     {
-        return !(string.IsNullOrWhiteSpace(ProjectUrl) || string.IsNullOrWhiteSpace(ApiToken)) && BuildServerSettingsHelper.IsRegexValid(BuildDefinitionFilter);
+        return !string.IsNullOrWhiteSpace(ProjectUrl) && BuildServerSettingsHelper.IsRegexValid(BuildDefinitionFilter);
     }
 }

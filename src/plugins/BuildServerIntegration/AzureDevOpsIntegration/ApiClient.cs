@@ -12,42 +12,117 @@ namespace AzureDevOpsIntegration;
 /// </summary>
 public sealed class ApiClient : IDisposable
 {
-    private const string BuildDefinitionsUrl = "build/definitions?api-version=2.0";
     private const string Properties = "properties=sourceVersion,status,buildNumber,result,definition,_links,startTime,finishTime";
     private readonly HttpClient _httpClient;
 
     /// <summary>
-    /// Creates a new API client instance for the given Azure DevOps / TFS project, that uses the given authentication token.
+    ///  Creates a new API client for the given Azure DevOps / TFS project.
     /// </summary>
     /// <param name="projectUrl">
-    /// The home page url of the project the API client should provide access to.
+    ///  The home page url of the project the API client should provide access to.
     /// </param>
     /// <param name="apiToken">
-    /// The authentication token that is required and used to access the REST API of the Azure DevOps / TFS instance.
+    ///  A Personal Access Token for Basic auth. When <see langword="null"/> or empty,
+    ///  the client attempts to obtain a Bearer token from Git Credential Manager, and
+    ///  falls back to default Windows credentials (NTLM/Negotiate) for on-premises TFS.
     /// </param>
-    public ApiClient(string projectUrl, string apiToken)
+    /// <param name="gitExecutable">
+    ///  Path to the git executable, used to invoke <c>git credential fill</c> when
+    ///  no PAT is provided. When <see langword="null"/>, defaults to <c>"git"</c>.
+    /// </param>
+    public ApiClient(string projectUrl, string? apiToken, string? gitExecutable = null)
     {
-        _httpClient = new HttpClient();
-        InitializeHttpClient(projectUrl, apiToken);
+        if (!string.IsNullOrWhiteSpace(apiToken))
+        {
+            _httpClient = new HttpClient();
+            SetBasicAuth(apiToken);
+        }
+        else
+        {
+            string? bearerToken = TryGetBearerTokenFromGcm(projectUrl, gitExecutable);
+            if (bearerToken is not null)
+            {
+                _httpClient = new HttpClient();
+                _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", bearerToken);
+            }
+            else
+            {
+                _httpClient = new HttpClient(new HttpClientHandler { UseDefaultCredentials = true });
+            }
+        }
+
+        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        _httpClient.BaseAddress = new Uri(projectUrl.EndsWith('/') ? projectUrl + "_apis/" : projectUrl + "/_apis/");
+    }
+
+    private void SetBasicAuth(string apiToken)
+    {
+        string apiTokenHeaderValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($":{apiToken}"));
+        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", apiTokenHeaderValue);
     }
 
     /// <summary>
-    /// Configures the <see cref="HttpClient"/> of the API client instance, so that API requests can be made with it.
+    ///  Attempts to obtain a Bearer token from Git Credential Manager via <c>git credential fill</c>.
     /// </summary>
-    /// <param name="projectUrl">
-    /// The home page url of the Azure DevOps / TFS project the API client should provide access to.
-    /// </param>
-    /// <param name="apiToken">
-    /// The authentication token that is required and used to access the REST API of the Azure DevOps / TFS instance.
-    /// </param>
-    private void InitializeHttpClient(string projectUrl, string apiToken)
+    private static string? TryGetBearerTokenFromGcm(string projectUrl, string? gitExecutable)
     {
-        _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+        try
+        {
+            if (!Uri.TryCreate(projectUrl, UriKind.Absolute, out Uri? uri))
+            {
+                return null;
+            }
 
-        string apiTokenHeaderValue = Convert.ToBase64String(Encoding.ASCII.GetBytes($":{apiToken}"));
-        _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Basic", apiTokenHeaderValue);
+            string input = $"protocol={uri.Scheme}\nhost={uri.Host}\npath={uri.AbsolutePath.TrimStart('/')}\n\n";
 
-        _httpClient.BaseAddress = new Uri(projectUrl.EndsWith('/') ? projectUrl + "_apis/" : projectUrl + "/_apis/");
+            using System.Diagnostics.Process process = new()
+            {
+                StartInfo = new System.Diagnostics.ProcessStartInfo
+                {
+                    FileName = gitExecutable ?? "git",
+                    Arguments = "credential fill",
+                    RedirectStandardInput = true,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false,
+                    CreateNoWindow = true,
+                }
+            };
+
+            process.Start();
+            process.StandardInput.Write(input);
+            process.StandardInput.Close();
+
+            string output = process.StandardOutput.ReadToEnd();
+            process.WaitForExit(TimeSpan.FromSeconds(30));
+
+            if (process.ExitCode != 0)
+            {
+                return null;
+            }
+
+            foreach (string line in output.Split('\n', StringSplitOptions.RemoveEmptyEntries))
+            {
+                // Split on the first '=' only to handle tokens containing '='
+                int separatorIndex = line.IndexOf('=');
+                if (separatorIndex > 0)
+                {
+                    string key = line[..separatorIndex].Trim();
+                    string value = line[(separatorIndex + 1)..].Trim();
+
+                    if (key == "password" && !string.IsNullOrWhiteSpace(value))
+                    {
+                        return value;
+                    }
+                }
+            }
+        }
+        catch
+        {
+            // GCM not available or failed — fall back to default credentials
+        }
+
+        return null;
     }
 
     private static readonly JsonSerializerOptions _jsonOptions = new()
@@ -69,11 +144,23 @@ public sealed class ApiClient : IDisposable
         return JsonSerializer.Deserialize<T>(json, _jsonOptions)!;
     }
 
-    public async Task<string?> GetBuildDefinitionsAsync(string buildDefinitionNameFilter)
+    public async Task<string?> GetBuildDefinitionsAsync(string buildDefinitionNameFilter, string? repositoryName = null)
     {
         bool isNotFiltered = string.IsNullOrWhiteSpace(buildDefinitionNameFilter);
         string buildDefinitionUriFilter = isNotFiltered ? string.Empty : "&name=" + buildDefinitionNameFilter;
-        ListWrapper<BuildDefinition> buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl + buildDefinitionUriFilter);
+
+        string repositoryFilter = "";
+        if (!string.IsNullOrWhiteSpace(repositoryName))
+        {
+            string? repositoryId = await GetRepositoryIdAsync(repositoryName);
+            if (repositoryId is not null)
+            {
+                repositoryFilter = $"&repositoryId={repositoryId}&repositoryType=TfsGit";
+            }
+        }
+
+        string url = $"build/definitions?api-version=6.0{buildDefinitionUriFilter}{repositoryFilter}";
+        ListWrapper<BuildDefinition> buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(url);
         if (buildDefinitions.Count != 0)
         {
             return GetBuildDefinitionsIds(buildDefinitions.Value);
@@ -84,9 +171,25 @@ public sealed class ApiClient : IDisposable
             return null;
         }
 
-        buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>(BuildDefinitionsUrl);
+        buildDefinitions = await HttpGetAsync<ListWrapper<BuildDefinition>>($"build/definitions?api-version=6.0{repositoryFilter}");
 
         return GetBuildDefinitionsIds(buildDefinitions.Value?.Where(b => b.Name is not null && Regex.IsMatch(b.Name, buildDefinitionNameFilter)));
+    }
+
+    /// <summary>
+    ///  Resolves a repository name to its GUID via the Azure DevOps Git API.
+    /// </summary>
+    private async Task<string?> GetRepositoryIdAsync(string repositoryName)
+    {
+        try
+        {
+            GitRepository repo = await HttpGetAsync<GitRepository>($"git/repositories/{Uri.EscapeDataString(repositoryName)}?api-version=6.0");
+            return repo.Id;
+        }
+        catch
+        {
+            return null;
+        }
     }
 
     private static string? GetBuildDefinitionsIds(IEnumerable<BuildDefinition>? buildDefinitions)
@@ -158,9 +261,15 @@ internal class Project
     public string? Url { get; set; }
 }
 
-public class BuildDefinition
+internal class GitRepository
 {
     public string? Id { get; set; }
+    public string? Name { get; set; }
+}
+
+public class BuildDefinition
+{
+    public int Id { get; set; }
     public string? Name { get; set; }
     public string? Url { get; set; }
 }

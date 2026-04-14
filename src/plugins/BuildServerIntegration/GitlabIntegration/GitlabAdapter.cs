@@ -91,23 +91,17 @@ public sealed class GitlabAdapter : IBuildServerAdapter
                     totalPages = _pagesLimit.Value;
                 }
 
-                Task[] pagesTasks = new Task[totalPages - 1];
+                Task<PagedResponse<GitlabPipeline>>[] pagesTasks = new Task<PagedResponse<GitlabPipeline>>[totalPages - 1];
                 for (int i = 2; i <= totalPages; i++)
                 {
-                    Task<PagedResponse<GitlabPipeline>> pageTask = _apiClient.GetPipelinesAsync(sinceDate, running, i, cancellationToken);
-                    pagesTasks[i - 2] = pageTask.ContinueWith(x =>
-                        {
-                            ProcessLoadedBuilds(x.Result.Items, observer);
-                        },
-                        cancellationToken,
-                        TaskContinuationOptions.None,
-                        TaskScheduler.Current);
+                    pagesTasks[i - 2] = _apiClient.GetPipelinesAsync(sinceDate, running, i, cancellationToken);
                 }
 
-                await Task.Factory.ContinueWhenAll(pagesTasks, t =>
+                PagedResponse<GitlabPipeline>[] pages = await Task.WhenAll(pagesTasks);
+                foreach (PagedResponse<GitlabPipeline> page in pages)
                 {
-                    observer.OnCompleted();
-                }, cancellationToken);
+                    ProcessLoadedBuilds(page.Items, observer);
+                }
             }
             else
             {
@@ -120,9 +114,9 @@ public sealed class GitlabAdapter : IBuildServerAdapter
                     currentPage = await _apiClient.GetPipelinesAsync(sinceDate, running, currentPage.NextPage.Value, cancellationToken);
                     ProcessLoadedBuilds(currentPage.Items, observer);
                 }
-
-                observer.OnCompleted();
             }
+
+            observer.OnCompleted();
         }
         catch (OperationCanceledException)
         {
