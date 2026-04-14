@@ -25,12 +25,12 @@ internal class ConsoleEmulatorsRegistry(
 
         if (TryGetConfiguredConsoleEmulator() is { } configuredEmulator)
         {
-            return configuredEmulator.CreateConsoleProcessController();
+            return configuredEmulator.CreateCommandController();
         }
 
         if (TryGetFallbackConsoleEmulator() is { } fallbackConsoleEmulator)
         {
-            return fallbackConsoleEmulator.CreateConsoleProcessController();
+            return fallbackConsoleEmulator.CreateCommandController();
         }
 
         // Fallback to no console emulation
@@ -44,12 +44,12 @@ internal class ConsoleEmulatorsRegistry(
     {
         if (TryGetConfiguredConsoleEmulator() is { } configuredEmulator)
         {
-            return configuredEmulator.CreateConsoleShellController();
+            return configuredEmulator.CreateShellController();
         }
 
         if (TryGetFallbackConsoleEmulator() is { } fallbackConsoleEmulator)
         {
-            return fallbackConsoleEmulator.CreateConsoleShellController();
+            return fallbackConsoleEmulator.CreateShellController();
         }
 
         return null;
