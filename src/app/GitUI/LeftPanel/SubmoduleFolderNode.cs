@@ -26,4 +26,43 @@ internal sealed class SubmoduleFolderNode : Node
 
     protected override FontStyle GetFontStyle()
         => base.GetFontStyle() | FontStyle.Italic;
+
+    /// <summary>
+    ///  Compacts chains of single-child folder nodes by merging their names with "/" separators.
+    ///  For example, a chain "extension" → "src" → "test" → "assets" becomes
+    ///  a single folder node named "extension/src/test/assets".
+    /// </summary>
+    /// <summary>
+    ///  Compacts chains of single-child folder nodes by merging their names with "/" separators.
+    ///  For example, a chain "extension" → "src" → "test" → "assets" becomes
+    ///  a single folder node named "extension/src/test/assets".
+    /// </summary>
+    internal void CompactSingleChildFolders()
+    {
+        while (Nodes.Count == 1)
+        {
+            SubmoduleFolderNode? childFolder = null;
+            foreach (Node child in Nodes)
+            {
+                childFolder = child as SubmoduleFolderNode;
+            }
+
+            if (childFolder is null)
+            {
+                break;
+            }
+
+            _name += "/" + childFolder._name;
+            List<Node> grandchildren = [.. childFolder.Nodes];
+            Nodes.Clear();
+            Nodes.AddNodes(grandchildren);
+        }
+    }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor(SubmoduleFolderNode node)
+    {
+        public string Name => node._name;
+    }
 }

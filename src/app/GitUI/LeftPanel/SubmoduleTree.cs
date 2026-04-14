@@ -341,6 +341,9 @@ internal sealed class SubmoduleTree : Tree
             }
         }
 
+        // Compact chains of single-child folder nodes for a cleaner display
+        CompactSingleChildFolderChains(rootNode.Nodes);
+
         Validates.NotNull(result.TopProject);
 
         // Add top-module node, and move children of root to it
@@ -353,6 +356,21 @@ internal sealed class SubmoduleTree : Tree
             result.TopProject.Path);
         topModuleNode.Nodes.AddNodes(rootNode.Nodes);
         nodes.AddNode(topModuleNode);
+
+        return;
+
+        static void CompactSingleChildFolderChains(Nodes nodes)
+        {
+            foreach (Node node in nodes)
+            {
+                if (node is SubmoduleFolderNode folderNode)
+                {
+                    folderNode.CompactSingleChildFolders();
+                }
+
+                CompactSingleChildFolderChains(node.Nodes);
+            }
+        }
     }
 
     public void UpdateSubmodule(IWin32Window owner, SubmoduleNode node)
