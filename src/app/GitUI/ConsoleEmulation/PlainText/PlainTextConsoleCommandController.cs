@@ -10,12 +10,12 @@ using GitUI.Theming;
 using Microsoft;
 using Timer = System.Windows.Forms.Timer;
 
-namespace GitUI.ConsoleEmulation.NoEmulation;
+namespace GitUI.ConsoleEmulation.PlainText;
 
 /// <summary>
 ///  Displays redirected process output in an edit box when no embedded terminal is being used.
 /// </summary>
-public sealed class NoEmulationConsoleProcessController : ContainerControl, IConsoleProcessController
+public sealed class PlainTextConsoleCommandController : ContainerControl, IConsoleCommandController
 {
     private readonly RichTextBox _editbox;
 
@@ -27,7 +27,7 @@ public sealed class NoEmulationConsoleProcessController : ContainerControl, ICon
 
     private StreamWriter? _input;
 
-    public NoEmulationConsoleProcessController()
+    public PlainTextConsoleCommandController()
     {
         _editbox = new RichTextBox
         {
@@ -63,8 +63,8 @@ public sealed class NoEmulationConsoleProcessController : ContainerControl, ICon
 
     public bool IsDisplayingFullProcessOutput => false;
 
-    public event EventHandler<ConsoleOutputEventArgs>? ProcessOutputReceived;
-    public event EventHandler<ConsoleProcessExitEventArgs>? ProcessExited;
+    public event EventHandler<ConsoleOutputEventArgs>? CommandOutputReceived;
+    public event EventHandler<ConsoleProcessExitEventArgs>? CommandProcessExited;
 
     // Editbox-based output never terminates independently; event is required by the interface.
 #pragma warning disable CS0067
@@ -76,13 +76,13 @@ public sealed class NoEmulationConsoleProcessController : ContainerControl, ICon
         _outputThrottle?.Append(text);
     }
 
-    public void WriteProcessInput(string text)
+    public void WriteCommandProcessInput(string text)
     {
         Validates.NotNull(_input);
         _input.Write(text);
     }
 
-    public void KillProcess()
+    public void KillCommandProcess()
     {
         if (InvokeRequired)
         {
@@ -109,18 +109,18 @@ public sealed class NoEmulationConsoleProcessController : ContainerControl, ICon
         _process = null;
         _input?.Dispose();
         _input = null;
-        ProcessExited?.Invoke(this, new ConsoleProcessExitEventArgs(-1));
+        CommandProcessExited?.Invoke(this, new ConsoleProcessExitEventArgs(-1));
     }
 
     public void ResetConsole()
     {
-        KillProcess();
+        KillCommandProcess();
         _outputThrottle?.Clear();
         _editbox.Text = "";
         _editbox.Visible = false;
     }
 
-    public void StartProcess(string command, string arguments, string workDir, Dictionary<string, string> envVariables)
+    public void StartCommand(string command, string arguments, string workDir, Dictionary<string, string> envVariables)
     {
         ProcessOperation operation = CommandLog.LogProcessStart(command, arguments, workDir);
 
@@ -128,7 +128,7 @@ public sealed class NoEmulationConsoleProcessController : ContainerControl, ICon
         {
             EnvironmentConfiguration.SetEnvironmentVariables();
 
-            KillProcess();
+            KillCommandProcess();
 
             _logProcessKilled = () => operation.LogProcessEnd(new Exception("Process killed"));
 
@@ -219,7 +219,7 @@ public sealed class NoEmulationConsoleProcessController : ContainerControl, ICon
                         await _input!.DisposeAsync();
                         _input = null;
                         _outputThrottle?.Stop(flush: true);
-                        ProcessExited?.Invoke(this, new ConsoleProcessExitEventArgs(exitCode));
+                        CommandProcessExited?.Invoke(this, new ConsoleProcessExitEventArgs(exitCode));
                     });
             };
 
@@ -251,7 +251,7 @@ public sealed class NoEmulationConsoleProcessController : ContainerControl, ICon
                     nextLineEnd = output.Length;
                 }
 
-                ProcessOutputReceived?.Invoke(this, new ConsoleOutputEventArgs(output[startIndex..nextLineEnd]));
+                CommandOutputReceived?.Invoke(this, new ConsoleOutputEventArgs(output[startIndex..nextLineEnd]));
                 startIndex = nextLineEnd;
             }
         }
@@ -259,7 +259,7 @@ public sealed class NoEmulationConsoleProcessController : ContainerControl, ICon
 
     protected override void Dispose(bool disposing)
     {
-        KillProcess();
+        KillCommandProcess();
         if (disposing)
         {
             _outputThrottle?.Dispose();

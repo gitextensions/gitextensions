@@ -29,7 +29,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
         InitializeComponent();
         cboTerminal.DisplayMember = "Name";
 
-        IReadOnlyCollection<IConsoleEmulator> emulators = serviceProvider.GetRequiredService<IConsoleControllersFactory>().AvailableConsoleEmulators;
+        IReadOnlyCollection<IConsoleEmulator> emulators = serviceProvider.GetRequiredService<IConsoleEmulatorsRegistry>().AvailableConsoleEmulators;
         foreach (IConsoleEmulator emulator in emulators)
         {
             cboConsoleEmulator.Items.Add(emulator);
@@ -77,7 +77,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
         }
 
         AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem!).Name.ToLowerInvariant();
-        AppSettings.ConsoleEmulatorName = (cboConsoleEmulator.SelectedItem as IConsoleEmulator)?.Name ?? "";
+        AppSettings.ConsoleEmulatorName.Value = (cboConsoleEmulator.SelectedItem as IConsoleEmulator)?.Name ?? "";
 
         base.PageToSettings();
     }
@@ -105,7 +105,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
 
         cboConsoleEmulator.SelectedItem = cboConsoleEmulator.Items
             .OfType<IConsoleEmulator>()
-            .FirstOrDefault(x => string.Equals(x.Name, AppSettings.ConsoleEmulatorName, StringComparison.OrdinalIgnoreCase));
+            .FirstOrDefault(x => string.Equals(x.Name, AppSettings.ConsoleEmulatorName.Value, StringComparison.OrdinalIgnoreCase));
         if (cboConsoleEmulator.SelectedIndex < 0 && cboConsoleEmulator.Items.Count > 0)
         {
             cboConsoleEmulator.SelectedIndex = 0;

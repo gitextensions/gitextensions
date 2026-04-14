@@ -60,7 +60,7 @@ internal sealed class ConEmuConsoleShellController : IConsoleShellController
             string? dirGit = Path.GetDirectoryName(AppSettings.GitCommandValue);
             if (!string.IsNullOrEmpty(dirGit))
             {
-                startInfo.SetEnv("PATH", dirGit + ";" + "%PATH%");
+                startInfo.SetEnv("PATH", $"{dirGit};%PATH%");
             }
         }
 

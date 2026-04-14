@@ -214,6 +214,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly ISubmoduleStatusProvider _submoduleStatusProvider;
     private readonly IScriptsManager _scriptsManager;
     private readonly IRepositoryHistoryUIService _repositoryHistoryUIService;
+    private readonly IConsoleEmulatorsRegistry _consoleEmulatorsRegistry;
     private List<ToolStripItem>? _currentSubmoduleMenuItems;
     private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
@@ -259,6 +260,8 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         InitializeComponent();
 
         _repositoryHistoryUIService = commands.GetRequiredService<IRepositoryHistoryUIService>();
+
+        _consoleEmulatorsRegistry = commands.GetRequiredService<IConsoleEmulatorsRegistry>();
 
         fileToolStripMenuItem.Initialize(() => UICommands);
         helpToolStripMenuItem.Initialize(() => UICommands);
@@ -2709,8 +2712,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         }
 
         // Check if there are available console emulators
-        IConsoleControllersFactory consoleControllersFactory = UICommands.GetRequiredService<IConsoleControllersFactory>();
-        if (consoleControllersFactory.AvailableConsoleEmulators.Count == 0)
+        if (_consoleEmulatorsRegistry.AvailableConsoleEmulators.Count == 0)
         {
             return;
         }
@@ -2735,7 +2737,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
             if (_terminal is null)
             {
-                _terminal = consoleControllersFactory.CreateConsoleShellControl(AppSettings.ConsoleEmulatorName);
+                _terminal = _consoleEmulatorsRegistry.CreateShellController();
                 if (_terminal is null)
                 {
                     return;

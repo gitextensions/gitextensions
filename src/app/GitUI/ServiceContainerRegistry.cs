@@ -50,8 +50,10 @@ public static class ServiceContainerRegistry
         serviceContainer.AddService<IInvalidRepositoryRemover>(invalidRepositoryRemover);
         serviceContainer.AddService<IRepositoryHistoryUIService>(new RepositoryHistoryUIService(serviceContainer.GetRequiredService<IGitExecutorProvider>(), branchNameCache, invalidRepositoryRemover));
 
-        serviceContainer.AddService<IConsoleControllersFactory>(new ConsoleControllersFactory([
-            new ConEmuConsoleEmulator()
-        ]));
+        serviceContainer.AddService<IConsoleEmulatorsRegistry>(
+            new ConsoleEmulatorsRegistry(
+                consoleEmulators: [new ConEmuConsoleEmulator()],
+                useConsoleEmulation: AppSettings.UseConsoleEmulatorForCommands,
+                consoleEmulatorName: AppSettings.ConsoleEmulatorName));
     }
 }

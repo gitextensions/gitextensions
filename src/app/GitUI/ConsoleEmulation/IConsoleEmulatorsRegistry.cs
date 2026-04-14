@@ -1,16 +1,19 @@
 ﻿namespace GitUI.ConsoleEmulation;
 
-internal interface IConsoleControllersFactory
+/// <summary>
+///   Registry with known console emulators.
+/// </summary>
+public interface IConsoleEmulatorsRegistry
 {
     /// <summary>
-    ///  Creates a console process controller for the configured emulator.
+    ///  Creates a console command controller for the configured emulator.
     /// </summary>
-    IConsoleProcessController CreateConsoleProcessController(bool useConsoleEmulation, string configuredConsoleEmulator);
+    IConsoleCommandController CreateCommandController();
 
     /// <summary>
     ///  Creates a console shell controller for the configured emulator, if available.
     /// </summary>
-    IConsoleShellController? CreateConsoleShellControl(string configuredConsoleEmulator);
+    IConsoleShellController? CreateShellController();
 
     /// <summary>
     ///  Gets the console emulators supported in the current environment.

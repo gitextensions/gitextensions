@@ -8,9 +8,9 @@ internal class ConEmuConsoleEmulator : IConsoleEmulator
 
     public bool IsSupportedInCurrentEnvironment => OperatingSystem.IsWindows();
 
-    public IConsoleProcessController CreateConsoleProcessController()
+    public IConsoleCommandController CreateConsoleProcessController()
     {
-        return new ConEmuConsoleProcessController();
+        return new ConEmuConsoleCommandController();
     }
 
     public IConsoleShellController CreateConsoleShellController()

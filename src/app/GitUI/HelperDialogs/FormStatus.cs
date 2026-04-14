@@ -4,7 +4,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.ConsoleEmulation;
-using GitUI.ConsoleEmulation.NoEmulation;
+using GitUI.ConsoleEmulation.PlainText;
 using GitUI.Models;
 using GitUI.Properties;
 using GitUI.UserControls;
@@ -20,21 +20,16 @@ public partial class FormStatus : GitExtensionsDialog
     private protected Action<FormStatus>? ProcessCallback;
     private protected Action<FormStatus>? AbortCallback;
 
-    public FormStatus(IGitUICommands commands, IConsoleProcessController? consoleConsoleProcess, bool useDialogSettings)
+    public FormStatus(IGitUICommands commands, IConsoleEmulatorsRegistry consoleEmulatorsRegistry, bool useDialogSettings)
         : base(commands, enablePositionRestore: true)
     {
         ArgumentNullException.ThrowIfNull(commands);
 
         _useDialogSettings = useDialogSettings;
 
-        ConsoleProcessController = consoleConsoleProcess ??
-                                   commands
-                                       .GetRequiredService<IConsoleControllersFactory>()
-                                       .CreateConsoleProcessController(
-                                           useConsoleEmulation: AppSettings.UseConsoleEmulatorForCommands,
-                                           configuredConsoleEmulator: AppSettings.ConsoleEmulatorName);
+        ConsoleCommandController = consoleEmulatorsRegistry.CreateCommandController();
 
-        ConsoleProcessController.ConsoleHostTerminated += (s, e) =>
+        ConsoleCommandController.ConsoleHostTerminated += (s, e) =>
         {
             // This means the control is not visible anymore, no use in keeping.
             // Expected scenario: user hits ESC in the prompt after the git process exits
@@ -45,8 +40,8 @@ public partial class FormStatus : GitExtensionsDialog
 
         SetIcon(Images.StatusBadgeWaiting);
 
-        pnlOutput.Controls.Add(ConsoleProcessController.Control);
-        ConsoleProcessController.Control.Dock = DockStyle.Fill;
+        pnlOutput.Controls.Add(ConsoleCommandController.Control);
+        ConsoleCommandController.Control.Dock = DockStyle.Fill;
 
         ShowPassword.Checked = AppSettings.ShowProcessDialogPasswordInput.Value;
 
@@ -95,7 +90,7 @@ public partial class FormStatus : GitExtensionsDialog
         }
     }
 
-    private protected IConsoleProcessController ConsoleProcessController { get; }
+    private protected IConsoleCommandController ConsoleCommandController { get; }
 
     /// <summary>
     /// Gets the logged output text. Note that this is a separate string from what you see in the console output control.
@@ -121,7 +116,7 @@ public partial class FormStatus : GitExtensionsDialog
 
     public static void ShowErrorDialog(IWin32Window owner, IGitUICommands commands, string text, params string[] output)
     {
-        using FormStatus form = new(commands, consoleConsoleProcess: new NoEmulationConsoleProcessController(), useDialogSettings: true);
+        using FormStatus form = new(commands, consoleEmulatorsRegistry: PlainTextConsoleEmulatorsRegistry.Instance, useDialogSettings: true);
         form.Text = text;
         if (output?.Length > 0)
         {
@@ -168,7 +163,7 @@ public partial class FormStatus : GitExtensionsDialog
     /// </summary>
     private protected void AppendMessage(string text)
     {
-        ConsoleProcessController.WriteConsoleOutput(text);
+        ConsoleCommandController.WriteConsoleOutput(text);
 
         if (!text.EndsWith(Delimiters.LineFeed))
         {
@@ -227,7 +222,7 @@ public partial class FormStatus : GitExtensionsDialog
     private protected void Reset()
     {
         SetIcon(Images.StatusBadgeWaiting);
-        ConsoleProcessController.ResetConsole();
+        ConsoleCommandController.ResetConsole();
         OutputLog.Clear();
         ShowPassword.Visible = true;
         PasswordInput.Visible = ShowPassword.CheckState != CheckState.Unchecked;
@@ -257,7 +252,7 @@ public partial class FormStatus : GitExtensionsDialog
         }
 
         // Show last progress message in the title, unless it's showing in the control body already
-        if (!ConsoleProcessController.IsDisplayingFullProcessOutput)
+        if (!ConsoleCommandController.IsDisplayingFullProcessOutput)
         {
             Text = text;
         }
@@ -316,7 +311,7 @@ public partial class FormStatus : GitExtensionsDialog
 
     private void PasswordInput_PasswordEntered(object sender, TextEventArgs e)
     {
-        ConsoleProcessController.WriteProcessInput($"{e.Text}\n");
+        ConsoleCommandController.WriteCommandProcessInput($"{e.Text}\n");
     }
 
     private void Ok_Click(object sender, EventArgs e)

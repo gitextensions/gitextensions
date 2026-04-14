@@ -1,9 +1,14 @@
-﻿using GitUI.ConsoleEmulation.ConEmu;
-using GitUI.ConsoleEmulation.NoEmulation;
+﻿using GitCommands.Settings;
+using GitUI.ConsoleEmulation.ConEmu;
+using GitUI.ConsoleEmulation.PlainText;
 
 namespace GitUI.ConsoleEmulation;
 
-internal class ConsoleControllersFactory(IConsoleEmulator[] consoleEmulators) : IConsoleControllersFactory
+internal class ConsoleEmulatorsRegistry(
+    IConsoleEmulator[] consoleEmulators,
+    ISetting<bool> useConsoleEmulation,
+    ISetting<string> consoleEmulatorName)
+    : IConsoleEmulatorsRegistry
 {
     public IReadOnlyCollection<IConsoleEmulator> AvailableConsoleEmulators { get; } =
         consoleEmulators.Where(x => x.IsSupportedInCurrentEnvironment).ToArray();
@@ -11,14 +16,14 @@ internal class ConsoleControllersFactory(IConsoleEmulator[] consoleEmulators) : 
     /// <summary>
     ///  Creates a console process controller for the configured emulator.
     /// </summary>
-    public IConsoleProcessController CreateConsoleProcessController(bool useConsoleEmulation, string configuredConsoleEmulator)
+    public IConsoleCommandController CreateCommandController()
     {
-        if (!useConsoleEmulation)
+        if (!useConsoleEmulation.Value)
         {
-            return new NoEmulationConsoleProcessController();
+            return new PlainTextConsoleCommandController();
         }
 
-        if (TryGetConfiguredConsoleEmulator(configuredConsoleEmulator) is { } configuredEmulator)
+        if (TryGetConfiguredConsoleEmulator() is { } configuredEmulator)
         {
             return configuredEmulator.CreateConsoleProcessController();
         }
@@ -29,15 +34,15 @@ internal class ConsoleControllersFactory(IConsoleEmulator[] consoleEmulators) : 
         }
 
         // Fallback to no console emulation
-        return new NoEmulationConsoleProcessController();
+        return new PlainTextConsoleCommandController();
     }
 
     /// <summary>
     ///  Creates a console shell controller for the configured emulator, if available.
     /// </summary>
-    public IConsoleShellController? CreateConsoleShellControl(string configuredConsoleEmulator)
+    public IConsoleShellController? CreateShellController()
     {
-        if (TryGetConfiguredConsoleEmulator(configuredConsoleEmulator) is { } configuredEmulator)
+        if (TryGetConfiguredConsoleEmulator() is { } configuredEmulator)
         {
             return configuredEmulator.CreateConsoleShellController();
         }
@@ -50,10 +55,10 @@ internal class ConsoleControllersFactory(IConsoleEmulator[] consoleEmulators) : 
         return null;
     }
 
-    private IConsoleEmulator? TryGetConfiguredConsoleEmulator(string configuredConsoleEmulator)
+    private IConsoleEmulator? TryGetConfiguredConsoleEmulator()
     {
         return AvailableConsoleEmulators
-            .FirstOrDefault(p => string.Equals(p.Name, configuredConsoleEmulator, StringComparison.OrdinalIgnoreCase));
+            .FirstOrDefault(p => string.Equals(p.Name, consoleEmulatorName.Value, StringComparison.OrdinalIgnoreCase));
     }
 
     private IConsoleEmulator? TryGetFallbackConsoleEmulator()

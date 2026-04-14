@@ -11,14 +11,14 @@ namespace GitUI.ConsoleEmulation.ConEmu;
 /// <summary>
 ///  Embeds a ConEmu terminal in the output panel so command dialogs can host an interactive console.
 /// </summary>
-internal class ConEmuConsoleProcessController : ContainerControl, IConsoleProcessController
+internal class ConEmuConsoleCommandController : ContainerControl, IConsoleCommandController
 {
     private int _nLastExitCode;
 
     private Panel _panel;
     private ConEmuControl? _terminal;
 
-    public ConEmuConsoleProcessController()
+    public ConEmuConsoleCommandController()
     {
         InitializeComponent();
 
@@ -34,8 +34,8 @@ internal class ConEmuConsoleProcessController : ContainerControl, IConsoleProces
 
     public bool IsDisplayingFullProcessOutput => true;
 
-    public event EventHandler<ConsoleOutputEventArgs>? ProcessOutputReceived;
-    public event EventHandler<ConsoleProcessExitEventArgs>? ProcessExited;
+    public event EventHandler<ConsoleOutputEventArgs>? CommandOutputReceived;
+    public event EventHandler<ConsoleProcessExitEventArgs>? CommandProcessExited;
     public event EventHandler? ConsoleHostTerminated;
 
     public void WriteConsoleOutput(string text)
@@ -44,13 +44,13 @@ internal class ConEmuConsoleProcessController : ContainerControl, IConsoleProces
         _terminal.RunningSession?.WriteOutputTextAsync(text);
     }
 
-    public void WriteProcessInput(string text)
+    public void WriteCommandProcessInput(string text)
     {
         Validates.NotNull(_terminal);
         this.InvokeAndForget(() => _terminal.RunningSession?.WriteInputTextAsync(text)!);
     }
 
-    public void KillProcess()
+    public void KillCommandProcess()
     {
         Validates.NotNull(_terminal);
         KillProcess(_terminal);
@@ -91,14 +91,14 @@ internal class ConEmuConsoleProcessController : ContainerControl, IConsoleProces
         base.Dispose(disposing);
     }
 
-    public void StartProcess(string command, string arguments, string workDir, Dictionary<string, string> envVariables)
+    public void StartCommand(string command, string arguments, string workDir, Dictionary<string, string> envVariables)
     {
         ProcessOperation operation = CommandLog.LogProcessStart(command, arguments, workDir);
 
         try
         {
             string commandLine = new ArgumentBuilder { command.Quote(), arguments }.ToString();
-            ConsoleCommandLineOutputProcessor outputProcessor = new(commandLine.Length, args => ProcessOutputReceived?.Invoke(this, args));
+            ConsoleCommandLineOutputProcessor outputProcessor = new(commandLine.Length, args => CommandOutputReceived?.Invoke(this, args));
 
             ConEmuStartInfo startInfo = new()
             {
@@ -119,7 +119,7 @@ internal class ConEmuConsoleProcessController : ContainerControl, IConsoleProces
                 _nLastExitCode = args.ExitCode;
                 operation.LogProcessEnd(_nLastExitCode);
                 outputProcessor.Flush();
-                ProcessExited?.Invoke(this, new ConsoleProcessExitEventArgs(args.ExitCode));
+                CommandProcessExited?.Invoke(this, new ConsoleProcessExitEventArgs(args.ExitCode));
             };
 
             startInfo.ConsoleEmulatorClosedEventSink = (sender, _) =>

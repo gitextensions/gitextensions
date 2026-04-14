@@ -1,9 +1,9 @@
 namespace GitUI.ConsoleEmulation;
 
 /// <summary>
-///  Represents a control that executes a console process and displays its output.
+///  Represents a control that executes a console command and displays its output.
 /// </summary>
-public interface IConsoleProcessController
+public interface IConsoleCommandController
 {
     /// <summary>
     ///  Gets the WinForms control to embed in the panel.
@@ -19,12 +19,12 @@ public interface IConsoleProcessController
     /// <summary>
     ///  Occurs when the process writes output.
     /// </summary>
-    event EventHandler<ConsoleOutputEventArgs> ProcessOutputReceived;
+    event EventHandler<ConsoleOutputEventArgs> CommandOutputReceived;
 
     /// <summary>
-    ///  Occurs when the target process exits.
+    ///  Occurs when the command process exits.
     /// </summary>
-    event EventHandler<ConsoleProcessExitEventArgs> ProcessExited;
+    event EventHandler<ConsoleProcessExitEventArgs> CommandProcessExited;
 
     /// <summary>
     ///  Occurs when the console host terminates independently of the command it runs.
@@ -34,7 +34,7 @@ public interface IConsoleProcessController
     /// <summary>
     ///  Terminates the running process.
     /// </summary>
-    void KillProcess();
+    void KillCommandProcess();
 
     /// <summary>
     ///  Resets the console and terminates any running target process.
@@ -42,9 +42,9 @@ public interface IConsoleProcessController
     void ResetConsole();
 
     /// <summary>
-    ///  Starts a new process inside the console.
+    ///  Starts a new command process inside the console.
     /// </summary>
-    void StartProcess(string command, string arguments, string workDir, Dictionary<string, string> envVariables);
+    void StartCommand(string command, string arguments, string workDir, Dictionary<string, string> envVariables);
 
     /// <summary>
     ///  Writes text directly to the console host output.
@@ -54,5 +54,5 @@ public interface IConsoleProcessController
     /// <summary>
     ///  Writes text to the process input stream.
     /// </summary>
-    void WriteProcessInput(string text);
+    void WriteCommandProcessInput(string text);
 }

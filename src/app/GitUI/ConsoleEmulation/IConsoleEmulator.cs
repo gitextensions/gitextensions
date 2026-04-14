@@ -24,7 +24,7 @@ public interface IConsoleEmulator
     /// <summary>
     ///  Creates a console process controller for command dialogs.
     /// </summary>
-    IConsoleProcessController CreateConsoleProcessController();
+    IConsoleCommandController CreateConsoleProcessController();
 
     /// <summary>
     ///  Creates a console shell controller for the repository browser's terminal tab.

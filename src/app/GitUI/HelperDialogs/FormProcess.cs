@@ -19,8 +19,8 @@ public partial class FormProcess : FormStatus
     public HandleOnExit? HandleOnExitCallback { get; set; }
     public readonly Dictionary<string, string> ProcessEnvVariables = [];
 
-    private FormProcess(IGitUICommands commands, IConsoleProcessController? consoleProcessController, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, string? process)
-        : base(commands, consoleProcessController, useDialogSettings)
+    private FormProcess(IGitUICommands commands, IConsoleEmulatorsRegistry consoleEmulatorsRegistry, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, string? process)
+        : base(commands, consoleEmulatorsRegistry, useDialogSettings)
     {
         ProcessCallback = ProcessStart;
         AbortCallback = ProcessAbort;
@@ -50,12 +50,12 @@ public partial class FormProcess : FormStatus
             Text += $" ({displayPath})";
         }
 
-        ConsoleProcessController.ProcessExited += (_, args) => OnExit(args.ExitCode);
-        ConsoleProcessController.ProcessOutputReceived += DataReceivedCore;
+        ConsoleCommandController.CommandProcessExited += (_, args) => OnExit(args.ExitCode);
+        ConsoleCommandController.CommandOutputReceived += DataReceivedCore;
     }
 
     public FormProcess(IGitUICommands commands, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, string? process = null)
-        : this(commands, consoleProcessController: null, arguments, workingDirectory, input, useDialogSettings, process)
+        : this(commands, consoleEmulatorsRegistry: commands.GetRequiredService<IConsoleEmulatorsRegistry>(), arguments, workingDirectory, input, useDialogSettings, process)
     {
     }
 
@@ -114,7 +114,7 @@ public partial class FormProcess : FormStatus
 
         try
         {
-            ConsoleProcessController.StartProcess(ProcessString!, ProcessArguments!, WorkingDirectory, ProcessEnvVariables);
+            ConsoleCommandController.StartCommand(ProcessString!, ProcessArguments!, WorkingDirectory, ProcessEnvVariables);
 
             if (!string.IsNullOrEmpty(ProcessInput))
             {
@@ -142,7 +142,7 @@ public partial class FormProcess : FormStatus
     {
         try
         {
-            ConsoleProcessController.KillProcess();
+            ConsoleCommandController.KillCommandProcess();
 
             GitModule module = new(UICommands.GetRequiredService<IGitExecutorProvider>(), WorkingDirectory);
             module.UnlockIndex(includeSubmodules: true);
@@ -199,7 +199,7 @@ public partial class FormProcess : FormStatus
             const string ansiSuffix = "\u001B[K";
             string line = e.Text.Replace(ansiSuffix, "");
 
-            if (ConsoleProcessController.IsDisplayingFullProcessOutput)
+            if (ConsoleCommandController.IsDisplayingFullProcessOutput)
             {
                 OutputLog.Append(line); // To the log only, display control displays it by itself
             }

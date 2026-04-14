@@ -33,7 +33,7 @@ public sealed class RunCommandTests
         _referenceRepository.Module.GitExecutable.RunCommand("config --local diff.guitool cmd").Should().BeTrue();
         _referenceRepository.Module.GitExecutable.RunCommand("config --local merge.guitool cmd").Should().BeTrue();
 
-        AppSettings.UseConsoleEmulatorForCommands = false;
+        AppSettings.UseConsoleEmulatorForCommands.Value = false;
         AppSettings.CloseProcessDialog = true;
         AppSettings.UseBrowseForFileHistory.Value = false;
 
