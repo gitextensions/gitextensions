@@ -1877,9 +1877,9 @@ public static partial class AppSettings
         set => SetBool("OmitUninterestingDiff", value);
     }
 
-    public static ISetting<bool> UseConsoleEmulatorForCommands { get; } = Setting.Create(RootSettingsPath, "UseConsoleEmulatorForCommands", true);
+    public static ISetting<bool> UseConsoleEmulatorForCommands { get; } = Setting.Create(RootSettingsPath, nameof(UseConsoleEmulatorForCommands), true);
 
-    public static ISetting<string> ConsoleEmulatorName { get; } = Setting.Create(DetailedSettingsPath, "ConsoleEmulatorName", "conemu");
+    public static ISetting<string> ConsoleEmulatorName { get; } = Setting.Create(DetailedSettingsPath, nameof(ConsoleEmulatorName), "ConEmu");
 
     public static GitRefsSortBy RefsSortBy
     {
