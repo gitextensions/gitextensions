@@ -1445,6 +1445,8 @@ internal static class RichTextBoxXhtmlSupportExtension
                 cs.scf.Push(cs.cf);
                 string strFont = cs.cf.szFaceName;
                 int crFont = cs.cf.crTextColor;
+                int crBack = cs.cf.crBackColor;
+                bool hasBackColor = false;
                 int yHeight = cs.cf.yHeight;
 
                 while (reader.MoveToNextAttribute())
@@ -1477,6 +1479,24 @@ internal static class RichTextBoxXhtmlSupportExtension
                             }
 
                             break;
+                        case "bgcolor":
+                            cs.cf.dwMask |= CFM.BACKCOLOR;
+                            hasBackColor = true;
+                            string bgText = reader.Value;
+                            if (bgText.StartsWith('#'))
+                            {
+                                string strBg = bgText[1..];
+                                int nBg = Convert.ToInt32(strBg, 16);
+                                Color bgColor = Color.FromArgb(nBg);
+                                crBack = GetCOLORREF(bgColor);
+                            }
+                            else if (!int.TryParse(bgText, out crBack))
+                            {
+                                Color bgColor = Color.FromName(bgText);
+                                crBack = GetCOLORREF(bgColor);
+                            }
+
+                            break;
                     }
                 }
 
@@ -1484,9 +1504,15 @@ internal static class RichTextBoxXhtmlSupportExtension
 
                 cs.cf.szFaceName = strFont;
                 cs.cf.crTextColor = crFont;
+                cs.cf.crBackColor = crBack;
                 cs.cf.yHeight = yHeight;
 
                 cs.cf.dwEffects &= ~CFE.AUTOCOLOR;
+                if (hasBackColor)
+                {
+                    cs.cf.dwEffects &= ~CFE.AUTOBACKCOLOR;
+                }
+
                 cs.charFormatChanged = true;
                 break;
         }

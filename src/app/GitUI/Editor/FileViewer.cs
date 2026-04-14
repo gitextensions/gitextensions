@@ -64,6 +64,7 @@ public partial class FileViewer : GitModuleControl
     private Encoding? _encoding;
     private Func<Task>? _deferShowFunc;
     private FileStatusItem? _viewItem;
+    private bool _isMarkdownFile;
 
     [GeneratedRegex(@"warning: .*has type .* expected .*", RegexOptions.ExplicitCapture)]
     private static partial Regex FileModeWarningRegex { get; }
@@ -154,6 +155,23 @@ public partial class FileViewer : GitModuleControl
             }
         };
         internalFileViewer.MouseLeave += (_, e) =>
+        {
+            if (GetChildAtPoint(PointToClient(MousePosition)) != fileviewerToolbar &&
+                fileviewerToolbar is not null)
+            {
+                fileviewerToolbar.Visible = false;
+            }
+        };
+        markdownViewer.MouseMove += (_, e) =>
+        {
+            if (!fileviewerToolbar.Visible)
+            {
+                fileviewerToolbar.Visible = true;
+                fileviewerToolbar.Location = new Point(Width - fileviewerToolbar.Width - 40, 0);
+                fileviewerToolbar.BringToFront();
+            }
+        };
+        markdownViewer.MouseLeave += (_, e) =>
         {
             if (GetChildAtPoint(PointToClient(MousePosition)) != fileviewerToolbar &&
                 fileviewerToolbar is not null)
@@ -640,6 +658,13 @@ public partial class FileViewer : GitModuleControl
                         internalFileViewer.SetText(string.Format(_binaryFileDetected.Text, fileName), openWithDifftool);
                     }
                 }
+                else if (_viewMode == ViewMode.MarkdownPreview)
+                {
+                    markdownViewer.MarkdownText = text;
+
+                    // Also keep the text in the internal viewer so toggling back works
+                    internalFileViewer.SetText(text, openWithDifftool, ViewMode.Text, useGitColoring: false, contentIdentification: fileName);
+                }
                 else
                 {
                     // If the file seem to be a diff, color with escape sequences if they exist
@@ -1024,6 +1049,9 @@ public partial class FileViewer : GitModuleControl
         ignoreWhiteSpaces.Visible = diffCanBeModified;
         ignoreAllWhitespaces.Visible = diffCanBeModified;
 
+        markdownPreviewButton.Visible = _isMarkdownFile || viewMode == ViewMode.MarkdownPreview;
+        markdownPreviewButton.Checked = viewMode == ViewMode.MarkdownPreview;
+
         return;
 
         void SetDifftasticEnabled()
@@ -1174,6 +1202,12 @@ public partial class FileViewer : GitModuleControl
 
         _viewMode = viewMode;
         _viewItem = item;
+        _isMarkdownFile = IsReadOnly
+            && _viewMode == ViewMode.Text
+            && !string.IsNullOrEmpty(fileName)
+            && (fileName.EndsWith(".md", StringComparison.OrdinalIgnoreCase)
+                || fileName.EndsWith(".markdown", StringComparison.OrdinalIgnoreCase));
+
         if (_viewMode == ViewMode.Text
             && !string.IsNullOrEmpty(fileName)
             && (fileName.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
@@ -1181,6 +1215,11 @@ public partial class FileViewer : GitModuleControl
         {
             // Override the set view mode
             _viewMode = ViewMode.FixedDiff;
+        }
+
+        if (_isMarkdownFile && AppSettings.RenderMarkdownPreview)
+        {
+            _viewMode = ViewMode.MarkdownPreview;
         }
 
         SupportLinePatching =
@@ -1201,7 +1240,18 @@ public partial class FileViewer : GitModuleControl
         SetVisibilityDiffContextMenu(_viewMode);
         ClearImage();
         PictureBox.Visible = _viewMode == ViewMode.Image;
-        internalFileViewer.Visible = _viewMode != ViewMode.Image;
+        markdownViewer.Visible = _viewMode == ViewMode.MarkdownPreview;
+        internalFileViewer.Visible = _viewMode is not (ViewMode.Image or ViewMode.MarkdownPreview);
+
+        // In markdown preview mode, always show the toolbar so the user can
+        // toggle back to source. WebView2 doesn't bubble WinForms mouse events,
+        // so the hover-based toolbar approach doesn't work.
+        if (_viewMode == ViewMode.MarkdownPreview)
+        {
+            fileviewerToolbar.Visible = true;
+            fileviewerToolbar.Location = new Point(Width - fileviewerToolbar.Width - 40, 0);
+            fileviewerToolbar.BringToFront();
+        }
 
         if (((ShowSyntaxHighlightingInDiff && _viewMode.IsPartialTextView()) || _viewMode == ViewMode.Text) && fileName is not null)
         {
@@ -1483,6 +1533,33 @@ public partial class FileViewer : GitModuleControl
         showSyntaxHighlightingToolStripMenuItem.Checked = ShowSyntaxHighlightingInDiff;
         AppSettings.ShowSyntaxHighlightingInDiff.Value = ShowSyntaxHighlightingInDiff;
         OnExtraDiffArgumentsChanged();
+    }
+
+    private void MarkdownPreviewButton_Click(object sender, EventArgs e)
+    {
+        bool showPreview = _viewMode != ViewMode.MarkdownPreview;
+
+        if (showPreview)
+        {
+            _viewMode = ViewMode.MarkdownPreview;
+            markdownViewer.MarkdownText = internalFileViewer.GetText();
+        }
+        else
+        {
+            _viewMode = ViewMode.Text;
+        }
+
+        markdownViewer.Visible = showPreview;
+        internalFileViewer.Visible = !showPreview;
+        SetVisibilityDiffContextMenu(_viewMode);
+
+        // Keep toolbar visible in preview mode (WebView2 can't hover-show it)
+        if (showPreview)
+        {
+            fileviewerToolbar.Visible = true;
+            fileviewerToolbar.Location = new Point(Width - fileviewerToolbar.Width - 40, 0);
+            fileviewerToolbar.BringToFront();
+        }
     }
 
     private void ShowEntireFileToolStripMenuItemClick(object sender, EventArgs e)

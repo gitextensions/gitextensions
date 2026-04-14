@@ -611,6 +611,12 @@ public static partial class AppSettings
         set => SetBool("commitinfoshowtagthiscommitderivesfrom", value);
     }
 
+    public static bool RenderMarkdownPreview
+    {
+        get => GetBool("RenderMarkdownPreview", true);
+        set => SetBool("RenderMarkdownPreview", value);
+    }
+
     #region Avatars
 
     public static string AvatarImageCachePath => Path.Join(LocalApplicationDataPath.Value!, "Images\\");

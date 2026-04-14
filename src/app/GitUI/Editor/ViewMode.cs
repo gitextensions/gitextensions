@@ -28,5 +28,8 @@ public enum ViewMode
     Grep,
 
     // Image viewer
-    Image
+    Image,
+
+    // Rendered Markdown preview
+    MarkdownPreview
 }

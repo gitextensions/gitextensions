@@ -63,7 +63,9 @@ partial class FileViewer
         PictureBox = new PictureBoxEx();
         _NO_TRANSLATE_lblShowPreview = new LinkLabel();
         internalFileViewer = new GitUI.Editor.FileViewerInternal();
+        markdownViewer = new GitUI.UserControls.MarkdownViewer();
         showSyntaxHighlighting = new ToolStripButton();
+        markdownPreviewButton = new ToolStripButton();
         contextMenu.SuspendLayout();
         fileviewerToolbar.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)(PictureBox)).BeginInit();
@@ -315,6 +317,7 @@ partial class FileViewer
         showEntireFileButton,
         showNonPrintChars,
         showSyntaxHighlighting,
+        markdownPreviewButton,
         ignoreWhitespaceAtEol,
         ignoreWhiteSpaces,
         ignoreAllWhitespaces,
@@ -483,11 +486,32 @@ partial class FileViewer
         showSyntaxHighlighting.ToolTipText = "Show syntax highlighting";
         showSyntaxHighlighting.Click += ShowSyntaxHighlighting_Click;
         // 
+        // markdownPreviewButton
+        // 
+        markdownPreviewButton.DisplayStyle = ToolStripItemDisplayStyle.Image;
+        markdownPreviewButton.Image = Properties.Images.Preview;
+        markdownPreviewButton.Name = "markdownPreviewButton";
+        markdownPreviewButton.Size = new Size(23, 22);
+        markdownPreviewButton.ToolTipText = "Toggle Markdown preview";
+        markdownPreviewButton.Visible = false;
+        markdownPreviewButton.Click += MarkdownPreviewButton_Click;
+        // 
+        // markdownViewer
+        // 
+        markdownViewer.Dock = DockStyle.Fill;
+        markdownViewer.Location = new Point(0, 0);
+        markdownViewer.Margin = new Padding(0);
+        markdownViewer.Name = "markdownViewer";
+        markdownViewer.Size = new Size(757, 518);
+        markdownViewer.TabIndex = 8;
+        markdownViewer.Visible = false;
+        // 
         // FileViewer
         // 
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         Controls.Add(_NO_TRANSLATE_lblShowPreview);
+        Controls.Add(markdownViewer);
         Controls.Add(internalFileViewer);
         Controls.Add(PictureBox);
         Controls.Add(fileviewerToolbar);
@@ -550,4 +574,6 @@ partial class FileViewer
     private ToolStripMenuItem ignoreAllWhitespaceChangesToolStripMenuItem;
     private LinkLabel _NO_TRANSLATE_lblShowPreview;
     private ToolStripButton showSyntaxHighlighting;
+    private ToolStripButton markdownPreviewButton;
+    private UserControls.MarkdownViewer markdownViewer;
 }

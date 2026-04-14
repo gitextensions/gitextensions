@@ -1,4 +1,5 @@
 ﻿using GitUI.Properties;
+using GitUI.UserControls;
 
 namespace GitUI.CommandsDialogs.BrowseDialog;
 
@@ -10,6 +11,6 @@ public partial class FormChangeLog : GitExtensionsForm
         InitializeComponent();
         InitializeComplete();
 
-        Load += (s, e) => ChangeLog.Text = Resources.ChangeLog;
+        Load += (s, e) => ChangeLog.MarkdownText = Resources.ChangeLog;
     }
 }

@@ -315,6 +315,7 @@ public partial class CommitInfo : GitModuleControl
         showContainedInTagsToolStripMenuItem.Checked = AppSettings.CommitInfoShowContainedInTags;
         showMessagesOfAnnotatedTagsToolStripMenuItem.Checked = AppSettings.ShowAnnotatedTagsMessages;
         showTagThisCommitDerivesFromMenuItem.Checked = AppSettings.CommitInfoShowTagThisCommitDerivesFrom;
+        renderAsMarkdownToolStripMenuItem.Checked = AppSettings.RenderMarkdownPreview;
 
         _showAllBranches = false;
         _showAllTags = false;
@@ -341,21 +342,23 @@ public partial class CommitInfo : GitModuleControl
         }
         else
         {
-            rtbxCommitMessage.SetXHTMLText(GetFixCommitMessage());
+            SetCommitMessage(GetFixCommitMessage());
             RevisionInfo.Clear();
         }
 
         return;
 
-        string GetFixCommitMessage()
+        (string rawBody, string xhtml) GetFixCommitMessage()
         {
             if (_revision is null)
             {
-                return string.Empty;
+                return (string.Empty, string.Empty);
             }
 
             CommitData data = _commitDataManager.CreateFromRevision(_revision, _children);
-            return _commitDataBodyRenderer?.Render(data, showRevisionsAsLinks: false) ?? string.Empty;
+            string rawBody = (GitExtensions.Extensibility.Extensions.UIExtensions.FormatBodyAndNotes(data.Body, data.Notes) ?? "").Trim();
+            string xhtml = _commitDataBodyRenderer?.Render(data, showRevisionsAsLinks: false) ?? string.Empty;
+            return (rawBody, xhtml);
         }
 
         async Task UpdateCommitMessageAsync(CancellationToken cancellationToken)
@@ -378,11 +381,12 @@ public partial class CommitInfo : GitModuleControl
                 return;
             }
 
-            string commitMessage = commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent is not null);
+            string rawBody = (GitExtensions.Extensibility.Extensions.UIExtensions.FormatBodyAndNotes(data.Body, data.Notes) ?? "").Trim();
+            string xhtml = commitDataBodyRenderer.Render(data, showRevisionsAsLinks: CommandClickedEvent is not null);
 
             await this.SwitchToMainThreadAsync(cancellationToken);
             cancellationToken.ThrowIfCancellationRequested();
-            rtbxCommitMessage.SetXHTMLText(commitMessage);
+            SetCommitMessage((rawBody, xhtml));
         }
 
         void StartAsyncDataLoad(DistributedSettings settings, CancellationToken cancellationToken)
@@ -728,6 +732,36 @@ public partial class CommitInfo : GitModuleControl
         ReloadCommitInfo();
     }
 
+    private void renderAsMarkdownToolStripMenuItem_Click(object sender, EventArgs e)
+    {
+        AppSettings.RenderMarkdownPreview = !AppSettings.RenderMarkdownPreview;
+        ReloadCommitInfo();
+    }
+
+    private void SetCommitMessage((string rawBody, string xhtml) message)
+    {
+        bool useMarkdown = AppSettings.RenderMarkdownPreview;
+
+        rtbxCommitMessage.Visible = !useMarkdown;
+        mdCommitMessage.Visible = useMarkdown;
+
+        if (useMarkdown)
+        {
+            mdCommitMessage.MarkdownText = message.rawBody;
+
+            // WebView2 doesn't fire ContentsResized, so set a reasonable
+            // height based on the text length as a rough heuristic.
+            int lineCount = message.rawBody.Split('\n').Length;
+            int estimatedLineHeight = (int)(16 * DpiUtil.ScaleY);
+            _commitMessageHeight = Math.Max(estimatedLineHeight * lineCount, (int)(60 * DpiUtil.ScaleY));
+            PerformLayout();
+        }
+        else
+        {
+            rtbxCommitMessage.SetXHTMLText(message.xhtml);
+        }
+    }
+
     private void addNoteToolStripMenuItem_Click(object sender, EventArgs e)
     {
         if (_revision is null)
@@ -766,6 +800,13 @@ public partial class CommitInfo : GitModuleControl
 
     private void CommitMessage_ContentsResized(ContentsResizedEventArgs e)
     {
+        // When the WebView2 markdown viewer is active, don't let the hidden
+        // RichTextBox's ContentsResized override the estimated height.
+        if (mdCommitMessage.Visible)
+        {
+            return;
+        }
+
         _commitMessageHeight = e.NewRectangle.Height;
 
         // at scale factor of 150% there is rendering artifact - the last line is almost lost

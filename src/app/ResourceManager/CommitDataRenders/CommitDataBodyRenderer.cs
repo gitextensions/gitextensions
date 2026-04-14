@@ -13,7 +13,13 @@ public interface ICommitDataBodyRenderer
     /// <summary>
     /// Render the body of a commit message.
     /// </summary>
-    string Render(CommitData commitData, bool showRevisionsAsLinks);
+    /// <param name="commitData"> The commit data to render.</param>
+    /// <param name="showRevisionsAsLinks"> Whether to linkify commit hashes.</param>
+    /// <param name="markdownConverter">
+    ///  An optional function that converts Markdown text to XHTML. When provided,
+    ///  the raw body is passed through this function instead of being HTML-encoded.
+    /// </param>
+    string Render(CommitData commitData, bool showRevisionsAsLinks, Func<string, string>? markdownConverter = null);
 }
 
 /// <summary>
@@ -33,11 +39,15 @@ public sealed class CommitDataBodyRenderer : ICommitDataBodyRenderer
     /// <summary>
     /// Render the body of a commit message.
     /// </summary>
-    public string Render(CommitData commitData, bool showRevisionsAsLinks)
+    public string Render(CommitData commitData, bool showRevisionsAsLinks, Func<string, string>? markdownConverter = null)
     {
         ArgumentNullException.ThrowIfNull(commitData);
 
-        string body = WebUtility.HtmlEncode((UIExtensions.FormatBodyAndNotes(commitData.Body, commitData.Notes) ?? "").Trim());
+        string rawBody = (UIExtensions.FormatBodyAndNotes(commitData.Body, commitData.Notes) ?? "").Trim();
+
+        string body = markdownConverter is not null
+            ? markdownConverter(rawBody)
+            : WebUtility.HtmlEncode(rawBody);
 
         if (showRevisionsAsLinks)
         {

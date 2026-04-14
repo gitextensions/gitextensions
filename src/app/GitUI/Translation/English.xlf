@@ -957,6 +957,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Copy link</source>
         <target />
       </trans-unit>
+      <trans-unit id="renderAsMarkdownToolStripMenuItem.Text">
+        <source>Render commit message as Markdown</source>
+        <target />
+      </trans-unit>
       <trans-unit id="showContainedInBranchesRemoteIfNoLocalToolStripMenuItem.Text">
         <source>Show remote branches only when no local branch contains this commit</source>
         <target />
@@ -2004,6 +2008,10 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="increaseNumberOfLinesToolStripMenuItem.Text">
         <source>&amp;Increase the number of lines of context</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="markdownPreviewButton.ToolTipText">
+        <source>Toggle Markdown preview</source>
         <target />
       </trans-unit>
       <trans-unit id="nextChangeButton.ToolTipText">

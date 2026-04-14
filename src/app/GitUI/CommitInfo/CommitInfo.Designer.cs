@@ -23,6 +23,7 @@ partial class CommitInfo
         tableLayout = new TableLayoutPanel();
         pnlCommitMessage = new Panel();
         rtbxCommitMessage = new RichTextBox();
+        mdCommitMessage = new GitUI.UserControls.MarkdownViewer();
         commitInfoContextMenuStrip = new ContextMenuStrip(components);
         copyLinkToolStripMenuItem = new ToolStripMenuItem();
         copyCommitInfoToolStripMenuItem = new ToolStripMenuItem();
@@ -33,6 +34,7 @@ partial class CommitInfo
         showContainedInTagsToolStripMenuItem = new ToolStripMenuItem();
         showMessagesOfAnnotatedTagsToolStripMenuItem = new ToolStripMenuItem();
         showTagThisCommitDerivesFromMenuItem = new ToolStripMenuItem();
+        renderAsMarkdownToolStripMenuItem = new ToolStripMenuItem();
         toolStripSeparator2 = new ToolStripSeparator();
         addNoteToolStripMenuItem = new ToolStripMenuItem();
         commitInfoHeader = new GitUI.CommitInfo.CommitInfoHeader();
@@ -67,6 +69,7 @@ partial class CommitInfo
         pnlCommitMessage.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
         pnlCommitMessage.BackColor = SystemColors.Control;
         pnlCommitMessage.Controls.Add(rtbxCommitMessage);
+        pnlCommitMessage.Controls.Add(mdCommitMessage);
         pnlCommitMessage.Location = new Point(0, 112);
         pnlCommitMessage.Margin = new Padding(0);
         pnlCommitMessage.Name = "pnlCommitMessage";
@@ -91,6 +94,16 @@ partial class CommitInfo
         rtbxCommitMessage.KeyDown += RichTextBox_KeyDown;
         rtbxCommitMessage.MouseDown += _RevisionHeader_MouseDown;
         // 
+        // mdCommitMessage
+        // 
+        mdCommitMessage.Dock = DockStyle.Fill;
+        mdCommitMessage.DisableScrolling = true;
+        mdCommitMessage.Margin = new Padding(0);
+        mdCommitMessage.Name = "mdCommitMessage";
+        mdCommitMessage.Size = new Size(456, 36);
+        mdCommitMessage.TabIndex = 3;
+        mdCommitMessage.Visible = false;
+        // 
         // commitInfoContextMenuStrip
         // 
         commitInfoContextMenuStrip.Items.AddRange(new ToolStripItem[] {
@@ -103,6 +116,7 @@ partial class CommitInfo
         showContainedInTagsToolStripMenuItem,
         showMessagesOfAnnotatedTagsToolStripMenuItem,
         showTagThisCommitDerivesFromMenuItem,
+        renderAsMarkdownToolStripMenuItem,
         toolStripSeparator2,
         addNoteToolStripMenuItem});
         commitInfoContextMenuStrip.Name = "commitInfoContextMenuStrip";
@@ -169,6 +183,13 @@ partial class CommitInfo
         showTagThisCommitDerivesFromMenuItem.Size = new Size(453, 22);
         showTagThisCommitDerivesFromMenuItem.Text = "Show the most recent tag this commit derives from";
         showTagThisCommitDerivesFromMenuItem.Click += showTagThisCommitDerivesFromMenuItem_Click;
+        // 
+        // renderAsMarkdownToolStripMenuItem
+        // 
+        renderAsMarkdownToolStripMenuItem.Name = "renderAsMarkdownToolStripMenuItem";
+        renderAsMarkdownToolStripMenuItem.Size = new Size(453, 22);
+        renderAsMarkdownToolStripMenuItem.Text = "Render commit message as Markdown";
+        renderAsMarkdownToolStripMenuItem.Click += renderAsMarkdownToolStripMenuItem_Click;
         // 
         // toolStripSeparator2
         // 
@@ -247,8 +268,10 @@ partial class CommitInfo
     private ToolStripMenuItem addNoteToolStripMenuItem;
     private ToolStripMenuItem showMessagesOfAnnotatedTagsToolStripMenuItem;
     private ToolStripMenuItem showTagThisCommitDerivesFromMenuItem;
+    private ToolStripMenuItem renderAsMarkdownToolStripMenuItem;
     private CommitInfoHeader commitInfoHeader;
     private Panel pnlCommitMessage;
     private RichTextBox rtbxCommitMessage;
+    private UserControls.MarkdownViewer mdCommitMessage;
     private TableLayoutPanel tableLayout;
 }

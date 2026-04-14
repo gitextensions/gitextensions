@@ -1,4 +1,6 @@
-﻿namespace GitUI.CommandsDialogs.BrowseDialog;
+﻿using GitUI.UserControls;
+
+namespace GitUI.CommandsDialogs.BrowseDialog;
 
 partial class FormChangeLog
 {
@@ -28,7 +30,7 @@ partial class FormChangeLog
     /// </summary>
     private void InitializeComponent()
     {
-        ChangeLog = new RichTextBox();
+        ChangeLog = new MarkdownViewer();
         SuspendLayout();
         // 
         // ChangeLog
@@ -36,11 +38,8 @@ partial class FormChangeLog
         ChangeLog.Dock = DockStyle.Fill;
         ChangeLog.Location = new Point(0, 0);
         ChangeLog.Name = "ChangeLog";
-        ChangeLog.ReadOnly = true;
         ChangeLog.Size = new Size(849, 411);
         ChangeLog.TabIndex = 0;
-        ChangeLog.Text = "";
-        ChangeLog.WordWrap = false;
         // 
         // FormChangeLog
         // 
@@ -57,5 +56,5 @@ partial class FormChangeLog
 
     #endregion
 
-    private RichTextBox ChangeLog;
+    private MarkdownViewer ChangeLog;
 }

@@ -11,6 +11,8 @@
     <PackageVersion Include="GitInfo" Version="2.2.0" />
     <PackageVersion Include="JetBrains.Annotations" Version="2021.2.0" />
     <PackageVersion Include="LibGit2Sharp" Version="0.31.0" />
+    <PackageVersion Include="Markdig" Version="1.1.2" />
+    <PackageVersion Include="Microsoft.Web.WebView2" Version="1.0.3856.49" />
     <PackageVersion Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
     <PackageVersion Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.201" />
@@ -37,10 +39,10 @@
 
     <!-- Test infra -->
     <PackageVersion Include="AwesomeAssertions" Version="9.4.0" />
-    <PackageVersion Include="NUnit.Analyzers" Version="4.7.0" PrivateAssets="all" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.13.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />    <!-- Required? -->
     <PackageVersion Include="NSubstitute" Version="5.3.0" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.7.0" PrivateAssets="all" />
     <PackageVersion Include="NUnit.ConsoleRunner" Version="3.19.2" />
     <PackageVersion Include="NUnit" Version="4.3.2" />
     <PackageVersion Include="NUnit3TestAdapter" Version="5.0.0" />
