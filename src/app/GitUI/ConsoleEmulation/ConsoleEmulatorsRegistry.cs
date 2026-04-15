@@ -16,40 +16,40 @@ internal class ConsoleEmulatorsRegistry(
     /// <summary>
     ///  Creates a console process controller for the configured emulator.
     /// </summary>
-    public IConsoleCommandController CreateCommandController()
+    public IConsoleCommandRunner CreateCommandController()
     {
         if (!useConsoleEmulation.Value)
         {
-            return new PlainTextConsoleCommandController();
+            return new PlainTextConsoleCommandRunner();
         }
 
         if (TryGetConfiguredConsoleEmulator() is { } configuredEmulator)
         {
-            return configuredEmulator.CreateCommandController();
+            return configuredEmulator.CreateCommandRunner();
         }
 
         if (TryGetFallbackConsoleEmulator() is { } fallbackConsoleEmulator)
         {
-            return fallbackConsoleEmulator.CreateCommandController();
+            return fallbackConsoleEmulator.CreateCommandRunner();
         }
 
         // Fallback to no console emulation
-        return new PlainTextConsoleCommandController();
+        return new PlainTextConsoleCommandRunner();
     }
 
     /// <summary>
     ///  Creates a console shell controller for the configured emulator, if available.
     /// </summary>
-    public IConsoleShellController? CreateShellController()
+    public IConsoleShellRunner? CreateShellRunner()
     {
         if (TryGetConfiguredConsoleEmulator() is { } configuredEmulator)
         {
-            return configuredEmulator.CreateShellController();
+            return configuredEmulator.CreateShellRunner();
         }
 
         if (TryGetFallbackConsoleEmulator() is { } fallbackConsoleEmulator)
         {
-            return fallbackConsoleEmulator.CreateShellController();
+            return fallbackConsoleEmulator.CreateShellRunner();
         }
 
         return null;

@@ -50,8 +50,8 @@ public partial class FormProcess : FormStatus
             Text += $" ({displayPath})";
         }
 
-        ConsoleCommandController.CommandProcessExited += (_, args) => OnExit(args.ExitCode);
-        ConsoleCommandController.CommandOutputReceived += DataReceivedCore;
+        ConsoleCommandRunner.CommandProcessExited += (_, args) => OnExit(args.ExitCode);
+        ConsoleCommandRunner.CommandOutputReceived += DataReceivedCore;
     }
 
     public FormProcess(IGitUICommands commands, ArgumentString arguments, string workingDirectory, string? input, bool useDialogSettings, string? process = null)
@@ -114,7 +114,7 @@ public partial class FormProcess : FormStatus
 
         try
         {
-            ConsoleCommandController.StartCommand(ProcessString!, ProcessArguments!, WorkingDirectory, ProcessEnvVariables);
+            ConsoleCommandRunner.StartCommand(ProcessString!, ProcessArguments!, WorkingDirectory, ProcessEnvVariables);
 
             if (!string.IsNullOrEmpty(ProcessInput))
             {
@@ -142,7 +142,7 @@ public partial class FormProcess : FormStatus
     {
         try
         {
-            ConsoleCommandController.KillCommandProcess();
+            ConsoleCommandRunner.KillCommandProcess();
 
             GitModule module = new(UICommands.GetRequiredService<IGitExecutorProvider>(), WorkingDirectory);
             module.UnlockIndex(includeSubmodules: true);
@@ -199,7 +199,7 @@ public partial class FormProcess : FormStatus
             const string ansiSuffix = "\u001B[K";
             string line = e.Text.Replace(ansiSuffix, "");
 
-            if (ConsoleCommandController.IsDisplayingFullProcessOutput)
+            if (ConsoleCommandRunner.IsDisplayingFullProcessOutput)
             {
                 OutputLog.Append(line); // To the log only, display control displays it by itself
             }

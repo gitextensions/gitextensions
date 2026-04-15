@@ -22,12 +22,12 @@ public interface IConsoleEmulator
     bool IsSupportedInCurrentEnvironment { get; }
 
     /// <summary>
-    ///  Creates a console process controller for command dialogs.
+    ///  Creates a console process runner for command dialogs.
     /// </summary>
-    IConsoleCommandController CreateCommandController();
+    IConsoleCommandRunner CreateCommandRunner();
 
     /// <summary>
-    ///  Creates a console shell controller for the repository browser's terminal tab.
+    ///  Creates a console shell runner for the repository browser's terminal tab.
     /// </summary>
-    IConsoleShellController CreateShellController();
+    IConsoleShellRunner CreateShellRunner();
 }

@@ -8,12 +8,12 @@ namespace GitUI.ConsoleEmulation.ConEmu;
 /// <summary>
 ///  Wraps <see cref="ConEmuControl"/> for the repository browser's terminal tab.
 /// </summary>
-internal sealed class ConEmuConsoleShellController : IConsoleShellController
+internal sealed class ConEmuConsoleShellRunner : IConsoleShellRunner
 {
     private readonly ConEmuControl _conEmu;
     private readonly ShellProvider _shellProvider = new();
 
-    internal ConEmuConsoleShellController()
+    internal ConEmuConsoleShellRunner()
     {
         _conEmu = new ConEmuControl
         {

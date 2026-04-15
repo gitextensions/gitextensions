@@ -219,7 +219,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
     private readonly ShellProvider _shellProvider = new();
-    private IConsoleShellController? _terminal;
+    private IConsoleShellRunner? _terminal;
     private Dashboard? _dashboard;
     private bool _isFileHistoryMode;
     private bool _fileBlameHistoryLeftPanelStartupState;
@@ -2737,7 +2737,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
             if (_terminal is null)
             {
-                _terminal = _consoleEmulatorsRegistry.CreateShellController();
+                _terminal = _consoleEmulatorsRegistry.CreateShellRunner();
                 if (_terminal is null)
                 {
                     return;

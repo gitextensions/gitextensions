@@ -11,14 +11,14 @@ namespace GitUI.ConsoleEmulation.ConEmu;
 /// <summary>
 ///  Embeds a ConEmu terminal in the output panel so command dialogs can host an interactive console.
 /// </summary>
-internal class ConEmuConsoleCommandController : ContainerControl, IConsoleCommandController
+internal class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRunner
 {
     private int _nLastExitCode;
 
     private Panel _panel;
     private ConEmuControl? _terminal;
 
-    public ConEmuConsoleCommandController()
+    public ConEmuConsoleCommandRunner()
     {
         InitializeComponent();
 

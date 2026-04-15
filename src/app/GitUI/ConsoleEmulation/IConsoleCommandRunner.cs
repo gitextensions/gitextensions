@@ -3,7 +3,7 @@ namespace GitUI.ConsoleEmulation;
 /// <summary>
 ///  Represents a control that executes a console command and displays its output.
 /// </summary>
-public interface IConsoleCommandController
+public interface IConsoleCommandRunner
 {
     /// <summary>
     ///  Gets the WinForms control to embed in the panel.

@@ -6,14 +6,14 @@
 public interface IConsoleEmulatorsRegistry
 {
     /// <summary>
-    ///  Creates a console command controller for the configured emulator.
+    ///  Creates a console command runner for the configured emulator.
     /// </summary>
-    IConsoleCommandController CreateCommandController();
+    IConsoleCommandRunner CreateCommandController();
 
     /// <summary>
-    ///  Creates a console shell controller for the configured emulator, if available.
+    ///  Creates a console shell runner for the configured emulator, if available.
     /// </summary>
-    IConsoleShellController? CreateShellController();
+    IConsoleShellRunner? CreateShellRunner();
 
     /// <summary>
     ///  Gets the console emulators supported in the current environment.

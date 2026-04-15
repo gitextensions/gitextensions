@@ -15,7 +15,7 @@ namespace GitUI.ConsoleEmulation.PlainText;
 /// <summary>
 ///  Displays redirected process output in an edit box when no embedded terminal is being used.
 /// </summary>
-public sealed class PlainTextConsoleCommandController : ContainerControl, IConsoleCommandController
+public sealed class PlainTextConsoleCommandRunner : ContainerControl, IConsoleCommandRunner
 {
     private readonly RichTextBox _editbox;
 
@@ -27,7 +27,7 @@ public sealed class PlainTextConsoleCommandController : ContainerControl, IConso
 
     private StreamWriter? _input;
 
-    public PlainTextConsoleCommandController()
+    public PlainTextConsoleCommandRunner()
     {
         _editbox = new RichTextBox
         {

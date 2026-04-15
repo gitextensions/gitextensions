@@ -10,10 +10,10 @@ internal class PlainTextConsoleEmulatorsRegistry : IConsoleEmulatorsRegistry
 
     public IReadOnlyCollection<IConsoleEmulator> AvailableConsoleEmulators => [];
 
-    public IConsoleCommandController CreateCommandController()
+    public IConsoleCommandRunner CreateCommandController()
     {
-        return new PlainTextConsoleCommandController();
+        return new PlainTextConsoleCommandRunner();
     }
 
-    public IConsoleShellController? CreateShellController() => null;
+    public IConsoleShellRunner? CreateShellRunner() => null;
 }

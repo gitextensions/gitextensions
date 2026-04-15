@@ -3,7 +3,7 @@ namespace GitUI.ConsoleEmulation;
 /// <summary>
 ///  Represents an interactive terminal session embedded in the repository browser's terminal tab.
 /// </summary>
-public interface IConsoleShellController
+public interface IConsoleShellRunner
 {
     /// <summary>
     ///  Gets the WinForms control to embed in the tab panel.
