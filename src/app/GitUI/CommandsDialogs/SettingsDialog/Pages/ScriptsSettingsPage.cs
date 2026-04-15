@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Globalization;
 using System.Reflection;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.ScriptsEngine;
@@ -163,7 +164,8 @@ Diff selection:
             return;
         }
 
-        if (EmbeddedIcons.Images.Count == 0)
+        bool containsAnyImageWithoutPath = EmbeddedIcons.Images.Keys.Cast<string>().Any(name => !name.ContainsAny(Delimiters.PathSeparators));
+        if (!containsAnyImageWithoutPath)
         {
             System.Resources.ResourceManager rm = new("GitUI.Properties.Images", Assembly.GetExecutingAssembly());
 
