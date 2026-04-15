@@ -543,9 +543,8 @@ public sealed class TextEditorSearcher : IDisposable
     public void SetScanRegion(int offset, int length)
     {
         Validates.NotNull(_document);
-        Color bkgColor = _document.HighlightingStrategy.GetColorFor("Default").BackgroundColor.AdaptBackColor();
         _region = new TextMarker(offset, length, TextMarkerType.SolidBlock,
-                                 Globals.HalfMix(bkgColor, Color.FromArgb(160, 160, 160).AdaptTextColor()));
+                                 Color.FromArgb(160, 160, 160).AdaptBackColor().DimColor());
         _document.MarkerStrategy.AddMarker(_region);
         _document.TextContentChanged += DocumentOnTextContentChanged;
         ScanRegionChanged?.Invoke(this, EventArgs.Empty);
@@ -766,14 +765,5 @@ public static class Globals
     public static bool IsInRange(int x, int lo, int hi)
     {
         return x >= lo && x <= hi;
-    }
-
-    public static Color HalfMix(Color one, Color two)
-    {
-        return Color.FromArgb(
-            (one.A + two.A) >> 1,
-            (one.R + two.R) >> 1,
-            (one.G + two.G) >> 1,
-            (one.B + two.B) >> 1);
     }
 }

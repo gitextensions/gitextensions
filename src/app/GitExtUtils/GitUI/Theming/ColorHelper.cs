@@ -14,15 +14,16 @@ public static class ColorHelper
     public static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
     /// <summary>
-    ///  Blends the color with the default Editor background color, halves each value first.
-    ///  Keep the original alpha, SystemColors.Window.A==255 and we do not want rounding errors.
+    ///  Blends the color with the current editor background color at 50% in linear light (sRGB gamma-corrected) space,
+    ///  producing a perceptually correct midpoint. The original alpha is preserved.
     /// </summary>
-    public static Color DimColor(Color color)
+    public static Color DimColor(this Color color)
     {
-        const uint maskWithoutLeastSignificantBits = 0xFE_FE_FE_FE;
-        uint defaultBackground = (uint)ThemeSettings.Theme.GetColor(AppColor.EditorBackground).ToArgb();
-        int dimCode = (int)((((uint)color.ToArgb() & maskWithoutLeastSignificantBits) >> 1) + ((defaultBackground & maskWithoutLeastSignificantBits) >> 1));
-        return Color.FromArgb(color.A, (dimCode >> 16) & 0xff, (dimCode >> 8) & 0xff, dimCode & 0xff);
+        Color background = ThemeSettings.Theme.GetColor(AppColor.EditorBackground);
+        byte r = SrgbDelinearize((SrgbLinearize(color.R) + SrgbLinearize(background.R)) * 0.5);
+        byte g = SrgbDelinearize((SrgbLinearize(color.G) + SrgbLinearize(background.G)) * 0.5);
+        byte b = SrgbDelinearize((SrgbLinearize(color.B) + SrgbLinearize(background.B)) * 0.5);
+        return Color.FromArgb(color.A, r, g, b);
     }
 
     public static void SetForeColorForBackColor(this Control control) =>
@@ -371,6 +372,18 @@ public static class ColorHelper
 
         // Use the threshold value to determine whether to use black or white as the foreground color
         return (luminance > luminanceThreshold) ? Color.Black : Color.White;
+    }
+
+    private static double SrgbLinearize(byte channel)
+    {
+        double normalized = channel / 255.0;
+        return normalized <= 0.04045 ? normalized / 12.92 : Math.Pow((normalized + 0.055) / 1.055, 2.4);
+    }
+
+    private static byte SrgbDelinearize(double linear)
+    {
+        double normalized = linear <= 0.0031308 ? 12.92 * linear : (1.055 * Math.Pow(linear, 1.0 / 2.4)) - 0.055;
+        return (byte)Math.Round(Math.Clamp(normalized * 255.0, 0.0, 255.0));
     }
 
     internal static class TestAccessor

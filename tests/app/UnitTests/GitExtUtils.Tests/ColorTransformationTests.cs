@@ -48,8 +48,8 @@ public class ColorTransformationTests
     }
 
     [TestCase("#000000", 0.5f)]
-    [TestCase("#777777", 0.5f)]
-    [TestCase("#999999", 0.6f)] // the threshold has been increased to still write in black on a darker color
+    [TestCase("#757575", 0.5f)]
+    [TestCase("#999999", 1.0f)] // write white on a lighter background with increased threshold
     public void Should_return_white_when_color_is_dark(string backgroundColor, float luminanceThreshold)
     {
         Color correspondingForeColor = ColorHelper.TestAccessor.GetContrastColor(ColorTranslator.FromHtml(backgroundColor), luminanceThreshold);
@@ -59,7 +59,7 @@ public class ColorTransformationTests
 
     [TestCase("#FFFFFF", 0.5f)]
     [TestCase("#999999", 0.5f)]
-    [TestCase("#777777", 0.4f)] // the threshold has been lower to still write in white on a lighter color
+    [TestCase("#777777", 0.4f)] // write black on a lighter background with decreased threshold
     public void Should_return_black_when_color_is_light(string backgroundColor, float luminanceThreshold)
     {
         Color correspondingForeColor = ColorHelper.TestAccessor.GetContrastColor(ColorTranslator.FromHtml(backgroundColor), luminanceThreshold);

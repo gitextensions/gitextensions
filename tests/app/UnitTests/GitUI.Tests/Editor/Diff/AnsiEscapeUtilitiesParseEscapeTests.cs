@@ -1,36 +1,11 @@
 ﻿using System.Text;
-using GitCommands;
-using GitExtUtils.GitUI.Theming;
 using GitUI.Editor.Diff;
-using GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 
 namespace GitUITests.Editor.Diff;
-public class AnsiEscapeUtilitiesTest_ParseEscape
+public class AnsiEscapeUtilitiesParseEscapeTests : AnsiEscapeUtilitiesTestBase
 {
     private const string _escape_sequence = "\u001b[";
-    private readonly List<Color> _redAnsiTheme = [Color.FromArgb(211, 0, 11), Color.FromArgb(232, 127, 132), Color.FromArgb(255, 94, 94), Color.FromArgb(254, 174, 174),
-        Color.FromArgb(255, 200, 200), Color.FromArgb(254, 227, 227), Color.FromArgb(255, 165, 165), Color.FromArgb(254, 209, 209)];
-
-    private ThemeId _themeId;
-    private string[] _themeVariations = null!;
-
-    [OneTimeSetUp]
-    public void OneTimeSetUp()
-    {
-        _themeId = AppSettings.ThemeId;
-        _themeVariations = AppSettings.ThemeVariations;
-        AppSettings.ThemeId = ThemeId.DefaultLight;
-        AppSettings.ThemeVariations = ThemeVariations.None;
-        ThemeModule.Load();
-    }
-
-    [OneTimeTearDown]
-    public void OneTimeTearDown()
-    {
-        AppSettings.ThemeId = _themeId;
-        AppSettings.ThemeVariations = _themeVariations;
-    }
 
     [Test]
     public void ParseEscape_ShouldAppendTextWithoutEscapeSequence_WhenNoEscapeSequenceIsPresent()
@@ -77,27 +52,27 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
         textMarkers[0].Offset.Should().Be(10);
         textMarkers[0].Length.Should().Be(3);
         textMarkers[0].Color.Should().Be(SystemColors.Window);
-        textMarkers[0].ForeColor.Should().Be(_redAnsiTheme[0]);
+        textMarkers[0].ForeColor.Should().Be(GetAnsiColor());
 
         textMarkers[1].Offset.Should().Be(46);
         textMarkers[1].Length.Should().Be(8);
         textMarkers[1].Color.Should().Be(SystemColors.Window);
-        textMarkers[1].ForeColor.Should().Be(_redAnsiTheme[2]);
+        textMarkers[1].ForeColor.Should().Be(GetAnsiColor(bold: true));
 
         textMarkers[2].Offset.Should().Be(59);
         textMarkers[2].Length.Should().Be(16);
-        textMarkers[2].Color.Should().Be(_redAnsiTheme[6]);
+        textMarkers[2].Color.Should().Be(GetAnsiColor(fore: false, bold: true));
         textMarkers[2].ForeColor.Should().Be(Color.FromArgb(0, 0, 0));
 
         textMarkers[3].Offset.Should().Be(85);
         textMarkers[3].Length.Should().Be(7);
         textMarkers[3].Color.Should().Be(SystemColors.Window);
-        textMarkers[3].ForeColor.Should().Be(_redAnsiTheme[1]);
+        textMarkers[3].ForeColor.Should().Be(GetAnsiColor(dim: true));
 
         textMarkers[4].Offset.Should().Be(108);
         textMarkers[4].Length.Should().Be(15);
         textMarkers[4].Color.Should().Be(SystemColors.Window);
-        textMarkers[4].ForeColor.Should().Be(_redAnsiTheme[0]);
+        textMarkers[4].ForeColor.Should().Be(GetAnsiColor());
     }
 
     [Test]
@@ -198,26 +173,26 @@ public class AnsiEscapeUtilitiesTest_ParseEscape
         textMarkers[1].Offset.Should().Be(62);
         textMarkers[1].Length.Should().Be(1);
         textMarkers[1].Color.Should().Be(SystemColors.Window);
-        textMarkers[1].ForeColor.Should().Be(_redAnsiTheme[0]);
+        textMarkers[1].ForeColor.Should().Be(GetAnsiColor());
 
         textMarkers[2].Offset.Should().Be(63);
         textMarkers[2].Length.Should().Be(38);
         textMarkers[2].Color.Should().Be(SystemColors.Window);
-        textMarkers[2].ForeColor.Should().Be(_redAnsiTheme[2]);
+        textMarkers[2].ForeColor.Should().Be(GetAnsiColor(bold: true));
 
         textMarkers[3].Offset.Should().Be(102);
         textMarkers[3].Length.Should().Be(13);
         textMarkers[3].Color.Should().Be(SystemColors.Window);
-        textMarkers[3].ForeColor.Should().Be(_redAnsiTheme[1]);
+        textMarkers[3].ForeColor.Should().Be(GetAnsiColor(dim: true));
 
         textMarkers[4].Offset.Should().Be(116);
         textMarkers[4].Length.Should().Be(47);
         textMarkers[4].Color.Should().Be(SystemColors.Window);
-        textMarkers[4].ForeColor.Should().Be(_redAnsiTheme[2]);
+        textMarkers[4].ForeColor.Should().Be(GetAnsiColor(bold: true));
 
         textMarkers[5].Offset.Should().Be(164);
         textMarkers[5].Length.Should().Be(54);
         textMarkers[5].Color.Should().Be(SystemColors.Window);
-        textMarkers[5].ForeColor.Should().Be(_redAnsiTheme[0]);
+        textMarkers[5].ForeColor.Should().Be(GetAnsiColor());
     }
 }

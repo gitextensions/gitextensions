@@ -513,7 +513,7 @@ public partial class AnsiEscapeUtilities
 
         if (dim)
         {
-            color = ColorHelper.DimColor(color);
+            color = color.DimColor();
         }
 
         return color;

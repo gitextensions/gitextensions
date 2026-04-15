@@ -1,35 +1,8 @@
-﻿using GitCommands;
-using GitExtUtils.GitUI.Theming;
-using GitUI.Editor.Diff;
-using GitUI.Theming;
+﻿using GitUI.Editor.Diff;
 
 namespace GitUITests.Editor.Diff;
-public class AnsiEscapeUtilitiesTest_Get8bitColor
+public class AnsiEscapeUtilitiesGet8bitColorTests : AnsiEscapeUtilitiesTestBase
 {
-    private const int _redId = 1;
-    private readonly List<Color> _redAnsiTheme = [Color.FromArgb(211, 0, 11), Color.FromArgb(232, 127, 132), Color.FromArgb(255, 94, 94), Color.FromArgb(254, 174, 174),
-        Color.FromArgb(255, 200, 200), Color.FromArgb(254, 227, 227), Color.FromArgb(255, 165, 165), Color.FromArgb(254, 209, 209)];
-
-    private ThemeId _themeId;
-    private string[] _themeVariations = null!;
-
-    [OneTimeSetUp]
-    public void OneTimeSetUp()
-    {
-        _themeId = AppSettings.ThemeId;
-        _themeVariations = AppSettings.ThemeVariations;
-        AppSettings.ThemeId = ThemeId.DefaultLight;
-        AppSettings.ThemeVariations = ThemeVariations.None;
-        ThemeModule.Load();
-    }
-
-    [OneTimeTearDown]
-    public void OneTimeTearDown()
-    {
-        AppSettings.ThemeId = _themeId;
-        AppSettings.ThemeVariations = _themeVariations;
-    }
-
     [Test]
     public void Get8bitColor_ShouldReturnBuiltinThemeColors()
     {
@@ -44,13 +17,12 @@ public class AnsiEscapeUtilitiesTest_Get8bitColor
                         // Only check the result for red, the other should just get a value
                         // (No need to maintain all ANSI theme colors in parallel)
                         Color result = AnsiEscapeUtilities.TestAccessor.Get8bitColor(colorId, fore, bold, dim);
-                        if (colorId != _redId)
+                        if (colorId != RedId)
                         {
                             continue;
                         }
 
-                        int themeOffset = (dim ? 1 : 0) + (bold ? 2 : 0) + (fore ? 0 : 4);
-                        result.Should().Be(_redAnsiTheme[themeOffset], $"Failed for {themeOffset}");
+                        result.Should().Be(GetAnsiColor(RedId, fore, bold, dim), $"Failed for fore:{fore}, bold:{bold}, dim:{dim}");
                     }
                 }
             }

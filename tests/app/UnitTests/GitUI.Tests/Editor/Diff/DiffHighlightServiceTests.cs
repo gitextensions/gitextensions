@@ -134,7 +134,7 @@ public class DiffHighlightServiceTests
     private static TextMarker CreateDimmedMarker(int offset, int length, bool isAdded)
     {
         Color color = (isAdded ? AppColor.AnsiTerminalGreenBackNormal : AppColor.AnsiTerminalRedBackNormal).GetThemeColor();
-        Color dimmedColor = ColorHelper.DimColor(ColorHelper.DimColor(color));
+        Color dimmedColor = color.DimColor().DimColor();
         return new TextMarker(offset, length, TextMarkerType.SolidBlock, dimmedColor, ColorHelper.GetForeColorForBackColor(dimmedColor));
     }
 
