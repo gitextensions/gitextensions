@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -40,7 +40,7 @@ public partial class FormReflog : GitModuleForm
         : base(uiCommands)
     {
         InitializeComponent();
-        lblDirtyWorkingDirectory.ForeColor.AdaptTextColor();
+        lblDirtyWorkingDirectory.SetForeColorForBackColor();
         InitializeComplete();
 
         gridReflog.RowTemplate.Height = DpiUtil.Scale(24);

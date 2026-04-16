@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -345,14 +345,14 @@ public partial class FormClone : GitExtensionsDialog
         if (destinationUnfilled || subDirectoryUnfilled)
         {
             Info.Text = newRepositoryLocationInfo;
-            Info.ForeColor = Color.Red.AdaptTextColor();
+            Info.ForeColor = Color.Red.AdaptForeColor(Info.BackColor);
             return;
         }
 
         if (Directory.Exists(destinationPath) && Directory.EnumerateFileSystemEntries(destinationPath).Any())
         {
             Info.Text = $@"{newRepositoryLocationInfo} {_infoDirectoryExists.Text}";
-            Info.ForeColor = Color.Red.AdaptTextColor();
+            Info.ForeColor = Color.Red.AdaptForeColor(Info.BackColor);
             return;
         }
 

@@ -371,7 +371,7 @@ public partial class PatchGrid : GitModuleControl
         {
             Patches.ClearSelection();
             DataGridViewRow dataGridViewRow = Patches.Rows[shouldSelectIndex];
-            dataGridViewRow.DefaultCellStyle.ForeColor = Color.OrangeRed.AdaptTextColor();
+            dataGridViewRow.DefaultCellStyle.ForeColor = Color.OrangeRed.AdaptForeColor(dataGridViewRow.InheritedStyle.BackColor);
             dataGridViewRow.Selected = true;
         }
     }

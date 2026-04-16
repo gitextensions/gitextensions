@@ -1,4 +1,4 @@
-using System.Collections.Frozen;
+﻿using System.Collections.Frozen;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -164,11 +164,11 @@ public sealed partial class RevisionDataGridView : DataGridView
         return;
 
         static Color GetHighlightedGrayTextColor(float degreeOfGrayness = 1f) =>
-        ColorHelper.GetHighlightGrayTextColor(
-            backgroundColorName: KnownColor.Control,
-            textColorName: KnownColor.ControlText,
-            highlightColorName: KnownColor.Highlight,
-            degreeOfGrayness);
+            ColorHelper.GetHighlightGrayTextColor(
+                backgroundColorName: KnownColor.Control,
+                textColorName: KnownColor.ControlText,
+                highlightColorName: KnownColor.Highlight,
+                degreeOfGrayness);
 
         void InitializeComponent()
         {
@@ -448,7 +448,8 @@ public sealed partial class RevisionDataGridView : DataGridView
             columnProvider.Clear();
         }
 
-        // Reload settings that will be used during drawing
+        // Reload settings that will be used during drawing.
+        // Theme related settings are only loaded at startup.
         _revisionGraphDrawNonRelativesTextGray = AppSettings.RevisionGraphDrawNonRelativesTextGray;
 
         _highlightAuthoredRevisions = AppSettings.HighlightAuthoredRevisions;

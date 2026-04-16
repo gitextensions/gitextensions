@@ -397,12 +397,14 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         void DrawSuperProjectRef(string label, ref int currentOffset, bool isSelected)
         {
+            // Rectangle does not have a BackColor property. Use the cell's background color instead.
+            Color backColor = e.CellStyle?.BackColor ?? ThemeSettings.Default.Theme.GetColor(AppColor.EditorBackground);
             RevisionGridRefRenderer.DrawRef(
                 e.State.HasFlag(DataGridViewElementStates.Selected),
                 style.NormalFont,
                 ref currentOffset,
                 label,
-                headColor: Color.OrangeRed.AdaptTextColor(),
+                headColor: Color.OrangeRed.AdaptForeColor(backColor),
                 isSelected ? RefArrowType.Filled : RefArrowType.NotFilled,
                 messageBounds,
                 e.Graphics!,

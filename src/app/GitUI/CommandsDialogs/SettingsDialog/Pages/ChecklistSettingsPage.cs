@@ -585,7 +585,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
     private static void RenderSettingSet(Button settingButton, Button settingFixButton, string text)
     {
         settingButton.BackColor = OtherColors.BrightGreen;
-        settingButton.ForeColor = ColorHelper.GetForeColorForBackColor(settingButton.BackColor);
+        settingButton.SetForeColorForBackColor();
         settingButton.Text = text;
         settingFixButton.Visible = false;
     }
@@ -596,7 +596,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
     private static void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
     {
         settingButton.BackColor = OtherColors.BrightRed;
-        settingButton.ForeColor = ColorHelper.GetForeColorForBackColor(settingButton.BackColor);
+        settingButton.SetForeColorForBackColor();
         settingButton.Text = text;
         settingFixButton.Visible = true;
     }
@@ -604,7 +604,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
     private static void RenderSettingNotRecommended(Button settingButton, Button settingFixButton, string text)
     {
         settingButton.BackColor = OtherColors.BrightYellow;
-        settingButton.ForeColor = ColorHelper.GetForeColorForBackColor(settingButton.BackColor);
+        settingButton.SetForeColorForBackColor();
         settingButton.Text = text;
         settingFixButton.Visible = true;
     }

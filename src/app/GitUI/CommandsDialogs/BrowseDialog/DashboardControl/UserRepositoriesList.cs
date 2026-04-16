@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -88,7 +88,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
         _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints - 1f);
         lblRecentRepositories.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
-        lblRecentRepositories.ForeColor.AdaptTextColor();
+        lblRecentRepositories.SetForeColorForBackColor();
 
         textBoxSearch.PlaceholderText = _repositorySearchPlaceholder.Text;
 

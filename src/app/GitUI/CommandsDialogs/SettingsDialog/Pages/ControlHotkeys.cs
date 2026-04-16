@@ -54,7 +54,7 @@ internal partial class ControlHotkeys : GitExtensionsControl
     public ControlHotkeys()
     {
         InitializeComponent();
-        txtHotkey.ForeColor.AdaptTextColor();
+        txtHotkey.SetForeColorForBackColor();
         InitializeComplete();
 
         cmbSettings.DisplayMember = nameof(HotkeySettings.Name);

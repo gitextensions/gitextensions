@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing.Drawing2D;
 using GitCommands;
@@ -1833,7 +1833,10 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                 bool isBranchVisible = ((ICheckRefs)RevisionGridControl).Contains(branch.ObjectId);
 
                 ToolStripItem toolStripItem = branchSelect.DropDownItems.Add(branch.Name);
-                toolStripItem.ForeColor = isBranchVisible ? branchSelect.ForeColor : Color.Silver.AdaptTextColor();
+                Color effectiveBackColor = toolStripItem.BackColor.IsEmpty
+                    ? toolStripItem.GetCurrentParent()?.BackColor ?? branchSelect.DropDown.BackColor
+                    : toolStripItem.BackColor;
+                toolStripItem.ForeColor = isBranchVisible ? branchSelect.ForeColor : Color.Silver.AdaptForeColor(effectiveBackColor);
                 toolStripItem.Image = (isBranchVisible ? Images.Branch : Images.EyeClosed).AdaptLightness();
                 toolStripItem.Click += (s, e) => UICommands.StartCheckoutBranch(this, toolStripItem.Text!);
             }

@@ -177,7 +177,7 @@ internal sealed class QuickSearchProvider
         }
         else
         {
-            _label.ForeColor = Color.DarkRed.AdaptTextColor();
+            _label.ForeColor = Color.DarkRed.AdaptForeColor(_label.BackColor);
         }
 
         int? SearchForward()

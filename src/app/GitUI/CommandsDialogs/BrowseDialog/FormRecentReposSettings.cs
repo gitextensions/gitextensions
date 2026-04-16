@@ -157,7 +157,7 @@ public partial class FormRecentReposSettings : GitExtensionsForm
 
         if (!Directory.Exists(repo.Repo.Path))
         {
-            item.ForeColor = Color.Red.AdaptTextColor();
+            item.ForeColor = Color.Red.AdaptForeColor(item.BackColor);
         }
 
         return item;

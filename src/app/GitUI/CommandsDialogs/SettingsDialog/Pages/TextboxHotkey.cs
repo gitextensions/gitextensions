@@ -38,7 +38,7 @@ public class TextboxHotkey : TextBox
             if (_keyData != Keys.None)
             {
                 // TODO: do not change text color on already assigned keys, which occur only once
-                ForeColor = HotkeySettingsManager.IsUniqueKey(_keyData) ? Color.Red.AdaptTextColor() : SystemColors.WindowText;
+                ForeColor = HotkeySettingsManager.IsUniqueKey(_keyData) ? Color.Red.AdaptForeColor(BackColor) : SystemColors.WindowText;
             }
 
             Text = _keyData.ToText();

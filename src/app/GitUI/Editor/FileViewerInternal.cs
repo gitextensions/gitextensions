@@ -142,7 +142,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
                 TextMarker textMarker = new(indexMatch,
                     word.Length, TextMarkerType.SolidBlock, highlightColor,
-                    ColorHelper.GetForeColorForBackColor(highlightColor));
+                    highlightColor.GetTextColor());
 
                 selectionMarkers.Add(textMarker);
             }

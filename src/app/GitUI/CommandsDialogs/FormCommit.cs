@@ -2378,7 +2378,7 @@ public sealed partial class FormCommit : GitModuleForm
                         len = lineLength - offset;
                         if (len > 0)
                         {
-                            Message.ChangeTextColor(line, offset, len, Color.Red.AdaptTextColor());
+                            Message.ChangeTextColor(line, offset, len, Color.Red.AdaptForeColor(Message.BackColor));
                         }
                     }
                 }

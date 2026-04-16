@@ -151,7 +151,7 @@ public sealed class SpellCheckEditControl : NativeWindow, IDisposable
 
     private void DrawWave(Point start, Point end)
     {
-        using Pen pen = new(Color.Red.AdaptTextColor(), DpiUtil.ScaleX);
+        using Pen pen = new(Color.Red.AdaptForeColor(_richTextBox.BackColor), DpiUtil.ScaleX);
         int waveWidth = DpiUtil.Scale(4);
         int waveHalfWidth = waveWidth >> 1;
         if ((end.X - start.X) > waveWidth)

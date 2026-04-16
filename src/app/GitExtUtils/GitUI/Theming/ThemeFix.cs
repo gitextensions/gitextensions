@@ -58,17 +58,21 @@ public static class ThemeFix
     private static void SetupLinkLabel(this LinkLabel label)
     {
         // e.g. FormAbout
-        label.LinkColor = Application.IsDarkModeEnabled ? Color.CornflowerBlue : label.LinkColor.AdaptTextColor();
-        label.VisitedLinkColor = label.VisitedLinkColor.AdaptTextColor();
-        label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
+        // Use the parent control's BackColor when the label's own BackColor is empty (inherited).
+        Color effectiveBackColor = label.BackColor.IsEmpty ? label.Parent?.BackColor ?? SystemColors.Control : label.BackColor;
+        label.LinkColor = label.LinkColor.AdaptForeColor(effectiveBackColor);
+        label.VisitedLinkColor = label.VisitedLinkColor.AdaptForeColor(effectiveBackColor);
+        label.ActiveLinkColor = label.ActiveLinkColor.AdaptForeColor(effectiveBackColor);
     }
 
     private static void SetupToolStripStatusLabel(this ToolStripLabel label)
     {
         // e.g. FormCommit
-        label.LinkColor = Application.IsDarkModeEnabled ? Color.CornflowerBlue : label.LinkColor.AdaptTextColor();
-        label.VisitedLinkColor = label.VisitedLinkColor.AdaptTextColor();
-        label.ActiveLinkColor = label.ActiveLinkColor.AdaptTextColor();
+        // Use the owning strip's BackColor when the label's own BackColor is empty (inherited).
+        Color effectiveBackColor = label.BackColor.IsEmpty ? label.Owner?.BackColor ?? SystemColors.Control : label.BackColor;
+        label.LinkColor = label.LinkColor.AdaptForeColor(effectiveBackColor);
+        label.VisitedLinkColor = label.VisitedLinkColor.AdaptForeColor(effectiveBackColor);
+        label.ActiveLinkColor = label.ActiveLinkColor.AdaptForeColor(effectiveBackColor);
     }
 
     private static void SetupButton(this Button button)

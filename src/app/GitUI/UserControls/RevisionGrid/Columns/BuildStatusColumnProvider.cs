@@ -1,4 +1,4 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.BuildServerIntegration;
@@ -91,6 +91,8 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
 
         _grid.DrawColumnText(e, text, _fontWithUnicodeCache, GetColor(style.ForeColor), bounds: e.CellBounds);
 
+        return;
+
         Color GetColor(Color foreColor)
         {
             bool isSelected = _gridView.Rows[e.RowIndex].Selected;
@@ -119,7 +121,18 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
                     break;
             }
 
-            return customColor.AdaptTextColor();
+            return customColor.AdaptForeColor(GetResolvedBackColor());
+        }
+
+        Color GetResolvedBackColor()
+        {
+            Color backColor = e?.CellStyle?.BackColor ?? Theme.Default.GetColor(AppColor.PanelBackground);
+            if (backColor == Color.Empty && e is not null)
+            {
+                return _gridView.Rows[e.RowIndex].Cells[e.ColumnIndex].InheritedStyle.BackColor;
+            }
+
+            return backColor;
         }
     }
 

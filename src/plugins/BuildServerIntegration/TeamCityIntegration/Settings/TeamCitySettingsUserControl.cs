@@ -28,7 +28,7 @@ public partial class TeamCitySettingsUserControl : GitExtensionsControl, IBuildS
     public TeamCitySettingsUserControl()
     {
         InitializeComponent();
-        labelRegexError.ForeColor.AdaptTextColor();
+        labelRegexError.SetForeColorForBackColor();
         InitializeComplete();
 
         Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;

@@ -32,7 +32,7 @@ public partial class SettingsUserControl : GitExtensionsControl, IBuildServerSet
     public SettingsUserControl()
     {
         InitializeComponent();
-        labelRegexError.ForeColor.AdaptTextColor();
+        labelRegexError.SetForeColorForBackColor();
         InitializeComplete();
 
         Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
