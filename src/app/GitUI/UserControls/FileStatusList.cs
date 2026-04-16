@@ -46,6 +46,10 @@ public sealed partial class FileStatusList : GitModuleControl
     private readonly ToolStripItem _sortBySeparator = new ToolStripSeparator();
     private readonly SolidBrush _inactiveSelectionHighlightBrush = new(AppColor.InactiveSelectionHighlight.GetThemeColor());
     private readonly SolidBrush _backgroundBrush = new(AppColor.PanelBackground.GetThemeColor());
+    private readonly Color _grayTextColor = ColorHelper.GetHighlightGrayTextColor(
+        backgroundColorName: KnownColor.Window,
+        textColorName: KnownColor.WindowText,
+        highlightColorName: KnownColor.Highlight);
 
     private GitItemStatus? _nextItemToSelect = null;
     private bool _enableSelectedIndexChangeEvent = true;
@@ -1729,10 +1733,7 @@ public sealed partial class FileStatusList : GitModuleControl
         Rectangle textRect = new(item.Bounds.X - 1, item.Bounds.Top - 1, item.Bounds.Width, item.Bounds.Height);
 
         Color grayTextColor = selected && Focused && !Application.IsDarkModeEnabled
-            ? ColorHelper.GetHighlightGrayTextColor(
-                backgroundColorName: KnownColor.Window,
-                textColorName: KnownColor.WindowText,
-                highlightColorName: KnownColor.Highlight)
+            ? _grayTextColor
             : SystemColors.GrayText;
 
         Color textColor = selected && Focused
