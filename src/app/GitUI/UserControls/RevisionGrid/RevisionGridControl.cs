@@ -2087,8 +2087,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             return;
         }
 
-        // If a ref label was right-clicked, show a focused context menu for that ref
-        if (_rightClickedHitInfo is RefLabelHitInfo hitInfo && (ModifierKeys == Keys.Control || (ModifierKeys != Keys.Shift && !AppSettings.AlwaysShowAdvOpt)))
+        // If a ref label was right-clicked, show a focused context menu for that ref (hold Shift for full menu)
+        if (_rightClickedHitInfo is RefLabelHitInfo hitInfo && !ModifierKeys.HasFlag(Keys.Shift))
         {
             e.Cancel = true;
             ShowRefSpecificContextMenu(hitInfo.GitRef, hitInfo.StashReflogSelector);
