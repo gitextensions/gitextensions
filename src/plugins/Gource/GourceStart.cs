@@ -62,7 +62,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
 
         if (!File.Exists(GourcePath.Text))
         {
-            MessageBoxes.ShowError(this, "Cannot find Gource.\nPlease download Gource and set the correct path.", "Error");
+            MessageBoxes.ShowError(this, "Cannot find Gource.\nPlease download Gource and set the correct path.");
             return;
         }
 
