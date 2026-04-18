@@ -52,7 +52,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         }
         catch (Exception e)
         {
-            MessageBoxes.ShowError(this, e.Message, "Error");
+            MessageBoxes.ShowError(this, e.Message);
         }
     }
 
