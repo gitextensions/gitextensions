@@ -4,7 +4,13 @@ internal sealed class Nodes(Tree? tree) : IReadOnlyCollection<Node>
 {
     private readonly List<Node> _nodesList = [];
 
+    public int Count => _nodesList.Count;
+
+    public Node? LastNode => _nodesList.Count > 0 ? _nodesList[^1] : null;
+
     public Tree? Tree { get; } = tree;
+
+    public Node this[int index] => _nodesList[index];
 
     /// <summary>
     /// Adds a new node to the collection.
@@ -18,11 +24,6 @@ internal sealed class Nodes(Tree? tree) : IReadOnlyCollection<Node>
     public void AddNodes(IEnumerable<Node> nodes)
     {
         _nodesList.AddRange(nodes);
-    }
-
-    public void InsertNode(int index, Node node)
-    {
-        _nodesList.Insert(index, node);
     }
 
     public void Clear()
@@ -114,9 +115,8 @@ internal sealed class Nodes(Tree? tree) : IReadOnlyCollection<Node>
         }
     }
 
-    public int Count => _nodesList.Count;
-
-    public Node this[int index] => _nodesList[index];
-
-    public Node? LastNode => _nodesList.Count > 0 ? _nodesList[^1] : null;
+    public void InsertNode(int index, Node node)
+    {
+        _nodesList.Insert(index, node);
+    }
 }

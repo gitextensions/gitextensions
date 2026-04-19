@@ -20,7 +20,7 @@ public sealed class SubmoduleFolderNodeTests
 
         root.CompactSingleChildFolders();
 
-        root.GetTestAccessor().Name.Should().Be("extension/src/test/assets");
+        root.GetTestAccessor().DisplayText().Should().Be("extension/src/test/assets");
         root.Nodes.Count.Should().Be(0);
     }
 
@@ -36,7 +36,7 @@ public sealed class SubmoduleFolderNodeTests
 
         root.CompactSingleChildFolders();
 
-        root.GetTestAccessor().Name.Should().Be("a/b");
+        root.GetTestAccessor().DisplayText().Should().Be("a/b");
         root.Nodes.Count.Should().Be(1);
     }
 
@@ -52,7 +52,7 @@ public sealed class SubmoduleFolderNodeTests
 
         root.CompactSingleChildFolders();
 
-        root.GetTestAccessor().Name.Should().Be("Externals");
+        root.GetTestAccessor().DisplayText().Should().Be("Externals");
         root.Nodes.Count.Should().Be(2);
     }
 
@@ -63,7 +63,7 @@ public sealed class SubmoduleFolderNodeTests
 
         root.CompactSingleChildFolders();
 
-        root.GetTestAccessor().Name.Should().Be("empty");
+        root.GetTestAccessor().DisplayText().Should().Be("empty");
         root.Nodes.Count.Should().Be(0);
     }
 
@@ -83,7 +83,7 @@ public sealed class SubmoduleFolderNodeTests
 
         root.CompactSingleChildFolders();
 
-        root.GetTestAccessor().Name.Should().Be("a/b/c");
+        root.GetTestAccessor().DisplayText().Should().Be("a/b/c");
         root.Nodes.Count.Should().Be(2);
     }
 
