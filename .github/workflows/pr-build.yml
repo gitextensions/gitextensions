@@ -23,8 +23,8 @@ env:
   BUILD_VERSION: 7.0.0.${{ github.run_number }}
 
 jobs:
-  build-and-test:
-    name: Build & Test
+  build:
+    name: Build
     runs-on: windows-latest
     timeout-minutes: 30
 
@@ -84,9 +84,6 @@ jobs:
         Pop-Location
         if ($exitCode -ne 0) { exit $exitCode }
 
-    - name: Run tests
-      run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx /bl:artifacts\log\tests.binlog
-
     - name: Publish
       shell: pwsh
       run: |
@@ -106,6 +103,64 @@ jobs:
         name: ${{ steps.portable-name.outputs.name }}
         path: 'artifacts\Release\publish\*.zip'
 
+    - name: Delete publish folder because not needed for tests
+      run: Remove-Item -Recurse -Force artifacts\Release\publish
+
+    - name: Upload build output
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      with:
+        name: build-output
+        path: 'artifacts\Release'
+        if-no-files-found: error
+        retention-days: 1
+
+    - name: Upload build logs on failure
+      if: failure()
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
+      with:
+        name: build-logs
+        path: |
+          artifacts\**\log\**\*.binlog
+          **\English*.xlf
+          artifacts\Release\**\*.dgml
+        if-no-files-found: ignore
+
+  test:
+    name: Test
+    runs-on: windows-latest
+    timeout-minutes: 30
+    needs: build
+    if: always() && needs.build.result == 'success'
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      with:
+        submodules: recursive
+        fetch-depth: 0
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Cache NuGet packages
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+      with:
+        path: ~/.nuget/packages
+        key: nuget-${{ runner.os }}-${{ hashFiles('Directory.Packages.props') }}
+        restore-keys: |
+          nuget-${{ runner.os }}-
+
+    - name: Download build output
+      uses: actions/download-artifact@fa0a91b85d4f404e444306b0b2b8c22efd7c7e23 # v4.1.8
+      with:
+        name: build-output
+        path: 'artifacts\Release'
+
+    - name: Run tests
+      run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx /bl:artifacts\log\tests.binlog
+
     - name: Upload test results
       if: always()
       uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
@@ -118,10 +173,8 @@ jobs:
       if: failure()
       uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       with:
-        name: build-logs
+        name: test-logs
         path: |
           artifacts\**\log\**\*.binlog
           artifacts\Release\TestsResults\**\*.trx
-          **\English*.xlf
-          artifacts\Release\**\*.dgml
         if-no-files-found: ignore
