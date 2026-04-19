@@ -104,13 +104,6 @@ public partial class FormProcess : FormStatus
     private void ProcessStart(FormStatus form)
     {
         BeforeProcessStart();
-        string quotedProcessString = ProcessString!;
-        if (quotedProcessString.Contains(' '))
-        {
-            quotedProcessString = quotedProcessString.Quote();
-        }
-
-        AppendMessage($"{quotedProcessString} {ProcessArguments}{Environment.NewLine}");
 
         try
         {
@@ -128,7 +121,7 @@ public partial class FormProcess : FormStatus
         }
         catch (Exception e)
         {
-            AppendMessage($"{Environment.NewLine}{e.ToStringWithData()}{Environment.NewLine}");
+            MessageBoxes.ShowError(this, $"{Environment.NewLine}{e.ToStringWithData()}", "Failed to run command");
             OnExit(1);
         }
     }
@@ -199,29 +192,17 @@ public partial class FormProcess : FormStatus
             const string ansiSuffix = "\u001B[K";
             string line = e.Text.Replace(ansiSuffix, "");
 
-            if (ConsoleCommandRunner.IsDisplayingFullProcessOutput)
+            // To the internal log (which can be then retrieved as full text from this form)
+            OutputLog.Append(line);
+
+            if (!ConsoleCommandRunner.IsDisplayingFullProcessOutput)
             {
-                OutputLog.Append(line); // To the log only, display control displays it by itself
-            }
-            else
-            {
-                AppendOutput(line); // Both to log and display control
+                // To the display control
+                AppendMessage(line);
             }
         }
 
         DataReceived(sender!, e);
-    }
-
-    /// <summary>
-    /// Appends a line of text (CRLF added automatically) both to the logged output (<see cref="FormStatus.GetOutputString"/>) and to the display console control.
-    /// </summary>
-    public void AppendOutput(string line)
-    {
-        // To the internal log (which can be then retrieved as full text from this form)
-        OutputLog.Append(line);
-
-        // To the display control
-        AppendMessage(line);
     }
 
     public static bool IsOperationAborted(string dialogResult)

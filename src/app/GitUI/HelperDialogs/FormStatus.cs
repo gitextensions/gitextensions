@@ -194,7 +194,6 @@ public partial class FormStatus : GitExtensionsDialog
                 Trace.WriteLine(exception);
             }
 
-            AppendMessage("Done");
             ShowPassword.Visible = false;
             PasswordInput.Visible = false;
             ProgressBar.Visible = false;

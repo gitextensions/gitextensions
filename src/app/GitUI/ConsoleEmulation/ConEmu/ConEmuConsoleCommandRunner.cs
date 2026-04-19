@@ -38,12 +38,6 @@ internal class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRun
     public event EventHandler<ConsoleProcessExitEventArgs>? CommandProcessExited;
     public event EventHandler? ConsoleHostTerminated;
 
-    public void WriteConsoleOutput(string text)
-    {
-        Validates.NotNull(_terminal);
-        _terminal.RunningSession?.WriteOutputTextAsync(text);
-    }
-
     public void WriteCommandProcessInput(string text)
     {
         Validates.NotNull(_terminal);
@@ -95,6 +89,8 @@ internal class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRun
     {
         ProcessOperation operation = CommandLog.LogProcessStart(command, arguments, workDir);
 
+        WriteConsoleOutput($"{(command.Contains(' ') ? command.Quote() : command)} {arguments}{Environment.NewLine}");
+
         try
         {
             string commandLine = new ArgumentBuilder { command.Quote(), arguments }.ToString();
@@ -119,6 +115,7 @@ internal class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRun
                 _nLastExitCode = args.ExitCode;
                 operation.LogProcessEnd(_nLastExitCode);
                 outputProcessor.Flush();
+                WriteConsoleOutput("Done");
                 CommandProcessExited?.Invoke(this, new ConsoleProcessExitEventArgs(args.ExitCode));
             };
 
@@ -139,6 +136,12 @@ internal class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRun
             operation.LogProcessEnd(ex);
             throw;
         }
+    }
+
+    public void WriteConsoleOutput(string text)
+    {
+        Validates.NotNull(_terminal);
+        _terminal.RunningSession?.WriteOutputTextAsync(text);
     }
 }
 

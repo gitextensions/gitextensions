@@ -124,6 +124,8 @@ public sealed class PlainTextConsoleCommandRunner : ContainerControl, IConsoleCo
     {
         ProcessOperation operation = CommandLog.LogProcessStart(command, arguments, workDir);
 
+        WriteConsoleOutput($"{(command.Contains(' ') ? command.Quote() : command)} {arguments}{Environment.NewLine}");
+
         try
         {
             EnvironmentConfiguration.SetEnvironmentVariables();
@@ -214,6 +216,7 @@ public sealed class PlainTextConsoleCommandRunner : ContainerControl, IConsoleCo
 
                         await this.SwitchToMainThreadAsync();
                         operation.LogProcessEnd(exitCode);
+                        WriteConsoleOutput("Done");
                         _process.Dispose();
                         _process = null;
                         await _input!.DisposeAsync();
@@ -251,7 +254,9 @@ public sealed class PlainTextConsoleCommandRunner : ContainerControl, IConsoleCo
                     nextLineEnd = output.Length;
                 }
 
-                CommandOutputReceived?.Invoke(this, new ConsoleOutputEventArgs(output[startIndex..nextLineEnd]));
+                string outputLine = output[startIndex..nextLineEnd];
+                CommandOutputReceived?.Invoke(this, new ConsoleOutputEventArgs(outputLine));
+
                 startIndex = nextLineEnd;
             }
         }

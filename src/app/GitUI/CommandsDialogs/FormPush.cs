@@ -573,18 +573,14 @@ public partial class FormPush : GitModuleForm
 
             if (onRejectedPullAction is not (GitPullAction.Merge or GitPullAction.Rebase))
             {
-                form.AppendOutput(Environment.NewLine +
-                    "Automatical pull can only be performed, when the default pull action is either set to Merge or Rebase." +
-                    Environment.NewLine + Environment.NewLine);
+                MessageBoxes.ShowError(form, "Automatical pull can only be performed, when the default pull action is either set to Merge or Rebase.");
                 return false;
             }
 
             if (IsRebasingMergeCommit())
             {
-                form.AppendOutput(Environment.NewLine +
-                    "Can not perform automatical pull, when the pull action is set to Rebase " + Environment.NewLine +
-                    "and one of the commits that are about to be rebased is a merge commit." +
-                    Environment.NewLine + Environment.NewLine);
+                MessageBoxes.ShowError(form, "Can not perform automatical pull, when the pull action is set to Rebase " +
+                                             "and one of the commits that are about to be rebased is a merge commit.");
                 return false;
             }
 
