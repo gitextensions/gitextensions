@@ -297,8 +297,8 @@ public sealed partial class GitModuleTests
         }
     }
 
-    [TestCase(null, "reset --hard --")]
-    [TestCase("file.txt", "reset --hard -- \"file.txt\"")]
+    [TestCase(null, "reset --hard --quiet --")]
+    [TestCase("file.txt", "reset --hard --quiet -- \"file.txt\"")]
     public void Reset_with_Hard_should_issue_correct_command_and_parse_response(string? file, string args)
     {
         using (_executable.StageCommand(args))
@@ -600,8 +600,8 @@ public sealed partial class GitModuleTests
                 },
                 new string[]
                 {
-                    "reset \"HEAD\" -- \"abc2\" \"abc3\" \"def\"",
-                    "reset -- \"abc2\"",
+                    "reset --quiet \"HEAD\" -- \"abc2\" \"abc3\" \"def\"",
+                    "reset --quiet -- \"abc2\"",
                     "update-index --force-remove --stdin"
                 },
                 false);
@@ -614,7 +614,7 @@ public sealed partial class GitModuleTests
                 },
                 new string[]
                 {
-                    "reset \"HEAD\" -- \"abc2\" \"abc3\"",
+                    "reset --quiet \"HEAD\" -- \"abc2\" \"abc3\"",
                 },
                 true);
         }
