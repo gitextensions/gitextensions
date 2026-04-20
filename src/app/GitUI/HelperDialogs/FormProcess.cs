@@ -3,6 +3,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.ConsoleEmulation;
+using GitUI.ConsoleEmulation.PlainText;
 
 namespace GitUI.HelperDialogs;
 
@@ -195,10 +196,22 @@ public partial class FormProcess : FormStatus
             // To the internal log (which can be then retrieved as full text from this form)
             OutputLog.Append(line);
 
-            if (!ConsoleCommandRunner.IsDisplayingFullProcessOutput)
+            if (ConsoleCommandRunner is IPlainTextConsoleCommandRunner plainTextRunner)
             {
-                // To the display control
-                AppendMessage(line);
+                // Plain text emulator is not emitting process output, so do it manually
+                plainTextRunner.WriteOutputText(line);
+
+                if (!line.EndsWith(Delimiters.LineFeed))
+                {
+                    this.InvokeAndForget(() =>
+                    {
+                        if (ShowPassword.CheckState == CheckState.Unchecked)
+                        {
+                            ShowPassword.CheckState = CheckState.Indeterminate;
+                            PasswordInput.Focus();
+                        }
+                    });
+                }
             }
         }
 

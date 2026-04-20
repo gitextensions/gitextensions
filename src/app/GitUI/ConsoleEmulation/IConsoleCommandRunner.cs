@@ -11,12 +11,6 @@ public interface IConsoleCommandRunner
     Control Control { get; }
 
     /// <summary>
-    ///  Gets a value indicating whether this control renders the full process output, so callers
-    ///  do not need to duplicate selected lines or progress in the window title.
-    /// </summary>
-    bool IsDisplayingFullProcessOutput { get; }
-
-    /// <summary>
     ///  Occurs when the process writes output.
     /// </summary>
     event EventHandler<ConsoleOutputEventArgs> CommandOutputReceived;
@@ -45,11 +39,6 @@ public interface IConsoleCommandRunner
     ///  Starts a new command process inside the console.
     /// </summary>
     void StartCommand(string command, string arguments, string workDir, Dictionary<string, string> envVariables);
-
-    /// <summary>
-    ///  Writes text directly to the console host output.
-    /// </summary>
-    void WriteConsoleOutput(string text);
 
     /// <summary>
     ///  Writes text to the process input stream.
