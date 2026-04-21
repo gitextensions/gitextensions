@@ -72,18 +72,18 @@ public partial class FormResetCurrentBranch : GitModuleForm
 
         if (Soft.Checked)
         {
-            FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Soft, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Soft, Revision.Guid, quiet: false), Module.WorkingDir, input: null, useDialogSettings: true);
         }
         else if (Mixed.Checked)
         {
-            FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Mixed, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Mixed, Revision.Guid, quiet: false), Module.WorkingDir, input: null, useDialogSettings: true);
         }
         else if (Hard.Checked)
         {
             if (MessageBoxes.Show(this, _resetHardWarning.Text, _resetCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 ObjectId? currentCheckout = Module.GetCurrentCheckout();
-                bool success = FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Hard, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
+                bool success = FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Hard, Revision.Guid, quiet: false), Module.WorkingDir, input: null, useDialogSettings: true);
                 if (success)
                 {
                     if (currentCheckout != Revision.ObjectId)
@@ -99,11 +99,11 @@ public partial class FormResetCurrentBranch : GitModuleForm
         }
         else if (Merge.Checked)
         {
-            FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Merge, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Merge, Revision.Guid, quiet: false), Module.WorkingDir, input: null, useDialogSettings: true);
         }
         else if (Keep.Checked)
         {
-            FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Keep, Revision.Guid), Module.WorkingDir, input: null, useDialogSettings: true);
+            FormProcess.ShowDialog(this, UICommands, arguments: Commands.Reset(ResetMode.Keep, Revision.Guid, quiet: false), Module.WorkingDir, input: null, useDialogSettings: true);
         }
 
         if (updateSubmodules)

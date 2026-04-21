@@ -1879,7 +1879,7 @@ public sealed partial class GitModule : IGitModule
 
         if (filesToRemove.Count > 0)
         {
-            ArgumentString args = Commands.Reset(ResetMode.ResetIndex, "HEAD");
+            ArgumentString args = Commands.Reset(ResetMode.ResetIndex, "HEAD", quiet: progressCallback is null);
             GitExecutable.RunBatchCommand(new ArgumentBuilder() { args }
                 .BuildBatchArgumentsForFiles(filesToRemove),
                 progressCallback);

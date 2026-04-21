@@ -601,7 +601,7 @@ public sealed partial class GitModuleTests
                 new string[]
                 {
                     "reset --quiet \"HEAD\" -- \"abc2\" \"abc3\" \"def\"",
-                    "reset --quiet -- \"abc2\"",
+                    "reset -- \"abc2\"",
                     "update-index --force-remove --stdin"
                 },
                 false);

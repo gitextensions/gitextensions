@@ -594,7 +594,7 @@ public static partial class Commands
     /// <param name="commit">Optional commit-ish (for reset-index this is tree-ish and mandatory).</param>
     /// <param name="file">Optional file to reset.</param>
     /// <returns>Argument string.</returns>
-    public static ArgumentString Reset(ResetMode mode, string? commit = null, string? file = null)
+    public static ArgumentString Reset(ResetMode mode, string? commit = null, string? file = null, bool quiet = true)
     {
         if (mode == ResetMode.ResetIndex && string.IsNullOrWhiteSpace(commit))
         {
@@ -604,7 +604,7 @@ public static partial class Commands
         return new GitArgumentBuilder("reset")
         {
             mode,
-            "--quiet",
+            { quiet,  "--quiet" },
             commit.QuoteNE(),
             "--",
             file?.ToPosixPath().QuoteNE()
