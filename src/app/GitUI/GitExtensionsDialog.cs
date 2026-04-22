@@ -12,7 +12,7 @@ namespace GitUI;
 /// <remarks>Includes support for font, hotkey, icon, translation, and position restore.</remarks>
 public partial class GitExtensionsDialog : GitModuleForm
 {
-    private static readonly Pen FooterDividerPen = new(SystemColors.ControlLight.MakeBackgroundDarkerBy(0.04));
+    private static readonly Pen FooterDividerPen = new(SystemColors.ControlLight.MakeDarkerBy(0.04));
 
     /// <summary>Creates a new <see cref="GitExtensionsForm"/> indicating position restore.</summary>
     /// <param name="enablePositionRestore">Indicates whether the <see cref="Form"/>'s position
@@ -23,7 +23,7 @@ public partial class GitExtensionsDialog : GitModuleForm
         InitializeComponent();
 
         // Lighten up the control panel
-        ControlsPanel.BackColor = SystemColors.ControlLight.MakeBackgroundDarkerBy(-0.04);
+        ControlsPanel.BackColor = SystemColors.ControlLight.MakeDarkerBy(-0.04);
         MainPanel.BackColor = AppColor.PanelBackground.GetThemeColor();
 
         // Draw a separator line at the top of the footer panel, similar to what Task Dialog does

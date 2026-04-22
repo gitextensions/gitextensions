@@ -145,7 +145,7 @@ public static class ColorHelper
     }
 
     /// <remarks>0.05 is subtle. 0.3 is quite strong.</remarks>
-    public static Color MakeBackgroundDarkerBy(this Color color, double amount) =>
+    public static Color MakeDarkerBy(this Color color, double amount) =>
         color.TransformHsl(l: l => l - amount);
 
     public static void AdaptImageLightness(this ToolStripItem item) =>

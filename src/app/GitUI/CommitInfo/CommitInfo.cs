@@ -104,7 +104,7 @@ public partial class CommitInfo : GitModuleControl
         _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
         _gitDescribeProvider = new GitDescribeProvider(() => Module);
 
-        Color messageBackground = SystemColors.Window.MakeBackgroundDarkerBy(0.04);
+        Color messageBackground = SystemColors.Window.MakeDarkerBy(0.04);
         pnlCommitMessage.BackColor = messageBackground;
         rtbxCommitMessage.BackColor = messageBackground;
 

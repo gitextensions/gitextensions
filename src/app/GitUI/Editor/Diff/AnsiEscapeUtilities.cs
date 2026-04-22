@@ -508,7 +508,7 @@ public partial class AnsiEscapeUtilities
 
         if (extraBold)
         {
-            color = color.MakeBackgroundDarkerBy(-0.1);
+            color = color.MakeDarkerBy(-0.1);
         }
 
         if (dim)

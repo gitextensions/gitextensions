@@ -103,7 +103,7 @@ public sealed partial class RevisionDataGridView : DataGridView
         DoubleBuffered = true;
 
         _rowBackgroundBrush = new SolidBrush(AppColor.PanelBackground.GetThemeColor());
-        _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color.MakeBackgroundDarkerBy(Application.IsDarkModeEnabled ? -0.018 : 0.025));
+        _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color.MakeDarkerBy(Application.IsDarkModeEnabled ? -0.018 : 0.025));
         _authoredHighlightBrush = new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
         _inactiveSelectionHighlightBrush = new SolidBrush(AppColor.InactiveSelectionHighlight.GetThemeColor());
 

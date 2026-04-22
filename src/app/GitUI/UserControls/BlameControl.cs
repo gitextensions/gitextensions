@@ -81,7 +81,7 @@ public sealed partial class BlameControl : GitModuleControl
 
         CommitInfo.CommandClicked += commitInfo_CommandClicked;
 
-        _commitHighlightColor = Application.IsDarkModeEnabled ? AppColor.EditorBackground.GetThemeColor().MakeBackgroundDarkerBy(-0.06) : SystemColors.ControlLight;
+        _commitHighlightColor = Application.IsDarkModeEnabled ? AppColor.EditorBackground.GetThemeColor().MakeDarkerBy(-0.06) : SystemColors.ControlLight;
         _gitRevisionSummaryBuilder = new GitRevisionSummaryBuilder();
         _gitBlameParser = new GitBlameParser(() => UICommands.Module);
     }
