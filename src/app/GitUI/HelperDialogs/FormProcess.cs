@@ -122,7 +122,7 @@ public partial class FormProcess : FormStatus
         }
         catch (Exception e)
         {
-            MessageBoxes.ShowError(this, $"{Environment.NewLine}{e.ToStringWithData()}", "Failed to run command");
+            MessageBoxes.ShowError(this, e.ToStringWithData(), "Failed to run command");
             OnExit(1);
         }
     }
