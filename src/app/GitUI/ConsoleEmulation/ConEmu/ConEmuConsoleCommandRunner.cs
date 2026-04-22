@@ -36,6 +36,12 @@ internal class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRun
     public event EventHandler<ConsoleProcessExitEventArgs>? CommandProcessExited;
     public event EventHandler? ConsoleHostTerminated;
 
+    private void WriteConsoleOutput(string text)
+    {
+        Validates.NotNull(_terminal);
+        _terminal.RunningSession?.WriteOutputTextAsync(text);
+    }
+
     public void WriteCommandProcessInput(string text)
     {
         Validates.NotNull(_terminal);
@@ -134,12 +140,6 @@ internal class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRun
             operation.LogProcessEnd(ex);
             throw;
         }
-    }
-
-    private void WriteConsoleOutput(string text)
-    {
-        Validates.NotNull(_terminal);
-        _terminal.RunningSession?.WriteOutputTextAsync(text);
     }
 }
 
