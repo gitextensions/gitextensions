@@ -162,11 +162,11 @@ internal sealed class SubmoduleNode : Node
 
     internal async Task SetStatusToolTipAsync(CancellationToken token)
     {
+        await TaskScheduler.Default;
         string toolTip;
         if (Info.Detailed?.RawStatus is not null)
         {
             // Prefer submodule status, shows ahead/behind
-            await TaskScheduler.Default;
             toolTip = SubmoduleResources.GetSubmoduleStatusText(
                 new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), Info.Path),
                 Info.Detailed.RawStatus,
@@ -175,15 +175,16 @@ internal sealed class SubmoduleNode : Node
         }
         else if (GitStatus is not null)
         {
-            await TaskScheduler.Default;
             ArtificialCommitChangeCount changeCount = new();
             changeCount.Update(GitStatus);
             toolTip = changeCount.GetSummary();
         }
         else
         {
-            // No data need to be set
-            return;
+            toolTip = SubmoduleResources.GetSubmoduleText(
+                new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), "."),
+                Info.Path,
+                hash: "");
         }
 
         await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(token);

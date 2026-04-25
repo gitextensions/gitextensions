@@ -168,16 +168,12 @@ internal abstract class Tree : NodeBase, IDisposable
 
         TreeNode? selectedNode = TreeViewNode.TreeView!.SelectedNode;
 
-        if (originalSelectedNodeFullNamePath != selectedNode?.GetFullNamePath())
+        if (originalSelectedNodeFullNamePath != selectedNode?.GetFullNamePath()
+            && TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath) is { } node)
         {
-            TreeNode? node = TreeViewNode.GetNodeFromPath(originalSelectedNodeFullNamePath);
-
-            if (node is not null)
-            {
-                TreeViewNode.TreeView.SelectedNode = node.Tag is not BaseRevisionNode branchNode || branchNode.Visible
-                    ? node
-                    : null;
-            }
+            TreeViewNode.TreeView.SelectedNode = node.Tag is not BaseRevisionNode branchNode || branchNode.Visible
+                ? node
+                : null;
         }
 
         PostFillTreeViewNode(firstTime);

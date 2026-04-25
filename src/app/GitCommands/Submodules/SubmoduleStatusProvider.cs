@@ -307,16 +307,16 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
             // (changed commit can be missed, but top module can only be dirty)
             SetModuleAsDirtyUpwards(module);
         }
-        else if (_submoduleInfos[module.WorkingDir].Detailed is not null)
+        else if (info.Detailed is { } detailed)
         {
             // No Git changes for this module, clear dirty status (but unknown for super projects)
-            if (_submoduleInfos[module.WorkingDir].Detailed!.Status == SubmoduleStatus.Unknown)
+            if (detailed.Status == SubmoduleStatus.Unknown)
             {
-                _submoduleInfos[module.WorkingDir].Detailed = null;
+                info.Detailed = null;
             }
             else
             {
-                _submoduleInfos[module.WorkingDir].Detailed!.IsDirty = false;
+                detailed.IsDirty = false;
             }
         }
 
@@ -424,8 +424,9 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
         GitSubmoduleStatus? submoduleStatus = await SubmoduleHelpers.GetSubmoduleCurrentChangesAsync(superModule, fileName: submoduleName, oldFileName: submoduleName, staged: false, noLocks: true)
             .ConfigureAwait(false);
 
-        // If no changes, set info.Detailed to null
-        info.Detailed = submoduleStatus is null ?
+        // If no changes, set submoduleInfo.Detailed to null
+        // if commit sha is not set the parsing was empty or there were no changes (ignore errors)
+        info.Detailed = submoduleStatus is null || submoduleStatus.Commit is null ?
             null :
             new DetailedSubmoduleInfo
             {
@@ -468,7 +469,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
 
         if (info.Detailed is null)
         {
-            // If no info, submodules are already the default
+            // If no submoduleInfo, submodules are already the default
             return;
         }
 

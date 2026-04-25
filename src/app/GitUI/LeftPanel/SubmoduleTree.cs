@@ -94,6 +94,7 @@ internal sealed class SubmoduleTree : Tree
 
             if (_currentNodes is null)
             {
+                // Load the nodes in the tree
                 // Module.GetRefs() is not used for submodules
                 JoinableTask joinableTask = ReloadNodesDetached((_, token) =>
                     {
@@ -201,9 +202,7 @@ internal sealed class SubmoduleTree : Tree
         // We always want to display submodules rooted from the top project.
         CreateSubmoduleNodes(result, threadModule, ref submoduleNodes);
 
-        Nodes nodes = new(this);
-        AddTopAndNodesToTree(ref nodes, submoduleNodes, threadModule, result);
-        return nodes;
+        return AddTopAndNodesToTree(submoduleNodes, threadModule, result);
     }
 
     private void CreateSubmoduleNodes(SubmoduleInfoResult result, IGitModule threadModule, ref List<SubmoduleNode> nodes)
@@ -257,8 +256,7 @@ internal sealed class SubmoduleTree : Tree
         return node.SuperPath.SubstringAfter(topModule.WorkingDir).ToPosixPath() + node.LocalPath;
     }
 
-    private void AddTopAndNodesToTree(
-        ref Nodes nodes,
+    private Nodes AddTopAndNodesToTree(
         List<SubmoduleNode> submoduleNodes,
         IGitModule threadModule,
         SubmoduleInfoResult result)
@@ -317,12 +315,21 @@ internal sealed class SubmoduleTree : Tree
             }
         }
 
+        // Add top-module node
+        Validates.NotNull(result.TopProject);
+        SubmoduleNode topModuleNode = new(
+            this,
+            result.TopProject,
+            result.TopProject.Bold,
+            result.TopProject.Bold ? result.CurrentSubmoduleStatus : null,
+            "",
+            result.TopProject.Path);
+
         // Now build the tree
-        DummyNode rootNode = new();
         HashSet<Node> nodesInTree = [];
         foreach (SubmoduleNode node in submoduleNodes)
         {
-            Node parentNode = rootNode;
+            Node parentNode = topModuleNode;
             string[] parts = GetNodeRelativePath(topModule, node).Split(Delimiters.ForwardSlash);
 
             for (int i = 0; i < parts.Length; ++i)
@@ -342,22 +349,12 @@ internal sealed class SubmoduleTree : Tree
         }
 
         // Compact chains of single-child folder nodes for a cleaner display
-        CompactSingleChildFolderChains(rootNode.Nodes);
+        CompactSingleChildFolderChains(topModuleNode.Nodes);
 
-        Validates.NotNull(result.TopProject);
-
-        // Add top-module node, and move children of root to it
-        SubmoduleNode topModuleNode = new(
-            this,
-            result.TopProject,
-            result.TopProject.Bold,
-            result.TopProject.Bold ? result.CurrentSubmoduleStatus : null,
-            "",
-            result.TopProject.Path);
-        topModuleNode.Nodes.AddNodes(rootNode.Nodes);
+        Nodes nodes = new(this);
         nodes.AddNode(topModuleNode);
 
-        return;
+        return nodes;
 
         static void CompactSingleChildFolderChains(Nodes nodes)
         {
