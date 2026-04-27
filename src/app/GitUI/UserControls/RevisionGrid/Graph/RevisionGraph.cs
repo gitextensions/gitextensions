@@ -196,6 +196,9 @@ public class RevisionGraph : IRevisionGraphRowProvider
     public bool TryGetNode(ObjectId objectId, [NotNullWhen(true)] out RevisionGraphRevision? revision)
         => _revisionByObjectId.TryGetValue(objectId, out revision);
 
+    /// <summary>Gets all revision nodes currently in the graph.</summary>
+    internal IEnumerable<RevisionGraphRevision> GetRevisions() => _revisionByObjectId.Values;
+
     public bool TryGetRowIndex(ObjectId objectId, out int index)
     {
         if (!TryGetNode(objectId, out RevisionGraphRevision? revision))
@@ -1034,15 +1037,8 @@ public class RevisionGraph : IRevisionGraphRowProvider
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal readonly struct TestAccessor
+    internal readonly struct TestAccessor(RevisionGraph revisionGraph)
     {
-        private readonly RevisionGraph _revisionGraph;
-
-        public TestAccessor(RevisionGraph revisionGraph)
-        {
-            _revisionGraph = revisionGraph;
-        }
-
         /// <summary>
         /// Validate the topo order in brute force.
         /// </summary>
@@ -1050,7 +1046,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
         public bool ValidateTopoOrder()
         {
             int nodeIndex = -1;
-            foreach (RevisionGraphRevision node in _revisionGraph._revisionByObjectId.Values)
+            foreach (RevisionGraphRevision node in revisionGraph._revisionByObjectId.Values)
             {
                 ++nodeIndex;
 
