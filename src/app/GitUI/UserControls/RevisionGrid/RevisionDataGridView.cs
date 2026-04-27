@@ -840,6 +840,17 @@ public sealed partial class RevisionDataGridView : DataGridView
         base.Refresh();
     }
 
+    /// <summary>
+    ///  Schedules a graph re-render without clearing the display cache, keeping the currently
+    ///  cached display visible during re-rendering. Use this for lightweight state changes such
+    ///  as hover highlighting, where the stale cache can be shown while the new render is computed.
+    /// </summary>
+    internal void RequestGraphRedraw()
+    {
+        _forceRefresh = true;
+        _visibleRowRangeUpdater.ScheduleExecution();
+    }
+
     private void UpdateRowHeight()
     {
         // TODO allow custom grid row spacing

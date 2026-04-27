@@ -1916,6 +1916,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         if (_messageColumnProvider.SetHighlight(e.RowIndex, hitInfo))
         {
             _gridView.InvalidateRow(e.RowIndex);
+            UpdateLaneHighlight(hitInfo?.GitRef);
         }
 
         _gridView.Cursor = hitInfo is not null ? Cursors.Hand : Cursors.Default;
@@ -1934,11 +1935,31 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         if (_messageColumnProvider.SetHighlight(-1, hitInfo: null))
         {
             _gridView.Invalidate();
+            UpdateLaneHighlight(null);
         }
 
         if (_gridView.Cursor == Cursors.Hand)
         {
             _gridView.Cursor = Cursors.Default;
+        }
+    }
+
+    private void UpdateLaneHighlight(IGitRef? gitRef)
+    {
+        IReadOnlySet<string>? branchBaseNames = GetBranchGroupBaseNames(gitRef);
+        _revisionGraphColumnProvider.SetHoverHighlight(branchBaseNames);
+        _gridView.RequestGraphRedraw();
+
+        return;
+
+        static IReadOnlySet<string>? GetBranchGroupBaseNames(IGitRef? gitRef)
+        {
+            if (gitRef is null || (!gitRef.IsHead && !gitRef.IsRemote))
+            {
+                return null;
+            }
+
+            return new HashSet<string> { gitRef.LocalName };
         }
     }
 

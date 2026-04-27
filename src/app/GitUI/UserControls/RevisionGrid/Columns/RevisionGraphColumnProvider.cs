@@ -18,6 +18,9 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
     private int _columnWidth = 0;
 
+    private IReadOnlySet<ObjectId>? _hoverHighlightedIds;
+    private volatile bool _hoverHighlightDirty;
+
     public RevisionGraphColumnProvider(RevisionGraph revisionGraph, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
         : base("Graph")
     {
@@ -120,6 +123,13 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
             _graphRenderCache.Reset();
         }
 
+        if (_hoverHighlightDirty)
+        {
+            // Hover state changed since last render. Reset so all rows re-render with new highlight.
+            _hoverHighlightDirty = false;
+            _graphRenderCache.Reset();
+        }
+
         int fromRowIndex = Math.Max(0, range.FromIndex - range.Count);
         _graphRenderCache.AdjustCapacity(range.Count * 3);
         int height = _graphRenderCache.Capacity * rowHeight;
@@ -199,7 +209,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
             _graphRenderCache.GraphBitmapGraphics.RenderingOrigin = new Point(x, laneRect.Y);
 
-            GraphRenderer.DrawItem(_revisionGraph.Config, _graphRenderCache.GraphBitmapGraphics, rowIndex, rowHeight, _revisionGraph.GetSegmentsForRow, RevisionGraphDrawStyle, _revisionGraph.HeadId);
+            GraphRenderer.DrawItem(_revisionGraph.Config, _graphRenderCache.GraphBitmapGraphics, rowIndex, rowHeight, _revisionGraph.GetSegmentsForRow, RevisionGraphDrawStyle, _revisionGraph.HeadId, _hoverHighlightedIds);
         }
     }
 
@@ -217,6 +227,57 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     public void HighlightBranch(ObjectId id)
     {
         _revisionGraph.HighlightBranch(id);
+    }
+
+    /// <summary>
+    ///  Updates the hover highlight to show only the ancestry of branches whose local name is in
+    ///  <paramref name="branchBaseNames"/>. All lanes outside this set are dimmed. Pass
+    ///  <see langword="null"/> to clear hover highlighting.
+    /// </summary>
+    public void SetHoverHighlight(IReadOnlySet<string>? branchBaseNames)
+    {
+        if (branchBaseNames is null)
+        {
+            _hoverHighlightedIds = null;
+            _hoverHighlightDirty = true;
+            return;
+        }
+
+        HashSet<ObjectId> ancestorIds = [];
+        foreach (RevisionGraphRevision revision in _revisionGraph.Revisions)
+        {
+            if (revision.GitRevision?.Refs.Any(r => IsInBranchGroup(r, branchBaseNames)) is true)
+            {
+                WalkAncestors(revision, ancestorIds);
+            }
+        }
+
+        _hoverHighlightedIds = ancestorIds.Count > 0 ? ancestorIds : null;
+        _hoverHighlightDirty = true;
+
+        return;
+
+        static bool IsInBranchGroup(IGitRef r, IReadOnlySet<string> baseNames)
+            => (r.IsHead || r.IsRemote) && baseNames.Contains(r.LocalName);
+
+        static void WalkAncestors(RevisionGraphRevision revision, HashSet<ObjectId> result)
+        {
+            Stack<RevisionGraphRevision> stack = new();
+            stack.Push(revision);
+            while (stack.Count > 0)
+            {
+                RevisionGraphRevision current = stack.Pop();
+                if (!result.Add(current.Objectid))
+                {
+                    continue;
+                }
+
+                foreach (RevisionGraphRevision parent in current.Parents)
+                {
+                    stack.Push(parent);
+                }
+            }
+        }
     }
 
     private int CalculateGraphColumnWidth(in VisibleRowRange range)

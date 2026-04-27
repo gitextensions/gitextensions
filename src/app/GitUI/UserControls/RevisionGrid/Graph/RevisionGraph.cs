@@ -196,6 +196,9 @@ public class RevisionGraph : IRevisionGraphRowProvider
     public bool TryGetNode(ObjectId objectId, [NotNullWhen(true)] out RevisionGraphRevision? revision)
         => _revisionByObjectId.TryGetValue(objectId, out revision);
 
+    /// <summary>Gets all revision nodes currently in the graph.</summary>
+    public IEnumerable<RevisionGraphRevision> Revisions => _revisionByObjectId.Values;
+
     public bool TryGetRowIndex(ObjectId objectId, out int index)
     {
         if (!TryGetNode(objectId, out RevisionGraphRevision? revision))
