@@ -17,6 +17,13 @@ namespace GitUI.UserControls.RevisionGrid;
 
 public sealed partial class RevisionDataGridView : DataGridView
 {
+    private enum RedrawMode
+    {
+        NoRedrawNeeded,
+        RedrawOnly,
+        RedrawWithClear,
+    }
+
     private const int BackgroundThreadUpdatePeriod = 25;
     private const int MouseWheelDeltaTimeout = 1500; // Mouse wheel idle time in milliseconds after which unconsumed wheel delta will be dropped.
     private const int RowCountUpdateCoolDown = 300;
@@ -64,7 +71,7 @@ public sealed partial class RevisionDataGridView : DataGridView
     /// <summary>
     /// Force refresh the gridview, set when revision graph is changed while loading revisions.
     /// </summary>
-    private bool _forceRefresh = false;
+    private RedrawMode _redrawMode;
 
     /// <summary>
     /// Indicates whether 'interesting' rows in the data grid is currently being loaded.
@@ -380,7 +387,11 @@ public sealed partial class RevisionDataGridView : DataGridView
     {
         foreach (GitRevision revision in revisions)
         {
-            _forceRefresh |= _revisionGraph.Add(revision);
+            if (_revisionGraph.Add(revision))
+            {
+                _redrawMode = RedrawMode.RedrawWithClear;
+            }
+
             if (ToBeSelectedObjectIds.Contains(revision.ObjectId))
             {
                 ++_loadedToBeSelectedRevisionsCount;
@@ -409,7 +420,10 @@ public sealed partial class RevisionDataGridView : DataGridView
         }
 
         // Insert at matching parent.
-        _forceRefresh |= _revisionGraph.Insert(workTreeRev, indexRev, parents);
+        if (_revisionGraph.Insert(workTreeRev, indexRev, parents))
+        {
+            _redrawMode = RedrawMode.RedrawWithClear;
+        }
 
         if (ToBeSelectedObjectIds.Contains(workTreeRev.ObjectId))
         {
@@ -430,7 +444,7 @@ public sealed partial class RevisionDataGridView : DataGridView
 
         _updateVisibleRowRangeSequence.CancelCurrent();
         _backgroundScrollTo = -1;
-        _forceRefresh = false;
+        _redrawMode = RedrawMode.NoRedrawNeeded;
         _visibleRowRange = new VisibleRowRange(fromIndex: 0, count: 0);
 
         // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about to delete the data
@@ -742,7 +756,7 @@ public sealed partial class RevisionDataGridView : DataGridView
             return;
         }
 
-        if (_forceRefresh)
+        if (_redrawMode == RedrawMode.RedrawWithClear)
         {
             // Always set _backgroundScrollTo in order to stop the background thread
             _backgroundScrollTo = -1;
@@ -772,12 +786,12 @@ public sealed partial class RevisionDataGridView : DataGridView
         int visibleRowCount = DisplayedRowCount(includePartialRow: true);
         visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
 
-        if (!_forceRefresh && _visibleRowRange.FromIndex == fromIndex && _visibleRowRange.Count == visibleRowCount)
+        if (_redrawMode == RedrawMode.NoRedrawNeeded && _visibleRowRange.FromIndex == fromIndex && _visibleRowRange.Count == visibleRowCount)
         {
             return;
         }
 
-        _forceRefresh = false;
+        _redrawMode = RedrawMode.NoRedrawNeeded;
         VisibleRowRange visibleRowRange = new(fromIndex, visibleRowCount);
         _visibleRowRange = visibleRowRange;
 
@@ -834,10 +848,25 @@ public sealed partial class RevisionDataGridView : DataGridView
 
     public override void Refresh()
     {
-        _forceRefresh = true;
+        _redrawMode = RedrawMode.RedrawWithClear;
         UpdateVisibleRowRange();
 
         base.Refresh();
+    }
+
+    /// <summary>
+    ///  Schedules a graph re-render without clearing the display cache, keeping the currently
+    ///  cached display visible during re-rendering. Use this for lightweight state changes such
+    ///  as hover highlighting, where the stale cache can be shown while the new render is computed.
+    /// </summary>
+    public void RequestRedrawWithoutClear()
+    {
+        if (_redrawMode < RedrawMode.RedrawWithClear)
+        {
+            _redrawMode = RedrawMode.RedrawOnly;
+        }
+
+        _visibleRowRangeUpdater.ScheduleExecution();
     }
 
     private void UpdateRowHeight()
