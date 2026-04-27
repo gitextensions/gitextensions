@@ -107,27 +107,30 @@ public sealed partial class RevisionDataGridView : DataGridView
         _authoredHighlightBrush = new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
         _inactiveSelectionHighlightBrush = new SolidBrush(AppColor.InactiveSelectionHighlight.GetThemeColor());
 
+        // subject/body colors are hardcoded to be correct relative each other,
+        // subject color should be emphasied compared to body, selected vs unselected etc.
+
         // relativeNonSelectedSubject: SystemColors.ControlText
         _relativeNonSelectedSubjectColor = Application.IsDarkModeEnabled
             ? SystemColors.ControlText
             : SystemColors.HighlightText;
         _nonRelativeNonSelectedSubjectColor = Application.IsDarkModeEnabled
-            ? Color.FromArgb(192, 192, 192)
+            ? Color.FromArgb(192, 192, 192) // de-emphasised light grey on dark background
             : SystemColors.GrayText;
         _nonRelativeSelectedSubjectColor = Application.IsDarkModeEnabled
-            ? Color.FromArgb(235, 235, 215)
-            : GetHighlightedGrayTextColor(degreeOfGrayness: 1f);
+            ? Color.FromArgb(235, 235, 215) // near-white with warm tint on blue selection
+            : Color.FromArgb(188, 188, 188);
 
         // relativeNonSelectedBody: SystemColors.GrayText
         _relativeSelectedBodyColor = Application.IsDarkModeEnabled
-            ? Color.FromArgb(170, 170, 150)
-            : _nonRelativeSelectedSubjectColor;
+            ? Color.FromArgb(170, 170, 150) // warm mid-grey on blue selection
+            : Color.FromArgb(188, 188, 188); // same as _nonRelativeSelectedSubjectColor
         _nonRelativeNonSelectedBodyColor = Application.IsDarkModeEnabled
-            ? Color.FromArgb(130, 130, 130)
-            : ColorHelper.GetGrayTextColor(textColorName: KnownColor.ControlText, degreeOfGrayness: 1.4f);
+            ? Color.FromArgb(130, 130, 130) // darker grey than subject, further de-emphasised
+            : Color.FromArgb(152, 152, 152);
         _nonRelativeSelectedBodyColor = Application.IsDarkModeEnabled
-            ? Color.FromArgb(170, 170, 150)
-            : GetHighlightedGrayTextColor(degreeOfGrayness: 1.4f);
+            ? Color.FromArgb(170, 170, 150) // same as relativeSelectedBody — consistent on selection
+            : Color.FromArgb(161, 161, 161);
 
         UpdateRowHeight();
 
@@ -162,13 +165,6 @@ public sealed partial class RevisionDataGridView : DataGridView
         Clear();
 
         return;
-
-        static Color GetHighlightedGrayTextColor(float degreeOfGrayness = 1f) =>
-            ColorHelper.GetHighlightGrayTextColor(
-                backgroundColorName: KnownColor.Control,
-                textColorName: KnownColor.ControlText,
-                highlightColorName: KnownColor.Highlight,
-                degreeOfGrayness);
 
         void InitializeComponent()
         {

@@ -57,58 +57,6 @@ public static class ColorHelper
     }
 
     /// <summary>
-    ///  Get a color to be used instead of SystemColors.GrayText
-    ///  when background is SystemColors.Highlight or SystemColors.MenuHighlight.
-    /// </summary>
-    /// <remarks>
-    ///  Consider a transformation of color range [SystemColors.ControlText, SystemColors.Control] to
-    ///  [SystemColors.HighlightText, SystemColors.Highlight].
-    ///  What result would such transformation produce given SystemColors.GrayText as input?
-    ///  First we calculate transformed GrayText color relative to InvariantTheme.
-    ///  Then we apply transformation from InvariantTheme to current theme by calling AdaptTextColor.
-    ///  Only used in Light mode.
-    /// </remarks>
-    public static Color GetHighlightGrayTextColor(
-        KnownColor backgroundColorName,
-        KnownColor textColorName,
-        KnownColor highlightColorName,
-        float degreeOfGrayness = 1f)
-    {
-        HslColor grayTextHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.GrayText));
-        HslColor textHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
-        HslColor highlightTextHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.HighlightText));
-        HslColor backgroundHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(backgroundColorName));
-        HslColor highlightBackgroundHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(highlightColorName));
-
-        double grayTextL = textHsl.L + (degreeOfGrayness * (grayTextHsl.L - textHsl.L));
-
-        double highlightGrayTextL = Transform(
-            grayTextL,
-            textHsl.L, backgroundHsl.L,
-            highlightTextHsl.L, highlightBackgroundHsl.L);
-
-        HslColor highlightGrayTextHsl = grayTextHsl.WithLuminosity(highlightGrayTextL);
-        return AdaptColor(highlightGrayTextHsl.ToColor(), isForeground: true);
-    }
-
-    /// <summary>
-    ///  Get a color to be used instead of <see cref="SystemColors.GrayText"/> which is more or less gray than
-    ///  the usual <see cref="SystemColors.GrayText"/>.
-    ///  Only used in Light mode.
-    /// </summary>
-    /// <param name="textColorName">The name of the text color to base the grayness on.</param>
-    /// <param name="degreeOfGrayness">How gray the result should be; 1.0 is full gray, 0.0 is same as text.</param>
-    public static Color GetGrayTextColor(KnownColor textColorName, float degreeOfGrayness = 1f)
-    {
-        HslColor grayTextHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.GrayText));
-        HslColor textHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
-
-        double grayTextL = textHsl.L + (degreeOfGrayness * (grayTextHsl.L - textHsl.L));
-        HslColor highlightGrayTextHsl = grayTextHsl.WithLuminosity(grayTextL);
-        return AdaptColor(highlightGrayTextHsl.ToColor(), isForeground: true);
-    }
-
-    /// <summary>
     ///  Adapt invariant background colors to the current theme,
     ///  by comparing to Text/Background color pairs in the invariant theme.
     ///  Note that <see cref="SystemColors"/> and <see cref="AppColor"/> should not be adapted.
@@ -116,9 +64,6 @@ public static class ColorHelper
     /// <param name="original">The original <see cref="Color"/></param>
     /// <returns>The adapted color.</returns>
     public static Color AdaptBackColor(this Color original)
-        => AdaptColor(original, isForeground: false);
-
-    private static Color AdaptColor(Color original, bool isForeground)
     {
         if (IsDefaultTheme)
         {
@@ -129,14 +74,11 @@ public static class ColorHelper
 
         int index = Enumerable.Range(0, BackForeExamples.Length)
             .Min(i => (
-                 distance: DistanceTo(
-                    isForeground ? BackForeExamples[i].fore : BackForeExamples[i].back),
+                 distance: DistanceTo(BackForeExamples[i].back),
                  index: i)).index;
 
         (KnownColor back, KnownColor fore) option = BackForeExamples[index];
-        return isForeground
-            ? AdaptColor(original, option.fore, option.back)
-            : AdaptColor(original, option.back, option.fore);
+        return AdaptColor(original, option.back, option.fore);
 
         double DistanceTo(KnownColor c2)
         {
