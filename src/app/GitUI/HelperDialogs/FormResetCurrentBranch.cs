@@ -2,6 +2,7 @@
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -31,10 +32,20 @@ public partial class FormResetCurrentBranch : GitModuleForm
         Revision = revision;
 
         InitializeComponent();
+        Soft.BackColor = AppColor.BrightGreen.GetThemeColor(OtherColors.BrightGreen);
         Soft.SetForeColorForBackColor();
+
+        Color mixedColor = AppColor.BrightYellow.GetThemeColor(OtherColors.BrightYellow);
+        Mixed.BackColor = mixedColor;
         Mixed.SetForeColorForBackColor();
+
+        Keep.BackColor = mixedColor;
         Keep.ForeColor = Mixed.ForeColor;
+
+        Merge.BackColor = mixedColor;
         Merge.ForeColor = Mixed.ForeColor;
+
+        Hard.BackColor = AppColor.BrightRed.GetThemeColor(OtherColors.BrightRed);
         Hard.SetForeColorForBackColor();
         InitializeComplete();
 

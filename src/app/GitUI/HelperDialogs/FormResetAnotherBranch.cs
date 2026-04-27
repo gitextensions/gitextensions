@@ -4,6 +4,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using GitUIPluginInterfaces;
 using ResourceManager;
 
@@ -150,7 +151,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
         CancellationToken cancellationToken = _cancellationTokenSequence.Next();
 
         IGitRef? gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == branch);
-        Branches.BackColor = gitRefToReset is null && ActiveControl != Branches ? Color.LightCoral.AdaptBackColor() : SystemColors.Window;
+        Branches.BackColor = gitRefToReset is null && ActiveControl != Branches ? AppColor.BrightRed.GetThemeColor(Color.LightCoral.AdaptBackColor()) : SystemColors.Window;
 
         Ok.Enabled = gitRefToReset is not null && ForceReset.Checked;
         Ok.BackColor = SystemColors.ButtonFace;
@@ -176,7 +177,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
             Ok.Enabled = executionResult.ExitedSuccessfully;
             if (!executionResult.ExitedSuccessfully)
             {
-                Ok.BackColor = Color.LightCoral.AdaptBackColor();
+                Ok.BackColor = AppColor.BrightRed.GetThemeColor(Color.LightCoral.AdaptBackColor());
             }
         });
     }
