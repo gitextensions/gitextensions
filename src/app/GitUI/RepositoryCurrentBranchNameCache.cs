@@ -9,16 +9,30 @@ namespace GitUI;
 /// </summary>
 public interface IRepositoryCurrentBranchNameCache : IRepositoryCurrentBranchNameProvider
 {
-    /// <summary>Returns the cached branch name for <paramref name="repositoryPath"/>, or <see langword="null"/> if not yet cached.</summary>
+    /// <summary>
+    ///  Returns the cached branch name for <paramref name="repositoryPath"/>, or <see langword="null"/> if not yet cached.
+    /// </summary>
     string? GetCachedBranchName(string repositoryPath);
 
-    /// <summary>Writes the resolved branch name into the cache, or removes the entry when the name is blank or error occurred.</summary>
+    /// <summary>
+    ///  Resolves the branch name and forwards it to <see cref="UpdateCache"/>.
+    /// </summary>
+    /// <returns>The branch name for <paramref name="repositoryPath"/>.</returns>
+    string GetUpdatedBranchName(string repositoryPath);
+
+    /// <summary>
+    ///  Writes the resolved branch name into the cache, or removes the entry when the name is blank or error occurred.
+    /// </summary>
     void UpdateCache(string repositoryPath, string branchName);
 
-    /// <summary>Clears all cached branch names, forcing fresh reads on the next access.</summary>
+    /// <summary>
+    ///  Clears all cached branch names, forcing fresh reads on the next access.
+    /// </summary>
     void InvalidateAll();
 
-    /// <summary><see langword="true"/> when no branch names have been cached yet.</summary>
+    /// <summary>
+    ///  Returns <see langword="true"/> when no branch names have been cached yet.
+    /// </summary>
     bool IsEmpty { get; }
 }
 
@@ -29,14 +43,16 @@ internal sealed class RepositoryCurrentBranchNameCache(IRepositoryCurrentBranchN
     public string? GetCachedBranchName(string repositoryPath)
         => _cache.TryGetValue(repositoryPath, out string? cached) ? cached : null;
 
-    /// <summary>Gets the current branch name, reading from the cache when available.</summary>
+    /// <summary>
+    ///  Gets the current branch name, reading from the cache when available.
+    /// </summary>
     public string GetCurrentBranchName(string repositoryPath)
-    {
-        if (_cache.TryGetValue(repositoryPath, out string? cached))
-        {
-            return cached;
-        }
+        => _cache.TryGetValue(repositoryPath, out string? cached)
+            ? cached
+            : GetUpdatedBranchName(repositoryPath);
 
+    public string GetUpdatedBranchName(string repositoryPath)
+    {
         string branchName = inner.GetCurrentBranchName(repositoryPath);
         UpdateCache(repositoryPath, branchName);
         return branchName;

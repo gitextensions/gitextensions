@@ -284,7 +284,7 @@ internal class RepositoryHistoryUIService : IRepositoryHistoryUIService
                     .AsParallel()
                     .WithCancellation(cancellationToken)
                     .WithDegreeOfParallelism(Math.Min(MaxBranchNameFetchParallelism, Math.Max(1, Environment.ProcessorCount / 2)))
-                    .ForAll(path => _ = _branchNameCache.GetCurrentBranchName(path));
+                    .ForAll(path => _ = _branchNameCache.GetUpdatedBranchName(path));
             }
         }
     }
