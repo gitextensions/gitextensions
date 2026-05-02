@@ -467,6 +467,9 @@ public partial class FormPush : GitModuleForm
         form.ShowDialog(owner);
         ErrorOccurred = form.ErrorOccurred();
 
+        // Invalidate the cached git config so that tracking info written by git (e.g. via --set-upstream) is picked up on the next refresh.
+        Module.InvalidateGitSettings();
+
         if (!Module.InTheMiddleOfAction() && !form.ErrorOccurred())
         {
             ScriptsRunner.RunEventScripts(ScriptEvent.AfterPush, this);
