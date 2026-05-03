@@ -101,7 +101,7 @@ internal static partial class MinttyConsoleRuntime
         }
     }
 
-    [GeneratedRegex(@"\x1b\[8mGITEX_EXIT:(\d+)\x1b\[0?m")]
+    [GeneratedRegex(@"\x1b\[8mGITEX_EXIT:(\d+)\x1b\[0m")]
     private static partial Regex ExitSentinelRegex();
 
     private static string BuildWrapperScript(string commandLine)
@@ -114,13 +114,13 @@ internal static partial class MinttyConsoleRuntime
               printf '\x1b[0;38;5;5;49m%s\x1b[0m\n' "$GITEX_CMD_DISPLAY"
               {{bashCommandLine}}
               GITEX_RC=$?
-              printf '\033[8mGITEX_EXIT:%d\033[0m' "$GITEX_RC"
+              printf '\x1b[8mGITEX_EXIT:%d\x1b[0m' "$GITEX_RC"
               echo
               if [ "$GITEX_RC" -ne 0 ]; then
-                  printf '\x1b[0;38;5;160;49mProcess exited with code %d\033[0m\n' "$GITEX_RC"
+                  printf '\x1b[0;38;5;160;49mProcess exited with code %d\x1b[0m\n' "$GITEX_RC"
               fi
-              printf '\x1b[0;38;5;243;49mDone\033[0m\n'
-              printf '\x1b[0;38;5;243;49mPress Enter or Esc to exit...\033[0m\n'
+              printf '\x1b[0;38;5;243;49mDone\x1b[0m\n'
+              printf '\x1b[0;38;5;243;49mPress Enter or Esc to exit...\x1b[0m\n'
               echo
               read -n 1
               exit 0
