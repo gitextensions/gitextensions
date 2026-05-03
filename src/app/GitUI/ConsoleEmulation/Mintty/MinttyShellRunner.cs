@@ -28,8 +28,8 @@ internal sealed class MinttyShellRunner : IConsoleShellRunner
 
     public void ChangeWorkingDirectory(string path)
     {
-        string changeDirCommand = $"cd {path.ToMountPath("/")}";
-        _control.SendConsoleInput("\x01\x0B" + changeDirCommand + "\n");
+        string changeDirCommand = $"cd \"{path.ToMountPath("/")}\"";
+        _control.SendConsoleInput($"\x1\xb{changeDirCommand}\n");
     }
 
     public void FocusTerminal()

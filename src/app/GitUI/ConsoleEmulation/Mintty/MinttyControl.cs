@@ -146,7 +146,10 @@ internal sealed class MinttyControl : Panel
         Process minttyProcess = Process.Start(psi)
             ?? throw new InvalidOperationException("Failed to start mintty.exe");
 
-        PInvoke.AssignProcessToJobObject(_jobHandle, new HANDLE(minttyProcess.Handle));
+        if (!_jobHandle.IsNull)
+        {
+            PInvoke.AssignProcessToJobObject(_jobHandle, new HANDLE(minttyProcess.Handle));
+        }
 
         minttyProcess.EnableRaisingEvents = true;
 
@@ -193,7 +196,7 @@ internal sealed class MinttyControl : Panel
         }
         catch (Exception)
         {
-            // Do nothing
+           session.Kill();
         }
     }
 

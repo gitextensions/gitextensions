@@ -50,8 +50,15 @@ internal static class NativeMethods
 
         JOBOBJECT_EXTENDED_LIMIT_INFORMATION info = default;
         info.BasicLimitInformation.LimitFlags = JOB_OBJECT_LIMIT.JOB_OBJECT_LIMIT_KILL_ON_JOB_CLOSE;
-        PInvoke.SetInformationJobObject(job, JOBOBJECTINFOCLASS.JobObjectExtendedLimitInformation,
-            &info, (uint)sizeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION));
+        if (!PInvoke.SetInformationJobObject(
+                job,
+                JOBOBJECTINFOCLASS.JobObjectExtendedLimitInformation,
+                &info,
+                (uint)sizeof(JOBOBJECT_EXTENDED_LIMIT_INFORMATION)))
+        {
+            PInvoke.CloseHandle(job);
+            return HANDLE.Null;
+        }
 
         return job;
     }
