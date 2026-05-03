@@ -127,25 +127,77 @@ internal static partial class MinttyConsoleRuntime
               """;
     }
 
-    private static string ConvertCommandLineToBash(string commandLine)
+    /// <summary>
+    /// Tokenizes the Windows-style command line and re-emits each token wrapped in bash
+    /// single quotes. Single quotes preserve everything literally, so backslashes and
+    /// dollar signs (e.g. WSL UNC paths like <c>\\wsl$\distro\...</c>) survive bash
+    /// parsing unmodified — splicing the raw command line into the script would let
+    /// bash collapse <c>\\</c> to <c>\</c> and break the path.
+    /// </summary>
+    internal static string ConvertCommandLineToBash(string commandLine)
     {
-        if (commandLine.StartsWith('"'))
+        List<string> tokens = TokenizeWindowsCommandLine(commandLine);
+        if (tokens.Count == 0)
         {
-            int closingQuote = commandLine.IndexOf('"', 1);
-            if (closingQuote > 0)
+            return string.Empty;
+        }
+
+        // Backslash → forward slash for the executable path so MSYS resolves
+        // Windows paths consistently (e.g. C:/Program Files/Git/bin/git.exe).
+        tokens[0] = tokens[0].Replace('\\', '/');
+
+        return string.Join(' ', tokens.Select(BashSingleQuote));
+    }
+
+    private static string BashSingleQuote(string token)
+    {
+        return $"'{token.Replace("'", "'\\''")}'";
+    }
+
+    private static List<string> TokenizeWindowsCommandLine(string commandLine)
+    {
+        List<string> tokens = [];
+        StringBuilder current = new();
+        bool inQuotes = false;
+        bool hasContent = false;
+
+        for (int i = 0; i < commandLine.Length; i++)
+        {
+            char c = commandLine[i];
+
+            if (c == '\\' && i + 1 < commandLine.Length && commandLine[i + 1] == '"')
             {
-                string path = commandLine[1..closingQuote].Replace('\\', '/');
-                string rest = commandLine[(closingQuote + 1)..];
-                return $"'{path}'{rest}";
+                // Escaped quote produced by StringExtensions.Quote(): keep the literal '"'.
+                current.Append('"');
+                hasContent = true;
+                i++;
+            }
+            else if (c == '"')
+            {
+                inQuotes = !inQuotes;
+                hasContent = true;
+            }
+            else if (char.IsWhiteSpace(c) && !inQuotes)
+            {
+                if (hasContent)
+                {
+                    tokens.Add(current.ToString());
+                    current.Clear();
+                    hasContent = false;
+                }
+            }
+            else
+            {
+                current.Append(c);
+                hasContent = true;
             }
         }
 
-        int firstSpace = commandLine.IndexOf(' ');
-        if (firstSpace > 0)
+        if (hasContent)
         {
-            return commandLine[..firstSpace].Replace('\\', '/') + commandLine[firstSpace..];
+            tokens.Add(current.ToString());
         }
 
-        return commandLine.Replace('\\', '/');
+        return tokens;
     }
 }
