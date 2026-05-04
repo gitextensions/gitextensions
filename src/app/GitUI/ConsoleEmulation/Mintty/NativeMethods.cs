@@ -1,6 +1,8 @@
+using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.System.JobObjects;
+using Windows.Win32.UI.WindowsAndMessaging;
 
 namespace GitUI.ConsoleEmulation.Mintty;
 
@@ -9,6 +11,28 @@ internal static class NativeMethods
     internal const uint WM_CHAR = 0x0102;
     internal const uint WM_KEYDOWN = 0x0100;
     internal const uint WM_KEYUP = 0x0101;
+
+    internal const int GWLP_HWNDPARENT = -8;
+
+    /// <summary>
+    /// Cross-bitness wrapper for SetWindowLongPtr. CsWin32 does not expose the Ptr
+    /// variant, and on x86 the Win32 header defines it as a macro for SetWindowLong.
+    /// </summary>
+    internal static nint SetWindowLongPtr(HWND hwnd, int nIndex, nint newValue)
+    {
+        if (IntPtr.Size == 8)
+        {
+            return SetWindowLongPtr64(hwnd, nIndex, newValue);
+        }
+
+        return SetWindowLong32(hwnd, nIndex, (int)newValue);
+    }
+
+    [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW", CharSet = CharSet.Unicode, ExactSpelling = true)]
+    private static extern nint SetWindowLongPtr64(HWND hwnd, int nIndex, nint newLong);
+
+    [DllImport("user32.dll", EntryPoint = "SetWindowLongW", CharSet = CharSet.Unicode, ExactSpelling = true)]
+    private static extern int SetWindowLong32(HWND hwnd, int nIndex, int newLong);
 
     internal static HWND FindMinttyWindowForProcess(int processId)
     {
@@ -33,6 +57,78 @@ internal static class NativeMethods
                         return false;
                     }
                 }
+            }
+
+            return true;
+        }, 0);
+        return found;
+    }
+
+    /// <summary>
+    /// Pings the target window with WM_NULL via SendMessageTimeout to verify its
+    /// message pump is alive. SMTO_ABORTIFHUNG returns immediately if the OS has
+    /// already marked the window as hung; otherwise the call returns once the pump
+    /// dispatches the no-op message or the timeout expires. Returns false on
+    /// failure — caller must not proceed with synchronous cross-process calls.
+    /// </summary>
+    internal static bool IsWindowResponsive(HWND hwnd, TimeSpan timeout)
+    {
+        nint result = PInvoke.SendMessageTimeout(
+            hwnd,
+            Msg: 0, // WM_NULL
+            wParam: default,
+            lParam: default,
+            SEND_MESSAGE_TIMEOUT_FLAGS.SMTO_ABORTIFHUNG,
+            (uint)timeout.TotalMilliseconds,
+            out _);
+        return result != 0;
+    }
+
+    /// <summary>
+    /// SetFocus only works when the target hwnd belongs to the calling thread, or when
+    /// the calling thread's input queue is attached to the target window's thread.
+    /// Mintty runs in another process, so we must attach input queues for the call to
+    /// take effect — otherwise SetFocus is silently dropped.
+    /// </summary>
+    internal static void FocusWindowWithAttachedInput(HWND hwnd)
+    {
+        uint targetThreadId = PInvoke.GetWindowThreadProcessId(hwnd, out _);
+        if (targetThreadId == 0)
+        {
+            return;
+        }
+
+        uint currentThreadId = PInvoke.GetCurrentThreadId();
+        if (targetThreadId == currentThreadId)
+        {
+            PInvoke.SetFocus(hwnd);
+            return;
+        }
+
+        if (!PInvoke.AttachThreadInput(currentThreadId, targetThreadId, true))
+        {
+            return;
+        }
+
+        try
+        {
+            PInvoke.SetFocus(hwnd);
+        }
+        finally
+        {
+            PInvoke.AttachThreadInput(currentThreadId, targetThreadId, false);
+        }
+    }
+
+    internal static List<HWND> EnumerateProcessWindows(int processId)
+    {
+        List<HWND> found = [];
+        PInvoke.EnumWindows((hwnd, _) =>
+        {
+            PInvoke.GetWindowThreadProcessId(hwnd, out uint pid);
+            if (pid == (uint)processId)
+            {
+                found.Add(hwnd);
             }
 
             return true;

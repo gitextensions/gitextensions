@@ -79,7 +79,7 @@ internal sealed class MinttyControl : Panel
             return;
         }
 
-        FocusWithAttachedInput(hwnd);
+        NativeMethods.FocusWindowWithAttachedInput(hwnd);
 
         foreach (char c in text)
         {
@@ -101,7 +101,7 @@ internal sealed class MinttyControl : Panel
         HWND hwnd = _runningSession?.WindowHandle ?? HWND.Null;
         if (!hwnd.IsNull)
         {
-            FocusWithAttachedInput(hwnd);
+            NativeMethods.FocusWindowWithAttachedInput(hwnd);
         }
     }
 
@@ -169,19 +169,25 @@ internal sealed class MinttyControl : Panel
     }
 
 #pragma warning disable VSTHRD100
-    private async void FindAndEmbedWindow(Process minttyProcess, MinttySession session, CancellationToken ct)
+    private async void FindAndEmbedWindow(Process minttyProcess, MinttySession session, CancellationToken sessionCt)
 #pragma warning restore VSTHRD100
     {
-        using CancellationTokenSource timeoutCts = new(TimeSpan.FromSeconds(30));
-        using CancellationTokenSource linkedCts = CancellationTokenSource.CreateLinkedTokenSource(ct, timeoutCts.Token);
-        ct = linkedCts.Token;
+        using CancellationTokenSource timeoutCts = new(TimeSpan.FromSeconds(5));
+        using CancellationTokenSource linkedCts = CancellationTokenSource.CreateLinkedTokenSource(sessionCt, timeoutCts.Token);
+        CancellationToken ct = linkedCts.Token;
 
         try
         {
             // Wait until mintty's message pump is idle before embedding — otherwise
             // mintty may still be running startup code that calls ShowWindow/SetFocus
             // and causes the host dialog's focus to flicker as it races with our embed.
-            await Task.Run(() => minttyProcess.WaitForInputIdle(5000), ct).ConfigureAwait(true);
+            // If the wait times out under load, proceed anyway: the embed may still
+            // succeed, and killing mintty here would also kill the spawned git process.
+            bool idle = await Task.Run(() => minttyProcess.WaitForInputIdle(10000), ct).ConfigureAwait(true);
+            if (!idle)
+            {
+                throw new InvalidOperationException($"Waiting for mintty to get idle timed out after 10 seconds for PID {minttyProcess.Id}.");
+            }
 
             HWND hwnd = HWND.Null;
 
@@ -197,16 +203,26 @@ internal sealed class MinttyControl : Panel
                 await Task.Delay(TimeSpan.FromMilliseconds(50), ct).ConfigureAwait(true);
             }
 
+            if (hwnd.IsNull)
+            {
+                throw new InvalidOperationException($"Could not locate mintty window for PID {minttyProcess.Id} within 5 seconds.");
+            }
+
             session.WindowHandle = hwnd;
 
-            if (!hwnd.IsNull)
-            {
-                EmbedWindow(hwnd);
-            }
+            EmbedWindow(hwnd);
         }
-        catch (Exception)
+        catch (OperationCanceledException) when (sessionCt.IsCancellationRequested)
         {
-           session.Kill();
+            // Session was reset/disposed while we were waiting — no error to surface.
+        }
+        catch (Exception ex)
+        {
+            // Don't kill mintty: the spawned git process is in the same job and would be
+            // terminated mid-write, leaving traces like index.lock behind. Let the command finish in
+            // the hidden mintty window — its output still reaches the host via stdout.
+            Trace.WriteLine($"MinttyControl: Failed to embed mintty window for PID {minttyProcess.Id}. The command will continue running invisibly until completion. Error: {ex}");
+            ShowEmbedFailure(ex, minttyProcess);
         }
     }
 
@@ -221,12 +237,11 @@ internal sealed class MinttyControl : Panel
         // on GWL_STYLE/GWL_EXSTYLE synchronously sends WM_STYLECHANGING/CHANGED to
         // mintty's thread; SetParent and AttachThreadInput are similarly synchronous.
         // Under system load mintty's pump can stall — without this probe the host
-        // UI thread blocks indefinitely inside one of those calls. If the probe
-        // fails, kill mintty so the session resets cleanly via Process.Exited.
-        if (!IsWindowResponsive(hwnd, TimeSpan.FromSeconds(5)))
+        // UI thread blocks indefinitely inside one of those calls. Throw so the
+        // caller can surface the failure without killing the in-flight git process.
+        if (!NativeMethods.IsWindowResponsive(hwnd, TimeSpan.FromSeconds(5)))
         {
-            _runningSession?.Kill();
-            return;
+            throw new InvalidOperationException("Mintty window did not respond within 5 seconds.");
         }
 
         // Capture the hosting form before embedding: mintty's process startup can
@@ -264,63 +279,7 @@ internal sealed class MinttyControl : Panel
             hostForm.Activate();
         }
 
-        FocusWithAttachedInput(hwnd);
-    }
-
-    /// <summary>
-    /// Pings the target window with WM_NULL via SendMessageTimeout to verify its
-    /// message pump is alive. SMTO_ABORTIFHUNG returns immediately if the OS has
-    /// already marked the window as hung; otherwise the call returns once the pump
-    /// dispatches the no-op message or the timeout expires. Returns false on
-    /// failure — caller must not proceed with synchronous cross-process calls.
-    /// </summary>
-    private static bool IsWindowResponsive(HWND hwnd, TimeSpan timeout)
-    {
-        nint result = PInvoke.SendMessageTimeout(
-            hwnd,
-            Msg: 0, // WM_NULL
-            wParam: default,
-            lParam: default,
-            SEND_MESSAGE_TIMEOUT_FLAGS.SMTO_ABORTIFHUNG,
-            (uint)timeout.TotalMilliseconds,
-            out _);
-        return result != 0;
-    }
-
-    /// <summary>
-    /// SetFocus only works when the target hwnd belongs to the calling thread, or when
-    /// the calling thread's input queue is attached to the target window's thread.
-    /// Mintty runs in another process, so we must attach input queues for the call to
-    /// take effect — otherwise SetFocus is silently dropped.
-    /// </summary>
-    private static void FocusWithAttachedInput(HWND hwnd)
-    {
-        uint targetThreadId = PInvoke.GetWindowThreadProcessId(hwnd, out _);
-        if (targetThreadId == 0)
-        {
-            return;
-        }
-
-        uint currentThreadId = PInvoke.GetCurrentThreadId();
-        if (targetThreadId == currentThreadId)
-        {
-            PInvoke.SetFocus(hwnd);
-            return;
-        }
-
-        if (!PInvoke.AttachThreadInput(currentThreadId, targetThreadId, true))
-        {
-            return;
-        }
-
-        try
-        {
-            PInvoke.SetFocus(hwnd);
-        }
-        finally
-        {
-            PInvoke.AttachThreadInput(currentThreadId, targetThreadId, false);
-        }
+        NativeMethods.FocusWindowWithAttachedInput(hwnd);
     }
 
     protected override void OnResize(EventArgs e)
@@ -366,5 +325,114 @@ internal sealed class MinttyControl : Panel
         }
 
         base.Dispose(disposing);
+    }
+
+    private void ShowEmbedFailure(Exception ex, Process minttyProcess)
+    {
+        if (!IsHandleCreated || IsDisposed)
+        {
+            return;
+        }
+
+        BeginInvoke(() =>
+        {
+            if (IsDisposed)
+            {
+                return;
+            }
+
+            TableLayoutPanel layout = new()
+            {
+                Dock = DockStyle.Fill,
+                BackColor = SystemColors.Control,
+                ColumnCount = 1,
+                RowCount = 2,
+                Padding = new Padding(20),
+            };
+            layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+            Label errorLabel = new()
+            {
+                Text = $"Failed to display the embedded console:{Environment.NewLine}{ex.Message}",
+                Dock = DockStyle.Fill,
+                TextAlign = ContentAlignment.MiddleCenter,
+                AutoSize = false,
+                ForeColor = SystemColors.GrayText,
+            };
+
+            Button showButton = new()
+            {
+                Text = "Show mintty window externally",
+                AutoSize = true,
+                Anchor = AnchorStyles.None,
+                Margin = new Padding(0, 8, 0, 0),
+            };
+            showButton.Click += (_, _) =>
+            {
+                // showButton.Enabled = false;
+
+                try
+                {
+                    ShowMinttyExternally(minttyProcess);
+                }
+                catch (Exception clickEx)
+                {
+                    Trace.WriteLine($"MinttyControl: Failed to surface mintty window externally: {clickEx}");
+                }
+            };
+
+            layout.Controls.Add(errorLabel, 0, 0);
+            layout.Controls.Add(showButton, 0, 1);
+            Controls.Add(layout);
+        });
+    }
+
+    private void ShowMinttyExternally(Process minttyProcess)
+    {
+        if (minttyProcess.HasExited)
+        {
+            return;
+        }
+
+        // mintty was started with --window hide; if embedding failed, it threw
+        // before we touched any styles, so the window keeps its original chrome
+        // and just needs to be unhidden.
+        HWND ownerHwnd = HWND.Null;
+        Form? hostForm = FindForm();
+        if (hostForm is { IsHandleCreated: true, IsDisposed: false })
+        {
+            ownerHwnd = (HWND)hostForm.Handle;
+        }
+
+        // Try the targeted lookup first; only fall back to enumerating every top-level window of the process
+        // if it fails (e.g. mintty's pump was so slow we never saw its window appear).
+        HWND mainHwnd = NativeMethods.FindMinttyWindowForProcess(minttyProcess.Id);
+        List<HWND> windows = mainHwnd.IsNull
+            ? NativeMethods.EnumerateProcessWindows(minttyProcess.Id)
+            : [mainHwnd];
+
+        foreach (HWND hwnd in windows)
+        {
+            if (!ownerHwnd.IsNull)
+            {
+                // GWLP_HWNDPARENT sets the owner relationship (despite the name):
+                // mintty stays above the host form — closest cross-process approximation
+                // of a modal child without disabling the host's input queue.
+                NativeMethods.SetWindowLongPtr(hwnd, NativeMethods.GWLP_HWNDPARENT, ownerHwnd);
+            }
+
+            // SWP_ASYNCWINDOWPOS posts the show to mintty's thread instead of a
+            // synchronous SendMessage — we must not block on a slow mintty pump
+            // (the same reason the embed failed in the first place).
+            PInvoke.SetWindowPos(hwnd, HWND.Null, 0, 0, 0, 0,
+                SET_WINDOW_POS_FLAGS.SWP_NOMOVE
+                | SET_WINDOW_POS_FLAGS.SWP_NOSIZE
+                | SET_WINDOW_POS_FLAGS.SWP_NOZORDER
+                | SET_WINDOW_POS_FLAGS.SWP_SHOWWINDOW
+                | SET_WINDOW_POS_FLAGS.SWP_ASYNCWINDOWPOS);
+
+            PInvoke.ShowWindow(hwnd, SHOW_WINDOW_CMD.SW_SHOWNORMAL);
+        }
     }
 }
