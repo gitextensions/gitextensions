@@ -1,4 +1,5 @@
-﻿using System.Collections.Frozen;
+using System.Buffers;
+using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
@@ -29,6 +30,7 @@ public sealed partial class GitModule : IGitModule
     private const string GitError = "Git Error";
 
     private static readonly Encoding _defaultEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
+    private static readonly SearchValues<char> _spaceAndTabSearchValues = SearchValues.Create(' ', '\t');
 
     // the amount of lines we must skip in order to get to an annotated tag's message when doing git cat-file -p <tag_name>
     private static readonly int StandardCatFileTagHeaderLength = 5;
@@ -739,10 +741,10 @@ public sealed partial class GitModule : IGitModule
 
         foreach (string line in unmerged)
         {
-            int findSecondWhitespace = line.IndexOfAny([' ', '\t']);
+            int findSecondWhitespace = line.IndexOfAny(_spaceAndTabSearchValues);
             string fileStage = findSecondWhitespace >= 0 ? line[findSecondWhitespace..].Trim() : "";
 
-            findSecondWhitespace = fileStage.IndexOfAny([' ', '\t']);
+            findSecondWhitespace = fileStage.IndexOfAny(_spaceAndTabSearchValues);
 
             string hash = findSecondWhitespace >= 0 ? fileStage[..findSecondWhitespace].Trim() : "";
             fileStage = findSecondWhitespace >= 0 ? fileStage[findSecondWhitespace..].Trim() : "";

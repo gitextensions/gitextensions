@@ -456,7 +456,7 @@ public record FilterInfo
             // Ignore quouting, Git revisions do not allow spaces.
             foreach (string branch in BranchFilter.Split((char[]?)null, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
             {
-                bool wildcardBranchFilter = branch.IndexOfAny(['?', '*', '[']) >= 0;
+                bool wildcardBranchFilter = branch.IndexOfAny(GitUIExtensions.WildcardBranchSearchValues) >= 0;
                 filter.Add(wildcardBranchFilter && !branch.StartsWith("--") && !branch.Contains("..")
                     ? $"--branches={branch}"
                     : branch);

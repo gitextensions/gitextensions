@@ -81,7 +81,7 @@ internal partial class FilterToolBar : ToolStripEx
             // Ignore quoting, Git revisions do not allow spaces.
             foreach (string branch in filter.Split((char[]?)null, StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries))
             {
-                bool wildcardBranchFilter = branch.IndexOfAny(['?', '*', '[']) >= 0;
+                bool wildcardBranchFilter = branch.IndexOfAny(GitUIExtensions.WildcardBranchSearchValues) >= 0;
                 if (branch.StartsWith("--") || refs.Any(r => r.LocalName == branch) || branch.Contains(".."))
                 {
                     // Added as git-log option or revision filter

@@ -1,4 +1,5 @@
-﻿using System.Diagnostics.CodeAnalysis;
+using System.Buffers;
+using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace GitCommands;
@@ -19,6 +20,7 @@ public static partial class PathUtil
     // TODO verify whether the user profile contains forwards/backwards slashes on other platforms
     public static readonly string UserProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
     private static StringComparison _pathComparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+    private static readonly SearchValues<char> _questionMarkAndHashSearchValues = SearchValues.Create('?', '#');
 
     [GeneratedRegex(@"^(\w+):\/\/([\S]+)", RegexOptions.ExplicitCapture)]
     private static partial Regex DriveLetterRegex { get; }
@@ -129,7 +131,7 @@ public static partial class PathUtil
             return false;
         }
 
-        return (Uri.IsWellFormedUriString(url, UriKind.Absolute) && url.IndexOfAny(['?', '#']) == -1)
+        return (Uri.IsWellFormedUriString(url, UriKind.Absolute) && url.IndexOfAny(_questionMarkAndHashSearchValues) == -1)
                || url.EndsWith(".git", StringComparison.CurrentCultureIgnoreCase)
                || url.EndsWith(".git/", StringComparison.CurrentCultureIgnoreCase)
                || GitModule.IsValidGitWorkingDir(url);
