@@ -1137,6 +1137,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>font name</source>
         <target />
       </trans-unit>
+      <trans-unit id="consoleFontResetButton.consoleFontToolTip">
+        <source>Reset to default</source>
+        <target />
+      </trans-unit>
       <trans-unit id="groupBoxConsoleSettings.Text">
         <source>Console settings (restart required)</source>
         <target />

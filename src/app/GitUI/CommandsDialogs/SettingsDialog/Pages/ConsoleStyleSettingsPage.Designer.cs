@@ -28,8 +28,11 @@ partial class ConsoleStyleSettingsPage
     /// </summary>
     private void InitializeComponent()
     {
+        components = new System.ComponentModel.Container();
         groupBoxConsoleSettings = new GroupBox();
         consoleFontChangeButton = new Button();
+        consoleFontResetButton = new Button();
+        consoleFontToolTip = new ToolTip(components);
         lblFontName = new Label();
         lblConsoleEmulator = new Label();
         cboConsoleEmulator = new ComboBox();
@@ -44,6 +47,7 @@ partial class ConsoleStyleSettingsPage
         groupBoxConsoleSettings.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
         groupBoxConsoleSettings.AutoSize = true;
         groupBoxConsoleSettings.Controls.Add(consoleFontChangeButton);
+        groupBoxConsoleSettings.Controls.Add(consoleFontResetButton);
         groupBoxConsoleSettings.Controls.Add(lblFontName);
         groupBoxConsoleSettings.Controls.Add(lblConsoleEmulator);
         groupBoxConsoleSettings.Controls.Add(cboConsoleEmulator);
@@ -117,6 +121,19 @@ partial class ConsoleStyleSettingsPage
         consoleFontChangeButton.UseVisualStyleBackColor = true;
         consoleFontChangeButton.Click += consoleFontChangeButton_Click;
         //
+        // consoleFontResetButton
+        //
+        consoleFontResetButton.Image = Properties.Images.ResetWorkingDirChanges;
+        consoleFontResetButton.Location = new Point(384, 82);
+        consoleFontResetButton.Margin = new Padding(0);
+        consoleFontResetButton.Name = "consoleFontResetButton";
+        consoleFontResetButton.Size = new Size(26, 26);
+        consoleFontResetButton.TabIndex = 6;
+        consoleFontResetButton.UseVisualStyleBackColor = true;
+        consoleFontResetButton.Visible = false;
+        consoleFontResetButton.Click += consoleFontResetButton_Click;
+        consoleFontToolTip.SetToolTip(consoleFontResetButton, "Reset to default");
+        //
         // consoleFontDialog
         //
         consoleFontDialog.AllowVerticalFonts = false;
@@ -147,5 +164,7 @@ partial class ConsoleStyleSettingsPage
     private Label label1;
     private ComboBox _NO_TRANSLATE_cboStyle;
     private Button consoleFontChangeButton;
+    private Button consoleFontResetButton;
+    private ToolTip consoleFontToolTip;
     private FontDialog consoleFontDialog;
 }

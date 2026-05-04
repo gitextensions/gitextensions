@@ -16,7 +16,7 @@ internal sealed class MinttyControl : Panel
 
     internal bool IsShellRunning => _runningSession is not null && !_runningSession.IsExited;
 
-    public MinttySession StartCommand(MinttyStartInfo startInfo, string minttyPath, string bashPath, string? theme)
+    public MinttySession StartCommand(MinttyStartInfo startInfo, string minttyPath, string bashPath, string? theme, Font? font)
     {
         ResetSession();
 
@@ -26,7 +26,7 @@ internal sealed class MinttyControl : Panel
         (MinttySession session, MinttyConsoleRuntime.CommandLaunchParams launchParams) = MinttySession.StartCommandSession(startInfo);
         _runningSession = session;
 
-        string minttyArgs = $"{BuildThemeArg(theme)}--nodaemon --window hide --log - \"{bashPath}\" -c \"{launchParams.BashBootstrapCommand}\"";
+        string minttyArgs = $"{BuildThemeArg(theme)}{BuildFontArgs(font)}--nodaemon --window hide --log - \"{bashPath}\" -c \"{launchParams.BashBootstrapCommand}\"";
 
         LaunchAndEmbed(session, minttyPath, minttyArgs, startInfo.StartupDirectory, launchParams.EnvironmentVariables, ct, redirectStdout: true);
 
@@ -44,13 +44,13 @@ internal sealed class MinttyControl : Panel
         return session;
     }
 
-    public MinttySession StartInteractiveShell(string minttyPath, string bashPath, string? theme, string workDir, Action? shellExitedCallback = null)
+    public MinttySession StartInteractiveShell(string minttyPath, string bashPath, string? theme, string workDir, Font? font, Action? shellExitedCallback = null)
     {
         ResetSession();
         CancellationTokenSource sessionCts = _sessionCts!;
         CancellationToken ct = sessionCts.Token;
 
-        string minttyArgs = $"{BuildThemeArg(theme)}--nodaemon --window hide \"{bashPath}\" --login -i";
+        string minttyArgs = $"{BuildThemeArg(theme)}{BuildFontArgs(font)}--nodaemon --window hide \"{bashPath}\" --login -i";
 
         MinttySession session = MinttySession.StartInteractiveShellSession();
         _runningSession = session;
@@ -108,6 +108,16 @@ internal sealed class MinttyControl : Panel
     private static string BuildThemeArg(string? theme)
     {
         return string.IsNullOrEmpty(theme) ? "" : $"-o \"ThemeFile={theme}\" ";
+    }
+
+    private static string BuildFontArgs(Font? font)
+    {
+        if (font is null)
+        {
+            return "";
+        }
+
+        return $"-o \"Font={font.Name}\" -o \"FontHeight={(int)(font.Size + 0.5f)}\" ";
     }
 
     private void ResetSession()

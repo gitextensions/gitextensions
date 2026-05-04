@@ -49,8 +49,6 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
 
     protected override void PageToSettings()
     {
-        Validates.NotNull(_consoleFont);
-
         AppSettings.ConsoleEmulatorName.Value = (cboConsoleEmulator.SelectedItem as IConsoleEmulator)?.Name ?? "";
         AppSettings.ConEmuStyle.Value = (string)_NO_TRANSLATE_cboStyle.SelectedItem!;
         AppSettings.ConEmuConsoleFont = _consoleFont;
@@ -105,9 +103,14 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
         }
     }
 
+    private void consoleFontResetButton_Click(object sender, EventArgs e)
+    {
+        SetCurrentConsoleFont(null);
+    }
+
     private void consoleFontChangeButton_Click(object sender, EventArgs e)
     {
-        consoleFontDialog.Font = _consoleFont!;
+        consoleFontDialog.Font = _consoleFont ?? new Font("Consolas", 12);
         DialogResult result = consoleFontDialog.ShowDialog(this);
 
         if (result is (DialogResult.OK or DialogResult.Yes))
@@ -117,15 +120,19 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
         }
     }
 
-    private void SetCurrentConsoleFont(Font newFont)
+    private void SetCurrentConsoleFont(Font? font)
     {
-        _consoleFont = newFont;
-        SetFontButtonText(newFont, consoleFontChangeButton);
-    }
-
-    private static void SetFontButtonText(Font font, Button button)
-    {
-        button.Text = string.Format("{0}, {1}", font.FontFamily.Name, (int)(font.Size + 0.5f));
-        button.Font = font;
+        _consoleFont = font;
+        consoleFontResetButton.Visible = font is not null;
+        if (font is null)
+        {
+            consoleFontChangeButton.Text = "Console Default";
+            consoleFontChangeButton.ResetFont();
+        }
+        else
+        {
+            consoleFontChangeButton.Text = $"{font.FontFamily.Name}, {(int)(font.Size + 0.5f)}";
+            consoleFontChangeButton.Font = font;
+        }
     }
 }

@@ -13,15 +13,15 @@ namespace GitUI.ConsoleEmulation.ConEmu;
 /// </summary>
 internal class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRunner
 {
-    private readonly string _theme;
+    private readonly ConsoleEmulatorSettings _settings;
     private int _nLastExitCode;
 
     private Panel _panel;
     private ConEmuControl? _terminal;
 
-    public ConEmuConsoleCommandRunner(string theme)
+    public ConEmuConsoleCommandRunner(ConsoleEmulatorSettings settings)
     {
-        _theme = theme;
+        _settings = settings;
         InitializeComponent();
 
         Validates.NotNull(_panel);
@@ -135,7 +135,7 @@ internal class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRun
             };
 
             Validates.NotNull(_terminal);
-            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, _theme, AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString("F0", CultureInfo.InvariantCulture));
+            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, _settings.Theme, _settings.Font!.Name, _settings.Font.Size.ToString("F0", CultureInfo.InvariantCulture));
         }
         catch (Exception ex)
         {

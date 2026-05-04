@@ -10,16 +10,16 @@ internal sealed partial class MinttyCommandRunner : IConsoleCommandRunner
 {
     private readonly string _minttyPath;
     private readonly string _bashPath;
-    private readonly string? _theme;
+    private readonly ConsoleEmulatorSettings _settings;
 
     private MinttyControl? _terminal;
     private readonly Panel _panel;
 
-    internal MinttyCommandRunner(string minttyPath, string bashPath, string? theme)
+    internal MinttyCommandRunner(string minttyPath, string bashPath, ConsoleEmulatorSettings settings)
     {
         _minttyPath = minttyPath;
         _bashPath = bashPath;
-        _theme = theme;
+        _settings = settings;
 
         _panel = new Panel { Dock = DockStyle.Fill, BorderStyle = BorderStyle.None };
     }
@@ -91,7 +91,7 @@ internal sealed partial class MinttyCommandRunner : IConsoleCommandRunner
                 startInfo.SetEnv(name, value);
             }
 
-            _terminal.StartCommand(startInfo, _minttyPath, _bashPath, _theme);
+            _terminal.StartCommand(startInfo, _minttyPath, _bashPath, _settings.Theme, _settings.Font);
         }
         catch (Exception ex)
         {

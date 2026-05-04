@@ -37,10 +37,10 @@ public interface IConsoleEmulator
     /// <summary>
     ///  Creates a console process runner for command dialogs.
     /// </summary>
-    IConsoleCommandRunner CreateCommandRunner(string? theme);
+    IConsoleCommandRunner CreateCommandRunner(ConsoleEmulatorSettings settings);
 
     /// <summary>
     ///  Creates a console shell runner for the repository browser's terminal tab.
     /// </summary>
-    IConsoleShellRunner CreateShellRunner(string? theme);
+    IConsoleShellRunner CreateShellRunner(ConsoleEmulatorSettings settings);
 }

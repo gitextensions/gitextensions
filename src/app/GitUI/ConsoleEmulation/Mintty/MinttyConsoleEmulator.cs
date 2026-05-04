@@ -22,16 +22,16 @@ internal sealed class MinttyConsoleEmulator : IConsoleEmulator
             ? PreferredDefaultTheme
             : null;
 
-    public IConsoleCommandRunner CreateCommandRunner(string? theme)
+    public IConsoleCommandRunner CreateCommandRunner(ConsoleEmulatorSettings settings)
     {
         (string minttyPath, string bashPath) = ResolvePaths();
-        return new MinttyCommandRunner(minttyPath, bashPath, theme);
+        return new MinttyCommandRunner(minttyPath, bashPath, settings);
     }
 
-    public IConsoleShellRunner CreateShellRunner(string? theme)
+    public IConsoleShellRunner CreateShellRunner(ConsoleEmulatorSettings settings)
     {
         (string minttyPath, string bashPath) = ResolvePaths();
-        return new MinttyShellRunner(minttyPath, bashPath, theme);
+        return new MinttyShellRunner(minttyPath, bashPath, settings);
     }
 
     private static (string MinttyPath, string BashPath) ResolvePaths()

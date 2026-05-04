@@ -6,14 +6,14 @@ internal sealed class MinttyShellRunner : IConsoleShellRunner
 {
     private readonly string _minttyPath;
     private readonly string _bashPath;
-    private readonly string? _theme;
+    private readonly ConsoleEmulatorSettings _settings;
     private readonly MinttyControl _control;
 
-    internal MinttyShellRunner(string minttyPath, string bashPath, string? theme)
+    internal MinttyShellRunner(string minttyPath, string bashPath, ConsoleEmulatorSettings settings)
     {
         _minttyPath = minttyPath;
         _bashPath = bashPath;
-        _theme = theme;
+        _settings = settings;
         _control = new MinttyControl { Dock = DockStyle.Fill };
     }
 
@@ -23,7 +23,7 @@ internal sealed class MinttyShellRunner : IConsoleShellRunner
 
     public void StartShell(string workDir)
     {
-        _control.StartInteractiveShell(_minttyPath, _bashPath, _theme, workDir);
+        _control.StartInteractiveShell(_minttyPath, _bashPath, _settings.Theme, workDir, _settings.Font);
     }
 
     public void ChangeWorkingDirectory(string path)

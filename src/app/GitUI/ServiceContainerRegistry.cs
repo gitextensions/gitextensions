@@ -56,6 +56,7 @@ public static class ServiceContainerRegistry
                 consoleEmulators: [new ConEmuConsoleEmulator(), new MinttyConsoleEmulator()],
                 useConsoleEmulation: AppSettings.UseConsoleEmulatorForCommands,
                 consoleEmulatorName: AppSettings.ConsoleEmulatorName,
-                consoleEmulatorTheme: AppSettings.ConEmuStyle));
+                consoleEmulatorTheme: AppSettings.ConEmuStyle,
+                consoleFont: () => AppSettings.ConEmuConsoleFont));
     }
 }

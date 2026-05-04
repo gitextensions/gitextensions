@@ -1531,9 +1531,9 @@ public static partial class AppSettings
         set => SetFont("font", value);
     }
 
-    public static Font ConEmuConsoleFont
+    public static Font? ConEmuConsoleFont
     {
-        get => GetFont("conemuconsolefont", new Font("Consolas", 12));
+        get => GetFont("conemuconsolefont", null);
         set => SetFont("conemuconsolefont", value);
     }
 
@@ -2166,8 +2166,9 @@ public static partial class AppSettings
     public static void SetDate(string name, DateTime? value) => SettingsContainer.SetDate(name, value);
 
     // Font
-    public static Font GetFont(string name, Font defaultValue) => SettingsContainer.GetFont(name, defaultValue);
-    public static void SetFont(string name, Font value) => SettingsContainer.SetFont(name, value);
+    [return: NotNullIfNotNull("defaultValue")]
+    public static Font? GetFont(string name, Font? defaultValue) => SettingsContainer.GetFont(name, defaultValue);
+    public static void SetFont(string name, Font? value) => SettingsContainer.SetFont(name, value);
 
     [Obsolete("AppSettings is no longer responsible for colors, ThemeModule is. Only used by ThemeMigration.")]
     public static Color GetColor(AppColor name)

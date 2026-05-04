@@ -8,7 +8,8 @@ internal class ConsoleEmulatorsRegistry(
     IConsoleEmulator[] consoleEmulators,
     ISetting<bool> useConsoleEmulation,
     ISetting<string> consoleEmulatorName,
-    ISetting<string> consoleEmulatorTheme)
+    ISetting<string> consoleEmulatorTheme,
+    Func<Font?> consoleFont)
     : IConsoleEmulatorsRegistry
 {
     public IReadOnlyCollection<IConsoleEmulator> AvailableConsoleEmulators { get; } =
@@ -26,12 +27,12 @@ internal class ConsoleEmulatorsRegistry(
 
         if (TryGetConfiguredConsoleEmulator() is { } configuredEmulator)
         {
-            return configuredEmulator.CreateCommandRunner(ResolveTheme(configuredEmulator));
+            return configuredEmulator.CreateCommandRunner(ResolveSettings(configuredEmulator));
         }
 
         if (TryGetFallbackConsoleEmulator() is { } fallbackConsoleEmulator)
         {
-            return fallbackConsoleEmulator.CreateCommandRunner(ResolveTheme(fallbackConsoleEmulator));
+            return fallbackConsoleEmulator.CreateCommandRunner(ResolveSettings(fallbackConsoleEmulator));
         }
 
         // Fallback to no console emulation
@@ -45,15 +46,20 @@ internal class ConsoleEmulatorsRegistry(
     {
         if (TryGetConfiguredConsoleEmulator() is { } configuredEmulator)
         {
-            return configuredEmulator.CreateShellRunner(ResolveTheme(configuredEmulator));
+            return configuredEmulator.CreateShellRunner(ResolveSettings(configuredEmulator));
         }
 
         if (TryGetFallbackConsoleEmulator() is { } fallbackConsoleEmulator)
         {
-            return fallbackConsoleEmulator.CreateShellRunner(ResolveTheme(fallbackConsoleEmulator));
+            return fallbackConsoleEmulator.CreateShellRunner(ResolveSettings(fallbackConsoleEmulator));
         }
 
         return null;
+    }
+
+    private ConsoleEmulatorSettings ResolveSettings(IConsoleEmulator emulator)
+    {
+        return new ConsoleEmulatorSettings(ResolveTheme(emulator), consoleFont());
     }
 
     private string? ResolveTheme(IConsoleEmulator emulator)
