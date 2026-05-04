@@ -23,7 +23,7 @@ internal sealed class MinttyShellRunner : IConsoleShellRunner
 
     public void StartShell(string workDir)
     {
-        _control.StartInteractiveShell(_minttyPath, _bashPath, _settings.Theme, workDir, _settings.Font);
+        _control.StartInteractiveShell(_minttyPath, _bashPath, workDir, _settings);
     }
 
     public void ChangeWorkingDirectory(string path)

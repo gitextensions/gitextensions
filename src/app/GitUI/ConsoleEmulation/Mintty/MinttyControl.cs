@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using System.Text;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.UI.Input.KeyboardAndMouse;
@@ -16,7 +17,7 @@ internal sealed class MinttyControl : Panel
 
     internal bool IsShellRunning => _runningSession is not null && !_runningSession.IsExited;
 
-    public MinttySession StartCommand(MinttyStartInfo startInfo, string minttyPath, string bashPath, string? theme, Font? font)
+    public MinttySession StartCommand(MinttyStartInfo startInfo, string minttyPath, string bashPath, ConsoleEmulatorSettings consoleSettings)
     {
         ResetSession();
 
@@ -26,7 +27,7 @@ internal sealed class MinttyControl : Panel
         (MinttySession session, MinttyConsoleRuntime.CommandLaunchParams launchParams) = MinttySession.StartCommandSession(startInfo);
         _runningSession = session;
 
-        string minttyArgs = $"{BuildThemeArg(theme)}{BuildFontArgs(font)}--nodaemon --window hide --log - \"{bashPath}\" -c \"{launchParams.BashBootstrapCommand}\"";
+        string minttyArgs = $"{BuildMinttyThemingArgs(consoleSettings)}--nodaemon --window hide --log - \"{bashPath}\" -c \"{launchParams.BashBootstrapCommand}\"";
 
         LaunchAndEmbed(session, minttyPath, minttyArgs, startInfo.StartupDirectory, launchParams.EnvironmentVariables, ct, redirectStdout: true);
 
@@ -44,13 +45,13 @@ internal sealed class MinttyControl : Panel
         return session;
     }
 
-    public MinttySession StartInteractiveShell(string minttyPath, string bashPath, string? theme, string workDir, Font? font, Action? shellExitedCallback = null)
+    public MinttySession StartInteractiveShell(string minttyPath, string bashPath, string workDir, ConsoleEmulatorSettings consoleSettings, Action? shellExitedCallback = null)
     {
         ResetSession();
         CancellationTokenSource sessionCts = _sessionCts!;
         CancellationToken ct = sessionCts.Token;
 
-        string minttyArgs = $"{BuildThemeArg(theme)}{BuildFontArgs(font)}--nodaemon --window hide \"{bashPath}\" --login -i";
+        string minttyArgs = $"{BuildMinttyThemingArgs(consoleSettings)}--nodaemon --window hide \"{bashPath}\" --login -i";
 
         MinttySession session = MinttySession.StartInteractiveShellSession();
         _runningSession = session;
@@ -105,19 +106,20 @@ internal sealed class MinttyControl : Panel
         }
     }
 
-    private static string BuildThemeArg(string? theme)
+    private static string BuildMinttyThemingArgs(ConsoleEmulatorSettings consoleSettings)
     {
-        return string.IsNullOrEmpty(theme) ? "" : $"-o \"ThemeFile={theme}\" ";
-    }
-
-    private static string BuildFontArgs(Font? font)
-    {
-        if (font is null)
+        StringBuilder args = new();
+        if (!string.IsNullOrEmpty(consoleSettings.Theme))
         {
-            return "";
+            args.Append($"-o \"ThemeFile={consoleSettings.Theme}\" ");
         }
 
-        return $"-o \"Font={font.Name}\" -o \"FontHeight={(int)(font.Size + 0.5f)}\" ";
+        if (consoleSettings.Font is { } font)
+        {
+            args.Append($"-o \"Font={font.Name}\" -o \"FontHeight={(int)(font.Size + 0.5f)}\" ");
+        }
+
+        return args.ToString();
     }
 
     private void ResetSession()

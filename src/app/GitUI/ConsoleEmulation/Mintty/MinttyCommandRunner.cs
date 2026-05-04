@@ -91,7 +91,7 @@ internal sealed partial class MinttyCommandRunner : IConsoleCommandRunner
                 startInfo.SetEnv(name, value);
             }
 
-            _terminal.StartCommand(startInfo, _minttyPath, _bashPath, _settings.Theme, _settings.Font);
+            _terminal.StartCommand(startInfo, _minttyPath, _bashPath, _settings);
         }
         catch (Exception ex)
         {
