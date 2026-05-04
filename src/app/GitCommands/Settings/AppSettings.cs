@@ -490,23 +490,9 @@ public static partial class AppSettings
 
     public static ISetting<bool> ShowConEmuTab { get; } = Setting.Create(DetailedSettingsPath, nameof(ShowConEmuTab), true);
 
-    private const string ConEmuStyleDefault = "Default";
-    private const string ConEmuStyleDark = "<Tomorrow Night>";
-    private const string ConEmuStyleLight = "<Tomorrow>";
+    public static ISetting<string> ConsoleEmulatorName { get; } = Setting.Create(DetailedSettingsPath, nameof(ConsoleEmulatorName), "ConEmu");
 
-    public static ISetting<string> ConEmuStyle { get; } = Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), ConEmuStyleDefault);
-
-    /// <summary>
-    ///  Returns the ConEmu style to use. When the configured value is <see cref="ConEmuStyleDefault"/>,
-    ///  automatically selects a style that matches the current application theme.
-    /// </summary>
-    public static string GetEffectiveConEmuStyle()
-    {
-        string style = ConEmuStyle.Value;
-        return style == ConEmuStyleDefault
-            ? Application.IsDarkModeEnabled ? ConEmuStyleDark : ConEmuStyleLight
-            : style;
-    }
+    public static ISetting<string> ConEmuStyle { get; } = Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "Default");
 
     public static ISetting<string> ConEmuTerminal { get; } = Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), "bash");
     public static ISetting<int> OutputHistoryDepth { get; } = Setting.Create(DetailedSettingsPath, nameof(OutputHistoryDepth), 20);
@@ -1878,10 +1864,6 @@ public static partial class AppSettings
     }
 
     public static ISetting<bool> UseConsoleEmulatorForCommands { get; } = Setting.Create(RootSettingsPath, nameof(UseConsoleEmulatorForCommands), true);
-
-    public static ISetting<string> ConsoleEmulatorName { get; } = Setting.Create(DetailedSettingsPath, nameof(ConsoleEmulatorName), "ConEmu");
-
-    public static ISetting<string> ConsoleEmulatorTheme { get; } = Setting.Create(DetailedSettingsPath, nameof(ConsoleEmulatorTheme), "");
 
     public static GitRefsSortBy RefsSortBy
     {

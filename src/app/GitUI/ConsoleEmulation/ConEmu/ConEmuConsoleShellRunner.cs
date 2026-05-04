@@ -10,11 +10,13 @@ namespace GitUI.ConsoleEmulation.ConEmu;
 /// </summary>
 internal sealed class ConEmuConsoleShellRunner : IConsoleShellRunner
 {
+    private readonly string _theme;
     private readonly ConEmuControl _conEmu;
     private readonly ShellProvider _shellProvider = new();
 
-    internal ConEmuConsoleShellRunner()
+    internal ConEmuConsoleShellRunner(string theme)
     {
+        _theme = theme;
         _conEmu = new ConEmuControl
         {
             Dock = DockStyle.Fill,
@@ -69,7 +71,7 @@ internal sealed class ConEmuConsoleShellRunner : IConsoleShellRunner
             _conEmu.Start(
                 startInfo,
                 ThreadHelper.JoinableTaskFactory,
-                AppSettings.GetEffectiveConEmuStyle(),
+                _theme,
                 AppSettings.ConEmuConsoleFont.Name,
                 AppSettings.ConEmuConsoleFont.Size.ToString("F0", CultureInfo.InvariantCulture));
         }

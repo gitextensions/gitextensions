@@ -1145,6 +1145,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Console style</source>
         <target />
       </trans-unit>
+      <trans-unit id="lblConsoleEmulator.Text">
+        <source>Console emulator</source>
+        <target />
+      </trans-unit>
       <trans-unit id="lblFontName.Text">
         <source>Font</source>
         <target />
@@ -3513,14 +3517,6 @@ Focus the output history and (when displayed as panel) toggle its visibility usi
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>General</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblConsoleEmulatorChoice.Text">
-        <source>Console emulator</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblConsoleEmulatorTheme.Text">
-        <source>Console emulator theme</source>
         <target />
       </trans-unit>
       <trans-unit id="lblDefaultShell.Text">
