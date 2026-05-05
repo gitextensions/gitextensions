@@ -30,7 +30,7 @@ internal sealed class TextBoxSilencer
         bool isAtFirstColumn = position == _textBox.GetFirstCharIndexOfCurrentLine();
         bool isAtEndColumn = position == GetLineEnd(text, startIndex: position);
         bool isAtFirstLine = position <= GetLineEnd(text, startIndex: 0);
-        bool isAtLastLine = text.IndexOfAny(Delimiters.LineFeedAndCarriageReturn, startIndex: position) < 0;
+        bool isAtLastLine = text.AsSpan()[position..].IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues) < 0;
         bool ctrl = e.Control;
 
         switch (e.KeyCode)
@@ -48,7 +48,7 @@ internal sealed class TextBoxSilencer
 
     private static int GetLineEnd(string text, int startIndex)
     {
-        int eol = text.IndexOfAny(Delimiters.LineFeedAndCarriageReturn, startIndex);
+        int eol = text.AsSpan()[startIndex..].IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues);
         return eol >= startIndex ? eol : text.Length;
     }
 }

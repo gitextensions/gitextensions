@@ -1,4 +1,5 @@
-﻿using System.Text;
+using System.Buffers;
+using System.Text;
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility.Configurations;
 
@@ -7,7 +8,7 @@ namespace GitCommands.Config;
 public class ConfigFile : IConfigFile
 {
     private static Encoding GetEncoding() => GitModule.SystemEncoding;
-    public static readonly char[] CommentChars = [';', '#'];
+    private static readonly SearchValues<char> _commentChars = SearchValues.Create(';', '#');
 
     private readonly List<IConfigSection> _configSections = [];
 
@@ -49,7 +50,7 @@ public class ConfigFile : IConfigFile
         value = value.Replace("\n", "\\n");
         value = value.Replace("\t", "\\t");
 
-        if (value.IndexOfAny(CommentChars) != -1 || value.Trim() != value)
+        if (value.IndexOfAny(_commentChars) != -1 || value.Trim() != value)
         {
             value = value.Quote();
         }

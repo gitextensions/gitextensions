@@ -1,3 +1,5 @@
+using System.Buffers;
+
 namespace GitExtensions.Extensibility;
 
 /// <summary>
@@ -24,7 +26,8 @@ public static class Delimiters
     public static readonly char[] GitOutput = ['*', Space, LineFeed, CarriageReturn];
     public static readonly char[] LineAndVerticalFeed = [LineFeed, VerticalFeed];
     public static readonly char[] LineFeedAndCarriageReturn = [LineFeed, CarriageReturn];
-    public static readonly char[] LineFeedAndCarriageReturnAndNull = [LineFeed, CarriageReturn, Null];
+    public static readonly SearchValues<char> LineFeedAndCarriageReturnSearchValues = SearchValues.Create(LineFeedAndCarriageReturn);
+    public static readonly SearchValues<char> LineFeedAndCarriageReturnAndNull = SearchValues.Create(LineFeed, CarriageReturn, Null);
     public static readonly string[] NewLines = [$"{CarriageReturn}{LineFeed}", $"{LineFeed}"];
     public static readonly char[] NullAndLineFeed = [Null, LineFeed];
     public static readonly char[] PathSeparators = [Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar];
