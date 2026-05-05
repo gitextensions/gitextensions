@@ -9,7 +9,7 @@ namespace GitUI.UserControls;
 /// because they are implemented using SendMessage calls.
 internal sealed class TextBoxSilencer
 {
-    private RichTextBox _textBox;
+    private readonly RichTextBox _textBox;
 
     public TextBoxSilencer(RichTextBox textBox)
     {

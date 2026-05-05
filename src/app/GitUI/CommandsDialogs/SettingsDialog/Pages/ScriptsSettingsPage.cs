@@ -164,7 +164,7 @@ Diff selection:
             return;
         }
 
-        bool containsAnyImageWithoutPath = EmbeddedIcons.Images.Keys.Cast<string>().Any(name => !name.ContainsAny(Delimiters.PathSeparators));
+        bool containsAnyImageWithoutPath = EmbeddedIcons.Images.Keys.Cast<string>().Any(name => !name.ContainsAny(Delimiters.PathSeparatorsSearchValues));
         if (!containsAnyImageWithoutPath)
         {
             System.Resources.ResourceManager rm = new("GitUI.Properties.Images", Assembly.GetExecutingAssembly());
