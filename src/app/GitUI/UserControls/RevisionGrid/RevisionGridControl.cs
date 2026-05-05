@@ -2032,6 +2032,17 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         });
     }
 
+    private void ResetChangesToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        UICommands.StartResetChangesDialog(this, Module.GetWorkTreeFiles(), onlyWorkTree: false);
+        PerformRefreshRevisions();
+    }
+
+    private void CommitToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        UICommands.StartCommitDialog(this);
+    }
+
     private void ResetAnotherBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (LatestSelectedRevision is null)
@@ -2338,6 +2349,10 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         SetEnabled(openBuildReportToolStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.Url));
 
         SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
+
+        bool hasChanges = GetChangeCount(ObjectId.WorkTreeId)?.HasChanges != false || GetChangeCount(ObjectId.IndexId)?.HasChanges != false;
+        SetEnabled(resetChangesToolStripMenuItem, hasChanges);
+        SetEnabled(commitToolStripMenuItem, hasChanges);
 
         mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.AddToRevisionGridContextMenu, UICommands);
 

@@ -9534,6 +9534,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <source>Cherr&amp;y pick this commit...</source>
         <target />
       </trans-unit>
+      <trans-unit id="commitToolStripMenuItem.Text">
+        <source>Commit</source>
+        <target />
+      </trans-unit>
       <trans-unit id="compareSelectedCommitsMenuItem.Text">
         <source>Compare &amp;selected commits</source>
         <target />
@@ -9652,6 +9656,10 @@ Reset the filter via View &gt; Show all branches.</source>
       </trans-unit>
       <trans-unit id="resetAnotherBranchToHereToolStripMenuItem.Text">
         <source>Reset an&amp;other branch to here...</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="resetChangesToolStripMenuItem.Text">
+        <source>&amp;Reset changes</source>
         <target />
       </trans-unit>
       <trans-unit id="resetCurrentBranchToHereToolStripMenuItem.Text">
