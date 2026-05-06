@@ -1,4 +1,3 @@
-using System.Buffers;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
@@ -15,8 +14,6 @@ namespace GitUI;
 
 public static partial class GitUIExtensions
 {
-    internal static readonly SearchValues<char> WildcardBranchSearchValues = SearchValues.Create('?', '*', '[');
-    internal static readonly SearchValues<char> InvalidPathCharsSearchValues = SearchValues.Create(Path.GetInvalidPathChars());
     [GeneratedRegex(@"\n\s*(@@|##)\s+(?<file>[^#:\n]+)", RegexOptions.ExplicitCapture)]
     private static partial Regex FileNameRegex { get; }
 

@@ -524,7 +524,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private void _destinationTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (destinationTB.Text.IndexOfAny(GitUIExtensions.InvalidPathCharsSearchValues) != -1)
+        if (destinationTB.Text.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) != -1)
         {
             e.Cancel = true;
         }
@@ -532,7 +532,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private void _createDirTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (createDirTB.Text.IndexOfAny(GitUIExtensions.InvalidPathCharsSearchValues) != -1)
+        if (createDirTB.Text.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) != -1)
         {
             e.Cancel = true;
         }

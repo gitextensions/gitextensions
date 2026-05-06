@@ -247,7 +247,7 @@ public sealed class PlainTextConsoleCommandRunner : ContainerControl, IPlainText
 
             for (int startIndex = 0; startIndex < output.Length;)
             {
-                int nextLineEnd = output.AsSpan()[startIndex..].IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues) + 1;
+                int nextLineEnd = output.AsSpan(startIndex).IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues) + 1;
                 if (nextLineEnd == 0)
                 {
                     nextLineEnd = output.Length;

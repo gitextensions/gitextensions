@@ -34,4 +34,7 @@ public static class Delimiters
     public static readonly SearchValues<char> PathSeparatorsSearchValues = SearchValues.Create(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
     public static readonly char[] TabAndLineFeedAndCarriageReturn = [Tab, LineFeed, CarriageReturn];
     public static readonly char[] TabAndSpace = [Tab, Space];
+    public static readonly SearchValues<char> WildcardBranchSearchValues = SearchValues.Create('?', '*', '[');
+    public static readonly SearchValues<char> InvalidPathCharsSearchValues = SearchValues.Create(Path.GetInvalidPathChars());
+    public static readonly SearchValues<char> WhiteSpaceChars = SearchValues.Create(Space, CarriageReturn, LineFeed, Tab);
 }
