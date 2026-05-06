@@ -13,6 +13,16 @@ internal sealed class MinttyControl : Panel
     private CancellationTokenSource? _sessionCts;
     private HANDLE _jobHandle = NativeMethods.CreateKillOnCloseJob();
 
+    public MinttyControl()
+    {
+        // Make the panel focusable so Focus() works programmatically and
+        // OnGotFocus runs whenever WinForms restores focus here (e.g. after
+        // alt-tabbing back to the host form). OnGotFocus then forwards focus
+        // to the embedded mintty hwnd — centralising what used to be scattered
+        // FocusWindowWithAttachedInput calls at every entry point.
+        SetStyle(ControlStyles.Selectable, true);
+    }
+
     internal MinttySession? RunningSession => _runningSession;
 
     internal bool IsShellRunning => _runningSession is not null && !_runningSession.IsExited;
@@ -94,15 +104,6 @@ internal sealed class MinttyControl : Panel
             {
                 PInvoke.PostMessage(hwnd, NativeMethods.WM_CHAR, (nuint)c, (nint)0);
             }
-        }
-    }
-
-    public void FocusConsole()
-    {
-        HWND hwnd = _runningSession?.WindowHandle ?? HWND.Null;
-        if (!hwnd.IsNull)
-        {
-            NativeMethods.FocusWindowWithAttachedInput(hwnd);
         }
     }
 
@@ -210,9 +211,11 @@ internal sealed class MinttyControl : Panel
                 throw new InvalidOperationException($"Could not locate mintty window for PID {minttyProcess.Id} within 5 seconds.");
             }
 
-            session.WindowHandle = hwnd;
+            await EmbedWindowAsync(hwnd).ConfigureAwait(true);
 
-            EmbedWindow(hwnd);
+            // Set WindowHandle only after the embed completes so OnResize doesn't
+            // post a SetWindowPos to mintty mid-reparent.
+            session.WindowHandle = hwnd;
         }
         catch (OperationCanceledException) when (sessionCt.IsCancellationRequested)
         {
@@ -228,60 +231,72 @@ internal sealed class MinttyControl : Panel
         }
     }
 
-    private void EmbedWindow(HWND hwnd)
+    private async Task EmbedWindowAsync(HWND hwnd)
     {
-        if (!IsHandleCreated || hwnd.IsNull)
+        // Capture WinForms state on the UI thread before going to the threadpool.
+        // After the awaited Task.Run resumes via ConfigureAwait(true), we are back
+        // on the UI thread for the focus call.
+        HWND panelHwnd = (HWND)Handle;
+        int width = Width;
+        int height = Height;
+
+        // The synchronous cross-process Win32 calls below all send messages to
+        // mintty's thread. Running them on the UI thread freezes the entire app
+        // when mintty's pump stalls. Move them to a threadpool thread so a stalled
+        // pump can only block the worker, not the UI.
+        await Task.Run(() =>
         {
-            return;
-        }
+            // Probe mintty's pump before any blocking cross-process call.
+            // SendMessageTimeout(SMTO_ABORTIFHUNG) is bounded and cannot itself
+            // hang. If this fails, none of the cross-process calls below are safe.
+            if (!NativeMethods.IsWindowResponsive(hwnd, TimeSpan.FromSeconds(5)))
+            {
+                throw new InvalidOperationException("Mintty window did not respond within 5 seconds.");
+            }
 
-        // Probe mintty's pump before any blocking cross-process call. SetWindowLong
-        // on GWL_STYLE/GWL_EXSTYLE synchronously sends WM_STYLECHANGING/CHANGED to
-        // mintty's thread; SetParent and AttachThreadInput are similarly synchronous.
-        // Under system load mintty's pump can stall — without this probe the host
-        // UI thread blocks indefinitely inside one of those calls. Throw so the
-        // caller can surface the failure without killing the in-flight git process.
-        if (!NativeMethods.IsWindowResponsive(hwnd, TimeSpan.FromSeconds(5)))
+            WINDOW_STYLE style = (WINDOW_STYLE)PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
+            style &= ~(WINDOW_STYLE.WS_CAPTION | WINDOW_STYLE.WS_THICKFRAME | WINDOW_STYLE.WS_BORDER);
+            style |= WINDOW_STYLE.WS_CHILD;
+            PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, (int)style);
+
+            WINDOW_EX_STYLE extendedStyle = (WINDOW_EX_STYLE)PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
+            extendedStyle &= ~(WINDOW_EX_STYLE.WS_EX_CLIENTEDGE | WINDOW_EX_STYLE.WS_EX_WINDOWEDGE | WINDOW_EX_STYLE.WS_EX_APPWINDOW);
+            extendedStyle |= WINDOW_EX_STYLE.WS_EX_TOOLWINDOW;
+            PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, (int)extendedStyle);
+
+            PInvoke.SetParent(hwnd, panelHwnd);
+
+            // SWP_ASYNCWINDOWPOS posts the size/show change to mintty's thread instead
+            // of a synchronous cross-process SendMessage. SWP_SHOWWINDOW combined with
+            // SWP_NOACTIVATE is equivalent to SW_SHOWNA. See OnResize for the same pattern.
+            PInvoke.SetWindowPos(hwnd, HWND.Null, 0, 0, width, height,
+                SET_WINDOW_POS_FLAGS.SWP_NOZORDER
+                | SET_WINDOW_POS_FLAGS.SWP_FRAMECHANGED
+                | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE
+                | SET_WINDOW_POS_FLAGS.SWP_SHOWWINDOW
+                | SET_WINDOW_POS_FLAGS.SWP_ASYNCWINDOWPOS);
+
+            return true;
+        }).ConfigureAwait(true);
+
+        // Defer Focus via BeginInvoke so our pump gets one cycle to drain. Mintty
+        // is now parented to our panel — that means cross-process messages
+        // (WM_PARENTNOTIFY, WM_MOUSEACTIVATE, focus-traversal traffic, etc.) can
+        // flow synchronously from mintty into our pump. Anything mintty posts
+        // while our continuation is dispatched gets handled before our queued
+        // Focus runs, instead of being processed reentrantly underneath SetFocus.
+        BeginInvoke(Focus);
+    }
+
+    protected override void OnGotFocus(EventArgs e)
+    {
+        base.OnGotFocus(e);
+
+        HWND hwnd = _runningSession?.WindowHandle ?? HWND.Null;
+        if (!hwnd.IsNull)
         {
-            throw new InvalidOperationException("Mintty window did not respond within 5 seconds.");
+            NativeMethods.FocusWindowWithAttachedInput(hwnd);
         }
-
-        // Capture the hosting form before embedding: mintty's process startup can
-        // shift foreground/activation away from the dialog that triggered the command,
-        // so we need a handle to restore activation after the embed completes.
-        Form? hostForm = FindForm();
-
-        WINDOW_STYLE style = (WINDOW_STYLE)PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
-        style &= ~(WINDOW_STYLE.WS_CAPTION | WINDOW_STYLE.WS_THICKFRAME | WINDOW_STYLE.WS_BORDER);
-        style |= WINDOW_STYLE.WS_CHILD;
-        PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, (int)style);
-
-        WINDOW_EX_STYLE extendedStyle = (WINDOW_EX_STYLE)PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
-        extendedStyle &= ~(WINDOW_EX_STYLE.WS_EX_CLIENTEDGE | WINDOW_EX_STYLE.WS_EX_WINDOWEDGE | WINDOW_EX_STYLE.WS_EX_APPWINDOW);
-        extendedStyle |= WINDOW_EX_STYLE.WS_EX_TOOLWINDOW;
-        PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, (int)extendedStyle);
-
-        PInvoke.SetParent(hwnd, new HWND(Handle));
-
-        // SWP_ASYNCWINDOWPOS posts the size/show change to mintty's thread instead of
-        // a synchronous cross-process SendMessage, so a slow mintty pump under system
-        // load cannot freeze our UI thread during embed. SWP_SHOWWINDOW replaces the
-        // separate ShowWindow call (which has no async variant) — combined with
-        // SWP_NOACTIVATE this is equivalent to SW_SHOWNA. See OnResize for the same
-        // pattern.
-        PInvoke.SetWindowPos(hwnd, HWND.Null, 0, 0, Width, Height,
-            SET_WINDOW_POS_FLAGS.SWP_NOZORDER
-            | SET_WINDOW_POS_FLAGS.SWP_FRAMECHANGED
-            | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE
-            | SET_WINDOW_POS_FLAGS.SWP_SHOWWINDOW
-            | SET_WINDOW_POS_FLAGS.SWP_ASYNCWINDOWPOS);
-
-        if (hostForm is { IsHandleCreated: true, IsDisposed: false })
-        {
-            hostForm.Activate();
-        }
-
-        NativeMethods.FocusWindowWithAttachedInput(hwnd);
     }
 
     protected override void OnResize(EventArgs e)

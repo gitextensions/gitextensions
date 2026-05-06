@@ -34,6 +34,6 @@ internal sealed class MinttyShellRunner : IConsoleShellRunner
 
     public void FocusTerminal()
     {
-        _control.FocusConsole();
+        _control.Focus();
     }
 }
