@@ -2350,10 +2350,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         SetEnabled(openPullRequestPageStripMenuItem, !string.IsNullOrWhiteSpace(revision.BuildStatus?.PullRequestUrl));
 
-        bool hasChanges = GetChangeCount(ObjectId.WorkTreeId)?.HasChanges != false || GetChangeCount(ObjectId.IndexId)?.HasChanges != false;
-        SetEnabled(resetChangesToolStripMenuItem, hasChanges);
-        SetEnabled(commitToolStripMenuItem, hasChanges);
-
         mainContextMenu.AddUserScripts(runScriptToolStripMenuItem, ExecuteCommand, script => script.AddToRevisionGridContextMenu, UICommands);
 
         UpdateSeparators();
