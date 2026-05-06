@@ -3,12 +3,14 @@ using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
 using GitUI.ConsoleEmulation;
 using Microsoft;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
 {
-    private const string DefaultThemeDisplayName = "Default";
+    private readonly TranslationString _defaultThemeDisplayName = new("Default");
+    private readonly TranslationString _consoleDefaultFontText = new("Console Default");
 
     private Font? _consoleFont;
 
@@ -71,7 +73,7 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
             return;
         }
 
-        _NO_TRANSLATE_cboStyle.Items.Add(DefaultThemeDisplayName);
+        _NO_TRANSLATE_cboStyle.Items.Add(_defaultThemeDisplayName.Text);
         foreach (string theme in emulator.AvailableThemes)
         {
             _NO_TRANSLATE_cboStyle.Items.Add(theme);
@@ -126,7 +128,7 @@ public partial class ConsoleStyleSettingsPage : SettingsPageWithHeader
         consoleFontResetButton.Visible = font is not null;
         if (font is null)
         {
-            consoleFontChangeButton.Text = "Console Default";
+            consoleFontChangeButton.Text = _consoleDefaultFontText.Text;
             consoleFontChangeButton.ResetFont();
         }
         else

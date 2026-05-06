@@ -174,7 +174,7 @@ internal sealed class MinttyControl : Panel
     private async void FindAndEmbedWindow(Process minttyProcess, MinttySession session, CancellationToken sessionCt)
 #pragma warning restore VSTHRD100
     {
-        using CancellationTokenSource timeoutCts = new(TimeSpan.FromSeconds(5));
+        using CancellationTokenSource timeoutCts = new(TimeSpan.FromSeconds(15));
         using CancellationTokenSource linkedCts = CancellationTokenSource.CreateLinkedTokenSource(sessionCt, timeoutCts.Token);
         CancellationToken ct = linkedCts.Token;
 
@@ -185,7 +185,7 @@ internal sealed class MinttyControl : Panel
             // and causes the host dialog's focus to flicker as it races with our embed.
             // If the wait times out under load, proceed anyway: the embed may still
             // succeed, and killing mintty here would also kill the spawned git process.
-            bool idle = await Task.Run(() => minttyProcess.WaitForInputIdle(10000), ct).ConfigureAwait(true);
+            bool idle = await Task.Run(() => minttyProcess.WaitForInputIdle(TimeSpan.FromSeconds(10)), ct).ConfigureAwait(true);
             if (!idle)
             {
                 throw new InvalidOperationException($"Waiting for mintty to get idle timed out after 10 seconds for PID {minttyProcess.Id}.");
@@ -356,6 +356,7 @@ internal sealed class MinttyControl : Panel
 
             Label errorLabel = new()
             {
+                // ReSharper disable once LocalizableElement - rare error, no need to localize
                 Text = $"Failed to display the embedded console:{Environment.NewLine}{ex.Message}",
                 Dock = DockStyle.Fill,
                 TextAlign = ContentAlignment.MiddleCenter,
@@ -365,6 +366,7 @@ internal sealed class MinttyControl : Panel
 
             Button showButton = new()
             {
+                // ReSharper disable once LocalizableElement - rare error, no need to localize
                 Text = "Show mintty window externally",
                 AutoSize = true,
                 Anchor = AnchorStyles.None,

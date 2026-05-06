@@ -81,8 +81,9 @@ internal static partial class MinttyConsoleRuntime
         catch (OperationCanceledException)
         {
         }
-        catch (Exception)
+        catch (Exception ex)
         {
+            Trace.WriteLine($"Failed to read mintty output: {ex}");
         }
 
         return;

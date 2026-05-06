@@ -1133,6 +1133,14 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Console style</source>
         <target />
       </trans-unit>
+      <trans-unit id="_consoleDefaultFontText.Text">
+        <source>Console Default</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_defaultThemeDisplayName.Text">
+        <source>Default</source>
+        <target />
+      </trans-unit>
       <trans-unit id="consoleFontChangeButton.Text">
         <source>font name</source>
         <target />
