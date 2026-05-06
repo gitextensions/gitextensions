@@ -26,6 +26,13 @@ internal static partial class MinttyConsoleRuntime
         envVars["GITEX_SCRIPT"] = scriptBase64;
         envVars["GITEX_CMD_DISPLAY"] = startInfo.ConsoleProcessCommandLine;
 
+        // MSYS would otherwise rewrite POSIX-looking arguments (e.g. /home/user/...)
+        // into Windows paths prefixed with the MSYS root before passing them to native
+        // Windows binaries like wsl.exe. The C# side already produces arguments in their
+        // target form — both vars are needed to cover MSYS and MSYS2 builds of bash.
+        envVars["MSYS_NO_PATHCONV"] = "1";
+        envVars["MSYS2_ARG_CONV_EXCL"] = "*";
+
         return new CommandLaunchParams(bashBootstrap, envVars);
     }
 
