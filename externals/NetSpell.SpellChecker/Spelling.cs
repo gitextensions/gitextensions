@@ -695,9 +695,9 @@ public partial class Spelling : Component
         }
 
         // if not in list and replacement word has length
-        if (!ReplaceList.ContainsKey(CurrentWord) && _replacementWord.Length > 0)
+        if (_replacementWord.Length > 0)
         {
-            ReplaceList.Add(CurrentWord, _replacementWord);
+            ReplaceList.TryAdd(CurrentWord, _replacementWord);
         }
 
         ReplaceWord();
@@ -991,9 +991,9 @@ public partial class Spelling : Component
             foreach (string tempWord in _dictionary.PossibleBaseWords)
             {
                 string tempCode = _dictionary.PhoneticCode(tempWord);
-                if (tempCode.Length > 0 && !codes.ContainsKey(tempCode))
+                if (tempCode.Length > 0)
                 {
-                    codes.Add(tempCode, tempCode);
+                    codes.TryAdd(tempCode, tempCode);
                 }
             }
 

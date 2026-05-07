@@ -112,9 +112,9 @@ internal static class TranslationHelpers
                 curItem.Name = item.Name;
 
                 string? source = curItem.NeutralValue ?? item.NeutralValue;
-                if (!string.IsNullOrEmpty(curItem.TranslatedValue) && source is not null && !dict.ContainsKey(source))
+                if (!string.IsNullOrEmpty(curItem.TranslatedValue) && source is not null)
                 {
-                    dict.Add(source, curItem.TranslatedValue);
+                    dict.TryAdd(source, curItem.TranslatedValue);
                 }
 
                 // Source text changed
@@ -131,9 +131,9 @@ internal static class TranslationHelpers
             {
                 // Obsolete should be added only to dictionary
                 if (!string.IsNullOrEmpty(item.TranslatedValue) &&
-                    item.NeutralValue is not null && !dict.ContainsKey(item.NeutralValue))
+                    item.NeutralValue is not null)
                 {
-                    dict.Add(item.NeutralValue, item.TranslatedValue);
+                    dict.TryAdd(item.NeutralValue, item.TranslatedValue);
                 }
             }
 

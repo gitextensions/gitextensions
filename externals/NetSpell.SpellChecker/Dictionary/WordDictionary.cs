@@ -315,9 +315,9 @@ public partial class WordDictionary : Component
         // check suffix keys first
         foreach (char key in word.AffixKeys)
         {
-            if (SuffixRules.ContainsKey(key.ToString(CultureInfo.CurrentUICulture)))
+            string keyAsString = key.ToString(CultureInfo.CurrentUICulture);
+            if (SuffixRules.TryGetValue(keyAsString, out AffixRule rule))
             {
-                AffixRule rule = SuffixRules[key.ToString(CultureInfo.CurrentUICulture)];
                 string tempWord = AffixUtility.AddSuffix(word.Text, rule);
                 if (tempWord != word.Text)
                 {
@@ -331,9 +331,9 @@ public partial class WordDictionary : Component
                     }
                 }
             }
-            else if (PrefixRules.ContainsKey(key.ToString(CultureInfo.CurrentUICulture)))
+            else if (PrefixRules.ContainsKey(keyAsString))
             {
-                prefixKeys += key.ToString(CultureInfo.CurrentUICulture);
+                prefixKeys += keyAsString;
             }
         }
 

@@ -1689,11 +1689,7 @@ public sealed class GitUICommands : IGitUICommands
 
     private bool RunMergeCommand(IReadOnlyDictionary<string, string?> arguments)
     {
-        string? branch = null;
-        if (arguments.ContainsKey("branch"))
-        {
-            branch = arguments["branch"];
-        }
+        arguments.TryGetValue("branch", out string? branch);
 
         return StartMergeBranchDialog(null, branch);
     }
@@ -1821,11 +1817,7 @@ public sealed class GitUICommands : IGitUICommands
 
     private bool RunRebaseCommand(IReadOnlyDictionary<string, string?> arguments)
     {
-        string? branch = null;
-        if (arguments.ContainsKey("branch"))
-        {
-            branch = arguments["branch"];
-        }
+        arguments.TryGetValue("branch", out string? branch);
 
         return StartRebaseDialog(owner: null, onto: branch);
     }
@@ -1985,11 +1977,7 @@ public sealed class GitUICommands : IGitUICommands
     {
         UpdateSettingsBasedOnArguments(arguments);
 
-        string? remoteBranch = null;
-        if (arguments.ContainsKey("remotebranch"))
-        {
-            remoteBranch = arguments["remotebranch"];
-        }
+        arguments.TryGetValue("remotebranch", out string? remoteBranch);
 
         bool isQuiet = arguments.ContainsKey("quiet");
 

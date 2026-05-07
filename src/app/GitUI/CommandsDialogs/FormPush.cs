@@ -1050,25 +1050,26 @@ public partial class FormPush : GitModuleForm
                 string remoteName = head.Remote == remote
                     ? head.MergeWith ?? head.Name
                     : string.Empty;
-                bool isKnownAtRemote = remoteBranches.ContainsKey(head.Name);
+                bool isKnownAtRemote = remoteBranches.TryGetValue(head.Name, out IGitRef? remoteBranch);
                 DataRow row = _branchTable.NewRow();
 
                 // Check if aheadBehind is relevant for this branch
-                bool isAheadRemote = (aheadBehindData?.ContainsKey(head.Name) ?? false)
-                    && GitRefName.GetRemoteName(aheadBehindData[head.Name].RemoteRef) == remote;
+                AheadBehindData aheadBehind = default;
+                bool isAheadRemote = (aheadBehindData?.TryGetValue(head.Name, out aheadBehind) ?? false)
+                                     && GitRefName.GetRemoteName(aheadBehind.RemoteRef) == remote;
 
                 row[ForceColumnName] = false;
                 row[DeleteColumnName] = false;
                 row[LocalColumnName] = head.Name;
                 row[RemoteColumnName] = isAheadRemote
-                    ? GitRefName.GetRemoteBranch(aheadBehindData![head.Name].RemoteRef)
+                    ? GitRefName.GetRemoteBranch(aheadBehind.RemoteRef)
                     : remoteName;
 
                 row[AheadColumnName] = isAheadRemote
                     ? aheadBehindData![head.Name].ToDisplay()
                     : !isKnownAtRemote
                     ? string.Empty
-                    : head.ObjectId == remoteBranches[head.Name].ObjectId
+                    : head.ObjectId == remoteBranch!.ObjectId
                     ? "="
                     : "<>";
                 row[PushColumnName] = false;
