@@ -106,15 +106,6 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
 
     public void SetValue(string name, string? value)
     {
-        if (_multiValueSettings.ContainsKey(name))
-        {
-            throw new UserExternalOperationException(new InvalidOperationException($"""
-                Changing multi-value git settings is not supported. Tried to set "{name}" = "{value}".
-                But you have set multiple values for "{name}" in the {GitSettingLevel.ToString().ToLower()} git config file. This is unusual for this configuration entry.
-                Please make the entry unique manually.
-                """));
-        }
-
         name = NormalizeSettingName(name);
 
         if (value?.Length is 0)
@@ -125,6 +116,15 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
         if (value == GetValue(name))
         {
             return;
+        }
+
+        if (_multiValueSettings.ContainsKey(name))
+        {
+            throw new UserExternalOperationException(new InvalidOperationException($"""
+                Changing multi-value git settings is not supported. Tried to set "{name}" = "{value}".
+                But you have set multiple values for "{name}" in the {GitSettingLevel.ToString().ToLower()} git config file. This is unusual for this configuration entry.
+                Please make the entry unique manually.
+                """));
         }
 
         if (UniqueValueSettings.TryGetValue(name, out string? storedValue) && value == storedValue)
