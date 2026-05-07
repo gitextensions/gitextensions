@@ -273,12 +273,10 @@ public partial class CommitInfo : GitModuleControl
         Dictionary<string, int> dict = [];
         foreach (string entry in tree.LazySplit('\n'))
         {
-            if (!dict.TryAdd(entry, i))
+            if (dict.TryAdd(entry, i))
             {
-                continue;
+                ++i;
             }
-
-            i++;
         }
 
         return dict;
