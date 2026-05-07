@@ -1054,7 +1054,8 @@ public partial class FormPush : GitModuleForm
                 DataRow row = _branchTable.NewRow();
 
                 // Check if aheadBehind is relevant for this branch
-                bool isAheadRemote = aheadBehindData?.TryGetValue(head.Name, out AheadBehindData? aheadBehind) is true
+                AheadBehindData aheadBehind = default;
+                bool isAheadRemote = (aheadBehindData?.TryGetValue(head.Name, out aheadBehind) ?? false)
                                      && GitRefName.GetRemoteName(aheadBehind.RemoteRef) == remote;
 
                 row[ForceColumnName] = false;
