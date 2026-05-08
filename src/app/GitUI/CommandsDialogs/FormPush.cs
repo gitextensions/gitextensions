@@ -1055,7 +1055,7 @@ public partial class FormPush : GitModuleForm
 
                 // Check if aheadBehind is relevant for this branch
                 AheadBehindData aheadBehind = default;
-                bool isAheadRemote = (aheadBehindData?.TryGetValue(head.Name, out aheadBehind) ?? false)
+                bool isAheadRemote = aheadBehindData?.TryGetValue(head.Name, out aheadBehind) is true
                                      && GitRefName.GetRemoteName(aheadBehind.RemoteRef) == remote;
 
                 row[ForceColumnName] = false;
