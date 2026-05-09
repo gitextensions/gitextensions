@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using GitCommands;
 using GitCommands.Git.Extensions;
@@ -247,8 +247,8 @@ public sealed class PlainTextConsoleCommandRunner : ContainerControl, IPlainText
 
             for (int startIndex = 0; startIndex < output.Length;)
             {
-                int nextLineEnd = output.AsSpan(startIndex).IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues) + 1;
-                if (nextLineEnd == 0)
+                int nextLineEnd = startIndex + output.AsSpan(startIndex).IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues) + 1;
+                if (nextLineEnd == startIndex)
                 {
                     nextLineEnd = output.Length;
                 }

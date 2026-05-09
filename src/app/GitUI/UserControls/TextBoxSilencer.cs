@@ -48,7 +48,7 @@ internal sealed class TextBoxSilencer
 
     private static int GetLineEnd(string text, int startIndex)
     {
-        int eol = text.AsSpan(startIndex).IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues);
+        int eol = startIndex + text.AsSpan(startIndex).IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues);
         return eol >= startIndex ? eol : text.Length;
     }
 }
