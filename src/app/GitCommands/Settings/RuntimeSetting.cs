@@ -1,6 +1,4 @@
-﻿using System.Diagnostics.CodeAnalysis;
-
-namespace GitCommands.Settings;
+﻿namespace GitCommands.Settings;
 
 /// <summary>
 ///  Represents a setting which has to be explicitly saved, if changed at runtime.
@@ -39,11 +37,7 @@ public class RuntimeSetting<T> : IRuntimeSetting<T>
 
     public string FullPath => _persistentSetting.FullPath;
 
-    public bool IsUnset => _persistentSetting.IsUnset;
-
     public string Name => _persistentSetting.Name;
-
-    public SettingsPath SettingsSource => _persistentSetting.SettingsSource;
 
     public T? Value
     {
@@ -56,14 +50,8 @@ public class RuntimeSetting<T> : IRuntimeSetting<T>
             }
 
             _value = value;
-            if (_loaded)
-            {
-                Updated?.Invoke(this, EventArgs.Empty);
-            }
         }
     }
-
-    public event EventHandler? Updated;
 
     public T GetValue(bool reload = false)
     {

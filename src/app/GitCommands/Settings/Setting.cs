@@ -22,28 +22,12 @@ public static class Setting
         return new SettingOf<T?>(settingsSource, name);
     }
 
-    private sealed class SettingOf<T> : ISetting<T>
+    private sealed class SettingOf<T>(SettingsPath settingsSource, string name, T? defaultValue = default) : ISetting<T>
     {
-        /// <inheritdoc />
-        public event EventHandler? Updated;
+        public string Name { get; } = name;
 
-        public SettingOf(SettingsPath settingsSource, string name, T? defaultValue = default)
-        {
-            SettingsSource = settingsSource;
-            Name = name;
-            Default = defaultValue;
-        }
+        public T? Default { get; } = defaultValue;
 
-        /// <inheritdoc />
-        public SettingsPath SettingsSource { get; }
-
-        /// <inheritdoc />
-        public string Name { get; }
-
-        /// <inheritdoc />
-        public T? Default { get; }
-
-        /// <inheritdoc />
         public T? Value
         {
             get
@@ -93,36 +77,14 @@ public static class Setting
                 {
                     SetValue(Name, value);
                 }
-
-                Updated?.Invoke(this, EventArgs.Empty);
             }
         }
 
-        /// <inheritdoc />
-        public bool IsUnset
-        {
-            get
-            {
-                if (default(T) is null)
-                {
-                    if (Type.GetTypeCode(typeof(T)) != TypeCode.String)
-                    {
-                        return false;
-                    }
-                }
-
-                object? storedValue = GetValue(Name);
-
-                return storedValue is null;
-            }
-        }
-
-        /// <inheritdoc />
-        public string FullPath => SettingsSource.PathFor(Name);
+        public string FullPath => settingsSource.PathFor(Name);
 
         private object? GetValue(string name)
         {
-            string? stringValue = SettingsSource.GetValue(name);
+            string? stringValue = settingsSource.GetValue(name);
             if (stringValue is null)
             {
                 return null;
@@ -188,7 +150,7 @@ public static class Setting
                     break;
             }
 
-            SettingsSource.SetValue(name, stringValue);
+            settingsSource.SetValue(name, stringValue);
         }
     }
 }
