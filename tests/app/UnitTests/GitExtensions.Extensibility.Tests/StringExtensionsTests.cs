@@ -5,7 +5,7 @@ namespace GitExtensions.ExtensibilityTests;
 [TestFixture]
 public sealed class StringExtensionsTests
 {
-    private static readonly SearchValues<char> _separators = SearchValues.Create([',', ';']);
+    private static readonly SearchValues<char> _separators = SearchValues.Create(',', ';');
 
     [TestCase("a,b;c", 0, ExpectedResult = 1)]
     [TestCase("a,b;c", 1, ExpectedResult = 1)]
