@@ -14,6 +14,7 @@ public static class AppColorDefaults
             { AppColor.Selection, Color.FromArgb(0xc3, 0xc3, 0xff) },
             { AppColor.HighlightAllOccurences, Color.FromArgb(0xe8, 0xe8, 0xff) },
             { AppColor.InactiveSelectionHighlight, Color.FromArgb(0xe6, 0xe6, 0xe6) },
+            { AppColor.CommitInfoBackground, Color.Empty },
             { AppColor.CommitInfoContentBackground, Color.Empty },
             { AppColor.RevisionGridAlternateRowBackground, Color.Empty },
             { AppColor.RevisionGridSelectionBackground, Color.Empty },

@@ -17,6 +17,7 @@ public enum AppColor
     HighlightAllOccurences,
     InactiveSelectionHighlight,
 
+    CommitInfoBackground,
     CommitInfoContentBackground,
 
     RevisionGridAlternateRowBackground,
