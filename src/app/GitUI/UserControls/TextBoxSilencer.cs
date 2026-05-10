@@ -28,9 +28,9 @@ internal sealed class TextBoxSilencer
         int position = _textBox.SelectionStart;
 
         bool isAtFirstColumn = position == _textBox.GetFirstCharIndexOfCurrentLine();
-        bool isAtEndColumn = position == GetLineEnd(text, startIndex: position);
-        bool isAtFirstLine = position <= GetLineEnd(text, startIndex: 0);
-        bool isAtLastLine = text.AsSpan(position).IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues) < 0;
+        bool isAtEndColumn = position == text.GetLineEnd(startIndex: position);
+        bool isAtFirstLine = position <= text.GetLineEnd(startIndex: 0);
+        bool isAtLastLine = text.IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues, position) < 0;
         bool ctrl = e.Control;
 
         switch (e.KeyCode)
@@ -44,11 +44,5 @@ internal sealed class TextBoxSilencer
                 e.Handled = true;
                 break;
         }
-    }
-
-    private static int GetLineEnd(string text, int startIndex)
-    {
-        int eol = startIndex + text.AsSpan(startIndex).IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues);
-        return eol >= startIndex ? eol : text.Length;
     }
 }

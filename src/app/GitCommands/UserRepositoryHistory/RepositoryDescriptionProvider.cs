@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 
@@ -101,8 +101,7 @@ public sealed class RepositoryDescriptionProvider : IRepositoryDescriptionProvid
     {
         const int maxDescriptiveLength = 25;
         string descriptive = Get(repositoryDir, isValidGitWorkingDir: default);
-        int endOfLineIndex = descriptive.IndexOfAny(Delimiters.LineFeedAndCarriageReturnAndNull);
-        int descriptiveEnd = endOfLineIndex >= 0 ? endOfLineIndex : descriptive.Length;
+        int descriptiveEnd = descriptive.GetLineEnd(lineEndings: Delimiters.LineFeedAndCarriageReturnAndNull);
         descriptiveEnd = Math.Min(descriptiveEnd, maxDescriptiveLength);
         ReadOnlySpan<char> shortName = descriptive.AsSpan(0, descriptiveEnd).Trim();
 

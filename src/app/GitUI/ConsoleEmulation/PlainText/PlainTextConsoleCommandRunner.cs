@@ -247,16 +247,16 @@ public sealed class PlainTextConsoleCommandRunner : ContainerControl, IPlainText
 
             for (int startIndex = 0; startIndex < output.Length;)
             {
-                int nextLineEnd = startIndex + output.AsSpan(startIndex).IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues) + 1;
-                if (nextLineEnd == startIndex)
+                int nextLineStart = output.IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues, startIndex) + 1;
+                if (nextLineStart == 0)
                 {
-                    nextLineEnd = output.Length;
+                    nextLineStart = output.Length;
                 }
 
-                string outputLine = output[startIndex..nextLineEnd];
+                string outputLine = output[startIndex..nextLineStart];
                 CommandOutputReceived?.Invoke(this, new ConsoleOutputEventArgs(outputLine));
 
-                startIndex = nextLineEnd;
+                startIndex = nextLineStart;
             }
         }
     }
