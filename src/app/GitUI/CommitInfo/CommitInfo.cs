@@ -110,10 +110,10 @@ public partial class CommitInfo : GitModuleControl
 
         BackColor = panelBackground;
         tableLayout.BackColor = panelBackground;
-        commitInfoHeader.BackColor = contentBackground;
+        commitInfoHeader.BackColor = panelBackground;
         pnlCommitMessage.BackColor = contentBackground;
         rtbxCommitMessage.BackColor = contentBackground;
-        RevisionInfo.BackColor = contentBackground;
+        RevisionInfo.BackColor = panelBackground;
 
         rtbxCommitMessage.Font = AppSettings.CommitFont;
         RevisionInfo.Font = AppSettings.Font;
