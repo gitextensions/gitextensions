@@ -90,26 +90,6 @@ internal sealed class SettingTests
     }
 
     [Test]
-    [TestCaseSource(nameof(SaveCases))]
-    public void Should_trigger_updated_event_for_setting<T>(T settingDefault, T value)
-        where T : struct
-    {
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
-
-        setting.Value = value;
-
-        setting.Should().NotBeNull();
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(settingDefault);
-        setting.Value.Should().Be(value);
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
     [TestCaseSource(nameof(CreateCases))]
     public void Should_return_default_value_for_setting_if_value_not_exist<T>(T settingDefault)
         where T : struct
@@ -223,25 +203,6 @@ internal sealed class SettingTests
         storedValue.Should().Be(value ?? string.Empty);
     }
 
-    [Test]
-    [TestCaseSource(nameof(SaveStringCases))]
-    public void Should_trigger_updated_event_for_string_setting(string settingDefault, string value)
-    {
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
-
-        setting.Value = value;
-
-        setting.Should().NotBeNull();
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(settingDefault ?? string.Empty);
-        setting.Value.Should().Be(value ?? string.Empty);
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
     #endregion String Setting
 
     #region Bool Setting
@@ -267,26 +228,6 @@ internal sealed class SettingTests
     [TestCase(false)]
     [TestCase(true)]
     public void Should_save_nullable_bool_setting(bool? value)
-    {
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Should().NotBeNull();
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
-    [TestCase(false)]
-    [TestCase(true)]
-    public void Should_trigger_updated_event_for_nullable_bool_setting(bool? value)
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
@@ -382,26 +323,6 @@ internal sealed class SettingTests
     [TestCase(char.MinValue)]
     [TestCase(' ')]
     public void Should_save_nullable_char_setting(char? value)
-    {
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Should().NotBeNull();
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
-    [TestCase(char.MinValue)]
-    [TestCase(' ')]
-    public void Should_trigger_updated_event_for_nullable_char_setting(char? value)
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
@@ -515,27 +436,6 @@ internal sealed class SettingTests
     }
 
     [Test]
-    [TestCase(byte.MinValue)]
-    [TestCase(byte.MaxValue)]
-    [TestCase(0)]
-    public void Should_trigger_updated_event_for_nullable_byte_setting(byte? value)
-    {
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Should().NotBeNull();
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
     public void Should_return_default_value_for_nullable_byte_setting_if_value_not_exist()
     {
         string pathName = Guid.NewGuid().ToString();
@@ -632,27 +532,6 @@ internal sealed class SettingTests
     }
 
     [Test]
-    [TestCase(int.MinValue)]
-    [TestCase(int.MaxValue)]
-    [TestCase(0)]
-    public void Should_trigger_updated_event_for_nullable_int_setting(int? value)
-    {
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Should().NotBeNull();
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
     public void Should_return_default_value_for_nullable_int_setting_if_value_not_exist()
     {
         string pathName = Guid.NewGuid().ToString();
@@ -732,27 +611,6 @@ internal sealed class SettingTests
     [TestCase(float.MaxValue)]
     [TestCase(0f)]
     public void Should_save_nullable_float_setting(float? value)
-    {
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Should().NotBeNull();
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
-    [TestCase(float.MinValue)]
-    [TestCase(float.MaxValue)]
-    [TestCase(0f)]
-    public void Should_trigger_updated_event_for_nullable_float_setting(float? value)
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
@@ -905,26 +763,6 @@ internal sealed class SettingTests
     }
 
     [Test]
-    [TestCase(TestEnum.First)]
-    [TestCase(TestEnum.Second)]
-    public void Should_trigger_updated_event_for_nullable_enum_setting(TestEnum? value)
-    {
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Should().NotBeNull();
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
     public void Should_return_default_value_for_nullable_enum_setting_if_value_not_exist()
     {
         string pathName = Guid.NewGuid().ToString();
@@ -1006,32 +844,6 @@ internal sealed class SettingTests
 
     [Test]
     public void Should_save_nullable_struct_setting()
-    {
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        TestStruct? value = new TestStruct
-        {
-            Bool = false,
-            Char = ' ',
-            Byte = 0,
-            Int = 0,
-            Float = 0f
-        };
-
-        ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Should().NotBeNull();
-        setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeNull();
-        setting.Value.Should().Be(value);
-        setting.FullPath.Should().Be($"{pathName}.{settingName}");
-    }
-
-    [Test]
-    public void Should_trigger_updated_event_for_nullable_struct_setting()
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
