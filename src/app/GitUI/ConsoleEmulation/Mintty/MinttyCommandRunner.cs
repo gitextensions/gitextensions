@@ -71,6 +71,7 @@ internal sealed partial class MinttyCommandRunner : IConsoleCommandRunner
 
             MinttyStartInfo startInfo = new()
             {
+                ProcessOperation = operation,
                 ConsoleProcessCommandLine = commandLine,
                 StartupDirectory = workDir,
                 ProcessExitedCallback = exitCode =>

@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using GitCommands.Logging;
 using Windows.Win32.Foundation;
 
 namespace GitUI.ConsoleEmulation.Mintty;
@@ -6,6 +7,7 @@ namespace GitUI.ConsoleEmulation.Mintty;
 internal sealed class MinttySession
 {
     private Process? _minttyProcess;
+    private ProcessOperation? _processOperation;
     private Action<string>? _lineCallback;
     private Action<int>? _exitCallback;
 
@@ -19,6 +21,7 @@ internal sealed class MinttySession
 
         MinttySession session = new()
         {
+            _processOperation = startInfo.ProcessOperation,
             _lineCallback = startInfo.AnsiOutputLineCallback,
             _exitCallback = startInfo.ProcessExitedCallback,
         };
@@ -53,6 +56,7 @@ internal sealed class MinttySession
     internal void AttachProcess(Process minttyProcess, CancellationToken ct)
     {
         _minttyProcess = minttyProcess;
+        _processOperation?.SetProcessId(minttyProcess.Id);
 
         // The interactive shell launches with stdout not redirected; reading
         // Process.StandardOutput in that case throws InvalidOperationException.
