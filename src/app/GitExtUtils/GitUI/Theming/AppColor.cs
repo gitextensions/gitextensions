@@ -23,10 +23,10 @@ public enum AppColor
     RevisionGridAlternateRowBackground,
     RevisionGridSelectionBackground,
     RevisionGridRelativeNonSelectedSubjectText,
-    RevisionGridNonRelativeNonSelectedSubjectText,
-    RevisionGridNonRelativeSelectedSubjectText,
     RevisionGridRelativeSelectedBodyText,
-    RevisionGridNonRelativeBodyText,
+    RevisionGridNonRelativeNonSelectedSubjectText,
+    RevisionGridNonRelativeNonSelectedBodyText,
+    RevisionGridNonRelativeSelectedSubjectText,
     RevisionGridNonRelativeSelectedBodyText,
 
     BrightGreen,

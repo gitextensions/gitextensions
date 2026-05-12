@@ -455,7 +455,7 @@ public sealed partial class RevisionDataGridView : DataGridView
         Color nonRelativeNonSelectedBodyColor = Application.IsDarkModeEnabled
             ? Color.FromArgb(130, 130, 130) // darker grey than subject, further de-emphasised
             : Color.FromArgb(152, 152, 152);
-        _nonRelativeNonSelectedBodyColor = AppColor.RevisionGridNonRelativeBodyText.GetThemeColor(nonRelativeNonSelectedBodyColor);
+        _nonRelativeNonSelectedBodyColor = AppColor.RevisionGridNonRelativeNonSelectedBodyText.GetThemeColor(nonRelativeNonSelectedBodyColor);
 
         Color nonRelativeSelectedBodyColor = Application.IsDarkModeEnabled
             ? Color.FromArgb(170, 170, 150) // same as relativeSelectedBody - consistent on selection
