@@ -1,0 +1,127 @@
+/* See (App install)\Themes\README.md for instructions on how to create or modify a theme */
+
+/* SystemColorMode.Dark listed for reference
+System colors cannot be changed, used when adapting colors (many occurrences are not themeable)
+
+ActiveBorder: ff464646
+ActiveCaption: ff3c5f78
+ActiveCaptionText: ffffffff
+AppWorkspace: ff3c3c3c
+ButtonFace: ff202020
+ButtonHighlight: ff101010
+ButtonShadow: ff464646
+Control: ff202020
+ControlDark: ff4a4a4a
+ControlDarkDark: ff5a5a5a
+ControlLight: ff2e2e2e
+ControlLightLight: ff1f1f1f
+ControlText: ffffffff
+Desktop: ff101010
+GradientActiveCaption: ff416482
+GradientInactiveCaption: ff557396
+GrayText: ff969696
+Highlight: ff2864b4
+HighlightText: ff000000
+HotTrack: ff2d5faf
+InactiveBorder: ff3c3f41
+InactiveCaption: ff374b5a
+InactiveCaptionText: ffbebebe
+Info: ff50503c
+InfoText: ffbebebe
+Menu: ff373737
+MenuBar: ff373737
+MenuHighlight: ff2a80d2
+MenuText: fff0f0f0
+ScrollBar: ff505050
+Window: ff323232
+WindowFrame: ff282828
+WindowText: fff0f0f0
+*/
+
+/* Application colors */
+/* PanelBackground sets Windows Dark mode */
+.PanelBackground { color: #252526; }
+.EditorBackground { color: #252526; }
+.LineNumberBackground { color: #252526; }
+.AuthoredHighlight { color: #1f1f1f; }
+.Selection { color: #37373d; }
+.HighlightAllOccurences { color: #515c6a; }
+.InactiveSelectionHighlight { color: #2d2d30; }
+
+.GraphBranch1 { color: #db5b93; }
+.GraphBranch2 { color: #6fa7d4; }
+.GraphBranch3 { color: #1da31b; }
+.GraphBranch4 { color: #8a67cf; }
+.GraphBranch5 { color: #c02a22; }
+.GraphBranch6 { color: #17aa8f; }
+.GraphBranch7 { color: #ca9b0d; }
+.GraphBranch8 { } /* color not specified, color slot will not be used */
+.GraphNonRelativeBranch { color: #707070; }
+
+.Branch { color: #8ab878; }
+.RemoteBranch { color: #c96767; }
+.Tag { color: #8ab878; }
+.OtherTag { color: #7b7b7b; }
+.DiffSection { color: #5f5e5e; }
+
+/* translation of terminal (cli) ansi color output sequences */
+/* Colors match VS Code Dark terminal ANSI palette */
+/* https://github.com/microsoft/vscode/blob/main/src/vs/workbench/contrib/terminal/common/terminalColorRegistry.ts */
+
+.AnsiTerminalBlackForeNormal { color: #000000; }
+.AnsiTerminalBlackBackNormal { color: #4d4d4d; }
+.AnsiTerminalBlackForeBold { color: #666666; }
+.AnsiTerminalBlackBackBold { color: #666666; }
+
+.AnsiTerminalRedForeNormal { color: #cd3131; }
+.AnsiTerminalRedBackNormal { color: #6e1919; }
+.AnsiTerminalRedBackNormal.colorblind { color: #0d0a5e; }
+.AnsiTerminalRedForeBold { color: #f14c4c; }
+.AnsiTerminalRedBackBold { color: #8a2c2c; }
+.AnsiTerminalRedBackBold.colorblind { color: #110e8a; }
+
+.AnsiTerminalGreenForeNormal { color: #0dbc79; }
+.AnsiTerminalGreenForeBold { color: #23d18b; }
+.AnsiTerminalGreenBackNormal { color: #076641; }
+.AnsiTerminalGreenBackBold { color: #0d7a4e; }
+
+.AnsiTerminalYellowForeNormal { color: #e5e510; }
+.AnsiTerminalYellowBackNormal { color: #79790a; }
+.AnsiTerminalYellowForeBold { color: #f5f543; }
+.AnsiTerminalYellowBackBold { color: #9e9e0d; }
+
+.AnsiTerminalBlueForeNormal { color: #2472c8; }
+.AnsiTerminalBlueBackNormal { color: #12396b; }
+.AnsiTerminalBlueForeBold { color: #3b8eea; }
+.AnsiTerminalBlueBackBold { color: #1d4e80; }
+
+.AnsiTerminalMagentaForeNormal { color: #bc3fbc; }
+.AnsiTerminalMagentaBackNormal { color: #622163; }
+.AnsiTerminalMagentaForeBold { color: #d670d6; }
+.AnsiTerminalMagentaBackBold { color: #7d3a7d; }
+
+.AnsiTerminalCyanForeNormal { color: #11a8cd; }
+.AnsiTerminalCyanBackNormal { color: #0a5a6e; }
+.AnsiTerminalCyanForeBold { color: #29b8db; }
+.AnsiTerminalCyanBackBold { color: #146375; }
+
+.AnsiTerminalWhiteForeNormal { color: #e5e5e5; }
+.AnsiTerminalWhiteBackNormal { color: #c0c0c0; }
+.AnsiTerminalWhiteForeBold { color: #e5e5e5; }
+.AnsiTerminalWhiteBackBold { color: #e5e5e5; }
+
+.CommitInfoBackground { color: #252526; }
+.CommitInfoContentBackground { color: #252526; }
+
+.RevisionGridAlternateRowBackground { color: #252526; }
+.RevisionGridSelectionBackground { color: #37373d; }
+.RevisionGridRelativeNonSelectedSubjectText { color: #ffffff; }
+.RevisionGridRelativeSelectedBodyText { color: #cccccc; }
+.RevisionGridNonRelativeNonSelectedSubjectText { color: #7b7b7b; }
+.RevisionGridNonRelativeNonSelectedBodyText { color: #555555; }
+.RevisionGridNonRelativeSelectedSubjectText { color: #ffffff; }
+.RevisionGridNonRelativeSelectedBodyText { color: #cccccc; }
+
+.BrightGreen { color: #0f9d58; }
+.BrightYellow { color: #fdd835; }
+.BrightRed { color: #db4437; }
