@@ -95,7 +95,7 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
 
                 UriBuilder builder = new(userProfile.AvatarUrl);
                 StringBuilder query = new(builder.Query.TrimStart('?'));
-                query.Append(query.Length == 0 ? "?" : "&");
+                query.Append(query.Length == 0 ? '?' : '&');
                 query.Append("s=").Append(imageSize);
                 builder.Query = query.ToString();
                 return builder.Uri;

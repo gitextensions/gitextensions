@@ -71,9 +71,9 @@ public partial class CommitInfo : GitModuleControl
     private string? _linksInfo;
     private IDictionary<string, string>? _annotatedTagsMessages;
     private string? _annotatedTagsInfo;
-    private List<string>? _tags;
+    private string[]? _tags;
     private string? _tagInfo;
-    private List<string>? _branches;
+    private string[]? _branches;
     private string? _branchInfo;
     private string? _gitDescribeInfo;
     private IDictionary<string, int>? _tagsOrderDict;
@@ -531,7 +531,7 @@ public partial class CommitInfo : GitModuleControl
             {
                 await TaskScheduler.Default;
 
-                List<string> tags = [.. Module.GetAllTagsWhichContainGivenCommit(objectId, cancellationToken)];
+                string[] tags = [.. Module.GetAllTagsWhichContainGivenCommit(objectId, cancellationToken)];
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
                 _tags = tags;
@@ -548,7 +548,7 @@ public partial class CommitInfo : GitModuleControl
                 // Include remote branches if requested
                 bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                                  AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-                List<string> branches = [.. Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote, cancellationToken)];
+                string[] branches = [.. Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote, cancellationToken)];
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
                 _branches = branches;
@@ -580,10 +580,10 @@ public partial class CommitInfo : GitModuleControl
                     if (!string.IsNullOrEmpty(precedingTag))
                     {
                         string tagString = ShowBranchesAsLinks ? linkFactory.CreateTagLink(precedingTag) : WebUtility.HtmlEncode(precedingTag);
-                        gitDescribeInfo.Append(WebUtility.HtmlEncode(_derivesFromTag.Text) + " " + tagString);
+                        gitDescribeInfo.Append(WebUtility.HtmlEncode(_derivesFromTag.Text)).Append(' ').Append(tagString);
                         if (!string.IsNullOrEmpty(commitCount))
                         {
-                            gitDescribeInfo.Append(" + " + commitCount + " " + WebUtility.HtmlEncode(_plusCommits.Text));
+                            gitDescribeInfo.Append(" + ").Append(commitCount).Append(' ').Append(WebUtility.HtmlEncode(_plusCommits.Text));
                         }
                     }
                     else
@@ -627,14 +627,14 @@ public partial class CommitInfo : GitModuleControl
 
             if (_tags is not null && string.IsNullOrEmpty(_tagInfo))
             {
-                _tags.Sort(new TagsComparer(_tagsOrderDict));
+                Array.Sort(_tags, new TagsComparer(_tagsOrderDict));
                 _tagInfo = refsFormatter.FormatTags(_tags, ShowBranchesAsLinks, limit: !_showAllTags);
             }
         }
 
         if (_branches is not null && string.IsNullOrEmpty(_branchInfo))
         {
-            _branches.Sort(new BranchComparer(_branches, Module.GetSelectedBranch()));
+            Array.Sort(_branches, new BranchComparer(_branches, Module.GetSelectedBranch()));
             _branchInfo = refsFormatter.FormatBranches(_branches, ShowBranchesAsLinks, limit: !_showAllBranches);
         }
 
@@ -852,7 +852,7 @@ public partial class CommitInfo : GitModuleControl
         private readonly bool _isDetachedHead;
         private readonly Dictionary<string, int> _orderByBranch = [];
 
-        public BranchComparer(List<string> branches, string currentBranch)
+        public BranchComparer(string[] branches, string currentBranch)
         {
             _currentBranch = currentBranch;
             _isDetachedHead = DetachedHeadParser.IsDetachedHead(currentBranch);

@@ -415,7 +415,7 @@ internal static class RichTextBoxXhtmlSupportExtension
                     }
                     else
                     {
-                        sb.Append(@"\u" + Convert.ToUInt32(c) + "?");
+                        sb.Append(@"\u").Append(Convert.ToUInt32(c)).Append('?');
                     }
                 }
 
@@ -691,13 +691,13 @@ internal static class RichTextBoxXhtmlSupportExtension
             for (int i = 0; i < colFormat.Count; i++)
             {
                 (int pos, string markup) = colFormat[i];
-                strHTML.Append(WebUtility.HtmlEncode(strT[nAcum..pos]) + markup);
+                strHTML.Append(WebUtility.HtmlEncode(strT[nAcum..pos])).Append(markup);
                 nAcum = pos;
             }
 
             if (nAcum < strT.Length)
             {
-                strHTML.Append(strT[nAcum..]);
+                strHTML.Append(strT.AsSpan()[nAcum..]);
             }
         }
         catch (Exception /*ex*/)
@@ -1158,8 +1158,8 @@ internal static class RichTextBoxXhtmlSupportExtension
 
             // prior to net47 links were created via hidden text, and had the following format: "text#link"
             // extract the link portion only
-            string linkOldFormat = text[from..to];
-            return linkOldFormat[(linkOldFormat.IndexOf(LinkSeparator) + LinkSeparator.Length)..];
+            ReadOnlySpan<char> linkOldFormat = text.AsSpan()[from..to];
+            return linkOldFormat[(linkOldFormat.IndexOf(LinkSeparator) + LinkSeparator.Length)..].ToString();
         }
         catch
         {
@@ -1208,7 +1208,7 @@ internal static class RichTextBoxXhtmlSupportExtension
             {
                 try
                 {
-                    result.Append("&#" + (int)ch + ';');
+                    result.Append("&#").Append((int)ch).Append(';');
                 }
                 catch (ArgumentException)
                 {
@@ -1220,7 +1220,7 @@ internal static class RichTextBoxXhtmlSupportExtension
         return result.ToString();
     }
 
-    private class RTFCurrentState
+    private sealed class RTFCurrentState
     {
         public RTFCurrentState()
         {

@@ -46,13 +46,13 @@ public static partial class UserEnvironmentInformation
         // Build and open FormAbout design to make sure info still looks good if you change this code.
         StringBuilder sb = new();
 
-        sb.AppendLine($"- Git Extensions {AppSettings.ProductVersion}");
-        sb.AppendLine($"- Build {_sha}{(_dirty ? " (Dirty)" : "")}");
-        sb.AppendLine($"- Git {gitVersionInfo}");
-        sb.AppendLine($"- {Environment.OSVersion}");
-        sb.AppendLine($"- {RuntimeInformation.FrameworkDescription}");
-        sb.AppendLine($"- DPI {DpiUtil.DpiX}dpi ({(DpiUtil.ScaleX == 1 ? "no" : $"{Math.Round(DpiUtil.ScaleX * 100)}%")} scaling)");
-        sb.AppendLine($"- Portable: {AppSettings.IsPortable()}");
+        sb.Append("- Git Extensions ").AppendLine(AppSettings.ProductVersion);
+        sb.Append("- Build ").Append(_sha).AppendLine(_dirty ? " (Dirty)" : "");
+        sb.Append("- Git ").AppendLine(gitVersionInfo);
+        sb.Append("- ").Append(Environment.OSVersion).AppendLine();
+        sb.Append("- ").AppendLine(RuntimeInformation.FrameworkDescription);
+        sb.Append("- DPI ").Append(DpiUtil.DpiX).Append("dpi (").Append(DpiUtil.ScaleX == 1 ? "no" : $"{Math.Round(DpiUtil.ScaleX * 100)}%").AppendLine(" scaling)");
+        sb.Append("- Portable: ").Append(AppSettings.IsPortable()).AppendLine();
 
         return sb.ToString();
     }
