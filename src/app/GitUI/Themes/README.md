@@ -8,7 +8,7 @@ Git Extensions supports color customization to some extent:
 There is no full theme support, system colors cannot be changed.
 
 Git Extensions includes a light+ theme (slightly darker panels compared to the built-in light theme),
-a dark theme for system dark mode, a dark+ mode with slightly darker panels, and a dark-alt theme.
+a dark theme for system dark mode and a dark+ mode with slightly darker panels.
 
 ## Themes location
 
