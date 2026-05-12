@@ -46,6 +46,13 @@
 .HighlightAllOccurences { color: #e8e8ff; }
 .InactiveSelectionHighlight { color: #e6e6e6; }
 
+.RevisionGridRelativeNonSelectedSubjectText { color: #ffffff; }
+.RevisionGridRelativeSelectedBodyText { color: #bcbcbc; }
+.RevisionGridNonRelativeNonSelectedSubjectText { color: #6d6d6d; }
+.RevisionGridNonRelativeNonSelectedBodyText { color: #989898; }
+.RevisionGridNonRelativeSelectedSubjectText { color: #bcbcbc; }
+.RevisionGridNonRelativeSelectedBodyText { color: #a1a1a1; }
+
 .BrightGreen { color: #80ff80; }
 .BrightYellow { color: #ffff80; }
 .BrightRed { color: #ff8080; }
