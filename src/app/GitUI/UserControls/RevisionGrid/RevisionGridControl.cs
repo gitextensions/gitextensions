@@ -2035,7 +2035,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
     private void ResetChangesToolStripMenuItemClick(object sender, EventArgs e)
     {
         UICommands.StartResetChangesDialog(this, Module.GetWorkTreeFiles(), onlyWorkTree: false);
-        PerformRefreshRevisions();
+        ArtificialChanged?.Invoke(this, EventArgs.Empty);
     }
 
     private void CommitToolStripMenuItemClick(object sender, EventArgs e)
