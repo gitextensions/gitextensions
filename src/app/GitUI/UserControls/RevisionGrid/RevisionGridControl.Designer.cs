@@ -290,9 +290,8 @@ partial class RevisionGridControl
         //
         commitToolStripMenuItem.Image = Properties.Images.RepoStateDirty;
         commitToolStripMenuItem.Name = "commitToolStripMenuItem";
-        commitToolStripMenuItem.ShortcutKeys = ((Keys)((Keys.Control | Keys.Space)));
         commitToolStripMenuItem.Size = new Size(223, 22);
-        commitToolStripMenuItem.Text = "Commit";
+        commitToolStripMenuItem.Text = "&Commit";
         commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
         //
         // resetAnotherBranchToHereToolStripMenuItem

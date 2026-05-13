@@ -3155,6 +3155,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void SetShortcutKeys()
     {
+        SetShortcutString(commitToolStripMenuItem, Command.Commit);
         SetShortcutString(fixupCommitToolStripMenuItem, Command.CreateFixupCommit);
         SetShortcutString(squashCommitToolStripMenuItem, Command.CreateSquashCommit);
         SetShortcutString(amendCommitToolStripMenuItem, Command.CreateAmendCommit);
@@ -3473,6 +3474,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             case Command.CompareToCurrentBranch: CompareWithCurrentBranchToolStripMenuItem_Click(this, EventArgs.Empty); break;
             case Command.CompareToBranch: CompareToBranchToolStripMenuItem_Click(this, EventArgs.Empty); break;
             case Command.CompareSelectedCommits: compareSelectedCommitsMenuItem_Click(this, EventArgs.Empty); break;
+            case Command.Commit: CommitToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.DeleteRef: DeleteRef(); break;
             case Command.RenameRef: RenameRef(); break;
             default: return base.ExecuteCommand(cmd);

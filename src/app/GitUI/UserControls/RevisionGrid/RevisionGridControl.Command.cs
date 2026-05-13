@@ -52,5 +52,6 @@ public sealed partial class RevisionGridControl
         RenameRef = 42,
         CreateSquashCommit = 43,
         CreateAmendCommit = 44,
+        Commit = 48,
     }
 }
