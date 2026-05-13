@@ -123,7 +123,7 @@ public partial class AnsiEscapeUtilities
 
         for (Match match = EscapeRegex.Match(text); match.Success; match = match.NextMatch())
         {
-            sb.Append(text.AsSpan(prevLineOffset, match.Index - prevLineOffset);
+            sb.Append(text.AsSpan(prevLineOffset, match.Index - prevLineOffset));
             prevLineOffset = match.Index + match.Length;
 
             // An escape sequence can include several attributes (empty/unparsable is break).
