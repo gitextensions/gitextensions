@@ -58,6 +58,8 @@ partial class FormBrowse
 
         InsertFetchPullShortcuts();
 
+        toolStripButtonPull.DropDownOpening += (_, _) => UpdateFetchAllVisibility();
+
         WorkaroundToolbarLocationBug();
 
         return;
@@ -321,6 +323,30 @@ partial class FormBrowse
         }
 
         UpdateTooltipWithShortcut(toolStripButtonPull, Command.QuickPullOrFetch);
+    }
+
+    /// <summary>
+    ///  Hides "Fetch all" item when there is only one remote,
+    ///  since it is redundant with the single-remote "Fetch" command.
+    /// </summary>
+    private void UpdateFetchAllVisibility()
+    {
+        bool hasMultipleRemotes = Module.IsValidGitWorkingDir() && Module.GetRemoteNames().Count > 1;
+
+        // Toolbar button drop down menu
+        fetchAllToolStripMenuItem.Visible = hasMultipleRemotes;
+
+        // Update the "set default pull action" submenu items
+        if (setDefaultPullButtonActionToolStripMenuItem.DropDown is ToolStripDropDownMenu setDefaultMenu)
+        {
+            foreach (ToolStripItem item in setDefaultMenu.Items)
+            {
+                if (item.Tag is GitPullAction.FetchAll)
+                {
+                    item.Visible = hasMultipleRemotes;
+                }
+            }
+        }
     }
 
     private Brush UpdateCommitButtonAndGetBrush(IReadOnlyList<GitItemStatus>? status, bool showCount)
