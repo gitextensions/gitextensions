@@ -37,11 +37,13 @@ public partial class AnsiEscapeUtilities
         sb.Append('\n');
 
         ReadOnlySpan<int> dims = [0, 2];
+        ReadOnlySpan<int> bolds = [0, 1];
+        ReadOnlySpan<int> codes = [30, 90, 40, 100];
 
         // color id (standard) colors
-        foreach (int code in new List<int> { 30, 90, 40, 100 })
+        foreach (int code in codes)
         {
-            foreach (int bold in new List<int> { 0, 1 })
+            foreach (int bold in bolds)
             {
                 if (bold == 0 && code >= 90)
                 {
@@ -62,8 +64,10 @@ public partial class AnsiEscapeUtilities
                         sequence.Add(dim);
                     }
 
-                    rawSb.Append(bold > 0 ? 'b' : ' ').Append(' ').Append(dim > 0 ? 'd' : ' ').Append(' ').Append($"{code,3}").Append(' ');
-                    sb.Append(bold > 0 ? 'b' : ' ').Append(' ').Append(dim > 0 ? 'd' : ' ').Append(' ').Append($"{code,3}").Append(' ');
+                    string boldString = bold > 0 ? "b" : " ";
+                    string dimString = dim > 0 ? "d" : " ";
+                    rawSb.Append($"{boldString} {dimString} {code,3} ");
+                    sb.Append($"{boldString} {dimString} {code,3} ");
                     for (int i = _blackId; i <= _whiteId; i++)
                     {
                         sb.Append("@!");
