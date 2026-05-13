@@ -166,7 +166,7 @@ internal sealed class MinttyControl : Panel
 
         minttyProcess.EnableRaisingEvents = true;
 
-        session.AttachProcess(minttyProcess, ct);
+        session.AttachProcess(minttyProcess);
 
         FindAndEmbedWindow(minttyProcess, session, ct);
     }

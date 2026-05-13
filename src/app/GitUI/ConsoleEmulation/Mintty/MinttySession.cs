@@ -53,7 +53,7 @@ internal sealed class MinttySession
         }
     }
 
-    internal void AttachProcess(Process minttyProcess, CancellationToken ct)
+    internal void AttachProcess(Process minttyProcess)
     {
         _minttyProcess = minttyProcess;
         _processOperation?.SetProcessId(minttyProcess.Id);
@@ -62,7 +62,7 @@ internal sealed class MinttySession
         // Process.StandardOutput in that case throws InvalidOperationException.
         if (minttyProcess.StartInfo.RedirectStandardOutput)
         {
-            MinttyConsoleRuntime.StartOutputReader(minttyProcess, _lineCallback, _exitCallback, ct);
+            MinttyConsoleRuntime.StartOutputReader(minttyProcess, _lineCallback, _exitCallback);
         }
     }
 

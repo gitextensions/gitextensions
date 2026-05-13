@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 
@@ -39,17 +39,15 @@ internal static partial class MinttyConsoleRuntime
     internal static void StartOutputReader(
         Process minttyProcess,
         Action<string>? lineCallback,
-        Action<int>? exitCallback,
-        CancellationToken ct)
+        Action<int>? exitCallback)
     {
-        _ = ReadLogStreamAsync(minttyProcess, lineCallback, exitCallback, ct);
+        _ = ReadLogStreamAsync(minttyProcess, lineCallback, exitCallback);
     }
 
     private static async Task ReadLogStreamAsync(
         Process minttyProcess,
         Action<string>? lineCallback,
-        Action<int>? exitCallback,
-        CancellationToken ct)
+        Action<int>? exitCallback)
     {
         try
         {
@@ -59,15 +57,17 @@ internal static partial class MinttyConsoleRuntime
             Decoder decoder = Encoding.UTF8.GetDecoder();
             StringBuilder line = new();
 
-            while (!ct.IsCancellationRequested)
+            while (true)
             {
-                int read = await stdout.ReadAsync(buffer.AsMemory(), ct);
+                int read = await stdout.ReadAsync(buffer.AsMemory());
                 if (read == 0)
                 {
                     break;
                 }
 
-                int chars = decoder.GetChars(buffer, 0, read, charBuf, 0);
+                Span<byte> bytes = buffer.AsSpan(0, read);
+
+                int chars = decoder.GetChars(bytes, charBuf, true);
                 for (int i = 0; i < chars; i++)
                 {
                     char c = charBuf[i];
