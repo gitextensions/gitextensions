@@ -6,22 +6,28 @@ namespace GitUI.ConsoleEmulation.Mintty;
 
 internal sealed class MinttySession
 {
-    private Process? _minttyProcess;
-    private ProcessOperation? _processOperation;
     private Action<string>? _lineCallback;
     private Action<int>? _exitCallback;
+
+    public ProcessOperation? ProcessOperation { get; private set; }
+
+    public HWND WindowHandle { get; set; }
+
+    public Process? MinttyProcess { get; private set; }
+
+    public int? ExitCode { get; private set; }
 
     private MinttySession()
     {
     }
 
-    internal static (MinttySession Session, MinttyConsoleRuntime.CommandLaunchParams LaunchParams) StartCommandSession(MinttyStartInfo startInfo)
+    public static (MinttySession Session, MinttyConsoleRuntime.CommandLaunchParams LaunchParams) StartCommandSession(MinttyStartInfo startInfo)
     {
         MinttyConsoleRuntime.CommandLaunchParams launchParams = MinttyConsoleRuntime.CreateLaunchParams(startInfo);
 
         MinttySession session = new()
         {
-            _processOperation = startInfo.ProcessOperation,
+            ProcessOperation = startInfo.ProcessOperation,
             _lineCallback = startInfo.AnsiOutputLineCallback,
             _exitCallback = startInfo.ProcessExitedCallback,
         };
@@ -29,22 +35,18 @@ internal sealed class MinttySession
         return (session, launchParams);
     }
 
-    internal static MinttySession StartInteractiveShellSession()
+    public static MinttySession StartInteractiveShellSession()
     {
         return new MinttySession();
     }
 
-    internal Process? MinttyProcess => _minttyProcess;
-
-    internal HWND WindowHandle { get; set; }
-
-    internal bool IsExited
+    public bool IsExited
     {
         get
         {
             try
             {
-                return _minttyProcess is null || _minttyProcess.HasExited;
+                return MinttyProcess is null || MinttyProcess.HasExited;
             }
             catch
             {
@@ -53,26 +55,33 @@ internal sealed class MinttySession
         }
     }
 
-    internal void AttachProcess(Process minttyProcess)
+    public void AttachProcess(Process minttyProcess)
     {
-        _minttyProcess = minttyProcess;
-        _processOperation?.SetProcessId(minttyProcess.Id);
+        MinttyProcess = minttyProcess;
+        ProcessOperation?.SetProcessId(minttyProcess.Id);
 
         // The interactive shell launches with stdout not redirected; reading
         // Process.StandardOutput in that case throws InvalidOperationException.
         if (minttyProcess.StartInfo.RedirectStandardOutput)
         {
-            MinttyConsoleRuntime.StartOutputReader(minttyProcess, _lineCallback, _exitCallback);
+            MinttyConsoleRuntime.StartOutputReader(
+                minttyProcess,
+                _lineCallback,
+                exitCallback: exitCode =>
+                {
+                    ExitCode = exitCode;
+                    _exitCallback?.Invoke(exitCode);
+                });
         }
     }
 
-    internal void Kill()
+    public void Kill()
     {
         try
         {
-            if (_minttyProcess is not null && !_minttyProcess.HasExited)
+            if (MinttyProcess is not null && !MinttyProcess.HasExited)
             {
-                _minttyProcess.Kill();
+                MinttyProcess.Kill();
             }
         }
         catch
