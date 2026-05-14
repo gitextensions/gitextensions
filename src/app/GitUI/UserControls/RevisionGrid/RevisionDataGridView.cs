@@ -449,15 +449,8 @@ public sealed partial class RevisionDataGridView : DataGridView
         {
             _rowBackgroundBrush.Color = AppColor.PanelBackground.GetThemeColor();
 
-            Color alternatingRowBackground = AppColor.RevisionGridAlternateRowBackground.GetThemeColor();
-            _alternatingRowBackgroundBrush.Color = alternatingRowBackground.IsEmpty
-                ? _rowBackgroundBrush.Color.MakeDarkerBy(Application.IsDarkModeEnabled ? -0.018 : 0.025)
-                : alternatingRowBackground;
-
-            Color selectionBackground = AppColor.RevisionGridSelectionBackground.GetThemeColor();
-            _selectionBrush.Color = selectionBackground.IsEmpty
-                ? (Application.IsDarkModeEnabled ? Color.FromArgb(0x3e, 0x3e, 0x42) : SystemColors.Highlight)
-                : selectionBackground;
+            _alternatingRowBackgroundBrush.Color = AppColor.RevisionGridAlternateRowBackground.GetThemeColor();
+            _selectionBrush.Color = AppColor.RevisionGridSelectionBackground.GetThemeColor();
         }
     }
 

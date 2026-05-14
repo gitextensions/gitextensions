@@ -46,6 +46,11 @@
 .HighlightAllOccurences { color: #e8e8ff; }
 .InactiveSelectionHighlight { color: #e6e6e6; }
 
+.CommitInfoBackground { color: #ffffff; }
+.CommitInfoContentBackground { color: #f5f5f5; }
+
+.RevisionGridAlternateRowBackground { color: #f9f9f9; }
+.RevisionGridSelectionBackground { color: #0078d7; }
 .RevisionGridRelativeNonSelectedSubjectText { color: #ffffff; }
 .RevisionGridRelativeSelectedBodyText { color: #bcbcbc; }
 .RevisionGridNonRelativeNonSelectedSubjectText { color: #6d6d6d; }

@@ -48,12 +48,21 @@ WindowText: fff0f0f0
 .HighlightAllOccurences { color: #1d4897; }
 .InactiveSelectionHighlight { color: #436689; }
 
+.CommitInfoBackground { color: #323232; }
+.CommitInfoContentBackground { color: #303030; }
+
+.RevisionGridAlternateRowBackground { color: #363636; }
+.RevisionGridSelectionBackground { color: #3e3e42; }
 .RevisionGridRelativeNonSelectedSubjectText { color: #ffffff; }
 .RevisionGridRelativeSelectedBodyText { color: #aaaa96; }
 .RevisionGridNonRelativeNonSelectedSubjectText { color: #c0c0c0; }
 .RevisionGridNonRelativeNonSelectedBodyText { color: #828282; }
 .RevisionGridNonRelativeSelectedSubjectText { color: #ebebd7; }
 .RevisionGridNonRelativeSelectedBodyText { color: #aaaa96; }
+
+.BrightGreen { color: #63be63; }
+.BrightYellow { color: #bebe63; }
+.BrightRed { color: #be6363; }
 
 .GraphBranch1 { color: #db5b93; }
 .GraphBranch2 { color: #6fa7d4; }

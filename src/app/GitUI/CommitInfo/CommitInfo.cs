@@ -105,8 +105,8 @@ public partial class CommitInfo : GitModuleControl
         _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
         _gitDescribeProvider = new GitDescribeProvider(() => Module);
 
-        Color panelBackground = AppColor.CommitInfoBackground.GetThemeColor(AppColor.PanelBackground.GetThemeColor());
-        Color contentBackground = AppColor.CommitInfoContentBackground.GetThemeColor(SystemColors.Window.MakeDarkerBy(0.04));
+        Color panelBackground = AppColor.CommitInfoBackground.GetThemeColor();
+        Color contentBackground = AppColor.CommitInfoContentBackground.GetThemeColor();
 
         BackColor = panelBackground;
         tableLayout.BackColor = panelBackground;

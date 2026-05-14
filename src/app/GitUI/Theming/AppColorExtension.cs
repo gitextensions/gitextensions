@@ -20,10 +20,4 @@ public static class AppColorExtension
 
         return AppColorDefaults.GetBy(name);
     }
-
-    public static Color GetThemeColor(this AppColor name, Color fallback)
-    {
-        Color themeColor = name.GetThemeColor();
-        return themeColor.IsEmpty ? fallback : themeColor;
-    }
 }
