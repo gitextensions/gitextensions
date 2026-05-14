@@ -11,11 +11,4 @@
 .HighlightAllOccurences { color: #173440; }
 .InactiveSelectionHighlight { color: #1e3d4b; }
 
-.RevisionGridRelativeNonSelectedSubjectText { color: #ffffff; }
-.RevisionGridRelativeSelectedBodyText { color: #aaaa96; }
-.RevisionGridNonRelativeNonSelectedSubjectText { color: #c0c0c0; }
-.RevisionGridNonRelativeNonSelectedBodyText { color: #828282; }
-.RevisionGridNonRelativeSelectedSubjectText { color: #ebebd7; }
-.RevisionGridNonRelativeSelectedBodyText { color: #aaaa96; }
-
 .Branch { color: #00d76b; }
