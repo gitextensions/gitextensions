@@ -9,6 +9,8 @@ public partial class FormBuildServerCredentials : Form
         InitializeComponent();
 
         labelHeader.Text = string.Format(labelHeader.Text, buildServerUniqueKey);
+
+        this.EnableProperWordBoundaries();
     }
 
     public IBuildServerCredentials? BuildServerCredentials { get; set; }
