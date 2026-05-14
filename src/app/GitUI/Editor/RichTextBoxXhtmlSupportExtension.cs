@@ -1158,7 +1158,7 @@ internal static class RichTextBoxXhtmlSupportExtension
 
             // prior to net47 links were created via hidden text, and had the following format: "text#link"
             // extract the link portion only
-            ReadOnlySpan<char> linkOldFormat = text.AsSpan()[from..to];
+            ReadOnlySpan<char> linkOldFormat = text.AsSpan(from, to - from);
             return linkOldFormat[(linkOldFormat.IndexOf(LinkSeparator) + LinkSeparator.Length)..].ToString();
         }
         catch
