@@ -4,18 +4,19 @@ using System.Runtime.CompilerServices;
 namespace GitUI;
 
 /// <summary>
-/// Makes Ctrl+Left/Right, Ctrl+Shift+Left/Right and double-click word selection treat
-/// punctuation such as '/', ':', '.', '(' and ')' as word boundaries in plain text boxes
-/// and editable combo boxes, matching the behavior of the commit message rich text box.
+///  Makes Ctrl+Left/Right, Ctrl+Shift+Left/Right and double-click word selection treat
+///  punctuation such as '/', ':', '.', '(' and ')' as word boundaries in plain text boxes
+///  and editable combo boxes, matching the behavior of the commit message rich text box.
+///  Triple-click selects the whole text.
 /// </summary>
 /// <remarks>
 /// <para>
-/// By default the Win32 edit control only breaks on whitespace, so Ctrl+Left/Right
-/// jumps over whole paths or identifiers and double-click selects them whole.
+///  By default the Win32 edit control only breaks on whitespace, so Ctrl+Left/Right
+///  jumps over whole paths or identifiers and double-click selects them whole.
 /// </para>
 /// <para>
-/// '_', '+' and '-' are treated as word characters, matching <c>SpellCheckerHelper.IsSeparator</c>
-/// used elsewhere for double-click word selection and autocomplete.
+///  '_', '+' and '-' are treated as word characters, matching <c>SpellCheckerHelper.IsSeparator</c>
+///  used elsewhere for double-click word selection and autocomplete.
 /// </para>
 /// </remarks>
 public static class TextBoxWordBreakExtensions
@@ -68,12 +69,34 @@ public static class TextBoxWordBreakExtensions
         }
     }
 
-    // Tracks the fixed end (anchor) of the selection so Ctrl+Shift+Left/Right can extend
-    // from the correct side. WinForms does not expose which end the caret is on.
-    private static readonly ConditionalWeakTable<Control, StrongBox<int>> _anchors = new();
+    /// <summary>
+    ///  Per-control state: the fixed end (anchor) of the selection so Ctrl+Shift+Left/Right can
+    ///  extend from the correct side (WinForms does not expose which end the caret is on), plus
+    ///  the time and location of the last double-click used to detect a triple-click.
+    /// </summary>
+    private static readonly ConditionalWeakTable<Control, WordSelectionState> _state = new();
 
     /// <summary>Keeps the native subclass of each editable ComboBox's child edit control alive.</summary>
     private static readonly ConditionalWeakTable<ComboBox, ComboBoxEditWindow> _comboBoxEditWindows = new();
+
+    private sealed class WordSelectionState
+    {
+        public int Anchor { get; set; }
+        public long LastDoubleClickTicks { get; set; }
+        public Point LastDoubleClickLocation { get; set; }
+
+        /// <summary>
+        ///  The selection the current click gesture intends (caret for a single click, word for a
+        ///  double-click, whole text for a triple-click), reasserted on the following mouse-up so it
+        ///  wins over the native edit control's drag-extend (see <see cref="HandleMouseUp"/>).
+        ///  <c>-1</c> when there is nothing to reassert.
+        /// </summary>
+        public int PendingStart { get; set; } = -1;
+        public int PendingLength { get; set; }
+
+        /// <summary>Mouse-down location of the pending gesture, to tell a stationary click from a drag.</summary>
+        public Point PendingDownLocation { get; set; }
+    }
 
     private static void HandleDisposed(object? sender, EventArgs e)
     {
@@ -82,7 +105,7 @@ public static class TextBoxWordBreakExtensions
         control.KeyDown -= HandleKeyDown;
         control.MouseDown -= HandleMouseDown;
         control.MouseUp -= HandleMouseUp;
-        _anchors.Remove(control);
+        _state.Remove(control);
 
         if (control is not ComboBox comboBox)
         {
@@ -149,35 +172,133 @@ public static class TextBoxWordBreakExtensions
         // TextBoxBase suppresses the MouseDoubleClick event (StandardDoubleClick style is off),
         // but MouseDown still fires with Clicks == 2 for the second click. ComboBox is handled
         // separately via its child edit control (see ComboBoxEditWindow).
-        if (e.Clicks == 2 && sender is TextBoxBase textBox)
+        if (sender is not TextBoxBase textBox)
+        {
+            return;
+        }
+
+        if (e.Clicks == 2)
         {
             // The base class has already applied its default whitespace-only word selection,
             // so this replaces it with one that respects punctuation boundaries.
-            SelectWordAt(textBox, textBox.Text, textBox.GetCharIndexFromPosition(e.Location));
+            (int Start, int Length) word = SelectWordAt(textBox, textBox.Text, textBox.GetCharIndexFromPosition(e.Location));
+            SetPendingSelection(textBox, word.Start, word.Length, e.Location);
+            RecordDoubleClick(textBox, e.Location);
+        }
+        else if (e.Clicks == 1 && IsTripleClick(textBox, e.Location))
+        {
+            textBox.SelectAll();
+            SetAnchor(textBox, 0);
+            SetPendingSelection(textBox, 0, textBox.TextLength, e.Location);
+        }
+        else if (e.Clicks == 1)
+        {
+            // Plain click: remember the caret target so a native drag-extend from a stale anchor
+            // (e.g. one left at 0 by a prior Select All) can be collapsed back on mouse-up.
+            SetPendingSelection(textBox, textBox.GetCharIndexFromPosition(e.Location), 0, e.Location);
         }
     }
 
-    private static void SelectWordAt(Control control, string text, int index)
+    /// <summary>
+    ///  Selects the punctuation-delimited word at <paramref name="index"/> and returns the
+    ///  applied <c>[Start, Length]</c>, or <c>(-1, 0)</c> if <paramref name="index"/> is out of range.
+    /// </summary>
+    private static (int Start, int Length) SelectWordAt(Control control, string text, int index)
     {
         if (index < 0 || index >= text.Length)
         {
-            return;
+            return (-1, 0);
         }
 
         (int start, int end) = GetWordAt(text, index);
         SetSelectionStart(control, start);
         SetSelectionLength(control, end - start);
         SetAnchor(control, start);
+        return (start, end - start);
     }
 
     private static void HandleMouseUp(object? sender, MouseEventArgs e)
     {
-        // A click collapses the selection; the anchor is wherever the caret landed.
         Control control = (Control)sender!;
+
+        // While the button is held, the native edit control drag-extends the selection from its
+        // anchor on any WM_MOUSEMOVE: after a double-click that grows it back to the whole
+        // whitespace-delimited run, and after a Select All (anchor left at 0) it grows it to
+        // [0, cursor]. Reasserting the gesture's intended selection here, on its final event,
+        // makes our selection win regardless of that or any event-ordering race.
+        if (TryReapplyPendingSelection(control, e.Location))
+        {
+            return;
+        }
+
+        // A click collapses the selection; the anchor is wherever the caret landed.
         if (GetSelectionLength(control) == 0)
         {
             SetAnchor(control, GetSelectionStart(control));
         }
+    }
+
+    private static void SetPendingSelection(Control control, int start, int length, Point downLocation)
+    {
+        if (start < 0)
+        {
+            return;
+        }
+
+        WordSelectionState state = _state.GetOrCreateValue(control);
+        state.PendingStart = start;
+        state.PendingLength = length;
+        state.PendingDownLocation = downLocation;
+    }
+
+    /// <summary>
+    ///  Reasserts the selection the current click gesture intended (unless the pointer moved far
+    ///  enough since mouse-down to be a genuine drag) and consumes it. Returns whether a pending
+    ///  selection was present.
+    /// </summary>
+    /// <remarks>
+    ///  <paramref name="upLocation"/> is the mouse-up position, in the same coordinate space as the
+    ///  recorded mouse-down. Beyond the drag threshold the user is drag-selecting, so the native
+    ///  selection is left untouched. A plain click that placed a collapsed caret is likewise left
+    ///  alone; only a selection the native drag-extend actually corrupted is restored.
+    /// </remarks>
+    private static bool TryReapplyPendingSelection(Control control, Point upLocation)
+    {
+        if (!_state.TryGetValue(control, out WordSelectionState? state) || state.PendingStart < 0)
+        {
+            return false;
+        }
+
+        int start = state.PendingStart;
+        int length = state.PendingLength;
+        Point down = state.PendingDownLocation;
+        state.PendingStart = -1;
+
+        Size slop = SystemInformation.DragSize;
+        if (Math.Abs(upLocation.X - down.X) > slop.Width || Math.Abs(upLocation.Y - down.Y) > slop.Height)
+        {
+            return true;
+        }
+
+        int currentStart = GetSelectionStart(control);
+        int currentLength = GetSelectionLength(control);
+
+        // A plain click intends a collapsed caret; leave the native caret where it landed (only
+        // its selection would be reasserted, and there is none), just record the anchor there.
+        if (length == 0 && currentLength == 0)
+        {
+            SetAnchor(control, currentStart);
+            return true;
+        }
+
+        if (currentStart != start || currentLength != length)
+        {
+            SetSelectionStart(control, start);
+            SetSelectionLength(control, length);
+        }
+
+        SetAnchor(control, start);
+        return true;
     }
 
     private static void HandleKeyDown(object? sender, KeyEventArgs e)
@@ -333,18 +454,43 @@ public static class TextBoxWordBreakExtensions
     }
 
     private static int GetAnchor(Control control)
-        => _anchors.TryGetValue(control, out StrongBox<int>? box) ? box.Value : -1;
+        => _state.TryGetValue(control, out WordSelectionState? state) ? state.Anchor : -1;
 
     private static void SetAnchor(Control control, int value)
+        => _state.GetOrCreateValue(control).Anchor = value;
+
+    private static void RecordDoubleClick(Control control, Point location)
     {
-        if (_anchors.TryGetValue(control, out StrongBox<int>? box))
+        WordSelectionState state = _state.GetOrCreateValue(control);
+        state.LastDoubleClickTicks = Environment.TickCount64;
+        state.LastDoubleClickLocation = location;
+    }
+
+    /// <summary>
+    ///  Windows has no triple-click message, so a click that lands shortly after a double-click
+    ///  and near the same spot is treated as the third click. The recorded double-click is
+    ///  consumed so a further click does not re-trigger.
+    /// </summary>
+    private static bool IsTripleClick(Control control, Point location)
+    {
+        if (!_state.TryGetValue(control, out WordSelectionState? state) || state.LastDoubleClickTicks == 0)
         {
-            box.Value = value;
+            return false;
         }
-        else
+
+        long elapsed = Environment.TickCount64 - state.LastDoubleClickTicks;
+        Size slop = SystemInformation.DoubleClickSize;
+        bool isTripleClick = elapsed >= 0
+            && elapsed <= SystemInformation.DoubleClickTime
+            && Math.Abs(location.X - state.LastDoubleClickLocation.X) <= slop.Width
+            && Math.Abs(location.Y - state.LastDoubleClickLocation.Y) <= slop.Height;
+
+        if (isTripleClick)
         {
-            _anchors.Add(control, new StrongBox<int>(value));
+            state.LastDoubleClickTicks = 0;
         }
+
+        return isTripleClick;
     }
 
     private static int GetSelectionStart(Control control)
@@ -414,13 +560,47 @@ public static class TextBoxWordBreakExtensions
             // Let the edit control apply its default selection first, then refine it.
             base.WndProc(ref m);
 
-            if (m.Msg == NativeMethods.WM_LBUTTONDBLCLK)
+            switch (m.Msg)
             {
-                // m.LParam holds the click position in the edit control's client coordinates.
-                int charPos = NativeMethods.SendMessageW(Handle, NativeMethods.EM_CHARFROMPOS, IntPtr.Zero, m.LParam).ToInt32();
-                int index = unchecked((short)(charPos & 0xFFFF));
-                SelectWordAt(_comboBox, _comboBox.Text, index);
+                case NativeMethods.WM_LBUTTONDBLCLK:
+                {
+                    (int Start, int Length) word = SelectWordAt(_comboBox, _comboBox.Text, CharIndexFromPosition(m.LParam));
+                    SetPendingSelection(_comboBox, word.Start, word.Length, m.LParam.ToPoint());
+                    RecordDoubleClick(_comboBox, m.LParam.ToPoint());
+                    break;
+                }
+
+                case NativeMethods.WM_LBUTTONUP:
+                {
+                    // Reassert the click gesture's selection over the edit control's drag-extend
+                    // (see HandleMouseUp).
+                    TryReapplyPendingSelection(_comboBox, m.LParam.ToPoint());
+                    break;
+                }
+
+                case NativeMethods.WM_LBUTTONDOWN when IsTripleClick(_comboBox, m.LParam.ToPoint()):
+                {
+                    _comboBox.SelectAll();
+                    SetAnchor(_comboBox, 0);
+                    SetPendingSelection(_comboBox, 0, _comboBox.Text.Length, m.LParam.ToPoint());
+                    break;
+                }
+
+                case NativeMethods.WM_LBUTTONDOWN:
+                {
+                    // Plain click: remember the caret target so a native drag-extend from a stale
+                    // anchor (e.g. one left at 0 by a prior Select All) is collapsed back on mouse-up.
+                    SetPendingSelection(_comboBox, CharIndexFromPosition(m.LParam), 0, m.LParam.ToPoint());
+                    break;
+                }
             }
+        }
+
+        /// <summary>Maps a packed click position (an <c>m.LParam</c>, in edit-control client coordinates) to a character index.</summary>
+        private int CharIndexFromPosition(IntPtr packedPosition)
+        {
+            int charPos = NativeMethods.SendMessageW(Handle, NativeMethods.EM_CHARFROMPOS, IntPtr.Zero, packedPosition).ToInt32();
+            return unchecked((short)(charPos & 0xFFFF));
         }
     }
 
