@@ -697,7 +697,7 @@ internal static class RichTextBoxXhtmlSupportExtension
 
             if (nAcum < strT.Length)
             {
-                strHTML.Append(strT.AsSpan()[nAcum..]);
+                strHTML.Append(strT.AsSpan(nAcum));
             }
         }
         catch (Exception /*ex*/)
