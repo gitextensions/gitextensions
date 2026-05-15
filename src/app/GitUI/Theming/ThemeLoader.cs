@@ -129,7 +129,7 @@ public class ThemeLoader : IThemeLoader
     private static Color GetColor(string themeFileName, StyleRule rule)
     {
         string cssColorValue = rule.Style.Color;
-        if (string.IsNullOrWhiteSpace(cssColorValue) && IsGraphBranchColorSlot(rule))
+        if (cssColorValue == "" && rule.SelectorText.StartsWith($".{nameof(AppColor.GraphBranch1)[..^1]}"))
         {
             return Color.Empty;
         }
@@ -165,9 +165,6 @@ public class ThemeLoader : IThemeLoader
         }
 
         return Color.FromArgb(rgbValues[0], rgbValues[1], rgbValues[2]);
-
-        static bool IsGraphBranchColorSlot(StyleRule rule)
-            => rule.SelectorText.StartsWith($".{nameof(AppColor.GraphBranch1)[..^1]}");
     }
 
     private static ThemeException StyleRuleThemeException(StyleRule styleRule, string themePath)

@@ -11,14 +11,4 @@
 .HighlightAllOccurences { color: #173440; }
 .InactiveSelectionHighlight { color: #1e3d4b; }
 
-.CommitInfoBackground { color: #191a1b; }
-.CommitInfoContentBackground { color: #18191a; }
-
-.RevisionGridAlternateRowBackground { color: #1d1e1f; }
-.RevisionGridSelectionBackground { color: #2d6981; }
-
-.BrightGreen { color: #5ebc5e; }
-.BrightYellow { color: #bcbc5e; }
-.BrightRed { color: #bc5e5e; }
-
 .Branch { color: #00d76b; }

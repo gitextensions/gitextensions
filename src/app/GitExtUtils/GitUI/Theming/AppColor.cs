@@ -1,4 +1,4 @@
-namespace GitExtUtils.GitUI.Theming;
+﻿namespace GitExtUtils.GitUI.Theming;
 
 /// <summary>
 /// GitExtensions' application specific color names.
@@ -16,23 +16,6 @@ public enum AppColor
     Selection,
     HighlightAllOccurences,
     InactiveSelectionHighlight,
-
-    CommitInfoBackground,
-    CommitInfoContentBackground,
-
-    RevisionGridAlternateRowBackground,
-    RevisionGridSelectionBackground,
-    RevisionGridRelativeNonSelectedSubjectText,
-    RevisionGridRelativeSelectedBodyText,
-    RevisionGridNonRelativeNonSelectedSubjectText,
-    RevisionGridNonRelativeNonSelectedBodyText,
-    RevisionGridNonRelativeSelectedSubjectText,
-    RevisionGridNonRelativeSelectedBodyText,
-
-    BrightGreen,
-    BrightYellow,
-    BrightRed,
-
     GraphBranch1,
     GraphBranch2,
     GraphBranch3,
@@ -40,17 +23,13 @@ public enum AppColor
     GraphBranch5,
     GraphBranch6,
     GraphBranch7,
-
-    // Kept for backward compatibility with existing theme files.
     GraphBranch8,
     GraphNonRelativeBranch,
-
     Branch,
     RemoteBranch,
     Tag,
     OtherTag,
     DiffSection,
-
     AnsiTerminalBlackForeNormal,
     AnsiTerminalBlackBackNormal,
     AnsiTerminalBlackForeBold,

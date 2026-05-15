@@ -26,7 +26,6 @@ public sealed partial class RevisionDataGridView : DataGridView
     private readonly SolidBrush _rowBackgroundBrush;
     private readonly SolidBrush _alternatingRowBackgroundBrush;
     private readonly SolidBrush _authoredHighlightBrush;
-    private readonly SolidBrush _selectionBrush;
     private readonly SolidBrush _inactiveSelectionHighlightBrush;
 
     private readonly BackgroundUpdater _rowCountUpdater;
@@ -104,15 +103,37 @@ public sealed partial class RevisionDataGridView : DataGridView
         DoubleBuffered = true;
 
         _rowBackgroundBrush = new SolidBrush(AppColor.PanelBackground.GetThemeColor());
-
-        // Theme color is applied by UpdateBrushes.
-        _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color);
-
+        _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color.MakeDarkerBy(Application.IsDarkModeEnabled ? -0.018 : 0.025));
         _authoredHighlightBrush = new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
-        _selectionBrush = new SolidBrush(SystemColors.Highlight);
         _inactiveSelectionHighlightBrush = new SolidBrush(AppColor.InactiveSelectionHighlight.GetThemeColor());
 
+        // subject/body colors are hardcoded to be correct relative each other,
+        // subject color should be emphasied compared to body, selected vs unselected etc.
+
+        // relativeNonSelectedSubject: SystemColors.ControlText
+        _relativeNonSelectedSubjectColor = Application.IsDarkModeEnabled
+            ? SystemColors.ControlText
+            : SystemColors.HighlightText;
+        _nonRelativeNonSelectedSubjectColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(192, 192, 192) // de-emphasised light grey on dark background
+            : SystemColors.GrayText;
+        _nonRelativeSelectedSubjectColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(235, 235, 215) // near-white with warm tint on blue selection
+            : Color.FromArgb(188, 188, 188);
+
+        // relativeNonSelectedBody: SystemColors.GrayText
+        _relativeSelectedBodyColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(170, 170, 150) // warm mid-grey on blue selection
+            : Color.FromArgb(188, 188, 188); // same as _nonRelativeSelectedSubjectColor
+        _nonRelativeNonSelectedBodyColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(130, 130, 130) // darker grey than subject, further de-emphasised
+            : Color.FromArgb(152, 152, 152);
+        _nonRelativeSelectedBodyColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(170, 170, 150) // same as relativeSelectedBody — consistent on selection
+            : Color.FromArgb(161, 161, 161);
+
         UpdateRowHeight();
+
         SetStyle(ControlStyles.OptimizedDoubleBuffer, true);
         ColumnWidthChanged += (s, e) =>
         {
@@ -281,7 +302,7 @@ public sealed partial class RevisionDataGridView : DataGridView
     {
         if (isSelected)
         {
-            return isFocused ? _selectionBrush : _inactiveSelectionHighlightBrush;
+            return isFocused ? SystemBrushes.Highlight : _inactiveSelectionHighlightBrush;
         }
 
         if (_highlightAuthoredRevisions && revision?.IsArtificial is false && AuthorHighlighting?.IsHighlighted(revision) is true)
@@ -427,31 +448,11 @@ public sealed partial class RevisionDataGridView : DataGridView
         // Theme related settings are only loaded at startup.
         _revisionGraphDrawNonRelativesTextGray = AppSettings.RevisionGraphDrawNonRelativesTextGray;
 
-        // Subject colors should be emphasized compared to body colors, selected vs unselected etc.
-        _relativeNonSelectedSubjectColor = AppColor.RevisionGridRelativeNonSelectedSubjectText.GetThemeColor();
-        _relativeSelectedBodyColor = AppColor.RevisionGridRelativeSelectedBodyText.GetThemeColor();
-        _nonRelativeNonSelectedSubjectColor = AppColor.RevisionGridNonRelativeNonSelectedSubjectText.GetThemeColor();
-        _nonRelativeNonSelectedBodyColor = AppColor.RevisionGridNonRelativeNonSelectedBodyText.GetThemeColor();
-        _nonRelativeSelectedSubjectColor = AppColor.RevisionGridNonRelativeSelectedSubjectText.GetThemeColor();
-        _nonRelativeSelectedBodyColor = AppColor.RevisionGridNonRelativeSelectedBodyText.GetThemeColor();
-
         _highlightAuthoredRevisions = AppSettings.HighlightAuthoredRevisions;
         _revisionGraphDrawAlternateBackColor = AppSettings.RevisionGraphDrawAlternateBackColor;
 
-        UpdateBrushes();
-
         // Redraw
         Invalidate(invalidateChildren: true);
-
-        return;
-
-        void UpdateBrushes()
-        {
-            _rowBackgroundBrush.Color = AppColor.PanelBackground.GetThemeColor();
-
-            _alternatingRowBackgroundBrush.Color = AppColor.RevisionGridAlternateRowBackground.GetThemeColor();
-            _selectionBrush.Color = AppColor.RevisionGridSelectionBackground.GetThemeColor();
-        }
     }
 
     public void ClearToBeSelected()
