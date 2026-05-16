@@ -502,8 +502,8 @@ public static partial class AppSettings
     /// </summary>
     public static string GetEffectiveConEmuStyle()
     {
-        string? style = ConEmuStyle.Value;
-        return style is null || style == ConEmuStyleDefault
+        string style = ConEmuStyle.Value;
+        return style == ConEmuStyleDefault
             ? Application.IsDarkModeEnabled ? ConEmuStyleDark : ConEmuStyleLight
             : style;
     }

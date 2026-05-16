@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
@@ -149,7 +149,7 @@ partial class FileStatusList
 
     private void FindUsingOption_Click(object sender, EventArgs e)
     {
-        AppSettings.GitGrepUserArguments.Value = ((ToolStripMenuItem)sender).Text;
+        AppSettings.GitGrepUserArguments.Value = ((ToolStripMenuItem)sender).Text ?? "";
         FindInCommitFilesGitGrep();
     }
 

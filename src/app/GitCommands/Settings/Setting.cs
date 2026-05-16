@@ -5,9 +5,9 @@ namespace GitCommands.Settings;
 
 public static class Setting
 {
-    public static ISetting<string> Create(SettingsPath settingsSource, string name, string? defaultValue)
+    public static ISetting<string> Create(SettingsPath settingsSource, string name, string defaultValue)
     {
-        return new SettingOf<string>(settingsSource, name, defaultValue ?? string.Empty);
+        return new SettingOf<string>(settingsSource, name, defaultValue);
     }
 
     public static ISetting<T> Create<T>(SettingsPath settingsSource, string name, T defaultValue)
@@ -16,67 +16,31 @@ public static class Setting
         return new SettingOf<T>(settingsSource, name, defaultValue);
     }
 
-    public static ISetting<T?> Create<T>(SettingsPath settingsSource, string name)
+    public static ISetting<T> Create<T>(SettingsPath settingsSource, string name)
         where T : struct
     {
-        return new SettingOf<T?>(settingsSource, name);
+        return new SettingOf<T>(settingsSource, name, default);
     }
 
-    private sealed class SettingOf<T>(SettingsPath settingsSource, string name, T? defaultValue = default) : ISetting<T>
+    private sealed class SettingOf<T>(SettingsPath settingsSource, string name, T defaultValue) : ISetting<T>
     {
         public string Name { get; } = name;
 
-        public T? Default { get; } = defaultValue;
+        public T Default { get; } = defaultValue;
 
-        public T? Value
+        public T Value
         {
-            get
-            {
-                object? storedValue = GetValue(Name);
-
-                if (default(T) is null)
-                {
-                    if (Type.GetTypeCode(typeof(T)) != TypeCode.String)
-                    {
-                        return (T?)storedValue;
-                    }
-                }
-
-                if (storedValue is null)
-                {
-                    return Default;
-                }
-
-                return (T)storedValue;
-            }
+            get => GetValue(Name) is { } value ? (T)value : Default;
 
             set
             {
-                object? storedValue = GetValue(Name);
-
-                if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
+                object? valueToBeStored = value?.Equals(Default) is true ? null : value;
+                if (valueToBeStored == GetValue(Name))
                 {
-                    if (storedValue?.Equals((object?)value ?? string.Empty) ?? false)
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    if (storedValue?.Equals(value) ?? ((default(T) is null) && (value is null)))
-                    {
-                        return;
-                    }
+                    return;
                 }
 
-                if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
-                {
-                    SetValue(Name, (object?)value ?? string.Empty);
-                }
-                else
-                {
-                    SetValue(Name, value);
-                }
+                SetValue(Name, valueToBeStored);
             }
         }
 
