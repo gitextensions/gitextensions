@@ -152,4 +152,4 @@ jobs:
         name: Test Results
         path: '**/*.trx'
         reporter: dotnet-trx
-        max-annotations: 0
+        max-annotations: 50 // do not increase over the allowed maximum of 50
