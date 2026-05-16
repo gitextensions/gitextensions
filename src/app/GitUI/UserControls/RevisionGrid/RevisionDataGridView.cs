@@ -65,6 +65,7 @@ public sealed partial class RevisionDataGridView : DataGridView
     /// Force refresh the gridview, set when revision graph is changed while loading revisions.
     /// </summary>
     private bool _forceRefresh = false;
+    private bool _graphRedrawRequested = false;
 
     /// <summary>
     /// Indicates whether 'interesting' rows in the data grid is currently being loaded.
@@ -431,6 +432,7 @@ public sealed partial class RevisionDataGridView : DataGridView
         _updateVisibleRowRangeSequence.CancelCurrent();
         _backgroundScrollTo = -1;
         _forceRefresh = false;
+        _graphRedrawRequested = false;
         _visibleRowRange = new VisibleRowRange(fromIndex: 0, count: 0);
 
         // Set rowcount to 0 first, to ensure it is not possible to select or redraw, since we are about to delete the data
@@ -772,12 +774,14 @@ public sealed partial class RevisionDataGridView : DataGridView
         int visibleRowCount = DisplayedRowCount(includePartialRow: true);
         visibleRowCount = Math.Min(_revisionGraph.Count - fromIndex, visibleRowCount);
 
-        if (!_forceRefresh && _visibleRowRange.FromIndex == fromIndex && _visibleRowRange.Count == visibleRowCount)
+        bool forceOrRedraw = _forceRefresh || _graphRedrawRequested;
+        if (!forceOrRedraw && _visibleRowRange.FromIndex == fromIndex && _visibleRowRange.Count == visibleRowCount)
         {
             return;
         }
 
         _forceRefresh = false;
+        _graphRedrawRequested = false;
         VisibleRowRange visibleRowRange = new(fromIndex, visibleRowCount);
         _visibleRowRange = visibleRowRange;
 
@@ -847,7 +851,7 @@ public sealed partial class RevisionDataGridView : DataGridView
     /// </summary>
     internal void RequestGraphRedraw()
     {
-        _forceRefresh = true;
+        _graphRedrawRequested = true;
         _visibleRowRangeUpdater.ScheduleExecution();
     }
 

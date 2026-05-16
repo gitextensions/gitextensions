@@ -145,6 +145,61 @@ public class RevisionGraphColumnTests
         testAccessor.GraphCache.Count.Should().Be(1);
     }
 
+    [Test]
+    public void SetHoverHighlight_should_include_tip_and_ancestors_for_matching_branch_group()
+    {
+        const string tipId = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        const string parentId = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+        const string rootId = "cccccccccccccccccccccccccccccccccccccccc";
+        const string otherTipId = "dddddddddddddddddddddddddddddddddddddddd";
+
+        RevisionGraph revisionGraph = new();
+        revisionGraph.Add(CreateRevision(
+            tipId,
+            [parentId],
+            CreateBranchRef(localName: "main", isHead: true),
+            CreateBranchRef(localName: "main", isHead: false, isRemote: true)));
+        revisionGraph.Add(CreateRevision(otherTipId, [rootId], CreateBranchRef(localName: "feature", isHead: true)));
+        revisionGraph.Add(CreateRevision(parentId, [rootId]));
+        revisionGraph.Add(CreateRevision(rootId, []));
+
+        RevisionGraphColumnProvider.TestAccessor testAccessor = CreateProvider(revisionGraph);
+
+        testAccessor.SetHoverHighlight(new HashSet<string> { "main" });
+
+        testAccessor.HoverHighlightedIds.Should().NotBeNull();
+        testAccessor.HoverHighlightedIds.Should().BeEquivalentTo(
+        [
+            ObjectId.Parse(tipId),
+            ObjectId.Parse(parentId),
+            ObjectId.Parse(rootId),
+        ]);
+    }
+
+    [Test]
+    public void SetHoverHighlight_should_not_mark_cache_dirty_when_hover_selection_is_unchanged()
+    {
+        const string tipId = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
+        const string parentId = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
+
+        RevisionGraph revisionGraph = new();
+        revisionGraph.Add(CreateRevision(tipId, [parentId], CreateBranchRef(localName: "main", isHead: true)));
+        revisionGraph.Add(CreateRevision(parentId, []));
+
+        RevisionGraphColumnProvider.TestAccessor testAccessor = CreateProvider(revisionGraph);
+        VisibleRowRange range = new(fromIndex: 0, visibleRowCount: 2);
+        testAccessor.RenderGraphToCache(range, toRowIndex: 1, _rowHeight);
+
+        testAccessor.SetHoverHighlight(new HashSet<string> { "main" });
+        testAccessor.IsHoverHighlightDirty.Should().BeTrue();
+
+        testAccessor.RenderGraphToCache(range, toRowIndex: 1, _rowHeight);
+        testAccessor.IsHoverHighlightDirty.Should().BeFalse();
+
+        testAccessor.SetHoverHighlight(new HashSet<string> { "main" });
+        testAccessor.IsHoverHighlightDirty.Should().BeFalse();
+    }
+
     private static void Setup(int rowCount, out RevisionGraphColumnProvider.TestAccessor testAccessor)
         => Setup(rowCount, rowCount, out testAccessor);
 
@@ -174,5 +229,36 @@ public class RevisionGraphColumnTests
         testAccessor.GraphCache.Reset();
         testAccessor.GraphCache.Capacity.Should().Be(expectedCapacity);
         testAccessor.GraphCache.Count.Should().Be(0);
+    }
+
+    private static IGitRef CreateBranchRef(string localName, bool isHead, bool isRemote = false)
+    {
+        IGitRef gitRef = Substitute.For<IGitRef>();
+        gitRef.IsHead.Returns(isHead);
+        gitRef.IsRemote.Returns(isRemote);
+        gitRef.LocalName.Returns(localName);
+        return gitRef;
+    }
+
+    private static RevisionGraphColumnProvider.TestAccessor CreateProvider(RevisionGraph revisionGraph)
+    {
+        IGitRevisionSummaryBuilder gitRevisionSummaryBuilder = Substitute.For<IGitRevisionSummaryBuilder>();
+        RevisionGraphColumnProvider revisionGraphColumnProvider = new(revisionGraph, gitRevisionSummaryBuilder);
+        return revisionGraphColumnProvider.GetTestAccessor();
+    }
+
+    private static GitRevision CreateRevision(string id, IReadOnlyList<string> parentIds, params IGitRef[] refs)
+    {
+        List<ObjectId> parsedParentIds = [];
+        foreach (string parentId in parentIds)
+        {
+            parsedParentIds.Add(ObjectId.Parse(parentId));
+        }
+
+        return new GitRevision(ObjectId.Parse(id))
+        {
+            ParentIds = parsedParentIds,
+            Refs = refs,
+        };
     }
 }

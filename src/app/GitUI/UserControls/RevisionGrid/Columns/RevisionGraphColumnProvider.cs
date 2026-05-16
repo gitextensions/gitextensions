@@ -19,6 +19,9 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     private int _columnWidth = 0;
 
     private IReadOnlySet<ObjectId>? _hoverHighlightedIds;
+    private Dictionary<string, List<RevisionGraphRevision>>? _branchTipLookupByLocalName;
+    private int _branchTipLookupRevisionCount = -1;
+    private IReadOnlySet<string>? _hoverHighlightedBranchBaseNames;
     private volatile bool _hoverHighlightDirty;
 
     public RevisionGraphColumnProvider(RevisionGraph revisionGraph, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
@@ -222,6 +225,11 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     {
         _graphRenderCache.Reset();
         _graphDisplayCache.Reset();
+        _branchTipLookupByLocalName = null;
+        _branchTipLookupRevisionCount = -1;
+        _hoverHighlightedBranchBaseNames = null;
+        _hoverHighlightedIds = null;
+        _hoverHighlightDirty = true;
     }
 
     public void HighlightBranch(ObjectId id)
@@ -238,27 +246,53 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     {
         if (branchBaseNames is null)
         {
+            if (_hoverHighlightedBranchBaseNames is null && _hoverHighlightedIds is null)
+            {
+                return;
+            }
+
+            _hoverHighlightedBranchBaseNames = null;
             _hoverHighlightedIds = null;
             _hoverHighlightDirty = true;
             return;
         }
 
-        HashSet<ObjectId> ancestorIds = [];
-        foreach (RevisionGraphRevision revision in _revisionGraph.Revisions)
+        bool graphChanged = _branchTipLookupRevisionCount != _revisionGraph.Count;
+        if (!graphChanged
+            && _hoverHighlightedBranchBaseNames is not null
+            && _hoverHighlightedBranchBaseNames.SetEquals(branchBaseNames))
         {
-            if (revision.GitRevision?.Refs.Any(r => IsInBranchGroup(r, branchBaseNames)) is true)
+            return;
+        }
+
+        EnsureBranchTipLookup();
+
+        HashSet<RevisionGraphRevision> tipRevisions = [];
+        foreach (string branchBaseName in branchBaseNames)
+        {
+            if (_branchTipLookupByLocalName!.TryGetValue(branchBaseName, out List<RevisionGraphRevision>? matchingTips))
             {
-                WalkAncestors(revision, ancestorIds);
+                tipRevisions.UnionWith(matchingTips);
             }
         }
 
-        _hoverHighlightedIds = ancestorIds.Count > 0 ? ancestorIds : null;
+        HashSet<ObjectId> ancestorIds = [];
+        foreach (RevisionGraphRevision tip in tipRevisions)
+        {
+            WalkAncestors(tip, ancestorIds);
+        }
+
+        IReadOnlySet<ObjectId>? highlightedIds = ancestorIds.Count > 0 ? ancestorIds : null;
+        if (!graphChanged && HaveSameValues(_hoverHighlightedIds, highlightedIds))
+        {
+            return;
+        }
+
+        _hoverHighlightedBranchBaseNames = [.. branchBaseNames];
+        _hoverHighlightedIds = highlightedIds;
         _hoverHighlightDirty = true;
 
         return;
-
-        static bool IsInBranchGroup(IGitRef r, IReadOnlySet<string> baseNames)
-            => (r.IsHead || r.IsRemote) && baseNames.Contains(r.LocalName);
 
         static void WalkAncestors(RevisionGraphRevision revision, HashSet<ObjectId> result)
         {
@@ -277,6 +311,52 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
                     stack.Push(parent);
                 }
             }
+        }
+
+        void EnsureBranchTipLookup()
+        {
+            if (_branchTipLookupByLocalName is not null && _branchTipLookupRevisionCount == _revisionGraph.Count)
+            {
+                return;
+            }
+
+            _branchTipLookupRevisionCount = _revisionGraph.Count;
+            _branchTipLookupByLocalName = new(StringComparer.Ordinal);
+            foreach (RevisionGraphRevision revision in _revisionGraph.GetRevisions())
+            {
+                IReadOnlyList<IGitRef>? refs = revision.GitRevision?.Refs;
+                if (refs is null || refs.Count == 0)
+                {
+                    continue;
+                }
+
+                foreach (IGitRef gitRef in refs)
+                {
+                    if (!gitRef.IsHead && !gitRef.IsRemote)
+                    {
+                        continue;
+                    }
+
+                    string localName = gitRef.LocalName;
+                    if (!_branchTipLookupByLocalName.TryGetValue(localName, out List<RevisionGraphRevision>? revisions))
+                    {
+                        revisions = [];
+                        _branchTipLookupByLocalName.Add(localName, revisions);
+                    }
+
+                    revisions.Add(revision);
+                }
+            }
+        }
+
+        static bool HaveSameValues(IReadOnlySet<ObjectId>? left, IReadOnlySet<ObjectId>? right)
+        {
+            if (left is null || right is null)
+            {
+                return left is null && right is null;
+            }
+
+            return left.SetEquals(right);
         }
     }
 
@@ -314,10 +394,17 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
         internal GraphCache GraphCache => RevisionGraphColumnProvider._graphRenderCache;
 
+        internal IReadOnlySet<ObjectId>? HoverHighlightedIds => RevisionGraphColumnProvider._hoverHighlightedIds;
+
+        internal bool IsHoverHighlightDirty => RevisionGraphColumnProvider._hoverHighlightDirty;
+
         internal void RenderGraphToCache(VisibleRowRange range, int toRowIndex, int rowHeight)
             => RevisionGraphColumnProvider.RenderGraphToCache(range, toRowIndex, rowHeight);
 
         internal void RenderRowToCache(int rowIndex, int rowHeight)
             => RevisionGraphColumnProvider.RenderRowToCache(rowIndex, rowHeight);
+
+        internal void SetHoverHighlight(IReadOnlySet<string>? branchBaseNames)
+            => RevisionGraphColumnProvider.SetHoverHighlight(branchBaseNames);
     }
 }
