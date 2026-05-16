@@ -6,6 +6,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.SettingsDialog.ShellExtension;
+using GitUI.Theming;
 using Microsoft;
 using ResourceManager;
 
@@ -584,7 +585,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
     /// </summary>
     private static void RenderSettingSet(Button settingButton, Button settingFixButton, string text)
     {
-        settingButton.BackColor = OtherColors.BrightGreen;
+        settingButton.BackColor = AppColor.ChecklistSettingsPageSettingSetBackground.GetThemeColor();
         settingButton.SetForeColorForBackColor();
         settingButton.Text = text;
         settingFixButton.Visible = false;
@@ -595,7 +596,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
     /// </summary>
     private static void RenderSettingUnset(Button settingButton, Button settingFixButton, string text)
     {
-        settingButton.BackColor = OtherColors.BrightRed;
+        settingButton.BackColor = AppColor.ChecklistSettingsPageSettingUnsetBackground.GetThemeColor();
         settingButton.SetForeColorForBackColor();
         settingButton.Text = text;
         settingFixButton.Visible = true;
@@ -603,7 +604,7 @@ public partial class ChecklistSettingsPage : SettingsPageWithHeader
 
     private static void RenderSettingNotRecommended(Button settingButton, Button settingFixButton, string text)
     {
-        settingButton.BackColor = OtherColors.BrightYellow;
+        settingButton.BackColor = AppColor.ChecklistSettingsPageSettingNotRecommendedBackground.GetThemeColor();
         settingButton.SetForeColorForBackColor();
         settingButton.Text = text;
         settingFixButton.Visible = true;

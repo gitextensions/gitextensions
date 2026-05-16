@@ -47,6 +47,12 @@ public partial class CommitInfoHeader : GitModuleControl
             .Subscribe(eventPattern => TaskManager.HandleExceptions(() => rtbRevisionHeader_ContentsResized(eventPattern.EventArgs), Application.OnThreadException));
     }
 
+    protected override void OnBackColorChanged(EventArgs e)
+    {
+        base.OnBackColorChanged(e);
+        rtbRevisionHeader.BackColor = BackColor;
+    }
+
     public void SetContextMenuStrip(ContextMenuStrip contextMenuStrip)
     {
         rtbRevisionHeader.ContextMenuStrip = contextMenuStrip;

@@ -1,0 +1,32 @@
+/* See (App install)\Themes\README.md for instructions on how to create or modify a theme */
+
+@import url("dark.css");
+
+/* Application colors */
+/* PanelBackground sets Windows Dark mode */
+.PanelBackground { color: #252526; }
+.EditorBackground { color: #252526; }
+.LineNumberBackground { color: #252526; }
+.AuthoredHighlight { color: #1f1f1f; }
+.Selection { color: #37373d; }
+.HighlightAllOccurences { color: #515c6a; }
+.InactiveSelectionHighlight { color: #2d2d30; }
+
+.Branch { color: #8ab878; }
+.RemoteBranch { color: #c96767; }
+.Tag { color: #8ab878; }
+.OtherTag { color: #7b7b7b; }
+.DiffSection { color: #5f5e5e; }
+
+.CommitInfoMessageBackground { color: #252526; }
+.CommitInfoBorderBackground { color: #252526; }
+.CommitInfoHeaderBackground { color: #252526; }
+.CommitInfoRevisionBackground { color: #252526; }
+
+
+.FormResetCurrentBranchSoftBackground { color: #0f9d58; }
+.FormResetCurrentBranchMixedBackground { color: #fdd835; }
+.FormResetCurrentBranchHardBackground { color: #db4437; }
+.ChecklistSettingsPageSettingSetBackground { color: #0f9d58; }
+.ChecklistSettingsPageSettingUnsetBackground { color: #db4437; }
+.ChecklistSettingsPageSettingNotRecommendedBackground { color: #fdd835; }

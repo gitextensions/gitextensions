@@ -16,6 +16,20 @@ public enum AppColor
     Selection,
     HighlightAllOccurences,
     InactiveSelectionHighlight,
+
+    CommitInfoMessageBackground,
+    CommitInfoBorderBackground,
+    CommitInfoHeaderBackground,
+    CommitInfoRevisionBackground,
+
+
+    FormResetCurrentBranchSoftBackground,
+    FormResetCurrentBranchMixedBackground,
+    FormResetCurrentBranchHardBackground,
+    ChecklistSettingsPageSettingSetBackground,
+    ChecklistSettingsPageSettingUnsetBackground,
+    ChecklistSettingsPageSettingNotRecommendedBackground,
+
     GraphBranch1,
     GraphBranch2,
     GraphBranch3,
@@ -23,13 +37,15 @@ public enum AppColor
     GraphBranch5,
     GraphBranch6,
     GraphBranch7,
-    GraphBranch8,
+    GraphBranch8, // Kept for backward compatibility with existing theme files.
     GraphNonRelativeBranch,
+
     Branch,
     RemoteBranch,
     Tag,
     OtherTag,
     DiffSection,
+
     AnsiTerminalBlackForeNormal,
     AnsiTerminalBlackBackNormal,
     AnsiTerminalBlackForeBold,

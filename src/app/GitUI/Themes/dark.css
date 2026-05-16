@@ -48,6 +48,19 @@ WindowText: fff0f0f0
 .HighlightAllOccurences { color: #1d4897; }
 .InactiveSelectionHighlight { color: #436689; }
 
+.CommitInfoMessageBackground { color: #272727; }
+.CommitInfoBorderBackground { color: #323232; }
+.CommitInfoHeaderBackground { color: #323232; }
+.CommitInfoRevisionBackground { color: #323232; }
+
+
+.FormResetCurrentBranchSoftBackground { color: #63be63; }
+.FormResetCurrentBranchMixedBackground { color: #bebe63; }
+.FormResetCurrentBranchHardBackground { color: #be6363; }
+.ChecklistSettingsPageSettingSetBackground { color: #63be63; }
+.ChecklistSettingsPageSettingUnsetBackground { color: #be6363; }
+.ChecklistSettingsPageSettingNotRecommendedBackground { color: #bebe63; }
+
 .GraphBranch1 { color: #db5b93; }
 .GraphBranch2 { color: #6fa7d4; }
 .GraphBranch3 { color: #1da31b; }

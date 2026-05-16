@@ -11,4 +11,11 @@
 .HighlightAllOccurences { color: #173440; }
 .InactiveSelectionHighlight { color: #1e3d4b; }
 
+.FormResetCurrentBranchSoftBackground { color: #5ebc5e; }
+.FormResetCurrentBranchMixedBackground { color: #bcbc5e; }
+.FormResetCurrentBranchHardBackground { color: #bc5e5e; }
+.ChecklistSettingsPageSettingSetBackground { color: #5ebc5e; }
+.ChecklistSettingsPageSettingUnsetBackground { color: #bc5e5e; }
+.ChecklistSettingsPageSettingNotRecommendedBackground { color: #bcbc5e; }
+
 .Branch { color: #00d76b; }

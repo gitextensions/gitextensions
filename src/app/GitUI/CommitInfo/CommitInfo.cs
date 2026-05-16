@@ -15,6 +15,7 @@ using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs;
 using GitUI.Editor.RichTextBoxExtension;
+using GitUI.Theming;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
 using Microsoft;
@@ -104,9 +105,13 @@ public partial class CommitInfo : GitModuleControl
         _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
         _gitDescribeProvider = new GitDescribeProvider(() => Module);
 
-        Color messageBackground = SystemColors.Window.MakeDarkerBy(0.04);
+        Color messageBackground = AppColor.CommitInfoMessageBackground.GetThemeColor();
         pnlCommitMessage.BackColor = messageBackground;
         rtbxCommitMessage.BackColor = messageBackground;
+
+        tableLayout.BackColor = AppColor.CommitInfoBorderBackground.GetThemeColor();
+        commitInfoHeader.BackColor = AppColor.CommitInfoHeaderBackground.GetThemeColor();
+        RevisionInfo.BackColor = AppColor.CommitInfoRevisionBackground.GetThemeColor();
 
         rtbxCommitMessage.Font = AppSettings.CommitFont;
         RevisionInfo.Font = AppSettings.Font;
