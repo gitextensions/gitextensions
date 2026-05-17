@@ -154,10 +154,11 @@ public class RevisionGraphColumnTests
         const string otherTipId = "dddddddddddddddddddddddddddddddddddddddd";
 
         RevisionGraph revisionGraph = new();
+        IGitRef main = CreateBranchRef(localName: "main", isHead: true);
         revisionGraph.Add(CreateRevision(
             tipId,
             [parentId],
-            CreateBranchRef(localName: "main", isHead: true),
+            main,
             CreateBranchRef(localName: "main", isHead: false, isRemote: true)));
         revisionGraph.Add(CreateRevision(otherTipId, [rootId], CreateBranchRef(localName: "feature", isHead: true)));
         revisionGraph.Add(CreateRevision(parentId, [rootId]));
@@ -165,7 +166,7 @@ public class RevisionGraphColumnTests
 
         RevisionGraphColumnProvider.TestAccessor testAccessor = CreateProvider(revisionGraph);
 
-        testAccessor.SetHoverHighlight(new HashSet<string> { "main" });
+        testAccessor.SetHoverHighlight(main);
 
         testAccessor.HoverHighlightedIds.Should().NotBeNull();
         testAccessor.HoverHighlightedIds.Should().BeEquivalentTo(
@@ -183,20 +184,21 @@ public class RevisionGraphColumnTests
         const string parentId = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
 
         RevisionGraph revisionGraph = new();
-        revisionGraph.Add(CreateRevision(tipId, [parentId], CreateBranchRef(localName: "main", isHead: true)));
+        IGitRef main = CreateBranchRef(localName: "main", isHead: true);
+        revisionGraph.Add(CreateRevision(tipId, [parentId], main));
         revisionGraph.Add(CreateRevision(parentId, []));
 
         RevisionGraphColumnProvider.TestAccessor testAccessor = CreateProvider(revisionGraph);
-        VisibleRowRange range = new(fromIndex: 0, visibleRowCount: 2);
+        VisibleRowRange range = new(fromIndex: 0, count: 2);
         testAccessor.RenderGraphToCache(range, toRowIndex: 1, _rowHeight);
 
-        testAccessor.SetHoverHighlight(new HashSet<string> { "main" });
+        testAccessor.SetHoverHighlight(main);
         testAccessor.IsHoverHighlightDirty.Should().BeTrue();
 
         testAccessor.RenderGraphToCache(range, toRowIndex: 1, _rowHeight);
         testAccessor.IsHoverHighlightDirty.Should().BeFalse();
 
-        testAccessor.SetHoverHighlight(new HashSet<string> { "main" });
+        testAccessor.SetHoverHighlight(main);
         testAccessor.IsHoverHighlightDirty.Should().BeFalse();
     }
 

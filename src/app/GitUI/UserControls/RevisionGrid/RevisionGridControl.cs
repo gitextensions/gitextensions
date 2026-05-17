@@ -1946,21 +1946,10 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void UpdateLaneHighlight(IGitRef? gitRef)
     {
-        IReadOnlySet<string>? branchBaseNames = GetBranchGroupBaseNames(gitRef);
-        _revisionGraphColumnProvider.SetHoverHighlight(branchBaseNames);
+        _revisionGraphColumnProvider.SetHoverHighlight(gitRef);
         _gridView.RequestGraphRedraw();
 
         return;
-
-        static IReadOnlySet<string>? GetBranchGroupBaseNames(IGitRef? gitRef)
-        {
-            if (gitRef is null || (!gitRef.IsHead && !gitRef.IsRemote))
-            {
-                return null;
-            }
-
-            return new HashSet<string> { gitRef.LocalName };
-        }
     }
 
     private void OnGridViewCellMouseDown(object? sender, DataGridViewCellMouseEventArgs e)
