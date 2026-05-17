@@ -239,8 +239,8 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
     /// <summary>
     ///  Updates the hover highlight to show only the ancestry of branches whose local name is in
-    ///  <paramref name="branchBaseNames"/>. All lanes outside this set are dimmed. Pass
-    ///  <see langword="null"/> to clear hover highlighting.
+    ///  <paramref name="branchBaseNames"/>. All lanes outside this set are gray.
+    ///  Pass <see langword="null"/> to clear hover highlighting.
     /// </summary>
     public void SetHoverHighlight(IReadOnlySet<string>? branchBaseNames)
     {
@@ -259,8 +259,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
         bool graphChanged = _branchTipLookupRevisionCount != _revisionGraph.Count;
         if (!graphChanged
-            && _hoverHighlightedBranchBaseNames is not null
-            && _hoverHighlightedBranchBaseNames.SetEquals(branchBaseNames))
+            && _hoverHighlightedBranchBaseNames?.SetEquals(branchBaseNames) is true)
         {
             return;
         }
@@ -288,7 +287,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
             return;
         }
 
-        _hoverHighlightedBranchBaseNames = [.. branchBaseNames];
+        _hoverHighlightedBranchBaseNames = new HashSet<string>(branchBaseNames, StringComparer.Ordinal);
         _hoverHighlightedIds = highlightedIds;
         _hoverHighlightDirty = true;
 

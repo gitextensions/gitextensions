@@ -359,7 +359,7 @@ internal static class GraphRenderer
             return RevisionGraphLaneColor.NonRelativeBrush;
         }
 
-        // Hover highlighting takes full priority: dim non-highlighted items, show highlighted ones in their lane color.
+        // Hover highlighting takes full priority: show highlighted ones in their lane color, gray others.
         if (isHoverHighlighted is false)
         {
             return RevisionGraphLaneColor.NonRelativeBrush;
