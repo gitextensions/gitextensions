@@ -18,10 +18,15 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
     private int _columnWidth = 0;
 
+    private const int HighlightCacheCapacity = 4;
+
+    private readonly record struct HighlightCacheEntry(IGitRef GitRef, int RowIndex, VisibleRowRange VisibleRange, int RevisionCount, IReadOnlySet<ObjectId>? HighlightedIds);
+
     private IReadOnlySet<ObjectId>? _hoverHighlightedIds;
-    private int _branchTipLookupRevisionCount = -1;
-    private IGitRef? _hoverHighlightedGitRef;
     private volatile bool _hoverHighlightDirty;
+    private VisibleRowRange _lastVisibleRange;
+    private readonly HighlightCacheEntry[] _highlightCache = new HighlightCacheEntry[HighlightCacheCapacity];
+    private int _highlightCacheNext;
 
     public RevisionGraphColumnProvider(RevisionGraph revisionGraph, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
         : base("Graph")
@@ -118,6 +123,8 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
     private void RenderGraphToCache(VisibleRowRange range, int toRowIndex, int rowHeight)
     {
+        _lastVisibleRange = range;
+
         int width = CalculateGraphColumnWidth(range);
         if (_columnWidth != width)
         {
@@ -224,8 +231,8 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     {
         _graphRenderCache.Reset();
         _graphDisplayCache.Reset();
-        _branchTipLookupRevisionCount = -1;
-        _hoverHighlightedGitRef = null;
+        Array.Clear(_highlightCache);
+        _highlightCacheNext = 0;
         _hoverHighlightedIds = null;
         _hoverHighlightDirty = true;
     }
@@ -240,45 +247,95 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     ///  <paramref name="gitRef"/> and tracked remote or the tracking local.
     ///  Set <see langword="null"/> to clear hover highlighting.
     /// </summary>
-    public void SetHoverHighlight(IGitRef? gitRef)
+    /// <param name="gitRef">The ref to highlight, or <see langword="null"/> to clear.</param>
+    /// <param name="rowIndex">
+    ///  The row index of the hovered ref label, limits the search to the visible range.
+    /// </param>
+    public void SetHoverHighlight(IGitRef? gitRef, int rowIndex = -1)
     {
-        if (gitRef is null)
+        if (gitRef is null || rowIndex < 0)
         {
-            if (_hoverHighlightedGitRef is null && _hoverHighlightedIds is null)
+            if (_hoverHighlightedIds is null)
             {
                 return;
             }
 
-            _hoverHighlightedGitRef = null;
             _hoverHighlightedIds = null;
             _hoverHighlightDirty = true;
             return;
         }
 
-        bool graphChanged = _branchTipLookupRevisionCount != _revisionGraph.Count;
-        if (!graphChanged
-            && _hoverHighlightedGitRef == gitRef)
+        int revisionCount = _revisionGraph.Count;
+
+        // Check the small ring-buffer cache before recomputing.
+        // This intended to cover moving the mousepointer around in the graph.
+        for (int i = 0; i < HighlightCacheCapacity; i++)
         {
-            return;
+            ref readonly HighlightCacheEntry entry = ref _highlightCache[i];
+            if (entry.GitRef == gitRef && entry.RowIndex == rowIndex && entry.VisibleRange == _lastVisibleRange && entry.RevisionCount == revisionCount)
+            {
+                if (HaveSameValues(_hoverHighlightedIds, entry.HighlightedIds))
+                {
+                    return;
+                }
+
+                _hoverHighlightedIds = entry.HighlightedIds;
+                _hoverHighlightDirty = true;
+                return;
+            }
         }
 
+        bool checkOtherRef = gitRef.IsRemote || (gitRef.IsHead && gitRef.TrackingRemote is not null);
         HashSet<ObjectId> ancestorIds = [];
-        foreach (RevisionGraphRevision revision in _revisionGraph.GetRevisions())
+
+        // Build the set of currently visible ObjectIds — only these need to be in the result.
+        // Start search for the tracked/tracking branch (if needed) a few indexes above.
+        int searchFrom = Math.Max(0, _lastVisibleRange.FromIndex - (checkOtherRef ? _lastVisibleRange.Count : 0));
+        int visibleTo = _lastVisibleRange.FromIndex + _lastVisibleRange.Count - 1;
+        HashSet<ObjectId> visibleIds = new(capacity: _lastVisibleRange.Count);
+        for (int row = _lastVisibleRange.FromIndex; row <= visibleTo; row++)
         {
-            if (revision.GitRevision?.Refs.Any(r => r == gitRef || IsInBranchGroup(r, gitRef)) is true)
+            RevisionGraphRevision? rev = _revisionGraph.GetNodeForRow(row);
+            if (rev is not null)
             {
-                WalkAncestors(revision, ancestorIds);
+                visibleIds.Add(rev.Objectid);
+            }
+        }
+
+        // The hovered ref is on a known row; start ancestor walk there directly.
+        RevisionGraphRevision? hoveredRevision = _revisionGraph.GetNodeForRow(rowIndex);
+        if (hoveredRevision?.GitRevision?.Refs.Any(r => r == gitRef) is true)
+        {
+            WalkAncestors(hoveredRevision, ancestorIds, visibleIds);
+        }
+
+        if (checkOtherRef)
+        {
+            for (int row = searchFrom; row <= visibleTo; row++)
+            {
+                RevisionGraphRevision? rev = _revisionGraph.GetNodeForRow(row);
+                if (rev?.GitRevision?.Refs.Any(r => IsInBranchGroup(r, gitRef)) is true)
+                {
+                    if (row != rowIndex)
+                    {
+                        WalkAncestors(rev, ancestorIds, visibleIds);
+                    }
+
+                    break;
+                }
             }
         }
 
         IReadOnlySet<ObjectId>? highlightedIds = ancestorIds.Count > 0 ? ancestorIds : null;
-        if (!graphChanged && HaveSameValues(_hoverHighlightedIds, highlightedIds))
+
+        _highlightCache[_highlightCacheNext] = new HighlightCacheEntry(gitRef, rowIndex, _lastVisibleRange, revisionCount, highlightedIds);
+        _highlightCacheNext = (_highlightCacheNext + 1) % HighlightCacheCapacity;
+
+        if (HaveSameValues(_hoverHighlightedIds, highlightedIds))
         {
             return;
         }
 
-        _branchTipLookupRevisionCount = _revisionGraph.Count;
-        _hoverHighlightedGitRef = gitRef;
         _hoverHighlightedIds = highlightedIds;
         _hoverHighlightDirty = true;
 
@@ -288,16 +345,24 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
             => (gitRef.IsHead && r.IsRemote && gitRef.IsTrackingRemote(r))
             || (gitRef.IsRemote && r.IsHead && r.IsTrackingRemote(gitRef));
 
-        static void WalkAncestors(RevisionGraphRevision revision, HashSet<ObjectId> result)
+        static void WalkAncestors(RevisionGraphRevision revision, HashSet<ObjectId> result, IReadOnlySet<ObjectId> visibleIds)
         {
             Stack<RevisionGraphRevision> stack = new();
+            HashSet<ObjectId> visited = [];
             stack.Push(revision);
             while (stack.Count > 0)
             {
                 RevisionGraphRevision current = stack.Pop();
-                if (!result.Add(current.Objectid))
+                if (!visited.Add(current.Objectid) || result.Contains(current.Objectid))
                 {
                     continue;
+                }
+
+                // Only include revisions that are currently visible; non-visible rows are never
+                // rendered during this scroll position so storing them would waste memory.
+                if (visibleIds.Contains(current.Objectid))
+                {
+                    result.Add(current.Objectid);
                 }
 
                 foreach (RevisionGraphRevision parent in current.Parents)
@@ -362,7 +427,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         internal void RenderRowToCache(int rowIndex, int rowHeight)
             => RevisionGraphColumnProvider.RenderRowToCache(rowIndex, rowHeight);
 
-        internal void SetHoverHighlight(IGitRef gitRef)
-            => RevisionGraphColumnProvider.SetHoverHighlight(gitRef);
+        internal void SetHoverHighlight(IGitRef gitRef, int rowIndex = -1)
+            => RevisionGraphColumnProvider.SetHoverHighlight(gitRef, rowIndex);
     }
 }

@@ -1916,7 +1916,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         if (_messageColumnProvider.SetHighlight(e.RowIndex, hitInfo))
         {
             _gridView.InvalidateRow(e.RowIndex);
-            UpdateLaneHighlight(hitInfo?.GitRef);
+            UpdateLaneHighlight(hitInfo?.GitRef, e.RowIndex);
         }
 
         _gridView.Cursor = hitInfo is not null ? Cursors.Hand : Cursors.Default;
@@ -1944,12 +1944,10 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    private void UpdateLaneHighlight(IGitRef? gitRef)
+    private void UpdateLaneHighlight(IGitRef? gitRef, int rowIndex = -1)
     {
-        _revisionGraphColumnProvider.SetHoverHighlight(gitRef);
+        _revisionGraphColumnProvider.SetHoverHighlight(gitRef, rowIndex);
         _gridView.RequestGraphRedraw();
-
-        return;
     }
 
     private void OnGridViewCellMouseDown(object? sender, DataGridViewCellMouseEventArgs e)
