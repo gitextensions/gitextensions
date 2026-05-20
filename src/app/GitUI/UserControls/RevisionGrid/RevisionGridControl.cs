@@ -369,7 +369,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             //// _refFilterOptions not disposable
             //// _lastVisibleResizableColumn not owned
             //// _maximizedColumn not owned
-            //// _revisionGraphColumnProvider not disposable
+            _revisionGraphColumnProvider.Dispose();
             //// _selectionTimer handled by this.components
             _buildServerWatcher?.Dispose();
             _customDiffToolsSequence.Dispose();
@@ -1946,8 +1946,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void UpdateLaneHighlight(IGitRef? gitRef, int rowIndex = -1)
     {
-        _revisionGraphColumnProvider.SetHoverHighlight(gitRef, rowIndex);
-        _gridView.RequestGraphRedraw();
+        _revisionGraphColumnProvider.SetHoverHighlightAsync(gitRef, rowIndex)
+            .ContinueWith(_ => _gridView.RequestGraphRedraw(), CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext())
+            .FileAndForget();
     }
 
     private void OnGridViewCellMouseDown(object? sender, DataGridViewCellMouseEventArgs e)

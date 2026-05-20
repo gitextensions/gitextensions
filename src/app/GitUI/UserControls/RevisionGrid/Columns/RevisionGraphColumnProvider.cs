@@ -9,7 +9,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.UserControls.RevisionGrid.Columns;
 
-internal sealed class RevisionGraphColumnProvider : ColumnProvider
+internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
 {
     private readonly LaneInfoProvider _laneInfoProvider;
     private readonly RevisionGraph _revisionGraph;
@@ -19,6 +19,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     private int _columnWidth = 0;
 
     private const int HighlightCacheCapacity = 4;
+    private const int HoverHighlightDebounceMs = 100;
 
     private readonly record struct HighlightCacheEntry(IGitRef GitRef, int RowIndex, VisibleRowRange VisibleRange, int RevisionCount, IReadOnlySet<ObjectId>? HighlightedIds);
 
@@ -27,6 +28,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     private VisibleRowRange _lastVisibleRange;
     private readonly HighlightCacheEntry[] _highlightCache = new HighlightCacheEntry[HighlightCacheCapacity];
     private int _highlightCacheNext;
+    private readonly CancellationTokenSequence _hoverHighlightSequence = new();
 
     public RevisionGraphColumnProvider(RevisionGraph revisionGraph, IGitRevisionSummaryBuilder gitRevisionSummaryBuilder)
         : base("Graph")
@@ -245,13 +247,31 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
     /// <summary>
     ///  Updates the hover highlight to show only the ancestry of the
     ///  <paramref name="gitRef"/> and tracked remote or the tracking local.
+    ///  Debounces by <see cref="HoverHighlightDebounceMs"/> ms before computing,
+    ///  cancelling any prior pending computation when called again.
     ///  Set <see langword="null"/> to clear hover highlighting.
     /// </summary>
     /// <param name="gitRef">The ref to highlight, or <see langword="null"/> to clear.</param>
     /// <param name="rowIndex">
     ///  The row index of the hovered ref label, limits the search to the visible range.
     /// </param>
-    public void SetHoverHighlight(IGitRef? gitRef, int rowIndex = -1)
+    public async Task SetHoverHighlightAsync(IGitRef? gitRef, int rowIndex = -1)
+    {
+        CancellationToken cancellationToken = _hoverHighlightSequence.Next();
+
+        try
+        {
+            await Task.Delay(HoverHighlightDebounceMs, cancellationToken);
+        }
+        catch (OperationCanceledException)
+        {
+            return;
+        }
+
+        ComputeHoverHighlight(gitRef, rowIndex, cancellationToken);
+    }
+
+    private void ComputeHoverHighlight(IGitRef? gitRef, int rowIndex, CancellationToken cancellationToken)
     {
         if (gitRef is null || rowIndex < 0)
         {
@@ -262,6 +282,11 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
             _hoverHighlightedIds = null;
             _hoverHighlightDirty = true;
+            return;
+        }
+
+        if (cancellationToken.IsCancellationRequested)
+        {
             return;
         }
 
@@ -279,6 +304,11 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
                     return;
                 }
 
+                if (cancellationToken.IsCancellationRequested)
+                {
+                    return;
+                }
+
                 _hoverHighlightedIds = entry.HighlightedIds;
                 _hoverHighlightDirty = true;
                 return;
@@ -290,10 +320,11 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
         // Build the set of currently visible ObjectIds — only these need to be in the result.
         // Start search for the tracked/tracking branch (if needed) a few indexes above.
-        int searchFrom = Math.Max(0, _lastVisibleRange.FromIndex - (checkOtherRef ? _lastVisibleRange.Count : 0));
+        // For the visible, also add the id prior to the first visible, as a lane may
+        int searchFrom = Math.Max(0, _lastVisibleRange.FromIndex - (checkOtherRef ? Math.Max(50, _lastVisibleRange.Count) : 0));
         int visibleTo = _lastVisibleRange.FromIndex + _lastVisibleRange.Count - 1;
-        HashSet<ObjectId> visibleIds = new(capacity: _lastVisibleRange.Count);
-        for (int row = _lastVisibleRange.FromIndex; row <= visibleTo; row++)
+        HashSet<ObjectId> visibleIds = new(capacity: 1 + _lastVisibleRange.Count);
+        for (int row = _lastVisibleRange.FromIndex - 1; row <= visibleTo; row++)
         {
             RevisionGraphRevision? rev = _revisionGraph.GetNodeForRow(row);
             if (rev is not null)
@@ -307,20 +338,28 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         if (hoveredRevision?.GitRevision?.Refs.Any(r => r == gitRef) is true)
         {
             WalkAncestors(hoveredRevision, ancestorIds, visibleIds);
+            checkOtherRef = checkOtherRef && hoveredRevision.GitRevision?.Refs.Any(r => IsInBranchGroup(r, gitRef)) is not true;
         }
 
         if (checkOtherRef)
         {
-            for (int row = searchFrom; row <= visibleTo; row++)
+            // Search down from rowIndex first, then up before rowIndex for locality of reference
+            for (int row = rowIndex + 1; row <= visibleTo; row++)
             {
-                RevisionGraphRevision? rev = _revisionGraph.GetNodeForRow(row);
-                if (rev?.GitRevision?.Refs.Any(r => IsInBranchGroup(r, gitRef)) is true)
+                if (TryMatchRef(row))
                 {
-                    if (row != rowIndex)
-                    {
-                        WalkAncestors(rev, ancestorIds, visibleIds);
-                    }
+                    checkOtherRef = false;
+                    break;
+                }
+            }
+        }
 
+        if (checkOtherRef)
+        {
+            for (int row = rowIndex - 1; row >= searchFrom; row--)
+            {
+                if (TryMatchRef(row))
+                {
                     break;
                 }
             }
@@ -332,6 +371,11 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         _highlightCacheNext = (_highlightCacheNext + 1) % HighlightCacheCapacity;
 
         if (HaveSameValues(_hoverHighlightedIds, highlightedIds))
+        {
+            return;
+        }
+
+        if (cancellationToken.IsCancellationRequested)
         {
             return;
         }
@@ -381,6 +425,22 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
 
             return left.SetEquals(right);
         }
+
+        bool TryMatchRef(int row)
+        {
+            RevisionGraphRevision? rev = _revisionGraph.GetNodeForRow(row);
+            if (rev?.GitRevision?.Refs.Any(r => IsInBranchGroup(r, gitRef)) is true)
+            {
+                if (row != rowIndex)
+                {
+                    WalkAncestors(rev, ancestorIds, visibleIds);
+                }
+
+                return true;
+            }
+
+            return false;
+        }
     }
 
     private int CalculateGraphColumnWidth(in VisibleRowRange range)
@@ -403,6 +463,8 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         toolTip = default;
         return false;
     }
+
+    public void Dispose() => _hoverHighlightSequence.Dispose();
 
     internal TestAccessor GetTestAccessor() => new(this);
 
@@ -427,7 +489,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         internal void RenderRowToCache(int rowIndex, int rowHeight)
             => RevisionGraphColumnProvider.RenderRowToCache(rowIndex, rowHeight);
 
-        internal void SetHoverHighlight(IGitRef gitRef, int rowIndex = -1)
-            => RevisionGraphColumnProvider.SetHoverHighlight(gitRef, rowIndex);
+        internal void SetHoverHighlight(IGitRef? gitRef, int rowIndex = -1)
+            => RevisionGraphColumnProvider.ComputeHoverHighlight(gitRef, rowIndex, CancellationToken.None);
     }
 }
