@@ -258,16 +258,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
     public async Task SetHoverHighlightAsync(IGitRef? gitRef, int rowIndex = -1)
     {
         CancellationToken cancellationToken = _hoverHighlightSequence.Next();
-
-        try
-        {
-            await Task.Delay(HoverHighlightDebounceMs, cancellationToken);
-        }
-        catch (OperationCanceledException)
-        {
-            return;
-        }
-
+        await Task.Delay(HoverHighlightDebounceMs, cancellationToken);
         ComputeHoverHighlight(gitRef, rowIndex, cancellationToken);
     }
 

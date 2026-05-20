@@ -1946,9 +1946,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void UpdateLaneHighlight(IGitRef? gitRef, int rowIndex = -1)
     {
-        _revisionGraphColumnProvider.SetHoverHighlightAsync(gitRef, rowIndex)
-            .ContinueWith(_ => _gridView.RequestGraphRedraw(), CancellationToken.None, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.FromCurrentSynchronizationContext())
-            .FileAndForget();
+        this.InvokeAndForget(async () =>
+        {
+            await _revisionGraphColumnProvider.SetHoverHighlightAsync(gitRef, rowIndex);
+            _gridView.RequestGraphRedraw();
+        });
     }
 
     private void OnGridViewCellMouseDown(object? sender, DataGridViewCellMouseEventArgs e)
