@@ -311,6 +311,9 @@
       <Component Id="Themes.dark.css" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Themes\dark.css" />
       </Component>
+      <Component Id="Themes.dark_alt.css" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Themes\dark-alt.css" />
+      </Component>
       <Component Id="Themes.dark_plus.css" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Themes\dark+.css" />
       </Component>
@@ -592,6 +595,7 @@
       <ComponentRef Id="Themes.invariant.css" />
       <ComponentRef Id="Themes.light_plus.css" />
       <ComponentRef Id="Themes.dark.css" />
+      <ComponentRef Id="Themes.dark_alt.css" />
       <ComponentRef Id="Themes.dark_plus.css" />
     </ComponentGroup>
     <ComponentGroup Id="Component.Translation">
