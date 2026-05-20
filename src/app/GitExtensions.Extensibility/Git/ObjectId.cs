@@ -80,8 +80,8 @@ public readonly struct ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>, I
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         get
         {
-            ref uint start = ref Unsafe.As<Sha1, uint>(ref Unsafe.AsRef(in _data));
-            uint last4Bytes = Unsafe.Add(ref start, 4);
+            ref byte start = ref Unsafe.As<Sha1, byte>(ref Unsafe.AsRef(in _data));
+            uint last4Bytes = Unsafe.ReadUnaligned<uint>(ref Unsafe.Add(ref start, 16));
 
             // Artificial IDs are 0x11, 0x22, or 0x33 repeated across all 20 bytes.
             // The last-uint check eliminates real hashes before the SIMD comparison for the first 16 bytes.
@@ -91,7 +91,8 @@ public readonly struct ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>, I
             }
 
             Vector128<uint> splat = Vector128.Create(last4Bytes);
-            return Vector128.LoadUnsafe(ref start) == splat;
+            ref uint startAsUint = ref Unsafe.As<byte, uint>(ref start);
+            return Vector128.LoadUnsafe(ref startAsUint) == splat;
         }
     }
 
