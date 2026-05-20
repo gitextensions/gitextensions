@@ -103,7 +103,7 @@ public class RevisionDiffControllerTests
 
         _controller.SaveFiles(files, userSelection);
 
-        _fullPathResolver.Received(1).Resolve("");
+        _fullPathResolver.Received(1).Resolve(".");
         _fullPathResolver.Received(0).Resolve(item1.Item.Name);
         _fullPathResolver.Received(0).Resolve(item2.Item.Name);
         _module.Received(0).SaveBlobAs(Arg.Any<string>(), Arg.Any<string>());
@@ -123,7 +123,7 @@ public class RevisionDiffControllerTests
             item2,
         ];
 
-        _fullPathResolver.Resolve("").Returns(x => "c:\\temp\\");
+        _fullPathResolver.Resolve(".").Returns(x => "c:\\temp\\");
         _fullPathResolver.Resolve(item1.Item.Name).Returns(x => "c:\\temp\\item1.txt");
         _fullPathResolver.Resolve(item2.Item.Name).Returns(x => "c:\\temp\\folder1\\item2.txt");
         _fullPathResolver.Resolve(item3.Item.Name).Returns(x => "c:\\temp\\folder1\\folder2\\item3.txt");
@@ -132,7 +132,7 @@ public class RevisionDiffControllerTests
 
         _controller.SaveFiles(files, userSelection);
 
-        _fullPathResolver.Received(1).Resolve("");
+        _fullPathResolver.Received(1).Resolve(".");
         _fullPathResolver.Received(1).Resolve(item1.Item.Name);
         _fullPathResolver.Received(1).Resolve(item2.Item.Name);
         _fullPathResolver.Received(1).Resolve(item3.Item.Name);
@@ -156,7 +156,7 @@ public class RevisionDiffControllerTests
             item3,
         ];
 
-        _fullPathResolver.Resolve("").Returns(x => "c:\\temp\\");
+        _fullPathResolver.Resolve(".").Returns(x => "c:\\temp\\");
         _fullPathResolver.Resolve(item1.Item.Name).Returns(x => "c:\\temp\\item1.txt");
         _fullPathResolver.Resolve(item2.Item.Name).Returns(x => "c:\\temp\\folder1\\item2.txt");
         _fullPathResolver.Resolve(item3.Item.Name).Returns(x => "c:\\temp\\folder1\\folder2\\item3.txt");
@@ -165,7 +165,7 @@ public class RevisionDiffControllerTests
 
         _controller.SaveFiles(files, userSelection);
 
-        _fullPathResolver.Received(1).Resolve("");
+        _fullPathResolver.Received(1).Resolve(".");
         _fullPathResolver.Received(1).Resolve(item1.Item.Name);
         _fullPathResolver.Received(1).Resolve(item2.Item.Name);
         _fullPathResolver.Received(1).Resolve(item3.Item.Name);

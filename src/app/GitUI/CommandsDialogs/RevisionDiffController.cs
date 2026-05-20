@@ -54,9 +54,14 @@ internal sealed class RevisionDiffController(Func<IGitModule> getModule, IFullPa
 
         void SaveMultipleFiles(List<FileStatusItem> selectedFiles)
         {
-            string? baseSourceDirectory = _fullPathResolver.Resolve(GetLongestCommonPath(selectedFiles)).EnsureTrailingPathSeparator();
+            string longestCommonPath = GetLongestCommonPath(selectedFiles);
+            string? baseSourceDirectory = _fullPathResolver.Resolve(longestCommonPath.Length == 0 ? "." : longestCommonPath).EnsureTrailingPathSeparator();
+            if (baseSourceDirectory is null)
+            {
+                throw new ExternalOperationException(innerException: new DirectoryNotFoundException(@$"Could not resolve common relative path ""{longestCommonPath}"" in ""{_getModule().WorkingDir}""."));
+            }
 
-            string? selectedPath = userSelection(baseSourceDirectory!);
+            string? selectedPath = userSelection(baseSourceDirectory);
             if (selectedPath is null)
             {
                 // User has cancelled the selection
