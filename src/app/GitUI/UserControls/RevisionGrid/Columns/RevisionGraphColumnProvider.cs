@@ -309,18 +309,39 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
         bool checkOtherRef = gitRef.IsRemote || (gitRef.IsHead && gitRef.TrackingRemote is not null);
         HashSet<ObjectId> ancestorIds = [];
 
-        // Build the set of currently visible ObjectIds — only these need to be in the result.
+        // Build the set of currently visible ObjectIds.
         // Start search for the tracked/tracking branch (if needed) a few indexes above.
-        // For the visible, also add the id prior to the first visible, as a lane may
         int searchFrom = Math.Max(0, _lastVisibleRange.FromIndex - (checkOtherRef ? Math.Max(50, _lastVisibleRange.Count) : 0));
         int visibleTo = _lastVisibleRange.FromIndex + _lastVisibleRange.Count - 1;
-        HashSet<ObjectId> visibleIds = new(capacity: 1 + _lastVisibleRange.Count);
+        HashSet<ObjectId> visibleIds = new(capacity: 2 + _lastVisibleRange.Count);
         for (int row = _lastVisibleRange.FromIndex - 1; row <= visibleTo; row++)
         {
             RevisionGraphRevision? rev = _revisionGraph.GetNodeForRow(row);
             if (rev is not null)
             {
                 visibleIds.Add(rev.Objectid);
+            }
+        }
+
+        // A segment whose Child is above the visible area still crosses visible rows and must
+        // be highlighted. Include the Child endpoint of every segment entering the viewport
+        // from above, and the Parent endpoint of every segment leaving below, so that
+        // WalkAncestors can reach them without storing all ancestors.
+        IRevisionGraphRow? topRow = _revisionGraph.GetSegmentsForRow(_lastVisibleRange.FromIndex);
+        if (topRow is not null)
+        {
+            foreach (RevisionGraphSegment segment in topRow.Segments)
+            {
+                visibleIds.Add(segment.Child.Objectid);
+            }
+        }
+
+        IRevisionGraphRow? bottomRow = _revisionGraph.GetSegmentsForRow(visibleTo);
+        if (bottomRow is not null)
+        {
+            foreach (RevisionGraphSegment segment in bottomRow.Segments)
+            {
+                visibleIds.Add(segment.Parent.Objectid);
             }
         }
 
@@ -388,13 +409,21 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider, IDisposable
             while (stack.Count > 0)
             {
                 RevisionGraphRevision current = stack.Pop();
-                if (!visited.Add(current.Objectid) || result.Contains(current.Objectid))
+                if (!visited.Add(current.Objectid))
                 {
                     continue;
                 }
 
-                // Only include revisions that are currently visible; non-visible rows are never
-                // rendered during this scroll position so storing them would waste memory.
+                // If already in result from a previous WalkAncestors call, all ancestors
+                // of this commit were already processed — prune this entire subtree.
+                if (result.Contains(current.Objectid))
+                {
+                    continue;
+                }
+
+                // Only store revisions that are in the visible set (commit nodes or segment
+                // endpoints crossing the viewport boundary). The visible set is pre-extended
+                // with one segment above and below, so spanning segments are handled.
                 if (visibleIds.Contains(current.Objectid))
                 {
                     result.Add(current.Objectid);

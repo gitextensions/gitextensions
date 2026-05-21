@@ -47,7 +47,10 @@ internal static class GraphRenderer
 
             LaneInfo? currentRowRevisionLaneInfo = null;
 
-            foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments.Reverse().OrderBy(s => s.Child.IsRelative))
+            foreach (RevisionGraphSegment revisionGraphSegment in currentRow.Segments.Reverse()
+                .OrderBy(s => s.Child.IsRelative)
+                .ThenBy(s => hoverHighlightedIds?.Contains(s.Child.Objectid) is true
+                          || hoverHighlightedIds?.Contains(s.Parent.Objectid) is true))
             {
                 bool skipSecondarySharedSegments = revisionGraphDrawStyle is not (RevisionGraphDrawStyle.DrawNonRelativesGray or RevisionGraphDrawStyle.HighlightSelected);
                 SegmentLanesInfo lanes = GetLanesInfo(revisionGraphSegment, previousRow, currentRow, nextRow, skipSecondarySharedSegments, config.MergeGraphLanesHavingCommonParent,
