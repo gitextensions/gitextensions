@@ -106,7 +106,7 @@ public class FormRemotesTests
         AppSettings.AlwaysShowAdvOpt = true;
 
         IGitBranchNameNormaliser branchNameNormaliser = _commands.GetRequiredService<IGitBranchNameNormaliser>();
-        branchNameNormaliser.Normalise("invalid branch namebranch_for_normalization", Arg.Any<GitBranchNameOptions>()).Returns("invalid-branch-namebranch_for_normalization");
+        branchNameNormaliser.Normalise("invalid branch prefix/branch_for_prefix_normalisation", Arg.Any<GitBranchNameOptions>()).Returns("invalid-branch-prefix/branch_for_prefix_normalisation");
 
         RunFormTest(
             form =>
@@ -114,10 +114,10 @@ public class FormRemotesTests
                 FormRemotes.TestAccessor accessor = form.GetTestAccessor();
 
                 accessor.RemotePrefix.Focus();
-                accessor.RemotePrefix.Text = "invalid branch name";
+                accessor.RemotePrefix.Text = "invalid branch prefix/";
                 accessor.RemoteName.Focus();
 
-                accessor.RemotePrefix.Text.Should().Be("invalid-branch-name");
+                accessor.RemotePrefix.Text.Should().Be("invalid-branch-prefix/");
             });
     }
 

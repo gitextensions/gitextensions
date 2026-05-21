@@ -159,7 +159,8 @@ Inactive remote is completely invisible to git.");
 
         static string NormalisePrefix(string prefix, IGitBranchNameNormaliser branchNameNormaliser)
         {
-            const string dummyBranchName = "branch_for_normalization";
+            // Without a branch appended, the normaliser would remove a trailing slash from the prefix
+            const string dummyBranchName = "branch_for_prefix_normalisation";
             string normalised = branchNameNormaliser.Normalise($"{prefix}{dummyBranchName}", new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol));
             if (normalised.EndsWith(dummyBranchName, StringComparison.Ordinal))
             {
