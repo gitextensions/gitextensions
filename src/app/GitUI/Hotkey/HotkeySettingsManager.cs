@@ -1,4 +1,4 @@
-﻿using System.Xml;
+using System.Xml;
 using System.Xml.Serialization;
 using GitCommands;
 using GitUI.CommandsDialogs;
@@ -271,7 +271,6 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
                 Hk(RepoObjectsTree.Command.Search, Keys.F3)),
             new HotkeySettings(
                 RevisionGridControl.HotkeySettingsName,
-                Hk(RevisionGridControl.Command.Commit, Keys.Control | Keys.Space),
                 Hk(RevisionGridControl.Command.CompareSelectedCommits, Keys.None),
                 Hk(RevisionGridControl.Command.CompareToBase, Keys.Control | Keys.R),
                 Hk(RevisionGridControl.Command.CompareToBranch, Keys.None),

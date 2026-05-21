@@ -117,6 +117,9 @@ public class GitExtensionsFormBase : Form, ITranslate
     protected string GetShortcutKeyDisplayString<T>(T commandCode) where T : struct, Enum
         => _hotkeys.GetShortcutDisplay(commandCode);
 
+    public string GetShortcutKeyDisplayStringPublic<T>(T commandCode) where T : struct, Enum
+        => GetShortcutKeyDisplayString(commandCode);
+
     protected string GetShortcutKeyTooltipString<T>(T commandCode) where T : struct, Enum
         => _hotkeys.GetShortcutToolTip(commandCode);
 
