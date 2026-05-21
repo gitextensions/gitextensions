@@ -106,7 +106,7 @@ public class FormRemotesTests
         AppSettings.AlwaysShowAdvOpt = true;
 
         IGitBranchNameNormaliser branchNameNormaliser = _commands.GetRequiredService<IGitBranchNameNormaliser>();
-        branchNameNormaliser.Normalise("invalid branch name", Arg.Any<GitBranchNameOptions>()).Returns("invalid-branch-name");
+        branchNameNormaliser.Normalise("invalid branch namebranch_for_normalization", Arg.Any<GitBranchNameOptions>()).Returns("invalid-branch-namebranch_for_normalization");
 
         RunFormTest(
             form =>
