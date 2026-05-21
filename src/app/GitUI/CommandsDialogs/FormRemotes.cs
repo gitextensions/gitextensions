@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Diagnostics;
+using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Remotes;
@@ -158,14 +159,15 @@ Inactive remote is completely invisible to git.");
 
         static string NormalisePrefix(string prefix, IGitBranchNameNormaliser branchNameNormaliser)
         {
-            const string dummyBranchName = nameof(dummyBranchName);
+            const string dummyBranchName = "branch_for_normalization";
             string normalised = branchNameNormaliser.Normalise($"{prefix}{dummyBranchName}", new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol));
             if (normalised.EndsWith(dummyBranchName, StringComparison.Ordinal))
             {
-                return normalised[0..(normalised.Length - dummyBranchName.Length)];
+                return normalised[..^dummyBranchName.Length];
             }
 
-            throw new InvalidOperationException(@$"Normalised branch name should end with the dummy branch name. Normalised: ""{normalised}"", Dummy branch name: ""{dummyBranchName}""");
+            Trace.WriteLine(@$"Normalised branch name should end with the dummy branch name. Normalised: ""{normalised}"", Dummy branch name: ""{dummyBranchName}""");
+            return prefix;
         }
     }
 
