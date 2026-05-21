@@ -111,7 +111,7 @@ Inactive remote is completely invisible to git.");
         InitializeComplete();
 
         _branchNameNormaliser = commands.GetRequiredService<IGitBranchNameNormaliser>();
-        txtRemotePrefix.Leave += (sender, e) => txtRemotePrefix.Text = _branchNameNormaliser.Normalise(txtRemotePrefix.Text, new(AppSettings.AutoNormaliseSymbol));
+        txtRemotePrefix.Leave += (_, _) => txtRemotePrefix.Text = NormalisePrefix(txtRemotePrefix.Text, _branchNameNormaliser);
 
         btnRemoteColor.BackColor = Color.Transparent;
 
@@ -153,6 +153,20 @@ Inactive remote is completely invisible to git.");
             resizeDebounceTimer.Stop();
             resizeDebounceTimer.Start();
         };
+
+        return;
+
+        static string NormalisePrefix(string prefix, IGitBranchNameNormaliser branchNameNormaliser)
+        {
+            const string dummyBranchName = nameof(dummyBranchName);
+            string normalised = branchNameNormaliser.Normalise($"{prefix}{dummyBranchName}", new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol));
+            if (normalised.EndsWith(dummyBranchName, StringComparison.Ordinal))
+            {
+                return normalised[0..(normalised.Length - dummyBranchName.Length)];
+            }
+
+            throw new InvalidOperationException(@$"Normalised branch name should end with the dummy branch name. Normalised: ""{normalised}"", Dummy branch name: ""{dummyBranchName}""");
+        }
     }
 
     private void AutoResizeRemotesColumn()
