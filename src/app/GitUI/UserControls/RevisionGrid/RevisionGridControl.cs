@@ -208,6 +208,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         const bool top = false;
         const bool advanced = true;
         _contextMenuItems = [
+            (resetChangesToolStripMenuItem, top),
+            (commitToolStripMenuItem, top),
             (markRevisionAsBadToolStripMenuItem, top),
             (markRevisionAsGoodToolStripMenuItem, top),
             (bisectSkipRevisionToolStripMenuItem, top),
@@ -2032,6 +2034,17 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         });
     }
 
+    private void ResetChangesToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        UICommands.StartResetChangesDialog(this, Module.GetWorkTreeFiles(), onlyWorkTree: false);
+        ArtificialChanged?.Invoke(this, EventArgs.Empty);
+    }
+
+    private void CommitToolStripMenuItemClick(object sender, EventArgs e)
+    {
+        UICommands.StartCommitDialog(this);
+    }
+
     private void ResetAnotherBranchToHereToolStripMenuItemClick(object sender, EventArgs e)
     {
         if (LatestSelectedRevision is null)
@@ -2319,6 +2332,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         SetEnabled(createNewBranchToolStripMenuItem, !bareRepositoryOrArtificial);
         SetEnabled(resetCurrentBranchToHereToolStripMenuItem, !bareRepositoryOrArtificial);
         SetEnabled(resetAnotherBranchToHereToolStripMenuItem, !bareRepositoryOrArtificial);
+        SetEnabled(resetChangesToolStripMenuItem, revision.IsArtificial);
+        SetEnabled(commitToolStripMenuItem, revision.IsArtificial);
         SetEnabled(archiveRevisionToolStripMenuItem, !revision.IsArtificial);
         SetEnabled(createTagToolStripMenuItem, !revision.IsArtificial);
 
@@ -3152,11 +3167,17 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         SetShortcutString(compareToBaseToolStripMenuItem, Command.CompareToBase);
         SetShortcutString(compareToWorkingDirectoryMenuItem, Command.CompareToWorkingDirectory);
         SetShortcutString(compareSelectedCommitsMenuItem, Command.CompareSelectedCommits);
+        SetShortcutString(commitToolStripMenuItem, FormBrowse.Command.Commit);
     }
 
     private void SetShortcutString(ToolStripMenuItem item, Command command)
     {
         item.ShortcutKeyDisplayString = GetShortcutKeyDisplayString(command);
+    }
+
+    private void SetShortcutString(ToolStripMenuItem item, FormBrowse.Command command)
+    {
+        item.ShortcutKeyDisplayString = GetHotkeys(FormBrowse.HotkeySettingsName).GetShortcutDisplay(command);
     }
 
     private void ShowFormDiff(ObjectId baseCommitSha, ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
