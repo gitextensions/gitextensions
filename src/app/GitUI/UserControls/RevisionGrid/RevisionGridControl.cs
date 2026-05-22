@@ -3155,7 +3155,6 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal void SetShortcutKeys()
     {
-        SetShortcutString(compareSelectedCommitsMenuItem, Command.CompareSelectedCommits);
         SetShortcutString(fixupCommitToolStripMenuItem, Command.CreateFixupCommit);
         SetShortcutString(squashCommitToolStripMenuItem, Command.CreateSquashCommit);
         SetShortcutString(amendCommitToolStripMenuItem, Command.CreateAmendCommit);
@@ -3163,6 +3162,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         SetShortcutString(openCommitsWithDiffToolMenuItem, Command.OpenCommitsWithDifftool);
         SetShortcutString(compareToBaseToolStripMenuItem, Command.CompareToBase);
         SetShortcutString(compareToWorkingDirectoryMenuItem, Command.CompareToWorkingDirectory);
+        SetShortcutString(compareSelectedCommitsMenuItem, Command.CompareSelectedCommits);
         SetShortcutString(commitToolStripMenuItem, FormBrowse.Command.Commit);
     }
 
@@ -3173,10 +3173,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void SetShortcutString(ToolStripMenuItem item, FormBrowse.Command command)
     {
-        if (FindForm() is GitExtensionsFormBase form)
-        {
-            item.ShortcutKeyDisplayString = form.GetShortcutKeyDisplayStringPublic(command);
-        }
+        item.ShortcutKeyDisplayString = GetHotkeys(FormBrowse.HotkeySettingsName).GetShortcutDisplay(command);
     }
 
     private void ShowFormDiff(ObjectId baseCommitSha, ObjectId headCommitSha, string baseCommitDisplayStr, string headCommitDisplayStr)
