@@ -8,7 +8,7 @@ on:
 
 env:
   # GE release version
-  ge-release-version: '6.0.5'
+  ge-release-version: '7.0.0'
   # Run tests for x64 build
   run-x64-tests: false # TODO: turn on again when TC GetOriginalLineInPreviousCommit passes stably
   # Run tests for arm64 build
@@ -35,18 +35,18 @@ jobs:
         run: echo "ge_version=${{ env.ge-release-version }}.${{ github.run_number }}" >> $env:GITHUB_ENV
 
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
 
       - name: Checkout submodules
         run: git submodule update --init --recursive
 
       - name: Use Python 3.13
-        uses: actions/setup-python@v6
+        uses: actions/setup-python@a309ff8b426b58ec0e2a45f0f869d46889d02405 # v6
         with:
           python-version: '3.13'
 
       - name: Set up .NET
-        uses: actions/setup-dotnet@v5
+        uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5
         with:
           global-json-file: global.json
 
@@ -98,7 +98,7 @@ jobs:
 
       - name: Upload test logs if test failure
         if: failure() && steps.test.conclusion == 'failure'
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: FailedTestLogs-v${{ env.ge_version }}-${{ runner.arch }}
           path: |
@@ -114,7 +114,7 @@ jobs:
         run: ls -R artifacts/Release/publish/
 
       - name: Upload GE distribution files
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: GE-v${{ env.ge_version }}-${{ runner.arch }}-dist
           path: |
@@ -126,9 +126,11 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     if: ${{ success() && vars.ARTIFACT_SIGNING_ENABLED == 'true' }}
+    permissions:
+      actions: read # required so GITHUB_TOKEN can download artifacts for the SignPath connector
     steps:
       - name: Download build artifacts
-        uses: actions/download-artifact@v7
+        uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
         with:
           path: ./artifacts
           merge-multiple: true
@@ -138,19 +140,36 @@ jobs:
 
       - name: Upload unsigned artifacts
         id:   upload-unsigned-artifacts
-        uses: actions/upload-artifact@v6
+        uses: actions/upload-artifact@b7c566a772e6b6bfb58ed0dc250532a479d7789f # v6
         with:
           name: GE-v${{ env.ge-release-version }}.${{ github.run_number }}-unsigned
           path: ./artifacts/*
           retention-days: 7
 
       - name: Submit signing request to SignPath
-        uses: SignPath/github-action-submit-signing-request@v1
-        with:
-          connector-url: https://githubactions.connectors.signpath.io
-          api-token: ${{ secrets.SIGNPATH_API_TOKEN }}
-          organization-id: "7c19b2cf-90f7-4d15-9b12-1b615f7c18c4"
-          project-slug: "GitExtensions_combined"
-          signing-policy-slug: "release-2020"
-          github-artifact-id: ${{ steps.upload-unsigned-artifacts.outputs.artifact-id }}
-          wait-for-completion: false
+        env:
+          SIGNPATH_API_TOKEN: ${{ secrets.SIGNPATH_API_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          # The connector authenticates to SignPath via the API token (Authorization header),
+          # and uses gitHubToken to download the artifact directly from GitHub Actions.
+          $body = @{
+            artifactId                       = "${{ steps.upload-unsigned-artifacts.outputs.artifact-id }}"
+            gitHubWorkflowRunId              = "${{ github.run_id }}"
+            gitHubRepository                 = "${{ github.repository }}"
+            gitHubToken                      = $env:GITHUB_TOKEN
+            signPathProjectSlug              = "GitExtensions_combined"
+            signPathSigningPolicySlug        = "release-2020"
+          } | ConvertTo-Json
+
+          $response = Invoke-RestMethod `
+            -Uri "https://githubactions.connectors.signpath.io/7c19b2cf-90f7-4d15-9b12-1b615f7c18c4/SigningRequests?api-version=1.0" `
+            -Method POST `
+            -Headers @{
+              "Content-Type"  = "application/json"
+              "Authorization" = "Bearer $env:SIGNPATH_API_TOKEN"
+            } `
+            -Body $body
+          Write-Host "Signing request submitted: $($response.signingRequestId)"
+        shell: pwsh
+
