@@ -27,11 +27,13 @@ public static class LinqExtensions
         this IEnumerable<TSource> source,
         Func<TSource, TKey> keySelector,
         Func<TKey, TKey, int> comparer)
+        where TKey : notnull
     {
         return source.OrderBy(keySelector, new DelegateComparer<TKey>(comparer));
     }
 
     private sealed class DelegateComparer<T> : IComparer<T>
+        where T : notnull
     {
         private readonly Func<T, T, int> _comparer;
 
@@ -40,9 +42,9 @@ public static class LinqExtensions
             _comparer = comparer;
         }
 
-        public int Compare(T x, T y)
+        public int Compare(T? x, T? y)
         {
-            return _comparer(x, y);
+            return _comparer(x!, y!);
         }
     }
 
@@ -84,9 +86,7 @@ public static class LinqExtensions
 
     public static void Swap<T>(this IList<T> list, int index1, int index2)
     {
-        T temp = list[index1];
-        list[index1] = list[index2];
-        list[index2] = temp;
+        (list[index2], list[index1]) = (list[index1], list[index2]);
     }
 
     [Pure]
@@ -103,7 +103,7 @@ public static class LinqExtensions
             {
                 if (collection.Count == 0)
                 {
-                    return Array.Empty<T>();
+                    return [];
                 }
 
                 T[] items = new T[collection.Count];
@@ -115,7 +115,7 @@ public static class LinqExtensions
         using IEnumerator<T> e = source.GetEnumerator();
         if (!e.MoveNext())
         {
-            return Array.Empty<T>();
+            return [];
         }
 
         List<T> list = [];
@@ -170,7 +170,7 @@ public static class LinqExtensions
     [MustUseReturnValue]
     public static IEnumerable<T> WhereNotNull<T>(this IEnumerable<T?> source)
     {
-        foreach (T item in source)
+        foreach (T? item in source)
         {
             if (item is not null)
             {
@@ -183,7 +183,7 @@ public static class LinqExtensions
     [MustUseReturnValue]
     public static IEnumerable<string> WhereNotNullOrWhiteSpace(this IEnumerable<string?> source)
     {
-        foreach (string item in source)
+        foreach (string? item in source)
         {
             if (!string.IsNullOrWhiteSpace(item))
             {

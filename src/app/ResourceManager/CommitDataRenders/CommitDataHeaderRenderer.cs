@@ -1,7 +1,8 @@
-using System.Net;
+﻿using System.Net;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility.Git;
+using GitUIPluginInterfaces;
 using Microsoft;
 
 namespace ResourceManager.CommitDataRenders;
@@ -42,9 +43,9 @@ public sealed partial class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
     private readonly ILinkFactory? _linkFactory;
 
     [GeneratedRegex(@"[ \t]+", RegexOptions.ExplicitCapture)]
-    private static partial Regex SpacesRegex();
+    private static partial Regex SpacesRegex { get; }
     [GeneratedRegex(@"(?<reltime>\n[^:]+: ).* ago \((?<unit>[^)]+)\)", RegexOptions.ExplicitCapture)]
-    private static partial Regex RemoveAgoRegex();
+    private static partial Regex RemoveAgoRegex { get; }
 
     public CommitDataHeaderRenderer(IHeaderLabelFormatter labelFormatter, IDateFormatter dateFormatter, IHeaderRenderStyleProvider headerRendererStyleProvider, ILinkFactory? linkFactory)
     {
@@ -58,8 +59,8 @@ public sealed partial class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
     {
         string children = $"({TranslatedStrings.GetChildren(1)})|({TranslatedStrings.GetChildren(2)})|({TranslatedStrings.GetChildren(10)})";
         string parents = $"({TranslatedStrings.GetParents(1)})|({TranslatedStrings.GetParents(2)})|({TranslatedStrings.GetParents(10)})";
-        header = SpacesRegex().Replace(header, " ");
-        header = RemoveAgoRegex().Replace(header, "$1$2");
+        header = SpacesRegex.Replace(header, " ");
+        header = RemoveAgoRegex.Replace(header, "$1$2");
         header = Regex.Replace(header, @$"\n({children}|{parents})[^\n]*", "");
         return header;
     }
@@ -118,14 +119,14 @@ public sealed partial class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
             header.AppendLine(_labelFormatter.FormatLabel(TranslatedStrings.GetChildren(commitData.ChildIds.Count), padding) + RenderObjectIds(commitData.ChildIds, showRevisionsAsLinks));
         }
 
-        IReadOnlyList<ObjectId> parentIds = commitData.ParentIds;
+        IReadOnlyList<ObjectId>? parentIds = commitData.ParentIds;
         if (parentIds?.Count > 0)
         {
             header.AppendLine(_labelFormatter.FormatLabel(TranslatedStrings.GetParents(parentIds.Count), padding) + RenderObjectIds(parentIds, showRevisionsAsLinks));
         }
 
         // remove the trailing newline character
-        header.Length = header.Length - Environment.NewLine.Length;
+        header.Length -= Environment.NewLine.Length;
 
         return header.ToString();
     }
@@ -159,21 +160,21 @@ public sealed partial class CommitDataHeaderRenderer : ICommitDataHeaderRenderer
         return header.ToString();
     }
 
-    private static string GetEmail(string author)
+    private static string GetEmail(string? author)
     {
         if (string.IsNullOrEmpty(author))
         {
             return "";
         }
 
-        int ind = author.IndexOf("<", StringComparison.Ordinal);
+        int ind = author.IndexOf('<');
         if (ind == -1)
         {
             return "";
         }
 
         ++ind;
-        return author[ind..author.LastIndexOf(">", StringComparison.Ordinal)];
+        return author[ind..author.LastIndexOf('>')];
     }
 
     private string RenderObjectIds(IEnumerable<ObjectId> objectIds, bool showRevisionsAsLinks)

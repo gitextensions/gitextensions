@@ -266,10 +266,8 @@ public sealed class RevisionGraphRow : IRevisionGraphRow
         }
 
         Validates.NotNull(_segmentLanes);
-        RevisionGraphSegment[] segmentsToBeMoved = _segmentLanes.Where(keyValue => keyValue.Value.Index >= fromLane && keyValue.Value.Index < nextGap)
-                                                                .Select(keyValue => keyValue.Key)
-                                                                .ToArray();
-        if (!segmentsToBeMoved.Any())
+        RevisionGraphSegment[] segmentsToBeMoved = [.. _segmentLanes.Where(keyValue => keyValue.Value.Index >= fromLane && keyValue.Value.Index < nextGap).Select(keyValue => keyValue.Key)];
+        if (segmentsToBeMoved.Length == 0)
         {
             return;
         }

@@ -1,9 +1,6 @@
-using FluentAssertions;
-using GitExtUtils.GitUI;
+﻿using GitExtUtils.GitUI;
 
 namespace GitExtUtilsTests.GitUI;
-
-[TestFixture]
 public sealed class DpiUtilTests
 {
     [Test]

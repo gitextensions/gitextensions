@@ -28,7 +28,7 @@ internal abstract class BaseRevisionTree : Tree
 
     internal virtual void UpdateVisibility()
     {
-        TreeView treeView = TreeViewNode.TreeView;
+        TreeView? treeView = TreeViewNode.TreeView;
 
         if (treeView is null || !IsAttached)
         {
@@ -54,7 +54,7 @@ internal abstract class BaseRevisionTree : Tree
             foreach (BaseRevisionNode node in Nodes.DepthEnumerator<BaseRevisionNode>())
             {
                 cancellationToken.ThrowIfCancellationRequested();
-                if (node.ObjectId is null)
+                if (node.ObjectId.IsZero)
                 {
                     continue;
                 }

@@ -1,27 +1,24 @@
 ﻿using System.IO.Abstractions;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class IndexLockManagerTests
 {
     private const string IndexLock = "index.lock";
     private readonly string _workingDir = @"c:\dev\repo";
-    private string _gitWorkingDir;
-    private string _indexLockFile;
-    private string _gitFile;
-    private FileBase _file;
-    private DirectoryBase _directory;
-    private IFileSystem _fileSystem;
-    private IGitDirectoryResolver _gitDirectoryResolver;
-    private IGitModule _module;
-    private IIndexLockManager _manager;
+    private string _gitWorkingDir = null!;
+    private string _indexLockFile = null!;
+    private string _gitFile = null!;
+    private FileBase _file = null!;
+    private DirectoryBase _directory = null!;
+    private IFileSystem _fileSystem = null!;
+    private IGitDirectoryResolver _gitDirectoryResolver = null!;
+    private IGitModule _module = null!;
+    private IIndexLockManager _manager = null!;
 
     [SetUp]
     public void Setup()
@@ -91,9 +88,10 @@ public class IndexLockManagerTests
         _file.Exists(_indexLockFile).Returns(true);
         _file.When(x => x.Delete(_indexLockFile)).Throw(new DivideByZeroException("boom"));
 
-        FileDeleteException ex = ClassicAssert.Throws<FileDeleteException>(() => _manager.UnlockIndex(false));
+        Action act = () => _manager.UnlockIndex(false);
+        FileDeleteException ex = act.Should().Throw<FileDeleteException>().Which;
 
-        ex.FileName.Should().Be(_indexLockFile);
+        ex!.FileName.Should().Be(_indexLockFile);
         _module.DidNotReceive().GetSubmodulesLocalPaths();
         _file.Received(1).Delete(Arg.Any<string>());
         _file.Received(1).Delete(_indexLockFile);

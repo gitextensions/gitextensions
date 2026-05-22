@@ -42,11 +42,11 @@ internal class GitRefsSortByContextMenuItem : ToolStripMenuItem
         }
     }
 
-    private void Item_Click(object sender, EventArgs e)
+    private void Item_Click(object? sender, EventArgs e)
     {
         if (sender is ToolStripMenuItem item)
         {
-            GitRefsSortBy sortingType = (GitRefsSortBy)item.Tag;
+            GitRefsSortBy sortingType = (GitRefsSortBy)item.Tag!;
             AppSettings.RefsSortBy = sortingType;
 
             _onSortByChanged?.Invoke();
@@ -55,7 +55,7 @@ internal class GitRefsSortByContextMenuItem : ToolStripMenuItem
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal struct TestAccessor
+    internal readonly struct TestAccessor
     {
         private readonly GitRefsSortByContextMenuItem _contextMenuItem;
 
@@ -64,6 +64,6 @@ internal class GitRefsSortByContextMenuItem : ToolStripMenuItem
             _contextMenuItem = menuitem;
         }
 
-        public void RaiseDropDownOpening() => _contextMenuItem.RequerySortingMethod();
+        public readonly void RaiseDropDownOpening() => _contextMenuItem.RequerySortingMethod();
     }
 }

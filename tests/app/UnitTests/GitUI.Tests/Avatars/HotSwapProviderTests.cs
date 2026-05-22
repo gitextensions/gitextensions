@@ -2,8 +2,6 @@
 using NSubstitute;
 
 namespace GitUITests.Avatars;
-
-[TestFixture]
 public class HotSwapProviderTests
 {
     private const int _size = 16;
@@ -17,12 +15,18 @@ public class HotSwapProviderTests
         _img = new Bitmap(_size, _size);
     }
 
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        _img.Dispose();
+    }
+
     [Test]
     public async Task Returns_null_if_no_provider_is_set()
     {
         HotSwapAvatarProvider provider = new();
-        Image image = await provider.GetAvatarAsync(_email, _name, 16);
-        ClassicAssert.Null(image);
+        Image? image = await provider.GetAvatarAsync(_email, _name, 16);
+        image.Should().BeNull();
     }
 
     [Test]
@@ -34,8 +38,8 @@ public class HotSwapProviderTests
 
         inner.GetAvatarAsync(_email, _name, _size).Returns(_img);
 
-        Image result = await provider.GetAvatarAsync(_email, _name, _size);
+        Image? result = await provider.GetAvatarAsync(_email, _name, _size);
 
-        ClassicAssert.AreSame(_img, result);
+        result.Should().BeSameAs(_img);
     }
 }

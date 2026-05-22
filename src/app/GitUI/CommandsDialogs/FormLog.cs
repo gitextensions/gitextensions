@@ -58,18 +58,18 @@ public partial class FormLog : GitModuleForm
         }
     }
 
-    private void DiffViewerExtraDiffArgumentsChanged(object sender, EventArgs e)
+    private void DiffViewerExtraDiffArgumentsChanged(object? sender, EventArgs e)
     {
         ViewSelectedFileDiff();
     }
 
-    private void FileViewer_TopScrollReached(object sender, EventArgs e)
+    private void FileViewer_TopScrollReached(object? sender, EventArgs e)
     {
         DiffFiles.SelectPreviousVisibleItem();
         diffViewer.ScrollToBottom();
     }
 
-    private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+    private void FileViewer_BottomScrollReached(object? sender, EventArgs e)
     {
         DiffFiles.SelectNextVisibleItem();
         diffViewer.ScrollToTop();

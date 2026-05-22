@@ -2,16 +2,13 @@
 using System.Runtime.CompilerServices;
 using System.Xml.Serialization;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands.UserRepositoryHistory.Legacy;
 using Current = GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory.Legacy;
-
-[TestFixture]
 public class RepositoryCategorySerialiserTests
 {
-    private RepositoryCategoryXmlSerialiser _repositoryXmlSerialiser;
+    private RepositoryCategoryXmlSerialiser _repositoryXmlSerialiser = null!;
 
     [SetUp]
     public void Setup()
@@ -22,7 +19,7 @@ public class RepositoryCategorySerialiserTests
     [Test]
     public void Deserialize_should_throw_if_null()
     {
-        ((Action)(() => _repositoryXmlSerialiser.Deserialize(null))).Should().Throw<ArgumentException>();
+        ((Action)(() => _repositoryXmlSerialiser.Deserialize(null!))).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -34,30 +31,30 @@ public class RepositoryCategorySerialiserTests
             throw new FileFormatException("Unexpected data");
         }
 
-        IReadOnlyList<RepositoryCategory> categorisedHistory = _repositoryXmlSerialiser.Deserialize(xml);
+        IReadOnlyList<RepositoryCategory>? categorisedHistory = _repositoryXmlSerialiser.Deserialize(xml);
 
         categorisedHistory.Should().HaveCount(2);
         categorisedHistory[0].Description.Should().Be("3rd Party");
         categorisedHistory[0].CategoryType.Should().Be("Repositories");
         categorisedHistory[0].Repositories.Should().HaveCount(2);
-        categorisedHistory[0].Repositories[0].Description.Should().Be("Check it out!");
-        categorisedHistory[0].Repositories[0].Path.Should().Be("C:\\Development\\RibbonWinForms\\");
-        categorisedHistory[0].Repositories[0].Anchor.Should().Be("None");
-        categorisedHistory[0].Repositories[1].Path.Should().Be("");
-        categorisedHistory[0].Repositories[1].Anchor.Should().Be("None");
+        categorisedHistory![0].Repositories![0].Description.Should().Be("Check it out!");
+        categorisedHistory![0].Repositories![0].Path.Should().Be("C:\\Development\\RibbonWinForms\\");
+        categorisedHistory![0].Repositories![0].Anchor.Should().Be("None");
+        categorisedHistory![0].Repositories![1].Path.Should().Be("");
+        categorisedHistory![0].Repositories![1].Anchor.Should().Be("None");
         categorisedHistory[1].Description.Should().Be("Test");
         categorisedHistory[1].CategoryType.Should().Be("Repositories");
         categorisedHistory[1].Repositories.Should().ContainSingle();
-        categorisedHistory[1].Repositories[0].Title.Should().Be("Git Extensions");
-        categorisedHistory[1].Repositories[0].Description.Should().Be("Mega project!");
-        categorisedHistory[1].Repositories[0].Path.Should().Be("C:\\Development\\gitextensions\\");
-        categorisedHistory[1].Repositories[0].Anchor.Should().Be("Pinned");
+        categorisedHistory![1].Repositories![0].Title.Should().Be("Git Extensions");
+        categorisedHistory![1].Repositories![0].Description.Should().Be("Mega project!");
+        categorisedHistory![1].Repositories![0].Path.Should().Be("C:\\Development\\gitextensions\\");
+        categorisedHistory![1].Repositories![0].Anchor.Should().Be("Pinned");
     }
 
     [Test]
     public void Serialize_must_fail_as_not_supported()
     {
-        ((Action)(() => ((Current.IRepositorySerialiser<RepositoryCategory>)_repositoryXmlSerialiser).Serialize(null))).Should().Throw<NotSupportedException>();
+        ((Action)(() => ((Current.IRepositorySerialiser<RepositoryCategory>)_repositoryXmlSerialiser).Serialize(null!))).Should().Throw<NotSupportedException>();
     }
 
     [MethodImpl(MethodImplOptions.NoInlining)]
@@ -68,22 +65,17 @@ public class RepositoryCategorySerialiserTests
         [
             new RepositoryCategory
             {
-                Repositories = new List<Repository>(
-                    new[]
-                    {
-                        new Repository { Path = "C:\\Development\\RibbonWinForms\\", Description = "Check it out!", Anchor = "None" },
-                        new Repository { Path = "", Anchor = "None" },
-                    }),
+                Repositories =
+                [
+                    new Repository { Path = "C:\\Development\\RibbonWinForms\\", Description = "Check it out!", Anchor = "None" },
+                    new Repository { Path = "", Anchor = "None" },
+                ],
                 CategoryType = "Repositories",
                 Description = "3rd Party"
             },
             new RepositoryCategory
             {
-                Repositories = new List<Repository>(
-                    new[]
-                    {
-                        new Repository { Title = "Git Extensions", Path = "C:\\Development\\gitextensions\\", Description = "Mega project!", Anchor = "Pinned" }
-                    }),
+                Repositories = [new Repository { Title = "Git Extensions", Path = "C:\\Development\\gitextensions\\", Description = "Mega project!", Anchor = "Pinned" }],
                 CategoryType = "Repositories",
                 Description = "Test"
             },

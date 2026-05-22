@@ -17,10 +17,10 @@ public static partial class UserEnvironmentInformation
     private static bool _dirty;
     private static string? _sha;
 
-    [GeneratedRegex(@"^Microsoft\.WindowsDesktop\.App\s+([\w.-]+)\s+.*$", RegexOptions.Multiline)]
-    private static partial Regex DesktopAppRegex();
+    [GeneratedRegex(@"^Microsoft\.WindowsDesktop\.App\s+(?<version>[\w.-]+)\s+.*$", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
+    private static partial Regex DesktopAppRegex { get; }
     [GeneratedRegex(@"^", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
-    private static partial Regex LineStartRegex();
+    private static partial Regex LineStartRegex { get; }
 
     public static void CopyInformation() => ClipboardUtil.TrySetText(GetInformation() + GetDotnetVersionInfo());
 
@@ -78,7 +78,7 @@ public static partial class UserEnvironmentInformation
         return gitVersion;
     }
 
-    private static IEnumerable<Match> GetDotnetDesktopRuntimeEntries()
+    private static string GetDotnetDesktopRuntimeEntries()
     {
         Executable dotnet = new(DOTNET_CMD);
         ArgumentString args = new ArgumentBuilder()
@@ -86,20 +86,42 @@ public static partial class UserEnvironmentInformation
             "--list-runtimes"
         };
 
-        string output = dotnet.GetOutput(args);
-        return DesktopAppRegex().Matches(output).Cast<Match>();
+        return dotnet.GetOutput(args);
     }
 
+    private static IEnumerable<Match> GetDotnetDesktopRuntimeMatches(string versions)
+        => DesktopAppRegex.Matches(versions).Cast<Match>();
+
     public static IEnumerable<Version> GetDotnetDesktopRuntimeVersions()
+        => GetDotnetDesktopRuntimeVersions(GetDotnetDesktopRuntimeEntries());
+
+    internal static IEnumerable<Version> GetDotnetDesktopRuntimeVersions(string versions)
     {
         try
         {
-            return GetDotnetDesktopRuntimeEntries().Select(match => new Version(match.Groups[1].Value));
+            return GetDotnetDesktopRuntimeMatches(versions)
+                .Select(match => Parse(match.Groups["version"].Value))
+                .WhereNotNull();
         }
         catch (Exception ex)
         {
             Trace.WriteLine(ex);
-            return [];
+        }
+
+        return [];
+
+        Version? Parse(string version)
+        {
+            try
+            {
+                int suffixPos = version.IndexOf('-');
+                return new Version(suffixPos > 0 ? version[0..suffixPos] : version);
+            }
+            catch (Exception ex)
+            {
+                Trace.WriteLine(ex);
+                return null;
+            }
         }
     }
 
@@ -111,14 +133,14 @@ public static partial class UserEnvironmentInformation
         sb.AppendLine("```");
         try
         {
-            IEnumerable<Match> desktopAppMatches = GetDotnetDesktopRuntimeEntries();
+            IEnumerable<Match> desktopAppMatches = GetDotnetDesktopRuntimeMatches(GetDotnetDesktopRuntimeEntries());
             string desktopAppLines = string.Join(Environment.NewLine, desktopAppMatches);
-            desktopAppLines = LineStartRegex().Replace(desktopAppLines, "    ");
+            desktopAppLines = LineStartRegex.Replace(desktopAppLines, "    ");
             sb.AppendLine($"{desktopAppLines}");
         }
         catch (Exception ex)
         {
-            sb.AppendLine(LineStartRegex().Replace(ex.Message, "    "));
+            sb.AppendLine(LineStartRegex.Replace(ex.Message, "    "));
         }
         finally
         {

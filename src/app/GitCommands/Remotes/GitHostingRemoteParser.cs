@@ -1,17 +1,17 @@
-using System.Diagnostics.CodeAnalysis;
+﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
 namespace GitCommands.Remotes;
 
 public partial class GitHostingRemoteParser : RemoteParser
 {
-    [GeneratedRegex(@"^(ssh://)?git(?:@|://)(?<hosting>([^.]+\.)+[^.]+)[:/](?<owner>[^/]+)/(?<repo>[\w_\.\-]+)(?:.git)?")]
-    private static partial Regex GitHostingSshUrlRegex();
+    [GeneratedRegex(@"^(ssh://)?git(?:@|://)(?<hosting>([^.]+\.)+[^.]+)[:/](?<owner>[^/]+)/(?<repo>[\w_\.\-]+)(?:.git)?", RegexOptions.ExplicitCapture)]
+    private static partial Regex GitHostingSshUrlRegex { get; }
 
-    [GeneratedRegex(@"^https?://(?:[^@:]*?)?(?::[^/@:]*?)?@?(?<hosting>([^./]+\.)+[^./]+)/(?<owner>[^/]+)/(?<repo>[\w_\.\-]+)(?:.git)?$")]
-    private static partial Regex GitHostingHttpsUrlRegex();
+    [GeneratedRegex(@"^https?://(?:[^@:]*?)?(?::[^/@:]*?)?@?(?<hosting>([^./]+\.)+[^./]+)/(?<owner>[^/]+)/(?<repo>[\w_\.\-]+)(?:.git)?$", RegexOptions.ExplicitCapture)]
+    private static partial Regex GitHostingHttpsUrlRegex { get; }
 
-    private static readonly Regex[] _gitHostingRegexes = [GitHostingHttpsUrlRegex(), GitHostingSshUrlRegex()];
+    private static readonly Regex[] _gitHostingRegexes = [GitHostingHttpsUrlRegex, GitHostingSshUrlRegex];
 
     /// <summary>
     /// Gets if an url is the one of a git hosted repository.
@@ -30,9 +30,9 @@ public partial class GitHostingRemoteParser : RemoteParser
         repository = null;
         gitHosting = null;
 
-        Match m = MatchRegExes(remoteUrl, _gitHostingRegexes);
+        Match? m = MatchRegExes(remoteUrl, _gitHostingRegexes);
 
-        if (m is null || !m.Success)
+        if (m is null or { Success: false })
         {
             return false;
         }

@@ -1,4 +1,8 @@
-name: "Labeler: Predict Pull Labels"
+# Workflow template imported and updated from:
+# https://github.com/dotnet/issue-labeler/wiki/Onboarding
+#
+# Predict labels for Pull Requests using a trained model
+name: "Labeler: Predict (Pulls)"
 
 on:
   # Per to the following documentation:
@@ -20,25 +24,50 @@ on:
   # Allow dispatching the workflow via the Actions UI, specifying ranges of numbers
   workflow_dispatch:
     inputs:
-      pull_numbers:
-        description: "Pull Numbers (comma-separated list of ranges)"
-        type: string
-      model_cache_key:
-        description: "The cache key suffix to use for loading the model"
-        type: string
+      pulls:
+        description: "Pull Request Numbers (comma-separated list of ranges)."
         required: true
-        default: "LIVE"
+      cache_key:
+        description: "The cache key suffix to use for restoring the model. Defaults to 'ACTIVE'."
+        required: true
+        default: "ACTIVE"
+
+env:
+  # Do not allow failure for jobs triggered automatically (this can block PR merge)
+  ALLOW_FAILURE: ${{ github.event_name == 'workflow_dispatch' }}
+
+  LABEL_PREFIX: "area: "
+  THRESHOLD: 0.40
+  DEFAULT_LABEL: "needs-area-label"
+  EXCLUDED_AUTHORS: ""
 
 jobs:
-  predict-pulls:
-    # Do not run the workflow on forks outside the 'gitextensions' org
-    if: ${{ github.repository_owner == 'gitextensions' && (inputs.pull_numbers || github.event.number) }}
+  predict-pull-label:
+    # Do not automatically run the workflow on forks outside the 'gitextensions' org
+    if: ${{ github.event_name == 'workflow_dispatch' || github.repository_owner == 'gitextensions' }}
+    runs-on: ubuntu-latest
     permissions:
       pull-requests: write
-    uses: dotnet/issue-labeler/.github/workflows/predict-pulls.yml@f0c098669828a134c0313adf3f58c1909e555d86 # v1.0.1
-    with:
-      model_cache_key: ${{ inputs.model_cache_key }}
-      pull_numbers: ${{ inputs.pull_numbers || github.event.number }}
-      label_prefix: "area: "
-      threshold: 0.40
-      default_label: "needs-area-label"
+    steps:
+      - name: "Restore pulls model from cache"
+        id: restore-model
+        uses: dotnet/issue-labeler/restore@46125e85e6a568dc712f358c39f35317366f5eed # v2.0.0
+        with:
+          type: pulls
+          fail-on-cache-miss: ${{ env.ALLOW_FAILURE }}
+          cache_key: ${{ inputs.cache_key || 'ACTIVE' }}
+          quiet: true
+
+      - name: "Predict pull labels"
+        id: prediction
+        if: ${{ steps.restore-model.outputs.cache-hit == 'true' }}
+        uses: dotnet/issue-labeler/predict@46125e85e6a568dc712f358c39f35317366f5eed # v2.0.0
+        with:
+          pulls: ${{ inputs.pulls || github.event.number }}
+          label_prefix: ${{ env.LABEL_PREFIX }}
+          threshold: ${{ env.THRESHOLD }}
+          default_label: ${{ env.DEFAULT_LABEL }}
+          excluded_authors: ${{ env.EXCLUDED_AUTHORS }}
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+        continue-on-error: ${{ !env.ALLOW_FAILURE }}

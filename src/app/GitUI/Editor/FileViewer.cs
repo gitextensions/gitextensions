@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -8,7 +8,6 @@ using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Patches;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -67,7 +66,7 @@ public partial class FileViewer : GitModuleControl
     private FileStatusItem? _viewItem;
 
     [GeneratedRegex(@"warning: .*has type .* expected .*", RegexOptions.ExplicitCapture)]
-    private static partial Regex FileModeWarningRegex();
+    private static partial Regex FileModeWarningRegex { get; }
 
     public FileViewer()
     {
@@ -102,7 +101,7 @@ public partial class FileViewer : GitModuleControl
                 {
                     ResetView(ViewMode.Text, null);
                     internalFileViewer.SetText("Unsupported file: \n\n" + e.Exception.ToString(), openWithDifftool: null /* not applicable */);
-                    TextLoaded?.Invoke(this, null);
+                    TextLoaded?.Invoke(this, null!);
                 }
             };
 
@@ -123,6 +122,8 @@ public partial class FileViewer : GitModuleControl
         showEntireFileToolStripMenuItem.Checked = ShowEntireFile;
         diffAppearanceToolStripMenuItem.Visible = false;
         SetStateOfContextLinesButtons();
+
+        _ = AppSettings.DiffDisplayAppearance.GetValue(reload: !AppSettings.RememberDiffDisplayAppearance.Value);
 
         automaticContinuousScrollToolStripMenuItem.AdaptImageLightness();
         automaticContinuousScrollToolStripMenuItem.Checked = AppSettings.AutomaticContinuousScroll;
@@ -147,7 +148,7 @@ public partial class FileViewer : GitModuleControl
 
         internalFileViewer.MouseMove += (_, e) =>
         {
-            if (_viewMode.IsPartialTextView() && !fileviewerToolbar.Visible)
+            if (!fileviewerToolbar.Visible)
             {
                 fileviewerToolbar.Visible = true;
                 fileviewerToolbar.Location = new Point(Width - fileviewerToolbar.Width - 40, 0);
@@ -198,6 +199,14 @@ public partial class FileViewer : GitModuleControl
             DefaultButton = TaskDialogButton.Yes,
             SizeToContent = true,
         };
+
+        PictureBox.PaintFailed += (_, ex) => this.InvokeAndForget(() =>
+        {
+            // No further service for users who handle invalid image files. We have no info other than the bad Image in OnPaint.
+            internalFileViewer.SetText($"{string.Format(_cannotViewImage.Text, "")}\n{ex.GetType().Name}: {ex.Message}", openWithDifftool: null);
+            internalFileViewer.Visible = true;
+            PictureBox.Visible = false;
+        });
     }
 
     // Public properties
@@ -305,7 +314,7 @@ public partial class FileViewer : GitModuleControl
             lock (_difftasticCmdCacheLock)
             {
                 // GetEffectiveSettings() checks Windows only, this need to be checked for each instance
-                if (_difftasticCmdCache.TryGetValue(Module.WorkingDir, out Lazy<bool> isEnabled))
+                if (_difftasticCmdCache.TryGetValue(Module.WorkingDir, out Lazy<bool>? isEnabled))
                 {
                     return isEnabled;
                 }
@@ -431,7 +440,7 @@ public partial class FileViewer : GitModuleControl
         };
     }
 
-    public (ArgumentString Args, string ExtraCacheKey) GetDifftasticArguments(bool isRangeDiff = false)
+    public (ArgumentString Args, string ExtraCacheKey) GetDifftasticArguments()
     {
         EnvironmentAbstraction env = new();
         StringBuilder extraCacheKey = new();
@@ -508,6 +517,7 @@ public partial class FileViewer : GitModuleControl
         return internalFileViewer.GetLineFromVisualPosY(visualPosY);
     }
 
+    public int CurrentFileColumn => internalFileViewer.CurrentFileColumn;
     public int CurrentFileLine => internalFileViewer.CurrentFileLine();
 
     public void HighlightLines(int startLine, int endLine, Color color)
@@ -566,7 +576,7 @@ public partial class FileViewer : GitModuleControl
         CancellationToken cancellationToken = default)
     {
         ThreadHelper.JoinableTaskFactory.Run(
-            () => ViewFixedPatchAsync(fileName, text, openWithDifftool, cancellationToken));
+            () => ViewFixedPatchAsync(fileName!, text, openWithDifftool, cancellationToken));
     }
 
     public Task ViewDifftasticAsync(string fileName,
@@ -625,7 +635,7 @@ public partial class FileViewer : GitModuleControl
                 {
                     try
                     {
-                        DisplayAsHexDump(_binaryFile.Text, fileName, text, openWithDifftool);
+                        DisplayAsHexDump(_binaryFile.Text, fileName!, text, openWithDifftool);
                     }
                     catch
                     {
@@ -644,7 +654,7 @@ public partial class FileViewer : GitModuleControl
                     }
                 }
 
-                TextLoaded?.Invoke(this, null);
+                TextLoaded?.Invoke(this, null!);
                 return Task.CompletedTask;
             });
     }
@@ -687,27 +697,27 @@ public partial class FileViewer : GitModuleControl
     }
 
     /// <summary>
-    /// View the git item with the TreeGuid.
+    /// View the git item with the TreeId.
     /// </summary>
-    /// <param name="file">GitItem file, with TreeGuid.</param>
-    /// <param name="objectId">Revision to present. Can be null if file.TreeGuid is set.</param>
+    /// <param name="file">GitItem file, with TreeId.</param>
+    /// <param name="objectId">Revision to present. Can be the zero <see cref="ObjectId"/> if file.TreeId is set.</param>
     /// <param name="item">Metadata for line patching and presentation.</param>
     /// <param name="line">The line to display.</param>
     /// <param name="openWithDifftool">difftool command</param>
     /// <returns>Task to view the item</returns>
     private Task ViewGitItemAsync(GitItemStatus file,
-        ObjectId? objectId,
+        ObjectId objectId,
         FileStatusItem? item,
         int? line,
         Action? openWithDifftool,
         CancellationToken cancellationToken = default)
     {
         // set fields possibly not set from git-diff (etc); treeGuid and IsSubmodule.
-        // (git-status does not report submodule, IsSubmodule is not set if not TreeGuid is)
+        // (git-status does not report submodule, IsSubmodule is not set if not TreeId is)
         // treeId (blobId) is only recalculated if required.
-        ObjectId? blobId = GetUpdateTreeId(file, objectId, cancellationToken);
+        ObjectId blobId = GetUpdateTreeId(file, objectId, cancellationToken);
 
-        return blobId is null
+        return blobId.IsZero
             ? ViewFileAsync(file.Name, file.IsSubmodule, item, line, openWithDifftool, cancellationToken)
             : ViewItemAsync(
                 file.Name,
@@ -728,14 +738,14 @@ public partial class FileViewer : GitModuleControl
                 || (!file.Name.EndsWith(".diff", StringComparison.OrdinalIgnoreCase)
                    && !file.Name.EndsWith(".patch", StringComparison.OrdinalIgnoreCase));
             FilePreamble = [];
-            return Module.GetFileText(blobId, Encoding, stripAnsiEscapeCodes) is string s ? s : "";
+            return Module.GetFileText(blobId, Encoding, stripAnsiEscapeCodes) ?? "";
         }
 
         async Task<Image?> GetImageAsync()
         {
             try
             {
-                using MemoryStream stream = await Module.GetFileStreamAsync(blobId.ToString(), cancellationToken: default);
+                using MemoryStream? stream = await Module.GetFileStreamAsync(blobId.ToString(), cancellationToken: default);
                 if (stream is not null)
                 {
                     return CreateImage(file.Name, stream);
@@ -776,7 +786,7 @@ public partial class FileViewer : GitModuleControl
         // Especially, if GE is invoked as git-config core.editor when rebasing,
         // another Git command must not be called (will fail the rebase).
         if (!isSubmodule
-            && (item is null || item.Item.TreeGuid is null)
+            && (item is null || item.Item.TreeId.IsZero)
             && (fileName.EndsWith('/') || Directory.Exists(fullPath)))
         {
             if (!GitModule.IsValidGitWorkingDir(fullPath))
@@ -821,10 +831,8 @@ public partial class FileViewer : GitModuleControl
         string GetFileText()
         {
             using FileStream stream = File.Open(fullPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-            using StreamReader reader = FileReader.OpenStream(stream, GitModule.LosslessEncoding);
-#pragma warning disable VSTHRD103 // Call async methods when in an async method
+            using StreamReader reader = FileReader.OpenStream(stream, Encoding);
             string content = reader.ReadToEnd();
-#pragma warning restore VSTHRD103 // Call async methods when in an async method
             FilePreamble = reader.CurrentEncoding.GetPreamble();
             return content;
         }
@@ -885,7 +893,7 @@ public partial class FileViewer : GitModuleControl
             _async.Dispose();
             components?.Dispose();
 
-            if (TryGetUICommandsDirect(out IGitUICommands uiCommands))
+            if (TryGetUICommandsDirect(out IGitUICommands? uiCommands))
             {
                 uiCommands.PostSettings -= UICommands_PostSettings;
             }
@@ -908,7 +916,7 @@ public partial class FileViewer : GitModuleControl
 
         Font = AppSettings.FixedWidthFont;
 
-        string[] encodings = AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName).ToArray();
+        string[] encodings = [.. AppSettings.AvailableEncodings.Values.Select(e => e.EncodingName)];
         encodingToolStripComboBox.Items.AddRange(encodings);
         encodingToolStripComboBox.ResizeDropDownWidth(minWidth: 50, maxWidth: 250);
     }
@@ -941,7 +949,7 @@ public partial class FileViewer : GitModuleControl
                     internalFileViewer.GoToFirstChange(NumberOfContextLines);
                 }
 
-                TextLoaded?.Invoke(this, null);
+                TextLoaded?.Invoke(this, null!);
                 return Task.CompletedTask;
             });
     }
@@ -951,9 +959,9 @@ public partial class FileViewer : GitModuleControl
         StagedStatus stagedStatus = _viewItem?.Item?.Staged ?? StagedStatus.Unknown;
         if (stagedStatus == StagedStatus.Unknown)
         {
-            stagedStatus = GitModule.GetStagedStatus(_viewItem?.FirstRevision?.ObjectId,
-                _viewItem?.SecondRevision?.ObjectId,
-                _viewItem?.SecondRevision?.FirstParentId);
+            stagedStatus = GitModule.GetStagedStatus(_viewItem?.FirstRevision?.ObjectId ?? default,
+                _viewItem?.SecondRevision?.ObjectId ?? default,
+                _viewItem?.SecondRevision?.FirstParentId ?? default);
             if (_viewItem?.Item is not null)
             {
                 _viewItem.Item.Staged = stagedStatus;
@@ -983,7 +991,8 @@ public partial class FileViewer : GitModuleControl
         ignoreWhitespaceChangesToolStripMenuItem.Visible = diffCanBeModified;
         ignoreAllWhitespaceChangesToolStripMenuItem.Visible = diffCanBeModified;
 
-        bool isPartialFlexibleView = viewMode.IsPartialTextView() && viewMode is not ViewMode.FixedDiff;
+        bool isPartialTextView = viewMode.IsPartialTextView();
+        bool isPartialFlexibleView = isPartialTextView && viewMode is not ViewMode.FixedDiff;
         increaseNumberOfLinesToolStripMenuItem.Visible = isPartialFlexibleView;
         decreaseNumberOfLinesToolStripMenuItem.Visible = isPartialFlexibleView;
         showEntireFileToolStripMenuItem.Visible = isPartialFlexibleView;
@@ -998,18 +1007,20 @@ public partial class FileViewer : GitModuleControl
         showPatchToolStripMenuItem.Checked = !(showGitWordColoringToolStripMenuItem.Checked || showDifftasticToolStripMenuItem.Checked);
         SetDifftasticEnabled();
 
-        toolStripSeparator2.Visible = viewMode.IsPartialTextView();
-        treatAllFilesAsTextToolStripMenuItem.Visible = viewMode.IsPartialTextView();
+        toolStripSeparator2.Visible = isPartialTextView;
+        treatAllFilesAsTextToolStripMenuItem.Visible = isPartialTextView;
 
         // toolbar
-        bool hasNextPreviousButton = viewMode.IsPartialTextView();
+        bool hasNextPreviousButton = isPartialTextView;
         nextChangeButton.Visible = hasNextPreviousButton;
         previousChangeButton.Visible = hasNextPreviousButton;
+        toolStripSeparator3.Visible = hasNextPreviousButton;
 
         increaseNumberOfLines.Visible = isPartialFlexibleView;
         decreaseNumberOfLines.Visible = isPartialFlexibleView;
+        toolStripSeparator4.Visible = isPartialFlexibleView;
         showEntireFileButton.Visible = isPartialFlexibleView;
-        showSyntaxHighlighting.Visible = viewMode.IsPartialTextView();
+        showSyntaxHighlighting.Visible = isPartialTextView;
 
         ignoreWhitespaceAtEol.Visible = diffCanBeModified || viewMode is ViewMode.Difftastic;
         ignoreWhiteSpaces.Visible = diffCanBeModified;
@@ -1062,7 +1073,7 @@ public partial class FileViewer : GitModuleControl
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, $"{ex.Message}{Environment.NewLine}{fullPath}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, $"{ex.Message}{Environment.NewLine}{fullPath}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             // If the file does not exist, it doesn't matter what size we
@@ -1393,14 +1404,14 @@ public partial class FileViewer : GitModuleControl
 
     // Event handlers
 
-    private void OnUICommandsChanged(object sender, GitUICommandsChangedEventArgs? e)
+    private void OnUICommandsChanged(object? sender, GitUICommandsChangedEventArgs? e)
     {
         if (e?.OldCommands is not null)
         {
             e.OldCommands.PostSettings -= UICommands_PostSettings;
         }
 
-        IGitUICommandsSource commandSource = sender as IGitUICommandsSource;
+        IGitUICommandsSource? commandSource = sender as IGitUICommandsSource;
         if (commandSource?.UICommands is not null)
         {
             commandSource.UICommands.PostSettings += UICommands_PostSettings;
@@ -1410,7 +1421,7 @@ public partial class FileViewer : GitModuleControl
         Encoding = null;
     }
 
-    private void UICommands_PostSettings(object sender, GitUIPostActionEventArgs? e)
+    private void UICommands_PostSettings(object? sender, GitUIPostActionEventArgs? e)
     {
         internalFileViewer.InvokeAndForget(() => internalFileViewer.VRulerPosition = AppSettings.DiffVerticalRulerPosition);
     }
@@ -1505,10 +1516,10 @@ public partial class FileViewer : GitModuleControl
         OnExtraDiffArgumentsChanged();
     }
 
-    private void _continuousScrollEventManager_BottomScrollReached(object sender, EventArgs e)
+    private void _continuousScrollEventManager_BottomScrollReached(object? sender, EventArgs e)
         => BottomScrollReached?.Invoke(sender, e);
 
-    private void _continuousScrollEventManager_TopScrollReached(object sender, EventArgs e)
+    private void _continuousScrollEventManager_TopScrollReached(object? sender, EventArgs e)
         => TopScrollReached?.Invoke(sender, e);
 
     private void llShowPreview_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -1517,23 +1528,23 @@ public partial class FileViewer : GitModuleControl
         ThreadHelper.JoinableTaskFactory.Run(() => _deferShowFunc?.Invoke() ?? Task.CompletedTask);
     }
 
-    private void PictureBox_MouseWheel(object sender, MouseEventArgs e)
+    private void PictureBox_MouseWheel(object? sender, MouseEventArgs e)
     {
         bool isScrollingTowardTop = e.Delta > 0;
         bool isScrollingTowardBottom = e.Delta < 0;
 
         if (isScrollingTowardTop)
         {
-            _continuousScrollEventManager.RaiseTopScrollReached(sender, e);
+            _continuousScrollEventManager.RaiseTopScrollReached(sender!, e);
         }
 
         if (isScrollingTowardBottom)
         {
-            _continuousScrollEventManager.RaiseBottomScrollReached(sender, e);
+            _continuousScrollEventManager.RaiseBottomScrollReached(sender!, e);
         }
     }
 
-    private void OnUICommandsSourceSet(object sender, GitUICommandsSourceEventArgs e)
+    private void OnUICommandsSourceSet(object? sender, GitUICommandsSourceEventArgs e)
     {
         UICommandsSource.UICommandsChanged += OnUICommandsChanged;
         OnUICommandsChanged(UICommandsSource, null);
@@ -1593,34 +1604,34 @@ public partial class FileViewer : GitModuleControl
     /// <param fileName="cancellationToken">The cancellation token.</param>
     /// <returns>the current TreeId (normally blob id, could be commit id) to be used.
     /// For worktree null is always returned also if there is a treeid (that really applies to the index)</returns>
-    public ObjectId? GetUpdateTreeId(GitItemStatus file,
-        ObjectId? commitId,
+    public ObjectId GetUpdateTreeId(GitItemStatus file,
+        ObjectId commitId,
         CancellationToken cancellationToken = default)
     {
-        if (file.TreeGuid is not null && commitId?.IsArtificial is false)
+        if (!file.TreeId.IsZero && !commitId.IsArtificial)
         {
             // current value is immutable (and IsSubmodule should have been set)
-            return file.TreeGuid;
+            return file.TreeId;
         }
 
-        if (commitId == ObjectId.WorkTreeId && (file.TreeGuid is not null || file.IsSubmodule))
+        if (commitId == ObjectId.WorkTreeId && (!file.TreeId.IsZero || file.IsSubmodule))
         {
             // treeId already calculated, no point in doing it again.
             // (if treeId is set, it means that IsSubmodule is set).
-            return null;
+            return default;
         }
 
         cancellationToken.ThrowIfCancellationRequested();
-        IObjectGitItem[] items = Module.GetTree(commitId, full: true, file.Name, cancellationToken).ToArray();
+        IObjectGitItem[] items = [.. Module.GetTree(commitId, full: true, file.Name, cancellationToken)];
         if (items.Length == 1)
         {
             IObjectGitItem gitItem = items[0];
             file.IsSubmodule = gitItem.ObjectType == GitObjectType.Commit;
-            file.TreeGuid = gitItem.ObjectId;
-            return commitId == ObjectId.WorkTreeId ? null : file.TreeGuid;
+            file.TreeId = gitItem.ObjectId;
+            return commitId == ObjectId.WorkTreeId ? default : file.TreeId;
         }
 
-        return null;
+        return default;
     }
 
     /// <summary>
@@ -1691,7 +1702,7 @@ public partial class FileViewer : GitModuleControl
         {
             Validates.NotNull(FilePreamble);
 
-            ObjectId? itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
+            ObjectId itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
             patch = PatchManager.GetSelectedLinesAsNewPatch(
                 Module,
                 _viewItem.Item.Name,
@@ -1701,7 +1712,7 @@ public partial class FileViewer : GitModuleControl
                 Encoding,
                 reset: false,
                 FilePreamble,
-                itemBlobId?.ToString());
+                itemBlobId.ToString());
         }
         else
         {
@@ -1754,7 +1765,7 @@ public partial class FileViewer : GitModuleControl
         {
             Validates.NotNull(FilePreamble);
 
-            ObjectId? itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
+            ObjectId itemBlobId = GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId);
             patch = PatchManager.GetSelectedLinesAsNewPatch(
                 Module,
                 _viewItem.Item.Name,
@@ -1764,7 +1775,7 @@ public partial class FileViewer : GitModuleControl
                 Encoding,
                 reset: true,
                 FilePreamble,
-                itemBlobId?.ToString());
+                itemBlobId.ToString());
         }
         else if (currentItemStaged)
         {
@@ -1828,7 +1839,7 @@ public partial class FileViewer : GitModuleControl
         {
             Validates.NotNull(FilePreamble);
 
-            ObjectId? itemBlobId = reverse ? GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId) : null;
+            ObjectId itemBlobId = reverse ? GetUpdateTreeId(_viewItem.Item, _viewItem.SecondRevision.ObjectId) : default;
             patch = PatchManager.GetSelectedLinesAsNewPatch(
                 Module,
                 _viewItem.Item.Name,
@@ -1838,7 +1849,7 @@ public partial class FileViewer : GitModuleControl
                 Encoding,
                 reset: reverse,
                 FilePreamble,
-                itemBlobId?.ToString());
+                itemBlobId.ToString());
         }
         else if (!reverse)
         {
@@ -1881,15 +1892,15 @@ public partial class FileViewer : GitModuleControl
         // TODO Cleanup the handling and separate AllOutput to StandardOutput/StandardError
         ExecutionResult result = Module.GitExecutable.Execute(args, inputWriter => inputWriter.BaseStream.Write(patch), throwOnErrorExit: false);
         string output = result.AllOutput.Trim();
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             // remove file mode warnings
-            output = output.RemoveLines(FileModeWarningRegex().IsMatch);
+            output = output.RemoveLines(FileModeWarningRegex.IsMatch);
         }
 
         if (!result.ExitedSuccessfully && (patchUpdateDiff || !MergeConflictHandler.HandleMergeConflicts(UICommands, this, false, false)))
         {
-            MessageBox.Show(this, $"{output}\n\n{Encoding.GetString(patch)}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, $"{output}\n\n{Encoding.GetString(patch)}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         else if (!result.ExitedSuccessfully || output.StartsWith("error: ") || output.StartsWith("warning: "))
         {
@@ -2143,7 +2154,7 @@ public partial class FileViewer : GitModuleControl
 
         return true;
 
-        bool PerformClickIfAvailable(ToolStripItem item)
+        static bool PerformClickIfAvailable(ToolStripItem item)
         {
             if (item.Enabled && item.Available)
             {

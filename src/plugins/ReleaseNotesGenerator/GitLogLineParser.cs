@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 
 namespace GitExtensions.Plugins.ReleaseNotesGenerator;
 
@@ -11,7 +11,7 @@ public interface IGitLogLineParser
 public sealed partial class GitLogLineParser : IGitLogLineParser
 {
     [GeneratedRegex(@"^(?<before>[a-zA-Z0-9]{1,})@(?<after>.*)", RegexOptions.ExplicitCapture)]
-    private static partial Regex LogLineRegex();
+    private static partial Regex LogLineRegex { get; }
 
     public LogLine? Parse(string line)
     {
@@ -20,7 +20,7 @@ public sealed partial class GitLogLineParser : IGitLogLineParser
             return null;
         }
 
-        Match m = LogLineRegex().Match(line);
+        Match m = LogLineRegex.Match(line);
         if (!m.Success)
         {
             return null;
@@ -41,7 +41,7 @@ public sealed partial class GitLogLineParser : IGitLogLineParser
         LogLine? logLineCurrent = null;
         foreach (string line in lines)
         {
-            LogLine logLine1 = Parse(line);
+            LogLine? logLine1 = Parse(line);
             if (logLine1 is not null)
             {
                 if (logLineCurrent is not null)

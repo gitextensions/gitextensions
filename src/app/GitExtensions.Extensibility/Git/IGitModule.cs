@@ -21,7 +21,7 @@ public interface IGitModule
 
     IReadOnlyList<IGitRef> GetRefs(RefsFilter getRef);
     IEnumerable<string> GetSettings(string setting);
-    IEnumerable<IObjectGitItem> GetTree(ObjectId? commitId, bool full, string fileName = "", CancellationToken cancellationToken = default);
+    IEnumerable<IObjectGitItem> GetTree(ObjectId commitId, bool full, string fileName = "", CancellationToken cancellationToken = default);
 
     /// <summary>
     ///  Loads the user-defined colors for the remote branches specific for the current repository.
@@ -61,7 +61,7 @@ public interface IGitModule
     /// </summary>
     /// <param name="revisionExpression">An expression like HEAD or commit hash that can be parsed as a git reference.</param>
     /// <returns>An ObjectID representing that git reference</returns>
-    ObjectId? RevParse(string revisionExpression);
+    ObjectId RevParse(string revisionExpression);
 
     void SetSetting(string setting, string value, bool append = false);
     void UnsetSetting(string setting);
@@ -77,14 +77,14 @@ public interface IGitModule
     string GitCommonDirectory { get; }
 
     /// <summary>
-    /// Gets the default Git executable associated with this module.
-    /// This executable can be non-native (i.e. WSL).
+    ///  Gets the default Git executable associated with this module.
+    ///  This executable can be non-native (i.e. WSL).
     /// </summary>
     IExecutable GitExecutable { get; }
 
     /// <summary>
-    /// Gets the access to the current git executable associated with this module.
-    /// This command runner can be non-native (i.e. WSL).
+    ///  Gets the access to the current git executable associated with this module.
+    ///  This command runner can be non-native (i.e. WSL).
     /// </summary>
     IGitCommandRunner GitCommandRunner { get; }
 
@@ -107,7 +107,7 @@ public interface IGitModule
     public IGitModule? SuperprojectModule { get; }
 
     /// <summary>
-    /// Gets the directory which contains the git repository.
+    ///  Gets the directory which contains the git repository.
     /// </summary>
     string WorkingDir { get; }
 
@@ -149,7 +149,7 @@ public interface IGitModule
     /// <returns>The path in Windows format with native file separators.</returns>
     public string GetWindowsPath(string path);
 
-    bool TryResolvePartialCommitId(string objectIdPrefix, [NotNullWhen(returnValue: true)] out ObjectId? objectId);
+    public bool TryResolvePartialCommitId(string objectIdPrefix, out ObjectId objectId);
 
     string GetSubmoduleFullPath(string localPath);
 
@@ -166,7 +166,7 @@ public interface IGitModule
     /// </remarks>
     IReadOnlyList<string> GetSubmodulesLocalPaths(bool recursive = true);
 
-    IGitModule GetSubmodule(string submoduleName);
+    IGitModule GetSubmodule(string? submoduleName);
 
     /// <summary>
     /// Retrieves registered remotes by running <c>git remote show</c> command.
@@ -176,14 +176,14 @@ public interface IGitModule
 
     /// <summary>
     /// Gets the commit ID of the currently checked out commit.
-    /// If the repo is bare or has no commits, <c>null</c> is returned.
+    /// If the repo is bare or has no commits, a zero <see cref="ObjectId"/> is returned.
     /// </summary>
-    ObjectId? GetCurrentCheckout();
+    ObjectId GetCurrentCheckout();
 
     /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
     string GetCurrentRemote();
 
-    GitRevision GetRevision(ObjectId? objectId = null, bool shortFormat = false, bool loadRefs = false);
+    GitRevision GetRevision(ObjectId objectId = default, bool shortFormat = false, bool loadRefs = false);
 
     Task<IReadOnlyList<Remote>> GetRemotesAsync();
 
@@ -206,11 +206,11 @@ public interface IGitModule
     T? GetEffectiveSetting<T>(string setting) where T : struct;
 
     /// <summary>
-    /// Gets the name of the currently checked out branch.
+    ///  Gets the name of the currently checked out branch.
     /// </summary>
     /// <param name="emptyIfDetached">Defines the value returned if HEAD is detached. <see langword="true"/> to return <see cref="string.Empty"/>; <see langword="false"/> to return "(no branch)".</param>
     /// <returns>
-    /// The name of the branch (for example: "main"); the value requested by <paramref name="emptyIfDetached"/>, if HEAD is detached.
+    ///  The name of the branch (for example: "main"); the value requested by <paramref name="emptyIfDetached"/>, if HEAD is detached; <see cref="string.Empty"/> if it fails to retrieve the branch name for any reason (for example, if the repository is not reachable).
     /// </returns>
     string GetSelectedBranch(bool emptyIfDetached = false);
 
@@ -222,9 +222,11 @@ public interface IGitModule
     SettingsSource GetEffectiveSettings();
     SettingsSource GetLocalSettings();
 
+    [return: NotNullIfNotNull(nameof(s))]
     string? ReEncodeStringFromLossless(string? s);
 
-    string ReEncodeCommitMessage(string s);
+    [return: NotNullIfNotNull(nameof(s))]
+    string? ReEncodeCommitMessage(string? s);
 
     string? GetDescribe(ObjectId commitId, CancellationToken cancellationToken);
 
@@ -236,8 +238,8 @@ public interface IGitModule
     Task<Patch?> GetCurrentChangesAsync(string? fileName, string? oldFileName, bool staged, string extraDiffArguments, Encoding? encoding = null, bool noLocks = false);
     Task<string?> GetFileContentsAsync(GitItemStatus file);
     IReadOnlyList<GitStash> GetStashes(bool noLocks);
+    IReadOnlyList<GitWorktree> GetWorktrees();
     IReadOnlyList<GitItemStatus> GetWorkTreeFiles();
-    SubmoduleStatus CheckSubmoduleStatus(ObjectId? commit, ObjectId? oldCommit, CommitData? data, CommitData? oldData, bool loadData);
     bool ResetAllChanges(bool clean, bool onlyWorkTree = false);
 
     /// <summary>
@@ -264,8 +266,8 @@ public interface IGitModule
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The result for the command.</returns>
     Task<ExecutionResult> GetSingleDifftoolAsync(
-        ObjectId? firstId,
-        ObjectId? secondId,
+        ObjectId firstId,
+        ObjectId secondId,
         string? fileName,
         string? oldFileName,
         ArgumentString extraDiffArguments,
@@ -276,8 +278,8 @@ public interface IGitModule
         CancellationToken cancellationToken);
 
     Task<(Patch? Patch, string? ErrorMessage)> GetSingleDiffAsync(
-            ObjectId? firstId,
-            ObjectId? secondId,
+            ObjectId firstId,
+            ObjectId secondId,
             string? fileName,
             string? oldFileName,
             string extraDiffArguments,
@@ -312,13 +314,19 @@ public interface IGitModule
     /// <returns>An <see cref="ExecutionResult"/> containing the list of differing files and any associated metadata.</returns>
     ExecutionResult GetDiffFiles(string? firstRevision, string? secondRevision, bool noCache, bool rawParsable, CancellationToken cancellationToken);
     bool InTheMiddleOfBisect();
-    IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision, string? secondRevision, StagedStatus stagedStatus, bool noCache, CancellationToken cancellationToken);
+    IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision,
+        string? secondRevision,
+        StagedStatus stagedStatus,
+        bool excludeSkipWorktreeFiles = true, // applies to StagedStatus.WorkTree or StagedStatus.Index only
+        UntrackedFilesMode untrackedFilesMode = UntrackedFilesMode.Default, // ditto
+        bool noCache = false,
+        CancellationToken cancellationToken = default);
     bool IsDirtyDir();
     Task<ExecutionResult> GetRangeDiffAsync(
         ObjectId firstId,
         ObjectId secondId,
-        ObjectId? firstBase,
-        ObjectId? secondBase,
+        ObjectId firstBase,
+        ObjectId secondBase,
         string extraDiffArguments,
         string? pathFilter,
         bool useGitColoring,
@@ -330,9 +338,14 @@ public interface IGitModule
     string ApplyPatch(string dirText, ArgumentString arguments);
     bool InTheMiddleOfRebase();
     bool InTheMiddleOfMerge();
-    IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId? firstId, ObjectId? secondId, ObjectId? parentToSecond, CancellationToken cancellationToken);
+    IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId firstId,
+        ObjectId secondId,
+        ObjectId parentToSecond,
+        bool excludeSkipWorktreeFiles = true, // applies to StagedStatus.WorkTree or StagedStatus.Index only
+        UntrackedFilesMode untrackedFilesMode = UntrackedFilesMode.Default, // ditto
+        CancellationToken cancellationToken = default);
     IReadOnlyList<GitItemStatus> GetIndexFilesWithSubmodulesStatus();
-    ObjectId? GetFileBlobHash(string fileName, ObjectId objectId);
+    ObjectId GetFileBlobHash(string fileName, ObjectId objectId);
     void OpenFilesWithDifftool(string? firstGitCommit, string? secondGitCommit, string? customTool);
     IReadOnlyList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns);
     void UnlockIndex(bool includeSubmodules);
@@ -340,10 +353,10 @@ public interface IGitModule
     ArgumentString FetchCmd(string? remote, string? remoteBranch, string? localBranch, bool? fetchTags = false, bool isUnshallow = false, bool pruneRemoteBranches = false, bool pruneRemoteBranchesAndTags = false);
     void RunGui();
     void RunGitK();
-    ObjectId? GetMergeBase(ObjectId a, ObjectId b);
+    ObjectId GetMergeBase(ObjectId a, ObjectId b);
     (int? First, int? Second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId);
     IReadOnlyList<GitItemStatus> GetCombinedDiffFileList(ObjectId mergeCommitObjectId);
-    IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId treeGuid, bool full, CancellationToken cancellationToken = default);
+    IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId treeId, bool full, CancellationToken cancellationToken = default);
     IReadOnlyList<string> GetFullTree(string id);
 
     /// <summary>
@@ -367,7 +380,15 @@ public interface IGitModule
     string GetCommitCountString(ObjectId fromId, string to);
     IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(CancellationToken cancellationToken);
     IReadOnlyList<GitItemStatus> GetAllChangedFilesWithSubmodulesStatus(bool excludeIgnoredFiles, bool excludeAssumeUnchangedFiles, bool excludeSkipWorktreeFiles, UntrackedFilesMode untrackedFiles, CancellationToken cancellationToken);
-    bool ResetChanges(ObjectId? resetId, IReadOnlyList<GitItemStatus> selectedItems, bool resetAndDelete, IFullPathResolver fullPathResolver, out StringBuilder output, Action<BatchProgressEventArgs>? progressAction);
+
+    /// <summary>
+    /// Initiate the submodule status async task, to calculate the statuses for the submodules in the list.
+    /// The task replaces the current task if it exists.
+    /// </summary>
+    /// <param name="status">List with GitItemStatus</param>
+    public void GetSubmoduleCurrentStatus(IReadOnlyList<GitItemStatus> status);
+
+    bool ResetChanges(ObjectId resetId, IReadOnlyList<GitItemStatus> selectedItems, bool resetAndDelete, IFullPathResolver fullPathResolver, out StringBuilder output, Action<BatchProgressEventArgs>? progressAction);
     bool HasSubmodules();
     void OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null);
     void OpenWithDifftoolDirDiff(string? firstRevision, string? secondRevision, string? customTool);
@@ -413,9 +434,9 @@ public interface IGitModule
     /// Performs <c>git-checkout</c> for the given files.
     /// </summary>
     /// <param name="files">The list of files to checkout.</param>
-    /// <param name="revision">The revision to checkout; <see langword="null"/> is handled as <c>HEAD</c>.</param>
+    /// <param name="objectId">The objectId to checkout; the default (zero) <see cref="ObjectId"/> is handled as <c>HEAD</c>.</param>
     /// <param name="force">Indicates whether to perform a forced checkout.</param>
-    string CheckoutFiles(IReadOnlyList<string> files, ObjectId? revision, bool force);
+    string CheckoutFiles(IReadOnlyList<string> files, ObjectId objectId, bool force);
 
     void DeleteTag(string tagName);
 
@@ -465,7 +486,7 @@ public interface IGitModule
     IGitVersion GitVersion { get; }
 
     bool GetCombinedDiffContent(
-            ObjectId revisionOfMergeCommit,
+            ObjectId objectIdOfMergeCommit,
             string filePath,
             string extraArgs,
             Encoding encoding,
@@ -523,6 +544,7 @@ public interface IGitModule
         bool useGitColoring,
         bool showFunctionName,
         IGitCommandConfiguration commandConfiguration,
+        Encoding encoding,
         CancellationToken cancellationToken);
 
     GitBlame Blame(string? fileName, string from, Encoding encoding, string? lines, CancellationToken cancellationToken);

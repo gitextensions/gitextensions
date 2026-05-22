@@ -31,13 +31,13 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         Arguments.Text = GourceArguments;
     }
 
-    private GitUIEventArgs GitUIArgs { get; }
+    private GitUIEventArgs GitUIArgs { get; } = null!;
 
-    public string PathToGource { get; set; }
+    public string PathToGource { get; set; } = "";
 
     public string? GitWorkingDir { get; set; }
 
-    public string GourceArguments { get; set; }
+    public string GourceArguments { get; set; } = "";
 
     private void RunRealCmdDetached(string cmd, string arguments)
     {
@@ -52,7 +52,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         }
         catch (Exception e)
         {
-            MessageBox.Show(this, e.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, e.Message);
         }
     }
 
@@ -62,7 +62,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
 
         if (!File.Exists(GourcePath.Text))
         {
-            MessageBox.Show(this, "Cannot find Gource.\nPlease download Gource and set the correct path.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, "Cannot find Gource.\nPlease download Gource and set the correct path.");
             return;
         }
 
@@ -80,7 +80,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
 
     private async Task<string> LoadAvatarsAsync()
     {
-        string gourceAvatarsDir = Path.Combine(Path.GetTempPath(), "GitAvatars");
+        string gourceAvatarsDir = Path.Join(Path.GetTempPath(), "GitAvatars");
 
         Directory.CreateDirectory(gourceAvatarsDir);
 
@@ -110,7 +110,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
         {
             try
             {
-                Image image = await AvatarService.DefaultProvider.GetAvatarAsync(author.email, author.name, imageSize: 90);
+                Image? image = await AvatarService.DefaultProvider.GetAvatarAsync(author.email, author.name, imageSize: 90);
                 string filename = author.name + ".png";
 
                 if (image is null || filename.IndexOfAny(Path.GetInvalidFileNameChars()) >= 0)
@@ -118,7 +118,7 @@ public partial class GourceStart : ResourceManager.GitExtensionsFormBase
                     return;
                 }
 
-                string filePath = Path.Combine(gourceAvatarsDir, filename);
+                string filePath = Path.Join(gourceAvatarsDir, filename);
                 image.Save(filePath, ImageFormat.Png);
             }
             catch

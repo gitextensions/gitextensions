@@ -1,0 +1,44 @@
+﻿{
+  "Text": "",
+  "Tag": "RelativePath: ",
+  "Nodes": [
+    {
+      "Text": "core",
+      "Tag": "RelativePath: core",
+      "Nodes": [
+        {
+          "Text": "api",
+          "Tag": "RelativePath: core/api",
+          "Nodes": [
+            {
+              "Text": "c_a.0",
+              "Tag": "FileStatusItem: core/api/c_a.0",
+              "Nodes": []
+            }
+          ]
+        },
+        {
+          "Text": "c.1",
+          "Tag": "FileStatusItem: core/c.1",
+          "Nodes": []
+        },
+        {
+          "Text": "c.2",
+          "Tag": "FileStatusItem: core/c.2",
+          "Nodes": []
+        }
+      ]
+    },
+    {
+      "Text": "core.dot",
+      "Tag": "RelativePath: core.dot",
+      "Nodes": [
+        {
+          "Text": "cd.3",
+          "Tag": "FileStatusItem: core.dot/cd.3",
+          "Nodes": []
+        }
+      ]
+    }
+  ]
+}

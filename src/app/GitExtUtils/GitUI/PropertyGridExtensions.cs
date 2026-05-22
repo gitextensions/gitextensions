@@ -12,7 +12,7 @@ public static class PropertyGridExtensions
 
     public static void SetLabelColumnWidth(this PropertyGrid grid, int width)
     {
-        object view = _gridViewField?.GetValue(grid);
+        object? view = _gridViewField?.GetValue(grid);
         _moveSplitterToMethod?.Invoke(view, [width]);
     }
 }

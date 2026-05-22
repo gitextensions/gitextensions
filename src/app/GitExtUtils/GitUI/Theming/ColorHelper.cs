@@ -1,121 +1,69 @@
-﻿namespace GitExtUtils.GitUI.Theming;
+﻿using System.Collections.Concurrent;
+
+namespace GitExtUtils.GitUI.Theming;
 
 public static class ColorHelper
 {
+    private static readonly ConcurrentDictionary<(Color fore, Color back), Color> _foreColorForBackColors = new();
+
     private static readonly (KnownColor back, KnownColor fore)[] BackForeExamples =
-    {
+    [
         (KnownColor.Window, KnownColor.WindowText),
         (KnownColor.Control, KnownColor.ControlText),
         (KnownColor.Info, KnownColor.InfoText),
         (KnownColor.Highlight, KnownColor.HighlightText),
         (KnownColor.MenuHighlight, KnownColor.HighlightText),
-    };
+    ];
 
     public static ThemeSettings ThemeSettings { private get; set; } = ThemeSettings.Default;
 
     /// <summary>
-    ///  Blends the color with the default Editor background color, halves each value first.
-    ///  Keep the original alpha, SystemColors.Window.A==255 and we do not want rounding errors.
+    ///  Blends the color with the current editor background color at 50% in linear light (sRGB gamma-corrected) space,
+    ///  producing a perceptually correct midpoint. The original alpha is preserved.
     /// </summary>
-    public static Color DimColor(Color color)
+    public static Color DimColor(this Color color)
     {
-        const uint maskWithoutLeastSignificantBits = 0xFE_FE_FE_FE;
-        uint defaultBackground = (uint)ThemeSettings.Theme.GetColor(AppColor.EditorBackground).ToArgb();
-        int dimCode = (int)((((uint)color.ToArgb() & maskWithoutLeastSignificantBits) >> 1) + ((defaultBackground & maskWithoutLeastSignificantBits) >> 1));
-        return Color.FromArgb(color.A, (dimCode >> 16) & 0xff, (dimCode >> 8) & 0xff, dimCode & 0xff);
+        Color background = ThemeSettings.Theme.GetColor(AppColor.EditorBackground);
+        byte r = SrgbDelinearize((SrgbLinearize(color.R) + SrgbLinearize(background.R)) * 0.5);
+        byte g = SrgbDelinearize((SrgbLinearize(color.G) + SrgbLinearize(background.G)) * 0.5);
+        byte b = SrgbDelinearize((SrgbLinearize(color.B) + SrgbLinearize(background.B)) * 0.5);
+        return Color.FromArgb(color.A, r, g, b);
     }
 
-    public static void SetForeColorForBackColor(this Control control) =>
-        control.ForeColor = GetForeColorForBackColor(control.BackColor);
+    public static void SetForeColorForBackColor(this Control control)
+        => control.ForeColor = control.ForeColor.AdaptForeColor(control.BackColor);
 
-    public static Color GetForeColorForBackColor(Color backColor)
+    public static Color GetTextColor(this Color backColor)
+        => ThemeSettings.Theme.GetNonEmptyColor(KnownColor.WindowText).AdaptForeColor(backColor);
+
+    public static Color AdaptForeColor(
+        this Color original, Color backColor)
     {
-        HslColor hsl1 = backColor.ToPerceptedHsl();
-
-        (double distance, int index) closestBack = Enumerable.Range(0, BackForeExamples.Length)
-            .Select(i => (Distance: DistanceTo(BackForeExamples[i].back), Index: i))
-            .Min();
-
-        (double distance, int index) closestFore = Enumerable.Range(0, BackForeExamples.Length)
-            .Select(i => (Distance: DistanceTo(BackForeExamples[i].fore), Index: i))
-            .Min();
-
-        return ThemeSettings.Theme.GetNonEmptyColor(closestBack.distance <= closestFore.distance * 1.25 // prefer back-fore combination
-            ? BackForeExamples[closestBack.index].fore
-            : BackForeExamples[closestFore.index].back);
-
-        double DistanceTo(KnownColor c2)
+        if (backColor == Color.Empty)
         {
-            HslColor hsl2 = ThemeSettings.Theme.GetNonEmptyColor(c2).ToPerceptedHsl();
-            return
-                Math.Abs(hsl1.L - hsl2.L) +
-                (0.25 * Math.Abs(hsl1.S - hsl2.S)) +
-                (0.25 * (hsl1.H - hsl2.H).Modulo(1));
+            backColor = ThemeSettings.Theme.GetColor(AppColor.PanelBackground);
         }
+
+        (Color fore, Color back) key = (original, backColor);
+
+        if (_foreColorForBackColors.TryGetValue(key, out Color cachedColor))
+        {
+            return cachedColor;
+        }
+
+        Color foreColor = EnsureContrast(backColor, original);
+        _foreColorForBackColors[key] = foreColor;
+        return foreColor;
     }
 
     /// <summary>
-    /// Get a color to be used instead of SystemColors.GrayText
-    /// when background is SystemColors.Highlight or SystemColors.MenuHighlight.
-    /// </summary>
-    /// <remarks>
-    /// Consider a transformation of color range [SystemColors.ControlText, SystemColors.Control] to
-    /// [SystemColors.HighlightText, SystemColors.Highlight].
-    /// What result would such transformation produce given SystemColors.GrayText as input?
-    /// First we calculate transformed GrayText color relative to InvariantTheme.
-    /// Then we apply transformation from InvariantTheme to current theme by calling AdaptTextColor.
-    /// </remarks>
-    public static Color GetHighlightGrayTextColor(
-        KnownColor backgroundColorName,
-        KnownColor textColorName,
-        KnownColor highlightColorName,
-        float degreeOfGrayness = 1f)
-    {
-        HslColor grayTextHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.GrayText));
-        HslColor textHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
-        HslColor highlightTextHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.HighlightText));
-        HslColor backgroundHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(backgroundColorName));
-        HslColor highlightBackgroundHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(highlightColorName));
-
-        double grayTextL = textHsl.L + (degreeOfGrayness * (grayTextHsl.L - textHsl.L));
-
-        double highlightGrayTextL = Transform(
-            grayTextL,
-            textHsl.L, backgroundHsl.L,
-            highlightTextHsl.L, highlightBackgroundHsl.L);
-
-        HslColor highlightGrayTextHsl = grayTextHsl.WithLuminosity(highlightGrayTextL);
-        return AdaptTextColor(highlightGrayTextHsl.ToColor());
-    }
-
-    /// <summary>
-    /// Get a color to be used instead of SystemColors.GrayText which is more or less gray than
-    /// the usual SystemColors.GrayText.
-    /// </summary>
-    public static Color GetGrayTextColor(KnownColor textColorName, float degreeOfGrayness = 1f)
-    {
-        HslColor grayTextHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(KnownColor.GrayText));
-        HslColor textHsl = new(ThemeSettings.InvariantTheme.GetNonEmptyColor(textColorName));
-
-        double grayTextL = textHsl.L + (degreeOfGrayness * (grayTextHsl.L - textHsl.L));
-        HslColor highlightGrayTextHsl = grayTextHsl.WithLuminosity(grayTextL);
-        return AdaptTextColor(highlightGrayTextHsl.ToColor());
-    }
-
-    public static Color AdaptTextColor(this Color original) =>
-        AdaptColor(original, isForeground: true);
-
-    public static Color AdaptBackColor(this Color original) =>
-        AdaptColor(original, isForeground: false);
-
-    /// <summary>
-    /// Adapt invariant colors to the current theme, by comparing to Text/Background color pairs in the invariant theme.
-    /// Note that <see cref="SystemColors"/> and <see cref="AppColor"/> should not be adapted.
+    ///  Adapt invariant background colors to the current theme,
+    ///  by comparing to Text/Background color pairs in the invariant theme.
+    ///  Note that <see cref="SystemColors"/> and <see cref="AppColor"/> should not be adapted.
     /// </summary>
     /// <param name="original">The original <see cref="Color"/></param>
-    /// <param name="isForeground"><see ref="true"/> if foreground/text, <see ref="false"/> if background.</param>
     /// <returns>The adapted color.</returns>
-    public static Color AdaptColor(Color original, bool isForeground)
+    public static Color AdaptBackColor(this Color original)
     {
         if (IsDefaultTheme)
         {
@@ -125,16 +73,12 @@ public static class ColorHelper
         HslColor hsl1 = original.ToPerceptedHsl();
 
         int index = Enumerable.Range(0, BackForeExamples.Length)
-            .Select(i => (
-                distance: DistanceTo(
-                    isForeground ? BackForeExamples[i].fore : BackForeExamples[i].back),
-                index: i))
-            .Min().index;
+            .Min(i => (
+                 distance: DistanceTo(BackForeExamples[i].back),
+                 index: i)).index;
 
         (KnownColor back, KnownColor fore) option = BackForeExamples[index];
-        return isForeground
-            ? AdaptColor(original, option.fore, option.back)
-            : AdaptColor(original, option.back, option.fore);
+        return AdaptColor(original, option.back, option.fore);
 
         double DistanceTo(KnownColor c2)
         {
@@ -144,14 +88,14 @@ public static class ColorHelper
     }
 
     /// <remarks>0.05 is subtle. 0.3 is quite strong.</remarks>
-    public static Color MakeBackgroundDarkerBy(this Color color, double amount) =>
+    public static Color MakeDarkerBy(this Color color, double amount) =>
         color.TransformHsl(l: l => l - amount);
 
     public static void AdaptImageLightness(this ToolStripItem item) =>
-        item.Image = ((Bitmap)item.Image)?.AdaptLightness();
+        item.Image = ((Bitmap?)item.Image)?.AdaptLightness();
 
     public static void AdaptImageLightness(this ButtonBase button) =>
-        button.Image = ((Bitmap)button.Image)?.AdaptLightness();
+        button.Image = ((Bitmap?)button.Image)?.AdaptLightness();
 
     public static Bitmap AdaptLightness(this Bitmap original)
     {
@@ -328,10 +272,10 @@ public static class ColorHelper
 
     /// <summary>
     /// Find if the theme is the default.
-    /// Note that the theme is parsed, so ThemeSettings.Default is another instance.
+    /// Note that the theme is parsed, so ThemeSettings.DefaultLight is another instance.
     /// </summary>
     /// <returns><see langword="true"/> if the theme is default; otherwise <see langword="false"/>.</returns>
-    private static bool IsDefaultTheme => string.IsNullOrWhiteSpace(ThemeSettings.Theme.Id.Name);
+    private static bool IsDefaultTheme => ThemeSettings.Theme.Id == ThemeId.DefaultLight;
 
     public static Color Lerp(Color colour, Color to, float amount)
     {
@@ -361,16 +305,105 @@ public static class ColorHelper
     /// Get contrast color (Black or White) of a background color to use as a foreground color (not using the theme settings).
     /// </summary>
     /// <param name="backgroundColor">the background color</param>
-    /// <param name="luminanceThreshold">a custom luminance threshold to let the caller determine the boundary.</param>
+    /// <param name="luminanceThreshold">
+    ///  scaled to the WCAG relative luminance threshold; so 0.5 corresponds to 0.18,
+    ///  which is approximately the WCAG equal-contrast midpoint between black and white.
+    ///  Therefore "force all" to white is about 5.5.
+    ///  Note that the rgb midpoint is closer to 77 than 7f, not linear.
+    /// </param>
     /// <returns>the black or white color to use as foreground</returns>
-    public static Color GetContrastColor(this Color backgroundColor, float luminanceThreshold = 0.5f)
+    public static Color GetContrastColor(this Color backgroundColor, float luminanceThreshold)
     {
-        // (Loosely) Based on https://stackoverflow.com/a/3943023
-        // Calculate the luminance of the background color
-        double luminance = ((0.2126 * backgroundColor.R) + (0.7152 * backgroundColor.G) + (0.0722 * backgroundColor.B)) / 255;
+        // scale so 0.5 corresponds to the WCAG equal-contrast midpoint between black and white
+        const float wcagEqualContrastMidpoint = 0.185f;
+        luminanceThreshold = luminanceThreshold * (wcagEqualContrastMidpoint * 2.0f);
+        double luminance = WcagRelativeLuminance(backgroundColor);
+        return luminance > luminanceThreshold ? Color.Black : Color.White;
+    }
 
-        // Use the threshold value to determine whether to use black or white as the foreground color
-        return (luminance > luminanceThreshold) ? Color.Black : Color.White;
+    private static double WcagRelativeLuminance(Color c) =>
+        (0.2126 * SrgbLinearize(c.R)) + (0.7152 * SrgbLinearize(c.G)) + (0.0722 * SrgbLinearize(c.B));
+
+    private static double SrgbLinearize(byte channel)
+    {
+        double normalized = channel / 255.0;
+        return normalized <= 0.04045 ? normalized / 12.92 : Math.Pow((normalized + 0.055) / 1.055, 2.4);
+    }
+
+    private static byte SrgbDelinearize(double linear)
+    {
+        double normalized = linear <= 0.0031308 ? 12.92 * linear : (1.055 * Math.Pow(linear, 1.0 / 2.4)) - 0.055;
+        return (byte)Math.Round(Math.Clamp(normalized * 255.0, 0.0, 255.0));
+    }
+
+    private static double WcagContrastRatio(Color c1, Color c2)
+    {
+        double l1 = WcagRelativeLuminance(c1);
+        double l2 = WcagRelativeLuminance(c2);
+        return l1 > l2 ? (l1 + 0.05) / (l2 + 0.05) : (l2 + 0.05) / (l1 + 0.05);
+    }
+
+    /// <summary>
+    ///  Adjusts <paramref name="foreground"/> luminance until <paramref name="ratio"/> contrast is met against
+    ///  <paramref name="background"/>, mirroring the xterm.js algorithm used by VS Code.
+    ///  If neither direction reaches the target, the result with the higher contrast ratio is returned.
+    /// </summary>
+    private static Color EnsureContrast(Color background, Color foreground, double ratio = 4.5)
+    {
+        if (WcagContrastRatio(background, foreground) >= ratio)
+        {
+            return foreground;
+        }
+
+        double foregroundLuminance = WcagRelativeLuminance(foreground);
+        double backgroundLuminance = WcagRelativeLuminance(background);
+
+        Color resultA = foregroundLuminance < backgroundLuminance
+            ? ReduceLuminance(background, foreground, ratio)
+            : IncreaseLuminance(background, foreground, ratio);
+
+        if (WcagContrastRatio(background, resultA) >= ratio)
+        {
+            return resultA;
+        }
+
+        Color resultB = foregroundLuminance < backgroundLuminance
+            ? IncreaseLuminance(background, foreground, ratio)
+            : ReduceLuminance(background, foreground, ratio);
+
+        return WcagContrastRatio(background, resultA) >= WcagContrastRatio(background, resultB)
+            ? resultA
+            : resultB;
+    }
+
+    private static Color ReduceLuminance(Color background, Color foreground, double ratio)
+    {
+        int r = foreground.R, g = foreground.G, b = foreground.B;
+        Color current = foreground;
+        while (WcagContrastRatio(background, current) < ratio && (r > 0 || g > 0 || b > 0))
+        {
+            r -= (int)Math.Ceiling(r * 0.1);
+            g -= (int)Math.Ceiling(g * 0.1);
+            b -= (int)Math.Ceiling(b * 0.1);
+            current = Color.FromArgb(foreground.A, r, g, b);
+        }
+
+        return current;
+    }
+
+    private static Color IncreaseLuminance(Color background, Color foreground, double ratio)
+    {
+        int r = foreground.R, g = foreground.G, b = foreground.B;
+        Color current = foreground;
+        while (WcagContrastRatio(background, current) < ratio && (r < 255 || g < 255 || b < 255))
+        {
+            r = Math.Min(255, r + (int)Math.Ceiling((255 - r) * 0.1));
+            g = Math.Min(255, g + (int)Math.Ceiling((255 - g) * 0.1));
+            b = Math.Min(255, b + (int)Math.Ceiling((255 - b) * 0.1));
+            current = Color.FromArgb(foreground.A, r, g, b);
+        }
+
+        return current;
     }
 
     internal static class TestAccessor
@@ -378,7 +411,7 @@ public static class ColorHelper
         public static double Transform(double orig, double exampleOrig, double oppositeOrig, double example, double opposite) =>
             ColorHelper.Transform(orig, exampleOrig, oppositeOrig, example, opposite);
 
-        public static Color GetContrastColor(Color backgroundColor, float luminanceThreshold = 0.5f) =>
-            ColorHelper.GetContrastColor(backgroundColor, luminanceThreshold);
+        public static Color GetContrastColor(Color backgroundColor, float luminanceThreshold) =>
+            backgroundColor.GetContrastColor(luminanceThreshold);
     }
 }

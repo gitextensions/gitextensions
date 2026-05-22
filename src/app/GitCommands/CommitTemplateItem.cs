@@ -1,20 +1,20 @@
-﻿using System.Runtime.Serialization;
-using GitCommands.Utils;
+﻿using GitCommands.Utils;
 
 namespace GitCommands;
 
-[Serializable]
-public sealed class CommitTemplateItem : ISerializable
+public sealed class CommitTemplateItem
 {
     public string Name { get; set; }
     public string Text { get; set; }
     public Image? Icon { get; set; }
+    public bool IsRegex { get; set; }
 
-    public CommitTemplateItem(string name, string text, Image? icon)
+    public CommitTemplateItem(string name, string text, Image? icon, bool isRegex)
     {
         Name = name;
         Text = text;
         Icon = icon;
+        IsRegex = isRegex;
     }
 
     public CommitTemplateItem()
@@ -22,18 +22,7 @@ public sealed class CommitTemplateItem : ISerializable
         Name = string.Empty;
         Text = string.Empty;
         Icon = null;
-    }
-
-    private CommitTemplateItem(SerializationInfo info, StreamingContext context)
-    {
-        Name = (string)info.GetValue("Name", typeof(string));
-        Text = (string)info.GetValue("Text", typeof(string));
-    }
-
-    public void GetObjectData(SerializationInfo info, StreamingContext context)
-    {
-        info.AddValue("Name", Name);
-        info.AddValue("Text", Text);
+        IsRegex = false;
     }
 
     public static void SaveToSettings(CommitTemplateItem[]? items)
@@ -44,8 +33,8 @@ public sealed class CommitTemplateItem : ISerializable
 
     public static CommitTemplateItem[]? LoadFromSettings()
     {
-        string serializedString = AppSettings.CommitTemplates;
-        CommitTemplateItem[] templates = DeserializeCommitTemplates(serializedString, out bool shouldBeUpdated);
+        string? serializedString = AppSettings.CommitTemplates;
+        CommitTemplateItem[]? templates = DeserializeCommitTemplates(serializedString, out bool shouldBeUpdated);
         if (shouldBeUpdated)
         {
             SaveToSettings(templates!);

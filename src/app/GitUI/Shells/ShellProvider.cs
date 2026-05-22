@@ -5,7 +5,7 @@ namespace GitUI.Shells;
 public class ShellProvider
 {
     private static IShellDescriptor DefaultShell = new BashShell();
-    private static readonly IShellDescriptor[] Shells = { DefaultShell, new CmdShell(), new PwshShell(), new PowerShellShell() };
+    private static readonly IShellDescriptor[] Shells = [DefaultShell, new CmdShell(), new PwshShell(), new PowerShellShell()];
 
     public IReadOnlyList<IShellDescriptor> GetShells() => Shells;
 

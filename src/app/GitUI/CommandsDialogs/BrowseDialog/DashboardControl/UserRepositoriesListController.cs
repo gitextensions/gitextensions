@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
@@ -17,16 +17,18 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
 {
     private readonly ILocalRepositoryManager _localRepositoryManager;
     private readonly IInvalidRepositoryRemover _invalidRepositoryRemover;
+    private readonly IRepositoryCurrentBranchNameCache _branchNameCache;
 
     // Holds the raw, unfiltered list of repositories.
     // This is done to allow fast filtering of all known repos.
     private IList<Repository>? _allRecentRepositories;
     private IList<Repository>? _allFavoriteRepositories;
 
-    public UserRepositoriesListController(ILocalRepositoryManager localRepositoryManager, IInvalidRepositoryRemover invalidRepositoryRemover)
+    public UserRepositoriesListController(ILocalRepositoryManager localRepositoryManager, IInvalidRepositoryRemover invalidRepositoryRemover, IRepositoryCurrentBranchNameCache branchNameCache)
     {
         _localRepositoryManager = localRepositoryManager;
         _invalidRepositoryRemover = invalidRepositoryRemover;
+        _branchNameCache = branchNameCache;
     }
 
     public async Task AssignCategoryAsync(Repository repository, string? category)
@@ -38,11 +40,14 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
 
     /// <summary>
     /// Clears the repository cache. After this call the repository list will be loaded from disk.
+    /// Note: The info in _branchNameCache is updated by Dashboard (but not read), the data is shared
+    /// with the repo menus in both Dashboard and Browse.
     /// </summary>
     public void ClearCache()
     {
         _allRecentRepositories = null;
         _allFavoriteRepositories = null;
+        _branchNameCache.InvalidateAll();
     }
 
     public string GetCurrentBranchName(string path)
@@ -52,7 +57,7 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
             return string.Empty;
         }
 
-        return GitModule.GetSelectedBranchFast(path);
+        return _branchNameCache.GetCurrentBranchName(path);
     }
 
     public bool IsValidGitWorkingDir(string path)
@@ -79,14 +84,14 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
         _allRecentRepositories ??= ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
         IList<Repository> repositories = Filter(_allRecentRepositories, pattern);
         splitter.SplitRecentRepos(repositories, topRepos, recentRepos);
-        List<RecentRepoInfo> recentRepositories = topRepos.Union(recentRepos).ToList();
+        List<RecentRepoInfo> recentRepositories = [.. topRepos.Union(recentRepos)];
 
         _allFavoriteRepositories ??= ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadFavouriteHistoryAsync);
         repositories = Filter(_allFavoriteRepositories, pattern);
         topRepos.Clear();
         recentRepos.Clear();
         splitter.SplitRecentRepos(repositories, topRepos, recentRepos);
-        List<RecentRepoInfo> favouriteRepositories = topRepos.Union(recentRepos).ToList();
+        List<RecentRepoInfo> favouriteRepositories = [.. topRepos.Union(recentRepos)];
 
         return (recentRepositories, favouriteRepositories);
     }
@@ -101,8 +106,6 @@ public sealed class UserRepositoriesListController : IUserRepositoriesListContro
             return repositories;
         }
 
-        return repositories
-            .Where(r => r.Path.Contains(pattern, StringComparison.CurrentCultureIgnoreCase))
-            .ToList();
+        return [.. repositories.Where(r => r.Path.Contains(pattern, StringComparison.CurrentCultureIgnoreCase))];
     }
 }

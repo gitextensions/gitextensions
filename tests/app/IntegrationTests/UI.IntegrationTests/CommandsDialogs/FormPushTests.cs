@@ -1,5 +1,4 @@
 ﻿using CommonTestUtils;
-using FluentAssertions;
 using GitCommands.Git;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -10,10 +9,10 @@ namespace GitExtensions.UITests.CommandsDialogs;
 public class FormPushTests
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     [SetUp]
     public void SetUp()
@@ -69,7 +68,7 @@ public class FormPushTests
             () =>
             {
                 // False because we haven't performed any actions
-                ClassicAssert.False(_commands.StartPushDialog(owner: null, pushOnShow: false, forceWithLease: false, out _));
+                _commands.StartPushDialog(owner: null, pushOnShow: false, forceWithLease: false, out _).Should().BeFalse();
             },
             testDriverAsync);
     }

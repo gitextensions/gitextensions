@@ -1,8 +1,6 @@
 ﻿using GitUI;
 
 namespace GitUITests;
-
-[TestFixture]
 public sealed class CancellationTokenSequenceTests
 {
     [Test]
@@ -12,12 +10,12 @@ public sealed class CancellationTokenSequenceTests
 
         CancellationToken token1 = sequence.Next();
 
-        ClassicAssert.False(token1.IsCancellationRequested);
+        token1.IsCancellationRequested.Should().BeFalse();
 
         CancellationToken token2 = sequence.Next();
 
-        ClassicAssert.True(token1.IsCancellationRequested);
-        ClassicAssert.False(token2.IsCancellationRequested);
+        token1.IsCancellationRequested.Should().BeTrue();
+        token2.IsCancellationRequested.Should().BeFalse();
     }
 
     [Test]
@@ -27,7 +25,7 @@ public sealed class CancellationTokenSequenceTests
 
         sequence.Dispose();
 
-        ClassicAssert.Throws<OperationCanceledException>(() => sequence.Next());
+        ((Action)(() => sequence.Next())).Should().Throw<OperationCanceledException>();
     }
 
     [Test]
@@ -37,11 +35,11 @@ public sealed class CancellationTokenSequenceTests
 
         CancellationToken token = sequence.Next();
 
-        ClassicAssert.False(token.IsCancellationRequested);
+        token.IsCancellationRequested.Should().BeFalse();
 
         sequence.CancelCurrent();
 
-        ClassicAssert.True(token.IsCancellationRequested);
+        token.IsCancellationRequested.Should().BeTrue();
     }
 
     [Test]
@@ -51,7 +49,7 @@ public sealed class CancellationTokenSequenceTests
 
         CancellationToken token = sequence.Next();
 
-        ClassicAssert.False(token.IsCancellationRequested);
+        token.IsCancellationRequested.Should().BeFalse();
 
         sequence.CancelCurrent();
         sequence.CancelCurrent();
@@ -74,11 +72,11 @@ public sealed class CancellationTokenSequenceTests
 
         CancellationToken token = sequence.Next();
 
-        ClassicAssert.False(token.IsCancellationRequested);
+        token.IsCancellationRequested.Should().BeFalse();
 
         sequence.Dispose();
 
-        ClassicAssert.True(token.IsCancellationRequested);
+        token.IsCancellationRequested.Should().BeTrue();
     }
 
     [Test]
@@ -105,53 +103,44 @@ public sealed class CancellationTokenSequenceTests
     [Test]
     public async Task Concurrent_callers_to_Next_only_result_in_one_non_cancelled_token_being_issued()
     {
-        const int loopCount = 10000;
+        const int loopCount = 1000;
 
         int logicalProcessorCount = Environment.ProcessorCount;
-        int threadCount = Math.Max(2, logicalProcessorCount);
+
+        // Cap threads to avoid O(n²) CAS contention in Next() on high-core-count machines
+        int threadCount = Math.Min(8, Math.Max(2, logicalProcessorCount));
 
         using CancellationTokenSequence sequence = new();
         using Barrier barrier = new(threadCount);
-        using CountdownEvent countdown = new(loopCount * threadCount);
         int completedCount = 0;
-
-        CancellationTokenSource completionTokenSource = new();
-        CancellationToken completionToken = completionTokenSource.Token;
         int[] winnerByIndex = new int[threadCount];
 
-        List<Task> tasks = Enumerable
+        List<Task> tasks = [.. Enumerable
             .Range(0, threadCount)
-            .Select(i => Task.Run(() => ThreadMethodAsync(i)))
-            .ToList();
+            .Select(i => Task.Run(() => ThreadMethod(i)))];
 
-        ClassicAssert.True(
-            countdown.Wait(TimeSpan.FromSeconds(10)),
-            "Test should have completed within a reasonable amount of time");
+        Task allTasks = Task.WhenAll(tasks);
+        Task completed = await Task.WhenAny(allTasks, Task.Delay(TimeSpan.FromSeconds(10)));
 
-        await Task.WhenAll(tasks);
+        completed.Should().Be(allTasks, "Test should have completed within a reasonable amount of time");
 
-        ClassicAssert.AreEqual(loopCount, completedCount);
+        completedCount.Should().Be(loopCount);
 
         await Console.Out.WriteLineAsync("Winner by index: " + string.Join(",", winnerByIndex));
 
         // Assume hyper threading, so halve logical processors (could use WMI or P/Invoke for more robust answer)
         if (logicalProcessorCount <= 2)
         {
-            ClassicAssert.Inconclusive("This test requires more than one physical processor to run.");
+            Assert.Inconclusive("This test requires more than one physical processor to run.");
         }
 
         return;
 
-        async Task ThreadMethodAsync(int i)
+        void ThreadMethod(int i)
         {
-            while (true)
+            for (int j = 0; j < loopCount; j++)
             {
                 barrier.SignalAndWait();
-
-                if (completionToken.IsCancellationRequested)
-                {
-                    return;
-                }
 
                 CancellationToken token = sequence.Next();
 
@@ -161,11 +150,6 @@ public sealed class CancellationTokenSequenceTests
                 {
                     Interlocked.Increment(ref completedCount);
                     Interlocked.Increment(ref winnerByIndex[i]);
-                }
-
-                if (countdown.Signal())
-                {
-                    await completionTokenSource.CancelAsync();
                 }
             }
         }

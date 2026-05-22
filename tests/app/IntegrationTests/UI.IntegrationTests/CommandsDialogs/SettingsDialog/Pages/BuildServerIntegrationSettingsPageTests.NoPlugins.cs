@@ -15,9 +15,9 @@ namespace UITests.CommandsDialogs.SettingsDialog.Pages;
 public class BuildServerIntegrationSettingsPageTests_NoPlugins
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
-    private MockHost _form;
-    private BuildServerIntegrationSettingsPage _settingsPage;
+    private ReferenceRepository _referenceRepository = null!;
+    private MockHost _form = null!;
+    private BuildServerIntegrationSettingsPage _settingsPage = null!;
 
     [SetUp]
     public void SetUp()
@@ -43,8 +43,8 @@ public class BuildServerIntegrationSettingsPageTests_NoPlugins
           {
               await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-              ClassicAssert.AreEqual(1, _settingsPage.GetTestAccessor().BuildServerType.Items.Count);
-              ClassicAssert.AreEqual(0, _settingsPage.GetTestAccessor().BuildServerType.SelectedIndex);
+              _settingsPage.GetTestAccessor().BuildServerType.Items.Count.Should().Be(1);
+              _settingsPage.GetTestAccessor().BuildServerType.SelectedIndex.Should().Be(0);
           });
     }
 

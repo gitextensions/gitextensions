@@ -2,7 +2,6 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
-using GitUI.NBugReports;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs.RepoHosting;
@@ -53,7 +52,7 @@ public partial class CreatePullRequestForm : GitModuleForm
             {
                 if (foreignHostedRemotes.Length == 0)
                 {
-                    MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
+                    MessageBoxes.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
                                           _strPleaseCloneGitHubRep.Text, "", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Close();
                     return;
@@ -96,7 +95,7 @@ public partial class CreatePullRequestForm : GitModuleForm
 
     private void LoadPRTemplate()
     {
-        string templatePath = Path.Combine(Module.WorkingDir, ".github", "PULL_REQUEST_TEMPLATE.md");
+        string templatePath = Path.Join(Module.WorkingDir, ".github", "PULL_REQUEST_TEMPLATE.md");
 
         if (!File.Exists(templatePath))
         {
@@ -127,21 +126,21 @@ public partial class CreatePullRequestForm : GitModuleForm
             return;
         }
 
-        _currentHostedRemote = (IHostedRemote)_pullReqTargetsCB.SelectedItem;
+        _currentHostedRemote = (IHostedRemote)_pullReqTargetsCB.SelectedItem!;
 
         _remoteBranchesCB.Items.Clear();
         _remoteBranchesCB.Text = _strLoading.Text;
 
-        PopulateBranchesComboAndEnableCreateButton(_currentHostedRemote, _remoteBranchesCB);
+        PopulateBranchesComboAndEnableCreateButton(_currentHostedRemote!, _remoteBranchesCB);
     }
 
-    private IHostedRemote? MyRemote => _hostedRemotes.FirstOrDefault(r => r.IsOwnedByMe);
+    private IHostedRemote? MyRemote => _hostedRemotes!.FirstOrDefault(r => r.IsOwnedByMe);
 
     private void LoadMyBranches()
     {
         _yourBranchesCB.Items.Clear();
 
-        IHostedRemote myRemote = MyRemote;
+        IHostedRemote? myRemote = MyRemote;
 
         if (myRemote is null)
         {
@@ -185,7 +184,7 @@ public partial class CreatePullRequestForm : GitModuleForm
                     }
                     catch (Exception ex)
                     {
-                        TaskDialog.ShowDialog(new TaskDialogPage
+                        await TaskDialog.ShowDialogAsync(new TaskDialogPage
                             {
                                 Icon = TaskDialogIcon.Error,
                                 Caption = _strRemoteFailToLoadBranches.Text,
@@ -201,7 +200,7 @@ public partial class CreatePullRequestForm : GitModuleForm
     {
         if (_prevTitle == _titleTB.Text && !string.IsNullOrWhiteSpace(_yourBranchesCB.Text) && MyRemote is not null)
         {
-            string lastMsg = Module.GetPreviousCommitMessages(count: 1, revision: MyRemote.Name.Combine("/", _yourBranchesCB.Text)!, authorPattern: string.Empty).FirstOrDefault();
+            string? lastMsg = Module.GetPreviousCommitMessages(count: 1, revision: MyRemote.Name.Combine("/", _yourBranchesCB.Text)!, authorPattern: string.Empty).FirstOrDefault();
             _titleTB.Text = lastMsg?.SubstringUntil('\n');
             _prevTitle = _titleTB.Text;
         }
@@ -218,7 +217,7 @@ public partial class CreatePullRequestForm : GitModuleForm
         string body = _bodyTB.Text.Trim();
         if (title.Length == 0)
         {
-            MessageBox.Show(this, _strYouMustSpecifyATitle.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _strYouMustSpecifyATitle.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -227,12 +226,12 @@ public partial class CreatePullRequestForm : GitModuleForm
             IHostedRepository hostedRepo = _currentHostedRemote.GetHostedRepository();
 
             hostedRepo.CreatePullRequest(_yourBranchesCB.Text, _remoteBranchesCB.Text, title, body);
-            MessageBox.Show(this, _strDone.Text, _strPullRequest.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBoxes.Show(this, _strDone.Text, _strPullRequest.Text, MessageBoxButtons.OK, MessageBoxIcon.Information);
             Close();
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
+            MessageBoxes.Show(this, _strFailedToCreatePullRequest.Text + Environment.NewLine +
                 ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }

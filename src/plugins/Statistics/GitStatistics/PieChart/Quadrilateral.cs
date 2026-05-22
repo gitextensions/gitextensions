@@ -11,14 +11,14 @@ public class Quadrilateral
     ///   <c>PathPointType</c>s describing the <c>GraphicsPath</c> points.
     /// </summary>
     private static readonly byte[] QuadrilateralPointTypes =
-        {
+        [
                 (byte)PathPointType.Start,
                 (byte)PathPointType.Line,
                 (byte)PathPointType.Line,
                 (byte)PathPointType.Line
 
                 // | (byte)PathPointType.CloseSubpath
-        };
+        ];
 
     public static readonly Quadrilateral Empty = new();
 
@@ -60,7 +60,7 @@ public class Quadrilateral
             pointTypes[3] |= (byte)PathPointType.CloseSubpath;
         }
 
-        _path = new GraphicsPath(new[] { point1, point2, point3, point4 }, pointTypes);
+        _path = new GraphicsPath([point1, point2, point3, point4], pointTypes);
     }
 
     /// <summary>

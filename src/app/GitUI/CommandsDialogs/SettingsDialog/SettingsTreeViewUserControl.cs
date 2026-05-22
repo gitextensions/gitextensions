@@ -58,7 +58,7 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
             }
             else
             {
-                if (!_pages2NodeMap.TryGetValue(parentPageReference, out TreeNode parentNode))
+                if (!_pages2NodeMap.TryGetValue(parentPageReference, out TreeNode? parentNode))
                 {
                     throw new ArgumentException("You have to add parent page first: " + parentPageReference);
                 }
@@ -80,7 +80,7 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
             return node;
         }
 
-        treeView1.ImageList.Images.Add(icon);
+        treeView1.ImageList!.Images.Add(icon);
         node.ImageIndex = node.SelectedImageIndex = treeView1.ImageList.Images.Count - 1;
         return node;
     }
@@ -89,7 +89,7 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
     {
         if (!_isSelectionChangeTriggeredByGoto)
         {
-            FireSettingsPageSelectedEvent(e.Node);
+            FireSettingsPageSelectedEvent(e.Node!);
         }
     }
 
@@ -97,11 +97,11 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
     {
         if (SettingsPageSelected is not null)
         {
-            ISettingsPage page = (ISettingsPage)node.Tag;
+            ISettingsPage page = (ISettingsPage)node.Tag!;
 
             if (page.GuiControl is null)
             {
-                TreeNode firstSubNode = node.FirstNode;
+                TreeNode? firstSubNode = node.FirstNode;
                 if (firstSubNode is not null)
                 {
                     treeView1.SelectedNode = firstSubNode;
@@ -127,7 +127,7 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
         LazyStringSplit andKeywords = searchFor.LazySplit(' ');
         foreach (TreeNode node in treeView1.AllNodes())
         {
-            ISettingsPage settingsPage = (ISettingsPage)node.Tag;
+            ISettingsPage settingsPage = (ISettingsPage)node.Tag!;
 
             // search for title
             if (settingsPage.GetTitle().Contains(searchFor, StringComparison.InvariantCultureIgnoreCase))
@@ -155,7 +155,7 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
             node.EnsureVerticallyVisible();
         }
 
-        if (_nodesFoundByTextBox.Any())
+        if (_nodesFoundByTextBox.Count != 0)
         {
             // if visible: when searching, if the selected node is valid, it will still have grey background
             treeView1.HideSelection = true;
@@ -177,7 +177,7 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
         treeView1.EndUpdate();
         return;
 
-        void ResetHighlighting(TreeNodeCollection nodes)
+        static void ResetHighlighting(TreeNodeCollection nodes)
         {
             foreach (TreeNode node in nodes.Cast<TreeNode>())
             {
@@ -217,10 +217,10 @@ public sealed partial class SettingsTreeViewUserControl : UserControl
             e.Handled = true;
 
             // each enter key press selects next highlighted node (cycle)
-            int indexOfSelectedNode = _nodesFoundByTextBox.IndexOf(treeView1.SelectedNode);
+            int indexOfSelectedNode = _nodesFoundByTextBox.IndexOf(treeView1.SelectedNode!);
             if (indexOfSelectedNode == -1 || indexOfSelectedNode + 1 == _nodesFoundByTextBox.Count)
             {
-                TreeNode firstFoundNode = _nodesFoundByTextBox.FirstOrDefault();
+                TreeNode? firstFoundNode = _nodesFoundByTextBox.FirstOrDefault();
                 if (firstFoundNode is not null)
                 {
                     treeView1.SelectedNode = firstFoundNode;

@@ -34,7 +34,7 @@ internal static partial class NativeMethods
         public static implicit operator RECT(Rectangle r)
             => new(r);
 
-        public Size Size
+        public readonly Size Size
             => new(right - left, bottom - top);
     }
 

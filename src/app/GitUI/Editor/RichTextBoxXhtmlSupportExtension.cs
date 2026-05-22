@@ -636,7 +636,7 @@ internal static class RichTextBoxXhtmlSupportExtension
 
     public static string GetUrl(this LinkClickedEventArgs e)
     {
-        string[] v = e.LinkText.Split(Delimiters.Hash, 2);
+        string[] v = e.LinkText!.Split(Delimiters.Hash, 2);
         return v.Length switch
         {
             0 => "",
@@ -647,7 +647,7 @@ internal static class RichTextBoxXhtmlSupportExtension
 
     public static void GetLinkText(this LinkClickedEventArgs e, out string url, out string text)
     {
-        string[] v = e.LinkText.Split(Delimiters.Hash, 2);
+        string[] v = e.LinkText!.Split(Delimiters.Hash, 2);
         if (v.Length == 0)
         {
             url = "";
@@ -739,7 +739,7 @@ internal static class RichTextBoxXhtmlSupportExtension
         int i;
         int pos = 0;
         int k = rtb.TextLength;
-        char[] chtrim = { ' ', '\x0000' };
+        char[] chtrim = [' ', '\x0000'];
 
         //--------------------------------
         // this is an inefficient method to get text format
@@ -1304,7 +1304,7 @@ internal static class RichTextBoxXhtmlSupportExtension
                 break;
             case XmlNodeType.Text:
                 string strData = reader.Value;
-                bool bNewParagraph = (strData.IndexOf("\r\n", 0) >= 0) || (strData.IndexOf("\n", 0) >= 0);
+                bool bNewParagraph = (strData.IndexOf("\r\n", 0) >= 0) || (strData.IndexOf('\n', 0) >= 0);
 
                 if (strData.Length > 0)
                 {
@@ -1463,7 +1463,7 @@ internal static class RichTextBoxXhtmlSupportExtension
                         case "color":
                             cs.cf.dwMask |= CFM.COLOR;
                             string text = reader.Value;
-                            if (text.StartsWith("#"))
+                            if (text.StartsWith('#'))
                             {
                                 string strCr = text[1..];
                                 int nCr = Convert.ToInt32(strCr, 16);

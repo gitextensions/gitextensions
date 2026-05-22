@@ -52,7 +52,7 @@ public sealed class RepositoryHistoryMigrator : IRepositoryHistoryMigrator
     {
         ArgumentNullException.ThrowIfNull(currentHistory);
 
-        List<Current.Repository> history = currentHistory.ToList();
+        List<Current.Repository> history = [.. currentHistory];
 
         await TaskScheduler.Default;
         IReadOnlyList<RepositoryCategory> categorised = _repositoryStorage.Load();
@@ -79,7 +79,7 @@ public sealed class RepositoryHistoryMigrator : IRepositoryHistoryMigrator
 
             foreach (Repository repository in category.Repositories)
             {
-                Current.Repository repo = history.FirstOrDefault(hr => hr.Path == repository.Path);
+                Current.Repository? repo = history.FirstOrDefault(hr => hr.Path == repository.Path);
                 if (repo is null)
                 {
                     repo = new Current.Repository(repository.Path!);
@@ -96,7 +96,7 @@ public sealed class RepositoryHistoryMigrator : IRepositoryHistoryMigrator
 
         return changed;
 
-        Current.Repository.RepositoryAnchor GetAnchor(string anchor)
+        static Current.Repository.RepositoryAnchor GetAnchor(string anchor)
         {
             if (!Enum.TryParse(anchor, out Current.Repository.RepositoryAnchor repositoryAnchor))
             {

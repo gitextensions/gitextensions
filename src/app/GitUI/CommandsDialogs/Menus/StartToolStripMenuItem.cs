@@ -11,8 +11,8 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
 {
     private IRepositoryHistoryUIService? _repositoryHistoryUIService;
 
-    public event EventHandler<GitModuleEventArgs> GitModuleChanged;
-    public event EventHandler RecentRepositoriesCleared;
+    public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
+    public event EventHandler? RecentRepositoriesCleared;
 
     public StartToolStripMenuItem()
     {
@@ -32,10 +32,7 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
         {
             components?.Dispose();
 
-            if (_repositoryHistoryUIService is not null)
-            {
-                _repositoryHistoryUIService.GitModuleChanged -= repositoryHistoryUIService_GitModuleChanged;
-            }
+            _repositoryHistoryUIService?.GitModuleChanged -= repositoryHistoryUIService_GitModuleChanged;
         }
 
         base.Dispose(disposing);
@@ -73,7 +70,7 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
 
     private void OpenToolStripMenuItemClick(object sender, EventArgs e)
     {
-        IGitModule? module = FormOpenDirectory.OpenModule(OwnerForm, UICommands.Module);
+        IGitModule? module = FormOpenDirectory.OpenModule(OwnerForm!, UICommands.GetRequiredService<IGitExecutorProvider>(), UICommands.Module);
         if (module is not null)
         {
             GitModuleChanged?.Invoke(OwnerForm, new GitModuleEventArgs(module));
@@ -89,22 +86,22 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
     {
         tsmiFavouriteRepositories.DropDown.SuspendLayout();
         tsmiFavouriteRepositories.DropDownItems.Clear();
-        _repositoryHistoryUIService.PopulateFavouriteRepositoriesMenu(tsmiFavouriteRepositories);
+        _repositoryHistoryUIService!.PopulateFavouriteRepositoriesMenu(tsmiFavouriteRepositories);
         tsmiFavouriteRepositories.DropDown.ResumeLayout();
     }
 
     private void tsmiRecentRepositories_DropDownOpening(object sender, EventArgs e)
     {
+        // Note: repo-branch name cache is shared with the dashboard, no update needed
         tsmiRecentRepositories.DropDown.SuspendLayout();
         tsmiRecentRepositories.DropDownItems.Clear();
-        _repositoryHistoryUIService.PopulateRecentRepositoriesMenu(tsmiRecentRepositories);
+        _repositoryHistoryUIService!.PopulateRecentRepositoriesMenu(tsmiRecentRepositories);
         if (tsmiRecentRepositories.DropDownItems.Count < 1)
         {
             return;
         }
 
         tsmiRecentRepositories.DropDownItems.Add(clearRecentRepositoriesListToolStripMenuItem);
-        ////TranslateItem(tsmiRecentRepositoriesClear.Name, tsmiRecentRepositoriesClear);
         tsmiRecentRepositories.DropDownItems.Add(tsmiRecentRepositoriesClear);
         tsmiRecentRepositories.DropDown.ResumeLayout();
     }
@@ -112,7 +109,7 @@ internal partial class StartToolStripMenuItem : ToolStripMenuItemEx
     private void tsmiRecentRepositoriesClear_Click(object sender, EventArgs e)
     {
         ThreadHelper.ThrowIfNotOnUIThread();
-        ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.SaveRecentHistoryAsync(Array.Empty<Repository>()));
+        ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.SaveRecentHistoryAsync([]));
         RecentRepositoriesCleared?.Invoke(sender, e);
     }
 }

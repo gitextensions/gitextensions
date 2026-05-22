@@ -10,7 +10,7 @@ internal class LocalBranchMenuItems<TNode> : MenuItemsGenerator<TNode>
 {
     /// <summary>Keys of local branch menu items applying to the currently checked out branch.
     /// See <see cref="LocalBranchNode.IsCurrent"/> and <see cref="MenuItemsGenerator{TNode}"/>.</summary>
-    internal static MenuItemKey[] CurrentBranchItemKeys = new[] { MenuItemKey.GitRefCreateBranch, MenuItemKey.Rename };
+    internal static MenuItemKey[] CurrentBranchItemKeys = [MenuItemKey.GitRefCreateBranch, MenuItemKey.Rename];
 
     public LocalBranchMenuItems(IMenuItemFactory menuItemFactory) : base(menuItemFactory)
     {

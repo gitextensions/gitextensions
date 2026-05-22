@@ -1,10 +1,7 @@
 ﻿using CommonTestUtils;
-using FluentAssertions;
 using GitUI;
 
 namespace GitUITests;
-
-[TestFixture]
 public partial class SplitterManagerTest
 {
     private MemorySettings _settings = null!;

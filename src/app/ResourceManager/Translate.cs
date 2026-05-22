@@ -7,6 +7,7 @@ public class Translate : ITranslate
 {
     void IDisposable.Dispose()
     {
+        GC.SuppressFinalize(this);
     }
 
     public virtual void AddTranslationItems(ITranslation translation)

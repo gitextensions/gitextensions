@@ -1,5 +1,4 @@
 ﻿using System.Text.RegularExpressions;
-using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
@@ -9,7 +8,6 @@ namespace GitUITests.UserControls;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 [NonParallelizable]
 public class FilterInfoTests
 {
@@ -821,13 +819,13 @@ public class FilterInfoTests
                                     {
                                         foreach (bool hideMergeCommits in new[] { false, true })
                                         {
-                                            foreach (string pathFilter in new[] { "file1", "", null })
+                                            foreach (string? pathFilter in new[] { "file1", "", null })
                                             {
                                                 foreach (bool showCurrentBranchOnly in new[] { false, true })
                                                 {
                                                     foreach (bool showReflogReferences in new[] { false, true })
                                                     {
-                                                        foreach (string branchFilter in new[] { "branch1", "", null })
+                                                        foreach (string? branchFilter in new[] { "branch1", "", null })
                                                         {
                                                             yield return new TestCaseData(byDateFrom, byDateTo, byAuthor, byCommitter, byMessage, byDiffContent, showSimplifyByDecoration, hideMergeCommits, pathFilter, showCurrentBranchOnly, showReflogReferences, branchFilter);
                                                         }
@@ -940,7 +938,7 @@ public class FilterInfoTests
         };
 
         filterInfo.GetSummary().Should().Be(expectedSummary);
-        filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random())).ToString().Should().Be(expectedArgs);
+        filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random())).ToString().Should().Be(expectedArgs);
     }
 
     [TestCase(false, false, "branchFilter")]
@@ -961,7 +959,7 @@ public class FilterInfoTests
             BranchFilter = branchFilter
         };
 
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random()));
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random()));
 
         if (showRefLog)
         {
@@ -998,7 +996,7 @@ public class FilterInfoTests
             BranchFilter = branchFilter
         };
 
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random()));
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random()));
 
         if (expectBranches)
         {
@@ -1020,7 +1018,7 @@ public class FilterInfoTests
             CommitsLimit = maxCount,
             ByCommitsLimit = true
         };
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random()));
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random()));
 
         if (expected)
         {
@@ -1041,7 +1039,7 @@ public class FilterInfoTests
             ShowOnlyFirstParent = expected
         };
 
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random()));
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random()));
 
         if (expected)
         {
@@ -1062,7 +1060,7 @@ public class FilterInfoTests
             HideMergeCommits = expected
         };
 
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random()));
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random()));
 
         if (expected)
         {
@@ -1082,17 +1080,20 @@ public class FilterInfoTests
             {
                 foreach (bool showStash in new[] { false, true })
                 {
-                    foreach (bool showReflog in new[] { false, true })
+                    foreach (bool showSessionRefs in new[] { false, true })
                     {
-                        foreach (bool showCurrentBranchOnly in new[] { false, true })
+                        foreach (bool showReflog in new[] { false, true })
                         {
-                            foreach (bool isValidCheckout in new[] { false, true })
+                            foreach (bool showCurrentBranchOnly in new[] { false, true })
                             {
-                                foreach (bool showFilteredBranches in new[] { false, true })
+                                foreach (bool isValidCheckout in new[] { false, true })
                                 {
-                                    foreach (string branchFilter in new[] { "branch1", "", null })
+                                    foreach (bool showFilteredBranches in new[] { false, true })
                                     {
-                                        yield return new TestCaseData(showNotes, showStash, showReflog, showCurrentBranchOnly, isValidCheckout, showFilteredBranches, branchFilter);
+                                        foreach (string? branchFilter in new[] { "branch1", "", null })
+                                        {
+                                            yield return new TestCaseData(showNotes, showStash, showSessionRefs, showReflog, showCurrentBranchOnly, isValidCheckout, showFilteredBranches, branchFilter);
+                                        }
                                     }
                                 }
                             }
@@ -1104,12 +1105,14 @@ public class FilterInfoTests
     }
 
     [TestCaseSource(nameof(FilterInfo_NotesStash))]
-    public void FilterInfo_GitNotes_Stashes(bool showGitNotes, bool showStash, bool showReflog, bool showCurrentBranchOnly, bool isValidCheckout, bool showFilteredBranches, string branchFilter)
+    public void FilterInfo_GitNotes_Stashes(bool showGitNotes, bool showStash, bool showSessionRefs, bool showReflog, bool showCurrentBranchOnly, bool isValidCheckout, bool showFilteredBranches, string branchFilter)
     {
         bool originalShowGitNotes = AppSettings.ShowGitNotes;
         AppSettings.ShowGitNotes = showGitNotes;
         bool originalShowStash = AppSettings.ShowStashes;
         AppSettings.ShowStashes = showStash;
+        bool originalShowSessionRefs = AppSettings.ShowSessionRefs;
+        AppSettings.ShowSessionRefs = showSessionRefs;
         FilterInfo filterInfo = new()
         {
             ShowReflogReferences = showReflog,
@@ -1117,9 +1120,9 @@ public class FilterInfoTests
             ByBranchFilter = showFilteredBranches,
             BranchFilter = branchFilter
         };
-        ObjectId? objectId = isValidCheckout ? ObjectId.Random() : null;
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => objectId));
-        bool showAll = !(showCurrentBranchOnly && objectId is not null)
+        ObjectId objectId = isValidCheckout ? ObjectId.Random() : default;
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => objectId));
+        bool showAll = !(showCurrentBranchOnly && !objectId.IsZero)
             && !(!showCurrentBranchOnly && showFilteredBranches && !string.IsNullOrWhiteSpace(branchFilter));
 
         try
@@ -1142,14 +1145,23 @@ public class FilterInfoTests
                 args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/stash($|\s)");
             }
 
-            if (showCurrentBranchOnly && objectId is not null)
+            if (showAll && !showSessionRefs)
             {
-                string head = Regex.Escape(objectId?.ToString());
+                args.ToString().Should().MatchRegex(@"(^|\s)--exclude=refs/sessions/\*\*($|\s)");
+            }
+            else
+            {
+                args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/sessions/\*\*($|\s)");
+            }
+
+            if (showCurrentBranchOnly && !objectId.IsZero)
+            {
+                string head = Regex.Escape(objectId.ToString());
                 args.ToString().Should().MatchRegex(@$"(^|\s){head}($|\s)");
             }
 
             string stash = Regex.Escape($"--glob={"refs/stas[h]"}");
-            if (showStash && ((showCurrentBranchOnly && objectId is not null)
+            if (showStash && ((showCurrentBranchOnly && !objectId.IsZero)
                 || (!showCurrentBranchOnly && showFilteredBranches && !string.IsNullOrWhiteSpace(branchFilter))))
             {
                 args.ToString().Should().MatchRegex(@$"(^|\s){stash}($|\s)");
@@ -1163,6 +1175,7 @@ public class FilterInfoTests
         {
             AppSettings.ShowGitNotes = originalShowGitNotes;
             AppSettings.ShowStashes = originalShowStash;
+            AppSettings.ShowSessionRefs = originalShowSessionRefs;
         }
 
         return;
@@ -1184,7 +1197,7 @@ public class FilterInfoTests
             Message = message,
             ByMessage = true
         };
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random()));
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random()));
         string summary = filterInfo.GetSummary();
 
         if (expectGrep)

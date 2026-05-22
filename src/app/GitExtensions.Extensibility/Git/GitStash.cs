@@ -7,7 +7,7 @@ namespace GitUIPluginInterfaces;
 public sealed partial class GitStash
 {
     [GeneratedRegex(@"^stash@\{(?<index>\d+)\}: (?<message>.+)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex StashRegex();
+    private static partial Regex StashRegex { get; }
 
     public static bool TryParse(string s, [NotNullWhen(returnValue: true)] out GitStash? stash)
     {
@@ -15,7 +15,7 @@ public sealed partial class GitStash
         // "stash@{i}: On {branch}: {Message}"
         // "stash@{i}: autostash"
 
-        Match match = StashRegex().Match(s);
+        Match match = StashRegex.Match(s);
 
         if (!match.Success)
         {

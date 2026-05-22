@@ -22,7 +22,7 @@ public class ThemePathProvider : IThemePathProvider
     {
         string appDirectory = AppSettings.GetGitExtensionsDirectory() ??
             throw new DirectoryNotFoundException("Application directory not found");
-        AppThemesDirectory = Path.Combine(appDirectory, Subdirectory);
+        AppThemesDirectory = Path.Join(appDirectory, Subdirectory);
 
         string? userDirectory = AppSettings.ApplicationDataPath.Value;
 
@@ -30,7 +30,7 @@ public class ThemePathProvider : IThemePathProvider
         // hence we don't have a separate directory for user themes
         UserThemesDirectory = string.Equals(appDirectory, userDirectory, StringComparison.OrdinalIgnoreCase)
             ? null
-            : Path.Combine(userDirectory, Subdirectory);
+            : Path.Join(userDirectory!, Subdirectory);
 
         ThemeExtension = ".css";
     }
@@ -50,7 +50,8 @@ public class ThemePathProvider : IThemePathProvider
         string path;
         if (id.IsBuiltin)
         {
-            path = Path.Combine(AppThemesDirectory, id.Name + ThemeExtension);
+            string name = id == ThemeId.DefaultLight ? ThemeId.InvariantThemeFileName : id.Name;
+            path = Path.Join(AppThemesDirectory, name + ThemeExtension);
         }
         else
         {
@@ -59,7 +60,7 @@ public class ThemePathProvider : IThemePathProvider
                 throw new InvalidOperationException("Portable mode only supports local themes");
             }
 
-            path = Path.Combine(UserThemesDirectory, id.Name + ThemeExtension);
+            path = Path.Join(UserThemesDirectory, id.Name + ThemeExtension);
         }
 
         return path;

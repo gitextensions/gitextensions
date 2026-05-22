@@ -35,6 +35,7 @@ partial class FormBrowse
         commitInfoRightwardMenuItem = new ToolStripMenuItem();
         toolStripSeparator17 = new ToolStripSeparator();
         toolStripButtonLevelUp = new ToolStripSplitButton();
+        toolStripWorktrees = new ToolStripSplitButton();
         _NO_TRANSLATE_WorkingDir = new WorkingDirectoryToolStripSplitButton();
         branchSelect = new ToolStripSplitButton();
         toolStripSeparator1 = new ToolStripSeparator();
@@ -65,12 +66,12 @@ partial class FormBrowse
         RightSplitContainer = new SplitContainer();
         RevisionsSplitContainer = new SplitContainer();
         RevisionGridContainer = new Panel();
-        RevisionGrid = new GitUI.RevisionGridControl();
+        RevisionGrid = new GitUI.RevisionGridControl(_commitDataManager);
         notificationBarBisectInProgress = new GitUI.UserControls.InteractiveGitActionControl();
         notificationBarGitActionInProgress = new GitUI.UserControls.InteractiveGitActionControl();
         CommitInfoTabControl = new GitUI.CommandsDialogs.FullBleedTabControl();
         CommitInfoTabPage = new TabPage();
-        RevisionInfo = new GitUI.CommitInfo.CommitInfo();
+        RevisionInfo = new GitUI.CommitInfo.CommitInfo(_commitDataManager);
         TreeTabPage = new TabPage();
         fileTree = new GitUI.CommandsDialogs.RevisionDiffControl();
         DiffTabPage = new TabPage();
@@ -209,6 +210,7 @@ partial class FormBrowse
         menuCommitInfoPosition,
         toolStripSeparator17,
         toolStripButtonLevelUp,
+        toolStripWorktrees,
         _NO_TRANSLATE_WorkingDir,
         branchSelect,
         toolStripSeparator1,
@@ -311,11 +313,21 @@ partial class FormBrowse
         toolStripButtonLevelUp.ToolTipText = "Submodules";
         toolStripButtonLevelUp.ButtonClick += toolStripButtonLevelUp_ButtonClick;
         // 
+        // toolStripWorktrees
+        // 
+        toolStripWorktrees.DisplayStyle = ToolStripItemDisplayStyle.Image;
+        toolStripWorktrees.Image = Properties.Images.WorkTree;
+        toolStripWorktrees.Name = "toolStripWorktrees";
+        toolStripWorktrees.Size = new Size(32, 22);
+        toolStripWorktrees.ToolTipText = "Worktrees";
+        toolStripWorktrees.Visible = false;
+        toolStripWorktrees.ButtonClick += toolStripWorktrees_ButtonClick;
+        toolStripWorktrees.DropDownOpening += toolStripWorktrees_DropDownOpening;
+        // 
         // _NO_TRANSLATE_WorkingDir
         // 
         _NO_TRANSLATE_WorkingDir.Size = new Size(83, 22);
         _NO_TRANSLATE_WorkingDir.Text = "WorkingDir";
-        _NO_TRANSLATE_WorkingDir.ToolTipText = "Change working directory";
         // 
         // branchSelect
         // 
@@ -1555,6 +1567,7 @@ partial class FormBrowse
     private ToolStripSeparator toolStripSeparator22;
     private ToolStripSeparator toolStripSeparator23;
     private ToolStripSplitButton toolStripButtonLevelUp;
+    private ToolStripSplitButton toolStripWorktrees;
     private ToolStripSplitButton toolStripButtonPull;
     private ToolStripMenuItem mergeToolStripMenuItem;
     private ToolStripMenuItem rebaseToolStripMenuItem1;

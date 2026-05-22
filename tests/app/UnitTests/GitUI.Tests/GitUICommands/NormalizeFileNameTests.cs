@@ -1,10 +1,9 @@
-﻿using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
+using GitCommands.Git;
+using GitExtensions.Extensibility.Git;
 using GitUI;
 
 namespace GitUITests.GitUICommandsTests;
-
-[TestFixture]
 public sealed class NormalizeFileNameTests
 {
     [TestCase(@"file", "file")]
@@ -20,7 +19,7 @@ public sealed class NormalizeFileNameTests
     [TestCase(@"C:/working/dir/path/file.ext", "C:/working/dir/path/file.ext")]
     public void NormalizeFileNameTest(string fileName, string expected)
     {
-        GitModule module = new(@"c:\working\dir");
+        GitModule module = new(new GitExecutorProvider(new GitDirectoryResolver()), @"c:\working\dir");
         GitUICommands commands = new(GitUICommands.EmptyServiceProvider, module);
 
         commands.GetTestAccessor().NormalizeFileName(fileName).Should().Be(expected);

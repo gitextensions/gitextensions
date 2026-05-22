@@ -52,7 +52,7 @@ internal abstract class Node : NodeBase, INode
 
     protected virtual string DisplayText()
     {
-        return ToString();
+        return ToString()!;
     }
 
     // Override to provide a unique node name (key), otherwise DisplayText is used
@@ -73,6 +73,22 @@ internal abstract class Node : NodeBase, INode
         {
             _treeViewNode.Text = updatedText;
         }
+    }
+
+    /// <summary>
+    ///  Navigates the revision grid to the specified ref (commit SHA, branch name, tag, etc.)
+    ///  and returns focus to the tree view.
+    /// </summary>
+    protected void GoToRevision(string @ref)
+    {
+        TreeView? treeView = TreeViewNode.TreeView;
+        bool toggleSelection = Control.ModifierKeys.HasFlag(Keys.Control);
+
+        treeView?.BeginInvoke(() =>
+        {
+            UICommands.BrowseRepo?.GoToRef(@ref, showNoRevisionMsg: true, toggleSelection: toggleSelection);
+            treeView.Focus();
+        });
     }
 
     internal virtual void OnSelected()
@@ -97,7 +113,7 @@ internal abstract class Node : NodeBase, INode
 
     public static Node GetNode(TreeNode treeNode)
     {
-        return (Node)treeNode.Tag;
+        return (Node)treeNode.Tag!;
     }
 
     internal static T? GetNodeSafe<T>(TreeNode? treeNode) where T : class, INode

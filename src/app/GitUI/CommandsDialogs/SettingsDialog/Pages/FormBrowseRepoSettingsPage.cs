@@ -1,6 +1,7 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils;
+using GitUI.ConsoleEmulation;
 using GitUI.Hotkey;
 using GitUI.Shells;
 using ResourceManager;
@@ -27,6 +28,15 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
     {
         InitializeComponent();
         cboTerminal.DisplayMember = "Name";
+
+        IReadOnlyCollection<IConsoleEmulator> emulators = serviceProvider.GetRequiredService<IConsoleEmulatorsRegistry>().AvailableConsoleEmulators;
+        foreach (IConsoleEmulator emulator in emulators)
+        {
+            cboConsoleEmulator.Items.Add(emulator);
+        }
+
+        cboConsoleEmulator.DisplayMember = nameof(IConsoleEmulator.DisplayName);
+        cboConsoleEmulator.ValueMember = nameof(IConsoleEmulator.Name);
         InitializeComplete();
         string hotkey = serviceProvider.GetRequiredService<IHotkeySettingsManager>()
             .LoadHotkeys(FormBrowse.HotkeySettingsName)
@@ -42,8 +52,8 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
     protected override void OnRuntimeLoad()
     {
         // align 1st columns across all tables
-        tlpnlGeneral.AdjustWidthToSize(0, lblDefaultShell, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowConsoleTab, chkShowGpgInformation);
-        tlpnlTabs.AdjustWidthToSize(0, lblDefaultShell, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowConsoleTab, chkShowGpgInformation);
+        tlpnlGeneral.AdjustWidthToSize(0, lblDefaultShell, lblConsoleEmulatorChoice, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowRevisionGridTooltip, chkShowConsoleTab, chkShowGpgInformation);
+        tlpnlTabs.AdjustWidthToSize(0, lblDefaultShell, lblConsoleEmulatorChoice, chkUseBrowseForFileHistory, chkUseDiffViewerForBlame, chkShowFindInCommitFilesGitGrep, chkShowRevisionGridTooltip, chkShowConsoleTab, chkShowGpgInformation);
 
         base.OnRuntimeLoad();
     }
@@ -55,6 +65,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
         AppSettings.UseDiffViewerForBlame.Value = chkUseDiffViewerForBlame.Checked;
         AppSettings.ShowGpgInformation.Value = chkShowGpgInformation.Checked;
         AppSettings.ShowFindInCommitFilesGitGrep.Value = chkShowFindInCommitFilesGitGrep.Checked;
+        AppSettings.ShowRevisionGridTooltips.Value = chkShowRevisionGridTooltip.Checked;
 
         int outputHistoryDepth = (int)_NO_TRANSLATE_OutputHistoryDepth.Value;
         bool changed = AppSettings.ShowOutputHistoryAsTab.Value != chkShowOutputHistoryAsTab.Checked || AppSettings.OutputHistoryDepth.Value != outputHistoryDepth;
@@ -65,7 +76,8 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
             AppSettings.OutputHistoryPanelVisible.Value = !chkShowOutputHistoryAsTab.Checked && outputHistoryDepth > 0;
         }
 
-        AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem).Name.ToLowerInvariant();
+        AppSettings.ConEmuTerminal.Value = ((IShellDescriptor)cboTerminal.SelectedItem!).Name.ToLowerInvariant();
+        AppSettings.ConsoleEmulatorName.Value = (cboConsoleEmulator.SelectedItem as IConsoleEmulator)?.Name ?? "";
 
         base.PageToSettings();
     }
@@ -77,6 +89,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
         chkUseDiffViewerForBlame.Checked = AppSettings.UseDiffViewerForBlame.Value;
         chkShowGpgInformation.Checked = AppSettings.ShowGpgInformation.Value;
         chkShowFindInCommitFilesGitGrep.Checked = AppSettings.ShowFindInCommitFilesGitGrep.Value;
+        chkShowRevisionGridTooltip.Checked = AppSettings.ShowRevisionGridTooltips.Value;
         chkShowOutputHistoryAsTab.Checked = AppSettings.ShowOutputHistoryAsTab.Value;
         _NO_TRANSLATE_OutputHistoryDepth.Value = Math.Clamp(AppSettings.OutputHistoryDepth.Value, _NO_TRANSLATE_OutputHistoryDepth.Minimum, _NO_TRANSLATE_OutputHistoryDepth.Maximum);
 
@@ -90,6 +103,14 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
             }
         }
 
+        cboConsoleEmulator.SelectedItem = cboConsoleEmulator.Items
+            .OfType<IConsoleEmulator>()
+            .FirstOrDefault(x => string.Equals(x.Name, AppSettings.ConsoleEmulatorName.Value, StringComparison.OrdinalIgnoreCase));
+        if (cboConsoleEmulator.SelectedIndex < 0 && cboConsoleEmulator.Items.Count > 0)
+        {
+            cboConsoleEmulator.SelectedIndex = 0;
+        }
+
         base.SettingsToPage();
     }
 
@@ -100,7 +121,7 @@ public partial class FormBrowseRepoSettingsPage : SettingsPageWithHeader
 
     private void cboTerminal_SelectionChangeCommitted(object sender, EventArgs e)
     {
-        if (!(cboTerminal.SelectedItem is IShellDescriptor shell))
+        if (cboTerminal.SelectedItem is not IShellDescriptor shell)
         {
             return;
         }

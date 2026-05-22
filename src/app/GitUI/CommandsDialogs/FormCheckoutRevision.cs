@@ -32,15 +32,15 @@ public partial class FormCheckoutRevision : GitExtensionsDialog
         {
             ObjectId selectedObjectId = commitPickerSmallControl1.SelectedObjectId;
 
-            if (selectedObjectId is null)
+            if (selectedObjectId.IsZero)
             {
-                MessageBox.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _noRevisionSelectedMsgBox.Text, _noRevisionSelectedMsgBoxCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             ObjectId checkedOutObjectId = Module.GetCurrentCheckout();
 
-            DebugHelpers.Assert(checkedOutObjectId is not null, "checkedOutObjectId is not null");
+            DebugHelpers.Assert(!checkedOutObjectId.IsZero, "checkedOutObjectId is not zero");
 
             bool success = ScriptsRunner.RunEventScripts(ScriptEvent.BeforeCheckout, this);
             if (!success)

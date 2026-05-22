@@ -1,10 +1,7 @@
-﻿using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Logging;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class CommandLogTests
 {
     [TestCase("somegit.exe", "", "")]

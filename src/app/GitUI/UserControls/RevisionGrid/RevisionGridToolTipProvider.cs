@@ -17,6 +17,8 @@ internal sealed class RevisionGridToolTipProvider
         _gridView = gridView;
     }
 
+    public bool ShowRevisionGridTooltips { get; set; }
+
     /// <summary>
     /// Hides the tooltip.
     /// </summary>
@@ -31,7 +33,12 @@ internal sealed class RevisionGridToolTipProvider
 
     public void OnCellMouseMove(DataGridViewCellMouseEventArgs e)
     {
-        GitUIPluginInterfaces.GitRevision revision = _gridView.GetRevision(e.RowIndex);
+        if (!ShowRevisionGridTooltips)
+        {
+            return;
+        }
+
+        GitUIPluginInterfaces.GitRevision? revision = _gridView.GetRevision(e.RowIndex);
 
         if (revision is null)
         {

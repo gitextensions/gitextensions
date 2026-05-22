@@ -1,8 +1,12 @@
 ﻿using System.ComponentModel.Design;
 using GitCommands;
+using GitCommands.Git;
 using GitCommands.Submodules;
+using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
+using GitUI.ConsoleEmulation;
+using GitUI.ConsoleEmulation.PlainText;
 using GitUI.Hotkey;
 using GitUI.Models;
 using GitUI.ScriptsEngine;
@@ -34,6 +38,15 @@ public static class GlobalServiceContainer
         serviceContainer.AddService(Substitute.For<IHotkeySettingsLoader>());
 
         serviceContainer.AddService(Substitute.For<ISubmoduleStatusProvider>());
+
+        IGitBranchNameNormaliser branchNameNormaliser = Substitute.For<IGitBranchNameNormaliser>();
+        branchNameNormaliser.Normalise(Arg.Any<string?>(), Arg.Any<GitBranchNameOptions>())
+            .Returns(callInfo => callInfo.Arg<string?>());
+        serviceContainer.AddService(branchNameNormaliser);
+
+        serviceContainer.AddService<IGitExecutorProvider>(new GitExecutorProvider(new GitDirectoryResolver()));
+
+        serviceContainer.AddService<IConsoleEmulatorsRegistry>(PlainTextConsoleEmulatorsRegistry.Instance);
 
         return serviceContainer;
     }

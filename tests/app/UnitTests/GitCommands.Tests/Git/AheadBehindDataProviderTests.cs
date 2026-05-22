@@ -1,21 +1,18 @@
 ﻿using System.Text;
-using FluentAssertions;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using NSubstitute;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class AheadBehindDataProviderTests
 {
-    private MemoryStream _standardOutputStream;
-    private MemoryStream _standardErrorStream;
-    private StreamReader _outputStreamReader;
+    private MemoryStream _standardOutputStream = null!;
+    private MemoryStream _standardErrorStream = null!;
+    private StreamReader _outputStreamReader = null!;
     private string _errorOutput = "";
-    private IProcess _process;
-    private IExecutable _executable;
-    private AheadBehindDataProvider _provider;
+    private IProcess _process = null!;
+    private IExecutable _executable = null!;
+    private AheadBehindDataProvider _provider = null!;
 
     [SetUp]
     public void Setup()
@@ -44,9 +41,9 @@ public class AheadBehindDataProviderTests
     }
 
     [TestCase(null)]
-    public void GetData_should_throw_if_branch_null(string branchName)
+    public void GetData_should_throw_if_branch_null(string? branchName)
     {
-        ((Action)(() => _provider.GetTestAccessor().GetData(Encoding.UTF8, branchName))).Should().Throw<ArgumentException>();
+        ((Action)(() => _provider.GetTestAccessor().GetData(Encoding.UTF8, branchName!))).Should().Throw<ArgumentException>();
     }
 
     [Test]
@@ -63,11 +60,11 @@ public class AheadBehindDataProviderTests
 
     [TestCase("")]
     [TestCase(null)]
-    public void GetData_should_return_null_result_if_unable_match_branch(string result)
+    public void GetData_should_return_null_result_if_unable_match_branch(string? result)
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
+        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
 
         data.Should().BeNull();
     }
@@ -80,22 +77,22 @@ public class AheadBehindDataProviderTests
     // Cover the case where a push refspec is defined for the remote. When this value is set, for-each-ref shows
     // 'refs/remotes/origin/name' as the default push location for any untracked branch 'name'.
     [TestCase("gone::::refs/remotes/origin/new-branch::::new-branch")]
-    public void GetData_should_return_empty_if_git_output_has_no_data(string result)
+    public void GetData_should_return_empty_if_git_output_has_no_data(string? result)
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
+        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
 
         data.Should().BeEmpty();
     }
 
     [TestCase("::ahead 1::::::my-branch")]
     [TestCase("results!")]
-    public void GetData_should_return_empty_if_no_remote(string result)
+    public void GetData_should_return_empty_if_no_remote(string? result)
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
+        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
 
         data.Should().BeEmpty();
     }
@@ -105,7 +102,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand("::translated-ahead 3::::refs/remotes/upstream/branch::my-branch");
 
-        IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -121,7 +118,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand("::ahead 10::::refs/remotes/upstream/branch::my-branch");
 
-        IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -137,7 +134,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand("::behind 2::::refs/remotes/upstream/my-branch::my-branch");
 
-        IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -153,7 +150,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand("::::::refs/remotes/upstream/my-branch::my-branch");
 
-        IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -165,11 +162,11 @@ public class AheadBehindDataProviderTests
 
     [TestCase("::ahead 99, behind 3::::refs/remotes/upstream/branch::my-branch")]
     [TestCase("ahead 99, behind 3::::refs/remotes/upstream/branch::::my-branch")]
-    public void GetData_should_return_ahead_and_behind_for_a_branch(string result)
+    public void GetData_should_return_ahead_and_behind_for_a_branch(string? result)
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -181,11 +178,11 @@ public class AheadBehindDataProviderTests
     }
 
     [TestCase("ahead 99, behind 97::ahead 9, behind 7::refs/remotes/upstream/push-branch::refs/remotes/upstream/upstream-branch::my-branch")]
-    public void GetData_should_prefer_push_before_upstream_ahead_behind(string result)
+    public void GetData_should_prefer_push_before_upstream_ahead_behind(string? result)
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -197,11 +194,11 @@ public class AheadBehindDataProviderTests
     }
 
     [TestCase("ahead 99::ahead 9, behind 7::refs/remotes/upstream/push-branch::refs/remotes/upstream/upstream-branch::my-branch")]
-    public void GetData_should_prefer_push_before_upstream_ahead(string result)
+    public void GetData_should_prefer_push_before_upstream_ahead(string? result)
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -213,11 +210,11 @@ public class AheadBehindDataProviderTests
     }
 
     [TestCase("behind 97::ahead 9, behind 7::refs/remotes/upstream/push-branch::refs/remotes/upstream/upstream-branch::my-branch")]
-    public void GetData_should_prefer_push_before_upstream_behind(string result)
+    public void GetData_should_prefer_push_before_upstream_behind(string? result)
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -237,7 +234,7 @@ public class AheadBehindDataProviderTests
                 + "::ahead 3::::refs/remotes/upstream/branch::ahead-branch\n"
                 + "::behind 4::::refs/remotes/upstream/branch::behind-branch");
 
-        IDictionary<string, AheadBehindData> data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "*");
+        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "*");
 
         data.Should().HaveCount(4);
         data.Should().BeEquivalentTo(
@@ -250,7 +247,7 @@ public class AheadBehindDataProviderTests
             });
     }
 
-    private void SetResultOfGitCommand(string result)
+    private void SetResultOfGitCommand(string? result)
     {
         StreamWriter writer = new(_standardOutputStream);
         writer.Write(result);

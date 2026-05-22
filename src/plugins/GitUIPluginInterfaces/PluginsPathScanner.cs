@@ -27,7 +27,7 @@ public static class PluginsPathScanner
     /// <returns>An enumeration of found dll files.</returns>
     public static IEnumerable<FileInfo> GetFiles(params string?[] pluginsPaths)
     {
-        IEnumerable<FileInfo> result = Enumerable.Empty<FileInfo>();
+        IEnumerable<FileInfo> result = [];
 
         foreach (string? pluginsPath in pluginsPaths)
         {

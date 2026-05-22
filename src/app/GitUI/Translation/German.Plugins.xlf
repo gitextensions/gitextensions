@@ -360,16 +360,16 @@
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
-        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>Wählen Sie die Branches zur Löschung aus. Nur Branches die vollständig in '{0}' gemerged wurden, werden gelöscht.</target>
+        <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
+        <target>Wählen Sie die Branches zur Löschung aus. Nur Branches die vollständig in &apos;{0}&apos; gemerged wurden, werden gelöscht.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
-Branches will be deleted on the remote '{0}'. This can not be undone.
+Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
         <target>GEFÄHRLICHE AKTION!
-Branches werden auf der Remote '{0}' gelöscht. Dies kann nicht rückgängig gemacht werden.
+Branches werden auf der Remote &apos;{0}&apos; gelöscht. Dies kann nicht rückgängig gemacht werden.
 Sind Sie sich sicher und wollen damit fortfahren?</target>
         
       </trans-unit>
@@ -394,8 +394,8 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
-        <source>Press '{0}' to search for branches to delete.</source>
-        <target>Drücken Sie '{0}', um nach Branches für die Löschung zu suchen.</target>
+        <source>Press &apos;{0}&apos; to search for branches to delete.</source>
+        <target>Drücken Sie &apos;{0}&apos;, um nach Branches für die Löschung zu suchen.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -404,8 +404,8 @@ Sind Sie sich sicher und wollen damit fortfahren?</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
-        <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>Wählen Sie Branches zur Löschung aus per Checkbox in der Spalte ''{0}.</target>
+        <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
+        <target>Wählen Sie Branches zur Löschung aus per Checkbox in der Spalte &apos;&apos;{0}.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -1335,18 +1335,18 @@ Wollen Sie den konfigurierten Pfad zurücksetzen?</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
-        <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>Commit-Log von '{0}' bis '{1}' ({2}):</target>
+        <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
+        <target>Commit-Log von &apos;{0}&apos; bis &apos;{1}&apos; ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
-        <source>'From' commit must be specified</source>
-        <target>'Von' Commit muss angegeben werden</target>
+        <source>&apos;From&apos; commit must be specified</source>
+        <target>&apos;Von&apos; Commit muss angegeben werden</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
-        <source>'To' commit must be specified</source>
-        <target>'Zu' Commit muss angegeben werden</target>
+        <source>&apos;To&apos; commit must be specified</source>
+        <target>&apos;Zu&apos; Commit muss angegeben werden</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1477,7 +1477,7 @@ Branchnamen oder Tag-Namen sein.)</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
@@ -1514,15 +1514,15 @@ Bitte stellen Sie sicher, dass die URL gültig ist und dass das API-Token Zugrif
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</source>
         <target>Sie müssen einen Token mit den folgenden Scopes erstellen:
-- 'Build (read)'
-- 'Project and team (read)'</target>
+- &apos;Build (read)&apos;
+- &apos;Project and team (read)&apos;</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
         <target>Der reguläre Ausdruck &quot;Builddefinition-Name&quot; ist ungültig und wird nicht gespeichert!</target>
         
       </trans-unit>
@@ -1541,7 +1541,7 @@ Bitte stellen Sie sicher, dass die URL gültig ist und dass das API-Token Zugrif
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
@@ -1564,7 +1564,7 @@ Bitte die Server-URL überprüfen.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
         <target>Der reguläre Ausdruck &quot;Build Id Filter&quot; validiert nicht und wird nicht gespeichert!</target>
         
       </trans-unit>

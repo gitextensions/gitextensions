@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Xml.Serialization;
 
 namespace GitCommands.UserRepositoryHistory.Legacy;
@@ -18,10 +18,7 @@ internal sealed class RepositoryCategoryXmlSerialiser : IRepositorySerialiser<Re
     /// <exception cref="ArgumentException"><paramref name="serialised"/> is <see langword="null"/> or <see cref="string.Empty"/>.</exception>
     public IReadOnlyList<RepositoryCategory>? Deserialize(string serialised)
     {
-        if (string.IsNullOrEmpty(serialised))
-        {
-            throw new ArgumentException(nameof(serialised));
-        }
+        ArgumentException.ThrowIfNullOrEmpty(serialised);
 
         try
         {

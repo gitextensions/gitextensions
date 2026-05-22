@@ -1,4 +1,4 @@
-using System.Collections.Concurrent;
+﻿using System.Collections.Concurrent;
 using System.Text;
 using GitExtensions.Extensibility;
 using GitUI;
@@ -28,7 +28,7 @@ public sealed class MockExecutable : IExecutable
         return new DelegateDisposable(
             () =>
             {
-                if (_outputStackByArguments.TryGetValue(arguments, out ConcurrentStack<(string output, int? exitCode, string? error)> queue) &&
+                if (_outputStackByArguments.TryGetValue(arguments, out ConcurrentStack<(string output, int? exitCode, string? error)>? queue) &&
                     queue.TryPeek(out (string output, int? exitCode, string? error) item) &&
                     output == item.output && error == item.error)
                 {
@@ -59,8 +59,8 @@ public sealed class MockExecutable : IExecutable
 
     public void Verify()
     {
-        ClassicAssert.IsEmpty(_outputStackByArguments, "All staged output should have been consumed.");
-        ClassicAssert.IsEmpty(_commandArgumentsSet, "All staged output should have been consumed.");
+        _outputStackByArguments.Should().BeEmpty("All staged output should have been consumed.");
+        _commandArgumentsSet.Should().BeEmpty("All staged output should have been consumed.");
 
         foreach (MockProcess process in _processes)
         {
@@ -73,17 +73,17 @@ public sealed class MockExecutable : IExecutable
         bool createWindow,
         bool redirectInput,
         bool redirectOutput,
-        Encoding outputEncoding,
+        Encoding? outputEncoding,
         bool useShellExecute = false,
         bool throwOnErrorExit = true,
         CancellationToken cancellationToken = default)
     {
         System.Diagnostics.Debug.WriteLine($"mock-git {arguments}");
 
-        if (_outputStackByArguments.TryRemove(arguments, out ConcurrentStack<(string output, int? exitCode, string? error)> queue) &&
+        if (_outputStackByArguments.TryRemove(arguments, out ConcurrentStack<(string output, int? exitCode, string? error)>? queue) &&
             queue.TryPop(out (string output, int? exitCode, string? error) item))
         {
-            if (queue.Count == 0)
+            if (queue.IsEmpty)
             {
                 _outputStackByArguments.TryRemove(arguments, out _);
             }
@@ -102,11 +102,6 @@ public sealed class MockExecutable : IExecutable
         }
 
         throw new Exception("Unexpected arguments: " + arguments);
-    }
-
-    public string GetWorkingDirectory()
-    {
-        return WorkingDir;
     }
 
     private sealed class MockProcess : IProcess
@@ -149,11 +144,9 @@ public sealed class MockExecutable : IExecutable
             }
             else
             {
-                CancellationTokenSource cts = new();
+                using CancellationTokenSource cts = new();
                 CancellationToken ct = cts.Token;
-#pragma warning disable VSTHRD103 // Cancel synchronously blocks. Await CancelAsync instead.
-                cts.Cancel();
-#pragma warning restore VSTHRD103
+                ThreadHelper.JoinableTaskFactory.RunAsync(() => cts.CancelAsync());
                 return Task.FromCanceled<int>(ct);
             }
         }
@@ -176,14 +169,14 @@ public sealed class MockExecutable : IExecutable
         public void Verify()
         {
             // all output should have been read
-            ClassicAssert.AreEqual(StandardOutput.BaseStream.Length, StandardOutput.BaseStream.Position);
+            StandardOutput.BaseStream.Position.Should().Be(StandardOutput.BaseStream.Length);
 
             // Only verify if std input is not closed.
             // ExecutableExtensions.ExecuteAsync will close std input when writeInput action is specified
             if (StandardInput.BaseStream is not null && StandardInput.BaseStream.CanRead)
             {
                 // no input should have been written (yet)
-                ClassicAssert.AreEqual(0, StandardInput.BaseStream.Length);
+                StandardInput.BaseStream.Length.Should().Be(0);
             }
         }
     }

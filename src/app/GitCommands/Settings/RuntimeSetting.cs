@@ -16,52 +16,31 @@ public interface IRuntimeSetting<T> : ISetting<T>, IRuntimeSetting
 ///  Represents a setting which has to be explicitly saved, if changed at runtime.
 /// </summary>
 /// <typeparam name="T">The type of setting.</typeparam>
-public class RuntimeSetting<T> : IRuntimeSetting<T>
+/// <param name="persistentSetting">The <see cref="ISetting{T}"/> instance used to persist the default value of the setting.</param>
+public class RuntimeSetting<T>(ISetting<T> persistentSetting) : IRuntimeSetting<T>
 {
     private bool _loaded;
-    private readonly ISetting<T> _persistentSetting;
-    private T _value;
+    private T _value = persistentSetting.Default;
 
-    /// <summary>
-    ///  Initializes a new instance of the <see cref="RuntimeSetting{T}"/> class.
-    /// </summary>
-    /// <param name="persistentSetting">
-    ///  The <see cref="ISetting{T}"/> instance used to persist the default value of the setting.
-    /// </param>
-    public RuntimeSetting(ISetting<T> persistentSetting)
-    {
-        _persistentSetting = persistentSetting;
-    }
+    public T Default => persistentSetting.Default;
 
-    public T Default => _persistentSetting.Default;
+    public string FullPath => persistentSetting.FullPath;
 
-    public string FullPath => _persistentSetting.FullPath;
-
-    public bool IsUnset => _persistentSetting.IsUnset;
-
-    public string Name => _persistentSetting.Name;
-
-    public SettingsPath SettingsSource => _persistentSetting.SettingsSource;
+    public string Name => persistentSetting.Name;
 
     public T Value
     {
         get => GetValue();
         set
         {
-            if (_value.Equals(value))
+            if (EqualityComparer<T>.Default.Equals(_value, value))
             {
                 return;
             }
 
             _value = value;
-            if (_loaded)
-            {
-                Updated?.Invoke(this, EventArgs.Empty);
-            }
         }
     }
-
-    public event EventHandler? Updated;
 
     public T GetValue(bool reload = false)
     {
@@ -75,7 +54,7 @@ public class RuntimeSetting<T> : IRuntimeSetting<T>
 
     public void Reload()
     {
-        Value = _persistentSetting.Value;
+        Value = persistentSetting.Value;
         _loaded = true;
     }
 
@@ -83,7 +62,7 @@ public class RuntimeSetting<T> : IRuntimeSetting<T>
 
     public void Save()
     {
-        _persistentSetting.Value = Value;
+        persistentSetting.Value = Value;
     }
 
     /// <summary>

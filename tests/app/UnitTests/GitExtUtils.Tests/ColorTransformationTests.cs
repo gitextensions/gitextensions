@@ -1,8 +1,6 @@
 ﻿using GitExtUtils.GitUI.Theming;
 
 namespace GitExtUtilsTests;
-
-[TestFixture]
 public class ColorTransformationTests
 {
     [Test, Combinatorial]
@@ -21,7 +19,7 @@ public class ColorTransformationTests
             opposite);
 
         double expected = (example * (1 - alpha)) + (opposite * alpha);
-        ClassicAssert.That(transformed, Is.EqualTo(expected).Within(0.001));
+        transformed.Should().BeApproximately(expected, 0.001);
     }
 
     [TestCase(0.4d, 0.7d, 0.6d, 0.8d, 0.2d, 0.3d)]
@@ -46,26 +44,26 @@ public class ColorTransformationTests
             example,
             opposite);
 
-        ClassicAssert.That(transformed, Is.EqualTo(expected).Within(0.001));
+        transformed.Should().BeApproximately(expected, 0.001);
     }
 
     [TestCase("#000000", 0.5f)]
-    [TestCase("#777777", 0.5f)]
-    [TestCase("#999999", 0.6f)] // the threshold has been increased to still write in black on a darker color
+    [TestCase("#757575", 0.5f)]
+    [TestCase("#999999", 1.0f)] // write white on a lighter background with increased threshold
     public void Should_return_white_when_color_is_dark(string backgroundColor, float luminanceThreshold)
     {
         Color correspondingForeColor = ColorHelper.TestAccessor.GetContrastColor(ColorTranslator.FromHtml(backgroundColor), luminanceThreshold);
 
-        ClassicAssert.That(correspondingForeColor, Is.EqualTo(Color.White));
+        correspondingForeColor.Should().Be(Color.White);
     }
 
     [TestCase("#FFFFFF", 0.5f)]
     [TestCase("#999999", 0.5f)]
-    [TestCase("#777777", 0.4f)] // the threshold has been lower to still write in white on a lighter color
+    [TestCase("#777777", 0.4f)] // write black on a lighter background with decreased threshold
     public void Should_return_black_when_color_is_light(string backgroundColor, float luminanceThreshold)
     {
         Color correspondingForeColor = ColorHelper.TestAccessor.GetContrastColor(ColorTranslator.FromHtml(backgroundColor), luminanceThreshold);
 
-        ClassicAssert.That(correspondingForeColor, Is.EqualTo(Color.Black));
+        correspondingForeColor.Should().Be(Color.Black);
     }
 }

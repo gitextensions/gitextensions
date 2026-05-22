@@ -1,15 +1,13 @@
-﻿using FluentAssertions;
-using GitExtUtils.GitUI;
+﻿using GitExtUtils.GitUI;
 using GitUI;
 using NSubstitute;
 
 namespace GitUITests;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public class GitExtensionsFormTests
 {
-    private IWindowPositionManager _windowPositionManager;
+    private IWindowPositionManager _windowPositionManager = null!;
 
     [SetUp]
     public void Setup()
@@ -89,12 +87,12 @@ public class GitExtensionsFormTests
             Size = new Size(300, 300),
             FormBorderStyle = borderStyle
         };
-        Rectangle[] screens = new[]
-        {
+        Rectangle[] screens =
+        [
             new Rectangle(-1920, 0, 1920, 1080),
             new Rectangle(1920, 0, 1920, 1080),
             new Rectangle(0, 0, 1920, 1080)
-        };
+        ];
 
         GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
         test.GetScreensWorkingArea = () => screens;
@@ -112,11 +110,13 @@ public class GitExtensionsFormTests
     [TestCase(120, 400, 400)]
     [TestCase(144, 333, 333)]
     [TestCase(192, 250, 250)]
+#pragma warning disable IDE0060 // Remove unused parameter
     public void RestorePosition_should_scale_sizable_window_if_different_dpi(int savedDpi, int expectedWidthAt96dpi, int expectedHeightAt96dpi)
+#pragma warning restore IDE0060 // Remove unused parameter
     {
         if (DpiUtil.IsNonStandard)
         {
-            ClassicAssert.Inconclusive("The test must be run at 96dpi");
+            Assert.Inconclusive("The test must be run at 96dpi");
         }
 
         using MockForm form = new(true)
@@ -124,12 +124,12 @@ public class GitExtensionsFormTests
             Location = new Point(-100, -100),
             Size = new Size(300, 300),
         };
-        Rectangle[] screens = new[]
-        {
+        Rectangle[] screens =
+        [
             new Rectangle(-1920, 0, 1920, 1080),
             new Rectangle(1920, 0, 1920, 1080),
             new Rectangle(0, 0, 1920, 1080)
-        };
+        ];
 
         GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
         test.GetScreensWorkingArea = () => screens;
@@ -150,7 +150,7 @@ public class GitExtensionsFormTests
     {
         if (DpiUtil.IsNonStandard)
         {
-            ClassicAssert.Inconclusive("The test must be run at 96dpi");
+            Assert.Inconclusive("The test must be run at 96dpi");
         }
 
         using Form owner = new()
@@ -163,13 +163,13 @@ public class GitExtensionsFormTests
             Owner = owner,
             StartPosition = FormStartPosition.CenterParent
         };
-        Rectangle[] screens = new[]
-        {
+        Rectangle[] screens =
+        [
             new Rectangle(0, 0, 0, 0),
             new Rectangle(-1920, 0, 1920, 1080),
             new Rectangle(1920, 0, 1920, 1080),
             new Rectangle(0, 0, 1920, 1080)
-        };
+        ];
 
         GitExtensionsForm.GitExtensionsFormTestAccessor test = form.GetGitExtensionsFormTestAccessor();
         test.GetScreensWorkingArea = () => screens;

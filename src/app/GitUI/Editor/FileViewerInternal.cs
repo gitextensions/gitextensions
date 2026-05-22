@@ -95,7 +95,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         _continuousScrollEventManager = continuousScrollEventManager;
     }
 
-    internal void GutterSelectedLineChanged(object sender, EventArgs e)
+    internal void GutterSelectedLineChanged(object? sender, EventArgs e)
     {
         GutterSelectedLineChanged(TextEditor.ActiveTextAreaControl.Caret.Line);
     }
@@ -106,7 +106,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         TextEditor.ActiveTextAreaControl.TextArea.GutterMargin.SelectedLineChanged(lineNo);
     }
 
-    private void SelectionManagerSelectionChanged(object sender, EventArgs e)
+    private void SelectionManagerSelectionChanged(object? sender, EventArgs e)
     {
         string text = TextEditor.ActiveTextAreaControl.TextArea.SelectionManager.SelectedText;
         TextEditor.Document.MarkerStrategy.RemoveAll(m => true);
@@ -126,7 +126,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     {
         if (string.IsNullOrWhiteSpace(word))
         {
-            return Array.Empty<TextMarker>();
+            return [];
         }
 
         List<TextMarker> selectionMarkers = [];
@@ -142,7 +142,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
                 TextMarker textMarker = new(indexMatch,
                     word.Length, TextMarkerType.SolidBlock, highlightColor,
-                    ColorHelper.GetForeColorForBackColor(highlightColor));
+                    highlightColor.GetTextColor());
 
                 selectionMarkers.Add(textMarker);
             }
@@ -170,7 +170,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         List<TextMarker> markers = TextEditor.Document.MarkerStrategy.GetMarkers(offset,
             TextEditor.Document.TextLength - offset);
 
-        TextMarker marker =
+        TextMarker? marker =
             markers.FirstOrDefault(x => x.Offset > offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
         if (marker is not null)
         {
@@ -188,7 +188,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
         List<TextMarker> markers = TextEditor.Document.MarkerStrategy.GetMarkers(0, offset);
 
-        TextMarker marker =
+        TextMarker? marker =
             markers.LastOrDefault(x => x.Offset < offset && x.Color == AppColor.HighlightAllOccurences.GetThemeColor());
         if (marker is not null)
         {
@@ -660,7 +660,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     private int FirstVisibleLine
     {
         get => TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine;
-        set => TextEditor.ActiveTextAreaControl.TextArea.TextView.FirstVisibleLine = value;
+        set => TextEditor.ActiveTextAreaControl.TextArea.TextView.SetFirstVisibleLine(value, TextEditor.ActiveTextAreaControl.HScrollBar.Visible ? 0 : SystemInformation.HorizontalScrollBarHeight);
     }
 
     public int GetLineFromVisualPosY(int visualPosY)
@@ -718,6 +718,8 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
 
     public int MaxLineNumber => TextEditor.ShowLineNumbers ? TotalNumberOfLines : _lineNumbersControl.MaxLineNumber;
 
+    public int CurrentFileColumn => TextEditor.ActiveTextAreaControl.Caret.Position.Column;
+
     public int CurrentFileLine()
     {
         bool isPartial = _textHighlightService is (DiffHighlightService or GrepHighlightService or DifftasticHighlightService);
@@ -766,20 +768,38 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         _findAndReplaceForm.SetFileLoader(fileLoader);
     }
 
-    private void TextArea_MouseWheel(object sender, MouseEventArgs e)
+    private void TextArea_MouseWheel(object? sender, MouseEventArgs e)
     {
+        if (ModifierKeys.HasFlag(Keys.Shift))
+        {
+            int scrollAmount = DpiUtil.Scale(8);
+            HScrollPosition = e.Delta switch
+            {
+                > 0 => Math.Max(0, HScrollPosition - scrollAmount),
+                < 0 => HScrollPosition + scrollAmount,
+                _ => HScrollPosition
+            };
+
+            if (e is HandledMouseEventArgs handled)
+            {
+                handled.Handled = true;
+            }
+
+            return;
+        }
+
         bool isScrollingTowardTop = e.Delta > 0;
         bool isScrollingTowardBottom = e.Delta < 0;
         VScrollBar scrollBar = TextEditor.ActiveTextAreaControl.VScrollBar;
 
         if (isScrollingTowardTop && (scrollBar.Value == 0))
         {
-            _continuousScrollEventManager?.RaiseTopScrollReached(sender, e);
+            _continuousScrollEventManager?.RaiseTopScrollReached(sender!, e);
         }
 
         if (isScrollingTowardBottom && (!scrollBar.Visible || scrollBar.Value + scrollBar.Height > scrollBar.Maximum))
         {
-            _continuousScrollEventManager?.RaiseBottomScrollReached(sender, e);
+            _continuousScrollEventManager?.RaiseBottomScrollReached(sender!, e);
         }
     }
 

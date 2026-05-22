@@ -1,5 +1,6 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
+using System.Security.Cryptography;
 using System.Text;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
@@ -40,7 +41,10 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
     {
         if (TaskbarManager.IsPlatformSupported)
         {
-            TaskbarManager.Instance.ApplicationId = AppSettings.ApplicationId;
+            string id = AppSettings.ApplicationId;
+            TaskbarManager.Instance.ApplicationId = AppSettings.IsPortable()
+                ? $"{id}.{Convert.ToBase64String(SHA1.HashData(Encoding.UTF8.GetBytes(Application.ExecutablePath)))}"
+                : id;
         }
     }
 
@@ -67,7 +71,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
         }
     }
 
-    private static bool IsSupported => EnvUtils.RunningOnWindows() && TaskbarManager.IsPlatformSupported;
+    private static bool IsSupported => OperatingSystem.IsWindows() && TaskbarManager.IsPlatformSupported;
     private static bool IsSupportedAndVisible => EnvUtils.RunningOnWindowsWithMainWindow() && TaskbarManager.IsPlatformSupported;
 
     /// <summary>
@@ -86,10 +90,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
             return;
         }
 
-        if (string.IsNullOrWhiteSpace(workingDir))
-        {
-            throw new ArgumentException(nameof(workingDir));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(workingDir);
 
         SafeInvoke(() =>
         {
@@ -99,7 +100,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
                 return;
             }
 
-            string baseFolder = Path.Combine(AppSettings.ApplicationDataPath.Value, "Recent");
+            string baseFolder = Path.Join(AppSettings.ApplicationDataPath.Value!, "Recent");
             if (!Directory.Exists(baseFolder))
             {
                 Directory.CreateDirectory(baseFolder);
@@ -113,9 +114,10 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
                 sb.Replace(c, '_');
             }
 
-            string path = Path.Combine(baseFolder, $"{sb}.gitext");
+            string path = Path.Join(baseFolder, $"{sb}.gitext");
             File.WriteAllText(path, workingDir);
             JumpList.AddToRecent(path);
+            UpdateJumpList(); // in order to refresh at once
 
             if (!ToolbarButtonsCreated)
             {
@@ -166,11 +168,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
 
         SafeInvoke(() =>
         {
-            // One ApplicationId, so all windows must share the same jumplist
-            JumpList jumpList = JumpList.CreateJumpList();
-            jumpList.ClearAllUserTasks();
-            jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
-            jumpList.Refresh();
+            UpdateJumpList();
 
             CreateTaskbarButtons(windowHandle, buttons);
         }, nameof(CreateJumpList));
@@ -229,6 +227,18 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
     }
 
     /// <summary>
+    ///  Updates the jump list to show recent repositories in the Start menu and at the taskbar icon.
+    ///  Uses the built-in Windows localized "Recent" category.
+    /// </summary>
+    private static void UpdateJumpList()
+    {
+        JumpList jumpList = JumpList.CreateJumpList();
+        jumpList.ClearAllUserTasks();
+        jumpList.KnownCategoryToDisplay = JumpListKnownCategoryType.Recent;
+        jumpList.Refresh();
+    }
+
+    /// <summary>
     /// Converts an image into an icon.  This was taken off of the interwebs.
     /// It's on a billion different sites and forum posts, so I would say its creative commons by now. -tekmaven.
     /// </summary>
@@ -240,7 +250,7 @@ public sealed class WindowsJumpListManager : IWindowsJumpListManager
     /// <returns>An icon!!.</returns>
     private static Icon MakeIcon(Image img, int size, bool keepAspectRatio)
     {
-        if (_iconByImage.TryGetValue(img, out Icon icon))
+        if (_iconByImage.TryGetValue(img, out Icon? icon))
         {
             return icon;
         }

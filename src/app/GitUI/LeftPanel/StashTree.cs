@@ -19,10 +19,10 @@ internal sealed class StashTree : BaseRevisionTree
             return;
         }
 
-        ReloadNodesDetached((cancellationToken, _) => LoadNodesAsync(cancellationToken, getStashRevs), getRefs: null);
+        ReloadNodesDetached((_, cancellationToken) => LoadNodesAsync(getStashRevs, cancellationToken), getRefs: null!);
     }
 
-    private async Task<Nodes> LoadNodesAsync(CancellationToken token, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs)
+    private async Task<Nodes> LoadNodesAsync(Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, CancellationToken token)
     {
         await TaskScheduler.Default;
         token.ThrowIfCancellationRequested();
@@ -40,7 +40,7 @@ internal sealed class StashTree : BaseRevisionTree
             token.ThrowIfCancellationRequested();
 
             // Visibility is set after the grid is loaded
-            StashNode node = new(this, stash.ObjectId, stash.ReflogSelector, stash.Subject, visible: false);
+            StashNode node = new(this, stash.ObjectId, stash.ReflogSelector!, stash.Subject, visible: false);
             Node? parent = node.CreateRootNode(pathToNodes, (tree, parentPath) => new BasePathNode(tree, parentPath));
 
             if (parent is not null)

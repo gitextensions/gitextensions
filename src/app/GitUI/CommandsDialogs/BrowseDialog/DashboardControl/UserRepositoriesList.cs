@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Properties;
@@ -16,7 +17,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 public partial class UserRepositoriesList : GitExtensionsControl
 {
     private readonly TranslationString _groupRecentRepositories = new("Recent repositories");
-    private readonly TranslationString _repositorySearchPlaceholder = new("Search repositories");
+    private readonly TranslationString _repositorySearchPlaceholder = new("Search repositories...");
     private readonly TranslationString _groupActions = new("Actions");
     private readonly TranslationString _deleteCategoryCaption = new(
         "Delete Category");
@@ -58,11 +59,16 @@ public partial class UserRepositoriesList : GitExtensionsControl
     private Brush _hoverColorBrush = new SolidBrush(SystemColors.InactiveCaption);
     private ListViewItem? _hoveredItem;
     private readonly ListViewGroup _lvgRecentRepositories;
-    private readonly IUserRepositoriesListController _controller = new UserRepositoriesListController(RepositoryHistoryManager.Locals, new InvalidRepositoryRemover());
     private bool _hasInvalidRepos;
     private ListViewItem? _rightClickedItem;
 
     public event EventHandler<GitModuleEventArgs>? GitModuleChanged;
+
+    private IUserRepositoriesListController Controller
+        => field ??= new UserRepositoriesListController(
+            RepositoryHistoryManager.Locals,
+            new InvalidRepositoryRemover(),
+            ServiceProvider.GetRequiredService<IRepositoryCurrentBranchNameCache>());
 
     public UserRepositoriesList()
     {
@@ -82,7 +88,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
         _secondaryFont = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints - 1f);
         lblRecentRepositories.Font = new Font(AppSettings.Font.FontFamily, AppSettings.Font.SizeInPoints + 5.5f);
-        lblRecentRepositories.ForeColor.AdaptTextColor();
+        lblRecentRepositories.SetForeColorForBackColor();
 
         textBoxSearch.PlaceholderText = _repositorySearchPlaceholder.Text;
 
@@ -290,12 +296,12 @@ public partial class UserRepositoriesList : GitExtensionsControl
     {
         if (reloadData)
         {
-            _controller.ClearCache();
+            Controller.ClearCache();
         }
 
         IReadOnlyList<RecentRepoInfo> recentRepositories;
         IReadOnlyList<RecentRepoInfo> favouriteRepositories;
-        (recentRepositories, favouriteRepositories) = _controller.PreRenderRepositories(textBoxSearch.Text);
+        (recentRepositories, favouriteRepositories) = Controller.PreRenderRepositories(textBoxSearch.Text);
 
         try
         {
@@ -309,18 +315,20 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
             _hasInvalidRepos = false;
 
-            ListViewGroup[] groups = new[] { _lvgRecentRepositories }
-                .Concat(recentRepositories.Concat(favouriteRepositories)
-                    .Select(repo => repo.Repo.Category)
-                    .Where(c => !string.IsNullOrWhiteSpace(c))
-                    .Distinct(GroupHeaderComparer)
-                    .OrderBy(c => c)
-                    .Select(c => new ListViewGroup(c, c)
-                    {
-                        CollapsedState = ListViewGroupCollapsedState.Expanded,
-                        TaskLink = _groupActions.Text
-                    }))
-                .ToArray();
+            ListViewGroup[] groups =
+            [
+                _lvgRecentRepositories,
+                .. recentRepositories.Concat(favouriteRepositories)
+                        .Select(repo => repo.Repo.Category)
+                        .Where(c => !string.IsNullOrWhiteSpace(c))
+                        .Distinct(GroupHeaderComparer)
+                        .OrderBy(c => c)
+                        .Select(c => new ListViewGroup(c, c)
+                        {
+                            CollapsedState = ListViewGroupCollapsedState.Expanded,
+                            TaskLink = _groupActions.Text
+                        }),
+            ];
 
             listView1.Groups.AddRange(groups);
             BindRepositories(recentRepositories, isFavourite: false);
@@ -350,8 +358,8 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
                 ThreadHelper.FileAndForget(async () =>
                 {
-                    bool isValidGitDir = _controller.IsValidGitWorkingDir(recent.Repo.Path);
-                    string branchName = isValidGitDir ? _controller.GetCurrentBranchName(recent.Repo.Path) : "";
+                    bool isValidGitDir = Controller.IsValidGitWorkingDir(recent.Repo.Path);
+                    string branchName = isValidGitDir ? Controller.GetCurrentBranchName(recent.Repo.Path) : "";
                     await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
                     if (isValidGitDir)
                     {
@@ -378,7 +386,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     protected virtual void OnModuleChanged(GitModuleEventArgs args)
     {
-        EventHandler<GitModuleEventArgs> handler = GitModuleChanged;
+        EventHandler<GitModuleEventArgs>? handler = GitModuleChanged;
         handler?.Invoke(this, args);
     }
 
@@ -398,28 +406,27 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private List<string> GetCategories()
     {
-        return GetRepositories()
+        return [.. GetRepositories()
             .Select(repository => repository.Category)
             .WhereNotNullOrWhiteSpace()
             .OrderBy(x => x)
-            .Distinct()
-            .ToList();
+            .Distinct()];
     }
 
     private IEnumerable<Repository> GetRepositories()
     {
         return listView1.Items.Cast<ListViewItem>()
-            .Select(lvi => (Repository)lvi.Tag)
-            .Where(r => r is not null);
+            .Select(lvi => (Repository?)lvi.Tag)
+            .WhereNotNull();
     }
 
     private static SelectedRepositoryItem? GetSelectedRepositoryItem(ToolStripItem? menuItem)
     {
         // Retrieve the ContextMenuStrip that owns this ToolStripItem
-        ContextMenuStrip contextMenu = menuItem?.Owner as ContextMenuStrip;
+        ContextMenuStrip? contextMenu = menuItem?.Owner as ContextMenuStrip;
 
         // Get the control that is displaying this context menu
-        SelectedRepositoryItem selected = contextMenu?.Tag as SelectedRepositoryItem;
+        SelectedRepositoryItem? selected = contextMenu?.Tag as SelectedRepositoryItem;
         if (string.IsNullOrWhiteSpace(selected?.Repository?.Path))
         {
             return null;
@@ -435,7 +442,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
             return null;
         }
 
-        Repository selected = listView1.SelectedItems[0].Tag as Repository;
+        Repository? selected = listView1.SelectedItems[0].Tag as Repository;
         if (string.IsNullOrWhiteSpace(selected?.Path))
         {
             return null;
@@ -447,7 +454,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
     private ListViewGroup GetTileGroup(Repository repository)
     {
         return listView1.Groups.Cast<ListViewGroup>()
-            .SingleOrDefault(x => GroupHeaderComparer.Equals(x.Header, repository.Category));
+            .SingleOrDefault(x => GroupHeaderComparer.Equals(x.Header, repository.Category))!;
     }
 
     private Size GetTileSize(IEnumerable<RecentRepoInfo> recentRepositories, IEnumerable<RecentRepoInfo> favouriteRepositories)
@@ -485,7 +492,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private static void RepositoryContextAction(ToolStripItem? menuItem, Action<SelectedRepositoryItem> action)
     {
-        SelectedRepositoryItem selected = GetSelectedRepositoryItem(menuItem);
+        SelectedRepositoryItem? selected = GetSelectedRepositoryItem(menuItem);
         if (selected is not null)
         {
             action(selected);
@@ -530,7 +537,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private bool PromptUserConfirm(string question, string caption)
     {
-        DialogResult dialogResult = MessageBox.Show(this,
+        DialogResult dialogResult = MessageBoxes.Show(this,
             question,
             caption,
             MessageBoxButtons.YesNo,
@@ -540,11 +547,11 @@ public partial class UserRepositoriesList : GitExtensionsControl
         return dialogResult == DialogResult.Yes;
     }
 
-    private void UpdateCategoryName(string originalName, string? newName)
+    private void UpdateCategoryName(string? originalName, string? newName)
     {
         foreach (Repository repository in GetRepositories().Where(r => r.Category == originalName))
         {
-            ThreadHelper.JoinableTaskFactory.Run(() => _controller.AssignCategoryAsync(repository, newName));
+            ThreadHelper.JoinableTaskFactory.Run(() => Controller.AssignCategoryAsync(repository, newName));
         }
 
         ShowRecentRepositories();
@@ -558,7 +565,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private void contextMenuStrip_Opening(object sender, CancelEventArgs e)
     {
-        Repository selected = GetSelectedRepository();
+        Repository? selected = GetSelectedRepository();
 
         tsmiRemoveFromList.Visible =
             toolStripMenuItem1.Visible =
@@ -632,7 +639,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
             }
         }
 
-        RectangleF DrawText(Graphics g, string text, Font font, Brush brush, int maxTextWidth, PointF location, float spacing)
+        static RectangleF DrawText(Graphics g, string text, Font font, Brush brush, int maxTextWidth, PointF location, float spacing)
         {
             Size textBounds = TextRenderer.MeasureText(text, font);
             float minWidth = Math.Min(textBounds.Width + spacing, maxTextWidth);
@@ -665,10 +672,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
         else if (e.Button == MouseButtons.Right)
         {
             _rightClickedItem = listView1.GetItemAt(e.X, e.Y);
-            if (_rightClickedItem is not null)
-            {
-                _rightClickedItem.Selected = true;
-            }
+            _rightClickedItem?.Selected = true;
         }
     }
 
@@ -741,16 +745,18 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private void RecentRepositoriesList_Load(object sender, EventArgs e)
     {
-        if (!(Parent.FindForm() is FormBrowse form))
+        if (Parent!.FindForm() is not FormBrowse form)
         {
             return;
         }
 
-        ToolStripItem[] menus = new ToolStripItem[] { mnuConfigure };
-        MenuStrip menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "mainMenuStrip");
+        ToolStripItem[] menus = [mnuConfigure];
+        MenuStrip? menuStrip = form.FindDescendantOfType<MenuStrip>(p => p.Name == "mainMenuStrip");
         Validates.NotNull(menuStrip);
-        ToolStripMenuItem dashboardMenu = (ToolStripMenuItem)menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem");
+        ToolStripMenuItem? dashboardMenu = menuStrip.Items.Cast<ToolStripItem>().SingleOrDefault(p => p.Name == "dashboardToolStripMenuItem") as ToolStripMenuItem;
         dashboardMenu?.DropDownItems.AddRange(menus);
+
+        BeginInvoke(textBoxSearch.Focus);
     }
 
     private void tsmiCategories_DropDownOpening(object sender, EventArgs e)
@@ -767,12 +773,12 @@ public partial class UserRepositoriesList : GitExtensionsControl
         if (categories.Count > 0)
         {
             tsmiCategories.DropDownItems.Add(tsmiCategoryNone);
-            tsmiCategories.DropDownItems.AddRange(categories.Select(category =>
+            tsmiCategories.DropDownItems.AddRange([.. categories.Select(category =>
             {
                 ToolStripMenuItem item = new(category) { Tag = category };
                 item.Click += tsmiCategory_Click;
                 return item;
-            }).ToArray<ToolStripItem>());
+            })]);
             tsmiCategories.DropDownItems.Add(new ToolStripSeparator());
         }
 
@@ -795,16 +801,16 @@ public partial class UserRepositoriesList : GitExtensionsControl
         });
     }
 
-    private void tsmiCategory_Click(object sender, EventArgs e)
+    private void tsmiCategory_Click(object? sender, EventArgs e)
     {
-        SelectedRepositoryItem selectedRepositoryItem = GetSelectedRepositoryItem((sender as ToolStripMenuItem)?.OwnerItem);
+        SelectedRepositoryItem? selectedRepositoryItem = GetSelectedRepositoryItem((sender as ToolStripMenuItem)?.OwnerItem);
         if (selectedRepositoryItem is null)
         {
             return;
         }
 
-        string category = (sender as ToolStripMenuItem)?.Tag as string;
-        ThreadHelper.JoinableTaskFactory.Run(() => _controller.AssignCategoryAsync(selectedRepositoryItem.Repository, category));
+        string? category = (sender as ToolStripMenuItem)?.Tag as string;
+        ThreadHelper.JoinableTaskFactory.Run(() => Controller.AssignCategoryAsync(selectedRepositoryItem.Repository, category));
         ShowRecentRepositories();
     }
 
@@ -814,7 +820,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
         {
             if (PromptCategoryName(GetCategories(), originalName: null, out string? categoryName))
             {
-                ThreadHelper.JoinableTaskFactory.Run(() => _controller.AssignCategoryAsync(selectedRepositoryItem.Repository, categoryName));
+                ThreadHelper.JoinableTaskFactory.Run(() => Controller.AssignCategoryAsync(selectedRepositoryItem.Repository, categoryName));
                 ShowRecentRepositories();
             }
         });
@@ -839,18 +845,18 @@ public partial class UserRepositoriesList : GitExtensionsControl
     {
         RepositoryContextAction(sender as ToolStripMenuItem, selectedRepositoryItem =>
         {
-            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(_controller.IsValidGitWorkingDir));
+            ThreadHelper.JoinableTaskFactory.Run(() => RepositoryHistoryManager.Locals.RemoveInvalidRepositoriesAsync(Controller.IsValidGitWorkingDir));
             ShowRecentRepositories();
         });
     }
 
     private void tsmiCategoryRename_Click(object sender, EventArgs e)
     {
-        ListViewGroup categoryGroup = (ListViewGroup)contextMenuStripCategory.Tag;
-        string originalName = categoryGroup.Name;
+        ListViewGroup categoryGroup = (ListViewGroup)contextMenuStripCategory.Tag!;
+        string? originalName = categoryGroup.Name;
 
         List<string> categories = GetCategories();
-        categories.Remove(originalName);
+        categories.Remove(originalName!);
 
         if (PromptCategoryName(categories, originalName, out string? newName))
         {
@@ -860,8 +866,8 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private void tsmiCategoryDelete_Click(object sender, EventArgs e)
     {
-        ListViewGroup categoryGroup = (ListViewGroup)contextMenuStripCategory.Tag;
-        string name = categoryGroup.Name;
+        ListViewGroup categoryGroup = (ListViewGroup)contextMenuStripCategory.Tag!;
+        string? name = categoryGroup.Name;
         string question = string.Format(_deleteCategoryQuestion.Text, name, categoryGroup.Items.Count);
 
         if (!PromptUserConfirm(question, _deleteCategoryCaption.Text))
@@ -874,7 +880,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private void tsmiCategoryClear_Click(object sender, EventArgs e)
     {
-        List<Repository> repositories = GetRepositories().ToList();
+        List<Repository> repositories = [.. GetRepositories()];
         string question = string.Format(_clearRecentCategoryQuestion.Text, repositories.Count);
         if (!PromptUserConfirm(question, _clearRecentCategoryCaption.Text))
         {
@@ -890,9 +896,9 @@ public partial class UserRepositoriesList : GitExtensionsControl
         ShowRecentRepositories();
     }
 
-    private void OnDragDrop(object sender, DragEventArgs e)
+    private void OnDragDrop(object? sender, DragEventArgs e)
     {
-        if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
+        if (e.Data!.GetData(DataFormats.FileDrop) is string[] fileNameArray)
         {
             if (fileNameArray.Length != 1)
             {
@@ -902,11 +908,11 @@ public partial class UserRepositoriesList : GitExtensionsControl
             string dir = fileNameArray[0];
             if (!string.IsNullOrEmpty(dir) && Directory.Exists(dir))
             {
-                GitModule module = new(dir);
+                GitModule module = new(ServiceProvider.GetRequiredService<IGitExecutorProvider>(), dir);
 
                 if (!module.IsValidGitWorkingDir())
                 {
-                    MessageBox.Show(this, TranslatedStrings.DirectoryInvalidRepository,
+                    MessageBoxes.Show(this, TranslatedStrings.DirectoryInvalidRepository,
                         _cannotOpenTheFolder.Text, MessageBoxButtons.OK,
                         MessageBoxIcon.Exclamation, MessageBoxDefaultButton.Button1);
                     return;
@@ -917,9 +923,9 @@ public partial class UserRepositoriesList : GitExtensionsControl
         }
     }
 
-    private static void OnDragEnter(object sender, DragEventArgs e)
+    private static void OnDragEnter(object? sender, DragEventArgs e)
     {
-        if (e.Data.GetData(DataFormats.FileDrop) is string[] fileNameArray)
+        if (e.Data!.GetData(DataFormats.FileDrop) is string[] fileNameArray)
         {
             if (fileNameArray.Length != 1)
             {
@@ -946,13 +952,13 @@ public partial class UserRepositoriesList : GitExtensionsControl
             return false;
         }
 
-        if (_controller.IsValidGitWorkingDir(repository.Path))
+        if (Controller.IsValidGitWorkingDir(repository.Path))
         {
-            OnModuleChanged(new GitModuleEventArgs(new GitModule(repository.Path)));
+            OnModuleChanged(new GitModuleEventArgs(new GitModule(ServiceProvider.GetRequiredService<IGitExecutorProvider>(), repository.Path)));
             return true;
         }
 
-        if (_controller.RemoveInvalidRepository(repository.Path))
+        if (Controller.RemoveInvalidRepository(repository.Path))
         {
             ShowRecentRepositories();
             return true;

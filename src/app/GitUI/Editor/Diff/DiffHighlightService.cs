@@ -21,7 +21,7 @@ public abstract class DiffHighlightService : TextHighlightService
 
     protected readonly bool _useGitColoring;
     protected readonly List<TextMarker> _textMarkers = [];
-    protected DiffLinesInfo _diffLinesInfo;
+    protected DiffLinesInfo _diffLinesInfo = null!;
 
     public DiffHighlightService(ref string text, bool useGitColoring)
     {
@@ -34,7 +34,7 @@ public abstract class DiffHighlightService : TextHighlightService
         if (!useGitColoring)
         {
             // Use default
-            return null;
+            return null!;
         }
 
         GitCommandConfiguration commandConfiguration = new();
@@ -220,7 +220,7 @@ public abstract class DiffHighlightService : TextHighlightService
 
     private IEnumerable<ISegment> GetAllLines(DiffLineType diffLineType)
         => _diffLinesInfo?.DiffLines.Where(i => i.Value.LineType == diffLineType && i.Value.LineSegment is not null)
-            .Select(l => l.Value.LineSegment)
+            .Select(l => l.Value.LineSegment!)
             ?? [];
 
     /// <summary>
@@ -409,11 +409,11 @@ public abstract class DiffHighlightService : TextHighlightService
 
     private static TextMarker CreateDimmedMarker(int offset, int length, bool isRemoved, bool dimBackground)
         => dimBackground
-            ? CreateTextMarker(offset, length, ColorHelper.DimColor(ColorHelper.DimColor(isRemoved ? _removedBackColor : _addedBackColor)))
-            : new(offset, length, TextMarkerType.SolidBlock, AppColor.EditorBackground.GetThemeColor(), ColorHelper.DimColor(isRemoved ? _removedForeColor : _addedForeColor));
+            ? CreateTextMarker(offset, length, (isRemoved ? _removedBackColor : _addedBackColor).DimColor().DimColor())
+            : new(offset, length, TextMarkerType.SolidBlock, AppColor.EditorBackground.GetThemeColor(), (isRemoved ? _removedForeColor : _addedForeColor).DimColor());
 
-    private static TextMarker CreateTextMarker(int offset, int length, Color color)
-        => new(offset, length, TextMarkerType.SolidBlock, color, ColorHelper.GetForeColorForBackColor(color));
+    private static TextMarker CreateTextMarker(int offset, int length, Color backColor)
+        => new(offset, length, TextMarkerType.SolidBlock, backColor, backColor.GetTextColor());
 
     internal class TestAccessor
     {

@@ -40,7 +40,7 @@ public sealed partial class GitArgumentBuilder : ArgumentBuilder
     private readonly string _command;
 
     [GeneratedRegex(@"^[a-z0-9_.-]+$", RegexOptions.ExplicitCapture)]
-    private static partial Regex CommandRegex();
+    private static partial Regex CommandRegex { get; }
 
     /// <summary>
     /// Initialises a new <see cref="GitArgumentBuilder"/> for the given <paramref name="command"/>.
@@ -54,7 +54,7 @@ public sealed partial class GitArgumentBuilder : ArgumentBuilder
     {
         ArgumentNullException.ThrowIfNull(command);
 
-        if (!CommandRegex().IsMatch(command))
+        if (!CommandRegex.IsMatch(command))
         {
             throw new ArgumentException($"Git command \"{command}\" contains invalid characters.", nameof(command));
         }

@@ -1,16 +1,13 @@
-﻿using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitUI.Hotkey;
 using GitUI.ScriptsEngine;
 using NSubstitute;
 using ResourceManager;
 
 namespace GitUITests.Hotkey;
-
-[TestFixture]
 public class HotkeySettingsManagerTests
 {
-    private HotkeySettingsManager _settingsManager;
+    private HotkeySettingsManager _settingsManager = null!;
 
     [SetUp]
     public void SetUp()
@@ -39,7 +36,7 @@ public class HotkeySettingsManagerTests
     {
         HotkeySettings[] defaultHotkeySettingsArray = CreateHotkeySettings(2);
         HotkeySettings[] loadedHotkeySettingsArray = CreateHotkeySettings(2);
-        loadedHotkeySettingsArray[0].Commands[0].KeyData = Keys.C;
+        loadedHotkeySettingsArray[0].Commands![0].KeyData = Keys.C;
 
         defaultHotkeySettingsArray.SequenceEqual(loadedHotkeySettingsArray).Should().BeFalse();
     }
@@ -60,7 +57,7 @@ public class HotkeySettingsManagerTests
 
         HotkeySettings[] defaultHotkeySettingsArray = CreateHotkeySettings(2);
         HotkeySettings[] loadedHotkeySettingsArray = CreateHotkeySettings(2);
-        loadedHotkeySettingsArray[0].Commands[0].KeyData = Keys.C;
+        loadedHotkeySettingsArray[0].Commands![0].KeyData = Keys.C;
 
         HotkeySettingsManager.MergeIntoDefaultSettings(defaultHotkeySettingsArray, loadedHotkeySettingsArray);
 
@@ -74,11 +71,11 @@ public class HotkeySettingsManagerTests
 
         HotkeySettings[] defaultHotkeySettingsArray = CreateHotkeySettings(3);
         HotkeySettings[] loadedHotkeySettingsArray = CreateHotkeySettings(2);
-        loadedHotkeySettingsArray[1].Commands[1].KeyData = Keys.C;
+        loadedHotkeySettingsArray[1].Commands![1].KeyData = Keys.C;
 
         HotkeySettingsManager.MergeIntoDefaultSettings(defaultHotkeySettingsArray, loadedHotkeySettingsArray);
         HotkeySettings[] expected = CreateHotkeySettings(3);
-        expected[1].Commands[1].KeyData = loadedHotkeySettingsArray[1].Commands[1].KeyData;
+        expected[1].Commands![1].KeyData = loadedHotkeySettingsArray[1].Commands![1].KeyData;
 
         defaultHotkeySettingsArray.SequenceEqual(expected).Should().BeTrue();
     }
@@ -86,7 +83,7 @@ public class HotkeySettingsManagerTests
     [Test]
     public async Task Can_save_settings()
     {
-        string originalHotkeys = AppSettings.SerializedHotkeys;
+        string? originalHotkeys = AppSettings.SerializedHotkeys;
 
         try
         {
@@ -97,15 +94,15 @@ public class HotkeySettingsManagerTests
         }
         finally
         {
-            AppSettings.SerializedHotkeys = originalHotkeys;
+            AppSettings.SerializedHotkeys = originalHotkeys!;
         }
     }
 
     private static HotkeySettings[] CreateHotkeySettings(int count)
     {
-        return Enumerable.Range(1, count).Select(i =>
+        return [.. Enumerable.Range(1, count).Select(i =>
             new HotkeySettings("settings" + i,
                 new HotkeyCommand(1, "C1") { KeyData = Keys.A },
-                new HotkeyCommand(2, "C2") { KeyData = Keys.B })).ToArray();
+                new HotkeyCommand(2, "C2") { KeyData = Keys.B }))];
     }
 }

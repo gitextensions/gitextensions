@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
 using Microsoft;
 
@@ -142,7 +140,7 @@ partial class FileStatusList
                     ("", "") => 0,
                     (_, "") => -1,
                     ("", _) => 1,
-                    _ => StringComparer.InvariantCulture.Compare(l.Path.Value, r.Path.Value)
+                    _ => ComparePath(l.Path.Value.AsSpan(), r.Path.Value.AsSpan())
                 };
 
                 return pathComparison switch
@@ -152,9 +150,40 @@ partial class FileStatusList
                     _ => StringComparer.InvariantCulture.Compare(l.Name, r.Name)
                 };
 
+                static int ComparePath(ReadOnlySpan<char> l, ReadOnlySpan<char> r)
+                {
+                    if (l.IsEmpty || r.IsEmpty)
+                    {
+                        return l.IsEmpty && r.IsEmpty ? 0 : l.IsEmpty ? -1 : 1;
+                    }
+
+                    Split(l, out ReadOnlySpan<char> topL, out ReadOnlySpan<char> subL);
+                    Split(r, out ReadOnlySpan<char> topR, out ReadOnlySpan<char> subR);
+                    return topL.CompareTo(topR, StringComparison.InvariantCulture) switch
+                    {
+                        -1 => -1,
+                        +1 => +1,
+                        _ => ComparePath(subL, subR)
+                    };
+
+                    static void Split(ReadOnlySpan<char> path, out ReadOnlySpan<char> top, out ReadOnlySpan<char> sub)
+                    {
+                        int separatorIndex = path.IndexOf('/');
+                        if (separatorIndex == -1)
+                        {
+                            top = path;
+                            sub = ReadOnlySpan<char>.Empty;
+                            return;
+                        }
+
+                        top = path[..separatorIndex];
+                        sub = path[(separatorIndex + 1)..];
+                    }
+                }
+
                 static bool StartsWith(RelativePath longPath, RelativePath shortPath)
                 {
-                    return longPath.Value.StartsWith(shortPath.Value)
+                    return longPath.Value.StartsWith(shortPath.Value, StringComparison.InvariantCulture)
                         && longPath.Value[shortPath.Length] == '/';
                 }
             }
@@ -163,6 +192,7 @@ partial class FileStatusList
         internal static class TestAccessor
         {
             public static string GetCommonPath(string a, string b) => StatusSorter.GetCommonPath(RelativePath.From(a), RelativePath.From(b)).Value;
+            public static int Compare(string l, string r) => new PathFirstComparer().Compare(new GitItemStatus(l), new GitItemStatus(r));
         }
     }
 }

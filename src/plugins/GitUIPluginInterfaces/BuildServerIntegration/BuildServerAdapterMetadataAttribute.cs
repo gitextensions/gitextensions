@@ -1,4 +1,4 @@
-using System.ComponentModel.Composition;
+﻿using System.ComponentModel.Composition;
 
 namespace GitUIPluginInterfaces.BuildServerIntegration;
 
@@ -9,10 +9,7 @@ public class BuildServerAdapterMetadataAttribute : ExportAttribute
     public BuildServerAdapterMetadataAttribute(string buildServerType)
         : base(typeof(IBuildServerTypeMetadata))
     {
-        if (string.IsNullOrEmpty(buildServerType))
-        {
-            throw new ArgumentException();
-        }
+        ArgumentException.ThrowIfNullOrEmpty(buildServerType);
 
         BuildServerType = buildServerType;
     }

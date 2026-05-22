@@ -1,4 +1,4 @@
-using Microsoft.VisualStudio.Threading;
+﻿using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands.UserRepositoryHistory;
 
@@ -31,7 +31,7 @@ public sealed class RemoteRepositoryManager : IRepositoryManager
     {
         if (string.IsNullOrWhiteSpace(repositoryPathUrl))
         {
-            throw new ArgumentException(nameof(repositoryPathUrl));
+            throw new ArgumentException("AddAsMostRecentAsync: no uri.", nameof(repositoryPathUrl));
         }
 
         return await AddAsMostRecentRepositoryAsync(repositoryPathUrl);
@@ -41,7 +41,7 @@ public sealed class RemoteRepositoryManager : IRepositoryManager
             await TaskScheduler.Default;
             IList<Repository> repositoryHistory = await LoadRecentHistoryAsync();
 
-            Repository repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
+            Repository? repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(path, StringComparison.CurrentCultureIgnoreCase));
             if (repository is not null)
             {
                 if (repositoryHistory[0] == repository)
@@ -73,7 +73,7 @@ public sealed class RemoteRepositoryManager : IRepositoryManager
         await TaskScheduler.Default;
 
         IReadOnlyList<Repository> history = _repositoryStorage.Load(KeyRemoteHistory);
-        return history is null ? Array.Empty<Repository>() : AdjustHistorySize(history, AppSettings.RemotesCacheLength).ToList();
+        return history is null ? [] : AdjustHistorySize(history, AppSettings.RemotesCacheLength).ToList();
     }
 
     /// <summary>
@@ -86,12 +86,12 @@ public sealed class RemoteRepositoryManager : IRepositoryManager
     {
         if (string.IsNullOrWhiteSpace(repositoryPath))
         {
-            throw new ArgumentException(nameof(repositoryPath));
+            throw new ArgumentException("RemoveRecentAsync: no path.", nameof(repositoryPath));
         }
 
         await TaskScheduler.Default;
         IList<Repository> repositoryHistory = await LoadRecentHistoryAsync();
-        Repository repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
+        Repository? repository = repositoryHistory.FirstOrDefault(r => r.Path.Equals(repositoryPath, StringComparison.CurrentCultureIgnoreCase));
         if (repository is null)
         {
             return repositoryHistory;

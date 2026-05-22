@@ -4,29 +4,24 @@
   <!--
      Properties describing the layout of the repo.
   -->
-
   <PropertyGroup>
     <!-- Set version for runtimeconfig.json, used by DotnetRuntimeBootstrapper for minimal version to support
          To be kept in sync with the .NET SDK version in global.json
     -->
-    <RuntimeFrameworkVersion>9.0.0</RuntimeFrameworkVersion>
-    <SolutionTargetFramework>net9.0-windows</SolutionTargetFramework>
+    <RuntimeFrameworkVersion>10.0.0</RuntimeFrameworkVersion>
+    <SolutionTargetFramework>net10.0-windows</SolutionTargetFramework>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
     <Platform Condition="'$(Platform)' == ''">AnyCPU</Platform>
     <PlatformName Condition="'$(PlatformName)' == ''">$(Platform)</PlatformName>
   </PropertyGroup>
-
   <PropertyGroup>
     <RepoRoot Condition="'$(RepoRoot)' == ''">$([MSBuild]::NormalizeDirectory('$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildProjectDirectory), 'global.json'))'))</RepoRoot>
   </PropertyGroup>
-
   <PropertyGroup Condition="'$(DotNetTool)' == ''">
     <DotNetTool>$(MSBuildToolsPath)\msbuild.exe</DotNetTool>
   </PropertyGroup>
-
   <PropertyGroup>
     <RepositoryToolsDir>$([MSBuild]::NormalizeDirectory('$(RepoRoot)', '.tools'))</RepositoryToolsDir>
-
     <ArtifactsDir Condition="'$(ArtifactsDir)' == ''">$([MSBuild]::NormalizeDirectory('$(RepoRoot)', 'artifacts', '$(Configuration)'))</ArtifactsDir>
     <ArtifactsToolsetDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'toolset'))</ArtifactsToolsetDir>
     <ArtifactsObjDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'obj'))</ArtifactsObjDir>
@@ -39,22 +34,17 @@
     <ArtifactsPackagesDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'packages'))</ArtifactsPackagesDir>
     <ArtifactsUnitTestsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestsDir)', 'UnitTests'))</ArtifactsUnitTestsDir>
     <ArtifactsIntegrationTestsDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsTestsDir)', 'IntegrationTests'))</ArtifactsIntegrationTestsDir>
-
     <ArtifactsPublishDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsDir)', 'publish'))</ArtifactsPublishDir>
     <AppPublishDir>$([MSBuild]::NormalizeDirectory('$(ArtifactsPublishDir)', 'GitExtensions'))</AppPublishDir>
   </PropertyGroup>
-
   <PropertyGroup>
     <OutDirName Condition="'$(OutDirName)' == ''">$(MSBuildProjectName)</OutDirName>
-
     <BaseOutputPath Condition="'$(BaseOutputPath)' == ''">$([System.IO.Path]::GetFullPath('$(ArtifactsBinDir)$(OutDirName)\'))</BaseOutputPath>
     <OutputPath Condition="'$(PlatformName)' == 'AnyCPU'">$(BaseOutputPath)</OutputPath>
     <OutputPath Condition="'$(PlatformName)' != 'AnyCPU'">$(BaseOutputPath)$(PlatformName)\</OutputPath>
-
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)' == ''">$([System.IO.Path]::GetFullPath('$(ArtifactsObjDir)$(OutDirName)\'))</BaseIntermediateOutputPath>
     <IntermediateOutputPath Condition="'$(PlatformName)' == 'AnyCPU'">$(BaseIntermediateOutputPath)</IntermediateOutputPath>
     <IntermediateOutputPath Condition="'$(PlatformName)' != 'AnyCPU'">$(BaseIntermediateOutputPath)$(PlatformName)\</IntermediateOutputPath>
-
     <GitExtensionsOutputPath>$([System.IO.Path]::GetFullPath('$(ArtifactsBinDir)GitExtensions\'))</GitExtensionsOutputPath>
   </PropertyGroup>
 </Project>

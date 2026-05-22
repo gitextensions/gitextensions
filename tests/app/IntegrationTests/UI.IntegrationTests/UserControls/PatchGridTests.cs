@@ -1,5 +1,4 @@
 ﻿using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -10,14 +9,13 @@ using NSubstitute;
 namespace UITests.UserControls;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public sealed class PatchGridTests
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     [SetUp]
     public void SetUp()

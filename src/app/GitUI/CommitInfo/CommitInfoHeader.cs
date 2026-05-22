@@ -36,7 +36,7 @@ public partial class CommitInfoHeader : GitModuleControl
             rtbRevisionHeader.Font = _commitDataHeaderRenderer.GetFont(g);
         }
 
-        rtbRevisionHeader.SelectionTabs = _commitDataHeaderRenderer.GetTabStops().ToArray();
+        rtbRevisionHeader.SelectionTabs = [.. _commitDataHeaderRenderer.GetTabStops()];
 
         _rtbResizedSubscription = Observable
             .FromEventPattern<ContentsResizedEventHandler, ContentsResizedEventArgs>(
@@ -123,7 +123,7 @@ public partial class CommitInfoHeader : GitModuleControl
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 

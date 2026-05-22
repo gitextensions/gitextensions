@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System.Buffers.Text;
+﻿using System.Buffers.Text;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Runtime.CompilerServices;
@@ -10,8 +8,6 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
 using GitUIPluginInterfaces;
-using Microsoft.Toolkit.HighPerformance;
-using Microsoft.Toolkit.HighPerformance.Buffers;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands;
@@ -38,9 +34,9 @@ public sealed class RevisionReader
         /* Notes placeholder */ "{1}";
 
     private const string _reflogSelectorFormat = "%gD%n";
-    private const string _notesPrefix = "Notes:";
-    private const string _notesMarker = $"\n{_notesPrefix}";
-    private const string _notesFormat = $"%n{_notesPrefix}%n%N";
+    private const string _notesPrefix = "\u039d\u043et\u0435\u0282:"; // Unicode l00k-alikes, Νоtеʂ:
+    internal const string NotesMarkerWithoutTrailingLF = $"\n{_notesPrefix}";
+    internal const string NotesFormat = $"%n{_notesPrefix}%n%N";
 
     // Trace info for parse errors
     private int _noOfParseError = 0;
@@ -56,8 +52,12 @@ public sealed class RevisionReader
     // Include Git Notes for the commit
     private bool _hasNotes;
 
-    // Buffer to decode subject
+    // Reusable buffer for decoding byte spans to chars (names, emails, subject, body)
     private char[] _decodeBuffer = new char[4096];
+
+    // Per-instance string pool for deduplicating author/committer names and emails
+    private readonly HashSet<string>.AlternateLookup<ReadOnlySpan<char>> _stringPool
+        = new HashSet<string>(StringComparer.Ordinal).GetAlternateLookup<ReadOnlySpan<char>>();
 
     public RevisionReader(IGitModule module, bool allBodies = false)
         : this(module, module.LogOutputEncoding, allBodies ? 0 : GetUnixTimeForOffset(_offsetDaysForOldestBody))
@@ -80,7 +80,7 @@ public sealed class RevisionReader
         _hasReflogSelector = hasReflogSelector;
         _hasNotes = hasNotes;
 
-        return string.Format(_fullFormat, hasReflogSelector ? _reflogSelectorFormat : "", hasNotes ? _notesFormat : "");
+        return string.Format(_fullFormat, hasReflogSelector ? _reflogSelectorFormat : "", hasNotes ? NotesFormat : "");
     }
 
     private static long GetUnixTimeForOffset(int days)
@@ -113,7 +113,7 @@ public sealed class RevisionReader
     {
         if (untracked.Count == 0)
         {
-            return Array.Empty<GitRevision>();
+            return [];
         }
 
         GitArgumentBuilder arguments = new("log")
@@ -139,7 +139,7 @@ public sealed class RevisionReader
     {
         if (string.IsNullOrWhiteSpace(olderCommitHash) || string.IsNullOrWhiteSpace(newerCommitHash))
         {
-            return Array.Empty<GitRevision>();
+            return [];
         }
 
         GitArgumentBuilder arguments = new("log")
@@ -178,11 +178,13 @@ public sealed class RevisionReader
     public async Task<GitRevision?> GetRevisionAsync(string commitHash, bool hasNotes, bool throwOnError, CancellationToken cancellationToken)
     {
         // output can be cached if git-notes is not included and hash is a sha.
-        bool doCacheGitOutput = ObjectId.TryParse(commitHash, out ObjectId? objectId) && !hasNotes;
-        if (objectId?.IsArtificial is true)
+        bool isValidSha = ObjectId.TryParse(commitHash, out ObjectId objectId);
+        if (isValidSha && objectId.IsArtificial)
         {
             throw new InvalidOperationException(nameof(commitHash));
         }
+
+        bool doCacheGitOutput = isValidSha && !hasNotes;
 
         GitArgumentBuilder arguments = new("log")
         {
@@ -353,9 +355,9 @@ public sealed class RevisionReader
 
     private static void AddAutoStash(string workingDirGitDir, IObserver<IReadOnlyList<GitRevision>> subject, string autostashLabel)
     {
-        string autoStashFileName = Path.Combine(workingDirGitDir, "rebase-merge/autostash");
+        string autoStashFileName = Path.Join(workingDirGitDir, "rebase-merge/autostash");
         if (!File.Exists(autoStashFileName)
-            || !ObjectId.TryParse(File.ReadLines(autoStashFileName).FirstOrDefault(), out ObjectId? autoStashCommitId))
+            || !ObjectId.TryParse(File.ReadLines(autoStashFileName).FirstOrDefault(), out ObjectId autoStashCommitId))
         {
             return;
         }
@@ -369,9 +371,9 @@ public sealed class RevisionReader
             Subject = autostashLabel
         };
 
-        string origHeadFileName = Path.Combine(workingDirGitDir, "rebase-merge/orig-head");
+        string origHeadFileName = Path.Join(workingDirGitDir, "rebase-merge/orig-head");
         if (File.Exists(origHeadFileName)
-            && ObjectId.TryParse(File.ReadLines(origHeadFileName).FirstOrDefault(), out ObjectId? origHeadCommitId))
+            && ObjectId.TryParse(File.ReadLines(origHeadFileName).FirstOrDefault(), out ObjectId origHeadCommitId))
         {
             autoStashRevision.ParentIds = [origHeadCommitId];
         }
@@ -420,7 +422,7 @@ public sealed class RevisionReader
         // The first 40 bytes are the revision ID and the tree ID back to back
         ReadOnlyMemory<byte> commitHash = buffer.Slice(0, ObjectId.Sha1CharCount);
         ReadOnlySpan<byte> commitHashSpan = commitHash.Span;
-        ObjectId? objectId;
+        ObjectId objectId;
         if (_cache is not null && commitHashSpan.SequenceEqual(_cache.Value.buffer.Span))
         {
             objectId = _cache.Value.objectId;
@@ -436,7 +438,7 @@ public sealed class RevisionReader
         }
 
         ReadOnlyMemory<byte> parentCommitHash = buffer.Slice(ObjectId.Sha1CharCount, ObjectId.Sha1CharCount);
-        if (!ObjectId.TryParse(parentCommitHash.Span, out ObjectId? treeId))
+        if (!ObjectId.TryParse(parentCommitHash.Span, out ObjectId treeId))
         {
             ParseAssert($"Log parse error, object id: {buffer.Length}({parentCommitHash}");
             revision = default;
@@ -479,7 +481,7 @@ public sealed class RevisionReader
         if (noParents <= 0)
         {
             offset++;
-            parentIds = Array.Empty<ObjectId>();
+            parentIds = [];
         }
         else
         {
@@ -488,7 +490,7 @@ public sealed class RevisionReader
             for (int parentIndex = 0; parentIndex < noParents; parentIndex++)
             {
                 ReadOnlyMemory<byte> hashParent = buffer.Slice(offset, ObjectId.Sha1CharCount);
-                if (!ObjectId.TryParse(hashParent.Span, out ObjectId? parentId))
+                if (!ObjectId.TryParse(hashParent.Span, out ObjectId parentId))
                 {
                     ParseAssert($"Log parse error, parent {parentIndex} for {objectId}");
                     revision = default;
@@ -511,7 +513,7 @@ public sealed class RevisionReader
         // Decimal ASCII seconds since the unix epoch
         if (!Utf8Parser.TryParse(bufferSpan.Slice(offset), out long authorUnixTime, out int bytesConsumed))
         {
-            ParseAssert($"Log parse error, not enough data for authortime: {buffer.Length} {offset} {buffer.Slice(offset).ToString()}");
+            ParseAssert($"Log parse error, not enough data for authortime: {buffer.Length} {offset} {buffer.Slice(offset)}");
             revision = default;
             return false;
         }
@@ -519,7 +521,7 @@ public sealed class RevisionReader
         offset += bytesConsumed + 1;
         if (!Utf8Parser.TryParse(bufferSpan.Slice(offset), out long commitUnixTime, out bytesConsumed))
         {
-            ParseAssert($"Log parse error, not enough data for committime: {buffer.Length} {offset} {buffer.Slice(offset).ToString()}");
+            ParseAssert($"Log parse error, not enough data for committime: {buffer.Length} {offset} {buffer.Slice(offset)}");
             revision = default;
             return false;
         }
@@ -536,7 +538,7 @@ public sealed class RevisionReader
         revision = new GitRevision(objectId)
         {
             ParentIds = parentIds,
-            TreeGuid = treeId,
+            TreeId = treeId,
 
             Author = GetNextLine(bufferSpan),
             AuthorEmail = GetNextLine(bufferSpan),
@@ -549,18 +551,7 @@ public sealed class RevisionReader
         // Body is occasionally big, like linux repo has 35K bytes, the buffer is over 100K
         // Use a backing buffer on the heap
         int maxChars = _logOutputEncoding.GetMaxByteCount(buffer.Slice(offset).Length);
-        if (maxChars > _decodeBuffer.Length)
-        {
-            // Default should be sufficient for most repos, Linux though has
-            // unencoded of 36K, which results in maxChars being greater than 100K
-            int newSize = _decodeBuffer.Length;
-            while (newSize < maxChars)
-            {
-                newSize *= 2;
-            }
-
-            _decodeBuffer = new char[newSize];
-        }
+        EnsureDecodeBufferSize(maxChars);
 
         int decodedLength = _logOutputEncoding.GetChars(bufferSpan.Slice(offset), _decodeBuffer);
         Span<char> decoded = _decodeBuffer.AsSpan(0, decodedLength).TrimEnd();
@@ -586,80 +577,48 @@ public sealed class RevisionReader
 
         // Subject can also be defined as the contents before empty line (%s for --pretty),
         // this uses the alternative definition of first line in body.
-        int lengthSubject = decoded.IndexOfAny(Delimiters.LineAndVerticalFeed);
-        revision.HasMultiLineMessage = _hasNotes
-            ? decoded.Length != lengthSubject + _notesMarker.Length + 1 // Notes must always include the notes marker
-            : lengthSubject >= 0;
-
-        revision.Subject = (lengthSubject >= 0
-            ? decoded.Slice(0, lengthSubject).TrimEnd()
-            : decoded)
-            .ToString();
-
-        if (keepBody && revision.HasMultiLineMessage)
+        int firstLineEnd = decoded.IndexOfAny(Delimiters.LineAndVerticalFeed);
+        if (firstLineEnd < 0)
         {
-            // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
-            int currentOffset = lengthSubject;
-            int verticalFeedIndex;
-            while ((verticalFeedIndex = decoded.Slice(currentOffset).IndexOf('\v')) >= 0)
-            {
-                currentOffset += verticalFeedIndex;
-                decoded[currentOffset] = '\n';
-                currentOffset++;
-            }
+            revision.Subject = decoded.ToString();
+            revision.HasMultiLineMessage = false;
+        }
+        else
+        {
+            revision.Subject = decoded[..firstLineEnd].TrimEnd().ToString();
+            Split(decoded, out ReadOnlySpan<char> body, out ReadOnlySpan<char> notes);
+            revision.HasMultiLineMessage = revision.Subject.Length < body.Length;
 
-            // Removes empty Notes markers (this is the most common case)
-            bool hasNonEmptyNotes = _hasNotes;
-            if (hasNonEmptyNotes)
+            if (keepBody)
             {
-                if (decoded.EndsWith(_notesMarker))
+                // Handle '\v' (Shift-Enter) as '\n' for users that by habit avoid Enter to 'send'
+                int currentOffset = firstLineEnd;
+                int verticalFeedIndex;
+                while ((verticalFeedIndex = decoded.Slice(currentOffset).IndexOf('\v')) >= 0)
                 {
-                    // Remove the empty marker
-                    decoded = decoded[..^_notesMarker.Length].TrimEnd();
-                    hasNonEmptyNotes = false;
-                }
-            }
-
-            if (hasNonEmptyNotes)
-            {
-                // Format Notes, add indentation
-                int notesStartIndex = ((ReadOnlySpan<char>)decoded).IndexOf(_notesMarker, StringComparison.Ordinal);
-
-                StringBuilder message = new();
-                currentOffset = notesStartIndex + _notesMarker.Length + 1;
-                message.Append(decoded.Slice(0, currentOffset));
-                while (currentOffset < decoded.Length)
-                {
-                    message.Append("    ");
-                    int lineLength = decoded.Slice(currentOffset).IndexOf('\n');
-                    if (lineLength == -1)
-                    {
-                        message.Append(decoded.Slice(currentOffset));
-                        break;
-                    }
-                    else
-                    {
-                        message.Append(decoded.Slice(currentOffset, lineLength))
-                            .Append('\n');
-                    }
-
-                    currentOffset += lineLength + 1;
+                    currentOffset += verticalFeedIndex;
+                    decoded[currentOffset] = '\n';
+                    currentOffset++;
                 }
 
-                revision.Body = message.ToString();
+                if (revision.HasMultiLineMessage)
+                {
+                    revision.Body = body.ToString();
+                }
+
+                if (_hasNotes)
+                {
+                    revision.Notes = notes.ToString();
+                }
             }
-            else
+            else if (_hasNotes && notes.Length == 0)
             {
-                revision.Body = decoded.ToString();
+                revision.Notes = "";
             }
         }
 
-        if (_hasNotes)
-        {
-            revision.HasNotes = true;
-        }
 #if DEBUG
-        if (revision.Author is null || revision.AuthorEmail is null || revision.Committer is null || revision.CommitterEmail is null || revision.Subject is null || (keepBody && revision.HasMultiLineMessage && revision.Body is null))
+        if (revision.Author is null || revision.AuthorEmail is null || revision.Committer is null || revision.CommitterEmail is null || revision.Subject is null || (keepBody && revision.HasMultiLineMessage && revision.Body is null) || (keepBody && _hasNotes && revision.Notes is null))
         {
             ParseAssert($"Log parse error, decoded fields ({revision.Subject}::{revision.Body}) for {objectId}");
             revision = default;
@@ -671,7 +630,7 @@ public sealed class RevisionReader
 
         return true;
 
-        // Authors etc are limited, use a shared string pool
+        // Authors etc are limited, use a per-instance string pool to deduplicate
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         string? GetNextLine(in ReadOnlySpan<byte> s)
         {
@@ -689,7 +648,21 @@ public sealed class RevisionReader
 
             ReadOnlySpan<byte> r = s.Slice(offset, lineLength);
             offset += lineLength + 1;
-            return StringPool.Shared.GetOrAdd(r, _logOutputEncoding);
+
+            int maxCharCount = _logOutputEncoding.GetMaxCharCount(r.Length);
+            EnsureDecodeBufferSize(maxCharCount);
+
+            int charCount = _logOutputEncoding.GetChars(r, _decodeBuffer);
+            ReadOnlySpan<char> decoded = _decodeBuffer.AsSpan(0, charCount);
+
+            if (_stringPool.TryGetValue(decoded, out string? existing))
+            {
+                return existing;
+            }
+
+            string newStr = new(decoded);
+            _stringPool.Add(newStr);
+            return newStr;
         }
 
         void ParseAssert(string message)
@@ -698,10 +671,40 @@ public sealed class RevisionReader
             DebugHelpers.Assert(!Debugger.IsAttached || _noOfParseError > 1, message);
             Trace.WriteLineIf(_noOfParseError < 10, message);
         }
+
+        void Split(ReadOnlySpan<char> decoded, out ReadOnlySpan<char> body, out ReadOnlySpan<char> notes)
+        {
+            if (_hasNotes && decoded.LastIndexOf(NotesMarkerWithoutTrailingLF, StringComparison.Ordinal) is int splitPos and >= 0)
+            {
+                body = decoded[..splitPos].TrimEnd();
+                splitPos += NotesMarkerWithoutTrailingLF.Length + /*LF*/ 1;
+                notes = decoded.Slice(Math.Min(splitPos, decoded.Length));
+                return;
+            }
+
+            body = decoded;
+            notes = [];
+        }
     }
 
     internal TestAccessor GetTestAccessor()
         => new(this);
+
+    private void EnsureDecodeBufferSize(int requiredLength)
+    {
+        if (requiredLength <= _decodeBuffer.Length)
+        {
+            return;
+        }
+
+        int newSize = _decodeBuffer.Length;
+        while (newSize < requiredLength)
+        {
+            newSize *= 2;
+        }
+
+        _decodeBuffer = new char[newSize];
+    }
 
     internal readonly struct TestAccessor
     {

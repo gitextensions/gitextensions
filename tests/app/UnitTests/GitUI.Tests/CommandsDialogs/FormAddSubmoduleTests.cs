@@ -1,5 +1,4 @@
 ﻿using CommonTestUtils;
-using FluentAssertions;
 using GitExtUtils;
 using GitUI.CommandsDialogs.SubmodulesDialog;
 
@@ -18,10 +17,10 @@ public class FormAddSubmoduleTests
                                + "456\t/refs/heads/b456\n"
                                + "789  /refs/heads/b789";
 
-    private readonly string[] _branches = { "master", "branch", "", "b123", "b456", "b789" };
+    private readonly string[] _branches = ["master", "branch", "", "b123", "b456", "b789"];
 
     // Created once for each test
-    private MockExecutable _gitExecutable;
+    private MockExecutable _gitExecutable = null!;
 
     [SetUp]
     public void SetUp()
@@ -30,19 +29,19 @@ public class FormAddSubmoduleTests
     }
 
     [Test]
-    public void LoadRemoteRepoBranches_NoUrl([Values(null, "", " ")] string url)
+    public void LoadRemoteRepoBranches_NoUrl([Values(null, "", " ")] string? url)
     {
-        FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, url)
+        FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, url!)
             .Should().BeEmpty();
     }
 
     [TestCase("git@github.com:gitextensions/gitextensions.git", "\"git@github.com:gitextensions/gitextensions.git\"")]
     [TestCase("https://github.com/gitextensions/gitextensions.git", "\"https://github.com/gitextensions/gitextensions.git\"")]
     [TestCase("C:\\Repo", "\"C:/Repo\"")]
-    public void LoadRemoteRepoBranches_Url(string url, string encodedUrl)
+    public void LoadRemoteRepoBranches_Url(string? url, string encodedUrl)
     {
         using IDisposable _ = MockupGitOutput(Heads, encodedUrl);
-        FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, url)
+        FormAddSubmodule.TestAccessor.LoadRemoteRepoBranches(_gitExecutable, url!)
             .Should().BeEquivalentTo(_branches);
     }
 

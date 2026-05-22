@@ -1,15 +1,13 @@
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class CommitDataManagerTest
 {
-    private CommitDataManager _commitDataManager;
-    private IGitModule _module;
-    private Func<IGitModule> _getModule;
+    private CommitDataManager _commitDataManager = null!;
+    private IGitModule _module = null!;
+    private Func<IGitModule> _getModule = null!;
 
     [SetUp]
     public void Setup()

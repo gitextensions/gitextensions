@@ -1,5 +1,4 @@
 ﻿using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitCommands.Git.Gpg;
 using GitExtensions.Extensibility.Git;
@@ -10,13 +9,11 @@ using NSubstitute;
 #pragma warning disable SA1312 // Variable names should begin with lower-case letter (doesn't understand discards)
 
 namespace GitCommandsTests.Git.Gpg;
-
-[TestFixture]
 public class GitGpgControllerTests
 {
-    private IGitModule _module;
-    private GitGpgController _gpgController;
-    private MockExecutable _executable;
+    private IGitModule _module = null!;
+    private GitGpgController _gpgController = null!;
+    private MockExecutable _executable = null!;
 
     [SetUp]
     public void Setup()
@@ -51,19 +48,19 @@ public class GitGpgControllerTests
 
         CommitStatus actual = await _gpgController.GetRevisionCommitSignatureStatusAsync(revision);
 
-        ClassicAssert.AreEqual(expected, actual);
+        actual.Should().Be(expected);
     }
 
     [TestCase]
     public void Validate_GetRevisionCommitSignatureStatusAsync_null_revision()
     {
-        ((Func<Task>)(() => _gpgController.GetRevisionCommitSignatureStatusAsync(null))).Should().ThrowAsync<ArgumentNullException>();
+        ((Func<Task>)(() => _gpgController.GetRevisionCommitSignatureStatusAsync(null!))).Should().ThrowAsync<ArgumentNullException>();
     }
 
     [TestCase]
     public void Validate_GetRevisionTagSignatureStatusAsync_null_revision()
     {
-        ((Func<Task>)(() => _gpgController.GetRevisionTagSignatureStatusAsync(null))).Should().ThrowAsync<ArgumentNullException>();
+        ((Func<Task>)(() => _gpgController.GetRevisionTagSignatureStatusAsync(null!))).Should().ThrowAsync<ArgumentNullException>();
     }
 
     [TestCase(TagStatus.NoTag, 0)]
@@ -83,7 +80,7 @@ public class GitGpgControllerTests
 
         TagStatus actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
 
-        ClassicAssert.AreEqual(tagStatus, actual);
+        actual.Should().Be(tagStatus);
     }
 
     [TestCase(TagStatus.OneGood, "GOODSIG ... VALIDSIG ...")]
@@ -106,7 +103,7 @@ public class GitGpgControllerTests
 
         TagStatus actual = await _gpgController.GetRevisionTagSignatureStatusAsync(revision);
 
-        ClassicAssert.AreEqual(tagStatus, actual);
+        actual.Should().Be(tagStatus);
     }
 
     [TestCase("return string")]
@@ -125,19 +122,21 @@ public class GitGpgControllerTests
 
         string actual = _gpgController.GetCommitVerificationMessage(revision);
 
-        ClassicAssert.AreEqual(returnString, actual);
+        actual.Should().Be(returnString);
     }
 
     [TestCase]
     public void Validate_GetCommitVerificationMessage_null_revision()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => _gpgController.GetCommitVerificationMessage(null));
+        Action act = () => _gpgController.GetCommitVerificationMessage(null!);
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [TestCase]
     public void Validate_GetTagVerifyMessage_null_revision()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() => _gpgController.GetTagVerifyMessage(null));
+        Action act = () => _gpgController.GetTagVerifyMessage(null!);
+        act.Should().Throw<ArgumentNullException>();
     }
 
     [TestCase(0, "")]
@@ -148,7 +147,7 @@ public class GitGpgControllerTests
         ObjectId objectId = ObjectId.Random();
         GitRevision revision = new(objectId);
 
-        IDisposable validate = null;
+        IDisposable? validate = null;
 
         switch (usefulTagRefNumber)
         {
@@ -191,9 +190,9 @@ public class GitGpgControllerTests
                 }
         }
 
-        string actual = _gpgController.GetTagVerifyMessage(revision);
+        string? actual = _gpgController.GetTagVerifyMessage(revision);
 
-        ClassicAssert.AreEqual(expected, actual);
+        actual.Should().Be(expected);
 
         validate?.Dispose();
     }

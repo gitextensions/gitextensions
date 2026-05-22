@@ -4,16 +4,14 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
 
 namespace GitCommandsTests.Settings;
-
-[TestFixture]
 internal sealed class SettingTests
 {
     private const string SettingsFileContent = @"<?xml version=""1.0"" encoding=""utf-8""?><dictionary />";
 
     private static readonly TempFileCollection _tempFiles = new();
-    private static string _settingFilePath;
-    private static GitExtSettingsCache _gitExtSettingsCache;
-    private static DistributedSettings _settingContainer;
+    private static string _settingFilePath = null!;
+    private static GitExtSettingsCache _gitExtSettingsCache = null!;
+    private static DistributedSettings _settingContainer = null!;
 
     [OneTimeSetUp]
     public void OneTimeSetUp()
@@ -41,22 +39,17 @@ internal sealed class SettingTests
     public void Should_create_setting<T>(T settingDefault)
         where T : struct
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        // Act
         ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault));
-        ClassicAssert.That(setting.Value, Is.EqualTo(settingDefault));
-        ClassicAssert.That(setting.IsUnset, Is.True);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(settingDefault);
+        setting.Value.Should().Be(settingDefault);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
@@ -64,14 +57,12 @@ internal sealed class SettingTests
     public void Should_save_setting<T>(T settingDefault, T value)
         where T : struct
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
         T storedValue = default;
 
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
             ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
@@ -95,74 +86,7 @@ internal sealed class SettingTests
             storedValue = setting.Value;
         });
 
-        // Assert
-        ClassicAssert.That(storedValue, Is.EqualTo(value));
-    }
-
-    [Test]
-    [TestCaseSource(nameof(SaveCases))]
-    public void Should_trigger_updated_event_for_setting<T>(T settingDefault, T value)
-        where T : struct
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault));
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
-    }
-
-    [Test]
-    [TestCaseSource(nameof(SaveCases))]
-    public void Should_not_trigger_updated_event_for_setting<T>(T settingDefault, T value)
-        where T : struct
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault));
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
+        storedValue.Should().Be(value);
     }
 
     [Test]
@@ -170,14 +94,12 @@ internal sealed class SettingTests
     public void Should_return_default_value_for_setting_if_value_not_exist<T>(T settingDefault)
         where T : struct
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
         T storedValue = default;
 
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
             ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
@@ -185,8 +107,7 @@ internal sealed class SettingTests
             storedValue = setting.Value;
         });
 
-        // Assert
-        ClassicAssert.That(storedValue, Is.EqualTo(settingDefault));
+        storedValue.Should().Be(settingDefault);
     }
 
     [Test]
@@ -194,14 +115,12 @@ internal sealed class SettingTests
     public void Should_return_default_value_for_setting_if_value_is_incorrect<T>(T settingDefault)
         where T : struct
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
         T storedValue = default;
 
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
@@ -225,8 +144,7 @@ internal sealed class SettingTests
             storedValue = setting.Value;
         });
 
-        // Assert
-        ClassicAssert.That(storedValue, Is.EqualTo(settingDefault));
+        storedValue.Should().Be(settingDefault);
     }
 
     #endregion Setting
@@ -237,35 +155,27 @@ internal sealed class SettingTests
     [TestCaseSource(nameof(CreateStringCases))]
     public void Should_create_string_setting(string settingDefault)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        // Act
         ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault ?? string.Empty));
-        ClassicAssert.That(setting.Value, Is.EqualTo(settingDefault ?? string.Empty));
-        ClassicAssert.That(setting.IsUnset, Is.True);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(settingDefault ?? string.Empty);
+        setting.Value.Should().Be(settingDefault ?? string.Empty);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
     [TestCaseSource(nameof(SaveStringCases))]
     public void Should_save_string_setting(string settingDefault, string value)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-        string storedValue = null;
 
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
@@ -286,75 +196,8 @@ internal sealed class SettingTests
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(value);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.EqualTo(value ?? string.Empty));
-    }
-
-    [Test]
-    [TestCaseSource(nameof(SaveStringCases))]
-    public void Should_trigger_updated_event_for_string_setting(string settingDefault, string value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault ?? string.Empty));
-        ClassicAssert.That(setting.Value, Is.EqualTo(value ?? string.Empty));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
-    }
-
-    [Test]
-    [TestCaseSource(nameof(SaveStringCases))]
-    public void Should_not_trigger_updated_event_for_string_setting(string settingDefault, string value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<string> setting = Setting.Create(settingsPath, settingName, settingDefault);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.EqualTo(settingDefault ?? string.Empty));
-        ClassicAssert.That(setting.Value, Is.EqualTo(value ?? string.Empty));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
     }
 
     #endregion String Setting
@@ -362,152 +205,63 @@ internal sealed class SettingTests
     #region Bool Setting
 
     [Test]
-    public void Should_create_nullable_bool_setting()
+    public void Should_create_bool_setting()
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        // Act
-        ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
+        ISetting<bool> setting = Setting.Create<bool>(settingsPath, settingName);
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-    }
-
-    [Test]
-    [TestCase(null)]
-    [TestCase(false)]
-    [TestCase(true)]
-    public void Should_save_nullable_bool_setting(bool? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        // Act
-        ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeFalse();
+        setting.Value.Should().BeFalse();
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
     [TestCase(false)]
     [TestCase(true)]
-    public void Should_trigger_updated_event_for_nullable_bool_setting(bool? value)
+    public void Should_save_bool_setting(bool value)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
 
-        // Act
-        ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
+        ISetting<bool> setting = Setting.Create<bool>(settingsPath, settingName);
 
         setting.Value = value;
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().BeFalse();
+        setting.Value.Should().Be(value);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
-    [TestCase(null)]
-    [TestCase(false)]
-    [TestCase(true)]
-    public void Should_not_trigger_updated_event_for_nullable_bool_setting(bool? value)
+    public void Should_return_default_value_for_bool_setting_if_value_not_exist([Values] bool defaultValue)
     {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
-    }
-
-    [Test]
-    public void Should_return_default_value_for_nullable_bool_setting_if_value_not_exist()
-    {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        bool? storedValue = null;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
+            ISetting<bool> setting = Setting.Create<bool>(settingsPath, settingName, defaultValue);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(defaultValue);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.Null);
     }
 
     [Test]
-    public void Should_return_default_value_for_nullable_bool_setting_if_value_is_incorrect()
+    public void Should_return_default_value_for_bool_setting_if_value_is_incorrect([Values] bool defaultValue)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        bool? storedValue = null;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
@@ -526,13 +280,10 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<bool?> setting = Setting.Create<bool>(settingsPath, settingName);
+            ISetting<bool> setting = Setting.Create<bool>(settingsPath, settingName, defaultValue);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(defaultValue);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.Null);
     }
 
     #endregion Bool Setting
@@ -540,152 +291,64 @@ internal sealed class SettingTests
     #region Char Setting
 
     [Test]
-    public void Should_create_nullable_char_setting()
+    public void Should_create_char_setting()
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        // Act
-        ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
+        ISetting<char> setting = Setting.Create<char>(settingsPath, settingName);
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-    }
-
-    [Test]
-    [TestCase(null)]
-    [TestCase(char.MinValue)]
-    [TestCase(' ')]
-    public void Should_save_nullable_char_setting(char? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        // Act
-        ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be('\0');
+        setting.Value.Should().Be('\0');
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
     [TestCase(char.MinValue)]
     [TestCase(' ')]
-    public void Should_trigger_updated_event_for_nullable_char_setting(char? value)
+    [TestCase(char.MaxValue)]
+    public void Should_save_char_setting(char value)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
 
-        // Act
-        ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
+        ISetting<char> setting = Setting.Create<char>(settingsPath, settingName);
 
         setting.Value = value;
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be('\0');
+        setting.Value.Should().Be(value);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
-    [TestCase(null)]
-    [TestCase(char.MinValue)]
-    [TestCase(' ')]
-    public void Should_not_trigger_updated_event_for_nullable_char_setting(char? value)
+    public void Should_return_default_value_for_char_setting_if_value_not_exist([Values('\0', ' ', '\uFFFF')] char defaultValue)
     {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
-    }
-
-    [Test]
-    public void Should_return_default_value_for_nullable_char_setting_if_value_not_exist()
-    {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        char? storedValue = null;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
+            ISetting<char> setting = Setting.Create<char>(settingsPath, settingName, defaultValue);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(defaultValue);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.Null);
     }
 
     [Test]
-    public void Should_return_default_value_for_nullable_char_setting_if_value_is_incorrect()
+    public void Should_return_default_value_for_char_setting_if_value_is_incorrect([Values('\0', ' ', '\uFFFF')] char defaultValue)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        char? storedValue = null;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
@@ -704,13 +367,10 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<char?> setting = Setting.Create<char>(settingsPath, settingName);
+            ISetting<char> setting = Setting.Create<char>(settingsPath, settingName, defaultValue);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(defaultValue);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.Null);
     }
 
     #endregion Char Setting
@@ -718,155 +378,64 @@ internal sealed class SettingTests
     #region Byte Setting
 
     [Test]
-    public void Should_create_nullable_byte_setting()
+    public void Should_create_byte_setting()
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        // Act
-        ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
+        ISetting<byte> setting = Setting.Create<byte>(settingsPath, settingName);
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-    }
-
-    [Test]
-    [TestCase(null)]
-    [TestCase(byte.MinValue)]
-    [TestCase(byte.MaxValue)]
-    [TestCase(0)]
-    public void Should_save_nullable_byte_setting(byte? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        // Act
-        ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(0);
+        setting.Value.Should().Be(0);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
     [TestCase(byte.MinValue)]
     [TestCase(byte.MaxValue)]
     [TestCase(0)]
-    public void Should_trigger_updated_event_for_nullable_byte_setting(byte? value)
+    public void Should_save_byte_setting(byte value)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
 
-        // Act
-        ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
+        ISetting<byte> setting = Setting.Create<byte>(settingsPath, settingName);
 
         setting.Value = value;
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(0);
+        setting.Value.Should().Be(value);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
-    [TestCase(null)]
-    [TestCase(byte.MinValue)]
-    [TestCase(byte.MaxValue)]
-    [TestCase(0)]
-    public void Should_not_trigger_updated_event_for_nullable_byte_setting(byte? value)
+    public void Should_return_default_value_for_byte_setting_if_value_not_exist([Values(0, 1, 255)] byte defaultValue)
     {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
-    }
-
-    [Test]
-    public void Should_return_default_value_for_nullable_byte_setting_if_value_not_exist()
-    {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        byte? storedValue = null;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
+            ISetting<byte> setting = Setting.Create<byte>(settingsPath, settingName, defaultValue);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(defaultValue);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.Null);
     }
 
     [Test]
-    public void Should_return_default_value_for_nullable_byte_setting_if_value_is_incorrect()
+    public void Should_return_default_value_for_byte_setting_if_value_is_incorrect([Values(0, 1, 255)] byte defaultValue)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        byte? storedValue = null;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
@@ -885,13 +454,10 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<byte?> setting = Setting.Create<byte>(settingsPath, settingName);
+            ISetting<byte> setting = Setting.Create<byte>(settingsPath, settingName, defaultValue);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(defaultValue);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.Null);
     }
 
     #endregion Byte Setting
@@ -899,155 +465,63 @@ internal sealed class SettingTests
     #region Int Setting
 
     [Test]
-    public void Should_create_nullable_int_setting()
+    public void Should_create_int_setting()
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        // Act
-        ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
+        ISetting<int> setting = Setting.Create<int>(settingsPath, settingName);
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-    }
-
-    [Test]
-    [TestCase(null)]
-    [TestCase(int.MinValue)]
-    [TestCase(int.MaxValue)]
-    [TestCase(0)]
-    public void Should_save_nullable_int_setting(int? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        // Act
-        ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(0);
+        setting.Value.Should().Be(0);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
     [TestCase(int.MinValue)]
     [TestCase(int.MaxValue)]
     [TestCase(0)]
-    public void Should_trigger_updated_event_for_nullable_int_setting(int? value)
+    public void Should_save_int_setting(int value)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
 
-        // Act
-        ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
+        ISetting<int> setting = Setting.Create<int>(settingsPath, settingName);
         setting.Value = value;
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(0);
+        setting.Value.Should().Be(value);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
-    [TestCase(null)]
-    [TestCase(int.MinValue)]
-    [TestCase(int.MaxValue)]
-    [TestCase(0)]
-    public void Should_not_trigger_updated_event_for_nullable_int_setting(int? value)
+    public void Should_return_default_value_for_int_setting_if_value_not_exist([Values(int.MinValue, -1, 0, 1, int.MaxValue)] int defaultValue)
     {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
-    }
-
-    [Test]
-    public void Should_return_default_value_for_nullable_int_setting_if_value_not_exist()
-    {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        int? storedValue = null;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
+            ISetting<int> setting = Setting.Create<int>(settingsPath, settingName, defaultValue);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(defaultValue);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.Null);
     }
 
     [Test]
-    public void Should_return_default_value_for_nullable_int_setting_if_value_is_incorrect()
+    public void Should_return_default_value_for_int_setting_if_value_is_incorrect([Values(int.MinValue, -1, 0, 1, int.MaxValue)] int defaultValue)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        int? storedValue = null;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
@@ -1066,13 +540,10 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<int?> setting = Setting.Create<int>(settingsPath, settingName);
+            ISetting<int> setting = Setting.Create<int>(settingsPath, settingName, defaultValue);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(defaultValue);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.Null);
     }
 
     #endregion Int Setting
@@ -1080,155 +551,64 @@ internal sealed class SettingTests
     #region Float Setting
 
     [Test]
-    public void Should_create_nullable_float_setting()
+    public void Should_create_float_setting()
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        // Act
-        ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
+        ISetting<float> setting = Setting.Create<float>(settingsPath, settingName);
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-    }
-
-    [Test]
-    [TestCase(null)]
-    [TestCase(float.MinValue)]
-    [TestCase(float.MaxValue)]
-    [TestCase(0f)]
-    public void Should_save_nullable_float_setting(float? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-
-        // Act
-        ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(0f);
+        setting.Value.Should().Be(0f);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
     [TestCase(float.MinValue)]
     [TestCase(float.MaxValue)]
     [TestCase(0f)]
-    public void Should_trigger_updated_event_for_nullable_float_setting(float? value)
+    public void Should_save_float_setting(float value)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
 
-        // Act
-        ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
+        ISetting<float> setting = Setting.Create<float>(settingsPath, settingName);
 
         setting.Value = value;
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(0f);
+        setting.Value.Should().Be(value);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
-    [TestCase(null)]
-    [TestCase(float.MinValue)]
-    [TestCase(float.MaxValue)]
-    [TestCase(0f)]
-    public void Should_not_trigger_updated_event_for_nullable_float_setting(float? value)
+    public void Should_return_default_value_for_float_setting_if_value_not_exist([Values(0f, .1f)] float defaultValue)
     {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
-    }
-
-    [Test]
-    public void Should_return_default_value_for_nullable_float_setting_if_value_not_exist()
-    {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        float? storedValue = null;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
+            ISetting<float> setting = Setting.Create<float>(settingsPath, settingName, defaultValue);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(defaultValue);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.Null);
     }
 
     [Test]
-    public void Should_return_default_value_for_nullable_float_setting_if_value_is_incorrect()
+    public void Should_return_default_value_for_float_setting_if_value_is_incorrect([Values(0f, .1f)] float defaultValue)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        float? storedValue = null;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
@@ -1247,13 +627,10 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<float?> setting = Setting.Create<float>(settingsPath, settingName);
+            ISetting<float> setting = Setting.Create<float>(settingsPath, settingName, defaultValue);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(defaultValue);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.Null);
     }
 
     #endregion Float Setting
@@ -1261,69 +638,51 @@ internal sealed class SettingTests
     #region Enum Setting
 
     [Test]
-    public void Should_create_nullable_enum_setting()
+    public void Should_create_enum_setting()
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        // Act
-        ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
+        ISetting<TestEnum> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(TestEnum.First);
+        setting.Value.Should().Be(TestEnum.First);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
-    [TestCase(null)]
     [TestCase(TestEnum.First)]
     [TestCase(TestEnum.Second)]
-    public void Should_save_nullable_enum_setting(TestEnum? value)
+    public void Should_save_enum_setting(TestEnum value)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        // Act
-        ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
+        ISetting<TestEnum> setting = Setting.Create<TestEnum>(settingsPath, settingName);
 
         setting.Value = value;
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(TestEnum.First);
+        setting.Value.Should().Be(value);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
-    [TestCase(null)]
-    [TestCase(TestEnum.First)]
-    [TestCase(TestEnum.Second)]
-    public void Should_save_nullable_enum_setting_as_string(TestEnum? value)
+    public void Should_save_enum_setting_as_string([Values] TestEnum value, [Values] TestEnum defaultValue)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        string storedValue = string.Empty;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
+            ISetting<TestEnum> setting = Setting.Create<TestEnum>(settingsPath, settingName, defaultValue);
 
             setting.Value = value;
 
@@ -1341,115 +700,35 @@ internal sealed class SettingTests
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
 
-            storedValue = setting.Value;
+            string storedValue = setting.Value;
+            storedValue.Should().Be(value == defaultValue ? "" : value.ToString());
+            bool isNumber = int.TryParse(storedValue, out _);
+            isNumber.Should().BeFalse();
         });
-
-        bool isNumber = int.TryParse(storedValue, out _);
-
-        // Assert
-        ClassicAssert.That(isNumber, Is.False);
     }
 
     [Test]
-    [TestCase(TestEnum.First)]
-    [TestCase(TestEnum.Second)]
-    public void Should_trigger_updated_event_for_nullable_enum_setting(TestEnum? value)
+    public void Should_return_default_value_for_enum_setting_if_value_not_exist([Values] TestEnum defaultValue)
     {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
-    }
-
-    [Test]
-    [TestCase(null)]
-    [TestCase(TestEnum.First)]
-    [TestCase(TestEnum.Second)]
-    public void Should_not_trigger_updated_event_for_nullable_enum_setting(TestEnum? value)
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        bool updated = false;
-
-        // Act
-        ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
-    }
-
-    [Test]
-    public void Should_return_default_value_for_nullable_enum_setting_if_value_not_exist()
-    {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        TestEnum? storedValue = null;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
+            ISetting<TestEnum> setting = Setting.Create<TestEnum>(settingsPath, settingName, defaultValue);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(defaultValue);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.Null);
     }
 
     [Test]
-    public void Should_return_default_value_for_nullable_enum_setting_if_value_is_incorrect()
+    public void Should_return_default_value_for_enum_setting_if_value_is_incorrect([Values] TestEnum defaultValue)
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        TestEnum? storedValue = null;
-
-        // Act
         AppSettings.UsingContainer(_settingContainer, () =>
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
@@ -1468,13 +747,10 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<TestEnum?> setting = Setting.Create<TestEnum>(settingsPath, settingName);
+            ISetting<TestEnum> setting = Setting.Create<TestEnum>(settingsPath, settingName, defaultValue);
 
-            storedValue = setting.Value;
+            setting.Value.Should().Be(defaultValue);
         });
-
-        // Assert
-        ClassicAssert.That(storedValue, Is.Null);
     }
 
     public enum TestEnum
@@ -1488,34 +764,28 @@ internal sealed class SettingTests
     #region Struct Setting
 
     [Test]
-    public void Should_create_nullable_struct_setting()
+    public void Should_create_struct_setting()
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        // Act
-        ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
+        ISetting<TestStruct> setting = Setting.Create<TestStruct>(settingsPath, settingName);
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.Null);
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(default(TestStruct));
+        setting.Value.Should().Be(default(TestStruct));
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
-    public void Should_save_nullable_struct_setting()
+    public void Should_save_struct_setting()
     {
-        // Arrange
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-        TestStruct? value = new TestStruct
+        TestStruct value = new TestStruct
         {
             Bool = false,
             Char = ' ',
@@ -1524,99 +794,15 @@ internal sealed class SettingTests
             Float = 0f
         };
 
-        // Act
-        ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
+        ISetting<TestStruct> setting = Setting.Create<TestStruct>(settingsPath, settingName);
 
         setting.Value = value;
 
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-    }
-
-    [Test]
-    public void Should_trigger_updated_event_for_nullable_struct_setting()
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        TestStruct? value = new TestStruct
-        {
-            Bool = false,
-            Char = ' ',
-            Byte = 0,
-            Int = 0,
-            Float = 0f
-        };
-
-        bool updated = false;
-
-        // Act
-        ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.True);
-    }
-
-    [Test]
-    public void Should_not_trigger_updated_event_for_nullable_struct_setting()
-    {
-        // Arrange
-        string pathName = Guid.NewGuid().ToString();
-        string settingName = Guid.NewGuid().ToString();
-        AppSettingsPath settingsPath = new(pathName);
-        TestStruct? value = new TestStruct
-        {
-            Bool = false,
-            Char = ' ',
-            Byte = 0,
-            Int = 0,
-            Float = 0f
-        };
-
-        bool updated = false;
-
-        // Act
-        ISetting<TestStruct?> setting = Setting.Create<TestStruct>(settingsPath, settingName);
-
-        setting.Value = value;
-
-        setting.Updated += (source, eventArgs) =>
-        {
-            updated = true;
-        };
-
-        setting.Value = value;
-
-        // Assert
-        ClassicAssert.That(setting, Is.Not.Null);
-        ClassicAssert.That(setting.SettingsSource, Is.EqualTo(settingsPath));
-        ClassicAssert.That(setting.Name, Is.EqualTo(settingName));
-        ClassicAssert.That(setting.Default, Is.Null);
-        ClassicAssert.That(setting.Value, Is.EqualTo(value));
-        ClassicAssert.That(setting.IsUnset, Is.False);
-        ClassicAssert.That(setting.FullPath, Is.EqualTo($"{pathName}.{settingName}"));
-        ClassicAssert.That(updated, Is.False);
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(default(TestStruct));
+        setting.Value.Should().Be(value);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     public struct TestStruct
@@ -1660,22 +846,15 @@ internal sealed class SettingTests
 
     private static IEnumerable<object[]> CreateStringCases()
     {
-        yield return new object[] { null };
         yield return new object[] { string.Empty };
         yield return new object[] { "_" };
     }
 
     private static IEnumerable<object[]> SaveStringCases()
     {
-        yield return new object[] { null, null };
-        yield return new object[] { null, string.Empty };
-        yield return new object[] { null, "_" };
-
-        yield return new object[] { string.Empty, null };
         yield return new object[] { string.Empty, string.Empty };
         yield return new object[] { string.Empty, "_" };
 
-        yield return new object[] { "_", null };
         yield return new object[] { "_", string.Empty };
         yield return new object[] { "_", "_" };
     }

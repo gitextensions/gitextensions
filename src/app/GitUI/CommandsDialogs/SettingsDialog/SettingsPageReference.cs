@@ -15,7 +15,7 @@ public class SettingsPageReferenceByType : SettingsPageReference
 
     public Type SettingsPageType { get; }
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is SettingsPageReferenceByType type && type.SettingsPageType == SettingsPageType;
     }

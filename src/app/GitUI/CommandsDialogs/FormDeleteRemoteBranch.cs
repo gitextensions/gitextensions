@@ -1,4 +1,4 @@
-using System.Text;
+﻿using System.Text;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -6,6 +6,7 @@ using GitExtensions.Extensibility.Git;
 using GitUI.HelperDialogs;
 using GitUI.Infrastructure;
 using GitUI.ScriptsEngine;
+using Microsoft;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs;
@@ -20,12 +21,12 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
 
     private readonly string _defaultRemoteBranch;
     private readonly TaskManager _taskManager = ThreadHelper.CreateTaskManager();
-    private HashSet<string> _mergedBranches;
+    private HashSet<string>? _mergedBranches;
 
     public FormDeleteRemoteBranch(IGitUICommands commands, string defaultRemoteBranch)
         : base(commands, enablePositionRestore: false)
     {
-        _taskManager.FileAndForget(() => _mergedBranches = Module.GetMergedRemoteBranches().ToHashSet());
+        _taskManager.FileAndForget(() => _mergedBranches = [.. Module.GetMergedRemoteBranches()]);
 
         _defaultRemoteBranch = defaultRemoteBranch;
 
@@ -53,11 +54,11 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
         Branches.Focus();
     }
 
-    private List<IGitRef> GetSelectedRemotRefs() => Branches.GetSelectedBranches().ToList();
+    private List<IGitRef> GetSelectedRemotRefs() => [.. Branches.GetSelectedBranches()];
     private void CheckDeleteTrackingAllowed()
     {
         string[] localTracking = GetTrackingReferenceOfRemoteRefs(GetSelectedRemotRefs());
-        bool localTrackingBranchesExists = localTracking.Any();
+        bool localTrackingBranchesExists = localTracking.Length != 0;
         const int maxDisplayed = 8;
 
         if (!localTrackingBranchesExists)
@@ -89,10 +90,9 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
     }
 
     private string[] GetTrackingReferenceOfRemoteRefs(List<IGitRef> remoteRefs)
-        => Module.GetRefs(RefsFilter.Heads)
+        => [.. Module.GetRefs(RefsFilter.Heads)
                  .Where(b => remoteRefs.Any(r => b.IsTrackingRemote(r)))
-                 .Select(r => r.LocalName)
-                 .ToArray();
+                 .Select(r => r.LocalName)];
 
     private void Branches_SelectedValueChanged(object? sender, EventArgs e)
         => CheckDeleteTrackingAllowed();
@@ -109,10 +109,12 @@ public sealed partial class FormDeleteRemoteBranch : GitExtensionsDialog
         // wait for _mergedBranches to be filled
         _taskManager.JoinPendingOperations();
 
+        Validates.NotNull(_mergedBranches);
+
         bool hasUnmergedBranches = selectedBranches.Any(branch => !_mergedBranches.Contains(branch.CompleteName));
         if (hasUnmergedBranches)
         {
-            if (MessageBox.Show(this,
+            if (MessageBoxes.Show(this,
                                 _confirmDeleteUnmergedRemoteBranchMessage.Text,
                                 _deleteRemoteBranchesCaption.Text,
                                 MessageBoxButtons.YesNo,

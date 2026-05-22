@@ -30,7 +30,7 @@ public sealed partial class CustomAvatarProvider : IAvatarProvider
 
         foreach (IAvatarProvider provider in _subProvider)
         {
-            Image avatar = provider switch
+            Image? avatar = provider switch
             {
                 UriTemplateResolver r => await _downloader.DownloadImageAsync(r.ResolveTemplate(templateData)),
                 _ => await provider.GetAvatarAsync(email, name, imageSize),
@@ -55,12 +55,11 @@ public sealed partial class CustomAvatarProvider : IAvatarProvider
     {
         ArgumentNullException.ThrowIfNull(downloader);
 
-        IAvatarProvider[] providerParts = customProviderTemplates
+        IAvatarProvider[] providerParts = [.. customProviderTemplates
             .LazySplit(';')
             .Select(p => p.Trim())
             .Select(p => FromTemplateSegment(downloader, p))
-            .WhereNotNull()
-            .ToArray();
+            .WhereNotNull()];
 
         // We can't use the chain provider here, because some returned providers (namely UriTemplateResolvers)
         // don't actually fulfill the interface contract of IAvatarProvider. UriTemplateResolver is a special
@@ -76,7 +75,7 @@ public sealed partial class CustomAvatarProvider : IAvatarProvider
     {
         // if the segment is a tag like "<Demo>", we extract the name
         // and try to parse it as an AvatarProvider enum.
-        if (providerTemplate.StartsWith("<") && providerTemplate.EndsWith(">"))
+        if (providerTemplate.StartsWith('<') && providerTemplate.EndsWith('>'))
         {
             string providerName = providerTemplate[1..^1];
 

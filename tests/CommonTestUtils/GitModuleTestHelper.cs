@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using GitCommands;
 using GitCommands.Config;
@@ -54,6 +54,8 @@ public sealed partial class GitModuleTestHelper : IDisposable
 
         GitModule module;
 
+        IGitExecutorProvider executorProvider = new GitExecutorProvider(new GitDirectoryResolver());
+
         if (useExisting)
         {
             if (!Directory.Exists(path))
@@ -61,7 +63,7 @@ public sealed partial class GitModuleTestHelper : IDisposable
                 throw new ArgumentException($"Repository '{path}' does not exist", nameof(repositoryName));
             }
 
-            module = new(path);
+            module = new(executorProvider, path);
         }
         else
         {
@@ -72,7 +74,7 @@ public sealed partial class GitModuleTestHelper : IDisposable
 
             Directory.CreateDirectory(path);
 
-            module = new(path);
+            module = new(executorProvider, path);
             module.Init(bare: false, shared: false);
 
             // Don't assume global user/email
@@ -100,12 +102,12 @@ public sealed partial class GitModuleTestHelper : IDisposable
 
         // Ensure config is set to allow file submodules
         string fileEnabled = Module.GetEffectiveSetting(SettingKeyString.AllowFileProtocol);
-        ClassicAssert.That(fileEnabled == "always");
+        fileEnabled.Should().Be("always");
 
         // Even though above is set, adding a file protocol submodule fails unless -c... is used for protocol.file.allow config.
         IEnumerable<GitConfigItem> cfgs = Commands.GetAllowFileConfig();
 
-        ExecutionResult result = Module.GitExecutable.Execute(Commands.AddSubmodule(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null, true, cfgs));
+        ExecutionResult result = Module.GitExecutable.Execute(Commands.AddSubmodule(subModuleHelper.Module.WorkingDir.ToPosixPath(), path, null!, true, cfgs));
         Debug.WriteLine(result.AllOutput);
 
         Module.GitExecutable.GetOutput(@"commit -am ""Add submodule""");
@@ -190,7 +192,7 @@ public sealed partial class GitModuleTestHelper : IDisposable
             // Note that the intermittent failures mentioned below are likely related too.
             if (Module.GetTestAccessor().EffectiveSettings is not null)
             {
-                if (ThreadHelper.JoinableTaskContext is null)
+                if (!ThreadHelper.HasJoinableTaskContext)
                 {
                     Trace.WriteLine($"{nameof(ThreadHelper)}{nameof(ThreadHelper.JoinableTaskContext)} should not be null if {nameof(Module.EffectiveSettings)} exist! Disposing too late?");
                 }
@@ -227,9 +229,10 @@ public sealed partial class GitModuleTestHelper : IDisposable
 
         Module.GitExecutable.Execute(args);
         IReadOnlyList<string> paths = Module.GetSubmodulesLocalPaths(recursive: true);
+        IGitExecutorProvider executorProvider = new GitExecutorProvider(new GitDirectoryResolver());
         return paths.Select(path =>
         {
-            GitModule module = new(Path.Combine(Module.WorkingDir, path).ToNativePath());
+            GitModule module = new(executorProvider, Path.Combine(Module.WorkingDir, path).ToNativePath());
             SetRepoConfig(module);
             return module;
         });

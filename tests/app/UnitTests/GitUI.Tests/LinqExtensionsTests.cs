@@ -1,13 +1,11 @@
 ﻿namespace GitUITests;
-
-[TestFixture]
 public sealed class LinqExtensionsTests
 {
     [Test]
     public void AsReadOnlyList_returns_singleton_empty()
     {
-        ClassicAssert.AreSame(Array.Empty<int>(), new HashSet<int>().AsReadOnlyList());
-        ClassicAssert.AreSame(Array.Empty<int>(), new Dictionary<int, int>().Values.AsReadOnlyList());
+        new HashSet<int>().AsReadOnlyList().Should().BeSameAs(Array.Empty<int>());
+        new Dictionary<int, int>().Values.AsReadOnlyList().Should().BeSameAs(Array.Empty<int>());
     }
 
     [Test]
@@ -15,26 +13,26 @@ public sealed class LinqExtensionsTests
     {
         HashSet<int> set = [1, 2, 3];
 
-        ClassicAssert.AreEqual(new[] { 1, 2, 3 }, set.AsReadOnlyList());
+        set.AsReadOnlyList().Should().Equal(new[] { 1, 2, 3 });
     }
 
     [Test]
     public void AsReadOnlyList_returns_object_unchanged_when_has_required_interface()
     {
-        Test(Array.Empty<int>());
+        Test([]);
         Test(new int[1]);
         Test(new List<int>());
         Test(new List<int> { 1, 2, 3 });
 
-        void Test(IEnumerable<int> e)
+        static void Test(IEnumerable<int> e)
         {
             if (e is IReadOnlyList<int>)
             {
-                ClassicAssert.AreSame(e, e.AsReadOnlyList());
+                e.AsReadOnlyList().Should().BeSameAs(e);
             }
             else
             {
-                ClassicAssert.AreNotSame(e, e.AsReadOnlyList());
+                e.AsReadOnlyList().Should().NotBeSameAs(e);
             }
         }
     }
@@ -42,12 +40,12 @@ public sealed class LinqExtensionsTests
     [Test]
     public void IndexOf()
     {
-        int[] ints = new[] { 0, 1, 2, 3 };
+        int[] ints = [0, 1, 2, 3];
 
-        ClassicAssert.AreEqual(0, ints.IndexOf(i => i == 0));
-        ClassicAssert.AreEqual(1, ints.IndexOf(i => i == 1));
-        ClassicAssert.AreEqual(2, ints.IndexOf(i => i == 2));
-        ClassicAssert.AreEqual(3, ints.IndexOf(i => i == 3));
-        ClassicAssert.AreEqual(-1, ints.IndexOf(i => i == 4));
+        ints.IndexOf(i => i == 0).Should().Be(0);
+        ints.IndexOf(i => i == 1).Should().Be(1);
+        ints.IndexOf(i => i == 2).Should().Be(2);
+        ints.IndexOf(i => i == 3).Should().Be(3);
+        ints.IndexOf(i => i == 4).Should().Be(-1);
     }
 }

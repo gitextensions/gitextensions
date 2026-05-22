@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
@@ -15,9 +15,6 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
 
     private static readonly TranslationString FormatUserDefinedThemeName =
         new("{0}, user-defined");
-
-    private static readonly TranslationString DefaultThemeName =
-        new("default");
 
     public ColorsSettingsPage(IServiceProvider serviceProvider)
         : base(serviceProvider)
@@ -36,7 +33,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
     {
         get
         {
-            return ((FormattedThemeId)_NO_TRANSLATE_cbSelectTheme.SelectedItem).ThemeId;
+            return ((FormattedThemeId)_NO_TRANSLATE_cbSelectTheme.SelectedItem!).ThemeId;
         }
         set
         {
@@ -66,7 +63,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
     public string[] SelectedThemeVariations
     {
         get => chkColorblind.Checked
-            ? new[] { ThemeVariations.Colorblind }
+            ? [ThemeVariations.Colorblind]
             : ThemeVariations.None;
 
         set => chkColorblind.Checked = value.Contains(ThemeVariations.Colorblind);
@@ -95,7 +92,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
         Trace.WriteLine($"Failed to load theme {themeId.Name}: {ex}");
         string variationsStr = string.Concat(variations.Select(_ => "." + _));
         string identifier = new FormattedThemeId(themeId).ToString();
-        AppSettings.ThemeId = ThemeId.Default;
+        AppSettings.ThemeId = ThemeId.DefaultLight;
         MessageBoxes.ShowError(this, $"Failed to load theme {identifier}{variationsStr}: {ex.Message}"
             + $"{Environment.NewLine}{Environment.NewLine}See also https://github.com/gitextensions/gitextensions/wiki/Dark-Mode");
     }
@@ -139,20 +136,19 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
     public void PopulateThemeMenu(IEnumerable<ThemeId> themeIds)
     {
         _NO_TRANSLATE_cbSelectTheme.Items.Clear();
-        object[] formattedThemeIds = themeIds
+        object[] formattedThemeIds = [.. themeIds
             .Select(id => new FormattedThemeId(id))
-            .Cast<object>()
-            .ToArray();
+            .Cast<object>()];
         _NO_TRANSLATE_cbSelectTheme.Items.AddRange(formattedThemeIds);
     }
 
-    private void ComboBoxTheme_SelectedIndexChanged(object sender, EventArgs e) =>
+    private void ComboBoxTheme_SelectedIndexChanged(object? sender, EventArgs e) =>
         _controller.HandleSelectedThemeChanged();
 
-    private void ChkUseSystemVisualStyle_CheckedChanged(object sender, EventArgs e) =>
+    private void ChkUseSystemVisualStyle_CheckedChanged(object? sender, EventArgs e) =>
         _controller.HandleUseSystemVisualStyleChanged();
 
-    private void ChkColorblind_CheckedChanged(object sender, EventArgs e) =>
+    private void ChkColorblind_CheckedChanged(object? sender, EventArgs e) =>
         _controller.HandleUseColorblindVariationChanged();
 
     private void tsmiApplicationFolder_Click(object sender, EventArgs e)
@@ -161,7 +157,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
     private void tsmiUserFolder_Click(object sender, EventArgs e) =>
         _controller.ShowUserThemesDirectory();
 
-    private struct FormattedThemeId
+    private readonly struct FormattedThemeId
     {
         public FormattedThemeId(ThemeId themeId)
         {
@@ -170,10 +166,10 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
 
         public ThemeId ThemeId { get; }
 
-        public override bool Equals(object obj) =>
+        public override bool Equals(object? obj) =>
             obj is FormattedThemeId other && Equals(other);
 
-        public override int GetHashCode() =>
+        public override readonly int GetHashCode() =>
             ThemeId.GetHashCode();
 
         public static bool operator ==(FormattedThemeId left, FormattedThemeId right) =>
@@ -182,13 +178,8 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
         public static bool operator !=(FormattedThemeId left, FormattedThemeId right) =>
             !left.Equals(right);
 
-        public override string ToString()
+        public override readonly string ToString()
         {
-            if (ThemeId == ThemeId.Default)
-            {
-                return DefaultThemeName.Text;
-            }
-
             if (ThemeId.IsBuiltin)
             {
                 return string.Format(FormatBuiltinThemeName.Text, ThemeId.Name);
@@ -197,7 +188,7 @@ public partial class ColorsSettingsPage : SettingsPageWithHeader, IColorsSetting
             return string.Format(FormatUserDefinedThemeName.Text, ThemeId.Name);
         }
 
-        private bool Equals(FormattedThemeId other) =>
+        private readonly bool Equals(FormattedThemeId other) =>
             ThemeId.Equals(other.ThemeId);
     }
 }

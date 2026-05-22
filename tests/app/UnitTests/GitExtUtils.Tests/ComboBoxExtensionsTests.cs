@@ -1,27 +1,24 @@
-﻿using FluentAssertions;
-using GitUI;
+﻿using GitUI;
 
 namespace GitExtUtilsTests;
-
-[TestFixture]
 public class ComboBoxExtensionsTests
 {
     [Test]
     public void AdjustWidthToFitContent_should_throw_if_combo_null()
     {
-        ((Action)(() => ((ComboBox)null).AdjustWidthToFitContent())).Should().Throw<ArgumentNullException>();
+        ((Action)(() => ((ComboBox)null!).AdjustWidthToFitContent())).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
     public void ResizeDropDownWidth_ComboBox_should_throw_if_combo_null()
     {
-        ((Action)(() => ((ComboBox)null).ResizeDropDownWidth(1, 2))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => ((ComboBox)null!).ResizeDropDownWidth(1, 2))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
     public void ResizeDropDownWidth_ToolStripComboBox_should_throw_if_combo_null()
     {
-        ((Action)(() => ((ToolStripComboBox)null).ResizeDropDownWidth(1, 2))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => ((ToolStripComboBox)null!).ResizeDropDownWidth(1, 2))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -30,7 +27,7 @@ public class ComboBoxExtensionsTests
         // Arrange
         string somewhatLongString = "This is a somewhat long string to force ComboBox drop-down to be adjusted";
 
-        ComboBox comboBox = new();
+        using ComboBox comboBox = new();
         comboBox.Items.Add(somewhatLongString);
 
         int initialWidth = comboBox.Width;
@@ -64,7 +61,7 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ToolStripComboBox comboBox = new();
+        using ToolStripComboBox comboBox = new();
         comboBox.Items.Add(veryLongString);
 
         // Act
@@ -80,7 +77,7 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ToolStripComboBox comboBox = new();
+        using ToolStripComboBox comboBox = new();
         comboBox.Items.Add(veryLongString);
 
         // Act
@@ -96,8 +93,10 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ComboBox comboBox = new();
-        comboBox.DisplayMember = "Value";
+        using ComboBox comboBox = new()
+        {
+            DisplayMember = "Value"
+        };
         comboBox.Items.Add(new ComboBoxItem(Value: veryLongString, ToStringValue: ""));
 
         // Act
@@ -113,8 +112,10 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ComboBox comboBox = new();
-        comboBox.DisplayMember = "Value";
+        using ComboBox comboBox = new()
+        {
+            DisplayMember = "Value"
+        };
         comboBox.Items.Add(new ComboBoxItem(Value: null, ToStringValue: veryLongString));
 
         // Act
@@ -130,7 +131,7 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ComboBox comboBox = new();
+        using ComboBox comboBox = new();
         comboBox.Items.Add(new ComboBoxItem(Value: "", ToStringValue: veryLongString));
 
         // Act
@@ -146,8 +147,10 @@ public class ComboBoxExtensionsTests
         // Arrange
         string veryLongString = string.Join(", ", Enumerable.Repeat("A very long string", 20));
 
-        ComboBox comboBox = new();
-        comboBox.DisplayMember = "NonExistentMemberName";
+        using ComboBox comboBox = new()
+        {
+            DisplayMember = "NonExistentMemberName"
+        };
         comboBox.Items.Add(new ComboBoxItem(Value: "", ToStringValue: veryLongString));
 
         // Act

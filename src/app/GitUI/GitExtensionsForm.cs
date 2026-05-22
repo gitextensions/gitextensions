@@ -33,7 +33,7 @@ public class GitExtensionsForm : GitExtensionsFormBase
         cancelButton.Click += CancelButtonClick;
         CancelButton = cancelButton;
 
-        void GitExtensionsForm_FormClosing(object sender, FormClosingEventArgs e)
+        void GitExtensionsForm_FormClosing(object? sender, FormClosingEventArgs e)
         {
             if (!needsPositionSave)
             {
@@ -46,7 +46,7 @@ public class GitExtensionsForm : GitExtensionsFormBase
         }
     }
 
-    public virtual void CancelButtonClick(object sender, EventArgs e)
+    public virtual void CancelButtonClick(object? sender, EventArgs e)
     {
         Close();
     }
@@ -88,7 +88,7 @@ public class GitExtensionsForm : GitExtensionsFormBase
             return;
         }
 
-        WindowPosition position = _windowPositionManager.LoadPosition(this);
+        WindowPosition? position = _windowPositionManager.LoadPosition(this);
         if (position is null)
         {
             return;

@@ -20,26 +20,37 @@ internal class ColorsSettingsPageController
         _themePathProvider = themePathProvider;
     }
 
-    public bool SettingsAreModified =>
-        _page.SelectedThemeId != ThemeModule.Settings.Theme.Id
-        || _page.UseSystemVisualStyle != ThemeModule.Settings.UseSystemVisualStyle
-        || !_page.SelectedThemeVariations.SequenceEqual(AppSettings.ThemeVariations);
+    private bool IsCurrentWinAppMode => _page.SelectedThemeId == ThemeId.WindowsAppColorModeId && ThemeModule.Settings.Theme.Id == ThemeId.ColorModeThemeId;
+
+    public bool SettingsAreModified
+        => !(_page.SelectedThemeId == ThemeModule.Settings.Theme.Id || IsCurrentWinAppMode)
+            || !(_page.UseSystemVisualStyle == ThemeModule.Settings.UseSystemVisualStyle || IsCurrentWinAppMode || ThemeModule.Settings.Theme.Id == ThemeId.DefaultLight)
+            || !_page.SelectedThemeVariations.SequenceEqual(AppSettings.ThemeVariations);
 
     public void ShowThemeSettings()
     {
         BeginUpdateThemeSettings();
-        _page.PopulateThemeMenu(Enumerable.Repeat(ThemeId.Default, 1).Concat(_themeRepository.GetThemeIds()));
+        _page.PopulateThemeMenu(Enumerable.Repeat(ThemeId.WindowsAppColorModeId, 1).Concat(_themeRepository.GetThemeIds()));
         _page.SelectedThemeId = AppSettings.ThemeId;
         _page.SelectedThemeVariations = AppSettings.ThemeVariations;
-        _page.UseSystemVisualStyle = AppSettings.UseSystemVisualStyle;
+        _page.UseSystemVisualStyle = IsCurrentWinAppMode
+            ? ThemeId.DefaultLight == ThemeId.ColorModeThemeId
+            : _page.SelectedThemeId == ThemeId.DefaultLight
+                ? true
+                : AppSettings.UseSystemVisualStyle;
+
         EndUpdateThemeSettings();
     }
 
     public void ApplyThemeSettings()
     {
-        AppSettings.UseSystemVisualStyle = _page.UseSystemVisualStyle;
         AppSettings.ThemeId = _page.SelectedThemeId;
         AppSettings.ThemeVariations = _page.SelectedThemeVariations;
+        if (_page.SelectedThemeId != ThemeId.WindowsAppColorModeId && _page.SelectedThemeId != ThemeId.DefaultLight)
+        {
+            // set only if UseSystemVisualStyle is not overridden
+            AppSettings.UseSystemVisualStyle = _page.UseSystemVisualStyle;
+        }
     }
 
     public void HandleSelectedThemeChanged()
@@ -50,10 +61,29 @@ internal class ColorsSettingsPageController
         }
 
         BeginUpdateThemeSettings();
-        _page.UseSystemVisualStyle = _page.SelectedThemeId == ThemeId.Default;
-        if (_page.SelectedThemeId == ThemeId.Default)
+
+        if (_page.SelectedThemeId == ThemeId.WindowsAppColorModeId)
         {
+            // Display the value forced in ThemeModule.LoadThemeSettings(),
+            _page.UseSystemVisualStyle = ThemeId.ColorModeThemeId == ThemeId.DefaultLight || _page.SelectedThemeId == ThemeId.DefaultLight;
+        }
+        else if (_page.SelectedThemeId == ThemeId.DefaultLight)
+        {
+            _page.UseSystemVisualStyle = true;
             _page.SelectedThemeVariations = ThemeVariations.None;
+        }
+        else
+        {
+            try
+            {
+                // override default (at least dark in .NET10 requires overrides).
+                Theme theme = _themeRepository.GetTheme(_page.SelectedThemeId, _page.SelectedThemeVariations);
+                _page.UseSystemVisualStyle = theme.SystemColorMode == SystemColorMode.Classic;
+            }
+            catch (Exception)
+            {
+                // ignore, popup in EndUpdateThemeSettings()
+            }
         }
 
         EndUpdateThemeSettings();
@@ -85,23 +115,29 @@ internal class ColorsSettingsPageController
             throw new InvalidOperationException($"{nameof(EndUpdateThemeSettings)} must be called after {nameof(BeginUpdateThemeSettings)}");
         }
 
+        ThemeId themeId = _page.SelectedThemeId == ThemeId.WindowsAppColorModeId
+            ? ThemeId.ColorModeThemeId
+            : _page.SelectedThemeId;
+
         if (counter == 0)
         {
             _page.LabelRestartIsNeededVisible = SettingsAreModified;
-            _page.IsChoosingVisualStyleEnabled =
-                _page.SelectedThemeId != ThemeId.Default;
+            _page.IsChoosingVisualStyleEnabled = _page.SelectedThemeId != ThemeId.WindowsAppColorModeId && themeId != ThemeId.DefaultLight;
         }
 
-        if (_page.SelectedThemeId != ThemeId.Default)
+        if (themeId == ThemeId.DefaultLight)
         {
-            try
-            {
-                Theme unused = _themeRepository.GetTheme(_page.SelectedThemeId, _page.SelectedThemeVariations);
-            }
-            catch (Exception ex)
-            {
-                _page.ShowThemeLoadingErrorMessage(_page.SelectedThemeId, _page.SelectedThemeVariations, ex);
-            }
+            // invariant, already loaded.
+            return;
+        }
+
+        try
+        {
+            _ = _themeRepository.GetTheme(themeId, _page.SelectedThemeVariations);
+        }
+        catch (Exception ex)
+        {
+            _page.ShowThemeLoadingErrorMessage(themeId, _page.SelectedThemeVariations, ex);
         }
     }
 

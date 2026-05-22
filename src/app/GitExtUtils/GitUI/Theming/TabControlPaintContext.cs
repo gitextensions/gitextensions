@@ -39,15 +39,9 @@ internal class TabControlPaintContext
 
         try
         {
-            _tabTexts = Enumerable.Range(0, _tabCount)
-                .Select(i => tabs.TabPages[i].Text)
-                .ToArray();
-            _tabImages = Enumerable.Range(0, _tabCount)
-                .Select(i => GetTabImage(tabs, i))
-                .ToArray();
-            _tabRects = Enumerable.Range(0, _tabCount)
-                .Select(tabs.GetTabRect)
-                .ToArray();
+            _tabTexts = [.. Enumerable.Range(0, _tabCount).Select(i => tabs.TabPages[i].Text)];
+            _tabImages = [.. Enumerable.Range(0, _tabCount).Select(i => GetTabImage(tabs, i))];
+            _tabRects = [.. Enumerable.Range(0, _tabCount).Select(tabs.GetTabRect)];
         }
         catch (ArgumentOutOfRangeException)
         {
@@ -124,7 +118,7 @@ internal class TabControlPaintContext
 
     private void RenderTabImage(int index)
     {
-        Image image = _tabImages[index];
+        Image? image = _tabImages[index];
         if (image is null)
         {
             return;
@@ -153,7 +147,7 @@ internal class TabControlPaintContext
 
     private static Image? GetTabImage(TabControl tabs, int index)
     {
-        ImageList.ImageCollection images = tabs.ImageList?.Images;
+        ImageList.ImageCollection? images = tabs.ImageList?.Images;
         if (images is null)
         {
             return null;
@@ -264,15 +258,13 @@ internal class TabControlPaintContext
             _graphics.FillRectangle(backgroundBrush.Brush, pageRect);
         }
 
-        using (Pen borderPen = CreateBorderPen())
-        {
-            _graphics.DrawRectangle(borderPen, pageRect);
-        }
+        using Pen borderPen = CreateBorderPen();
+        _graphics.DrawRectangle(borderPen, pageRect);
     }
 
     private static Color GetParentBackColor(TabControl tabs)
     {
-        Control parent = tabs.Parent;
+        Control? parent = tabs.Parent;
         while (parent is not null)
         {
             if (parent.BackColor != Color.Transparent)

@@ -1,3 +1,5 @@
+using System.Buffers;
+
 namespace GitExtensions.Extensibility;
 
 /// <summary>
@@ -22,12 +24,17 @@ public static class Delimiters
     public const char VerticalFeed = '\v';
 
     public static readonly char[] GitOutput = ['*', Space, LineFeed, CarriageReturn];
-    public static readonly char[] LineAndVerticalFeed = [LineFeed, VerticalFeed];
+    public static readonly SearchValues<char> LineAndVerticalFeed = SearchValues.Create(LineFeed, VerticalFeed);
     public static readonly char[] LineFeedAndCarriageReturn = [LineFeed, CarriageReturn];
-    public static readonly char[] LineFeedAndCarriageReturnAndNull = [LineFeed, CarriageReturn, Null];
+    public static readonly SearchValues<char> LineFeedAndCarriageReturnSearchValues = SearchValues.Create(LineFeedAndCarriageReturn);
+    public static readonly SearchValues<char> LineFeedAndCarriageReturnAndNull = SearchValues.Create(LineFeed, CarriageReturn, Null);
     public static readonly string[] NewLines = [$"{CarriageReturn}{LineFeed}", $"{LineFeed}"];
     public static readonly char[] NullAndLineFeed = [Null, LineFeed];
     public static readonly char[] PathSeparators = [Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar];
+    public static readonly SearchValues<char> PathSeparatorsSearchValues = SearchValues.Create(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
     public static readonly char[] TabAndLineFeedAndCarriageReturn = [Tab, LineFeed, CarriageReturn];
     public static readonly char[] TabAndSpace = [Tab, Space];
+    public static readonly SearchValues<char> WildcardBranchSearchValues = SearchValues.Create('?', '*', '[');
+    public static readonly SearchValues<char> InvalidPathCharsSearchValues = SearchValues.Create(Path.GetInvalidPathChars());
+    public static readonly SearchValues<char> WhiteSpaceChars = SearchValues.Create(Space, CarriageReturn, LineFeed, Tab);
 }

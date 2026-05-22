@@ -12,6 +12,7 @@ internal static partial class NativeMethods
     public const int WM_HSCROLL = 276;
     public const int WM_VSCROLL = 0x115;
     public const int WM_MOUSEWHEEL = 0x020A;
+    public const int WM_MOUSEHWHEEL = 0x020E;
     public const int WM_KEYDOWN = 0x0100;
 
     public const int LVM_FIRST = 0x1000;

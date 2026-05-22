@@ -1,16 +1,13 @@
-using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class GitRevisionInfoProviderTests
 {
-    private IGitModule _module;
-    private GitRevisionInfoProvider _provider;
+    private IGitModule _module = null!;
+    private GitRevisionInfoProvider _provider = null!;
 
     [SetUp]
     public void Setup()
@@ -22,17 +19,15 @@ public class GitRevisionInfoProviderTests
     [Test]
     public void LoadChildren_should_throw_if_null()
     {
-        ((Action)(() => _provider.LoadChildren(null))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => _provider.LoadChildren(null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
-    public void LoadChildren_should_throw_if_ObjectId_is_null()
+    public void LoadChildren_should_throw_if_ObjectId_is_zero()
     {
         IGitItem item = Substitute.For<IGitItem>();
 
-        // ObjectId checks input, use Try to get an illegal value
-        ObjectId.TryParse("", out ObjectId objectId);
-        item.ObjectId.Returns(objectId);
+        item.ObjectId.Returns(default(ObjectId));
 
         ((Action)(() => _provider.LoadChildren(item))).Should().Throw<ArgumentException>();
     }
@@ -44,7 +39,7 @@ public class GitRevisionInfoProviderTests
         IGitItem item = Substitute.For<IGitItem>();
         item.Guid.Returns(objectId);
 
-        _provider = new GitRevisionInfoProvider(() => null);
+        _provider = new GitRevisionInfoProvider(() => null!);
 
         ((Action)(() => _provider.LoadChildren(item))).Should().Throw<ArgumentException>();
     }
@@ -57,7 +52,7 @@ public class GitRevisionInfoProviderTests
         item.ObjectId.Returns(objectId);
         item.Guid.Returns(objectId.ToString());
 
-        IObjectGitItem[] items = new[] { Substitute.For<IObjectGitItem>(), Substitute.For<IObjectGitItem>(), Substitute.For<IObjectGitItem>() };
+        IObjectGitItem[] items = [Substitute.For<IObjectGitItem>(), Substitute.For<IObjectGitItem>(), Substitute.For<IObjectGitItem>()];
         _module.GetTree(objectId, full: false).Returns(items);
 
         IEnumerable<INamedGitItem> children = _provider.LoadChildren(item);
@@ -72,7 +67,7 @@ public class GitRevisionInfoProviderTests
         ObjectId commitId = ObjectId.Random();
         GitItem item = new(0, GitObjectType.Tree, commitId, "folder");
 
-        IObjectGitItem[] items = new[] { Substitute.For<IObjectGitItem>(), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file3") };
+        IObjectGitItem[] items = [Substitute.For<IObjectGitItem>(), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file2"), new GitItem(0, GitObjectType.Blob, ObjectId.Random(), "file3")];
         _module.GetTree(commitId, full: false).Returns(items);
 
         IEnumerable<INamedGitItem> children = _provider.LoadChildren(item);

@@ -1,10 +1,7 @@
-﻿using FluentAssertions;
-using GitCommands.ExternalLinks;
+﻿using GitCommands.ExternalLinks;
 using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
 
 namespace GitUITests.CommandsDialogs.Settings;
-
-[TestFixture]
 public class GitHubExternalLinkDefinitionExtractorTests
 {
     [TestCase("https://github.com/owner/repo.git")]
@@ -29,7 +26,7 @@ public class GitHubExternalLinkDefinitionExtractorTests
     [Test]
     public void Should_get_link_definitions_When_no_remote_url_provided()
     {
-        IList<ExternalLinkDefinition> externalLinkDefinitions = new GitHubExternalLinkDefinitionExtractor().GetDefinitions(null);
+        IList<ExternalLinkDefinition> externalLinkDefinitions = new GitHubExternalLinkDefinitionExtractor().GetDefinitions(null!);
         externalLinkDefinitions.Should().HaveCount(3);
         foreach (ExternalLinkDefinition externalLinkDefinition in externalLinkDefinitions)
         {

@@ -1,23 +1,19 @@
 ﻿using System.Reflection;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
-using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitCommandsTests.Settings;
-
-[TestFixture]
 internal sealed class BuildServerSettingsTests
 {
-    private GitModuleTestHelper _testHelper;
-    private DistributedSettings _userRoaming;
-    private DistributedSettings _repoDistributed;
-    private DistributedSettings _repoLocal;
-    private DistributedSettings _effective;
-    private string _userRoamingConfigFilePath;
-    private string _repoDistributedConfigFilePath;
-    private string _repoLocalConfigFilePath;
+    private GitModuleTestHelper _testHelper = null!;
+    private DistributedSettings _userRoaming = null!;
+    private DistributedSettings _repoDistributed = null!;
+    private DistributedSettings _repoLocal = null!;
+    private DistributedSettings _effective = null!;
+    private string _userRoamingConfigFilePath = null!;
+    private string _repoDistributedConfigFilePath = null!;
+    private string _repoLocalConfigFilePath = null!;
 
     [SetUp]
     public void Setup()
@@ -34,7 +30,7 @@ internal sealed class BuildServerSettingsTests
         _userRoaming = new DistributedSettings(lowerPriority: null, new GitExtSettingsCache(_userRoamingConfigFilePath), SettingLevel.Global);
         _repoDistributed = new DistributedSettings(lowerPriority: _userRoaming, new GitExtSettingsCache(_repoDistributedConfigFilePath), SettingLevel.Distributed);
         _repoLocal = new DistributedSettings(lowerPriority: _repoDistributed, new GitExtSettingsCache(_repoLocalConfigFilePath), SettingLevel.Local);
-        _effective = new DistributedSettings(lowerPriority: _repoLocal, new GitExtSettingsCache(settingsFilePath: null), SettingLevel.Effective);
+        _effective = new DistributedSettings(lowerPriority: _repoLocal, new GitExtSettingsCache(settingsFilePath: null!), SettingLevel.Effective);
     }
 
     [TearDown]
@@ -50,15 +46,13 @@ internal sealed class BuildServerSettingsTests
     [Test]
     public void UserRoaming_settings_should_return_expected()
     {
-        IBuildServerSettings buildServerSettings = _userRoaming.GetBuildServerSettings();
+        // Explicitly set
+        BuildServerSettings.ServerName[_userRoaming].Should().Be("Azure DevOps and Team Foundation Server (since TFS2015)");
+        BuildServerSettings.IntegrationEnabled[_userRoaming].Should().BeTrue();
+        BuildServerSettings.ShowBuildResultPage[_userRoaming].Should().BeNull();
 
         // Explicitly set
-        buildServerSettings.ServerName.Should().Be("Azure DevOps and Team Foundation Server (since TFS2015)");
-        buildServerSettings.IntegrationEnabled.Should().BeTrue();
-        buildServerSettings.ShowBuildResultPage.Should().BeNull();
-
-        // Explicitly set
-        SettingsSource settingsSource = buildServerSettings.SettingsSource;
+        SettingsSource settingsSource = BuildServerSettings.GetSettingsSource(_userRoaming);
         settingsSource.Should().BeOfType<SettingsPath>();
         ((SettingsPath)settingsSource).PathFor("").Should().Be("BuildServer.Azure DevOps and Team Foundation Server (since TFS2015).");
     }
@@ -66,17 +60,15 @@ internal sealed class BuildServerSettingsTests
     [Test]
     public void RepoDistributed_settings_should_return_expected()
     {
-        IBuildServerSettings buildServerSettings = _repoLocal.GetBuildServerSettings();
-
         // No explicit settings, inheriting from the repo local
-        buildServerSettings.ServerName.Should().Be("AppVeyor");
-        buildServerSettings.IntegrationEnabled.Should().BeTrue();
+        BuildServerSettings.ServerName[_repoLocal].Should().Be("AppVeyor");
+        BuildServerSettings.IntegrationEnabled[_repoLocal].Should().BeTrue();
 
         // Explicitly set
-        buildServerSettings.ShowBuildResultPage.Should().BeFalse();
+        BuildServerSettings.ShowBuildResultPage[_repoLocal].Should().BeFalse();
 
         // No explicit settings, inheriting from the repo local
-        SettingsSource settingsSource = buildServerSettings.SettingsSource;
+        SettingsSource settingsSource = BuildServerSettings.GetSettingsSource(_repoLocal);
         settingsSource.Should().BeOfType<SettingsPath>();
         ((SettingsPath)settingsSource).PathFor("").Should().Be("BuildServer.AppVeyor.");
     }
@@ -85,15 +77,14 @@ internal sealed class BuildServerSettingsTests
     [TestCase(false)]
     public void RepoLocalAndEffective_settings_should_return_expected(bool isLocal)
     {
-        IBuildServerSettings buildServerSettings = (isLocal ? _repoLocal : _effective).GetBuildServerSettings();
-
-        buildServerSettings.ServerName.Should().Be("AppVeyor");
-        buildServerSettings.IntegrationEnabled.Should().BeTrue();
+        SettingsSource source = isLocal ? _repoLocal : _effective;
+        BuildServerSettings.ServerName[source].Should().Be("AppVeyor");
+        BuildServerSettings.IntegrationEnabled[source].Should().BeTrue();
 
         // No explicit settings, inheriting from the repo distributed
-        buildServerSettings.ShowBuildResultPage.Should().BeFalse();
+        BuildServerSettings.ShowBuildResultPage[source].Should().BeFalse();
 
-        SettingsSource settingsSource = buildServerSettings.SettingsSource;
+        SettingsSource settingsSource = BuildServerSettings.GetSettingsSource(source);
         settingsSource.Should().BeOfType<SettingsPath>();
         ((SettingsPath)settingsSource).PathFor("").Should().Be("BuildServer.AppVeyor.");
     }

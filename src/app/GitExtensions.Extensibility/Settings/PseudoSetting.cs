@@ -34,38 +34,8 @@ public class PseudoSetting : ISetting
         CustomControl = _textBoxCreator();
     }
 
-    public string Name { get; } = "PseusoSetting";
+    public string Name { get; } = "PseudoSetting";
     public string Caption { get; }
     public Control? CustomControl { get; set; }
-
-    public ISettingControlBinding CreateControlBinding()
-    {
-        return new PseudoBinding(this, CustomControl, _textBoxCreator);
-    }
-
-    private class PseudoBinding : SettingControlBinding<PseudoSetting, Control>
-    {
-        private readonly Func<TextBox>? _textBoxCreator;
-
-        public PseudoBinding(PseudoSetting setting, Control? customControl, Func<TextBox>? textBoxCreator)
-            : base(setting, customControl)
-        {
-            _textBoxCreator = textBoxCreator;
-        }
-
-        public override Control CreateControl()
-        {
-            ArgumentNullException.ThrowIfNull(_textBoxCreator);
-            Setting.CustomControl = _textBoxCreator();
-            return Setting.CustomControl;
-        }
-
-        public override void LoadSetting(SettingsSource settings, Control control)
-        {
-        }
-
-        public override void SaveSetting(SettingsSource settings, Control control)
-        {
-        }
-    }
+    public Func<TextBox>? TextBoxCreator => _textBoxCreator;
 }

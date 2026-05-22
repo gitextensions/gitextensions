@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using GitCommands.Settings;
+﻿using GitCommands.Settings;
 using GitUI.Editor;
 
 namespace GitUITests.Editor;
@@ -7,7 +6,7 @@ namespace GitUITests.Editor;
 [Apartment(ApartmentState.STA)]
 public class FileViewerTests
 {
-    private FileViewer _fileViewer;
+    private FileViewer _fileViewer = null!;
 
     [SetUp]
     public void SetUp()
@@ -33,7 +32,7 @@ public class FileViewerTests
     [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Change, true, true, false)]
     public void Should_correctly_setup_IgnoreWhitespaceMethod_with_one_click(IgnoreWhitespaceKind oldIgnoreWhitespace, IgnoreWhitespaceKind newIgnoreWhitespace, bool ignoreEol, bool ignoreChange, bool ignoreAllSpace)
     {
-        ClassicAssert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
+        newIgnoreWhitespace.Should().NotBe(oldIgnoreWhitespace);
 
         FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
 
@@ -42,13 +41,13 @@ public class FileViewerTests
         switch (newIgnoreWhitespace)
         {
             case IgnoreWhitespaceKind.Eol:
-                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null, null);
+                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null!, null!);
                 break;
             case IgnoreWhitespaceKind.Change:
-                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
+                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null!, null!);
                 break;
             case IgnoreWhitespaceKind.AllSpace:
-                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null, null);
+                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null!, null!);
                 break;
         }
 
@@ -76,7 +75,7 @@ public class FileViewerTests
     [TestCase(IgnoreWhitespaceKind.AllSpace, IgnoreWhitespaceKind.Change)]
     public void Should_correctly_reset_IgnoreWhitespaceMethod_to_None_with_two_clicks(IgnoreWhitespaceKind oldIgnoreWhitespace, IgnoreWhitespaceKind newIgnoreWhitespace)
     {
-        ClassicAssert.AreNotEqual(oldIgnoreWhitespace, newIgnoreWhitespace);
+        newIgnoreWhitespace.Should().NotBe(oldIgnoreWhitespace);
 
         FileViewer.TestAccessor accessor = _fileViewer.GetTestAccessor();
 
@@ -85,16 +84,16 @@ public class FileViewerTests
         switch (newIgnoreWhitespace)
         {
             case IgnoreWhitespaceKind.Eol:
-                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null, null);
-                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null, null);
+                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null!, null!);
+                accessor.IgnoreWhitespaceAtEolToolStripMenuItem_Click(null!, null!);
                 break;
             case IgnoreWhitespaceKind.Change:
-                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
-                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null, null);
+                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null!, null!);
+                accessor.IgnoreWhitespaceChangesToolStripMenuItemClick(null!, null!);
                 break;
             case IgnoreWhitespaceKind.AllSpace:
-                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null, null);
-                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null, null);
+                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null!, null!);
+                accessor.IgnoreAllWhitespaceChangesToolStripMenuItem_Click(null!, null!);
                 break;
         }
 

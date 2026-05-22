@@ -1,6 +1,5 @@
 ﻿using System.Drawing.Imaging;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 
@@ -152,7 +151,7 @@ public sealed class SpellCheckEditControl : NativeWindow, IDisposable
 
     private void DrawWave(Point start, Point end)
     {
-        using Pen pen = new(Color.Red.AdaptTextColor(), DpiUtil.ScaleX);
+        using Pen pen = new(Color.Red.AdaptForeColor(_richTextBox.BackColor), DpiUtil.ScaleX);
         int waveWidth = DpiUtil.Scale(4);
         int waveHalfWidth = waveWidth >> 1;
         if ((end.X - start.X) > waveWidth)
@@ -164,7 +163,7 @@ public sealed class SpellCheckEditControl : NativeWindow, IDisposable
                 pl.Add(new Point(i + waveHalfWidth, start.Y + waveHalfWidth));
             }
 
-            Point[] p = pl.ToArray();
+            Point[] p = [.. pl];
             _bufferGraphics!.DrawLines(pen, p);
         }
         else
@@ -185,7 +184,7 @@ public sealed class SpellCheckEditControl : NativeWindow, IDisposable
 
     private int LineHeight()
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return 12;
         }

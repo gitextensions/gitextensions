@@ -14,9 +14,9 @@ namespace CommonTestUtils;
 [AttributeUsage(AttributeTargets.Assembly)]
 public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestAction
 {
-    private DenyExecutionSynchronizationContext _denyExecutionSynchronizationContext;
-    private HangReporter _hangReporter;
-    private ExceptionDispatchInfo _threadException;
+    private DenyExecutionSynchronizationContext? _denyExecutionSynchronizationContext;
+    private HangReporter? _hangReporter;
+    private ExceptionDispatchInfo? _threadException;
 
     public ActionTargets Targets => ActionTargets.Test;
 
@@ -27,10 +27,10 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
 
     public void BeforeTest(ITest test)
     {
-        ClassicAssert.IsNull(ThreadHelper.JoinableTaskContext, "Tests with joinable tasks must not be run in parallel!");
+        ThreadHelper.HasJoinableTaskContext.Should().BeFalse("Tests with joinable tasks must not be run in parallel!");
 
-        IList apartmentState = null;
-        for (ITest scope = test; scope is not null; scope = scope.Parent)
+        IList? apartmentState = null;
+        for (ITest? scope = test; scope is not null; scope = scope.Parent)
         {
             apartmentState = scope.Properties[nameof(ApartmentState)];
             if (apartmentState.Count > 0)
@@ -39,14 +39,14 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
             }
         }
 
-        if (!apartmentState.Contains(ApartmentState.STA))
+        if (!apartmentState!.Contains(ApartmentState.STA))
         {
             _denyExecutionSynchronizationContext = new DenyExecutionSynchronizationContext(SynchronizationContext.Current);
             ThreadHelper.JoinableTaskContext = new JoinableTaskContext(_denyExecutionSynchronizationContext.MainThread, _denyExecutionSynchronizationContext);
             return;
         }
 
-        ClassicAssert.AreEqual(ApartmentState.STA, Thread.CurrentThread.GetApartmentState());
+        Thread.CurrentThread.GetApartmentState().Should().Be(ApartmentState.STA);
 
         // This form is created to obtain a UI synchronization context only.
         using (new Form())
@@ -86,7 +86,7 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
             }
             finally
             {
-                ThreadHelper.JoinableTaskContext = null;
+                ThreadHelper.JoinableTaskContext = null!;
                 if (_denyExecutionSynchronizationContext is not null)
                 {
                     SynchronizationContext.SetSynchronizationContext(_denyExecutionSynchronizationContext.UnderlyingContext);
@@ -106,14 +106,14 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
         }
     }
 
-    private void HandleApplicationThreadException(object sender, ThreadExceptionEventArgs e)
+    private void HandleApplicationThreadException(object? sender, ThreadExceptionEventArgs e)
         => StoreThreadException(e.Exception);
 
     private void StoreThreadException(Exception ex)
     {
         if (_threadException is not null)
         {
-            ex = new AggregateException(new Exception[] { _threadException.SourceException, ex });
+            ex = new AggregateException([_threadException.SourceException, ex]);
         }
 
         _threadException = ExceptionDispatchInfo.Capture(ex);
@@ -121,23 +121,23 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
 
     private class DenyExecutionSynchronizationContext : SynchronizationContext
     {
-        private readonly SynchronizationContext _underlyingContext;
+        private readonly SynchronizationContext? _underlyingContext;
         private readonly Thread _mainThread;
         private readonly StrongBox<ExceptionDispatchInfo> _failedTransfer;
 
-        public DenyExecutionSynchronizationContext(SynchronizationContext underlyingContext)
+        public DenyExecutionSynchronizationContext(SynchronizationContext? underlyingContext)
             : this(underlyingContext, mainThread: null, failedTransfer: null)
         {
         }
 
-        private DenyExecutionSynchronizationContext(SynchronizationContext underlyingContext, Thread mainThread, StrongBox<ExceptionDispatchInfo> failedTransfer)
+        private DenyExecutionSynchronizationContext(SynchronizationContext? underlyingContext, Thread? mainThread, StrongBox<ExceptionDispatchInfo>? failedTransfer)
         {
             _underlyingContext = underlyingContext;
             _mainThread = mainThread ?? new Thread(MainThreadStart);
             _failedTransfer = failedTransfer ?? new StrongBox<ExceptionDispatchInfo>();
         }
 
-        internal SynchronizationContext UnderlyingContext => _underlyingContext;
+        internal SynchronizationContext? UnderlyingContext => _underlyingContext;
 
         internal Thread MainThread => _mainThread;
 
@@ -148,7 +148,7 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
             _failedTransfer.Value?.Throw();
         }
 
-        public override void Post(SendOrPostCallback d, object state)
+        public override void Post(SendOrPostCallback d, object? state)
         {
             try
             {
@@ -167,7 +167,7 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
 #pragma warning restore VSTHRD001 // Avoid legacy thread switching APIs
         }
 
-        public override void Send(SendOrPostCallback d, object state)
+        public override void Send(SendOrPostCallback d, object? state)
         {
             try
             {
@@ -188,7 +188,7 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
 
         public override SynchronizationContext CreateCopy()
         {
-            return new DenyExecutionSynchronizationContext(_underlyingContext.CreateCopy(), _mainThread, _failedTransfer);
+            return new DenyExecutionSynchronizationContext(_underlyingContext?.CreateCopy(), _mainThread, _failedTransfer);
         }
 
         private static void ThrowFailedTransferExceptionForCapture()
@@ -217,13 +217,13 @@ public sealed class ConfigureJoinableTaskFactoryAttribute : Attribute, ITestActi
             output.AppendLine($"HANG DETECTED: guid {hangId}");
 
             HangReportContribution report = ((IHangReportContributor)Context).GetHangReport();
-            if (report.ContentName.EndsWith("dgml", StringComparison.InvariantCultureIgnoreCase))
+            if (report.ContentName!.EndsWith("dgml", StringComparison.InvariantCultureIgnoreCase))
             {
                 try
                 {
                     string assemblyLocation = Assembly.GetExecutingAssembly().Location;
-                    string reportLocation = Path.GetDirectoryName(assemblyLocation);
-                    string reportFileName = Path.Combine(reportLocation, $"{hangId}.dgml");
+                    string? reportLocation = Path.GetDirectoryName(assemblyLocation);
+                    string reportFileName = Path.Combine(reportLocation!, $"{hangId}.dgml");
 
                     File.WriteAllText(reportFileName, report.Content);
                     output.AppendLine($"HANG report: {reportFileName}");

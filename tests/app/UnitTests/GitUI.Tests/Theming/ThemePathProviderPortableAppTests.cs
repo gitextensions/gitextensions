@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 
@@ -7,8 +6,8 @@ namespace GitUITests.Theming;
 
 public class ThemePathProviderPortableAppTests
 {
-    private string _originalAppExecutablePath;
-    private Lazy<string> _originalAppDataPath;
+    private string _originalAppExecutablePath = null!;
+    private Lazy<string?> _originalAppDataPath = null!;
 
     // appInstall and AppData paths are same for portable app
     private const string MockAppInstallPath = "c:\\portable\\GitExtensions";
@@ -22,7 +21,7 @@ public class ThemePathProviderPortableAppTests
         testAccessor.ApplicationExecutablePath = Path.Combine(MockAppInstallPath, "gitextensions.exe");
 
         _originalAppDataPath = testAccessor.ApplicationDataPath;
-        testAccessor.ApplicationDataPath = new Lazy<string>(() => MockAppDataPath);
+        testAccessor.ApplicationDataPath = new Lazy<string?>(() => MockAppDataPath);
     }
 
     [OneTimeTearDown]

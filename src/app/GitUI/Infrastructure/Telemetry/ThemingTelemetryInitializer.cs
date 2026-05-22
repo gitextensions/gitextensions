@@ -9,7 +9,7 @@ internal class ThemingTelemetryInitializer : ITelemetryInitializer
     {
         IDictionary<string, string> properties = telemetry.Context.GlobalProperties;
         GitExtUtils.GitUI.Theming.ThemeSettings themeSettings = Theming.ThemeModule.Settings;
-        properties["Theme dark"] = FlagString(themeSettings.Theme.Id.Name == "dark");
+        properties["Theme dark"] = FlagString(themeSettings.Theme.SystemColorMode == SystemColorMode.Dark);
         properties["Theme builtin"] = FlagString(themeSettings.Theme.Id.IsBuiltin);
         properties["Theme systemstyles"] = FlagString(themeSettings.UseSystemVisualStyle);
     }

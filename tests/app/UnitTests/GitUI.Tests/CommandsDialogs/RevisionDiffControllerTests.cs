@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls;
@@ -10,12 +9,11 @@ namespace GitUITests.CommandsDialogs;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class RevisionDiffControllerTests
 {
-    private IGitModule _module;
-    private IFullPathResolver _fullPathResolver;
-    private RevisionDiffController _controller;
+    private IGitModule _module = null!;
+    private IFullPathResolver _fullPathResolver = null!;
+    private RevisionDiffController _controller = null!;
 
     [SetUp]
     public void Setup()
@@ -28,7 +26,7 @@ public class RevisionDiffControllerTests
     [Test]
     public void SaveFiles_should_throw_if_files_null()
     {
-        ((Action)(() => _controller.SaveFiles(files: null, userSelection: null))).Should()
+        ((Action)(() => _controller.SaveFiles(files: null!, userSelection: null!))).Should()
             .Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'files')");
     }
@@ -38,7 +36,7 @@ public class RevisionDiffControllerTests
     {
         List<FileStatusItem> files = [];
 
-        ((Action)(() => _controller.SaveFiles(files, userSelection: null))).Should().NotThrow();
+        ((Action)(() => _controller.SaveFiles(files, userSelection: null!))).Should().NotThrow();
     }
 
     [Test]
@@ -49,7 +47,7 @@ public class RevisionDiffControllerTests
             new(default, new(ObjectId.Random()), new(""))
         ];
 
-        ((Action)(() => _controller.SaveFiles(files, userSelection: null))).Should()
+        ((Action)(() => _controller.SaveFiles(files, userSelection: null!))).Should()
             .Throw<ArgumentNullException>()
             .WithMessage("Value cannot be null. (Parameter 'userSelection')");
     }
@@ -105,7 +103,7 @@ public class RevisionDiffControllerTests
 
         _controller.SaveFiles(files, userSelection);
 
-        _fullPathResolver.Received(1).Resolve("");
+        _fullPathResolver.Received(1).Resolve(".");
         _fullPathResolver.Received(0).Resolve(item1.Item.Name);
         _fullPathResolver.Received(0).Resolve(item2.Item.Name);
         _module.Received(0).SaveBlobAs(Arg.Any<string>(), Arg.Any<string>());
@@ -125,7 +123,7 @@ public class RevisionDiffControllerTests
             item2,
         ];
 
-        _fullPathResolver.Resolve("").Returns(x => "c:\\temp\\");
+        _fullPathResolver.Resolve(".").Returns(x => "c:\\temp\\");
         _fullPathResolver.Resolve(item1.Item.Name).Returns(x => "c:\\temp\\item1.txt");
         _fullPathResolver.Resolve(item2.Item.Name).Returns(x => "c:\\temp\\folder1\\item2.txt");
         _fullPathResolver.Resolve(item3.Item.Name).Returns(x => "c:\\temp\\folder1\\folder2\\item3.txt");
@@ -134,11 +132,11 @@ public class RevisionDiffControllerTests
 
         _controller.SaveFiles(files, userSelection);
 
-        _fullPathResolver.Received(1).Resolve("");
+        _fullPathResolver.Received(1).Resolve(".");
         _fullPathResolver.Received(1).Resolve(item1.Item.Name);
         _fullPathResolver.Received(1).Resolve(item2.Item.Name);
         _fullPathResolver.Received(1).Resolve(item3.Item.Name);
-        _module.ReceivedWithAnyArgs(3).SaveBlobAs(default, default);
+        _module.ReceivedWithAnyArgs(3).SaveBlobAs(default!, default!);
         _module.Received(1).SaveBlobAs("c:\\temp\\item1.txt", Arg.Any<string>());
         _module.Received(1).SaveBlobAs("c:\\temp\\folder1\\item2.txt", Arg.Any<string>());
         _module.Received(1).SaveBlobAs("c:\\temp\\folder1\\folder2\\item3.txt", Arg.Any<string>());
@@ -158,7 +156,7 @@ public class RevisionDiffControllerTests
             item3,
         ];
 
-        _fullPathResolver.Resolve("").Returns(x => "c:\\temp\\");
+        _fullPathResolver.Resolve(".").Returns(x => "c:\\temp\\");
         _fullPathResolver.Resolve(item1.Item.Name).Returns(x => "c:\\temp\\item1.txt");
         _fullPathResolver.Resolve(item2.Item.Name).Returns(x => "c:\\temp\\folder1\\item2.txt");
         _fullPathResolver.Resolve(item3.Item.Name).Returns(x => "c:\\temp\\folder1\\folder2\\item3.txt");
@@ -167,11 +165,11 @@ public class RevisionDiffControllerTests
 
         _controller.SaveFiles(files, userSelection);
 
-        _fullPathResolver.Received(1).Resolve("");
+        _fullPathResolver.Received(1).Resolve(".");
         _fullPathResolver.Received(1).Resolve(item1.Item.Name);
         _fullPathResolver.Received(1).Resolve(item2.Item.Name);
         _fullPathResolver.Received(1).Resolve(item3.Item.Name);
-        _module.ReceivedWithAnyArgs(3).SaveBlobAs(default, default);
+        _module.ReceivedWithAnyArgs(3).SaveBlobAs(default!, default!);
         _module.Received(1).SaveBlobAs("c:\\myproject\\src\\item1.txt", Arg.Any<string>());
         _module.Received(1).SaveBlobAs("c:\\myproject\\src\\folder1\\item2.txt", Arg.Any<string>());
         _module.Received(1).SaveBlobAs("c:\\myproject\\src\\folder1\\folder2\\item3.txt", Arg.Any<string>());

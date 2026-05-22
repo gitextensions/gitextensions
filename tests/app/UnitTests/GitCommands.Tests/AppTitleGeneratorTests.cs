@@ -1,17 +1,14 @@
-﻿using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class AppTitleGeneratorTests
 {
     private const string ShortName = "gitextension";
     private string _defaultBranchName = "no branch";
-    private IRepositoryDescriptionProvider _repositoryDescriptionProvider;
-    private AppTitleGenerator _appTitleGenerator;
+    private IRepositoryDescriptionProvider _repositoryDescriptionProvider = null!;
+    private AppTitleGenerator _appTitleGenerator = null!;
 
     [SetUp]
     public void Setup()
@@ -26,7 +23,7 @@ public class AppTitleGeneratorTests
     [TestCase("")]
     [TestCase(" ")]
     [TestCase("\t")]
-    public void Generate_should_return_default_title_if_invalid_working_directory(string path)
+    public void Generate_should_return_default_title_if_invalid_working_directory(string? path)
     {
         string title = _appTitleGenerator.Generate(path, false, null);
         title.Should().Be(AppSettings.ApplicationName);
@@ -82,10 +79,10 @@ public class AppTitleGeneratorTests
 
 #if DEBUG
     [Test]
-    public void Generate_should_include_debug_suffix([Values(null, "invalid")] string buildSha)
+    public void Generate_should_include_debug_suffix([Values(null, "invalid")] string? buildSha)
     {
         string buildBranch = "build_branch";
-        AppTitleGenerator.Initialise(buildSha, buildBranch);
+        AppTitleGenerator.Initialise(buildSha!, buildBranch);
         string title = _appTitleGenerator.Generate("a", true, null, defaultBranchName: _defaultBranchName);
 
         title.Should().Be($"{ShortName} ({_defaultBranchName}) - {AppSettings.ApplicationName} [DEBUG]");

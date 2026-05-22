@@ -1,5 +1,4 @@
-using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitCommands.UserRepositoryHistory.Legacy;
 using NSubstitute;
@@ -7,15 +6,13 @@ using IRepositoryStorage = GitCommands.UserRepositoryHistory.IRepositoryStorage;
 using Repository = GitCommands.UserRepositoryHistory.Repository;
 
 namespace GitCommandsTests.UserRepositoryHistory;
-
-[TestFixture]
 public class LocalRepositoryManagerTests
 {
     private const string KeyRecentHistory = "history";
     private const string KeyFavouriteHistory = "history-favourite";
-    private IRepositoryStorage _repositoryStorage;
-    private IRepositoryHistoryMigrator _repositoryHistoryMigrator;
-    private LocalRepositoryManager _manager;
+    private IRepositoryStorage _repositoryStorage = null!;
+    private IRepositoryHistoryMigrator _repositoryHistoryMigrator = null!;
+    private LocalRepositoryManager _manager = null!;
     private int _userSetting;
 
     [SetUp]
@@ -121,14 +118,14 @@ public class LocalRepositoryManagerTests
     [Test]
     public void AssignCategoryAsync_should_throw_if_key_null()
     {
-        Func<Task> f = async () => { await _manager.AssignCategoryAsync(null, null); };
+        Func<Task> f = async () => { await _manager.AssignCategoryAsync(null!, null); };
         f.Should().ThrowAsync<ArgumentNullException>();
     }
 
     [Test]
     public async Task LoadFavouriteHistoryAsync_should_return_empty_list_if_nothing_loaded()
     {
-        _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => null);
+        _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => null!);
 
         IList<Repository> history = await _manager.LoadFavouriteHistoryAsync();
 
@@ -150,7 +147,7 @@ public class LocalRepositoryManagerTests
     [Test]
     public async Task LoadRecentHistoryAsync_should_return_empty_list_if_nothing_loaded()
     {
-        _repositoryStorage.Load(KeyRecentHistory).Returns(x => null);
+        _repositoryStorage.Load(KeyRecentHistory).Returns(x => null!);
 
         IList<Repository> history = await _manager.LoadRecentHistoryAsync();
 
@@ -283,7 +280,7 @@ public class LocalRepositoryManagerTests
     [Test]
     public void SaveFavouriteHistoryAsync_should_throw_if_repositories_null()
     {
-        Func<Task> action = async () => await _manager.SaveFavouriteHistoryAsync(null);
+        Func<Task> action = async () => await _manager.SaveFavouriteHistoryAsync(null!);
         action.Should().ThrowAsync<ArgumentNullException>();
     }
 
@@ -307,7 +304,7 @@ public class LocalRepositoryManagerTests
     [Test]
     public void SaveRecentHistoryAsync_should_throw_if_repositories_null()
     {
-        Func<Task> action = async () => await _manager.SaveRecentHistoryAsync(null);
+        Func<Task> action = async () => await _manager.SaveRecentHistoryAsync(null!);
         action.Should().ThrowAsync<ArgumentNullException>();
     }
 
@@ -383,7 +380,7 @@ public class LocalRepositoryManagerTests
 
         _repositoryStorage.Load(KeyRecentHistory).Returns(x => history);
 
-        await _manager.RemoveInvalidRepositoriesAsync(repoPath => repoPath.StartsWith("p"));
+        await _manager.RemoveInvalidRepositoriesAsync(repoPath => repoPath.StartsWith('p'));
 
         _repositoryStorage.Received(1).Load(KeyRecentHistory);
         _repositoryStorage.Received(1).Save(KeyRecentHistory, Arg.Is<IEnumerable<Repository>>(h => h.Count() == 2));
@@ -405,7 +402,7 @@ public class LocalRepositoryManagerTests
         _repositoryStorage.Load(KeyFavouriteHistory).Returns(x => history);
         _repositoryHistoryMigrator.MigrateAsync(Arg.Any<List<Repository>>()).Returns(x => (history, false));
 
-        await _manager.RemoveInvalidRepositoriesAsync(repoPath => repoPath.StartsWith("p"));
+        await _manager.RemoveInvalidRepositoriesAsync(repoPath => repoPath.StartsWith('p'));
 
         _repositoryStorage.Received(1).Load(KeyFavouriteHistory);
         _repositoryStorage.Received(1).Save(KeyFavouriteHistory, Arg.Is<IEnumerable<Repository>>(h => h.All(r => r.Path != repoToDelete)));

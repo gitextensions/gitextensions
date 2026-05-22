@@ -1,11 +1,9 @@
-using GitCommands;
+﻿using GitCommands;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class GitCommandCacheTest
 {
-    private CommandCache _cache;
+    private CommandCache _cache = null!;
 
     [SetUp]
     public void SetUp()
@@ -18,18 +16,18 @@ public class GitCommandCacheTest
     {
         string output = "Git result";
         string error = "No Git error!";
-        string[] expectedCachedCommand = { "git command" };
+        string[] expectedCachedCommand = ["git command"];
 
         _cache.Add("git command", output, error);
 
-        ClassicAssert.IsTrue(expectedCachedCommand.SequenceEqual(_cache.GetCachedCommands()));
+        expectedCachedCommand.SequenceEqual(_cache.GetCachedCommands()).Should().BeTrue();
     }
 
     [Test]
     public void TestAddCannotCache()
     {
-        _cache.Add(null, null, null);
-        ClassicAssert.IsFalse(_cache.GetCachedCommands().Any());
+        _cache.Add(null, null!, null!);
+        _cache.GetCachedCommands().Any().Should().BeFalse();
     }
 
     [Test]
@@ -40,17 +38,17 @@ public class GitCommandCacheTest
 
         _cache.Add("git command", originalOutput, originalError);
 
-        ClassicAssert.IsTrue(_cache.TryGet("git command", out string? cachedOutput, out string? cachedError));
-        ClassicAssert.AreEqual(cachedOutput, originalOutput);
-        ClassicAssert.AreEqual(cachedError, originalError);
+        _cache.TryGet("git command", out string? cachedOutput, out string? cachedError).Should().BeTrue();
+        originalOutput.Should().Be(cachedOutput);
+        originalError.Should().Be(cachedError);
     }
 
     [Test]
     public void TestTryGetFails()
     {
-        ClassicAssert.IsFalse(_cache.TryGet(null, out string? output, out string? error));
-        ClassicAssert.IsFalse(_cache.TryGet("", out output, out error));
-        ClassicAssert.IsNull(output);
-        ClassicAssert.IsNull(error);
+        _cache.TryGet(null, out string? output, out string? error).Should().BeFalse();
+        _cache.TryGet("", out output, out error).Should().BeFalse();
+        output.Should().BeNull();
+        error.Should().BeNull();
     }
 }

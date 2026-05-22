@@ -1,9 +1,6 @@
-﻿using FluentAssertions;
-using GitExtensions.Plugins.GitlabIntegration.Settings;
+﻿using GitExtensions.Plugins.GitlabIntegration.Settings;
 
 namespace GitlabIntegrationTests;
-
-[TestFixture]
 internal class GitlabRemoteParserTests
 {
     [TestCase("https://gitlab.com/owner/repo.git/")]
@@ -37,7 +34,7 @@ internal class GitlabRemoteParserTests
     {
         GitlabRemoteParser gitlabRemoteParser = new();
         string url = "https://owner@dev.bad.com/owner/project/_git/repo";
-        gitlabRemoteParser.TryExtractGitlabDataFromRemoteUrl(url, out string? host, out string? owner, out string? repository).Should().BeFalse();
+        gitlabRemoteParser.TryExtractGitlabDataFromRemoteUrl(url, out string? _, out string? owner, out string? repository).Should().BeFalse();
         owner.Should().BeNull();
         repository.Should().BeNull();
 

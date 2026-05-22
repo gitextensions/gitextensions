@@ -44,14 +44,14 @@ public partial class FormViewPatch : GitModuleForm
         LoadPatchFile();
     }
 
-    private void GridChangedFiles_SelectionChanged(object sender, EventArgs e)
+    private void GridChangedFiles_SelectionChanged(object? sender, EventArgs e)
     {
         if (GridChangedFiles.SelectedRows.Count == 0)
         {
             return;
         }
 
-        Patch patch = (Patch)GridChangedFiles.SelectedRows[0].DataBoundItem;
+        Patch? patch = (Patch?)GridChangedFiles.SelectedRows[0].DataBoundItem;
 
         if (patch is null)
         {
@@ -86,7 +86,7 @@ public partial class FormViewPatch : GitModuleForm
         try
         {
             string text = System.IO.File.ReadAllText(PatchFileNameEdit.Text, GitModule.LosslessEncoding);
-            List<Patch> patches = PatchProcessor.CreatePatchesFromString(text, new Lazy<Encoding>(() => Module.FilesEncoding)).ToList();
+            List<Patch> patches = [.. PatchProcessor.CreatePatchesFromString(text, new Lazy<Encoding>(() => Module.FilesEncoding))];
             SortablePatchesList patchesList = new();
             patchesList.AddRange(patches);
             GridChangedFiles.DataSource = patchesList;

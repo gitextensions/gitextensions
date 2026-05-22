@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using System.Xml;
 using System.Xml.Serialization;
-using FluentAssertions;
 using GitCommands.ExternalLinks;
 using GitCommands.Remotes;
 using GitExtensions.Extensibility.Git;
@@ -10,14 +9,12 @@ using JetBrains.Annotations;
 using NSubstitute;
 
 namespace GitCommandsTests.ExternalLinks;
-
-[TestFixture]
 public class ExternalLinkRevisionParserTests
 {
-    private IConfigFileRemoteSettingsManager _remotesManager;
-    private ExternalLinkRevisionParser _parser;
-    private ExternalLinkDefinition _linkDef;
-    private GitRevision _revision;
+    private IConfigFileRemoteSettingsManager _remotesManager = null!;
+    private ExternalLinkRevisionParser _parser = null!;
+    private ExternalLinkDefinition _linkDef = null!;
+    private GitRevision _revision = null!;
 
     [SetUp]
     public void Setup()
@@ -36,10 +33,10 @@ public class ExternalLinkRevisionParserTests
     public void ParseGitHubIssueForUpstreamLink()
     {
         _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-        ExternalLink[] expectedLinks = new[]
-        {
+        ExternalLink[] expectedLinks =
+        [
             new ExternalLink("Issue 3657", "https://github.com/gitextensions/gitextensions/issues/3657")
-        };
+        ];
 
         IEnumerable<ExternalLink> actualLinks = _parser.Parse(_revision, _linkDef);
         actualLinks.Should().Equal(expectedLinks);
@@ -50,10 +47,10 @@ public class ExternalLinkRevisionParserTests
     {
         _linkDef.UseRemotesPattern = "origin|upstream";
         _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-        ExternalLink[] expectedLinks = new[]
-        {
+        ExternalLink[] expectedLinks =
+        [
             new ExternalLink("Issue 3657", "https://github.com/jbialobr/gitextensions/issues/3657")
-        };
+        ];
 
         IEnumerable<ExternalLink> actualLinks = _parser.Parse(_revision, _linkDef);
         actualLinks.Should().Equal(expectedLinks);
@@ -64,11 +61,11 @@ public class ExternalLinkRevisionParserTests
     {
         _linkDef.UseOnlyFirstRemote = false;
         _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-        ExternalLink[] expectedLinks = new[]
-        {
+        ExternalLink[] expectedLinks =
+        [
             new ExternalLink("Issue 3657", "https://github.com/gitextensions/gitextensions/issues/3657"),
             new ExternalLink("Issue 3657", "https://github.com/jbialobr/gitextensions/issues/3657")
-        };
+        ];
 
         IEnumerable<ExternalLink> actualLinks = _parser.Parse(_revision, _linkDef);
         actualLinks.Should().Equal(expectedLinks);
@@ -80,12 +77,12 @@ public class ExternalLinkRevisionParserTests
         _linkDef.UseRemotesPattern = string.Empty;
         _linkDef.UseOnlyFirstRemote = false;
         _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-        ExternalLink[] expectedLinks = new[]
-        {
+        ExternalLink[] expectedLinks =
+        [
             new ExternalLink("Issue 3657", "https://github.com/jbialobr/gitextensions/issues/3657"),
             new ExternalLink("Issue 3657", "https://github.com/gitextensions/gitextensions/issues/3657"),
             new ExternalLink("Issue 3657", "https://github.com/russkie/gitextensions/issues/3657")
-        };
+        ];
 
         IEnumerable<ExternalLink> actualLinks = _parser.Parse(_revision, _linkDef);
         actualLinks.Should().Equal(expectedLinks);
@@ -96,10 +93,10 @@ public class ExternalLinkRevisionParserTests
     {
         _linkDef = Parse(GetEmptyRemotePartXmlDef())[0];
         _revision.Body = "Merge pull request #3657 from RussKie/tweak_FormRemotes_tooltips";
-        ExternalLink[] expectedLinks = new[]
-        {
+        ExternalLink[] expectedLinks =
+        [
             new ExternalLink("Issue 3657", "https://github.com/gitextensions/gitextensions/issues/3657")
-        };
+        ];
 
         IEnumerable<ExternalLink> actualLinks = _parser.Parse(_revision, _linkDef);
         actualLinks.Should().Equal(expectedLinks);
@@ -135,7 +132,7 @@ public class ExternalLinkRevisionParserTests
         XmlSerializer serializer = new(typeof(List<ExternalLinkDefinition>));
         using StringReader stringReader = new(xml);
         using XmlTextReader xmlReader = new(stringReader);
-        return serializer.Deserialize(xmlReader) as List<ExternalLinkDefinition>;
+        return (serializer.Deserialize(xmlReader) as List<ExternalLinkDefinition>)!;
     }
 
     private static string GetGitHubIssuesXmlDef()

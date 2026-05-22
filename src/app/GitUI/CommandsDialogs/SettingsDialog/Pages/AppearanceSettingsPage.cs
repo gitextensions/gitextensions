@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitCommands.Utils;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
@@ -30,8 +30,8 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
 
     private static void FillComboBoxWithEnumValues<T>(ComboBox comboBox) where T : Enum
     {
-        comboBox.DisplayMember = nameof(ComboBoxItem<T>.Text);
-        comboBox.ValueMember = nameof(ComboBoxItem<T>.Value);
+        comboBox.DisplayMember = nameof(ComboBoxItem<>.Text);
+        comboBox.ValueMember = nameof(ComboBoxItem<>.Value);
         comboBox.DataSource = EnumHelper.GetValues<T>()
             .Select(e => new ComboBoxItem<T>(e.GetDescription(), e))
             .ToArray();
@@ -94,7 +94,7 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         }
         else
         {
-            string dictionaryFile = string.Concat(Path.Combine(AppSettings.GetDictionaryDir(), AppSettings.Dictionary), ".dic");
+            string dictionaryFile = string.Concat(Path.Join(AppSettings.GetDictionaryDir(), AppSettings.Dictionary), ".dic");
             if (File.Exists(dictionaryFile))
             {
                 Dictionary.Items.Add(AppSettings.Dictionary);
@@ -130,8 +130,8 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         AppSettings.TruncatePathMethod = GetTruncatePathMethodString(truncatePathMethod.SelectedIndex);
 
         bool shouldClearCache =
-            AppSettings.AvatarProvider != (AvatarProvider)AvatarProvider.SelectedValue
-            || AppSettings.AvatarFallbackType != (AvatarFallbackType)_NO_TRANSLATE_NoImageService.SelectedValue
+            AppSettings.AvatarProvider != (AvatarProvider)AvatarProvider.SelectedValue!
+            || AppSettings.AvatarFallbackType != (AvatarFallbackType)_NO_TRANSLATE_NoImageService.SelectedValue!
             || AppSettings.CustomAvatarTemplate != txtCustomAvatarTemplate.Text;
 
         AppSettings.ShowAuthorAvatarColumn = ShowAuthorAvatarInCommitGraph.Checked;
@@ -189,7 +189,7 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         }
         catch
         {
-            MessageBox.Show(this, string.Format(_noDictFilesFound.Text, AppSettings.GetDictionaryDir()), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, string.Format(_noDictFilesFound.Text, AppSettings.GetDictionaryDir()), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -221,7 +221,7 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
 
     private void ManageAvatarOptionsDisplay()
     {
-        bool showCustomTemplate = (AvatarProvider)AvatarProvider.SelectedValue == GitCommands.AvatarProvider.Custom;
+        bool showCustomTemplate = (AvatarProvider)AvatarProvider.SelectedValue! == GitCommands.AvatarProvider.Custom;
 
         lblCustomAvatarTemplate.Visible = showCustomTemplate;
         txtCustomAvatarTemplate.Visible = showCustomTemplate;

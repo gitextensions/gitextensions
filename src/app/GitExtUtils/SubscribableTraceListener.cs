@@ -19,7 +19,7 @@ internal class SubscribableTraceListener : TraceListener, ISubscribableTraceList
 
     private readonly StringBuilder _trace = new();
 
-    public event TraceHandler TraceReceived;
+    public event TraceHandler? TraceReceived;
 
     public SubscribableTraceListener()
     {

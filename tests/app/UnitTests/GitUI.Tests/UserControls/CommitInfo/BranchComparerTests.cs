@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
 
 namespace GitUITests.UserControls.CommitInfo;
 
@@ -15,7 +14,7 @@ public class BranchComparerTests
 
         List<string> expectedBranches =
         [
-            currentBranch,
+            currentBranch!,
 
             // local branch important
             // order 0
@@ -74,7 +73,7 @@ public class BranchComparerTests
             expectedBranches.RemoveAt(0);
         }
 
-        List<string> branches = new(expectedBranches);
+        List<string> branches = [.. expectedBranches];
 
         SortAndCheckListsForEquality();
 

@@ -23,11 +23,11 @@ public sealed class GitRef : IGitRef
 
     public IGitModule Module { get; }
 
-    public GitRef(IGitModule module, ObjectId? objectId, string completeName, string remote = "")
+    public GitRef(IGitModule module, ObjectId objectId, string completeName, string remote = "")
     {
         Module = module;
         ObjectId = objectId;
-        Guid = objectId?.ToString();
+        Guid = objectId.IsZero ? null : objectId.ToString();
         CompleteName = completeName;
         Remote = remote;
 
@@ -108,7 +108,7 @@ public sealed class GitRef : IGitRef
     }
 
     public string CompleteName { get; }
-    public bool IsSelected { get; set; } = false;
+    public bool IsSelected { get; set; }
     public bool IsSelectedHeadMergeSource { get; set; }
 
     public bool IsTag => _type == GitRefType.Tag;
@@ -169,12 +169,12 @@ public sealed class GitRef : IGitRef
 
     public static GitRef NoHead(IGitModule module)
     {
-        return new GitRef(module, null, "");
+        return new GitRef(module, default, "");
     }
 
     #region IGitItem Members
 
-    public ObjectId? ObjectId { get; }
+    public ObjectId ObjectId { get; }
     public string? Guid { get; }
     public string Name { get; }
 

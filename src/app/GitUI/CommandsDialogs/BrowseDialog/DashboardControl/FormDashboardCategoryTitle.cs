@@ -1,4 +1,4 @@
-﻿using ResourceManager;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.BrowseDialog.DashboardControl;
 
@@ -41,13 +41,13 @@ public partial class FormDashboardCategoryTitle : GitExtensionsForm
     {
         if (string.IsNullOrEmpty(txtCategoryName.Text))
         {
-            MessageBox.Show(this, _categoryNameRequiredText.Text, lblCategoryName.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _categoryNameRequiredText.Text, lblCategoryName.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
         if (_existingCategories.Contains(txtCategoryName.Text, StringComparer.Ordinal))
         {
-            MessageBox.Show(this, _categoryNameExistsText.Text, lblCategoryName.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _categoryNameExistsText.Text, lblCategoryName.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 

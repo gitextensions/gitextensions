@@ -22,7 +22,7 @@ internal readonly struct VisibleRowRange : IEnumerable<int>, IEquatable<VisibleR
     public IEnumerator<int> GetEnumerator() => Enumerable.Range(FromIndex, Count).GetEnumerator();
     IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
     public bool Equals(VisibleRowRange other) => FromIndex == other.FromIndex && Count == other.Count;
-    public override bool Equals(object obj) => obj is VisibleRowRange range && Equals(range);
+    public override bool Equals(object? obj) => obj is VisibleRowRange range && Equals(range);
     public override int GetHashCode() => unchecked((FromIndex * 397) ^ Count);
     public override string ToString() => $"[{FromIndex}, {FromIndex + Count - 1}] {Count} row{(Count == 1 ? "" : "s")}";
     public static bool operator ==(VisibleRowRange left, VisibleRowRange right) => left.Equals(right);

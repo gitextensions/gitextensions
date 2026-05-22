@@ -1,5 +1,6 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitUI.Properties;
 
 namespace GitUI.CommandsDialogs;
@@ -8,8 +9,10 @@ partial class FormBrowse
 {
     // This file is dedicated to init logic for FormBrowse revisiong grid control
 
-    private void InitRevisionGrid(ObjectId? selectedId, ObjectId? firstId, bool isFileHistoryMode)
+    private void InitRevisionGrid(ObjectId selectedId, ObjectId firstId, bool isFileHistoryMode)
     {
+        RevisionGrid.ArtificialChanged += (_, _) => RefreshGitStatusMonitor();
+
         RevisionGrid.IndexWatcher.Changed += (_, args) =>
         {
             bool indexChanged = args.IsIndexChanged;
@@ -63,6 +66,8 @@ partial class FormBrowse
 
         RevisionGrid.RevisionsLoaded += (sender, e) =>
         {
+            UICommands.GetRequiredService<IRepositoryHistoryUIService>().TriggerBranchNameCacheUpdate();
+
             if (sender is null || MainSplitContainer.Panel1Collapsed)
             {
                 // - the event is either not originated from the revision grid, or

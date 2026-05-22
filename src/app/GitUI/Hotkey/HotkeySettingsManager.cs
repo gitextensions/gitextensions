@@ -42,7 +42,7 @@ public interface IHotkeySettingsManager : IHotkeySettingsLoader
 
 internal class HotkeySettingsManager : IHotkeySettingsManager
 {
-    private static readonly XmlSerializer? _serializer = new(typeof(HotkeySettings[]), new[] { typeof(HotkeyCommand) });
+    private static readonly XmlSerializer? _serializer = new(typeof(HotkeySettings[]), [typeof(HotkeyCommand)]);
     private readonly HashSet<Keys> _usedKeys = [];
     private readonly IScriptsManager _scriptsManager;
 
@@ -57,7 +57,7 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
     {
         // Get the default settings
         IReadOnlyList<HotkeySettings> defaultSettings = CreateDefaultSettings();
-        HotkeySettings[] loadedSettings = LoadSerializedSettings();
+        HotkeySettings[]? loadedSettings = LoadSerializedSettings();
 
         MergeIntoDefaultSettings(defaultSettings, loadedSettings);
 
@@ -94,7 +94,7 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
             using StringWriter sw = new();
             using XmlWriter xmlWriter = XmlWriter.Create(sw, xmlWriterSettings);
 
-            _serializer.Serialize(xmlWriter, settings.ToArray());
+            _serializer!.Serialize(xmlWriter, settings.ToArray());
             AppSettings.SerializedHotkeys = sw.ToString();
         }
         catch
@@ -124,7 +124,7 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
                     foreach (HotkeyCommand command in setting.Commands)
                     {
                         string dictKey = CalcDictionaryKey(setting.Name, command.CommandCode);
-                        if (defaultCommands.TryGetValue(dictKey, out HotkeyCommand defaultCommand))
+                        if (defaultCommands.TryGetValue(dictKey, out HotkeyCommand? defaultCommand))
                         {
                             defaultCommand.KeyData = command.KeyData;
                         }
@@ -166,7 +166,7 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
         try
         {
             using StringReader reader = new(serializedHotkeys);
-            return (HotkeySettings[])_serializer.Deserialize(reader);
+            return (HotkeySettings[]?)_serializer!.Deserialize(reader);
         }
         catch
         {
@@ -176,7 +176,7 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
 
     public IReadOnlyList<HotkeySettings> CreateDefaultSettings()
     {
-        HotkeyCommand Hk(object en, Keys k) => new((int)en, en.ToString()) { KeyData = k };
+        HotkeyCommand Hk(object en, Keys k) => new((int)en, en.ToString()!) { KeyData = k };
 
         const Keys OpenWithDifftoolHotkey = Keys.F3;
         const Keys OpenWithDifftoolFirstToLocalHotkey = Keys.Alt | Keys.F3;
@@ -282,8 +282,8 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
                 Hk(RevisionGridControl.Command.DeleteRef, Keys.Delete),
                 Hk(RevisionGridControl.Command.GoToChild, Keys.Control | Keys.N),
                 Hk(RevisionGridControl.Command.GoToCommit, Keys.Control | Keys.Shift | Keys.G),
-                Hk(RevisionGridControl.Command.GoToFirstParent, Keys.None),
-                Hk(RevisionGridControl.Command.GoToLastParent, Keys.None),
+                Hk(RevisionGridControl.Command.GoToFirstParent, Keys.Control | Keys.Left),
+                Hk(RevisionGridControl.Command.GoToLastParent, Keys.Control | Keys.Right),
                 Hk(RevisionGridControl.Command.GoToMergeBase, Keys.Control | Keys.Shift | Keys.K),
                 Hk(RevisionGridControl.Command.GoToParent, Keys.Control | Keys.P),
                 Hk(RevisionGridControl.Command.NavigateBackward, Keys.Alt | Keys.Left),
@@ -313,6 +313,7 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
                 Hk(RevisionGridControl.Command.ToggleOrderRevisionsByDate, Keys.None),
                 Hk(RevisionGridControl.Command.ToggleRevisionGraph, Keys.None),
                 Hk(RevisionGridControl.Command.ToggleShowGitNotes, Keys.None),
+                Hk(RevisionGridControl.Command.ToggleShowGitNotesColumn, Keys.None),
                 Hk(RevisionGridControl.Command.ToggleHideMergeCommits, Keys.Control | Keys.Shift | Keys.M),
                 Hk(RevisionGridControl.Command.ToggleShowRelativeDate, Keys.None),
                 Hk(RevisionGridControl.Command.ToggleShowTags, Keys.Control | Keys.Alt | Keys.T)),
@@ -355,8 +356,8 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
                 Hk(RevisionDiffControl.Command.FindFile, Keys.None),
                 Hk(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_DiffTab, Keys.Control | Keys.Shift | Keys.F),
                 Hk(RevisionDiffControl.Command.FindInCommitFilesUsingGitGrep_FileTreeTab, Keys.None),
-                Hk(RevisionDiffControl.Command.GoToFirstParent, Keys.None),
-                Hk(RevisionDiffControl.Command.GoToLastParent, Keys.None),
+                Hk(RevisionDiffControl.Command.GoToFirstParent, Keys.Control | Keys.Left),
+                Hk(RevisionDiffControl.Command.GoToLastParent, Keys.Control | Keys.Right),
                 Hk(RevisionDiffControl.Command.OpenAsTempFile, OpenAsTempFileHotkey),
                 Hk(RevisionDiffControl.Command.OpenAsTempFileWith, OpenAsTempFileWithHotkey),
                 Hk(RevisionDiffControl.Command.OpenInVisualStudio, Keys.Control | Keys.Shift | Keys.S),
@@ -389,11 +390,10 @@ internal class HotkeySettingsManager : IHotkeySettingsManager
              * these integers are never matched in the 'switch' routine on a form and
              * therefore execute the 'default' action
              */
-            return _scriptsManager
+            return [.. _scriptsManager
                 .GetScripts()
                 .Where(s => !string.IsNullOrEmpty(s.Name))
-                .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.GetDisplayName()) { KeyData = Keys.None })
-                .ToArray();
+                .Select(s => new HotkeyCommand(s.HotkeyCommandIdentifier, s.GetDisplayName()) { KeyData = Keys.None })];
         }
     }
 

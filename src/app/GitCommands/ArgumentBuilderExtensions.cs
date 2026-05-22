@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -63,7 +64,7 @@ public static class ArgumentBuilderExtensions
             return;
         }
 
-        foreach (string value in values)
+        foreach (string? value in values)
         {
             builder.Add(value);
         }
@@ -89,7 +90,7 @@ public static class ArgumentBuilderExtensions
             return;
         }
 
-        foreach (string value in ifConditionTrue)
+        foreach (string? value in ifConditionTrue)
         {
             builder.Add(value);
         }
@@ -228,17 +229,17 @@ public static class ArgumentBuilderExtensions
     }
 
     /// <summary>
-    /// Adds <paramref name="objectId"/> as a SHA-1 argument.
+    /// Adds <paramref name="objectId"/> as a SHA-1 argument without allocating a string.
     /// </summary>
-    /// <remarks>
-    /// If <paramref name="objectId"/> is <c>null</c> then no change is made to the arguments.
-    /// </remarks>
     /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
-    /// <param name="objectId">The SHA-1 object ID to add to the builder, or <c>null</c>.</param>
-    /// <exception cref="ArgumentException"><paramref name="objectId"/> represents an artificial commit.</exception>
-    public static void Add(this ArgumentBuilder builder, ObjectId? objectId)
+    /// <param name="objectId">The SHA-1 object ID to add to the builder.</param>
+    /// <exception cref="ArgumentException"><paramref name="objectId"/> does not represent a real git object.</exception>
+    /// <remarks>
+    ///  If <paramref name="objectId"/> is zero then no change is made to the arguments.
+    /// </remarks>
+    public static void Add(this ArgumentBuilder builder, ObjectId objectId)
     {
-        if (objectId is null)
+        if (objectId.IsZero)
         {
             return;
         }
@@ -248,19 +249,18 @@ public static class ArgumentBuilderExtensions
             throw new ArgumentException("Unexpected artificial commit in Git command: " + objectId);
         }
 
-        builder.Add(objectId.ToString());
+        Span<char> buffer = stackalloc char[ObjectId.Sha1CharCount];
+        objectId.WriteTo(buffer);
+        builder.Add((ReadOnlySpan<char>)buffer);
     }
 
     /// <summary>
     /// Adds a sequence of <paramref name="objectIds"/> to the builder.
     /// </summary>
-    /// <remarks>
-    /// If <paramref name="objectIds"/> is <c>null</c> then no change is made to the arguments.
-    /// </remarks>
     /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
-    /// <param name="objectIds">A sequence of SHA-1 object IDs to add to the builder, or <c>null</c>.</param>
+    /// <param name="objectIds">A sequence of SHA-1 object IDs to add to the builder, or <see langword="null"/>.</param>
     /// <exception cref="ArgumentException"><paramref name="objectIds"/> contains an artificial commit.</exception>
-    public static void Add(this ArgumentBuilder builder, IEnumerable<ObjectId?>? objectIds)
+    public static void Add(this ArgumentBuilder builder, IEnumerable<ObjectId>? objectIds)
     {
         if (objectIds is null)
         {
@@ -294,7 +294,7 @@ public static class ArgumentBuilderExtensions
         string baseArgument = builder.ToString();
         if (baseLength + baseArgument.Length >= maxLength)
         {
-            throw new ArgumentException($"Git base command \"{baseArgument}\" always reached max length of {maxLength} characters.", nameof(baseArgument));
+            throw new ArgumentException($"Git base command \"{baseArgument}\" always reached max length of {maxLength} characters.", nameof(baseLength));
         }
 
         // Clone command as argument builder

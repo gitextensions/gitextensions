@@ -1,15 +1,12 @@
-﻿using FluentAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid.Graph;
 using NSubstitute;
 
 namespace GitUITests.UserControls.RevisionGrid.Graph;
-
-[TestFixture]
 public class LaneNodeLocatorTests
 {
-    private IRevisionGraphRowProvider _revisionGraphRowProvider;
-    private LaneNodeLocator _laneNodeLocator;
+    private IRevisionGraphRowProvider _revisionGraphRowProvider = null!;
+    private LaneNodeLocator _laneNodeLocator = null!;
 
     [SetUp]
     public void Setup()
@@ -18,12 +15,12 @@ public class LaneNodeLocatorTests
         _laneNodeLocator = new LaneNodeLocator(_revisionGraphRowProvider);
     }
 
-    private RevisionGraphRevision SetupLaneRow(int row, int lane, int laneCount, int nodeLane = -1, RevisionGraphSegment firstSegment = null)
+    private RevisionGraphRevision SetupLaneRow(int row, int lane, int laneCount, int nodeLane = -1, RevisionGraphSegment firstSegment = null!, RevisionGraphRevision child = null!)
     {
         RevisionGraphRevision node = new(ObjectId.WorkTreeId, 0);
         IRevisionGraphRow revisionGraphRow = Substitute.For<IRevisionGraphRow>();
 
-        List<RevisionGraphSegment> segments = new();
+        List<RevisionGraphSegment> segments = [];
         if (firstSegment is not null)
         {
             segments.Add(firstSegment);
@@ -41,7 +38,7 @@ public class LaneNodeLocatorTests
         }
         else
         {
-            segments.Add(new RevisionGraphSegment(node, null));
+            segments.Add(new RevisionGraphSegment(node, child));
         }
 
         _revisionGraphRowProvider.GetSegmentsForRow(row).Returns(x => revisionGraphRow);
@@ -51,13 +48,13 @@ public class LaneNodeLocatorTests
     [Test]
     public void FindPrevNode_should_return_null_if_lane_negative()
     {
-        _laneNodeLocator.FindPrevNode(0, -1).Should().Be((null, false));
+        _laneNodeLocator.FindPrevNode(0, -1).Should().Be((null, false, null));
     }
 
     [Test]
     public void FindPrevNode_should_return_null_if_rowIndex_negative()
     {
-        _laneNodeLocator.FindPrevNode(-1, 0).Should().Be((null, false));
+        _laneNodeLocator.FindPrevNode(-1, 0).Should().Be((null, false, null));
     }
 
     [Test]
@@ -65,7 +62,7 @@ public class LaneNodeLocatorTests
     {
         const int row = 100;
         _revisionGraphRowProvider.GetSegmentsForRow(row).Returns(x => null);
-        _laneNodeLocator.FindPrevNode(row, 0).Should().Be((null, false));
+        _laneNodeLocator.FindPrevNode(row, 0).Should().Be((null, false, null));
     }
 
     [Test]
@@ -84,7 +81,7 @@ public class LaneNodeLocatorTests
         RevisionGraphRevision node = SetupLaneRow(row, lane, laneCount: 0, nodeLane: lane);
 
         // row.GetCurrentRevisionLane() == lane
-        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((node, true));
+        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((node, true, null));
     }
 
     [Test]
@@ -95,7 +92,7 @@ public class LaneNodeLocatorTests
         SetupLaneRow(row, lane, laneCount: lane);
 
         // lane >= _revisionGraphRowProvider.GetSegmentsForRow(rowIndex).Count
-        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((null, false));
+        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((null, false, null));
     }
 
     [Test]
@@ -104,10 +101,10 @@ public class LaneNodeLocatorTests
         const int row = 100;
         const int lane = 3;
         SetupLaneRow(row, lane, laneCount: lane + 1);
-        _revisionGraphRowProvider.GetSegmentsForRow(row).GetSegmentsForIndex(lane).Returns(x => new List<RevisionGraphSegment>());
+        _revisionGraphRowProvider!.GetSegmentsForRow(row)!.GetSegmentsForIndex(lane).Returns(x => new List<RevisionGraphSegment>());
 
         // segmentsForLane.Count() <= 0
-        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((null, false));
+        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((null, false, null));
     }
 
     [Test]
@@ -118,7 +115,19 @@ public class LaneNodeLocatorTests
         RevisionGraphRevision laneNode = SetupLaneRow(row, lane, laneCount: lane + 1);
 
         // innermost "return"
-        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((laneNode, false));
+        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((laneNode, false, null));
+    }
+
+    [Test]
+    public void FindPrevNode_should_return_the_parent_and_child_nodes_of_the_single_segment()
+    {
+        const int row = 100;
+        const int lane = 3;
+        RevisionGraphRevision childNode = new(ObjectId.WorkTreeId, 0);
+        RevisionGraphRevision laneNode = SetupLaneRow(row, lane, laneCount: lane + 1, child: childNode);
+
+        // innermost "return"
+        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((laneNode, false, childNode));
     }
 
     [Test]
@@ -126,19 +135,19 @@ public class LaneNodeLocatorTests
     {
         const int row = 100;
         const int lane = 3;
-        RevisionGraphRevision parentNode = new(ObjectId.WorkTreeId, 0);
+        RevisionGraphRevision parentNode = new(ObjectId.IndexId, 0);
         RevisionGraphRevision childNode = new(ObjectId.WorkTreeId, 0);
         RevisionGraphSegment segment = new(parentNode, childNode);
         RevisionGraphRevision laneNode = SetupLaneRow(row, lane, laneCount: lane + 1, firstSegment: segment);
 
 #if !DEBUG
         // innermost "return" in RELEASE build
-        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((parentNode, false));
+        _laneNodeLocator.FindPrevNode(row, lane).Should().Be((parentNode, false, segment.Child));
 #else
         try
         {
             // Exception before innermost "return" in DEBUG build
-            _laneNodeLocator.FindPrevNode(row, lane).Should().Be((parentNode, false));
+            _laneNodeLocator.FindPrevNode(row, lane).Should().Be((parentNode, false, null));
             throw new AssertionException("The debug build should throw an exception!");
         }
         catch (Exception x)

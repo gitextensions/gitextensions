@@ -1,5 +1,3 @@
-#nullable enable
-
 using System.Diagnostics;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -12,7 +10,7 @@ namespace GitCommands.Settings;
 /// <summary>
 ///  Provides read-only access to git config settings of different scopes (by running "git config list").
 /// </summary>
-/// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the repo of interest.</param>
+/// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the repo of interest.</param>
 /// <param name="gitSettingLevel">The scope (<see cref="GitSettingLevel"/>) of the git config settings.</param>
 [DebuggerDisplay("{" + nameof(DebuggerDisplay) + ",nq}")]
 public abstract class GitConfigSettingsBase(IExecutable gitExecutable, GitSettingLevel gitSettingLevel) : ISettingsValueGetter

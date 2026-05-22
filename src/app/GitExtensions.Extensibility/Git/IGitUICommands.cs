@@ -29,7 +29,7 @@ public interface IGitUICommands : IServiceProvider
     /// </summary>
     ILockableNotifier RepoChangedNotifier { get; }
 
-    void AddCommitTemplate(string key, Func<string> addingText, Image? icon);
+    void AddCommitTemplate(string key, Func<string> addingText, Image? icon, bool isRegex = false);
     void AddUpstreamRemote(IWin32Window? owner, IRepositoryHostPlugin gitHoster);
     IGitRemoteCommand CreateRemoteCommand();
     bool DoActionOnRepo(Func<bool> action);
@@ -46,8 +46,8 @@ public interface IGitUICommands : IServiceProvider
     bool StartArchiveDialog(IWin32Window? owner = null, GitRevision? revision = null, GitRevision? revision2 = null, string? path = null);
     void StartBatchFileProcessDialog(string batchFile);
     bool StartBrowseDialog(IWin32Window? owner, BrowseArguments? args = null);
-    bool StartCheckoutBranch(IWin32Window? owner, IReadOnlyList<ObjectId>? containRevisions);
-    bool StartCheckoutBranch(IWin32Window? owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId>? containRevisions = null);
+    bool StartCheckoutBranch(IWin32Window? owner, IReadOnlyList<ObjectId>? containObjectIds);
+    bool StartCheckoutBranch(IWin32Window? owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId>? containObjectIds = null);
     bool StartCheckoutRemoteBranch(IWin32Window? owner, string branch);
     bool StartCheckoutRevisionDialog(IWin32Window? owner, string? revision = null);
     bool StartCherryPickDialog(IWin32Window? owner = null, GitRevision? revision = null);
@@ -60,7 +60,7 @@ public interface IGitUICommands : IServiceProvider
     bool StartCommandLineProcessDialog(IWin32Window? owner, string? command, ArgumentString arguments);
     bool StartCommitDialog(IWin32Window? owner, string? commitMessage = null, bool showOnlyWhenChanges = false);
     bool StartCompareRevisionsDialog(IWin32Window? owner = null);
-    bool StartCreateBranchDialog(IWin32Window? owner = null, ObjectId? objectId = null, string? newBranchNamePrefix = null);
+    bool StartCreateBranchDialog(IWin32Window? owner = null, ObjectId objectId = default, string? newBranchNamePrefix = null);
     bool StartCreateBranchDialog(IWin32Window? owner, string? branch);
     void StartCreatePullRequest(IWin32Window? owner);
     void StartCreatePullRequest(IWin32Window? owner, IRepositoryHostPlugin gitHoster, string? chooseRemote = null, string? chooseBranch = null);
@@ -88,7 +88,7 @@ public interface IGitUICommands : IServiceProvider
     bool StartPullDialogAndPullImmediately(out bool pullCompleted, IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None);
     void StartPullRequestsDialog(IWin32Window? owner, IRepositoryHostPlugin gitHoster);
     bool StartPushDialog(IWin32Window? owner, bool pushOnShow);
-    bool StartPushDialog(IWin32Window? owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted);
+    bool StartPushDialog(IWin32Window? owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted, string? branchName = null);
     bool StartRebase(IWin32Window? owner, string onto);
     bool StartRebaseDialog(IWin32Window? owner, string? from, string? to, string? onto, bool interactive = false, bool startRebaseImmediately = true);
     bool StartRebaseDialog(IWin32Window? owner, string? onto);
@@ -111,7 +111,7 @@ public interface IGitUICommands : IServiceProvider
     bool StartSettingsDialog(Type pageType);
     bool StartSparseWorkingCopyDialog(IWin32Window? owner);
     bool StartSquashCommitDialog(IWin32Window? owner, GitRevision revision);
-    bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true, string initialStash = null);
+    bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true, string? initialStash = null);
     bool StartSubmodulesDialog(IWin32Window? owner);
     bool StartSyncSubmodulesDialog(IWin32Window? owner);
     bool StartTheContinueRebaseDialog(IWin32Window? owner);
@@ -128,4 +128,28 @@ public interface IGitUICommands : IServiceProvider
     void UpdateSubmodules(IWin32Window? owner);
     IGitUICommands WithGitModule(IGitModule module);
     IGitUICommands WithWorkingDirectory(string? workingDirectory);
+
+    /// <summary>
+    ///  Shows the create worktree dialog and optionally switches to the new worktree.
+    /// </summary>
+    /// <param name="owner">Owner window for dialogs.</param>
+    /// <param name="mainWorktreePath">Path of the main worktree (used as the base directory).</param>
+    /// <returns><see langword="true"/> if a worktree was created.</returns>
+    bool WorktreeCreate(IWin32Window? owner, string mainWorktreePath);
+
+    /// <summary>
+    ///  Confirms with the user, deletes a worktree directory on disk, and runs <c>git worktree prune</c>.
+    /// </summary>
+    /// <param name="owner">Owner window for dialogs.</param>
+    /// <param name="worktreePath">Absolute path of the worktree to delete.</param>
+    /// <returns><see langword="true"/> if the user confirmed and the directory was successfully removed.</returns>
+    bool WorktreeDelete(IWin32Window? owner, string worktreePath);
+
+    /// <summary>
+    ///  Optionally confirms with the user, then switches the current browse window to the specified worktree.
+    /// </summary>
+    /// <param name="owner">Owner window for the confirmation dialog. Must be or have <see cref="IBrowseRepo"/> as the owning <c>FormBrowse</c>.</param>
+    /// <param name="worktreePath">Absolute path of the worktree to switch to.</param>
+    /// <returns><see langword="true"/> if the switch was performed.</returns>
+    bool WorktreeSwitch(IWin32Window? owner, string worktreePath);
 }

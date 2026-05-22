@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
@@ -10,12 +9,11 @@ namespace GitUITests.Script;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class ScriptsManagerScriptRunnerTests
 {
-    private IGitUICommands _commands;
-    private IGitModule _module;
-    private IScriptOptionsProvider _scriptOptionsProvider;
+    private IGitUICommands _commands = null!;
+    private IGitModule _module = null!;
+    private IScriptOptionsProvider _scriptOptionsProvider = null!;
 
     [SetUp]
     public void Setup()
@@ -32,7 +30,7 @@ public class ScriptsManagerScriptRunnerTests
     public void Parse_should_not_fail_if_arguments_null()
     {
         (string? arguments, bool abort, bool cancel) result = ScriptRunner.ParseUserInputs("script_name", arguments: null, _commands,
-            owner: null, scriptOptionsProvider: _scriptOptionsProvider);
+            owner: null!, scriptOptionsProvider: _scriptOptionsProvider);
 
         result.abort.Should().Be(false);
         result.cancel.Should().Be(false);
@@ -42,9 +40,9 @@ public class ScriptsManagerScriptRunnerTests
     [Test]
     public void Parse_should_parse_distincts_userInput()
     {
-        _commands.GetService<ISimplePromptCreator>().Returns(new SimplePromptCreatorForTest(("input label1", "value", "foo1"), ("input label2", "value2", "bar1"), (null, string.Empty, "foo2")));
+        _commands.GetService<ISimplePromptCreator>().Returns(new SimplePromptCreatorForTest(("input label1", "value", "foo1"), ("input label2", "value2", "bar1"), (null!, string.Empty, "foo2")));
         (string? arguments, bool abort, bool cancel) result = ScriptRunner.ParseUserInputs("script_name", "{UserInput:input label1=value}_{{UserInput:input label2=value2}}_{UserInput}_{{UserInput}}", _commands,
-            owner: null, scriptOptionsProvider: _scriptOptionsProvider);
+            owner: null!, scriptOptionsProvider: _scriptOptionsProvider);
 
         result.abort.Should().Be(false);
         result.cancel.Should().Be(false);
@@ -56,7 +54,7 @@ public class ScriptsManagerScriptRunnerTests
     {
         _commands.GetService<ISimplePromptCreator>().Returns(new SimplePromptCreatorForTest(("input label1", string.Empty, "foo1")));
         (string? arguments, bool abort, bool cancel) result = ScriptRunner.ParseUserInputs("script_name", "{UserInput:input label1}", _commands,
-            owner: null, scriptOptionsProvider: _scriptOptionsProvider);
+            owner: null!, scriptOptionsProvider: _scriptOptionsProvider);
 
         result.abort.Should().Be(false);
         result.cancel.Should().Be(false);
@@ -68,7 +66,7 @@ public class ScriptsManagerScriptRunnerTests
     {
         _commands.GetService<ISimplePromptCreator>().Returns(new SimplePromptCreatorForTest(("input label1", "value", "foo1")));
         (string? arguments, bool abort, bool cancel) result = ScriptRunner.ParseUserInputs("script_name", "{UserInput:input label1=value}_{UserInput:input label1}_{{UserInput:input label1}}", _commands,
-            owner: null, scriptOptionsProvider: _scriptOptionsProvider);
+            owner: null!, scriptOptionsProvider: _scriptOptionsProvider);
 
         result.abort.Should().Be(false);
         result.cancel.Should().Be(false);
@@ -78,10 +76,10 @@ public class ScriptsManagerScriptRunnerTests
     [Test]
     public void Parse_should_parse_userInput_with_default_value_as_expression_containing_arguments_inside()
     {
-        _module.GetRevision(null, Arg.Any<bool>(), Arg.Any<bool>()).Returns(new GitRevision(ObjectId.Parse("79b9792ca4db3d01d7c0f2cd95419dd53665ec41")));
+        _module.GetRevision(default, Arg.Any<bool>(), Arg.Any<bool>()).Returns(new GitRevision(ObjectId.Parse("79b9792ca4db3d01d7c0f2cd95419dd53665ec41")));
         _commands.GetService<ISimplePromptCreator>().Returns(new SimplePromptCreatorForTest(("input label1", "file_79b9792ca4db3d01d7c0f2cd95419dd53665ec41.bak", "file_foo.bak")));
         (string? arguments, bool abort, bool cancel) result = ScriptRunner.ParseUserInputs("script_name", "{UserInput:input label1=file_{HEAD}.bak}", _commands,
-            owner: null, scriptOptionsProvider: _scriptOptionsProvider);
+            owner: null!, scriptOptionsProvider: _scriptOptionsProvider);
 
         result.abort.Should().Be(false);
         result.cancel.Should().Be(false);
@@ -98,7 +96,7 @@ public class ScriptsManagerScriptRunnerTests
             _values = values;
         }
 
-        public IUserInputPrompt Create(string title, string label, string defaultValue)
+        public IUserInputPrompt Create(string? title, string? label, string? defaultValue)
         {
             if (_indexOfNextFakeValueReturned >= _values.Length)
             {
@@ -138,7 +136,7 @@ public class ScriptsManagerScriptRunnerTests
     {
         _commands.GetService<IFilePromptCreator>().Returns(new FilePromptCreatorForTest(@"C:\a_file_path\file.txt"));
         (string? arguments, bool abort, bool cancel) result = ScriptRunner.ParseUserInputs("script_name", "unquoted path:{UserFiles} - quoted path:{{UserFiles}}", _commands,
-            owner: null, scriptOptionsProvider: _scriptOptionsProvider);
+            owner: null!, scriptOptionsProvider: _scriptOptionsProvider);
 
         result.abort.Should().Be(false);
         result.cancel.Should().Be(false);

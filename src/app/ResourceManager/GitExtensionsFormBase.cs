@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -96,7 +96,7 @@ public class GitExtensionsFormBase : Form, ITranslate
             return [];
         }
 
-        if (!TryGetUICommands(out IGitUICommands commands))
+        if (!TryGetUICommands(out IGitUICommands? commands))
         {
             DebugHelpers.Fail($"{GetType().FullName}: service provider is unavailable.");
             return [];
@@ -138,14 +138,8 @@ public class GitExtensionsFormBase : Form, ITranslate
     /// <returns>
     ///  <see langword="true"/>, if an instance of <see cref="IGitUICommands"/> is found; <see langword="false"/>, otherwise.
     /// </returns>
-    public bool TryGetUICommands([NotNullWhen(returnValue: true)] out IGitUICommands? commands)
+    public virtual bool TryGetUICommands([NotNullWhen(returnValue: true)] out IGitUICommands? commands)
     {
-        if (this is IGitModuleForm control)
-        {
-            commands = control.UICommands;
-            return commands is not null;
-        }
-
         commands = null;
         return false;
     }
@@ -215,7 +209,7 @@ public class GitExtensionsFormBase : Form, ITranslate
             return;
         }
 
-        (string itemName, object item)[] itemsToTranslate = new[] { (itemName, item) };
+        (string itemName, object item)[] itemsToTranslate = [(itemName, item)];
 
         foreach (KeyValuePair<string, TranslationFile> pair in translation)
         {

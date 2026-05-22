@@ -1,4 +1,5 @@
-﻿using System.Text;
+using System.Buffers;
+using System.Text;
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility.Configurations;
 
@@ -7,7 +8,7 @@ namespace GitCommands.Config;
 public class ConfigFile : IConfigFile
 {
     private static Encoding GetEncoding() => GitModule.SystemEncoding;
-    public static readonly char[] CommentChars = { ';', '#' };
+    private static readonly SearchValues<char> _commentChars = SearchValues.Create(';', '#');
 
     private readonly List<IConfigSection> _configSections = [];
 
@@ -49,7 +50,7 @@ public class ConfigFile : IConfigFile
         value = value.Replace("\n", "\\n");
         value = value.Replace("\t", "\\t");
 
-        if (value.IndexOfAny(CommentChars) != -1 || value.Trim() != value)
+        if (value.IndexOfAny(_commentChars) != -1 || value.Trim() != value)
         {
             value = value.Quote();
         }
@@ -144,7 +145,7 @@ public class ConfigFile : IConfigFile
     {
         if (string.IsNullOrEmpty(setting))
         {
-            throw new ArgumentNullException();
+            throw new ArgumentNullException(nameof(setting));
         }
 
         int keyIndex = FindAndCheckKeyIndex(setting);
@@ -152,7 +153,7 @@ public class ConfigFile : IConfigFile
         string configSectionName = setting[..keyIndex];
         string keyName = setting[(keyIndex + 1)..];
 
-        IConfigSection configSection = FindConfigSection(configSectionName);
+        IConfigSection? configSection = FindConfigSection(configSectionName);
 
         if (configSection is null)
         {
@@ -174,11 +175,11 @@ public class ConfigFile : IConfigFile
         string configSectionName = setting[..keyIndex];
         string keyName = setting[(keyIndex + 1)..];
 
-        IConfigSection configSection = FindConfigSection(configSectionName);
+        IConfigSection? configSection = FindConfigSection(configSectionName);
 
         if (configSection is null)
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         return configSection.GetValues(keyName);
@@ -186,7 +187,7 @@ public class ConfigFile : IConfigFile
 
     public IConfigSection FindOrCreateConfigSection(string name)
     {
-        IConfigSection result = FindConfigSection(name);
+        IConfigSection? result = FindConfigSection(name);
         if (result is null)
         {
             result = new ConfigSection(name, true);
@@ -208,7 +209,7 @@ public class ConfigFile : IConfigFile
 
     public void RemoveConfigSection(string configSectionName)
     {
-        IConfigSection configSection = FindConfigSection(configSectionName);
+        IConfigSection? configSection = FindConfigSection(configSectionName);
 
         if (configSection is null)
         {
@@ -263,7 +264,7 @@ public class ConfigFile : IConfigFile
                 parseFunc = parseFunc(_fileContent[_pos]);
             }
 
-            if (_fileContent.Length > 0 && !_fileContent.EndsWith("\n"))
+            if (_fileContent.Length > 0 && !_fileContent.EndsWith('\n'))
             {
                 parseFunc('\n');
             }

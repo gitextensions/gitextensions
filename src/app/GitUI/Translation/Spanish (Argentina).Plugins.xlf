@@ -360,16 +360,16 @@
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
-        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>Escoja ramas a eliminar. Sólo ramas que hayan sido completamente fusionadas con '{0}' serán borradas.</target>
+        <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
+        <target>Escoja ramas a eliminar. Sólo ramas que hayan sido completamente fusionadas con &apos;{0}&apos; serán borradas.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
-Branches will be deleted on the remote '{0}'. This can not be undone.
+Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
         <target>¡ACCIÓN PELIGROSA!
-Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede deshacerse. 
+Las ramas serán eliminadas en el servidor remoto &apos;{0}&apos;. Esta acción no puede deshacerse. 
 ¿Está seguro de que desea continuar?</target>
         
       </trans-unit>
@@ -394,8 +394,8 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
-        <source>Press '{0}' to search for branches to delete.</source>
-        <target>Presione '{0}' para buscar ramas a borrar.</target>
+        <source>Press &apos;{0}&apos; to search for branches to delete.</source>
+        <target>Presione &apos;{0}&apos; para buscar ramas a borrar.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -404,8 +404,8 @@ Las ramas serán eliminadas en el servidor remoto '{0}'. Esta acción no puede d
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
-        <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>Selecciona las ramas a borrar usando los Checkbox en la columna '{0}'.</target>
+        <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
+        <target>Selecciona las ramas a borrar usando los Checkbox en la columna &apos;{0}&apos;.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -1346,17 +1346,17 @@ Do you want to reset the configured path?</source>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
-        <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>Log de commit desde '{0}' hasta '{1}' ({2}):</target>
+        <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
+        <target>Log de commit desde &apos;{0}&apos; hasta &apos;{1}&apos; ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
-        <source>'From' commit must be specified</source>
+        <source>&apos;From&apos; commit must be specified</source>
         <target>El campo &quot;Desde&quot; debe ser especificado</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
-        <source>'To' commit must be specified</source>
+        <source>&apos;To&apos; commit must be specified</source>
         <target>El campo &quot;Hacia&quot; debe ser especificado</target>
         
       </trans-unit>
@@ -1487,7 +1487,7 @@ nombres de ramas, ó nombres de tags)</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
@@ -1524,16 +1524,16 @@ Asegurate de que la URL sea válida y de que el token de la API tenga acceso al 
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</source>
         <target>Tenés que crear un token con los siguientes alcances:
-- 'Build (para lectura)'
-- 'Proyecto y equipo (para lectura)'</target>
+- &apos;Build (para lectura)&apos;
+- &apos;Proyecto y equipo (para lectura)&apos;</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>¡La expresión regular 'Build definition name' no es válida y no será guardada!</target>
+        <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
+        <target>¡La expresión regular &apos;Build definition name&apos; no es válida y no será guardada!</target>
         
       </trans-unit>
     </body>
@@ -1551,7 +1551,7 @@ Asegurate de que la URL sea válida y de que el token de la API tenga acceso al 
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
@@ -1574,7 +1574,7 @@ Por favor, verifique la url del servidor.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
         <target>¡La expresión regular &quot;Build Id Filter&quot; no es válida y no será guardada!</target>
         
       </trans-unit>

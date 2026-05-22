@@ -5,15 +5,13 @@ using NSubstitute;
 using ResourceManager;
 
 namespace GitUITests.LeftPanel;
-
-[TestFixture]
 [Apartment(ApartmentState.STA)]
 public class GitRefMenuItemsTest
 {
     private const int expectedMenuItems = 7;
     private const int expectedTotal = expectedMenuItems + 1; // + end separator
     private Queue<ToolStripMenuItem> _factoryQueue = new();
-    private IMenuItemFactory _factory = null;
+    private IMenuItemFactory _factory = null!;
     private TestBranchNode _testNode = new();
 
     [SetUp]
@@ -28,6 +26,15 @@ public class GitRefMenuItemsTest
             .Returns(_ => _factoryQueue.Dequeue());
 
         Enumerable.Range(0, expectedMenuItems).ForEach(_ => _factoryQueue.Enqueue(new ToolStripMenuItem()));
+    }
+
+    [TearDown]
+    public void TearDown()
+    {
+        while (_factoryQueue.Count > 0)
+        {
+            _factoryQueue.Dequeue().Dispose();
+        }
     }
 
     [Test]
@@ -63,16 +70,16 @@ public class GitRefMenuItemsTest
     private void WithRefMenu_HasAllItems(MenuItemsGenerator<TestBranchNode> group)
     {
         // Act
-        ToolStripItemWithKey[] menuItems = group.ToArray();
-        ClassicAssert.IsEmpty(_factoryQueue);
-        ClassicAssert.AreEqual(menuItems.Length, expectedTotal);
+        ToolStripItemWithKey[] menuItems = [.. group];
+        _factoryQueue.Should().BeEmpty();
+        expectedTotal.Should().Be(menuItems.Length);
         int testIndex = 0;
         AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Checkout));
         AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Merge));
         AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Rebase));
         AssertItem(menuItems[testIndex++], nameof(TestBranchNode.CreateBranch));
         AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Reset));
-        ClassicAssert.IsInstanceOf<ToolStripSeparator>(menuItems[testIndex++].Item);
+        menuItems[testIndex++].Item.Should().BeOfType<ToolStripSeparator>();
         AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Rename));
         AssertItem(menuItems[testIndex++], nameof(TestBranchNode.Delete));
     }
@@ -86,22 +93,22 @@ public class GitRefMenuItemsTest
         // Act
         const int expectedEnabled = 2; // create branch, rename
         int expectedDisabled = expectedTotal - expectedEnabled;
-        ToolStripItemWithKey[] disabledItems = generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key)).ToArray();
-        ClassicAssert.AreEqual(disabledItems.Length, expectedDisabled);
+        ToolStripItemWithKey[] disabledItems = [.. generator.Where(t => !LocalBranchMenuItems<TestBranchNode>.CurrentBranchItemKeys.Contains(t.Key))];
+        expectedDisabled.Should().Be(disabledItems.Length);
         int testIndex = 0;
         AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Checkout));
         AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Merge));
         AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Rebase));
         AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Reset));
-        ClassicAssert.IsInstanceOf<ToolStripSeparator>(disabledItems[testIndex++].Item);
+        disabledItems[testIndex++].Item.Should().BeOfType<ToolStripSeparator>();
         AssertItem(disabledItems[testIndex++], nameof(TestBranchNode.Delete));
     }
 
     private void AssertItem(ToolStripItemWithKey menuItem, string caption)
     {
-        ToolStripMenuItem item = menuItem.Item as ToolStripMenuItem;
-        item.PerformClick();
-        ClassicAssert.AreEqual(caption, _testNode.CallStatck.Pop());
+        ToolStripMenuItem? item = menuItem.Item as ToolStripMenuItem;
+        item!.PerformClick();
+        _testNode.CallStatck.Pop().Should().Be(caption);
     }
 
     private static MenuItemsGenerator<TestBranchNode> CreateGenerator(IMenuItemFactory factory)

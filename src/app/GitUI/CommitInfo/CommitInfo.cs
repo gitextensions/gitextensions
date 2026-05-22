@@ -1,6 +1,4 @@
-#nullable enable
-
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Net;
 using System.Reactive.Linq;
 using System.Text;
@@ -88,11 +86,16 @@ public partial class CommitInfo : GitModuleControl
     public bool ShowBranchesAsLinks { get; set; }
 
     public CommitInfo()
+        : this(commitDataManager: null)
+    {
+    }
+
+    public CommitInfo(ICommitDataManager? commitDataManager)
     {
         InitializeComponent();
         InitializeComplete();
 
-        _commitDataManager = new CommitDataManager(() => Module);
+        _commitDataManager = commitDataManager ?? new CommitDataManager(() => Module);
 
         _externalLinksStorage = new ExternalLinksStorage();
         _effectiveLinkDefinitionsProvider = new ConfiguredLinkDefinitionsProvider(_externalLinksStorage);
@@ -101,7 +104,7 @@ public partial class CommitInfo : GitModuleControl
         _gitRevisionExternalLinksParser = new GitRevisionExternalLinksParser(_effectiveLinkDefinitionsProvider, _externalLinkRevisionParser);
         _gitDescribeProvider = new GitDescribeProvider(() => Module);
 
-        Color messageBackground = SystemColors.Window.MakeBackgroundDarkerBy(0.04);
+        Color messageBackground = SystemColors.Window.MakeDarkerBy(0.04);
         pnlCommitMessage.BackColor = messageBackground;
         rtbxCommitMessage.BackColor = messageBackground;
 
@@ -208,7 +211,7 @@ public partial class CommitInfo : GitModuleControl
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -270,13 +273,10 @@ public partial class CommitInfo : GitModuleControl
         Dictionary<string, int> dict = [];
         foreach (string entry in tree.LazySplit('\n'))
         {
-            if (dict.ContainsKey(entry))
+            if (dict.TryAdd(entry, i))
             {
-                continue;
+                ++i;
             }
-
-            dict.Add(entry, i);
-            i++;
         }
 
         return dict;
@@ -295,7 +295,7 @@ public partial class CommitInfo : GitModuleControl
         catch (RefsWarningException ex)
         {
             await this.SwitchToMainThreadAsync();
-            MessageBox.Show(this, string.Format("{0}{1}{1}{2}", _brokenRefs.Text, Environment.NewLine, ex.Message), _repoFailure.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, string.Format("{0}{1}{1}{2}", _brokenRefs.Text, Environment.NewLine, ex.Message), _repoFailure.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -359,16 +359,14 @@ public partial class CommitInfo : GitModuleControl
         {
             cancellationToken.ThrowIfCancellationRequested();
 
+            if (_revision.Body is null || (_revision.Notes is null && (AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes)))
+            {
+                _commitDataManager.UpdateBodyAndNotes(_revision);
+            }
+
             CommitData data = _commitDataManager.CreateFromRevision(_revision, _children);
 
             cancellationToken.ThrowIfCancellationRequested();
-
-            if (_revision.Body is null || (AppSettings.ShowGitNotes && !_revision.HasNotes))
-            {
-                _commitDataManager.UpdateBody(data, appendNotesOnly: _revision.Body is not null, out _);
-                _revision.Body = data.Body;
-                _revision.HasNotes = true;
-            }
 
             ICommitDataBodyRenderer? commitDataBodyRenderer = _commitDataBodyRenderer;
             if (commitDataBodyRenderer is null)
@@ -533,13 +531,13 @@ public partial class CommitInfo : GitModuleControl
             {
                 await TaskScheduler.Default;
 
-                List<string> tags = Module.GetAllTagsWhichContainGivenCommit(objectId, cancellationToken).ToList();
+                List<string> tags = [.. Module.GetAllTagsWhichContainGivenCommit(objectId, cancellationToken)];
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
                 _tags = tags;
             }
 
-            async Task LoadBranchInfoAsync(ObjectId revision)
+            async Task LoadBranchInfoAsync(ObjectId objectId)
             {
                 await TaskScheduler.Default;
 
@@ -550,7 +548,7 @@ public partial class CommitInfo : GitModuleControl
                 // Include remote branches if requested
                 bool getRemote = AppSettings.CommitInfoShowContainedInBranchesRemote ||
                                  AppSettings.CommitInfoShowContainedInBranchesRemoteIfNoLocal;
-                List<string> branches = Module.GetAllBranchesWhichContainGivenCommit(revision, getLocal, getRemote, cancellationToken).ToList();
+                List<string> branches = [.. Module.GetAllBranchesWhichContainGivenCommit(objectId, getLocal, getRemote, cancellationToken)];
 
                 await this.SwitchToMainThreadAsync(cancellationToken);
                 _branches = branches;
@@ -618,11 +616,10 @@ public partial class CommitInfo : GitModuleControl
                 // having both lightweight & annotated tags in thisRevisionTagNames,
                 // but GetAnnotatedTagsInfo will process annotated only:
                 List<string> thisRevisionTagNames =
-                    Revision
+                    [.. Revision
                     .Refs
                     .Where(r => r.IsTag)
-                    .Select(r => r.LocalName)
-                    .ToList();
+                    .Select(r => r.LocalName)];
 
                 thisRevisionTagNames.Sort(new TagsComparer(_tagsOrderDict));
                 _annotatedTagsInfo = GetAnnotatedTagsInfo(thisRevisionTagNames, _annotatedTagsMessages);
@@ -648,7 +645,7 @@ public partial class CommitInfo : GitModuleControl
         RevisionInfo.SetXHTMLText(body);
         return;
 
-        string GetAnnotatedTagsInfo(
+        static string GetAnnotatedTagsInfo(
             IEnumerable<string> tagNames,
             IDictionary<string, string> annotatedTagsMessages)
         {
@@ -736,8 +733,8 @@ public partial class CommitInfo : GitModuleControl
         }
 
         Module.EditNotes(_revision.ObjectId);
-        _revision.HasNotes = false;
         _revision.Body = null;
+        _revision.Notes = null;
         ReloadCommitInfo();
     }
 
@@ -786,11 +783,11 @@ public partial class CommitInfo : GitModuleControl
         tableLayout.SuspendLayout();
 
         int[] heights =
-        {
+        [
             commitInfoHeader.Height + commitInfoHeader.Margin.Vertical,
             _commitMessageHeight + rtbxCommitMessage.Margin.Vertical + pnlCommitMessage.Margin.Vertical,
             _revisionInfoHeight + RevisionInfo.Margin.Vertical
-        };
+        ];
 
         // leave 1st row SizeType = AutoWidth to let CommitInfoHeader.AutoSize be correctly applied
         for (int i = 1; i < tableLayout.RowStyles.Count; i++)
@@ -860,10 +857,9 @@ public partial class CommitInfo : GitModuleControl
             _currentBranch = currentBranch;
             _isDetachedHead = DetachedHeadParser.IsDetachedHead(currentBranch);
             string[] branchRegexes = AppSettings.PrioritizedBranchNames.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-            string[] localBranchRegexes = branchRegexes.Select(regex => $"^({regex})$").ToArray();
-            string[] remoteBranchRegexes = branchRegexes.Select(regex => $"^{_remoteBranchPrefix}[^/]+/({regex})$").ToArray();
-            string[] remoteRegexes = AppSettings.PrioritizedRemoteNames.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-                .Select(regex => $"^{_remoteBranchPrefix}({regex})/").ToArray();
+            string[] localBranchRegexes = [.. branchRegexes.Select(regex => $"^({regex})$")];
+            string[] remoteBranchRegexes = [.. branchRegexes.Select(regex => $"^{_remoteBranchPrefix}[^/]+/({regex})$")];
+            string[] remoteRegexes = [.. AppSettings.PrioritizedRemoteNames.Split(';', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries).Select(regex => $"^{_remoteBranchPrefix}({regex})/")];
 
             foreach (string branch in branches)
             {

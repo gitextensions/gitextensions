@@ -1,9 +1,6 @@
-﻿using FluentAssertions;
-using GitExtensions.Extensibility;
+﻿using GitExtensions.Extensibility;
 
 namespace GitExtUtilsTests;
-
-[TestFixture]
 public sealed class ArgumentBuilderTests
 {
     [Test]
@@ -33,9 +30,9 @@ public sealed class ArgumentBuilderTests
             "",
             [null]);
 
-        void Test(string expected, ArgumentBuilder command)
+        static void Test(string expected, ArgumentBuilder command)
         {
-            ClassicAssert.AreEqual(expected, command.ToString());
+            command.ToString().Should().Be(expected);
         }
     }
 
@@ -64,7 +61,7 @@ public sealed class ArgumentBuilderTests
         builder.GetTestAccessor().Arguments.Length.Should().Be(expectedLength + /* 'test ' */5);
     }
 
-    [TestCase(new[] { (string)null }, 0, "")]
+    [TestCase(new[] { (string?)null }, 0, "")]
     [TestCase(new[] { "" }, 0, "")]
     [TestCase(new[] { "", null }, 0, "")]
     [TestCase(new[] { "test" }, 4, "test")]

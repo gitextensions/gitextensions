@@ -1,11 +1,8 @@
-﻿using FluentAssertions;
-using GitExtUtils.GitUI.Theming;
+﻿using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
 using NSubstitute;
 
 namespace GitUITests.Theming;
-
-[TestFixture]
 public class ThemeLoaderTests
 {
     private static readonly IReadOnlyCollection<KnownColor> ThemableSystemColorNames =
@@ -25,10 +22,7 @@ public class ThemeLoaderTests
             Color.LightGreen,
         };
 
-    private static readonly IReadOnlyCollection<AppColor> AppColorNames =
-        Enum.GetValues(typeof(AppColor))
-            .Cast<AppColor>()
-            .ToList();
+    private static readonly IReadOnlyCollection<AppColor> AppColorNames = Enum.GetValues<AppColor>();
 
     private const string MockAppThemesDirectory = "c:\\gitextensions\\themes";
     private const string MockUserThemesDirectory = "c:\\appdata\\gitextensions\\themes";

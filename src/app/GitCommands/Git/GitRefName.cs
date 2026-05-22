@@ -9,9 +9,9 @@ namespace GitCommands;
 public static partial class GitRefName
 {
     [GeneratedRegex(@"^refs/remotes/[^/]+/HEAD$", RegexOptions.ExplicitCapture)]
-    private static partial Regex RemoteHeadRegex();
+    private static partial Regex RemoteHeadRegex { get; }
     [GeneratedRegex(@"^refs/remotes/(?<remote>[^/]+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex RemoteNameRegex();
+    private static partial Regex RemoteNameRegex { get; }
 
     /// <summary>"refs/tags/".</summary>
     public static string RefsTagsPrefix { get; } = "refs/tags/";
@@ -37,13 +37,16 @@ public static partial class GitRefName
     /// <summary>"refs/notes/commits".</summary>
     public static string RefsNotesPrefix { get; } = "refs/notes/commits";
 
+    /// <summary>"refs/sessions/".</summary>
+    public static string RefsSessionsPrefix { get; } = "refs/sessions/";
+
     /// <summary>"^{}".</summary>
     public static string TagDereferenceSuffix { get; } = "^{}";
 
     [Pure]
     public static string GetRemoteName(string refName)
     {
-        Match match = RemoteNameRegex().Match(refName);
+        Match match = RemoteNameRegex.Match(refName);
 
         if (match.Success)
         {
@@ -95,7 +98,7 @@ public static partial class GitRefName
     }
 
     [Pure]
-    [return: NotNullIfNotNull("branch")]
+    [return: NotNullIfNotNull(nameof(branch))]
     public static string? GetFullBranchName(string? branch)
     {
         if (branch is null)
@@ -112,7 +115,7 @@ public static partial class GitRefName
 
         // If the branch represents a commit hash, return it as-is without appending refs/heads/ (fix issue #2240)
         // NOTE: We can use `String.IsNullOrEmpty(Module.RevParse(srcRev))` instead
-        if (GitRevision.Sha1HashRegex().IsMatch(branch))
+        if (GitRevision.Sha1HashRegex.IsMatch(branch))
         {
             return branch;
         }
@@ -123,6 +126,6 @@ public static partial class GitRefName
     [Pure]
     public static bool IsRemoteHead(string refName)
     {
-        return RemoteHeadRegex().IsMatch(refName);
+        return RemoteHeadRegex.IsMatch(refName);
     }
 }

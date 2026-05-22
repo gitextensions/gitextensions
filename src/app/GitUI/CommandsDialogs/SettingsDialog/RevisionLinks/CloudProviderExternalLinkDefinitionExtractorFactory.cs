@@ -14,7 +14,7 @@ public sealed class CloudProviderExternalLinkDefinitionExtractorFactory : ICloud
 
     public IEnumerable<ICloudProviderExternalLinkDefinitionExtractor> GetAllExtractor()
     {
-        IEnumerable<CloudProviderKind> cloudProviderKinds = Enum.GetValues(typeof(CloudProviderKind)).OfType<CloudProviderKind>();
+        IEnumerable<CloudProviderKind> cloudProviderKinds = Enum.GetValues<CloudProviderKind>();
         CloudProviderExternalLinkDefinitionExtractorFactory cloudProviderExternalLinkDefinitionExtractorFactory = new();
         return cloudProviderKinds.Select(c => cloudProviderExternalLinkDefinitionExtractorFactory.Get(c))
             .WhereNotNull();

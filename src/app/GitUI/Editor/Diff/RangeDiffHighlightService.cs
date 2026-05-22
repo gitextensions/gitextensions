@@ -1,4 +1,4 @@
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using ICSharpCode.TextEditor.Document;
@@ -11,7 +11,7 @@ namespace GitUI.Editor.Diff;
 public partial class RangeDiffHighlightService : DiffHighlightService
 {
     [GeneratedRegex(@"^(\u001b\[.*?m)?\s*(\d+|-):", RegexOptions.ExplicitCapture)]
-    private static partial Regex RangeHeaderRegex();
+    private static partial Regex RangeHeaderRegex { get; }
 
     private static readonly string[] _diffFullPrefixes = ["      ", "    ++", "    + ", "     +", "    --", "    - ", "     -", "    +-", "    -+", "    "];
 
@@ -30,7 +30,7 @@ public partial class RangeDiffHighlightService : DiffHighlightService
                 RightLineNumber = bufferLine,
 
                 // Note that Git output occasionally corrupts context lines, so parse headers
-                LineType = RangeHeaderRegex().IsMatch(line) ? DiffLineType.Header : DiffLineType.Context
+                LineType = RangeHeaderRegex.IsMatch(line) ? DiffLineType.Header : DiffLineType.Context
             });
         }
 

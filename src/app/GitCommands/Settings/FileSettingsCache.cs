@@ -27,9 +27,11 @@ public abstract class FileSettingsCache : SettingsCache
         SettingsFilePath = settingsFilePath;
         _autoSave = autoSave;
 
-        _saveTimer = new Timer(SaveTime);
-        _saveTimer.Enabled = false;
-        _saveTimer.AutoReset = false;
+        _saveTimer = new Timer(SaveTime)
+        {
+            Enabled = false,
+            AutoReset = false
+        };
         _saveTimer.Elapsed += OnSaveTimer;
 
         _fileWatcher.IncludeSubdirectories = false;
@@ -152,10 +154,10 @@ public abstract class FileSettingsCache : SettingsCache
             try
             {
                 // ensure the directory structure exists
-                string parentFolder = Path.GetDirectoryName(SettingsFilePath);
+                string? parentFolder = Path.GetDirectoryName(SettingsFilePath);
                 if (!Directory.Exists(parentFolder))
                 {
-                    Directory.CreateDirectory(parentFolder);
+                    Directory.CreateDirectory(parentFolder!);
                 }
 
                 File.Copy(tmpFile, SettingsFilePath, true);
@@ -225,9 +227,9 @@ public abstract class FileSettingsCache : SettingsCache
     }
 
     // Used to eliminate multiple settings file open and close to save multiple values.  Settings will be saved SAVETIME milliseconds after the last setvalue is called
-    private void OnSaveTimer(object source, System.Timers.ElapsedEventArgs e)
+    private void OnSaveTimer(object? source, System.Timers.ElapsedEventArgs e)
     {
-        ((Timer)source).Stop();
+        ((Timer)source!).Stop();
         Save();
     }
 

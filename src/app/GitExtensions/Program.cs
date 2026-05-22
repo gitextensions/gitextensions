@@ -1,9 +1,10 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Configuration;
 using System.Diagnostics;
 using GitCommands;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
+using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI;
 using GitUI.CommandsDialogs.SettingsDialog;
@@ -13,6 +14,7 @@ using GitUI.NBugReports;
 using GitUI.Theming;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
+using MessageBoxes = GitUI.MessageBoxes;
 
 namespace GitExtensions;
 
@@ -34,6 +36,7 @@ internal static class Program
         {
             AppDomain.CurrentDomain.UnhandledException += (s, e) => BugReportInvoker.Report((Exception)e.ExceptionObject, e.IsTerminating);
             Application.ThreadException += (s, e) => BugReportInvoker.Report(e.Exception, isTerminating: false);
+            Application.ApplicationExit += (s, e) => BugReportInvoker.IgnoreFailedToLoadAnAssembly = true;
         }
 
         if (Environment.OSVersion.Version.Major >= 6)
@@ -59,6 +62,7 @@ internal static class Program
         Control.CheckForIllegalCrossThreadCalls = checkForIllegalCrossThreadCalls;
 
         ServiceContainerRegistry.RegisterServices(_serviceContainer);
+        BugReportInvoker.ExecutorProvider = _serviceContainer.GetRequiredService<IGitExecutorProvider>();
 
         // If an error happens before we had a chance to init the environment information
         // the call to GetInformation() from BugReporter.ShowNBug() will fail.
@@ -109,7 +113,7 @@ internal static class Program
 
         AppSettings.LoadSettings();
 
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             WebBrowserEmulationMode.SetBrowserFeatureControl();
             FormFixHome.CheckHomePath();
@@ -121,7 +125,7 @@ internal static class Program
             formChoose.ShowDialog();
         }
 
-        AppSettings.TelemetryEnabled ??= MessageBox.Show(
+        AppSettings.TelemetryEnabled ??= MessageBoxes.Show(
             null,
             ResourceManager.TranslatedStrings.TelemetryPermissionMessage,
             ResourceManager.TranslatedStrings.TelemetryPermissionCaption,
@@ -144,7 +148,7 @@ internal static class Program
                     }
                 }
 
-                GitUICommands uiCommands = new(_serviceContainer, new GitModule(""));
+                GitUICommands uiCommands = new(_serviceContainer, new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), ""));
                 CommonLogic commonLogic = new(uiCommands.Module);
                 if (AppSettings.CheckSettings)
                 {
@@ -170,12 +174,12 @@ internal static class Program
             // TODO: remove catch-all
         }
 
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             MouseWheelRedirector.Active = true;
         }
 
-        GitUICommands commands = new(_serviceContainer, new GitModule(GetWorkingDir(args)));
+        GitUICommands commands = new(_serviceContainer, new GitModule(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), GetWorkingDir(args)));
 
         if (args.Length <= 1)
         {
@@ -221,7 +225,7 @@ internal static class Program
             {
                 if (!Directory.Exists(dirArg))
                 {
-                    dirArg = Path.GetDirectoryName(dirArg);
+                    dirArg = Path.GetDirectoryName(dirArg)!;
                 }
 
                 workingDir = GitModule.TryFindGitWorkingDir(dirArg);
@@ -266,25 +270,25 @@ internal static class Program
         try
         {
             // perhaps this should be checked for if it is null
-            Exception in3 = ce.InnerException.InnerException;
+            Exception? in3 = ce.InnerException?.InnerException;
 
             // saves having to have a reference to System.Xml just to check that we have an XmlException
-            if (in3.GetType().Name == "XmlException")
+            if (in3?.GetType().Name == "XmlException")
             {
-                string localSettingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
+                string localSettingsPath = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "GitExtensions");
 
                 // assume that if we are having this error and the installation is not a portable one then the folder will exist.
                 if (Directory.Exists(localSettingsPath))
                 {
                     string messageContent = string.Format("There is a problem with the user.xml configuration file.{0}{0}The error message was: {1}{0}{0}The configuration file is usually found in: {2}{0}{0}Problems with configuration can usually be solved by deleting the configuration file. Would you like to delete the file?", Environment.NewLine, in3.Message, localSettingsPath);
 
-                    if (MessageBox.Show(messageContent, "Configuration Error",
+                    if (MessageBoxes.Show(messageContent, "Configuration Error",
                                         MessageBoxButtons.YesNo, MessageBoxIcon.Error, MessageBoxDefaultButton.Button2) == DialogResult.Yes)
                     {
                         if (localSettingsPath.TryDeleteDirectory(out string? errorMessage))
                         {
                             // Restart Git Extensions with the same arguments after old config is deleted?
-                            if (DialogResult.OK.Equals(MessageBox.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart Git Extensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)))
+                            if (DialogResult.OK.Equals(MessageBoxes.Show(string.Format("Files have been deleted.{0}{0}Would you like to attempt to restart Git Extensions?", Environment.NewLine), "Configuration Error", MessageBoxButtons.OKCancel, MessageBoxIcon.Question)))
                             {
                                 string[] args = Environment.GetCommandLineArgs();
                                 Process p = new() { StartInfo = { FileName = args[0] } };
@@ -299,7 +303,7 @@ internal static class Program
                         }
                         else
                         {
-                            MessageBox.Show(string.Format("Could not delete all files and folders in {0}!", localSettingsPath), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                            MessageBoxes.Show(string.Format("Could not delete all files and folders in {0}!", localSettingsPath), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         }
                     }
                 }
@@ -308,7 +312,7 @@ internal static class Program
                 else
                 {
                     string messageContent = string.Format("There is a problem with the application settings XML configuration file.{0}{0}The error message was: {1}{0}{0}Problems with configuration can usually be solved by deleting the configuration file.", Environment.NewLine, in3.Message);
-                    MessageBox.Show(messageContent, "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(messageContent, "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
 
                 exceptionHandled = true;
@@ -319,7 +323,7 @@ internal static class Program
             // if we fail in this somehow at least this message might get somewhere
             if (!exceptionHandled)
             {
-                MessageBox.Show(ce.ToString(), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(ce.ToString(), "Configuration Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             Environment.Exit(1);

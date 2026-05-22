@@ -30,10 +30,9 @@ public partial class GeneralSettingsPage : SettingsPageWithHeader
         }
 
         IList<Repository> repositoryHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
-        string[] historicPaths = repositoryHistory.Select(x => x.GetParentPath())
+        string[] historicPaths = [.. repositoryHistory.Select(x => x.GetParentPath())
                                                   .Where(x => !string.IsNullOrEmpty(x))
-                                                  .Distinct(StringComparer.CurrentCultureIgnoreCase)
-                                                  .ToArray();
+                                                  .Distinct(StringComparer.CurrentCultureIgnoreCase)];
         cbDefaultCloneDestination.Items.AddRange(historicPaths);
 
         var pullActions = new[]
@@ -121,7 +120,7 @@ public partial class GeneralSettingsPage : SettingsPageWithHeader
         AppSettings.ShowSubmoduleStatus = chkShowSubmoduleStatusInBrowse.Checked;
 
         AppSettings.DefaultCloneDestinationPath = cbDefaultCloneDestination.Text;
-        AppSettings.DefaultPullAction = (GitPullAction)cboDefaultPullAction.SelectedValue;
+        AppSettings.DefaultPullAction = (GitPullAction)cboDefaultPullAction.SelectedValue!;
         AppSettings.FollowRenamesInFileHistoryExactOnly = chkFollowRenamesInFileHistoryExact.Checked;
 
         AppSettings.TelemetryEnabled = chkTelemetry.Checked;
@@ -151,7 +150,7 @@ public partial class GeneralSettingsPage : SettingsPageWithHeader
 
     private void DefaultCloneDestinationBrowseClick(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this, cbDefaultCloneDestination.Text);
+        string? userSelectedPath = OsShellUtil.PickFolder(this, cbDefaultCloneDestination.Text);
 
         if (userSelectedPath is not null)
         {

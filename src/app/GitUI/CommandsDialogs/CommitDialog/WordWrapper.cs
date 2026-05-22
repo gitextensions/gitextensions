@@ -51,7 +51,7 @@ public static class WordWrapper
         public bool CanAddWord(string word)
         {
             int newLength = _wordsLength + _wordList.Count + word.Length;
-            return (newLength < _lineLimit) || _wordList.Any() == false;
+            return (newLength < _lineLimit) || _wordList.Count == 0;
         }
 
         public string GetLineAndReset()

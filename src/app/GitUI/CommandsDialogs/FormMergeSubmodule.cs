@@ -26,16 +26,16 @@ public sealed partial class FormMergeSubmodule : GitModuleForm
     {
         ConflictData item = ThreadHelper.JoinableTaskFactory.Run(() => Module.GetConflictAsync(_filename));
 
-        tbBase.Text = item.Base.ObjectId?.ToString() ?? _deleted.Text;
-        tbLocal.Text = item.Local.ObjectId?.ToString() ?? _deleted.Text;
-        tbRemote.Text = item.Remote.ObjectId?.ToString() ?? _deleted.Text;
-        tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout()?.ToString() ?? "";
-        btCheckoutBranch.Enabled = item.Base.ObjectId is not null && item.Remote.ObjectId is not null;
+        tbBase.Text = item.Base.ObjectId.IsZero ? _deleted.Text : item.Base.ObjectId.ToString();
+        tbLocal.Text = item.Local.ObjectId.IsZero ? _deleted.Text : item.Local.ObjectId.ToString();
+        tbRemote.Text = item.Remote.ObjectId.IsZero ? _deleted.Text : item.Remote.ObjectId.ToString();
+        tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout() is { IsZero: false } id ? id.ToString() : "";
+        btCheckoutBranch.Enabled = !item.Base.ObjectId.IsZero && !item.Remote.ObjectId.IsZero;
     }
 
     private void btRefresh_Click(object sender, EventArgs e)
     {
-        tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout()?.ToString() ?? "";
+        tbCurrent.Text = Module.GetSubmodule(_filename).GetCurrentCheckout() is { IsZero: false } id ? id.ToString() : "";
     }
 
     private void StageSubmodule()
@@ -70,7 +70,7 @@ public sealed partial class FormMergeSubmodule : GitModuleForm
 
     private void btCheckoutBranch_Click(object sender, EventArgs e)
     {
-        ObjectId[] ids = new[] { ObjectId.Parse(tbLocal.Text), ObjectId.Parse(tbRemote.Text) };
+        ObjectId[] ids = [ObjectId.Parse(tbLocal.Text), ObjectId.Parse(tbRemote.Text)];
         IGitUICommands submoduleCommands = UICommands.WithWorkingDirectory(Module.GetSubmoduleFullPath(_filename));
         if (!submoduleCommands.StartCheckoutBranch(this, ids))
         {

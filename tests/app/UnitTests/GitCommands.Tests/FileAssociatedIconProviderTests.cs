@@ -1,16 +1,13 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
 using GitCommands;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class FileAssociatedIconProviderTests
 {
-    private FileBase _file;
-    private IFileSystem _fileSystem;
-    private FileAssociatedIconProvider _iconProvider;
+    private FileBase _file = null!;
+    private IFileSystem _fileSystem = null!;
+    private FileAssociatedIconProvider _iconProvider = null!;
 
     [SetUp]
     public void Setup()
@@ -24,9 +21,9 @@ public class FileAssociatedIconProviderTests
 
     [TestCase(null, null)]
     [TestCase("", "")]
-    public void Get_should_return_null_if_path_null_or_empty(string workingDirectory, string relativeFilePath)
+    public void Get_should_return_null_if_path_null_or_empty(string? workingDirectory, string? relativeFilePath)
     {
-        _iconProvider.Get(workingDirectory, relativeFilePath).Should().BeNull();
+        _iconProvider.Get(workingDirectory!, relativeFilePath!).Should().BeNull();
     }
 
     [Test]
@@ -70,14 +67,14 @@ public class FileAssociatedIconProviderTests
         _iconProvider.ResetCache();
 
         string tempFile = Path.GetTempFileName();
-        string folder = Path.GetDirectoryName(tempFile);
+        string? folder = Path.GetDirectoryName(tempFile);
         string file = Path.GetFileName(tempFile);
 
         _iconProvider.CacheCount.Should().Be(0);
-        _iconProvider.Get(folder, file);
-        _iconProvider.Get(folder, file);
-        _iconProvider.Get(folder, file);
-        _iconProvider.Get(folder, file);
+        _iconProvider.Get(folder!, file);
+        _iconProvider.Get(folder!, file);
+        _iconProvider.Get(folder!, file);
+        _iconProvider.Get(folder!, file);
         _iconProvider.CacheCount.Should().Be(1);
 
         try

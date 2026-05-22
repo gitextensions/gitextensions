@@ -1,21 +1,17 @@
-﻿using FluentAssertions;
-using GitCommands;
-using GitCommands.Utils;
+﻿using GitCommands;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class EnvironmentPathsProviderTests
 {
-    private string _separator;
-    private IEnvironmentAbstraction _environment;
-    private IEnvironmentPathsProvider _provider;
+    private string _separator = null!;
+    private IEnvironmentAbstraction _environment = null!;
+    private IEnvironmentPathsProvider _provider = null!;
 
     [SetUp]
     public void Setup()
     {
-        _separator = EnvUtils.EnvVariableSeparator.ToString();
+        _separator = Path.PathSeparator.ToString();
 
         _environment = Substitute.For<IEnvironmentAbstraction>();
         _provider = new EnvironmentPathsProvider(_environment);
@@ -29,7 +25,7 @@ public class EnvironmentPathsProviderTests
 
         IEnumerable<string> validPaths = _provider.GetEnvironmentValidPaths();
 
-        CollectionAssert.AreEqual(GetValidPaths().ToArray(), validPaths.ToArray());
+        validPaths.ToArray().Should().Equal(GetValidPaths().ToArray());
     }
 
     [Test]
@@ -42,7 +38,7 @@ public class EnvironmentPathsProviderTests
 
         IEnumerable<string> validPaths = _provider.GetEnvironmentValidPaths();
 
-        CollectionAssert.AreEqual(GetValidPaths().ToArray(), validPaths.ToArray());
+        validPaths.ToArray().Should().Equal(GetValidPaths().ToArray());
     }
 
     [Platform(Include = "Win")]

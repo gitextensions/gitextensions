@@ -4,6 +4,7 @@ using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.HelperDialogs;
 using ResourceManager;
@@ -56,10 +57,9 @@ public partial class FormClone : GitExtensionsDialog
         _NO_TRANSLATE_From.DisplayMember = nameof(Repository.Path);
 
         IList<Repository> localsHistory = ThreadHelper.JoinableTaskFactory.Run(RepositoryHistoryManager.Locals.LoadRecentHistoryAsync);
-        string[] historicPaths = localsHistory.Select(x => x.GetParentPath())
+        string[] historicPaths = [.. localsHistory.Select(x => x.GetParentPath())
                                               .Where(x => !string.IsNullOrEmpty(x))
-                                              .Distinct(StringComparer.CurrentCultureIgnoreCase)
-                                              .ToArray();
+                                              .Distinct(StringComparer.CurrentCultureIgnoreCase)];
         _NO_TRANSLATE_To.DataSource = historicPaths;
         _NO_TRANSLATE_To.Text = AppSettings.DefaultCloneDestinationPath;
 
@@ -98,7 +98,7 @@ public partial class FormClone : GitExtensionsDialog
             // that the cloned repository is hosted on the same server
             if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_From.Text) && Module.IsValidGitWorkingDir())
             {
-                string currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
+                string? currentBranchRemote = Module.GetSetting(string.Format(SettingKeyString.BranchRemote, Module.GetSelectedBranch()));
                 if (string.IsNullOrEmpty(currentBranchRemote))
                 {
                     IReadOnlyList<string> remotes = Module.GetRemoteNames();
@@ -167,14 +167,14 @@ public partial class FormClone : GitExtensionsDialog
             string destination = _NO_TRANSLATE_To.Text;
             if (string.IsNullOrWhiteSpace(destination))
             {
-                MessageBox.Show(this, _errorDestinationNotSupplied.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _errorDestinationNotSupplied.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _NO_TRANSLATE_To.Focus();
                 return;
             }
 
             if (!Path.IsPathRooted(destination))
             {
-                MessageBox.Show(this, _errorDestinationNotRooted.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _errorDestinationNotRooted.Text, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 _NO_TRANSLATE_To.Focus();
                 return;
             }
@@ -243,7 +243,7 @@ public partial class FormClone : GitExtensionsDialog
 
             if (!string.IsNullOrEmpty(_puttySshKey))
             {
-                GitModule clonedGitModule = new(dirTo);
+                GitModule clonedGitModule = new(UICommands.GetRequiredService<IGitExecutorProvider>(), dirTo);
                 clonedGitModule.SetSetting(string.Format(SettingKeyString.RemotePuttySshKey, "origin"), _puttySshKey);
             }
 
@@ -256,26 +256,26 @@ public partial class FormClone : GitExtensionsDialog
             else if (ShowInTaskbar == false && _gitModuleChanged is not null &&
                 AskIfNewRepositoryShouldBeOpened(dirTo))
             {
-                _gitModuleChanged(this, new GitModuleEventArgs(new GitModule(dirTo)));
+                _gitModuleChanged(this, new GitModuleEventArgs(new GitModule(UICommands.GetRequiredService<IGitExecutorProvider>(), dirTo)));
             }
 
             Close();
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, "Exception: " + ex.Message, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, "Exception: " + ex.Message, _errorCloneFailed.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
     private bool AskIfNewRepositoryShouldBeOpened(string dirTo)
     {
-        return MessageBox.Show(this, string.Format(_questionOpenRepo.Text, dirTo), _questionOpenRepoCaption.Text,
+        return MessageBoxes.Show(this, string.Format(_questionOpenRepo.Text, dirTo), _questionOpenRepoCaption.Text,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes;
     }
 
     private void FromBrowseClick(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_From.Text);
+        string? userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_From.Text);
 
         if (userSelectedPath is not null)
         {
@@ -287,7 +287,7 @@ public partial class FormClone : GitExtensionsDialog
 
     private void ToBrowseClick(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_To.Text);
+        string? userSelectedPath = OsShellUtil.PickFolder(this, _NO_TRANSLATE_To.Text);
 
         if (userSelectedPath is not null)
         {
@@ -332,8 +332,8 @@ public partial class FormClone : GitExtensionsDialog
 
     private void ToTextUpdate(object sender, EventArgs e)
     {
-        bool destinationUnfilled = string.IsNullOrEmpty(_NO_TRANSLATE_To.Text) || _NO_TRANSLATE_To.Text.IndexOfAny(System.IO.Path.GetInvalidPathChars()) >= 0;
-        bool subDirectoryUnfilled = string.IsNullOrEmpty(_NO_TRANSLATE_NewDirectory.Text) || _NO_TRANSLATE_NewDirectory.Text.IndexOfAny(System.IO.Path.GetInvalidPathChars()) >= 0;
+        bool destinationUnfilled = string.IsNullOrEmpty(_NO_TRANSLATE_To.Text) || _NO_TRANSLATE_To.Text.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) >= 0;
+        bool subDirectoryUnfilled = string.IsNullOrEmpty(_NO_TRANSLATE_NewDirectory.Text) || _NO_TRANSLATE_NewDirectory.Text.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) >= 0;
 
         string destinationDirectory = destinationUnfilled ? $@"[{destinationLabel.Text}]" : _NO_TRANSLATE_To.Text;
         string destinationSubDirectory = subDirectoryUnfilled ? $@"[{subdirectoryLabel.Text}]" : _NO_TRANSLATE_NewDirectory.Text;
@@ -345,14 +345,14 @@ public partial class FormClone : GitExtensionsDialog
         if (destinationUnfilled || subDirectoryUnfilled)
         {
             Info.Text = newRepositoryLocationInfo;
-            Info.ForeColor = Color.Red.AdaptTextColor();
+            Info.ForeColor = Color.Red.AdaptForeColor(Info.BackColor);
             return;
         }
 
         if (Directory.Exists(destinationPath) && Directory.EnumerateFileSystemEntries(destinationPath).Any())
         {
             Info.Text = $@"{newRepositoryLocationInfo} {_infoDirectoryExists.Text}";
-            Info.ForeColor = Color.Red.AdaptTextColor();
+            Info.ForeColor = Color.Red.AdaptForeColor(Info.BackColor);
             return;
         }
 
@@ -393,7 +393,7 @@ public partial class FormClone : GitExtensionsDialog
         else
         {
             string text = _NO_TRANSLATE_Branches.Text;
-            List<string> names = _defaultBranchItems.Concat(branchList.Result.Select(o => o.LocalName)).ToList();
+            List<string> names = [.. _defaultBranchItems, .. branchList.Result!.Select(o => o.LocalName!)];
             _NO_TRANSLATE_Branches.DataSource = names;
             if (names.Any(a => a == text))
             {

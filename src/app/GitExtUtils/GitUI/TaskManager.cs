@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using Microsoft.VisualStudio.Threading;
 
 namespace GitUI;

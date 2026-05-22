@@ -26,7 +26,7 @@ public class WeakRefCache : IDisposable
 
         lock (_weakMapLock)
         {
-            if (_weakMap.TryGetValue(objectUniqueKey, out WeakReference weakReference))
+            if (_weakMap.TryGetValue(objectUniqueKey, out WeakReference? weakReference))
             {
                 cached = weakReference.Target;
             }
@@ -50,11 +50,11 @@ public class WeakRefCache : IDisposable
         return (T)cached!;
     }
 
-    private void OnClearTimer(object source, ElapsedEventArgs e)
+    private void OnClearTimer(object? source, ElapsedEventArgs e)
     {
         lock (_weakMapLock)
         {
-            string[] toRemove = _weakMap.Where(p => !p.Value.IsAlive).Select(p => p.Key).ToArray();
+            string[] toRemove = [.. _weakMap.Where(p => !p.Value.IsAlive).Select(p => p.Key)];
             foreach (string key in toRemove)
             {
                 _weakMap.Remove(key);

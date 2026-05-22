@@ -32,7 +32,7 @@ public class NativeTreeViewExplorerNavigationDecorator
     {
     }
 
-    private static void OnKeyDown(object sender, KeyEventArgs e)
+    private static void OnKeyDown(object? sender, KeyEventArgs e)
     {
         // Suppress the "ding" when Enter is pressed
         if (e.KeyCode == Keys.Enter)
@@ -41,7 +41,7 @@ public class NativeTreeViewExplorerNavigationDecorator
         }
     }
 
-    private void OnPreviewKeyDown(object sender, PreviewKeyDownEventArgs e)
+    private void OnPreviewKeyDown(object? sender, PreviewKeyDownEventArgs e)
     {
         if (e.KeyCode == Keys.Up || e.KeyCode == Keys.Down || e.KeyCode == Keys.Left || e.KeyCode == Keys.Right)
         {
@@ -51,13 +51,13 @@ public class NativeTreeViewExplorerNavigationDecorator
         {
             // Force a reselection of the current node
             _lastKeyNavigateTime = DateTime.MinValue;
-            TreeNode currNode = _treeView.SelectedNode;
+            TreeNode? currNode = _treeView.SelectedNode;
             _treeView.SelectedNode = null;
             _treeView.SelectedNode = currNode;
         }
     }
 
-    private void OnAfterSelect(object sender, TreeViewEventArgs e)
+    private void OnAfterSelect(object? sender, TreeViewEventArgs e)
     {
         // If arrow key was used to navigate to this node, don't send OnSelected
         int delta = (int)_getCurrentTime().Subtract(_lastKeyNavigateTime).TotalMilliseconds;
@@ -69,7 +69,7 @@ public class NativeTreeViewExplorerNavigationDecorator
         AfterSelect?.Invoke(sender, e);
     }
 
-    private void OnNodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
+    private void OnNodeMouseClick(object? sender, TreeNodeMouseClickEventArgs e)
     {
         // If selected node is clicked, make sure to force re-selection. This way, if user
         // navigates to a node by keyboard, then clicks on the same node with the mouse, it

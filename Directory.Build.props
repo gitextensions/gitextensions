@@ -3,9 +3,12 @@
   <Import Project="eng\Tests.props" />
 
   <PropertyGroup>
-    <!-- Enable C#13 keyword "field" -->
-    <LangVersion>preview</LangVersion>
+    <LangVersion>14.0</LangVersion>
+
     <NoWarn>$(NoWarn);1573;1591;1712</NoWarn>
+    <!-- URIs should not be hardcoded -->
+    <NoWarn>$(NoWarn);S1075</NoWarn>
+
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <Nullable>enable</Nullable>
 
@@ -13,7 +16,7 @@
     <UseWindowsForms>true</UseWindowsForms>
     <TargetFramework>$(SolutionTargetFramework)</TargetFramework>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <SuppressNETCoreSdkPreviewMessage>true</SuppressNETCoreSdkPreviewMessage>
+    <SuppressNETCoreSdkPreviewMessage>false</SuppressNETCoreSdkPreviewMessage>
     <CodeAnalysisRuleSet>$(MSBuildThisFileDirectory)eng\GitExtensions.ruleset</CodeAnalysisRuleSet>
 
     <!-- More information: https://aka.ms/msbuild/net8-binaryformatter -->
@@ -66,6 +69,9 @@
   <ItemGroup>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)eng\stylecop.json">
       <Link>stylecop.json</Link>
+    </AdditionalFiles>
+    <AdditionalFiles Include="$(MSBuildThisFileDirectory)eng\BannedSymbols.txt">
+      <Visible>False</Visible>
     </AdditionalFiles>
     <AdditionalFiles Include="$(MSBuildThisFileDirectory)eng\vs-threading.MainThreadAssertingMethods.txt">
       <Visible>False</Visible>

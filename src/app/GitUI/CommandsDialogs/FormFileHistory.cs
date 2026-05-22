@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility;
@@ -78,7 +78,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
 
         Blame.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
 
-        RevisionGrid.SelectedId = revision?.ObjectId;
+        RevisionGrid.SelectedId = revision is null ? default : revision.ObjectId;
         RevisionGrid.ShowBuildServerInfo = true;
         RevisionGrid.FilePathByObjectId = [];
 
@@ -203,8 +203,8 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
     {
         List<CustomDiffMergeTool> menus =
         [
-            new(openWithDifftoolToolStripMenuItem, OpenWithDifftoolToolStripMenuItem_Click),
-            new(diffToolRemoteLocalStripMenuItem, diffToolRemoteLocalStripMenuItem_Click),
+            new(openWithDifftoolToolStripMenuItem, OpenWithDifftoolToolStripMenuItem_Click!),
+            new(diffToolRemoteLocalStripMenuItem, diffToolRemoteLocalStripMenuItem_Click!),
         ];
 
         new CustomDiffMergeToolProvider().LoadCustomDiffMergeTools(Module, menus, components, isDiff: true, cancellationToken: _customDiffToolsSequence.Next());
@@ -229,12 +229,12 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
             return null;
         }
 
-        ObjectId? objectId = rev.IsArtificial ? RevisionGrid.CurrentCheckout : rev.ObjectId;
+        ObjectId objectId = rev.IsArtificial ? RevisionGrid.CurrentCheckout : rev.ObjectId;
 
         return RevisionGrid.GetRevisionFileName(FileName, objectId);
     }
 
-    private void FileChangesSelectionChanged(object sender, EventArgs e)
+    private void FileChangesSelectionChanged(object? sender, EventArgs e)
     {
         UpdateSelectedFileViewers();
     }
@@ -269,9 +269,8 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         string fileName = GetFileNameForRevision(revision) ?? FileName;
         bool isFolder = fileName.EndsWith('/');
         bool fileAvailable
-            = isFolder ? false
-            : revision.IsArtificial ? File.Exists(fileName)
-            : Module.GetFileBlobHash(fileName, revision.ObjectId) is not null;
+            = !isFolder && (revision.IsArtificial ? File.Exists(fileName)
+            : !Module.GetFileBlobHash(fileName, revision.ObjectId).IsZero);
 
         SetTitle(alternativeFileName: fileName);
 
@@ -280,7 +279,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
             = _commitInfoTabPageText
             + (isFolder || fileAvailable ? "" : string.Format(_fileNotFound.Text, fileName.Quote()));
 
-        TabPage preferredTab = null;
+        TabPage? preferredTab = null;
         if (revision.IsArtificial)
         {
             CommitInfoTabPage.Parent = null;
@@ -363,8 +362,9 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
             };
             CancellationToken cancellationToken = _viewChangesSequence.Next();
             View.GetUpdateTreeId(file, revision.ObjectId, cancellationToken);
-            FileStatusItem item = new(firstRev: selectedRevisions.Count > 1 ? selectedRevisions[^1] : null,
-                secondRev: selectedRevisions.Count > 0 ? selectedRevisions[0] : null,
+            FileStatusItem item = new(
+                firstRev: selectedRevisions.Count > 1 ? selectedRevisions[^1] : null,
+                secondRev: selectedRevisions.Count > 0 ? selectedRevisions[0] : null!,
                 file);
             _ = Diff.ViewChangesAsync(item, defaultText: TranslatedStrings.NoChanges, cancellationToken: cancellationToken);
         }
@@ -388,24 +388,24 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         RevisionGrid.ViewSelectedRevisions();
     }
 
-    private void OpenWithDifftoolToolStripMenuItem_Click(object sender, EventArgs e)
+    private void OpenWithDifftoolToolStripMenuItem_Click(object? sender, EventArgs e)
     {
         OpenFilesWithDiffTool(RevisionDiffKind.DiffAB, sender);
     }
 
-    private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object sender)
+    private void OpenFilesWithDiffTool(RevisionDiffKind diffKind, object? sender)
     {
-        ToolStripMenuItem item = sender as ToolStripMenuItem;
+        ToolStripMenuItem? item = sender as ToolStripMenuItem;
         if (item?.DropDownItems != null)
         {
             // "main menu" clicked, cancel dropdown manually, invoke default mergetool
             item.HideDropDown();
-            item.Owner.Hide();
+            item.Owner?.Hide();
         }
 
-        string toolName = item?.Tag as string;
+        string? toolName = item?.Tag as string;
         IReadOnlyList<GitRevision> selectedRevisions = RevisionGrid.GetSelectedRevisions();
-        string orgFileName = selectedRevisions.Count != 0
+        string? orgFileName = selectedRevisions.Count != 0
             ? GetFileNameForRevision(selectedRevisions[0])
             : null;
 
@@ -527,7 +527,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
             selectedRevisions.Count >= 1 && !selectedRevisions[0].IsArtificial;
     }
 
-    private void diffToolRemoteLocalStripMenuItem_Click(object sender, EventArgs e)
+    private void diffToolRemoteLocalStripMenuItem_Click(object? sender, EventArgs e)
     {
         OpenFilesWithDiffTool(RevisionDiffKind.DiffBLocal, sender);
     }
@@ -554,7 +554,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         if (e.Command == "gotocommit")
         {
             Validates.NotNull(e.Data);
-            if (Module.TryResolvePartialCommitId(e.Data, out ObjectId? commitId))
+            if (Module.TryResolvePartialCommitId(e.Data, out ObjectId commitId))
             {
                 if (!RevisionGrid.SetSelectedRevision(commitId))
                 {

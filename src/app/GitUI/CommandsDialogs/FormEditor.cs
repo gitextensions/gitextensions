@@ -62,7 +62,7 @@ public sealed partial class FormEditor : GitModuleForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, _cannotOpenFile.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _cannotOpenFile.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             Close();
         }
     }
@@ -72,7 +72,7 @@ public sealed partial class FormEditor : GitModuleForm
         // only offer to save if there's something to save.
         if (HasChanges)
         {
-            DialogResult saveChangesAnswer = MessageBox.Show(this, _saveChanges.Text, _saveChangesCaption.Text,
+            DialogResult saveChangesAnswer = MessageBoxes.Show(this, _saveChanges.Text, _saveChangesCaption.Text,
                                      MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
             switch (saveChangesAnswer)
             {
@@ -83,7 +83,7 @@ public sealed partial class FormEditor : GitModuleForm
                     }
                     catch (Exception ex)
                     {
-                        if (MessageBox.Show(this, $"{_cannotSaveFile.Text}{Environment.NewLine}{ex.Message}", TranslatedStrings.Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
+                        if (MessageBoxes.Show(this, $"{_cannotSaveFile.Text}{Environment.NewLine}{ex.Message}", TranslatedStrings.Error, MessageBoxButtons.OKCancel, MessageBoxIcon.Error) == DialogResult.Cancel)
                         {
                             e.Cancel = true;
                             return;

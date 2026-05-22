@@ -144,7 +144,6 @@ namespace {@namespace}
 
     public static bool IsSupportedSyntaxNode(SyntaxNode syntaxNode)
     {
-#pragma warning disable SA1513 // Closing brace should be followed by blank line
         if (syntaxNode is ClassDeclarationSyntax
             {
                 BaseList: BaseListSyntax
@@ -155,7 +154,6 @@ namespace {@namespace}
         {
             return true;
         }
-#pragma warning restore SA1513 // Closing brace should be followed by blank line
 
         return false;
     }

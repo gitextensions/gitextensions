@@ -8,7 +8,6 @@ using ICSharpCode.TextEditor.Document;
 namespace GitUITests.Editor;
 
 [Apartment(ApartmentState.STA)]
-[TestFixture]
 public class FindAndReplaceFormTests
 {
     public struct TextRegion
@@ -22,13 +21,13 @@ public class FindAndReplaceFormTests
             End = end;
         }
 
-        public override string ToString()
+        public override readonly string ToString()
             => $"[[Line = {Start.X}, Column = {Start.Y}], [Line = {End.X}, Column = {End.Y}]]";
     }
 
-    private FindAndReplaceForm _findAndReplaceForm;
+    private FindAndReplaceForm _findAndReplaceForm = null!;
     private FindAndReplaceForm.TestAccessor _testAccessor;
-    private TextEditorControl _textEditorControl;
+    private TextEditorControl _textEditorControl = null!;
 
     [SetUp]
     public void SetUp()
@@ -61,9 +60,9 @@ public class FindAndReplaceFormTests
     {
         Arrange(text, searchPhrase, matchCase);
 
-        TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
+        TextRange? actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
 
-        AssertTextRange(expectedRange, actualRange);
+        AssertTextRange(expectedRange, actualRange!);
     }
 
     private static IEnumerable<TestCaseData> MatchWholeWordOnly
@@ -80,9 +79,9 @@ public class FindAndReplaceFormTests
     {
         Arrange(text, searchPhrase, matchWholeWordOnly: true);
 
-        TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, true, null);
+        TextRange? actualRange = await _findAndReplaceForm.FindNextAsync(false, true, null);
 
-        AssertTextRange(expectedRange, actualRange);
+        AssertTextRange(expectedRange, actualRange!);
     }
 
     private static IEnumerable<TestCaseData> LoopAround
@@ -135,9 +134,9 @@ public class FindAndReplaceFormTests
 
         foreach (TextRange expectedRange in expectedRanges)
         {
-            TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, searchBackwards, null);
+            TextRange? actualRange = await _findAndReplaceForm.FindNextAsync(false, searchBackwards, null);
 
-            AssertTextRange(expectedRange, actualRange);
+            AssertTextRange(expectedRange, actualRange!);
         }
     }
 
@@ -146,15 +145,15 @@ public class FindAndReplaceFormTests
     {
         Arrange("line one\r\nline two\r\nline three", "line", scanRegion: new TextRegion(new TextLocation(0, 0), new TextLocation(0, 1)));
 
-        TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
-        AssertTextRange(new TextRange(0, 4), actualRange);
+        TextRange? actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
+        AssertTextRange(new TextRange(0, 4), actualRange!);
 
         // Move the caret outside of the originally selected region.
         TextLocation newCaretPosition = new(1, 1);
         _textEditorControl.ActiveTextAreaControl.Caret.Position = newCaretPosition;
 
         actualRange = await _findAndReplaceForm.FindNextAsync(true, false, null);
-        AssertTextRange(new TextRange(20, 4), actualRange);
+        AssertTextRange(new TextRange(20, 4), actualRange!);
     }
 
     private static IEnumerable<TestCaseData> MultiFileSearch
@@ -202,9 +201,9 @@ public class FindAndReplaceFormTests
 
         foreach (TextRange expectedRange in expectedRanges)
         {
-            TextRange actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
+            TextRange? actualRange = await _findAndReplaceForm.FindNextAsync(false, false, null);
 
-            AssertTextRange(expectedRange, actualRange);
+            AssertTextRange(expectedRange, actualRange!);
         }
     }
 
@@ -213,11 +212,11 @@ public class FindAndReplaceFormTests
     {
         Arrange("line 1\r\nline 2\r\nline 3", "line", scanRegion: new TextRegion(new TextLocation(0, 1), new TextLocation(0, 2)));
 
-        ClassicAssert.IsTrue(_testAccessor.Search.HasScanRegion);
+        _testAccessor.Search.HasScanRegion.Should().BeTrue();
 
         _textEditorControl.Text = "new text";
 
-        ClassicAssert.IsFalse(_testAccessor.Search.HasScanRegion);
+        _testAccessor.Search.HasScanRegion.Should().BeFalse();
     }
 
     private void Arrange(string text,
@@ -225,7 +224,7 @@ public class FindAndReplaceFormTests
         bool matchCase = false,
         bool matchWholeWordOnly = false,
         TextRegion scanRegion = default,
-        GetNextFileFnc fileLoader = null)
+        GetNextFileFnc fileLoader = null!)
     {
         _textEditorControl.Text = text;
         _testAccessor.SetEditor(_textEditorControl);
@@ -246,7 +245,7 @@ public class FindAndReplaceFormTests
     private void AssertTextRange(TextRange expectedRange, TextRange actualRange)
     {
         // Assert returned value
-        ClassicAssert.That(actualRange, Is.EqualTo(expectedRange).Using(new SegmentComparer()));
+        actualRange.Should().BeEquivalentTo(expectedRange);
 
         if (expectedRange is null)
         {
@@ -255,10 +254,10 @@ public class FindAndReplaceFormTests
 
         // Assert text selected
         ISelection actualSelection = _textEditorControl.ActiveTextAreaControl.SelectionManager.SelectionCollection.Single();
-        ClassicAssert.AreEqual(expectedRange.Offset, actualSelection.Offset);
-        ClassicAssert.AreEqual(expectedRange.Length, actualSelection.Length);
+        actualSelection.Offset.Should().Be(expectedRange.Offset);
+        actualSelection.Length.Should().Be(expectedRange.Length);
 
         // Assert caret is at the end of the found range.
-        ClassicAssert.AreEqual(expectedRange.Offset + expectedRange.Length, _textEditorControl.ActiveTextAreaControl.Caret.Offset);
+        _textEditorControl.ActiveTextAreaControl.Caret.Offset.Should().Be(expectedRange.Offset + expectedRange.Length);
     }
 }

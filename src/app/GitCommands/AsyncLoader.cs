@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using GitUI;
 using Microsoft.VisualStudio.Threading;
 

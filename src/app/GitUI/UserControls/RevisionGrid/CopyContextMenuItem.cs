@@ -10,6 +10,7 @@ namespace GitUI.UserControls.RevisionGrid;
 public sealed class CopyContextMenuItem : ToolStripMenuItem
 {
     private readonly TranslationString _copyToClipboardText = new("&Copy to clipboard");
+    private Func<IEnumerable<string>, IEnumerable<string>> _filterRefsFunc = refs => refs;
     private Func<IReadOnlyList<GitRevision>>? _revisionFunc;
     private uint _itemNumber;
 
@@ -19,6 +20,11 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
         Text = _copyToClipboardText.Text;
 
         DropDownOpening += OnDropDownOpening;
+    }
+
+    public void SetFilterRefsFunc(Func<IEnumerable<string>, IEnumerable<string>> filterRefsFunc)
+    {
+        _filterRefsFunc = filterRefsFunc;
     }
 
     public void SetRevisionFunc(Func<IReadOnlyList<GitRevision>> revisionFunc)
@@ -31,7 +37,7 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
 
     private void AddItem(string displayText, Func<GitRevision, string> extractRevisionText, Image image, char? hotkey)
     {
-        string[] textToCopy = ExtractRevisionTexts(extractRevisionText);
+        string[]? textToCopy = ExtractRevisionTexts(extractRevisionText);
         if (textToCopy is null)
         {
             return;
@@ -78,18 +84,18 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
             return null;
         }
 
-        IReadOnlyList<GitRevision> gitRevisions = _revisionFunc?.Invoke();
+        IReadOnlyList<GitRevision>? gitRevisions = _revisionFunc?.Invoke();
         if (gitRevisions?.Count is not > 0)
         {
             return null;
         }
 
-        return gitRevisions.Select(extractRevisionText).Distinct().ToArray();
+        return [.. gitRevisions.Select(extractRevisionText).Distinct()];
     }
 
-    private void OnDropDownOpening(object sender, EventArgs e)
+    private void OnDropDownOpening(object? sender, EventArgs e)
     {
-        IReadOnlyList<GitRevision> revisions = _revisionFunc?.Invoke();
+        IReadOnlyList<GitRevision>? revisions = _revisionFunc?.Invoke();
         if (revisions?.Count is not > 0)
         {
             HideDropDown();
@@ -104,17 +110,17 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
         foreach (GitRevision revision in revisions)
         {
             GitRefListsForRevision refLists = new(revision);
-            branchNames.AddRange(refLists.GetAllBranchNames());
-            tagNames.AddRange(refLists.GetAllTagNames());
+            branchNames.AddRange(_filterRefsFunc(refLists.GetAllBranchNames()));
+            tagNames.AddRange(_filterRefsFunc(refLists.GetAllTagNames()));
         }
 
         _itemNumber = 0;
 
         // Add items for branches
-        if (branchNames.Any())
+        if (branchNames.Count != 0)
         {
             ToolStripMenuItem caption = new() { Text = TranslatedStrings.Branches };
-            MenuUtil.SetAsCaptionMenuItem(caption, Owner);
+            MenuUtil.SetAsCaptionMenuItem(caption, Owner!);
             DropDownItems.Add(caption);
 
             foreach (string name in branchNames)
@@ -126,10 +132,10 @@ public sealed class CopyContextMenuItem : ToolStripMenuItem
         }
 
         // Add items for tags
-        if (tagNames.Any())
+        if (tagNames.Count != 0)
         {
             ToolStripMenuItem caption = new() { Text = TranslatedStrings.Tags };
-            MenuUtil.SetAsCaptionMenuItem(caption, Owner);
+            MenuUtil.SetAsCaptionMenuItem(caption, Owner!);
             DropDownItems.Add(caption);
 
             foreach (string name in tagNames)

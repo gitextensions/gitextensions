@@ -1,22 +1,19 @@
 ﻿using System.IO.Abstractions;
-using FluentAssertions;
+using System.Text.Json;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Newtonsoft.Json;
 using NSubstitute;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class GitRevisionTesterTests
 {
-    private FileBase _file;
-    private IFileSystem _fileSystem;
-    private IFullPathResolver _fullPathResolver;
-    private GitRevisionTester _tester;
+    private FileBase _file = null!;
+    private IFileSystem _fileSystem = null!;
+    private IFullPathResolver _fullPathResolver = null!;
+    private GitRevisionTester _tester = null!;
 
     [SetUp]
     public void Setup()
@@ -38,7 +35,7 @@ public class GitRevisionTesterTests
     [Test]
     public void AllFirstAreParentsToSelected_should_return_false_if_no_parents_contains_any_of_selected_items()
     {
-        ObjectId[] firstSelected = new[] { ObjectId.IndexId, ObjectId.Random() };
+        ObjectId[] firstSelected = [ObjectId.IndexId, ObjectId.Random()];
 
         GitRevision selectedRevision = new(ObjectId.WorkTreeId)
         {
@@ -54,11 +51,11 @@ public class GitRevisionTesterTests
         ObjectId parent1 = ObjectId.Random();
         ObjectId parent2 = ObjectId.Random();
 
-        ObjectId[] firstSelected2 = new[]
-        {
+        ObjectId[] firstSelected2 =
+        [
             parent1,
             parent2
-        };
+        ];
 
         GitRevision selectedRevision2 = new(ObjectId.Random())
         {
@@ -118,75 +115,75 @@ public class GitRevisionTesterTests
     [Test]
     public void Matches_should_not_throw_if_revision_null()
     {
-        _tester.Matches(null, null).Should().BeFalse();
+        _tester.Matches(null, null!).Should().BeFalse();
     }
 
     [TestCase(null)]
     [TestCase("")]
     [TestCase("\t")]
-    public void Matches_should_not_throw_if_criteria_null_or_empty(string criteria)
+    public void Matches_should_not_throw_if_criteria_null_or_empty(string? criteria)
     {
-        _tester.Matches(new GitRevision(ObjectId.Random()), criteria).Should().BeFalse();
+        _tester.Matches(new GitRevision(ObjectId.Random()), criteria!).Should().BeFalse();
     }
 
     [TestCase("myname")]
     [TestCase("myName")]
-    public void Matches_should_match_name(string criteria)
+    public void Matches_should_match_name(string? criteria)
     {
         IGitRef gitRef = Substitute.For<IGitRef>();
         gitRef.Name.Returns(x => "Name is MyName");
         GitRevision revision = new(ObjectId.Random()) { Refs = new[] { gitRef } };
 
-        _tester.Matches(revision, criteria).Should().BeTrue();
+        _tester.Matches(revision, criteria!).Should().BeTrue();
     }
 
     [TestCase("001122", true)]
     [TestCase("", false)]
     [TestCase("0", false)]
     [TestCase("012", false)]
-    public void Matches_should_match_guid(string criteria, bool expected)
+    public void Matches_should_match_guid(string? criteria, bool expected)
     {
         IGitRef gitRef = Substitute.For<IGitRef>();
         gitRef.Name.Returns(x => "Name is MyName");
 
         GitRevision revision = new(ObjectId.Parse("0011223344556677889900112233445566778899")) { Refs = new[] { gitRef } };
 
-        _tester.Matches(revision, criteria).Should().Be(expected);
+        _tester.Matches(revision, criteria!).Should().Be(expected);
     }
 
     [Test]
     public async Task ReverseSelection_expected_changes_none()
     {
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1").InvertStatus()));
+        await Verifier.VerifyJson(JsonSerializer.Serialize(new GitItemStatus("file1").InvertStatus()));
     }
 
     [Test]
     public async Task ReverseSelection_expected_changes_renamed()
     {
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsRenamed = true, OldName = "file2" }.InvertStatus()));
+        await Verifier.VerifyJson(JsonSerializer.Serialize(new GitItemStatus("file1") { IsRenamed = true, OldName = "file2" }.InvertStatus()));
     }
 
     [Test]
     public async Task ReverseSelection_expected_changes_new()
     {
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsNew = true }.InvertStatus()));
+        await Verifier.VerifyJson(JsonSerializer.Serialize(new GitItemStatus("file1") { IsNew = true }.InvertStatus()));
     }
 
     [Test]
     public async Task ReverseSelection_expected_changes_deleted()
     {
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsDeleted = true }.InvertStatus()));
+        await Verifier.VerifyJson(JsonSerializer.Serialize(new GitItemStatus("file1") { IsDeleted = true }.InvertStatus()));
     }
 
     [Test]
     public async Task ReverseSelection_expected_changes_unmerged()
     {
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(new GitItemStatus("file1") { IsUnmerged = true }.InvertStatus()));
+        await Verifier.VerifyJson(JsonSerializer.Serialize(new GitItemStatus("file1") { IsUnmerged = true }.InvertStatus()));
     }
 
     [Test]
     public async Task ReverseSelection_expected_changes_getdefaults()
     {
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(GitItemStatus.GetDefaultStatus("file1").InvertStatus()));
+        await Verifier.VerifyJson(JsonSerializer.Serialize(GitItemStatus.GetDefaultStatus("file1").InvertStatus()));
     }
 }

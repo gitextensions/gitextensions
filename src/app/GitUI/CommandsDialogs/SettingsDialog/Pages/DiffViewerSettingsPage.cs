@@ -1,10 +1,19 @@
 ﻿using GitCommands;
 using GitExtensions.Extensibility.Settings;
+using GitUI.UserControls.RevisionGrid;
+using ResourceManager;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
 public partial class DiffViewerSettingsPage : SettingsPageWithHeader
 {
+    private readonly TranslationString _saveCurrentViewSettingsAsDefaultTooltip = new("""
+        Saves all current view settings as the default for future sessions.
+        Note: The checkboxes 'Remember the "xyz" preference' only affect the running instance
+        as long as the default has not been saved. These preference values are held in memory
+        and must be explicitly saved to become persistent defaults.
+        """);
+
     public DiffViewerSettingsPage(IServiceProvider serviceProvider)
         : base(serviceProvider)
     {
@@ -59,6 +68,11 @@ public partial class DiffViewerSettingsPage : SettingsPageWithHeader
 
     private void chkUseGitColoring_CheckedChanged(object sender, EventArgs e)
         => chkUseGEThemeGitColoring.Enabled = chkUseGitColoring.Checked;
+
+    private void btnSaveCurrentViewSettingsAsDefault_Click(object sender, EventArgs e)
+    {
+        RevisionGridMenuCommands.SaveCurrentViewSettingsAsDefault();
+    }
 
     public static SettingsPageReference GetPageReference()
     {

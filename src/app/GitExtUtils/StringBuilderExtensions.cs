@@ -1,11 +1,10 @@
-﻿using System.Text;
+using System.Text;
+using GitExtensions.Extensibility;
 
 namespace GitExtUtils;
 
 public static class StringBuilderExtensions
 {
-    private static readonly char[] _whiteSpaceChars = { ' ', '\r', '\n', '\t' };
-
     public static StringBuilder AppendQuoted(this StringBuilder builder, string s)
     {
         if (NeedsEscaping())
@@ -27,7 +26,7 @@ public static class StringBuilderExtensions
                 return true;
             }
 
-            if (s.IndexOfAny(_whiteSpaceChars) == -1)
+            if (s.IndexOfAny(Delimiters.WhiteSpaceChars) == -1)
             {
                 // Doesn't contain any white space
                 return false;

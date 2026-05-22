@@ -13,9 +13,6 @@
     <IsPublishable>true</IsPublishable>
     <PublishDir Condition="'$(IsPublishable)' == 'true'">$(AppPublishDir)</PublishDir>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-
-    <!-- To be removed when NRT annotations are complete -->
-    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>

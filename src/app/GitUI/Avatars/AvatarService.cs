@@ -48,13 +48,12 @@ public static class AvatarService
         Lazy<IAvatarDownloader> lazyDownloader = new(() => downloader ?? new AvatarDownloader());
 
         // build collection of (non-null) providers
-        IAvatarProvider[] providers = new[]
+        IAvatarProvider[] providers = [.. new[]
         {
             BuildMainProvider(),
             BuildFallbackProvider()
         }
-        .WhereNotNull()
-        .ToArray();
+        .WhereNotNull()];
 
         // only create chained avatar overhead if really needed
         return providers.Length switch

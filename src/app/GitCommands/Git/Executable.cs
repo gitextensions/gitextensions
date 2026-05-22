@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Text;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
@@ -7,17 +7,30 @@ using Microsoft.VisualStudio.Threading;
 
 namespace GitCommands;
 
-/// <inheritdoc />
+/// <summary>
+///  Wraps an executable file and provides process creation with logging and environment setup.
+/// </summary>
 public sealed class Executable : IExecutable
 {
     private readonly string _workingDir;
     private readonly Func<string> _fileNameProvider;
 
+    /// <summary>
+    ///  Initializes a new instance of the <see cref="Executable"/> class with a fixed file name.
+    /// </summary>
+    /// <param name="fileName">The path to the executable file.</param>
+    /// <param name="workingDir">The working directory in which the process will be started.</param>
     public Executable(string fileName, string workingDir = "")
         : this(() => fileName, workingDir)
     {
     }
 
+    /// <summary>
+    ///  Initializes a new instance of the <see cref="Executable"/> class with a deferred file name resolution.
+    /// </summary>
+    /// <param name="fileNameProvider">A delegate that returns the path to the executable file.</param>
+    /// <param name="workingDir">The working directory in which the process will be started.</param>
+    /// <param name="prefixArguments">Arguments that are prepended to every invocation.</param>
     public Executable(Func<string> fileNameProvider, string workingDir = "", string prefixArguments = "")
     {
         _workingDir = workingDir;
@@ -26,7 +39,9 @@ public sealed class Executable : IExecutable
     }
 
     public string WorkingDir => _workingDir;
+
     public string Command => _fileNameProvider();
+
     public string PrefixArguments { get; }
 
     public IProcess Start(ArgumentString arguments = default,
@@ -47,8 +62,6 @@ public sealed class Executable : IExecutable
 
         return new ProcessWrapper(fileName, PrefixArguments, args, _workingDir, createWindow, redirectInput, redirectOutput, outputEncoding, useShellExecute, throwOnErrorExit, cancellationToken);
     }
-
-    public string GetWorkingDirectory() => _workingDir;
 
     #region ProcessWrapper
 
@@ -131,7 +144,17 @@ public sealed class Executable : IExecutable
 
             try
             {
-                _process.Start();
+                try
+                {
+                    _process.Start();
+                }
+                catch (Exception ex)
+                {
+                    _process.Exited -= OnProcessExit;
+                    _exitHandlerRemoved = true;
+                    _exitTaskCompletionSource.TrySetException(ex);
+                    throw;
+                }
 
                 if (_errorOutputStream is not null)
                 {
@@ -194,7 +217,7 @@ public sealed class Executable : IExecutable
 
             string? ReadErrorOutput()
             {
-                if (_errorOutputStream is null)
+                if (_errorOutputStream is null || _errorEncoding is null)
                 {
                     return null;
                 }
@@ -212,7 +235,7 @@ public sealed class Executable : IExecutable
             }
         }
 
-        private void OnProcessExit(object sender, EventArgs eventArgs)
+        private void OnProcessExit(object? sender, EventArgs eventArgs)
         {
             lock (_lock)
             {

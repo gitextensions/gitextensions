@@ -1,9 +1,6 @@
 ﻿using BugReporter;
-using FluentAssertions;
 
 namespace GitUITests;
-
-[TestFixture]
 public class BugReportFormTests
 {
     [TestCase("", false)]

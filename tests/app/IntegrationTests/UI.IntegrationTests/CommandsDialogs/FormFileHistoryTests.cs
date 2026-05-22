@@ -1,5 +1,4 @@
 ﻿using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
@@ -10,9 +9,9 @@ namespace GitExtensions.UITests.CommandsDialogs;
 [Apartment(ApartmentState.STA)]
 public class FormFileHistoryTests
 {
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     [SetUp]
     public void SetUp()

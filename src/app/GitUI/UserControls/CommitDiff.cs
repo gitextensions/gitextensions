@@ -29,19 +29,19 @@ public partial class CommitDiff : GitModuleControl
         splitContainer2.SplitterDistance = DpiUtil.Scale(260);
     }
 
-    private void FileViewer_TopScrollReached(object sender, EventArgs e)
+    private void FileViewer_TopScrollReached(object? sender, EventArgs e)
     {
         DiffFiles.SelectPreviousVisibleItem();
         DiffText.ScrollToBottom();
     }
 
-    private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+    private void FileViewer_BottomScrollReached(object? sender, EventArgs e)
     {
         DiffFiles.SelectNextVisibleItem();
         DiffText.ScrollToTop();
     }
 
-    public void SetRevision(ObjectId? objectId, string? fileToSelect)
+    public void SetRevision(ObjectId objectId, string? fileToSelect)
     {
         // We cannot use the GitRevision from revision grid. When a filtered commit list
         // is shown (file history/normal filter) the parent guids are not the 'real' parents,
@@ -53,7 +53,7 @@ public partial class CommitDiff : GitModuleControl
             DiffFiles.SetDiffs(new[] { revision });
             if (fileToSelect is not null)
             {
-                FileStatusItem itemToSelect = DiffFiles.AllItems.FirstOrDefault(i => i.Item.Name == fileToSelect);
+                FileStatusItem? itemToSelect = DiffFiles.AllItems.FirstOrDefault(i => i.Item.Name == fileToSelect);
                 if (itemToSelect is not null)
                 {
                     DiffFiles.SelectedGitItem = itemToSelect.Item;
@@ -86,7 +86,7 @@ public partial class CommitDiff : GitModuleControl
         ViewSelectedDiff();
     }
 
-    private void DiffText_ExtraDiffArgumentsChanged(object sender, EventArgs e)
+    private void DiffText_ExtraDiffArgumentsChanged(object? sender, EventArgs e)
     {
         ViewSelectedDiff();
     }

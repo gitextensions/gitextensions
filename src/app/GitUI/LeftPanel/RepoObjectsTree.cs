@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Drawing.Imaging;
 using System.Reflection;
 using GitCommands;
@@ -28,17 +28,18 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private NativeTreeViewExplorerNavigationDecorator _explorerNavigationDecorator;
     private readonly List<Tree> _rootNodes = [];
     private readonly SearchControl<string> _txtBranchCriterion;
-    private LocalBranchTree _branchesTree;
-    private RemoteBranchTree _remotesTree;
-    private TagTree _tagTree;
-    private StashTree _stashTree;
-    private SubmoduleTree _submoduleTree;
+    private LocalBranchTree _branchesTree = null!;
+    private RemoteBranchTree _remotesTree = null!;
+    private TagTree _tagTree = null!;
+    private StashTree _stashTree = null!;
+    private SubmoduleTree _submoduleTree = null!;
+    private WorktreeTree _worktreeTree = null!;
     private List<TreeNode>? _searchResult;
-    private Action<string?> _filterRevisionGridBySpaceSeparatedRefs;
+    private Action<string?> _filterRevisionGridBySpaceSeparatedRefs = null!;
     private IAheadBehindDataProvider? _aheadBehindDataProvider;
     private bool _searchCriteriaChanged;
-    private ICheckRefs _refsSource;
-    private IRevisionGridInfo _revisionGridInfo;
+    private ICheckRefs _refsSource = null!;
+    private IRevisionGridInfo _revisionGridInfo = null!;
 
     public RepoObjectsTree()
     {
@@ -71,6 +72,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         tsbShowTags.Checked = AppSettings.RepoObjectsTreeShowTags;
         tsbShowSubmodules.Checked = AppSettings.RepoObjectsTreeShowSubmodules;
         tsbShowStashes.Checked = AppSettings.RepoObjectsTreeShowStashes;
+        tsbShowWorktrees.Checked = AppSettings.RepoObjectsTreeShowWorktrees;
 
         _doubleClickDecorator = new NativeTreeViewDoubleClickDecorator(treeMain);
         _doubleClickDecorator.BeforeDoubleClickExpandCollapse += BeforeDoubleClickExpandCollapse;
@@ -93,37 +95,38 @@ public sealed partial class RepoObjectsTree : GitModuleControl
                 ImageSize = DpiUtil.Scale(new Size(16, 16 + rowPadding + rowPadding)), // Scale ImageSize and images scale automatically
                 Images =
                 {
-                    { nameof(Images.ArrowUp), Pad(Images.ArrowUp) },
                     { nameof(Images.ArrowDown), Pad(Images.ArrowDown) },
-                    { nameof(Images.FolderClosed), Pad(Images.FolderClosed) },
+                    { nameof(Images.ArrowUp), Pad(Images.ArrowUp) },
+                    { nameof(Images.BitBucket), Pad(Images.BitBucket) },
+                    { nameof(Images.Branch), Pad(Images.Branch.AdaptLightness()) },
+                    { nameof(Images.BranchFolder), Pad(Images.BranchFolder) },
                     { nameof(Images.BranchLocal), Pad(Images.BranchLocal) },
                     { nameof(Images.BranchLocalMerged), Pad(Images.BranchLocalMerged) },
-                    { nameof(Images.Branch), Pad(Images.Branch.AdaptLightness()) },
-                    { nameof(Images.Remote), Pad(Images.Remote) },
-                    { nameof(Images.BitBucket), Pad(Images.BitBucket) },
-                    { nameof(Images.GitHub), Pad(Images.GitHub) },
-                    { nameof(Images.VisualStudioTeamServices), Pad(Images.VisualStudioTeamServices) },
                     { nameof(Images.BranchLocalRoot), Pad(Images.BranchLocalRoot) },
-                    { nameof(Images.BranchRemoteRoot), Pad(Images.BranchRemoteRoot) },
                     { nameof(Images.BranchRemote), Pad(Images.BranchRemote) },
                     { nameof(Images.BranchRemoteMerged), Pad(Images.BranchRemoteMerged) },
-                    { nameof(Images.BranchFolder), Pad(Images.BranchFolder) },
-                    { nameof(Images.TagHorizontal), Pad(Images.TagHorizontal) },
-                    { nameof(Images.EyeOpened), Pad(Images.EyeOpened.AdaptLightness()) },
+                    { nameof(Images.BranchRemoteRoot), Pad(Images.BranchRemoteRoot) },
                     { nameof(Images.EyeClosed), Pad(Images.EyeClosed.AdaptLightness()) },
-                    { nameof(Images.RemoteEnableAndFetch), Pad(Images.RemoteEnableAndFetch.AdaptLightness()) },
+                    { nameof(Images.EyeOpened), Pad(Images.EyeOpened.AdaptLightness()) },
                     { nameof(Images.FileStatusModified), Pad(Images.FileStatusModified) },
+                    { nameof(Images.FolderClosed), Pad(Images.FolderClosed) },
                     { nameof(Images.FolderSubmodule), Pad(Images.FolderSubmodule) },
+                    { nameof(Images.GitHub), Pad(Images.GitHub) },
+                    { nameof(Images.Remote), Pad(Images.Remote) },
+                    { nameof(Images.RemoteEnableAndFetch), Pad(Images.RemoteEnableAndFetch.AdaptLightness()) },
                     { nameof(Images.Stash), Pad(Images.Stash) },
                     { nameof(Images.SubmoduleDirty), Pad(Images.SubmoduleDirty) },
-                    { nameof(Images.SubmoduleRevisionUp), Pad(Images.SubmoduleRevisionUp) },
                     { nameof(Images.SubmoduleRevisionDown), Pad(Images.SubmoduleRevisionDown) },
-                    { nameof(Images.SubmoduleRevisionSemiUp), Pad(Images.SubmoduleRevisionSemiUp) },
-                    { nameof(Images.SubmoduleRevisionSemiDown), Pad(Images.SubmoduleRevisionSemiDown) },
-                    { nameof(Images.SubmoduleRevisionUpDirty), Pad(Images.SubmoduleRevisionUpDirty) },
                     { nameof(Images.SubmoduleRevisionDownDirty), Pad(Images.SubmoduleRevisionDownDirty) },
-                    { nameof(Images.SubmoduleRevisionSemiUpDirty), Pad(Images.SubmoduleRevisionSemiUpDirty) },
+                    { nameof(Images.SubmoduleRevisionSemiDown), Pad(Images.SubmoduleRevisionSemiDown) },
                     { nameof(Images.SubmoduleRevisionSemiDownDirty), Pad(Images.SubmoduleRevisionSemiDownDirty) },
+                    { nameof(Images.SubmoduleRevisionSemiUp), Pad(Images.SubmoduleRevisionSemiUp) },
+                    { nameof(Images.SubmoduleRevisionSemiUpDirty), Pad(Images.SubmoduleRevisionSemiUpDirty) },
+                    { nameof(Images.SubmoduleRevisionUp), Pad(Images.SubmoduleRevisionUp) },
+                    { nameof(Images.SubmoduleRevisionUpDirty), Pad(Images.SubmoduleRevisionUpDirty) },
+                    { nameof(Images.TagHorizontal), Pad(Images.TagHorizontal) },
+                    { nameof(Images.VisualStudioTeamServices), Pad(Images.VisualStudioTeamServices) },
+                    { nameof(Images.WorkTree), Pad(Images.WorkTree) },
                 }
             };
             treeMain.SelectedImageKey = treeMain.ImageKey;
@@ -163,7 +166,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             IEnumerable<string> SearchForBranch(string arg)
             {
                 return CollectFilterCandidates()
-                    .Where(r => r.IndexOf(arg, StringComparison.OrdinalIgnoreCase) != -1);
+                    .Where(r => r.Contains(arg, StringComparison.OrdinalIgnoreCase));
             }
 
             IEnumerable<string> CollectFilterCandidates()
@@ -200,7 +203,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
-    private void BeforeDoubleClickExpandCollapse(object sender, CancelEventArgs e)
+    private void BeforeDoubleClickExpandCollapse(object? sender, CancelEventArgs e)
     {
         // If node is an inner node, and overrides OnDoubleClick, then disable expand/collapse
         if (treeMain.SelectedNode?.Tag is Node { HasChildren: true } node
@@ -211,7 +214,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         return;
 
-        bool IsOverride(MethodInfo? m)
+        static bool IsOverride(MethodInfo? m)
         {
             return m is not null && m.GetBaseDefinition().DeclaringType != m.DeclaringType;
         }
@@ -239,9 +242,10 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     /// <param name="forceRefresh">Refresh may be required as references may have been changed.</param>
     public void RefreshRevisionsLoading(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs, Lazy<IReadOnlyCollection<GitRevision>> getStashRevs, bool forceRefresh)
     {
-        _branchesTree.Refresh(getRefs, forceRefresh);
-        _remotesTree.Refresh(getRefs, forceRefresh);
-        _tagTree.Refresh(getRefs, forceRefresh);
+        _branchesTree.Refresh(getRefs);
+        _remotesTree.Refresh(getRefs);
+        _worktreeTree.Refresh();
+        _tagTree.Refresh(getRefs);
         _stashTree.Refresh(getStashRevs);
     }
 
@@ -264,9 +268,9 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     /// <param name="getRefs">Git references</param>
     public void ResortRefs(Func<RefsFilter, IReadOnlyList<IGitRef>> getRefs)
     {
-        _branchesTree.Refresh(getRefs);
-        _remotesTree.Refresh(getRefs);
-        _tagTree.Refresh(getRefs);
+        _branchesTree.RefreshInternal(getRefs);
+        _remotesTree.RefreshInternal(getRefs);
+        _tagTree.RefreshInternal(getRefs);
 
         _branchesTree.UpdateVisibility();
         _remotesTree.UpdateVisibility();
@@ -283,7 +287,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         // If we arrived here through the chain of events after selecting a node in the tree,
         // and the selected revision is the one we have selected - do nothing.
         if ((selectedRevisions.Count == 0 && treeMain.SelectedNode is null)
-            || (selectedRevisions.Count == 1 && selectedRevisions[0].ObjectId == GetSelectedNodeObjectId(treeMain.SelectedNode)))
+            || (selectedRevisions.Count == 1 && selectedRevisions[0].ObjectId == GetSelectedNodeObjectId(treeMain.SelectedNode!)))
         {
             return;
         }
@@ -308,7 +312,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             cancellationToken.ThrowIfCancellationRequested();
             HashSet<string> mergedBranches = selectedGuid is null
                 ? []
-                : (await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid, cancellationToken)).ToHashSet();
+                : [.. await Module.GetMergedBranchesAsync(includeRemote: true, fullRefname: true, commit: selectedGuid, cancellationToken)];
 
             selectedRevision?.Refs.ForEach(gitRef => mergedBranches.Remove(gitRef.CompleteName));
 
@@ -328,11 +332,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             }
         });
 
-        static ObjectId? GetSelectedNodeObjectId(TreeNode treeNode)
+        static ObjectId GetSelectedNodeObjectId(TreeNode treeNode)
         {
             // Local or remote branch nodes or tag nodes
-            return Node.GetNodeSafe<BaseBranchLeafNode>(treeNode)?.ObjectId ??
-                Node.GetNodeSafe<TagNode>(treeNode)?.ObjectId;
+            ObjectId fromBranch = Node.GetNodeSafe<BaseBranchLeafNode>(treeNode)?.ObjectId ?? default;
+            return !fromBranch.IsZero ? fromBranch : Node.GetNodeSafe<TagNode>(treeNode)?.ObjectId ?? default;
         }
     }
 
@@ -364,6 +368,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
         CreateBranches();
         CreateRemotes();
+        CreateWorktrees();
         CreateTags();
         CreateSubmodules();
         CreateStashes();
@@ -401,6 +406,18 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         };
 
         _remotesTree = new RemoteBranchTree(rootNode, UICommandsSource, _aheadBehindDataProvider, _refsSource);
+    }
+
+    private void CreateWorktrees()
+    {
+        TreeNode rootNode = new(TranslatedStrings.Worktrees)
+        {
+            Name = TranslatedStrings.Worktrees,
+            ImageKey = nameof(Images.WorkTree),
+            SelectedImageKey = nameof(Images.WorkTree)
+        };
+
+        _worktreeTree = new WorktreeTree(rootNode, UICommandsSource);
     }
 
     private void CreateTags()
@@ -447,11 +464,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         // Add Tree's node in position index order. Because TreeNodeCollections cannot be sorted,
         // we create a list from it, sort it, then clear and re-add the nodes back to the collection.
         treeMain.BeginUpdate();
-        List<TreeNode> nodeList = treeMain.Nodes.OfType<TreeNode>().ToList();
+        List<TreeNode> nodeList = [.. treeMain.Nodes.OfType<TreeNode>()];
         nodeList.Add(tree.TreeViewNode);
         treeMain.Nodes.Clear();
         Dictionary<Tree, int> treeToPositionIndex = GetTreeToPositionIndex();
-        treeMain.Nodes.AddRange(nodeList.OrderBy(treeNode => treeToPositionIndex[(Tree)treeNode.Tag]).ToArray());
+        treeMain.Nodes.AddRange([.. nodeList.OrderBy(treeNode => treeToPositionIndex[(Tree)treeNode.Tag!])]);
         treeMain.EndUpdate();
 
         treeMain.Font = AppSettings.Font;
@@ -471,7 +488,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     {
         _txtBranchCriterion.CloseDropdown();
 
-        if (_searchCriteriaChanged && _searchResult?.Any() is true)
+        if (_searchCriteriaChanged && _searchResult?.Count is > 0)
         {
             _searchCriteriaChanged = false;
             foreach (TreeNode coloredNode in _searchResult)
@@ -487,7 +504,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             }
         }
 
-        if (_searchResult is null || !_searchResult.Any())
+        if (_searchResult is null || _searchResult.Count == 0)
         {
             if (!string.IsNullOrWhiteSpace(_txtBranchCriterion.Text))
             {
@@ -495,7 +512,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             }
         }
 
-        TreeNode node = GetNextSearchResult();
+        TreeNode? node = GetNextSearchResult();
 
         if (node is null)
         {
@@ -530,14 +547,14 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
                 if (n.Tag is BaseRevisionNode branch)
                 {
-                    if (branch.FullPath.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                    if (branch.FullPath.Contains(text, StringComparison.InvariantCultureIgnoreCase))
                     {
                         AddTreeNodeToSearchResult(ret, n);
                     }
                 }
                 else
                 {
-                    if (n.Text.IndexOf(text, StringComparison.InvariantCultureIgnoreCase) != -1)
+                    if (n.Text.Contains(text, StringComparison.InvariantCultureIgnoreCase))
                     {
                         AddTreeNodeToSearchResult(ret, n);
                     }
@@ -563,12 +580,12 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         treeMain.CollapseAll();
     }
 
-    private void OnBranchCriterionChanged(object sender, EventArgs e)
+    private void OnBranchCriterionChanged(object? sender, EventArgs e)
     {
         _searchCriteriaChanged = true;
     }
 
-    private void TxtBranchCriterion_KeyDown(object sender, KeyEventArgs e)
+    private void TxtBranchCriterion_KeyDown(object? sender, KeyEventArgs e)
     {
         if (e.KeyCode != Keys.Enter)
         {
@@ -604,7 +621,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
-    private void OnNodeSelected(object sender, TreeViewEventArgs e)
+    private void OnNodeSelected(object? sender, TreeViewEventArgs e)
     {
         Node.OnNode<Node>(e.Node, node =>
         {
@@ -619,13 +636,18 @@ public sealed partial class RepoObjectsTree : GitModuleControl
     private IEnumerable<NodeBase> GetSelectedNodes()
         => _rootNodes.SelectMany(tree => tree.GetSelectedNodes());
 
-    private void OnNodeClick(object sender, TreeNodeMouseClickEventArgs e)
+    private void OnNodeClick(object? sender, TreeNodeMouseClickEventArgs e)
     {
-        NodeBase node = (NodeBase)e.Node.Tag;
+        NodeBase? node = (NodeBase?)e.Node?.Tag;
 
-        if (e.Button == MouseButtons.Right && node.IsSelected)
+        if (e.Button == MouseButtons.Right && node?.IsSelected is true)
         {
             return; // don't undo multi-selection on opening context menu, even without Ctrl
+        }
+
+        if (node is null)
+        {
+            return;
         }
 
         try
@@ -662,7 +684,7 @@ public sealed partial class RepoObjectsTree : GitModuleControl
         }
     }
 
-    private void OnNodeDoubleClick(object sender, TreeNodeMouseClickEventArgs e)
+    private void OnNodeDoubleClick(object? sender, TreeNodeMouseClickEventArgs e)
     {
         // Don't consider-double clicking on the PlusMinus as a double-click event
         // for nodes in tree. This prevents opening inner submodules, for example,
@@ -715,21 +737,15 @@ public sealed partial class RepoObjectsTree : GitModuleControl
 
             foreach (string text in nodeTexts)
             {
-                node = nodes.SingleOrDefault(n => n.Text == text);
-
-                if (node is null)
-                {
-                    throw new ArgumentException(
+                node = nodes.SingleOrDefault(n => n.Text == text) ?? throw new ArgumentException(
                         $"Node '{text}' not found. Available nodes on this level: " + nodes.Select(n => n.Text).Join(", "),
                         nameof(nodeTexts));
-                }
-
                 nodes = node.Nodes.Cast<TreeNode>();
             }
 
-            if (node?.Tag.GetType() != typeof(TExpected))
+            if (node?.Tag?.GetType() != typeof(TExpected))
             {
-                throw new ArgumentException($"The selected node is of type {node?.Tag.GetType()} instead of the expected type {typeof(TExpected)}.", nameof(TExpected));
+                throw new ArgumentException($"The selected node is of type {node?.Tag?.GetType()} instead of the expected type {typeof(TExpected)}.", nameof(TExpected));
             }
 
             TreeView.SelectedNode = node; // simulates a node click well enough for UI tests

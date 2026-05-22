@@ -1,23 +1,56 @@
 ﻿# Example:
 #    .\Prepare-Release.ps1 -milestones 36,37
+#    .\Prepare-Release.ps1 -milestones 36,37 -pat ghp_YourPersonalAccessTokenHere
 #
 
 [CmdletBinding()]
 Param(
     #[Parameter(Mandatory=$True, Position=3)]
-    [string] $milestones
+    [string] $milestones,
+    [string] $pat
 )
 
 $repoRoot = Resolve-Path  "../../"
 
 
+function Invoke-GitHubApi {
+    Param(
+        [System.Net.Http.HttpClient] $client,
+        [string] $uri
+    )
+
+    $response = $client.GetAsync($uri).Result
+    if (-not $response.IsSuccessStatusCode) {
+        $body = $response.Content.ReadAsStringAsync().Result
+        throw "GitHub API request to '$uri' failed with $([int]$response.StatusCode) $($response.ReasonPhrase): $body"
+    }
+
+    return $response.Content.ReadAsStringAsync().Result | ConvertFrom-Json
+}
+
 function Generate-Changelog {
     [CmdletBinding()]
     Param(
-        [int[]] $milestones
+        [int[]] $milestones,
+        [string] $pat
     )
 
     $baseUri = "https://api.github.com/repos/gitextensions/gitextensions"
+
+    # Use HttpClient with a per-request DefaultRequestHeaders so that the
+    # Authorization header is set at the protocol level and cannot be dropped.
+    # WebClient treats Authorization as a restricted header and silently strips
+    # it; Invoke-RestMethod on PS 5.1 has the same limitation via HttpWebRequest.
+    [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
+    Add-Type -AssemblyName System.Net.Http
+    $httpClient = New-Object System.Net.Http.HttpClient
+    $httpClient.DefaultRequestHeaders.Add('Accept', 'application/vnd.github+json')
+    $httpClient.DefaultRequestHeaders.Add('X-GitHub-Api-Version', '2022-11-28')
+    $httpClient.DefaultRequestHeaders.Add('User-Agent', 'GitExtensions-PrepareRelease')
+    if ($pat) {
+        $httpClient.DefaultRequestHeaders.Authorization =
+            New-Object System.Net.Http.Headers.AuthenticationHeaderValue('token', $pat)
+    }
 
     $changelogFile = "$repoRoot/src/app/GitUI/Resources/ChangeLog.md";
     $totalIssues = @();
@@ -27,15 +60,14 @@ function Generate-Changelog {
 
         Write-Host "Preparing changelog for milestone: $milestoneNumber";
 
-        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
-        $milestone = Invoke-RestMethod -Method Get -Uri $baseUri/milestones/$milestoneNumber
+        $milestone = Invoke-GitHubApi $httpClient "$baseUri/milestones/$milestoneNumber"
         $milestoneTitle = $milestone.title;
         $milestoneDue = if ($milestone.due_on -eq $null) { "no due date" } else { Get-Date $milestone.due_on -Format "dd MMM yyyy" };
         $totalIssueCount = $milestone.closed_issues
 
         $pageIndex = 1;
         while ($totalIssueCount -gt 0) {
-            $issues = Invoke-RestMethod -Method Get -Uri "$baseUri/issues?page=$pageIndex&per_page=100&milestone=$($milestone.number)&state=closed" #-Verbose
+            $issues = Invoke-GitHubApi $httpClient "$baseUri/issues?page=$pageIndex&per_page=100&milestone=$($milestone.number)&state=closed"
             $totalIssues += $issues;
 
             $totalIssueCount -= $issues.Count;
@@ -137,7 +169,7 @@ try {
     Write-Host ----------------------------------------------------------------------
     Write-Host Generate the changelog
     Write-Host ----------------------------------------------------------------------
-    Generate-Changelog -milestones $milestoneNumbers
+    Generate-Changelog -milestones $milestoneNumbers -pat $pat
 
 }
 catch {

@@ -3,6 +3,7 @@ using Git.hub;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
@@ -98,7 +99,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
 
     private IGitUICommands? _currentGitUiCommands;
     private IReadOnlyList<IHostedRemote>? _hostedRemotesForModule;
-    private List<string> _currentMessages = new();
+    private List<string> _currentMessages = [];
 
     public GitHub3Plugin() : base(true)
     {
@@ -130,12 +131,12 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         yield return _issueCommitMessageHelperMaxCount;
     }
 
-    private void GenerateTokenLink_Click(object sender, EventArgs e)
+    private void GenerateTokenLink_Click(object? sender, EventArgs e)
     {
         OpenLink($"https://{GitHubHost.ValueOrDefault(Instance.Settings)}/settings/tokens/new?description=Token%20for%20GitExtensions&scopes=repo,public_repo");
     }
 
-    private void ManageTokenLink_Click(object sender, EventArgs e)
+    private void ManageTokenLink_Click(object? sender, EventArgs e)
     {
         OpenLink($"https://{GitHubHost.ValueOrDefault(Instance.Settings)}/settings/tokens");
     }
@@ -148,7 +149,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         }
         catch (Exception ex)
         {
-            MessageBox.Show(_openLinkFailed.Text + ex.Message);
+            MessageBoxes.Show(owner: null, _openLinkFailed.Text + ex.Message, caption: string.Empty, MessageBoxButtons.OK, MessageBoxIcon.None);
         }
     }
 
@@ -179,7 +180,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
 
         ThreadHelper.FileAndForget(async () =>
         {
-            IHostedRemote[] hostedRemotes = GetHostedRemotes().ToArray();
+            IHostedRemote[] hostedRemotes = [.. GetHostedRemotes()];
             if (hostedRemotes.Length == 0)
             {
                 return;
@@ -194,10 +195,9 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
                 return;
             }
 
-            Issue[] recentUserIssues = issues.Where(i => i.Number != 0 && hostedRemotes.Any(r => r.Owner == i.Repository.Owner.Login && r.RemoteRepositoryName == i.Repository.Name))
+            Issue[] recentUserIssues = [.. issues.Where(i => i.Number != 0 && hostedRemotes.Any(r => r.Owner == i.Repository.Owner.Login && r.RemoteRepositoryName == i.Repository.Name))
                                                         .OrderByDescending(i => i.UpdatedAt)
-                                                        .Take(_issueCommitMessageHelperMaxCount.ValueOrDefault(Settings))
-                                                        .ToArray();
+                                                        .Take(_issueCommitMessageHelperMaxCount.ValueOrDefault(Settings))];
 
             bool multipleRemotes = hostedRemotes.Length > 1;
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
@@ -209,7 +209,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
                 e.GitUICommands.AddCommitTemplate(key, () => GetIssueDescription(issue), Icon);
             }
 
-            string GetIssueDescription(Issue issue)
+            static string GetIssueDescription(Issue issue)
                 => $"""
 
                     Fixes #{issue.Number} : {issue.Title}
@@ -220,7 +220,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         });
     }
 
-    private void GitUiCommands_PostCommit(object sender, GitUIEventArgs e)
+    private void GitUiCommands_PostCommit(object? sender, GitUIEventArgs e)
     {
         if (_currentMessages.Count == 0)
         {
@@ -243,7 +243,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         }
         else
         {
-            MessageBox.Show(args.OwnerForm, _tokenAlreadyExist.Text, _error.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(args.OwnerForm, _tokenAlreadyExist.Text, _error.Text);
         }
 
         return false;
@@ -280,7 +280,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         Validates.NotNull(_currentGitUiCommands);
 
         IGitModule gitModule = _currentGitUiCommands.Module;
-        IHostedRemote hostedRemote = GetHostedRemotesForModule().FirstOrDefault(r => r.IsOwnedByMe);
+        IHostedRemote? hostedRemote = GetHostedRemotesForModule().FirstOrDefault(r => r.IsOwnedByMe);
         if (hostedRemote is null)
         {
             return null;
@@ -302,9 +302,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
     }
 
     public bool GitModuleIsRelevantToMe()
-        => _currentGitUiCommands?.Module is null
-            ? false
-            : GetHostedRemotes().Any();
+        => _currentGitUiCommands?.Module is not null && GetHostedRemotes().Any();
 
     /// <summary>
     /// Returns all relevant github-remotes for the current working directory
@@ -316,7 +314,12 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
     {
         HashSet<IHostedRemote> set = [];
 
-        IGitModule gitModule = _currentGitUiCommands.Module;
+        IGitModule? gitModule = _currentGitUiCommands?.Module;
+        if (gitModule is null)
+        {
+            yield break;
+        }
+
         foreach (string remote in gitModule.GetRemoteNames())
         {
             string url = gitModule.GetSetting(string.Format(SettingKeyString.RemoteUrl, remote));
@@ -345,7 +348,7 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
         for (int i = contextMenu.Items.Count - 1; i >= 0; i--)
         {
             ToolStripItem item = contextMenu.Items[i];
-            if (item is ToolStripMenuItem tsmi && (string)tsmi.Tag == HostedRemoteMenuItem)
+            if (item is ToolStripMenuItem tsmi && tsmi.Tag as string == HostedRemoteMenuItem)
             {
                 contextMenu.Items.RemoveAt(i);
             }
@@ -357,8 +360,10 @@ public class GitHub3Plugin : GitPluginBase, IRepositoryHostPlugin, IGitPluginFor
             return;
         }
 
-        ToolStripMenuItem toolStripMenuItem = new(string.Format(_viewInWebSite.Text, Name), Icon);
-        toolStripMenuItem.Tag = HostedRemoteMenuItem;
+        ToolStripMenuItem toolStripMenuItem = new(string.Format(_viewInWebSite.Text, Name), Icon)
+        {
+            Tag = HostedRemoteMenuItem
+        };
         contextMenu.Items.Add(toolStripMenuItem);
 
         foreach (IHostedRemote hostedRemote in _hostedRemotesForModule.OrderBy(r => r.Data))

@@ -14,7 +14,7 @@ namespace GitExtensions.Plugins.ReleaseNotesGenerator;
 internal partial class HtmlFragment
 {
     [GeneratedRegex(@"(?<key>[a-zA-Z]+):(?<val>.+?)[\r\n]", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
-    private static partial Regex HtmlRegex();
+    private static partial Regex HtmlRegex { get; }
 
     #region Read and decode from clipboard
 
@@ -52,7 +52,7 @@ internal partial class HtmlFragment
         int startHtml = 0;
         int startFragment = 0;
 
-        for (Match m = HtmlRegex().Match(rawClipboardText); m.Success; m = m.NextMatch())
+        for (Match m = HtmlRegex.Match(rawClipboardText); m.Success; m = m.NextMatch())
         {
             string key = m.Groups["key"].Value.ToLower();
             string val = m.Groups["val"].Value;
@@ -155,11 +155,10 @@ internal partial class HtmlFragment
     /// Clears clipboard and copy a HTML fragment to the clipboard, providing additional meta-information.
     /// </summary>
     /// <param name="htmlFragment">a html fragment</param>
-    /// <param name="title">optional title of the HTML document (can be null)</param>
     /// <param name="sourceUri">optional Source URL of the HTML document, for resolving relative links (can be null)</param>
-    public static void CopyToClipboard(string htmlFragment, string? title = null, Uri? sourceUri = null)
+    public static void CopyToClipboard(string htmlFragment, Uri? sourceUri = null)
     {
-        DataObject dataObject = CreateHtmlFormatClipboardDataObject(htmlFragment, title, sourceUri);
+        DataObject dataObject = CreateHtmlFormatClipboardDataObject(htmlFragment, sourceUri);
 
         Clipboard.Clear();
         Clipboard.SetDataObject(dataObject);
@@ -168,7 +167,7 @@ internal partial class HtmlFragment
         // or as table to MS Word or LibreOffice Writer
     }
 
-    internal static DataObject CreateHtmlFormatClipboardDataObject(string htmlFragment, string? title = "From Clipboard", Uri? sourceUri = null)
+    internal static DataObject CreateHtmlFormatClipboardDataObject(string htmlFragment, Uri? sourceUri = null)
     {
         System.Text.StringBuilder sb = new();
 

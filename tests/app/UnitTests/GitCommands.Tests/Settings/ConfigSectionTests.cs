@@ -1,15 +1,12 @@
-﻿using FluentAssertions;
-using GitCommands.Config;
+﻿using GitCommands.Config;
 
 namespace GitCommandsTests.Settings;
-
-[TestFixture]
 internal sealed class ConfigSectionTests
 {
     private static readonly string _keyName = Guid.NewGuid().ToString();
     private static readonly string _sectionName = Guid.NewGuid().ToString();
 
-    private static ConfigSection _configSection;
+    private static ConfigSection _configSection = null!;
 
     [SetUp]
     public void SetUp()
@@ -20,11 +17,11 @@ internal sealed class ConfigSectionTests
     [OneTimeTearDown]
     public void OneTimeTearDown()
     {
-        _configSection = null;
+        _configSection = null!;
     }
 
     [Test]
-    public void should_remove_setting([Values(null, "")] string noValue)
+    public void should_remove_setting([Values(null, "")] string? noValue)
     {
         string value = Guid.NewGuid().ToString();
         string defaultValue = Guid.NewGuid().ToString();

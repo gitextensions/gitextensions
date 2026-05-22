@@ -4,6 +4,7 @@ using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
+using GitExtUtils;
 using GitExtUtils.GitUI;
 using GitUI.HelperDialogs;
 using Microsoft;
@@ -134,7 +135,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private static void ResizeColumnToFitContent(ColumnHeader column)
     {
-        int resizeStrategy = column.ListView.Items.Count == 0 ? ResizeOnHeader : ResizeOnContent;
+        int resizeStrategy = column.ListView!.Items.Count == 0 ? ResizeOnHeader : ResizeOnContent;
         column.Width = resizeStrategy;
     }
 
@@ -164,7 +165,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
                 {
                     await this.SwitchToMainThreadAsync();
 
-                    MessageBox.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(this, _strSearchFailed.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     searchBtn.Enabled = true;
                 }
             });
@@ -196,11 +197,11 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
                     if (ex.Message.Contains("404"))
                     {
-                        MessageBox.Show(this, _strUserNotFound.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBoxes.Show(this, _strUserNotFound.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
                     {
-                        MessageBox.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine +
+                        MessageBoxes.Show(this, _strCouldNotFetchReposOfUser.Text + Environment.NewLine +
                                               ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
 
@@ -246,18 +247,18 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     {
         if (searchResultsLV.SelectedItems.Count != 1)
         {
-            MessageBox.Show(this, _strSelectOneItem.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _strSelectOneItem.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
-        IHostedRepository hostedRepo = searchResultsLV.SelectedItems[0].Tag as IHostedRepository;
+        IHostedRepository? hostedRepo = searchResultsLV.SelectedItems[0].Tag as IHostedRepository;
         try
         {
             hostedRepo?.Fork();
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, _strFailedToFork.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _strFailedToFork.Text + Environment.NewLine + ex.Message, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         tabControl.SelectedTab = myReposPage;
@@ -284,7 +285,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         }
 
         forkBtn.Enabled = true;
-        IHostedRepository hostedRepo = (IHostedRepository)searchResultsLV.SelectedItems[0].Tag;
+        IHostedRepository hostedRepo = (IHostedRepository)searchResultsLV.SelectedItems[0].Tag!;
         searchResultItemDescription.Text = hostedRepo.Description;
     }
 
@@ -292,7 +293,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     {
         string initialDir = destinationTB.Text.Length > 0 ? destinationTB.Text : "C:\\";
 
-        string userSelectedPath = OsShellUtil.PickFolder(this, initialDir);
+        string? userSelectedPath = OsShellUtil.PickFolder(this, initialDir);
 
         if (userSelectedPath is not null)
         {
@@ -303,7 +304,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private void _cloneBtn_Click(object sender, EventArgs e)
     {
-        IHostedRepository repo = CurrentySelectedGitRepo;
+        IHostedRepository? repo = CurrentySelectedGitRepo;
 
         if (repo is not null)
         {
@@ -321,7 +322,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         string hp = CurrentySelectedGitRepo.Homepage;
         if (string.IsNullOrEmpty(hp) || (!hp.StartsWith("http://") && !hp.StartsWith("https://")))
         {
-            MessageBox.Show(this, _strNoHomepageDefined.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _strNoHomepageDefined.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         else
         {
@@ -386,14 +387,14 @@ public partial class ForkAndCloneForm : GitExtensionsForm
             return;
         }
 
-        GitModule module = new(targetDir);
+        GitModule module = new(_commands.GetRequiredService<IGitExecutorProvider>(), targetDir);
 
         if (addUpstreamRemoteAsCB.Text.Trim().Length > 0 && !string.IsNullOrEmpty(repo.ParentUrl))
         {
             string error = module.AddRemote(addUpstreamRemoteAsCB.Text.Trim(), repo.ParentUrl);
             if (!string.IsNullOrEmpty(error))
             {
-                MessageBox.Show(this, error, _strCouldNotAddRemote.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, error, _strCouldNotAddRemote.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -413,7 +414,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
                     return null;
                 }
 
-                return (IHostedRepository)searchResultsLV.SelectedItems[0].Tag;
+                return (IHostedRepository)searchResultsLV.SelectedItems[0].Tag!;
             }
 
             if (myReposLV.SelectedItems.Count != 1)
@@ -421,13 +422,13 @@ public partial class ForkAndCloneForm : GitExtensionsForm
                 return null;
             }
 
-            return (IHostedRepository)myReposLV.SelectedItems[0].Tag;
+            return (IHostedRepository)myReposLV.SelectedItems[0].Tag!;
         }
     }
 
     private void UpdateCloneInfo(bool updateCreateDirTB = true, bool updateProtocols = true)
     {
-        IHostedRepository repo = CurrentySelectedGitRepo;
+        IHostedRepository? repo = CurrentySelectedGitRepo;
 
         if (repo is not null)
         {
@@ -503,7 +504,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
         string targetDir = destinationTB.Text.Trim();
         if (targetDir.Length == 0)
         {
-            MessageBox.Show(this, _strCloneFolderCanNotBeEmpty.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _strCloneFolderCanNotBeEmpty.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return null;
         }
 
@@ -523,7 +524,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private void _destinationTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (destinationTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+        if (destinationTB.Text.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) != -1)
         {
             e.Cancel = true;
         }
@@ -531,7 +532,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
 
     private void _createDirTB_Validating(object sender, System.ComponentModel.CancelEventArgs e)
     {
-        if (createDirTB.Text.IndexOfAny(Path.GetInvalidPathChars()) != -1)
+        if (createDirTB.Text.IndexOfAny(Delimiters.InvalidPathCharsSearchValues) != -1)
         {
             e.Cancel = true;
         }
@@ -541,7 +542,7 @@ public partial class ForkAndCloneForm : GitExtensionsForm
     {
         Validates.NotNull(CurrentySelectedGitRepo);
 
-        CurrentySelectedGitRepo.CloneProtocol = (GitProtocol)ProtocolDropdownList.SelectedItem;
+        CurrentySelectedGitRepo.CloneProtocol = (GitProtocol)ProtocolDropdownList.SelectedItem!;
         SetCloneInfoText(CurrentySelectedGitRepo);
     }
 }

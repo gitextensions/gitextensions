@@ -10,10 +10,10 @@ public partial class BranchSelector : GitModuleControl
     public event EventHandler? SelectedIndexChanged;
 
     private readonly bool _isLoading;
-    private IReadOnlyList<ObjectId>? _containRevisions;
+    private IReadOnlyList<ObjectId>? _containObjectIds;
     private string[]? _localBranches;
     private string[]? _remoteBranches;
-    public ObjectId? CommitToCompare;
+    public ObjectId CommitToCompare;
 
     public BranchSelector()
     {
@@ -34,16 +34,16 @@ public partial class BranchSelector : GitModuleControl
     public string SelectedBranchName => Branches.Text;
     public override string Text => Branches.Text;
 
-    public void Initialize(bool remote, IReadOnlyList<ObjectId>? containRevisions)
+    public void Initialize(bool remote, IReadOnlyList<ObjectId>? containObjectIds)
     {
         lbChanges.Text = "";
         LocalBranch.Checked = !remote;
         Remotebranch.Checked = remote;
 
-        _containRevisions = containRevisions;
+        _containObjectIds = containObjectIds;
 
         Branches.Items.Clear();
-        Branches.Items.AddRange(_containRevisions is not null
+        Branches.Items.AddRange(_containObjectIds is not null
             ? GetContainsRevisionBranches()
             : LocalBranch.Checked
                 ? GetLocalBranches()
@@ -51,7 +51,7 @@ public partial class BranchSelector : GitModuleControl
 
         Branches.ResizeDropDownWidth();
 
-        if (_containRevisions is not null && Branches.Items.Count == 1)
+        if (_containObjectIds is not null && Branches.Items.Count == 1)
         {
             Branches.SelectedIndex = 0;
         }
@@ -62,22 +62,22 @@ public partial class BranchSelector : GitModuleControl
 
         string[] GetLocalBranches()
         {
-            return _localBranches ??= Module.GetRefs(RefsFilter.Heads).Select(b => b.Name).ToArray();
+            return _localBranches ??= [.. Module.GetRefs(RefsFilter.Heads).Select(b => b.Name)];
         }
 
         string[] GetRemoteBranches()
         {
-            return _remoteBranches ??= Module.GetRefs(RefsFilter.Remotes).Select(b => b.Name).ToArray();
+            return _remoteBranches ??= [.. Module.GetRefs(RefsFilter.Remotes).Select(b => b.Name)];
         }
 
         string[] GetContainsRevisionBranches()
         {
             HashSet<string> result = [];
 
-            if (_containRevisions.Count > 0)
+            if (_containObjectIds.Count > 0)
             {
                 IEnumerable<string> branches =
-                    Module.GetAllBranchesWhichContainGivenCommit(_containRevisions[0],
+                    Module.GetAllBranchesWhichContainGivenCommit(_containObjectIds[0],
                                                                  getLocal: LocalBranch.Checked,
                                                                  getRemote: !LocalBranch.Checked,
                                                                  cancellationToken: default)
@@ -86,11 +86,11 @@ public partial class BranchSelector : GitModuleControl
                 result.UnionWith(branches);
             }
 
-            for (int index = 1; index < _containRevisions.Count; index++)
+            for (int index = 1; index < _containObjectIds.Count; index++)
             {
-                ObjectId containRevision = _containRevisions[index];
+                ObjectId containObjectId = _containObjectIds[index];
                 IEnumerable<string> branches =
-                    Module.GetAllBranchesWhichContainGivenCommit(containRevision,
+                    Module.GetAllBranchesWhichContainGivenCommit(containObjectId,
                                                                  getLocal: LocalBranch.Checked,
                                                                  getRemote: !LocalBranch.Checked,
                                                                  cancellationToken: default)
@@ -99,11 +99,11 @@ public partial class BranchSelector : GitModuleControl
                 result.IntersectWith(branches);
             }
 
-            return result.ToArray();
+            return [.. result];
         }
     }
 
-    private void Branches_SelectedIndexChanged(object sender, EventArgs e)
+    private void Branches_SelectedIndexChanged(object? sender, EventArgs e)
     {
         lbChanges.Text = "";
         FireSelectionChangedEvent(sender, e);
@@ -115,9 +115,9 @@ public partial class BranchSelector : GitModuleControl
         else
         {
             string branchName = SelectedBranchName;
-            ObjectId currentCheckout = CommitToCompare ?? Module.GetCurrentCheckout();
+            ObjectId currentCheckout = CommitToCompare.IsZero ? Module.GetCurrentCheckout() : CommitToCompare;
 
-            if (currentCheckout is null)
+            if (currentCheckout.IsZero)
             {
                 lbChanges.Text = "";
                 return;
@@ -140,7 +140,7 @@ public partial class BranchSelector : GitModuleControl
         ////BranchTypeChanged();
     }
 
-    private void Remotebranch_CheckedChanged(object sender, EventArgs e)
+    private void Remotebranch_CheckedChanged(object? sender, EventArgs e)
     {
         Branches.Focus();
         if (!_isLoading)
@@ -151,7 +151,7 @@ public partial class BranchSelector : GitModuleControl
         FireSelectionChangedEvent(sender, e);
     }
 
-    private void FireSelectionChangedEvent(object sender, EventArgs e)
+    private void FireSelectionChangedEvent(object? sender, EventArgs e)
     {
         SelectedIndexChanged?.Invoke(sender, e);
     }

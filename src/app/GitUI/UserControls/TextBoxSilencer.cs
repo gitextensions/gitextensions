@@ -9,7 +9,7 @@ namespace GitUI.UserControls;
 /// because they are implemented using SendMessage calls.
 internal sealed class TextBoxSilencer
 {
-    private RichTextBox _textBox;
+    private readonly RichTextBox _textBox;
 
     public TextBoxSilencer(RichTextBox textBox)
     {
@@ -28,26 +28,21 @@ internal sealed class TextBoxSilencer
         int position = _textBox.SelectionStart;
 
         bool isAtFirstColumn = position == _textBox.GetFirstCharIndexOfCurrentLine();
-        bool isAtEndColumn = position == GetLineEnd(text, startIndex: position);
-        bool isAtFirstLine = position <= GetLineEnd(text, startIndex: 0);
-        bool isAtLastLine = text.IndexOfAny(Delimiters.LineFeedAndCarriageReturn, startIndex: position) < 0;
+        bool isAtEndColumn = position == text.GetLineEnd(startIndex: position);
+        bool isAtFirstLine = position <= text.GetLineEnd(startIndex: 0);
+        bool isAtLastLine = text.IndexOfAny(Delimiters.LineFeedAndCarriageReturnSearchValues, position) < 0;
+        bool ctrl = e.Control;
 
         switch (e.KeyCode)
         {
             case Keys.Up when isAtFirstLine:
             case Keys.Down when isAtLastLine:
-            case Keys.Home when isAtFirstColumn:
-            case Keys.End when isAtEndColumn:
+            case Keys.Home when isAtFirstColumn && (!ctrl || isAtFirstLine):
+            case Keys.End when isAtEndColumn && (!ctrl || isAtLastLine):
             case Keys.Left or Keys.PageUp when isAtFirstLine && isAtFirstColumn:
             case Keys.Right or Keys.PageDown when isAtLastLine && isAtEndColumn:
                 e.Handled = true;
                 break;
         }
-    }
-
-    private static int GetLineEnd(string text, int startIndex)
-    {
-        int eol = text.IndexOfAny(Delimiters.LineFeedAndCarriageReturn, startIndex);
-        return eol >= startIndex ? eol : text.Length;
     }
 }

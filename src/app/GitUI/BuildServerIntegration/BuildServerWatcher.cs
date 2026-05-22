@@ -1,16 +1,19 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.IO.IsolatedStorage;
 using System.Reactive.Concurrency;
 using System.Reactive.Disposables;
 using System.Reactive.Linq;
 using System.Security.Cryptography;
 using System.Text;
+using GitCommands;
 using GitCommands.Config;
 using GitCommands.Remotes;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
+using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
 using GitUI.HelperDialogs;
@@ -59,12 +62,26 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
         CancellationToken launchToken = _launchCancellation.Next();
 
-        IBuildServerAdapter buildServerAdapter = await GetBuildServerAdapterAsync().ConfigureAwait(false);
+        IBuildServerAdapter? buildServerAdapter = await GetBuildServerAdapterAsync().ConfigureAwait(false);
 
         await _revisionGridView.SwitchToMainThreadAsync(launchToken);
 
         _buildServerAdapter?.Dispose();
         _buildServerAdapter = buildServerAdapter;
+
+        // When a build server adapter is available (including auto-detected),
+        // ensure the column visibility and width reflect the user's display preferences
+        if (buildServerAdapter is not null)
+        {
+            bool showIcon = AppSettings.ShowBuildStatusIconColumn;
+            bool showText = AppSettings.ShowBuildStatusTextColumn;
+            ColumnProvider.Column.Visible = showIcon || showText;
+
+            if (showIcon && !showText)
+            {
+                ColumnProvider.Column.Width = DpiUtil.Scale(16);
+            }
+        }
 
         await TaskScheduler.Default;
 
@@ -134,7 +151,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
     public void CancelBuildStatusFetchOperation()
     {
-        IDisposable cancellationToken = Interlocked.Exchange(ref _buildStatusCancellationToken, null);
+        IDisposable? cancellationToken = Interlocked.Exchange(ref _buildStatusCancellationToken, null);
 
         cancellationToken?.Dispose();
     }
@@ -171,7 +188,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
                             credentialsConfig.LoadFromString(textReader.ReadToEnd());
                         }
 
-                        IConfigSection section = credentialsConfig.FindConfigSection(CredentialsConfigName);
+                        IConfigSection? section = credentialsConfig.FindConfigSection(CredentialsConfigName);
 
                         if (section is not null)
                         {
@@ -273,7 +290,8 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         using FormBuildServerCredentials form = new(buildServerUniqueKey);
         form.BuildServerCredentials = buildServerCredentials;
 
-        if (form.ShowDialog(_revisionGrid) == DialogResult.OK)
+        DialogResult result = await form.ShowDialogAsync(_revisionGrid);
+        if (result == DialogResult.OK)
         {
             return buildServerCredentials;
         }
@@ -300,7 +318,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
                 continue;
             }
 
-            GitRevision revision = _revisionGridView.GetRevision(index.Value);
+            GitRevision? revision = _revisionGridView.GetRevision(index.Value);
 
             if (revision is null)
             {
@@ -326,26 +344,46 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     {
         await TaskScheduler.Default;
 
-        IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings().GetBuildServerSettings();
-        if (!buildServerSettings.IntegrationEnabledOrDefault)
+        SettingsSource effectiveSettings = _module().GetEffectiveSettings();
+
+        string? buildServerName = BuildServerSettings.ServerName[effectiveSettings];
+
+        if (!string.IsNullOrEmpty(buildServerName))
         {
-            return null;
+            // A build server type is explicitly configured.
+            // Only bail out if integration has been explicitly disabled.
+            if (BuildServerSettings.IntegrationEnabled[effectiveSettings] is false)
+            {
+                return null;
+            }
+        }
+        else
+        {
+            // Nothing configured. Auto-detect only when the user hasn't touched
+            // integration settings at all (both ServerName and IntegrationEnabled are unset).
+            if (BuildServerSettings.IntegrationEnabled[effectiveSettings] is not null)
+            {
+                return null;
+            }
+
+            buildServerName = TryAutoDetectBuildServerType(BuildServerSettings.GetSettingsSource(effectiveSettings));
+            if (string.IsNullOrEmpty(buildServerName))
+            {
+                return null;
+            }
         }
 
-        string buildServerName = buildServerSettings.ServerName;
-        if (string.IsNullOrEmpty(buildServerName))
-        {
-            return null;
-        }
+        // When explicitly configured, let the matching detector populate settings from remotes
+        TryPopulateSettingsForBuildServer(buildServerName, BuildServerSettings.GetSettingsSource(effectiveSettings));
 
         IEnumerable<Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>> exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
-        Lazy<IBuildServerAdapter, IBuildServerTypeMetadata> export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerName);
+        Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>? export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerName);
 
         if (export is not null)
         {
             try
             {
-                string canBeLoaded = export.Metadata.CanBeLoaded;
+                string? canBeLoaded = export.Metadata.CanBeLoaded;
                 if (!string.IsNullOrEmpty(canBeLoaded))
                 {
                     Debug.Write(export.Metadata.BuildServerType + " adapter could not be loaded: " + canBeLoaded);
@@ -354,7 +392,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
                 IBuildServerAdapter buildServerAdapter = export.Value;
 
-                buildServerAdapter.Initialize(this, buildServerSettings.SettingsSource,
+                buildServerAdapter.Initialize(this, BuildServerSettings.GetSettingsSource(effectiveSettings),
                     () =>
                     {
                         // To run the `StartSettingsDialog()` in the UI Thread
@@ -376,6 +414,101 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         }
 
         return null;
+    }
+
+    /// <summary>
+    ///  Attempts to detect the build server type from the repository's remote URLs
+    ///  by querying registered <see cref="IBuildServerAutoDetector"/> exports.
+    ///  When detected, writes adapter-specific settings to <paramref name="settingsSource"/>
+    ///  (if not already set) so the adapter can use them without re-parsing.
+    ///  Respects <see cref="AppSettings.PrioritizedBuildServerRemoteNames"/> for remote ordering,
+    ///  so that forks resolve to the upstream project's CI rather than the fork's.
+    /// </summary>
+    private string? TryAutoDetectBuildServerType(GitExtensions.Extensibility.Settings.SettingsSource? settingsSource = null)
+    {
+        try
+        {
+            List<string> remoteUrls = GetOrderedRemoteUrls();
+            if (remoteUrls.Count == 0)
+            {
+                return null;
+            }
+
+            foreach (Lazy<IBuildServerAutoDetector> export in ManagedExtensibility.GetExports<IBuildServerAutoDetector>())
+            {
+                if (export.Value.TryDetect(remoteUrls, settingsSource))
+                {
+                    return export.Value.BuildServerType;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.Write($"Auto-detect build server failed: {ex}");
+        }
+
+        return null;
+    }
+
+    /// <summary>
+    ///  For an explicitly configured build server, runs the matching auto-detector
+    ///  to populate adapter-specific settings from remote URLs.
+    /// </summary>
+    private void TryPopulateSettingsForBuildServer(string buildServerName, GitExtensions.Extensibility.Settings.SettingsSource settingsSource)
+    {
+        try
+        {
+            List<string> remoteUrls = GetOrderedRemoteUrls();
+            if (remoteUrls.Count == 0)
+            {
+                return;
+            }
+
+            foreach (Lazy<IBuildServerAutoDetector> export in ManagedExtensibility.GetExports<IBuildServerAutoDetector>())
+            {
+                if (export.Value.BuildServerType == buildServerName)
+                {
+                    export.Value.TryDetect(remoteUrls, settingsSource);
+                    return;
+                }
+            }
+        }
+        catch (Exception ex)
+        {
+            Debug.Write($"Populate build server settings failed: {ex}");
+        }
+    }
+
+    /// <summary>
+    ///  Collects remote URLs from the current module, ordered by
+    ///  <see cref="AppSettings.PrioritizedBuildServerRemoteNames"/>.
+    /// </summary>
+    private List<string> GetOrderedRemoteUrls()
+    {
+        IGitModule module = _module();
+        IReadOnlyList<string> remoteNames = module.GetRemoteNames();
+
+        string[] prioritizedNames = AppSettings.PrioritizedBuildServerRemoteNames
+            .Split('|', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
+
+        IEnumerable<string> orderedRemotes = remoteNames
+            .OrderBy(r =>
+            {
+                int index = Array.FindIndex(prioritizedNames, n => string.Equals(n, r, StringComparison.OrdinalIgnoreCase));
+                return index >= 0 ? index : prioritizedNames.Length;
+            });
+
+        List<string> remoteUrls = [];
+        foreach (string remoteName in orderedRemotes)
+        {
+            string remoteUrl = module.GetSetting(string.Format(SettingKeyString.RemoteUrl, remoteName));
+            if (!string.IsNullOrWhiteSpace(remoteUrl))
+            {
+                remoteUrls.Add(remoteUrl);
+            }
+        }
+
+        return remoteUrls;
     }
 
     public void Dispose()

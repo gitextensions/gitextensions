@@ -10,20 +10,18 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
     /// <summary>
     ///  Action to search for files in the commit using git grep.
     /// </summary>
-    public Action<string, int> FilesGitGrepLocator;
+    public Action<string> FilesGitGrepLocator = null!;
 
     /// <summary>
     /// Action to toggle the visibility of the "find in commit files" filter control.
     /// </summary>
-    public Action<bool> FindInCommitFilesGitGrepToggle;
+    public Action<bool> FindInCommitFilesGitGrepToggle = null!;
 
     public FormFindInCommitFilesGitGrep(IGitUICommands commands)
         : base(commands, enablePositionRestore: false)
     {
         InitializeComponent();
         InitializeComplete();
-
-        lblSearchCommitGitGrepWatermark.Font = new Font(lblSearchCommitGitGrepWatermark.Font, FontStyle.Italic);
 
         ShowInTaskbar = false;
     }
@@ -101,7 +99,7 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         // Close the search if search is not visible (or user has cleared input)
         if (string.IsNullOrEmpty(GitGrepExpressionText) || !chkShowSearchBox.Checked)
         {
-            FilesGitGrepLocator?.Invoke("", 0);
+            FilesGitGrepLocator?.Invoke("");
         }
     }
 
@@ -117,30 +115,11 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
     }
 
     private void Search()
-        => FilesGitGrepLocator?.Invoke(GitGrepExpressionText, 0);
-
-    private void SetSearchWatermarkLabelVisibility()
-    {
-        lblSearchCommitGitGrepWatermark.Visible = cboFindInCommitFilesGitGrep.Visible && !cboFindInCommitFilesGitGrep.Focused && string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
-        if (lblSearchCommitGitGrepWatermark.Visible)
-        {
-            lblSearchCommitGitGrepWatermark.BringToFront();
-        }
-    }
+        => FilesGitGrepLocator?.Invoke(GitGrepExpressionText!);
 
     private void btnSearch_Click(object sender, EventArgs e)
     {
         Search();
-    }
-
-    private void cboSearchCommitGitGrep_GotFocus(object sender, EventArgs e)
-    {
-        SetSearchWatermarkLabelVisibility();
-    }
-
-    private void cboSearchCommitGitGrep_LostFocus(object sender, EventArgs e)
-    {
-        SetSearchWatermarkLabelVisibility();
     }
 
     private void chkMatchCase_CheckedChanged(object sender, EventArgs e)
@@ -162,11 +141,6 @@ internal partial class FormFindInCommitFilesGitGrep : GitExtensionsDialog
         }
 
         FindInCommitFilesGitGrepToggle?.Invoke(chkShowSearchBox.Checked);
-    }
-
-    private void lblSearchCommitGitGrepWatermark_Click(object sender, EventArgs e)
-    {
-        cboFindInCommitFilesGitGrep.Focus();
     }
 
     private void txtOptions_TextChanged(object sender, EventArgs e)

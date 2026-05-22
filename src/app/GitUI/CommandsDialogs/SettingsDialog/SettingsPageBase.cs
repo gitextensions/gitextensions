@@ -1,9 +1,8 @@
-﻿#nullable enable
-
-using GitCommands.Settings;
+﻿using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
+using GitUI.SettingControlBindings;
 using JetBrains.Annotations;
 using Microsoft;
 using ResourceManager;
@@ -142,34 +141,10 @@ public abstract partial class SettingsPageBase : TranslatedControl, ISettingsPag
         _controlBindings.Add(binding);
     }
 
-    protected void AddSettingBinding(ISetting<bool> setting, CheckBox checkBox)
-    {
-        BoolCheckBoxAdapter adapter = new(setting, checkBox);
-        AddControlBinding(adapter.CreateControlBinding());
-    }
-
-    protected void AddSettingBinding(ISetting<bool?> setting, CheckBox checkBox)
-    {
-        BoolCheckBoxAdapter adapter = new(setting, checkBox);
-        AddControlBinding(adapter.CreateControlBinding());
-    }
-
-    protected void AddSettingBinding(ISetting<int> setting, TextBox control)
-    {
-        IntTextBoxAdapter adapter = new(setting, control);
-        AddControlBinding(adapter.CreateControlBinding());
-    }
-
-    protected void AddSettingBinding(ISetting<int?> setting, TextBox control)
-    {
-        IntTextBoxAdapter adapter = new(setting, control);
-        AddControlBinding(adapter.CreateControlBinding());
-    }
-
     protected void AddSettingBinding(ISetting<string> setting, ComboBox comboBox)
     {
         StringComboBoxAdapter adapter = new(setting, comboBox);
-        AddControlBinding(adapter.CreateControlBinding());
+        AddControlBinding(SettingControlBindingsProvider.CreateControlBinding(adapter));
     }
 
     /// <summary>
@@ -220,41 +195,11 @@ public abstract partial class SettingsPageBase : TranslatedControl, ISettingsPag
     }
 }
 
-public class BoolCheckBoxAdapter : BoolSetting
-{
-    public BoolCheckBoxAdapter(ISetting<bool> setting, CheckBox checkBox)
-        : base(setting.FullPath, setting.Default)
-    {
-        CustomControl = checkBox;
-    }
-
-    public BoolCheckBoxAdapter(ISetting<bool?> setting, CheckBox checkBox)
-        : base(setting.FullPath, setting.Default ?? false)
-    {
-        CustomControl = checkBox;
-    }
-}
-
 public class StringComboBoxAdapter : ChoiceSetting
 {
     public StringComboBoxAdapter(ISetting<string> setting, ComboBox comboBox)
-        : base(setting.FullPath, comboBox.Items.Cast<string>().ToList(), setting.Default)
+        : base(setting.FullPath, [.. comboBox.Items.Cast<string>()], setting.Default)
     {
         CustomControl = comboBox;
-    }
-}
-
-public class IntTextBoxAdapter : NumberSetting<int>
-{
-    public IntTextBoxAdapter(ISetting<int> setting, TextBox control)
-        : base(setting.FullPath, setting.Default)
-    {
-        CustomControl = control;
-    }
-
-    public IntTextBoxAdapter(ISetting<int?> setting, TextBox control)
-        : base(setting.FullPath, setting.Default ?? 0)
-    {
-        CustomControl = control;
     }
 }

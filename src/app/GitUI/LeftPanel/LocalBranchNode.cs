@@ -8,7 +8,7 @@ namespace GitUI.LeftPanel;
 [DebuggerDisplay("(Local) FullPath = {FullPath}, Hash = {ObjectId}, Visible: {Visible}")]
 internal class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename, ICanDelete
 {
-    public LocalBranchNode(Tree tree, in ObjectId? objectId, string fullPath, bool isCurrent, bool visible)
+    public LocalBranchNode(Tree tree, in ObjectId objectId, string fullPath, bool isCurrent, bool visible)
         : base(tree, objectId, fullPath, visible, nameof(Images.BranchLocal), nameof(Images.BranchLocalMerged))
     {
         IsCurrent = isCurrent;
@@ -20,7 +20,7 @@ internal class LocalBranchNode : BaseBranchLeafNode, IGitRefActions, ICanRename,
     protected override FontStyle GetFontStyle()
         => base.GetFontStyle() | (IsCurrent ? FontStyle.Bold : FontStyle.Regular);
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
         => base.Equals(obj) && obj is LocalBranchNode;
 
     public override int GetHashCode()

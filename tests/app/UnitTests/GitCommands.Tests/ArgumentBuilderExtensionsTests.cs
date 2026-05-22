@@ -40,12 +40,12 @@ public sealed class ArgumentBuilderExtensionsTests
             new ArgumentBuilder
             {
                 "foo",
-                { true, (string)null }
+                { true, (string?)null }
             });
 
-        void Test(string expected, ArgumentBuilder command)
+        static void Test(string expected, ArgumentBuilder command)
         {
-            ClassicAssert.AreEqual(expected, command.ToString());
+            command.ToString().Should().Be(expected);
         }
     }
 
@@ -100,9 +100,9 @@ public sealed class ArgumentBuilderExtensionsTests
                 { false, null, null }
             });
 
-        void Test(string expected, ArgumentBuilder command)
+        static void Test(string expected, ArgumentBuilder command)
         {
-            ClassicAssert.AreEqual(expected, command.ToString());
+            command.ToString().Should().Be(expected);
         }
     }
 
@@ -111,31 +111,28 @@ public sealed class ArgumentBuilderExtensionsTests
     {
         Test(
             "foo a b c",
-            new ArgumentBuilder
-            {
+            [
                 "foo",
                 new[] { "a", "b", "c" }
-            });
+            ]);
 
         Test(
             "foo",
-            new ArgumentBuilder
-            {
+            [
                 "foo",
                 Enumerable.Empty<string>()
-            });
+            ]);
 
         Test(
             "foo",
-            new ArgumentBuilder
-            {
+            [
                 "foo",
-                (IEnumerable<string>)null
-            });
+                (IEnumerable<string>?)null
+            ]);
 
-        void Test(string expected, ArgumentBuilder command)
+        static void Test(string expected, ArgumentBuilder command)
         {
-            ClassicAssert.AreEqual(expected, command.ToString());
+            command.ToString().Should().Be(expected);
         }
     }
 
@@ -179,7 +176,7 @@ public sealed class ArgumentBuilderExtensionsTests
             new ArgumentBuilder
             {
                 "foo",
-                { true, (IEnumerable<string>)null }
+                { true, (IEnumerable<string>?)null }
             });
 
         Test(
@@ -187,12 +184,12 @@ public sealed class ArgumentBuilderExtensionsTests
             new ArgumentBuilder
             {
                 "foo",
-                { false, (IEnumerable<string>)null }
+                { false, (IEnumerable<string>?)null }
             });
 
-        void Test(string expected, ArgumentBuilder command)
+        static void Test(string expected, ArgumentBuilder command)
         {
-            ClassicAssert.AreEqual(expected, command.ToString());
+            command.ToString().Should().Be(expected);
         }
     }
 
@@ -206,21 +203,20 @@ public sealed class ArgumentBuilderExtensionsTests
 
         void Test<T>()
         {
-            System.Reflection.MethodInfo method = typeof(ArgumentBuilderExtensions).GetMethod(
+            System.Reflection.MethodInfo? method = typeof(ArgumentBuilderExtensions).GetMethod(
                 nameof(ArgumentBuilderExtensions.Add),
-                new[]
-                {
+                [
                     typeof(ArgumentBuilder),
                     typeof(T)
-                });
+                ]);
 
-            ClassicAssert.NotNull(method);
+            method.Should().NotBeNull();
 
             foreach (T member in Enum.GetValues(typeof(T)))
             {
                 ArgumentBuilder args = [];
 
-                ClassicAssert.DoesNotThrow(() => method.Invoke(null, new object[] { args, member }));
+                ((Action)(() => method!.Invoke(null, [args, member]))).Should().NotThrow();
             }
         }
     }
@@ -228,34 +224,24 @@ public sealed class ArgumentBuilderExtensionsTests
     [Test]
     public void Handle_artificial_objectid()
     {
-        ClassicAssert.Throws<ArgumentException>(() => new ArgumentBuilder
+        ((Action)(() => new ArgumentBuilder
         {
             ObjectId.WorkTreeId
-        });
-        ClassicAssert.Throws<ArgumentException>(() => new ArgumentBuilder
+        })).Should().Throw<ArgumentException>();
+        ((Action)(() => new ArgumentBuilder
         {
             ObjectId.IndexId
-        });
-        ClassicAssert.Throws<ArgumentException>(() => new ArgumentBuilder
+        })).Should().Throw<ArgumentException>();
+        ((Action)(() => new ArgumentBuilder
         {
             ObjectId.CombinedDiffId
-        });
-    }
-
-    [TestCase(null)]
-    public void Handle_null_objectid(ObjectId id)
-    {
-        ArgumentBuilder args =
-        [
-            id
-        ];
-        ClassicAssert.AreEqual(args.ToString(), "");
+        })).Should().Throw<ArgumentException>();
     }
 
     [Test]
     public void Add_ForcePushOptions_ensure_all_switches_are_handled()
     {
-        foreach (int mode in Enum.GetValues(typeof(ForcePushOptions)))
+        foreach (int mode in Enum.GetValues<ForcePushOptions>())
         {
             // unimplemented switches will result in InvalidEnumArgumentException
             ArgumentBuilder args =
@@ -268,7 +254,7 @@ public sealed class ArgumentBuilderExtensionsTests
     [Test]
     public void Add_GitBisectOption_ensure_all_switches_are_handled()
     {
-        foreach (int mode in Enum.GetValues(typeof(GitBisectOption)))
+        foreach (int mode in Enum.GetValues<GitBisectOption>())
         {
             // unimplemented switches will result in InvalidEnumArgumentException
             ArgumentBuilder args =
@@ -281,7 +267,7 @@ public sealed class ArgumentBuilderExtensionsTests
     [Test]
     public void Add_IgnoreSubmodulesMode_ensure_all_switches_are_handled()
     {
-        foreach (int mode in Enum.GetValues(typeof(IgnoreSubmodulesMode)))
+        foreach (int mode in Enum.GetValues<IgnoreSubmodulesMode>())
         {
             // unimplemented switches will result in InvalidEnumArgumentException
             ArgumentBuilder args =
@@ -294,7 +280,7 @@ public sealed class ArgumentBuilderExtensionsTests
     [Test]
     public void Add_CleanMode_ensure_all_switches_are_handled()
     {
-        foreach (int mode in Enum.GetValues(typeof(CleanMode)))
+        foreach (int mode in Enum.GetValues<CleanMode>())
         {
             // unimplemented switches will result in InvalidEnumArgumentException
             ArgumentBuilder args =
@@ -307,7 +293,7 @@ public sealed class ArgumentBuilderExtensionsTests
     [Test]
     public void Add_ResetMode_ensure_all_switches_are_handled()
     {
-        foreach (int mode in Enum.GetValues(typeof(ResetMode)))
+        foreach (int mode in Enum.GetValues<ResetMode>())
         {
             // unimplemented switches will result in InvalidEnumArgumentException
             ArgumentBuilder args =
@@ -335,11 +321,11 @@ public sealed class ArgumentBuilderExtensionsTests
         List<BatchArgumentItem> batch = new GitArgumentBuilder(command)
             .BuildBatchArguments(arguments, baseLength, maxLength);
 
-        string[] args = batch.Select(item => item.Argument.ToString()).ToArray();
-        int[] counts = batch.Select(item => item.BatchItemsCount).ToArray();
+        string[] args = [.. batch.Select(item => item.Argument.ToString())];
+        int[] counts = [.. batch.Select(item => item.BatchItemsCount)];
 
-        ClassicAssert.AreEqual(expected, args);
-        ClassicAssert.AreEqual(expectedCounts, counts);
+        args.Should().Equal(expected);
+        counts.Should().Equal(expectedCounts);
     }
 
     // 8: 'checkout'
@@ -359,6 +345,6 @@ public sealed class ArgumentBuilderExtensionsTests
     public void BuildBatchArguments_builder_throw_invalid_argument_exception(string command, string[] arguments, int maxLength,
         int baseLength = 0)
     {
-        ClassicAssert.Throws(typeof(ArgumentException), () => new GitArgumentBuilder(command).BuildBatchArguments(arguments, baseLength, maxLength));
+        ((Action)(() => new GitArgumentBuilder(command).BuildBatchArguments(arguments, baseLength, maxLength))).Should().Throw<ArgumentException>();
     }
 }

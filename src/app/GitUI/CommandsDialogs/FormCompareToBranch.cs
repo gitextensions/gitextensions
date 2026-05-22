@@ -4,7 +4,7 @@ namespace GitUI.CommandsDialogs;
 
 public partial class FormCompareToBranch : GitModuleForm
 {
-    public FormCompareToBranch(IGitUICommands commands, ObjectId? selectedCommit)
+    public FormCompareToBranch(IGitUICommands commands, ObjectId selectedCommit)
         : base(commands)
     {
         MinimizeBox = false;
@@ -13,12 +13,12 @@ public partial class FormCompareToBranch : GitModuleForm
         InitializeComponent();
         InitializeComplete();
 
-        branchSelector.Initialize(remote: true, containRevisions: null);
+        branchSelector.Initialize(remote: true, containObjectIds: null);
         branchSelector.CommitToCompare = selectedCommit;
         Activated += OnActivated;
     }
 
-    private void OnActivated(object sender, EventArgs eventArgs)
+    private void OnActivated(object? sender, EventArgs eventArgs)
     {
         branchSelector.Focus();
     }

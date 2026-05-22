@@ -1,8 +1,7 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Runtime.InteropServices;
 using GitCommands;
 using GitExtensions.Extensibility;
-using GitUI.NBugReports;
 
 namespace GitUI.Infrastructure;
 

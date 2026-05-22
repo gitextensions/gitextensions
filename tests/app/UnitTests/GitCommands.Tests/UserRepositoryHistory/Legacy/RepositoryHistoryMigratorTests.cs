@@ -1,17 +1,14 @@
-using System.Reflection;
+﻿using System.Reflection;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands.UserRepositoryHistory.Legacy;
 using NSubstitute;
 using Current = GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory.Legacy;
-
-[TestFixture]
 public class RepositoryHistoryMigratorTests
 {
-    private IRepositoryStorage _repositoryStorage;
-    private RepositoryHistoryMigrator _historyMigrator;
+    private IRepositoryStorage _repositoryStorage = null!;
+    private RepositoryHistoryMigrator _historyMigrator = null!;
 
     [SetUp]
     public void Setup()
@@ -23,7 +20,7 @@ public class RepositoryHistoryMigratorTests
     [Test]
     public void MigrateAsync_should_throw_if_currentHistory_null()
     {
-        Func<Task> f = async () => { await _historyMigrator.MigrateAsync(null); };
+        Func<Task> f = async () => { await _historyMigrator.MigrateAsync(null!); };
         f.Should().ThrowAsync<ArgumentNullException>();
     }
 

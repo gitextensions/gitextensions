@@ -24,12 +24,12 @@ internal abstract class BaseRevisionNode : Node
         if (nameIndex == -1)
         {
             Name = fullPath;
-            ParentPath = null;
+            ParentPath = null!;
         }
         else
         {
-            Name = fullPath.Substring(nameIndex + 1);
-            ParentPath = fullPath.Substring(0, nameIndex);
+            Name = fullPath[(nameIndex + 1)..];
+            ParentPath = fullPath[..nameIndex];
         }
 
         Visible = visible;
@@ -50,7 +50,7 @@ internal abstract class BaseRevisionNode : Node
     /// <summary>
     /// ObjectId for nodes with a revision.
     /// </summary>
-    public ObjectId? ObjectId { get; init; }
+    public ObjectId ObjectId { get; init; }
 
     public override void ApplyStyle()
     {
@@ -62,7 +62,7 @@ internal abstract class BaseRevisionNode : Node
 
     public override int GetHashCode() => FullPath.GetHashCode();
 
-    public override bool Equals(object obj)
+    public override bool Equals(object? obj)
     {
         return obj is BaseRevisionNode other
             && (ReferenceEquals(other, this) || string.Equals(FullPath, other.FullPath));
@@ -88,7 +88,7 @@ internal abstract class BaseRevisionNode : Node
 
         BaseRevisionNode? result;
 
-        if (pathToNode.TryGetValue(ParentPath, out BaseRevisionNode parent))
+        if (pathToNode.TryGetValue(ParentPath, out BaseRevisionNode? parent))
         {
             result = null;
         }
@@ -111,15 +111,9 @@ internal abstract class BaseRevisionNode : Node
 
     protected virtual void SelectRevision()
     {
-        if (ObjectId is null)
+        if (!ObjectId.IsZero)
         {
-            return;
+            GoToRevision(ObjectId.ToString());
         }
-
-        TreeViewNode.TreeView?.BeginInvoke(() =>
-        {
-            UICommands.BrowseRepo?.GoToRef(ObjectId.ToString(), showNoRevisionMsg: true, toggleSelection: Control.ModifierKeys.HasFlag(Keys.Control));
-            TreeViewNode.TreeView?.Focus();
-        });
     }
 }

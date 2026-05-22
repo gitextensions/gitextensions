@@ -57,8 +57,11 @@ public interface IConfigFileRemoteSettingsManager
     /// <param name="remotePushUrl">An optional alternative remote push URL.</param>
     /// <param name="remotePuttySshKey">An optional Putty SSH key.</param>
     /// <param name="remoteColor">An optional color for the remote.</param>
+    /// <param name="remotePrefix">An optional prefix for the remote.</param>
     /// <returns>Result of the operation.</returns>
-    ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey, string? remoteColor);
+    ConfigFileRemoteSaveResult SaveRemote(
+        ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl,
+        string remotePuttySshKey, string? remoteColor, string? remotePrefix);
 
     /// <summary>
     ///  Marks the remote as enabled or disabled in .git/config file.
@@ -135,11 +138,11 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
 
         IGitModule module = GetModule();
 
-        GitRef remoteHead = remote.Push
+        GitRef? remoteHead = remote.Push?
                                .Select(s => s.Split(Delimiters.Colon))
                                .Where(t => t.Length == 2)
                                .Where(t => IsSettingForBranch(t[0], branch))
-                               .Select(t => new GitRef(module, objectId: null, t[1]))
+                               .Select(t => new GitRef(module, objectId: default, t[1]))
                                .FirstOrDefault(h => h.IsHead);
 
         if (remoteHead is not null)
@@ -147,24 +150,24 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
             return remoteHead.Name;
         }
 
-        GitRef remoteWildcardHead = remote.Push
+        GitRef? remoteWildcardHead = remote.Push?
                                .Select(s => s.Split(Delimiters.Colon))
                                .Where(t => t.Length == 2)
                                .Where(t => IsSettingForWildcardBranch(t[0]))
-                               .Select(t => new GitRef(module, objectId: null, t[1].Replace("*", branch)))
+                               .Select(t => new GitRef(module, objectId: default, t[1].Replace("*", branch)))
                                .FirstOrDefault(h => h.IsHead);
 
         return remoteWildcardHead?.Name;
 
         bool IsSettingForBranch(string setting, string branchName)
         {
-            GitRef head = new(module, objectId: null, setting);
+            GitRef head = new(module, objectId: default, setting);
             return head.IsHead && head.Name.Equals(branchName, StringComparison.OrdinalIgnoreCase);
         }
 
         bool IsSettingForWildcardBranch(string setting)
         {
-            GitRef head = new(module, objectId: null, setting);
+            GitRef head = new(module, objectId: default, setting);
             return head.IsHead && head.Name == "*";
         }
     }
@@ -196,7 +199,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
             .Distinct()
             .ToList();
 
-        IEnumerable<string> EnumerateDisabledRemoteNames()
+        IEnumerable<string?> EnumerateDisabledRemoteNames()
         {
             foreach ((string setting, string _) in module.GetAllLocalSettings())
             {
@@ -218,7 +221,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
     public IEnumerable<ConfigFileRemote> LoadRemotes(bool loadDisabled)
     {
         List<ConfigFileRemote> remotes = [];
-        IGitModule module = _getModule();
+        IGitModule? module = _getModule();
         if (module is null)
         {
             return remotes;
@@ -258,6 +261,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
                 Url = module.GetSetting(GetSettingKey(SettingKeyString.RemoteUrl, remote, enabled)),
                 Push = module.GetSettings(GetSettingKey(SettingKeyString.RemotePush, remote, enabled)).ToList(),
                 Color = module.GetSetting(GetSettingKey(SettingKeyString.RemoteColor, remote, enabled)),
+                Prefix = module.GetSetting(GetSettingKey(SettingKeyString.RemotePrefix, remote, enabled)),
 
                 // Note: This only gets the last pushurl
                 PushUrl = module.GetSetting(GetSettingKey(SettingKeyString.RemotePushUrl, remote, enabled)),
@@ -296,12 +300,11 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
         return GetDisabledRemoteNames().Any(r => r == remoteName);
     }
 
-    public ConfigFileRemoteSaveResult SaveRemote(ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl, string remotePuttySshKey, string? remoteColor)
+    public ConfigFileRemoteSaveResult SaveRemote(
+        ConfigFileRemote? remote, string remoteName, string remoteUrl, string? remotePushUrl,
+        string remotePuttySshKey, string? remoteColor, string? remotePrefix)
     {
-        if (string.IsNullOrWhiteSpace(remoteName))
-        {
-            throw new ArgumentNullException(nameof(remoteName));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(remoteName);
 
         remoteName = remoteName.Trim();
 
@@ -366,16 +369,14 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
         UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePushUrl, remotePushUrl);
         UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePuttySshKey, remotePuttySshKey);
         UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemoteColor, remoteColor);
+        UpdateSettings(module, remoteName, remoteDisabled, SettingKeyString.RemotePrefix, remotePrefix);
 
         return new ConfigFileRemoteSaveResult(output, updateRemoteRequired);
     }
 
     public void ToggleRemoteState(string remoteName, bool disabled)
     {
-        if (string.IsNullOrWhiteSpace(remoteName))
-        {
-            throw new ArgumentNullException(nameof(remoteName));
-        }
+        ArgumentException.ThrowIfNullOrWhiteSpace(remoteName);
 
         // disabled is the new state, so if the new state is 'false' (=enabled), then the existing state is 'true' (=disabled, i.e. '-remote')
         string sectionName = disabled ? SectionRemote : SectionRemoteDisabled;
@@ -442,15 +443,7 @@ public class ConfigFileRemoteSettingsManager : IConfigFileRemoteSettingsManager
     }
 
     private IGitModule GetModule()
-    {
-        IGitModule module = _getModule();
-        if (module is null)
-        {
-            throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
-        }
-
-        return module;
-    }
+        => _getModule() ?? throw new ArgumentException($"Require a valid instance of {nameof(IGitModule)}");
 
     private static string GetSettingKey(string settingKey, string remoteName, bool remoteEnabled)
     {

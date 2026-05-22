@@ -11,6 +11,7 @@ public sealed partial class RevisionGridControl
         ToggleShowRelativeDate = 4,
         ToggleDrawNonRelativesGray = 5,
         ToggleShowGitNotes = 6,
+        ToggleShowGitNotesColumn = 47,
         //// <snip>
         ToggleHideMergeCommits = 8,
         ShowAllBranches = 9,

@@ -25,11 +25,11 @@ public readonly struct WaitCursorScope : IDisposable
     /// </summary>
     public static WaitCursorScope Enter(Cursor? cursor = null)
     {
-        Cursor cursorAtStartOfScope = Cursor.Current;
+        Cursor? cursorAtStartOfScope = Cursor.Current;
 
         Cursor.Current = cursor ?? Cursors.WaitCursor;
 
-        return new WaitCursorScope(cursorAtStartOfScope);
+        return new WaitCursorScope(cursorAtStartOfScope!);
     }
 
     private readonly Cursor _cursorAtStartOfScope;

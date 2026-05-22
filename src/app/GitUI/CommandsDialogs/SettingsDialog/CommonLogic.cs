@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 using System.Text;
 using GitCommands;
 using GitCommands.Settings;
@@ -89,7 +87,7 @@ public sealed class CommonLogic : Translate
         }
         catch (UnauthorizedAccessException)
         {
-            MessageBox.Show(_cantReadRegistry.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(_cantReadRegistry.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         return value ?? "";
@@ -121,7 +119,7 @@ public sealed class CommonLogic : Translate
 
     public static void FillEncodings(ComboBox combo)
     {
-        combo.Items.AddRange(AppSettings.AvailableEncodings.Values.ToArray<object>());
+        combo.Items.AddRange([.. AppSettings.AvailableEncodings.Values]);
         combo.DisplayMember = nameof(Encoding.EncodingName);
     }
 }

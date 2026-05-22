@@ -1,4 +1,4 @@
-﻿using System.Diagnostics;
+using System.Diagnostics;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI.CommandsDialogs.GitIgnoreDialog;
@@ -19,10 +19,10 @@ public sealed partial class FormGitIgnore : GitModuleForm
 
     #region default patterns
 
-    private static readonly string DefaultIgnorePatternsFile = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
+    private static readonly string DefaultIgnorePatternsFile = Path.Join(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "GitExtensions/DefaultIgnorePatterns.txt");
 
     private static readonly string[] DefaultIgnorePatterns =
-    {
+    [
         "#Ignore thumbnails created by Windows",
         "Thumbs.db",
         "#Ignore files built by Visual Studio",
@@ -55,7 +55,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
         ".idea/",
         "#Nuget packages folder",
         "packages/"
-    };
+    ];
 
     #endregion
 
@@ -110,7 +110,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
         {
             if (File.Exists(ExcludeFile))
             {
-                _NO_TRANSLATE_GitIgnoreEdit.ViewFileAsync(ExcludeFile!);
+                _NO_TRANSLATE_GitIgnoreEdit.ViewFileAsync(ExcludeFile);
             }
         }
         catch (Exception ex)
@@ -145,7 +145,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
                             fileContent += Environment.NewLine;
                         }
 
-                        Directory.CreateDirectory(Path.GetDirectoryName(x));
+                        Directory.CreateDirectory(Path.GetDirectoryName(x)!);
                         File.WriteAllBytes(x, GitModule.SystemEncoding.GetBytes(fileContent));
                         _originalGitIgnoreFileContent = fileContent;
                     });
@@ -153,7 +153,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, _dialogModel.CannotAccessFile + Environment.NewLine + ex.Message,
+            MessageBoxes.Show(this, _dialogModel.CannotAccessFile + Environment.NewLine + ex.Message,
                 _dialogModel.CannotAccessFileCaption, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
@@ -163,7 +163,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
     {
         if (HasUnsavedChanges())
         {
-            switch (MessageBox.Show(this, _dialogModel.SaveFileQuestion, _saveFileQuestionCaption.Text,
+            switch (MessageBoxes.Show(this, _dialogModel.SaveFileQuestion, _saveFileQuestionCaption.Text,
                                 MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
             {
                 case DialogResult.Yes:
@@ -187,7 +187,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
             return;
         }
 
-        MessageBox.Show(this, _dialogModel.FileOnlyInWorkingDirSupported, _gitignoreOnlyInWorkingDirSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBoxes.Show(this, _dialogModel.FileOnlyInWorkingDirSupported, _gitignoreOnlyInWorkingDirSupportedCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         Close();
     }
 
@@ -196,9 +196,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
         string[] defaultIgnorePatterns = File.Exists(DefaultIgnorePatternsFile) ? File.ReadAllLines(DefaultIgnorePatternsFile) : DefaultIgnorePatterns;
 
         string currentFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
-        string[] patternsToAdd = defaultIgnorePatterns
-            .Except(currentFileContent.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries))
-            .ToArray();
+        string[] patternsToAdd = [.. defaultIgnorePatterns.Except(currentFileContent.Split([Environment.NewLine], StringSplitOptions.RemoveEmptyEntries))];
         if (patternsToAdd.Length == 0)
         {
             return;
@@ -228,7 +226,7 @@ public sealed partial class FormGitIgnore : GitModuleForm
         return _originalGitIgnoreFileContent != _NO_TRANSLATE_GitIgnoreEdit.GetText();
     }
 
-    private void GitIgnoreFileLoaded(object sender, EventArgs e)
+    private void GitIgnoreFileLoaded(object? sender, EventArgs e)
     {
         _originalGitIgnoreFileContent = _NO_TRANSLATE_GitIgnoreEdit.GetText();
     }

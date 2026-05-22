@@ -21,7 +21,7 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
     private readonly bool _onlySupplyNoReply;
 
     [GeneratedRegex(@"^(\d+\+)?(?<username>[^@]+)@users\.noreply\.github\.com$", RegexOptions.IgnoreCase | RegexOptions.ExplicitCapture)]
-    private static partial Regex GitHubEmailRegex();
+    private static partial Regex GitHubEmailRegex { get; }
 
     public GithubAvatarProvider([NotNull] IAvatarDownloader downloader, bool onlySupplyNoReply = false)
     {
@@ -33,14 +33,14 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
 
     public async Task<Image?> GetAvatarAsync(string email, string? name, int imageSize)
     {
-        Uri uri = await BuildAvatarUriAsync(email, imageSize);
+        Uri? uri = await BuildAvatarUriAsync(email, imageSize);
 
         if (uri is null)
         {
             return null;
         }
 
-        Image image = await _downloader.DownloadImageAsync(uri);
+        Image? image = await _downloader.DownloadImageAsync(uri);
 
         // Sadly GitHub doesn't provide an option to return a 404 error for non-custom avatars
         // and always provides a fallback image (identicon). Using GitHubs fallback image would
@@ -62,7 +62,7 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
 
     private async Task<Uri?> BuildAvatarUriAsync(string email, int imageSize)
     {
-        Match match = GitHubEmailRegex().Match(email);
+        Match match = GitHubEmailRegex.Match(email);
 
         if (match.Success)
         {
@@ -81,7 +81,7 @@ public sealed partial class GithubAvatarProvider : IAvatarProvider
             // query the GitHub profile first.
 
             // GitHub user names can't contain square brackets but bots use them.
-            bool isBot = username.IndexOf('[') >= 0;
+            bool isBot = username.Contains('[');
 
             if (isBot)
             {

@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using System.Runtime.InteropServices;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -39,7 +39,7 @@ public sealed partial class FormSparseWorkingCopy : GitModuleForm
                 // Closing/canceling, prompt to save if dirty
                 if (sparse.IsWithUnsavedChanges())
                 {
-                    switch (MessageBox.Show(this, Globalized.Strings.YouHaveMadeChangesToSettingsOrRulesWouldYouLikeToSaveThem.Text, Globalized.Strings.SparseWorkingCopy.Text + " – " + Globalized.Strings.Cancel.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
+                    switch (MessageBoxes.Show(this, Globalized.Strings.YouHaveMadeChangesToSettingsOrRulesWouldYouLikeToSaveThem.Text, Globalized.Strings.SparseWorkingCopy.Text + " – " + Globalized.Strings.Cancel.Text, MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question))
                     {
                         case DialogResult.Yes:
                             sparse.SaveChanges();
@@ -56,7 +56,7 @@ public sealed partial class FormSparseWorkingCopy : GitModuleForm
             }
             catch (Exception ex)
             {
-                MessageBox.Show(ActiveForm, Globalized.Strings.CouldNotSave.Text + "\n\n" + ex.Message, Globalized.Strings.SparseWorkingCopy.Text + " – " + Globalized.Strings.SaveFile.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(ActiveForm, Globalized.Strings.CouldNotSave.Text + "\n\n" + ex.Message, Globalized.Strings.SparseWorkingCopy.Text + " – " + Globalized.Strings.SaveFile.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         };
     }
@@ -69,7 +69,7 @@ public sealed partial class FormSparseWorkingCopy : GitModuleForm
         {
             if (!args.Cancel)
             {
-                args.Cancel |= MessageBox.Show(this, string.Format(Globalized.Strings.ConfirmDisableGitSparse.Text, args.IsCurrentRuleSetEmpty ? Globalized.Strings.WithTheSparsePassFilterEmptyOrMissing.Text : Globalized.Strings.WithSomeRulesStillInTheSparsePassFilter.Text), Globalized.Strings.DisableGitSparse.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes;
+                args.Cancel |= MessageBoxes.Show(this, string.Format(Globalized.Strings.ConfirmDisableGitSparse.Text, args.IsCurrentRuleSetEmpty ? Globalized.Strings.WithTheSparsePassFilterEmptyOrMissing.Text : Globalized.Strings.WithSomeRulesStillInTheSparsePassFilter.Text), Globalized.Strings.DisableGitSparse.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes;
             }
         };
     }
@@ -193,7 +193,7 @@ public sealed partial class FormSparseWorkingCopy : GitModuleForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(ActiveForm, Globalized.Strings.CannotLoadTheTextOfTheSparseFile.Text + "\n\n" + ex.Message, Globalized.Strings.SparseWorkingCopy.Text + " – " + Globalized.Strings.LoadFile.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(ActiveForm, Globalized.Strings.CannotLoadTheTextOfTheSparseFile.Text + "\n\n" + ex.Message, Globalized.Strings.SparseWorkingCopy.Text + " – " + Globalized.Strings.LoadFile.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         editor.TextChanged += (sender, args) => sparse.RulesText = editor.GetText() ?? "";

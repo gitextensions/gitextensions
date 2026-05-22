@@ -1,5 +1,3 @@
-﻿#nullable enable
-
 namespace GitUI;
 
 partial class FileStatusList

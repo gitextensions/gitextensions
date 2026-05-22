@@ -1,4 +1,5 @@
-﻿using GitCommands;
+﻿using System.Diagnostics.CodeAnalysis;
+using GitCommands;
 
 namespace GitUI.CommandsDialogs;
 
@@ -11,6 +12,7 @@ public partial class SearchControl<T> : UserControl, IDisposable where T : class
     public event Action? OnTextEntered;
     public event Action? OnCancelled;
 
+    [AllowNull]
     public override string Text
     {
         get => txtSearchBox.Text;
@@ -134,6 +136,7 @@ public partial class SearchControl<T> : UserControl, IDisposable where T : class
     void IDisposable.Dispose()
     {
         _backgroundLoader?.Dispose();
+        GC.SuppressFinalize(this);
     }
 
     private void txtSearchBox_TextChange(object sender, EventArgs e)

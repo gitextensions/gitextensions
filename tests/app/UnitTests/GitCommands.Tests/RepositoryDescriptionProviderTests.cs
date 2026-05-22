@@ -1,14 +1,11 @@
-using FluentAssertions;
-using GitCommands.Git;
+﻿using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
 using NSubstitute;
 
 namespace GitCommandsTests.UserRepositoryHistory;
-
-[TestFixture]
 public class RepositoryDescriptionProviderTests
 {
-    private string _tempDir;
+    private string _tempDir = null!;
 
     [SetUp]
     public void Setup()

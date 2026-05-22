@@ -1,10 +1,7 @@
-﻿using FluentAssertions;
-using GitCommands.ExternalLinks;
+﻿using GitCommands.ExternalLinks;
 using GitUI.CommandsDialogs.SettingsDialog.RevisionLinks;
 
 namespace GitUITests.CommandsDialogs.Settings;
-
-[TestFixture]
 public class AzureDevOpsExternalLinkDefinitionExtractorTests
 {
     [TestCase("https://owner@dev.azure.com/owner/project/_git/repo")]
@@ -28,7 +25,7 @@ public class AzureDevOpsExternalLinkDefinitionExtractorTests
     [Test]
     public void Should_get_link_definitions_When_no_remote_url_provided()
     {
-        IList<ExternalLinkDefinition> externalLinkDefinitions = new AzureDevopsExternalLinkDefinitionExtractor().GetDefinitions(null);
+        IList<ExternalLinkDefinition> externalLinkDefinitions = new AzureDevopsExternalLinkDefinitionExtractor().GetDefinitions(null!);
         externalLinkDefinitions.Should().HaveCount(2);
         foreach (ExternalLinkDefinition externalLinkDefinition in externalLinkDefinitions)
         {

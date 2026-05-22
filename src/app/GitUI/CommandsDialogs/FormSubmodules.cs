@@ -1,4 +1,4 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -87,7 +87,7 @@ public partial class FormSubmodules : GitModuleForm
         };
         _bw.DoWork += (sender, e) =>
         {
-            foreach (IGitSubmoduleInfo oldSubmodule in Module.GetSubmodulesInfo().Where(submodule => submodule is not null))
+            foreach (IGitSubmoduleInfo? oldSubmodule in Module.GetSubmodulesInfo().Where(submodule => submodule is not null))
             {
                 if (_bw.CancellationPending)
                 {
@@ -106,14 +106,11 @@ public partial class FormSubmodules : GitModuleForm
 
                 if (_oldSubmoduleInfo is not null)
                 {
-                    DataGridViewRow row = Submodules.Rows
+                    DataGridViewRow? row = Submodules.Rows
                         .Cast<DataGridViewRow>()
                         .FirstOrDefault(r => r.DataBoundItem as GitSubmoduleInfo == _oldSubmoduleInfo);
 
-                    if (row is not null)
-                    {
-                        row.Selected = true;
-                    }
+                    row?.Selected = true;
                 }
             }
         };
@@ -142,7 +139,7 @@ public partial class FormSubmodules : GitModuleForm
     private void RemoveSubmoduleClick(object sender, EventArgs e)
     {
         if (Submodules.SelectedRows.Count != 1 ||
-            MessageBox.Show(this, _removeSelectedSubmodule.Text, _removeSelectedSubmoduleCaption.Text,
+            MessageBoxes.Show(this, _removeSelectedSubmodule.Text, _removeSelectedSubmoduleCaption.Text,
                             MessageBoxButtons.YesNo, MessageBoxIcon.Warning) !=
             DialogResult.Yes)
         {

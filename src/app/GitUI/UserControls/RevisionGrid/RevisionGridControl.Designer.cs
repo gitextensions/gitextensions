@@ -1,4 +1,4 @@
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using GitUI.Hotkey;
 using GitUI.UserControls.RevisionGrid;
 
@@ -27,25 +27,26 @@ partial class RevisionGridControl
         markRevisionAsGoodToolStripMenuItem = new ToolStripMenuItem();
         bisectSkipRevisionToolStripMenuItem = new ToolStripMenuItem();
         stopBisectToolStripMenuItem = new ToolStripMenuItem();
-        bisectSeparator = new ToolStripSeparator();
+        sepBisect = new ToolStripSeparator();
         copyToClipboardToolStripMenuItem = new GitUI.UserControls.RevisionGrid.CopyContextMenuItem();
-        stashStripSeparator = new ToolStripSeparator();
+        sepStash = new ToolStripSeparator();
         applyStashToolStripMenuItem = new ToolStripMenuItem();
         popStashToolStripMenuItem = new ToolStripMenuItem();
         dropStashToolStripMenuItem = new ToolStripMenuItem();
-        toolStripSeparator8 = new ToolStripSeparator();
+        sepCopy = new ToolStripSeparator();
         checkoutBranchToolStripMenuItem = new ToolStripMenuItem();
         mergeBranchToolStripMenuItem = new ToolStripMenuItem();
         resetCurrentBranchToHereToolStripMenuItem = new ToolStripMenuItem();
         resetAnotherBranchToHereToolStripMenuItem = new ToolStripMenuItem();
         rebaseOnToolStripMenuItem = new ToolStripMenuItem();
-        toolStripSeparator3 = new ToolStripSeparator();
+        sepBranch = new ToolStripSeparator();
         createNewBranchToolStripMenuItem = new ToolStripMenuItem();
+        tsmiPushBranch = new ToolStripMenuItem();
         deleteBranchToolStripMenuItem = new ToolStripMenuItem();
         renameBranchToolStripMenuItem = new ToolStripMenuItem();
-        toolStripSeparator4 = new ToolStripSeparator();
+        sepBranchModification = new ToolStripSeparator();
         openCommitsWithDiffToolMenuItem = new ToolStripMenuItem();
-        compareStripSeparator = new ToolStripSeparator();
+        sepCompareDropdown = new ToolStripSeparator();
         compareToBranchToolStripMenuItem = new ToolStripMenuItem();
         compareToolStripMenuItem = new ToolStripMenuItem();
         compareWithCurrentBranchToolStripMenuItem = new ToolStripMenuItem();
@@ -53,10 +54,10 @@ partial class RevisionGridControl
         compareToWorkingDirectoryMenuItem = new ToolStripMenuItem();
         compareSelectedCommitsMenuItem = new ToolStripMenuItem();
         selectAsBaseToolStripMenuItem = new ToolStripMenuItem();
-        toolStripSeparator5 = new ToolStripSeparator();
+        sepNavigate = new ToolStripSeparator();
         createTagToolStripMenuItem = new ToolStripMenuItem();
         deleteTagToolStripMenuItem = new ToolStripMenuItem();
-        toolStripSeparator2 = new ToolStripSeparator();
+        sepCommit = new ToolStripSeparator();
         checkoutRevisionToolStripMenuItem = new ToolStripMenuItem();
         revertCommitToolStripMenuItem = new ToolStripMenuItem();
         cherryPickCommitToolStripMenuItem = new ToolStripMenuItem();
@@ -66,19 +67,19 @@ partial class RevisionGridControl
         fixupCommitToolStripMenuItem = new ToolStripMenuItem();
         squashCommitToolStripMenuItem = new ToolStripMenuItem();
         amendCommitToolStripMenuItem = new ToolStripMenuItem();
-        toolStripSeparator1 = new ToolStripSeparator();
+        sepCompare = new ToolStripSeparator();
         navigateToolStripMenuItem = new ToolStripMenuItem();
         tsmiSelectInLeftPanel = new ToolStripMenuItem();
         viewToolStripMenuItem = new ToolStripMenuItem();
         runScriptToolStripMenuItem = new ToolStripMenuItem();
         openBuildReportToolStripMenuItem = new ToolStripMenuItem();
         openPullRequestPageStripMenuItem = new ToolStripMenuItem();
-        toolStripSeparator9 = new ToolStripSeparator();
+        tsmiOtherActions = new ToolStripMenuItem();
         getHelpOnHowToUseTheseFeaturesToolStripMenuItem = new ToolStripMenuItem();
         editCommitToolStripMenuItem = new ToolStripMenuItem();
         rebaseToolStripMenuItem = new ToolStripMenuItem();
         rebaseInteractivelyToolStripMenuItem = new ToolStripMenuItem();
-        toolStripSeparator10 = new ToolStripSeparator();
+        sepRebase = new ToolStripSeparator();
         rebaseWithAdvOptionsToolStripMenuItem = new ToolStripMenuItem();
         ((System.ComponentModel.ISupportInitialize)(_gridView)).BeginInit();
         mainContextMenu.SuspendLayout();
@@ -124,40 +125,42 @@ partial class RevisionGridControl
         markRevisionAsGoodToolStripMenuItem,
         bisectSkipRevisionToolStripMenuItem,
         stopBisectToolStripMenuItem,
-        bisectSeparator,
+        sepBisect,
         copyToClipboardToolStripMenuItem,
-        toolStripSeparator8,
+        sepCopy,
         applyStashToolStripMenuItem,
         popStashToolStripMenuItem,
         dropStashToolStripMenuItem,
-        stashStripSeparator,
+        sepStash,
         checkoutBranchToolStripMenuItem,
+        tsmiPushBranch,
         mergeBranchToolStripMenuItem,
         rebaseOnToolStripMenuItem,
         resetCurrentBranchToHereToolStripMenuItem,
-        toolStripSeparator3,
+        sepBranch,
         createNewBranchToolStripMenuItem,
+        resetAnotherBranchToHereToolStripMenuItem,
         renameBranchToolStripMenuItem,
         deleteBranchToolStripMenuItem,
-        resetAnotherBranchToHereToolStripMenuItem,
-        toolStripSeparator4,
+        sepBranchModification,
         createTagToolStripMenuItem,
         deleteTagToolStripMenuItem,
-        toolStripSeparator2,
+        sepCommit,
         checkoutRevisionToolStripMenuItem,
         revertCommitToolStripMenuItem,
         cherryPickCommitToolStripMenuItem,
         archiveRevisionToolStripMenuItem,
         manipulateCommitToolStripMenuItem,
-        toolStripSeparator1,
+        sepCompare,
         compareToolStripMenuItem,
-        toolStripSeparator5,
+        sepNavigate,
         navigateToolStripMenuItem,
         tsmiSelectInLeftPanel,
         viewToolStripMenuItem,
         runScriptToolStripMenuItem,
         openBuildReportToolStripMenuItem,
-        openPullRequestPageStripMenuItem
+        openPullRequestPageStripMenuItem,
+        tsmiOtherActions
         });
         mainContextMenu.Name = "CreateTag";
         mainContextMenu.Size = new Size(265, 620);
@@ -195,15 +198,15 @@ partial class RevisionGridControl
         stopBisectToolStripMenuItem.Text = "Stop bisect";
         stopBisectToolStripMenuItem.Click += StopBisectToolStripMenuItemClick;
         // 
-        // bisectSeparator
+        // sepBisect
         // 
-        bisectSeparator.Name = "bisectSeparator";
-        bisectSeparator.Size = new Size(261, 6);
+        sepBisect.Name = "sepBisect";
+        sepBisect.Size = new Size(261, 6);
         // 
-        // toolStripSeparator8
+        // sepCopy
         // 
-        toolStripSeparator8.Name = "toolStripSeparator8";
-        toolStripSeparator8.Size = new Size(261, 6);
+        sepCopy.Name = "sepCopy";
+        sepCopy.Size = new Size(261, 6);
         // 
         // applyStashToolStripMenuItem
         // 
@@ -229,10 +232,10 @@ partial class RevisionGridControl
         dropStashToolStripMenuItem.Text = "&Drop stash...";
         dropStashToolStripMenuItem.Click += DropStashToolStripMenuItemClick;
         // 
-        // stashStripSeparator
+        // sepStash
         // 
-        stashStripSeparator.Name = "stashStripSeparator";
-        stashStripSeparator.Size = new Size(220, 6);
+        sepStash.Name = "sepStash";
+        sepStash.Size = new Size(220, 6);
         // 
         // checkoutBranchToolStripMenuItem
         // 
@@ -240,7 +243,7 @@ partial class RevisionGridControl
         checkoutBranchToolStripMenuItem.Name = "checkoutBranchToolStripMenuItem";
         checkoutBranchToolStripMenuItem.Size = new Size(264, 24);
         checkoutBranchToolStripMenuItem.Text = "Chec&kout branch...";
-        checkoutBranchToolStripMenuItem.Click += deleteBranchTagToolStripMenuItem_Click;
+        checkoutBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         // 
         // mergeBranchToolStripMenuItem
         // 
@@ -248,14 +251,14 @@ partial class RevisionGridControl
         mergeBranchToolStripMenuItem.Name = "mergeBranchToolStripMenuItem";
         mergeBranchToolStripMenuItem.Size = new Size(264, 24);
         mergeBranchToolStripMenuItem.Text = "&Merge into current branch...";
-        mergeBranchToolStripMenuItem.Click += deleteBranchTagToolStripMenuItem_Click;
+        mergeBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         // 
         // rebaseOnToolStripMenuItem
         // 
         rebaseOnToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] {
         rebaseToolStripMenuItem,
         rebaseInteractivelyToolStripMenuItem,
-        toolStripSeparator10,
+        sepRebase,
         rebaseWithAdvOptionsToolStripMenuItem});
         rebaseOnToolStripMenuItem.Image = Properties.Images.Rebase;
         rebaseOnToolStripMenuItem.Name = "rebaseOnToolStripMenuItem";
@@ -279,10 +282,10 @@ partial class RevisionGridControl
         resetAnotherBranchToHereToolStripMenuItem.Text = "Reset an&other branch to here...";
         resetAnotherBranchToHereToolStripMenuItem.Click += ResetAnotherBranchToHereToolStripMenuItemClick;
         // 
-        // toolStripSeparator3
+        // sepBranch
         // 
-        toolStripSeparator3.Name = "toolStripSeparator3";
-        toolStripSeparator3.Size = new Size(261, 6);
+        sepBranch.Name = "sepBranch";
+        sepBranch.Size = new Size(261, 6);
         // 
         // createNewBranchToolStripMenuItem
         // 
@@ -290,8 +293,16 @@ partial class RevisionGridControl
         createNewBranchToolStripMenuItem.Name = "createNewBranchToolStripMenuItem";
         createNewBranchToolStripMenuItem.ShortcutKeys = ((Keys)((Keys.Control | Keys.B)));
         createNewBranchToolStripMenuItem.Size = new Size(264, 24);
-        createNewBranchToolStripMenuItem.Text = "Create new branc&h here...";
+        createNewBranchToolStripMenuItem.Text = "Create new branch here (&x)...";
         createNewBranchToolStripMenuItem.Click += CreateNewBranchToolStripMenuItemClick;
+        // 
+        // tsmiPushBranch
+        // 
+        tsmiPushBranch.Image = Properties.Images.Push;
+        tsmiPushBranch.Name = "tsmiPushBranch";
+        tsmiPushBranch.Size = new Size(264, 24);
+        tsmiPushBranch.Text = "Pus&h branch...";
+        tsmiPushBranch.Click += PerformFirstDropdownItemClick;
         // 
         // renameBranchToolStripMenuItem
         // 
@@ -299,7 +310,7 @@ partial class RevisionGridControl
         renameBranchToolStripMenuItem.Name = "renameBranchToolStripMenuItem";
         renameBranchToolStripMenuItem.Size = new Size(223, 22);
         renameBranchToolStripMenuItem.Text = "R&ename branch...";
-        renameBranchToolStripMenuItem.Click += renameBranchToolStripMenuItem_Click;
+        renameBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         // 
         // deleteBranchToolStripMenuItem
         // 
@@ -307,12 +318,12 @@ partial class RevisionGridControl
         deleteBranchToolStripMenuItem.Name = "deleteBranchToolStripMenuItem";
         deleteBranchToolStripMenuItem.Size = new Size(264, 24);
         deleteBranchToolStripMenuItem.Text = "&Delete branch...";
-        deleteBranchToolStripMenuItem.Click += deleteBranchTagToolStripMenuItem_Click;
+        deleteBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         // 
-        // toolStripSeparator4
+        // sepBranchModification
         // 
-        toolStripSeparator4.Name = "toolStripSeparator4";
-        toolStripSeparator4.Size = new Size(220, 6);
+        sepBranchModification.Name = "sepBranchModification";
+        sepBranchModification.Size = new Size(220, 6);
         // 
         // openCommitsWithDiffToolMenuItem
         // 
@@ -321,10 +332,10 @@ partial class RevisionGridControl
         openCommitsWithDiffToolMenuItem.Text = "Open selected commits with &difftool";
         openCommitsWithDiffToolMenuItem.Click += diffSelectedCommitsMenuItem_Click;
         // 
-        // compareStripSeparator
+        // sepCompareDropdown
         // 
-        compareStripSeparator.Name = "compareStripSeparator";
-        compareStripSeparator.Size = new Size(220, 6);
+        sepCompareDropdown.Name = "sepCompareDropdown";
+        sepCompareDropdown.Size = new Size(220, 6);
         // 
         // compareToBranchToolStripMenuItem
         // 
@@ -378,7 +389,7 @@ partial class RevisionGridControl
         compareToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
         {
             openCommitsWithDiffToolMenuItem,
-            compareStripSeparator,
+            sepCompareDropdown,
             compareToBranchToolStripMenuItem,
             compareWithCurrentBranchToolStripMenuItem,
             selectAsBaseToolStripMenuItem,
@@ -387,10 +398,10 @@ partial class RevisionGridControl
             compareSelectedCommitsMenuItem
         });
         // 
-        // toolStripSeparator5
+        // sepNavigate
         // 
-        toolStripSeparator5.Name = "toolStripSeparator5";
-        toolStripSeparator5.Size = new Size(261, 6);
+        sepNavigate.Name = "sepNavigate";
+        sepNavigate.Size = new Size(261, 6);
         // 
         // createTagToolStripMenuItem
         // 
@@ -407,12 +418,12 @@ partial class RevisionGridControl
         deleteTagToolStripMenuItem.Name = "deleteTagToolStripMenuItem";
         deleteTagToolStripMenuItem.Size = new Size(264, 24);
         deleteTagToolStripMenuItem.Text = "&Delete tag...";
-        deleteTagToolStripMenuItem.Click += deleteBranchTagToolStripMenuItem_Click;
+        deleteTagToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         // 
-        // toolStripSeparator2
+        // sepCommit
         // 
-        toolStripSeparator2.Name = "toolStripSeparator2";
-        toolStripSeparator2.Size = new Size(261, 6);
+        sepCommit.Name = "sepCommit";
+        sepCommit.Size = new Size(261, 6);
         // 
         // checkoutRevisionToolStripMenuItem
         // 
@@ -481,10 +492,10 @@ partial class RevisionGridControl
         amendCommitToolStripMenuItem.Text = "Create an &amend commit...";
         amendCommitToolStripMenuItem.Click += AmendCommitToolStripMenuItemClick;
         // 
-        // toolStripSeparator1
+        // sepCompare
         // 
-        toolStripSeparator1.Name = "toolStripSeparator1";
-        toolStripSeparator1.Size = new Size(220, 6);
+        sepCompare.Name = "sepCompare";
+        sepCompare.Size = new Size(220, 6);
         // 
         // navigateToolStripMenuItem
         // 
@@ -531,10 +542,11 @@ partial class RevisionGridControl
         openPullRequestPageStripMenuItem.Text = "Vie&w pull request in a browser";
         openPullRequestPageStripMenuItem.Click += openPullRequestPageStripMenuItem_Click;
         // 
-        // toolStripSeparator9
+        // tsmiOtherActions
         // 
-        toolStripSeparator9.Name = "toolStripSeparator9";
-        toolStripSeparator9.Size = new Size(149, 6);
+        tsmiOtherActions.Name = "tsmiOtherActions";
+        tsmiOtherActions.Size = new Size(301, 26);
+        tsmiOtherActions.Text = "&Other actions";
         // 
         // getHelpOnHowToUseTheseFeaturesToolStripMenuItem
         // 
@@ -570,10 +582,10 @@ partial class RevisionGridControl
         rebaseInteractivelyToolStripMenuItem.Text = "Selected commit &interactively...";
         rebaseInteractivelyToolStripMenuItem.Click += OnRebaseInteractivelyClicked;
         // 
-        // toolStripSeparator10
+        // sepRebase
         // 
-        toolStripSeparator10.Name = "toolStripSeparator10";
-        toolStripSeparator10.Size = new Size(195, 6);
+        sepRebase.Name = "sepRebase";
+        sepRebase.Size = new Size(195, 6);
         // 
         // rebaseWithAdvOptionsToolStripMenuItem
         // 
@@ -640,20 +652,20 @@ partial class RevisionGridControl
     private ToolStripMenuItem rebaseWithAdvOptionsToolStripMenuItem;
     private ToolStripMenuItem createTagToolStripMenuItem;
     private ToolStripMenuItem createNewBranchToolStripMenuItem;
+    private ToolStripMenuItem tsmiPushBranch;
     private ToolStripMenuItem resetCurrentBranchToHereToolStripMenuItem;
     private ToolStripMenuItem resetAnotherBranchToHereToolStripMenuItem;
     private GitUI.UserControls.RevisionGrid.CopyContextMenuItem copyToClipboardToolStripMenuItem;
-
-    private ToolStripSeparator bisectSeparator;
-    private ToolStripSeparator toolStripSeparator1;
-    private ToolStripSeparator toolStripSeparator2;
-    private ToolStripSeparator toolStripSeparator3;
-    private ToolStripSeparator toolStripSeparator4;
-    private ToolStripSeparator toolStripSeparator5;
-    private ToolStripSeparator toolStripSeparator8;
-    private ToolStripSeparator toolStripSeparator9;
-    private ToolStripSeparator toolStripSeparator10;
-    private ToolStripSeparator compareStripSeparator;
-    private ToolStripSeparator stashStripSeparator;
+    private ToolStripSeparator sepBisect;
+    private ToolStripSeparator sepCompare;
+    private ToolStripSeparator sepCommit;
+    private ToolStripSeparator sepBranch;
+    private ToolStripSeparator sepBranchModification;
+    private ToolStripSeparator sepNavigate;
+    private ToolStripSeparator sepCopy;
+    private ToolStripSeparator sepRebase;
+    private ToolStripSeparator sepCompareDropdown;
+    private ToolStripSeparator sepStash;
     private ToolStripMenuItem amendCommitToolStripMenuItem;
+    private ToolStripMenuItem tsmiOtherActions;
 }

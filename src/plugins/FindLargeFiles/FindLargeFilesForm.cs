@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Diagnostics;
+using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -14,9 +15,9 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
     private readonly TranslationString _deleteCaption = new("Delete");
 
     private readonly float _threshold;
-    private readonly IGitUICommands _commands;
-    private readonly IGitModule _gitModule;
-    private string[] _revList = Array.Empty<string>();
+    private readonly IGitUICommands _commands = null!;
+    private readonly IGitModule _gitModule = null!;
+    private string[] _revList = [];
     private readonly Dictionary<string, GitObject> _list = [];
     private readonly SortableObjectsList _gitObjects = [];
 
@@ -59,8 +60,7 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
             foreach (GitObject d in data)
             {
                 string commit = d.Commit.First();
-                DateTime date;
-                if (!revData.ContainsKey(commit))
+                if (!revData.TryGetValue(commit, out DateTime date))
                 {
                     GitArgumentBuilder args = new("show")
                     {
@@ -69,15 +69,16 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
                         "--format=\"%ci\""
                     };
                     string revDate = _gitModule.GitExecutable.GetOutput(args);
-                    DateTime.TryParse(revDate, out date);
+                    if (!DateTime.TryParse(revDate, out date))
+                    {
+                        Trace.WriteLine($"Could not parse date '{revDate}' for commit '{commit}'");
+                        date = DateTime.MinValue;
+                    }
+
                     revData.Add(commit, date);
                 }
-                else
-                {
-                    date = revData[commit];
-                }
 
-                if (!_list.TryGetValue(d.SHA, out GitObject curGitObject))
+                if (!_list.TryGetValue(d.SHA, out GitObject? curGitObject))
                 {
                     d.LastCommitDate = date;
                     _list.Add(d.SHA, d);
@@ -119,12 +120,12 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
                     ThreadHelper.JoinableTaskFactory.Run(async () =>
                     {
                         await pbRevisions.SwitchToMainThreadAsync();
-                        pbRevisions.Value = pbRevisions.Value + (int)((_revList.Length * 0.1f) / packFiles.Length);
+                        pbRevisions.Value += (int)((_revList.Length * 0.1f) / packFiles.Length);
                     });
                     foreach (string gitObject in objects.Where(x => x.Contains(" blob ")))
                     {
-                        string[] dataFields = gitObject.Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                        if (_list.TryGetValue(dataFields[0], out GitObject curGitObject))
+                        string[] dataFields = gitObject.Split([' '], StringSplitOptions.RemoveEmptyEntries);
+                        if (_list.TryGetValue(dataFields[0], out GitObject? curGitObject))
                         {
                             if (int.TryParse(dataFields[3], out int compressedSize))
                             {
@@ -184,19 +185,15 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
                 "-zrl",
                 rev.Quote()
             };
-            string[] objects = _gitModule.GitExecutable.GetOutput(args).Split(new[] { '\0' }, StringSplitOptions.RemoveEmptyEntries);
+            string[] objects = _gitModule.GitExecutable.GetOutput(args).Split(['\0'], StringSplitOptions.RemoveEmptyEntries);
             foreach (string objData in objects)
             {
                 // "100644 blob b17a497cdc6140aa3b9a681344522f44768165ac 2120195\tBin/Dictionaries/de-DE.dic"
                 string[] dataPack = objData.Split('\t');
-                string[] data = dataPack[0].Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
-                if (data[1] == "blob")
+                string[] data = dataPack[0].Split([' '], count: 4, StringSplitOptions.RemoveEmptyEntries);
+                if (data[1] == "blob" && int.TryParse(data[3], out int size) && size >= thresholdSize)
                 {
-                    int.TryParse(data[3], out int size);
-                    if (size >= thresholdSize)
-                    {
-                        yield return new GitObject(data[2], dataPack[1], size, rev);
-                    }
+                    yield return new GitObject(data[2], dataPack[1], size, rev);
                 }
             }
         }
@@ -221,7 +218,7 @@ public sealed partial class FindLargeFilesForm : GitExtensionsFormBase
 
     private void Delete_Click(object sender, EventArgs e)
     {
-        if (MessageBox.Show(this, _areYouSureToDelete.Text, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+        if (MessageBoxes.Show(this, _areYouSureToDelete.Text, _deleteCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
         {
             _commands.StartBatchFileProcessDialog(GenerateCommand(_gitObjects));
         }

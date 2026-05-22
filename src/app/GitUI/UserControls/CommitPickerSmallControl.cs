@@ -19,7 +19,7 @@ public partial class CommitPickerSmallControl : GitModuleControl
 
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public ObjectId? SelectedObjectId { get; private set; }
+    public ObjectId SelectedObjectId { get; private set; }
 
     /// <summary>
     /// shows a message box if commitHash is invalid.
@@ -28,12 +28,12 @@ public partial class CommitPickerSmallControl : GitModuleControl
     {
         ObjectId oldCommitHash = SelectedObjectId;
 
-        SelectedObjectId = Module.RevParse(commitHash);
+        SelectedObjectId = Module.RevParse(commitHash!);
 
-        if (SelectedObjectId is null && !string.IsNullOrWhiteSpace(commitHash))
+        if (SelectedObjectId.IsZero && !string.IsNullOrWhiteSpace(commitHash))
         {
             SelectedObjectId = oldCommitHash;
-            MessageBox.Show("The given commit hash is not valid for this repository and was therefore discarded.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show("The given commit hash is not valid for this repository and was therefore discarded.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         else
         {
@@ -44,23 +44,24 @@ public partial class CommitPickerSmallControl : GitModuleControl
 
         lbCommits.Text = "";
 
-        if (SelectedObjectId is null || isArtificialCommitForEmptyRepo)
+        if (SelectedObjectId.IsZero || isArtificialCommitForEmptyRepo)
         {
             textBoxCommitHash.Text = "";
         }
         else
         {
-            textBoxCommitHash.Text = SelectedObjectId.ToShortString();
+            ObjectId selectedObjectId = SelectedObjectId;
+            textBoxCommitHash.Text = selectedObjectId.ToShortString();
             ThreadHelper.FileAndForget(async () =>
                 {
                     ObjectId currentCheckout = Module.GetCurrentCheckout();
 
-                    if (currentCheckout is null)
+                    if (currentCheckout.IsZero)
                     {
                         return;
                     }
 
-                    string toRef = SelectedObjectId.IsArtificial ? "HEAD" : SelectedObjectId.ToString();
+                    string toRef = selectedObjectId.IsArtificial ? "HEAD" : selectedObjectId.ToString();
                     string text = Module.GetCommitCountString(currentCheckout, toRef);
 
                     await this.SwitchToMainThreadAsync();
@@ -72,7 +73,7 @@ public partial class CommitPickerSmallControl : GitModuleControl
 
     private void buttonPickCommit_Click(object sender, EventArgs e)
     {
-        using FormChooseCommit chooseForm = new(UICommands, SelectedObjectId?.ToString());
+        using FormChooseCommit chooseForm = new(UICommands, SelectedObjectId.IsZero ? null : SelectedObjectId.ToString());
         if (chooseForm.ShowDialog(this) == DialogResult.OK && chooseForm.SelectedRevision is not null)
         {
             SetSelectedCommitHash(chooseForm.SelectedRevision.Guid);

@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
@@ -166,7 +166,13 @@ public sealed partial class FormCommit : GitModuleForm
     private IReadOnlyList<GitItemStatus>? _currentSelection;
     private int _alreadyLoadedTemplatesCount = -1;
     private EventHandler? _branchNameLabelOnClick;
-    private ToolStripMenuItem _conventionalCommitItem;
+    private ToolStripMenuItem? _conventionalCommitItem;
+
+    /// <summary>
+    /// Regex to find message replace pattern: {{ group1 }}[ group2 ]
+    /// </summary>
+    [GeneratedRegex(@"\{\{(?<pattern>.*?)\}\}(?:\[(?<index>\d+)\])?", RegexOptions.ExplicitCapture)]
+    private static partial Regex ReplaceMessageRegex();
 
     private CommitKind CommitKind
     {
@@ -318,7 +324,7 @@ public sealed partial class FormCommit : GitModuleForm
         // TODO this code is very similar to code in FileStatusList
         _selectionFilterSubject
             .Throttle(TimeSpan.FromMilliseconds(250))
-            .ObserveOn(SynchronizationContext.Current)
+            .ObserveOn(SynchronizationContext.Current!)
             .Subscribe(filterText => TaskManager.HandleExceptions(() => Update(filterText), Application.OnThreadException));
 
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
@@ -533,12 +539,12 @@ public sealed partial class FormCommit : GitModuleForm
             }
             catch (FileNotFoundException ex)
             {
-                MessageBox.Show(this, string.Format(_templateNotFound.Text, ex.FileName),
+                MessageBoxes.Show(this, string.Format(_templateNotFound.Text, ex.FileName),
                     _templateNotFoundCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
             catch (Exception ex)
             {
-                MessageBox.Show(this, ex.Message,
+                MessageBoxes.Show(this, ex.Message,
                     _templateLoadErrorCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
@@ -566,12 +572,9 @@ public sealed partial class FormCommit : GitModuleForm
 
     protected override void OnUICommandsChanged(GitUICommandsChangedEventArgs e)
     {
-        IGitUICommands oldCommands = e.OldCommands;
+        IGitUICommands? oldCommands = e.OldCommands;
 
-        if (oldCommands is not null)
-        {
-            oldCommands.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
-        }
+        oldCommands?.PostRepositoryChanged -= UICommands_PostRepositoryChanged;
 
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
 
@@ -602,14 +605,14 @@ public sealed partial class FormCommit : GitModuleForm
             || SelectedDiff.ProcessHotkey(keyData);
     }
 
-    private void FileViewer_TopScrollReached(object sender, EventArgs e)
+    private void FileViewer_TopScrollReached(object? sender, EventArgs e)
     {
         FileStatusList fileStatus = _currentItemStaged ? Staged : Unstaged;
         fileStatus.SelectPreviousVisibleItem();
         SelectedDiff.ScrollToBottom();
     }
 
-    private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+    private void FileViewer_BottomScrollReached(object? sender, EventArgs e)
     {
         FileStatusList fileStatus = _currentItemStaged ? Staged : Unstaged;
         fileStatus.SelectNextVisibleItem();
@@ -770,9 +773,9 @@ public sealed partial class FormCommit : GitModuleForm
         }
     }
 
-    public override IScriptOptionsProvider? GetScriptOptionsProvider()
+    public override IScriptOptionsProvider GetScriptOptionsProvider()
     {
-        return new ScriptOptionsProvider(_currentFilesList, () => SelectedDiff.CurrentFileLine);
+        return new ScriptOptionsProvider(_currentFilesList, () => SelectedDiff.CurrentFileLine, () => SelectedDiff.CurrentFileColumn);
     }
 
     #endregion
@@ -836,7 +839,7 @@ public sealed partial class FormCommit : GitModuleForm
             remoteNameLabel.Click -= _branchNameLabelOnClick;
         }
 
-        IGitRef currentBranch = Module.GetRefs(RefsFilter.Heads).FirstOrDefault(r => r.LocalName == currentBranchName);
+        IGitRef? currentBranch = Module.GetRefs(RefsFilter.Heads).FirstOrDefault(r => r.LocalName == currentBranchName);
         if (currentBranch is null)
         {
             await this.SwitchToMainThreadAsync();
@@ -849,7 +852,7 @@ public sealed partial class FormCommit : GitModuleForm
         string pushTo;
         if (string.IsNullOrEmpty(currentBranch.TrackingRemote) || string.IsNullOrEmpty(currentBranch.MergeWith))
         {
-            string defaultRemote = Module.GetRemoteNames().FirstOrDefault(r => r == "origin") ?? Module.GetRemoteNames().OrderBy(r => r).FirstOrDefault();
+            string? defaultRemote = Module.GetRemoteNames().FirstOrDefault(r => r == "origin") ?? Module.GetRemoteNames().OrderBy(r => r).FirstOrDefault();
 
             pushTo = defaultRemote is not null
                 ? $"{defaultRemote}/{currentBranchName} {_untrackedRemote.Text}"
@@ -865,7 +868,7 @@ public sealed partial class FormCommit : GitModuleForm
         branchNameLabel.Text = $"{currentBranchName} {char.ConvertFromUtf32(0x2192)}";
         remoteNameLabel.Text = pushTo;
 
-        _branchNameLabelOnClick = (object sender, EventArgs e) => this.InvokeAndForget(async () =>
+        _branchNameLabelOnClick = (object? sender, EventArgs e) => this.InvokeAndForget(async () =>
         {
             UICommands.StartRemotesDialog(this, null, currentBranchName);
             await TaskScheduler.Default;
@@ -905,7 +908,7 @@ public sealed partial class FormCommit : GitModuleForm
 
         void UpdateMergeHead()
         {
-            _isMergeCommit = Module.RevParse("MERGE_HEAD") is not null;
+            _isMergeCommit = !Module.RevParse("MERGE_HEAD").IsZero;
         }
     }
 
@@ -914,7 +917,7 @@ public sealed partial class FormCommit : GitModuleForm
         using (WaitCursorScope.Enter())
         {
             SolveMergeconflicts.Visible = Module.InTheMiddleOfConflictedMerge();
-            (GitRevision headRev, GitRevision indexRev, GitRevision _) = GetHeadRevisions();
+            (GitRevision? headRev, GitRevision indexRev, GitRevision _) = GetHeadRevisions();
             Staged.SetDiffs(headRev, indexRev, Module.GetIndexFilesWithSubmodulesStatus());
         }
 
@@ -928,7 +931,7 @@ public sealed partial class FormCommit : GitModuleForm
     /// </summary>
     private void LoadUnstagedOutput(IReadOnlyList<GitItemStatus> allChangedFiles)
     {
-        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? [];
 
         List<GitItemStatus> unstagedFiles = [];
         List<GitItemStatus> stagedFiles = [];
@@ -946,7 +949,7 @@ public sealed partial class FormCommit : GitModuleForm
             }
         }
 
-        (GitRevision headRev, GitRevision indexRev, GitRevision workTreeRev) = GetHeadRevisions();
+        (GitRevision? headRev, GitRevision indexRev, GitRevision workTreeRev) = GetHeadRevisions();
         Unstaged.SetDiffs(indexRev, workTreeRev, unstagedFiles);
         Staged.SetDiffs(headRev, indexRev, stagedFiles);
 
@@ -1017,10 +1020,10 @@ public sealed partial class FormCommit : GitModuleForm
 
         Validates.NotNull(lastSelection);
         IReadOnlyList<GitItemStatus> newItems = _currentFilesList == Staged ? stagedFiles : unstagedFiles;
-        HashSet<string> names = lastSelection.Select(x => x.Name).ToHashSet();
-        List<GitItemStatus> newSelection = newItems.Where(x => names.Contains(x.Name)).ToList();
+        HashSet<string> names = [.. lastSelection.Select(x => x.Name)];
+        List<GitItemStatus> newSelection = [.. newItems.Where(x => names.Contains(x.Name))];
 
-        if (newSelection.Any())
+        if (newSelection.Count != 0)
         {
             _currentFilesList.SelectedGitItems = newSelection;
         }
@@ -1098,7 +1101,7 @@ public sealed partial class FormCommit : GitModuleForm
                 // commit, because amend may be used just to change the commit message or timestamp.
                 if (!AppSettings.DontConfirmAmend)
                 {
-                    if (MessageBox.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    if (MessageBoxes.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
                     {
                         return false;
                     }
@@ -1111,7 +1114,7 @@ public sealed partial class FormCommit : GitModuleForm
             {
                 // it is a merge commit, so user can commit just for merging two branches even the changeset is empty,
                 // but also user may forget to add files, so only ask for confirmation that user really wants to commit an empty changeset
-                if (MessageBox.Show(this, _noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+                if (MessageBoxes.Show(this, _noFilesStagedAndConfirmAnEmptyMergeCommit.Text, _noStagedChanges.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 {
                     return false;
                 }
@@ -1170,13 +1173,13 @@ public sealed partial class FormCommit : GitModuleForm
         {
             if (Module.InTheMiddleOfConflictedMerge())
             {
-                MessageBox.Show(this, _mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _mergeConflicts.Text, _mergeConflictsCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
             if (_useFormCommitMessage && (string.IsNullOrEmpty(Message.Text) || Message.Text == _commitTemplate))
             {
-                MessageBox.Show(this, _enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+                MessageBoxes.Show(this, _enterCommitMessage.Text, _enterCommitMessageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
                 return;
             }
 
@@ -1212,15 +1215,15 @@ public sealed partial class FormCommit : GitModuleForm
 
                 if (result == btnCheckout)
                 {
-                    ObjectId[] revisions = _editedCommit is not null ? new[] { _editedCommit.ObjectId } : null;
-                    if (!UICommands.StartCheckoutBranch(this, revisions))
+                    ObjectId[]? objectIds = _editedCommit is not null ? [_editedCommit.ObjectId] : null;
+                    if (!UICommands.StartCheckoutBranch(this, objectIds))
                     {
                         return;
                     }
                 }
                 else if (result == btnCreate)
                 {
-                    if (!UICommands.StartCreateBranchDialog(this, _editedCommit?.ObjectId))
+                    if (!UICommands.StartCreateBranchDialog(this, _editedCommit?.ObjectId ?? default))
                     {
                         return;
                     }
@@ -1320,7 +1323,7 @@ public sealed partial class FormCommit : GitModuleForm
             }
             catch (Exception e)
             {
-                MessageBox.Show(this, $"Exception: {e.Message}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, $"Exception: {e.Message}", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             return;
@@ -1331,7 +1334,7 @@ public sealed partial class FormCommit : GitModuleForm
                 {
                     string firstLine = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.RemoveEmptyEntries)[0];
                     if (firstLine.Length > AppSettings.CommitValidationMaxCntCharsFirstLine &&
-                        MessageBox.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                        MessageBoxes.Show(this, _commitMsgFirstLineInvalid.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                     {
                         return false;
                     }
@@ -1343,7 +1346,7 @@ public sealed partial class FormCommit : GitModuleForm
                     foreach (string line in lines)
                     {
                         if (line.Length > AppSettings.CommitValidationMaxCntCharsPerLine &&
-                            MessageBox.Show(this, string.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                            MessageBoxes.Show(this, string.Format(_commitMsgLineInvalid.Text, line), _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
                             return false;
                         }
@@ -1355,7 +1358,7 @@ public sealed partial class FormCommit : GitModuleForm
                     string[] lines = Message.Text.Split(Delimiters.NewLines, StringSplitOptions.None);
                     if (lines.Length > 2 &&
                         lines[1].Length != 0 &&
-                        MessageBox.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                        MessageBoxes.Show(this, _commitMsgSecondLineNotEmpty.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                     {
                         return false;
                     }
@@ -1368,7 +1371,7 @@ public sealed partial class FormCommit : GitModuleForm
                         if (!Message.Text.StartsWith(CommitKind.Fixup.GetPrefix()) &&
                             !Message.Text.StartsWith(CommitKind.Squash.GetPrefix()) &&
                             !Regex.IsMatch(GetTextToValidate(Message.Text), AppSettings.CommitValidationRegEx) &&
-                            MessageBox.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
+                            MessageBoxes.Show(this, _commitMsgRegExNotMatched.Text, _commitValidationCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk) == DialogResult.No)
                         {
                             return false;
                         }
@@ -1398,12 +1401,59 @@ public sealed partial class FormCommit : GitModuleForm
     /// replace the Message.Text in an undo-able way.
     /// </summary>
     /// <param name="message">the new message.</param>
-    private void ReplaceMessage(string? message)
+    private void ReplaceMessage(string message)
     {
         if (Message.Text != message)
         {
             Message.SelectAll();
             Message.SelectedText = message;
+        }
+    }
+
+    /// <summary>
+    /// replace the Message.Text in an undo-able way.
+    /// </summary>
+    /// <param name="message">the new message.</param>
+    /// <param name="regexEnabled">regex replace is enabled</param>
+    private void ReplaceMessage(string message, bool regexEnabled)
+    {
+        try
+        {
+            if (!regexEnabled)
+            {
+                return;
+            }
+
+            foreach (Match regexMatch in ReplaceMessageRegex().Matches(message))
+            {
+                string pattern = regexMatch.Groups["pattern"].Value;
+                int groupIndex = 1;
+
+                if (int.TryParse(regexMatch.Groups["index"].Value, out int parsedIndex))
+                {
+                    groupIndex = parsedIndex;
+                }
+
+                Regex regex = new(pattern);
+                string currentBranchName = Module.GetSelectedBranch();
+                MatchCollection matches = regex.Matches(currentBranchName);
+                string replaceText = "";
+
+                if (matches.Count > 0 && matches[0].Groups.Count > groupIndex)
+                {
+                    replaceText = matches[0].Groups[groupIndex].Value;
+                }
+
+                message = message.Replace(regexMatch.Groups[0].Value, replaceText);
+            }
+        }
+        catch (Exception ex)
+        {
+            Trace.WriteLine($"ReplaceMessage with regex replace exception: {ex}");
+        }
+        finally
+        {
+            ReplaceMessage(message);
         }
     }
 
@@ -1444,7 +1494,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void UnstageAllFiles()
     {
-        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+        IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? [];
 
         OnStageAreaLoaded += StageAreaLoaded;
 
@@ -1516,7 +1566,7 @@ public sealed partial class FormCommit : GitModuleForm
         }
     }
 
-    private void Unstaged_FilterChanged(object sender, EventArgs e)
+    private void Unstaged_FilterChanged(object? sender, EventArgs e)
     {
         if (Unstaged.IsFilterActive)
         {
@@ -1530,7 +1580,7 @@ public sealed partial class FormCommit : GitModuleForm
         }
     }
 
-    private void Staged_FilterChanged(object sender, EventArgs e)
+    private void Staged_FilterChanged(object? sender, EventArgs e)
     {
         if (Staged.IsFilterActive)
         {
@@ -1552,7 +1602,7 @@ public sealed partial class FormCommit : GitModuleForm
         }
 
         // Staged.SelectedItems.Items() is needed only once, so we can safely convert to list here
-        List<GitItemStatus> allFiles = Staged.SelectedItems.Items().ToList();
+        List<GitItemStatus> allFiles = [.. Staged.SelectedItems.Items()];
         if (allFiles.Count == 0)
         {
             return;
@@ -1593,8 +1643,8 @@ public sealed partial class FormCommit : GitModuleForm
 
                 _skipUpdate = true;
                 InitializedStaged();
-                List<GitItemStatus> stagedFiles = Staged.GitItemStatuses.ToList();
-                List<GitItemStatus> unstagedFiles = Unstaged.GitItemStatuses.ToList();
+                List<GitItemStatus> stagedFiles = [.. Staged.GitItemStatuses];
+                List<GitItemStatus> unstagedFiles = [.. Unstaged.GitItemStatuses];
                 foreach (GitItemStatus item in allFiles)
                 {
                     GitItemStatus item1 = item;
@@ -1612,6 +1662,10 @@ public sealed partial class FormCommit : GitModuleForm
                         unstagedFiles[index].IsDeleted = item.IsDeleted;
                         unstagedFiles[index].IsTracked = item.IsTracked;
                         unstagedFiles[index].IsChanged = item.IsChanged;
+
+                        // if this is a submodule, update the status, may be dirty
+                        Module.GetSubmoduleCurrentStatus([unstagedFiles[index]]);
+
                         continue;
                     }
 
@@ -1637,7 +1691,7 @@ public sealed partial class FormCommit : GitModuleForm
                     unstagedFiles.Add(item);
                 }
 
-                (GitRevision headRev, GitRevision indexRev, GitRevision workTreeRev) = GetHeadRevisions();
+                (GitRevision? headRev, GitRevision indexRev, GitRevision workTreeRev) = GetHeadRevisions();
                 Unstaged.SetDiffs(indexRev, workTreeRev, unstagedFiles);
                 Staged.SetDiffs(headRev, indexRev, stagedFiles);
                 _skipUpdate = false;
@@ -1649,7 +1703,7 @@ public sealed partial class FormCommit : GitModuleForm
 
                 if (Staged.IsEmpty)
                 {
-                    IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+                    IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? [];
 
                     _currentFilesList = Unstaged;
                     RestoreSelectedFiles(Unstaged.GitItemStatuses, Staged.GitItemStatuses, lastSelection);
@@ -1680,7 +1734,7 @@ public sealed partial class FormCommit : GitModuleForm
         GitRevision? headRev;
         GitRevision indexRev;
         ObjectId headId = Module.RevParse("HEAD");
-        if (headId is not null)
+        if (!headId.IsZero)
         {
             headRev = new GitRevision(headId);
             indexRev = new GitRevision(ObjectId.IndexId) { ParentIds = new[] { headId } };
@@ -1691,7 +1745,7 @@ public sealed partial class FormCommit : GitModuleForm
             indexRev = new GitRevision(ObjectId.IndexId);
         }
 
-        GitRevision workTreeRev = new(ObjectId.WorkTreeId) { ParentIds = new[] { ObjectId.IndexId } };
+        GitRevision workTreeRev = new(ObjectId.WorkTreeId) { ParentIds = [ObjectId.IndexId] };
         return (headRev, indexRev, workTreeRev);
     }
 
@@ -1796,7 +1850,7 @@ public sealed partial class FormCommit : GitModuleForm
             EnableStageButtons(false);
             try
             {
-                IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? Array.Empty<GitItemStatus>();
+                IReadOnlyList<GitItemStatus> lastSelection = _currentSelection ?? [];
 
                 Unstaged.StoreNextItemToSelect();
                 toolStripProgressBar1.Visible = true;
@@ -1824,7 +1878,7 @@ public sealed partial class FormCommit : GitModuleForm
                 else
                 {
                     InitializedStaged();
-                    List<GitItemStatus> unstagedFiles = Unstaged.GitItemStatuses.ToList();
+                    List<GitItemStatus> unstagedFiles = [.. Unstaged.GitItemStatuses];
                     _skipUpdate = true;
                     HashSet<string?> names = [];
                     foreach (GitItemStatus item in files)
@@ -1843,40 +1897,19 @@ public sealed partial class FormCommit : GitModuleForm
                         }
                     }
 
-                    unstagedFiles.RemoveAll(item => !item.IsSubmodule && unstagedItems.Contains(item));
-
+                    // Dirty submodules need to be kept in unstaged, update the status
                     unstagedFiles.RemoveAll(
                         item =>
                         {
-                            if (!item.IsSubmodule
-                                || item.GetSubmoduleStatusAsync() is not Task<GitSubmoduleStatus> statusTask
-                                || statusTask is null
-                                || !statusTask.IsCompleted)
+                            if ((!item.IsSubmodule || !item.IsDirty) && unstagedItems.Contains(item))
                             {
-                                return false;
+                                return true;
                             }
 
-                            GitSubmoduleStatus? status = statusTask.CompletedResult();
-                            return status is null || (!status.IsDirty && unstagedItems.Contains(item));
+                            Module.GetSubmoduleCurrentStatus([item]);
+                            return false;
                         });
-
-                    foreach (GitItemStatus item in unstagedItems)
-                    {
-                        if (!item.IsSubmodule)
-                        {
-                            continue;
-                        }
-
-                        GitSubmoduleStatus? gitSubmoduleStatus = ThreadHelper.JoinableTaskFactory.Run(() =>
-                            item.GetSubmoduleStatusAsync() ?? Task.FromResult<GitSubmoduleStatus?>(null));
-
-                        if (gitSubmoduleStatus is null || !gitSubmoduleStatus.IsDirty)
-                        {
-                            continue;
-                        }
-                    }
-
-                    (GitRevision _, GitRevision indexRev, GitRevision workTreeRev) = GetHeadRevisions();
+                    (GitRevision? _, GitRevision indexRev, GitRevision workTreeRev) = GetHeadRevisions();
                     Unstaged.SetDiffs(indexRev, workTreeRev, unstagedFiles);
                     Unstaged.ClearSelected();
                     _skipUpdate = false;
@@ -1913,7 +1946,7 @@ public sealed partial class FormCommit : GitModuleForm
     {
         if (!AppSettings.DontConfirmAmend)
         {
-            if (MessageBox.Show(this, _amendResetSoft.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            if (MessageBoxes.Show(this, _amendResetSoft.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
             {
                 return;
             }
@@ -1955,11 +1988,10 @@ public sealed partial class FormCommit : GitModuleForm
             authorPattern = $"^{Regex.Escape(userName)} <{Regex.Escape(userEmail)}>$";
         }
 
-        List<string> prevMessages = Module.GetPreviousCommitMessages(maxCount, "HEAD", authorPattern)
+        List<string> prevMessages = [.. Module.GetPreviousCommitMessages(maxCount, "HEAD", authorPattern)
             .WhereNotNull()
             .Select(message => message.TrimEnd('\n'))
-            .Where(message => !string.IsNullOrWhiteSpace(message))
-            .ToList();
+            .Where(message => !string.IsNullOrWhiteSpace(message))];
 
         if (!string.IsNullOrWhiteSpace(msg) && !prevMessages.Contains(msg))
         {
@@ -1982,12 +2014,12 @@ public sealed partial class FormCommit : GitModuleForm
             AddCommitMessageToMenu(prevMsg);
         }
 
-        commitMessageToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[]
-        {
+        commitMessageToolStripMenuItem.DropDownItems.AddRange(
+        [
             toolStripMenuItem1,
             generateListOfChangesInSubmodulesChangesToolStripMenuItem,
             ShowOnlyMyMessagesToolStripMenuItem
-        });
+        ]);
         commitMessageToolStripMenuItem.DropDown.ResumeLayout();
 
         void AddCommitMessageToMenu(string commitMessage)
@@ -2017,7 +2049,7 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void CommitMessageToolStripMenuItemDropDownItemClicked(object sender, ToolStripItemClickedEventArgs e)
     {
-        if (e.ClickedItem.Tag is not null)
+        if (e.ClickedItem!.Tag is not null)
         {
             ReplaceMessage(((string)e.ClickedItem.Tag).Trim());
         }
@@ -2045,7 +2077,7 @@ public sealed partial class FormCommit : GitModuleForm
             .Select(item => item.Name)
             .ToDictionary(localPath =>
             {
-                IConfigSection submodule = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
+                IConfigSection? submodule = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
                 Validates.NotNull(submodule?.SubSection);
                 return submodule.SubSection.Trim();
             });
@@ -2078,7 +2110,7 @@ public sealed partial class FormCommit : GitModuleForm
             if (!string.IsNullOrEmpty(from) && !string.IsNullOrEmpty(to))
             {
                 sb.AppendLine("Submodule " + path + ":");
-                GitModule module = new(_fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
+                GitModule module = new(UICommands.GetRequiredService<IGitExecutorProvider>(), _fullPathResolver.Resolve(name.EnsureTrailingPathSeparator()));
                 args = new GitArgumentBuilder("log")
                 {
                     "--pretty=format:\"    %m %h - %s\"",
@@ -2132,7 +2164,7 @@ public sealed partial class FormCommit : GitModuleForm
     {
         foreach (FileStatusItem item in items)
         {
-            GitRevision?[] revs = { item.SecondRevision, item.FirstRevision };
+            GitRevision?[] revs = [item.SecondRevision, item.FirstRevision];
             UICommands.OpenWithDifftool(this, revs, item.Item.Name, item.Item.OldName, RevisionDiffKind.DiffAB, item.Item.IsTracked, customTool: toolName);
         }
     }
@@ -2225,12 +2257,12 @@ public sealed partial class FormCommit : GitModuleForm
     private void OpenConventionalCommitMenu(bool insertScope)
     {
         commitTemplatesToolStripMenuItem.ShowDropDown();
-        _conventionalCommitItem.ShowDropDown();
+        _conventionalCommitItem!.ShowDropDown();
         _conventionalCommitItem.DropDownItems.Cast<ToolStripItem>().First(i => i.Text == _feat).Select();
         _insertScopeParentheses = insertScope;
     }
 
-    private void Message_TextChanged(object sender, EventArgs e)
+    private void Message_TextChanged(object? sender, EventArgs e)
     {
         // Format text, except when doing an undo, because
         // this would itself introduce more steps that
@@ -2242,7 +2274,7 @@ public sealed partial class FormCommit : GitModuleForm
         }
     }
 
-    private void Message_TextAssigned(object sender, EventArgs e)
+    private void Message_TextAssigned(object? sender, EventArgs e)
     {
         Message_TextChanged(sender, e);
     }
@@ -2346,7 +2378,7 @@ public sealed partial class FormCommit : GitModuleForm
                         len = lineLength - offset;
                         if (len > 0)
                         {
-                            Message.ChangeTextColor(line, offset, len, Color.Red.AdaptTextColor());
+                            Message.ChangeTextColor(line, offset, len, Color.Red.AdaptForeColor(Message.BackColor));
                         }
                     }
                 }
@@ -2485,7 +2517,7 @@ public sealed partial class FormCommit : GitModuleForm
             }
 
             // Add templates from settings
-            foreach (CommitTemplateItem item in CommitTemplateItem.LoadFromSettings() ?? Array.Empty<CommitTemplateItem>())
+            foreach (CommitTemplateItem item in CommitTemplateItem.LoadFromSettings() ?? [])
             {
                 isItemAdded |= CreateToolStripItem(item);
             }
@@ -2516,7 +2548,7 @@ public sealed partial class FormCommit : GitModuleForm
                 {
                     try
                     {
-                        ReplaceMessage(item.Text);
+                        ReplaceMessage(item.Text, item.IsRegex);
                         Message.Focus();
                     }
                     catch
@@ -2595,7 +2627,7 @@ public sealed partial class FormCommit : GitModuleForm
 
                 AddFooter("[skip ci]", keepCursorPosition: true);
 
-                void AddFooter(string itemText, string messageText = null, bool keepCursorPosition = false)
+                void AddFooter(string itemText, string? messageText = null, bool keepCursorPosition = false)
                 {
                     messageText ??= itemText;
                     _conventionalCommitItem.DropDownItems.Add(itemText, null, (_, _) =>
@@ -2665,18 +2697,18 @@ public sealed partial class FormCommit : GitModuleForm
             {
                 if (nextChar == ':' || nextChar == '!')
                 {
-                    return ($"{keyword}(){currentTitle.Substring(key.Length)}", scopePosition);
+                    return ($"{keyword}(){currentTitle[key.Length..]}", scopePosition);
                 }
 
                 if (nextChar == '(')
                 {
-                    return ReplaceKeyword(newTitle => 2 + Math.Max(newTitle.IndexOf(":"), newTitle.IndexOf("(")));
+                    return ReplaceKeyword(newTitle => 2 + Math.Max(newTitle.IndexOf(':'), newTitle.IndexOf('(')));
                 }
             }
 
             (string message, int selectionStart) ReplaceKeyword(Func<string, int> maxPosition)
             {
-                string newTitle = $"{keyword}{currentTitle.Substring(key.Length)}";
+                string newTitle = $"{keyword}{currentTitle[key.Length..]}";
                 int newMessageLength = Message.Text.Length + newTitle.Length - currentTitle.Length;
                 return (newTitle, Math.Min(newMessageLength, Math.Max(maxPosition(newTitle), currentPosition + keyword.Length - key.Length)));
             }
@@ -2697,10 +2729,10 @@ public sealed partial class FormCommit : GitModuleForm
 
         if (string.IsNullOrEmpty(Message.Text) && Amend.Checked)
         {
-            ReplaceMessage(Module.GetPreviousCommitMessages(count: 1, revision: "HEAD", authorPattern: string.Empty).FirstOrDefault()?.Trim());
+            ReplaceMessage(Module.GetPreviousCommitMessages(count: 1, revision: "HEAD", authorPattern: string.Empty).FirstOrDefault()?.Trim()!);
         }
 
-        ResetSoft.Enabled = ResetSoft.Visible && Amend.Checked && Module.RevParse(_resetSoftRevision) is not null;
+        ResetSoft.Enabled = ResetSoft.Visible && Amend.Checked && !Module.RevParse(_resetSoftRevision).IsZero;
 
         if (AppSettings.CommitAndPushForcedWhenAmend)
         {
@@ -2713,7 +2745,10 @@ public sealed partial class FormCommit : GitModuleForm
 
         UpdateButtonStates();
 
-        SelectStaged();
+        if (AppSettings.CommitDialogSelectStagedOnEnterMessage.Value)
+        {
+            SelectStaged();
+        }
     }
 
     private void StageInSuperproject_CheckedChanged(object sender, EventArgs e)
@@ -2747,7 +2782,10 @@ public sealed partial class FormCommit : GitModuleForm
 
     private void Message_Enter(object sender, EventArgs e)
     {
-        SelectStaged();
+        if (AppSettings.CommitDialogSelectStagedOnEnterMessage.Value)
+        {
+            SelectStaged();
+        }
     }
 
     private void modifyCommitMessageButton_Click(object sender, EventArgs e)
@@ -2764,7 +2802,7 @@ public sealed partial class FormCommit : GitModuleForm
             : TranslatedStrings.ButtonPush;
     }
 
-    private void UICommands_PostRepositoryChanged(object sender, GitUIEventArgs e)
+    private void UICommands_PostRepositoryChanged(object? sender, GitUIEventArgs e)
     {
         if (!_skipUpdate && !_bypassActivatedEventHandler)
         {
@@ -2782,6 +2820,12 @@ public sealed partial class FormCommit : GitModuleForm
     private void Options_DropDownOpening(object sender, EventArgs e)
     {
         refreshDialogOnFormFocusToolStripMenuItem.Checked = AppSettings.RefreshArtificialCommitOnApplicationActivated;
+        tsmiSelectStagedOnEnterMessage.Checked = AppSettings.CommitDialogSelectStagedOnEnterMessage.Value;
+    }
+
+    private void tsmiSelectStagedOnEnterMessage_Click(object sender, EventArgs e)
+    {
+        AppSettings.CommitDialogSelectStagedOnEnterMessage.Value = !AppSettings.CommitDialogSelectStagedOnEnterMessage.Value;
     }
 
     internal readonly struct TestAccessor
@@ -2841,6 +2885,9 @@ public sealed partial class FormCommit : GitModuleForm
             => _formCommit.PrefixOrReplaceKeyword(keyword);
 
         internal bool IncludeFeatureParentheses { set => _formCommit._insertScopeParentheses = value; }
+
+        internal void ReplaceMessage(string message, bool regexEnabled) => _formCommit.ReplaceMessage(message, regexEnabled);
+
         internal void SetMessageState(string text, int position)
         {
             _formCommit.Message.Text = text;

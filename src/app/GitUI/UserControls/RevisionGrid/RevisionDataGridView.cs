@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System.Collections.Frozen;
+﻿using System.Collections.Frozen;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
@@ -105,9 +103,34 @@ public sealed partial class RevisionDataGridView : DataGridView
         DoubleBuffered = true;
 
         _rowBackgroundBrush = new SolidBrush(AppColor.PanelBackground.GetThemeColor());
-        _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color.MakeBackgroundDarkerBy(Application.IsDarkModeEnabled ? -0.018 : 0.025));
+        _alternatingRowBackgroundBrush = new SolidBrush(_rowBackgroundBrush.Color.MakeDarkerBy(Application.IsDarkModeEnabled ? -0.018 : 0.025));
         _authoredHighlightBrush = new SolidBrush(AppColor.AuthoredHighlight.GetThemeColor());
         _inactiveSelectionHighlightBrush = new SolidBrush(AppColor.InactiveSelectionHighlight.GetThemeColor());
+
+        // subject/body colors are hardcoded to be correct relative each other,
+        // subject color should be emphasied compared to body, selected vs unselected etc.
+
+        // relativeNonSelectedSubject: SystemColors.ControlText
+        _relativeNonSelectedSubjectColor = Application.IsDarkModeEnabled
+            ? SystemColors.ControlText
+            : SystemColors.HighlightText;
+        _nonRelativeNonSelectedSubjectColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(192, 192, 192) // de-emphasised light grey on dark background
+            : SystemColors.GrayText;
+        _nonRelativeSelectedSubjectColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(235, 235, 215) // near-white with warm tint on blue selection
+            : Color.FromArgb(188, 188, 188);
+
+        // relativeNonSelectedBody: SystemColors.GrayText
+        _relativeSelectedBodyColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(170, 170, 150) // warm mid-grey on blue selection
+            : Color.FromArgb(188, 188, 188); // same as _nonRelativeSelectedSubjectColor
+        _nonRelativeNonSelectedBodyColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(130, 130, 130) // darker grey than subject, further de-emphasised
+            : Color.FromArgb(152, 152, 152);
+        _nonRelativeSelectedBodyColor = Application.IsDarkModeEnabled
+            ? Color.FromArgb(170, 170, 150) // same as relativeSelectedBody — consistent on selection
+            : Color.FromArgb(161, 161, 161);
 
         UpdateRowHeight();
 
@@ -202,7 +225,7 @@ public sealed partial class RevisionDataGridView : DataGridView
 
     // Contains the object Id's that will be selected as soon as all of them have been loaded.
     // The object Id's are in the order in which they were originally selected.
-    public IReadOnlyList<ObjectId> ToBeSelectedObjectIds { get; set; } = Array.Empty<ObjectId>();
+    public IReadOnlyList<ObjectId> ToBeSelectedObjectIds { get; set; } = [];
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [Browsable(false)]
     public IReadOnlyList<ObjectId>? SelectedObjectIds
@@ -380,7 +403,7 @@ public sealed partial class RevisionDataGridView : DataGridView
             && SelectedRows?.Count is > 0)
         {
             // (GraphIndex) selection in grid was 'premature'
-            ToBeSelectedObjectIds = SelectedObjectIds ?? Array.Empty<ObjectId>();
+            ToBeSelectedObjectIds = SelectedObjectIds ?? [];
             _loadedToBeSelectedRevisionsCount = ToBeSelectedObjectIds.Count;
             ResetGraphIndices();
         }
@@ -421,18 +444,9 @@ public sealed partial class RevisionDataGridView : DataGridView
             columnProvider.Clear();
         }
 
-        // Reload settings that will be used during drawing
+        // Reload settings that will be used during drawing.
+        // Theme related settings are only loaded at startup.
         _revisionGraphDrawNonRelativesTextGray = AppSettings.RevisionGraphDrawNonRelativesTextGray;
-
-        // relativeNonSelectedSubject: SystemColors.ControlText
-        _relativeNonSelectedSubjectColor = Application.IsDarkModeEnabled ? SystemColors.ControlText : SystemColors.HighlightText;
-        _nonRelativeNonSelectedSubjectColor = Application.IsDarkModeEnabled ? Color.FromArgb(192, 192, 192) : SystemColors.GrayText;
-        _nonRelativeSelectedSubjectColor = Application.IsDarkModeEnabled ? Color.FromArgb(235, 235, 215) : GetHighlightedGrayTextColor(degreeOfGrayness: 1f);
-
-        // relativeNonSelectedBody: SystemColors.GrayText
-        _relativeSelectedBodyColor = Application.IsDarkModeEnabled ? Color.FromArgb(170, 170, 150) : _nonRelativeSelectedSubjectColor;
-        _nonRelativeNonSelectedBodyColor = Application.IsDarkModeEnabled ? Color.FromArgb(130, 130, 130) : GetGrayControlTextColor(degreeOfGrayness: 1.4f);
-        _nonRelativeSelectedBodyColor = Application.IsDarkModeEnabled ? Color.FromArgb(170, 170, 150) : GetHighlightedGrayTextColor(degreeOfGrayness: 1.4f);
 
         _highlightAuthoredRevisions = AppSettings.HighlightAuthoredRevisions;
         _revisionGraphDrawAlternateBackColor = AppSettings.RevisionGraphDrawAlternateBackColor;
@@ -444,7 +458,7 @@ public sealed partial class RevisionDataGridView : DataGridView
     public void ClearToBeSelected()
     {
         _loadedToBeSelectedRevisionsCount = 0;
-        ToBeSelectedObjectIds = Array.Empty<ObjectId>();
+        ToBeSelectedObjectIds = [];
         ResetGraphIndices();
     }
 
@@ -840,9 +854,9 @@ public sealed partial class RevisionDataGridView : DataGridView
         return _revisionGraph.TryGetNode(objectId, out RevisionGraphRevision? node) ? node.GitRevision : null;
     }
 
-    public int? TryGetRevisionIndex(ObjectId? objectId)
+    public int? TryGetRevisionIndex(ObjectId objectId)
     {
-        return objectId is not null && _revisionGraph.TryGetRowIndex(objectId, out int index) ? index : null;
+        return !objectId.IsZero && _revisionGraph.TryGetRowIndex(objectId, out int index) ? index : null;
     }
 
     public IReadOnlyList<ObjectId> GetRevisionChildren(ObjectId objectId)
@@ -852,12 +866,12 @@ public sealed partial class RevisionDataGridView : DataGridView
         // With lock, loading the commit info slows down terribly.
         if (_revisionGraph.TryGetNode(objectId, out RevisionGraphRevision? node))
         {
-            List<ObjectId> children = node.Children.Select(d => d.GitRevision!.ObjectId).ToList();
+            List<ObjectId> children = [.. node.Children.Select(d => d.GitRevision!.ObjectId)];
             children.Reverse();
             return children;
         }
 
-        return Array.Empty<ObjectId>();
+        return [];
     }
 
     protected override void OnKeyDown(KeyEventArgs e)
@@ -883,10 +897,10 @@ public sealed partial class RevisionDataGridView : DataGridView
 
                 break;
             case Keys.Control | Keys.C:
-                IReadOnlyList<ObjectId>? selectedRevisions = SelectedObjectIds;
-                if (selectedRevisions?.Count is > 0)
+                IReadOnlyList<ObjectId>? selectedObjectIds = SelectedObjectIds;
+                if (selectedObjectIds?.Count is > 0)
                 {
-                    ClipboardUtil.TrySetText(string.Join(Environment.NewLine, selectedRevisions));
+                    ClipboardUtil.TrySetText(string.Join(Environment.NewLine, selectedObjectIds));
                 }
 
                 break;
@@ -1017,14 +1031,4 @@ public sealed partial class RevisionDataGridView : DataGridView
         _boldFont = new Font(_normalFont, FontStyle.Bold);
         _monospaceFont = AppSettings.MonospaceFont;
     }
-
-    private static Color GetHighlightedGrayTextColor(float degreeOfGrayness = 1f) =>
-        ColorHelper.GetHighlightGrayTextColor(
-            backgroundColorName: KnownColor.Control,
-            textColorName: KnownColor.ControlText,
-            highlightColorName: KnownColor.Highlight,
-            degreeOfGrayness);
-
-    private static Color GetGrayControlTextColor(float degreeOfGrayness = 1f) =>
-        ColorHelper.GetGrayTextColor(textColorName: KnownColor.ControlText, degreeOfGrayness);
 }

@@ -1,4 +1,4 @@
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Extensibility.Translations;
 
@@ -30,6 +30,7 @@ public abstract class GitPluginBase : IGitPlugin, ITranslate
 
     void IDisposable.Dispose()
     {
+        GC.SuppressFinalize(this);
     }
 
     public bool HasSettings { get; }
@@ -48,7 +49,7 @@ public abstract class GitPluginBase : IGitPlugin, ITranslate
 
     public virtual IEnumerable<ISetting> GetSettings()
     {
-        return Enumerable.Empty<ISetting>();
+        return [];
     }
 
     public virtual void Register(IGitUICommands gitUiCommands)
@@ -71,7 +72,7 @@ public abstract class GitPluginBase : IGitPlugin, ITranslate
     /// false, otherwise </returns>
     public abstract bool Execute(GitUIEventArgs args);
 
-    protected void Translate(string currentTranslation)
+    protected void Translate(string? currentTranslation)
     {
         // Description for old plugin setting processing as key
         Description = Name;

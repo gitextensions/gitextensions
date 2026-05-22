@@ -2,8 +2,6 @@
 using NSubstitute;
 
 namespace GitUITests.Avatars;
-
-[TestFixture]
 public class ChainedAvatarProviderTests
 {
     private const int _size = 16;
@@ -35,27 +33,32 @@ public class ChainedAvatarProviderTests
         _img6 = new Bitmap(_size, _size);
     }
 
+    [OneTimeTearDown]
+    public void OneTimeTearDown()
+    {
+        _img1.Dispose();
+        _img2.Dispose();
+        _img3.Dispose();
+        _img4.Dispose();
+        _img5.Dispose();
+        _img6.Dispose();
+    }
+
     [Test]
     public async Task Construction_without_parameter_is_allowed_and_returns_null()
     {
         ChainedAvatarProvider provider = new();
 
-        Image image = await provider.GetAvatarAsync(_email1, _name1, _size);
-        ClassicAssert.Null(image);
+        Image? image = await provider.GetAvatarAsync(_email1, _name1, _size);
+        image.Should().BeNull();
     }
 
     [Test]
     public void Construction_with_null_parameters_is_permitted()
     {
-        ClassicAssert.Throws<ArgumentNullException>(() =>
-        {
-            new ChainedAvatarProvider(null);
-        });
+        ((Action)(() => new ChainedAvatarProvider(null!))).Should().Throw<ArgumentNullException>();
 
-        ClassicAssert.Throws<ArgumentNullException>(() =>
-        {
-            new ChainedAvatarProvider(null, null);
-        });
+        ((Action)(() => new ChainedAvatarProvider(null!, null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -74,30 +77,30 @@ public class ChainedAvatarProviderTests
         provider3.GetAvatarAsync(_email1, _name1, _size).Returns(_img3);
 
         // Case 2: Second provider hit
-        provider1.GetAvatarAsync(_email2, _name2, _size).Returns((Image)null);
+        provider1.GetAvatarAsync(_email2, _name2, _size).Returns((Image?)null);
         provider2.GetAvatarAsync(_email2, _name2, _size).Returns(_img4);
         provider3.GetAvatarAsync(_email2, _name2, _size).Returns(_img5);
 
         // Case 3: Third provider hit
-        provider1.GetAvatarAsync(_email3, _name3, _size).Returns((Image)null);
-        provider2.GetAvatarAsync(_email3, _name3, _size).Returns((Image)null);
+        provider1.GetAvatarAsync(_email3, _name3, _size).Returns((Image?)null);
+        provider2.GetAvatarAsync(_email3, _name3, _size).Returns((Image?)null);
         provider3.GetAvatarAsync(_email3, _name3, _size).Returns(_img6);
 
         // Case 4: No provider hit
-        provider1.GetAvatarAsync(_email4, _name4, _size).Returns((Image)null);
-        provider2.GetAvatarAsync(_email4, _name4, _size).Returns((Image)null);
-        provider3.GetAvatarAsync(_email4, _name4, _size).Returns((Image)null);
+        provider1.GetAvatarAsync(_email4, _name4, _size).Returns((Image?)null);
+        provider2.GetAvatarAsync(_email4, _name4, _size).Returns((Image?)null);
+        provider3.GetAvatarAsync(_email4, _name4, _size).Returns((Image?)null);
 
         ChainedAvatarProvider chainedProvider = new(provider1, provider2, provider3);
 
-        Image res1 = await chainedProvider.GetAvatarAsync(_email1, _name1, _size);
-        Image res2 = await chainedProvider.GetAvatarAsync(_email2, _name2, _size);
-        Image res3 = await chainedProvider.GetAvatarAsync(_email3, _name3, _size);
-        Image res4 = await chainedProvider.GetAvatarAsync(_email4, _name4, _size);
+        Image? res1 = await chainedProvider.GetAvatarAsync(_email1, _name1, _size);
+        Image? res2 = await chainedProvider.GetAvatarAsync(_email2, _name2, _size);
+        Image? res3 = await chainedProvider.GetAvatarAsync(_email3, _name3, _size);
+        Image? res4 = await chainedProvider.GetAvatarAsync(_email4, _name4, _size);
 
-        ClassicAssert.AreSame(_img1, res1);
-        ClassicAssert.AreSame(_img4, res2);
-        ClassicAssert.AreSame(_img6, res3);
-        ClassicAssert.AreSame(null, res4);
+        res1.Should().BeSameAs(_img1);
+        res2.Should().BeSameAs(_img4);
+        res3.Should().BeSameAs(_img6);
+        res4.Should().BeSameAs(null);
     }
 }

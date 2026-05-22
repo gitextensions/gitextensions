@@ -32,12 +32,12 @@ internal sealed class SubmoduleTree : Tree
         _submoduleStatusProvider.StatusUpdated -= Provider_StatusUpdated;
     }
 
-    private void Provider_StatusUpdating(object sender, EventArgs e)
+    private void Provider_StatusUpdating(object? sender, EventArgs e)
     {
         _currentNodes = null;
     }
 
-    private void Provider_StatusUpdated(object sender, SubmoduleStatusEventArgs e)
+    private void Provider_StatusUpdated(object? sender, SubmoduleStatusEventArgs e)
     {
         _currentSubmoduleInfo = e;
 
@@ -49,7 +49,7 @@ internal sealed class SubmoduleTree : Tree
 
     private void OnStatusUpdated(SubmoduleStatusEventArgs e)
     {
-        TreeViewNode.TreeView.InvokeAndForget(async () =>
+        TreeViewNode.TreeView!.InvokeAndForget(async () =>
         {
             CancellationTokenSource? cts = null;
             Task<Nodes>? loadNodesTask = null;
@@ -65,13 +65,13 @@ internal sealed class SubmoduleTree : Tree
                 Dictionary<string, SubmoduleInfo> infos = e.Info.AllSubmodules.ToDictionary(info => info.Path, info => info);
                 Validates.NotNull(e.Info.TopProject);
                 infos[e.Info.TopProject.Path] = e.Info.TopProject;
-                List<SubmoduleNode> nodes = _currentNodes.DepthEnumerator<SubmoduleNode>().ToList();
+                List<SubmoduleNode> nodes = [.. _currentNodes.DepthEnumerator<SubmoduleNode>()];
 
                 foreach (SubmoduleNode node in nodes)
                 {
-                    if (infos.ContainsKey(node.Info.Path))
+                    if (infos.TryGetValue(node.Info.Path, out SubmoduleInfo? info))
                     {
-                        node.Info = infos[node.Info.Path];
+                        node.Info = info;
                         infos.Remove(node.Info.Path);
                     }
                     else
@@ -94,14 +94,15 @@ internal sealed class SubmoduleTree : Tree
 
             if (_currentNodes is null)
             {
+                // Load the nodes in the tree
                 // Module.GetRefs() is not used for submodules
-                JoinableTask joinableTask = ReloadNodesDetached((token, _) =>
+                JoinableTask joinableTask = ReloadNodesDetached((_, token) =>
                     {
                         cts = CancellationTokenSource.CreateLinkedTokenSource(e.Token, token);
                         loadNodesTask = LoadNodesAsync(e.Info, cts.Token);
                         return loadNodesTask;
                     },
-                    getRefs: null);
+                    getRefs: null!);
                 await joinableTask.JoinAsync(e.Token);
             }
 
@@ -192,7 +193,7 @@ internal sealed class SubmoduleTree : Tree
     {
         Validates.NotNull(result.TopProject);
 
-        GitModule threadModule = (GitModule?)result.Module;
+        GitModule? threadModule = (GitModule?)result.Module;
 
         Validates.NotNull(threadModule);
 
@@ -201,19 +202,17 @@ internal sealed class SubmoduleTree : Tree
         // We always want to display submodules rooted from the top project.
         CreateSubmoduleNodes(result, threadModule, ref submoduleNodes);
 
-        Nodes nodes = new(this);
-        AddTopAndNodesToTree(ref nodes, submoduleNodes, threadModule, result);
-        return nodes;
+        return AddTopAndNodesToTree(submoduleNodes, threadModule, result);
     }
 
     private void CreateSubmoduleNodes(SubmoduleInfoResult result, IGitModule threadModule, ref List<SubmoduleNode> nodes)
     {
         // result.OurSubmodules/AllSubmodules contain a recursive list of submodules, but don't provide info about the super
         // project path. So we deduce these by substring matching paths against an ordered list of all paths.
-        List<string> modulePaths = result.AllSubmodules.Select(info => info.Path).ToList();
+        List<string> modulePaths = [.. result.AllSubmodules.Select(info => info.Path)];
 
         // Add current and parent module paths
-        IGitModule parentModule = threadModule;
+        IGitModule? parentModule = threadModule;
 
         while (parentModule is not null)
         {
@@ -222,7 +221,7 @@ internal sealed class SubmoduleTree : Tree
         }
 
         // Sort descending so we find the nearest outer folder first
-        modulePaths = modulePaths.OrderByDescending(path => path).ToList();
+        modulePaths = [.. modulePaths.OrderByDescending(path => path)];
 
         foreach (SubmoduleInfo submoduleInfo in result.AllSubmodules)
         {
@@ -234,7 +233,7 @@ internal sealed class SubmoduleTree : Tree
                 continue;
             }
 
-            string localPath = Path.GetDirectoryName(submoduleInfo.Path[superPath.Length..]).ToPosixPath();
+            string? localPath = Path.GetDirectoryName(submoduleInfo.Path[superPath.Length..]).ToPosixPath();
 
             bool isCurrent = submoduleInfo.Bold;
 
@@ -242,7 +241,7 @@ internal sealed class SubmoduleTree : Tree
                 submoduleInfo,
                 isCurrent,
                 isCurrent ? result.CurrentSubmoduleStatus : null,
-                localPath,
+                localPath!,
                 superPath));
         }
 
@@ -257,8 +256,7 @@ internal sealed class SubmoduleTree : Tree
         return node.SuperPath.SubstringAfter(topModule.WorkingDir).ToPosixPath() + node.LocalPath;
     }
 
-    private void AddTopAndNodesToTree(
-        ref Nodes nodes,
+    private Nodes AddTopAndNodesToTree(
         List<SubmoduleNode> submoduleNodes,
         IGitModule threadModule,
         SubmoduleInfoResult result)
@@ -317,12 +315,21 @@ internal sealed class SubmoduleTree : Tree
             }
         }
 
+        // Add top-module node
+        Validates.NotNull(result.TopProject);
+        SubmoduleNode topModuleNode = new(
+            this,
+            result.TopProject,
+            result.TopProject.Bold,
+            result.TopProject.Bold ? result.CurrentSubmoduleStatus : null,
+            "",
+            result.TopProject.Path);
+
         // Now build the tree
-        DummyNode rootNode = new();
         HashSet<Node> nodesInTree = [];
         foreach (SubmoduleNode node in submoduleNodes)
         {
-            Node parentNode = rootNode;
+            Node parentNode = topModuleNode;
             string[] parts = GetNodeRelativePath(topModule, node).Split(Delimiters.ForwardSlash);
 
             for (int i = 0; i < parts.Length; ++i)
@@ -341,18 +348,26 @@ internal sealed class SubmoduleTree : Tree
             }
         }
 
-        Validates.NotNull(result.TopProject);
+        // Compact chains of single-child folder nodes for a cleaner display
+        CompactSingleChildFolderChains(topModuleNode.Nodes);
 
-        // Add top-module node, and move children of root to it
-        SubmoduleNode topModuleNode = new(
-            this,
-            result.TopProject,
-            result.TopProject.Bold,
-            result.TopProject.Bold ? result.CurrentSubmoduleStatus : null,
-            "",
-            result.TopProject.Path);
-        topModuleNode.Nodes.AddNodes(rootNode.Nodes);
+        Nodes nodes = new(this);
         nodes.AddNode(topModuleNode);
+
+        return nodes;
+
+        static void CompactSingleChildFolderChains(Nodes nodes)
+        {
+            foreach (Node node in nodes)
+            {
+                if (node is SubmoduleFolderNode folderNode)
+                {
+                    folderNode.CompactSingleChildFolders();
+                }
+
+                CompactSingleChildFolderChains(node.Nodes);
+            }
+        }
     }
 
     public void UpdateSubmodule(IWin32Window owner, SubmoduleNode node)
@@ -360,12 +375,12 @@ internal sealed class SubmoduleTree : Tree
         UICommands.StartUpdateSubmoduleDialog(owner, node.LocalPath, node.SuperPath);
     }
 
-    public void OpenSubmodule(IWin32Window owner, SubmoduleNode node)
+    public void OpenSubmodule(SubmoduleNode node)
     {
         node.Open();
     }
 
-    public void OpenSubmoduleInGitExtensions(IWin32Window owner, SubmoduleNode node)
+    public void OpenSubmoduleInGitExtensions(SubmoduleNode node)
     {
         node.LaunchGitExtensions();
     }
@@ -389,7 +404,7 @@ internal sealed class SubmoduleTree : Tree
             return;
         }
 
-        GitModule module = new(node.Info.Path);
+        GitModule module = new(UICommands.GetRequiredService<IGitExecutorProvider>(), node.Info.Path);
         module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete);
     }
 

@@ -3,8 +3,8 @@ using GitCommands.Config;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
+using GitUI.ConsoleEmulation;
 using GitUI.Infrastructure;
-using GitUI.UserControls;
 using ResourceManager;
 
 namespace GitUI.HelperDialogs;
@@ -95,7 +95,7 @@ Do you want to register the host's fingerprint and restart the process?");
                     if (!string.IsNullOrEmpty(loadedKey) && !string.IsNullOrEmpty(Remote) &&
                         string.IsNullOrEmpty(Commands.Module.GetSetting("remote.{0}.puttykeyfile")))
                     {
-                        Commands.Module.SetSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey.ConvertPathToGitSetting());
+                        Commands.Module.SetSetting(string.Format("remote.{0}.puttykeyfile", Remote), loadedKey.ConvertPathToGitSetting()!);
                     }
 
                     // Retry the command.
@@ -142,11 +142,11 @@ Do you want to register the host's fingerprint and restart the process?");
         return false;
     }
 
-    protected override void DataReceived(object sender, TextEventArgs e)
+    protected override void DataReceived(object sender, ConsoleOutputEventArgs e)
     {
         if (Plink && e.Text.Contains("If you trust this host, enter \"y\" to add the key to"))
         {
-            if (MessageBox.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+            if (MessageBoxes.Show(this, _fingerprintNotRegistredText.Text, _fingerprintNotRegistredTextCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
                 string remoteUrl;
                 if (string.IsNullOrEmpty(_urlTryingToConnect))

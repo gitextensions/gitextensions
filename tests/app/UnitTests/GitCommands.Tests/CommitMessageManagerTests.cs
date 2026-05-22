@@ -1,14 +1,11 @@
-using System.Collections;
+﻿using System.Collections;
 using System.IO.Abstractions;
 using System.Text;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using NSubstitute;
 
 namespace GitCommandsTests;
-
-[TestFixture]
 public class CommitMessageManagerTests
 {
     private const string _commitMessage = "commit message";
@@ -17,7 +14,7 @@ public class CommitMessageManagerTests
     private const string _overriddenCommitMessage = "commandline message";
 
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     private readonly string _workingDirGitDir = @"c:\dev\repo\.git";
     private readonly Encoding _encoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
@@ -27,10 +24,10 @@ public class CommitMessageManagerTests
     private readonly string _mergeMessagePath;
     private readonly bool _rememberAmendCommitState;
 
-    private FileBase _file;
-    private DirectoryBase _directory;
-    private IFileSystem _fileSystem;
-    private CommitMessageManager _manager;
+    private FileBase _file = null!;
+    private DirectoryBase _directory = null!;
+    private IFileSystem _fileSystem = null!;
+    private CommitMessageManager _manager = null!;
 
     // We don't expect any failures so that we won't be switching to the main thread or showing messages
     private readonly Control _owner = ReferenceRepository.DummyOwner;
@@ -60,7 +57,7 @@ public class CommitMessageManagerTests
         _directory = Substitute.For<DirectoryBase>();
 
         PathBase path = Substitute.For<PathBase>();
-        path.Combine(Arg.Any<string>(), Arg.Any<string>()).Returns(x => Path.Combine((string)x[0], (string)x[1]));
+        path.Join(Arg.Any<string>(), Arg.Any<string>()).Returns(x => Path.Join((string)x[0], (string)x[1]));
 
         _fileSystem = Substitute.For<IFileSystem>();
         _fileSystem.File.Returns(_file);
@@ -84,17 +81,17 @@ public class CommitMessageManagerTests
     }
 
     [TestCase(null)]
-    public void Constructor_should_throw(string workingDirGitDir)
+    public void Constructor_should_throw(string? workingDirGitDir)
     {
-        ((Action)(() => new CommitMessageManager(_owner, workingDirGitDir, _encoding))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => new CommitMessageManager(_owner, workingDirGitDir!, _encoding))).Should().Throw<ArgumentNullException>();
     }
 
     [TestCase("")]
     [TestCase(" ")]
     [TestCase("::")]
-    public void Constructor_should_not_throw(string workingDirGitDir)
+    public void Constructor_should_not_throw(string? workingDirGitDir)
     {
-        new CommitMessageManager(_owner, workingDirGitDir, _encoding).Should().NotBeNull();
+        new CommitMessageManager(_owner, workingDirGitDir!, _encoding).Should().NotBeNull();
     }
 
     [Test]
@@ -159,7 +156,7 @@ public class CommitMessageManagerTests
         AppSettings.RememberAmendCommitState = true;
         await _manager.SetAmendStateAsync(amendState: true);
 
-        ClassicAssert.That(correctlyWritten);
+        correctlyWritten.Should().BeTrue();
     }
 
     [Test]
@@ -172,7 +169,7 @@ public class CommitMessageManagerTests
         AppSettings.RememberAmendCommitState = false;
         await _manager.SetAmendStateAsync(amendState: true);
 
-        ClassicAssert.That(correctlyDeleted);
+        correctlyDeleted.Should().BeTrue();
     }
 
     [TestCase(true)]
@@ -186,7 +183,7 @@ public class CommitMessageManagerTests
         AppSettings.RememberAmendCommitState = rememberAmendCommitState;
         await _manager.SetAmendStateAsync(amendState: false);
 
-        ClassicAssert.That(correctlyDeleted);
+        correctlyDeleted.Should().BeTrue();
     }
 
     [Test]
@@ -212,8 +209,8 @@ public class CommitMessageManagerTests
         File.Exists(manager.CommitMessagePath).Should().BeFalse();
 
         // null message isn't formatted, since we're only interested in testing File.Write logic
-        string message = null;
-        await manager.WriteCommitMessageToFileAsync(message, CommitMessageType.Normal, false, false);
+        string? message = null;
+        await manager.WriteCommitMessageToFileAsync(message!, CommitMessageType.Normal, false, false);
 
         File.Exists(manager.CommitMessagePath).Should().BeTrue();
     }
@@ -245,8 +242,8 @@ public class CommitMessageManagerTests
         File.Exists(manager.MergeMessagePath).Should().BeFalse();
 
         // null message isn't formatted, since we're only interested in testing File.Write logic
-        string message = null;
-        await manager.WriteCommitMessageToFileAsync(message, CommitMessageType.Merge, false, false);
+        string? message = null;
+        await manager.WriteCommitMessageToFileAsync(message!, CommitMessageType.Merge, false, false);
 
         File.Exists(manager.MergeMessagePath).Should().BeTrue();
     }
@@ -325,7 +322,7 @@ public class CommitMessageManagerTests
 
         await _manager.SetMergeOrCommitMessageAsync(_newMessage);
 
-        ClassicAssert.That(correctlyWritten);
+        correctlyWritten.Should().BeTrue();
     }
 
     [Test]
@@ -353,7 +350,7 @@ public class CommitMessageManagerTests
 
         await _manager.SetMergeOrCommitMessageAsync(_newMessage);
 
-        ClassicAssert.That(correctlyWritten);
+        correctlyWritten.Should().BeTrue();
     }
 
     [Test]
@@ -367,7 +364,7 @@ public class CommitMessageManagerTests
 
         await _manager.SetMergeOrCommitMessageAsync(_newMessage);
 
-        ClassicAssert.That(correctlyWritten);
+        correctlyWritten.Should().BeTrue();
     }
 
     [Test]
@@ -381,7 +378,7 @@ public class CommitMessageManagerTests
 
         await _manager.SetMergeOrCommitMessageAsync(message: null);
 
-        ClassicAssert.That(correctlyWritten);
+        correctlyWritten.Should().BeTrue();
     }
 
     [Test]
@@ -395,7 +392,7 @@ public class CommitMessageManagerTests
 
         await _manager.SetMergeOrCommitMessageAsync(message: null);
 
-        ClassicAssert.That(!correctlyWritten);
+        correctlyWritten.Should().BeFalse();
     }
 
     [Test]
@@ -410,9 +407,9 @@ public class CommitMessageManagerTests
 
         await _manager.ResetCommitMessageAsync();
 
-        ClassicAssert.That(deletedA);
-        ClassicAssert.That(deletedC);
-        ClassicAssert.That(!deletedM);
+        deletedA.Should().BeTrue();
+        deletedC.Should().BeTrue();
+        deletedM.Should().BeFalse();
     }
 
     [Test, TestCaseSource(typeof(FormatCommitMessageTestData), nameof(FormatCommitMessageTestData.FormatCommitMessageTestCases))]
@@ -432,33 +429,33 @@ public class CommitMessageManagerTests
             get
             {
                 // string commitMessageText, bool usingCommitTemplate, bool ensureCommitMessageSecondLineEmpty, string expectedMessage
-                yield return new TestCaseData(new object[] { null, false, false, "" });
-                yield return new TestCaseData(new object[] { null, true, false, "" });
-                yield return new TestCaseData(new object[] { null, false, true, "" });
-                yield return new TestCaseData(new object[] { null, true, true, "" });
-                yield return new TestCaseData(new object[] { "", false, false, "" });
-                yield return new TestCaseData(new object[] { "", true, false, "" });
-                yield return new TestCaseData(new object[] { "", false, true, "" });
-                yield return new TestCaseData(new object[] { "", true, true, "" });
-                yield return new TestCaseData(new object[] { "\n", false, false, NL + NL });
-                yield return new TestCaseData(new object[] { "\n", true, false, NL + NL });
-                yield return new TestCaseData(new object[] { "\n", false, true, NL + NL });
-                yield return new TestCaseData(new object[] { "\n", true, true, NL + NL });
-                yield return new TestCaseData(new object[] { "1", true, false, "1" + NL });
-                yield return new TestCaseData(new object[] { "#1", false, false, "#1" + NL });
-                yield return new TestCaseData(new object[] { "#1", true, false, "" });
-                yield return new TestCaseData(new object[] { "1\n\n3", false, false, "1" + NL + NL + "3" + NL });
-                yield return new TestCaseData(new object[] { "1\n\n3", false, true, "1" + NL + NL + "3" + NL });
-                yield return new TestCaseData(new object[] { "1\n2\n3", false, false, "1" + NL + "2" + NL + "3" + NL });
-                yield return new TestCaseData(new object[] { "1\n2\n3", false, true, "1" + NL + NL + "2" + NL + "3" + NL });
-                yield return new TestCaseData(new object[] { "#0\n1\n\n3", true, false, "1" + NL + NL + "3" + NL });
-                yield return new TestCaseData(new object[] { "#0\n1\n\n3", true, true, "1" + NL + NL + "3" + NL });
-                yield return new TestCaseData(new object[] { "#0\n1\n2\n3", true, false, "1" + NL + "2" + NL + "3" + NL });
-                yield return new TestCaseData(new object[] { "#0\n1\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL });
-                yield return new TestCaseData(new object[] { "#0\n1\n#0\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL });
-                yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10", true, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL });
-                yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL });
-                yield return new TestCaseData(new object[] { "1\n2\n3\n4\n5\n\n7\n\n\n10\n", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL + NL });
+                yield return new TestCaseData([null, false, false, ""]);
+                yield return new TestCaseData([null, true, false, ""]);
+                yield return new TestCaseData([null, false, true, ""]);
+                yield return new TestCaseData([null, true, true, ""]);
+                yield return new TestCaseData(["", false, false, ""]);
+                yield return new TestCaseData(["", true, false, ""]);
+                yield return new TestCaseData(["", false, true, ""]);
+                yield return new TestCaseData(["", true, true, ""]);
+                yield return new TestCaseData(["\n", false, false, NL + NL]);
+                yield return new TestCaseData(["\n", true, false, NL + NL]);
+                yield return new TestCaseData(["\n", false, true, NL + NL]);
+                yield return new TestCaseData(["\n", true, true, NL + NL]);
+                yield return new TestCaseData(["1", true, false, "1" + NL]);
+                yield return new TestCaseData(["#1", false, false, "#1" + NL]);
+                yield return new TestCaseData(["#1", true, false, ""]);
+                yield return new TestCaseData(["1\n\n3", false, false, "1" + NL + NL + "3" + NL]);
+                yield return new TestCaseData(["1\n\n3", false, true, "1" + NL + NL + "3" + NL]);
+                yield return new TestCaseData(["1\n2\n3", false, false, "1" + NL + "2" + NL + "3" + NL]);
+                yield return new TestCaseData(["1\n2\n3", false, true, "1" + NL + NL + "2" + NL + "3" + NL]);
+                yield return new TestCaseData(["#0\n1\n\n3", true, false, "1" + NL + NL + "3" + NL]);
+                yield return new TestCaseData(["#0\n1\n\n3", true, true, "1" + NL + NL + "3" + NL]);
+                yield return new TestCaseData(["#0\n1\n2\n3", true, false, "1" + NL + "2" + NL + "3" + NL]);
+                yield return new TestCaseData(["#0\n1\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL]);
+                yield return new TestCaseData(["#0\n1\n#0\n2\n3", true, true, "1" + NL + NL + "2" + NL + "3" + NL]);
+                yield return new TestCaseData(["1\n2\n3\n4\n5\n\n7\n\n\n10", true, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL]);
+                yield return new TestCaseData(["1\n2\n3\n4\n5\n\n7\n\n\n10", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL]);
+                yield return new TestCaseData(["1\n2\n3\n4\n5\n\n7\n\n\n10\n", false, true, "1" + NL + NL + "2" + NL + "3" + NL + "4" + NL + "5" + NL + NL + "7" + NL + NL + NL + "10" + NL + NL]);
             }
         }
     }

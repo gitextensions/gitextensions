@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitUIPluginInterfaces;
@@ -119,7 +119,7 @@ public sealed partial class FormStash : GitModuleForm
 
     private void Initialize()
     {
-        List<GitStash> stashedItems = Module.GetStashes(noLocks: false).ToList();
+        List<GitStash> stashedItems = [.. Module.GetStashes(noLocks: false)];
 
         _currentWorkingDirStashItem = new GitStash(-1, _currentWorkingDirChanges.Text);
 
@@ -189,13 +189,13 @@ public sealed partial class FormStash : GitModuleForm
         }
     }
 
-    private void FileViewer_TopScrollReached(object sender, EventArgs e)
+    private void FileViewer_TopScrollReached(object? sender, EventArgs e)
     {
         Stashed.SelectPreviousVisibleItem();
         View.ScrollToBottom();
     }
 
-    private void FileViewer_BottomScrollReached(object sender, EventArgs e)
+    private void FileViewer_BottomScrollReached(object? sender, EventArgs e)
     {
         Stashed.SelectNextVisibleItem();
         View.ScrollToTop();
@@ -241,17 +241,17 @@ public sealed partial class FormStash : GitModuleForm
 
     private void LoadGitItemStatuses(IReadOnlyList<GitItemStatus> gitItemStatuses)
     {
-        GitStash gitStash = (GitStash)Stashes.SelectedItem;
+        GitStash gitStash = (GitStash)Stashes.SelectedItem!;
         if (gitStash == _currentWorkingDirStashItem)
         {
             // FileStatusList has no interface for both worktree<-index, index<-HEAD at the same time
             // Must be handled when displaying
-            ObjectId? headId = Module.RevParse("HEAD");
+            ObjectId headId = Module.RevParse("HEAD");
             GitRevision workTreeRev = new(ObjectId.WorkTreeId)
             {
                 ParentIds = new[] { ObjectId.IndexId }
             };
-            if (headId is null)
+            if (headId.IsZero)
             {
                 // Likely a detached head
                 Stashed.SetDiffs(null, workTreeRev, gitItemStatuses);
@@ -263,20 +263,24 @@ public sealed partial class FormStash : GitModuleForm
                 {
                     ParentIds = new[] { headId }
                 };
-                List<GitItemStatus> indexItems = gitItemStatuses.Where(item => item.Staged == StagedStatus.Index).ToList();
-                List<GitItemStatus> workTreeItems = gitItemStatuses.Where(item => item.Staged != StagedStatus.Index).ToList();
+                List<GitItemStatus> indexItems = [.. gitItemStatuses.Where(item => item.Staged == StagedStatus.Index)];
+                List<GitItemStatus> workTreeItems = [.. gitItemStatuses.Where(item => item.Staged != StagedStatus.Index)];
                 Stashed.SetStashDiffs(headRev, indexRev, ResourceManager.TranslatedStrings.Index, indexItems, workTreeRev, ResourceManager.TranslatedStrings.Workspace, workTreeItems);
             }
         }
         else
         {
             ObjectId firstId = Module.RevParse(gitStash.Name + "^");
-            GitRevision? firstRev = firstId is null ? null : new(firstId);
+            GitRevision? firstRev = firstId.IsZero ? null : new(firstId);
 
             ObjectId selectedId = Module.RevParse(gitStash.Name);
-            Validates.NotNull(selectedId);
+            if (selectedId.IsZero)
+            {
+                throw new InvalidOperationException("selectedId must not be zero");
+            }
+
             GitRevision secondRev = new(selectedId);
-            if (firstId is not null)
+            if (!firstId.IsZero)
             {
                 secondRev.ParentIds = new[] { firstId };
             }
@@ -369,7 +373,7 @@ public sealed partial class FormStash : GitModuleForm
 
     private string GetStashName()
     {
-        return ((GitStash)Stashes.SelectedItem).Name;
+        return ((GitStash)Stashes.SelectedItem!).Name;
     }
 
     private void ApplyClick(object sender, EventArgs e)

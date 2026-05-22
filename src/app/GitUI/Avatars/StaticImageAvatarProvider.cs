@@ -24,7 +24,7 @@ public sealed class StaticImageAvatarProvider : IAvatarProvider
     {
         lock (_sizeCacheLock)
         {
-            if (_sizeCache.TryGetValue(imageSize, out Image image))
+            if (_sizeCache.TryGetValue(imageSize, out Image? image))
             {
                 return image;
             }

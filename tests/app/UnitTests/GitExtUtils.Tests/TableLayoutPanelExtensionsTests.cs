@@ -1,64 +1,62 @@
-﻿using FluentAssertions;
-using GitUI;
+﻿using GitUI;
 
 namespace GitExtUtilsTests;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class TableLayoutPanelExtensionsTests
 {
     [Test]
     public void AdjustWidthToSize_should_throw_if_table_null()
     {
-        ((Action)(() => ((TableLayoutPanel)null).AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => ((TableLayoutPanel)null!).AdjustWidthToSize(0, []))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
     public void AdjustWidthToSize_should_throw_if_table_has_no_columns()
     {
-        ((Action)(() => new TableLayoutPanel().AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentException>()
+        ((Action)(() => new TableLayoutPanel().AdjustWidthToSize(0, []))).Should().Throw<ArgumentException>()
             .WithMessage("The table must have at least one column");
     }
 
     [Test]
     public void AdjustWidthToSize_should_throw_if_index_outside_table_columns_count()
     {
-        TableLayoutPanel table = new()
+        using TableLayoutPanel table = new()
         {
             ColumnCount = 3
         };
-        ((Action)(() => table.AdjustWidthToSize(-1, Array.Empty<Control>()))).Should().Throw<ArgumentOutOfRangeException>()
+        ((Action)(() => table.AdjustWidthToSize(-1, []))).Should().Throw<ArgumentOutOfRangeException>()
             .WithMessage("Column index must be within [0, 2] range (Parameter 'columnIndex')\nActual value was -1.");
-        ((Action)(() => table.AdjustWidthToSize(3, Array.Empty<Control>()))).Should().Throw<ArgumentOutOfRangeException>()
+        ((Action)(() => table.AdjustWidthToSize(3, []))).Should().Throw<ArgumentOutOfRangeException>()
             .WithMessage("Column index must be within [0, 2] range (Parameter 'columnIndex')\nActual value was 3.");
     }
 
     [Test]
     public void AdjustWidthToSize_should_throw_if_no_widths_given()
     {
-        TableLayoutPanel table = new()
+        using TableLayoutPanel table = new()
         {
             ColumnCount = 3
         };
-        ((Action)(() => table.AdjustWidthToSize(0, null))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => table.AdjustWidthToSize(0, null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
     public void AdjustWidthToSize_should_throw_if_no_widths_given1()
     {
-        TableLayoutPanel table = new()
+        using TableLayoutPanel table = new()
         {
             ColumnCount = 3
         };
-        ((Action)(() => table.AdjustWidthToSize(0, Array.Empty<Control>()))).Should().Throw<ArgumentException>()
+        ((Action)(() => table.AdjustWidthToSize(0, []))).Should().Throw<ArgumentException>()
             .WithMessage("At least one control is required (Parameter 'controls')");
     }
 
     [Test]
     public void AdjustWidthToSize_should_set_width_to_largest_value()
     {
-        TableLayoutPanel table = new()
+        using TableLayoutPanel table = new()
         {
             ColumnCount = 3
         };

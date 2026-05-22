@@ -29,7 +29,7 @@ public partial class FormReflog : GitModuleForm
     private readonly TranslationString _continueResetCurrentBranchCaptionText = new("Changes not committed...");
 
     [GeneratedRegex(@"^(?<sha>[^ ]+) (?<ref>[^:]+): (?<action>.+)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex ReflogRegex();
+    private static partial Regex ReflogRegex { get; }
 
     private string? _currentBranch;
     private bool _isBranchCheckedOut;
@@ -40,7 +40,7 @@ public partial class FormReflog : GitModuleForm
         : base(uiCommands)
     {
         InitializeComponent();
-        lblDirtyWorkingDirectory.ForeColor.AdaptTextColor();
+        lblDirtyWorkingDirectory.SetForeColorForBackColor();
         InitializeComplete();
 
         gridReflog.RowTemplate.Height = DpiUtil.Scale(24);
@@ -77,7 +77,7 @@ public partial class FormReflog : GitModuleForm
 
         async Task DisplayRefLogAsync()
         {
-            string item = (string)Branches.SelectedItem;
+            string item = (string)Branches.SelectedItem!;
             await TaskScheduler.Default;
             GitArgumentBuilder arguments = new("reflog")
             {
@@ -85,7 +85,7 @@ public partial class FormReflog : GitModuleForm
                 item
             };
             string output = UICommands.Module.GitExecutable.GetOutput(arguments);
-            List<RefLine> refLines = ConvertReflogOutput().ToList();
+            List<RefLine> refLines = [.. ConvertReflogOutput()];
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
             _lastHitRowIndex = 0;
             SortableRefLineList refLinesList = new();
@@ -95,7 +95,7 @@ public partial class FormReflog : GitModuleForm
             IEnumerable<RefLine> ConvertReflogOutput()
                 => from line in output.LazySplit('\n')
                     where line.Length != 0
-                    select ReflogRegex().Match(line)
+                    select ReflogRegex.Match(line)
                     into match
                     where match.Success
                     select new RefLine(ObjectId.Parse(match.Groups["sha"].Value), match.Groups["ref"].Value, match.Groups["action"].Value);
@@ -122,7 +122,7 @@ public partial class FormReflog : GitModuleForm
     private ObjectId GetShaOfRefLine()
     {
         DataGridViewRow row = GetSelectedRow();
-        RefLine refLine = (RefLine)row.DataBoundItem;
+        RefLine refLine = (RefLine)row.DataBoundItem!;
         return refLine.Sha;
 
         DataGridViewRow GetSelectedRow()
@@ -137,7 +137,7 @@ public partial class FormReflog : GitModuleForm
                 return gridReflog.Rows[gridReflog.SelectedCells[0].RowIndex];
             }
 
-            return gridReflog.CurrentRow;
+            return gridReflog.CurrentRow!;
         }
     }
 
@@ -145,7 +145,7 @@ public partial class FormReflog : GitModuleForm
     {
         if (_isDirtyDir)
         {
-            if (MessageBox.Show(this, _continueResetCurrentBranchEvenWithChangesText.Text,
+            if (MessageBoxes.Show(this, _continueResetCurrentBranchEvenWithChangesText.Text,
                     _continueResetCurrentBranchCaptionText.Text,
                     MessageBoxButtons.YesNo, MessageBoxIcon.Warning, MessageBoxDefaultButton.Button2) == DialogResult.No)
             {

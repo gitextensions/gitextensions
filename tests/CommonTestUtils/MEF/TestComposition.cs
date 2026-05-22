@@ -15,7 +15,7 @@ namespace CommonTestUtils.MEF;
 /// </summary>
 public sealed partial class TestComposition
 {
-    public static readonly TestComposition Empty = new(ImmutableHashSet<Assembly>.Empty, ImmutableHashSet<Type>.Empty, ImmutableHashSet<Type>.Empty);
+    public static readonly TestComposition Empty = new([], [], []);
     private static readonly Lock _factoryCacheLock = new();
     private static readonly Dictionary<CacheKey, IExportProviderFactory> _factoryCache = [];
 
@@ -27,9 +27,9 @@ public sealed partial class TestComposition
 
         public CacheKey(ImmutableHashSet<Assembly> assemblies, ImmutableHashSet<Type> parts, ImmutableHashSet<Type> excludedPartTypes)
         {
-            _assemblies = assemblies.OrderBy(a => a.FullName).ToImmutableArray();
-            _parts = parts.OrderBy(a => a.FullName).ToImmutableArray();
-            _excludedPartTypes = excludedPartTypes.OrderBy(a => a.FullName).ToImmutableArray();
+            _assemblies = [.. assemblies.OrderBy(a => a.FullName)];
+            _parts = [.. parts.OrderBy(a => a.FullName)];
+            _excludedPartTypes = [.. excludedPartTypes.OrderBy(a => a.FullName)];
         }
 
         public override bool Equals(object? obj)
@@ -88,17 +88,17 @@ public sealed partial class TestComposition
 
         lock (_factoryCacheLock)
         {
-            if (_factoryCache.TryGetValue(key, out IExportProviderFactory existing))
+            if (_factoryCache.TryGetValue(key, out IExportProviderFactory? existing))
             {
                 return existing;
             }
         }
 
-        IExportProviderFactory newFactory = ExportProviderCache.CreateExportProviderFactory(GetCatalog(), isRemoteHostComposition: false);
+        IExportProviderFactory newFactory = ExportProviderCache.CreateExportProviderFactory(GetCatalog());
 
         lock (_factoryCacheLock)
         {
-            if (_factoryCache.TryGetValue(key, out IExportProviderFactory existing))
+            if (_factoryCache.TryGetValue(key, out IExportProviderFactory? existing))
             {
                 return existing;
             }
@@ -122,16 +122,16 @@ public sealed partial class TestComposition
         => AddAssemblies((IEnumerable<Assembly>?)assemblies);
 
     public TestComposition AddAssemblies(IEnumerable<Assembly>? assemblies)
-        => WithAssemblies(Assemblies.Union(assemblies ?? Array.Empty<Assembly>()));
+        => WithAssemblies(Assemblies.Union(assemblies ?? []));
 
     public TestComposition AddParts(IEnumerable<Type>? types)
-        => WithParts(Parts.Union(types ?? Array.Empty<Type>()));
+        => WithParts(Parts.Union(types ?? []));
 
     public TestComposition AddParts(params Type[]? types)
         => AddParts((IEnumerable<Type>?)types);
 
     public TestComposition AddExcludedPartTypes(IEnumerable<Type>? types)
-        => WithExcludedPartTypes(ExcludedPartTypes.Union(types ?? Array.Empty<Type>()));
+        => WithExcludedPartTypes(ExcludedPartTypes.Union(types ?? []));
 
     public TestComposition AddExcludedPartTypes(params Type[]? types)
         => AddExcludedPartTypes((IEnumerable<Type>?)types);
@@ -143,16 +143,16 @@ public sealed partial class TestComposition
         => RemoveAssemblies((IEnumerable<Assembly>?)assemblies);
 
     public TestComposition RemoveAssemblies(IEnumerable<Assembly>? assemblies)
-        => WithAssemblies(Assemblies.Except(assemblies ?? Array.Empty<Assembly>()));
+        => WithAssemblies(Assemblies.Except(assemblies ?? []));
 
     public TestComposition RemoveParts(IEnumerable<Type>? types)
-        => WithParts(Parts.Except(types ?? Array.Empty<Type>()));
+        => WithParts(Parts.Except(types ?? []));
 
     public TestComposition RemoveParts(params Type[]? types)
         => RemoveParts((IEnumerable<Type>?)types);
 
     public TestComposition RemoveExcludedPartTypes(IEnumerable<Type>? types)
-        => WithExcludedPartTypes(ExcludedPartTypes.Except(types ?? Array.Empty<Type>()));
+        => WithExcludedPartTypes(ExcludedPartTypes.Except(types ?? []));
 
     public TestComposition RemoveExcludedPartTypes(params Type[]? types)
         => RemoveExcludedPartTypes((IEnumerable<Type>?)types);
@@ -164,8 +164,8 @@ public sealed partial class TestComposition
             return this;
         }
 
-        Assembly testAssembly = assemblies.FirstOrDefault(IsTestAssembly);
-        if (testAssembly == null)
+        Assembly? testAssembly = assemblies.FirstOrDefault(IsTestAssembly);
+        if (testAssembly is null)
         {
             throw new NullReferenceException($"Test assemblies are not allowed in test composition: {testAssembly}. Specify explicit test parts instead.");
         }
@@ -178,7 +178,7 @@ public sealed partial class TestComposition
             return
                 name.EndsWith(".Tests", StringComparison.OrdinalIgnoreCase) ||
                 name.EndsWith(".UnitTests", StringComparison.OrdinalIgnoreCase) ||
-                name.IndexOf("Test.Utilities", StringComparison.OrdinalIgnoreCase) >= 0;
+                name.Contains("Test.Utilities", StringComparison.OrdinalIgnoreCase);
         }
     }
 

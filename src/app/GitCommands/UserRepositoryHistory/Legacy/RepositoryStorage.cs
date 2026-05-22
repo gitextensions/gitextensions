@@ -1,4 +1,4 @@
-namespace GitCommands.UserRepositoryHistory.Legacy;
+﻿namespace GitCommands.UserRepositoryHistory.Legacy;
 
 /// <summary>
 /// Provides the ability to persist and retrieve collections of user's git repositories.
@@ -46,16 +46,16 @@ public sealed class RepositoryStorage : IRepositoryStorage
         string? legacySetting = AppSettings.GetString(KeyHistory, null);
         if (string.IsNullOrWhiteSpace(legacySetting))
         {
-            return Array.Empty<RepositoryCategory>();
+            return [];
         }
 
         // backup the original setting
         AppSettings.SetString(KeyHistoryBackup, legacySetting);
 
-        IReadOnlyList<RepositoryCategory> history = _repositoryCategorySerialiser.Deserialize(legacySetting);
+        IReadOnlyList<RepositoryCategory>? history = _repositoryCategorySerialiser.Deserialize(legacySetting);
         if (history is null)
         {
-            return Array.Empty<RepositoryCategory>();
+            return [];
         }
 
         return history;

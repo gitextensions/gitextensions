@@ -18,11 +18,11 @@ public static class RegisteredDiffMergeTools
                                                    }
                                                    catch (Exception)
                                                    {
-                                                       return Array.Empty<Type>();
+                                                       return [];
                                                    }
                                                })
                                                .Where(t => t.IsSubclassOf(typeof(DiffMergeTool)))
-                                               .Select(t => (DiffMergeTool)Activator.CreateInstance(t));
+                                               .Select(t => (DiffMergeTool)Activator.CreateInstance(t)!);
         foreach (DiffMergeTool tool in diffTools)
         {
             RegisteredTools.Add(tool.Name, tool);

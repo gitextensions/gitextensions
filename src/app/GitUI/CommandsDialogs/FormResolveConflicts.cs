@@ -1,9 +1,8 @@
-﻿using System.ComponentModel;
+using System.ComponentModel;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -36,23 +35,23 @@ public partial class FormResolveConflicts : GitModuleForm
     private readonly TranslationString _noMergeTool = new("There is no mergetool configured." + Environment.NewLine + "Please go to settings and set a mergetool!");
     private readonly TranslationString _noMergeToolConfigured = new("The mergetool is not correctly configured." + Environment.NewLine + "Please go to settings and configure the mergetool!");
     private readonly TranslationString _errorStartingMergetool = new("Error starting mergetool: {0}");
-    private readonly TranslationString _stageFilename = new("Stage {0}");
+    private readonly TranslationString _stageFilename = new("Stage '{0}'");
 
-    private readonly TranslationString _noBaseRevision = new("There is no base revision for {0}." + Environment.NewLine + "Fall back to 2-way merge?");
+    private readonly TranslationString _noBaseRevision = new("There is no base revision for '{0}'." + Environment.NewLine + "Fall back to 2-way merge?");
     private readonly TranslationString _ours = new("ours");
     private readonly TranslationString _theirs = new("theirs");
-    private readonly TranslationString _fileBinaryChooseLocalBaseRemote = new("File ({0}) appears to be a binary file." + Environment.NewLine + "Choose to keep the local ({1}), remote ({2}) or base file.");
+    private readonly TranslationString _fileBinaryChooseLocalBaseRemote = new("File '{0}' appears to be binary." + Environment.NewLine + "Choose to keep the local '{1}', remote '{2}' or base file.");
     private readonly TranslationString _fileChangeLocallyAndRemotely = new("The file has been changed both locally ({0}) and remotely ({1}). Merge the changes.");
     private readonly TranslationString _fileCreatedLocallyAndRemotely = new("A file with the same name has been created locally ({0}) and remotely ({1}). Choose the file you want to keep or merge the files.");
-    private readonly TranslationString _fileCreatedLocallyAndRemotelyLong = new("File {0} does not have a base revision." + Environment.NewLine + "A file with the same name has been created locally ({1}) and remotely ({2}) causing this conflict." + Environment.NewLine + Environment.NewLine + "Choose the file you want to keep, merge the files or delete the file?");
+    private readonly TranslationString _fileCreatedLocallyAndRemotelyLong = new("File '{0}' does not have a base revision." + Environment.NewLine + "A file with the same name has been created locally ({1}) and remotely ({2}) causing this conflict." + Environment.NewLine + Environment.NewLine + "Choose the file you want to keep, merge the files or delete the file?");
     private readonly TranslationString _fileDeletedLocallyAndModifiedRemotely = new("The file has been deleted locally ({0}) and modified remotely ({1}). Choose to delete the file or keep the modified version.");
-    private readonly TranslationString _fileDeletedLocallyAndModifiedRemotelyLong = new("File {0} does not have a local revision." + Environment.NewLine + "The file has been deleted locally ({1}) but modified remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
-    private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLong = new("{0} and {1} other out of {2} selected files do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
-    private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLongNoOtherFilesSelected = new("{0} and {1} other selected file(s) do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
+    private readonly TranslationString _fileDeletedLocallyAndModifiedRemotelyLong = new("File '{0}' does not have a local revision." + Environment.NewLine + "The file has been deleted locally ({1}) but modified remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
+    private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLong = new("'{0}' and {1} other out of {2} selected files do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
+    private readonly TranslationString _filesDeletedLocallyAndModifiedRemotelyLongNoOtherFilesSelected = new("'{0}' and {1} other selected file(s) do not have a local revision." + Environment.NewLine + "The files have been deleted locally, but modified remotely" + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
     private readonly TranslationString _fileModifiedLocallyAndDeletedRemotely = new("The file has been modified locally ({0}) and deleted remotely ({1}). Choose to delete the file or keep the modified version.");
-    private readonly TranslationString _fileModifiedLocallyAndDeletedRemotelyLong = new("File {0} does not have a remote revision." + Environment.NewLine + "The file has been modified locally ({1}) but deleted remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
-    private readonly TranslationString _filesModifiedLocallyAndDeletedRemotelyLong = new("{0} and {1} other out of {2} selected files do not have a remote revision." + Environment.NewLine + "The files have been modified locally, but deleted remotely." + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
-    private readonly TranslationString _filesModifiedLocallyAndDeletedRemotelyLongNoOtherFilesSelected = new("{0} and {1} other selected file(s) do not have a remote revision." + Environment.NewLine + "The files have been modified locally, but deleted remotely." + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
+    private readonly TranslationString _fileModifiedLocallyAndDeletedRemotelyLong = new("File '{0}' does not have a remote revision." + Environment.NewLine + "The file has been modified locally ({1}) but deleted remotely ({2})." + Environment.NewLine + Environment.NewLine + "Choose to delete the file or keep the modified version.");
+    private readonly TranslationString _filesModifiedLocallyAndDeletedRemotelyLong = new("'{0}' and {1} other out of {2} selected files do not have a remote revision." + Environment.NewLine + "The files have been modified locally, but deleted remotely." + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
+    private readonly TranslationString _filesModifiedLocallyAndDeletedRemotelyLongNoOtherFilesSelected = new("'{0}' and {1} other selected file(s) do not have a remote revision." + Environment.NewLine + "The files have been modified locally, but deleted remotely." + Environment.NewLine + Environment.NewLine + "Choose to delete the files or keep the modified versions.");
     private readonly TranslationString _noBase = new("no base");
     private readonly TranslationString _deleted = new("deleted");
     private readonly TranslationString _chooseLocalButtonText = new("Choose local");
@@ -61,7 +60,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private readonly TranslationString _keepModifiedButtonText = new("Keep modified");
     private readonly TranslationString _keepBaseButtonText = new("Keep base file");
 
-    private readonly TranslationString _solveMergeConflictApplyToAllCheckBoxText = new("Apply to {0} and {1} other file(s)");
+    private readonly TranslationString _solveMergeConflictApplyToAllCheckBoxText = new("Apply to '{0}' and {1} other file(s)");
     private readonly TranslationString _solveMergeConflictDialogCaption = new("Solve merge conflict");
 
     private readonly TranslationString _conflictedFilesContextMenuText = new("Solve");
@@ -285,7 +284,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 if (!Module.InTheMiddleOfPatch() && !_inTheMiddleOfRebase && _offerCommit)
                 {
                     if (AppSettings.DontConfirmCommitAfterConflictsResolved ||
-                        MessageBox.Show(this, _allConflictsResolved.Text, _allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                        MessageBoxes.Show(this, _allConflictsResolved.Text, _allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         UICommands.StartCommitDialog(this);
                     }
@@ -309,15 +308,50 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private ConflictData GetConflict()
     {
-        return (ConflictData)ConflictedFiles.SelectedRows[0].DataBoundItem;
+        return (ConflictData)ConflictedFiles.SelectedRows[0].DataBoundItem!;
     }
 
-    private IReadOnlyList<ConflictData> GetConflicts()
+    private (IReadOnlyList<ConflictData> conflicts,
+        IReadOnlyList<ConflictData> filesDeletedLocallyAndModifiedRemotely,
+        IReadOnlyList<ConflictData> filesModifiedLocallyAndDeletedRemotely,
+        IReadOnlyList<ConflictData> filesRemaining) GetConflicts()
     {
-        return ConflictedFiles.SelectedRows
+        IReadOnlyList<ConflictData> conflicts = ConflictedFiles.SelectedRows
             .Cast<DataGridViewRow>()
-            .Select(selectedRow => (ConflictData)selectedRow.DataBoundItem)
+            .Select(selectedRow => (ConflictData)selectedRow.DataBoundItem!)
             .ToArray();
+
+        _conflictItemsCount = conflicts.Count;
+        StartProgressBarWithMaxValue(_conflictItemsCount);
+
+        List<ConflictData> filesDeletedLocallyAndModifiedRemotely = [];
+        List<ConflictData> filesModifiedLocallyAndDeletedRemotely = [];
+        List<ConflictData> filesRemaining = [];
+
+        // Insert(0, conflictData) is needed the task dialog shows the same order of files as selected in the grid
+        foreach (ConflictData conflictData in conflicts)
+        {
+            if (string.IsNullOrEmpty(conflictData.Local.Filename) && !string.IsNullOrEmpty(conflictData.Remote.Filename))
+            {
+                filesDeletedLocallyAndModifiedRemotely.Insert(0, conflictData);
+            }
+            else if (!string.IsNullOrEmpty(conflictData.Local.Filename) && string.IsNullOrEmpty(conflictData.Remote.Filename))
+            {
+                filesModifiedLocallyAndDeletedRemotely.Insert(0, conflictData);
+            }
+            else
+            {
+                filesRemaining.Insert(0, conflictData);
+            }
+        }
+
+        _filesDeletedLocallyAndModifiedRemotelyCount = filesDeletedLocallyAndModifiedRemotely.Count;
+        _filesModifiedLocallyAndDeletedRemotelyCount = filesModifiedLocallyAndDeletedRemotely.Count;
+        _filesRemainedCount = filesRemaining.Count;
+        _filesDeletedLocallyAndModifiedRemotelySolved = _filesDeletedLocallyAndModifiedRemotelyCount;
+        _filesModifiedLocallyAndDeletedRemotelySolved = _filesModifiedLocallyAndDeletedRemotelyCount;
+
+        return (conflicts, filesDeletedLocallyAndModifiedRemotely, filesModifiedLocallyAndDeletedRemotely, filesRemaining);
     }
 
     private string GetFileName()
@@ -353,7 +387,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private bool TryMergeWithScript(string fileName, string? baseFileName, string? localFileName, string? remoteFileName)
     {
-        if (!EnvUtils.RunningOnWindows())
+        if (!OperatingSystem.IsWindows())
         {
             return false;
         }
@@ -366,17 +400,17 @@ public partial class FormResolveConflicts : GitModuleForm
                 return false;
             }
 
-            string dir = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), "Diff-Scripts").EnsureTrailingPathSeparator();
+            string dir = Path.Join(Path.GetDirectoryName(Application.ExecutablePath)!, "Diff-Scripts").EnsureTrailingPathSeparator();
             if (Directory.Exists(dir))
             {
-                if (_mergeScripts.TryGetValue(extension, out string mergeScript) &&
-                    File.Exists(Path.Combine(dir!, mergeScript)))
+                if (_mergeScripts.TryGetValue(extension!, out string? mergeScript) &&
+                    File.Exists(Path.Join(dir!, mergeScript)))
                 {
-                    if (MessageBox.Show(this, string.Format(_uskUseCustomMergeScript.Text, mergeScript),
+                    if (MessageBoxes.Show(this, string.Format(_uskUseCustomMergeScript.Text, mergeScript),
                                         _uskUseCustomMergeScriptCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) ==
                         DialogResult.Yes)
                     {
-                        UseMergeWithScript(fileName, Path.Combine(dir, mergeScript), baseFileName, localFileName, remoteFileName);
+                        UseMergeWithScript(fileName, Path.Join(dir, mergeScript), baseFileName, localFileName, remoteFileName);
 
                         return true;
                     }
@@ -385,7 +419,7 @@ public partial class FormResolveConflicts : GitModuleForm
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, "Merge using script failed.\n" + ex, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, "Merge using script failed.\n" + ex, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         return false;
@@ -394,7 +428,7 @@ public partial class FormResolveConflicts : GitModuleForm
     private void UseMergeWithScript(string fileName, string mergeScript, string? baseFileName, string? localFileName, string? remoteFileName)
     {
         // get timestamp of file before merge. This is an extra check to verify if merge was successfully
-        string filePath = _fullPathResolver.Resolve(fileName);
+        string? filePath = _fullPathResolver.Resolve(fileName);
         DateTime lastWriteTimeBeforeMerge = File.Exists(filePath) ? File.GetLastWriteTime(filePath) : DateTime.Now;
 
         ArgumentBuilder args =
@@ -408,7 +442,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
         new Executable("wscript", Module.WorkingDir).Start(args);
 
-        if (MessageBox.Show(this, string.Format(_askMergeConflictSolvedAfterCustomMergeScript.Text,
+        if (MessageBoxes.Show(this, string.Format(_askMergeConflictSolvedAfterCustomMergeScript.Text,
             FixPath(filePath)), _askMergeConflictSolvedCaption.Text,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
@@ -417,7 +451,7 @@ public partial class FormResolveConflicts : GitModuleForm
             // The file is not modified, do not stage file and present warning
             if (lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge)
             {
-                MessageBox.Show(this, _fileUnchangedAfterMerge.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBoxes.Show(this, _fileUnchangedAfterMerge.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             else
             {
@@ -525,7 +559,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void ResolveFilesConflict(ConflictData item)
     {
-        (string baseFile, string localFile, string remoteFile) = Module.CheckoutConflictedFiles(item);
+        (string? baseFile, string? localFile, string? remoteFile) = Module.CheckoutConflictedFiles(item);
 
         try
         {
@@ -540,7 +574,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
                 if (FileHelper.IsBinaryFileName(Module, item.Local.Filename))
                 {
-                    if (MessageBox.Show(this, string.Format(_fileIsBinary.Text, _mergetool),
+                    if (MessageBoxes.Show(this, string.Format(_fileIsBinary.Text, _mergetool),
                             TranslatedStrings.Warning, MessageBoxButtons.YesNo, MessageBoxIcon.Warning,
                             MessageBoxDefaultButton.Button2) == DialogResult.No)
                     {
@@ -568,7 +602,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 if (item.Base.Filename is null)
                 {
                     string text = string.Format(_noBaseRevision.Text, item.Filename);
-                    DialogResult result = MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
+                    DialogResult result = MessageBoxes.Show(this, text, _noBaseFileMergeCaption.Text,
                         MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question);
                     if (result == DialogResult.Yes)
                     {
@@ -587,7 +621,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 arguments = arguments.Replace("$MERGED", item.Filename);
 
                 // get timestamp of file before merge. This is an extra check to verify if merge was successful
-                string filePath = _fullPathResolver.Resolve(item.Filename);
+                string? filePath = _fullPathResolver.Resolve(item.Filename);
                 DateTime lastWriteTimeBeforeMerge = File.Exists(filePath) ? File.GetLastWriteTime(filePath) : DateTime.Now;
 
                 ExecutionResult res;
@@ -598,7 +632,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 catch (Exception)
                 {
                     string text = string.Format(_errorStartingMergetool.Text, _mergetoolPath);
-                    MessageBox.Show(this, text, _noBaseFileMergeCaption.Text,
+                    MessageBoxes.Show(this, text, _noBaseFileMergeCaption.Text,
                         MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
@@ -617,7 +651,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 if ((res.ExitCode == 1 && lastWriteTimeBeforeMerge != lastWriteTimeAfterMerge) ||
                     (res.ExitCode == 0 && lastWriteTimeBeforeMerge == lastWriteTimeAfterMerge))
                 {
-                    if (MessageBox.Show(this, _askMergeConflictSolved.Text, _askMergeConflictSolvedCaption.Text,
+                    if (MessageBoxes.Show(this, _askMergeConflictSolved.Text, _askMergeConflictSolvedCaption.Text,
                         MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
                     {
                         StageFile(item.Filename);
@@ -634,7 +668,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
         return;
 
-        void DeleteTemporaryFile(string? path)
+        static void DeleteTemporaryFile(string? path)
         {
             if (path is not null && File.Exists(path))
             {
@@ -661,7 +695,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
         if (string.IsNullOrEmpty(_mergetool))
         {
-            MessageBox.Show(this, _noMergeTool.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _noMergeTool.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return false;
         }
 
@@ -684,7 +718,7 @@ public partial class FormResolveConflicts : GitModuleForm
                 }
             }
 
-            if (EnvUtils.RunningOnWindows() && _mergetoolCmd is not null)
+            if (OperatingSystem.IsWindows() && _mergetoolCmd is not null)
             {
                 // This only works when on Windows....
                 const string executablePattern = ".exe";
@@ -696,9 +730,9 @@ public partial class FormResolveConflicts : GitModuleForm
                 }
             }
 
-            if (!PathUtil.TryFindFullPath(_mergetoolPath, out string? fullPath))
+            if (!PathUtil.TryFindFullPath(_mergetoolPath!, out string? fullPath))
             {
-                MessageBox.Show(this, _noMergeToolConfigured.Text, TranslatedStrings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBoxes.Show(this, _noMergeToolConfigured.Text, TranslatedStrings.Warning, MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return false;
             }
 
@@ -710,11 +744,11 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private bool ShowAbortMessage()
     {
-        if (MessageBox.Show(_abortCurrentOperation.Text, _resetCaption.Text,
+        if (MessageBoxes.Show(_abortCurrentOperation.Text, _resetCaption.Text,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
             if (AppSettings.DontConfirmSecondAbortConfirmation ||
-                MessageBox.Show(_areYouSureYouWantDeleteFiles.Text, _areYouSureYouWantDeleteFilesCaption.Text,
+                MessageBoxes.Show(_areYouSureYouWantDeleteFiles.Text, _areYouSureYouWantDeleteFilesCaption.Text,
                 MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
             {
                 return true;
@@ -741,9 +775,9 @@ public partial class FormResolveConflicts : GitModuleForm
     private string GetLocalSideString() => _inTheMiddleOfRebase ? _theirs.Text : _ours.Text;
 
     private string GetShortHash(ConflictedFileData item)
-        => $"@{(item.ObjectId is null ? _deleted.Text : item.ObjectId.ToShortString())}";
+        => $"@{(item.ObjectId.IsZero ? _deleted.Text : item.ObjectId.ToShortString())}";
 
-    private void ConflictedFiles_SelectionChanged(object sender, EventArgs e)
+    private void ConflictedFiles_SelectionChanged(object? sender, EventArgs e)
     {
         UpdateConflictedFilesMenu();
     }
@@ -826,9 +860,9 @@ public partial class FormResolveConflicts : GitModuleForm
         ItemType itemType = GetItemType(item.Filename);
         if (itemType == ItemType.Submodule)
         {
-            baseFileName.Text = baseFileName.Text + GetShortHash(item.Base);
-            localFileName.Text = localFileName.Text + GetShortHash(item.Local);
-            remoteFileName.Text = remoteFileName.Text + GetShortHash(item.Remote);
+            baseFileName.Text += GetShortHash(item.Base);
+            localFileName.Text += GetShortHash(item.Local);
+            remoteFileName.Text += GetShortHash(item.Remote);
         }
     }
 
@@ -836,10 +870,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
-            IReadOnlyList<ConflictData> conflictItems = GetConflicts();
-
-            StartProgressBarWithMaxValue(conflictItems.Count);
-            foreach (ConflictData conflictItem in conflictItems)
+            foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForBaseRevision(conflictItem))
                 {
@@ -858,7 +889,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         if (!Module.HandleConflictSelectSide(fileName, "BASE"))
         {
-            MessageBox.Show(this, _chooseBaseFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _chooseBaseFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -866,9 +897,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
-            IReadOnlyList<ConflictData> conflictItems = GetConflicts();
-            StartProgressBarWithMaxValue(conflictItems.Count);
-            foreach (ConflictData conflictItem in conflictItems)
+            foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForLocalRevision(conflictItem))
                 {
@@ -887,7 +916,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         if (!Module.HandleConflictSelectSide(fileName, "LOCAL"))
         {
-            MessageBox.Show(this, _chooseLocalFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _chooseLocalFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -895,9 +924,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
-            IReadOnlyList<ConflictData> conflictItems = GetConflicts();
-            StartProgressBarWithMaxValue(conflictItems.Count);
-            foreach (ConflictData conflictItem in conflictItems)
+            foreach (ConflictData conflictItem in GetConflicts().conflicts)
             {
                 if (CheckForRemoteRevision(conflictItem))
                 {
@@ -916,7 +943,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         if (!Module.HandleConflictSelectSide(fileName, "REMOTE"))
         {
-            MessageBox.Show(this, _chooseRemoteFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _chooseRemoteFileFailedText.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 
@@ -1204,37 +1231,11 @@ public partial class FormResolveConflicts : GitModuleForm
         {
             try
             {
-                IReadOnlyList<ConflictData> items = GetConflicts();
-                _conflictItemsCount = items.Count;
-
-                List<ConflictData> filesDeletedLocallyAndModifiedRemotely = [];
-                List<ConflictData> filesModifiedLocallyAndDeletedRemotely = [];
-                List<ConflictData> filesRemaining = [];
-
-                // Insert(0, conflictData) is needed the task dialog shows the same order of files as selected in the grid
-                foreach (ConflictData conflictData in items)
-                {
-                    if (string.IsNullOrEmpty(conflictData.Local.Filename) && !string.IsNullOrEmpty(conflictData.Remote.Filename))
-                    {
-                        filesDeletedLocallyAndModifiedRemotely.Insert(0, conflictData);
-                    }
-                    else if (!string.IsNullOrEmpty(conflictData.Local.Filename) && string.IsNullOrEmpty(conflictData.Remote.Filename))
-                    {
-                        filesModifiedLocallyAndDeletedRemotely.Insert(0, conflictData);
-                    }
-                    else
-                    {
-                        filesRemaining.Insert(0, conflictData);
-                    }
-                }
-
-                _filesDeletedLocallyAndModifiedRemotelyCount = filesDeletedLocallyAndModifiedRemotely.Count;
-                _filesModifiedLocallyAndDeletedRemotelyCount = filesModifiedLocallyAndDeletedRemotely.Count;
-                _filesRemainedCount = filesRemaining.Count;
-                _filesDeletedLocallyAndModifiedRemotelySolved = _filesDeletedLocallyAndModifiedRemotelyCount;
-                _filesModifiedLocallyAndDeletedRemotelySolved = _filesModifiedLocallyAndDeletedRemotelyCount;
-
-                StartProgressBarWithMaxValue(_conflictItemsCount);
+                (IReadOnlyList<ConflictData> conflictItems,
+                    IReadOnlyList<ConflictData> filesDeletedLocallyAndModifiedRemotely,
+                    IReadOnlyList<ConflictData> filesModifiedLocallyAndDeletedRemotely,
+                    IReadOnlyList<ConflictData> filesRemaining)
+                    = GetConflicts();
 
                 _solveMergeConflictApplyToAll = false;
                 foreach (ConflictData conflictData in filesDeletedLocallyAndModifiedRemotely)
@@ -1272,21 +1273,21 @@ public partial class FormResolveConflicts : GitModuleForm
         OpenMergeTool();
     }
 
-    private void customMergetool_Click(object sender, EventArgs e)
+    private void customMergetool_Click(object? sender, EventArgs e)
     {
-        ToolStripMenuItem item = sender as ToolStripMenuItem;
+        ToolStripMenuItem? item = sender as ToolStripMenuItem;
         if (item?.DropDownItems != null)
         {
             // "main menu" clicked, cancel dropdown manually, invoke default mergetool
             item.HideDropDown();
-            item.Owner.Hide();
+            item.Owner!.Hide();
         }
 
         using (WaitCursorScope.Enter())
         {
-            string customTool = item?.Tag as string;
+            string? customTool = item?.Tag as string;
 
-            foreach (ConflictData conflict in GetConflicts())
+            foreach (ConflictData conflict in GetConflicts().conflicts)
             {
                 Directory.SetCurrentDirectory(Module.WorkingDir);
                 Module.RunMergeTool(fileName: conflict.Filename, customTool: customTool);
@@ -1317,7 +1318,7 @@ public partial class FormResolveConflicts : GitModuleForm
 
             if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileName, side))
             {
-                MessageBox.Show(this, _failureWhileOpenFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBoxes.Show(this, _failureWhileOpenFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
             OsShellUtil.OpenAs(fileName);
@@ -1356,7 +1357,7 @@ public partial class FormResolveConflicts : GitModuleForm
         {
             ConflictData conflictData = GetConflict();
             string fileName = PathUtil.GetFileName(conflictData.Filename);
-            string initialDirectory = _fullPathResolver.Resolve(Path.GetDirectoryName(conflictData.Filename));
+            string? initialDirectory = _fullPathResolver.Resolve(Path.GetDirectoryName(conflictData.Filename));
 
             using SaveFileDialog fileDialog = new()
             {
@@ -1372,7 +1373,7 @@ public partial class FormResolveConflicts : GitModuleForm
             {
                 if (!Module.HandleConflictsSaveSide(conflictData.Filename, fileDialog.FileName, side))
                 {
-                    MessageBox.Show(this, _failureWhileSaveFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBoxes.Show(this, _failureWhileSaveFile.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -1397,7 +1398,11 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         using (WaitCursorScope.Enter())
         {
-            StageFile(GetFileName());
+            foreach (ConflictData conflict in GetConflicts().conflicts)
+            {
+                StageFile(conflict.Filename);
+            }
+
             Initialize();
         }
     }

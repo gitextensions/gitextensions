@@ -13,7 +13,6 @@ using System.Xml.Serialization;
 
 namespace BugReporter.Serialization;
 
-[Serializable]
 public class SerializableException
 {
     /// <summary>
@@ -26,7 +25,7 @@ public class SerializableException
 
     public SerializableException(Exception exception)
     {
-        OriginalException = exception ?? throw new ArgumentNullException();
+        OriginalException = exception ?? throw new ArgumentNullException(nameof(exception));
 
         CultureInfo oldCulture = Thread.CurrentThread.CurrentCulture;
         CultureInfo oldUICulture = Thread.CurrentThread.CurrentUICulture;
@@ -63,11 +62,11 @@ public class SerializableException
                 InnerException = new SerializableException(exception.InnerException);
             }
 
-            if (exception is AggregateException)
+            if (exception is AggregateException aggregateException)
             {
                 InnerExceptions = [];
 
-                foreach (Exception innerException in ((AggregateException)exception).InnerExceptions)
+                foreach (Exception innerException in aggregateException.InnerExceptions)
                 {
                     InnerExceptions.Add(new SerializableException(innerException));
                 }
@@ -166,16 +165,16 @@ public class SerializableException
         serializer.Serialize(stream, this);
         stream.Position = 0;
         XDocument doc = XDocument.Load(stream);
-        return doc.Root.ToString();
+        return doc.Root!.ToString();
     }
 
     public static SerializableException FromXmlString(string xml)
     {
         XmlSerializer serializer = new(typeof(SerializableException));
         using StringReader reader = new(xml);
-        SerializableException exception = (SerializableException)serializer.Deserialize(reader);
+        SerializableException? exception = (SerializableException?)serializer.Deserialize(reader);
 
-        if (exception.StackTrace?.IndexOf(Environment.NewLine) < 0)
+        if (exception!.StackTrace?.IndexOf(Environment.NewLine) < 0)
         {
             // Presume that the payload was serialized with \n only
             exception.StackTrace = exception.StackTrace.Replace("\n", Environment.NewLine);
@@ -186,20 +185,20 @@ public class SerializableException
 
     private SerializableDictionary<string, object>? GetExtendedInformation(Exception exception)
     {
-        PropertyInfo[] extendedProperties = (from property in exception.GetType().GetProperties()
+        PropertyInfo[] extendedProperties = [.. from property in exception.GetType().GetProperties()
                                   where
                                       property.Name != "Data" && property.Name != "InnerExceptions" && property.Name != "InnerException"
                                       && property.Name != "Message" && property.Name != "Source" && property.Name != "StackTrace"
                                       && property.Name != "TargetSite" && property.Name != "HelpLink" && property.CanRead
-                                  select property).ToArray();
+                                  select property];
 
-        if (extendedProperties.Any())
+        if (extendedProperties.Length != 0)
         {
             SerializableDictionary<string, object> extendedInformation = [];
 
             foreach (PropertyInfo property in extendedProperties.Where(property => property.GetValue(exception, null) is not null))
             {
-                extendedInformation.Add(property.Name, property.GetValue(exception, null));
+                extendedInformation.Add(property.Name, property.GetValue(exception, null)!);
             }
 
             return extendedInformation;

@@ -1,8 +1,6 @@
 ﻿using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests.Patches;
-
-[TestFixture]
 internal class PatchTest
 {
     [Test]
@@ -10,12 +8,12 @@ internal class PatchTest
     {
         Patch patch = new("header", "index", PatchFileType.Text, "A", "B", PatchChangeType.NewFile, "text");
 
-        ClassicAssert.AreEqual("header", patch.Header);
-        ClassicAssert.AreEqual("index", patch.Index);
-        ClassicAssert.AreEqual(PatchFileType.Text, patch.FileType);
-        ClassicAssert.AreEqual("A", patch.FileNameA);
-        ClassicAssert.AreEqual("B", patch.FileNameB);
-        ClassicAssert.AreEqual(PatchChangeType.NewFile, patch.ChangeType);
-        ClassicAssert.AreEqual("text", patch.Text);
+        patch.Header.Should().Be("header");
+        patch.Index.Should().Be("index");
+        patch.FileType.Should().Be(PatchFileType.Text);
+        patch.FileNameA.Should().Be("A");
+        patch.FileNameB.Should().Be("B");
+        patch.ChangeType.Should().Be(PatchChangeType.NewFile);
+        patch.Text.Should().Be("text");
     }
 }

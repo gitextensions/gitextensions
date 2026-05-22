@@ -2,60 +2,11 @@
 
 namespace GitCommands.Settings;
 
-internal sealed class DetailedSettings : IDetailedSettings
+public static class DetailedSettings
 {
-    private const string DetailedGroupName = "Detailed";
+    private static readonly SettingsPath _settingsPath = new(parent: null, "Detailed");
 
-    private const bool GetRemoteBranchesDirectlyFromRemoteDefault = false;
-    private const bool AddMergeLogMessagesDefault = false;
-    private const int MergeLogMessagesCountDefault = 20;
-
-    private readonly SettingsSource _settingsSource;
-
-    public DetailedSettings(SettingsSource settingsSource)
-    {
-        _settingsSource = settingsSource;
-    }
-
-    public bool GetRemoteBranchesDirectlyFromRemote
-    {
-        get => _settingsSource.GetBool($"{DetailedGroupName}.{nameof(GetRemoteBranchesDirectlyFromRemote)}", GetRemoteBranchesDirectlyFromRemoteDefault);
-        set
-        {
-            if (GetRemoteBranchesDirectlyFromRemote == value)
-            {
-                return;
-            }
-
-            _settingsSource.SetBool($"{DetailedGroupName}.{nameof(GetRemoteBranchesDirectlyFromRemote)}", value);
-        }
-    }
-
-    public bool AddMergeLogMessages
-    {
-        get => _settingsSource.GetBool($"{DetailedGroupName}.{nameof(AddMergeLogMessages)}", AddMergeLogMessagesDefault);
-        set
-        {
-            if (AddMergeLogMessages == value)
-            {
-                return;
-            }
-
-            _settingsSource.SetBool($"{DetailedGroupName}.{nameof(AddMergeLogMessages)}", value);
-        }
-    }
-
-    public int MergeLogMessagesCount
-    {
-        get => _settingsSource.GetInt($"{DetailedGroupName}.{nameof(MergeLogMessagesCount)}", MergeLogMessagesCountDefault);
-        set
-        {
-            if (MergeLogMessagesCount == value)
-            {
-                return;
-            }
-
-            _settingsSource.SetInt($"{DetailedGroupName}.{nameof(MergeLogMessagesCount)}", value);
-        }
-    }
+    public static BoolSetting GetRemoteBranchesDirectlyFromRemote { get; } = new(_settingsPath.PathFor(nameof(GetRemoteBranchesDirectlyFromRemote)), defaultValue: false);
+    public static BoolSetting AddMergeLogMessages { get; } = new(_settingsPath.PathFor(nameof(AddMergeLogMessages)), defaultValue: false);
+    public static NumberSetting<int> MergeLogMessagesCount { get; } = new(_settingsPath.PathFor(nameof(MergeLogMessagesCount)), defaultValue: 20);
 }

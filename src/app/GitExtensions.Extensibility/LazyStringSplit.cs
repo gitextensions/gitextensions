@@ -97,7 +97,7 @@ public readonly struct LazyStringSplit : IEnumerable<string>
             return false;
         }
 
-        object IEnumerator.Current => Current;
+        readonly object IEnumerator.Current => Current;
 
         void IEnumerator.Reset()
         {

@@ -1,15 +1,16 @@
 ﻿namespace GitUI.LeftPanel;
 
-internal sealed class Nodes : IEnumerable<Node>
+internal sealed class Nodes(Tree? tree) : IReadOnlyCollection<Node>
 {
     private readonly List<Node> _nodesList = [];
 
-    public Tree? Tree { get; }
+    public int Count => _nodesList.Count;
 
-    public Nodes(Tree? tree)
-    {
-        Tree = tree;
-    }
+    public Node? LastNode => _nodesList.Count > 0 ? _nodesList[^1] : null;
+
+    public Tree? Tree { get; } = tree;
+
+    public Node this[int index] => _nodesList[index];
 
     /// <summary>
     /// Adds a new node to the collection.
@@ -30,14 +31,22 @@ internal sealed class Nodes : IEnumerable<Node>
         _nodesList.Clear();
     }
 
-    public IEnumerator<Node> GetEnumerator()
-        => _nodesList.GetEnumerator();
+    #region Enumerators
 
-    public void InsertNode(int index, Node node)
-        => _nodesList.Insert(index, node);
+    public List<Node>.Enumerator GetEnumerator()
+    {
+        return _nodesList.GetEnumerator();
+    }
+
+    IEnumerator<Node> IEnumerable<Node>.GetEnumerator()
+    {
+        return _nodesList.GetEnumerator();
+    }
 
     System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        => GetEnumerator();
+    {
+        return GetEnumerator();
+    }
 
     /// <summary>
     /// Returns all nodes of a given TNode type using depth-first, pre-order method.
@@ -57,6 +66,8 @@ internal sealed class Nodes : IEnumerable<Node>
             }
         }
     }
+
+    #endregion
 
     /// <summary>
     /// This function is responsible for building the TreeNode structure that matches this Nodes's
@@ -104,7 +115,8 @@ internal sealed class Nodes : IEnumerable<Node>
         }
     }
 
-    public int Count => _nodesList.Count;
-
-    public Node? LastNode => _nodesList.Count > 0 ? _nodesList[^1] : null;
+    public void InsertNode(int index, Node node)
+    {
+        _nodesList.Insert(index, node);
+    }
 }

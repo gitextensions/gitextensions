@@ -18,13 +18,13 @@ public class ExternalLinkFormat
         List<string> groups = [];
         AddGroupsFromMatches(remoteMatch);
         AddGroupsFromMatches(revisionMatch);
-        object[] groupsArray = groups.ToArray<object>();
+        object[] groupsArray = [.. groups];
 
         string? caption = null;
         string? uri;
         try
         {
-            caption = string.Format(Caption, groupsArray);
+            caption = string.Format(Caption!, groupsArray);
             Validates.NotNull(Format);
             uri = Format.Replace("%COMMIT_HASH%", revision.Guid);
             uri = string.Format(uri, groupsArray);

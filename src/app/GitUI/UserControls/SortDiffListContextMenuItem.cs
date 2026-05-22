@@ -91,16 +91,16 @@ public class SortDiffListContextMenuItem : ToolStripMenuItem
         }
     }
 
-    private void Item_Click(object sender, EventArgs e)
+    private void Item_Click(object? sender, EventArgs e)
     {
-        ToolStripMenuItem item = (ToolStripMenuItem)sender;
-        DiffListSortType sortingType = (DiffListSortType)item.Tag;
+        ToolStripMenuItem item = (ToolStripMenuItem)sender!;
+        DiffListSortType sortingType = (DiffListSortType)item.Tag!;
         _sortService.DiffListSorting = sortingType;
     }
 
     internal TestAccessor GetTestAccessor() => new(this);
 
-    internal struct TestAccessor
+    internal readonly struct TestAccessor
     {
         private readonly SortDiffListContextMenuItem _contextMenuItem;
 
@@ -109,6 +109,6 @@ public class SortDiffListContextMenuItem : ToolStripMenuItem
             _contextMenuItem = menuitem;
         }
 
-        public void RaiseDropDownOpening() => _contextMenuItem.RequerySortingMethod();
+        public readonly void RaiseDropDownOpening() => _contextMenuItem.RequerySortingMethod();
     }
 }

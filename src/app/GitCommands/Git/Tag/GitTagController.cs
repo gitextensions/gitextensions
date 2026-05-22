@@ -44,7 +44,7 @@ public class GitTagController : IGitTagController
         string? tagMessageFileName = null;
         if (args.Operation.CanProvideMessage())
         {
-            tagMessageFileName = Path.Combine(GetWorkingDirPath(), "TAGMESSAGE");
+            tagMessageFileName = Path.Join(GetWorkingDirPath(), "TAGMESSAGE");
             _fileSystem.File.WriteAllText(tagMessageFileName, args.TagMessage);
         }
 

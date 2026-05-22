@@ -17,7 +17,7 @@ public static partial class ExportProviderCache
         public Assembly LoadAssembly(AssemblyName assemblyName)
             => Assembly.Load(assemblyName);
 
-        public Assembly LoadAssembly(string assemblyFullName, string codeBasePath)
+        public Assembly LoadAssembly(string assemblyFullName, string? codeBasePath)
         {
             AssemblyName assemblyName = new(assemblyFullName);
             if (!string.IsNullOrEmpty(codeBasePath))

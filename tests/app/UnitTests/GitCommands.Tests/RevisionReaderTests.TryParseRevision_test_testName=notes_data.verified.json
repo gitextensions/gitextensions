@@ -1,20 +1,25 @@
 ﻿{
   "ObjectId": {
+    "IsZero": false,
     "IsArtificial": false
   },
   "Guid": "0c350e248500e4e893e6d17dcc61591cc1cd64e7",
   "ParentIds": [
     {
+      "IsZero": false,
       "IsArtificial": false
     },
     {
+      "IsZero": false,
       "IsArtificial": false
     },
     {
+      "IsZero": false,
       "IsArtificial": false
     }
   ],
-  "TreeGuid": {
+  "TreeId": {
+    "IsZero": false,
     "IsArtificial": false
   },
   "Author": "Gerhard Olsson",
@@ -27,15 +32,16 @@
   "CommitDate": "DateTimeOffset_1",
   "BuildStatus": null,
   "Subject": "Notes subject1",
-  "Body": "Notes subject1\n\nline\nNotes:\n    line",
+  "Body": "Notes subject1\n\nline",
   "HasMultiLineMessage": true,
-  "HasNotes": true,
+  "Notes": "Notes",
   "IsArtificial": false,
   "IsAutostash": false,
   "IsStash": false,
   "ReflogSelector": null,
   "HasParent": true,
   "FirstParentId": {
+    "IsZero": false,
     "IsArtificial": false
   }
 }

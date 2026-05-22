@@ -19,13 +19,13 @@ public class PieChartControl : Panel
     private float _initialAngle;
     private float _leftMargin;
     private PieChart3D? _pieChart;
-    private float[] _relativeSliceDisplacements = { 0F };
+    private float[] _relativeSliceDisplacements = [0F];
     private float _rightMargin;
     private ShadowStyle _shadowStyle = ShadowStyle.GradualShadow;
     private float _sliceRelativeHeight;
     private object[]? _tags;
     private float _topMargin;
-    private decimal[] _values = Array.Empty<decimal>();
+    private decimal[] _values = [];
 
     /// <summary>
     ///   Initializes the <c>PieChartControl</c>.
@@ -306,7 +306,7 @@ public class PieChartControl : Panel
                 }
 
                 SliceSelected?.Invoke(this,
-                    new SliceSelectedArgs(_values[index], _toolTip.GetToolTip(this), _tags?[index]));
+                    new SliceSelectedArgs(_values[index], _toolTip.GetToolTip(this)!, _tags?[index]));
             }
             else
             {

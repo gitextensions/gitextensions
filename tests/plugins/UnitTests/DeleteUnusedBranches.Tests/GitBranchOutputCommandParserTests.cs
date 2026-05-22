@@ -1,12 +1,9 @@
-﻿using FluentAssertions;
-using GitExtensions.Plugins.DeleteUnusedBranches;
+﻿using GitExtensions.Plugins.DeleteUnusedBranches;
 
 namespace DeleteUnusedBranchesTests;
-
-[TestFixture]
 public class GitBranchOutputCommandParserTests
 {
-    private GitBranchOutputCommandParser _parser;
+    private GitBranchOutputCommandParser _parser = null!;
 
     [SetUp]
     public void Setup()
@@ -16,10 +13,10 @@ public class GitBranchOutputCommandParserTests
 
     [Test]
     public void GetBranchNames_should_return_empty_list(
-        [Values(null, "", "   ")] string commandOutput,
+        [Values(null, "", "   ")] string? commandOutput,
         [Values(true, false)] bool isRemote)
     {
-        _parser.GetBranchNames(commandOutput, isRemote).Should().BeEmpty();
+        _parser.GetBranchNames(commandOutput!, isRemote).Should().BeEmpty();
     }
 
     [TestCase]

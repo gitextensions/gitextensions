@@ -31,6 +31,8 @@ partial class DiffViewerSettingsPage
     private void InitializeComponent()
     {
         tlpnlGeneral = new TableLayoutPanel();
+        btnSaveCurrentViewSettingsAsDefault = new Button();
+        toolTip = new ToolTip();
         chkRememberIgnoreWhiteSpacePreference = new CheckBox();
         chkRememberShowNonPrintingCharsPreference = new CheckBox();
         chkRememberShowEntireFilePreference = new CheckBox();
@@ -66,23 +68,25 @@ partial class DiffViewerSettingsPage
         tlpnlGeneral.ColumnStyles.Add(new ColumnStyle());
         tlpnlGeneral.ColumnStyles.Add(new ColumnStyle());
         tlpnlGeneral.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-        tlpnlGeneral.Controls.Add(chkRememberIgnoreWhiteSpacePreference, 0, 0);
-        tlpnlGeneral.Controls.Add(chkRememberShowNonPrintingCharsPreference, 0, 1);
-        tlpnlGeneral.Controls.Add(chkRememberShowEntireFilePreference, 0, 2);
-        tlpnlGeneral.Controls.Add(chkRememberDiffAppearancePreference, 0, 3);
-        tlpnlGeneral.Controls.Add(chkRememberNumberOfContextLines, 0, 4);
-        tlpnlGeneral.Controls.Add(chkRememberShowSyntaxHighlightingInDiff, 0, 5);
-        tlpnlGeneral.Controls.Add(chkOmitUninterestingDiff, 0, 6);
-        tlpnlGeneral.Controls.Add(chkContScrollToNextFileOnlyWithAlt, 0, 7);
-        tlpnlGeneral.Controls.Add(chkOpenSubmoduleDiffInSeparateWindow, 0, 8);
-        tlpnlGeneral.Controls.Add(chkShowDiffForAllParents, 0, 9);
-        tlpnlGeneral.Controls.Add(chkShowAllCustomDiffTools, 0, 10);
-        tlpnlGeneral.Controls.Add(label1, 0, 11);
-        tlpnlGeneral.Controls.Add(VerticalRulerPosition, 1, 11);
+        tlpnlGeneral.Controls.Add(btnSaveCurrentViewSettingsAsDefault, 0, 0);
+        tlpnlGeneral.Controls.Add(chkRememberIgnoreWhiteSpacePreference, 0, 1);
+        tlpnlGeneral.Controls.Add(chkRememberShowNonPrintingCharsPreference, 0, 2);
+        tlpnlGeneral.Controls.Add(chkRememberShowEntireFilePreference, 0, 3);
+        tlpnlGeneral.Controls.Add(chkRememberDiffAppearancePreference, 0, 4);
+        tlpnlGeneral.Controls.Add(chkRememberNumberOfContextLines, 0, 5);
+        tlpnlGeneral.Controls.Add(chkRememberShowSyntaxHighlightingInDiff, 0, 6);
+        tlpnlGeneral.Controls.Add(chkOmitUninterestingDiff, 0, 7);
+        tlpnlGeneral.Controls.Add(chkContScrollToNextFileOnlyWithAlt, 0, 8);
+        tlpnlGeneral.Controls.Add(chkOpenSubmoduleDiffInSeparateWindow, 0, 9);
+        tlpnlGeneral.Controls.Add(chkShowDiffForAllParents, 0, 10);
+        tlpnlGeneral.Controls.Add(chkShowAllCustomDiffTools, 0, 11);
+        tlpnlGeneral.Controls.Add(label1, 0, 12);
+        tlpnlGeneral.Controls.Add(VerticalRulerPosition, 1, 12);
         tlpnlGeneral.Dock = DockStyle.Fill;
         tlpnlGeneral.Location = new Point(8, 24);
         tlpnlGeneral.Name = "tlpnlGeneral";
-        tlpnlGeneral.RowCount = 12;
+        tlpnlGeneral.RowCount = 13;
+        tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
@@ -96,7 +100,16 @@ partial class DiffViewerSettingsPage
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle());
         tlpnlGeneral.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-        tlpnlGeneral.Size = new Size(1725, 279);
+        tlpnlGeneral.Size = new Size(1725, 304);
+        // 
+        // btnSaveCurrentViewSettingsAsDefault
+        // 
+        btnSaveCurrentViewSettingsAsDefault.AutoSize = true;
+        btnSaveCurrentViewSettingsAsDefault.Name = "btnSaveCurrentViewSettingsAsDefault";
+        btnSaveCurrentViewSettingsAsDefault.Text = "Save current view settings as default";
+        btnSaveCurrentViewSettingsAsDefault.UseVisualStyleBackColor = true;
+        toolTip.SetToolTip(btnSaveCurrentViewSettingsAsDefault, _saveCurrentViewSettingsAsDefaultTooltip.Text);
+        btnSaveCurrentViewSettingsAsDefault.Click += btnSaveCurrentViewSettingsAsDefault_Click;
         // 
         // chkRememberIgnoreWhiteSpacePreference
         // 
@@ -380,4 +393,6 @@ partial class DiffViewerSettingsPage
     private TableLayoutPanel tlpnlDiffColoring;
     private SettingsCheckBox chkUseGitColoring;
     private SettingsCheckBox chkUseGEThemeGitColoring;
+    private Button btnSaveCurrentViewSettingsAsDefault;
+    private ToolTip toolTip;
 }

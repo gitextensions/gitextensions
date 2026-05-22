@@ -1,16 +1,13 @@
-using FluentAssertions;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.UserRepositoryHistory.Legacy;
 using NSubstitute;
 using Current = GitCommands.UserRepositoryHistory;
 
 namespace GitCommandsTests.UserRepositoryHistory.Legacy;
-
-[TestFixture]
 public class RepositoryStorageTests
 {
-    private Current.IRepositorySerialiser<RepositoryCategory> _repositoryCategorySerialiser;
-    private RepositoryStorage _repositoryStorage;
+    private Current.IRepositorySerialiser<RepositoryCategory> _repositoryCategorySerialiser = null!;
+    private RepositoryStorage _repositoryStorage = null!;
 
     [SetUp]
     public void Setup()
@@ -22,11 +19,11 @@ public class RepositoryStorageTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("   ")]
-    public void LoadLegacy_should_return_empty_collection_if_settings_empty(string setting)
+    public void LoadLegacy_should_return_empty_collection_if_settings_empty(string? setting)
     {
-        AppSettings.SetString("repositories", setting);
+        AppSettings.SetString("repositories", setting!);
         RepositoryStorage repositoryStorage = new();
-        var repositories = repositoryStorage.Load();
+        IReadOnlyList<RepositoryCategory> repositories = repositoryStorage.Load();
 
         repositories.Should().BeEmpty();
     }
@@ -50,22 +47,17 @@ public class RepositoryStorageTests
         [
             new RepositoryCategory
             {
-                Repositories = new List<Repository>(
-                    new[]
-                    {
-                        new Repository { Path = "C:\\Development\\RibbonWinForms\\", Description = "Check it out!", Anchor = "None" },
-                        new Repository { Path = "", Anchor = "None" },
-                    }),
+                Repositories =
+                [
+                    new Repository { Path = "C:\\Development\\RibbonWinForms\\", Description = "Check it out!", Anchor = "None" },
+                    new Repository { Path = "", Anchor = "None" },
+                ],
                 CategoryType = "Repositories",
                 Description = "3rd Party"
             },
             new RepositoryCategory
             {
-                Repositories = new List<Repository>(
-                    new[]
-                    {
-                        new Repository { Title = "Git Extensions", Path = "C:\\Development\\gitextensions\\", Description = "Mega project!", Anchor = "Pinned" }
-                    }),
+                Repositories = [new Repository { Title = "Git Extensions", Path = "C:\\Development\\gitextensions\\", Description = "Mega project!", Anchor = "Pinned" }],
                 CategoryType = "Repositories",
                 Description = "Test"
             },

@@ -18,9 +18,7 @@ public static class DebugHelpers
         }
     }
 
-#pragma warning disable CS8763 // A method marked [DoesNotReturn] should not return.
     [Conditional("DEBUG")]
-    [DoesNotReturn]
     public static void Fail(string message)
     {
         if (Debugger.IsAttached || IsTestRunning)
@@ -37,7 +35,6 @@ public static class DebugHelpers
             }
         }
     }
-#pragma warning restore CS8763 // A method marked [DoesNotReturn] should not return.
 
     [Conditional("DEBUG")]
     public static void Trace(string message, [CallerMemberName] string caller = "")

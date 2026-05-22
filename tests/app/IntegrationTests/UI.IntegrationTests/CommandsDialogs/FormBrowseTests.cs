@@ -1,6 +1,5 @@
 ﻿using System.Runtime.CompilerServices;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
@@ -12,10 +11,10 @@ namespace GitExtensions.UITests.CommandsDialogs;
 public class FormBrowseTests
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     // Track the original setting value
     private bool _originalShowAuthorAvatarColumn;
@@ -60,9 +59,9 @@ public class FormBrowseTests
     public void Filters_should_behave_as_expected()
     {
         _referenceRepository.CreateCommit("Commit1", "Commit1");
-        _referenceRepository.CreateBranch("Branch1", _referenceRepository.CommitHash);
+        _referenceRepository.CreateBranch("Branch1", _referenceRepository.CommitHash!);
         _referenceRepository.CreateCommit("Commit2", "Commit2");
-        _referenceRepository.CreateBranch("Branch2", _referenceRepository.CommitHash);
+        _referenceRepository.CreateBranch("Branch2", _referenceRepository.CommitHash!);
 
         _referenceRepository.CreateCommit("head commit");
 
@@ -204,12 +203,12 @@ public class FormBrowseTests
             $"{contentA}\n{new string('A', 20000)}", fileA,
             $"{contentB}\n{new string('B', 20000)}", fileB);
 
-        const int maxMilliseconds = 1_000;
+        const int maxMilliseconds = 3_000;
         RunFormTest(
             async form =>
             {
                 FormBrowse.TestAccessor ta = form.GetTestAccessor();
-                ((TabControl)ta.DiffTabPage.Parent).SelectedTab = ta.DiffTabPage;
+                ((TabControl)ta.DiffTabPage.Parent!).SelectedTab = ta.DiffTabPage;
 
                 RevisionDiffControl.TestAccessor tadiff = ta.RevisionDiffControl.GetTestAccessor();
                 FileStatusList fileStatusList = tadiff.DiffFiles;

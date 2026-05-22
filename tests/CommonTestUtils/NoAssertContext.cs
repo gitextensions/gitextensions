@@ -27,13 +27,13 @@ public sealed class NoAssertContext : IDisposable
     private static readonly ConcurrentDictionary<int, int> s_suppressedThreads = new();
 
     // "Default" is the listener that terminates the process when debug assertions fail.
-    private static readonly TraceListener s_defaultListener = Trace.Listeners["Default"];
+    private static readonly TraceListener s_defaultListener = Trace.Listeners["Default"]!;
     private static readonly NoAssertListener s_noAssertListener = new();
 #pragma warning restore SA1308 // Variable names should not be prefixed
 
     public NoAssertContext()
     {
-        s_suppressedThreads.AddOrUpdate(Thread.CurrentThread.ManagedThreadId, 1, (key, oldValue) => oldValue + 1);
+        s_suppressedThreads.AddOrUpdate(Environment.CurrentManagedThreadId, 1, (key, oldValue) => oldValue + 1);
 
         // Lock to make sure we are hooked properly if two threads come into the constructor/dispose at the same time.
         lock (s_lock)
@@ -53,7 +53,7 @@ public sealed class NoAssertContext : IDisposable
     {
         GC.SuppressFinalize(this);
 
-        int currentThread = Thread.CurrentThread.ManagedThreadId;
+        int currentThread = Environment.CurrentManagedThreadId;
         if (s_suppressedThreads.TryRemove(currentThread, out int count))
         {
             if (count > 1)
@@ -67,7 +67,7 @@ public sealed class NoAssertContext : IDisposable
 
         lock (s_lock)
         {
-            if (s_hooked && s_suppressedThreads.Count == 0)
+            if (s_hooked && s_suppressedThreads.IsEmpty)
             {
                 // We're the first to hit the need to unhook. Add the default listener back first to
                 // ensure we don't lose any asserts from other threads.
@@ -91,17 +91,17 @@ public sealed class NoAssertContext : IDisposable
         {
         }
 
-        public override void Fail(string message)
+        public override void Fail(string? message)
         {
-            if (!s_suppressedThreads.TryGetValue(Thread.CurrentThread.ManagedThreadId, out _))
+            if (!s_suppressedThreads.TryGetValue(Environment.CurrentManagedThreadId, out _))
             {
                 s_defaultListener.Fail(message);
             }
         }
 
-        public override void Fail(string message, string detailMessage)
+        public override void Fail(string? message, string? detailMessage)
         {
-            if (!s_suppressedThreads.TryGetValue(Thread.CurrentThread.ManagedThreadId, out _))
+            if (!s_suppressedThreads.TryGetValue(Environment.CurrentManagedThreadId, out _))
             {
                 s_defaultListener.Fail(message, detailMessage);
             }
@@ -109,17 +109,17 @@ public sealed class NoAssertContext : IDisposable
 
         // Write and WriteLine are virtual
 
-        public override void Write(string message)
+        public override void Write(string? message)
         {
-            if (!s_suppressedThreads.TryGetValue(Thread.CurrentThread.ManagedThreadId, out _))
+            if (!s_suppressedThreads.TryGetValue(Environment.CurrentManagedThreadId, out _))
             {
                 s_defaultListener.Write(message);
             }
         }
 
-        public override void WriteLine(string message)
+        public override void WriteLine(string? message)
         {
-            if (!s_suppressedThreads.TryGetValue(Thread.CurrentThread.ManagedThreadId, out _))
+            if (!s_suppressedThreads.TryGetValue(Environment.CurrentManagedThreadId, out _))
             {
                 s_defaultListener.WriteLine(message);
             }

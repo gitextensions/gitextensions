@@ -1,7 +1,7 @@
+﻿using System.Buffers;
 using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Security;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Config;
@@ -10,7 +10,6 @@ using GitCommands.Git.Extensions;
 using GitCommands.Patches;
 using GitCommands.Remotes;
 using GitCommands.Settings;
-using GitCommands.Utils;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
@@ -31,7 +30,7 @@ public sealed partial class GitModule : IGitModule
     private const string GitError = "Git Error";
 
     private static readonly Encoding _defaultEncoding = new UTF8Encoding(encoderShouldEmitUTF8Identifier: false);
-    private static readonly IGitDirectoryResolver GitDirectoryResolverInstance = new GitDirectoryResolver();
+    private static readonly SearchValues<char> _spaceAndTabSearchValues = SearchValues.Create(' ', '\t');
 
     // the amount of lines we must skip in order to get to an annotated tag's message when doing git cat-file -p <tag_name>
     private static readonly int StandardCatFileTagHeaderLength = 5;
@@ -39,18 +38,14 @@ public sealed partial class GitModule : IGitModule
     public static readonly string NoNewLineAtTheEnd = "\\ No newline at end of file";
     public static CommandCache GitCommandCache { get; } = new();
 
+    private readonly IGitExecutorProvider _executorProvider;
+    private readonly IGitExecutor _executor;
     private readonly Lock _lock = new();
     private readonly IIndexLockManager _indexLockManager;
     private readonly IGitTreeParser _gitTreeParser = new GitTreeParser();
     private readonly IRevisionDiffProvider _revisionDiffProvider = new RevisionDiffProvider();
     private readonly GetAllChangedFilesOutputParser _getAllChangedFilesOutputParser;
     private FrozenDictionary<string, Color>? _remoteColors;
-
-    // The executable may use Windows Git (native to the app, always used in special situations) or WSL Git.
-    private readonly IGitCommandRunner _gitCommandRunner;
-    private readonly IGitCommandRunner _gitWindowsCommandRunner;
-    private readonly IExecutable _gitExecutable;
-    private readonly IExecutable _gitWindowsExecutable;
 
     // Parse lines of format:
     //
@@ -60,73 +55,56 @@ public sealed partial class GitModule : IGitModule
     //
     // Lines may also use \t as a column delimiter, such as output of "ls-remote --heads origin".
     [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40})[ \t](?<refname>.+)$", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
-    private static partial Regex RefRegex();
+    private static partial Regex RefRegex { get; }
 
     [GeneratedRegex(@"^(?<objectid>[0-9a-f]{40}) (?<origlinenum>\d+) (?<finallinenum>\d+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex HeaderRegex();
+    private static partial Regex HeaderRegex { get; }
 
     [GeneratedRegex(@"^(?<name>[^\t]+)\t(?<url>.+?) \((?<direction>fetch|push)\)(?:(?# ignore trailing options)\s*\[[^\]]*])?$", RegexOptions.ExplicitCapture)]
-    private static partial Regex RemoteVerboseLineRegex();
+    private static partial Regex RemoteVerboseLineRegex { get; }
 
     [GeneratedRegex(@"(\\(?<octal>[0-7]{3}))+", RegexOptions.ExplicitCapture)]
-    private static partial Regex EscapedOctalCodePointRegex();
+    private static partial Regex EscapedOctalCodePointRegex { get; }
 
     [GeneratedRegex(@"^(?<code>[\-+U ])(?<sha>[0-9a-f]{40}) (?<path>.+) \((?<branch>.+)\)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex ShaRegex();
+    private static partial Regex ShaRegex { get; }
 
     [GeneratedRegex(@"^\s*(?<count>\d+)\s+(?<name>.*)$", RegexOptions.ExplicitCapture)]
-    private static partial Regex ShortlogRegex();
+    private static partial Regex ShortlogRegex { get; }
 
     /// <summary>
     /// Name of the WSL distro for the GitExecutable, empty string for the app native Windows Git executable.
     /// This can be seen as the Git "instance" identifier.
     /// </summary>
-    private readonly string _wslDistro;
-
-    public GitModule(string? workingDir)
+    public GitModule(IGitExecutorProvider executorProvider, string? workingDir)
     {
-        WorkingDir = (workingDir ?? "").NormalizePath().NormalizeWslPath().EnsureTrailingPathSeparator();
-        WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
+        _executorProvider = executorProvider;
+        _executor = executorProvider.GetExecutor(workingDir ?? "");
+        WorkingDirGitDir = _executor.GetGitDirectory();
         _indexLockManager = new IndexLockManager(this);
         _getAllChangedFilesOutputParser = new GetAllChangedFilesOutputParser(() => this);
-        _gitWindowsExecutable = new Executable(() => AppSettings.GitCommand, WorkingDir);
-        _gitWindowsCommandRunner = new GitCommandRunner(_gitWindowsExecutable, () => SystemEncoding);
-
-        _wslDistro = AppSettings.WslGitEnabled ? PathUtil.GetWslDistro(WorkingDir) : "";
-        if (!string.IsNullOrEmpty(_wslDistro))
-        {
-            // In some WSL environments the current working directory is not passed along to the git command without using the `--cd` argument. Adding it to
-            // the command line is required for these environments. For those that do not need it using the argument is just redundant.
-            _gitExecutable = new Executable(() => AppSettings.WslCommand, WorkingDir, $"-d {_wslDistro} --cd {WorkingDir.RemoveTrailingPathSeparator().Quote()} {AppSettings.WslGitCommand} ");
-            _gitCommandRunner = new GitCommandRunner(_gitExecutable, () => SystemEncoding);
-        }
-        else
-        {
-            _gitExecutable = _gitWindowsExecutable;
-            _gitCommandRunner = _gitWindowsCommandRunner;
-        }
 
         // If this is a submodule, populate relevant properties.
         // If this is not a submodule, these will all be null.
-        (SuperprojectModule, SubmodulePath, SubmoduleName) = InitialiseSubmoduleProperties();
+        (SuperprojectModule, SubmodulePath) = InitialiseSubmoduleProperties();
 
         return;
 
-        (GitModule? superprojectModule, string? submodulePath, string? submoduleName) InitialiseSubmoduleProperties()
+        (GitModule? superprojectModule, string? submodulePath) InitialiseSubmoduleProperties()
         {
             if (!IsValidGitWorkingDir())
             {
-                return (null, null, null);
+                return (null, null);
             }
 
             string currentPath = WorkingDir.RemoveTrailingPathSeparator();
 
             // Try to find an ancestor path that contains a .gitmodules file and is a valid work dir
-            string superprojectPath = PathUtil.FindAncestors(currentPath).FirstOrDefault(HasGitModulesFile);
+            string? superprojectPath = PathUtil.FindAncestors(currentPath).FirstOrDefault(HasGitModulesFile);
 
             // If we didn't find it, but there's a .git file in the current folder, look for a gitdir:
             // line in that file that points to the location of the .git folder
-            string gitDir = Path.Combine(WorkingDir, ".git");
+            string gitDir = Path.Join(WorkingDir, ".git");
             if (superprojectPath is null && File.Exists(gitDir))
             {
                 IEnumerable<string> lines;
@@ -139,7 +117,7 @@ public sealed partial class GitModule : IGitModule
                     // If we cannot read the .git file, assume it's not a submodule
                     // See also special handling of WSL .git symbolic links in PathUtil.IsWslLink()
                     // Symbolic links to submodule .git is not expected and not supported.
-                    return (null, null, null);
+                    return (null, null);
                 }
 
                 foreach (string line in lines)
@@ -163,45 +141,48 @@ public sealed partial class GitModule : IGitModule
                 }
             }
 
-            if (!string.IsNullOrEmpty(superprojectPath) && currentPath.ToPosixPath().StartsWith(superprojectPath.ToPosixPath()))
+            if (string.IsNullOrEmpty(superprojectPath) || !currentPath.ToPosixPath().StartsWith(superprojectPath.ToPosixPath()))
             {
-                string submodulePath = currentPath[superprojectPath.Length..].ToPosixPath();
-                ConfigFile configFile = new(Path.Combine(superprojectPath, ".gitmodules"));
-
-                foreach (IConfigSection configSection in configFile.ConfigSections)
-                {
-                    if (configSection.GetValue("path") == submodulePath.ToPosixPath())
-                    {
-                        string submoduleName = configSection.SubSection;
-                        GitModule superprojectModule = new(superprojectPath);
-
-                        return (superprojectModule, submodulePath, submoduleName);
-                    }
-                }
-
-                return (null, submodulePath, null);
+                return (null, null);
             }
 
-            return (null, null, null);
+            string submodulePath = currentPath[superprojectPath.Length..].ToPosixPath();
+            ConfigFile configFile = new(Path.Join(superprojectPath, ".gitmodules"));
+
+            foreach (IConfigSection configSection in configFile.ConfigSections)
+            {
+                if (configSection.GetValue("path") == submodulePath.ToPosixPath())
+                {
+                    GitModule superprojectModule = new(_executorProvider, superprojectPath);
+
+                    return (superprojectModule, submodulePath);
+                }
+            }
+
+            return (null, submodulePath);
 
             static bool HasGitModulesFile(string path)
-                => File.Exists(Path.Combine(path, ".gitmodules")) && IsValidGitWorkingDir(path);
+                => File.Exists(Path.Join(path, ".gitmodules")) && IsValidGitWorkingDir(path);
         }
     }
-
-    /// <inherit/>
-    public string WorkingDir { get; init; }
 
     /// <summary>
     /// GitVersion for the default GitExecutable.
     /// </summary>
     public IGitVersion GitVersion => Git.GitVersion.CurrentVersion(GitExecutable);
 
-    /// <inherit/>
-    public IExecutable GitExecutable => _gitExecutable;
+    public string WorkingDir => _executor.WorkingDir;
 
-    /// <inherit/>
-    public IGitCommandRunner GitCommandRunner => _gitCommandRunner;
+    public IExecutable GitExecutable => _executor.GitExecutable;
+
+    public IGitCommandRunner GitCommandRunner => _executor.GitCommandRunner;
+
+    public string GetSelectedBranch(bool emptyIfDetached = false) => Commands.GetSelectedBranch(_executor, emptyIfDetached);
+
+    /// <summary>
+    ///  Gets the system encoding.
+    /// </summary>
+    public static Encoding SystemEncoding => GitExecutor.SystemEncoding;
 
     /// <summary>
     /// Gets the location of .git directory for the current working folder.
@@ -209,16 +190,10 @@ public sealed partial class GitModule : IGitModule
     public string WorkingDirGitDir { get; private set; }
 
     /// <inherit/>
-    public string GetPathForGitExecution(string? path) => PathUtil.GetPathForGitExecution(path, _wslDistro);
+    public string GetPathForGitExecution(string? path) => PathUtil.GetPathForGitExecution(path, _executor.WslDistro);
 
     /// <inherit/>
-    public string GetWindowsPath(string path) => PathUtil.GetWindowsPath(path, _wslDistro);
-
-    /// <summary>
-    /// If this module is a submodule, returns its name, otherwise <c>null</c>.
-    /// </summary>
-    // TODO: remove?
-    private string? SubmoduleName { get; }
+    public string GetWindowsPath(string path) => PathUtil.GetWindowsPath(path, _executor.WslDistro);
 
     public string? SubmodulePath { get; }
 
@@ -301,11 +276,6 @@ public sealed partial class GitModule : IGitModule
 
     private IGitConfigSettingsGetter LocalGitConfigSettings => field ??= new GitConfigSettings(GitExecutable, GitSettingLevel.Local);
 
-    // encoding for files paths
-    private static Encoding? _systemEncoding;
-
-    public static Encoding SystemEncoding => _systemEncoding ??= new SystemEncodingReader().Read();
-
     // Encoding that let us read all bytes without replacing any char
     // It is using to read output of commands, which may consist of:
     // 1) commit header (message, author, ...) encoded in CommitEncoding, recoded to LogOutputEncoding or not dependent of
@@ -331,13 +301,17 @@ public sealed partial class GitModule : IGitModule
         LocalGitConfigSettings.Invalidate();
     }
 
-    /// <summary>Indicates whether the <see cref="WorkingDir"/> contains a git repository.</summary>
+    /// <summary>
+    ///  Indicates whether the <see cref="IGitExecutor.WorkingDir"/> contains a git repository.
+    /// </summary>
     public bool IsValidGitWorkingDir()
     {
         return IsValidGitWorkingDir(WorkingDir);
     }
 
-    /// <summary>Indicates whether the specified directory contains a git repository.</summary>
+    /// <summary>
+    ///  Indicates whether the specified directory contains a git repository.
+    /// </summary>
     public static bool IsValidGitWorkingDir(string? dir)
     {
         if (string.IsNullOrEmpty(dir))
@@ -372,11 +346,11 @@ public sealed partial class GitModule : IGitModule
             "--git-path",
             relativePath.Quote()
         };
-        string gitPath = _gitExecutable.GetOutput(args).Trim();
+        string gitPath = GitExecutable.GetOutput(args).Trim();
 
         if (gitPath.StartsWith(".git/"))
         {
-            gitPath = Path.Combine(GetGitDirectory(), gitPath[".git/".Length..]);
+            gitPath = Path.Combine(_executor.GetGitDirectory(), gitPath[".git/".Length..]);
         }
 
         return GetWindowsPath(gitPath);
@@ -412,13 +386,13 @@ public sealed partial class GitModule : IGitModule
                 if (_gitCommonDirectory is null)
                 {
                     GitArgumentBuilder args = new("rev-parse") { "--git-common-dir" };
-                    ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
+                    ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
 
                     string dir = GetWindowsPath(result.StandardOutput).Trim();
 
                     if (!result.ExitedSuccessfully || dir == ".git" || dir == "." || !Directory.Exists(dir))
                     {
-                        dir = GetGitDirectory();
+                        dir = _executor.GetGitDirectory();
                     }
 
                     _gitCommonDirectory = dir;
@@ -429,25 +403,14 @@ public sealed partial class GitModule : IGitModule
         }
     }
 
-    /// <summary>Gets the ".git" directory path.</summary>
-    private string GetGitDirectory()
-    {
-        return GetGitDirectory(WorkingDir);
-    }
-
-    public static string GetGitDirectory(string repositoryPath)
-    {
-        return GitDirectoryResolverInstance.Resolve(repositoryPath);
-    }
-
     public bool IsBareRepository()
     {
-        return WorkingDir == GetGitDirectory();
+        return WorkingDir == _executor.GetGitDirectory();
     }
 
     public static bool IsBareRepository(string repositoryPath)
     {
-        return repositoryPath == GetGitDirectory(repositoryPath);
+        return repositoryPath == new GitDirectoryResolver().Resolve(repositoryPath);
     }
 
     public bool IsSubmodule(string submodulePath)
@@ -457,7 +420,7 @@ public sealed partial class GitModule : IGitModule
             "status",
             submodulePath
         };
-        ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
+        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
 
         return result.ExitedSuccessfully || IsSubmoduleRemoved();
 
@@ -487,9 +450,7 @@ public sealed partial class GitModule : IGitModule
 
         void DoGetSubmodulesLocalPaths(IGitModule module, string parentPath, List<string> paths, bool recurse)
         {
-            List<string> submodulePaths = GetSubmodulePaths(module)
-                .Select(p => Path.Combine(parentPath, p).ToPosixPath())
-                .ToList();
+            List<string> submodulePaths = [.. GetSubmodulePaths(module).Select(p => Path.Combine(parentPath, p).ToPosixPath())];
 
             paths.AddRange(submodulePaths);
 
@@ -517,7 +478,7 @@ public sealed partial class GitModule : IGitModule
     /// </summary>
     public static string? TryFindGitWorkingDir(string? startDir)
     {
-        string dir = startDir?.Trim();
+        string? dir = startDir?.Trim();
 
         while (!string.IsNullOrWhiteSpace(dir))
         {
@@ -534,7 +495,7 @@ public sealed partial class GitModule : IGitModule
 
     public ExecutionResult Clean(CleanMode mode, bool dryRun = false, bool directories = false, string? paths = null)
     {
-        return _gitExecutable.Execute(
+        return GitExecutable.Execute(
             Commands.Clean(mode, dryRun, directories, paths));
     }
 
@@ -544,7 +505,7 @@ public sealed partial class GitModule : IGitModule
         string editor = GetEffectiveSetting("core.editor").ToLower();
         bool createWindow = !editor.Contains("gitextensions") && !editor.Contains("notepad");
 
-        return _gitExecutable.RunCommand(arguments, createWindow: createWindow, throwOnErrorExit: false);
+        return GitExecutable.RunCommand(arguments, createWindow: createWindow, throwOnErrorExit: false);
     }
 
     public bool InTheMiddleOfConflictedMerge(bool throwOnErrorExit = true)
@@ -556,7 +517,7 @@ public sealed partial class GitModule : IGitModule
         };
 
         // Do not report errors for commands called in the background
-        ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: throwOnErrorExit);
+        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: throwOnErrorExit);
         return result.ExitedSuccessfully && !string.IsNullOrEmpty(result.StandardOutput);
     }
 
@@ -570,7 +531,7 @@ public sealed partial class GitModule : IGitModule
             "--",
             fileName.ToPosixPath().QuoteNE()
         };
-        string output = _gitExecutable.GetOutput(args);
+        string output = GitExecutable.GetOutput(args);
 
         if (!string.IsNullOrEmpty(output))
         {
@@ -582,7 +543,7 @@ public sealed partial class GitModule : IGitModule
             "--",
             fileName.ToPosixPath().QuoteNE()
         };
-        output = _gitExecutable.GetOutput(args);
+        output = GitExecutable.GetOutput(args);
         return string.IsNullOrEmpty(output);
     }
 
@@ -597,7 +558,7 @@ public sealed partial class GitModule : IGitModule
             "--",
             fileName.ToPosixPath().QuoteNE()
         };
-        string output = _gitExecutable.GetOutput(args);
+        string output = GitExecutable.GetOutput(args);
 
         if (string.IsNullOrEmpty(output))
         {
@@ -653,7 +614,7 @@ public sealed partial class GitModule : IGitModule
 
     public async Task SaveBlobAsAsync(string saveAs, string blob, CancellationToken cancellationToken)
     {
-        using MemoryStream blobStream = await GetFileStreamAsync(blob, cancellationToken);
+        using MemoryStream? blobStream = await GetFileStreamAsync(blob, cancellationToken);
         if (blobStream is null)
         {
             return;
@@ -669,7 +630,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         using FileStream stream = File.Create(saveAs);
-        await stream.WriteAsync(blobData, 0, blobData.Length);
+        await stream.WriteAsync(blobData.AsMemory(0, blobData.Length), cancellationToken);
     }
 
     private static string GetSide(string side)
@@ -696,9 +657,9 @@ public sealed partial class GitModule : IGitModule
     {
         Directory.SetCurrentDirectory(WorkingDir);
 
-        string baseFile = CheckoutPart(1, unmergedData.Filename + ".BASE", unmergedData.Base.Filename);
-        string localFile = CheckoutPart(2, unmergedData.Filename + ".LOCAL", unmergedData.Local.Filename);
-        string remoteFile = CheckoutPart(3, unmergedData.Filename + ".REMOTE", unmergedData.Remote.Filename);
+        string? baseFile = CheckoutPart(1, unmergedData.Filename + ".BASE", unmergedData.Base.Filename);
+        string? localFile = CheckoutPart(2, unmergedData.Filename + ".LOCAL", unmergedData.Local.Filename);
+        string? remoteFile = CheckoutPart(3, unmergedData.Filename + ".REMOTE", unmergedData.Remote.Filename);
 
         return (baseFile, localFile, remoteFile);
 
@@ -715,7 +676,7 @@ public sealed partial class GitModule : IGitModule
                 };
 
                 // Check out the part to a temporary file
-                string output = _gitExecutable.GetOutput(args);
+                string output = GitExecutable.GetOutput(args);
 
                 string tempFile = Path.Combine(WorkingDir, output.SubstringUntil('\t'));
 
@@ -771,7 +732,7 @@ public sealed partial class GitModule : IGitModule
         };
 
         // ignore non-zero exit code, e.g. in case of missing submodule
-        ExecutionResult result = await _gitExecutable.ExecuteAsync(args, throwOnErrorExit: false).ConfigureAwait(false);
+        ExecutionResult result = await GitExecutable.ExecuteAsync(args, throwOnErrorExit: false).ConfigureAwait(false);
         string[] unmerged = result.StandardOutput.Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries);
 
         ConflictedFileData[] item = new ConflictedFileData[3];
@@ -780,10 +741,10 @@ public sealed partial class GitModule : IGitModule
 
         foreach (string line in unmerged)
         {
-            int findSecondWhitespace = line.IndexOfAny(new[] { ' ', '\t' });
+            int findSecondWhitespace = line.IndexOfAny(_spaceAndTabSearchValues);
             string fileStage = findSecondWhitespace >= 0 ? line[findSecondWhitespace..].Trim() : "";
 
-            findSecondWhitespace = fileStage.IndexOfAny(new[] { ' ', '\t' });
+            findSecondWhitespace = fileStage.IndexOfAny(_spaceAndTabSearchValues);
 
             string hash = findSecondWhitespace >= 0 ? fileStage[..findSecondWhitespace].Trim() : "";
             fileStage = findSecondWhitespace >= 0 ? fileStage[findSecondWhitespace..].Trim() : "";
@@ -822,7 +783,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         string? command = Commands.GetRefs(refsFilter, noLocks: noLocks, GitRefsSortBy.committerdate, GitRefsSortOrder.Descending, maxSuperRefCount);
-        string refList = await _gitExecutable.GetOutputAsync(command).ConfigureAwait(false);
+        string refList = await GitExecutable.GetOutputAsync(command).ConfigureAwait(false);
         IReadOnlyList<IGitRef> refs = ParseRefs(refList);
 
         return refs.ToDictionary(r => r, r => GetSubmoduleCommitHash(filename.ToPosixPath(), r.Name));
@@ -837,7 +798,7 @@ public sealed partial class GitModule : IGitModule
             "--",
             filename.QuoteNE()
         };
-        string output = _gitExecutable.GetOutput(args);
+        string output = GitExecutable.GetOutput(args);
 
         return _gitTreeParser.ParseSingle(output);
     }
@@ -856,7 +817,7 @@ public sealed partial class GitModule : IGitModule
             "--count",
             "--"
         };
-        ExecutionResult result = _gitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: throwOnErrorExit);
+        ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: throwOnErrorExit);
         string output = result.StandardOutput;
 
         if (int.TryParse(output, out int commitCount))
@@ -889,7 +850,7 @@ public sealed partial class GitModule : IGitModule
             "--left-right"
         };
 
-        ExecutionResult result = _gitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: throwOnErrorExit);
+        ExecutionResult result = GitExecutable.Execute(args, cache: cache ? GitCommandCache : null, throwOnErrorExit: throwOnErrorExit);
         if (!result.ExitedSuccessfully)
         {
             // this is likely one of the commits in a submodule no longer existing
@@ -926,7 +887,7 @@ public sealed partial class GitModule : IGitModule
 
     public void RunGitK()
     {
-        if (EnvUtils.RunningOnUnix())
+        if (!OperatingSystem.IsWindows())
         {
             new Executable("gitk", WorkingDir).Start(createWindow: true);
         }
@@ -946,10 +907,10 @@ public sealed partial class GitModule : IGitModule
     public void RunGui()
     {
         ArgumentBuilder args;
-        if (EnvUtils.RunningOnUnix())
+        if (!OperatingSystem.IsWindows())
         {
             args = new GitArgumentBuilder("gui");
-            _gitExecutable.Start(args, createWindow: true);
+            _ = GitExecutable.Start(args, createWindow: true);
         }
         else
         {
@@ -975,7 +936,7 @@ public sealed partial class GitModule : IGitModule
             fileName.ToPosixPath().QuoteNE()
         };
 
-        using IProcess process = (isWindowsGit ? _gitWindowsExecutable : _gitExecutable).Start(args, createWindow: true, throwOnErrorExit: false);
+        using IProcess process = (isWindowsGit ? _executor.GitWindowsExecutable : GitExecutable).Start(args, createWindow: true, throwOnErrorExit: false);
         process.WaitForExit();
     }
 
@@ -989,9 +950,9 @@ public sealed partial class GitModule : IGitModule
 
         // Note that the output contains the path to the repo for the Git executable.
         // This means that the WSL path is presented in WSL repos, not the Windows path (native to the app).
-        string output = _gitExecutable.GetOutput(args);
+        string output = GitExecutable.GetOutput(args);
 
-        WorkingDirGitDir = GitDirectoryResolverInstance.Resolve(WorkingDir);
+        WorkingDirGitDir = _executor.GetGitDirectory();
         return output;
     }
 
@@ -1000,9 +961,9 @@ public sealed partial class GitModule : IGitModule
         return GetParents(objectId).Count > 1;
     }
 
-    public GitRevision GetRevision(ObjectId? objectId = null, bool shortFormat = false, bool loadRefs = false)
+    public GitRevision GetRevision(ObjectId objectId = default, bool shortFormat = false, bool loadRefs = false)
     {
-        GitRevision revision = new RevisionReader(this, allBodies: true).GetRevision(objectId?.ToString(), hasNotes: !shortFormat, throwOnError: true, cancellationToken: default)!;
+        GitRevision revision = new RevisionReader(this, allBodies: true).GetRevision(objectId.IsZero ? null! : objectId.ToString(), hasNotes: !shortFormat, throwOnError: true, cancellationToken: default)!;
 
         if (loadRefs)
         {
@@ -1026,7 +987,7 @@ public sealed partial class GitModule : IGitModule
         {
             $"{objectId}^@".Quote()
         };
-        return _gitExecutable.Execute(args, cache: GitCommandCache)
+        return GitExecutable.Execute(args, cache: GitCommandCache)
             .StandardOutput
             .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries)
             .Select(line => ObjectId.Parse(line))
@@ -1042,7 +1003,7 @@ public sealed partial class GitModule : IGitModule
 
     public string? ShowObject(ObjectId objectId, bool returnRaw)
     {
-        string gitOutput = _gitExecutable
+        string gitOutput = GitExecutable
             .GetOutput($"show {objectId}", cache: GitCommandCache, outputEncoding: LosslessEncoding);
         return returnRaw ? gitOutput : ReEncodeShowString(gitOutput);
     }
@@ -1054,7 +1015,7 @@ public sealed partial class GitModule : IGitModule
             "-d",
             tagName.QuoteNE()
         };
-        _gitExecutable.RunCommand(args);
+        GitExecutable.RunCommand(args);
     }
 
     /// <summary>
@@ -1071,7 +1032,7 @@ public sealed partial class GitModule : IGitModule
     public string GetCurrentBranchName()
     {
         GitArgumentBuilder args = new("branch") { "--show-current" };
-        ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
+        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
 
         result.ThrowIfErrorExit("Error retrieving current branch name");
 
@@ -1080,19 +1041,19 @@ public sealed partial class GitModule : IGitModule
 
     /// <summary>
     /// Gets the commit ID of the currently checked out commit.
-    /// If the repo is bare, has no commits, detached head or is corrupt, <c>null</c> is returned.
+    /// If the repo is bare, has no commits, detached head or is corrupt, a zero <see cref="ObjectId"/> is returned.
     /// </summary>
-    public ObjectId? GetCurrentCheckout()
+    public ObjectId GetCurrentCheckout()
     {
         GitArgumentBuilder args = new("rev-parse") { "HEAD" };
-        ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
+        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
 
-        return result.ExitedSuccessfully && ObjectId.TryParse(result.StandardOutput, offset: 0, out ObjectId? objectId)
+        return result.ExitedSuccessfully && ObjectId.TryParse(result.StandardOutput, offset: 0, out ObjectId objectId)
             ? objectId
-            : null;
+            : default;
     }
 
-    public bool TryResolvePartialCommitId(string objectIdPrefix, [NotNullWhen(returnValue: true)] out ObjectId? objectId)
+    public bool TryResolvePartialCommitId(string objectIdPrefix, out ObjectId objectId)
     {
         // If the prefix is already a full SHA1 then return immediately without invoking a git process.
         if (ObjectId.TryParse(objectIdPrefix, out objectId))
@@ -1106,7 +1067,7 @@ public sealed partial class GitModule : IGitModule
             "--quiet",
             $"{objectIdPrefix}^{{commit}}".Quote()
         };
-        ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
+        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
         string output = result.StandardOutput.Trim();
 
         if (output.StartsWith(objectIdPrefix) && ObjectId.TryParse(output, out objectId))
@@ -1118,11 +1079,11 @@ public sealed partial class GitModule : IGitModule
         return false;
     }
 
-    public async Task<(char Code, ObjectId? CommitId)> GetSuperprojectCurrentCheckoutAsync()
+    public async Task<(char Code, ObjectId CommitId)> GetSuperprojectCurrentCheckoutAsync()
     {
         if (string.IsNullOrEmpty(SuperprojectModule?.WorkingDir))
         {
-            return (' ', null);
+            return (' ', default);
         }
 
         GitArgumentBuilder args = new("submodule")
@@ -1136,7 +1097,7 @@ public sealed partial class GitModule : IGitModule
 
         if (lines.Length == 0)
         {
-            return (' ', null);
+            return (' ', default);
         }
 
         string submodule = lines[0];
@@ -1144,7 +1105,7 @@ public sealed partial class GitModule : IGitModule
         if (submodule.Length < ObjectId.Sha1CharCount + 3
             || !ObjectId.TryParse(submodule, 1, out ObjectId commitId))
         {
-            return (' ', null);
+            return (' ', default);
         }
 
         return (submodule[0], commitId);
@@ -1166,7 +1127,7 @@ public sealed partial class GitModule : IGitModule
         };
 
         // Could fail if pulling interactively from remote where the specified branch does not exist
-        string mergeCommitsOutput = _gitExecutable.Execute(args, throwOnErrorExit: false).StandardOutput;
+        string mergeCommitsOutput = GitExecutable.Execute(args, throwOnErrorExit: false).StandardOutput;
         return !string.IsNullOrWhiteSpace(mergeCommitsOutput);
     }
 
@@ -1199,10 +1160,10 @@ public sealed partial class GitModule : IGitModule
 
     public IGitModule GetSubmodule(string? localPath)
     {
-        return new GitModule(GetSubmoduleFullPath(localPath));
+        return new GitModule(_executorProvider, GetSubmoduleFullPath(localPath));
     }
 
-    IGitModule IGitModule.GetSubmodule(string submoduleName)
+    IGitModule IGitModule.GetSubmodule(string? submoduleName)
     {
         return GetSubmodule(submoduleName);
     }
@@ -1226,7 +1187,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         GitArgumentBuilder args = new("submodule") { "status" };
-        ExecutionResult result = _gitExecutable.Execute(args);
+        ExecutionResult result = GitExecutable.Execute(args);
         LazyStringSplit lines = result.StandardOutput.LazySplit('\n');
 
         string? lastLine = null;
@@ -1268,7 +1229,7 @@ public sealed partial class GitModule : IGitModule
             // - the submodule path
             // - the output of git describe for the SHA-1
 
-            Match match = ShaRegex().Match(s);
+            Match match = ShaRegex.Match(s);
 
             if (!match.Success)
             {
@@ -1280,7 +1241,7 @@ public sealed partial class GitModule : IGitModule
             string localPath = match.Groups["path"].Value;
             string branch = match.Groups["branch"].Value;
 
-            if (!ObjectId.TryParse(match.Groups["sha"].Value, out ObjectId? currentCommitId))
+            if (!ObjectId.TryParse(match.Groups["sha"].Value, out ObjectId currentCommitId))
             {
                 info = default;
                 return false;
@@ -1288,7 +1249,7 @@ public sealed partial class GitModule : IGitModule
 
             Validates.NotNull(configFile);
 
-            IConfigSection configSection = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
+            IConfigSection? configSection = configFile.ConfigSections.FirstOrDefault(section => section.GetValue("path").Trim() == localPath);
 
             Assumes.True(configSection is not null, $"`git submodule status` returned submodule \"{localPath}\" that was not found in .gitmodules");
             Assumes.True(configSection.SubSection is not null, $"Config section must have a non-null sub-section");
@@ -1311,7 +1272,7 @@ public sealed partial class GitModule : IGitModule
             "summary",
             submodule
         };
-        return _gitExecutable.GetOutput(args);
+        return GitExecutable.GetOutput(args);
     }
 
     /// <summary>
@@ -1347,7 +1308,7 @@ public sealed partial class GitModule : IGitModule
 
     public void Reset(ResetMode mode, string? file = null)
     {
-        _gitExecutable.RunCommand(Commands.Reset(mode, commit: null, file));
+        GitExecutable.RunCommand(Commands.Reset(mode, commit: null, file));
     }
 
     /// <summary>
@@ -1362,7 +1323,7 @@ public sealed partial class GitModule : IGitModule
             return string.Empty;
         }
 
-        return _gitExecutable.GetBatchOutput(new GitArgumentBuilder("checkout-index")
+        return GitExecutable.GetBatchOutput(new GitArgumentBuilder("checkout-index")
             {
                 "--index",
                 "--force",
@@ -1381,9 +1342,9 @@ public sealed partial class GitModule : IGitModule
     /// <param name="output">Error messages from the reset.</param>
     /// <param name="progressAction">Action when unstaging files (to update a progress bar).</param>
     /// <returns><see langword="true"/> if successfully executed</returns>
-    public bool ResetChanges(ObjectId? resetId, IReadOnlyList<GitItemStatus> selectedItems, bool resetAndDelete, IFullPathResolver fullPathResolver, out StringBuilder output, Action<BatchProgressEventArgs>? progressAction = null)
+    public bool ResetChanges(ObjectId resetId, IReadOnlyList<GitItemStatus> selectedItems, bool resetAndDelete, IFullPathResolver fullPathResolver, out StringBuilder output, Action<BatchProgressEventArgs>? progressAction = null)
     {
-        if (resetId?.IsArtificial is true && resetId != ObjectId.IndexId)
+        if (resetId.IsArtificial && resetId != ObjectId.IndexId)
         {
             throw new InvalidOperationException(nameof(resetId));
         }
@@ -1391,7 +1352,7 @@ public sealed partial class GitModule : IGitModule
         // unstage first (to reset conflicts)
         if (resetId != ObjectId.IndexId)
         {
-            Lazy<List<GitItemStatus>> initialStatus = new(() => GetAllChangedFilesWithSubmodulesStatus().ToList());
+            Lazy<List<GitItemStatus>> initialStatus = new(() => [.. GetAllChangedFilesWithSubmodulesStatus()]);
             List<GitItemStatus> filesToUnstage = [];
             foreach (GitItemStatus item in selectedItems)
             {
@@ -1414,7 +1375,7 @@ public sealed partial class GitModule : IGitModule
         List<string> filesCannotCheckout = [];
         HashSet<GitItemStatus> deletedItems = [];
         output = new();
-        Lazy<List<GitItemStatus>> postUnstageStatus = new(() => GetAllChangedFilesWithSubmodulesStatus().ToList());
+        Lazy<List<GitItemStatus>> postUnstageStatus = new(() => [.. GetAllChangedFilesWithSubmodulesStatus()]);
 
         foreach (GitItemStatus item in selectedItems)
         {
@@ -1458,18 +1419,18 @@ public sealed partial class GitModule : IGitModule
                     continue;
                 }
 
-                filesToCheckout.Add(item.IsRenamed ? item.OldName : item.Name);
+                filesToCheckout.Add(item.IsRenamed ? item.OldName! : item.Name);
             }
             else if (!item.IsNew && !postUnstageStatus.Value.Any(i => i.IsNew && i.Name == item.Name))
             {
-                if (resetId is not null || UnmergedNotIndex(item, postUnstageStatus))
+                if (!resetId.IsZero || UnmergedNotIndex(item, postUnstageStatus))
                 {
-                    filesToCheckout.Add(item.IsRenamed ? item.OldName : item.Name);
+                    filesToCheckout.Add(item.IsRenamed ? item.OldName! : item.Name);
                 }
                 else
                 {
                     // reset to head
-                    filesToReset.Add(item.IsRenamed ? item.OldName : item.Name);
+                    filesToReset.Add(item.IsRenamed ? item.OldName! : item.Name);
                 }
             }
         }
@@ -1518,7 +1479,7 @@ public sealed partial class GitModule : IGitModule
 
     public string FormatPatch(string from, string to, string output, int? start = null)
     {
-        return _gitExecutable.GetOutput(
+        return GitExecutable.GetOutput(
             new GitArgumentBuilder("format-patch")
             {
                 "--find-renames",
@@ -1530,20 +1491,38 @@ public sealed partial class GitModule : IGitModule
             });
     }
 
-    public string CheckoutFiles(IReadOnlyList<string> files, ObjectId? revision, bool force)
+    public string CheckoutFiles(IReadOnlyList<string> files, ObjectId objectId, bool force)
     {
-        if (files.Count == 0 || (revision?.IsArtificial is true && revision != ObjectId.IndexId))
+        if (files.Count == 0 || (objectId.IsArtificial && objectId != ObjectId.IndexId))
         {
             return "";
         }
 
-        // Reset to index has no revision string
-        string revStr = revision == ObjectId.IndexId ? "" : revision?.ToString() ?? RevParse("HEAD").ToString();
+        // Reset to index has no objectId string
+        string revStr;
+        if (objectId == ObjectId.IndexId)
+        {
+            revStr = "";
+        }
+        else if (objectId.IsZero)
+        {
+            ObjectId headObjectId = RevParse("HEAD");
+            if (headObjectId.IsZero)
+            {
+                throw new InvalidOperationException("Cannot checkout files because HEAD could not be resolved.");
+            }
+
+            revStr = headObjectId.ToString();
+        }
+        else
+        {
+            revStr = objectId.ToString();
+        }
 
         // Run batch arguments to work around max command line length on Windows. Fix #6593
         // 3: double quotes + ' '
         // See https://referencesource.microsoft.com/#system/services/monitoring/system/diagnostics/Process.cs,1952
-        return _gitExecutable.RunBatchCommand(new GitArgumentBuilder("checkout")
+        return GitExecutable.RunBatchCommand(new GitArgumentBuilder("checkout")
             {
                 { force, "--force" },
                 revStr,
@@ -1560,7 +1539,7 @@ public sealed partial class GitModule : IGitModule
             return "";
         }
 
-        return _gitExecutable.GetBatchOutput(
+        return GitExecutable.GetBatchOutput(
             new GitArgumentBuilder("rm")
             {
                 { force, "--force" },
@@ -1614,9 +1593,9 @@ public sealed partial class GitModule : IGitModule
 
         if (!string.IsNullOrEmpty(remoteBranch))
         {
-            if (remoteBranch.StartsWith("+"))
+            if (remoteBranch.StartsWith('+'))
             {
-                remoteBranch = remoteBranch.Remove(0, 1);
+                remoteBranch = remoteBranch[1..];
             }
 
             branchArguments = "+" + FormatBranchName(remoteBranch);
@@ -1651,7 +1630,7 @@ public sealed partial class GitModule : IGitModule
 
     public string GetRebaseDir()
     {
-        string gitDirectory = GetGitDirectory();
+        string gitDirectory = _executor.GetGitDirectory();
 
         string rebaseMergeDir = gitDirectory + "rebase-merge" + Path.DirectorySeparatorChar;
         if (Directory.Exists(rebaseMergeDir))
@@ -1676,7 +1655,7 @@ public sealed partial class GitModule : IGitModule
 
     public string ApplyPatch(string dir, ArgumentString arguments)
     {
-        using IProcess process = _gitExecutable.Start(arguments, createWindow: false, redirectInput: true, redirectOutput: true, SystemEncoding);
+        using IProcess process = GitExecutable.Start(arguments, createWindow: false, redirectInput: true, redirectOutput: true, SystemEncoding);
         string[] files = Directory.GetFiles(dir);
 
         if (files.Length == 0)
@@ -1708,7 +1687,7 @@ public sealed partial class GitModule : IGitModule
             return true;
         }
 
-        ExecutionResult execution = _gitExecutable.Execute(
+        ExecutionResult execution = GitExecutable.Execute(
             new GitArgumentBuilder("update-index")
             {
                 { assumeUnchanged ? "--assume-unchanged" : "--no-assume-unchanged" },
@@ -1738,7 +1717,7 @@ public sealed partial class GitModule : IGitModule
             return true;
         }
 
-        ExecutionResult execution = _gitExecutable.Execute(
+        ExecutionResult execution = GitExecutable.Execute(
             new GitArgumentBuilder("update-index")
             {
                 { skipWorktree ? "--skip-worktree" : "--no-skip-worktree" },
@@ -1774,12 +1753,12 @@ public sealed partial class GitModule : IGitModule
         }
 
         StringBuilder output = new();
-        List<GitItemStatus> nonDeletedFiles = files.Where(file => !file.IsDeleted).ToList();
-        List<GitItemStatus> deletedFiles = files.Where(file => file.IsDeleted).ToList();
+        List<GitItemStatus> nonDeletedFiles = [.. files.Where(file => !file.IsDeleted)];
+        List<GitItemStatus> deletedFiles = [.. files.Where(file => file.IsDeleted)];
 
         if (nonDeletedFiles.Count != 0)
         {
-            ExecutionResult execution = _gitExecutable.Execute(
+            ExecutionResult execution = GitExecutable.Execute(
                 UpdateIndexCmd(AppSettings.ShowErrorsWhenStagingFiles),
                 inputWriter =>
                 {
@@ -1797,7 +1776,7 @@ public sealed partial class GitModule : IGitModule
 
         if (deletedFiles.Count != 0)
         {
-            ExecutionResult execution = _gitExecutable.Execute(
+            ExecutionResult execution = GitExecutable.Execute(
                 new GitArgumentBuilder("update-index")
                 {
                     "--remove",
@@ -1823,7 +1802,7 @@ public sealed partial class GitModule : IGitModule
 
     public void StageFile(string file)
     {
-        _gitExecutable.RunCommand(
+        GitExecutable.RunCommand(
             new GitArgumentBuilder("update-index")
             {
                 "--add",
@@ -1848,8 +1827,8 @@ public sealed partial class GitModule : IGitModule
         }
 
         StringBuilder output = new();
-        List<GitItemStatus> nonNewFiles = files.Where(file => !file.IsDeleted).ToList();
-        List<GitItemStatus> newFiles = files.Where(file => file.IsDeleted).ToList();
+        List<GitItemStatus> nonNewFiles = [.. files.Where(file => !file.IsDeleted)];
+        List<GitItemStatus> newFiles = [.. files.Where(file => file.IsDeleted)];
 
         if (nonNewFiles.Count != 0)
         {
@@ -1859,14 +1838,14 @@ public sealed partial class GitModule : IGitModule
                 sb.Add(file.Name.ToPosixPath().QuoteNE());
             }
 
-            ExecutionResult execution = _gitExecutable.Execute(sb);
+            ExecutionResult execution = GitExecutable.Execute(sb);
 
             output.AppendLine(execution.AllOutput);
         }
 
         if (newFiles.Count != 0)
         {
-            ExecutionResult execution = _gitExecutable.Execute(
+            ExecutionResult execution = GitExecutable.Execute(
             new GitArgumentBuilder("update-index")
             {
                 "--force-remove",
@@ -1920,8 +1899,8 @@ public sealed partial class GitModule : IGitModule
 
         if (filesToRemove.Count > 0)
         {
-            ArgumentString args = Commands.Reset(ResetMode.ResetIndex, "HEAD");
-            _gitExecutable.RunBatchCommand(new ArgumentBuilder() { args }
+            ArgumentString args = Commands.Reset(ResetMode.ResetIndex, "HEAD", quiet: progressCallback is null);
+            GitExecutable.RunBatchCommand(new ArgumentBuilder() { args }
                 .BuildBatchArgumentsForFiles(filesToRemove),
                 progressCallback);
         }
@@ -1939,7 +1918,7 @@ public sealed partial class GitModule : IGitModule
             file.Name.Quote()
         };
 
-        using IProcess process = _gitExecutable.Start(args, createWindow: true);
+        using IProcess process = GitExecutable.Start(args, createWindow: true);
         return await process.WaitForExitAsync() == 0;
     }
 
@@ -1951,7 +1930,7 @@ public sealed partial class GitModule : IGitModule
             file.Name.Quote()
         };
 
-        using IProcess process = _gitExecutable.Start(args, createWindow: true);
+        using IProcess process = GitExecutable.Start(args, createWindow: true);
         return await process.WaitForExitAsync() == 0;
     }
 
@@ -1980,7 +1959,7 @@ public sealed partial class GitModule : IGitModule
 
     public bool InTheMiddleOfBisect()
     {
-        return File.Exists(Path.Combine(GetGitDirectory(), "BISECT_START"));
+        return File.Exists(Path.Join(_executor.GetGitDirectory(), "BISECT_START"));
     }
 
     public bool InTheMiddleOfRebase() => InTheMiddleOfGitOperation("applying");
@@ -1995,7 +1974,7 @@ public sealed partial class GitModule : IGitModule
 
     public bool InTheMiddleOfMerge()
     {
-        return File.Exists(Path.Combine(GetGitDirectory(), "MERGE_HEAD"));
+        return File.Exists(Path.Join(_executor.GetGitDirectory(), "MERGE_HEAD"));
     }
 
     public bool InTheMiddleOfAction()
@@ -2016,7 +1995,7 @@ public sealed partial class GitModule : IGitModule
             "rm",
             remoteName.QuoteNE()
         };
-        string output = _gitExecutable.GetOutput(args);
+        string output = GitExecutable.GetOutput(args);
         InvalidateGitSettings();
         return output;
     }
@@ -2029,7 +2008,7 @@ public sealed partial class GitModule : IGitModule
             remoteName.QuoteNE(),
             newName.QuoteNE()
         };
-        string output = _gitExecutable.GetOutput(args);
+        string output = GitExecutable.GetOutput(args);
         InvalidateGitSettings();
         return output;
     }
@@ -2047,14 +2026,14 @@ public sealed partial class GitModule : IGitModule
             name.Quote(),
             GetPathForGitExecution(path).QuoteNE()
         };
-        string output = _gitExecutable.GetOutput(args);
+        string output = GitExecutable.GetOutput(args);
         InvalidateGitSettings();
         return output;
     }
 
     public IReadOnlyList<string> GetRemoteNames()
     {
-        return _gitExecutable
+        return GitExecutable
             .Execute("remote")
             .StandardOutput
             .LazySplit('\n', StringSplitOptions.RemoveEmptyEntries)
@@ -2063,11 +2042,11 @@ public sealed partial class GitModule : IGitModule
 
     public async Task<IReadOnlyList<Remote>> GetRemotesAsync()
     {
-        ExecutionResult result = await _gitExecutable.ExecuteAsync(new GitArgumentBuilder("remote") { "-v" }, throwOnErrorExit: false);
+        ExecutionResult result = await GitExecutable.ExecuteAsync(new GitArgumentBuilder("remote") { "-v" }, throwOnErrorExit: false);
         ////TODO: Handle non-empty result.StandardError if not result.ExitedSuccessfully
         return result.ExitedSuccessfully
             ? ParseRemotes(result)
-            : Array.Empty<Remote>();
+            : [];
 
         IReadOnlyList<Remote> ParseRemotes(ExecutionResult result)
         {
@@ -2080,7 +2059,7 @@ public sealed partial class GitModule : IGitModule
             while (enumerator.MoveNext())
             {
                 string remoteLine = enumerator.Current;
-                Match remoteMatch = RemoteVerboseLineRegex().Match(remoteLine);
+                Match remoteMatch = RemoteVerboseLineRegex.Match(remoteLine);
                 if (!remoteMatch.Success
                     || (remoteMatch.Groups["direction"].Value != "fetch"
                        && remoteMatch.Groups["direction"].Value != "push"))
@@ -2113,7 +2092,7 @@ public sealed partial class GitModule : IGitModule
                 }
 
                 string pushLine = enumerator.Current;
-                Match pushMatch = RemoteVerboseLineRegex().Match(pushLine);
+                Match pushMatch = RemoteVerboseLineRegex.Match(pushLine);
                 if (!pushMatch.Success || pushMatch.Groups["direction"].Value != "push")
                 {
                     throw new Exception("Unable to parse git remote push URL line: " + pushLine);
@@ -2147,7 +2126,7 @@ public sealed partial class GitModule : IGitModule
                 _remoteColors ??= new ConfigFileRemoteSettingsManager(getModule: () => this)
                             .LoadRemotes(loadDisabled: false)
                             .Where(r => !string.IsNullOrEmpty(r.Color) && !string.IsNullOrEmpty(r.Name))
-                            .ToFrozenDictionary(r => r.Name, r => ColorTranslator.FromHtml(r.Color), StringComparer.Ordinal);
+                            .ToFrozenDictionary(r => r.Name!, r => ColorTranslator.FromHtml(r.Color!), StringComparer.Ordinal);
             }
         }
 
@@ -2188,7 +2167,7 @@ public sealed partial class GitModule : IGitModule
     public IReadOnlyList<GitStash> GetStashes(bool noLocks = false)
     {
         GitArgumentBuilder args = GetStashesCmd(noLocks);
-        string[] lines = _gitExecutable.GetOutput(args).Split(Delimiters.LineFeed);
+        string[] lines = GitExecutable.GetOutput(args).Split(Delimiters.LineFeed);
 
         List<GitStash> stashes = new(lines.Length);
 
@@ -2203,9 +2182,86 @@ public sealed partial class GitModule : IGitModule
         return stashes;
     }
 
+    /// <summary>
+    /// Returns the list of git worktrees for this repository by parsing
+    /// the output of <c>git worktree list --porcelain -z</c>.
+    /// </summary>
+    public IReadOnlyList<GitWorktree> GetWorktrees()
+    {
+        GitArgumentBuilder args = new("worktree")
+        {
+            "list",
+            "--porcelain",
+            { GitVersion.SupportWorktreeZ, "-z" },
+        };
+
+        string output = GitExecutable.GetOutput(args);
+        List<GitWorktree> worktrees = [];
+
+        string? path = null;
+        string? sha1 = null;
+        string? branch = null;
+        GitWorktreeHeadType headType = GitWorktreeHeadType.Branch;
+
+        // Note: -z for separator is not configurable before Git 2.36 so paths with \n will fail
+        // Just ignore this case, require Git update (no user feedback other than NBug).
+        char sep = GitVersion.SupportWorktreeZ ? '\0' : '\n';
+
+        foreach (string field in output.LazySplit(sep))
+        {
+            // Double \0 (empty field) marks the boundary between worktree records
+            if (field.Length == 0)
+            {
+                if (path is not null)
+                {
+                    string fullPath = GetWindowsPath(path);
+                    bool isDeleted = !Directory.Exists(fullPath);
+                    worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted));
+                }
+
+                path = null;
+                sha1 = null;
+                branch = null;
+                headType = GitWorktreeHeadType.Branch;
+                continue;
+            }
+
+            int spaceIndex = field.IndexOf(' ');
+            string key = spaceIndex >= 0 ? field[..spaceIndex] : field;
+            string value = spaceIndex >= 0 ? field[(spaceIndex + 1)..] : "";
+            switch (key)
+            {
+                case "worktree":
+                    path = value;
+                    break;
+                case "HEAD":
+                    sha1 = value;
+                    break;
+                case "branch":
+                    branch = value.RemovePrefix(GitRefName.RefsHeadsPrefix);
+                    break;
+                case "bare":
+                    headType = GitWorktreeHeadType.Bare;
+                    break;
+                case "detached":
+                    headType = GitWorktreeHeadType.Detached;
+                    break;
+            }
+        }
+
+        if (path is not null)
+        {
+            string fullPath = GetWindowsPath(path);
+            bool isDeleted = !Directory.Exists(fullPath);
+            worktrees.Add(new GitWorktree(fullPath, headType, sha1, branch, isDeleted));
+        }
+
+        return worktrees;
+    }
+
     public async Task<ExecutionResult> GetSingleDifftoolAsync(
-        ObjectId? firstId,
-        ObjectId? secondId,
+        ObjectId firstId,
+        ObjectId secondId,
         string? fileName,
         string? oldFileName,
         ArgumentString extraDiffArguments,
@@ -2218,8 +2274,8 @@ public sealed partial class GitModule : IGitModule
         // fix refs slashes
         fileName = fileName.ToPosixPath();
         oldFileName = oldFileName.ToPosixPath();
-        string? firstRevision = firstId?.ToString();
-        string? secondRevision = secondId?.ToString();
+        string? firstRevision = firstId.IsZero ? null : firstId.ToString();
+        string? secondRevision = secondId.IsZero ? null : secondId.ToString();
 
         string? diffOptions = _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked);
 
@@ -2240,7 +2296,7 @@ public sealed partial class GitModule : IGitModule
             ? GitCommandCache
             : null;
 
-        ExecutionResult result = await _gitExecutable.ExecuteAsync(
+        ExecutionResult result = await GitExecutable.ExecuteAsync(
             args,
             writeInput: null,
             outputEncoding: LosslessEncoding,
@@ -2254,8 +2310,8 @@ public sealed partial class GitModule : IGitModule
     }
 
     public async Task<(Patch? Patch, string? ErrorMessage)> GetSingleDiffAsync(
-        ObjectId? firstId,
-        ObjectId? secondId,
+        ObjectId firstId,
+        ObjectId secondId,
         string? fileName,
         string? oldFileName,
         string extraDiffArguments,
@@ -2269,8 +2325,8 @@ public sealed partial class GitModule : IGitModule
         // fix refs slashes
         fileName = fileName.ToPosixPath();
         oldFileName = oldFileName.ToPosixPath();
-        string? firstRevision = firstId?.ToString();
-        string? secondRevision = secondId?.ToString();
+        string? firstRevision = firstId.IsZero ? null : firstId.ToString();
+        string? secondRevision = secondId.IsZero ? null : secondId.ToString();
 
         string? diffOptions = _revisionDiffProvider.Get(firstRevision, secondRevision, fileName, oldFileName, isTracked);
 
@@ -2293,7 +2349,7 @@ public sealed partial class GitModule : IGitModule
             ? GitCommandCache
             : null;
 
-        ExecutionResult result = await _gitExecutable.ExecuteAsync(
+        ExecutionResult result = await GitExecutable.ExecuteAsync(
             args,
             cache: cache,
             outputEncoding: LosslessEncoding,
@@ -2314,8 +2370,8 @@ public sealed partial class GitModule : IGitModule
     public async Task<ExecutionResult> GetRangeDiffAsync(
         ObjectId firstId,
         ObjectId secondId,
-        ObjectId? firstBase,
-        ObjectId? secondBase,
+        ObjectId firstBase,
+        ObjectId secondBase,
         string extraDiffArguments,
         string? pathFilter,
         bool useGitColoring,
@@ -2326,7 +2382,7 @@ public sealed partial class GitModule : IGitModule
         string first = firstId.IsArtificial ? "HEAD" : firstId.ToString();
         string second = secondId.IsArtificial ? "HEAD" : secondId.ToString();
 
-        if ((firstBase?.IsArtificial is true) || (secondBase?.IsArtificial is true))
+        if (firstBase.IsArtificial || secondBase.IsArtificial)
         {
             throw new ArgumentException($"Cannot get range diff for artificial commit base of A: {firstBase} or base of B: {secondBase}.");
         }
@@ -2339,12 +2395,12 @@ public sealed partial class GitModule : IGitModule
             { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
             { useGitColoring, "--color=always" },
             extraDiffArguments,
-            { firstBase is null || secondBase is null,  $"{first}...{second}", $"{firstBase}..{first} {secondBase}..{second}" },
+            { firstBase.IsZero || secondBase.IsZero,  $"{first}...{second}", $"{firstBase}..{first} {secondBase}..{second}" },
             { GitVersion.SupportRangeDiffPath && !string.IsNullOrWhiteSpace(pathFilter), "--" },
             { GitVersion.SupportRangeDiffPath && !string.IsNullOrWhiteSpace(pathFilter), pathFilter }
         };
 
-        ExecutionResult result = await _gitExecutable.ExecuteAsync(
+        ExecutionResult result = await GitExecutable.ExecuteAsync(
             args,
             cache: GitCommandCache,
             outputEncoding: LosslessEncoding,
@@ -2372,7 +2428,7 @@ public sealed partial class GitModule : IGitModule
 
     public string GetStatusText(bool untracked)
     {
-        return _gitExecutable.GetOutput(new GitArgumentBuilder("status")
+        return GitExecutable.GetOutput(new GitArgumentBuilder("status")
         {
             "-s",
             { untracked, "-u" }
@@ -2383,7 +2439,7 @@ public sealed partial class GitModule : IGitModule
     {
         bool noCache = objectId.IsArtificial;
 
-        return _gitExecutable.Execute(
+        return GitExecutable.Execute(
             new GitArgumentBuilder("grep")
             {
                 "--files-with-matches",
@@ -2433,6 +2489,7 @@ public sealed partial class GitModule : IGitModule
         bool useGitColoring,
         bool showFunctionName,
         IGitCommandConfiguration commandConfiguration,
+        Encoding encoding,
         CancellationToken cancellationToken)
     {
         bool noCache = objectId.IsArtificial;
@@ -2453,8 +2510,9 @@ public sealed partial class GitModule : IGitModule
             fileName.Quote()
         };
 
-        return await _gitExecutable.ExecuteAsync(
+        return await GitExecutable.ExecuteAsync(
             args,
+            outputEncoding: encoding,
             cache: noCache ? null : GitCommandCache,
             throwOnErrorExit: false,
             stripAnsiEscapeCodes: !useGitColoring,
@@ -2472,7 +2530,7 @@ public sealed partial class GitModule : IGitModule
         // * Checkout the commit
         // * Select the submodule in the diff tab
         // This should not raise a popup to the user, but describe the error message
-        return _gitExecutable.Execute(
+        return GitExecutable.Execute(
             new GitArgumentBuilder("diff")
             {
                 "--no-ext-diff",
@@ -2487,10 +2545,15 @@ public sealed partial class GitModule : IGitModule
             cancellationToken: cancellationToken);
     }
 
-    public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId? firstId, ObjectId? secondId, ObjectId? parentToSecond, CancellationToken cancellationToken)
+    public IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId firstId,
+        ObjectId secondId,
+        ObjectId parentToSecond,
+        bool excludeSkipWorktreeFiles,
+        UntrackedFilesMode untrackedFilesMode,
+        CancellationToken cancellationToken)
     {
         StagedStatus stagedStatus = GetStagedStatus(firstId, secondId, parentToSecond);
-        IReadOnlyList<GitItemStatus> status = GetDiffFilesWithUntracked(firstId?.ToString(), secondId?.ToString(), stagedStatus, cancellationToken: cancellationToken);
+        IReadOnlyList<GitItemStatus> status = GetDiffFilesWithUntracked(firstId.IsZero ? null : firstId.ToString(), secondId.IsZero ? null : secondId.ToString(), stagedStatus, excludeSkipWorktreeFiles, untrackedFilesMode, cancellationToken: cancellationToken);
         GetSubmoduleDiffStatus(status, firstId, secondId, cancellationToken);
         return status;
     }
@@ -2498,11 +2561,11 @@ public sealed partial class GitModule : IGitModule
     /// <summary>
     /// If possible, find if files in a diff are index or worktree.
     /// </summary>
-    /// <param name="firstId">from revision string.</param>
-    /// <param name="secondId">to revision.</param>
-    /// <param name="parentToSecond">The parent for the second revision.</param>
+    /// <param name="firstId">from objectId string.</param>
+    /// <param name="secondId">to objectId.</param>
+    /// <param name="parentToSecond">The parent for the second objectId.</param>
     /// <remarks>Git revisions are required to determine if <see cref="StagedStatus"/> allows stage/unstage.</remarks>
-    public static StagedStatus GetStagedStatus(ObjectId? firstId, ObjectId? secondId, ObjectId? parentToSecond)
+    public static StagedStatus GetStagedStatus(ObjectId firstId, ObjectId secondId, ObjectId parentToSecond)
     {
         StagedStatus staged;
         if (firstId == ObjectId.IndexId && secondId == ObjectId.WorkTreeId)
@@ -2513,8 +2576,7 @@ public sealed partial class GitModule : IGitModule
         {
             staged = StagedStatus.Index;
         }
-        else if (firstId is not null && !firstId.IsArtificial &&
-                 secondId is not null && !secondId.IsArtificial)
+        else if (!firstId.IsZeroOrArtificial && !secondId.IsZeroOrArtificial)
         {
             // This cannot be a worktree/index file
             staged = StagedStatus.None;
@@ -2527,12 +2589,17 @@ public sealed partial class GitModule : IGitModule
         return staged;
     }
 
-    public IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision, string? secondRevision, StagedStatus stagedStatus, bool noCache = false,
+    public IReadOnlyList<GitItemStatus> GetDiffFilesWithUntracked(string? firstRevision,
+        string? secondRevision,
+        StagedStatus stagedStatus,
+        bool excludeSkipWorktreeFiles = true,
+        UntrackedFilesMode untrackedFilesMode = UntrackedFilesMode.Default,
+        bool noCache = false,
         CancellationToken cancellationToken = default)
     {
         if (stagedStatus is StagedStatus.WorkTree or StagedStatus.Index)
         {
-            IReadOnlyList<GitItemStatus> status = GetAllChangedFilesWithSubmodulesStatus(cancellationToken: cancellationToken);
+            IReadOnlyList<GitItemStatus> status = GetAllChangedFilesWithSubmodulesStatus(excludeIgnoredFiles: true, excludeAssumeUnchangedFiles: true, excludeSkipWorktreeFiles, untrackedFilesMode, cancellationToken);
             return status.Where(x => x.Staged == stagedStatus || x.IsStatusOnly).ToList();
         }
 
@@ -2547,11 +2614,11 @@ public sealed partial class GitModule : IGitModule
         {
             // For worktree the untracked must be added too
             // Note that this may add a second GitError, this is a separate Git command
-            GitItemStatus[] files = GetAllChangedFilesWithSubmodulesStatus(cancellationToken: cancellationToken).Where(x =>
-                ((x.Staged == StagedStatus.WorkTree && x.IsNew) || x.IsStatusOnly)).ToArray();
+            GitItemStatus[] files = [.. GetAllChangedFilesWithSubmodulesStatus(cancellationToken: cancellationToken).Where(x =>
+                ((x.Staged == StagedStatus.WorkTree && x.IsNew) || x.IsStatusOnly))];
             if (firstRevision == GitRevision.WorkTreeGuid)
             {
-                // The file is seen as "deleted" in 'to' revision
+                // The file is seen as "deleted" in 'to' objectId
                 foreach (GitItemStatus item in files)
                 {
                     item.IsNew = false;
@@ -2570,7 +2637,7 @@ public sealed partial class GitModule : IGitModule
 
     public IReadOnlyList<GitItemStatus> GetStashDiffFiles(string stashName)
     {
-        List<GitItemStatus> resultCollection = GetDiffFilesWithUntracked(stashName + "^", stashName, StagedStatus.None, true).ToList();
+        List<GitItemStatus> resultCollection = [.. GetDiffFilesWithUntracked(stashName + "^", stashName, StagedStatus.None, noCache: true)];
 
         // add - optionally stashed - untracked files
         GitArgumentBuilder args = new("log")
@@ -2579,8 +2646,8 @@ public sealed partial class GitModule : IGitModule
             "--pretty=format:\"%T\"",
             "--max-count=1"
         };
-        ExecutionResult executionResult = _gitExecutable.Execute(args, throwOnErrorExit: false);
-        if (executionResult.ExitedSuccessfully && ObjectId.TryParse(executionResult.StandardOutput, out ObjectId? treeId))
+        ExecutionResult executionResult = GitExecutable.Execute(args, throwOnErrorExit: false);
+        if (executionResult.ExitedSuccessfully && ObjectId.TryParse(executionResult.StandardOutput, out ObjectId treeId))
         {
             IEnumerable<GitItemStatus> files = GetTreeFiles(treeId, full: true)
                 .Select(i =>
@@ -2601,14 +2668,14 @@ public sealed partial class GitModule : IGitModule
             {
                 // IsTracked is always true, only tracked are reported
                 // (all with TreeId are tracked)
-                // TreeGuid for worktree reflects Index, just for reference
+                // TreeId for worktree reflects Index, just for reference
                 // New/Changed/Deleted are are just set
                 IsTracked = true,
                 IsNew = false,
                 IsChanged = false,
                 IsDeleted = false,
                 Staged = StagedStatus.Unset,
-                TreeGuid = file.ObjectId,
+                TreeId = file.ObjectId,
                 IsSubmodule = file.ObjectType == GitObjectType.Commit
             })
             .ToList();
@@ -2617,8 +2684,8 @@ public sealed partial class GitModule : IGitModule
         bool excludeAssumeUnchangedFiles = true, bool excludeSkipWorktreeFiles = true,
         UntrackedFilesMode untrackedFiles = UntrackedFilesMode.Default, CancellationToken cancellationToken = default)
     {
-        ExecutionResult exec = _gitExecutable.Execute(Commands.GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles), throwOnErrorExit: false, cancellationToken: cancellationToken);
-        List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
+        ExecutionResult exec = GitExecutable.Execute(Commands.GetAllChangedFiles(excludeIgnoredFiles, untrackedFiles), throwOnErrorExit: false, cancellationToken: cancellationToken);
+        List<GitItemStatus> result = [.. _getAllChangedFilesOutputParser.Parse(exec.StandardOutput)];
         if (!exec.ExitedSuccessfully)
         {
             // No simple way to pass the error message, create fake file
@@ -2628,7 +2695,7 @@ public sealed partial class GitModule : IGitModule
         if (!excludeAssumeUnchangedFiles || !excludeSkipWorktreeFiles)
         {
             GitArgumentBuilder args = new("ls-files") { "-v" };
-            string lsOutput = _gitExecutable.GetOutput(args);
+            string lsOutput = GitExecutable.GetOutput(args);
 
             if (!excludeAssumeUnchangedFiles)
             {
@@ -2704,7 +2771,7 @@ public sealed partial class GitModule : IGitModule
         return status;
     }
 
-    private void GetSubmoduleCurrentStatus(IReadOnlyList<GitItemStatus> status)
+    public void GetSubmoduleCurrentStatus(IReadOnlyList<GitItemStatus> status)
     {
         foreach (GitItemStatus item in status)
         {
@@ -2720,7 +2787,7 @@ public sealed partial class GitModule : IGitModule
         }
     }
 
-    private void GetSubmoduleDiffStatus(IReadOnlyList<GitItemStatus> status, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
+    private void GetSubmoduleDiffStatus(IReadOnlyList<GitItemStatus> status, ObjectId firstId, ObjectId secondId, CancellationToken cancellationToken)
     {
         foreach (GitItemStatus item in status.Where(i => i.IsSubmodule))
         {
@@ -2745,7 +2812,7 @@ public sealed partial class GitModule : IGitModule
             "--raw",
             "--cached"
         };
-        ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
+        ExecutionResult exec = GitExecutable.Execute(args, throwOnErrorExit: false);
         if (exec.ExitedSuccessfully)
         {
             return GetDiffChangedFilesFromString(exec.StandardOutput, StagedStatus.Index);
@@ -2753,10 +2820,8 @@ public sealed partial class GitModule : IGitModule
 
         // This command is a little more expensive because it will return both staged and unstaged files
         ArgumentString command = Commands.GetAllChangedFiles(excludeIgnoredFiles: true, UntrackedFilesMode.No);
-        exec = _gitExecutable.Execute(command, throwOnErrorExit: false);
-        List<GitItemStatus> res = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput)
-                                        .Where(item => (item.Staged == StagedStatus.Index || item.IsStatusOnly))
-                                        .ToList();
+        exec = GitExecutable.Execute(command, throwOnErrorExit: false);
+        List<GitItemStatus> res = [.. _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).Where(item => (item.Staged == StagedStatus.Index || item.IsStatusOnly))];
         if (!exec.ExitedSuccessfully)
         {
             // No simple way to pass the error message, create fake file
@@ -2791,8 +2856,8 @@ public sealed partial class GitModule : IGitModule
     public IReadOnlyList<GitItemStatus> GitStatus(UntrackedFilesMode untrackedFilesMode, IgnoreSubmodulesMode ignoreSubmodulesMode = IgnoreSubmodulesMode.None)
     {
         ArgumentString args = Commands.GetAllChangedFiles(true, untrackedFilesMode, ignoreSubmodulesMode);
-        ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
-        List<GitItemStatus> result = _getAllChangedFilesOutputParser.Parse(exec.StandardOutput).ToList();
+        ExecutionResult exec = GitExecutable.Execute(args, throwOnErrorExit: false);
+        List<GitItemStatus> result = [.. _getAllChangedFilesOutputParser.Parse(exec.StandardOutput)];
         if (!exec.ExitedSuccessfully)
         {
             // No simple way to pass the error message, create fake file
@@ -2811,7 +2876,7 @@ public sealed partial class GitModule : IGitModule
 
     public async Task<Patch?> GetCurrentChangesAsync(string? fileName, string? oldFileName, bool staged, string extraDiffArguments, Encoding? encoding = null, bool noLocks = false)
     {
-        ExecutionResult result = await _gitExecutable.ExecuteAsync(Commands.GetCurrentChanges(fileName, oldFileName, staged, extraDiffArguments, noLocks),
+        ExecutionResult result = await GitExecutable.ExecuteAsync(Commands.GetCurrentChanges(fileName, oldFileName, staged, extraDiffArguments, noLocks),
             outputEncoding: LosslessEncoding, throwOnErrorExit: false).ConfigureAwait(false);
         if (!result.ExitedSuccessfully)
         {
@@ -2828,7 +2893,7 @@ public sealed partial class GitModule : IGitModule
     private async Task<string?> GetFileContentsAsync(string? path)
     {
         GitArgumentBuilder args = new("show") { $"HEAD:{path.ToPosixPath().Quote()}" };
-        ExecutionResult result = await _gitExecutable.ExecuteAsync(args, throwOnErrorExit: false).ConfigureAwaitRunInline();
+        ExecutionResult result = await GitExecutable.ExecuteAsync(args, throwOnErrorExit: false).ConfigureAwaitRunInline();
 
         return result.ExitedSuccessfully
             ? result.StandardOutput
@@ -2874,80 +2939,13 @@ public sealed partial class GitModule : IGitModule
             "--cached",
             file.ToPosixPath().QuoteNE()
         };
-        _gitExecutable.RunCommand(args);
+        GitExecutable.RunCommand(args);
     }
 
     public void UnstageFileToRemove(string file)
     {
         ArgumentString args = Commands.Reset(ResetMode.ResetIndex, "HEAD", file);
-        _gitExecutable.RunCommand(args);
-    }
-
-    /// <summary>Attempt to read the branch name from the HEAD file instead of calling a git command.</summary>
-    /// <remarks>Dirty but fast. This sometimes fails. In reftable repos, it always returns ".invalid".</remarks>
-    public static string GetSelectedBranchFast(string? repositoryPath, bool emptyIfDetached = false)
-    {
-        if (string.IsNullOrEmpty(repositoryPath))
-        {
-            return string.Empty;
-        }
-
-        string headFileContents;
-        try
-        {
-            // eg. "/path/to/repo/.git/HEAD"
-            string headFileName = Path.Combine(GetGitDirectory(repositoryPath), "HEAD");
-
-            if (!File.Exists(headFileName))
-            {
-                return string.Empty;
-            }
-
-            headFileContents = File.ReadAllText(headFileName, SystemEncoding);
-        }
-        catch (Exception ex) when (ex is IOException || ex is UnauthorizedAccessException || ex is SecurityException)
-        {
-            // ignore inaccessible file
-            return string.Empty;
-        }
-
-        // eg. "ref: refs/heads/master"
-        //     "9601551c564b48208bccd50b705264e9bd68140d"
-
-        if (!headFileContents.StartsWith("ref: "))
-        {
-            return emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
-        }
-
-        const string prefix = "ref: refs/heads/";
-
-        if (!headFileContents.StartsWith(prefix))
-        {
-            return string.Empty;
-        }
-
-        return headFileContents[prefix.Length..].TrimEnd();
-    }
-
-    public string GetSelectedBranch(bool emptyIfDetached = false)
-    {
-        string head = GetSelectedBranchFast(WorkingDir, emptyIfDetached);
-
-        if (!string.IsNullOrEmpty(head) && head != ".invalid")
-        {
-            return head;
-        }
-
-        GitArgumentBuilder args = new("symbolic-ref")
-        {
-            "--quiet",
-            "HEAD"
-        };
-        ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
-
-        return result.ExitedSuccessfully
-            ? result.StandardOutput[GitRefName.RefsHeadsPrefix.Length..].TrimEnd()
-            : emptyIfDetached ? string.Empty : DetachedHeadParser.DetachedBranch;
+        GitExecutable.RunCommand(args);
     }
 
     public bool IsDetachedHead()
@@ -2983,7 +2981,7 @@ public sealed partial class GitModule : IGitModule
     {
         ExecutionResult executionResult = !tags && !branches
             ? new() // TODO is this an error?
-            : _gitExecutable.Execute(new GitArgumentBuilder("ls-remote")
+            : GitExecutable.Execute(new GitArgumentBuilder("ls-remote")
                 {
                     { tags, "--tags" },
                     { branches, "--heads" },
@@ -3002,7 +3000,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         errorOutput = output;
-        return Array.Empty<IGitRef>();
+        return [];
     }
 
     /// <summary>
@@ -3020,15 +3018,15 @@ public sealed partial class GitModule : IGitModule
         const bool noLocks = true;
 
         ArgumentString cmd = Commands.GetRefs(getRef, noLocks, AppSettings.RefsSortBy, AppSettings.RefsSortOrder);
-        ExecutionResult result = _gitExecutable.Execute(cmd, throwOnErrorExit: false);
+        ExecutionResult result = GitExecutable.Execute(cmd, throwOnErrorExit: false);
         return result.ExitedSuccessfully
             ? ParseRefs(result.StandardOutput)
-            : Array.Empty<IGitRef>();
+            : [];
     }
 
     public async Task<string[]> GetMergedBranchesAsync(bool includeRemote, bool fullRefname, string? commit, CancellationToken cancellationToken)
     {
-        ExecutionResult result = await _gitExecutable
+        ExecutionResult result = await GitExecutable
             .ExecuteAsync(Commands.MergedBranches(includeRemote, fullRefname, commit), throwOnErrorExit: false, cancellationToken: cancellationToken)
             .ConfigureAwait(false);
         ////TODO: Handle non-empty result.StandardError
@@ -3037,7 +3035,7 @@ public sealed partial class GitModule : IGitModule
 
     public IEnumerable<string> GetMergedBranches(bool includeRemote = false)
     {
-        return _gitExecutable
+        return GitExecutable
             .GetOutput(Commands.MergedBranches(includeRemote))
             .LazySplit('\n', StringSplitOptions.RemoveEmptyEntries);
     }
@@ -3048,7 +3046,7 @@ public sealed partial class GitModule : IGitModule
         const string refsPrefix = "refs/";
 
         IReadOnlyList<string> remotes = GetRemoteNames();
-        ExecutionResult result = _gitExecutable.Execute(Commands.MergedBranches(includeRemote: true));
+        ExecutionResult result = GitExecutable.Execute(Commands.MergedBranches(includeRemote: true));
         LazyStringSplit lines = result.StandardOutput.LazySplit('\n');
 
         return lines
@@ -3061,7 +3059,7 @@ public sealed partial class GitModule : IGitModule
 
     public IReadOnlyList<IGitRef> ParseRefs(string refList)
     {
-        MatchCollection matches = RefRegex().Matches(refList);
+        MatchCollection matches = RefRegex.Matches(refList);
 
         List<IGitRef> gitRefs = [];
         Dictionary<string, GitRef> headByRemote = [];
@@ -3086,7 +3084,7 @@ public sealed partial class GitModule : IGitModule
         // do not show default head if remote has a branch on the same commit
         foreach (IGitRef gitRef in gitRefs)
         {
-            if (headByRemote.TryGetValue(gitRef.Remote, out GitRef defaultHead) &&
+            if (headByRemote.TryGetValue(gitRef.Remote, out GitRef? defaultHead) &&
                 gitRef.ObjectId == defaultHead.ObjectId)
             {
                 headByRemote.Remove(gitRef.Remote);
@@ -3102,7 +3100,7 @@ public sealed partial class GitModule : IGitModule
     {
         if (!getLocal && !getRemote)
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         GitArgumentBuilder args = new("branch")
@@ -3112,11 +3110,11 @@ public sealed partial class GitModule : IGitModule
             "--contains",
             objectId
         };
-        ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false, cancellationToken: cancellationToken);
+        ExecutionResult exec = GitExecutable.Execute(args, throwOnErrorExit: false, cancellationToken: cancellationToken);
         if (!exec.ExitedSuccessfully)
         {
             // Error occurred, no matches (no error presented to the user)
-            return Array.Empty<string>();
+            return [];
         }
 
         string[] result = exec.StandardOutput.Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.RemoveEmptyEntries);
@@ -3149,11 +3147,11 @@ public sealed partial class GitModule : IGitModule
 
     public IReadOnlyList<string> GetAllTagsWhichContainGivenCommit(ObjectId objectId, CancellationToken cancellationToken)
     {
-        ExecutionResult exec = _gitExecutable.Execute($"tag --contains {objectId}", throwOnErrorExit: false, cancellationToken: cancellationToken);
+        ExecutionResult exec = GitExecutable.Execute($"tag --contains {objectId}", throwOnErrorExit: false, cancellationToken: cancellationToken);
         if (!exec.ExitedSuccessfully)
         {
             // Error occurred, no matches (no error presented to the user)
-            return Array.Empty<string>();
+            return [];
         }
 
         return exec.StandardOutput.Split(Delimiters.GitOutput, StringSplitOptions.RemoveEmptyEntries);
@@ -3168,7 +3166,7 @@ public sealed partial class GitModule : IGitModule
 
         tag = tag.Trim();
 
-        ExecutionResult exec = _gitExecutable.Execute($"cat-file -p {tag}", throwOnErrorExit: false, cancellationToken: cancellationToken);
+        ExecutionResult exec = GitExecutable.Execute($"cat-file -p {tag}", throwOnErrorExit: false, cancellationToken: cancellationToken);
         if (!exec.ExitedSuccessfully)
         {
             // Error occurred, no message (no error presented to the user)
@@ -3191,9 +3189,7 @@ public sealed partial class GitModule : IGitModule
     /// <param name="ignorePatterns">Patterns to ignore (.gitignore syntax).</param>
     public IReadOnlyList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns)
     {
-        List<string> notEmptyPatterns = ignorePatterns
-            .Where(pattern => !string.IsNullOrWhiteSpace(pattern))
-            .ToList();
+        List<string> notEmptyPatterns = [.. ignorePatterns.Where(pattern => !string.IsNullOrWhiteSpace(pattern))];
 
         if (notEmptyPatterns.Count != 0)
         {
@@ -3204,28 +3200,28 @@ public sealed partial class GitModule : IGitModule
 
             // filter duplicates out of the result because options -c and -m may return
             // same files at times
-            return _gitExecutable.GetOutput($"ls-files -z -o -m -c -i {excludeParams}")
+            return GitExecutable.GetOutput($"ls-files -z -o -m -c -i {excludeParams}")
                 .Split(Delimiters.NullAndLineFeed, StringSplitOptions.RemoveEmptyEntries)
                 .Distinct()
                 .ToList();
         }
         else
         {
-            return Array.Empty<string>();
+            return [];
         }
     }
 
     public IReadOnlyList<string> GetFullTree(string id)
     {
-        return _gitExecutable.GetOutput(
+        return GitExecutable.GetOutput(
                 $"ls-tree -z -r --name-only {id.Quote()}",
                 cache: GitCommandCache)
             .Split(Delimiters.NullAndLineFeed);
     }
 
-    public IEnumerable<IObjectGitItem> GetTree(ObjectId? commitId, bool full, string fileName = "", CancellationToken cancellationToken = default)
+    public IEnumerable<IObjectGitItem> GetTree(ObjectId commitId, bool full, string fileName = "", CancellationToken cancellationToken = default)
     {
-        bool isArtificial = commitId?.IsArtificial is true;
+        bool isArtificial = commitId.IsArtificial;
         if (isArtificial && !full)
         {
             throw new ArgumentOutOfRangeException(nameof(full), "Artificial commit requires 'full'.");
@@ -3242,9 +3238,7 @@ public sealed partial class GitModule : IGitModule
                 // ls-files with same format as ls-tree
                 "-z",
                 { commitId == ObjectId.IndexId, "--cached", "--no-cached" },
-
-                // TODO change to GitVersion.SupportLsFilesFormat when Extensibility.Git can be updated
-                { GitVersion.SupportNewGitConfigSyntax, @$"--format=""{_gitTreeParser.GitTreeFormat}""", "--stage" },
+                { GitVersion.SupportLsFilesFormat, @$"--format=""{_gitTreeParser.GitTreeFormat}""", "--stage" },
                 "--",
                 fileName.QuoteNE()
             }
@@ -3253,15 +3247,14 @@ public sealed partial class GitModule : IGitModule
                 // optimized codepath, default is "--format={_gitTreeParser.GitTreeFormat}"
                 "-z",
                 { full, "-r" },
-                { commitId is null, "HEAD", commitId.ToString() },
+                { commitId.IsZero ? "HEAD" : commitId.ToString() },
                 "--",
                 fileName.QuoteNE()
             };
 
-        ExecutionResult result = _gitExecutable.Execute(args, cache: isArtificial ? null : GitCommandCache, cancellationToken: cancellationToken);
+        ExecutionResult result = GitExecutable.Execute(args, cache: isArtificial ? null : GitCommandCache, cancellationToken: cancellationToken);
 
-        // TODO change to GitVersion.SupportLsFilesFormat when Extensibility.Git can be updated
-        if (isArtificial && !GitVersion.SupportNewGitConfigSyntax)
+        if (isArtificial && !GitVersion.SupportLsFilesFormat)
         {
             return _gitTreeParser.ParseLsFiles(result.StandardOutput);
         }
@@ -3284,7 +3277,7 @@ public sealed partial class GitModule : IGitModule
             fileName.ToPosixPath().Quote()
         };
 
-        ExecutionResult result = _gitExecutable.Execute(
+        ExecutionResult result = GitExecutable.Execute(
             args,
             cache: GitCommandCache,
             outputEncoding: LosslessEncoding,
@@ -3302,7 +3295,7 @@ public sealed partial class GitModule : IGitModule
             // We should never get here...
             Debug.WriteLine("Error parsing output from command: {0}\n\nPlease report a bug!", args);
 
-            return new GitBlame(Array.Empty<GitBlameLine>());
+            return new GitBlame([]);
         }
     }
 
@@ -3374,7 +3367,7 @@ public sealed partial class GitModule : IGitModule
         List<GitBlameLine> lines = new(capacity: Math.Min(Math.Max(256, output.Length / GitBlameLengthPerLineHeuristicValue), 5000));
 
         bool hasCommitHeader;
-        ObjectId? objectId;
+        ObjectId objectId;
         int finalLineNumber;
         int originLineNumber;
         string? author;
@@ -3392,7 +3385,7 @@ public sealed partial class GitModule : IGitModule
 
         foreach (string line in output.LazySplit('\n').Select(l => l.TrimEnd('\r')))
         {
-            Match match = HeaderRegex().Match(line);
+            Match match = HeaderRegex.Match(line);
 
             if (match.Success)
             {
@@ -3400,20 +3393,23 @@ public sealed partial class GitModule : IGitModule
                 finalLineNumber = int.Parse(match.Groups["finallinenum"].Value);
                 originLineNumber = int.Parse(match.Groups["origlinenum"].Value);
             }
-            else if (line.StartsWith("\t"))
+            else if (line.StartsWith('\t'))
             {
                 // The contents of the actual line is output after the above header, prefixed by a TAB. This is to allow adding more header elements later.
                 string text = ReEncodeStringFromLossless(line[1..], encoding);
+
+                // objectId is guaranteed to be set by the preceding git blame header line
+                ObjectId oid = objectId.IsZero ? throw new InvalidOperationException("Invalid git blame output: missing object ID header before content line.") : objectId;
 
                 GitBlameCommit commit;
                 if (hasCommitHeader)
                 {
                     // TODO quite a few nullable suppressions here (via ! character) which should be addressed as they hint at a design flaw
 
-                    if (!commitByObjectId.TryGetValue(objectId!, out GitBlameCommit? commitData))
+                    if (!commitByObjectId.TryGetValue(oid, out GitBlameCommit? commitData))
                     {
                         commit = new GitBlameCommit(
-                            objectId!,
+                            oid,
                             author!,
                             authorMail!,
                             authorTime,
@@ -3424,7 +3420,7 @@ public sealed partial class GitModule : IGitModule
                             committerTimeZone!,
                             summary!,
                             filename!);
-                        commitByObjectId[objectId!] = commit;
+                        commitByObjectId[oid] = commit;
                     }
                     else
                     {
@@ -3451,7 +3447,7 @@ public sealed partial class GitModule : IGitModule
                 }
                 else
                 {
-                    commit = commitByObjectId[objectId!];
+                    commit = commitByObjectId[oid];
                 }
 
                 lines.Add(new GitBlameLine(commit, finalLineNumber, originLineNumber, text));
@@ -3516,7 +3512,7 @@ public sealed partial class GitModule : IGitModule
         void Reset()
         {
             hasCommitHeader = false;
-            objectId = null;
+            objectId = default;
             finalLineNumber = -1;
             originLineNumber = -1;
             author = null;
@@ -3540,7 +3536,7 @@ public sealed partial class GitModule : IGitModule
             id.ToString().QuoteNE()
         };
 
-        ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false, cache: GitCommandCache);
+        ExecutionResult exec = GitExecutable.Execute(args, outputEncoding: encoding, stripAnsiEscapeCodes: stripAnsiEscapeCodes, throwOnErrorExit: false, cache: GitCommandCache);
         if (!exec.ExitedSuccessfully)
         {
             // blob did not exist, this could be a submodule that is removed
@@ -3550,16 +3546,16 @@ public sealed partial class GitModule : IGitModule
         return exec.StandardOutput;
     }
 
-    public ObjectId? GetFileBlobHash(string fileName, ObjectId objectId)
+    public ObjectId GetFileBlobHash(string fileName, ObjectId objectId)
     {
-        IObjectGitItem[] items = GetTree(objectId, full: true, fileName).ToArray();
+        IObjectGitItem[] items = [.. GetTree(objectId, full: true, fileName)];
         return items.Length == 1 && items[0].ObjectType is GitObjectType.Blob
             ? items[0].ObjectId
-            : null;
+            : default;
     }
 
     public Task<MemoryStream?> GetFileStreamAsync(string blob, CancellationToken cancellationToken)
-        => GitFileStreamGetter.GetFileStreamAsync(blob, _gitCommandRunner, cancellationToken);
+        => GitFileStreamGetter.GetFileStreamAsync(blob, GitCommandRunner, cancellationToken);
 
     public IEnumerable<string?> GetPreviousCommitMessages(int count, string revision, string authorPattern)
     {
@@ -3572,7 +3568,7 @@ public sealed partial class GitModule : IGitModule
             { !string.IsNullOrEmpty(authorPattern), string.Concat("--author=\"", authorPattern, "\"") }
         };
 
-        ExecutionResult result = _gitExecutable.Execute(args, outputEncoding: LosslessEncoding, throwOnErrorExit: false);
+        ExecutionResult result = GitExecutable.Execute(args, outputEncoding: LosslessEncoding, throwOnErrorExit: false);
         if (!result.ExitedSuccessfully)
         {
             return new[] { string.Empty };
@@ -3589,7 +3585,7 @@ public sealed partial class GitModule : IGitModule
         // Use a global list of custom tools, always use Windows tools (native paths for the app).
         // Note that --gui has no effect here
         GitArgumentBuilder args = new(isDiff ? "difftool" : "mergetool") { "--tool-help" };
-        ExecutionResult result = _gitWindowsExecutable.Execute(args, cancellationToken: cancellationToken);
+        ExecutionResult result = _executor.GitWindowsExecutable.Execute(args, cancellationToken: cancellationToken);
         return result.StandardOutput;
     }
 
@@ -3601,7 +3597,7 @@ public sealed partial class GitModule : IGitModule
     public void OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null)
     {
         // Use Windows Git if custom tool is selected as the list is native to the application.
-        (string.IsNullOrWhiteSpace(customTool) ? _gitCommandRunner : _gitWindowsCommandRunner)
+        (string.IsNullOrWhiteSpace(customTool) ? GitCommandRunner : _executor.GitWindowsCommandRunner)
             .RunDetached(new GitArgumentBuilder("difftool")
         {
             { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
@@ -3627,7 +3623,7 @@ public sealed partial class GitModule : IGitModule
         }
 
         // Use Windows Git if custom tool is selected as the list is native to the application.
-        (string.IsNullOrWhiteSpace(customTool) ? _gitCommandRunner : _gitWindowsCommandRunner)
+        (string.IsNullOrWhiteSpace(customTool) ? GitCommandRunner : _executor.GitWindowsCommandRunner)
             .RunDetached(new GitArgumentBuilder("difftool")
         {
             { string.IsNullOrWhiteSpace(customTool), "--gui", $"--tool={customTool}" },
@@ -3639,14 +3635,14 @@ public sealed partial class GitModule : IGitModule
         });
     }
 
-    public ObjectId? RevParse(string? revisionExpression)
+    public ObjectId RevParse(string? revisionExpression)
     {
         if (string.IsNullOrWhiteSpace(revisionExpression) || revisionExpression.Length > 260)
         {
-            return null;
+            return default;
         }
 
-        if (ObjectId.TryParse(revisionExpression, out ObjectId? objectId))
+        if (ObjectId.TryParse(revisionExpression, out ObjectId objectId))
         {
             return objectId;
         }
@@ -3657,14 +3653,14 @@ public sealed partial class GitModule : IGitModule
             "--verify",
             $"{revisionExpression}~0".Quote()
         };
-        ExecutionResult result = _gitExecutable.Execute(args, throwOnErrorExit: false);
+        ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
 
         return result.ExitedSuccessfully && ObjectId.TryParse(result.StandardOutput, offset: 0, out objectId)
             ? objectId
-            : null;
+            : default;
     }
 
-    public ObjectId? GetMergeBase(ObjectId a, ObjectId b)
+    public ObjectId GetMergeBase(ObjectId a, ObjectId b)
     {
         if (a == b)
         {
@@ -3676,18 +3672,12 @@ public sealed partial class GitModule : IGitModule
             a,
             b
         };
-        ExecutionResult result = _gitExecutable.Execute(args, cache: GitCommandCache, throwOnErrorExit: false);
+        ExecutionResult result = GitExecutable.Execute(args, cache: GitCommandCache, throwOnErrorExit: false);
         string output = result.StandardOutput;
 
-        return ObjectId.TryParse(output, offset: 0, out ObjectId? objectId)
+        return ObjectId.TryParse(output, offset: 0, out ObjectId objectId)
             ? objectId
-            : null;
-    }
-
-    public SubmoduleStatus CheckSubmoduleStatus(ObjectId? commit, ObjectId? oldCommit, CommitData? data, CommitData? oldData, bool loadData)
-    {
-        // TODO remove from IGitModule
-        throw new NotImplementedException("CheckSubmoduleStatus is not implemented in GitModule. Use SubmoduleHelper instead.");
+            : default;
     }
 
     public bool CheckBranchFormat(string branchName)
@@ -3704,7 +3694,7 @@ public sealed partial class GitModule : IGitModule
             "--branch",
             branchName.QuoteNE()
         };
-        return _gitExecutable.Execute(args, throwOnErrorExit: false).ExitedSuccessfully;
+        return GitExecutable.Execute(args, throwOnErrorExit: false).ExitedSuccessfully;
     }
 
     public string FormatBranchName(string branchName)
@@ -3713,7 +3703,7 @@ public sealed partial class GitModule : IGitModule
 
         string fullBranchName = GitRefName.GetFullBranchName(branchName);
 
-        if (RevParse(fullBranchName) is null)
+        if (RevParse(fullBranchName).IsZero)
         {
             return branchName;
         }
@@ -3728,13 +3718,13 @@ public sealed partial class GitModule : IGitModule
             return true;
         }
 
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
             return Process.GetProcessesByName("git").Length > 0;
         }
 
         // Get processes by "ps" command.
-        string cmd = Path.Combine(AppSettings.LinuxToolsDir, "ps");
+        string cmd = Path.Join(AppSettings.LinuxToolsDir, "ps");
         string[] lines = new Executable(cmd).GetOutput("x").Split(Delimiters.LineFeed);
 
         if (lines.Length <= 2)
@@ -3773,7 +3763,7 @@ public sealed partial class GitModule : IGitModule
     /// </example>
     /// <param name="s">The string to unescape.</param>
     /// <returns>The unescaped string, or <paramref name="s"/> if no escaped values were present, or <c>""</c> if <paramref name="s"/> is <c>null</c>.</returns>
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public static string? UnescapeOctalCodePoints(string? s)
     {
         if (s is null)
@@ -3781,17 +3771,16 @@ public sealed partial class GitModule : IGitModule
             return null;
         }
 
-        return EscapedOctalCodePointRegex().Replace(
+        return EscapedOctalCodePointRegex.Replace(
             s,
             match =>
             {
                 try
                 {
                     return SystemEncoding.GetString(
-                        match.Groups["octal"]
+                        [.. match.Groups["octal"]
                             .Captures.Cast<Capture>()
-                            .Select(c => Convert.ToByte(c.Value, 8))
-                            .ToArray());
+                            .Select(c => Convert.ToByte(c.Value, 8))]);
                 }
                 catch (OverflowException)
                 {
@@ -3802,14 +3791,14 @@ public sealed partial class GitModule : IGitModule
             });
     }
 
-    [return: NotNullIfNotNull("fileName")]
+    [return: NotNullIfNotNull(nameof(fileName))]
     public static string? ReEncodeFileNameFromLossless(string? fileName)
     {
         fileName = ReEncodeStringFromLossless(fileName, SystemEncoding);
         return UnescapeOctalCodePoints(fileName);
     }
 
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public static string? ReEncodeString(string? s, Encoding fromEncoding, Encoding toEncoding)
     {
         if (s is null || fromEncoding.WebName == toEncoding.WebName)
@@ -3824,7 +3813,7 @@ public sealed partial class GitModule : IGitModule
     /// <summary>
     /// Re-encodes string from Commands.LosslessEncoding to toEncoding.
     /// </summary>
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public static string? ReEncodeStringFromLossless(string? s, Encoding? toEncoding)
     {
         if (toEncoding is null)
@@ -3835,13 +3824,14 @@ public sealed partial class GitModule : IGitModule
         return ReEncodeString(s, LosslessEncoding, toEncoding);
     }
 
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public string? ReEncodeStringFromLossless(string? s)
     {
         return ReEncodeStringFromLossless(s, LogOutputEncoding);
     }
 
-    public string? ReEncodeCommitMessage(string s)
+    [return: NotNullIfNotNull(nameof(s))]
+    public string? ReEncodeCommitMessage(string? s)
     {
         return ReEncodeStringFromLossless(s, LogOutputEncoding)?.Trim();
     }
@@ -3851,7 +3841,7 @@ public sealed partial class GitModule : IGitModule
     /// diff part is raw data in file's original encoding.
     /// s should be encoded in LosslessEncoding.
     /// </summary>
-    [return: NotNullIfNotNull("s")]
+    [return: NotNullIfNotNull(nameof(s))]
     public string? ReEncodeShowString(string? s)
     {
         if (string.IsNullOrEmpty(s))
@@ -3929,11 +3919,11 @@ public sealed partial class GitModule : IGitModule
             mergeCommitObjectId
         };
 
-        string fileList = _gitExecutable.GetOutput(args);
+        string fileList = GitExecutable.GetOutput(args);
 
         if (string.IsNullOrWhiteSpace(fileList))
         {
-            return Array.Empty<GitItemStatus>();
+            return [];
         }
 
         LazyStringSplit files = fileList.LazySplit('\0', StringSplitOptions.RemoveEmptyEntries);
@@ -3950,7 +3940,7 @@ public sealed partial class GitModule : IGitModule
     }
 
     public bool GetCombinedDiffContent(
-        ObjectId revisionOfMergeCommit,
+        ObjectId objectIdOfMergeCommit,
         string filePath,
         string extraArgs,
         Encoding encoding,
@@ -3966,12 +3956,12 @@ public sealed partial class GitModule : IGitModule
             { AppSettings.UseHistogramDiffAlgorithm, "--histogram" },
             { useGitColoring, "--color=always" },
             extraArgs,
-            revisionOfMergeCommit,
+            objectIdOfMergeCommit,
             "--",
             filePath.ToPosixPath().Quote()
         };
 
-        ExecutionResult result = _gitExecutable.Execute(
+        ExecutionResult result = GitExecutable.Execute(
             args,
             cache: GitCommandCache,
             outputEncoding: LosslessEncoding,
@@ -3991,7 +3981,7 @@ public sealed partial class GitModule : IGitModule
             return true;
         }
 
-        List<Patch> patches = PatchProcessor.CreatePatchesFromString(result.StandardOutput, new Lazy<Encoding>(() => encoding)).ToList();
+        List<Patch> patches = [.. PatchProcessor.CreatePatchesFromString(result.StandardOutput, new Lazy<Encoding>(() => encoding))];
 
         Patch? patch = GetPatch(patches, filePath, filePath);
         if (patch is null)
@@ -4011,7 +4001,7 @@ public sealed partial class GitModule : IGitModule
             "--cached",
             filename.ToPosixPath().Quote()
         };
-        return _gitExecutable.Execute(args, throwOnErrorExit: false).ExitedSuccessfully;
+        return GitExecutable.Execute(args, throwOnErrorExit: false).ExitedSuccessfully;
     }
 
     /// <summary>
@@ -4029,7 +4019,7 @@ public sealed partial class GitModule : IGitModule
             commitId
         };
 
-        ExecutionResult exec = _gitExecutable.Execute(args, throwOnErrorExit: false);
+        ExecutionResult exec = GitExecutable.Execute(args, throwOnErrorExit: false, cancellationToken: cancellationToken);
         return exec.ExitedSuccessfully
             ? exec.StandardOutput.TrimEnd()
             : null;
@@ -4055,12 +4045,12 @@ public sealed partial class GitModule : IGitModule
             GetDateParameter("--until", until)
         };
 
-        ExecutionResult result = _gitExecutable.Execute(args);
+        ExecutionResult result = GitExecutable.Execute(args);
         LazyStringSplit lines = result.StandardOutput.LazySplit('\n');
 
         foreach (string line in lines)
         {
-            Match match = ShortlogRegex().Match(line);
+            Match match = ShortlogRegex.Match(line);
 
             if (!match.Success)
             {
@@ -4085,7 +4075,7 @@ public sealed partial class GitModule : IGitModule
 
         return (totalCommits, countByName);
 
-        string GetDateParameter(string param, DateTime? date)
+        static string GetDateParameter(string param, DateTime? date)
         {
             return date is not null
                 ? $"{param}=\"{date:yyyy-MM-dd hh:mm:ss}\""
@@ -4115,6 +4105,8 @@ public sealed partial class GitModule : IGitModule
             _gitModule = gitModule;
         }
 
+        public GitExecutor.TestAccessor Executor => ((GitExecutor)_gitModule._executor).GetTestAccessor();
+
         public DistributedSettings? EffectiveSettings => _gitModule._effectiveSettings;
 
         public FrozenDictionary<string, Color>? RemoteColors => _gitModule._remoteColors;
@@ -4124,7 +4116,7 @@ public sealed partial class GitModule : IGitModule
         public List<GitItemStatus> GetDiffChangedFilesFromString(string statusString, StagedStatus staged)
             => _gitModule.GetDiffChangedFilesFromString(statusString, staged);
 
-        public StagedStatus GetStagedStatus(ObjectId? firstId, ObjectId? secondId, ObjectId? parentToSecond)
+        public StagedStatus GetStagedStatus(ObjectId firstId, ObjectId secondId, ObjectId parentToSecond)
             => GitModule.GetStagedStatus(firstId, secondId, parentToSecond);
     }
 }

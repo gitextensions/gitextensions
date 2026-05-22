@@ -58,7 +58,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
 
     public void TriggerMenuChanged()
     {
-        MenuChanged?.Invoke(this, null);
+        MenuChanged?.Invoke(this, null!);
 
         foreach (MenuCommand menuCommand in GetMenuCommandsWithoutSeparators())
         {
@@ -179,7 +179,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
                 Name = "QuickSearch",
                 Text = "&Quick search",
                 ToolTipText = _quickSearchQuickHelp.Text,
-                ExecuteAction = () => MessageBox.Show(_quickSearchQuickHelp.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
+                ExecuteAction = () => MessageBoxes.Show(_quickSearchQuickHelp.Text, "Information", MessageBoxButtons.OK, MessageBoxIcon.Information)
             },
             new MenuCommand
             {
@@ -331,6 +331,13 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
                 ExecuteAction = () => _revisionGrid.ToggleShowGitNotes(),
                 IsCheckedFunc = () => AppSettings.ShowGitNotes
             },
+            new MenuCommand
+            {
+                Name = "ShowSessionCheckpoints",
+                Text = "Show session checkpoints",
+                ExecuteAction = () => _revisionGrid.ToggleShowSessionRefs(),
+                IsCheckedFunc = () => AppSettings.ShowSessionRefs
+            },
 
             MenuCommand.CreateSeparator(),
 
@@ -408,7 +415,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
             {
                 Name = "showRelativeDateToolStripMenuItem",
                 Text = "Show relati&ve date",
-                ExecuteAction = () => _revisionGrid.ToggleShowRelativeDate(EventArgs.Empty),
+                ExecuteAction = () => _revisionGrid.ToggleShowRelativeDate(),
                 IsCheckedFunc = () => AppSettings.RelativeDate
             },
 
@@ -421,6 +428,13 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
                 Text = "Show revision &graph column",
                 ExecuteAction = () => _revisionGrid.ToggleRevisionGraphColumn(),
                 IsCheckedFunc = () => AppSettings.ShowRevisionGridGraphColumn
+            },
+            new MenuCommand
+            {
+                Name = "showGitNotesColumnToolStripMenuItem",
+                Text = "Show Git &notes column",
+                ExecuteAction = () => _revisionGrid.ToggleShowGitNotesColumn(),
+                IsCheckedFunc = () => AppSettings.ShowGitNotesColumn.Value
             },
             new MenuCommand
             {
@@ -475,7 +489,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
             {
                 Name = "SaveAsDefault",
                 Text = "Save current view settings as default",
-                ExecuteAction = SaveAsDefaultViewSettings
+                ExecuteAction = SaveCurrentViewSettingsAsDefault
             }
         };
     }
@@ -509,9 +523,9 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
             return;
         }
 
-        ObjectId commitId = formGoToCommit.ValidateAndGetSelectedRevision();
+        ObjectId commitId = formGoToCommit.ValidateAndGetSelectedObjectId();
 
-        if (commitId is not null)
+        if (!commitId.IsZero)
         {
             if (!_revisionGrid.SetSelectedRevision(commitId))
             {
@@ -524,9 +538,12 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
         }
     }
 
-    private void SaveAsDefaultViewSettings()
+    /// <summary>
+    ///  Saves all <see cref="IRuntimeSetting"/> values as the default for future sessions.
+    /// </summary>
+    public static void SaveCurrentViewSettingsAsDefault()
     {
-        foreach (FieldInfo staticAppSettingField in typeof(AppSettings).GetFields(BindingFlags.Public | BindingFlags.NonPublic | System.Reflection.BindingFlags.Static))
+        foreach (FieldInfo staticAppSettingField in typeof(AppSettings).GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Static))
         {
             IRuntimeSetting? runtimeSetting = staticAppSettingField.GetValue(null) as IRuntimeSetting;
             runtimeSetting?.Save();

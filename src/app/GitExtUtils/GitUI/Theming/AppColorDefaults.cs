@@ -11,6 +11,7 @@ public static class AppColorDefaults
             { AppColor.EditorBackground, SystemColors.Window },
             { AppColor.LineNumberBackground, SystemColors.Window },
             { AppColor.AuthoredHighlight, Color.FromArgb(0xea, 0xf1, 0xff) },
+            { AppColor.Selection, Color.FromArgb(0xc3, 0xc3, 0xff) },
             { AppColor.HighlightAllOccurences, Color.FromArgb(0xe8, 0xe8, 0xff) },
             { AppColor.InactiveSelectionHighlight, Color.FromArgb(0xe6, 0xe6, 0xe6) },
             { AppColor.GraphBranch1, Color.FromArgb(0xf0, 0x64, 0xa0) },
@@ -87,7 +88,7 @@ public static class AppColorDefaults
 
         foreach (string variation in variations)
         {
-            if (!_variations.TryGetValue(variation, out Dictionary<AppColor, Color> colorOverrides))
+            if (!_variations.TryGetValue(variation, out Dictionary<AppColor, Color>? colorOverrides))
             {
                 continue;
             }

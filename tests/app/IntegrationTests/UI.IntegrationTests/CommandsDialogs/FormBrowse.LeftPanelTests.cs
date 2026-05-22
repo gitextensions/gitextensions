@@ -1,5 +1,4 @@
 ﻿using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitUI;
 using GitUI.CommandsDialogs;
@@ -18,9 +17,9 @@ public class FormBrowse_LeftPanelTests
     private bool _showAvailableDiffTools;
 
     // Created once for each test
-    private ReferenceRepository _remoteReferenceRepository;
-    private ReferenceRepository _referenceRepository;
-    private GitUICommands _commands;
+    private ReferenceRepository _remoteReferenceRepository = null!;
+    private ReferenceRepository _referenceRepository = null!;
+    private GitUICommands _commands = null!;
 
     [OneTimeSetUp]
     public void SetUpFixture()
@@ -59,10 +58,10 @@ public class FormBrowse_LeftPanelTests
         _commands = new GitUICommands(GlobalServiceContainer.CreateDefaultMockServiceContainer(), _referenceRepository.Module);
 
         _referenceRepository.CreateCommit("Commit1", "Commit1");
-        _referenceRepository.CreateBranch("Branch1", _referenceRepository.CommitHash);
-        _referenceRepository.CreateTag("Branch1", _referenceRepository.CommitHash);
+        _referenceRepository.CreateBranch("Branch1", _referenceRepository.CommitHash!);
+        _referenceRepository.CreateTag("Branch1", _referenceRepository.CommitHash!);
         _referenceRepository.CreateCommit("Commit2", "Commit2");
-        _referenceRepository.CreateBranch("Branch2", _referenceRepository.CommitHash);
+        _referenceRepository.CreateBranch("Branch2", _referenceRepository.CommitHash!);
 
         _referenceRepository.CreateCommit("head commit");
     }
@@ -119,15 +118,15 @@ public class FormBrowse_LeftPanelTests
 
                 ContextMenuStrip contextMenu = ta.ContextMenu;
 
-                ta.SelectNode<LocalBranchNode>(new[] { TranslatedStrings.Branches, branchName });
+                ta.SelectNode<LocalBranchNode>([TranslatedStrings.Branches, branchName]);
                 ta.OpenContextMenu();
                 testDriver(contextMenu);
 
-                ta.SelectNode<RemoteBranchNode>(new[] { TranslatedStrings.Remotes, RemoteName, branchName });
+                ta.SelectNode<RemoteBranchNode>([TranslatedStrings.Remotes, RemoteName, branchName]);
                 ta.OpenContextMenu();
                 testDriver(contextMenu);
 
-                ta.SelectNode<TagNode>(new[] { TranslatedStrings.Tags, "Branch1" });
+                ta.SelectNode<TagNode>([TranslatedStrings.Tags, "Branch1"]);
                 ta.OpenContextMenu();
                 testDriver(contextMenu);
             });

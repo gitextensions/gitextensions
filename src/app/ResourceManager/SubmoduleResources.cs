@@ -1,8 +1,9 @@
-using System.Text;
+﻿using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitUIPluginInterfaces;
 using ResourceManager.CommitDataRenders;
 
 namespace ResourceManager;
@@ -10,8 +11,8 @@ namespace ResourceManager;
 public static partial class SubmoduleResources
 {
     private static readonly ICommitDataHeaderRenderer PlainCommitDataHeaderRenderer = new CommitDataHeaderRenderer(new MonospacedHeaderLabelFormatter(), new DateFormatter(), new MonospacedHeaderRenderStyleProvider(), null);
-    [GeneratedRegex(@"^(\s*\S+)\s+", RegexOptions.Multiline)]
-    private static partial Regex ReplaceTrailingSpacesWithTabRegex();
+    [GeneratedRegex(@"^(?<prefix>\s*\S+)\s+", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
+    private static partial Regex ReplaceTrailingSpacesWithTabRegex { get; }
 
     public static string GetSubmoduleText(IGitModule superproject, string name, string hash)
     {
@@ -52,44 +53,40 @@ public static partial class SubmoduleResources
         StringBuilder sb = new();
         sb.AppendLine($"Submodule {status.Name}");
 
-        // TEMP, will be moved in the follow up refactor
-        ICommitDataManager commitDataManager = new CommitDataManager(() => gitModule);
-
-        if (status.OldCommit != status.Commit && status.OldCommit is not null)
+        if (status.OldCommit != status.Commit && !status.OldCommit.IsZero)
         {
             sb.AppendLine();
             sb.Append("From:\t");
-            sb.AppendLine(status.OldCommit?.ToString() ?? "null");
+            sb.AppendLine(status.OldCommit.ToString());
 
             // Submodule directory must exist to run commands, unknown otherwise
-            if (gitModule.IsValidGitWorkingDir()
-                && commitDataManager.GetCommitData(status.OldCommit.ToString()) is CommitData oldCommitData)
+            if (status.OldCommitData is not null)
             {
-                sb.AppendLine("\t\t\t" + LocalizationHelpers.GetRelativeDateString(DateTime.UtcNow, oldCommitData.CommitDate.UtcDateTime) + " (" +
-                              LocalizationHelpers.GetFullDateString(oldCommitData.CommitDate) + ")");
-                foreach (string line in oldCommitData.Body.Replace("\r\n", "\n").Split(Delimiters.LineFeed, StringSplitOptions.None))
+                sb.AppendLine("\t\t\t" + LocalizationHelpers.GetRelativeDateString(DateTime.UtcNow, status.OldCommitData.CommitDate.UtcDateTime) + " (" +
+                    LocalizationHelpers.GetFullDateString(status.OldCommitData.CommitDate) + ")");
+                string[] lines = status.OldCommitData.Body.Trim(Delimiters.LineFeedAndCarriageReturn).Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.None);
+                foreach (string line in lines)
                 {
                     sb.AppendLine("\t\t" + line);
                 }
             }
         }
 
-        if (status.Commit is not null)
+        if (!status.Commit.IsZero)
         {
             sb.AppendLine();
             string dirty = !status.IsDirty ? "" : " (dirty)";
 
             // Note: add spaces to get "To" aligned the same as From
             sb.Append(status.OldCommit != status.Commit ? "To:  \t" : "Commit:\t");
-            sb.AppendLine((status.Commit?.ToString() ?? "null") + dirty);
+            sb.AppendLine(status.Commit.ToString() + dirty);
 
-            // Submodule directory must exist to run commands, unknown otherwise
-            if (gitModule.IsValidGitWorkingDir()
-                && commitDataManager.GetCommitData(status.Commit.ToString()) is CommitData commitData)
+            if (status.CommitData is not null)
             {
-                sb.AppendLine("\t\t\t" + LocalizationHelpers.GetRelativeDateString(DateTime.UtcNow, commitData.CommitDate.UtcDateTime) + " (" +
-                              LocalizationHelpers.GetFullDateString(commitData.CommitDate) + ")");
-                foreach (string line in commitData.Body.Replace("\r\n", "\n").LazySplit(Delimiters.LineFeed))
+                sb.AppendLine("\t\t\t" + LocalizationHelpers.GetRelativeDateString(DateTime.UtcNow, status.CommitData.CommitDate.UtcDateTime) + " (" +
+                              LocalizationHelpers.GetFullDateString(status.CommitData.CommitDate) + ")");
+                string[] lines = status.CommitData.Body.Trim(Delimiters.LineFeedAndCarriageReturn).Split(Delimiters.LineFeedAndCarriageReturn, StringSplitOptions.None);
+                foreach (string line in lines)
                 {
                     sb.AppendLine("\t\t" + line);
                 }
@@ -100,11 +97,17 @@ public static partial class SubmoduleResources
         sb.Append("Type: ");
         switch (status.Status)
         {
+            case SubmoduleStatus.Modified:
+                sb.Append("Modified");
+                break;
             case SubmoduleStatus.NewSubmodule:
                 sb.Append("New submodule");
                 break;
             case SubmoduleStatus.RemovedSubmodule:
                 sb.AppendLine("Removed submodule");
+                break;
+            case SubmoduleStatus.SameCommit:
+                sb.Append("Same commit");
                 break;
             case SubmoduleStatus.FastForward:
                 sb.Append("Fast Forward");
@@ -117,9 +120,6 @@ public static partial class SubmoduleResources
                 break;
             case SubmoduleStatus.OlderTime:
                 sb.Append("Older commit time");
-                break;
-            case SubmoduleStatus.SameTime:
-                sb.Append("Same commit");
                 break;
             case SubmoduleStatus.Unknown:
             default:
@@ -137,7 +137,7 @@ public static partial class SubmoduleResources
             sb.AppendLine($"Commits: {addedRemoved}");
         }
 
-        if (status.Commit is not null && status.OldCommit is not null && gitModule.IsValidGitWorkingDir())
+        if (!status.Commit.IsZero && !status.OldCommit.IsZero && gitModule.IsValidGitWorkingDir())
         {
             const int maxLimitedLines = 5;
             if (status.IsDirty)
@@ -199,6 +199,6 @@ public static partial class SubmoduleResources
         }
 
         static string ReplaceTrailingSpacesWithTab(string input)
-            => ReplaceTrailingSpacesWithTabRegex().Replace(input, "$1\t");
+            => ReplaceTrailingSpacesWithTabRegex.Replace(input, "${prefix}\t");
     }
 }

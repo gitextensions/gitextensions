@@ -11,7 +11,7 @@ namespace GitUI.Editor.Diff;
 public partial class AnsiEscapeUtilities
 {
     [GeneratedRegex(@"\u001b\[((?<escNo>\d+)\s*[:;]?\s*)*m", RegexOptions.ExplicitCapture)]
-    private static partial Regex EscapeRegex();
+    private static partial Regex EscapeRegex { get; }
     private static readonly int _defaultForeColorId = Application.IsDarkModeEnabled ? _whiteId : _blackId;
 
     // Color code definitions
@@ -77,9 +77,9 @@ public partial class AnsiEscapeUtilities
                                 },
                                 prevMarker: null,
                                 sb,
-                                out TextMarker tm))
+                                out TextMarker? tm))
                         {
-                            textMarkers.Add(tm);
+                            textMarkers.Add(tm!);
                         }
                     }
 
@@ -115,13 +115,13 @@ public partial class AnsiEscapeUtilities
             ForeColor = SystemColors.WindowText,
         };
 
-        for (Match match = EscapeRegex().Match(text); match.Success; match = match.NextMatch())
+        for (Match match = EscapeRegex.Match(text); match.Success; match = match.NextMatch())
         {
             sb.Append(text[prevLineOffset..match.Index]);
             prevLineOffset = match.Index + match.Length;
 
             // An escape sequence can include several attributes (empty/unparsable is break).
-            List<int> escapeCodes = match.Groups["escNo"].Captures.Select(i => int.TryParse(i.ToString(), out int attribute) ? attribute : 0).ToList();
+            List<int> escapeCodes = [.. match.Groups["escNo"].Captures.Select(i => int.TryParse(i.ToString(), out int attribute) ? attribute : 0)];
 
             if (TryGetColorsFromEscapeSequence(escapeCodes, out Color? backColor, out Color? foreColor, ref currentColorId, themeColors))
             {
@@ -181,9 +181,9 @@ public partial class AnsiEscapeUtilities
 
             currentHighlight.Length = len;
             TextMarker? prevMarker = textMarkers.Count == 0 ? null : textMarkers[^1];
-            if (TryGetTextMarker(currentHighlight, prevMarker, sb, out TextMarker tm))
+            if (TryGetTextMarker(currentHighlight, prevMarker, sb, out TextMarker? tm))
             {
-                textMarkers.Add(tm);
+                textMarkers.Add(tm!);
             }
 
             currentHighlight.Length = -1;
@@ -402,9 +402,9 @@ public partial class AnsiEscapeUtilities
             backColor = Get8bitColor(currentBack, fore: false, bold, dim);
         }
 
-        if (backColor is not null && foreColor is null)
+        if (backColor is Color back && foreColor is null)
         {
-            foreColor = ColorHelper.GetForeColorForBackColor((Color)backColor);
+            foreColor = back.GetTextColor();
         }
 
         // Set result if there are changes
@@ -508,12 +508,12 @@ public partial class AnsiEscapeUtilities
 
         if (extraBold)
         {
-            color = color.MakeBackgroundDarkerBy(-0.1);
+            color = color.MakeDarkerBy(-0.1);
         }
 
         if (dim)
         {
-            color = ColorHelper.DimColor(color);
+            color = color.DimColor();
         }
 
         return color;

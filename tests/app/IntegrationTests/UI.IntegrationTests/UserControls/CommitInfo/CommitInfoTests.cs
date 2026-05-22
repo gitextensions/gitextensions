@@ -1,9 +1,8 @@
 ﻿using System.ComponentModel.Design;
-using System.Reflection;
 using CommonTestUtils;
-using FluentAssertions;
 using GitCommands;
 using GitCommands.Git;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
@@ -17,12 +16,12 @@ namespace GitExtensions.UITests.UserControls.CommitInfo;
 public class CommitInfoTests
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // Created once for each test
-    private MockExecutable _gitExecutable;
-    private GitUICommands _commands;
-    private MockLinkFactory _mockLinkFactory;
+    private MockExecutable _gitExecutable = null!;
+    private GitUICommands _commands = null!;
+    private MockLinkFactory _mockLinkFactory = null!;
 
     [SetUp]
     public void SetUp()
@@ -38,19 +37,18 @@ public class CommitInfoTests
 
         // mock git executable
         _gitExecutable = new MockExecutable();
-        typeof(GitModule).GetField("_gitExecutable", BindingFlags.Instance | BindingFlags.NonPublic)
-            .SetValue(_commands.Module, _gitExecutable);
-        GitCommandRunner cmdRunner = new(_gitExecutable, () => GitModule.SystemEncoding);
-        typeof(GitModule).GetField("_gitCommandRunner", BindingFlags.Instance | BindingFlags.NonPublic)
-            .SetValue(_commands.Module, cmdRunner);
+        GitExecutor.TestAccessor executorAccessor = _referenceRepository.Module.GetTestAccessor().Executor;
+        executorAccessor.GitExecutable = _gitExecutable;
+        executorAccessor.GitWindowsExecutable = _gitExecutable;
+        executorAccessor.GitCommandRunner = new GitCommandRunner(_gitExecutable, () => GitModule.SystemEncoding);
     }
 
     [TearDown]
     public void TearDown()
     {
         _gitExecutable.Verify();
-        _gitExecutable = null;
-        _commands = null;
+        _gitExecutable = null!;
+        _commands = null!;
         _referenceRepository.Dispose();
     }
 
@@ -235,7 +233,7 @@ public class CommitInfoTests
 
         RunCommitInfoTest(async (commitInfo) =>
         {
-            object commandClickedSender = null;
+            object? commandClickedSender = null;
             commitInfo.CommandClicked += (s, e) => commandClickedSender = s;
             commitInfo.SetRevisionWithChildren(revision, children: null);
 

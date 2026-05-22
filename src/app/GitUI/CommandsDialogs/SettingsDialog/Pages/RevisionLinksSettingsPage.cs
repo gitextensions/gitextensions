@@ -151,7 +151,7 @@ public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
             return default;
         }
 
-        string[] remoteNames = new[] { "upstream", "fork", "origin" };
+        string[] remoteNames = ["upstream", "fork", "origin"];
         foreach (string remoteName in remoteNames)
         {
             Remote remoteFound = remotes.FirstOrDefault(r => r.Name == remoteName);
@@ -170,7 +170,7 @@ public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
         Validates.NotNull(_externalLinksManager);
 
         IReadOnlyList<Remote> remotes = ThreadHelper.JoinableTaskFactory.Run(Module.GetRemotesAsync).ToList();
-        Remote selectedRemote = FindRemoteByPreference(remotes.Where(r => externalLinkDefinitionExtractor.IsValidRemoteUrl(r.FetchUrl)).ToList());
+        Remote selectedRemote = FindRemoteByPreference([.. remotes.Where(r => externalLinkDefinitionExtractor.IsValidRemoteUrl(r.FetchUrl))]);
 
         IList<ExternalLinkDefinition> externalLinkDefinitions = externalLinkDefinitionExtractor.GetDefinitions(selectedRemote.FetchUrl);
         _externalLinksManager.AddRange(externalLinkDefinitions);
@@ -216,10 +216,7 @@ public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
 
     private void EnabledChx_CheckedChanged(object sender, EventArgs e)
     {
-        if (SelectedLinkDefinition is not null)
-        {
-            SelectedLinkDefinition.Enabled = EnabledChx.Checked;
-        }
+        SelectedLinkDefinition?.Enabled = EnabledChx.Checked;
     }
 
     private void MessageChx_CheckedChanged(object sender, EventArgs e)
@@ -239,18 +236,12 @@ public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
 
     private void _NO_TRANSLATE_SearchPatternEdit_Leave(object sender, EventArgs e)
     {
-        if (SelectedLinkDefinition is not null)
-        {
-            SelectedLinkDefinition.SearchPattern = _NO_TRANSLATE_SearchPatternEdit.Text.Trim();
-        }
+        SelectedLinkDefinition?.SearchPattern = _NO_TRANSLATE_SearchPatternEdit.Text.Trim();
     }
 
     private void _NO_TRANSLATE_NestedPatternEdit_Leave(object sender, EventArgs e)
     {
-        if (SelectedLinkDefinition is not null)
-        {
-            SelectedLinkDefinition.NestedSearchPattern = _NO_TRANSLATE_NestedPatternEdit.Text.Trim();
-        }
+        SelectedLinkDefinition?.NestedSearchPattern = _NO_TRANSLATE_NestedPatternEdit.Text.Trim();
     }
 
     private void LocalBranchChx_CheckedChanged(object sender, EventArgs e)
@@ -285,10 +276,7 @@ public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
 
     private void _NO_TRANSLATE_RemotePatern_Leave(object sender, EventArgs e)
     {
-        if (SelectedLinkDefinition is not null)
-        {
-            SelectedLinkDefinition.RemoteSearchPattern = _NO_TRANSLATE_RemotePatern.Text.Trim();
-        }
+        SelectedLinkDefinition?.RemoteSearchPattern = _NO_TRANSLATE_RemotePatern.Text.Trim();
     }
 
     private void chxURL_CheckedChanged(object sender, EventArgs e)
@@ -323,17 +311,11 @@ public sealed partial class RevisionLinksSettingsPage : DistributedSettingsPage
 
     private void _NO_TRANSLATE_UseRemotes_Leave(object sender, EventArgs e)
     {
-        if (SelectedLinkDefinition is not null)
-        {
-            SelectedLinkDefinition.UseRemotesPattern = _NO_TRANSLATE_UseRemotes.Text.Trim();
-        }
+        SelectedLinkDefinition?.UseRemotesPattern = _NO_TRANSLATE_UseRemotes.Text.Trim();
     }
 
     private void chkOnlyFirstRemote_CheckedChanged(object sender, EventArgs e)
     {
-        if (SelectedLinkDefinition is not null)
-        {
-            SelectedLinkDefinition.UseOnlyFirstRemote = chkOnlyFirstRemote.Checked;
-        }
+        SelectedLinkDefinition?.UseOnlyFirstRemote = chkOnlyFirstRemote.Checked;
     }
 }

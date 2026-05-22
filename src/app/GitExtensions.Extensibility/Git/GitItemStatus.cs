@@ -1,6 +1,4 @@
-﻿#nullable enable
-
-using System.Text;
+﻿using System.Text;
 using Microsoft;
 using Microsoft.VisualStudio.Threading;
 
@@ -97,7 +95,7 @@ public sealed class GitItemStatus
     public string? OldName { get; set; }
     public RelativePath Path { get; private set; }
     public string? ErrorMessage { get; set; }
-    public ObjectId? TreeGuid { get; set; }
+    public ObjectId TreeId { get; set; }
     public string? RenameCopyPercentage { get; set; }
 
     public StagedStatus Staged { get; set; }
@@ -291,7 +289,7 @@ public sealed class GitItemStatus
             Name = IsRenamed ? (OldName ?? string.Empty) : Name,
             OldName = IsRenamed ? Name : OldName,
             ErrorMessage = ErrorMessage,
-            TreeGuid = TreeGuid,
+            TreeId = TreeId,
             RenameCopyPercentage = RenameCopyPercentage,
             Staged = Staged,
             DiffStatus = DiffStatus,

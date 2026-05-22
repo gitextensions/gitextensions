@@ -69,7 +69,7 @@ public sealed class AppTitleGenerator : IAppTitleGenerator
             if (string.IsNullOrWhiteSpace(filePart))
             {
                 // No file, just quote the pathFilter
-                filePart = path.StartsWith(@"""") && path.EndsWith(@"""")
+                filePart = path.StartsWith('"') && path.EndsWith('"')
                     ? path
                     : $"{path.Quote()}";
             }
@@ -81,7 +81,7 @@ public sealed class AppTitleGenerator : IAppTitleGenerator
     public static void Initialise(string sha, string buildBranch)
     {
 #if DEBUG
-        if (ObjectId.TryParse(sha, out ObjectId? objectId))
+        if (ObjectId.TryParse(sha, out ObjectId objectId))
         {
             _extraInfo = $" {objectId.ToShortString()}";
             if (!string.IsNullOrWhiteSpace(buildBranch))

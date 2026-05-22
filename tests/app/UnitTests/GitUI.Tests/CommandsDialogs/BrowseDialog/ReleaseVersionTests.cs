@@ -1,10 +1,7 @@
-﻿using FluentAssertions;
-using GitCommands.Config;
+﻿using GitCommands.Config;
 using GitUI.CommandsDialogs.BrowseDialog;
 
 namespace GitUITests.CommandsDialogs.BrowseDialog;
-
-[TestFixture]
 public class ReleaseVersionTests
 {
     private static string GetReleasesConfigFileText()
@@ -25,12 +22,12 @@ public class ReleaseVersionTests
         IEnumerable<ReleaseVersion> availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
         IEnumerable<ReleaseVersion> updates = ReleaseVersion.GetNewerVersions(currentVersion, true, availableVersions);
-        Version[] expectedVersions = new[]
-        {
+        Version[] expectedVersions =
+        [
             new Version(2, 48),
             new Version(2, 49),
             new Version(2, 50)
-        };
+        ];
         updates.Select(rv => rv.ApplicationVersion).Should().Equal(expectedVersions);
     }
 
@@ -41,10 +38,10 @@ public class ReleaseVersionTests
         IEnumerable<ReleaseVersion> availableVersions = ReleaseVersion.Parse(GetReleasesConfigFileText());
 
         IEnumerable<ReleaseVersion> updates = ReleaseVersion.GetNewerVersions(currentVersion, false, availableVersions);
-        Version[] expectedVersions = new[]
-        {
+        Version[] expectedVersions =
+        [
             new Version(2, 48)
-        };
+        ];
         updates.Select(rv => rv.ApplicationVersion).Should().Equal(expectedVersions);
     }
 

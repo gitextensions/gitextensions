@@ -1,13 +1,10 @@
-using FluentAssertions;
-using GitCommands.Git;
+﻿using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class GitTreeParserTests
 {
-    private IGitTreeParser _parser;
+    private IGitTreeParser _parser = null!;
 
     [SetUp]
     public void Setup()
@@ -24,7 +21,7 @@ public class GitTreeParserTests
     [Test]
     public void Parse_should_return_the_list()
     {
-        List<GitItem> items = _parser.Parse(GetLsTreeOutput()).ToList();
+        List<GitItem> items = [.. _parser.Parse(GetLsTreeOutput())];
 
         items.Should().HaveCount(13);
 
@@ -59,7 +56,7 @@ public class GitTreeParserTests
     [TestCase("1006444 blob 0000000000000000000000000000000000000000\tREADME.md")]
     [TestCase("10064 blob 0000000000000000000000000000000000000000\tREADME.md")]
     [TestCase("100644 blob 960498876e233a6119e20fc73171bca2e26f57c0 space")]
-    public void ParseSingle_should_return_null_if_input_invalid(string s)
+    public void ParseSingle_should_return_null_if_input_invalid(string? s)
     {
         _parser.ParseSingle(s).Should().BeNull();
     }
@@ -68,9 +65,9 @@ public class GitTreeParserTests
     public void ParseSingle_should_return_GitItem()
     {
         const string s = "100644 blob 25d7b5d771e84982a3dfd8bd537531d8fb45d491\t.editorconfig";
-        GitItem item = _parser.ParseSingle(s);
+        GitItem? item = _parser.ParseSingle(s);
 
-        item.Guid.Should().Be("25d7b5d771e84982a3dfd8bd537531d8fb45d491");
+        item!.Guid.Should().Be("25d7b5d771e84982a3dfd8bd537531d8fb45d491");
         item.Mode.Should().Be(100644);
         item.Name.Should().Be(".editorconfig");
         item.ObjectType.Should().Be(GitObjectType.Blob);
@@ -97,7 +94,7 @@ public class GitTreeParserTests
     [Test]
     public void ParseLsFiles_should_return_the_list()
     {
-        List<GitItem> items = _parser.ParseLsFiles(GetLsFilesOutput()).ToList();
+        List<GitItem> items = [.. _parser.ParseLsFiles(GetLsFilesOutput())];
 
         items.Should().HaveCount(6);
 

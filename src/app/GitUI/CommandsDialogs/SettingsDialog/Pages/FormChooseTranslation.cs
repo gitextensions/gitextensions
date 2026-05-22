@@ -19,7 +19,7 @@ public partial class FormChooseTranslation : GitExtensionsForm
     {
         base.OnLoad(e);
 
-        List<string> translations = new(Translator.GetAllTranslations());
+        List<string> translations = [.. Translator.GetAllTranslations()];
         translations.Sort();
         translations.Insert(0, "English");
 
@@ -31,7 +31,7 @@ public partial class FormChooseTranslation : GitExtensionsForm
 
         foreach (string translation in translations)
         {
-            string imagePath = Path.Combine(Translator.GetTranslationDir(), translation + ".gif");
+            string imagePath = Path.Join(Translator.GetTranslationDir(), translation + ".gif");
             if (File.Exists(imagePath))
             {
                 Image image = Image.FromFile(imagePath);
@@ -68,7 +68,7 @@ public partial class FormChooseTranslation : GitExtensionsForm
         ListView.SelectedListViewItemCollection selectedItems = ((ListView)sender).SelectedItems;
         if (selectedItems.Count > 0)
         {
-            AppSettings.Translation = selectedItems[0].Tag.ToString();
+            AppSettings.Translation = selectedItems[0].Tag!.ToString()!;
         }
 
         Close();

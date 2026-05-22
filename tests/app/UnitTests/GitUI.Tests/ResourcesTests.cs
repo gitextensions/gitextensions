@@ -4,12 +4,9 @@ using System.Drawing.Imaging;
 using System.Globalization;
 using System.Resources;
 using System.Text;
-using FluentAssertions;
 using GitUI.Properties;
 
 namespace GitUITests;
-
-[TestFixture]
 public class ResourcesTests
 {
     [Test]
@@ -17,10 +14,10 @@ public class ResourcesTests
     {
         // arrange
         // Note: do not dispose it, as it's a global resource used by others.
-        ResourceSet resourceSet = Images.ResourceManager.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists: true, tryParents: false);
+        ResourceSet? resourceSet = Images.ResourceManager.GetResourceSet(CultureInfo.InvariantCulture, createIfNotExists: true, tryParents: false);
 
         // act & assert
-        foreach (DictionaryEntry resourceEntry in resourceSet)
+        foreach (DictionaryEntry resourceEntry in resourceSet!)
         {
             if (resourceEntry.Value is not Bitmap bitmap || !ImageFormat.Png.Equals(bitmap.RawFormat))
             {
@@ -57,7 +54,7 @@ public class ResourcesTests
         // Read more info on format here: https://en.wikipedia.org/wiki/Portable_Network_Graphics#File_format
 
         // Verify header
-        ReadOnlySpan<byte> header = stackalloc byte[] { 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A };
+        ReadOnlySpan<byte> header = [0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A];
         if (!header.SequenceEqual(cursor[0..header.Length]))
         {
             throw new ArgumentException("PNG does not contain a valid header");

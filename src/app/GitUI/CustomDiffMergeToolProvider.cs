@@ -49,9 +49,8 @@ public class CustomDiffMergeToolProvider
         {
             // get the tools, possibly with a delay as requesting requires considerable time
             // cache is shared
-            List<string> tools = (await (isDiff ? CustomDiffMergeToolCache.DiffToolCache : CustomDiffMergeToolCache.MergeToolCache)
-                .GetToolsAsync(module, delay, cancellationToken))
-                .ToList();
+            List<string> tools = [.. await (isDiff ? CustomDiffMergeToolCache.DiffToolCache : CustomDiffMergeToolCache.MergeToolCache)
+                .GetToolsAsync(module, delay, cancellationToken)];
 
             if (tools.Count <= 1)
             {

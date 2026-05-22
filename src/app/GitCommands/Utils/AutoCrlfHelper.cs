@@ -18,7 +18,7 @@ public static class AutoCrlfExtensions
             return text.Replace("\r\n", Environment.NewLine);
         }
 
-        if (text.Contains("\r"))
+        if (text.Contains('\r'))
         {
             // Old MAC lines (pre OS X). See "if (text.Contains("\r\n"))" above.
             return text.Replace("\r", Environment.NewLine);

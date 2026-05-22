@@ -35,7 +35,10 @@ internal sealed class RemoteBranchTree : BaseRefTree
         {
             token.ThrowIfCancellationRequested();
 
-            Validates.NotNull(branch.ObjectId);
+            if (branch.ObjectId.IsZero)
+            {
+                throw new InvalidOperationException($"Branch '{branch.Name}' has no ObjectId.");
+            }
 
             string remoteName = branch.Name.SubstringUntil('/');
             if (remoteByName.TryGetValue(remoteName, out Remote remote))
@@ -46,7 +49,7 @@ internal sealed class RemoteBranchTree : BaseRefTree
                     remoteBranchNode.UpdateAheadBehind(aheadBehind.ToDisplay(), $"{GitRefName.RefsHeadsPrefix}{aheadBehind.Branch}");
                 }
 
-                BaseRevisionNode parent = remoteBranchNode.CreateRootNode(
+                BaseRevisionNode? parent = remoteBranchNode.CreateRootNode(
                     pathToNodes,
                     (tree, parentPath) => CreateRemoteBranchPathNode(tree, parentPath, remote));
 
@@ -108,11 +111,9 @@ internal sealed class RemoteBranchTree : BaseRefTree
 
         IReadOnlyList<string> GetEnabledRemoteNamesWithoutBranches(IReadOnlyList<IGitRef> branches, Dictionary<string, Remote> remoteByName)
         {
-            HashSet<string> remotesWithBranches = branches
-                .Select(branch => branch.Name.SubstringUntil('/'))
-                .ToHashSet();
+            HashSet<string> remotesWithBranches = [.. branches.Select(branch => branch.Name.SubstringUntil('/'))];
 
-            HashSet<string> allRemotes = remoteByName.Select(kv => kv.Value.Name).ToHashSet();
+            HashSet<string> allRemotes = [.. remoteByName.Select(kv => kv.Value.Name)];
 
             return allRemotes.Except(remotesWithBranches).ToList();
         }

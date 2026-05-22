@@ -245,9 +245,8 @@ partial class DetailedSettingsPage
         nbMessages.Anchor = AnchorStyles.Top | AnchorStyles.Right;
         nbMessages.Location = new Point(131, 3);
         nbMessages.Name = "nbMessages";
-        nbMessages.Size = new Size(51, 23);
+        nbMessages.Size = new Size(100, 23);
         nbMessages.TabIndex = 1;
-        nbMessages.TextAlign = HorizontalAlignment.Center;
         // 
         // DetailedSettingsPage
         // 

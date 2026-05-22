@@ -28,7 +28,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
 
         InitializeComponent();
 
-        pictureBox1.Image = DpiUtil.Scale(pictureBox1.Image);
+        pictureBox1.Image = DpiUtil.Scale(pictureBox1.Image!);
         lblResetBranchWarning.AutoSize = true;
         lblResetBranchWarning.Dock = DockStyle.Fill;
         lblResetBranchWarning.SetForeColorForBackColor();
@@ -46,7 +46,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
         Ok.Enabled = false;
     }
 
-    private void Application_Idle(object sender, EventArgs e)
+    private void Application_Idle(object? sender, EventArgs e)
     {
         Application.Idle -= Application_Idle;
 
@@ -61,21 +61,19 @@ public partial class FormResetAnotherBranch : GitModuleForm
         string currentBranch = Module.GetSelectedBranch();
         bool isDetachedHead = currentBranch == DetachedHeadParser.DetachedBranch;
 
-        List<IGitRef> selectedRevisionRemotes = _revision.Refs.Where(r => r.IsRemote).ToList();
+        List<IGitRef> selectedRevisionRemotes = [.. _revision.Refs.Where(r => r.IsRemote)];
 
-        _localGitRefs = Module.GetRefs(RefsFilter.Heads)
+        _localGitRefs = [.. Module.GetRefs(RefsFilter.Heads)
             .Where(r => r.IsHead)
             .Where(r => isDetachedHead || r.LocalName != currentBranch)
             .Where(r => _revision.ObjectId != r.ObjectId) // Don't display local branches already at this revision
             .OrderByDescending(r => selectedRevisionRemotes.Any(r.IsTrackingRemote)) // Put local branches that track these remotes first
-            .ThenByDescending(r => selectedRevisionRemotes.Any(r2 => r2.LocalName == r.LocalName)) // Put local branches with same name as remotes first
-            .ToArray();
+            .ThenByDescending(r => selectedRevisionRemotes.Any(r2 => r2.LocalName == r.LocalName))];
 
         if (selectedRevisionRemotes.Count == 1)
         {
             IGitRef availableRemote = selectedRevisionRemotes[0];
-            IGitRef[] defaultCandidateRefs = _localGitRefs
-                .Where(r => r.IsTrackingRemote(availableRemote) || r.LocalName == availableRemote.LocalName).ToArray();
+            IGitRef[] defaultCandidateRefs = [.. _localGitRefs.Where(r => r.IsTrackingRemote(availableRemote) || r.LocalName == availableRemote.LocalName)];
             if (defaultCandidateRefs.Length == 1)
             {
                 Branches.Text = defaultCandidateRefs[0].Name;
@@ -88,7 +86,7 @@ public partial class FormResetAnotherBranch : GitModuleForm
         InitLocalBranchesWithoutCurrent();
 
         Branches.DisplayMember = nameof(IGitRef.Name);
-        Branches.Items.AddRange(_localGitRefs);
+        Branches.Items.AddRange(_localGitRefs!);
 
         commitSummaryUserControl.Revision = _revision;
 
@@ -97,10 +95,10 @@ public partial class FormResetAnotherBranch : GitModuleForm
 
     private void Ok_Click(object sender, EventArgs e)
     {
-        IGitRef gitRefToReset = _localGitRefs.FirstOrDefault(b => b.Name == Branches.Text);
+        IGitRef? gitRefToReset = _localGitRefs!.FirstOrDefault(b => b.Name == Branches.Text);
         if (gitRefToReset is null)
         {
-            MessageBox.Show(string.Format(_localRefInvalid.Text, Branches.Text), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(string.Format(_localRefInvalid.Text, Branches.Text), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 

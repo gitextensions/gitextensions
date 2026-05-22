@@ -1,5 +1,3 @@
-#nullable enable
-
 using System.Diagnostics;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -20,7 +18,7 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
     /// <summary>
     ///  The constructor.
     /// </summary>
-    /// <param name="gitExecutable">The <see cref="IGitModule.GitExecutable"/> for the repo of interest.</param>
+    /// <param name="gitExecutable">The <see cref="IGitExecutor.GitExecutable"/> for the repo of interest.</param>
     /// <param name="gitSettingLevel">The scope (excluding <see cref="GitSettingLevel.Effective"/>) of the git config settings.</param>
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public GitConfigSettings(IExecutable gitExecutable, GitSettingLevel gitSettingLevel)
@@ -108,11 +106,6 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
 
     public void SetValue(string name, string? value)
     {
-        if (_multiValueSettings.ContainsKey(name))
-        {
-            throw new InvalidOperationException(@$"Changing multi-value git settings is not supported. Tried to set ""{name}"" = ""{value}"".");
-        }
-
         name = NormalizeSettingName(name);
 
         if (value?.Length is 0)
@@ -123,6 +116,15 @@ public sealed class GitConfigSettings : GitConfigSettingsBase, IGitConfigSetting
         if (value == GetValue(name))
         {
             return;
+        }
+
+        if (_multiValueSettings.ContainsKey(name))
+        {
+            throw new UserExternalOperationException(new InvalidOperationException($"""
+                Changing multi-value git settings is not supported. Tried to set "{name}" = "{value}".
+                But you have set multiple values for "{name}" in the {GitSettingLevel.ToString().ToLower()} git config file. This is unusual for this configuration entry.
+                Please make the entry unique manually.
+                """));
         }
 
         if (UniqueValueSettings.TryGetValue(name, out string? storedValue) && value == storedValue)

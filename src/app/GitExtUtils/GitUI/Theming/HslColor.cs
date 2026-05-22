@@ -14,7 +14,7 @@ public readonly struct HslColor
         S = Preprocess(saturation);
         L = Preprocess(luminance);
 
-        double Preprocess(double value)
+        static double Preprocess(double value)
         {
             if (double.IsNaN(value))
             {
@@ -122,7 +122,7 @@ public readonly struct HslColor
             (int)Math.Floor(g * 256).AtMost(255),
             (int)Math.Floor(b * 256).AtMost(255));
 
-        double Hue2Rgb(double p, double q, double t)
+        static double Hue2Rgb(double p, double q, double t)
         {
             if (t < 0)
             {

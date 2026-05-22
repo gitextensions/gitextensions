@@ -48,14 +48,14 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
             }
             else
             {
-                return Path.Combine(Module.ResolveGitInternalPath("info"), "exclude");
+                return Path.Join(Module.ResolveGitInternalPath("info"), "exclude");
             }
         }
     }
 
     private void AddToIgnoreClick(object sender, EventArgs e)
     {
-        string[] patterns = GetCurrentPatterns().ToArray();
+        string[] patterns = [.. GetCurrentPatterns()];
         if (patterns.Length == 0)
         {
             Close();
@@ -64,7 +64,7 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
 
         try
         {
-            string fileName = ExcludeFile;
+            string? fileName = ExcludeFile;
             Validates.NotNull(fileName);
             FileInfoExtensions.MakeFileTemporaryWritable(fileName, x =>
             {
@@ -81,14 +81,14 @@ public sealed partial class FormAddToGitIgnore : GitModuleForm
                     gitIgnoreFileAddition.Append(Environment.NewLine);
                 }
 
-                Directory.CreateDirectory(Path.GetDirectoryName(x));
+                Directory.CreateDirectory(Path.GetDirectoryName(x)!);
                 using StreamWriter writer = new(x, append: true, GitModule.SystemEncoding);
                 writer.Write(gitIgnoreFileAddition);
             });
         }
         catch (Exception ex)
         {
-            MessageBox.Show(this, ex.ToString(), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, ex.ToString(), TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
 
         Close();

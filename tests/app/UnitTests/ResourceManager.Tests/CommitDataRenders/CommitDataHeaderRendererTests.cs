@@ -1,5 +1,4 @@
-﻿using FluentAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using ResourceManager;
@@ -9,14 +8,13 @@ namespace ResourceManagerTests.CommitDataRenders;
 
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
-[TestFixture]
 public class CommitDataHeaderRendererTests
 {
-    private IHeaderLabelFormatter _labelFormatter;
-    private IHeaderRenderStyleProvider _headerRendererStyleProvider;
-    private ILinkFactory _linkFactory;
-    private IDateFormatter _dateFormatter;
-    private CommitDataHeaderRenderer _renderer;
+    private IHeaderLabelFormatter _labelFormatter = null!;
+    private IHeaderRenderStyleProvider _headerRendererStyleProvider = null!;
+    private ILinkFactory _linkFactory = null!;
+    private IDateFormatter _dateFormatter = null!;
+    private CommitDataHeaderRenderer _renderer = null!;
 
     private readonly IReadOnlyList<ObjectId> _childrenHashes = new[]
     {
@@ -75,7 +73,7 @@ public class CommitDataHeaderRendererTests
     [Test]
     public void Render_should_throw_if_data_null()
     {
-        ((Action)(() => _renderer.Render(null, true))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => _renderer.Render(null!, true))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -87,7 +85,7 @@ public class CommitDataHeaderRendererTests
         DateTime commitDate = authorDate;
         CommitData data = new(
             ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-            Array.Empty<ObjectId>(),
+            [],
             author, authorDate,
             committer, commitDate, "");
 
@@ -114,7 +112,7 @@ public class CommitDataHeaderRendererTests
         DateTime commitDate = authorDate;
         CommitData data = new(
             ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-            Array.Empty<ObjectId>(),
+            [],
             author, authorDate,
             committer, commitDate, "");
 
@@ -142,7 +140,7 @@ public class CommitDataHeaderRendererTests
         DateTime commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
         CommitData data = new(
             ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-            Array.Empty<ObjectId>(),
+            [],
             author, authorDate,
             committer, commitDate, "");
 
@@ -170,10 +168,12 @@ public class CommitDataHeaderRendererTests
         DateTime commitDate = authorDate;
         CommitData data = new(
             ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-            Array.Empty<ObjectId>(),
+            [],
             author, authorDate,
-            committer, commitDate, "");
-        data.ChildIds = _childrenHashes;
+            committer, commitDate, "")
+        {
+            ChildIds = _childrenHashes
+        };
 
         _linkFactory.CreateLink(author, Arg.Any<string>()).Returns(x => author);
         _dateFormatter.FormatDateAsRelativeLocal(authorDate).Returns("6 months ago (06/17/2017 23:38:40)");
@@ -251,7 +251,7 @@ public class CommitDataHeaderRendererTests
     [Test]
     public void RenderPlain_should_throw_if_data_null()
     {
-        ((Action)(() => _renderer.RenderPlain(null))).Should().Throw<ArgumentNullException>();
+        ((Action)(() => _renderer.RenderPlain(null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -263,7 +263,7 @@ public class CommitDataHeaderRendererTests
         DateTime commitDate = authorDate;
         CommitData data = new(
             ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-            Array.Empty<ObjectId>(),
+            [],
             author, authorDate,
             committer, commitDate, "");
 
@@ -290,7 +290,7 @@ public class CommitDataHeaderRendererTests
         DateTime commitDate = authorDate;
         CommitData data = new(
             ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-            Array.Empty<ObjectId>(),
+            [],
             author, authorDate,
             committer, commitDate, "");
 
@@ -318,7 +318,7 @@ public class CommitDataHeaderRendererTests
         DateTime commitDate = DateTime.Parse("2017-10-23T06:17:11+05");
         CommitData data = new(
             ObjectId.Parse("7fa3109989e0523aeacb178995a2a3aa6c302a2c"),
-            Array.Empty<ObjectId>(),
+            [],
             author, authorDate,
             committer, commitDate, "");
 

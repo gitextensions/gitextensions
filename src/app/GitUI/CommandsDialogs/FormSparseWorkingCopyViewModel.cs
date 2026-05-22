@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -100,9 +100,11 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
         }
     }
 
+    private static readonly string[] first = ["/*"];
+
     public void FirePropertyChanged()
     {
-        PropertyChanged(this, new PropertyChangedEventArgs(""));
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(""));
     }
 
     /// <summary>
@@ -118,7 +120,7 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
     /// </summary>
     public FileInfo GetPathToSparseCheckoutFile()
     {
-        return new FileInfo(Path.Combine(_gitCommands.Module.ResolveGitInternalPath("info"), "sparse-checkout"));
+        return new FileInfo(Path.Join(_gitCommands.Module.ResolveGitInternalPath("info"), "sparse-checkout"));
     }
 
     /// <summary>
@@ -200,7 +202,7 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
     /// <summary>
     /// Fires on any prop change. Lightweight reactive.
     /// </summary>
-    public event PropertyChangedEventHandler PropertyChanged = delegate { };
+    public event PropertyChangedEventHandler? PropertyChanged;
 
     /// <summary>
     /// Make sure WC gets unsparsed when turning off sparse.
@@ -213,14 +215,14 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
         }
 
         // Now check the rules, the well-known recommendation is to have the single "/*" rule active
-        List<string> rulelines = RulesText.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).Where(l => (!string.IsNullOrEmpty(l)) && (l[0] != '#')).ToList(); // All nonempty and non-comment lines
+        List<string> rulelines = [.. RulesText.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).Select(l => l.Trim()).Where(l => (!string.IsNullOrEmpty(l)) && (l[0] != '#'))]; // All nonempty and non-comment lines
         if (rulelines.All(l => l == "/*"))
         {
             return; // Rules OK for turning off
         }
 
         // Confirm
-        ComfirmAdjustingRulesOnDeactEventArgs args = new(!rulelines.Any());
+        ComfirmAdjustingRulesOnDeactEventArgs args = new(rulelines.Count == 0);
         ComfirmAdjustingRulesOnDeactRequested(this, args);
         if (args.Cancel)
         {
@@ -229,7 +231,7 @@ public class FormSparseWorkingCopyViewModel : INotifyPropertyChanged
 
         // Adjust the rules
         // Comment out all existing nonempty lines, add the single "/*" line to make a total pass filter
-        RulesText = new[] { "/*" }.Concat(RulesText.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).Select(l => (string.IsNullOrWhiteSpace(l) || (l[0] == '#')) ? l : "#" + l)).Join(Environment.NewLine);
+        RulesText = first.Concat(RulesText.LazySplit('\n', StringSplitOptions.RemoveEmptyEntries).Select(l => (string.IsNullOrWhiteSpace(l) || (l[0] == '#')) ? l : "#" + l)).Join(Environment.NewLine);
     }
 
     /// <summary>

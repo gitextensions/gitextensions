@@ -1,19 +1,17 @@
-﻿using FluentAssertions;
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
+using GitUIPluginInterfaces;
 using NSubstitute;
 using ResourceManager;
 using ResourceManager.CommitDataRenders;
 
 namespace ResourceManagerTests.CommitDataRenders;
-
-[TestFixture]
 public class CommitDataBodyRendererTests
 {
-    private IGitModule _module;
-    private Func<IGitModule> _getModule;
-    private ILinkFactory _linkFactory;
-    private CommitDataBodyRenderer _renderer;
-    private CommitDataBodyRenderer _rendererReal;
+    private IGitModule _module = null!;
+    private Func<IGitModule> _getModule = null!;
+    private ILinkFactory _linkFactory = null!;
+    private CommitDataBodyRenderer _renderer = null!;
+    private CommitDataBodyRenderer _rendererReal = null!;
 
     [SetUp]
     public void Setup()
@@ -47,7 +45,7 @@ public class CommitDataBodyRendererTests
         });
 
         CommitData data = new(ObjectId.Random(),
-            Array.Empty<ObjectId>(),
+            [],
             "John Doe (Acme Inc) <John.Doe@test.com>", DateTime.UtcNow,
             "John Doe <John.Doe@test.com>", DateTime.UtcNow,
             @"fix\n\nAllow cherry-picking multiple commits from FormBrowse menu
@@ -74,7 +72,7 @@ The ability to do so from the RevisionGrid context menu has been added in commit
     public void Render_should_render_body_without_links()
     {
         CommitData data = new(ObjectId.Random(),
-            Array.Empty<ObjectId>(),
+            [],
             "John Doe (Acme Inc) <John.Doe@test.com>", DateTime.UtcNow,
             "John Doe <John.Doe@test.com>", DateTime.UtcNow,
             "fix\n\nAllow cherry-picking multiple commits from FormBrowse menu\r\n\r\nThe ability to do so from the RevisionGrid context menu has been added in commit\r\nb3e79447928051cfb3494c9c0ef1a1d0ecde56a8\r\n");

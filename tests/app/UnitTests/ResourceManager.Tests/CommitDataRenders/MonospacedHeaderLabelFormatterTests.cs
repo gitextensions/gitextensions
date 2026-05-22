@@ -1,12 +1,9 @@
-﻿using FluentAssertions;
-using ResourceManager.CommitDataRenders;
+﻿using ResourceManager.CommitDataRenders;
 
 namespace ResourceManagerTests.CommitDataRenders;
-
-[TestFixture]
 public class MonospacedHeaderLabelFormatterTests
 {
-    private MonospacedHeaderLabelFormatter _formatter;
+    private MonospacedHeaderLabelFormatter _formatter = null!;
 
     [SetUp]
     public void Setup()
@@ -20,8 +17,8 @@ public class MonospacedHeaderLabelFormatterTests
     [TestCase("a", 10, "a:        ")]
     [TestCase("abc", 1, "abc:")]
     [TestCase("John Doe <John.Doe@test.com>", 40, "John Doe &lt;John.Doe@test.com&gt;:     ")]
-    public void FormatLabel_should_render_correctly(string given, int desiredLength, string expected)
+    public void FormatLabel_should_render_correctly(string? given, int desiredLength, string expected)
     {
-        _formatter.FormatLabel(given, desiredLength).Should().Be(expected);
+        _formatter.FormatLabel(given!, desiredLength).Should().Be(expected);
     }
 }

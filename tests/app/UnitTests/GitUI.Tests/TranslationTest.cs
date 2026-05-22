@@ -3,8 +3,6 @@ using GitExtensions.Extensibility.Translations.Xliff;
 using GitUI;
 
 namespace GitUITests;
-
-[TestFixture]
 public sealed class TranslationTest
 {
     [SetUp]
@@ -37,20 +35,20 @@ public sealed class TranslationTest
             {
                 try
                 {
-                    using ITranslate obj = (ITranslate)TranslationUtil.CreateInstanceOfClass(type);
+                    using ITranslate obj = (ITranslate)TranslationUtil.CreateInstanceOfClass(type)!;
                     obj.AddTranslationItems(translation);
                     obj.TranslateItems(translation);
                 }
                 catch (Exception ex)
                 {
-                    problems.Add((type.FullName, ex));
+                    problems.Add((type.FullName!, ex));
                 }
             }
         }
 
         if (problems.Count != 0)
         {
-            ClassicAssert.Fail(string.Join(
+            Assert.Fail(string.Join(
                 "\n\n--------\n\n",
                 problems.Select(p => $"Problem with type {p.typeName}\n\n{p.exception}")));
         }

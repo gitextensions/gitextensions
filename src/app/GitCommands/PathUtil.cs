@@ -1,6 +1,6 @@
+using System.Buffers;
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using GitCommands.Utils;
 
 namespace GitCommands;
 
@@ -19,10 +19,20 @@ public static partial class PathUtil
     /// <summary>The user's profile folder path.</summary>
     // TODO verify whether the user profile contains forwards/backwards slashes on other platforms
     public static readonly string UserProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-    private static StringComparison _pathComparison = EnvUtils.RunningOnWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+    private static StringComparison _pathComparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+    private static readonly SearchValues<char> _questionMarkAndHashSearchValues = SearchValues.Create('?', '#');
 
     [GeneratedRegex(@"^(\w+):\/\/([\S]+)", RegexOptions.ExplicitCapture)]
-    private static partial Regex DriveLetterRegex();
+    private static partial Regex DriveLetterRegex { get; }
+
+    /// <summary>
+    ///  Indicates whether the given character can be used in a git branch name (and in a file path).
+    /// </summary>
+    public static bool IsValidPathChar(char c)
+    {
+        return c is (> ' ' and < '~' and not ('^' or ':')) &&
+                Array.IndexOf(Path.GetInvalidPathChars(), c) < 0;
+    }
 
     /// <summary>Replaces native path separator with posix path separator (/).</summary>
     [return: NotNullIfNotNull(nameof(path))]
@@ -32,28 +42,28 @@ public static partial class PathUtil
     }
 
     /// <summary>Replaces '/' with native path separator.</summary>
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     public static string? ToNativePath(this string? path)
     {
         return path?.Replace(PosixDirectorySeparatorChar, NativeDirectorySeparatorChar);
     }
 
     /// <summary>Replaces native path separator with posix path separator (/) and drive letter X: with /mnt/x for use in WSL.</summary>
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     public static string? ToWslPath(this string? path)
     {
         return path?.ToMountPath("/mnt/");
     }
 
     /// <summary>Replaces native path separator with posix path separator (/) and drive letter X: with /cygdrive/x.</summary>
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     public static string? ToCygwinPath(this string? path)
     {
         return path?.ToMountPath("/cygdrive/");
     }
 
     /// <summary>Replaces native path separator with posix path separator (/) and drive letter X: with /prefix/x.</summary>
-    [return: NotNullIfNotNull("path")]
+    [return: NotNullIfNotNull(nameof(path))]
     public static string? ToMountPath(this string? path, string prefix)
     {
         if (path is null)
@@ -77,7 +87,7 @@ public static partial class PathUtil
     /// <summary>
     /// Removes any trailing path separator character from the end of <paramref name="dirPath"/>.
     /// </summary>
-    [return: NotNullIfNotNull("dirPath")]
+    [return: NotNullIfNotNull(nameof(dirPath))]
     public static string? RemoveTrailingPathSeparator(this string? dirPath)
     {
         if (dirPath?.Length > 0 &&
@@ -96,7 +106,7 @@ public static partial class PathUtil
     ///
     /// This method can be used to add (or keep) a trailing path separator character to a directory path.
     /// </summary>
-    [return: NotNullIfNotNull("dirPath")]
+    [return: NotNullIfNotNull(nameof(dirPath))]
     public static string? EnsureTrailingPathSeparator(this string? dirPath, bool posix = false)
     {
         if (!string.IsNullOrEmpty(dirPath) &&
@@ -111,7 +121,7 @@ public static partial class PathUtil
 
     public static bool IsLocalFile(string fileName)
     {
-        return !DriveLetterRegex().IsMatch(fileName);
+        return !DriveLetterRegex.IsMatch(fileName);
     }
 
     public static bool CanBeGitURL(string? url)
@@ -121,7 +131,7 @@ public static partial class PathUtil
             return false;
         }
 
-        return (Uri.IsWellFormedUriString(url, UriKind.Absolute) && url.IndexOfAny(['?', '#']) == -1)
+        return (Uri.IsWellFormedUriString(url, UriKind.Absolute) && url.IndexOfAny(_questionMarkAndHashSearchValues) == -1)
                || url.EndsWith(".git", StringComparison.CurrentCultureIgnoreCase)
                || url.EndsWith(".git/", StringComparison.CurrentCultureIgnoreCase)
                || GitModule.IsValidGitWorkingDir(url);
@@ -196,7 +206,7 @@ public static partial class PathUtil
     {
         if (string.IsNullOrWhiteSpace(path))
         {
-            throw new ArgumentException(nameof(path));
+            throw new ArgumentException("Resolve: no path.", nameof(path));
         }
 
         return IsWslPrefixPath(path) ? ResolveWsl(path, relativePath) : ResolveRelativePath(path, relativePath);
@@ -209,7 +219,7 @@ public static partial class PathUtil
     {
         if (string.IsNullOrWhiteSpace(path) || !IsWslPrefixPath(path))
         {
-            throw new ArgumentException(nameof(path));
+            throw new ArgumentException("ResolveWsl: no path.", nameof(path));
         }
 
         // Temporarily replace machine name with a valid name (remove $ sign from \\wsl$\)
@@ -225,7 +235,7 @@ public static partial class PathUtil
     {
         if (string.IsNullOrWhiteSpace(path))
         {
-            throw new ArgumentException(nameof(path));
+            throw new ArgumentException("ResolveRelativePath: no path.", nameof(path));
         }
 
         Uri tempPath = new(path);
@@ -273,7 +283,7 @@ public static partial class PathUtil
     public static string GetWslDistro(string? path)
     {
         int distroLen = GetWslDistroLength(path);
-        return distroLen <= 0 ? "" : path.Substring(WslPrefix.Length, distroLen);
+        return distroLen <= 0 ? "" : path!.Substring(WslPrefix.Length, distroLen);
 
         static int GetWslDistroLength(string? path)
         {
@@ -282,7 +292,7 @@ public static partial class PathUtil
                 return -1;
             }
 
-            return path.IndexOfAny(new[] { '\\', '/' }, WslPrefix.Length) - WslPrefix.Length;
+            return path.IndexOfAny(['\\', '/'], WslPrefix.Length) - WslPrefix.Length;
         }
     }
 
@@ -369,9 +379,9 @@ public static partial class PathUtil
                 path = path[..^standardRepositorySuffix.Length];
             }
 
-            if (path.Contains("\\") || path.Contains("/"))
+            if (path.Contains('\\') || path.Contains('/'))
             {
-                name = path[(path.LastIndexOfAny(new[] { '\\', '/' }) + 1)..];
+                name = path[(path.LastIndexOfAny(['\\', '/']) + 1)..];
             }
         }
 
@@ -390,7 +400,7 @@ public static partial class PathUtil
 
             foreach (string path in EnvironmentPathsProvider.GetEnvironmentValidPaths())
             {
-                fullPath = Path.Combine(path, fileName);
+                fullPath = Path.Join(path, fileName);
                 if (File.Exists(fullPath))
                 {
                     return true;
@@ -410,22 +420,34 @@ public static partial class PathUtil
     {
         try
         {
-            shellPath = Path.Combine(EnvironmentAbstraction.GetEnvironmentVariable("ProgramW6432"), "Git", shell);
-            if (File.Exists(shellPath))
+            string? programW6432 = EnvironmentAbstraction.GetEnvironmentVariable("ProgramW6432");
+            if (!string.IsNullOrEmpty(programW6432))
             {
-                return true;
+                shellPath = Path.Join(programW6432, "Git", shell);
+                if (File.Exists(shellPath))
+                {
+                    return true;
+                }
             }
 
-            shellPath = Path.Combine(EnvironmentAbstraction.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86), "Git", shell);
-            if (File.Exists(shellPath))
+            string programFilesX86 = EnvironmentAbstraction.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86);
+            if (!string.IsNullOrEmpty(programFilesX86))
             {
-                return true;
+                shellPath = Path.Join(programFilesX86, "Git", shell);
+                if (File.Exists(shellPath))
+                {
+                    return true;
+                }
             }
 
-            shellPath = Path.Combine(AppSettings.LinuxToolsDir, shell);
-            if (File.Exists(shellPath))
+            string linuxToolsDir = AppSettings.LinuxToolsDir;
+            if (!string.IsNullOrEmpty(linuxToolsDir))
             {
-                return true;
+                shellPath = Path.Join(linuxToolsDir, shell);
+                if (File.Exists(shellPath))
+                {
+                    return true;
+                }
             }
 
             if (TryFindFullPath(shell, out shellPath))
@@ -455,7 +477,7 @@ public static partial class PathUtil
         if (IsInUserProfile(path))
         {
             int length = path.Length - UserProfilePath.Length;
-            if (path.EndsWith("/") || path.EndsWith("\\"))
+            if (path.EndsWith('/') || path.EndsWith('\\'))
             {
                 length--;
             }
@@ -477,7 +499,7 @@ public static partial class PathUtil
 
         while (true)
         {
-            path = Path.GetDirectoryName(path);
+            path = Path.GetDirectoryName(path)!;
 
             if (string.IsNullOrEmpty(path))
             {
@@ -509,7 +531,7 @@ public static partial class PathUtil
                 continue;
             }
 
-            fullName = FindFileInEnvVarFolder("LOCALAPPDATA", Path.Combine("Programs", location), fileName)
+            fullName = FindFileInEnvVarFolder("LOCALAPPDATA", Path.Join("Programs", location), fileName)
                 ?? FindFileInEnvVarFolder("ProgramFiles", location, fileName)
                 ?? FindFileInEnvVarFolder("ProgramW6432", location, fileName);
             if (fullName is not null)
@@ -529,15 +551,15 @@ public static partial class PathUtil
 
         return string.Empty;
 
-        string? FindFileInEnvVarFolder(string environmentVariable, string location, string fileName1)
+        static string? FindFileInEnvVarFolder(string environmentVariable, string location, string fileName1)
         {
-            string envVarFolder = Environment.GetEnvironmentVariable(environmentVariable);
+            string? envVarFolder = Environment.GetEnvironmentVariable(environmentVariable);
             if (string.IsNullOrEmpty(envVarFolder))
             {
                 return null;
             }
 
-            string path = Path.Combine(envVarFolder, location);
+            string path = Path.Join(envVarFolder, location);
             if (!Directory.Exists(path))
             {
                 return null;
@@ -548,7 +570,7 @@ public static partial class PathUtil
 
         static string? FindFile(string location, string fileName1)
         {
-            string fullName = Path.Combine(location, fileName1);
+            string fullName = Path.Join(location, fileName1);
             if (File.Exists(fullName))
             {
                 return fullName;

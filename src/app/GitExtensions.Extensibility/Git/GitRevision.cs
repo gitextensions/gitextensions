@@ -19,16 +19,21 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
     public const string CombinedDiffGuid = "3333333333333333333333333333333333333333";
 
     [GeneratedRegex(@"^[a-f\d]{40}$", RegexOptions.ExplicitCapture)]
-    public static partial Regex Sha1HashRegex();
+    public static partial Regex Sha1HashRegex { get; }
     [GeneratedRegex(@"\b[a-f\d]{7,40}\b(?![^@\s]*@)", RegexOptions.ExplicitCapture)]
-    public static partial Regex Sha1HashShortRegex();
+    public static partial Regex Sha1HashShortRegex { get; }
 
     private BuildInfo? _buildStatus;
     private string? _body;
 
     public GitRevision(ObjectId objectId)
     {
-        ObjectId = objectId ?? throw new ArgumentNullException(nameof(objectId));
+        if (objectId.IsZero)
+        {
+            throw new ArgumentException("ObjectId must not be the default (zero) value.", nameof(objectId));
+        }
+
+        ObjectId = objectId;
     }
 
     /// <summary>
@@ -45,7 +50,7 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
     public string Guid => ObjectId.ToString();
 
     // TODO this should probably be null when not yet populated, similar to how ParentIds works
-    public IReadOnlyList<IGitRef> Refs { get; set; } = Array.Empty<IGitRef>();
+    public IReadOnlyList<IGitRef> Refs { get; set; } = [];
 
     /// <summary>
     /// Gets the revision's parent IDs.
@@ -56,7 +61,7 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
     /// </remarks>
     public IReadOnlyList<ObjectId>? ParentIds { get; set; }
 
-    public ObjectId? TreeGuid { get; set; }
+    public ObjectId TreeId { get; set; }
 
     public string? Author { get; set; }
     public string? AuthorEmail { get; set; }
@@ -89,6 +94,9 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
 
     public string Subject { get; set; } = "";
 
+    /// <summary>
+    /// Full commit message (all lines), but without <see cref="Notes"/>.
+    /// </summary>
     public string? Body
     {
         // Body is not stored by default for older commits to reduce memory usage
@@ -98,7 +106,14 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
     }
 
     public bool HasMultiLineMessage { get; set; }
-    public bool HasNotes { get; set; }
+
+    /// <summary>
+    /// Git <see href="https://git-scm.com/docs/git-notes">Notes</see>
+    /// </summary>
+    /// <remarks>
+    /// <see langword="null"/> means "not loaded yet", <see cref="string.Empty"/> means "empty".
+    /// </remarks>
+    public string? Notes { get; set; }
 
     public override string ToString() => $"{ObjectId.ToShortString()}:{Subject}";
 
@@ -124,7 +139,7 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
 
     public bool HasParent => ParentIds?.Count > 0;
 
-    public ObjectId? FirstParentId => HasParent ? ParentIds?[0] : null;
+    public ObjectId FirstParentId => HasParent ? ParentIds![0] : default;
 
     #region INotifyPropertyChanged
 
@@ -147,6 +162,6 @@ public sealed partial class GitRevision : IGitItem, INotifyPropertyChanged
     /// <returns><c>true</c> if <paramref name="id"/> is a valid SHA-1 hash, otherwise <c>false</c>.</returns>
     public static bool IsFullSha1Hash(string id)
     {
-        return Sha1HashRegex().IsMatch(id);
+        return Sha1HashRegex.IsMatch(id);
     }
 }

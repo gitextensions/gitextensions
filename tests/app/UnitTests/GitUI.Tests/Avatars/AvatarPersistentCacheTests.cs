@@ -1,22 +1,19 @@
 ﻿using System.IO.Abstractions;
 using System.IO.Abstractions.TestingHelpers;
-using FluentAssertions;
 using GitCommands;
 using GitUI.Avatars;
 using NSubstitute;
 
 namespace GitUITests.Avatars;
-
-[TestFixture]
 public sealed class AvatarPersistentCacheTests : AvatarCacheTestBase
 {
     private string _avatarImageCachePath = AppSettings.AvatarImageCachePath;
-    private string _email1AvatarPath;
-    private IFileSystem _fileSystem;
-    private DirectoryBase _directory;
-    private FileBase _file;
-    private FileInfoBase _fileInfo;
-    private IFileInfoFactory _fileInfoFactory;
+    private string _email1AvatarPath = null!;
+    private IFileSystem _fileSystem = null!;
+    private DirectoryBase _directory = null!;
+    private FileBase _file = null!;
+    private FileInfoBase _fileInfo = null!;
+    private IFileInfoFactory _fileInfoFactory = null!;
 
     [SetUp]
     public override void SetUp()
@@ -47,7 +44,7 @@ public sealed class AvatarPersistentCacheTests : AvatarCacheTestBase
         fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeFalse();
         _cache = new FileSystemAvatarCache(_inner, fileSystem);
 
-        ClassicAssert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
+        (await _cache.GetAvatarAsync(_email1, _name1, _size)).Should().BeSameAs(_img1);
 
         fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeTrue();
     }
@@ -59,7 +56,7 @@ public sealed class AvatarPersistentCacheTests : AvatarCacheTestBase
         fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeFalse();
         _cache = new FileSystemAvatarCache(_inner, fileSystem);
 
-        ClassicAssert.AreSame(_img1, await _cache.GetAvatarAsync(_email1, _name1, _size));
+        (await _cache.GetAvatarAsync(_email1, _name1, _size)).Should().BeSameAs(_img1);
 
         fileSystem.Directory.Exists(_avatarImageCachePath).Should().BeTrue();
         fileSystem.File.Exists(_email1AvatarPath).Should().BeTrue();
@@ -83,7 +80,7 @@ public sealed class AvatarPersistentCacheTests : AvatarCacheTestBase
         _fileInfo.ClearReceivedCalls();
         _file.ClearReceivedCalls();
 
-        Image image = await _cache.GetAvatarAsync(_email1, _name1, 16);
+        Image? image = await _cache.GetAvatarAsync(_email1, _name1, 16);
 
         image.Should().NotBeNull();
         _ = _fileInfo.Received(1).LastWriteTime;

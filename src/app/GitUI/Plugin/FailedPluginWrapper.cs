@@ -10,10 +10,10 @@ namespace GitUI;
 internal partial class FailedPluginWrapper : IGitPlugin
 {
     [GeneratedRegex(@"""GitExtensions.([^""]+)""", RegexOptions.ExplicitCapture)]
-    private static partial Regex PluginNameRegex();
+    private static partial Regex PluginNameRegex { get; }
 
     private readonly string _exception;
-    private string _pluginName;
+    private string _pluginName = null!;
 
     public FailedPluginWrapper(Exception loadingException)
     {
@@ -23,11 +23,11 @@ internal partial class FailedPluginWrapper : IGitPlugin
         try
         {
             // Try to extract plugin name from exception
-            Match match = PluginNameRegex().Match(_exception);
+            Match match = PluginNameRegex.Match(_exception);
             if (match.Success)
             {
                 _pluginName = match.Value;
-                Name = $"{TranslatedStrings.FailedToLoadPlugin}: {_pluginName.Substring(0, Math.Min(50, match.Value.Length))}";
+                Name = $"{TranslatedStrings.FailedToLoadPlugin}: {_pluginName[..Math.Min(50, match.Value.Length)]}";
             }
         }
         catch (Exception)
@@ -45,7 +45,7 @@ internal partial class FailedPluginWrapper : IGitPlugin
 
     public bool Execute(GitUIEventArgs args)
     {
-        DialogResult result = MessageBox.Show(string.Format(TranslatedStrings.FailedToLoadPluginPopupText, _exception),
+        DialogResult result = MessageBoxes.Show(string.Format(TranslatedStrings.FailedToLoadPluginPopupText, _exception),
             TranslatedStrings.FailedToLoadPlugin, MessageBoxButtons.OKCancel, MessageBoxIcon.Error);
         if (result == DialogResult.OK)
         {
@@ -55,7 +55,7 @@ internal partial class FailedPluginWrapper : IGitPlugin
         return false;
     }
 
-    public IEnumerable<ISetting> GetSettings() => Array.Empty<ISetting>();
+    public IEnumerable<ISetting> GetSettings() => [];
 
     public void Register(IGitUICommands gitUiCommands)
     {

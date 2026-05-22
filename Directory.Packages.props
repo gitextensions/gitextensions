@@ -4,7 +4,6 @@
     <!-- Solution dependencies -->
     <PackageVersion Include="AdysTech.CredentialManager" Version="2.3.0" />
     <PackageVersion Include="AppInsights.WindowsDesktop" Version="2.18.1" />
-    <PackageVersion Include="Atlassian.SDK" Version="13.0.0" />
     <PackageVersion Include="Ben.Demystifier" Version="0.4.1" />
     <PackageVersion Include="ConEmu.Core" Version="23.07.24" />
     <PackageVersion Include="EnvDTE" Version="17.0.32112.339" />
@@ -14,12 +13,9 @@
     <PackageVersion Include="LibGit2Sharp" Version="0.31.0" />
     <PackageVersion Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
     <PackageVersion Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
-    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="8.0.0" />
-    <PackageVersion Include="Microsoft.Toolkit.HighPerformance" Version="7.1.2" />
+    <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.201" />
     <PackageVersion Include="Microsoft.VisualStudio.Composition" Version="17.2.41" />
     <PackageVersion Include="Microsoft.VisualStudio.Threading" Version="17.13.61" />
-    <PackageVersion Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageVersion Include="NString" Version="2.1.1" />
     <PackageVersion Include="RestSharp" Version="106.12.0" />
     <PackageVersion Include="SmartFormat" Version="3.6.0" />
     <PackageVersion Include="StrongOf" Version="1.2.4" />
@@ -32,6 +28,7 @@
 
     <!-- Analyzers -->
     <PackageVersion Include="Microsoft.CodeAnalysis.Analyzers" Version="3.11.0" PrivateAssets="all" />
+    <PackageVersion Include="Microsoft.CodeAnalysis.BannedApiAnalyzers" Version="3.3.4" PrivateAssets="all" />
     <PackageVersion Include="Microsoft.CodeAnalysis.CSharp" Version="4.13.0" />
 
     <!-- Setup infra -->
@@ -39,8 +36,8 @@
     <PackageVersion Include="WiX" Version="3.14.1" />
 
     <!-- Test infra -->
-    <PackageVersion Include="Appveyor.TestLogger" Version="2.0.0" />
-    <PackageVersion Include="FluentAssertions" Version="8.2.0" />
+    <PackageVersion Include="AwesomeAssertions" Version="9.4.0" />
+    <PackageVersion Include="NUnit.Analyzers" Version="4.7.0" PrivateAssets="all" />
     <PackageVersion Include="Microsoft.CodeAnalysis.Workspaces.Common" Version="4.13.0" />
     <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />    <!-- Required? -->
     <PackageVersion Include="NSubstitute" Version="5.3.0" />

@@ -1,21 +1,18 @@
-using System.ComponentModel.Design;
+﻿using System.ComponentModel.Design;
 using System.Reflection;
+using AwesomeAssertions.Specialized;
 using CommonTestUtils;
-using FluentAssertions;
-using FluentAssertions.Specialized;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
-using GitUI.NBugReports;
 using GitUI.ScriptsEngine;
 using GitUIPluginInterfaces;
 using NSubstitute;
 using ResourceManager;
 
 namespace GitExtensions.UITests.ScriptEngine;
-
-[TestFixture]
 [Apartment(ApartmentState.STA)]
 [SetCulture("en-US")]
 [SetUICulture("en-US")]
@@ -26,18 +23,18 @@ public class ScriptRunnerTests
     private const int _keyOfExampleScript = 9002;
 
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // perf optimisation: get hold of the static ScriptsManager.ScriptRunner.RunScript method for test invocations
     // we could have used TestAccessor, but it would involve more code.
-    private static readonly MethodInfo _miRunScript = typeof(ScriptsManager.ScriptRunner).GetMethod("RunScriptInternal", BindingFlags.NonPublic | BindingFlags.Static);
+    private static readonly MethodInfo? _miRunScript = typeof(ScriptsManager.ScriptRunner).GetMethod("RunScriptInternal", BindingFlags.NonPublic | BindingFlags.Static);
 
     // Created once for each test
-    private GitUICommands _uiCommands;
-    private ScriptInfo _exampleScript;
-    private MockForm _mockForm;
-    private IGitModule _module;
-    private IGitUICommands _commands;
+    private GitUICommands _uiCommands = null!;
+    private ScriptInfo _exampleScript = null!;
+    private MockForm _mockForm = null!;
+    private IGitModule _module = null!;
+    private IGitUICommands _commands = null!;
 
     [SetUp]
     public void Setup()
@@ -63,7 +60,7 @@ public class ScriptRunnerTests
 
         _mockForm = new(_commands);
 
-        _exampleScript = scriptsManager.GetScript(_keyOfExampleScript);
+        _exampleScript = scriptsManager.GetScript(_keyOfExampleScript)!;
         _exampleScript.AskConfirmation = false; // avoid any dialogs popping up
         _exampleScript.RunInBackground = true; // avoid any dialogs popping up
 
@@ -80,11 +77,11 @@ public class ScriptRunnerTests
     }
 
     [Test]
-    public void RunScript_without_command_shall_return_false([Values(null, "")] string command)
+    public void RunScript_without_command_shall_return_false([Values(null, "")] string? command)
     {
         _exampleScript.Command = command;
 
-        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands);
+        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands, ScriptOptionsProviderBase.Default);
 
         result.Should().BeFalse();
     }
@@ -95,7 +92,7 @@ public class ScriptRunnerTests
         _exampleScript.Command = "{git}";
         _exampleScript.Arguments = "";
 
-        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands);
+        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands, ScriptOptionsProviderBase.Default);
 
         result.Should().BeTrue();
     }
@@ -106,7 +103,7 @@ public class ScriptRunnerTests
         _exampleScript.Command = "{git}";
         _exampleScript.Arguments = "--version";
 
-        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands);
+        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands, ScriptOptionsProviderBase.Default);
 
         result.Should().BeTrue();
     }
@@ -120,7 +117,7 @@ public class ScriptRunnerTests
         GitRevision revision = new(ObjectId.IndexId);
         _module.GetRevision(shortFormat: true, loadRefs: true).Returns(x => revision);
 
-        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands);
+        bool result = ScriptsManager.ScriptRunner.RunScript(_exampleScript, _mockForm, _mockForm.UICommands, ScriptOptionsProviderBase.Default);
 
         result.Should().BeTrue();
     }
@@ -131,9 +128,9 @@ public class ScriptRunnerTests
         _exampleScript.Command = "cmd";
         _exampleScript.Arguments = "/c echo {cHash}";
 
-        _module.GetCurrentCheckout().Returns((ObjectId)null);
+        _module.GetCurrentCheckout().Returns(default(ObjectId));
 
-        ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _commands))).Should()
+        ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _commands, ScriptOptionsProviderBase.Default))).Should()
             .Throw<UserExternalOperationException>();
         ex.And.Context.Should().Be($"Script: '{_exampleScript.GetDisplayName()}'\r\nA valid revision is required to substitute the argument options");
         ex.And.Command.Should().Be(_exampleScript.Command);
@@ -149,7 +146,7 @@ public class ScriptRunnerTests
 
         _mockForm.UICommands.BrowseRepo = null;
 
-        ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands))).Should()
+        ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _mockForm.UICommands, ScriptOptionsProviderBase.Default))).Should()
             .Throw<UserExternalOperationException>();
         ex.And.Context.Should().Be($"Script: '{_exampleScript.GetDisplayName()}'\r\n'sHash' option is only supported when invoked from the revision grid");
         ex.And.Command.Should().Be(_exampleScript.Command);
@@ -170,10 +167,10 @@ public class ScriptRunnerTests
 
             // check for correct test setup
             formBrowse.RevisionGridControl.GetTestAccessor().ClearSelection();
-            ClassicAssert.AreEqual(0, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
+            formBrowse.RevisionGridControl.GetSelectedRevisions().Count.Should().Be(0);
             formBrowse.RevisionGridControl.LatestSelectedRevision.Should().BeNull();
 
-            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands))).Should()
+            ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, ScriptOptionsProviderBase.Default))).Should()
                     .Throw<UserExternalOperationException>();
             ex.And.Context.Should().Be($"Script: '{_exampleScript.GetDisplayName()}'\r\nA valid revision is required to substitute the argument options");
             ex.And.Command.Should().Be(_exampleScript.Command);
@@ -194,33 +191,32 @@ public class ScriptRunnerTests
             // wait until the revisions are loaded
             await AsyncTestHelper.JoinPendingOperationsAsync(AsyncTestHelper.UnexpectedTimeout);
 
-            ClassicAssert.AreEqual(1, formBrowse.RevisionGridControl.GetSelectedRevisions().Count);
+            formBrowse.RevisionGridControl.GetSelectedRevisions().Count.Should().Be(1);
 
-            string errorMessage = null;
-            bool result = ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands);
+            string? errorMessage = null;
+            bool result = ExecuteRunScript(_exampleScript, formBrowse, formBrowse.UICommands, ScriptOptionsProviderBase.Default);
 
             errorMessage.Should().BeNull();
             result.Should().BeTrue();
         });
     }
 
-    private static bool ExecuteRunScript(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptOptionsProvider? scriptOptionsProvider = null)
+    private static bool ExecuteRunScript(ScriptInfo script, IWin32Window owner, IGitUICommands uiCommands, IScriptOptionsProvider scriptOptionsProvider)
     {
         try
         {
-            bool result = (bool)_miRunScript.Invoke(null,
-                new object[]
-                {
+            bool result = (bool)_miRunScript!.Invoke(null,
+                [
                     script,
                     owner,
                     uiCommands,
                     scriptOptionsProvider
-                });
+                ])!;
             return result;
         }
         catch (TargetInvocationException ex)
         {
-            throw ex.InnerException;
+            throw ex.InnerException!;
         }
     }
 

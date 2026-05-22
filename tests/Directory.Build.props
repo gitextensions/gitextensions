@@ -6,12 +6,9 @@
     <DebugType>full</DebugType>
 
     <CodeAnalysisRuleSet>$(RepoRoot)\eng\GitExtensionsTest.ruleset</CodeAnalysisRuleSet>
-
-    <!-- To be removed when NRT annotations are complete -->
-    <Nullable>annotations</Nullable>
   </PropertyGroup>
 
   <ItemGroup>
-    <Using Include="NUnit.Framework.Legacy" />
+    <Using Include="AwesomeAssertions" />
   </ItemGroup>
 </Project>

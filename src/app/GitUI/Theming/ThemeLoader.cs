@@ -28,7 +28,7 @@ public class ThemeLoader : IThemeLoader
     public Theme LoadTheme(string themeFileName, ThemeId themeId, in IReadOnlyList<string> allowedClasses)
     {
         ThemeColors themeColors = new();
-        LoadThemeColors(themeFileName, cssImportChain: new[] { themeFileName }, allowedClasses, themeColors);
+        LoadThemeColors(themeFileName, cssImportChain: [themeFileName], allowedClasses, themeColors);
         return new Theme(themeColors.AppColors, themeColors.SysColors, themeId);
     }
 
@@ -44,7 +44,7 @@ public class ThemeLoader : IThemeLoader
             ImportTheme(themeFileName, importDirective, allowedClasses, cssImportChain, themeColors);
         }
 
-        foreach (StyleRule rule in stylesheet.StyleRules)
+        foreach (StyleRule rule in stylesheet.StyleRules.Cast<StyleRule>())
         {
             ParseRule(themeFileName, rule, allowedClasses, themeColors);
         }
@@ -123,7 +123,7 @@ public class ThemeLoader : IThemeLoader
             throw StyleRuleThemeException(rule, themeFileName);
         }
 
-        return selectorText[ClassSelector.Length..].Split(new[] { ClassSelector }, StringSplitOptions.RemoveEmptyEntries);
+        return selectorText[ClassSelector.Length..].Split([ClassSelector], StringSplitOptions.RemoveEmptyEntries);
     }
 
     private static Color GetColor(string themeFileName, StyleRule rule)
@@ -150,15 +150,14 @@ public class ThemeLoader : IThemeLoader
         // Prefer the latter option - less magic.
 
         // cssColorValue is something like 'rgb(180, 180, 180)'
-        int[] rgbValues = cssColorValue.Split('(', ')', ',')
+        int[] rgbValues = [.. cssColorValue.Split('(', ')', ',')
             .Select(sa => new
             {
                 Success = int.TryParse(sa, out int value),
                 Value = value
             })
             .Where(v => v.Success)
-            .Select(v => v.Value)
-            .ToArray();
+            .Select(v => v.Value)];
 
         if (rgbValues.Length != 3)
         {

@@ -24,7 +24,7 @@ public sealed class RefsFormatter
 
     public RefsFormatter(ILinkFactory linkFactory)
     {
-        _linkFactory = linkFactory ?? throw new ArgumentNullException("RefsFormatter requires an ILinkFactory instance");
+        _linkFactory = linkFactory ?? throw new ArgumentNullException(nameof(linkFactory), "RefsFormatter requires an ILinkFactory instance");
     }
 
     public string FormatBranches(IEnumerable<string>? branches, bool showAsLinks, bool limit)
@@ -74,7 +74,7 @@ public sealed class RefsFormatter
 
         foreach (string branch in branches)
         {
-            string noPrefixBranch = branch ?? string.Empty;
+            string noPrefixBranch = branch;
             bool branchIsLocal;
             if (getLocal && getRemote)
             {

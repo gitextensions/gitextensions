@@ -1,7 +1,7 @@
 ﻿using System.Net;
 using System.Text;
 using GitCommands;
-using GitCommands.Utils;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using ResourceManager;
@@ -20,7 +20,7 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
 
     private const string MostRecentHint = "most recent changes are listed on top";
     private readonly GitUIEventArgs _gitUiCommands;
-    private IEnumerable<LogLine> _lastGeneratedLogLines = Enumerable.Empty<LogLine>();
+    private IEnumerable<LogLine> _lastGeneratedLogLines = [];
     private readonly IGitLogLineParser _gitLogLineParser;
 
     public ReleaseNotesGeneratorForm(GitUIEventArgs gitUiCommands)
@@ -44,14 +44,14 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
 
         if (string.IsNullOrWhiteSpace(textBoxRevFrom.Text))
         {
-            MessageBox.Show(this, _fromCommitNotSpecified.Text, _caption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, _fromCommitNotSpecified.Text, _caption.Text);
             textBoxRevFrom.Focus();
             return;
         }
 
         if (string.IsNullOrWhiteSpace(_NO_TRANSLATE_textBoxRevTo.Text))
         {
-            MessageBox.Show(this, _toCommitNotSpecified.Text, _caption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.ShowError(this, _toCommitNotSpecified.Text, _caption.Text);
             _NO_TRANSLATE_textBoxRevTo.Focus();
             return;
         }
@@ -63,9 +63,9 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
 
         string result = _gitUiCommands.GitModule.GitExecutable.GetOutput(args);
 
-        if (EnvUtils.RunningOnWindows())
+        if (OperatingSystem.IsWindows())
         {
-            result = string.Join(Environment.NewLine, result.Split(new[] { Environment.NewLine }, StringSplitOptions.None).SelectMany(l => l.Split('\n')));
+            result = string.Join(Environment.NewLine, result.Split([Environment.NewLine], StringSplitOptions.None).SelectMany(l => l.Split('\n')));
         }
 
         textBoxResult.Text = result;
@@ -125,7 +125,7 @@ public partial class ReleaseNotesGeneratorForm : GitExtensionsFormBase
         {
             string message = string.Join(Environment.NewLine + colSeparatorRestLines,
                 logLine.MessageLines.Where(
-                a => suppressEmptyLines ? !string.IsNullOrWhiteSpace(a) : true));
+                a => !suppressEmptyLines || !string.IsNullOrWhiteSpace(a)));
             stringBuilder.AppendFormat("{0}{1}{2}{3}", logLine.Commit, colSeparatorFirstLine, message, Environment.NewLine);
         }
 

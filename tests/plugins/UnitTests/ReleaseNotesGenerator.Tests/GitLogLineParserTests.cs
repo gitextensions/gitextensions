@@ -1,12 +1,9 @@
-﻿using FluentAssertions;
-using GitExtensions.Plugins.ReleaseNotesGenerator;
+﻿using GitExtensions.Plugins.ReleaseNotesGenerator;
 
 namespace ReleaseNotesGeneratorTests;
-
-[TestFixture]
 public class GitLogLineParserTests
 {
-    private IGitLogLineParser _parser;
+    private IGitLogLineParser _parser = null!;
 
     [SetUp]
     public void Setup()
@@ -17,9 +14,9 @@ public class GitLogLineParserTests
     [TestCase(null)]
     [TestCase("")]
     [TestCase("    ")]
-    public void Parse_line_should_return_null(string line)
+    public void Parse_line_should_return_null(string? line)
     {
-        _parser.Parse(line).Should().BeNull();
+        _parser.Parse(line!).Should().BeNull();
     }
 
     [Test]
@@ -33,9 +30,9 @@ public class GitLogLineParserTests
     [TestCase("0824e058c@RevisionDiffProvider Release tests", "0824e058c", "RevisionDiffProvider Release tests")]
     [TestCase("0824e058c0123@RevisionDiffProvider Release tests", "0824e058c0123", "RevisionDiffProvider Release tests")]
     [TestCase("0824e058c@RevisionDiffProvider@ Release tests", "0824e058c", "RevisionDiffProvider@ Release tests")]
-    public void Parse_line_should_parse_correctly(string line, string expectedHash, string expectedMessage)
+    public void Parse_line_should_parse_correctly(string? line, string expectedHash, string expectedMessage)
     {
-        LogLine logLine = _parser.Parse(line);
+        LogLine? logLine = _parser.Parse(line!);
 
         logLine.Should().NotBeNull();
         logLine.Commit.Should().Be(expectedHash);
@@ -45,7 +42,7 @@ public class GitLogLineParserTests
     [Test]
     public void Parse_lines_should_return_empty_list_if_null()
     {
-        _parser.Parse((string[])null).Should().BeEmpty();
+        _parser.Parse((string[])null!).Should().BeEmpty();
     }
 
     [Test]
@@ -91,11 +88,11 @@ The irrelevant commands are disabled
 There are some existing checks for bareRepositories in InternalInitialize() (where some init code is running...) that al
 so could be removed after this (some were missing from that menu). checkoutBranchToolStripMenuItem is a little special t";
 
-        List<LogLine> logLines = _parser.Parse(log.Replace("\r\n", "\n").Split('\n')).ToList();
+        List<LogLine> logLines = [.. _parser.Parse(log.Replace("\r\n", "\n").Split('\n'))];
 
         logLines.Should().HaveCount(18);
 
-        LogLine line = logLines.SingleOrDefault(l => l.Commit == "77fc3cb50");
+        LogLine? line = logLines.SingleOrDefault(l => l.Commit == "77fc3cb50");
         line.Should().NotBeNull();
         line.MessageLines.Should().HaveCount(10);
 

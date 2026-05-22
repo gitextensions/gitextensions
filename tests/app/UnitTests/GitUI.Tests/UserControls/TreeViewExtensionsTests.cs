@@ -1,20 +1,17 @@
-﻿using FluentAssertions;
-using GitUI.UserControls;
+﻿using GitUI.UserControls;
 
 namespace GitUITests.UserControls;
-
-[TestFixture]
 public class TreeViewExtensionsTests
 {
-    private TreeView _treeView;
-    private TreeNode _root;
-    private TreeNode _a;
-    private TreeNode _b;
-    private TreeNode _c;
-    private TreeNode _b1;
-    private TreeNode _b2;
-    private TreeNode _b3;
-    private TreeNode _b2_1;
+    private TreeView _treeView = null!;
+    private TreeNode _root = null!;
+    private TreeNode _a = null!;
+    private TreeNode _b = null!;
+    private TreeNode _c = null!;
+    private TreeNode _b1 = null!;
+    private TreeNode _b2 = null!;
+    private TreeNode _b3 = null!;
+    private TreeNode _b2_1 = null!;
 
     [SetUp]
     public void Setup()
@@ -34,11 +31,17 @@ public class TreeViewExtensionsTests
         _b2_1 = _b2.Nodes.Add("B_2_1");
     }
 
+    [TearDown]
+    public void TearDown()
+    {
+        _treeView.Dispose();
+    }
+
     [Test]
     public void GetExpandedNodesState_should_return_no_expanded_nodes()
     {
         HashSet<string> expandedNodes = _root.GetExpandedNodesState();
-        ClassicAssert.AreEqual(0, expandedNodes.Count);
+        expandedNodes.Count.Should().Be(0);
     }
 
     [Test]
@@ -46,8 +49,8 @@ public class TreeViewExtensionsTests
     {
         _b.Expand();
         HashSet<string> expandedNodes = _root.GetExpandedNodesState();
-        ClassicAssert.AreEqual(1, expandedNodes.Count);
-        ClassicAssert.AreEqual(true, expandedNodes.Contains(@"Root\B"));
+        expandedNodes.Count.Should().Be(1);
+        expandedNodes.Contains(@"Root\B").Should().Be(true);
     }
 
     [Test]
@@ -55,7 +58,7 @@ public class TreeViewExtensionsTests
     {
         _root.ExpandAll();
         HashSet<string> expandedNodes = _root.GetExpandedNodesState();
-        ClassicAssert.AreEqual(8, expandedNodes.Count);
+        expandedNodes.Count.Should().Be(8);
     }
 
     [Test]
@@ -65,7 +68,7 @@ public class TreeViewExtensionsTests
         _root.RestoreExpandedNodesState(expandedNodes);
 
         HashSet<string> expandedNodesPost = _root.GetExpandedNodesState();
-        ClassicAssert.AreEqual(0, expandedNodesPost.Count);
+        expandedNodesPost.Count.Should().Be(0);
     }
 
     [Test]
@@ -75,8 +78,8 @@ public class TreeViewExtensionsTests
         _root.RestoreExpandedNodesState(expandedNodes);
 
         HashSet<string> expandedNodesPost = _root.GetExpandedNodesState();
-        ClassicAssert.AreEqual(1, expandedNodesPost.Count);
-        ClassicAssert.AreEqual(true, expandedNodes.Contains(@"Root\B"));
+        expandedNodesPost.Count.Should().Be(1);
+        expandedNodes.Contains(@"Root\B").Should().Be(true);
     }
 
     [Test]
@@ -97,8 +100,8 @@ public class TreeViewExtensionsTests
         _root.RestoreExpandedNodesState(expandedNodes);
 
         HashSet<string> expandedNodesPost = _root.GetExpandedNodesState();
-        ClassicAssert.AreEqual(8, expandedNodesPost.Count);
-        ClassicAssert.AreEqual(expandedNodes, expandedNodesPost);
+        expandedNodesPost.Count.Should().Be(8);
+        expandedNodesPost.Should().BeEquivalentTo(expandedNodes);
     }
 
     [Test]

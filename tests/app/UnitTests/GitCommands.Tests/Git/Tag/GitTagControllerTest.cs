@@ -5,15 +5,13 @@ using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests.Git.Tag;
-
-[TestFixture]
 public class GitTagControllerTest
 {
     private readonly string _workingDir = TestContext.CurrentContext.TestDirectory;
-    private string _tagMessageFile;
-    private IGitTagController _controller;
-    private IFileSystem _fileSystem;
-    private IGitUICommands _uiCommands;
+    private string _tagMessageFile = null!;
+    private IGitTagController _controller = null!;
+    private IFileSystem _fileSystem = null!;
+    private IGitUICommands _uiCommands = null!;
 
     [SetUp]
     public void Setup()
@@ -34,7 +32,7 @@ public class GitTagControllerTest
     public void CreateTagWithMessageThrowsIfTheWindowIsNull()
     {
         GitCreateTagArgs args = CreateAnnotatedTagArgs();
-        ClassicAssert.Throws<ArgumentNullException>(() => _controller.CreateTag(args, parentWindow: null));
+        ((Action)(() => _controller.CreateTag(args, parentWindow: null!))).Should().Throw<ArgumentNullException>();
     }
 
     [Test]
@@ -59,7 +57,7 @@ public class GitTagControllerTest
         _uiCommands.StartCommandLineProcessDialog(Arg.Any<IWin32Window>(), Arg.Is<IGitCommand>(cmd => cmd.Arguments.StartsWith("tag")))
             .Returns(uiResult);
 
-        ClassicAssert.AreEqual(uiResult, _controller.CreateTag(args, CreateTestingWindow()));
+        _controller.CreateTag(args, CreateTestingWindow()).Should().Be(uiResult);
 
         _fileSystem.File.Received(1).Delete(_tagMessageFile);
     }
@@ -82,6 +80,6 @@ public class GitTagControllerTest
 
     private static GitCreateTagArgs CreateAnnotatedTagArgs()
     {
-        return new GitCreateTagArgs("tagname", ObjectId.Parse("0000000000000000000000000000000000000000"), TagOperation.Annotate, "hello world");
+        return new GitCreateTagArgs("tagname", ObjectId.Random(), TagOperation.Annotate, "hello world");
     }
 }

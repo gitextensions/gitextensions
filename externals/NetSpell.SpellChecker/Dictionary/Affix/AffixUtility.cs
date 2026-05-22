@@ -80,7 +80,7 @@ public static class AffixUtility
                 int passCount = 0;
                 for (int i = 0; i < entry.ConditionCount; i++)
                 {
-                    int charCode = word[word.Length - (entry.ConditionCount - i)];
+                    int charCode = word[^(entry.ConditionCount - i)];
                     if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
                     {
                         passCount++;
@@ -314,7 +314,7 @@ public static class AffixUtility
             int passCount = 0;
             for (int i = 0; i < entry.ConditionCount; i++)
             {
-                int charCode = tempWord[tempWord.Length - (entry.ConditionCount - i)];
+                int charCode = tempWord[^(entry.ConditionCount - i)];
                 if ((entry.Condition[charCode] & (1 << i)) == (1 << i))
                 {
                     passCount++;

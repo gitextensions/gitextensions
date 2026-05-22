@@ -20,11 +20,11 @@ partial class FormVerify
     private sealed partial class LostObject
     {
         [GeneratedRegex(@"^(?<rawtype>(dangling|missing|unreachable) (?<objecttype>commit|blob|tree|tag)|warning in tree) (?<objectid>[a-f\d]{40})(.)*$", RegexOptions.ExplicitCapture)]
-        private static partial Regex RawDataRegex();
+        private static partial Regex RawDataRegex { get; }
         [GeneratedRegex(@"^(?<author>[^\u001F]+)\u001F(?<subject>.*)\u001F(?<date>\d+)\u001F(?<first_parent>[^ ]+)?( .+)?$", RegexOptions.Singleline | RegexOptions.ExplicitCapture)]
-        private static partial Regex LogRegex();
+        private static partial Regex LogRegex { get; }
         [GeneratedRegex(@"^object (?<parent>.+)\ntype commit\ntag (?<tagname>.+)\ntagger (?<author>.+) <.*> (?<date>.+) .*\n\n(?<subject>.*)\n", RegexOptions.Multiline | RegexOptions.ExplicitCapture)]
-        private static partial Regex TagRegex();
+        private static partial Regex TagRegex { get; }
 
         /// <summary>
         /// {0} - lost object's hash.
@@ -54,7 +54,7 @@ partial class FormVerify
         /// <summary>
         /// Id (SHA-1 hash) of parent commit to the lost object.
         /// </summary>
-        public ObjectId? Parent { get; private set; }
+        public ObjectId Parent { get; private set; }
 
         /// <summary>
         /// Diagnostics and object type.
@@ -75,7 +75,12 @@ partial class FormVerify
             // TODO use enum for RawType
             ObjectType = objectType;
             RawType = rawType;
-            ObjectId = objectId ?? throw new ArgumentNullException(nameof(objectId));
+            if (objectId.IsZero)
+            {
+                throw new ArgumentNullException(nameof(objectId));
+            }
+
+            ObjectId = objectId;
         }
 
         /// <summary>
@@ -93,7 +98,7 @@ partial class FormVerify
 
         public void FillCommitData(IGitModule module, string commitLog)
         {
-            Match logPatternMatch = LogRegex().Match(commitLog);
+            Match logPatternMatch = LogRegex.Match(commitLog);
             if (logPatternMatch.Success)
             {
                 // TODO: cache
@@ -115,7 +120,7 @@ partial class FormVerify
                 throw new ArgumentException("Raw source must be non-empty string", raw);
             }
 
-            Match patternMatch = RawDataRegex().Match(raw);
+            Match patternMatch = RawDataRegex.Match(raw);
 
             // show failed assertion for unsupported cases (for developers)
             // if you get this message,
@@ -141,7 +146,7 @@ partial class FormVerify
             else if (objectType == LostObjectType.Tag)
             {
                 string tagData = GetLostTagData();
-                Match tagPatternMatch = TagRegex().Match(tagData);
+                Match tagPatternMatch = TagRegex.Match(tagData);
                 if (tagPatternMatch.Success)
                 {
                     result.Parent = ObjectId.Parse(tagData, tagPatternMatch.Groups["parent"]);
@@ -154,7 +159,7 @@ partial class FormVerify
             else if (objectType == LostObjectType.Blob)
             {
                 string hash = objectId.ToString();
-                string blobPath = Path.Combine(module.WorkingDirGitDir, "objects", hash[..2], hash[2..ObjectId.Sha1CharCount]);
+                string blobPath = Path.Join(module.WorkingDirGitDir, "objects", hash[..2], hash[2..ObjectId.Sha1CharCount]);
                 result.Date = new FileInfo(blobPath).CreationTime;
             }
 

@@ -1,13 +1,13 @@
 ﻿using System.ComponentModel;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace GitCommands.Settings;
 
 public static class Setting
 {
-    public static ISetting<string> Create(SettingsPath settingsSource, string name, string? defaultValue)
+    public static ISetting<string> Create(SettingsPath settingsSource, string name, string defaultValue)
     {
-        return new SettingOf<string>(settingsSource, name, defaultValue ?? string.Empty);
+        return new SettingOf<string>(settingsSource, name, defaultValue);
     }
 
     public static ISetting<T> Create<T>(SettingsPath settingsSource, string name, T defaultValue)
@@ -16,113 +16,39 @@ public static class Setting
         return new SettingOf<T>(settingsSource, name, defaultValue);
     }
 
-    public static ISetting<T?> Create<T>(SettingsPath settingsSource, string name)
+    public static ISetting<T> Create<T>(SettingsPath settingsSource, string name)
         where T : struct
     {
-        return new SettingOf<T?>(settingsSource, name);
+        return new SettingOf<T>(settingsSource, name, default);
     }
 
-    private sealed class SettingOf<T> : ISetting<T>
+    private sealed class SettingOf<T>(SettingsPath settingsSource, string name, T defaultValue) : ISetting<T>
     {
-        /// <inheritdoc />
-        public event EventHandler? Updated;
+        public string Name { get; } = name;
 
-        public SettingOf(SettingsPath settingsSource, string name, T? defaultValue = default)
+        public T Default { get; } = defaultValue;
+
+        public T Value
         {
-            SettingsSource = settingsSource;
-            Name = name;
-            Default = defaultValue;
-        }
-
-        /// <inheritdoc />
-        public SettingsPath SettingsSource { get; }
-
-        /// <inheritdoc />
-        public string Name { get; }
-
-        /// <inheritdoc />
-        public T? Default { get; }
-
-        /// <inheritdoc />
-        public T? Value
-        {
-            get
-            {
-                object storedValue = GetValue(Name);
-
-                if (default(T) is null)
-                {
-                    if (Type.GetTypeCode(typeof(T)) != TypeCode.String)
-                    {
-                        return (T?)storedValue!;
-                    }
-                }
-
-                if (storedValue is null)
-                {
-                    return Default;
-                }
-
-                return (T)storedValue;
-            }
+            get => GetValue(Name) is { } value ? (T)value : Default;
 
             set
             {
-                object storedValue = GetValue(Name);
-
-                if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
+                object? valueToBeStored = value?.Equals(Default) is true ? null : value;
+                if (valueToBeStored == GetValue(Name))
                 {
-                    if (storedValue?.Equals((object?)value ?? string.Empty) ?? false)
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    if (storedValue?.Equals(value) ?? ((default(T) is null) && (value is null)))
-                    {
-                        return;
-                    }
+                    return;
                 }
 
-                if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
-                {
-                    SetValue(Name, (object?)value ?? string.Empty);
-                }
-                else
-                {
-                    SetValue(Name, value);
-                }
-
-                Updated?.Invoke(this, EventArgs.Empty);
+                SetValue(Name, valueToBeStored);
             }
         }
 
-        /// <inheritdoc />
-        public bool IsUnset
-        {
-            get
-            {
-                if (default(T) is null)
-                {
-                    if (Type.GetTypeCode(typeof(T)) != TypeCode.String)
-                    {
-                        return false;
-                    }
-                }
-
-                object storedValue = GetValue(Name);
-
-                return storedValue is null;
-            }
-        }
-
-        /// <inheritdoc />
-        public string FullPath => SettingsSource.PathFor(Name);
+        public string FullPath => settingsSource.PathFor(Name);
 
         private object? GetValue(string name)
         {
-            string? stringValue = SettingsSource.GetValue(name);
+            string? stringValue = settingsSource.GetValue(name);
             if (stringValue is null)
             {
                 return null;
@@ -138,8 +64,8 @@ public static class Setting
                 case TypeCode.Object:
                     try
                     {
-                        return JsonConvert
-                            .DeserializeObject<T>(stringValue);
+                        return JsonSerializer
+                            .Deserialize<T>(stringValue);
                     }
                     catch
                     {
@@ -176,8 +102,8 @@ public static class Setting
                     stringValue = (string?)value;
                     break;
                 case TypeCode.Object:
-                    stringValue = JsonConvert
-                        .SerializeObject(value);
+                    stringValue = JsonSerializer
+                        .Serialize(value);
                     break;
                 default:
                     TypeConverter converter = TypeDescriptor
@@ -188,7 +114,7 @@ public static class Setting
                     break;
             }
 
-            SettingsSource.SetValue(name, stringValue);
+            settingsSource.SetValue(name, stringValue);
         }
     }
 }

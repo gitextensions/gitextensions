@@ -27,7 +27,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Runtime environment
     </td>
     <td>
-      MS Windows 7SP1+ // <a href="https://dotnet.microsoft.com/download/dotnet/9.0" target=_blank>.NET 9.0 SDK</a>
+      MS Windows 10+ // <a href="https://dotnet.microsoft.com/download/dotnet/10.0" target=_blank>.NET Desktop 10.0 SDK</a>
     </td>
   </tr>
   <tr>
@@ -35,7 +35,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Development
     </td>
     <td>
-      MS Visual Studio 2022 (v17.12+), C# 13 // VC++ (inc. ATL for x86/x64 for installer)
+      MS Visual Studio 2026, C# 14 // VC++ (inc. ATL for x86/x64 for installer)
     </td>
   </tr>
   <tr>
@@ -43,7 +43,7 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
       Current dev status
     </td>
     <td>
-      <a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a>
+      <a href="https://github.com/gitextensions/gitextensions/actions/workflows/pr-build.yml?query=branch%3Amaster"><img alt="Build status" src="https://github.com/gitextensions/gitextensions/actions/workflows/pr-build.yml/badge.svg?branch=master" style="max-width:100%;"></a>
     </td>
   </tr>
   <tr>
@@ -75,7 +75,7 @@ If you want to **update a portable version**, you should delete all the files an
 <table>
   <tr>
     <td>
-      <strong>Latest Release: v6.0.2</strong>
+      <strong>Latest Release: v6.0.5</strong>
     </td>
     <td>
       <a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a><br />
@@ -88,13 +88,13 @@ If you want to **update a portable version**, you should delete all the files an
       NB: expect :unicorn: :unicorn: and :dragon: :dragon:
     </td>
     <td>
-      <a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master/artifacts">[ Download ]</a><br />
-      <a href="https://ci.appveyor.com/project/gitextensions/gitextensions/branch/master"><img alt="Build status" src="https://ci.appveyor.com/api/projects/status/yo5kw7sl6da8danr/branch/master?svg=true" style="max-width:100%;"></a>
+      <a href="https://github.com/gitextensions/gitextensions/actions/workflows/pr-build.yml?query=branch%3Amaster">[ Download ]</a><br />
+      <a href="https://github.com/gitextensions/gitextensions/actions/workflows/pr-build.yml?query=branch%3Amaster"><img alt="Build status" src="https://github.com/gitextensions/gitextensions/actions/workflows/pr-build.yml/badge.svg?branch=master" style="max-width:100%;"></a>
     </td>
   </tr>
   <tr>
     <td>
-      <strong>Visual Studio VSIX (2022)</strong>
+      <strong>Visual Studio VSIX (2022 and later)</strong>
     </td>
     <td>
       <a href="https://marketplace.visualstudio.com/items?itemName=GitExtensionsApp.VS2022">[ Download ]</a> or install from Visual Studio via Extensions

@@ -1,4 +1,4 @@
-﻿using System.Collections.Immutable;
+using System.Collections.Immutable;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -32,7 +32,7 @@ public partial class FormAddSubmodule : GitModuleForm
 
     private void BrowseClick(object sender, EventArgs e)
     {
-        string userSelectedPath = OsShellUtil.PickFolder(this, Directory.Text);
+        string? userSelectedPath = OsShellUtil.PickFolder(this, Directory.Text);
 
         if (userSelectedPath is not null)
         {
@@ -44,7 +44,7 @@ public partial class FormAddSubmodule : GitModuleForm
     {
         if (string.IsNullOrEmpty(Directory.Text) || string.IsNullOrEmpty(LocalPath.Text))
         {
-            MessageBox.Show(this, _remoteAndLocalPathRequired.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBoxes.Show(this, _remoteAndLocalPathRequired.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return;
         }
 
@@ -87,7 +87,7 @@ public partial class FormAddSubmodule : GitModuleForm
     {
         if (string.IsNullOrWhiteSpace(url))
         {
-            return Array.Empty<string>();
+            return [];
         }
 
         GitArgumentBuilder gitArguments = new("ls-remote") { "--heads", url.ToPosixPath().Quote() };

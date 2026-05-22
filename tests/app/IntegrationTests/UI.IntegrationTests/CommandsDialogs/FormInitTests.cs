@@ -8,10 +8,10 @@ namespace GitExtensions.UITests.CommandsDialogs;
 public class FormInitTests
 {
     // Created once for the fixture
-    private ReferenceRepository _referenceRepository;
+    private ReferenceRepository _referenceRepository = null!;
 
     // Created once for each test
-    private GitUICommands _commands;
+    private GitUICommands _commands = null!;
 
     [SetUp]
     public void SetUp()
@@ -33,7 +33,7 @@ public class FormInitTests
         RunFormTest(
             form =>
             {
-                ClassicAssert.AreEqual(currentDir, form.GetTestAccessor().DirectoryCombo.Text);
+                form.GetTestAccessor().DirectoryCombo.Text.Should().Be(currentDir);
             },
             currentDir);
     }
@@ -45,22 +45,22 @@ public class FormInitTests
         RunFormTest(
             form =>
             {
-                ClassicAssert.AreEqual(_referenceRepository.Module.WorkingDir, form.GetTestAccessor().DirectoryCombo.Text);
+                form.GetTestAccessor().DirectoryCombo.Text.Should().Be(_referenceRepository.Module.WorkingDir);
             },
-            null);
+            null!);
     }
 
     [TestCase("")]
     [TestCase(null)]
     [TestCase("    ")]
     [TestCase(@"foo\bar")]
-    public void IsRootedDirectoryPath_should_detect_invalid_paths(string input)
+    public void IsRootedDirectoryPath_should_detect_invalid_paths(string? input)
     {
         string currentDir = "bla";
         RunFormTest(
             form =>
             {
-                ClassicAssert.IsFalse(form.GetTestAccessor().IsRootedDirectoryPath(input));
+                form.GetTestAccessor().IsRootedDirectoryPath(input!).Should().BeFalse();
             },
             currentDir);
     }
@@ -69,13 +69,13 @@ public class FormInitTests
     [TestCase(@"c:\foo\bar\")]
     [TestCase(@"c:")]
     [TestCase(@"  c:\foo\bar  ")]
-    public void IsRootedDirectoryPath_returns_true_on_valid_paths(string input)
+    public void IsRootedDirectoryPath_returns_true_on_valid_paths(string? input)
     {
         string currentDir = "bla";
         RunFormTest(
             form =>
             {
-                ClassicAssert.IsTrue(form.GetTestAccessor().IsRootedDirectoryPath(input));
+                form.GetTestAccessor().IsRootedDirectoryPath(input!).Should().BeTrue();
             },
             currentDir);
     }
@@ -96,7 +96,7 @@ public class FormInitTests
         UITest.RunForm(
             () =>
             {
-                ClassicAssert.True(_commands.StartInitializeDialog(owner: null, path));
+                _commands.StartInitializeDialog(owner: null, path).Should().BeTrue();
             },
             testDriverAsync);
     }

@@ -1,15 +1,12 @@
-﻿using FluentAssertions;
-using GitCommands.Git;
+﻿using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using NSubstitute;
 
 namespace GitCommandsTests.Git;
-
-[TestFixture]
 public class GitDescribeProviderTests
 {
-    private IGitModule _module;
-    private GitDescribeProvider _provider;
+    private IGitModule _module = null!;
+    private GitDescribeProvider _provider = null!;
 
     [SetUp]
     public void Setup()
@@ -69,7 +66,7 @@ public class GitDescribeProviderTests
     [Test]
     public void GitDescribeProvider_should_throw_if_module_is_not_provided()
     {
-        _module = null;
+        _module = null!;
 
         ((Action)(() => _provider.Get(ObjectId.Random()))).Should().Throw<ArgumentException>();
     }

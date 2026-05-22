@@ -1,12 +1,10 @@
-﻿using GitCommands;
+﻿using System.Text.Json;
+using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using Microsoft.VisualStudio.TestPlatform.ObjectModel;
-using Newtonsoft.Json;
 
 namespace GitCommandsTests.Git.Commands;
-
-[TestFixture]
 public class GetAllChangedFilesOutputParserTest
 {
     [Test]
@@ -25,12 +23,12 @@ public class GetAllChangedFilesOutputParserTest
     public async Task TestGetStatusChangedFilesFromString(string testName, string statusString)
     {
         // TODO produce a valid working directory
-        GitModule module = new(Path.GetTempPath());
+        GitModule module = new(new GitExecutorProvider(new GitDirectoryResolver()), Path.GetTempPath());
         GetAllChangedFilesOutputParser getAllChangedFilesOutputParser = new(() => module);
 
         // git status --porcelain=2 --untracked-files=no -z
         IReadOnlyList<GitItemStatus> statuses = getAllChangedFilesOutputParser.Parse(statusString);
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(statuses))
+        await Verifier.VerifyJson(JsonSerializer.Serialize(statuses))
             .UseParameters(testName);
     }
 
@@ -39,7 +37,7 @@ public class GetAllChangedFilesOutputParserTest
     {
         GitItemStatus item = GitItemStatus.GetDefaultStatus("filename.txt");
 
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(item));
+        await Verifier.VerifyJson(JsonSerializer.Serialize(item));
     }
 
     private const string _rawinfo = ":100644 100644 96b438fc ffe29e27 ";
@@ -68,11 +66,11 @@ public class GetAllChangedFilesOutputParserTest
     public async Task GetDiffChangedFilesFromString(string testName, StagedStatus stagedStatus, string statusString)
     {
         // TODO produce a valid working directory
-        GitModule module = new(Path.GetTempPath());
+        GitModule module = new(new GitExecutorProvider(new GitDirectoryResolver()), Path.GetTempPath());
         // git diff --find-renames --find-copies -z --raw
         List<GitItemStatus> statuses = module.GetTestAccessor().GetDiffChangedFilesFromString(statusString, stagedStatus);
 
-        await Verifier.VerifyJson(JsonConvert.SerializeObject(statuses))
+        await Verifier.VerifyJson(JsonSerializer.Serialize(statuses))
             .UseParameters(testName);
     }
 }

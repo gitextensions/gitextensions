@@ -13,6 +13,6 @@ public sealed class StringBuilderExtensionsTests
     [TestCase("\" \"", " ")]
     public void AppendQuoted(string expected, string source)
     {
-        ClassicAssert.AreEqual(expected, new StringBuilder().AppendQuoted(source).ToString());
+        new StringBuilder().AppendQuoted(source).ToString().Should().Be(expected);
     }
 }

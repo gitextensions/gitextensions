@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\..\src\plugins\BuildServerIntegration\JenkinsIntegration\GitExtensions.Plugins.JenkinsIntegration.csproj" />
+    <ProjectReference Include="..\..\..\..\..\src\app\ResourceManager\ResourceManager.csproj" />
+    <ProjectReference Include="..\..\..\..\CommonTestUtils\CommonTestUtils.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="MockData\JenkinsResult_freestyle_success.json" />
+    <EmbeddedResource Include="MockData\JenkinsResult_freestyle_failure.json" />
+    <EmbeddedResource Include="MockData\JenkinsResult_freestyle_running.json" />
+    <EmbeddedResource Include="MockData\JenkinsResult_with_tests.json" />
+    <EmbeddedResource Include="MockData\JenkinsResult_with_branches.json" />
+  </ItemGroup>
+
+</Project>

@@ -52,11 +52,11 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
     }
 
     public bool RunEventScripts<THostForm>(ScriptEvent scriptEvent, THostForm form)
-        where THostForm : IGitModuleForm, IWin32Window
+        where THostForm : IGitModuleForm, IScriptOptionsForm, IWin32Window
     {
         foreach (ScriptInfo script in GetScripts().Where(scriptInfo => scriptInfo.Enabled && scriptInfo.OnEvent == scriptEvent))
         {
-            bool executed = ScriptRunner.RunScript(script, owner: form, form.UICommands);
+            bool executed = ScriptRunner.RunScript(script, owner: form, form.UICommands, form.GetScriptOptionsProvider());
             if (!executed)
             {
                 return false;
@@ -66,12 +66,12 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
         return true;
     }
 
-    public bool RunScript(ScriptInfo scriptInfo, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider? scriptOptionsProvider = null)
+    public bool RunScript(ScriptInfo scriptInfo, IWin32Window owner, IGitUICommands commands, IScriptOptionsProvider scriptOptionsProvider)
     {
         return ScriptRunner.RunScript(scriptInfo, owner, commands, scriptOptionsProvider);
     }
 
-    public string? SerializeIntoXml()
+    public string SerializeIntoXml()
     {
         try
         {
@@ -87,7 +87,7 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
         }
         catch
         {
-            return null;
+            return null!;
         }
     }
 
@@ -103,7 +103,7 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
         {
             using StringReader stringReader = new(xml);
             using XmlTextReader xmlReader = new(stringReader);
-            return (BindingList<ScriptInfo>)_serializer.Deserialize(xmlReader);
+            return (BindingList<ScriptInfo>)_serializer.Deserialize(xmlReader)!;
         }
         catch (Exception ex)
         {
@@ -111,8 +111,8 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
             return DeserializeFromOldFormat(xml);
         }
 
-        BindingList<ScriptInfo> GetDefaultScripts() => new()
-        {
+        BindingList<ScriptInfo> GetDefaultScripts() =>
+        [
             new ScriptInfo
             {
                 HotkeyCommandIdentifier = 9000,
@@ -134,6 +134,24 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
                 RunInBackground = false,
                 AskConfirmation = true,
                 OnEvent = ScriptEvent.AfterPull,
+                AddToRevisionGridContextMenu = false,
+                Enabled = false
+            },
+            new ScriptInfo
+            {
+                HotkeyCommandIdentifier = 9005,
+                Icon = "EditFile",
+                Name = "&Open in VS Code",
+                Command = "bash",
+                Arguments = "-c '"
+                    + @"if [ -z ""{SelectedRelativePaths}"" ]; then code .; "
+                    + @"elif [ -d ""{SelectedRelativePaths}"" ]; then code {{SelectedRelativePaths}}; "
+                    + @"elif [ ! -f ""{SelectedRelativePaths}"" ]; then code . --goto {{SelectedRelativePaths}}; "
+                    + @"else code . --goto {{SelectedRelativePaths}}:{LineNumber}:{ColumnNumber}; "
+                    + @"fi'",
+                RunInBackground = true,
+                AskConfirmation = false,
+                OnEvent = ScriptEvent.ShowInUserMenuBar,
                 AddToRevisionGridContextMenu = false,
                 Enabled = false
             },
@@ -172,8 +190,32 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
                 OnEvent = 0,
                 AddToRevisionGridContextMenu = true,
                 Enabled = false
+            },
+            new ScriptInfo
+            {
+                HotkeyCommandIdentifier = 9006,
+                Name = "Convert workspace file to LF",
+                Command = "bash.exe",
+                Arguments = "-c 'dos2unix.exe {{SelectedRelativePaths}}'",
+                RunInBackground = true,
+                AskConfirmation = false,
+                OnEvent = 0,
+                AddToRevisionGridContextMenu = false,
+                Enabled = false
+            },
+            new ScriptInfo
+            {
+                HotkeyCommandIdentifier = 9007,
+                Name = "Convert workspace file to CRLF",
+                Command = "bash.exe",
+                Arguments = "-c 'unix2dos.exe {{SelectedRelativePaths}}'",
+                RunInBackground = true,
+                AskConfirmation = false,
+                OnEvent = 0,
+                AddToRevisionGridContextMenu = false,
+                Enabled = false
             }
-        };
+        ];
 
         BindingList<ScriptInfo> DeserializeFromOldFormat(string inputString)
         {
@@ -184,9 +226,9 @@ internal sealed partial class ScriptsManager : IScriptsManager, IScriptsRunner
 
             if (inputString.Contains(paramSeparator) || inputString.Contains(scriptSeparator))
             {
-                foreach (string script in inputString.Split(new[] { scriptSeparator }, StringSplitOptions.RemoveEmptyEntries))
+                foreach (string script in inputString.Split([scriptSeparator], StringSplitOptions.RemoveEmptyEntries))
                 {
-                    string[] parameters = script.Split(new[] { paramSeparator }, StringSplitOptions.None);
+                    string[] parameters = script.Split([paramSeparator], StringSplitOptions.None);
 
                     scripts.Add(new ScriptInfo
                     {

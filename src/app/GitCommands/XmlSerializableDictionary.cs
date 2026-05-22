@@ -1,24 +1,16 @@
-﻿using System.Runtime.Serialization;
-using System.Xml;
+﻿using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 
 namespace GitCommands;
 
 [XmlRoot("dictionary")]
-[Serializable]
 public class XmlSerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IXmlSerializable
+    where TKey : notnull
 {
     public XmlSerializableDictionary()
     {
     }
-
-#pragma warning disable SYSLIB0051 // This ctor is obsolete: 'This API supports obsolete formatter-based serialization. It should not be called or extended by application code.'
-    protected XmlSerializableDictionary(SerializationInfo info, StreamingContext context)
-        : base(info, context)
-    {
-    }
-#pragma warning restore SYSLIB0051
 
     #region IXmlSerializable Members
 
@@ -52,17 +44,17 @@ public class XmlSerializableDictionary<TKey, TValue> : Dictionary<TKey, TValue>,
                 reader.ReadStartElement("item");
 
                 reader.ReadStartElement("key");
-                TKey key = (TKey)keySerializer.Deserialize(reader);
+                TKey? key = (TKey?)keySerializer.Deserialize(reader);
                 reader.ReadEndElement();
 
                 reader.ReadStartElement("value");
-                TValue value = (TValue)valueSerializer.Deserialize(reader);
+                TValue? value = (TValue?)valueSerializer.Deserialize(reader);
                 reader.ReadEndElement();
 
                 reader.ReadEndElement();
                 reader.MoveToContent();
 
-                this[key] = value;
+                this[key!] = value!;
             }
         }
 

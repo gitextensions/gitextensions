@@ -28,28 +28,32 @@ partial class FormResetChanges
     /// </summary>
     private void InitializeComponent()
     {
-        label1 = new Label();
+        txtMessage = new TextBox();
         btnReset = new Button();
         btnCancel = new Button();
         cbDeleteNewFilesAndDirectories = new CheckBox();
-        label2 = new Label();
+        lblDeleteHint = new Label();
         flowLayoutPanel1 = new FlowLayoutPanel();
         flowLayoutPanel1.SuspendLayout();
         SuspendLayout();
         // 
-        // label1
+        // txtMessage
         // 
-        label1.AutoSize = true;
-        label1.Location = new Point(9, 9);
-        label1.Name = "label1";
-        label1.Size = new Size(271, 16);
-        label1.TabIndex = 0;
-        label1.Text = "Are you sure you want to reset your changes?";
+        txtMessage.BorderStyle = BorderStyle.None;
+        txtMessage.Dock = DockStyle.Fill;
+        txtMessage.Location = new Point(8, 8);
+        txtMessage.Multiline = true;
+        txtMessage.Name = "txtMessage";
+        txtMessage.ReadOnly = true;
+        txtMessage.Size = new Size(452, 16);
+        txtMessage.TabIndex = 0;
+        txtMessage.TabStop = false;
+        txtMessage.Text = "Are you sure you want to reset your changes?";
         // 
         // btnReset
         // 
         btnReset.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-        btnReset.Location = new Point(261, 3);
+        btnReset.Location = new Point(253, 3);
         btnReset.Name = "btnReset";
         btnReset.Size = new Size(95, 25);
         btnReset.TabIndex = 2;
@@ -61,7 +65,7 @@ partial class FormResetChanges
         // 
         btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
         btnCancel.DialogResult = DialogResult.Cancel;
-        btnCancel.Location = new Point(362, 3);
+        btnCancel.Location = new Point(354, 3);
         btnCancel.Name = "btnCancel";
         btnCancel.Size = new Size(95, 25);
         btnCancel.TabIndex = 1;
@@ -72,21 +76,25 @@ partial class FormResetChanges
         // cbDeleteNewFilesAndDirectories
         // 
         cbDeleteNewFilesAndDirectories.AutoSize = true;
-        cbDeleteNewFilesAndDirectories.Location = new Point(10, 58);
+        cbDeleteNewFilesAndDirectories.Dock = DockStyle.Bottom;
+        cbDeleteNewFilesAndDirectories.Location = new Point(8, 55);
         cbDeleteNewFilesAndDirectories.Name = "cbDeleteNewFilesAndDirectories";
-        cbDeleteNewFilesAndDirectories.Size = new Size(251, 20);
+        cbDeleteNewFilesAndDirectories.Padding = new Padding(3, 8, 0, 8);
+        cbDeleteNewFilesAndDirectories.Size = new Size(452, 35);
         cbDeleteNewFilesAndDirectories.TabIndex = 3;
         cbDeleteNewFilesAndDirectories.Text = "Also delete &new files and/or directories";
         cbDeleteNewFilesAndDirectories.UseVisualStyleBackColor = true;
         // 
-        // label2
+        // lblDeleteHint
         // 
-        label2.AutoSize = true;
-        label2.Location = new Point(9, 24);
-        label2.Name = "label2";
-        label2.Size = new Size(232, 16);
-        label2.TabIndex = 4;
-        label2.Text = "This will delete any uncommitted work.";
+        lblDeleteHint.AutoSize = true;
+        lblDeleteHint.Dock = DockStyle.Bottom;
+        lblDeleteHint.Location = new Point(8, 24);
+        lblDeleteHint.Name = "lblDeleteHint";
+        lblDeleteHint.Padding = new Padding(0, 8, 0, 8);
+        lblDeleteHint.Size = new Size(214, 31);
+        lblDeleteHint.TabIndex = 4;
+        lblDeleteHint.Text = "This will delete any uncommitted work.";
         // 
         // flowLayoutPanel1
         // 
@@ -95,10 +103,10 @@ partial class FormResetChanges
         flowLayoutPanel1.Controls.Add(btnReset);
         flowLayoutPanel1.Dock = DockStyle.Bottom;
         flowLayoutPanel1.FlowDirection = FlowDirection.RightToLeft;
-        flowLayoutPanel1.Location = new Point(0, 84);
-        flowLayoutPanel1.Margin = new Padding(2, 2, 2, 2);
+        flowLayoutPanel1.Location = new Point(8, 90);
+        flowLayoutPanel1.Margin = new Padding(2);
         flowLayoutPanel1.Name = "flowLayoutPanel1";
-        flowLayoutPanel1.Size = new Size(460, 31);
+        flowLayoutPanel1.Size = new Size(452, 31);
         flowLayoutPanel1.TabIndex = 5;
         // 
         // FormResetChanges
@@ -108,15 +116,14 @@ partial class FormResetChanges
         AutoScaleMode = AutoScaleMode.Dpi;
         AutoSize = true;
         CancelButton = btnCancel;
-        ClientSize = new Size(460, 115);
-        Controls.Add(flowLayoutPanel1);
-        Controls.Add(label1);
-        Controls.Add(label2);
+        ClientSize = new Size(460, 121);
+        Controls.Add(txtMessage);
+        Controls.Add(lblDeleteHint);
         Controls.Add(cbDeleteNewFilesAndDirectories);
-        FormBorderStyle = FormBorderStyle.FixedDialog;
-        MaximizeBox = false;
+        Controls.Add(flowLayoutPanel1);
         MinimizeBox = false;
         Name = "FormResetChanges";
+        Padding = new Padding(8, 8, 0, 0);
         StartPosition = FormStartPosition.CenterParent;
         Text = "Reset changes";
         flowLayoutPanel1.ResumeLayout(false);
@@ -127,10 +134,10 @@ partial class FormResetChanges
 
     #endregion
 
-    private Label label1;
+    private TextBox txtMessage;
     private Button btnReset;
     private Button btnCancel;
     private CheckBox cbDeleteNewFilesAndDirectories;
-    private Label label2;
+    private Label lblDeleteHint;
     private FlowLayoutPanel flowLayoutPanel1;
 }

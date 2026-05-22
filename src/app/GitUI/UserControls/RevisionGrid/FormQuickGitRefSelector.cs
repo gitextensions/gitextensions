@@ -57,16 +57,15 @@ internal class FormQuickGitRefSelector : FormQuickItemSelector
 
         static List<ItemData> Filter(IReadOnlyList<IGitRef> sourceRefs, TranslationString localText, TranslationString remoteText, TranslationString tagText, Func<IGitRef, bool> selector)
         {
-            List<ItemData> list = sourceRefs.Where(r => selector(r))
+            List<ItemData> list = [.. sourceRefs.Where(r => selector(r))
                                             .OrderBy(r => r.Name)
-                                            .Select(r => new ItemData(label: r.Name, item: r))
-                                            .ToList();
+                                            .Select(r => new ItemData(label: r.Name, item: r))];
 
             if (list.Count > 0)
             {
                 IGitRef gitRef = (IGitRef)list[0].Item;
 
-                TranslationString chosenText = gitRef switch
+                TranslationString? chosenText = gitRef switch
                 {
                     { IsHead: true } => localText,
                     { IsRemote: true } => remoteText,
