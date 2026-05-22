@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
 using GitCommands.Remotes;
@@ -112,7 +111,8 @@ Inactive remote is completely invisible to git.");
         InitializeComplete();
 
         _branchNameNormaliser = commands.GetRequiredService<IGitBranchNameNormaliser>();
-        txtRemotePrefix.Leave += (_, _) => txtRemotePrefix.Text = NormalisePrefix(txtRemotePrefix.Text, _branchNameNormaliser);
+        GitBranchNameOptions options = new(replacementToken: AppSettings.AutoNormaliseSymbol, allowTrailingSlash: true);
+        txtRemotePrefix.Leave += (_, _) => txtRemotePrefix.Text = _branchNameNormaliser.Normalise(txtRemotePrefix.Text, options);
 
         btnRemoteColor.BackColor = Color.Transparent;
 
@@ -154,22 +154,6 @@ Inactive remote is completely invisible to git.");
             resizeDebounceTimer.Stop();
             resizeDebounceTimer.Start();
         };
-
-        return;
-
-        static string NormalisePrefix(string prefix, IGitBranchNameNormaliser branchNameNormaliser)
-        {
-            // Append a dummy branch name so the normaliser does not remove a trailing slash from the prefix
-            const string dummyBranchName = "branch_for_prefix_normalisation";
-            string normalised = branchNameNormaliser.Normalise($"{prefix}{dummyBranchName}", new GitBranchNameOptions(AppSettings.AutoNormaliseSymbol));
-            if (normalised.EndsWith(dummyBranchName, StringComparison.Ordinal))
-            {
-                return normalised[..^dummyBranchName.Length];
-            }
-
-            Trace.WriteLine(@$"Normalised branch name should end with the dummy branch name. Normalised: ""{normalised}"", Dummy branch name: ""{dummyBranchName}""");
-            return prefix;
-        }
     }
 
     private void AutoResizeRemotesColumn()

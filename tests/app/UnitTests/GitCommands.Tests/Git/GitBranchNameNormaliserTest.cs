@@ -93,14 +93,19 @@ public sealed class GitBranchNameNormaliserTest
     }
 
     // Branch name begin or end with a slash '/' or contain multiple consecutive slashes.
-    [TestCase("test/", "test")]
-    [TestCase("/test", "test")]
-    [TestCase("/test/", "test")]
-    [TestCase("/test/test/", "test/test")]
-    [TestCase("///test///test///", "test/test")]
-    public void Normalise_rule06(string input, string expected)
+    [TestCase("test/", false, "test")]
+    [TestCase("test/", true, "test/")]
+    [TestCase("/test", false, "test")]
+    [TestCase("/test/", false, "test")]
+    [TestCase("/test/", true, "test/")]
+    [TestCase("/test/test/", false, "test/test")]
+    [TestCase("/test/test/", true, "test/test/")]
+    [TestCase("///test///test///", false, "test/test")]
+    [TestCase("///test///test///", true, "test/test/")]
+    public void Normalise_rule06(string input, bool allowTrailingSlash, string expected)
     {
-        GitBranchNameNormaliser.Rule06(input).Should().Be(expected);
+        GitBranchNameOptions options = new(replacementToken: "_", allowTrailingSlash);
+        GitBranchNameNormaliser.Rule06(input, options).Should().Be(expected);
     }
 
     // Branch name end with a dot '.'.

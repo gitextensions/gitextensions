@@ -117,7 +117,7 @@ internal sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
 
         // rule #2 is not applicable
         // rule #6 runs as second last to ensure no consecutive '/' are left after previous normalisations
-        branchName = Rule06(branchName);
+        branchName = Rule06(branchName, options);
         branchName = Rule01(branchName, options);
 
         return branchName;
@@ -199,8 +199,9 @@ internal sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
     ///  Branch name begin or end with a slash '/' or contain multiple consecutive slashes.
     /// </summary>
     /// <param name="branchName">Name of the branch.</param>
+    /// <param name="options">The options.</param>
     /// <returns>Normalised branch name.</returns>
-    internal static string Rule06(string branchName)
+    internal static string Rule06(string branchName, GitBranchNameOptions options)
     {
         branchName = Rule06Regex.Replace(branchName, "/");
         if (branchName.StartsWith('/'))
@@ -208,7 +209,7 @@ internal sealed partial class GitBranchNameNormaliser : IGitBranchNameNormaliser
             branchName = branchName[1..];
         }
 
-        if (branchName.EndsWith('/'))
+        if (!options.AllowTrailingSlash && branchName.EndsWith('/'))
         {
             branchName = branchName[..^1];
         }
