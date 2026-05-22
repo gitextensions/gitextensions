@@ -3,7 +3,7 @@
     <body>
       <trans-unit id="cbLoadTestResults.Text">
         <source>Display test results in build status summary for each build result (network intensive!)</source>
-        <target>在每個建置結果的建置狀態摘要中顯示測試結果 (需使用大量網路資源！)</target>
+        <target>在每個組建結果的組建狀態摘要中顯示測試結果（網路用量大！）</target>
         
       </trans-unit>
     </body>
@@ -19,29 +19,29 @@
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>您想要建置 {0} 嗎?
+        <target>您想要建置 {0} 嗎？
 
 {1}</target>
         
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>请在 &quot;插件设置&quot; 对话框中输入正确的 msbuild 路径, 然后重试。</target>
+        <target>請在外掛設定對話方塊中輸入正確的 MSBuild 路徑，然後重試。</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
         <source>msbuild.exe arguments</source>
-        <target>msbuild.exe 参数</target>
+        <target>msbuild.exe 引數</target>
         
       </trans-unit>
       <trans-unit id="_msBuildEnabled.Caption">
         <source>Enabled</source>
-        <target>已启用</target>
+        <target>已啟用</target>
         
       </trans-unit>
       <trans-unit id="_msBuildPath.Caption">
         <source>Path to msbuild.exe</source>
-        <target>msbuild.exe 路径</target>
+        <target>msbuild.exe 的路徑</target>
         
       </trans-unit>
     </body>
@@ -50,32 +50,32 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
-        <target>周期性背景提取</target>
+        <target>定期背景擷取</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
         <source>Refresh view after fetch</source>
-        <target>拉取后刷新视图</target>
+        <target>擷取後重新整理檢視</target>
         
       </trans-unit>
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
-        <target>拉取所有子模块</target>
+        <target>擷取所有子模組</target>
         
       </trans-unit>
       <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
         <source>Fetch immediately on repository opening</source>
-        <target>開啟版本庫時立即獲取</target>
+        <target>開啟儲存庫時立即擷取</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>每（几）秒自动拉取一次 - 设为 0 以禁用</target>
+        <target>擷取間隔（秒） - 設為 0 以停用</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
-        <target>git 命令运行参数</target>
+        <target>要執行的 git 指令引數</target>
         
       </trans-unit>
     </body>
@@ -84,7 +84,7 @@
     <body>
       <trans-unit id="BitbucketBaseUrl.Caption">
         <source>Specify the base URL to Bitbucket</source>
-        <target>指定 Bitbucket 服务器的根 URL</target>
+        <target>指定 Bitbucket 的基礎 URL</target>
         
       </trans-unit>
       <trans-unit id="BitbucketDisableSsl.Caption">
@@ -94,7 +94,7 @@
       </trans-unit>
       <trans-unit id="BitbucketPassword.Caption">
         <source>Bitbucket Password</source>
-        <target>Bitbucket 密码</target>
+        <target>Bitbucket 密碼</target>
         
       </trans-unit>
       <trans-unit id="BitbucketUsername.Caption">
@@ -109,7 +109,7 @@
       </trans-unit>
       <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
         <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>您的版本库没有托管在 Bitbucket 上。</target>
+        <target>您的儲存庫並非代管於 BitBucket 伺服器。</target>
         
       </trans-unit>
     </body>
@@ -118,7 +118,7 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Bitbucket Server</source>
-        <target>Bitbucket 服务器</target>
+        <target>Bitbucket 伺服器</target>
         
       </trans-unit>
       <trans-unit id="_committed.Text">
@@ -130,12 +130,12 @@
       </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
-        <target>错误</target>
+        <target>錯誤</target>
         
       </trans-unit>
       <trans-unit id="_linkLabelToolTip.Text">
         <source>Right-click to copy link</source>
-        <target>按一下右鍵以複製連結</target>
+        <target>按一下右鍵複製連結</target>
         
       </trans-unit>
       <trans-unit id="_success.Text">
@@ -145,22 +145,22 @@
       </trans-unit>
       <trans-unit id="btnApprove.Text">
         <source>Approve</source>
-        <target>批准</target>
+        <target>核准</target>
         
       </trans-unit>
       <trans-unit id="btnCreate.Text">
         <source>Create</source>
-        <target>创建</target>
+        <target>建立</target>
         
       </trans-unit>
       <trans-unit id="btnMerge.Text">
         <source>Merge</source>
-        <target>合并</target>
+        <target>合併</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCreatePullRequest.Text">
         <source>Pull Request Info</source>
-        <target>拉取请求信息</target>
+        <target>拉取請求資訊</target>
         
       </trans-unit>
       <trans-unit id="groupBoxInformation.Text">
@@ -170,27 +170,27 @@
       </trans-unit>
       <trans-unit id="groupBoxPullRequestInfo.Text">
         <source>Pull Request Info</source>
-        <target>拉取请求信息</target>
+        <target>拉取請求資訊</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSource.Text">
         <source>Source</source>
-        <target>源</target>
+        <target>來源</target>
         
       </trans-unit>
       <trans-unit id="groupBoxSourceRepoView.Text">
         <source>Source</source>
-        <target>源</target>
+        <target>來源</target>
         
       </trans-unit>
       <trans-unit id="groupBoxTarget.Text">
         <source>Target</source>
-        <target>目标</target>
+        <target>目標</target>
         
       </trans-unit>
       <trans-unit id="groupBoxTargetRepoView.Text">
         <source>Target</source>
-        <target>目标</target>
+        <target>目標</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
@@ -215,12 +215,12 @@
       </trans-unit>
       <trans-unit id="lblRepositoryView.Text">
         <source>Repository</source>
-        <target>版本庫</target>
+        <target>儲存庫</target>
         
       </trans-unit>
       <trans-unit id="lblReviewerView.Text">
         <source>Reviewer (approved)</source>
-        <target>审阅者(核准)</target>
+        <target>檢閱者（已核准）</target>
         
       </trans-unit>
       <trans-unit id="lblSourceBranch.Text">
@@ -230,17 +230,17 @@
       </trans-unit>
       <trans-unit id="lblSourceRepoView.Text">
         <source>Repository</source>
-        <target>版本庫</target>
+        <target>儲存庫</target>
         
       </trans-unit>
       <trans-unit id="lblSourceRepository.Text">
         <source>Repository</source>
-        <target>版本庫</target>
+        <target>儲存庫</target>
         
       </trans-unit>
       <trans-unit id="lblState.Text">
         <source>State</source>
-        <target>状态</target>
+        <target>狀態</target>
         
       </trans-unit>
       <trans-unit id="lblTargetBranch.Text">
@@ -255,27 +255,27 @@
       </trans-unit>
       <trans-unit id="lblTargetRepository.Text">
         <source>Repository</source>
-        <target>版本庫</target>
+        <target>儲存庫</target>
         
       </trans-unit>
       <trans-unit id="lblTitle.Text">
         <source>Title</source>
-        <target>标题</target>
+        <target>標題</target>
         
       </trans-unit>
       <trans-unit id="lblTitleView.Text">
         <source>Title</source>
-        <target>标题</target>
+        <target>標題</target>
         
       </trans-unit>
       <trans-unit id="tabCreate.Text">
         <source>Create Pull Request</source>
-        <target>创建拉取请求</target>
+        <target>建立拉取請求</target>
         
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>查看推送请求</target>
+        <target>檢視拉取請求</target>
         
       </trans-unit>
     </body>
@@ -294,7 +294,7 @@
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Remote to create tracking branches for</source>
-        <target>创建远程存储库跟踪分支</target>
+        <target>要建立追蹤分支的遠端</target>
         
       </trans-unit>
     </body>
@@ -303,7 +303,7 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Create local tracking branches</source>
-        <target>创建本地跟踪分支</target>
+        <target>建立本機追蹤分支</target>
         
       </trans-unit>
     </body>
@@ -312,7 +312,7 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
-        <target>删除废弃的分支</target>
+        <target>刪除過時分支</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
@@ -322,17 +322,17 @@
       </trans-unit>
       <trans-unit id="Cancel.Text">
         <source>Close</source>
-        <target>关闭</target>
+        <target>關閉</target>
         
       </trans-unit>
       <trans-unit id="Delete.Text">
         <source>Delete</source>
-        <target>删除</target>
+        <target>刪除</target>
         
       </trans-unit>
       <trans-unit id="IncludeRemoteBranches.Text">
         <source>Delete remote branches from</source>
-        <target>删除远程分支</target>
+        <target>刪除遠端分支於</target>
         
       </trans-unit>
       <trans-unit id="Message.HeaderText">
@@ -347,12 +347,12 @@
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
-        <target>您确定要删除选中的{0}分支吗？</target>
+        <target>您確定要刪除 {0} 個選取的分支嗎？</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
         <source>{0}/{1} branches selected.</source>
-        <target>{0}/{1} 分支被选中.</target>
+        <target>已選取 {0}/{1} 個分支。</target>
         
       </trans-unit>
       <trans-unit id="_cancel.Text">
@@ -361,42 +361,42 @@
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
-        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>选择要删除的分支。只有在 &quot;{0}&quot; 中完全合并的分支才会被删除。</target>
+        <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
+        <target>選擇要刪除的分支。只有完全合併到「{0}」的分支才會被刪除。</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
-Branches will be deleted on the remote '{0}'. This can not be undone.
+Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
-        <target>危险的行为! 
-将在远程存储库上删除分支 &quot;{0}&quot; 。这是不能撤消的。 
-确实要继续吗？</target>
+        <target>危險動作！
+分支將從遠端「{0}」刪除。此動作無法復原。
+您確定要繼續嗎？</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
         <source>Delete</source>
-        <target>删除</target>
+        <target>刪除</target>
         
       </trans-unit>
       <trans-unit id="_deletingBranches.Text">
         <source>Deleting branches...</source>
-        <target>删除分支</target>
+        <target>正在刪除分支...</target>
         
       </trans-unit>
       <trans-unit id="_deletingUnmergedBranches.Text">
         <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
-        <target>删除未合并的分支将导致悬空提交。小心使用!</target>
+        <target>刪除未合併的分支將導致懸空提交。請謹慎使用！</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
         <source>Loading...</source>
-        <target>载入...</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
-        <source>Press '{0}' to search for branches to delete.</source>
-        <target>按 &quot;{0}&quot; 搜索要删除的分支。</target>
+        <source>Press &apos;{0}&apos; to search for branches to delete.</source>
+        <target>按下「{0}」搜尋要刪除的分支。</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -405,58 +405,58 @@ Are you sure you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
-        <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>使用 &quot;{0}&quot; 列中的复选框选择要删除的分支。</target>
+        <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
+        <target>使用「{0}」欄位中的核取方塊選取要刪除的分支。</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
         <source>Settings</source>
-        <target>设置</target>
+        <target>設定</target>
         
       </trans-unit>
       <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
         <source>Last activity</source>
-        <target>上次的活动</target>
+        <target>最後活動</target>
         
       </trans-unit>
       <trans-unit id="includeUnmergedBranches.Text">
         <source>Include unmerged branches</source>
-        <target>包含未合并的分支</target>
+        <target>包含未合併的分支</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Delete branches older than x days</source>
-        <target>删除x天前的分支</target>
+        <target>刪除超過 x 天的分支</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Delete branches fully merged into branch</source>
-        <target>删除全部分支合并到分支</target>
+        <target>刪除已完全合併至此分支的分支</target>
         
       </trans-unit>
       <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
         <source>Name</source>
-        <target>名称</target>
+        <target>名稱</target>
         
       </trans-unit>
       <trans-unit id="regexDoesNotMatch.Text">
         <source>Does not match</source>
-        <target>不匹配</target>
+        <target>不符合</target>
         
       </trans-unit>
       <trans-unit id="regexFilter.Text">
         <source>/(feature|develop)/</source>
-        <target>/(特性|开发)/</target>
+        <target>/(feature|develop)/</target>
         
       </trans-unit>
       <trans-unit id="useRegexCaseInsensitive.Text">
         <source>Case insensitive</source>
-        <target>不区分大小写</target>
+        <target>不區分大小寫</target>
         
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>使用正则表达式过滤分支</target>
+        <target>使用正規表示式過濾分支</target>
         
       </trans-unit>
     </body>
@@ -465,52 +465,52 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Delete obsolete branches</source>
-        <target>删除废弃的分支</target>
+        <target>刪除過時分支</target>
         
       </trans-unit>
       <trans-unit id="_daysOlderThan.Caption">
         <source>Delete obsolete branches older than (days)</source>
-        <target>删除未变更超过多少（天）的过时分支</target>
+        <target>刪除超過（天數）的過時分支</target>
         
       </trans-unit>
       <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
         <source>Delete obsolete branches from remote</source>
-        <target>删除过时分支的时一并删除远程分支</target>
+        <target>從遠端刪除過時分支</target>
         
       </trans-unit>
       <trans-unit id="_includeUnmergedBranchesFlag.Caption">
         <source>Delete unmerged branches</source>
-        <target>删除未合并的分支</target>
+        <target>刪除未合併的分支</target>
         
       </trans-unit>
       <trans-unit id="_mergedInBranch.Caption">
         <source>Branch where all branches should be merged in</source>
-        <target>所有分支将要合入的分支</target>
+        <target>所有分支應合併至此分支</target>
         
       </trans-unit>
       <trans-unit id="_regexCaseInsensitiveFlag.Caption">
         <source>Is regex filter case insensitive?</source>
-        <target>正则表达式过滤器是否大小写不敏感？</target>
+        <target>正規表示式過濾器是否不區分大小寫？</target>
         
       </trans-unit>
       <trans-unit id="_regexFilter.Caption">
         <source>Regex to filter branches to delete</source>
-        <target>用于过滤要删除的分支的正则表达式</target>
+        <target>過濾要刪除分支的正規表示式</target>
         
       </trans-unit>
       <trans-unit id="_regexInvertedFlag.Caption">
         <source>Search branches that does not match regex</source>
-        <target>搜索与正则表达式不匹配的分支</target>
+        <target>搜尋不符合正規表示式的分支</target>
         
       </trans-unit>
       <trans-unit id="_remoteName.Caption">
         <source>Remote name obsoleted branches should be deleted from</source>
-        <target>删除过时的远程分支的名字</target>
+        <target>應刪除過時分支的遠端名稱</target>
         
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
-        <target>使用正则表达式筛选分支以删除</target>
+        <target>使用正規表示式過濾要刪除的分支</target>
         
       </trans-unit>
     </body>
@@ -519,7 +519,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Find large files</source>
-        <target>查找大文件</target>
+        <target>尋找大型檔案</target>
         
       </trans-unit>
       <trans-unit id="Cancel.Text">
@@ -539,7 +539,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
-        <target>确定删除所选文件吗？</target>
+        <target>您確定要刪除選取的檔案嗎？</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -549,7 +549,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
         <source>Commit count</source>
-        <target>提交數</target>
+        <target>提交計數</target>
         
       </trans-unit>
       <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
@@ -559,12 +559,12 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>删除文件前重置本地修改。选择要删除的文件。强制推送到远程库覆盖数据。</target>
+        <target>刪除檔案前請重設本機變更。選擇要刪除的檔案。強制推送以取代遠端儲存庫上的資料。</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
         <source>Last commit date</source>
-        <target>最后提交日期</target>
+        <target>最後提交日期</target>
         
       </trans-unit>
       <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
@@ -588,12 +588,12 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Find large files</source>
-        <target>查找大文件</target>
+        <target>尋找大型檔案</target>
         
       </trans-unit>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
-        <target>查找大于多少（Mb）的大文件</target>
+        <target>尋找大於 (MB) 的大型檔案</target>
         
       </trans-unit>
     </body>
@@ -602,7 +602,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Statistics</source>
-        <target>统计</target>
+        <target>統計資料</target>
         
       </trans-unit>
       <trans-unit id="CommitStatistics.Text">
@@ -612,42 +612,42 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="LinesOfCodePerLanguageText.Text">
         <source>Loading...</source>
-        <target>载入...</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="LinesOfCodePerTypeText.Text">
         <source>Loading...</source>
-        <target>载入...</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="LoadingLabel.Text">
         <source>Loading...</source>
-        <target>载入...</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="TestCodeText.Text">
         <source>Loading...</source>
-        <target>载入...</target>
+        <target>正在載入...</target>
         
       </trans-unit>
       <trans-unit id="TotalCommits.Text">
         <source>Total commits</source>
-        <target>总提交</target>
+        <target>總提交數</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode.Text">
         <source>Total lines of code</source>
-        <target>总代码行</target>
+        <target>總程式碼行數</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfCode2.Text">
         <source>Total lines of code</source>
-        <target>总代码行</target>
+        <target>總程式碼行數</target>
         
       </trans-unit>
       <trans-unit id="TotalLinesOfTestCode.Text">
         <source>Total lines of code</source>
-        <target>总代码行</target>
+        <target>總程式碼行數</target>
         
       </trans-unit>
       <trans-unit id="_blankLinesP.Text">
@@ -657,72 +657,72 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_commentLinesP.Text">
         <source>{0:N0} Comment lines ({1:P1})</source>
-        <target>{0:N0} 注释行 ({1:P1})</target>
+        <target>{0:N0} 註解行 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_commits.Text">
         <source>{0:N0} Commits</source>
-        <target>{0:N0} 提交</target>
+        <target>{0:N0} 次提交</target>
         
       </trans-unit>
       <trans-unit id="_commitsBy.Text">
         <source>{0:N0} Commits by {1}</source>
-        <target>{0:N0} 被 {1} 提交</target>
+        <target>{1} 的 {0:N0} 次提交</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCode.Text">
         <source>{0:N0} Lines of code</source>
-        <target>{0:N0} 行代码</target>
+        <target>{0:N0} 行程式碼</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeInFiles.Text">
         <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
-        <target>{0:N0} 行代码在 {1} 文件 ({2:P1})</target>
+        <target>{1} 個檔案中的 {0:N0} 行程式碼 ({2:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfCodeP.Text">
         <source>{0:N0} Lines of code ({1:P1})</source>
-        <target>{0:N0} 行代码 ({1:P1})</target>
+        <target>{0:N0} 行程式碼 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfDesignerFilesP.Text">
         <source>{0:N0} Lines in designer files ({1:P1})</source>
-        <target>{0:N0}行在开发的({1:P1})文件中</target>
+        <target>設計工具檔案中的 {0:N0} 行 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfProductionCodeP.Text">
         <source>{0:N0} Lines of production code ({1:P1})</source>
-        <target>{0:N0} 行生产代码 ({1:P1})</target>
+        <target>{0:N0} 行生產環境程式碼 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCode.Text">
         <source>{0:N0} Lines of test code</source>
-        <target>{0:N0} 行测试代码</target>
+        <target>{0:N0} 行測試程式碼</target>
         
       </trans-unit>
       <trans-unit id="_linesOfTestCodeP.Text">
         <source>{0:N0} Lines of test code ({1:P1})</source>
-        <target>{0:N0} 行测试代码 ({1:P1})</target>
+        <target>{0:N0} 行測試程式碼 ({1:P1})</target>
         
       </trans-unit>
       <trans-unit id="tabPage1.Text">
         <source>Lines of code per language</source>
-        <target>行代码每种语言</target>
+        <target>每種語言的程式碼行數</target>
         
       </trans-unit>
       <trans-unit id="tabPage2.Text">
         <source>Commits per contributor</source>
-        <target>提交数每位贡献者</target>
+        <target>每位貢獻者的提交數</target>
         
       </trans-unit>
       <trans-unit id="tabPage3.Text">
         <source>Lines of code per type</source>
-        <target>行代码每种类型</target>
+        <target>每種類型的程式碼行數</target>
         
       </trans-unit>
       <trans-unit id="tabPage4.Text">
         <source>Lines of test code</source>
-        <target>行测试代码</target>
+        <target>測試程式碼行數</target>
         
       </trans-unit>
     </body>
@@ -731,17 +731,17 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Impact</source>
-        <target>影响</target>
+        <target>影響</target>
         
       </trans-unit>
       <trans-unit id="_authorCommits.Text">
         <source>{0} ({1} Commits, {2} Changed Lines)</source>
-        <target>{0} ({1} 提交, {2} 行修改)</target>
+        <target>{0}（{1} 次提交，{2} 行變更）</target>
         
       </trans-unit>
       <trans-unit id="cbIncludingSubmodules.Text">
         <source>Including submodules</source>
-        <target>包含子模块</target>
+        <target>包含子模組</target>
         
       </trans-unit>
       <trans-unit id="lblAuthor.Text">
@@ -760,7 +760,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_gitFlowTooltip.Text">
         <source>A good branch model for your project with Git...</source>
-        <target>用git为您的项目搭建好分支模型</target>
+        <target>適用於 Git 專案的良好分支模型...</target>
         
       </trans-unit>
       <trans-unit id="_loading.Text">
@@ -770,7 +770,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_noBranchExist.Text">
         <source>No {0} branches exist.</source>
-        <target>{0} 分支不存在。</target>
+        <target>沒有 {0} 分支。</target>
         
       </trans-unit>
       <trans-unit id="btnClose.Text">
@@ -780,7 +780,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="btnCreateBranch.Text">
         <source>Start!</source>
-        <target>开始！</target>
+        <target>開始！</target>
         
       </trans-unit>
       <trans-unit id="btnFinish.Text">
@@ -795,7 +795,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="btnPublish.Text">
         <source>Publish</source>
-        <target>发布</target>
+        <target>發佈</target>
         
       </trans-unit>
       <trans-unit id="btnPull.Text">
@@ -805,27 +805,27 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="cbBasedOn.Text">
         <source>based on:</source>
-        <target>基於:</target>
+        <target>基於：</target>
         
       </trans-unit>
       <trans-unit id="cbPushAfterFinish.Text">
         <source>Push after finish</source>
-        <target>完成后推送</target>
+        <target>完成後推送</target>
         
       </trans-unit>
       <trans-unit id="cbSquash.Text">
         <source>Squash</source>
-        <target>Squash提交</target>
+        <target>Squash</target>
         
       </trans-unit>
       <trans-unit id="gbManage.Text">
         <source>Manage existing branches:</source>
-        <target>管理已有分支：</target>
+        <target>管理現有分支：</target>
         
       </trans-unit>
       <trans-unit id="gbStart.Text">
         <source>Start branch:</source>
-        <target>创建分支：</target>
+        <target>開始分支：</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -835,22 +835,22 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>Expected name:</source>
-        <target>预期名称：</target>
+        <target>預期名稱：</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>command:</source>
-        <target>命令：</target>
+        <target>指令：</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>Remote to pull from :</source>
-        <target>拉取自：</target>
+        <target>要拉取的遠端：</target>
         
       </trans-unit>
       <trans-unit id="lblCaptionHead.Text">
         <source>HEAD:</source>
-        <target>HEAD:</target>
+        <target>HEAD：</target>
         
       </trans-unit>
       <trans-unit id="lblHead.Text">
@@ -860,22 +860,22 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="lblPrefixName.Text">
         <source>[prefix]/</source>
-        <target>[前缀]/</target>
+        <target>[前置詞]/</target>
         
       </trans-unit>
       <trans-unit id="lnkGitFlow.Text">
         <source>About GitFlow</source>
-        <target>关于GitFlow</target>
+        <target>關於 GitFlow</target>
         
       </trans-unit>
       <trans-unit id="lnkGitFlow.ttGitFlow">
         <source>A good branch model for your project with Git...</source>
-        <target>在使用 Git 管理儲存庫時，一個良好的分支模型對於你的專案至關重要...</target>
+        <target>適用於 Git 專案的良好分支模型...</target>
         
       </trans-unit>
       <trans-unit id="panel3.Text">
         <source>Result of git flow command run</source>
-        <target>git工作流命令允许结果</target>
+        <target>git flow 指令執行結果</target>
         
       </trans-unit>
     </body>
@@ -898,67 +898,67 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="GitHubHost.Caption">
         <source>GitHub (Enterprise) hostname</source>
-        <target>GitHub (Enterprise) 主机名</target>
+        <target>GitHub (Enterprise) 主機名稱</target>
         
       </trans-unit>
       <trans-unit id="PersonalAccessToken.Caption">
         <source>Personal Access Token</source>
-        <target>个人访问令牌</target>
+        <target>個人存取權杖</target>
         
       </trans-unit>
       <trans-unit id="_error.Text">
         <source>Error</source>
-        <target>错误</target>
+        <target>錯誤</target>
         
       </trans-unit>
       <trans-unit id="_generateToken.Text">
         <source>Generate a GitHub personal access token</source>
-        <target>生成GitHub个人访问令牌</target>
+        <target>產生 GitHub 個人存取權杖</target>
         
       </trans-unit>
       <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
         <source>Enable commit message issue helper</source>
-        <target>启用提交信息问题助手</target>
+        <target>啟用提交訊息議題小幫手</target>
         
       </trans-unit>
       <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
         <source>Maximum number of issues retrieved</source>
-        <target>检索到的最大问题数量</target>
+        <target>擷取的最大議題數量</target>
         
       </trans-unit>
       <trans-unit id="_manageToken.Text">
         <source>Manage GitHub personal access token</source>
-        <target>管理GitHub个人访问令牌</target>
+        <target>管理 GitHub 個人存取權杖</target>
         
       </trans-unit>
       <trans-unit id="_noAssignedIssues.Text">
         <source>No assigned GitHub issues found</source>
-        <target>未找到分配的 GitHub 问题</target>
+        <target>找不到已指派的 GitHub 議題</target>
         
       </trans-unit>
       <trans-unit id="_noTokenError.Text">
         <source>No GitHub personal access token (PAT) defined</source>
-        <target>未定义GitHub个人访问令牌（PAT）</target>
+        <target>未定義 GitHub 個人存取權杖 (PAT)</target>
         
       </trans-unit>
       <trans-unit id="_noteRestartNeeded.Text">
         <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
-        <target>註：需要重新啟動 Git Extensions 以使令牌生效。</target>
+        <target>注意：Git Extensions 需要重新啟動，權杖才會生效。</target>
         
       </trans-unit>
       <trans-unit id="_openLinkFailed.Text">
         <source>Fail to open the link. Reason: </source>
-        <target>无法打开链接。原因：</target>
+        <target>無法開啟連結。原因：</target>
         
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
-        <target>您已经有了个人访问令牌。要获得新的插件，请先在 插件 &gt; 插件设置 中删除旧的插件。</target>
+        <target>您已經擁有個人存取權杖。若要取得新的權杖，請先在「外掛」&gt;「外掛設定」中刪除舊的權杖。</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
-        <target>在 {0} 中查看</target>
+        <target>在 {0} 中檢視</target>
         
       </trans-unit>
     </body>
@@ -967,7 +967,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Impact Graph</source>
-        <target>影响图形</target>
+        <target>影響圖表</target>
         
       </trans-unit>
     </body>
@@ -976,32 +976,32 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="GetProjectIdLink.Text">
         <source>Get Project ID from server</source>
-        <target>从服务器获取工程 ID</target>
+        <target>從伺服器取得專案 ID</target>
         
       </trans-unit>
       <trans-unit id="GetProjectIdStatusText.Text">
         <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
-        <target>从服务器获取工程失败。请尝试指定有效的 API 令牌或检查实例 URL</target>
+        <target>無法從伺服器取得專案。請嘗試指定有效的 API 權杖或檢查執行個體 URL</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
-        <target>转到令牌管理页面</target>
+        <target>前往權杖管理頁面</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Instance URL</source>
-        <target>实例 URL</target>
+        <target>執行個體 URL</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Api Token</source>
-        <target>API 令牌</target>
+        <target>API 權杖</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
-        <target>工程 ID</target>
+        <target>專案 ID</target>
         
       </trans-unit>
     </body>
@@ -1010,7 +1010,7 @@ Are you sure you want to continue?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Statistics</source>
-        <target>统计</target>
+        <target>統計資料</target>
         
       </trans-unit>
       <trans-unit id="_codeFiles.Caption">
@@ -1020,7 +1020,7 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_ignoreDirectories.Caption">
         <source>Directories to ignore (EndsWith)</source>
-        <target>忽略目录(以××结尾)</target>
+        <target>要忽略的目錄 (EndsWith)</target>
         
       </trans-unit>
       <trans-unit id="_ignoreSubmodules.Caption">
@@ -1039,32 +1039,32 @@ Are you sure you want to continue?</source>
       </trans-unit>
       <trans-unit id="_bytesDownloaded.Text">
         <source>{0} bytes downloaded.</source>
-        <target>{0} 字节已下载</target>
+        <target>已下載 {0} 位元組。</target>
         
       </trans-unit>
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>找不到Gource.
-请下载Gource并在插件设置框中设置Gource路径。</target>
+        <target>找不到 Gource。
+請下載 Gource 並在外掛設定對話方塊中設定路徑。</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
         <source>The current directory is not a valid git repository.
 
 Gource can be only be started from a valid git repository.</source>
-        <target>当前目录不是有效的git档案库。
+        <target>目前目錄不是有效的 git 儲存庫。
 
-Gource只能从有效的git档案库启动。</target>
+Gource 只能從有效的 git 儲存庫啟動。</target>
         
       </trans-unit>
       <trans-unit id="_doYouWantDownloadGource.Text">
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
-        <target>没有设置Gource路径。
+        <target>未設定 Gource 路徑。
 
-是否自动下载Gource？</target>
+您想要自動下載 Gource 嗎？</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
@@ -1075,8 +1075,8 @@ Do you want to automatically download Gource?</source>
       <trans-unit id="_downloadingFailed.Text">
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>下载失败。
-请下载Gource并在插件设置框中设置Gource路径。</target>
+        <target>下載失敗。
+請下載 Gource 並在外掛設定對話方塊中設定路徑。</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1086,26 +1086,26 @@ Please download Gource and set the path in the plugins settings dialog.</source>
       </trans-unit>
       <trans-unit id="_gourceArguments.Caption">
         <source>Arguments</source>
-        <target>参数</target>
+        <target>引數</target>
         
       </trans-unit>
       <trans-unit id="_gourceDownloadedAndUnzipped.Text">
         <source>Gource has been downloaded and unzipped.</source>
-        <target>Gource已经下载并解压。</target>
+        <target>Gource 已下載並解壓縮。</target>
         
       </trans-unit>
       <trans-unit id="_gourcePath.Caption">
         <source>Path to Gource</source>
-        <target>Gource路径</target>
+        <target>Gource 的路徑</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
-        <target>在已配置的路径: {0}找不到Gource。
+        <target>在設定的路徑中找不到 Gource：{0}。
 
-是否重置已配置的路径？</target>
+您要重設設定的路徑嗎？</target>
         
       </trans-unit>
     </body>
@@ -1119,17 +1119,17 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="ArgumentsLabel.Text">
         <source>Arguments</source>
-        <target>参数</target>
+        <target>引數</target>
         
       </trans-unit>
       <trans-unit id="GourceBrowse.Text">
         <source>Browse</source>
-        <target>流覽</target>
+        <target>瀏覽</target>
         
       </trans-unit>
       <trans-unit id="WorkingDirBrowse.Text">
         <source>Browse</source>
-        <target>流覽</target>
+        <target>瀏覽</target>
         
       </trans-unit>
       <trans-unit id="button1.Text">
@@ -1139,23 +1139,22 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
-        <target>Gource路径</target>
+        <target>Gource 的路徑</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Repository</source>
-        <target>檔案庫
-</target>
+        <target>儲存庫</target>
         
       </trans-unit>
       <trans-unit id="linkLabel1.Text">
         <source>Gource project</source>
-        <target>Gource项目</target>
+        <target>Gource 專案</target>
         
       </trans-unit>
       <trans-unit id="linkLabel2.Text">
         <source>Gource command line</source>
-        <target>Gource命令行</target>
+        <target>Gource 命令列</target>
         
       </trans-unit>
     </body>
@@ -1164,17 +1163,17 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="lblIgnoreBuildBranch.Text">
         <source>Ignore build for branch</source>
-        <target>对分支忽略构建</target>
+        <target>忽略分支的建置</target>
         
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
-        <target>Jenkins服务器地址</target>
+        <target>Jenkins 伺服器 URL</target>
         
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
-        <target>工程名</target>
+        <target>專案名稱</target>
         
       </trans-unit>
     </body>
@@ -1183,37 +1182,37 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Jira Commit Hint</source>
-        <target>Jira Commit 提示</target>
+        <target>Jira 提交提示</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultCaption.Text">
         <source>First Task Preview</source>
-        <target>首任务预览</target>
+        <target>第一個任務預覽</target>
         
       </trans-unit>
       <trans-unit id="EmptyQueryResultMessage.Text">
         <source>[Empty Jira Query Result]</source>
-        <target>[空白 Jira 查询结果]</target>
+        <target>[Jira 查詢結果為空]</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlCaption.Text">
         <source>Invalid Jira url</source>
-        <target>无效的 Jira URL</target>
+        <target>無效的 Jira URL</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlMessage.Text">
         <source>A valid url is required to launch the Jira query helper</source>
-        <target>需要有效的 URL 才能启动 Jira 查询助手</target>
+        <target>需要有效的 URL 才能啟動 Jira 查詢小幫手</target>
         
       </trans-unit>
       <trans-unit id="JiraFieldsLabel.Text">
         <source>Jira fields</source>
-        <target>Jira 字段</target>
+        <target>Jira 欄位</target>
         
       </trans-unit>
       <trans-unit id="JiraPluginConfigurationErrorText.Text">
         <source>Jira plugin configuration incomplete!</source>
-        <target>Jira插件设置未完成！</target>
+        <target>Jira 外掛設定不完整！</target>
         
       </trans-unit>
       <trans-unit id="PreviewButtonText.Text">
@@ -1223,42 +1222,42 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="QueryHelperLinkText.Text">
         <source>Open the query helper inside Jira</source>
-        <target>打开 Jira 内置的查询助手</target>
+        <target>在 Jira 中開啟查詢小幫手</target>
         
       </trans-unit>
       <trans-unit id="QueryHelperOpenErrorText.Text">
         <source>Unable to open Jira query helper</source>
-        <target>无法打开 Jira 查询助手</target>
+        <target>無法開啟 Jira 查詢小幫手</target>
         
       </trans-unit>
       <trans-unit id="_authTypeSettings.Caption">
         <source>Auth type</source>
-        <target>認證類型</target>
+        <target>驗證類型</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
         <source>Jira credentials</source>
-        <target>Jira 登录凭证</target>
+        <target>Jira 認證</target>
         
       </trans-unit>
       <trans-unit id="_enabledSettings.Caption">
         <source>Jira hint plugin enabled</source>
-        <target>已启用 Jira 提示插件</target>
+        <target>已啟用 Jira 提示外掛</target>
         
       </trans-unit>
       <trans-unit id="_jqlQuerySettings.Caption">
         <source>JQL Query</source>
-        <target>JQL查询</target>
+        <target>JQL 查詢</target>
         
       </trans-unit>
       <trans-unit id="_stringTemplateSetting.Caption">
         <source>Message Template</source>
-        <target>提交注释模板</target>
+        <target>訊息範本</target>
         
       </trans-unit>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
-        <target>Jira 地址</target>
+        <target>Jira URL</target>
         
       </trans-unit>
     </body>
@@ -1267,42 +1266,42 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Proxy Switcher</source>
-        <target>代理切换</target>
+        <target>Proxy 切換器</target>
         
       </trans-unit>
       <trans-unit id="ApplyGlobally_CheckBox.Text">
         <source>Apply globally</source>
-        <target>应用于全局</target>
+        <target>全域套用</target>
         
       </trans-unit>
       <trans-unit id="GlobalHttpProxy_Label.Text">
         <source>Global http.proxy:</source>
-        <target>全局HTTP代理http.proxy:</target>
+        <target>全域 http.proxy：</target>
         
       </trans-unit>
       <trans-unit id="LocalHttpProxy_Label.Text">
         <source>Local http.proxy:</source>
-        <target>局部HTTP代理http.proxy:</target>
+        <target>本機 http.proxy：</target>
         
       </trans-unit>
       <trans-unit id="SetProxy_Button.Text">
         <source>Set proxy</source>
-        <target>设置代理</target>
+        <target>設定 Proxy</target>
         
       </trans-unit>
       <trans-unit id="UnsetProxy_Button.Text">
         <source>Unset proxy</source>
-        <target>取消代理</target>
+        <target>取消設定 Proxy</target>
         
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>没有代理配置。请在插件设置中设置代理服务器。</target>
+        <target>未設定 Proxy。請在外掛設定中設定 Proxy 主機。</target>
         
       </trans-unit>
       <trans-unit id="_pluginDescription.Text">
         <source>Proxy Switcher</source>
-        <target>代理切换</target>
+        <target>Proxy 切換器</target>
         
       </trans-unit>
     </body>
@@ -1311,27 +1310,27 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Proxy Switcher</source>
-        <target>代理切换</target>
+        <target>Proxy 切換器</target>
         
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
         <source>HTTP proxy</source>
-        <target>HTTP代理</target>
+        <target>HTTP Proxy</target>
         
       </trans-unit>
       <trans-unit id="HttpProxyPort.Caption">
         <source>HTTP proxy port</source>
-        <target>HTTP代理端口</target>
+        <target>HTTP Proxy 連接埠</target>
         
       </trans-unit>
       <trans-unit id="Password.Caption">
         <source>Password</source>
-        <target>密码</target>
+        <target>密碼</target>
         
       </trans-unit>
       <trans-unit id="Username.Caption">
         <source>Username</source>
-        <target>用户名</target>
+        <target>使用者名稱</target>
         
       </trans-unit>
     </body>
@@ -1340,7 +1339,7 @@ Do you want to reset the configured path?</source>
     <body>
       <trans-unit id="$this.Text">
         <source>Release Notes Generator</source>
-        <target>发行注记</target>
+        <target>版本資訊產生器</target>
         
       </trans-unit>
       <trans-unit id="_caption.Text">
@@ -1349,38 +1348,38 @@ Do you want to reset the configured path?</source>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
-        <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>提交历史从 '{0}' 到 '{1}' ({2})：</target>
+        <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
+        <target>從「{0}」到「{1}」的提交記錄 ({2})：</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
-        <source>'From' commit must be specified</source>
-        <target>必须指定“发件人”提交</target>
+        <source>&apos;From&apos; commit must be specified</source>
+        <target>必須指定「從」提交</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
-        <source>'To' commit must be specified</source>
-        <target>必须指定'目标'提交</target>
+        <source>&apos;To&apos; commit must be specified</source>
+        <target>必須指定「到」提交</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
         <source>as HTML table</source>
-        <target>像网页表格</target>
+        <target>為 HTML 表格</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableSpace.Text">
         <source>as text table (spaces)</source>
-        <target>as text table (spaces)</target>
+        <target>為文字表格（空格）</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsTextTableTab.Text">
         <source>as text table (tabs)</source>
-        <target>as text table (tabs)</target>
+        <target>為文字表格（定位點）</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyOrigOutput.Text">
         <source>original output</source>
-        <target>原始输出</target>
+        <target>原始輸出</target>
         
       </trans-unit>
       <trans-unit id="buttonGenerate.Text">
@@ -1390,76 +1389,76 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>Result</source>
-        <target>结果</target>
+        <target>結果</target>
         
       </trans-unit>
       <trans-unit id="groupBoxCopy.Text">
         <source>Copy to clipboard</source>
-        <target>复制到剪贴板</target>
+        <target>複製到剪貼簿</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>Commit expression &quot;To&quot; (including):</target>
+        <target>提交運算式「到」（包含）：</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
         <source>separate columns with spaces</source>
-        <target>用空格分隔列</target>
+        <target>以空格分隔欄位</target>
         
       </trans-unit>
       <trans-unit id="label11.Text">
         <source>Clipboard will contain HTML code (plain text) and HTML format
 which can be pasted to programs like MS Word or LibreOffice Writer.</source>
-        <target>剪贴板将包含HTML代码(纯文本)和HTML格式。
-可以粘贴到Word或LibreOffice里。</target>
+        <target>剪貼簿將包含 HTML 程式碼（純文字）和 HTML 格式，
+可貼上至 MS Word 或 LibreOffice Writer 等程式。</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>Commit expression &quot;From&quot; (excluding):</target>
+        <target>提交運算式「從」（排除）：</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>git log arguments:</source>
-        <target>git log 参数：</target>
+        <target>git log 引數：</target>
         
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>{0} = from; {1} = to</source>
-        <target>{0} = 从; {1} = 到</target>
+        <target>{0} = 從; {1} = 到</target>
         
       </trans-unit>
       <trans-unit id="label5.Text">
         <source>Sorting: Most recent revisions are listed on top.</source>
-        <target>分类: 最近的修订列在最上面。</target>
+        <target>排序：最新的修訂版本列在最上方。</target>
         
       </trans-unit>
       <trans-unit id="label6.Text">
         <source>Revisions count = </source>
-        <target>修订次数=</target>
+        <target>修訂版本計數 = </target>
         
       </trans-unit>
       <trans-unit id="label7.Text">
         <source>(Commit expressions can be commit hashes,
 branch names, tag names)</source>
-        <target>(提交信息可以是提交码,
-分支名称, 标签名称)</target>
+        <target>（提交運算式可以是提交雜湊、
+分支名稱、標籤名稱）</target>
         
       </trans-unit>
       <trans-unit id="label8.Text">
         <source>as is</source>
-        <target>就这样</target>
+        <target>原樣</target>
         
       </trans-unit>
       <trans-unit id="label9.Text">
         <source>separate columns with tabs</source>
-        <target>用制表符来分隔列</target>
+        <target>以定位點分隔欄位</target>
         
       </trans-unit>
       <trans-unit id="labelRevCount.Text">
         <source>n/a</source>
-        <target>n/a</target>
+        <target>不適用</target>
         
       </trans-unit>
     </body>
@@ -1468,7 +1467,7 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="Description.Text">
         <source>Release Notes Generator</source>
-        <target>发行注记</target>
+        <target>版本資訊產生器</target>
         
       </trans-unit>
     </body>
@@ -1477,42 +1476,42 @@ branch names, tag names)</source>
     <body>
       <trans-unit id="ExtractLink.Text">
         <source>Extract data from a build result url copied in the clipboard</source>
-        <target>从剪贴板复制来的构建结果URL中提取数据</target>
+        <target>從複製到剪貼簿的組建結果 URL 擷取資料</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
         <source>Go to token management page</source>
-        <target>转到令牌管理页</target>
+        <target>前往權杖管理頁面</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Could not extract data</source>
-        <target>无法提取数据</target>
+        <target>無法擷取資料</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
-        <target>剪贴板中并不包含可用的构建网址。
+        <target>剪貼簿不包含有效的組建 URL。
 
-请复制构建网址到剪贴板后再重试。
-（应该至少包含“buildID”参数）</target>
+請在重試前將組建的 URL 複製到剪貼簿。
+（應至少包含 &quot;buildId&quot; 參數）</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
         <source>Error while trying to retrieve build definition information from url.
 
 Please ensure that the url is valid and that the API token has access to build and project information.</source>
-        <target>在尝试从网址取回构建定义信息时发生错误。
+        <target>嘗試從 URL 擷取組建定義資訊時發生錯誤。
 
-请确定网址有效且应用程序界面符号有权限访问构建和工程信息。</target>
+請確認 URL 有效，且 API 權杖有權存取組建和專案資訊。</target>
         
       </trans-unit>
       <trans-unit id="_infoNoApiTokenMessage.Text">
         <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
-        <target>没有应用程序界面符号无法取回构建定义信息。字段将会留为空白。</target>
+        <target>沒有 API 權杖無法擷取組建定義資訊。欄位將留空。</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -1520,7 +1519,7 @@ Please ensure that the url is valid and that the API token has access to build a
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</source>
-        <target>范例：
+        <target>範例：
  - https://dev.azure.com/yourorganization/projectname/
  - https://yourhost:8080/tfs/collectionname/projectname/
  - https://yourorganization.visualstudio.com/projectname/</target>
@@ -1528,16 +1527,16 @@ Please ensure that the url is valid and that the API token has access to build a
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
-        <target>您需要创建具有以下范围的令牌:
- - '编译(读)'
- - '工程和团队(读)'</target>
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</source>
+        <target>您需要建立具有以下範圍的權杖：
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>&quot;生成定义名称&quot; 正则表达式无效, 无法保存!</target>
+        <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
+        <target>「組建定義名稱」正規表示式無效，將不會儲存！</target>
         
       </trans-unit>
     </body>
@@ -1546,45 +1545,45 @@ Please ensure that the url is valid and that the API token has access to build a
     <body>
       <trans-unit id="CheckBoxLogAsGuest.Text">
         <source>Log as guest to display the build report</source>
-        <target>作为来宾登陆以显示生成报告</target>
+        <target>以訪客身分登入以顯示組建報告</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
-        <target>生产url无效</target>
+        <target>組建 URL 無效</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>剪切版不包含有效的构建URL。
+        <target>剪貼簿不包含有效的組建 URL。
 
-请复制剪贴板的构建URL后重试。
-(至少应包含&quot;buildTypeId&quot;参数)</target>
+請在重試前將組建的 URL 複製到剪貼簿。
+（應至少包含 &quot;buildTypeId&quot; 參數）</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
         <source>Error when loading the projects and build list</source>
-        <target>加载项目和生成列表时出错</target>
+        <target>載入專案和組建清單時發生錯誤</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
-        <target>未能加载项目和生成列表。
-请验证服务器 url。</target>
+        <target>無法載入專案和組建清單。
+請驗證伺服器 URL。</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
-        <target>&quot;生成 id 筛选器&quot; 正则表达式无效, 无法保存!</target>
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
+        <target>「組建 ID 過濾器」正規表示式無效，將不會儲存！</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
-        <target>从剪贴板中复制的生成 url 中提取数据</target>
+        <target>從複製到剪貼簿的組建 URL 擷取資料</target>
         
       </trans-unit>
     </body>

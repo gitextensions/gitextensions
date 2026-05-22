@@ -361,16 +361,16 @@
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
-        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>제거할 브랜치를 선택하십시오. '{0}'에 완전히 머지된 브랜치만 제거됩니다.</target>
+        <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
+        <target>제거할 브랜치를 선택하십시오. &apos;{0}&apos;에 완전히 머지된 브랜치만 제거됩니다.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
-Branches will be deleted on the remote '{0}'. This can not be undone.
+Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
         <target>위험한 동작입니다!
-원격 '{0}'에서 브랜치는 삭제될 것입니다. 이것은 되돌릴 수 없습니다. 
+원격 &apos;{0}&apos;에서 브랜치는 삭제될 것입니다. 이것은 되돌릴 수 없습니다. 
 정말로 계속할까요?</target>
         
       </trans-unit>
@@ -395,8 +395,8 @@ Are you sure you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
-        <source>Press '{0}' to search for branches to delete.</source>
-        <target>삭제할 브랜치를 찾으려면 '{0}' 누름.</target>
+        <source>Press &apos;{0}&apos; to search for branches to delete.</source>
+        <target>삭제할 브랜치를 찾으려면 &apos;{0}&apos; 누름.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -405,8 +405,8 @@ Are you sure you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
-        <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>'{0}' 열의 체크박스를 사용하여 삭제할 브랜치를 선택합니다.</target>
+        <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
+        <target>&apos;{0}&apos; 열의 체크박스를 사용하여 삭제할 브랜치를 선택합니다.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -1348,18 +1348,18 @@ Do you want to reset the configured path?</source>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
-        <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>'{0}'에서 '{1}' ({2})로 로그 커밋:</target>
+        <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
+        <target>&apos;{0}&apos;에서 &apos;{1}&apos; ({2})로 로그 커밋:</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
-        <source>'From' commit must be specified</source>
-        <target>'From' 커밋을 지정해야 합니다</target>
+        <source>&apos;From&apos; commit must be specified</source>
+        <target>&apos;From&apos; 커밋을 지정해야 합니다</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
-        <source>'To' commit must be specified</source>
-        <target>'To' 커밋을 지정해야 합니다</target>
+        <source>&apos;To&apos; commit must be specified</source>
+        <target>&apos;To&apos; 커밋을 지정해야 합니다</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1489,7 +1489,7 @@ branch names, tag names)</source>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
@@ -1526,16 +1526,16 @@ URL이 유효하고 API 토큰이 빌드 및 프로젝트 정보에 액세스할
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</source>
         <target>다음 범위를 사용하여 토큰을 생성해야 합니다.
-- '빌드(읽기)'
-- '프로젝트 및 팀(읽기)'</target>
+- &apos;빌드(읽기)&apos;
+- &apos;프로젝트 및 팀(읽기)&apos;</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>정규 표현식 'Build definition name'이 유효하지 않아 저장되지 않았습니다!</target>
+        <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
+        <target>정규 표현식 &apos;Build definition name&apos;이 유효하지 않아 저장되지 않았습니다!</target>
         
       </trans-unit>
     </body>
@@ -1553,7 +1553,7 @@ URL이 유효하고 API 토큰이 빌드 및 프로젝트 정보에 액세스할
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
@@ -1575,7 +1575,7 @@ Please verify the server url.</source>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
         <target>&quot;Build Id Filter&quot; 정규 표현식이 유효하지 않아 저장되지 않습니다!</target>
         
       </trans-unit>

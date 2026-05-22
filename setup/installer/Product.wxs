@@ -461,6 +461,15 @@
       <Component Id="German.Plugins.xlf" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\German.Plugins.xlf" />
       </Component>
+      <Component Id="Italian.gif" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Italian.gif" />
+      </Component>
+      <Component Id="Italian.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Italian.xlf" />
+      </Component>
+      <Component Id="Italian.Plugins.xlf" Guid="*">
+        <File Source="$(var.ArtifactsPublishPath)\Translation\Italian.Plugins.xlf" />
+      </Component>
       <Component Id="Japanese.gif" Guid="*">
         <File Source="$(var.ArtifactsPublishPath)\Translation\Japanese.gif" />
       </Component>
@@ -803,6 +812,11 @@
           <ComponentRef Id="German.xlf" />
           <ComponentRef Id="German.Plugins.xlf" />
           <ComponentRef Id="German.gif" />
+        </Feature>
+        <Feature Id="Italian" Title="Italian" Level="1">
+          <ComponentRef Id="Italian.xlf" />
+          <ComponentRef Id="Italian.Plugins.xlf" />
+          <ComponentRef Id="Italian.gif" />
         </Feature>
         <Feature Id="Japanese" Title="Japanese" Level="1">
           <ComponentRef Id="Japanese.xlf" />
