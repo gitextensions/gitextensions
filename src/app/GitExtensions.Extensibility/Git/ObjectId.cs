@@ -91,7 +91,7 @@ public readonly struct ObjectId : IEquatable<ObjectId>, IComparable<ObjectId>, I
             }
 
             Vector128<uint> splat = Vector128.Create(last4Bytes);
-            return Vector128.LoadUnsafe(ref Unsafe.As<byte, uint>(ref start)) == splat;
+            return Vector128.LoadUnsafe(ref start) == splat;
         }
     }
 
