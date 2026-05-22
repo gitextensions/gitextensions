@@ -208,6 +208,8 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         const bool top = false;
         const bool advanced = true;
         _contextMenuItems = [
+            (resetChangesToolStripMenuItem, top),
+            (commitToolStripMenuItem, top),
             (markRevisionAsBadToolStripMenuItem, top),
             (markRevisionAsGoodToolStripMenuItem, top),
             (bisectSkipRevisionToolStripMenuItem, top),
