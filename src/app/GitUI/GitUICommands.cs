@@ -710,7 +710,7 @@ public sealed class GitUICommands : IGitUICommands
         {
             dir ??= Module.IsValidGitWorkingDir() ? Module.WorkingDir : string.Empty;
 
-            using FormInit frm = new(dir, gitModuleChanged);
+            using FormInit frm = new(this, dir, gitModuleChanged);
             frm.ShowDialog(owner);
             return true;
         }
