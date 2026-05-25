@@ -227,3 +227,4 @@ YYYY/MM/DD, github id, Full name, email
 2026/01/09, jmg2k, Jonas Guss, 44924601+jmg2k@users.noreply.github.com
 2026/02/19, apoorvdarshan, Apoorv Darshan, ad13dtu(at)gmail.com
 2026/05/04, Henr1k80, Henrik Gedionsen, Henrik.Gedionsen[.@)gmail.com
+2026/05/06, LeeRedfield, Chiong Ngek Lee, chiongngeklee@gmail.com
