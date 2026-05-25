@@ -1,9 +1,13 @@
 ﻿Changelog
 =========
 
-### Version v7.0.0 (no due date)
+### Version v7.0.0 (25 May 2026)
 
 #### Changes:
+* [#13081] fix(StartFileHistoryDialog): Avoid error popup
+* [#13080] fix(create repo): Pass ServiceProvider
+* [#13077] Fix regex pattern for rejected push detection
+* [#13075] feat: "Reset Changes" and "Commit" working directory context menu (#9…
 * [#13074] fix(remote branch prefix): Allow trailing slash
 * [#13073] fix: Use ReadUnaligned for IsArtificial
 * [#13072] fix(save selected as): Support top-level files
@@ -163,6 +167,10 @@
 * [#12367] Add ComboBoxWatermarkManager for control of ComboBox watermark text
 
 
+[#13081]:https://github.com/gitextensions/gitextensions/pull/13081
+[#13080]:https://github.com/gitextensions/gitextensions/pull/13080
+[#13077]:https://github.com/gitextensions/gitextensions/pull/13077
+[#13075]:https://github.com/gitextensions/gitextensions/pull/13075
 [#13074]:https://github.com/gitextensions/gitextensions/pull/13074
 [#13073]:https://github.com/gitextensions/gitextensions/pull/13073
 [#13072]:https://github.com/gitextensions/gitextensions/pull/13072
