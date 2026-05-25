@@ -134,7 +134,7 @@ internal sealed class AppSettingsTests
     ///  Verifies that ISetting property names (storage keys) remain stable across changes.
     /// </summary>
     [Test]
-    public Task ISetting_properties_should_have_stable_storage_keys()
+    public Task ISetting_properties_should_have_stable_storage_keys_and_type()
     {
         StringBuilder sb = new();
         IOrderedEnumerable<PropertyInfo> properties = typeof(AppSettings)
@@ -147,7 +147,14 @@ internal sealed class AppSettingsTests
             string fullPath = (string)setting.GetType()
                 .GetProperty(nameof(ISetting<int>.FullPath))!
                 .GetValue(setting)!;
-            sb.AppendLine($"{property.Name} = {fullPath}");
+            Type type = property.PropertyType;
+            sb.Append(type.Name);
+            if (type.IsGenericType)
+            {
+                sb.Append('<').Append(type.GenericTypeArguments[0].Name).Append('>');
+            }
+
+            sb.AppendLine($" {property.Name} = {fullPath}");
         }
 
         return Verifier.Verify(sb.ToString());
@@ -209,7 +216,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.FileStatusShowGroupNodesInFlatList)], false, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.RememberAmendCommitState)], true, false, false);
             yield return (properties[nameof(AppSettings.StashKeepIndex)], false, false, false);
-            yield return (properties[nameof(AppSettings.DontConfirmStashDrop)], false, false, false);
+            yield return (properties[nameof(AppSettings.DontConfirmStashDrop)], false, false, isISetting);
             yield return (properties[nameof(AppSettings.ApplyPatchIgnoreWhitespace)], false, false, false);
             yield return (properties[nameof(AppSettings.ApplyPatchSignOff)], true, false, false);
             yield return (properties[nameof(AppSettings.UseHistogramDiffAlgorithm)], false, false, false);
@@ -284,21 +291,21 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.UseDefaultCheckoutBranchAction)], false, false, false);
             yield return (properties[nameof(AppSettings.DontShowHelpImages)], false, false, false);
             yield return (properties[nameof(AppSettings.AlwaysShowAdvOpt)], false, false, false);
-            yield return (properties[nameof(AppSettings.DontConfirmAmend)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmCommitIfNoBranch)], false, false, false);
+            yield return (properties[nameof(AppSettings.DontConfirmAmend)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmCommitIfNoBranch)], false, false, isISetting);
             yield return (properties[nameof(AppSettings.ConfirmBranchCheckout)], false, false, false);
             yield return (properties[nameof(AppSettings.AutoPopStashAfterPull)], null, true, false);
             yield return (properties[nameof(AppSettings.AutoPopStashAfterCheckoutBranch)], null, true, false);
             yield return (properties[nameof(AppSettings.AutoPullOnPushRejectedAction)], null, true, false);
-            yield return (properties[nameof(AppSettings.DontConfirmPushNewBranch)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmAddTrackingRef)], false, false, false);
-            yield return (properties[nameof(AppSettings.DontConfirmCommitAfterConflictsResolved)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmSecondAbortConfirmation)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmRebase)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmResolveConflicts)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmUndoLastCommit)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmFetchAndPruneAll)], false, isNotNullable, isISetting);
-            yield return (properties[nameof(AppSettings.DontConfirmSwitchWorktree)], false, isNotNullable, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmPushNewBranch)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmAddTrackingRef)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmCommitAfterConflictsResolved)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmSecondAbortConfirmation)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmRebase)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmResolveConflicts)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmUndoLastCommit)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmFetchAndPruneAll)], false, false, isISetting);
+            yield return (properties[nameof(AppSettings.DontConfirmSwitchWorktree)], false, false, isISetting);
             yield return (properties[nameof(AppSettings.IncludeUntrackedFilesInAutoStash)], false, false, false);
             yield return (properties[nameof(AppSettings.IncludeUntrackedFilesInManualStash)], false, false, false);
             yield return (properties[nameof(AppSettings.ShowRemoteBranches)], true, false, false);
@@ -307,7 +314,7 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowSuperprojectBranches)], true, false, false);
             yield return (properties[nameof(AppSettings.ShowSuperprojectRemoteBranches)], false, false, false);
             yield return (properties[nameof(AppSettings.UpdateSubmodulesOnCheckout)], null, true, false);
-            yield return (properties[nameof(AppSettings.DontConfirmUpdateSubmodulesOnCheckout)], null, true, false);
+            yield return (properties[nameof(AppSettings.DontConfirmUpdateSubmodulesOnCheckout)], null, true, isISetting);
             yield return (properties[nameof(AppSettings.ShowGitCommandLine)], false, false, false);
             yield return (properties[nameof(AppSettings.ShowStashCount)], false, false, false);
             yield return (properties[nameof(AppSettings.ShowAheadBehindData)], true, false, false);
