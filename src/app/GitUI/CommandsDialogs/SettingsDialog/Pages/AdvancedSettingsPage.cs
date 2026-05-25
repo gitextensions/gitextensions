@@ -31,7 +31,7 @@ public partial class AdvancedSettingsPage : SettingsPageWithHeader
         chkAlwaysShowAdvOpt.Checked = AppSettings.AlwaysShowAdvOpt;
         chkCheckForUpdates.Checked = AppSettings.CheckForUpdates;
         chkCheckForRCVersions.Checked = AppSettings.CheckForReleaseCandidates;
-        chkConsoleEmulator.Checked = AppSettings.UseConsoleEmulatorForCommands.Value;
+        chkConsoleEmulator.Checked = AppSettings.UseConsoleEmulatorForCommands;
         chkAutoNormaliseBranchName.Checked = AppSettings.AutoNormaliseBranchName;
         cboAutoNormaliseSymbol.Enabled = chkAutoNormaliseBranchName.Checked;
         cboAutoNormaliseSymbol.SelectedValue = AppSettings.AutoNormaliseSymbol;

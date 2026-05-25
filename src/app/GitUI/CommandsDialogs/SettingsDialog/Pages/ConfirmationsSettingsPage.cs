@@ -25,7 +25,7 @@ public partial class ConfirmationsSettingsPage : SettingsPageWithHeader
         chkPushNewBranch.Checked = !AppSettings.DontConfirmPushNewBranch;
         chkAddTrackingRef.Checked = !AppSettings.DontConfirmAddTrackingRef;
         chkBranchDeleteUnmerged.Checked = !AppSettings.DontConfirmDeleteUnmergedBranch;
-        chkBranchCheckoutConfirmation.Checked = AppSettings.ConfirmBranchCheckout.Value;
+        chkBranchCheckoutConfirmation.Checked = AppSettings.ConfirmBranchCheckout;
 
         // Stashes:
         chkAutoPopStashAfterPull.CheckState = ToCheckboxStateInverted(AppSettings.AutoPopStashAfterPull);

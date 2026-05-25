@@ -134,7 +134,7 @@ internal sealed class AppSettingsTests
     ///  Verifies that ISetting property names (storage keys) remain stable across changes.
     /// </summary>
     [Test]
-    public Task ISetting_properties_should_have_stable_storage_keys()
+    public Task ISetting_properties_should_have_stable_storage_keys_and_type()
     {
         StringBuilder sb = new();
         IOrderedEnumerable<PropertyInfo> properties = typeof(AppSettings)
@@ -147,7 +147,14 @@ internal sealed class AppSettingsTests
             string fullPath = (string)setting.GetType()
                 .GetProperty(nameof(ISetting<int>.FullPath))!
                 .GetValue(setting)!;
-            sb.AppendLine($"{property.Name} = {fullPath}");
+            Type type = property.PropertyType;
+            sb.Append(type.Name);
+            if (type.IsGenericType)
+            {
+                sb.Append('<').Append(type.GenericTypeArguments[0].Name).Append('>');
+            }
+
+            sb.AppendLine($" {property.Name} = {fullPath}");
         }
 
         return Verifier.Verify(sb.ToString());

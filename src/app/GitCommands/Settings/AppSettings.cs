@@ -305,11 +305,11 @@ public static partial class AppSettings
         set => WriteStringRegValue("CascadeShellMenuItems", value);
     }
 
-    public static ISetting<int> FileStatusFindInFilesGitGrepTypeIndex { get; } = Setting.Create(FileStatusSettingsPath, nameof(FileStatusFindInFilesGitGrepTypeIndex), 1);
+    public static Setting_Int FileStatusFindInFilesGitGrepTypeIndex { get; } = new(FileStatusSettingsPath, nameof(FileStatusFindInFilesGitGrepTypeIndex), defaultValue: 1);
 
-    public static ISetting<bool> FileStatusMergeSingleItemWithFolder { get; } = Setting.Create(FileStatusSettingsPath, nameof(FileStatusMergeSingleItemWithFolder), false);
+    public static Setting_Bool FileStatusMergeSingleItemWithFolder { get; } = new(FileStatusSettingsPath, nameof(FileStatusMergeSingleItemWithFolder), defaultValue: false);
 
-    public static ISetting<bool> FileStatusShowGroupNodesInFlatList { get; } = Setting.Create(FileStatusSettingsPath, nameof(FileStatusShowGroupNodesInFlatList), false);
+    public static Setting_Bool FileStatusShowGroupNodesInFlatList { get; } = new(FileStatusSettingsPath, nameof(FileStatusShowGroupNodesInFlatList), defaultValue: false);
 
     public static string SshPath
     {
@@ -431,12 +431,12 @@ public static partial class AppSettings
     /// <summary>
     /// Use Git coloring for selected commands
     /// </summary>
-    public static ISetting<bool> UseGitColoring { get; } = Setting.Create(AppearanceSettingsPath, nameof(UseGitColoring), true);
+    public static Setting_Bool UseGitColoring { get; } = new(AppearanceSettingsPath, nameof(UseGitColoring), defaultValue: true);
 
     /// <summary>
     /// Color the background at changes (invert colors).
     /// </summary>
-    public static ISetting<bool> ReverseGitColoring { get; } = Setting.Create(AppearanceSettingsPath, nameof(ReverseGitColoring), true);
+    public static Setting_Bool ReverseGitColoring { get; } = new(AppearanceSettingsPath, nameof(ReverseGitColoring), defaultValue: true);
 
     public static bool ShowErrorsWhenStagingFiles
     {
@@ -462,7 +462,7 @@ public static partial class AppSettings
         set => SetInt("commitDialogNumberOfPreviousMessages", value);
     }
 
-    public static ISetting<bool> CommitDialogSelectStagedOnEnterMessage { get; } = Setting.Create(DialogSettingsPath, nameof(CommitDialogSelectStagedOnEnterMessage), true);
+    public static Setting_Bool CommitDialogSelectStagedOnEnterMessage { get; } = new(DialogSettingsPath, nameof(CommitDialogSelectStagedOnEnterMessage), defaultValue: true);
 
     public static bool CommitDialogShowOnlyMyMessages
     {
@@ -488,19 +488,19 @@ public static partial class AppSettings
         set => SetBool("showresetallchanges", value);
     }
 
-    public static ISetting<bool> ShowConEmuTab { get; } = Setting.Create(DetailedSettingsPath, nameof(ShowConEmuTab), true);
+    public static Setting_Bool ShowConEmuTab { get; } = new(DetailedSettingsPath, nameof(ShowConEmuTab), defaultValue: true);
 
-    public static ISetting<string> ConsoleEmulatorName { get; } = Setting.Create(DetailedSettingsPath, nameof(ConsoleEmulatorName), "ConEmu");
+    public static Setting_String ConsoleEmulatorName { get; } = new(DetailedSettingsPath, nameof(ConsoleEmulatorName), "ConEmu");
 
-    public static ISetting<string> ConEmuStyle { get; } = Setting.Create(DetailedSettingsPath, nameof(ConEmuStyle), "Default");
+    public static Setting_String ConEmuStyle { get; } = new(DetailedSettingsPath, nameof(ConEmuStyle), "Default");
 
-    public static ISetting<string> ConEmuTerminal { get; } = Setting.Create(DetailedSettingsPath, nameof(ConEmuTerminal), "bash");
-    public static ISetting<int> OutputHistoryDepth { get; } = Setting.Create(DetailedSettingsPath, nameof(OutputHistoryDepth), 20);
-    public static ISetting<bool> OutputHistoryPanelVisible { get; } = Setting.Create(DetailedSettingsPath, nameof(OutputHistoryPanelVisible), false);
-    public static ISetting<bool> ShowOutputHistoryAsTab { get; } = Setting.Create(DetailedSettingsPath, nameof(ShowOutputHistoryAsTab), true);
-    public static ISetting<bool> UseBrowseForFileHistory { get; } = Setting.Create(DetailedSettingsPath, nameof(UseBrowseForFileHistory), true);
-    public static ISetting<bool> UseDiffViewerForBlame { get; } = Setting.Create(DetailedSettingsPath, nameof(UseDiffViewerForBlame), false);
-    public static ISetting<bool> ShowGpgInformation { get; } = Setting.Create(DetailedSettingsPath, nameof(ShowGpgInformation), true);
+    public static Setting_String ConEmuTerminal { get; } = new(DetailedSettingsPath, nameof(ConEmuTerminal), defaultValue: "bash");
+    public static Setting_Int OutputHistoryDepth { get; } = new(DetailedSettingsPath, nameof(OutputHistoryDepth), defaultValue: 20);
+    public static Setting_Bool OutputHistoryPanelVisible { get; } = new(DetailedSettingsPath, nameof(OutputHistoryPanelVisible), defaultValue: false);
+    public static Setting_Bool ShowOutputHistoryAsTab { get; } = new(DetailedSettingsPath, nameof(ShowOutputHistoryAsTab), defaultValue: true);
+    public static Setting_Bool UseBrowseForFileHistory { get; } = new(DetailedSettingsPath, nameof(UseBrowseForFileHistory), defaultValue: true);
+    public static Setting_Bool UseDiffViewerForBlame { get; } = new(DetailedSettingsPath, nameof(UseDiffViewerForBlame), defaultValue: false);
+    public static Setting_Bool ShowGpgInformation { get; } = new(DetailedSettingsPath, nameof(ShowGpgInformation), defaultValue: true);
 
     public static CommitInfoPosition CommitInfoPosition
     {
@@ -511,7 +511,7 @@ public static partial class AppSettings
         set => DetailedSettingsPath.SetEnum("CommitInfoPosition", value);
     }
 
-    public static ISetting<bool> MessageEditorWordWrap => Setting.Create(DetailedSettingsPath, nameof(MessageEditorWordWrap), false);
+    public static Setting_Bool MessageEditorWordWrap { get; } = new(DetailedSettingsPath, nameof(MessageEditorWordWrap), defaultValue: false);
 
     public static bool ShowSplitViewLayout
     {
@@ -1016,7 +1016,7 @@ public static partial class AppSettings
         set => SetEnum("checkoutbranchaction", value);
     }
 
-    public static ISetting<bool> CheckoutOtherBranchAfterReset { get; } = Setting.Create(DialogSettingsPath, nameof(CheckoutOtherBranchAfterReset), defaultValue: true);
+    public static Setting_Bool CheckoutOtherBranchAfterReset { get; } = new(DialogSettingsPath, nameof(CheckoutOtherBranchAfterReset), defaultValue: true);
 
     public static bool UseDefaultCheckoutBranchAction
     {
@@ -1054,7 +1054,7 @@ public static partial class AppSettings
         set => SetBool("DontConfirmCommitIfNoBranch", value);
     }
 
-    public static ISetting<bool> ConfirmBranchCheckout { get; } = Setting.Create(ConfirmationsSettingsPath, nameof(ConfirmBranchCheckout), false);
+    public static Setting_Bool ConfirmBranchCheckout { get; } = new(ConfirmationsSettingsPath, nameof(ConfirmBranchCheckout), defaultValue: false);
 
     public static bool? AutoPopStashAfterPull
     {
@@ -1238,7 +1238,7 @@ public static partial class AppSettings
         set => SetBool("showSessionRefs", value);
     }
 
-    public static ISetting<bool> ShowGitNotesColumn { get; } = Setting.Create(AppearanceSettingsPath, nameof(ShowGitNotesColumn), false);
+    public static Setting_Bool ShowGitNotesColumn { get; } = new(AppearanceSettingsPath, nameof(ShowGitNotesColumn), defaultValue: false);
 
     public static bool ShowAnnotatedTagsMessages
     {
@@ -1317,9 +1317,9 @@ public static partial class AppSettings
         set => SetBool("closeprocessdialog", value);
     }
 
-    public static ISetting<bool> ShowProcessDialogPasswordInput => Setting.Create(DetailedSettingsPath, nameof(ShowProcessDialogPasswordInput), false);
+    public static Setting_Bool ShowProcessDialogPasswordInput { get; } = new(DetailedSettingsPath, nameof(ShowProcessDialogPasswordInput), defaultValue: false);
 
-    public static BoolRuntimeSetting ShowCurrentBranchOnly { get; } = new(RootSettingsPath, nameof(ShowCurrentBranchOnly), false);
+    public static BoolRuntimeSetting ShowCurrentBranchOnly { get; } = new(RootSettingsPath, nameof(ShowCurrentBranchOnly), defaultValue: false);
 
     public static bool ShowSimplifyByDecoration
     {
@@ -1327,7 +1327,7 @@ public static partial class AppSettings
         set => SetBool("showsimplifybydecoration", value);
     }
 
-    public static BoolRuntimeSetting BranchFilterEnabled { get; } = new(RootSettingsPath, nameof(BranchFilterEnabled), false);
+    public static BoolRuntimeSetting BranchFilterEnabled { get; } = new(RootSettingsPath, nameof(BranchFilterEnabled), defaultValue: false);
 
     public static bool ShowOnlyFirstParent
     {
@@ -1389,8 +1389,8 @@ public static partial class AppSettings
         set => SetBool("showdiffforallparents", value);
     }
 
-    public static ISetting<bool> ShowFindInCommitFilesGitGrep { get; } = Setting.Create(AppearanceSettingsPath, nameof(ShowFindInCommitFilesGitGrep), false);
-    public static ISetting<bool> ShowRevisionGridTooltips { get; } = Setting.Create(AppearanceSettingsPath, nameof(ShowRevisionGridTooltips), true);
+    public static Setting_Bool ShowFindInCommitFilesGitGrep { get; } = new(AppearanceSettingsPath, nameof(ShowFindInCommitFilesGitGrep), defaultValue: false);
+    public static Setting_Bool ShowRevisionGridTooltips { get; } = new(AppearanceSettingsPath, nameof(ShowRevisionGridTooltips), defaultValue: true);
 
     public static bool ShowAvailableDiffTools
     {
@@ -1404,11 +1404,11 @@ public static partial class AppSettings
         set => SetInt("diffverticalrulerposition", value);
     }
 
-    public static ISetting<string> GitGrepUserArguments { get; } = Setting.Create(DialogSettingsPath, nameof(GitGrepUserArguments), "");
+    public static Setting_String GitGrepUserArguments { get; } = new(DialogSettingsPath, nameof(GitGrepUserArguments), defaultValue: "");
 
-    public static ISetting<bool> GitGrepIgnoreCase { get; } = Setting.Create(DialogSettingsPath, nameof(GitGrepIgnoreCase), false);
+    public static Setting_Bool GitGrepIgnoreCase { get; } = new(DialogSettingsPath, nameof(GitGrepIgnoreCase), defaultValue: false);
 
-    public static ISetting<bool> GitGrepMatchWholeWord { get; } = Setting.Create(DialogSettingsPath, nameof(GitGrepMatchWholeWord), false);
+    public static Setting_Bool GitGrepMatchWholeWord { get; } = new(DialogSettingsPath, nameof(GitGrepMatchWholeWord), defaultValue: false);
 
     [MaybeNull]
     public static string RecentWorkingDir
@@ -1563,11 +1563,11 @@ public static partial class AppSettings
         set => SetBool("FillRefLabels", value);
     }
 
-    public static ISetting<bool> MergeGraphLanesHavingCommonParent { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(MergeGraphLanesHavingCommonParent), true);
+    public static Setting_Bool MergeGraphLanesHavingCommonParent { get; } = new(RevisionGraphSettingsPath, nameof(MergeGraphLanesHavingCommonParent), defaultValue: true);
 
-    public static ISetting<bool> RenderGraphWithDiagonals { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(RenderGraphWithDiagonals), true);
+    public static Setting_Bool RenderGraphWithDiagonals { get; } = new(RevisionGraphSettingsPath, nameof(RenderGraphWithDiagonals), defaultValue: true);
 
-    public static ISetting<bool> StraightenGraphDiagonals { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(StraightenGraphDiagonals), true);
+    public static Setting_Bool StraightenGraphDiagonals { get; } = new(RevisionGraphSettingsPath, nameof(StraightenGraphDiagonals), defaultValue: true);
 
     /// <summary>
     ///  The limit when to skip the straightening of revision graph segments.
@@ -1577,7 +1577,7 @@ public static partial class AppSettings
     ///  Straightening inserts gaps making the graph wider. If it already has to display many segments, i.e. parallel branches, there would be a low benefit of straightening.<br></br>
     ///  So rather skip the - in this case particularly expensive - RevisionGraphRow.BuildSegmentLanes function and call it only if the row is visible.
     /// </remarks>
-    public static ISetting<int> StraightenGraphSegmentsLimit { get; } = Setting.Create(RevisionGraphSettingsPath, nameof(StraightenGraphSegmentsLimit), 80);
+    public static Setting_Int StraightenGraphSegmentsLimit { get; } = new(RevisionGraphSettingsPath, nameof(StraightenGraphSegmentsLimit), defaultValue: 80);
 
     public static string LastFormatPatchDir
     {
@@ -1617,7 +1617,7 @@ public static partial class AppSettings
     /// <summary>
     /// Gets or sets whether to remember the preference for diff appearance.
     /// </summary>
-    public static ISetting<bool> RememberDiffDisplayAppearance { get; } = Setting.Create(AppearanceSettingsPath, nameof(RememberDiffDisplayAppearance), false);
+    public static Setting_Bool RememberDiffDisplayAppearance { get; } = new(AppearanceSettingsPath, nameof(RememberDiffDisplayAppearance), defaultValue: false);
 
     public static int NumberOfContextLines
     {
@@ -1734,7 +1734,7 @@ public static partial class AppSettings
         set => SetInt("history size", value);
     }
 
-    public static ISetting<bool> HideTopRepositoriesFromRecentList { get; } = Setting.Create(RecentRepositories, nameof(HideTopRepositoriesFromRecentList), false);
+    public static Setting_Bool HideTopRepositoriesFromRecentList { get; } = new(RecentRepositories, nameof(HideTopRepositoriesFromRecentList), defaultValue: false);
 
     // Currently not configurable in UI (Set manually in settings file)
     public static int RemotesCacheLength
@@ -1863,7 +1863,7 @@ public static partial class AppSettings
         set => SetBool("OmitUninterestingDiff", value);
     }
 
-    public static ISetting<bool> UseConsoleEmulatorForCommands { get; } = Setting.Create(RootSettingsPath, nameof(UseConsoleEmulatorForCommands), true);
+    public static Setting_Bool UseConsoleEmulatorForCommands { get; } = new(RootSettingsPath, nameof(UseConsoleEmulatorForCommands), defaultValue: true);
 
     public static GitRefsSortBy RefsSortBy
     {
@@ -2111,9 +2111,9 @@ public static partial class AppSettings
         get => GetBool("GitAsyncWhenMinimized", false);
     }
 
-    public static ISetting<bool> IsEditorSettingsMigrated { get; } = Setting.Create(MigrationSettingsPath, nameof(IsEditorSettingsMigrated), false);
+    public static Setting_Bool IsEditorSettingsMigrated { get; } = new(MigrationSettingsPath, nameof(IsEditorSettingsMigrated), defaultValue: false);
 
-    public static ISetting<string> UninformativeRepoNameRegex { get; } = Setting.Create(DetailedSettingsPath, nameof(UninformativeRepoNameRegex), "app|(repo(sitory)?)");
+    public static Setting_String UninformativeRepoNameRegex { get; } = new(DetailedSettingsPath, nameof(UninformativeRepoNameRegex), defaultValue: "app|(repo(sitory)?)");
 
     private static IEnumerable<(string name, string? value)> GetSettingsFromRegistry()
     {

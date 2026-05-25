@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
@@ -69,7 +69,7 @@ public partial class EditNetSpell : GitModuleControl
 
         _wordAtCursorExtractor = new WordAtCursorExtractor();
 
-        if (AppSettings.MessageEditorWordWrap.Value)
+        if (AppSettings.MessageEditorWordWrap)
         {
             TextBox.WordWrap = true;
         }

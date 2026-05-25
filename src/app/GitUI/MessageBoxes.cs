@@ -133,7 +133,7 @@ public class MessageBoxes : Translate
     }
 
     public static bool ConfirmBranchCheckout(IWin32Window? owner, string branchName)
-        => !AppSettings.ConfirmBranchCheckout.Value || Confirm(owner, string.Format(Instance._confirmBranchCheckout.Text, branchName), Instance._confirmBranchCheckoutCaption.Text);
+        => !AppSettings.ConfirmBranchCheckout || Confirm(owner, string.Format(Instance._confirmBranchCheckout.Text, branchName), Instance._confirmBranchCheckoutCaption.Text);
 
     public static bool ConfirmRetryOpenVisualStudio(IWin32Window? owner = null)
         => Confirm(owner, Instance._retryOpenVisualStudio.Text, Instance._retry.Text);
