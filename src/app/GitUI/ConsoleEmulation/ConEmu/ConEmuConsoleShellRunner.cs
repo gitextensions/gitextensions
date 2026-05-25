@@ -3,6 +3,7 @@ using ConEmu.WinForms;
 using GitCommands;
 using GitUI.ConsoleEmulation;
 using GitUI.Shells;
+using Microsoft;
 
 namespace GitUI.ConsoleEmulation.ConEmu;
 
@@ -69,11 +70,13 @@ internal sealed class ConEmuConsoleShellRunner : IConsoleShellRunner
 
         try
         {
+            Validates.NotNull(_settings.Font);
+
             _conEmu.Start(
                 startInfo,
                 ThreadHelper.JoinableTaskFactory,
                 _settings.Theme,
-                _settings.Font!.Name,
+                _settings.Font.Name,
                 _settings.Font.Size.ToString("F0", CultureInfo.InvariantCulture));
         }
         catch (InvalidOperationException)

@@ -4,21 +4,17 @@ namespace GitUI.ConsoleEmulation.Mintty;
 
 internal sealed class MinttyStartInfo
 {
-    private readonly Dictionary<string, string> _environmentVariables = new();
+    public string ConsoleProcessCommandLine { get; init; } = "";
 
-    internal string ConsoleProcessCommandLine { get; init; } = "";
+    public required string StartupDirectory { get; init; }
 
-    internal required string StartupDirectory { get; init; }
+    public Dictionary<string, string> EnvironmentVariables { get; } = [];
 
-    internal IReadOnlyDictionary<string, string> EnvironmentVariables => _environmentVariables;
+    public Action<int>? ProcessExitedCallback { get; init; }
 
-    internal Action<int>? ProcessExitedCallback { get; init; }
+    public Action? ConsoleClosedCallback { get; init; }
 
-    internal Action? ConsoleClosedCallback { get; init; }
+    public required ProcessOperation ProcessOperation { get; init; }
 
-    internal required ProcessOperation ProcessOperation { get; init; }
-
-    internal Action<string>? AnsiOutputLineCallback { get; init; }
-
-    internal void SetEnv(string name, string value) => _environmentVariables[name] = value;
+    public Action<string>? AnsiOutputLineCallback { get; init; }
 }

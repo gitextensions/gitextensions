@@ -135,7 +135,8 @@ internal class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRun
             };
 
             Validates.NotNull(_terminal);
-            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, _settings.Theme, _settings.Font!.Name, _settings.Font.Size.ToString("F0", CultureInfo.InvariantCulture));
+            Validates.NotNull(_settings.Font);
+            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, _settings.Theme, _settings.Font.Name, _settings.Font.Size.ToString("F0", CultureInfo.InvariantCulture));
         }
         catch (Exception ex)
         {

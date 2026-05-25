@@ -168,13 +168,13 @@ internal sealed class MinttyControl : Panel
 
         session.AttachProcess(minttyProcess);
 
-        FindAndEmbedWindow(minttyProcess, session, ct);
+        ThreadHelper.FileAndForget(() => FindAndEmbedWindowAsync(minttyProcess, session, ct));
     }
 
-#pragma warning disable VSTHRD100
-    private async void FindAndEmbedWindow(Process minttyProcess, MinttySession session, CancellationToken sessionCt)
-#pragma warning restore VSTHRD100
+    private async Task FindAndEmbedWindowAsync(Process minttyProcess, MinttySession session, CancellationToken sessionCt)
     {
+        ThreadHelper.ThrowIfOnUIThread();
+
         using CancellationTokenSource timeoutCts = new(TimeSpan.FromSeconds(15));
         using CancellationTokenSource linkedCts = CancellationTokenSource.CreateLinkedTokenSource(sessionCt, timeoutCts.Token);
         CancellationToken ct = linkedCts.Token;
@@ -186,7 +186,7 @@ internal sealed class MinttyControl : Panel
             // and causes the host dialog's focus to flicker as it races with our embed.
             // If the wait times out under load, proceed anyway: the embed may still
             // succeed, and killing mintty here would also kill the spawned git process.
-            bool idle = await Task.Run(() => minttyProcess.WaitForInputIdle(TimeSpan.FromSeconds(10)), ct).ConfigureAwait(true);
+            bool idle = await Task.Run(() => minttyProcess.WaitForInputIdle(TimeSpan.FromSeconds(10)), ct);
             if (!idle)
             {
                 throw new InvalidOperationException($"Waiting for mintty to get idle timed out after 10 seconds for PID {minttyProcess.Id}.");
@@ -203,7 +203,7 @@ internal sealed class MinttyControl : Panel
                 }
 
                 // It is essential to capture original synchronization context
-                await Task.Delay(TimeSpan.FromMilliseconds(50), ct).ConfigureAwait(true);
+                await Task.Delay(TimeSpan.FromMilliseconds(50), ct);
             }
 
             if (hwnd.IsNull)
@@ -211,7 +211,7 @@ internal sealed class MinttyControl : Panel
                 throw new InvalidOperationException($"Could not locate mintty window for PID {minttyProcess.Id} within 5 seconds.");
             }
 
-            await EmbedWindowAsync(hwnd).ConfigureAwait(true);
+            await EmbedWindowAsync(hwnd);
 
             // Set WindowHandle only after the embed completes so OnResize doesn't
             // post a SetWindowPos to mintty mid-reparent.
@@ -233,51 +233,48 @@ internal sealed class MinttyControl : Panel
 
     private async Task EmbedWindowAsync(HWND hwnd)
     {
-        // Capture WinForms state on the UI thread before going to the threadpool.
-        // After the awaited Task.Run resumes via ConfigureAwait(true), we are back
-        // on the UI thread for the focus call.
-        HWND panelHwnd = (HWND)Handle;
+        // Capture WinForms state on the UI thread - as it's required by the control.
+        TaskCompletionSource<HWND> panelHwndTcs = new();
+        BeginInvoke(() => panelHwndTcs.SetResult((HWND)Handle));
+
+        HWND panelHwnd = await panelHwndTcs.Task;
         int width = Width;
         int height = Height;
 
         // The synchronous cross-process Win32 calls below all send messages to
         // mintty's thread. Running them on the UI thread freezes the entire app
-        // when mintty's pump stalls. Move them to a threadpool thread so a stalled
-        // pump can only block the worker, not the UI.
-        await Task.Run(() =>
+        // when mintty's pump stalls.
+        ThreadHelper.ThrowIfOnUIThread();
+
+        // Probe mintty's pump before any blocking cross-process call.
+        // SendMessageTimeout(SMTO_ABORTIFHUNG) is bounded and cannot itself
+        // hang. If this fails, none of the cross-process calls below are safe.
+        if (!NativeMethods.IsWindowResponsive(hwnd, TimeSpan.FromSeconds(5)))
         {
-            // Probe mintty's pump before any blocking cross-process call.
-            // SendMessageTimeout(SMTO_ABORTIFHUNG) is bounded and cannot itself
-            // hang. If this fails, none of the cross-process calls below are safe.
-            if (!NativeMethods.IsWindowResponsive(hwnd, TimeSpan.FromSeconds(5)))
-            {
-                throw new InvalidOperationException("Mintty window did not respond within 5 seconds.");
-            }
+            throw new InvalidOperationException("Mintty window did not respond within 5 seconds.");
+        }
 
-            WINDOW_STYLE style = (WINDOW_STYLE)PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
-            style &= ~(WINDOW_STYLE.WS_CAPTION | WINDOW_STYLE.WS_THICKFRAME | WINDOW_STYLE.WS_BORDER);
-            style |= WINDOW_STYLE.WS_CHILD;
-            PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, (int)style);
+        WINDOW_STYLE style = (WINDOW_STYLE)PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
+        style &= ~(WINDOW_STYLE.WS_CAPTION | WINDOW_STYLE.WS_THICKFRAME | WINDOW_STYLE.WS_BORDER);
+        style |= WINDOW_STYLE.WS_CHILD;
+        PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE, (int)style);
 
-            WINDOW_EX_STYLE extendedStyle = (WINDOW_EX_STYLE)PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
-            extendedStyle &= ~(WINDOW_EX_STYLE.WS_EX_CLIENTEDGE | WINDOW_EX_STYLE.WS_EX_WINDOWEDGE | WINDOW_EX_STYLE.WS_EX_APPWINDOW);
-            extendedStyle |= WINDOW_EX_STYLE.WS_EX_TOOLWINDOW;
-            PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, (int)extendedStyle);
+        WINDOW_EX_STYLE extendedStyle = (WINDOW_EX_STYLE)PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE);
+        extendedStyle &= ~(WINDOW_EX_STYLE.WS_EX_CLIENTEDGE | WINDOW_EX_STYLE.WS_EX_WINDOWEDGE | WINDOW_EX_STYLE.WS_EX_APPWINDOW);
+        extendedStyle |= WINDOW_EX_STYLE.WS_EX_TOOLWINDOW;
+        PInvoke.SetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_EXSTYLE, (int)extendedStyle);
 
-            PInvoke.SetParent(hwnd, panelHwnd);
+        PInvoke.SetParent(hwnd, panelHwnd);
 
-            // SWP_ASYNCWINDOWPOS posts the size/show change to mintty's thread instead
-            // of a synchronous cross-process SendMessage. SWP_SHOWWINDOW combined with
-            // SWP_NOACTIVATE is equivalent to SW_SHOWNA. See OnResize for the same pattern.
-            PInvoke.SetWindowPos(hwnd, HWND.Null, 0, 0, width, height,
-                SET_WINDOW_POS_FLAGS.SWP_NOZORDER
-                | SET_WINDOW_POS_FLAGS.SWP_FRAMECHANGED
-                | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE
-                | SET_WINDOW_POS_FLAGS.SWP_SHOWWINDOW
-                | SET_WINDOW_POS_FLAGS.SWP_ASYNCWINDOWPOS);
-
-            return true;
-        }).ConfigureAwait(true);
+        // SWP_ASYNCWINDOWPOS posts the size/show change to mintty's thread instead
+        // of a synchronous cross-process SendMessage. SWP_SHOWWINDOW combined with
+        // SWP_NOACTIVATE is equivalent to SW_SHOWNA. See OnResize for the same pattern.
+        PInvoke.SetWindowPos(hwnd, HWND.Null, 0, 0, width, height,
+            SET_WINDOW_POS_FLAGS.SWP_NOZORDER
+            | SET_WINDOW_POS_FLAGS.SWP_FRAMECHANGED
+            | SET_WINDOW_POS_FLAGS.SWP_NOACTIVATE
+            | SET_WINDOW_POS_FLAGS.SWP_SHOWWINDOW
+            | SET_WINDOW_POS_FLAGS.SWP_ASYNCWINDOWPOS);
 
         // Defer Focus via BeginInvoke so our pump gets one cycle to drain. Mintty
         // is now parented to our panel — that means cross-process messages
@@ -332,8 +329,9 @@ internal sealed class MinttyControl : Panel
                 {
                     PInvoke.TerminateJobObject(_jobHandle, 0);
                 }
-                catch
+                catch (Exception ex)
                 {
+                    Trace.WriteLine(ex);
                 }
 
                 PInvoke.CloseHandle(_jobHandle);
@@ -438,6 +436,7 @@ internal sealed class MinttyControl : Panel
                 // GWLP_HWNDPARENT sets the owner relationship (despite the name):
                 // mintty stays above the host form — closest cross-process approximation
                 // of a modal child without disabling the host's input queue.
+
                 NativeMethods.SetWindowLongPtr(hwnd, NativeMethods.GWLP_HWNDPARENT, ownerHwnd);
             }
 

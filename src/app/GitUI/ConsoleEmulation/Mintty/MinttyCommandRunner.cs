@@ -1,6 +1,5 @@
 ﻿using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
-using GitCommands;
 using GitCommands.Logging;
 using GitExtensions.Extensibility;
 
@@ -77,19 +76,22 @@ internal sealed partial class MinttyCommandRunner : IConsoleCommandRunner
                 ProcessExitedCallback = exitCode =>
                 {
                     operation.LogProcessEnd(exitCode);
-                    SafeBeginInvoke(() => CommandProcessExited?.Invoke(this, new ConsoleProcessExitEventArgs(exitCode)));
+                    Control.InvokeAndForget(() => CommandProcessExited?.Invoke(this, new ConsoleProcessExitEventArgs(exitCode)));
                 },
-                ConsoleClosedCallback = () => SafeBeginInvoke(() => ConsoleHostTerminated?.Invoke(this, EventArgs.Empty)),
+                ConsoleClosedCallback = () =>
+                {
+                    Control.InvokeAndForget(() => ConsoleHostTerminated?.Invoke(this, EventArgs.Empty));
+                },
                 AnsiOutputLineCallback = line =>
                 {
                     line = StripAnsiCodesRegex().Replace(line, string.Empty);
-                    CommandOutputReceived?.Invoke(this, new ConsoleOutputEventArgs(line));
-                },
+                    Control.InvokeAndForget(() => CommandOutputReceived?.Invoke(this, new ConsoleOutputEventArgs(line)));
+                }
             };
 
             foreach ((string name, string value) in envVariables)
             {
-                startInfo.SetEnv(name, value);
+                startInfo.EnvironmentVariables[name] = value;
             }
 
             _terminal.StartCommand(startInfo, _minttyPath, _bashPath, _settings);
@@ -99,30 +101,6 @@ internal sealed partial class MinttyCommandRunner : IConsoleCommandRunner
             operation.LogProcessEnd(ex);
             throw;
         }
-    }
-
-    private void SafeBeginInvoke(Action action)
-    {
-        if (_panel.IsHandleCreated)
-        {
-            try
-            {
-                _panel.BeginInvoke(action);
-                return;
-            }
-            catch (InvalidOperationException)
-            {
-                // Handle was destroyed between IsHandleCreated and BeginInvoke.
-            }
-        }
-
-        // Process.Exited fires on a thread-pool thread; running the action inline
-        // would push UI updates off the UI thread. Hop via JTF instead.
-        ThreadHelper.FileAndForget(async () =>
-        {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
-            action();
-        });
     }
 
     [GeneratedRegex(@"\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])")]

@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using GitCommands;
 
@@ -73,8 +74,9 @@ internal sealed class MinttyConsoleEmulator : IConsoleEmulator
                 .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
                 .ToArray();
         }
-        catch
+        catch (Exception ex)
         {
+            Trace.WriteLine(ex);
             return [];
         }
     }

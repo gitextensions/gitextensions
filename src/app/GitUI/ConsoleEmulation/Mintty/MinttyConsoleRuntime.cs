@@ -41,7 +41,7 @@ internal static partial class MinttyConsoleRuntime
         Action<string>? lineCallback,
         Action<int>? exitCallback)
     {
-        _ = ReadLogStreamAsync(minttyProcess, lineCallback, exitCallback);
+        ThreadHelper.FileAndForget(() => ReadLogStreamAsync(minttyProcess, lineCallback, exitCallback));
     }
 
     private static async Task ReadLogStreamAsync(

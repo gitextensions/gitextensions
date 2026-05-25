@@ -48,8 +48,9 @@ internal sealed class MinttySession
             {
                 return MinttyProcess is null || MinttyProcess.HasExited;
             }
-            catch
+            catch (Exception ex)
             {
+                Trace.WriteLine(ex);
                 return true;
             }
         }
@@ -84,8 +85,9 @@ internal sealed class MinttySession
                 MinttyProcess.Kill();
             }
         }
-        catch
+        catch (Exception ex)
         {
+            Trace.WriteLine(ex);
         }
     }
 }
