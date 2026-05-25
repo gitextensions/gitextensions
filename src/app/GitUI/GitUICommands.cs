@@ -1306,6 +1306,8 @@ public sealed class GitUICommands : IGitUICommands
                 return $" -commit={revision.ObjectId}";
             }
 
+            // Avoid a race condition in FormFileHistory selecting an artificial commit.
+            // Without a hash passed, it automatically selects the first real revision.
             if (revision.IsArtificial)
             {
                 return "";
