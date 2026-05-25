@@ -123,7 +123,7 @@ public partial class FileViewer : GitModuleControl
         diffAppearanceToolStripMenuItem.Visible = false;
         SetStateOfContextLinesButtons();
 
-        _ = AppSettings.DiffDisplayAppearance.GetValue(reload: !AppSettings.RememberDiffDisplayAppearance.Value);
+        _ = AppSettings.DiffDisplayAppearance.GetValue(reload: !AppSettings.RememberDiffDisplayAppearance);
 
         automaticContinuousScrollToolStripMenuItem.AdaptImageLightness();
         automaticContinuousScrollToolStripMenuItem.Checked = AppSettings.AutomaticContinuousScroll;
@@ -307,7 +307,7 @@ public partial class FileViewer : GitModuleControl
 
     [Description("Use Git coloring with patch commands (always for git-word-diff, setting for normal patch).")]
     [DefaultValue(false)]
-    public bool PatchUseGitColoring => showGitWordColoringToolStripMenuItem.Checked || AppSettings.UseGitColoring.Value;
+    public bool PatchUseGitColoring => showGitWordColoringToolStripMenuItem.Checked || AppSettings.UseGitColoring;
 
     [Description("Show Difftastic diff coloring.")]
     [DefaultValue(false)]
@@ -449,7 +449,7 @@ public partial class FileViewer : GitModuleControl
         EnvironmentAbstraction env = new();
         StringBuilder extraCacheKey = new();
 
-        // Difftastic coloring is always used (AppSettings.UseGitColoring.Value is not used).
+        // Difftastic coloring is always used (AppSettings.UseGitColoring is not used).
         // Allow user to override with difftool command line options.
         SetEnvironmentVariable("DFT_COLOR", "always");
 
@@ -560,7 +560,7 @@ public partial class FileViewer : GitModuleControl
         int? line,
         Action? openWithDifftool,
         CancellationToken cancellationToken = default)
-        => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.CombinedDiff, useGitColoring: AppSettings.UseGitColoring.Value, cancellationToken);
+        => ViewPrivateAsync(item, item?.Item?.Name, text, line, openWithDifftool, ViewMode.CombinedDiff, useGitColoring: AppSettings.UseGitColoring, cancellationToken);
 
     /// <summary>
     /// Present the text as a patch in the file viewer.
@@ -1193,7 +1193,7 @@ public partial class FileViewer : GitModuleControl
 
             // Diffs, currently requires that the file to update exists
             ((_viewMode.IsNormalDiffView() && (text?.Contains("@@") ?? false)
-                    && AppSettings.DiffDisplayAppearance.Value != DiffDisplayAppearance.GitWordDiff
+                    && AppSettings.DiffDisplayAppearance != DiffDisplayAppearance.GitWordDiff
                     && File.Exists(_fullPathResolver.Resolve(fileName)))
 
                 // Added files, i.e. new or copied ones: patching only applies for an artificial
