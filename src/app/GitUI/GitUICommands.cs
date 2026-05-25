@@ -710,7 +710,7 @@ public sealed class GitUICommands : IGitUICommands
         {
             dir ??= Module.IsValidGitWorkingDir() ? Module.WorkingDir : string.Empty;
 
-            using FormInit frm = new(dir, gitModuleChanged);
+            using FormInit frm = new(this, dir, gitModuleChanged);
             frm.ShowDialog(owner);
             return true;
         }
@@ -1287,9 +1287,34 @@ public sealed class GitUICommands : IGitUICommands
 
     public void StartFileHistoryDialog(IWin32Window? owner, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
     {
-        string arguments = AppSettings.UseBrowseForFileHistory.Value ? $"browse {PathFilterArg}={fileName.Quote()} -commit={revision?.ObjectId}"
-            : $"{(showBlame ? BlameHistoryCommand : FileHistoryCommand)} {fileName.Quote()} {revision?.ObjectId} {(filterByRevision ? FilterByRevisionArg : string.Empty)}";
+        bool useBrowseForFileHistory = AppSettings.UseBrowseForFileHistory.Value;
+        string arguments = useBrowseForFileHistory ? $"browse {PathFilterArg}={fileName.Quote()}{GetCommitIdArg}"
+            : $"{(showBlame ? BlameHistoryCommand : FileHistoryCommand)} {fileName.Quote()}{GetCommitIdArg()} {(filterByRevision ? FilterByRevisionArg : string.Empty)}";
         Launch(arguments, Module.WorkingDir);
+
+        return;
+
+        string GetCommitIdArg()
+        {
+            if (revision is null)
+            {
+                return "";
+            }
+
+            if (useBrowseForFileHistory)
+            {
+                return $" -commit={revision.ObjectId}";
+            }
+
+            // Avoid a race condition in FormFileHistory selecting an artificial commit.
+            // Without a hash passed, it automatically selects the first real revision.
+            if (revision.IsArtificial)
+            {
+                return "";
+            }
+
+            return $" {revision.ObjectId}";
+        }
     }
 
     public void OpenWithDifftool(IWin32Window? owner, IReadOnlyList<GitRevision?> revisions, string fileName, string? oldFileName, RevisionDiffKind diffKind, bool isTracked, string? customTool = null)

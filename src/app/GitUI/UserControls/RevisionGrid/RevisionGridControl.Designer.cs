@@ -38,6 +38,8 @@ partial class RevisionGridControl
         mergeBranchToolStripMenuItem = new ToolStripMenuItem();
         resetCurrentBranchToHereToolStripMenuItem = new ToolStripMenuItem();
         resetAnotherBranchToHereToolStripMenuItem = new ToolStripMenuItem();
+        resetChangesToolStripMenuItem = new ToolStripMenuItem();
+        commitToolStripMenuItem = new ToolStripMenuItem();
         rebaseOnToolStripMenuItem = new ToolStripMenuItem();
         sepBranch = new ToolStripSeparator();
         createNewBranchToolStripMenuItem = new ToolStripMenuItem();
@@ -138,6 +140,8 @@ partial class RevisionGridControl
         rebaseOnToolStripMenuItem,
         resetCurrentBranchToHereToolStripMenuItem,
         sepBranch,
+        resetChangesToolStripMenuItem,
+        commitToolStripMenuItem,
         createNewBranchToolStripMenuItem,
         resetAnotherBranchToHereToolStripMenuItem,
         renameBranchToolStripMenuItem,
@@ -274,8 +278,24 @@ partial class RevisionGridControl
         resetCurrentBranchToHereToolStripMenuItem.Text = "Reset c&urrent branch to here...";
         resetCurrentBranchToHereToolStripMenuItem.Click += ResetCurrentBranchToHereToolStripMenuItemClick;
         // 
-        // resetAnotherBranchToHereToolStripMenuItem
+        // resetChangesToolStripMenuItem
+        //
+        resetChangesToolStripMenuItem.Image = Properties.Images.ResetWorkingDirChanges;
+        resetChangesToolStripMenuItem.Name = "resetChangesToolStripMenuItem";
+        resetChangesToolStripMenuItem.Size = new Size(223, 22);
+        resetChangesToolStripMenuItem.Text = "&Reset changes";
+        resetChangesToolStripMenuItem.Click += ResetChangesToolStripMenuItemClick;
         // 
+        // commitToolStripMenuItem
+        //
+        commitToolStripMenuItem.Image = Properties.Images.RepoStateDirty;
+        commitToolStripMenuItem.Name = "commitToolStripMenuItem";
+        commitToolStripMenuItem.Size = new Size(223, 22);
+        commitToolStripMenuItem.Text = "&Commit";
+        commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
+        //
+        // resetAnotherBranchToHereToolStripMenuItem
+        //
         resetAnotherBranchToHereToolStripMenuItem.Image = Properties.Images.ResetAnotherBranchToHere;
         resetAnotherBranchToHereToolStripMenuItem.Name = "resetAnotherBranchToHereToolStripMenuItem";
         resetAnotherBranchToHereToolStripMenuItem.Size = new Size(223, 22);
@@ -655,6 +675,8 @@ partial class RevisionGridControl
     private ToolStripMenuItem tsmiPushBranch;
     private ToolStripMenuItem resetCurrentBranchToHereToolStripMenuItem;
     private ToolStripMenuItem resetAnotherBranchToHereToolStripMenuItem;
+    private ToolStripMenuItem resetChangesToolStripMenuItem;
+    private ToolStripMenuItem commitToolStripMenuItem;
     private GitUI.UserControls.RevisionGrid.CopyContextMenuItem copyToClipboardToolStripMenuItem;
     private ToolStripSeparator sepBisect;
     private ToolStripSeparator sepCompare;

@@ -541,7 +541,7 @@ public partial class FormPush : GitModuleForm
 
         // if push was rejected, offer force push and for current branch also pull/merge
         // Note that the Git output contains color codes etc too
-        Regex isRejected = new($"! \\[rejected\\] .* ((?<currBranch>{Regex.Escape(_currentBranchName!)})|.*) -> ");
+        Regex isRejected = new($"! \\[rejected\\]\\s*((?<currBranch>{Regex.Escape(_currentBranchName!)})|.*) -> ");
         Match match = isRejected.Match(form.GetOutputString());
         if (match.Success && !Module.IsBareRepository())
         {
