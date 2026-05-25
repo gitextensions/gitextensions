@@ -51,6 +51,23 @@ public sealed class Setting_Bool : Setting<bool>
 }
 
 /// <summary>
+///  Concrete implementation of an <see cref="ISetting{T}"/> instance for <see langword="bool"/>
+///  which is stored inverted for backwards compatibility with historical settings files.
+/// </summary>
+public sealed class Setting_InvertedBool : Setting<bool>
+{
+    public Setting_InvertedBool(SettingsPath settingsSource, string name, bool defaultValue)
+        : base(
+            settingsSource,
+            name,
+            defaultValue,
+            read: static s => s switch { "true" or "True" => (true, false), "false" or "False" => (true, true), _ => (false, default) },
+            store: static v => v ? "false" : "true")
+    {
+    }
+}
+
+/// <summary>
 ///  Concrete implementation of an <see cref="ISetting{T}"/> instance for <see langword="bool?"/>.
 /// </summary>
 public sealed class Setting_NullableBool : Setting<bool?>

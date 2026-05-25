@@ -2539,7 +2539,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         if (page.Verification.Checked)
         {
-            AppSettings.DontConfirmRebase = true;
+            AppSettings.DontConfirmRebase.Value = true;
         }
 
         if (result == TaskDialogButton.Yes)
@@ -2579,7 +2579,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
         if (page.Verification.Checked)
         {
-            AppSettings.DontConfirmRebase = true;
+            AppSettings.DontConfirmRebase.Value = true;
         }
 
         if (result == TaskDialogButton.Yes)
@@ -2761,7 +2761,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
                 if (page.Verification.Checked)
                 {
-                    AppSettings.DontConfirmStashDrop = true;
+                    AppSettings.DontConfirmStashDrop.Value = true;
                 }
             }
 

@@ -125,7 +125,7 @@ public class MessageBoxes : Translate
         bool result = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page) == TaskDialogButton.Yes;
         if (page.Verification.Checked)
         {
-            AppSettings.DontConfirmUpdateSubmodulesOnCheckout = result;
+            AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value = result;
             AppSettings.UpdateSubmodulesOnCheckout = result;
         }
 

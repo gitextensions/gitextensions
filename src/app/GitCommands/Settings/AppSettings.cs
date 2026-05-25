@@ -162,11 +162,7 @@ public static partial class AppSettings
         set => SetBool("TelemetryEnabled", value);
     }
 
-    public static bool AutoNormaliseBranchName
-    {
-        get => GetBool("AutoNormaliseBranchName", true);
-        set => SetBool("AutoNormaliseBranchName", value);
-    }
+    public static Setting_Bool AutoNormaliseBranchName { get; } = new(RootSettingsPath, nameof(AutoNormaliseBranchName), defaultValue: true);
 
     public static string AutoNormaliseSymbol
     {
@@ -401,13 +397,9 @@ public static partial class AppSettings
         set => SetBool("stashkeepindex", value);
     }
 
-    public static bool DontConfirmStashDrop
-    {
-        // History Compatibility: The settings was originally was called 'StashConfirmDropShow', and then it was inverted.
-        // To maintain the compat with the existing user settings negate the retrieved value.
-        get => !GetBool("stashconfirmdropshow", true);
-        set => SetBool("stashconfirmdropshow", !value);
-    }
+    // History: The setting had originally been called 'StashConfirmDropShow', and then it was inverted.
+    // To maintain the compatibility with the existing user settings, negate the retrieved value.
+    public static Setting_InvertedBool DontConfirmStashDrop { get; } = new(RootSettingsPath, "stashconfirmdropshow", defaultValue: false);
 
     public static bool ApplyPatchIgnoreWhitespace
     {
@@ -1036,23 +1028,11 @@ public static partial class AppSettings
         set => SetBool("AlwaysShowAdvOpt", value);
     }
 
-    public static bool DontConfirmAmend
-    {
-        get => GetBool("DontConfirmAmend", false);
-        set => SetBool("DontConfirmAmend", value);
-    }
+    public static Setting_Bool DontConfirmAmend { get; } = new(RootSettingsPath, nameof(DontConfirmAmend), defaultValue: false);
 
-    public static bool DontConfirmDeleteUnmergedBranch
-    {
-        get => GetBool("DontConfirmDeleteUnmergedBranch", false);
-        set => SetBool("DontConfirmDeleteUnmergedBranch", value);
-    }
+    public static Setting_Bool DontConfirmDeleteUnmergedBranch { get; } = new(RootSettingsPath, nameof(DontConfirmDeleteUnmergedBranch), defaultValue: false);
 
-    public static bool DontConfirmCommitIfNoBranch
-    {
-        get => GetBool("DontConfirmCommitIfNoBranch", false);
-        set => SetBool("DontConfirmCommitIfNoBranch", value);
-    }
+    public static Setting_Bool DontConfirmCommitIfNoBranch { get; } = new(RootSettingsPath, nameof(DontConfirmCommitIfNoBranch), defaultValue: false);
 
     public static Setting_Bool ConfirmBranchCheckout { get; } = new(ConfirmationsSettingsPath, nameof(ConfirmBranchCheckout), defaultValue: false);
 
@@ -1074,59 +1054,23 @@ public static partial class AppSettings
         set => SetNullableEnum("AutoPullOnPushRejectedAction", value);
     }
 
-    public static bool DontConfirmPushNewBranch
-    {
-        get => GetBool("DontConfirmPushNewBranch", false);
-        set => SetBool("DontConfirmPushNewBranch", value);
-    }
+    public static Setting_Bool DontConfirmPushNewBranch { get; } = new(RootSettingsPath, nameof(DontConfirmPushNewBranch), defaultValue: false);
 
-    public static bool DontConfirmAddTrackingRef
-    {
-        get => GetBool("DontConfirmAddTrackingRef", false);
-        set => SetBool("DontConfirmAddTrackingRef", value);
-    }
+    public static Setting_Bool DontConfirmAddTrackingRef { get; } = new(RootSettingsPath, nameof(DontConfirmAddTrackingRef), defaultValue: false);
 
-    public static bool DontConfirmCommitAfterConflictsResolved
-    {
-        get => GetBool("DontConfirmCommitAfterConflictsResolved", false);
-        set => SetBool("DontConfirmCommitAfterConflictsResolved", value);
-    }
+    public static Setting_Bool DontConfirmCommitAfterConflictsResolved { get; } = new(RootSettingsPath, nameof(DontConfirmCommitAfterConflictsResolved), defaultValue: false);
 
-    public static bool DontConfirmSecondAbortConfirmation
-    {
-        get => GetBool("DontConfirmSecondAbortConfirmation", false);
-        set => SetBool("DontConfirmSecondAbortConfirmation", value);
-    }
+    public static Setting_Bool DontConfirmSecondAbortConfirmation { get; } = new(RootSettingsPath, nameof(DontConfirmSecondAbortConfirmation), defaultValue: false);
 
-    public static bool DontConfirmRebase
-    {
-        get => GetBool("DontConfirmRebase", false);
-        set => SetBool("DontConfirmRebase", value);
-    }
+    public static Setting_Bool DontConfirmRebase { get; } = new(RootSettingsPath, nameof(DontConfirmRebase), defaultValue: false);
 
-    public static bool DontConfirmResolveConflicts
-    {
-        get => GetBool("DontConfirmResolveConflicts", false);
-        set => SetBool("DontConfirmResolveConflicts", value);
-    }
+    public static Setting_Bool DontConfirmResolveConflicts { get; } = new(RootSettingsPath, nameof(DontConfirmResolveConflicts), defaultValue: false);
 
-    public static bool DontConfirmUndoLastCommit
-    {
-        get => GetBool("DontConfirmUndoLastCommit", false);
-        set => SetBool("DontConfirmUndoLastCommit", value);
-    }
+    public static Setting_Bool DontConfirmUndoLastCommit { get; } = new(RootSettingsPath, nameof(DontConfirmUndoLastCommit), defaultValue: false);
 
-    public static bool DontConfirmFetchAndPruneAll
-    {
-        get => GetBool("DontConfirmFetchAndPruneAll", false);
-        set => SetBool("DontConfirmFetchAndPruneAll", value);
-    }
+    public static Setting_Bool DontConfirmFetchAndPruneAll { get; } = new(RootSettingsPath, nameof(DontConfirmFetchAndPruneAll), defaultValue: false);
 
-    public static bool DontConfirmSwitchWorktree
-    {
-        get => GetBool("DontConfirmSwitchWorktree", false);
-        set => SetBool("DontConfirmSwitchWorktree", value);
-    }
+    public static Setting_Bool DontConfirmSwitchWorktree { get; } = new(RootSettingsPath, nameof(DontConfirmSwitchWorktree), defaultValue: false);
 
     public static bool IncludeUntrackedFilesInAutoStash
     {
@@ -1184,11 +1128,7 @@ public static partial class AppSettings
         set => SetBool("updateSubmodulesOnCheckout", value);
     }
 
-    public static bool? DontConfirmUpdateSubmodulesOnCheckout
-    {
-        get => GetBool("dontConfirmUpdateSubmodulesOnCheckout");
-        set => SetBool("dontConfirmUpdateSubmodulesOnCheckout", value);
-    }
+    public static Setting_NullableBool DontConfirmUpdateSubmodulesOnCheckout { get; } = new(RootSettingsPath, "dontConfirmUpdateSubmodulesOnCheckout");
 
     public static string Dictionary
     {

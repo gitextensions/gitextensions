@@ -528,7 +528,7 @@ public sealed partial class FormPull : GitExtensionsDialog
                 // If the "Update submodules on checkout" option is `true`, initialize and update
                 // all submodules. If it's `false` don't initialize/update the submodules. If it's
                 // indeterminate, ask the user what they'd like to do.
-                if (AppSettings.UpdateSubmodulesOnCheckout ?? AppSettings.DontConfirmUpdateSubmodulesOnCheckout ?? AskIfSubmodulesShouldBeInitialized())
+                if (AppSettings.UpdateSubmodulesOnCheckout ?? AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value ?? AskIfSubmodulesShouldBeInitialized())
                 {
                     UICommands.StartUpdateSubmodulesDialog(this);
                 }

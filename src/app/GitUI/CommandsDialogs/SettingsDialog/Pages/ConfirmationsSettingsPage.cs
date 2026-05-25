@@ -49,33 +49,33 @@ public partial class ConfirmationsSettingsPage : SettingsPageWithHeader
     protected override void PageToSettings()
     {
         // Commits:
-        AppSettings.DontConfirmAmend = !chkAmend.Checked;
-        AppSettings.DontConfirmUndoLastCommit = !chkUndoLastCommitConfirmation.Checked;
-        AppSettings.DontConfirmCommitIfNoBranch = !chkCommitIfNoBranch.Checked;
-        AppSettings.DontConfirmRebase = !chkRebaseOnTopOfSelectedCommit.Checked;
+        AppSettings.DontConfirmAmend.Value = !chkAmend.Checked;
+        AppSettings.DontConfirmUndoLastCommit.Value = !chkUndoLastCommitConfirmation.Checked;
+        AppSettings.DontConfirmCommitIfNoBranch.Value = !chkCommitIfNoBranch.Checked;
+        AppSettings.DontConfirmRebase.Value = !chkRebaseOnTopOfSelectedCommit.Checked;
 
         // Branches:
-        AppSettings.DontConfirmFetchAndPruneAll = !chkFetchAndPruneAllConfirmation.Checked;
-        AppSettings.DontConfirmPushNewBranch = !chkPushNewBranch.Checked;
-        AppSettings.DontConfirmAddTrackingRef = !chkAddTrackingRef.Checked;
-        AppSettings.DontConfirmDeleteUnmergedBranch = !chkBranchDeleteUnmerged.Checked;
+        AppSettings.DontConfirmFetchAndPruneAll.Value = !chkFetchAndPruneAllConfirmation.Checked;
+        AppSettings.DontConfirmPushNewBranch.Value = !chkPushNewBranch.Checked;
+        AppSettings.DontConfirmAddTrackingRef.Value = !chkAddTrackingRef.Checked;
+        AppSettings.DontConfirmDeleteUnmergedBranch.Value = !chkBranchDeleteUnmerged.Checked;
         AppSettings.ConfirmBranchCheckout.Value = chkBranchCheckoutConfirmation.Checked;
 
         // Stashes:
         AppSettings.AutoPopStashAfterPull = ToBooleanInverted(chkAutoPopStashAfterPull.CheckState);
         AppSettings.AutoPopStashAfterCheckoutBranch = ToBooleanInverted(chkAutoPopStashAfterCheckout.CheckState);
-        AppSettings.DontConfirmStashDrop = !chkConfirmStashDrop.Checked;
+        AppSettings.DontConfirmStashDrop.Value = !chkConfirmStashDrop.Checked;
 
         // Conflict resolution:
-        AppSettings.DontConfirmResolveConflicts = !chkResolveConflicts.Checked;
-        AppSettings.DontConfirmCommitAfterConflictsResolved = !chkCommitAfterConflictsResolved.Checked;
-        AppSettings.DontConfirmSecondAbortConfirmation = !chkSecondAbortConfirmation.Checked;
+        AppSettings.DontConfirmResolveConflicts.Value = !chkResolveConflicts.Checked;
+        AppSettings.DontConfirmCommitAfterConflictsResolved.Value = !chkCommitAfterConflictsResolved.Checked;
+        AppSettings.DontConfirmSecondAbortConfirmation.Value = !chkSecondAbortConfirmation.Checked;
 
         // Submodules:
-        AppSettings.DontConfirmUpdateSubmodulesOnCheckout = ToBooleanInverted(chkUpdateModules.CheckState);
+        AppSettings.DontConfirmUpdateSubmodulesOnCheckout.Value = ToBooleanInverted(chkUpdateModules.CheckState);
 
         // Worktrees:
-        AppSettings.DontConfirmSwitchWorktree = !chkSwitchWorktree.Checked;
+        AppSettings.DontConfirmSwitchWorktree.Value = !chkSwitchWorktree.Checked;
 
         base.PageToSettings();
     }
