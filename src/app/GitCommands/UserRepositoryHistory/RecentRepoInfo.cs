@@ -55,7 +55,7 @@ public class RecentRepoSplitter
     public RecentRepoSplitter()
     {
         MaxTopRepositories = AppSettings.MaxTopRepositories;
-        HideTopRepositoriesFromRecentList = AppSettings.HideTopRepositoriesFromRecentList.Value;
+        HideTopRepositoriesFromRecentList = AppSettings.HideTopRepositoriesFromRecentList;
         ShorteningStrategy = AppSettings.ShorteningRecentRepoPathStrategy;
         SortTopRepos = AppSettings.SortTopRepos;
         SortRecentRepos = AppSettings.SortRecentRepos;
