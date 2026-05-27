@@ -1288,7 +1288,7 @@ public sealed class GitUICommands : IGitUICommands
     public void StartFileHistoryDialog(IWin32Window? owner, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
     {
         bool useBrowseForFileHistory = AppSettings.UseBrowseForFileHistory.Value;
-        string arguments = useBrowseForFileHistory ? $"browse {PathFilterArg}={fileName.Quote()}{GetCommitIdArg}"
+        string arguments = useBrowseForFileHistory ? $"browse {PathFilterArg}={fileName.Quote()}{GetCommitIdArg()}"
             : $"{(showBlame ? BlameHistoryCommand : FileHistoryCommand)} {fileName.Quote()}{GetCommitIdArg()} {(filterByRevision ? FilterByRevisionArg : string.Empty)}";
         Launch(arguments, Module.WorkingDir);
 
