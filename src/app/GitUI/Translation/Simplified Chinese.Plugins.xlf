@@ -50,27 +50,27 @@
     <body>
       <trans-unit id="Description.Text">
         <source>Periodic background fetch</source>
-        <target>周期性背景提取</target>
+        <target>定期后台获取</target>
         
       </trans-unit>
       <trans-unit id="_autoRefresh.Caption">
         <source>Refresh view after fetch</source>
-        <target>拉取后刷新视图</target>
+        <target>获取后刷新视图</target>
         
       </trans-unit>
       <trans-unit id="_fetchAllSubmodules.Caption">
         <source>Fetch all submodules</source>
-        <target>拉取所有子模块</target>
+        <target>获取所有子模块</target>
         
       </trans-unit>
       <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
         <source>Fetch immediately on repository opening</source>
-        <target>打开存储库时立即获取</target>
+        <target>打开版本库时立即获取</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
         <source>Fetch every (seconds) - set to 0 to disable</source>
-        <target>每（几）秒自动拉取一次 - 设为 0 以禁用</target>
+        <target>每（几）秒自动获取一次 - 设为 0 以禁用</target>
         
       </trans-unit>
       <trans-unit id="_gitCommand.Caption">
@@ -275,7 +275,7 @@
       </trans-unit>
       <trans-unit id="tabView.Text">
         <source>View Pull Requests</source>
-        <target>查看推送请求</target>
+        <target>查看获取请求</target>
         
       </trans-unit>
     </body>
@@ -312,7 +312,7 @@
     <body>
       <trans-unit id="$this.Text">
         <source>Delete obsolete branches</source>
-        <target>删除废弃的分支</target>
+        <target>删除淘汰的分支</target>
         
       </trans-unit>
       <trans-unit id="Author.HeaderText">
@@ -361,13 +361,13 @@
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
-        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
+        <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
         <target>选择要删除的分支。只有在 &quot;{0}&quot; 中完全合并的分支才会被删除。</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
-Branches will be deleted on the remote '{0}'. This can not be undone.
+Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
         <target>危险的行为! 
 将在远程存储库上删除分支 &quot;{0}&quot; 。这是不能撤消的。 
@@ -395,7 +395,7 @@ Are you sure you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
-        <source>Press '{0}' to search for branches to delete.</source>
+        <source>Press &apos;{0}&apos; to search for branches to delete.</source>
         <target>按 &quot;{0}&quot; 搜索要删除的分支。</target>
         
       </trans-unit>
@@ -405,7 +405,7 @@ Are you sure you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
-        <source>Select branches to delete using checkboxes in '{0}' column.</source>
+        <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
         <target>使用 &quot;{0}&quot; 列中的复选框选择要删除的分支。</target>
         
       </trans-unit>
@@ -1232,7 +1232,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_authTypeSettings.Caption">
         <source>Auth type</source>
-        <target>認證類型</target>
+        <target>认证类型</target>
         
       </trans-unit>
       <trans-unit id="_credentialsSettings.Caption">
@@ -1348,18 +1348,18 @@ Do you want to reset the configured path?</source>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
-        <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>提交历史从 '{0}' 到 '{1}' ({2})：</target>
+        <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
+        <target>提交历史从 &apos;{0}&apos; 到 &apos;{1}&apos; ({2})：</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
-        <source>'From' commit must be specified</source>
+        <source>&apos;From&apos; commit must be specified</source>
         <target>必须指定“发件人”提交</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
-        <source>'To' commit must be specified</source>
-        <target>必须指定'目标'提交</target>
+        <source>&apos;To&apos; commit must be specified</source>
+        <target>必须指定&apos;目标&apos;提交</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1399,7 +1399,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>Commit expression &quot;To&quot; (including):</target>
+        <target>提交表达式&quot;到&quot; (包括):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -1416,7 +1416,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>Commit expression &quot;From&quot; (excluding):</target>
+        <target>提交表达式&quot;从&quot; (不包括):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -1490,7 +1490,7 @@ branch names, tag names)</source>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
@@ -1527,15 +1527,15 @@ Please ensure that the url is valid and that the API token has access to build a
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</source>
         <target>您需要创建具有以下范围的令牌:
- - '编译(读)'
- - '工程和团队(读)'</target>
+ - &apos;编译(读)&apos;
+ - &apos;工程和团队(读)&apos;</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
+        <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
         <target>&quot;生成定义名称&quot; 正则表达式无效, 无法保存!</target>
         
       </trans-unit>
@@ -1554,7 +1554,7 @@ Please ensure that the url is valid and that the API token has access to build a
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
@@ -1577,7 +1577,7 @@ Please verify the server url.</source>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
         <target>&quot;生成 id 筛选器&quot; 正则表达式无效, 无法保存!</target>
         
       </trans-unit>

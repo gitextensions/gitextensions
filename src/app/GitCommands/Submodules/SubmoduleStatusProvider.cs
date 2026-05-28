@@ -426,7 +426,7 @@ internal sealed class SubmoduleStatusProvider(IGitExecutorProvider executorProvi
 
         // If no changes, set submoduleInfo.Detailed to null
         // if commit sha is not set the parsing was empty or there were no changes (ignore errors)
-        info.Detailed = submoduleStatus is null || submoduleStatus.Commit is null ?
+        info.Detailed = submoduleStatus is null || submoduleStatus.Commit.IsZero ?
             null :
             new DetailedSubmoduleInfo
             {

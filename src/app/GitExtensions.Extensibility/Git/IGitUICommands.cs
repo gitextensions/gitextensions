@@ -46,8 +46,8 @@ public interface IGitUICommands : IServiceProvider
     bool StartArchiveDialog(IWin32Window? owner = null, GitRevision? revision = null, GitRevision? revision2 = null, string? path = null);
     void StartBatchFileProcessDialog(string batchFile);
     bool StartBrowseDialog(IWin32Window? owner, BrowseArguments? args = null);
-    bool StartCheckoutBranch(IWin32Window? owner, IReadOnlyList<ObjectId>? containRevisions);
-    bool StartCheckoutBranch(IWin32Window? owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId>? containRevisions = null);
+    bool StartCheckoutBranch(IWin32Window? owner, IReadOnlyList<ObjectId>? containObjectIds);
+    bool StartCheckoutBranch(IWin32Window? owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId>? containObjectIds = null);
     bool StartCheckoutRemoteBranch(IWin32Window? owner, string branch);
     bool StartCheckoutRevisionDialog(IWin32Window? owner, string? revision = null);
     bool StartCherryPickDialog(IWin32Window? owner = null, GitRevision? revision = null);
@@ -60,7 +60,7 @@ public interface IGitUICommands : IServiceProvider
     bool StartCommandLineProcessDialog(IWin32Window? owner, string? command, ArgumentString arguments);
     bool StartCommitDialog(IWin32Window? owner, string? commitMessage = null, bool showOnlyWhenChanges = false);
     bool StartCompareRevisionsDialog(IWin32Window? owner = null);
-    bool StartCreateBranchDialog(IWin32Window? owner = null, ObjectId? objectId = null, string? newBranchNamePrefix = null);
+    bool StartCreateBranchDialog(IWin32Window? owner = null, ObjectId objectId = default, string? newBranchNamePrefix = null);
     bool StartCreateBranchDialog(IWin32Window? owner, string? branch);
     void StartCreatePullRequest(IWin32Window? owner);
     void StartCreatePullRequest(IWin32Window? owner, IRepositoryHostPlugin gitHoster, string? chooseRemote = null, string? chooseBranch = null);

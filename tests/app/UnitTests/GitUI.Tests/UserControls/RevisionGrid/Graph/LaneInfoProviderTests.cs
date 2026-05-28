@@ -1,4 +1,4 @@
-﻿using GitCommands;
+using GitCommands;
 using GitExtensions.Extensibility.Git;
 using GitUI;
 using GitUI.UserControls.RevisionGrid.Graph;
@@ -315,12 +315,12 @@ public class LaneInfoProviderTests
         // real
         _mergeCommitNode.GetTestAccessor().AddParent(_innerCommitNode);
         _innerCommitNode.GetTestAccessor().AddParent(_realCommitNode);
-        _realCommitNode.GitRevision!.Refs = [new GitRef(null!, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored")];
+        _realCommitNode.GitRevision!.Refs = [new GitRef(null!, default, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored")];
         _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, (RevisionGraphRevision?)null));
 
-        Check(new GitRef(null!, null, GitRefName.RefsHeadsPrefix + "local_branch"));
-        Check(new GitRef(null!, null, GitRefName.RefsRemotesPrefix + "remote_branch", "origin"));
-        Check(new GitRef(null!, null, GitRefName.RefsStashPrefix + "@0"));
+        Check(new GitRef(null!, default, GitRefName.RefsHeadsPrefix + "local_branch"));
+        Check(new GitRef(null!, default, GitRefName.RefsRemotesPrefix + "remote_branch", "origin"));
+        Check(new GitRef(null!, default, GitRefName.RefsStashPrefix + "@0"));
 
         return;
 
@@ -370,7 +370,7 @@ public class LaneInfoProviderTests
         string into = MergeSubjectsWithDecoding[2];
         _mergeCommitNode.GitRevision!.Subject = subject;
 
-        GitRef gitRef = new(null!, null, GitRefName.RefsHeadsPrefix + "local_branch");
+        GitRef gitRef = new(null!, default, GitRefName.RefsHeadsPrefix + "local_branch");
         _mergeCommitNode.GitRevision!.Refs = [gitRef];
 
         GetLaneInfo_should_display(_realCommitNode, into);
@@ -453,12 +453,12 @@ public class LaneInfoProviderTests
         // |
         // real (parent)
         _innerCommitNode.AddParent(_realCommitNode);
-        _realCommitNode.GitRevision!.Refs = [new GitRef(null!, null, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored")];
+        _realCommitNode.GitRevision!.Refs = [new GitRef(null!, default, GitRefName.RefsTagsPrefix + "tag_shall_be_ignored")];
         _laneNodeLocator.FindPrevNode(Arg.Any<int>(), Arg.Any<int>()).Returns(x => (_realCommitNode, isAtNode: false, _innerCommitNode));
 
-        Check(new GitRef(null!, null, GitRefName.RefsHeadsPrefix + "local_branch"));
-        Check(new GitRef(null!, null, GitRefName.RefsRemotesPrefix + "remote_branch", "origin"));
-        Check(new GitRef(null!, null, GitRefName.RefsStashPrefix + "@0"));
+        Check(new GitRef(null!, default, GitRefName.RefsHeadsPrefix + "local_branch"));
+        Check(new GitRef(null!, default, GitRefName.RefsRemotesPrefix + "remote_branch", "origin"));
+        Check(new GitRef(null!, default, GitRefName.RefsStashPrefix + "@0"));
 
         return;
 

@@ -1,3 +1,4 @@
+﻿#!/usr/bin/env dotnet-run
 #:property TargetFramework=net10.0
 #:property UseWindowsForms=false
 #:property EnableStyleCopAnalyzers=false

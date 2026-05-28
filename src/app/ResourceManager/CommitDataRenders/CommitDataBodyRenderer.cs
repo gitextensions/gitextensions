@@ -56,7 +56,7 @@ public sealed class CommitDataBodyRenderer : ICommitDataBodyRenderer
             return hash;
         }
 
-        if (!module.TryResolvePartialCommitId(hash, out ObjectId? fullHash))
+        if (!module.TryResolvePartialCommitId(hash, out ObjectId fullHash))
         {
             return hash;
         }

@@ -111,7 +111,7 @@ public class RevisionGraph : IRevisionGraphRowProvider
     public int Count { get; private set; }
 
     public bool OnlyFirstParent { get; set; }
-    public ObjectId HeadId { get; set; } = null!;
+    public ObjectId HeadId { get; set; }
 
     /// <summary>
     /// Checks whether the given hash is present in the graph.

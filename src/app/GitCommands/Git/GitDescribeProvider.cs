@@ -9,10 +9,10 @@ public interface IGitDescribeProvider
     /// If the tag points to the commit, then only the tag is shown. Otherwise, it suffixes the tag name with the number
     /// of additional commits on top of the tagged object and the abbreviated object name of the most recent commit.
     /// </summary>
-    /// <param name="revision">A revision to describe.</param>
+    /// <param name="objectId">An objectId to describe.</param>
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>Describe information.</returns>
-    (string precedingTag, string commitCount) Get(ObjectId revision, CancellationToken cancellationToken = default);
+    (string precedingTag, string commitCount) Get(ObjectId objectId, CancellationToken cancellationToken = default);
 }
 
 public sealed class GitDescribeProvider : IGitDescribeProvider
@@ -25,9 +25,9 @@ public sealed class GitDescribeProvider : IGitDescribeProvider
     }
 
     /// <inheritdoc />
-    public (string precedingTag, string commitCount) Get(ObjectId revision, CancellationToken cancellationToken = default)
+    public (string precedingTag, string commitCount) Get(ObjectId objectId, CancellationToken cancellationToken = default)
     {
-        string? description = GetModule().GetDescribe(revision, cancellationToken);
+        string? description = GetModule().GetDescribe(objectId, cancellationToken);
         if (string.IsNullOrEmpty(description))
         {
             return (string.Empty, string.Empty);
@@ -40,7 +40,7 @@ public sealed class GitDescribeProvider : IGitDescribeProvider
         }
 
         string commitHash = description[(commitHashPos + 2)..];
-        if (commitHash.Length == 0 || revision.ToString() != commitHash)
+        if (commitHash.Length == 0 || objectId.ToString() != commitHash)
         {
             return (description, string.Empty);
         }

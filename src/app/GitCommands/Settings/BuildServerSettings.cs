@@ -1,61 +1,29 @@
 ﻿using GitExtensions.Extensibility.Settings;
-using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitCommands.Settings;
 
-internal sealed class BuildServerSettings : IBuildServerSettings
+public static class BuildServerSettings
 {
-    private const string BuildServerGroupName = "BuildServer";
-    private const string BuildServerTypeName = "Type";
-    private const string BuildServerIntegrationEnabledName = "EnableIntegration";
-    private readonly SettingsSource _settingsSource;
+    private static readonly SettingsPath _settingsPath = new(parent: null, "BuildServer");
 
-    public BuildServerSettings(SettingsSource settingsSource)
-    {
-        _settingsSource = settingsSource;
-    }
+    /// <summary>
+    ///  Gets the type of the build server (e.g. AppVeyor, TeamCity, etc.).
+    /// </summary>
+    public static StringSetting ServerName { get; } = new(_settingsPath.PathFor("Type"), defaultValue: "");
 
-    public SettingsSource SettingsSource => new SettingsPath(_settingsSource, $"{BuildServerGroupName}.{ServerName}");
+    /// <summary>
+    ///  Gets whether the integration with the build server is enabled.
+    /// </summary>
+    public static BoolSetting IntegrationEnabled { get; } = new(_settingsPath.PathFor("EnableIntegration"), defaultValue: false);
 
-    public string? ServerName
-    {
-        get => _settingsSource.GetString($"{BuildServerGroupName}.{BuildServerTypeName}", defaultValue: null);
-        set
-        {
-            if (ServerName == value)
-            {
-                return;
-            }
+    /// <summary>
+    ///  Gets whether the build server's build result page is displayed.
+    /// </summary>
+    public static BoolSetting ShowBuildResultPage { get; } = new(_settingsPath.PathFor(nameof(ShowBuildResultPage)), defaultValue: false);
 
-            _settingsSource.SetString($"{BuildServerGroupName}.{BuildServerTypeName}", value);
-        }
-    }
-
-    public bool? IntegrationEnabled
-    {
-        get => _settingsSource.GetBool($"{BuildServerGroupName}.{BuildServerIntegrationEnabledName}");
-        set
-        {
-            if (IntegrationEnabled == value)
-            {
-                return;
-            }
-
-            _settingsSource.SetBool($"{BuildServerGroupName}.{BuildServerIntegrationEnabledName}", value);
-        }
-    }
-
-    public bool? ShowBuildResultPage
-    {
-        get => _settingsSource.GetBool($"{BuildServerGroupName}.{nameof(ShowBuildResultPage)}");
-        set
-        {
-            if (ShowBuildResultPage == value)
-            {
-                return;
-            }
-
-            _settingsSource.SetBool($"{BuildServerGroupName}.{nameof(ShowBuildResultPage)}", value);
-        }
-    }
+    /// <summary>
+    ///  Gets the settings source for the build server configured in <paramref name="settingsSource"/>.
+    /// </summary>
+    public static SettingsSource GetSettingsSource(SettingsSource settingsSource)
+        => new SettingsPath(settingsSource, _settingsPath.PathFor(ServerName.ValueOrDefault(settingsSource)));
 }

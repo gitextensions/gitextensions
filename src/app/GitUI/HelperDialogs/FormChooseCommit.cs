@@ -30,8 +30,8 @@ public partial class FormChooseCommit : GitModuleForm
 
         if (!string.IsNullOrEmpty(preselectCommit))
         {
-            ObjectId? objectId = Module.RevParse(preselectCommit);
-            if (objectId is not null)
+            ObjectId objectId = Module.RevParse(preselectCommit);
+            if (!objectId.IsZero)
             {
                 revisionGrid.SelectedId = objectId;
             }

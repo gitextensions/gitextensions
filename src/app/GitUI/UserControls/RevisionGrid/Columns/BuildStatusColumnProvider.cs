@@ -6,7 +6,6 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI;
 using GitExtUtils.GitUI.Theming;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.BuildServerIntegration;
 
 namespace GitUI.UserControls.RevisionGrid.Columns;
 
@@ -44,8 +43,7 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
         bool showIcon = AppSettings.ShowBuildStatusIconColumn;
         bool showText = AppSettings.ShowBuildStatusTextColumn;
 
-        IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings().GetBuildServerSettings();
-        bool columnVisible = buildServerSettings.IntegrationEnabledOrDefault && (showIcon || showText);
+        bool columnVisible = BuildServerSettings.IntegrationEnabled.ValueOrDefault(_module().GetEffectiveSettings()) && (showIcon || showText);
 
         Column.Visible = columnVisible;
 

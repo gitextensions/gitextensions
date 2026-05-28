@@ -938,7 +938,7 @@ public class FilterInfoTests
         };
 
         filterInfo.GetSummary().Should().Be(expectedSummary);
-        filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random())).ToString().Should().Be(expectedArgs);
+        filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random())).ToString().Should().Be(expectedArgs);
     }
 
     [TestCase(false, false, "branchFilter")]
@@ -959,7 +959,7 @@ public class FilterInfoTests
             BranchFilter = branchFilter
         };
 
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random()));
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random()));
 
         if (showRefLog)
         {
@@ -996,7 +996,7 @@ public class FilterInfoTests
             BranchFilter = branchFilter
         };
 
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random()));
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random()));
 
         if (expectBranches)
         {
@@ -1018,7 +1018,7 @@ public class FilterInfoTests
             CommitsLimit = maxCount,
             ByCommitsLimit = true
         };
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random()));
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random()));
 
         if (expected)
         {
@@ -1039,7 +1039,7 @@ public class FilterInfoTests
             ShowOnlyFirstParent = expected
         };
 
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random()));
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random()));
 
         if (expected)
         {
@@ -1060,7 +1060,7 @@ public class FilterInfoTests
             HideMergeCommits = expected
         };
 
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random()));
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random()));
 
         if (expected)
         {
@@ -1120,9 +1120,9 @@ public class FilterInfoTests
             ByBranchFilter = showFilteredBranches,
             BranchFilter = branchFilter
         };
-        ObjectId? objectId = isValidCheckout ? ObjectId.Random() : null;
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => objectId));
-        bool showAll = !(showCurrentBranchOnly && objectId is not null)
+        ObjectId objectId = isValidCheckout ? ObjectId.Random() : default;
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => objectId));
+        bool showAll = !(showCurrentBranchOnly && !objectId.IsZero)
             && !(!showCurrentBranchOnly && showFilteredBranches && !string.IsNullOrWhiteSpace(branchFilter));
 
         try
@@ -1154,14 +1154,14 @@ public class FilterInfoTests
                 args.ToString().Should().NotMatchRegex(@"(^|\s)--exclude=refs/sessions/\*\*($|\s)");
             }
 
-            if (showCurrentBranchOnly && objectId is not null)
+            if (showCurrentBranchOnly && !objectId.IsZero)
             {
-                string head = Regex.Escape(objectId?.ToString()!);
+                string head = Regex.Escape(objectId.ToString());
                 args.ToString().Should().MatchRegex(@$"(^|\s){head}($|\s)");
             }
 
             string stash = Regex.Escape($"--glob={"refs/stas[h]"}");
-            if (showStash && ((showCurrentBranchOnly && objectId is not null)
+            if (showStash && ((showCurrentBranchOnly && !objectId.IsZero)
                 || (!showCurrentBranchOnly && showFilteredBranches && !string.IsNullOrWhiteSpace(branchFilter))))
             {
                 args.ToString().Should().MatchRegex(@$"(^|\s){stash}($|\s)");
@@ -1197,7 +1197,7 @@ public class FilterInfoTests
             Message = message,
             ByMessage = true
         };
-        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId?>(() => ObjectId.Random()));
+        string args = filterInfo.GetRevisionFilter(new Lazy<ObjectId>(() => ObjectId.Random()));
         string summary = filterInfo.GetSummary();
 
         if (expectGrep)

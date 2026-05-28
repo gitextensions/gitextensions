@@ -332,11 +332,11 @@ public sealed partial class RepoObjectsTree : GitModuleControl
             }
         });
 
-        static ObjectId? GetSelectedNodeObjectId(TreeNode treeNode)
+        static ObjectId GetSelectedNodeObjectId(TreeNode treeNode)
         {
             // Local or remote branch nodes or tag nodes
-            return Node.GetNodeSafe<BaseBranchLeafNode>(treeNode)?.ObjectId ??
-                Node.GetNodeSafe<TagNode>(treeNode)?.ObjectId;
+            ObjectId fromBranch = Node.GetNodeSafe<BaseBranchLeafNode>(treeNode)?.ObjectId ?? default;
+            return !fromBranch.IsZero ? fromBranch : Node.GetNodeSafe<TagNode>(treeNode)?.ObjectId ?? default;
         }
     }
 

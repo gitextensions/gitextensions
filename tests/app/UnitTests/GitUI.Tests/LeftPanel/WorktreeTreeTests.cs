@@ -1,9 +1,7 @@
-﻿using AwesomeAssertions;
-using GitUI.LeftPanel;
+﻿using GitUI.LeftPanel;
 
 namespace GitUITests.LeftPanel;
 
-[TestFixture]
 public sealed class WorktreeTreeTests
 {
     private static readonly char Sep = Path.DirectorySeparatorChar;

@@ -26,9 +26,9 @@ internal partial class GitBlameParser : IGitBlameParser
 
     public int GetOriginalLineInPreviousCommit(GitRevision selectedBlamedRevision, string filename, int selectedLine)
     {
-        ObjectId? parentId = selectedBlamedRevision.FirstParentId;
+        ObjectId parentId = selectedBlamedRevision.FirstParentId;
 
-        if (parentId is null)
+        if (parentId.IsZero)
         {
             return selectedLine;
         }

@@ -12,12 +12,17 @@ public sealed class GitSubmoduleInfo : IGitSubmoduleInfo
     public bool IsInitialized { get; }
     public bool IsUpToDate { get; }
 
-    public GitSubmoduleInfo(string name, string localPath, string remotePath, ObjectId currentCommitGuid, string branch, bool isInitialized, bool isUpToDate)
+    public GitSubmoduleInfo(string name, string localPath, string remotePath, ObjectId currentCommitId, string branch, bool isInitialized, bool isUpToDate)
     {
         Name = name ?? throw new ArgumentNullException(nameof(name));
         LocalPath = localPath ?? throw new ArgumentNullException(nameof(localPath));
         RemotePath = remotePath ?? throw new ArgumentNullException(nameof(remotePath));
-        CurrentCommitId = currentCommitGuid ?? throw new ArgumentNullException(nameof(currentCommitGuid));
+        if (currentCommitId.IsZero)
+        {
+            throw new ArgumentNullException(nameof(currentCommitId));
+        }
+
+        CurrentCommitId = currentCommitId;
         Branch = branch ?? throw new ArgumentNullException(nameof(branch));
         IsInitialized = isInitialized;
         IsUpToDate = isUpToDate;

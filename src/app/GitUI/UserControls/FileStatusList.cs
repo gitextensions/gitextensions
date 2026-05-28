@@ -316,7 +316,7 @@ public sealed partial class FileStatusList : GitModuleControl
         }
     }
 
-    public void Bind(Action refreshArtificial, bool canAutoRefresh = false, Func<ObjectId?, string>? describeRevision = null, Func<GitRevision, GitRevision>? getActualRevision = null, bool isFileTreeMode = false)
+    public void Bind(Action refreshArtificial, bool canAutoRefresh = false, Func<ObjectId, string>? describeRevision = null, Func<GitRevision, GitRevision>? getActualRevision = null, bool isFileTreeMode = false)
     {
         btnRefresh.Click += (s, e) => refreshArtificial();
         btnRefresh.Visible = true;
@@ -432,7 +432,7 @@ public sealed partial class FileStatusList : GitModuleControl
 
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     [Browsable(false)]
-    public Func<ObjectId?, string>? DescribeRevision { get; set; }
+    public Func<ObjectId, string>? DescribeRevision { get; set; }
 
     public bool FilterFilesByNameRegexFocused => cboFilterComboBox.Focused;
     public bool FindInCommitFilesGitGrepActive => !string.IsNullOrEmpty(cboFindInCommitFilesGitGrep.Text);
@@ -832,11 +832,11 @@ public sealed partial class FileStatusList : GitModuleControl
         FileStatusListLoading();
         UpdateToolbar(revisions);
         _enableDisablingShowDiffForAllParents = true;
-        _diffCalculator.SetDiff(revisions, headId: null, allowMultiDiff: false);
+        _diffCalculator.SetDiff(revisions, headId: default(ObjectId), allowMultiDiff: false);
         UpdateFileStatusListView(_diffCalculator.Calculate(prevList: [], refreshDiff: true, refreshGrep: false, cancellationToken), cancellationToken: cancellationToken);
     }
 
-    public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId? headId, CancellationToken cancellationToken)
+    public async Task SetDiffsAsync(IReadOnlyList<GitRevision> revisions, ObjectId headId, CancellationToken cancellationToken)
     {
         FileStatusListLoading();
         UpdateToolbar(revisions);
@@ -921,7 +921,7 @@ public sealed partial class FileStatusList : GitModuleControl
             new(
                 firstRev: firstRev,
                 secondRev: secondRev,
-                summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev?.ObjectId),
+                summary: TranslatedStrings.DiffWithParent + GetDescriptionForRevision(firstRev?.ObjectId ?? default(ObjectId)),
                 statuses: items)
         });
     }
@@ -932,9 +932,8 @@ public sealed partial class FileStatusList : GitModuleControl
         UpdateFileStatusListView([]);
     }
 
-    private string? GetDescriptionForRevision(ObjectId? objectId)
+    private string? GetDescriptionForRevision(ObjectId objectId)
         => DescribeRevision is not null ? DescribeRevision(objectId)
-            : objectId is null ? ""
             : objectId == ObjectId.WorkTreeId ? ResourceManager.TranslatedStrings.Workspace
             : objectId == ObjectId.IndexId ? ResourceManager.TranslatedStrings.Index
             : objectId.ToShortString();
@@ -1040,10 +1039,10 @@ public sealed partial class FileStatusList : GitModuleControl
             ? await task.ConfigureAwait(false)
             : null;
 
-        ObjectId? selectedId = SelectedItem.SecondRevision?.ObjectId == ObjectId.WorkTreeId
+        ObjectId selectedId = SelectedItem.SecondRevision?.ObjectId == ObjectId.WorkTreeId
             ? ObjectId.WorkTreeId
-            : status?.Commit;
-        ObjectId? firstId = status?.OldCommit;
+            : status?.Commit ?? default;
+        ObjectId firstId = status?.OldCommit ?? default;
 
         string path = _fullPathResolver.Resolve(submoduleName.EnsureTrailingPathSeparator()) ?? "";
         if (!Directory.Exists(path))

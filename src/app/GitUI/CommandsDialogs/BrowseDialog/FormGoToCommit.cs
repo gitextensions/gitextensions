@@ -43,7 +43,7 @@ public sealed partial class FormGoToCommit : GitModuleForm
     /// <summary>
     /// returns null if revision does not exist (could not be revparsed).
     /// </summary>
-    public ObjectId? ValidateAndGetSelectedRevision()
+    public ObjectId ValidateAndGetSelectedObjectId()
     {
         return Module.RevParse(_selectedRevision!);
     }
@@ -206,8 +206,8 @@ public sealed partial class FormGoToCommit : GitModuleForm
             return;
         }
 
-        ObjectId? guid = Module.RevParse(text);
-        if (guid is not null)
+        ObjectId objectId = Module.RevParse(text);
+        if (!objectId.IsZero)
         {
             textboxCommitExpression.Text = text;
             textboxCommitExpression.SelectAll();

@@ -246,12 +246,12 @@ public sealed partial class FormStash : GitModuleForm
         {
             // FileStatusList has no interface for both worktree<-index, index<-HEAD at the same time
             // Must be handled when displaying
-            ObjectId? headId = Module.RevParse("HEAD");
+            ObjectId headId = Module.RevParse("HEAD");
             GitRevision workTreeRev = new(ObjectId.WorkTreeId)
             {
                 ParentIds = new[] { ObjectId.IndexId }
             };
-            if (headId is null)
+            if (headId.IsZero)
             {
                 // Likely a detached head
                 Stashed.SetDiffs(null, workTreeRev, gitItemStatuses);
@@ -270,13 +270,17 @@ public sealed partial class FormStash : GitModuleForm
         }
         else
         {
-            ObjectId? firstId = Module.RevParse(gitStash.Name + "^");
-            GitRevision? firstRev = firstId is null ? null : new(firstId);
+            ObjectId firstId = Module.RevParse(gitStash.Name + "^");
+            GitRevision? firstRev = firstId.IsZero ? null : new(firstId);
 
-            ObjectId? selectedId = Module.RevParse(gitStash.Name);
-            Validates.NotNull(selectedId);
+            ObjectId selectedId = Module.RevParse(gitStash.Name);
+            if (selectedId.IsZero)
+            {
+                throw new InvalidOperationException("selectedId must not be zero");
+            }
+
             GitRevision secondRev = new(selectedId);
-            if (firstId is not null)
+            if (!firstId.IsZero)
             {
                 secondRev.ParentIds = new[] { firstId };
             }

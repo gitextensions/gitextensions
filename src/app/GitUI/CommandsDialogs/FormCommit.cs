@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Runtime.InteropServices;
@@ -908,7 +908,7 @@ public sealed partial class FormCommit : GitModuleForm
 
         void UpdateMergeHead()
         {
-            _isMergeCommit = Module.RevParse("MERGE_HEAD") is not null;
+            _isMergeCommit = !Module.RevParse("MERGE_HEAD").IsZero;
         }
     }
 
@@ -1215,15 +1215,15 @@ public sealed partial class FormCommit : GitModuleForm
 
                 if (result == btnCheckout)
                 {
-                    ObjectId[]? revisions = _editedCommit is not null ? [_editedCommit.ObjectId] : null;
-                    if (!UICommands.StartCheckoutBranch(this, revisions))
+                    ObjectId[]? objectIds = _editedCommit is not null ? [_editedCommit.ObjectId] : null;
+                    if (!UICommands.StartCheckoutBranch(this, objectIds))
                     {
                         return;
                     }
                 }
                 else if (result == btnCreate)
                 {
-                    if (!UICommands.StartCreateBranchDialog(this, _editedCommit?.ObjectId))
+                    if (!UICommands.StartCreateBranchDialog(this, _editedCommit?.ObjectId ?? default))
                     {
                         return;
                     }
@@ -1733,8 +1733,8 @@ public sealed partial class FormCommit : GitModuleForm
     {
         GitRevision? headRev;
         GitRevision indexRev;
-        ObjectId? headId = Module.RevParse("HEAD");
-        if (headId is not null)
+        ObjectId headId = Module.RevParse("HEAD");
+        if (!headId.IsZero)
         {
             headRev = new GitRevision(headId);
             indexRev = new GitRevision(ObjectId.IndexId) { ParentIds = new[] { headId } };
@@ -1745,7 +1745,7 @@ public sealed partial class FormCommit : GitModuleForm
             indexRev = new GitRevision(ObjectId.IndexId);
         }
 
-        GitRevision workTreeRev = new(ObjectId.WorkTreeId) { ParentIds = new[] { ObjectId.IndexId } };
+        GitRevision workTreeRev = new(ObjectId.WorkTreeId) { ParentIds = [ObjectId.IndexId] };
         return (headRev, indexRev, workTreeRev);
     }
 
@@ -2732,7 +2732,7 @@ public sealed partial class FormCommit : GitModuleForm
             ReplaceMessage(Module.GetPreviousCommitMessages(count: 1, revision: "HEAD", authorPattern: string.Empty).FirstOrDefault()?.Trim()!);
         }
 
-        ResetSoft.Enabled = ResetSoft.Visible && Amend.Checked && Module.RevParse(_resetSoftRevision) is not null;
+        ResetSoft.Enabled = ResetSoft.Visible && Amend.Checked && !Module.RevParse(_resetSoftRevision).IsZero;
 
         if (AppSettings.CommitAndPushForcedWhenAmend)
         {

@@ -523,9 +523,9 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
             return;
         }
 
-        ObjectId? commitId = formGoToCommit.ValidateAndGetSelectedRevision();
+        ObjectId commitId = formGoToCommit.ValidateAndGetSelectedObjectId();
 
-        if (commitId is not null)
+        if (!commitId.IsZero)
         {
             if (!_revisionGrid.SetSelectedRevision(commitId))
             {

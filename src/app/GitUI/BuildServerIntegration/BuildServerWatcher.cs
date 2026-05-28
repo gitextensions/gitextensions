@@ -12,6 +12,7 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility.BuildServerIntegration;
 using GitExtensions.Extensibility.Configurations;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.CommandsDialogs.SettingsDialog.Pages;
@@ -343,15 +344,15 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
     {
         await TaskScheduler.Default;
 
-        IBuildServerSettings buildServerSettings = _module().GetEffectiveSettings().GetBuildServerSettings();
+        SettingsSource effectiveSettings = _module().GetEffectiveSettings();
 
-        string? buildServerName = buildServerSettings.ServerName;
+        string? buildServerName = BuildServerSettings.ServerName[effectiveSettings];
 
         if (!string.IsNullOrEmpty(buildServerName))
         {
             // A build server type is explicitly configured.
-            // Only proceed if integration is enabled or hasn't been explicitly disabled.
-            if (buildServerSettings.IntegrationEnabled == false)
+            // Only bail out if integration has been explicitly disabled.
+            if (BuildServerSettings.IntegrationEnabled[effectiveSettings] is false)
             {
                 return null;
             }
@@ -360,12 +361,12 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         {
             // Nothing configured. Auto-detect only when the user hasn't touched
             // integration settings at all (both ServerName and IntegrationEnabled are unset).
-            if (buildServerSettings.IntegrationEnabled is not null)
+            if (BuildServerSettings.IntegrationEnabled[effectiveSettings] is not null)
             {
                 return null;
             }
 
-            buildServerName = TryAutoDetectBuildServerType(buildServerSettings.SettingsSource);
+            buildServerName = TryAutoDetectBuildServerType(BuildServerSettings.GetSettingsSource(effectiveSettings));
             if (string.IsNullOrEmpty(buildServerName))
             {
                 return null;
@@ -373,7 +374,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
         }
 
         // When explicitly configured, let the matching detector populate settings from remotes
-        TryPopulateSettingsForBuildServer(buildServerName, buildServerSettings.SettingsSource);
+        TryPopulateSettingsForBuildServer(buildServerName, BuildServerSettings.GetSettingsSource(effectiveSettings));
 
         IEnumerable<Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>> exports = ManagedExtensibility.GetExports<IBuildServerAdapter, IBuildServerTypeMetadata>();
         Lazy<IBuildServerAdapter, IBuildServerTypeMetadata>? export = exports.SingleOrDefault(x => x.Metadata.BuildServerType == buildServerName);
@@ -391,7 +392,7 @@ public sealed class BuildServerWatcher : IBuildServerWatcher, IDisposable
 
                 IBuildServerAdapter buildServerAdapter = export.Value;
 
-                buildServerAdapter.Initialize(this, buildServerSettings.SettingsSource,
+                buildServerAdapter.Initialize(this, BuildServerSettings.GetSettingsSource(effectiveSettings),
                     () =>
                     {
                         // To run the `StartSettingsDialog()` in the UI Thread

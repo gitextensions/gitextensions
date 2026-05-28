@@ -12,7 +12,7 @@ public static partial class SubmoduleHelpers
     [GeneratedRegex(@"diff --cc (?<filenamea>.+)", RegexOptions.ExplicitCapture)]
     private static partial Regex CombinedDiffCommandRegex { get; }
 
-    public static async Task<GitSubmoduleStatus?> GetSubmoduleDiffChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId? firstId, ObjectId? secondId, CancellationToken cancellationToken)
+    public static async Task<GitSubmoduleStatus?> GetSubmoduleDiffChangesAsync(IGitModule module, string? fileName, string? oldFileName, ObjectId firstId, ObjectId secondId, CancellationToken cancellationToken)
     {
         (Patch? patch, string? errorMessage) = await module.GetSingleDiffAsync(firstId, secondId, fileName, oldFileName, "", GitModule.SystemEncoding, cacheResult: true, isTracked: true, useGitColoring: false, commandConfiguration: null!, cancellationToken: cancellationToken).ConfigureAwait(false);
         return GetSubmoduleChanges(patch, errorMessage, module, fileName);
@@ -29,7 +29,7 @@ public static partial class SubmoduleHelpers
         if (!string.IsNullOrEmpty(errorMessage))
         {
             // (some) Git errors, propagate
-            return new GitSubmoduleStatus(errorMessage, null, false, null, null, null, null, null, GetSubmoduleStatus);
+            return new GitSubmoduleStatus(errorMessage, null, false, default, default, null, null, null, GetSubmoduleStatus);
         }
 
         if (string.IsNullOrEmpty(patch?.Text))
@@ -48,8 +48,8 @@ public static partial class SubmoduleHelpers
         string? name = null;
         string? oldName = null;
         bool isDirty = false;
-        ObjectId? commitId = null;
-        ObjectId? oldCommitId = null;
+        ObjectId commitId = default;
+        ObjectId oldCommitId = default;
         int? addedCommits = null;
         int? removedCommits = null;
 
@@ -122,7 +122,7 @@ public static partial class SubmoduleHelpers
         }
 
         // Force calculation of caches, could be separate
-        if (oldCommitId is not null && commitId is not null)
+        if (!oldCommitId.IsZero && !commitId.IsZero)
         {
             if (oldCommitId == commitId)
             {
@@ -147,12 +147,12 @@ public static partial class SubmoduleHelpers
 
     private static SubmoduleStatus GetSubmoduleStatus(GitSubmoduleStatus submoduleStatus)
     {
-        if (submoduleStatus.OldCommit is null)
+        if (submoduleStatus.OldCommit.IsZero)
         {
             return SubmoduleStatus.NewSubmodule;
         }
 
-        if (submoduleStatus.Commit is null)
+        if (submoduleStatus.Commit.IsZero)
         {
             return SubmoduleStatus.RemovedSubmodule;
         }

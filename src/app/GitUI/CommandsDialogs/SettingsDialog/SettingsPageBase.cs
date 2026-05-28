@@ -1,7 +1,8 @@
-using GitCommands.Settings;
+﻿using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
+using GitUI.SettingControlBindings;
 using JetBrains.Annotations;
 using Microsoft;
 using ResourceManager;
@@ -143,7 +144,7 @@ public abstract partial class SettingsPageBase : TranslatedControl, ISettingsPag
     protected void AddSettingBinding(ISetting<string> setting, ComboBox comboBox)
     {
         StringComboBoxAdapter adapter = new(setting, comboBox);
-        AddControlBinding(adapter.CreateControlBinding());
+        AddControlBinding(SettingControlBindingsProvider.CreateControlBinding(adapter));
     }
 
     /// <summary>

@@ -231,16 +231,15 @@ public static class ArgumentBuilderExtensions
     /// <summary>
     /// Adds <paramref name="objectId"/> as a SHA-1 argument without allocating a string.
     /// </summary>
-    /// <remarks>
-    /// If <paramref name="objectId"/> is <c>null</c> then no change is made to the arguments.
-    /// </remarks>
     /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
-    /// <param name="objectId">The SHA-1 object ID to add to the builder, or <c>null</c>.</param>
-    /// <exception cref="ArgumentException"><paramref name="objectId"/> represents an artificial commit.</exception>
-    [SkipLocalsInit]
-    public static void Add(this ArgumentBuilder builder, ObjectId? objectId)
+    /// <param name="objectId">The SHA-1 object ID to add to the builder.</param>
+    /// <exception cref="ArgumentException"><paramref name="objectId"/> does not represent a real git object.</exception>
+    /// <remarks>
+    ///  If <paramref name="objectId"/> is zero then no change is made to the arguments.
+    /// </remarks>
+    public static void Add(this ArgumentBuilder builder, ObjectId objectId)
     {
-        if (objectId is null)
+        if (objectId.IsZero)
         {
             return;
         }
@@ -258,20 +257,17 @@ public static class ArgumentBuilderExtensions
     /// <summary>
     /// Adds a sequence of <paramref name="objectIds"/> to the builder.
     /// </summary>
-    /// <remarks>
-    /// If <paramref name="objectIds"/> is <c>null</c> then no change is made to the arguments.
-    /// </remarks>
     /// <param name="builder">The <see cref="ArgumentBuilder"/> to add arguments to.</param>
-    /// <param name="objectIds">A sequence of SHA-1 object IDs to add to the builder, or <c>null</c>.</param>
+    /// <param name="objectIds">A sequence of SHA-1 object IDs to add to the builder, or <see langword="null"/>.</param>
     /// <exception cref="ArgumentException"><paramref name="objectIds"/> contains an artificial commit.</exception>
-    public static void Add(this ArgumentBuilder builder, IEnumerable<ObjectId?>? objectIds)
+    public static void Add(this ArgumentBuilder builder, IEnumerable<ObjectId>? objectIds)
     {
         if (objectIds is null)
         {
             return;
         }
 
-        foreach (ObjectId? objectId in objectIds)
+        foreach (ObjectId objectId in objectIds)
         {
             builder.Add(objectId);
         }

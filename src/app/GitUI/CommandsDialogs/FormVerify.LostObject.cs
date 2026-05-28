@@ -54,7 +54,7 @@ partial class FormVerify
         /// <summary>
         /// Id (SHA-1 hash) of parent commit to the lost object.
         /// </summary>
-        public ObjectId? Parent { get; private set; }
+        public ObjectId Parent { get; private set; }
 
         /// <summary>
         /// Diagnostics and object type.
@@ -75,7 +75,12 @@ partial class FormVerify
             // TODO use enum for RawType
             ObjectType = objectType;
             RawType = rawType;
-            ObjectId = objectId ?? throw new ArgumentNullException(nameof(objectId));
+            if (objectId.IsZero)
+            {
+                throw new ArgumentNullException(nameof(objectId));
+            }
+
+            ObjectId = objectId;
         }
 
         /// <summary>

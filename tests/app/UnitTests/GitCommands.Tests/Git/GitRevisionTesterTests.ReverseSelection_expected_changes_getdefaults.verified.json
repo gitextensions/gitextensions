@@ -6,7 +6,10 @@
     "Value": ""
   },
   "ErrorMessage": null,
-  "TreeGuid": null,
+  "TreeId": {
+    "IsZero": true,
+    "IsArtificial": false
+  },
   "RenameCopyPercentage": null,
   "Staged": 2,
   "DiffStatus": 0,

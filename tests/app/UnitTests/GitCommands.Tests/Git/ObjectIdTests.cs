@@ -1,6 +1,5 @@
 ﻿using System.Text;
 using System.Text.RegularExpressions;
-using AwesomeAssertions;
 using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 using JetBrains.Annotations;
@@ -22,8 +21,8 @@ public sealed partial class ObjectIdTests
     [TestCase("0123456789abcdef0123456789abcdef01234567")]
     public void TryParse_handles_valid_hashes(string sha1)
     {
-        ObjectId.TryParse(sha1, out ObjectId? id).Should().BeTrue();
-        id!.ToString().Should().Be(sha1.ToLower());
+        ObjectId.TryParse(sha1, out ObjectId id).Should().BeTrue();
+        id.ToString().Should().Be(sha1.ToLower());
     }
 
     [TestCase("00000000000000000000000000000000000000")]
@@ -45,8 +44,8 @@ public sealed partial class ObjectIdTests
     [TestCase("__0102030405060708091011121314151617181920__", 2)]
     public void TryParse_with_offset_handles_valid_hashes(string sha1, int offset)
     {
-        ObjectId.TryParse(sha1, offset, out ObjectId? id).Should().BeTrue();
-        id!.ToString().Should().Be(sha1.Substring(offset, 40));
+        ObjectId.TryParse(sha1, offset, out ObjectId id).Should().BeTrue();
+        id.ToString().Should().Be(sha1.Substring(offset, 40));
     }
 
     [TestCase("0000000000000000000000000000000000000000")]
@@ -205,7 +204,7 @@ public sealed partial class ObjectIdTests
     {
         byte[] sourceBytes = Encoding.ASCII.GetBytes(source);
 
-        ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId? id).Should().Be(expected is not null);
+        ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId id).Should().Be(expected is not null);
 
         if (expected is not null)
         {
@@ -214,19 +213,20 @@ public sealed partial class ObjectIdTests
     }
 
     [TestCase(NonHexAscii, 0, null)]
-    public void TryParse_bytes_throws_with_illegal_input(string source, int offset, [CanBeNull] string? expected)
+    public void TryParse_returns_false_zero_with_illegal_input(string source, int offset, [CanBeNull] string? expected)
     {
         byte[] sourceBytes = Encoding.ASCII.GetBytes(source);
-        ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId? id).Should().Be(expected is not null);
+        ObjectId.TryParse(sourceBytes.AsSpan(offset, 40), out ObjectId objectId).Should().Be(expected is not null);
+        objectId.IsZero.Should().BeTrue();
     }
 
     [Test]
     public void TryParse_returns_false_when_array_null()
     {
-        ObjectId.TryParse(default, out ObjectId? objectId).Should().BeFalse();
-        objectId.Should().BeNull();
+        ObjectId.TryParse(default, out ObjectId objectId).Should().BeFalse();
+        objectId.IsZero.Should().BeTrue();
         ObjectId.TryParse(default(Span<byte>), out objectId).Should().BeFalse();
-        objectId.Should().BeNull();
+        objectId.IsZero.Should().BeTrue();
     }
 
     [Test]
@@ -234,8 +234,8 @@ public sealed partial class ObjectIdTests
     {
         byte[] bytes = new byte[ObjectId.Sha1CharCount];
 
-        ObjectId.TryParse(bytes.AsSpan(1), out ObjectId? objectId).Should().BeFalse();
-        objectId.Should().BeNull();
+        ObjectId.TryParse(bytes.AsSpan(1), out ObjectId objectId).Should().BeFalse();
+        objectId.IsZero.Should().BeTrue();
     }
 
     [Test]
@@ -343,11 +343,11 @@ public sealed partial class ObjectIdTests
     }
 
     [Test]
-    public void CompareTo_returns_positive_for_null()
+    public void CompareTo_returns_positive_for_zero()
     {
         ObjectId id = ObjectId.Parse("0102030405060708091011121314151617181920");
 
-        id.CompareTo(null).Should().BePositive();
+        id.CompareTo(default).Should().BePositive();
     }
 
     [Test]
@@ -364,9 +364,9 @@ public sealed partial class ObjectIdTests
     public void TryParse_bytes_roundtrips_correctly(string sha1)
     {
         byte[] asciiBytes = Encoding.ASCII.GetBytes(sha1);
-        ObjectId.TryParse(asciiBytes.AsSpan(), out ObjectId? id).Should().BeTrue();
+        ObjectId.TryParse((ReadOnlySpan<byte>)asciiBytes.AsSpan(), out ObjectId id).Should().BeTrue();
 
-        id!.ToString().Should().Be(sha1);
+        id.ToString().Should().Be(sha1);
     }
 
     [Test]
@@ -376,7 +376,7 @@ public sealed partial class ObjectIdTests
 
         // Convert.FromHexString accepts uppercase, so this will parse successfully.
         // SHA-1 strings are always lowercase in git output, and ToString normalises to lowercase.
-        ObjectId.TryParse(asciiBytes.AsSpan(), out ObjectId? id).Should().BeTrue();
-        id!.ToString().Should().Be("abcdefabcdefabcdefabcdefabcdefabcdefabcd");
+        ObjectId.TryParse((ReadOnlySpan<byte>)asciiBytes.AsSpan(), out ObjectId id).Should().BeTrue();
+        id.ToString().Should().Be("abcdefabcdefabcdefabcdefabcdefabcdefabcd");
     }
 }

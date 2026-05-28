@@ -238,16 +238,6 @@ public sealed class ArgumentBuilderExtensionsTests
         })).Should().Throw<ArgumentException>();
     }
 
-    [TestCase(null)]
-    public void Handle_null_objectid(ObjectId? id)
-    {
-        ArgumentBuilder args =
-        [
-            id
-        ];
-        "".Should().Be(args.ToString());
-    }
-
     [Test]
     public void Add_ForcePushOptions_ensure_all_switches_are_handled()
     {

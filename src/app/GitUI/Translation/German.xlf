@@ -74,7 +74,7 @@ Schalten Sie ihn aus, wenn Sie Probleme mit dem Konsolenemulator haben.</target>
         
       </trans-unit>
       <trans-unit id="chkDontSHowHelpImages.Text">
-        <source>Don't show help images</source>
+        <source>Don&apos;t show help images</source>
         <target>Hilfe-Bilder nicht anzeigen</target>
         
       </trans-unit>
@@ -174,12 +174,12 @@ Diese Aktion wird dann ohne Warnung beim Auschecken eines Branch angewendet.</ta
         
       </trans-unit>
       <trans-unit id="ShowAuthorAvatarInCommitGraph.Text">
-        <source>Show author's avatar column in the commit graph</source>
+        <source>Show author&apos;s avatar column in the commit graph</source>
         <target>Zeige die Spalte mit dem Avatar des Autors im Commit Graph</target>
         
       </trans-unit>
       <trans-unit id="ShowAuthorAvatarInCommitInfo.Text">
-        <source>Show author's avatar in the commit info view</source>
+        <source>Show author&apos;s avatar in the commit info view</source>
         <target>Zeige den Avatar des Autors in der Commit Info Anzeige</target>
         
       </trans-unit>
@@ -457,8 +457,8 @@ Klicken Sie auf dieses Info-Symbol für weitere Details.</target>
   <file datatype="plaintext" original="BranchComboBox" source-language="en" target-language="de">
     <body>
       <trans-unit id="_branchCheckoutError.Text">
-        <source>Branch '{0}' is not selectable, this branch has been removed from the selection.</source>
-        <target>Branch '{0}' ist nicht selektierbar. Er wurde aus der Auswahl entfernt.</target>
+        <source>Branch &apos;{0}&apos; is not selectable, this branch has been removed from the selection.</source>
+        <target>Branch &apos;{0}&apos; ist nicht selektierbar. Er wurde aus der Auswahl entfernt.</target>
         
       </trans-unit>
     </body>
@@ -991,11 +991,6 @@ Bitte stellen Sie sicher, dass Git for Windows wurde oder oder setzen Sie den Be
         <target>Farben</target>
         
       </trans-unit>
-      <trans-unit id="DefaultThemeName.Text">
-        <source>default</source>
-        <target>Standard</target>
-        
-      </trans-unit>
       <trans-unit id="DrawNonRelativesGray.Text">
         <source>Draw non relatives graph gray</source>
         <target>Graphen ohne Bezug grau zeichnen</target>
@@ -1080,8 +1075,8 @@ Bitte stellen Sie sicher, dass Git for Windows wurde oder oder setzen Sie den Be
         
       </trans-unit>
       <trans-unit id="cbRememberAmendCommitState.Text">
-        <source>Remember 'Amend commit' checkbox on commit form close</source>
-        <target>Speichere 'Commit anpassen' Einstellung beim Schließen des Commit Dialogs.</target>
+        <source>Remember &apos;Amend commit&apos; checkbox on commit form close</source>
+        <target>Speichere &apos;Commit anpassen&apos; Einstellung beim Schließen des Commit Dialogs.</target>
         
       </trans-unit>
       <trans-unit id="chkAutocomplete.Text">
@@ -1668,7 +1663,7 @@ Bitte stellen Sie sicher, dass Git for Windows wurde oder oder setzen Sie den Be
         
       </trans-unit>
       <trans-unit id="chkRememberDiffAppearancePreference.Text">
-        <source>Remember the 'Diff appearance' preference</source>
+        <source>Remember the &apos;Diff appearance&apos; preference</source>
         
       </trans-unit>
       <trans-unit id="chkRememberDiffAppearancePreference.ToolTipText">
@@ -1676,28 +1671,28 @@ Bitte stellen Sie sicher, dass Git for Windows wurde oder oder setzen Sie den Be
         
       </trans-unit>
       <trans-unit id="chkRememberIgnoreWhiteSpacePreference.Text">
-        <source>Remember the 'Ignore whitespaces' preference</source>
-        <target>Die Einstellung 'Leerzeichen ignorieren' merken</target>
+        <source>Remember the &apos;Ignore whitespaces&apos; preference</source>
+        <target>Die Einstellung &apos;Leerzeichen ignorieren&apos; merken</target>
         
       </trans-unit>
       <trans-unit id="chkRememberNumberOfContextLines.Text">
-        <source>Remember the 'Number of context lines' preference</source>
-        <target>Die Einstellung 'Anzahl der Kontextzeilem' merken</target>
+        <source>Remember the &apos;Number of context lines&apos; preference</source>
+        <target>Die Einstellung &apos;Anzahl der Kontextzeilem&apos; merken</target>
         
       </trans-unit>
       <trans-unit id="chkRememberShowEntireFilePreference.Text">
-        <source>Remember the 'Show entire file' preference</source>
-        <target>Die Einstellung 'Ganze Datei anzeigen' merken</target>
+        <source>Remember the &apos;Show entire file&apos; preference</source>
+        <target>Die Einstellung &apos;Ganze Datei anzeigen&apos; merken</target>
         
       </trans-unit>
       <trans-unit id="chkRememberShowNonPrintingCharsPreference.Text">
-        <source>Remember the 'Show nonprinting characters' preference</source>
-        <target>Die Einstellung 'Zeige nicht-druckbare Zeichen' merken</target>
+        <source>Remember the &apos;Show nonprinting characters&apos; preference</source>
+        <target>Die Einstellung &apos;Zeige nicht-druckbare Zeichen&apos; merken</target>
         
       </trans-unit>
       <trans-unit id="chkRememberShowSyntaxHighlightingInDiff.Text">
-        <source>Remember the 'Show syntax highlighting' preference</source>
-        <target>Die Einstellung 'Syntax highlighting anzeigen' merken</target>
+        <source>Remember the &apos;Show syntax highlighting&apos; preference</source>
+        <target>Die Einstellung &apos;Syntax highlighting anzeigen&apos; merken</target>
         
       </trans-unit>
       <trans-unit id="chkShowAllCustomDiffTools.Text">
@@ -1841,11 +1836,6 @@ Das vorrangige Diff-Werkzeug kann weiterhin durch Klicken auf den Hauptmenüeint
         <target>Regex</target>
         
       </trans-unit>
-      <trans-unit id="FilterWatermarkLabel.Text">
-        <source>Filter files using a regular expression...</source>
-        <target>Filtern von Dateien über reguläre Ausdrücke...</target>
-        
-      </trans-unit>
       <trans-unit id="LoadingFiles.Text">
         <source>Loading data...</source>
         <target>Lade Daten...</target>
@@ -1872,6 +1862,7 @@ Git will never check if the file has changed that will improve status check perf
       </trans-unit>
       <trans-unit id="_deleteFailed.Text">
         <source>Delete file failed</source>
+        <target>Löschen der Datei fehlgeschlagen</target>
         
       </trans-unit>
       <trans-unit id="_deleteSelectedFiles.Text">
@@ -1880,6 +1871,7 @@ Git will never check if the file has changed that will improve status check perf
       </trans-unit>
       <trans-unit id="_deleteSelectedFilesCaption.Text">
         <source>Delete</source>
+        <target>Löschen</target>
         
       </trans-unit>
       <trans-unit id="_expandAll.Text">
@@ -1900,18 +1892,22 @@ Git will never check if the file has changed that will improve status check perf
       </trans-unit>
       <trans-unit id="_resetSelectedChangesText.Text">
         <source>Are you sure you want to reset all selected files to {0}?</source>
+        <target>Sind Sie sich sicher, dass Sie alle selektierten Dateien auf {0} zurücksetzen wollen?</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterAllFiles.Text">
         <source>All files</source>
+        <target>Alle Dateien</target>
         
       </trans-unit>
       <trans-unit id="_saveFileFilterCurrentFormat.Text">
         <source>Current format</source>
+        <target>Aktuelles Format</target>
         
       </trans-unit>
       <trans-unit id="_selectAll.Text">
         <source>S&amp;elect all</source>
+        <target>All&amp;es auswählen</target>
         
       </trans-unit>
       <trans-unit id="_selectedRevision.Text">
@@ -1919,7 +1915,7 @@ Git will never check if the file has changed that will improve status check perf
         
       </trans-unit>
       <trans-unit id="_skipWorktreeToolTip.Text">
-        <source>Hide already tracked files that will change but that you don't want to commit.
+        <source>Hide already tracked files that will change but that you don&apos;t want to commit.
 Suitable for some config files modified locally.</source>
         
       </trans-unit>
@@ -1928,7 +1924,7 @@ Suitable for some config files modified locally.</source>
         
       </trans-unit>
       <trans-unit id="_stopTrackingFail.Text">
-        <source>Fail to stop tracking the file '{0}'.</source>
+        <source>Fail to stop tracking the file &apos;{0}&apos;.</source>
         
       </trans-unit>
       <trans-unit id="btnAsTree.ToolTipText">
@@ -1952,7 +1948,7 @@ Suitable for some config files modified locally.</source>
         
       </trans-unit>
       <trans-unit id="btnFindInFilesGitGrep.ToolTipText">
-        <source>Toggle 'Find in commit files using git-grep'</source>
+        <source>Toggle &apos;Find in commit files using git-grep&apos;</source>
         
       </trans-unit>
       <trans-unit id="btnOnlyA.Text">
@@ -1987,13 +1983,17 @@ Suitable for some config files modified locally.</source>
         <source>Show files with different changes</source>
         
       </trans-unit>
+      <trans-unit id="cboFilterComboBox.Watermark">
+        <source>Filter files using a regular expression...</source>
+        
+      </trans-unit>
+      <trans-unit id="cboFindInCommitFilesGitGrep.Watermark">
+        <source>Find in commit files using git-grep regular expression...</source>
+        
+      </trans-unit>
       <trans-unit id="columnHeader.Text">
         <source>Files</source>
         <target>Dateien</target>
-        
-      </trans-unit>
-      <trans-unit id="lblFindInCommitFilesGitGrepWatermark.Text">
-        <source>Find in commit files using git-grep regular expression...</source>
         
       </trans-unit>
       <trans-unit id="tmsiEditLocallyIgnoredFiles.Text">
@@ -2082,6 +2082,14 @@ Suitable for some config files modified locally.</source>
       </trans-unit>
       <trans-unit id="tsmiFindUsingInputBox.Text">
         <source>Using &amp;input box</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFindUsingMatchCase.Text">
+        <source>Match &amp;case</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiFindUsingWholeWord.Text">
+        <source>Match &amp;whole word</source>
         
       </trans-unit>
       <trans-unit id="tsmiGroupByFileExtensionFlat.Text">
@@ -2185,7 +2193,7 @@ Suitable for some config files modified locally.</source>
         
       </trans-unit>
       <trans-unit id="tsmiShowFindInCommitFilesGitGrep.Text">
-        <source>Show 'Find in commit fi&amp;les using git-grep'</source>
+        <source>Show &apos;Find in commit fi&amp;les using git-grep&apos;</source>
         
       </trans-unit>
       <trans-unit id="tsmiShowGroupNodesInFlatList.Text">
@@ -2582,7 +2590,7 @@ Suitable for some config files modified locally.</source>
         
       </trans-unit>
       <trans-unit id="_strFailedToGetRepos.Text">
-        <source>Failed to get repositories. This most likely means you didn't configure {0}, please do so via the menu &quot;Plugins/{0}&quot;.</source>
+        <source>Failed to get repositories. This most likely means you didn&apos;t configure {0}, please do so via the menu &quot;Plugins/{0}&quot;.</source>
         <target>Fehler bei Abfrage des Repositorys. Benutzername/ApiToken korrekt?</target>
         
       </trans-unit>
@@ -2711,7 +2719,7 @@ You will have push access. {2}</source>
       </trans-unit>
       <trans-unit id="helpTextLbl.Text">
         <source>If you want to fork a repository owned by somebody else, go to the Search for repositories tab.</source>
-        <target>Wenn Sie ein Repository forken möchten, welches jemanden anderem gehört, wechseln Sie auf den 'Nach Repositorys suchen&quot; Tab.</target>
+        <target>Wenn Sie ein Repository forken möchten, welches jemanden anderem gehört, wechseln Sie auf den &apos;Nach Repositorys suchen&quot; Tab.</target>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -3364,7 +3372,7 @@ mit erster zu vergleichen:</target>
         
       </trans-unit>
       <trans-unit id="_undoLastCommitText.Text">
-        <source>You will still be able to find all the commit's changes in the staging area
+        <source>You will still be able to find all the commit&apos;s changes in the staging area
 
 Do you want to continue?</source>
         <target>Sie können immer noch alle Änderungen des Commits im Staging Bereich finden
@@ -4100,7 +4108,7 @@ Focus the output history and (when displayed as panel) toggle its visibility usi
         
       </trans-unit>
       <trans-unit id="chkShowFindInCommitFilesGitGrep.Text">
-        <source>Show 'Find in commit files using git-grep'</source>
+        <source>Show &apos;Find in commit files using git-grep&apos;</source>
         
       </trans-unit>
       <trans-unit id="chkShowGpgInformation.Text">
@@ -4252,7 +4260,7 @@ Sind Sie sicher?</target>
         
       </trans-unit>
       <trans-unit id="rbDontChange.Text">
-        <source>Do&amp;n't change</source>
+        <source>Do&amp;n&apos;t change</source>
         <target>Nicht ändern</target>
         
       </trans-unit>
@@ -4574,7 +4582,7 @@ Sind Sie sicher?</target>
         
       </trans-unit>
       <trans-unit id="_branchNone.Text">
-        <source>(none: don't checkout after clone)</source>
+        <source>(none: don&apos;t checkout after clone)</source>
         <target>(Nichts: Kein Checkout nach dem Klonen)</target>
         
       </trans-unit>
@@ -4633,7 +4641,7 @@ Wollen Sie das neue Repository &quot;{0}&quot; jetzt öffnen?</target>
       </trans-unit>
       <trans-unit id="cbDownloadFullHistory.ttHints">
         <source>The default Git behavior is to download all historical revisions.
-If you turn this off, we'll only download the latest revision for all branches.
+If you turn this off, we&apos;ll only download the latest revision for all branches.
 
 Actual command line (if unchecked): --depth 1 --no-single-branch</source>
         
@@ -4915,7 +4923,7 @@ Wollen sie wirklich committen?</target>
         
       </trans-unit>
       <trans-unit id="_noFilesStagedCommitInstructions.Text">
-        <source>There aren't any changes in the staging area.
+        <source>There aren&apos;t any changes in the staging area.
 How do you want to proceed?</source>
         <target>Es befinden sich keine Änderungen im Staging-Bereich.
 Wie wollen Sie weitermachen?</target>
@@ -5144,6 +5152,10 @@ Sie können das Template zurücksetzen:
         <source>&amp;Options</source>
         
       </trans-unit>
+      <trans-unit id="tsmiSelectStagedOnEnterMessage.Text">
+        <source>Select staged on entering message editor</source>
+        
+      </trans-unit>
     </body>
   </file>
   <file datatype="plaintext" original="FormCommitDiff" source-language="en" target-language="de">
@@ -5254,7 +5266,7 @@ Sie können das Template zurücksetzen:
       </trans-unit>
       <trans-unit id="_branchNameIsNotValid.Text">
         <source>“{0}” is not valid branch name.</source>
-        <target>'{0}' ist kein gültiger Branchname.</target>
+        <target>&apos;{0}&apos; ist kein gültiger Branchname.</target>
         
       </trans-unit>
       <trans-unit id="_creatingOrphanBranch.Text">
@@ -5333,7 +5345,7 @@ Sie können das Template zurücksetzen:
         
       </trans-unit>
       <trans-unit id="_pushToCaption.Text">
-        <source>Push tag to '{0}'</source>
+        <source>Push tag to &apos;{0}&apos;</source>
         <target>Tag nach {0} pushen </target>
         
       </trans-unit>
@@ -5378,7 +5390,7 @@ Sie können das Template zurücksetzen:
         
       </trans-unit>
       <trans-unit id="pushTag.Text">
-        <source>Push tag to '{0}'</source>
+        <source>Push tag to &apos;{0}&apos;</source>
         <target>Tag nach {0} pushen </target>
         
       </trans-unit>
@@ -5937,6 +5949,10 @@ Sollten Sie sich unsicher sein bitte dieses Fenster einfach schliessen.</target>
         <source>&amp;Find</source>
         
       </trans-unit>
+      <trans-unit id="cboFindInCommitFilesGitGrep.Watermark">
+        <source>git-grep regular expression...</source>
+        
+      </trans-unit>
       <trans-unit id="chkMatchCase.Text">
         <source>Match &amp;case</source>
         
@@ -5946,7 +5962,7 @@ Sollten Sie sich unsicher sein bitte dieses Fenster einfach schliessen.</target>
         
       </trans-unit>
       <trans-unit id="chkShowSearchBox.Text">
-        <source>&amp;Show 'Find in commit files using git-grep'</source>
+        <source>&amp;Show &apos;Find in commit files using git-grep&apos;</source>
         
       </trans-unit>
       <trans-unit id="label1.Text">
@@ -5955,10 +5971,6 @@ Sollten Sie sich unsicher sein bitte dieses Fenster einfach schliessen.</target>
       </trans-unit>
       <trans-unit id="lblOptions.Text">
         <source>&amp;Options:</source>
-        
-      </trans-unit>
-      <trans-unit id="lblSearchCommitGitGrepWatermark.Text">
-        <source>git-grep regular expression...</source>
         
       </trans-unit>
     </body>
@@ -6977,7 +6989,7 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         
       </trans-unit>
       <trans-unit id="_noRemoteBranch.Text">
-        <source>You didn't specify a remote branch</source>
+        <source>You didn&apos;t specify a remote branch</source>
         <target>Sie haben keinen Remote Branch angegeben</target>
         
       </trans-unit>
@@ -6997,20 +7009,20 @@ Wenn Sie einen Branch holen und mergen wollen, wählen Sie einen speziellen Bran
         
       </trans-unit>
       <trans-unit id="_noRemoteBranchForFetchMainInstruction.Text">
-        <source>You asked to fetch from the remote '{0}',
+        <source>You asked to fetch from the remote &apos;{0}&apos;,
 but did not specify a remote branch.
 Because this is not the current branch, you must specify a remote branch.</source>
-        <target>Sie haben einen Fetch von Remote '{0}' angefragt,
+        <target>Sie haben einen Fetch von Remote &apos;{0}&apos; angefragt,
 aber keinen Remote Branch angeben.
 Weil dies nicht der aktuelle Branch ist, muss ein Remote Branch angegeben werden.</target>
         
       </trans-unit>
       <trans-unit id="_noRemoteBranchMainInstruction.Text">
-        <source>You asked to pull from the remote '{0}',
+        <source>You asked to pull from the remote &apos;{0}&apos;,
 but did not specify a remote branch.
 Because this is not the default configured remote for your local branch,
 you must specify a remote branch.</source>
-        <target>Sie haben einen Pull von Remote '{0}' angefragt,
+        <target>Sie haben einen Pull von Remote &apos;{0}&apos; angefragt,
 aber keinen Remote Branch angegeben.
 Weil dies nicht der standardmäßige Remote Branch für Ihren lokalen Branch ist,
 müssen Sie einen Remote Branch angeben.</target>
@@ -7833,8 +7845,8 @@ Wollen Sie fortfahren?</target>
         
       </trans-unit>
       <trans-unit id="lblDirtyWorkingDirectory.Text">
-        <source>Warning: you've got changes in your working directory that could be lost if you want to reset the current branch to another commit.
-Stash them before if you don't want to lose them.</source>
+        <source>Warning: you&apos;ve got changes in your working directory that could be lost if you want to reset the current branch to another commit.
+Stash them before if you don&apos;t want to lose them.</source>
         <target>Warnung: Sie haben Änderungen in Ihrem Arbeitsverzeichnis die verloren gehen könnten wenn Sie den aktuellen Branch auf einen anderen Commit zurücksetzen wollen.
 Stashen Sie die Änderungen zuvor wenn Sie diese nicht verlieren wollen.</target>
         
@@ -7884,10 +7896,10 @@ Stashen Sie die Änderungen zuvor wenn Sie diese nicht verlieren wollen.</target
         <source>The fingerprint of this host is not registered by PuTTY.
 This causes this process to hang, and that why it is automatically stopped.
 
-When the connection is opened detached from Git and Git Extensions, the host's fingerprint can be registered.
-You could also manually add the host's fingerprint or run Test Connection from the remotes dialog.
+When the connection is opened detached from Git and Git Extensions, the host&apos;s fingerprint can be registered.
+You could also manually add the host&apos;s fingerprint or run Test Connection from the remotes dialog.
 
-Do you want to register the host's fingerprint and restart the process?</source>
+Do you want to register the host&apos;s fingerprint and restart the process?</source>
         <target>Der Fingerprint dieses Hosts ist nicht in PuTTY registriert.
 Dies kann zum Hängenbleiben des aktuellen Prozesses führen und wurde deshalb automatisch gestoppt.
 
@@ -8046,7 +8058,7 @@ Wollen Sie automatisch das Standard Push- und Pull-Verhalten für diesen Remote 
       <trans-unit id="_remoteBranchDataError.Text">
         <source>Invalid ´{1}´ found for branch ´{0}´.
 Value has been reset to empty value.</source>
-        <target>Fehler '{1}' gefunden bei Branch {0}.
+        <target>Fehler &apos;{1}&apos; gefunden bei Branch {0}.
 Wert wurde mit leerem Wert ersetzt.</target>
         
       </trans-unit>
@@ -8192,8 +8204,8 @@ Wert wurde mit leerem Wert ersetzt.</target>
         
       </trans-unit>
       <trans-unit id="_localRefInvalid.Text">
-        <source>The entered value '{0}' is not the name of an existing local branch.</source>
-        <target>Der eingegebene Wert '{0}' ist nicht der Name eines existierenden lokalen Branch.</target>
+        <source>The entered value &apos;{0}&apos; is not the name of an existing local branch.</source>
+        <target>Der eingegebene Wert &apos;{0}&apos; ist nicht der Name eines existierenden lokalen Branch.</target>
         
       </trans-unit>
       <trans-unit id="cbxCheckoutBranch.Text">
@@ -8282,8 +8294,8 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         
       </trans-unit>
       <trans-unit id="_branchInfo.Text">
-        <source>Reset branch '{0}' to revision:</source>
-        <target>Branch '{0}' zurücksetzen auf Revision:</target>
+        <source>Reset branch &apos;{0}&apos; to revision:</source>
+        <target>Branch &apos;{0}&apos; zurücksetzen auf Revision:</target>
         
       </trans-unit>
       <trans-unit id="_resetCaption.Text">
@@ -8554,10 +8566,8 @@ Ist der Merge-Konflikt gelöst?</target>
         
       </trans-unit>
       <trans-unit id="_fileBinaryChooseLocalBaseRemote.Text">
-        <source>File ({0}) appears to be a binary file.
-Choose to keep the local ({1}), remote ({2}) or base file.</source>
-        <target>Die Datei ({0}) scheint eine binäre Datei zu sein.
-Wählen Sie, ob Sie die lokale ({1}), remote ({2}) oder base Datei behalten wollen.</target>
+        <source>File &apos;{0}&apos; appears to be binary.
+Choose to keep the local &apos;{1}&apos;, remote &apos;{2}&apos; or base file.</source>
         
       </trans-unit>
       <trans-unit id="_fileChangeLocallyAndRemotely.Text">
@@ -8571,14 +8581,10 @@ Wählen Sie, ob Sie die lokale ({1}), remote ({2}) oder base Datei behalten woll
         
       </trans-unit>
       <trans-unit id="_fileCreatedLocallyAndRemotelyLong.Text">
-        <source>File {0} does not have a base revision.
+        <source>File &apos;{0}&apos; does not have a base revision.
 A file with the same name has been created locally ({1}) and remotely ({2}) causing this conflict.
 
 Choose the file you want to keep, merge the files or delete the file?</source>
-        <target>Die Datei {0} hat keine Basis-Revision.
-Der Konflikt tritt auf, weil eine Datei mit dem selben Namen lokal ({1}) und auch beim Remote ({2}) erzeugt wurde.
-
-Bitte wählen Sie die Datei aus, die sie behalten möchten, mergen Sie die Dateien oder löschen Sie die Datei?</target>
         
       </trans-unit>
       <trans-unit id="_fileDeletedLocallyAndModifiedRemotely.Text">
@@ -8587,14 +8593,10 @@ Bitte wählen Sie die Datei aus, die sie behalten möchten, mergen Sie die Datei
         
       </trans-unit>
       <trans-unit id="_fileDeletedLocallyAndModifiedRemotelyLong.Text">
-        <source>File {0} does not have a local revision.
+        <source>File &apos;{0}&apos; does not have a local revision.
 The file has been deleted locally ({1}) but modified remotely ({2}).
 
 Choose to delete the file or keep the modified version.</source>
-        <target>Die Datei {0} besitzt keine lokale Revision.
-Die Datei wurde lokal ({1}) gelöscht, aber beim Remote ({2}) geändert.
-
-Wählen Sie, ob Sie die Datei löschen oder die geänderte Datei behalten möchten.</target>
         
       </trans-unit>
       <trans-unit id="_fileIsBinary.Text">
@@ -8610,14 +8612,10 @@ Wollen Sie die Datei wirklich mit {0} öffnen?</target>
         
       </trans-unit>
       <trans-unit id="_fileModifiedLocallyAndDeletedRemotelyLong.Text">
-        <source>File {0} does not have a remote revision.
+        <source>File &apos;{0}&apos; does not have a remote revision.
 The file has been modified locally ({1}) but deleted remotely ({2}).
 
 Choose to delete the file or keep the modified version.</source>
-        <target>Die Datei {0} hat beim Remote keine Revision.
-Die Datei wurde lokal ({1}) bearbeitet, aber beim Remote ({2}) gelöscht.
-
-Wählen Sie, ob Sie die Datei löschen oder die geänderte Version behalten möchten.</target>
         
       </trans-unit>
       <trans-unit id="_fileUnchangedAfterMerge.Text">
@@ -8630,47 +8628,31 @@ Der Merge-Konflikt wird als nicht-gelöst markiert. Bitte versuchen Sie es noch 
         
       </trans-unit>
       <trans-unit id="_filesDeletedLocallyAndModifiedRemotelyLong.Text">
-        <source>{0} and {1} other out of {2} selected files do not have a local revision.
+        <source>&apos;{0}&apos; and {1} other out of {2} selected files do not have a local revision.
 The files have been deleted locally, but modified remotely
 
 Choose to delete the files or keep the modified versions.</source>
-        <target>{0} und {1} weitere von {2} gewählten Dateien haben keine lokale Revision.
-Diese Dateien wurden lokal gelöscht aber beim Remote geändert.
-
-Wählen Sie, ob Sie die Dateien löschen oder die geänderten Versionen behalten möchten.</target>
         
       </trans-unit>
       <trans-unit id="_filesDeletedLocallyAndModifiedRemotelyLongNoOtherFilesSelected.Text">
-        <source>{0} and {1} other selected file(s) do not have a local revision.
+        <source>&apos;{0}&apos; and {1} other selected file(s) do not have a local revision.
 The files have been deleted locally, but modified remotely
 
 Choose to delete the files or keep the modified versions.</source>
-        <target>{0} und {1} weitere gewählte Datei(en) haben keine lokale Revision.
-Diese Dateien wurden lokal gelöscht aber beim Remote geändert.
-
-Wählen Sie, ob Sie die Dateien löschen oder die geänderten Versionen behalten möchten.</target>
         
       </trans-unit>
       <trans-unit id="_filesModifiedLocallyAndDeletedRemotelyLong.Text">
-        <source>{0} and {1} other out of {2} selected files do not have a remote revision.
+        <source>&apos;{0}&apos; and {1} other out of {2} selected files do not have a remote revision.
 The files have been modified locally, but deleted remotely.
 
 Choose to delete the files or keep the modified versions.</source>
-        <target>{0} und {1} weitere von {2} gewählten Dateien haben keine Revision beim Remote.
-Diese Dateien wurden lokal geändert aber beim Remote gelöscht.
-
-Wählen Sie, ob Sie die Dateien löschen oder die geänderten Versionen behalten möchten.</target>
         
       </trans-unit>
       <trans-unit id="_filesModifiedLocallyAndDeletedRemotelyLongNoOtherFilesSelected.Text">
-        <source>{0} and {1} other selected file(s) do not have a remote revision.
+        <source>&apos;{0}&apos; and {1} other selected file(s) do not have a remote revision.
 The files have been modified locally, but deleted remotely.
 
 Choose to delete the files or keep the modified versions.</source>
-        <target>{0} und {1} weitere gewählte Datei(en) haben keine Revision beim Remote.
-Diese Dateien wurden lokal geändert aber beim Remote gelöscht.
-
-Wählen Sie, ob Sie die Dateien löschen oder die geänderten Versionen behalten möchten.</target>
         
       </trans-unit>
       <trans-unit id="_keepBaseButtonText.Text">
@@ -8694,10 +8676,8 @@ Wählen Sie, ob Sie die Dateien löschen oder die geänderten Versionen behalten
         
       </trans-unit>
       <trans-unit id="_noBaseRevision.Text">
-        <source>There is no base revision for {0}.
+        <source>There is no base revision for &apos;{0}&apos;.
 Fall back to 2-way merge?</source>
-        <target>Es gibt keine Basis-Version für {0}.
-Fallback auf 2-Wege-Merge?</target>
         
       </trans-unit>
       <trans-unit id="_noMergeTool.Text">
@@ -8730,8 +8710,7 @@ Bitte konfigurieren Sie das Merge-Werkzeug in den Einstellungen!</target>
         
       </trans-unit>
       <trans-unit id="_solveMergeConflictApplyToAllCheckBoxText.Text">
-        <source>Apply to {0} and {1} other file(s)</source>
-        <target>An {0} und {1} anderen Datei(en) anwenden</target>
+        <source>Apply to &apos;{0}&apos; and {1} other file(s)</source>
         
       </trans-unit>
       <trans-unit id="_solveMergeConflictDialogCaption.Text">
@@ -8740,8 +8719,7 @@ Bitte konfigurieren Sie das Merge-Werkzeug in den Einstellungen!</target>
         
       </trans-unit>
       <trans-unit id="_stageFilename.Text">
-        <source>Stage {0}</source>
-        <target>Stage {0}</target>
+        <source>Stage &apos;{0}&apos;</source>
         
       </trans-unit>
       <trans-unit id="_theirs.Text">
@@ -9353,7 +9331,7 @@ in einem Reflog referenziert sind.</target>
         
       </trans-unit>
       <trans-unit id="Unreachable.Text">
-        <source>Print out objects that exist but that aren't readable from any of the reference 
+        <source>Print out objects that exist but that aren&apos;t readable from any of the reference 
 nodes.
 </source>
         <target>Alle existierenden Objekte ausgeben, die
@@ -10079,7 +10057,7 @@ Nur angeben wenn nicht im Pfad.</target>
       </trans-unit>
       <trans-unit id="ConfirmDisableGitSparse.Text">
         <source>You are about to disable Git Sparse feature for this repository, {0}.
-Git won't be able to restore the working copy to its full content this way.
+Git won&apos;t be able to restore the working copy to its full content this way.
 
 Would you like to have the filter modified so that it allowed for the full working copy?</source>
         <target>Sie sind dabei das Git Sparse Feature für dieses Repository {0} abzuschalten.
@@ -10435,7 +10413,7 @@ Try again?</source>
         
       </trans-unit>
       <trans-unit id="_serverHostkeyNotCachedText.Text">
-        <source>The server's host key is not cached in the registry.
+        <source>The server&apos;s host key is not cached in the registry.
 
 Do you want to trust this host key and then try again?</source>
         <target>Der Host-Key des Servers ist nicht in der Registry vorhanden.
@@ -10479,7 +10457,7 @@ Wollen Sie diesem Host-Key vertrauen und noch einmal versuchen?</target>
         
       </trans-unit>
       <trans-unit id="_updateSubmodulesToo.Text">
-        <source>Since this repository has submodules, it's necessary to update them on every checkout.
+        <source>Since this repository has submodules, it&apos;s necessary to update them on every checkout.
 
 This will just checkout on the submodule the commit determined by the superproject.</source>
         <target>Da dieses Repository Untermodule hat ist es notwendig diese bei jedem Checkout upzudaten.
@@ -11247,7 +11225,7 @@ Reset the filter via View &gt; Show all branches.</source>
         
       </trans-unit>
       <trans-unit id="_dontShowAgain.Text">
-        <source>Don't show me this message again.</source>
+        <source>Don&apos;t show me this message again.</source>
         <target>Diese Meldung nicht mehr anzeigen.</target>
         
       </trans-unit>
@@ -11257,7 +11235,7 @@ Reset the filter via View &gt; Show all branches.</source>
         
       </trans-unit>
       <trans-unit id="_invalidDiffContainsFilter.Text">
-        <source>Filter text '{0}' not valid for &quot;Diff contains&quot; filter.</source>
+        <source>Filter text &apos;{0}&apos; not valid for &quot;Diff contains&quot; filter.</source>
         
       </trans-unit>
       <trans-unit id="_loadingControlText.Text">
@@ -11687,7 +11665,7 @@ Selected revision:
 {sBranch}
 {sLocalBranch}
 {sRemoteBranch}
-{sRemoteBranchName}   (without the remote's name)
+{sRemoteBranchName}   (without the remote&apos;s name)
 {sRemote}
 {sRemoteUrl}
 {sRemotePathFromUrl}
@@ -11705,7 +11683,7 @@ Currently checked out revision:
 {cBranch}
 {cLocalBranch}
 {cRemoteBranch}
-{cRemoteBranchName}   (without the remote's name)
+{cRemoteBranchName}   (without the remote&apos;s name)
 {cHash}
 {cMessage}
 {cSubject}
@@ -11719,7 +11697,8 @@ Currently checked out revision:
 
 Diff selection:
 {SelectedRelativePaths}   (relative paths as they were in the selected commit)
-{LineNumber}</source>
+{LineNumber}
+{ColumnNumber}</source>
         
       </trans-unit>
       <trans-unit id="chdrCommand.Text">
@@ -11835,13 +11814,13 @@ Diff selection:
       <trans-unit id="_prioBranchNamesTooltip.Text">
         <source>Regex to prioritize branch names in the left panel and commit info.
 The branches matching the pattern will be shown before the others.
-Separate the priorities with ';'.</source>
+Separate the priorities with &apos;;&apos;.</source>
         
       </trans-unit>
       <trans-unit id="_prioRemoteNamesTooltip.Text">
         <source>Regex to prioritize remote names in the left panel and commit info.
 The remotes matching the pattern will be shown before the others.
-Separate the priorities with ';'.</source>
+Separate the priorities with &apos;;&apos;.</source>
         
       </trans-unit>
       <trans-unit id="_revisionSortWarningTooltip.Text">
@@ -12175,8 +12154,8 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
         
       </trans-unit>
       <trans-unit id="_containedInCurrentCommitText.Text">
-        <source>'{0}' is contained in the currently selected commit</source>
-        <target>'{0}' ist im aktuell gewählten Commit enthalten</target>
+        <source>&apos;{0}&apos; is contained in the currently selected commit</source>
+        <target>&apos;{0}&apos; ist im aktuell gewählten Commit enthalten</target>
         
       </trans-unit>
       <trans-unit id="_containedInNoBranchText.Text">
@@ -12248,7 +12227,7 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
         
       </trans-unit>
       <trans-unit id="_dontShowAgain.Text">
-        <source>&amp;Don't show me this message again</source>
+        <source>&amp;Don&apos;t show me this message again</source>
         
       </trans-unit>
       <trans-unit id="_error.Text">
@@ -12310,8 +12289,8 @@ Vollständiger Nachrichten Text ist nicht in älteren Commits enthalten. Wählen
         
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyFormat.Text">
-        <source>Could not load file or assembly '{0}'.</source>
-        <target>Datei oder Assembly '{0}' konnte nicht geladen werden.</target>
+        <source>Could not load file or assembly &apos;{0}&apos;.</source>
+        <target>Datei oder Assembly &apos;{0}&apos; konnte nicht geladen werden.</target>
         
       </trans-unit>
       <trans-unit id="_failedToLoadFileOrAssemblyText.Text">
@@ -12428,7 +12407,7 @@ Um dieses Repository zu öffnen müssen Sie entweder:
         
       </trans-unit>
       <trans-unit id="_invisibleCommitText.Text">
-        <source>'{0}' is not currently visible</source>
+        <source>&apos;{0}&apos; is not currently visible</source>
         <target>{0} ist aktuell nicht sichtbar</target>
         
       </trans-unit>
@@ -12650,7 +12629,7 @@ Sometimes Windows may need to be restarted too.</source>
         
       </trans-unit>
       <trans-unit id="_scriptUserInputCaption.Text">
-        <source>User input for script '{0}'</source>
+        <source>User input for script &apos;{0}&apos;</source>
         
       </trans-unit>
       <trans-unit id="_searchingFor.Text">
@@ -12784,7 +12763,7 @@ the last selected commit.</source>
       <trans-unit id="_telemetryPermissionMessage.Text">
         <source>We collect information so we can make the app better.
 
-We won't collect any personal or identifiable information.
+We won&apos;t collect any personal or identifiable information.
 You can change your mind at any time.
 
 Yes, I allow telemetry!</source>

@@ -76,7 +76,7 @@ public class ScriptsManagerScriptRunnerTests
     [Test]
     public void Parse_should_parse_userInput_with_default_value_as_expression_containing_arguments_inside()
     {
-        _module.GetRevision(null, Arg.Any<bool>(), Arg.Any<bool>()).Returns(new GitRevision(ObjectId.Parse("79b9792ca4db3d01d7c0f2cd95419dd53665ec41")));
+        _module.GetRevision(default, Arg.Any<bool>(), Arg.Any<bool>()).Returns(new GitRevision(ObjectId.Parse("79b9792ca4db3d01d7c0f2cd95419dd53665ec41")));
         _commands.GetService<ISimplePromptCreator>().Returns(new SimplePromptCreatorForTest(("input label1", "file_79b9792ca4db3d01d7c0f2cd95419dd53665ec41.bak", "file_foo.bak")));
         (string? arguments, bool abort, bool cancel) result = ScriptRunner.ParseUserInputs("script_name", "{UserInput:input label1=file_{HEAD}.bak}", _commands,
             owner: null!, scriptOptionsProvider: _scriptOptionsProvider);

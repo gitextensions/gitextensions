@@ -52,16 +52,16 @@ public sealed partial class FormBisect : GitModuleForm
 
         return;
 
-        void BisectRange(ObjectId startRevision, ObjectId endRevision)
+        void BisectRange(ObjectId startObjectId, ObjectId endObjectId)
         {
-            ArgumentString command = Commands.ContinueBisect(GitBisectOption.Good, startRevision);
+            ArgumentString command = Commands.ContinueBisect(GitBisectOption.Good, startObjectId);
             bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (!success)
             {
                 return;
             }
 
-            command = Commands.ContinueBisect(GitBisectOption.Bad, endRevision);
+            command = Commands.ContinueBisect(GitBisectOption.Bad, endObjectId);
             FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
         }
     }

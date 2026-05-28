@@ -361,16 +361,16 @@
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
-        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>நீக்கக் கிளைகளைத் தேர்ந்தெடு. '{0}' இல் முழுமையாக இணைக்கப்பட்ட கிளைகள் மட்டுமே நீக்கப்படும்.</target>
+        <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
+        <target>நீக்கக் கிளைகளைத் தேர்ந்தெடு. &apos;{0}&apos; இல் முழுமையாக இணைக்கப்பட்ட கிளைகள் மட்டுமே நீக்கப்படும்.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
-Branches will be deleted on the remote '{0}'. This can not be undone.
+Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
         <target>ஆபத்தான செயல்!
-தொலை களஞ்சியமான '{0}' இலிருந்து கிளைகள் அகற்றப்படும். இந்தச் செயலைச் செயல்தவிர்க்க முடியாது.
+தொலை களஞ்சியமான &apos;{0}&apos; இலிருந்து கிளைகள் அகற்றப்படும். இந்தச் செயலைச் செயல்தவிர்க்க முடியாது.
 நீங்கள் நிச்சயமாகத் தொடர விரும்புகிறீர்களா?</target>
         
       </trans-unit>
@@ -395,8 +395,8 @@ Are you sure you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
-        <source>Press '{0}' to search for branches to delete.</source>
-        <target>நீக்குவதற்கான கிளைகளைக் கண்டறிய '{0}' ஐ அழுத்தவும்.</target>
+        <source>Press &apos;{0}&apos; to search for branches to delete.</source>
+        <target>நீக்குவதற்கான கிளைகளைக் கண்டறிய &apos;{0}&apos; ஐ அழுத்தவும்.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -405,8 +405,8 @@ Are you sure you want to continue?</source>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
-        <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>'{0}' நெடுவரிசையில் உள்ள தேர்வுப்பெட்டிகளைப் பயன்படுத்தி நீக்கக் கிளைகளைத் தேர்ந்தெடு.</target>
+        <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
+        <target>&apos;{0}&apos; நெடுவரிசையில் உள்ள தேர்வுப்பெட்டிகளைப் பயன்படுத்தி நீக்கக் கிளைகளைத் தேர்ந்தெடு.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -1348,18 +1348,18 @@ Do you want to reset the configured path?</source>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
-        <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>'{0}' இலிருந்து '{1}'வரையிலான உறுதிமொழி பதிவு ({2}):</target>
+        <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
+        <target>&apos;{0}&apos; இலிருந்து &apos;{1}&apos;வரையிலான உறுதிமொழி பதிவு ({2}):</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
-        <source>'From' commit must be specified</source>
-        <target>'இதிலிருந்து' உறுதிமொழி குறிப்பிடப்பட வேண்டும்</target>
+        <source>&apos;From&apos; commit must be specified</source>
+        <target>&apos;இதிலிருந்து&apos; உறுதிமொழி குறிப்பிடப்பட வேண்டும்</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
-        <source>'To' commit must be specified</source>
-        <target>'இதற்கு' உறுதிமொழி குறிப்பிடப்பட வேண்டும்</target>
+        <source>&apos;To&apos; commit must be specified</source>
+        <target>&apos;இதற்கு&apos; உறுதிமொழி குறிப்பிடப்பட வேண்டும்</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1399,7 +1399,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Commit expression &quot;To&quot; (including):</source>
-        <target>உறுதிமொழி வெளிப்பாடு 'இதற்கு' (உட்பட):</target>
+        <target>உறுதிமொழி வெளிப்பாடு &apos;இதற்கு&apos; (உட்பட):</target>
         
       </trans-unit>
       <trans-unit id="label10.Text">
@@ -1416,7 +1416,7 @@ which can be pasted to programs like MS Word or LibreOffice Writer.</source>
       </trans-unit>
       <trans-unit id="label2.Text">
         <source>Commit expression &quot;From&quot; (excluding):</source>
-        <target>உறுதிமொழி வெளிப்பாடு 'இதிலிருந்து' (தவிர்த்து):</target>
+        <target>உறுதிமொழி வெளிப்பாடு &apos;இதிலிருந்து&apos; (தவிர்த்து):</target>
         
       </trans-unit>
       <trans-unit id="label3.Text">
@@ -1490,7 +1490,7 @@ branch names, tag names)</source>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
@@ -1527,16 +1527,16 @@ Please ensure that the url is valid and that the API token has access to build a
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</source>
         <target>நீங்கள் பின்வரும் நோக்கங்களுடன் ஒரு அடையாளகுறியை உருவாக்க வேண்டும்:
- - 'கட்ட (படிக்க)'
- - 'திட்டம் மற்றும் குழு (படிக்க)'</target>
+ - &apos;கட்ட (படிக்க)&apos;
+ - &apos;திட்டம் மற்றும் குழு (படிக்க)&apos;</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>'கட்டுமான வரையறை பெயர்' வழக்கமான வெளிப்பாடு தவறானது மற்றும் சேமிக்கப்படாது!</target>
+        <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
+        <target>&apos;கட்டுமான வரையறை பெயர்&apos; வழக்கமான வெளிப்பாடு தவறானது மற்றும் சேமிக்கப்படாது!</target>
         
       </trans-unit>
     </body>
@@ -1554,14 +1554,14 @@ Please ensure that the url is valid and that the API token has access to build a
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
         <target>இடைநிலைப் பலகையில் சரியான கட்டுமான முகவரி இல்லை.
 
 மீண்டும் முயற்சிக்கும் முன், கட்டமைப்பின் முகவரியை இடைநிலைப் பலகையில் நகலெடு.
-(குறைந்தது 'கட்டுமானவகைஅடையாளம்' அளவுருவையாவது கொண்டிருக்க வேண்டும்)</target>
+(குறைந்தது &apos;கட்டுமானவகைஅடையாளம்&apos; அளவுருவையாவது கொண்டிருக்க வேண்டும்)</target>
         
       </trans-unit>
       <trans-unit id="_failToLoadProjectCaption.Text">
@@ -1577,7 +1577,7 @@ Please verify the server url.</source>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
         <target>&quot;கட்டுமான அடையாள வடிகட்டி&quot; வழக்கமான வெளிப்பாடு தவறானது மற்றும் சேமிக்கப்படாது!</target>
         
       </trans-unit>

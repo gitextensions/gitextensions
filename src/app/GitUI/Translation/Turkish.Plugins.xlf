@@ -84,7 +84,7 @@
     <body>
       <trans-unit id="BitbucketBaseUrl.Caption">
         <source>Specify the base URL to Bitbucket</source>
-        <target>Bitbucket için temel URL'yi belirtin</target>
+        <target>Bitbucket için temel URL&apos;yi belirtin</target>
         
       </trans-unit>
       <trans-unit id="BitbucketDisableSsl.Caption">
@@ -361,16 +361,16 @@
         
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
-        <source>Choose branches to delete. Only branches that are fully merged in '{0}' will be deleted.</source>
-        <target>Silmek için dalları seç. Yalnızca '{0}' ile tamamen birleştirilen dallar silinebilir.</target>
+        <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
+        <target>Silmek için dalları seç. Yalnızca &apos;{0}&apos; ile tamamen birleştirilen dallar silinebilir.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
         <source>DANGEROUS ACTION!
-Branches will be deleted on the remote '{0}'. This can not be undone.
+Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
         <target>TEHLİKELİ EYLEM!
-'{0}' uzak deposu üzerindeki dallar silinecektir. Bu işlem geri alınamaz.
+&apos;{0}&apos; uzak deposu üzerindeki dallar silinecektir. Bu işlem geri alınamaz.
 Devam etmek istediğine emin misin?</target>
         
       </trans-unit>
@@ -395,8 +395,8 @@ Devam etmek istediğine emin misin?</target>
         
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
-        <source>Press '{0}' to search for branches to delete.</source>
-        <target>Silinecek dalları aramak için '{0}' düğmesine basın.</target>
+        <source>Press &apos;{0}&apos; to search for branches to delete.</source>
+        <target>Silinecek dalları aramak için &apos;{0}&apos; düğmesine basın.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -405,8 +405,8 @@ Devam etmek istediğine emin misin?</target>
         
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
-        <source>Select branches to delete using checkboxes in '{0}' column.</source>
-        <target>'{0}' sütunundaki onay kutularını kullanarak, silmek istediğin dalları seç.</target>
+        <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
+        <target>&apos;{0}&apos; sütunundaki onay kutularını kullanarak, silmek istediğin dalları seç.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -456,7 +456,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="useRegexFilter.Text">
         <source>Use regex to filter branches</source>
-        <target>Dalları filtrelemek için regex'i (düzenli ifadeleri) kullan</target>
+        <target>Dalları filtrelemek için regex&apos;i (düzenli ifadeleri) kullan</target>
         
       </trans-unit>
     </body>
@@ -510,7 +510,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
         <source>Use regex to filter branches to delete</source>
-        <target>Silinecek dalları filtrelemek için regex'i (düzenli ifadeleri) kullan</target>
+        <target>Silinecek dalları filtrelemek için regex&apos;i (düzenli ifadeleri) kullan</target>
         
       </trans-unit>
     </body>
@@ -593,7 +593,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_sizeLargeFile.Caption">
         <source>Find large files bigger than (Mb)</source>
-        <target>(Mb)'tan büyük dosyaları bul</target>
+        <target>(Mb)&apos;tan büyük dosyaları bul</target>
         
       </trans-unit>
     </body>
@@ -790,7 +790,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="btnInit.Text">
         <source>Init GitFlow</source>
-        <target>GitFlow'u başlat</target>
+        <target>GitFlow&apos;u başlat</target>
         
       </trans-unit>
       <trans-unit id="btnPublish.Text">
@@ -953,7 +953,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
-        <target>Zaten bir tane kişisel erişim jetonun (personal access token) var. Yeni bir jeton (token) almak için ilk önce Eklentiler &gt; Eklenti Ayarlar'ı içerisinden eski jetonu (token'u) sil.</target>
+        <target>Zaten bir tane kişisel erişim jetonun (personal access token) var. Yeni bir jeton (token) almak için ilk önce Eklentiler &gt; Eklenti Ayarlar&apos;ı içerisinden eski jetonu (token&apos;u) sil.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
@@ -976,12 +976,12 @@ Devam etmek istediğine emin misin?</target>
     <body>
       <trans-unit id="GetProjectIdLink.Text">
         <source>Get Project ID from server</source>
-        <target>Sunucudan Proje ID'sini getir</target>
+        <target>Sunucudan Proje ID&apos;sini getir</target>
         
       </trans-unit>
       <trans-unit id="GetProjectIdStatusText.Text">
         <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
-        <target>Sunucudan proje alınamadı. Geçerli API jetonu (tokenu) veya örnek URL'sini kontrol et.</target>
+        <target>Sunucudan proje alınamadı. Geçerli API jetonu (tokenu) veya örnek URL&apos;sini kontrol et.</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
@@ -1001,7 +1001,7 @@ Devam etmek istediğine emin misin?</target>
       </trans-unit>
       <trans-unit id="label3.Text">
         <source>Project ID</source>
-        <target>Proje ID'si</target>
+        <target>Proje ID&apos;si</target>
         
       </trans-unit>
     </body>
@@ -1046,7 +1046,7 @@ Devam etmek istediğine emin misin?</target>
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>Gource bulunamıyor.
-Lütfen Gource'u indirin ve eklenti ayarları iletişim kutusundaki yolu ayarlayın.</target>
+Lütfen Gource&apos;u indirin ve eklenti ayarları iletişim kutusundaki yolu ayarlayın.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1064,7 +1064,7 @@ Gource yalnızca geçerli bir git deposundan başlatılabilir.</target>
 Do you want to automatically download Gource?</source>
         <target>Yapılandırılmış Gource için bir yol yok.
 
-Gource'u otomatik olarak indirmek ister misin?</target>
+Gource&apos;u otomatik olarak indirmek ister misin?</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
@@ -1076,7 +1076,7 @@ Gource'u otomatik olarak indirmek ister misin?</target>
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>İndirme başarısız oldu.
-Lütfen Gource'u indirin ve eklenti ayarları iletişim kutusundaki yolu ayarlayın.</target>
+Lütfen Gource&apos;u indirin ve eklenti ayarları iletişim kutusundaki yolu ayarlayın.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1096,7 +1096,7 @@ Lütfen Gource'u indirin ve eklenti ayarları iletişim kutusundaki yolu ayarlay
       </trans-unit>
       <trans-unit id="_gourcePath.Caption">
         <source>Path to Gource</source>
-        <target>Gource'sun Yolu</target>
+        <target>Gource&apos;sun Yolu</target>
         
       </trans-unit>
       <trans-unit id="_resetConfigPath.Text">
@@ -1139,7 +1139,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Path to Gource</source>
-        <target>Gource'sun Yolu</target>
+        <target>Gource&apos;sun Yolu</target>
         
       </trans-unit>
       <trans-unit id="label2.Text">
@@ -1168,7 +1168,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       </trans-unit>
       <trans-unit id="lblJenkinsServerUrl.Text">
         <source>Jenkins server URL</source>
-        <target>Jenkins sunucusunun URL'si</target>
+        <target>Jenkins sunucusunun URL&apos;si</target>
         
       </trans-unit>
       <trans-unit id="lblProjectName.Text">
@@ -1197,7 +1197,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       </trans-unit>
       <trans-unit id="InvalidUrlCaption.Text">
         <source>Invalid Jira url</source>
-        <target>Jira url'si geçersiz</target>
+        <target>Jira url&apos;si geçersiz</target>
         
       </trans-unit>
       <trans-unit id="InvalidUrlMessage.Text">
@@ -1222,7 +1222,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       </trans-unit>
       <trans-unit id="QueryHelperLinkText.Text">
         <source>Open the query helper inside Jira</source>
-        <target>Jira'nın içerisindeki sorgu yardımcısını aç</target>
+        <target>Jira&apos;nın içerisindeki sorgu yardımcısını aç</target>
         
       </trans-unit>
       <trans-unit id="QueryHelperOpenErrorText.Text">
@@ -1257,7 +1257,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       </trans-unit>
       <trans-unit id="_urlSettings.Caption">
         <source>Jira URL</source>
-        <target>Jira URL'si</target>
+        <target>Jira URL&apos;si</target>
         
       </trans-unit>
     </body>
@@ -1286,7 +1286,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       </trans-unit>
       <trans-unit id="SetProxy_Button.Text">
         <source>Set proxy</source>
-        <target>Vekili (proxy'yi) ayarla</target>
+        <target>Vekili (proxy&apos;yi) ayarla</target>
         
       </trans-unit>
       <trans-unit id="UnsetProxy_Button.Text">
@@ -1296,7 +1296,7 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>Yapılandırılmış bir vekiili (proxy'si) yok. Lütfen, eklenti ayarlarında vekil (proxy) ana bilgisayarını ayarlayın.</target>
+        <target>Yapılandırılmış bir vekiili (proxy&apos;si) yok. Lütfen, eklenti ayarlarında vekil (proxy) ana bilgisayarını ayarlayın.</target>
         
       </trans-unit>
       <trans-unit id="_pluginDescription.Text">
@@ -1315,12 +1315,12 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
       </trans-unit>
       <trans-unit id="HttpProxy.Caption">
         <source>HTTP proxy</source>
-        <target>HTTP vekili (proxy'si)</target>
+        <target>HTTP vekili (proxy&apos;si)</target>
         
       </trans-unit>
       <trans-unit id="HttpProxyPort.Caption">
         <source>HTTP proxy port</source>
-        <target>HTTP vekili (proxy'si) bağlantı noktası (port)</target>
+        <target>HTTP vekili (proxy&apos;si) bağlantı noktası (port)</target>
         
       </trans-unit>
       <trans-unit id="Password.Caption">
@@ -1348,18 +1348,18 @@ Yapılandırılmış yolu sıfırlamak istiyor musun?</target>
         
       </trans-unit>
       <trans-unit id="_commitLogFrom.Text">
-        <source>Commit log from '{0}' to '{1}' ({2}):</source>
-        <target>Teslim günlüğü '{0}' ile '{1}' ({2}) arasında:</target>
+        <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
+        <target>Teslim günlüğü &apos;{0}&apos; ile &apos;{1}&apos; ({2}) arasında:</target>
         
       </trans-unit>
       <trans-unit id="_fromCommitNotSpecified.Text">
-        <source>'From' commit must be specified</source>
-        <target>'Başlangıç' teslimi belirtilmelidir</target>
+        <source>&apos;From&apos; commit must be specified</source>
+        <target>&apos;Başlangıç&apos; teslimi belirtilmelidir</target>
         
       </trans-unit>
       <trans-unit id="_toCommitNotSpecified.Text">
-        <source>'To' commit must be specified</source>
-        <target>'Son' teslimi belirtilmelidir</target>
+        <source>&apos;To&apos; commit must be specified</source>
+        <target>&apos;Son&apos; teslimi belirtilmelidir</target>
         
       </trans-unit>
       <trans-unit id="buttonCopyAsHtml.Text">
@@ -1476,7 +1476,7 @@ teslim ifadeleri olabilir)</target>
     <body>
       <trans-unit id="ExtractLink.Text">
         <source>Extract data from a build result url copied in the clipboard</source>
-        <target>Panoya kopyalanan bir derleme sonucu url'sinden verileri çıkar</target>
+        <target>Panoya kopyalanan bir derleme sonucu url&apos;sinden verileri çıkar</target>
         
       </trans-unit>
       <trans-unit id="TokenManagementLink.Text">
@@ -1490,13 +1490,13 @@ teslim ifadeleri olabilir)</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy the url of the build into the clipboard before retrying.
 (Should contain at least the &quot;buildId&quot; parameter)</source>
-        <target>Pano, geçerli bir derleme url'si içermiyor.
+        <target>Pano, geçerli bir derleme url&apos;si içermiyor.
 
-Lütfen, yeniden denemeden önce, derleme url'sini panoya kopyalayın.
+Lütfen, yeniden denemeden önce, derleme url&apos;sini panoya kopyalayın.
 (En azından, &quot;buildId&quot; parametresini içermeli)</target>
         
       </trans-unit>
@@ -1504,9 +1504,9 @@ Lütfen, yeniden denemeden önce, derleme url'sini panoya kopyalayın.
         <source>Error while trying to retrieve build definition information from url.
 
 Please ensure that the url is valid and that the API token has access to build and project information.</source>
-        <target>Url'den derleme tanım bilgisi alınmaya çalışılırken hata oluştu.
+        <target>Url&apos;den derleme tanım bilgisi alınmaya çalışılırken hata oluştu.
 
-Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bilgilerine erişimin olduğuna emin ol.</target>
+Lütfen URL&apos;nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bilgilerine erişimin olduğuna emin ol.</target>
         
       </trans-unit>
       <trans-unit id="_infoNoApiTokenMessage.Text">
@@ -1527,16 +1527,16 @@ Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bi
       </trans-unit>
       <trans-unit id="label4.Text">
         <source>You need to create a token with the following scopes:
- - 'Build (read)'
- - 'Project and team (read)'</source>
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</source>
         <target>Aşağıdaki kapsamlara sahip bir jeton (token) oluşturman gerekiyor:
- - 'Build (read)' Derle (oku)
- - 'Project and team (read)' Proje ve takım (oku)</target>
+ - &apos;Build (read)&apos; Derle (oku)
+ - &apos;Project and team (read)&apos; Proje ve takım (oku)</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The 'Build definition name' regular expression is not valid and won't be saved!</source>
-        <target>'Derleme tanımlama adı' düzenli ifadesi geçerli değil ve kaydedilmeyecek!</target>
+        <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
+        <target>&apos;Derleme tanımlama adı&apos; düzenli ifadesi geçerli değil ve kaydedilmeyecek!</target>
         
       </trans-unit>
     </body>
@@ -1550,17 +1550,17 @@ Lütfen URL'nin geçerli olduğundan ve API jetonuna (token) derleme ve proje bi
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
         <source>Build url not valid</source>
-        <target>Derleme url'si geçerli değil</target>
+        <target>Derleme url&apos;si geçerli değil</target>
         
       </trans-unit>
       <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
-        <source>The clipboard doesn't contain a valid build url.
+        <source>The clipboard doesn&apos;t contain a valid build url.
 
 Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
-        <target>Pano, geçerli bir derleme url'si içermiyor.
+        <target>Pano, geçerli bir derleme url&apos;si içermiyor.
 
-Lütfen, yeniden denemeden önce, derleme url'sini panoya kopyalayın.
+Lütfen, yeniden denemeden önce, derleme url&apos;sini panoya kopyalayın.
 (En azından, &quot;buildTypeId&quot; parametresini içermeli)</target>
         
       </trans-unit>
@@ -1573,17 +1573,17 @@ Lütfen, yeniden denemeden önce, derleme url'sini panoya kopyalayın.
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
         <target>Projeler ve derleme listesi yüklenemedi.
-Lütfen, sunucu URL'sini doğrulayın.</target>
+Lütfen, sunucu URL&apos;sini doğrulayın.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">
-        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won't be saved!</source>
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
         <target>&quot;Derleme Kimliği Filtresi (Build Id Filter)&quot; düzenli(kurallı) ifadesi geçerli değil ve kaydedilmeyecek!</target>
         
       </trans-unit>
       <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
         <source>Extract the data from the build url copied in the clipboard</source>
-        <target>Panoya kopyalanan derleme url'sinden verileri çıkar</target>
+        <target>Panoya kopyalanan derleme url&apos;sinden verileri çıkar</target>
         
       </trans-unit>
     </body>

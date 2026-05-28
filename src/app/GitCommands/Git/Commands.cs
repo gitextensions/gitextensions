@@ -58,9 +58,9 @@ public static partial class Commands
 
         static void Validate(GitCreateTagArgs gitCreateTagArgs, string? tagMessageFileName)
         {
-            if (gitCreateTagArgs.ObjectId is null)
+            if (gitCreateTagArgs.ObjectId.IsArtificial)
             {
-                throw new ArgumentException("Revision is required.");
+                throw new ArgumentException("A valid, non-artificial revision is required for tagging.", nameof(gitCreateTagArgs.ObjectId));
             }
 
             if (string.IsNullOrWhiteSpace(gitCreateTagArgs.TagName))

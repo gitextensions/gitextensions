@@ -389,8 +389,8 @@ public partial class ViewPullRequestsForm : GitModuleForm
         List<GitItemStatus> giss = [];
 
         // baseSha is the sha of the merge to ("master") sha, the commit to be firstId
-        GitRevision? firstRev = ObjectId.TryParse(baseSha, out ObjectId? firstId) ? new GitRevision(firstId) : null;
-        GitRevision? secondRev = ObjectId.TryParse(secondSha, out ObjectId? secondId) ? new GitRevision(secondId) : null;
+        GitRevision? firstRev = ObjectId.TryParse(baseSha, out ObjectId firstId) ? new GitRevision(firstId) : null;
+        GitRevision? secondRev = ObjectId.TryParse(secondSha, out ObjectId secondId) ? new GitRevision(secondId) : null;
         if (secondRev is null)
         {
             MessageBoxes.Show(this, _strUnableUnderstandPatch.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);

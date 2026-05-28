@@ -23,7 +23,7 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
     public bool UserAbleToChangeRevision { get; set; } = true;
     public bool CouldBeOrphan { get; set; } = true;
 
-    public FormCreateBranch(IGitUICommands commands, ObjectId? objectId, string? newBranchNamePrefix = null)
+    public FormCreateBranch(IGitUICommands commands, ObjectId objectId, string? newBranchNamePrefix = null)
         : base(commands, enablePositionRestore: false)
     {
         InitializeComponent();
@@ -36,15 +36,19 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
 
         grpOrphan.AutoSize = true;
 
-        if (objectId?.IsArtificial is true)
+        if (objectId.IsArtificial)
         {
-            objectId = null;
+            objectId = default;
         }
 
         commitSummaryUserControl1.Revision = null;
 
-        objectId ??= Module.GetCurrentCheckout();
-        if (objectId is not null)
+        if (objectId.IsZero)
+        {
+            objectId = Module.GetCurrentCheckout();
+        }
+
+        if (!objectId.IsZero)
         {
             commitPicker.SetSelectedCommitHash(objectId.ToString());
 
@@ -120,12 +124,12 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
         // if the user hits [Enter] at any point, we need to trigger BranchNameTextBox Leave event
         cmdOk.Focus();
 
-        ObjectId? objectId = null;
+        ObjectId objectId = default;
 
         if (!chkCreateOrphan.Checked)
         {
             objectId = commitPicker.SelectedObjectId;
-            if (objectId is null)
+            if (objectId.IsZeroOrArtificial)
             {
                 MessageBoxes.Show(this, _noRevisionSelected.Text, Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
@@ -150,11 +154,11 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
 
         try
         {
-            ObjectId? originalHash = Module.GetCurrentCheckout();
+            ObjectId originalHash = Module.GetCurrentCheckout();
 
             ArgumentString command = chkCreateOrphan.Checked
                 ? Commands.CreateOrphan(branchName, objectId)
-                : Commands.Branch(branchName, objectId!.ToString(), chkCheckoutAfterCreate.Checked);
+                : Commands.Branch(branchName, objectId, chkCheckoutAfterCreate.Checked);
 
             bool success = FormProcess.ShowDialog(this, UICommands, arguments: command, Module.WorkingDir, input: null, useDialogSettings: true);
             if (chkCreateOrphan.Checked && success && chkClearOrphan.Checked)

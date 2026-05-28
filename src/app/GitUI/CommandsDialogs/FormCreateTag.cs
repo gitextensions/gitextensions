@@ -1,4 +1,4 @@
-using GitCommands.Git;
+﻿using GitCommands.Git;
 using GitCommands.Git.Extensions;
 using GitCommands.Git.Tag;
 using GitExtensions.Extensibility;
@@ -22,7 +22,7 @@ public sealed partial class FormCreateTag : GitModuleForm
     private readonly IGitTagController _gitTagController;
     private string _currentRemote = "";
 
-    public FormCreateTag(IGitUICommands commands, ObjectId? objectId)
+    public FormCreateTag(IGitUICommands commands, ObjectId objectId)
         : base(commands)
     {
         InitializeComponent();
@@ -33,13 +33,17 @@ public sealed partial class FormCreateTag : GitModuleForm
 
         tagMessage.MistakeFont = new Font(tagMessage.MistakeFont, FontStyle.Underline);
 
-        if (objectId?.IsArtificial is true)
+        if (objectId.IsArtificial)
         {
-            objectId = null;
+            objectId = default;
         }
 
-        objectId ??= Module.GetCurrentCheckout();
-        if (objectId is not null)
+        if (objectId.IsZero)
+        {
+            objectId = Module.GetCurrentCheckout();
+        }
+
+        if (!objectId.IsZero)
         {
             commitPickerSmallControl1.SetSelectedCommitHash(objectId.ToString());
         }
@@ -78,9 +82,9 @@ public sealed partial class FormCreateTag : GitModuleForm
 
     private string CreateTag()
     {
-        ObjectId? objectId = commitPickerSmallControl1.SelectedObjectId;
+        ObjectId objectId = commitPickerSmallControl1.SelectedObjectId;
 
-        if (objectId is null)
+        if (objectId.IsZero)
         {
             MessageBoxes.Show(this, _noRevisionSelected.Text, _messageCaption.Text, MessageBoxButtons.OK, MessageBoxIcon.Error);
             return "";

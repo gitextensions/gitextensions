@@ -93,8 +93,8 @@ internal partial class FilterToolBar : ToolStripEx
                 else
                 {
                     string gitref = branch.StartsWith('^') ? branch[1..] : branch;
-                    ObjectId? oid = GetModule().RevParse(gitref);
-                    if (oid is null)
+                    ObjectId oid = GetModule().RevParse(gitref);
+                    if (oid.IsZero)
                     {
                         TaskDialogPage page = new()
                         {

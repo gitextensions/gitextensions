@@ -1,11 +1,11 @@
-using GitExtensions.Extensibility.Git;
+﻿using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
 namespace GitUI.CommandsDialogs;
 
 public interface IRevisionGridInfo
 {
-    ObjectId? CurrentCheckout { get; }
+    ObjectId CurrentCheckout { get; }
     GitRevision GetRevision(ObjectId objectId);
     GitRevision? GetActualRevision(ObjectId objectId);
     GitRevision GetActualRevision(GitRevision revision);

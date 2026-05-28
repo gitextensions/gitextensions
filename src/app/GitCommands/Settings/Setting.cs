@@ -1,156 +1,189 @@
-﻿using System.ComponentModel;
-using System.Text.Json;
+﻿using System.Globalization;
 
 namespace GitCommands.Settings;
 
+/// <summary>
+///  Factory methods for <see cref="ISetting{T}"/> instances.
+/// </summary>
 public static class Setting
 {
-    public static ISetting<string> Create(SettingsPath settingsSource, string name, string? defaultValue)
+    /// <summary>
+    ///  Creates a <see cref="string"/> setting.
+    /// </summary>
+    public static ISetting<string> Create(SettingsPath settingsSource, string name, string defaultValue)
     {
-        return new SettingOf<string>(settingsSource, name, defaultValue ?? string.Empty);
+        return new SettingOf<string>(
+            settingsSource,
+            name,
+            defaultValue,
+            read: static s => (true, s),
+            store: static v => v);
     }
 
+    /// <summary>
+    ///  Creates a nullable <see cref="string"/> setting.
+    /// </summary>
+    public static ISetting<string?> CreateNullableString(SettingsPath settingsSource, string name)
+    {
+        return new SettingOf<string?>(
+            settingsSource,
+            name,
+            defaultValue: null,
+            read: static s => (true, s),
+            store: static v => v);
+    }
+
+    /// <summary>
+    ///  Creates a <see cref="bool"/> setting with a default value.
+    /// </summary>
+    public static ISetting<bool> Create(SettingsPath settingsSource, string name, bool defaultValue)
+    {
+        return new SettingOf<bool>(
+            settingsSource,
+            name,
+            defaultValue,
+            read: static s => s switch { "True" => (true, true), "False" => (true, false), _ => (false, default) },
+            store: static v => v ? "True" : "False");
+    }
+
+    /// <summary>
+    ///  Creates a nullable <see cref="bool"/> setting.
+    /// </summary>
+    public static ISetting<bool?> CreateNullableBool(SettingsPath settingsSource, string name)
+    {
+        return new SettingOf<bool?>(
+            settingsSource,
+            name,
+            defaultValue: null,
+            read: static s => s switch { "True" => (true, true), "False" => (true, false), _ => (false, default) },
+            store: static v => v switch { true => "True", false => "False", _ => null });
+    }
+
+    /// <summary>
+    ///  Creates an <see cref="int"/> setting with a default value.
+    /// </summary>
+    public static ISetting<int> Create(SettingsPath settingsSource, string name, int defaultValue)
+    {
+        return new SettingOf<int>(
+            settingsSource,
+            name,
+            defaultValue,
+            read: static s => int.TryParse(s, NumberStyles.Integer, CultureInfo.InvariantCulture, out int v) ? (true, v) : (false, default),
+            store: static v => v.ToString(CultureInfo.InvariantCulture));
+    }
+
+    /// <summary>
+    ///  Creates a <see cref="float"/> setting with a default value.
+    /// </summary>
+    public static ISetting<float> Create(SettingsPath settingsSource, string name, float defaultValue)
+    {
+        return new SettingOf<float>(
+            settingsSource,
+            name,
+            defaultValue,
+            read: static s => float.TryParse(s, NumberStyles.Float, CultureInfo.InvariantCulture, out float v) ? (true, v) : (false, default),
+            store: static v => v.ToString(CultureInfo.InvariantCulture));
+    }
+
+    /// <summary>
+    ///  Creates an <see cref="Enum"/> setting with a default value.
+    /// </summary>
     public static ISetting<T> Create<T>(SettingsPath settingsSource, string name, T defaultValue)
-        where T : struct
+        where T : struct, Enum
     {
-        return new SettingOf<T>(settingsSource, name, defaultValue);
+        return new SettingOf<T>(
+            settingsSource,
+            name,
+            defaultValue,
+            read: static s => Enum.TryParse(s, out T v) ? (true, v) : (false, default),
+            store: static v => v.ToString());
     }
 
-    public static ISetting<T?> Create<T>(SettingsPath settingsSource, string name)
-        where T : struct
+    /// <summary>
+    ///  Creates a nullable <see cref="Enum"/> setting.
+    /// </summary>
+    public static ISetting<T?> CreateNullableEnum<T>(SettingsPath settingsSource, string name)
+        where T : struct, Enum
     {
-        return new SettingOf<T?>(settingsSource, name);
+        return new SettingOf<T?>(
+            settingsSource,
+            name,
+            defaultValue: null,
+            read: static s => Enum.TryParse(s, out T v) ? (true, v) : (false, default),
+            store: static v => v?.ToString());
     }
 
-    private sealed class SettingOf<T>(SettingsPath settingsSource, string name, T? defaultValue = default) : ISetting<T>
+    /// <summary>
+    ///  Creates a setting with custom conversion between the stored string and the exposed type.
+    /// </summary>
+    /// <typeparam name="T">The type exposed to callers.</typeparam>
+    /// <param name="settingsSource">The settings path to store the value under.</param>
+    /// <param name="name">The settings key name.</param>
+    /// <param name="defaultValue">The default value.</param>
+    /// <param name="read">
+    ///  Converts from the stored string to <typeparamref name="T"/>, returning a tuple
+    ///  of <c>(success, value)</c>. When <c>success</c> is <see langword="false"/>, the default is used.
+    /// </param>
+    /// <param name="store">Converts from <typeparamref name="T"/> to the stored string.</param>
+    public static ISetting<T> Create<T>(
+        SettingsPath settingsSource,
+        string name,
+        T defaultValue,
+        Func<string, (bool success, T value)> read,
+        Func<T, string?> store)
     {
-        public string Name { get; } = name;
+        return new SettingOf<T>(settingsSource, name, defaultValue, read, store);
+    }
 
-        public T? Default { get; } = defaultValue;
+    /// <summary>
+    ///  Concrete implementation of <see cref="ISetting{T}"/> that stores immutable metadata
+    ///  and baked-in conversion functions for reading/writing string-based storage.
+    /// </summary>
+    private sealed class SettingOf<T> : ISetting<T>
+    {
+        private readonly SettingsPath _settingsSource;
+        private readonly Func<string, (bool success, T value)> _read;
+        private readonly Func<T, string?> _store;
 
-        public T? Value
+        public SettingOf(
+            SettingsPath settingsSource,
+            string name,
+            T defaultValue,
+            Func<string, (bool success, T value)> read,
+            Func<T, string?> store)
+        {
+            _settingsSource = settingsSource;
+            Name = name;
+            Default = defaultValue;
+            _read = read;
+            _store = store;
+        }
+
+        public string Name { get; }
+
+        public T Default { get; }
+
+        public T Value
         {
             get
             {
-                object? storedValue = GetValue(Name);
-
-                if (default(T) is null)
-                {
-                    if (Type.GetTypeCode(typeof(T)) != TypeCode.String)
-                    {
-                        return (T?)storedValue;
-                    }
-                }
-
-                if (storedValue is null)
+                string? raw = _settingsSource.GetValue(Name);
+                if (raw is null)
                 {
                     return Default;
                 }
 
-                return (T)storedValue;
+                (bool success, T value) = _read(raw);
+                return success ? value : Default;
             }
 
             set
             {
-                object? storedValue = GetValue(Name);
-
-                if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
-                {
-                    if (storedValue?.Equals((object?)value ?? string.Empty) ?? false)
-                    {
-                        return;
-                    }
-                }
-                else
-                {
-                    if (storedValue?.Equals(value) ?? ((default(T) is null) && (value is null)))
-                    {
-                        return;
-                    }
-                }
-
-                if (Type.GetTypeCode(typeof(T)) == TypeCode.String)
-                {
-                    SetValue(Name, (object?)value ?? string.Empty);
-                }
-                else
-                {
-                    SetValue(Name, value);
-                }
+                string? raw = value is null ? null : _store(value);
+                _settingsSource.SetValue(Name, raw);
             }
         }
 
-        public string FullPath => settingsSource.PathFor(Name);
-
-        private object? GetValue(string name)
-        {
-            string? stringValue = settingsSource.GetValue(name);
-            if (stringValue is null)
-            {
-                return null;
-            }
-
-            Type type = typeof(T);
-            Type underlyingType = Nullable.GetUnderlyingType(type) ?? type;
-
-            switch (Type.GetTypeCode(underlyingType))
-            {
-                case TypeCode.String:
-                    return stringValue;
-                case TypeCode.Object:
-                    try
-                    {
-                        return JsonSerializer
-                            .Deserialize<T>(stringValue);
-                    }
-                    catch
-                    {
-                        return null;
-                    }
-
-                default:
-                    TypeConverter converter = TypeDescriptor
-                        .GetConverter(underlyingType);
-
-                    try
-                    {
-                        return converter
-                            .ConvertFromInvariantString(stringValue);
-                    }
-                    catch
-                    {
-                        return null;
-                    }
-            }
-        }
-
-        private void SetValue(string name, object? value)
-        {
-            string? stringValue;
-
-            Type type = typeof(T);
-            Type underlyingType = Nullable
-                .GetUnderlyingType(type) ?? type;
-
-            switch (Type.GetTypeCode(underlyingType))
-            {
-                case TypeCode.String:
-                    stringValue = (string?)value;
-                    break;
-                case TypeCode.Object:
-                    stringValue = JsonSerializer
-                        .Serialize(value);
-                    break;
-                default:
-                    TypeConverter converter = TypeDescriptor
-                        .GetConverter(underlyingType);
-
-                    stringValue = converter
-                        .ConvertToInvariantString(value);
-                    break;
-            }
-
-            settingsSource.SetValue(name, stringValue);
-        }
+        public string FullPath => _settingsSource.PathFor(Name);
     }
 }

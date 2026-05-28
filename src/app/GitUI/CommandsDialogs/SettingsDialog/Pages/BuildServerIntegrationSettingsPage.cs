@@ -2,6 +2,7 @@
 using GitCommands.Settings;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Extensions;
+using GitExtensions.Extensibility.Settings;
 using GitUIPluginInterfaces;
 using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
@@ -64,12 +65,12 @@ public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPag
 
                 await this.SwitchToMainThreadAsync();
 
-                IBuildServerSettings buildServerSettings = GetCurrentSettings().GetBuildServerSettings();
+                SettingsSource currentSettings = GetCurrentSettings();
 
-                checkBoxEnableBuildServerIntegration.SetNullableChecked(buildServerSettings.IntegrationEnabled);
-                checkBoxShowBuildResultPage.SetNullableChecked(buildServerSettings.ShowBuildResultPage);
+                checkBoxEnableBuildServerIntegration.SetNullableChecked(BuildServerSettings.IntegrationEnabled[currentSettings]);
+                checkBoxShowBuildResultPage.SetNullableChecked(BuildServerSettings.ShowBuildResultPage[currentSettings]);
 
-                BuildServerType.SelectedItem = buildServerSettings.ServerName ?? _noneItem.Text;
+                BuildServerType.SelectedItem = BuildServerSettings.ServerName[currentSettings] ?? _noneItem.Text;
                 ActivateBuildServerSettingsControl();
 
                 base.SettingsToPage();
@@ -78,18 +79,18 @@ public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPag
 
     protected override void PageToSettings()
     {
-        IBuildServerSettings buildServerSettings = GetCurrentSettings().GetBuildServerSettings();
+        SettingsSource currentSettings = GetCurrentSettings();
 
-        buildServerSettings.ServerName = GetSelectedBuildServerType();
-        buildServerSettings.IntegrationEnabled = checkBoxEnableBuildServerIntegration.CheckState == CheckState.Indeterminate
+        BuildServerSettings.ServerName[currentSettings] = GetSelectedBuildServerType();
+        BuildServerSettings.IntegrationEnabled[currentSettings] = checkBoxEnableBuildServerIntegration.CheckState == CheckState.Indeterminate
             ? null
             : checkBoxEnableBuildServerIntegration.Checked;
-        buildServerSettings.ShowBuildResultPage = checkBoxShowBuildResultPage.CheckState == CheckState.Indeterminate
+        BuildServerSettings.ShowBuildResultPage[currentSettings] = checkBoxShowBuildResultPage.CheckState == CheckState.Indeterminate
             ? null
             : checkBoxShowBuildResultPage.Checked;
 
         IBuildServerSettingsUserControl? control = buildServerSettingsPanel.Controls.OfType<IBuildServerSettingsUserControl>().SingleOrDefault();
-        control?.SaveSettings(buildServerSettings.SettingsSource);
+        control?.SaveSettings(BuildServerSettings.GetSettingsSource(currentSettings));
 
         base.PageToSettings();
     }
@@ -106,9 +107,7 @@ public partial class BuildServerIntegrationSettingsPage : DistributedSettingsPag
 
         if (control is not null)
         {
-            IBuildServerSettings buildServerSettings = GetCurrentSettings().GetBuildServerSettings();
-
-            control.LoadSettings(buildServerSettings.SettingsSource);
+            control.LoadSettings(BuildServerSettings.GetSettingsSource(GetCurrentSettings()));
 
             buildServerSettingsPanel.Controls.Add((Control)control);
             ((Control)control).Dock = DockStyle.Fill;

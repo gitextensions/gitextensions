@@ -1,4 +1,4 @@
-﻿using System.ComponentModel.Design;
+using System.ComponentModel.Design;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -263,7 +263,7 @@ public class ScriptOptionsParserTests
     {
         string option = "sRemoteBranch";
         string branch = remoteName + '/' + branchName;
-        List<IGitRef> remoteBranches = [new GitRef(null!, null, branch)];
+        List<IGitRef> remoteBranches = [new GitRef(null!, default, branch)];
 
         string? result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{" + option + "}", option,
@@ -282,7 +282,7 @@ public class ScriptOptionsParserTests
     {
         string option = "sRemoteBranchName";
         string branch = remoteName + '/' + branchName;
-        List<IGitRef> remoteBranches = [new GitRef(null!, null, branch)];
+        List<IGitRef> remoteBranches = [new GitRef(null!, default, branch)];
 
         string? result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{" + option + "}", option,
@@ -301,7 +301,7 @@ public class ScriptOptionsParserTests
     {
         string option = "cRemoteBranch";
         string branch = remoteName + '/' + branchName;
-        List<IGitRef> remoteBranches = [new GitRef(null!, null, branch)];
+        List<IGitRef> remoteBranches = [new GitRef(null!, default, branch)];
 
         string? result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{" + option + "}", option,
@@ -320,7 +320,7 @@ public class ScriptOptionsParserTests
     {
         string option = "cRemoteBranchName";
         string branch = remoteName + '/' + branchName;
-        List<IGitRef> remoteBranches = [new GitRef(null!, null, branch)];
+        List<IGitRef> remoteBranches = [new GitRef(null!, default, branch)];
 
         string? result = ScriptOptionsParser.GetTestAccessor().ParseScriptArguments(
             arguments: "{" + option + "}", option,

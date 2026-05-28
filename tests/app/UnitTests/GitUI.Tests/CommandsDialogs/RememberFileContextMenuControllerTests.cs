@@ -163,7 +163,7 @@ public class RememberFileContextMenuControllerTests
         FileStatusItem item = new(
             firstRev: rev,
             secondRev: index,
-            item: new GitItemStatus(name) { TreeGuid = ObjectId.Random() });
+            item: new GitItemStatus(name) { TreeId = ObjectId.Random() });
         _rememberFileContextMenuController.GetGitCommit(GetFileBlobHash, item, true).Should().Be(ObjectId.IndexId.ToString());
     }
 
@@ -176,7 +176,7 @@ public class RememberFileContextMenuControllerTests
         FileStatusItem item = new(
             firstRev: rev,
             secondRev: index,
-            item: new GitItemStatus(name) { TreeGuid = null });
+            item: new GitItemStatus(name) { TreeId = default });
         _rememberFileContextMenuController.GetGitCommit(GetFileBlobHash, item, true).Should().Be(ObjectId.IndexId.ToString());
     }
 

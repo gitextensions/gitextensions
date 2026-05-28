@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.UserRepositoryHistory;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
@@ -22,8 +22,14 @@ public partial class FormInit : GitExtensionsDialog
 
     private readonly EventHandler<GitModuleEventArgs>? _gitModuleChanged;
 
-    public FormInit(string dir, EventHandler<GitModuleEventArgs>? gitModuleChanged)
-        : base(commands: null, enablePositionRestore: true)
+    /// <summary>
+    ///  Initializes a new instance of the <see cref="FormInit"/> class.
+    /// </summary>
+    /// <param name="commands">The <see cref="IGitUICommands"/> instance, mainly in its role as <see cref="IServiceProvider"/>.</param>
+    /// <param name="dir">The initial directory path.</param>
+    /// <param name="gitModuleChanged">The event handler for Git module changes.</param>
+    public FormInit(IGitUICommands commands, string dir, EventHandler<GitModuleEventArgs>? gitModuleChanged)
+        : base(commands, enablePositionRestore: true)
     {
         ThreadHelper.ThrowIfNotOnUIThread();
 

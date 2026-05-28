@@ -1,5 +1,6 @@
 ﻿using System.CodeDom.Compiler;
 using System.Reflection;
+using System.Text;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
@@ -129,6 +130,39 @@ internal sealed class AppSettingsTests
         }
     }
 
+    /// <summary>
+    ///  Verifies that ISetting property names (storage keys) remain stable across changes.
+    /// </summary>
+    [Test]
+    public Task ISetting_properties_should_have_stable_storage_keys()
+    {
+        StringBuilder sb = new();
+        IOrderedEnumerable<PropertyInfo> properties = typeof(AppSettings)
+            .GetProperties(BindingFlags.Public | BindingFlags.Static)
+            .Where(p => IsISettingType(p.PropertyType))
+            .OrderBy(p => p.Name, StringComparer.Ordinal);
+        foreach (PropertyInfo property in properties)
+        {
+            object setting = property.GetValue(null)!;
+            string fullPath = (string)setting.GetType()
+                .GetProperty(nameof(ISetting<int>.FullPath))!
+                .GetValue(setting)!;
+            sb.AppendLine($"{property.Name} = {fullPath}");
+        }
+
+        return Verifier.Verify(sb.ToString());
+
+        static bool IsISettingType(Type type)
+        {
+            if (type.IsGenericType && type.GetGenericTypeDefinition() == typeof(ISetting<>))
+            {
+                return true;
+            }
+
+            return type.GetInterfaces().Any(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(ISetting<>));
+        }
+    }
+
     #region Test Cases
 
     private static IEnumerable<object[]> TestCases()
@@ -192,8 +226,8 @@ internal sealed class AppSettingsTests
             yield return (properties[nameof(AppSettings.ShowResetAllChanges)], true, false, false);
 
             yield return (properties[nameof(AppSettings.ShowConEmuTab)], true, false, true);
-            yield return (properties[nameof(AppSettings.ConEmuStyle)], "Default", true, true);
-            yield return (properties[nameof(AppSettings.ConEmuTerminal)], "bash", true, true);
+            yield return (properties[nameof(AppSettings.ConEmuStyle)], "Default", isNotNullable, true);
+            yield return (properties[nameof(AppSettings.ConEmuTerminal)], "bash", isNotNullable, true);
             yield return (properties[nameof(AppSettings.OutputHistoryDepth)], 20, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.OutputHistoryPanelVisible)], false, isNotNullable, isISetting);
             yield return (properties[nameof(AppSettings.ShowOutputHistoryAsTab)], true, isNotNullable, isISetting);

@@ -53,11 +53,11 @@ public static partial class SubmoduleResources
         StringBuilder sb = new();
         sb.AppendLine($"Submodule {status.Name}");
 
-        if (status.OldCommit != status.Commit && status.OldCommit is not null)
+        if (status.OldCommit != status.Commit && !status.OldCommit.IsZero)
         {
             sb.AppendLine();
             sb.Append("From:\t");
-            sb.AppendLine(status.OldCommit?.ToString() ?? "null");
+            sb.AppendLine(status.OldCommit.ToString());
 
             // Submodule directory must exist to run commands, unknown otherwise
             if (status.OldCommitData is not null)
@@ -72,14 +72,14 @@ public static partial class SubmoduleResources
             }
         }
 
-        if (status.Commit is not null)
+        if (!status.Commit.IsZero)
         {
             sb.AppendLine();
             string dirty = !status.IsDirty ? "" : " (dirty)";
 
             // Note: add spaces to get "To" aligned the same as From
             sb.Append(status.OldCommit != status.Commit ? "To:  \t" : "Commit:\t");
-            sb.AppendLine((status.Commit?.ToString() ?? "null") + dirty);
+            sb.AppendLine(status.Commit.ToString() + dirty);
 
             if (status.CommitData is not null)
             {
@@ -137,7 +137,7 @@ public static partial class SubmoduleResources
             sb.AppendLine($"Commits: {addedRemoved}");
         }
 
-        if (status.Commit is not null && status.OldCommit is not null && gitModule.IsValidGitWorkingDir())
+        if (!status.Commit.IsZero && !status.OldCommit.IsZero && gitModule.IsValidGitWorkingDir())
         {
             const int maxLimitedLines = 5;
             if (status.IsDirty)

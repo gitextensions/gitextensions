@@ -5,7 +5,6 @@ using GitCommands.Settings;
 using GitExtensions.Extensibility.Git;
 using GitUI.UserControls;
 using GitUIPluginInterfaces;
-using GitUIPluginInterfaces.BuildServerIntegration;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs;
@@ -209,8 +208,7 @@ public class BuildReportTabPageExtension
 
     private bool IsBuildResultPageEnabled()
     {
-        IBuildServerSettings buildServerSettings = GetModule().GetEffectiveSettings().GetBuildServerSettings();
-        return buildServerSettings.ShowBuildResultPageOrDefault;
+        return BuildServerSettings.ShowBuildResultPage.ValueOrDefault(GetModule().GetEffectiveSettings());
     }
 
     private IGitModule GetModule()

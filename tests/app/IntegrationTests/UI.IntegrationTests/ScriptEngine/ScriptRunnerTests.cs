@@ -128,7 +128,7 @@ public class ScriptRunnerTests
         _exampleScript.Command = "cmd";
         _exampleScript.Arguments = "/c echo {cHash}";
 
-        _module.GetCurrentCheckout().Returns((ObjectId?)null);
+        _module.GetCurrentCheckout().Returns(default(ObjectId));
 
         ExceptionAssertions<UserExternalOperationException> ex = ((Action)(() => ExecuteRunScript(_exampleScript, _mockForm, _commands, ScriptOptionsProviderBase.Default))).Should()
             .Throw<UserExternalOperationException>();

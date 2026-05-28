@@ -81,7 +81,7 @@ public sealed class AppTitleGenerator : IAppTitleGenerator
     public static void Initialise(string sha, string buildBranch)
     {
 #if DEBUG
-        if (ObjectId.TryParse(sha, out ObjectId? objectId))
+        if (ObjectId.TryParse(sha, out ObjectId objectId))
         {
             _extraInfo = $" {objectId.ToShortString()}";
             if (!string.IsNullOrWhiteSpace(buildBranch))

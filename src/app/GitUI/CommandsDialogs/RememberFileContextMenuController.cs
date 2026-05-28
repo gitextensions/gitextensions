@@ -83,7 +83,7 @@ public class RememberFileContextMenuController
     /// <param name="isSecondRevision">true if second revision is used.</param>
     /// <returns>A Git commitish.</returns>
     [Pure]
-    public string? GetGitCommit(Func<string, ObjectId, ObjectId?>? getFileBlobHash, FileStatusItem? item, bool isSecondRevision)
+    public string? GetGitCommit(Func<string, ObjectId, ObjectId>? getFileBlobHash, FileStatusItem? item, bool isSecondRevision)
     {
         if (item is null)
         {
@@ -94,8 +94,8 @@ public class RememberFileContextMenuController
                 ? item.Item.OldName
                 : item.Item.Name)
             ?.ToPosixPath();
-        ObjectId? id = (isSecondRevision ? item.SecondRevision : item.FirstRevision)?.ObjectId;
-        if (string.IsNullOrWhiteSpace(name) || id is null)
+        ObjectId id = (isSecondRevision ? item.SecondRevision : item.FirstRevision)?.ObjectId ?? default;
+        if (string.IsNullOrWhiteSpace(name) || id.IsZero)
         {
             return null;
         }
@@ -110,7 +110,8 @@ public class RememberFileContextMenuController
         {
             // Must be referenced by blob - treeid is mutable.
             // File name presented in difftool will be blob or the other file
-            return getFileBlobHash?.Invoke(name, id)?.ToString();
+            ObjectId blobHash = getFileBlobHash?.Invoke(name, id) ?? default;
+            return blobHash.IsZero ? null : blobHash.ToString();
         }
 
         // commit:path

@@ -111,7 +111,8 @@ Inactive remote is completely invisible to git.");
         InitializeComplete();
 
         _branchNameNormaliser = commands.GetRequiredService<IGitBranchNameNormaliser>();
-        txtRemotePrefix.Leave += (sender, e) => txtRemotePrefix.Text = _branchNameNormaliser.Normalise(txtRemotePrefix.Text, new(AppSettings.AutoNormaliseSymbol));
+        GitBranchNameOptions options = new(replacementToken: AppSettings.AutoNormaliseSymbol, allowTrailingSlash: true);
+        txtRemotePrefix.Leave += (_, _) => txtRemotePrefix.Text = _branchNameNormaliser.Normalise(txtRemotePrefix.Text, options);
 
         btnRemoteColor.BackColor = Color.Transparent;
 

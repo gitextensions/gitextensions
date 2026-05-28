@@ -78,7 +78,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
 
         Blame.ConfigureRepositoryHostPlugin(PluginRegistry.TryGetGitHosterForModule(Module));
 
-        RevisionGrid.SelectedId = revision?.ObjectId;
+        RevisionGrid.SelectedId = revision is null ? default : revision.ObjectId;
         RevisionGrid.ShowBuildServerInfo = true;
         RevisionGrid.FilePathByObjectId = [];
 
@@ -229,7 +229,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
             return null;
         }
 
-        ObjectId? objectId = rev.IsArtificial ? RevisionGrid.CurrentCheckout : rev.ObjectId;
+        ObjectId objectId = rev.IsArtificial ? RevisionGrid.CurrentCheckout : rev.ObjectId;
 
         return RevisionGrid.GetRevisionFileName(FileName, objectId);
     }
@@ -270,7 +270,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         bool isFolder = fileName.EndsWith('/');
         bool fileAvailable
             = !isFolder && (revision.IsArtificial ? File.Exists(fileName)
-            : Module.GetFileBlobHash(fileName, revision.ObjectId) is not null);
+            : !Module.GetFileBlobHash(fileName, revision.ObjectId).IsZero);
 
         SetTitle(alternativeFileName: fileName);
 
@@ -554,7 +554,7 @@ public sealed partial class FormFileHistory : GitModuleForm, IRevisionGridFileUp
         if (e.Command == "gotocommit")
         {
             Validates.NotNull(e.Data);
-            if (Module.TryResolvePartialCommitId(e.Data, out ObjectId? commitId))
+            if (Module.TryResolvePartialCommitId(e.Data, out ObjectId commitId))
             {
                 if (!RevisionGrid.SetSelectedRevision(commitId))
                 {

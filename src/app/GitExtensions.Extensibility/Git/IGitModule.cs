@@ -21,7 +21,7 @@ public interface IGitModule
 
     IReadOnlyList<IGitRef> GetRefs(RefsFilter getRef);
     IEnumerable<string> GetSettings(string setting);
-    IEnumerable<IObjectGitItem> GetTree(ObjectId? commitId, bool full, string fileName = "", CancellationToken cancellationToken = default);
+    IEnumerable<IObjectGitItem> GetTree(ObjectId commitId, bool full, string fileName = "", CancellationToken cancellationToken = default);
 
     /// <summary>
     ///  Loads the user-defined colors for the remote branches specific for the current repository.
@@ -61,7 +61,7 @@ public interface IGitModule
     /// </summary>
     /// <param name="revisionExpression">An expression like HEAD or commit hash that can be parsed as a git reference.</param>
     /// <returns>An ObjectID representing that git reference</returns>
-    ObjectId? RevParse(string revisionExpression);
+    ObjectId RevParse(string revisionExpression);
 
     void SetSetting(string setting, string value, bool append = false);
     void UnsetSetting(string setting);
@@ -149,7 +149,7 @@ public interface IGitModule
     /// <returns>The path in Windows format with native file separators.</returns>
     public string GetWindowsPath(string path);
 
-    bool TryResolvePartialCommitId(string objectIdPrefix, [NotNullWhen(returnValue: true)] out ObjectId? objectId);
+    public bool TryResolvePartialCommitId(string objectIdPrefix, out ObjectId objectId);
 
     string GetSubmoduleFullPath(string localPath);
 
@@ -176,14 +176,14 @@ public interface IGitModule
 
     /// <summary>
     /// Gets the commit ID of the currently checked out commit.
-    /// If the repo is bare or has no commits, <c>null</c> is returned.
+    /// If the repo is bare or has no commits, a zero <see cref="ObjectId"/> is returned.
     /// </summary>
-    ObjectId? GetCurrentCheckout();
+    ObjectId GetCurrentCheckout();
 
     /// <summary>Gets the remote of the current branch; or "" if no remote is configured.</summary>
     string GetCurrentRemote();
 
-    GitRevision GetRevision(ObjectId? objectId = null, bool shortFormat = false, bool loadRefs = false);
+    GitRevision GetRevision(ObjectId objectId = default, bool shortFormat = false, bool loadRefs = false);
 
     Task<IReadOnlyList<Remote>> GetRemotesAsync();
 
@@ -234,7 +234,7 @@ public interface IGitModule
 
     void SaveBlobAs(string saveAs, string blob, CancellationToken cancellationToken = default);
     Task SaveBlobAsAsync(string saveAs, string blob, CancellationToken cancellationToken = default);
-    Task<(char Code, ObjectId? CommitId)> GetSuperprojectCurrentCheckoutAsync();
+    Task<(char Code, ObjectId CommitId)> GetSuperprojectCurrentCheckoutAsync();
     Task<Patch?> GetCurrentChangesAsync(string? fileName, string? oldFileName, bool staged, string extraDiffArguments, Encoding? encoding = null, bool noLocks = false);
     Task<string?> GetFileContentsAsync(GitItemStatus file);
     IReadOnlyList<GitStash> GetStashes(bool noLocks);
@@ -266,8 +266,8 @@ public interface IGitModule
     /// <param name="cancellationToken">A cancellation token.</param>
     /// <returns>The result for the command.</returns>
     Task<ExecutionResult> GetSingleDifftoolAsync(
-        ObjectId? firstId,
-        ObjectId? secondId,
+        ObjectId firstId,
+        ObjectId secondId,
         string? fileName,
         string? oldFileName,
         ArgumentString extraDiffArguments,
@@ -278,8 +278,8 @@ public interface IGitModule
         CancellationToken cancellationToken);
 
     Task<(Patch? Patch, string? ErrorMessage)> GetSingleDiffAsync(
-            ObjectId? firstId,
-            ObjectId? secondId,
+            ObjectId firstId,
+            ObjectId secondId,
             string? fileName,
             string? oldFileName,
             string extraDiffArguments,
@@ -325,8 +325,8 @@ public interface IGitModule
     Task<ExecutionResult> GetRangeDiffAsync(
         ObjectId firstId,
         ObjectId secondId,
-        ObjectId? firstBase,
-        ObjectId? secondBase,
+        ObjectId firstBase,
+        ObjectId secondBase,
         string extraDiffArguments,
         string? pathFilter,
         bool useGitColoring,
@@ -338,14 +338,14 @@ public interface IGitModule
     string ApplyPatch(string dirText, ArgumentString arguments);
     bool InTheMiddleOfRebase();
     bool InTheMiddleOfMerge();
-    IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId? firstId,
-        ObjectId? secondId,
-        ObjectId? parentToSecond,
+    IReadOnlyList<GitItemStatus> GetDiffFilesWithSubmodulesStatus(ObjectId firstId,
+        ObjectId secondId,
+        ObjectId parentToSecond,
         bool excludeSkipWorktreeFiles = true, // applies to StagedStatus.WorkTree or StagedStatus.Index only
         UntrackedFilesMode untrackedFilesMode = UntrackedFilesMode.Default, // ditto
         CancellationToken cancellationToken = default);
     IReadOnlyList<GitItemStatus> GetIndexFilesWithSubmodulesStatus();
-    ObjectId? GetFileBlobHash(string fileName, ObjectId objectId);
+    ObjectId GetFileBlobHash(string fileName, ObjectId objectId);
     void OpenFilesWithDifftool(string? firstGitCommit, string? secondGitCommit, string? customTool);
     IReadOnlyList<string> GetIgnoredFiles(IEnumerable<string> ignorePatterns);
     void UnlockIndex(bool includeSubmodules);
@@ -353,10 +353,10 @@ public interface IGitModule
     ArgumentString FetchCmd(string? remote, string? remoteBranch, string? localBranch, bool? fetchTags = false, bool isUnshallow = false, bool pruneRemoteBranches = false, bool pruneRemoteBranchesAndTags = false);
     void RunGui();
     void RunGitK();
-    ObjectId? GetMergeBase(ObjectId a, ObjectId b);
+    ObjectId GetMergeBase(ObjectId a, ObjectId b);
     (int? First, int? Second) GetCommitRangeDiffCount(ObjectId firstId, ObjectId secondId);
     IReadOnlyList<GitItemStatus> GetCombinedDiffFileList(ObjectId mergeCommitObjectId);
-    IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId treeGuid, bool full, CancellationToken cancellationToken = default);
+    IReadOnlyList<GitItemStatus> GetTreeFiles(ObjectId treeId, bool full, CancellationToken cancellationToken = default);
     IReadOnlyList<string> GetFullTree(string id);
 
     /// <summary>
@@ -388,7 +388,7 @@ public interface IGitModule
     /// <param name="status">List with GitItemStatus</param>
     public void GetSubmoduleCurrentStatus(IReadOnlyList<GitItemStatus> status);
 
-    bool ResetChanges(ObjectId? resetId, IReadOnlyList<GitItemStatus> selectedItems, bool resetAndDelete, IFullPathResolver fullPathResolver, out StringBuilder output, Action<BatchProgressEventArgs>? progressAction);
+    bool ResetChanges(ObjectId resetId, IReadOnlyList<GitItemStatus> selectedItems, bool resetAndDelete, IFullPathResolver fullPathResolver, out StringBuilder output, Action<BatchProgressEventArgs>? progressAction);
     bool HasSubmodules();
     void OpenWithDifftool(string? filename, string? oldFileName = "", string? firstRevision = GitRevision.IndexGuid, string? secondRevision = GitRevision.WorkTreeGuid, string? extraDiffArguments = null, bool isTracked = true, string? customTool = null);
     void OpenWithDifftoolDirDiff(string? firstRevision, string? secondRevision, string? customTool);
@@ -434,9 +434,9 @@ public interface IGitModule
     /// Performs <c>git-checkout</c> for the given files.
     /// </summary>
     /// <param name="files">The list of files to checkout.</param>
-    /// <param name="revision">The revision to checkout; <see langword="null"/> is handled as <c>HEAD</c>.</param>
+    /// <param name="objectId">The objectId to checkout; the default (zero) <see cref="ObjectId"/> is handled as <c>HEAD</c>.</param>
     /// <param name="force">Indicates whether to perform a forced checkout.</param>
-    string CheckoutFiles(IReadOnlyList<string> files, ObjectId? revision, bool force);
+    string CheckoutFiles(IReadOnlyList<string> files, ObjectId objectId, bool force);
 
     void DeleteTag(string tagName);
 
@@ -486,7 +486,7 @@ public interface IGitModule
     IGitVersion GitVersion { get; }
 
     bool GetCombinedDiffContent(
-            ObjectId revisionOfMergeCommit,
+            ObjectId objectIdOfMergeCommit,
             string filePath,
             string extraArgs,
             Encoding encoding,

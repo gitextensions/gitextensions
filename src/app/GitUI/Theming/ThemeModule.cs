@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using GitCommands;
+using GitExtensions.Extensibility.Settings;
 using GitExtUtils.GitUI.Theming;
 using ICSharpCode.TextEditor.Document;
 

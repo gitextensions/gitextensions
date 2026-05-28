@@ -7,7 +7,7 @@ partial class FileStatusDiffCalculator
 {
     private record struct FileStatusDiffCalculatorInfo(
         IReadOnlyList<GitRevision> Revisions,
-        ObjectId? HeadId,
+        ObjectId HeadId,
         bool AllowMultiDiff,
         bool FileTreeMode,
         string GrepArguments,

@@ -10,7 +10,7 @@ on:
 
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' && !startsWith(github.ref, 'refs/heads/release/') }}
 
 env:
   DOTNET_NOLOGO: true
@@ -152,4 +152,4 @@ jobs:
         name: Test Results
         path: '**/*.trx'
         reporter: dotnet-trx
-        max-annotations: 0
+        max-annotations: 50 // do not increase over the allowed maximum of 50

@@ -31,7 +31,7 @@ git submodule update --init --recursive
 * Do not add `/// <inheritdoc />` nor other xmldoc when just implementing interface or abstract members.
 * Do not add XML documentation comments to `TestAccessor` structs or their members.
 * Use correct xmldoc tags, as well as "see", "langword", and "paramref" tags where appropriate.
-* Use single-line tags for simple XML comments, such as for the `<returns>` or `<params>` tag. Use mulit-line comment for `<summary>`, `<remarks>` and everything else.
+* Use single-line tags for simple XML comments, such as for the `<returns>` or `<params>` tag. Always use multi-line comment for `<summary>`, `<remarks>` and everything else.
 * When adding multi-line XML documentation comments, add an extra space after the `///` *within* the tags to ensure proper formatting and readability. However, do not add a space after the opening `///` tag in the single-line comments.
 For example:
 ```csharp

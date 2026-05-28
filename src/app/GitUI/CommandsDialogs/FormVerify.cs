@@ -1,4 +1,4 @@
-using GitCommands.Git;
+﻿using GitCommands.Git;
 using GitCommands.Git.Tag;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -541,9 +541,9 @@ public sealed partial class FormVerify : GitModuleForm
         if (Warnings?.SelectedRows.Count is > 0 && Warnings.SelectedRows[0].DataBoundItem is not null)
         {
             LostObject lostObject = (LostObject)Warnings.SelectedRows[0].DataBoundItem!;
-            ObjectId? parent = lostObject.Parent;
+            ObjectId parent = lostObject.Parent;
 
-            if (parent is not null)
+            if (!parent.IsZero)
             {
                 ClipboardUtil.TrySetText(parent.ToString());
             }

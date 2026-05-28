@@ -2,6 +2,7 @@
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
+using GitUI.SettingControlBindings;
 using Microsoft;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Plugins;
@@ -35,7 +36,7 @@ public partial class PluginSettingsPage : AutoLayoutSettingsPage
 
             foreach (ISetting setting in settingsArray)
             {
-                AddSettingControl(setting.CreateControlBinding());
+                AddSettingControl(SettingControlBindingsProvider.CreateControlBinding(setting));
                 state.Append('.');
             }
         }
