@@ -66,8 +66,9 @@ public partial class AnsiEscapeUtilities
 
                     string boldString = bold > 0 ? "b" : " ";
                     string dimString = dim > 0 ? "d" : " ";
-                    rawSb.Append($"{boldString} {dimString} {code,3} ");
-                    sb.Append($"{boldString} {dimString} {code,3} ");
+                    string appendString = $"{boldString} {dimString} {code,3} ";
+                    rawSb.Append(appendString);
+                    sb.Append(appendString);
                     for (int i = _blackId; i <= _whiteId; i++)
                     {
                         sb.Append("@!");
