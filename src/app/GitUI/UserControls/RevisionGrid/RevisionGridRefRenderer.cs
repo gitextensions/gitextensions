@@ -227,7 +227,7 @@ internal static class RevisionGridRefRenderer
         Rectangle textBounds = new(
             textX,
             rect.Y + paddingTopBottom - 1,
-            Math.Clamp(textWidth, 0, bounds.Right - textX),
+            Math.Clamp(textWidth, 0, Math.Max(0, bounds.Right - textX)),
             textSize.Height);
 
         TextRenderer.DrawText(graphics, name, font, textBounds, textColor, TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
@@ -249,6 +249,11 @@ internal static class RevisionGridRefRenderer
                     try
                     {
                         using Pen highlightPen = new(headColor, RefLabelHighlightWidth);
+                        if (dashedLine)
+                        {
+                            highlightPen.DashPattern = _dashPattern;
+                        }
+
                         graphics.DrawPath(highlightPen, refPath);
                     }
                     finally
@@ -361,23 +366,16 @@ internal static class RevisionGridRefRenderer
     }
 
     /// <summary>
-    ///  Computes the ideal rendered size of a ref label without drawing it.
+    ///  Computes the point width for the given font and graphics context, which is needed to calculate the ideal capsule size for Notch and Point shapes.
     /// </summary>
     /// <remarks>
-    ///  Returns the capsule's ideal width and height given the same inputs as <see cref="DrawRef"/> and <see cref="DrawRefEx"/>.
+    ///  Computes the capsule's ideal height given the same inputs as <see cref="DrawRef"/> and <see cref="DrawRefEx"/>.
     ///  Does not account for clipping to available cell width.
     /// </remarks>
-    public static (int idealWidth, int backgroundHeight) MeasureRef(Font font, string name, RefLabelIcon icon, int rowHeight, Graphics graphics)
+    public static int GetPointWidth(Font font, Graphics graphics)
     {
-        icon = GetEffectiveIcon(icon);
-        Size textSize = !string.IsNullOrEmpty(name)
-            ? TextRenderer.MeasureText(graphics, name, font, Size.Empty, TextFormatFlags.NoPadding)
-            : new(0, TextRenderer.MeasureText(graphics, " ", font, Size.Empty, TextFormatFlags.NoPadding).Height);
-
-        int backgroundHeight = textSize.Height + (PaddingTopBottom * 2) - 1;
-        int iconWidth = icon == RefLabelIcon.None ? 0 : rowHeight / 2;
-        int idealWidth = textSize.Width + iconWidth + (PaddingLeftRight(name) * 2) - 1;
-
-        return (idealWidth, backgroundHeight);
+        int textHeight = TextRenderer.MeasureText(graphics, " ", font, Size.Empty, TextFormatFlags.NoPadding).Height;
+        int backgroundHeight = textHeight + (PaddingTopBottom * 2) - 1;
+        return PointWidth(backgroundHeight);
     }
 }

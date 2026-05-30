@@ -329,6 +329,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, refsSource: RevisionGrid, revisionGridInfo: RevisionGrid);
         revisionDiff.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: fileTree, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor);
         fileTree.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: null, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor, requestBlame: _isFileHistoryMode);
+        RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
         RevisionGrid.ResumeRefreshRevisions();
 
         // Application is init, the repo related operations are triggered in OnLoad()
@@ -722,6 +723,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
             return;
         }
+
+        // Pre-warm the ahead/behind cache in the background so the revision grid can pick it up synchronously. GetData checks the AppSetting itself.
+        ThreadHelper.FileAndForget(() => _ = _aheadBehindDataProvider?.GetData());
 
         RevisionGrid.PerformRefreshRevisions(getRefs, forceRefresh: true);
 

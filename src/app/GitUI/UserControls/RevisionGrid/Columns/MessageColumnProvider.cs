@@ -1,7 +1,9 @@
-﻿using System.Diagnostics.CodeAnalysis;
+﻿using System.Collections.Frozen;
+using System.Diagnostics.CodeAnalysis;
 using System.Text;
 using GitCommands;
 using GitCommands.Config;
+using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Extensions;
 using GitExtensions.Extensibility.Git;
@@ -25,6 +27,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         bool ShowGitNotes,
         bool ShowGitStatusForArtificialCommits,
         bool ShowRemoteBranches,
+        bool ShowRevisionGridTooltips,
         bool ShowTags);
 
     public const int MaxSuperprojectRefs = 4;
@@ -49,6 +52,10 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
     // Caches the configured push prefix per remote name to avoid repeated git-config reads during painting.
     private readonly Dictionary<string, string> _remotePrefixCache = [];
+
+    private IReadOnlyDictionary<string, AheadBehindData>? _aheadBehindDataByLocalBranch;
+    private IReadOnlyDictionary<string, AheadBehindData>? _aheadBehindDataByRemoteBranch;
+    private IAheadBehindDataProvider? _aheadBehindDataProvider;
 
     // The ref currently under the mouse cursor, used to draw a highlight border.
     private IGitRef? _highlightedRef;
@@ -79,6 +86,13 @@ internal sealed class MessageColumnProvider : ColumnProvider
         };
     }
 
+    public void SetAheadBehindDataProvider(IAheadBehindDataProvider? provider)
+    {
+        _aheadBehindDataProvider = provider;
+        _aheadBehindDataByLocalBranch = null;
+        _aheadBehindDataByRemoteBranch = null;
+    }
+
     public override void ApplySettings()
     {
         _settings = new Settings(
@@ -89,6 +103,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             ShowGitNotes: AppSettings.ShowGitNotes,
             ShowGitStatusForArtificialCommits: AppSettings.ShowGitStatusForArtificialCommits,
             ShowRemoteBranches: AppSettings.ShowRemoteBranches,
+            ShowRevisionGridTooltips: AppSettings.ShowRevisionGridTooltips.Value,
             ShowTags: AppSettings.ShowTags);
     }
 
@@ -151,6 +166,16 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 if (gitRef.IsHead && trackedRemotes.TryGetValue(gitRef.Name, out IGitRef? remote))
                 {
                     DrawBranchWithNestledRemote(gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted, remote, ref hitInfos);
+                    continue;
+                }
+
+                // If this branch has ahead/behind information, draw that info as virtual label of the tracked/tracking branch.
+                (string aheadBehind, string trackedCompleteName) = GetAheadBehind(gitRef, withCounts: false);
+                if (aheadBehind.Length > 0)
+                {
+                    VirtualRef virtualRef = new(aheadBehind, trackedCompleteName, gitRef.TrackingRemote, mergeWith: gitRef.CompleteName, gitRef.Module)
+                    { IsHead = gitRef.IsRemote, IsRemote = !gitRef.IsRemote };
+                    DrawBranchWithNestledRemote(gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted, virtualRef, ref hitInfos);
                     continue;
                 }
 
@@ -249,68 +274,70 @@ internal sealed class MessageColumnProvider : ColumnProvider
             Rectangle messageBounds,
             ref int offset,
             bool isHighlighted,
-            IGitRef remote,
+            IGitRef nestledRef,
             ref List<RefLabelHitInfo>? hitInfos)
         {
-            bool isRemoteHighlighted = _highlightedRowIndex == e.RowIndex && ReferenceEquals(_highlightedRef, remote);
+            int initialOffset = offset;
 
-            if (!style.RemoteColors.TryGetValue(remote.Remote, out Color remoteColor))
+            bool isRemoteHighlighted = _highlightedRowIndex == e.RowIndex && Equals(_highlightedRef, nestledRef);
+
+            if (!style.RemoteColors.TryGetValue(nestledRef.Remote, out Color remoteColor))
             {
-                remoteColor = RevisionGridRefRenderer.GetHeadColor(remote);
+                remoteColor = RevisionGridRefRenderer.GetHeadColor(nestledRef);
             }
 
-            // Draw the branch with a '>' right edge that meets the remote's matching left indent.
-            (Rectangle branchRect, Action? drawBranchHighlight) = DrawRef(e, gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted, gitRef.Name, RefLabelShape.PointRight);
+            // Draw the gitRef with a '>' / '<' right edge that meets the nestledRef's matching left indent.
+            (RefLabelShape shape1, RefLabelShape shape2) = gitRef.IsRemote ? (RefLabelShape.NotchRight, RefLabelShape.PointLeft) : (RefLabelShape.PointRight, RefLabelShape.NotchLeft);
+            (Rectangle branchRect, Action? drawBranchHighlight) = DrawRef(e, gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted, gitRef.Name, shape1);
             if (branchRect == Rectangle.Empty)
             {
                 return;
             }
 
-            // Compute the point geometry to align the remote notch exactly against the branch point tip.
-            RefLabelIcon branchIcon = gitRef.IsSelected ? RefLabelIcon.Head : RefLabelIcon.LocalBranch;
+            // Compute the geometry to align the nestled notch/point exactly against the branch point/notch.
             Font branchFont = gitRef.IsSelected ? style.BoldFont : style.NormalFont;
-            (_, int backgroundHeight) = RevisionGridRefRenderer.MeasureRef(branchFont, gitRef.Name, branchIcon, messageBounds.Height, e.Graphics!);
-            int remotePointWidth = backgroundHeight / 2;
+            int pointWidth = RevisionGridRefRenderer.GetPointWidth(branchFont, e.Graphics);
 
             // Position the NotchLeft rect so its notch tip (rect.X + pointWidth) aligns with the branch point tip (branchRect.Right), cancelling the inter-label margin.
-            offset = branchRect.Right - remotePointWidth - messageBounds.X + 1;
+            offset = Math.Max(initialOffset, branchRect.Right - messageBounds.X - pointWidth + 1);
 
             // Show only the remote name when the tracked branch has the same local name,
             // accounting for an optional prefix configured for the remote.
-            string remoteName = remote.LocalName == GetRemotePrefix(remote.Module, remote.Remote) + gitRef.Name ? remote.Remote : remote.Name;
+            string nestledName = nestledRef.LocalName == GetRemotePrefix(nestledRef.Module, nestledRef.Remote) + gitRef.Name ? nestledRef.Remote : nestledRef.Name;
 
-            // Draw the remote directly via DrawRefEx with RefLabelIcon.None — the nestled remote never shows an arrow.
-            (Rectangle remoteRect, Action? drawRemoteHighlight) = RevisionGridRefRenderer.DrawRefEx(
+            // Draw the nestled directly via DrawRefEx with RefLabelIcon.None — the nestled remote never shows a head indicator.
+            (Rectangle nestledRect, Action? drawNestledHighlight) = RevisionGridRefRenderer.DrawRefEx(
                 e.State.HasFlag(DataGridViewElementStates.Selected),
-                style.NormalFont,
+                nestledName == AheadBehindData.GoneSymbol ? style.BoldFont : style.NormalFont,
                 ref offset,
-                remoteName,
+                nestledName,
                 remoteColor,
                 RefLabelIcon.None,
                 messageBounds,
                 e.Graphics!,
+                dashedLine: nestledRef.Guid is null,
                 fill: _settings.FillRefLabels,
                 highlight: isRemoteHighlighted,
-                shape: RefLabelShape.NotchLeft);
+                shape2);
 
             // Draw highlight frames last so neither capsule overwrites the other's highlight edge.
             drawBranchHighlight?.Invoke();
-            drawRemoteHighlight?.Invoke();
+            drawNestledHighlight?.Invoke();
 
             // Register hit-boxes.
             hitInfos ??= RentHitInfoList();
             hitInfos.Add(new RefLabelHitInfo(branchRect, gitRef, StashReflogSelector: null));
 
-            if (remoteRect == Rectangle.Empty)
+            if (nestledRect == Rectangle.Empty)
             {
                 return;
             }
 
-            // The visible remote area starts at the notch tip (remoteRect.X + remotePointWidth).
-            int remoteVisibleLeft = remoteRect.X + remotePointWidth - 1;
+            // The visible nestled area starts at the notch tip.
+            int nestledVisibleLeft = nestledRect.X + pointWidth - 1;
             hitInfos.Add(new RefLabelHitInfo(
-                remoteRect with { X = remoteVisibleLeft, Width = remoteRect.Right - remoteVisibleLeft },
-                remote,
+                nestledRect with { X = nestledVisibleLeft, Width = nestledRect.Right - nestledVisibleLeft },
+                nestledRef,
                 StashReflogSelector: null));
         }
 
@@ -346,9 +373,106 @@ internal sealed class MessageColumnProvider : ColumnProvider
         e.Value = revision.Subject.Trim();
     }
 
-    public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, [NotNullWhen(returnValue: true)] out string? toolTip)
+    public override bool TryGetToolTip(DataGridViewCellMouseEventArgs e, GitRevision revision, IGitRef? highlightRef, [NotNullWhen(returnValue: true)] out string? toolTip)
     {
         _toolTipBuilder.Clear();
+
+        if (highlightRef is not null)
+        {
+            if (highlightRef is { Guid: null } aheadBehindRef)
+            {
+                // VirtualRef(name: aheadBehind, completeName: trackedCompleteName, remote: gitRef.TrackingRemote, mergeWith: gitRef.CompleteName, ...) { IsRemote = !gitRef.IsRemote }
+                bool realRefIsRemote = !aheadBehindRef.IsRemote;
+                string realRefCompleteName = aheadBehindRef.MergeWith;
+                string realRefName = realRefCompleteName[(realRefIsRemote ? GitRefName.RefsRemotesPrefix : GitRefName.RefsHeadsPrefix).Length..];
+                AheadBehindData? data = GetAheadBehindData(realRefIsRemote, realRefCompleteName);
+                _toolTipBuilder.Append('[').Append(realRefName).Append(']');
+                if (realRefIsRemote)
+                {
+                    _toolTipBuilder.AppendLine().AppendFormat(TranslatedStrings.IsTrackedBy_Branch_AheadBehind, data?.Branch, data?.ToDisplay());
+                }
+                else
+                {
+                    string? remoteBranch = data?.RemoteRef[GitRefName.RefsRemotesPrefix.Length..];
+                    if (data?.AheadCount == AheadBehindData.Gone)
+                    {
+                        _toolTipBuilder.AppendLine()
+                                       .AppendFormat(TranslatedStrings.WasTracking_Remote, remoteBranch);
+                    }
+                    else
+                    {
+                        _toolTipBuilder.Append("   ").AppendLine(data?.ToDisplay())
+                                       .AppendFormat(TranslatedStrings.IsTracking_Remote, remoteBranch);
+                    }
+                }
+            }
+            else
+            {
+                _toolTipBuilder.Append('[').Append(highlightRef.Name).Append(']');
+                if (highlightRef.IsRemote)
+                {
+                    if (GetAheadBehindData(isRemote: true, highlightRef.CompleteName) is { } data)
+                    {
+                        _toolTipBuilder.AppendLine().AppendFormat(TranslatedStrings.IsTrackedBy_Branch_AheadBehind, data.Branch, data.ToDisplay());
+                    }
+                    else if (_settings.ShowRevisionGridTooltips)
+                    {
+                        _toolTipBuilder.AppendLine().Append(TranslatedStrings.IsRemoteBranch);
+                    }
+                    else
+                    {
+                        toolTip = null;
+                        return false;
+                    }
+                }
+                else if (highlightRef.IsHead)
+                {
+                    if (GetAheadBehindData(isRemote: false, highlightRef.CompleteName) is { } data)
+                    {
+                        string remoteBranch = data.RemoteRef[GitRefName.RefsRemotesPrefix.Length..];
+                        if (data.AheadCount == AheadBehindData.Gone)
+                        {
+                            _toolTipBuilder.AppendLine()
+                                           .AppendFormat(TranslatedStrings.WasTracking_Remote, remoteBranch);
+                        }
+                        else
+                        {
+                            _toolTipBuilder.Append("   ").AppendLine(data.ToDisplay())
+                                           .AppendFormat(TranslatedStrings.IsTracking_Remote, remoteBranch);
+                        }
+                    }
+                    else if (_settings.ShowRevisionGridTooltips)
+                    {
+                        _toolTipBuilder.AppendLine().Append(TranslatedStrings.IsLocalBranch);
+                    }
+                    else
+                    {
+                        toolTip = null;
+                        return false;
+                    }
+                }
+                else if (highlightRef.IsTag)
+                {
+                    if (_settings.ShowRevisionGridTooltips)
+                    {
+                        _toolTipBuilder.AppendLine().Append(TranslatedStrings.IsTag);
+                    }
+                    else
+                    {
+                        toolTip = null;
+                        return false;
+                    }
+                }
+            }
+
+            if (!_settings.ShowRevisionGridTooltips)
+            {
+                toolTip = _toolTipBuilder.ToString();
+                return true;
+            }
+
+            _toolTipBuilder.AppendLine().AppendLine();
+        }
 
         if (!revision.IsArtificial && (revision.HasMultiLineMessage || revision.Refs.Count != 0))
         {
@@ -380,7 +504,13 @@ internal sealed class MessageColumnProvider : ColumnProvider
                     }
                     else
                     {
-                        _toolTipBuilder.Append('[').Append(gitRef.Name).Append(']').AppendLine();
+                        _toolTipBuilder.Append('[').Append(gitRef.Name).Append(']');
+                        if (GetAheadBehindData(gitRef.IsRemote, gitRef.CompleteName) is { } data)
+                        {
+                            _toolTipBuilder.Append("   ").Append(data.ToDisplay(reverse: gitRef.IsRemote));
+                        }
+
+                        _toolTipBuilder.AppendLine();
                     }
                 }
             }
@@ -395,7 +525,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             return true;
         }
 
-        return base.TryGetToolTip(e, revision, out toolTip);
+        return base.TryGetToolTip(e, revision, highlightRef, out toolTip);
     }
 
     private void DrawArtificialRevision(
@@ -827,7 +957,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         IGitRef? gitRef = hitInfo?.GitRef;
         int stashRow = hitInfo?.StashReflogSelector is not null ? rowIndex : -1;
 
-        if (_highlightedRowIndex == rowIndex && ReferenceEquals(_highlightedRef, gitRef) && _highlightedStashRow == stashRow)
+        if (_highlightedRowIndex == rowIndex && Equals(_highlightedRef, gitRef) && _highlightedStashRow == stashRow)
         {
             return false;
         }
@@ -840,6 +970,9 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
     public override void Clear()
     {
+        _aheadBehindDataByLocalBranch = null;
+        _aheadBehindDataByRemoteBranch = null;
+
         foreach (List<RefLabelHitInfo> list in _refLabelHitInfoByRow.Values)
         {
             ReturnHitInfoList(list);
@@ -852,6 +985,62 @@ internal sealed class MessageColumnProvider : ColumnProvider
         _highlightedStashRow = -1;
     }
 
+    /// <summary>
+    ///  Returns a tuple of the ahead/behind indicator for a local or remote branch ref label
+    ///  and the <see cref="IGitRef.CompleteName"/> of the tracked (for a local ref) or tracking (for a remote ref) branch.
+    /// </summary>
+    /// <remarks>
+    ///  Uses <see cref="AheadBehindData.ToDisplay"/> for consistent formatting with the push button and left panel.
+    ///  When rendering a local branch's tracked remote as a virtual label, the perspective is inverted: what the local branch
+    ///  is ahead of the remote appears as the remote being behind, and vice versa — so <see cref="AheadBehindData.BehindCount"/>
+    ///  and <see cref="AheadBehindData.AheadCount"/> are swapped before formatting.
+    ///  Returns an empty display string for untracked refs or when the provider is unavailable.
+    /// </remarks>
+    private (string Display, string TrackedCompleteName) GetAheadBehind(IGitRef gitRef, bool withCounts = true)
+    {
+        _aheadBehindDataByLocalBranch ??= _aheadBehindDataProvider?.GetData() ?? FrozenDictionary<string, AheadBehindData>.Empty;
+
+        if (gitRef.IsRemote)
+        {
+            // Match the remote ref via AheadBehindData.RemoteRef, which holds the full refs/remotes/… name
+            // regardless of whether the remote branch is named differently from the local tracking branch.
+            _aheadBehindDataByRemoteBranch ??= _aheadBehindDataByLocalBranch.Values
+                .DistinctBy(data => data.RemoteRef)
+                .ToFrozenDictionary(data => data.RemoteRef, data => data);
+
+            if (_aheadBehindDataByRemoteBranch.TryGetValue(gitRef.CompleteName, out AheadBehindData aheadBehind))
+            {
+               return (aheadBehind.ToDisplay(withCounts), GitRefName.RefsHeadsPrefix + aheadBehind.Branch);
+            }
+        }
+        else
+        {
+            if (_aheadBehindDataByLocalBranch.TryGetValue(gitRef.Name, out AheadBehindData aheadBehind))
+            {
+                // This info is displayed in a virtual remote ref label.
+                // From the remote ref's perspective, ahead/behind are swapped relative to the local branch.
+                return (aheadBehind.ToDisplay(withCounts, reverse: true), aheadBehind.RemoteRef);
+            }
+        }
+
+        return (string.Empty, string.Empty);
+    }
+
+    public AheadBehindData? GetAheadBehindData(bool isRemote, string completeName)
+    {
+        _aheadBehindDataByLocalBranch ??= _aheadBehindDataProvider?.GetData() ?? FrozenDictionary<string, AheadBehindData>.Empty;
+
+        if (isRemote)
+        {
+            _aheadBehindDataByRemoteBranch ??= _aheadBehindDataByLocalBranch.Values
+                .DistinctBy(data => data.RemoteRef)
+                .ToFrozenDictionary(data => data.RemoteRef, data => data);
+            return _aheadBehindDataByRemoteBranch.TryGetValue(completeName, out AheadBehindData dataByRemote) ? dataByRemote : null;
+        }
+
+        return _aheadBehindDataByLocalBranch.TryGetValue(completeName[GitRefName.RefsHeadsPrefix.Length..], out AheadBehindData data) ? data : null;
+    }
+
     private List<RefLabelHitInfo> RentHitInfoList()
     {
         return _hitInfoListPool.TryPop(out List<RefLabelHitInfo>? list) ? list : [];
@@ -861,5 +1050,43 @@ internal sealed class MessageColumnProvider : ColumnProvider
     {
         list.Clear();
         _hitInfoListPool.Push(list);
+    }
+
+    private sealed class VirtualRef(string name, string completeName, string remote, string mergeWith, IGitModule module) : IGitRef
+    {
+        public string Name => name;
+        public ObjectId ObjectId => throw new NotSupportedException();
+        public string? Guid => null;
+        public IGitModule Module => module;
+        public string CompleteName => completeName;
+        public string Remote => remote;
+        public string LocalName => Name;
+        public bool IsRemote { get; init; }
+        public bool IsHead { get; init; }
+        public bool IsTag => false;
+        public bool IsBisect => false;
+        public bool IsBisectGood => false;
+        public bool IsBisectBad => false;
+        public bool IsStash => false;
+        public bool IsDereference => false;
+        public bool IsSelected { get; set; }
+        public bool IsSelectedHeadMergeSource { get; set; }
+        public string MergeWith
+        {
+            get => mergeWith;
+            set => throw new NotSupportedException();
+        }
+
+        public string TrackingRemote
+        {
+            get => "";
+            set => throw new NotSupportedException();
+        }
+
+        public bool IsTrackingRemote(IGitRef? remote) => false;
+
+        public override bool Equals(object? obj) => obj is VirtualRef other && CompleteName == other.CompleteName;
+
+        public override int GetHashCode() => completeName.GetHashCode();
     }
 }

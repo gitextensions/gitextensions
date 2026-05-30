@@ -111,6 +111,7 @@ public class AheadBehindDataProviderTests
         aheadBehindData.Branch.Should().Be("my-branch");
         aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/branch");
         aheadBehindData.ToDisplay().Should().Be(string.Empty);
+        aheadBehindData.ToDisplay(reverse: true).Should().Be(string.Empty);
     }
 
     [Test]
@@ -127,6 +128,7 @@ public class AheadBehindDataProviderTests
         aheadBehindData.Branch.Should().Be("my-branch");
         aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/branch");
         aheadBehindData.ToDisplay().Should().Be("10↑");
+        aheadBehindData.ToDisplay(reverse: true).Should().Be("10↓");
     }
 
     [Test]
@@ -143,6 +145,7 @@ public class AheadBehindDataProviderTests
         aheadBehindData.Branch.Should().Be("my-branch");
         aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/my-branch");
         aheadBehindData.ToDisplay().Should().Be("2↓");
+        aheadBehindData.ToDisplay(reverse: true).Should().Be("2↑");
     }
 
     [Test]
@@ -158,6 +161,7 @@ public class AheadBehindDataProviderTests
         aheadBehindData.BehindCount.Should().Be("");
         aheadBehindData.Branch.Should().Be("my-branch");
         aheadBehindData.ToDisplay().Should().Be("0↑↓");
+        aheadBehindData.ToDisplay(reverse: true).Should().Be("0↓↑");
     }
 
     [TestCase("::ahead 99, behind 3::::refs/remotes/upstream/branch::my-branch")]
@@ -175,6 +179,7 @@ public class AheadBehindDataProviderTests
         aheadBehindData.Branch.Should().Be("my-branch");
         aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/branch");
         aheadBehindData.ToDisplay().Should().Be("99↑ 3↓");
+        aheadBehindData.ToDisplay(reverse: true).Should().Be("99↓ 3↑");
     }
 
     [TestCase("ahead 99, behind 97::ahead 9, behind 7::refs/remotes/upstream/push-branch::refs/remotes/upstream/upstream-branch::my-branch")]
@@ -191,6 +196,7 @@ public class AheadBehindDataProviderTests
         aheadBehindData.Branch.Should().Be("my-branch");
         aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/push-branch");
         aheadBehindData.ToDisplay().Should().Be("99↑ 97↓");
+        aheadBehindData.ToDisplay(reverse: true).Should().Be("99↓ 97↑");
     }
 
     [TestCase("ahead 99::ahead 9, behind 7::refs/remotes/upstream/push-branch::refs/remotes/upstream/upstream-branch::my-branch")]
@@ -207,6 +213,7 @@ public class AheadBehindDataProviderTests
         aheadBehindData.Branch.Should().Be("my-branch");
         aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/push-branch");
         aheadBehindData.ToDisplay().Should().Be("99↑");
+        aheadBehindData.ToDisplay(reverse: true).Should().Be("99↓");
     }
 
     [TestCase("behind 97::ahead 9, behind 7::refs/remotes/upstream/push-branch::refs/remotes/upstream/upstream-branch::my-branch")]
@@ -223,6 +230,7 @@ public class AheadBehindDataProviderTests
         aheadBehindData.Branch.Should().Be("my-branch");
         aheadBehindData.RemoteRef.Should().Be("refs/remotes/upstream/push-branch");
         aheadBehindData.ToDisplay().Should().Be("97↓");
+        aheadBehindData.ToDisplay(reverse: true).Should().Be("97↑");
     }
 
     [Test]

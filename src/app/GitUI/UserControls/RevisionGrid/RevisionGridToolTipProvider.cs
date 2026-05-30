@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics;
+using GitExtensions.Extensibility.Git;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 
@@ -11,6 +12,7 @@ internal sealed class RevisionGridToolTipProvider
     private readonly RevisionDataGridView _gridView;
     private int _previousRowIndex = -1;
     private int _previousColumnIndex = -1;
+    private IGitRef? _previousHighlight = null;
 
     public RevisionGridToolTipProvider(RevisionDataGridView gridView)
     {
@@ -31,17 +33,26 @@ internal sealed class RevisionGridToolTipProvider
         return wasActive;
     }
 
-    public void OnCellMouseMove(DataGridViewCellMouseEventArgs e)
+    public void OnCellMouseMove(DataGridViewCellMouseEventArgs e, RefLabelHitInfo? hitInfo)
     {
-        if (!ShowRevisionGridTooltips)
+        if (hitInfo?.GitRef is { } gitRef)
         {
+            if (gitRef.Equals(_previousHighlight))
+            {
+                return;
+            }
+
+            _previousHighlight = gitRef;
+            _previousRowIndex = -1;
+            UpdateToolTip(gitRef);
             return;
         }
 
-        GitUIPluginInterfaces.GitRevision? revision = _gridView.GetRevision(e.RowIndex);
+        _previousHighlight = null;
 
-        if (revision is null)
+        if (!ShowRevisionGridTooltips)
         {
+            _toolTip.SetToolTip(_gridView, null);
             return;
         }
 
@@ -53,27 +64,38 @@ internal sealed class RevisionGridToolTipProvider
 
         _previousRowIndex = e.RowIndex;
         _previousColumnIndex = e.ColumnIndex;
-
-        string newText = GetToolTipText();
-        if (_toolTip.GetToolTip(_gridView) != newText)
-        {
-            _toolTip.SetToolTip(_gridView, newText);
-        }
-
-        if (!_toolTip.Active)
-        {
-            _toolTip.Active = true;
-        }
+        UpdateToolTip();
 
         return;
 
-        string GetToolTipText()
+        void UpdateToolTip(IGitRef? highlightRef = null)
+        {
+            GitUIPluginInterfaces.GitRevision? revision = _gridView.GetRevision(e.RowIndex);
+
+            if (revision is null)
+            {
+                return;
+            }
+
+            string newText = GetToolTipText(revision, highlightRef);
+            if (_toolTip.GetToolTip(_gridView) != newText)
+            {
+                _toolTip.SetToolTip(_gridView, newText);
+            }
+
+            if (!_toolTip.Active)
+            {
+                _toolTip.Active = true;
+            }
+        }
+
+        string GetToolTipText(GitUIPluginInterfaces.GitRevision revision, IGitRef? highlightRef)
         {
             try
             {
-                if (_gridView.Columns[e.ColumnIndex].Tag is ColumnProvider provider &&
-                    provider.TryGetToolTip(e, revision, out string? toolTip) &&
-                    !string.IsNullOrWhiteSpace(toolTip))
+                if (_gridView.Columns[e.ColumnIndex].Tag is ColumnProvider provider
+                    && provider.TryGetToolTip(e, revision, highlightRef, out string? toolTip)
+                    && !string.IsNullOrWhiteSpace(toolTip))
                 {
                     return toolTip;
                 }
