@@ -329,7 +329,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                             && gitRef.IsRemote
                             && gitRef.LocalName == GetRemotePrefix(gitRef.Module, gitRef.Remote) + singleLocalBranchName
                 ? gitRef.Remote : gitRef.Name;
-            RefLabelShape shape = RefLabelShape.Rect;
+            RefLabelShape shape = gitRef.IsTag ? RefLabelShape.PointLeft : RefLabelShape.Rect;
             (Rectangle refRect, Action? drawHighlight) = DrawRef(e, gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted, label, shape);
             drawHighlight?.Invoke();
             if (refRect != Rectangle.Empty)
