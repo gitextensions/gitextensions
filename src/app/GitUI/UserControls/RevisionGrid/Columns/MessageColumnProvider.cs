@@ -169,7 +169,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 ref offset,
                 revision.IsAutostash ? revision.Subject : (revision.ReflogSelector ?? throw new InvalidOperationException($"{nameof(revision.ReflogSelector)} must not be null"))[5..],
                 AppColor.OtherTag.GetThemeColor(),
-                RefArrowType.None,
+                RefLabelIcon.Stash,
                 messageBounds,
                 e.Graphics,
                 dashedLine: false,
@@ -252,9 +252,9 @@ internal sealed class MessageColumnProvider : ColumnProvider
             IGitRef remote,
             ref List<RefLabelHitInfo>? hitInfos)
         {
-            RefArrowType arrowType = gitRef.IsSelected ? RefArrowType.Filled : RefArrowType.None;
+            RefLabelIcon icon = gitRef.IsSelected ? RefLabelIcon.Head : RefLabelIcon.LocalBranch;
             Font branchFont = gitRef.IsSelected ? style.BoldFont : style.NormalFont;
-            (int branchIdealWidth, int backgroundHeight) = RevisionGridRefRenderer.MeasureRef(branchFont, gitRef.Name, arrowType, messageBounds.Height, e.Graphics!);
+            (int branchIdealWidth, int backgroundHeight) = RevisionGridRefRenderer.MeasureRef(branchFont, gitRef.Name, icon, messageBounds.Height, e.Graphics!);
 
             int branchWidth = Math.Min(messageBounds.Width - offset, branchIdealWidth);
             if (branchWidth <= 0)
@@ -422,7 +422,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             ref offset,
             revision.Subject,
             AppColor.OtherTag.GetThemeColor(),
-            RefArrowType.None,
+            revision.ObjectId == ObjectId.IndexId ? RefLabelIcon.CommitIndex : RefLabelIcon.WorkingDirectory,
             messageBounds,
             graphics,
             dashedLine: false,
@@ -508,11 +508,15 @@ internal sealed class MessageColumnProvider : ColumnProvider
             Color headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
             string gitRefName = i < (MaxSuperprojectRefs - 1) ? gitRef.Name : "…";
 
-            RefArrowType arrowType = gitRef.IsSelected
-                ? RefArrowType.Filled
+            RefLabelIcon icon = gitRef.IsSelected
+                ? RefLabelIcon.Head
                 : gitRef.IsSelectedHeadMergeSource
-                    ? RefArrowType.NotFilled
-                    : RefArrowType.None;
+                    ? RefLabelIcon.HeadMergeSource
+                    : gitRef.IsTag
+                        ? RefLabelIcon.Tag
+                        : gitRef.IsRemote
+                            ? RefLabelIcon.Remote
+                            : RefLabelIcon.LocalBranch;
             Font font = gitRef.IsSelected ? style.BoldFont : style.NormalFont;
 
             RevisionGridRefRenderer.DrawRef(
@@ -521,7 +525,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 ref offset,
                 gitRefName,
                 headColor,
-                arrowType,
+                icon,
                 messageBounds,
                 e.Graphics!,
                 dashedLine: true);
@@ -566,7 +570,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 ref currentOffset,
                 label,
                 headColor: Color.OrangeRed.AdaptForeColor(backColor),
-                isSelected ? RefArrowType.Filled : RefArrowType.NotFilled,
+                isSelected ? RefLabelIcon.Head : RefLabelIcon.HeadMergeSource,
                 messageBounds,
                 e.Graphics!,
                 dashedLine: true);
@@ -604,11 +608,15 @@ internal sealed class MessageColumnProvider : ColumnProvider
             headColor = RevisionGridRefRenderer.GetHeadColor(gitRef);
         }
 
-        RefArrowType arrowType = gitRef.IsSelected
-            ? RefArrowType.Filled
+        RefLabelIcon icon = gitRef.IsSelected
+            ? RefLabelIcon.Head
             : gitRef.IsSelectedHeadMergeSource
-                ? RefArrowType.NotFilled
-                : RefArrowType.None;
+                ? RefLabelIcon.HeadMergeSource
+                : gitRef.IsTag
+                    ? RefLabelIcon.Tag
+                    : gitRef.IsRemote
+                        ? RefLabelIcon.Remote
+                        : RefLabelIcon.LocalBranch;
 
         Font font = gitRef.IsSelected
             ? style.BoldFont
@@ -627,7 +635,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             ref offset,
             name,
             headColor,
-            arrowType,
+            icon,
             messageBounds,
             e.Graphics!,
             dashedLine: superprojectRef is not null,

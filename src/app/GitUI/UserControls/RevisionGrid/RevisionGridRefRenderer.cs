@@ -135,7 +135,7 @@ internal static class RevisionGridRefRenderer
         }
 
         GraphicsPath remotePath = CreateChevronLeftRoundRectPath(rect, RefLabelCornerRadius, chevronWidth);
-        DrawRefBackground(isRowSelected, graphics, headColor, rect, remotePath, RefArrowType.None, dashedLine: false, fill, highlight: false);
+        DrawRefBackground(isRowSelected, graphics, headColor, rect, remotePath, RefLabelIcon.None, dashedLine: false, fill, highlight: false);
 
         // Text is right-aligned within the visible portion (right of precedingRight), keeping paddingLeftRight from the right edge.
         Rectangle textBounds = new(
@@ -176,8 +176,9 @@ internal static class RevisionGridRefRenderer
     ///  Draws a ref label and returns the painted rectangle in the same coordinate space as <paramref name="bounds"/>.
     /// </summary>
     /// <returns>The bounding rectangle of the drawn ref label in DataGridView client coordinates, or <see cref="Rectangle.Empty"/> if nothing was drawn.</returns>
-    public static Rectangle DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false, bool highlight = false, bool nestledRight = false)
+    public static Rectangle DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefLabelIcon icon, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false, bool highlight = false, bool nestledRight = false)
     {
+        icon = GetEffectiveIcon(icon);
         int paddingLeftRight = PaddingLeftRight(name);
         int paddingTopBottom = PaddingTopBottom;
         int marginRight = DpiUtil.Scale(5);
@@ -188,7 +189,7 @@ internal static class RevisionGridRefRenderer
             ? TextRenderer.MeasureText(graphics, name, font, Size.Empty, TextFormatFlags.NoPadding)
             : new(0, TextRenderer.MeasureText(graphics, " ", font, Size.Empty, TextFormatFlags.NoPadding).Height);
 
-        int arrowWidth = arrowType == RefArrowType.None ? 0 : bounds.Height / 2;
+        int iconWidth = icon == RefLabelIcon.None ? 0 : bounds.Height / 2;
 
         int backgroundHeight = textSize.Height + paddingTopBottom + paddingTopBottom - 1;
         int outerMarginTopBottom = (bounds.Height - backgroundHeight) / 2;
@@ -196,7 +197,7 @@ internal static class RevisionGridRefRenderer
         Rectangle rect = new(
             bounds.X + offset,
             bounds.Y + outerMarginTopBottom,
-            Math.Min(bounds.Width - offset, textSize.Width + arrowWidth + paddingLeftRight + paddingLeftRight - 1),
+            Math.Min(bounds.Width - offset, textSize.Width + iconWidth + paddingLeftRight + paddingLeftRight - 1),
             backgroundHeight);
         if (rect.Width == 0 || rect.Height == 0)
         {
@@ -210,16 +211,16 @@ internal static class RevisionGridRefRenderer
             int chevronWidth = ChevronWidth(backgroundHeight);
             rect = rect with { Width = rect.Width + (chevronWidth / 2) };
             using GraphicsPath branchPath = CreateChevronRightRoundRectPath(rect, scaledRadius, chevronWidth);
-            DrawRefBackground(isRowSelected, graphics, headColor, rect, branchPath, arrowType, dashedLine, fill, highlight);
+            DrawRefBackground(isRowSelected, graphics, headColor, rect, branchPath, icon, dashedLine, fill, highlight);
         }
         else
         {
             using GraphicsPath roundPath = CreateRoundRectPath(rect, scaledRadius);
-            DrawRefBackground(isRowSelected, graphics, headColor, rect, roundPath, arrowType, dashedLine, fill, highlight);
+            DrawRefBackground(isRowSelected, graphics, headColor, rect, roundPath, icon, dashedLine, fill, highlight);
         }
 
         Rectangle textBounds = new(
-            rect.X + arrowWidth + paddingLeftRight,
+            rect.X + iconWidth + paddingLeftRight,
             rect.Y + paddingTopBottom - 1,
             Math.Min(bounds.Width - offset - paddingLeftRight - paddingLeftRight, textSize.Width),
             textSize.Height);
@@ -230,7 +231,7 @@ internal static class RevisionGridRefRenderer
         return rect;
     }
 
-    private static void DrawRefBackground(bool isRowSelected, Graphics graphics, Color color, Rectangle bounds, GraphicsPath path, RefArrowType arrowType, bool dashedLine, bool fill, bool highlight)
+    private static void DrawRefBackground(bool isRowSelected, Graphics graphics, Color color, Rectangle bounds, GraphicsPath path, RefLabelIcon icon, bool dashedLine, bool fill, bool highlight)
     {
         SmoothingMode oldMode = graphics.SmoothingMode;
         graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -265,9 +266,9 @@ internal static class RevisionGridRefRenderer
             }
 
             // arrow if the head is the current branch
-            if (arrowType != RefArrowType.None)
+            if (icon != RefLabelIcon.None)
             {
-                DrawArrow(graphics, bounds.X, bounds.Y, bounds.Height, color, filled: arrowType == RefArrowType.Filled);
+                DrawArrow(graphics, bounds.X, bounds.Y, bounds.Height, color, filled: icon == RefLabelIcon.Head);
             }
         }
         finally
@@ -326,6 +327,11 @@ internal static class RevisionGridRefRenderer
         }
     }
 
+    private static RefLabelIcon GetEffectiveIcon(RefLabelIcon icon)
+    {
+        return icon is RefLabelIcon.Head or RefLabelIcon.HeadMergeSource ? icon : RefLabelIcon.None;
+    }
+
     /// <summary>
     ///  Computes the ideal rendered size of a ref label without drawing it.
     /// </summary>
@@ -333,15 +339,16 @@ internal static class RevisionGridRefRenderer
     ///  Returns the capsule's ideal width and height given the same inputs as <see cref="DrawRef"/>.
     ///  Does not account for clipping to available cell width.
     /// </remarks>
-    public static (int idealWidth, int backgroundHeight) MeasureRef(Font font, string name, RefArrowType arrowType, int rowHeight, Graphics graphics)
+    public static (int idealWidth, int backgroundHeight) MeasureRef(Font font, string name, RefLabelIcon icon, int rowHeight, Graphics graphics)
     {
+        icon = GetEffectiveIcon(icon);
         Size textSize = !string.IsNullOrEmpty(name)
             ? TextRenderer.MeasureText(graphics, name, font, Size.Empty, TextFormatFlags.NoPadding)
             : new(0, TextRenderer.MeasureText(graphics, " ", font, Size.Empty, TextFormatFlags.NoPadding).Height);
 
         int backgroundHeight = textSize.Height + (PaddingTopBottom * 2) - 1;
-        int arrowWidth = arrowType == RefArrowType.None ? 0 : rowHeight / 2;
-        int idealWidth = textSize.Width + arrowWidth + (PaddingLeftRight(name) * 2) - 1;
+        int iconWidth = icon == RefLabelIcon.None ? 0 : rowHeight / 2;
+        int idealWidth = textSize.Width + iconWidth + (PaddingLeftRight(name) * 2) - 1;
 
         return (idealWidth, backgroundHeight);
     }
