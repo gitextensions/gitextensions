@@ -356,30 +356,17 @@ internal static class GraphRenderer
 
     private static Brush GetBrushForLaneInfo(LaneInfo? laneInfo, bool isRelative, RevisionGraphDrawStyle revisionGraphDrawStyle, bool? isHoverHighlighted = null)
     {
-        // laneInfo can be null for revisions without parents and children, especially when filtering, draw them gray, too
-        if (laneInfo is null)
-        {
-            return RevisionGraphLaneColor.NonRelativeBrush;
-        }
-
+        // Return the colored brush when lane info is present, hover is active or inactive-but-relative.
+        // laneInfo can be null for revisions without parents and children, especially when filtering, draw them gray, too.
         // Hover highlighting takes full priority: show highlighted ones in their lane color, gray others.
-        if (isHoverHighlighted is false)
-        {
-            return RevisionGraphLaneColor.NonRelativeBrush;
-        }
-
-        if (isHoverHighlighted is true)
+        // No hover active — apply normal draw-style logic.
+        if (laneInfo is not null && isHoverHighlighted is not false
+            && (isHoverHighlighted is true || isRelative || revisionGraphDrawStyle is not (RevisionGraphDrawStyle.DrawNonRelativesGray or RevisionGraphDrawStyle.HighlightSelected)))
         {
             return RevisionGraphLaneColor.GetBrushForLane(laneInfo.Color);
         }
 
-        // No hover active — apply normal draw-style logic.
-        if (!isRelative && (revisionGraphDrawStyle is RevisionGraphDrawStyle.DrawNonRelativesGray or RevisionGraphDrawStyle.HighlightSelected))
-        {
-            return RevisionGraphLaneColor.NonRelativeBrush;
-        }
-
-        return RevisionGraphLaneColor.GetBrushForLane(laneInfo.Color);
+        return RevisionGraphLaneColor.NonRelativeBrush;
     }
 
     private static int GetLaneForRow(IRevisionGraphRow? row, RevisionGraphSegment revisionGraphRevision)

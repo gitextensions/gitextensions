@@ -1935,7 +1935,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         if (_messageColumnProvider.SetHighlight(-1, hitInfo: null))
         {
             _gridView.Invalidate();
-            UpdateLaneHighlight(null);
+            UpdateLaneHighlight(gitRef: null, rowIndex: -1);
         }
 
         if (_gridView.Cursor == Cursors.Hand)
@@ -1944,7 +1944,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    private void UpdateLaneHighlight(IGitRef? gitRef, int rowIndex = -1)
+    private void UpdateLaneHighlight(IGitRef? gitRef, int rowIndex)
     {
         this.InvokeAndForget(async () =>
         {

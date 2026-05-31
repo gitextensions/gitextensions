@@ -178,7 +178,7 @@ public class RevisionGraphColumnTests
     }
 
     [Test]
-    public void SetHoverHighlight_should_exclude_ancestors_outside_visible_range()
+    public void SetHoverHighlight_should_include_one_ancestor_outside_visible_range()
     {
         const string tipId = "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa";
         const string parentId = "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb";
@@ -205,6 +205,7 @@ public class RevisionGraphColumnTests
         [
             ObjectId.Parse(tipId),
             ObjectId.Parse(parentId),
+            ObjectId.Parse(rootId),
         ]);
         testAccessor.HoverHighlightedIds.Should().NotContain(ObjectId.Parse(rootId));
     }
