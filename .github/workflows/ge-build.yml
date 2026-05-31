@@ -8,7 +8,7 @@ on:
 
 env:
   # GE release version
-  ge-release-version: '7.0.0'
+  ge-release-version: '7.0.1'
   # Run tests for x64 build
   run-x64-tests: false # TODO: turn on again when TC GetOriginalLineInPreviousCommit passes stably
   # Run tests for arm64 build
