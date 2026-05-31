@@ -168,8 +168,10 @@ public class ToolStripPushButtonTests
         _sut.DisplayAheadBehindInformation(_aheadBehindDataProvider?.GetData(branchName), branchName, string.Empty);
         int updatedSize = _sut.GetTestAccessor().GetButtonWidth();
         _sut.ResetBeforeUpdate();
+        // ResetBeforeUpdate freezes AutoSize=false to keep the button width stable while the
+        // next refresh is in progress. Text is intentionally NOT cleared here so that
+        // TextChanged does not trigger SyncFromOriginal on clones between ResetBeforeUpdate
+        // and the following DisplayAheadBehindInformation call (which would show an empty clone).
         _sut.GetTestAccessor().GetButtonWidth().Should().Be(updatedSize);
-        _sut.GetTestAccessor().GetButtonText().Should().BeNullOrEmpty();
-        _sut.DisplayStyle.Should().Be(ToolStripItemDisplayStyle.ImageAndText);
     }
 }
