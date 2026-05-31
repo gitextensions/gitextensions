@@ -1,4 +1,4 @@
-﻿﻿using System.ComponentModel;
+﻿using System.ComponentModel;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils.GitUI.Theming;
 using GitUI.CommandsDialogs.Menus;
@@ -119,6 +119,7 @@ partial class FormBrowse
         toolStripSeparator25 = new ToolStripSeparator();
         branchToolStripMenuItem = new ToolStripMenuItem();
         deleteBranchToolStripMenuItem = new ToolStripMenuItem();
+        renameBranchMainToolStripMenuItem = new ToolStripMenuItem();
         checkoutBranchToolStripMenuItem = new ToolStripMenuItem();
         mergeBranchToolStripMenuItem = new ToolStripMenuItem();
         rebaseToolStripMenuItem = new ToolStripMenuItem();
@@ -199,7 +200,7 @@ partial class FormBrowse
         ToolStripMain.ClickThrough = true;
         ToolStripMain.Dock = DockStyle.None;
         ToolStripMain.DrawBorder = false;
-        ToolStripMain.GripEnabled = false;
+        ToolStripMain.GripStyle = ToolStripGripStyle.Visible;
         ToolStripMain.GripMargin = new Padding(0);
         ToolStripMain.ImeMode = ImeMode.NoControl;
         ToolStripMain.Items.AddRange(new ToolStripItem[] {
@@ -1018,6 +1019,7 @@ partial class FormBrowse
         toolStripSeparator25,
         branchToolStripMenuItem,
         deleteBranchToolStripMenuItem,
+        renameBranchMainToolStripMenuItem,
         checkoutBranchToolStripMenuItem,
         mergeBranchToolStripMenuItem,
         rebaseToolStripMenuItem,
@@ -1120,7 +1122,15 @@ partial class FormBrowse
         deleteBranchToolStripMenuItem.Size = new Size(213, 22);
         deleteBranchToolStripMenuItem.Text = "De&lete branch...";
         deleteBranchToolStripMenuItem.Click += DeleteBranchToolStripMenuItemClick;
-        // 
+        //
+        // renameBranchMainToolStripMenuItem
+        //
+        renameBranchMainToolStripMenuItem.Image = Properties.Images.Renamed;
+        renameBranchMainToolStripMenuItem.Name = "renameBranchMainToolStripMenuItem";
+        renameBranchMainToolStripMenuItem.Size = new Size(213, 22);
+        renameBranchMainToolStripMenuItem.Text = "R&ename branch...";
+        renameBranchMainToolStripMenuItem.Click += RenameBranchMainToolStripMenuItemClick;
+        //
         // checkoutBranchToolStripMenuItem
         // 
         checkoutBranchToolStripMenuItem.Image = Properties.Images.BranchCheckout;
@@ -1394,8 +1404,7 @@ partial class FormBrowse
         ToolStripScripts.ClickThrough = true;
         ToolStripScripts.Dock = DockStyle.None;
         ToolStripScripts.DrawBorder = false;
-        ToolStripScripts.GripEnabled = false;
-        ToolStripScripts.GripMargin = new Padding(0);
+        ToolStripScripts.GripStyle = ToolStripGripStyle.Visible;
         ToolStripScripts.ImeMode = ImeMode.NoControl;
         ToolStripScripts.LayoutStyle = ToolStripLayoutStyle.HorizontalStackWithOverflow;
         ToolStripScripts.Location = new Point(890, 0);
@@ -1484,10 +1493,10 @@ partial class FormBrowse
     private ToolStripContainer toolPanel;
     private RevisionGpgInfoControl revisionGpgInfo1;
 
-    private MenuStripEx mainMenuStrip;
-    private ToolStripEx ToolStripMain;
-    private GitUI.UserControls.FilterToolBar ToolStripFilters;
-    private ToolStripEx ToolStripScripts;
+    public MenuStripEx mainMenuStrip;
+    public ToolStripEx ToolStripMain;
+    public GitUI.UserControls.FilterToolBar ToolStripFilters;
+    public ToolStripEx ToolStripScripts;
 
     private ToolStripButton toolStripButtonCommit;
     private WorkingDirectoryToolStripSplitButton _NO_TRANSLATE_WorkingDir;
@@ -1526,6 +1535,7 @@ partial class FormBrowse
     private ToolStripMenuItem branchToolStripMenuItem;
     private ToolStripMenuItem tagToolStripMenuItem;
     private ToolStripMenuItem deleteBranchToolStripMenuItem;
+    private ToolStripMenuItem renameBranchMainToolStripMenuItem;
     private ToolStripMenuItem deleteTagToolStripMenuItem;
     private ToolStripMenuItem formatPatchToolStripMenuItem;
     private ToolStripMenuItem mergeBranchToolStripMenuItem;
