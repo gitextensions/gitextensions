@@ -1,4 +1,6 @@
 ﻿using System.CodeDom.Compiler;
+using System.Globalization;
+using System.Text.Json;
 using GitCommands;
 using GitCommands.Settings;
 using GitExtensions.Extensibility.Settings;
@@ -43,7 +45,7 @@ internal sealed class SettingTests
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
+        ISetting<T> setting = CreateTestSetting(settingsPath, settingName, settingDefault);
 
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
@@ -62,10 +64,9 @@ internal sealed class SettingTests
         AppSettingsPath settingsPath = new(pathName);
 
         T storedValue = default;
-
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
+            ISetting<T> setting = CreateTestSetting(settingsPath, settingName, settingDefault);
 
             setting.Value = value;
 
@@ -81,11 +82,10 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
+            ISetting<T> setting = CreateTestSetting(settingsPath, settingName, settingDefault);
 
             storedValue = setting.Value;
         });
-
         storedValue.Should().Be(value);
     }
 
@@ -99,14 +99,12 @@ internal sealed class SettingTests
         AppSettingsPath settingsPath = new(pathName);
 
         T storedValue = default;
-
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
+            ISetting<T> setting = CreateTestSetting(settingsPath, settingName, settingDefault);
 
             storedValue = setting.Value;
         });
-
         storedValue.Should().Be(settingDefault);
     }
 
@@ -120,7 +118,6 @@ internal sealed class SettingTests
         AppSettingsPath settingsPath = new(pathName);
 
         T storedValue = default;
-
         AppSettings.UsingContainer(_settingContainer, () =>
         {
             ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
@@ -139,11 +136,10 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<T> setting = Setting.Create(settingsPath, settingName, settingDefault);
+            ISetting<T> setting = CreateTestSetting(settingsPath, settingName, settingDefault);
 
             storedValue = setting.Value;
         });
-
         storedValue.Should().Be(settingDefault);
     }
 
@@ -155,6 +151,8 @@ internal sealed class SettingTests
     [TestCaseSource(nameof(CreateStringCases))]
     public void Should_create_string_setting(string settingDefault)
     {
+        settingDefault ??= string.Empty;
+
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
@@ -163,15 +161,18 @@ internal sealed class SettingTests
 
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(settingDefault ?? string.Empty);
-        setting.Value.Should().Be(settingDefault ?? string.Empty);
+        setting.Default.Should().Be(settingDefault);
+        setting.Value.Should().Be(settingDefault);
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
     [TestCaseSource(nameof(SaveStringCases))]
-    public void Should_save_string_setting(string settingDefault, string value)
+    public void Should_save_string_setting(string? settingDefault, string? value)
     {
+        settingDefault ??= string.Empty;
+        value ??= string.Empty;
+
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
@@ -200,42 +201,70 @@ internal sealed class SettingTests
         });
     }
 
+    [Test]
+    [TestCaseSource(nameof(SaveStringCases))]
+    public void Should_save_nullable_string_setting(string? settingDefault, string? value)
+    {
+        string pathName = Guid.NewGuid().ToString();
+        string settingName = Guid.NewGuid().ToString();
+        AppSettingsPath settingsPath = new(pathName);
+        AppSettings.UsingContainer(_settingContainer, () =>
+        {
+            ISetting<string?> setting = Setting.CreateNullableString(settingsPath, settingName);
+
+            setting.Value = value;
+
+            AppSettings.SaveSettings();
+        });
+
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+
+        File.WriteAllText(filePath, File.ReadAllText(_settingFilePath));
+
+        DistributedSettings container = new(lowerPriority: null, GitExtSettingsCache.Create(filePath), SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            ISetting<string?> setting = Setting.CreateNullableString(settingsPath, settingName);
+
+            setting.Value.Should().Be(value);
+        });
+    }
+
     #endregion String Setting
 
     #region Bool Setting
 
     [Test]
-    public void Should_create_bool_setting()
+    public void Should_create_nullable_bool_setting()
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<bool> setting = Setting.Create<bool>(settingsPath, settingName);
-
+        ISetting<bool?> setting = Setting.CreateNullableBool(settingsPath, settingName);
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeFalse();
-        setting.Value.Should().BeFalse();
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
+    [TestCase(null)]
     [TestCase(false)]
     [TestCase(true)]
-    public void Should_save_bool_setting(bool value)
+    public void Should_save_nullable_bool_setting(bool? value)
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<bool> setting = Setting.Create<bool>(settingsPath, settingName);
+        ISetting<bool?> setting = Setting.CreateNullableBool(settingsPath, settingName);
 
         setting.Value = value;
-
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().BeFalse();
+        setting.Default.Should().BeNull();
         setting.Value.Should().Be(value);
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
@@ -249,7 +278,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<bool> setting = Setting.Create<bool>(settingsPath, settingName, defaultValue);
+            ISetting<bool> setting = Setting.Create(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -280,7 +309,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<bool> setting = Setting.Create<bool>(settingsPath, settingName, defaultValue);
+            ISetting<bool> setting = Setting.Create(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -297,7 +326,7 @@ internal sealed class SettingTests
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        ISetting<char> setting = Setting.Create<char>(settingsPath, settingName);
+        ISetting<char> setting = CreateTestSetting(settingsPath, settingName, defaultValue: default(char));
 
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
@@ -307,22 +336,21 @@ internal sealed class SettingTests
     }
 
     [Test]
+    [TestCase(null)]
     [TestCase(char.MinValue)]
     [TestCase(' ')]
     [TestCase(char.MaxValue)]
-    public void Should_save_char_setting(char value)
+    public void Should_save_nullable_char_setting(char? value)
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<char> setting = Setting.Create<char>(settingsPath, settingName);
+        ISetting<char?> setting = CreateNullableTestSetting<char>(settingsPath, settingName);
 
         setting.Value = value;
-
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be('\0');
+        setting.Default.Should().BeNull();
         setting.Value.Should().Be(value);
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
@@ -336,7 +364,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<char> setting = Setting.Create<char>(settingsPath, settingName, defaultValue);
+            ISetting<char> setting = CreateTestSetting(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -367,7 +395,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<char> setting = Setting.Create<char>(settingsPath, settingName, defaultValue);
+            ISetting<char> setting = CreateTestSetting(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -378,38 +406,37 @@ internal sealed class SettingTests
     #region Byte Setting
 
     [Test]
-    public void Should_create_byte_setting()
+    public void Should_create_nullable_byte_setting()
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        ISetting<byte> setting = Setting.Create<byte>(settingsPath, settingName);
+        ISetting<byte?> setting = CreateNullableTestSetting<byte>(settingsPath, settingName);
 
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(0);
-        setting.Value.Should().Be(0);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
+    [TestCase(null)]
     [TestCase(byte.MinValue)]
     [TestCase(byte.MaxValue)]
     [TestCase(0)]
-    public void Should_save_byte_setting(byte value)
+    public void Should_save_nullable_byte_setting(byte? value)
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<byte> setting = Setting.Create<byte>(settingsPath, settingName);
+        ISetting<byte?> setting = CreateNullableTestSetting<byte>(settingsPath, settingName);
 
         setting.Value = value;
-
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(0);
+        setting.Default.Should().BeNull();
         setting.Value.Should().Be(value);
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
@@ -423,7 +450,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<byte> setting = Setting.Create<byte>(settingsPath, settingName, defaultValue);
+            ISetting<byte> setting = CreateTestSetting(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -454,7 +481,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<byte> setting = Setting.Create<byte>(settingsPath, settingName, defaultValue);
+            ISetting<byte> setting = CreateTestSetting(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -465,37 +492,35 @@ internal sealed class SettingTests
     #region Int Setting
 
     [Test]
-    public void Should_create_int_setting()
+    public void Should_create_nullable_int_setting()
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<int> setting = Setting.Create<int>(settingsPath, settingName);
-
+        ISetting<int?> setting = CreateNullableTestSetting<int>(settingsPath, settingName);
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(0);
-        setting.Value.Should().Be(0);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
+    [TestCase(null)]
     [TestCase(int.MinValue)]
     [TestCase(int.MaxValue)]
     [TestCase(0)]
-    public void Should_save_int_setting(int value)
+    public void Should_save_nullable_int_setting(int? value)
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
+        ISetting<int?> setting = CreateNullableTestSetting<int>(settingsPath, settingName);
 
-        ISetting<int> setting = Setting.Create<int>(settingsPath, settingName);
         setting.Value = value;
-
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(0);
+        setting.Default.Should().BeNull();
         setting.Value.Should().Be(value);
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
@@ -509,7 +534,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<int> setting = Setting.Create<int>(settingsPath, settingName, defaultValue);
+            ISetting<int> setting = Setting.Create(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -540,7 +565,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<int> setting = Setting.Create<int>(settingsPath, settingName, defaultValue);
+            ISetting<int> setting = Setting.Create(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -551,38 +576,35 @@ internal sealed class SettingTests
     #region Float Setting
 
     [Test]
-    public void Should_create_float_setting()
+    public void Should_create_nullable_float_setting()
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<float> setting = Setting.Create<float>(settingsPath, settingName);
-
+        ISetting<float?> setting = CreateNullableTestSetting<float>(settingsPath, settingName);
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(0f);
-        setting.Value.Should().Be(0f);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
+    [TestCase(null)]
     [TestCase(float.MinValue)]
     [TestCase(float.MaxValue)]
     [TestCase(0f)]
-    public void Should_save_float_setting(float value)
+    public void Should_save_nullable_float_setting(float? value)
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<float> setting = Setting.Create<float>(settingsPath, settingName);
+        ISetting<float?> setting = CreateNullableTestSetting<float>(settingsPath, settingName);
 
         setting.Value = value;
-
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(0f);
+        setting.Default.Should().BeNull();
         setting.Value.Should().Be(value);
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
@@ -596,7 +618,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<float> setting = Setting.Create<float>(settingsPath, settingName, defaultValue);
+            ISetting<float> setting = Setting.Create(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -627,7 +649,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<float> setting = Setting.Create<float>(settingsPath, settingName, defaultValue);
+            ISetting<float> setting = Setting.Create(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -638,43 +660,45 @@ internal sealed class SettingTests
     #region Enum Setting
 
     [Test]
-    public void Should_create_enum_setting()
+    public void Should_create_nullable_enum_setting()
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
 
-        ISetting<TestEnum> setting = Setting.Create<TestEnum>(settingsPath, settingName);
+        ISetting<TestEnum?> setting = Setting.CreateNullableEnum<TestEnum>(settingsPath, settingName);
 
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(TestEnum.First);
-        setting.Value.Should().Be(TestEnum.First);
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
+    [TestCase(null)]
     [TestCase(TestEnum.First)]
     [TestCase(TestEnum.Second)]
-    public void Should_save_enum_setting(TestEnum value)
+    public void Should_save_nullable_enum_setting(TestEnum? value)
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<TestEnum> setting = Setting.Create<TestEnum>(settingsPath, settingName);
+        ISetting<TestEnum?> setting = Setting.CreateNullableEnum<TestEnum>(settingsPath, settingName);
 
         setting.Value = value;
-
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(TestEnum.First);
+        setting.Default.Should().BeNull();
         setting.Value.Should().Be(value);
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
-    public void Should_save_enum_setting_as_string([Values] TestEnum value, [Values] TestEnum defaultValue)
+    [TestCase(null)]
+    [TestCase(TestEnum.First)]
+    [TestCase(TestEnum.Second)]
+    public void Should_save_nullable_enum_setting_as_string(TestEnum? value)
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
@@ -682,7 +706,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<TestEnum> setting = Setting.Create<TestEnum>(settingsPath, settingName, defaultValue);
+            ISetting<TestEnum?> setting = Setting.CreateNullableEnum<TestEnum>(settingsPath, settingName);
 
             setting.Value = value;
 
@@ -698,10 +722,10 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
+            ISetting<string?> setting = Setting.CreateNullableString(settingsPath, settingName);
 
-            string storedValue = setting.Value;
-            storedValue.Should().Be(value == defaultValue ? "" : value.ToString());
+            string? storedValue = setting.Value;
+            storedValue.Should().Be(value?.ToString());
             bool isNumber = int.TryParse(storedValue, out _);
             isNumber.Should().BeFalse();
         });
@@ -716,7 +740,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(_settingContainer, () =>
         {
-            ISetting<TestEnum> setting = Setting.Create<TestEnum>(settingsPath, settingName, defaultValue);
+            ISetting<TestEnum> setting = Setting.Create(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -747,7 +771,7 @@ internal sealed class SettingTests
 
         AppSettings.UsingContainer(container, () =>
         {
-            ISetting<TestEnum> setting = Setting.Create<TestEnum>(settingsPath, settingName, defaultValue);
+            ISetting<TestEnum> setting = Setting.Create(settingsPath, settingName, defaultValue);
 
             setting.Value.Should().Be(defaultValue);
         });
@@ -764,28 +788,26 @@ internal sealed class SettingTests
     #region Struct Setting
 
     [Test]
-    public void Should_create_struct_setting()
+    public void Should_create_nullable_struct_setting()
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-
-        ISetting<TestStruct> setting = Setting.Create<TestStruct>(settingsPath, settingName);
-
+        ISetting<TestStruct?> setting = CreateNullableTestSetting<TestStruct>(settingsPath, settingName);
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(default(TestStruct));
-        setting.Value.Should().Be(default(TestStruct));
+        setting.Default.Should().BeNull();
+        setting.Value.Should().BeNull();
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
 
     [Test]
-    public void Should_save_struct_setting()
+    public void Should_save_nullable_struct_setting()
     {
         string pathName = Guid.NewGuid().ToString();
         string settingName = Guid.NewGuid().ToString();
         AppSettingsPath settingsPath = new(pathName);
-        TestStruct value = new TestStruct
+        TestStruct? value = new TestStruct
         {
             Bool = false,
             Char = ' ',
@@ -793,14 +815,12 @@ internal sealed class SettingTests
             Int = 0,
             Float = 0f
         };
-
-        ISetting<TestStruct> setting = Setting.Create<TestStruct>(settingsPath, settingName);
+        ISetting<TestStruct?> setting = CreateNullableTestSetting<TestStruct>(settingsPath, settingName);
 
         setting.Value = value;
-
         setting.Should().NotBeNull();
         setting.Name.Should().Be(settingName);
-        setting.Default.Should().Be(default(TestStruct));
+        setting.Default.Should().BeNull();
         setting.Value.Should().Be(value);
         setting.FullPath.Should().Be($"{pathName}.{settingName}");
     }
@@ -819,6 +839,123 @@ internal sealed class SettingTests
     }
 
     #endregion Struct Setting
+
+    #region Helpers
+
+    private static ISetting<T> CreateTestSetting<T>(SettingsPath path, string name, T defaultValue)
+        where T : struct
+    {
+        Type type = typeof(T);
+        return
+              type == typeof(string) ? (ISetting<T>)Setting.Create(path, name, (string)(object)defaultValue)
+            : type == typeof(bool) ? (ISetting<T>)Setting.Create(path, name, (bool)(object)defaultValue)
+            : type == typeof(int) ? (ISetting<T>)Setting.Create(path, name, (int)(object)defaultValue)
+            : type == typeof(float) ? (ISetting<T>)Setting.Create(path, name, (float)(object)defaultValue)
+            : Setting.Create(
+                path,
+                name,
+                defaultValue,
+                read: s =>
+                {
+                    try
+                    {
+                        if (typeof(T).IsEnum
+                            && Enum.TryParse(typeof(T), s, out object? parsed)
+                            && parsed is T enumValue)
+                        {
+                            return (true, enumValue);
+                        }
+
+                        if ((typeof(T).IsPrimitive || typeof(T) == typeof(decimal) || typeof(T) == typeof(DateTime))
+                            && Convert.ChangeType(s, typeof(T), CultureInfo.InvariantCulture) is T convertedValue)
+                        {
+                            return (true, convertedValue);
+                        }
+
+                        T? deserialized = JsonSerializer.Deserialize<T>(s);
+                        return deserialized.HasValue ? (true, deserialized.Value) : default;
+                    }
+                    catch
+                    {
+                        return default;
+                    }
+                },
+                store: v =>
+                {
+                    if (typeof(T).IsEnum)
+                    {
+                        return v.ToString();
+                    }
+
+                    if (typeof(T).IsPrimitive || typeof(T) == typeof(decimal) || typeof(T) == typeof(DateTime))
+                    {
+                        return Convert.ToString(v, CultureInfo.InvariantCulture);
+                    }
+
+                    return JsonSerializer.Serialize(v);
+                });
+    }
+
+    private static ISetting<T?> CreateNullableTestSetting<T>(SettingsPath path, string name)
+        where T : struct
+    {
+        Type type = typeof(T);
+        return
+            type == typeof(string) ? (ISetting<T?>)Setting.CreateNullableString(path, name)
+            : type == typeof(bool) ? (ISetting<T?>)Setting.CreateNullableBool(path, name)
+            : Setting.Create<T?>(
+                path,
+                name,
+                defaultValue: null,
+                read: s =>
+                {
+                    try
+                    {
+                        if (typeof(T).IsEnum
+                            && Enum.TryParse(typeof(T), s, out object? parsed)
+                            && parsed is T enumValue)
+                        {
+                            return (true, (T?)enumValue);
+                        }
+
+                        if ((typeof(T).IsPrimitive || typeof(T) == typeof(decimal) || typeof(T) == typeof(DateTime))
+                            && Convert.ChangeType(s, typeof(T), CultureInfo.InvariantCulture) is T convertedValue)
+                        {
+                            return (true, (T?)convertedValue);
+                        }
+
+                        T? deserialized = JsonSerializer.Deserialize<T>(s);
+                        return deserialized.HasValue ? (true, deserialized) : default;
+                    }
+                    catch
+                    {
+                        return default;
+                    }
+                },
+                store: v =>
+                {
+                    if (!v.HasValue)
+                    {
+                        return null;
+                    }
+
+                    T val = v.Value;
+
+                    if (typeof(T).IsEnum)
+                    {
+                        return val.ToString();
+                    }
+
+                    if (typeof(T).IsPrimitive || typeof(T) == typeof(decimal) || typeof(T) == typeof(DateTime))
+                    {
+                        return Convert.ToString(val, CultureInfo.InvariantCulture);
+                    }
+
+                    return JsonSerializer.Serialize(val);
+                });
+    }
+
+    #endregion Helpers
 
     #region Test Cases
 
@@ -846,15 +983,22 @@ internal sealed class SettingTests
 
     private static IEnumerable<object[]> CreateStringCases()
     {
+        yield return new object[] { null! };
         yield return new object[] { string.Empty };
         yield return new object[] { "_" };
     }
 
     private static IEnumerable<object[]> SaveStringCases()
     {
+        yield return new object[] { null!, null! };
+        yield return new object[] { null!, string.Empty };
+        yield return new object[] { null!, "_" };
+
+        yield return new object[] { string.Empty, null! };
         yield return new object[] { string.Empty, string.Empty };
         yield return new object[] { string.Empty, "_" };
 
+        yield return new object[] { "_", null! };
         yield return new object[] { "_", string.Empty };
         yield return new object[] { "_", "_" };
     }

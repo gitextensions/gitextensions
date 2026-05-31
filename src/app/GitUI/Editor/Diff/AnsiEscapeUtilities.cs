@@ -36,10 +36,14 @@ public partial class AnsiEscapeUtilities
         rawSb.Append("\nnormal, normal dim, bold, bold dim, bold bold, bold bold dim\nFor foreground, background choosen by GE\nNote: GE configures black foreground for bold yellow/blue/magenta/cyan\nGenerated from AnsiEscapeUtilities.cs PrintColors());\n\n");
         sb.Append('\n');
 
+        ReadOnlySpan<int> dims = [0, 2];
+        ReadOnlySpan<int> bolds = [0, 1];
+        ReadOnlySpan<int> codes = [30, 90, 40, 100];
+
         // color id (standard) colors
-        foreach (int code in new List<int> { 30, 90, 40, 100 })
+        foreach (int code in codes)
         {
-            foreach (int bold in new List<int> { 0, 1 })
+            foreach (int bold in bolds)
             {
                 if (bold == 0 && code >= 90)
                 {
@@ -47,7 +51,7 @@ public partial class AnsiEscapeUtilities
                     continue;
                 }
 
-                foreach (int dim in new List<int>() { 0, 2 })
+                foreach (int dim in dims)
                 {
                     List<int> sequence = [0];
                     if (bold > 0)
@@ -60,13 +64,14 @@ public partial class AnsiEscapeUtilities
                         sequence.Add(dim);
                     }
 
-                    rawSb.Append($"""{(bold > 0 ? "b" : " ")} {(dim > 0 ? "d" : " ")} {code,3} """);
-                    sb.Append($"""{(bold > 0 ? "b" : " ")} {(dim > 0 ? "d" : " ")} {code,3} """);
+                    string appendString = $"{(bold > 0 ? "b" : " ")} {(dim > 0 ? "d" : " ")} {code,3} ";
+                    rawSb.Append(appendString);
+                    sb.Append(appendString);
                     for (int i = _blackId; i <= _whiteId; i++)
                     {
                         sb.Append("@!");
                         sequence.Add(i + code);
-                        rawSb.Append($"\x1b[{string.Join(';', sequence)}m@!\x1b[0m");
+                        rawSb.Append("\x1b[").AppendJoin(';', sequence).Append("m@!\x1b[0m");
                         TryGetColorsFromEscapeSequence(sequence, out Color? backColor, out Color? foreColor, ref currentColorId, themeColors: false);
                         if (TryGetTextMarker(new()
                                 {
@@ -117,7 +122,7 @@ public partial class AnsiEscapeUtilities
 
         for (Match match = EscapeRegex.Match(text); match.Success; match = match.NextMatch())
         {
-            sb.Append(text[prevLineOffset..match.Index]);
+            sb.Append(text.AsSpan(prevLineOffset, match.Index - prevLineOffset));
             prevLineOffset = match.Index + match.Length;
 
             // An escape sequence can include several attributes (empty/unparsable is break).

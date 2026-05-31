@@ -1,4 +1,4 @@
-namespace GitCommands.Settings;
+﻿namespace GitCommands.Settings;
 
 /// <inheritdoc />
 public sealed class EnumRuntimeSetting<T> : RuntimeSetting<T> where T : struct, Enum

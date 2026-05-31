@@ -668,10 +668,10 @@ public partial class FileViewer : GitModuleControl
         double mb = data.Length / (1024d * 1024);
         if (mb >= 0.1)
         {
-            summary.Append($"{mb:N1} {_fileSizeInMb.Text} / ");
+            summary.Append($"{mb:N1}").Append(' ').Append(_fileSizeInMb.Text).Append(" / ");
         }
 
-        summary.AppendLine($"{data.Length:N0} {_bytes.Text}:")
+        summary.Append($"{data.Length:N0}").Append(' ').Append(_bytes.Text).AppendLine(":")
             .AppendLine();
 
         string hexData = ToHexDump(data, summary);
