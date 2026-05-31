@@ -1,6 +1,21 @@
 ﻿Changelog
 =========
 
+### Version v7.0.1 (31 May 2026)
+
+#### Changes:
+* [#13090] fix(SubmoduleHelpers): Support quoted filenames
+* [#13087] fix(StartFileHistoryDialog): Add missing call
+* [#13084] refactor(AppSettings): Replace dynamic type coercion with baked-in converters
+* [#13049] Optimized StringBuilder usage
+
+
+[#13090]:https://github.com/gitextensions/gitextensions/pull/13090
+[#13087]:https://github.com/gitextensions/gitextensions/pull/13087
+[#13084]:https://github.com/gitextensions/gitextensions/pull/13084
+[#13049]:https://github.com/gitextensions/gitextensions/pull/13049
+
+
 ### Version v7.0.0 (25 May 2026)
 
 #### Changes:
