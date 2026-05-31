@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog;
 ///
 /// Purpose: have methods from specific context menus also available in main menu.
 /// </summary>
-internal sealed class MenuCommand
+public sealed class MenuCommand
 {
     public static MenuCommand CreateSeparator()
     {
@@ -112,19 +112,19 @@ internal sealed class MenuCommand
     /// <summary>
     /// execute on menu click.
     /// </summary>
-    public Action? ExecuteAction;
+    public Action? ExecuteAction { get; set; }
 
     /// <summary>
     /// called if the menu item want to know if the Checked property
     /// should be true or false. If null then false.
     /// </summary>
-    public Func<bool>? IsCheckedFunc;
+    public Func<bool>? IsCheckedFunc { get; set; }
 
     /// <summary>
     /// called if the menu item want to know if the Enabled property
     /// should be true or false. If null then true.
     /// </summary>
-    public Func<bool>? IsEnabledFunc;
+    public Func<bool>? IsEnabledFunc { get; set; }
 
     /// <summary>
     /// To make the MenuCommand interact with all its associated menu items
