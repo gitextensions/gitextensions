@@ -952,6 +952,18 @@ partial class FormBrowse
         int size = iconSize > 0 ? iconSize : 16;
         toolStrip.ImageScalingSize = new Size(size, size);
 
+        // Widen the drop-down region of split buttons proportionally so the enlarged arrow
+        // (scaled by ToolStripArrowScaler) fits inside it. 11px (DPI-scaled) is the framework's
+        // baseline drop-down width for 16px icons; reset to that baseline when not enlarging.
+        int baselineDropDownWidth = GitExtUtils.GitUI.DpiUtil.Scale(11);
+        int dropDownWidth = size > 16
+            ? (int)Math.Round(baselineDropDownWidth * (size / 16.0))
+            : baselineDropDownWidth;
+        foreach (ToolStripSplitButton splitButton in toolStrip.Items.OfType<ToolStripSplitButton>())
+        {
+            splitButton.DropDownButtonWidth = dropDownWidth;
+        }
+
         // AppSettings.Font is the application font (Segoe UI 9 pt by default), applied to all
         // GitExtensionsFormBase instances and inherited by their child ToolStrips.
         Font baseFont = GitCommands.AppSettings.Font;
