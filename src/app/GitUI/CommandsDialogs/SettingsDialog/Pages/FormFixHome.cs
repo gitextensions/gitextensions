@@ -36,12 +36,12 @@ public partial class FormFixHome : GitExtensionsForm
     private static bool HasGlobalGitConfig(string path)
     {
         // Check default Git config location
-        string gitConfig = Path.Join(path, ".gitconfig");
-        if (File.Exists(gitConfig))
+        string gitConfigFile = Path.Join(path, ".gitconfig");
+        if (File.Exists(gitConfigFile))
         {
             try
             {
-                using FileStream fs = File.Open(gitConfig, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                using FileStream fs = File.Open(gitConfigFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                 return true;
             }
             catch
@@ -50,18 +50,26 @@ public partial class FormFixHome : GitExtensionsForm
             }
         }
 
-        // Check compatible location of XDG_CONFIG_HOME for "path" as potential HOME directory
+        // Check presence of XDG config directory
         string xdgConfigDir = Path.Join(path, ".config");
+        if (!Directory.Exists(xdgConfigDir))
+        {
+            return false;
+        }
+
+        // Check compatible location of XDG_CONFIG_HOME for "path" as potential HOME directory
+        // Make issues with caseing a "user problem"
+        // Allowing case insensitive equality would depend on File System type and/or setting
         string? xdgConfigHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
-        if (string.IsNullOrEmpty(xdgConfigHome) || xdgConfigHome.Equals(xdgConfigDir))
+        if (string.IsNullOrEmpty(xdgConfigHome) || xdgConfigHome == xdgConfigDir)
         {
             // Consider alternative Git config file
-            string xdgGitConfig = Path.Join(xdgConfigDir, "git/config");
-            if (File.Exists(xdgGitConfig))
+            string xdgGitConfigFile = Path.Join(xdgConfigDir, "git", "config");
+            if (File.Exists(xdgGitConfigFile))
             {
                 try
                 {
-                    using FileStream fs = File.Open(xdgGitConfig, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
+                    using FileStream fs = File.Open(xdgGitConfigFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
                     return true;
                 }
                 catch
