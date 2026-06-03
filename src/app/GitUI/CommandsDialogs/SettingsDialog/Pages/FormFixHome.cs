@@ -33,8 +33,13 @@ public partial class FormFixHome : GitExtensionsForm
         InitializeComplete();
     }
 
-    private static bool HasGlobalGitConfig(string path)
+    private static bool HasGlobalGitConfig(string? path)
     {
+        if (string.IsNullOrEmpty(path) || !Directory.Exists(path))
+        {
+            return false;
+        }
+
         // Check default Git config location
         string gitConfigFile = Path.Join(path, ".gitconfig");
         if (File.Exists(gitConfigFile))
@@ -97,15 +102,14 @@ public partial class FormFixHome : GitExtensionsForm
                 return false;
             }
 
-            string[] candidates =
-            [
-                        Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User)!,
-                        Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH"),
-                        Environment.GetEnvironmentVariable("USERPROFILE")!,
-                        Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+            string?[] candidates = [
+                Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User),
+                Environment.GetEnvironmentVariable("HOMEDRIVE") + Environment.GetEnvironmentVariable("HOMEPATH"),
+                Environment.GetEnvironmentVariable("USERPROFILE"),
+                Environment.GetFolderPath(Environment.SpecialFolder.Personal)
             ];
 
-            foreach (string candidate in candidates)
+            foreach (string? candidate in candidates)
             {
                 if (HasGlobalGitConfig(candidate))
                 {
@@ -175,7 +179,7 @@ public partial class FormFixHome : GitExtensionsForm
         try
         {
             string? userHomeDir = Environment.GetEnvironmentVariable("HOME", EnvironmentVariableTarget.User);
-            if (!string.IsNullOrEmpty(userHomeDir) && HasGlobalGitConfig(userHomeDir))
+            if (HasGlobalGitConfig(userHomeDir))
             {
                 MessageBoxes.Show(this, string.Format(_gitconfigFoundHome.Text, userHomeDir), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 defaultHome.Checked = true;
@@ -193,7 +197,7 @@ public partial class FormFixHome : GitExtensionsForm
         {
             string path = Environment.GetEnvironmentVariable("HOMEDRIVE") +
                        Environment.GetEnvironmentVariable("HOMEPATH");
-            if (!string.IsNullOrEmpty(path) && HasGlobalGitConfig(path))
+            if (HasGlobalGitConfig(path))
             {
                 MessageBoxes.Show(this, string.Format(_gitconfigFoundHomedrive.Text, path), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 defaultHome.Checked = true;
@@ -210,7 +214,7 @@ public partial class FormFixHome : GitExtensionsForm
         try
         {
             string? path = Environment.GetEnvironmentVariable("USERPROFILE");
-            if (!string.IsNullOrEmpty(path) && HasGlobalGitConfig(path))
+            if (HasGlobalGitConfig(path))
             {
                 MessageBoxes.Show(this, string.Format(_gitconfigFoundUserprofile.Text, path), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 userprofileHome.Checked = true;
@@ -227,7 +231,7 @@ public partial class FormFixHome : GitExtensionsForm
         try
         {
             string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal);
-            if (!string.IsNullOrEmpty(path) && HasGlobalGitConfig(path))
+            if (HasGlobalGitConfig(path))
             {
                 MessageBoxes.Show(this, string.Format(_gitconfigFoundPersonalFolder.Text, Environment.GetFolderPath(Environment.SpecialFolder.Personal)),
                     "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
