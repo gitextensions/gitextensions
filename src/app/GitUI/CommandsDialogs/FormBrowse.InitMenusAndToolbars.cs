@@ -130,10 +130,151 @@ partial class FormBrowse
         {
             if (e2.Button == MouseButtons.Right)
             {
-                _formBrowseMenus.ShowToolStripContextMenu(Cursor.Position, ts.Text);
+                ToolStripItem? clickedItem = ts.GetItemAt(e2.Location);
+                _formBrowseMenus.ShowToolStripContextMenu(Cursor.Position, ts.Text, ts, clickedItem);
             }
         };
     }
+
+    /// <summary>
+    /// Removes <paramref name="item"/> from <paramref name="toolStrip"/> and persists the
+    /// resulting layout so the removal survives a restart. Invoked by the "Remove this" entry
+    /// of the toolbar context menu.
+    /// </summary>
+    internal void RemoveToolbarItemAndSave(ToolStrip toolStrip, ToolStripItem item)
+    {
+        if (toolStrip is null || item is null || !toolStrip.Items.Contains(item))
+        {
+            return;
+        }
+
+        // Confirm before removing to guard against accidental right-clicks.
+        string itemName = GetToolbarItemConfirmName(item);
+        if (!MessageBoxes.Confirm(this, $"Remove \"{itemName}\" from this toolbar?", "Remove toolbar item"))
+        {
+            return;
+        }
+
+        toolStrip.Items.Remove(item);
+
+        PersistCurrentToolbarItemsLayout();
+
+        ReorganizeToolbars();
+    }
+
+    // Builds a human-readable name for an item, used in the removal confirmation prompt.
+    private static string GetToolbarItemConfirmName(ToolStripItem item)
+    {
+        static string FirstLine(string text)
+        {
+            int newLine = text.IndexOfAny(['\r', '\n']);
+            return (newLine < 0 ? text : text[..newLine]).Trim();
+        }
+
+        if (!string.IsNullOrWhiteSpace(item.Text))
+        {
+            return FirstLine(item.Text).Replace("&", "");
+        }
+
+        if (!string.IsNullOrWhiteSpace(item.ToolTipText))
+        {
+            return FirstLine(item.ToolTipText).Replace("&", "");
+        }
+
+        return !string.IsNullOrWhiteSpace(item.Name) ? item.Name! : "this item";
+    }
+
+    // Snapshots the current item layout of every toolbar into the saved config.
+    // We persist all toolbars (not just the one being edited) because the loader rebuilds each
+    // built-in toolbar from scratch when any item layout exists; a partial list would wipe the
+    // toolbars that are absent from it. Visibility/position metadata is preserved as-is.
+    private void PersistCurrentToolbarItemsLayout()
+    {
+        ToolbarLayoutConfig config = AppSettings.ToolbarLayout ?? new ToolbarLayoutConfig();
+        config.Items = [];
+
+        foreach (ToolStrip toolStrip in GetAllLayoutToolStrips())
+        {
+            string toolbarName = toolStrip.Text;
+            if (string.IsNullOrEmpty(toolbarName))
+            {
+                continue;
+            }
+
+            int order = 0;
+            foreach (ToolStripItem item in toolStrip.Items)
+            {
+                config.Items.Add(new ToolbarItemConfig
+                {
+                    ItemName = GetItemSerializationName(item, order),
+                    ToolbarName = toolbarName,
+                    Order = order,
+                    ShowText = GetItemShowText(item)
+                });
+                order++;
+            }
+        }
+
+        AppSettings.ToolbarLayout = config;
+        AppSettings.SettingsContainer.Save();
+    }
+
+    // All toolbars that participate in the saved layout: the three built-ins plus any custom toolbars.
+    private IEnumerable<ToolStrip> GetAllLayoutToolStrips()
+    {
+        yield return ToolStripMain;
+        yield return ToolStripFilters;
+        yield return ToolStripScripts;
+
+        foreach (ToolStrip customTs in toolPanel.TopToolStripPanel.Controls
+            .OfType<ToolStrip>()
+            .Where(ts => ts.Name.StartsWith(CustomToolbarNamePrefix) && !ts.IsDisposed && !string.IsNullOrEmpty(ts.Text)))
+        {
+            yield return customTs;
+        }
+    }
+
+    // Computes the name under which a live toolbar item is serialized, matching the scheme used
+    // by the Toolbars settings page so the layout round-trips through ApplyLayoutToToolStrip.
+    private static string GetItemSerializationName(ToolStripItem item, int order)
+    {
+        if (item is ToolStripSeparator)
+        {
+            return !string.IsNullOrWhiteSpace(item.Name) ? item.Name! : $"_SEPARATOR_{order}";
+        }
+
+        // Spacers and labels rebuilt from config already carry their placeholder name.
+        if (!string.IsNullOrEmpty(item.Name)
+            && (item.Name.StartsWith("_SPACER_", StringComparison.Ordinal)
+                || item.Name.StartsWith("_LABEL_", StringComparison.Ordinal)))
+        {
+            return item.Name;
+        }
+
+        // Editable label created at runtime (Name "editableLabel_N"): serialize with the
+        // "_LABEL_{encodedText}_{order}" scheme the loader expects.
+        if (item is ToolStripLabel label)
+        {
+            return $"_LABEL_{Uri.EscapeDataString(label.Text ?? string.Empty)}_{order}";
+        }
+
+        // Clones carry their source item in Tag; serialize under the canonical original name.
+        if (item.Tag is ToolStripItem source
+            && !string.IsNullOrWhiteSpace(source.Name)
+            && !source.Name.StartsWith("clone_", StringComparison.Ordinal))
+        {
+            return source.Name;
+        }
+
+        return item.Name ?? string.Empty;
+    }
+
+    // For IPushLabelItem the ShowLabel flag is authoritative; for everything else the presence
+    // of a text label is encoded by the ImageAndText display style.
+    private static bool GetItemShowText(ToolStripItem item)
+        => item is IPushLabelItem pushItem
+            ? pushItem.ShowLabel
+            : item.DisplayStyle == ToolStripItemDisplayStyle.ImageAndText;
 
     private void InitToolStripStyles(Color toolForeColor, Color toolBackColor)
     {
@@ -1184,6 +1325,22 @@ partial class FormBrowse
             rowFinalizer?.Invoke(row, rowState.RowStrips);
 
             LogToolbar($"[{logPrefix}] Row {row} final order: {string.Join(" | ", rowState.RowStrips.Select(s => s.ToolStrip).OrderBy(ts => ts.Location.X).Select(ts => $"{ts.Name}@X={ts.Location.X},Y={ts.Location.Y}"))}, hintY={hintY}");
+        }
+
+        // Re-add toolbars that were skipped above because they are currently invisible.
+        // Controls.Clear() removed every toolbar and the visible-only join never re-adds the hidden
+        // ones. Built-in toolbars survive via their backing fields (ToolStripMain, etc.), but a hidden
+        // custom toolbar has no other reference: leaving it out would orphan it (and BuildToolbarLayoutInfo
+        // could no longer find it in the panel), so toggling it off from View > Toolbars would effectively
+        // delete it instead of just hiding it. Keeping it in the panel (still invisible) lets it be
+        // discovered and shown again later. An invisible toolstrip is not laid out into a row.
+        foreach ((ToolStrip toolStrip, _, _) in layoutInfo)
+        {
+            if (!toolStrip.Visible && !toolPanel.TopToolStripPanel.Controls.Contains(toolStrip))
+            {
+                toolPanel.TopToolStripPanel.Controls.Add(toolStrip);
+                LogToolbar($"[{logPrefix}] Re-added hidden toolbar '{toolStrip.Name}' to panel to preserve it");
+            }
         }
 
         toolPanel.TopToolStripPanel.PerformLayout();
