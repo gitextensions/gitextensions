@@ -13,7 +13,7 @@ namespace GitUI.CommandsDialogs;
 /// This class is intended to have NO dependency to FormBrowse
 ///   (if needed this kind of code should be done in FormBrowseMenuCommands).
 /// </summary>
-public class FormBrowseMenus : ITranslate, IDisposable
+public class FormBrowseMenus : ITranslate
 {
     /// <summary>
     /// The menu to which we will be adding RevisionGrid command menus.
@@ -25,6 +25,8 @@ public class FormBrowseMenus : ITranslate, IDisposable
     /// </summary>
     private readonly ContextMenuStrip _toolStripContextMenu = new();
     private string? _clickedToolbarName;
+    private ToolStrip? _clickedToolStrip;
+    private ToolStripItem? _clickedItem;
 
     private List<MenuCommand>? _navigateMenuCommands;
     private List<MenuCommand>? _viewMenuCommands;
@@ -120,7 +122,7 @@ public class FormBrowseMenus : ITranslate, IDisposable
         _toolbarsMenuItem.DropDownItems.Add(customizeItem);
     }
 
-    // Refreshes the toolbars menu to reflect dynamically created toolbars.
+    /// <summary>Refreshes the toolbars menu to reflect dynamically created toolbars.</summary>
     /// <param name="dynamicToolbars">Optional dictionary of dynamically created toolbars to add.</param>
     public void RefreshToolbarsMenu(Dictionary<string, ToolStrip>? dynamicToolbars = null)
     {
@@ -129,12 +131,9 @@ public class FormBrowseMenus : ITranslate, IDisposable
         // Add dynamic toolbars to registered list if provided
         if (dynamicToolbars != null)
         {
-            foreach (var toolStrip in dynamicToolbars.Values)
+            foreach (ToolStrip toolStrip in dynamicToolbars.Values.Where(ts => !_registeredToolbars.Contains(ts)))
             {
-                if (!_registeredToolbars.Contains(toolStrip))
-                {
-                    _registeredToolbars.Add(toolStrip);
-                }
+                _registeredToolbars.Add(toolStrip);
             }
         }
 
@@ -184,6 +183,10 @@ public class FormBrowseMenus : ITranslate, IDisposable
         // This is needed because RefreshContextMenu can be called directly from Opening event
         _registeredToolbars.RemoveAll(ts => ts.IsDisposed || string.IsNullOrEmpty(ts.Text));
 
+        // Re-read the menu font on every open so a change applied in
+        // Settings > Appearance > Fonts takes effect without restarting.
+        _toolStripContextMenu.Font = AppSettings.MenuFont;
+
         // Clear context menu
         _toolStripContextMenu.Items.Clear();
 
@@ -205,6 +208,29 @@ public class FormBrowseMenus : ITranslate, IDisposable
             }
         };
         _toolStripContextMenu.Items.Add(customizeContextItem);
+
+        // When the right-click happened on top of a concrete toolbar item, offer to remove
+        // just that item from its toolbar. Placed below "Customize toolbar...". Captured in
+        // locals so the handler is not affected by a later right-click changing the fields.
+        ToolStrip? clickedToolStrip = _clickedToolStrip;
+        ToolStripItem? clickedItem = _clickedItem;
+        if (clickedToolStrip is not null && clickedItem is not null)
+        {
+            _toolStripContextMenu.Items.Add(new ToolStripSeparator());
+
+            ToolStripMenuItem removeItem = new("Remove this")
+            {
+                Name = "removeToolbarItemContextMenuItem"
+            };
+            removeItem.Click += (s, e) =>
+            {
+                if (_mainMenuStrip.FindForm() is FormBrowse formBrowse)
+                {
+                    formBrowse.RemoveToolbarItemAndSave(clickedToolStrip, clickedItem);
+                }
+            };
+            _toolStripContextMenu.Items.Add(removeItem);
+        }
     }
 
     private ToolStripItem CreateItem(ToolStrip senderToolStrip)
@@ -216,15 +242,6 @@ public class FormBrowseMenus : ITranslate, IDisposable
             Tag = senderToolStrip
         };
 
-        toolStripItem.DropDown.Closing += (sender, e) =>
-        {
-            if (e.CloseReason == ToolStripDropDownCloseReason.ItemClicked)
-            {
-                // Cancel closing menu to allow selecting/unselecting multiple items.
-                e.Cancel = true;
-            }
-        };
-
         CreateToolStripSubMenus(senderToolStrip, toolStripItem);
 
         toolStripItem.Click += (s, e) =>
@@ -232,14 +249,31 @@ public class FormBrowseMenus : ITranslate, IDisposable
             senderToolStrip.Visible = !senderToolStrip.Visible;
 
             // Persist the new visibility so that ReorganizeToolbars reads an up-to-date config
-            // and the state is preserved across restarts.
+            // and the state is preserved across restarts. Unchecking only hides the toolbar; it must
+            // not delete it.
             ToolbarLayoutConfig? config = AppSettings.ToolbarLayout;
-            if (config?.ToolbarsVisibility != null)
+            if (config != null)
             {
-                ToolbarMetadata? meta = config.ToolbarsVisibility.FirstOrDefault(t => t.Name == senderToolStrip.Text);
+                bool changed = false;
+
+                ToolbarMetadata? meta = config.ToolbarsVisibility?.FirstOrDefault(t => t.Name == senderToolStrip.Text);
                 if (meta != null)
                 {
                     meta.Visible = senderToolStrip.Visible;
+                    changed = true;
+                }
+
+                // Keep the parallel CustomToolbars list in sync: custom toolbars are recreated from
+                // their CustomToolbars metadata at startup, so its Visible flag must match.
+                CustomToolbarMetadata? customMeta = config.CustomToolbars?.FirstOrDefault(c => c.Name == senderToolStrip.Text);
+                if (customMeta != null)
+                {
+                    customMeta.Visible = senderToolStrip.Visible;
+                    changed = true;
+                }
+
+                if (changed)
+                {
                     AppSettings.ToolbarLayout = config;
                     AppSettings.SettingsContainer.Save();
                 }
@@ -256,7 +290,9 @@ public class FormBrowseMenus : ITranslate, IDisposable
 
     private static void CreateToolStripSubMenus(ToolStrip senderToolStrip, ToolStripMenuItem toolStripItem)
     {
-        const string toolbarSettingsPrefix = "formbrowse_toolbar_visibility_";
+        // The submenu lists the toolbar's actions for reference only. Enabling/disabling actions
+        // is handled exclusively by the toolbar customization window (Settings - Toolbars), so these
+        // entries are read-only: no checkbox toggling, no persistence.
         string? currentGroup = null;
         toolStripItem.DropDown.SuspendLayout();
         foreach (ToolStripItem toolbarItem in senderToolStrip.Items)
@@ -267,75 +303,34 @@ public class FormBrowseMenus : ITranslate, IDisposable
                 continue;
             }
 
-            bool belongToAGroup = BelongToAGroup(toolbarItem, out string groupName);
-            string key;
-            if (belongToAGroup)
+            if (BelongToAGroup(toolbarItem, out string groupName))
             {
+                // Collapse consecutive items of the same group into a single entry.
                 if (currentGroup == groupName)
                 {
-                    toolbarItem.Visible = LoadVisibilitySetting(groupName);
                     continue;
                 }
 
-                currentGroup = (string?)toolbarItem.Tag;
-                key = groupName;
+                currentGroup = groupName;
             }
-            else
-            {
-                key = toolbarItem.Name!;
-            }
-
-            bool visible = LoadVisibilitySetting(key, IsVisibleByDefault(key));
-
-            toolbarItem.Visible = visible;
 
             // Get display text for the menu item
             string displayText = GetToolbarItemDisplayText(toolbarItem);
 
+            // No checkbox (no Checked / CheckOnClick) and no Click handler: the entry stays
+            // enabled and normally rendered, but the left margin can no longer toggle the action.
             ToolStripMenuItem menuToolbarItem = new(displayText)
             {
-                Checked = visible,
-                CheckOnClick = true,
                 Tag = toolbarItem,
                 Image = toolbarItem.Image
-            };
-
-            menuToolbarItem.Click += (s, e) =>
-            {
-                toolbarItem.Visible = !toolbarItem.Visible;
-
-                if (!BelongToAGroup(toolbarItem, out string group))
-                {
-                    SaveVisibilitySetting(toolbarItem.Name!, toolbarItem.Visible, IsVisibleByDefault(toolbarItem.Name!));
-                }
-                else
-                {
-                    SaveVisibilitySetting(group, toolbarItem.Visible, IsVisibleByDefault(toolbarItem.Name!));
-                    foreach (ToolStripItem item in senderToolStrip.Items)
-                    {
-                        if (item.Tag == (object)group)
-                        {
-                            item.Visible = toolbarItem.Visible;
-                        }
-                    }
-                }
-
-                AdaptSeparatorsVisibility(senderToolStrip);
             };
 
             toolStripItem.DropDownItems.Add(menuToolbarItem);
         }
 
-        AdaptSeparatorsVisibility(senderToolStrip);
         toolStripItem.DropDown.ResumeLayout();
 
         return;
-
-        static bool IsVisibleByDefault(string buttonKey) => !buttonKey.Contains(FormBrowse.FetchPullToolbarShortcutsPrefix);
-        static void SaveVisibilitySetting(string key, bool visible, bool defaultValue = true)
-            => AppSettings.SetBool(toolbarSettingsPrefix + key, visible == defaultValue ? null : visible);
-        static bool LoadVisibilitySetting(string key, bool defaultValue = true)
-            => AppSettings.GetBool(toolbarSettingsPrefix + key, defaultValue);
 
         static bool BelongToAGroup(ToolStripItem toolbarItem, out string groupName)
         {
@@ -365,6 +360,13 @@ public class FormBrowseMenus : ITranslate, IDisposable
             return "--- separator ---";
         }
 
+        // Expanding spacers are ToolStripLabels named "_SPACER_<n>" whose Text is placeholder
+        // whitespace, so give them a friendly label instead of falling back to the raw Name.
+        if (item.Name is not null && item.Name.StartsWith("_SPACER_", StringComparison.Ordinal))
+        {
+            return "--- expanding spacer ---";
+        }
+
         // Check for items with dynamic text that should use a friendly name
         if (!string.IsNullOrWhiteSpace(item.Name))
         {
@@ -385,16 +387,23 @@ public class FormBrowseMenus : ITranslate, IDisposable
             }
         }
 
-        // Use ToolTipText if available (most common case)
-        if (!string.IsNullOrWhiteSpace(item.ToolTipText))
-        {
-            return item.ToolTipText.Replace("&", "");
-        }
-
-        // Use Text if available
+        // Prefer Text (the action's name) so the customize list shows the action name rather than a
+        // verbose tooltip (e.g. the merge-base or quick-search buttons carry a long descriptive
+        // ToolTipText). Many toolbar buttons are image-only with an empty Text, so fall back to
+        // ToolTipText for those.
+        // Keep only the first line: some buttons (e.g. the working-directory split button) carry a
+        // multi-line tooltip, which would otherwise force a tall menu row and, since a drop-down menu
+        // sizes every row to its tallest item, stretch the whole submenu.
         if (!string.IsNullOrWhiteSpace(item.Text))
         {
-            return item.Text.Replace("&", "");
+            return FirstLine(item.Text).Replace("&", "");
+        }
+
+        if (!string.IsNullOrWhiteSpace(item.ToolTipText))
+        {
+            // Strip a trailing keyboard shortcut hint like " (F5)" or " (Ctrl+Alt+C)" so the
+            // submenu shows the action name only, without the shortcut.
+            return StripShortcutHint(FirstLine(item.ToolTipText)).Replace("&", "");
         }
 
         // Fallback to Name
@@ -404,48 +413,25 @@ public class FormBrowseMenus : ITranslate, IDisposable
         }
 
         return $"[{item.GetType().Name}]";
+
+        static string FirstLine(string text)
+        {
+            int newLine = text.IndexOfAny(['\r', '\n']);
+            return (newLine < 0 ? text : text[..newLine]).Trim();
+        }
+
+        static string StripShortcutHint(string text)
+            => System.Text.RegularExpressions.Regex.Replace(text, @"\s*\([^)]*\)\s*$", string.Empty, System.Text.RegularExpressions.RegexOptions.None, TimeSpan.FromSeconds(1)).Trim();
     }
 
-    private static void AdaptSeparatorsVisibility(ToolStrip senderToolStrip)
-    {
-        // First pass: toolbar items from left to right
-        bool shouldHideNextSeparator = true;
-        foreach (ToolStripItem item in senderToolStrip.Items)
-        {
-            HandleCurrentItem(item);
-        }
-
-        // Second pass: toolbar items from right to left
-        shouldHideNextSeparator = true;
-        for (int i = senderToolStrip.Items.Count - 1; i >= 0; i--)
-        {
-            ToolStripItem item = senderToolStrip.Items[i];
-
-            if (item is ToolStripSeparator { Visible: false })
-            {
-                continue;
-            }
-
-            HandleCurrentItem(item);
-        }
-
-        void HandleCurrentItem(ToolStripItem toolStripItem)
-        {
-            if (toolStripItem is ToolStripSeparator separator)
-            {
-                separator.Visible = !shouldHideNextSeparator;
-                shouldHideNextSeparator = true;
-            }
-            else
-            {
-                shouldHideNextSeparator &= !toolStripItem.Visible;
-            }
-        }
-    }
-
-    public void ShowToolStripContextMenu(Point point, string? clickedToolbarName = null)
+    public void ShowToolStripContextMenu(Point point, string? clickedToolbarName = null, ToolStrip? clickedToolStrip = null, ToolStripItem? clickedItem = null)
     {
         _clickedToolbarName = clickedToolbarName;
+        _clickedToolStrip = clickedToolStrip;
+
+        // Separators and expanding spacers are layout-only; "Remove this" targets real actions.
+        _clickedItem = clickedItem is null or ToolStripSeparator ? null : clickedItem;
+
         _toolStripContextMenu.Show(point);
     }
 
