@@ -42,17 +42,9 @@ public partial class FormFixHome : GitExtensionsForm
 
         // Check default Git config location
         string gitConfigFile = Path.Join(path, ".gitconfig");
-        if (File.Exists(gitConfigFile))
+        if (CanReadFile(gitConfigFile))
         {
-            try
-            {
-                using FileStream fs = File.Open(gitConfigFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                return true;
-            }
-            catch
-            {
-                // Ignore permission or access problem
-            }
+            return true;
         }
 
         // Check presence of XDG config directory
@@ -62,29 +54,40 @@ public partial class FormFixHome : GitExtensionsForm
             return false;
         }
 
-        // Check compatible location of XDG_CONFIG_HOME for "path" as potential HOME directory
-        // Make issues with caseing a "user problem"
-        // Allowing case insensitive equality would depend on File System type and/or setting
+        // Check whether the XDG_CONFIG_HOME is compatible (unset or matching) with "path" being tested as potential HOME directory
+        // and contains a git config file in the according subfolder
+        // (refer to https://git-scm.com/docs/git-config#Documentation/git-config.txt-XDGCONFIGHOMEgitconfig)
+        // Make issues with casing a "user problem" (case-insensitive equality would depend on file system type)
         string? xdgConfigHome = Environment.GetEnvironmentVariable("XDG_CONFIG_HOME");
         if (string.IsNullOrEmpty(xdgConfigHome) || xdgConfigHome == xdgConfigDir)
         {
             // Consider alternative Git config file
             string xdgGitConfigFile = Path.Join(xdgConfigDir, "git", "config");
-            if (File.Exists(xdgGitConfigFile))
+            if (CanReadFile(xdgGitConfigFile))
             {
-                try
-                {
-                    using FileStream fs = File.Open(xdgGitConfigFile, FileMode.Open, FileAccess.Read, FileShare.ReadWrite);
-                    return true;
-                }
-                catch
-                {
-                    // Ignore permission or access problem
-                }
+                return true;
             }
         }
 
         return false;
+
+        static bool CanReadFile(string path)
+        {
+            try
+            {
+                if (!File.Exists(path))
+                {
+                    return false;
+                }
+
+                File.Open(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite).Dispose();
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
+        }
     }
 
     private static bool IsFixHome()
