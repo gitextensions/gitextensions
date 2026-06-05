@@ -64,7 +64,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
+        IReadOnlyDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
 
         data.Should().BeNull();
     }
@@ -81,7 +81,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
+        IReadOnlyDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
 
         data.Should().BeEmpty();
     }
@@ -92,7 +92,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
+        IReadOnlyDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "**");
 
         data.Should().BeEmpty();
     }
@@ -102,7 +102,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand("::translated-ahead 3::::refs/remotes/upstream/branch::my-branch");
 
-        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IReadOnlyDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -118,7 +118,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand("::ahead 10::::refs/remotes/upstream/branch::my-branch");
 
-        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IReadOnlyDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -134,7 +134,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand("::behind 2::::refs/remotes/upstream/my-branch::my-branch");
 
-        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IReadOnlyDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -150,7 +150,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand("::::::refs/remotes/upstream/my-branch::my-branch");
 
-        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IReadOnlyDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -166,7 +166,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IReadOnlyDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -182,7 +182,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IReadOnlyDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -198,7 +198,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IReadOnlyDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -214,7 +214,7 @@ public class AheadBehindDataProviderTests
     {
         SetResultOfGitCommand(result);
 
-        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
+        IReadOnlyDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "my-branch");
 
         data.Should().HaveCount(1);
         AheadBehindData aheadBehindData = data.Values.First();
@@ -234,7 +234,7 @@ public class AheadBehindDataProviderTests
                 + "::ahead 3::::refs/remotes/upstream/branch::ahead-branch\n"
                 + "::behind 4::::refs/remotes/upstream/branch::behind-branch");
 
-        IDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "*");
+        IReadOnlyDictionary<string, AheadBehindData>? data = _provider.GetTestAccessor().GetData(Encoding.UTF8, "*");
 
         data.Should().HaveCount(4);
         data.Should().BeEquivalentTo(

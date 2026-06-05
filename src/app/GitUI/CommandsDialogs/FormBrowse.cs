@@ -1058,7 +1058,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                         // because getting ahead - behind data for all branches will be (very ?) long
                         // * when there are few branches, we will end up here not in 1st
                         // and the data will be taken from cache (so what we pass as argument is kind of useless)
-                        IDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData(currentBranch);
+                        IReadOnlyDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData(currentBranch);
                         await this.SwitchToMainThreadAsync();
                         toolStripButtonPush.DisplayAheadBehindInformation(aheadBehindData, currentBranch, GetShortcutKeyTooltipString(Command.Push));
                     });

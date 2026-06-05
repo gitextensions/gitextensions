@@ -52,7 +52,7 @@ internal sealed class LocalBranchTree : BaseRefTree
         #endregion
 
         Nodes nodes = new(this);
-        IDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData();
+        IReadOnlyDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData();
         string currentBranch = _revisionGridInfo.GetCurrentBranch();
         Dictionary<string, BaseRevisionNode> pathToNode = [];
         foreach (IGitRef branch in PrioritizedBranches(branches))
