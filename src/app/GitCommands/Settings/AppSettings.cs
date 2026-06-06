@@ -98,6 +98,7 @@ public static partial class AppSettings
 
         MigrateAvatarSettings();
         MigrateSshSettings();
+        MigrateToolbarVisibilitySettings();
 
         return;
 
@@ -747,6 +748,49 @@ public static partial class AppSettings
             {
                 AppSettings.SshPath = "";
             }
+        }
+    }
+
+    private static void MigrateToolbarVisibilitySettings()
+    {
+        // The per-button toolbar visibility feature (formbrowse_toolbar_visibility_*) was removed
+        // in favour of the Settings > Toolbars customisation page. Purge any leftover keys so that
+        // the settings file stays clean for users upgrading from an older version.
+        const string p = "formbrowse_toolbar_visibility_";
+
+        // ToolStripMain buttons, pull shortcut buttons (hidden by default), FilterToolBar group keys.
+        string[] obsoleteKeys =
+        [
+            p + "toolStripButtonLevelUp",
+            p + "toolStripWorktrees",
+            p + "branchSelect",
+            p + "toolStripSplitStash",
+            p + "toolStripButtonCommit",
+            p + "toolStripButtonPull",
+            p + "toolStripButtonPush",
+            p + "toolStripFileExplorer",
+            p + "userShell",
+            p + "pull_shortcut_fetchToolStripMenuItem",
+            p + "pull_shortcut_fetchAllToolStripMenuItem",
+            p + "pull_shortcut_fetchPruneAllToolStripMenuItem",
+            p + "pull_shortcut_mergeToolStripMenuItem",
+            p + "pull_shortcut_rebaseToolStripMenuItem1",
+            p + "pull_shortcut_pullToolStripMenuItem1",
+            p + "ToolBar_group:Branch filter",
+            p + "ToolBar_group:Text filter",
+            p + "ToolBar_group:Text search",
+        ];
+
+        bool needsSave = false;
+        foreach (string key in obsoleteKeys.Where(key => SettingsContainer.GetValue(key) is not null))
+        {
+            SettingsContainer.SetValue(key, null);
+            needsSave = true;
+        }
+
+        if (needsSave)
+        {
+            SaveSettings();
         }
     }
 
