@@ -252,23 +252,6 @@ internal sealed class MessageColumnProvider : ColumnProvider
             IGitRef remote,
             ref List<RefLabelHitInfo>? hitInfos)
         {
-            RefLabelIcon icon = gitRef.IsSelected ? RefLabelIcon.Head : RefLabelIcon.LocalBranch;
-            Font branchFont = gitRef.IsSelected ? style.BoldFont : style.NormalFont;
-            (int branchIdealWidth, int backgroundHeight) = RevisionGridRefRenderer.MeasureRef(branchFont, gitRef.Name, icon, messageBounds.Height, e.Graphics!);
-
-            int branchWidth = Math.Min(messageBounds.Width - offset, branchIdealWidth);
-            if (branchWidth <= 0)
-            {
-                return;
-            }
-
-            // Absolute x where the branch capsule's right edge will be.
-            int branchRight = messageBounds.X + offset + branchWidth;
-
-            // capsuleTop: y-coordinate of the capsule top edge (same formula as DrawRef uses).
-            int outerMarginTopBottom = (messageBounds.Height - backgroundHeight) / 2;
-            int capsuleTop = messageBounds.Y + outerMarginTopBottom;
-
             bool isRemoteHighlighted = _highlightedRowIndex == e.RowIndex && ReferenceEquals(_highlightedRef, remote);
 
             if (!style.RemoteColors.TryGetValue(remote.Remote, out Color remoteColor))
@@ -276,47 +259,55 @@ internal sealed class MessageColumnProvider : ColumnProvider
                 remoteColor = RevisionGridRefRenderer.GetHeadColor(remote);
             }
 
+            // Draw the branch with a '>' right edge that meets the remote's matching left indent.
+            (Rectangle branchRect, Action? drawBranchHighlight) = DrawRef(e, gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted, gitRef.Name, RefLabelShape.PointRight);
+            if (branchRect == Rectangle.Empty)
+            {
+                return;
+            }
+
+            // Compute the point geometry to align the remote notch exactly against the branch point tip.
+            RefLabelIcon branchIcon = gitRef.IsSelected ? RefLabelIcon.Head : RefLabelIcon.LocalBranch;
+            Font branchFont = gitRef.IsSelected ? style.BoldFont : style.NormalFont;
+            (_, int backgroundHeight) = RevisionGridRefRenderer.MeasureRef(branchFont, gitRef.Name, branchIcon, messageBounds.Height, e.Graphics!);
+            int remotePointWidth = backgroundHeight / 2;
+
+            // Position the NotchLeft rect so its notch tip (rect.X + pointWidth) aligns with the branch point tip (branchRect.Right), cancelling the inter-label margin.
+            offset = branchRect.Right - remotePointWidth - messageBounds.X + 1;
+
             // Show only the remote name when the tracked branch has the same local name,
             // accounting for an optional prefix configured for the remote.
             string remoteName = remote.LocalName == GetRemotePrefix(remote.Module, remote.Remote) + gitRef.Name ? remote.Remote : remote.Name;
 
-            (Rectangle remoteRect, Action? drawRemoteHighlight) = RevisionGridRefRenderer.DrawNestledRemoteRef(
+            // Draw the remote directly via DrawRefEx with RefLabelIcon.None — the nestled remote never shows an arrow.
+            (Rectangle remoteRect, Action? drawRemoteHighlight) = RevisionGridRefRenderer.DrawRefEx(
                 e.State.HasFlag(DataGridViewElementStates.Selected),
                 style.NormalFont,
+                ref offset,
                 remoteName,
                 remoteColor,
-                branchRight,
-                capsuleTop,
-                backgroundHeight,
+                RefLabelIcon.None,
+                messageBounds,
                 e.Graphics!,
                 fill: _settings.FillRefLabels,
-                highlight: isRemoteHighlighted);
+                highlight: isRemoteHighlighted,
+                shape: RefLabelShape.NotchLeft);
 
-            // Draw the branch with a '>' right edge that meets the remote's matching left indent.
-            Rectangle branchRect = DrawRef(e, gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted, gitRef.Name, nestledRight: true);
-
-            // Draw the remote highlight last so the branch capsule drawn on top cannot overwrite its highlight edge.
+            // Draw highlight frames last so neither capsule overwrites the other's highlight edge.
+            drawBranchHighlight?.Invoke();
             drawRemoteHighlight?.Invoke();
 
-            // Advance offset past the remote's right edge (or just past the branch if the remote was not drawn).
-            offset = (remoteRect != Rectangle.Empty ? remoteRect.Right : branchRight) - messageBounds.X + DpiUtil.Scale(5);
-
             // Register hit-boxes.
-            if (branchRect != Rectangle.Empty)
-            {
-                hitInfos ??= RentHitInfoList();
-                hitInfos.Add(new RefLabelHitInfo(branchRect, gitRef, StashReflogSelector: null));
-            }
+            hitInfos ??= RentHitInfoList();
+            hitInfos.Add(new RefLabelHitInfo(branchRect, gitRef, StashReflogSelector: null));
 
             if (remoteRect == Rectangle.Empty)
             {
                 return;
             }
 
-            // No overlap: the visible remote area starts at the notch tip (remoteRect.X + chevronWidth).
-            int remoteChevronWidth = backgroundHeight / 2;
-            int remoteVisibleLeft = remoteRect.X + remoteChevronWidth - 1;
-            hitInfos ??= RentHitInfoList();
+            // The visible remote area starts at the notch tip (remoteRect.X + remotePointWidth).
+            int remoteVisibleLeft = remoteRect.X + remotePointWidth - 1;
             hitInfos.Add(new RefLabelHitInfo(
                 remoteRect with { X = remoteVisibleLeft, Width = remoteRect.Right - remoteVisibleLeft },
                 remote,
@@ -338,7 +329,9 @@ internal sealed class MessageColumnProvider : ColumnProvider
                             && gitRef.IsRemote
                             && gitRef.LocalName == GetRemotePrefix(gitRef.Module, gitRef.Remote) + singleLocalBranchName
                 ? gitRef.Remote : gitRef.Name;
-            Rectangle refRect = DrawRef(e, gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted, label);
+            RefLabelShape shape = RefLabelShape.Rect;
+            (Rectangle refRect, Action? drawHighlight) = DrawRef(e, gitRef, superprojectRef, style, messageBounds, ref offset, isHighlighted, label, shape);
+            drawHighlight?.Invoke();
             if (refRect != Rectangle.Empty)
             {
                 hitInfos ??= RentHitInfoList();
@@ -577,7 +570,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
         }
     }
 
-    private Rectangle DrawRef(
+    private (Rectangle Rect, Action? DrawHighlight) DrawRef(
         DataGridViewCellPaintingEventArgs e,
         IGitRef gitRef,
         IGitRef? superprojectRef,
@@ -586,20 +579,20 @@ internal sealed class MessageColumnProvider : ColumnProvider
         ref int offset,
         bool highlight,
         string name,
-        bool nestledRight = false)
+        RefLabelShape shape)
     {
         if (gitRef.IsBisect)
         {
             if (gitRef.IsBisectGood)
             {
                 DrawImage(e, _bisectGoodImage, messageBounds, ref offset);
-                return Rectangle.Empty;
+                return (Rectangle.Empty, DrawHighlight: null);
             }
 
             if (gitRef.IsBisectBad)
             {
                 DrawImage(e, _bisectBadImage, messageBounds, ref offset);
-                return Rectangle.Empty;
+                return (Rectangle.Empty, DrawHighlight: null);
             }
         }
 
@@ -629,7 +622,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             name += " [...]";
         }
 
-        return RevisionGridRefRenderer.DrawRef(
+        return RevisionGridRefRenderer.DrawRefEx(
             e.State.HasFlag(DataGridViewElementStates.Selected),
             font,
             ref offset,
@@ -640,8 +633,8 @@ internal sealed class MessageColumnProvider : ColumnProvider
             e.Graphics!,
             dashedLine: superprojectRef is not null,
             fill: _settings.FillRefLabels,
-            highlight: highlight,
-            nestledRight: nestledRight);
+            highlight,
+            shape);
     }
 
     private static void DrawImage(
