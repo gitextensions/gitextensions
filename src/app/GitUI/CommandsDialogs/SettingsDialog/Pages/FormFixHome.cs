@@ -290,4 +290,9 @@ public partial class FormFixHome : GitExtensionsForm
             otherHomeDir.Text = userSelectedPath;
         }
     }
+
+    internal static class TestAccessor
+    {
+        public static bool HasGlobalGitConfig(string path) => FormFixHome.HasGlobalGitConfig(path);
+    }
 }
