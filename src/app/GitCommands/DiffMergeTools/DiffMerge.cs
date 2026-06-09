@@ -1,6 +1,6 @@
 namespace GitCommands.DiffMergeTools;
 
-internal class DiffMerge : DiffMergeTool
+internal sealed class DiffMerge : DiffMergeTool
 {
     /// <inheritdoc />
     public override string ExeFileName => "sgdm.exe";

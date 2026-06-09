@@ -220,7 +220,7 @@ public sealed partial class FormSparseWorkingCopy : GitModuleForm
         }
     }
 
-    private class Globalized : Translate
+    private sealed class Globalized : Translate
     {
         public static readonly Globalized Strings = new();
 

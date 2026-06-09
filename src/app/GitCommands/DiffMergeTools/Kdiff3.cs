@@ -1,6 +1,6 @@
 namespace GitCommands.DiffMergeTools;
 
-internal class Kdiff3 : DiffMergeTool
+internal sealed class Kdiff3 : DiffMergeTool
 {
     /// <inheritdoc />
     public override string ExeFileName => "kdiff3.exe";

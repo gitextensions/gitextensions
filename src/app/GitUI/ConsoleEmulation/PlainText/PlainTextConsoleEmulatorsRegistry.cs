@@ -1,6 +1,6 @@
 namespace GitUI.ConsoleEmulation.PlainText;
 
-internal class PlainTextConsoleEmulatorsRegistry : IConsoleEmulatorsRegistry
+internal sealed class PlainTextConsoleEmulatorsRegistry : IConsoleEmulatorsRegistry
 {
     public static PlainTextConsoleEmulatorsRegistry Instance { get; } = new();
 

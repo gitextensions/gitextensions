@@ -5,7 +5,7 @@ public sealed partial class RevisionDataGridView
     /// <summary>
     /// Coordinates background update executions. Requested reruns only "queue up" upto one.
     /// </summary>
-    private class BackgroundUpdater
+    private sealed class BackgroundUpdater
     {
         private readonly Func<Task> _operation;
         private readonly int _cooldownMilliseconds;

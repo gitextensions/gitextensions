@@ -2,7 +2,7 @@
 
 namespace GitUI.Design;
 
-internal class PropertySorter : ExpandableObjectConverter
+internal sealed class PropertySorter : ExpandableObjectConverter
 {
     public override bool GetPropertiesSupported(ITypeDescriptorContext? context)
     {

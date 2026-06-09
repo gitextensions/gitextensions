@@ -5,7 +5,7 @@ using GitExtensions.Extensibility.Plugins;
 
 namespace GitExtensions.Plugins.GitHub3;
 
-internal class GitHubPullRequest : IPullRequestInformation
+internal sealed class GitHubPullRequest : IPullRequestInformation
 {
     private readonly PullRequest _pullRequest;
 

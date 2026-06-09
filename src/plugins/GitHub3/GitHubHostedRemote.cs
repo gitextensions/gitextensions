@@ -5,7 +5,7 @@ using GitUIPluginInterfaces.RepositoryHosts;
 namespace GitExtensions.Plugins.GitHub3;
 
 [DebuggerDisplay("{Data}")]
-internal class GitHubHostedRemote : IHostedRemote
+internal sealed class GitHubHostedRemote : IHostedRemote
 {
     private GitHubRepo? _repo;
 

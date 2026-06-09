@@ -5,7 +5,7 @@ using ResourceManager;
 
 namespace GitUI.LeftPanel.ContextMenu;
 
-internal class TagMenuItems<TNode> : MenuItemsGenerator<TNode>
+internal sealed class TagMenuItems<TNode> : MenuItemsGenerator<TNode>
     where TNode : class, INode
 {
     public TagMenuItems(IMenuItemFactory menuItemFactory) : base(menuItemFactory)

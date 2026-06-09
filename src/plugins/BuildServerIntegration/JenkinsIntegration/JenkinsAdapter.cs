@@ -33,7 +33,7 @@ public sealed class JenkinsIntegrationMetadata : BuildServerAdapterMetadataAttri
 [Export(typeof(IBuildServerAdapter))]
 [JenkinsIntegrationMetadata(PluginName)]
 [PartCreationPolicy(CreationPolicy.NonShared)]
-internal class JenkinsAdapter : IBuildServerAdapter
+internal sealed class JenkinsAdapter : IBuildServerAdapter
 {
     public const string PluginName = "Jenkins";
     private static readonly IBuildDurationFormatter _buildDurationFormatter = new BuildDurationFormatter();
@@ -98,7 +98,7 @@ internal class JenkinsAdapter : IBuildServerAdapter
         }
     }
 
-    private class ResponseInfo
+    private sealed class ResponseInfo
     {
         public string? Url { get; set; }
         public long Timestamp { get; set; }

@@ -1,6 +1,6 @@
 namespace GitCommands.DiffMergeTools;
 
-internal class VsCode : DiffMergeTool
+internal sealed class VsCode : DiffMergeTool
 {
     private static readonly string[] Folders = GetFolders();
 

@@ -1,6 +1,6 @@
 ﻿namespace GitUI.AutoCompletion;
 
-internal class CommitMessageMetadataProvider : IAutoCompleteProvider
+internal sealed class CommitMessageMetadataProvider : IAutoCompleteProvider
 {
     private static readonly string[] keywords = [
         "Co-authored-by: ",
@@ -10,7 +10,7 @@ internal class CommitMessageMetadataProvider : IAutoCompleteProvider
         "Tested-by: ",
         ];
 
-    private static readonly AutoCompleteWord[] _autoCompleteWords = [.. keywords.Select(k => new AutoCompleteWord(k))];
+    private static readonly AutoCompleteWord[] _autoCompleteWords = Array.ConvertAll(keywords, k => new AutoCompleteWord(k));
 
     public Task<IEnumerable<AutoCompleteWord>> GetAutoCompleteWordsAsync(CancellationToken cancellationToken)
     {

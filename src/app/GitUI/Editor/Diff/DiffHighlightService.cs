@@ -415,7 +415,7 @@ public abstract class DiffHighlightService : TextHighlightService
     private static TextMarker CreateTextMarker(int offset, int length, Color backColor)
         => new(offset, length, TextMarkerType.SolidBlock, backColor, backColor.GetTextColor());
 
-    internal class TestAccessor
+    internal sealed class TestAccessor
     {
         internal static List<ISegment> GetBlockOfLines(DiffLineInfo[] diffLines, DiffLineType diffLineType, ref int index, bool found)
             => DiffHighlightService.GetBlockOfLines(diffLines, diffLineType, ref index, found);

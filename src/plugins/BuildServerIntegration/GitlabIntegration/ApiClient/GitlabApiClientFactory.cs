@@ -5,7 +5,7 @@ public interface IGitlabApiClientFactory
     IGitlabApiClient CreateGitlabApiClient(string instanceUrl, string apiToken, int projectId);
 }
 
-internal class GitlabApiClientFactory : IGitlabApiClientFactory
+internal sealed class GitlabApiClientFactory : IGitlabApiClientFactory
 {
     public IGitlabApiClient CreateGitlabApiClient(string instanceUrl, string apiToken, int projectId)
     {

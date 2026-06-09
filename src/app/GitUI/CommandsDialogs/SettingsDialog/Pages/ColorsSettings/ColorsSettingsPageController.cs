@@ -4,7 +4,7 @@ using GitUI.Theming;
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
-internal class ColorsSettingsPageController
+internal sealed class ColorsSettingsPageController
 {
     private readonly IColorsSettingsPage _page;
     private readonly IThemeRepository _themeRepository;

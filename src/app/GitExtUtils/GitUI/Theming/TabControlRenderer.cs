@@ -2,7 +2,7 @@
 
 namespace GitExtUtils.GitUI.Theming;
 
-internal class TabControlRenderer
+internal sealed class TabControlRenderer
 {
     private readonly TabControl _tabs;
 

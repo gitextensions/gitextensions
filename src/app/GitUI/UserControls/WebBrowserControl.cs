@@ -1,6 +1,6 @@
 ﻿namespace GitUI.UserControls;
 
-internal class WebBrowserControl : WebBrowser
+internal sealed class WebBrowserControl : WebBrowser
 {
     public WebBrowserControl()
     {

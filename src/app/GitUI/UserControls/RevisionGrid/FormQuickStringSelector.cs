@@ -2,7 +2,7 @@
 
 namespace GitUI.UserControls.RevisionGrid;
 
-internal class FormQuickStringSelector : FormQuickItemSelector
+internal sealed class FormQuickStringSelector : FormQuickItemSelector
 {
     private readonly TranslationString _actionSelect = new("Select");
 

@@ -2,7 +2,7 @@ using Microsoft.Win32;
 
 namespace GitCommands.DiffMergeTools;
 
-internal class VsDiffMerge : DiffMergeTool
+internal sealed class VsDiffMerge : DiffMergeTool
 {
     private const string ExeName = "vsdiffmerge.exe";
 

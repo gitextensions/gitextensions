@@ -2,7 +2,7 @@
 
 namespace GitUI.UserControls.RevisionGrid;
 
-internal class NavigationHistory
+internal sealed class NavigationHistory
 {
     // history of selected items (browse history)
     // head == currently selected item

@@ -1,6 +1,6 @@
 namespace GitCommands.DiffMergeTools;
 
-internal class P4Merge : DiffMergeTool
+internal sealed class P4Merge : DiffMergeTool
 {
     /// <inheritdoc />
     public override string ExeFileName => "p4merge.exe";

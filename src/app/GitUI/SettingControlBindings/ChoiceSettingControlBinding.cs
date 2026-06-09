@@ -2,7 +2,7 @@
 
 namespace GitUI.SettingControlBindings;
 
-internal class ChoiceSettingControlBinding : SettingControlBinding<ChoiceSetting, ComboBox>
+internal sealed class ChoiceSettingControlBinding : SettingControlBinding<ChoiceSetting, ComboBox>
 {
     public ChoiceSettingControlBinding(ChoiceSetting setting, ComboBox? customControl)
         : base(setting, customControl)

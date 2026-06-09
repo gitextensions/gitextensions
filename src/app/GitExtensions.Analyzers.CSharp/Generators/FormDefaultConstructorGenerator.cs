@@ -6,7 +6,7 @@ using Microsoft.CodeAnalysis.CSharp.Syntax;
 namespace System.Windows.Forms.Generators;
 
 [Generator(LanguageNames.CSharp)]
-internal class FormDefaultConstructorGenerator : IIncrementalGenerator
+internal sealed class FormDefaultConstructorGenerator : IIncrementalGenerator
 {
     private static void Execute(SourceProductionContext context, Compilation compilation, ImmutableArray<string?> candidateTypes)
     {

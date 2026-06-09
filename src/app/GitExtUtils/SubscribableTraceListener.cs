@@ -13,7 +13,7 @@ public interface ISubscribableTraceListener
     event TraceHandler TraceReceived;
 }
 
-internal class SubscribableTraceListener : TraceListener, ISubscribableTraceListener
+internal sealed class SubscribableTraceListener : TraceListener, ISubscribableTraceListener
 {
     private readonly Lock _lock = new();
 

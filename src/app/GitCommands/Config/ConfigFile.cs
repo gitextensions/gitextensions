@@ -233,7 +233,7 @@ public class ConfigFile : IConfigFile
 
     #region ConfigFileParser
 
-    private class ConfigFileParser
+    private sealed class ConfigFileParser
     {
         private delegate ParsePart ParsePart(char c);
 
