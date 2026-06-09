@@ -175,7 +175,8 @@ internal sealed class MinttyControl : Panel
     {
         ThreadHelper.ThrowIfOnUIThread();
 
-        using CancellationTokenSource timeoutCts = new(TimeSpan.FromSeconds(15));
+        TimeSpan findWindowTimeout = TimeSpan.FromSeconds(15);
+        using CancellationTokenSource timeoutCts = new(findWindowTimeout);
         using CancellationTokenSource linkedCts = CancellationTokenSource.CreateLinkedTokenSource(sessionCt, timeoutCts.Token);
         CancellationToken ct = linkedCts.Token;
 
@@ -186,10 +187,11 @@ internal sealed class MinttyControl : Panel
             // and causes the host dialog's focus to flicker as it races with our embed.
             // If the wait times out under load, proceed anyway: the embed may still
             // succeed, and killing mintty here would also kill the spawned git process.
-            bool idle = await Task.Run(() => minttyProcess.WaitForInputIdle(TimeSpan.FromSeconds(10)), ct);
+            TimeSpan idleTimeout = TimeSpan.FromSeconds(10);
+            bool idle = await Task.Run(() => minttyProcess.WaitForInputIdle(idleTimeout), ct);
             if (!idle)
             {
-                throw new InvalidOperationException($"Waiting for mintty to get idle timed out after 10 seconds for PID {minttyProcess.Id}.");
+                throw new InvalidOperationException($"Waiting for mintty to get idle timed out after {idleTimeout.TotalSeconds} seconds for PID {minttyProcess.Id}.");
             }
 
             HWND hwnd = HWND.Null;
@@ -208,7 +210,7 @@ internal sealed class MinttyControl : Panel
 
             if (hwnd.IsNull)
             {
-                throw new InvalidOperationException($"Could not locate mintty window for PID {minttyProcess.Id} within 5 seconds.");
+                throw new InvalidOperationException($"Could not locate mintty window for PID {minttyProcess.Id} within {findWindowTimeout.TotalSeconds} seconds.");
             }
 
             await EmbedWindowAsync(hwnd);
@@ -227,7 +229,7 @@ internal sealed class MinttyControl : Panel
             // terminated mid-write, leaving traces like index.lock behind. Let the command finish in
             // the hidden mintty window — its output still reaches the host via stdout.
             Trace.WriteLine($"MinttyControl: Failed to embed mintty window for PID {minttyProcess.Id}. The command will continue running invisibly until completion. Error: {ex}");
-            ShowEmbedFailure(ex, minttyProcess);
+            this.InvokeAndForget(() => ShowEmbedFailure(ex, minttyProcess));
         }
     }
 
@@ -249,9 +251,10 @@ internal sealed class MinttyControl : Panel
         // Probe mintty's pump before any blocking cross-process call.
         // SendMessageTimeout(SMTO_ABORTIFHUNG) is bounded and cannot itself
         // hang. If this fails, none of the cross-process calls below are safe.
-        if (!NativeMethods.IsWindowResponsive(hwnd, TimeSpan.FromSeconds(5)))
+        TimeSpan responsivenessTimeout = TimeSpan.FromSeconds(5);
+        if (!NativeMethods.IsWindowResponsive(hwnd, responsivenessTimeout))
         {
-            throw new InvalidOperationException("Mintty window did not respond within 5 seconds.");
+            throw new InvalidOperationException($"Mintty window did not respond within {responsivenessTimeout.TotalSeconds} seconds.");
         }
 
         WINDOW_STYLE style = (WINDOW_STYLE)PInvoke.GetWindowLong(hwnd, WINDOW_LONG_PTR_INDEX.GWL_STYLE);
@@ -344,113 +347,72 @@ internal sealed class MinttyControl : Panel
 
     private void ShowEmbedFailure(Exception ex, Process minttyProcess)
     {
-        if (!IsHandleCreated || IsDisposed)
+        if (IsDisposed)
         {
             return;
         }
 
-        BeginInvoke(() =>
+        TableLayoutPanel layout = new()
         {
-            if (IsDisposed)
-            {
-                return;
-            }
+            Dock = DockStyle.Fill,
+            BackColor = SystemColors.Control,
+            ColumnCount = 1,
+            RowCount = 2,
+            Padding = new Padding(20),
+        };
+        layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
+        layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
-            TableLayoutPanel layout = new()
-            {
-                Dock = DockStyle.Fill,
-                BackColor = SystemColors.Control,
-                ColumnCount = 1,
-                RowCount = 2,
-                Padding = new Padding(20),
-            };
-            layout.RowStyles.Add(new RowStyle(SizeType.Percent, 100));
-            layout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        Label errorLabel = new()
+        {
+            // ReSharper disable once LocalizableElement - rare error, no need to localize
+            Text = $"Failed to display the embedded console:{Environment.NewLine}{ex.Message}",
+            Dock = DockStyle.Fill,
+            TextAlign = ContentAlignment.MiddleCenter,
+            AutoSize = false,
+            ForeColor = SystemColors.GrayText,
+        };
 
-            Label errorLabel = new()
+        Button showButton = new()
+        {
+            // ReSharper disable once LocalizableElement - rare error, no need to localize
+            Text = "Show mintty window externally",
+            AutoSize = true,
+            Anchor = AnchorStyles.None,
+            Margin = new Padding(0, 8, 0, 0),
+        };
+        showButton.Click += (_, _) =>
+        {
+            try
             {
-                // ReSharper disable once LocalizableElement - rare error, no need to localize
-                Text = $"Failed to display the embedded console:{Environment.NewLine}{ex.Message}",
-                Dock = DockStyle.Fill,
-                TextAlign = ContentAlignment.MiddleCenter,
-                AutoSize = false,
-                ForeColor = SystemColors.GrayText,
-            };
-
-            Button showButton = new()
-            {
-                // ReSharper disable once LocalizableElement - rare error, no need to localize
-                Text = "Show mintty window externally",
-                AutoSize = true,
-                Anchor = AnchorStyles.None,
-                Margin = new Padding(0, 8, 0, 0),
-            };
-            showButton.Click += (_, _) =>
-            {
-                // showButton.Enabled = false;
-
-                try
+                if (minttyProcess.HasExited)
                 {
-                    ShowMinttyExternally(minttyProcess);
+                    return;
                 }
-                catch (Exception clickEx)
+
+                // Try the targeted lookup first; only fall back to enumerating every top-level window of the process
+                // if it fails (e.g. mintty's pump was so slow we never saw its window appear).
+                HWND mainHwnd = NativeMethods.FindMinttyWindowForProcess(minttyProcess.Id);
+                List<HWND> windows = mainHwnd.IsNull
+                    ? NativeMethods.EnumerateProcessWindows(minttyProcess.Id)
+                    : [mainHwnd];
+
+                foreach (HWND hwnd in windows)
                 {
-                    Trace.WriteLine($"MinttyControl: Failed to surface mintty window externally: {clickEx}");
+                    // mintty was started with --window hide; if embedding failed, it threw
+                    // before we touched any styles, so the window keeps its original chrome
+                    // and just needs to be unhidden.
+                    PInvoke.ShowWindow(hwnd, SHOW_WINDOW_CMD.SW_SHOWNORMAL);
                 }
-            };
-
-            layout.Controls.Add(errorLabel, 0, 0);
-            layout.Controls.Add(showButton, 0, 1);
-            Controls.Add(layout);
-        });
-    }
-
-    private void ShowMinttyExternally(Process minttyProcess)
-    {
-        if (minttyProcess.HasExited)
-        {
-            return;
-        }
-
-        // mintty was started with --window hide; if embedding failed, it threw
-        // before we touched any styles, so the window keeps its original chrome
-        // and just needs to be unhidden.
-        HWND ownerHwnd = HWND.Null;
-        Form? hostForm = FindForm();
-        if (hostForm is { IsHandleCreated: true, IsDisposed: false })
-        {
-            ownerHwnd = (HWND)hostForm.Handle;
-        }
-
-        // Try the targeted lookup first; only fall back to enumerating every top-level window of the process
-        // if it fails (e.g. mintty's pump was so slow we never saw its window appear).
-        HWND mainHwnd = NativeMethods.FindMinttyWindowForProcess(minttyProcess.Id);
-        List<HWND> windows = mainHwnd.IsNull
-            ? NativeMethods.EnumerateProcessWindows(minttyProcess.Id)
-            : [mainHwnd];
-
-        foreach (HWND hwnd in windows)
-        {
-            if (!ownerHwnd.IsNull)
-            {
-                // GWLP_HWNDPARENT sets the owner relationship (despite the name):
-                // mintty stays above the host form — closest cross-process approximation
-                // of a modal child without disabling the host's input queue.
-
-                NativeMethods.SetWindowLongPtr(hwnd, NativeMethods.GWLP_HWNDPARENT, ownerHwnd);
             }
+            catch (Exception clickEx)
+            {
+                Trace.WriteLine($"MinttyControl: Failed to surface mintty window externally: {clickEx}");
+            }
+        };
 
-            // SWP_ASYNCWINDOWPOS posts the show to mintty's thread instead of a
-            // synchronous SendMessage — we must not block on a slow mintty pump
-            // (the same reason the embed failed in the first place).
-            PInvoke.SetWindowPos(hwnd, HWND.Null, 0, 0, 0, 0,
-                SET_WINDOW_POS_FLAGS.SWP_NOMOVE
-                | SET_WINDOW_POS_FLAGS.SWP_NOSIZE
-                | SET_WINDOW_POS_FLAGS.SWP_NOZORDER
-                | SET_WINDOW_POS_FLAGS.SWP_SHOWWINDOW
-                | SET_WINDOW_POS_FLAGS.SWP_ASYNCWINDOWPOS);
-
-            PInvoke.ShowWindow(hwnd, SHOW_WINDOW_CMD.SW_SHOWNORMAL);
-        }
+        layout.Controls.Add(errorLabel, 0, 0);
+        layout.Controls.Add(showButton, 0, 1);
+        Controls.Add(layout);
     }
 }
