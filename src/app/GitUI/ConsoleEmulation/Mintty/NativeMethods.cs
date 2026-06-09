@@ -1,4 +1,3 @@
-using System.Runtime.InteropServices;
 using Windows.Win32;
 using Windows.Win32.Foundation;
 using Windows.Win32.System.JobObjects;
@@ -11,28 +10,6 @@ internal static class NativeMethods
     internal const uint WM_CHAR = 0x0102;
     internal const uint WM_KEYDOWN = 0x0100;
     internal const uint WM_KEYUP = 0x0101;
-
-    internal const int GWLP_HWNDPARENT = -8;
-
-    /// <summary>
-    /// Cross-bitness wrapper for SetWindowLongPtr. CsWin32 does not expose the Ptr
-    /// variant, and on x86 the Win32 header defines it as a macro for SetWindowLong.
-    /// </summary>
-    internal static nint SetWindowLongPtr(HWND hwnd, int nIndex, nint newValue)
-    {
-        if (IntPtr.Size == 8)
-        {
-            return SetWindowLongPtr64(hwnd, nIndex, newValue);
-        }
-
-        return SetWindowLong32(hwnd, nIndex, (int)newValue);
-    }
-
-    [DllImport("user32.dll", EntryPoint = "SetWindowLongPtrW", CharSet = CharSet.Unicode, ExactSpelling = true)]
-    private static extern nint SetWindowLongPtr64(HWND hwnd, int nIndex, nint newLong);
-
-    [DllImport("user32.dll", EntryPoint = "SetWindowLongW", CharSet = CharSet.Unicode, ExactSpelling = true)]
-    private static extern int SetWindowLong32(HWND hwnd, int nIndex, int newLong);
 
     internal static HWND FindMinttyWindowForProcess(int processId)
     {

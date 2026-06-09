@@ -39,9 +39,11 @@ internal sealed class MinttyControl : Panel
 
         string minttyArgs = $"{BuildMinttyThemingArgs(consoleSettings)}--nodaemon --window hide --log - \"{bashPath}\" -c \"{launchParams.BashBootstrapCommand}\"";
 
-        LaunchAndEmbed(session, minttyPath, minttyArgs, startInfo.StartupDirectory, launchParams.EnvironmentVariables, ct, redirectStdout: true);
+        LaunchAndEmbed(session, minttyPath, minttyArgs, startInfo.StartupDirectory, launchParams.EnvironmentVariables, OnExited, ct, redirectStdout: true);
 
-        session.MinttyProcess!.Exited += (_, _) =>
+        return session;
+
+        void OnExited()
         {
             // If ResetSession already cancelled this CTS, skip the callback —
             // the old session was intentionally killed, not a host termination.
@@ -50,9 +52,7 @@ internal sealed class MinttyControl : Panel
                 sessionCts.Cancel();
                 startInfo.ConsoleClosedCallback?.Invoke();
             }
-        };
-
-        return session;
+        }
     }
 
     public MinttySession StartInteractiveShell(string minttyPath, string bashPath, string workDir, ConsoleEmulatorSettings consoleSettings, Action? shellExitedCallback = null)
@@ -66,9 +66,11 @@ internal sealed class MinttyControl : Panel
         MinttySession session = MinttySession.StartInteractiveShellSession();
         _runningSession = session;
 
-        LaunchAndEmbed(session, minttyPath, minttyArgs, workDir, new Dictionary<string, string>(), ct);
+        LaunchAndEmbed(session, minttyPath, minttyArgs, workDir, new Dictionary<string, string>(), OnExited, ct);
 
-        session.MinttyProcess!.Exited += (_, _) =>
+        return session;
+
+        void OnExited()
         {
             // If ResetSession already cancelled this CTS, skip the callback —
             // the old session was intentionally killed, not a host termination.
@@ -77,9 +79,7 @@ internal sealed class MinttyControl : Panel
                 sessionCts.Cancel();
                 shellExitedCallback?.Invoke();
             }
-        };
-
-        return session;
+        }
     }
 
     public void SendConsoleInput(string text)
@@ -128,16 +128,16 @@ internal sealed class MinttyControl : Panel
         _sessionCts?.Cancel();
         _sessionCts?.Dispose();
         _sessionCts = new CancellationTokenSource();
-        _runningSession?.Kill();
+        _runningSession?.Dispose();
         _runningSession = null;
     }
 
-    private void LaunchAndEmbed(
-        MinttySession session,
+    private void LaunchAndEmbed(MinttySession session,
         string minttyPath,
         string minttyArgs,
         string? workDir,
         IReadOnlyDictionary<string, string> envVariables,
+        Action onExited,
         CancellationToken ct,
         bool redirectStdout = false)
     {
@@ -164,6 +164,9 @@ internal sealed class MinttyControl : Panel
             PInvoke.AssignProcessToJobObject(_jobHandle, new HANDLE(minttyProcess.Handle));
         }
 
+        // Subscribe before enabling events so a near-instant exit (e.g. mintty fails to start)
+        // can't fire and be lost before the handler is attached.
+        minttyProcess.Exited += (_, _) => onExited();
         minttyProcess.EnableRaisingEvents = true;
 
         session.AttachProcess(minttyProcess);
@@ -236,12 +239,10 @@ internal sealed class MinttyControl : Panel
     private async Task EmbedWindowAsync(HWND hwnd)
     {
         // Capture WinForms state on the UI thread - as it's required by the control.
-        TaskCompletionSource<HWND> panelHwndTcs = new();
-        BeginInvoke(() => panelHwndTcs.SetResult((HWND)Handle));
+        TaskCompletionSource<(HWND Handle, int Width, int Height)> panelStateTcs = new();
+        BeginInvoke(() => panelStateTcs.SetResult(((HWND)Handle, Width, Height)));
 
-        HWND panelHwnd = await panelHwndTcs.Task;
-        int width = Width;
-        int height = Height;
+        (HWND panelHwnd, int width, int height) = await panelStateTcs.Task;
 
         // The synchronous cross-process Win32 calls below all send messages to
         // mintty's thread. Running them on the UI thread freezes the entire app
@@ -323,7 +324,7 @@ internal sealed class MinttyControl : Panel
             _sessionCts?.Cancel();
             _sessionCts?.Dispose();
             _sessionCts = null;
-            _runningSession?.Kill();
+            _runningSession?.Dispose();
             _runningSession = null;
 
             if (!_jobHandle.IsNull)

@@ -49,13 +49,14 @@ internal static partial class MinttyConsoleRuntime
         Action<string>? lineCallback,
         Action<int>? exitCallback)
     {
+        char[] charBuf = new char[4096];
+        StringBuilder pendingLine = new();
+        Decoder decoder = Encoding.UTF8.GetDecoder();
+
         try
         {
             Stream stdout = minttyProcess.StandardOutput.BaseStream;
             byte[] buffer = new byte[4096];
-            char[] charBuf = new char[4096];
-            Decoder decoder = Encoding.UTF8.GetDecoder();
-            StringBuilder line = new();
 
             while (true)
             {
@@ -65,24 +66,14 @@ internal static partial class MinttyConsoleRuntime
                     break;
                 }
 
-                Span<byte> bytes = buffer.AsSpan(0, read);
-
-                int chars = decoder.GetChars(bytes, charBuf, true);
-                for (int i = 0; i < chars; i++)
-                {
-                    char c = charBuf[i];
-                    line.Append(c);
-                    if (c == '\n')
-                    {
-                        EmitLine(line.ToString());
-                        line.Clear();
-                    }
-                }
+                DecodeAndEmitLines(buffer.AsSpan(0, read), flush: false);
             }
 
-            if (line.Length > 0)
+            DecodeAndEmitLines(ReadOnlySpan<byte>.Empty, flush: true);
+
+            if (pendingLine.Length > 0)
             {
-                EmitLine(line.ToString());
+                EmitLine(pendingLine.ToString());
             }
         }
         catch (Exception ex)
@@ -91,6 +82,23 @@ internal static partial class MinttyConsoleRuntime
         }
 
         return;
+
+        void DecodeAndEmitLines(ReadOnlySpan<byte> bytes, bool flush)
+        {
+            // flush: false mid-stream so a multi-byte UTF-8 sequence split across reads
+            // is carried into the next call instead of being emitted as U+FFFD.
+            int count = decoder.GetChars(bytes, charBuf, flush);
+            for (int i = 0; i < count; i++)
+            {
+                char c = charBuf[i];
+                pendingLine.Append(c);
+                if (c == '\n')
+                {
+                    EmitLine(pendingLine.ToString());
+                    pendingLine.Clear();
+                }
+            }
+        }
 
         void EmitLine(string text)
         {
@@ -170,12 +178,43 @@ internal static partial class MinttyConsoleRuntime
         {
             char c = commandLine[i];
 
-            if (c == '\\' && i + 1 < commandLine.Length && commandLine[i + 1] == '"')
+            if (c == '\\')
             {
-                // Escaped quote produced by StringExtensions.Quote(): keep the literal '"'.
-                current.Append('"');
+                // Apply the Windows CommandLineToArgvW backslash rules so a run of
+                // backslashes before a quote is interpreted correctly:
+                //   2n   backslashes + '"' => n literal backslashes, the quote toggles
+                //   2n+1 backslashes + '"' => n literal backslashes + a literal '"'
+                //   backslashes not before a '"' are all literal.
+                // Without this, a quoted path ending in '\' (escaped as `\\"`) loses its
+                // closing quote and swallows every following token.
+                int backslashes = 0;
+                while (i < commandLine.Length && commandLine[i] == '\\')
+                {
+                    backslashes++;
+                    i++;
+                }
+
+                if (i < commandLine.Length && commandLine[i] == '"')
+                {
+                    current.Append('\\', backslashes / 2);
+                    if (backslashes % 2 == 0)
+                    {
+                        inQuotes = !inQuotes;
+                    }
+                    else
+                    {
+                        current.Append('"');
+                    }
+                }
+                else
+                {
+                    current.Append('\\', backslashes);
+
+                    // Reprocess the non-backslash character (or stop at end of string).
+                    i--;
+                }
+
                 hasContent = true;
-                i++;
             }
             else if (c == '"')
             {

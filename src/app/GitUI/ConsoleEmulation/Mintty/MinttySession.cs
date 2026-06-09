@@ -4,7 +4,7 @@ using Windows.Win32.Foundation;
 
 namespace GitUI.ConsoleEmulation.Mintty;
 
-internal sealed class MinttySession
+internal sealed class MinttySession : IDisposable
 {
     private Action<string>? _lineCallback;
     private Action<int>? _exitCallback;
@@ -89,5 +89,15 @@ internal sealed class MinttySession
         {
             Trace.WriteLine(ex);
         }
+    }
+
+    // Kills the process and releases its handle. The output reader (if any) holds the
+    // stdout stream; killing closes the pipe so it drains and exits, and any read still
+    // in flight when the Process is disposed fails into the reader's own try/catch.
+    public void Dispose()
+    {
+        Kill();
+        MinttyProcess?.Dispose();
+        MinttyProcess = null;
     }
 }

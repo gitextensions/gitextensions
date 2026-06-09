@@ -113,4 +113,40 @@ public sealed class MinttyConsoleRuntimeTests
         MinttyConsoleRuntime.ConvertCommandLineToBash(@"""git"" log --author=""John Doe""")
             .Should().Be("'git' 'log' '--author=John Doe'");
     }
+
+    [Test]
+    public void ConvertCommandLineToBash_treats_doubled_backslash_before_closing_quote_as_literal_backslash()
+    {
+        // A properly escaped trailing backslash in a quoted path is written as `\\"`
+        // (two backslashes = one literal backslash, then the closing quote). Without
+        // backslash-run counting the closing quote is swallowed and every following
+        // token is merged into the path.
+        MinttyConsoleRuntime.ConvertCommandLineToBash(@"""git"" status ""C:\dir\\""")
+            .Should().Be(@"'git' 'status' 'C:\dir\'");
+    }
+
+    [Test]
+    public void ConvertCommandLineToBash_does_not_merge_tokens_after_quoted_trailing_backslash()
+    {
+        // Regression: a quoted argument ending in a backslash must not absorb the
+        // arguments that follow it.
+        MinttyConsoleRuntime.ConvertCommandLineToBash(@"""git"" -C ""C:\repo\\"" status --short")
+            .Should().Be(@"'git' '-C' 'C:\repo\' 'status' '--short'");
+    }
+
+    [Test]
+    public void ConvertCommandLineToBash_treats_even_backslash_run_before_quote_as_pairs()
+    {
+        // Four backslashes before a quote = two literal backslashes + a real quote toggle.
+        MinttyConsoleRuntime.ConvertCommandLineToBash(@"""git"" ""a\\\\""b")
+            .Should().Be(@"'git' 'a\\b'");
+    }
+
+    [Test]
+    public void ConvertCommandLineToBash_keeps_odd_backslash_run_before_quote_as_escaped_quote()
+    {
+        // Three backslashes before a quote = one literal backslash + an escaped (literal) quote.
+        MinttyConsoleRuntime.ConvertCommandLineToBash(@"""git"" ""a\\\""b""")
+            .Should().Be(@"'git' 'a\""b'");
+    }
 }
