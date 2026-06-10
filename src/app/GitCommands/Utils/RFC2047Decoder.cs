@@ -124,10 +124,10 @@ public static class RFC2047Decoder
         byte[] workingBytes = Encoding.ASCII.GetBytes(input);
         int i = startPos;
         int outputPos = i;
+        Span<char> peekAhead = stackalloc char[2];
         while (i < workingBytes.Length)
         {
             byte currentByte = workingBytes[i];
-            char[] peekAhead = new char[2];
             switch (currentByte)
             {
                 case (byte)'=':
@@ -162,7 +162,7 @@ public static class RFC2047Decoder
                         {
                             peekAhead[0] = (char)workingBytes[i + 1];
                             peekAhead[1] = (char)workingBytes[i + 2];
-                            byte decodedByte = Convert.ToByte(new string(peekAhead, 0, 2), 16);
+                            byte decodedByte = Convert.ToByte(new string(peekAhead), 16);
                             workingBytes[outputPos] = decodedByte;
                             ++outputPos;
                             i += 3;

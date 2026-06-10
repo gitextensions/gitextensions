@@ -20,7 +20,8 @@ public partial class RangeDiffHighlightService : DiffHighlightService
     {
         _diffLinesInfo = new();
         int bufferLine = 0;
-        foreach (string line in text.Split(Delimiters.LineFeed))
+        ReadOnlySpan<char> textAsSpan = text.AsSpan();
+        foreach (Range range in textAsSpan.Split(Delimiters.LineFeed))
         {
             ++bufferLine;
             _diffLinesInfo.Add(new DiffLineInfo
@@ -30,7 +31,7 @@ public partial class RangeDiffHighlightService : DiffHighlightService
                 RightLineNumber = bufferLine,
 
                 // Note that Git output occasionally corrupts context lines, so parse headers
-                LineType = RangeHeaderRegex.IsMatch(line) ? DiffLineType.Header : DiffLineType.Context
+                LineType = RangeHeaderRegex.IsMatch(textAsSpan[range]) ? DiffLineType.Header : DiffLineType.Context
             });
         }
 

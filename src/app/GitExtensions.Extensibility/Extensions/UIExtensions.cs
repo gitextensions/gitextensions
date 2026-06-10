@@ -30,7 +30,7 @@ public static class UIExtensions
 
     public static bool IsFixedWidth(this Font ft, Graphics g)
     {
-        char[] charSizes = ['i', 'a', 'Z', '%', '#', 'a', 'B', 'l', 'm', ',', '.'];
+        ReadOnlySpan<char> charSizes = ['i', 'a', 'Z', '%', '#', 'a', 'B', 'l', 'm', ',', '.'];
         float charWidth = g.MeasureString("I", ft).Width;
 
         bool fixedWidth = true;
@@ -62,7 +62,7 @@ public static class UIExtensions
         const string indent = "    ";
 
         // trying to avoid buffer re-allocation during Append()
-        StringBuilder? sb = new(bodyOrSubject.Length + 4 + notesPrefix.Length + 2 + indent.Length + notes.Length + 1);
+        StringBuilder sb = new(bodyOrSubject.Length + 4 + notesPrefix.Length + 2 + indent.Length + notes.Length + 1);
         if (!string.IsNullOrEmpty(bodyOrSubject))
         {
             sb.AppendLine(bodyOrSubject);
@@ -70,9 +70,10 @@ public static class UIExtensions
 
         sb.AppendLine().AppendLine(notesPrefix);
 
-        foreach (string line in notes.Split('\n'))
+        ReadOnlySpan<char> notesAsSpan = notes.AsSpan();
+        foreach (Range range in notesAsSpan.Split('\n'))
         {
-            sb.Append(indent).Append(line).Append('\n');
+            sb.Append(indent).Append(notesAsSpan[range]).Append('\n');
         }
 
         --sb.Length; // removing the last artificially appended \n

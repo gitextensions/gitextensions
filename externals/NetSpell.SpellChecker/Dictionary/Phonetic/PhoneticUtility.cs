@@ -1,3 +1,4 @@
+using System;
 using System.Globalization;
 
 namespace NetSpell.SpellChecker.Dictionary.Phonetic;
@@ -31,7 +32,7 @@ public static class PhoneticUtility
         bool group = false;  /* group indicator */
         bool end = false;   /* end condition indicator */
 
-        char[] memberChars = new char[200];
+        Span<char> memberChars = stackalloc char[200];
         int numMember = 0;   /* number of member in group */
 
         foreach (char cond in ruleText)
