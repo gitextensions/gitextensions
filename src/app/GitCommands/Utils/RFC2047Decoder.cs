@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Globalization;
+using System.Text;
 
 namespace GitCommands;
 
@@ -127,7 +128,6 @@ public static class RFC2047Decoder
         while (i < workingBytes.Length)
         {
             byte currentByte = workingBytes[i];
-            char[] peekAhead = new char[2];
             switch (currentByte)
             {
                 case (byte)'=':
@@ -160,9 +160,8 @@ public static class RFC2047Decoder
                     {
                         try
                         {
-                            peekAhead[0] = (char)workingBytes[i + 1];
-                            peekAhead[1] = (char)workingBytes[i + 2];
-                            byte decodedByte = Convert.ToByte(new string(peekAhead, 0, 2), 16);
+                            Span<char> hexChars = [(char)workingBytes[i + 1], (char)workingBytes[i + 2]];
+                            byte decodedByte = byte.Parse(hexChars, NumberStyles.HexNumber);
                             workingBytes[outputPos] = decodedByte;
                             ++outputPos;
                             i += 3;
