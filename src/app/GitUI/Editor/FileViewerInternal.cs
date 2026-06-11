@@ -590,7 +590,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             if (hpos <= pos)
             {
                 const string specials = " -+";
-                lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s[1..] : s);
+                lines = lines.Select(s => s.Length > 0 && specials.Contains(s[0]) ? s[1..] : s);
             }
 
             text = string.Join("\n", lines);
