@@ -12,7 +12,7 @@ public static class EdgeColor
     /// <summary>
     ///   Gets the actual color used for rendering.
     /// </summary>
-    public static Color GetRenderingColor(EdgeColorType edgeColorType, Color color)
+    public static Color GetRenderingColor(EdgeColorType edgeColorType, in Color color)
     {
         DebugHelpers.Assert(color != Color.Empty, "color != Color.Empty");
         if (edgeColorType is (EdgeColorType.Contrast or EdgeColorType.EnhancedContrast))
@@ -48,7 +48,7 @@ public static class EdgeColor
         return ColorUtil.CreateColorWithCorrectedLightness(color, correctionFactor);
     }
 
-    private static EdgeColorType GetContrastColorType(Color color, EdgeColorType colorType)
+    private static EdgeColorType GetContrastColorType(in Color color, EdgeColorType colorType)
     {
         DebugHelpers.Assert(colorType is (EdgeColorType.Contrast or EdgeColorType.EnhancedContrast), "colorType is(EdgeColorType.Contrast or EdgeColorType.EnhancedContrast)");
         if (color.GetBrightness() > BrightnessThreshold)
@@ -65,7 +65,7 @@ public static class EdgeColor
                    : EdgeColorType.LighterLighterThanSurface;
     }
 
-    private static Color GetFullContrastColor(Color color)
+    private static Color GetFullContrastColor(in Color color)
     {
         return
             color.GetBrightness() > BrightnessThreshold

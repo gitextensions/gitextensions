@@ -424,7 +424,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    internal int DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, Rectangle bounds, bool useEllipsis = true)
+    internal int DrawColumnText(DataGridViewCellPaintingEventArgs e, string text, Font font, Color color, in Rectangle bounds, bool useEllipsis = true)
     {
         TextFormatFlags flags =
             TextFormatFlags.NoPrefix |

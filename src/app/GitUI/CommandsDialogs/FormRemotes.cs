@@ -363,7 +363,7 @@ Inactive remote is completely invisible to git.");
         }
     }
 
-    private void SetRemoteColor(Color color)
+    private void SetRemoteColor(in Color color)
     {
         if (color == Color.Transparent)
         {

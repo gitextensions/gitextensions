@@ -1754,7 +1754,7 @@ public sealed partial class FileStatusList : GitModuleControl
 
         return;
 
-        void DrawString(Rectangle rect, string s, Color color)
+        void DrawString(Rectangle rect, string s, in Color color)
         {
             rect.Intersect(Rectangle.Round(e.Graphics.ClipBounds));
             if (rect.Width != 0 && rect.Height != 0)

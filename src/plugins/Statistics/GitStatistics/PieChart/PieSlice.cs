@@ -138,7 +138,7 @@ public class PieSlice : IDisposable
     /// </param>
     public PieSlice(
         float xBoundingRect, float yBoundingRect, float widthBoundingRect,
-        float heightBoundingRect, float startAngle, float sweepAngle, Color surfaceColor)
+        float heightBoundingRect, float startAngle, float sweepAngle, in Color surfaceColor)
         : this(
             xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect, 0F, startAngle, sweepAngle,
             surfaceColor, ShadowStyle.NoShadow, EdgeColorType.NoEdge)
@@ -186,7 +186,7 @@ public class PieSlice : IDisposable
     public PieSlice(
         float xBoundingRect, float yBoundingRect, float widthBoundingRect,
         float heightBoundingRect, float sliceHeight, float startAngle, float sweepAngle,
-        Color surfaceColor, ShadowStyle shadowStyle, EdgeColorType edgeColorType)
+        in Color surfaceColor, ShadowStyle shadowStyle, EdgeColorType edgeColorType)
     {
         // set some persistent values
         _actualStartAngle = startAngle;
@@ -226,8 +226,8 @@ public class PieSlice : IDisposable
     ///   Edge color type used for rendering.
     /// </param>
     public PieSlice(
-        RectangleF boundingRect, float sliceHeight, float startAngle, float sweepAngle,
-        Color surfaceColor, ShadowStyle shadowStyle, EdgeColorType edgeColorType)
+        in RectangleF boundingRect, float sliceHeight, float startAngle, float sweepAngle,
+        in Color surfaceColor, ShadowStyle shadowStyle, EdgeColorType edgeColorType)
         : this(
             boundingRect.X, boundingRect.Y, boundingRect.Width, boundingRect.Height, sliceHeight, startAngle,
             sweepAngle, surfaceColor, shadowStyle, edgeColorType)
@@ -278,7 +278,7 @@ public class PieSlice : IDisposable
     public PieSlice(
         float xBoundingRect, float yBoundingRect, float widthBoundingRect,
         float heightBoundingRect, float sliceHeight, float startAngle, float sweepAngle,
-        Color surfaceColor, ShadowStyle shadowStyle, EdgeColorType edgeColorType, float edgeLineWidth)
+        in Color surfaceColor, ShadowStyle shadowStyle, EdgeColorType edgeColorType, float edgeLineWidth)
         : this(
             xBoundingRect, yBoundingRect, widthBoundingRect, heightBoundingRect,
             sliceHeight, startAngle, sweepAngle, surfaceColor, shadowStyle, edgeColorType)
@@ -316,7 +316,7 @@ public class PieSlice : IDisposable
     /// </param>
     public PieSlice(
         Rectangle boundingRect, float sliceHeight, float startAngle, float sweepAngle,
-        Color surfaceColor, ShadowStyle shadowStyle, EdgeColorType edgeColorType,
+        in Color surfaceColor, ShadowStyle shadowStyle, EdgeColorType edgeColorType,
         float edgeLineWidth)
         : this(
             boundingRect.X, boundingRect.Y, boundingRect.Width, boundingRect.Height, sliceHeight, startAngle,
@@ -669,7 +669,7 @@ public class PieSlice : IDisposable
     /// <param name = "shadowStyle">
     ///   Shadow style used for rendering.
     /// </param>
-    protected virtual void CreateSurfaceBrushes(Color surfaceColor, ShadowStyle shadowStyle)
+    protected virtual void CreateSurfaceBrushes(in Color surfaceColor, ShadowStyle shadowStyle)
     {
         DisposeBrushes();
         BrushSurface = new SolidBrush(surfaceColor);
@@ -740,7 +740,7 @@ public class PieSlice : IDisposable
     /// <returns>
     ///   <c>Brush</c> object.
     /// </returns>
-    protected virtual Brush CreateBrushForSide(Color color, double angle)
+    protected virtual Brush CreateBrushForSide(in Color color, double angle)
     {
         double d = 1 - (0.8 * Math.Cos(angle * Math.PI / 180));
         return
@@ -760,7 +760,7 @@ public class PieSlice : IDisposable
     /// <returns>
     ///   <c>Brush</c> object.
     /// </returns>
-    protected virtual Brush CreateBrushForPeriphery(Color color)
+    protected virtual Brush CreateBrushForPeriphery(in Color color)
     {
         Color color1 =
             ColorUtil.CreateColorWithCorrectedLightness(

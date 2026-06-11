@@ -36,10 +36,10 @@ internal sealed class DashboardTheme
                                   backgroundImage: Images.DashboardBackgroundGrey);
     }
 
-    private DashboardTheme(Color searchBackColor, Color startBackColor, Color contributeBackColor,
-                             Color headerBackColor, Color logoBackColor,
-                             Color primaryText, Color secondaryText, Color accentedText,
-                             Color primaryHeadingText, Color secondaryHeadingText,
+    private DashboardTheme(in Color searchBackColor, in Color startBackColor, in Color contributeBackColor,
+                             in Color headerBackColor, in Color logoBackColor,
+                             in Color primaryText, in Color secondaryText, in Color accentedText,
+                             in Color primaryHeadingText, in Color secondaryHeadingText,
                              Image backgroundImage)
     {
         SearchBackColor = searchBackColor;

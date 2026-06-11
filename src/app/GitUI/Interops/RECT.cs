@@ -20,7 +20,7 @@ internal static partial class NativeMethods
             this.bottom = bottom;
         }
 
-        public RECT(Rectangle r)
+        public RECT(in Rectangle r)
         {
             left = r.Left;
             top = r.Top;
@@ -28,10 +28,10 @@ internal static partial class NativeMethods
             bottom = r.Bottom;
         }
 
-        public static implicit operator Rectangle(RECT r)
+        public static implicit operator Rectangle(in RECT r)
             => Rectangle.FromLTRB(r.left, r.top, r.right, r.bottom);
 
-        public static implicit operator RECT(Rectangle r)
+        public static implicit operator RECT(in Rectangle r)
             => new(r);
 
         public readonly Size Size

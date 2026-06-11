@@ -28,7 +28,7 @@ internal static class RevisionGridRefRenderer
     ///  Creates a closed path for a remote capsule whose left edge is a concave '>' notch
     ///  that exactly fits the convex chevron tip of a preceding branch capsule.
     /// </summary>
-    private static GraphicsPath CreateChevronLeftRoundRectPath(Rectangle rect, int radius, int chevronWidth)
+    private static GraphicsPath CreateChevronLeftRoundRectPath(in Rectangle rect, int radius, int chevronWidth)
     {
         int left = rect.X;
         int top = rect.Y;
@@ -51,7 +51,7 @@ internal static class RevisionGridRefRenderer
     ///  Creates a closed path for a branch capsule whose right edge is a '&gt;' chevron point
     ///  instead of a rounded cap, so it visually connects to a nestled remote label.
     /// </summary>
-    private static GraphicsPath CreateChevronRightRoundRectPath(Rectangle rect, int radius, int chevronWidth)
+    private static GraphicsPath CreateChevronRightRoundRectPath(in Rectangle rect, int radius, int chevronWidth)
     {
         int left = rect.X;
         int top = rect.Y;
@@ -70,7 +70,7 @@ internal static class RevisionGridRefRenderer
         return path;
     }
 
-    internal static GraphicsPath CreateRoundRectPath(Rectangle rect, int radius)
+    internal static GraphicsPath CreateRoundRectPath(in Rectangle rect, int radius)
     {
         int left = rect.X;
         int top = rect.Y;
@@ -176,7 +176,7 @@ internal static class RevisionGridRefRenderer
     ///  Draws a ref label and returns the painted rectangle in the same coordinate space as <paramref name="bounds"/>.
     /// </summary>
     /// <returns>The bounding rectangle of the drawn ref label in DataGridView client coordinates, or <see cref="Rectangle.Empty"/> if nothing was drawn.</returns>
-    public static Rectangle DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false, bool highlight = false, bool nestledRight = false)
+    public static Rectangle DrawRef(bool isRowSelected, Font font, ref int offset, string name, in Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false, bool highlight = false, bool nestledRight = false)
     {
         int paddingLeftRight = PaddingLeftRight(name);
         int paddingTopBottom = PaddingTopBottom;
@@ -230,7 +230,7 @@ internal static class RevisionGridRefRenderer
         return rect;
     }
 
-    private static void DrawRefBackground(bool isRowSelected, Graphics graphics, Color color, Rectangle bounds, GraphicsPath path, RefArrowType arrowType, bool dashedLine, bool fill, bool highlight)
+    private static void DrawRefBackground(bool isRowSelected, Graphics graphics, in Color color, in Rectangle bounds, GraphicsPath path, RefArrowType arrowType, bool dashedLine, bool fill, bool highlight)
     {
         SmoothingMode oldMode = graphics.SmoothingMode;
         graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -296,7 +296,7 @@ internal static class RevisionGridRefRenderer
         return AppColor.OtherTag.GetThemeColor();
     }
 
-    private static void DrawArrow(Graphics graphics, float x, float y, float rowHeight, Color color, bool filled)
+    private static void DrawArrow(Graphics graphics, float x, float y, float rowHeight, in Color color, bool filled)
     {
         ThreadHelper.AssertOnUIThread();
 

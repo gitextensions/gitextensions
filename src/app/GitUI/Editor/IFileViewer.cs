@@ -33,7 +33,7 @@ public interface IFileViewer
     void SetText(string text, Action? openWithDifftool);
     void SetHighlighting(string syntax);
     void SetHighlightingForFile(string filename);
-    void HighlightLines(int startLine, int endLine, Color color);
+    void HighlightLines(int startLine, int endLine, in Color color);
     void ClearHighlighting();
     string GetSelectedText();
     int GetSelectionPosition();

@@ -35,7 +35,7 @@ public class ThemePersistence : IThemePersistence
         File.WriteAllText(themeFileName, serialized);
     }
 
-    private static string FormatColor(Color color)
+    private static string FormatColor(in Color color)
     {
         int rgb = color.ToArgb() & 0x00_ff_ff_ff;
         return $"#{rgb:x6}";
@@ -43,7 +43,7 @@ public class ThemePersistence : IThemePersistence
 
     internal static class TestAccessor
     {
-        public static string FormatColor(Color color) =>
+        public static string FormatColor(in Color color) =>
             ThemePersistence.FormatColor(color);
     }
 }

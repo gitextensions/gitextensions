@@ -520,7 +520,7 @@ public partial class FileViewer : GitModuleControl
     public int CurrentFileColumn => internalFileViewer.CurrentFileColumn;
     public int CurrentFileLine => internalFileViewer.CurrentFileLine();
 
-    public void HighlightLines(int startLine, int endLine, Color color)
+    public void HighlightLines(int startLine, int endLine, in Color color)
     {
         internalFileViewer.HighlightLines(startLine, endLine, color);
     }

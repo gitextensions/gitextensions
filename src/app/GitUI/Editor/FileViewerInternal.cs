@@ -733,7 +733,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         set => TextEditor.ActiveTextAreaControl.Caret.Position = new TextLocation(TextEditor.ActiveTextAreaControl.Caret.Position.Column, value);
     }
 
-    public void HighlightLines(int startLine, int endLine, Color color)
+    public void HighlightLines(int startLine, int endLine, in Color color)
     {
         IDocument document = TextEditor.Document;
         if (startLine > endLine || endLine >= document.TotalNumberOfLines)

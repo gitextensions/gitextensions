@@ -54,7 +54,7 @@ public class BlameAuthorMargin : AbstractMargin
         _isVisible = isVisible;
     }
 
-    public override void Paint(Graphics g, Rectangle rect)
+    public override void Paint(Graphics g, in Rectangle rect)
     {
         if (rect.Width <= 0 || rect.Height <= 0 || _blameLines?.Count is not > 0)
         {

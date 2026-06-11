@@ -49,7 +49,7 @@ public class DiffViewerLineNumberControl : AbstractMargin
         return diffLine;
     }
 
-    public override void Paint(Graphics g, Rectangle rect)
+    public override void Paint(Graphics g, in Rectangle rect)
     {
         int numbersWidth = Width - _textHorizontalMargin;
         int leftWidth = _showLeftColumn ? _textHorizontalMargin + (numbersWidth / 2) : 0;

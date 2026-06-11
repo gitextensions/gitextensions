@@ -394,7 +394,7 @@ public class SplitButton : Button
         }
     }
 
-    private void PaintArrow(Graphics g, Rectangle dropDownRect)
+    private void PaintArrow(Graphics g, in Rectangle dropDownRect)
     {
         Point middle = new(Convert.ToInt32(dropDownRect.Left + (dropDownRect.Width / 2)), Convert.ToInt32(dropDownRect.Top + (dropDownRect.Height / 2)));
 
@@ -578,7 +578,7 @@ public class SplitButton : Button
         return new Rectangle(x, y, sizeOfObject.Width, sizeOfObject.Height);
     }
 
-    private void LayoutTextBeforeOrAfterImage(Rectangle totalArea, bool textFirst, Size textSize, Size imageSize, out Rectangle textRect, out Rectangle imageRect)
+    private void LayoutTextBeforeOrAfterImage(in Rectangle totalArea, bool textFirst, Size textSize, in Size imageSize, out Rectangle textRect, out Rectangle imageRect)
     {
         int element_spacing = 0;    // Spacing between the Text and the Image
         int total_width = textSize.Width + element_spacing + imageSize.Width;
@@ -636,7 +636,7 @@ public class SplitButton : Button
         imageRect = final_image_rect;
     }
 
-    private void LayoutTextAboveOrBelowImage(Rectangle totalArea, bool textFirst, Size textSize, Size imageSize, out Rectangle textRect, out Rectangle imageRect)
+    private void LayoutTextAboveOrBelowImage(in Rectangle totalArea, bool textFirst, Size textSize, Size imageSize, out Rectangle textRect, out Rectangle imageRect)
     {
         int element_spacing = 0;    // Spacing between the Text and the Image
         int total_height = textSize.Height + element_spacing + imageSize.Height;
@@ -746,7 +746,7 @@ public class SplitButton : Button
         return VerticalAlignment.Top;
     }
 
-    private static Rectangle AlignInRectangle(Rectangle outer, Size inner, ContentAlignment align)
+    private static Rectangle AlignInRectangle(in Rectangle outer, in Size inner, ContentAlignment align)
     {
         int x = 0;
         int y = 0;

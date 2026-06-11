@@ -31,7 +31,7 @@ internal sealed class WindowPositionManager : IWindowPositionManager
     /// <param name="calculatedWindowBounds">The intended location of the window.</param>
     /// <param name="workingAreas">The working areas of all available screens.</param>
     /// <returns>A most likely visible location for the window.</returns>
-    public static Point FitWindowOnScreen(Rectangle calculatedWindowBounds, IEnumerable<Rectangle> workingAreas)
+    public static Point FitWindowOnScreen(in Rectangle calculatedWindowBounds, IEnumerable<Rectangle> workingAreas)
     {
         foreach (Rectangle screen in workingAreas)
         {
@@ -45,7 +45,7 @@ internal sealed class WindowPositionManager : IWindowPositionManager
         return workingAreas.FirstOrDefault(screen => !screen.IsEmpty).Location;
     }
 
-    private static bool IsDisplayedOn10Percent(Rectangle screen, Rectangle window)
+    private static bool IsDisplayedOn10Percent(in Rectangle screen, in Rectangle window)
     {
         if (screen.IsEmpty || window.IsEmpty)
         {

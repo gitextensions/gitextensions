@@ -624,7 +624,7 @@ internal static class RichTextBoxXhtmlSupportExtension
         return result;
     }
 
-    private static int GetCOLORREF(Color color)
+    private static int GetCOLORREF(in Color color)
     {
         int r = color.R;
         int g = color.G;

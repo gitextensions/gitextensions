@@ -11,6 +11,6 @@ public static class OtherColors
     public static readonly Color BrightYellow = Color.FromArgb(255, 255, 128).DimDarkModeColor();
     public static readonly Color BrightRed = Color.FromArgb(255, 128, 128).DimDarkModeColor();
 
-    public static Color DimDarkModeColor(this Color color)
+    public static Color DimDarkModeColor(this in Color color)
         => Application.IsDarkModeEnabled ? color.DimColor() : color;
 }

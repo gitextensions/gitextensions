@@ -165,7 +165,7 @@ public class InitialsAvatarProvider : IAvatarProvider
         }
     }
 
-    private Image DrawText(string? text, Brush foreColor, Color backColor, int avatarSize)
+    private Image DrawText(string? text, Brush foreColor, in Color backColor, int avatarSize)
     {
         Validates.NotNull(_estimationFont);
         Validates.NotNull(_fontFamily);

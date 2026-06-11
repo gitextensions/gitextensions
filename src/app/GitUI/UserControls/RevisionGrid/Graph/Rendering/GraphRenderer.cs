@@ -79,7 +79,7 @@ internal static class GraphRenderer
                         SegmentLanesInfo nextLanes = GetLanesInfo(revisionGraphSegment, currentRow, nextRow, getSegmentsForRow(index + 2), skipSecondarySharedSegments, config.MergeGraphLanesHavingCommonParent);
                         return GetDiagonalSegmentInfo(nextLanes, config.MergeGraphLanesHavingCommonParent);
                     });
-                    DiagonalSegmentInfo currentSegmentInfo = GetDiagonalSegmentInfo(lanes, config.MergeGraphLanesHavingCommonParent);
+                    DiagonalSegmentInfo currentSegmentInfo = GetDiagonalSegmentInfo(in lanes, config.MergeGraphLanesHavingCommonParent);
 
                     DrawSegmentWithDiagonals(segmentRenderer, p, previousSegmentInfo, currentSegmentInfo, nextSegmentInfo);
                 }

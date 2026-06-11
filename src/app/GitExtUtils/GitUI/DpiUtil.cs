@@ -152,7 +152,7 @@ public static class DpiUtil
     /// Modifies <paramref name="point"/> in place so that it has equivalent physical
     /// screen position at the current DPI as the original value would at <paramref name="originalDpi"/>.
     /// </summary>
-    public static Point Scale(Point point, int originalDpi)
+    public static Point Scale(in Point point, int originalDpi)
     {
         float scale = (float)DpiX / originalDpi;
 

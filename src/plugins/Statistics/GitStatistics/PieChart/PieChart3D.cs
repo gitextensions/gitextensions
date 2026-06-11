@@ -144,7 +144,7 @@ public class PieChart3D : IDisposable
     /// <param name = "values">
     ///   Array of values to initialize with.
     /// </param>
-    public PieChart3D(RectangleF boundingRectangle, decimal[] values, float sliceRelativeHeight)
+    public PieChart3D(in RectangleF boundingRectangle, decimal[] values, float sliceRelativeHeight)
         : this(
             boundingRectangle.X, boundingRectangle.Y, boundingRectangle.Width, boundingRectangle.Y, values,
             sliceRelativeHeight)
@@ -202,7 +202,7 @@ public class PieChart3D : IDisposable
     /// <param name = "sliceRelativeHeight">
     ///   Pie slice relative height.
     /// </param>
-    public PieChart3D(RectangleF boundingRectangle, decimal[] values, Color[] sliceColors, float sliceRelativeHeight)
+    public PieChart3D(in RectangleF boundingRectangle, decimal[] values, Color[] sliceColors, float sliceRelativeHeight)
         : this(boundingRectangle, values, sliceRelativeHeight)
     {
         SliceColors = sliceColors;
@@ -776,7 +776,7 @@ public class PieChart3D : IDisposable
     /// </returns>
     protected virtual PieSlice CreatePieSlice(float boundingRectLeft, float boundingRectTop, float boundingRectWidth,
                                               float boundingRectHeight, float sliceHeight, float startAngle,
-                                              float sweepAngle, Color color, ShadowStyle shadowStyle,
+                                              float sweepAngle, in Color color, ShadowStyle shadowStyle,
                                               EdgeColorType edgeColorType, float edgeLineWidth)
     {
         return new PieSlice(boundingRectLeft, boundingRectTop, boundingRectWidth, boundingRectHeight, sliceHeight,
@@ -829,7 +829,7 @@ public class PieChart3D : IDisposable
     protected virtual PieSlice CreatePieSliceHighlighted(float boundingRectLeft, float boundingRectTop,
                                                          float boundingRectWidth, float boundingRectHeight,
                                                          float sliceHeight, float startAngle, float sweepAngle,
-                                                         Color color, ShadowStyle shadowStyle,
+                                                         in Color color, ShadowStyle shadowStyle,
                                                          EdgeColorType edgeColorType, float edgeLineWidth)
     {
         Color highLightedColor = ColorUtil.CreateColorWithCorrectedLightness(color,

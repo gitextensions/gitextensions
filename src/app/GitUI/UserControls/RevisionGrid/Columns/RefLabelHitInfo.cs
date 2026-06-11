@@ -8,4 +8,4 @@ namespace GitUI.UserControls.RevisionGrid.Columns;
 ///  enabling hit-testing for mouse hover and context menu interactions.
 ///  Exactly one of <see cref="GitRef"/> or <see cref="StashReflogSelector"/> will be non-null.
 /// </summary>
-internal readonly record struct RefLabelHitInfo(Rectangle Bounds, IGitRef? GitRef, string? StashReflogSelector);
+internal readonly record struct RefLabelHitInfo(in Rectangle Bounds, IGitRef? GitRef, string? StashReflogSelector);

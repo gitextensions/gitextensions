@@ -12,7 +12,7 @@ public static class RectangleExtensions
     ///  reducing the width accordingly.
     /// </summary>
     [Pure]
-    public static Rectangle ReduceLeft(this Rectangle rect, int offset)
+    public static Rectangle ReduceLeft(this in Rectangle rect, int offset)
     {
         return new Rectangle(
             rect.Left + offset,
@@ -25,7 +25,7 @@ public static class RectangleExtensions
     ///  Returns a new rectangle with its width reduced from the right by <paramref name="offset"/>.
     /// </summary>
     [Pure]
-    public static Rectangle ReduceRight(this Rectangle rect, int offset)
+    public static Rectangle ReduceRight(this in Rectangle rect, int offset)
     {
         return new Rectangle(
             rect.Left,

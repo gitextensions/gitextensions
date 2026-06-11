@@ -93,7 +93,7 @@ internal sealed class PathFormatter
             formatFlags);
     }
 
-    public void DrawString(string str, Rectangle rect, Color color) =>
+    public void DrawString(string str, in Rectangle rect, in Color color) =>
         TextRenderer.DrawText(_graphics, str, _font, rect, color, FilePathStringFormat);
 
     private static (string? prefix, string? text, string? suffix) FormatString(string name, string? oldName, int step)

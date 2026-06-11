@@ -16,7 +16,7 @@ public class WindowPosition
         DeviceDpi = 96;
     }
 
-    public WindowPosition(Rectangle rect, int deviceDpi, FormWindowState state, string name)
+    public WindowPosition(in Rectangle rect, int deviceDpi, FormWindowState state, string name)
     {
         Rect = rect;
         DeviceDpi = deviceDpi;

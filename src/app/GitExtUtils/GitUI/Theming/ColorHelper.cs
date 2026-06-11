@@ -21,7 +21,7 @@ public static class ColorHelper
     ///  Blends the color with the current editor background color at 50% in linear light (sRGB gamma-corrected) space,
     ///  producing a perceptually correct midpoint. The original alpha is preserved.
     /// </summary>
-    public static Color DimColor(this Color color)
+    public static Color DimColor(this in Color color)
     {
         Color background = ThemeSettings.Theme.GetColor(AppColor.EditorBackground);
         byte r = SrgbDelinearize((SrgbLinearize(color.R) + SrgbLinearize(background.R)) * 0.5);
@@ -33,11 +33,11 @@ public static class ColorHelper
     public static void SetForeColorForBackColor(this Control control)
         => control.ForeColor = control.ForeColor.AdaptForeColor(control.BackColor);
 
-    public static Color GetTextColor(this Color backColor)
+    public static Color GetTextColor(this in Color backColor)
         => ThemeSettings.Theme.GetNonEmptyColor(KnownColor.WindowText).AdaptForeColor(backColor);
 
     public static Color AdaptForeColor(
-        this Color original, Color backColor)
+        this in Color original, Color backColor)
     {
         if (backColor == Color.Empty)
         {
@@ -63,7 +63,7 @@ public static class ColorHelper
     /// </summary>
     /// <param name="original">The original <see cref="Color"/></param>
     /// <returns>The adapted color.</returns>
-    public static Color AdaptBackColor(this Color original)
+    public static Color AdaptBackColor(this in Color original)
     {
         if (IsDefaultTheme)
         {
@@ -88,7 +88,7 @@ public static class ColorHelper
     }
 
     /// <remarks>0.05 is subtle. 0.3 is quite strong.</remarks>
-    public static Color MakeDarkerBy(this Color color, double amount) =>
+    public static Color MakeDarkerBy(this in Color color, double amount) =>
         color.TransformHsl(l: l => l - amount);
 
     public static void AdaptImageLightness(this ToolStripItem item) =>
@@ -149,10 +149,10 @@ public static class ColorHelper
         result = Color.FromArgb(original.A, result);
         return result;
 
-        double PerceptedL((Color rgb, HslColor hsl) c) =>
+        double PerceptedL(in (Color rgb, HslColor hsl) c) =>
             ColorHelper.PerceptedL(c.rgb, c.hsl.L);
 
-        (Color rgb, HslColor hsl) RgbHsl(Color c) =>
+        (Color rgb, HslColor hsl) RgbHsl(in Color c) =>
             (c, new HslColor(c));
     }
 
@@ -197,7 +197,7 @@ public static class ColorHelper
     }
 
     private static Color TransformHsl(
-        this Color c,
+        this in Color c,
         Func<double, double>? h = null,
         Func<double, double>? s = null,
         Func<double, double>? l = null)
@@ -210,10 +210,10 @@ public static class ColorHelper
         return transformed.ToColor();
     }
 
-    private static double PerceptedL(Color rgb, double l) =>
+    private static double PerceptedL(in Color rgb, double l) =>
         l.GammaTransform(Gamma(rgb));
 
-    private static double ActualL(Color rgb, double percepted) =>
+    private static double ActualL(in Color rgb, double percepted) =>
         percepted.GammaTransform(1d / Gamma(rgb));
 
     private static double GammaTransform(this double l, double gamma)
@@ -227,7 +227,7 @@ public static class ColorHelper
         return 1 + (gamma * (l - 1));
     }
 
-    private static double Gamma(Color c)
+    private static double Gamma(in Color c)
     {
         if (c.R == c.G && c.G == c.B)
         {
@@ -241,16 +241,16 @@ public static class ColorHelper
         return (c.R + c.G + c.B) / ((c.R * r) + (c.G * g) + (c.B * b));
     }
 
-    public static HslColor ToPerceptedHsl(this Color rgb)
+    public static HslColor ToPerceptedHsl(this in Color rgb)
     {
         HslColor hsl = new(rgb);
         return hsl.WithLuminosity(PerceptedL(rgb, hsl.L));
     }
 
-    public static HslColor ToActualHsl(this HslColor hsl, Color rgb) =>
+    public static HslColor ToActualHsl(this in HslColor hsl, Color rgb) =>
         hsl.WithLuminosity(ActualL(rgb, hsl.L));
 
-    private static Color AdaptToColorblindness(this Color color)
+    private static Color AdaptToColorblindness(this in Color color)
     {
         double excludeHTo = 15d; // orange
 
@@ -277,7 +277,7 @@ public static class ColorHelper
     /// <returns><see langword="true"/> if the theme is default; otherwise <see langword="false"/>.</returns>
     private static bool IsDefaultTheme => ThemeSettings.Theme.Id == ThemeId.DefaultLight;
 
-    public static Color Lerp(Color colour, Color to, float amount)
+    public static Color Lerp(in Color colour, in Color to, float amount)
     {
         // start colours as lerp-able floats
         float sr = colour.R, sg = colour.G, sb = colour.B;
@@ -312,7 +312,7 @@ public static class ColorHelper
     ///  Note that the rgb midpoint is closer to 77 than 7f, not linear.
     /// </param>
     /// <returns>the black or white color to use as foreground</returns>
-    public static Color GetContrastColor(this Color backgroundColor, float luminanceThreshold)
+    public static Color GetContrastColor(this in Color backgroundColor, float luminanceThreshold)
     {
         // scale so 0.5 corresponds to the WCAG equal-contrast midpoint between black and white
         const float wcagEqualContrastMidpoint = 0.185f;
@@ -321,7 +321,7 @@ public static class ColorHelper
         return luminance > luminanceThreshold ? Color.Black : Color.White;
     }
 
-    private static double WcagRelativeLuminance(Color c) =>
+    private static double WcagRelativeLuminance(in Color c) =>
         (0.2126 * SrgbLinearize(c.R)) + (0.7152 * SrgbLinearize(c.G)) + (0.0722 * SrgbLinearize(c.B));
 
     private static double SrgbLinearize(byte channel)
@@ -336,7 +336,7 @@ public static class ColorHelper
         return (byte)Math.Round(Math.Clamp(normalized * 255.0, 0.0, 255.0));
     }
 
-    private static double WcagContrastRatio(Color c1, Color c2)
+    private static double WcagContrastRatio(in Color c1, in Color c2)
     {
         double l1 = WcagRelativeLuminance(c1);
         double l2 = WcagRelativeLuminance(c2);
@@ -348,7 +348,7 @@ public static class ColorHelper
     ///  <paramref name="background"/>, mirroring the xterm.js algorithm used by VS Code.
     ///  If neither direction reaches the target, the result with the higher contrast ratio is returned.
     /// </summary>
-    private static Color EnsureContrast(Color background, Color foreground, double ratio = 4.5)
+    private static Color EnsureContrast(in Color background, in Color foreground, double ratio = 4.5)
     {
         if (WcagContrastRatio(background, foreground) >= ratio)
         {
@@ -376,7 +376,7 @@ public static class ColorHelper
             : resultB;
     }
 
-    private static Color ReduceLuminance(Color background, Color foreground, double ratio)
+    private static Color ReduceLuminance(in Color background, in Color foreground, double ratio)
     {
         int r = foreground.R, g = foreground.G, b = foreground.B;
         Color current = foreground;
@@ -391,7 +391,7 @@ public static class ColorHelper
         return current;
     }
 
-    private static Color IncreaseLuminance(Color background, Color foreground, double ratio)
+    private static Color IncreaseLuminance(in Color background, in Color foreground, double ratio)
     {
         int r = foreground.R, g = foreground.G, b = foreground.B;
         Color current = foreground;

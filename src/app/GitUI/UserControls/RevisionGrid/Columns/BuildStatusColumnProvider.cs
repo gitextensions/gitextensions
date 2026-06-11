@@ -91,7 +91,7 @@ internal sealed class BuildStatusColumnProvider : ColumnProvider
 
         return;
 
-        Color GetColor(Color foreColor)
+        Color GetColor(in Color foreColor)
         {
             bool isSelected = _gridView.Rows[e.RowIndex].Selected;
 

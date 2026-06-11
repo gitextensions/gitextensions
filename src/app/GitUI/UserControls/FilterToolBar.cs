@@ -194,7 +194,7 @@ internal partial class FilterToolBar : ToolStripEx
         SelectShowBranchesFilterOption(selectedIndex);
     }
 
-    public void InitToolStripStyles(Color toolForeColor, Color toolBackColor)
+    public void InitToolStripStyles(in Color toolForeColor, in Color toolBackColor)
     {
         tsddbtnRevisionFilter.BackColor = toolBackColor;
         tsddbtnRevisionFilter.ForeColor = toolForeColor;
