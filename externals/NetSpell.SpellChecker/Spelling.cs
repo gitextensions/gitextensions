@@ -528,7 +528,7 @@ public partial class Spelling : Component
             {
                 int diag = matrix[i - 1, j - 1];
 
-                if (source.Substring(i - 1, 1) != target.Substring(j - 1, 1))
+                if (!source.AsSpan(i - 1, 1).SequenceEqual(target.AsSpan(j - 1, 1)))
                 {
                     diag++;
                 }
