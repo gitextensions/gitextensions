@@ -1,7 +1,6 @@
 ﻿using System.Text.RegularExpressions;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
-using ICSharpCode.TextEditor.Document;
 
 namespace GitUI.Editor.Diff;
 
