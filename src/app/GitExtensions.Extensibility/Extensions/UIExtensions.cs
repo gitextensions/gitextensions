@@ -61,7 +61,7 @@ public static class UIExtensions
 
         // trying to avoid buffer re-allocation during Append()
         StringBuilder sb = new(bodyOrSubject.Length + 4 + notesPrefix.Length + 2 + indent.Length + notes.Length + 1);
-        if (!string.IsNullOrEmpty(bodyOrSubject))
+        if (bodyOrSubject.Length > 0)
         {
             sb.AppendLine(bodyOrSubject);
         }
