@@ -33,17 +33,15 @@ public static class UIExtensions
         ReadOnlySpan<char> charSizes = ['i', 'a', 'Z', '%', '#', 'a', 'B', 'l', 'm', ',', '.'];
         float charWidth = g.MeasureString("I", ft).Width;
 
-        bool fixedWidth = true;
-
         foreach (char c in charSizes)
         {
             if (Math.Abs(g.MeasureString(c.ToString(), ft).Width - charWidth) > float.Epsilon)
             {
-                fixedWidth = false;
+                return false;
             }
         }
 
-        return fixedWidth;
+        return true;
     }
 
     /// <summary>
