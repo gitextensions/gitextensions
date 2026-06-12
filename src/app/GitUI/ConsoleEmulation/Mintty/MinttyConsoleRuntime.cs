@@ -172,72 +172,64 @@ internal static partial class MinttyConsoleRuntime
         List<string> tokens = [];
         StringBuilder current = new();
         bool inQuotes = false;
-        bool hasContent = false;
+        bool hasToken = false;
+        int pendingBackslashes = 0;
 
-        for (int i = 0; i < commandLine.Length; i++)
+        foreach (char c in commandLine)
         {
-            char c = commandLine[i];
-
             if (c == '\\')
             {
-                // Apply the Windows CommandLineToArgvW backslash rules so a run of
-                // backslashes before a quote is interpreted correctly:
+                // Defer: per the Windows CommandLineToArgvW rules, the meaning of a
+                // backslash run depends on whether a '"' follows it.
+                pendingBackslashes++;
+                hasToken = true;
+                continue;
+            }
+
+            if (c == '"')
+            {
+                // Resolve the deferred backslash run:
                 //   2n   backslashes + '"' => n literal backslashes, the quote toggles
                 //   2n+1 backslashes + '"' => n literal backslashes + a literal '"'
-                //   backslashes not before a '"' are all literal.
                 // Without this, a quoted path ending in '\' (escaped as `\\"`) loses its
                 // closing quote and swallows every following token.
-                int backslashes = 0;
-                while (i < commandLine.Length && commandLine[i] == '\\')
+                current.Append('\\', pendingBackslashes / 2);
+                if (pendingBackslashes % 2 == 0)
                 {
-                    backslashes++;
-                    i++;
-                }
-
-                if (i < commandLine.Length && commandLine[i] == '"')
-                {
-                    current.Append('\\', backslashes / 2);
-                    if (backslashes % 2 == 0)
-                    {
-                        inQuotes = !inQuotes;
-                    }
-                    else
-                    {
-                        current.Append('"');
-                    }
+                    inQuotes = !inQuotes;
                 }
                 else
                 {
-                    current.Append('\\', backslashes);
-
-                    // Reprocess the non-backslash character (or stop at end of string).
-                    i--;
+                    current.Append('"');
                 }
 
-                hasContent = true;
+                pendingBackslashes = 0;
+                hasToken = true;
+                continue;
             }
-            else if (c == '"')
+
+            // Backslashes not followed by a '"' are all literal.
+            current.Append('\\', pendingBackslashes);
+            pendingBackslashes = 0;
+
+            if (char.IsWhiteSpace(c) && !inQuotes)
             {
-                inQuotes = !inQuotes;
-                hasContent = true;
-            }
-            else if (char.IsWhiteSpace(c) && !inQuotes)
-            {
-                if (hasContent)
+                if (hasToken)
                 {
                     tokens.Add(current.ToString());
                     current.Clear();
-                    hasContent = false;
+                    hasToken = false;
                 }
             }
             else
             {
                 current.Append(c);
-                hasContent = true;
+                hasToken = true;
             }
         }
 
-        if (hasContent)
+        current.Append('\\', pendingBackslashes);
+        if (hasToken)
         {
             tokens.Add(current.ToString());
         }
