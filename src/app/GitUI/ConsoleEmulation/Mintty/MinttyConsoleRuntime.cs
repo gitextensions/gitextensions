@@ -49,14 +49,19 @@ internal static partial class MinttyConsoleRuntime
         Action<string>? lineCallback,
         Action<int>? exitCallback)
     {
-        char[] charBuf = new char[4096];
+        const int byteBufferSize = 4096;
+
+        // GetMaxCharCount accounts for a partial multi-byte sequence the decoder
+        // buffered from the previous read; sizing by the byte count alone can fall
+        // one char short and make GetChars throw, killing the reader.
+        char[] charBuf = new char[Encoding.UTF8.GetMaxCharCount(byteBufferSize)];
         StringBuilder pendingLine = new();
         Decoder decoder = Encoding.UTF8.GetDecoder();
 
         try
         {
             Stream stdout = minttyProcess.StandardOutput.BaseStream;
-            byte[] buffer = new byte[4096];
+            byte[] buffer = new byte[byteBufferSize];
 
             while (true)
             {
