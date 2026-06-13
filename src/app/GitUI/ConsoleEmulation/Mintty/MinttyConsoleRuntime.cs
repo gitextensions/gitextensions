@@ -119,7 +119,7 @@ internal static partial class MinttyConsoleRuntime
             {
                 exitCallback?.Invoke(exitCode);
             }
-            else
+            else if (!text.StartsWith(ScriptChromeMarker, StringComparison.Ordinal))
             {
                 lineCallback?.Invoke(text);
             }
@@ -129,6 +129,17 @@ internal static partial class MinttyConsoleRuntime
     [GeneratedRegex(@"\x1b\[8mGITEX_EXIT:(\d+)\x1b\[0m")]
     private static partial Regex ExitSentinelRegex();
 
+    /// <summary>
+    /// Zero-width SGR pair (conceal on/off) prefixed to every line the wrapper script
+    /// generates itself (command echo, exit sentinel, "Done", exit prompts). Mintty
+    /// renders the marker as nothing, while the log reader uses it to keep such chrome
+    /// out of the command output — mirroring ConEmu, which filters the echoed command
+    /// line. The exit sentinel is matched before the chrome filter (the regex scans the
+    /// line, so the prefix does not interfere); its marker only ensures a malformed
+    /// sentinel is dropped instead of leaking into the output.
+    /// </summary>
+    private const string ScriptChromeMarker = "\x1b[8m\x1b[28m";
+
     private static string BuildWrapperScript(string commandLine)
     {
         string bashCommandLine = ConvertCommandLineToBash(commandLine);
@@ -136,18 +147,17 @@ internal static partial class MinttyConsoleRuntime
         return
             $$"""
               #!/bin/bash
-              printf '\x1b[0;38;5;5;49m%s\x1b[0m\n' "$GITEX_CMD_DISPLAY"
+              printf '{{ScriptChromeMarker}}\x1b[0;38;5;5;49m%s\x1b[0m\n' "$GITEX_CMD_DISPLAY"
               {{bashCommandLine}}
               GITEX_RC=$?
-              printf '\x1b[8mGITEX_EXIT:%d\x1b[0m' "$GITEX_RC"
-              echo
+              printf '{{ScriptChromeMarker}}\x1b[8mGITEX_EXIT:%d\x1b[0m\n' "$GITEX_RC"
               if [ "$GITEX_RC" -ne 0 ]; then
-                  printf '\x1b[0;38;5;160;49mProcess exited with code %d\x1b[0m\n' "$GITEX_RC"
+                  printf '{{ScriptChromeMarker}}\x1b[0;38;5;160;49mProcess exited with code %d\x1b[0m\n' "$GITEX_RC"
               fi
-              printf '\x1b[0;38;5;243;49mDone\x1b[0m\n'
-              printf '\x1b[0;38;5;243;49mPress Enter or Esc to exit...\x1b[0m\n'
-              echo
-              read -n 1
+              printf '{{ScriptChromeMarker}}\x1b[0;38;5;243;49mDone\x1b[0m\n'
+              printf '{{ScriptChromeMarker}}\x1b[0;38;5;243;49mPress Enter or Esc to exit...\x1b[0m\n'
+              printf '{{ScriptChromeMarker}}\n'
+              read -s -n 1
               exit 0
               """;
     }
