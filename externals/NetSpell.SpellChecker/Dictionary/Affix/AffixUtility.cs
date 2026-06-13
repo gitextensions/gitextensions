@@ -1,3 +1,5 @@
+using System;
+
 namespace NetSpell.SpellChecker.Dictionary.Affix;
 
 /// <summary>
@@ -137,7 +139,7 @@ public static class AffixUtility
         bool end = false;   /* end condition indicator */
         int num = 0;    /* number of conditions */
 
-        char[] memberChars = new char[200];
+        Span<char> memberChars = stackalloc char[200];
         int numMember = 0;   /* number of member in group */
 
         foreach (char cond in conditionText)
