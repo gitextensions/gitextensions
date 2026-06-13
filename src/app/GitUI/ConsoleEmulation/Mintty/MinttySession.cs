@@ -76,7 +76,31 @@ internal sealed class MinttySession : IDisposable
         }
     }
 
+    /// <summary>
+    ///  Deliberately aborts the session and reports the command as failed.
+    ///  Use <see cref="Dispose"/> for a silent teardown without exit notification.
+    /// </summary>
     public void Kill()
+    {
+        if (IsExited)
+        {
+            return;
+        }
+
+        KillProcess();
+
+        if (ExitCode is null)
+        {
+            // Killing the host means the exit sentinel never arrives, so no exit
+            // notification would fire and the aborted command would be mistaken
+            // for a successful one. Report a non-zero exit code, like ConEmu does
+            // when the command is interrupted.
+            ExitCode = -1;
+            _exitCallback?.Invoke(-1);
+        }
+    }
+
+    private void KillProcess()
     {
         try
         {
@@ -96,7 +120,7 @@ internal sealed class MinttySession : IDisposable
     // in flight when the Process is disposed fails into the reader's own try/catch.
     public void Dispose()
     {
-        Kill();
+        KillProcess();
         MinttyProcess?.Dispose();
         MinttyProcess = null;
     }
