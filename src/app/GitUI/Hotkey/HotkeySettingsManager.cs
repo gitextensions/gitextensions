@@ -40,7 +40,7 @@ public interface IHotkeySettingsManager : IHotkeySettingsLoader
     void SaveSettings(IEnumerable<HotkeySettings> settings);
 }
 
-internal class HotkeySettingsManager : IHotkeySettingsManager
+internal sealed class HotkeySettingsManager : IHotkeySettingsManager
 {
     private static readonly XmlSerializer? _serializer = new(typeof(HotkeySettings[]), [typeof(HotkeyCommand)]);
     private readonly HashSet<Keys> _usedKeys = [];

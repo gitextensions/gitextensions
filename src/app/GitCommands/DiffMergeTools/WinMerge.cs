@@ -1,6 +1,6 @@
 namespace GitCommands.DiffMergeTools;
 
-internal class WinMerge : DiffMergeTool
+internal sealed class WinMerge : DiffMergeTool
 {
     /// <inheritdoc />
     public override string DiffCommand => "-e -u \"$LOCAL\" \"$REMOTE\"";

@@ -248,20 +248,20 @@ public sealed class ApiClient : IDisposable
     }
 }
 
-internal class ListWrapper<T>
+internal sealed class ListWrapper<T>
 {
     public int Count { get; set; }
     public IList<T>? Value { get; set; }
 }
 
-internal class Project
+internal sealed class Project
 {
     public string? Id { get; set; }
     public string? Name { get; set; }
     public string? Url { get; set; }
 }
 
-internal class GitRepository
+internal sealed class GitRepository
 {
     public string? Id { get; set; }
     public string? Name { get; set; }

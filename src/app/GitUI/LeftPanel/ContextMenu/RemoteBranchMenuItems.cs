@@ -5,7 +5,7 @@ using ResourceManager;
 
 namespace GitUI.LeftPanel.ContextMenu;
 
-internal class RemoteBranchMenuItems<TNode> : MenuItemsGenerator<TNode>
+internal sealed class RemoteBranchMenuItems<TNode> : MenuItemsGenerator<TNode>
     where TNode : class, INode
 {
     public RemoteBranchMenuItems(IMenuItemFactory menuItemFactory) : base(menuItemFactory)

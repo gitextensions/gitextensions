@@ -1,6 +1,6 @@
 ﻿namespace GitUI.ConsoleEmulation.ConEmu;
 
-internal class ConEmuConsoleEmulator : IConsoleEmulator
+internal sealed class ConEmuConsoleEmulator : IConsoleEmulator
 {
     public string Name => "conemu";
 

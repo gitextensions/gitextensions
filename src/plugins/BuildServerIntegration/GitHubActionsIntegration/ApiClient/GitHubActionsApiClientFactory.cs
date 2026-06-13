@@ -5,7 +5,7 @@ public interface IGitHubActionsApiClientFactory
     IGitHubActionsApiClient CreateApiClient(string apiUrl, string owner, string repository, string? apiToken);
 }
 
-internal class GitHubActionsApiClientFactory : IGitHubActionsApiClientFactory
+internal sealed class GitHubActionsApiClientFactory : IGitHubActionsApiClientFactory
 {
     public IGitHubActionsApiClient CreateApiClient(string apiUrl, string owner, string repository, string? apiToken)
     {

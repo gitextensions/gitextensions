@@ -11,7 +11,7 @@ namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 partial class ScriptsSettingsPage
 {
     [TypeConverter(typeof(PropertySorter))]
-    private class ScriptInfoProxy
+    private sealed class ScriptInfoProxy
     {
         private const string ScriptCategory = "Script";
         private const string ScriptBehaviourCategory = "Script behaviour";

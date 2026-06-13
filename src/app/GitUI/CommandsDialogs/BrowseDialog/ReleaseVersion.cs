@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog;
 /// <summary>
 ///  Represents a release version with its details.
 /// </summary>
-internal class ReleaseVersion
+internal sealed class ReleaseVersion
 {
     /// <summary>
     ///  Initializes a new instance of the <see cref="ReleaseVersion"/> class.

@@ -4,7 +4,7 @@ using GitExtensions.Extensibility.Settings.UserControls;
 
 namespace GitUI.SettingControlBindings;
 
-internal class CredentialsSettingControlBinding : SettingControlBinding<CredentialsSetting, CredentialsControl>
+internal sealed class CredentialsSettingControlBinding : SettingControlBinding<CredentialsSetting, CredentialsControl>
 {
     public CredentialsSettingControlBinding(CredentialsSetting setting, CredentialsControl? control)
         : base(setting, control)

@@ -4,7 +4,7 @@ using GitUI.ConsoleEmulation.PlainText;
 
 namespace GitUI.ConsoleEmulation;
 
-internal class ConsoleEmulatorsRegistry(
+internal sealed class ConsoleEmulatorsRegistry(
     IConsoleEmulator[] consoleEmulators,
     ISetting<bool> useConsoleEmulation,
     ISetting<string> consoleEmulatorName)

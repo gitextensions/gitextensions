@@ -199,7 +199,7 @@ public partial class FormReflog : GitModuleForm
     }
 }
 
-internal class RefLine
+internal sealed class RefLine
 {
     public ObjectId Sha { get; set; }
     public string Ref { get; set; }

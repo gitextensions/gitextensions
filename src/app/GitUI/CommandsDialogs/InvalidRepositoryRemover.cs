@@ -17,7 +17,7 @@ public interface IInvalidRepositoryRemover
     bool ShowDeleteInvalidRepositoryDialog(string repositoryPath);
 }
 
-internal class InvalidRepositoryRemover : IInvalidRepositoryRemover
+internal sealed class InvalidRepositoryRemover : IInvalidRepositoryRemover
 {
     public bool ShowDeleteInvalidRepositoryDialog(string repositoryPath)
     {

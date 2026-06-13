@@ -3,7 +3,7 @@
 /// <summary>
 ///  A PictureBox which handles exceptions from OnPaint.
 /// </summary>
-internal class PictureBoxEx : PictureBox
+internal sealed class PictureBoxEx : PictureBox
 {
     public event EventHandler<Exception>? PaintFailed;
 

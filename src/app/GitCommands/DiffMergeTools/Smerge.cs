@@ -1,6 +1,6 @@
 namespace GitCommands.DiffMergeTools;
 
-internal class Smerge : DiffMergeTool
+internal sealed class Smerge : DiffMergeTool
 {
     /// <inheritdoc />
     public override string ExeFileName => "smerge.exe";

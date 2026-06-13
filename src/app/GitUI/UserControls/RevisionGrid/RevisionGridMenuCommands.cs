@@ -8,7 +8,7 @@ using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid;
 
-internal class RevisionGridMenuCommands : MenuCommandsBase
+internal sealed class RevisionGridMenuCommands : MenuCommandsBase
 {
     public event EventHandler? MenuChanged;
 
@@ -67,7 +67,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
         }
     }
 
-    private IReadOnlyList<MenuCommand> CreateNavigateMenuCommands()
+    private MenuCommand[] CreateNavigateMenuCommands()
     {
         /*
             NAVIGATE menu
@@ -198,7 +198,7 @@ internal class RevisionGridMenuCommands : MenuCommandsBase
         };
     }
 
-    private IReadOnlyList<MenuCommand> CreateViewMenuCommands()
+    private MenuCommand[] CreateViewMenuCommands()
     {
         /*
             VIEW menu

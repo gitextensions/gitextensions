@@ -1,6 +1,6 @@
 ﻿namespace GitUI.SpellChecker;
 
-internal class WordAtCursorExtractor : IWordAtCursorExtractor
+internal sealed class WordAtCursorExtractor : IWordAtCursorExtractor
 {
     public string Extract(string text, int index)
     {

@@ -1,6 +1,6 @@
 namespace GitCommands.DiffMergeTools;
 
-internal class BeyondCompare4 : DiffMergeTool
+internal sealed class BeyondCompare4 : DiffMergeTool
 {
     /// <inheritdoc />
     public override string ExeFileName => "bcomp.exe";

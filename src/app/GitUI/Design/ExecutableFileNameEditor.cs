@@ -2,7 +2,7 @@
 
 namespace GitUI.Design;
 
-internal class ExecutableFileNameEditor : FileNameEditor
+internal sealed class ExecutableFileNameEditor : FileNameEditor
 {
     protected override void InitializeDialog(OpenFileDialog openFileDialog)
     {

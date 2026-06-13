@@ -34,7 +34,7 @@ public sealed class TeamCityIntegrationMetadataAttribute : BuildServerAdapterMet
 [Export(typeof(IBuildServerAdapter))]
 [TeamCityIntegrationMetadata(PluginName)]
 [PartCreationPolicy(CreationPolicy.NonShared)]
-internal class TeamCityAdapter : IBuildServerAdapter
+internal sealed class TeamCityAdapter : IBuildServerAdapter
 {
     public const string PluginName = "TeamCity";
     private IBuildServerWatcher? _buildServerWatcher;

@@ -1,6 +1,6 @@
 namespace GitCommands.DiffMergeTools;
 
-internal class Meld : DiffMergeTool
+internal sealed class Meld : DiffMergeTool
 {
     /// <inheritdoc />
     public override string ExeFileName => "meld.exe";

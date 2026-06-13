@@ -1,6 +1,6 @@
 ﻿namespace GitExtUtils.GitUI.Theming;
 
-internal class TabControlPaintContext
+internal sealed class TabControlPaintContext
 {
     private readonly Point _mouseCursor;
     private readonly Graphics _graphics;
