@@ -91,6 +91,18 @@ internal static partial class MinttyConsoleRuntime
             for (int i = 0; i < count; i++)
             {
                 char c = charBuf[i];
+
+                // A '\r' not followed by '\n' terminates a transient progress line
+                // (e.g. git's "Receiving objects: 42%\r"). Emit it with the trailing
+                // '\r' so consumers can tell it apart from a completed line; waiting
+                // for the eventual '\n' would merge the whole progress stream into
+                // one huge line. "\r\n" breaks (pty ONLCR) remain a single line.
+                if (c != '\n' && pendingLine.Length > 0 && pendingLine[^1] == '\r')
+                {
+                    EmitLine(pendingLine.ToString());
+                    pendingLine.Clear();
+                }
+
                 pendingLine.Append(c);
                 if (c == '\n')
                 {
