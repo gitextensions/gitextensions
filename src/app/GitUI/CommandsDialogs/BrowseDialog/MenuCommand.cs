@@ -1,3 +1,5 @@
+using System.Runtime.InteropServices;
+
 namespace GitUI.CommandsDialogs.BrowseDialog;
 
 /// <summary>
@@ -9,7 +11,7 @@ namespace GitUI.CommandsDialogs.BrowseDialog;
 ///
 /// Purpose: have methods from specific context menus also available in main menu.
 /// </summary>
-internal class MenuCommand
+internal sealed class MenuCommand
 {
     public static MenuCommand CreateSeparator()
     {
@@ -147,7 +149,7 @@ internal class MenuCommand
         {
             bool isChecked = IsCheckedFunc();
 
-            foreach (ToolStripMenuItem item in _registeredMenuItems)
+            foreach (ToolStripMenuItem item in CollectionsMarshal.AsSpan(_registeredMenuItems))
             {
                 item.Checked = isChecked;
             }
@@ -157,7 +159,7 @@ internal class MenuCommand
         {
             bool isEnabled = IsEnabledFunc();
 
-            foreach (ToolStripMenuItem item in _registeredMenuItems)
+            foreach (ToolStripMenuItem item in CollectionsMarshal.AsSpan(_registeredMenuItems))
             {
                 item.Enabled = isEnabled;
             }
@@ -166,7 +168,7 @@ internal class MenuCommand
 
     public void UpdateMenuItemsShortcutKeyDisplayString()
     {
-        foreach (ToolStripMenuItem item in _registeredMenuItems)
+        foreach (ToolStripMenuItem item in CollectionsMarshal.AsSpan(_registeredMenuItems))
         {
             item.ShortcutKeyDisplayString = ShortcutKeyDisplayString;
         }

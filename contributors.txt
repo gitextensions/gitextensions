@@ -228,3 +228,4 @@ YYYY/MM/DD, github id, Full name, email
 2026/02/19, apoorvdarshan, Apoorv Darshan, ad13dtu(at)gmail.com
 2026/05/04, Henr1k80, Henrik Gedionsen, Henrik.Gedionsen[.@)gmail.com
 2026/05/06, LeeRedfield, Chiong Ngek Lee, chiongngeklee@gmail.com
+2026/06/01, becm, Marc Becker, becm@gmx.de

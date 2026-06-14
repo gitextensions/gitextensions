@@ -170,7 +170,7 @@ public class ThemeLoader : IThemeLoader
     private static ThemeException StyleRuleThemeException(StyleRule styleRule, string themePath)
         => new($"Invalid CSS rule '{styleRule.SelectorText}'", themePath);
 
-    private class ThemeColors
+    private sealed class ThemeColors
     {
         public readonly Dictionary<AppColor, Color> AppColors = [];
         public readonly Dictionary<KnownColor, Color> SysColors = [];

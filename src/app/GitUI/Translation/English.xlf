@@ -1133,8 +1133,20 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <source>Console style</source>
         <target />
       </trans-unit>
+      <trans-unit id="_consoleDefaultFontText.Text">
+        <source>Console Default</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_defaultThemeDisplayName.Text">
+        <source>Default</source>
+        <target />
+      </trans-unit>
       <trans-unit id="consoleFontChangeButton.Text">
         <source>font name</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="consoleFontResetButton.consoleFontToolTip">
+        <source>Reset to default</source>
         <target />
       </trans-unit>
       <trans-unit id="groupBoxConsoleSettings.Text">
@@ -1143,6 +1155,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Console style</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="lblConsoleEmulator.Text">
+        <source>Console emulator</source>
         <target />
       </trans-unit>
       <trans-unit id="lblFontName.Text">
@@ -3513,10 +3529,6 @@ Focus the output history and (when displayed as panel) toggle its visibility usi
       </trans-unit>
       <trans-unit id="groupBox1.Text">
         <source>General</source>
-        <target />
-      </trans-unit>
-      <trans-unit id="lblConsoleEmulatorChoice.Text">
-        <source>Console emulator</source>
         <target />
       </trans-unit>
       <trans-unit id="lblDefaultShell.Text">

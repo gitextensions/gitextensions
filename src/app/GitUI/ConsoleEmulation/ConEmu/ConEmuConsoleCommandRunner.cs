@@ -11,15 +11,17 @@ namespace GitUI.ConsoleEmulation.ConEmu;
 /// <summary>
 ///  Embeds a ConEmu terminal in the output panel so command dialogs can host an interactive console.
 /// </summary>
-internal class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRunner
+internal sealed class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRunner
 {
+    private readonly ConsoleEmulatorSettings _settings;
     private int _nLastExitCode;
 
     private Panel _panel;
     private ConEmuControl? _terminal;
 
-    public ConEmuConsoleCommandRunner()
+    public ConEmuConsoleCommandRunner(ConsoleEmulatorSettings settings)
     {
+        _settings = settings;
         InitializeComponent();
 
         Validates.NotNull(_panel);
@@ -133,7 +135,8 @@ internal class ConEmuConsoleCommandRunner : ContainerControl, IConsoleCommandRun
             };
 
             Validates.NotNull(_terminal);
-            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, AppSettings.GetEffectiveConEmuStyle(), AppSettings.ConEmuConsoleFont.Name, AppSettings.ConEmuConsoleFont.Size.ToString("F0", CultureInfo.InvariantCulture));
+            Validates.NotNull(_settings.Font);
+            _terminal.Start(startInfo, ThreadHelper.JoinableTaskFactory, _settings.Theme, _settings.Font.Name, _settings.Font.Size.ToString("F0", CultureInfo.InvariantCulture));
         }
         catch (Exception ex)
         {

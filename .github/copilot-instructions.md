@@ -17,6 +17,7 @@ git submodule update --init --recursive
 * Files must have CRLF line endings.
 * When creating or modifying code, follow all StyleCop analyzer rules.
 * Test changes locally or verify StyleCop compliance before committing when possible.
+* When reviewing, mention if files in src/app/GitExtensions.Extensibility/ are modified, as these affect the plugin interface version in https://github.com/gitextensions/gitextensions.extensibility.
 
 ## Comments
 

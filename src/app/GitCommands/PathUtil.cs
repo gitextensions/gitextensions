@@ -19,7 +19,7 @@ public static partial class PathUtil
     /// <summary>The user's profile folder path.</summary>
     // TODO verify whether the user profile contains forwards/backwards slashes on other platforms
     public static readonly string UserProfilePath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
-    private static StringComparison _pathComparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+    private static readonly StringComparison _pathComparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
     private static readonly SearchValues<char> _questionMarkAndHashSearchValues = SearchValues.Create('?', '#');
 
     [GeneratedRegex(@"^(\w+):\/\/([\S]+)", RegexOptions.ExplicitCapture)]
@@ -139,7 +139,7 @@ public static partial class PathUtil
 
     public static string GetFileName(string fileName)
     {
-        char[] pathSeparators = [NativeDirectorySeparatorChar, PosixDirectorySeparatorChar];
+        ReadOnlySpan<char> pathSeparators = [NativeDirectorySeparatorChar, PosixDirectorySeparatorChar];
         int pos = fileName.LastIndexOfAny(pathSeparators);
         if (pos != -1)
         {

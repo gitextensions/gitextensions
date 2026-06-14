@@ -3,7 +3,7 @@ using GitUI.CommandsDialogs;
 
 namespace GitUI.Infrastructure.Telemetry;
 
-internal class FormBrowseDiagnosticsReporter
+internal sealed class FormBrowseDiagnosticsReporter
 {
     private readonly FormBrowse _owner;
 

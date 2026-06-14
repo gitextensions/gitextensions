@@ -3,7 +3,7 @@ using static System.NativeMethods;
 
 namespace GitUI.Theming;
 
-internal class SystemBrushesCache : IDisposable
+internal sealed class SystemBrushesCache : IDisposable
 {
     private readonly Dictionary<int, HandleRef> _cache = [];
 

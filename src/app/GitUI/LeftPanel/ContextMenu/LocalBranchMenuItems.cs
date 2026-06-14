@@ -5,7 +5,7 @@ using ResourceManager;
 
 namespace GitUI.LeftPanel.ContextMenu;
 
-internal class LocalBranchMenuItems<TNode> : MenuItemsGenerator<TNode>
+internal sealed class LocalBranchMenuItems<TNode> : MenuItemsGenerator<TNode>
     where TNode : class, INode
 {
     /// <summary>Keys of local branch menu items applying to the currently checked out branch.

@@ -5,7 +5,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.LeftPanel.ContextMenu;
 
-internal class GitRefsSortByContextMenuItem : ToolStripMenuItem
+internal sealed class GitRefsSortByContextMenuItem : ToolStripMenuItem
 {
     private readonly Action _onSortByChanged;
 

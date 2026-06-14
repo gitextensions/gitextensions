@@ -5,7 +5,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 
 namespace GitUI.Infrastructure.Telemetry;
 
-internal class AppEnvironmentTelemetryInitializer : ITelemetryInitializer
+internal sealed class AppEnvironmentTelemetryInitializer : ITelemetryInitializer
 {
     public void Initialize(ITelemetry telemetry)
     {

@@ -314,7 +314,7 @@ public partial class Spelling : Component
     /// </summary>
     private void BadChar(List<Word> tempSuggestion)
     {
-        char[] tryme = Dictionary.TryCharacters.ToCharArray();
+        string tryme = Dictionary.TryCharacters;
 
         for (int i = 0; i < CurrentWord.Length; i++)
         {
@@ -357,7 +357,7 @@ public partial class Spelling : Component
     /// </summary>
     private void ForgotChar(List<Word> tempSuggestion)
     {
-        char[] tryme = Dictionary.TryCharacters.ToCharArray();
+        string tryme = Dictionary.TryCharacters;
 
         for (int i = 0; i <= CurrentWord.Length; i++)
         {
@@ -528,7 +528,7 @@ public partial class Spelling : Component
             {
                 int diag = matrix[i - 1, j - 1];
 
-                if (source.Substring(i - 1, 1) != target.Substring(j - 1, 1))
+                if (!source.AsSpan(i - 1, 1).SequenceEqual(target.AsSpan(j - 1, 1)))
                 {
                     diag++;
                 }

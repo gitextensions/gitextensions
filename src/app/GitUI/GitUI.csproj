@@ -23,6 +23,10 @@
     <PackageReference Include="ExCSS" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Core" />
     <PackageReference Include="Microsoft-WindowsAPICodePack-Shell" />
+    <PackageReference Include="Microsoft.Windows.CsWin32">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+    </PackageReference>
     <PackageReference Include="JetBrains.Annotations" />
   </ItemGroup>
 
@@ -44,6 +48,8 @@
 
   <ItemGroup>
     <!-- Resources -->
+    <AdditionalFiles Include="Interops\NativeMethods.json" />
+    <AdditionalFiles Include="Interops\NativeMethods.txt" />
     <EmbeddedResource Update="Properties\Images.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Images.Designer.cs</LastGenOutput>

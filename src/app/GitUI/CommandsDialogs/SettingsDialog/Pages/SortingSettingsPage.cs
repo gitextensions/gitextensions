@@ -86,7 +86,7 @@ public partial class SortingSettingsPage : SettingsPageWithHeader
     private void PrioRemoteNamesHelp_Click(object sender, EventArgs e)
         => OsShellUtil.OpenUrlInDefaultBrowser(UserManual.UserManual.UrlFor("settings", "sorting-sort-prioritized-remotes"));
 
-    private class ComboBoxItem<T>
+    private sealed class ComboBoxItem<T>
     {
         public string Text { get; }
         public T Value { get; }

@@ -3,7 +3,7 @@ using ResourceManager;
 
 namespace GitUI.UserControls.RevisionGrid;
 
-internal class FormQuickGitRefSelector : FormQuickItemSelector
+internal sealed class FormQuickGitRefSelector : FormQuickItemSelector
 {
     private const string _separator = "――――――――――――――――――";
     private readonly TranslationString _actionRename = new("Rename");
@@ -57,7 +57,7 @@ internal class FormQuickGitRefSelector : FormQuickItemSelector
 
         static List<ItemData> Filter(IReadOnlyList<IGitRef> sourceRefs, TranslationString localText, TranslationString remoteText, TranslationString tagText, Func<IGitRef, bool> selector)
         {
-            List<ItemData> list = [.. sourceRefs.Where(r => selector(r))
+            List<ItemData> list = [.. sourceRefs.Where(selector)
                                             .OrderBy(r => r.Name)
                                             .Select(r => new ItemData(label: r.Name, item: r))];
 

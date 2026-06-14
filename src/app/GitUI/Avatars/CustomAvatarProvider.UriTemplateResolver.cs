@@ -15,7 +15,7 @@ public sealed partial class CustomAvatarProvider
     /// but sadly C# doesn't offer them at the moment and external dependency just for that case
     /// would probably be overkill.
     /// </remarks>
-    private class UriTemplateResolver : IAvatarProvider
+    private sealed class UriTemplateResolver : IAvatarProvider
     {
         private readonly Func<UriTemplateData, string> _templateResolver;
 
