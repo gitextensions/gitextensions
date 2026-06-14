@@ -1,0 +1,28 @@
+// kernel32 - Job Object
+CreateJobObject
+SetInformationJobObject
+AssignProcessToJobObject
+TerminateJobObject
+CloseHandle
+JOBOBJECT_EXTENDED_LIMIT_INFORMATION
+
+// kernel32 - Threading
+GetCurrentThreadId
+
+// user32 - Window management
+SetParent
+GetWindowLong
+SetWindowLong
+MoveWindow
+ShowWindow
+SetWindowPos
+SetFocus
+AttachThreadInput
+GetWindowThreadProcessId
+PostMessage
+SendMessageTimeout
+EnumWindows
+GetClassName
+VIRTUAL_KEY
+WINDOW_STYLE
+WINDOW_EX_STYLE

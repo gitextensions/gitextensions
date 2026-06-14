@@ -14,6 +14,7 @@
     <PackageVersion Include="Microsoft-WindowsAPICodePack-Core" Version="1.1.4" />
     <PackageVersion Include="Microsoft-WindowsAPICodePack-Shell" Version="1.1.4" />
     <PackageVersion Include="Microsoft.SourceLink.GitHub" Version="10.0.201" />
+    <PackageVersion Include="Microsoft.Windows.CsWin32" Version="0.3.269" PrivateAssets="all" />
     <PackageVersion Include="Microsoft.VisualStudio.Composition" Version="17.2.41" />
     <PackageVersion Include="Microsoft.VisualStudio.Threading" Version="17.13.61" />
     <PackageVersion Include="RestSharp" Version="106.12.0" />

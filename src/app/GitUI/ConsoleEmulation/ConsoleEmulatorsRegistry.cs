@@ -1,4 +1,4 @@
-﻿using GitCommands.Settings;
+using GitCommands.Settings;
 using GitUI.ConsoleEmulation.ConEmu;
 using GitUI.ConsoleEmulation.PlainText;
 
@@ -7,7 +7,9 @@ namespace GitUI.ConsoleEmulation;
 internal sealed class ConsoleEmulatorsRegistry(
     IConsoleEmulator[] consoleEmulators,
     ISetting<bool> useConsoleEmulation,
-    ISetting<string> consoleEmulatorName)
+    ISetting<string> consoleEmulatorName,
+    ISetting<string> consoleEmulatorTheme,
+    Func<Font?> consoleFont)
     : IConsoleEmulatorsRegistry
 {
     public IReadOnlyCollection<IConsoleEmulator> AvailableConsoleEmulators { get; } =
@@ -25,12 +27,12 @@ internal sealed class ConsoleEmulatorsRegistry(
 
         if (TryGetConfiguredConsoleEmulator() is { } configuredEmulator)
         {
-            return configuredEmulator.CreateCommandRunner();
+            return configuredEmulator.CreateCommandRunner(ResolveSettings(configuredEmulator));
         }
 
         if (TryGetFallbackConsoleEmulator() is { } fallbackConsoleEmulator)
         {
-            return fallbackConsoleEmulator.CreateCommandRunner();
+            return fallbackConsoleEmulator.CreateCommandRunner(ResolveSettings(fallbackConsoleEmulator));
         }
 
         // Fallback to no console emulation
@@ -44,15 +46,32 @@ internal sealed class ConsoleEmulatorsRegistry(
     {
         if (TryGetConfiguredConsoleEmulator() is { } configuredEmulator)
         {
-            return configuredEmulator.CreateShellRunner();
+            return configuredEmulator.CreateShellRunner(ResolveSettings(configuredEmulator));
         }
 
         if (TryGetFallbackConsoleEmulator() is { } fallbackConsoleEmulator)
         {
-            return fallbackConsoleEmulator.CreateShellRunner();
+            return fallbackConsoleEmulator.CreateShellRunner(ResolveSettings(fallbackConsoleEmulator));
         }
 
         return null;
+    }
+
+    private ConsoleEmulatorSettings ResolveSettings(IConsoleEmulator emulator)
+    {
+        return new ConsoleEmulatorSettings(ResolveTheme(emulator), consoleFont());
+    }
+
+    private string? ResolveTheme(IConsoleEmulator emulator)
+    {
+        string? configured = consoleEmulatorTheme.Value;
+        if (!string.IsNullOrEmpty(configured)
+            && emulator.AvailableThemes.Contains(configured, StringComparer.OrdinalIgnoreCase))
+        {
+            return configured;
+        }
+
+        return emulator.DefaultTheme;
     }
 
     private IConsoleEmulator? TryGetConfiguredConsoleEmulator()
