@@ -371,7 +371,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             //// _refFilterOptions not disposable
             //// _lastVisibleResizableColumn not owned
             //// _maximizedColumn not owned
-            //// _revisionGraphColumnProvider not disposable
+            _revisionGraphColumnProvider.Dispose();
             //// _selectionTimer handled by this.components
             _buildServerWatcher?.Dispose();
             _customDiffToolsSequence.Dispose();
@@ -1918,6 +1918,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         if (_messageColumnProvider.SetHighlight(e.RowIndex, hitInfo))
         {
             _gridView.InvalidateRow(e.RowIndex);
+            UpdateLaneHighlight(hitInfo?.GitRef, e.RowIndex);
         }
 
         _gridView.Cursor = hitInfo is not null ? Cursors.Hand : Cursors.Default;
@@ -1936,12 +1937,22 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         if (_messageColumnProvider.SetHighlight(-1, hitInfo: null))
         {
             _gridView.Invalidate();
+            UpdateLaneHighlight(gitRef: null, rowIndex: -1);
         }
 
         if (_gridView.Cursor == Cursors.Hand)
         {
             _gridView.Cursor = Cursors.Default;
         }
+    }
+
+    private void UpdateLaneHighlight(IGitRef? gitRef, int rowIndex)
+    {
+        this.InvokeAndForget(async () =>
+        {
+            await _revisionGraphColumnProvider.SetHoverHighlightAsync(gitRef, rowIndex);
+            _gridView.RequestGraphRedraw();
+        });
     }
 
     private void OnGridViewCellMouseDown(object? sender, DataGridViewCellMouseEventArgs e)
