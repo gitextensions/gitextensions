@@ -12379,7 +12379,7 @@ Select this commit to populate the full message.</source>
       </trans-unit>
       <trans-unit id="_deleteFile.Text">
         <source>{0:Delete file|Delete files}</source>
-        <target>{0:Fichier effacé|Fichiers effacés}</target>
+        <target>{0:Supprimer le fichier|Supprimer les fichiers}</target>
         
       </trans-unit>
       <trans-unit id="_diffBaseWith.Text">
