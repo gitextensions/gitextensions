@@ -206,6 +206,7 @@ public sealed partial class FormCommit : GitModuleForm
         _editedCommit = editedCommit;
 
         InitializeComponent();
+        KeyDown += FormCommit_KeyDown;
 
         _currentFilesList = Unstaged;
 
@@ -389,6 +390,37 @@ public sealed partial class FormCommit : GitModuleForm
             splitLeft.Panel2.Padding = padding;
             splitRight.Panel1.Padding = padding;
             splitRight.Panel2.Padding = padding;
+        }
+    }
+
+    private void FormCommit_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.KeyCode == Keys.C && e.Modifiers == (Keys.Control | Keys.Alt | Keys.Shift))
+        {
+            const int margin = 10;
+            StartPosition = FormStartPosition.Manual;
+            WindowState = FormWindowState.Normal;
+            if (Owner is not null)
+            {
+                Left = Owner.Left + margin;
+                Top = Owner.Top + margin;
+            }
+            else
+            {
+                Rectangle? primaryScreen = Screen.PrimaryScreen?.Bounds;
+                if (primaryScreen is not null)
+                {
+                    Left = primaryScreen.Value.Left + margin;
+                    Top = primaryScreen.Value.Top + margin;
+                }
+                else
+                {
+                    Left = margin;
+                    Top = margin;
+                }
+            }
+
+            e.Handled = true;
         }
     }
 
