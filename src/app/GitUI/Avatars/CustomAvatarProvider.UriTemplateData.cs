@@ -9,7 +9,7 @@ public sealed partial class CustomAvatarProvider
     /// A type that holds and prepares for variables in custom avatar templates.
     /// It's processed by an <see cref="UriTemplateResolver"/>.
     /// </summary>
-    private class UriTemplateData
+    private sealed class UriTemplateData
     {
         public UriTemplateData(string email, string? name, int imageSize)
         {

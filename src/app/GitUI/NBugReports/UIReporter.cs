@@ -46,7 +46,7 @@ internal interface IBugReporter
 ///  Implements <see cref="IBugReporter" /> by displaying task dialogs
 ///  and optionally launching the NBug report form.
 /// </summary>
-internal class UIReporter : IBugReporter
+internal sealed class UIReporter : IBugReporter
 {
     /// <summary>
     ///  Set to <see langword="true" /> on application exit

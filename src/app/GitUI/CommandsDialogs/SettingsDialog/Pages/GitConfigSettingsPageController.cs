@@ -2,7 +2,7 @@
 
 namespace GitUI.CommandsDialogs.SettingsDialog.Pages;
 
-internal class GitConfigSettingsPageController
+internal sealed class GitConfigSettingsPageController
 {
     public string GetInitialDirectory(string path, string toolPreferredPath) =>
         CalculateInitialDirectory(path) ??

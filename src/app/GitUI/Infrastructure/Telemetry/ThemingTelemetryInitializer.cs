@@ -3,7 +3,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 
 namespace GitUI.Infrastructure.Telemetry;
 
-internal class ThemingTelemetryInitializer : ITelemetryInitializer
+internal sealed class ThemingTelemetryInitializer : ITelemetryInitializer
 {
     public void Initialize(ITelemetry telemetry)
     {

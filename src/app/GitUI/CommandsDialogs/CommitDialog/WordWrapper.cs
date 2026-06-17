@@ -27,7 +27,7 @@ public static class WordWrapper
         return string.Join(Environment.NewLine, lines);
     }
 
-    private class WrapperState
+    private sealed class WrapperState
     {
         private readonly List<string> _wordList = [];
         private int _wordsLength;

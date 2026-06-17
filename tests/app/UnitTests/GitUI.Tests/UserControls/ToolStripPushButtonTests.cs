@@ -46,7 +46,7 @@ public class ToolStripPushButtonTests
     }
 
     [TestCaseSource(nameof(GetInvalidAheadBehindData))]
-    public void DisplayAheadBehindInformation_should_display_default_text_image_if_ahead_behind_data_null(IDictionary<string, AheadBehindData> data)
+    public void DisplayAheadBehindInformation_should_display_default_text_image_if_ahead_behind_data_null(IReadOnlyDictionary<string, AheadBehindData> data)
     {
         string branchName = "who_cares";
         _aheadBehindDataProvider.GetData(branchName).Returns(x => data);

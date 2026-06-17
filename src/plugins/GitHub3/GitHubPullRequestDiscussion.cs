@@ -3,7 +3,7 @@ using GitExtensions.Extensibility.Plugins;
 
 namespace GitExtensions.Plugins.GitHub3;
 
-internal class GitHubPullRequestDiscussion : IPullRequestDiscussion
+internal sealed class GitHubPullRequestDiscussion : IPullRequestDiscussion
 {
     private readonly PullRequest _pullRequest;
 
@@ -48,7 +48,7 @@ internal class GitHubDiscussionComment : IDiscussionEntry
     public string? Body { get; internal set; }
 }
 
-internal class GitHubDiscussionCommit : GitHubDiscussionComment, ICommitDiscussionEntry
+internal sealed class GitHubDiscussionCommit : GitHubDiscussionComment, ICommitDiscussionEntry
 {
     public string? Sha { get; internal set; }
 }

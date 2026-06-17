@@ -1,6 +1,27 @@
 ﻿Changelog
 =========
 
+### Version v7.1.0 (14 Jun 2026)
+
+#### Changes:
+* [#13115] ci: convert FabricBot automation to GitHub Actions
+* [#13114] ci: add CLA sign-off check workflow for pull requests
+* [#13111] fix: copilot to mention extensibility changes in reviews
+* [#13108] Avoid some heap allocations
+* [#13107] Make private & internal classes sealed, plus some collection tweaks
+* [#13095] feat(FormFixHome): Detect alternative global git config
+* [#13035] Implement Mintty console emulator support
+
+
+[#13115]:https://github.com/gitextensions/gitextensions/pull/13115
+[#13114]:https://github.com/gitextensions/gitextensions/pull/13114
+[#13111]:https://github.com/gitextensions/gitextensions/pull/13111
+[#13108]:https://github.com/gitextensions/gitextensions/pull/13108
+[#13107]:https://github.com/gitextensions/gitextensions/pull/13107
+[#13095]:https://github.com/gitextensions/gitextensions/pull/13095
+[#13035]:https://github.com/gitextensions/gitextensions/pull/13035
+
+
 ### Version v7.0.1 (31 May 2026)
 
 #### Changes:

@@ -2,10 +2,8 @@
 
 # Git Extensions
 
-Git Extensions is a standalone UI tool for managing git repositories.
-It also integrates with Windows Explorer and Microsoft Visual Studio (2015/2017/2019).
-
-Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/gitextensions/gitextensions?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge) or send us a tweet [![@git_extensions](https://img.shields.io/badge/twitter-%40git__extensions-blue)](https://twitter.com/git_extensions)
+Git Extensions is a standalone Windows UI tool for managing git repositories.
+It also integrates with Windows Explorer and Microsoft Visual Studio.
 
 ## Online manual
 
@@ -56,10 +54,6 @@ Have a question? Come and talk to us: [![Gitter](https://badges.gitter.im/Join%2
   </tr>
 </table>
 
-### Older versions
-
-See [build instructions](https://github.com/gitextensions/gitextensions/wiki/Build-instructions)
-
 ## Downloads
 
 <a href="https://github.com/gitextensions/gitextensions/releases" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/github/downloads/gitextensions/gitextensions/total.svg?label=GitHub%20downloads%20(total)&cacheSeconds=86400"></a> <a href="https://chocolatey.org/packages/gitextensions" rel="nofollow" style="vertical-align: -webkit-baseline-middle;"><img src="https://img.shields.io/chocolatey/dt/gitextensions.svg?label=Chocolatey%20downloads%20(total)&cacheSeconds=86400"></a>
@@ -75,7 +69,7 @@ If you want to **update a portable version**, you should delete all the files an
 <table>
   <tr>
     <td>
-      <strong>Latest Release: v6.0.5</strong>
+      <strong>Latest official release: v7.0.1</strong>
     </td>
     <td>
       <a href="https://github.com/gitextensions/gitextensions/releases/latest">[ Download ]</a><br />
@@ -102,41 +96,12 @@ If you want to **update a portable version**, you should delete all the files an
   </tr>
   <tr>
     <td>
-      <strong>Visual Studio VSIX (2015/2017/2019)</strong>
-    </td>
-    <td>
-      <a href="https://marketplace.visualstudio.com/items?itemName=GitExtensionsApp.v341">[ Download ]</a> or install from Visual Studio via Extensions
-    </td>
-  </tr>
-  <tr>
-    <td>
       <strong>Visual Studio Code VSIX</strong><br />
       Kudos to <a href="https://github.com/pmiossec" class="author text-inherit">@pmiossec</a>
     </td>
     <td>
       <a href="https://marketplace.visualstudio.com/items?itemName=pmiossec.vscode-gitextensions">[ Download ]</a> or install via VSCode<br />
       NB: Please direct all discussions about the VSIX to <a href="https://github.com/pmiossec/vscode-gitextensions">its own repo</a>.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <strong>IntelliJ platform IDEs</strong><br />
-      Kudos to <a href="https://github.com/DmitryZhelnin" class="author text-inherit">@DmitryZhelnin</a>
-    </td>
-    <td>
-      <a href="https://plugins.jetbrains.com/plugin/11511-gitextensions">[ Download ]</a> or install via IDE Plugins settings<br />
-      NB: Please direct all discussions about this plugin to <a href="https://github.com/DmitryZhelnin/git-extensions-intellij">its own repo</a>.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      <strong>Git Extensions for VS Code</strong><br />
-      Kudos to <a href="https://github.com/Carl-Hugo" class="author text-inherit">@Carl-Hugo</a>
-    </td>
-    <td>
-        <p>This extension allows users to <strong>Browse with Git Extensions</strong> from the <em>Explorer</em> and the <em>Editor</em>. It supports a single folder and workspaces. Nothing fancier.</p>
-        <p><a href="https://marketplace.visualstudio.com/items?itemName=forevolve.git-extensions-for-vs-code">[ Download ]</a> from the Marketplace or install via VS Code<br />
-        NB: Please direct all discussions about this extension to <a href="https://github.com/ForEvolve/git-extensions-for-vs-code">its own repo</a>.</p>
     </td>
   </tr>
 </table>

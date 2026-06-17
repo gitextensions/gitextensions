@@ -53,7 +53,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
         _currentViewPositionCache = new CurrentViewPositionCache(this);
         TextEditor.ActiveTextAreaControl.TextArea.SelectionManager.SelectionChanged += SelectionManagerSelectionChanged;
 
-        TextEditor.ActiveTextAreaControl.TextArea.PreviewKeyDown += (s, e) =>
+        TextEditor.ActiveTextAreaControl.TextArea.PreviewKeyDown += (_, e) =>
         {
             if (e.KeyCode == Keys.Escape && !TextEditor.ActiveTextAreaControl.SelectionManager.HasSomethingSelected)
             {
@@ -412,7 +412,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     /// </summary>
     public void AddTextHighlighting()
     {
-        TextEditor.Document.MarkerStrategy.RemoveAll(m => true);
+        TextEditor.Document.MarkerStrategy.RemoveAll(_ => true);
         _textHighlightService.AddTextHighlighting(TextEditor.Document);
     }
 
@@ -589,8 +589,8 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
             // if header is selected then don't remove diff extra chars
             if (hpos <= pos)
             {
-                char[] specials = [' ', '-', '+'];
-                lines = lines.Select(s => s.Length > 0 && specials.Any(c => c == s[0]) ? s[1..] : s);
+                const string specials = " -+";
+                lines = lines.Select(s => s.Length > 0 && specials.Contains(s[0]) ? s[1..] : s);
             }
 
             text = string.Join("\n", lines);
@@ -752,7 +752,7 @@ public partial class FileViewerInternal : GitModuleControl, IFileViewer
     public void ClearHighlighting()
     {
         IDocument document = TextEditor.Document;
-        document.MarkerStrategy.RemoveAll(t => true);
+        document.MarkerStrategy.RemoveAll(_ => true);
     }
 
     public int TotalNumberOfLines => TextEditor.Document.TotalNumberOfLines;

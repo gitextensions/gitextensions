@@ -1,6 +1,6 @@
 ﻿namespace GitCommands.DiffMergeTools;
 
-internal class Araxis : DiffMergeTool
+internal sealed class Araxis : DiffMergeTool
 {
     /// <inheritdoc />
     public override string ExeFileName => "Compare.exe";

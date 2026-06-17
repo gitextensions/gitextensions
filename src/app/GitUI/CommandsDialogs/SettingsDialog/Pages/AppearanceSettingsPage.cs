@@ -227,7 +227,7 @@ public partial class AppearanceSettingsPage : SettingsPageWithHeader
         txtCustomAvatarTemplate.Visible = showCustomTemplate;
     }
 
-    private class ComboBoxItem<T>
+    private sealed class ComboBoxItem<T>
     {
         public string Text { get; }
         public T Value { get; }

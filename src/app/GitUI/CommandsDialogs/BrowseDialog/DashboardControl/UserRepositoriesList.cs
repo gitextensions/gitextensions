@@ -31,7 +31,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private readonly TranslationString _cannotOpenTheFolder = new("Cannot open the folder");
 
-    private class SelectedRepositoryItem
+    private sealed class SelectedRepositoryItem
     {
         public bool IsFavourite { get; }
         public Repository Repository { get; }
@@ -501,7 +501,7 @@ public partial class UserRepositoriesList : GitExtensionsControl
 
     private static string ShortenText(string text, Font font, float maxWidth)
     {
-        char ellipsis = '…';
+        const char ellipsis = '…';
         int width = TextRenderer.MeasureText(text, font).Width;
         if (width < maxWidth)
         {

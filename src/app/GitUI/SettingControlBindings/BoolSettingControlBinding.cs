@@ -3,7 +3,7 @@ using GitExtensions.Extensibility.Settings;
 
 namespace GitUI.SettingControlBindings;
 
-internal class BoolSettingControlBinding : SettingControlBinding<BoolSetting, CheckBox>
+internal sealed class BoolSettingControlBinding : SettingControlBinding<BoolSetting, CheckBox>
 {
     public BoolSettingControlBinding(BoolSetting setting, CheckBox? customControl)
         : base(setting, customControl)

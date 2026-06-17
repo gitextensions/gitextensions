@@ -5,7 +5,7 @@ using GitUIPluginInterfaces;
 
 namespace GitUI.LeftPanel.ContextMenu;
 
-internal class GitRefsSortOrderContextMenuItem : ToolStripMenuItem
+internal sealed class GitRefsSortOrderContextMenuItem : ToolStripMenuItem
 {
     internal const string MenuItemName = "GitRefsSortOrderContextMenuItem";
     private readonly Action _onSortOrderChanged;

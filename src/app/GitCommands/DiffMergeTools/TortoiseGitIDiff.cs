@@ -1,6 +1,6 @@
 namespace GitCommands.DiffMergeTools;
 
-internal class TortoiseGitIDiff : DiffMergeTool
+internal sealed class TortoiseGitIDiff : DiffMergeTool
 {
     /// <inheritdoc />
     public override string ExeFileName => "TortoiseGitIDiff.exe";

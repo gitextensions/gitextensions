@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Frozen;
+using System.Diagnostics;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitExtensions.Extensibility;
@@ -8,7 +9,7 @@ namespace GitCommands.Git;
 
 public interface IAheadBehindDataProvider
 {
-    IDictionary<string, AheadBehindData>? GetData(string branchName = "");
+    IReadOnlyDictionary<string, AheadBehindData>? GetData(string branchName = "");
     void ResetCache();
 }
 
@@ -24,7 +25,7 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.ExplicitCapture)]
     private static partial Regex AheadBehindRegex { get; }
     private readonly string _refFormat = @"%(push:track,nobracket)::%(upstream:track,nobracket)::%(push)::%(upstream)::%(refname:short)";
-    private Lazy<IDictionary<string, AheadBehindData>?>? _lazyData;
+    private Lazy<IReadOnlyDictionary<string, AheadBehindData>?>? _lazyData;
     private string? _branchName;
     private readonly Lock _lock = new();
 
@@ -39,7 +40,7 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
         _branchName = null;
     }
 
-    public IDictionary<string, AheadBehindData>? GetData(string branchName = "")
+    public IReadOnlyDictionary<string, AheadBehindData>? GetData(string branchName = "")
     {
         if (!AppSettings.ShowAheadBehindData)
         {
@@ -67,7 +68,7 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
     }
 
     // This method is required to facilitate unit tests
-    private IDictionary<string, AheadBehindData>? GetData(Encoding? encoding, string branchName = "")
+    private IReadOnlyDictionary<string, AheadBehindData>? GetData(Encoding? encoding, string branchName = "")
     {
         if (branchName is null)
         {
@@ -150,7 +151,7 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
 #pragma warning restore SA1515
         }
 
-        return aheadBehindForBranchesData;
+        return aheadBehindForBranchesData.ToFrozenDictionary();
     }
 
     private IExecutable GetGitExecutable()
@@ -168,6 +169,6 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
             _provider = provider;
         }
 
-        public IDictionary<string, AheadBehindData>? GetData(Encoding encoding, string branchName) => _provider.GetData(encoding, branchName);
+        public IReadOnlyDictionary<string, AheadBehindData>? GetData(Encoding encoding, string branchName) => _provider.GetData(encoding, branchName);
     }
 }

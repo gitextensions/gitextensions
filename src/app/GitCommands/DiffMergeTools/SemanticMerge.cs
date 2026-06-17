@@ -1,6 +1,6 @@
 namespace GitCommands.DiffMergeTools;
 
-internal class SemanticMerge : DiffMergeTool
+internal sealed class SemanticMerge : DiffMergeTool
 {
     private static readonly string[] Folders = GetFolders();
 

@@ -5,7 +5,7 @@ using Microsoft.ApplicationInsights.Extensibility;
 
 namespace GitUI.Infrastructure.Telemetry;
 
-internal class AppInfoTelemetryInitializer : ITelemetryInitializer
+internal sealed class AppInfoTelemetryInitializer : ITelemetryInitializer
 {
     private readonly bool _isDirty;
     private static readonly string AppCurrentTranslationKey = nameof(AppSettings.CurrentTranslation).FormatKey();

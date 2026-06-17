@@ -5,7 +5,7 @@ internal interface IFilePromptCreator
     IUserInputPrompt Create();
 }
 
-internal class FilePromptCreator : IFilePromptCreator
+internal sealed class FilePromptCreator : IFilePromptCreator
 {
     public IUserInputPrompt Create()
     {

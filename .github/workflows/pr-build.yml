@@ -16,7 +16,7 @@ env:
   DOTNET_NOLOGO: true
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
   DOTNET_CLI_TELEMETRY_OPTOUT: true
-  BUILD_VERSION: 7.0.0.${{ github.run_number }}
+  BUILD_VERSION: 7.2.0.${{ github.run_number }}
 
 jobs:
   build-and-test:
