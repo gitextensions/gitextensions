@@ -1536,8 +1536,9 @@ public sealed partial class FormCommit : GitModuleForm
 
         Staged.ClearSelected();
 
-        _currentSelection = Unstaged.SelectedItems.Items().ToList();
-        FileStatusItem? item = Unstaged.SelectedItem;
+        FileStatusItem[] selectedItems = Unstaged.SelectedItems.ToArray();
+        _currentSelection = selectedItems.Items().ToArray();
+        FileStatusItem? item = selectedItems.Contains(Unstaged.FocusedItem) ? Unstaged.FocusedItem : selectedItems.FirstOrDefault();
         ShowChanges(item, staged: false);
     }
 
@@ -1801,8 +1802,9 @@ public sealed partial class FormCommit : GitModuleForm
 
         Unstaged.ClearSelected();
 
-        _currentSelection = Staged.SelectedItems.Items().ToList();
-        FileStatusItem? item = Staged.SelectedItem;
+        FileStatusItem[] selectedItems = Staged.SelectedItems.ToArray();
+        _currentSelection = selectedItems.Items().ToArray();
+        FileStatusItem? item = selectedItems.Contains(Staged.FocusedItem) ? Staged.FocusedItem : selectedItems.FirstOrDefault();
         ShowChanges(item, staged: true);
     }
 
