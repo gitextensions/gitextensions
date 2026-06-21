@@ -203,7 +203,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
             if (stashRect != Rectangle.Empty)
             {
                 hitInfos ??= RentHitInfoList();
-                hitInfos.Add(new RefLabelHitInfo(stashRect, GitRef: null, StashReflogSelector: revision.ReflogSelector));
+                hitInfos.Add(new RefLabelHitInfo(stashRect, RefLabelShape.Rect, PointWidth: 0, GitRef: null, StashReflogSelector: revision.ReflogSelector));
             }
         }
 
@@ -326,19 +326,14 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
             // Register hit-boxes.
             hitInfos ??= RentHitInfoList();
-            hitInfos.Add(new RefLabelHitInfo(branchRect, gitRef, StashReflogSelector: null));
+            hitInfos.Add(new RefLabelHitInfo(branchRect, shape1, pointWidth, gitRef, StashReflogSelector: null));
 
             if (nestledRect == Rectangle.Empty)
             {
                 return;
             }
 
-            // The visible nestled area starts at the notch tip.
-            int nestledVisibleLeft = nestledRect.X + pointWidth - 1;
-            hitInfos.Add(new RefLabelHitInfo(
-                nestledRect with { X = nestledVisibleLeft, Width = nestledRect.Right - nestledVisibleLeft },
-                nestledRef,
-                StashReflogSelector: null));
+            hitInfos.Add(new RefLabelHitInfo(nestledRect, shape2, pointWidth, nestledRef, StashReflogSelector: null));
         }
 
         void DrawSeparateRef(
@@ -362,7 +357,10 @@ internal sealed class MessageColumnProvider : ColumnProvider
             if (refRect != Rectangle.Empty)
             {
                 hitInfos ??= RentHitInfoList();
-                hitInfos.Add(new RefLabelHitInfo(refRect, gitRef, StashReflogSelector: null));
+                int pointWidth = shape == RefLabelShape.Rect
+                    ? 0
+                    : RevisionGridRefRenderer.GetPointWidth(gitRef.IsSelected ? style.BoldFont : style.NormalFont, e.Graphics!);
+                hitInfos.Add(new RefLabelHitInfo(refRect, shape, pointWidth, gitRef, StashReflogSelector: null));
             }
         }
     }
@@ -939,7 +937,7 @@ internal sealed class MessageColumnProvider : ColumnProvider
 
         foreach (RefLabelHitInfo hitInfo in hitInfos)
         {
-            if (hitInfo.Bounds.Contains(gridClientPoint))
+            if (hitInfo.Contains(gridClientPoint))
             {
                 return hitInfo;
             }
