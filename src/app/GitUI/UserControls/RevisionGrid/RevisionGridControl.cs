@@ -2011,11 +2011,17 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                         // Let DataGridView's native Ctrl+click processing select this revision again.
                         // And let the related ref be added to the selection afterwards.
                         _gridView.ClearSelection();
-                        this.InvokeAndForget(async () =>
+                        BeginInvoke(() =>
                         {
-                            await Task.Delay(100);
                             GoToRelatedRef(gitRef, toggleSelection: true);
-                            _gridView.FirstDisplayedScrollingRowIndex = topRow;
+                            try
+                            {
+                                _gridView.FirstDisplayedScrollingRowIndex = topRow;
+                            }
+                            catch
+                            {
+                                // ignore
+                            }
                         });
                         return;
                     }
@@ -3254,7 +3260,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             }
             else
             {
-                GoToRef(gitRef.IsRemote ? aheadBehindData.Branch : aheadBehindData.RemoteRef, showNoRevisionMsg: true);
+                GoToRef(gitRef.IsRemote ? aheadBehindData.Branch : aheadBehindData.RemoteRef, showNoRevisionMsg: true, toggleSelection);
             }
         }
     }
