@@ -84,7 +84,7 @@ public static class ShellExtensionManager
                     Verb = "RunAs",
                     UseShellExecute = true
                 };
-                Process? process = Process.Start(pi);
+                using Process? process = Process.Start(pi);
                 process?.WaitForExit();
                 if (process?.ExitCode is not 0)
                 {

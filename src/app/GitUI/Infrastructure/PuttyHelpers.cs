@@ -89,7 +89,14 @@ public static class PuttyHelpers
         static bool IsPageantRunning()
         {
             string pageantProcName = Path.GetFileNameWithoutExtension(AppSettings.Pageant);
-            return Process.GetProcessesByName(pageantProcName).Length != 0;
+            Process[] processes = Process.GetProcessesByName(pageantProcName);
+            bool running = processes.Length != 0;
+            foreach (Process p in processes)
+            {
+                p.Dispose();
+            }
+
+            return running;
         }
     }
 

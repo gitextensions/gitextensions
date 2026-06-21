@@ -3720,7 +3720,15 @@ public sealed partial class GitModule : IGitModule
 
         if (OperatingSystem.IsWindows())
         {
-            return Process.GetProcessesByName("git").Length > 0;
+            // Dispose each Process handle immediately
+            Process[] processes = Process.GetProcessesByName("git");
+            bool running = processes.Length > 0;
+            foreach (Process p in processes)
+            {
+                p.Dispose();
+            }
+
+            return running;
         }
 
         // Get processes by "ps" command.

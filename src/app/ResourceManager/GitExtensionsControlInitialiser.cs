@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using GitCommands;
+﻿using GitCommands;
 using GitExtensions.Extensibility.Translations;
 using GitUI;
 
@@ -46,7 +45,7 @@ internal sealed class GitExtensionsControlInitialiser
         {
             if (_isDesignMode is null)
             {
-                string processName = Process.GetCurrentProcess().ProcessName.ToLowerInvariant();
+                string processName = Path.GetFileNameWithoutExtension(Environment.ProcessPath ?? "").ToLowerInvariant();
                 _isDesignMode = processName.Contains("devenv") || processName.Contains("designtoolsserver");
             }
 
