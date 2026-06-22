@@ -52,7 +52,7 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         }
     }
 
-    private bool DrawGraphCellFromCache(int rowIndex, int rowHeight, Rectangle cellBounds, Graphics graphics)
+    private void DrawGraphCellFromCache(int rowIndex, int rowHeight, Rectangle cellBounds, Graphics graphics)
     {
         // Draws the required row from the cache if available.
 
@@ -62,14 +62,14 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
         if (width <= 0 || height <= 0)
         {
             // Nothing to be drawn
-            return true;
+            return;
         }
 
         int offsetToHead = rowIndex - _graphDisplayCache.HeadRow;
         if (offsetToHead < 0 || offsetToHead >= _graphDisplayCache.Count)
         {
             // Item not in the cache
-            return false;
+            return;
         }
 
         Rectangle cellRect = new(
@@ -83,8 +83,6 @@ internal sealed class RevisionGraphColumnProvider : ColumnProvider
             cellBounds,
             cellRect,
             GraphicsUnit.Pixel);
-
-        return true;
     }
 
     public async Task RenderGraphToCacheAsync(VisibleRowRange range, int toRowIndex, int rowHeight, CancellationToken cancellationToken)

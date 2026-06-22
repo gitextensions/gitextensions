@@ -1237,7 +1237,7 @@ public sealed partial class GitModule : IGitModule
                 return false;
             }
 
-            char code = match.Groups["code"].Value[0];
+            char code = match.Groups["code"].ValueSpan[0];
             string localPath = match.Groups["path"].Value;
             string branch = match.Groups["branch"].Value;
 
@@ -2061,8 +2061,8 @@ public sealed partial class GitModule : IGitModule
                 string remoteLine = enumerator.Current;
                 Match remoteMatch = RemoteVerboseLineRegex.Match(remoteLine);
                 if (!remoteMatch.Success
-                    || (remoteMatch.Groups["direction"].Value != "fetch"
-                       && remoteMatch.Groups["direction"].Value != "push"))
+                    || (remoteMatch.Groups["direction"].ValueSpan is not "fetch"
+                       && remoteMatch.Groups["direction"].ValueSpan is not "push"))
                 {
                     // Ignore malformed and unknown entries
                     continue;
@@ -2075,7 +2075,7 @@ public sealed partial class GitModule : IGitModule
                     remoteUrl = GetWindowsPath(remoteUrl).ToPosixPath();
                 }
 
-                if (remoteMatch.Groups["direction"].Value == "push")
+                if (remoteMatch.Groups["direction"].ValueSpan is "push")
                 {
                     if (remotes.Count <= 0 || name != remotes[^1].Name)
                     {
@@ -2093,7 +2093,7 @@ public sealed partial class GitModule : IGitModule
 
                 string pushLine = enumerator.Current;
                 Match pushMatch = RemoteVerboseLineRegex.Match(pushLine);
-                if (!pushMatch.Success || pushMatch.Groups["direction"].Value != "push")
+                if (!pushMatch.Success || pushMatch.Groups["direction"].ValueSpan is not "push")
                 {
                     throw new Exception("Unable to parse git remote push URL line: " + pushLine);
                 }
@@ -3390,8 +3390,8 @@ public sealed partial class GitModule : IGitModule
             if (match.Success)
             {
                 objectId = ObjectId.Parse(line, match.Groups["objectid"]);
-                finalLineNumber = int.Parse(match.Groups["finallinenum"].Value);
-                originLineNumber = int.Parse(match.Groups["origlinenum"].Value);
+                finalLineNumber = int.Parse(match.Groups["finallinenum"].ValueSpan);
+                originLineNumber = int.Parse(match.Groups["origlinenum"].ValueSpan);
             }
             else if (line.StartsWith('\t'))
             {
@@ -4057,7 +4057,7 @@ public sealed partial class GitModule : IGitModule
                 continue;
             }
 
-            int count = int.Parse(match.Groups["count"].Value);
+            int count = int.Parse(match.Groups["count"].ValueSpan);
             string name = match.Groups["name"].Value;
 
             totalCommits += count;

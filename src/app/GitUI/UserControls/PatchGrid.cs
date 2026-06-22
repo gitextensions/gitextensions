@@ -315,7 +315,7 @@ public partial class PatchGrid : GitModuleControl
             }
 
             DebugHelpers.Assert(m1.Groups["qr1"].Value == m2.Groups["qr1"].Value, @"m1.Groups[""qr1""].Value == m2.Groups[""qr2""].Value");
-            return str1[..^2] + m2.Groups["qr2"].Value + "?=";
+            return $"{str1.AsSpan()[..^2]}{m2.Groups["qr2"].ValueSpan}?=";
         }
     }
 

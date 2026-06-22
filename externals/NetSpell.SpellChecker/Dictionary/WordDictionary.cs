@@ -433,7 +433,7 @@ public partial class WordDictionary : Component
                             };
 
                             // part 2 = combine flag
-                            if (partMatches[1].Value == "Y")
+                            if (partMatches[1].ValueSpan is "Y")
                             {
                                 currentRule.AllowCombine = true;
                             }
@@ -460,7 +460,7 @@ public partial class WordDictionary : Component
                                 AffixEntry entry = new();
 
                                 // part 2 = strip char
-                                if (partMatches[1].Value != "0")
+                                if (partMatches[1].ValueSpan is not "0")
                                 {
                                     entry.StripCharacters = partMatches[1].Value;
                                 }

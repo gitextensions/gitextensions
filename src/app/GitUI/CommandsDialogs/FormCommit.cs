@@ -1429,7 +1429,7 @@ public sealed partial class FormCommit : GitModuleForm
                 string pattern = regexMatch.Groups["pattern"].Value;
                 int groupIndex = 1;
 
-                if (int.TryParse(regexMatch.Groups["index"].Value, out int parsedIndex))
+                if (int.TryParse(regexMatch.Groups["index"].ValueSpan, out int parsedIndex))
                 {
                     groupIndex = parsedIndex;
                 }

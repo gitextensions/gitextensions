@@ -39,8 +39,8 @@ public sealed class FullPathResolver : IFullPathResolver
         }
 
         string basePath = Path.GetFullPath(workingDir);
-        if (!basePath.EndsWith(Path.DirectorySeparatorChar.ToString())
-            && !basePath.EndsWith(Path.AltDirectorySeparatorChar.ToString()))
+        if (!basePath.EndsWith(Path.DirectorySeparatorChar)
+            && !basePath.EndsWith(Path.AltDirectorySeparatorChar))
         {
             basePath += Path.DirectorySeparatorChar;
         }

@@ -47,7 +47,7 @@ public sealed partial class BlameControl : GitModuleControl
     private GitBlameCommit? _tooltipCommit;
     private bool _changingScrollPosition;
     private IRepositoryHostPlugin? _gitHoster;
-    private static readonly IList<Color> AgeBucketGradientColors = GetAgeBucketGradientColors();
+    private static readonly Color[] AgeBucketGradientColors = GetAgeBucketGradientColors();
     private static readonly TranslationString _blameActualPreviousRevision = new("&Blame previous revision");
     private static readonly TranslationString _blameVisiblePreviousRevision = new("&Blame previous visible revision");
     private readonly Color _commitHighlightColor;
@@ -483,19 +483,18 @@ public sealed partial class BlameControl : GitModuleControl
         return authorLineBuilder.ToString();
     }
 
-    private static IList<Color> GetAgeBucketGradientColors()
+    private static Color[] GetAgeBucketGradientColors()
     {
         // Color chosen from: https://colorbrewer2.org/#type=sequential&scheme=Greens&n=7
-        return [.. new[]
-        {
+        return Array.ConvertAll([
             Color.FromArgb(247, 252, 245),
             Color.FromArgb(199, 233, 192),
             Color.FromArgb(161, 217, 155),
             Color.FromArgb(116, 196, 118),
             Color.FromArgb(65, 171, 93),
             Color.FromArgb(35, 139, 69),
-            Color.FromArgb(0, 68, 27),
-        }.Select(ColorHelper.AdaptBackColor)];
+            Color.FromArgb(0, 68, 27)
+        ], c => c.AdaptBackColor());
     }
 
     public DateTime ArtificialOldBoundary => DateTime.Now.AddYears(-3);
@@ -512,11 +511,11 @@ public sealed partial class BlameControl : GitModuleControl
                                                 .DefaultIfEmpty(artificialOldBoundary)
                                                 .Min()
                                                 .Ticks);
-        long intervalSize = (mostRecentDate - lessRecentDate + 1) / AgeBucketGradientColors.Count;
+        long intervalSize = (mostRecentDate - lessRecentDate + 1) / AgeBucketGradientColors.Length;
         foreach (GitBlameLine blame in blameLines)
         {
             long relativeTicks = Math.Max(0, blame.Commit.AuthorTime.Ticks - lessRecentDate);
-            int ageBucketIndex = Math.Min((int)(relativeTicks / intervalSize), AgeBucketGradientColors.Count - 1);
+            int ageBucketIndex = Math.Min((int)(relativeTicks / intervalSize), AgeBucketGradientColors.Length - 1);
             GitBlameEntry gitBlameDisplay = new()
             {
                 AgeBucketIndex = ageBucketIndex,
