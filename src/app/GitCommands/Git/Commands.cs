@@ -17,10 +17,10 @@ public static partial class Commands
         return new GitCommand(accessesRemote: false, changesRepoState: true,
             new GitArgumentBuilder("checkout")
             {
-                { localChanges == LocalChangesAction.Merge, "--merge" },
-                { localChanges == LocalChangesAction.Reset, "--force" },
-                { remote && newBranchMode == CheckoutNewBranchMode.Create, $"-b {newBranchName.Quote()}" },
-                { remote && newBranchMode == CheckoutNewBranchMode.Reset, $"-B {newBranchName.Quote()}" },
+                { localChanges is LocalChangesAction.Merge, "--merge" },
+                { localChanges is LocalChangesAction.Reset, "--force" },
+                { remote && newBranchMode is CheckoutNewBranchMode.Create, $"-b {newBranchName.Quote()}" },
+                { remote && newBranchMode is CheckoutNewBranchMode.Reset, $"-B {newBranchName.Quote()}" },
                 { remote && (newBranchMode is CheckoutNewBranchMode.Create), "--track" },
                 branchName.QuoteNE()
             });
