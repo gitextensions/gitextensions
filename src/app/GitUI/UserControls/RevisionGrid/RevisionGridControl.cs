@@ -2005,11 +2005,11 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
                 if (hitInfo?.GitRef is { } gitRef)
                 {
-                    bool isVirtualRef = gitRef.Guid is null;
-                    if (isVirtualRef)
+                    bool isVirtualAheadBehingRef = gitRef.Guid is null;
+                    if (isVirtualAheadBehingRef)
                     {
-                        // Let DataGridView's native Ctrl+click processing select this revision again.
-                        // And let the related ref be added to the selection afterwards.
+                        // Let the related ref be added to the selection afterwards in order to simulate standard Ctrl+click behavior.
+                        // For this, let DataGridView's native Ctrl+click processing select this revision again first.
                         _gridView.ClearSelection();
                         BeginInvoke(() =>
                         {
