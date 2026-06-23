@@ -21,7 +21,7 @@ public static partial class Commands
                 { localChanges is LocalChangesAction.Reset, "--force" },
                 { remote && newBranchMode is CheckoutNewBranchMode.Create, $"-b {newBranchName.Quote()}" },
                 { remote && newBranchMode is CheckoutNewBranchMode.Reset, $"-B {newBranchName.Quote()}" },
-                { remote && (newBranchMode is CheckoutNewBranchMode.Create), "--track" },
+                { remote && newBranchMode is CheckoutNewBranchMode.Create, "--track" },
                 branchName.QuoteNE()
             });
     }
