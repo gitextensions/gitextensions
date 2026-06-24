@@ -120,7 +120,7 @@ public static partial class UserEnvironmentInformation
                     version = version[..suffixPos];
                 }
 
-                return new Version(new string(version));
+                return Version.Parse(version);
             }
             catch (Exception ex)
             {
