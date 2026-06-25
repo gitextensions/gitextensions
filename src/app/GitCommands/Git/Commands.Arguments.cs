@@ -388,6 +388,7 @@ public static partial class Commands
              // let git fail, if the file doesn't exist
             { !string.IsNullOrWhiteSpace(mergeCommitFilePath), $"-F {getPathForGitExecution(mergeCommitFilePath).Quote()}" },
             { log is not null && log.Value > 0, $"--log={log}" },
+            "--no-edit", // suppress editor prompt and accept auto-generated message
             branch
         };
     }
