@@ -158,7 +158,7 @@ partial class FormVerify
             }
             else if (objectType == LostObjectType.Blob)
             {
-                string hash = objectId.ToString();
+                ReadOnlySpan<char> hash = objectId.ToString().AsSpan();
                 string blobPath = Path.Join(module.WorkingDirGitDir, "objects", hash[..2], hash[2..ObjectId.Sha1CharCount]);
                 result.Date = new FileInfo(blobPath).CreationTime;
             }
