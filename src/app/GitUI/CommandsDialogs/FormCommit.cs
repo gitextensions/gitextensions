@@ -1386,10 +1386,15 @@ public sealed partial class FormCommit : GitModuleForm
 
             static string GetTextToValidate(string text)
             {
-                string[] lines = text.Split(Delimiters.NewLines, StringSplitOptions.None);
-                if (text.StartsWith(CommitKind.Amend.GetPrefix()) && lines.Length > 2 && lines[1].Length == 0)
+                if (!text.StartsWith(CommitKind.Amend.GetPrefix()) || !text.ContainsAny(Delimiters.LineFeedAndCarriageReturnSearchValues))
                 {
-                    return string.Join(Environment.NewLine, lines.Skip(2));
+                    return text;
+                }
+
+                string[] lines = text.Split(Delimiters.NewLines, StringSplitOptions.None);
+                if (lines.Length > 2 && lines[1].Length == 0)
+                {
+                    return string.Join(Environment.NewLine, lines.AsSpan(2));
                 }
 
                 return text;
