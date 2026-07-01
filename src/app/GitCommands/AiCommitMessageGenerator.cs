@@ -100,10 +100,7 @@ public static class AiCommitMessageGenerator
         return ExtractContent(responseText);
     }
 
-    /// <summary>
-    ///  Extracts the generated commit message from a Chat Completions JSON response.
-    /// </summary>
-    public static string ExtractContent(string responseText)
+    private static string ExtractContent(string responseText)
     {
         using JsonDocument doc = JsonDocument.Parse(responseText);
         JsonElement root = doc.RootElement;
@@ -131,4 +128,9 @@ public static class AiCommitMessageGenerator
 
     private static string Truncate(string value, int maxLength)
         => value.Length <= maxLength ? value : $"{value[..maxLength]}…";
+
+    internal readonly struct TestAccessor
+    {
+        public static string ExtractContent(string responseText) => AiCommitMessageGenerator.ExtractContent(responseText);
+    }
 }

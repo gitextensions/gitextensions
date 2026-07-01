@@ -10,7 +10,7 @@ public class AiCommitMessageGeneratorTests
     {
         string json = """{"choices":[{"index":0,"message":{"role":"assistant","content":"feat: add the thing"}}]}""";
 
-        AiCommitMessageGenerator.ExtractContent(json).Should().Be("feat: add the thing");
+        AiCommitMessageGenerator.TestAccessor.ExtractContent(json).Should().Be("feat: add the thing");
     }
 
     [Test]
@@ -18,7 +18,7 @@ public class AiCommitMessageGeneratorTests
     {
         string json = """{"choices":[{"message":{"content":"  hello  "}}]}""";
 
-        AiCommitMessageGenerator.ExtractContent(json).Should().Be("hello");
+        AiCommitMessageGenerator.TestAccessor.ExtractContent(json).Should().Be("hello");
     }
 
     [TestCase("""{"choices":[]}""", TestName = "empty choices")]
@@ -28,7 +28,7 @@ public class AiCommitMessageGeneratorTests
     [TestCase("""{"choices":[{"message":{}}]}""", TestName = "message without content")]
     public void ExtractContent_throws_when_there_is_no_usable_message(string json)
     {
-        Action act = () => AiCommitMessageGenerator.ExtractContent(json);
+        Action act = () => AiCommitMessageGenerator.TestAccessor.ExtractContent(json);
 
         act.Should().Throw<UserExternalOperationException>();
     }
