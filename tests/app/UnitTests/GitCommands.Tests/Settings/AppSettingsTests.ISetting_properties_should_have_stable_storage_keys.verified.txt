@@ -1,4 +1,9 @@
-﻿BranchFilterEnabled = BranchFilterEnabled
+﻿AiCommitMessageApiBaseUrl = AiCommitMessage.AiCommitMessageApiBaseUrl
+AiCommitMessageEnabled = AiCommitMessage.AiCommitMessageEnabled
+AiCommitMessageMaxDiffLength = AiCommitMessage.AiCommitMessageMaxDiffLength
+AiCommitMessageModel = AiCommitMessage.AiCommitMessageModel
+AiCommitMessageSystemPrompt = AiCommitMessage.AiCommitMessageSystemPrompt
+BranchFilterEnabled = BranchFilterEnabled
 CheckoutOtherBranchAfterReset = Dialogs.CheckoutOtherBranchAfterReset
 CommitDialogSelectStagedOnEnterMessage = Dialogs.CommitDialogSelectStagedOnEnterMessage
 ConEmuStyle = Detailed.ConEmuStyle
