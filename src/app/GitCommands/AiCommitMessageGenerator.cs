@@ -45,13 +45,13 @@ public static class AiCommitMessageGenerator
     /// </summary>
     public static async Task<string> GenerateAsync(string diff, CancellationToken cancellationToken = default)
     {
-        string baseUrl = (AppSettings.AiCommitMessageApiBaseUrl.Value ?? string.Empty).Trim().TrimEnd('/');
+        string baseUrl = AppSettings.AiCommitMessageApiBaseUrl.Value.Trim().TrimEnd('/');
         if (string.IsNullOrWhiteSpace(baseUrl))
         {
             throw new InvalidOperationException("The AI commit message API base URL is not configured (Settings > Commit dialog).");
         }
 
-        string apiKey = (AppSettings.AiCommitMessageApiKey ?? string.Empty).Trim();
+        string apiKey = AppSettings.AiCommitMessageApiKey.Trim();
         string model = AppSettings.AiCommitMessageModel.Value;
         string systemPrompt = AppSettings.AiCommitMessageSystemPrompt.Value;
 
@@ -100,7 +100,10 @@ public static class AiCommitMessageGenerator
         return ExtractContent(responseText);
     }
 
-    private static string ExtractContent(string responseText)
+    /// <summary>
+    ///  Extracts the generated commit message from a Chat Completions JSON response.
+    /// </summary>
+    public static string ExtractContent(string responseText)
     {
         using JsonDocument doc = JsonDocument.Parse(responseText);
         JsonElement root = doc.RootElement;
@@ -123,17 +126,9 @@ public static class AiCommitMessageGenerator
 
         throw new UserExternalOperationException(
             "AI commit message generation failed.",
-            new ExternalOperationException(innerException: new Exception("The AI response did not contain a commit message (no choices[0].message.content):" + Environment.NewLine + Environment.NewLine + Truncate(responseText, 1000))));
+            new ExternalOperationException(innerException: new Exception($"The AI response did not contain a commit message (no choices[0].message.content):{Environment.NewLine}{Environment.NewLine}{Truncate(responseText, 1000)}")));
     }
 
     private static string Truncate(string value, int maxLength)
-        => string.IsNullOrEmpty(value) || value.Length <= maxLength ? value : value[..maxLength] + "…";
-
-    internal static TestAccessor GetTestAccessor() => new();
-
-    internal readonly struct TestAccessor
-    {
-        internal string ExtractContent(string responseText)
-            => AiCommitMessageGenerator.ExtractContent(responseText);
-    }
+        => value.Length <= maxLength ? value : $"{value[..maxLength]}…";
 }
