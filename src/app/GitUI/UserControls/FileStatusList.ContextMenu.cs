@@ -105,7 +105,9 @@ partial class FileStatusList
 
     private void AddFileToIgnoreFile(bool localExclude)
     {
-        string[] fileNames = [.. SelectedItems.Select(item => "/" + item.Item.Name)];
+        string[] fileNames = SelectedFolder is { Length: > 0 } selectedFolder
+            ? [$"/{selectedFolder}/"]
+            : [.. SelectedItems.Select(item => "/" + item.Item.Name)];
         if (fileNames.Length > 0 && UICommands.StartAddToGitIgnoreDialog(this, localExclude, fileNames))
         {
             RequestRefresh();
