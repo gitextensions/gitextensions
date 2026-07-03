@@ -743,7 +743,7 @@ public partial class Spelling : Component
         _text.Remove(index, length);
 
         // if first letter upper case, match case for replacement word
-        if (char.IsUpper(_words[replacedIndex].ToString(), 0))
+        if (char.IsUpper(_words[replacedIndex].ValueSpan[0]))
         {
             _replacementWord = $"{char.ToUpper(_replacementWord[0], CultureInfo.CurrentUICulture)}{_replacementWord[1..]}";
         }

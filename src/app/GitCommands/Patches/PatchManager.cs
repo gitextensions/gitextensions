@@ -579,7 +579,7 @@ internal sealed partial class Chunk
 
         if (match.Success)
         {
-            _startLine = int.Parse(match.Groups["startline"].Value);
+            _startLine = int.Parse(match.Groups["startline"].ValueSpan);
         }
     }
 

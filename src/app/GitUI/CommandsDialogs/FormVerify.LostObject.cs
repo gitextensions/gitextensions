@@ -152,13 +152,13 @@ partial class FormVerify
                     result.Parent = ObjectId.Parse(tagData, tagPatternMatch.Groups["parent"]);
                     result.Author = module.ReEncodeStringFromLossless(tagPatternMatch.Groups["author"].Value);
                     result.TagName = tagPatternMatch.Groups["tagname"].Value;
-                    result.Subject = result.TagName + ":" + tagPatternMatch.Groups["subject"].Value;
+                    result.Subject = $"{result.TagName}:{tagPatternMatch.Groups["subject"].ValueSpan}";
                     result.Date = DateTimeUtils.ParseUnixTime(tagPatternMatch.Groups["date"].Value);
                 }
             }
             else if (objectType == LostObjectType.Blob)
             {
-                string hash = objectId.ToString();
+                ReadOnlySpan<char> hash = objectId.ToString().AsSpan();
                 string blobPath = Path.Join(module.WorkingDirGitDir, "objects", hash[..2], hash[2..ObjectId.Sha1CharCount]);
                 result.Date = new FileInfo(blobPath).CreationTime;
             }
@@ -179,7 +179,7 @@ partial class FormVerify
                     return LostObjectType.Other;
                 }
 
-                return matchedGroup.Value switch
+                return matchedGroup.ValueSpan switch
                 {
                     "commit" => LostObjectType.Commit,
                     "blob" => LostObjectType.Blob,

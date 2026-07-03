@@ -75,8 +75,8 @@ public sealed partial class GitTreeParser : IGitTreeParser
             return null;
         }
 
-        int mode = int.Parse(match.Groups["mode"].Value);
-        string typeName = match.Groups["type"].Value;
+        int mode = int.Parse(match.Groups["mode"].ValueSpan);
+        ReadOnlySpan<char> typeName = match.Groups["type"].ValueSpan;
         ObjectId objectId = ObjectId.Parse(rawItem, match.Groups["objectid"]);
         string name = match.Groups["name"].Value;
 
@@ -109,7 +109,7 @@ public sealed partial class GitTreeParser : IGitTreeParser
             return null;
         }
 
-        int mode = int.Parse(match.Groups["mode"].Value);
+        int mode = int.Parse(match.Groups["mode"].ValueSpan);
         ObjectId objectId = ObjectId.Parse(rawItem, match.Groups["objectid"]);
         string name = match.Groups["name"].Value;
 

@@ -106,7 +106,7 @@ public partial class AheadBehindDataProvider : IAheadBehindDataProvider
             // The third condition specifically ensures we do not use the value of '%(push)' in cases where the
             // value was provided by a push refspec defined for the remote, but the local branch is not already
             // tracking some remote branch.
-            string remoteRef = (match.Groups["remote_p"].Success && !string.IsNullOrEmpty(match.Groups["remote_p"].Value) && !match.Groups["gone_p"].Success)
+            string remoteRef = (match.Groups["remote_p"].Success && !match.Groups["remote_p"].ValueSpan.IsEmpty && !match.Groups["gone_p"].Success)
                 ? match.Groups["remote_p"].Value
                 : match.Groups["remote_u"].Value;
             if (string.IsNullOrEmpty(branch) || string.IsNullOrEmpty(remoteRef))

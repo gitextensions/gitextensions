@@ -9,9 +9,9 @@ namespace GitUI.Editor;
 public class BlameAuthorMargin : AbstractMargin
 {
     private static readonly int AgeBucketMarkerWidth = Convert.ToInt32(4 * DpiUtil.ScaleX);
-    private List<Image?>? _avatars;
+    private Image?[]? _avatars;
     private readonly Color _backgroundColor;
-    private List<GitBlameEntry>? _blameLines;
+    private GitBlameEntry[]? _blameLines;
     private readonly Dictionary<int, SolidBrush> _brushs = [];
     private bool _isVisible = true;
 
@@ -28,7 +28,7 @@ public class BlameAuthorMargin : AbstractMargin
     public void Initialize(IEnumerable<GitBlameEntry> blameLines)
     {
         _blameLines = [.. blameLines];
-        _avatars = [.. _blameLines.Select(a => a.Avatar)];
+        _avatars = Array.ConvertAll(_blameLines, a => a.Avatar);
 
         // Update the resolution otherwise the image is not drawn at the good size :(
         foreach (Image? avatar in _avatars)
@@ -56,14 +56,14 @@ public class BlameAuthorMargin : AbstractMargin
 
     public override void Paint(Graphics g, Rectangle rect)
     {
-        if (rect.Width <= 0 || rect.Height <= 0 || _blameLines?.Count is not > 0)
+        if (rect.Width <= 0 || rect.Height <= 0 || _blameLines?.Length is not > 0)
         {
             return;
         }
 
         g.Clear(_backgroundColor);
 
-        if (_avatars?.Count is not > 0)
+        if (_avatars?.Length is not > 0)
         {
             return;
         }
@@ -75,7 +75,7 @@ public class BlameAuthorMargin : AbstractMargin
 
         for (int i = 0; i < lineCount; i++)
         {
-            if (lineStart + i >= _avatars.Count)
+            if (lineStart + i >= _avatars.Length)
             {
                 break;
             }

@@ -64,13 +64,13 @@ internal partial class GitBlameParser : IGitBlameParser
                     continue;
                 }
 
-                int currentChunkStartingLine = int.Parse(match.Groups["CurrentLineNumber"].Value);
+                int currentChunkStartingLine = int.Parse(match.Groups["CurrentLineNumber"].ValueSpan);
                 if (currentChunkStartingLine <= selectedLine)
                 {
                     // Calculate the offset thanks to the diff chunk header
-                    int previousChunkStartingLine = int.Parse(match.Groups["PreviousLineNumber"].Value);
-                    int lineRemovedCount = match.Groups["LineRemovedCount"].Success ? int.Parse(match.Groups["LineRemovedCount"].Value) : 1;
-                    int lineAddedCount = match.Groups["LineAddedCount"].Success ? int.Parse(match.Groups["LineAddedCount"].Value) : 1;
+                    int previousChunkStartingLine = int.Parse(match.Groups["PreviousLineNumber"].ValueSpan);
+                    int lineRemovedCount = match.Groups["LineRemovedCount"].Success ? int.Parse(match.Groups["LineRemovedCount"].ValueSpan) : 1;
+                    int lineAddedCount = match.Groups["LineAddedCount"].Success ? int.Parse(match.Groups["LineAddedCount"].ValueSpan) : 1;
 
                     // calculate the new position based on changes made above in the file
                     // and changes made in this chunk

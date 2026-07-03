@@ -126,7 +126,7 @@ public partial class AnsiEscapeUtilities
             prevLineOffset = match.Index + match.Length;
 
             // An escape sequence can include several attributes (empty/unparsable is break).
-            List<int> escapeCodes = [.. match.Groups["escNo"].Captures.Select(i => int.TryParse(i.ToString(), out int attribute) ? attribute : 0)];
+            List<int> escapeCodes = [.. match.Groups["escNo"].Captures.Select(i => int.TryParse(i.ValueSpan, out int attribute) ? attribute : 0)];
 
             if (TryGetColorsFromEscapeSequence(escapeCodes, out Color? backColor, out Color? foreColor, ref currentColorId, themeColors))
             {
