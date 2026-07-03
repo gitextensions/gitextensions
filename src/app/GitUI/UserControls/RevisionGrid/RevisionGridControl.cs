@@ -2001,16 +2001,49 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
             if (addRelatedRefToSelection)
             {
+                int topRow = _gridView.FirstDisplayedScrollingRowIndex;
+
                 if (hitInfo?.GitRef is { } gitRef)
                 {
-                    int topRow = _gridView.FirstDisplayedScrollingRowIndex;
-                    GoToRelatedRef(gitRef);
+                    bool isVirtualAheadBehingRef = gitRef.Guid is null;
+                    if (isVirtualAheadBehingRef)
+                    {
+                        // Let the related ref be added to the selection afterwards in order to simulate standard Ctrl+click behavior.
+                        // For this, let DataGridView's native Ctrl+click processing select this revision again first.
+                        _gridView.ClearSelection();
+                        BeginInvoke(() =>
+                        {
+                            GoToRelatedRef(gitRef, toggleSelection: true);
+                            try
+                            {
+                                _gridView.FirstDisplayedScrollingRowIndex = topRow;
+                            }
+                            catch
+                            {
+                                // ignore
+                            }
+                        });
+                        return;
+                    }
 
-                    // The related revision is now selected. Return early so that the DataGridView's
-                    // native Ctrl+click processing adds the clicked row to the selection (instead of
-                    // toggling it off again, which would happen if we selected it here first).
-                    _gridView.FirstDisplayedScrollingRowIndex = topRow;
+                    // Select the related ref.
+                    GoToRelatedRef(gitRef);
                 }
+                else if (GetRevision(e.RowIndex) is { IsArtificial: true })
+                {
+                    // Diff with the previous revision as amend preview.
+                    GoToRef("HEAD~1", showNoRevisionMsg: false);
+                }
+                else
+                {
+                    return;
+                }
+
+                // The related or the previous revision is now selected. Return early so that the DataGridView's
+                // native Ctrl+click processing adds the clicked row to the selection (instead of
+                // toggling it off again, which would happen if we selected it here first).
+
+                _gridView.FirstDisplayedScrollingRowIndex = topRow;
 
                 return;
             }
@@ -3206,7 +3239,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
     }
 
-    private void GoToRelatedRef(IGitRef gitRef, Action<string>? handleGone = null)
+    private void GoToRelatedRef(IGitRef gitRef, Action<string>? handleGone = null, bool toggleSelection = false)
     {
         if (gitRef.Guid is null)
         {
@@ -3216,7 +3249,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             }
             else
             {
-                GoToRef(gitRef.CompleteName, showNoRevisionMsg: true);
+                GoToRef(gitRef.CompleteName, showNoRevisionMsg: true, toggleSelection);
             }
         }
         else if (_messageColumnProvider.GetAheadBehindData(gitRef.IsRemote, gitRef.CompleteName) is { } aheadBehindData)
@@ -3227,7 +3260,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
             }
             else
             {
-                GoToRef(gitRef.IsRemote ? aheadBehindData.Branch : aheadBehindData.RemoteRef, showNoRevisionMsg: true);
+                GoToRef(gitRef.IsRemote ? aheadBehindData.Branch : aheadBehindData.RemoteRef, showNoRevisionMsg: true, toggleSelection);
             }
         }
     }
