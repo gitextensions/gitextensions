@@ -215,16 +215,21 @@ public partial class FormClone : GitExtensionsDialog
                 branch = null;
             }
 
+            // Use a commands instance rooted at the destination so that path conversion and
+            // git-executable selection (Windows vs WSL) match the destination directory, not the
+            // currently open module which may live on a different subsystem.
+            IGitUICommands destUICommands = UICommands.WithWorkingDirectory(dirTo);
+
             ArgumentString cloneCmd = Commands.Clone(_NO_TRANSLATE_From.Text,
                 dirTo,
-                UICommands.Module.GetPathForGitExecution,
+                destUICommands.Module.GetPathForGitExecution,
                 CentralRepository.Checked,
                 cbIntializeAllSubmodules.Checked,
                 branch, depth, isSingleBranch);
-            using (FormRemoteProcess fromProcess = new(UICommands, cloneCmd))
+            using (FormRemoteProcess fromProcess = new(destUICommands, cloneCmd))
             {
                 string sourceRepo = PathUtil.IsLocalFile(_NO_TRANSLATE_From.Text)
-                    ? UICommands.Module.GetPathForGitExecution(_NO_TRANSLATE_From.Text)
+                    ? destUICommands.Module.GetPathForGitExecution(_NO_TRANSLATE_From.Text)
                     : _NO_TRANSLATE_From.Text;
                 fromProcess.SetUrlTryingToConnect(sourceRepo);
                 fromProcess.ShowDialog(this);
