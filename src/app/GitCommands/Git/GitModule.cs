@@ -926,6 +926,14 @@ public sealed partial class GitModule : IGitModule
 
     public void RunMergeTool(string? fileName = "", string? customTool = null)
     {
+        ThreadHelper.JoinableTaskFactory.Run(() => RunMergeToolAsync(fileName, customTool));
+    }
+
+    // TODO: Replace RunMergeTool with RunMergeToolAsync in all usages.
+    private async Task RunMergeToolAsync(string? fileName, string? customTool)
+    {
+        await TaskScheduler.Default;
+
         // Use Windows Git if custom tool is selected as the list is native to the application.
         bool isWindowsGit = !string.IsNullOrWhiteSpace(customTool);
         string gui = (isWindowsGit ? Git.GitVersion.Current : GitVersion).SupportGuiMergeTool ? "--gui" : string.Empty;
@@ -937,7 +945,7 @@ public sealed partial class GitModule : IGitModule
         };
 
         using IProcess process = (isWindowsGit ? _executor.GitWindowsExecutable : GitExecutable).Start(args, createWindow: true, throwOnErrorExit: false);
-        process.WaitForExit();
+        await process.WaitForExitAsync();
     }
 
     public string Init(bool bare, bool shared)
