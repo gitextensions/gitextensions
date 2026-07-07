@@ -80,6 +80,14 @@ partial class FileStatusList
         tsmiFindUsingDialog = new ToolStripMenuItem();
         tsmiFindUsingInputBox = new ToolStripMenuItem();
         tsmiFindUsingBoth = new ToolStripMenuItem();
+        sepAiFilter = new ToolStripSeparator();
+        btnAiFilter = new ToolStripSplitButton();
+        tsmiAiFilterImports = new ToolStripMenuItem();
+        tsmiAiFilterCallerRenames = new ToolStripMenuItem();
+        tsmiAiFilterSyncToAsync = new ToolStripMenuItem();
+        tsmiAiFilterStyleOnly = new ToolStripMenuItem();
+        sepAiFilterConfigure = new ToolStripSeparator();
+        tsmiAiFilterConfigure = new ToolStripMenuItem();
         sepSettings = new ToolStripSeparator();
         btnSettings = new ToolStripDropDownButton();
         tsmiShowIgnoredFiles = new ToolStripMenuItem();
@@ -281,7 +289,7 @@ partial class FileStatusList
         Toolbar.ClickThrough = true;
         Toolbar.DrawBorder = false;
         Toolbar.GripStyle = ToolStripGripStyle.Hidden;
-        Toolbar.Items.AddRange(new ToolStripItem[] { btnCollapseGroups, sepRefresh, btnRefresh, sepAsTree, btnAsTree, sepGroupBy, btnByPath, btnByExtension, btnByStatus, sepFilter, btnUnequalChange, btnOnlyB, btnOnlyA, btnSameChange, sepOptions, btnFindInFilesGitGrep, sepSettings, btnSettings });
+        Toolbar.Items.AddRange(new ToolStripItem[] { btnCollapseGroups, sepRefresh, btnRefresh, sepAsTree, btnAsTree, sepGroupBy, btnByPath, btnByExtension, btnByStatus, sepFilter, btnUnequalChange, btnOnlyB, btnOnlyA, btnSameChange, sepOptions, btnFindInFilesGitGrep, sepAiFilter, btnAiFilter, sepSettings, btnSettings });
         Toolbar.Location = new Point(0, 0);
         Toolbar.Name = "Toolbar";
         Toolbar.RenderMode = ToolStripRenderMode.Professional;
@@ -585,9 +593,71 @@ partial class FileStatusList
         tsmiFindUsingBoth.Size = new Size(158, 22);
         tsmiFindUsingBoth.Text = "Using &both";
         tsmiFindUsingBoth.Click += FindUsing_Click;
-        // 
+        //
+        // sepAiFilter
+        //
+        sepAiFilter.Name = "sepAiFilter";
+        sepAiFilter.Size = new Size(6, 25);
+        sepAiFilter.Visible = false;
+        //
+        // btnAiFilter
+        //
+        btnAiFilter.DisplayStyle = ToolStripItemDisplayStyle.Image;
+        btnAiFilter.DropDownItems.AddRange(new ToolStripItem[] { tsmiAiFilterImports, tsmiAiFilterCallerRenames, tsmiAiFilterSyncToAsync, tsmiAiFilterStyleOnly, sepAiFilterConfigure, tsmiAiFilterConfigure });
+        btnAiFilter.Image = Properties.Images.FunnelExclamation;
+        btnAiFilter.Name = "btnAiFilter";
+        btnAiFilter.Size = new Size(32, 22);
+        btnAiFilter.ToolTipText = "Filter out noise changes using AI";
+        btnAiFilter.Visible = false;
+        btnAiFilter.ButtonClick += AiFilter_ButtonClick;
+        btnAiFilter.DropDownOpening += AiFilter_DropDownOpening;
+        //
+        // tsmiAiFilterImports
+        //
+        tsmiAiFilterImports.CheckOnClick = true;
+        tsmiAiFilterImports.Name = "tsmiAiFilterImports";
+        tsmiAiFilterImports.Size = new Size(340, 22);
+        tsmiAiFilterImports.Text = "Filter &import-only changes";
+        tsmiAiFilterImports.Click += AiFilterCategory_Click;
+        //
+        // tsmiAiFilterCallerRenames
+        //
+        tsmiAiFilterCallerRenames.CheckOnClick = true;
+        tsmiAiFilterCallerRenames.Name = "tsmiAiFilterCallerRenames";
+        tsmiAiFilterCallerRenames.Size = new Size(340, 22);
+        tsmiAiFilterCallerRenames.Text = "Filter &renames at caller sites";
+        tsmiAiFilterCallerRenames.Click += AiFilterCategory_Click;
+        //
+        // tsmiAiFilterSyncToAsync
+        //
+        tsmiAiFilterSyncToAsync.CheckOnClick = true;
+        tsmiAiFilterSyncToAsync.Name = "tsmiAiFilterSyncToAsync";
+        tsmiAiFilterSyncToAsync.Size = new Size(340, 22);
+        tsmiAiFilterSyncToAsync.Text = "Filter s&ync → async conversions (.NET)";
+        tsmiAiFilterSyncToAsync.Click += AiFilterCategory_Click;
+        //
+        // tsmiAiFilterStyleOnly
+        //
+        tsmiAiFilterStyleOnly.CheckOnClick = true;
+        tsmiAiFilterStyleOnly.Name = "tsmiAiFilterStyleOnly";
+        tsmiAiFilterStyleOnly.Size = new Size(340, 22);
+        tsmiAiFilterStyleOnly.Text = "Filter &style-only changes (.NET)";
+        tsmiAiFilterStyleOnly.Click += AiFilterCategory_Click;
+        //
+        // sepAiFilterConfigure
+        //
+        sepAiFilterConfigure.Name = "sepAiFilterConfigure";
+        sepAiFilterConfigure.Size = new Size(337, 6);
+        //
+        // tsmiAiFilterConfigure
+        //
+        tsmiAiFilterConfigure.Name = "tsmiAiFilterConfigure";
+        tsmiAiFilterConfigure.Size = new Size(340, 22);
+        tsmiAiFilterConfigure.Text = "&Configure...";
+        tsmiAiFilterConfigure.Click += AiFilterConfigure_Click;
+        //
         // sepSettings
-        // 
+        //
         sepSettings.Name = "sepSettings";
         sepSettings.Size = new Size(6, 25);
         // 
@@ -1161,6 +1231,14 @@ partial class FileStatusList
     private ToolStripMenuItem tsmiFindUsingDialog;
     private ToolStripMenuItem tsmiFindUsingInputBox;
     private ToolStripMenuItem tsmiFindUsingBoth;
+    private ToolStripSeparator sepAiFilter;
+    private ToolStripSplitButton btnAiFilter;
+    private ToolStripMenuItem tsmiAiFilterImports;
+    private ToolStripMenuItem tsmiAiFilterCallerRenames;
+    private ToolStripMenuItem tsmiAiFilterSyncToAsync;
+    private ToolStripMenuItem tsmiAiFilterStyleOnly;
+    private ToolStripSeparator sepAiFilterConfigure;
+    private ToolStripMenuItem tsmiAiFilterConfigure;
     private ToolStripSeparator sepSettings;
     private ToolStripDropDownButton btnSettings;
     internal ToolStripMenuItem tsmiShowIgnoredFiles;
