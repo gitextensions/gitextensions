@@ -81,7 +81,8 @@ partial class FileStatusList
         tsmiFindUsingInputBox = new ToolStripMenuItem();
         tsmiFindUsingBoth = new ToolStripMenuItem();
         sepAiFilter = new ToolStripSeparator();
-        btnAiFilter = new ToolStripSplitButton();
+        btnAiFilter = new ToolStripButton();
+        btnAiFilterOptions = new ToolStripDropDownButton();
         tsmiAiFilterImports = new ToolStripMenuItem();
         tsmiAiFilterCallerRenames = new ToolStripMenuItem();
         tsmiAiFilterSyncToAsync = new ToolStripMenuItem();
@@ -289,7 +290,7 @@ partial class FileStatusList
         Toolbar.ClickThrough = true;
         Toolbar.DrawBorder = false;
         Toolbar.GripStyle = ToolStripGripStyle.Hidden;
-        Toolbar.Items.AddRange(new ToolStripItem[] { btnCollapseGroups, sepRefresh, btnRefresh, sepAsTree, btnAsTree, sepGroupBy, btnByPath, btnByExtension, btnByStatus, sepFilter, btnUnequalChange, btnOnlyB, btnOnlyA, btnSameChange, sepOptions, btnFindInFilesGitGrep, sepAiFilter, btnAiFilter, sepSettings, btnSettings });
+        Toolbar.Items.AddRange(new ToolStripItem[] { btnCollapseGroups, sepRefresh, btnRefresh, sepAsTree, btnAsTree, sepGroupBy, btnByPath, btnByExtension, btnByStatus, sepFilter, btnUnequalChange, btnOnlyB, btnOnlyA, btnSameChange, sepOptions, btnFindInFilesGitGrep, sepAiFilter, btnAiFilter, btnAiFilterOptions, sepSettings, btnSettings });
         Toolbar.Location = new Point(0, 0);
         Toolbar.Name = "Toolbar";
         Toolbar.RenderMode = ToolStripRenderMode.Professional;
@@ -602,15 +603,25 @@ partial class FileStatusList
         //
         // btnAiFilter
         //
+        btnAiFilter.CheckOnClick = false;
         btnAiFilter.DisplayStyle = ToolStripItemDisplayStyle.Image;
-        btnAiFilter.DropDownItems.AddRange(new ToolStripItem[] { tsmiAiFilterImports, tsmiAiFilterCallerRenames, tsmiAiFilterSyncToAsync, tsmiAiFilterStyleOnly, sepAiFilterConfigure, tsmiAiFilterConfigure });
         btnAiFilter.Image = Properties.Images.FunnelExclamation;
         btnAiFilter.Name = "btnAiFilter";
-        btnAiFilter.Size = new Size(32, 22);
+        btnAiFilter.Size = new Size(23, 22);
         btnAiFilter.ToolTipText = "Filter out noise changes using AI";
         btnAiFilter.Visible = false;
-        btnAiFilter.ButtonClick += AiFilter_ButtonClick;
-        btnAiFilter.DropDownOpening += AiFilter_DropDownOpening;
+        btnAiFilter.Click += AiFilter_ButtonClick;
+        //
+        // btnAiFilterOptions
+        //
+        btnAiFilterOptions.DisplayStyle = ToolStripItemDisplayStyle.Text;
+        btnAiFilterOptions.DropDownItems.AddRange(new ToolStripItem[] { tsmiAiFilterImports, tsmiAiFilterCallerRenames, tsmiAiFilterSyncToAsync, tsmiAiFilterStyleOnly, sepAiFilterConfigure, tsmiAiFilterConfigure });
+        btnAiFilterOptions.Name = "btnAiFilterOptions";
+        btnAiFilterOptions.Size = new Size(29, 22);
+        btnAiFilterOptions.Text = "AI";
+        btnAiFilterOptions.ToolTipText = "AI filter categories and settings";
+        btnAiFilterOptions.Visible = false;
+        btnAiFilterOptions.DropDownOpening += AiFilter_DropDownOpening;
         //
         // tsmiAiFilterImports
         //
@@ -1232,7 +1243,8 @@ partial class FileStatusList
     private ToolStripMenuItem tsmiFindUsingInputBox;
     private ToolStripMenuItem tsmiFindUsingBoth;
     private ToolStripSeparator sepAiFilter;
-    private ToolStripSplitButton btnAiFilter;
+    private ToolStripButton btnAiFilter;
+    private ToolStripDropDownButton btnAiFilterOptions;
     private ToolStripMenuItem tsmiAiFilterImports;
     private ToolStripMenuItem tsmiAiFilterCallerRenames;
     private ToolStripMenuItem tsmiAiFilterSyncToAsync;

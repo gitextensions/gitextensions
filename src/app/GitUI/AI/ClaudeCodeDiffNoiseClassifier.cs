@@ -14,6 +14,9 @@ namespace GitUI.AI;
 /// </summary>
 public sealed class ClaudeCodeDiffNoiseClassifier : IDiffNoiseClassifier
 {
+    // Each call spawns a Claude Code process, so keep concurrency modest to bound process/plan-rate pressure.
+    private const int _maxConcurrency = 3;
+
     private readonly string _executable;
     private readonly string _model;
     private readonly int _maxCharsPerFile;
@@ -29,6 +32,7 @@ public sealed class ClaudeCodeDiffNoiseClassifier : IDiffNoiseClassifier
     public async Task<IReadOnlyList<DiffNoiseClassification>> ClassifyAsync(
         IReadOnlyList<DiffFileContent> files,
         DiffNoiseFilterOptions options,
+        IProgress<DiffNoiseProgress>? progress,
         CancellationToken cancellationToken)
     {
         if (!options.AnyEnabled || files.Count == 0)
@@ -36,16 +40,18 @@ public sealed class ClaudeCodeDiffNoiseClassifier : IDiffNoiseClassifier
             return [];
         }
 
-        List<DiffNoiseClassification> results = [];
-        foreach (List<DiffFileContent> batch in DiffNoisePrompt.CreateBatches(files, _maxCharsPerFile))
-        {
-            cancellationToken.ThrowIfCancellationRequested();
-            string userPrompt = DiffNoisePrompt.BuildUserPrompt(batch, options, _maxCharsPerFile);
-            string result = await RunClaudeAsync(userPrompt, cancellationToken);
-            results.AddRange(DiffNoisePrompt.ParseClassifications(result, batch));
-        }
-
-        return results;
+        return await DiffNoiseBatchRunner.RunAsync(
+            files,
+            _maxCharsPerFile,
+            _maxConcurrency,
+            async (batch, ct) =>
+            {
+                string userPrompt = DiffNoisePrompt.BuildUserPrompt(batch, options, _maxCharsPerFile);
+                string result = await RunClaudeAsync(userPrompt, ct);
+                return DiffNoisePrompt.ParseClassifications(result, batch);
+            },
+            progress,
+            cancellationToken);
     }
 
     private async Task<string> RunClaudeAsync(string userPrompt, CancellationToken cancellationToken)

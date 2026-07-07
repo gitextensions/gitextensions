@@ -29,7 +29,7 @@ partial class AiFilterSettingsPage
     /// </summary>
     private void InitializeComponent()
     {
-        mainPanel = new FlowLayoutPanel();
+        tlpnlMain = new TableLayoutPanel();
         grpBackend = new GroupBox();
         tableBackend = new TableLayoutPanel();
         lblBackend = new Label();
@@ -56,7 +56,7 @@ partial class AiFilterSettingsPage
         chkSyncToAsync = new CheckBox();
         chkStyleOnly = new CheckBox();
         lblPrivacyHint = new Label();
-        mainPanel.SuspendLayout();
+        tlpnlMain.SuspendLayout();
         grpBackend.SuspendLayout();
         tableBackend.SuspendLayout();
         grpConnection.SuspendLayout();
@@ -66,28 +66,36 @@ partial class AiFilterSettingsPage
         flowCategories.SuspendLayout();
         SuspendLayout();
         //
-        // mainPanel
+        // tlpnlMain
         //
-        mainPanel.AutoSize = true;
-        mainPanel.Controls.Add(grpBackend);
-        mainPanel.Controls.Add(grpConnection);
-        mainPanel.Controls.Add(grpCategories);
-        mainPanel.Controls.Add(lblPrivacyHint);
-        mainPanel.Dock = DockStyle.Top;
-        mainPanel.FlowDirection = FlowDirection.TopDown;
-        mainPanel.Location = new Point(0, 0);
-        mainPanel.Name = "mainPanel";
-        mainPanel.Size = new Size(1014, 400);
-        mainPanel.TabIndex = 0;
-        mainPanel.WrapContents = false;
+        tlpnlMain.ColumnCount = 1;
+        tlpnlMain.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        tlpnlMain.Controls.Add(grpBackend, 0, 0);
+        tlpnlMain.Controls.Add(grpConnection, 0, 1);
+        tlpnlMain.Controls.Add(grpCategories, 0, 2);
+        tlpnlMain.Controls.Add(lblPrivacyHint, 0, 3);
+        tlpnlMain.Dock = DockStyle.Fill;
+        tlpnlMain.Location = new Point(8, 8);
+        tlpnlMain.Name = "tlpnlMain";
+        tlpnlMain.RowCount = 5;
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle());
+        tlpnlMain.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+        tlpnlMain.Size = new Size(998, 934);
+        tlpnlMain.TabIndex = 0;
         //
         // grpBackend
         //
         grpBackend.AutoSize = true;
+        grpBackend.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         grpBackend.Controls.Add(tableBackend);
+        grpBackend.Dock = DockStyle.Fill;
         grpBackend.Location = new Point(3, 3);
         grpBackend.Name = "grpBackend";
-        grpBackend.Size = new Size(660, 90);
+        grpBackend.Padding = new Padding(8);
+        grpBackend.Size = new Size(992, 90);
         grpBackend.TabIndex = 0;
         grpBackend.TabStop = false;
         grpBackend.Text = "Backend";
@@ -95,20 +103,21 @@ partial class AiFilterSettingsPage
         // tableBackend
         //
         tableBackend.AutoSize = true;
+        tableBackend.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         tableBackend.ColumnCount = 2;
         tableBackend.ColumnStyles.Add(new ColumnStyle());
-        tableBackend.ColumnStyles.Add(new ColumnStyle());
+        tableBackend.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         tableBackend.Controls.Add(lblBackend, 0, 0);
         tableBackend.Controls.Add(cboBackend, 1, 0);
         tableBackend.Controls.Add(lblClaudeCodeExecutable, 0, 1);
         tableBackend.Controls.Add(txtClaudeCodeExecutable, 1, 1);
         tableBackend.Dock = DockStyle.Top;
-        tableBackend.Location = new Point(3, 19);
+        tableBackend.Location = new Point(8, 21);
         tableBackend.Name = "tableBackend";
         tableBackend.RowCount = 2;
         tableBackend.RowStyles.Add(new RowStyle());
         tableBackend.RowStyles.Add(new RowStyle());
-        tableBackend.Size = new Size(654, 62);
+        tableBackend.Size = new Size(976, 58);
         tableBackend.TabIndex = 0;
         //
         // lblBackend
@@ -123,12 +132,13 @@ partial class AiFilterSettingsPage
         //
         // cboBackend
         //
+        cboBackend.Anchor = AnchorStyles.Left | AnchorStyles.Right;
         cboBackend.DropDownStyle = ComboBoxStyle.DropDownList;
         cboBackend.FormattingEnabled = true;
         cboBackend.Items.AddRange(new object[] { "Anthropic API (requires API key)", "Claude Code (uses your Claude subscription)" });
-        cboBackend.Location = new Point(150, 3);
+        cboBackend.Location = new Point(180, 3);
         cboBackend.Name = "cboBackend";
-        cboBackend.Size = new Size(390, 23);
+        cboBackend.Size = new Size(400, 23);
         cboBackend.TabIndex = 1;
         //
         // lblClaudeCodeExecutable
@@ -143,28 +153,33 @@ partial class AiFilterSettingsPage
         //
         // txtClaudeCodeExecutable
         //
-        txtClaudeCodeExecutable.Location = new Point(150, 33);
+        txtClaudeCodeExecutable.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+        txtClaudeCodeExecutable.Location = new Point(180, 32);
         txtClaudeCodeExecutable.Name = "txtClaudeCodeExecutable";
-        txtClaudeCodeExecutable.Size = new Size(390, 23);
+        txtClaudeCodeExecutable.Size = new Size(400, 23);
         txtClaudeCodeExecutable.TabIndex = 3;
         //
         // grpConnection
         //
         grpConnection.AutoSize = true;
+        grpConnection.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         grpConnection.Controls.Add(tableConnection);
-        grpConnection.Location = new Point(3, 3);
+        grpConnection.Dock = DockStyle.Fill;
+        grpConnection.Location = new Point(3, 99);
         grpConnection.Name = "grpConnection";
-        grpConnection.Size = new Size(660, 200);
-        grpConnection.TabIndex = 0;
+        grpConnection.Padding = new Padding(8);
+        grpConnection.Size = new Size(992, 190);
+        grpConnection.TabIndex = 1;
         grpConnection.TabStop = false;
-        grpConnection.Text = "Anthropic connection";
+        grpConnection.Text = "Anthropic connection (used by the Anthropic API backend)";
         //
         // tableConnection
         //
         tableConnection.AutoSize = true;
+        tableConnection.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         tableConnection.ColumnCount = 2;
         tableConnection.ColumnStyles.Add(new ColumnStyle());
-        tableConnection.ColumnStyles.Add(new ColumnStyle());
+        tableConnection.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
         tableConnection.Controls.Add(lblEndpoint, 0, 0);
         tableConnection.Controls.Add(txtEndpoint, 1, 0);
         tableConnection.Controls.Add(lblModel, 0, 1);
@@ -177,7 +192,7 @@ partial class AiFilterSettingsPage
         tableConnection.Controls.Add(lblMaxDiffChars, 0, 5);
         tableConnection.Controls.Add(numMaxDiffChars, 1, 5);
         tableConnection.Dock = DockStyle.Top;
-        tableConnection.Location = new Point(3, 19);
+        tableConnection.Location = new Point(8, 21);
         tableConnection.Name = "tableConnection";
         tableConnection.RowCount = 6;
         tableConnection.RowStyles.Add(new RowStyle());
@@ -186,7 +201,7 @@ partial class AiFilterSettingsPage
         tableConnection.RowStyles.Add(new RowStyle());
         tableConnection.RowStyles.Add(new RowStyle());
         tableConnection.RowStyles.Add(new RowStyle());
-        tableConnection.Size = new Size(654, 178);
+        tableConnection.Size = new Size(976, 162);
         tableConnection.TabIndex = 0;
         //
         // lblEndpoint
@@ -201,9 +216,10 @@ partial class AiFilterSettingsPage
         //
         // txtEndpoint
         //
-        txtEndpoint.Location = new Point(120, 3);
+        txtEndpoint.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+        txtEndpoint.Location = new Point(180, 3);
         txtEndpoint.Name = "txtEndpoint";
-        txtEndpoint.Size = new Size(420, 23);
+        txtEndpoint.Size = new Size(400, 23);
         txtEndpoint.TabIndex = 1;
         //
         // lblModel
@@ -218,9 +234,10 @@ partial class AiFilterSettingsPage
         //
         // txtModel
         //
-        txtModel.Location = new Point(120, 32);
+        txtModel.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+        txtModel.Location = new Point(180, 32);
         txtModel.Name = "txtModel";
-        txtModel.Size = new Size(420, 23);
+        txtModel.Size = new Size(400, 23);
         txtModel.TabIndex = 3;
         //
         // lblApiKey
@@ -235,20 +252,22 @@ partial class AiFilterSettingsPage
         //
         // txtApiKey
         //
-        txtApiKey.Location = new Point(120, 61);
+        txtApiKey.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+        txtApiKey.Location = new Point(180, 61);
         txtApiKey.Name = "txtApiKey";
-        txtApiKey.Size = new Size(420, 23);
+        txtApiKey.Size = new Size(400, 23);
         txtApiKey.TabIndex = 5;
         txtApiKey.UseSystemPasswordChar = true;
         //
         // lblApiKeyHint
         //
+        lblApiKeyHint.Anchor = AnchorStyles.Left;
         lblApiKeyHint.AutoSize = true;
         lblApiKeyHint.ForeColor = SystemColors.GrayText;
-        lblApiKeyHint.Location = new Point(120, 87);
+        lblApiKeyHint.Location = new Point(180, 87);
         lblApiKeyHint.Margin = new Padding(3, 0, 3, 6);
         lblApiKeyHint.Name = "lblApiKeyHint";
-        lblApiKeyHint.Size = new Size(400, 15);
+        lblApiKeyHint.Size = new Size(377, 15);
         lblApiKeyHint.TabIndex = 6;
         lblApiKeyHint.Text = "Leave empty to use the ANTHROPIC_API_KEY environment variable.";
         //
@@ -264,7 +283,8 @@ partial class AiFilterSettingsPage
         //
         // txtAnthropicVersion
         //
-        txtAnthropicVersion.Location = new Point(120, 111);
+        txtAnthropicVersion.Anchor = AnchorStyles.Left;
+        txtAnthropicVersion.Location = new Point(180, 111);
         txtAnthropicVersion.Name = "txtAnthropicVersion";
         txtAnthropicVersion.Size = new Size(200, 23);
         txtAnthropicVersion.TabIndex = 8;
@@ -281,7 +301,8 @@ partial class AiFilterSettingsPage
         //
         // numMaxDiffChars
         //
-        numMaxDiffChars.Location = new Point(120, 142);
+        numMaxDiffChars.Anchor = AnchorStyles.Left;
+        numMaxDiffChars.Location = new Point(180, 142);
         numMaxDiffChars.Maximum = new decimal(new int[] { 1000000, 0, 0, 0 });
         numMaxDiffChars.Minimum = new decimal(new int[] { 1000, 0, 0, 0 });
         numMaxDiffChars.Name = "numMaxDiffChars";
@@ -293,26 +314,30 @@ partial class AiFilterSettingsPage
         // grpCategories
         //
         grpCategories.AutoSize = true;
+        grpCategories.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         grpCategories.Controls.Add(flowCategories);
-        grpCategories.Location = new Point(3, 209);
+        grpCategories.Dock = DockStyle.Fill;
+        grpCategories.Location = new Point(3, 295);
         grpCategories.Name = "grpCategories";
-        grpCategories.Size = new Size(660, 130);
-        grpCategories.TabIndex = 1;
+        grpCategories.Padding = new Padding(8);
+        grpCategories.Size = new Size(992, 130);
+        grpCategories.TabIndex = 2;
         grpCategories.TabStop = false;
         grpCategories.Text = "Categories to filter away";
         //
         // flowCategories
         //
         flowCategories.AutoSize = true;
+        flowCategories.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         flowCategories.Controls.Add(chkImports);
         flowCategories.Controls.Add(chkCallerRenames);
         flowCategories.Controls.Add(chkSyncToAsync);
         flowCategories.Controls.Add(chkStyleOnly);
         flowCategories.Dock = DockStyle.Top;
         flowCategories.FlowDirection = FlowDirection.TopDown;
-        flowCategories.Location = new Point(3, 19);
+        flowCategories.Location = new Point(8, 21);
         flowCategories.Name = "flowCategories";
-        flowCategories.Size = new Size(654, 108);
+        flowCategories.Size = new Size(976, 100);
         flowCategories.TabIndex = 0;
         flowCategories.WrapContents = false;
         //
@@ -352,32 +377,33 @@ partial class AiFilterSettingsPage
         chkStyleOnly.Location = new Point(3, 78);
         chkStyleOnly.Name = "chkStyleOnly";
         chkStyleOnly.Size = new Size(300, 19);
-        chkStyleOnly.Text = "Style-only changes (e.g. whitespace, .NET)";
         chkStyleOnly.TabIndex = 3;
+        chkStyleOnly.Text = "Style-only changes (e.g. whitespace, .NET)";
         chkStyleOnly.UseVisualStyleBackColor = true;
         //
         // lblPrivacyHint
         //
         lblPrivacyHint.AutoSize = true;
         lblPrivacyHint.ForeColor = SystemColors.GrayText;
-        lblPrivacyHint.Location = new Point(3, 342);
+        lblPrivacyHint.Location = new Point(3, 428);
         lblPrivacyHint.Margin = new Padding(3, 6, 3, 3);
         lblPrivacyHint.Name = "lblPrivacyHint";
         lblPrivacyHint.Size = new Size(600, 30);
-        lblPrivacyHint.TabIndex = 2;
-        lblPrivacyHint.Text = "Note: enabling the AI filter sends the diffs of the listed files to Claude (via the selected backend).\r\nOnly use it with repositories whose contents you are allowed to share with the service.";
+        lblPrivacyHint.TabIndex = 3;
+        lblPrivacyHint.Text = "Note: the AI filter sends file diffs to Claude (via the selected backend), except files it can classify locally (import-only or whitespace-only).\r\nOnly use it with repositories whose contents you are allowed to share with the service.";
         //
         // AiFilterSettingsPage
         //
         AutoScaleDimensions = new SizeF(96F, 96F);
         AutoScaleMode = AutoScaleMode.Dpi;
         AutoScroll = true;
-        Controls.Add(mainPanel);
+        Controls.Add(tlpnlMain);
         Name = "AiFilterSettingsPage";
+        Padding = new Padding(8);
         Size = new Size(1014, 950);
         Text = "Diff AI filter";
-        mainPanel.ResumeLayout(false);
-        mainPanel.PerformLayout();
+        tlpnlMain.ResumeLayout(false);
+        tlpnlMain.PerformLayout();
         grpBackend.ResumeLayout(false);
         grpBackend.PerformLayout();
         tableBackend.ResumeLayout(false);
@@ -397,7 +423,7 @@ partial class AiFilterSettingsPage
 
     #endregion
 
-    private FlowLayoutPanel mainPanel;
+    private TableLayoutPanel tlpnlMain;
     private GroupBox grpBackend;
     private TableLayoutPanel tableBackend;
     private Label lblBackend;

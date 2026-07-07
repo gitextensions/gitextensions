@@ -24,9 +24,10 @@ public static partial class AppSettings
     public static ISetting<string> AiFilterEndpoint { get; } = Setting.Create(AiFilterSettingsPath, nameof(AiFilterEndpoint), "https://api.anthropic.com/v1/messages");
 
     /// <summary>
-    /// The Anthropic model used to classify diffs.
+    /// The model used to classify diffs. Defaults to a fast model since classification is a simple task;
+    /// switch to a stronger model if you want higher accuracy at the cost of speed.
     /// </summary>
-    public static ISetting<string> AiFilterModel { get; } = Setting.Create(AiFilterSettingsPath, nameof(AiFilterModel), "claude-sonnet-5");
+    public static ISetting<string> AiFilterModel { get; } = Setting.Create(AiFilterSettingsPath, nameof(AiFilterModel), "claude-haiku-4-5-20251001");
 
     /// <summary>
     /// The Anthropic API key. Stored in the settings file; leave empty to use the ANTHROPIC_API_KEY environment variable instead.

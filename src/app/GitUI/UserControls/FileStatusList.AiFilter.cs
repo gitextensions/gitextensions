@@ -1,3 +1,4 @@
+using System.Collections.Concurrent;
 using System.Text;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -11,6 +12,12 @@ namespace GitUI;
 
 partial class FileStatusList
 {
+    // Diffs are fetched concurrently to speed up large change sets.
+    private const int _maxDiffFetchConcurrency = 8;
+
+    // Ask for confirmation before analyzing very large change sets (cost/time guard).
+    private const int _largeDiffConfirmThreshold = 150;
+
     private readonly CancellationTokenSequence _aiFilterSequence = new();
 
     // The files hidden by the AI filter (consulted by IsFilterMatch).
@@ -82,9 +89,18 @@ partial class FileStatusList
             return;
         }
 
+        if (candidates.Count > _largeDiffConfirmThreshold
+            && !MessageBoxes.Confirm(this,
+                $"The AI filter will analyze {candidates.Count} files. This may take a while and consume API/plan usage. Continue?",
+                "AI filter"))
+        {
+            return;
+        }
+
         CancellationToken cancellationToken = _aiFilterSequence.Next();
         IGitModule module = Module;
         Encoding encoding = module.FilesEncoding;
+        Progress<DiffNoiseProgress> progress = new(OnAiFilterProgress);
 
         _aiFilterRunning = true;
         UpdateAiFilterButton();
@@ -93,21 +109,46 @@ partial class FileStatusList
         {
             try
             {
-                List<DiffFileContent> diffs = [];
-                foreach (FileStatusItem item in candidates)
+                // Phase 1: fetch diffs concurrently and resolve the cheap categories locally (no AI call).
+                ConcurrentDictionary<string, DiffNoiseCategory> deterministic = new();
+                ConcurrentBag<DiffFileContent> pendingFiles = [];
+                ParallelOptions gatherOptions = new() { MaxDegreeOfParallelism = _maxDiffFetchConcurrency, CancellationToken = cancellationToken };
+                await Parallel.ForEachAsync(candidates, gatherOptions, async (item, ct) =>
                 {
-                    cancellationToken.ThrowIfCancellationRequested();
-                    string? diff = await GetItemDiffTextAsync(module, item, encoding, cancellationToken);
-                    if (!string.IsNullOrWhiteSpace(diff))
+                    string? diff = await GetItemDiffTextAsync(module, item, encoding, extraDiffArguments: "", ct);
+                    if (string.IsNullOrWhiteSpace(diff))
                     {
-                        diffs.Add(new DiffFileContent(item.Item.Name, diff));
+                        return;
                     }
-                }
 
-                IDiffNoiseClassifier classifier = DiffNoiseClassifierFactory.Create();
-                IReadOnlyList<DiffNoiseClassification> classifications = await classifier.ClassifyAsync(diffs, options, cancellationToken);
+                    string path = item.Item.Name;
 
-                Dictionary<string, DiffNoiseCategory> byPath = [];
+                    if (options.Imports && DeterministicDiffNoise.IsImportOnly(path, diff))
+                    {
+                        deterministic[path] = DiffNoiseCategory.Imports;
+                        return;
+                    }
+
+                    if (options.StyleOnly && DeterministicDiffNoise.IsWhitespaceInsignificant(path))
+                    {
+                        string? ignoreWsDiff = await GetItemDiffTextAsync(module, item, encoding, "--ignore-all-space --ignore-blank-lines", ct);
+                        if (!DeterministicDiffNoise.DiffHasContentChanges(ignoreWsDiff))
+                        {
+                            deterministic[path] = DiffNoiseCategory.StyleOnly;
+                            return;
+                        }
+                    }
+
+                    pendingFiles.Add(new DiffFileContent(path, diff));
+                });
+
+                // Phase 2: classify the remaining files with AI (skipped entirely if everything was resolved locally).
+                List<DiffFileContent> pendingDiffs = [.. pendingFiles];
+                IReadOnlyList<DiffNoiseClassification> classifications = pendingDiffs.Count > 0
+                    ? await DiffNoiseClassifierFactory.Create().ClassifyAsync(pendingDiffs, options, progress, cancellationToken)
+                    : [];
+
+                Dictionary<string, DiffNoiseCategory> byPath = new(deterministic);
                 foreach (DiffNoiseClassification classification in classifications)
                 {
                     byPath[classification.Path] = classification.Category;
@@ -141,15 +182,27 @@ partial class FileStatusList
             {
                 // Cancelled by the user toggling off or by a new diff being loaded.
             }
-            catch (DiffNoiseClassifierException ex)
+            catch (Exception ex)
             {
+                Exception error = ex is AggregateException aggregate && aggregate.InnerException is not null
+                    ? aggregate.InnerException
+                    : ex;
+                if (error is OperationCanceledException)
+                {
+                    return;
+                }
+
                 await this.SwitchToMainThreadAsync();
                 _aiFilterRunning = false;
                 _aiFilterActive = false;
                 _aiHiddenItems.Clear();
                 _aiClassifications.Clear();
                 UpdateAiFilterButton();
-                MessageBoxes.ShowError(this, ex.Message, "AI filter");
+
+                string message = error is DiffNoiseClassifierException
+                    ? error.Message
+                    : $"The AI filter failed: {error.Message}";
+                MessageBoxes.ShowError(this, message, "AI filter");
             }
         });
     }
@@ -166,15 +219,34 @@ partial class FileStatusList
         }
     }
 
+    private void OnAiFilterProgress(DiffNoiseProgress progress)
+    {
+        // Invoked on the UI thread (Progress<T> captures the creating thread's context).
+        if (_aiFilterRunning)
+        {
+            btnAiFilter.Text = progress.TotalFiles > 0
+                ? $"{progress.ProcessedFiles}/{progress.TotalFiles}"
+                : "…";
+        }
+    }
+
     private void UpdateAiFilterButton()
     {
+        // Reflect the state as a pressed (checked) button so there is clear visual feedback.
+        btnAiFilter.Checked = _aiFilterActive || _aiFilterRunning;
+
         btnAiFilter.ToolTipText = _aiFilterRunning
             ? "AI filter: analyzing changes…"
             : _aiFilterActive
                 ? $"AI filter active — {_aiHiddenItems.Count} file(s) hidden. Click to turn off."
                 : "Filter out noise changes using AI";
 
-        if (_aiFilterActive && _aiHiddenItems.Count > 0)
+        if (_aiFilterRunning)
+        {
+            btnAiFilter.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
+            btnAiFilter.Text = "…";
+        }
+        else if (_aiFilterActive)
         {
             btnAiFilter.DisplayStyle = ToolStripItemDisplayStyle.ImageAndText;
             btnAiFilter.Text = _aiHiddenItems.Count.ToString();
@@ -205,7 +277,7 @@ partial class FileStatusList
         => item.Item is { IsSubmodule: false, IsRangeDiff: false, IsStatusOnly: false, IsNew: false, IsDeleted: false, IsTracked: true }
            && string.IsNullOrEmpty(item.Item.GrepString);
 
-    private static async Task<string?> GetItemDiffTextAsync(IGitModule module, FileStatusItem item, Encoding encoding, CancellationToken cancellationToken)
+    private static async Task<string?> GetItemDiffTextAsync(IGitModule module, FileStatusItem item, Encoding encoding, string extraDiffArguments, CancellationToken cancellationToken)
     {
         ObjectId firstId = item.FirstRevision?.ObjectId ?? item.SecondRevision.FirstParentId;
         if (firstId.IsZero)
@@ -220,7 +292,7 @@ partial class FileStatusList
             item.SecondRevision.ObjectId,
             item.Item.Name,
             item.Item.OldName,
-            extraDiffArguments: "",
+            extraDiffArguments,
             encoding,
             cacheResult: true,
             isTracked,

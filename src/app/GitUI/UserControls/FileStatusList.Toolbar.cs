@@ -292,6 +292,7 @@ partial class FileStatusList
         sepOptions.Visible = findInFilesGitGrepVisible;
 
         btnAiFilter.Visible = CanUseAiFilter;
+        btnAiFilterOptions.Visible = CanUseAiFilter;
         sepAiFilter.Visible = CanUseAiFilter;
 
         for (int itemIndex = 0; itemIndex < FindUsingMenuItems.Length; ++itemIndex)

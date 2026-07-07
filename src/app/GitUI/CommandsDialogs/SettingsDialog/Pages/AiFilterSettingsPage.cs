@@ -52,4 +52,23 @@ public partial class AiFilterSettingsPage : SettingsPageWithHeader
 
         base.PageToSettings();
     }
+
+    internal TestAccessor GetTestAccessor() => new(this);
+
+    internal readonly struct TestAccessor
+    {
+        private readonly AiFilterSettingsPage _page;
+
+        public TestAccessor(AiFilterSettingsPage page)
+        {
+            _page = page;
+        }
+
+        public ComboBox Backend => _page.cboBackend;
+        public TextBox Endpoint => _page.txtEndpoint;
+        public TextBox Model => _page.txtModel;
+        public TextBox ApiKey => _page.txtApiKey;
+        public TextBox ClaudeCodeExecutable => _page.txtClaudeCodeExecutable;
+        public CheckBox Imports => _page.chkImports;
+    }
 }

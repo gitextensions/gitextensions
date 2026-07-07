@@ -10,8 +10,9 @@ namespace GitUI.AI;
 internal static class DiffNoisePrompt
 {
     // Bounds per request so a large diff set is split into several calls.
-    internal const int MaxFilesPerBatch = 25;
-    internal const int MaxCharsPerBatch = 120_000;
+    // Kept moderate so many batches can run concurrently and each call stays fast.
+    internal const int MaxFilesPerBatch = 15;
+    internal const int MaxCharsPerBatch = 60_000;
 
     internal const string SystemPrompt =
         "You are a precise code-review assistant that classifies git diffs. You only ever respond with the requested JSON object.";

@@ -23,6 +23,9 @@ public sealed class DiffNoiseClassifierException : Exception
 /// </summary>
 public sealed class AnthropicDiffNoiseClassifier : IDiffNoiseClassifier
 {
+    // The API handles concurrent requests well, so several batches can run in parallel.
+    private const int _maxConcurrency = 6;
+
     private static readonly HttpClient _httpClient = new(new HttpClientHandler { UseProxy = true, DefaultProxyCredentials = CredentialCache.DefaultCredentials })
     {
         Timeout = TimeSpan.FromMinutes(2)
@@ -50,26 +53,26 @@ public sealed class AnthropicDiffNoiseClassifier : IDiffNoiseClassifier
     public async Task<IReadOnlyList<DiffNoiseClassification>> ClassifyAsync(
         IReadOnlyList<DiffFileContent> files,
         DiffNoiseFilterOptions options,
+        IProgress<DiffNoiseProgress>? progress,
         CancellationToken cancellationToken)
     {
-        if (string.IsNullOrWhiteSpace(_apiKey))
-        {
-            throw new DiffNoiseClassifierException("No Anthropic API key configured. Set it in Settings > Diff AI filter (or the ANTHROPIC_API_KEY environment variable).");
-        }
-
         if (!options.AnyEnabled || files.Count == 0)
         {
             return [];
         }
 
-        List<DiffNoiseClassification> results = [];
-        foreach (List<DiffFileContent> batch in DiffNoisePrompt.CreateBatches(files, _maxCharsPerFile))
+        if (string.IsNullOrWhiteSpace(_apiKey))
         {
-            cancellationToken.ThrowIfCancellationRequested();
-            results.AddRange(await ClassifyBatchAsync(batch, options, cancellationToken));
+            throw new DiffNoiseClassifierException("No Anthropic API key configured. Set it in Settings > Diff AI filter (or the ANTHROPIC_API_KEY environment variable).");
         }
 
-        return results;
+        return await DiffNoiseBatchRunner.RunAsync(
+            files,
+            _maxCharsPerFile,
+            _maxConcurrency,
+            (batch, ct) => ClassifyBatchAsync(batch, options, ct),
+            progress,
+            cancellationToken);
     }
 
     private async Task<IReadOnlyList<DiffNoiseClassification>> ClassifyBatchAsync(
