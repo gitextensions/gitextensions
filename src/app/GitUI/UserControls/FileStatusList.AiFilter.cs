@@ -104,7 +104,7 @@ partial class FileStatusList
                     }
                 }
 
-                IDiffNoiseClassifier classifier = new AnthropicDiffNoiseClassifier();
+                IDiffNoiseClassifier classifier = DiffNoiseClassifierFactory.Create();
                 IReadOnlyList<DiffNoiseClassification> classifications = await classifier.ClassifyAsync(diffs, options, cancellationToken);
 
                 Dictionary<string, DiffNoiseCategory> byPath = [];

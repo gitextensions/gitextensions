@@ -19,6 +19,8 @@ public partial class AiFilterSettingsPage : SettingsPageWithHeader
 
     protected override void SettingsToPage()
     {
+        cboBackend.SelectedIndex = (int)AppSettings.AiFilterBackend.Value;
+        txtClaudeCodeExecutable.Text = AppSettings.AiFilterClaudeCodeExecutable.Value;
         txtEndpoint.Text = AppSettings.AiFilterEndpoint.Value;
         txtModel.Text = AppSettings.AiFilterModel.Value;
         txtApiKey.Text = AppSettings.AiFilterApiKey.Value;
@@ -35,6 +37,8 @@ public partial class AiFilterSettingsPage : SettingsPageWithHeader
 
     protected override void PageToSettings()
     {
+        AppSettings.AiFilterBackend.Value = (AiFilterBackend)Math.Max(0, cboBackend.SelectedIndex);
+        AppSettings.AiFilterClaudeCodeExecutable.Value = txtClaudeCodeExecutable.Text.Trim();
         AppSettings.AiFilterEndpoint.Value = txtEndpoint.Text.Trim();
         AppSettings.AiFilterModel.Value = txtModel.Text.Trim();
         AppSettings.AiFilterApiKey.Value = txtApiKey.Text.Trim();

@@ -30,6 +30,12 @@ partial class AiFilterSettingsPage
     private void InitializeComponent()
     {
         mainPanel = new FlowLayoutPanel();
+        grpBackend = new GroupBox();
+        tableBackend = new TableLayoutPanel();
+        lblBackend = new Label();
+        cboBackend = new ComboBox();
+        lblClaudeCodeExecutable = new Label();
+        txtClaudeCodeExecutable = new TextBox();
         grpConnection = new GroupBox();
         tableConnection = new TableLayoutPanel();
         lblEndpoint = new Label();
@@ -51,6 +57,8 @@ partial class AiFilterSettingsPage
         chkStyleOnly = new CheckBox();
         lblPrivacyHint = new Label();
         mainPanel.SuspendLayout();
+        grpBackend.SuspendLayout();
+        tableBackend.SuspendLayout();
         grpConnection.SuspendLayout();
         tableConnection.SuspendLayout();
         ((System.ComponentModel.ISupportInitialize)numMaxDiffChars).BeginInit();
@@ -61,6 +69,7 @@ partial class AiFilterSettingsPage
         // mainPanel
         //
         mainPanel.AutoSize = true;
+        mainPanel.Controls.Add(grpBackend);
         mainPanel.Controls.Add(grpConnection);
         mainPanel.Controls.Add(grpCategories);
         mainPanel.Controls.Add(lblPrivacyHint);
@@ -71,6 +80,73 @@ partial class AiFilterSettingsPage
         mainPanel.Size = new Size(1014, 400);
         mainPanel.TabIndex = 0;
         mainPanel.WrapContents = false;
+        //
+        // grpBackend
+        //
+        grpBackend.AutoSize = true;
+        grpBackend.Controls.Add(tableBackend);
+        grpBackend.Location = new Point(3, 3);
+        grpBackend.Name = "grpBackend";
+        grpBackend.Size = new Size(660, 90);
+        grpBackend.TabIndex = 0;
+        grpBackend.TabStop = false;
+        grpBackend.Text = "Backend";
+        //
+        // tableBackend
+        //
+        tableBackend.AutoSize = true;
+        tableBackend.ColumnCount = 2;
+        tableBackend.ColumnStyles.Add(new ColumnStyle());
+        tableBackend.ColumnStyles.Add(new ColumnStyle());
+        tableBackend.Controls.Add(lblBackend, 0, 0);
+        tableBackend.Controls.Add(cboBackend, 1, 0);
+        tableBackend.Controls.Add(lblClaudeCodeExecutable, 0, 1);
+        tableBackend.Controls.Add(txtClaudeCodeExecutable, 1, 1);
+        tableBackend.Dock = DockStyle.Top;
+        tableBackend.Location = new Point(3, 19);
+        tableBackend.Name = "tableBackend";
+        tableBackend.RowCount = 2;
+        tableBackend.RowStyles.Add(new RowStyle());
+        tableBackend.RowStyles.Add(new RowStyle());
+        tableBackend.Size = new Size(654, 62);
+        tableBackend.TabIndex = 0;
+        //
+        // lblBackend
+        //
+        lblBackend.Anchor = AnchorStyles.Left;
+        lblBackend.AutoSize = true;
+        lblBackend.Location = new Point(3, 8);
+        lblBackend.Name = "lblBackend";
+        lblBackend.Size = new Size(52, 15);
+        lblBackend.TabIndex = 0;
+        lblBackend.Text = "Provider";
+        //
+        // cboBackend
+        //
+        cboBackend.DropDownStyle = ComboBoxStyle.DropDownList;
+        cboBackend.FormattingEnabled = true;
+        cboBackend.Items.AddRange(new object[] { "Anthropic API (requires API key)", "Claude Code (uses your Claude subscription)" });
+        cboBackend.Location = new Point(150, 3);
+        cboBackend.Name = "cboBackend";
+        cboBackend.Size = new Size(390, 23);
+        cboBackend.TabIndex = 1;
+        //
+        // lblClaudeCodeExecutable
+        //
+        lblClaudeCodeExecutable.Anchor = AnchorStyles.Left;
+        lblClaudeCodeExecutable.AutoSize = true;
+        lblClaudeCodeExecutable.Location = new Point(3, 37);
+        lblClaudeCodeExecutable.Name = "lblClaudeCodeExecutable";
+        lblClaudeCodeExecutable.Size = new Size(141, 15);
+        lblClaudeCodeExecutable.TabIndex = 2;
+        lblClaudeCodeExecutable.Text = "Claude Code command";
+        //
+        // txtClaudeCodeExecutable
+        //
+        txtClaudeCodeExecutable.Location = new Point(150, 33);
+        txtClaudeCodeExecutable.Name = "txtClaudeCodeExecutable";
+        txtClaudeCodeExecutable.Size = new Size(390, 23);
+        txtClaudeCodeExecutable.TabIndex = 3;
         //
         // grpConnection
         //
@@ -289,7 +365,7 @@ partial class AiFilterSettingsPage
         lblPrivacyHint.Name = "lblPrivacyHint";
         lblPrivacyHint.Size = new Size(600, 30);
         lblPrivacyHint.TabIndex = 2;
-        lblPrivacyHint.Text = "Note: enabling the AI filter sends the diffs of the listed files to the configured endpoint.\r\nOnly use it with repositories whose contents you are allowed to share with the service.";
+        lblPrivacyHint.Text = "Note: enabling the AI filter sends the diffs of the listed files to Claude (via the selected backend).\r\nOnly use it with repositories whose contents you are allowed to share with the service.";
         //
         // AiFilterSettingsPage
         //
@@ -302,6 +378,10 @@ partial class AiFilterSettingsPage
         Text = "Diff AI filter";
         mainPanel.ResumeLayout(false);
         mainPanel.PerformLayout();
+        grpBackend.ResumeLayout(false);
+        grpBackend.PerformLayout();
+        tableBackend.ResumeLayout(false);
+        tableBackend.PerformLayout();
         grpConnection.ResumeLayout(false);
         grpConnection.PerformLayout();
         tableConnection.ResumeLayout(false);
@@ -318,6 +398,12 @@ partial class AiFilterSettingsPage
     #endregion
 
     private FlowLayoutPanel mainPanel;
+    private GroupBox grpBackend;
+    private TableLayoutPanel tableBackend;
+    private Label lblBackend;
+    private ComboBox cboBackend;
+    private Label lblClaudeCodeExecutable;
+    private TextBox txtClaudeCodeExecutable;
     private GroupBox grpConnection;
     private TableLayoutPanel tableConnection;
     private Label lblEndpoint;

@@ -8,6 +8,17 @@ public static partial class AppSettings
     private static readonly SettingsPath AiFilterSettingsPath = new AppSettingsPath("AIFilter");
 
     /// <summary>
+    /// Selects how the diff AI filter talks to Claude (direct API vs. the locally installed Claude Code).
+    /// </summary>
+    public static ISetting<AiFilterBackend> AiFilterBackend { get; } = Setting.Create(AiFilterSettingsPath, nameof(AiFilterBackend), GitCommands.AiFilterBackend.AnthropicApi);
+
+    /// <summary>
+    /// The command used to launch Claude Code when <see cref="AiFilterBackend"/> is <see cref="GitCommands.AiFilterBackend.ClaudeCode"/>.
+    /// May be a bare command found on PATH or an absolute path to the executable.
+    /// </summary>
+    public static ISetting<string> AiFilterClaudeCodeExecutable { get; } = Setting.Create(AiFilterSettingsPath, nameof(AiFilterClaudeCodeExecutable), "claude");
+
+    /// <summary>
     /// The HTTP endpoint of the Anthropic Messages API used to classify diffs.
     /// </summary>
     public static ISetting<string> AiFilterEndpoint { get; } = Setting.Create(AiFilterSettingsPath, nameof(AiFilterEndpoint), "https://api.anthropic.com/v1/messages");
