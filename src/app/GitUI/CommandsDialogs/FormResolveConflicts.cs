@@ -548,7 +548,7 @@ public partial class FormResolveConflicts : GitModuleForm
         ItemType itemType = GetItemType(item.Filename);
         if (itemType == ItemType.Submodule)
         {
-            FormMergeSubmodule form = new(UICommands, item.Filename);
+            using FormMergeSubmodule form = new(UICommands, item.Filename);
             if (await form.ShowDialogAsync() == DialogResult.OK)
             {
                 StageFile(item.Filename);
@@ -1238,7 +1238,7 @@ public partial class FormResolveConflicts : GitModuleForm
     {
         this.InvokeAndForget(async () =>
         {
-            using (WaitCursorScope.Enter())
+            using (FormBusyScope.Enter(this))
             {
                 try
                 {
