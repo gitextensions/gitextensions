@@ -286,8 +286,35 @@ public partial class FormResolveConflicts : GitModuleForm
 
                 if (!Module.InTheMiddleOfPatch() && !_inTheMiddleOfRebase && _offerCommit)
                 {
-                    if (AppSettings.DontConfirmCommitAfterConflictsResolved ||
-                        MessageBoxes.Show(this, _allConflictsResolved.Text, _allConflictsResolvedCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                    bool commitConfirmed;
+                    if (AppSettings.DontConfirmCommitAfterConflictsResolved)
+                    {
+                        commitConfirmed = true;
+                    }
+                    else
+                    {
+                        TaskDialogPage page = new()
+                        {
+                            Text = _allConflictsResolved.Text,
+                            Caption = _allConflictsResolvedCaption.Text,
+                            Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                            Icon = TaskDialogIcon.Information,
+                            Verification = new TaskDialogVerificationCheckBox
+                            {
+                                Text = TranslatedStrings.DontShowAgain
+                            },
+                            SizeToContent = true
+                        };
+
+                        commitConfirmed = TaskDialog.ShowDialog(Handle, page) == TaskDialogButton.Yes;
+
+                        if (page.Verification.Checked)
+                        {
+                            AppSettings.DontConfirmCommitAfterConflictsResolved = true;
+                        }
+                    }
+
+                    if (commitConfirmed)
                     {
                         UICommands.StartCommitDialog(this);
                     }
@@ -756,9 +783,32 @@ public partial class FormResolveConflicts : GitModuleForm
         if (MessageBoxes.Show(_abortCurrentOperation.Text, _resetCaption.Text,
             MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
         {
-            if (AppSettings.DontConfirmSecondAbortConfirmation ||
-                MessageBoxes.Show(_areYouSureYouWantDeleteFiles.Text, _areYouSureYouWantDeleteFilesCaption.Text,
-                MessageBoxButtons.YesNo, MessageBoxIcon.Exclamation) == DialogResult.Yes)
+            if (AppSettings.DontConfirmSecondAbortConfirmation)
+            {
+                return true;
+            }
+
+            TaskDialogPage page = new()
+            {
+                Text = _areYouSureYouWantDeleteFiles.Text,
+                Caption = _areYouSureYouWantDeleteFilesCaption.Text,
+                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                Icon = TaskDialogIcon.Warning,
+                Verification = new TaskDialogVerificationCheckBox
+                {
+                    Text = TranslatedStrings.DontShowAgain
+                },
+                SizeToContent = true
+            };
+
+            TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
+
+            if (page.Verification.Checked)
+            {
+                AppSettings.DontConfirmSecondAbortConfirmation = true;
+            }
+
+            if (result == TaskDialogButton.Yes)
             {
                 return true;
             }

@@ -1101,7 +1101,27 @@ public sealed partial class FormCommit : GitModuleForm
                 // commit, because amend may be used just to change the commit message or timestamp.
                 if (!AppSettings.DontConfirmAmend)
                 {
-                    if (MessageBoxes.Show(this, _amendCommit.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+                    TaskDialogPage page = new()
+                    {
+                        Text = _amendCommit.Text,
+                        Caption = _amendCommitCaption.Text,
+                        Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                        Icon = TaskDialogIcon.Warning,
+                        Verification = new TaskDialogVerificationCheckBox
+                        {
+                            Text = TranslatedStrings.DontShowAgain
+                        },
+                        SizeToContent = true
+                    };
+
+                    TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
+
+                    if (page.Verification.Checked)
+                    {
+                        AppSettings.DontConfirmAmend = true;
+                    }
+
+                    if (result != TaskDialogButton.Yes)
                     {
                         return false;
                     }
@@ -1953,7 +1973,27 @@ public sealed partial class FormCommit : GitModuleForm
     {
         if (!AppSettings.DontConfirmAmend)
         {
-            if (MessageBoxes.Show(this, _amendResetSoft.Text, _amendCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+            TaskDialogPage page = new()
+            {
+                Text = _amendResetSoft.Text,
+                Caption = _amendCommitCaption.Text,
+                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                Icon = TaskDialogIcon.Warning,
+                Verification = new TaskDialogVerificationCheckBox
+                {
+                    Text = TranslatedStrings.DontShowAgain
+                },
+                SizeToContent = true
+            };
+
+            TaskDialogButton result = TaskDialog.ShowDialog(Handle, page);
+
+            if (page.Verification.Checked)
+            {
+                AppSettings.DontConfirmAmend = true;
+            }
+
+            if (result != TaskDialogButton.Yes)
             {
                 return;
             }
