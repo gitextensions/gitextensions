@@ -3039,7 +3039,35 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
 
     private void undoLastCommitToolStripMenuItem_Click(object sender, EventArgs e)
     {
-        if (AppSettings.DontConfirmUndoLastCommit || MessageBoxes.Show(this, _undoLastCommitText.Text, _undoLastCommitCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
+        bool confirmed;
+        if (AppSettings.DontConfirmUndoLastCommit)
+        {
+            confirmed = true;
+        }
+        else
+        {
+            TaskDialogPage page = new()
+            {
+                Text = _undoLastCommitText.Text,
+                Caption = _undoLastCommitCaption.Text,
+                Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                Icon = TaskDialogIcon.Warning,
+                Verification = new TaskDialogVerificationCheckBox
+                {
+                    Text = TranslatedStrings.DontShowAgain
+                },
+                SizeToContent = true
+            };
+
+            confirmed = TaskDialog.ShowDialog(Handle, page) == TaskDialogButton.Yes;
+
+            if (page.Verification.Checked)
+            {
+                AppSettings.DontConfirmUndoLastCommit = true;
+            }
+        }
+
+        if (confirmed)
         {
             ArgumentString args = Commands.Reset(ResetMode.Soft, "HEAD~1");
             Module.GitExecutable.RunCommand(args);
