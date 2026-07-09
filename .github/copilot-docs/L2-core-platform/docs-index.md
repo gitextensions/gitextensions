@@ -12,16 +12,16 @@ Read the [L0 primer](../L0-foundations/gitextensions-primer.md) first.
 | --- | --- | --- |
 | [git-command-execution.md](git-command-execution.md) | How `git` is launched: `Executable`, `GitCommandRunner`, `ExecutionResult`, encoding. | done |
 | [structured-commands.md](structured-commands.md) | `Commands`/`IGitCommand` records, `ArgumentBuilder`, remote vs state-changing flags. | done |
-| `git-module.md` | `GitModule` responsibilities: repo state, refs, submodules, command entry point. | planned |
+| [git-module.md](git-module.md) | `GitModule` responsibilities: repo state, refs, submodules, command entry point. | done |
 | `output-parsing.md` | Parsing git output into models (`RevisionReader`, status/tree/diff parsers). | planned |
 
 ## Application services
 
 | Doc | One-line description | Status |
 | --- | --- | --- |
-| `settings-system.md` | Layered settings/config: `GitExtensions.settings`, `SettingsSource`, git config. | planned |
-| `plugin-system.md` | Plugin loading & interfaces (`GitUIPluginInterfaces`, `Extensibility.Plugins`). | planned |
-| `translation-system.md` | Localization: `TranslatedStrings`, `English.xlf`, `update-loc.cmd`, `TranslationApp`. | planned |
+| [settings-system.md](settings-system.md) | Layered settings/config: `GitExtensions.settings`, `SettingsSource`, git config. | done |
+| [plugin-system.md](plugin-system.md) | Plugin loading & interfaces (`GitUIPluginInterfaces`, `Extensibility.Plugins`). | done |
+| [translation-system.md](translation-system.md) | Localization: `TranslatedStrings`, `English.xlf`, `update-loc.cmd`, `TranslationApp`. | done |
 | `theming-system.md` | Themes & colors: `Theming/`, `Themes/`, high-contrast handling. | planned |
 | `hotkey-system.md` | Hotkey registration and dispatch (`GitUI/Hotkey/`). | planned |
 | `scripts-engine.md` | User-defined scripts and command menus (`GitUI/ScriptsEngine/`). | planned |
