@@ -7,7 +7,7 @@ It is layered into four tiers with a strict one-way dependency direction:
 the sides. Read this to understand *how the pieces fit*; then jump to an
 [L2 subsystem](../L2-core-platform/docs-index.md) or [L3 flow](../L3-flows/docs-index.md).
 
-**Related:** [L0 primer](../L0-foundations/gitextensions-primer.md) · [project-map](project-map.md) · [git-command-execution](../L2-core-platform/docs-index.md) · [structured-commands](../L2-core-platform/docs-index.md)
+**Related:** [L0 primer](../L0-foundations/gitextensions-primer.md) · [project-map](project-map.md) · [git-command-execution](../L2-core-platform/git-command-execution.md) · [structured-commands](../L2-core-platform/structured-commands.md)
 
 ## Why (the shape of the app)
 
@@ -65,4 +65,4 @@ graph TD
 - Treat `GitExtensions.Extensibility` as a **public API** — additive, deliberate changes only.
 
 **Next:** [project-map](project-map.md) for the per-project breakdown, or the
-[git-command-execution](../L2-core-platform/docs-index.md) doc for the execution pipeline.
+[git-command-execution](../L2-core-platform/git-command-execution.md) doc for the execution pipeline.

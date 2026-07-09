@@ -27,7 +27,7 @@ discovered/hosted by `GitUI`. Examples:
 `BackgroundFetch`, `AutoCompileSubmodules`, `Bitbucket`, `GitHub3`, `GitFlow`,
 `BuildServerIntegration`, `Statistics`, `Gource`, `FindLargeFiles`, `ProxySwitcher`,
 `CreateLocalBranches`, `DeleteUnusedBranches`, `ReleaseNotesGenerator`.
-See [plugin-system](../L2-core-platform/docs-index.md) for how they load.
+See [plugin-system](../L2-core-platform/plugin-system.md) for how they load.
 
 ## `src/native/` — Windows integration (C++)
 
@@ -46,7 +46,7 @@ Built via [src/native/build.proj](../../../src/native/build.proj) (needs VC++/AT
 | [tests/plugins/](../../../tests/plugins/) | Plugin tests. |
 | [tests/CommonTestUtils/](../../../tests/CommonTestUtils/) | Shared test helpers/fixtures. |
 
-Stack: NUnit + `NSubstitute` + `AwesomeAssertions`. See [testing-guide](../L2-core-platform/docs-index.md).
+Stack: NUnit + `NSubstitute` + `AwesomeAssertions`. See [testing-guide](../L2-core-platform/testing-guide.md).
 
 ## Top-level support folders
 

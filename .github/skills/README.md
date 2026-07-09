@@ -1,4 +1,4 @@
-# Skills (planned)
+# Skills
 
 Skills are cross-cutting workflows that apply across all documentation areas. Each skill lives
 in its own folder as `.github/skills/<name>/SKILL.md` and is auto-matched by the agent from its
@@ -12,7 +12,7 @@ description/keyword triggers.
   first (read the relevant docs-index reading chain + anchor docs) before acting.
 - **Execution (runbook):** deterministic "do X" procedures with prechecks, steps, and STOP conditions.
 
-## Planned skills
+## Available skills
 
 | Skill | Class | Purpose | Status |
 | --- | --- | --- | --- |

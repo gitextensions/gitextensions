@@ -7,7 +7,7 @@
 `ChangesRepoState` — so the UI can pick the right process dialog and fire repo-changed events.
 Run them with `GitUICommands.StartCommandLineProcessDialog`.
 
-**Related:** [git-command-execution](git-command-execution.md) (how they run) · [commit-flow](../L3-flows/docs-index.md) · [L0 primer](../L0-foundations/gitextensions-primer.md)
+**Related:** [git-command-execution](git-command-execution.md) (how they run) · [commit-flow](../L3-flows/commit-flow.md) · [L0 primer](../L0-foundations/gitextensions-primer.md)
 
 ## Why
 
@@ -70,4 +70,4 @@ See [GitUICommands.cs](../../../src/app/GitUI/GitUICommands.cs) (`StartCommandLi
 - Quote user-provided values (`.Quote()` / `.QuoteNE()`).
 - New interactive git operations SHOULD go through `IGitModule`/`Commands` and have unit tests.
 
-**Next:** [commit-flow](../L3-flows/docs-index.md) to see the pattern end-to-end.
+**Next:** [commit-flow](../L3-flows/commit-flow.md) to see the pattern end-to-end.

@@ -10,9 +10,8 @@ This folder contains **Docs-Augmented Generation (DAG)** documentation: reposito
 agent-optimised docs that let an AI coding agent build accurate context about Git Extensions
 *incrementally* — without vector databases, embeddings, or external infrastructure.
 
-> **Status: SKELETON.** The layer indexes list the *planned* documents. Most are not written
-> yet. We are filling them in iteratively ("meat on the bones"). Entries are marked
-> `planned` / `draft` / `done`.
+> The layer indexes list every doc with a `planned` / `draft` / `done` status. The L1–L3 docs
+> and skills are written; use the status column when adding new docs.
 
 ## How it works (30-second version)
 
@@ -51,7 +50,7 @@ These are **hard rules**. Agents behave inconsistently when docs are long or bur
 ## Related folders
 
 - [.github/agents/](../agents/) — custom domain-scoped agents (planned).
-- [.github/skills/](../skills/) — cross-cutting workflow skills (planned).
+- [.github/skills/](../skills/) — cross-cutting workflow skills.
 
 ## How to add a doc
 

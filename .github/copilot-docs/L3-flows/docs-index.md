@@ -4,7 +4,7 @@
 Each flow doc traces a user action from the UI down to `git` and back, with code pointers at every hop.
 Read the [L0 primer](../L0-foundations/gitextensions-primer.md) first.
 
-> **Status: SKELETON** — docs below are the roadmap. `planned` = not written yet.
+> All docs below are written. `Status` tracks any future additions.
 
 ## Repository & history
 

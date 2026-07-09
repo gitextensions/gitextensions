@@ -6,8 +6,8 @@ Use the **Ownership Table** to find which area owns a topic, then follow the mat
 **Reading Chain** to load docs in the right order. Read the cheap indexes first; open
 individual docs only when the task requires them.
 
-> **Status: SKELETON.** Most linked docs are `planned` (not written yet). This index is the
-> roadmap. See [README.md](README.md) for how DAG works and how to add docs.
+> This index is the ownership + navigation map for the DAG docs. All L1–L3 docs and skills are
+> written; the `Status` columns track any future additions. See [README.md](README.md) for how DAG works.
 
 ## Always loaded
 
@@ -46,8 +46,6 @@ Use this to route a question to the right layer/doc and the right part of the co
 Ordered doc sequences for the most common questions. `→` means "read next". End every chain by
 verifying against the actual source files referenced in the docs.
 
-> Chains reference `planned` docs. As docs are written, these become live.
-
 - **"How does Git Extensions run a git command?"**
   L0 primer → [git-command-execution](L2-core-platform/git-command-execution.md) → [structured-commands](L2-core-platform/structured-commands.md) → verify in `GitModule` / `Executable`.
 - **"How does the commit flow work?"**
@@ -64,4 +62,4 @@ verifying against the actual source files referenced in the docs.
 ## Cross-cutting
 
 - [Custom agents](../agents/README.md) — domain-scoped agents (planned).
-- [Skills](../skills/README.md) — reusable workflows: code search, deep explanation, PR creation, doc management (planned).
+- [Skills](../skills/README.md) — reusable workflows: code search, deep explanation, PR creation, doc management.

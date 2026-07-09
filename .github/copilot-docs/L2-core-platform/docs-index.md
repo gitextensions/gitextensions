@@ -4,7 +4,7 @@
 matches your task. Each doc leads with *why*, then *what*, then code pointers.
 Read the [L0 primer](../L0-foundations/gitextensions-primer.md) first.
 
-> **Status: SKELETON** — docs below are the roadmap. `planned` = not written yet.
+> All docs below are written. `Status` tracks any future additions.
 
 ## Git execution
 

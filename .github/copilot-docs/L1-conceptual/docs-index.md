@@ -4,7 +4,7 @@
 Start here to orient before diving into a specific subsystem (L2) or flow (L3).
 Read the [L0 primer](../L0-foundations/gitextensions-primer.md) first.
 
-> **Status: SKELETON** — docs below are the roadmap. `planned` = not written yet.
+> All docs below are written. `Status` tracks any future additions.
 
 | Doc | One-line description | Status |
 | --- | --- | --- |

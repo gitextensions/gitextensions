@@ -6,7 +6,7 @@ point; it uses an `IExecutable` (`Executable`) to start a process (`IProcess`), 
 `ExecutableExtensions` helpers (`GetOutput` / `RunCommand` / `ExecuteAsync`) handle
 input/output/encoding and return an `ExecutionResult`. Results can be cached via `CommandCache`.
 
-**Related:** [structured-commands](structured-commands.md) (what args to run) · [git-module](docs-index.md) · [L0 primer](../L0-foundations/gitextensions-primer.md) · [architecture-overview](../L1-conceptual/architecture-overview.md)
+**Related:** [structured-commands](structured-commands.md) (what args to run) · [git-module](git-module.md) · [L0 primer](../L0-foundations/gitextensions-primer.md) · [architecture-overview](../L1-conceptual/architecture-overview.md)
 
 ## Why
 
