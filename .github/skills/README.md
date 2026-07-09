@@ -4,7 +4,7 @@ Skills are cross-cutting workflows that apply across all documentation areas. Ea
 in its own folder as `.github/skills/<name>/SKILL.md` and is auto-matched by the agent from its
 description/keyword triggers.
 
-> **Status: SKELETON.** Skills below are the roadmap. None are written yet.
+> **Status:** core skills written. Add more as recurring workflows emerge.
 
 ## Two classes of skills
 
@@ -16,13 +16,13 @@ description/keyword triggers.
 
 | Skill | Class | Purpose | Status |
 | --- | --- | --- | --- |
-| `code-search` | SDLC | How to search this codebase effectively (symbols, forms, command flows) before editing. | planned |
-| `deep-explanation` | SDLC | Explain a subsystem/flow with Why→What→How, Mermaid diagram, and code pointers. | planned |
-| `doc-management` | SDLC | Create/maintain DAG docs: enforce agentic-doc rules, update the right docs-index, keep chains valid. | planned |
-| `pr-creation` | Execution | Branch naming, conventional-commit messages, and the pre-PR checklist. | planned |
-| `add-translation-strings` | Execution | Runbook for adding/changing UI strings and regenerating `English.xlf` via `update-loc.cmd`. | planned |
-| `add-winforms-dialog` | Execution | Runbook for adding a new Form/control following naming + designer conventions. | planned |
-| `run-tests` | Execution | Build and run the NUnit suite; interpret failures. | planned |
+| [code-search](code-search/SKILL.md) | SDLC | How to search this codebase effectively (symbols, forms, command flows) before editing. | done |
+| [deep-explanation](deep-explanation/SKILL.md) | SDLC | Explain a subsystem/flow with Why→What→How, Mermaid diagram, and code pointers. | done |
+| [doc-management](doc-management/SKILL.md) | SDLC | Create/maintain DAG docs: enforce agentic-doc rules, update the right docs-index, keep chains valid. | done |
+| [pr-creation](pr-creation/SKILL.md) | Execution | Branch naming, conventional-commit messages, and the pre-PR checklist. | done |
+| [add-translation-strings](add-translation-strings/SKILL.md) | Execution | Runbook for adding/changing UI strings and regenerating `English.xlf` via `update-loc.cmd`. | done |
+| [add-winforms-dialog](add-winforms-dialog/SKILL.md) | Execution | Runbook for adding a new Form/control following naming + designer conventions. | done |
+| [run-tests](run-tests/SKILL.md) | Execution | Build and run the NUnit suite; interpret failures. | done |
 
 ## Authoring rules
 
