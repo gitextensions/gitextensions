@@ -53,13 +53,13 @@ verifying against the actual source files referenced in the docs.
 - **"How does the commit flow work?"**
   L0 primer → [architecture-overview](L1-conceptual/architecture-overview.md) → [commit-flow](L3-flows/commit-flow.md) → verify in `FormCommit`.
 - **"How does checkout / branch switching work?"**
-  L0 primer → [checkout-flow](L3-flows/docs-index.md) → verify in `FormCheckoutBranch`.
+  L0 primer → [checkout-flow](L3-flows/checkout-flow.md) → verify in `FormCheckoutBranch`.
 - **"How do plugins work / how do I write one?"**
   L0 primer → [plugin-system](L2-core-platform/plugin-system.md) → verify in `GitExtensions.Extensibility/Plugins/` + a sample under `src/plugins/`.
 - **"How does translation / adding UI strings work?"**
   L0 primer → [translation-system](L2-core-platform/translation-system.md) → verify with `update-loc.cmd` + `English.xlf`.
 - **"How is the commit graph rendered?"**
-  L0 primer → [architecture-overview](L1-conceptual/architecture-overview.md) → [revision-grid-flow](L3-flows/docs-index.md) → verify in `RevisionGrid`.
+  L0 primer → [architecture-overview](L1-conceptual/architecture-overview.md) → [revision-grid-flow](L3-flows/revision-grid-flow.md) → verify in `RevisionGrid`.
 
 ## Cross-cutting
 
