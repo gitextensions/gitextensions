@@ -298,14 +298,25 @@ public sealed class GitUICommands : IGitUICommands
     {
         if (!AppSettings.DontConfirmSwitchWorktree)
         {
-            TaskDialogButton result = TaskDialog.ShowDialog(owner!, new TaskDialogPage
+            TaskDialogPage page = new()
             {
                 Text = string.Format(TranslatedStrings.SwitchWorktreeConfirmation, worktreePath),
                 Caption = TranslatedStrings.SwitchWorktreeCaption,
                 Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
                 Icon = TaskDialogIcon.Information,
+                Verification = new TaskDialogVerificationCheckBox
+                {
+                    Text = TranslatedStrings.DontShowAgain
+                },
                 SizeToContent = true
-            });
+            };
+
+            TaskDialogButton result = TaskDialog.ShowDialog(owner!, page);
+
+            if (page.Verification.Checked)
+            {
+                AppSettings.DontConfirmSwitchWorktree = true;
+            }
 
             if (result != TaskDialogButton.Yes)
             {
