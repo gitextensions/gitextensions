@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using System.Text.RegularExpressions;
 using GitCommands;
 using GitCommands.Config;
@@ -290,15 +290,21 @@ public sealed partial class FormPull : GitExtensionsDialog
 
     private void MergetoolClick(object sender, EventArgs e)
     {
-        Module.RunMergeTool();
-
-        if (MessageBoxes.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
-                            MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+        this.InvokeAndForget(async () =>
         {
-            return;
-        }
+            using (FormBusyScope.Enter(this))
+            {
+                await Task.Run(() => Module.RunMergeTool());
+            }
 
-        UICommands.StartCommitDialog(this);
+            if (MessageBoxes.Show(this, _allMergeConflictSolvedQuestion.Text, _allMergeConflictSolvedQuestionCaption.Text,
+                                MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            UICommands.StartCommitDialog(this);
+        });
     }
 
     private void BranchesDropDown(object sender, EventArgs e)
