@@ -17,7 +17,7 @@ public class ToolStripPushButton : ToolStripButton
     private readonly TranslationString _behindCommitsTointegrateOrForcePush =
         new("{0} commit(s) should be integrated (or will be lost if force pushed)");
 
-    public void DisplayAheadBehindInformation(IDictionary<string, AheadBehindData>? aheadBehindData, string branchName, string shortcut)
+    public void DisplayAheadBehindInformation(IReadOnlyDictionary<string, AheadBehindData>? aheadBehindData, string branchName, string shortcut)
     {
         if (string.IsNullOrWhiteSpace(branchName)
             || !AppSettings.ShowAheadBehindData

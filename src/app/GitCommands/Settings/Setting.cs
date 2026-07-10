@@ -42,8 +42,8 @@ public static class Setting
             settingsSource,
             name,
             defaultValue,
-            read: static s => s switch { "True" => (true, true), "False" => (true, false), _ => (false, default) },
-            store: static v => v ? "True" : "False");
+            read: static s => s switch { "true" or "True" => (true, true), "false" or "False" => (true, false), _ => (false, default) },
+            store: static v => v ? "true" : "false");
     }
 
     /// <summary>
@@ -55,8 +55,8 @@ public static class Setting
             settingsSource,
             name,
             defaultValue: null,
-            read: static s => s switch { "True" => (true, true), "False" => (true, false), _ => (false, default) },
-            store: static v => v switch { true => "True", false => "False", _ => null });
+            read: static s => s switch { "true" or "True" => (true, true), "false" or "False" => (true, false), _ => (false, default) },
+            store: static v => v switch { true => "true", false => "false", _ => null });
     }
 
     /// <summary>

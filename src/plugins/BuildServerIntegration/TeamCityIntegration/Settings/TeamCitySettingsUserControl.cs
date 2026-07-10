@@ -125,7 +125,7 @@ public partial class TeamCitySettingsUserControl : GitExtensionsControl, IBuildS
             {
                 if (paramResult.Success)
                 {
-                    if (paramResult.Groups["buildtypeid"].Value == "buildTypeId")
+                    if (paramResult.Groups["buildtypeid"].ValueSpan is "buildTypeId")
                     {
                         Build buildType = _teamCityAdapter.GetBuildType(paramResult.Groups["buildtype"].Value);
                         TeamCityProjectName.Text = buildType.ParentProject;

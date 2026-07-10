@@ -20,15 +20,15 @@ internal static class RevisionGridRefRenderer
     // and the left-side offset used when drawing the nestled remote label.
     private static int RefLabelHighlightWidth => DpiUtil.Scale(1);
 
-    private static int ChevronWidth(int height) => height / 2;
+    private static int PointWidth(int height) => height / 2;
 
     private static int PaddingLeftRight(string name) => string.IsNullOrEmpty(name) ? DpiUtil.Scale(1) : DpiUtil.Scale(4);
 
     /// <summary>
-    ///  Creates a closed path for a remote capsule whose left edge is a concave '>' notch
-    ///  that exactly fits the convex chevron tip of a preceding branch capsule.
+    ///  Creates a closed path for a capsule whose left edge is a concave '>' notch
+    ///  that exactly fits the convex point tip of a preceding capsule.
     /// </summary>
-    private static GraphicsPath CreateChevronLeftRoundRectPath(Rectangle rect, int radius, int chevronWidth)
+    private static GraphicsPath CreateNotchLeftRoundRectPath(Rectangle rect, int radius, int pointWidth)
     {
         int left = rect.X;
         int top = rect.Y;
@@ -36,22 +36,22 @@ internal static class RevisionGridRefRenderer
         int bottom = rect.Bottom;
         int midY = top + (rect.Height / 2);
 
-        // The notch corners are at the leftmost pixels; the notch tip is indented by chevronWidth.
+        // The notch corners are at the leftmost pixels; the notch tip is indented by pointWidth.
         GraphicsPath path = new();
-        path.AddLine(left, top, left + chevronWidth, midY);                      // top notch corner → indented tip
-        path.AddLine(left + chevronWidth, midY, left, bottom);                   // indented tip → bottom notch corner
-        path.AddArc(right - radius, bottom - radius, radius, radius, 90, -90);   // bottom-right arc
-        path.AddArc(right - radius, top, radius, radius, 0, -90);                // top-right arc
+        path.AddLine(left, top, left + pointWidth, midY);                      // top notch corner → indented tip
+        path.AddLine(left + pointWidth, midY, left, bottom);                   // indented tip → bottom notch corner
+        path.AddArc(right - radius, bottom - radius, radius, radius, 90, -90); // bottom-right arc
+        path.AddArc(right - radius, top, radius, radius, 0, -90);              // top-right arc
         path.CloseFigure();
 
         return path;
     }
 
     /// <summary>
-    ///  Creates a closed path for a branch capsule whose right edge is a '&gt;' chevron point
-    ///  instead of a rounded cap, so it visually connects to a nestled remote label.
+    ///  Creates a closed path for a capsule whose right edge is a concave '&lt;' notch
+    ///  that exactly fits the convex point tip of a following capsule.
     /// </summary>
-    private static GraphicsPath CreateChevronRightRoundRectPath(Rectangle rect, int radius, int chevronWidth)
+    private static GraphicsPath CreateNotchRightRoundRectPath(Rectangle rect, int radius, int pointWidth)
     {
         int left = rect.X;
         int top = rect.Y;
@@ -59,18 +59,64 @@ internal static class RevisionGridRefRenderer
         int bottom = rect.Bottom;
         int midY = top + (rect.Height / 2);
 
-        // The chevron tip is at the rightmost pixel; the top/bottom corners step back by chevronWidth.
+        // The notch corners are at the rightmost pixels; the notch tip is indented by pointWidth.
         GraphicsPath path = new();
         path.AddArc(left, top, radius, radius, startAngle: 180, sweepAngle: 90); // top-left arc
-        path.AddLine(right - chevronWidth, top, right, midY);                    // top-right corner → tip
-        path.AddLine(right, midY, right - chevronWidth, bottom);                 // tip → bottom-right corner
+        path.AddLine(right, top, right - pointWidth, midY);                      // top notch corner → indented tip
+        path.AddLine(right - pointWidth, midY, right, bottom);                   // indented tip → bottom notch corner
         path.AddArc(left, bottom - radius, radius, radius, 90, 90);              // bottom-left arc
         path.CloseFigure();
 
         return path;
     }
 
-    internal static GraphicsPath CreateRoundRectPath(Rectangle rect, int radius)
+    /// <summary>
+    ///  Creates a closed path for a capsule whose left edge is a convex '&lt;' point
+    ///  that protrudes leftward, so it visually connects to a nestled preceding label.
+    /// </summary>
+    private static GraphicsPath CreatePointLeftRoundRectPath(Rectangle rect, int radius, int pointWidth)
+    {
+        int left = rect.X;
+        int top = rect.Y;
+        int right = rect.Right;
+        int bottom = rect.Bottom;
+        int midY = top + (rect.Height / 2);
+
+        // The point tip is at the leftmost pixel; the top/bottom corners step back by pointWidth.
+        GraphicsPath path = new();
+        path.AddLine(left, midY, left + pointWidth, top);                    // tip → top-left corner
+        path.AddArc(right - radius, top, radius, radius, 270, 90);           // top-right arc
+        path.AddArc(right - radius, bottom - radius, radius, radius, 0, 90); // bottom-right arc
+        path.AddLine(left + pointWidth, bottom, left, midY);                 // bottom-left corner → tip
+        path.CloseFigure();
+
+        return path;
+    }
+
+    /// <summary>
+    ///  Creates a closed path for a capsule whose right edge is a convex '&gt;' point
+    ///  instead of a rounded cap, so it visually connects to a nestled following label.
+    /// </summary>
+    private static GraphicsPath CreatePointRightRoundRectPath(Rectangle rect, int radius, int pointWidth)
+    {
+        int left = rect.X;
+        int top = rect.Y;
+        int right = rect.Right;
+        int bottom = rect.Bottom;
+        int midY = top + (rect.Height / 2);
+
+        // The point tip is at the rightmost pixel; the top/bottom corners step back by pointWidth.
+        GraphicsPath path = new();
+        path.AddArc(left, top, radius, radius, startAngle: 180, sweepAngle: 90); // top-left arc
+        path.AddLine(right - pointWidth, top, right, midY);                      // top-right corner → tip
+        path.AddLine(right, midY, right - pointWidth, bottom);                   // tip → bottom-right corner
+        path.AddArc(left, bottom - radius, radius, radius, 90, 90);              // bottom-left arc
+        path.CloseFigure();
+
+        return path;
+    }
+
+    private static GraphicsPath CreateRoundRectPath(Rectangle rect, int radius)
     {
         int left = rect.X;
         int top = rect.Y;
@@ -88,96 +134,39 @@ internal static class RevisionGridRefRenderer
     }
 
     /// <summary>
-    ///  Draws a remote ref label nestled immediately after a preceding branch capsule.
+    ///  Draws a ref label and returns the painted rectangle in the same coordinate space as <paramref name="bounds"/>.
     /// </summary>
-    /// <remarks>
-    ///  The label is drawn without an arrow and positioned flush against the right edge of the
-    ///  preceding capsule, so the two labels appear as a single visual group.
-    /// </remarks>
-    /// <param name="precedingRight">Absolute x-coordinate of the right edge of the preceding capsule.</param>
-    /// <param name="capsuleTop">Absolute y-coordinate of the top edge shared with the preceding capsule.</param>
-    /// <param name="backgroundHeight">Height of the capsule, matching the preceding branch capsule.</param>
+    /// <returns>The bounding rectangle of the drawn ref label in DataGridView client coordinates, or <see cref="Rectangle.Empty"/> if nothing was drawn.</returns>
+    public static Rectangle DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefLabelIcon icon, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false, bool highlight = false, RefLabelShape shape = RefLabelShape.Rect)
+    {
+        (Rectangle rect, Action? drawHighlight) = DrawRefEx(isRowSelected, font, ref offset, name, headColor, icon, bounds, graphics, dashedLine, fill, highlight, shape);
+        drawHighlight?.Invoke();
+        return rect;
+    }
+
+    /// <summary>
+    ///  Draws a ref label with the specified edge shape and returns the bounding rectangle and an optional deferred highlight action.
+    /// </summary>
     /// <returns>
     ///  The bounding rectangle of the drawn label (or <see cref="Rectangle.Empty"/> if nothing was drawn),
     ///  and a deferred action that paints the highlight frame — or <see langword="null"/> when <paramref name="highlight"/> is <see langword="false"/>.
     ///  The caller is responsible for invoking the action at the appropriate time (typically after all adjacent labels are drawn).
     /// </returns>
-    public static (Rectangle Rect, Action? DrawHighlight) DrawNestledRemoteRef(
+    public static (Rectangle Rect, Action? DrawHighlight) DrawRefEx(
         bool isRowSelected,
         Font font,
+        ref int offset,
         string name,
         Color headColor,
-        int precedingRight,
-        int capsuleTop,
-        int backgroundHeight,
+        RefLabelIcon icon,
+        in Rectangle bounds,
         Graphics graphics,
-        bool fill,
-        bool highlight)
+        bool dashedLine = false,
+        bool fill = false,
+        bool highlight = false,
+        RefLabelShape shape = RefLabelShape.Rect)
     {
-        int paddingLeftRight = PaddingLeftRight(name);
-
-        Size textSize = !string.IsNullOrEmpty(name)
-            ? TextRenderer.MeasureText(graphics, name, font, Size.Empty, TextFormatFlags.NoPadding)
-            : new(0, TextRenderer.MeasureText(graphics, " ", font, Size.Empty, TextFormatFlags.NoPadding).Height);
-
-        // rect.X is at the notch corners (= branch ankle corners);
-        // the notch tip is chevronWidth to the right, so visible content starts at rect.X + chevronWidth.
-        int chevronWidth = ChevronWidth(backgroundHeight);
-        Rectangle rect = new(
-            precedingRight - (chevronWidth / 2),
-            capsuleTop,
-            chevronWidth + textSize.Width + (paddingLeftRight * 2) - 1,
-            backgroundHeight);
-
-        if (rect.Width <= 0 || rect.Height <= 0)
-        {
-            return (Rectangle.Empty, DrawHighlight: null);
-        }
-
-        GraphicsPath remotePath = CreateChevronLeftRoundRectPath(rect, RefLabelCornerRadius, chevronWidth);
-        DrawRefBackground(isRowSelected, graphics, headColor, rect, remotePath, RefArrowType.None, dashedLine: false, fill, highlight: false);
-
-        // Text is right-aligned within the visible portion (right of precedingRight), keeping paddingLeftRight from the right edge.
-        Rectangle textBounds = new(
-            rect.Right - paddingLeftRight - textSize.Width,
-            rect.Y + PaddingTopBottom - 1,
-            textSize.Width,
-            textSize.Height);
-
-        Color textColor = fill ? headColor : ColorHelper.Lerp(headColor, Color.Black, 0.25F);
-        TextRenderer.DrawText(graphics, name, font, textBounds, textColor, TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
-
-        if (!highlight)
-        {
-            remotePath.Dispose();
-            return (rect, DrawHighlight: null);
-        }
-
-        return (rect, DrawHighlight: () =>
-            {
-                using (remotePath)
-                {
-                    SmoothingMode oldMode = graphics.SmoothingMode;
-                    graphics.SmoothingMode = SmoothingMode.AntiAlias;
-                    try
-                    {
-                        using Pen highlightPen = new(headColor, RefLabelHighlightWidth);
-                        graphics.DrawPath(highlightPen, remotePath);
-                    }
-                    finally
-                    {
-                        graphics.SmoothingMode = oldMode;
-                    }
-                }
-            });
-    }
-
-    /// <summary>
-    ///  Draws a ref label and returns the painted rectangle in the same coordinate space as <paramref name="bounds"/>.
-    /// </summary>
-    /// <returns>The bounding rectangle of the drawn ref label in DataGridView client coordinates, or <see cref="Rectangle.Empty"/> if nothing was drawn.</returns>
-    public static Rectangle DrawRef(bool isRowSelected, Font font, ref int offset, string name, Color headColor, RefArrowType arrowType, in Rectangle bounds, Graphics graphics, bool dashedLine = false, bool fill = false, bool highlight = false, bool nestledRight = false)
-    {
+        icon = GetEffectiveIcon(icon);
         int paddingLeftRight = PaddingLeftRight(name);
         int paddingTopBottom = PaddingTopBottom;
         int marginRight = DpiUtil.Scale(5);
@@ -188,49 +177,94 @@ internal static class RevisionGridRefRenderer
             ? TextRenderer.MeasureText(graphics, name, font, Size.Empty, TextFormatFlags.NoPadding)
             : new(0, TextRenderer.MeasureText(graphics, " ", font, Size.Empty, TextFormatFlags.NoPadding).Height);
 
-        int arrowWidth = arrowType == RefArrowType.None ? 0 : bounds.Height / 2;
+        int iconWidth = icon == RefLabelIcon.None ? 0 : bounds.Height / 2;
 
         int backgroundHeight = textSize.Height + paddingTopBottom + paddingTopBottom - 1;
         int outerMarginTopBottom = (bounds.Height - backgroundHeight) / 2;
 
+        int scaledRadius = RefLabelCornerRadius;
+        int pointWidth = PointWidth(backgroundHeight);
+
+        // For notch/point the rect must include the full/half notch/point area
+        // so text can be positioned within the visible portion, matching the symmetric padding of other shapes.
+        int extraWidth = shape switch
+        {
+            RefLabelShape.NotchLeft or RefLabelShape.NotchRight => pointWidth,
+            RefLabelShape.PointLeft or RefLabelShape.PointRight => pointWidth / 2,
+            _ => 0
+        };
+
         Rectangle rect = new(
             bounds.X + offset,
             bounds.Y + outerMarginTopBottom,
-            Math.Min(bounds.Width - offset, textSize.Width + arrowWidth + paddingLeftRight + paddingLeftRight - 1),
+            Math.Min(bounds.Width - offset, textSize.Width + iconWidth + paddingLeftRight + paddingLeftRight + extraWidth - 1),
             backgroundHeight);
-        if (rect.Width == 0 || rect.Height == 0)
+
+        if (rect.Width <= 0 || rect.Height <= 0)
         {
-            // it may happen, as observe in #5396
-            return Rectangle.Empty;
+            // It may happen, as observed in #5396
+            return (Rectangle.Empty, DrawHighlight: null);
         }
 
-        int scaledRadius = RefLabelCornerRadius;
-        if (nestledRight)
+        GraphicsPath refPath = shape switch
         {
-            int chevronWidth = ChevronWidth(backgroundHeight);
-            rect = rect with { Width = rect.Width + (chevronWidth / 2) };
-            using GraphicsPath branchPath = CreateChevronRightRoundRectPath(rect, scaledRadius, chevronWidth);
-            DrawRefBackground(isRowSelected, graphics, headColor, rect, branchPath, arrowType, dashedLine, fill, highlight);
-        }
-        else
-        {
-            using GraphicsPath roundPath = CreateRoundRectPath(rect, scaledRadius);
-            DrawRefBackground(isRowSelected, graphics, headColor, rect, roundPath, arrowType, dashedLine, fill, highlight);
-        }
+            RefLabelShape.NotchLeft => CreateNotchLeftRoundRectPath(rect, scaledRadius, pointWidth),
+            RefLabelShape.NotchRight => CreateNotchRightRoundRectPath(rect, scaledRadius, pointWidth),
+            RefLabelShape.PointLeft => CreatePointLeftRoundRectPath(rect, scaledRadius, pointWidth),
+            RefLabelShape.PointRight => CreatePointRightRoundRectPath(rect, scaledRadius, pointWidth),
+            RefLabelShape.Rect => CreateRoundRectPath(rect, scaledRadius),
+            _ => throw new ArgumentOutOfRangeException(nameof(shape), $"Unsupported shape: {shape}")
+        };
 
+        // For NotchLeft and PointLeft the point/notch occupies the left portion of the rect,
+        // so the icon and text must be shifted right by pointWidth.
+        int iconXOffset = shape is RefLabelShape.NotchLeft or RefLabelShape.PointLeft ? pointWidth : 0;
+        DrawRefBackground(isRowSelected, graphics, headColor, rect, refPath, icon, dashedLine, fill, highlight: false, iconXOffset);
+
+        // For PointLeft, offset by half pointWidth so text starts inside the point.
+        int textX = rect.X + iconXOffset + iconWidth + paddingLeftRight - (shape is RefLabelShape.PointLeft ? pointWidth / 2 : 0);
+        int textWidth = Math.Min(bounds.Width - offset - paddingLeftRight - paddingLeftRight, textSize.Width);
         Rectangle textBounds = new(
-            rect.X + arrowWidth + paddingLeftRight,
+            textX,
             rect.Y + paddingTopBottom - 1,
-            Math.Min(bounds.Width - offset - paddingLeftRight - paddingLeftRight, textSize.Width),
+            Math.Clamp(textWidth, 0, Math.Max(0, bounds.Right - textX)),
             textSize.Height);
 
         TextRenderer.DrawText(graphics, name, font, textBounds, textColor, TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
 
         offset += rect.Width + marginRight;
-        return rect;
+
+        if (!highlight)
+        {
+            refPath.Dispose();
+            return (rect, DrawHighlight: null);
+        }
+
+        return (rect, DrawHighlight: () =>
+            {
+                using (refPath)
+                {
+                    SmoothingMode oldMode = graphics.SmoothingMode;
+                    graphics.SmoothingMode = SmoothingMode.AntiAlias;
+                    try
+                    {
+                        using Pen highlightPen = new(headColor, RefLabelHighlightWidth);
+                        if (dashedLine)
+                        {
+                            highlightPen.DashPattern = _dashPattern;
+                        }
+
+                        graphics.DrawPath(highlightPen, refPath);
+                    }
+                    finally
+                    {
+                        graphics.SmoothingMode = oldMode;
+                    }
+                }
+            });
     }
 
-    private static void DrawRefBackground(bool isRowSelected, Graphics graphics, Color color, Rectangle bounds, GraphicsPath path, RefArrowType arrowType, bool dashedLine, bool fill, bool highlight)
+    private static void DrawRefBackground(bool isRowSelected, Graphics graphics, Color color, Rectangle bounds, GraphicsPath path, RefLabelIcon icon, bool dashedLine, bool fill, bool highlight, int iconXOffset)
     {
         SmoothingMode oldMode = graphics.SmoothingMode;
         graphics.SmoothingMode = SmoothingMode.AntiAlias;
@@ -265,9 +299,9 @@ internal static class RevisionGridRefRenderer
             }
 
             // arrow if the head is the current branch
-            if (arrowType != RefArrowType.None)
+            if (icon != RefLabelIcon.None)
             {
-                DrawArrow(graphics, bounds.X, bounds.Y, bounds.Height, color, filled: arrowType == RefArrowType.Filled);
+                DrawArrow(graphics, bounds.X + iconXOffset, bounds.Y, bounds.Height, color, filled: icon == RefLabelIcon.Head);
             }
         }
         finally
@@ -326,23 +360,22 @@ internal static class RevisionGridRefRenderer
         }
     }
 
+    private static RefLabelIcon GetEffectiveIcon(RefLabelIcon icon)
+    {
+        return icon is RefLabelIcon.Head or RefLabelIcon.HeadMergeSource ? icon : RefLabelIcon.None;
+    }
+
     /// <summary>
-    ///  Computes the ideal rendered size of a ref label without drawing it.
+    ///  Computes the point width for the given font and graphics context, which is needed to calculate the ideal capsule size for Notch and Point shapes.
     /// </summary>
     /// <remarks>
-    ///  Returns the capsule's ideal width and height given the same inputs as <see cref="DrawRef"/>.
+    ///  Computes the capsule's ideal height given the same inputs as <see cref="DrawRef"/> and <see cref="DrawRefEx"/>.
     ///  Does not account for clipping to available cell width.
     /// </remarks>
-    public static (int idealWidth, int backgroundHeight) MeasureRef(Font font, string name, RefArrowType arrowType, int rowHeight, Graphics graphics)
+    public static int GetPointWidth(Font font, Graphics graphics)
     {
-        Size textSize = !string.IsNullOrEmpty(name)
-            ? TextRenderer.MeasureText(graphics, name, font, Size.Empty, TextFormatFlags.NoPadding)
-            : new(0, TextRenderer.MeasureText(graphics, " ", font, Size.Empty, TextFormatFlags.NoPadding).Height);
-
-        int backgroundHeight = textSize.Height + (PaddingTopBottom * 2) - 1;
-        int arrowWidth = arrowType == RefArrowType.None ? 0 : rowHeight / 2;
-        int idealWidth = textSize.Width + arrowWidth + (PaddingLeftRight(name) * 2) - 1;
-
-        return (idealWidth, backgroundHeight);
+        int textHeight = TextRenderer.MeasureText(graphics, " ", font, Size.Empty, TextFormatFlags.NoPadding).Height;
+        int backgroundHeight = textHeight + (PaddingTopBottom * 2) - 1;
+        return PointWidth(backgroundHeight);
     }
 }

@@ -10508,6 +10508,26 @@ To be able to open this repository, you need to either:
         <source>'{0}' is not currently visible</source>
         <target />
       </trans-unit>
+      <trans-unit id="_isLocalBranch.Text">
+        <source>is a local branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_isRemoteBranch.Text">
+        <source>is a remote branch</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_isTag.Text">
+        <source>is a tag</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_isTrackedBy_Branch_AheadBehind.Text">
+        <source>is tracked by [{0}]   {1}</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_isTracking_Remote.Text">
+        <source>is tracking [{0}]</source>
+        <target />
+      </trans-unit>
       <trans-unit id="_loadingDataText.Text">
         <source>Loading data...</source>
         <target />
@@ -10836,6 +10856,10 @@ Yes, I allow telemetry!</source>
       </trans-unit>
       <trans-unit id="_warning.Text">
         <source>Warning</source>
+        <target />
+      </trans-unit>
+      <trans-unit id="_wasTracking_Remote.Text">
+        <source>was tracking [{0}], but the remote is gone</source>
         <target />
       </trans-unit>
       <trans-unit id="_weeksAgo.Text">

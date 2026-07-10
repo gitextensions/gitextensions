@@ -100,7 +100,7 @@ public static partial class UserEnvironmentInformation
         try
         {
             return GetDotnetDesktopRuntimeMatches(versions)
-                .Select(match => Parse(match.Groups["version"].Value))
+                .Select(match => Parse(match.Groups["version"].ValueSpan))
                 .WhereNotNull();
         }
         catch (Exception ex)
@@ -110,12 +110,17 @@ public static partial class UserEnvironmentInformation
 
         return [];
 
-        Version? Parse(string version)
+        Version? Parse(ReadOnlySpan<char> version)
         {
             try
             {
                 int suffixPos = version.IndexOf('-');
-                return new Version(suffixPos > 0 ? version[0..suffixPos] : version);
+                if (suffixPos > 0)
+                {
+                    version = version[..suffixPos];
+                }
+
+                return Version.Parse(version);
             }
             catch (Exception ex)
             {

@@ -1,6 +1,49 @@
 ﻿Changelog
 =========
 
+### Version v7.2.0 (10 Jul 2026)
+
+#### Changes:
+* [#13159] fix: unblock UI thread while awaiting merge tool
+* [#13158] perf: make classes sealed
+* [#13154] fix(ISetting): read and store bool in lowercase
+* [#13150] ci(cla-check): Reject "noreply" email
+* [#13148] Do not show merge commit editor when there are no errors
+* [#13147] feat(.gitignore): Support single selected folder
+* [#13145] Fix unhandled exception when selecting non-TrueType font in Appearance settings
+* [#13143] fix: checkout branch --track
+* [#13139] Avoid some string allocations, plus some collection tweaks
+* [#13138] fix(Reset changes): Restrict to working dir
+* [#13137] feat(RevisionGrid): Preview amend on Ctrl+click
+* [#13135] build(translation): Verify Transifex base files
+* [#13134] fix: dispose Process handles
+* [#13133] feat(RevisionGrid): Improve label hover hit-test
+* [#13129] fix(FormCommit): Avoid empty diff on multi-selection
+* [#13117] fix: remove unused UxTheme native methods
+* [#13104] feat(RevisionGrid): Draw ahead/behind info; adapt tag shape
+* [#13064] feat: hide fetch-all UI when there is only one remote
+
+
+[#13159]:https://github.com/gitextensions/gitextensions/pull/13159
+[#13158]:https://github.com/gitextensions/gitextensions/pull/13158
+[#13154]:https://github.com/gitextensions/gitextensions/pull/13154
+[#13150]:https://github.com/gitextensions/gitextensions/pull/13150
+[#13148]:https://github.com/gitextensions/gitextensions/pull/13148
+[#13147]:https://github.com/gitextensions/gitextensions/pull/13147
+[#13145]:https://github.com/gitextensions/gitextensions/pull/13145
+[#13143]:https://github.com/gitextensions/gitextensions/pull/13143
+[#13139]:https://github.com/gitextensions/gitextensions/pull/13139
+[#13138]:https://github.com/gitextensions/gitextensions/pull/13138
+[#13137]:https://github.com/gitextensions/gitextensions/pull/13137
+[#13135]:https://github.com/gitextensions/gitextensions/pull/13135
+[#13134]:https://github.com/gitextensions/gitextensions/pull/13134
+[#13133]:https://github.com/gitextensions/gitextensions/pull/13133
+[#13129]:https://github.com/gitextensions/gitextensions/pull/13129
+[#13117]:https://github.com/gitextensions/gitextensions/pull/13117
+[#13104]:https://github.com/gitextensions/gitextensions/pull/13104
+[#13064]:https://github.com/gitextensions/gitextensions/pull/13064
+
+
 ### Version v7.1.0 (14 Jun 2026)
 
 #### Changes:

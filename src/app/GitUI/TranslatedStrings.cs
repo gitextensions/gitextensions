@@ -63,6 +63,13 @@ internal sealed class TranslatedStrings : Translate
     private readonly TranslationString _errorCaptionFailedDeleteFolder = new("Failed to delete directory");
     private readonly TranslationString _errorCaptionNotOnBranch = new("Not on a branch");
 
+    private readonly TranslationString _isLocalBranch = new("is a local branch");
+    private readonly TranslationString _isRemoteBranch = new("is a remote branch");
+    private readonly TranslationString _isTag = new("is a tag");
+    private readonly TranslationString _isTrackedBy_Branch_AheadBehind = new("is tracked by [{0}]   {1}");
+    private readonly TranslationString _isTracking_Remote = new("is tracking [{0}]");
+    private readonly TranslationString _wasTracking_Remote = new("was tracking [{0}], but the remote is gone");
+
     private readonly TranslationString _mainInstructionNotOnBranch = new("You are not working on a branch");
 
     private readonly TranslationString _noBranch = new("no branch");
@@ -273,6 +280,13 @@ Copy error details to clipboard?");
     public static string ErrorSshPuTTYInstalled => _instance.Value._errorSshPuTTYInstalled.Text;
     public static string ErrorSshPuTTYNotConfigured => _instance.Value._errorSshPuTTYNotConfigured.Text;
     public static string ErrorSshPuTTYWhereConfigure => _instance.Value._errorSshPuTTYWhereConfigure.Text;
+
+    public static string IsLocalBranch => _instance.Value._isLocalBranch.Text;
+    public static string IsRemoteBranch => _instance.Value._isRemoteBranch.Text;
+    public static string IsTag => _instance.Value._isTag.Text;
+    public static string IsTrackedBy_Branch_AheadBehind => _instance.Value._isTrackedBy_Branch_AheadBehind.Text;
+    public static string IsTracking_Remote => _instance.Value._isTracking_Remote.Text;
+    public static string WasTracking_Remote => _instance.Value._wasTracking_Remote.Text;
 
     public static string ErrorInstructionNotOnBranch => _instance.Value._mainInstructionNotOnBranch.Text;
 

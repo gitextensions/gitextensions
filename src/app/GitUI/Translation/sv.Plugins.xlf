@@ -1,0 +1,1198 @@
+<?xml version="1.0" ?><xliff xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" version="1.0" GitExVersion="">
+  <file datatype="plaintext" original="AppVeyorSettingsUserControl" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="cbLoadTestResults.Text">
+        <source>Display test results in build status summary for each build result (network intensive!)</source>
+        <target>Visa testresultat i sammandrag, tilsammans med status för varje byggresultat (nätverksintensivt!)</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="AutoCompileSubModulesPlugin" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Auto compile submodules</source>
+        <target>Kompilera undermoduler automatiskt</target>
+        
+      </trans-unit>
+      <trans-unit id="_doYouWantBuild.Text">
+        <source>Do you want to build {0}?
+
+{1}</source>
+        <target>Vill du bygga {0}?
+
+{1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_enterCorrectMsBuildPath.Text">
+        <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
+        <target>Ange rätt MSBuild-sökväg i inställningsdialogen för tillägget och försök igen.</target>
+        
+      </trans-unit>
+      <trans-unit id="_msBuildArguments.Caption">
+        <source>msbuild.exe arguments</source>
+        <target>msbuild.exe-argument</target>
+        
+      </trans-unit>
+      <trans-unit id="_msBuildEnabled.Caption">
+        <source>Enabled</source>
+        <target>Aktiverad</target>
+        
+      </trans-unit>
+      <trans-unit id="_msBuildPath.Caption">
+        <source>Path to msbuild.exe</source>
+        <target>Sökväg till msbuild.exe</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="BackgroundFetchPlugin" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Periodic background fetch</source>
+        <target>Periodisk bakgrundshämtning</target>
+        
+      </trans-unit>
+      <trans-unit id="_autoRefresh.Caption">
+        <source>Refresh view after fetch</source>
+        <target>Uppdatera vyn efter hämtning</target>
+        
+      </trans-unit>
+      <trans-unit id="_fetchAllSubmodules.Caption">
+        <source>Fetch all submodules</source>
+        <target>Hämta alla undermoduler</target>
+        
+      </trans-unit>
+      <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
+        <source>Fetch immediately on repository opening</source>
+        <target>Hämta omedelbart när arkivet öppnas</target>
+        
+      </trans-unit>
+      <trans-unit id="_fetchInterval.Caption">
+        <source>Fetch every (seconds) - set to 0 to disable</source>
+        <target>Hämta var (sekunder) - ange 0 för att inaktivera</target>
+        
+      </trans-unit>
+      <trans-unit id="_gitCommand.Caption">
+        <source>Arguments of git command to run</source>
+        <target>Argument till git-kommandot som ska köras</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Create local tracking branches</source>
+        <target>Skapa lokala spårningsgrenar</target>
+        
+      </trans-unit>
+      <trans-unit id="button1.Text">
+        <source>Create local tracking branches</source>
+        <target>Skapa lokala spårningsgrenar</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Remote to create tracking branches for</source>
+        <target>Fjärr att skapa spårningsgrenar för</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="CreateLocalBranchesPlugin" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Create local tracking branches</source>
+        <target>Skapa lokala spårningsgrenar</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="DeleteUnusedBranchesForm" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Delete obsolete branches</source>
+        <target>Ta bort föråldrade grenar</target>
+        
+      </trans-unit>
+      <trans-unit id="Author.HeaderText">
+        <source>Last author</source>
+        <target>Senaste författare</target>
+        
+      </trans-unit>
+      <trans-unit id="Cancel.Text">
+        <source>Close</source>
+        <target>Stäng</target>
+        
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>Delete</source>
+        <target>Radera</target>
+        
+      </trans-unit>
+      <trans-unit id="IncludeRemoteBranches.Text">
+        <source>Delete remote branches from</source>
+        <target>Ta bort fjärrgrenar från</target>
+        
+      </trans-unit>
+      <trans-unit id="Message.HeaderText">
+        <source>Last message</source>
+        <target>Senaste meddelande</target>
+        
+      </trans-unit>
+      <trans-unit id="RefreshBtn.Text">
+        <source>Search branches</source>
+        <target>Sök grenar</target>
+        
+      </trans-unit>
+      <trans-unit id="_areYouSureToDelete.Text">
+        <source>Are you sure to delete {0} selected branches?</source>
+        <target>Är du säker på att du vill ta bort {0} valda grenar?</target>
+        
+      </trans-unit>
+      <trans-unit id="_branchesSelected.Text">
+        <source>{0}/{1} branches selected.</source>
+        <target>{0}/{1} grenar valda.</target>
+        
+      </trans-unit>
+      <trans-unit id="_cancel.Text">
+        <source>Cancel</source>
+        <target>Avbryt</target>
+        
+      </trans-unit>
+      <trans-unit id="_chooseBranchesToDelete.Text">
+        <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
+        <target>Välj grenar att ta bort. Endast grenar som är helt sammanslagna i ’{0}’ kommer att tas bort.</target>
+        
+      </trans-unit>
+      <trans-unit id="_dangerousAction.Text">
+        <source>DANGEROUS ACTION!
+Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
+Are you sure you want to continue?</source>
+        <target>FARLIG ÅTGÄRD!
+Grenar kommer att tas bort på fjärren ’{0}’. Detta kan inte ångras.
+Är du säker på att du vill fortsätta?</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteCaption.Text">
+        <source>Delete</source>
+        <target>Radera</target>
+        
+      </trans-unit>
+      <trans-unit id="_deletingBranches.Text">
+        <source>Deleting branches...</source>
+        <target>Raderar grenar...</target>
+        
+      </trans-unit>
+      <trans-unit id="_deletingUnmergedBranches.Text">
+        <source>Deleting unmerged branches will result in dangling commits. Use with caution!</source>
+        <target>Att ta bort osammanslagna grenar resulterar i lösgjorda incheckningar. Använd med försiktighet!</target>
+        
+      </trans-unit>
+      <trans-unit id="_loading.Text">
+        <source>Loading...</source>
+        <target>Laddar...</target>
+        
+      </trans-unit>
+      <trans-unit id="_pressToSearch.Text">
+        <source>Press &apos;{0}&apos; to search for branches to delete.</source>
+        <target>Tryck på ’{0}’ för att söka efter grenar att ta bort.</target>
+        
+      </trans-unit>
+      <trans-unit id="_searchBranches.Text">
+        <source>Search branches</source>
+        <target>Sök grenar</target>
+        
+      </trans-unit>
+      <trans-unit id="_selectBranchesToDelete.Text">
+        <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
+        <target>Välj grenar att ta bort med kryssrutorna i kolumnen ’{0}’.</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonSettings.Text">
+        <source>Settings</source>
+        <target>Inställningar</target>
+        
+      </trans-unit>
+      <trans-unit id="dateDataGridViewTextBoxColumn.HeaderText">
+        <source>Last activity</source>
+        <target>Senaste aktivitet</target>
+        
+      </trans-unit>
+      <trans-unit id="includeUnmergedBranches.Text">
+        <source>Include unmerged branches</source>
+        <target>Inkludera osammanslagna grenar</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Delete branches older than x days</source>
+        <target>Ta bort grenar äldre än x dagar</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Delete branches fully merged into branch</source>
+        <target>Ta bort grenar som är helt sammanslagna i gren</target>
+        
+      </trans-unit>
+      <trans-unit id="nameDataGridViewTextBoxColumn.HeaderText">
+        <source>Name</source>
+        <target>Namn</target>
+        
+      </trans-unit>
+      <trans-unit id="regexDoesNotMatch.Text">
+        <source>Does not match</source>
+        <target>Matchar inte</target>
+        
+      </trans-unit>
+      <trans-unit id="regexFilter.Text">
+        <source>/(feature|develop)/</source>
+        <target>/(feature|develop)/</target>
+        
+      </trans-unit>
+      <trans-unit id="useRegexCaseInsensitive.Text">
+        <source>Case insensitive</source>
+        <target>Skiftlägesokänslig</target>
+        
+      </trans-unit>
+      <trans-unit id="useRegexFilter.Text">
+        <source>Use regex to filter branches</source>
+        <target>Använd reguljärt uttryck för att filtrera grenar</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="DeleteUnusedBranchesPlugin" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Delete obsolete branches</source>
+        <target>Ta bort föråldrade grenar</target>
+        
+      </trans-unit>
+      <trans-unit id="_daysOlderThan.Caption">
+        <source>Delete obsolete branches older than (days)</source>
+        <target>Ta bort föråldrade grenar äldre än (dagar)</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteRemoteBranchesFromFlag.Caption">
+        <source>Delete obsolete branches from remote</source>
+        <target>Ta bort föråldrade grenar från fjärr</target>
+        
+      </trans-unit>
+      <trans-unit id="_includeUnmergedBranchesFlag.Caption">
+        <source>Delete unmerged branches</source>
+        <target>Ta bort osammanslagna grenar</target>
+        
+      </trans-unit>
+      <trans-unit id="_mergedInBranch.Caption">
+        <source>Branch where all branches should be merged in</source>
+        <target>Gren där alla grenar ska slås samman in i</target>
+        
+      </trans-unit>
+      <trans-unit id="_regexCaseInsensitiveFlag.Caption">
+        <source>Is regex filter case insensitive?</source>
+        <target>Är det reguljära filteruttrycket skiftlägesokänsligt?</target>
+        
+      </trans-unit>
+      <trans-unit id="_regexFilter.Caption">
+        <source>Regex to filter branches to delete</source>
+        <target>Reguljärt uttryck för att filtrera grenar att ta bort</target>
+        
+      </trans-unit>
+      <trans-unit id="_regexInvertedFlag.Caption">
+        <source>Search branches that does not match regex</source>
+        <target>Sök grenar som inte matchar det reguljära uttrycket</target>
+        
+      </trans-unit>
+      <trans-unit id="_remoteName.Caption">
+        <source>Remote name obsoleted branches should be deleted from</source>
+        <target>Fjärrnamn som föråldrade grenar ska tas bort från</target>
+        
+      </trans-unit>
+      <trans-unit id="_useRegexToFilterBranchesFlag.Caption">
+        <source>Use regex to filter branches to delete</source>
+        <target>Använd reguljärt uttryck för att filtrera grenar att ta bort</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FindLargeFilesForm" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Find large files</source>
+        <target>Hitta stora filer</target>
+        
+      </trans-unit>
+      <trans-unit id="Cancel.Text">
+        <source>Close</source>
+        <target>Stäng</target>
+        
+      </trans-unit>
+      <trans-unit id="CompressedSize.HeaderText">
+        <source>Compressed size</source>
+        <target>Komprimerad storlek</target>
+        
+      </trans-unit>
+      <trans-unit id="Delete.Text">
+        <source>Delete</source>
+        <target>Radera</target>
+        
+      </trans-unit>
+      <trans-unit id="_areYouSureToDelete.Text">
+        <source>Are you sure to delete the selected files?</source>
+        <target>Är du säker på att du vill ta bort de valda filerna?</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteCaption.Text">
+        <source>Delete</source>
+        <target>Radera</target>
+        
+      </trans-unit>
+      <trans-unit id="commitCountDataGridViewTextBoxColumn.HeaderText">
+        <source>Commit count</source>
+        <target>Antal incheckningar</target>
+        
+      </trans-unit>
+      <trans-unit id="dataGridViewCheckBoxColumn1.HeaderText">
+        <source>Delete</source>
+        <target>Radera</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
+        <target>Återställ lokala ändringar innan filer tas bort. Välj filer att ta bort. Tvinga push för att ersätta data i fjärrarkivet.</target>
+        
+      </trans-unit>
+      <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
+        <source>Last commit date</source>
+        <target>Datum för senaste incheckning</target>
+        
+      </trans-unit>
+      <trans-unit id="pathDataGridViewTextBoxColumn.HeaderText">
+        <source>Path</source>
+        <target>Sökväg</target>
+        
+      </trans-unit>
+      <trans-unit id="sHADataGridViewTextBoxColumn.HeaderText">
+        <source>SHA</source>
+        <target>SHA</target>
+        
+      </trans-unit>
+      <trans-unit id="sizeDataGridViewTextBoxColumn.HeaderText">
+        <source>Size</source>
+        <target>Storlek</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FindLargeFilesPlugin" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Find large files</source>
+        <target>Hitta stora filer</target>
+        
+      </trans-unit>
+      <trans-unit id="_sizeLargeFile.Caption">
+        <source>Find large files bigger than (Mb)</source>
+        <target>Hitta stora filer större än (Mb)</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormGitStatistics" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Statistics</source>
+        <target>Statistik</target>
+        
+      </trans-unit>
+      <trans-unit id="CommitStatistics.Text">
+        <source>Loading..</source>
+        <target>Laddar..</target>
+        
+      </trans-unit>
+      <trans-unit id="LinesOfCodePerLanguageText.Text">
+        <source>Loading...</source>
+        <target>Laddar...</target>
+        
+      </trans-unit>
+      <trans-unit id="LinesOfCodePerTypeText.Text">
+        <source>Loading...</source>
+        <target>Laddar...</target>
+        
+      </trans-unit>
+      <trans-unit id="LoadingLabel.Text">
+        <source>Loading...</source>
+        <target>Laddar...</target>
+        
+      </trans-unit>
+      <trans-unit id="TestCodeText.Text">
+        <source>Loading...</source>
+        <target>Laddar...</target>
+        
+      </trans-unit>
+      <trans-unit id="TotalCommits.Text">
+        <source>Total commits</source>
+        <target>Totalt antal incheckningar</target>
+        
+      </trans-unit>
+      <trans-unit id="TotalLinesOfCode.Text">
+        <source>Total lines of code</source>
+        <target>Totalt antal kodrader</target>
+        
+      </trans-unit>
+      <trans-unit id="TotalLinesOfCode2.Text">
+        <source>Total lines of code</source>
+        <target>Totalt antal kodrader</target>
+        
+      </trans-unit>
+      <trans-unit id="TotalLinesOfTestCode.Text">
+        <source>Total lines of code</source>
+        <target>Totalt antal kodrader</target>
+        
+      </trans-unit>
+      <trans-unit id="_blankLinesP.Text">
+        <source>{0:N0} Blank lines ({1:P1})</source>
+        <target>{0:N0} tomma rader ({1:P1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_commentLinesP.Text">
+        <source>{0:N0} Comment lines ({1:P1})</source>
+        <target>{0:N0} kommentarsrader ({1:P1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_commits.Text">
+        <source>{0:N0} Commits</source>
+        <target>{0:N0} incheckningar</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitsBy.Text">
+        <source>{0:N0} Commits by {1}</source>
+        <target>{0:N0} incheckningar av {1}</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfCode.Text">
+        <source>{0:N0} Lines of code</source>
+        <target>{0:N0} kodrader</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfCodeInFiles.Text">
+        <source>{0:N0} Lines of code in {1} files ({2:P1})</source>
+        <target>{0:N0} kodrader i {1} filer ({2:P1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfCodeP.Text">
+        <source>{0:N0} Lines of code ({1:P1})</source>
+        <target>{0:N0} kodrader ({1:P1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfDesignerFilesP.Text">
+        <source>{0:N0} Lines in designer files ({1:P1})</source>
+        <target>{0:N0} rader i designerfiler ({1:P1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfProductionCodeP.Text">
+        <source>{0:N0} Lines of production code ({1:P1})</source>
+        <target>{0:N0} rader produktionskod ({1:P1})</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfTestCode.Text">
+        <source>{0:N0} Lines of test code</source>
+        <target>{0:N0} rader testkod</target>
+        
+      </trans-unit>
+      <trans-unit id="_linesOfTestCodeP.Text">
+        <source>{0:N0} Lines of test code ({1:P1})</source>
+        <target>{0:N0} rader testkod ({1:P1})</target>
+        
+      </trans-unit>
+      <trans-unit id="tabPage1.Text">
+        <source>Lines of code per language</source>
+        <target>Kodrader per språk</target>
+        
+      </trans-unit>
+      <trans-unit id="tabPage2.Text">
+        <source>Commits per contributor</source>
+        <target>Incheckningar per bidragsgivare</target>
+        
+      </trans-unit>
+      <trans-unit id="tabPage3.Text">
+        <source>Lines of code per type</source>
+        <target>Kodrader per typ</target>
+        
+      </trans-unit>
+      <trans-unit id="tabPage4.Text">
+        <source>Lines of test code</source>
+        <target>Rader testkod</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="FormImpact" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Impact</source>
+        <target>Inverkan</target>
+        
+      </trans-unit>
+      <trans-unit id="_authorCommits.Text">
+        <source>{0} ({1} Commits, {2} Changed Lines)</source>
+        <target>{0} ({1} incheckningar, {2} ändrade rader)</target>
+        
+      </trans-unit>
+      <trans-unit id="cbIncludingSubmodules.Text">
+        <source>Including submodules</source>
+        <target>Inklusive undermoduler</target>
+        
+      </trans-unit>
+      <trans-unit id="lblAuthor.Text">
+        <source>Author</source>
+        <target>Författare</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>GitHub</source>
+        <target>GitHub</target>
+        
+      </trans-unit>
+      <trans-unit id="GitHubHost.Caption">
+        <source>GitHub (Enterprise) hostname</source>
+        <target>GitHub-värdnamn (Enterprise)</target>
+        
+      </trans-unit>
+      <trans-unit id="PersonalAccessToken.Caption">
+        <source>Personal Access Token</source>
+        <target>Personlig åtkomsttoken</target>
+        
+      </trans-unit>
+      <trans-unit id="_error.Text">
+        <source>Error</source>
+        <target>Fel</target>
+        
+      </trans-unit>
+      <trans-unit id="_generateToken.Text">
+        <source>Generate a GitHub personal access token</source>
+        <target>Generera en personlig åtkomsttoken för GitHub</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperEnabled.Caption">
+        <source>Enable commit message issue helper</source>
+        <target>Aktivera hjälp för ärendehantering i incheckningsmeddelande</target>
+        
+      </trans-unit>
+      <trans-unit id="_issueCommitMessageHelperMaxCount.Caption">
+        <source>Maximum number of issues retrieved</source>
+        <target>Högsta antal hämtade ärenden</target>
+        
+      </trans-unit>
+      <trans-unit id="_manageToken.Text">
+        <source>Manage GitHub personal access token</source>
+        <target>Hantera personlig åtkomsttoken för GitHub</target>
+        
+      </trans-unit>
+      <trans-unit id="_noAssignedIssues.Text">
+        <source>No assigned GitHub issues found</source>
+        <target>Inga tilldelade GitHub-ärenden hittades</target>
+        
+      </trans-unit>
+      <trans-unit id="_noTokenError.Text">
+        <source>No GitHub personal access token (PAT) defined</source>
+        <target>Ingen personlig åtkomsttoken (PAT) för GitHub definierad</target>
+        
+      </trans-unit>
+      <trans-unit id="_noteRestartNeeded.Text">
+        <source>Note: Git Extensions need to be restarted so that the token is taken into account.</source>
+        <target>Obs: Git Extensions måste startas om för att token ska träda i kraft.</target>
+        
+      </trans-unit>
+      <trans-unit id="_openLinkFailed.Text">
+        <source>Fail to open the link. Reason: </source>
+        <target>Det gick inte att öppna länken. Orsak: </target>
+        
+      </trans-unit>
+      <trans-unit id="_tokenAlreadyExist.Text">
+        <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
+        <target>Du har redan en personlig åtkomsttoken. För att få en ny måste du först ta bort den gamla under Tillägg &gt; Tilläggsinställningar.</target>
+        
+      </trans-unit>
+      <trans-unit id="_viewInWebSite.Text">
+        <source>View in {0}</source>
+        <target>Visa i {0}</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="lblApiToken.Text">
+        <source>API &amp;Token</source>
+        <target>API-&amp;amp;token</target>
+        
+      </trans-unit>
+      <trans-unit id="lblApiUrl.Text">
+        <source>&amp;API URL</source>
+        <target>&amp;amp;API-URL</target>
+        
+      </trans-unit>
+      <trans-unit id="lblOwner.Text">
+        <source>&amp;Owner</source>
+        <target>&amp;amp;Ägare</target>
+        
+      </trans-unit>
+      <trans-unit id="lblRepository.Text">
+        <source>&amp;Repository</source>
+        <target>&amp;amp;Arkiv</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkTokenManagement.Text">
+        <source>Create a GitHub personal access token</source>
+        <target>Skapa en personlig åtkomsttoken för GitHub</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitImpactPlugin" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Impact Graph</source>
+        <target>Effektgraf</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitlabSettingsUserControl" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="GetProjectIdLink.Text">
+        <source>Get Project ID from server</source>
+        <target>Hämta projekt-ID från servern</target>
+        
+      </trans-unit>
+      <trans-unit id="GetProjectIdStatusText.Text">
+        <source>Failed to obtain project from server. Try to specify valid API token or check instance URL</source>
+        <target>Det gick inte att hämta projektet från servern. Försök ange en giltig API-token eller kontrollera instans-URL:en</target>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target>Gå till sidan för tokenhantering</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Instance URL</source>
+        <target>Instans-URL</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Api Token</source>
+        <target>Api-token</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>Project ID</source>
+        <target>Projekt-ID</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitStatisticsPlugin" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Statistics</source>
+        <target>Statistik</target>
+        
+      </trans-unit>
+      <trans-unit id="_codeFiles.Caption">
+        <source>Code files</source>
+        <target>Kodfiler</target>
+        
+      </trans-unit>
+      <trans-unit id="_ignoreDirectories.Caption">
+        <source>Directories to ignore (EndsWith)</source>
+        <target>Kataloger att ignorera (slutar med)</target>
+        
+      </trans-unit>
+      <trans-unit id="_ignoreSubmodules.Caption">
+        <source>Ignore submodules</source>
+        <target>Ignorera undermoduler</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GourcePlugin" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Gource</source>
+        <target>Gource</target>
+        
+      </trans-unit>
+      <trans-unit id="_bytesDownloaded.Text">
+        <source>{0} bytes downloaded.</source>
+        <target>{0} bytes nedladdade.</target>
+        
+      </trans-unit>
+      <trans-unit id="_cannotFindGource.Text">
+        <source>Cannot find Gource.
+Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Hittar inte Gource.
+Ladda ner Gource och ange sökvägen i inställningsdialogen för tillägg.</target>
+        
+      </trans-unit>
+      <trans-unit id="_currentDirectoryIsNotValidGit.Text">
+        <source>The current directory is not a valid git repository.
+
+Gource can be only be started from a valid git repository.</source>
+        <target>Den aktuella katalogen är inte ett giltigt git-arkiv.
+
+Gource kan endast startas från ett giltigt git-arkiv.</target>
+        
+      </trans-unit>
+      <trans-unit id="_doYouWantDownloadGource.Text">
+        <source>There is no path to Gource configured.
+
+Do you want to automatically download Gource?</source>
+        <target>Det finns ingen sökväg till Gource konfigurerad.
+
+Vill du automatiskt ladda ner Gource?</target>
+        
+      </trans-unit>
+      <trans-unit id="_download.Text">
+        <source>Download</source>
+        <target>Ladda ner</target>
+        
+      </trans-unit>
+      <trans-unit id="_downloadingFailed.Text">
+        <source>Downloading failed.
+Please download Gource and set the path in the plugins settings dialog.</source>
+        <target>Nedladdningen misslyckades.
+Ladda ner Gource och ange sökvägen i inställningsdialogen för tillägg.</target>
+        
+      </trans-unit>
+      <trans-unit id="_gource.Text">
+        <source>Gource</source>
+        <target>Gource</target>
+        
+      </trans-unit>
+      <trans-unit id="_gourceArguments.Caption">
+        <source>Arguments</source>
+        <target>Argument</target>
+        
+      </trans-unit>
+      <trans-unit id="_gourceDownloadedAndUnzipped.Text">
+        <source>Gource has been downloaded and unzipped.</source>
+        <target>Gource har laddats ner och packats upp.</target>
+        
+      </trans-unit>
+      <trans-unit id="_gourcePath.Caption">
+        <source>Path to Gource</source>
+        <target>Sökväg till Gource</target>
+        
+      </trans-unit>
+      <trans-unit id="_resetConfigPath.Text">
+        <source>Cannot find Gource in the configured path: {0}.
+
+Do you want to reset the configured path?</source>
+        <target>Hittar inte Gource på den konfigurerade sökvägen: {0}.
+
+Vill du återställa den konfigurerade sökvägen?</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GourceStart" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Gource</source>
+        <target>Gource</target>
+        
+      </trans-unit>
+      <trans-unit id="ArgumentsLabel.Text">
+        <source>Arguments</source>
+        <target>Argument</target>
+        
+      </trans-unit>
+      <trans-unit id="GourceBrowse.Text">
+        <source>Browse</source>
+        <target>Bläddra</target>
+        
+      </trans-unit>
+      <trans-unit id="WorkingDirBrowse.Text">
+        <source>Browse</source>
+        <target>Bläddra</target>
+        
+      </trans-unit>
+      <trans-unit id="button1.Text">
+        <source>Start</source>
+        <target>Starta</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Path to Gource</source>
+        <target>Sökväg till Gource</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Repository</source>
+        <target>Arkiv</target>
+        
+      </trans-unit>
+      <trans-unit id="linkLabel1.Text">
+        <source>Gource project</source>
+        <target>Gource-projekt</target>
+        
+      </trans-unit>
+      <trans-unit id="linkLabel2.Text">
+        <source>Gource command line</source>
+        <target>Gource-kommandorad</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="JenkinsSettingsUserControl" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="lblIgnoreBuildBranch.Text">
+        <source>Ignore build for branch</source>
+        <target>Ignorera bygge för gren</target>
+        
+      </trans-unit>
+      <trans-unit id="lblJenkinsServerUrl.Text">
+        <source>Jenkins server URL</source>
+        <target>Jenkins-server-URL</target>
+        
+      </trans-unit>
+      <trans-unit id="lblProjectName.Text">
+        <source>Project name</source>
+        <target>Projektnamn</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Proxy Switcher</source>
+        <target>Proxyväxlare</target>
+        
+      </trans-unit>
+      <trans-unit id="ApplyGlobally_CheckBox.Text">
+        <source>Apply globally</source>
+        <target>Verkställ globalt</target>
+        
+      </trans-unit>
+      <trans-unit id="GlobalHttpProxy_Label.Text">
+        <source>Global http.proxy:</source>
+        <target>Global http.proxy:</target>
+        
+      </trans-unit>
+      <trans-unit id="LocalHttpProxy_Label.Text">
+        <source>Local http.proxy:</source>
+        <target>Lokal http.proxy:</target>
+        
+      </trans-unit>
+      <trans-unit id="SetProxy_Button.Text">
+        <source>Set proxy</source>
+        <target>Ange proxy</target>
+        
+      </trans-unit>
+      <trans-unit id="UnsetProxy_Button.Text">
+        <source>Unset proxy</source>
+        <target>Ta bort proxy</target>
+        
+      </trans-unit>
+      <trans-unit id="_pleaseSetProxy.Text">
+        <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
+        <target>Det finns ingen proxy konfigurerad. Ange proxyvärden i tilläggsinställningarna.</target>
+        
+      </trans-unit>
+      <trans-unit id="_pluginDescription.Text">
+        <source>Proxy Switcher</source>
+        <target>Proxyväxlare</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ProxySwitcherPlugin" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Proxy Switcher</source>
+        <target>Proxyväxlare</target>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxy.Caption">
+        <source>HTTP proxy</source>
+        <target>HTTP-proxy</target>
+        
+      </trans-unit>
+      <trans-unit id="HttpProxyPort.Caption">
+        <source>HTTP proxy port</source>
+        <target>HTTP-proxyport</target>
+        
+      </trans-unit>
+      <trans-unit id="Password.Caption">
+        <source>Password</source>
+        <target>Lösenord</target>
+        
+      </trans-unit>
+      <trans-unit id="Username.Caption">
+        <source>Username</source>
+        <target>Användarnamn</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ReleaseNotesGeneratorForm" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="$this.Text">
+        <source>Release Notes Generator</source>
+        <target>Generator för utgåvor</target>
+        
+      </trans-unit>
+      <trans-unit id="_caption.Text">
+        <source>Invalid input</source>
+        <target>Ogiltig indata</target>
+        
+      </trans-unit>
+      <trans-unit id="_commitLogFrom.Text">
+        <source>Commit log from &apos;{0}&apos; to &apos;{1}&apos; ({2}):</source>
+        <target>Incheckningslogg från ’{0}’ till ’{1}’ ({2}):</target>
+        
+      </trans-unit>
+      <trans-unit id="_fromCommitNotSpecified.Text">
+        <source>&apos;From&apos; commit must be specified</source>
+        <target>’Från’-incheckning måste anges</target>
+        
+      </trans-unit>
+      <trans-unit id="_toCommitNotSpecified.Text">
+        <source>&apos;To&apos; commit must be specified</source>
+        <target>’Till’-incheckning måste anges</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonCopyAsHtml.Text">
+        <source>as HTML table</source>
+        <target>som HTML-tabell</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonCopyAsTextTableSpace.Text">
+        <source>as text table (spaces)</source>
+        <target>som textabell (mellanslag)</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonCopyAsTextTableTab.Text">
+        <source>as text table (tabs)</source>
+        <target>som textabell (tabbar)</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonCopyOrigOutput.Text">
+        <source>original output</source>
+        <target>ursprunglig utdata</target>
+        
+      </trans-unit>
+      <trans-unit id="buttonGenerate.Text">
+        <source>Generate</source>
+        <target>Generera</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBox1.Text">
+        <source>Result</source>
+        <target>Resultat</target>
+        
+      </trans-unit>
+      <trans-unit id="groupBoxCopy.Text">
+        <source>Copy to clipboard</source>
+        <target>Kopiera</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Commit expression &quot;To&quot; (including):</source>
+        <target>Incheckningsuttryck “Till” (inklusive):</target>
+        
+      </trans-unit>
+      <trans-unit id="label10.Text">
+        <source>separate columns with spaces</source>
+        <target>avgränsa kolumner med mellanslag</target>
+        
+      </trans-unit>
+      <trans-unit id="label11.Text">
+        <source>Clipboard will contain HTML code (plain text) and HTML format
+which can be pasted to programs like MS Word or LibreOffice Writer.</source>
+        <target>Urklipp kommer att innehålla HTML-kod (ren text) och HTML-format
+som kan klistras in i program som MS Word eller LibreOffice Writer.</target>
+        
+      </trans-unit>
+      <trans-unit id="label2.Text">
+        <source>Commit expression &quot;From&quot; (excluding):</source>
+        <target>Incheckningsuttryck “Från” (exklusive):</target>
+        
+      </trans-unit>
+      <trans-unit id="label3.Text">
+        <source>git log arguments:</source>
+        <target>git log-argument:</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>{0} = from; {1} = to</source>
+        <target>{0} = från; {1} = till</target>
+        
+      </trans-unit>
+      <trans-unit id="label5.Text">
+        <source>Sorting: Most recent revisions are listed on top.</source>
+        <target>Sortering: De senaste revisionerna listas överst.</target>
+        
+      </trans-unit>
+      <trans-unit id="label6.Text">
+        <source>Revisions count = </source>
+        <target>Antal revisioner = </target>
+        
+      </trans-unit>
+      <trans-unit id="label7.Text">
+        <source>(Commit expressions can be commit hashes,
+branch names, tag names)</source>
+        <target>(Incheckningsuttryck kan vara incheckningshashar,
+grennamn, taggnamn)</target>
+        
+      </trans-unit>
+      <trans-unit id="label8.Text">
+        <source>as is</source>
+        <target>som det är</target>
+        
+      </trans-unit>
+      <trans-unit id="label9.Text">
+        <source>separate columns with tabs</source>
+        <target>avgränsa kolumner med tabbar</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRevCount.Text">
+        <source>n/a</source>
+        <target>n/a</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="ReleaseNotesGeneratorPlugin" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="Description.Text">
+        <source>Release Notes Generator</source>
+        <target>Generator för utgåvor</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="SettingsUserControl" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="ExtractLink.Text">
+        <source>Extract data from a build result url copied in the clipboard</source>
+        <target>Extrahera data från en byggresultat-URL som kopierats till urklipp</target>
+        
+      </trans-unit>
+      <trans-unit id="TokenManagementLink.Text">
+        <source>Go to token management page</source>
+        <target>Gå till sidan för tokenhantering</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Could not extract data</source>
+        <target>Det gick inte att extrahera data</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn&apos;t contain a valid build url.
+
+Please copy the url of the build into the clipboard before retrying.
+(Should contain at least the &quot;buildId&quot; parameter)</source>
+        <target>Urklippet innehåller inte en giltig bygg-URL.
+
+Kopiera URL:en för bygget till urklipp innan du försöker igen.
+(Ska innehålla åtminstone parametern “buildId”)</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadBuildDefinitionInfoMessage.Text">
+        <source>Error while trying to retrieve build definition information from url.
+
+Please ensure that the url is valid and that the API token has access to build and project information.</source>
+        <target>Ett fel uppstod när byggdefinitionsinformation skulle hämtas från URL:en.
+
+Kontrollera att URL:en är giltig och att API-token har åtkomst till bygg- och projektinformation.</target>
+        
+      </trans-unit>
+      <trans-unit id="_infoNoApiTokenMessage.Text">
+        <source>Unable to retrieve build definition information without API token. Field will be left blank.</source>
+        <target>Det gick inte att hämta byggdefinitionsinformation utan API-token. Fältet lämnas tomt.</target>
+        
+      </trans-unit>
+      <trans-unit id="label1.Text">
+        <source>Examples:
+ - https://dev.azure.com/yourorganization/projectname/
+ - https://yourhost:8080/tfs/collectionname/projectname/
+ - https://yourorganization.visualstudio.com/projectname/</source>
+        <target>Exempel:
+ - https://dev.azure.com/dinorganisation/projektnamn/
+ - https://dinvard:8080/tfs/samlingsnamn/projektnamn/
+ - https://dinorganisation.visualstudio.com/projektnamn/</target>
+        
+      </trans-unit>
+      <trans-unit id="label4.Text">
+        <source>You need to create a token with the following scopes:
+ - &apos;Build (read)&apos;
+ - &apos;Project and team (read)&apos;</source>
+        <target>Du måste skapa en token med följande behörigheter:
+ - ’Build (read)’
+ - ’Project and team (read)’</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRegexError.Text">
+        <source>The &apos;Build definition name&apos; regular expression is not valid and won&apos;t be saved!</source>
+        <target>Det reguljära uttrycket för “Byggdefinitionsnamn” är inte giltigt och kommer inte att sparas!</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="TeamCitySettingsUserControl" source-language="en" target-language="sv">
+    <body>
+      <trans-unit id="CheckBoxLogAsGuest.Text">
+        <source>Log as guest to display the build report</source>
+        <target>Logga in som gäst för att visa byggrapporten</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardCaption.Text">
+        <source>Build url not valid</source>
+        <target>Bygg-URL inte giltig</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToExtractDataFromClipboardMessage.Text">
+        <source>The clipboard doesn&apos;t contain a valid build url.
+
+Please copy in the clipboard the url of the build before retrying.
+(Should contain at least the &quot;buildTypeId&quot; parameter)</source>
+        <target>Urklippet innehåller inte en giltig bygg-URL.
+
+Kopiera URL:en för bygget till urklipp innan du försöker igen.
+(Ska innehålla åtminstone parametern “buildTypeId”)</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectCaption.Text">
+        <source>Error when loading the projects and build list</source>
+        <target>Fel vid inläsning av projekt- och bygglistan</target>
+        
+      </trans-unit>
+      <trans-unit id="_failToLoadProjectMessage.Text">
+        <source>Failed to load the projects and build list.
+Please verify the server url.</source>
+        <target>Det gick inte att läsa in projekt- och bygglistan.
+Kontrollera serverns URL.</target>
+        
+      </trans-unit>
+      <trans-unit id="labelRegexError.Text">
+        <source>The &quot;Build Id Filter&quot; regular expression is not valid and won&apos;t be saved!</source>
+        <target>Det reguljära uttrycket för “Build Id Filter” är inte giltigt och kommer inte att sparas!</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkExtractDataFromBuildUrlCopiedInTheClipboard.Text">
+        <source>Extract the data from the build url copied in the clipboard</source>
+        <target>Extrahera data från bygg-URL:en som kopierats till urklipp</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

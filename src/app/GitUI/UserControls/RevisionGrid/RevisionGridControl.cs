@@ -194,6 +194,9 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     internal Action<string>? SelectInLeftPanel { get;  set; } = null;
 
+    internal void SetAheadBehindDataProvider(IAheadBehindDataProvider? provider)
+        => _messageColumnProvider.SetAheadBehindDataProvider(provider);
+
     public RevisionGridControl()
         : this(commitDataManager: null)
     {
@@ -321,7 +324,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         _gridView.KeyPress += (_, e) => _quickSearchProvider.OnKeyPress(e);
         _gridView.MouseDown += OnGridViewMouseDown;
         _gridView.CellMouseDown += OnGridViewCellMouseDown;
-        _gridView.MouseDoubleClick += OnGridViewDoubleClick;
+        _gridView.CellMouseDoubleClick += OnGridViewDoubleClick;
         _gridView.MouseClick += OnGridViewMouseClick;
         _gridView.CellMouseMove += OnGridViewCellMouseMove;
         _gridView.CellMouseEnter += _gridView_CellMouseEnter;
@@ -1862,11 +1865,23 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         return spi is not null;
     }
 
-    private void OnGridViewDoubleClick(object? sender, MouseEventArgs e)
+    private void OnGridViewDoubleClick(object? sender, DataGridViewCellMouseEventArgs e)
     {
         if (e.Button != MouseButtons.Left)
         {
             return;
+        }
+
+        // If a tracking/tracked ref label was clicked in the message column, go to the tracking/tracked branch.
+        if (e.RowIndex >= 0 && e.ColumnIndex == _messageColumnProvider.Index)
+        {
+            Rectangle cellBounds = _gridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, cutOverflow: false);
+            Point clientPoint = new(cellBounds.X + e.X, cellBounds.Y + e.Y);
+            if (_messageColumnProvider.HitTest(e.RowIndex, clientPoint)?.GitRef is { } gitRef)
+            {
+                GoToRelatedRef(gitRef, handleGone: localBranch => UICommands.StartDeleteBranchDialog(this, localBranch));
+                return;
+            }
         }
 
         DoubleClickRevision?.Invoke(this, new DoubleClickRevisionEventArgs(GetSelectedRevisionOrDefault()));
@@ -1903,24 +1918,38 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void OnGridViewCellMouseMove(object? sender, DataGridViewCellMouseEventArgs e)
     {
-        _toolTipProvider.OnCellMouseMove(e);
+        (int rowIndex, RefLabelHitInfo? hitInfo) = GetHitInfo();
 
-        if (e.RowIndex < 0 || e.ColumnIndex != _messageColumnProvider.Index)
+        _toolTipProvider.OnCellMouseMove(e, hitInfo);
+
+        if (_messageColumnProvider.SetHighlight(rowIndex, hitInfo))
         {
-            ClearRefHighlight();
-            return;
-        }
-
-        Rectangle cellBounds = _gridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, cutOverflow: false);
-        Point clientPoint = new(cellBounds.X + e.X, cellBounds.Y + e.Y);
-        RefLabelHitInfo? hitInfo = _messageColumnProvider.HitTest(e.RowIndex, clientPoint);
-
-        if (_messageColumnProvider.SetHighlight(e.RowIndex, hitInfo))
-        {
-            _gridView.InvalidateRow(e.RowIndex);
+            if (rowIndex < 0)
+            {
+                _gridView.Invalidate();
+            }
+            else
+            {
+                _gridView.InvalidateRow(e.RowIndex);
+            }
         }
 
         _gridView.Cursor = hitInfo is not null ? Cursors.Hand : Cursors.Default;
+
+        return;
+
+        (int RowIndex, RefLabelHitInfo? HitInfo) GetHitInfo()
+        {
+            if (e.RowIndex < 0 || e.ColumnIndex != _messageColumnProvider.Index)
+            {
+                return (-1, null);
+            }
+
+            Rectangle cellBounds = _gridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, cutOverflow: false);
+            Point clientPoint = new(cellBounds.X + e.X, cellBounds.Y + e.Y);
+
+            return (e.RowIndex, _messageColumnProvider.HitTest(e.RowIndex, clientPoint));
+        }
     }
 
     private void OnGridViewCellMouseLeave(object? sender, DataGridViewCellEventArgs e)
@@ -1954,19 +1983,72 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
                 return;
             }
 
-            if (e.Button != MouseButtons.Right)
+            bool addRelatedRefToSelection = e.Button == MouseButtons.Left && ModifierKeys.HasFlag(Keys.Control)
+                && _gridView.SelectedRows is { Count: 1 } selectedRows && selectedRows[0].Index == e.RowIndex;
+            if (e.Button != MouseButtons.Right && !addRelatedRefToSelection)
             {
                 return;
             }
 
-            // Check if a ref label was right-clicked in the message column
-            _rightClickedHitInfo = null;
+            // Check if a ref label was clicked in the message column
+            RefLabelHitInfo? hitInfo = null;
             if (e.RowIndex >= 0 && e.ColumnIndex == _messageColumnProvider.Index)
             {
                 Rectangle cellBounds = _gridView.GetCellDisplayRectangle(e.ColumnIndex, e.RowIndex, cutOverflow: false);
                 Point clientPoint = new(cellBounds.X + e.X, cellBounds.Y + e.Y);
-                _rightClickedHitInfo = _messageColumnProvider.HitTest(e.RowIndex, clientPoint);
+                hitInfo = _messageColumnProvider.HitTest(e.RowIndex, clientPoint);
             }
+
+            if (addRelatedRefToSelection)
+            {
+                int topRow = _gridView.FirstDisplayedScrollingRowIndex;
+
+                if (hitInfo?.GitRef is { } gitRef)
+                {
+                    bool isVirtualAheadBehingRef = gitRef.Guid is null;
+                    if (isVirtualAheadBehingRef)
+                    {
+                        // Let the related ref be added to the selection afterwards in order to simulate standard Ctrl+click behavior.
+                        // For this, let DataGridView's native Ctrl+click processing select this revision again first.
+                        _gridView.ClearSelection();
+                        BeginInvoke(() =>
+                        {
+                            GoToRelatedRef(gitRef, toggleSelection: true);
+                            try
+                            {
+                                _gridView.FirstDisplayedScrollingRowIndex = topRow;
+                            }
+                            catch
+                            {
+                                // ignore
+                            }
+                        });
+                        return;
+                    }
+
+                    // Select the related ref.
+                    GoToRelatedRef(gitRef);
+                }
+                else if (GetRevision(e.RowIndex) is { IsArtificial: true })
+                {
+                    // Diff with the previous revision as amend preview.
+                    GoToRef("HEAD~1", showNoRevisionMsg: false);
+                }
+                else
+                {
+                    return;
+                }
+
+                // The related or the previous revision is now selected. Return early so that the DataGridView's
+                // native Ctrl+click processing adds the clicked row to the selection (instead of
+                // toggling it off again, which would happen if we selected it here first).
+
+                _gridView.FirstDisplayedScrollingRowIndex = topRow;
+
+                return;
+            }
+
+            _rightClickedHitInfo = hitInfo;
 
             if (_latestSelectedRowIndex == e.RowIndex
                 && _latestSelectedRowIndex < _gridView.Rows.Count
@@ -2036,7 +2118,7 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
 
     private void ResetChangesToolStripMenuItemClick(object sender, EventArgs e)
     {
-        UICommands.StartResetChangesDialog(this, Module.GetWorkTreeFiles(), onlyWorkTree: false);
+        UICommands.StartResetChangesDialog(this, Module.GetWorkTreeFiles(), onlyWorkTree: LatestSelectedRevision?.ObjectId == ObjectId.WorkTreeId);
         ArtificialChanged?.Invoke(this, EventArgs.Empty);
     }
 
@@ -2158,13 +2240,18 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         }
 
         IGitRef? clickedRef = _rightClickedHitInfo?.GitRef;
+        string? relatedBranch = clickedRef is { Guid: null }
+            ? clickedRef.MergeWith.StartsWith(GitRefName.RefsRemotesPrefix)
+                ? clickedRef.MergeWith[GitRefName.RefsRemotesPrefix.Length..]
+                : clickedRef.MergeWith[GitRefName.RefsHeadsPrefix.Length..]
+            : null;
         _rightClickedHitInfo = null;
         Func<IEnumerable<IGitRef>, IEnumerable<IGitRef>> filterRefs = clickedRef is null
             ? refs => refs
-            : refs => refs.Where(r => r == clickedRef);
+            : refs => refs.Where(r => r == clickedRef || r.Name == relatedBranch);
         copyToClipboardToolStripMenuItem.SetFilterRefsFunc(clickedRef is null
             ? refNames => refNames
-            : refNames => refNames.Where(r => r == clickedRef.Name));
+            : refNames => refNames.Where(r => r == clickedRef.Name || r == relatedBranch));
 
         bool inTheMiddleOfBisect = Module.InTheMiddleOfBisect();
         SetEnabled(markRevisionAsBadToolStripMenuItem, inTheMiddleOfBisect);
@@ -3149,6 +3236,32 @@ public sealed partial class RevisionGridControl : GitModuleControl, ICheckRefs, 
         else if (showNoRevisionMsg)
         {
             MessageBoxes.Show(this, _noRevisionFoundError.Text, TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+    }
+
+    private void GoToRelatedRef(IGitRef gitRef, Action<string>? handleGone = null, bool toggleSelection = false)
+    {
+        if (gitRef.Guid is null)
+        {
+            if (gitRef.Name == AheadBehindData.GoneSymbol)
+            {
+                handleGone?.Invoke(gitRef.MergeWith[GitRefName.RefsHeadsPrefix.Length..]);
+            }
+            else
+            {
+                GoToRef(gitRef.CompleteName, showNoRevisionMsg: true, toggleSelection);
+            }
+        }
+        else if (_messageColumnProvider.GetAheadBehindData(gitRef.IsRemote, gitRef.CompleteName) is { } aheadBehindData)
+        {
+            if (aheadBehindData.AheadCount == AheadBehindData.Gone)
+            {
+                handleGone?.Invoke(gitRef.Name);
+            }
+            else
+            {
+                GoToRef(gitRef.IsRemote ? aheadBehindData.Branch : aheadBehindData.RemoteRef, showNoRevisionMsg: true, toggleSelection);
+            }
         }
     }
 

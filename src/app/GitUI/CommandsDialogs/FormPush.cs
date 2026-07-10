@@ -1040,7 +1040,7 @@ public partial class FormPush : GitModuleForm
             Validates.NotNull(_branchTable);
             _branchTable.BeginLoadData();
             AheadBehindDataProvider aheadBehindDataProvider = new(() => Module.GitExecutable);
-            IDictionary<string, AheadBehindData>? aheadBehindData = aheadBehindDataProvider.GetData();
+            IReadOnlyDictionary<string, AheadBehindData>? aheadBehindData = aheadBehindDataProvider.GetData();
 
             // Add all the local branches.
             foreach (IGitRef head in localHeads)

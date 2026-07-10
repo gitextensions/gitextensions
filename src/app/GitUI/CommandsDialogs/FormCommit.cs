@@ -1386,10 +1386,15 @@ public sealed partial class FormCommit : GitModuleForm
 
             static string GetTextToValidate(string text)
             {
-                string[] lines = text.Split(Delimiters.NewLines, StringSplitOptions.None);
-                if (text.StartsWith(CommitKind.Amend.GetPrefix()) && lines.Length > 2 && lines[1].Length == 0)
+                if (!text.StartsWith(CommitKind.Amend.GetPrefix()) || !text.ContainsAny(Delimiters.LineFeedAndCarriageReturnSearchValues))
                 {
-                    return string.Join(Environment.NewLine, lines.Skip(2));
+                    return text;
+                }
+
+                string[] lines = text.Split(Delimiters.NewLines, StringSplitOptions.None);
+                if (lines.Length > 2 && lines[1].Length == 0)
+                {
+                    return string.Join(Environment.NewLine, lines.AsSpan(2));
                 }
 
                 return text;
@@ -1429,7 +1434,7 @@ public sealed partial class FormCommit : GitModuleForm
                 string pattern = regexMatch.Groups["pattern"].Value;
                 int groupIndex = 1;
 
-                if (int.TryParse(regexMatch.Groups["index"].Value, out int parsedIndex))
+                if (int.TryParse(regexMatch.Groups["index"].ValueSpan, out int parsedIndex))
                 {
                     groupIndex = parsedIndex;
                 }
@@ -1536,8 +1541,9 @@ public sealed partial class FormCommit : GitModuleForm
 
         Staged.ClearSelected();
 
-        _currentSelection = Unstaged.SelectedItems.Items().ToList();
-        FileStatusItem? item = Unstaged.SelectedItem;
+        FileStatusItem[] selectedItems = Unstaged.SelectedItems.ToArray();
+        _currentSelection = selectedItems.Items().ToArray();
+        FileStatusItem? item = selectedItems.Contains(Unstaged.FocusedItem) ? Unstaged.FocusedItem : selectedItems.FirstOrDefault();
         ShowChanges(item, staged: false);
     }
 
@@ -1801,8 +1807,9 @@ public sealed partial class FormCommit : GitModuleForm
 
         Unstaged.ClearSelected();
 
-        _currentSelection = Staged.SelectedItems.Items().ToList();
-        FileStatusItem? item = Staged.SelectedItem;
+        FileStatusItem[] selectedItems = Staged.SelectedItems.ToArray();
+        _currentSelection = selectedItems.Items().ToArray();
+        FileStatusItem? item = selectedItems.Contains(Staged.FocusedItem) ? Staged.FocusedItem : selectedItems.FirstOrDefault();
         ShowChanges(item, staged: true);
     }
 

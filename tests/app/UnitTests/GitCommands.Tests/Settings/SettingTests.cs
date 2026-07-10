@@ -315,6 +315,300 @@ internal sealed class SettingTests
         });
     }
 
+    [Test]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Should_create_bool_setting(bool defaultValue)
+    {
+        string pathName = Guid.NewGuid().ToString();
+        string settingName = Guid.NewGuid().ToString();
+        AppSettingsPath settingsPath = new(pathName);
+
+        ISetting<bool> setting = Setting.Create(settingsPath, settingName, defaultValue);
+
+        setting.Should().NotBeNull();
+        setting.Name.Should().Be(settingName);
+        setting.Default.Should().Be(defaultValue);
+        setting.Value.Should().Be(defaultValue);
+        setting.FullPath.Should().Be($"{pathName}.{settingName}");
+    }
+
+    [Test]
+    [TestCase(false, false)]
+    [TestCase(false, true)]
+    [TestCase(true, false)]
+    [TestCase(true, true)]
+    public void Should_save_bool_setting(bool defaultValue, bool value)
+    {
+        string pathName = Guid.NewGuid().ToString();
+        string settingName = Guid.NewGuid().ToString();
+        AppSettingsPath settingsPath = new(pathName);
+
+        AppSettings.UsingContainer(_settingContainer, () =>
+        {
+            ISetting<bool> setting = Setting.Create(settingsPath, settingName, defaultValue);
+
+            setting.Value = value;
+
+            AppSettings.SaveSettings();
+        });
+
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+
+        File.WriteAllText(filePath, File.ReadAllText(_settingFilePath));
+
+        DistributedSettings container = new(lowerPriority: null, GitExtSettingsCache.Create(filePath), SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            ISetting<bool> setting = Setting.Create(settingsPath, settingName, defaultValue);
+
+            setting.Value.Should().Be(value);
+        });
+    }
+
+    [Test]
+    [TestCase("true", true)]
+    [TestCase("True", true)]
+    [TestCase("false", false)]
+    [TestCase("False", false)]
+    public void Should_read_bool_setting_case_insensitively(string storedValue, bool expected)
+    {
+        string pathName = Guid.NewGuid().ToString();
+        string settingName = Guid.NewGuid().ToString();
+        AppSettingsPath settingsPath = new(pathName);
+
+        AppSettings.UsingContainer(_settingContainer, () =>
+        {
+            ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
+
+            setting.Value = storedValue;
+
+            AppSettings.SaveSettings();
+        });
+
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+
+        File.WriteAllText(filePath, File.ReadAllText(_settingFilePath));
+
+        DistributedSettings container = new(lowerPriority: null, GitExtSettingsCache.Create(filePath), SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            ISetting<bool> setting = Setting.Create(settingsPath, settingName, !expected);
+
+            setting.Value.Should().Be(expected);
+        });
+    }
+
+    [Test]
+    [TestCase("TRUE", false)]
+    [TestCase("FALSE", true)]
+    [TestCase("1", false)]
+    [TestCase("yes", true)]
+    public void Should_return_default_for_bool_setting_if_stored_value_is_unrecognized(string storedValue, bool defaultValue)
+    {
+        string pathName = Guid.NewGuid().ToString();
+        string settingName = Guid.NewGuid().ToString();
+        AppSettingsPath settingsPath = new(pathName);
+
+        AppSettings.UsingContainer(_settingContainer, () =>
+        {
+            ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
+
+            setting.Value = storedValue;
+
+            AppSettings.SaveSettings();
+        });
+
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+
+        File.WriteAllText(filePath, File.ReadAllText(_settingFilePath));
+
+        DistributedSettings container = new(lowerPriority: null, GitExtSettingsCache.Create(filePath), SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            ISetting<bool> setting = Setting.Create(settingsPath, settingName, defaultValue);
+
+            setting.Value.Should().Be(defaultValue);
+        });
+    }
+
+    [Test]
+    [TestCase(false, "false")]
+    [TestCase(true, "true")]
+    public void Should_store_bool_setting_as_lowercase_string(bool value, string expectedStoredString)
+    {
+        string pathName = Guid.NewGuid().ToString();
+        string settingName = Guid.NewGuid().ToString();
+        AppSettingsPath settingsPath = new(pathName);
+
+        AppSettings.UsingContainer(_settingContainer, () =>
+        {
+            ISetting<bool> setting = Setting.Create(settingsPath, settingName, !value);
+
+            setting.Value = value;
+
+            AppSettings.SaveSettings();
+        });
+
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+
+        File.WriteAllText(filePath, File.ReadAllText(_settingFilePath));
+
+        DistributedSettings container = new(lowerPriority: null, GitExtSettingsCache.Create(filePath), SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
+
+            setting.Value.Should().Be(expectedStoredString);
+        });
+    }
+
+    [Test]
+    [TestCase("true", true)]
+    [TestCase("True", true)]
+    [TestCase("false", false)]
+    [TestCase("False", false)]
+    public void Should_read_nullable_bool_setting_case_insensitively(string storedValue, bool? expected)
+    {
+        string pathName = Guid.NewGuid().ToString();
+        string settingName = Guid.NewGuid().ToString();
+        AppSettingsPath settingsPath = new(pathName);
+
+        AppSettings.UsingContainer(_settingContainer, () =>
+        {
+            ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
+
+            setting.Value = storedValue;
+
+            AppSettings.SaveSettings();
+        });
+
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+
+        File.WriteAllText(filePath, File.ReadAllText(_settingFilePath));
+
+        DistributedSettings container = new(lowerPriority: null, GitExtSettingsCache.Create(filePath), SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            ISetting<bool?> setting = Setting.CreateNullableBool(settingsPath, settingName);
+
+            setting.Value.Should().Be(expected);
+        });
+    }
+
+    [Test]
+    [TestCase("TRUE")]
+    [TestCase("FALSE")]
+    [TestCase("1")]
+    [TestCase("yes")]
+    public void Should_return_null_for_nullable_bool_setting_if_stored_value_is_unrecognized(string storedValue)
+    {
+        string pathName = Guid.NewGuid().ToString();
+        string settingName = Guid.NewGuid().ToString();
+        AppSettingsPath settingsPath = new(pathName);
+
+        AppSettings.UsingContainer(_settingContainer, () =>
+        {
+            ISetting<string> setting = Setting.Create(settingsPath, settingName, string.Empty);
+
+            setting.Value = storedValue;
+
+            AppSettings.SaveSettings();
+        });
+
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+
+        File.WriteAllText(filePath, File.ReadAllText(_settingFilePath));
+
+        DistributedSettings container = new(lowerPriority: null, GitExtSettingsCache.Create(filePath), SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            ISetting<bool?> setting = Setting.CreateNullableBool(settingsPath, settingName);
+
+            setting.Value.Should().BeNull();
+        });
+    }
+
+    [Test]
+    [TestCase(null)]
+    [TestCase(false)]
+    [TestCase(true)]
+    public void Should_save_nullable_bool_setting_as_string(bool? value)
+    {
+        string pathName = Guid.NewGuid().ToString();
+        string settingName = Guid.NewGuid().ToString();
+        AppSettingsPath settingsPath = new(pathName);
+
+        AppSettings.UsingContainer(_settingContainer, () =>
+        {
+            ISetting<bool?> setting = Setting.CreateNullableBool(settingsPath, settingName);
+
+            setting.Value = value;
+
+            AppSettings.SaveSettings();
+        });
+
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+
+        File.WriteAllText(filePath, File.ReadAllText(_settingFilePath));
+
+        DistributedSettings container = new(lowerPriority: null, GitExtSettingsCache.Create(filePath), SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            ISetting<bool?> setting = Setting.CreateNullableBool(settingsPath, settingName);
+
+            setting.Value.Should().Be(value);
+        });
+    }
+
+    [Test]
+    [TestCase(false, "false")]
+    [TestCase(true, "true")]
+    [TestCase(null, null)]
+    public void Should_store_nullable_bool_setting_as_lowercase_string(bool? value, string? expectedStoredString)
+    {
+        string pathName = Guid.NewGuid().ToString();
+        string settingName = Guid.NewGuid().ToString();
+        AppSettingsPath settingsPath = new(pathName);
+
+        AppSettings.UsingContainer(_settingContainer, () =>
+        {
+            ISetting<bool?> setting = Setting.CreateNullableBool(settingsPath, settingName);
+
+            setting.Value = value;
+
+            AppSettings.SaveSettings();
+        });
+
+        using TempFileCollection tempFiles = new();
+        string filePath = tempFiles.AddExtension(".settings");
+
+        File.WriteAllText(filePath, File.ReadAllText(_settingFilePath));
+
+        DistributedSettings container = new(lowerPriority: null, GitExtSettingsCache.Create(filePath), SettingLevel.Unknown);
+
+        AppSettings.UsingContainer(container, () =>
+        {
+            ISetting<string?> setting = Setting.CreateNullableString(settingsPath, settingName);
+
+            setting.Value.Should().Be(expectedStoredString);
+        });
+    }
+
     #endregion Bool Setting
 
     #region Char Setting

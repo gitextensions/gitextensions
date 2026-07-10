@@ -1,4 +1,4 @@
-using System.ComponentModel;
+﻿using System.ComponentModel;
 using GitCommands;
 using GitCommands.Config;
 using GitCommands.Git;
@@ -168,12 +168,15 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void Mergetool_Click(object sender, EventArgs e)
     {
-        using (WaitCursorScope.Enter())
+        this.InvokeAndForget(async () =>
         {
-            Directory.SetCurrentDirectory(Module.WorkingDir);
-            Module.RunMergeTool();
-            Initialize();
-        }
+            using (FormBusyScope.Enter(this))
+            {
+                Directory.SetCurrentDirectory(Module.WorkingDir);
+                await Task.Run(() => Module.RunMergeTool());
+                Initialize();
+            }
+        });
     }
 
     private readonly bool _offerCommit;
@@ -540,24 +543,24 @@ public partial class FormResolveConflicts : GitModuleForm
         progressBar.Visible = true;
     }
 
-    private void ResolveItemConflict(ConflictData item)
+    private async Task ResolveItemConflictAsync(ConflictData item)
     {
         ItemType itemType = GetItemType(item.Filename);
         if (itemType == ItemType.Submodule)
         {
-            FormMergeSubmodule form = new(UICommands, item.Filename);
-            if (form.ShowDialog() == DialogResult.OK)
+            using FormMergeSubmodule form = new(UICommands, item.Filename);
+            if (await form.ShowDialogAsync() == DialogResult.OK)
             {
                 StageFile(item.Filename);
             }
         }
         else if (itemType == ItemType.File)
         {
-            ResolveFilesConflict(item);
+            await ResolveFilesConflictAsync(item);
         }
     }
 
-    private void ResolveFilesConflict(ConflictData item)
+    private async Task ResolveFilesConflictAsync(ConflictData item)
     {
         (string? baseFile, string? localFile, string? remoteFile) = Module.CheckoutConflictedFiles(item);
 
@@ -585,8 +588,11 @@ public partial class FormResolveConflicts : GitModuleForm
 
                 if (string.IsNullOrWhiteSpace(_mergetoolCmd) || string.IsNullOrWhiteSpace(_mergetoolPath))
                 {
-                    // mergetool is set, but arguments cannot be manipulated
-                    Module.RunMergeTool(item.Filename);
+                    using (FormBusyScope.Enter(this))
+                    {
+                        // mergetool is set, but arguments cannot be manipulated
+                        await Task.Run(() => Module.RunMergeTool(item.Filename));
+                    }
 
                     // git-mergetool does not provide exit status, do not stage
                     return;
@@ -627,7 +633,10 @@ public partial class FormResolveConflicts : GitModuleForm
                 ExecutionResult res;
                 try
                 {
-                    res = new Executable(_mergetoolPath, Module.WorkingDir).Execute(arguments, throwOnErrorExit: false);
+                    using (FormBusyScope.Enter(this))
+                    {
+                        res = await new Executable(_mergetoolPath, Module.WorkingDir).ExecuteAsync(arguments, throwOnErrorExit: false);
+                    }
                 }
                 catch (Exception)
                 {
@@ -1227,45 +1236,48 @@ public partial class FormResolveConflicts : GitModuleForm
 
     private void OpenMergeTool()
     {
-        using (WaitCursorScope.Enter())
+        this.InvokeAndForget(async () =>
         {
-            try
+            using (FormBusyScope.Enter(this))
             {
-                (IReadOnlyList<ConflictData> conflictItems,
-                    IReadOnlyList<ConflictData> filesDeletedLocallyAndModifiedRemotely,
-                    IReadOnlyList<ConflictData> filesModifiedLocallyAndDeletedRemotely,
-                    IReadOnlyList<ConflictData> filesRemaining)
-                    = GetConflicts();
-
-                _solveMergeConflictApplyToAll = false;
-                foreach (ConflictData conflictData in filesDeletedLocallyAndModifiedRemotely)
+                try
                 {
-                    IncrementProgressBarValue();
-                    ResolveItemConflict(conflictData);
+                    (IReadOnlyList<ConflictData> conflictItems,
+                        IReadOnlyList<ConflictData> filesDeletedLocallyAndModifiedRemotely,
+                        IReadOnlyList<ConflictData> filesModifiedLocallyAndDeletedRemotely,
+                        IReadOnlyList<ConflictData> filesRemaining)
+                        = GetConflicts();
+
+                    _solveMergeConflictApplyToAll = false;
+                    foreach (ConflictData conflictData in filesDeletedLocallyAndModifiedRemotely)
+                    {
+                        IncrementProgressBarValue();
+                        await ResolveItemConflictAsync(conflictData);
+                    }
+
+                    _solveMergeConflictApplyToAll = false;
+                    foreach (ConflictData conflictData in filesModifiedLocallyAndDeletedRemotely)
+                    {
+                        IncrementProgressBarValue();
+                        await ResolveItemConflictAsync(conflictData);
+                    }
+
+                    _solveMergeConflictDialogCheckboxText = string.Empty; // Hide checkbox "apply to all"
+                    _solveMergeConflictApplyToAll = false;
+                    foreach (ConflictData conflictData in filesRemaining)
+                    {
+                        IncrementProgressBarValue();
+                        await ResolveItemConflictAsync(conflictData);
+                    }
                 }
-
-                _solveMergeConflictApplyToAll = false;
-                foreach (ConflictData conflictData in filesModifiedLocallyAndDeletedRemotely)
+                finally
                 {
-                    IncrementProgressBarValue();
-                    ResolveItemConflict(conflictData);
-                }
-
-                _solveMergeConflictDialogCheckboxText = string.Empty; // Hide checkbox "apply to all"
-                _solveMergeConflictApplyToAll = false;
-                foreach (ConflictData conflictData in filesRemaining)
-                {
-                    IncrementProgressBarValue();
-                    ResolveItemConflict(conflictData);
+                    _solveMergeConflictApplyToAll = false;
+                    StopAndHideProgressBar();
+                    Initialize();
                 }
             }
-            finally
-            {
-                _solveMergeConflictApplyToAll = false;
-                StopAndHideProgressBar();
-                Initialize();
-            }
-        }
+        });
     }
 
     private void OpenMergetool_Click(object sender, EventArgs e)
@@ -1280,20 +1292,23 @@ public partial class FormResolveConflicts : GitModuleForm
         {
             // "main menu" clicked, cancel dropdown manually, invoke default mergetool
             item.HideDropDown();
-            item.Owner!.Hide();
+            item.Owner?.Hide();
         }
 
-        using (WaitCursorScope.Enter())
+        this.InvokeAndForget(async () =>
         {
-            string? customTool = item?.Tag as string;
-
-            foreach (ConflictData conflict in GetConflicts().conflicts)
+            using (FormBusyScope.Enter(this))
             {
-                Directory.SetCurrentDirectory(Module.WorkingDir);
-                Module.RunMergeTool(fileName: conflict.Filename, customTool: customTool);
-                Initialize();
+                string? customTool = item?.Tag as string;
+
+                foreach (ConflictData conflict in GetConflicts().conflicts)
+                {
+                    Directory.SetCurrentDirectory(Module.WorkingDir);
+                    await Task.Run(() => Module.RunMergeTool(fileName: conflict.Filename, customTool: customTool));
+                    Initialize();
+                }
             }
-        }
+        });
     }
 
     private void ContextOpenBaseWith_Click(object sender, EventArgs e)

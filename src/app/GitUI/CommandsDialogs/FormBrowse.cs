@@ -329,6 +329,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         repoObjectsTree.Initialize(_aheadBehindDataProvider, filterRevisionGridBySpaceSeparatedRefs: ToolStripFilters.SetBranchFilter, refsSource: RevisionGrid, revisionGridInfo: RevisionGrid);
         revisionDiff.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: fileTree, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor);
         fileTree.Bind(revisionGridInfo: RevisionGrid, revisionGridUpdate: RevisionGrid, revisionFileTree: null, () => RevisionGrid.CurrentFilter.PathFilter, RefreshGitStatusMonitor, requestBlame: _isFileHistoryMode);
+        RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
         RevisionGrid.ResumeRefreshRevisions();
 
         // Application is init, the repo related operations are triggered in OnLoad()
@@ -723,6 +724,9 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             return;
         }
 
+        // Pre-warm the ahead/behind cache in the background so the revision grid can pick it up synchronously. GetData checks the AppSetting itself.
+        ThreadHelper.FileAndForget(() => _ = _aheadBehindDataProvider?.GetData());
+
         RevisionGrid.PerformRefreshRevisions(getRefs, forceRefresh: true);
 
         InternalInitialize();
@@ -974,6 +978,12 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
             toolStripButtonPull.Enabled = validBrowseDir;
             toolStripButtonPush.Enabled = validBrowseDir;
             toolStripButtonPush.ResetBeforeUpdate();
+
+            if (validBrowseDir)
+            {
+                UpdateFetchAllVisibility();
+            }
+
             dashboardToolStripMenuItem.Visible = isDashboard;
             pluginsToolStripMenuItem.Visible = validBrowseDir;
             repositoryToolStripMenuItem.Visible = validBrowseDir;
@@ -1058,7 +1068,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
                         // because getting ahead - behind data for all branches will be (very ?) long
                         // * when there are few branches, we will end up here not in 1st
                         // and the data will be taken from cache (so what we pass as argument is kind of useless)
-                        IDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData(currentBranch);
+                        IReadOnlyDictionary<string, AheadBehindData>? aheadBehindData = _aheadBehindDataProvider?.GetData(currentBranch);
                         await this.SwitchToMainThreadAsync();
                         toolStripButtonPush.DisplayAheadBehindInformation(aheadBehindData, currentBranch, GetShortcutKeyTooltipString(Command.Push));
                     });

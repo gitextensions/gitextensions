@@ -80,206 +80,6 @@
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="ru">
-    <body>
-      <trans-unit id="BitbucketBaseUrl.Caption">
-        <source>Specify the base URL to Bitbucket</source>
-        <target>Укажите основной URL к Bitbucket</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketDisableSsl.Caption">
-        <source>Disable SSL verification</source>
-        <target>Отключить верификацию SSL</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketPassword.Caption">
-        <source>Bitbucket Password</source>
-        <target>Bitbucket пароль</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketUsername.Caption">
-        <source>Bitbucket Username</source>
-        <target>Bitbucket имя пользователя</target>
-        
-      </trans-unit>
-      <trans-unit id="Description.Text">
-        <source>Bitbucket Server</source>
-        <target>Сервер Bitbucket</target>
-        
-      </trans-unit>
-      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
-        <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>Ваш репозиторий не находится на сервере Bitbucket.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="ru">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Bitbucket Server</source>
-        <target>Сервер Bitbucket</target>
-        
-      </trans-unit>
-      <trans-unit id="_committed.Text">
-        <source>{0} committed
-{1}</source>
-        <target>{0} автор коммита
-{1}</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Ошибка</target>
-        
-      </trans-unit>
-      <trans-unit id="_linkLabelToolTip.Text">
-        <source>Right-click to copy link</source>
-        <target>Правый клик для копирования ссылки</target>
-        
-      </trans-unit>
-      <trans-unit id="_success.Text">
-        <source>Success</source>
-        <target>Завершено успешно</target>
-        
-      </trans-unit>
-      <trans-unit id="btnApprove.Text">
-        <source>Approve</source>
-        <target>Подтвержден</target>
-        
-      </trans-unit>
-      <trans-unit id="btnCreate.Text">
-        <source>Create</source>
-        <target>Создать</target>
-        
-      </trans-unit>
-      <trans-unit id="btnMerge.Text">
-        <source>Merge</source>
-        <target>Слияние</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxCreatePullRequest.Text">
-        <source>Pull Request Info</source>
-        <target>Информация запроса на слияние</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxInformation.Text">
-        <source>Information</source>
-        <target>Информация</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxPullRequestInfo.Text">
-        <source>Pull Request Info</source>
-        <target>Информация запроса на слияние</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxSource.Text">
-        <source>Source</source>
-        <target>Источник</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxSourceRepoView.Text">
-        <source>Source</source>
-        <target>Источник</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxTarget.Text">
-        <source>Target</source>
-        <target>Назначение</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxTargetRepoView.Text">
-        <source>Target</source>
-        <target>Назначение</target>
-        
-      </trans-unit>
-      <trans-unit id="lblAuthor.Text">
-        <source>Author</source>
-        <target>Автор</target>
-        
-      </trans-unit>
-      <trans-unit id="lblBranchView.Text">
-        <source>Branch</source>
-        <target>Ветка</target>
-        
-      </trans-unit>
-      <trans-unit id="lblDescription.Text">
-        <source>Description</source>
-        <target>Описание</target>
-        
-      </trans-unit>
-      <trans-unit id="lblDescriptionView.Text">
-        <source>Description</source>
-        <target>Описание</target>
-        
-      </trans-unit>
-      <trans-unit id="lblRepositoryView.Text">
-        <source>Repository</source>
-        <target>Репозиторий</target>
-        
-      </trans-unit>
-      <trans-unit id="lblReviewerView.Text">
-        <source>Reviewer (approved)</source>
-        <target>Рецензент (подтвержден)</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceBranch.Text">
-        <source>Branch</source>
-        <target>Ветка</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceRepoView.Text">
-        <source>Repository</source>
-        <target>Репозиторий</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceRepository.Text">
-        <source>Repository</source>
-        <target>Репозиторий</target>
-        
-      </trans-unit>
-      <trans-unit id="lblState.Text">
-        <source>State</source>
-        <target>Состояние</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetBranch.Text">
-        <source>Branch</source>
-        <target>Ветка</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetRepoView.Text">
-        <source>Branch</source>
-        <target>Ветка</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetRepository.Text">
-        <source>Repository</source>
-        <target>Репозиторий</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTitle.Text">
-        <source>Title</source>
-        <target>Заголовок</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTitleView.Text">
-        <source>Title</source>
-        <target>Заголовок</target>
-        
-      </trans-unit>
-      <trans-unit id="tabCreate.Text">
-        <source>Create Pull Request</source>
-        <target>Создать запрос на слияние</target>
-        
-      </trans-unit>
-      <trans-unit id="tabView.Text">
-        <source>View Pull Requests</source>
-        <target>Посмотреть запросы на слияние</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="CreateLocalBranchesForm" source-language="en" target-language="ru">
     <body>
       <trans-unit id="$this.Text">
@@ -751,144 +551,6 @@ Are you sure you want to continue?</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="ru">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>GitFlow</source>
-        <target>GitFlow</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitFlowTooltip.Text">
-        <source>A good branch model for your project with Git...</source>
-        <target>Хороший модель ветвления для проекта с Git ...</target>
-        
-      </trans-unit>
-      <trans-unit id="_loading.Text">
-        <source>Loading...</source>
-        <target>Загрузка...</target>
-        
-      </trans-unit>
-      <trans-unit id="_noBranchExist.Text">
-        <source>No {0} branches exist.</source>
-        <target>Не существует {0} веток.</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>Закрыть</target>
-        
-      </trans-unit>
-      <trans-unit id="btnCreateBranch.Text">
-        <source>Start!</source>
-        <target>Начать!</target>
-        
-      </trans-unit>
-      <trans-unit id="btnFinish.Text">
-        <source>Finish</source>
-        <target>Завершить</target>
-        
-      </trans-unit>
-      <trans-unit id="btnInit.Text">
-        <source>Init GitFlow</source>
-        <target>Инициализировать GitFlow</target>
-        
-      </trans-unit>
-      <trans-unit id="btnPublish.Text">
-        <source>Publish</source>
-        <target>Опубликовать</target>
-        
-      </trans-unit>
-      <trans-unit id="btnPull.Text">
-        <source>Pull</source>
-        <target>Получить</target>
-        
-      </trans-unit>
-      <trans-unit id="cbBasedOn.Text">
-        <source>based on:</source>
-        <target>основан на:</target>
-        
-      </trans-unit>
-      <trans-unit id="cbPushAfterFinish.Text">
-        <source>Push after finish</source>
-        <target>Отправить после завершения</target>
-        
-      </trans-unit>
-      <trans-unit id="cbSquash.Text">
-        <source>Squash</source>
-        <target>Squash</target>
-        
-      </trans-unit>
-      <trans-unit id="gbManage.Text">
-        <source>Manage existing branches:</source>
-        <target>Управление существующими ветками:</target>
-        
-      </trans-unit>
-      <trans-unit id="gbStart.Text">
-        <source>Start branch:</source>
-        <target>Начать ветку:</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>branch:</source>
-        <target>ветка:</target>
-        
-      </trans-unit>
-      <trans-unit id="label10.Text">
-        <source>Expected name:</source>
-        <target>Ожидаемое имя:</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>command:</source>
-        <target>команда:</target>
-        
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>Remote to pull from :</source>
-        <target>Репозиторий из которого получить:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblCaptionHead.Text">
-        <source>HEAD:</source>
-        <target>HEAD:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblHead.Text">
-        <source>ref/...</source>
-        <target>ref/...</target>
-        
-      </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
-        <source>[prefix]/</source>
-        <target>[префикс]/</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitFlow.Text">
-        <source>About GitFlow</source>
-        <target>О GitFlow</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitFlow.ttGitFlow">
-        <source>A good branch model for your project with Git...</source>
-        <target>Хорошая модель ветвления для проекта с Git ...</target>
-        
-      </trans-unit>
-      <trans-unit id="panel3.Text">
-        <source>Result of git flow command run</source>
-        <target>Результат выполнения команды git flow</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="ru">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>GitFlow</source>
-        <target>GitFlow</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="ru">
     <body>
       <trans-unit id="Description.Text">
@@ -959,6 +621,31 @@ Are you sure you want to continue?</source>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
         <target>Просмотр в {0}</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="lblApiToken.Text">
+        <source>API &amp;Token</source>
+        <target>API &amp;токен</target>
+        
+      </trans-unit>
+      <trans-unit id="lblApiUrl.Text">
+        <source>&amp;API URL</source>
+        
+      </trans-unit>
+      <trans-unit id="lblOwner.Text">
+        <source>&amp;Owner</source>
+        
+      </trans-unit>
+      <trans-unit id="lblRepository.Text">
+        <source>&amp;Repository</source>
+        
+      </trans-unit>
+      <trans-unit id="lnkTokenManagement.Text">
+        <source>Create a GitHub personal access token</source>
         
       </trans-unit>
     </body>
@@ -1174,90 +861,6 @@ Do you want to reset the configured path?</source>
       <trans-unit id="lblProjectName.Text">
         <source>Project name</source>
         <target>Имя проекта</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="ru">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Jira Commit Hint</source>
-        <target>Подсказка коммита Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="EmptyQueryResultCaption.Text">
-        <source>First Task Preview</source>
-        <target>Предпросмотр первой задачи</target>
-        
-      </trans-unit>
-      <trans-unit id="EmptyQueryResultMessage.Text">
-        <source>[Empty Jira Query Result]</source>
-        <target>[Пустой результат запроса Jira]</target>
-        
-      </trans-unit>
-      <trans-unit id="InvalidUrlCaption.Text">
-        <source>Invalid Jira url</source>
-        <target>Неправильный адрес Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="InvalidUrlMessage.Text">
-        <source>A valid url is required to launch the Jira query helper</source>
-        <target>Корректный адрес требуется для запуска помощника по запросам Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="JiraFieldsLabel.Text">
-        <source>Jira fields</source>
-        <target>Поля Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="JiraPluginConfigurationErrorText.Text">
-        <source>Jira plugin configuration incomplete!</source>
-        <target>Настройка плагина Jira не завершена!</target>
-        
-      </trans-unit>
-      <trans-unit id="PreviewButtonText.Text">
-        <source>Preview</source>
-        <target>Предпросмотр</target>
-        
-      </trans-unit>
-      <trans-unit id="QueryHelperLinkText.Text">
-        <source>Open the query helper inside Jira</source>
-        <target>Открыть помощник запросов Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="QueryHelperOpenErrorText.Text">
-        <source>Unable to open Jira query helper</source>
-        <target>Невозможно открыть помощник запросов Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="_authTypeSettings.Caption">
-        <source>Auth type</source>
-        <target>Тип аутентификации</target>
-        
-      </trans-unit>
-      <trans-unit id="_credentialsSettings.Caption">
-        <source>Jira credentials</source>
-        <target>Полномочия Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="_enabledSettings.Caption">
-        <source>Jira hint plugin enabled</source>
-        <target>Плагин Jira hint включен</target>
-        
-      </trans-unit>
-      <trans-unit id="_jqlQuerySettings.Caption">
-        <source>JQL Query</source>
-        <target>JQL запрос</target>
-        
-      </trans-unit>
-      <trans-unit id="_stringTemplateSetting.Caption">
-        <source>Message Template</source>
-        <target>Шаблон сообщения</target>
-        
-      </trans-unit>
-      <trans-unit id="_urlSettings.Caption">
-        <source>Jira URL</source>
-        <target>Jira URL</target>
         
       </trans-unit>
     </body>

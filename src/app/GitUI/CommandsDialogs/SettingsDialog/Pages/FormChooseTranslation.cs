@@ -9,8 +9,6 @@ public partial class FormChooseTranslation : GitExtensionsForm
     public FormChooseTranslation()
     {
         InitializeComponent();
-        label1.Font = FontUtil.MainInstructionFont;
-        label1.ForeColor = FontUtil.MainInstructionColor;
         Text = "Choose language";
         InitializeComplete();
     }

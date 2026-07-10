@@ -19,14 +19,14 @@
         <source>Do you want to build {0}?
 
 {1}</source>
-        <target>¿Quieres compilar {0}?
+        <target>¿Querés compilar {0}?
 
 {1}</target>
         
       </trans-unit>
       <trans-unit id="_enterCorrectMsBuildPath.Text">
         <source>Please enter correct MSBuild path in the plugin settings dialog and try again.</source>
-        <target>Por favor ingrese el directorio correcto para MSBuild en el diálogo de configuración del plugin e intente nuevamente.</target>
+        <target>Por favor, ingresá el directorio correcto para MSBuild en el diálogo de configuración del plugin e intentá nuevamente.</target>
         
       </trans-unit>
       <trans-unit id="_msBuildArguments.Caption">
@@ -65,6 +65,7 @@
       </trans-unit>
       <trans-unit id="_fetchImmediatelyOnRepoOpening.Caption">
         <source>Fetch immediately on repository opening</source>
+        <target>Hacer fetch inmediatamente al abrir el repositorio</target>
         
       </trans-unit>
       <trans-unit id="_fetchInterval.Caption">
@@ -75,206 +76,6 @@
       <trans-unit id="_gitCommand.Caption">
         <source>Arguments of git command to run</source>
         <target>Argumentos para el comando de git a ejecutarse</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="BitbucketPlugin" source-language="en" target-language="es-AR">
-    <body>
-      <trans-unit id="BitbucketBaseUrl.Caption">
-        <source>Specify the base URL to Bitbucket</source>
-        <target>Especifique la URL base de Bitbucket</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketDisableSsl.Caption">
-        <source>Disable SSL verification</source>
-        <target>Deshabilitar verificación SSL</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketPassword.Caption">
-        <source>Bitbucket Password</source>
-        <target>Contraseña de Bitbucket</target>
-        
-      </trans-unit>
-      <trans-unit id="BitbucketUsername.Caption">
-        <source>Bitbucket Username</source>
-        <target>Nombre de usuario de Bitbucket</target>
-        
-      </trans-unit>
-      <trans-unit id="Description.Text">
-        <source>Bitbucket Server</source>
-        <target>Servidor Bitbucket</target>
-        
-      </trans-unit>
-      <trans-unit id="_yourRepositoryIsNotInBitbucket.Text">
-        <source>Your repository is not hosted in BitBucket Server.</source>
-        <target>Su repositorio no está alojado en Bitbucket.</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="BitbucketPullRequestForm" source-language="en" target-language="es-AR">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>Bitbucket Server</source>
-        <target>Servidor Bitbucket</target>
-        
-      </trans-unit>
-      <trans-unit id="_committed.Text">
-        <source>{0} committed
-{1}</source>
-        <target>{0} Commiteado
-{1}</target>
-        
-      </trans-unit>
-      <trans-unit id="_error.Text">
-        <source>Error</source>
-        <target>Error</target>
-        
-      </trans-unit>
-      <trans-unit id="_linkLabelToolTip.Text">
-        <source>Right-click to copy link</source>
-        <target>Clic derecho para copiar el enlace</target>
-        
-      </trans-unit>
-      <trans-unit id="_success.Text">
-        <source>Success</source>
-        <target>Exito</target>
-        
-      </trans-unit>
-      <trans-unit id="btnApprove.Text">
-        <source>Approve</source>
-        <target>Aprobar</target>
-        
-      </trans-unit>
-      <trans-unit id="btnCreate.Text">
-        <source>Create</source>
-        <target>Crear</target>
-        
-      </trans-unit>
-      <trans-unit id="btnMerge.Text">
-        <source>Merge</source>
-        <target>Fusionar</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxCreatePullRequest.Text">
-        <source>Pull Request Info</source>
-        <target>Información de las Pull Request.</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxInformation.Text">
-        <source>Information</source>
-        <target>Información</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxPullRequestInfo.Text">
-        <source>Pull Request Info</source>
-        <target>Información de las Pull Request.</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxSource.Text">
-        <source>Source</source>
-        <target>Fuente</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxSourceRepoView.Text">
-        <source>Source</source>
-        <target>Fuente</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxTarget.Text">
-        <source>Target</source>
-        <target>Destino</target>
-        
-      </trans-unit>
-      <trans-unit id="groupBoxTargetRepoView.Text">
-        <source>Target</source>
-        <target>Destino</target>
-        
-      </trans-unit>
-      <trans-unit id="lblAuthor.Text">
-        <source>Author</source>
-        <target>Autor</target>
-        
-      </trans-unit>
-      <trans-unit id="lblBranchView.Text">
-        <source>Branch</source>
-        <target>Rama</target>
-        
-      </trans-unit>
-      <trans-unit id="lblDescription.Text">
-        <source>Description</source>
-        <target>Descripción</target>
-        
-      </trans-unit>
-      <trans-unit id="lblDescriptionView.Text">
-        <source>Description</source>
-        <target>Descripción</target>
-        
-      </trans-unit>
-      <trans-unit id="lblRepositoryView.Text">
-        <source>Repository</source>
-        <target>Repositorio</target>
-        
-      </trans-unit>
-      <trans-unit id="lblReviewerView.Text">
-        <source>Reviewer (approved)</source>
-        <target>Revisor (aprovado)</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceBranch.Text">
-        <source>Branch</source>
-        <target>Rama</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceRepoView.Text">
-        <source>Repository</source>
-        <target>Repositorio</target>
-        
-      </trans-unit>
-      <trans-unit id="lblSourceRepository.Text">
-        <source>Repository</source>
-        <target>Repositorio</target>
-        
-      </trans-unit>
-      <trans-unit id="lblState.Text">
-        <source>State</source>
-        <target>Estado</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetBranch.Text">
-        <source>Branch</source>
-        <target>Rama</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetRepoView.Text">
-        <source>Branch</source>
-        <target>Rama</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTargetRepository.Text">
-        <source>Repository</source>
-        <target>Repositorio</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTitle.Text">
-        <source>Title</source>
-        <target>Título</target>
-        
-      </trans-unit>
-      <trans-unit id="lblTitleView.Text">
-        <source>Title</source>
-        <target>Título</target>
-        
-      </trans-unit>
-      <trans-unit id="tabCreate.Text">
-        <source>Create Pull Request</source>
-        <target>Crear pedido de Pull</target>
-        
-      </trans-unit>
-      <trans-unit id="tabView.Text">
-        <source>View Pull Requests</source>
-        <target>Ver pedidos de Pull</target>
         
       </trans-unit>
     </body>
@@ -346,7 +147,7 @@
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete {0} selected branches?</source>
-        <target>Está seguro que quiere eliminar {0} ramas seleccionadas?</target>
+        <target>¿Estás seguro que querés eliminar {0} ramas seleccionadas?</target>
         
       </trans-unit>
       <trans-unit id="_branchesSelected.Text">
@@ -361,7 +162,7 @@
       </trans-unit>
       <trans-unit id="_chooseBranchesToDelete.Text">
         <source>Choose branches to delete. Only branches that are fully merged in &apos;{0}&apos; will be deleted.</source>
-        <target>Escoja ramas a eliminar. Sólo ramas que hayan sido completamente fusionadas con &apos;{0}&apos; serán borradas.</target>
+        <target>Elegí ramas a eliminar. Sólo ramas que hayan sido completamente fusionadas con &apos;{0}&apos; serán borradas.</target>
         
       </trans-unit>
       <trans-unit id="_dangerousAction.Text">
@@ -370,7 +171,7 @@ Branches will be deleted on the remote &apos;{0}&apos;. This can not be undone.
 Are you sure you want to continue?</source>
         <target>¡ACCIÓN PELIGROSA!
 Las ramas serán eliminadas en el servidor remoto &apos;{0}&apos;. Esta acción no puede deshacerse. 
-¿Está seguro de que desea continuar?</target>
+¿Estás seguro de que querés continuar?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -395,7 +196,7 @@ Las ramas serán eliminadas en el servidor remoto &apos;{0}&apos;. Esta acción 
       </trans-unit>
       <trans-unit id="_pressToSearch.Text">
         <source>Press &apos;{0}&apos; to search for branches to delete.</source>
-        <target>Presione &apos;{0}&apos; para buscar ramas a borrar.</target>
+        <target>Presioná &apos;{0}&apos; para buscar ramas a borrar.</target>
         
       </trans-unit>
       <trans-unit id="_searchBranches.Text">
@@ -405,7 +206,7 @@ Las ramas serán eliminadas en el servidor remoto &apos;{0}&apos;. Esta acción 
       </trans-unit>
       <trans-unit id="_selectBranchesToDelete.Text">
         <source>Select branches to delete using checkboxes in &apos;{0}&apos; column.</source>
-        <target>Selecciona las ramas a borrar usando los Checkbox en la columna &apos;{0}&apos;.</target>
+        <target>Seleccioná las ramas a borrar usando los Checkbox en la columna &apos;{0}&apos;.</target>
         
       </trans-unit>
       <trans-unit id="buttonSettings.Text">
@@ -538,7 +339,7 @@ Las ramas serán eliminadas en el servidor remoto &apos;{0}&apos;. Esta acción 
       </trans-unit>
       <trans-unit id="_areYouSureToDelete.Text">
         <source>Are you sure to delete the selected files?</source>
-        <target>Está seguro que quiere eliminar los archivos seleccionados?</target>
+        <target>¿Estás seguro que querés eliminar los archivos seleccionados?</target>
         
       </trans-unit>
       <trans-unit id="_deleteCaption.Text">
@@ -558,7 +359,7 @@ Las ramas serán eliminadas en el servidor remoto &apos;{0}&apos;. Esta acción 
       </trans-unit>
       <trans-unit id="label1.Text">
         <source>Reset local changes before deleting files. Choose files to delete. Force push for replacing data on remote repository.</source>
-        <target>Deshaga los cambios locales antes de eliminar los archivos. Seleccione los archivos a eliminar. Fuerce un push para reemplazar los datos en el repositorio remoto.</target>
+        <target>Deshacé los cambios locales antes de eliminar los archivos. Seleccioná los archivos a eliminar. Forzá un push para reemplazar los datos en el repositorio remoto.</target>
         
       </trans-unit>
       <trans-unit id="lastCommitDateDataGridViewTextBoxColumn.HeaderText">
@@ -750,144 +551,6 @@ Las ramas serán eliminadas en el servidor remoto &apos;{0}&apos;. Esta acción 
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="GitFlowForm" source-language="en" target-language="es-AR">
-    <body>
-      <trans-unit id="$this.Text">
-        <source>GitFlow</source>
-        <target>GitFlow</target>
-        
-      </trans-unit>
-      <trans-unit id="_gitFlowTooltip.Text">
-        <source>A good branch model for your project with Git...</source>
-        <target>Un buen modelo de ramas para tu proyecto con Git...</target>
-        
-      </trans-unit>
-      <trans-unit id="_loading.Text">
-        <source>Loading...</source>
-        <target>Cargando...</target>
-        
-      </trans-unit>
-      <trans-unit id="_noBranchExist.Text">
-        <source>No {0} branches exist.</source>
-        <target>Ninguna rama {0} existe.</target>
-        
-      </trans-unit>
-      <trans-unit id="btnClose.Text">
-        <source>Close</source>
-        <target>Cerrar</target>
-        
-      </trans-unit>
-      <trans-unit id="btnCreateBranch.Text">
-        <source>Start!</source>
-        <target>Iniciar!</target>
-        
-      </trans-unit>
-      <trans-unit id="btnFinish.Text">
-        <source>Finish</source>
-        <target>Finalizar</target>
-        
-      </trans-unit>
-      <trans-unit id="btnInit.Text">
-        <source>Init GitFlow</source>
-        <target>Iniciar GitFlow</target>
-        
-      </trans-unit>
-      <trans-unit id="btnPublish.Text">
-        <source>Publish</source>
-        <target>Publicar</target>
-        
-      </trans-unit>
-      <trans-unit id="btnPull.Text">
-        <source>Pull</source>
-        <target>Pull</target>
-        
-      </trans-unit>
-      <trans-unit id="cbBasedOn.Text">
-        <source>based on:</source>
-        <target>basado en:</target>
-        
-      </trans-unit>
-      <trans-unit id="cbPushAfterFinish.Text">
-        <source>Push after finish</source>
-        <target>Hacer push al terminar</target>
-        
-      </trans-unit>
-      <trans-unit id="cbSquash.Text">
-        <source>Squash</source>
-        <target>Aplastar</target>
-        
-      </trans-unit>
-      <trans-unit id="gbManage.Text">
-        <source>Manage existing branches:</source>
-        <target>Gestionar ramas existentes:</target>
-        
-      </trans-unit>
-      <trans-unit id="gbStart.Text">
-        <source>Start branch:</source>
-        <target>Iniciar rama:</target>
-        
-      </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>branch:</source>
-        <target>rama:</target>
-        
-      </trans-unit>
-      <trans-unit id="label10.Text">
-        <source>Expected name:</source>
-        <target>Nombre esperado:</target>
-        
-      </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>command:</source>
-        <target>comando:</target>
-        
-      </trans-unit>
-      <trans-unit id="label9.Text">
-        <source>Remote to pull from :</source>
-        <target>Remoto a pullear:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblCaptionHead.Text">
-        <source>HEAD:</source>
-        <target>HEAD:</target>
-        
-      </trans-unit>
-      <trans-unit id="lblHead.Text">
-        <source>ref/...</source>
-        <target>ref/...</target>
-        
-      </trans-unit>
-      <trans-unit id="lblPrefixName.Text">
-        <source>[prefix]/</source>
-        <target>[prefijo]/</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitFlow.Text">
-        <source>About GitFlow</source>
-        <target>Acerca de GitFlow</target>
-        
-      </trans-unit>
-      <trans-unit id="lnkGitFlow.ttGitFlow">
-        <source>A good branch model for your project with Git...</source>
-        <target>Un buen modelo de ramas para tu proyecto con Git...</target>
-        
-      </trans-unit>
-      <trans-unit id="panel3.Text">
-        <source>Result of git flow command run</source>
-        <target>Resultado de ejecutar el commando git flow</target>
-        
-      </trans-unit>
-    </body>
-  </file>
-  <file datatype="plaintext" original="GitFlowPlugin" source-language="en" target-language="es-AR">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>GitFlow</source>
-        <target>GitFlow</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="GitHub3Plugin" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="Description.Text">
@@ -952,12 +615,41 @@ Las ramas serán eliminadas en el servidor remoto &apos;{0}&apos;. Esta acción 
       </trans-unit>
       <trans-unit id="_tokenAlreadyExist.Text">
         <source>You already have an personal access token. To get a new one, delete your old one in Plugins &gt; Plugin Settings first.</source>
-        <target>Ya tienes un token de acceso personal. Para obtener uno nuevo, elimine primero el antiguo en Plugins &gt; Configuración de plugins.</target>
+        <target>Ya tenés un token de acceso personal. Para obtener uno nuevo, eliminá primero el antiguo en Plugins &gt; Configuración de plugins.</target>
         
       </trans-unit>
       <trans-unit id="_viewInWebSite.Text">
         <source>View in {0}</source>
         <target>Ver en {0}</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="GitHubActionsSettingsUserControl" source-language="en" target-language="es-AR">
+    <body>
+      <trans-unit id="lblApiToken.Text">
+        <source>API &amp;Token</source>
+        <target>&amp;Token de API</target>
+        
+      </trans-unit>
+      <trans-unit id="lblApiUrl.Text">
+        <source>&amp;API URL</source>
+        <target>&amp;URL de la API</target>
+        
+      </trans-unit>
+      <trans-unit id="lblOwner.Text">
+        <source>&amp;Owner</source>
+        <target>&amp;Propietario</target>
+        
+      </trans-unit>
+      <trans-unit id="lblRepository.Text">
+        <source>&amp;Repository</source>
+        <target>&amp;Repositorio</target>
+        
+      </trans-unit>
+      <trans-unit id="lnkTokenManagement.Text">
+        <source>Create a GitHub personal access token</source>
+        <target>Crear un token de acceso personal de GitHub</target>
         
       </trans-unit>
     </body>
@@ -1044,7 +736,7 @@ Las ramas serán eliminadas en el servidor remoto &apos;{0}&apos;. Esta acción 
       <trans-unit id="_cannotFindGource.Text">
         <source>Cannot find Gource.
 Please download Gource and set the path in the plugins settings dialog.</source>
-        <target>No se encuentra Gource. Por favor, descargue Gource y configure la ruta en el diálogo de configuración de extensiones.</target>
+        <target>No se encuentra Gource. Por favor, descargá Gource y configurá la ruta en el diálogo de configuración de extensiones.</target>
         
       </trans-unit>
       <trans-unit id="_currentDirectoryIsNotValidGit.Text">
@@ -1060,9 +752,9 @@ Gource sólo puede ser iniciado desde un repositorio válido de git.</target>
         <source>There is no path to Gource configured.
 
 Do you want to automatically download Gource?</source>
-        <target>No hay una ruta de Gourge configurada
+        <target>No hay una ruta de Gource configurada
 
-¿Desea que se descargue Gourge automáticamente?</target>
+¿Querés que se descargue Gource automáticamente?</target>
         
       </trans-unit>
       <trans-unit id="_download.Text">
@@ -1074,7 +766,7 @@ Do you want to automatically download Gource?</source>
         <source>Downloading failed.
 Please download Gource and set the path in the plugins settings dialog.</source>
         <target>Descarga fallida.
-Por favor, descargue Gource y configure la ruta en el diálogo de configuración de extensiones.</target>
+Por favor, descargá Gource y configurá la ruta en el diálogo de configuración de extensiones.</target>
         
       </trans-unit>
       <trans-unit id="_gource.Text">
@@ -1101,9 +793,9 @@ Por favor, descargue Gource y configure la ruta en el diálogo de configuración
         <source>Cannot find Gource in the configured path: {0}.
 
 Do you want to reset the configured path?</source>
-        <target>No se ha podido encontrar Gourge en la ruta de configuración: {0}
+        <target>No se ha podido encontrar Gource en la ruta de configuración: {0}
 
-¿Desea reiniciar la ruta de configuración?</target>
+¿Querés reiniciar la ruta de configuración?</target>
         
       </trans-unit>
     </body>
@@ -1176,90 +868,6 @@ Do you want to reset the configured path?</source>
       </trans-unit>
     </body>
   </file>
-  <file datatype="plaintext" original="JiraCommitHintPlugin" source-language="en" target-language="es-AR">
-    <body>
-      <trans-unit id="Description.Text">
-        <source>Jira Commit Hint</source>
-        <target>Pista del commit de Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="EmptyQueryResultCaption.Text">
-        <source>First Task Preview</source>
-        <target>Vista preliminar de la primera tarea</target>
-        
-      </trans-unit>
-      <trans-unit id="EmptyQueryResultMessage.Text">
-        <source>[Empty Jira Query Result]</source>
-        <target>[Resultado de la Consulta de Jira vacío]</target>
-        
-      </trans-unit>
-      <trans-unit id="InvalidUrlCaption.Text">
-        <source>Invalid Jira url</source>
-        <target>Url de Jira no válida</target>
-        
-      </trans-unit>
-      <trans-unit id="InvalidUrlMessage.Text">
-        <source>A valid url is required to launch the Jira query helper</source>
-        <target>Se requiere una url válida para lanzar el ayudante de consultas de Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="JiraFieldsLabel.Text">
-        <source>Jira fields</source>
-        <target>Campos de Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="JiraPluginConfigurationErrorText.Text">
-        <source>Jira plugin configuration incomplete!</source>
-        <target>¡Configuración del plugin de Jira incompleta!</target>
-        
-      </trans-unit>
-      <trans-unit id="PreviewButtonText.Text">
-        <source>Preview</source>
-        <target>Vista previa</target>
-        
-      </trans-unit>
-      <trans-unit id="QueryHelperLinkText.Text">
-        <source>Open the query helper inside Jira</source>
-        <target>Abrir el ayudante de consultas en Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="QueryHelperOpenErrorText.Text">
-        <source>Unable to open Jira query helper</source>
-        <target>Incapaz de abrir el ayudante de consultas</target>
-        
-      </trans-unit>
-      <trans-unit id="_authTypeSettings.Caption">
-        <source>Auth type</source>
-        <target>Tipo de autenticación</target>
-        
-      </trans-unit>
-      <trans-unit id="_credentialsSettings.Caption">
-        <source>Jira credentials</source>
-        <target>Credenciales de Jira</target>
-        
-      </trans-unit>
-      <trans-unit id="_enabledSettings.Caption">
-        <source>Jira hint plugin enabled</source>
-        <target>El plugin Jira Hint está habilitado</target>
-        
-      </trans-unit>
-      <trans-unit id="_jqlQuerySettings.Caption">
-        <source>JQL Query</source>
-        <target>Consulta JQL</target>
-        
-      </trans-unit>
-      <trans-unit id="_stringTemplateSetting.Caption">
-        <source>Message Template</source>
-        <target>Plantilla de mensaje</target>
-        
-      </trans-unit>
-      <trans-unit id="_urlSettings.Caption">
-        <source>Jira URL</source>
-        <target>URL de Jira</target>
-        
-      </trans-unit>
-    </body>
-  </file>
   <file datatype="plaintext" original="ProxySwitcherForm" source-language="en" target-language="es-AR">
     <body>
       <trans-unit id="$this.Text">
@@ -1294,7 +902,7 @@ Do you want to reset the configured path?</source>
       </trans-unit>
       <trans-unit id="_pleaseSetProxy.Text">
         <source>There is no proxy configured. Please set the proxy host in the plugin settings.</source>
-        <target>No hay ningún proxy configurado. Por favor configure el host del proxy en los ajustes del plugin.</target>
+        <target>No hay ningún proxy configurado. Por favor, configurá el host del proxy en los ajustes del plugin.</target>
         
       </trans-unit>
       <trans-unit id="_pluginDescription.Text">
@@ -1557,7 +1165,7 @@ Please copy in the clipboard the url of the build before retrying.
 (Should contain at least the &quot;buildTypeId&quot; parameter)</source>
         <target>El portapapeles no contiene una url de Build válida
 
-Por favor, copie en el portapapeles una url de la Build antes de reintentarlo.
+Por favor, copiá en el portapapeles una url de la Build antes de reintentarlo.
 (Debería contener al menos el parámetro &quot;buildTypeId&quot;)</target>
         
       </trans-unit>
@@ -1569,8 +1177,8 @@ Por favor, copie en el portapapeles una url de la Build antes de reintentarlo.
       <trans-unit id="_failToLoadProjectMessage.Text">
         <source>Failed to load the projects and build list.
 Please verify the server url.</source>
-        <target>Se produjo un fallo al cargar los proyecto y la lista de Builds.
-Por favor, verifique la url del servidor.</target>
+        <target>Se produjo un fallo al cargar los proyectos y la lista de Builds.
+Por favor, verificá la URL del servidor.</target>
         
       </trans-unit>
       <trans-unit id="labelRegexError.Text">

@@ -1412,9 +1412,21 @@ Please make sure that Git for Windows is installed or set the correct command ma
         <target>Стиль консоли</target>
         
       </trans-unit>
+      <trans-unit id="_consoleDefaultFontText.Text">
+        <source>Console Default</source>
+        
+      </trans-unit>
+      <trans-unit id="_defaultThemeDisplayName.Text">
+        <source>Default</source>
+        
+      </trans-unit>
       <trans-unit id="consoleFontChangeButton.Text">
         <source>font name</source>
         <target>имя шрифта</target>
+        
+      </trans-unit>
+      <trans-unit id="consoleFontResetButton.consoleFontToolTip">
+        <source>Reset to default</source>
         
       </trans-unit>
       <trans-unit id="groupBoxConsoleSettings.Text">
@@ -1425,6 +1437,10 @@ Please make sure that Git for Windows is installed or set the correct command ma
       <trans-unit id="label1.Text">
         <source>Console style</source>
         <target>Стиль консоли</target>
+        
+      </trans-unit>
+      <trans-unit id="lblConsoleEmulator.Text">
+        <source>Console emulator</source>
         
       </trans-unit>
       <trans-unit id="lblFontName.Text">
@@ -1664,6 +1680,24 @@ Please make sure that Git for Windows is installed or set the correct command ma
       <trans-unit id="$this.Text">
         <source>Diff viewer</source>
         <target>Просмотр изменений</target>
+        
+      </trans-unit>
+      <trans-unit id="_saveCurrentViewSettingsAsDefaultTooltip.Text">
+        <source>Saves all current view settings as the default for future sessions.
+Note: The checkboxes &apos;Remember the &quot;xyz&quot; preference&apos; only affect the running instance
+as long as the default has not been saved. These preference values are held in memory
+and must be explicitly saved to become persistent defaults.</source>
+        
+      </trans-unit>
+      <trans-unit id="btnSaveCurrentViewSettingsAsDefault.Text">
+        <source>Save current view settings as default</source>
+        
+      </trans-unit>
+      <trans-unit id="btnSaveCurrentViewSettingsAsDefault.toolTip">
+        <source>Saves all current view settings as the default for future sessions.
+Note: The checkboxes &apos;Remember the &quot;xyz&quot; preference&apos; only affect the running instance
+as long as the default has not been saved. These preference values are held in memory
+and must be explicitly saved to become persistent defaults.</source>
         
       </trans-unit>
       <trans-unit id="chkContScrollToNextFileOnlyWithAlt.Text">
@@ -2132,6 +2166,10 @@ Suitable for some config files modified locally.</source>
         <source>Match &amp;case</source>
         
       </trans-unit>
+      <trans-unit id="tsmiFindUsingOptions.Text">
+        <source>&amp;Options</source>
+        
+      </trans-unit>
       <trans-unit id="tsmiFindUsingWholeWord.Text">
         <source>Match &amp;whole word</source>
         
@@ -2257,7 +2295,7 @@ Suitable for some config files modified locally.</source>
         
       </trans-unit>
       <trans-unit id="tsmiShowSkipWorktreeFiles.Text">
-        <source>Show &amp;skip-worktree files</source>
+        <source>Show s&amp;kip-worktree files</source>
         
       </trans-unit>
       <trans-unit id="tsmiShowUntrackedFiles.Text">
@@ -3419,9 +3457,20 @@ compare with first:</source>
         <target>(Хостинг репозиториев)</target>
         
       </trans-unit>
+      <trans-unit id="_repositorySearchPlaceholder.Text">
+        <source>Search repositories...</source>
+        
+      </trans-unit>
       <trans-unit id="_superprojectModuleFormat.Text">
         <source>Superproject: {0}</source>
         <target>Суперпроект: {0}</target>
+        
+      </trans-unit>
+      <trans-unit id="_toolTip.Text">
+        <source>Change working directory
+Left click opens the drop-down menu.
+Then hold Ctrl in order to open the selected repository in a new instance.
+Right click starts the &quot;Open repository&quot; dialog.</source>
         
       </trans-unit>
       <trans-unit id="_topProjectModuleFormat.Text">
@@ -3982,6 +4031,10 @@ Do you want to continue?</source>
         <target>Управление спрятанными изменениями</target>
         
       </trans-unit>
+      <trans-unit id="toolStripWorktrees.ToolTipText">
+        <source>Worktrees</source>
+        
+      </trans-unit>
       <trans-unit id="toolbarsMenuItem.Text">
         <source>Toolbars</source>
         <target>Панели инструментов</target>
@@ -4202,6 +4255,10 @@ Focus the output history and (when displayed as panel) toggle its visibility usi
       </trans-unit>
       <trans-unit id="chkShowOutputHistoryAsTab.Text">
         <source>Show output history as tab (otherwise as panel)</source>
+        
+      </trans-unit>
+      <trans-unit id="chkShowRevisionGridTooltip.Text">
+        <source>Show revision tooltips (restart required)</source>
         
       </trans-unit>
       <trans-unit id="chkUseBrowseForFileHistory.Text">
@@ -5288,6 +5345,20 @@ $ git config --unset commit.template</target>
         <target>OK</target>
         
       </trans-unit>
+      <trans-unit id="checkBoxRegexEnabled.Text">
+        <source>Enable regex</source>
+        
+      </trans-unit>
+      <trans-unit id="checkBoxRegexEnabled.toolTipRegex">
+        <source>Use {{regex}}[regex group number] to extract branch name part
+Group number is optional, default is 1
+
+Examples on branch name: &quot;feature/ABC-4587-commitMessageRegex&quot;
+&quot;Commit from: {{^feature/(.*)$}} branch&quot; -&gt; &quot;Commit from: ABC-4587-commitMessageRegex branch&quot;
+&quot;{{([A-Z]+-\d+)}}: My message is&quot; -&gt; &quot;ABC-4587: My message is &quot;
+&quot;Name: {{([A-Z]+-\d+)-(.*)}}[2], issue: {{([A-Z]+-\d+)-(.*)}}[1]&quot; -&gt; &quot;Name: commitMessageRegex, issue: ABC-4587&quot;</source>
+        
+      </trans-unit>
       <trans-unit id="labelAutoWrap.Text">
         <source>Auto-wrap commit message (except subject line)</source>
         <target>Автоматический перенос сообщении коммита (кроме строки темы)</target>
@@ -5505,36 +5576,29 @@ $ git config --unset commit.template</target>
         <target>Создать новое рабочее дерево</target>
         
       </trans-unit>
-      <trans-unit id="createWorktreeButton.Text">
-        <source>Create the new worktree</source>
-        <target>Создать новое рабочее дерево</target>
+      <trans-unit id="btnCreateWorktree.Text">
+        <source>&amp;Create the new worktree</source>
         
       </trans-unit>
-      <trans-unit id="groupBoxWhatToCheckout.Text">
-        <source>What to checkout: </source>
-        <target>Что переключить:</target>
+      <trans-unit id="chkOpenWorktree.Text">
+        <source>&amp;Open the new worktree after the creation</source>
         
       </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>New worktree directory:</source>
-        <target>Новый путь рабочего дерева:</target>
+      <trans-unit id="gbxWhatToCheckout.Text">
+        <source>What to checkout:</source>
         
       </trans-unit>
-      <trans-unit id="openWorktreeCheckBox.Text">
-        <source>Open the new worktree after the creation</source>
-        <target>Открыть рабочее дерево после создания</target>
+      <trans-unit id="lblNewWorktreeFolder.Text">
+        <source>New worktree &amp;directory:</source>
         
       </trans-unit>
-      <trans-unit id="radioButtonCheckoutExistingBranch.Text">
-        <source>Checkout an existing branch:</source>
-        <target>Переключиться на существующую ветку</target>
+      <trans-unit id="rbCheckoutExistingBranch.Text">
+        <source>Checkout an &amp;existing branch:</source>
         
       </trans-unit>
-      <trans-unit id="radioButtonCreateNewBranch.Text">
-        <source>Create a new branch:
- (from current commit) </source>
-        <target>Создать новую ветку:
- (с текущего коммита)</target>
+      <trans-unit id="rbCreateNewBranch.Text">
+        <source>Create a &amp;new branch:
+(from current commit)</source>
         
       </trans-unit>
     </body>
@@ -5588,6 +5652,19 @@ $ git config --unset commit.template</target>
       <trans-unit id="Delete.Text">
         <source>&amp;Delete</source>
         <target>&amp;Удалить</target>
+        
+      </trans-unit>
+      <trans-unit id="_branchUsedByWorktreeQuestion.Text">
+        <source>The following branches are checked out in worktrees and cannot be deleted directly:
+
+{0}
+
+Do you want to delete the worktrees and branches together?</source>
+        
+      </trans-unit>
+      <trans-unit id="_cannotDeleteBranchInMainWorktree.Text">
+        <source>The branch “{0}” cannot be deleted because it is checked out in the main worktree at:
+{1}</source>
         
       </trans-unit>
       <trans-unit id="_cannotDeleteCurrentBranchMessage.Text">
@@ -6701,31 +6778,6 @@ Henk Westhuis &lt;henk_westhuis@hotmail.com&gt;
       <trans-unit id="Type.HeaderText">
         <source>Type</source>
         <target>Тип</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteWorktreeFailedText.Text">
-        <source>Failed to delete a worktree</source>
-        <target>Не удалось удалить рабочее дерево</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteWorktreeText.Text">
-        <source>Are you sure you want to delete this worktree?</source>
-        <target>Вы уверены, что хотите удалить это рабочее дерево?</target>
-        
-      </trans-unit>
-      <trans-unit id="_deleteWorktreeTitle.Text">
-        <source>Delete a worktree</source>
-        <target>Удалить рабочее дерево</target>
-        
-      </trans-unit>
-      <trans-unit id="_switchWorktreeText.Text">
-        <source>Are you sure you want to switch to this worktree?</source>
-        <target>Вы уверены, что хотите переключиться на это рабочее дерево?</target>
-        
-      </trans-unit>
-      <trans-unit id="_switchWorktreeTitle.Text">
-        <source>Open a worktree</source>
-        <target>Открыть рабочее дерево</target>
         
       </trans-unit>
       <trans-unit id="buttonCreateNewWorktree.Text">
@@ -8288,6 +8340,10 @@ Value has been reset to empty value.</source>
         <target>Цвет</target>
         
       </trans-unit>
+      <trans-unit id="lblRemotePrefix.Text">
+        <source>Prefix</source>
+        
+      </trans-unit>
       <trans-unit id="pnlMgtDetails.Text">
         <source>Details</source>
         <target>Подробно</target>
@@ -8394,14 +8450,12 @@ Forcing a branch to reset if it has not been merged might leave some commits unr
         <target>Также удалить новые файлы и/или директории</target>
         
       </trans-unit>
-      <trans-unit id="label1.Text">
-        <source>Are you sure you want to reset your changes?</source>
-        <target>Вы уверены, что хотите сбросить изменения?</target>
+      <trans-unit id="lblDeleteHint.Text">
+        <source>This will delete any uncommitted work.</source>
         
       </trans-unit>
-      <trans-unit id="label2.Text">
-        <source>This will delete any uncommitted work.</source>
-        <target>Это удалит все изменения, которые вы не зафиксировали.</target>
+      <trans-unit id="txtMessage.Text">
+        <source>Are you sure you want to reset your changes?</source>
         
       </trans-unit>
     </body>
@@ -10191,9 +10245,12 @@ Check if file is accessible.</source>
         <target>Изменить HOME</target>
         
       </trans-unit>
-      <trans-unit id="_homeIsSetToString.Text">
-        <source>HOME is set to:</source>
-        <target>HOME установлен в:</target>
+      <trans-unit id="_envIsNotSetString.Text">
+        <source>{0} is not set.</source>
+        
+      </trans-unit>
+      <trans-unit id="_envIsSetToString.Text">
+        <source>{0} is set to: {1}</source>
         
       </trans-unit>
       <trans-unit id="downloadGitForWindows.Text">
@@ -10226,11 +10283,10 @@ Check if file is accessible.</source>
         
       </trans-unit>
       <trans-unit id="lblGlobalConfigPath.Text">
-        <source>The global config file located in the location stored environment variable %HOME%. By default %HOME% will be set 
-to %HOMEDRIVE%%HOMEPATH% if empty. Change the default behaviour only if you experience problems.</source>
-        <target>Глобальный конфигурационный файл расположен в папке, хранящейся в переменной среды %HOME%. 
-По умолчанию %HOME% будет установлена в %HOMEDRIVE%%HOMEPATH%, если не указана. 
-Измените поведение по умолчанию, только если у вас возникли проблемы.</target>
+        <source>By default, the global config file is located in the location stored in the environment variable %HOME%.
+(This can be overridden by setting %GIT_CONFIG_GLOBAL%.)
+If empty, %HOME% will be set to %HOMEDRIVE%%HOMEPATH% by default.
+Change the default behaviour only if you experience problems.</source>
         
       </trans-unit>
       <trans-unit id="lblShPath.Text">
@@ -10899,6 +10955,14 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>Зафиксировать изменения выбранного субмодуля</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnCopyWorktreePath.Text">
+        <source>Copy &amp;path</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnCopyWorktreePath.ToolTipText">
+        <source>Copy the worktree path to clipboard</source>
+        
+      </trans-unit>
       <trans-unit id="mnubtnCreateBranch.Text">
         <source>Create Branch...</source>
         <target>Создать ветку...</target>
@@ -10909,6 +10973,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>Создать локальную ветку</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnCreateWorktreeFromRootNode.Text">
+        <source>&amp;Create worktree...</source>
+        
+      </trans-unit>
       <trans-unit id="mnubtnDeleteAllBranches.Text">
         <source>Delete All</source>
         <target>Удалить все</target>
@@ -10917,6 +10985,14 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="mnubtnDeleteAllBranches.ToolTipText">
         <source>Delete all child branches, which must all be fully merged in its upstream branch or in HEAD</source>
         <target>Удалите все дочерние ветки, которые должны быть полностью объединены с внешней веткой или HEAD.</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnDeleteWorktree.Text">
+        <source>&amp;Delete worktree...</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnDeleteWorktree.ToolTipText">
+        <source>Delete this worktree</source>
         
       </trans-unit>
       <trans-unit id="mnubtnDisableRemote.Text">
@@ -11014,6 +11090,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>Управление субмодулями</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnManageWorktreesFromRootNode.Text">
+        <source>&amp;Manage worktrees...</source>
+        
+      </trans-unit>
       <trans-unit id="mnubtnMoveDown.Text">
         <source>Move Down</source>
         <target>Вниз</target>
@@ -11064,6 +11144,14 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>Открыть выбранный субмодуль</target>
         
       </trans-unit>
+      <trans-unit id="mnubtnOpenWorktree.Text">
+        <source>&amp;Open worktree</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnOpenWorktree.ToolTipText">
+        <source>Open this worktree</source>
+        
+      </trans-unit>
       <trans-unit id="mnubtnPopStash.Text">
         <source>&amp;Pop stash</source>
         <target>Получить спрятанные изменения</target>
@@ -11072,6 +11160,10 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="mnubtnPopStash.ToolTipText">
         <source>Pop this stash</source>
         <target>Получить эти спрятанные изменения</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnPruneWorktreesFromRootNode.Text">
+        <source>&amp;Prune worktrees</source>
         
       </trans-unit>
       <trans-unit id="mnubtnPullFromRemoteBranch.Text">
@@ -11102,6 +11194,14 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="mnubtnResetSubmodule.ToolTipText">
         <source>Reset selected submodule</source>
         <target>Сбросить выбранный субмодуль</target>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnShowWorktreeInFolder.Text">
+        <source>Show &amp;in folder</source>
+        
+      </trans-unit>
+      <trans-unit id="mnubtnShowWorktreeInFolder.ToolTipText">
+        <source>Show the worktree in File Explorer</source>
         
       </trans-unit>
       <trans-unit id="mnubtnStashAllFromRootNode.Text">
@@ -11202,6 +11302,14 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="tsbShowTags.ToolTipText">
         <source>Tags</source>
         <target>Метки</target>
+        
+      </trans-unit>
+      <trans-unit id="tsbShowWorktrees.Text">
+        <source>&amp;Worktrees</source>
+        
+      </trans-unit>
+      <trans-unit id="tsbShowWorktrees.ToolTipText">
+        <source>Worktrees</source>
         
       </trans-unit>
     </body>
@@ -11372,6 +11480,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>Показывать внешние ветки</target>
         
       </trans-unit>
+      <trans-unit id="ShowSessionCheckpoints.Text">
+        <source>Show session checkpoints</source>
+        
+      </trans-unit>
       <trans-unit id="ShowStashes.Text">
         <source>Show stashes</source>
         <target>Показать спрятанные изменения</target>
@@ -11455,6 +11567,10 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="showDateColumnToolStripMenuItem.Text">
         <source>Show &amp;date column</source>
         <target>Показывать колонку с датой</target>
+        
+      </trans-unit>
+      <trans-unit id="showGitNotesColumnToolStripMenuItem.Text">
+        <source>Show Git &amp;notes column</source>
         
       </trans-unit>
       <trans-unit id="showGitNotesToolStripMenuItem.Text">
@@ -11586,6 +11702,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>Забрать этот коммит...</target>
         
       </trans-unit>
+      <trans-unit id="commitToolStripMenuItem.Text">
+        <source>&amp;Commit</source>
+        
+      </trans-unit>
       <trans-unit id="compareSelectedCommitsMenuItem.Text">
         <source>Compare &amp;selected commits</source>
         <target>Сравнить выбранные коммиты</target>
@@ -11622,8 +11742,7 @@ Reset the filter via View &gt; Show all branches.</source>
         
       </trans-unit>
       <trans-unit id="createNewBranchToolStripMenuItem.Text">
-        <source>Create new branc&amp;h here...</source>
-        <target>Создать новую ветку здесь...</target>
+        <source>Create new branch here (&amp;x)...</source>
         
       </trans-unit>
       <trans-unit id="createTagToolStripMenuItem.Text">
@@ -11735,6 +11854,10 @@ Reset the filter via View &gt; Show all branches.</source>
         <target>Сбросить текущую ветку сюда...</target>
         
       </trans-unit>
+      <trans-unit id="resetChangesToolStripMenuItem.Text">
+        <source>&amp;Reset changes</source>
+        
+      </trans-unit>
       <trans-unit id="resetCurrentBranchToHereToolStripMenuItem.Text">
         <source>Reset c&amp;urrent branch to here...</source>
         <target>Сбросить текущую ветку сюда...</target>
@@ -11768,6 +11891,14 @@ Reset the filter via View &gt; Show all branches.</source>
       <trans-unit id="stopBisectToolStripMenuItem.Text">
         <source>Stop bisect</source>
         <target>Остановить bisect</target>
+        
+      </trans-unit>
+      <trans-unit id="tsmiOtherActions.Text">
+        <source>&amp;Other actions</source>
+        
+      </trans-unit>
+      <trans-unit id="tsmiPushBranch.Text">
+        <source>Pus&amp;h branch...</source>
         
       </trans-unit>
       <trans-unit id="tsmiSelectInLeftPanel.Text">
@@ -11992,6 +12123,18 @@ Diff selection:
       <trans-unit id="chdrNames.Text">
         <source>Name</source>
         <target>Имя</target>
+        
+      </trans-unit>
+    </body>
+  </file>
+  <file datatype="plaintext" original="SettingsPageBase" source-language="en" target-language="ru">
+    <body>
+      <trans-unit id="_numberSettingPlaceholder.Text">
+        <source>no value set</source>
+        
+      </trans-unit>
+      <trans-unit id="_stringSettingPlaceholder.Text">
+        <source>no value set; for empty string, enter &quot;{0}&quot; without the double quotes</source>
         
       </trans-unit>
     </body>
@@ -12466,6 +12609,10 @@ Select this commit to populate the full message.</source>
         <target>Создать pull request</target>
         
       </trans-unit>
+      <trans-unit id="_createWorktree.Text">
+        <source>Create worktree...</source>
+        
+      </trans-unit>
       <trans-unit id="_dateText.Text">
         <source>Date</source>
         <target>Дата</target>
@@ -12479,6 +12626,18 @@ Select this commit to populate the full message.</source>
       <trans-unit id="_deleteFile.Text">
         <source>{0:Delete file|Delete files}</source>
         <target>{0:Delete file|Delete files}</target>
+        
+      </trans-unit>
+      <trans-unit id="_deleteWorktreeCaption.Text">
+        <source>Delete worktree</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteWorktreeConfirmation.Text">
+        <source>Are you sure you want to delete the worktree at {0}?</source>
+        
+      </trans-unit>
+      <trans-unit id="_deleteWorktreeFailed.Text">
+        <source>Failed to delete worktree: {0}</source>
         
       </trans-unit>
       <trans-unit id="_diffBaseWith.Text">
@@ -12715,6 +12874,26 @@ To be able to open this repository, you need to either:
         <target>&apos;{0}&apos; в настоящее время не отображается</target>
         
       </trans-unit>
+      <trans-unit id="_isLocalBranch.Text">
+        <source>is a local branch</source>
+        
+      </trans-unit>
+      <trans-unit id="_isRemoteBranch.Text">
+        <source>is a remote branch</source>
+        
+      </trans-unit>
+      <trans-unit id="_isTag.Text">
+        <source>is a tag</source>
+        
+      </trans-unit>
+      <trans-unit id="_isTrackedBy_Branch_AheadBehind.Text">
+        <source>is tracked by [{0}]   {1}</source>
+        
+      </trans-unit>
+      <trans-unit id="_isTracking_Remote.Text">
+        <source>is tracking [{0}]</source>
+        
+      </trans-unit>
       <trans-unit id="_loadingDataText.Text">
         <source>Loading data...</source>
         <target>Загрузка данных...</target>
@@ -12728,6 +12907,10 @@ To be able to open this repository, you need to either:
       <trans-unit id="_mainInstructionNotOnBranch.Text">
         <source>You are not working on a branch</source>
         <target>Вы не работаете в ветке</target>
+        
+      </trans-unit>
+      <trans-unit id="_manageWorktrees.Text">
+        <source>Manage worktrees...</source>
         
       </trans-unit>
       <trans-unit id="_markBisectAsBad.Text">
@@ -12823,6 +13006,10 @@ To be able to open this repository, you need to either:
       <trans-unit id="_pathFilter.Text">
         <source>Path filter</source>
         <target>Фильтр путей</target>
+        
+      </trans-unit>
+      <trans-unit id="_pruneWorktrees.Text">
+        <source>Prune worktrees</source>
         
       </trans-unit>
       <trans-unit id="_remote.Text">
@@ -13063,6 +13250,14 @@ the last selected commit.</source>
         <target>Субмодули</target>
         
       </trans-unit>
+      <trans-unit id="_switchWorktreeCaption.Text">
+        <source>Open worktree</source>
+        
+      </trans-unit>
+      <trans-unit id="_switchWorktreeConfirmation.Text">
+        <source>Switch to worktree at {0}?</source>
+        
+      </trans-unit>
       <trans-unit id="_tag.Text">
         <source>Tag</source>
         <target>Метка</target>
@@ -13118,6 +13313,10 @@ Yes, I allow telemetry!</source>
         <target>Предупреждение</target>
         
       </trans-unit>
+      <trans-unit id="_wasTracking_Remote.Text">
+        <source>was tracking [{0}], but the remote is gone</source>
+        
+      </trans-unit>
       <trans-unit id="_weeksAgo.Text">
         <source>{0} {1:week|weeks} ago</source>
         <target>{0} {1:неделя|недели|недель} назад</target>
@@ -13131,6 +13330,14 @@ Yes, I allow telemetry!</source>
       <trans-unit id="_workspaceText.Text">
         <source>Working directory</source>
         <target>Рабочий каталог</target>
+        
+      </trans-unit>
+      <trans-unit id="_worktreeDirectoryNotFound.Text">
+        <source>Worktree directory does not exist: {0}</source>
+        
+      </trans-unit>
+      <trans-unit id="_worktreesText.Text">
+        <source>Worktrees</source>
         
       </trans-unit>
       <trans-unit id="_yearsAgo.Text">
@@ -13191,8 +13398,7 @@ The action cannot be undone.</source>
         
       </trans-unit>
       <trans-unit id="_repositorySearchPlaceholder.Text">
-        <source>Search repositories</source>
-        <target>Поиск репозиториев</target>
+        <source>Search repositories...</source>
         
       </trans-unit>
       <trans-unit id="clmhdrBranch.Text">

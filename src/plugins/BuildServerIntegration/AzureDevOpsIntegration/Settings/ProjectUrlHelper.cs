@@ -37,27 +37,27 @@ public partial class ProjectUrlHelper
     {
         { // VS Team Services via HTTPS
             VsTeamHttpsRegex,
-            (match) => $"{match.Groups["prot"].Value}://{match.Groups["user"].Value}.visualstudio.com{match.Groups["port"].Value}{match.Groups["project"].Value}"
+            (match) => $"{match.Groups["prot"].ValueSpan}://{match.Groups["user"].ValueSpan}.visualstudio.com{match.Groups["port"].ValueSpan}{match.Groups["project"].ValueSpan}"
         },
         { // VS Team Services via SSH
             VsTeamSshRegex,
-            (match) => $"https://{match.Groups["user"].Value}.visualstudio.com{match.Groups["project"].Value}"
+            (match) => $"https://{match.Groups["user"].ValueSpan}.visualstudio.com{match.Groups["project"].ValueSpan}"
         },
         { // Azure DevOps via HTTPS
             AzureDevopsHttpsRegex,
-            (match) => $"{match.Groups["prot"].Value}://dev.azure.com{match.Groups["port"].Value}{match.Groups["project"].Value}"
+            (match) => $"{match.Groups["prot"].ValueSpan}://dev.azure.com{match.Groups["port"].ValueSpan}{match.Groups["project"].ValueSpan}"
         },
         { // Azure DevOps via SSH
             AzureDevopsSshRegex,
-            (match) => $"https://dev.azure.com{match.Groups["project"].Value}"
+            (match) => $"https://dev.azure.com{match.Groups["project"].ValueSpan}"
         },
         { // Secondary Project-Repo in TFS on premise with DefaultCollection (need at least something to detect)
             TfsSecondaryRegex,
-            (match) => $"{match.Groups["instanceurl"].Value}{match.Groups["project"].Value}"
+            (match) => $"{match.Groups["instanceurl"].ValueSpan}{match.Groups["project"].ValueSpan}"
         },
         { // Main Project-Repo in TFS on premise with DefaultCollection (need at least something to detect)
             TfsMainRegex,
-            (match) => $"{match.Groups["instanceurl"].Value}{match.Groups["project"].Value}"
+            (match) => $"{match.Groups["instanceurl"].ValueSpan}{match.Groups["project"].ValueSpan}"
         },
     };
 
@@ -65,15 +65,15 @@ public partial class ProjectUrlHelper
     {
         { // VS Team Services
             VsTeamTokenRegex,
-            (match) => $"{match.Groups["instanceurl"].Value}/_details/security/tokens"
+            (match) => $"{match.Groups["instanceurl"].ValueSpan}/_details/security/tokens"
         },
         { // Azure DevOps
             AzureDevopsTokenRegex,
-            (match) => $"{match.Groups["instanceurl"].Value}/_details/security/tokens"
+            (match) => $"{match.Groups["instanceurl"].ValueSpan}/_details/security/tokens"
         },
         { // Generic TFS on premise instance
             TfsTokenRegex,
-            (match) => $"{match.Groups["instanceurl"].Value}/_details/security/tokens"
+            (match) => $"{match.Groups["instanceurl"].ValueSpan}/_details/security/tokens"
         },
     };
 
@@ -189,7 +189,7 @@ public partial class ProjectUrlHelper
         if (match.Success)
         {
             string projectUrl = match.Groups["projecturl"].Value;
-            if (int.TryParse(match.Groups["buildid"].Value, out int buildId))
+            if (int.TryParse(match.Groups["buildid"].ValueSpan, out int buildId))
             {
                 return (true, projectUrl, buildId);
             }

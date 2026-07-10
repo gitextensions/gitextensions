@@ -2282,8 +2282,8 @@ public static partial class AppSettings
         {
             if (_isDesignMode is null)
             {
-                string processName = Process.GetCurrentProcess().ProcessName.ToLowerInvariant();
-                _isDesignMode = processName.Contains("devenv") || processName.Contains("designtoolsserver");
+                string processName = Path.GetFileNameWithoutExtension(Environment.ProcessPath ?? string.Empty);
+                _isDesignMode = processName.Contains("devenv", StringComparison.OrdinalIgnoreCase) || processName.Contains("designtoolsserver", StringComparison.OrdinalIgnoreCase);
             }
 
             return _isDesignMode.Value;

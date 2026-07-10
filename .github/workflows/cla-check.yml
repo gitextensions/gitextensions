@@ -81,12 +81,15 @@ jobs:
 
             // Extract the lowercased GitHub ids that have signed from the contributors.txt content. Entries look like:
             //   YYYY/MM/DD, github id, Full name, email
-            // The GitHub id is the second comma-separated column.
+            // The GitHub id is the second comma-separated column; the email is the fourth column.
+            // Entries whose email contains "noreply" are rejected.
             const parseSignedIds = (content) => {
               const ids = new Set();
               for (const line of content.split(/\r?\n/)) {
-                const match = line.match(/^\s*\d{4}\/\d{2}\/\d{2}\s*,\s*([^,]+?)\s*,/);
+                const match = line.match(/^\s*\d{4}\/\d{2}\/\d{2}\s*,\s*([^,]+?)\s*,\s*[^,]+?\s*,\s*(\S+)/);
                 if (match) {
+                  const email = match[2].trim().toLowerCase();
+                  if (email.includes('noreply')) continue;
                   ids.add(match[1].trim().toLowerCase());
                 }
               }

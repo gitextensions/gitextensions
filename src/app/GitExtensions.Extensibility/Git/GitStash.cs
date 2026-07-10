@@ -24,7 +24,7 @@ public sealed partial class GitStash
         }
 
         stash = new GitStash(
-            int.Parse(match.Groups["index"].Value),
+            int.Parse(match.Groups["index"].ValueSpan),
             match.Groups["message"].Value);
 
         return true;

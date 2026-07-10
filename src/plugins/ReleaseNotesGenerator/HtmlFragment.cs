@@ -55,13 +55,13 @@ internal partial class HtmlFragment
         for (Match m = HtmlRegex.Match(rawClipboardText); m.Success; m = m.NextMatch())
         {
             string key = m.Groups["key"].Value.ToLower();
-            string val = m.Groups["val"].Value;
+            ReadOnlySpan<char> val = m.Groups["val"].ValueSpan;
 
             switch (key)
             {
                 // Version number of the clipboard. Starting version is 0.9.
                 case "version":
-                    Version = val;
+                    Version = new string(val);
                     break;
 
                 // Byte count from the beginning of the clipboard to the start of the context, or -1 if no context
@@ -109,7 +109,7 @@ internal partial class HtmlFragment
 
                 // Optional Source URL, used for resolving relative links.
                 case "sourceurl":
-                    SourceUrl = new Uri(val);
+                    SourceUrl = new Uri(new string(val));
                     break;
             }
         }

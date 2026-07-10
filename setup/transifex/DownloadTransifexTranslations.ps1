@@ -30,6 +30,38 @@ try {
     # 5. move translations to the destination folder
     Get-ChildItem -Path ./* -Filter *.xlf | `
         Move-Item -Destination $repoRoot/src/app/GitUI/Translation/$($_.Name) -Force
+
+    # 6. stage deletions (step 1 + 4) and new/updated translation files (step 5)
+    git -C "$repoRoot" add -A -- src/app/GitUI/Translation ':(exclude)src/app/GitUI/Translation/English*.xlf'
+
+    # 7. replace English source files for verfication that Transifex is up to date (not to be committed)
+    ./tx.exe pull --source -f -r git-extensions.gitui-translation-english-xlf--master
+    ./tx.exe pull --source -f -r git-extensions.gitui-translation-english-plugins-xlf--master
+    $utf8NoBom = [System.Text.UTF8Encoding]::new($false)
+    $utf8WithBom = [System.Text.UTF8Encoding]::new($true)
+    foreach ($fileName in @('English.xlf', 'English.Plugins.xlf')) {
+        $filePath = Join-Path $PSScriptRoot $fileName
+        $content = [System.IO.File]::ReadAllText($filePath, $utf8NoBom)
+        # Transifex encodes ' and " as XML entities in source text; reverse that to reduce diff noise
+        $content = $content -replace '&apos;', "'"
+        $content = $content -replace '&quot;', '"'
+        # Transifex omits <target /> from source files; add it back to match the repo format
+        $content = $content -replace '(</source>(\r?\n)[ \t]*)\r?\n', '$1<target />$2'
+        # Transifex omits encoding declaration and BOM, and joins declaration and root element on one line
+        $content = $content -replace '<\?xml version="1\.0" \?><xliff', ("<?xml version=`"1.0`" encoding=`"utf-8`"?>`r`n<xliff")
+        # Normalize line endings to CRLF to match the repo format
+        $content = $content -replace '\r?\n', "`r`n"
+        [System.IO.File]::WriteAllText($filePath, $content, $utf8WithBom)
+        # Compare with the existing repo file; if different, mark as not to be committed
+        $repoFilePath = "$repoRoot/src/app/GitUI/Translation/$fileName"
+        if ((Get-FileHash $filePath).Hash -ne (Get-FileHash $repoFilePath).Hash) {
+            $content = "DO NOT COMMIT! This is just for verification that Transifex is up to date.`r`n" + $content
+            [System.IO.File]::WriteAllText($filePath, $content, $utf8WithBom)
+            Write-Host("WARNING: '$fileName' from Transifex differs from the repo version. Please verify that Transifex is up to date and do not commit the file!")
+        }
+    }
+    Move-Item -Path ./English.xlf         -Destination $repoRoot/src/app/GitUI/Translation/English.xlf         -Force
+    Move-Item -Path ./English.Plugins.xlf -Destination $repoRoot/src/app/GitUI/Translation/English.Plugins.xlf -Force
 }
 finally {
     Pop-Location

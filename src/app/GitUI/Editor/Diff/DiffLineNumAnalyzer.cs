@@ -54,8 +54,8 @@ public partial class DiffLineNumAnalyzer
                 };
 
                 Match lineNumbers = DiffRegex.Match(line);
-                leftLineNum = int.Parse(lineNumbers.Groups["leftStart"].Value);
-                rightLineNum = int.Parse(lineNumbers.Groups["rightStart"].Value);
+                leftLineNum = int.Parse(lineNumbers.Groups["leftStart"].ValueSpan);
+                rightLineNum = int.Parse(lineNumbers.Groups["rightStart"].ValueSpan);
 
                 ret.Add(meta);
                 isHeaderLineLocated = true;
