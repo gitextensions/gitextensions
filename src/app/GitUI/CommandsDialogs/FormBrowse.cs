@@ -218,7 +218,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
     private List<ToolStripItem>? _currentSubmoduleMenuItems;
     private readonly FormBrowseDiagnosticsReporter _formBrowseDiagnosticsReporter;
     private BuildReportTabPageExtension? _buildReportTabPageExtension;
-    private readonly ShellProvider _shellProvider = new();
+    private readonly IShellProvider _shellProvider;
     private IConsoleShellRunner? _terminal;
     private Dashboard? _dashboard;
     private bool _isFileHistoryMode;
@@ -262,6 +262,7 @@ public sealed partial class FormBrowse : GitModuleForm, IBrowseRepo
         _repositoryHistoryUIService = commands.GetRequiredService<IRepositoryHistoryUIService>();
 
         _consoleEmulatorsRegistry = commands.GetRequiredService<IConsoleEmulatorsRegistry>();
+        _shellProvider = commands.GetRequiredService<IShellProvider>();
 
         fileToolStripMenuItem.Initialize(() => UICommands);
         helpToolStripMenuItem.Initialize(() => UICommands);
