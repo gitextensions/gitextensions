@@ -1,0 +1,96 @@
+# =============================================================================
+# CI del fork (change 0.1 — add-fork-ci)
+#
+# Filosofía "local-first": este workflow NO sabe compilar ni testear. Toda la
+# lógica de verificación vive en eng/Verify.ps1 (el mismo script que se ejecuta
+# en local). Aquí solo se prepara una máquina limpia y se invoca ese script.
+# Especificación completa: openspec/changes/add-fork-ci/
+# =============================================================================
+
+# Nombre del workflow: aparece en la pestaña Actions y en el badge del README.
+name: Fork CI
+
+# -----------------------------------------------------------------------------
+# `on:` — los TRIGGERS: qué eventos de GitHub arrancan este workflow.
+# -----------------------------------------------------------------------------
+on:
+  # Cada push a la rama de trabajo (p. ej. al mergear una PR).
+  push:
+    branches: [ avalonia/main ]
+  # Cada pull request CUYO DESTINO sea avalonia/main. Se ejecuta sobre el
+  # resultado provisional del merge, y se re-ejecuta con cada push a la rama
+  # de la PR — así el check verde/rojo de la PR siempre refleja el último estado.
+  pull_request:
+    branches: [ avalonia/main ]
+  # Botón "Run workflow" en la pestaña Actions, para lanzarlo a mano sobre
+  # cualquier rama (útil para probar el propio workflow).
+  workflow_dispatch:
+
+# -----------------------------------------------------------------------------
+# `concurrency` — cancela el run anterior si llega otro push de la misma rama:
+# no tiene sentido gastar ~15 min verificando un commit ya superado.
+# `github.ref` identifica la rama/PR; un grupo por referencia.
+# -----------------------------------------------------------------------------
+concurrency:
+  group: fork-ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Variables de entorno visibles en todos los steps.
+env:
+  # Sin logo de .NET ni telemetría de primera ejecución: logs más limpios.
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
+# -----------------------------------------------------------------------------
+# `jobs:` — cada job corre en una máquina virtual limpia y efímera (runner).
+# Aquí hay un único job: verificar.
+# -----------------------------------------------------------------------------
+jobs:
+  verify:
+    name: Build + unit tests (Windows)
+
+    # Runner hospedado por GitHub: Windows Server con git, PowerShell (pwsh)
+    # y SDKs comunes preinstalados. Gratuito en repositorios públicos.
+    runs-on: windows-latest
+
+    # Red de seguridad: si algo se cuelga, GitHub mata el job a los 45 min
+    # (sin esto, un job colgado puede correr horas).
+    timeout-minutes: 45
+
+    steps:
+      # -----------------------------------------------------------------------
+      # Las `actions` (uses:) son steps empaquetados del Marketplace.
+      # Se anclan por tag mayor (@v5) por legibilidad; el upstream ancla por
+      # SHA de commit, que es más robusto frente a ataques de cadena de
+      # suministro (un tag puede moverse; un SHA no). Endurecer más adelante.
+      # -----------------------------------------------------------------------
+
+      # 1) Clonar el repositorio en el runner, incluyendo los tres submódulos
+      #    de externals/ (sin ellos la solución no compila).
+      - name: Checkout (con submódulos)
+        uses: actions/checkout@v5
+        with:
+          submodules: recursive
+
+      # 2) Instalar el SDK de .NET exacto que pide global.json (10.0.x).
+      #    El runner trae SDKs preinstalados, pero fijarlo con global.json
+      #    garantiza reproducibilidad aunque GitHub actualice sus imágenes.
+      - name: Instalar .NET SDK (según global.json)
+        uses: actions/setup-dotnet@v5
+        with:
+          global-json-file: global.json
+
+      # 3) La verificación de verdad: el MISMO script que se ejecuta en local.
+      #    Si su exit code es distinto de 0, este step (y el run) quedan en rojo.
+      - name: Verificar (build + unit tests)
+        run: .\eng\Verify.ps1
+
+      # 4) Solo si la verificación falló: subir los resultados .trx como
+      #    artifact descargable desde la página del run, para diagnóstico.
+      - name: Publicar resultados de tests (solo si falla)
+        if: failure()
+        uses: actions/upload-artifact@v6
+        with:
+          name: test-results-${{ github.run_number }}
+          path: artifacts/Release/TestResults/*.trx
+          retention-days: 31

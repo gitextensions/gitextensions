@@ -23,6 +23,8 @@ The journey started on **July 11, 2026**, from the upstream stable tag `v7.2.0`.
 
 ## Status
 
+[![Fork CI](https://github.com/angazo/gitextensionscp/actions/workflows/fork-ci.yml/badge.svg?branch=avalonia%2Fmain)](https://github.com/angazo/gitextensionscp/actions/workflows/fork-ci.yml)
+
 🚧 **Early days.** The migration is being developed incrementally, phase by phase:
 
 1. **Phase 0 — Foundations**: decouple the core from WinForms and prove it builds and passes
