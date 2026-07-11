@@ -82,3 +82,4 @@ artifacts/
 # AI tools folders and files excluded
 .claude/
 AGENTS.md
+AVALONIA_MIGRATION_ANALYSIS.md
