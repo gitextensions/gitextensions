@@ -78,3 +78,7 @@ artifacts/
 .tools/vswhere/
 .dotnet/
 *.svclog
+
+# AI tools folders and files excluded
+.claude/
+AGENTS.md
