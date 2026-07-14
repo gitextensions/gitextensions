@@ -58,6 +58,19 @@ public partial class RevisionGridControl : UserControl
     public event EventHandler? SelectionChanged;
 
     /// <summary>
+    ///  Selects and scrolls to the given revision if it is loaded.
+    /// </summary>
+    public void SelectRevision(ObjectId objectId)
+    {
+        GitRevision? revision = _revisions.Find(r => r.ObjectId == objectId);
+        if (revision is not null)
+        {
+            lstRevisions.SelectedItem = revision;
+            lstRevisions.ScrollIntoView(revision);
+        }
+    }
+
+    /// <summary>
     ///  Starts (re)loading the history of <paramref name="module"/> in the background,
     ///  streaming batches into the list as they are parsed.
     /// </summary>
