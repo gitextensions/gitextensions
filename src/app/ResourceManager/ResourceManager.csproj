@@ -4,6 +4,28 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- Avalonia/Linux port (see AGENTS.md): additionally build a cross-platform flavor
+         that compiles against GitExtensions.Shims.WinForms instead of real WinForms. -->
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
+    <UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0'">false</UseWindowsForms>
+    <UseGitExtensionsShims>true</UseGitExtensionsShims>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <!-- WinForms base classes for forms/controls; GitUI.Avalonia provides twins. -->
+    <Compile Remove="GitExtensionsControl.cs" />
+    <Compile Remove="GitExtensionsControlInitialiser.cs" />
+    <Compile Remove="GitExtensionsFormBase.cs" />
+    <Compile Remove="TranslatedControl.cs" />
+    <!-- Win32 P/Invoke. -->
+    <Compile Remove="NativeMethods.cs" />
+    <!-- Contains System.Drawing.Icon resources; unused outside the excluded control bases. -->
+    <Compile Remove="Properties\Resources.Designer.cs" />
+    <EmbeddedResource Remove="Properties\Resources.resx" />
+  </ItemGroup>
+
   <ItemGroup>
     <Compile Include="..\GitExtUtils\Validates.cs" Link="Utils\Validates.cs" />
   </ItemGroup>
