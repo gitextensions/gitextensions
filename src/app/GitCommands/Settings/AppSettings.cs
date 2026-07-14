@@ -261,6 +261,12 @@ public static partial class AppSettings
 
     private static bool ReadBoolRegKey(string key, bool defaultValue)
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            // Non-Windows has no registry; store these settings in the settings file like portable installations do.
+            return GetBool(key, defaultValue);
+        }
+
         object? obj = VersionIndependentRegKey.GetValue(key);
         if (obj is not string)
         {
@@ -277,17 +283,37 @@ public static partial class AppSettings
 
     private static void WriteBoolRegKey(string key, bool value)
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            // Non-Windows has no registry; store these settings in the settings file like portable installations do.
+            SetBool(key, value);
+            return;
+        }
+
         VersionIndependentRegKey.SetValue(key, value ? "true" : "false");
     }
 
     [return: NotNullIfNotNull(nameof(defaultValue))]
     private static string? ReadStringRegValue(string key, string? defaultValue)
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            // Non-Windows has no registry; store these settings in the settings file like portable installations do.
+            return GetString(key, defaultValue);
+        }
+
         return (string?)VersionIndependentRegKey.GetValue(key, defaultValue);
     }
 
     private static void WriteStringRegValue(string key, string value)
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            // Non-Windows has no registry; store these settings in the settings file like portable installations do.
+            SetString(key, value);
+            return;
+        }
+
         VersionIndependentRegKey.SetValue(key, value);
     }
 
@@ -2137,6 +2163,12 @@ public static partial class AppSettings
 
     private static void ImportFromRegistry()
     {
+        if (!OperatingSystem.IsWindows())
+        {
+            // Nothing to import: the legacy settings being migrated only ever existed in the Windows registry.
+            return;
+        }
+
         SettingsContainer.SettingsCache.Import(GetSettingsFromRegistry());
     }
 
