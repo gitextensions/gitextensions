@@ -6,12 +6,14 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUIPluginInterfaces;
 
+using ResourceManager;
+
 namespace GitUI.CommandsDialogs;
 
 // TODO(avalonia-port): reduced shell for milestones M1.0-M1.3 — revision grid, file list,
 // and patch viewer. The left panel, commit info, menus, and toolbars of the real FormBrowse
 // twin arrive in later milestones.
-public partial class FormBrowse : Window
+public partial class FormBrowse : GitExtensionsForm
 {
     private readonly GitModule? _module;
 
@@ -53,6 +55,8 @@ public partial class FormBrowse : Window
             lblRepoPath.Text = "No git repository";
             lblStatus.Text = "Start the app inside a repository or pass one on the command line: GitExtensions.Avalonia browse <path>";
         }
+
+        InitializeComplete();
     }
 
     private void RepoObjectsTree_SelectionChanged(object? sender, EventArgs e)
