@@ -2,18 +2,22 @@ using Avalonia.Controls;
 using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
+using ResourceManager;
+
 namespace GitUI.LeftPanel;
 
 // TODO(avalonia-port): milestone M1.4b — a read-only branches/remotes/tags panel.
 // The WinForms RepoObjectsTree's nested branch folders, submodules, stashes, favorites,
 // filtering, and context menus arrive in later milestones.
-public partial class RepoObjectsTree : UserControl
+public partial class RepoObjectsTree : GitExtensionsControl
 {
     public RepoObjectsTree()
     {
         InitializeComponent();
 
         treeMain.SelectionChanged += (_, _) => SelectionChanged?.Invoke(this, EventArgs.Empty);
+
+        InitializeComplete();
     }
 
     /// <summary>

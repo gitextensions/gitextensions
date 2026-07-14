@@ -3,12 +3,14 @@ using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using GitExtensions.Extensibility.Git;
 
+using ResourceManager;
+
 namespace GitUI;
 
 // TODO(avalonia-port): milestone M1.3 — a read-only file list for the selected revision.
 // The grouping, filtering, staging interactions, and context menus of the WinForms
 // FileStatusList (2,198 LOC) arrive in later milestones.
-public partial class FileStatusList : UserControl
+public partial class FileStatusList : GitExtensionsControl
 {
     public FileStatusList()
     {
@@ -16,6 +18,8 @@ public partial class FileStatusList : UserControl
 
         lstFiles.ItemTemplate = new FuncDataTemplate<GitItemStatus>(CreateFileRow, supportsRecycling: false);
         lstFiles.SelectionChanged += (_, _) => SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+
+        InitializeComplete();
     }
 
     /// <summary>
