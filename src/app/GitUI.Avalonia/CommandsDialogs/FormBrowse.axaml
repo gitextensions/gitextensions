@@ -1,14 +1,23 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:gitui="clr-namespace:GitUI"
+        xmlns:editor="clr-namespace:GitUI.Editor"
         x:Class="GitUI.CommandsDialogs.FormBrowse"
-        Width="1200" Height="750"
+        Width="1280" Height="800"
         Title="Git Extensions">
   <DockPanel>
     <StackPanel DockPanel.Dock="Top" Margin="8,6" Spacing="2">
       <TextBlock x:Name="lblRepoPath" FontWeight="SemiBold" />
       <TextBlock x:Name="lblStatus" Opacity="0.7" TextWrapping="Wrap" />
     </StackPanel>
-    <gitui:RevisionGridControl x:Name="RevisionGrid" Margin="8,0,8,8" />
+    <Grid RowDefinitions="3*,4,2*" Margin="8,0,8,8">
+      <gitui:RevisionGridControl x:Name="RevisionGrid" Grid.Row="0" />
+      <GridSplitter Grid.Row="1" Background="Transparent" ResizeDirection="Rows" />
+      <Grid Grid.Row="2" ColumnDefinitions="380,4,*">
+        <gitui:FileStatusList x:Name="fileStatusList" Grid.Column="0" />
+        <GridSplitter Grid.Column="1" Background="Transparent" ResizeDirection="Columns" />
+        <editor:FileViewer x:Name="fileViewer" Grid.Column="2" />
+      </Grid>
+    </Grid>
   </DockPanel>
 </Window>
