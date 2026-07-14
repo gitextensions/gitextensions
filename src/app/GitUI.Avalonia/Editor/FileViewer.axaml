@@ -1,0 +1,12 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit"
+             x:Class="GitUI.Editor.FileViewer">
+  <avaloniaEdit:TextEditor x:Name="TextEditor"
+                           IsReadOnly="True"
+                           FontFamily="monospace"
+                           FontSize="12"
+                           ShowLineNumbers="True"
+                           HorizontalScrollBarVisibility="Auto"
+                           VerticalScrollBarVisibility="Auto" />
+</UserControl>
