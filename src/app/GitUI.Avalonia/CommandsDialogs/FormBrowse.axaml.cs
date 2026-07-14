@@ -5,9 +5,9 @@ using GitExtUtils;
 
 namespace GitUI.CommandsDialogs;
 
-// TODO(avalonia-port): skeleton shell proving milestone M1.0 "boots on Linux".
-// It will be replaced by the real FormBrowse twin (revision grid, left panel, diff viewer)
-// in milestones M1.1+ (see PLAN.md).
+// TODO(avalonia-port): reduced shell for milestones M1.0/M1.1 — hosts the revision list.
+// The left panel, diff viewer, commit info, menus, and toolbars of the real FormBrowse twin
+// arrive in later milestones (see PLAN.md).
 public partial class FormBrowse : Window
 {
     public FormBrowse()
@@ -24,12 +24,16 @@ public partial class FormBrowse : Window
         IAppTitleGenerator appTitleGenerator = serviceProvider.GetRequiredService<IAppTitleGenerator>();
         Title = appTitleGenerator.Generate(module.WorkingDir, isValidWorkingDir, branchName);
 
-        lblHeading.Text = Title;
-        lblRepoPath.Text = isValidWorkingDir
-            ? $"Repository: {module.WorkingDir}"
-            : "No git repository (start the app inside a repository or pass one on the command line)";
-        lblBranch.Text = isValidWorkingDir ? $"Branch: {branchName}" : string.Empty;
-        lblGitVersion.Text = $"git: {GitVersion.Current}";
-        lblStatus.Text = "Avalonia port — Phase 1 skeleton. The revision grid, left panel, and diff viewer arrive in the next milestones (see PLAN.md).";
+        if (isValidWorkingDir)
+        {
+            lblRepoPath.Text = $"{module.WorkingDir}  —  {branchName}";
+            lblStatus.Text = $"git: {GitVersion.Current}";
+            RevisionGrid.ReloadRevisions(module);
+        }
+        else
+        {
+            lblRepoPath.Text = "No git repository";
+            lblStatus.Text = "Start the app inside a repository or pass one on the command line: GitExtensions.Avalonia browse <path>";
+        }
     }
 }
