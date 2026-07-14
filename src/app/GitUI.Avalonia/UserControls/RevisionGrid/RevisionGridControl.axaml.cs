@@ -3,8 +3,11 @@ using Avalonia.Controls.Templates;
 using Avalonia.Media;
 using Avalonia.Threading;
 using GitCommands;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitExtUtils.GitUI.Theming;
+using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUI.UserControls.RevisionGrid.Graph.Rendering;
 using GitUIPluginInterfaces;
@@ -34,6 +37,7 @@ public partial class RevisionGridControl : UserControl
     private RevisionGraphConfig _config = new();
     private ObjectId? _headId;
     private bool _headHighlighted;
+    private ILookup<ObjectId, IGitRef>? _refsByObjectId;
 
     public RevisionGridControl()
     {
@@ -72,6 +76,12 @@ public partial class RevisionGridControl : UserControl
         RevisionObserver observer = new(this, cancellationToken);
         ThreadHelper.FileAndForget(() =>
         {
+            // Like the WinForms grid: fetch the refs first so they can be attached to the
+            // revisions as they stream in (ref labels; square graph nodes).
+            _refsByObjectId = module.GetRefs(RefsFilter.NoFilter)
+                .Where(gitRef => !gitRef.ObjectId.IsZero)
+                .ToLookup(gitRef => gitRef.ObjectId);
+
             RevisionReader reader = new(module);
             reader.GetLog(observer, revisionFilter: "--all", pathFilter: "", hasNotes: false, autostashLabel: "autostash", cancellationToken);
         });
@@ -88,6 +98,11 @@ public partial class RevisionGridControl : UserControl
             if (cancellationToken.IsCancellationRequested)
             {
                 return;
+            }
+
+            if (_refsByObjectId is not null)
+            {
+                revision.Refs = [.. _refsByObjectId[revision.ObjectId]];
             }
 
             _revisionGraph.Add(revision);
@@ -172,6 +187,7 @@ public partial class RevisionGridControl : UserControl
     private sealed class RevisionRowControl : Grid
     {
         private readonly GraphCellControl _graph;
+        private readonly StackPanel _messagePanel;
         private readonly TextBlock _subject;
         private readonly TextBlock _author;
         private readonly TextBlock _date;
@@ -182,16 +198,23 @@ public partial class RevisionGridControl : UserControl
             ColumnDefinitions = new ColumnDefinitions($"{GraphColumnWidth},*,180,140");
 
             _graph = new GraphCellControl(owner) { ClipToBounds = true };
-            _subject = CreateTextBlock(leftMargin: 8);
+            _subject = CreateTextBlock(leftMargin: 0);
+            _messagePanel = new StackPanel
+            {
+                Orientation = Avalonia.Layout.Orientation.Horizontal,
+                Margin = new Avalonia.Thickness(8, 0, 2, 0),
+                ClipToBounds = true,
+            };
+            _messagePanel.Children.Add(_subject);
             _author = CreateTextBlock(leftMargin: 8, opacity: 0.85);
             _date = CreateTextBlock(leftMargin: 8, opacity: 0.7);
 
             SetColumn(_graph, 0);
-            SetColumn(_subject, 1);
+            SetColumn(_messagePanel, 1);
             SetColumn(_author, 2);
             SetColumn(_date, 3);
             Children.Add(_graph);
-            Children.Add(_subject);
+            Children.Add(_messagePanel);
             Children.Add(_author);
             Children.Add(_date);
 
@@ -213,11 +236,64 @@ public partial class RevisionGridControl : UserControl
 
             if (DataContext is GitRevision revision)
             {
+                // The subject TextBlock is the persistent last child; only ref chips are rebuilt.
+                _messagePanel.Children.RemoveRange(0, _messagePanel.Children.Count - 1);
+                foreach (IGitRef gitRef in revision.Refs)
+                {
+                    _messagePanel.Children.Insert(_messagePanel.Children.Count - 1, RefLabels.CreateChip(gitRef));
+                }
+
                 _subject.Text = revision.Subject;
                 _author.Text = revision.Author ?? string.Empty;
                 _date.Text = revision.AuthorDate.ToString("yyyy-MM-dd HH:mm");
                 _graph.Revision = revision;
             }
+        }
+    }
+
+    /// <summary>
+    ///  Ref label chips (branch/tag/remote), colored like the WinForms
+    ///  <c>RevisionGridRefRenderer</c> from the <see cref="AppColor"/> palette.
+    /// </summary>
+    private static class RefLabels
+    {
+        private static readonly IBrush _branchBrush = CreateBrush(AppColor.Branch);
+        private static readonly IBrush _remoteBranchBrush = CreateBrush(AppColor.RemoteBranch);
+        private static readonly IBrush _tagBrush = CreateBrush(AppColor.Tag);
+        private static readonly IBrush _otherBrush = CreateBrush(AppColor.OtherTag);
+
+        public static Border CreateChip(IGitRef gitRef)
+        {
+            IBrush brush = gitRef switch
+            {
+                { IsTag: true } => _tagBrush,
+                { IsRemote: true } => _remoteBranchBrush,
+                { IsHead: true } => _branchBrush,
+                _ => _otherBrush,
+            };
+
+            return new Border
+            {
+                BorderBrush = brush,
+                BorderThickness = new Avalonia.Thickness(1),
+                CornerRadius = new Avalonia.CornerRadius(3),
+                Padding = new Avalonia.Thickness(4, 0),
+                Margin = new Avalonia.Thickness(0, 3, 6, 3),
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                Child = new TextBlock
+                {
+                    Text = gitRef.Name,
+                    Foreground = brush,
+                    FontSize = 11,
+                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
+                },
+            };
+        }
+
+        private static IBrush CreateBrush(AppColor appColor)
+        {
+            System.Drawing.Color color = appColor.GetThemeColor();
+            return new SolidColorBrush(Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B)).ToImmutable();
         }
     }
 
