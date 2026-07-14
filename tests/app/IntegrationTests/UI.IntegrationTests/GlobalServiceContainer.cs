@@ -7,10 +7,10 @@ using GitExtUtils;
 using GitUI;
 using GitUI.ConsoleEmulation;
 using GitUI.ConsoleEmulation.PlainText;
-using GitUI.Shells;
 using GitUI.Hotkey;
 using GitUI.Models;
 using GitUI.ScriptsEngine;
+using GitUI.Shells;
 using NSubstitute;
 using ResourceManager;
 
