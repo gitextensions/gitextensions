@@ -2,6 +2,20 @@
 
 <https://github.blog/changelog/2025-01-21-custom-repository-instructions-are-now-available-for-copilot-on-github-com-public-preview/>
 
+## Agent documentation (DAG) — read this first
+
+This repository uses **Docs-Augmented Generation (DAG)**: hierarchical, agent-optimised docs
+under [.github/copilot-docs/](copilot-docs/README.md) that let you build accurate context
+incrementally without loading the whole codebase.
+
+- **ALWAYS load the foundation:** [L0 Foundations Primer](copilot-docs/L0-foundations/gitextensions-primer.md) — architecture anchor, glossary, and ownership map. Read it every session.
+- **Navigate via the index:** the master [docs-index.md](copilot-docs/docs-index.md) has the ownership table and reading chains. Read the relevant index and follow a reading chain **before** grep-ing the code.
+- **Layers:** [L1 Conceptual](copilot-docs/L1-conceptual/docs-index.md) · [L2 Core Platform](copilot-docs/L2-core-platform/docs-index.md) · [L3 Flows](copilot-docs/L3-flows/docs-index.md).
+- **Cross-cutting:** [skills](skills/README.md) and [custom agents](agents/README.md).
+
+> **HARD RULE:** for any non-trivial task, first read the L0 primer, then the matching
+> docs-index reading chain, *then* verify against the source. Load only the docs a task needs.
+
 ## Repository setup
 
 This repository uses git submodules (under `externals/`). After cloning or creating a new worktree, always run:
