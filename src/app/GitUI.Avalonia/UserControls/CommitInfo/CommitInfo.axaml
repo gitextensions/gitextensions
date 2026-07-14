@@ -1,0 +1,10 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitUI.CommitInfo.CommitInfo">
+  <ScrollViewer>
+    <StackPanel Margin="8,4" Spacing="8">
+      <SelectableTextBlock x:Name="RevisionHeader" FontFamily="monospace" FontSize="12" Opacity="0.85" />
+      <SelectableTextBlock x:Name="rtbxCommitMessage" TextWrapping="Wrap" />
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>
