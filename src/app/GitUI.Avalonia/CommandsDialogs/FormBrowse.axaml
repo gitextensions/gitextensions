@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.FormBrowse"
+        Width="1000" Height="650"
+        Title="Git Extensions">
+  <DockPanel Margin="16">
+    <TextBlock DockPanel.Dock="Top" x:Name="lblHeading" FontSize="20" FontWeight="SemiBold" />
+    <StackPanel Spacing="8" Margin="0,16,0,0">
+      <TextBlock x:Name="lblRepoPath" />
+      <TextBlock x:Name="lblBranch" />
+      <TextBlock x:Name="lblGitVersion" />
+      <TextBlock x:Name="lblStatus" Opacity="0.7" TextWrapping="Wrap" />
+    </StackPanel>
+  </DockPanel>
+</Window>

@@ -6,6 +6,7 @@ using System.Runtime.CompilerServices;
 [assembly: InternalsVisibleTo("GitExtUtils.Tests")]
 [assembly: InternalsVisibleTo("GitUI.Tests")]
 [assembly: InternalsVisibleTo("GitExtensions")]
+[assembly: InternalsVisibleTo("GitExtensions.Avalonia")]
 [assembly: InternalsVisibleTo("BugReporter")]
 [assembly: InternalsVisibleTo("CommonTestUtils")]
 [assembly: InternalsVisibleTo("TranslationApp")]
