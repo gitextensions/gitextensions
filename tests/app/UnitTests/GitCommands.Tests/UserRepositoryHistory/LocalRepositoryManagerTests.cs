@@ -195,9 +195,9 @@ public class LocalRepositoryManagerTests
 
         IList<Repository> repositories = await _manager.LoadRecentHistoryAsync();
 
+        repositories.Should().HaveCount(size);
         repositories.Select(r => r.Path).Should().ContainInOrder("path1", "path5", "path6");
-        repositories.Select(r => r.Path).Should().NotContain(["path3", "path4"]);
-    }
+        repositories.Select(r => r.Path).Should().NotContain(["path2", "path3", "path4"]);
 
     [Test]
     public async Task LoadRecentHistoryAsync_should_keep_all_anchored_repositories_when_they_exceed_size()
