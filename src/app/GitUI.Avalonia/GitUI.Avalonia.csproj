@@ -1,13 +1,41 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- Avalonia twin of GitUI (see AGENTS.md): ported types keep their original GitUI
+    <!-- Avalonia twin of GitUI: ported types keep their original GitUI
          namespaces so upstream diffs map 1:1 and translation keys stay valid. -->
     <TargetFramework>net10.0</TargetFramework>
     <UseWindowsForms>false</UseWindowsForms>
     <RootNamespace>GitUI</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Mirror of the implicit System.Drawing using that UseWindowsForms provides in GitUI,
+         so portable GitUI files can be linked below without source changes. Files that also
+         use Avalonia's Point/Size alias per file. -->
+    <Using Include="System.Drawing" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Framework-free GitUI sources compiled unchanged (update
+         eng/avalonia/portmap.json when this list changes). -->
+    <Compile Include="..\GitExtUtils\Validates.cs" Link="Validates.cs" />
+    <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\BranchFinder.cs" Link="UserControls\RevisionGrid\Graph\BranchFinder.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\Lane.cs" Link="UserControls\RevisionGrid\Graph\Lane.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\LaneInfo.cs" Link="UserControls\RevisionGrid\Graph\LaneInfo.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\LaneInfoProvider.cs" Link="UserControls\RevisionGrid\Graph\LaneInfoProvider.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\LaneNodeLocator.cs" Link="UserControls\RevisionGrid\Graph\LaneNodeLocator.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\LaneSharing.cs" Link="UserControls\RevisionGrid\Graph\LaneSharing.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\RevisionGraph.cs" Link="UserControls\RevisionGrid\Graph\RevisionGraph.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\RevisionGraphConfig.cs" Link="UserControls\RevisionGrid\Graph\RevisionGraphConfig.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\RevisionGraphRevision.cs" Link="UserControls\RevisionGrid\Graph\RevisionGraphRevision.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\RevisionGraphRow.cs" Link="UserControls\RevisionGrid\Graph\RevisionGraphRow.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\RevisionGraphSegment.cs" Link="UserControls\RevisionGrid\Graph\RevisionGraphSegment.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\Rendering\DiagonalSegmentInfo.cs" Link="UserControls\RevisionGrid\Graph\Rendering\DiagonalSegmentInfo.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\Rendering\SegmentLanesInfo.cs" Link="UserControls\RevisionGrid\Graph\Rendering\SegmentLanesInfo.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\Rendering\SegmentPointsInfo.cs" Link="UserControls\RevisionGrid\Graph\Rendering\SegmentPointsInfo.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Avalonia" />
