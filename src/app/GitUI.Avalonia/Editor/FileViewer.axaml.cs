@@ -3,18 +3,22 @@ using Avalonia.Media;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
 
+using ResourceManager;
+
 namespace GitUI.Editor;
 
 // TODO(avalonia-port): milestone M1.3 — a read-only patch viewer on AvaloniaEdit.
 // The WinForms FileViewer's view modes (blob, blame, ranges), encodings, syntax highlighting,
 // and margins arrive in later milestones.
-public partial class FileViewer : UserControl
+public partial class FileViewer : GitExtensionsControl
 {
     public FileViewer()
     {
         InitializeComponent();
 
         TextEditor.TextArea.TextView.LineTransformers.Add(new DiffLineColorizer());
+
+        InitializeComplete();
     }
 
     /// <summary>

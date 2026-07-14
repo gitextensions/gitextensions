@@ -12,6 +12,8 @@ using GitUI.UserControls.RevisionGrid.Graph;
 using GitUI.UserControls.RevisionGrid.Graph.Rendering;
 using GitUIPluginInterfaces;
 
+using ResourceManager;
+
 namespace GitUI;
 
 // Twin of the enum declared in GitUI/UserControls/RevisionGrid/RevisionGridControl.cs.
@@ -26,7 +28,7 @@ public enum RevisionGraphDrawStyle
 // streamed by the shared RevisionReader and shaped by the shared RevisionGraph model.
 // Ref labels, avatars, and the ColumnProvider pattern of the WinForms RevisionGridControl
 // come in later milestones.
-public partial class RevisionGridControl : UserControl
+public partial class RevisionGridControl : GitExtensionsControl
 {
     private const int RowHeight = 24;
     private const int GraphColumnWidth = 160;
@@ -45,6 +47,8 @@ public partial class RevisionGridControl : UserControl
 
         lstRevisions.ItemTemplate = new FuncDataTemplate<GitRevision>((_, _) => new RevisionRowControl(this), supportsRecycling: true);
         lstRevisions.SelectionChanged += (_, _) => SelectionChanged?.Invoke(this, EventArgs.Empty);
+
+        InitializeComplete();
     }
 
     /// <summary>
