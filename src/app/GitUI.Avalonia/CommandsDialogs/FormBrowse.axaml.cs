@@ -33,17 +33,33 @@ public partial class FormBrowse : Window
 
         RevisionGrid.SelectionChanged += RevisionGrid_SelectionChanged;
         fileStatusList.SelectedIndexChanged += FileStatusList_SelectedIndexChanged;
+        repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
 
         if (isValidWorkingDir)
         {
             lblRepoPath.Text = $"{module.WorkingDir}  —  {branchName}";
             lblStatus.Text = $"git: {GitVersion.Current}";
             RevisionGrid.ReloadRevisions(module);
+
+            ThreadHelper.FileAndForget(async () =>
+            {
+                IReadOnlyList<IGitRef> refs = module.GetRefs(RefsFilter.NoFilter);
+                await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync();
+                repoObjectsTree.SetRefs(refs);
+            });
         }
         else
         {
             lblRepoPath.Text = "No git repository";
             lblStatus.Text = "Start the app inside a repository or pass one on the command line: GitExtensions.Avalonia browse <path>";
+        }
+    }
+
+    private void RepoObjectsTree_SelectionChanged(object? sender, EventArgs e)
+    {
+        if (repoObjectsTree.SelectedRef is IGitRef gitRef)
+        {
+            RevisionGrid.SelectRevision(gitRef.ObjectId);
         }
     }
 
