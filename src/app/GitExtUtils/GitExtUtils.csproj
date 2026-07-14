@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- Avalonia/Linux port (see AGENTS.md): additionally build a cross-platform flavor
+    <!-- Avalonia/Linux port: additionally build a cross-platform flavor
          that compiles against GitExtensions.Shims.WinForms instead of real WinForms. -->
     <TargetFramework></TargetFramework>
     <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
@@ -21,7 +21,7 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
     <!-- WinForms/GDI-coupled UI helpers: net10.0 removes the whole GitUI subtree, then
          re-includes only the whitelisted portable files below. New upstream files therefore
-         stay excluded until explicitly whitelisted (see AGENTS.md). -->
+         stay excluded until explicitly whitelisted. -->
     <Compile Remove="GitUI\**\*.cs" />
     <Compile Include="GitUI\CancellationTokenSequence.cs" />
     <Compile Include="GitUI\ControlTagExtensions.cs" />

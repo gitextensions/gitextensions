@@ -5,7 +5,7 @@ namespace GitUI.Compat;
 
 /// <summary>
 ///  Installs the Avalonia implementations of the shim services
-///  (see <see cref="ShimHost"/> and AGENTS.md, "The shim contract").
+///  (see <see cref="ShimHost"/>).
 /// </summary>
 public static class ShimServices
 {
