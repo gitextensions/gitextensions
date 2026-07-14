@@ -95,6 +95,7 @@
       <BuildDependency Project="src/plugins/Statistics/GitImpact/GitExtensions.Plugins.GitImpact.csproj" />
       <BuildDependency Project="src/plugins/Statistics/GitStatistics/GitExtensions.Plugins.GitStatistics.csproj" />
     </Project>
+    <Project Path="src/app/GitExtensions.Shims.WinForms/GitExtensions.Shims.WinForms.csproj" />
     <Project Path="src/app/GitExtUtils/GitExtUtils.csproj" />
     <Project Path="src/app/GitUI/GitUI.csproj" />
     <Project Path="src/app/ResourceManager/ResourceManager.csproj" />
