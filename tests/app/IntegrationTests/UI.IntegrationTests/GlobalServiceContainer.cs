@@ -7,6 +7,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.ConsoleEmulation;
 using GitUI.ConsoleEmulation.PlainText;
+using GitUI.Shells;
 using GitUI.Hotkey;
 using GitUI.Models;
 using GitUI.ScriptsEngine;
@@ -45,6 +46,8 @@ public static class GlobalServiceContainer
         serviceContainer.AddService(branchNameNormaliser);
 
         serviceContainer.AddService<IGitExecutorProvider>(new GitExecutorProvider(new GitDirectoryResolver()));
+
+        serviceContainer.AddService<IShellProvider>(new ShellProvider());
 
         serviceContainer.AddService<IConsoleEmulatorsRegistry>(PlainTextConsoleEmulatorsRegistry.Instance);
 
