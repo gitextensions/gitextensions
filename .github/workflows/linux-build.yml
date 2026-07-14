@@ -65,6 +65,9 @@ jobs:
         dotnet build src/app/GitCommands/GitCommands.csproj -f net10.0
         dotnet build src/app/ResourceManager/ResourceManager.csproj -f net10.0
 
+    - name: Build Avalonia app
+      run: dotnet build src/app/GitExtensions.Avalonia/GitExtensions.Avalonia.csproj
+
     - name: Build tiers (net10.0-windows compile check)
       run: |
         dotnet build src/app/GitExtensions.Extensibility/GitExtensions.Extensibility.csproj -f net10.0-windows
