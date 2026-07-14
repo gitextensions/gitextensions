@@ -22,13 +22,13 @@
     <PackageReference Update="JetBrains.Annotations" PrivateAssets="all" />
   </ItemGroup>
 
-  <!-- Avalonia/Linux port (see AGENTS.md): allow compiling the net10.0-windows flavor on
+  <!-- Avalonia/Linux port: allow compiling the net10.0-windows flavor on
        non-Windows machines (restore of multi-targeted projects evaluates all flavors). -->
   <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
     <EnableWindowsTargeting>true</EnableWindowsTargeting>
   </PropertyGroup>
 
-  <!-- Avalonia/Linux port (see AGENTS.md): the cross-platform 'net10.0' flavor of the
+  <!-- Avalonia/Linux port: the cross-platform 'net10.0' flavor of the
        multi-targeted tier projects compiles against headless WinForms stand-ins instead of
        real WinForms. The global usings below replace the implicit System.Windows.Forms and
        System.Drawing usings that UseWindowsForms provides on the Windows flavor. -->

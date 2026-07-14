@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project>
 
-  <!-- Avalonia/Linux port (see AGENTS.md): allow compiling the Windows-targeting externals
+  <!-- Avalonia/Linux port: allow compiling the Windows-targeting externals
        on non-Windows machines. -->
   <PropertyGroup Condition="'$(OS)' != 'Windows_NT'">
     <EnableWindowsTargeting>true</EnableWindowsTargeting>

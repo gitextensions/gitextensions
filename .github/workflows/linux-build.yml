@@ -1,6 +1,6 @@
 name: Linux Build
 
-# Avalonia/Linux port (see AGENTS.md): builds the cross-platform (net10.0) flavor of the
+# Avalonia/Linux port: builds the cross-platform (net10.0) flavor of the
 # tier projects on Linux, plus their net10.0-windows flavor as a compile check.
 # Kept as a separate workflow file so upstream merges never conflict on CI configuration.
 
