@@ -1,15 +1,14 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="clr-namespace:GitUI"
         x:Class="GitUI.CommandsDialogs.FormBrowse"
-        Width="1000" Height="650"
+        Width="1200" Height="750"
         Title="Git Extensions">
-  <DockPanel Margin="16">
-    <TextBlock DockPanel.Dock="Top" x:Name="lblHeading" FontSize="20" FontWeight="SemiBold" />
-    <StackPanel Spacing="8" Margin="0,16,0,0">
-      <TextBlock x:Name="lblRepoPath" />
-      <TextBlock x:Name="lblBranch" />
-      <TextBlock x:Name="lblGitVersion" />
+  <DockPanel>
+    <StackPanel DockPanel.Dock="Top" Margin="8,6" Spacing="2">
+      <TextBlock x:Name="lblRepoPath" FontWeight="SemiBold" />
       <TextBlock x:Name="lblStatus" Opacity="0.7" TextWrapping="Wrap" />
     </StackPanel>
+    <gitui:RevisionGridControl x:Name="RevisionGrid" Margin="8,0,8,8" />
   </DockPanel>
 </Window>
