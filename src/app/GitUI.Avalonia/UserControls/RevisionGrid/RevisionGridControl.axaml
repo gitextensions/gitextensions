@@ -1,0 +1,8 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitUI.RevisionGridControl">
+  <DockPanel>
+    <TextBlock DockPanel.Dock="Bottom" x:Name="lblLoadingStatus" Margin="4,2" Opacity="0.7" />
+    <ListBox x:Name="lstRevisions" SelectionMode="Single" />
+  </DockPanel>
+</UserControl>
