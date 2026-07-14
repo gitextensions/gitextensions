@@ -1,17 +1,21 @@
 using Avalonia.Controls;
 using GitUIPluginInterfaces;
 
+using ResourceManager;
+
 namespace GitUI.CommitInfo;
 
 // TODO(avalonia-port): milestone M1.4 — a plain commit details pane. The WinForms CommitInfo's
 // links, tags/branches resolution, and rendered header arrive in later milestones.
-public partial class CommitInfo : UserControl
+public partial class CommitInfo : GitExtensionsControl
 {
     private GitRevision? _revision;
 
     public CommitInfo()
     {
         InitializeComponent();
+
+        InitializeComplete();
     }
 
     /// <summary>
