@@ -51,6 +51,7 @@ public partial class FormBrowse : Window
     {
         fileStatusList.Clear();
         fileViewer.ViewPatch(string.Empty);
+        CommitInfo.Revision = RevisionGrid.SelectedRevision;
 
         if (_module is not GitModule module
             || RevisionGrid.SelectedRevision is not GitRevision revision
