@@ -22,6 +22,7 @@
     <PackageVersion Include="StrongOf" Version="1.2.4" />
     <PackageVersion Include="StyleCop.Analyzers" Version="1.2.0-beta.556" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="6.0.0" />    <!-- Required by GitExtensions.PluginManager -->
+    <PackageVersion Include="System.Configuration.ConfigurationManager" Version="10.0.9" />    <!-- Avalonia/Linux port: net10.0 flavor of GitCommands (Windows flavor gets it from the WindowsDesktop framework) -->
     <PackageVersion Include="System.IO.Abstractions" Version="22.0.12" />
     <PackageVersion Include="System.Reactive.Interfaces" Version="5.0.0" />
     <PackageVersion Include="System.Reactive.Linq" Version="5.0.0" />
