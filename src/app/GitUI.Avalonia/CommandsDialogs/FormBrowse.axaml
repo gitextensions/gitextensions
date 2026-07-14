@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:gitui="clr-namespace:GitUI"
         xmlns:editor="clr-namespace:GitUI.Editor"
+        xmlns:commitinfo="clr-namespace:GitUI.CommitInfo"
         x:Class="GitUI.CommandsDialogs.FormBrowse"
         Width="1280" Height="800"
         Title="Git Extensions">
@@ -14,7 +15,10 @@
       <gitui:RevisionGridControl x:Name="RevisionGrid" Grid.Row="0" />
       <GridSplitter Grid.Row="1" Background="Transparent" ResizeDirection="Rows" />
       <Grid Grid.Row="2" ColumnDefinitions="380,4,*">
-        <gitui:FileStatusList x:Name="fileStatusList" Grid.Column="0" />
+        <Grid Grid.Column="0" RowDefinitions="Auto,*">
+          <commitinfo:CommitInfo x:Name="CommitInfo" Grid.Row="0" MaxHeight="180" />
+          <gitui:FileStatusList x:Name="fileStatusList" Grid.Row="1" />
+        </Grid>
         <GridSplitter Grid.Column="1" Background="Transparent" ResizeDirection="Columns" />
         <editor:FileViewer x:Name="fileViewer" Grid.Column="2" />
       </Grid>
