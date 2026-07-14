@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <!-- Avalonia/Linux port (see AGENTS.md): additionally build a cross-platform flavor
+    <!-- Avalonia/Linux port: additionally build a cross-platform flavor
          that compiles against GitExtensions.Shims.WinForms instead of real WinForms. -->
     <TargetFramework></TargetFramework>
     <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
