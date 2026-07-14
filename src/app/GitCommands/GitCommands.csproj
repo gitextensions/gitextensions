@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
@@ -6,7 +6,7 @@
     <DefineConstants>$(DefineConstants);TRACE_REVISIONREADER</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup>
+  <PropertyGroup Condition="'$(OS)' != 'Windows_NT' or '$(BuildAvalonia)' == 'true'">
     <!-- Avalonia/Linux port: additionally build a cross-platform flavor
          that compiles against GitExtensions.Shims.WinForms instead of real WinForms. -->
     <TargetFramework></TargetFramework>

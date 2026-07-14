@@ -26,6 +26,9 @@ jobs:
   build-linux:
     name: Build (net10.0 tiers)
     runs-on: ubuntu-latest
+    # The Avalonia port must never block the Windows Forms pipelines: report failures as
+    # annotations without failing the check.
+    continue-on-error: true
     timeout-minutes: 30
     permissions:
       contents: read
