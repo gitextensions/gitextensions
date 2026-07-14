@@ -3,6 +3,15 @@
              x:Class="GitUI.RevisionGridControl">
   <DockPanel>
     <TextBlock DockPanel.Dock="Bottom" x:Name="lblLoadingStatus" Margin="4,2" Opacity="0.7" />
-    <ListBox x:Name="lstRevisions" SelectionMode="Single" />
+    <ListBox x:Name="lstRevisions" SelectionMode="Single">
+      <ListBox.Styles>
+        <!-- Rows must be exactly RowHeight tall: the graph renderer draws each row's lane
+             segment assuming adjacent rows abut, so any container padding breaks the lines. -->
+        <Style Selector="ListBoxItem">
+          <Setter Property="Padding" Value="0" />
+          <Setter Property="MinHeight" Value="0" />
+        </Style>
+      </ListBox.Styles>
+    </ListBox>
   </DockPanel>
 </UserControl>

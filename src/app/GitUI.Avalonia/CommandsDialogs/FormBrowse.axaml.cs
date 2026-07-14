@@ -7,7 +7,7 @@ namespace GitUI.CommandsDialogs;
 
 // TODO(avalonia-port): reduced shell for milestones M1.0/M1.1 — hosts the revision list.
 // The left panel, diff viewer, commit info, menus, and toolbars of the real FormBrowse twin
-// arrive in later milestones (see PLAN.md).
+// arrive in later milestones.
 public partial class FormBrowse : Window
 {
     public FormBrowse()
