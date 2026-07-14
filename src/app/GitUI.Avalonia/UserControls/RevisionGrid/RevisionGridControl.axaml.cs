@@ -146,6 +146,12 @@ public partial class RevisionGridControl : UserControl
         // realized row controls render again, so refresh the list once at the end.
         lstRevisions.ItemsSource = _revisions.ToArray();
         lblLoadingStatus.Text = $"{_revisions.Count} revisions";
+
+        // Like the WinForms grid, select a row when loading finishes.
+        if (lstRevisions.SelectedItem is null && _revisions.Count > 0)
+        {
+            lstRevisions.SelectedIndex = 0;
+        }
     }
 
     private void OnLoadingError(Exception exception, CancellationToken cancellationToken)
@@ -323,10 +329,27 @@ public partial class RevisionGridControl : UserControl
                 return;
             }
 
-            GraphRenderer.DrawItem(owner._config, context, rowIndex, RowHeight,
-                owner._revisionGraph.GetSegmentsForRow,
-                RevisionGraphDrawStyle.DrawNonRelativesGray,
-                headId);
+            // Like the WinForms grid, only paint rows the row cache has fully prepared
+            // (drawing looks at the neighbor rows, hence the margin of 2). During loading
+            // the reader thread grows the cache concurrently; rows near the frontier are
+            // skipped now and repainted with the next batch refresh.
+            if (rowIndex + 2 >= owner._revisionGraph.GetCachedCount())
+            {
+                return;
+            }
+
+            try
+            {
+                GraphRenderer.DrawItem(owner._config, context, rowIndex, RowHeight,
+                    owner._revisionGraph.GetSegmentsForRow,
+                    RevisionGraphDrawStyle.DrawNonRelativesGray,
+                    headId);
+            }
+            catch (Exception)
+            {
+                // The row cache can shift under a concurrent CacheTo while loading;
+                // skip this frame, the next refresh repaints the row.
+            }
         }
     }
 }
