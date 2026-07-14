@@ -6,6 +6,15 @@
     <DefineConstants>$(DefineConstants);TRACE_REVISIONREADER</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <!-- Avalonia/Linux port (see AGENTS.md): additionally build a cross-platform flavor
+         that compiles against GitExtensions.Shims.WinForms instead of real WinForms. -->
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
+    <UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0'">false</UseWindowsForms>
+    <UseGitExtensionsShims>true</UseGitExtensionsShims>
+  </PropertyGroup>
+
   <ItemGroup>
     <Compile Include="..\GitExtUtils\Validates.cs" Link="Validates.cs" />
   </ItemGroup>
@@ -22,6 +31,9 @@
     <PackageReference Include="JetBrains.Annotations" />
     <PackageReference Include="System.IO.Abstractions" />
     <PackageReference Include="System.Reactive.Linq" />
+    <!-- Properties/Settings.Designer.cs (ApplicationSettingsBase); the Windows flavor gets
+         this from the WindowsDesktop framework. -->
+    <PackageReference Include="System.Configuration.ConfigurationManager" Condition="'$(TargetFramework)' == 'net10.0'" />
   </ItemGroup>
 
   <ItemGroup>
