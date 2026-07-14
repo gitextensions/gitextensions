@@ -1,0 +1,74 @@
+name: Linux Build
+
+# Avalonia/Linux port (see AGENTS.md): builds the cross-platform (net10.0) flavor of the
+# tier projects on Linux, plus their net10.0-windows flavor as a compile check.
+# Kept as a separate workflow file so upstream merges never conflict on CI configuration.
+
+on:
+  push:
+    branches:
+      - master
+      - 'release/**'
+      - Avalonia_Port
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: linux-ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' && !startsWith(github.ref, 'refs/heads/release/') }}
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  build-linux:
+    name: Build (net10.0 tiers)
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+      with:
+        submodules: recursive
+
+    - name: Setup .NET SDK
+      uses: actions/setup-dotnet@c2fa09f4bde5ebb9d1777cf28262a3eb3db3ced7 # v5.2.0
+      with:
+        dotnet-version: '10.0.x'
+
+    - name: Cache NuGet packages
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
+      with:
+        path: ~/.nuget/packages
+        key: nuget-${{ runner.os }}-${{ hashFiles('Directory.Packages.props') }}
+        restore-keys: |
+          nuget-${{ runner.os }}-
+
+    - name: Show tool versions
+      run: |
+        dotnet --version
+        git --version
+
+    - name: Build shim assembly
+      run: dotnet build src/app/GitExtensions.Shims.WinForms/GitExtensions.Shims.WinForms.csproj
+
+    - name: Build tiers (net10.0)
+      run: |
+        dotnet build src/app/GitExtensions.Extensibility/GitExtensions.Extensibility.csproj -f net10.0
+        dotnet build src/app/GitExtUtils/GitExtUtils.csproj -f net10.0
+        dotnet build src/plugins/GitUIPluginInterfaces/GitUIPluginInterfaces.csproj -f net10.0
+        dotnet build src/app/GitCommands/GitCommands.csproj -f net10.0
+        dotnet build src/app/ResourceManager/ResourceManager.csproj -f net10.0
+
+    - name: Build tiers (net10.0-windows compile check)
+      run: |
+        dotnet build src/app/GitExtensions.Extensibility/GitExtensions.Extensibility.csproj -f net10.0-windows
+        dotnet build src/app/GitExtUtils/GitExtUtils.csproj -f net10.0-windows
+        dotnet build src/plugins/GitUIPluginInterfaces/GitUIPluginInterfaces.csproj -f net10.0-windows
+        dotnet build src/app/GitCommands/GitCommands.csproj -f net10.0-windows
+        dotnet build src/app/ResourceManager/ResourceManager.csproj -f net10.0-windows
