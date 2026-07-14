@@ -46,6 +46,7 @@ For example:
 
 * Apply code-formatting style defined in `.editorconfig`.
 * Prefer file-scoped namespace declarations and single-line `using` declarations.
+* Order `using` directives alphabetically by namespace, with `System.*` directives first (StyleCop SA1208/SA1210). When adding a new `using`, insert it at the correct alphabetical position rather than appending it to the end of the list.
 * Insert a newline before the opening curly brace of any code block (e.g., after `if`, `for`, `while`, `foreach`, `using`, `try`, etc.).
 * Ensure that the final return statement of a method is on its own line.
 * Use pattern matching and switch expressions wherever possible.
