@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Cross-platform only: this assembly provides the WinForms stand-ins itself (see AGENTS.md). -->
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- System.Drawing.Primitives types (Size, Color, ...) used in stand-in signatures. -->
+    <Using Include="System.Drawing" />
+  </ItemGroup>
+
+</Project>

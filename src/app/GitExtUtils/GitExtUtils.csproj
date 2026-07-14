@@ -4,13 +4,44 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <ItemGroup>
+  <PropertyGroup>
+    <!-- Avalonia/Linux port (see AGENTS.md): additionally build a cross-platform flavor
+         that compiles against GitExtensions.Shims.WinForms instead of real WinForms. -->
+    <TargetFramework></TargetFramework>
+    <TargetFrameworks>net10.0;net10.0-windows</TargetFrameworks>
+    <UseWindowsForms Condition="'$(TargetFramework)' == 'net10.0'">false</UseWindowsForms>
+    <UseGitExtensionsShims>true</UseGitExtensionsShims>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(TargetFramework)' != 'net10.0'">
     <Compile Include="..\GitUI\Interops\BOOL.cs" Link="GitUI\Interops\BOOL.cs" />
     <Compile Include="..\GitUI\Interops\RECT.cs" Link="GitUI\Interops\RECT.cs" />
   </ItemGroup>
 
+  <ItemGroup Condition="'$(TargetFramework)' == 'net10.0'">
+    <!-- WinForms/GDI-coupled UI helpers: net10.0 removes the whole GitUI subtree, then
+         re-includes only the whitelisted portable files below. New upstream files therefore
+         stay excluded until explicitly whitelisted (see AGENTS.md). -->
+    <Compile Remove="GitUI\**\*.cs" />
+    <Compile Include="GitUI\CancellationTokenSequence.cs" />
+    <Compile Include="GitUI\ControlTagExtensions.cs" />
+    <Compile Include="GitUI\ControlThreadingExtensions.cs" />
+    <Compile Include="GitUI\ExclusiveTaskRunner.cs" />
+    <Compile Include="GitUI\TaskManager.cs" />
+    <Compile Include="GitUI\ThreadHelper.cs" />
+    <Compile Include="GitUI\Theming\AppColor.cs" />
+    <Compile Include="GitUI\Theming\AppColorDefaults.cs" />
+    <Compile Include="GitUI\Theming\ComparableExtensions.cs" />
+    <Compile Include="GitUI\Theming\HslColor.cs" />
+    <Compile Include="GitUI\Theming\IThemeSerializationData.cs" />
+    <Compile Include="GitUI\Theming\Theme.cs" />
+    <Compile Include="GitUI\Theming\ThemeId.cs" />
+    <Compile Include="GitUI\Theming\ThemeModifiers.cs" />
+    <Compile Include="GitUI\Theming\ThemeSettings.cs" />
+  </ItemGroup>
+
   <ItemGroup>
-    <PackageReference Include="AdysTech.CredentialManager" />
+    <PackageReference Include="AdysTech.CredentialManager" Condition="'$(TargetFramework)' != 'net10.0'" />
     <PackageReference Include="Ben.Demystifier" />
     <PackageReference Include="JetBrains.Annotations" />
   </ItemGroup>
