@@ -5,7 +5,7 @@ namespace GitExtensions.Extensibility.Settings;
 // Cross-platform (net10.0) substitute for CredentialsManager.cs, which is Windows-only
 // because it stores credentials in the Windows Credential Store via AdysTech.CredentialManager.
 // Reading behaves like an empty store; storing fails fast until a Linux secret-service backend
-// is implemented (see AGENTS.md, platform behavior matrix).
+// is implemented.
 public interface ICredentialsManager
 {
     void Save();
