@@ -1,4 +1,3 @@
-using Avalonia.Input;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -86,18 +85,6 @@ public class FormProcess : FormStatus
 
     protected virtual void BeforeProcessStart()
     {
-    }
-
-    protected override void OnKeyDown(KeyEventArgs e)
-    {
-        if (e.Key == Key.Escape)
-        {
-            Close();
-            e.Handled = true;
-            return;
-        }
-
-        base.OnKeyDown(e);
     }
 
     private void ProcessStart(FormStatus form)
