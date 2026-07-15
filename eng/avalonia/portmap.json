@@ -9,7 +9,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh and Commands/Fetch all; remaining menus and toolbars are added with their dialogs."
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Checkout branch, and Commands/Fetch all; remaining menus and toolbars are added with their dialogs."
+  },
+  "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Local branches only. Remote checkout/create/reset, auto-stash, checkout event scripts, and submodule follow-up remain to be ported; the original remote control names stay hidden in AXAML for translation parity."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
