@@ -215,13 +215,13 @@
     "twin": "src/app/GitUI.Avalonia/ConsoleEmulation/PlainText/PlainTextConsoleCommandRunner.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only TextBox output; Linux commands start through ProcessExtensions.StartInOwnProcessGroup so cancellation reaches re-parented group members; no clickable links yet."
+    "notes": "Read-only TextBox output; Linux and macOS commands start through ProcessExtensions.StartInOwnProcessGroup so cancellation reaches re-parented group members; no clickable links yet."
   },
   "src/app/GitCommands/Git/Extensions/ProcessExtensions.cs": {
     "twin": "src/app/GitCommands/Git/Extensions/ProcessExtensions.cs",
     "status": "parity",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Shared source retains the Windows Ctrl+C path and adds portable entire-tree termination plus Linux setsid/process-group cleanup."
+    "notes": "Shared source retains the Windows Ctrl+C path and adds portable entire-tree termination plus Linux setsid and macOS native-launcher process-group cleanup."
   },
   "src/app/GitExtensions/Program.cs": {
     "twin": "src/app/GitExtensions.Avalonia/Program.cs",
