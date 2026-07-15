@@ -35,6 +35,22 @@ public sealed class TerminalLauncherTests
     }
 
     [Test]
+    public void Launch_should_use_the_linux_desktop_default_terminal()
+    {
+        ProcessStartInfo? captured = null;
+        TerminalLauncher launcher = new(
+            _ => null,
+            executable => executable == "xdg-terminal-exec" ? "/usr/bin/xdg-terminal-exec" : null,
+            startInfo => captured = startInfo,
+            TerminalPlatform.Linux);
+
+        launcher.Launch("/work/repository with spaces");
+
+        captured!.FileName.Should().Be("/usr/bin/xdg-terminal-exec");
+        captured.ArgumentList.Should().Equal("--dir=/work/repository with spaces");
+    }
+
+    [Test]
     public void Launch_should_use_linux_fallback_order()
     {
         List<string> candidates = [];
@@ -51,7 +67,7 @@ public sealed class TerminalLauncherTests
 
         launcher.Launch("/work/repository");
 
-        candidates.Should().Equal("x-terminal-emulator", "gnome-terminal");
+        candidates.Should().Equal("xdg-terminal-exec", "x-terminal-emulator", "gnome-terminal");
         captured!.FileName.Should().Be("/usr/bin/gnome-terminal");
     }
 
