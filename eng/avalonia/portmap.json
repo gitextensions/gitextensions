@@ -9,7 +9,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh and Commands/Checkout branch/Create branch/Fetch all; remaining menus and toolbars are added with their dialogs."
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh and Commands/Commit/Checkout branch/Create branch/Fetch all; remaining menus and toolbars are added with their dialogs."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
@@ -27,7 +27,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommit.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Staged/unstaged lists, selected-file diff preview, and stage/unstage selected/all (including double-click) are functional. Message editing, commit execution, and the browse entry point are deferred to the next FormCommit increment."
+    "notes": "Normal whole-file commits are functional: staged/unstaged lists, diff preview, stage/unstage selected/all, message editing, shared CommitMessageManager, FormProcess execution, and the browse entry point. Amend/fixup/squash, templates/history, advanced validation, scripts/hooks UI, signing/author options, and commit-and-push remain deferred."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
@@ -155,7 +155,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Process, local-checkout, and create-branch dialog members are real; unported members throw NotImplementedException."
+    "notes": "Process, normal-commit, local-checkout, and create-branch dialog members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/ServiceContainerRegistry.cs": {
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",

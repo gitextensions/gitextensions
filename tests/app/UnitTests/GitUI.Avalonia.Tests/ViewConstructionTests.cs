@@ -76,6 +76,11 @@ public sealed class ViewConstructionTests
             "fetchAllToolStripMenuItem",
             "Text",
             "Fetch &all");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "commitToolStripMenuItem",
+            "Text",
+            "&Commit...");
         translation.Received(1).TranslateItem(
             nameof(FormBrowse),
             "fetchAllToolStripMenuItem",
@@ -84,6 +89,32 @@ public sealed class ViewConstructionTests
         MenuItem fetchAll = form.FindControl<MenuItem>("fetchAllToolStripMenuItem")
             ?? throw new InvalidOperationException("Fetch-all menu item was not created.");
         fetchAll.Header.Should().Be("_Fetch translated");
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_commit_should_start_the_dialog()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(Path.GetTempPath());
+        module.IsValidGitWorkingDir().Returns(false);
+
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
+        appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
+
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+
+        FormBrowse form = new(commands);
+        MenuItem commit = form.FindControl<MenuItem>("commitToolStripMenuItem")
+            ?? throw new InvalidOperationException("Commit menu item was not created.");
+        commit.IsEnabled = true;
+
+        commit.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        commands.Received(1).StartCommitDialog(form);
     }
 
     [AvaloniaTest]

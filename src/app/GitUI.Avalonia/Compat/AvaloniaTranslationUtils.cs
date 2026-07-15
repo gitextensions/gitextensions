@@ -136,7 +136,7 @@ internal static class AvaloniaTranslationUtils
         }
     }
 
-    private static string ToAvaloniaMnemonics(string text)
+    internal static string ToAvaloniaMnemonics(string text)
     {
         const string escapedAmpersand = "\u0001";
         return text
