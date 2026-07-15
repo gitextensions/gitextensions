@@ -323,7 +323,7 @@ public partial class FormPush : GitModuleForm
                         AppSettings.DontConfirmPushNewBranch = true;
                     }
 
-                    if (result == TaskDialogButton.No)
+                    if (result != TaskDialogButton.Yes)
                     {
                         return false;
                     }
