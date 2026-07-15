@@ -23,6 +23,12 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Creates and optionally checks out normal or orphan branches. Commit selection accepts a revision/SHA as text; the chooser button is hidden until FormChooseCommit is ported. Submodule update after checkout is deferred."
   },
+  "src/app/GitUI/CommandsDialogs/FormCommit.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommit.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "First increment: read-only staged/unstaged lists, commit-message display, and selected-file diff preview. Stage/unstage, message editing, commit execution, and the browse entry point are deferred to the next FormCommit increments."
+  },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
@@ -54,7 +60,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only list with change-kind markers; no grouping, filtering, or interactivity yet."
+    "notes": "Read-only list with change-kind markers, exposed statuses, and selection clearing for the commit view; no grouping, filtering, or staging interactivity yet."
   },
   "src/app/GitUI/Editor/FileViewer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
