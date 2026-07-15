@@ -18,6 +18,7 @@ public partial class FileStatusList : GitExtensionsControl
 
         lstFiles.ItemTemplate = new FuncDataTemplate<GitItemStatus>(CreateFileRow, supportsRecycling: false);
         lstFiles.SelectionChanged += (_, _) => SelectedIndexChanged?.Invoke(this, EventArgs.Empty);
+        lstFiles.DoubleTapped += (_, _) => DoubleClick?.Invoke(this, EventArgs.Empty);
 
         InitializeComplete();
     }
@@ -26,6 +27,11 @@ public partial class FileStatusList : GitExtensionsControl
     ///  Occurs when the selected file changes (named like the WinForms event).
     /// </summary>
     public event EventHandler? SelectedIndexChanged;
+
+    /// <summary>
+    ///  Occurs when a file is double-clicked (named like the WinForms event).
+    /// </summary>
+    public event EventHandler? DoubleClick;
 
     /// <summary>
     ///  Gets the selected file status item, or <see langword="null"/>.
@@ -68,6 +74,13 @@ public partial class FileStatusList : GitExtensionsControl
 
     private static Control CreateFileRow(GitItemStatus item, INameScope nameScope)
     {
+        // Avalonia can briefly rebuild a recycled presenter with null while ItemsSource is
+        // replaced after staging. The typed template annotation does not expose that state.
+        if (item is null)
+        {
+            return new Panel();
+        }
+
         (string marker, Avalonia.Media.Color color) = item switch
         {
             { IsNew: true } => ("A", Colors.SeaGreen),

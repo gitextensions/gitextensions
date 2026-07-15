@@ -27,7 +27,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommit.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "First increment: read-only staged/unstaged lists, commit-message display, and selected-file diff preview. Stage/unstage, message editing, commit execution, and the browse entry point are deferred to the next FormCommit increments."
+    "notes": "Staged/unstaged lists, selected-file diff preview, and stage/unstage selected/all (including double-click) are functional. Message editing, commit execution, and the browse entry point are deferred to the next FormCommit increment."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
@@ -60,7 +60,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only list with change-kind markers, exposed statuses, and selection clearing for the commit view; no grouping, filtering, or staging interactivity yet."
+    "notes": "List with change-kind markers, exposed statuses, selection clearing, and a WinForms-shaped double-click event used by FormCommit. Grouping, filtering, multi-selection, and context menus remain deferred."
   },
   "src/app/GitUI/Editor/FileViewer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
