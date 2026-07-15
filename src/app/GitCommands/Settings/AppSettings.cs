@@ -3,6 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
 using System.Runtime.Versioning;
+using System.Security.Cryptography;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Git;
@@ -1688,24 +1689,26 @@ public static partial class AppSettings
         {
             SettingsContainer.LockedAction(() =>
             {
-                if (OperatingSystem.IsWindows())
-                {
-                    // Prepend "Global\" so Windows sessions share the settings-file mutex.
-                    _globalMutex ??= new Mutex(initiallyOwned: false, name: @$"Global\Mutex{SettingsFilePath.ToPosixPath()}");
+                // Preserve the legacy Windows name; Unix mutex names must be valid file names.
+                _globalMutex ??= OperatingSystem.IsWindows()
+                    ? new Mutex(initiallyOwned: false, name: @$"Global\Mutex{SettingsFilePath.ToPosixPath()}")
+                    : new Mutex(
+                        initiallyOwned: false,
+                        name: $"GitExtensions.Settings.{Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(Path.GetFullPath(SettingsFilePath))))}",
+                        new NamedWaitHandleOptions
+                        {
+                            CurrentUserOnly = true,
+                            CurrentSessionOnly = false
+                        });
 
-                    try
-                    {
-                        _globalMutex.WaitOne();
-                        SettingsContainer.Save();
-                    }
-                    finally
-                    {
-                        _globalMutex.ReleaseMutex();
-                    }
-                }
-                else
+                try
                 {
+                    _globalMutex.WaitOne();
                     SettingsContainer.Save();
+                }
+                finally
+                {
+                    _globalMutex.ReleaseMutex();
                 }
             });
 

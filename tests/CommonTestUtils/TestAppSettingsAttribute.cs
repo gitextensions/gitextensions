@@ -7,10 +7,19 @@ namespace CommonTestUtils;
 [AttributeUsage(AttributeTargets.Assembly)]
 public sealed class TestAppSettingsAttribute : Attribute, ITestAction
 {
-    private static readonly SemaphoreSlim _portableSemaphore = new(initialCount: 1, maxCount: 1);
     private readonly Semaphore? _windowsSemaphore = OperatingSystem.IsWindows()
         ? new(initialCount: 1, maximumCount: 1, "GitExtensionsTestAssemblySerializer")
         : null;
+    private readonly Mutex? _portableMutex = OperatingSystem.IsWindows()
+        ? null
+        : new(
+            initiallyOwned: false,
+            name: "GitExtensionsTestAssemblySerializer",
+            new NamedWaitHandleOptions
+            {
+                CurrentUserOnly = true,
+                CurrentSessionOnly = false
+            });
 
     public ActionTargets Targets => ActionTargets.Suite;
 
@@ -22,7 +31,7 @@ public sealed class TestAppSettingsAttribute : Attribute, ITestAction
         }
         else
         {
-            _portableSemaphore.Wait();
+            _portableMutex!.WaitOne();
         }
 
         File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
@@ -45,7 +54,7 @@ public sealed class TestAppSettingsAttribute : Attribute, ITestAction
         }
         else
         {
-            _portableSemaphore.Release();
+            _portableMutex!.ReleaseMutex();
         }
     }
 }
