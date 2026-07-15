@@ -72,9 +72,20 @@ internal sealed class TerminalLauncher : ITerminalLauncher
 
             default:
                 string? configuredTerminal = _getEnvironmentVariable("TERMINAL");
-                startInfo.FileName = !string.IsNullOrWhiteSpace(configuredTerminal)
-                    ? FindRequiredExecutable(configuredTerminal)
-                    : FindRequiredExecutable("x-terminal-emulator", "gnome-terminal", "konsole", "xterm");
+                if (!string.IsNullOrWhiteSpace(configuredTerminal))
+                {
+                    startInfo.FileName = FindRequiredExecutable(configuredTerminal);
+                }
+                else if (_resolveExecutable("xdg-terminal-exec") is string desktopTerminalLauncher)
+                {
+                    startInfo.FileName = desktopTerminalLauncher;
+                    startInfo.ArgumentList.Add($"--dir={workingDirectory}");
+                }
+                else
+                {
+                    startInfo.FileName = FindRequiredExecutable("x-terminal-emulator", "gnome-terminal", "konsole", "xterm");
+                }
+
                 SanitizeLinuxEnvironment(startInfo.Environment);
                 break;
         }
