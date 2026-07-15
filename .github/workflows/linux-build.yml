@@ -71,6 +71,9 @@ jobs:
     - name: Build Avalonia app
       run: dotnet build src/app/GitExtensions.Avalonia/GitExtensions.Avalonia.csproj
 
+    - name: Build WinFormsToAxaml tool
+      run: dotnet build eng/tools/WinFormsToAxaml/WinFormsToAxaml.csproj
+
     - name: Run Avalonia headless tests
       run: dotnet test tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj
 
