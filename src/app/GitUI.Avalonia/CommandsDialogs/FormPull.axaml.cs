@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -31,6 +31,7 @@ public sealed partial class FormPull : GitExtensionsDialog
     public FormPull()
     {
         InitializeComponent();
+        InitializeComplete();
     }
 
     public FormPull(GitUICommands commands, string? defaultRemoteBranch, string? defaultRemote, GitPullAction pullAction)
