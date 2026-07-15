@@ -1,9 +1,10 @@
+using Avalonia.Controls;
+using Avalonia.Platform;
 using GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormResetChanges.cs. The dialog grows with its message
-// through SizeToContent instead of the manual preferred-size arithmetic of the original.
+// Twin of GitUI/CommandsDialogs/FormResetChanges.cs.
 
 /// <summary>
 /// Shows a form asking if the user wants to reset their changes.
@@ -37,7 +38,28 @@ public partial class FormResetChanges : GitExtensionsForm
 
         if (confirmationMessage is not null)
         {
-            txtMessage.Text = confirmationMessage.ReplaceLineEndings(Environment.NewLine);
+            confirmationMessage = confirmationMessage.ReplaceLineEndings(Environment.NewLine);
+            txtMessage.Text = confirmationMessage;
+
+            // Grow the dialog to fit the message, never below its designed size and never past
+            // three quarters of the screen. The original computes that size itself because
+            // Windows Forms cannot; here the layout measures the message and the bounds only
+            // have to be stated.
+            MinWidth = Width;
+            MinHeight = Height;
+
+            Screen? screen = Screens.ScreenFromWindow(this) ?? Screens.Primary;
+            if (screen is not null)
+            {
+                MaxWidth = screen.WorkingArea.Width / screen.Scaling * 3 / 4;
+                MaxHeight = screen.WorkingArea.Height / screen.Scaling * 3 / 4;
+            }
+
+            // An explicit size wins over SizeToContent, so the designed one is handed over to
+            // the minimums above and released here.
+            Width = double.NaN;
+            Height = double.NaN;
+            SizeToContent = SizeToContent.WidthAndHeight;
         }
 
         if (!hasExistingFiles)

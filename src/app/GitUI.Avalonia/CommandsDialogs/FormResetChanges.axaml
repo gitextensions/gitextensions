@@ -1,9 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="GitUI.CommandsDialogs.FormResetChanges"
-        Width="460" MinHeight="121"
-        SizeToContent="Height"
-        CanResize="False"
+        Width="460" Height="121"
         WindowStartupLocation="CenterOwner"
         Title="Reset changes">
   <!-- The docked children are ordered bottom-up: Windows Forms docks in reverse z-order,
@@ -19,7 +17,7 @@
     <TextBlock x:Name="lblDeleteHint" DockPanel.Dock="Bottom" Margin="0,8,0,8"
                Text="This will delete any uncommitted work." />
     <TextBox x:Name="txtMessage" AcceptsReturn="True" IsReadOnly="True" TextWrapping="Wrap"
-             BorderThickness="0" Background="Transparent" MaxHeight="400"
+             BorderThickness="0" Background="Transparent"
              Text="Are you sure you want to reset your changes?" />
   </DockPanel>
 </Window>
