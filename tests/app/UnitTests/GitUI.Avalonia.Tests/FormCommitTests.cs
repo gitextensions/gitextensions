@@ -1,9 +1,12 @@
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using AvaloniaEdit;
 using GitCommands;
 using GitCommands.Git;
@@ -70,6 +73,15 @@ public sealed class FormCommitTests
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "toolUnstageItem", "Text", "&Unstage");
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "commitStagedCountLabel", "Text", "Staged");
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "Commit", "Text", "&Commit");
+        translation.Received(1).AddTranslationItem(nameof(FormCommit), "_stageAll", "Text", "Stage all");
+        translation.Received(1).AddTranslationItem(nameof(FormCommit), "_unstageAll", "Text", "Unstage all");
+
+        Button stageAll = form.FindControl<Button>("toolStageAllItem")
+            ?? throw new InvalidOperationException("Stage-all button was not created.");
+        Button unstageAll = form.FindControl<Button>("toolUnstageAllItem")
+            ?? throw new InvalidOperationException("Unstage-all button was not created.");
+        ToolTip.GetTip(stageAll).Should().Be("Stage all");
+        ToolTip.GetTip(unstageAll).Should().Be("Unstage all");
 
         string[] emittedKeys = translation.ReceivedCalls()
             .Where(call => call.GetMethodInfo().Name == nameof(ITranslation.AddTranslationItem))
@@ -78,6 +90,56 @@ public sealed class FormCommitTests
         emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(
             emittedKeys.Length,
             "each field must be routed through exactly one translation path");
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommit_should_stage_and_unstage_selected_and_all_files()
+    {
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        GitUICommands commands = new(_serviceContainer, module);
+        FormCommit form = new(commands);
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")
+                ?? throw new InvalidOperationException("Unstaged file list was not created.");
+            FileStatusList staged = form.FindControl<FileStatusList>("Staged")
+                ?? throw new InvalidOperationException("Staged file list was not created.");
+            Button stageSelected = form.FindControl<Button>("toolStageItem")
+                ?? throw new InvalidOperationException("Stage button was not created.");
+            Button stageAll = form.FindControl<Button>("toolStageAllItem")
+                ?? throw new InvalidOperationException("Stage-all button was not created.");
+            Button unstageSelected = form.FindControl<Button>("toolUnstageItem")
+                ?? throw new InvalidOperationException("Unstage button was not created.");
+            Button unstageAll = form.FindControl<Button>("toolUnstageAllItem")
+                ?? throw new InvalidOperationException("Unstage-all button was not created.");
+
+            await WaitForCountsAsync(unstaged, 2, staged, 0);
+
+            DoubleClickSelectedItem(form, unstaged);
+            await WaitForCountsAsync(unstaged, 1, staged, 1);
+
+            DoubleClickSelectedItem(form, staged);
+            await WaitForCountsAsync(unstaged, 2, staged, 0);
+
+            stageSelected.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            await WaitForCountsAsync(unstaged, 1, staged, 1);
+
+            unstageSelected.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            await WaitForCountsAsync(unstaged, 2, staged, 0);
+
+            stageAll.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            await WaitForCountsAsync(unstaged, 0, staged, 2);
+
+            unstageAll.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            await WaitForCountsAsync(unstaged, 2, staged, 0);
+
+            module.GetAllChangedFilesWithSubmodulesStatus().Should().OnlyContain(item => item.Staged == StagedStatus.WorkTree);
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [AvaloniaTest]
@@ -138,6 +200,45 @@ public sealed class FormCommitTests
         module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" });
         File.AppendAllText(fileName, "unstaged line\n");
         return module;
+    }
+
+    private GitModule CreateRepositoryWithTwoUnstagedChanges()
+    {
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
+        module.SetSetting("user.name", "Avalonia Test");
+        module.SetSetting("user.email", "avalonia@example.com");
+
+        string trackedFileName = Path.Combine(_workingDirectory, "tracked.txt");
+        File.WriteAllText(trackedFileName, "initial line\n");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" });
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" });
+
+        File.AppendAllText(trackedFileName, "modified line\n");
+        File.WriteAllText(Path.Combine(_workingDirectory, "untracked.txt"), "new line\n");
+        return module;
+    }
+
+    private static void DoubleClickSelectedItem(FormCommit form, FileStatusList fileStatusList)
+    {
+        ListBox listBox = fileStatusList.FindControl<ListBox>("lstFiles")
+            ?? throw new InvalidOperationException("File list box was not created.");
+        ListBoxItem item = listBox.ContainerFromIndex(listBox.SelectedIndex) as ListBoxItem
+            ?? throw new InvalidOperationException("Selected file row was not realized.");
+        Point point = item.TranslatePoint(new Point(12, item.Bounds.Height / 2), form)
+            ?? throw new InvalidOperationException("Selected file row position was not available.");
+
+        form.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+        form.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+        form.MouseDown(point, MouseButton.Left, RawInputModifiers.None);
+        form.MouseUp(point, MouseButton.Left, RawInputModifiers.None);
+    }
+
+    private static Task WaitForCountsAsync(FileStatusList unstaged, int unstagedCount, FileStatusList staged, int stagedCount)
+    {
+        return WaitUntilAsync(() =>
+            unstaged.GitItemStatuses.Count == unstagedCount
+            && staged.GitItemStatuses.Count == stagedCount);
     }
 
     private static async Task WaitUntilAsync(Func<bool> condition)
