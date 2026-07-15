@@ -25,7 +25,10 @@ on a selected remote and supports force-with-lease. URL, tag, multiple-branch, a
 management push options are being ported incrementally. Commands > Pull/Fetch opens the
 reduced pull dialog, which supports merge pulls, rebase pulls, and fetch-only from a selected
 configured remote. URL pulls, auto-stash, tag/prune/unshallow options, scripts, submodule
-follow-up, and conflict recovery remain deferred with the remaining dialogs.
+follow-up, and conflict recovery remain deferred with the remaining dialogs. Browse hotkeys
+use the same persisted `Keys` values and XML settings as the Windows Forms application: F5
+refreshes, the currently implemented configurable Browse commands are dispatched through
+their upstream command IDs, and Escape closes dialogs without closing the repository browser.
 
 ## Requirements
 
