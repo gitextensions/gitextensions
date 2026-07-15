@@ -24,6 +24,8 @@
     <!-- Contains System.Drawing.Icon resources; unused outside the excluded control bases. -->
     <Compile Remove="Properties\Resources.Designer.cs" />
     <EmbeddedResource Remove="Properties\Resources.resx" />
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+    <Compile Include="..\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
   </ItemGroup>
 
   <ItemGroup>
