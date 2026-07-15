@@ -15,12 +15,18 @@
           Grid.Column="0"
           RowDefinitions="*,5,*">
       <DockPanel Grid.Row="0">
-        <Button x:Name="toolStageItem"
-                DockPanel.Dock="Top"
-                HorizontalAlignment="Right"
-                Margin="0,0,0,4"
-                Content="_Stage"
-                IsEnabled="False" />
+        <StackPanel DockPanel.Dock="Top"
+                    HorizontalAlignment="Right"
+                    Margin="0,0,0,4"
+                    Orientation="Horizontal">
+          <Button x:Name="toolStageAllItem"
+                  Content="⇊"
+                  IsEnabled="False" />
+          <Button x:Name="toolStageItem"
+                  Margin="4,0,0,0"
+                  Content="_Stage"
+                  IsEnabled="False" />
+        </StackPanel>
         <gitui:FileStatusList x:Name="Unstaged" />
       </DockPanel>
 
@@ -40,6 +46,10 @@
           <Button x:Name="toolUnstageItem"
                   Margin="12,0,0,0"
                   Content="_Unstage"
+                  IsEnabled="False" />
+          <Button x:Name="toolUnstageAllItem"
+                  Margin="4,0,0,0"
+                  Content="⇈"
                   IsEnabled="False" />
         </StackPanel>
         <gitui:FileStatusList x:Name="Staged" />
