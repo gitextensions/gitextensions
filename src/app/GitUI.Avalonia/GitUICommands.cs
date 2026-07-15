@@ -276,8 +276,31 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartPullDialogAndPullImmediately(IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None) => throw NotPorted(nameof(StartPullDialogAndPullImmediately));
     public bool StartPullDialogAndPullImmediately(out bool pullCompleted, IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None) => throw NotPorted(nameof(StartPullDialogAndPullImmediately));
     public void StartPullRequestsDialog(IWin32Window? owner, IRepositoryHostPlugin gitHoster) => throw NotPorted(nameof(StartPullRequestsDialog));
-    public bool StartPushDialog(IWin32Window? owner, bool pushOnShow) => throw NotPorted(nameof(StartPushDialog));
-    public bool StartPushDialog(IWin32Window? owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted, string? branchName = null) => throw NotPorted(nameof(StartPushDialog));
+    public bool StartPushDialog(IWin32Window? owner, bool pushOnShow)
+        => StartPushDialog(owner, pushOnShow, forceWithLease: false, out _);
+
+    public bool StartPushDialog(IWin32Window? owner, bool pushOnShow, bool forceWithLease, out bool pushCompleted, string? branchName = null)
+    {
+        bool pushed = false;
+        bool done = DoActionOnRepo(owner, action: () =>
+        {
+            using CommandsDialogs.FormPush form = new(this, branchName);
+            if (forceWithLease)
+            {
+                form.CheckForceWithLease();
+            }
+
+            DialogResult result = pushOnShow
+                ? form.PushAndShowDialogWhenFailed(owner)
+                : form.ShowDialog(owner);
+            pushed = result == DialogResult.OK && !form.ErrorOccurred;
+            return result == DialogResult.OK;
+        });
+
+        pushCompleted = pushed;
+        return done;
+    }
+
     public bool StartRebase(IWin32Window? owner, string onto) => throw NotPorted(nameof(StartRebase));
     public bool StartRebaseDialog(IWin32Window? owner, string? from, string? to, string? onto, bool interactive = false, bool startRebaseImmediately = true) => throw NotPorted(nameof(StartRebaseDialog));
     public bool StartRebaseDialog(IWin32Window? owner, string? onto) => throw NotPorted(nameof(StartRebaseDialog));

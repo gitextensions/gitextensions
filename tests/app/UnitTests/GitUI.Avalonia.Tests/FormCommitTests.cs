@@ -95,7 +95,7 @@ public sealed class FormCommitTests
         Button commitAndPush = form.FindControl<Button>("CommitAndPush")
             ?? throw new InvalidOperationException("Commit-and-push button was not created.");
         (commitAndPush.Content as TextBlock)?.Text.Should().Be("Commit & _push");
-        commitAndPush.IsEnabled.Should().BeFalse("push is enabled when FormPush is ported");
+        commitAndPush.IsEnabled.Should().BeFalse("there are no staged changes in the construction-only form");
 
         string[] emittedKeys = translation.ReceivedCalls()
             .Where(call => call.GetMethodInfo().Name == nameof(ITranslation.AddTranslationItem))
@@ -129,6 +129,8 @@ public sealed class FormCommitTests
                 ?? throw new InvalidOperationException("Commit message editor was not created.");
             Button commit = form.FindControl<Button>("Commit")
                 ?? throw new InvalidOperationException("Commit button was not created.");
+            Button commitAndPush = form.FindControl<Button>("CommitAndPush")
+                ?? throw new InvalidOperationException("Commit-and-push button was not created.");
 
             await WaitForCountsAsync(unstaged, 2, staged, 0);
             stageAll.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
@@ -136,6 +138,7 @@ public sealed class FormCommitTests
 
             message.Text = "Commit from Avalonia";
             await WaitUntilAsync(() => commit.IsEnabled);
+            commitAndPush.IsEnabled.Should().BeTrue("FormPush is now available for the follow-up action");
             form.CaptureRenderedFrame().Should().NotBeNull("the ready-to-commit dialog should render headlessly");
             commit.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
 
