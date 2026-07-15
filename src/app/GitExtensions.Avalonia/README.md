@@ -57,7 +57,12 @@ application starts without an opened repository.
 dotnet test tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj
 ```
 
-The tests run headlessly (no display required) on all three operating systems.
+The tests run headlessly (no display required) on all three operating systems. This
+includes golden-image tests that render known commit topologies with the graph renderer
+and compare the pixels against the images in the `GoldenImages` folder of the test
+project. After an intended rendering change, regenerate the images by running the tests
+once with the environment variable `GITEXT_UPDATE_GOLDEN_IMAGES=1`, review the new
+images, and commit them.
 
 ## Project layout
 
