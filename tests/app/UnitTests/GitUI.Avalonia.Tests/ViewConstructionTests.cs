@@ -31,6 +31,27 @@ public sealed class ViewConstructionTests
         form.Should().NotBeNull();
     }
 
+    // The constructor the designer and the XAML loader use must complete initialisation like
+    // the run-time one, or the dialog they build is left untranslated.
+    [AvaloniaTest]
+    public void Designer_constructors_should_translate_the_view()
+    {
+        string original = AppSettings.CurrentTranslation ?? "";
+        try
+        {
+            AppSettings.CurrentTranslation = "German";
+
+            FormCreateBranch form = new();
+
+            form.cmdOk.Content.Should().Be("Branch _erstellen");
+            form.chkCheckoutAfterCreate.Content.Should().Be("Nach dem Erstellen _auschecken");
+        }
+        finally
+        {
+            AppSettings.CurrentTranslation = original;
+        }
+    }
+
     [AvaloniaTest]
     public void FormBrowse_refresh_should_notify_repository_changed()
     {

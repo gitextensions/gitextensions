@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -38,6 +38,7 @@ public sealed partial class FormCommit : GitModuleForm
     public FormCommit()
     {
         InitializeComponent();
+        InitializeComplete();
     }
 
     public FormCommit(
