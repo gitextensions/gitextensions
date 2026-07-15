@@ -29,11 +29,16 @@ follow-up, and conflict recovery remain deferred with the remaining dialogs. Bro
 use the same persisted `Keys` values and XML settings as the Windows Forms application: F5
 refreshes, the currently implemented configurable Browse commands are dispatched through
 their upstream command IDs, and Escape closes dialogs without closing the repository browser.
+On Linux with `setsid` available, commands shown in the process dialog run in an isolated
+process group so cancelling the dialog also terminates descendant processes, including
+children that have been re-parented.
 
 ## Requirements
 
 - [.NET SDK](https://dotnet.microsoft.com/download) 10.0 or later
 - [Git](https://git-scm.com/) available on `PATH`
+- On Linux, `setsid` from util-linux for reliable process-tree cleanup (included by standard
+  desktop distributions; descendant traversal remains available when it is absent)
 - A desktop environment:
   - Windows 10 or later
   - Linux with an X11 or Wayland session (standard desktop distributions work out of the box)
