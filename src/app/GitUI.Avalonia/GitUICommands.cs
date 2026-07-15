@@ -205,7 +205,26 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartCloneDialog(IWin32Window? owner, string url, EventHandler<GitModuleEventArgs> gitModuleChanged) => throw NotPorted(nameof(StartCloneDialog));
     public bool StartCloneDialog(IWin32Window? owner, string? url = null, bool openedFromProtocolHandler = false, EventHandler<GitModuleEventArgs>? gitModuleChanged = null) => throw NotPorted(nameof(StartCloneDialog));
     public void StartCloneForkFromHoster(IWin32Window? owner, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs>? gitModuleChanged) => throw NotPorted(nameof(StartCloneForkFromHoster));
-    public bool StartCommitDialog(IWin32Window? owner, string? commitMessage = null, bool showOnlyWhenChanges = false) => throw NotPorted(nameof(StartCommitDialog));
+    public bool StartCommitDialog(IWin32Window? owner, string? commitMessage = null, bool showOnlyWhenChanges = false)
+    {
+        if (Module.IsBareRepository())
+        {
+            return false;
+        }
+
+        return DoActionOnRepo(owner, action: () =>
+        {
+            if (showOnlyWhenChanges && Module.GetAllChangedFilesWithSubmodulesStatus(CancellationToken.None).Count == 0)
+            {
+                return true;
+            }
+
+            using CommandsDialogs.FormCommit form = new(this, commitMessage: commitMessage);
+            form.ShowDialog(owner);
+            return true;
+        }, changesRepo: false, preEvent: PreCommit, postEvent: PostCommit);
+    }
+
     public bool StartCompareRevisionsDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartCompareRevisionsDialog));
     public bool StartCreateBranchDialog(IWin32Window? owner, string? branch)
     {

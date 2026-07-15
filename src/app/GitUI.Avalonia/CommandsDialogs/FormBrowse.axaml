@@ -13,6 +13,8 @@
         <MenuItem x:Name="refreshToolStripMenuItem" Header="_Refresh" />
       </MenuItem>
       <MenuItem x:Name="commandsToolStripMenuItem" Header="_Commands">
+        <MenuItem x:Name="commitToolStripMenuItem" Header="_Commit..." />
+        <Separator />
         <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch..." />
         <MenuItem x:Name="branchToolStripMenuItem" Header="Create _branch..." />
         <MenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all" />
