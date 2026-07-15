@@ -34,6 +34,7 @@ public sealed partial class FormBrowse : GitModuleForm
         fileStatusList.SelectedIndexChanged += FileStatusList_SelectedIndexChanged;
         repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
+        commitToolStripMenuItem.Click += CommitToolStripMenuItemClick;
         checkoutBranchToolStripMenuItem.Click += CheckoutBranchToolStripMenuItemClick;
         branchToolStripMenuItem.Click += CreateBranchToolStripMenuItemClick;
         fetchAllToolStripMenuItem.Click += fetchAllToolStripMenuItem_Click;
@@ -55,6 +56,7 @@ public sealed partial class FormBrowse : GitModuleForm
         Title = appTitleGenerator.Generate(module.WorkingDir, isValidWorkingDir, branchName);
 
         refreshToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        commitToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
         checkoutBranchToolStripMenuItem.IsEnabled = isValidWorkingDir;
         branchToolStripMenuItem.IsEnabled = isValidWorkingDir;
         fetchAllToolStripMenuItem.IsEnabled = isValidWorkingDir;
@@ -168,6 +170,11 @@ public sealed partial class FormBrowse : GitModuleForm
     private void CheckoutBranchToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartCheckoutBranch(this);
+    }
+
+    private void CommitToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartCommitDialog(this);
     }
 
     private void CreateBranchToolStripMenuItemClick(object? sender, EventArgs e)

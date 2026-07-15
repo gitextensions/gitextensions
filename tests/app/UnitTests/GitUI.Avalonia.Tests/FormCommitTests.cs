@@ -19,6 +19,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Editor;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 
@@ -73,6 +74,15 @@ public sealed class FormCommitTests
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "toolUnstageItem", "Text", "&Unstage");
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "commitStagedCountLabel", "Text", "Staged");
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "Commit", "Text", "&Commit");
+        translation.Received(1).AddTranslationItem(nameof(FormCommit), "_commitAndPush", "Text", "Commit && &push");
+        translation.Received(1).AddTranslationItem(nameof(FormCommit), "_enterCommitMessage", "Text", "Please enter commit message");
+        translation.Received(1).AddTranslationItem(nameof(FormCommit), "_enterCommitMessageCaption", "Text", "Commit message");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormCommit),
+            "_mergeConflicts",
+            "Text",
+            "There are unresolved merge conflicts, solve merge conflicts before committing.");
+        translation.Received(1).AddTranslationItem(nameof(FormCommit), "_mergeConflictsCaption", "Text", "Merge conflicts");
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "_stageAll", "Text", "Stage all");
         translation.Received(1).AddTranslationItem(nameof(FormCommit), "_unstageAll", "Text", "Unstage all");
 
@@ -82,6 +92,10 @@ public sealed class FormCommitTests
             ?? throw new InvalidOperationException("Unstage-all button was not created.");
         ToolTip.GetTip(stageAll).Should().Be("Stage all");
         ToolTip.GetTip(unstageAll).Should().Be("Unstage all");
+        Button commitAndPush = form.FindControl<Button>("CommitAndPush")
+            ?? throw new InvalidOperationException("Commit-and-push button was not created.");
+        (commitAndPush.Content as TextBlock)?.Text.Should().Be("Commit & _push");
+        commitAndPush.IsEnabled.Should().BeFalse("push is enabled when FormPush is ported");
 
         string[] emittedKeys = translation.ReceivedCalls()
             .Where(call => call.GetMethodInfo().Name == nameof(ITranslation.AddTranslationItem))
@@ -90,6 +104,69 @@ public sealed class FormCommitTests
         emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(
             emittedKeys.Length,
             "each field must be routed through exactly one translation path");
+    }
+
+    [AvaloniaTest]
+    public async Task FormCommit_should_stage_and_commit_changes_end_to_end()
+    {
+        bool closeProcessDialog = AppSettings.CloseProcessDialog;
+        string lastCommitMessage = AppSettings.LastCommitMessage;
+        AppSettings.CloseProcessDialog = true;
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        ObjectId initialCommit = module.GetCurrentCheckout();
+        GitUICommands commands = new(_serviceContainer, module);
+        FormCommit form = new(commands);
+        try
+        {
+            form.Show();
+            FileStatusList unstaged = form.FindControl<FileStatusList>("Unstaged")
+                ?? throw new InvalidOperationException("Unstaged file list was not created.");
+            FileStatusList staged = form.FindControl<FileStatusList>("Staged")
+                ?? throw new InvalidOperationException("Staged file list was not created.");
+            Button stageAll = form.FindControl<Button>("toolStageAllItem")
+                ?? throw new InvalidOperationException("Stage-all button was not created.");
+            TextBox message = form.FindControl<TextBox>("Message")
+                ?? throw new InvalidOperationException("Commit message editor was not created.");
+            Button commit = form.FindControl<Button>("Commit")
+                ?? throw new InvalidOperationException("Commit button was not created.");
+
+            await WaitForCountsAsync(unstaged, 2, staged, 0);
+            stageAll.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+            await WaitForCountsAsync(unstaged, 0, staged, 2);
+
+            message.Text = "Commit from Avalonia";
+            await WaitUntilAsync(() => commit.IsEnabled);
+            form.CaptureRenderedFrame().Should().NotBeNull("the ready-to-commit dialog should render headlessly");
+            commit.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Button.ClickEvent));
+
+            await WaitUntilAsync(() => !form.IsVisible && module.GetCurrentCheckout() != initialCommit);
+
+            GitRevision revision = module.GetRevision(module.GetCurrentCheckout(), shortFormat: true, loadRefs: false);
+            revision.Subject.Should().Be("Commit from Avalonia");
+            module.GetAllChangedFilesWithSubmodulesStatus().Should().BeEmpty();
+            File.Exists(Path.Combine(module.WorkingDirGitDir, "COMMITMESSAGE")).Should().BeFalse();
+        }
+        finally
+        {
+            AppSettings.CloseProcessDialog = closeProcessDialog;
+            AppSettings.LastCommitMessage = lastCommitMessage;
+            if (form.IsVisible)
+            {
+                form.Close();
+            }
+        }
+    }
+
+    [Test]
+    public void StartCommitDialog_should_honor_pre_commit_cancellation()
+    {
+        GitModule module = CreateRepositoryWithTwoUnstagedChanges();
+        GitUICommands commands = new(_serviceContainer, module);
+        commands.PreCommit += (_, e) => e.Cancel = true;
+
+        bool result = commands.StartCommitDialog(owner: null);
+
+        result.Should().BeFalse();
     }
 
     [AvaloniaTest]

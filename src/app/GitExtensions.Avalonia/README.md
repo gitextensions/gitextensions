@@ -16,10 +16,11 @@ switch between existing local branches, with merge/reset handling for local chan
 checkout and auto-stash are not yet available. Commands > Create branch can create a branch
 at the selected revision, optionally check it out, and supports orphan branches in empty
 repositories. Right-clicking a revision provides the same checkout-branch and create-branch
-actions for that commit. The first commit-dialog increment can display staged and unstaged
-files with a selected-file diff, and can stage or unstage selected files or all files.
-Committing is not enabled yet, and the dialog's browse entry point arrives with the
-functional commit increment. Push and the remaining dialogs are being ported incrementally.
+actions for that commit. Commands > Commit opens the commit dialog, which displays staged
+and unstaged files with a selected-file diff, stages or unstages selected files or all files,
+edits the commit message, and creates normal commits through the process dialog. Amend,
+fixup/squash, commit templates/history, signing options, and commit-and-push are not yet
+available. Push and the remaining dialogs are being ported incrementally.
 
 ## Requirements
 
