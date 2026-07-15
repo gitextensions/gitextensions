@@ -81,6 +81,11 @@ public sealed class ViewConstructionTests
             "commitToolStripMenuItem",
             "Text",
             "&Commit...");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "pullToolStripMenuItem",
+            "Text",
+            "Pull&/Fetch...");
         translation.Received(1).TranslateItem(
             nameof(FormBrowse),
             "fetchAllToolStripMenuItem",
@@ -115,6 +120,32 @@ public sealed class ViewConstructionTests
         commit.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
         commands.Received(1).StartCommitDialog(form);
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_pull_should_start_the_dialog()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(Path.GetTempPath());
+        module.IsValidGitWorkingDir().Returns(false);
+
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
+        appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
+
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+
+        FormBrowse form = new(commands);
+        MenuItem pull = form.FindControl<MenuItem>("pullToolStripMenuItem")
+            ?? throw new InvalidOperationException("Pull menu item was not created.");
+        pull.IsEnabled = true;
+
+        pull.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        commands.Received(1).StartPullDialog(form);
     }
 
     [AvaloniaTest]
