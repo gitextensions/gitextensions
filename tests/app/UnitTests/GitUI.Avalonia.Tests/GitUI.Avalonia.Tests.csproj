@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Cross-platform Avalonia tests; part of GitExtensions.Avalonia.slnx only, so the
+         Windows Forms solution and its pipelines are unaffected. -->
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- CommonAssemblyInfo.cs declares SupportedOSPlatform("windows7.0"), which NUnit 4
+         translates into a Windows-only platform requirement for every test: on Linux the
+         whole assembly is silently discovered as empty. This project is cross-platform. -->
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia.Headless.NUnit" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\src\app\GitExtensions.Avalonia\GitExtensions.Avalonia.csproj" />
+  </ItemGroup>
+
+</Project>

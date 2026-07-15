@@ -14,4 +14,7 @@
   <Folder Name="/src/plugins/">
     <Project Path="src/plugins/GitUIPluginInterfaces/GitUIPluginInterfaces.csproj" />
   </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj" />
+  </Folder>
 </Solution>
