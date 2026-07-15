@@ -17,9 +17,9 @@ checkout and auto-stash are not yet available. Commands > Create branch can crea
 at the selected revision, optionally check it out, and supports orphan branches in empty
 repositories. Right-clicking a revision provides the same checkout-branch and create-branch
 actions for that commit. The first commit-dialog increment can display staged and unstaged
-files with a selected-file diff; staging and committing are not enabled yet, and its browse
-entry point arrives with the functional commit increment. Push and the remaining dialogs
-are being ported incrementally.
+files with a selected-file diff, and can stage or unstage selected files or all files.
+Committing is not enabled yet, and the dialog's browse entry point arrives with the
+functional commit increment. Push and the remaining dialogs are being ported incrementally.
 
 ## Requirements
 
