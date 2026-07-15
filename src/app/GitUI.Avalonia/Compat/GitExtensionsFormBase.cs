@@ -1,7 +1,10 @@
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
+using Avalonia.Input;
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
+using GitExtUtils;
 using GitUI.Compat;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -9,13 +12,14 @@ namespace ResourceManager;
 
 // Twin of ResourceManager/GitExtensionsFormBase.cs: provides xlf translation for windows
 // plus the WinForms form idioms the ported code-behind relies on (Text, DialogResult,
-// synchronous ShowDialog, AcceptButton, OnRuntimeLoad). Hotkeys and theming arrive later.
+// synchronous ShowDialog, AcceptButton, OnRuntimeLoad, and hotkey dispatch). Theming arrives later.
 public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Window
 {
     private WinFormsShims.DialogResult _dialogResult = WinFormsShims.DialogResult.None;
     private bool _isShownModally;
     private bool _runtimeLoadRaised;
     private Button? _acceptButton;
+    private IReadOnlyList<HotkeyCommand> _hotkeys = [];
 
     /// <summary>The window title, under its WinForms name so ported code compiles unchanged.</summary>
     public string? Text
@@ -127,6 +131,70 @@ public class GitExtensionsFormBase : Window, ITranslate, WinFormsShims.IWin32Win
     /// </summary>
     protected virtual void OnRuntimeLoad(EventArgs e)
     {
+    }
+
+    /// <summary>Gets or sets whether this window dispatches its loaded hotkeys.</summary>
+    protected bool HotkeysEnabled { get; set; }
+
+    /// <summary>Loads the persisted hotkeys for one upstream settings category.</summary>
+    protected void LoadHotkeys(string hotkeySettingsName)
+    {
+        if (!HotkeysEnabled || !TryGetUICommands(out IGitUICommands? commands))
+        {
+            _hotkeys = [];
+            return;
+        }
+
+        _hotkeys = commands.GetService(typeof(IHotkeySettingsLoader)) is IHotkeySettingsLoader loader
+            ? loader.LoadHotkeys(hotkeySettingsName)
+            : [];
+    }
+
+    /// <summary>Dispatches a WinForms-compatible key value through the loaded command table.</summary>
+    public virtual bool ProcessHotkey(WinFormsShims.Keys keyData)
+    {
+        if (!HotkeysEnabled)
+        {
+            return false;
+        }
+
+        HotkeyCommand? hotkey = _hotkeys.FirstOrDefault(hotkey => hotkey.KeyData == keyData);
+        return hotkey is not null && ExecuteCommand(hotkey.CommandCode);
+    }
+
+    /// <summary>Attempts to expose this window's Git UI command service.</summary>
+    public virtual bool TryGetUICommands([System.Diagnostics.CodeAnalysis.NotNullWhen(true)] out IGitUICommands? commands)
+    {
+        commands = null;
+        return false;
+    }
+
+    /// <summary>Handles a loaded hotkey command.</summary>
+    protected virtual bool ExecuteCommand(int command)
+    {
+        return false;
+    }
+
+    /// <summary>Controls the shared Escape-to-close behavior; the repository browser opts out.</summary>
+    protected virtual bool CloseOnEscape => true;
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        WinFormsShims.Keys keyData = KeysMapper.ToKeys(e);
+        if (ProcessHotkey(keyData))
+        {
+            e.Handled = true;
+            return;
+        }
+
+        if (CloseOnEscape && keyData == WinFormsShims.Keys.Escape)
+        {
+            Close();
+            e.Handled = true;
+            return;
+        }
+
+        base.OnKeyDown(e);
     }
 
     /// <summary>Performs post-initialisation tasks such as translation.</summary>
