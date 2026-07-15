@@ -87,6 +87,44 @@ public sealed class ProcessDialogTests
     }
 
     [AvaloniaTest]
+    public void FormProcess_Escape_should_terminate_a_running_linux_command()
+    {
+        if (!OperatingSystem.IsLinux())
+        {
+            Assert.Ignore("Linux process groups are required for this test.");
+        }
+
+        using FormProcess form = new(
+            CreateCommands(Path.GetTempPath()),
+            arguments: "-c \"sleep 100 & echo $!; wait\"",
+            Path.GetTempPath(),
+            input: null,
+            useDialogSettings: true,
+            process: "/bin/bash");
+        try
+        {
+            form.Show();
+            Stopwatch stopwatch = Stopwatch.StartNew();
+            while (string.IsNullOrWhiteSpace(form.GetOutputString()) && stopwatch.ElapsedMilliseconds < 5_000)
+            {
+                Dispatcher.UIThread.RunJobs();
+                Thread.Sleep(25);
+            }
+
+            int childProcessId = int.Parse(form.GetOutputString().Trim());
+
+            form.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+
+            form.IsVisible.Should().BeFalse();
+            SpinWait.SpinUntil(() => HasExited(childProcessId), TimeSpan.FromSeconds(5)).Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FormProcess_should_run_a_git_command_and_report_success()
     {
         FormProcess form = new(CreateCommands(Path.GetTempPath()), arguments: "version", Path.GetTempPath(), input: null, useDialogSettings: false);
@@ -133,6 +171,19 @@ public sealed class ProcessDialogTests
         finally
         {
             form.Close();
+        }
+    }
+
+    private static bool HasExited(int processId)
+    {
+        try
+        {
+            using Process process = Process.GetProcessById(processId);
+            return process.HasExited;
+        }
+        catch (ArgumentException)
+        {
+            return true;
         }
     }
 }
