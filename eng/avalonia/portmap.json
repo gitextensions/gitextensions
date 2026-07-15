@@ -185,7 +185,7 @@
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Registers the plain text console emulation, reduced hotkey settings loader, and cross-platform external-terminal launcher."
+    "notes": "Registers the plain text console emulation, reduced hotkey settings loader, and cross-platform external-terminal launcher; Linux honors the desktop default through xdg-terminal-exec before named fallbacks."
   },
   "src/app/GitUI/MessageBoxes.cs": {
     "twin": "src/app/GitUI.Avalonia/MessageBoxes.cs",
