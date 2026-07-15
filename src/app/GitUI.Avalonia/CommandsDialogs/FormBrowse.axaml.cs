@@ -34,6 +34,7 @@ public sealed partial class FormBrowse : GitModuleForm
         repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
         refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
         checkoutBranchToolStripMenuItem.Click += CheckoutBranchToolStripMenuItemClick;
+        branchToolStripMenuItem.Click += CreateBranchToolStripMenuItemClick;
         fetchAllToolStripMenuItem.Click += fetchAllToolStripMenuItem_Click;
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
 
@@ -54,6 +55,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
         refreshToolStripMenuItem.IsEnabled = isValidWorkingDir;
         checkoutBranchToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        branchToolStripMenuItem.IsEnabled = isValidWorkingDir;
         fetchAllToolStripMenuItem.IsEnabled = isValidWorkingDir;
 
         if (isValidWorkingDir)
@@ -165,6 +167,11 @@ public sealed partial class FormBrowse : GitModuleForm
     private void CheckoutBranchToolStripMenuItemClick(object? sender, EventArgs e)
     {
         UICommands.StartCheckoutBranch(this);
+    }
+
+    private void CreateBranchToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartCreateBranchDialog(this, RevisionGrid.SelectedRevision?.ObjectId ?? default);
     }
 
     private void fetchAllToolStripMenuItem_Click(object? sender, EventArgs e)

@@ -112,6 +112,32 @@ public sealed class ViewConstructionTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_create_branch_should_start_the_dialog_at_the_selected_revision()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(Path.GetTempPath());
+        module.IsValidGitWorkingDir().Returns(false);
+
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
+        appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
+
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+
+        FormBrowse form = new(commands);
+        MenuItem createBranch = form.FindControl<MenuItem>("branchToolStripMenuItem")
+            ?? throw new InvalidOperationException("Create-branch menu item was not created.");
+        createBranch.IsEnabled = true;
+
+        createBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        commands.Received(1).StartCreateBranchDialog(form, default(ObjectId));
+    }
+
+    [AvaloniaTest]
     public void FormCheckoutBranch_should_use_existing_translation_keys()
     {
         FormCheckoutBranch form = new();

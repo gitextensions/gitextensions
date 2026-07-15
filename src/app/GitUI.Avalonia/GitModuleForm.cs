@@ -6,9 +6,11 @@ namespace GitUI;
 // The hotkey and scripts plumbing of the WinForms base arrives with the Phase 2 hotkey work.
 
 /// <summary>Base window that provides access to the module and <see cref="IGitUICommands"/>.</summary>
-public class GitModuleForm : GitExtensionsForm
+public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
 {
     private IGitUICommands? _uiCommands;
+
+    public event EventHandler<GitUICommandsChangedEventArgs>? UICommandsChanged;
 
     /// <summary>For the visual designer and construction tests only, like WinForms.</summary>
     protected GitModuleForm()
@@ -27,7 +29,9 @@ public class GitModuleForm : GitExtensionsForm
         protected set
         {
             ArgumentNullException.ThrowIfNull(value);
+            IGitUICommands? oldCommands = _uiCommands;
             _uiCommands = value;
+            UICommandsChanged?.Invoke(this, new GitUICommandsChangedEventArgs(oldCommands));
         }
     }
 

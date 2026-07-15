@@ -13,8 +13,9 @@ history, graph and branch/tag labels, the files in a selected revision, and a co
 viewer. The Repository menu can refresh the view, and Commands > Fetch all runs Git in the
 ported process dialog and reloads the repository afterwards. Commands > Checkout branch can
 switch between existing local branches, with merge/reset handling for local changes. Remote
-checkout, auto-stash, commit, and push, and the remaining dialogs, are being ported
-incrementally.
+checkout and auto-stash are not yet available. Commands > Create branch can create a branch
+at the selected revision, optionally check it out, and supports orphan branches in empty
+repositories. Commit, push, and the remaining dialogs are being ported incrementally.
 
 ## Requirements
 
