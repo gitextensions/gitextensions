@@ -225,7 +225,7 @@ public sealed class PlainTextConsoleCommandRunner : UserControl, IPlainTextConso
                     });
             };
 
-            _process.Start();
+            _process.StartInOwnProcessGroup();
             operation.SetProcessId(_process.Id);
             _input = _process.StandardInput;
             outputReader = new AsyncStreamReader(_process.StandardOutput, ForwardOutput);
