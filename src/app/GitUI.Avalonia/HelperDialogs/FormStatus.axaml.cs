@@ -21,11 +21,20 @@ public partial class FormStatus : GitExtensionsDialog
     private protected Action<FormStatus>? ProcessCallback;
     private protected Action<FormStatus>? AbortCallback;
 
-    public FormStatus(IGitUICommands commands, IConsoleEmulatorsRegistry consoleEmulatorsRegistry, bool useDialogSettings)
+    /// <summary>For the visual designer and the XAML loader only, like WinForms.</summary>
+    /// <remarks>
+    ///  The dialog is built the same way as at run time, but without commands: starting an
+    ///  operation from it is an error, which <see cref="GitModuleForm.UICommands"/> reports.
+    /// </remarks>
+    public FormStatus()
+        : this(commands: null, PlainTextConsoleEmulatorsRegistry.Instance, useDialogSettings: false)
+    {
+    }
+
+    /// <param name="commands">The commands, or <see langword="null"/> for the designer.</param>
+    public FormStatus(IGitUICommands? commands, IConsoleEmulatorsRegistry consoleEmulatorsRegistry, bool useDialogSettings)
         : base(commands, enablePositionRestore: true)
     {
-        ArgumentNullException.ThrowIfNull(commands);
-
         _useDialogSettings = useDialogSettings;
 
         ConsoleCommandRunner = consoleEmulatorsRegistry.CreateCommandController();
