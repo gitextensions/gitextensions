@@ -231,7 +231,7 @@ public class CommitMessageManagerTests
         await manager.WriteCommitMessageToFileAsync(message, CommitMessageType.Normal, false, false);
 
         File.Exists(manager.CommitMessagePath).Should().BeTrue();
-        File.ReadAllBytes(manager.CommitMessagePath).Should().BeEquivalentTo(Encoding.ASCII.GetBytes(message + "\r\n"));
+        File.ReadAllBytes(manager.CommitMessagePath).Should().BeEquivalentTo(Encoding.ASCII.GetBytes(message + Environment.NewLine));
     }
 
     [Test]

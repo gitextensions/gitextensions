@@ -11,6 +11,7 @@ public class PathEqualityComparerTests
         _comparer = new PathEqualityComparer();
     }
 
+    [Platform(Include = "Win")]
     [TestCase("C:\\WORK\\GitExtensions\\", "C:/Work/GitExtensions/")]
     [TestCase("\\\\my-pc\\Work\\GitExtensions\\", "//my-pc/WORK/GitExtensions/")]
     public void Equals(string input, string expected)

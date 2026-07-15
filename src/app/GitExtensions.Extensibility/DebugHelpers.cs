@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Runtime.CompilerServices;
 
 namespace GitExtensions.Extensibility;
@@ -53,6 +54,9 @@ public static class DebugHelpers
         }
     }
 
+    // The test host is testhost.exe on Windows but testhost.dll started by the dotnet host
+    // elsewhere, so the process path does not identify it on every platform; the entry
+    // assembly does.
     private static bool IsTestRunning
-        => Application.ExecutablePath.EndsWith("testhost.exe");
+        => string.Equals(Assembly.GetEntryAssembly()?.GetName().Name, "testhost", StringComparison.OrdinalIgnoreCase);
 }
