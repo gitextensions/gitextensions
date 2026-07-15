@@ -197,7 +197,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResetChanges.axaml.cs",
     "status": "parity",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "The dialog grows with its message through SizeToContent instead of the original's manual preferred-size arithmetic."
+    "notes": "Sizing follows the original: a custom message grows the dialog, clamped between its designed size and three quarters of the screen work area. The minimize box cannot be hidden separately in Avalonia."
   },
   "src/app/GitUI/HelperDialogs/FormStatus.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormStatus.axaml.cs",

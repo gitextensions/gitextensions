@@ -47,6 +47,33 @@ public sealed class ResetChangesTests
         form.txtMessage.Text.Should().Be("Reset 3 files?");
     }
 
+    // Like the WinForms original, a long message grows the dialog, but never below its
+    // designed size and never past three quarters of the screen.
+    [AvaloniaTest]
+    public void FormResetChanges_should_grow_to_fit_a_long_message_within_bounds()
+    {
+        string longMessage = string.Join(Environment.NewLine, Enumerable.Range(0, 200).Select(i => $"path/to/some/file{i}.cs"));
+        using FormResetChanges form = new(hasExistingFiles: true, hasNewFiles: true, confirmationMessage: longMessage);
+        form.Show();
+
+        form.MinWidth.Should().Be(460);
+        form.MinHeight.Should().Be(121);
+        form.Bounds.Height.Should().BeGreaterThan(121, "the dialog must grow to show the message");
+        form.Bounds.Height.Should().BeLessThanOrEqualTo(form.MaxHeight, "growth stops at three quarters of the screen");
+        form.Close();
+    }
+
+    [AvaloniaTest]
+    public void FormResetChanges_should_keep_its_designed_size_without_a_message()
+    {
+        using FormResetChanges form = new(hasExistingFiles: true, hasNewFiles: true);
+        form.Show();
+
+        form.Width.Should().Be(460);
+        form.Height.Should().Be(121);
+        form.Close();
+    }
+
     [AvaloniaTest]
     [TestCase(true, FormResetChanges.ActionEnum.ResetAndDelete)]
     [TestCase(false, FormResetChanges.ActionEnum.Reset)]

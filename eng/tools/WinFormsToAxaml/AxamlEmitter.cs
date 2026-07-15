@@ -623,22 +623,39 @@ internal sealed class AxamlEmitter(DesignerForm form, string sourceDescription, 
             return [.. children.OrderBy(child => child.GridRow ?? 0).ThenBy(child => child.GridColumn ?? 0)];
         }
 
+        if (element == "DockPanel")
+        {
+            return [.. OrderForDockPanel(children)];
+        }
+
         return children;
     }
 
     /// <summary>
-    ///  DockPanel needs the filling child last; WinForms z-order puts it first. The button
-    ///  row of the GitExtensions base dialog ("ControlsPanel") docks to the bottom edge and
-    ///  "MainPanel" fills what remains.
+    ///  Orders the children of a DockPanel the way Windows Forms lays them out.
     /// </summary>
+    /// <remarks>
+    ///  Windows Forms docks in reverse z-order: <c>Controls.Add</c> appends to the back of the
+    ///  collection, and the control furthest back is docked first, so it takes the outermost
+    ///  edge. A DockPanel docks its children in document order, so the source order is
+    ///  reversed here. The filling child goes last (DockPanel gives it what is left), and
+    ///  "MainPanel" is the filling child of the GitExtensions base dialog while its button row
+    ///  "ControlsPanel" docks to an edge.
+    /// </remarks>
     private static IEnumerable<ControlNode> OrderForDockPanel(IReadOnlyList<ControlNode> controls)
-        => [.. controls.OrderBy(control => (control.Name, UsesSideDock(control)) switch
+    {
+        List<ControlNode> reversed = [.. controls];
+        reversed.Reverse();
+
+        // OrderBy is stable, so children docked to an edge keep the reversed order.
+        return [.. reversed.OrderBy(control => (control.Name, UsesSideDock(control)) switch
             {
                 ("MainPanel", _) => 2,
                 ("ControlsPanel", _) => 0,
                 (_, true) => 0,
                 (_, false) => 1,
             })];
+    }
 
     private static bool UsesSideDock(ControlNode control)
         => control.Properties.TryGetValue("Dock", out string? dock) && dock is not ("DockStyle.Fill" or "DockStyle.None");
