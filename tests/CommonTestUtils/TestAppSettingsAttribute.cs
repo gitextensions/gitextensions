@@ -7,13 +7,13 @@ namespace CommonTestUtils;
 [AttributeUsage(AttributeTargets.Assembly)]
 public sealed class TestAppSettingsAttribute : Attribute, ITestAction
 {
-    private readonly Semaphore _semaphore = new(initialCount: 1, maximumCount: 1, "GitExtensionsTestAssemblySerializer");
+    private static readonly SemaphoreSlim _semaphore = new(initialCount: 1, maxCount: 1);
 
     public ActionTargets Targets => ActionTargets.Suite;
 
     public void BeforeTest(ITest test)
     {
-        _semaphore.WaitOne();
+        _semaphore.Wait();
 
         File.Delete(AppSettings.SettingsContainer.SettingsCache.SettingsFilePath);
         AppSettings.SettingsContainer.SettingsCache.Load();
