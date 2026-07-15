@@ -57,6 +57,8 @@ public sealed partial class FormCommit : GitModuleForm
         toolStageItem.Click += StageClick;
         toolStageAllItem.Click += toolStageAllItem_Click;
         toolUnstageItem.Click += UnstageFilesClick;
+        btnResetAllChanges.Click += btnResetAllChanges_Click;
+        btnResetUnstagedChanges.Click += btnResetUnstagedChanges_Click;
         toolUnstageAllItem.Click += toolUnstageAllItem_Click;
         Commit.Click += CommitClick;
         CommitAndPush.Click += CommitAndPushClick;
@@ -233,6 +235,22 @@ public sealed partial class FormCommit : GitModuleForm
         });
     }
 
+    private void btnResetAllChanges_Click(object sender, EventArgs e)
+    {
+        ResetChanges(onlyWorkTree: false);
+    }
+
+    private void btnResetUnstagedChanges_Click(object sender, EventArgs e)
+    {
+        ResetChanges(onlyWorkTree: true);
+    }
+
+    private void ResetChanges(bool onlyWorkTree)
+    {
+        UICommands.StartResetChangesDialog(this, Unstaged.GitItemStatuses, onlyWorkTree);
+        ReloadChanges(preferStaged: false);
+    }
+
     private void UpdateStageButtons()
     {
         bool actionsEnabled = !_indexOperationInProgress && !_commitInProgress;
@@ -244,6 +262,9 @@ public sealed partial class FormCommit : GitModuleForm
             && Unstaged.GitItemStatuses.Any(item => !item.IsAssumeUnchanged && !item.IsSkipWorktree);
         toolUnstageItem.IsEnabled = canUnstage;
         toolUnstageAllItem.IsEnabled = actionsEnabled && Staged.GitItemStatuses.Count > 0;
+        btnResetUnstagedChanges.IsEnabled = actionsEnabled && Unstaged.GitItemStatuses.Count > 0;
+        btnResetAllChanges.IsEnabled = actionsEnabled
+            && (Unstaged.GitItemStatuses.Count > 0 || Staged.GitItemStatuses.Count > 0);
         Commit.IsEnabled = actionsEnabled
             && Staged.GitItemStatuses.Count > 0
             && !string.IsNullOrWhiteSpace(Message.Text);
