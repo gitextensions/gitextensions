@@ -81,6 +81,47 @@ public sealed class ViewConstructionTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_checkout_branch_should_start_the_dialog()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(Path.GetTempPath());
+        module.IsValidGitWorkingDir().Returns(false);
+
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
+        appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
+
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+
+        FormBrowse form = new(commands);
+        MenuItem checkout = form.FindControl<MenuItem>("checkoutBranchToolStripMenuItem")
+            ?? throw new InvalidOperationException("Checkout-branch menu item was not created.");
+        checkout.IsEnabled = true;
+
+        checkout.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        commands.Received(1).StartCheckoutBranch(form);
+    }
+
+    [AvaloniaTest]
+    public void FormCheckoutBranch_should_use_existing_translation_keys()
+    {
+        FormCheckoutBranch form = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        form.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(nameof(FormCheckoutBranch), "Ok", "Text", "&Checkout");
+        translation.Received(1).AddTranslationItem(nameof(FormCheckoutBranch), "LocalBranch", "Text", "Local &branch");
+        translation.Received(1).AddTranslationItem(nameof(FormCheckoutBranch), "label1", "Text", "&Select branch");
+        translation.Received(1).AddTranslationItem(nameof(FormCheckoutBranch), "localChangesGB", "Text", "Local changes");
+        translation.Received(1).AddTranslationItem(nameof(FormCheckoutBranch), "rbDontChange", "Text", "Do&n't change");
+    }
+
+    [AvaloniaTest]
     public void RevisionGridControl_should_construct()
     {
         RevisionGridControl control = new();
