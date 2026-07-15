@@ -7,13 +7,23 @@ namespace CommonTestUtils;
 [AttributeUsage(AttributeTargets.Assembly)]
 public sealed class TestAppSettingsAttribute : Attribute, ITestAction
 {
-    private static readonly SemaphoreSlim _semaphore = new(initialCount: 1, maxCount: 1);
+    private static readonly SemaphoreSlim _portableSemaphore = new(initialCount: 1, maxCount: 1);
+    private readonly Semaphore? _windowsSemaphore = OperatingSystem.IsWindows()
+        ? new(initialCount: 1, maximumCount: 1, "GitExtensionsTestAssemblySerializer")
+        : null;
 
     public ActionTargets Targets => ActionTargets.Suite;
 
     public void BeforeTest(ITest test)
     {
-        _semaphore.Wait();
+        if (_windowsSemaphore is not null)
+        {
+            _windowsSemaphore.WaitOne();
+        }
+        else
+        {
+            _portableSemaphore.Wait();
+        }
 
         // A test host may run under the shared dotnet runtime rather than a native testhost.exe apphost (e.g. on the
         // arm64 CI runner, which has no native testhost.exe). In that case Application.ExecutablePath — and therefore
@@ -36,6 +46,13 @@ public sealed class TestAppSettingsAttribute : Attribute, ITestAction
     {
         AppSettings.SettingsContainer.SettingsCache.Dispose();
 
-        _semaphore.Release();
+        if (_windowsSemaphore is not null)
+        {
+            _windowsSemaphore.Release();
+        }
+        else
+        {
+            _portableSemaphore.Release();
+        }
     }
 }
