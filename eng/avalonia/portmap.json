@@ -124,7 +124,7 @@
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormProcess.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Headless end-to-end tests pending a threading fix (see the ignored tests)."
+    "notes": "Headless end-to-end success and failure tests pass; real-window integration arrives with the first FormBrowse action."
   },
   "src/app/GitUI/UserControls/PasswordInput.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/PasswordInput.axaml.cs",

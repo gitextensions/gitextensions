@@ -24,13 +24,10 @@ public sealed class ProcessDialogTests
     [SetUp]
     public void SetUp()
     {
-        // The app initializes the JoinableTaskContext for the desktop lifetime only; the
-        // headless test session provides its own, capturing the headless UI thread.
-        if (!ThreadHelper.HasJoinableTaskContext)
-        {
-            AvaloniaSynchronizationContext.InstallIfNeeded();
-            ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
-        }
+        // ThreadHelper is static, while Avalonia's test context can change between cases.
+        // Capture the current headless UI thread for every process-dialog test.
+        AvaloniaSynchronizationContext.InstallIfNeeded();
+        ThreadHelper.JoinableTaskContext = new JoinableTaskContext();
 
         // Like GitExtensions.Avalonia's ServiceContainerRegistry, reduced to what the
         // process dialogs consume.
@@ -77,7 +74,6 @@ public sealed class ProcessDialogTests
     }
 
     [AvaloniaTest]
-    [Ignore("Known issue: in the headless session SwitchToMainThreadAsync resumes on a thread where Dispatcher.UIThread.CheckAccess() is false, so the output-flush assert aborts the exit path before CommandProcessExited. Fix planned as the next porting step; see RunnerProbeTests for the diagnostic.")]
     public void FormProcess_should_run_a_git_command_and_report_success()
     {
         FormProcess form = new(CreateCommands(Path.GetTempPath()), arguments: "version", Path.GetTempPath(), input: null, useDialogSettings: false);
@@ -104,7 +100,6 @@ public sealed class ProcessDialogTests
     }
 
     [AvaloniaTest]
-    [Ignore("Same known issue as FormProcess_should_run_a_git_command_and_report_success.")]
     public void FormProcess_should_report_an_error_for_a_failing_command()
     {
         FormProcess form = new(CreateCommands(Path.GetTempPath()), arguments: "definitely-not-a-git-command", Path.GetTempPath(), input: null, useDialogSettings: false);
