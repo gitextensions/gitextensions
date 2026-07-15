@@ -24,6 +24,7 @@
     <!-- Avalonia/Linux port (see AGENTS.md) -->
     <PackageVersion Include="Avalonia" Version="12.1.0" />
     <PackageVersion Include="Avalonia.AvaloniaEdit" Version="12.0.0" />
+    <PackageVersion Include="Avalonia.Headless.NUnit" Version="12.1.0" />
     <PackageVersion Include="Avalonia.Desktop" Version="12.1.0" />
     <PackageVersion Include="Avalonia.Themes.Fluent" Version="12.1.0" />
     <PackageVersion Include="System.ComponentModel.Composition" Version="6.0.0" />    <!-- Required by GitExtensions.PluginManager -->

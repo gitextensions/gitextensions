@@ -38,6 +38,8 @@
     <Compile Include="GitUI\Theming\ThemeId.cs" />
     <Compile Include="GitUI\Theming\ThemeModifiers.cs" />
     <Compile Include="GitUI\Theming\ThemeSettings.cs" />
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+    <Compile Include="..\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
   </ItemGroup>
 
   <ItemGroup>
