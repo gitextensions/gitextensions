@@ -3,7 +3,9 @@ using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
+using GitUI.Compat;
 using GitUIPluginInterfaces;
 
 using ResourceManager;
@@ -18,6 +20,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
     internal enum Command
     {
+        GitBash = 0,
         Commit = 7,
         CheckoutBranch = 10,
         PullOrFetch = 39,
@@ -54,6 +57,7 @@ public sealed partial class FormBrowse : GitModuleForm
         branchToolStripMenuItem.Click += CreateBranchToolStripMenuItemClick;
         pullToolStripMenuItem.Click += PullToolStripMenuItemClick;
         fetchAllToolStripMenuItem.Click += fetchAllToolStripMenuItem_Click;
+        userShell.Click += userShell_Click;
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
 
         ReloadRepository();
@@ -220,10 +224,23 @@ public sealed partial class FormBrowse : GitModuleForm
         }
     }
 
+    private void userShell_Click(object? sender, EventArgs e)
+    {
+        try
+        {
+            UICommands.GetRequiredService<ITerminalLauncher>().Launch(Module.WorkingDir);
+        }
+        catch (Exception exception)
+        {
+            MessageBoxes.FailedToRunShell(this, "Git bash", exception);
+        }
+    }
+
     protected override bool ExecuteCommand(int command)
     {
         switch ((Command)command)
         {
+            case Command.GitBash: userShell_Click(this, EventArgs.Empty); break;
             case Command.Refresh: RefreshToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.Commit: CommitToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
@@ -237,4 +254,24 @@ public sealed partial class FormBrowse : GitModuleForm
     }
 
     protected override bool CloseOnEscape => false;
+
+    public override void AddTranslationItems(ITranslation translation)
+    {
+        base.AddTranslationItems(translation);
+        translation.AddTranslationItem(nameof(FormBrowse), nameof(userShell), "ToolTipText", "Git bash");
+    }
+
+    public override void TranslateItems(ITranslation translation)
+    {
+        base.TranslateItems(translation);
+        string? translated = translation.TranslateItem(
+            nameof(FormBrowse),
+            nameof(userShell),
+            "ToolTipText",
+            () => "Git bash");
+        if (!string.IsNullOrEmpty(translated) && userShell.Header is TextBlock header)
+        {
+            header.Text = translated;
+        }
+    }
 }
