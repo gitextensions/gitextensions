@@ -1,3 +1,4 @@
+using System.Diagnostics.CodeAnalysis;
 using Avalonia.LogicalTree;
 using GitExtensions.Extensibility.Git;
 using ResourceManager;
@@ -39,6 +40,13 @@ public class GitModuleControl : GitExtensionsControl
 
     /// <summary>Gets the commands exposed by <see cref="UICommandsSource"/>.</summary>
     public IGitUICommands UICommands => UICommandsSource.UICommands;
+
+    /// <summary>Gets the commands only if their source has already been set.</summary>
+    internal bool TryGetUICommandsDirect([NotNullWhen(returnValue: true)] out IGitUICommands? commands)
+    {
+        commands = _uiCommandsSource?.UICommands;
+        return commands is not null;
+    }
 
     /// <summary>Gets the current Git module.</summary>
     public IGitModule Module => UICommands.Module;

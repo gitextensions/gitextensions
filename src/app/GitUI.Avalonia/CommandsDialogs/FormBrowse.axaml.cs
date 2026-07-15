@@ -29,6 +29,7 @@ public sealed partial class FormBrowse : GitModuleForm
     {
         InitializeComponent();
 
+        RevisionGrid.UICommandsSource = this;
         RevisionGrid.SelectionChanged += RevisionGrid_SelectionChanged;
         fileStatusList.SelectedIndexChanged += FileStatusList_SelectedIndexChanged;
         repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
