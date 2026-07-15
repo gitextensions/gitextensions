@@ -4,11 +4,11 @@ namespace GitCommands.Git.Extensions;
 
 public static class ProcessExtensions
 {
-    /// <summary>Starts a process in its own session and process group on Linux.</summary>
+    /// <summary>Starts a process in its own process group on Linux and macOS.</summary>
     /// <remarks>
     ///  The Linux wrapper uses the <c>setsid</c> executable from util-linux when available.
-    ///  Other platforms, or Linux installations without that executable, use
-    ///  <see cref="Process.Start()"/> unchanged.
+    ///  macOS uses the native launcher built with the Avalonia application. Other platforms,
+    ///  or installations without their launcher, use <see cref="Process.Start()"/> unchanged.
     /// </remarks>
     public static bool StartInOwnProcessGroup(this Process process)
     {
@@ -19,31 +19,23 @@ public static class ProcessExtensions
             string? setsidPath = GetSetsidPath();
             if (setsidPath is not null)
             {
-                ProcessStartInfo startInfo = process.StartInfo;
-                string fileName = startInfo.FileName;
-                string arguments = startInfo.Arguments;
-                string[] argumentList = [.. startInfo.ArgumentList];
-
-                startInfo.FileName = setsidPath;
-                if (argumentList.Length > 0)
-                {
-                    startInfo.ArgumentList.Clear();
-                    startInfo.ArgumentList.Add(fileName);
-                    foreach (string argument in argumentList)
-                    {
-                        startInfo.ArgumentList.Add(argument);
-                    }
-                }
-                else
-                {
-                    startInfo.Arguments = string.IsNullOrEmpty(arguments)
-                        ? fileName.Quote()
-                        : $"{fileName.Quote()} {arguments}";
-                }
+                WrapStartInfo(process.StartInfo, setsidPath);
             }
             else
             {
                 Trace.WriteLine("setsid was not found; process cleanup will use descendant traversal only.");
+            }
+        }
+        else if (OperatingSystem.IsMacOS())
+        {
+            string launcherPath = Path.Combine(AppContext.BaseDirectory, "GitExtensions.ProcessGroupLauncher");
+            if (File.Exists(launcherPath))
+            {
+                WrapStartInfo(process.StartInfo, launcherPath);
+            }
+            else
+            {
+                Trace.WriteLine("The macOS process-group launcher was not found; process cleanup will use descendant traversal only.");
             }
         }
 
@@ -104,6 +96,30 @@ public static class ProcessExtensions
         }
 
         return null;
+    }
+
+    private static void WrapStartInfo(ProcessStartInfo startInfo, string wrapperPath)
+    {
+        string fileName = startInfo.FileName;
+        string arguments = startInfo.Arguments;
+        string[] argumentList = [.. startInfo.ArgumentList];
+
+        startInfo.FileName = wrapperPath;
+        if (argumentList.Length > 0)
+        {
+            startInfo.ArgumentList.Clear();
+            startInfo.ArgumentList.Add(fileName);
+            foreach (string argument in argumentList)
+            {
+                startInfo.ArgumentList.Add(argument);
+            }
+        }
+        else
+        {
+            startInfo.Arguments = string.IsNullOrEmpty(arguments)
+                ? fileName.Quote()
+                : $"{fileName.Quote()} {arguments}";
+        }
     }
 
     private static class NativeMethods
