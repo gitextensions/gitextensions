@@ -1,18 +1,24 @@
 using System.ComponentModel.Design;
 using System.Diagnostics;
 using Avalonia.Controls;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Interactivity;
+using Avalonia.Media.Imaging;
 using Avalonia.Threading;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
 using GitCommands.UserRepositoryHistory;
+using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using Microsoft.VisualStudio.Threading;
+using NSubstitute;
 using ResourceManager;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitExtensionsTests;
 
@@ -93,6 +99,72 @@ public sealed class FormBrowseTests
         {
             form.Close();
         }
+    }
+
+    [AvaloniaTest]
+    public async Task RevisionGrid_context_menu_should_route_the_selected_revision()
+    {
+        GitModule module = CreateRepositoryWithInitialCommit();
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(Arg.Any<Type>()).Returns(call => _serviceContainer.GetService(call.Arg<Type>()));
+
+        FormBrowse form = new(commands);
+        try
+        {
+            form.Show();
+            RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")
+                ?? throw new InvalidOperationException("Revision grid was not created.");
+            TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")
+                ?? throw new InvalidOperationException("Revision loading status was not created.");
+            await WaitUntilAsync(() => loadingStatus.Text == "1 revisions" && revisionGrid.SelectedRevision is not null);
+
+            ContextMenu contextMenu = revisionGrid.FindControl<ContextMenu>("revisionContextMenu")
+                ?? throw new InvalidOperationException("Revision context menu was not created.");
+            MenuItem checkoutBranch = revisionGrid.FindControl<MenuItem>("checkoutBranchToolStripMenuItem")
+                ?? throw new InvalidOperationException("Checkout-branch menu item was not created.");
+            MenuItem createBranch = revisionGrid.FindControl<MenuItem>("createNewBranchToolStripMenuItem")
+                ?? throw new InvalidOperationException("Create-branch menu item was not created.");
+            ListBox revisions = revisionGrid.FindControl<ListBox>("lstRevisions")
+                ?? throw new InvalidOperationException("Revision list was not created.");
+
+            contextMenu.Open(revisions);
+            Dispatcher.UIThread.RunJobs();
+
+            TopLevel contextMenuRoot = TopLevel.GetTopLevel(contextMenu)
+                ?? throw new InvalidOperationException("Revision context menu did not open in a top level.");
+            WriteableBitmap? contextMenuFrame = contextMenuRoot.CaptureRenderedFrame();
+            contextMenuFrame.Should().NotBeNull("the opened context menu should render headlessly");
+
+            ObjectId selectedObjectId = revisionGrid.SelectedRevision!.ObjectId;
+            checkoutBranch.IsEnabled.Should().BeTrue();
+            createBranch.IsEnabled.Should().BeTrue();
+            checkoutBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            createBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+            commands.Received(1).StartCheckoutBranch(
+                form,
+                Arg.Is<IReadOnlyList<ObjectId>>(objectIds => objectIds.SequenceEqual(new[] { selectedObjectId })));
+            commands.Received(1).StartCreateBranchDialog(form, selectedObjectId);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    private GitModule CreateRepositoryWithInitialCommit()
+    {
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
+        module.SetSetting("user.name", "Avalonia Test");
+        module.SetSetting("user.email", "avalonia@example.com");
+        File.WriteAllText(Path.Combine(_workingDirectory, "tracked.txt"), "content");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "tracked.txt" });
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "initial" });
+        return module;
     }
 
     private static async Task WaitUntilAsync(Func<bool> condition)

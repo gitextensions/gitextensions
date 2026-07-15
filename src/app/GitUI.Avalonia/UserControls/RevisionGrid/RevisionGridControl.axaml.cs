@@ -1,5 +1,6 @@
 using Avalonia.Controls;
 using Avalonia.Controls.Templates;
+using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
 using GitCommands;
@@ -13,6 +14,7 @@ using GitUI.UserControls.RevisionGrid.Graph.Rendering;
 using GitUIPluginInterfaces;
 
 using ResourceManager;
+using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI;
 
@@ -28,7 +30,7 @@ public enum RevisionGraphDrawStyle
 // streamed by the shared RevisionReader and shaped by the shared RevisionGraph model.
 // Ref labels, avatars, and the ColumnProvider pattern of the WinForms RevisionGridControl
 // come in later milestones.
-public partial class RevisionGridControl : GitExtensionsControl
+public partial class RevisionGridControl : GitModuleControl
 {
     private const int RowHeight = 24;
     private const int GraphColumnWidth = 160;
@@ -46,7 +48,16 @@ public partial class RevisionGridControl : GitExtensionsControl
         InitializeComponent();
 
         lstRevisions.ItemTemplate = new FuncDataTemplate<GitRevision>((_, _) => new RevisionRowControl(this), supportsRecycling: true);
-        lstRevisions.SelectionChanged += (_, _) => SelectionChanged?.Invoke(this, EventArgs.Empty);
+        lstRevisions.SelectionChanged += (_, _) =>
+        {
+            UpdateContextMenuItems();
+            SelectionChanged?.Invoke(this, EventArgs.Empty);
+        };
+        lstRevisions.PointerPressed += lstRevisions_PointerPressed;
+        revisionContextMenu.Opening += (_, _) => UpdateContextMenuItems();
+        checkoutBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
+        createNewBranchToolStripMenuItem.Click += CreateNewBranchToolStripMenuItemClick;
+        UpdateContextMenuItems();
 
         InitializeComplete();
     }
@@ -73,6 +84,48 @@ public partial class RevisionGridControl : GitExtensionsControl
             lstRevisions.ScrollIntoView(revision);
         }
     }
+
+    private void lstRevisions_PointerPressed(object? sender, PointerPressedEventArgs e)
+    {
+        PointerPointProperties properties = e.GetCurrentPoint(lstRevisions).Properties;
+        if (properties.PointerUpdateKind == PointerUpdateKind.RightButtonPressed
+            && e.Source is Control { DataContext: GitRevision revision })
+        {
+            lstRevisions.SelectedItem = revision;
+        }
+    }
+
+    private void UpdateContextMenuItems()
+    {
+        GitRevision? revision = SelectedRevision;
+        bool enabled = revision is not null
+            && !revision.IsArtificial
+            && TryGetUICommandsDirect(out IGitUICommands? commands)
+            && !commands.Module.IsBareRepository();
+        checkoutBranchToolStripMenuItem.IsEnabled = enabled;
+        createNewBranchToolStripMenuItem.IsEnabled = enabled;
+    }
+
+    private void PerformFirstDropdownItemClick(object? sender, EventArgs e)
+    {
+        if (SelectedRevision is GitRevision revision)
+        {
+            // The reduced menu has no per-branch submenu yet; the checkout dialog provides
+            // the equivalent choice, filtered to branches containing this commit.
+            UICommands.StartCheckoutBranch(GetOwner(), [revision.ObjectId]);
+        }
+    }
+
+    private void CreateNewBranchToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        if (SelectedRevision is GitRevision revision)
+        {
+            UICommands.StartCreateBranchDialog(GetOwner(), revision.ObjectId);
+        }
+    }
+
+    private WinFormsShims.IWin32Window? GetOwner()
+        => TopLevel.GetTopLevel(this) as WinFormsShims.IWin32Window;
 
     /// <summary>
     ///  Starts (re)loading the history of <paramref name="module"/> in the background,
