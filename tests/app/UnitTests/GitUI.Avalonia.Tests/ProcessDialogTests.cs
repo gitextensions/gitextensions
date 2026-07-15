@@ -68,6 +68,38 @@ public sealed class ProcessDialogTests
     }
 
     [AvaloniaTest]
+    public void FormStatus_should_construct_with_the_designer_constructor()
+    {
+        // The XAML loader needs this constructor. It builds the dialog exactly like the
+        // run-time one does — console included — so the designer shows the real thing.
+        using FormStatus form = new();
+
+        form.pnlOutput.Children.Should().NotBeEmpty("the console control belongs to the dialog");
+        form.KeepDialogOpen.IsVisible.Should().BeFalse();
+
+        // Only the commands are absent, and asking for them says so.
+        form.Invoking(f => _ = f.UICommands).Should().Throw<InvalidOperationException>()
+            .WithMessage("*constructed incorrectly*");
+    }
+
+    [AvaloniaTest]
+    public void FormStatus_should_be_translated_by_the_designer_constructor()
+    {
+        string original = AppSettings.CurrentTranslation ?? "";
+        try
+        {
+            AppSettings.CurrentTranslation = "German";
+            using FormStatus form = new();
+
+            form.Abort.Content.Should().Be("_Abbrechen", "InitializeComplete must translate the dialog the loader built");
+        }
+        finally
+        {
+            AppSettings.CurrentTranslation = original;
+        }
+    }
+
+    [AvaloniaTest]
     public void FormProcess_should_construct()
     {
         using FormProcess form = new(CreateCommands(Path.GetTempPath()), arguments: "version", Path.GetTempPath(), input: null, useDialogSettings: true);
