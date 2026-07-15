@@ -32,6 +32,9 @@ their upstream command IDs, and Escape closes dialogs without closing the reposi
 On Linux with `setsid` available, commands shown in the process dialog run in an isolated
 process group so cancelling the dialog also terminates descendant processes, including
 children that have been re-parented.
+On macOS, the build compiles a small native launcher that creates the process group before
+executing Git. The launcher preserves the command PID and redirected streams so cancellation
+uses the same process-tree behavior as Linux.
 Tools > Git bash opens an external terminal in the repository directory. Linux uses the
 `TERMINAL` environment variable when set, then `xdg-terminal-exec` to honor the desktop's
 configured default terminal, followed by `x-terminal-emulator`, GNOME Terminal, Konsole, or
@@ -45,6 +48,7 @@ terminal can start correctly when Git Extensions was launched from a Snap-hosted
 - [Git](https://git-scm.com/) available on `PATH`
 - On Linux, `setsid` from util-linux for reliable process-tree cleanup (included by standard
   desktop distributions; descendant traversal remains available when it is absent)
+- On macOS, the Xcode Command Line Tools (`cc`) to build the process-group launcher
 - A desktop environment:
   - Windows 10 or later
   - Linux with an X11 or Wayland session (standard desktop distributions work out of the box)
