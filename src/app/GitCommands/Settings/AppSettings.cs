@@ -2,6 +2,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.Versioning;
 using System.Text;
 using System.Text.RegularExpressions;
 using GitCommands.Git;
@@ -1860,6 +1861,7 @@ public static partial class AppSettings
 
     private static RegistryKey? _versionIndependentRegKey;
 
+    [SupportedOSPlatform("windows")]
     private static RegistryKey VersionIndependentRegKey
     {
         get
@@ -2058,6 +2060,7 @@ public static partial class AppSettings
 
     public static TextSetting UninformativeRepoNameRegex { get; } = new(DetailedSettingsPath, nameof(UninformativeRepoNameRegex), defaultValue: "app|(repo(sitory)?)");
 
+    [SupportedOSPlatform("windows")]
     private static IEnumerable<(string name, string? value)> GetSettingsFromRegistry()
     {
         RegistryKey? oldSettings = VersionIndependentRegKey.OpenSubKey("GitExtensions");
