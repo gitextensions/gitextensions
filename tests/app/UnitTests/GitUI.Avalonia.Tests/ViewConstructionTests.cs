@@ -1,6 +1,7 @@
 using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
+using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -189,6 +190,56 @@ public sealed class ViewConstructionTests
     {
         RevisionGridControl control = new();
         control.Should().NotBeNull();
+    }
+
+    [AvaloniaTest]
+    public void RevisionGridControl_context_menu_should_use_existing_translation_keys()
+    {
+        RevisionGridControl control = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        control.AddTranslationItems(translation);
+        control.TranslateItems(translation);
+
+        translation.Received(1).AddTranslationItem(
+            nameof(RevisionGridControl),
+            "checkoutBranchToolStripMenuItem",
+            "Text",
+            "Chec&kout branch...");
+        translation.Received(1).AddTranslationItem(
+            nameof(RevisionGridControl),
+            "createNewBranchToolStripMenuItem",
+            "Text",
+            "Create new branch here (&x)...");
+    }
+
+    [AvaloniaTest]
+    public void RevisionGridControl_context_menu_should_be_disabled_without_a_selection()
+    {
+        RevisionGridControl control = new();
+        Window window = new() { Content = control };
+        window.Show();
+        try
+        {
+            ContextMenu contextMenu = control.FindControl<ContextMenu>("revisionContextMenu")
+                ?? throw new InvalidOperationException("Revision context menu was not created.");
+            MenuItem checkoutBranch = control.FindControl<MenuItem>("checkoutBranchToolStripMenuItem")
+                ?? throw new InvalidOperationException("Checkout-branch menu item was not created.");
+            MenuItem createBranch = control.FindControl<MenuItem>("createNewBranchToolStripMenuItem")
+                ?? throw new InvalidOperationException("Create-branch menu item was not created.");
+            ListBox revisions = control.FindControl<ListBox>("lstRevisions")
+                ?? throw new InvalidOperationException("Revision list was not created.");
+
+            contextMenu.Open(revisions);
+            Dispatcher.UIThread.RunJobs();
+
+            checkoutBranch.IsEnabled.Should().BeFalse();
+            createBranch.IsEnabled.Should().BeFalse();
+        }
+        finally
+        {
+            window.Close();
+        }
     }
 
     [AvaloniaTest]
