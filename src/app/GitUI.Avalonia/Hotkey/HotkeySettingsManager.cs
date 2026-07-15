@@ -48,6 +48,7 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
         [
             new HotkeySettings(
                 FormBrowse.HotkeySettingsName,
+                Hk(FormBrowse.Command.GitBash, WinFormsShims.Keys.Control | WinFormsShims.Keys.G),
                 Hk(FormBrowse.Command.Refresh, WinFormsShims.Keys.F5),
                 Hk(FormBrowse.Command.Commit, WinFormsShims.Keys.Control | WinFormsShims.Keys.Space),
                 Hk(FormBrowse.Command.CheckoutBranch, WinFormsShims.Keys.Control | WinFormsShims.Keys.OemPeriod),
