@@ -1688,17 +1688,24 @@ public static partial class AppSettings
         {
             SettingsContainer.LockedAction(() =>
             {
-                // prepend "Global\" in order to be safe in preparation for non-Windows OS, too
-                _globalMutex ??= new Mutex(initiallyOwned: false, name: @$"Global\Mutex{SettingsFilePath.ToPosixPath()}");
+                if (OperatingSystem.IsWindows())
+                {
+                    // Prepend "Global\" so Windows sessions share the settings-file mutex.
+                    _globalMutex ??= new Mutex(initiallyOwned: false, name: @$"Global\Mutex{SettingsFilePath.ToPosixPath()}");
 
-                try
-                {
-                    _globalMutex.WaitOne();
-                    SettingsContainer.Save();
+                    try
+                    {
+                        _globalMutex.WaitOne();
+                        SettingsContainer.Save();
+                    }
+                    finally
+                    {
+                        _globalMutex.ReleaseMutex();
+                    }
                 }
-                finally
+                else
                 {
-                    _globalMutex.ReleaseMutex();
+                    SettingsContainer.Save();
                 }
             });
 
