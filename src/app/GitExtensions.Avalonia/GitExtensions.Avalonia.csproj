@@ -22,6 +22,33 @@
     <ProjectReference Include="..\GitUI.Avalonia\GitUI.Avalonia.csproj" />
   </ItemGroup>
 
+  <PropertyGroup Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <MacProcessGroupLauncher>$(IntermediateOutputPath)GitExtensions.ProcessGroupLauncher</MacProcessGroupLauncher>
+  </PropertyGroup>
+
+  <Target Name="BuildMacProcessGroupLauncher"
+          BeforeTargets="CoreCompile"
+          Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <MakeDir Directories="$(IntermediateOutputPath)" />
+    <Exec Command="cc -std=c11 -Wall -Wextra -Werror -O2 &quot;$(MSBuildProjectDirectory)/Compat/ProcessGroupLauncher.c&quot; -o &quot;$(MacProcessGroupLauncher)&quot;" />
+  </Target>
+
+  <Target Name="CopyMacProcessGroupLauncherToOutput"
+          AfterTargets="Build"
+          DependsOnTargets="BuildMacProcessGroupLauncher"
+          Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <Copy SourceFiles="$(MacProcessGroupLauncher)" DestinationFolder="$(TargetDir)" />
+  </Target>
+
+  <Target Name="AddMacProcessGroupLauncherToPublish"
+          BeforeTargets="ComputeFilesToPublish"
+          DependsOnTargets="BuildMacProcessGroupLauncher"
+          Condition="$([MSBuild]::IsOSPlatform('OSX'))">
+    <ItemGroup>
+      <ResolvedFileToPublish Include="$(MacProcessGroupLauncher)" RelativePath="GitExtensions.ProcessGroupLauncher" CopyToPublishDirectory="PreserveNewest" />
+    </ItemGroup>
+  </Target>
+
   <ItemGroup>
     <!-- Cross-platform assemblies must not carry the SupportedOSPlatform("windows7.0")
          attribute from CommonAssemblyInfo.cs; use the platform-neutral variant. -->
