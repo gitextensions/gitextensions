@@ -1,0 +1,62 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.FormCheckoutBranch"
+        Width="626" SizeToContent="Height"
+        MinWidth="500"
+        WindowStartupLocation="CenterOwner"
+        CanResize="False"
+        Title="Checkout branch">
+  <DockPanel>
+    <StackPanel x:Name="ControlsPanel" DockPanel.Dock="Bottom" Orientation="Horizontal"
+                HorizontalAlignment="Right" Spacing="8" Margin="8">
+      <Button x:Name="Ok" MinWidth="75" MinHeight="23" Content="_Checkout" IsDefault="True" />
+    </StackPanel>
+
+    <!-- Retained for field-name parity with the WinForms Designer; it has no children there. -->
+    <StackPanel x:Name="flowLayoutPanel1" IsVisible="False" />
+
+    <Border x:Name="MainPanel" Padding="14">
+      <Grid x:Name="tlpnlMain" RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="8">
+        <Grid x:Name="tlpnlBranches" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto"
+              ColumnSpacing="8" RowSpacing="8">
+          <RadioButton x:Name="LocalBranch" IsChecked="True" Content="Local _branch" />
+          <!-- Remote checkout options are retained for translation/field parity and hidden until that flow is ported. -->
+          <RadioButton x:Name="Remotebranch" Grid.Column="1" Content="Remote _branch" IsVisible="False" />
+          <Label x:Name="label1" Grid.Row="1" Content="_Select branch" Target="{Binding #Branches}"
+                 VerticalAlignment="Center"
+                 HorizontalContentAlignment="Right" />
+          <ComboBox x:Name="Branches" Grid.Row="1" Grid.Column="1" MinWidth="320" />
+          <TextBlock x:Name="lbChanges" Grid.Row="1" Grid.Column="2" Opacity="0.65"
+                     VerticalAlignment="Center" />
+        </Grid>
+
+        <Border x:Name="horLine" Grid.Row="1" Height="1" Background="{DynamicResource ThemeBorderLowBrush}" />
+
+        <!-- Remote-only controls stay in the visual tree so their original names and translation keys remain stable. -->
+        <Grid x:Name="tlpnlRemoteOptions" Grid.Row="2" ColumnDefinitions="Auto,*"
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto" IsVisible="False">
+          <RadioButton x:Name="rbResetBranch" IsChecked="True" Content="R_eset local branch with the name:" />
+          <TextBlock x:Name="branchName" Grid.Column="1" VerticalAlignment="Center" />
+          <RadioButton x:Name="rbCreateBranchWithCustomName" Grid.Row="2"
+                       Content="Cr_eate local branch with custom name:" />
+          <TextBox x:Name="txtCustomBranchName" Grid.Row="2" Grid.Column="1" IsEnabled="False" />
+          <RadioButton x:Name="rbDontCreate" Grid.Row="4"
+                       Content="Ch_eckout the commit (in detached head)" />
+        </Grid>
+
+        <HeaderedContentControl x:Name="localChangesGB" Grid.Row="3" Header="Local changes">
+          <Border Padding="9,6">
+            <StackPanel x:Name="flpnlLocalOptions" Orientation="Horizontal" Spacing="8">
+              <RadioButton x:Name="rbDontChange" Content="Do_n't change" />
+              <RadioButton x:Name="rbMerge" Content="_Merge" />
+              <!-- Auto-stash depends on the later stash-dialog port. -->
+              <RadioButton x:Name="rbStash" Content="S_tash" IsVisible="False" />
+              <RadioButton x:Name="rbReset" Content="_Reset" />
+              <CheckBox x:Name="chkSetLocalChangesActionAsDefault" Content="Set as _default" />
+            </StackPanel>
+          </Border>
+        </HeaderedContentControl>
+      </Grid>
+    </Border>
+  </DockPanel>
+</Window>

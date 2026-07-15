@@ -11,8 +11,10 @@ application remains fully intact and buildable.
 Early development. The application currently provides a repository browser with commit
 history, graph and branch/tag labels, the files in a selected revision, and a colored diff
 viewer. The Repository menu can refresh the view, and Commands > Fetch all runs Git in the
-ported process dialog and reloads the repository afterwards. Write operations such as commit,
-checkout, and push, and the remaining dialogs, are being ported incrementally.
+ported process dialog and reloads the repository afterwards. Commands > Checkout branch can
+switch between existing local branches, with merge/reset handling for local changes. Remote
+checkout, auto-stash, commit, and push, and the remaining dialogs, are being ported
+incrementally.
 
 ## Requirements
 
