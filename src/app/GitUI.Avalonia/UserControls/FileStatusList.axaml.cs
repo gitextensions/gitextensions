@@ -33,6 +33,11 @@ public partial class FileStatusList : GitExtensionsControl
     public GitItemStatus? SelectedItem => lstFiles.SelectedItem as GitItemStatus;
 
     /// <summary>
+    ///  Gets the displayed file statuses (named like the WinForms property).
+    /// </summary>
+    public IReadOnlyList<GitItemStatus> GitItemStatuses => lstFiles.ItemsSource as IReadOnlyList<GitItemStatus> ?? [];
+
+    /// <summary>
     ///  Shows the given diff items.
     /// </summary>
     public void SetDiffs(IReadOnlyList<GitItemStatus> items)
@@ -51,6 +56,14 @@ public partial class FileStatusList : GitExtensionsControl
     {
         lstFiles.ItemsSource = null;
         lblCount.Text = string.Empty;
+    }
+
+    /// <summary>
+    ///  Clears the current selection (named like the WinForms method).
+    /// </summary>
+    public void ClearSelected()
+    {
+        lstFiles.SelectedItem = null;
     }
 
     private static Control CreateFileRow(GitItemStatus item, INameScope nameScope)

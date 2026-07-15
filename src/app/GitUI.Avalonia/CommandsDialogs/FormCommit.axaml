@@ -1,0 +1,80 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:editor="using:GitUI.Editor"
+        xmlns:gitui="using:GitUI"
+        x:Class="GitUI.CommandsDialogs.FormCommit"
+        Width="1100"
+        Height="720"
+        MinWidth="800"
+        MinHeight="500"
+        Title="Commit">
+  <Grid x:Name="splitMain"
+        Margin="8"
+        ColumnDefinitions="380,5,*">
+    <Grid x:Name="splitLeft"
+          Grid.Column="0"
+          RowDefinitions="*,5,*">
+      <DockPanel Grid.Row="0">
+        <Button x:Name="toolStageItem"
+                DockPanel.Dock="Top"
+                HorizontalAlignment="Right"
+                Margin="0,0,0,4"
+                Content="_Stage"
+                IsEnabled="False" />
+        <gitui:FileStatusList x:Name="Unstaged" />
+      </DockPanel>
+
+      <GridSplitter Grid.Row="1"
+                    ResizeDirection="Rows" />
+
+      <DockPanel Grid.Row="2">
+        <StackPanel DockPanel.Dock="Top"
+                    Margin="0,4,0,4"
+                    Orientation="Horizontal">
+          <TextBlock x:Name="commitStagedCountLabel"
+                     VerticalAlignment="Center"
+                     Text="Staged" />
+          <TextBlock x:Name="commitStagedCount"
+                     Margin="6,0,0,0"
+                     VerticalAlignment="Center" />
+          <Button x:Name="toolUnstageItem"
+                  Margin="12,0,0,0"
+                  Content="_Unstage"
+                  IsEnabled="False" />
+        </StackPanel>
+        <gitui:FileStatusList x:Name="Staged" />
+      </DockPanel>
+    </Grid>
+
+    <GridSplitter Grid.Column="1"
+                  ResizeDirection="Columns" />
+
+    <Grid x:Name="splitRight"
+          Grid.Column="2"
+          Margin="4,0,0,0"
+          RowDefinitions="180,5,*">
+      <DockPanel Grid.Row="0">
+        <StackPanel DockPanel.Dock="Bottom"
+                    Margin="0,6,0,0"
+                    HorizontalAlignment="Right"
+                    Orientation="Horizontal">
+          <Button x:Name="Commit"
+                  Content="_Commit"
+                  IsEnabled="False" />
+        </StackPanel>
+        <TextBox x:Name="Message"
+                 AcceptsReturn="True"
+                 IsReadOnly="True"
+                 TextWrapping="Wrap"
+                 ScrollViewer.VerticalScrollBarVisibility="Auto" />
+      </DockPanel>
+
+      <GridSplitter Grid.Row="1"
+                    ResizeDirection="Rows" />
+
+      <editor:FileViewer x:Name="SelectedDiff"
+                         Grid.Row="2"
+                         Margin="0,4,0,0" />
+    </Grid>
+  </Grid>
+</Window>
