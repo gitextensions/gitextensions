@@ -9,13 +9,19 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Checkout branch, and Commands/Fetch all; remaining menus and toolbars are added with their dialogs."
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh and Commands/Checkout branch/Create branch/Fetch all; remaining menus and toolbars are added with their dialogs."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Local branches only. Remote checkout/create/reset, auto-stash, checkout event scripts, and submodule follow-up remain to be ported; the original remote control names stay hidden in AXAML for translation parity."
+  },
+  "src/app/GitUI/CommandsDialogs/FormCreateBranch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateBranch.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Creates and optionally checks out normal or orphan branches. Commit selection accepts a revision/SHA as text; the chooser button is hidden until FormChooseCommit is ported. Submodule update after checkout is deferred."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
@@ -62,6 +68,18 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Simplified header + message; no links, avatars, or branch/tag expansion yet."
   },
+  "src/app/GitUI/UserControls/CommitPickerSmallControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/CommitPickerSmallControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Text entry resolves a revision name or SHA. FormChooseCommit and the commit-count hint are deferred."
+  },
+  "src/app/GitUI/UserControls/CommitSummaryUserControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/CommitSummaryUserControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Compact author/date/message/branches/tags summary; WinForms-specific color adaptation and resize code are unnecessary in the Avalonia layout."
+  },
   "src/app/GitUI/LeftPanel/RepoObjectsTree.cs": {
     "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.axaml.cs",
     "status": "functional",
@@ -101,7 +119,25 @@
     "twin": "src/app/GitUI.Avalonia/GitModuleForm.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "UICommands/Module only; hotkey and scripts plumbing come with the hotkey subphase."
+    "notes": "UICommands/Module plus the shared IGitUICommandsSource contract; hotkey and scripts plumbing come with the hotkey subphase."
+  },
+  "src/app/GitUI/GitModuleControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/GitModuleControl.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Command-source discovery and Module/UICommands access only; disposal and script-command plumbing arrive with their consumers."
+  },
+  "src/app/GitUI/IGitUICommandsSource.cs": {
+    "twin": "src/app/GitUI/IGitUICommandsSource.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/GitUICommandsSourceEventArgs.cs": {
+    "twin": "src/app/GitUI/GitUICommandsSourceEventArgs.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/GitExtensionsDialog.cs": {
     "twin": "src/app/GitUI.Avalonia/GitExtensionsDialog.cs",
@@ -113,7 +149,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Process dialog members are real; all other members throw NotImplementedException."
+    "notes": "Process, local-checkout, and create-branch dialog members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/ServiceContainerRegistry.cs": {
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",

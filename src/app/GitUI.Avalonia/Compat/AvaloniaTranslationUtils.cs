@@ -5,7 +5,8 @@ using GitExtensions.Extensibility.Translations;
 namespace GitUI.Compat;
 
 // Existing XLF files use WinForms .Text keys. Partition the host fields once so Avalonia
-// Content/Header properties are mapped here and every other field uses the shared walker.
+// Content/Header/TextBlock text and attached tooltips are mapped here, while every other
+// field uses the shared walker.
 internal static class AvaloniaTranslationUtils
 {
     public static void AddTranslationItemsFromFields(string category, object host, ITranslation translation)
@@ -13,16 +14,25 @@ internal static class AvaloniaTranslationUtils
         List<(string Name, object Item)> sharedItems = [];
         foreach ((string name, object item) in TranslationUtils.GetObjFields(host, "$this"))
         {
-            if (!TryGetAvaloniaText(item, out string? text, out bool convertMnemonics))
+            bool hasText = TryGetAvaloniaText(item, out string? text, out bool convertMnemonics);
+            bool hasToolTip = item is Control control && ToolTip.GetTip(control) is string;
+            if (!hasText && !hasToolTip)
             {
                 sharedItems.Add((name, item));
                 continue;
             }
 
-            if (text?.Any(char.IsLetter) is true)
+            if (hasText && text?.Any(char.IsLetter) is true)
             {
                 string neutralText = convertMnemonics ? ToWinFormsMnemonics(text) : text;
                 translation.AddTranslationItem(category, name, "Text", neutralText);
+            }
+
+            if (hasToolTip
+                && ToolTip.GetTip((Control)item) is string toolTip
+                && toolTip.Any(char.IsLetter))
+            {
+                translation.AddTranslationItem(category, name, "toolTip", toolTip);
             }
         }
 
@@ -34,22 +44,31 @@ internal static class AvaloniaTranslationUtils
         List<(string Name, object Item)> sharedItems = [];
         foreach ((string name, object item) in TranslationUtils.GetObjFields(host, "$this"))
         {
-            if (!TryGetAvaloniaText(item, out string? text, out bool convertMnemonics))
+            bool hasText = TryGetAvaloniaText(item, out string? text, out bool convertMnemonics);
+            bool hasToolTip = item is Control control && ToolTip.GetTip(control) is string;
+            if (!hasText && !hasToolTip)
             {
                 sharedItems.Add((name, item));
                 continue;
             }
 
-            if (text is null)
+            if (hasText && text is not null)
             {
-                continue;
+                string neutralText = convertMnemonics ? ToWinFormsMnemonics(text) : text;
+                string? translatedText = translation.TranslateItem(category, name, "Text", () => neutralText);
+                if (!string.IsNullOrEmpty(translatedText))
+                {
+                    SetAvaloniaText(item, convertMnemonics ? ToAvaloniaMnemonics(translatedText) : translatedText);
+                }
             }
 
-            string neutralText = convertMnemonics ? ToWinFormsMnemonics(text) : text;
-            string? translatedText = translation.TranslateItem(category, name, "Text", () => neutralText);
-            if (!string.IsNullOrEmpty(translatedText))
+            if (hasToolTip && ToolTip.GetTip((Control)item) is string toolTip)
             {
-                SetAvaloniaText(item, convertMnemonics ? ToAvaloniaMnemonics(translatedText) : translatedText);
+                string? translatedToolTip = translation.TranslateItem(category, name, "toolTip", () => toolTip);
+                if (!string.IsNullOrEmpty(translatedToolTip))
+                {
+                    ToolTip.SetTip((Control)item, translatedToolTip);
+                }
             }
         }
 
@@ -80,6 +99,9 @@ internal static class AvaloniaTranslationUtils
             case ContentControl contentControl:
                 text = contentControl.Content as string;
                 return true;
+            case TextBlock textBlock:
+                text = textBlock.Text;
+                return true;
             default:
                 text = null;
                 return false;
@@ -107,6 +129,9 @@ internal static class AvaloniaTranslationUtils
                 break;
             case ContentControl contentControl:
                 contentControl.Content = text;
+                break;
+            case TextBlock textBlock:
+                textBlock.Text = text;
                 break;
         }
     }
