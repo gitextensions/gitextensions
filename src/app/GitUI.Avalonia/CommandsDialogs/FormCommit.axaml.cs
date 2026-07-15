@@ -13,8 +13,8 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Reduced twin: the normal whole-file commit flow is functional. Advanced commit modes,
-// message helpers, signing options, scripts UI, and push arrive in later increments.
+// Reduced twin: the normal whole-file commit and commit-and-push flows are functional.
+// Advanced commit modes, message helpers, signing options, and scripts UI arrive later.
 public sealed partial class FormCommit : GitModuleForm
 {
     private readonly TranslationString _commitAndPush = new("Commit && &push");
@@ -58,6 +58,7 @@ public sealed partial class FormCommit : GitModuleForm
         toolUnstageItem.Click += UnstageFilesClick;
         toolUnstageAllItem.Click += toolUnstageAllItem_Click;
         Commit.Click += CommitClick;
+        CommitAndPush.Click += CommitAndPushClick;
         Message.TextChanged += Message_TextChanged;
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
         _subscribedToRepositoryChanges = true;
@@ -245,6 +246,7 @@ public sealed partial class FormCommit : GitModuleForm
         Commit.IsEnabled = actionsEnabled
             && Staged.GitItemStatuses.Count > 0
             && !string.IsNullOrWhiteSpace(Message.Text);
+        CommitAndPush.IsEnabled = Commit.IsEnabled;
     }
 
     private void Message_TextChanged(object? sender, EventArgs e)
@@ -253,6 +255,16 @@ public sealed partial class FormCommit : GitModuleForm
     }
 
     private void CommitClick(object? sender, EventArgs e)
+    {
+        PerformCommit(pushAfterCommit: false);
+    }
+
+    private void CommitAndPushClick(object? sender, EventArgs e)
+    {
+        PerformCommit(pushAfterCommit: true);
+    }
+
+    private void PerformCommit(bool pushAfterCommit)
     {
         string message = Message.Text ?? string.Empty;
         if (string.IsNullOrWhiteSpace(message))
@@ -315,6 +327,11 @@ public sealed partial class FormCommit : GitModuleForm
             await this.SwitchToMainThreadAsync(cancellationToken);
 
             UICommands.RepoChangedNotifier.Notify();
+            if (pushAfterCommit)
+            {
+                UICommands.StartPushDialog(this, pushOnShow: true);
+            }
+
             DialogResult = WinFormsShims.DialogResult.OK;
             if (IsVisible)
             {
