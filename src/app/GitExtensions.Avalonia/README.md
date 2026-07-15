@@ -8,10 +8,11 @@ application remains fully intact and buildable.
 
 ## Status
 
-Early development. The application currently provides a read-only repository browser:
-commit history with the commit graph and branch/tag labels, the file list of a selected
-revision, and a colored diff viewer. Write operations (commit, checkout, push, pull) and
-the remaining dialogs are being ported incrementally.
+Early development. The application currently provides a repository browser with commit
+history, graph and branch/tag labels, the files in a selected revision, and a colored diff
+viewer. The Repository menu can refresh the view, and Commands > Fetch all runs Git in the
+ported process dialog and reloads the repository afterwards. Write operations such as commit,
+checkout, and push, and the remaining dialogs, are being ported incrementally.
 
 ## Requirements
 
