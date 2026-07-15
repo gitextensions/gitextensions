@@ -17,6 +17,7 @@
         <Separator />
         <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch..." />
         <MenuItem x:Name="branchToolStripMenuItem" Header="Create _branch..." />
+        <MenuItem x:Name="pullToolStripMenuItem" Header="Pull_/Fetch..." />
         <MenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all" />
       </MenuItem>
     </Menu>

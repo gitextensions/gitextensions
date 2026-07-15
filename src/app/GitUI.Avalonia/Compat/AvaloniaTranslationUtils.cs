@@ -145,6 +145,15 @@ internal static class AvaloniaTranslationUtils
             .Replace(escapedAmpersand, "&", StringComparison.Ordinal);
     }
 
+    internal static string RemoveAvaloniaMnemonics(string text)
+    {
+        const string escapedUnderscore = "\u0001";
+        return text
+            .Replace("__", escapedUnderscore, StringComparison.Ordinal)
+            .Replace("_", string.Empty, StringComparison.Ordinal)
+            .Replace(escapedUnderscore, "_", StringComparison.Ordinal);
+    }
+
     private static string ToWinFormsMnemonics(string text)
     {
         const string escapedUnderscore = "\u0001";
