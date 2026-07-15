@@ -24,13 +24,11 @@ public class TranslatedControl : UserControl, ITranslate
 
     public virtual void AddTranslationItems(ITranslation translation)
     {
-        TranslationUtils.AddTranslationItemsFromFields(GetType().Name, this, translation);
         AvaloniaTranslationUtils.AddTranslationItemsFromFields(GetType().Name, this, translation);
     }
 
     public virtual void TranslateItems(ITranslation translation)
     {
-        TranslationUtils.TranslateItemsFromFields(GetType().Name, this, translation);
         AvaloniaTranslationUtils.TranslateItemsFromFields(GetType().Name, this, translation);
     }
 }
