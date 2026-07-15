@@ -78,7 +78,7 @@
     "twin": "src/app/GitUI.Avalonia/Compat/GitExtensionsFormBase.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Translation wired; hotkey dispatch comes in Phase 2."
+    "notes": "Translation uses the one-pass Avalonia adapter while retaining shared XLF keys; hotkey dispatch comes in Phase 2."
   },
   "src/app/ResourceManager/GitExtensionsControl.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/GitExtensionsControl.cs",
@@ -88,7 +88,8 @@
   "src/app/ResourceManager/TranslatedControl.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/TranslatedControl.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Translation uses the one-pass Avalonia adapter while retaining shared XLF keys."
   },
   "src/app/GitExtUtils/GitUI/DpiUtil.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/DpiUtil.cs",
