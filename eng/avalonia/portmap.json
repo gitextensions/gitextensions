@@ -9,7 +9,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh and Commands/Commit/Checkout branch/Create branch/Fetch all; remaining menus and toolbars are added with their dialogs."
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh and Commands/Commit/Checkout branch/Create branch/Pull-Fetch/Fetch all; remaining menus and toolbars are added with their dialogs."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
@@ -34,6 +34,12 @@
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Reduced flow: current branch to the same branch on the selected remote, optional force-with-lease, push-on-show, and commit-and-push. URL/tag/multiple-branch pushes, tracking prompts, remote management, scripts, submodule options, and rejected-push recovery remain deferred."
+  },
+  "src/app/GitUI/CommandsDialogs/FormPull.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormPull.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Reduced flow: merge pull, rebase pull, and fetch-only from a selected configured remote; immediate execution and the browse entry point are functional. URL pulls, remote management, auto-stash, tag/prune/unshallow controls, scripts, submodule follow-up, and conflict recovery remain deferred."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
@@ -161,7 +167,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Process, normal-commit, push, local-checkout, and create-branch dialog members are real; unported members throw NotImplementedException."
+    "notes": "Process, normal-commit, push, pull/fetch, local-checkout, and create-branch dialog members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/ServiceContainerRegistry.cs": {
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
