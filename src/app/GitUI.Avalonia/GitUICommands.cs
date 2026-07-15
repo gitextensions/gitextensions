@@ -5,6 +5,7 @@ using GitExtensions.Extensibility.Plugins;
 using GitExtensions.Extensibility.Settings;
 using GitExtensions.Shims.WinForms;
 using GitExtUtils;
+using GitUI.CommandsDialogs;
 using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 
@@ -337,7 +338,24 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartRemotesDialog(IWin32Window? owner, string? preselectRemote = null, string? preselectLocal = null) => throw NotPorted(nameof(StartRemotesDialog));
     public bool StartRenameDialog(IWin32Window? owner, string branch) => throw NotPorted(nameof(StartRenameDialog));
     public bool StartRepoSettingsDialog(IWin32Window? owner) => throw NotPorted(nameof(StartRepoSettingsDialog));
-    public bool StartResetChangesDialog(IWin32Window? owner, IReadOnlyCollection<GitItemStatus> workTreeFiles, bool onlyWorkTree) => throw NotPorted(nameof(StartResetChangesDialog));
+    public bool StartResetChangesDialog(IWin32Window? owner, IReadOnlyCollection<GitItemStatus> workTreeFiles, bool onlyWorkTree)
+    {
+        // Show a form asking the user if they want to reset the changes.
+        FormResetChanges.ActionEnum resetType = FormResetChanges.ShowResetDialog(owner, hasExistingFiles: workTreeFiles.Any(item => !item.IsNew), hasNewFiles: workTreeFiles.Any(item => item.IsNew));
+
+        if (resetType == FormResetChanges.ActionEnum.Cancel)
+        {
+            return false;
+        }
+
+        return DoActionOnRepo(owner, Action);
+
+        bool Action()
+        {
+            return Module.ResetAllChanges(clean: resetType == FormResetChanges.ActionEnum.ResetAndDelete, onlyWorkTree);
+        }
+    }
+
     public bool StartResetCurrentBranchDialog(IWin32Window? owner, string branch) => throw NotPorted(nameof(StartResetCurrentBranchDialog));
     public bool StartResolveConflictsDialog(IWin32Window? owner = null, bool offerCommit = true) => throw NotPorted(nameof(StartResolveConflictsDialog));
     public bool StartRevertCommitDialog(IWin32Window? owner, GitRevision revision) => throw NotPorted(nameof(StartRevertCommitDialog));
