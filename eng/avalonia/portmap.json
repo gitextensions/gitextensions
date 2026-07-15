@@ -193,6 +193,12 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Reduced twin forwards generic overloads to the shared approved wrapper and ports the translated FailedToRunShell helper. Other domain-specific helpers join with their consumers."
   },
+  "src/app/GitUI/CommandsDialogs/FormResetChanges.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResetChanges.axaml.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "The dialog grows with its message through SizeToContent instead of the original's manual preferred-size arithmetic."
+  },
   "src/app/GitUI/HelperDialogs/FormStatus.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormStatus.axaml.cs",
     "status": "functional",
