@@ -1,5 +1,6 @@
 using System.ComponentModel.Design;
 using GitExtUtils;
+using GitUI.Compat;
 using GitUI.ConsoleEmulation;
 using GitUI.ConsoleEmulation.PlainText;
 using GitUI.Hotkey;
@@ -16,5 +17,6 @@ public static class ServiceContainerRegistry
     {
         serviceContainer.AddService<IConsoleEmulatorsRegistry>(PlainTextConsoleEmulatorsRegistry.Instance);
         serviceContainer.AddService<IHotkeySettingsLoader>(new HotkeySettingsManager());
+        serviceContainer.AddService<ITerminalLauncher>(new TerminalLauncher());
     }
 }

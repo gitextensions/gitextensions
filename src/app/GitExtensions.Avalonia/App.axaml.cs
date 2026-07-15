@@ -32,7 +32,7 @@ public partial class App : Application
 
             ShimServices.Install(desktop);
             Shims.WinForms.Application.ThreadException += (_, e)
-                => MessageBoxes.ShowError(owner: null, e.Exception.ToString(), "Unhandled exception");
+                => GitUI.MessageBoxes.ShowError(owner: null, e.Exception.ToString(), "Unhandled exception");
 
             AppSettings.LoadSettings();
 
