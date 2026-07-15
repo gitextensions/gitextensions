@@ -8,8 +8,8 @@ using ResourceManager;
 
 namespace GitExtensions;
 
-// Twin of GitExtensions/ServiceContainerRegistry.cs without the WinForms
-// GitUI.ServiceContainerRegistry; GitUI.Avalonia services are added here as they are ported.
+// Twin of GitExtensions/ServiceContainerRegistry.cs; GitUI.ServiceContainerRegistry is the
+// GitUI.Avalonia twin registry.
 internal static class ServiceContainerRegistry
 {
     public static void RegisterServices(ServiceContainer serviceContainer)
@@ -27,5 +27,6 @@ internal static class ServiceContainerRegistry
         serviceContainer.AddService<ILinkFactory>(new LinkFactory());
 
         GitCommands.ServiceContainerRegistry.RegisterServices(serviceContainer);
+        GitUI.ServiceContainerRegistry.RegisterServices(serviceContainer);
     }
 }
