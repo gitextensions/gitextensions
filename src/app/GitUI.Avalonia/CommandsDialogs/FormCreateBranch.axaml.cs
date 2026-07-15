@@ -1,4 +1,4 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
 using Avalonia.Controls;
 using GitCommands;
 using GitCommands.Git;
@@ -27,6 +27,7 @@ public sealed partial class FormCreateBranch : GitExtensionsDialog
     public FormCreateBranch()
     {
         InitializeComponent();
+        InitializeComplete();
     }
 
     public FormCreateBranch(IGitUICommands commands, ObjectId objectId, string? newBranchNamePrefix = null)

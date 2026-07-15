@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
@@ -35,6 +35,7 @@ public sealed partial class FormBrowse : GitModuleForm
     public FormBrowse()
     {
         InitializeComponent();
+        InitializeComplete();
     }
 
     public FormBrowse(IServiceProvider serviceProvider, GitModule module)

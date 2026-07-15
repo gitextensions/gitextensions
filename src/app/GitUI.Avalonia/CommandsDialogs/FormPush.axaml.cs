@@ -1,4 +1,4 @@
-using Avalonia.Controls;
+﻿using Avalonia.Controls;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -24,6 +24,7 @@ public sealed partial class FormPush : GitModuleForm
     public FormPush()
     {
         InitializeComponent();
+        InitializeComplete();
     }
 
     public FormPush(IGitUICommands commands, string? branchName = null)
