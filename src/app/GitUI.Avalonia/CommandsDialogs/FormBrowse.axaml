@@ -20,6 +20,13 @@
         <MenuItem x:Name="pullToolStripMenuItem" Header="Pull_/Fetch..." />
         <MenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all" />
       </MenuItem>
+      <MenuItem x:Name="toolsToolStripMenuItem" Header="_Tools">
+        <MenuItem x:Name="userShell">
+          <MenuItem.Header>
+            <TextBlock Text="Git bash" />
+          </MenuItem.Header>
+        </MenuItem>
+      </MenuItem>
     </Menu>
     <StackPanel DockPanel.Dock="Top" Margin="8,6" Spacing="2">
       <TextBlock x:Name="lblRepoPath" FontWeight="SemiBold" />
