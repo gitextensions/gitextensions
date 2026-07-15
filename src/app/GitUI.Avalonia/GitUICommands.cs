@@ -207,8 +207,32 @@ public sealed class GitUICommands : IGitUICommands
     public void StartCloneForkFromHoster(IWin32Window? owner, IRepositoryHostPlugin gitHoster, EventHandler<GitModuleEventArgs>? gitModuleChanged) => throw NotPorted(nameof(StartCloneForkFromHoster));
     public bool StartCommitDialog(IWin32Window? owner, string? commitMessage = null, bool showOnlyWhenChanges = false) => throw NotPorted(nameof(StartCommitDialog));
     public bool StartCompareRevisionsDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartCompareRevisionsDialog));
-    public bool StartCreateBranchDialog(IWin32Window? owner = null, ObjectId objectId = default, string? newBranchNamePrefix = null) => throw NotPorted(nameof(StartCreateBranchDialog));
-    public bool StartCreateBranchDialog(IWin32Window? owner, string? branch) => throw NotPorted(nameof(StartCreateBranchDialog));
+    public bool StartCreateBranchDialog(IWin32Window? owner, string? branch)
+    {
+        ObjectId objectId = Module.RevParse(branch!);
+        if (objectId.IsZero)
+        {
+            MessageBoxes.Show($"Branch \"{branch}\" could not be resolved.", TranslatedStrings.Error, MessageBoxButtons.OK, MessageBoxIcon.Error);
+            return false;
+        }
+
+        return StartCreateBranchDialog(owner, objectId);
+    }
+
+    public bool StartCreateBranchDialog(IWin32Window? owner = null, ObjectId objectId = default, string? newBranchNamePrefix = null)
+    {
+        if (Module.IsBareRepository() || objectId.IsArtificial)
+        {
+            return false;
+        }
+
+        return DoActionOnRepo(owner, action: () =>
+        {
+            using CommandsDialogs.FormCreateBranch form = new(this, objectId, newBranchNamePrefix);
+            return form.ShowDialog(owner) == DialogResult.OK;
+        });
+    }
+
     public void StartCreatePullRequest(IWin32Window? owner) => throw NotPorted(nameof(StartCreatePullRequest));
     public void StartCreatePullRequest(IWin32Window? owner, IRepositoryHostPlugin gitHoster, string? chooseRemote = null, string? chooseBranch = null) => throw NotPorted(nameof(StartCreatePullRequest));
     public bool StartCreateTagDialog(IWin32Window? owner = null, GitRevision? revision = null) => throw NotPorted(nameof(StartCreateTagDialog));
