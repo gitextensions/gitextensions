@@ -19,7 +19,15 @@
                     HorizontalAlignment="Right"
                     Margin="0,0,0,4"
                     Orientation="Horizontal">
+          <Button x:Name="btnResetUnstagedChanges"
+                  Content="Reset _unstaged changes"
+                  IsEnabled="False" />
+          <Button x:Name="btnResetAllChanges"
+                  Margin="4,0,0,0"
+                  Content="Reset _all changes"
+                  IsEnabled="False" />
           <Button x:Name="toolStageAllItem"
+                  Margin="4,0,0,0"
                   Content="⇊"
                   IsEnabled="False" />
           <Button x:Name="toolStageItem"
