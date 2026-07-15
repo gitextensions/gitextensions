@@ -8,6 +8,14 @@
         Width="1280" Height="800"
         Title="Git Extensions">
   <DockPanel>
+    <Menu x:Name="mainMenuStrip" DockPanel.Dock="Top">
+      <MenuItem x:Name="repositoryToolStripMenuItem" Header="_Repository">
+        <MenuItem x:Name="refreshToolStripMenuItem" Header="_Refresh" />
+      </MenuItem>
+      <MenuItem x:Name="commandsToolStripMenuItem" Header="_Commands">
+        <MenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all" />
+      </MenuItem>
+    </Menu>
     <StackPanel DockPanel.Dock="Top" Margin="8,6" Spacing="2">
       <TextBlock x:Name="lblRepoPath" FontWeight="SemiBold" />
       <TextBlock x:Name="lblStatus" Opacity="0.7" TextWrapping="Wrap" />
