@@ -61,9 +61,21 @@ internal sealed class DesignerForm
 
     public required IReadOnlyList<ControlNode> AllControls { get; init; }
 
-    /// <summary>Controls contained by the form itself (or by nothing): the visual roots, in source order.</summary>
+    /// <summary>Controls contained by the form itself (or by nothing): the visual roots.</summary>
+    /// <remarks>
+    ///  The controls the form adds come first, in <c>Controls.Add</c> order, because that is
+    ///  the order the layout depends on; controls that are never added (containers inherited
+    ///  from a base form) follow in the order they appear.
+    /// </remarks>
     public IReadOnlyList<ControlNode> TopLevelControls
-        => [.. AllControls.Where(control => (control.Parent is null || control.Parent == Root) && !IsNonVisual(control))];
+    {
+        get
+        {
+            List<ControlNode> topLevel = [.. Root.Children.Where(control => !IsNonVisual(control))];
+            topLevel.AddRange(AllControls.Where(control => control.Parent is null && !IsNonVisual(control) && !topLevel.Contains(control)));
+            return topLevel;
+        }
+    }
 
     /// <summary>Component-tray types that have no visual twin (their data is folded into other controls or hand-wired).</summary>
     public static bool IsNonVisual(ControlNode control)

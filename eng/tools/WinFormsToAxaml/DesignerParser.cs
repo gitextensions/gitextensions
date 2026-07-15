@@ -184,9 +184,17 @@ internal static class DesignerParser
             // Layout-machinery calls carry no information for the AXAML scaffold.
             if (invocationText.EndsWith(".SuspendLayout") || invocationText.EndsWith(".ResumeLayout")
                 || invocationText.EndsWith(".PerformLayout") || invocationText.EndsWith(".BeginInit")
-                || invocationText.EndsWith(".EndInit") || invocationText.EndsWith(".SetChildIndex")
+                || invocationText.EndsWith(".EndInit")
                 || invocationText is "SuspendLayout" or "ResumeLayout" or "PerformLayout")
             {
+                return;
+            }
+
+            // Changes the z-order, which is the order the controls are docked in, so the
+            // emitted child order cannot be trusted where it is used.
+            if (invocationText.EndsWith("Controls.SetChildIndex"))
+            {
+                root.Unmapped.Add($"{Strip(invocation.ToString())} — reorders docking; check the order of the docked children");
                 return;
             }
 
