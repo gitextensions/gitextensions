@@ -29,6 +29,8 @@
     <Compile Include="..\GitUI\ConsoleEmulation\PlainText\IPlainTextConsoleCommandRunner.cs" Link="ConsoleEmulation\PlainText\IPlainTextConsoleCommandRunner.cs" />
     <Compile Include="..\GitUI\ConsoleEmulation\PlainText\PlainTextConsoleEmulatorsRegistry.cs" Link="ConsoleEmulation\PlainText\PlainTextConsoleEmulatorsRegistry.cs" />
     <Compile Include="..\GitUI\FormStatusOutputLog.cs" Link="FormStatusOutputLog.cs" />
+    <Compile Include="..\GitUI\IGitUICommandsSource.cs" Link="IGitUICommandsSource.cs" />
+    <Compile Include="..\GitUI\GitUICommandsSourceEventArgs.cs" Link="GitUICommandsSourceEventArgs.cs" />
     <Compile Include="..\GitUI\Models\IOutputHistoryRecorder.cs" Link="Models\IOutputHistoryRecorder.cs" />
     <Compile Include="..\GitUI\Models\RunProcessInfo.cs" Link="Models\RunProcessInfo.cs" />
     <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
