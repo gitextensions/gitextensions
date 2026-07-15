@@ -9,7 +9,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh and Commands/Commit/Checkout branch/Create branch/Pull-Fetch/Fetch all; remaining menus and toolbars are added with their dialogs."
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh and Commands/Commit/Checkout branch/Create branch/Pull-Fetch/Fetch all. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. Remaining menus and toolbars are added with their dialogs."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
@@ -114,7 +114,7 @@
     "twin": "src/app/GitUI.Avalonia/Compat/GitExtensionsFormBase.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Translation uses the one-pass Avalonia adapter while retaining shared XLF keys; hotkey dispatch comes in Phase 2."
+    "notes": "Translation uses the one-pass Avalonia adapter while retaining shared XLF keys; window hotkeys use persisted shim Keys through KeysMapper and ExecuteCommand(int), with shared Escape-to-close for dialogs."
   },
   "src/app/ResourceManager/GitExtensionsControl.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/GitExtensionsControl.cs",
@@ -137,7 +137,7 @@
     "twin": "src/app/GitUI.Avalonia/GitModuleForm.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "UICommands/Module plus the shared IGitUICommandsSource contract; hotkey and scripts plumbing come with the hotkey subphase."
+    "notes": "UICommands/Module plus the shared IGitUICommandsSource contract and hotkey service discovery; scripts remain deferred."
   },
   "src/app/GitUI/GitModuleControl.cs": {
     "twin": "src/app/GitUI.Avalonia/GitModuleControl.cs",
@@ -157,6 +157,18 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
   },
+  "src/app/GitUI/Hotkey/HotkeySettings.cs": {
+    "twin": "src/app/GitUI/Hotkey/HotkeySettings.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
+  },
+  "src/app/GitUI/Hotkey/HotkeySettingsManager.cs": {
+    "twin": "src/app/GitUI.Avalonia/Hotkey/HotkeySettingsManager.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Reduced loader preserves the upstream XML format and command IDs for implemented FormBrowse commands. Settings editing, scripts, and other hotkey targets join as their consumers are ported."
+  },
   "src/app/GitUI/GitExtensionsDialog.cs": {
     "twin": "src/app/GitUI.Avalonia/GitExtensionsDialog.cs",
     "status": "functional",
@@ -173,7 +185,7 @@
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Registers the plain text console emulation only so far."
+    "notes": "Registers the plain text console emulation and reduced hotkey settings loader."
   },
   "src/app/GitUI/HelperDialogs/FormStatus.cs": {
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormStatus.axaml.cs",
@@ -185,7 +197,7 @@
     "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormProcess.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Headless end-to-end success and failure tests pass; real-window integration arrives with the first FormBrowse action."
+    "notes": "Headless end-to-end success and failure tests pass; Escape now uses the shared dialog key handler instead of a form-specific override."
   },
   "src/app/GitUI/UserControls/PasswordInput.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/PasswordInput.axaml.cs",

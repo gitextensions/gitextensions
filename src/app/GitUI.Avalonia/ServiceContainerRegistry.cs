@@ -2,6 +2,8 @@ using System.ComponentModel.Design;
 using GitExtUtils;
 using GitUI.ConsoleEmulation;
 using GitUI.ConsoleEmulation.PlainText;
+using GitUI.Hotkey;
+using ResourceManager;
 
 namespace GitUI;
 
@@ -13,5 +15,6 @@ public static class ServiceContainerRegistry
     public static void RegisterServices(ServiceContainer serviceContainer)
     {
         serviceContainer.AddService<IConsoleEmulatorsRegistry>(PlainTextConsoleEmulatorsRegistry.Instance);
+        serviceContainer.AddService<IHotkeySettingsLoader>(new HotkeySettingsManager());
     }
 }
