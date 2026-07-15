@@ -272,9 +272,38 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartMailMapDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartMailMapDialog));
     public bool StartMergeBranchDialog(IWin32Window? owner, string? branch) => throw NotPorted(nameof(StartMergeBranchDialog));
     public bool StartPluginSettingsDialog(IWin32Window? owner) => throw NotPorted(nameof(StartPluginSettingsDialog));
-    public bool StartPullDialog(IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None) => throw NotPorted(nameof(StartPullDialog));
-    public bool StartPullDialogAndPullImmediately(IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None) => throw NotPorted(nameof(StartPullDialogAndPullImmediately));
-    public bool StartPullDialogAndPullImmediately(out bool pullCompleted, IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None) => throw NotPorted(nameof(StartPullDialogAndPullImmediately));
+    public bool StartPullDialog(IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None)
+        => StartPullDialogInternal(owner, pullOnShow: false, out _, remoteBranch, remote, pullAction);
+
+    public bool StartPullDialogAndPullImmediately(IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None)
+        => StartPullDialogAndPullImmediately(out _, owner, remoteBranch, remote, pullAction);
+
+    public bool StartPullDialogAndPullImmediately(out bool pullCompleted, IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None)
+        => StartPullDialogInternal(owner, pullOnShow: true, out pullCompleted, remoteBranch, remote, pullAction);
+
+    private bool StartPullDialogInternal(
+        IWin32Window? owner,
+        bool pullOnShow,
+        out bool pullCompleted,
+        string? remoteBranch,
+        string? remote,
+        GitPullAction pullAction)
+    {
+        bool pulled = false;
+        bool done = DoActionOnRepo(owner, action: () =>
+        {
+            using CommandsDialogs.FormPull form = new(this, remoteBranch, remote, pullAction);
+            DialogResult result = pullOnShow
+                ? form.PullAndShowDialogWhenFailed(owner, remote, pullAction)
+                : form.ShowDialog(owner);
+            pulled = result == DialogResult.OK && !form.ErrorOccurred;
+            return result == DialogResult.OK;
+        });
+
+        pullCompleted = pulled;
+        return done;
+    }
+
     public void StartPullRequestsDialog(IWin32Window? owner, IRepositoryHostPlugin gitHoster) => throw NotPorted(nameof(StartPullRequestsDialog));
     public bool StartPushDialog(IWin32Window? owner, bool pushOnShow)
         => StartPushDialog(owner, pushOnShow, forceWithLease: false, out _);

@@ -130,17 +130,8 @@ public sealed partial class FormPush : GitModuleForm
 
     private void RemoveLabelMnemonicMarkers()
     {
-        labelFrom.Text = RemoveMnemonicMarker(labelFrom.Text ?? string.Empty);
-        labelTo.Text = RemoveMnemonicMarker(labelTo.Text ?? string.Empty);
-
-        static string RemoveMnemonicMarker(string text)
-        {
-            const string escapedUnderscore = "\u0001";
-            return text
-                .Replace("__", escapedUnderscore, StringComparison.Ordinal)
-                .Replace("_", string.Empty, StringComparison.Ordinal)
-                .Replace(escapedUnderscore, "_", StringComparison.Ordinal);
-        }
+        labelFrom.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(labelFrom.Text ?? string.Empty);
+        labelTo.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(labelTo.Text ?? string.Empty);
     }
 
     public override void TranslateItems(GitExtensions.Extensibility.Translations.ITranslation translation)
