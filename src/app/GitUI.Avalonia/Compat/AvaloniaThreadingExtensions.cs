@@ -1,6 +1,6 @@
 using Avalonia;
+using Avalonia.Threading;
 using GitExtUtils;
-using Microsoft.VisualStudio.Threading;
 
 namespace GitUI;
 
@@ -25,11 +25,14 @@ public static class AvaloniaThreadingExtensions
     public static void InvokeAndForget(this Visual control, Func<Task> asyncAction, CancellationToken cancellationToken = default)
         => ThreadHelper.FileAndForget(async () =>
         {
-            await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+            await control.SwitchToMainThreadAsync(cancellationToken);
             await asyncAction();
         });
 
     /// <summary>Switches to the UI thread, like the WinForms control extension.</summary>
-    public static async Task SwitchToMainThreadAsync(this Visual control, CancellationToken cancellationToken = default)
-        => await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
+    public static DispatcherPriorityAwaitable SwitchToMainThreadAsync(this Visual control, CancellationToken cancellationToken = default)
+    {
+        cancellationToken.ThrowIfCancellationRequested();
+        return control.Dispatcher.Resume();
+    }
 }
