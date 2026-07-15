@@ -22,7 +22,10 @@ edits the commit message, and creates normal commits through the process dialog.
 fixup/squash, commit templates/history, and signing options are not yet available. Commit
 and push opens the reduced push dialog, which pushes the current branch to the same branch
 on a selected remote and supports force-with-lease. URL, tag, multiple-branch, and remote
-management push options are being ported incrementally with the remaining dialogs.
+management push options are being ported incrementally. Commands > Pull/Fetch opens the
+reduced pull dialog, which supports merge pulls, rebase pulls, and fetch-only from a selected
+configured remote. URL pulls, auto-stash, tag/prune/unshallow options, scripts, submodule
+follow-up, and conflict recovery remain deferred with the remaining dialogs.
 
 ## Requirements
 
