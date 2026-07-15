@@ -455,7 +455,7 @@ public sealed partial class GitModuleTests
         string? actualReturnedMessage = repo.Module.GetTagMessage("test_tag", cancellationToken: default);
 
         // compare result to expectations
-        actualReturnedMessage.Should().Be(expectedReturnedMessage);
+        actualReturnedMessage.Should().Be(expectedReturnedMessage.Replace("\r\n", Environment.NewLine));
     }
 
     // TODO: add GetTagMessage "sad-path" tests, ones that test what happens if we try to execute it on a non-tag object.
