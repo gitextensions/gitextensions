@@ -10,32 +10,49 @@ using ResourceManager;
 
 namespace GitUI.CommandsDialogs;
 
-// TODO(avalonia-port): reduced shell for milestones M1.0-M1.3 — revision grid, file list,
-// and patch viewer. The left panel, commit info, menus, and toolbars of the real FormBrowse
-// twin arrive in later milestones.
-public partial class FormBrowse : GitExtensionsForm
+// Reduced shell: the read-only browse panels and first repository commands are functional;
+// the remaining upstream menus and toolbars arrive with their corresponding dialogs.
+public sealed partial class FormBrowse : GitModuleForm
 {
-    private readonly GitModule? _module;
-
     public FormBrowse()
     {
         InitializeComponent();
     }
 
     public FormBrowse(IServiceProvider serviceProvider, GitModule module)
-        : this()
+        : this(new GitUICommands(serviceProvider, module))
     {
-        _module = module;
+    }
 
-        bool isValidWorkingDir = module.IsValidGitWorkingDir();
-        string branchName = isValidWorkingDir ? module.GetSelectedBranch() : string.Empty;
-
-        IAppTitleGenerator appTitleGenerator = serviceProvider.GetRequiredService<IAppTitleGenerator>();
-        Title = appTitleGenerator.Generate(module.WorkingDir, isValidWorkingDir, branchName);
+    public FormBrowse(IGitUICommands commands)
+        : base(commands, enablePositionRestore: true)
+    {
+        InitializeComponent();
 
         RevisionGrid.SelectionChanged += RevisionGrid_SelectionChanged;
         fileStatusList.SelectedIndexChanged += FileStatusList_SelectedIndexChanged;
         repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
+        refreshToolStripMenuItem.Click += RefreshToolStripMenuItemClick;
+        fetchAllToolStripMenuItem.Click += fetchAllToolStripMenuItem_Click;
+        UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
+
+        ReloadRepository();
+
+        InitializeComplete();
+    }
+
+    private void ReloadRepository()
+    {
+        IGitModule module = Module;
+
+        bool isValidWorkingDir = module.IsValidGitWorkingDir();
+        string branchName = isValidWorkingDir ? module.GetSelectedBranch() : string.Empty;
+
+        IAppTitleGenerator appTitleGenerator = UICommands.GetRequiredService<IAppTitleGenerator>();
+        Title = appTitleGenerator.Generate(module.WorkingDir, isValidWorkingDir, branchName);
+
+        refreshToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        fetchAllToolStripMenuItem.IsEnabled = isValidWorkingDir;
 
         if (isValidWorkingDir)
         {
@@ -55,8 +72,6 @@ public partial class FormBrowse : GitExtensionsForm
             lblRepoPath.Text = "No git repository";
             lblStatus.Text = "Start the app inside a repository or pass one on the command line: GitExtensions.Avalonia browse <path>";
         }
-
-        InitializeComplete();
     }
 
     private void RepoObjectsTree_SelectionChanged(object? sender, EventArgs e)
@@ -73,13 +88,13 @@ public partial class FormBrowse : GitExtensionsForm
         fileViewer.ViewPatch(string.Empty);
         CommitInfo.Revision = RevisionGrid.SelectedRevision;
 
-        if (_module is not GitModule module
-            || RevisionGrid.SelectedRevision is not GitRevision revision
+        if (RevisionGrid.SelectedRevision is not GitRevision revision
             || !revision.HasParent)
         {
             return;
         }
 
+        IGitModule module = Module;
         ObjectId parentId = revision.FirstParentId;
         ThreadHelper.FileAndForget(async () =>
         {
@@ -102,14 +117,14 @@ public partial class FormBrowse : GitExtensionsForm
 
     private void FileStatusList_SelectedIndexChanged(object? sender, EventArgs e)
     {
-        if (_module is not GitModule module
-            || RevisionGrid.SelectedRevision is not GitRevision revision
+        if (RevisionGrid.SelectedRevision is not GitRevision revision
             || !revision.HasParent
             || fileStatusList.SelectedItem is not GitItemStatus item)
         {
             return;
         }
 
+        IGitModule module = Module;
         ObjectId parentId = revision.FirstParentId;
         ThreadHelper.FileAndForget(async () =>
         {
@@ -133,5 +148,29 @@ public partial class FormBrowse : GitExtensionsForm
                 fileViewer.ViewPatch(patch?.Text ?? errorMessage);
             }
         });
+    }
+
+    private void UICommands_PostRepositoryChanged(object? sender, GitUIEventArgs e)
+    {
+        this.InvokeAndForget(ReloadRepository);
+    }
+
+    private void RefreshToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.RepoChangedNotifier.Notify();
+    }
+
+    private void fetchAllToolStripMenuItem_Click(object? sender, EventArgs e)
+    {
+        ArgumentString arguments = new GitArgumentBuilder("fetch")
+        {
+            "--all",
+            "--progress",
+        };
+
+        if (UICommands.StartGitCommandProcessDialog(this, arguments))
+        {
+            UICommands.RepoChangedNotifier.Notify();
+        }
     }
 }
