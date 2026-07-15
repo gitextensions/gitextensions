@@ -1,9 +1,10 @@
+using System.Diagnostics.CodeAnalysis;
 using GitExtensions.Extensibility.Git;
 
 namespace GitUI;
 
-// Twin of GitUI/GitModuleForm.cs (reduced): access to IGitUICommands and the GitModule.
-// The hotkey and scripts plumbing of the WinForms base arrives with the Phase 2 hotkey work.
+// Twin of GitUI/GitModuleForm.cs (reduced): access to IGitUICommands and the GitModule,
+// including the command-service bridge used by the shared hotkey dispatcher. Scripts remain deferred.
 
 /// <summary>Base window that provides access to the module and <see cref="IGitUICommands"/>.</summary>
 public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
@@ -37,4 +38,10 @@ public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
 
     /// <summary>Gets the module of the currently set <see cref="UICommands"/>.</summary>
     public IGitModule Module => UICommands.Module;
+
+    public override bool TryGetUICommands([NotNullWhen(true)] out IGitUICommands? commands)
+    {
+        commands = _uiCommands;
+        return commands is not null;
+    }
 }

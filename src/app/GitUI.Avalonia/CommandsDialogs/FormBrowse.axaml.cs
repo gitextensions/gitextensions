@@ -14,6 +14,21 @@ namespace GitUI.CommandsDialogs;
 // the remaining upstream menus and toolbars arrive with their corresponding dialogs.
 public sealed partial class FormBrowse : GitModuleForm
 {
+    public static readonly string HotkeySettingsName = "Browse";
+
+    internal enum Command
+    {
+        Commit = 7,
+        CheckoutBranch = 10,
+        PullOrFetch = 39,
+        Push = 40,
+        CreateBranch = 41,
+
+        // WinForms routes F5 through ToolStripItem.ShortcutKeys. Avalonia has no ToolStrip,
+        // so refresh joins the same command dispatcher without changing persisted upstream IDs.
+        Refresh = 50,
+    }
+
     public FormBrowse()
     {
         InitializeComponent();
@@ -44,6 +59,8 @@ public sealed partial class FormBrowse : GitModuleForm
         ReloadRepository();
 
         InitializeComplete();
+        HotkeysEnabled = true;
+        LoadHotkeys(HotkeySettingsName);
     }
 
     private void ReloadRepository()
@@ -202,4 +219,22 @@ public sealed partial class FormBrowse : GitModuleForm
             UICommands.RepoChangedNotifier.Notify();
         }
     }
+
+    protected override bool ExecuteCommand(int command)
+    {
+        switch ((Command)command)
+        {
+            case Command.Refresh: RefreshToolStripMenuItemClick(this, EventArgs.Empty); break;
+            case Command.Commit: CommitToolStripMenuItemClick(this, EventArgs.Empty); break;
+            case Command.CheckoutBranch: CheckoutBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
+            case Command.PullOrFetch: PullToolStripMenuItemClick(this, EventArgs.Empty); break;
+            case Command.Push: UICommands.StartPushDialog(this, pushOnShow: false); break;
+            case Command.CreateBranch: CreateBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
+            default: return base.ExecuteCommand(command);
+        }
+
+        return true;
+    }
+
+    protected override bool CloseOnEscape => false;
 }

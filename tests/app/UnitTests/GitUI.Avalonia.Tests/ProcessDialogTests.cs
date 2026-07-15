@@ -1,6 +1,8 @@
 using System.ComponentModel.Design;
 using System.Diagnostics;
+using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
+using Avalonia.Input;
 using Avalonia.Threading;
 using GitCommands;
 using GitExtensions.Extensibility.Git;
@@ -71,6 +73,17 @@ public sealed class ProcessDialogTests
         using FormProcess form = new(CreateCommands(Path.GetTempPath()), arguments: "version", Path.GetTempPath(), input: null, useDialogSettings: true);
         form.Title.Should().StartWith("Process");
         form.ProcessString.Should().NotBeNullOrEmpty();
+    }
+
+    [AvaloniaTest]
+    public void FormProcess_Escape_should_close_through_the_shared_dialog_handler()
+    {
+        using FormProcess form = new(CreateCommands(Path.GetTempPath()), arguments: "version", Path.GetTempPath(), input: null, useDialogSettings: true);
+        form.Show();
+
+        form.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);
+
+        form.IsVisible.Should().BeFalse();
     }
 
     [AvaloniaTest]
