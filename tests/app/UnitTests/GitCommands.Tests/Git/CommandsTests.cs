@@ -29,21 +29,31 @@ public partial class CommandsTests
 
         Commands.AddSubmodule("remotepath", "localpath", "branch", force: true, configs).Arguments.Should().Be($"{config}submodule add -f -b \"branch\" \"remotepath\" \"localpath\"");
 
-        Commands.AddSubmodule("remote\\path", "local\\path", "branch", force: true, configs).Arguments.Should().Be($"{config}submodule add -f -b \"branch\" \"remote/path\" \"local/path\"");
+        Commands.AddSubmodule(Path.Combine("remote", "path"), Path.Combine("local", "path"), "branch", force: true, configs).Arguments.Should().Be($"{config}submodule add -f -b \"branch\" \"remote/path\" \"local/path\"");
     }
 
     [Test]
     public void ApplyDiffPatchCmd()
     {
-        Commands.ApplyDiffPatch(false, "hello\\world.patch", PathUtil.ToPosixPath).Arguments.Should().Be("apply \"hello/world.patch\"");
-        Commands.ApplyDiffPatch(true, "hello\\world.patch", PathUtil.ToPosixPath).Arguments.Should().Be("apply --ignore-whitespace \"hello/world.patch\"");
+        string patchFile = Path.Combine("hello", "world.patch");
+        Commands.ApplyDiffPatch(false, patchFile, PathUtil.ToPosixPath).Arguments.Should().Be("apply \"hello/world.patch\"");
+        Commands.ApplyDiffPatch(true, patchFile, PathUtil.ToPosixPath).Arguments.Should().Be("apply --ignore-whitespace \"hello/world.patch\"");
     }
 
-    [TestCase(false, false, "hello\\world.patch", "am --3way \"hello/world.patch\"")]
-    [TestCase(false, true, "hello\\world.patch", "am --3way --ignore-whitespace \"hello/world.patch\"")]
-    [TestCase(true, false, "hello\\world.patch", "am --3way --signoff \"hello/world.patch\"")]
-    [TestCase(true, true, "hello\\world.patch", "am --3way --signoff --ignore-whitespace \"hello/world.patch\"")]
-    [TestCase(true, true, null, "am --3way --signoff --ignore-whitespace")]
+    // The patch file is given as a native path and converted to the posix form git expects.
+    // On Unix a native path already is a posix one, so only Windows exercises a conversion.
+    private static IEnumerable<TestCaseData> MailboxPatchTestCases()
+    {
+        string patchFile = Path.Combine("hello", "world.patch");
+
+        yield return new TestCaseData(false, false, patchFile, "am --3way \"hello/world.patch\"");
+        yield return new TestCaseData(false, true, patchFile, "am --3way --ignore-whitespace \"hello/world.patch\"");
+        yield return new TestCaseData(true, false, patchFile, "am --3way --signoff \"hello/world.patch\"");
+        yield return new TestCaseData(true, true, patchFile, "am --3way --signoff --ignore-whitespace \"hello/world.patch\"");
+        yield return new TestCaseData(true, true, null, "am --3way --signoff --ignore-whitespace");
+    }
+
+    [TestCaseSource(nameof(MailboxPatchTestCases))]
     public void ApplyMailboxPatchCmd(bool signOff, bool ignoreWhitespace, string? patchFile, string expected)
     {
         Commands.ApplyMailboxPatch(signOff, ignoreWhitespace, patchFile, PathUtil.ToPosixPath).Arguments.Should().Be(expected);
@@ -261,15 +271,24 @@ public partial class CommandsTests
     [TestCase(false, true, false, null, false, "\t", null, "merge --no-ff --squash --no-edit branch")]
     [TestCase(false, true, false, null, false, "\n", null, "merge --no-ff --squash --no-edit branch")]
     [TestCase(false, true, false, null, false, "foo", null, "merge --no-ff --squash -F \"foo\" --no-edit branch")]
-    [TestCase(false, true, false, null, false, "D:\\myrepo\\.git\\file", null, "merge --no-ff --squash -F \"D:/myrepo/.git/file\" --no-edit branch")]
 
     // log parameter
     [TestCase(true, true, false, null, false, null, -1, "merge --squash --no-edit branch")]
     [TestCase(true, true, false, null, false, null, 0, "merge --squash --no-edit branch")]
     [TestCase(true, true, false, null, false, null, 5, "merge --squash --log=5 --no-edit branch")]
+    [TestCaseSource(nameof(MergeCommitFilePathTestCases))]
     public void MergeBranchCmd(bool allowFastForward, bool squash, bool noCommit, string? strategy, bool allowUnrelatedHistories, string? mergeCommitFilePath, int? log, string expected)
     {
         Commands.MergeBranch("branch", allowFastForward, squash, noCommit, strategy!, allowUnrelatedHistories, mergeCommitFilePath, PathUtil.ToPosixPath, log).Arguments.Should().Be(expected);
+    }
+
+    // The merge commit file is given as a native absolute path and converted to the posix
+    // form git expects; the two platforms have no common spelling for such a path.
+    private static IEnumerable<TestCaseData> MergeCommitFilePathTestCases()
+    {
+        yield return OperatingSystem.IsWindows()
+            ? new TestCaseData(false, true, false, null, false, @"D:\myrepo\.git\file", null, "merge --no-ff --squash -F \"D:/myrepo/.git/file\" --no-edit branch")
+            : new TestCaseData(false, true, false, null, false, "/myrepo/.git/file", null, "merge --no-ff --squash -F \"/myrepo/.git/file\" --no-edit branch");
     }
 
     [Test]
@@ -326,7 +345,7 @@ public partial class CommandsTests
     {
         Commands.PushTag("path", "tag", all: false).Arguments.Should().Be("push --progress \"path\" tag tag");
         Commands.PushTag("path", " tag ", all: false).Arguments.Should().Be("push --progress \"path\" tag tag");
-        Commands.PushTag("path\\path", " tag ", all: false).Arguments.Should().Be("push --progress \"path/path\" tag tag");
+        Commands.PushTag(Path.Combine("path", "path"), " tag ", all: false).Arguments.Should().Be("push --progress \"path/path\" tag tag");
         Commands.PushTag("path", "tag", all: true).Arguments.Should().Be("push --progress \"path\" --tags");
         Commands.PushTag("path", "tag", all: true, force: ForcePushOptions.Force).Arguments.Should().Be("push -f --progress \"path\" --tags");
         Commands.PushTag("path", "tag", all: true, force: ForcePushOptions.ForceWithLease).Arguments.Should().Be("push --force-with-lease --progress \"path\" --tags");
