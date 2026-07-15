@@ -51,6 +51,14 @@ The command-line arguments follow the Windows Forms application: the first argum
 command (for example `browse`), the second is the repository path. Without arguments the
 application starts without an opened repository.
 
+## Testing
+
+```
+dotnet test tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj
+```
+
+The tests run headlessly (no display required) on all three operating systems.
+
 ## Project layout
 
 The UI lives in `src/app/GitUI.Avalonia`, which mirrors the file structure of the Windows

@@ -22,4 +22,11 @@
     <ProjectReference Include="..\GitUI.Avalonia\GitUI.Avalonia.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Cross-platform assemblies must not carry the SupportedOSPlatform("windows7.0")
+         attribute from CommonAssemblyInfo.cs; use the platform-neutral variant. -->
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+    <Compile Include="$(RepoRoot)\src\app\GitUI.Avalonia\Properties\CommonAssemblyInfoAvalonia.cs" Link="Properties\CommonAssemblyInfoAvalonia.cs" />
+  </ItemGroup>
+
 </Project>

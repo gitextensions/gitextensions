@@ -37,4 +37,13 @@
     <Using Include="System.Drawing" />
     <ProjectReference Include="$(RepoRoot)src\app\GitExtensions.Shims.WinForms\GitExtensions.Shims.WinForms.csproj" />
   </ItemGroup>
+
+  <!-- Avalonia/Linux port: Avalonia.Headless.NUnit requires a newer NUnit than the
+       repository pin; override for the Avalonia test project only. NUnit.ConsoleRunner is
+       removed because this project is run with 'dotnet test' only and the runner would put
+       a second NUnit engine into the output next to the test adapter's own. -->
+  <ItemGroup Condition="'$(MSBuildProjectName)' == 'GitUI.Avalonia.Tests'">
+    <PackageReference Update="NUnit" VersionOverride="4.5.1" />
+    <PackageReference Remove="NUnit.ConsoleRunner" />
+  </ItemGroup>
 </Project>
