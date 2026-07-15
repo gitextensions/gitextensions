@@ -25,11 +25,11 @@ public class RepositoryDescriptionProviderTests
         IGitDirectoryResolver gitDirectoryResolver = Substitute.For<IGitDirectoryResolver>();
         RepositoryDescriptionProvider repositoryDescriptionProvider = new(gitDirectoryResolver);
 
-        string repo = @$"{_tempDir}\test_repo";
-        string submodule = @$"{repo}\submodule";
-        string nested = @$"{submodule}\nested";
-        string subsubmodule = @$"{nested}\subsubmodule";
-        string leafsubmodule = @$"{nested}\leafsubmodule";
+        string repo = Path.Combine(_tempDir, "test_repo");
+        string submodule = Path.Combine(repo, "submodule");
+        string nested = Path.Combine(submodule, "nested");
+        string subsubmodule = Path.Combine(nested, "subsubmodule");
+        string leafsubmodule = Path.Combine(nested, "leafsubmodule");
         Directory.CreateDirectory(leafsubmodule);
 
         repositoryDescriptionProvider.Get(repo, IsValidGitWorkingDir)
@@ -53,7 +53,7 @@ public class RepositoryDescriptionProviderTests
 
         string rootrepo = nameof(rootrepo);
         string parent = nameof(parent);
-        string repo = @$"{_tempDir}\{rootrepo}\{parent}\{uninformative}";
+        string repo = Path.Combine(_tempDir, rootrepo, parent, uninformative);
         Directory.CreateDirectory(repo);
 
         repositoryDescriptionProvider.Get(repo, IsValidGitWorkingDir)
@@ -67,7 +67,7 @@ public class RepositoryDescriptionProviderTests
         RepositoryDescriptionProvider repositoryDescriptionProvider = new(gitDirectoryResolver);
 
         string parentrepo = nameof(parentrepo);
-        string repo = @$"{_tempDir}\{parentrepo}\{uninformative}";
+        string repo = Path.Combine(_tempDir, parentrepo, uninformative);
         Directory.CreateDirectory(repo);
 
         repositoryDescriptionProvider.Get(repo, IsValidGitWorkingDir)
@@ -81,7 +81,7 @@ public class RepositoryDescriptionProviderTests
         RepositoryDescriptionProvider repositoryDescriptionProvider = new(gitDirectoryResolver);
 
         string parent = nameof(parent);
-        string repo = @$"{_tempDir}\{parent}\{uninformative}";
+        string repo = Path.Combine(_tempDir, parent, uninformative);
         Directory.CreateDirectory(repo);
 
         repositoryDescriptionProvider.Get(repo, IsValidGitWorkingDir)
