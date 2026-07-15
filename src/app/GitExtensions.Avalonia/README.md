@@ -15,7 +15,9 @@ ported process dialog and reloads the repository afterwards. Commands > Checkout
 switch between existing local branches, with merge/reset handling for local changes. Remote
 checkout and auto-stash are not yet available. Commands > Create branch can create a branch
 at the selected revision, optionally check it out, and supports orphan branches in empty
-repositories. Commit, push, and the remaining dialogs are being ported incrementally.
+repositories. Right-clicking a revision provides the same checkout-branch and create-branch
+actions for that commit. Commit, push, and the remaining dialogs are being ported
+incrementally.
 
 ## Requirements
 

@@ -27,7 +27,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only: graph, ref labels, selection. No column providers, context menu, or hotkeys yet."
+    "notes": "Read-only graph/ref labels/selection plus the first context-menu actions: checkout a local branch containing the selected commit and create a branch at it. Remaining menu items, column providers, and hotkeys are deferred."
   },
   "src/app/GitUI/UserControls/RevisionGrid/Graph/RevisionGraphLaneColor.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Graph/RevisionGraphLaneColor.cs",

@@ -4,6 +4,12 @@
   <DockPanel>
     <TextBlock DockPanel.Dock="Bottom" x:Name="lblLoadingStatus" Margin="4,2" Opacity="0.7" />
     <ListBox x:Name="lstRevisions" SelectionMode="Single">
+      <ListBox.ContextMenu>
+        <ContextMenu x:Name="revisionContextMenu">
+          <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch..." />
+          <MenuItem x:Name="createNewBranchToolStripMenuItem" Header="Create new branch here (_x)..." />
+        </ContextMenu>
+      </ListBox.ContextMenu>
       <ListBox.Styles>
         <!-- Rows must be exactly RowHeight tall: the graph renderer draws each row's lane
              segment assuming adjacent rows abut, so any container padding breaks the lines. -->
