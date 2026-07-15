@@ -96,16 +96,64 @@ public sealed class GitUICommands : IGitUICommands
         return FormProcess.ShowDialog(owner, this, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
     }
 
-    private void InvokeEvent(IWin32Window? ownerForm, EventHandler<GitUIEventArgs>? gitUIEventHandler)
+    private bool InvokeEvent(IWin32Window? ownerForm, EventHandler<GitUIEventArgs>? gitUIEventHandler)
     {
         try
         {
-            gitUIEventHandler?.Invoke(this, new GitUIEventArgs(ownerForm, this));
+            GitUIEventArgs eventArgs = new(ownerForm, this);
+            gitUIEventHandler?.Invoke(this, eventArgs);
+            return !eventArgs.Cancel;
         }
         catch (Exception ex)
         {
             MessageBoxes.ShowError(ownerForm, $"{ex.Message}{Environment.NewLine}{ex.StackTrace}", "Error");
+            return false;
         }
+    }
+
+    private void InvokePostEvent(IWin32Window? ownerForm, bool actionDone, EventHandler<GitUIPostActionEventArgs>? gitUIEventHandler)
+    {
+        gitUIEventHandler?.Invoke(this, new GitUIPostActionEventArgs(ownerForm, this, actionDone));
+    }
+
+    private bool DoActionOnRepo(
+        IWin32Window? owner,
+        Func<bool> action,
+        bool requiresValidWorkingDir = true,
+        bool changesRepo = true,
+        EventHandler<GitUIEventArgs>? preEvent = null,
+        EventHandler<GitUIPostActionEventArgs>? postEvent = null)
+    {
+        bool actionDone = false;
+        RepoChangedNotifier.Lock();
+        try
+        {
+            if (requiresValidWorkingDir && !Module.IsValidGitWorkingDir())
+            {
+                return false;
+            }
+
+            if (!InvokeEvent(owner, preEvent))
+            {
+                return false;
+            }
+
+            try
+            {
+                actionDone = action();
+            }
+            finally
+            {
+                InvokePostEvent(owner, actionDone, postEvent);
+            }
+        }
+        finally
+        {
+            bool requestNotify = actionDone && changesRepo && Module.IsValidGitWorkingDir();
+            RepoChangedNotifier.UnLock(requestNotify);
+        }
+
+        return actionDone;
     }
 
     private static NotImplementedException NotPorted(string member)
@@ -116,7 +164,8 @@ public sealed class GitUICommands : IGitUICommands
     public void AddCommitTemplate(string key, Func<string> addingText, Image? icon, bool isRegex = false) => throw NotPorted(nameof(AddCommitTemplate));
     public void AddUpstreamRemote(IWin32Window? owner, IRepositoryHostPlugin gitHoster) => throw NotPorted(nameof(AddUpstreamRemote));
     public IGitRemoteCommand CreateRemoteCommand() => throw NotPorted(nameof(CreateRemoteCommand));
-    public bool DoActionOnRepo(Func<bool> action) => throw NotPorted(nameof(DoActionOnRepo));
+    public bool DoActionOnRepo(Func<bool> action)
+        => DoActionOnRepo(owner: null, action, requiresValidWorkingDir: false);
     public void OpenWithDifftool(IWin32Window? owner, IReadOnlyList<GitRevision?> revisions, string fileName, string? oldFileName, RevisionDiffKind diffKind, bool isTracked, string? customTool = null) => throw NotPorted(nameof(OpenWithDifftool));
     public void RaisePostBrowseInitialize(IWin32Window? owner) => InvokeEvent(owner, PostBrowseInitialize);
     public void RaisePostRegisterPlugin(IWin32Window? owner) => InvokeEvent(owner, PostRegisterPlugin);
@@ -130,8 +179,24 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartArchiveDialog(IWin32Window? owner = null, GitRevision? revision = null, GitRevision? revision2 = null, string? path = null) => throw NotPorted(nameof(StartArchiveDialog));
     public void StartBatchFileProcessDialog(string batchFile) => throw NotPorted(nameof(StartBatchFileProcessDialog));
     public bool StartBrowseDialog(IWin32Window? owner, BrowseArguments? args = null) => throw NotPorted(nameof(StartBrowseDialog));
-    public bool StartCheckoutBranch(IWin32Window? owner, IReadOnlyList<ObjectId>? containObjectIds) => throw NotPorted(nameof(StartCheckoutBranch));
-    public bool StartCheckoutBranch(IWin32Window? owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId>? containObjectIds = null) => throw NotPorted(nameof(StartCheckoutBranch));
+    public bool StartCheckoutBranch(IWin32Window? owner, IReadOnlyList<ObjectId>? containObjectIds)
+        => StartCheckoutBranch(owner, string.Empty, remote: false, containObjectIds);
+
+    public bool StartCheckoutBranch(IWin32Window? owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId>? containObjectIds = null)
+    {
+        if (remote)
+        {
+            // The first checkout-dialog increment intentionally supports local branches only.
+            return false;
+        }
+
+        return DoActionOnRepo(owner, action: () =>
+        {
+            using CommandsDialogs.FormCheckoutBranch form = new(this, branch, remote: false, containObjectIds);
+            return form.DoDefaultActionOrShow(owner) == DialogResult.OK;
+        }, preEvent: PreCheckoutBranch, postEvent: PostCheckoutBranch);
+    }
+
     public bool StartCheckoutRemoteBranch(IWin32Window? owner, string branch) => throw NotPorted(nameof(StartCheckoutRemoteBranch));
     public bool StartCheckoutRevisionDialog(IWin32Window? owner, string? revision = null) => throw NotPorted(nameof(StartCheckoutRevisionDialog));
     public bool StartCherryPickDialog(IWin32Window? owner = null, GitRevision? revision = null) => throw NotPorted(nameof(StartCherryPickDialog));
