@@ -19,8 +19,10 @@ repositories. Right-clicking a revision provides the same checkout-branch and cr
 actions for that commit. Commands > Commit opens the commit dialog, which displays staged
 and unstaged files with a selected-file diff, stages or unstages selected files or all files,
 edits the commit message, and creates normal commits through the process dialog. Amend,
-fixup/squash, commit templates/history, signing options, and commit-and-push are not yet
-available. Push and the remaining dialogs are being ported incrementally.
+fixup/squash, commit templates/history, and signing options are not yet available. Commit
+and push opens the reduced push dialog, which pushes the current branch to the same branch
+on a selected remote and supports force-with-lease. URL, tag, multiple-branch, and remote
+management push options are being ported incrementally with the remaining dialogs.
 
 ## Requirements
 
