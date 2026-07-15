@@ -90,6 +90,54 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Identity twin: Avalonia layout units are DIP, scale is always 1."
   },
+  "src/app/GitUI/GitModuleForm.cs": {
+    "twin": "src/app/GitUI.Avalonia/GitModuleForm.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "UICommands/Module only; hotkey and scripts plumbing come with the hotkey subphase."
+  },
+  "src/app/GitUI/GitExtensionsDialog.cs": {
+    "twin": "src/app/GitUI.Avalonia/GitExtensionsDialog.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "MainPanel/ControlsPanel chrome is declared per-dialog in axaml, not inherited."
+  },
+  "src/app/GitUI/GitUICommands.cs": {
+    "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Process dialog members are real; all other members throw NotImplementedException."
+  },
+  "src/app/GitUI/ServiceContainerRegistry.cs": {
+    "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Registers the plain text console emulation only so far."
+  },
+  "src/app/GitUI/HelperDialogs/FormStatus.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormStatus.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Plain text console only; no taskbar progress or status badge icons."
+  },
+  "src/app/GitUI/HelperDialogs/FormProcess.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormProcess.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Headless end-to-end tests pending a threading fix (see the ignored tests)."
+  },
+  "src/app/GitUI/UserControls/PasswordInput.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/PasswordInput.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "No drag and drop of text; eye button has no image yet."
+  },
+  "src/app/GitUI/ConsoleEmulation/PlainText/PlainTextConsoleCommandRunner.cs": {
+    "twin": "src/app/GitUI.Avalonia/ConsoleEmulation/PlainText/PlainTextConsoleCommandRunner.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Read-only TextBox output; no clickable links yet."
+  },
   "src/app/GitExtensions/Program.cs": {
     "twin": "src/app/GitExtensions.Avalonia/Program.cs",
     "status": "functional",
