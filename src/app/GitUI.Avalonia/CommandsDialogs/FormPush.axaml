@@ -1,0 +1,59 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.CommandsDialogs.FormPush"
+        Width="600"
+        Height="285"
+        MinWidth="500"
+        MinHeight="285"
+        CanResize="True"
+        Title="Push">
+  <Grid Margin="12"
+        RowDefinitions="Auto,Auto,Auto,*">
+    <HeaderedContentControl x:Name="groupBox2"
+                            Header="Push to">
+      <Grid Margin="8"
+            ColumnDefinitions="Auto,*"
+            RowDefinitions="Auto">
+        <TextBlock Margin="0,0,12,0"
+                   VerticalAlignment="Center"
+                   Text="Remote" />
+        <ComboBox x:Name="_NO_TRANSLATE_Remotes"
+                  Grid.Column="1"
+                  MinWidth="280" />
+      </Grid>
+    </HeaderedContentControl>
+
+    <Grid Grid.Row="1"
+          Margin="8,14,8,0"
+          ColumnDefinitions="Auto,*,Auto,*">
+      <TextBlock x:Name="labelFrom"
+                 Margin="0,0,12,0"
+                 VerticalAlignment="Center"
+                 Text="_Branch to push" />
+      <TextBox x:Name="_NO_TRANSLATE_Branch"
+               Grid.Column="1"
+               IsReadOnly="True" />
+      <TextBlock x:Name="labelTo"
+                 Grid.Column="2"
+                 Margin="12,0"
+                 VerticalAlignment="Center"
+                 Text="_to" />
+      <TextBox x:Name="RemoteBranch"
+               Grid.Column="3"
+               IsReadOnly="True" />
+    </Grid>
+
+    <CheckBox x:Name="ckForceWithLease"
+              Grid.Row="2"
+              Margin="8,14,8,0"
+              Content="_Force with lease" />
+
+    <Button x:Name="Push"
+            Grid.Row="3"
+            Margin="0,18,0,0"
+            MinWidth="100"
+            HorizontalAlignment="Right"
+            VerticalAlignment="Bottom"
+            IsDefault="True" />
+  </Grid>
+</Window>
