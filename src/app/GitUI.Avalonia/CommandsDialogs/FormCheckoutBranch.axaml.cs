@@ -1,4 +1,4 @@
-using GitCommands;
+﻿using GitCommands;
 using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
@@ -21,6 +21,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
     public FormCheckoutBranch()
     {
         InitializeComponent();
+        InitializeComplete();
     }
 
     public FormCheckoutBranch(IGitUICommands commands, string branch, bool remote, IReadOnlyList<ObjectId>? containObjectIds = null)
