@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- Development tool for the Avalonia port: scaffolds an .axaml layout from a Windows
+         Forms .Designer.cs file. Cross-platform; part of GitExtensions.Avalonia.slnx only,
+         so the Windows Forms solution and its pipelines are unaffected. -->
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net10.0</TargetFramework>
+    <UseWindowsForms>false</UseWindowsForms>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- The repo-wide assembly info declares SupportedOSPlatform("windows7.0"); this tool
+         is cross-platform and needs no assembly metadata. -->
+    <Compile Remove="$(RepoRoot)\CommonAssemblyInfo.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" />
+  </ItemGroup>
+
+</Project>

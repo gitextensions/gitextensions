@@ -79,6 +79,10 @@ engine projects.
 
 - Changes must not break the Windows Forms application; both user interfaces are built and
   shipped side by side.
+- New dialogs are scaffolded from their Windows Forms layout:
+  `dotnet run --project eng/tools/WinFormsToAxaml -- path/to/Form.Designer.cs` prints an
+  `.axaml` starting point (`-o <file>` writes it) with the original control names kept and
+  `TODO:WinForms` comments for everything that needs a manual decision.
 - Follow the repository coding guidelines (`.github/copilot-instructions.md`) and the
   Windows Forms control naming conventions (`.github/ui_design_guidelines.md`).
 - Keep this document up to date when build or runtime requirements change.
