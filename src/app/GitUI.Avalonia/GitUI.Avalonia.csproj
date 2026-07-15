@@ -7,6 +7,9 @@
     <UseWindowsForms>false</UseWindowsForms>
     <RootNamespace>GitUI</RootNamespace>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- Ported event handlers keep their WinForms signature "(object sender, EventArgs e)";
+         Avalonia's event delegates declare the sender as nullable. -->
+    <NoWarn>$(NoWarn);CS8622</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,7 +23,16 @@
     <!-- Framework-free GitUI sources compiled unchanged (update
          eng/avalonia/portmap.json when this list changes). -->
     <Compile Include="..\GitExtUtils\Validates.cs" Link="Validates.cs" />
+    <Compile Include="..\GitUI\ConsoleEmulation\ConsoleOutputEventArgs.cs" Link="ConsoleEmulation\ConsoleOutputEventArgs.cs" />
+    <Compile Include="..\GitUI\ConsoleEmulation\ConsoleProcessExitEventArgs.cs" Link="ConsoleEmulation\ConsoleProcessExitEventArgs.cs" />
+    <Compile Include="..\GitUI\ConsoleEmulation\IConsoleEmulatorsRegistry.cs" Link="ConsoleEmulation\IConsoleEmulatorsRegistry.cs" />
+    <Compile Include="..\GitUI\ConsoleEmulation\PlainText\IPlainTextConsoleCommandRunner.cs" Link="ConsoleEmulation\PlainText\IPlainTextConsoleCommandRunner.cs" />
+    <Compile Include="..\GitUI\ConsoleEmulation\PlainText\PlainTextConsoleEmulatorsRegistry.cs" Link="ConsoleEmulation\PlainText\PlainTextConsoleEmulatorsRegistry.cs" />
+    <Compile Include="..\GitUI\FormStatusOutputLog.cs" Link="FormStatusOutputLog.cs" />
+    <Compile Include="..\GitUI\Models\IOutputHistoryRecorder.cs" Link="Models\IOutputHistoryRecorder.cs" />
+    <Compile Include="..\GitUI\Models\RunProcessInfo.cs" Link="Models\RunProcessInfo.cs" />
     <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
+    <Compile Include="..\GitUI\UserControls\TextEventArgs.cs" Link="UserControls\TextEventArgs.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\BranchFinder.cs" Link="UserControls\RevisionGrid\Graph\BranchFinder.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\Lane.cs" Link="UserControls\RevisionGrid\Graph\Lane.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\LaneInfo.cs" Link="UserControls\RevisionGrid\Graph\LaneInfo.cs" />

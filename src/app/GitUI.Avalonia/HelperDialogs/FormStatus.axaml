@@ -1,0 +1,23 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrols="clr-namespace:GitUI.UserControls"
+        x:Class="GitUI.HelperDialogs.FormStatus"
+        Width="549" Height="327"
+        MinWidth="500" MinHeight="200"
+        WindowStartupLocation="CenterOwner"
+        Title="Process">
+  <DockPanel>
+    <StackPanel x:Name="ControlsPanel" DockPanel.Dock="Bottom" Orientation="Horizontal"
+                HorizontalAlignment="Right" Spacing="8" Margin="8">
+      <CheckBox x:Name="ShowPassword" Content="Show _password input" />
+      <CheckBox x:Name="KeepDialogOpen" Content="_Keep dialog open" />
+      <Button x:Name="Ok" MinWidth="75" Content="OK" />
+      <Button x:Name="Abort" MinWidth="75" Content="_Abort" />
+    </StackPanel>
+    <ProgressBar x:Name="ProgressBar" DockPanel.Dock="Bottom" IsIndeterminate="True" />
+    <usercontrols:PasswordInput x:Name="PasswordInput" DockPanel.Dock="Bottom" />
+    <Panel x:Name="MainPanel" Margin="12">
+      <Panel x:Name="pnlOutput" />
+    </Panel>
+  </DockPanel>
+</Window>
