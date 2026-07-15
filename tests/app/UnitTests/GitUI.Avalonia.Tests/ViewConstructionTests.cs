@@ -75,6 +75,11 @@ public sealed class ViewConstructionTests
             "fetchAllToolStripMenuItem",
             "Text",
             "Fetch &all");
+        translation.Received(1).TranslateItem(
+            nameof(FormBrowse),
+            "fetchAllToolStripMenuItem",
+            "Text",
+            Arg.Is<Func<string?>>(provideDefaultValue => provideDefaultValue() == "Fetch &all"));
         MenuItem fetchAll = form.FindControl<MenuItem>("fetchAllToolStripMenuItem")
             ?? throw new InvalidOperationException("Fetch-all menu item was not created.");
         fetchAll.Header.Should().Be("_Fetch translated");
@@ -111,14 +116,46 @@ public sealed class ViewConstructionTests
     {
         FormCheckoutBranch form = new();
         ITranslation translation = Substitute.For<ITranslation>();
+        translation.TranslateItem(
+                nameof(FormCheckoutBranch),
+                "$this",
+                "Text",
+                Arg.Any<Func<string?>>())
+            .Returns("Translated checkout title");
 
         form.AddTranslationItems(translation);
+        form.TranslateItems(translation);
 
+        translation.Received(1).AddTranslationItem(nameof(FormCheckoutBranch), "$this", "Text", "Checkout branch");
         translation.Received(1).AddTranslationItem(nameof(FormCheckoutBranch), "Ok", "Text", "&Checkout");
         translation.Received(1).AddTranslationItem(nameof(FormCheckoutBranch), "LocalBranch", "Text", "Local &branch");
         translation.Received(1).AddTranslationItem(nameof(FormCheckoutBranch), "label1", "Text", "&Select branch");
         translation.Received(1).AddTranslationItem(nameof(FormCheckoutBranch), "localChangesGB", "Text", "Local changes");
         translation.Received(1).AddTranslationItem(nameof(FormCheckoutBranch), "rbDontChange", "Text", "Do&n't change");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormCheckoutBranch),
+            "_invalidBranchName",
+            "Text",
+            "An existing branch must be selected.");
+        translation.DidNotReceive().AddTranslationItem(
+            nameof(FormCheckoutBranch),
+            "$this",
+            "Title",
+            Arg.Any<string>());
+        translation.DidNotReceive().TranslateItem(
+            nameof(FormCheckoutBranch),
+            "$this",
+            "Title",
+            Arg.Any<Func<string?>>());
+        form.Title.Should().Be("Translated checkout title");
+
+        string[] emittedKeys = translation.ReceivedCalls()
+            .Where(call => call.GetMethodInfo().Name == nameof(ITranslation.AddTranslationItem))
+            .Select(call => string.Join('.', call.GetArguments().Take(3)))
+            .ToArray();
+        emittedKeys.Distinct(StringComparer.Ordinal).Count().Should().Be(
+            emittedKeys.Length,
+            "each field must be routed through exactly one translation path");
     }
 
     [AvaloniaTest]
