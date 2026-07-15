@@ -32,6 +32,11 @@ their upstream command IDs, and Escape closes dialogs without closing the reposi
 On Linux with `setsid` available, commands shown in the process dialog run in an isolated
 process group so cancelling the dialog also terminates descendant processes, including
 children that have been re-parented.
+Tools > Git bash opens an external terminal in the repository directory. Linux uses the
+`TERMINAL` environment variable when set, then `x-terminal-emulator`, GNOME Terminal,
+Konsole, or xterm; Windows prefers Windows Terminal and falls back to Command Prompt; macOS
+opens Terminal.app. Linux launch removes inherited Snap-specific GTK/GIO overrides so a
+system terminal can start correctly when Git Extensions was launched from a Snap-hosted IDE.
 
 ## Requirements
 
