@@ -128,6 +128,7 @@ public class DiffMergeToolConfigurationManagerTests
         ((Action)(() => _configurationManager.LoadDiffMergeToolConfig(toolName!, ""))).Should().Throw<ArgumentException>();
     }
 
+    [Platform(Include = "Win")]
     [Test]
     public void LoadDiffMergeToolConfig_should_create_tool_config_with_userSuppliedPath_if_tool_unregistered()
     {
@@ -154,6 +155,7 @@ public class DiffMergeToolConfigurationManagerTests
         config.MergeCommand.Should().BeEmpty();
     }
 
+    [Platform(Include = "Win")]
     [Test]
     public void LoadDiffMergeToolConfig_should_create_tool_config_if_tool_unregistered_but_exists_path()
     {

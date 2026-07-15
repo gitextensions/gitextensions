@@ -137,9 +137,9 @@ partial class GitModuleTests
             remotes[3].PushUrls[0].Should().Be("https://github.com/gitextensions/push.git");
 
             remotes[4].Name.Should().Be("with-space");
-            remotes[4].FetchUrl.Should().Be("c:/Bare Repo");
+            remotes[4].FetchUrl.Should().Be(@"c:\Bare Repo".ToPosixPath());
             remotes[4].PushUrls.Count.Should().Be(1);
-            remotes[4].PushUrls[0].Should().Be("c:/Bare Repo");
+            remotes[4].PushUrls[0].Should().Be(@"c:\Bare Repo".ToPosixPath());
 
             remotes[5].Name.Should().Be("multi");
             remotes[5].FetchUrl.Should().Be("git@github.com:drewnoakes/gitextensions.git");
