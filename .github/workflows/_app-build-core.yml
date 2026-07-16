@@ -35,7 +35,7 @@ env:
 
 jobs:
   build:
-    name: ${{ inputs.release && 'Package' || 'Test' }}
+    name: ${{ inputs.release && 'Build + package' || 'Build + test' }}
     # A separate job for test takes too much time for transferring artifacts and setting up the job.
     # So we build and test in the same job, but upload test results as a separate artifact to be consumed by the test-report job.
     runs-on: ${{ inputs.os }}

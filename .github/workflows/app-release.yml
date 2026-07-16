@@ -13,7 +13,7 @@ concurrency:
 
 jobs:
   build:
-    name: Build & Package
+    name: ${{ matrix.os }}
     # Releases are only produced from the upstream repository, never from forks.
     if: ${{ github.repository_owner == 'gitextensions' }}
     strategy:

@@ -41,7 +41,7 @@ jobs:
         "os=$os" >> $env:GITHUB_OUTPUT
 
   build-and-test:
-    name: Build & Test
+    name: ${{ matrix.os }}
     needs: setup
     # 'release' defaults to false, so this is a CI build: it runs tests and does not package.
     strategy:
