@@ -9,13 +9,19 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Pull-Fetch/Fetch all, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. Remaining menus and toolbars are added with their dialogs."
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Pull-Fetch/Fetch all/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. Remaining menus and toolbars are added with their dialogs."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Local branches only; remote-branch create/reset flow not ported. Auto-stash works; the \"apply stashed items again?\" prompt is the upstream task dialog with its \"don't show again\" box, over the Compat TaskDialog surrogate."
+  },
+  "src/app/GitUI/CommandsDialogs/FormStash.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormStash.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Manage/create mode, worktree/index and stored-stash file lists, real diff preview, stash all/selected, apply/drop, persisted options, repository refresh binding, continuous file scrolling, and Ctrl+N/Ctrl+P/F5 hotkeys. The drop confirmation uses the Compat TaskDialog surrogate. FileViewer line patching and FileStatusList context-menu actions remain deferred."
   },
   "src/app/GitUI/CommandsDialogs/FormResolveConflicts.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResolveConflicts.axaml.cs",
@@ -96,13 +102,18 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusList.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "List with change-kind markers, exposed statuses, selection clearing, and a WinForms-shaped double-click event used by FormCommit. Grouping, filtering, multi-selection, and context menus remain deferred."
+    "notes": "List with change-kind markers, exposed statuses, configurable multi-selection, revision-aware FileStatusItem entries, worktree/index grouping, repository refresh binding, selection navigation, and WinForms-shaped selection/double-click events. Filtering, staging interactions, and context menus remain deferred."
+  },
+  "src/app/GitUI/UserControls/FileStatusItem.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusItem.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
   },
   "src/app/GitUI/Editor/FileViewer.cs": {
     "twin": "src/app/GitUI.Avalonia/Editor/FileViewer.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only diff on AvaloniaEdit; no margins, encodings menu, or blame yet."
+    "notes": "Read-only unified diff on AvaloniaEdit, including revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. No margins, encodings menu, blob/blame/range modes, or line patching yet."
   },
   "src/app/GitUI/CommitInfo/CommitInfo.cs": {
     "twin": "src/app/GitUI.Avalonia/CommitInfo/CommitInfo.axaml.cs",

@@ -82,6 +82,33 @@ public sealed class HotkeyTests
     }
 
     [Test]
+    public void HotkeySettingsManager_should_load_default_stash_hotkeys()
+    {
+        string? serializedHotkeys = AppSettings.SerializedHotkeys;
+        AppSettings.SerializedHotkeys = string.Empty;
+        try
+        {
+            IHotkeySettingsLoader loader = new HotkeySettingsManager();
+
+            IReadOnlyList<HotkeyCommand> hotkeys = loader.LoadHotkeys(FormStash.HotkeySettingsName);
+
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormStash.Command.NextStash
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.N));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormStash.Command.PreviousStash
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.P));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormStash.Command.Refresh
+                && command.KeyData == WinFormsShims.Keys.F5);
+        }
+        finally
+        {
+            AppSettings.SerializedHotkeys = serializedHotkeys!;
+        }
+    }
+
+    [Test]
     public void HotkeySettingsManager_should_apply_a_persisted_override()
     {
         string? serializedHotkeys = AppSettings.SerializedHotkeys;
