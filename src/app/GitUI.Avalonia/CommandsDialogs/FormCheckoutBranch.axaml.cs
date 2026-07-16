@@ -13,6 +13,10 @@ namespace GitUI.CommandsDialogs;
 public partial class FormCheckoutBranch : GitExtensionsDialog
 {
     private TranslationString _invalidBranchName = new("An existing branch must be selected.");
+    private readonly TranslationString _applyStashedItemsAgainCaption =
+        new("Auto stash");
+    private readonly TranslationString _applyStashedItemsAgain =
+        new("Apply stashed items to working directory again?");
 
     private readonly IReadOnlyList<ObjectId>? _containObjectIds;
     private bool? _isDirtyDir;
@@ -60,10 +64,7 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
             : null;
         localChangesGB.IsVisible = HasUncommittedChanges;
 
-        LocalChangesAction configuredAction = AppSettings.CheckoutBranchAction;
-        ChangesMode = configuredAction == LocalChangesAction.Stash
-            ? LocalChangesAction.DontChange
-            : configuredAction;
+        ChangesMode = AppSettings.CheckoutBranchAction;
 
         InitializeComplete();
     }
@@ -82,12 +83,18 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
                 return LocalChangesAction.Merge;
             }
 
+            if (rbStash.IsChecked == true)
+            {
+                return LocalChangesAction.Stash;
+            }
+
             return LocalChangesAction.DontChange;
         }
         set
         {
             rbReset.IsChecked = value == LocalChangesAction.Reset;
             rbMerge.IsChecked = value == LocalChangesAction.Merge;
+            rbStash.IsChecked = value == LocalChangesAction.Stash;
             rbDontChange.IsChecked = value == LocalChangesAction.DontChange;
         }
     }
@@ -172,11 +179,42 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
             AppSettings.CheckoutBranchAction = localChanges;
         }
 
-        return UICommands.StartCommandLineProcessDialog(
+        bool stash = false;
+        if (localChanges == LocalChangesAction.Stash)
+        {
+            if (_isDirtyDir is null && IsVisible)
+            {
+                _isDirtyDir = Module.IsDirtyDir();
+            }
+
+            stash = _isDirtyDir == true;
+            if (stash)
+            {
+                UICommands.StashSave(owner, AppSettings.IncludeUntrackedFilesInAutoStash);
+            }
+        }
+
+        if (!UICommands.StartCommandLineProcessDialog(
             owner,
-            Commands.CheckoutBranch(branchName, remote: false, localChanges))
-                ? DialogResult.OK
-                : DialogResult.None;
+            Commands.CheckoutBranch(branchName, remote: false, localChanges)))
+        {
+            return DialogResult.None;
+        }
+
+        if (stash)
+        {
+            // TODO(avalonia-port): the original offers "don't show again" through a task
+            // dialog, which Avalonia has no counterpart for; the setting is still honored.
+            bool? autoPop = AppSettings.AutoPopStashAfterCheckoutBranch;
+            autoPop ??= MessageBoxes.Show(this, _applyStashedItemsAgain.Text, _applyStashedItemsAgainCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes;
+
+            if (autoPop.Value)
+            {
+                UICommands.StashPop(this);
+            }
+        }
+
+        return DialogResult.OK;
     }
 
     private void Branches_SelectedIndexChanged(object? sender, EventArgs e)
