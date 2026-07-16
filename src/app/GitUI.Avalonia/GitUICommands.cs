@@ -130,9 +130,8 @@ public sealed class GitUICommands : IGitUICommands
         bool Action()
         {
             FormProcess.ShowDialog(owner, this, arguments: $"stash pop {stashName.QuoteNE()}", Module.WorkingDir, input: null, useDialogSettings: true);
+            MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
 
-            // TODO(avalonia-port): offer to resolve the conflicts a pop can leave behind, once
-            // the conflict dialog is ported; the process dialog shows git's message meanwhile.
             // git-stash may have changed commits also if aborted, the grid must be refreshed
             return true;
         }
@@ -158,9 +157,8 @@ public sealed class GitUICommands : IGitUICommands
         bool Action()
         {
             FormProcess.ShowDialog(owner, this, arguments: $"stash apply {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
+            MergeConflictHandler.HandleMergeConflicts(this, owner, false, false);
 
-            // TODO(avalonia-port): offer to resolve the conflicts an apply can leave behind,
-            // once the conflict dialog is ported; the process dialog shows git's message.
             // git-stash may have changed commits also if aborted, the grid must be refreshed
             return true;
         }
@@ -428,7 +426,18 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     public bool StartResetCurrentBranchDialog(IWin32Window? owner, string branch) => throw NotPorted(nameof(StartResetCurrentBranchDialog));
-    public bool StartResolveConflictsDialog(IWin32Window? owner = null, bool offerCommit = true) => throw NotPorted(nameof(StartResolveConflictsDialog));
+    public bool StartResolveConflictsDialog(IWin32Window? owner = null, bool offerCommit = true)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormResolveConflicts form = new(this, offerCommit);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartRevertCommitDialog(IWin32Window? owner, GitRevision revision) => throw NotPorted(nameof(StartRevertCommitDialog));
     public bool StartSettingsDialog(IGitPlugin gitPlugin) => throw NotPorted(nameof(StartSettingsDialog));
     public bool StartSettingsDialog(IWin32Window? owner, SettingsPageReference? initialPage = null) => throw NotPorted(nameof(StartSettingsDialog));
@@ -440,11 +449,34 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartSyncSubmodulesDialog(IWin32Window? owner) => throw NotPorted(nameof(StartSyncSubmodulesDialog));
     public bool StartTheContinueRebaseDialog(IWin32Window? owner) => throw NotPorted(nameof(StartTheContinueRebaseDialog));
     public bool StartUpdateSubmoduleDialog(IWin32Window? owner, string submoduleLocalPath, string submoduleParentPath) => throw NotPorted(nameof(StartUpdateSubmoduleDialog));
-    public bool StartUpdateSubmodulesDialog(IWin32Window? owner, string submoduleLocalPath = "") => throw NotPorted(nameof(StartUpdateSubmodulesDialog));
+    public bool StartUpdateSubmodulesDialog(IWin32Window? owner, string submoduleLocalPath = "")
+    {
+        bool Action()
+        {
+            return FormProcess.ShowDialog(owner, this, arguments: Commands.SubmoduleUpdate(submoduleLocalPath), Module.WorkingDir, input: null, useDialogSettings: true);
+        }
+
+        return DoActionOnRepo(owner, Action, postEvent: PostUpdateSubmodules);
+    }
+
     public bool StartVerifyDatabaseDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartVerifyDatabaseDialog));
     public bool StartViewPatchDialog(IWin32Window? owner, string? patchFile = null) => throw NotPorted(nameof(StartViewPatchDialog));
     public bool StartViewPatchDialog(string patchFile) => throw NotPorted(nameof(StartViewPatchDialog));
-    public void UpdateSubmodules(IWin32Window? owner) => throw NotPorted(nameof(UpdateSubmodules));
+    public void UpdateSubmodules(IWin32Window? owner)
+    {
+        if (!Module.HasSubmodules())
+        {
+            return;
+        }
+
+        bool updateSubmodules = AppSettings.UpdateSubmodulesOnCheckout ?? (AppSettings.DontConfirmUpdateSubmodulesOnCheckout ?? MessageBoxes.ConfirmUpdateSubmodules(owner));
+
+        if (updateSubmodules)
+        {
+            StartUpdateSubmodulesDialog(owner);
+        }
+    }
+
     public bool WorktreeCreate(IWin32Window? owner, string mainWorktreePath) => throw NotPorted(nameof(WorktreeCreate));
     public bool WorktreeDelete(IWin32Window? owner, string worktreePath) => throw NotPorted(nameof(WorktreeDelete));
     public bool WorktreeSwitch(IWin32Window? owner, string worktreePath) => throw NotPorted(nameof(WorktreeSwitch));

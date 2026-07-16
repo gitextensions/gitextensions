@@ -4,6 +4,7 @@ using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Shims.WinForms;
 using GitExtUtils;
+using GitUI.Compat;
 using ResourceManager;
 
 namespace GitUI.CommandsDialogs;
@@ -203,12 +204,31 @@ public partial class FormCheckoutBranch : GitExtensionsDialog
 
         if (stash)
         {
-            // TODO(avalonia-port): the original offers "don't show again" through a task
-            // dialog, which Avalonia has no counterpart for; the setting is still honored.
-            bool? autoPop = AppSettings.AutoPopStashAfterCheckoutBranch;
-            autoPop ??= MessageBoxes.Show(this, _applyStashedItemsAgain.Text, _applyStashedItemsAgainCaption.Text, MessageBoxButtons.YesNo, MessageBoxIcon.Information) == DialogResult.Yes;
+            bool? messageBoxResult = AppSettings.AutoPopStashAfterCheckoutBranch;
+            if (messageBoxResult is null)
+            {
+                TaskDialogPage page = new()
+                {
+                    Text = _applyStashedItemsAgain.Text,
+                    Caption = _applyStashedItemsAgainCaption.Text,
+                    Icon = TaskDialogIcon.Information,
+                    Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                    Verification = new TaskDialogVerificationCheckBox
+                    {
+                        Text = TranslatedStrings.DontShowAgain
+                    },
+                    SizeToContent = true
+                };
 
-            if (autoPop.Value)
+                messageBoxResult = TaskDialog.ShowDialog(this, page) == TaskDialogButton.Yes;
+
+                if (page.Verification.Checked)
+                {
+                    AppSettings.AutoPopStashAfterCheckoutBranch = messageBoxResult;
+                }
+            }
+
+            if (messageBoxResult ?? false)
             {
                 UICommands.StashPop(this);
             }
