@@ -1,10 +1,12 @@
+using Avalonia.Controls;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Shims.WinForms;
+using GitUI.HelperDialogs;
 
 namespace GitUI.UserControls;
 
-/// <summary>Small revision picker; the initial port accepts a revision name or SHA as text.</summary>
+/// <summary>Small revision picker accepting a revision name/SHA or the shared commit chooser.</summary>
 public partial class CommitPickerSmallControl : GitModuleControl
 {
     /// <summary>Occurs whenever the selected commit changes.</summary>
@@ -14,6 +16,7 @@ public partial class CommitPickerSmallControl : GitModuleControl
     {
         InitializeComponent();
         textBoxCommitHash.LostFocus += textBoxCommitHash_TextLeave;
+        buttonPickCommit.Click += buttonPickCommit_Click;
         InitializeComplete();
     }
 
@@ -46,5 +49,17 @@ public partial class CommitPickerSmallControl : GitModuleControl
     private void textBoxCommitHash_TextLeave(object? sender, EventArgs e)
     {
         SetSelectedCommitHash(textBoxCommitHash.Text?.Trim());
+    }
+
+    private void buttonPickCommit_Click(object? sender, EventArgs e)
+    {
+        using FormChooseCommit chooseForm = new(
+            UICommands,
+            SelectedObjectId.IsZero ? null : SelectedObjectId.ToString());
+        if (chooseForm.ShowDialog(TopLevel.GetTopLevel(this) as IWin32Window) == DialogResult.OK
+            && chooseForm.SelectedRevision is not null)
+        {
+            SetSelectedCommitHash(chooseForm.SelectedRevision.ObjectId.ToString());
+        }
     }
 }

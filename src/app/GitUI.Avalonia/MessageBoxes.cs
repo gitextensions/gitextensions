@@ -1,4 +1,5 @@
 using GitCommands;
+using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Translations;
 using GitUI.Compat;
 using ResourceManager;
@@ -10,6 +11,10 @@ namespace GitUI;
 // translated helpers join this class as their Avalonia consumers are ported.
 public class MessageBoxes : Translate
 {
+    private readonly TranslationString _cannotFindRevisionFilter = new(@"Revision ""{0}"" is not visible in the revision grid. Remove the revision filter.");
+    private readonly TranslationString _cannotFindRevisionCaption = new("Cannot find revision");
+    private readonly TranslationString _noRevisionFoundError = new("No revision found.");
+
     private readonly TranslationString _failedToRunShell = new("Failed to run shell");
     private readonly TranslationString _reason = new("Reason");
 
@@ -33,6 +38,12 @@ public class MessageBoxes : Translate
     }
 
     private static MessageBoxes Instance => field ??= new();
+
+    public static void RevisionFilteredInGrid(WinFormsShims.IWin32Window? owner, ObjectId objectId)
+        => ShowError(owner, string.Format(Instance._cannotFindRevisionFilter.Text, objectId.ToShortString()), Instance._cannotFindRevisionCaption.Text);
+
+    public static void CannotFindGitRevision(WinFormsShims.IWin32Window? owner)
+        => ShowError(owner, Instance._noRevisionFoundError.Text, Instance._cannotFindRevisionCaption.Text);
 
     public static void FailedToRunShell(WinFormsShims.IWin32Window? owner, string shell, Exception ex)
         => ShowError(owner, $"{Instance._failedToRunShell.Text} {shell.Quote()}.{Environment.NewLine}"
