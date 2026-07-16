@@ -335,7 +335,20 @@ public sealed class GitUICommands : IGitUICommands
 
     public void StartCreatePullRequest(IWin32Window? owner) => throw NotPorted(nameof(StartCreatePullRequest));
     public void StartCreatePullRequest(IWin32Window? owner, IRepositoryHostPlugin gitHoster, string? chooseRemote = null, string? chooseBranch = null) => throw NotPorted(nameof(StartCreatePullRequest));
-    public bool StartCreateTagDialog(IWin32Window? owner = null, GitRevision? revision = null) => throw NotPorted(nameof(StartCreateTagDialog));
+    public bool StartCreateTagDialog(IWin32Window? owner = null, GitRevision? revision = null)
+    {
+        if (revision?.IsArtificial is true)
+        {
+            return false;
+        }
+
+        return DoActionOnRepo(owner, action: () =>
+        {
+            using CommandsDialogs.FormCreateTag form = new(this, revision?.ObjectId ?? default);
+            return form.ShowDialog(owner) == DialogResult.OK;
+        });
+    }
+
     public bool StartDeleteBranchDialog(IWin32Window? owner, IEnumerable<string> branches) => throw NotPorted(nameof(StartDeleteBranchDialog));
     public bool StartDeleteBranchDialog(IWin32Window? owner, string branch) => throw NotPorted(nameof(StartDeleteBranchDialog));
     public bool StartDeleteRemoteBranchDialog(IWin32Window? owner, string remoteBranch) => throw NotPorted(nameof(StartDeleteRemoteBranchDialog));

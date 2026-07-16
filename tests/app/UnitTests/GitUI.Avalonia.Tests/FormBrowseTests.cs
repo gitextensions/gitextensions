@@ -17,6 +17,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
+using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
@@ -140,6 +141,8 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Checkout-branch menu item was not created.");
             MenuItem createBranch = revisionGrid.FindControl<MenuItem>("createNewBranchToolStripMenuItem")
                 ?? throw new InvalidOperationException("Create-branch menu item was not created.");
+            MenuItem createTag = revisionGrid.FindControl<MenuItem>("createTagToolStripMenuItem")
+                ?? throw new InvalidOperationException("Create-tag menu item was not created.");
             ListBox revisions = revisionGrid.FindControl<ListBox>("lstRevisions")
                 ?? throw new InvalidOperationException("Revision list was not created.");
 
@@ -154,13 +157,18 @@ public sealed class FormBrowseTests
             ObjectId selectedObjectId = revisionGrid.SelectedRevision!.ObjectId;
             checkoutBranch.IsEnabled.Should().BeTrue();
             createBranch.IsEnabled.Should().BeTrue();
+            createTag.IsEnabled.Should().BeTrue();
             checkoutBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
             createBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+            createTag.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
             commands.Received(1).StartCheckoutBranch(
                 form,
                 Arg.Is<IReadOnlyList<ObjectId>>(objectIds => objectIds.SequenceEqual(new[] { selectedObjectId })));
             commands.Received(1).StartCreateBranchDialog(form, selectedObjectId);
+            commands.Received(1).StartCreateTagDialog(
+                form,
+                Arg.Is<GitRevision>(revision => revision.ObjectId == selectedObjectId));
         }
         finally
         {
