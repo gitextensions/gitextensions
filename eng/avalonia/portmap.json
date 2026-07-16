@@ -9,7 +9,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Pull-Fetch/Fetch all/Merge branches/Rebase/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The main panes now use shared semantic borders/splitters and retain usable bounds at the WinForms-sized minimum window. Remaining menus and toolbars are added with their dialogs."
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Delete branch/Pull-Fetch/Fetch all/Merge branches/Rebase/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The main panes now use shared semantic borders/splitters and retain usable bounds at the WinForms-sized minimum window. Remaining menus and toolbars are added with their dialogs."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
@@ -76,6 +76,12 @@
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Creates lightweight, annotated, default-key-signed, or specific-key-signed tags through the shared GitTagController, with revision picking, force, and optional push. EditNetSpell is represented by the same-named multiline TextBox until Phase 3.21; push uses FormProcess until FormRemoteProcess and push event scripts are ported."
+  },
+  "src/app/GitUI/CommandsDialogs/FormDeleteBranch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteBranch.axaml.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Local branch selection and forced deletion preserve the upstream current-branch, unmerged-branch, main/linked/stale-worktree safety flow. The Compat TaskDialog supplies the explicit default button and reflog footnote used by the confirmations."
   },
   "src/app/GitUI/CommandsDialogs/FormCommit.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommit.axaml.cs",
@@ -325,7 +331,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Process, normal-commit, push, pull/fetch, local-checkout, create-branch, create-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, add-files, resolve-conflicts, and submodule-update members are real; unported members throw NotImplementedException."
+    "notes": "Process, normal-commit, push, pull/fetch, local-checkout, create-branch, create-tag, delete-branch, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, add-files, resolve-conflicts, and submodule-update members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/ServiceContainerRegistry.cs": {
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
