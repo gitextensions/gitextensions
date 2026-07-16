@@ -1,0 +1,62 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="using:GitUI"
+        x:Class="GitUI.HelperDialogs.FormChooseCommit"
+        Width="1105"
+        Height="515"
+        MinWidth="720"
+        MinHeight="360"
+        WindowStartupLocation="CenterOwner"
+        Title="Choose Commit">
+  <Grid x:Name="tableLayoutPanel1"
+        RowDefinitions="*,Auto"
+        ColumnDefinitions="Auto,*,Auto">
+    <gitui:RevisionGridControl x:Name="revisionGrid"
+                               Grid.ColumnSpan="3"
+                               Margin="4"
+                               MinWidth="250"
+                               MinHeight="125" />
+
+    <StackPanel x:Name="flowLayoutPanel1"
+                Grid.Row="1"
+                Margin="4"
+                Orientation="Horizontal"
+                Spacing="6">
+      <TextBlock x:Name="label1"
+                 VerticalAlignment="Center"
+                 Text="Find specific commit:" />
+      <TextBox x:Name="txtGotoCommit"
+               Width="150" />
+      <Button x:Name="buttonGotoCommit"
+              Content="Go to commit..." />
+    </StackPanel>
+
+    <StackPanel x:Name="flowLayoutPanelParents"
+                Grid.Row="1"
+                Grid.Column="1"
+                Margin="4"
+                Orientation="Horizontal"
+                HorizontalAlignment="Center"
+                Spacing="4"
+                IsVisible="False">
+      <TextBlock x:Name="labelParents"
+                 VerticalAlignment="Center"
+                 Text="Parent(s):" />
+      <HyperlinkButton x:Name="linkLabelParent"
+                       Content="sha parent 1"
+                       IsVisible="False" />
+      <HyperlinkButton x:Name="linkLabelParent2"
+                       Content="sha parent 2"
+                       IsVisible="False" />
+    </StackPanel>
+
+    <Button x:Name="btnOK"
+            Grid.Row="1"
+            Grid.Column="2"
+            Margin="4"
+            MinWidth="100"
+            HorizontalAlignment="Right"
+            Content="OK"
+            IsDefault="True" />
+  </Grid>
+</Window>

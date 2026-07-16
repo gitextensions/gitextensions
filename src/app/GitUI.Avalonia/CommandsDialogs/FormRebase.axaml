@@ -1,5 +1,6 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="using:GitUI"
         xmlns:help="using:GitUI.Help"
         x:Class="GitUI.CommandsDialogs.FormRebase"
         Width="1034"
@@ -35,10 +36,9 @@
                       Grid.Row="2"
                       Orientation="Horizontal"
                       Spacing="8">
-            <Label x:Name="label2"
-                   Content="_Rebase on"
-                   Target="{Binding #cboBranches}"
-                   VerticalAlignment="Center" />
+            <TextBlock x:Name="label2"
+                       Text="_Rebase on"
+                       VerticalAlignment="Center" />
             <ComboBox x:Name="cboBranches"
                       Width="300"
                       IsEditable="True" />
@@ -53,14 +53,13 @@
             <CheckBox x:Name="chkInteractive"
                       Margin="0,0,10,4"
                       Content="_Interactive Rebase"
-                      IsVisible="False" />
+                      IsVisible="True" />
             <CheckBox x:Name="chkPreserveMerges"
                       Margin="0,0,10,4"
                       Content="_Preserve Merges" />
             <CheckBox x:Name="chkAutosquash"
                       Margin="0,0,10,4"
                       Content="Autos_quash"
-                      IsVisible="False"
                       IsEnabled="False" />
             <CheckBox x:Name="chkStash"
                       Margin="0,0,10,4"
@@ -84,37 +83,36 @@
                       IsVisible="False">
             <CheckBox x:Name="chkSpecificRange"
                       Content="Specific ra_nge" />
-            <Label x:Name="lblRangeFrom"
-                   Content="_From (exc.)"
-                   Target="{Binding #txtFrom}"
-                   VerticalAlignment="Center" />
+            <TextBlock x:Name="lblRangeFrom"
+                       Text="_From (exc.)"
+                       VerticalAlignment="Center" />
             <TextBox x:Name="txtFrom"
                      Width="100"
                      IsEnabled="False" />
             <Button x:Name="btnChooseFromRevision"
                     Width="26"
                     Content="…"
-                    IsVisible="False"
                     IsEnabled="False" />
-            <Label x:Name="lblRangeTo"
-                   Content="_To"
-                   Target="{Binding #cboTo}"
-                   VerticalAlignment="Center" />
+            <TextBlock x:Name="lblRangeTo"
+                       Text="_To"
+                       VerticalAlignment="Center" />
             <ComboBox x:Name="cboTo"
                       Width="200"
                       IsEditable="True"
                       IsEnabled="False" />
           </StackPanel>
 
-          <!-- PatchGrid belongs to interactive rebase visualization and is retained only
-               as a named layout placeholder until that control is ported. -->
-          <TextBlock x:Name="lblCommitsToReapply"
-                     Grid.Row="5"
-                     Text="Commits to re-apply:"
-                     IsVisible="False" />
-          <Border x:Name="PatchGrid"
-                  Grid.Row="5"
-                  IsVisible="False" />
+          <DockPanel Grid.Row="5">
+            <TextBlock x:Name="lblCommitsToReapply"
+                       DockPanel.Dock="Top"
+                       Margin="0,0,0,4"
+                       Text="Commits to re-apply:"
+                       IsVisible="False" />
+            <gitui:PatchGrid x:Name="PatchGrid"
+                             Margin="0,24,0,0"
+                             MinHeight="180"
+                             IsVisible="False" />
+          </DockPanel>
 
           <Grid x:Name="tlpnlSecondaryControls"
                 Grid.Row="6"

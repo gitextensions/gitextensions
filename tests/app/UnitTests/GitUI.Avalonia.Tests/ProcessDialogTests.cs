@@ -110,7 +110,12 @@ public sealed class ProcessDialogTests
     [AvaloniaTest]
     public void FormProcess_Escape_should_close_through_the_shared_dialog_handler()
     {
-        using FormProcess form = new(CreateCommands(Path.GetTempPath()), arguments: "version", Path.GetTempPath(), input: null, useDialogSettings: true);
+        using FormProcess form = new(
+            CreateCommands(Path.GetTempPath()),
+            arguments: "version",
+            Path.GetTempPath(),
+            input: null,
+            useDialogSettings: false);
         form.Show();
 
         form.KeyPress(Key.Escape, RawInputModifiers.None, PhysicalKey.Escape, keySymbol: null);

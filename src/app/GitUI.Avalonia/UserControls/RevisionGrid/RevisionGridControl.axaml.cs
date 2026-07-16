@@ -9,6 +9,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitExtUtils.GitUI.Theming;
 using GitUI.Theming;
+using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUI.UserControls.RevisionGrid.Graph.Rendering;
 using GitUIPluginInterfaces;
@@ -40,6 +41,7 @@ public partial class RevisionGridControl : GitModuleControl
     private readonly RevisionGraph _revisionGraph = new();
     private RevisionGraphConfig _config = new();
     private ObjectId? _headId;
+    private ObjectId _pendingSelectedObjectId;
     private bool _headHighlighted;
     private ILookup<ObjectId, IGitRef>? _refsByObjectId;
 
@@ -53,6 +55,8 @@ public partial class RevisionGridControl : GitModuleControl
             UpdateContextMenuItems();
             SelectionChanged?.Invoke(this, EventArgs.Empty);
         };
+        lstRevisions.DoubleTapped += (_, _) =>
+            DoubleClickRevision?.Invoke(this, new DoubleClickRevisionEventArgs(SelectedRevision));
         lstRevisions.PointerPressed += lstRevisions_PointerPressed;
         revisionContextMenu.Opening += (_, _) => UpdateContextMenuItems();
         checkoutBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
@@ -72,17 +76,29 @@ public partial class RevisionGridControl : GitModuleControl
     /// </summary>
     public event EventHandler? SelectionChanged;
 
+    /// <summary>Occurs when the selected revision is double-clicked.</summary>
+    public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
+
     /// <summary>
     ///  Selects and scrolls to the given revision if it is loaded.
     /// </summary>
     public void SelectRevision(ObjectId objectId)
     {
+        SetSelectedRevision(objectId);
+    }
+
+    /// <summary>Selects and scrolls to the given revision if it is loaded.</summary>
+    public bool SetSelectedRevision(ObjectId objectId)
+    {
         GitRevision? revision = _revisions.Find(r => r.ObjectId == objectId);
-        if (revision is not null)
+        if (revision is null)
         {
-            lstRevisions.SelectedItem = revision;
-            lstRevisions.ScrollIntoView(revision);
+            return false;
         }
+
+        lstRevisions.SelectedItem = revision;
+        lstRevisions.ScrollIntoView(revision);
+        return true;
     }
 
     private void lstRevisions_PointerPressed(object? sender, PointerPressedEventArgs e)
@@ -131,7 +147,10 @@ public partial class RevisionGridControl : GitModuleControl
     ///  Starts (re)loading the history of <paramref name="module"/> in the background,
     ///  streaming batches into the list as they are parsed.
     /// </summary>
-    public void ReloadRevisions(IGitModule module)
+    public void ReloadRevisions(
+        IGitModule module,
+        string revisionFilter = "--all",
+        ObjectId selectedObjectId = default)
     {
         CancellationToken cancellationToken = _refreshSequence.Next();
 
@@ -139,6 +158,7 @@ public partial class RevisionGridControl : GitModuleControl
         _revisionGraph.Clear();
         _config = new RevisionGraphConfig();
         _headId = module.GetCurrentCheckout();
+        _pendingSelectedObjectId = selectedObjectId;
         _headHighlighted = false;
         lstRevisions.ItemsSource = null;
         lblLoadingStatus.Text = "Loading…";
@@ -153,7 +173,7 @@ public partial class RevisionGridControl : GitModuleControl
                 .ToLookup(gitRef => gitRef.ObjectId);
 
             RevisionReader reader = new(module);
-            reader.GetLog(observer, revisionFilter: "--all", pathFilter: "", hasNotes: false, autostashLabel: "autostash", cancellationToken);
+            reader.GetLog(observer, revisionFilter, pathFilter: "", hasNotes: false, autostashLabel: "autostash", cancellationToken);
         });
     }
 
@@ -203,6 +223,7 @@ public partial class RevisionGridControl : GitModuleControl
         // few (the reader flushes at most every 500 ms).
         lstRevisions.ItemsSource = _revisions.ToArray();
         lblLoadingStatus.Text = $"{_revisions.Count} revisions…";
+        SelectPendingRevision();
     }
 
     private void OnLoadingCompleted(CancellationToken cancellationToken)
@@ -216,12 +237,23 @@ public partial class RevisionGridControl : GitModuleControl
         // realized row controls render again, so refresh the list once at the end.
         lstRevisions.ItemsSource = _revisions.ToArray();
         lblLoadingStatus.Text = $"{_revisions.Count} revisions";
+        SelectPendingRevision();
 
         // Like the WinForms grid, select a row when loading finishes.
         if (lstRevisions.SelectedItem is null && _revisions.Count > 0)
         {
             lstRevisions.SelectedIndex = 0;
         }
+    }
+
+    private void SelectPendingRevision()
+    {
+        if (_pendingSelectedObjectId.IsZero || !SetSelectedRevision(_pendingSelectedObjectId))
+        {
+            return;
+        }
+
+        _pendingSelectedObjectId = default;
     }
 
     private void OnLoadingError(Exception exception, CancellationToken cancellationToken)

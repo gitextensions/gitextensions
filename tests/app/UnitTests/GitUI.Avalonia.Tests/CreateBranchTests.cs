@@ -32,7 +32,7 @@ public sealed class CreateBranchTests
     }
 
     [AvaloniaTest]
-    public void FormCreateBranch_should_construct_with_reduced_commit_controls()
+    public void FormCreateBranch_should_construct_with_commit_chooser()
     {
         FormCreateBranch form = new();
 
@@ -41,7 +41,7 @@ public sealed class CreateBranchTests
             ?? throw new InvalidOperationException("Commit picker was not created.");
         Button pickCommit = picker.FindControl<Button>("buttonPickCommit")
             ?? throw new InvalidOperationException("Pick-commit button was not created.");
-        pickCommit.IsVisible.Should().BeFalse("the revision chooser is not ported yet");
+        pickCommit.IsVisible.Should().BeTrue();
     }
 
     [AvaloniaTest]
