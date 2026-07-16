@@ -97,6 +97,12 @@ public partial class RevisionGridControl : GitModuleControl
         SetSelectedRevision(objectId);
     }
 
+    /// <summary>Removes the row context menu, like the WinForms grid method.</summary>
+    public void DisableContextMenu()
+    {
+        lstRevisions.ContextMenu = null;
+    }
+
     /// <summary>Selects and scrolls to the given revision if it is loaded.</summary>
     public bool SetSelectedRevision(ObjectId objectId)
     {
@@ -184,7 +190,8 @@ public partial class RevisionGridControl : GitModuleControl
     public void ReloadRevisions(
         IGitModule module,
         string revisionFilter = "--all",
-        ObjectId selectedObjectId = default)
+        ObjectId selectedObjectId = default,
+        string pathFilter = "")
     {
         CancellationToken cancellationToken = _refreshSequence.Next();
 
@@ -221,7 +228,7 @@ public partial class RevisionGridControl : GitModuleControl
                 .ToLookup(gitRef => gitRef.ObjectId);
 
             RevisionReader reader = new(module);
-            reader.GetLog(observer, revisionFilter, pathFilter: "", hasNotes: false, autostashLabel: "autostash", cancellationToken);
+            reader.GetLog(observer, revisionFilter, pathFilter, hasNotes: false, autostashLabel: "autostash", cancellationToken);
         });
     }
 
