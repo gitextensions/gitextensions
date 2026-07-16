@@ -1,3 +1,4 @@
+using Avalonia.Controls;
 using Avalonia.Headless.NUnit;
 using Avalonia.Threading;
 using GitCommands;
@@ -39,6 +40,7 @@ public sealed class ResolveConflictsTests
         form.customMergetool.IsVisible.Should().BeFalse("custom merge tools are not ported yet");
         form.fileHistoryToolStripMenuItem.IsVisible.Should().BeFalse("the file history form is not ported yet");
         form.progressBar.IsVisible.Should().BeFalse();
+        form.FindControl<GitUI.UserControls.GotoUserManualControl>("gotoUserManualControl1").Should().NotBeNull();
     }
 
     [AvaloniaTest]

@@ -67,6 +67,7 @@
     <AvaloniaResource Include="..\GitUI\Resources\Help\HelpCommandMerge.png" Link="Resources\Help\HelpCommandMerge.png" />
     <AvaloniaResource Include="..\GitUI\Resources\Help\HelpCommandMergeFastForward.png" Link="Resources\Help\HelpCommandMergeFastForward.png" />
     <AvaloniaResource Include="..\GitUI\Resources\Help\HelpCommandRebase.png" Link="Resources\Help\HelpCommandRebase.png" />
+    <AvaloniaResource Include="..\GitUI\Resources\Icons\GotoManual.png" Link="Resources\Icons\GotoManual.png" />
   </ItemGroup>
 
   <ItemGroup>
