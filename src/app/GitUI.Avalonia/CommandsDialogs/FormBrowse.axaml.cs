@@ -58,6 +58,7 @@ public sealed partial class FormBrowse : GitModuleForm
         branchToolStripMenuItem.Click += CreateBranchToolStripMenuItemClick;
         pullToolStripMenuItem.Click += PullToolStripMenuItemClick;
         fetchAllToolStripMenuItem.Click += fetchAllToolStripMenuItem_Click;
+        stashToolStripMenuItem.Click += StashToolStripMenuItemClick;
         userShell.Click += userShell_Click;
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
 
@@ -84,6 +85,7 @@ public sealed partial class FormBrowse : GitModuleForm
         branchToolStripMenuItem.IsEnabled = isValidWorkingDir;
         pullToolStripMenuItem.IsEnabled = isValidWorkingDir;
         fetchAllToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        stashToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
 
         if (isValidWorkingDir)
         {
@@ -223,6 +225,11 @@ public sealed partial class FormBrowse : GitModuleForm
         {
             UICommands.RepoChangedNotifier.Notify();
         }
+    }
+
+    private void StashToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartStashDialog(this);
     }
 
     private void userShell_Click(object? sender, EventArgs e)

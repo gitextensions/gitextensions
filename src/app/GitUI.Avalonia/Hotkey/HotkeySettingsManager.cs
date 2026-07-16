@@ -63,6 +63,11 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
                 Hk(FormResolveConflicts.Commands.ChooseRemote, WinFormsShims.Keys.R),
                 Hk(FormResolveConflicts.Commands.Merge, WinFormsShims.Keys.M),
                 Hk(FormResolveConflicts.Commands.Rescan, WinFormsShims.Keys.F5)),
+            new HotkeySettings(
+                FormStash.HotkeySettingsName,
+                Hk(FormStash.Command.NextStash, WinFormsShims.Keys.Control | WinFormsShims.Keys.N),
+                Hk(FormStash.Command.PreviousStash, WinFormsShims.Keys.Control | WinFormsShims.Keys.P),
+                Hk(FormStash.Command.Refresh, WinFormsShims.Keys.F5)),
         ];
     }
 
