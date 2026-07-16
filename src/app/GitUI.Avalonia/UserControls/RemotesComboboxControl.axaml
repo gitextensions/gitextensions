@@ -1,0 +1,18 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitUI.UserControls.RemotesComboboxControl"
+             MinWidth="181"
+             MinHeight="25">
+  <Grid x:Name="tableLayoutPanel1"
+        ColumnDefinitions="*,Auto">
+    <ComboBox x:Name="comboBoxRemotes"
+              HorizontalAlignment="Stretch"
+              IsEditable="True" />
+    <Button x:Name="buttonSelectMultipleRemotes"
+            Grid.Column="1"
+            Width="26"
+            Margin="4,0,0,0"
+            Content="..."
+            IsVisible="False" />
+  </Grid>
+</UserControl>
