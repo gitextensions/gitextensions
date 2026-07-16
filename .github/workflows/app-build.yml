@@ -1,0 +1,81 @@
+name: App build and test
+
+on:
+  push:
+    branches:
+      - master
+      - release
+      - 'release/**'
+      - 'experimental/**'
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/master' && github.ref != 'refs/heads/release' && !startsWith(github.ref, 'refs/heads/release/') }}
+
+jobs:
+  setup:
+    name: Resolve build matrix
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      os: ${{ steps.matrix.outputs.os }}
+    steps:
+    - name: Resolve OS matrix
+      id: matrix
+      shell: pwsh
+      run: |
+        $ref = "${{ github.ref }}"
+        # Release branches validate both architectures; other branches build x64 only to save CI minutes.
+        if ($ref -eq "refs/heads/release" -or $ref.StartsWith("refs/heads/release/"))
+        {
+          $os = '["windows-latest", "windows-11-arm"]'
+        }
+        else
+        {
+          $os = '["windows-latest"]'
+        }
+
+        "os=$os" >> $env:GITHUB_OUTPUT
+
+  build-and-test:
+    name: Build & Test
+    needs: setup
+    # 'release' defaults to false, so this is a CI build: it runs tests and does not package.
+    strategy:
+      fail-fast: false
+      matrix:
+        os: ${{ fromJson(needs.setup.outputs.os) }}
+    uses: ./.github/workflows/_app-build-core.yml
+    with:
+      os: ${{ matrix.os }}
+
+  test-report:
+    name: Test Report
+    runs-on: ubuntu-latest
+    needs: build-and-test
+    if: always() && needs.build-and-test.outputs.has-test-results == 'true'
+    permissions:
+      actions: read
+      contents: read
+      checks: write
+
+    steps:
+    - name: Download test results
+      uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093 # v4
+      with:
+        # Gather every per-architecture test-results artifact produced by the build matrix.
+        pattern: test-results-*
+        path: test-results
+        merge-multiple: true
+
+    - name: Create test report
+      uses: dorny/test-reporter@a43b3a5f7366b97d083190328d2c652e1a8b6aa2 # v3.0.0
+      continue-on-error: true
+      with:
+        name: Test Results
+        path: '**/*.trx'
+        reporter: dotnet-trx
+        max-annotations: 50  # do not increase over the allowed maximum of 50
