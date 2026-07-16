@@ -64,6 +64,8 @@ public sealed partial class FormBrowse : GitModuleForm
         fetchAllToolStripMenuItem.Click += fetchAllToolStripMenuItem_Click;
         mergeBranchToolStripMenuItem.Click += MergeBranchToolStripMenuItemClick;
         rebaseToolStripMenuItem.Click += RebaseToolStripMenuItemClick;
+        tagToolStripMenuItem.Click += TagToolStripMenuItemClick;
+        deleteTagToolStripMenuItem.Click += DeleteTagToolStripMenuItemClick;
         stashToolStripMenuItem.Click += StashToolStripMenuItemClick;
         userShell.Click += userShell_Click;
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
@@ -94,6 +96,8 @@ public sealed partial class FormBrowse : GitModuleForm
         fetchAllToolStripMenuItem.IsEnabled = isValidWorkingDir;
         mergeBranchToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
         rebaseToolStripMenuItem.IsEnabled = false;
+        tagToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        deleteTagToolStripMenuItem.IsEnabled = isValidWorkingDir;
         stashToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
 
         if (isValidWorkingDir)
@@ -264,6 +268,16 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.StartRebaseDialog(this, revision.ObjectId.ToString());
     }
 
+    private void TagToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartCreateTagDialog(this, RevisionGrid.SelectedRevision);
+    }
+
+    private void DeleteTagToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartDeleteTagDialog(this, null);
+    }
+
     private void userShell_Click(object? sender, EventArgs e)
     {
         try
@@ -288,7 +302,7 @@ public sealed partial class FormBrowse : GitModuleForm
             case Command.Push: UICommands.StartPushDialog(this, pushOnShow: false); break;
             case Command.CreateBranch: CreateBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.MergeBranches: MergeBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
-            case Command.CreateTag: UICommands.StartCreateTagDialog(this, RevisionGrid.SelectedRevision); break;
+            case Command.CreateTag: TagToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.Rebase: RebaseToolStripMenuItemClick(this, EventArgs.Empty); break;
             default: return base.ExecuteCommand(command);
         }
