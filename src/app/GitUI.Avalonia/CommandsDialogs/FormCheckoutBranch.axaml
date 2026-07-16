@@ -50,7 +50,7 @@
               <RadioButton x:Name="rbDontChange" Content="Do_n't change" />
               <RadioButton x:Name="rbMerge" Content="_Merge" />
               <!-- Auto-stash depends on the later stash-dialog port. -->
-              <RadioButton x:Name="rbStash" Content="S_tash" IsVisible="False" />
+              <RadioButton x:Name="rbStash" Content="S_tash" />
               <RadioButton x:Name="rbReset" Content="_Reset" />
               <CheckBox x:Name="chkSetLocalChangesActionAsDefault" Content="Set as _default" />
             </StackPanel>

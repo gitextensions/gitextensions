@@ -74,6 +74,60 @@ public sealed class CheckoutBranchTests
         module.Received().GetRefs(RefsFilter.Heads);
     }
 
+    [AvaloniaTest]
+    public void OkClick_should_stash_before_checkout_and_pop_afterwards()
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands("main", "feature");
+        module.IsDirtyDir().Returns(true);
+        commands.StartCommandLineProcessDialog(Arg.Any<WinFormsShims.IWin32Window>(), Arg.Any<IGitCommand>()).Returns(true);
+
+        bool? original = AppSettings.AutoPopStashAfterCheckoutBranch;
+        try
+        {
+            // Answer the "apply stashed items again?" question without showing it.
+            AppSettings.AutoPopStashAfterCheckoutBranch = true;
+
+            FormCheckoutBranch form = new(commands, branch: string.Empty, remote: false);
+            ComboBox branches = form.FindControl<ComboBox>("Branches")!;
+            RadioButton stash = form.FindControl<RadioButton>("rbStash")!;
+            Button ok = form.FindControl<Button>("Ok")!;
+
+            stash.IsVisible.Should().BeTrue("stashing local changes is offered again");
+
+            branches.SelectedItem = "feature";
+            stash.IsChecked = true;
+            ok.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+            commands.Received(1).StashSave(Arg.Any<WinFormsShims.IWin32Window>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<string>(), Arg.Any<IReadOnlyList<string>>());
+            commands.Received(1).StashPop(Arg.Any<WinFormsShims.IWin32Window>(), Arg.Any<string>());
+            form.DialogResult.Should().Be(WinFormsShims.DialogResult.OK);
+        }
+        finally
+        {
+            AppSettings.AutoPopStashAfterCheckoutBranch = original;
+        }
+    }
+
+    [AvaloniaTest]
+    public void OkClick_should_not_stash_a_clean_working_directory()
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands("main", "feature");
+        module.IsDirtyDir().Returns(false);
+        commands.StartCommandLineProcessDialog(Arg.Any<WinFormsShims.IWin32Window>(), Arg.Any<IGitCommand>()).Returns(true);
+
+        FormCheckoutBranch form = new(commands, branch: string.Empty, remote: false);
+        ComboBox branches = form.FindControl<ComboBox>("Branches")!;
+        RadioButton stash = form.FindControl<RadioButton>("rbStash")!;
+        Button ok = form.FindControl<Button>("Ok")!;
+
+        branches.SelectedItem = "feature";
+        stash.IsChecked = true;
+        ok.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+        commands.DidNotReceive().StashSave(Arg.Any<WinFormsShims.IWin32Window>(), Arg.Any<bool>(), Arg.Any<bool>(), Arg.Any<string>(), Arg.Any<IReadOnlyList<string>>());
+        commands.DidNotReceive().StashPop(Arg.Any<WinFormsShims.IWin32Window>(), Arg.Any<string>());
+    }
+
     [Test]
     public void StartCheckoutBranch_should_honor_pre_checkout_cancellation()
     {
