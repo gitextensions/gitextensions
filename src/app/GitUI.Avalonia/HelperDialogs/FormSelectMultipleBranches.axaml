@@ -1,0 +1,20 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="GitUI.HelperDialogs.FormSelectMultipleBranches"
+        Width="320"
+        Height="360"
+        MinWidth="200"
+        MinHeight="200"
+        WindowStartupLocation="CenterOwner"
+        Title="Select multiple branches">
+  <Grid Margin="12" RowDefinitions="Auto,*,Auto" RowSpacing="8">
+    <TextBlock x:Name="selectBranchesLabel" Text="Select branches" />
+    <ListBox x:Name="Branches" Grid.Row="1" SelectionMode="Multiple" />
+    <Button x:Name="okButton"
+            Grid.Row="2"
+            MinWidth="75"
+            HorizontalAlignment="Right"
+            Content="OK"
+            IsDefault="True" />
+  </Grid>
+</Window>
