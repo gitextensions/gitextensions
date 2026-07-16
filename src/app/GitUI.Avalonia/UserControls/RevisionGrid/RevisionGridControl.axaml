@@ -11,6 +11,8 @@
           <MenuItem x:Name="createTagToolStripMenuItem"
                     Header="Create new ta_g here..."
                     InputGesture="Ctrl+T" />
+          <!-- One sub-item per local branch on the commit, filled when the menu opens. -->
+          <MenuItem x:Name="renameBranchToolStripMenuItem" Header="R_ename branch..." />
         </ContextMenu>
       </ListBox.ContextMenu>
       <ListBox.Styles>
