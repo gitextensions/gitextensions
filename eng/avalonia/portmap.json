@@ -111,7 +111,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters, double-click notification, and the first context-menu actions: checkout a local branch containing the selected commit, create a branch, and create a tag at it. Like WinForms, the graph column is six pixels plus the lane width needed by the currently realized rows, the message column has its own six-pixel inset, and the checked-out commit title is bold. Refs mark the checked-out branch and matching tracking remote before rows are attached. Remaining menu items, column providers, and hotkeys are deferred."
+    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters, double-click notification, and the first context-menu actions: checkout a local branch containing the selected commit, create a branch or tag at it, and the per-branch rename dropdown (underscores escaped for Avalonia access keys). Like WinForms, the graph column is six pixels plus the lane width needed by the currently realized rows, the message column has its own six-pixel inset, and the checked-out commit title is bold. Refs mark the checked-out branch and matching tracking remote before rows are attached. Remaining menu items, column providers, and hotkeys are deferred."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridRefRenderer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridRefRenderer.cs",
@@ -349,7 +349,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Process, normal-commit, push, pull/fetch, local-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, add-files, resolve-conflicts, and submodule-update members are real; unported members throw NotImplementedException."
+    "notes": "Process, normal-commit, push, pull/fetch, local-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, add-files, rename-branch, resolve-conflicts, and submodule-update members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/ServiceContainerRegistry.cs": {
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
@@ -368,6 +368,18 @@
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Single-selection revision grid, preselection, current-branch/last-revision filters, direct SHA lookup, parent navigation, OK and double-click selection are functional. Artificial worktree/index revisions remain unavailable until the revision grid gains them."
+  },
+  "src/app/GitUI/CommandsDialogs/FormRenameBranch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRenameBranch.axaml.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Verbatim port: auto-normalisation on focus loss (caret preserved), unchanged-name cancel, rename through the cross-platform FormProcess. The revision-grid context menu gains the upstream renameBranchToolStripMenuItem as a per-branch dropdown (underscores escaped for Avalonia access keys); the left-panel branch node entry waits for the left-panel context menus."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/GitRefListsForRevision.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/GitRefListsForRevision.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Framework-free source linked unchanged into GitUI.Avalonia."
   },
   "src/app/GitUI/CommandsDialogs/FormResetChanges.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResetChanges.axaml.cs",
