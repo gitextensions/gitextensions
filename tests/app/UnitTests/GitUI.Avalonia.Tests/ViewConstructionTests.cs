@@ -113,6 +113,16 @@ public sealed class ViewConstructionTests
             "pullToolStripMenuItem",
             "Text",
             "Pull&/Fetch...");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "tagToolStripMenuItem",
+            "Text",
+            "Create &tag...");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
+            "deleteTagToolStripMenuItem",
+            "Text",
+            "&Delete tag...");
         translation.Received(1).TranslateItem(
             nameof(FormBrowse),
             "fetchAllToolStripMenuItem",
@@ -336,6 +346,37 @@ public sealed class ViewConstructionTests
         deleteBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
         commands.Received(1).StartDeleteBranchDialog(form, string.Empty);
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_tag_commands_should_start_the_matching_dialogs()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(Path.GetTempPath());
+        module.IsValidGitWorkingDir().Returns(false);
+
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
+        appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
+
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+
+        FormBrowse form = new(commands);
+        MenuItem createTag = form.FindControl<MenuItem>("tagToolStripMenuItem")
+            ?? throw new InvalidOperationException("Create-tag menu item was not created.");
+        MenuItem deleteTag = form.FindControl<MenuItem>("deleteTagToolStripMenuItem")
+            ?? throw new InvalidOperationException("Delete-tag menu item was not created.");
+        createTag.IsEnabled = true;
+        deleteTag.IsEnabled = true;
+
+        createTag.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+        deleteTag.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        commands.Received(1).StartCreateTagDialog(form, revision: null);
+        commands.Received(1).StartDeleteTagDialog(form, tag: null);
     }
 
     [AvaloniaTest]
