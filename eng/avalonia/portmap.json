@@ -9,13 +9,19 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Pull-Fetch/Fetch all/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. Remaining menus and toolbars are added with their dialogs."
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Pull-Fetch/Fetch all/Merge branches/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. Remaining menus and toolbars are added with their dialogs."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Local branches only; remote-branch create/reset flow not ported. Auto-stash works; the \"apply stashed items again?\" prompt is the upstream task dialog with its \"don't show again\" box, over the Compat TaskDialog surrogate."
+  },
+  "src/app/GitUI/CommandsDialogs/FormMergeBranch.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormMergeBranch.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Branch/tag/remote selection (including multiple heads), fast-forward/no-ff/no-commit/squash/unrelated-history/strategy/log/custom-message options, persisted settings, real process execution, conflict handling, help images, Browse menu, and Ctrl+M hotkey. Before/after merge ScriptsEngine events remain deferred to Phase 3.23."
   },
   "src/app/GitUI/CommandsDialogs/FormStash.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormStash.axaml.cs",
@@ -104,6 +110,18 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "List with change-kind markers, exposed statuses, configurable multi-selection, revision-aware FileStatusItem entries, worktree/index grouping, repository refresh binding, selection navigation, and WinForms-shaped selection/double-click events. Filtering, staging interactions, and context menus remain deferred."
   },
+  "src/app/GitUI/UserControls/BranchComboBox.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/BranchComboBox.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Editable branch/ref selector with typed display template, selected-text API, validation, and the multi-branch selection dialog. Avalonia's editable ComboBox supplies completion behavior instead of WinForms Suggest mode."
+  },
+  "src/app/GitUI/UserControls/HelpImageDisplayUserControl.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/HelpImageDisplayUserControl.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Reusable expandable/collapsible help image, persisted expansion state, hover image swap, and original translation keys. Dynamic top-level resizing is unnecessary because Avalonia layout reflows the host."
+  },
   "src/app/GitUI/UserControls/FileStatusItem.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/FileStatusItem.cs",
     "status": "parity",
@@ -114,6 +132,39 @@
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Read-only unified diff on AvaloniaEdit, including revision-aware Git diff loading, Escape handling, and top/bottom continuous-scroll events. No margins, encodings menu, blob/blame/range modes, or line patching yet."
+  },
+  "src/app/GitUI/HelperDialogs/FormSelectMultipleBranches.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormSelectMultipleBranches.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Multi-select ListBox equivalent of the checked branch list; preserves SelectBranch and GetSelectedBranches."
+  },
+  "src/app/GitUI/UserManual/IProvideUserManual.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserManual/IProvideUserManual.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
+  },
+  "src/app/GitUI/UserManual/StandardHtmlUserManual.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserManual/StandardHtmlUserManual.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
+  },
+  "src/app/GitUI/UserManual/UserManual.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserManual/UserManual.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
+  },
+  "src/app/GitUI/Resources/Help/HelpCommandMerge.png": {
+    "twin": "src/app/GitUI.Avalonia/Resources/Help/HelpCommandMerge.png",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked as an AvaloniaResource; the tracked PNG is shared unchanged."
+  },
+  "src/app/GitUI/Resources/Help/HelpCommandMergeFastForward.png": {
+    "twin": "src/app/GitUI.Avalonia/Resources/Help/HelpCommandMergeFastForward.png",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked as an AvaloniaResource; the tracked PNG is shared unchanged."
   },
   "src/app/GitUI/CommitInfo/CommitInfo.cs": {
     "twin": "src/app/GitUI.Avalonia/CommitInfo/CommitInfo.axaml.cs",

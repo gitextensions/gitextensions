@@ -170,6 +170,32 @@ public sealed class ViewConstructionTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_merge_should_start_the_dialog()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(Path.GetTempPath());
+        module.IsValidGitWorkingDir().Returns(false);
+
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
+        appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
+
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+
+        FormBrowse form = new(commands);
+        MenuItem merge = form.FindControl<MenuItem>("mergeBranchToolStripMenuItem")
+            ?? throw new InvalidOperationException("Merge-branches menu item was not created.");
+        merge.IsEnabled = true;
+
+        merge.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        commands.Received(1).StartMergeBranchDialog(form, null);
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_pull_should_start_the_dialog()
     {
         IGitModule module = Substitute.For<IGitModule>();
