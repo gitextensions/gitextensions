@@ -265,20 +265,18 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool StartCheckoutBranch(IWin32Window? owner, string branch = "", bool remote = false, IReadOnlyList<ObjectId>? containObjectIds = null)
     {
-        if (remote)
-        {
-            // The first checkout-dialog increment intentionally supports local branches only.
-            return false;
-        }
-
         return DoActionOnRepo(owner, action: () =>
         {
-            using CommandsDialogs.FormCheckoutBranch form = new(this, branch, remote: false, containObjectIds);
+            using CommandsDialogs.FormCheckoutBranch form = new(this, branch, remote, containObjectIds);
             return form.DoDefaultActionOrShow(owner) == DialogResult.OK;
         }, preEvent: PreCheckoutBranch, postEvent: PostCheckoutBranch);
     }
 
-    public bool StartCheckoutRemoteBranch(IWin32Window? owner, string branch) => throw NotPorted(nameof(StartCheckoutRemoteBranch));
+    public bool StartCheckoutRemoteBranch(IWin32Window? owner, string branch)
+    {
+        return StartCheckoutBranch(owner, branch, true);
+    }
+
     public bool StartCheckoutRevisionDialog(IWin32Window? owner, string? revision = null) => throw NotPorted(nameof(StartCheckoutRevisionDialog));
     public bool StartCherryPickDialog(IWin32Window? owner = null, GitRevision? revision = null) => throw NotPorted(nameof(StartCherryPickDialog));
     public bool StartCherryPickDialog(IWin32Window? owner, IEnumerable<GitRevision> revisions) => throw NotPorted(nameof(StartCherryPickDialog));
