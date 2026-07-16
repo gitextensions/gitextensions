@@ -37,7 +37,8 @@ Use this to route a question to the right layer/doc and the right part of the co
 | Hotkeys | L2 | `src/app/GitUI/Hotkey/` |
 | User scripts engine | L2 | `src/app/GitUI/ScriptsEngine/` |
 | Windows Explorer shell integration | L2 | `src/native/GitExtensionsShellEx/` |
-| Build / installer / CI | L2 | `Setup/`, `.github/workflows/`, `eng/` |
+| Build / installer | L2 | `Setup/`, `eng/`, `src/native/build.proj` |
+| CI / release pipelines | L2 | `.github/workflows/` (`_app-build-core`, `app-build`, `app-release`) |
 | Tests | L2 | `tests/` (NUnit, NSubstitute, AwesomeAssertions) |
 | Submodules | L2/L3 | `src/app/GitCommands/Submodules/`, `GitCommands/Git/SubmoduleHelpers.cs` |
 
@@ -58,6 +59,8 @@ verifying against the actual source files referenced in the docs.
   L0 primer → [translation-system](L2-core-platform/translation-system.md) → verify with `update-loc.cmd` + `English.xlf`.
 - **"How is the commit graph rendered?"**
   L0 primer → [architecture-overview](L1-conceptual/architecture-overview.md) → [revision-grid-flow](L3-flows/revision-grid-flow.md) → verify in `RevisionGrid`.
+- **"How does CI build/test a PR, or how are releases built and signed?"**
+  L0 primer → [ci-workflows](L2-core-platform/ci-workflows.md) → [release-pipeline](L2-core-platform/release-pipeline.md) → [build-and-installer](L2-core-platform/build-and-installer.md) → verify in `.github/workflows/_app-build-core.yml`.
 
 ## Cross-cutting
 
