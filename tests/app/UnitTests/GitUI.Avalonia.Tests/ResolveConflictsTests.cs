@@ -38,7 +38,7 @@ public sealed class ResolveConflictsTests
         form.merge.IsDefault.Should().BeTrue("Merge is the dialog's accept button");
         form.ContextChooseLocal.Should().NotBeNull("the context menu items keep their WinForms names");
         form.customMergetool.IsVisible.Should().BeFalse("custom merge tools are not ported yet");
-        form.fileHistoryToolStripMenuItem.IsVisible.Should().BeFalse("the file history form is not ported yet");
+        form.fileHistoryToolStripMenuItem.IsVisible.Should().BeTrue("the file history shell is ported");
         form.progressBar.IsVisible.Should().BeFalse();
         form.FindControl<GitUI.UserControls.GotoUserManualControl>("gotoUserManualControl1").Should().NotBeNull();
     }
@@ -105,6 +105,30 @@ public sealed class ResolveConflictsTests
 
         form.ContextOpenLocalWith.IsEnabled.Should().BeFalse("open/save commands need a single selection");
         form.ContextChooseLocal.IsEnabled.Should().BeTrue("choosing a side works for many files at once");
+    }
+
+    [AvaloniaTest]
+    public void File_history_menu_item_should_open_the_selected_conflicts_history()
+    {
+        (IGitUICommands commands, IGitModule module) = CreateCommands();
+        module.GetConflictsAsync(Arg.Any<string?>()).Returns(
+        [
+            CreateConflict("a.txt", hasBase: true, hasLocal: true, hasRemote: true),
+        ]);
+
+        FormResolveConflicts form = new(commands);
+        form.Show();
+        try
+        {
+            form.fileHistoryToolStripMenuItem.IsVisible.Should().BeTrue();
+            form.fileHistoryToolStripMenuItem.RaiseEvent(new Avalonia.Interactivity.RoutedEventArgs(Avalonia.Controls.MenuItem.ClickEvent));
+
+            commands.Received(1).StartFileHistoryDialog(form, "a.txt");
+        }
+        finally
+        {
+            form.Close();
+        }
     }
 
     [Test]

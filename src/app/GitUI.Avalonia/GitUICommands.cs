@@ -377,7 +377,18 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartEditGitAttributesDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartEditGitAttributesDialog));
     public bool StartEditGitIgnoreDialog(IWin32Window? owner, bool localExcludes) => throw NotPorted(nameof(StartEditGitIgnoreDialog));
     public bool StartFileEditorDialog(string? filename, bool showWarning = false, int? lineNumber = null) => throw NotPorted(nameof(StartFileEditorDialog));
-    public void StartFileHistoryDialog(IWin32Window? owner, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false) => throw NotPorted(nameof(StartFileHistoryDialog));
+    public void StartFileHistoryDialog(IWin32Window? owner, string fileName, GitRevision? revision = null, bool filterByRevision = false, bool showBlame = false)
+    {
+        // The WinForms client launches a separate process (or reuses Browse) for file
+        // history; this twin opens the window in-process, non-modal like that process.
+        DoActionOnRepo(owner, action: () =>
+        {
+            CommandsDialogs.FormFileHistory form = new(this, fileName, revision, filterByRevision, showBlame);
+            form.Show();
+            return true;
+        }, changesRepo: false);
+    }
+
     public bool StartFixupCommitDialog(IWin32Window? owner, GitRevision revision) => throw NotPorted(nameof(StartFixupCommitDialog));
     public bool StartFormCommitDiff(ObjectId objectId) => throw NotPorted(nameof(StartFormCommitDiff));
     public bool StartFormatPatchDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartFormatPatchDialog));
