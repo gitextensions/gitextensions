@@ -11,6 +11,7 @@ using GitUI.CommandsDialogs;
 using GitUI.CommitInfo;
 using GitUI.Editor;
 using GitUI.LeftPanel;
+using GitUIPluginInterfaces;
 using NSubstitute;
 
 namespace GitExtensionsTests;
@@ -193,6 +194,39 @@ public sealed class ViewConstructionTests
         merge.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
         commands.Received(1).StartMergeBranchDialog(form, null);
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_rebase_should_start_the_dialog()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(Path.GetTempPath());
+        module.IsValidGitWorkingDir().Returns(false);
+
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
+        appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
+
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+
+        FormBrowse form = new(commands);
+        MenuItem rebase = form.FindControl<MenuItem>("rebaseToolStripMenuItem")
+            ?? throw new InvalidOperationException("Rebase menu item was not created.");
+        RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")
+            ?? throw new InvalidOperationException("Revision grid was not created.");
+        ListBox revisions = revisionGrid.FindControl<ListBox>("lstRevisions")
+            ?? throw new InvalidOperationException("Revision list was not created.");
+        GitRevision revision = new(ObjectId.Random());
+        revisions.ItemsSource = new[] { revision };
+        revisions.SelectedItem = revision;
+        rebase.IsEnabled = true;
+
+        rebase.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        commands.Received(1).StartRebaseDialog(form, revision.ObjectId.ToString());
     }
 
     [AvaloniaTest]
