@@ -1,4 +1,5 @@
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtensions.Extensibility.Plugins;
@@ -95,6 +96,76 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartGitCommandProcessDialog(IWin32Window? owner, ArgumentString arguments)
     {
         return FormProcess.ShowDialog(owner, this, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+    }
+
+    public bool StashSave(IWin32Window? owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "", IReadOnlyList<string>? selectedFiles = null)
+    {
+        bool Action()
+        {
+            ArgumentString arguments = Commands.StashSave(includeUntrackedFiles, keepIndex, message, selectedFiles);
+            FormProcess.ShowDialog(owner, this, arguments, Module.WorkingDir, input: null, useDialogSettings: true);
+
+            // git-stash may have changed commits also if aborted, the grid must be refreshed
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
+    public bool StashStaged(IWin32Window? owner)
+    {
+        bool Action()
+        {
+            FormProcess.ShowDialog(owner, this, arguments: "stash --staged", Module.WorkingDir, input: null, useDialogSettings: true);
+
+            // git-stash may have changed commits also if aborted, the grid must be refreshed
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
+    public bool StashPop(IWin32Window? owner, string stashName = "")
+    {
+        bool Action()
+        {
+            FormProcess.ShowDialog(owner, this, arguments: $"stash pop {stashName.QuoteNE()}", Module.WorkingDir, input: null, useDialogSettings: true);
+
+            // TODO(avalonia-port): offer to resolve the conflicts a pop can leave behind, once
+            // the conflict dialog is ported; the process dialog shows git's message meanwhile.
+            // git-stash may have changed commits also if aborted, the grid must be refreshed
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
+    public bool StashDrop(IWin32Window? owner, string stashName)
+    {
+        bool Action()
+        {
+            FormProcess.ShowDialog(owner, this, arguments: $"stash drop {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
+
+            // git-stash may have changed commits also if aborted, the grid must be refreshed
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
+    public bool StashApply(IWin32Window? owner, string stashName)
+    {
+        bool Action()
+        {
+            FormProcess.ShowDialog(owner, this, arguments: $"stash apply {stashName.Quote()}", Module.WorkingDir, input: null, useDialogSettings: true);
+
+            // TODO(avalonia-port): offer to resolve the conflicts an apply can leave behind,
+            // once the conflict dialog is ported; the process dialog shows git's message.
+            // git-stash may have changed commits also if aborted, the grid must be refreshed
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
     }
 
     private bool InvokeEvent(IWin32Window? ownerForm, EventHandler<GitUIEventArgs>? gitUIEventHandler)
@@ -373,11 +444,6 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartVerifyDatabaseDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartVerifyDatabaseDialog));
     public bool StartViewPatchDialog(IWin32Window? owner, string? patchFile = null) => throw NotPorted(nameof(StartViewPatchDialog));
     public bool StartViewPatchDialog(string patchFile) => throw NotPorted(nameof(StartViewPatchDialog));
-    public bool StashApply(IWin32Window? owner, string stashName) => throw NotPorted(nameof(StashApply));
-    public bool StashDrop(IWin32Window? owner, string stashName) => throw NotPorted(nameof(StashDrop));
-    public bool StashPop(IWin32Window? owner, string stashName = "") => throw NotPorted(nameof(StashPop));
-    public bool StashSave(IWin32Window? owner, bool includeUntrackedFiles, bool keepIndex = false, string message = "", IReadOnlyList<string>? selectedFiles = null) => throw NotPorted(nameof(StashSave));
-    public bool StashStaged(IWin32Window? owner) => throw NotPorted(nameof(StashStaged));
     public void UpdateSubmodules(IWin32Window? owner) => throw NotPorted(nameof(UpdateSubmodules));
     public bool WorktreeCreate(IWin32Window? owner, string mainWorktreePath) => throw NotPorted(nameof(WorktreeCreate));
     public bool WorktreeDelete(IWin32Window? owner, string worktreePath) => throw NotPorted(nameof(WorktreeDelete));
