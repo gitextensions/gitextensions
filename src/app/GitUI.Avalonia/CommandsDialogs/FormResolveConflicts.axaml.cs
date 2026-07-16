@@ -22,8 +22,7 @@ namespace GitUI.CommandsDialogs;
 // Twin of GitUI/CommandsDialogs/FormResolveConflicts.cs. The conflicted-files grid is a
 // ListBox showing the file names (the WinForms grid's hidden Author column had no data
 // source upstream either). Deferred with TODOs below: custom merge tools
-// (CustomDiffMergeToolProvider), the submodule conflict dialog (FormMergeSubmodule), and
-// the file-history menu item.
+// (CustomDiffMergeToolProvider) and the submodule conflict dialog (FormMergeSubmodule).
 public partial class FormResolveConflicts : GitModuleForm
 {
     #region Translation

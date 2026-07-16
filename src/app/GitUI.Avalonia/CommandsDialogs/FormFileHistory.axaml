@@ -1,0 +1,24 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:gitui="clr-namespace:GitUI"
+        xmlns:editor="clr-namespace:GitUI.Editor"
+        x:Class="GitUI.CommandsDialogs.FormFileHistory"
+        Width="900" Height="620"
+        MinWidth="600" MinHeight="400"
+        WindowStartupLocation="CenterOwner"
+        Title="File History">
+  <Grid RowDefinitions="*,5,2*" Margin="8">
+    <gitui:RevisionGridControl x:Name="RevisionGrid" />
+
+    <GridSplitter Grid.Row="1"
+                  Height="5"
+                  ResizeDirection="Rows" />
+
+    <!-- The View, Blame, and Commit tabs join this shell in later subphases. -->
+    <TabControl x:Name="tabControl1" Grid.Row="2">
+      <TabItem x:Name="DiffTab" Header="Diff">
+        <editor:FileViewer x:Name="Diff" />
+      </TabItem>
+    </TabControl>
+  </Grid>
+</Window>
