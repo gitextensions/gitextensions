@@ -3,12 +3,11 @@ using Avalonia.Controls.Templates;
 using Avalonia.Input;
 using Avalonia.Media;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
-using GitExtUtils.GitUI.Theming;
-using GitUI.Theming;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUI.UserControls.RevisionGrid.Graph.Rendering;
@@ -34,7 +33,7 @@ public enum RevisionGraphDrawStyle
 public partial class RevisionGridControl : GitModuleControl
 {
     private const int RowHeight = 24;
-    private const int GraphColumnWidth = 160;
+    private const int GraphLeftMargin = 6;
 
     private readonly CancellationTokenSequence _refreshSequence = new();
     private readonly List<GitRevision> _revisions = [];
@@ -42,6 +41,7 @@ public partial class RevisionGridControl : GitModuleControl
     private RevisionGraphConfig _config = new();
     private ObjectId? _headId;
     private ObjectId _pendingSelectedObjectId;
+    private int _graphColumnWidth = CalculateGraphColumnWidth(visibleLaneCount: 0);
     private bool _headHighlighted;
     private ILookup<ObjectId, IGitRef>? _refsByObjectId;
 
@@ -58,6 +58,7 @@ public partial class RevisionGridControl : GitModuleControl
         lstRevisions.DoubleTapped += (_, _) =>
             DoubleClickRevision?.Invoke(this, new DoubleClickRevisionEventArgs(SelectedRevision));
         lstRevisions.PointerPressed += lstRevisions_PointerPressed;
+        lstRevisions.LayoutUpdated += (_, _) => UpdateVisibleGraphColumnWidth();
         revisionContextMenu.Opening += (_, _) => UpdateContextMenuItems();
         checkoutBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         createNewBranchToolStripMenuItem.Click += CreateNewBranchToolStripMenuItemClick;
@@ -78,6 +79,14 @@ public partial class RevisionGridControl : GitModuleControl
 
     /// <summary>Occurs when the selected revision is double-clicked.</summary>
     public event EventHandler<DoubleClickRevisionEventArgs>? DoubleClickRevision;
+
+    internal int GraphColumnWidth => _graphColumnWidth;
+
+    internal static int CalculateGraphColumnWidth(int visibleLaneCount)
+        => GraphLeftMargin
+            + Math.Max(
+                GraphRenderer.LaneWidth * Math.Min(visibleLaneCount, GraphRenderer.MaxLanes),
+                GraphRenderer.LaneWidth);
 
     /// <summary>
     ///  Selects and scrolls to the given revision if it is loaded.
@@ -168,7 +177,21 @@ public partial class RevisionGridControl : GitModuleControl
         {
             // Like the WinForms grid: fetch the refs first so they can be attached to the
             // revisions as they stream in (ref labels; square graph nodes).
-            _refsByObjectId = module.GetRefs(RefsFilter.NoFilter)
+            IReadOnlyList<IGitRef> refs = module.GetRefs(RefsFilter.NoFilter);
+            string selectedBranch = module.GetSelectedBranch(emptyIfDetached: true);
+            IGitRef? selectedRef = refs.FirstOrDefault(
+                gitRef => gitRef.IsHead && gitRef.Name == selectedBranch);
+            if (selectedRef is not null)
+            {
+                selectedRef.IsSelected = true;
+                refs.FirstOrDefault(
+                    gitRef => gitRef.IsRemote
+                        && gitRef.Remote == selectedRef.TrackingRemote
+                        && gitRef.LocalName == selectedRef.MergeWith)
+                    ?.IsSelectedHeadMergeSource = true;
+            }
+
+            _refsByObjectId = refs
                 .Where(gitRef => !gitRef.ObjectId.IsZero)
                 .ToLookup(gitRef => gitRef.ObjectId);
 
@@ -264,6 +287,47 @@ public partial class RevisionGridControl : GitModuleControl
         }
     }
 
+    private void UpdateVisibleGraphColumnWidth()
+    {
+        RevisionRowControl[] visibleRows =
+        [
+            .. lstRevisions.GetVisualDescendants().OfType<RevisionRowControl>(),
+        ];
+        int visibleLaneCount = visibleRows
+            .Select(row => row.DataContext)
+            .OfType<GitRevision>()
+            .Select(GetLaneCount)
+            .DefaultIfEmpty()
+            .Max();
+        int graphColumnWidth = CalculateGraphColumnWidth(visibleLaneCount);
+        if (_graphColumnWidth == graphColumnWidth)
+        {
+            return;
+        }
+
+        _graphColumnWidth = graphColumnWidth;
+        foreach (RevisionRowControl row in visibleRows)
+        {
+            row.SetGraphColumnWidth(graphColumnWidth);
+        }
+    }
+
+    private int GetLaneCount(GitRevision revision)
+    {
+        try
+        {
+            return _revisionGraph.TryGetRowIndex(revision.ObjectId, out int rowIndex)
+                ? _revisionGraph.GetSegmentsForRow(rowIndex)?.GetLaneCount() ?? 0
+                : 0;
+        }
+        catch (Exception)
+        {
+            // The reader can advance the row cache while layout is measuring the visible
+            // controls. The next layout pass recalculates the width from the stable rows.
+            return 0;
+        }
+    }
+
     private sealed class RevisionObserver(RevisionGridControl owner, CancellationToken cancellationToken) : IObserver<IReadOnlyList<GitRevision>>
     {
         public void OnNext(IReadOnlyList<GitRevision> value)
@@ -294,6 +358,7 @@ public partial class RevisionGridControl : GitModuleControl
     /// </summary>
     private sealed class RevisionRowControl : Grid
     {
+        private readonly RevisionGridControl _owner;
         private readonly GraphCellControl _graph;
         private readonly StackPanel _messagePanel;
         private readonly TextBlock _subject;
@@ -302,17 +367,26 @@ public partial class RevisionGridControl : GitModuleControl
 
         public RevisionRowControl(RevisionGridControl owner)
         {
+            _owner = owner;
             Height = RowHeight;
-            ColumnDefinitions = new ColumnDefinitions($"{GraphColumnWidth},*,180,140");
+            ColumnDefinitions = new ColumnDefinitions($"{owner.GraphColumnWidth},*,180,140");
+            Classes.Add("revision-row");
 
-            _graph = new GraphCellControl(owner) { ClipToBounds = true };
+            _graph = new GraphCellControl(owner)
+            {
+                ClipToBounds = true,
+                Margin = new Avalonia.Thickness(GraphLeftMargin, 0, 0, 0),
+            };
+            _graph.Classes.Add("revision-graph-cell");
             _subject = CreateTextBlock(leftMargin: 0);
+            _subject.Classes.Add("revision-subject");
             _messagePanel = new StackPanel
             {
                 Orientation = Avalonia.Layout.Orientation.Horizontal,
-                Margin = new Avalonia.Thickness(8, 0, 2, 0),
+                Margin = new Avalonia.Thickness(6, 0, 2, 0),
                 ClipToBounds = true,
             };
+            _messagePanel.Classes.Add("revision-message-cell");
             _messagePanel.Children.Add(_subject);
             _author = CreateTextBlock(leftMargin: 8, opacity: 0.85);
             _date = CreateTextBlock(leftMargin: 8, opacity: 0.7);
@@ -346,63 +420,24 @@ public partial class RevisionGridControl : GitModuleControl
             {
                 // The subject TextBlock is the persistent last child; only ref chips are rebuilt.
                 _messagePanel.Children.RemoveRange(0, _messagePanel.Children.Count - 1);
-                foreach (IGitRef gitRef in revision.Refs)
+                foreach (Control label in RevisionGridRefRenderer.CreateLabels(revision.Refs))
                 {
-                    _messagePanel.Children.Insert(_messagePanel.Children.Count - 1, RefLabels.CreateChip(gitRef));
+                    _messagePanel.Children.Insert(_messagePanel.Children.Count - 1, label);
                 }
 
                 _subject.Text = revision.Subject;
+                _subject.FontWeight = _owner._headId is ObjectId headId
+                    && revision.ObjectId == headId
+                        ? FontWeight.Bold
+                        : FontWeight.Normal;
                 _author.Text = revision.Author ?? string.Empty;
                 _date.Text = revision.AuthorDate.ToString("yyyy-MM-dd HH:mm");
                 _graph.Revision = revision;
             }
         }
-    }
 
-    /// <summary>
-    ///  Ref label chips (branch/tag/remote), colored like the WinForms
-    ///  <c>RevisionGridRefRenderer</c> from the <see cref="AppColor"/> palette.
-    /// </summary>
-    private static class RefLabels
-    {
-        private static readonly IBrush _branchBrush = CreateBrush(AppColor.Branch);
-        private static readonly IBrush _remoteBranchBrush = CreateBrush(AppColor.RemoteBranch);
-        private static readonly IBrush _tagBrush = CreateBrush(AppColor.Tag);
-        private static readonly IBrush _otherBrush = CreateBrush(AppColor.OtherTag);
-
-        public static Border CreateChip(IGitRef gitRef)
-        {
-            IBrush brush = gitRef switch
-            {
-                { IsTag: true } => _tagBrush,
-                { IsRemote: true } => _remoteBranchBrush,
-                { IsHead: true } => _branchBrush,
-                _ => _otherBrush,
-            };
-
-            return new Border
-            {
-                BorderBrush = brush,
-                BorderThickness = new Avalonia.Thickness(1),
-                CornerRadius = new Avalonia.CornerRadius(3),
-                Padding = new Avalonia.Thickness(4, 0),
-                Margin = new Avalonia.Thickness(0, 3, 6, 3),
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                Child = new TextBlock
-                {
-                    Text = gitRef.Name,
-                    Foreground = brush,
-                    FontSize = 11,
-                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-                },
-            };
-        }
-
-        private static IBrush CreateBrush(AppColor appColor)
-        {
-            System.Drawing.Color color = appColor.GetThemeColor();
-            return new SolidColorBrush(Avalonia.Media.Color.FromArgb(color.A, color.R, color.G, color.B)).ToImmutable();
-        }
+        public void SetGraphColumnWidth(int width)
+            => ColumnDefinitions[0].Width = new GridLength(width);
     }
 
     /// <summary>

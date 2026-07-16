@@ -39,6 +39,8 @@
     <Compile Include="..\GitUI\UserControls\PatchFile.cs" Link="UserControls\PatchFile.cs" />
     <Compile Include="..\GitUI\UserControls\TextEventArgs.cs" Link="UserControls\TextEventArgs.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\DoubleClickRevisionEventArgs.cs" Link="UserControls\RevisionGrid\DoubleClickRevisionEventArgs.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\RefLabelIcon.cs" Link="UserControls\RevisionGrid\RefLabelIcon.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\RefLabelShape.cs" Link="UserControls\RevisionGrid\RefLabelShape.cs" />
     <Compile Include="..\GitUI\UserManual\IProvideUserManual.cs" Link="UserManual\IProvideUserManual.cs" />
     <Compile Include="..\GitUI\UserManual\StandardHtmlUserManual.cs" Link="UserManual\StandardHtmlUserManual.cs" />
     <Compile Include="..\GitUI\UserManual\UserManual.cs" Link="UserManual\UserManual.cs" />
