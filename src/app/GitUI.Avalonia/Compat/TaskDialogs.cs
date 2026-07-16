@@ -8,7 +8,8 @@ namespace GitUI.Compat;
 
 // Avalonia stand-ins for the WinForms task-dialog object model, limited to the members
 // the ported forms use, so upstream TaskDialog code ports mechanically: a page with
-// heading/text, regular buttons, command links, and a verification checkbox.
+// heading/text, regular buttons (including an explicit default), command links,
+// a verification checkbox, and a footnote.
 // The one intentional call-site change: WinForms identifies the owner by handle
 // (TaskDialog.ShowDialog(Handle, page)); here the owner is passed directly
 // (TaskDialog.ShowDialog(this, page)).
@@ -67,7 +68,11 @@ public sealed class TaskDialogPage
 
     public List<TaskDialogButton> Buttons { get; } = [];
 
+    public TaskDialogButton? DefaultButton { get; set; }
+
     public TaskDialogVerificationCheckBox? Verification { get; set; }
+
+    public string? Footnote { get; set; }
 
     public bool AllowCancel { get; set; }
 
@@ -146,6 +151,16 @@ public static class TaskDialog
                 content.Children.Add(verification);
             }
 
+            if (!string.IsNullOrEmpty(page.Footnote))
+            {
+                content.Children.Add(new SelectableTextBlock
+                {
+                    Text = page.Footnote,
+                    Opacity = 0.7,
+                    TextWrapping = TextWrapping.Wrap,
+                });
+            }
+
             StackPanel buttonPanel = new()
             {
                 Orientation = Orientation.Horizontal,
@@ -157,7 +172,9 @@ public static class TaskDialog
             foreach (TaskDialogButton pageButton in page.Buttons.Where(button => button is not TaskDialogCommandLinkButton))
             {
                 Button button = CreateButton(pageButton, minWidth: 80, HorizontalAlignment.Right);
-                button.IsDefault = isFirst;
+                button.IsDefault = page.DefaultButton is null
+                    ? isFirst
+                    : ReferenceEquals(pageButton, page.DefaultButton);
                 button.IsCancel = pageButton == TaskDialogButton.Cancel || pageButton == TaskDialogButton.No;
                 isFirst = false;
                 buttonPanel.Children.Add(button);
