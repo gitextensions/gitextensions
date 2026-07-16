@@ -1,5 +1,6 @@
 using GitCommands;
 using GitExtensions.Extensibility.Translations;
+using GitUI.Compat;
 using ResourceManager;
 using WinFormsShims = GitExtensions.Shims.WinForms;
 
@@ -11,6 +12,20 @@ public class MessageBoxes : Translate
 {
     private readonly TranslationString _failedToRunShell = new("Failed to run shell");
     private readonly TranslationString _reason = new("Reason");
+
+    private readonly TranslationString _unresolvedMergeConflictsCaption = new("Merge conflicts");
+    private readonly TranslationString _unresolvedMergeConflicts = new("There are unresolved merge conflicts, solve conflicts now?");
+
+    private readonly TranslationString _middleOfRebaseCaption = new("Rebase");
+    private readonly TranslationString _middleOfRebase = new("You are in the middle of a rebase, continue rebase?");
+
+    private readonly TranslationString _middleOfPatchApplyCaption = new("Patch apply");
+    private readonly TranslationString _middleOfPatchApply = new("You are in the middle of a patch apply, continue patch apply?");
+
+    private readonly TranslationString _updateSubmodules = new("Update submodules");
+    private readonly TranslationString _theRepositorySubmodules = new("Update submodules on checkout?");
+    private readonly TranslationString _updateSubmodulesToo = new("Since this repository has submodules, it's necessary to update them on every checkout.\r\n\r\nThis will just checkout on the submodule the commit determined by the superproject.");
+    private readonly TranslationString _rememberChoice = new("&Remember choice");
 
     internal MessageBoxes()
     {
@@ -25,6 +40,44 @@ public class MessageBoxes : Translate
 
     public static void ShowError(WinFormsShims.IWin32Window? owner, string text, string? caption = null)
         => GitExtensions.Extensibility.MessageBoxes.ShowError(owner, text, caption);
+
+    public static bool MiddleOfRebase(WinFormsShims.IWin32Window? owner)
+        => Confirm(owner, Instance._middleOfRebase.Text, Instance._middleOfRebaseCaption.Text);
+
+    public static bool MiddleOfPatchApply(WinFormsShims.IWin32Window? owner)
+        => Confirm(owner, Instance._middleOfPatchApply.Text, Instance._middleOfPatchApplyCaption.Text);
+
+    public static bool ConfirmResolveMergeConflicts(WinFormsShims.IWin32Window? owner)
+        => Confirm(owner, Instance._unresolvedMergeConflicts.Text, Instance._unresolvedMergeConflictsCaption.Text);
+
+    public static bool ConfirmUpdateSubmodules(WinFormsShims.IWin32Window? owner)
+    {
+        TaskDialogPage page = new()
+        {
+            Text = Instance._updateSubmodulesToo.Text,
+            Heading = Instance._theRepositorySubmodules.Text,
+            Caption = Instance._updateSubmodules.Text,
+            Icon = TaskDialogIcon.Information,
+            Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+            Verification = new TaskDialogVerificationCheckBox
+            {
+                Text = Instance._rememberChoice.Text
+            },
+            SizeToContent = true
+        };
+
+        bool result = TaskDialog.ShowDialog(owner, page) == TaskDialogButton.Yes;
+        if (page.Verification.Checked)
+        {
+            AppSettings.DontConfirmUpdateSubmodulesOnCheckout = result;
+            AppSettings.UpdateSubmodulesOnCheckout = result;
+        }
+
+        return result;
+    }
+
+    public static bool Confirm(WinFormsShims.IWin32Window? owner, string text, string caption, WinFormsShims.MessageBoxIcon icon = WinFormsShims.MessageBoxIcon.Question, WinFormsShims.MessageBoxDefaultButton defaultButton = WinFormsShims.MessageBoxDefaultButton.Button1)
+        => Show(owner, text, caption, WinFormsShims.MessageBoxButtons.YesNo, icon, defaultButton) == WinFormsShims.DialogResult.Yes;
 
     public static WinFormsShims.DialogResult Show(
         WinFormsShims.IWin32Window? owner,
