@@ -41,8 +41,9 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
 
     internal static IReadOnlyList<HotkeySettings> CreateDefaultSettings()
     {
-        HotkeyCommand Hk(FormBrowse.Command command, WinFormsShims.Keys key)
-            => new((int)command, command.ToString()) { KeyData = key };
+        HotkeyCommand Hk<TCommand>(TCommand command, WinFormsShims.Keys key)
+            where TCommand : struct, Enum
+            => new(Convert.ToInt32(command), command.ToString()) { KeyData = key };
 
         return
         [
@@ -55,6 +56,13 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
                 Hk(FormBrowse.Command.PullOrFetch, WinFormsShims.Keys.Control | WinFormsShims.Keys.Down),
                 Hk(FormBrowse.Command.Push, WinFormsShims.Keys.Control | WinFormsShims.Keys.Up),
                 Hk(FormBrowse.Command.CreateBranch, WinFormsShims.Keys.Control | WinFormsShims.Keys.B)),
+            new HotkeySettings(
+                FormResolveConflicts.HotkeySettingsName,
+                Hk(FormResolveConflicts.Commands.ChooseBase, WinFormsShims.Keys.B),
+                Hk(FormResolveConflicts.Commands.ChooseLocal, WinFormsShims.Keys.L),
+                Hk(FormResolveConflicts.Commands.ChooseRemote, WinFormsShims.Keys.R),
+                Hk(FormResolveConflicts.Commands.Merge, WinFormsShims.Keys.M),
+                Hk(FormResolveConflicts.Commands.Rescan, WinFormsShims.Keys.F5)),
         ];
     }
 
