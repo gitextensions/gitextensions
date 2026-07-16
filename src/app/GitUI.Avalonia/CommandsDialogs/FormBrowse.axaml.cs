@@ -27,6 +27,7 @@ public sealed partial class FormBrowse : GitModuleForm
         Push = 40,
         CreateBranch = 41,
         MergeBranches = 42,
+        Rebase = 44,
 
         // WinForms routes F5 through ToolStripItem.ShortcutKeys. Avalonia has no ToolStrip,
         // so refresh joins the same command dispatcher without changing persisted upstream IDs.
@@ -60,6 +61,7 @@ public sealed partial class FormBrowse : GitModuleForm
         pullToolStripMenuItem.Click += PullToolStripMenuItemClick;
         fetchAllToolStripMenuItem.Click += fetchAllToolStripMenuItem_Click;
         mergeBranchToolStripMenuItem.Click += MergeBranchToolStripMenuItemClick;
+        rebaseToolStripMenuItem.Click += RebaseToolStripMenuItemClick;
         stashToolStripMenuItem.Click += StashToolStripMenuItemClick;
         userShell.Click += userShell_Click;
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
@@ -88,6 +90,7 @@ public sealed partial class FormBrowse : GitModuleForm
         pullToolStripMenuItem.IsEnabled = isValidWorkingDir;
         fetchAllToolStripMenuItem.IsEnabled = isValidWorkingDir;
         mergeBranchToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
+        rebaseToolStripMenuItem.IsEnabled = false;
         stashToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
 
         if (isValidWorkingDir)
@@ -123,6 +126,9 @@ public sealed partial class FormBrowse : GitModuleForm
         fileStatusList.Clear();
         fileViewer.ViewPatch(string.Empty);
         CommitInfo.Revision = RevisionGrid.SelectedRevision;
+        rebaseToolStripMenuItem.IsEnabled =
+            RevisionGrid.SelectedRevision is { IsArtificial: false }
+            && !Module.IsBareRepository();
 
         if (RevisionGrid.SelectedRevision is not GitRevision revision
             || !revision.HasParent)
@@ -240,6 +246,16 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.StartMergeBranchDialog(this, branch: null);
     }
 
+    private void RebaseToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        if (RevisionGrid.SelectedRevision is not { IsArtificial: false } revision)
+        {
+            return;
+        }
+
+        UICommands.StartRebaseDialog(this, revision.ObjectId.ToString());
+    }
+
     private void userShell_Click(object? sender, EventArgs e)
     {
         try
@@ -264,6 +280,7 @@ public sealed partial class FormBrowse : GitModuleForm
             case Command.Push: UICommands.StartPushDialog(this, pushOnShow: false); break;
             case Command.CreateBranch: CreateBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.MergeBranches: MergeBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
+            case Command.Rebase: RebaseToolStripMenuItemClick(this, EventArgs.Empty); break;
             default: return base.ExecuteCommand(command);
         }
 

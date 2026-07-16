@@ -62,6 +62,7 @@
     <None Include="..\GitUI\Translation\*.xlf" Link="Translation\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
     <AvaloniaResource Include="..\GitUI\Resources\Help\HelpCommandMerge.png" Link="Resources\Help\HelpCommandMerge.png" />
     <AvaloniaResource Include="..\GitUI\Resources\Help\HelpCommandMergeFastForward.png" Link="Resources\Help\HelpCommandMergeFastForward.png" />
+    <AvaloniaResource Include="..\GitUI\Resources\Help\HelpCommandRebase.png" Link="Resources\Help\HelpCommandRebase.png" />
   </ItemGroup>
 
   <ItemGroup>

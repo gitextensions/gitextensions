@@ -9,7 +9,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Pull-Fetch/Fetch all/Merge branches/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. Remaining menus and toolbars are added with their dialogs."
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Pull-Fetch/Fetch all/Merge branches/Rebase/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. Remaining menus and toolbars are added with their dialogs."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
@@ -22,6 +22,12 @@
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Branch/tag/remote selection (including multiple heads), fast-forward/no-ff/no-commit/squash/unrelated-history/strategy/log/custom-message options, persisted settings, real process execution, conflict handling, help images, Browse menu, and Ctrl+M hotkey. Before/after merge ScriptsEngine events remain deferred to Phase 3.23."
+  },
+  "src/app/GitUI/CommandsDialogs/FormRebase.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRebase.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Plain rebase supports heads/remotes/tags, immediate and advanced-option entry points, preserve-merges/auto-stash/date/update-refs/specific-range options, real process execution, repository notification, Browse menu, and Ctrl+Shift+E. The in-progress controller supports continue, skip, abort, conflict resolution, and commit. Interactive/autosquash, PatchGrid visualization, add-files, edit-todo, and the commit-picker button remain deferred to Phase 3.6b."
   },
   "src/app/GitUI/CommandsDialogs/FormStash.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormStash.axaml.cs",
@@ -162,6 +168,12 @@
   },
   "src/app/GitUI/Resources/Help/HelpCommandMergeFastForward.png": {
     "twin": "src/app/GitUI.Avalonia/Resources/Help/HelpCommandMergeFastForward.png",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked as an AvaloniaResource; the tracked PNG is shared unchanged."
+  },
+  "src/app/GitUI/Resources/Help/HelpCommandRebase.png": {
+    "twin": "src/app/GitUI.Avalonia/Resources/Help/HelpCommandRebase.png",
     "status": "parity",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Linked as an AvaloniaResource; the tracked PNG is shared unchanged."
