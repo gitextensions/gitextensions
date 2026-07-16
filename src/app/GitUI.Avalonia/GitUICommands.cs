@@ -520,7 +520,17 @@ public sealed class GitUICommands : IGitUICommands
     }
 
     public bool StartRemotesDialog(IWin32Window? owner, string? preselectRemote = null, string? preselectLocal = null) => throw NotPorted(nameof(StartRemotesDialog));
-    public bool StartRenameDialog(IWin32Window? owner, string branch) => throw NotPorted(nameof(StartRenameDialog));
+    public bool StartRenameDialog(IWin32Window? owner, string branch)
+    {
+        bool Action()
+        {
+            using CommandsDialogs.FormRenameBranch form = new(this, branch);
+            return form.ShowDialog(owner) == DialogResult.OK;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartRepoSettingsDialog(IWin32Window? owner) => throw NotPorted(nameof(StartRepoSettingsDialog));
     public bool StartResetChangesDialog(IWin32Window? owner, IReadOnlyCollection<GitItemStatus> workTreeFiles, bool onlyWorkTree)
     {
