@@ -1,25 +1,53 @@
 using Avalonia.Controls;
+using Avalonia.Input;
 using Avalonia.Media;
 using AvaloniaEdit.Document;
 using AvaloniaEdit.Rendering;
+using GitCommands;
+using GitCommands.Git;
+using GitExtensions.Extensibility.Git;
+using GitExtUtils;
+using GitUI.UserControls;
 
 using ResourceManager;
 
 namespace GitUI.Editor;
 
-// TODO(avalonia-port): milestone M1.3 — a read-only patch viewer on AvaloniaEdit.
-// The WinForms FileViewer's view modes (blob, blame, ranges), encodings, syntax highlighting,
-// and margins arrive in later milestones.
-public partial class FileViewer : GitExtensionsControl
+// Reduced twin of GitUI/Editor/FileViewer.cs. It renders unified diffs and supports the
+// file-to-file continuous scrolling used by FormStash. Blob/blame/range modes, syntax
+// highlighting, and line patching remain deferred.
+public partial class FileViewer : GitModuleControl
 {
     public FileViewer()
     {
         InitializeComponent();
 
         TextEditor.TextArea.TextView.LineTransformers.Add(new DiffLineColorizer());
+        TextEditor.KeyDown += TextEditor_KeyDown;
+        TextEditor.PointerWheelChanged += TextEditor_PointerWheelChanged;
 
         InitializeComplete();
     }
+
+    /// <summary>
+    ///  Raised when Escape is pressed in the diff editor.
+    /// </summary>
+    public event Action? EscapePressed;
+
+    /// <summary>
+    ///  Raised when scrolling above the first line.
+    /// </summary>
+    public event EventHandler? TopScrollReached;
+
+    /// <summary>
+    ///  Raised when scrolling below the last line.
+    /// </summary>
+    public event EventHandler? BottomScrollReached;
+
+    /// <summary>
+    ///  Gets whether the current diff supports line patching.
+    /// </summary>
+    public bool SupportLinePatching => false;
 
     /// <summary>
     ///  Shows a unified diff (patch) text.
@@ -29,6 +57,80 @@ public partial class FileViewer : GitExtensionsControl
         TextEditor.Document ??= new TextDocument();
         TextEditor.Document.Text = text ?? string.Empty;
         TextEditor.ScrollToHome();
+    }
+
+    /// <summary>
+    ///  Loads and displays the diff represented by a file-status entry.
+    /// </summary>
+    public async Task ViewChangesAsync(FileStatusItem? item, CancellationToken cancellationToken)
+    {
+        if (item?.Item is null)
+        {
+            ViewPatch(null);
+            return;
+        }
+
+        if (item.Item.IsStatusOnly)
+        {
+            ViewPatch(item.Item.ErrorMessage);
+            return;
+        }
+
+        ObjectId firstId = item.FirstRevision?.ObjectId ?? item.SecondRevision.FirstParentId;
+        ObjectId secondId = item.SecondRevision.ObjectId;
+        bool isTracked = item.Item.IsTracked || (!item.Item.TreeId.IsZero && !secondId.IsZero);
+
+        (Patch? patch, string? errorMessage) = await Module.GetSingleDiffAsync(
+            firstId,
+            secondId,
+            item.Item.Name,
+            item.Item.OldName,
+            extraDiffArguments: "",
+            Module.FilesEncoding,
+            cacheResult: true,
+            isTracked,
+            useGitColoring: false,
+            GitCommandConfiguration.Default,
+            cancellationToken);
+
+        await this.SwitchToMainThreadAsync(cancellationToken);
+        cancellationToken.ThrowIfCancellationRequested();
+        ViewPatch(patch?.Text ?? errorMessage);
+    }
+
+    /// <summary>
+    ///  Scrolls to the first line.
+    /// </summary>
+    public void ScrollToTop() => TextEditor.ScrollToHome();
+
+    /// <summary>
+    ///  Scrolls to the last line.
+    /// </summary>
+    public void ScrollToBottom() => TextEditor.ScrollToEnd();
+
+    private void TextEditor_KeyDown(object? sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape)
+        {
+            EscapePressed?.Invoke();
+            e.Handled = true;
+        }
+    }
+
+    private void TextEditor_PointerWheelChanged(object? sender, PointerWheelEventArgs e)
+    {
+        AvaloniaEdit.Rendering.TextView textView = TextEditor.TextArea.TextView;
+        if (e.Delta.Y > 0 && textView.ScrollOffset.Y <= 0)
+        {
+            TopScrollReached?.Invoke(this, EventArgs.Empty);
+            e.Handled = true;
+        }
+        else if (e.Delta.Y < 0
+                 && textView.ScrollOffset.Y + textView.Bounds.Height >= textView.DocumentHeight)
+        {
+            BottomScrollReached?.Invoke(this, EventArgs.Empty);
+            e.Handled = true;
+        }
     }
 
     /// <summary>
