@@ -8,6 +8,9 @@
         <ContextMenu x:Name="revisionContextMenu">
           <MenuItem x:Name="checkoutBranchToolStripMenuItem" Header="Chec_kout branch..." />
           <MenuItem x:Name="createNewBranchToolStripMenuItem" Header="Create new branch here (_x)..." />
+          <MenuItem x:Name="createTagToolStripMenuItem"
+                    Header="Create new ta_g here..."
+                    InputGesture="Ctrl+T" />
         </ContextMenu>
       </ListBox.ContextMenu>
       <ListBox.Styles>
