@@ -1,5 +1,9 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GitUI.LeftPanel.RepoObjectsTree">
-  <TreeView x:Name="treeMain" SelectionMode="Single" />
+  <TreeView x:Name="treeMain"
+            SelectionMode="Single"
+            ScrollViewer.HorizontalScrollBarVisibility="Auto"
+            ScrollViewer.VerticalScrollBarVisibility="Auto"
+            ScrollViewer.AllowAutoHide="False" />
 </UserControl>

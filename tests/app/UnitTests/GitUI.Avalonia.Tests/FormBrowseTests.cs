@@ -6,6 +6,7 @@ using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Media.Imaging;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.Git.Extensions;
@@ -15,6 +16,7 @@ using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.UserControls.RevisionGrid;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
 using ResourceManager;
@@ -81,6 +83,17 @@ public sealed class FormBrowseTests
                 ?? throw new InvalidOperationException("Revision loading status was not created.");
 
             await WaitUntilAsync(() => loadingStatus.Text == "1 revisions");
+
+            RevisionGridRefRenderer.RefLabelControl currentBranch =
+                revisionGrid.GetVisualDescendants()
+                    .OfType<RevisionGridRefRenderer.RefLabelControl>()
+                    .Single();
+            currentBranch.Icon.Should().Be(RefLabelIcon.Head);
+            currentBranch.FontWeight.Should().Be(Avalonia.Media.FontWeight.Bold);
+            TextBlock currentCommitSubject = revisionGrid.GetVisualDescendants()
+                .OfType<TextBlock>()
+                .Single(textBlock => textBlock.Classes.Contains("revision-subject"));
+            currentCommitSubject.FontWeight.Should().Be(Avalonia.Media.FontWeight.Bold);
 
             File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "updated");
             module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
