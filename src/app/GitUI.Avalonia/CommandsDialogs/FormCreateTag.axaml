@@ -1,0 +1,84 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrols="clr-namespace:GitUI.UserControls"
+        x:Class="GitUI.CommandsDialogs.FormCreateTag"
+        Width="500" Height="330"
+        MinWidth="455" MinHeight="260"
+        CanResize="False"
+        WindowStartupLocation="CenterOwner"
+        Title="Create tag">
+  <Grid x:Name="tableLayoutPanel2"
+        Margin="12"
+        ColumnDefinitions="Auto,*"
+        RowDefinitions="28,32,28,28,28,*,32"
+        ColumnSpacing="10">
+    <TextBlock x:Name="label1"
+               Text="Tag name"
+               VerticalAlignment="Center" />
+    <TextBox x:Name="textBoxTagName"
+             Grid.Column="1" />
+
+    <TextBlock x:Name="label3"
+               Grid.Row="1"
+               Text="Create tag at this revision"
+               VerticalAlignment="Center" />
+    <Grid Grid.Row="1"
+          Grid.Column="1"
+          ColumnDefinitions="*,Auto"
+          ColumnSpacing="10">
+      <usercontrols:CommitPickerSmallControl x:Name="commitPickerSmallControl1"
+                                             MinWidth="100"
+                                             MinHeight="26" />
+      <CheckBox x:Name="ForceTag"
+                Grid.Column="1"
+                Content="Force"
+                VerticalAlignment="Center" />
+    </Grid>
+
+    <CheckBox x:Name="pushTag"
+              Grid.Row="2"
+              Grid.Column="1"
+              Content="Push tag to '{0}'" />
+
+    <ComboBox x:Name="annotate"
+              Grid.Row="3"
+              Grid.Column="1"
+              Width="220"
+              HorizontalAlignment="Left" />
+
+    <TextBlock x:Name="keyIdLbl"
+               Grid.Row="4"
+               IsEnabled="False"
+               Text="Specific Key Id"
+               VerticalAlignment="Center" />
+    <TextBox x:Name="textBoxGpgKey"
+             Grid.Row="4"
+             Grid.Column="1"
+             Width="140"
+             HorizontalAlignment="Left"
+             IsEnabled="False"
+             MaxLength="16" />
+
+    <TextBlock x:Name="label2"
+               Grid.Row="5"
+               Text="Message"
+               VerticalAlignment="Top" />
+    <!-- A multiline TextBox keeps the shared GitTagController and all tag operations
+         functional until the Avalonia spell-checker control is available. -->
+    <TextBox x:Name="tagMessage"
+             Grid.Row="5"
+             Grid.Column="1"
+             AcceptsReturn="True"
+             TextWrapping="Wrap"
+             VerticalContentAlignment="Top"
+             IsEnabled="False" />
+
+    <Button x:Name="Ok"
+            Grid.Row="6"
+            Grid.Column="1"
+            MinWidth="128"
+            HorizontalAlignment="Right"
+            Content="Create tag"
+            IsDefault="True" />
+  </Grid>
+</Window>

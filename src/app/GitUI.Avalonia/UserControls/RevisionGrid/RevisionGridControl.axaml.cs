@@ -62,6 +62,7 @@ public partial class RevisionGridControl : GitModuleControl
         revisionContextMenu.Opening += (_, _) => UpdateContextMenuItems();
         checkoutBranchToolStripMenuItem.Click += PerformFirstDropdownItemClick;
         createNewBranchToolStripMenuItem.Click += CreateNewBranchToolStripMenuItemClick;
+        createTagToolStripMenuItem.Click += CreateTagToolStripMenuItemClick;
         UpdateContextMenuItems();
 
         InitializeComplete();
@@ -129,6 +130,7 @@ public partial class RevisionGridControl : GitModuleControl
             && !commands.Module.IsBareRepository();
         checkoutBranchToolStripMenuItem.IsEnabled = enabled;
         createNewBranchToolStripMenuItem.IsEnabled = enabled;
+        createTagToolStripMenuItem.IsEnabled = enabled;
     }
 
     private void PerformFirstDropdownItemClick(object? sender, EventArgs e)
@@ -146,6 +148,14 @@ public partial class RevisionGridControl : GitModuleControl
         if (SelectedRevision is GitRevision revision)
         {
             UICommands.StartCreateBranchDialog(GetOwner(), revision.ObjectId);
+        }
+    }
+
+    private void CreateTagToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        if (SelectedRevision is GitRevision revision)
+        {
+            UICommands.StartCreateTagDialog(GetOwner(), revision);
         }
     }
 
