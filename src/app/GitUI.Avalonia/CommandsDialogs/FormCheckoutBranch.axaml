@@ -20,21 +20,21 @@
         <Grid x:Name="tlpnlBranches" ColumnDefinitions="Auto,*,Auto" RowDefinitions="Auto,Auto"
               ColumnSpacing="8" RowSpacing="8">
           <RadioButton x:Name="LocalBranch" IsChecked="True" Content="Local _branch" />
-          <!-- Remote checkout options are retained for translation/field parity and hidden until that flow is ported. -->
-          <RadioButton x:Name="Remotebranch" Grid.Column="1" Content="Remote _branch" IsVisible="False" />
+          <RadioButton x:Name="Remotebranch" Grid.Column="1" Content="Remote _branch" />
           <Label x:Name="label1" Grid.Row="1" Content="_Select branch" Target="{Binding #Branches}"
                  VerticalAlignment="Center"
                  HorizontalContentAlignment="Right" />
-          <ComboBox x:Name="Branches" Grid.Row="1" Grid.Column="1" MinWidth="320" />
+          <ComboBox x:Name="Branches" Grid.Row="1" Grid.Column="1" MinWidth="320" IsEditable="True" />
           <TextBlock x:Name="lbChanges" Grid.Row="1" Grid.Column="2" Opacity="0.65"
                      VerticalAlignment="Center" />
         </Grid>
 
         <Border x:Name="horLine" Grid.Row="1" Height="1" Background="{DynamicResource ThemeBorderLowBrush}" />
 
-        <!-- Remote-only controls stay in the visual tree so their original names and translation keys remain stable. -->
+        <!-- Shown while "Remote branch" is selected (RecalculateSizeConstraints). -->
         <Grid x:Name="tlpnlRemoteOptions" Grid.Row="2" ColumnDefinitions="Auto,*"
-              RowDefinitions="Auto,Auto,Auto,Auto,Auto" IsVisible="False">
+              RowDefinitions="Auto,Auto,Auto,Auto,Auto" RowSpacing="6" ColumnSpacing="8"
+              IsVisible="False">
           <RadioButton x:Name="rbResetBranch" IsChecked="True" Content="R_eset local branch with the name:" />
           <TextBlock x:Name="branchName" Grid.Column="1" VerticalAlignment="Center" />
           <RadioButton x:Name="rbCreateBranchWithCustomName" Grid.Row="2"
@@ -49,7 +49,6 @@
             <StackPanel x:Name="flpnlLocalOptions" Orientation="Horizontal" Spacing="8">
               <RadioButton x:Name="rbDontChange" Content="Do_n't change" />
               <RadioButton x:Name="rbMerge" Content="_Merge" />
-              <!-- Auto-stash depends on the later stash-dialog port. -->
               <RadioButton x:Name="rbStash" Content="S_tash" />
               <RadioButton x:Name="rbReset" Content="_Reset" />
               <CheckBox x:Name="chkSetLocalChangesActionAsDefault" Content="Set as _default" />
