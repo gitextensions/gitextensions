@@ -14,49 +14,49 @@
     </Grid.ColumnDefinitions>
     <Border x:Name="Status"
             Padding="6,4"
-            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
             BorderThickness="0,0,1,1">
       <TextBlock Text="Status" FontWeight="SemiBold" />
     </Border>
     <Border x:Name="Action"
             Grid.Column="1"
             Padding="6,4"
-            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
             BorderThickness="0,0,1,1">
       <TextBlock Text="Action" FontWeight="SemiBold" />
     </Border>
     <Border x:Name="FileName"
             Grid.Column="2"
             Padding="6,4"
-            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
             BorderThickness="0,0,1,1">
       <TextBlock Text="Name" FontWeight="SemiBold" />
     </Border>
     <Border x:Name="subjectDataGridViewTextBoxColumn"
             Grid.Column="3"
             Padding="6,4"
-            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
             BorderThickness="0,0,1,1">
       <TextBlock Text="Subject" FontWeight="SemiBold" />
     </Border>
     <Border x:Name="authorDataGridViewTextBoxColumn"
             Grid.Column="4"
             Padding="6,4"
-            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
             BorderThickness="0,0,1,1">
       <TextBlock Text="Author" FontWeight="SemiBold" />
     </Border>
     <Border x:Name="dateDataGridViewTextBoxColumn"
             Grid.Column="5"
             Padding="6,4"
-            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
             BorderThickness="0,0,1,1">
       <TextBlock Text="Date" FontWeight="SemiBold" />
     </Border>
     <Border x:Name="CommitHash"
             Grid.Column="6"
             Padding="6,4"
-            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
             BorderThickness="0,0,0,1">
       <TextBlock Text="Commit hash" FontWeight="SemiBold" />
     </Border>
