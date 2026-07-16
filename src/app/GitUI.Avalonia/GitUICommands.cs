@@ -349,8 +349,21 @@ public sealed class GitUICommands : IGitUICommands
         });
     }
 
-    public bool StartDeleteBranchDialog(IWin32Window? owner, IEnumerable<string> branches) => throw NotPorted(nameof(StartDeleteBranchDialog));
-    public bool StartDeleteBranchDialog(IWin32Window? owner, string branch) => throw NotPorted(nameof(StartDeleteBranchDialog));
+    public bool StartDeleteBranchDialog(IWin32Window? owner, string branch)
+    {
+        return StartDeleteBranchDialog(owner, new[] { branch });
+    }
+
+    public bool StartDeleteBranchDialog(IWin32Window? owner, IEnumerable<string> branches)
+    {
+        return DoActionOnRepo(owner, action: () =>
+        {
+            using CommandsDialogs.FormDeleteBranch form = new(this, branches);
+            form.ShowDialog(owner);
+            return true;
+        }, changesRepo: false);
+    }
+
     public bool StartDeleteRemoteBranchDialog(IWin32Window? owner, string remoteBranch) => throw NotPorted(nameof(StartDeleteRemoteBranchDialog));
     public bool StartDeleteTagDialog(IWin32Window? owner, string? tag) => throw NotPorted(nameof(StartDeleteTagDialog));
     public bool StartEditGitAttributesDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartEditGitAttributesDialog));
