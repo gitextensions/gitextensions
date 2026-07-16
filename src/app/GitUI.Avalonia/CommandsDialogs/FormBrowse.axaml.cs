@@ -26,6 +26,7 @@ public sealed partial class FormBrowse : GitModuleForm
         PullOrFetch = 39,
         Push = 40,
         CreateBranch = 41,
+        MergeBranches = 42,
 
         // WinForms routes F5 through ToolStripItem.ShortcutKeys. Avalonia has no ToolStrip,
         // so refresh joins the same command dispatcher without changing persisted upstream IDs.
@@ -58,6 +59,7 @@ public sealed partial class FormBrowse : GitModuleForm
         branchToolStripMenuItem.Click += CreateBranchToolStripMenuItemClick;
         pullToolStripMenuItem.Click += PullToolStripMenuItemClick;
         fetchAllToolStripMenuItem.Click += fetchAllToolStripMenuItem_Click;
+        mergeBranchToolStripMenuItem.Click += MergeBranchToolStripMenuItemClick;
         stashToolStripMenuItem.Click += StashToolStripMenuItemClick;
         userShell.Click += userShell_Click;
         UICommands.PostRepositoryChanged += UICommands_PostRepositoryChanged;
@@ -85,6 +87,7 @@ public sealed partial class FormBrowse : GitModuleForm
         branchToolStripMenuItem.IsEnabled = isValidWorkingDir;
         pullToolStripMenuItem.IsEnabled = isValidWorkingDir;
         fetchAllToolStripMenuItem.IsEnabled = isValidWorkingDir;
+        mergeBranchToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
         stashToolStripMenuItem.IsEnabled = isValidWorkingDir && !module.IsBareRepository();
 
         if (isValidWorkingDir)
@@ -232,6 +235,11 @@ public sealed partial class FormBrowse : GitModuleForm
         UICommands.StartStashDialog(this);
     }
 
+    private void MergeBranchToolStripMenuItemClick(object? sender, EventArgs e)
+    {
+        UICommands.StartMergeBranchDialog(this, branch: null);
+    }
+
     private void userShell_Click(object? sender, EventArgs e)
     {
         try
@@ -255,6 +263,7 @@ public sealed partial class FormBrowse : GitModuleForm
             case Command.PullOrFetch: PullToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.Push: UICommands.StartPushDialog(this, pushOnShow: false); break;
             case Command.CreateBranch: CreateBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
+            case Command.MergeBranches: MergeBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
             default: return base.ExecuteCommand(command);
         }
 
