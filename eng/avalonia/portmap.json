@@ -15,7 +15,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Local branches only. Remote checkout/create/reset, auto-stash, checkout event scripts, and submodule follow-up remain to be ported; the original remote control names stay hidden in AXAML for translation parity."
+    "notes": "Local branches only; remote-branch create/reset flow not ported. Auto-stash works, but the \"apply stashed items again?\" prompt is a message box: the task dialog's \"don't show again\" box has no Avalonia counterpart."
   },
   "src/app/GitUI/CommandsDialogs/FormCreateBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateBranch.axaml.cs",
