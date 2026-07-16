@@ -74,6 +74,9 @@ jobs:
     - name: Build WinFormsToAxaml tool
       run: dotnet build eng/tools/WinFormsToAxaml/WinFormsToAxaml.csproj
 
+    - name: Run GitCommands tests
+      run: dotnet test tests/app/UnitTests/GitCommands.Tests/GitCommands.Tests.csproj -f net10.0
+
     - name: Run Avalonia headless tests
       run: dotnet test tests/app/UnitTests/GitUI.Avalonia.Tests/GitUI.Avalonia.Tests.csproj
 
