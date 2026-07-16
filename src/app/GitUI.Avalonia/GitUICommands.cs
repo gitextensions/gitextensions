@@ -411,10 +411,62 @@ public sealed class GitUICommands : IGitUICommands
         return done;
     }
 
-    public bool StartRebase(IWin32Window? owner, string onto) => throw NotPorted(nameof(StartRebase));
-    public bool StartRebaseDialog(IWin32Window? owner, string? from, string? to, string? onto, bool interactive = false, bool startRebaseImmediately = true) => throw NotPorted(nameof(StartRebaseDialog));
-    public bool StartRebaseDialog(IWin32Window? owner, string? onto) => throw NotPorted(nameof(StartRebaseDialog));
-    public bool StartRebaseDialogWithAdvOptions(IWin32Window? owner, string onto, string from = "") => throw NotPorted(nameof(StartRebaseDialogWithAdvOptions));
+    public bool StartRebase(IWin32Window? owner, string onto)
+    {
+        return StartRebaseDialog(
+            owner,
+            from: string.Empty,
+            to: null,
+            onto,
+            interactive: false,
+            startRebaseImmediately: true);
+    }
+
+    public bool StartRebaseDialog(
+        IWin32Window? owner,
+        string? from,
+        string? to,
+        string? onto,
+        bool interactive = false,
+        bool startRebaseImmediately = true)
+    {
+        if (interactive)
+        {
+            throw NotPorted(nameof(StartInteractiveRebase));
+        }
+
+        bool Action()
+        {
+            using FormRebase form = new(this, from, to, onto, interactive: false, startRebaseImmediately);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
+    public bool StartRebaseDialog(IWin32Window? owner, string? onto)
+    {
+        return StartRebaseDialog(
+            owner,
+            from: string.Empty,
+            to: null,
+            onto,
+            interactive: false,
+            startRebaseImmediately: false);
+    }
+
+    public bool StartRebaseDialogWithAdvOptions(IWin32Window? owner, string onto, string from = "")
+    {
+        return StartRebaseDialog(
+            owner,
+            from,
+            to: null,
+            onto,
+            interactive: false,
+            startRebaseImmediately: false);
+    }
+
     public bool StartRemotesDialog(IWin32Window? owner, string? preselectRemote = null, string? preselectLocal = null) => throw NotPorted(nameof(StartRemotesDialog));
     public bool StartRenameDialog(IWin32Window? owner, string branch) => throw NotPorted(nameof(StartRenameDialog));
     public bool StartRepoSettingsDialog(IWin32Window? owner) => throw NotPorted(nameof(StartRepoSettingsDialog));
@@ -469,7 +521,17 @@ public sealed class GitUICommands : IGitUICommands
 
     public bool StartSubmodulesDialog(IWin32Window? owner) => throw NotPorted(nameof(StartSubmodulesDialog));
     public bool StartSyncSubmodulesDialog(IWin32Window? owner) => throw NotPorted(nameof(StartSyncSubmodulesDialog));
-    public bool StartTheContinueRebaseDialog(IWin32Window? owner) => throw NotPorted(nameof(StartTheContinueRebaseDialog));
+    public bool StartTheContinueRebaseDialog(IWin32Window? owner)
+    {
+        return StartRebaseDialog(
+            owner,
+            from: string.Empty,
+            to: null,
+            onto: null,
+            interactive: false,
+            startRebaseImmediately: false);
+    }
+
     public bool StartUpdateSubmoduleDialog(IWin32Window? owner, string submoduleLocalPath, string submoduleParentPath) => throw NotPorted(nameof(StartUpdateSubmoduleDialog));
     public bool StartUpdateSubmodulesDialog(IWin32Window? owner, string submoduleLocalPath = "")
     {
