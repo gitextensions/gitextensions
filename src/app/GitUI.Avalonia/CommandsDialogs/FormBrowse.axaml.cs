@@ -27,6 +27,7 @@ public sealed partial class FormBrowse : GitModuleForm
         Push = 40,
         CreateBranch = 41,
         MergeBranches = 42,
+        CreateTag = 43,
         Rebase = 44,
 
         // WinForms routes F5 through ToolStripItem.ShortcutKeys. Avalonia has no ToolStrip,
@@ -280,6 +281,7 @@ public sealed partial class FormBrowse : GitModuleForm
             case Command.Push: UICommands.StartPushDialog(this, pushOnShow: false); break;
             case Command.CreateBranch: CreateBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
             case Command.MergeBranches: MergeBranchToolStripMenuItemClick(this, EventArgs.Empty); break;
+            case Command.CreateTag: UICommands.StartCreateTagDialog(this, RevisionGrid.SelectedRevision); break;
             case Command.Rebase: RebaseToolStripMenuItemClick(this, EventArgs.Empty); break;
             default: return base.ExecuteCommand(command);
         }
