@@ -45,7 +45,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResolveConflicts.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Ported at the post-97cfa7b44 shape (FormBusyScope keeps the UI thread free while the merge tool runs). The conflicted-files grid is a multi-select ListBox showing file names (the hidden Author column had no data source upstream); SortableBindingList header-sort is dropped, while the shared go-to-manual control is functional. Solve-conflict choices (keep local/remote/base, apply-to-all) use the Compat TaskDialog surrogate. SaveFileDialog becomes the Avalonia storage provider; \"open with\"/\"show in folder\" fall back to the default application/folder outside Windows. Context-menu Ctrl+1..3 shortcuts are dispatched in OnKeyDown. Deferred with TODOs: custom merge tools (CustomDiffMergeToolProvider), FormMergeSubmodule (a message box explains until then; new string recorded in AGENTS §9), and the hidden file-history item."
+    "notes": "Ported at the post-97cfa7b44 shape (FormBusyScope keeps the UI thread free while the merge tool runs). The conflicted-files grid is a multi-select ListBox showing file names (the hidden Author column had no data source upstream); SortableBindingList header-sort is dropped, while the shared go-to-manual control is functional. Solve-conflict choices (keep local/remote/base, apply-to-all) use the Compat TaskDialog surrogate. SaveFileDialog becomes the Avalonia storage provider; \"open with\"/\"show in folder\" fall back to the default application/folder outside Windows. Context-menu Ctrl+1..3 shortcuts are dispatched in OnKeyDown. Deferred with TODOs: custom merge tools (CustomDiffMergeToolProvider), and FormMergeSubmodule (a message box explains until then; new string recorded in AGENTS §9). The file-history item is live since 3.8."
   },
   "src/app/GitUI/CommandsDialogs/MergeConflictHandler.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/MergeConflictHandler.cs",
@@ -83,6 +83,12 @@
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
     "notes": "Local branch selection and forced deletion preserve the upstream current-branch, unmerged-branch, main/linked/stale-worktree safety flow. The Compat TaskDialog supplies the explicit default button and reflog footnote used by the confirmations."
   },
+  "src/app/GitUI/CommandsDialogs/FormFileHistory.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormFileHistory.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Shell: the revision grid filtered to one path (history always loads on show) above the Diff tab, with the WinForms title format. StartFileHistoryDialog opens the window in-process and non-modal instead of launching a separate client process. Deferred: View/Blame/Commit tabs (blame is 3.9), browse menus and filter toolbar, rename following (--follow, FilePathByObjectId), full-history/simplify-merges options, custom diff tools, and the build report."
+  },
   "src/app/GitUI/CommandsDialogs/FormDeleteTag.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormDeleteTag.axaml.cs",
     "status": "functional",
@@ -111,7 +117,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters, double-click notification, and the first context-menu actions: checkout a local branch containing the selected commit, create a branch or tag at it, and the per-branch rename dropdown (underscores escaped for Avalonia access keys). Like WinForms, the graph column is six pixels plus the lane width needed by the currently realized rows, the message column has its own six-pixel inset, and the checked-out commit title is bold. Refs mark the checked-out branch and matching tracking remote before rows are attached. Remaining menu items, column providers, and hotkeys are deferred."
+    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters, double-click notification, and the first context-menu actions: checkout a local branch containing the selected commit, create a branch or tag at it, and the per-branch rename dropdown (underscores escaped for Avalonia access keys). Like WinForms, the graph column is six pixels plus the lane width needed by the currently realized rows, the message column has its own six-pixel inset, and the checked-out commit title is bold. Refs mark the checked-out branch and matching tracking remote before rows are attached. ReloadRevisions accepts a path filter (file history) and the context menu can be disabled like WinForms. Remaining menu items, column providers, and hotkeys are deferred."
   },
   "src/app/GitUI/UserControls/RevisionGrid/RevisionGridRefRenderer.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridRefRenderer.cs",
@@ -349,7 +355,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Process, normal-commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, add-files, rename-branch, resolve-conflicts, and submodule-update members are real; unported members throw NotImplementedException."
+    "notes": "Process, normal-commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, add-files, rename-branch, file-history, resolve-conflicts, and submodule-update members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/ServiceContainerRegistry.cs": {
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
