@@ -444,7 +444,18 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartSettingsDialog(Type pageType) => throw NotPorted(nameof(StartSettingsDialog));
     public bool StartSparseWorkingCopyDialog(IWin32Window? owner) => throw NotPorted(nameof(StartSparseWorkingCopyDialog));
     public bool StartSquashCommitDialog(IWin32Window? owner, GitRevision revision) => throw NotPorted(nameof(StartSquashCommitDialog));
-    public bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true, string? initialStash = null) => throw NotPorted(nameof(StartStashDialog));
+    public bool StartStashDialog(IWin32Window? owner = null, bool manageStashes = true, string? initialStash = null)
+    {
+        bool Action()
+        {
+            using FormStash form = new(this, initialStash) { ManageStashes = manageStashes };
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action, changesRepo: false);
+    }
+
     public bool StartSubmodulesDialog(IWin32Window? owner) => throw NotPorted(nameof(StartSubmodulesDialog));
     public bool StartSyncSubmodulesDialog(IWin32Window? owner) => throw NotPorted(nameof(StartSyncSubmodulesDialog));
     public bool StartTheContinueRebaseDialog(IWin32Window? owner) => throw NotPorted(nameof(StartTheContinueRebaseDialog));
