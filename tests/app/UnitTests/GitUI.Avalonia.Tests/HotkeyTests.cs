@@ -58,6 +58,30 @@ public sealed class HotkeyTests
     }
 
     [Test]
+    public void HotkeySettingsManager_should_load_default_resolve_conflicts_hotkeys()
+    {
+        string? serializedHotkeys = AppSettings.SerializedHotkeys;
+        AppSettings.SerializedHotkeys = string.Empty;
+        try
+        {
+            IHotkeySettingsLoader loader = new HotkeySettingsManager();
+
+            IReadOnlyList<HotkeyCommand> hotkeys = loader.LoadHotkeys(FormResolveConflicts.HotkeySettingsName);
+
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormResolveConflicts.Commands.ChooseRemote
+                && command.KeyData == WinFormsShims.Keys.R);
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormResolveConflicts.Commands.Rescan
+                && command.KeyData == WinFormsShims.Keys.F5);
+        }
+        finally
+        {
+            AppSettings.SerializedHotkeys = serializedHotkeys!;
+        }
+    }
+
+    [Test]
     public void HotkeySettingsManager_should_apply_a_persisted_override()
     {
         string? serializedHotkeys = AppSettings.SerializedHotkeys;
