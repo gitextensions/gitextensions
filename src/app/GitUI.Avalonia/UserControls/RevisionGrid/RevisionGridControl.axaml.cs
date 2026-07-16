@@ -131,6 +131,21 @@ public partial class RevisionGridControl : GitModuleControl
         checkoutBranchToolStripMenuItem.IsEnabled = enabled;
         createNewBranchToolStripMenuItem.IsEnabled = enabled;
         createTagToolStripMenuItem.IsEnabled = enabled;
+
+        // Like the WinForms dropdown: one entry per renameable local branch on the commit.
+        renameBranchToolStripMenuItem.Items.Clear();
+        if (enabled && revision!.Refs is not null)
+        {
+            foreach (IGitRef head in new GitRefListsForRevision(revision).GetRenameableLocalBranches())
+            {
+                // Double the underscores so branch names are not treated as access keys.
+                MenuItem branchItem = new() { Header = head.Name.Replace("_", "__") };
+                branchItem.Click += delegate { UICommands.StartRenameDialog(GetOwner(), head.Name); };
+                renameBranchToolStripMenuItem.Items.Add(branchItem);
+            }
+        }
+
+        renameBranchToolStripMenuItem.IsEnabled = renameBranchToolStripMenuItem.Items.Count > 0;
     }
 
     private void PerformFirstDropdownItemClick(object? sender, EventArgs e)
