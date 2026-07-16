@@ -15,7 +15,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Local branches only; remote-branch create/reset flow not ported. Auto-stash works; the \"apply stashed items again?\" prompt is the upstream task dialog with its \"don't show again\" box, over the Compat TaskDialog surrogate."
+    "notes": "Full local and remote flow: remote checkout with reset/create-tracking/custom-name/detached-head options, non-fast-forward reset warning, custom-name validation and auto-normalisation, auto-stash with the upstream task dialog, and submodule update after a changed checkout. The WinForms ErrorProvider validation is an on-checkout message box, Avalonia SizeToContent replaces the ApplyLayout row math, and before/after-checkout event scripts wait for the ScriptsEngine phase (3.23)."
   },
   "src/app/GitUI/CommandsDialogs/FormMergeBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormMergeBranch.axaml.cs",
@@ -349,7 +349,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Process, normal-commit, push, pull/fetch, local-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, add-files, rename-branch, resolve-conflicts, and submodule-update members are real; unported members throw NotImplementedException."
+    "notes": "Process, normal-commit, push, pull/fetch, local/remote-checkout, create-branch, create-tag, delete-branch, delete-tag, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, add-files, rename-branch, resolve-conflicts, and submodule-update members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/ServiceContainerRegistry.cs": {
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
