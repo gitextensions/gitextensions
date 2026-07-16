@@ -56,7 +56,8 @@ internal sealed class HotkeySettingsManager : IHotkeySettingsLoader
                 Hk(FormBrowse.Command.PullOrFetch, WinFormsShims.Keys.Control | WinFormsShims.Keys.Down),
                 Hk(FormBrowse.Command.Push, WinFormsShims.Keys.Control | WinFormsShims.Keys.Up),
                 Hk(FormBrowse.Command.CreateBranch, WinFormsShims.Keys.Control | WinFormsShims.Keys.B),
-                Hk(FormBrowse.Command.MergeBranches, WinFormsShims.Keys.Control | WinFormsShims.Keys.M)),
+                Hk(FormBrowse.Command.MergeBranches, WinFormsShims.Keys.Control | WinFormsShims.Keys.M),
+                Hk(FormBrowse.Command.Rebase, WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.E)),
             new HotkeySettings(
                 FormResolveConflicts.HotkeySettingsName,
                 Hk(FormResolveConflicts.Commands.ChooseBase, WinFormsShims.Keys.B),
