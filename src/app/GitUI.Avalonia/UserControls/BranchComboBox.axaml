@@ -1,0 +1,17 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitUI.BranchComboBox"
+             MinHeight="26">
+  <Grid ColumnDefinitions="*,Auto" ColumnSpacing="4">
+    <ComboBox x:Name="branches"
+              IsEditable="True"
+              HorizontalAlignment="Stretch"
+              VerticalAlignment="Center" />
+    <Button x:Name="selectMultipleBranchesButton"
+            Grid.Column="1"
+            Width="27"
+            MinHeight="24"
+            Padding="2"
+            Content="…" />
+  </Grid>
+</UserControl>

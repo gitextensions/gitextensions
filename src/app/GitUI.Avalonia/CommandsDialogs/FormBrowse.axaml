@@ -20,6 +20,7 @@
         <MenuItem x:Name="pullToolStripMenuItem" Header="Pull_/Fetch..." />
         <MenuItem x:Name="fetchAllToolStripMenuItem" Header="Fetch _all" />
         <Separator />
+        <MenuItem x:Name="mergeBranchToolStripMenuItem" Header="_Merge branches..." />
         <MenuItem x:Name="stashToolStripMenuItem" Header="Ma_nage stashes..." />
       </MenuItem>
       <MenuItem x:Name="toolsToolStripMenuItem" Header="_Tools">

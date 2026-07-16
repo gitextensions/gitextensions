@@ -340,7 +340,18 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartInitializeDialog(IWin32Window? owner = null, string? dir = null, EventHandler<GitModuleEventArgs>? gitModuleChanged = null) => throw NotPorted(nameof(StartInitializeDialog));
     public bool StartInteractiveRebase(IWin32Window? owner, string onto) => throw NotPorted(nameof(StartInteractiveRebase));
     public bool StartMailMapDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartMailMapDialog));
-    public bool StartMergeBranchDialog(IWin32Window? owner, string? branch) => throw NotPorted(nameof(StartMergeBranchDialog));
+    public bool StartMergeBranchDialog(IWin32Window? owner, string? branch)
+    {
+        bool Action()
+        {
+            using FormMergeBranch form = new(this, branch);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action, changesRepo: false);
+    }
+
     public bool StartPluginSettingsDialog(IWin32Window? owner) => throw NotPorted(nameof(StartPluginSettingsDialog));
     public bool StartPullDialog(IWin32Window? owner = null, string? remoteBranch = null, string? remote = null, GitPullAction pullAction = GitPullAction.None)
         => StartPullDialogInternal(owner, pullOnShow: false, out _, remoteBranch, remote, pullAction);

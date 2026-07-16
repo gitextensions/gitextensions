@@ -37,6 +37,9 @@
     <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusItem.cs" Link="UserControls\FileStatusItem.cs" />
     <Compile Include="..\GitUI\UserControls\TextEventArgs.cs" Link="UserControls\TextEventArgs.cs" />
+    <Compile Include="..\GitUI\UserManual\IProvideUserManual.cs" Link="UserManual\IProvideUserManual.cs" />
+    <Compile Include="..\GitUI\UserManual\StandardHtmlUserManual.cs" Link="UserManual\StandardHtmlUserManual.cs" />
+    <Compile Include="..\GitUI\UserManual\UserManual.cs" Link="UserManual\UserManual.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\BranchFinder.cs" Link="UserControls\RevisionGrid\Graph\BranchFinder.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\Lane.cs" Link="UserControls\RevisionGrid\Graph\Lane.cs" />
     <Compile Include="..\GitUI\UserControls\RevisionGrid\Graph\LaneInfo.cs" Link="UserControls\RevisionGrid\Graph\LaneInfo.cs" />
@@ -57,6 +60,8 @@
     <!-- The language files are shared with the WinForms application; translation keys are
          identical, so all existing translations apply to the Avalonia twins unchanged. -->
     <None Include="..\GitUI\Translation\*.xlf" Link="Translation\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" />
+    <AvaloniaResource Include="..\GitUI\Resources\Help\HelpCommandMerge.png" Link="Resources\Help\HelpCommandMerge.png" />
+    <AvaloniaResource Include="..\GitUI\Resources\Help\HelpCommandMergeFastForward.png" Link="Resources\Help\HelpCommandMergeFastForward.png" />
   </ItemGroup>
 
   <ItemGroup>

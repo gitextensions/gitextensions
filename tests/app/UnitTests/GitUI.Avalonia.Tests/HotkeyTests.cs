@@ -50,6 +50,9 @@ public sealed class HotkeyTests
             hotkeys.Should().ContainSingle(command =>
                 command.CommandCode == (int)FormBrowse.Command.GitBash
                 && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.G));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)FormBrowse.Command.MergeBranches
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.M));
         }
         finally
         {
