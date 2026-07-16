@@ -27,7 +27,13 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormRebase.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Plain rebase supports heads/remotes/tags, immediate and advanced-option entry points, preserve-merges/auto-stash/date/update-refs/specific-range options, real process execution, repository notification, Browse menu, and Ctrl+Shift+E. The in-progress controller supports continue, skip, abort, conflict resolution, and commit. Interactive/autosquash, PatchGrid visualization, add-files, edit-todo, and the commit-picker button remain deferred to Phase 3.6b."
+    "notes": "Plain and interactive rebase support heads/remotes/tags, immediate and advanced-option entry points, autosquash/preserve-merges/auto-stash/date/update-refs/specific-range options, real process execution, repository notification, Browse menu, and Ctrl+Shift+E. The in-progress controller supports PatchGrid visualization/skipped state, add-files, commit, edit-todo, continue, skip, abort, and conflict resolution. Patch-row double-click commit/patch detail remains deferred until those detail dialogs are ported."
+  },
+  "src/app/GitUI/CommandsDialogs/FormAddFiles.cs": {
+    "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormAddFiles.axaml.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Filter, force, dry-run preview, and add execution preserve the original FormProcess flow."
   },
   "src/app/GitUI/CommandsDialogs/FormStash.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormStash.axaml.cs",
@@ -45,7 +51,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/MergeConflictHandler.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Verbatim; the middle-of-patch and middle-of-rebase follow-ups reach dialog members that still throw NotImplementedException."
+    "notes": "Verbatim; the middle-of-rebase follow-up now reaches the functional FormRebase controller. The middle-of-patch follow-up remains deferred."
   },
   "src/app/GitUI/FormBusyScope.cs": {
     "twin": "src/app/GitUI.Avalonia/FormBusyScope.cs",
@@ -63,7 +69,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCreateBranch.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Creates and optionally checks out normal or orphan branches. Commit selection accepts a revision/SHA as text; the chooser button is hidden until FormChooseCommit is ported. Submodule update after checkout is deferred."
+    "notes": "Creates and optionally checks out normal or orphan branches. Commit selection accepts a revision/SHA as text or the shared FormChooseCommit dialog. Submodule update after checkout is deferred."
   },
   "src/app/GitUI/CommandsDialogs/FormCommit.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCommit.axaml.cs",
@@ -87,7 +93,13 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only graph/ref labels/selection plus the first context-menu actions: checkout a local branch containing the selected commit and create a branch at it. Remaining menu items, column providers, and hotkeys are deferred."
+    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters, double-click notification, and the first context-menu actions: checkout a local branch containing the selected commit and create a branch at it. Remaining menu items, column providers, and hotkeys are deferred."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/DoubleClickRevisionEventArgs.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/DoubleClickRevisionEventArgs.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked unchanged."
   },
   "src/app/GitUI/UserControls/RevisionGrid/Graph/RevisionGraphLaneColor.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/Graph/RevisionGraphLaneColor.cs",
@@ -188,7 +200,19 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/CommitPickerSmallControl.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Text entry resolves a revision name or SHA. FormChooseCommit and the commit-count hint are deferred."
+    "notes": "Text entry resolves a revision name or SHA; the picker button opens the shared FormChooseCommit twin. The commit-count hint remains deferred."
+  },
+  "src/app/GitUI/UserControls/PatchGrid.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/PatchGrid.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Interactive and apply-style rebase state parsing, translated HeaderText keys, applying/applied/skipped status, current-row selection, and virtualized multi-column display are functional. Row double-click commit/patch detail waits for FormCommitDiff/FormViewPatch."
+  },
+  "src/app/GitUI/UserControls/PatchFile.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/PatchFile.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked unchanged."
   },
   "src/app/GitUI/UserControls/CommitSummaryUserControl.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/CommitSummaryUserControl.axaml.cs",
@@ -277,7 +301,7 @@
     "twin": "src/app/GitUI.Avalonia/GitUICommands.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Process, normal-commit, push, pull/fetch, local-checkout, create-branch, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), resolve-conflicts, and submodule-update members are real; unported members throw NotImplementedException."
+    "notes": "Process, normal-commit, push, pull/fetch, local-checkout, create-branch, reset-changes, stash (save/staged/pop/drop/apply with conflict follow-up), plain/interactive rebase, add-files, resolve-conflicts, and submodule-update members are real; unported members throw NotImplementedException."
   },
   "src/app/GitUI/ServiceContainerRegistry.cs": {
     "twin": "src/app/GitUI.Avalonia/ServiceContainerRegistry.cs",
@@ -289,7 +313,13 @@
     "twin": "src/app/GitUI.Avalonia/MessageBoxes.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced twin forwards generic overloads to the shared approved wrapper and ports the translated helpers in use: FailedToRunShell, Confirm, ConfirmResolveMergeConflicts, MiddleOfRebase, MiddleOfPatchApply, and ConfirmUpdateSubmodules (task dialog). Other domain-specific helpers join with their consumers."
+    "notes": "Reduced twin forwards generic overloads to the shared approved wrapper and ports the translated helpers in use: revision-not-found/filter messages, FailedToRunShell, Confirm, ConfirmResolveMergeConflicts, MiddleOfRebase, MiddleOfPatchApply, and ConfirmUpdateSubmodules (task dialog). Other domain-specific helpers join with their consumers."
+  },
+  "src/app/GitUI/HelperDialogs/FormChooseCommit.cs": {
+    "twin": "src/app/GitUI.Avalonia/HelperDialogs/FormChooseCommit.axaml.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Single-selection revision grid, preselection, current-branch/last-revision filters, direct SHA lookup, parent navigation, OK and double-click selection are functional. Artificial worktree/index revisions remain unavailable until the revision grid gains them."
   },
   "src/app/GitUI/CommandsDialogs/FormResetChanges.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResetChanges.axaml.cs",

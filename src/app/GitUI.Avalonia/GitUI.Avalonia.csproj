@@ -36,7 +36,9 @@
     <Compile Include="..\GitUI\Models\RunProcessInfo.cs" Link="Models\RunProcessInfo.cs" />
     <Compile Include="..\GitUI\TranslatedStrings.cs" Link="TranslatedStrings.cs" />
     <Compile Include="..\GitUI\UserControls\FileStatusItem.cs" Link="UserControls\FileStatusItem.cs" />
+    <Compile Include="..\GitUI\UserControls\PatchFile.cs" Link="UserControls\PatchFile.cs" />
     <Compile Include="..\GitUI\UserControls\TextEventArgs.cs" Link="UserControls\TextEventArgs.cs" />
+    <Compile Include="..\GitUI\UserControls\RevisionGrid\DoubleClickRevisionEventArgs.cs" Link="UserControls\RevisionGrid\DoubleClickRevisionEventArgs.cs" />
     <Compile Include="..\GitUI\UserManual\IProvideUserManual.cs" Link="UserManual\IProvideUserManual.cs" />
     <Compile Include="..\GitUI\UserManual\StandardHtmlUserManual.cs" Link="UserManual\StandardHtmlUserManual.cs" />
     <Compile Include="..\GitUI\UserManual\UserManual.cs" Link="UserManual\UserManual.cs" />

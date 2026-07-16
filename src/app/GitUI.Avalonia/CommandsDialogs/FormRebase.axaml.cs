@@ -16,9 +16,6 @@ using WinFormsShims = GitExtensions.Shims.WinForms;
 
 namespace GitUI.CommandsDialogs;
 
-// Twin of GitUI/CommandsDialogs/FormRebase.cs, limited to normal rebase and the
-// continue/skip/abort/conflict controller. Interactive todo editing, autosquash,
-// PatchGrid visualization, add-files, and the commit picker remain deferred.
 public partial class FormRebase : GitExtensionsDialog
 {
     private const string IgnoreDateToolTip =
@@ -37,6 +34,8 @@ public partial class FormRebase : GitExtensionsDialog
         new("Current branch a is up to date." + Environment.NewLine + "Nothing to rebase.");
     private readonly TranslationString _branchUpToDateCaption = new("Rebase");
     private readonly TranslationString _hoverShowImageLabelText = new("Hover to see scenario when fast forward is possible.");
+
+    private static readonly List<PatchFile> Skipped = [];
 
     private readonly string? _defaultBranch;
     private readonly string? _defaultToBranch;
@@ -69,11 +68,6 @@ public partial class FormRebase : GitExtensionsDialog
         bool startRebaseImmediately = true)
         : base(commands, enablePositionRestore: false)
     {
-        if (interactive)
-        {
-            throw new NotSupportedException("Interactive rebase is not available in the Avalonia UI yet.");
-        }
-
         _defaultBranch = defaultBranch;
         _defaultToBranch = to;
         _startRebaseImmediately = startRebaseImmediately;
@@ -87,16 +81,25 @@ public partial class FormRebase : GitExtensionsDialog
         btnSkip.Click += SkipClick;
         btnSolveConflicts.Click += MergetoolClick;
         btnSolveMergeconflicts.Click += SolveMergeConflictsClick;
+        btnAddFiles.Click += AddFilesClick;
         btnCommit.Click += Commit_Click;
+        btnEditTodo.Click += EditTodoClick;
+        btnChooseFromRevision.Click += btnChooseFromRevision_Click;
         llblShowOptions.Click += ShowOptions_LinkClicked;
+        chkInteractive.IsCheckedChanged += chkInteractive_CheckedChanged;
         chkIgnoreDate.IsCheckedChanged += chkIgnoreDate_CheckedChanged;
         chkCommitterDateIsAuthorDate.IsCheckedChanged += chkCommitterDateIsAuthorDate_CheckedChanged;
         chkSpecificRange.IsCheckedChanged += chkUseFromOnto_CheckedChanged;
 
         txtFrom.Text = from ?? string.Empty;
         chkSpecificRange.IsChecked = !string.IsNullOrEmpty(from);
+        chkInteractive.IsChecked = interactive;
+        chkAutosquash.IsEnabled = interactive;
         PanelLeftImage.IsVisible = !AppSettings.DontShowHelpImages;
         checkBoxUpdateRefs.IsVisible = Module.GitVersion.SupportUpdateRefs;
+        PatchGrid.UICommandsSource = this;
+        PatchGrid.IsManagingRebase = true;
+        PatchGrid.SetSkipped(Skipped);
 
         AcceptButton = btnRebase;
         InitializeComplete();
@@ -114,6 +117,9 @@ public partial class FormRebase : GitExtensionsDialog
         base.TranslateItems(translation);
 
         PanelLeftImage.IsOnHoverShowImage2NoticeText = _hoverShowImageLabelText.Text;
+        label2.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(label2.Text ?? string.Empty);
+        lblRangeFrom.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(lblRangeFrom.Text ?? string.Empty);
+        lblRangeTo.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(lblRangeTo.Text ?? string.Empty);
         string? ignoreDateToolTip = translation.TranslateItem(
             nameof(FormRebase),
             nameof(chkIgnoreDate),
@@ -132,6 +138,9 @@ public partial class FormRebase : GitExtensionsDialog
     {
         base.OnRuntimeLoad(e);
 
+        label2.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(label2.Text ?? string.Empty);
+        lblRangeFrom.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(lblRangeFrom.Text ?? string.Empty);
+        lblRangeTo.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(lblRangeTo.Text ?? string.Empty);
         string selectedHead = Module.GetSelectedBranch();
         Currentbranch.Text = selectedHead;
 
@@ -151,6 +160,7 @@ public partial class FormRebase : GitExtensionsDialog
         chkStash.IsChecked = AppSettings.RebaseAutoStash;
         chkStash.IsEnabled = !Module.InTheMiddleOfRebase() && Module.IsDirtyDir();
         chkPreserveMerges.IsEnabled = Module.GitVersion.SupportRebaseMerges;
+        chkAutosquash.IsChecked = Module.GetEffectiveSetting<bool>("rebase.autosquash") is true;
         if (Module.GetEffectiveSetting<bool>("rebase.updaterefs") is bool updateRefs)
         {
             checkBoxUpdateRefs.IsChecked = updateRefs;
@@ -158,6 +168,10 @@ public partial class FormRebase : GitExtensionsDialog
 
         rebasePanel.IsVisible = !Module.InTheMiddleOfRebase();
         EnableButtons();
+        if (Module.InTheMiddleOfRebase())
+        {
+            PatchGrid.Initialize();
+        }
 
         if (_startRebaseImmediately)
         {
@@ -215,33 +229,42 @@ public partial class FormRebase : GitExtensionsDialog
         chkStash.IsEnabled = !inRebase && Module.IsDirtyDir();
 
         btnCommit.IsVisible = inRebase;
+        btnAddFiles.IsVisible = inRebase;
+        btnEditTodo.IsVisible = inRebase;
         btnContinueRebase.IsVisible = inRebase && !conflictedMerge;
         btnSolveConflicts.IsVisible = inRebase && conflictedMerge;
         btnSkip.IsVisible = inRebase;
         btnAbort.IsVisible = inRebase;
         btnSolveMergeconflicts.IsVisible = conflictedMerge;
+        PatchGrid.IsVisible = inRebase;
+        lblCommitsToReapply.IsVisible = inRebase;
 
-        btnContinueRebase.Content = _continueRebaseText.Text;
-        btnSolveConflicts.Content = _solveConflictsText.Text;
+        btnContinueRebase.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_continueRebaseText.Text);
+        btnSolveConflicts.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_solveConflictsText.Text);
         MergeToolPanel.Background = null;
 
         if (conflictedMerge)
         {
             AcceptButton = btnSolveConflicts;
-            btnSolveConflicts.Content = _solveConflictsText2.Text;
+            btnSolveConflicts.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_solveConflictsText2.Text);
             MergeToolPanel.Background = new SolidColorBrush(Colors.Goldenrod);
             btnSolveConflicts.Focus();
         }
         else if (inRebase)
         {
             AcceptButton = btnContinueRebase;
-            btnContinueRebase.Content = _continueRebaseText2.Text;
+            btnContinueRebase.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(_continueRebaseText2.Text);
             btnContinueRebase.Focus();
         }
         else
         {
             AcceptButton = btnRebase;
         }
+    }
+
+    private void chkInteractive_CheckedChanged(object? sender, EventArgs e)
+    {
+        chkAutosquash.IsEnabled = chkInteractive.IsChecked == true;
     }
 
     private void MergetoolClick(object? sender, EventArgs e)
@@ -268,6 +291,18 @@ public partial class FormRebase : GitExtensionsDialog
             chkIgnoreDate.IsChecked != true
             && chkCommitterDateIsAuthorDate.IsChecked != true
             && Module.GitVersion.SupportRebaseMerges;
+        chkInteractive.IsEnabled =
+            chkIgnoreDate.IsChecked != true
+            && chkCommitterDateIsAuthorDate.IsChecked != true;
+        chkAutosquash.IsEnabled =
+            chkInteractive.IsChecked == true
+            && chkIgnoreDate.IsChecked != true
+            && chkCommitterDateIsAuthorDate.IsChecked != true;
+    }
+
+    private void AddFilesClick(object? sender, EventArgs e)
+    {
+        UICommands.StartAddFilesDialog(this);
     }
 
     private void ResolvedClick(object? sender, EventArgs e)
@@ -288,6 +323,10 @@ public partial class FormRebase : GitExtensionsDialog
             }
 
             EnableButtons();
+            if (Module.InTheMiddleOfRebase())
+            {
+                PatchGrid.Initialize();
+            }
         }
     }
 
@@ -295,6 +334,13 @@ public partial class FormRebase : GitExtensionsDialog
     {
         using (WaitCursorScope.Enter())
         {
+            PatchFile? applyingPatch = PatchGrid.PatchFiles?.FirstOrDefault(patchFile => patchFile.IsNext);
+            if (applyingPatch is not null)
+            {
+                applyingPatch.IsSkipped = true;
+                Skipped.Add(applyingPatch);
+            }
+
             FormProcess.ShowDialog(
                 this,
                 UICommands,
@@ -309,6 +355,10 @@ public partial class FormRebase : GitExtensionsDialog
             }
 
             EnableButtons();
+            if (Module.InTheMiddleOfRebase())
+            {
+                PatchGrid.RefreshGrid();
+            }
         }
     }
 
@@ -326,10 +376,41 @@ public partial class FormRebase : GitExtensionsDialog
 
             if (!Module.InTheMiddleOfRebase())
             {
+                Skipped.Clear();
                 Close();
             }
 
             EnableButtons();
+            if (Module.InTheMiddleOfRebase())
+            {
+                PatchGrid.Initialize();
+            }
+        }
+    }
+
+    private void EditTodoClick(object? sender, EventArgs e)
+    {
+        using (WaitCursorScope.Enter())
+        {
+            FormProcess.ShowDialog(
+                this,
+                UICommands,
+                arguments: Commands.EditTodoRebase(),
+                Module.WorkingDir,
+                input: null,
+                useDialogSettings: true);
+
+            if (!Module.InTheMiddleOfRebase())
+            {
+                Skipped.Clear();
+                Close();
+            }
+
+            EnableButtons();
+            if (Module.InTheMiddleOfRebase())
+            {
+                PatchGrid.Initialize();
+            }
         }
     }
 
@@ -350,6 +431,7 @@ public partial class FormRebase : GitExtensionsDialog
             }
 
             AppSettings.RebaseAutoStash = chkStash.IsChecked == true;
+            Skipped.Clear();
 
             bool? updateRefChoice = null;
             if (Module.GitVersion.SupportUpdateRefs
@@ -360,9 +442,9 @@ public partial class FormRebase : GitExtensionsDialog
 
             Commands.RebaseOptions rebaseOptions = new()
             {
-                Interactive = false,
+                Interactive = chkInteractive.IsChecked == true,
                 PreserveMerges = chkPreserveMerges.IsChecked == true,
-                AutoSquash = false,
+                AutoSquash = chkAutosquash.IsChecked == true,
                 AutoStash = chkStash.IsChecked == true,
                 IgnoreDate = chkIgnoreDate.IsChecked == true,
                 CommitterDateIsAuthorDate = chkCommitterDateIsAuthorDate.IsChecked == true,
@@ -410,6 +492,10 @@ public partial class FormRebase : GitExtensionsDialog
             }
 
             EnableButtons();
+            if (Module.InTheMiddleOfRebase())
+            {
+                PatchGrid.Initialize();
+            }
         }
     }
 
@@ -430,6 +516,61 @@ public partial class FormRebase : GitExtensionsDialog
         bool enabled = chkSpecificRange.IsChecked == true;
         txtFrom.IsEnabled = enabled;
         cboTo.IsEnabled = enabled;
+        btnChooseFromRevision.IsEnabled = enabled;
+    }
+
+    private void btnChooseFromRevision_Click(object? sender, EventArgs e)
+    {
+        bool previousValueBranchFilterEnabled = AppSettings.BranchFilterEnabled;
+        bool previousValueShowCurrentBranchOnly = AppSettings.ShowCurrentBranchOnly;
+        bool previousValueShowReflogReferences = AppSettings.ShowReflogReferences;
+        bool previousValueShowStashes = AppSettings.ShowStashes;
+
+        try
+        {
+            AppSettings.ShowStashes = false;
+            ObjectId firstParent = Module.RevParse("HEAD~");
+            string preSelectedCommit = !string.IsNullOrWhiteSpace(txtFrom.Text)
+                ? txtFrom.Text
+                : firstParent.IsZero
+                    ? string.Empty
+                    : firstParent.ToString();
+            string? mergeBaseCommitId = null;
+
+            string onto = GetComboText(cboBranches);
+            if (!string.IsNullOrWhiteSpace(onto))
+            {
+                try
+                {
+                    ObjectId commit1 = Module.RevParse(onto);
+                    ObjectId commit2 = Module.RevParse("HEAD");
+                    ObjectId mergeBase = Module.GetMergeBase(commit1, commit2);
+                    mergeBaseCommitId = mergeBase.IsZero ? null : mergeBase.ToString();
+                }
+                catch (Exception)
+                {
+                    // If the target cannot be resolved, show the unfiltered current branch.
+                }
+            }
+
+            using FormChooseCommit chooseForm = new(
+                UICommands,
+                preSelectedCommit,
+                showCurrentBranchOnly: true,
+                lastRevisionToDisplayHash: mergeBaseCommitId);
+            if (chooseForm.ShowDialog(this) == WinFormsShims.DialogResult.OK
+                && chooseForm.SelectedRevision is not null)
+            {
+                txtFrom.Text = chooseForm.SelectedRevision.ObjectId.ToShortString();
+            }
+        }
+        finally
+        {
+            AppSettings.ShowStashes = previousValueShowStashes;
+            AppSettings.BranchFilterEnabled.Value = previousValueBranchFilterEnabled;
+            AppSettings.ShowCurrentBranchOnly.Value = previousValueShowCurrentBranchOnly;
+            AppSettings.ShowReflogReferences.Value = previousValueShowReflogReferences;
+        }
     }
 
     private void Commit_Click(object? sender, EventArgs e)

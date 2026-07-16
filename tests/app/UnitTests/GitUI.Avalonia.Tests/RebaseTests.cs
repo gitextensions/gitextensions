@@ -5,6 +5,7 @@ using Avalonia.Headless;
 using Avalonia.Headless.NUnit;
 using Avalonia.Interactivity;
 using Avalonia.Threading;
+using Avalonia.VisualTree;
 using GitCommands;
 using GitCommands.Git;
 using GitCommands.UserRepositoryHistory;
@@ -14,6 +15,7 @@ using GitExtensions.Extensibility.Translations;
 using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
+using GitUI.HelperDialogs;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -86,11 +88,14 @@ public sealed class RebaseTests
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "_solveConflictsText", "Text", "&Solve conflicts");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "_noBranchSelectedText", "Text", "Please select a branch");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "btnAbort", "Text", "A&bort");
+        translation.Received(1).AddTranslationItem(nameof(FormRebase), "btnAddFiles", "Text", "&Add files");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "btnContinueRebase", "Text", "&Continue rebase");
+        translation.Received(1).AddTranslationItem(nameof(FormRebase), "btnEditTodo", "Text", "&Edit todo...");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "btnRebase", "Text", "Rebase");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "btnSkip", "Text", "S&kip currently applying commit");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "btnSolveConflicts", "Text", "&Solve conflicts");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "checkBoxUpdateRefs", "Text", "Update dependent r&efs");
+        translation.Received(1).AddTranslationItem(nameof(FormRebase), "chkAutosquash", "Text", "Autos&quash");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "chkCommitterDateIsAuthorDate", "Text", "Co&mmitter date is author date");
         translation.Received(1).AddTranslationItem(
             nameof(FormRebase),
@@ -104,6 +109,7 @@ public sealed class RebaseTests
             "toolTip1",
             $"Sets the author date to the current date (same as{Environment.NewLine}commit date), ignoring the original author date.");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "chkPreserveMerges", "Text", "&Preserve Merges");
+        translation.Received(1).AddTranslationItem(nameof(FormRebase), "chkInteractive", "Text", "&Interactive Rebase");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "chkSpecificRange", "Text", "Specific ra&nge");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "chkStash", "Text", "A&uto stash");
         translation.Received(1).AddTranslationItem(nameof(FormRebase), "label2", "Text", "&Rebase on");
@@ -124,7 +130,7 @@ public sealed class RebaseTests
     }
 
     [AvaloniaTest]
-    public void FormRebase_should_load_refs_and_keep_interactive_controls_absent()
+    public void FormRebase_should_load_refs_and_offer_interactive_rebase()
     {
         (IGitUICommands commands, IGitModule module) = CreateCommands("main", "feature", "origin/main");
         module.GetSelectedBranch().Returns("feature");
@@ -135,8 +141,11 @@ public sealed class RebaseTests
         form.Currentbranch.Text.Should().Be("feature");
         form.cboBranches.Text.Should().Be("main");
         form.cboBranches.ItemCount.Should().Be(3);
-        form.chkInteractive.IsVisible.Should().BeFalse();
-        form.chkAutosquash.IsVisible.Should().BeFalse();
+        form.chkInteractive.IsVisible.Should().BeTrue();
+        form.chkAutosquash.IsVisible.Should().BeTrue();
+        form.chkAutosquash.IsEnabled.Should().BeFalse();
+        form.chkInteractive.IsChecked = true;
+        form.chkAutosquash.IsEnabled.Should().BeTrue();
         form.btnEditTodo.IsVisible.Should().BeFalse();
         form.PatchGrid.IsVisible.Should().BeFalse();
         form.Close();
@@ -180,19 +189,30 @@ public sealed class RebaseTests
         form.btnSolveMergeconflicts.IsVisible.Should().BeTrue();
         form.btnSkip.IsVisible.Should().BeTrue();
         form.btnAbort.IsVisible.Should().BeTrue();
+        form.btnAddFiles.IsVisible.Should().BeTrue();
+        form.btnEditTodo.IsVisible.Should().BeTrue();
+        form.PatchGrid.IsVisible.Should().BeTrue();
         form.btnContinueRebase.IsVisible.Should().BeFalse();
         form.Close();
     }
 
-    [Test]
-    public void StartInteractiveRebase_should_remain_explicitly_unavailable()
+    [AvaloniaTest]
+    public void FormRebase_should_preselect_interactive_mode()
     {
-        IGitModule module = Substitute.For<IGitModule>();
-        GitUICommands commands = new(Substitute.For<IServiceProvider>(), module);
+        (IGitUICommands commands, _) = CreateCommands("main", "feature");
 
-        Action action = () => commands.StartInteractiveRebase(owner: null, onto: "main");
+        FormRebase form = new(
+            commands,
+            from: string.Empty,
+            to: null,
+            defaultBranch: "main",
+            interactive: true,
+            startRebaseImmediately: false);
+        form.Show();
 
-        action.Should().Throw<NotImplementedException>();
+        form.chkInteractive.IsChecked.Should().BeTrue();
+        form.chkAutosquash.IsEnabled.Should().BeTrue();
+        form.Close();
     }
 
     [AvaloniaTest]
@@ -227,6 +247,190 @@ public sealed class RebaseTests
         }
     }
 
+    [AvaloniaTest]
+    public async Task FormRebase_should_run_a_real_interactive_rebase()
+    {
+        AppSettings.CloseProcessDialog = true;
+        GitModule module = CreateDivergedRepository(out ObjectId mainId, out ObjectId oldFeatureId);
+        module.SetSetting("sequence.editor", "true");
+        GitUICommands commands = new(_serviceContainer, module);
+        FormRebase form = new(
+            commands,
+            from: string.Empty,
+            to: null,
+            defaultBranch: "main",
+            interactive: true,
+            startRebaseImmediately: false);
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => form.cboBranches.Text == "main");
+
+            form.chkAutosquash.IsChecked = true;
+            form.btnRebase.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+
+            await WaitUntilAsync(() => !form.IsVisible && module.GetCurrentCheckout() != oldFeatureId);
+
+            GitRevision rebasedFeature = module.GetRevision(module.GetCurrentCheckout(), shortFormat: true, loadRefs: false);
+            rebasedFeature.FirstParentId.Should().Be(mainId);
+            module.InTheMiddleOfRebase().Should().BeFalse();
+        }
+        finally
+        {
+            if (form.IsVisible)
+            {
+                form.Close();
+            }
+        }
+    }
+
+    [AvaloniaTest]
+    public void PatchGrid_should_use_existing_header_translation_keys()
+    {
+        PatchGrid patchGrid = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        patchGrid.AddTranslationItems(translation);
+        patchGrid.TranslateItems(translation);
+
+        translation.Received(1).AddTranslationItem(nameof(PatchGrid), "Action", "HeaderText", "Action");
+        translation.Received(1).AddTranslationItem(nameof(PatchGrid), "CommitHash", "HeaderText", "Commit hash");
+        translation.Received(1).AddTranslationItem(nameof(PatchGrid), "FileName", "HeaderText", "Name");
+        translation.Received(1).AddTranslationItem(nameof(PatchGrid), "Status", "HeaderText", "Status");
+        translation.Received(1).AddTranslationItem(nameof(PatchGrid), "authorDataGridViewTextBoxColumn", "HeaderText", "Author");
+        translation.Received(1).AddTranslationItem(nameof(PatchGrid), "dateDataGridViewTextBoxColumn", "HeaderText", "Date");
+        translation.Received(1).AddTranslationItem(nameof(PatchGrid), "subjectDataGridViewTextBoxColumn", "HeaderText", "Subject");
+        translation.Received(1).AddTranslationItem(
+            nameof(PatchGrid),
+            "_unableToShowPatchDetails",
+            "Text",
+            "Unable to show details of patch file.");
+    }
+
+    [AvaloniaTest]
+    public void PatchGrid_should_parse_interactive_rebase_state()
+    {
+        GitModule module = CreateLinearRepository(out ObjectId firstId, out ObjectId applyingId, out ObjectId todoId);
+        string rebaseDirectory = Path.Combine(_workingDirectory, ".git", "rebase-merge");
+        Directory.CreateDirectory(rebaseDirectory);
+        File.WriteAllText(
+            Path.Combine(rebaseDirectory, "done"),
+            $"pick {firstId} first{Environment.NewLine}pick {applyingId} applying{Environment.NewLine}");
+        File.WriteAllText(Path.Combine(rebaseDirectory, "stopped-sha"), applyingId.ToShortString());
+        File.WriteAllText(
+            Path.Combine(rebaseDirectory, "git-rebase-todo"),
+            $"pick {todoId} todo{Environment.NewLine}");
+
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        IGitUICommandsSource source = Substitute.For<IGitUICommandsSource>();
+        source.UICommands.Returns(commands);
+
+        PatchGrid patchGrid = new()
+        {
+            UICommandsSource = source,
+            IsManagingRebase = true,
+        };
+        patchGrid.Initialize();
+
+        patchGrid.PatchFiles.Should().HaveCount(3);
+        patchGrid.PatchFiles![0].IsApplied.Should().BeTrue();
+        patchGrid.PatchFiles[1].IsNext.Should().BeTrue();
+        patchGrid.PatchFiles[2].IsApplied.Should().BeFalse();
+        patchGrid.Patches.SelectedItem.Should().BeSameAs(patchGrid.PatchFiles[1]);
+    }
+
+    [AvaloniaTest]
+    public async Task FormRebase_should_display_a_real_interactive_conflict()
+    {
+        GitModule module = CreateConflictingRepository();
+        ExecutionResult result = module.GitExecutable.Execute("rebase -i main", throwOnErrorExit: false);
+        result.ExitCode.Should().NotBe(0);
+        module.InTheMiddleOfRebase().Should().BeTrue();
+
+        GitUICommands commands = new(_serviceContainer, module);
+        FormRebase form = new(commands, defaultBranch: null);
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => form.PatchGrid.PatchFiles?.Count == 2);
+
+            form.PatchGrid.IsVisible.Should().BeTrue();
+            form.PatchGrid.PatchFiles!.Should().ContainSingle(patchFile => patchFile.IsNext);
+            form.PatchGrid.PatchFiles.Should().OnlyContain(patchFile =>
+                !string.IsNullOrWhiteSpace(patchFile.Action)
+                && !string.IsNullOrWhiteSpace(patchFile.Subject));
+            Dispatcher.UIThread.RunJobs();
+            string[] renderedTexts = form.PatchGrid.Patches.GetVisualDescendants()
+                .OfType<TextBlock>()
+                .Select(textBlock => textBlock.Text ?? string.Empty)
+                .ToArray();
+            renderedTexts.Should().Contain("pick");
+            renderedTexts.Should().Contain("feature conflict");
+            renderedTexts.Should().Contain("feature after");
+            form.CaptureRenderedFrame().Should().NotBeNull(
+                "the interactive conflict controller and patch list should render headlessly");
+        }
+        finally
+        {
+            form.Close();
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("rebase") { "--abort" });
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task FormChooseCommit_should_preselect_a_real_revision()
+    {
+        GitModule module = CreateLinearRepository(out _, out ObjectId selectedId, out _);
+        GitUICommands commands = new(_serviceContainer, module);
+        FormChooseCommit form = new(commands, selectedId.ToString(), showCurrentBranchOnly: true);
+        try
+        {
+            form.Show();
+            await WaitUntilAsync(() => form.SelectedRevision?.ObjectId == selectedId);
+
+            form.SelectedRevision!.ObjectId.Should().Be(selectedId);
+            form.flowLayoutPanelParents.IsVisible.Should().BeTrue();
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
+    public void FormChooseCommit_should_construct_and_use_existing_translation_keys()
+    {
+        FormChooseCommit form = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        form.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(nameof(FormChooseCommit), "$this", "Text", "Choose Commit");
+        translation.Received(1).AddTranslationItem(nameof(FormChooseCommit), "btnOK", "Text", "OK");
+        translation.Received(1).AddTranslationItem(nameof(FormChooseCommit), "buttonGotoCommit", "Text", "Go to commit...");
+        translation.Received(1).AddTranslationItem(nameof(FormChooseCommit), "label1", "Text", "Find specific commit:");
+        translation.Received(1).AddTranslationItem(nameof(FormChooseCommit), "labelParents", "Text", "Parent(s):");
+        translation.Received(1).AddTranslationItem(nameof(FormChooseCommit), "linkLabelParent", "Text", "sha parent 1");
+        translation.Received(1).AddTranslationItem(nameof(FormChooseCommit), "linkLabelParent2", "Text", "sha parent 2");
+    }
+
+    [AvaloniaTest]
+    public void FormAddFiles_should_construct_and_use_existing_translation_keys()
+    {
+        FormAddFiles form = new();
+        ITranslation translation = Substitute.For<ITranslation>();
+
+        form.AddTranslationItems(translation);
+
+        translation.Received(1).AddTranslationItem(nameof(FormAddFiles), "$this", "Text", "Add files");
+        translation.Received(1).AddTranslationItem(nameof(FormAddFiles), "AddFiles", "Text", "Add files");
+        translation.Received(1).AddTranslationItem(nameof(FormAddFiles), "ShowFiles", "Text", "Show files");
+        translation.Received(1).AddTranslationItem(nameof(FormAddFiles), "force", "Text", "Force");
+        translation.Received(1).AddTranslationItem(nameof(FormAddFiles), "label1", "Text", "Filter");
+        form.Filter.Text.Should().Be(".");
+    }
+
     private (IGitUICommands Commands, IGitModule Module) CreateCommands(params string[] refNames)
     {
         IReadOnlyList<IGitRef> refs = refNames.Select(name => CreateRef(name, isHead: !name.Contains('/'))).ToList();
@@ -240,6 +444,7 @@ public sealed class RebaseTests
         module.GetRefs(Arg.Any<RefsFilter>()).Returns(refs);
         module.GetSelectedBranch().Returns("feature");
         module.GetEffectiveSetting<bool>(Arg.Any<string>()).Returns((bool?)false);
+        module.GetRebaseDir().Returns(Path.Combine(_workingDirectory, ".git", "rebase-merge") + Path.DirectorySeparatorChar);
         module.IsDirtyDir().Returns(false);
         module.InTheMiddleOfRebase().Returns(false);
         module.InTheMiddleOfConflictedMerge().Returns(false);
@@ -274,6 +479,60 @@ public sealed class RebaseTests
         module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", "feature" });
         featureId = module.GetCurrentCheckout();
         return module;
+    }
+
+    private GitModule CreateLinearRepository(
+        out ObjectId firstId,
+        out ObjectId secondId,
+        out ObjectId thirdId)
+    {
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
+        module.SetSetting("user.name", "Avalonia Test");
+        module.SetSetting("user.email", "avalonia@example.com");
+
+        firstId = Commit("first");
+        secondId = Commit("second");
+        thirdId = Commit("third");
+        return module;
+
+        ObjectId Commit(string message)
+        {
+            File.AppendAllText(Path.Combine(_workingDirectory, "history.txt"), $"{message}{Environment.NewLine}");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", "history.txt" });
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", message.Quote() });
+            return module.GetCurrentCheckout();
+        }
+    }
+
+    private GitModule CreateConflictingRepository()
+    {
+        GitModule module = new(_serviceContainer.GetRequiredService<IGitExecutorProvider>(), _workingDirectory);
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("init") { "--quiet" });
+        module.SetSetting("user.name", "Avalonia Test");
+        module.SetSetting("user.email", "avalonia@example.com");
+        module.SetSetting("sequence.editor", "true");
+
+        File.WriteAllText(Path.Combine(_workingDirectory, "conflict.txt"), "base\n");
+        Commit("base", "conflict.txt");
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "-M", "main" });
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("branch") { "feature" });
+
+        File.WriteAllText(Path.Combine(_workingDirectory, "conflict.txt"), "main\n");
+        Commit("main", "conflict.txt");
+
+        module.GitExecutable.RunCommand(new GitArgumentBuilder("checkout") { "--quiet", "feature" });
+        File.WriteAllText(Path.Combine(_workingDirectory, "conflict.txt"), "feature\n");
+        Commit("feature conflict", "conflict.txt");
+        File.WriteAllText(Path.Combine(_workingDirectory, "after.txt"), "after\n");
+        Commit("feature after", "after.txt");
+        return module;
+
+        void Commit(string message, string file)
+        {
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("add") { "--", file });
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-m", message.Quote() });
+        }
     }
 
     private static IGitRef CreateRef(string name, bool isHead)
