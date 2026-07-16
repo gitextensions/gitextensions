@@ -9,7 +9,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Pull-Fetch/Fetch all/Merge branches/Rebase/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. Remaining menus and toolbars are added with their dialogs."
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Pull-Fetch/Fetch all/Merge branches/Rebase/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The main panes now use shared semantic borders/splitters and retain usable bounds at the WinForms-sized minimum window. Remaining menus and toolbars are added with their dialogs."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
@@ -39,7 +39,7 @@
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormStash.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Manage/create mode, worktree/index and stored-stash file lists, real diff preview, stash all/selected, apply/drop, persisted options, repository refresh binding, continuous file scrolling, and Ctrl+N/Ctrl+P/F5 hotkeys. The drop confirmation uses the Compat TaskDialog surrogate. FileViewer line patching and FileStatusList context-menu actions remain deferred."
+    "notes": "Manage/create mode, worktree/index and stored-stash file lists, real diff preview, stash all/selected, apply/drop, persisted options, repository refresh binding, continuous file scrolling, and Ctrl+N/Ctrl+P/F5 hotkeys. The drop confirmation uses the Compat TaskDialog surrogate. The main divider uses the shared light/dark splitter brush. FileViewer line patching and FileStatusList context-menu actions remain deferred."
   },
   "src/app/GitUI/CommandsDialogs/FormResolveConflicts.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormResolveConflicts.axaml.cs",
@@ -93,7 +93,25 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters, double-click notification, and the first context-menu actions: checkout a local branch containing the selected commit and create a branch at it. Remaining menu items, column providers, and hotkeys are deferred."
+    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters, double-click notification, and the first context-menu actions: checkout a local branch containing the selected commit and create a branch at it. Like WinForms, the graph column is six pixels plus the lane width needed by the currently realized rows, the message column has its own six-pixel inset, and the checked-out commit title is bold. Refs mark the checked-out branch and matching tracking remote before rows are attached. Remaining menu items, column providers, and hotkeys are deferred."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionGridRefRenderer.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridRefRenderer.cs",
+    "status": "functional",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Avalonia DrawingContext twin preserves the WinForms ref ordering, tag point, current-branch and tracking-remote indicators, and joined local/tracking-remote point/notch geometry. Theme-variant semantic resources supply the exact invariant/dark branch, remote, tag, other, and neutral-capsule colors. Hover hit testing, ahead/behind virtual refs, fill/dashed settings, and superproject labels remain deferred with the full column-provider port."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RefLabelIcon.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RefLabelIcon.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked unchanged."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RefLabelShape.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RefLabelShape.cs",
+    "status": "parity",
+    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "notes": "Linked unchanged."
   },
   "src/app/GitUI/UserControls/RevisionGrid/DoubleClickRevisionEventArgs.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/DoubleClickRevisionEventArgs.cs",
@@ -206,7 +224,7 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/PatchGrid.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Interactive and apply-style rebase state parsing, translated HeaderText keys, applying/applied/skipped status, current-row selection, and virtualized multi-column display are functional. Row double-click commit/patch detail waits for FormCommitDiff/FormViewPatch."
+    "notes": "Interactive and apply-style rebase state parsing, translated HeaderText keys, applying/applied/skipped status, current-row selection, and virtualized multi-column display are functional. Header separators use the shared light/dark section-border brush. Row double-click commit/patch detail waits for FormCommitDiff/FormViewPatch."
   },
   "src/app/GitUI/UserControls/PatchFile.cs": {
     "twin": "src/app/GitUI.Avalonia/UserControls/PatchFile.cs",
@@ -224,7 +242,7 @@
     "twin": "src/app/GitUI.Avalonia/LeftPanel/RepoObjectsTree.axaml.cs",
     "status": "functional",
     "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Flat Branches/Remotes/Tags lists; no nested folders, stashes, or submodules yet."
+    "notes": "Flat Branches/Remotes/Tags lists with WinForms-like parent/child connector lines. Auto-hidden overlay scrollbars are disabled so simultaneous horizontal/vertical scrolling does not cover the last expanded item. No nested folders, stashes, or submodules yet."
   },
   "src/app/GitUI/GitExtensionsForm.cs": {
     "twin": "src/app/GitUI.Avalonia/GitExtensionsForm.cs",
