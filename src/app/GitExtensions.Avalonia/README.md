@@ -62,11 +62,17 @@ cd gitextensions
 dotnet build src/app/GitExtensions.Avalonia/GitExtensions.Avalonia.csproj
 ```
 
-On Windows, pass `-p:BuildAvalonia=true` to the build (and run) commands: the shared engine
-projects build their cross-platform flavor only when this property is set (or when building
-on a non-Windows system), so that the existing Windows Forms solution and its pipelines are
-never affected by the Avalonia port. `GitExtensions.Avalonia.slnx` in the repository root is
-a separate solution containing only the Avalonia application and the projects it uses.
+The shared engine projects build their cross-platform flavor only when the `BuildAvalonia`
+MSBuild property is set (or when building on a non-Windows system), so that the existing
+Windows Forms solution and its pipelines are never affected by the Avalonia port. The
+property is applied automatically: building `GitExtensions.Avalonia.slnx` (the separate
+solution in the repository root containing only the Avalonia application and the projects
+it uses) sets it through the solution name, and building or running the Avalonia projects
+directly picks it up from the `Directory.Build.rsp` next to each of them. Only when building
+a shared engine project itself for `net10.0` on Windows (for example
+`dotnet build src/app/GitCommands -f net10.0`) does `-p:BuildAvalonia=true` still need to be
+passed explicitly. IDE design-time builds do not read `.rsp` files, so on Windows open
+`GitExtensions.Avalonia.slnx` rather than an individual Avalonia project.
 
 The Avalonia application builds on all three operating systems with the commands above;
 the git submodules are not required for it. Building the complete solution including the
