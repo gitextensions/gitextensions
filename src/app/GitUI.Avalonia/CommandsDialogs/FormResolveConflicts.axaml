@@ -33,8 +33,7 @@
             <MenuItem x:Name="openWithToolStripMenuItem" Header="Open With" />
             <MenuItem x:Name="openFolderToolStripMenuItem" Header="Show in folder" />
             <Separator x:Name="toolStripSeparator4" />
-            <!-- The file-history form is not ported yet; hidden until it is. -->
-            <MenuItem x:Name="fileHistoryToolStripMenuItem" Header="File history" IsVisible="False" />
+            <MenuItem x:Name="fileHistoryToolStripMenuItem" Header="File history" />
           </ContextMenu>
         </ListBox.ContextMenu>
       </ListBox>
