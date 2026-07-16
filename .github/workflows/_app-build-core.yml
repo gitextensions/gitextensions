@@ -101,13 +101,24 @@ jobs:
           $suffix = "-dev"
         }
 
+        $versionText = "$version$suffix"
+
+        # arm64 runners cross-target arm64; TargetPlatform feeds the portable/MSI file names (GitExtensions-Portable-<platform>-...)
+        # so it must be set, otherwise the arm64 leg produces x64-named artifacts that collide with the x64 leg.
+        # The informational version is also marked so the two builds are distinguishable at runtime.
+        if ($env:RUNNER_ARCH -eq 'arm64')
+        {
+          $versionText = "$versionText-arm64"
+          "TargetPlatform=arm64" >> $env:GITHUB_ENV
+        }
+
         "VERSION=$version" >> $env:GITHUB_ENV
-        "VERSION_TEXT=$version$suffix" >> $env:GITHUB_ENV
+        "VERSION_TEXT=$versionText" >> $env:GITHUB_ENV
         # ARTIFACT_BUILD_SUFFIX carries the pre-release marker so packaged file names match the informational version.
         "ARTIFACT_BUILD_SUFFIX=$suffix" >> $env:GITHUB_ENV
         # Exposed as job/workflow outputs so callers (e.g. the release signing job) can name artifacts consistently.
         "version=$version" >> $env:GITHUB_OUTPUT
-        "version-text=$version$suffix" >> $env:GITHUB_OUTPUT
+        "version-text=$versionText" >> $env:GITHUB_OUTPUT
 
         # ContinuousIntegrationBuild is always set; PR builds additionally stamp the originating commit.
         $buildArgs = "/p:ContinuousIntegrationBuild=true"
