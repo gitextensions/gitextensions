@@ -6,6 +6,7 @@
         xmlns:leftpanel="clr-namespace:GitUI.LeftPanel"
         x:Class="GitUI.CommandsDialogs.FormBrowse"
         Width="1280" Height="800"
+        MinWidth="900" MinHeight="560"
         Title="Git Extensions">
   <DockPanel>
     <Menu x:Name="mainMenuStrip" DockPanel.Dock="Top">
@@ -36,20 +37,29 @@
       <TextBlock x:Name="lblRepoPath" FontWeight="SemiBold" />
       <TextBlock x:Name="lblStatus" Opacity="0.7" TextWrapping="Wrap" />
     </StackPanel>
-    <Grid ColumnDefinitions="240,4,*" Margin="8,0,8,8">
-      <leftpanel:RepoObjectsTree x:Name="repoObjectsTree" Grid.Column="0" />
-      <GridSplitter Grid.Column="1" Background="Transparent" ResizeDirection="Columns" />
-      <Grid Grid.Column="2" RowDefinitions="3*,4,2*">
-      <gitui:RevisionGridControl x:Name="RevisionGrid" Grid.Row="0" />
-      <GridSplitter Grid.Row="1" Background="Transparent" ResizeDirection="Rows" />
-      <Grid Grid.Row="2" ColumnDefinitions="380,4,*">
-        <Grid Grid.Column="0" RowDefinitions="Auto,*">
-          <commitinfo:CommitInfo x:Name="CommitInfo" Grid.Row="0" MaxHeight="180" />
-          <gitui:FileStatusList x:Name="fileStatusList" Grid.Row="1" />
+    <Grid ColumnDefinitions="240,5,*" Margin="8,0,8,8">
+      <Border Grid.Column="0" Classes="gitextensions-section">
+        <leftpanel:RepoObjectsTree x:Name="repoObjectsTree" />
+      </Border>
+      <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+      <Grid Grid.Column="2" RowDefinitions="3*,5,2*">
+        <Border Grid.Row="0" Classes="gitextensions-section">
+          <gitui:RevisionGridControl x:Name="RevisionGrid" />
+        </Border>
+        <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
+        <Grid Grid.Row="2" ColumnDefinitions="380,5,*">
+          <Border Grid.Column="0" Classes="gitextensions-section">
+            <Grid RowDefinitions="Auto,1,*">
+              <commitinfo:CommitInfo x:Name="CommitInfo" Grid.Row="0" MaxHeight="180" />
+              <Border Grid.Row="1" Classes="gitextensions-section-separator" />
+              <gitui:FileStatusList x:Name="fileStatusList" Grid.Row="2" />
+            </Grid>
+          </Border>
+          <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
+          <Border Grid.Column="2" Classes="gitextensions-section">
+            <editor:FileViewer x:Name="fileViewer" />
+          </Border>
         </Grid>
-        <GridSplitter Grid.Column="1" Background="Transparent" ResizeDirection="Columns" />
-        <editor:FileViewer x:Name="fileViewer" Grid.Column="2" />
-      </Grid>
       </Grid>
     </Grid>
   </DockPanel>

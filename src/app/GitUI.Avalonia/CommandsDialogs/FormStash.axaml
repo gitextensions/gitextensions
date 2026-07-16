@@ -92,8 +92,7 @@
 
     <GridSplitter Grid.Column="1"
                   Width="5"
-                  ResizeDirection="Columns"
-                  Background="{DynamicResource ThemeBorderLowBrush}" />
+                  ResizeDirection="Columns" />
 
     <editor:FileViewer x:Name="View" Grid.Column="2" Margin="8" />
   </Grid>
