@@ -380,6 +380,11 @@ public sealed class ViewConstructionTests
             "createNewBranchToolStripMenuItem",
             "Text",
             "Create new branch here (&x)...");
+        translation.Received(1).AddTranslationItem(
+            nameof(RevisionGridControl),
+            "createTagToolStripMenuItem",
+            "Text",
+            "Create new ta&g here...");
     }
 
     [AvaloniaTest]
@@ -396,6 +401,8 @@ public sealed class ViewConstructionTests
                 ?? throw new InvalidOperationException("Checkout-branch menu item was not created.");
             MenuItem createBranch = control.FindControl<MenuItem>("createNewBranchToolStripMenuItem")
                 ?? throw new InvalidOperationException("Create-branch menu item was not created.");
+            MenuItem createTag = control.FindControl<MenuItem>("createTagToolStripMenuItem")
+                ?? throw new InvalidOperationException("Create-tag menu item was not created.");
             ListBox revisions = control.FindControl<ListBox>("lstRevisions")
                 ?? throw new InvalidOperationException("Revision list was not created.");
 
@@ -404,6 +411,7 @@ public sealed class ViewConstructionTests
 
             checkoutBranch.IsEnabled.Should().BeFalse();
             createBranch.IsEnabled.Should().BeFalse();
+            createTag.IsEnabled.Should().BeFalse();
         }
         finally
         {

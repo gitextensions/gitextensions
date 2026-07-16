@@ -195,6 +195,27 @@ public sealed class HotkeyTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_create_tag_hotkey_should_open_for_the_current_revision()
+    {
+        (FormBrowse form, IGitUICommands commands, _) = CreateBrowseForm(
+            new HotkeyCommand((int)FormBrowse.Command.CreateTag, nameof(FormBrowse.Command.CreateTag))
+            {
+                KeyData = WinFormsShims.Keys.Control | WinFormsShims.Keys.T,
+            });
+        form.Show();
+        try
+        {
+            form.KeyPress(Key.T, RawInputModifiers.Control, PhysicalKey.T, keySymbol: "t");
+
+            commands.Received(1).StartCreateTagDialog(form, revision: null);
+        }
+        finally
+        {
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_Escape_should_not_close_the_repository_browser()
     {
         (FormBrowse form, _, _) = CreateBrowseForm();
