@@ -105,6 +105,11 @@ public sealed class ViewConstructionTests
             "&Commit...");
         translation.Received(1).AddTranslationItem(
             nameof(FormBrowse),
+            "deleteBranchToolStripMenuItem",
+            "Text",
+            "De&lete branch...");
+        translation.Received(1).AddTranslationItem(
+            nameof(FormBrowse),
             "pullToolStripMenuItem",
             "Text",
             "Pull&/Fetch...");
@@ -305,6 +310,32 @@ public sealed class ViewConstructionTests
         createBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
 
         commands.Received(1).StartCreateBranchDialog(form, default(ObjectId));
+    }
+
+    [AvaloniaTest]
+    public void FormBrowse_delete_branch_should_start_the_dialog()
+    {
+        IGitModule module = Substitute.For<IGitModule>();
+        module.WorkingDir.Returns(Path.GetTempPath());
+        module.IsValidGitWorkingDir().Returns(false);
+
+        ILockableNotifier notifier = Substitute.For<ILockableNotifier>();
+        IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
+        appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
+
+        IGitUICommands commands = Substitute.For<IGitUICommands>();
+        commands.Module.Returns(module);
+        commands.RepoChangedNotifier.Returns(notifier);
+        commands.GetService(typeof(IAppTitleGenerator)).Returns(appTitleGenerator);
+
+        FormBrowse form = new(commands);
+        MenuItem deleteBranch = form.FindControl<MenuItem>("deleteBranchToolStripMenuItem")
+            ?? throw new InvalidOperationException("Delete-branch menu item was not created.");
+        deleteBranch.IsEnabled = true;
+
+        deleteBranch.RaiseEvent(new RoutedEventArgs(MenuItem.ClickEvent));
+
+        commands.Received(1).StartDeleteBranchDialog(form, string.Empty);
     }
 
     [AvaloniaTest]
