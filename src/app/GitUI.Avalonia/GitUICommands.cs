@@ -242,7 +242,18 @@ public sealed class GitUICommands : IGitUICommands
     public void RemoveCommitTemplate(string key) => throw NotPorted(nameof(RemoveCommitTemplate));
     public bool RunCommand(IReadOnlyList<string> args) => throw NotPorted(nameof(RunCommand));
     public void ShowModelessForm(IWin32Window? owner, bool requiresValidWorkingDir, EventHandler<GitUIEventArgs>? preEvent, EventHandler<GitUIPostActionEventArgs>? postEvent, Func<Form> provideForm) => throw NotPorted(nameof(ShowModelessForm));
-    public bool StartAddFilesDialog(IWin32Window? owner, string? addFiles = null) => throw NotPorted(nameof(StartAddFilesDialog));
+    public bool StartAddFilesDialog(IWin32Window? owner, string? addFiles = null)
+    {
+        bool Action()
+        {
+            using FormAddFiles form = new(this, addFiles);
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartAddToGitIgnoreDialog(IWin32Window? owner, bool localExclude, params string[] filePattern) => throw NotPorted(nameof(StartAddToGitIgnoreDialog));
     public bool StartAmendCommitDialog(IWin32Window? owner, GitRevision revision) => throw NotPorted(nameof(StartAmendCommitDialog));
     public bool StartApplyPatchDialog(IWin32Window? owner, string? patchFile = null) => throw NotPorted(nameof(StartApplyPatchDialog));
@@ -338,7 +349,17 @@ public sealed class GitUICommands : IGitUICommands
     public bool StartFormatPatchDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartFormatPatchDialog));
     public bool StartGeneralSettingsDialog(IWin32Window? owner) => throw NotPorted(nameof(StartGeneralSettingsDialog));
     public bool StartInitializeDialog(IWin32Window? owner = null, string? dir = null, EventHandler<GitModuleEventArgs>? gitModuleChanged = null) => throw NotPorted(nameof(StartInitializeDialog));
-    public bool StartInteractiveRebase(IWin32Window? owner, string onto) => throw NotPorted(nameof(StartInteractiveRebase));
+    public bool StartInteractiveRebase(IWin32Window? owner, string onto)
+    {
+        return StartRebaseDialog(
+            owner,
+            from: string.Empty,
+            to: null,
+            onto,
+            interactive: true,
+            startRebaseImmediately: true);
+    }
+
     public bool StartMailMapDialog(IWin32Window? owner = null) => throw NotPorted(nameof(StartMailMapDialog));
     public bool StartMergeBranchDialog(IWin32Window? owner, string? branch)
     {
@@ -430,14 +451,9 @@ public sealed class GitUICommands : IGitUICommands
         bool interactive = false,
         bool startRebaseImmediately = true)
     {
-        if (interactive)
-        {
-            throw NotPorted(nameof(StartInteractiveRebase));
-        }
-
         bool Action()
         {
-            using FormRebase form = new(this, from, to, onto, interactive: false, startRebaseImmediately);
+            using FormRebase form = new(this, from, to, onto, interactive, startRebaseImmediately);
             form.ShowDialog(owner);
             return true;
         }

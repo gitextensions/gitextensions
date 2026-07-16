@@ -1,0 +1,77 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="GitUI.PatchGrid">
+  <Grid x:Name="columnsGrid"
+        RowDefinitions="Auto,*">
+    <Grid.ColumnDefinitions>
+      <ColumnDefinition Width="82" />
+      <ColumnDefinition Width="82" />
+      <ColumnDefinition Width="70" />
+      <ColumnDefinition Width="*" />
+      <ColumnDefinition Width="150" />
+      <ColumnDefinition Width="140" />
+      <ColumnDefinition Width="110" />
+    </Grid.ColumnDefinitions>
+    <Border x:Name="Status"
+            Padding="6,4"
+            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderThickness="0,0,1,1">
+      <TextBlock Text="Status" FontWeight="SemiBold" />
+    </Border>
+    <Border x:Name="Action"
+            Grid.Column="1"
+            Padding="6,4"
+            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderThickness="0,0,1,1">
+      <TextBlock Text="Action" FontWeight="SemiBold" />
+    </Border>
+    <Border x:Name="FileName"
+            Grid.Column="2"
+            Padding="6,4"
+            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderThickness="0,0,1,1">
+      <TextBlock Text="Name" FontWeight="SemiBold" />
+    </Border>
+    <Border x:Name="subjectDataGridViewTextBoxColumn"
+            Grid.Column="3"
+            Padding="6,4"
+            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderThickness="0,0,1,1">
+      <TextBlock Text="Subject" FontWeight="SemiBold" />
+    </Border>
+    <Border x:Name="authorDataGridViewTextBoxColumn"
+            Grid.Column="4"
+            Padding="6,4"
+            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderThickness="0,0,1,1">
+      <TextBlock Text="Author" FontWeight="SemiBold" />
+    </Border>
+    <Border x:Name="dateDataGridViewTextBoxColumn"
+            Grid.Column="5"
+            Padding="6,4"
+            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderThickness="0,0,1,1">
+      <TextBlock Text="Date" FontWeight="SemiBold" />
+    </Border>
+    <Border x:Name="CommitHash"
+            Grid.Column="6"
+            Padding="6,4"
+            BorderBrush="{DynamicResource ThemeBorderLowBrush}"
+            BorderThickness="0,0,0,1">
+      <TextBlock Text="Commit hash" FontWeight="SemiBold" />
+    </Border>
+
+    <ListBox x:Name="Patches"
+             Grid.Row="1"
+             Grid.ColumnSpan="7"
+             SelectionMode="Single">
+      <ListBox.Styles>
+        <Style Selector="ListBoxItem">
+          <Setter Property="Padding" Value="0" />
+          <Setter Property="MinHeight" Value="28" />
+          <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+        </Style>
+      </ListBox.Styles>
+    </ListBox>
+  </Grid>
+</UserControl>
