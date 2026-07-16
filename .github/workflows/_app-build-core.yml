@@ -39,7 +39,9 @@ jobs:
     # A separate job for test takes too much time for transferring artifacts and setting up the job.
     # So we build and test in the same job, but upload test results as a separate artifact to be consumed by the test-report job.
     runs-on: ${{ inputs.os }}
-    timeout-minutes: 30
+    # The arm64 Windows runner executes the test suite roughly twice as slowly as x64, so it needs a higher cap
+    # to avoid the job timeout cancelling tests mid-run. x64 keeps the tighter cap so genuine hangs surface quickly.
+    timeout-minutes: ${{ inputs.os == 'windows-11-arm' && 60 || 30 }}
     permissions:
       contents: read
     outputs:
