@@ -1,11 +1,12 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:usercontrols="clr-namespace:GitUI.UserControls"
         x:Class="GitUI.CommandsDialogs.FormResolveConflicts"
         Width="619" Height="392"
         MinWidth="450" MinHeight="299"
         WindowStartupLocation="CenterOwner"
         Title="Resolve merge conflicts">
-  <Grid x:Name="tableLayoutPanel4" Margin="9" ColumnDefinitions="*,Auto" RowDefinitions="*,Auto" RowSpacing="8">
+  <Grid x:Name="tableLayoutPanel4" Margin="9" ColumnDefinitions="*,Auto" RowDefinitions="*,Auto,24" RowSpacing="8">
     <Grid x:Name="tableLayoutPanel5" ColumnDefinitions="*" RowDefinitions="Auto,*,Auto" RowSpacing="3">
       <TextBlock x:Name="label1" Text="Unresolved merge conflicts" />
       <ListBox x:Name="ConflictedFiles" Grid.Row="1" SelectionMode="Multiple">
@@ -59,6 +60,11 @@
       <TextBlock x:Name="labelRemoteIncoming" Grid.Row="2" Padding="0,3,0,3" Text="Remote/incoming" />
       <TextBlock x:Name="remoteFileName" Grid.Row="2" Grid.Column="1" VerticalAlignment="Center" Text="..." />
     </Grid>
-    <!-- The go-to-user-manual link (gotoUserManualControl1) waits for its UserControl twin. -->
+    <usercontrols:GotoUserManualControl x:Name="gotoUserManualControl1"
+                                        Grid.Row="2"
+                                        ManualSectionAnchorName="handle-merge-conflicts"
+                                        ManualSectionSubfolder="modify_history"
+                                        HorizontalAlignment="Left"
+                                        VerticalAlignment="Bottom" />
   </Grid>
 </Window>

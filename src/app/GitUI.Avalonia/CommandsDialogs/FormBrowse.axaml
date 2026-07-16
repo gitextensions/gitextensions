@@ -24,6 +24,10 @@
         <Separator />
         <MenuItem x:Name="mergeBranchToolStripMenuItem" Header="_Merge branches..." />
         <MenuItem x:Name="rebaseToolStripMenuItem" Header="Rebas_e..." />
+        <Separator />
+        <MenuItem x:Name="tagToolStripMenuItem" Header="Create _tag..." />
+        <MenuItem x:Name="deleteTagToolStripMenuItem" Header="_Delete tag..." />
+        <Separator />
         <MenuItem x:Name="stashToolStripMenuItem" Header="Ma_nage stashes..." />
       </MenuItem>
       <MenuItem x:Name="toolsToolStripMenuItem" Header="_Tools">
