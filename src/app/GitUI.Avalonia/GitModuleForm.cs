@@ -7,7 +7,7 @@ namespace GitUI;
 // including the command-service bridge used by the shared hotkey dispatcher. Scripts remain deferred.
 
 /// <summary>Base window that provides access to the module and <see cref="IGitUICommands"/>.</summary>
-public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource
+public class GitModuleForm : GitExtensionsForm, IGitUICommandsSource, ResourceManager.IGitModuleForm
 {
     private IGitUICommands? _uiCommands;
 

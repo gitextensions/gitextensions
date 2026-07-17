@@ -6,6 +6,7 @@ using Avalonia.Input;
 using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
+using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.Compat;
 using GitUI.Hotkey;
@@ -115,6 +116,33 @@ public sealed class HotkeyTests
     }
 
     [Test]
+    public void HotkeySettingsManager_should_load_upstream_revision_grid_hotkeys()
+    {
+        string? serializedHotkeys = AppSettings.SerializedHotkeys;
+        AppSettings.SerializedHotkeys = string.Empty;
+        try
+        {
+            IHotkeySettingsLoader loader = new HotkeySettingsManager();
+
+            IReadOnlyList<HotkeyCommand> hotkeys = loader.LoadHotkeys(RevisionGridControl.HotkeySettingsName);
+
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)RevisionGridControl.Command.SelectCurrentRevision
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.C));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)RevisionGridControl.Command.ShowRemoteBranches
+                && command.KeyData == (WinFormsShims.Keys.Control | WinFormsShims.Keys.Shift | WinFormsShims.Keys.R));
+            hotkeys.Should().ContainSingle(command =>
+                command.CommandCode == (int)RevisionGridControl.Command.RenameRef
+                && command.KeyData == WinFormsShims.Keys.F2);
+        }
+        finally
+        {
+            AppSettings.SerializedHotkeys = serializedHotkeys!;
+        }
+    }
+
+    [Test]
     public void HotkeySettingsManager_should_apply_a_persisted_override()
     {
         string? serializedHotkeys = AppSettings.SerializedHotkeys;
@@ -216,6 +244,31 @@ public sealed class HotkeyTests
     }
 
     [AvaloniaTest]
+    public void FormBrowse_should_route_revision_grid_hotkeys_to_the_control()
+    {
+        bool originalShowRemoteBranches = AppSettings.ShowRemoteBranches;
+        (FormBrowse form, _, _) = CreateBrowseFormWithRevisionHotkeys(
+            new HotkeyCommand(
+                (int)RevisionGridControl.Command.ShowRemoteBranches,
+                nameof(RevisionGridControl.Command.ShowRemoteBranches))
+            {
+                KeyData = WinFormsShims.Keys.F6,
+            });
+        form.Show();
+        try
+        {
+            form.KeyPress(Key.F6, RawInputModifiers.None, PhysicalKey.F6, keySymbol: null);
+
+            AppSettings.ShowRemoteBranches.Should().Be(!originalShowRemoteBranches);
+        }
+        finally
+        {
+            AppSettings.ShowRemoteBranches = originalShowRemoteBranches;
+            form.Close();
+        }
+    }
+
+    [AvaloniaTest]
     public void FormBrowse_Escape_should_not_close_the_repository_browser()
     {
         (FormBrowse form, _, _) = CreateBrowseForm();
@@ -233,6 +286,15 @@ public sealed class HotkeyTests
     }
 
     private static (FormBrowse Form, IGitUICommands Commands, ILockableNotifier Notifier) CreateBrowseForm(params HotkeyCommand[] hotkeys)
+        => CreateBrowseForm(hotkeys, revisionHotkeys: []);
+
+    private static (FormBrowse Form, IGitUICommands Commands, ILockableNotifier Notifier) CreateBrowseFormWithRevisionHotkeys(
+        params HotkeyCommand[] hotkeys)
+        => CreateBrowseForm(browseHotkeys: [], revisionHotkeys: hotkeys);
+
+    private static (FormBrowse Form, IGitUICommands Commands, ILockableNotifier Notifier) CreateBrowseForm(
+        IReadOnlyList<HotkeyCommand> browseHotkeys,
+        IReadOnlyList<HotkeyCommand> revisionHotkeys)
     {
         IGitModule module = Substitute.For<IGitModule>();
         module.WorkingDir.Returns(Path.GetTempPath());
@@ -242,7 +304,8 @@ public sealed class HotkeyTests
         IAppTitleGenerator appTitleGenerator = Substitute.For<IAppTitleGenerator>();
         appTitleGenerator.Generate(Arg.Any<string>(), Arg.Any<bool>(), Arg.Any<string>()).Returns("Git Extensions");
         IHotkeySettingsLoader loader = Substitute.For<IHotkeySettingsLoader>();
-        loader.LoadHotkeys(FormBrowse.HotkeySettingsName).Returns(hotkeys);
+        loader.LoadHotkeys(FormBrowse.HotkeySettingsName).Returns(browseHotkeys);
+        loader.LoadHotkeys(RevisionGridControl.HotkeySettingsName).Returns(revisionHotkeys);
 
         IGitUICommands commands = Substitute.For<IGitUICommands>();
         commands.Module.Returns(module);
