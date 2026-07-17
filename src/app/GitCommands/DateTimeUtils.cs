@@ -12,7 +12,7 @@ public static class DateTimeUtils
     /// </summary>
     /// <param name="unixTime">Unix time string</param>
     /// <returns>DateTime (local time)</returns>
-    public static DateTime ParseUnixTime(string unixTime)
+    public static DateTime ParseUnixTime(ReadOnlySpan<char> unixTime)
     {
         return UnixEpoch.AddSeconds(long.Parse(unixTime)).ToLocalTime();
     }

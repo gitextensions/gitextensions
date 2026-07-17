@@ -67,7 +67,7 @@ public static class PhoneticUtility
                 case '7':
                 case '8':
                 case '9':
-                    rule.Priority = int.Parse(cond.ToString(CultureInfo.CurrentUICulture));
+                    rule.Priority = int.Parse([cond]);
                     break;
                 default:
                     if (group)

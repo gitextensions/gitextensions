@@ -746,10 +746,10 @@ public sealed partial class GitModule : IGitModule
 
             findSecondWhitespace = fileStage.IndexOfAny(_spaceAndTabSearchValues);
 
-            string hash = findSecondWhitespace >= 0 ? fileStage[..findSecondWhitespace].Trim() : "";
+            ReadOnlySpan<char> hash = findSecondWhitespace >= 0 ? fileStage.AsSpan(0, findSecondWhitespace).Trim() : "";
             fileStage = findSecondWhitespace >= 0 ? fileStage[findSecondWhitespace..].Trim() : "";
 
-            if (fileStage.Length > 2 && int.TryParse(fileStage[0].ToString(), out int stage) && stage is (>= 1 and <= 3))
+            if (fileStage.Length > 2 && int.TryParse(fileStage.AsSpan(0, 1), out int stage) && stage is (>= 1 and <= 3))
             {
                 string itemName = fileStage[2..];
                 if (prevItemName != itemName && prevItemName is not null)
@@ -1076,7 +1076,7 @@ public sealed partial class GitModule : IGitModule
             $"{objectIdPrefix}^{{commit}}".Quote()
         };
         ExecutionResult result = GitExecutable.Execute(args, throwOnErrorExit: false);
-        string output = result.StandardOutput.Trim();
+        ReadOnlySpan<char> output = result.StandardOutput.AsSpan().Trim();
 
         if (output.StartsWith(objectIdPrefix) && ObjectId.TryParse(output, out objectId))
         {
@@ -1249,7 +1249,7 @@ public sealed partial class GitModule : IGitModule
             string localPath = match.Groups["path"].Value;
             string branch = match.Groups["branch"].Value;
 
-            if (!ObjectId.TryParse(match.Groups["sha"].Value, out ObjectId currentCommitId))
+            if (!ObjectId.TryParse(match.Groups["sha"].ValueSpan, out ObjectId currentCommitId))
             {
                 info = default;
                 return false;
@@ -3475,7 +3475,7 @@ public sealed partial class GitModule : IGitModule
             }
             else if (line.StartsWith("author-time "))
             {
-                authorTime = DateTimeUtils.ParseUnixTime(line["author-time ".Length..]);
+                authorTime = DateTimeUtils.ParseUnixTime(line.AsSpan("author-time ".Length));
                 hasCommitHeader = true;
             }
             else if (line.StartsWith("author-tz "))
@@ -3495,7 +3495,7 @@ public sealed partial class GitModule : IGitModule
             }
             else if (line.StartsWith("committer-time "))
             {
-                committerTime = DateTimeUtils.ParseUnixTime(line["committer-time ".Length..]);
+                committerTime = DateTimeUtils.ParseUnixTime(line.AsSpan("committer-time ".Length..));
                 hasCommitHeader = true;
             }
             else if (line.StartsWith("committer-tz "))
