@@ -4,10 +4,14 @@ using Avalonia.Styling;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility.Git;
 using GitUI;
+using GitUI.UserControls;
+using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
+using NSubstitute;
 using ResourceManager;
 
 namespace GitExtensionsTests;
@@ -128,7 +132,7 @@ public sealed class RevisionGridColumnProviderTests
         NotesColumnProvider.FirstLine(revision.Notes).Should().Be("First note");
         CommitIdColumnProvider.GetCharLengthForColumnWidth(width: 55, characterWidth: 7).Should().Be(7);
 
-        AuthorNameColumnProvider authorProvider = new();
+        AuthorNameColumnProvider authorProvider = new(new AuthorRevisionHighlighting());
         authorProvider.TryGetToolTip(revision, out string? authorToolTip).Should().BeTrue();
         authorToolTip.Should().Contain("Author <author@example.com>");
         authorToolTip.Should().Contain("Committer <committer@example.com>");
@@ -136,6 +140,126 @@ public sealed class RevisionGridColumnProviderTests
         CommitIdColumnProvider idProvider = new();
         idProvider.TryGetToolTip(revision, out string? idToolTip).Should().BeTrue();
         idToolTip.Should().Be(revision.Guid);
+    }
+
+    [AvaloniaTest]
+    public void Message_provider_should_apply_ref_filters_fill_and_virtual_ahead_behind_labels()
+    {
+        bool originalFill = AppSettings.FillRefLabels;
+        bool originalShowRemoteBranches = AppSettings.ShowRemoteBranches;
+        bool originalShowTags = AppSettings.ShowTags;
+        bool originalDrawNonRelativesGray = AppSettings.RevisionGraphDrawNonRelativesGray;
+        try
+        {
+            AppSettings.FillRefLabels = true;
+            AppSettings.ShowRemoteBranches = false;
+            AppSettings.ShowTags = false;
+            AppSettings.RevisionGraphDrawNonRelativesGray = false;
+
+            IGitModule module = Substitute.For<IGitModule>();
+            GitRevision revision = CreateRevision();
+            revision.Refs =
+            [
+                CreateRef(module, revision.ObjectId, "main", "refs/heads/main", isHead: true),
+                CreateRef(module, revision.ObjectId, "origin/main", "refs/remotes/origin/main", isRemote: true),
+                CreateRef(module, revision.ObjectId, "v1", "refs/tags/v1", isTag: true),
+            ];
+            IAheadBehindDataProvider aheadBehindProvider = Substitute.For<IAheadBehindDataProvider>();
+            aheadBehindProvider.GetData(Arg.Any<string>()).Returns(
+                new Dictionary<string, AheadBehindData>
+                {
+                    ["main"] = new("main", "refs/remotes/origin/main", AheadCount: "1", BehindCount: string.Empty),
+                });
+
+            RevisionGridControl control = new();
+            control.SetAheadBehindDataProvider(aheadBehindProvider);
+            control.ApplyColumnSettings();
+            ListBox revisions = control.FindControl<ListBox>("lstRevisions")
+                ?? throw new InvalidOperationException("The revision list was not created.");
+            revisions.ItemsSource = new[] { revision };
+            Window window = new()
+            {
+                Width = 900,
+                Height = 160,
+                Content = control,
+            };
+            window.Show();
+            try
+            {
+                Dispatcher.UIThread.RunJobs();
+
+                RevisionGridRefRenderer.RefLabelControl[] labels =
+                [
+                    .. control.GetVisualDescendants().OfType<RevisionGridRefRenderer.RefLabelControl>(),
+                ];
+                labels.Select(label => label.Label).Should().Equal("main", "↓");
+                labels.Should().OnlyContain(label => label.Fill);
+                labels.Single(label => label.Label == "↓").IsDashed.Should().BeTrue();
+                ((RevisionGraphColumnProvider)control.ColumnProviders[0]).RevisionGraphDrawStyle
+                    .Should().Be(RevisionGraphDrawStyle.Normal);
+            }
+            finally
+            {
+                window.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.FillRefLabels = originalFill;
+            AppSettings.ShowRemoteBranches = originalShowRemoteBranches;
+            AppSettings.ShowTags = originalShowTags;
+            AppSettings.RevisionGraphDrawNonRelativesGray = originalDrawNonRelativesGray;
+        }
+    }
+
+    [AvaloniaTest]
+    public void Message_provider_should_render_superproject_checkout_and_additional_refs()
+    {
+        GitRevision revision = CreateRevision();
+        IGitModule module = Substitute.For<IGitModule>();
+        IGitRef superprojectRef = CreateRef(
+            module,
+            revision.ObjectId,
+            "release",
+            "refs/heads/release");
+        IGitRef existingRef = CreateRef(
+            module,
+            revision.ObjectId,
+            "main",
+            "refs/heads/main",
+            isHead: true);
+        revision.Refs = [existingRef];
+        SuperProjectInfo superProjectInfo = new()
+        {
+            CurrentCommit = revision.ObjectId,
+            Refs = new Dictionary<ObjectId, IReadOnlyList<IGitRef>>
+            {
+                [revision.ObjectId] = [existingRef, superprojectRef],
+            },
+        };
+
+        RevisionGridRefRenderer.RefLabelControl[] labels =
+        [
+            .. MessageColumnProvider.CreateSuperprojectLabels(revision, superProjectInfo)
+                .Cast<RevisionGridRefRenderer.RefLabelControl>(),
+        ];
+
+        labels.Should().HaveCount(2);
+        labels[0].Icon.Should().Be(RefLabelIcon.Head);
+        labels[0].Label.Should().BeEmpty();
+        labels[1].Label.Should().Be("release");
+        labels[1].IsDashed.Should().BeTrue();
+
+        RevisionGridRefRenderer.RefLabelControl existingLabel = RevisionGridRefRenderer.CreateLabels(
+                revision.Refs,
+                showTags: true,
+                showRemoteBranches: true,
+                fill: false,
+                getVirtualRef: null,
+                superprojectRefs: new HashSet<string>(StringComparer.Ordinal) { existingRef.CompleteName })
+            .Should().ContainSingle()
+            .Which.Should().BeOfType<RevisionGridRefRenderer.RefLabelControl>().Subject;
+        existingLabel.IsDashed.Should().BeTrue();
     }
 
     private static GitRevision CreateRevision()
@@ -150,6 +274,28 @@ public sealed class RevisionGridColumnProviderTests
             CommitUnixTime = 1_700_003_600,
             Notes = "First note\nSecond note",
         };
+
+    private static IGitRef CreateRef(
+        IGitModule module,
+        ObjectId objectId,
+        string name,
+        string completeName,
+        bool isHead = false,
+        bool isRemote = false,
+        bool isTag = false)
+    {
+        IGitRef gitRef = Substitute.For<IGitRef>();
+        gitRef.Module.Returns(module);
+        gitRef.ObjectId.Returns(objectId);
+        gitRef.Guid.Returns(objectId.ToString());
+        gitRef.Name.Returns(name);
+        gitRef.LocalName.Returns(name.Split('/')[^1]);
+        gitRef.CompleteName.Returns(completeName);
+        gitRef.IsHead.Returns(isHead);
+        gitRef.IsRemote.Returns(isRemote);
+        gitRef.IsTag.Returns(isTag);
+        return gitRef;
+    }
 
     private readonly record struct ColumnSettings(
         bool ShowGraph,

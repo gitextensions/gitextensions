@@ -297,6 +297,13 @@ public sealed class VisualParityTests
             standaloneTrackingRemote.Icon.Should().Be(RefLabelIcon.HeadMergeSource);
             labels[1].Bounds.X.Should().BeLessThan(labels[0].Bounds.Right);
             pair.DesiredSize.Width.Should().BeLessThan(labels.Sum(label => label.DesiredSize.Width));
+            double localMiddle = labels[0].Bounds.Height / 2;
+            double localPointX = labels[0].Bounds.Width - 6;
+            labels[0].Contains(new Point(localPointX, localMiddle)).Should().BeTrue();
+            labels[0].Contains(new Point(localPointX, 1)).Should().BeFalse();
+            double remoteMiddle = labels[1].Bounds.Height / 2;
+            labels[1].Contains(new Point(1, remoteMiddle)).Should().BeFalse();
+            labels[1].Contains(new Point(labels[1].PointWidth + 1, remoteMiddle)).Should().BeTrue();
             window.CaptureRenderedFrame().Should().NotBeNull();
         }
         finally
