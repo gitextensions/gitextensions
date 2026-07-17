@@ -166,6 +166,9 @@ public sealed class VisualParityTests
 
             form.MinWidth.Should().Be(900);
             form.MinHeight.Should().Be(560);
+            Point repoTreePosition = form.repoObjectsTree.TranslatePoint(new Point(), form)
+                ?? throw new InvalidOperationException("The repository tree position was not available.");
+            repoTreePosition.X.Should().BeApproximately(7, 0.1);
             form.repoObjectsTree.Bounds.Width.Should().BeApproximately(258, 0.1);
             form.repoObjectsTree.Bounds.Width.Should().BeGreaterThan(0);
             form.RevisionGrid.Bounds.Width.Should().BeGreaterThan(0);
@@ -183,6 +186,28 @@ public sealed class VisualParityTests
             splitters.Where(splitter => splitter.ResizeDirection == GridResizeDirection.Rows)
                 .Should().ContainSingle()
                 .Which.Bounds.Height.Should().Be(6);
+            foreach (GridSplitter splitter in splitters)
+            {
+                Border line = splitter.GetVisualDescendants()
+                    .OfType<Border>()
+                    .Single(border => border.Name == "PART_VisibleSplitter");
+                if (splitter.ResizeDirection == GridResizeDirection.Columns)
+                {
+                    line.Bounds.Width.Should().Be(1);
+                }
+                else
+                {
+                    line.Bounds.Height.Should().Be(1);
+                }
+            }
+
+            Menu menu = form.FindControl<Menu>("mainMenuStrip")
+                ?? throw new InvalidOperationException("The main menu was not created.");
+            menu.Bounds.Height.Should().Be(24);
+            menu.Items.Cast<MenuItem>().Should().OnlyContain(item => item.Bounds.Height == 20);
+            form.commandsToolStripMenuItem.IsSubMenuOpen = true;
+            Dispatcher.UIThread.RunJobs();
+            form.commitToolStripMenuItem.Bounds.Height.Should().Be(22);
         }
         finally
         {
@@ -322,24 +347,24 @@ public sealed class VisualParityTests
             TreeViewItem[] children = branches.Items
                 .Cast<TreeViewItem>()
                 .ToArray();
-            RepoObjectsTree.TreeConnectorControl[] connectors = children
-                .Select(child => child.Header)
-                .OfType<Grid>()
-                .SelectMany(header => header.Children)
-                .OfType<RepoObjectsTree.TreeConnectorControl>()
+            TreeConnectorControl[] connectors = tree
+                .GetVisualDescendants()
+                .OfType<TreeConnectorControl>()
                 .ToArray();
 
             children.Should().HaveCount(2);
-            connectors.Should().HaveCount(2);
-            connectors[0].IsLastSibling.Should().BeFalse();
-            connectors[1].IsLastSibling.Should().BeTrue();
+            connectors.Should().HaveCount(5);
+            TreeConnectorControl[] childConnectors = connectors
+                .Where(connector => children.Contains(connector.Item))
+                .ToArray();
+            childConnectors.Should().HaveCount(2);
+            childConnectors[0].IsLastSibling.Should().BeFalse();
+            childConnectors[1].IsLastSibling.Should().BeTrue();
             children.Should().OnlyContain(child => child.Bounds.Width > 0 && child.Bounds.Height > 0);
-            connectors.Should().OnlyContain(connector => connector.Bounds.Width > 0 && connector.Bounds.Height > 0);
-            connectors
-                .SelectMany(connector => connector.Children)
-                .OfType<Border>()
-                .Should()
-                .OnlyContain(line => GetColor(line.Background) == Color.Parse("#8A8A8A"));
+            connectors.Should().OnlyContain(connector =>
+                connector.Bounds.Width > 0
+                && connector.Bounds.Height >= 17
+                && connector.Bounds.Height <= 18);
             window.CaptureRenderedFrame().Should().NotBeNull();
         }
         finally

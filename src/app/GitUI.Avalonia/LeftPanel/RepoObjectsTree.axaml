@@ -1,6 +1,60 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:converters="using:Avalonia.Controls.Converters"
+             xmlns:leftpanel="using:GitUI.LeftPanel"
              x:Class="GitUI.LeftPanel.RepoObjectsTree">
+  <UserControl.Styles>
+    <!-- Fluent deliberately omits hierarchy lines. Keep its selection states and PART
+         names, but add the dotted NativeTreeView lines beneath the standard chevron. -->
+    <Style Selector="TreeViewItem">
+      <Setter Property="MinHeight" Value="18" />
+      <Setter Property="Template">
+        <ControlTemplate>
+          <StackPanel>
+            <Border x:Name="PART_LayoutRoot"
+                    Focusable="True"
+                    Background="{TemplateBinding Background}"
+                    BorderBrush="{TemplateBinding BorderBrush}"
+                    BorderThickness="{TemplateBinding BorderThickness}"
+                    CornerRadius="{TemplateBinding CornerRadius}"
+                    MinHeight="{TemplateBinding MinHeight}"
+                    TemplatedControl.IsTemplateFocusTarget="True">
+              <Grid x:Name="PART_Header">
+                <leftpanel:TreeConnectorControl IsHitTestVisible="False" />
+                <Grid ColumnDefinitions="Auto,*">
+                  <Grid.Margin>
+                    <MultiBinding Converter="{x:Static converters:TreeViewItemIndentConverter.Instance}">
+                      <Binding Path="Level" RelativeSource="{RelativeSource TemplatedParent}" />
+                      <DynamicResource ResourceKey="TreeViewItemIndent" />
+                    </MultiBinding>
+                  </Grid.Margin>
+                  <Panel x:Name="PART_ExpandCollapseChevronContainer"
+                         Margin="{StaticResource TreeViewItemExpandCollapseChevronMargin}">
+                    <ToggleButton x:Name="PART_ExpandCollapseChevron"
+                                  Theme="{StaticResource FluentTreeViewExpandCollapseChevron}"
+                                  Focusable="False"
+                                  IsChecked="{TemplateBinding IsExpanded, Mode=TwoWay}" />
+                  </Panel>
+                  <ContentPresenter x:Name="PART_HeaderPresenter"
+                                    Grid.Column="1"
+                                    Focusable="False"
+                                    Background="Transparent"
+                                    Content="{TemplateBinding Header}"
+                                    ContentTemplate="{TemplateBinding HeaderTemplate}"
+                                    HorizontalAlignment="{TemplateBinding HorizontalAlignment}"
+                                    VerticalAlignment="{TemplateBinding VerticalAlignment}"
+                                    Margin="{TemplateBinding Padding}" />
+                </Grid>
+              </Grid>
+            </Border>
+            <ItemsPresenter x:Name="PART_ItemsPresenter"
+                            IsVisible="{TemplateBinding IsExpanded}"
+                            ItemsPanel="{TemplateBinding ItemsPanel}" />
+          </StackPanel>
+        </ControlTemplate>
+      </Setter>
+    </Style>
+  </UserControl.Styles>
   <TreeView x:Name="treeMain"
             SelectionMode="Single"
             ScrollViewer.HorizontalScrollBarVisibility="Auto"
