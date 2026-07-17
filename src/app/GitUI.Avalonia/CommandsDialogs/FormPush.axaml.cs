@@ -61,7 +61,6 @@ public sealed partial class FormPush : GitModuleForm
         UpdatePushButton();
         _NO_TRANSLATE_Remotes.SelectionChanged += (_, _) => UpdatePushButton();
         InitializeComplete();
-        RemoveLabelMnemonicMarkers();
     }
 
     public bool ErrorOccurred { get; private set; }
@@ -129,16 +128,9 @@ public sealed partial class FormPush : GitModuleForm
             && _NO_TRANSLATE_Remotes.SelectedItem is string;
     }
 
-    private void RemoveLabelMnemonicMarkers()
-    {
-        labelFrom.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(labelFrom.Text ?? string.Empty);
-        labelTo.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(labelTo.Text ?? string.Empty);
-    }
-
     public override void TranslateItems(GitExtensions.Extensibility.Translations.ITranslation translation)
     {
         base.TranslateItems(translation);
-        RemoveLabelMnemonicMarkers();
         Push.Content = AvaloniaTranslationUtils.ToAvaloniaMnemonics(TranslatedStrings.ButtonPush);
     }
 }

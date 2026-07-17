@@ -54,7 +54,6 @@ public sealed partial class FormPull : GitExtensionsDialog
         _runtimeInitialized = true;
 
         InitializeComplete();
-        RemoveLabelMnemonicMarkers();
         UpdateActionState();
     }
 
@@ -231,16 +230,9 @@ public sealed partial class FormPull : GitExtensionsDialog
             && (fetch || !string.IsNullOrWhiteSpace(Branches.Text));
     }
 
-    private void RemoveLabelMnemonicMarkers()
-    {
-        lblLocalBranch.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(lblLocalBranch.Text ?? string.Empty);
-        lblRemoteBranch.Text = AvaloniaTranslationUtils.RemoveAvaloniaMnemonics(lblRemoteBranch.Text ?? string.Empty);
-    }
-
     public override void TranslateItems(GitExtensions.Extensibility.Translations.ITranslation translation)
     {
         base.TranslateItems(translation);
-        RemoveLabelMnemonicMarkers();
         UpdateActionState();
     }
 }

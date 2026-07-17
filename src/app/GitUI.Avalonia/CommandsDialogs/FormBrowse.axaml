@@ -42,17 +42,17 @@
       <TextBlock x:Name="lblRepoPath" FontWeight="SemiBold" />
       <TextBlock x:Name="lblStatus" Opacity="0.7" TextWrapping="Wrap" />
     </StackPanel>
-    <Grid ColumnDefinitions="240,5,*" Margin="8,0,8,8">
+    <Grid ColumnDefinitions="260,6,*" Margin="8,0,8,8">
       <Border Grid.Column="0" Classes="gitextensions-section">
         <leftpanel:RepoObjectsTree x:Name="repoObjectsTree" />
       </Border>
       <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
-      <Grid Grid.Column="2" RowDefinitions="3*,5,2*">
+      <Grid Grid.Column="2" RowDefinitions="3*,6,2*">
         <Border Grid.Row="0" Classes="gitextensions-section">
           <gitui:RevisionGridControl x:Name="RevisionGrid" />
         </Border>
         <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
-        <Grid Grid.Row="2" ColumnDefinitions="380,5,*">
+        <Grid Grid.Row="2" ColumnDefinitions="380,6,*">
           <Border Grid.Column="0" Classes="gitextensions-section">
             <Grid RowDefinitions="Auto,1,*">
               <commitinfo:CommitInfo x:Name="CommitInfo" Grid.Row="0" MaxHeight="180" />
