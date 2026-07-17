@@ -27,8 +27,25 @@ internal static class RevisionGridRefRenderer
     ///  tracked remote when both point at the same commit.
     /// </summary>
     public static IReadOnlyList<Control> CreateLabels(IReadOnlyList<IGitRef> refs)
+        => CreateLabels(
+            refs,
+            showTags: true,
+            showRemoteBranches: true,
+            fill: false,
+            getVirtualRef: null,
+            superprojectRefs: null);
+
+    internal static IReadOnlyList<Control> CreateLabels(
+        IReadOnlyList<IGitRef> refs,
+        bool showTags,
+        bool showRemoteBranches,
+        bool fill,
+        Func<IGitRef, IGitRef?>? getVirtualRef,
+        IReadOnlySet<string>? superprojectRefs)
     {
-        IReadOnlyList<IGitRef> sortedRefs = SortRefs(refs);
+        IReadOnlyList<IGitRef> sortedRefs = SortRefs(
+            refs.Where(gitRef => (!gitRef.IsTag || showTags)
+                && (!gitRef.IsRemote || showRemoteBranches)));
         Dictionary<string, IGitRef> trackedRemotes = BuildTrackedRemoteMap(sortedRefs);
         List<Control> labels = [];
 
@@ -41,20 +58,51 @@ internal static class RevisionGridRefRenderer
 
             if (gitRef.IsHead && trackedRemotes.TryGetValue(gitRef.Name, out IGitRef? remote))
             {
-                RefLabelControl localLabel = CreateLabel(gitRef, gitRef.Name, RefLabelShape.PointRight);
+                RefLabelControl localLabel = CreateLabel(
+                    gitRef,
+                    gitRef.Name,
+                    RefLabelShape.PointRight,
+                    fill,
+                    dashed: superprojectRefs?.Contains(gitRef.CompleteName) == true);
                 RefLabelControl remoteLabel = CreateLabel(
                     remote,
                     remote.LocalName == gitRef.Name ? remote.Remote : remote.Name,
                     RefLabelShape.NotchLeft,
-                    showHeadIndicator: false);
+                    fill,
+                    showHeadIndicator: false,
+                    dashed: superprojectRefs?.Contains(remote.CompleteName) == true);
                 labels.Add(new NestledRefLabelPanel(localLabel, remoteLabel));
+                continue;
+            }
+
+            if (getVirtualRef?.Invoke(gitRef) is IGitRef virtualRef)
+            {
+                (RefLabelShape refShape, RefLabelShape virtualShape) = gitRef.IsRemote
+                    ? (RefLabelShape.NotchRight, RefLabelShape.PointLeft)
+                    : (RefLabelShape.PointRight, RefLabelShape.NotchLeft);
+                labels.Add(new NestledRefLabelPanel(
+                    CreateLabel(
+                        gitRef,
+                        gitRef.Name,
+                        refShape,
+                        fill,
+                        dashed: superprojectRefs?.Contains(gitRef.CompleteName) == true),
+                    CreateLabel(
+                        virtualRef,
+                        virtualRef.Name,
+                        virtualShape,
+                        fill,
+                        showHeadIndicator: false,
+                        dashed: true)));
                 continue;
             }
 
             labels.Add(CreateLabel(
                 gitRef,
                 gitRef.Name,
-                gitRef.IsTag ? RefLabelShape.PointLeft : RefLabelShape.Rect));
+                gitRef.IsTag ? RefLabelShape.PointLeft : RefLabelShape.Rect,
+                fill,
+                dashed: superprojectRefs?.Contains(gitRef.CompleteName) == true));
         }
 
         return labels;
@@ -127,12 +175,15 @@ internal static class RevisionGridRefRenderer
         return remoteByLocal;
     }
 
-    private static RefLabelControl CreateLabel(
+    internal static RefLabelControl CreateLabel(
         IGitRef gitRef,
         string label,
         RefLabelShape shape,
-        bool showHeadIndicator = true)
+        bool fill,
+        bool showHeadIndicator = true,
+        bool dashed = false)
         => new(
+            gitRef,
             label,
             GetBrushResourceKey(gitRef),
             showHeadIndicator && gitRef.IsSelected
@@ -140,11 +191,26 @@ internal static class RevisionGridRefRenderer
                 : showHeadIndicator && gitRef.IsSelectedHeadMergeSource
                     ? RefLabelIcon.HeadMergeSource
                     : RefLabelIcon.None,
-            shape)
+            shape,
+            fill,
+            dashed)
         {
             FontWeight = gitRef.IsSelected ? FontWeight.Bold : FontWeight.Normal,
             VerticalAlignment = VerticalAlignment.Center,
         };
+
+    internal static RefLabelControl CreateSpecialLabel(
+        string label,
+        RefLabelIcon icon,
+        bool dashed = true)
+        => new(
+            gitRef: null,
+            label,
+            "GitExtensionsOtherRefBrush",
+            icon,
+            RefLabelShape.Rect,
+            fill: false,
+            dashed);
 
     private static string GetBrushResourceKey(IGitRef gitRef)
     {
@@ -217,29 +283,58 @@ internal static class RevisionGridRefRenderer
     /// </summary>
     internal sealed class RefLabelControl : TemplatedControl
     {
+        private static readonly DashStyle DashedLine = new([4, 4], 0);
         private readonly string _brushResourceKey;
         private double _backgroundHeight;
+        private bool _isHighlighted;
         private double _labelWidth;
         private FormattedText? _formattedText;
 
         public RefLabelControl(
+            IGitRef? gitRef,
             string label,
             string brushResourceKey,
             RefLabelIcon icon,
-            RefLabelShape shape)
+            RefLabelShape shape,
+            bool fill,
+            bool dashed)
         {
+            GitRef = gitRef;
             Label = label;
             _brushResourceKey = brushResourceKey;
             Icon = icon;
             Shape = shape;
+            Fill = fill;
+            IsDashed = dashed;
             ActualThemeVariantChanged += (_, _) => InvalidateVisual();
         }
+
+        public IGitRef? GitRef { get; }
 
         public string Label { get; }
 
         public RefLabelIcon Icon { get; }
 
         public RefLabelShape Shape { get; }
+
+        public bool Fill { get; }
+
+        public bool IsDashed { get; }
+
+        public bool IsHighlighted
+        {
+            get => _isHighlighted;
+            set
+            {
+                if (_isHighlighted == value)
+                {
+                    return;
+                }
+
+                _isHighlighted = value;
+                InvalidateVisual();
+            }
+        }
 
         public double PointWidth => _backgroundHeight / 2;
 
@@ -280,7 +375,11 @@ internal static class RevisionGridRefRenderer
             double top = (Bounds.Height - _backgroundHeight) / 2;
             Rect capsuleBounds = new(0.5, top + 0.5, Math.Max(0, _labelWidth - 1), _backgroundHeight - 1);
             StreamGeometry geometry = CreateGeometry(capsuleBounds, Shape, PointWidth);
-            context.DrawGeometry(CapsuleBackgroundBrush, new Pen(refBrush, 1), geometry);
+            Pen outline = new(
+                refBrush,
+                IsHighlighted ? 2 : 1,
+                IsDashed ? DashedLine : null);
+            context.DrawGeometry(Fill ? refBrush : CapsuleBackgroundBrush, outline, geometry);
 
             double iconXOffset = Shape is RefLabelShape.NotchLeft or RefLabelShape.PointLeft
                 ? PointWidth
@@ -295,8 +394,20 @@ internal static class RevisionGridRefRenderer
                 + iconWidth
                 + PaddingLeftRight
                 - (Shape == RefLabelShape.PointLeft ? PointWidth / 2 : 0);
-            FormattedText formattedText = CreateFormattedText(refBrush);
+            FormattedText formattedText = CreateFormattedText(Fill ? CapsuleBackgroundBrush : refBrush);
             context.DrawText(formattedText, new Point(textX, capsuleBounds.Y + PaddingTopBottom - 1));
+        }
+
+        public bool Contains(Point point)
+        {
+            if (point.X < 0 || point.X >= Bounds.Width || point.Y < 0 || point.Y >= Bounds.Height)
+            {
+                return false;
+            }
+
+            double top = (Bounds.Height - _backgroundHeight) / 2;
+            Rect capsuleBounds = new(0, top, Math.Max(0, _labelWidth), _backgroundHeight);
+            return CreateGeometry(capsuleBounds, Shape, PointWidth).FillContains(point);
         }
 
         private FormattedText CreateFormattedText(IBrush foreground)

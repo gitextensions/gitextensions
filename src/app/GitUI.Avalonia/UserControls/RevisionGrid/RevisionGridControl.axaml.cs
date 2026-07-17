@@ -5,10 +5,12 @@ using Avalonia.Media;
 using Avalonia.Threading;
 using Avalonia.VisualTree;
 using GitCommands;
+using GitCommands.Git;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
 using GitUI.CommandsDialogs;
+using GitUI.UserControls;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Columns;
 using GitUI.UserControls.RevisionGrid.Graph;
@@ -28,15 +30,12 @@ public enum RevisionGraphDrawStyle
     HighlightSelected
 }
 
-// TODO(avalonia-port): milestones M1.1/M1.2 — a revision list with the commit graph column,
-// streamed by the shared RevisionReader and shaped by the shared RevisionGraph model.
-// Ref labels, avatars, and the ColumnProvider pattern of the WinForms RevisionGridControl
-// come in later milestones.
 public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
 {
     private const int RowHeight = 24;
 
     private readonly CancellationTokenSequence _refreshSequence = new();
+    private readonly AuthorRevisionHighlighting _authorHighlighting = new();
     private readonly List<ColumnProvider> _columnProviders = [];
     private readonly List<GitRevision> _revisions = [];
     private readonly RevisionGraph _revisionGraph = new();
@@ -47,18 +46,20 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
     private bool _headHighlighted;
     private bool _parentsAreRewritten;
     private ILookup<ObjectId, IGitRef>? _refsByObjectId;
+    private SuperProjectInfo? _superprojectCurrentCheckout;
 
     public RevisionGridControl()
     {
         InitializeComponent();
 
-        _revisionGraphColumnProvider = new RevisionGraphColumnProvider(_revisionGraph, this);
+        GitRevisionSummaryBuilder gitRevisionSummaryBuilder = new();
+        _revisionGraphColumnProvider = new RevisionGraphColumnProvider(_revisionGraph, this, gitRevisionSummaryBuilder);
         AddColumn(_revisionGraphColumnProvider);
         _messageColumnProvider = new MessageColumnProvider(this);
         AddColumn(_messageColumnProvider);
         AddColumn(new NotesColumnProvider());
         AddColumn(new AvatarColumnProvider());
-        AddColumn(new AuthorNameColumnProvider());
+        AddColumn(new AuthorNameColumnProvider(_authorHighlighting));
         AddColumn(new DateColumnProvider());
         AddColumn(new CommitIdColumnProvider());
         AddColumn(new BuildStatusColumnProvider());
@@ -67,6 +68,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
         lstRevisions.ItemTemplate = new FuncDataTemplate<GitRevision>((_, _) => new RevisionRowControl(this), supportsRecycling: true);
         lstRevisions.SelectionChanged += (_, _) =>
         {
+            HighlightRevisionsByAuthor();
             UpdateContextMenuItems();
             SelectionChanged?.Invoke(this, EventArgs.Empty);
         };
@@ -106,6 +108,23 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
     internal bool IsCurrentCheckout(GitRevision revision)
         => _headId is ObjectId headId && revision.ObjectId == headId;
 
+    internal void SetAheadBehindDataProvider(IAheadBehindDataProvider? provider)
+        => _messageColumnProvider.SetAheadBehindDataProvider(provider);
+
+    internal bool TryGetSuperProjectInfo([System.Diagnostics.CodeAnalysis.NotNullWhen(returnValue: true)] out SuperProjectInfo? superProjectInfo)
+    {
+        superProjectInfo = _superprojectCurrentCheckout;
+        return superProjectInfo is not null;
+    }
+
+    internal bool GoToRelatedRef(IGitRef gitRef)
+    {
+        ObjectId objectId = gitRef.Guid is null
+            ? Module.RevParse(gitRef.CompleteName)
+            : gitRef.ObjectId;
+        return !objectId.IsZero && SetSelectedRevision(objectId);
+    }
+
     private void AddColumn(ColumnProvider columnProvider)
     {
         columnProvider.Index = _columnProviders.Count;
@@ -122,6 +141,25 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
         foreach (RevisionRowControl row in lstRevisions.GetVisualDescendants().OfType<RevisionRowControl>())
         {
             row.ApplyColumnLayout();
+        }
+    }
+
+    private void HighlightRevisionsByAuthor()
+    {
+        if (TryGetUICommandsDirect(out IGitUICommands? commands)
+            && _authorHighlighting.ProcessRevisionSelectionChange(
+                commands.Module,
+                GetSelectedRevisions()))
+        {
+            RefreshRealizedRows();
+        }
+    }
+
+    private void RefreshRealizedRows()
+    {
+        foreach (RevisionRowControl row in lstRevisions.GetVisualDescendants().OfType<RevisionRowControl>())
+        {
+            row.RefreshCells();
         }
     }
 
@@ -326,9 +364,15 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
         }
 
         _revisions.Clear();
+        foreach (ColumnProvider columnProvider in _columnProviders)
+        {
+            columnProvider.Clear();
+        }
+
         _revisionGraph.Clear();
         _headId = module.GetCurrentCheckout();
         _revisionGraph.HeadId = _headId.Value;
+        _superprojectCurrentCheckout = null;
 
         // A path filter makes git rewrite parents ("history simplification"), so revisions
         // may carry parent ids that are not their real parents.
@@ -339,6 +383,18 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
         lblLoadingStatus.Text = "Loading…";
 
         RevisionObserver observer = new(this, cancellationToken);
+        ThreadHelper.FileAndForget(async () =>
+        {
+            SuperProjectInfo? superProjectInfo = await GetSuperprojectCheckoutAsync(module).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            _superprojectCurrentCheckout = superProjectInfo;
+            if (superProjectInfo is not null)
+            {
+                await this.SwitchToMainThreadAsync(cancellationToken);
+                RefreshRealizedRows();
+            }
+        });
+
         ThreadHelper.FileAndForget(() =>
         {
             // Like the WinForms grid: fetch the refs first so they can be attached to the
@@ -365,6 +421,39 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
             bool hasNotes = AppSettings.ShowGitNotesColumn.Value || AppSettings.ShowGitNotes;
             reader.GetLog(observer, revisionFilter, pathFilter, hasNotes, autostashLabel: "autostash", cancellationToken);
         });
+    }
+
+    private static async Task<SuperProjectInfo?> GetSuperprojectCheckoutAsync(IGitModule module)
+    {
+        if (module.SuperprojectModule is null)
+        {
+            return null;
+        }
+
+        SuperProjectInfo superProjectInfo = new();
+        (char code, ObjectId commit) = await module.GetSuperprojectCurrentCheckoutAsync().ConfigureAwait(false);
+        if (code == 'U')
+        {
+            ConflictData conflict = await module.SuperprojectModule.GetConflictAsync(module.SubmodulePath).ConfigureAwait(false);
+            superProjectInfo.ConflictBase = conflict.Base.ObjectId;
+            superProjectInfo.ConflictLocal = conflict.Local.ObjectId;
+            superProjectInfo.ConflictRemote = conflict.Remote.ObjectId;
+        }
+        else
+        {
+            superProjectInfo.CurrentCommit = commit;
+        }
+
+        Dictionary<IGitRef, IGitItem?> refs = await module.SuperprojectModule
+            .GetSubmoduleItemsForEachRefAsync(module.SubmodulePath, noLocks: true)
+            .ConfigureAwait(false);
+        superProjectInfo.Refs = refs
+            .Where(item => item.Value is not null && !item.Value.ObjectId.IsZero)
+            .GroupBy(item => item.Value!.ObjectId)
+            .ToDictionary(
+                group => group.Key,
+                group => (IReadOnlyList<IGitRef>)[.. group.Select(item => item.Key)]);
+        return superProjectInfo;
     }
 
     /// <summary>
@@ -426,10 +515,7 @@ public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
         // The graph rows straightened after the final CacheTo become visible only when the
         // realized row controls render again, so refresh the list once at the end.
         lstRevisions.ItemsSource = _revisions.ToArray();
-        foreach (RevisionRowControl row in lstRevisions.GetVisualDescendants().OfType<RevisionRowControl>())
-        {
-            row.RefreshCells();
-        }
+        RefreshRealizedRows();
 
         lblLoadingStatus.Text = $"{_revisions.Count} revisions";
         SelectPendingRevision();
