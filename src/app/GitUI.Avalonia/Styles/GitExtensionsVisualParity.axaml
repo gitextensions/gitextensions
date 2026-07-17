@@ -22,6 +22,13 @@
       <FontStyle x:Key="GitExtensionsMonospaceFontStyle">Normal</FontStyle>
       <FontWeight x:Key="GitExtensionsMonospaceFontWeight">Normal</FontWeight>
 
+      <!-- WinForms MenuStrip is a compact desktop control: 24px bar, 20px top-level
+           items, and 22px dropdown rows. Fluent's defaults are intentionally roomier. -->
+      <x:Double x:Key="MenuBarHeight">24</x:Double>
+      <Thickness x:Key="MenuBarItemPadding">8,0</Thickness>
+      <Thickness x:Key="MenuFlyoutItemThemePaddingNarrow">8,2</Thickness>
+      <CornerRadius x:Key="OverlayCornerRadius">0</CornerRadius>
+
       <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
           <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
@@ -213,14 +220,41 @@
             Value="{DynamicResource GitExtensionsSelectionPointerOverBackgroundBrush}" />
   </Style>
 
-  <Style Selector="Border.gitextensions-tree-connector">
-    <Setter Property="Background"
-            Value="{DynamicResource GitExtensionsTreeConnectorBrush}" />
+  <Style Selector="MenuItem">
+    <Setter Property="MinHeight" Value="22" />
+  </Style>
+  <Style Selector="Menu">
+    <Setter Property="Padding" Value="4,0" />
+  </Style>
+  <Style Selector="Menu > MenuItem">
+    <Setter Property="Margin" Value="0,2" />
+    <Setter Property="MinHeight" Value="20" />
   </Style>
 
   <Style Selector="GridSplitter">
-    <Setter Property="Background"
-            Value="{DynamicResource GitExtensionsSplitterBrush}" />
+    <!-- SplitContainer.SplitterWidth is the drag target, not a request to paint a solid
+         bar. Individual orientation classes below keep the 6px target and draw one line. -->
+    <Setter Property="Background" Value="Transparent" />
+  </Style>
+  <Style Selector="GridSplitter.gitextensions-column-splitter">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border x:Name="PART_VisibleSplitter"
+                Width="1"
+                HorizontalAlignment="Center"
+                Background="{DynamicResource GitExtensionsSplitterBrush}" />
+      </ControlTemplate>
+    </Setter>
+  </Style>
+  <Style Selector="GridSplitter.gitextensions-row-splitter">
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Border x:Name="PART_VisibleSplitter"
+                Height="1"
+                VerticalAlignment="Center"
+                Background="{DynamicResource GitExtensionsSplitterBrush}" />
+      </ControlTemplate>
+    </Setter>
   </Style>
   <Style Selector="Border.gitextensions-section">
     <Setter Property="BorderBrush"
