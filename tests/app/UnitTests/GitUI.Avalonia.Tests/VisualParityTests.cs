@@ -154,51 +154,77 @@ public sealed class VisualParityTests
     [AvaloniaTest]
     public void FormBrowse_should_keep_all_main_sections_usable_at_its_minimum_size()
     {
-        FormBrowse form = new()
-        {
-            Width = 900,
-            Height = 560,
-        };
-        form.Show();
+        CommitInfoPosition originalPosition = AppSettings.CommitInfoPosition;
+        bool originalShowSplitView = AppSettings.ShowSplitViewLayout;
         try
         {
-            Dispatcher.UIThread.RunJobs();
+            AppSettings.CommitInfoPosition = CommitInfoPosition.BelowList;
+            AppSettings.ShowSplitViewLayout = true;
+            FormBrowse form = new()
+            {
+                Width = 900,
+                Height = 560,
+            };
+            form.Show();
+            try
+            {
+                Dispatcher.UIThread.RunJobs();
 
-            form.MinWidth.Should().Be(900);
-            form.MinHeight.Should().Be(560);
-            Point repoTreePosition = form.repoObjectsTree.TranslatePoint(new Point(), form)
-                ?? throw new InvalidOperationException("The repository tree position was not available.");
-            repoTreePosition.X.Should().BeApproximately(7, 0.1);
-            form.repoObjectsTree.Bounds.Width.Should().BeApproximately(258, 0.1);
-            form.repoObjectsTree.Bounds.Width.Should().BeGreaterThan(0);
-            form.RevisionGrid.Bounds.Width.Should().BeGreaterThan(0);
-            form.RevisionGrid.Bounds.Height.Should().BeGreaterThan(0);
-            form.fileStatusList.Bounds.Height.Should().BeGreaterThan(0);
-            form.fileViewer.Bounds.Width.Should().BeGreaterThan(0);
+                form.MinWidth.Should().Be(900);
+                form.MinHeight.Should().Be(560);
+                Point repoTreePosition = form.repoObjectsTree.TranslatePoint(new Point(), form)
+                    ?? throw new InvalidOperationException("The repository tree position was not available.");
+                repoTreePosition.X.Should().BeApproximately(7, 0.1);
+                form.repoObjectsTree.Bounds.Width.Should().BeApproximately(258, 0.1);
+                form.repoObjectsTree.Bounds.Width.Should().BeGreaterThan(0);
+                form.RevisionGrid.Bounds.Width.Should().BeGreaterThan(0);
+                form.RevisionGrid.Bounds.Height.Should().BeGreaterThan(0);
+                form.CommitInfoTabControl.SelectedItem.Should().BeSameAs(form.CommitInfoTabPage);
+                form.CommitInfoTabControl.Bounds.Height.Should().BeGreaterThan(0);
+                form.CommitInfoTabPage.Bounds.Height.Should().Be(23);
+                form.DiffTabPage.Bounds.Height.Should().Be(23);
+                form.commitInfoBelowHost.Bounds.Height.Should().BeGreaterThan(0);
+                Point commitHostPosition = form.commitInfoBelowHost.TranslatePoint(new Point(), form.CommitInfoTabControl)
+                    ?? throw new InvalidOperationException("The commit-info host position was not available.");
+                commitHostPosition.X.Should().BeLessThanOrEqualTo(1);
+                form.RevisionInfo.Bounds.Height.Should().BeGreaterThan(0);
 
-            GridSplitter[] splitters =
-            [
-                .. form.GetVisualDescendants().OfType<GridSplitter>(),
-            ];
-            splitters.Where(splitter => splitter.ResizeDirection == GridResizeDirection.Columns)
-                .Should().HaveCount(2)
-                .And.OnlyContain(splitter => splitter.Bounds.Width == 6);
-            splitters.Where(splitter => splitter.ResizeDirection == GridResizeDirection.Rows)
-                .Should().ContainSingle()
-                .Which.Bounds.Height.Should().Be(6);
-            splitters.Should().OnlyContain(splitter => GetColor(splitter.Background) == Colors.Transparent);
+                form.CommitInfoTabControl.SelectedItem = form.DiffTabPage;
+                Dispatcher.UIThread.RunJobs();
+                form.fileStatusList.Bounds.Height.Should().BeGreaterThan(0);
+                form.fileViewer.Bounds.Width.Should().BeGreaterThan(0);
 
-            Menu menu = form.FindControl<Menu>("mainMenuStrip")
-                ?? throw new InvalidOperationException("The main menu was not created.");
-            menu.Bounds.Height.Should().Be(24);
-            menu.Items.Cast<MenuItem>().Should().OnlyContain(item => item.Bounds.Height == 20);
-            form.commandsToolStripMenuItem.IsSubMenuOpen = true;
-            Dispatcher.UIThread.RunJobs();
-            form.commitToolStripMenuItem.Bounds.Height.Should().Be(22);
+                GridSplitter[] splitters =
+                [
+                    .. form.GetVisualDescendants()
+                        .OfType<GridSplitter>()
+                        .Where(splitter => splitter.IsVisible),
+                ];
+                splitters.Where(splitter => splitter.ResizeDirection == GridResizeDirection.Columns)
+                    .Should().HaveCount(2)
+                    .And.OnlyContain(splitter => splitter.Bounds.Width == 6);
+                splitters.Where(splitter => splitter.ResizeDirection == GridResizeDirection.Rows)
+                    .Should().ContainSingle()
+                    .Which.Bounds.Height.Should().Be(6);
+                splitters.Should().OnlyContain(splitter => GetColor(splitter.Background) == Colors.Transparent);
+
+                Menu menu = form.FindControl<Menu>("mainMenuStrip")
+                    ?? throw new InvalidOperationException("The main menu was not created.");
+                menu.Bounds.Height.Should().Be(24);
+                menu.Items.Cast<MenuItem>().Should().OnlyContain(item => item.Bounds.Height == 20);
+                form.commandsToolStripMenuItem.IsSubMenuOpen = true;
+                Dispatcher.UIThread.RunJobs();
+                form.commitToolStripMenuItem.Bounds.Height.Should().Be(22);
+            }
+            finally
+            {
+                form.Close();
+            }
         }
         finally
         {
-            form.Close();
+            AppSettings.CommitInfoPosition = originalPosition;
+            AppSettings.ShowSplitViewLayout = originalShowSplitView;
         }
     }
 
