@@ -3,6 +3,7 @@
         xmlns:gitui="clr-namespace:GitUI"
         xmlns:editor="clr-namespace:GitUI.Editor"
         xmlns:commitinfo="clr-namespace:GitUI.CommitInfo"
+        xmlns:commandsDialogs="using:GitUI.CommandsDialogs"
         xmlns:leftpanel="clr-namespace:GitUI.LeftPanel"
         xmlns:controls="clr-namespace:GitUI.UserControls"
         xmlns:compat="using:GitUI.Compat"
@@ -81,6 +82,31 @@
         <Button x:Name="toggleLeftPanel" Classes="gitextensions-toolbar-button">
           <Image Width="16" Height="16" Source="{x:Static properties:Images.LayoutSidebarLeft}" />
         </Button>
+        <Button x:Name="toggleSplitViewLayout" Classes="gitextensions-toolbar-button">
+          <Image Width="16" Height="16" Source="{x:Static properties:Images.LayoutFooter}" />
+        </Button>
+        <SplitButton x:Name="menuCommitInfoPosition"
+                     Classes="gitextensions-toolbar-button">
+          <SplitButton.Content>
+            <Image x:Name="menuCommitInfoPositionImage"
+                   Width="16"
+                   Height="16"
+                   Source="{x:Static properties:Images.LayoutFooterTab}" />
+          </SplitButton.Content>
+          <SplitButton.Flyout>
+            <MenuFlyout>
+              <MenuItem x:Name="commitInfoBelowMenuItem" Header="Commit info _below graph">
+                <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.LayoutFooterTab}" /></MenuItem.Icon>
+              </MenuItem>
+              <MenuItem x:Name="commitInfoLeftwardMenuItem" Header="Commit info _left of graph">
+                <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.LayoutSidebarTopLeft}" /></MenuItem.Icon>
+              </MenuItem>
+              <MenuItem x:Name="commitInfoRightwardMenuItem" Header="Commit info _right of graph">
+                <MenuItem.Icon><Image Width="16" Height="16" Source="{x:Static properties:Images.LayoutSidebarTopRight}" /></MenuItem.Icon>
+              </MenuItem>
+            </MenuFlyout>
+          </SplitButton.Flyout>
+        </SplitButton>
         <ComboBox x:Name="_NO_TRANSLATE_WorkingDir"
                   Width="180"
                   Height="23"
@@ -161,24 +187,45 @@
         <leftpanel:RepoObjectsTree x:Name="repoObjectsTree" />
       </Border>
       <GridSplitter x:Name="leftPanelSplitter" Grid.Column="1" ResizeDirection="Columns" />
-      <Grid Grid.Column="2" RowDefinitions="3*,6,2*">
-        <Border Grid.Row="0" Classes="gitextensions-section">
-          <gitui:RevisionGridControl x:Name="RevisionGrid" />
-        </Border>
-        <GridSplitter Grid.Row="1" ResizeDirection="Rows" />
-        <Grid Grid.Row="2" ColumnDefinitions="380,6,*">
-          <Border Grid.Column="0" Classes="gitextensions-section">
-            <Grid RowDefinitions="Auto,1,*">
-              <commitinfo:CommitInfo x:Name="CommitInfo" Grid.Row="0" MaxHeight="180" />
-              <Border Grid.Row="1" Classes="gitextensions-section-separator" />
-              <gitui:FileStatusList x:Name="fileStatusList" Grid.Row="2" />
-            </Grid>
+      <Grid x:Name="RightSplitContainer" Grid.Column="2" RowDefinitions="3*,0,2*">
+        <Grid x:Name="RevisionsSplitContainer" Grid.Row="0" ColumnDefinitions="0,0,*,0,0">
+          <Border x:Name="commitInfoLeftHost" Grid.Column="0" Classes="gitextensions-section" />
+          <GridSplitter x:Name="commitInfoLeftSplitter" Grid.Column="1" ResizeDirection="Columns" IsVisible="False" />
+          <Border x:Name="RevisionGridContainer" Grid.Column="2" Classes="gitextensions-section">
+            <gitui:RevisionGridControl x:Name="RevisionGrid" />
           </Border>
-          <GridSplitter Grid.Column="1" ResizeDirection="Columns" />
-          <Border Grid.Column="2" Classes="gitextensions-section">
-            <editor:FileViewer x:Name="fileViewer" />
-          </Border>
+          <GridSplitter x:Name="commitInfoRightSplitter" Grid.Column="3" ResizeDirection="Columns" IsVisible="False" />
+          <Border x:Name="commitInfoRightHost" Grid.Column="4" Classes="gitextensions-section" />
         </Grid>
+        <GridSplitter x:Name="splitViewSplitter" Grid.Row="1" ResizeDirection="Rows" />
+        <commandsDialogs:FullBleedTabControl x:Name="CommitInfoTabControl"
+                                              Grid.Row="2"
+                                              SelectedIndex="0"
+                                              Padding="0"
+                                              Classes="gitextensions-workspace-tabs">
+          <TabItem x:Name="CommitInfoTabPage"
+                   Classes="gitextensions-workspace-tab"
+                   Header="Commit"
+                   Icon="{x:Static properties:Images.CommitSummary}">
+            <Border x:Name="commitInfoBelowHost" Classes="gitextensions-section">
+              <commitinfo:CommitInfo x:Name="RevisionInfo" />
+            </Border>
+          </TabItem>
+          <TabItem x:Name="DiffTabPage"
+                   Classes="gitextensions-workspace-tab"
+                   Header="Diff"
+                   Icon="{x:Static properties:Images.Diff}">
+            <Grid x:Name="revisionDiff" ColumnDefinitions="380,0,*">
+              <Border Grid.Column="0" Classes="gitextensions-section">
+                <gitui:FileStatusList x:Name="fileStatusList" />
+              </Border>
+              <GridSplitter x:Name="revisionDiffSplitter" Grid.Column="1" ResizeDirection="Columns" />
+              <Border Grid.Column="2" Classes="gitextensions-section">
+                <editor:FileViewer x:Name="fileViewer" />
+              </Border>
+            </Grid>
+          </TabItem>
+        </commandsDialogs:FullBleedTabControl>
       </Grid>
     </Grid>
   </DockPanel>
