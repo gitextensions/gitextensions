@@ -1,0 +1,33 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:commitinfo="clr-namespace:GitUI.CommitInfo"
+             xmlns:editor="clr-namespace:GitUI.Editor"
+             x:Class="GitUI.Blame.BlameControl">
+  <!-- Upstream splitContainer1 (commit info above, fixed 160) / splitContainer2 (author
+       gutter | file). The author gutter is an editor margin here, so a single row hosts
+       the file viewer. -->
+  <Grid RowDefinitions="160,5,*">
+    <commitinfo:CommitInfo x:Name="CommitInfo" />
+
+    <GridSplitter Grid.Row="1"
+                  Height="5"
+                  ResizeDirection="Rows" />
+
+    <editor:FileViewer x:Name="BlameFile" Grid.Row="2">
+      <editor:FileViewer.ContextMenu>
+        <ContextMenu x:Name="contextMenu">
+          <MenuItem x:Name="blameRevisionToolStripMenuItem" Header="Blame _this revision" />
+          <MenuItem x:Name="blamePreviousRevisionToolStripMenuItem" Header="Blame previous revision" />
+          <!-- Hidden until FormCommitDiff is ported. -->
+          <MenuItem x:Name="showChangesToolStripMenuItem" Header="_Show changes" IsVisible="False" />
+          <Separator x:Name="toolStripSeparator1" />
+          <MenuItem x:Name="copyToClipboardToolStripMenuItem" Header="_Copy to clipboard">
+            <MenuItem x:Name="commitHashToolStripMenuItem" Header="Commit _hash" />
+            <MenuItem x:Name="commitMessageToolStripMenuItem" Header="Commit _message" />
+            <MenuItem x:Name="allCommitInfoToolStripMenuItem" Header="_All commit info" />
+          </MenuItem>
+        </ContextMenu>
+      </editor:FileViewer.ContextMenu>
+    </editor:FileViewer>
+  </Grid>
+</UserControl>

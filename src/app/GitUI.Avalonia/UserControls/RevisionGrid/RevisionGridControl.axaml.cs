@@ -8,6 +8,7 @@ using GitCommands;
 using GitExtensions.Extensibility;
 using GitExtensions.Extensibility.Git;
 using GitExtUtils;
+using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
 using GitUI.UserControls.RevisionGrid.Graph;
 using GitUI.UserControls.RevisionGrid.Graph.Rendering;
@@ -30,7 +31,7 @@ public enum RevisionGraphDrawStyle
 // streamed by the shared RevisionReader and shaped by the shared RevisionGraph model.
 // Ref labels, avatars, and the ColumnProvider pattern of the WinForms RevisionGridControl
 // come in later milestones.
-public partial class RevisionGridControl : GitModuleControl
+public partial class RevisionGridControl : GitModuleControl, IRevisionGridInfo
 {
     private const int RowHeight = 24;
     private const int GraphLeftMargin = 6;
@@ -43,6 +44,7 @@ public partial class RevisionGridControl : GitModuleControl
     private ObjectId _pendingSelectedObjectId;
     private int _graphColumnWidth = CalculateGraphColumnWidth(visibleLaneCount: 0);
     private bool _headHighlighted;
+    private bool _parentsAreRewritten;
     private ILookup<ObjectId, IGitRef>? _refsByObjectId;
 
     public RevisionGridControl()
@@ -116,6 +118,78 @@ public partial class RevisionGridControl : GitModuleControl
         lstRevisions.ScrollIntoView(revision);
         return true;
     }
+
+    #region IRevisionGridInfo
+
+    public ObjectId CurrentCheckout => _headId ?? default;
+
+    public GitRevision GetRevision(ObjectId objectId)
+    {
+        // Like WinForms, may return null; callers null-check.
+        return _revisions.Find(r => r.ObjectId == objectId)!;
+    }
+
+    public GitRevision? GetActualRevision(ObjectId objectId)
+    {
+        GitRevision? revision = GetRevision(objectId);
+        if (revision is not null)
+        {
+            return GetActualRevision(revision);
+        }
+
+        // Revision is not in grid, try get from Git
+        return Module.GetRevision(objectId, shortFormat: true, loadRefs: true);
+    }
+
+    /// <summary>
+    /// Get the GitRevision with the actual parents as they may be rewritten in filtered grids.
+    /// </summary>
+    /// <param name="revision">The revision, likely from the grid.</param>
+    /// <returns>The revision with parents.</returns>
+    public GitRevision GetActualRevision(GitRevision revision)
+    {
+        // Index commits must have HEAD as parent already
+        if (_parentsAreRewritten && !revision.IsArtificial)
+        {
+            // Grid is filtered and revision may have incorrect parents
+            revision = revision.Clone();
+            revision.ParentIds = Module.GetParents(revision.ObjectId).ToList();
+        }
+
+        return revision;
+    }
+
+    public IReadOnlyList<GitRevision> GetSelectedRevisions()
+        => SelectedRevision is GitRevision selectedRevision ? [selectedRevision] : [];
+
+    public string DescribeRevision(GitRevision revision, int maxLength = 0)
+    {
+        string description = revision.IsArtificial
+            ? string.Empty
+            : revision.ObjectId.ToShortString() + ": ";
+
+        GitRefListsForRevision gitRefListsForRevision = new(revision);
+
+        IGitRef? descriptiveRef = gitRefListsForRevision.AllBranches
+            .Concat(gitRefListsForRevision.AllTags)
+            .FirstOrDefault();
+
+        // The WinForms grid disambiguates ref names against ambiguous refs; not ported.
+        description += descriptiveRef is not null
+            ? descriptiveRef.Name
+            : revision.Subject;
+
+        if (maxLength > 0)
+        {
+            description = description.ShortenTo(maxLength);
+        }
+
+        return description;
+    }
+
+    public string GetCurrentBranch() => Module.GetSelectedBranch();
+
+    #endregion
 
     private void lstRevisions_PointerPressed(object? sender, PointerPressedEventArgs e)
     {
@@ -199,6 +273,10 @@ public partial class RevisionGridControl : GitModuleControl
         _revisionGraph.Clear();
         _config = new RevisionGraphConfig();
         _headId = module.GetCurrentCheckout();
+
+        // A path filter makes git rewrite parents ("history simplification"), so revisions
+        // may carry parent ids that are not their real parents.
+        _parentsAreRewritten = !string.IsNullOrEmpty(pathFilter);
         _pendingSelectedObjectId = selectedObjectId;
         _headHighlighted = false;
         lstRevisions.ItemsSource = null;
