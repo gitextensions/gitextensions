@@ -14,8 +14,8 @@
   "src/app/GitUI/CommandsDialogs/FormBrowse.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormBrowse.axaml.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Delete branch/Pull-Fetch/Fetch all/Merge branches/Rebase/Create tag/Delete tag/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The revision grid receives the shared ahead/behind provider and resets its cache on repository reload. The main panes preserve the original invisible 6px splitter drag targets, adjacent 1px pane borders, 6px content padding, and 260px repository-tree distance; the menu uses the original 24/20/22px desktop density and original command icons. The auto-discovered headless-Skia harness captures this shell with an open menu and every other AXAML view in light/dark mode at 100%/200% scaling over a seeded repository. Remaining menus and toolbars are added with their dialogs."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Reduced shell: five browse panes plus Repository/Refresh, Commands/Commit/Checkout branch/Create branch/Delete branch/Pull-Fetch/Fetch all/Merge branches/Rebase/Create tag/Delete tag/Manage stashes, and Tools/Git bash external-terminal launch. Browse hotkeys dispatch the implemented commands with upstream IDs; F5 refresh uses Avalonia-only command ID 50 because WinForms routes it through ToolStrip shortcut handling. The form routes non-editing keys to the revision grid's persisted upstream hotkeys. The revision grid receives the shared ahead/behind provider and resets its cache on repository reload. The main panes preserve the original invisible 6px splitter drag targets, adjacent 1px pane borders, 6px content padding, and 260px repository-tree distance; the menu uses the original 24/20/22px desktop density and original command icons. The auto-discovered headless-Skia harness captures this shell with an open menu and every other AXAML view in light/dark mode at 100%/200% scaling over a seeded repository. Remaining menus and toolbars are added with their dialogs."
   },
   "src/app/GitUI/CommandsDialogs/FormCheckoutBranch.cs": {
     "twin": "src/app/GitUI.Avalonia/CommandsDialogs/FormCheckoutBranch.axaml.cs",
@@ -159,7 +159,19 @@
     "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/RevisionGridControl.axaml.cs",
     "status": "functional",
     "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
-    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters, double-click notification, and the first context-menu actions: checkout a local branch containing the selected commit, create a branch or tag at it, and the per-branch rename dropdown (underscores escaped for Avalonia access keys). Recycled rows are shaped by the same ordered ColumnProvider boundary as WinForms; settings control graph, notes, author, date and object-ID visibility, while the visible graph lanes still determine the graph width. Refs mark the checked-out branch and matching tracking remote before rows are attached. Selection drives the shared author-highlighting state, related real/virtual refs can select their loaded target, and superproject checkout/conflict/ref data loads independently without delaying history. ReloadRevisions accepts a path filter, requests notes when either notes presentation is enabled, and mirrors the default --all exclusions for hidden notes, stash and session refs. Remaining menu items and hotkeys are deferred."
+    "notes": "Read-only graph/ref labels/selection plus preselection, caller-supplied revision filters and double-click notification. The context menu routes copy details, stash apply/pop/drop, local/remote checkout, local push, merge and rebase variants, artificial-row reset/commit, branch/tag creation, local rename/delete, tag delete, parent/child/current navigation, and provider visibility toggles through real Avalonia workflows; unavailable dialog-owned commands remain absent. Persisted upstream RevisionGrid command IDs/default hotkeys dispatch from FormBrowse, including safe single-ref rename/delete. Recycled rows are shaped by the same ordered ColumnProvider boundary as WinForms; settings control graph, notes, author, date and object-ID visibility, while the visible graph lanes still determine the graph width. Refs mark the checked-out branch and matching tracking remote before rows are attached. Selection drives the shared author-highlighting state, related real/virtual refs can select their loaded target, and superproject checkout/conflict/ref data loads independently without delaying history. ReloadRevisions accepts a path filter, requests notes when either notes presentation is enabled, and mirrors the default --all exclusions for hidden notes, stash and session refs."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs": {
+    "twin": "src/app/GitUI/UserControls/RevisionGrid/RevisionGridControl.Command.cs",
+    "status": "parity",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Framework-free command enum linked unchanged so persisted hotkey IDs remain identical to WinForms."
+  },
+  "src/app/GitUI/UserControls/RevisionGrid/CopyContextMenuItem.cs": {
+    "twin": "src/app/GitUI.Avalonia/UserControls/RevisionGrid/CopyContextMenuItem.cs",
+    "status": "functional",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Avalonia MenuItem twin copies filtered branch/tag names plus commit hash, message, author and date details with the original translated captions, access keys and shared icons."
   },
   "src/app/GitUI/UserControls/RevisionGrid/AuthorRevisionHighlighting.cs": {
     "twin": "src/app/GitUI/UserControls/RevisionGrid/AuthorRevisionHighlighting.cs",
@@ -500,7 +512,8 @@
   "src/app/ResourceManager/GitExtensionsControl.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/GitExtensionsControl.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387"
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Retains the WinForms-shaped persisted hotkey table, shortcut display and text-edit-key classification; containing Avalonia forms route key events to controls explicitly."
   },
   "src/app/ResourceManager/TranslatedControl.cs": {
     "twin": "src/app/GitUI.Avalonia/Compat/TranslatedControl.cs",
@@ -517,14 +530,14 @@
   "src/app/GitUI/GitModuleForm.cs": {
     "twin": "src/app/GitUI.Avalonia/GitModuleForm.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
     "notes": "UICommands/Module plus the shared IGitUICommandsSource contract and hotkey service discovery; scripts remain deferred."
   },
   "src/app/GitUI/GitModuleControl.cs": {
     "twin": "src/app/GitUI.Avalonia/GitModuleControl.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Command-source discovery and Module/UICommands access only; disposal and script-command plumbing arrive with their consumers."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Command-source discovery, Module/UICommands access and control-hotkey service discovery; disposal and script-command plumbing arrive with their consumers."
   },
   "src/app/GitUI/IGitUICommandsSource.cs": {
     "twin": "src/app/GitUI/IGitUICommandsSource.cs",
@@ -547,8 +560,8 @@
   "src/app/GitUI/Hotkey/HotkeySettingsManager.cs": {
     "twin": "src/app/GitUI.Avalonia/Hotkey/HotkeySettingsManager.cs",
     "status": "functional",
-    "basedOn": "abd24eff5bd364da0fa16f82edc9937da0ae8387",
-    "notes": "Reduced loader preserves the upstream XML format and command IDs for the implemented FormBrowse and FormResolveConflicts commands. Settings editing, scripts, and other hotkey targets join as their consumers are ported."
+    "basedOn": "9129931492b88f5d5ebece0d869df70e438a1fc3",
+    "notes": "Reduced loader preserves the upstream XML format and command IDs for the implemented FormBrowse and FormResolveConflicts commands, plus the complete upstream RevisionGrid command/default table so persisted settings remain forward-compatible as handlers land. Settings editing, scripts, and other hotkey targets join as their consumers are ported."
   },
   "src/app/GitUI/GitExtensionsDialog.cs": {
     "twin": "src/app/GitUI.Avalonia/GitExtensionsDialog.cs",
