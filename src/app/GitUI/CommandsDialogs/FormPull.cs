@@ -261,12 +261,33 @@ public sealed partial class FormPull : GitExtensionsDialog
                 messageBoxTitle = string.Format(_pruneFromCaption.Text, remote);
             }
 
-            bool isActionConfirmed = AppSettings.DontConfirmFetchAndPruneAll
-                                     || MessageBoxes.Show(
-                                         owner,
-                                         _pullFetchPruneAllConfirmation.Text,
-                                         messageBoxTitle,
-                                         MessageBoxButtons.YesNo) == DialogResult.Yes;
+            bool isActionConfirmed;
+            if (AppSettings.DontConfirmFetchAndPruneAll)
+            {
+                isActionConfirmed = true;
+            }
+            else
+            {
+                TaskDialogPage page = new()
+                {
+                    Text = _pullFetchPruneAllConfirmation.Text,
+                    Caption = messageBoxTitle,
+                    Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
+                    Icon = TaskDialogIcon.Information,
+                    Verification = new TaskDialogVerificationCheckBox
+                    {
+                        Text = TranslatedStrings.DontShowAgain
+                    },
+                    SizeToContent = true
+                };
+
+                isActionConfirmed = TaskDialog.ShowDialog(owner?.Handle ?? IntPtr.Zero, page) == TaskDialogButton.Yes;
+
+                if (page.Verification.Checked)
+                {
+                    AppSettings.DontConfirmFetchAndPruneAll = true;
+                }
+            }
 
             if (!isActionConfirmed)
             {

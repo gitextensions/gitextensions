@@ -104,10 +104,20 @@ public sealed partial class FormDeleteBranch : GitExtensionsDialog
                     Buttons = { TaskDialogButton.Yes, TaskDialogButton.No },
                     DefaultButton = TaskDialogButton.No,
                     Footnote = _useReflogHint.Text,
+                    Verification = new TaskDialogVerificationCheckBox
+                    {
+                        Text = TranslatedStrings.DontShowAgain
+                    },
                     SizeToContent = true,
                 };
 
                 bool isConfirmed = TaskDialog.ShowDialog(Handle, page) == TaskDialogButton.Yes;
+
+                if (page.Verification.Checked)
+                {
+                    AppSettings.DontConfirmDeleteUnmergedBranch = true;
+                }
+
                 if (!isConfirmed)
                 {
                     return;
