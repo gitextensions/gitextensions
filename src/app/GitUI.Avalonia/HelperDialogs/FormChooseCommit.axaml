@@ -51,6 +51,7 @@
     </StackPanel>
 
     <Button x:Name="btnOK"
+            Classes="gitextensions-dialog-action"
             Grid.Row="1"
             Grid.Column="2"
             Margin="4"

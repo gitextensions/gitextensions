@@ -8,13 +8,13 @@
         WindowStartupLocation="CenterOwner"
         Title="Create tag">
   <Grid x:Name="tableLayoutPanel2"
-        Margin="12"
+        Classes="gitextensions-dialog-main"
         ColumnDefinitions="Auto,*"
         RowDefinitions="28,32,28,28,28,*,32"
         ColumnSpacing="10">
     <TextBlock x:Name="label1"
-               Text="Tag name"
-               VerticalAlignment="Center" />
+               Classes="gitextensions-dialog-label"
+               Text="Tag name" />
     <TextBox x:Name="textBoxTagName"
              Grid.Column="1" />
 
@@ -74,6 +74,7 @@
              IsEnabled="False" />
 
     <Button x:Name="Ok"
+            Classes="gitextensions-dialog-action"
             Grid.Row="6"
             Grid.Column="1"
             MinWidth="128"

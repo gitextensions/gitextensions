@@ -9,8 +9,8 @@
   <DockPanel Margin="8,8,0,0">
     <StackPanel x:Name="flowLayoutPanel1" DockPanel.Dock="Bottom" Orientation="Horizontal"
                 HorizontalAlignment="Right" Spacing="6" Margin="2">
-      <Button x:Name="btnReset" MinWidth="75" Content="R_eset" />
-      <Button x:Name="btnCancel" MinWidth="75" Content="_Cancel" IsDefault="True" IsCancel="True" />
+      <Button x:Name="btnReset" Classes="gitextensions-dialog-action" Content="R_eset" />
+      <Button x:Name="btnCancel" Classes="gitextensions-dialog-action" Content="_Cancel" IsDefault="True" IsCancel="True" />
     </StackPanel>
     <CheckBox x:Name="cbDeleteNewFilesAndDirectories" DockPanel.Dock="Bottom" Margin="3,8,0,8"
               Content="Also delete _new files and/or directories" />

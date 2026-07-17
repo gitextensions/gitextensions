@@ -3,8 +3,12 @@
              x:Class="GitUI.CommitInfo.CommitInfo">
   <ScrollViewer>
     <StackPanel Margin="8,4" Spacing="8">
-      <SelectableTextBlock x:Name="RevisionHeader" FontFamily="monospace" FontSize="12" Opacity="0.85" />
-      <SelectableTextBlock x:Name="rtbxCommitMessage" TextWrapping="Wrap" />
+      <SelectableTextBlock x:Name="RevisionHeader"
+                           Classes="gitextensions-commit-header"
+                           Opacity="0.85" />
+      <SelectableTextBlock x:Name="rtbxCommitMessage"
+                           Classes="gitextensions-commit-message"
+                           TextWrapping="Wrap" />
     </StackPanel>
   </ScrollViewer>
 </UserControl>

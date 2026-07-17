@@ -9,7 +9,7 @@
         CanResize="True"
         WindowStartupLocation="CenterOwner"
         Title="Add files">
-  <Grid Margin="12"
+  <Grid Classes="gitextensions-dialog-main"
         RowDefinitions="Auto,Auto"
         ColumnDefinitions="Auto,*,Auto,Auto"
         RowSpacing="8"
@@ -22,10 +22,12 @@
              Grid.Column="1"
              Text="." />
     <Button x:Name="ShowFiles"
+            Classes="gitextensions-dialog-action"
             Grid.Column="2"
             MinWidth="94"
             Content="Show files" />
     <Button x:Name="AddFiles"
+            Classes="gitextensions-dialog-action"
             Grid.Column="3"
             MinWidth="94"
             Content="Add files"
