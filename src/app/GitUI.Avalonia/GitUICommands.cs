@@ -556,7 +556,22 @@ public sealed class GitUICommands : IGitUICommands
             startRebaseImmediately: false);
     }
 
-    public bool StartRemotesDialog(IWin32Window? owner, string? preselectRemote = null, string? preselectLocal = null) => throw NotPorted(nameof(StartRemotesDialog));
+    public bool StartRemotesDialog(IWin32Window? owner, string? preselectRemote = null, string? preselectLocal = null)
+    {
+        bool Action()
+        {
+            CommandsDialogs.FormRemotes form = new(this)
+            {
+                PreselectRemoteOnLoad = preselectRemote,
+                PreselectLocalOnLoad = preselectLocal
+            };
+            form.ShowDialog(owner);
+            return true;
+        }
+
+        return DoActionOnRepo(owner, Action);
+    }
+
     public bool StartRenameDialog(IWin32Window? owner, string branch)
     {
         bool Action()
