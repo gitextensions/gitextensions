@@ -31,9 +31,7 @@ jobs:
         # Release branches validate both architectures; other branches build x64 only to save CI minutes.
         if ($ref -eq "refs/heads/release" -or $ref.StartsWith("refs/heads/release/"))
         {
-          # TEMPORARY: arm64 only while investigating the arm64 test hang; x64 is disabled to save compute.
-          # TODO: restore '["windows-latest", "windows-11-arm"]' once the arm64 hang is resolved.
-          $os = '["windows-11-arm"]'
+          $os = '["windows-latest", "windows-11-arm"]'
         }
         else
         {
