@@ -194,13 +194,17 @@ jobs:
 
     - name: Run tests
       if: ${{ !inputs.release }}
+      # -m:1 runs the test projects sequentially (one test host at a time). The suite already serializes assemblies
+      # via a machine-wide named semaphore (CommonTestUtils.TestAppSettingsAttribute), so parallel hosts gain nothing
+      # and merely sit idle waiting for that semaphore; --blame-hang-timeout then kills those idle waiters as if hung.
+      # Sequential execution removes the idle waiters so the hang timeout only ever fires on a genuinely stuck test.
+      #
       # --blame-hang-timeout is a per-test cap: any single test running longer than this is treated as hung, then
-      # aborted and named in a Sequence_*.xml, so a deadlocked test (e.g. a UI integration test) fails fast instead
-      # of silently eating the whole job timeout. The slowest healthy test is ~25s on x64 / ~50s on the slower arm64
-      # runner, so 3m leaves ample headroom for CI variance while still surfacing a real hang quickly.
+      # aborted and named in a Sequence_*.xml, so a deadlocked test fails fast instead of eating the whole job timeout.
+      # The slowest healthy test is ~25s on x64 / ~50s on the slower arm64 runner, so 3m leaves ample headroom.
       # --blame-hang-dump-type mini captures a minidump (all managed thread stacks) of the hung test host so the
       # actual deadlock is diagnosable from the artifact, instead of only knowing which test was running.
-      run: dotnet test -c Release --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx --blame-hang-timeout 3m --blame-hang-dump-type mini /bl:artifacts\log\tests.binlog
+      run: dotnet test -c Release -m:1 --no-restore --no-build --nologo --verbosity q --test-adapter-path:. --logger:trx --blame-hang-timeout 3m --blame-hang-dump-type mini /bl:artifacts\log\tests.binlog
 
     - name: Upload test results
       id: upload-test-results
