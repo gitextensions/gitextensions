@@ -1,13 +1,16 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:compat="using:GitUI.Compat"
+             xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.UserControls.CommitPickerSmallControl">
   <Grid x:Name="tableLayoutPanel1" ColumnDefinitions="*,Auto,Auto" Margin="2">
     <TextBox x:Name="textBoxCommitHash" MaxLength="100" />
-    <Button x:Name="buttonPickCommit"
-            Grid.Column="1"
-            Margin="4,0"
-            Width="28"
-            Content="…" />
+    <compat:IconButton x:Name="buttonPickCommit"
+                       Classes="gitextensions-icon-only"
+                       Grid.Column="1"
+                       Margin="4,0"
+                       Width="28"
+                       Icon="{x:Static properties:Images.SelectRevision}" />
     <TextBlock x:Name="lbCommits" Grid.Column="2" Margin="8,0,0,0"
                Opacity="0.65" VerticalAlignment="Center" />
   </Grid>

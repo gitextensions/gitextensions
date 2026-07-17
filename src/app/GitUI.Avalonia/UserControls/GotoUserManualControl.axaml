@@ -1,5 +1,6 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:properties="using:GitUI.Properties"
              x:Class="GitUI.UserControls.GotoUserManualControl"
              MinWidth="70"
              MinHeight="20">
@@ -10,7 +11,7 @@
     <Image x:Name="pictureBoxHelpIcon"
            Width="16"
            Height="16"
-           Source="avares://GitUI.Avalonia/Resources/Icons/GotoManual.png" />
+           Source="{x:Static properties:Images.GotoManual}" />
     <HyperlinkButton x:Name="linkLabelHelp"
                      Padding="0"
                      Content="Help" />

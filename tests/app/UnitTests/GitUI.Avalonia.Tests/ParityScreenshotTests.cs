@@ -95,13 +95,28 @@ public sealed partial class ParityScreenshotTests
             ("Light", ThemeVariant.Light),
             ("Dark", ThemeVariant.Dark),
         ];
+        (string Name, double Factor)[] scales =
+        [
+            ("100", 1),
+            ("200", 2),
+        ];
 
         foreach ((string themeName, ThemeVariant themeVariant) in themes)
         {
-            foreach (ViewDescriptor view in views)
+            foreach ((string scaleName, double scaleFactor) in scales)
             {
-                ManifestEntry entry = await CaptureViewAsync(context, view, themeName, themeVariant, outputDirectory);
-                manifest.Add(entry);
+                foreach (ViewDescriptor view in views)
+                {
+                    ManifestEntry entry = await CaptureViewAsync(
+                        context,
+                        view,
+                        themeName,
+                        themeVariant,
+                        scaleName,
+                        scaleFactor,
+                        outputDirectory);
+                    manifest.Add(entry);
+                }
             }
         }
 
@@ -110,7 +125,7 @@ public sealed partial class ParityScreenshotTests
             manifestPath,
             JsonSerializer.Serialize(manifest, new JsonSerializerOptions { WriteIndented = true }));
 
-        manifest.Should().HaveCount(views.Count * themes.Length);
+        manifest.Should().HaveCount(views.Count * themes.Length * scales.Length);
         manifest.Should().OnlyContain(entry => File.Exists(Path.Combine(outputDirectory, entry.File)));
         await TestContext.Progress.WriteLineAsync($"Captured {manifest.Count} parity screenshots in {outputDirectory}");
     }
@@ -120,6 +135,8 @@ public sealed partial class ParityScreenshotTests
         ViewDescriptor descriptor,
         string themeName,
         ThemeVariant themeVariant,
+        string scaleName,
+        double scaleFactor,
         string outputDirectory)
     {
         Control view = CreateView(context, descriptor.ViewType);
@@ -150,6 +167,7 @@ public sealed partial class ParityScreenshotTests
         {
             PrepareView(view, context);
             window.Show();
+            window.SetRenderScaling(scaleFactor);
             if (!isWindow)
             {
                 SeedStandaloneControl(view, context);
@@ -166,7 +184,7 @@ public sealed partial class ParityScreenshotTests
             WriteableBitmap? frame = window.CaptureRenderedFrame();
             frame.Should().NotBeNull($"{descriptor.ClassName} should render with headless Skia");
 
-            string relativeFile = Path.Combine(themeName, descriptor.RelativePathWithoutExtension + ".png");
+            string relativeFile = Path.Combine(themeName, scaleName, descriptor.RelativePathWithoutExtension + ".png");
             string outputPath = Path.Combine(outputDirectory, relativeFile);
             Directory.CreateDirectory(Path.GetDirectoryName(outputPath)!);
             using FileStream stream = File.Create(outputPath);
@@ -176,6 +194,7 @@ public sealed partial class ParityScreenshotTests
                 descriptor.RelativePath,
                 descriptor.ClassName,
                 themeName,
+                scaleName,
                 isWindow ? "Window" : "UserControl",
                 (int)frame.PixelSize.Width,
                 (int)frame.PixelSize.Height,
@@ -577,6 +596,7 @@ public sealed partial class ParityScreenshotTests
         string View,
         string ClassName,
         string Theme,
+        string ScalePercent,
         string Kind,
         int Width,
         int Height,

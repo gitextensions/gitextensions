@@ -23,6 +23,7 @@ public sealed class AvaloniaMessageBoxHost(IClassicDesktopStyleApplicationLifeti
             Window dialog = new()
             {
                 Title = caption ?? string.Empty,
+                Icon = Properties.Images.ApplicationIcon,
                 SizeToContent = SizeToContent.WidthAndHeight,
                 CanResize = false,
                 WindowStartupLocation = ownerWindow is null ? WindowStartupLocation.CenterScreen : WindowStartupLocation.CenterOwner,
@@ -57,13 +58,31 @@ public sealed class AvaloniaMessageBoxHost(IClassicDesktopStyleApplicationLifeti
                 buttonPanel.Children.Add(button);
             }
 
+            StackPanel messagePanel = new()
+            {
+                Orientation = Orientation.Horizontal,
+                Spacing = 16,
+            };
+            Avalonia.Controls.Control? messageIcon = DialogIconFactory.Create(icon);
+            if (messageIcon is not null)
+            {
+                messagePanel.Children.Add(messageIcon);
+            }
+
+            messagePanel.Children.Add(new SelectableTextBlock
+            {
+                Text = text ?? string.Empty,
+                TextWrapping = Avalonia.Media.TextWrapping.Wrap,
+                VerticalAlignment = VerticalAlignment.Center,
+            });
+
             dialog.Content = new StackPanel
             {
                 Margin = new Avalonia.Thickness(20),
                 Spacing = 16,
                 Children =
                 {
-                    new SelectableTextBlock { Text = text ?? string.Empty, TextWrapping = Avalonia.Media.TextWrapping.Wrap },
+                    messagePanel,
                     buttonPanel,
                 },
             };
