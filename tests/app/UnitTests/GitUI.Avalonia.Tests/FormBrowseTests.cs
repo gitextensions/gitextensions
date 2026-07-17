@@ -17,6 +17,7 @@ using GitExtUtils;
 using GitUI;
 using GitUI.CommandsDialogs;
 using GitUI.UserControls.RevisionGrid;
+using GitUI.UserControls.RevisionGrid.Columns;
 using GitUIPluginInterfaces;
 using Microsoft.VisualStudio.Threading;
 using NSubstitute;
@@ -161,6 +162,75 @@ public sealed class FormBrowseTests
         {
             AppSettings.ShowGitNotesColumn.Value = originalShowNotesColumn;
             AppSettings.ShowGitNotes = originalShowGitNotes;
+            AppSettings.ShowRevisionGridTooltips.Value = originalShowToolTips;
+        }
+    }
+
+    [AvaloniaTest]
+    public async Task Revision_grid_should_highlight_the_selected_author_and_expose_lane_tooltips()
+    {
+        bool originalShowAuthor = AppSettings.ShowAuthorNameColumn;
+        bool originalShowToolTips = AppSettings.ShowRevisionGridTooltips.Value;
+        try
+        {
+            AppSettings.ShowAuthorNameColumn = true;
+            AppSettings.ShowRevisionGridTooltips.Value = true;
+            GitModule module = CreateRepositoryWithInitialCommit();
+            ObjectId initialCommit = module.GetCurrentCheckout();
+            module.SetSetting("user.name", "Second Author");
+            module.SetSetting("user.email", "second@example.com");
+            File.AppendAllText(Path.Combine(_workingDirectory, "tracked.txt"), "second");
+            module.GitExecutable.RunCommand(new GitArgumentBuilder("commit") { "--quiet", "-am", "second" });
+            ObjectId secondCommit = module.GetCurrentCheckout();
+
+            FormBrowse form = new(new GitUICommands(_serviceContainer, module));
+            try
+            {
+                form.Show();
+                RevisionGridControl revisionGrid = form.FindControl<RevisionGridControl>("RevisionGrid")
+                    ?? throw new InvalidOperationException("Revision grid was not created.");
+                TextBlock loadingStatus = revisionGrid.FindControl<TextBlock>("lblLoadingStatus")
+                    ?? throw new InvalidOperationException("Revision loading status was not created.");
+                await WaitUntilAsync(() => loadingStatus.Text == "2 revisions" && revisionGrid.SelectedRevision is not null);
+
+                TextBlock[] authorCells =
+                [
+                    .. revisionGrid.GetVisualDescendants()
+                        .OfType<TextBlock>()
+                        .Where(textBlock => textBlock.Classes.Contains("revision-author-cell")),
+                ];
+                authorCells.Single(cell => cell.Text == "Second Author").FontWeight
+                    .Should().Be(Avalonia.Media.FontWeight.Bold);
+                authorCells.Single(cell => cell.Text == "Avalonia Test").FontWeight
+                    .Should().Be(Avalonia.Media.FontWeight.Normal);
+
+                RevisionGraphColumnProvider graphProvider =
+                    (RevisionGraphColumnProvider)revisionGrid.ColumnProviders[0];
+                graphProvider.GetLaneToolTip(revisionGrid.SelectedRevision!, x: 1)
+                    .Should().Contain(revisionGrid.SelectedRevision!.Guid);
+
+                revisionGrid.SetSelectedRevision(initialCommit).Should().BeTrue();
+                Dispatcher.UIThread.RunJobs();
+                authorCells.Single(cell => cell.Text == "Avalonia Test").FontWeight
+                    .Should().Be(Avalonia.Media.FontWeight.Bold);
+                authorCells.Single(cell => cell.Text == "Second Author").FontWeight
+                    .Should().Be(Avalonia.Media.FontWeight.Normal);
+
+                IGitRef relatedRef = Substitute.For<IGitRef>();
+                relatedRef.Guid.Returns(initialCommit.ToString());
+                relatedRef.ObjectId.Returns(initialCommit);
+                revisionGrid.SetSelectedRevision(secondCommit).Should().BeTrue();
+                revisionGrid.GoToRelatedRef(relatedRef).Should().BeTrue();
+                revisionGrid.SelectedRevision!.ObjectId.Should().Be(initialCommit);
+            }
+            finally
+            {
+                form.Close();
+            }
+        }
+        finally
+        {
+            AppSettings.ShowAuthorNameColumn = originalShowAuthor;
             AppSettings.ShowRevisionGridTooltips.Value = originalShowToolTips;
         }
     }

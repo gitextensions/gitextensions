@@ -16,6 +16,8 @@ namespace GitUI.CommandsDialogs;
 // the remaining upstream menus and toolbars arrive with their corresponding dialogs.
 public sealed partial class FormBrowse : GitModuleForm
 {
+    private readonly IAheadBehindDataProvider? _aheadBehindDataProvider;
+
     public static readonly string HotkeySettingsName = "Browse";
 
     internal enum Command
@@ -52,6 +54,8 @@ public sealed partial class FormBrowse : GitModuleForm
         InitializeComponent();
 
         RevisionGrid.UICommandsSource = this;
+        _aheadBehindDataProvider = new AheadBehindDataProvider(() => Module.GitExecutable);
+        RevisionGrid.SetAheadBehindDataProvider(_aheadBehindDataProvider);
         RevisionGrid.SelectionChanged += RevisionGrid_SelectionChanged;
         fileStatusList.SelectedIndexChanged += FileStatusList_SelectedIndexChanged;
         repoObjectsTree.SelectionChanged += RepoObjectsTree_SelectionChanged;
@@ -102,6 +106,7 @@ public sealed partial class FormBrowse : GitModuleForm
 
         if (isValidWorkingDir)
         {
+            _aheadBehindDataProvider?.ResetCache();
             lblRepoPath.Text = $"{module.WorkingDir}  —  {branchName}";
             lblStatus.Text = $"git: {GitVersion.Current}";
             RevisionGrid.ReloadRevisions(module);
