@@ -1,4 +1,7 @@
+using Avalonia;
 using Avalonia.Controls;
+using Avalonia.Media;
+using Avalonia.VisualTree;
 using GitExtensions.Extensibility.Git;
 using GitUIPluginInterfaces;
 
@@ -52,9 +55,9 @@ public partial class RepoObjectsTree : GitExtensionsControl
             ];
             TreeViewItem[] children =
             [
-                .. refs.Select((gitRef, index) => new TreeViewItem
+                .. refs.Select(gitRef => new TreeViewItem
                 {
-                    Header = CreateChildHeader(gitRef.Name, index == refs.Length - 1),
+                    Header = gitRef.Name,
                     Tag = gitRef,
                 }),
             ];
@@ -64,58 +67,90 @@ public partial class RepoObjectsTree : GitExtensionsControl
                 ItemsSource = children,
             };
         }
-
-        static Grid CreateChildHeader(string caption, bool isLastSibling)
-        {
-            TreeConnectorControl connector = new(isLastSibling);
-            TextBlock text = new()
-            {
-                Text = caption,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center,
-            };
-            Grid.SetColumn(text, 1);
-
-            return new Grid
-            {
-                ColumnDefinitions = new ColumnDefinitions("18,*"),
-                Children =
-                {
-                    connector,
-                    text,
-                },
-            };
-        }
     }
+}
 
-    internal sealed class TreeConnectorControl : Grid
+/// <summary>
+///  Draws the dotted hierarchy lines supplied by the native WinForms tree but absent from
+///  Avalonia's Fluent TreeView template.
+/// </summary>
+internal sealed class TreeConnectorControl : Control
+{
+    private const double ChevronCenter = 18;
+    private const double Indent = 16;
+    private static readonly DashStyle DottedLine = new([1, 1], 0);
+
+    internal TreeViewItem? Item => this.FindAncestorOfType<TreeViewItem>();
+
+    internal bool IsLastSibling
     {
-        internal TreeConnectorControl(bool isLastSibling)
+        get
         {
-            IsLastSibling = isLastSibling;
-            RowDefinitions = new RowDefinitions("*,*");
-            ColumnDefinitions = new ColumnDefinitions("4,*");
-
-            Border vertical = new()
+            if (Item is not TreeViewItem item)
             {
-                Width = 1,
-                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
-            };
-            vertical.Classes.Add("gitextensions-tree-connector");
-            SetRowSpan(vertical, isLastSibling ? 1 : 2);
+                return true;
+            }
 
-            Border horizontal = new()
-            {
-                Height = 1,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Bottom,
-            };
-            horizontal.Classes.Add("gitextensions-tree-connector");
-            SetRow(horizontal, 0);
-            SetColumn(horizontal, 1);
+            (int index, int count) = GetSiblingPosition(item);
+            return index == count - 1;
+        }
+    }
 
-            Children.Add(vertical);
-            Children.Add(horizontal);
+    public override void Render(DrawingContext context)
+    {
+        base.Render(context);
+
+        TreeViewItem? item = Item;
+        if (item is null || Bounds.Height <= 0)
+        {
+            return;
         }
 
-        internal bool IsLastSibling { get; }
+        IBrush brush = GetConnectorBrush();
+        Pen pen = new(brush, 1, DottedLine, PenLineCap.Flat, PenLineJoin.Miter, 10);
+        double middle = Bounds.Height / 2;
+        (int index, int count) = GetSiblingPosition(item);
+        double x = ChevronCenter + (item.Level * Indent);
+        double top = item.Level == 0 && index == 0 ? middle : 0;
+        double bottom = index == count - 1 ? middle : Bounds.Height;
+
+        context.DrawLine(pen, new Avalonia.Point(x, top), new Avalonia.Point(x, bottom));
+        context.DrawLine(pen, new Avalonia.Point(x, middle), new Avalonia.Point(x + ChevronCenter, middle));
+
+        for (TreeViewItem? ancestor = GetParentItem(item);
+             ancestor is not null;
+             ancestor = GetParentItem(ancestor))
+        {
+            (int ancestorIndex, int ancestorCount) = GetSiblingPosition(ancestor);
+            if (ancestorIndex < ancestorCount - 1)
+            {
+                double ancestorX = ChevronCenter + (ancestor.Level * Indent);
+                context.DrawLine(
+                    pen,
+                    new Avalonia.Point(ancestorX, 0),
+                    new Avalonia.Point(ancestorX, Bounds.Height));
+            }
+        }
     }
+
+    private static TreeViewItem? GetParentItem(TreeViewItem item)
+        => item.GetVisualAncestors().OfType<TreeViewItem>().FirstOrDefault();
+
+    private static (int Index, int Count) GetSiblingPosition(TreeViewItem item)
+    {
+        TreeViewItem? parentItem = GetParentItem(item);
+        ItemCollection siblings = parentItem is not null
+            ? parentItem.Items
+            : item.GetVisualAncestors().OfType<TreeView>().First().Items;
+        return (Math.Max(siblings.IndexOf(item), 0), siblings.Count);
+    }
+
+    private IBrush GetConnectorBrush()
+        => Application.Current?.TryGetResource(
+                "GitExtensionsTreeConnectorBrush",
+                ActualThemeVariant,
+                out object? resource) == true
+            && resource is IBrush brush
+                ? brush
+                : Brushes.Gray;
 }
