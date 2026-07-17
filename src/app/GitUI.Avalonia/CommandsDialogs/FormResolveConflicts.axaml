@@ -40,14 +40,14 @@
       <Grid x:Name="tableLayoutPanel3" Grid.Row="2" ColumnDefinitions="Auto,*,Auto" ColumnSpacing="3">
         <TextBlock x:Name="pictureBox1" Text="ⓘ" VerticalAlignment="Center" />
         <TextBlock x:Name="conflictDescription" Grid.Column="1" Text="Select file" VerticalAlignment="Center" />
-        <Button x:Name="merge" Grid.Column="2" MinWidth="130" MinHeight="25" Margin="0,0,0,2" Content="Merge" />
+        <Button x:Name="merge" Classes="gitextensions-dialog-action" Grid.Column="2" MinWidth="130" Margin="0,0,0,2" Content="Merge" />
       </Grid>
     </Grid>
     <StackPanel x:Name="flowLayoutPanel1" Grid.Column="1" Margin="8,0,0,0" Spacing="6">
-      <Button x:Name="openMergeToolBtn" MinWidth="140" MinHeight="25" HorizontalAlignment="Stretch" Content="Open in mergetool" />
-      <Button x:Name="startMergetool" MinWidth="140" MinHeight="25" HorizontalAlignment="Stretch" Content="Start mergetool" />
-      <Button x:Name="Rescan" MinWidth="140" MinHeight="25" HorizontalAlignment="Stretch" Content="Rescan merge conflicts" />
-      <Button x:Name="Reset" MinWidth="140" MinHeight="25" HorizontalAlignment="Stretch" Content="_Reset" />
+      <Button x:Name="openMergeToolBtn" Classes="gitextensions-dialog-action" MinWidth="140" HorizontalAlignment="Stretch" Content="Open in mergetool" />
+      <Button x:Name="startMergetool" Classes="gitextensions-dialog-action" MinWidth="140" HorizontalAlignment="Stretch" Content="Start mergetool" />
+      <Button x:Name="Rescan" Classes="gitextensions-dialog-action" MinWidth="140" HorizontalAlignment="Stretch" Content="Rescan merge conflicts" />
+      <Button x:Name="Reset" Classes="gitextensions-dialog-action" MinWidth="140" HorizontalAlignment="Stretch" Content="_Reset" />
       <ProgressBar x:Name="progressBar" MinHeight="24" IsVisible="False" />
     </StackPanel>
     <Grid x:Name="tableLayoutPanel1" Grid.Row="1" Grid.ColumnSpan="2" ColumnDefinitions="Auto,*"

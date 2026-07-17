@@ -1,7 +1,10 @@
 <UserControl xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="GitUI.UserControls.CommitSummaryUserControl">
-  <HeaderedContentControl x:Name="groupBox1" Padding="10" Header="...">
+  <HeaderedContentControl x:Name="groupBox1"
+                          Classes="gitextensions-group-box"
+                          Padding="10"
+                          Header="...">
     <Grid x:Name="tableLayoutPanel1" ColumnDefinitions="Auto,*"
           RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnSpacing="10" RowSpacing="3">
       <TextBlock x:Name="labelMessage" Grid.ColumnSpan="2" Margin="0,0,0,5"

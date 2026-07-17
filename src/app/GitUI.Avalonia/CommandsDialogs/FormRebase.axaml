@@ -121,14 +121,17 @@
                         Orientation="Horizontal"
                         Spacing="6">
               <Button x:Name="btnAddFiles"
+                      Classes="gitextensions-dialog-action"
                       MinWidth="79"
                       Content="_Add files"
                       IsVisible="False" />
               <Button x:Name="btnCommit"
+                      Classes="gitextensions-dialog-action"
                       MinWidth="86"
                       Content="C_ommit..."
                       IsVisible="False" />
               <Button x:Name="btnEditTodo"
+                      Classes="gitextensions-dialog-action"
                       MinWidth="90"
                       Content="_Edit todo..."
                       IsVisible="False" />
@@ -137,6 +140,7 @@
                         Grid.Column="1"
                         HorizontalAlignment="Right">
               <Button x:Name="btnSkip"
+                      Classes="gitextensions-dialog-action"
                       MinWidth="183"
                       Content="S_kip currently applying commit"
                       IsVisible="False" />
@@ -147,32 +151,35 @@
     </Border>
 
     <StackPanel x:Name="ControlsPanel"
+                Classes="gitextensions-dialog-controls"
                 Grid.Row="1"
                 Margin="8"
-                Orientation="Horizontal"
-                HorizontalAlignment="Right"
                 Spacing="6">
       <Button x:Name="btnRebase"
+              Classes="gitextensions-dialog-action"
               MinWidth="100"
               Content="Rebase"
               IsDefault="True" />
       <Border x:Name="MergeToolPanel">
         <Button x:Name="btnSolveConflicts"
+                Classes="gitextensions-dialog-action"
                 MinWidth="110"
                 Content="_Solve conflicts"
                 IsVisible="False" />
       </Border>
       <Button x:Name="btnContinueRebase"
+              Classes="gitextensions-dialog-action"
               MinWidth="115"
               Content="_Continue rebase"
               IsVisible="False" />
       <Button x:Name="btnAbort"
-              MinWidth="75"
+              Classes="gitextensions-dialog-action"
               Content="A_bort"
               IsVisible="False" />
     </StackPanel>
 
     <Button x:Name="btnSolveMergeconflicts"
+            Classes="gitextensions-dialog-action"
             Grid.Row="2"
             Margin="12,0,12,8"
             MinWidth="213"

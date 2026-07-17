@@ -1,7 +1,27 @@
 <Styles xmlns="https://github.com/avaloniaui"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:avaloniaEdit="https://github.com/avaloniaui/avaloniaedit">
   <Styles.Resources>
     <ResourceDictionary>
+      <!-- WinForms stores fonts in points; these defaults are the equivalent Avalonia
+           device-independent-pixel sizes until AppSettings replaces them at startup. -->
+      <FontFamily x:Key="GitExtensionsUiFontFamily">Segoe UI</FontFamily>
+      <x:Double x:Key="GitExtensionsUiFontSize">12</x:Double>
+      <FontStyle x:Key="GitExtensionsUiFontStyle">Normal</FontStyle>
+      <FontWeight x:Key="GitExtensionsUiFontWeight">Normal</FontWeight>
+      <FontFamily x:Key="GitExtensionsCommitFontFamily">Segoe UI</FontFamily>
+      <x:Double x:Key="GitExtensionsCommitFontSize">12</x:Double>
+      <FontStyle x:Key="GitExtensionsCommitFontStyle">Normal</FontStyle>
+      <FontWeight x:Key="GitExtensionsCommitFontWeight">Normal</FontWeight>
+      <FontFamily x:Key="GitExtensionsFixedWidthFontFamily">Consolas</FontFamily>
+      <x:Double x:Key="GitExtensionsFixedWidthFontSize">13.333333333333334</x:Double>
+      <FontStyle x:Key="GitExtensionsFixedWidthFontStyle">Normal</FontStyle>
+      <FontWeight x:Key="GitExtensionsFixedWidthFontWeight">Normal</FontWeight>
+      <FontFamily x:Key="GitExtensionsMonospaceFontFamily">Consolas</FontFamily>
+      <x:Double x:Key="GitExtensionsMonospaceFontSize">12</x:Double>
+      <FontStyle x:Key="GitExtensionsMonospaceFontStyle">Normal</FontStyle>
+      <FontWeight x:Key="GitExtensionsMonospaceFontWeight">Normal</FontWeight>
+
       <ResourceDictionary.ThemeDictionaries>
         <ResourceDictionary x:Key="Light">
           <SolidColorBrush x:Key="GitExtensionsSelectionBackgroundBrush"
@@ -61,6 +81,107 @@
 
   <!-- Keep these colors behind semantic resources. A future theme service can derive the
        palette from the desktop accent while preserving contrast for graph and ref colors. -->
+  <Style Selector="Window">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
+  </Style>
+  <Style Selector="UserControl">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsUiFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsUiFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsUiFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsUiFontWeight}" />
+  </Style>
+
+  <Style Selector="TextBox">
+    <Setter Property="MinHeight" Value="23" />
+  </Style>
+  <Style Selector="ComboBox">
+    <Setter Property="MinHeight" Value="23" />
+  </Style>
+  <Style Selector="Button.gitextensions-dialog-action">
+    <Setter Property="MinWidth" Value="75" />
+    <Setter Property="MinHeight" Value="25" />
+  </Style>
+  <Style Selector="StackPanel.gitextensions-dialog-controls">
+    <Setter Property="MinHeight" Value="32" />
+    <Setter Property="Margin" Value="5" />
+    <Setter Property="Orientation" Value="Horizontal" />
+    <Setter Property="HorizontalAlignment" Value="Right" />
+    <Setter Property="Spacing" Value="6" />
+  </Style>
+  <Style Selector="Grid.gitextensions-dialog-main">
+    <Setter Property="Margin" Value="12" />
+  </Style>
+  <Style Selector="Border.gitextensions-dialog-main">
+    <Setter Property="Padding" Value="12" />
+  </Style>
+  <Style Selector="TextBlock.gitextensions-dialog-label">
+    <Setter Property="Margin" Value="3" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+  <Style Selector="Label.gitextensions-dialog-label">
+    <Setter Property="Margin" Value="3" />
+    <Setter Property="VerticalAlignment" Value="Center" />
+  </Style>
+
+  <Style Selector="HeaderedContentControl.gitextensions-group-box">
+    <Setter Property="Padding" Value="8" />
+    <Setter Property="Template">
+      <ControlTemplate>
+        <Grid RowDefinitions="Auto,*" ColumnDefinitions="8,Auto,*">
+          <Border Grid.Column="0"
+                  Height="1"
+                  VerticalAlignment="Center"
+                  Background="{DynamicResource GitExtensionsSectionBorderBrush}" />
+          <ContentPresenter x:Name="PART_HeaderPresenter"
+                            Grid.Column="1"
+                            Margin="3,0"
+                            Content="{TemplateBinding Header}"
+                            ContentTemplate="{TemplateBinding HeaderTemplate}"
+                            VerticalContentAlignment="Center" />
+          <Border Grid.Column="2"
+                  Height="1"
+                  VerticalAlignment="Center"
+                  Background="{DynamicResource GitExtensionsSectionBorderBrush}" />
+          <Border x:Name="PART_GroupBoxFrame"
+                  Grid.Row="1"
+                  Grid.ColumnSpan="3"
+                  BorderBrush="{DynamicResource GitExtensionsSectionBorderBrush}"
+                  BorderThickness="1,0,1,1"
+                  CornerRadius="0" />
+          <ContentPresenter Grid.Row="1"
+                            Grid.ColumnSpan="3"
+                            Margin="{TemplateBinding Padding}"
+                            Content="{TemplateBinding Content}"
+                            ContentTemplate="{TemplateBinding ContentTemplate}"
+                            HorizontalContentAlignment="{TemplateBinding HorizontalContentAlignment}"
+                            VerticalContentAlignment="{TemplateBinding VerticalContentAlignment}" />
+        </Grid>
+      </ControlTemplate>
+    </Setter>
+  </Style>
+
+  <Style Selector="avaloniaEdit|TextEditor.gitextensions-diff-editor">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsFixedWidthFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsFixedWidthFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsFixedWidthFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsFixedWidthFontWeight}" />
+  </Style>
+  <Style Selector="SelectableTextBlock.gitextensions-commit-header">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsMonospaceFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsMonospaceFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsMonospaceFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsMonospaceFontWeight}" />
+  </Style>
+  <Style Selector="SelectableTextBlock.gitextensions-commit-message">
+    <Setter Property="FontFamily" Value="{DynamicResource GitExtensionsCommitFontFamily}" />
+    <Setter Property="FontSize" Value="{DynamicResource GitExtensionsCommitFontSize}" />
+    <Setter Property="FontStyle" Value="{DynamicResource GitExtensionsCommitFontStyle}" />
+    <Setter Property="FontWeight" Value="{DynamicResource GitExtensionsCommitFontWeight}" />
+  </Style>
+
   <Style Selector="ListBoxItem">
     <Setter Property="MinHeight" Value="24" />
     <Setter Property="Padding" Value="6,2" />
