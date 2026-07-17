@@ -1,4 +1,5 @@
 ﻿using GitCommands;
+using GitExtUtils;
 using GitUI.CommandsDialogs.BrowseDialog;
 using GitUI.Infrastructure;
 using GitUI.Shells;
@@ -16,13 +17,16 @@ internal partial class ToolsToolStripMenuItem : ToolStripMenuItemEx
     {
         InitializeComponent();
 
-        gitBashToolStripMenuItem.Tag = new ShellProvider().GetShell(BashShell.ShellName);
-
         if (!OperatingSystem.IsWindows())
         {
             toolStripSeparator6.Visible = false;
             PuTTYToolStripMenuItem.Visible = false;
         }
+    }
+
+    public override void OnInitialized()
+    {
+        gitBashToolStripMenuItem.Tag = UICommands.GetRequiredService<IShellProvider>().GetShell(BashShell.ShellName);
     }
 
     public override void RefreshShortcutKeys(IEnumerable<HotkeyCommand>? hotkeys)

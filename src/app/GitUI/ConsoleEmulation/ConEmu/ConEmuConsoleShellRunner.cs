@@ -14,10 +14,11 @@ internal sealed class ConEmuConsoleShellRunner : IConsoleShellRunner
 {
     private readonly ConsoleEmulatorSettings _settings;
     private readonly ConEmuControl _conEmu;
-    private readonly ShellProvider _shellProvider = new();
+    private readonly IShellProvider _shellProvider;
 
-    internal ConEmuConsoleShellRunner(ConsoleEmulatorSettings settings)
+    internal ConEmuConsoleShellRunner(IShellProvider shellProvider, ConsoleEmulatorSettings settings)
     {
+        _shellProvider = shellProvider;
         _settings = settings;
         _conEmu = new ConEmuControl
         {
