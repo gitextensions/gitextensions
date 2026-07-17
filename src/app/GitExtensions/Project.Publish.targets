@@ -229,7 +229,9 @@
       <_PublishAppConfigPath>$([System.IO.Path]::Combine('$(PublishDir)', '$(_PublishAppConfig)'))</_PublishAppConfigPath>
 
       <!-- Resolve the output file -->
-      <_PublishPortableVersionSuffix>-$(CurrentBuildVersion.ToString())</_PublishPortableVersionSuffix>
+      <!-- ARTIFACT_BUILD_SUFFIX carries the pre-release marker (e.g. -dev, -preview) so the file name matches the informational version;
+           the numeric assembly version in CurrentBuildVersion cannot carry it. The MSI name uses the same suffix for consistency. -->
+      <_PublishPortableVersionSuffix>-$(CurrentBuildVersion.ToString())$(ARTIFACT_BUILD_SUFFIX)</_PublishPortableVersionSuffix>
 
       <!-- This property comes from GitInfo package, but can be overriden on AppVeyor -->
       <_PublishPortableCommitHashSuffix Condition="'$(GitCommit)' != ''">-$(GitCommit)</_PublishPortableCommitHashSuffix>

@@ -15,8 +15,11 @@ A deterministic checklist to make a change merge-ready. Do the steps in order; S
 ## Build & test (gates)
 
 3. **Build clean:** `dotnet build /v:q` — no errors, no new analyzer/StyleCop warnings.
-4. **Run tests:** `dotnet test` (or the affected test project). All green. See
-   [testing-guide](../../copilot-docs/L2-core-platform/testing-guide.md).
+4. **Run the associated tests locally — MANDATORY before any push.** Identify the tests covering your change and run
+   them (`dotnet test <project> --filter "FullyQualifiedName~<Type>"`), then run the affected project(s) in full.
+   All green. **NEVER** push untested changes and let CI be the first run — it wastes CI compute and slows feedback.
+   If some path can't be exercised locally (e.g. an arch-specific case), state explicitly what was and wasn't verified.
+   See [testing-guide](../../copilot-docs/L2-core-platform/testing-guide.md).
 
 ## Localization gate (MUST if UI changed)
 
